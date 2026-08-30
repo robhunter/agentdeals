@@ -1,11 +1,3 @@
-// The rendered half of #1025: what a reader and a crawler actually see once
-// selection goes through the shared module.
-//
-// The assertions worth having here are the ones a unit test cannot make: that
-// the tie is disclosed above the list rather than hidden by a top-8 cut, that
-// a demoted vendor is still on the page with its reason attached, and that the
-// seed we publish is the seed we used.
-
 import { describe, it, before, after } from "node:test";
 import assert from "node:assert";
 import { spawn, type ChildProcess } from "node:child_process";
@@ -84,7 +76,6 @@ describe("/best/:slug shows the whole qualified band", () => {
   it("discloses a recorded change without letting it move rank", async () => {
     const { html } = await get("/best/free-databases");
     assert.match(html, /Recorded, but does not affect rank/);
-    // Supabase's Feb limit reduction is disclosed; it is still in the top band.
     const demotedAt = html.indexOf("Demoted &mdash; and exactly why");
     const supabaseAt = html.indexOf(">Supabase<");
     assert.ok(supabaseAt > -1 && supabaseAt < demotedAt, "Supabase should be in the qualified band");
@@ -119,8 +110,6 @@ describe("/best/:slug shows the whole qualified band", () => {
 });
 
 describe("/best/:slug is not a mirror of /category/:slug", () => {
-  // The kill condition for this page type: if the gates make no difference, the page
-  // is duplicate content on 57 URLs and should not exist.
   it("the gates remove offers the category page shows", async () => {
     const best = await get("/best/free-ai-ml");
     const category = await get("/category/ai-ml");
@@ -128,7 +117,6 @@ describe("/best/:slug is not a mirror of /category/:slug", () => {
     assert.strictEqual(category.status, 200);
     const bestVendors = new Set([...best.html.matchAll(/class="best-pick-name">([^<]+)</g)].map((m) => m[1]));
     assert.ok(bestVendors.size > 0);
-    // Eligibility-restricted and non-free tiers are in the category and not here.
     const index = JSON.parse(readFileSync(path.join(__dirname, "..", "data", "index.json"), "utf8"));
     const gatedOut = index.offers.filter((o: { category: string; eligibility?: unknown }) => o.category === "AI / ML" && o.eligibility);
     assert.ok(gatedOut.length > 0, "fixture assumption: AI/ML has eligibility-gated offers");
@@ -190,8 +178,6 @@ describe("/criteria publishes the method", () => {
 
 describe("comparison pages survive the change of pair selection", () => {
   it("a pair we no longer generate still resolves rather than 404ing", async () => {
-    // Vendors that exist but are not in the generated set: the URL may have
-    // been indexed under the old description.length selection.
     const { status, html } = await get("/compare/supabase-vs-neon");
     assert.ok(status === 200 || status === 301, `expected the page to resolve, got ${status}`);
     if (status === 200) assert.ok(html.includes("Supabase") && html.includes("Neon"));

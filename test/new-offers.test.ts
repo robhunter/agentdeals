@@ -32,7 +32,6 @@ function sendMcpMessages(
               resolve(responses);
             }
           } catch {
-            // not valid JSON yet
           }
         }
       }
@@ -96,7 +95,6 @@ describe("search_deals with since param (new offers)", () => {
     assert.ok(Array.isArray(body.deals));
     assert.strictEqual(typeof body.total, "number");
 
-    // All deals should have verifiedDate on or after since
     for (const deal of body.deals) {
       assert.ok(deal.verifiedDate >= sevenDaysAgo, `${deal.vendor} verifiedDate ${deal.verifiedDate} should be >= ${sevenDaysAgo}`);
     }
@@ -138,7 +136,6 @@ describe("search_deals with since param (new offers)", () => {
       stdio: ["pipe", "pipe", "pipe"],
     });
 
-    // Use a future date which should return nothing
     const responses = await sendMcpMessages(proc, [
       ...INIT_MESSAGES,
       {

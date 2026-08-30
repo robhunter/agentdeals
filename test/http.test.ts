@@ -69,7 +69,6 @@ function parseSSEData(text: string): any[] {
       try {
         results.push(JSON.parse(line.slice(6)));
       } catch {
-        // skip non-JSON lines
       }
     }
   }
@@ -108,7 +107,6 @@ describe("HTTP transport", () => {
   it("initializes and responds to tool calls over HTTP", async () => {
     proc = await startHttpServer();
 
-    // Initialize
     const initResp = await mcpRequest("/mcp", {
       jsonrpc: "2.0",
       id: 1,
@@ -128,7 +126,6 @@ describe("HTTP transport", () => {
     assert.strictEqual(initData.length, 1);
     assert.strictEqual(initData[0].result.serverInfo.name, "agentdeals");
 
-    // Send initialized notification + list_categories tool call
     const toolResp = await mcpRequest(
       "/mcp",
       [
@@ -156,7 +153,6 @@ describe("HTTP transport", () => {
   it("search_deals works over HTTP", async () => {
     proc = await startHttpServer();
 
-    // Initialize
     const initResp = await mcpRequest("/mcp", {
       jsonrpc: "2.0",
       id: 1,
@@ -171,7 +167,6 @@ describe("HTTP transport", () => {
     const sessionId = initResp.headers.get("mcp-session-id");
     assert.ok(sessionId);
 
-    // Search
     const searchResp = await mcpRequest(
       "/mcp",
       [
@@ -206,7 +201,6 @@ describe("HTTP transport", () => {
   it("supports two concurrent sessions", async () => {
     proc = await startHttpServer();
 
-    // Initialize client A
     const initA = await mcpRequest("/mcp", {
       jsonrpc: "2.0",
       id: 1,
@@ -221,7 +215,6 @@ describe("HTTP transport", () => {
     const sessionA = initA.headers.get("mcp-session-id");
     assert.ok(sessionA, "Client A should get a session ID");
 
-    // Initialize client B
     const initB = await mcpRequest("/mcp", {
       jsonrpc: "2.0",
       id: 1,
@@ -236,10 +229,8 @@ describe("HTTP transport", () => {
     const sessionB = initB.headers.get("mcp-session-id");
     assert.ok(sessionB, "Client B should get a session ID");
 
-    // Sessions should be different
     assert.notStrictEqual(sessionA, sessionB, "Sessions should have different IDs");
 
-    // Both clients can make tool calls independently
     const [toolRespA, toolRespB] = await Promise.all([
       mcpRequest(
         "/mcp",
@@ -349,7 +340,6 @@ describe("HTTP transport", () => {
     assert.ok(toolNames.includes("plan_stack"));
     assert.ok(toolNames.includes("compare_vendors"));
     assert.ok(toolNames.includes("track_changes"));
-    // Verify tool safety annotations
     for (const tool of body.tools) {
       assert.strictEqual(tool.annotations.readOnlyHint, true, `${tool.name} should have readOnlyHint: true`);
       assert.strictEqual(tool.annotations.destructiveHint, false, `${tool.name} should have destructiveHint: false`);
@@ -443,7 +433,6 @@ describe("HTTP transport", () => {
     assert.strictEqual(body.offers.length, 3);
     assert.ok(typeof body.total === "number");
     assert.ok(body.total > 3);
-    // Each offer has expected fields
     for (const o of body.offers) {
       assert.ok(o.vendor);
       assert.ok(o.category);
@@ -454,7 +443,6 @@ describe("HTTP transport", () => {
   it("GET /api/offers filters by query and category", async () => {
     proc = await startHttpServer();
 
-    // Filter by category
     const catResp = await fetch(`http://localhost:${serverPort}/api/offers?category=Databases&limit=100`);
     const catBody = await catResp.json() as any;
     assert.ok(catBody.total > 0);
@@ -462,7 +450,6 @@ describe("HTTP transport", () => {
       assert.strictEqual(o.category, "Databases");
     }
 
-    // Filter by query
     const qResp = await fetch(`http://localhost:${serverPort}/api/offers?q=postgres&limit=100`);
     const qBody = await qResp.json() as any;
     assert.ok(qBody.total > 0);
@@ -497,7 +484,6 @@ describe("HTTP transport", () => {
   it("health endpoint returns session count", async () => {
     proc = await startHttpServer();
 
-    // Initially 0 sessions
     const health0 = await fetch(`http://localhost:${serverPort}/health`);
     const body0 = await health0.json() as any;
     assert.strictEqual(body0.status, "ok");
@@ -511,7 +497,6 @@ describe("HTTP transport", () => {
     assert.ok(body0.stats.tool_calls);
     assert.ok(body0.stats.api_hits);
 
-    // Create a session
     await mcpRequest("/mcp", {
       jsonrpc: "2.0",
       id: 1,
@@ -523,12 +508,10 @@ describe("HTTP transport", () => {
       },
     });
 
-    // Now 1 session
     const health1 = await fetch(`http://localhost:${serverPort}/health`);
     const body1 = await health1.json() as any;
     assert.strictEqual(body1.sessions, 1);
 
-    // Create another session
     await mcpRequest("/mcp", {
       jsonrpc: "2.0",
       id: 1,
@@ -540,36 +523,29 @@ describe("HTTP transport", () => {
       },
     });
 
-    // Now 2 sessions
     const health2 = await fetch(`http://localhost:${serverPort}/health`);
     const body2 = await health2.json() as any;
     assert.strictEqual(body2.sessions, 2);
 
-    // Stats should show 2 sessions connected
     assert.ok(body2.stats.total_sessions >= 2);
   });
 
   it("tracks API hit and landing page stats", async () => {
     proc = await startHttpServer();
 
-    // Record initial stats
     const h0 = await fetch(`http://localhost:${serverPort}/health`);
     const s0 = (await h0.json() as any).stats;
     const initialApiOffers = s0.api_hits["/api/offers"] ?? 0;
     const initialApiCats = s0.api_hits["/api/categories"] ?? 0;
     const initialPageViews = s0.landing_page_views;
 
-    // Hit /api/offers twice
     await fetch(`http://localhost:${serverPort}/api/offers?limit=1`);
     await fetch(`http://localhost:${serverPort}/api/offers?q=test&limit=1`);
 
-    // Hit /api/categories once
     await fetch(`http://localhost:${serverPort}/api/categories`);
 
-    // Hit landing page once
     await fetch(`http://localhost:${serverPort}/`);
 
-    // Check stats incremented
     const h1 = await fetch(`http://localhost:${serverPort}/health`);
     const s1 = (await h1.json() as any).stats;
 
@@ -582,7 +558,6 @@ describe("HTTP transport", () => {
   it("GET /api/stats returns connection stats", async () => {
     proc = await startHttpServer();
 
-    // Check initial stats
     const resp0 = await fetch(`http://localhost:${serverPort}/api/stats`);
     assert.strictEqual(resp0.status, 200);
     assert.strictEqual(resp0.headers.get("content-type"), "application/json");
@@ -593,12 +568,10 @@ describe("HTTP transport", () => {
     assert.ok(typeof stats0.totalToolCallsAllTime === "number");
     assert.ok(typeof stats0.sessionsToday === "number");
     assert.ok(typeof stats0.serverStarted === "string");
-    // serverStarted should be a valid ISO timestamp
     assert.ok(!isNaN(Date.parse(stats0.serverStarted)));
     const initialAllTime = stats0.totalSessionsAllTime;
     const initialToday = stats0.sessionsToday;
 
-    // Create a session
     await mcpRequest("/mcp", {
       jsonrpc: "2.0",
       id: 1,
@@ -610,13 +583,11 @@ describe("HTTP transport", () => {
       },
     });
 
-    // Stats should reflect the new session
     const resp1 = await fetch(`http://localhost:${serverPort}/api/stats`);
     const stats1 = await resp1.json() as any;
     assert.strictEqual(stats1.activeSessions, 1);
     assert.strictEqual(stats1.totalSessionsAllTime, initialAllTime + 1);
     assert.strictEqual(stats1.sessionsToday, initialToday + 1);
-    // Should include clients breakdown with the client name from initialize
     assert.ok(typeof stats1.clients === "object");
     assert.ok(stats1.clients["stats-test"] >= 1, "clients should include stats-test");
   });
@@ -624,13 +595,11 @@ describe("HTTP transport", () => {
   it("GET /api/stats tracks client info from MCP initialize", async () => {
     proc = await startHttpServer();
 
-    // Get initial client counts
     const resp0 = await fetch(`http://localhost:${serverPort}/api/stats`);
     const stats0 = await resp0.json() as any;
     const initialClaude = stats0.clients?.["claude-desktop"] ?? 0;
     const initialCursor = stats0.clients?.["cursor"] ?? 0;
 
-    // Create two sessions with different clients
     await mcpRequest("/mcp", {
       jsonrpc: "2.0",
       id: 1,
@@ -672,7 +641,6 @@ describe("HTTP transport", () => {
   it("logs session_open to stdout on session creation", async () => {
     proc = await startHttpServer();
 
-    // Create a session
     const initResp = await mcpRequest("/mcp", {
       jsonrpc: "2.0",
       id: 1,
@@ -687,19 +655,13 @@ describe("HTTP transport", () => {
     const sessionId = initResp.headers.get("mcp-session-id");
     assert.ok(sessionId);
 
-    // Give a moment for stdout to flush
     await new Promise((r) => setTimeout(r, 100));
 
-    // Read stdout from the process
     const stdout = proc!.stdout!;
     const chunks: Buffer[] = [];
     stdout.on("data", (chunk: Buffer) => chunks.push(chunk));
-    // Drain any buffered data
     await new Promise((r) => setTimeout(r, 200));
 
-    // We need to check what was already written to stdout
-    // Since stdout is piped, we should have captured the session_open log
-    // Let's verify by checking the health endpoint that the session exists
     const health = await fetch(`http://localhost:${serverPort}/health`);
     const body = await health.json() as any;
     assert.strictEqual(body.sessions, 1);
@@ -724,7 +686,6 @@ describe("HTTP transport", () => {
     const body = await response.json() as any;
     assert.ok(typeof body.all_time_total === "number", "Expected all_time_total field");
     assert.ok(body.all_time_total >= body.total, "all_time_total should be >= 30-day total");
-    // Sanity: all_time_total should match unfiltered history
     const allResp = await fetch(`http://localhost:${serverPort}/api/changes?since=2000-01-01`);
     const allBody = await allResp.json() as any;
     assert.strictEqual(body.all_time_total, allBody.total, "all_time_total should match since=2000 total");
@@ -733,19 +694,16 @@ describe("HTTP transport", () => {
   it("GET /api/changes filters by since, type, and vendor", async () => {
     proc = await startHttpServer();
 
-    // Get all changes (use a very old date to get everything)
     const allResp = await fetch(`http://localhost:${serverPort}/api/changes?since=2020-01-01`);
     const allBody = await allResp.json() as any;
     assert.ok(allBody.total > 0, "Should have deal changes with since=2020-01-01");
 
-    // Filter by type
     const typeResp = await fetch(`http://localhost:${serverPort}/api/changes?since=2020-01-01&type=free_tier_removed`);
     const typeBody = await typeResp.json() as any;
     for (const c of typeBody.changes) {
       assert.strictEqual(c.change_type, "free_tier_removed");
     }
 
-    // Filter by vendor
     const vendorResp = await fetch(`http://localhost:${serverPort}/api/changes?since=2020-01-01&vendor=Google`);
     const vendorBody = await vendorResp.json() as any;
     for (const c of vendorBody.changes) {
@@ -768,7 +726,6 @@ describe("HTTP transport", () => {
     const response = await fetch(`http://localhost:${serverPort}/api/changes?since=2020-01-01&vendors=Netlify,OpenAI`);
     assert.strictEqual(response.status, 200);
     const body = await response.json() as any;
-    // Personalized response format
     assert.ok(Array.isArray(body.your_stack_changes), "Expected your_stack_changes array");
     assert.ok(Array.isArray(body.advisory), "Expected advisory array");
     assert.ok(body.summary, "Expected summary object");
@@ -803,7 +760,6 @@ describe("HTTP transport", () => {
   it("GET /api/details/:vendor returns offer details", async () => {
     proc = await startHttpServer();
 
-    // Get a known vendor from /api/offers
     const offersResp = await fetch(`http://localhost:${serverPort}/api/offers?limit=1`);
     const offersBody = await offersResp.json() as any;
     const vendorName = offersBody.offers[0].vendor;
@@ -819,7 +775,6 @@ describe("HTTP transport", () => {
   it("GET /api/details/:vendor?alternatives=true includes alternatives", async () => {
     proc = await startHttpServer();
 
-    // Get a known vendor
     const offersResp = await fetch(`http://localhost:${serverPort}/api/offers?limit=1`);
     const offersBody = await offersResp.json() as any;
     const vendorName = offersBody.offers[0].vendor;
@@ -844,12 +799,10 @@ describe("HTTP transport", () => {
   it("GET /api/details/:vendor is case-insensitive", async () => {
     proc = await startHttpServer();
 
-    // Get a known vendor
     const offersResp = await fetch(`http://localhost:${serverPort}/api/offers?limit=1`);
     const offersBody = await offersResp.json() as any;
     const vendorName = offersBody.offers[0].vendor;
 
-    // Request with different casing
     const lowerName = vendorName.toLowerCase();
     const response = await fetch(`http://localhost:${serverPort}/api/details/${encodeURIComponent(lowerName)}`);
     assert.strictEqual(response.status, 200);
@@ -896,13 +849,11 @@ describe("HTTP transport", () => {
   it("logs session_close on explicit DELETE", async () => {
     proc = await startHttpServer();
 
-    // Collect stdout
     let stdoutData = "";
     proc!.stdout!.on("data", (chunk: Buffer) => {
       stdoutData += chunk.toString();
     });
 
-    // Create a session
     const initResp = await mcpRequest("/mcp", {
       jsonrpc: "2.0",
       id: 1,
@@ -917,25 +868,20 @@ describe("HTTP transport", () => {
     const sessionId = initResp.headers.get("mcp-session-id");
     assert.ok(sessionId);
 
-    // Wait for session_open log
     await new Promise((r) => setTimeout(r, 100));
 
-    // Delete the session
     await fetch(`http://localhost:${serverPort}/mcp`, {
       method: "DELETE",
       headers: { "Mcp-Session-Id": sessionId },
     });
 
-    // Wait for logs to flush
     await new Promise((r) => setTimeout(r, 200));
 
-    // Parse stdout lines as JSON
     const lines = stdoutData.trim().split("\n").filter(Boolean);
     const events = lines.map((l) => {
       try { return JSON.parse(l); } catch { return null; }
     }).filter(Boolean);
 
-    // Should have session_open and session_close events
     const openEvent = events.find((e: any) => e.event === "session_open");
     assert.ok(openEvent, "Should have session_open event");
     assert.strictEqual(openEvent.sessionId, sessionId);
@@ -950,7 +896,6 @@ describe("HTTP transport", () => {
     assert.ok(typeof closeEvent.durationMs === "number");
     assert.ok(closeEvent.durationMs >= 0);
 
-    // Verify session was cleaned up
     const health = await fetch(`http://localhost:${serverPort}/health`);
     const body = await health.json() as any;
     assert.strictEqual(body.sessions, 0);
@@ -1054,7 +999,6 @@ describe("HTTP transport", () => {
   it("prompts/list returns all 6 prompt templates", async () => {
     proc = await startHttpServer();
 
-    // Initialize session
     const initResp = await mcpRequest("/mcp", {
       jsonrpc: "2.0",
       id: 1,
@@ -1068,13 +1012,11 @@ describe("HTTP transport", () => {
     const sessionId = initResp.headers.get("mcp-session-id");
     assert.ok(sessionId);
 
-    // Send initialized notification
     await mcpRequest("/mcp", {
       jsonrpc: "2.0",
       method: "notifications/initialized",
     }, sessionId);
 
-    // List prompts
     const listResp = await mcpRequest("/mcp", {
       jsonrpc: "2.0",
       id: 2,
@@ -1097,20 +1039,16 @@ describe("HTTP transport", () => {
       "new-project-setup",
     ]);
 
-    // Each prompt should have a description
     for (const p of prompts) {
       assert.ok(p.description, `Prompt ${p.name} should have a description`);
     }
 
-    // compare-options should have services argument
     const compareOpts = prompts.find((p: any) => p.name === "compare-options");
     assert.ok(compareOpts.arguments?.some((a: any) => a.name === "services"));
 
-    // check-pricing-changes should have no required arguments
     const checkChanges = prompts.find((p: any) => p.name === "check-pricing-changes");
     assert.ok(!checkChanges.arguments || checkChanges.arguments.length === 0);
 
-    // monitor-vendor-changes should have vendors argument
     const monitorVendors = prompts.find((p: any) => p.name === "monitor-vendor-changes");
     assert.ok(monitorVendors.arguments?.some((a: any) => a.name === "vendors"));
   });
@@ -1118,7 +1056,6 @@ describe("HTTP transport", () => {
   it("prompts/get returns structured message for compare-options", async () => {
     proc = await startHttpServer();
 
-    // Initialize session
     const initResp = await mcpRequest("/mcp", {
       jsonrpc: "2.0",
       id: 1,
@@ -1132,13 +1069,11 @@ describe("HTTP transport", () => {
     const sessionId = initResp.headers.get("mcp-session-id");
     assert.ok(sessionId);
 
-    // Send initialized notification
     await mcpRequest("/mcp", {
       jsonrpc: "2.0",
       method: "notifications/initialized",
     }, sessionId);
 
-    // Get prompt
     const getResp = await mcpRequest("/mcp", {
       jsonrpc: "2.0",
       id: 3,
@@ -1219,7 +1154,6 @@ describe("HTTP transport", () => {
     proc = await startHttpServer();
     const response = await fetch(`http://localhost:${serverPort}/sitemap.xml`);
     const xml = await response.text();
-    // Extract the reports sitemap block and its lastmod
     const reportsBlock = xml.match(/<sitemap>\s*<loc>[^<]*sitemap-reports\.xml<\/loc>\s*<lastmod>([^<]+)<\/lastmod>/);
     assert.ok(reportsBlock, "Should have a sitemap-reports entry with lastmod");
     const lastmod = reportsBlock![1];
@@ -1236,7 +1170,6 @@ describe("HTTP transport", () => {
     const xml = await response.text();
     assert.ok(xml.includes("/category/databases"), "Sitemap should include databases category");
     assert.ok(xml.includes("/category/ai-coding"), "Sitemap should include ai-coding category");
-    // Should have many category entries (54 categories)
     const categoryCount = (xml.match(/\/category\//g) || []).length;
     assert.ok(categoryCount >= 50, `Expected 50+ category URLs in sitemap, got ${categoryCount}`);
   });
@@ -1365,7 +1298,6 @@ describe("HTTP transport", () => {
   it("GET /digest/:week renders digest page with changes", async () => {
     proc = await startHttpServer();
 
-    // Use 2026-w11 which has deal changes (March 2026)
     const response = await fetch(`http://localhost:${serverPort}/digest/2026-w11`);
     assert.strictEqual(response.status, 200);
     assert.ok(response.headers.get("content-type")?.includes("text/html"));
@@ -1408,8 +1340,6 @@ describe("HTTP transport", () => {
   it("sitemap-reports.xml includes ALL weeks with deal changes (past + future)", async () => {
     proc = await startHttpServer();
 
-    // /digest/archive is the canonical list of weeks with deal changes.
-    // The sitemap must include every week the archive shows.
     const archiveRes = await fetch(`http://localhost:${serverPort}/digest/archive`);
     const archiveHtml = await archiveRes.text();
     const archiveWeeks = new Set<string>();
@@ -1420,7 +1350,6 @@ describe("HTTP transport", () => {
     for (const wk of archiveWeeks) {
       assert.ok(xml.includes(`/digest/${wk}`), `Sitemap should include digest week ${wk}`);
     }
-    // Sanity: the sitemap should list substantially more than the old 4-week window
     assert.ok(archiveWeeks.size >= 10, `Expected >=10 archive weeks to meaningfully test; got ${archiveWeeks.size}`);
   });
 
@@ -1547,8 +1476,6 @@ describe("HTTP transport", () => {
     assert.strictEqual(response.headers.get("location"), "/vendor/vercel");
   });
 
-  // Vendor slug alias resolution (issue #989): substring match against vendorSlugMap
-  // so short-form lookups like /vendor/kiro resolve to the canonical slug instead of 404.
   it("GET /vendor/kiro 301-redirects to /vendor/amazon-kiro", async () => {
     proc = await startHttpServer();
 
@@ -1644,8 +1571,6 @@ describe("HTTP transport", () => {
     assert.ok(trendsCount >= 50, `Expected 50+ trends URLs in sitemap, got ${trendsCount}`);
   });
 
-  // --- Alternative-to pages ---
-
   it("GET /alternative-to returns alternatives index page", async () => {
     proc = await startHttpServer();
 
@@ -1680,8 +1605,6 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("/alternative-to"), "Should link to alternatives index");
   });
 
-  // Slug alias resolution on /alternative-to/:slug (issue #991) mirrors /vendor/:slug
-  // behavior from #989/PR #990 — same resolveVendorSlug helper, different route prefix.
   it("GET /alternative-to/kiro 301-redirects to /alternative-to/amazon-kiro", async () => {
     proc = await startHttpServer();
 
@@ -1746,29 +1669,21 @@ describe("HTTP transport", () => {
 
     const response = await fetch(`http://localhost:${serverPort}/sitemap-vendors.xml`);
     const xml = await response.text();
-    // Extract all lastmod dates
     const lastmods = [...xml.matchAll(/<lastmod>([^<]+)<\/lastmod>/g)].map(m => m[1]);
     assert.ok(lastmods.length > 100, `Expected 100+ lastmod entries, got ${lastmods.length}`);
-    // Verify not all dates are the same (the whole point of this feature)
     const uniqueDates = new Set(lastmods);
     assert.ok(uniqueDates.size > 1, `Expected varying lastmod dates, got ${uniqueDates.size} unique date(s): ${[...uniqueDates].join(", ")}`);
-    // All dates should be valid YYYY-MM-DD format
     for (const d of lastmods) {
       assert.match(d, /^\d{4}-\d{2}-\d{2}$/, `Invalid lastmod date format: ${d}`);
     }
-    // No future dates
     const today = new Date().toISOString().split("T")[0];
     for (const d of lastmods) {
       assert.ok(d <= today, `Lastmod date ${d} is in the future`);
     }
-    // Vendor pages should use verifiedDate (spot check: /vendor/vercel should not use today's date)
     const vercelEntry = xml.match(/<url>\s*<loc>[^<]*\/vendor\/vercel<\/loc>\s*<lastmod>([^<]+)<\/lastmod>/);
     assert.ok(vercelEntry, "Should have vercel vendor entry");
-    // The vercel lastmod should be a verifiedDate, not necessarily today
     assert.match(vercelEntry![1], /^\d{4}-\d{2}-\d{2}$/, "Vercel lastmod should be valid date");
   });
-
-  // --- Expiring page ---
 
   it("GET /expiring renders expiring deals timeline page", async () => {
     proc = await startHttpServer();
@@ -1785,8 +1700,6 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("global-nav"), "Should have global nav");
     assert.ok(html.includes("Recently Changed"), "Should have recently changed section");
   });
-
-  // --- Global navigation structure ---
 
   it("global nav uses grouped dropdowns instead of flat links", async () => {
     proc = await startHttpServer();
@@ -1824,8 +1737,6 @@ describe("HTTP transport", () => {
     const html = await response.text();
     assert.ok(html.includes("has-active"), "Insights group should have has-active class when on /expiring");
   });
-
-  // --- Changes page ---
 
   it("GET /changes renders deal change timeline page", async () => {
     proc = await startHttpServer();
@@ -2091,7 +2002,6 @@ describe("HTTP transport", () => {
 
     const response = await fetch(`http://localhost:${serverPort}/estimate`);
     const html = await response.text();
-    // Extract the EST_DATA JSON from the page
     const match = html.match(/var EST_DATA = (\[[\s\S]*?\]);\s*var VENDOR_INFO/);
     assert.ok(match, "Should have EST_DATA JSON");
     const data = JSON.parse(match![1]);
@@ -2257,8 +2167,6 @@ describe("HTTP transport", () => {
     assert.ok(typeof body.offers[0].days_since_verified === "number", "Offer should include days_since_verified");
     assert.ok(body.offers[0].days_since_verified >= 0, "days_since_verified should be non-negative");
   });
-
-  // --- Timely alternatives pages ---
 
   it("GET /localstack-alternatives renders alternatives page", async () => {
     proc = await startHttpServer();
@@ -2882,8 +2790,6 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("/alternatives"), "Should link to hub page");
   });
 
-  // --- Q1 2026 Pricing Report ---
-
   it("GET /q1-2026-developer-pricing-report renders quarterly pricing report", async () => {
     proc = await startHttpServer();
 
@@ -2897,16 +2803,13 @@ describe("HTTP transport", () => {
     assert.ok(html.includes('"Article"'), "Should use Article schema");
     assert.ok(html.includes("canonical"), "Should have canonical link");
     assert.ok(html.includes("global-nav"), "Should have global nav");
-    // Executive summary and stats
     assert.ok(html.includes("Executive Summary"), "Should have executive summary");
     assert.ok(html.includes("By the Numbers"), "Should have by-the-numbers section");
     assert.ok(html.includes("Change Type Breakdown"), "Should have change type breakdown");
-    // Impact analysis
     assert.ok(html.includes("Impact Analysis"), "Should have impact analysis section");
     assert.ok(html.includes("High Impact"), "Should show high impact count");
     assert.ok(html.includes("Medium Impact"), "Should show medium impact count");
     assert.ok(html.includes("Low Impact"), "Should show low impact count");
-    // Biggest stories
     assert.ok(html.includes("Biggest Stories of Q1"), "Should have biggest stories section");
     assert.ok(html.includes("X (Twitter) API Paywall"), "Should have X API story");
     assert.ok(html.includes("MinIO Open Source Killed"), "Should have MinIO story");
@@ -2915,25 +2818,20 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("Firebase Restrictions"), "Should have Firebase story");
     assert.ok(html.includes("HCP Terraform"), "Should have Terraform story");
     assert.ok(html.includes("Spotify API Lockdown"), "Should have Spotify story");
-    // Counter-trend
     assert.ok(html.includes("Counter-Trend: Cloudflare"), "Should have Cloudflare counter-trend section");
     assert.ok(html.includes("Free Queues"), "Should mention Cloudflare Queues");
     assert.ok(html.includes("Startup Program"), "Should mention startup program");
-    // Category and monthly breakdowns
     assert.ok(html.includes("Category Breakdown"), "Should have category breakdown");
     assert.ok(html.includes("Monthly Timeline"), "Should have monthly timeline");
     assert.ok(html.includes("January"), "Should show January data");
     assert.ok(html.includes("March"), "Should show March data");
-    // Change cards by type
     assert.ok(html.includes("Free Tiers Removed"), "Should have removals section");
     assert.ok(html.includes("Limits Tightened"), "Should have restrictions section");
     assert.ok(html.includes("Pricing Restructured"), "Should have restructured section");
     assert.ok(html.includes("Bright Spots"), "Should have expansions section");
-    // Q2 outlook
     assert.ok(html.includes("What to Watch in Q2"), "Should have Q2 outlook section");
     assert.ok(html.includes("OpenAI Assistants API"), "Should mention OpenAI deadline");
     assert.ok(html.includes("Google Tenor"), "Should mention Tenor deadline");
-    // Methodology and cross-links
     assert.ok(html.includes("Methodology"), "Should have methodology section");
     assert.ok(html.includes("Related Guides"), "Should have related guides");
     assert.ok(html.includes("/changes"), "Should link to changes page");
@@ -2961,8 +2859,6 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("/q1-2026-developer-pricing-report"), "Should link to Q1 report");
     assert.ok(html.includes("More Alternatives Guides"), "Should have cross-links");
   });
-
-  // --- Hetzner April 2026 Pricing Analysis ---
 
   it("GET /hetzner-pricing-2026 renders Hetzner pricing analysis page", async () => {
     proc = await startHttpServer();
@@ -3318,7 +3214,6 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("canonical"), "Should have canonical link");
     assert.ok(html.includes("global-nav"), "Should have global nav");
     assert.ok(html.includes("$0"), "Should show $0 cost");
-    // TL;DR section
     assert.ok(html.includes("tldr-box"), "Should have TL;DR box");
     assert.ok(html.includes("Railway"), "Should recommend Railway for hosting");
     assert.ok(html.includes("Neon"), "Should recommend Neon for database");
@@ -3329,7 +3224,6 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("Sentry"), "Should recommend Sentry for monitoring");
     assert.ok(html.includes("PostHog"), "Should recommend PostHog for analytics");
     assert.ok(html.includes("Inngest"), "Should recommend Inngest for background jobs");
-    // Sections
     assert.ok(html.includes("Hosting"), "Should have hosting section");
     assert.ok(html.includes("Database"), "Should have database section");
     assert.ok(html.includes("Authentication"), "Should have auth section");
@@ -3341,16 +3235,13 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("Analytics"), "Should have analytics section");
     assert.ok(html.includes("Background Jobs"), "Should have background jobs section");
     assert.ok(html.includes("Framework"), "Should have framework section");
-    // Growth cost analysis
     assert.ok(html.includes("Growth Path"), "Should have growth path section");
     assert.ok(html.includes("1K-5K"), "Should have 1K users scale");
     assert.ok(html.includes("10K-25K"), "Should have 10K users scale");
     assert.ok(html.includes("50K-100K"), "Should have 100K users scale");
     assert.ok(html.includes("$19/month breakpoint"), "Should have breakpoint analysis");
-    // When to upgrade table
     assert.ok(html.includes("When to Upgrade"), "Should have upgrade guidance");
     assert.ok(html.includes("hit first"), "Should indicate which limits hit first");
-    // Cross-links
     assert.ok(html.includes("outgrow"), "Should have outgrow guidance");
     assert.ok(html.includes("whynot-box"), "Should have why-not callouts");
     assert.ok(html.includes("/hosting-free-tier-comparison-2026"), "Should cross-link to hosting comparison");
@@ -3363,7 +3254,6 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("/free-django-stack"), "Should cross-link to Django stack");
     assert.ok(html.includes("/free-fastapi-stack"), "Should cross-link to FastAPI stack");
     assert.ok(html.includes("/free-go-stack"), "Should cross-link to Go stack");
-    // FAQ
     assert.ok(html.includes("cheapest way to launch a SaaS"), "Should have FAQ content");
     assert.ok(html.includes("build a SaaS for free"), "Should have FAQ content");
     assert.ok(html.includes("best free database for SaaS"), "Should have FAQ content");
@@ -3574,7 +3464,6 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("Methodology"), "Should have methodology section");
     assert.ok(html.includes("Full Scoring Table"), "Should have full scoring table");
     assert.ok(html.includes("/free-startup-stack"), "Should cross-link to startup stack");
-    // New sections added for issue #674
     assert.ok(html.includes("Category Risk Heatmap"), "Should have category risk heatmap");
     assert.ok(html.includes("Pattern Analysis"), "Should have pattern analysis section");
     assert.ok(html.includes("Counter-Trends"), "Should have counter-trends section");
@@ -3896,7 +3785,6 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("FAQPage"), "Should have FAQ schema");
     assert.ok(html.includes("canonical"), "Should have canonical link");
     assert.ok(html.includes("global-nav"), "Should have global nav");
-    // 17 tools across 4 categories
     assert.ok(html.includes("Cursor"), "Should include Cursor");
     assert.ok(html.includes("Windsurf"), "Should include Windsurf");
     assert.ok(html.includes("GitHub Copilot"), "Should include GitHub Copilot");
@@ -3909,7 +3797,6 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("MarsCode"), "Should include MarsCode");
     assert.ok(html.includes("Claude Code"), "Should include Claude Code");
     assert.ok(html.includes("Amazon Kiro"), "Should include Amazon Kiro");
-    // Key sections
     assert.ok(html.includes("Category Breakdown"), "Should have category breakdown");
     assert.ok(html.includes("IDE-Based"), "Should have IDE category");
     assert.ok(html.includes("CLI / Terminal"), "Should have CLI category");
@@ -3937,7 +3824,6 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("FAQPage"), "Should have FAQ schema");
     assert.ok(html.includes("canonical"), "Should have canonical link");
     assert.ok(html.includes("global-nav"), "Should have global nav");
-    // 17+ tools across 4 categories
     assert.ok(html.includes("GitHub Actions"), "Should include GitHub Actions");
     assert.ok(html.includes("GitLab CI"), "Should include GitLab CI");
     assert.ok(html.includes("CircleCI"), "Should include CircleCI");
@@ -3955,7 +3841,6 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("Codefresh"), "Should include Codefresh");
     assert.ok(html.includes("Bitbucket Pipelines"), "Should include Bitbucket Pipelines");
     assert.ok(html.includes("Semaphore CI"), "Should include Semaphore CI");
-    // Key sections
     assert.ok(html.includes("Category Breakdown"), "Should have category breakdown");
     assert.ok(html.includes("General CI/CD Platforms"), "Should have general category");
     assert.ok(html.includes("Cloud-Native CI/CD"), "Should have cloud-native category");
@@ -3970,7 +3855,6 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("/pricing-changes"), "Should cross-link to changes");
     assert.ok(html.includes("/developers"), "Should cross-link to developers");
     assert.ok(html.includes("/ci-cd-alternatives"), "Should cross-link to CI/CD hub");
-    // CI/CD-specific columns
     assert.ok(html.includes("Free Minutes/mo"), "Should have minutes column");
     assert.ok(html.includes("Concurrency"), "Should have concurrency column");
     assert.ok(html.includes("Self-Hosted"), "Should have self-hosted column");
@@ -3988,7 +3872,6 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("FAQPage"), "Should have FAQ schema");
     assert.ok(html.includes("canonical"), "Should have canonical link");
     assert.ok(html.includes("global-nav"), "Should have global nav");
-    // 25+ services across 5 categories
     assert.ok(html.includes("Supabase"), "Should include Supabase");
     assert.ok(html.includes("Neon"), "Should include Neon");
     assert.ok(html.includes("CockroachDB"), "Should include CockroachDB");
@@ -4005,7 +3888,6 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("Weaviate"), "Should include Weaviate");
     assert.ok(html.includes("Hasura Cloud"), "Should include Hasura Cloud");
     assert.ok(html.includes("BigQuery"), "Should include BigQuery");
-    // Key sections
     assert.ok(html.includes("Category Breakdown"), "Should have category breakdown");
     assert.ok(html.includes("Managed PostgreSQL"), "Should have managed postgres category");
     assert.ok(html.includes("Serverless / Edge"), "Should have serverless/edge category");
@@ -4020,7 +3902,6 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("mcp-cta"), "Should have MCP CTA");
     assert.ok(html.includes("/pricing-changes"), "Should cross-link to changes");
     assert.ok(html.includes("/developers"), "Should cross-link to developers");
-    // Database-specific columns
     assert.ok(html.includes("Free Storage"), "Should have storage column");
     assert.ok(html.includes("Free Connections"), "Should have connections column");
     assert.ok(html.includes("FREE TIER REMOVED"), "Should flag PlanetScale removal");
@@ -4038,7 +3919,6 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("FAQPage"), "Should have FAQ schema");
     assert.ok(html.includes("canonical"), "Should have canonical link");
     assert.ok(html.includes("global-nav"), "Should have global nav");
-    // 11 services across 5 categories
     assert.ok(html.includes("Pinecone"), "Should include Pinecone");
     assert.ok(html.includes("Qdrant"), "Should include Qdrant");
     assert.ok(html.includes("Weaviate"), "Should include Weaviate");
@@ -4050,7 +3930,6 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("Supabase pgvector"), "Should include Supabase pgvector");
     assert.ok(html.includes("Neon pgvector"), "Should include Neon pgvector");
     assert.ok(html.includes("MongoDB Atlas Vector Search"), "Should include MongoDB Atlas Vector Search");
-    // Key sections
     assert.ok(html.includes("Category Breakdown"), "Should have category breakdown");
     assert.ok(html.includes("Self-Hosted vs Managed"), "Should have self-hosted vs managed section");
     assert.ok(html.includes("Cost Comparison by Team Size"), "Should have cost analysis");
@@ -4058,10 +3937,8 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("Best-for-Use-Case Recommendations"), "Should have recommendations");
     assert.ok(html.includes("Frequently Asked Questions"), "Should have FAQ");
     assert.ok(html.includes("mcp-cta"), "Should have MCP CTA");
-    // Vector-specific columns
     assert.ok(html.includes("Free Vectors"), "Should have vectors column");
     assert.ok(html.includes("Dimensions"), "Should have dimensions column");
-    // Cross-links
     assert.ok(html.includes("/database-pricing"), "Should cross-link to database pricing");
     assert.ok(html.includes("/free-llm-apis"), "Should cross-link to free LLM APIs");
   });
@@ -4127,7 +4004,6 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("FAQPage"), "Should have FAQ schema");
     assert.ok(html.includes("canonical"), "Should have canonical link");
     assert.ok(html.includes("global-nav"), "Should have global nav");
-    // Key content
     assert.ok(html.includes("August 26, 2026"), "Should have shutdown date");
     assert.ok(html.includes("days"), "Should have days countdown");
     assert.ok(html.includes("Responses API"), "Should mention Responses API");
@@ -4136,7 +4012,6 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("Google Gemini API"), "Should mention Gemini");
     assert.ok(html.includes("LangChain"), "Should mention LangChain");
     assert.ok(html.includes("CrewAI"), "Should mention CrewAI");
-    // Key sections
     assert.ok(html.includes("Cost Comparison"), "Should have cost comparison");
     assert.ok(html.includes("Migration Paths Detailed"), "Should have migration paths");
     assert.ok(html.includes("Free Tier Alternatives"), "Should have free tier section");
@@ -4580,7 +4455,6 @@ describe("HTTP transport", () => {
     assert.ok(html.includes('"Article"'), "Should use Article schema");
     assert.ok(html.includes("canonical"), "Should have canonical link");
     assert.ok(html.includes("global-nav"), "Should have global nav");
-    // Providers
     assert.ok(html.includes("Cloudflare R2"), "Should mention Cloudflare R2");
     assert.ok(html.includes("Backblaze B2"), "Should mention Backblaze B2");
     assert.ok(html.includes("AWS S3"), "Should mention AWS S3");
@@ -4593,7 +4467,6 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("BunnyCDN"), "Should mention BunnyCDN");
     assert.ok(html.includes("ImageKit"), "Should mention ImageKit");
     assert.ok(html.includes("Pinata"), "Should mention Pinata IPFS");
-    // Sections
     assert.ok(html.includes("Zero-Egress"), "Should have zero-egress section");
     assert.ok(html.includes("Cloud Provider Storage"), "Should have cloud provider section");
     assert.ok(html.includes("Media"), "Should have media/CDN section");
@@ -4870,8 +4743,6 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("More Alternatives Guides"), "Should have cross-links");
   });
 
-  // --- Search page ---
-
   it("GET /search renders search page with search box", async () => {
     proc = await startHttpServer();
 
@@ -4988,8 +4859,6 @@ describe("HTTP transport", () => {
     assert.ok(html.includes('value="newest"'), "Should preserve sort in hidden input");
   });
 
-  // --- BreadcrumbList structured data ---
-
   it("vendor page has BreadcrumbList JSON-LD", async () => {
     proc = await startHttpServer();
 
@@ -5028,8 +4897,6 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("Alternatives"), "Breadcrumb should include Alternatives level");
     assert.ok(html.includes("Heroku"), "Breadcrumb should include vendor name");
   });
-
-  // --- Global navigation ---
 
   it("landing page has global navigation with all section links", async () => {
     proc = await startHttpServer();
@@ -5076,8 +4943,6 @@ describe("HTTP transport", () => {
       assert.ok(html.includes("global-nav-home"), `${page} should have AgentDeals home link`);
     }
   });
-
-  // --- FAQ structured data ---
 
   it("vendor page has FAQ structured data and visible FAQ section", async () => {
     proc = await startHttpServer();
@@ -5132,12 +4997,10 @@ describe("HTTP transport", () => {
     assert.strictEqual(response.headers.get("content-type"), "image/png");
     assert.ok(response.headers.get("cache-control")?.includes("public"));
     const buffer = Buffer.from(await response.arrayBuffer());
-    // PNG magic bytes
     assert.strictEqual(buffer[0], 0x89);
-    assert.strictEqual(buffer[1], 0x50); // P
-    assert.strictEqual(buffer[2], 0x4e); // N
-    assert.strictEqual(buffer[3], 0x47); // G
-    // Verify 1200x630 dimensions from PNG header
+    assert.strictEqual(buffer[1], 0x50);
+    assert.strictEqual(buffer[2], 0x4e);
+    assert.strictEqual(buffer[3], 0x47);
     const width = buffer.readUInt32BE(16);
     const height = buffer.readUInt32BE(20);
     assert.strictEqual(width, 1200, "OG image should be 1200px wide");
@@ -5383,24 +5246,18 @@ describe("page view tracking", () => {
 
   it("page_views_today appears in stats response", async () => {
     proc = await startHttpServer();
-    // Visit a page first to increment counter
     await fetch(`http://localhost:${serverPort}/category/databases`);
     const response = await fetch(`http://localhost:${serverPort}/api/stats`);
     const text = await response.text();
-    // The getStats export isn't used by /api/stats (it uses getConnectionStats),
-    // but page_views_today may be in the response if getStats is used elsewhere
     assert.strictEqual(response.status, 200);
   });
 
   it("page views increment on page visit", async () => {
     proc = await startHttpServer();
-    // Get initial count
     const before = await fetch(`http://localhost:${serverPort}/api/pageviews`);
     const dataBefore = await before.json() as { today: { total: number } };
     const initialTotal = dataBefore.today.total;
-    // Visit a page
     await fetch(`http://localhost:${serverPort}/vendor/vercel`);
-    // Check count increased
     const after = await fetch(`http://localhost:${serverPort}/api/pageviews`);
     const dataAfter = await after.json() as { today: { total: number } };
     assert.ok(dataAfter.today.total >= initialTotal, "Page views should not decrease after visit");
@@ -5439,7 +5296,6 @@ describe("301 canonical hostname redirect", () => {
   });
 
   it("does NOT redirect /mcp endpoint", async () => {
-    // GET /mcp without session returns 400, but should NOT be 301
     const response = await fetch(`http://localhost:${redirectPort}/mcp`, { redirect: "manual" });
     assert.notStrictEqual(response.status, 301, "MCP should not redirect");
   });
@@ -5460,8 +5316,6 @@ describe("301 canonical hostname redirect", () => {
   });
 
   it("no redirect when BASE_URL matches request host", async () => {
-    // Default server has BASE_URL matching localhost (or not set to external domain)
-    // This test uses a separate server with matching BASE_URL
     let proc: ChildProcess | null = null;
     try {
       proc = await startHttpServer();
@@ -5535,7 +5389,6 @@ describe("IndexNow integration", () => {
   });
 
   it("does not serve key file when INDEXNOW_KEY is not set", async () => {
-    // This test uses a separate server without INDEXNOW_KEY
     let proc: ChildProcess | null = null;
     try {
       proc = await startHttpServer();
@@ -5812,7 +5665,6 @@ describe("shutdown tracker page", () => {
     assert.ok(response.headers.get("content-type")?.includes("text/html"));
     const html = await response.text();
 
-    // Page structure
     assert.ok(html.includes("<title>Stack Health Check"), "Should have health check page title");
     assert.ok(html.includes("application/ld+json"), "Should have JSON-LD");
     assert.ok(html.includes("WebApplication"), "Should have WebApplication JSON-LD type");
@@ -5821,51 +5673,40 @@ describe("shutdown tracker page", () => {
     assert.ok(html.includes("/stack-check"), "Should reference /stack-check");
     assert.ok(html.includes("global-nav"), "Should have global nav");
 
-    // Input section
     assert.ok(html.includes("stack-input"), "Should have stack input field");
     assert.ok(html.includes("check-btn"), "Should have check button");
     assert.ok(html.includes("checkStack"), "Should have checkStack function");
 
-    // Preset stacks (at least 3)
     assert.ok(html.includes("preset-btn"), "Should have preset stack buttons");
     assert.ok(html.includes("MERN Stack"), "Should have MERN preset");
     assert.ok(html.includes("JAMstack"), "Should have JAMstack preset");
     assert.ok(html.includes("Serverless"), "Should have Serverless preset");
 
-    // Results area
     assert.ok(html.includes("grade-section"), "Should have grade section");
     assert.ok(html.includes("risk-summary"), "Should have risk summary");
     assert.ok(html.includes("service-cards"), "Should have service cards");
     assert.ok(html.includes("gaps-section"), "Should have gaps section");
     assert.ok(html.includes("recs-section"), "Should have recommendations section");
 
-    // Shareable URLs
     assert.ok(html.includes("share-bar"), "Should have share bar");
     assert.ok(html.includes("copyShareUrl"), "Should have copy share URL function");
 
-    // SEO
     assert.ok(html.includes("free tier health check"), "Should have SEO keywords");
     assert.ok(html.includes("og:title"), "Should have OG title");
     assert.ok(html.includes("og:description"), "Should have OG description");
 
-    // Client-side data
     assert.ok(html.includes("VENDOR_LOOKUP"), "Should embed vendor lookup data");
     assert.ok(html.includes("/api/audit-stack"), "Should call audit-stack API");
 
-    // FAQ
     assert.ok(html.includes("How does the Stack Health Check work"), "Should have FAQ");
 
-    // Related links
     assert.ok(html.includes("/free-tier-risk"), "Should link to risk index");
     assert.ok(html.includes("/estimate"), "Should link to cost estimator");
 
-    // MCP CTA
     assert.ok(html.includes("mcp-cta"), "Should have MCP CTA");
 
-    // No unresolved template variables
     assert.ok(!html.includes("${BASE_URL}"), "Should not have unresolved BASE_URL");
 
-    // Auto-check from URL params
     assert.ok(html.includes("URLSearchParams"), "Should parse URL params for auto-check");
   });
 
@@ -5893,7 +5734,6 @@ describe("shutdown tracker page", () => {
     assert.strictEqual(response.status, 200);
     const html = await response.text();
 
-    // Page structure
     assert.ok(html.includes("<title>Compare Tool"), "Should have compare tool page title");
     assert.ok(html.includes("application/ld+json"), "Should have JSON-LD");
     assert.ok(html.includes("WebApplication"), "Should have WebApplication JSON-LD type");
@@ -5902,27 +5742,21 @@ describe("shutdown tracker page", () => {
     assert.ok(html.includes("/compare-tool"), "Should reference /compare-tool");
     assert.ok(html.includes("global-nav"), "Should have global nav");
 
-    // Input section
     assert.ok(html.includes("vendor-a"), "Should have vendor A input");
     assert.ok(html.includes("vendor-b"), "Should have vendor B input");
     assert.ok(html.includes("doCompare"), "Should have compare function");
     assert.ok(html.includes("vendor-list"), "Should have vendor datalist for autocomplete");
 
-    // Presets
     assert.ok(html.includes("preset-btn"), "Should have preset matchup buttons");
     assert.ok(html.includes("Vercel vs Netlify"), "Should have Vercel vs Netlify preset");
 
-    // Random button
     assert.ok(html.includes("randomMatchup"), "Should have random matchup button");
 
-    // Share functionality
     assert.ok(html.includes("share-bar"), "Should have share bar");
     assert.ok(html.includes("copyShareUrl"), "Should have copy share URL function");
 
-    // FAQ
     assert.ok(html.includes("How does the comparison tool work"), "Should have FAQ section");
 
-    // SEO
     assert.ok(html.includes("og:title"), "Should have OG title");
     assert.ok(html.includes("og:description"), "Should have OG description");
   });
@@ -5952,7 +5786,6 @@ describe("shutdown tracker page", () => {
     assert.ok(response.headers.get("content-type")?.includes("text/html"));
     const html = await response.text();
 
-    // Page structure
     assert.ok(html.includes("<title>Budget Stack Builder"), "Should have budget builder page title");
     assert.ok(html.includes("application/ld+json"), "Should have JSON-LD");
     assert.ok(html.includes("WebApplication"), "Should have WebApplication JSON-LD type");
@@ -5961,72 +5794,57 @@ describe("shutdown tracker page", () => {
     assert.ok(html.includes("/budget-builder"), "Should reference /budget-builder");
     assert.ok(html.includes("global-nav"), "Should have global nav");
 
-    // Budget input section
     assert.ok(html.includes("budget-input"), "Should have budget input field");
     assert.ok(html.includes("budget-preset"), "Should have budget preset buttons");
     assert.ok(html.includes("setBudget"), "Should have setBudget function");
 
-    // Budget preset amounts
     assert.ok(html.includes("$0"), "Should have $0 budget preset");
     assert.ok(html.includes("$10"), "Should have $10 budget preset");
     assert.ok(html.includes("$25"), "Should have $25 budget preset");
     assert.ok(html.includes("$50"), "Should have $50 budget preset");
     assert.ok(html.includes("$100"), "Should have $100 budget preset");
 
-    // Project type presets (at least 3)
     assert.ok(html.includes("project-preset"), "Should have project type presets");
     assert.ok(html.includes("Side Project"), "Should have Side Project preset");
     assert.ok(html.includes("Startup MVP"), "Should have Startup MVP preset");
     assert.ok(html.includes("Production App"), "Should have Production App preset");
     assert.ok(html.includes("Data / ML Project"), "Should have Data/ML preset");
 
-    // Category selection
     assert.ok(html.includes("cat-toggle"), "Should have category toggle buttons");
     assert.ok(html.includes("Database"), "Should have Database category");
     assert.ok(html.includes("Hosting"), "Should have Hosting category");
     assert.ok(html.includes("Auth"), "Should have Auth category");
 
-    // Build button
     assert.ok(html.includes("build-btn"), "Should have build button");
     assert.ok(html.includes("buildStack"), "Should have buildStack function");
 
-    // Results area
     assert.ok(html.includes("budget-bar"), "Should have budget bar");
     assert.ok(html.includes("summary-cards"), "Should have summary cards");
     assert.ok(html.includes("stack-cards"), "Should have stack cards");
     assert.ok(html.includes("risk-summary"), "Should have risk summary");
     assert.ok(html.includes("savings-callout"), "Should have savings callout");
 
-    // Recommendation engine
     assert.ok(html.includes("CATEGORY_VENDORS"), "Should embed category vendor data");
     assert.ok(html.includes("recommendVendor"), "Should have recommendation function");
 
-    // Shareable URLs
     assert.ok(html.includes("share-bar"), "Should have share bar");
     assert.ok(html.includes("copyShareUrl"), "Should have copy share URL function");
 
-    // I'm Feeling Lucky
     assert.ok(html.includes("feelingLucky"), "Should have feeling lucky function");
 
-    // FAQ
     assert.ok(html.includes("How does the Budget Stack Builder work"), "Should have FAQ");
 
-    // Related links
     assert.ok(html.includes("/estimate"), "Should link to cost estimator");
     assert.ok(html.includes("/stack-check"), "Should link to health check");
 
-    // MCP CTA
     assert.ok(html.includes("mcp-cta"), "Should have MCP CTA");
 
-    // SEO
     assert.ok(html.includes("og:title"), "Should have OG title");
     assert.ok(html.includes("og:description"), "Should have OG description");
     assert.ok(html.includes("budget developer stack"), "Should have SEO keywords");
 
-    // No unresolved template variables
     assert.ok(!html.includes("${BASE_URL}"), "Should not have unresolved BASE_URL");
 
-    // Auto-load from URL params
     assert.ok(html.includes("URLSearchParams"), "Should parse URL params for auto-load");
   });
 
@@ -6176,7 +5994,6 @@ describe("shutdown tracker page", () => {
     assert.ok(html.includes("FAQPage"), "Should have FAQ schema");
     assert.ok(html.includes("canonical"), "Should have canonical link");
     assert.ok(html.includes("global-nav"), "Should have global nav");
-    // Key platforms
     assert.ok(html.includes("Railway"), "Should include Railway");
     assert.ok(html.includes("Vercel"), "Should include Vercel");
     assert.ok(html.includes("Render"), "Should include Render");
@@ -6186,7 +6003,6 @@ describe("shutdown tracker page", () => {
     assert.ok(html.includes("Deno Deploy"), "Should include Deno Deploy");
     assert.ok(html.includes("Google Cloud Run"), "Should include Google Cloud Run");
     assert.ok(html.includes("Heroku"), "Should include Heroku");
-    // Key sections
     assert.ok(html.includes("Category Breakdown"), "Should have category breakdown");
     assert.ok(html.includes("Traditional PaaS"), "Should have PaaS category");
     assert.ok(html.includes("Edge / Serverless"), "Should have edge category");
@@ -6246,13 +6062,11 @@ describe("shutdown tracker page", () => {
     assert.ok(Array.isArray(body.changes), "Should have changes array");
     assert.ok(Array.isArray(body.categories), "Should have categories list");
     assert.deepStrictEqual(body.categories, ["ide", "cli", "cloud-agent", "app-builder"]);
-    // Check tool structure
     const tool = body.tools[0];
     assert.ok(tool.vendor, "Tool should have vendor");
     assert.ok(tool.category, "Tool should have category");
     assert.ok(tool.description, "Tool should have description");
     assert.ok(tool.vendor_page, "Tool should have vendor_page link");
-    // Check known tools present
     const vendors = body.tools.map((t: any) => t.vendor);
     assert.ok(vendors.includes("Cursor"), "Should include Cursor");
     assert.ok(vendors.includes("Claude Code"), "Should include Claude Code");
@@ -6283,7 +6097,6 @@ describe("shutdown tracker page", () => {
     assert.ok(html.includes("FAQPage"), "Should have FAQ schema");
     assert.ok(html.includes("canonical"), "Should have canonical link");
     assert.ok(html.includes("global-nav"), "Should have global nav");
-    // Key providers
     assert.ok(html.includes("OpenAI"), "Should include OpenAI");
     assert.ok(html.includes("Anthropic"), "Should include Anthropic");
     assert.ok(html.includes("Google Gemini"), "Should include Google Gemini");
@@ -6291,7 +6104,6 @@ describe("shutdown tracker page", () => {
     assert.ok(html.includes("DeepSeek"), "Should include DeepSeek");
     assert.ok(html.includes("OpenRouter"), "Should include OpenRouter");
     assert.ok(html.includes("Cerebras"), "Should include Cerebras");
-    // Key sections
     assert.ok(html.includes("Provider Breakdown"), "Should have provider breakdown");
     assert.ok(html.includes("Frontier Labs"), "Should have frontier category");
     assert.ok(html.includes("Inference Providers"), "Should have inference category");
@@ -6369,7 +6181,6 @@ describe("startup credits comparison page", () => {
     assert.ok(html.includes("FAQPage"), "Should have FAQ schema");
     assert.ok(html.includes("canonical"), "Should have canonical link");
     assert.ok(html.includes("global-nav"), "Should have global nav");
-    // Key programs
     assert.ok(html.includes("AWS Activate"), "Should include AWS Activate");
     assert.ok(html.includes("Google Cloud"), "Should include Google Cloud");
     assert.ok(html.includes("Microsoft Founders Hub"), "Should include Microsoft Founders Hub");
@@ -6378,7 +6189,6 @@ describe("startup credits comparison page", () => {
     assert.ok(html.includes("Stripe Atlas"), "Should include Stripe Atlas");
     assert.ok(html.includes("Brex"), "Should include Brex");
     assert.ok(html.includes("Mercury"), "Should include Mercury");
-    // Key sections
     assert.ok(html.includes("Category Breakdown"), "Should have category breakdown");
     assert.ok(html.includes("Cloud Infrastructure"), "Should have cloud category");
     assert.ok(html.includes("Fintech"), "Should have fintech category");
@@ -6422,8 +6232,6 @@ describe("startup credits comparison page", () => {
       assert.strictEqual(program.category, "cloud-infrastructure", `${program.vendor} should be categorized as cloud-infrastructure`);
     }
   });
-
-  // --- Events pages ---
 
   it("GET /events renders events index page", async () => {
     proc = await startHttpServer();

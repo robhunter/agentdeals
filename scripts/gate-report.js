@@ -1,15 +1,5 @@
 #!/usr/bin/env node
 
-/**
- * Report what the change gate would do to records already in the log.
- *
- * Usage:
- *   node scripts/gate-report.js                        # every machine-detected record, first layer only
- *   node scripts/gate-report.js --on 2026-08-28        # only records recorded that day
- *   node scripts/gate-report.js --confirm              # also ask the second-opinion pass
- *   node scripts/gate-report.js --fetch                # re-read each source_url so the price-signal rule applies
- */
-
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { readChangeLog, CHANGES_PATH, DETECTED_BY_AI } from "./change-log.js";

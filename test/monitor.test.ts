@@ -56,22 +56,22 @@ describe("pricing monitor", () => {
     });
 
     it("returns true for daily vendors checked >24h ago", () => {
-      const lastCheck = "2026-03-02T10:00:00Z"; // 26 hours ago
+      const lastCheck = "2026-03-02T10:00:00Z";
       assert.strictEqual(isDueForCheck({ interval: "daily" }, lastCheck, now), true);
     });
 
     it("returns false for daily vendors checked <24h ago", () => {
-      const lastCheck = "2026-03-03T10:00:00Z"; // 2 hours ago
+      const lastCheck = "2026-03-03T10:00:00Z";
       assert.strictEqual(isDueForCheck({ interval: "daily" }, lastCheck, now), false);
     });
 
     it("returns true for weekly vendors checked >168h ago", () => {
-      const lastCheck = "2026-02-24T10:00:00Z"; // 8 days ago
+      const lastCheck = "2026-02-24T10:00:00Z";
       assert.strictEqual(isDueForCheck({ interval: "weekly" }, lastCheck, now), true);
     });
 
     it("returns false for weekly vendors checked <168h ago", () => {
-      const lastCheck = "2026-03-01T12:00:00Z"; // 2 days ago
+      const lastCheck = "2026-03-01T12:00:00Z";
       assert.strictEqual(isDueForCheck({ interval: "weekly" }, lastCheck, now), false);
     });
   });

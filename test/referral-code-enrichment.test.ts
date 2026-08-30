@@ -88,7 +88,6 @@ describe("MCP tools referral_code enrichment (via local REST proxy)", () => {
               return;
             }
           } catch {
-            // not valid JSON yet
           }
         }
         buffer = lines[lines.length - 1];
@@ -151,7 +150,6 @@ describe("MCP tools referral_code enrichment (via local REST proxy)", () => {
   it("compare_vendors two-vendor mode includes referral_codes map with explicit null for vendors without codes", async () => {
     const body = await initAndCall("compare_vendors", { vendors: ["Railway", "Vercel"] });
     assert.ok(body.referral_codes, "Two-vendor response should have referral_codes map");
-    // The map key uses the canonical vendor name from the store, which may differ in case from user input.
     const keys = Object.keys(body.referral_codes);
     const railwayKey = keys.find(k => k.toLowerCase() === "railway");
     const vercelKey = keys.find(k => k.toLowerCase() === "vercel");
@@ -197,7 +195,6 @@ describe("REST /api/offers referral_code enrichment", () => {
     assert.ok(body.offers.length > 0, "Should have some offers");
     for (const offer of body.offers) {
       assert.ok("referral_code" in offer, `Offer for ${offer.vendor} missing referral_code field`);
-      // either null or matching shape
       if (offer.referral_code !== null) {
         const rc = offer.referral_code as Record<string, unknown>;
         assert.ok(rc.code, "referral_code.code should be present");

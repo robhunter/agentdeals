@@ -1,18 +1,5 @@
 #!/usr/bin/env node
 
-/**
- * Report, per offer, whether anything readable states the terms we publish for
- * it — for records whose cited page does not name them (#1109 AC-3, AC-4).
- *
- * For each offer it tries, in order:
- *   1. a deep link on the aggregator it is already sourced from
- *   2. the vendor's own site, guessed from the vendor name
- * and reports what each answered. It repoints nothing.
- *
- * Usage:
- *   node scripts/aggregator-source-audit.js --out /tmp/aggregator.json
- */
-
 import { readFileSync, writeFileSync } from "node:fs";
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";

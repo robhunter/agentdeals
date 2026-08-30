@@ -992,7 +992,7 @@ export function parseConfirmation(raw) {
       try {
         const parsed = accept(JSON.parse(match[0]));
         if (parsed) return { verdict: parsed.change, reason: parsed.reason ?? null };
-      } catch { /* fall through */ }
+      } catch {}
     }
   }
   return { verdict: "unparsed", reason: null };

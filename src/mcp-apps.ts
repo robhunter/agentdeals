@@ -1,14 +1,6 @@
-/**
- * MCP Apps UI resources for AgentDeals tools.
- *
- * Each tool gets a companion UI resource that renders an interactive widget
- * in MCP Apps-capable clients (Claude, ChatGPT, VS Code, etc.).
- * Non-MCP-Apps clients still receive the text/JSON fallback.
- */
 import { registerAppTool, registerAppResource, RESOURCE_MIME_TYPE } from "@modelcontextprotocol/ext-apps/server";
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 
-// Shared CSS variables matching agentdeals.dev dark theme
 const SHARED_STYLES = `
   * { margin: 0; padding: 0; box-sizing: border-box; }
   body {
@@ -46,7 +38,6 @@ const SHARED_STYLES = `
   .link-row { margin-top: 12px; font-size: 13px; }
 `;
 
-// Shared App bridge script (vanilla JS, no framework)
 const APP_BRIDGE_SCRIPT = `
   import { App, PostMessageTransport } from "@modelcontextprotocol/ext-apps";
 
@@ -73,7 +64,6 @@ const APP_BRIDGE_SCRIPT = `
 
 const BASE_URL = "https://agentdeals.dev";
 
-// --- search_deals UI ---
 function searchDealsHtml(): string {
   return `<!DOCTYPE html>
 <html><head><meta charset="utf-8"><style>${SHARED_STYLES}
@@ -158,7 +148,6 @@ function esc(s) { if (!s) return ""; const d = document.createElement("div"); d.
 </script></body></html>`;
 }
 
-// --- plan_stack UI ---
 function planStackHtml(): string {
   return `<!DOCTYPE html>
 <html><head><meta charset="utf-8"><style>${SHARED_STYLES}
@@ -266,7 +255,6 @@ function esc(s) { if (!s) return ""; const d = document.createElement("div"); d.
 </script></body></html>`;
 }
 
-// --- compare_vendors UI ---
 function compareVendorsHtml(): string {
   return `<!DOCTYPE html>
 <html><head><meta charset="utf-8"><style>${SHARED_STYLES}
@@ -364,7 +352,6 @@ function esc(s) { if (!s) return ""; const d = document.createElement("div"); d.
 </script></body></html>`;
 }
 
-// --- track_changes UI ---
 function trackChangesHtml(): string {
   return `<!DOCTYPE html>
 <html><head><meta charset="utf-8"><style>${SHARED_STYLES}
@@ -514,10 +501,6 @@ function esc(s) { if (!s) return ""; const d = document.createElement("div"); d.
 </script></body></html>`;
 }
 
-/**
- * Register all MCP Apps UI resources on the server.
- * Call this after creating the McpServer.
- */
 export function registerMcpAppsResources(server: McpServer): void {
   registerAppResource(
     server, "Search Deals View", "ui://agentdeals/search-deals",
@@ -552,7 +535,6 @@ export function registerMcpAppsResources(server: McpServer): void {
   );
 }
 
-/** UI metadata to add to tool configs */
 export const TOOL_UI_META = {
   search_deals: { ui: { resourceUri: "ui://agentdeals/search-deals" } },
   plan_stack: { ui: { resourceUri: "ui://agentdeals/plan-stack" } },

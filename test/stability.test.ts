@@ -103,11 +103,6 @@ describe("classifyStability", () => {
     assert.strictEqual(classifyStability(changes), "improving");
   });
 
-  // #1038: this used to assert `pricing_model_change` was neutral. All five
-  // records of that type describe a free tier getting worse — Xata retiring
-  // its SaaS free tier, Xero ending free API access, X migrating legacy free
-  // users to pay-per-use — so reading them as neutral rendered Xata `stable`.
-  // `rebranded` is now the only genuinely neutral type: a naming event.
   it("returns stable for vendor with only neutral changes", async () => {
     const { classifyStability } = await import("../dist/data.js");
     const changes = [{
@@ -181,11 +176,9 @@ describe("searchOffers stability filter", () => {
   it("filters results by stability class", async () => {
     const { searchOffers, enrichOffers, getStabilityMap } = await import("../dist/data.js");
 
-    // Get results filtered to stable only
     const stableResults = searchOffers(undefined, undefined, undefined, undefined, "stable");
     assert.ok(stableResults.length > 0, "Should find stable vendors");
 
-    // Verify all returned results are actually stable
     const stabilityMap = getStabilityMap();
     for (const offer of stableResults) {
       const stability = stabilityMap.get(offer.vendor.toLowerCase()) ?? "stable";

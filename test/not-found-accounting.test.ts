@@ -1,20 +1,3 @@
-// A request that does not resolve to a page is not a page view (#1029).
-//
-// The defect these lock: 84% of the page views we recorded on 2026-08-25 were a scanner
-// walking paths we do not serve, and the same requests inflated every client class's hit
-// count on /api/traffic. Both figures are published, and both were wrong.
-//
-// The properties under test are the ones that make the numbers quotable:
-//   - a non-resolving request is counted, under its own name, outside every total
-//   - a redirect is counted apart from both, because the request that follows it is the
-//     page view and counting both would double it
-//   - the excluded traffic stays *attributable* — bounded sample, client class, path —
-//     because "scanner" and "broken integration" lead to opposite decisions
-//   - none of it spends a Redis command (#1023's budget still binds)
-//   - the pre-#1021 junk key space is repaired, and what could not be repaired says so
-//
-// Hermetic: Upstash is replaced by an in-process fake that actually stores values.
-
 import { describe, it, beforeEach, afterEach } from "node:test";
 import assert from "node:assert";
 import { tmpdir } from "node:os";
@@ -165,8 +148,6 @@ describe("404s are not page views (#1029)", () => {
       assert.equal(requestOutcome(404), "not_found");
       assert.equal(requestOutcome(410), "not_found");
       assert.equal(requestOutcome(500), "not_found");
-      // A caller that recorded no status is recording an intent, not a response. It gets
-      // the pre-#1029 reading rather than being silently reclassified as a failure.
       assert.equal(requestOutcome(undefined), "served");
     });
   });
@@ -174,7 +155,6 @@ describe("404s are not page views (#1029)", () => {
   describe("the excluded traffic is out of every total we would quote", () => {
     it("reproduces the reported shape: a scan burst leaves the headline figures alone", async () => {
       await boot();
-      // 100 scanner 404s against 12 real page views, roughly the ratio production showed.
       for (let i = 0; i < 100; i++) {
         recordPageView(`/wp-admin-${i}`, UA.chrome, undefined, 404);
         recordTraffic(`/wp-admin-${i}`, UA.curl, 404);
@@ -214,7 +194,6 @@ describe("404s are not page views (#1029)", () => {
       await boot();
       recordPageView("/nope", UA.chrome, undefined, 404);
       recordPageView("/", UA.chrome, undefined, 200);
-      // getStats().page_views_today is a second surface on the same number, on /api/metrics.
       assert.equal(getStats().page_views_today, 1);
     });
 
@@ -237,8 +216,6 @@ describe("404s are not page views (#1029)", () => {
       assert.equal(traffic.not_found_total, 0);
       assert.equal(traffic.redirects_by_class.browser, 1);
       assert.equal(storedSnapshot().days[today()][REDIRECT_KEY], 1);
-      // ...and it must not show up as a route the class read, or the breakdown would
-      // disagree with the total it sits next to.
       const routes = (traffic.top_routes_by_class.browser ?? []).map((r: any) => r.route);
       assert.deepEqual(routes, ["/compare/:slug"], `a redirect leaked into the route list: ${routes}`);
       assert.equal(
@@ -266,12 +243,9 @@ describe("404s are not page views (#1029)", () => {
       recordTraffic("/broken", UA.googlebot, 500);
 
       const sample = getTrafficReport().not_found_sample;
-      // A served page is not a failure, and neither is a redirect — the sample exists to
-      // characterise traffic we could not answer, so anything else in it is noise.
       assert.equal(sample.length, 2, "only non-resolving requests are sampled");
       assert.ok(!sample.some((s: any) => s.path === "/vendor/neon"), "a served page is not sampled");
       assert.ok(!sample.some((s: any) => s.path === "/vendors/neon"), "a redirect is not sampled");
-      // Newest first: an operator reading this wants the most recent burst at the top.
       assert.equal(sample[0].path, "/broken");
       assert.equal(sample[0].status, 500);
       assert.equal(sample[0].client_class, "search_crawler");
@@ -294,9 +268,6 @@ describe("404s are not page views (#1029)", () => {
     it("bounds it in memory too, between flushes", async () => {
       await boot();
       for (let i = 0; i < 5000; i++) recordTraffic(`/scan-${i}`, UA.curl, 404);
-      // Nothing has been flushed, so the snapshot cannot show the buffer. A scan running
-      // faster than the flush interval must not accumulate one object per request in
-      // memory — the pending-work counter is where that would show.
       const pending = getTelemetryHealth().pending_page_view_keys;
       assert.ok(pending <= 60, `pending page-view work grew to ${pending} for 5,000 scanned paths`);
     });
@@ -305,9 +276,6 @@ describe("404s are not page views (#1029)", () => {
       await boot();
       for (let i = 0; i < 40; i++) recordTraffic(`/stored-${i}`, UA.curl, 404);
       await flushPending();
-      // These are in the pending delta, not the snapshot. A read merges the two, and the
-      // merge is the only thing standing between 50 stored + 50 buffered and a 100-entry
-      // answer from a field documented as holding the last 50.
       for (let i = 0; i < 40; i++) recordTraffic(`/buffered-${i}`, UA.curl, 404);
 
       const sample = getTrafficReport().not_found_sample;
@@ -355,7 +323,6 @@ describe("404s are not page views (#1029)", () => {
       const sample = snapshot.not_found_sample[0];
       assert.ok(sample.path.length <= 83, `path not truncated: ${sample.path.length}`);
       assert.ok(!/[<>"'`&\\]/.test(sample.path), `unescaped markup survived: ${sample.path}`);
-      // The bounded key space is what #1018 bought; a sample must not spend it back.
       for (const map of [snapshot.days[today()] ?? {}, snapshot.all_time, snapshot.class_routes[today()] ?? {}]) {
         for (const key of Object.keys(map)) {
           assert.ok(!key.includes("script"), `sample path leaked into a key: ${key}`);
@@ -369,8 +336,6 @@ describe("404s are not page views (#1029)", () => {
       recordTraffic("/probe", UA.curl, 404);
       await flushPending();
 
-      // A blob written by a future build, a hand edit, or a bug: whatever it claims, a
-      // reader must see the documented 50 and the next flush must store 50.
       const raw = JSON.parse(redis.values.get(PAGE_VIEWS_KEY)!);
       raw.not_found_sample = Array.from({ length: 500 }, (_, i) => ({
         ts: new Date().toISOString(),
@@ -393,8 +358,6 @@ describe("404s are not page views (#1029)", () => {
       recordTraffic("/probe", UA.curl, 404);
       await flushPending();
 
-      // Simulate a hand-edited or older blob: the stored path is the one field that
-      // originated in a request line, so it is re-validated on the way back in.
       const raw = JSON.parse(redis.values.get(PAGE_VIEWS_KEY)!);
       raw.not_found_sample.push({ ts: "x", client_class: "browser", status: 404, path: "/<img onerror=1>" });
       redis.values.set(PAGE_VIEWS_KEY, JSON.stringify(raw));
@@ -416,7 +379,6 @@ describe("404s are not page views (#1029)", () => {
       assert.equal(window.not_found_by_class.browser, 3);
       assert.equal(window.not_found_by_class.search_crawler, 1);
       assert.equal(window.not_found_total, 34);
-      // Classes with none are zero-filled, so an absent key never reads as "unknown".
       assert.equal(window.not_found_by_class.ai_agent, 0);
     });
   });
@@ -459,7 +421,6 @@ describe("404s are not page views (#1029)", () => {
   });
 
   describe("the pre-#1021 junk key space", () => {
-    // The keys observed in the live all_time.top_pages, verbatim.
     const JUNK = [
       "/%2f%2eenv",
       "/%2eenv",
@@ -502,7 +463,6 @@ describe("404s are not page views (#1029)", () => {
     });
 
     it("holds the pseudo-keys out of the path cap so they cannot be folded away", async () => {
-      // 400 junk keys: more than the 300-key all-time cap, so the fold runs too.
       for (let i = 0; i < 400; i++) redis.values.set(`pv:all:/%2e${i}%2fenv`, "2");
       await loadTelemetry(telemetryFile);
 
@@ -512,10 +472,6 @@ describe("404s are not page views (#1029)", () => {
     });
 
     it("keeps the excluded counters out of the path cap, so a full key space cannot re-absorb them", async () => {
-      // Saturate all-time with real pages, then record traffic of every outcome. If the
-      // excluded counters were treated as ordinary path keys they would fold into the
-      // served-overflow bucket once the cap was reached — silently moving scan traffic
-      // back inside the number we quote.
       for (let i = 0; i < 320; i++) redis.values.set(`pv:all:/page-${i}`, "1");
       await boot();
       for (let i = 0; i < 25; i++) recordPageView(`/scan-${i}`, UA.chrome, undefined, 404);
@@ -533,7 +489,6 @@ describe("404s are not page views (#1029)", () => {
 
     it("does the same for a day map, whose cap is reached first on a busy day", async () => {
       await boot();
-      // 320 distinct served pages saturates the 300-key day cap, so the fold is running.
       for (let i = 0; i < 320; i++) recordPageView(`/page-${i}`, UA.chrome, undefined, 200);
       for (let i = 0; i < 25; i++) recordPageView(`/scan-${i}`, UA.chrome, undefined, 404);
       recordPageView("/moved", UA.chrome, undefined, 301);
@@ -574,7 +529,6 @@ describe("404s are not page views (#1029)", () => {
     });
 
     it("reports what the old counter could not name instead of dropping it", async () => {
-      // A legacy day: the stored total counted the 404s, the page keys did not.
       redis.values.set(`pv:${today()}:/`, "573");
       redis.values.set(`pv:${today()}:total`, "3580");
       redis.values.set(`pv:${today()}:${UNMATCHED_PAGE_KEY}`, "3007");
@@ -591,7 +545,6 @@ describe("404s are not page views (#1029)", () => {
   describe("nothing writes the legacy bucket any more", () => {
     it("sends a served page we cannot name to the overflow bucket, not __unmatched__", async () => {
       await boot();
-      // Normalization rejects this path, but we answered it with a page.
       const odd = "/Weird_Path!!";
       assert.equal(normalizePagePath(odd), UNMATCHED_PAGE_KEY, "precondition: it does not normalize");
       recordPageView(odd, UA.chrome, undefined, 200);
@@ -630,16 +583,12 @@ describe("404s are not page views (#1029)", () => {
 
       assert.equal(report.today.data_days_available, 1);
       assert.equal(report.today.coverage.split(";")[0], "complete");
-      // The observed failure: today, 7d and 30d all read 4,984 because the keyspace was
-      // rebuilt that morning. Arithmetically right, presentationally a month-long claim.
       assert.equal(report.last_30d.days, 30);
       assert.equal(report.last_30d.data_days_available, 1);
       assert.ok(
         report.last_30d.coverage.startsWith("partial — 1 of 30 days"),
         `coverage did not warn: ${report.last_30d.coverage}`,
       );
-      // Assert on the coverage clause itself: the pre-split disclosure appended after
-      // the ";" also contains today's date, and would satisfy a looser check.
       assert.ok(
         report.last_30d.coverage.split(";")[0].includes(today()),
         `coverage clause does not name the earliest record: ${report.last_30d.coverage}`,
@@ -650,7 +599,6 @@ describe("404s are not page views (#1029)", () => {
       for (let i = 0; i < 10; i++) {
         redis.values.set(`pv:${daysAgo(i)}:/`, "1");
       }
-      // Only today/yesterday migrate from legacy keys, so seed the snapshot directly.
       redis.values.set(
         PAGE_VIEWS_KEY,
         JSON.stringify({
@@ -681,8 +629,6 @@ describe("404s are not page views (#1029)", () => {
       recordTraffic("/vendor/neon", UA.chatgpt, 200);
       const report = getTrafficReport();
 
-      // The split lands mid-day, so its own date is mixed and is named as such rather
-      // than being quietly presented as clean.
       assert.deepEqual(report.today.pre_split_dates, [today()]);
       assert.ok(report.today.coverage.includes("before the outcome split"));
       assert.ok(report.notes.some((n: string) => n.includes("not_found_*")));

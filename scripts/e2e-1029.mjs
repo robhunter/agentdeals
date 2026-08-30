@@ -1,13 +1,3 @@
-// End-to-end verification for #1029 against production-shaped stored data.
-//
-// Unit + wiring tests cover the logic and the hooks. This covers the thing neither can:
-// booting the real dist/serve.js against a stored snapshot with the actual shape
-// production holds today — junk all-time keys, a legacy day whose total counted its 404s,
-// and class counters recorded before the outcome split — then driving real traffic
-// through it and reading the real endpoints.
-//
-// Usage: node scripts/e2e-1029.mjs
-
 import { createServer } from "node:http";
 import { spawn } from "node:child_process";
 
@@ -15,7 +5,6 @@ const store = new Map();
 const lists = new Map();
 const commands = [];
 
-// --- Fake Upstash -----------------------------------------------------------------
 const upstash = createServer((req, res) => {
   let body = "";
   req.on("data", c => (body += c));
@@ -60,9 +49,6 @@ const upstash = createServer((req, res) => {
 
 const today = new Date().toISOString().slice(0, 10);
 
-// The exact junk keys observed in the live all_time.top_pages, plus the real
-// shape of today's counters: a day total that counted its own 404s, and class counters
-// with the 404s already inside them.
 const SEEDED = {
   days: {
     [today]: {
@@ -149,10 +135,6 @@ check("all_time.unclassified_legacy holds the un-splittable bucket", pv0.all_tim
 check("no junk path survives in top_pages",
   pv0.all_time.top_pages.filter(p => /%|\$/.test(p.path)).length, 0);
 check("today.total is the named pages, not the inflated counter", pv0.today.total, 49 + 199 + 123 + 94);
-// The seeded day lists 4 named pages against a stored total of 3,862 — deliberately
-// partial, as a legacy day whose smaller keys have expired would be. So the unnameable
-// remainder is larger than the __unmatched__ bucket alone, and the report says so rather
-// than dropping the difference. What must hold is that the arithmetic closes.
 check("today.unclassified_legacy carries everything unnameable", pv0.today.unclassified_legacy, 3862 - 465);
 check("and the arithmetic closes against the old total",
   pv0.today.total + pv0.today.unclassified_legacy, 3862);

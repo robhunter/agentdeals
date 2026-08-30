@@ -62,27 +62,16 @@ function slugifyVendor(name: string): string {
   return name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 }
 
-/**
- * Get the active platform code for a vendor, if one exists.
- * Accepts both canonical vendor names ("Proton Mail") and URL slugs ("proton-mail").
- */
 export function getPlatformCodeForVendor(vendorName: string): PlatformCode | null {
   const codes = loadPlatformCodes();
   const querySlug = slugifyVendor(vendorName);
   return codes.find(c => slugifyVendor(c.vendor) === querySlug && c.active) ?? null;
 }
 
-/**
- * Get all active platform codes.
- */
 export function getAllPlatformCodes(): PlatformCode[] {
   return loadPlatformCodes().filter(c => c.active);
 }
 
-/**
- * Unified referral code shape returned inline on MCP tool responses and REST enrichment.
- * Matches the GET /api/referral-codes/:vendor response shape so clients can consume both the same way.
- */
 export interface BestReferralCode {
   vendor: string;
   code: string;
@@ -92,11 +81,6 @@ export interface BestReferralCode {
   source: "platform" | "agent-submitted";
 }
 
-/**
- * Get the best available referral code for a vendor.
- * Platform codes take priority over agent-submitted codes.
- * Returns null (explicit) when no code is available, so callers can distinguish "no code" from "field missing".
- */
 export function getBestReferralCode(vendorName: string): BestReferralCode | null {
   const platformCode = getPlatformCodeForVendor(vendorName);
   if (platformCode) {
@@ -126,11 +110,6 @@ export function getBestReferralCode(vendorName: string): BestReferralCode | null
   return null;
 }
 
-/**
- * List all active referral codes across all vendors, for the GET /api/referral-codes listing endpoint.
- * Includes both platform codes (ours) and active agent-submitted codes.
- * Callers can pass a `vendorToCategory` resolver to enrich each entry with its primary category.
- */
 export interface ListedReferralCode {
   vendor: string;
   category: string | null;

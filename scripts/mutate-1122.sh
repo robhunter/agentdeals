@@ -1,17 +1,4 @@
 #!/usr/bin/env bash
-#
-# Mutation testing for the rule that a record whose cited page states no terms
-# we can read gets no stability verdict, and for the answers that must not open
-# with a bare "Yes" when we cannot vouch for the terms behind them.
-#
-# Each mutation breaks one property the change is supposed to hold, rebuilds,
-# and runs the tests that claim to pin it. A surviving mutation means no test
-# is asserting that property. A mutation that changes no file proves nothing
-# and is reported as a survivor rather than silently passing.
-#
-# Usage:
-#   bash scripts/mutate-1122.sh
-#
 set -u
 
 REPO="$(cd "$(dirname "$0")/.." && pwd)"
@@ -69,8 +56,6 @@ run_mutation() {
 
 py() { python3 - "$@"; }
 
-# --- Part A: the outcome that was left out of the withholding list ---
-
 m_no_terms_no_longer_withholds() {
   py <<'PY'
 p = "src/source-check.ts"
@@ -90,8 +75,6 @@ s = s.replace('export const LEVEL_WITHHOLDING_OUTCOMES: SourceCheckOutcome[] = [
 open(p, "w").write(s)
 PY
 }
-
-# --- AC-2: three distinct sentences, one per outcome ---
 
 m_no_terms_clause_reads_as_unreadable() {
   py <<'PY'
@@ -122,8 +105,6 @@ s = s.replace('export function withheldLevelSentence(\n  reason: LevelWithheldRe
 open(p, "w").write(s)
 PY
 }
-
-# --- Part B: the question an answer engine quotes first ---
 
 m_is_x_free_ignores_the_withholding() {
   py <<'PY'
@@ -173,8 +154,6 @@ open(p, "w").write(s)
 PY
 }
 
-# --- the alternatives page, which re-asserted a level of its own ---
-
 m_alternatives_page_publishes_the_level_anyway() {
   py <<'PY'
 p = "src/serve.ts"
@@ -212,8 +191,6 @@ s = s.replace('  const altWithheldSentence = altLevelWithheld\n    ? withheldLev
 open(p, "w").write(s)
 PY
 }
-
-# --- the tool result, which is a surface like any other ---
 
 m_tool_summary_falls_through_to_a_stable_history() {
   py <<'PY'

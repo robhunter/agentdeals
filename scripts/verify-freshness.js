@@ -1,19 +1,5 @@
 #!/usr/bin/env node
 
-/**
- * AI-powered data freshness verification.
- *
- * Finds stale entries, fetches vendor pricing pages, and asks a model over an
- * OpenAI-compatible endpoint whether stored deal information is still accurate.
- * Updates verifiedDate for confirmed entries; flags discrepancies for review.
- *
- * Usage:
- *   npm run verify-freshness                       # verify entries older than 25 days
- *   npm run verify-freshness -- --threshold 14     # custom threshold
- *   npm run verify-freshness -- --dry-run          # report only, don't modify data
- *   npm run verify-freshness -- --limit 50         # verify at most 50 entries
- */
-
 import { readFileSync, writeFileSync } from "node:fs";
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -24,15 +10,13 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const INDEX_PATH = resolve(__dirname, "..", "data", "index.json");
 const DEFAULT_THRESHOLD_DAYS = 25;
 const FETCH_TIMEOUT_MS = 15_000;
-const RATE_LIMIT_MS = 500; // 2 requests per second
-export const MAX_PAGE_TEXT_LENGTH = 12_000; // chars of page text sent to the model
+const RATE_LIMIT_MS = 500;
+export const MAX_PAGE_TEXT_LENGTH = 12_000;
 const MAX_RESPONSE_TOKENS = 400;
 
 export const VERIFIER_MODEL = "google/gemma-3-27b-it";
 export const VERIFIER_API_KEY_ENV = "OPENROUTER_API_KEY";
 export const VERIFIER_BASE_URL = "https://openrouter.ai/api/v1";
-
-// ── Helpers ──────────────────────────────────────────────────────────────────
 
 export function findStaleOffers(offers, thresholdDays, now = new Date()) {
   const stale = [];
@@ -53,7 +37,6 @@ export function findStaleOffers(offers, thresholdDays, now = new Date()) {
       fresh.push({ index: i, offer });
     }
   }
-  // Sort by staleness descending — verify the oldest first
   stale.sort((a, b) => (b.daysSince ?? Infinity) - (a.daysSince ?? Infinity));
   return { stale, freshCount: fresh.length };
 }
@@ -167,7 +150,7 @@ export function parseVerifierResponse(raw) {
       try {
         const parsed = accept(JSON.parse(match[0]));
         if (parsed) return parsed;
-      } catch { /* fall through */ }
+      } catch {}
     }
   }
   return { status: "unclear", summary: "Could not parse AI response" };
@@ -207,8 +190,6 @@ function sleep(ms) {
   return new Promise((r) => setTimeout(r, ms));
 }
 
-// ── Main ─────────────────────────────────────────────────────────────────────
-
 export async function verifyFreshness({ thresholdDays, dryRun, limit, indexPath, now = new Date(), client: injectedClient }) {
   const data = JSON.parse(readFileSync(indexPath || INDEX_PATH, "utf-8"));
   const offers = data.offers || [];
@@ -242,7 +223,6 @@ export async function verifyFreshness({ thresholdDays, dryRun, limit, indexPath,
   for (const entry of toVerify) {
     const { offer, index } = entry;
 
-    // Fetch pricing page
     const page = await fetchPageText(offer.url);
     if (!page.ok) {
       failed++;
@@ -270,7 +250,6 @@ export async function verifyFreshness({ thresholdDays, dryRun, limit, indexPath,
       changed++;
       changes.push({ vendor: offer.vendor, category: offer.category, tier: offer.tier, summary: result.summary });
     } else {
-      // unclear — count as failed
       failed++;
       failures.push({ vendor: offer.vendor, category: offer.category, url: offer.url, error: result.summary || "unclear" });
     }
@@ -278,7 +257,6 @@ export async function verifyFreshness({ thresholdDays, dryRun, limit, indexPath,
     await sleep(RATE_LIMIT_MS);
   }
 
-  // Write updated index
   if (!dryRun && verified > 0) {
     writeFileSync(indexPath || INDEX_PATH, JSON.stringify(data, null, 2) + "\n");
   }
@@ -295,8 +273,6 @@ export async function verifyFreshness({ thresholdDays, dryRun, limit, indexPath,
     failures,
   };
 }
-
-// ── CLI ──────────────────────────────────────────────────────────────────────
 
 async function main() {
   const args = process.argv.slice(2);
@@ -347,7 +323,6 @@ async function main() {
   }
   console.log("");
 
-  // Report changes
   if (result.changes.length > 0) {
     console.log("⚠ DISCREPANCIES DETECTED (requires PM review):");
     for (const c of result.changes) {
@@ -356,7 +331,6 @@ async function main() {
     console.log("");
   }
 
-  // Report failures
   if (result.failures.length > 0) {
     console.log("✗ FAILED TO VERIFY:");
     for (const f of result.failures) {

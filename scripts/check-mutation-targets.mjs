@@ -1,18 +1,3 @@
-/**
- * Reports mutations in scripts/mutate-*.sh whose target text no longer exists.
- *
- * A mutation whose search string has moved applies nothing, and the mutation
- * script scores it as passing. The scripts themselves catch this only when run,
- * which costs a rebuild and a test pass per mutation; this reads the target
- * strings straight out of the scripts and checks them against the files.
- *
- * Usage:
- *   node scripts/check-mutation-targets.mjs            # every mutate-*.sh
- *   node scripts/check-mutation-targets.mjs 1109 1116  # only those
- *
- * Exits non-zero if any mutation has a target that is absent.
- */
-
 import { readFileSync, readdirSync, existsSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -40,7 +25,6 @@ const read = (rel) => {
   return fileCache.get(rel);
 };
 
-/** Turn a Python single- or double-quoted literal into the string it denotes. */
 function pythonLiteral(quoted) {
   const quote = quoted[0];
   const body = quoted.slice(1, -1);

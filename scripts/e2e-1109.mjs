@@ -1,18 +1,5 @@
 #!/usr/bin/env node
 
-/**
- * End-to-end check that a record read from a page about other companies is
- * refused, and that its offer keeps the verified date it had.
- *
- * Fetches each page over the network and runs the real re-verification path.
- * Needs no credential — the model and the second opinion are stubbed, so this
- * exercises the fetch, the naming read, the gate, the writer and the marker
- * written back to the record.
- *
- * Usage:
- *   node scripts/e2e-1109.mjs
- */
-
 import { mkdtempSync, readFileSync, writeFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";

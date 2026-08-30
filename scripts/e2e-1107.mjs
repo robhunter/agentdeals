@@ -1,17 +1,5 @@
 #!/usr/bin/env node
 
-/**
- * End-to-end check of the change gate against the real vendor pages.
- *
- * Fetches each vendor's page over the network, replays the detection the
- * model produced for it, and asserts what the run writes to a throwaway
- * change log. Needs no credential — the second opinion is stubbed, so this
- * exercises the fetch, the price-signal read, the gate and the writer.
- *
- * Usage:
- *   node scripts/e2e-1107.mjs
- */
-
 import { mkdtempSync, readFileSync, writeFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";

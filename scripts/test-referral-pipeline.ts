@@ -1,22 +1,4 @@
 #!/usr/bin/env node
-/**
- * End-to-end integration test for all 4 referral marketplace phases.
- *
- * Exercises:
- *   Phase 1 — Platform referral code lookup (Railway)
- *   Phase 2 — Agent registration + attribution logging
- *   Phase 3 — Agent code submission with trust tier
- *   Phase 4 — Friendships + friend-code visibility
- *
- * Starts a self-contained dev server on a free port with isolated empty data
- * files, runs every step against real HTTP, and restores the originals on exit.
- *
- * Exit code: 0 if all steps pass, 1 if any fail.
- *
- * Usage:
- *   node scripts/test-referral-pipeline.ts
- *   npm run test:referral-pipeline
- */
 
 import { spawn, type ChildProcess } from "node:child_process";
 import fs from "node:fs";
@@ -165,7 +147,6 @@ async function main(): Promise<number> {
     serverProc = started.proc;
     const base = `http://localhost:${started.port}`;
 
-    // ---------- Phase 1: Referral code lookup ----------
     console.log("Phase 1 — Referral code lookup");
 
     const list = await req("GET", `${base}/api/referral-codes`);
@@ -197,7 +178,6 @@ async function main(): Promise<number> {
       railwayOffer ? `code=${railwayOffer.referral_code?.code ?? "null"}` : "no Railway offer in results",
     );
 
-    // ---------- Phase 2: Agent registration + attribution ----------
     console.log("\nPhase 2 — Agent registration + attribution");
 
     const agentName = `dev-agent-test-${Date.now()}`;
@@ -210,7 +190,6 @@ async function main(): Promise<number> {
       `id=${agentId ?? "n/a"}`,
     );
 
-    // Authenticated lookup — should log a referral request for attribution.
     const authedLookup = await req("GET", `${base}/api/referral/Railway`, { apiKey });
     record(
       "5. Authenticated GET /api/referral/Railway logs attribution",
@@ -218,7 +197,6 @@ async function main(): Promise<number> {
       `attributed=${authedLookup.body?.attributed}`,
     );
 
-    // Balance is the current name of the "credits" endpoint.
     const balance = await req("GET", `${base}/api/agents/${encodeURIComponent(agentId)}/balance`, { apiKey });
     record(
       "6. GET /api/agents/:id/balance returns a balance record",
@@ -228,11 +206,8 @@ async function main(): Promise<number> {
       `pending=${balance.body?.pending_balance}, confirmed=${balance.body?.confirmed_balance}`,
     );
 
-    // ---------- Phase 3: Code submission ----------
     console.log("\nPhase 3 — Code submission");
 
-    // Use a vendor without a platform code so our submission shows through in
-    // the per-vendor lookup. Supabase is in the index but has no platform code.
     const submitVendor = "Supabase";
     const submitPayload = {
       vendor: submitVendor,
@@ -264,7 +239,6 @@ async function main(): Promise<number> {
       `trust_tier_at_submission=${submit.body?.trust_tier_at_submission ?? "n/a"}`,
     );
 
-    // Revoke via DELETE — resubmit later to set up friend-priority test.
     if (submittedCodeId) {
       const del = await req("DELETE", `${base}/api/referral-codes/${submittedCodeId}`, { apiKey });
       record(
@@ -276,7 +250,6 @@ async function main(): Promise<number> {
       record("10. DELETE /api/referral-codes/:id revokes the test code", false, "no code id returned from step 7");
     }
 
-    // ---------- Phase 4: Friendships ----------
     console.log("\nPhase 4 — Friendships");
 
     const friendName = `dev-agent-test-friend-${Date.now()}`;
@@ -306,8 +279,6 @@ async function main(): Promise<number> {
       `friends=${friendsList.body?.friends?.length ?? 0}`,
     );
 
-    // Friend submits a code for a vendor we don't carry as a platform code
-    // so friend visibility isn't masked by platform ranking.
     const friendSubmitVendor = "Vercel";
     const friendSubmit = await req("POST", `${base}/api/referral-codes`, {
       body: {
@@ -333,7 +304,6 @@ async function main(): Promise<number> {
       `vendors=${friendCodes.body?.vendors?.length ?? 0}`,
     );
 
-    // Cleanup: revoke friend code and remove friendship.
     let cleanupOk = true;
     const cleanupDetails: string[] = [];
     if (friendCodeId) {

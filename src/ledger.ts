@@ -11,10 +11,6 @@ const LEDGER_PATH = path.join(__dirname, "..", "data", "ledger_entries.json");
 const BALANCES_PATH = path.join(__dirname, "..", "data", "agent_balances.json");
 const CLAWBACK_CONFIG_PATH = path.join(__dirname, "..", "data", "vendor_clawback.json");
 
-// Revenue split. The agent that submitted the code a conversion was reported
-// against receives this share; the platform receives the rest. There is no
-// share for showing a code to a user — that is not an event we observe.
-// /marketplace renders its published table from this constant.
 export const SUBMITTER_SHARE_RATE = 0.4;
 
 export const MAX_COMMISSION_AMOUNT = 10_000;
@@ -55,7 +51,6 @@ export interface VendorClawbackConfig {
   clawback_days: number;
 }
 
-// --- Caches ---
 let cachedClawbackConfig: VendorClawbackConfig[] | null = null;
 
 const ledgerStore = createDurableStore<LedgerEntry>({
@@ -69,8 +64,6 @@ const balanceStore = createDurableStore<AgentBalance>({
   property: "agent_balances",
   filePath: () => BALANCES_PATH,
 });
-
-// --- Load/Save helpers ---
 
 function loadLedger(): LedgerEntry[] {
   return ledgerStore.read();
@@ -110,13 +103,9 @@ export function resetLedgerCache(): void {
   cachedClawbackConfig = null;
 }
 
-// --- ID generation ---
-
 function generateLedgerId(): string {
   return `le_${randomBytes(16).toString("hex")}`;
 }
-
-// --- Clawback config ---
 
 const DEFAULT_CLAWBACK_DAYS = 30;
 
@@ -125,8 +114,6 @@ export function getClawbackDays(vendor: string): number {
   const entry = config.find(c => c.vendor.toLowerCase() === vendor.toLowerCase());
   return entry ? entry.clawback_days : DEFAULT_CLAWBACK_DAYS;
 }
-
-// --- Balance helpers ---
 
 function getOrCreateBalance(agentId: string): AgentBalance {
   const balances = loadBalances();
@@ -149,18 +136,6 @@ function roundCents(n: number): number {
   return Math.round(n * 100) / 100;
 }
 
-// --- Core operations ---
-
-/**
- * Record a new conversion. Resolves the submitting agent from the code the
- * conversion was reported against, creates a ledger entry with status
- * "pending", and updates that agent's balance.
- *
- * A code we hold a submission record for credits its submitter at
- * SUBMITTER_SHARE_RATE; the platform takes the rest. One of our own codes
- * credits no agent. Nothing is credited for showing a code to a user — that
- * is not an event we can observe, so it is not an event we pay for.
- */
 export function recordConversion(opts: {
   vendor: string;
   referral_code: string;
@@ -201,7 +176,6 @@ export function recordConversion(opts: {
     metadata: opts.metadata ?? {},
   };
 
-  // Append to ledger (append-only)
   const ledger = loadLedger();
   ledger.push(entry);
   saveLedger(ledger);
@@ -216,11 +190,6 @@ export function recordConversion(opts: {
   return entry;
 }
 
-/**
- * Confirm all pending entries whose clawback window has passed.
- * Moves them from pending to confirmed and shifts balance accordingly.
- * Returns the list of confirmed entry IDs.
- */
 export function confirmEligibleEntries(asOfDate?: Date): string[] {
   const now = asOfDate ?? new Date();
   const nowStr = now.toISOString().split("T")[0];
@@ -231,7 +200,6 @@ export function confirmEligibleEntries(asOfDate?: Date): string[] {
     if (entry.status !== "pending") continue;
     if (entry.clawback_window_ends > nowStr) continue;
 
-    // Create a confirmation event (append-only)
     const confirmEntry: LedgerEntry = {
       id: generateLedgerId(),
       agent_id: entry.agent_id,
@@ -252,12 +220,10 @@ export function confirmEligibleEntries(asOfDate?: Date): string[] {
     };
     ledger.push(confirmEntry);
 
-    // Update original entry status
     entry.status = "confirmed";
     entry.confirmed_at = new Date().toISOString();
     confirmed.push(entry.id);
 
-    // Update the credited agent's balance
     if (entry.agent_id && entry.agent_share > 0) {
       const balance = getOrCreateBalance(entry.agent_id);
       balance.pending_balance = roundCents(balance.pending_balance - entry.agent_share);
@@ -266,7 +232,6 @@ export function confirmEligibleEntries(asOfDate?: Date): string[] {
       balance.updated_at = new Date().toISOString();
     }
 
-    // Update the submitter balance when an entry carries one separately
     const submitterShare = entry.submitter_share ?? 0;
     if (entry.submitter_id && submitterShare > 0 && entry.submitter_id !== entry.agent_id) {
       const submitterBalance = getOrCreateBalance(entry.submitter_id);
@@ -281,7 +246,6 @@ export function confirmEligibleEntries(asOfDate?: Date): string[] {
     saveLedger(ledger);
     saveBalances(loadBalances());
 
-    // Recalculate trust tiers for affected agents
     const affectedAgents = new Set<string>();
     for (const entryId of confirmed) {
       const entry = ledger.find(e => e.id === entryId);
@@ -296,16 +260,11 @@ export function confirmEligibleEntries(asOfDate?: Date): string[] {
   return confirmed;
 }
 
-/**
- * Clawback a pending entry. Marks it as clawed_back and deducts from pending balance.
- * Returns true if successful.
- */
 export function clawbackEntry(entryId: string, reason?: string): boolean {
   const ledger = loadLedger();
   const entry = ledger.find(e => e.id === entryId);
   if (!entry || entry.status !== "pending") return false;
 
-  // Create clawback event (append-only)
   const clawbackEvent: LedgerEntry = {
     id: generateLedgerId(),
     agent_id: entry.agent_id,
@@ -326,17 +285,14 @@ export function clawbackEntry(entryId: string, reason?: string): boolean {
   };
   ledger.push(clawbackEvent);
 
-  // Update original entry
   entry.status = "clawed_back";
 
-  // Update the credited agent's balance
   if (entry.agent_id && entry.agent_share > 0) {
     const balance = getOrCreateBalance(entry.agent_id);
     balance.pending_balance = roundCents(balance.pending_balance - entry.agent_share);
     balance.updated_at = new Date().toISOString();
   }
 
-  // Update the submitter balance when an entry carries one separately
   const submitterShare = entry.submitter_share ?? 0;
   if (entry.submitter_id && submitterShare > 0 && entry.submitter_id !== entry.agent_id) {
     const submitterBalance = getOrCreateBalance(entry.submitter_id);
@@ -347,7 +303,6 @@ export function clawbackEntry(entryId: string, reason?: string): boolean {
   saveLedger(ledger);
   saveBalances(loadBalances());
 
-  // Recalculate trust tier for affected agent
   if (entry.agent_id) {
     const newTier = calculateTrustTier(entry.agent_id, ledger);
     updateAgentTrustTier(entry.agent_id, newTier);
@@ -358,11 +313,6 @@ export function clawbackEntry(entryId: string, reason?: string): boolean {
 
 const MINIMUM_PAYOUT_AMOUNT = 10;
 
-/**
- * Record a payout. Deducts from confirmed_balance, increments total_paid_out,
- * creates a "payout" event in the ledger. Returns the ledger entry.
- * Throws if balance insufficient or below minimum.
- */
 export function recordPayout(opts: {
   agent_id: string;
   x402_address: string;
@@ -402,12 +352,10 @@ export function recordPayout(opts: {
     },
   };
 
-  // Append to ledger (append-only)
   const ledger = loadLedger();
   ledger.push(entry);
   saveLedger(ledger);
 
-  // Update balance
   if (balance) {
     balance.confirmed_balance = 0;
     balance.total_paid_out = roundCents(balance.total_paid_out + payoutAmount);
@@ -420,36 +368,22 @@ export function recordPayout(opts: {
 
 export { MINIMUM_PAYOUT_AMOUNT };
 
-/**
- * Get an agent's balance summary.
- */
 export function getAgentBalance(agentId: string): AgentBalance | null {
   const balances = loadBalances();
   return balances.find(b => b.agent_id === agentId) ?? null;
 }
 
-/**
- * Get ledger entries for a specific agent.
- */
 export function getAgentLedgerEntries(agentId: string): LedgerEntry[] {
   return loadLedger().filter(e => e.agent_id === agentId);
 }
 
-/**
- * Get a ledger entry by ID.
- */
 export function getLedgerEntry(id: string): LedgerEntry | null {
   return loadLedger().find(e => e.id === id) ?? null;
 }
 
-/**
- * Get all conversion entries (for admin).
- */
 export function getAllConversions(): LedgerEntry[] {
   return loadLedger().filter(e => e.event_type === "conversion");
 }
-
-// --- Leaderboard ---
 
 export interface LeaderboardEntry {
   agent_id: string;
@@ -460,10 +394,6 @@ export interface LeaderboardEntry {
   total_earnings: number;
 }
 
-/**
- * Get the agent leaderboard ranked by total conversions.
- * Public endpoint — no auth required.
- */
 export function getLeaderboard(opts?: { limit?: number; offset?: number }): { entries: LeaderboardEntry[]; total: number } {
   const limit = Math.min(opts?.limit ?? 10, 50);
   const offset = opts?.offset ?? 0;
@@ -471,19 +401,16 @@ export function getLeaderboard(opts?: { limit?: number; offset?: number }): { en
   const ledger = loadLedger();
   const balances = loadBalances();
 
-  // Collect per-agent conversion counts from ledger
   const agentConversions = new Map<string, number>();
   for (const entry of ledger) {
     if (entry.event_type === "conversion" && entry.agent_id && entry.status !== "clawed_back") {
       agentConversions.set(entry.agent_id, (agentConversions.get(entry.agent_id) ?? 0) + 1);
     }
-    // Also count submitter contributions
     if (entry.event_type === "conversion" && entry.submitter_id && entry.submitter_id !== entry.agent_id && entry.status !== "clawed_back") {
       agentConversions.set(entry.submitter_id, (agentConversions.get(entry.submitter_id) ?? 0) + 1);
     }
   }
 
-  // Build leaderboard from agents that have at least one conversion
   const entries: LeaderboardEntry[] = [];
   for (const [agentId, conversions] of agentConversions) {
     const agent = getAgentById(agentId);
@@ -505,7 +432,6 @@ export function getLeaderboard(opts?: { limit?: number; offset?: number }): { en
     });
   }
 
-  // Sort by total conversions descending
   entries.sort((a, b) => b.total_conversions - a.total_conversions);
 
   return {

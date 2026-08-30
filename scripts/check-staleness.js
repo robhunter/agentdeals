@@ -59,7 +59,6 @@ function main() {
   process.exit(1);
 }
 
-// Only run main when executed directly (not imported)
 const isMainModule = process.argv[1] && resolve(process.argv[1]) === resolve(fileURLToPath(import.meta.url));
 if (isMainModule) {
   main();

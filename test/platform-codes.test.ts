@@ -26,7 +26,6 @@ after(() => {
 
 describe("Platform Codes", () => {
   beforeEach(() => {
-    // Restore original data and reset cache before each test
     if (originalData) {
       fs.writeFileSync(PLATFORM_CODES_PATH, originalData, "utf-8");
     }
@@ -112,7 +111,6 @@ describe("Platform Codes", () => {
     const code = getPlatformCodeForVendor("Railway");
     assert.strictEqual(code, null);
 
-    // Restore
     fs.writeFileSync(PLATFORM_CODES_PATH, backup, "utf-8");
     resetPlatformCodesCache();
   });

@@ -26,7 +26,6 @@ function sendMcpRequest(
             resolve(parsed);
             return;
           } catch {
-            // not valid JSON yet, keep buffering
           }
         }
       }
@@ -41,13 +40,11 @@ async function initServer() {
   const serverPath = path.join(__dirname, "..", "dist", "index.js");
   const proc = spawn("node", [serverPath], { stdio: ["pipe", "pipe", "pipe"] });
 
-  // Initialize
   await sendMcpRequest(proc, {
     jsonrpc: "2.0", id: 1, method: "initialize",
     params: { protocolVersion: "2024-11-05", capabilities: {}, clientInfo: { name: "test", version: "0.0.1" } },
   });
 
-  // Send initialized notification
   proc.stdin!.write(JSON.stringify({ jsonrpc: "2.0", method: "notifications/initialized" }) + "\n");
 
   return proc;

@@ -13,7 +13,6 @@ const AWESOME_DIR = resolve(CACHE_DIR, "awesome-startup-credits");
 const STARTUPDEALS_DIR = resolve(CACHE_DIR, "startupdeals");
 const OUTPUT_PATH = resolve(ROOT, "data/startup-deals-new.json");
 
-// Map awesome-startup-credits categories to our categories
 const AWESOME_CATEGORY_MAP: Record<string, string> = {
   Advertising: "Developer Tools",
   Analytics: "Analytics",
@@ -33,7 +32,6 @@ const AWESOME_CATEGORY_MAP: Record<string, string> = {
   Miscellaneous: "Developer Tools",
 };
 
-// Tags for each mapped category
 const CATEGORY_TAGS: Record<string, string[]> = {
   "Developer Tools": ["developer-tools"],
   Analytics: ["analytics", "statistics"],
@@ -70,7 +68,6 @@ function cloneOrUpdate(repoUrl: string, targetDir: string): void {
 }
 
 function parseAwesomeStartupCredits(): ParsedEntry[] {
-  // Try README.md (uppercase)
   let readmePath = resolve(AWESOME_DIR, "README.md");
   if (!existsSync(readmePath)) {
     readmePath = resolve(AWESOME_DIR, "readme.md");
@@ -81,18 +78,15 @@ function parseAwesomeStartupCredits(): ParsedEntry[] {
   let currentCategory = "";
   let inDiscontinued = false;
 
-  // Pattern: - [Name](url) - Description
   const entryPattern = /^\s*-\s+\[([^\]]+)\]\(([^)]+)\)\s*[\u2014\u2013\-]+\s*(.+)/;
 
   for (const line of lines) {
-    // Detect category headers (h3)
     const h3Match = line.match(/^###\s+(.+)/);
     if (h3Match) {
       currentCategory = h3Match[1].trim();
       continue;
     }
 
-    // Detect discontinued section
     const h2Match = line.match(/^##\s+(.+)/);
     if (h2Match) {
       if (h2Match[1].trim().toLowerCase().includes("discontinued")) {
@@ -101,17 +95,14 @@ function parseAwesomeStartupCredits(): ParsedEntry[] {
       continue;
     }
 
-    // Skip discontinued entries
     if (inDiscontinued) continue;
 
-    // Skip unmapped categories
     if (!AWESOME_CATEGORY_MAP[currentCategory]) continue;
 
     const entryMatch = line.match(entryPattern);
     if (entryMatch) {
       const [, vendor, url, description] = entryMatch;
 
-      // Extract eligibility from description
       const conditions: string[] = [];
       const descLower = description.toLowerCase();
       let eligType = "startup";
@@ -160,7 +151,6 @@ function parseAwesomeStartupCredits(): ParsedEntry[] {
 }
 
 function parseStartupDeals(): ParsedEntry[] {
-  // Try readme.md (lowercase)
   let readmePath = resolve(STARTUPDEALS_DIR, "readme.md");
   if (!existsSync(readmePath)) {
     readmePath = resolve(STARTUPDEALS_DIR, "README.md");
@@ -169,11 +159,9 @@ function parseStartupDeals(): ParsedEntry[] {
   const lines = content.split("\n");
   const entries: ParsedEntry[] = [];
 
-  // Pattern: | [Company](url) | Deal description | Conditions |
   const tableRowPattern = /^\|\s*\[([^\]]+)\]\(([^)]+)\)\s*\|\s*(.+?)\s*\|\s*(.+?)\s*\|/;
 
   for (const line of lines) {
-    // Skip header and separator rows
     if (line.includes("Company") && line.includes("Deal") && line.includes("Conditions")) continue;
     if (/^\|[\s\-:]+\|/.test(line)) continue;
 
@@ -181,15 +169,11 @@ function parseStartupDeals(): ParsedEntry[] {
     if (match) {
       const [, vendor, sourceUrl, deal, conditions] = match;
 
-      // Skip entries that are paid-only (no free component)
       const condLower = conditions.toLowerCase();
       if (condLower.includes("$") && !condLower.includes("free")) {
-        // Has a cost but no free mention — skip
         continue;
       }
 
-      // The URL in startupdeals points to the deal source, not the vendor
-      // Try to extract vendor URL from the vendor name
       const vendorClean = vendor.trim();
       const description = `${deal.trim()}. Access via: ${conditions.trim()}`;
 
@@ -276,7 +260,6 @@ function deduplicate(
       continue;
     }
 
-    // For startupdeals, URLs point to deal sources not vendor sites — skip domain check
     if (entry.source !== "startupdeals") {
       const domain = extractDomain(entry.url);
       if (domain && existingDomains.has(domain)) {
@@ -377,13 +360,11 @@ async function main() {
 
   console.log("=== Startup Deals Ingestion Script ===\n");
 
-  // Step 1: Clone/update repos
   console.log("Step 1: Fetching source repos...");
   cloneOrUpdate("https://github.com/dakshshah96/awesome-startup-credits.git", AWESOME_DIR);
   cloneOrUpdate("https://github.com/startupdeals/startupdeals.git", STARTUPDEALS_DIR);
   console.log();
 
-  // Step 2: Parse both sources
   console.log("Step 2: Parsing entries...");
   const awesomeEntries = parseAwesomeStartupCredits();
   console.log(`  awesome-startup-credits: ${awesomeEntries.length} entries`);
@@ -391,19 +372,15 @@ async function main() {
   const startupDealsEntries = parseStartupDeals();
   console.log(`  startupdeals: ${startupDealsEntries.length} entries`);
 
-  // Combine — awesome-startup-credits first (higher quality data)
   const allParsed = [...awesomeEntries, ...startupDealsEntries];
   console.log(`  Total parsed: ${allParsed.length} entries\n`);
 
-  // Step 3: Load existing index
   const index = JSON.parse(readFileSync(INDEX_PATH, "utf8"));
   console.log(`Step 3: Existing index has ${index.offers.length} offers\n`);
 
-  // Step 4: Deduplicate
   const { newEntries, duplicates } = deduplicate(allParsed, index.offers);
   console.log(`Step 4: After deduplication: ${newEntries.length} new, ${duplicates.length} duplicates\n`);
 
-  // Step 5: URL health check
   let finalEntries: ParsedEntry[];
   if (skipUrlCheck) {
     console.log("Step 5: Skipping URL health checks (--skip-url-check)\n");
@@ -421,11 +398,9 @@ async function main() {
     finalEntries = live;
   }
 
-  // Step 6: Convert to offer format
   const today = new Date().toISOString().split("T")[0];
   const offers = finalEntries.map((e) => toOfferFormat(e, today));
 
-  // Category breakdown
   const categoryCounts: Record<string, number> = {};
   for (const o of offers) {
     categoryCounts[o.category] = (categoryCounts[o.category] || 0) + 1;
@@ -436,7 +411,6 @@ async function main() {
   }
   console.log();
 
-  // Source breakdown
   const sourceCounts: Record<string, number> = {};
   for (const e of finalEntries) {
     sourceCounts[e.source] = (sourceCounts[e.source] || 0) + 1;
@@ -447,7 +421,6 @@ async function main() {
   }
   console.log();
 
-  // Step 7: Output
   writeFileSync(OUTPUT_PATH, JSON.stringify({ offers }, null, 2));
   console.log(`Wrote ${offers.length} new entries to ${OUTPUT_PATH}`);
 
@@ -461,7 +434,6 @@ async function main() {
     );
   }
 
-  // Summary
   console.log("\n=== Summary ===");
   console.log(`Source entries parsed: ${allParsed.length}`);
   console.log(`Duplicates skipped: ${duplicates.length}`);

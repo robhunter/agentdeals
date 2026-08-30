@@ -5,30 +5,6 @@ import { verificationLedger } from "./verification-state.js";
 import type { Offer, StabilityClass, DealChange } from "./types.js";
 import { partitionRoleCandidates, MEMBERSHIP_GATE_RULES } from "./product-role.js";
 
-/**
- * plan_stack no longer answers "what should I use".
- *
- * It used to: a hand-written TEMPLATES table listed preferred vendors per role
- * and `findBestOffer()` returned the first one present in the catalog, so
- * Supabase won every database slot in every template because someone typed it
- * first. The fallback when no preferred vendor matched was `publicOffers[0]` —
- * index order in the JSON file.
- *
- * Deleting the preference list on its own made the answer worse, not better:
- * scored purely on offer terms, a Next.js SaaS app got Chroma (a vector store)
- * as its database and Integrately (an automation tool) as its hosting. The
- * templates were carrying real technical fit that our category taxonomy cannot
- * express, and no amount of ranking recovers it.
- *
- * So the question changed instead. Our caller is a language model that already
- * knows Chroma is a vector store; that knowledge is free and abundant and we
- * add nothing by supplying it. What it cannot get anywhere else is that a given
- * free tier was withdrawn in March, or that nobody has been able to confirm
- * this one for 142 days. This tool now answers: *of the things that can fill
- * this role, which ones have terms we can stand behind today, and what exactly
- * is wrong with the rest.* The caller applies fit; we apply terms.
- */
-
 export interface StackCandidate {
   vendor: string;
   tier: string;
@@ -37,23 +13,18 @@ export interface StackCandidate {
   verified_date: string;
   risk_level: "stable" | "caution" | "risky";
   stability: StabilityClass;
-  /** Empty for a candidate we hold nothing against. */
   demerits: Demerit[];
-  /** Recorded facts shown wherever the offer appears; they never move rank. */
   disclosures: Disclosure[];
 }
 
 export interface StackRole {
   role: string;
   category: string;
-  /** The rotated tied set, capped. Deliberately not a single pick. */
   candidates: StackCandidate[];
-  /** How many offers tie at zero demerits — the size of the band we drew from. */
   tie_count: number;
   eligible_count: number;
   demoted_count: number;
   excluded_count: number;
-  /** Why these, in words, with the numbers behind it. */
   reason: string;
   tie_break: TieBreak;
 }
@@ -72,7 +43,6 @@ export interface StackRecommendation {
   };
 }
 
-/** How many of a tied band to return per role. A page size, not a ranking. */
 const CANDIDATES_PER_ROLE = 8;
 
 interface StackTemplate {
@@ -81,13 +51,6 @@ interface StackTemplate {
   upgrade_path: string;
 }
 
-/**
- * Templates define roles and the category each role draws from. They no longer
- * name winners: `preferredVendors` is deleted rather than repointed, because
- * retyping the fiat is not the fix. The upgrade-path strings lost their vendor
- * names for the same reason — they were naming the same hardcoded winners in
- * prose.
- */
 const TEMPLATES: StackTemplate[] = [
   {
     keywords: ["saas", "web app", "webapp", "next.js", "nextjs", "react app", "full-stack", "fullstack"],
@@ -199,7 +162,7 @@ function matchTemplate(useCase: string): StackTemplate | null {
     let score = 0;
     for (const keyword of template.keywords) {
       if (lower.includes(keyword)) {
-        score += keyword.length; // Longer keyword matches are more specific
+        score += keyword.length;
       }
     }
     if (score > bestScore) {
@@ -230,10 +193,6 @@ function buildLimitations(roles: StackRole[]): string[] {
   return [...limitations];
 }
 
-/**
- * Warnings describe the candidates we are actually showing, and each cites the
- * recorded fact behind it rather than a derived risk bucket.
- */
 function buildRiskWarnings(roles: StackRole[]): string[] {
   const warnings: string[] = [];
   for (const role of roles) {
@@ -277,7 +236,6 @@ export function getStackRecommendation(
   let upgradePath: string;
 
   if (requirements && requirements.length > 0) {
-    // User-specified requirements override the template
     roleSpecs = requirements.map((req) => {
       const lower = req.toLowerCase();
       const category = ROLE_TO_CATEGORY[lower] ?? req;
@@ -290,7 +248,6 @@ export function getStackRecommendation(
       roleSpecs = template.roles;
       upgradePath = template.upgrade_path;
     } else {
-      // Fallback: common categories
       roleSpecs = [
         { role: "Hosting", category: "Cloud Hosting" },
         { role: "Database", category: "Databases" },
@@ -323,8 +280,6 @@ export function getStackRecommendation(
       verificationLedger: verificationLedger(),
     });
 
-    // Draw from the best band available. If nothing is unblemished we still
-    // answer, with the demerits attached rather than hidden.
     const shown = ranking.ranked.slice(0, CANDIDATES_PER_ROLE);
     if (shown.length === 0) continue;
 

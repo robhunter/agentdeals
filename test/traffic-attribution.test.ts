@@ -1,13 +1,3 @@
-// Client-class traffic attribution — storage and reporting (#1019).
-//
-// client-class.test.ts proves the classifier is right. This proves the counters built on
-// it are right: that bot traffic is *counted* rather than dropped, that the human
-// page-view figure did not change meaning underneath us, that observing the service does
-// not register as using it, and — the constraint #1023 left behind — that measuring all
-// of this costs zero additional Redis commands.
-//
-// Hermetic: Upstash is replaced by an in-process fake that actually stores values.
-
 import { describe, it, beforeEach, afterEach } from "node:test";
 import assert from "node:assert";
 import { tmpdir } from "node:os";
@@ -33,8 +23,6 @@ const {
 } = await import("../dist/stats.js");
 const { classifyRequest, CLIENT_CLASSES } = await import("../dist/client-class.js");
 
-// The server classifies and hands the result to storage; these tests go through the same
-// path so a change to either half shows up here.
 function recordTraffic(path: string, ua: string | undefined, status?: number): void {
   recordTrafficRaw(classifyRequest(path, ua), path, status);
 }
@@ -170,7 +158,6 @@ describe("client-class traffic attribution (#1019)", () => {
 
   it("is additive — the human page-view figure does not change meaning", async () => {
     await boot();
-    // One human and three bots hit the same page.
     recordPageView("/vendor/neon", UA.chrome, undefined, 200);
     recordTraffic("/vendor/neon", UA.chrome, 200);
     for (const ua of [UA.chatgpt, UA.googlebot, UA.ahrefs]) {
@@ -192,7 +179,6 @@ describe("client-class traffic attribution (#1019)", () => {
   it("observing the service is not using it", async () => {
     await boot();
     recordTraffic("/best/free-databases", UA.chrome, 200);
-    // An operator polling our own dashboards, exactly as during #1023 verification.
     for (let i = 0; i < 20; i++) {
       recordTraffic("/api/pageviews", UA.curl, 200);
       recordTraffic("/api/traffic", UA.curl, 200);
@@ -215,7 +201,6 @@ describe("client-class traffic attribution (#1019)", () => {
     await flushPending();
     assert.equal(redis.commandCount("SET"), 1, "the whole interval is one snapshot write");
 
-    // The load-bearing property from #1023: cost is O(flush intervals), not O(requests).
     const afterFirst = redis.commandCount();
     for (let i = 0; i < 5000; i++) recordTraffic("/vendor/x", UA.oai, 200);
     assert.equal(redis.commandCount(), afterFirst, "25x the traffic, still zero commands");
@@ -257,7 +242,6 @@ describe("client-class traffic attribution (#1019)", () => {
     assert.equal(persisted.classes[today()].ai_agent, 1);
     assert.equal(persisted.mcp[today()], 1);
 
-    // New process, same storage.
     resetTelemetryBuffers();
     resetCounters();
     await boot();
@@ -289,14 +273,11 @@ describe("client-class traffic attribution (#1019)", () => {
     const report = getTrafficReport();
     assert.equal(report.available, false, "a failed load is not a measurement (#1018 Defect B)");
     assert.ok(report.error, "and it says why");
-    // The in-memory tally is still a real observation and stays visible.
     assert.equal(report.since_boot_by_class.ai_agent, 1);
   });
 
   it("bounds the route key space, and overflow never crosses a class", async () => {
     await boot();
-    // Single-segment paths each mint their own route key (a slugged path would collapse
-    // to one and never reach the cap), so 400 of them across two classes forces overflow.
     for (let i = 0; i < 400; i++) {
       recordTraffic(`/p${i}`, UA.chatgpt, 200);
       recordTraffic(`/q${i}`, UA.googlebot, 200);
@@ -305,24 +286,17 @@ describe("client-class traffic attribution (#1019)", () => {
 
     const routes = storedSnapshot().class_routes[today()];
     const keys = Object.keys(routes);
-    // The cap admits 200 ordinary keys; each class's overflow bucket is exempt from the
-    // check (otherwise overflow would have nowhere to go), so the true ceiling is
-    // 200 + one bucket per class. Bounded is what matters, and this is the bound.
     assert.ok(keys.length <= 208, `class_routes grew to ${keys.length} keys — cap not enforced`);
     assert.ok(
       keys.includes(`ai_agent|${OVERFLOW_PAGE_KEY}`) && keys.includes(`search_crawler|${OVERFLOW_PAGE_KEY}`),
       "overflow folds into a per-class bucket, not a shared one",
     );
-    // Nothing is dropped, and nothing moves between classes on a busy day.
     const sum = (cls: string) =>
       keys.filter(k => k.startsWith(`${cls}|`)).reduce((n, k) => n + routes[k], 0);
     assert.equal(sum("ai_agent"), 400, "every ai_agent hit is still in an ai_agent bucket");
     assert.equal(sum("search_crawler"), 400);
   });
 
-  // Contract changed by #1029: a 404 no longer mints a route key *at all*, rather than
-  // minting the shared unmatched one. A client that only ever 404s is not a client that
-  // read our pages, so it must not appear in that class's hit count or route list.
   it("a 404 is counted apart from served traffic and mints no route key", async () => {
     await boot();
     recordTraffic("/wp-login.php", UA.curl, 404);
@@ -393,11 +367,6 @@ describe("client-class traffic attribution (#1019)", () => {
 });
 
 describe("taxonomy drift", () => {
-  // stats.ts deliberately does not import client-class.ts (Node's type stripping cannot
-  // resolve a relative import out of a .ts file, and several tests load stats.ts from
-  // source). It restates the class list instead. This is what stops the two copies
-  // diverging: a class added to one and not the other would silently stop being
-  // zero-filled in the report, so it would read as "unknown" rather than "none".
   it("the storage-side class list matches the classifier's", () => {
     assert.deepEqual([...TRAFFIC_CLASSES], [...CLIENT_CLASSES]);
   });
@@ -408,17 +377,11 @@ describe("window honesty and storage bounds", () => {
     const report = getTrafficReport();
     assert.equal(report.today.detail_days, 1);
     assert.equal(report.last_7d.detail_days, 7);
-    // The 30-day window reports 30 days of class totals but only 7 of route/family
-    // detail, because that is all we retain. Presenting the shorter series as if it
-    // covered the window would understate it silently.
     assert.equal(report.last_30d.days, 30);
     assert.equal(report.last_30d.detail_days, 7);
   });
 
   it("keeps the worst-case snapshot well inside Upstash's request limit", () => {
-    // Every cap saturated on every retained day. If this ever exceeds the limit the SET
-    // fails and the whole snapshot is lost — the exact failure #1018 was about — so the
-    // bound is asserted rather than assumed. Raise a cap and this test tells you the cost.
     const CLASSES = [...TRAFFIC_CLASSES];
     const day = (i: number) => new Date(Date.now() - i * 86400000).toISOString().slice(0, 10);
     const snap: any = { days: {}, referrers: {}, all_time: {}, updated_at: new Date().toISOString(), classes: {}, class_routes: {}, families: {}, mcp: {} };
@@ -438,8 +401,6 @@ describe("window honesty and storage bounds", () => {
       snap.mcp[day(i)] = 999999;
     }
     for (let k = 0; k < 300; k++) snap.all_time[`/some-page-slug-${k}`] = 99999999;
-    // #1029's additions: two class-keyed outcome maps over the same 30 days, and the
-    // bounded not-found sample at its cap with the longest path each entry can hold.
     snap.not_found = {};
     snap.redirects = {};
     for (let i = 0; i < 30; i++) {

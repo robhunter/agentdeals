@@ -187,7 +187,6 @@ describe("getSessionClassification aggregation", () => {
   });
 
   it("returns clients_top sorted descending by sessions, capped at 10", () => {
-    // 12 crawlers + 3 agents with varying counts
     for (let i = 0; i < 12; i++) {
       const name = `crawler-${i}`;
       for (let j = 0; j <= i; j++) recordSessionConnect(name);
@@ -201,7 +200,6 @@ describe("getSessionClassification aggregation", () => {
     assert.strictEqual(c.clients_top[0].name, "crawler-11");
     assert.strictEqual(c.clients_top[0].sessions, 12);
     assert.strictEqual(c.clients_top[0].type, "crawler");
-    // Sorted descending
     for (let i = 1; i < c.clients_top.length; i++) {
       assert.ok(c.clients_top[i - 1].sessions >= c.clients_top[i].sessions);
     }
@@ -292,7 +290,6 @@ describe("GET /api/metrics — sessions_by_type + clients_top", () => {
         `unexpected entry.type ${entry.type}`,
       );
     }
-    // clients_top sorted descending by sessions
     for (let i = 1; i < body.clients_top.length; i++) {
       assert.ok(body.clients_top[i - 1].sessions >= body.clients_top[i].sessions);
     }
@@ -302,8 +299,6 @@ describe("GET /api/metrics — sessions_by_type + clients_top", () => {
     const res = await fetch(`http://localhost:${serverPort}/api/metrics`);
     const body = await res.json() as any;
     assert.strictEqual(typeof body.cumulative_sessions, "number");
-    // sessions_by_type.total tracks the clients map, which may be a subset of
-    // cumulative_sessions if older deployments didn't track per-client counts.
     assert.ok(body.sessions_by_type.total <= body.cumulative_sessions);
   });
 

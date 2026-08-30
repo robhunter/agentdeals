@@ -1,12 +1,3 @@
-/**
- * Replays the refusals of the 2026-08-28T08:05Z rolling re-verification against the gate.
- *
- * Pages are fetched live. The detector's readings and the second opinion's verdicts are
- * the ones that run recorded, so the only thing stubbed is the model call.
- *
- * Usage: node scripts/e2e-1116.mjs
- */
-
 import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";

@@ -26,7 +26,6 @@ const {
 const { resetReferralCodesCache } = await import("../dist/referral-codes.js");
 const { registerAgent, resetAgentsCache } = await import("../dist/agents.js");
 
-// Save original data
 let origLedger: string | null = null;
 let origBalances: string | null = null;
 let origCodes: string | null = null;
@@ -63,12 +62,6 @@ function resetFiles() {
   resetAgentsCache();
 }
 
-/**
- * Write a submission record straight to the store, so a conversion reported
- * against this code resolves to this agent. Bypasses submitReferralCode's
- * offers-index check, which lets these tests keep using a vendor that is
- * deliberately absent from the index to exercise the default clawback window.
- */
 function writeSubmittedCode(opts: { agent_id: string; vendor: string; code: string }) {
   const raw = JSON.parse(fs.readFileSync(CODES_PATH, "utf-8"));
   const now = new Date().toISOString();
@@ -194,7 +187,6 @@ describe("Record Conversion", () => {
       commission_amount: 10.00,
       conversion_date: "2026-04-01",
     });
-    // Railway has 45 day clawback
     assert.strictEqual(entry.clawback_window_ends, "2026-05-16");
   });
 
@@ -205,7 +197,6 @@ describe("Record Conversion", () => {
       commission_amount: 10.00,
       conversion_date: "2026-04-01",
     });
-    // Default 30 days
     assert.strictEqual(entry.clawback_window_ends, "2026-05-01");
   });
 
@@ -268,15 +259,13 @@ describe("Confirm Eligible Entries", () => {
     const agent = registerAgent({ name: "ConfirmBot" });
     writeSubmittedCode({ agent_id: agent.agent.id, vendor: "UnknownVendor", code: "CODE" });
 
-    // Create a conversion with clawback ending March 31
     recordConversion({
       vendor: "UnknownVendor",
       referral_code: "CODE",
       commission_amount: 100.00,
-      conversion_date: "2026-03-01", // 30 day clawback → ends March 31
+      conversion_date: "2026-03-01",
     });
 
-    // Confirm as of April 2 — past the clawback window
     const confirmed = confirmEligibleEntries(new Date("2026-04-02"));
     assert.strictEqual(confirmed.length, 1);
 
@@ -292,7 +281,7 @@ describe("Confirm Eligible Entries", () => {
       vendor: "Railway",
       referral_code: "CODE",
       commission_amount: 100.00,
-      conversion_date: "2026-04-01", // 45 day Railway clawback → ends May 16
+      conversion_date: "2026-04-01",
     });
 
     const confirmed = confirmEligibleEntries(new Date("2026-04-30"));
@@ -309,7 +298,7 @@ describe("Confirm Eligible Entries", () => {
 
     let balance = getAgentBalance(agent.agent.id);
     assert.ok(balance);
-    assert.strictEqual(balance.pending_balance, 40.00); // 20 + 20
+    assert.strictEqual(balance.pending_balance, 40.00);
 
     const confirmed = confirmEligibleEntries(new Date("2026-04-02"));
     assert.strictEqual(confirmed.length, 2);
@@ -393,7 +382,7 @@ describe("Agent Balance Queries", () => {
 
     const balance = getAgentBalance(agent.agent.id);
     assert.ok(balance);
-    assert.strictEqual(balance.pending_balance, 120.00); // 40 + 80
+    assert.strictEqual(balance.pending_balance, 120.00);
   });
 });
 
@@ -441,7 +430,6 @@ describe("Append-Only Enforcement", () => {
     const entry = recordConversion({ vendor: "Railway", referral_code: "CODE", commission_amount: 100.00 });
     clawbackEntry(entry.id);
 
-    // The original entry should still exist (status changed) plus a new clawback event
     const raw = JSON.parse(fs.readFileSync(LEDGER_PATH, "utf-8"));
     assert.ok(raw.ledger_entries.length >= 2);
     const clawbackEvents = raw.ledger_entries.filter((e: any) => e.event_type === "clawback");

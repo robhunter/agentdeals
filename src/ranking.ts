@@ -1,44 +1,11 @@
-/**
- * Shared selection module — the single ranking authority for every surface
- * that presents vendors as a recommendation.
- *
- * Design (approved on issue #1025):
- *
- *   Everything starts at zero and can only be DEMOTED. There is no bonus for
- *   anything, so there is no signal a vendor can acquire, lobby for, or buy —
- *   there is nothing to add.
- *
- * Consequences of that rule, all deliberate:
- *
- *   - Every input is a property of the vendor's own offer or of a change we
- *     recorded about it. Nothing derived from our editorial copy is an input.
- *     `description.length` in particular is not read here and must never be:
- *     it is a 22%-of-range placement lever that measures us, not them.
- *   - Weights are integers, so the tie band is exactly zero. One offer can
- *     only rank below another if we can name at least one specific recorded
- *     fact about it that the other does not have.
- *   - Because almost nothing separates a healthy free tier from another
- *     healthy free tier, large ties are the normal case, not an edge case.
- *     Ties are broken by a permutation seeded on the UTC date and the query
- *     key alone — never on anything vendor-controlled or vendor-identifying —
- *     and the seed is published so a third party can recompute the order.
- *
- * This module is pure: no filesystem, no network, no clock unless you pass
- * one in. It imports only `node:crypto` and erased types, so it can be loaded
- * directly from `src/` by a test runner using type stripping.
- */
-
 import { createHash } from "node:crypto";
 import type { ChangeDateSource, DealChange, Offer } from "./types.js";
 
-/** Stable URL where the criteria below are published in full. */
 export const CRITERIA_PATH = "/criteria";
 
-/** The policy sentence, kept here so every surface quotes the same words. */
 export const DEMOTE_ONLY_POLICY =
   "Rankings start every offer at zero and can only demote. There is no signal a vendor can acquire, lobby for, or buy — there is nothing to add.";
 
-/** What we do not model, stated wherever we return a recommendation. */
 export const NOT_MODELLED_NOTICE =
   "We rank on offer terms, verification recency and recorded adverse changes. We do NOT model technical fit between a product and a role — the caller must apply that.";
 
@@ -48,21 +15,8 @@ const VERIFICATION_LAPSED_DAYS = 180;
 const EXPIRING_SOON_DAYS = 90;
 const ADVERSE_CHANGE_WINDOW_DAYS = 365;
 
-// --- Tier classification -----------------------------------------------------
-
 export type TierClass = "free" | "time_limited" | "not_free";
 
-/**
- * Tier strings are free text: 88 distinct values across 1,571 offers, 61 of
- * them singletons. The previous code gated on a hand-typed allowlist
- * (`Free | Hobby | Open Source | Free Credits`) which silently hid 290 offers
- * — including all 13 `Always Free`, all 30 `Free OSS` and all 4 `Free Forever`.
- *
- * This is the inverse: a documented classification in which anything we have
- * not written down a reason to exclude stays IN. A new tier string can never
- * be silently dropped; the worst it can do is be treated as an ordinary free
- * offer until someone classifies it.
- */
 export const NOT_FREE_TIER_RULES: { pattern: RegExp; note: string }[] = [
   { pattern: /^paid$/i, note: "no free offer at all" },
   { pattern: /^freemium$/i, note: "paid product with a trial-shaped entry point, not a stated free tier" },
@@ -79,11 +33,6 @@ export const TIME_LIMITED_TIER_RULES: { pattern: RegExp; note: string }[] = [
   { pattern: /\bbeta\b|preview|sandbox/i, note: "a beta/preview/sandbox allowance that may end without notice" },
 ];
 
-/**
- * Classify a tier string. Order matters: a tier that names a credit grant is
- * time-limited even when it also mentions pay-as-you-go pricing afterwards
- * (`Free Credits + Pay-as-you-go`), because the free part is the credits.
- */
 export function classifyTier(tier: string): { class: TierClass; note: string } {
   for (const rule of TIME_LIMITED_TIER_RULES) {
     if (rule.pattern.test(tier)) return { class: "time_limited", note: rule.note };
@@ -93,8 +42,6 @@ export function classifyTier(tier: string): { class: TierClass; note: string } {
   }
   return { class: "free", note: "an ongoing free tier" };
 }
-
-// --- Gates -------------------------------------------------------------------
 
 export type GateCode =
   | "eligibility_restricted"
@@ -129,8 +76,6 @@ export const GATE_TABLE: { code: GateCode; description: string }[] = [
   },
 ];
 
-// --- Demerits ----------------------------------------------------------------
-
 export type DemeritCode =
   | "free_tier_withdrawn"
   | "time_limited_offer"
@@ -140,11 +85,8 @@ export type DemeritCode =
 export interface Demerit {
   code: DemeritCode;
   points: number;
-  /** Human-readable, and true: states the recorded fact behind the demotion. */
   reason: string;
-  /** Date of the recorded fact, where one exists. */
   date?: string;
-  /** True when the demerit describes a limit of ours rather than a fact about the vendor. */
   about_us?: boolean;
 }
 
@@ -180,8 +122,6 @@ const WITHDRAWAL_CHANGE_TYPES: Partial<Record<DealChange["change_type"], string>
   product_deprecated: "product deprecation",
 };
 
-// --- Disclosures (recorded, but never move rank) ------------------------------
-
 export type DisclosureCode = "limits_reduced" | "pricing_restructured" | "restriction";
 
 export interface Disclosure {
@@ -197,28 +137,9 @@ const DISCLOSURE_CHANGE_TYPES = new Set<string>([
   "restriction",
 ]);
 
-/**
- * Why these are shown but not scored: `deal_changes` covers 246 of 1,563
- * vendors (15.7%), but 51% of the vendors anyone has heard of. Ranking on
- * recorded instability demotes prominent vendors 3.2x more often than
- * obscure ones, which would replace an arbitrary ranking with a biased one.
- * Our not having recorded a limit reduction about a competitor is not
- * evidence that none happened.
- */
 export const DISCLOSURE_RATIONALE =
   "A recorded limit reduction, pricing restructure or new restriction is shown on every surface where the offer appears, with its date and summary — but it does not move rank. We have change records for only 16% of vendors, and disproportionately for well-known ones, so ranking on them would demote the vendors we happen to watch most closely.";
 
-// --- Verification ledger (populated by issue #1020) --------------------------
-
-/**
- * What the re-verification job knows about an offer it could not confirm.
- *
- * Nothing writes this yet: the rolling re-verifier prints failures to stdout
- * and keeps no record, so today we cannot honestly distinguish "not yet
- * re-checked" from "re-checked repeatedly and failed". Until #1020 records it,
- * `stale_verification` states the one thing that is true in both cases — that
- * we have not been able to confirm the offer since a given date.
- */
 export interface VerificationFailure {
   vendor: string;
   url: string;
@@ -229,8 +150,6 @@ export interface VerificationFailure {
 }
 
 export type VerificationLedger = Map<string, VerificationFailure>;
-
-// --- Results -----------------------------------------------------------------
 
 export interface RankedEntry<T> {
   offer: T;
@@ -245,25 +164,17 @@ export interface ExcludedEntry<T> {
 }
 
 export interface TieBreak {
-  /** UTC date the order was derived for. */
   date: string;
-  /** Derived only from the request. Never from the candidate set. */
   query_key: string;
-  /** sha256(`${date}|${query_key}|p${demerit_total}`), full hex. */
   seed: string;
-  /** How many offers tie at the top with zero demerits. */
   tie_count: number;
   algorithm: string;
 }
 
 export interface RankingResult<T> {
-  /** Every eligible offer, best band first, order rotated within each band. */
   ranked: RankedEntry<T>[];
-  /** The zero-demerit band — the offers we can stand behind without caveat. */
   qualified: RankedEntry<T>[];
-  /** Everything with at least one demerit, fewest demerits first. */
   demoted: RankedEntry<T>[];
-  /** Offers a gate removed, with the gate that removed them. */
   excluded: ExcludedEntry<T>[];
   tie_break: TieBreak;
   criteria_path: string;
@@ -271,8 +182,6 @@ export interface RankingResult<T> {
 
 export const TIE_BREAK_ALGORITHM =
   "seed = sha256(utc_date + '|' + query_key + '|p' + demerit_total); order = Fisher-Yates over the tied set driven by mulberry32(first 4 bytes of seed). No vendor name, slug, id, index or offer field is an input.";
-
-// --- Seeded permutation ------------------------------------------------------
 
 export function tieBreakSeed(date: string, queryKey: string, band: number): string {
   return createHash("sha256").update(`${date}|${queryKey}|p${band}`).digest("hex");
@@ -288,14 +197,6 @@ function mulberry32(a: number): () => number {
   };
 }
 
-/**
- * Fisher-Yates over `items`, driven only by `seedHex`.
- *
- * The permutation is chosen from all n! orderings by the seed alone and then
- * applied to the incoming list, so an offer's output position is uniform
- * regardless of what it is called or where it sits in the file. There is
- * nothing here to grind against.
- */
 export function seededShuffle<T>(items: T[], seedHex: string): T[] {
   const out = items.slice();
   const rng = mulberry32(parseInt(seedHex.slice(0, 8), 16) >>> 0);
@@ -308,21 +209,14 @@ export function seededShuffle<T>(items: T[], seedHex: string): T[] {
   return out;
 }
 
-/** Today in UTC, as YYYY-MM-DD. */
 export function utcDate(now: Date = new Date()): string {
   return now.toISOString().slice(0, 10);
 }
 
-// --- Ranking -----------------------------------------------------------------
-
 export interface RankOptions {
-  /** Derived only from the request, e.g. `best-of:Databases`. */
   queryKey: string;
-  /** All recorded deal changes. Passed in so this module stays pure. */
   changes: DealChange[];
-  /** UTC date to rank for. Defaults to today. */
   date?: string;
-  /** Failed re-verification attempts, keyed by lowercased vendor. #1020. */
   verificationLedger?: VerificationLedger;
 }
 
@@ -337,7 +231,6 @@ function shiftDays(dateIso: string, days: number): string {
   return new Date(Date.parse(dateIso) + days * DAY_MS).toISOString().slice(0, 10);
 }
 
-/** The gate an offer trips, or null if it is eligible for a ranked surface. */
 export function gateFor(offer: Offer, date: string): Gate | null {
   if (offer.eligibility) {
     const program = offer.eligibility.program ? ` (${offer.eligibility.program})` : "";
@@ -480,10 +373,6 @@ export function changesByVendor(changes: DealChange[]): Map<string, DealChange[]
   return map;
 }
 
-/**
- * Rank a candidate set. Gates first, then demerits, then a per-band
- * permutation seeded on the date and the query key.
- */
 export function rankOffers<T extends Offer>(candidates: T[], opts: RankOptions): RankingResult<T> {
   const date = opts.date ?? utcDate();
   const byVendor = changesByVendor(opts.changes);
@@ -505,8 +394,6 @@ export function rankOffers<T extends Offer>(candidates: T[], opts: RankOptions):
     );
   }
 
-  // Group into integer bands. The band is part of the seed so each band gets
-  // its own permutation, and a demoted offer cannot inherit a top-band slot.
   const bands = new Map<number, RankedEntry<T>[]>();
   for (const entry of entries) {
     const list = bands.get(entry.demerit_total);
@@ -539,20 +426,11 @@ export function rankOffers<T extends Offer>(candidates: T[], opts: RankOptions):
   };
 }
 
-/**
- * Order an inventory listing — a list that is not a recommendation but should
- * still not be ordered by the alphabet or by our commercial interest in it.
- *
- * Date-free by design where the caller passes no date: which pages exist is a
- * URL-stability question, and rotating that daily would churn the site for a
- * crawler with no benefit to a reader.
- */
 export function rotateListing<T>(items: T[], queryKey: string, date?: string): T[] {
   return seededShuffle(items, tieBreakSeed(date ?? "", queryKey, 0));
 }
 
 export interface ListedEntry<T> extends RankedEntry<T> {
-  /** Set when a gate applies. The entry is listed last, with the gate stated. */
   gate?: Gate;
 }
 
@@ -564,24 +442,9 @@ export interface ListingResult<T> {
   tie_break: TieBreak;
 }
 
-/**
- * Rank a "what else could fill this need" list, e.g. the alternatives on a
- * vendor page.
- *
- * Same ranking, one difference: a gated offer is moved to the end with its
- * gate stated rather than removed. A `/best/` page claims *every free X that
- * clears our bar*, so an offer that does not clear the bar has no business on
- * it. An alternatives list claims *the other things in this category*, and
- * dropping them silently would empty 91 of these pages — every vendor whose
- * category peers are all eligibility-restricted, which is most of the startup
- * and fintech programmes. Listing them with "requires accelerator/student
- * qualification" attached tells the reader more than hiding them does.
- */
 export function rankForListing<T extends Offer>(candidates: T[], opts: RankOptions): ListingResult<T> {
   const date = opts.date ?? utcDate();
   const result = rankOffers(candidates, { ...opts, date });
-  // One band past the worst demerit total, so the gated tail gets its own
-  // permutation and can never be interleaved with rankable offers.
   const gatedBand = result.ranked.reduce((max, e) => Math.max(max, e.demerit_total), 0) + 1;
   const gatedTail: ListedEntry<T>[] = seededShuffle(
     result.excluded,

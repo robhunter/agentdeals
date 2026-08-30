@@ -45,7 +45,6 @@ describe("normalizeVendor", () => {
   });
 
   it("does not strip TLD-shaped fragments mid-name", () => {
-    // .com at start or middle is not a TLD suffix
     assert.strictEqual(normalizeVendor("com Foo"), "com foo");
     assert.strictEqual(normalizeVendor("Foo.com Bar"), "foo.com bar");
   });
@@ -280,11 +279,6 @@ describe("formatMarkdown", () => {
 });
 
 describe("lint-duplicates against current data/index.json", () => {
-  // PR #1003 added vendor-name normalization (TLD/corp suffix stripping),
-  // surfacing 5 latent dups. All resolved in follow-up dedup PRs:
-  // todoist (#1005), trello (#1006), evernote (#1007), internxt + pcloud (#1010).
-  // If this ever drifts back >0, either a new miscategorization appeared and
-  // needs a dedup PR, or the list needs to flip back to the inventory form.
   it("surfaces zero normalized duplicate candidates", async () => {
     const { readFileSync } = await import("node:fs");
     const { resolve } = await import("node:path");

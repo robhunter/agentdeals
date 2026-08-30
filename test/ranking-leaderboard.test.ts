@@ -91,8 +91,6 @@ describe("Code Ranking Algorithm", () => {
       trust_tier: "verified",
     });
 
-    // New code with < 10 impressions uses default 0.5 conversion rate
-    // trust_weight=1.5 (verified), conversion_rate=0.5 (default), recency=1.0 (new)
     const score = calculateCodeScore(code);
     assert.strictEqual(score, 1.5 * 0.5 * 1.0);
   });
@@ -108,14 +106,12 @@ describe("Code Ranking Algorithm", () => {
       trust_tier: "new",
     });
 
-    // Simulate 20 impressions, 4 conversions => 20% rate
     for (let i = 0; i < 20; i++) recordImpression(code.id);
     for (let i = 0; i < 4; i++) recordCodeConversion(code.id);
 
     const updatedCodes = getCodesByAgent(agent.id);
     const updatedCode = updatedCodes.find((c: any) => c.id === code.id);
     const score = calculateCodeScore(updatedCode);
-    // trust_weight=1.0 (new), conversion_rate=4/20=0.2, recency=1.0
     assert.strictEqual(score, 1.0 * 0.2 * 1.0);
   });
 
@@ -130,18 +126,15 @@ describe("Code Ranking Algorithm", () => {
       trust_tier: "trusted",
     });
 
-    // Score at day 7 (still 1.0)
     const day7 = new Date(new Date(code.submitted_at).getTime() + 7 * 24 * 60 * 60 * 1000);
     const score7 = calculateCodeScore(code, day7);
     assert.strictEqual(score7, 2.0 * 0.5 * 1.0);
 
-    // Score at day 14 (1 week past first 7 days => 0.95)
     const day14 = new Date(new Date(code.submitted_at).getTime() + 14 * 24 * 60 * 60 * 1000);
     const score14 = calculateCodeScore(code, day14);
     const expected14 = 2.0 * 0.5 * 0.95;
     assert.ok(Math.abs(score14 - expected14) < 0.001);
 
-    // Score after many weeks — floor at 0.5
     const day200 = new Date(new Date(code.submitted_at).getTime() + 200 * 24 * 60 * 60 * 1000);
     const score200 = calculateCodeScore(code, day200);
     const expected200 = 2.0 * 0.5 * 0.5;
@@ -161,7 +154,6 @@ describe("Code Ranking Algorithm", () => {
 
     assert.strictEqual(isInColdStart(code), true);
 
-    // Add 50 impressions
     for (let i = 0; i < 50; i++) recordImpression(code.id);
     const updatedCodes = getCodesByAgent(agent.id);
     const updatedCode = updatedCodes.find((c: any) => c.id === code.id);
@@ -173,7 +165,6 @@ describe("Code Ranking Algorithm", () => {
     updateAgentTrustTier(a1.id, "trusted");
     const { agent: a2 } = createTestAgent("LowBot");
 
-    // High-performing trusted agent
     const code1 = submitReferralCode({
       vendor: "Railway",
       code: "HIGH1",
@@ -182,11 +173,9 @@ describe("Code Ranking Algorithm", () => {
       agent_id: a1.id,
       trust_tier: "trusted",
     });
-    // Push past cold start with good conversion rate
     for (let i = 0; i < 50; i++) recordImpression(code1.id);
     for (let i = 0; i < 10; i++) recordCodeConversion(code1.id);
 
-    // Low-performing verified agent
     updateAgentTrustTier(a2.id, "verified");
     const code2 = submitReferralCode({
       vendor: "Railway",
@@ -201,7 +190,6 @@ describe("Code Ranking Algorithm", () => {
 
     const ranked = getRankedCodesForVendor("Railway");
     assert.strictEqual(ranked.length, 2);
-    // High performer should be first
     assert.strictEqual(ranked[0].code, "HIGH1");
     assert.strictEqual(ranked[1].code, "LOW1");
   });
@@ -211,7 +199,6 @@ describe("Code Ranking Algorithm", () => {
     updateAgentTrustTier(a1.id, "trusted");
     const { agent: a2 } = createTestAgent("NewBot");
 
-    // Established code past cold start
     const code1 = submitReferralCode({
       vendor: "Railway",
       code: "EST1",
@@ -222,7 +209,6 @@ describe("Code Ranking Algorithm", () => {
     });
     for (let i = 0; i < 50; i++) recordImpression(code1.id);
 
-    // New code in cold start (verified so it's active)
     updateAgentTrustTier(a2.id, "verified");
     const code2 = submitReferralCode({
       vendor: "Railway",
@@ -235,7 +221,6 @@ describe("Code Ranking Algorithm", () => {
 
     const ranked = getRankedCodesForVendor("Railway");
     assert.strictEqual(ranked.length, 2);
-    // Cold start code first
     assert.strictEqual(ranked[0].code, "NEW1");
     assert.strictEqual(ranked[1].code, "EST1");
   });
@@ -468,7 +453,6 @@ describe("Agent Leaderboard", () => {
 
   it("caps limit at 50", () => {
     const result = getLeaderboard({ limit: 100 });
-    // Should not error, just cap
     assert.ok(result);
   });
 
@@ -481,7 +465,6 @@ describe("Agent Leaderboard", () => {
   it("includes active_codes count and earnings", () => {
     const { agent } = createTestAgent("EarnBot");
 
-    // Submit a code
     submitReferralCode({
       vendor: "Railway",
       code: "EARN1",
@@ -491,7 +474,6 @@ describe("Agent Leaderboard", () => {
       trust_tier: "verified",
     });
 
-    // Record conversions
     recordConversion({ vendor: "Railway", referral_code: "EARN1", commission_amount: 100 });
 
     const result = getLeaderboard();
@@ -507,14 +489,11 @@ describe("Agent Leaderboard", () => {
 
     const entry = recordConversion({ vendor: "Railway", referral_code: "CLAW", commission_amount: 50 });
 
-    // Clawback that entry
     clawbackEntry(entry.id);
 
-    // Record one more valid conversion
     recordConversion({ vendor: "Vercel", referral_code: "VALID", commission_amount: 50 });
 
     const result = getLeaderboard();
-    // Clawed back one shouldn't count
     assert.strictEqual(result.entries[0].total_conversions, 1);
   });
 });

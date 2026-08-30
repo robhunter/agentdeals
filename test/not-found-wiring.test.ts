@@ -1,12 +1,3 @@
-// Locks the wiring between the HTTP server and the outcome split (#1029).
-//
-// not-found-accounting.test.ts proves the counters are right once `recordTraffic` and
-// `recordPageView` are told the status. It cannot prove the server tells them: a handler
-// that returns before the hook is registered, or a hook registered before the status is
-// known, keeps producing the bug this issue is about — a 404 counted as a page view.
-// That is exactly how the page-view hook came to miss every redirect (found in #1019), so
-// this drives the real server over real HTTP.
-
 import { describe, it, after, before } from "node:test";
 import assert from "node:assert";
 import { spawn, type ChildProcess } from "node:child_process";
@@ -24,8 +15,6 @@ let proc: ChildProcess;
 let movedAside = false;
 
 before(async () => {
-  // Same isolation as the search wiring test: data/telemetry.json is gitignored local
-  // detritus that any spawned server hydrates.
   if (existsSync(telemetryPath)) {
     renameSync(telemetryPath, telemetryBackup);
     movedAside = true;
@@ -33,9 +22,6 @@ before(async () => {
 
   proc = spawn("node", [serverPath], {
     stdio: ["pipe", "pipe", "pipe"],
-    // BASE_URL decides the canonical hostname, and a request to localhost that does not
-    // match it 301s before reaching any handler — which would make every case below
-    // assert on the canonical redirect instead of on what it means to.
     env: { ...process.env, PORT: "0", BASE_URL: "http://localhost" },
   });
   await new Promise<void>((resolve, reject) => {
@@ -66,7 +52,6 @@ async function request(pathname: string, redirect: RequestRedirect = "manual"): 
   return res.status;
 }
 
-/** Read through the internal marker so the observability call is not itself measured. */
 async function observe(pathname: string): Promise<any> {
   const res = await fetch(`http://localhost:${port}${pathname}`, {
     headers: { "user-agent": "agentdeals-internal/1.0 (wiring test)" },
@@ -105,9 +90,6 @@ describe("404 accounting wiring (#1029)", () => {
 
   it("counts a real 301 apart from both", async () => {
     const before = await observe("/api/traffic");
-    // /vendors/<slug> 301s to /vendor/<slug>. This branch returns *above* the page-view
-    // hook, which is why the traffic hook is registered first — a redirect that nothing
-    // records at all is the failure mode here.
     assert.strictEqual(await request("/vendors/neon"), 301);
     const after = await observe("/api/traffic");
 
@@ -150,7 +132,6 @@ describe("404 accounting wiring (#1029)", () => {
     }
     assert.ok(pageviews.notes.length > 0, "/api/pageviews must state what it counts");
     assert.ok(Array.isArray(traffic.not_found_sample));
-    // Present even with no storage configured — the field must not be conditional on it.
     assert.ok("all_time_trustworthy_from" in pageviews);
   });
 });

@@ -52,14 +52,6 @@ function generateCodeId(): string {
   return `code_${randomBytes(12).toString("hex")}`;
 }
 
-// --- Trust tier calculation ---
-
-/**
- * Calculate an agent's trust tier based on their conversion/clawback history.
- * - new: default (just registered)
- * - verified: 3+ successful conversions, 0 clawbacks
- * - trusted: 20+ conversions, <5% clawback rate
- */
 export function calculateTrustTier(agentId: string, ledgerEntries: { event_type: string; agent_id: string | null; status: string }[]): TrustTier {
   const agentEntries = ledgerEntries.filter(e => e.agent_id === agentId);
   const conversions = agentEntries.filter(e => e.event_type === "conversion" && e.status !== "clawed_back");
@@ -78,8 +70,6 @@ export function calculateTrustTier(agentId: string, ledgerEntries: { event_type:
 
   return "new";
 }
-
-// --- Rate limiting ---
 
 const DAILY_LIMITS: Record<TrustTier, number> = {
   new: 10,
@@ -102,8 +92,6 @@ export function getDailyLimit(tier: TrustTier): number {
   return DAILY_LIMITS[tier];
 }
 
-// --- Validation ---
-
 function validateVendorExists(vendor: string): boolean {
   const offers = loadOffers();
   return offers.some(o => o.vendor.toLowerCase() === vendor.toLowerCase());
@@ -118,8 +106,6 @@ function isValidUrl(url: string): boolean {
   }
 }
 
-// --- Core operations ---
-
 export interface SubmitCodeOpts {
   vendor: string;
   code: string;
@@ -132,28 +118,23 @@ export interface SubmitCodeOpts {
 }
 
 export function submitReferralCode(opts: SubmitCodeOpts): SubmittedReferralCode {
-  // Validate vendor exists
   if (!validateVendorExists(opts.vendor)) {
     throw new Error(`Vendor "${opts.vendor}" not found in the offers index`);
   }
 
-  // Validate code
   if (!opts.code || opts.code.length > 100) {
     throw new Error("code must be a non-empty string, max 100 characters");
   }
 
-  // Validate URL
   if (!isValidUrl(opts.referral_url)) {
     throw new Error("referral_url must be a valid URL");
   }
 
-  // Validate agent is active
   const agent = getAgentById(opts.agent_id);
   if (!agent || agent.status !== "active") {
     throw new Error("Agent must be active to submit referral codes");
   }
 
-  // Check one active code per vendor per agent
   const codes = loadCodes();
   const existingActive = codes.find(c =>
     c.submitted_by === opts.agent_id &&
@@ -164,14 +145,12 @@ export function submitReferralCode(opts: SubmitCodeOpts): SubmittedReferralCode 
     throw new Error(`You already have an active/pending code for "${opts.vendor}". Revoke it first to submit a new one.`);
   }
 
-  // Rate limit check
   const dailyCount = getDailySubmissionCount(opts.agent_id);
   const dailyLimit = getDailyLimit(opts.trust_tier);
   if (dailyCount >= dailyLimit) {
     throw new Error(`Daily submission limit reached (${dailyLimit}/day for ${opts.trust_tier} tier). Try again tomorrow.`);
   }
 
-  // Validate expiry if provided
   if (opts.expiry) {
     const expiryDate = new Date(opts.expiry);
     if (isNaN(expiryDate.getTime())) {
@@ -182,10 +161,6 @@ export function submitReferralCode(opts: SubmitCodeOpts): SubmittedReferralCode 
     }
   }
 
-  // All agent-submitted codes are active on submission, regardless of trust tier.
-  // Trust tier influences ranking weight (see TRUST_WEIGHTS below), not visibility —
-  // otherwise new-tier agents could never accumulate the conversions needed to
-  // advance past "new" (issue #906).
   const status: CodeStatus = "active";
 
   const now = new Date().toISOString();
@@ -213,26 +188,14 @@ export function submitReferralCode(opts: SubmitCodeOpts): SubmittedReferralCode 
   return entry;
 }
 
-/**
- * Get all codes submitted by a specific agent.
- */
 export function getCodesByAgent(agentId: string): SubmittedReferralCode[] {
   return loadCodes().filter(c => c.submitted_by === agentId);
 }
 
-/**
- * Get a submitted code by ID.
- */
 export function getCodeById(id: string): SubmittedReferralCode | null {
   return loadCodes().find(c => c.id === id) ?? null;
 }
 
-/**
- * Resolve the agent that submitted a code, from the vendor and code string a
- * conversion was reported against. Returns null for one of our own curated
- * codes, and for any code we hold no submission record for. Revoked and expired
- * submissions still resolve: the agent did submit the code that converted.
- */
 export function submitterOfCode(vendorName: string, code: string): string | null {
   if (!code) return null;
   const lowerName = vendorName.toLowerCase();
@@ -240,10 +203,6 @@ export function submitterOfCode(vendorName: string, code: string): string | null
   return match ? match.submitted_by : null;
 }
 
-/**
- * Update a submitted code. Only the owner can update.
- * Returns the updated code or throws.
- */
 export function updateCode(id: string, agentId: string, updates: {
   code?: string;
   referral_url?: string;
@@ -303,9 +262,6 @@ export function updateCode(id: string, agentId: string, updates: {
   return entry;
 }
 
-/**
- * Soft-delete (revoke) a submitted code. Only the owner can revoke.
- */
 export function revokeCode(id: string, agentId: string): SubmittedReferralCode {
   const codes = loadCodes();
   const entry = codes.find(c => c.id === id);
@@ -328,15 +284,10 @@ export function revokeCode(id: string, agentId: string): SubmittedReferralCode {
   return entry;
 }
 
-/**
- * Get all active agent-submitted codes for a specific vendor.
- * Used by search results to include alongside curated codes.
- */
 export function getActiveCodesForVendor(vendorName: string): SubmittedReferralCode[] {
   const codes = loadCodes();
   const lowerName = vendorName.toLowerCase();
 
-  // Check and expire any codes past their expiry date
   const now = new Date();
   let changed = false;
   for (const code of codes) {
@@ -356,9 +307,6 @@ export function getActiveCodesForVendor(vendorName: string): SubmittedReferralCo
   );
 }
 
-/**
- * Get all active agent-submitted codes (for search result integration).
- */
 export function getAllActiveCodes(): SubmittedReferralCode[] {
   const codes = loadCodes();
   const now = new Date();
@@ -378,8 +326,6 @@ export function getAllActiveCodes(): SubmittedReferralCode[] {
   return codes.filter(c => c.status === "active");
 }
 
-// --- Code Ranking Algorithm ---
-
 const TRUST_WEIGHTS: Record<TrustTier, number> = {
   new: 1.0,
   verified: 1.5,
@@ -387,27 +333,21 @@ const TRUST_WEIGHTS: Record<TrustTier, number> = {
 };
 
 const COLD_START_IMPRESSIONS = 50;
-const RECENCY_DECAY_RATE = 0.05; // 5% per week
+const RECENCY_DECAY_RATE = 0.05;
 const RECENCY_FLOOR = 0.5;
 const MIN_IMPRESSIONS_FOR_RATE = 10;
 
-/**
- * Calculate the ranking score for a submitted code.
- * score = trust_weight × conversion_rate × recency_factor
- */
 export function calculateCodeScore(code: SubmittedReferralCode, now?: Date): number {
   const currentDate = now ?? new Date();
   const trustWeight = TRUST_WEIGHTS[code.trust_tier_at_submission] ?? 1.0;
 
-  // Conversion rate (min 10 impressions before rate kicks in)
   let conversionRate: number;
   if (code.impressions < MIN_IMPRESSIONS_FOR_RATE) {
-    conversionRate = 0.5; // default rate for new codes
+    conversionRate = 0.5;
   } else {
     conversionRate = code.conversions / code.impressions;
   }
 
-  // Recency factor: 1.0 for first 7 days, decaying 5% per week after, floor 0.5
   const submittedAt = new Date(code.submitted_at);
   const daysSinceSubmission = Math.max(0, (currentDate.getTime() - submittedAt.getTime()) / (1000 * 60 * 60 * 24));
   let recencyFactor: number;
@@ -421,19 +361,10 @@ export function calculateCodeScore(code: SubmittedReferralCode, now?: Date): num
   return trustWeight * conversionRate * recencyFactor;
 }
 
-/**
- * Check if a code is in its cold start trial period (< 50 impressions).
- */
 export function isInColdStart(code: SubmittedReferralCode): boolean {
   return code.impressions < COLD_START_IMPRESSIONS;
 }
 
-/**
- * Get ranked active codes for a vendor. Codes in cold start get equal
- * distribution; codes past cold start are ranked by score descending.
- * Returns all active codes sorted: cold start codes first (round-robin
- * by fewest impressions), then performance-ranked codes.
- */
 export function getRankedCodesForVendor(vendorName: string, now?: Date): SubmittedReferralCode[] {
   const activeCodes = getActiveCodesForVendor(vendorName);
   if (activeCodes.length === 0) return [];
@@ -441,19 +372,13 @@ export function getRankedCodesForVendor(vendorName: string, now?: Date): Submitt
   const coldStart = activeCodes.filter(c => isInColdStart(c));
   const ranked = activeCodes.filter(c => !isInColdStart(c));
 
-  // Cold start: sort by fewest impressions (equal distribution)
   coldStart.sort((a, b) => a.impressions - b.impressions);
 
-  // Performance-ranked: sort by score descending
   ranked.sort((a, b) => calculateCodeScore(b, now) - calculateCodeScore(a, now));
 
-  // Cold start codes are interleaved alongside ranked codes
   return [...coldStart, ...ranked];
 }
 
-/**
- * Record an impression for a code (increments the counter).
- */
 export function recordImpression(codeId: string): void {
   const codes = loadCodes();
   const code = codes.find(c => c.id === codeId);
@@ -463,9 +388,6 @@ export function recordImpression(codeId: string): void {
   }
 }
 
-/**
- * Record a conversion for a submitted code.
- */
 export function recordCodeConversion(codeId: string): void {
   const codes = loadCodes();
   const code = codes.find(c => c.id === codeId);

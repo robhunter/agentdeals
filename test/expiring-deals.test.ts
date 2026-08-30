@@ -22,7 +22,6 @@ describe("getExpiringDeals logic", () => {
 
   it("returns empty results when no deals expire in window", async () => {
     const { getExpiringDeals } = await import("../dist/data.js");
-    // Use 0 days — nothing expires today exactly
     const result = getExpiringDeals(0);
     assert.strictEqual(result.total, 0, "No deals should expire within 0 days");
     assert.deepStrictEqual(result.deals, []);
@@ -159,7 +158,6 @@ describe("get_expiring_deals REST endpoint", () => {
     assert.strictEqual(response.status, 200);
     const body = await response.json() as any;
     assert.ok(Array.isArray(body.deals));
-    // All deals should be within 30 days
     for (const deal of body.deals) {
       assert.ok(deal.days_until_expiry <= 30, `Deal ${deal.vendor} should expire within 30 days`);
     }

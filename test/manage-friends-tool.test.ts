@@ -142,27 +142,22 @@ describe("manage_friends MCP tool via HTTP", () => {
     const reg1 = JSON.parse((await callTool(sessionId, 2, "register_agent", { name: "A1_" + ts })).content[0].text);
     const reg2 = JSON.parse((await callTool(sessionId, 3, "register_agent", { name: "A2_" + ts })).content[0].text);
 
-    // Add
     const addResult = await callTool(sessionId, 4, "manage_friends", { api_key: reg1.api_key, action: "add", agent_id: reg2.id });
     assert.ok(!addResult.isError, "add should succeed");
     const addData = JSON.parse(addResult.content[0].text);
     assert.strictEqual(addData.action, "added");
 
-    // List
     const listData = JSON.parse((await callTool(sessionId, 5, "manage_friends", { api_key: reg1.api_key, action: "list" })).content[0].text);
     assert.strictEqual(listData.total, 1);
     assert.strictEqual(listData.friends[0].friend_id, reg2.id);
 
-    // Codes
     const codesData = JSON.parse((await callTool(sessionId, 6, "manage_friends", { api_key: reg1.api_key, action: "codes" })).content[0].text);
     assert.strictEqual(codesData.action, "codes");
     assert.ok(Array.isArray(codesData.vendors));
 
-    // Remove
     const removeData = JSON.parse((await callTool(sessionId, 7, "manage_friends", { api_key: reg1.api_key, action: "remove", agent_id: reg2.id })).content[0].text);
     assert.strictEqual(removeData.action, "removed");
 
-    // Verify empty
     const afterData = JSON.parse((await callTool(sessionId, 8, "manage_friends", { api_key: reg1.api_key, action: "list" })).content[0].text);
     assert.strictEqual(afterData.total, 0);
   });

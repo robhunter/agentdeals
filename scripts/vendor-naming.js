@@ -1,14 +1,3 @@
-/**
- * Does a fetched page state terms about *this* vendor?
- *
- * `priceSignals()` in change-gate.js answers "does this page state terms".
- * A marketplace landing page saturated with other companies' prices scores
- * higher on that question than a real vendor pricing page, so the two
- * questions have to be asked separately (#1109).
- *
- * Every function here is pure. The caller supplies the fetched text.
- */
-
 const NAME_QUALIFIERS = new Set([
   "cloud", "ci", "cd", "api", "apis", "ai", "app", "apps", "platform", "hosting",
   "storage", "object", "free", "inc", "ltd", "llc", "labs", "software", "services",

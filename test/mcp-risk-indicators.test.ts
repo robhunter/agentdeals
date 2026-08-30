@@ -81,7 +81,6 @@ describe("MCP risk_level/stability indicators (issue #969)", () => {
         ["stable", "watch", "volatile", "improving"].includes(r.stability),
         `concise result for ${r.vendor} should have stability, got ${r.stability}`
       );
-      // Concise mode should still be concise: no full description-free kitchen-sink (no deal_changes array)
       assert.strictEqual(r.deal_changes, undefined, "concise should not include deal_changes");
     }
   });
@@ -155,7 +154,6 @@ describe("MCP risk_level/stability indicators (issue #969)", () => {
     });
     const body = JSON.parse(result.content[0].text);
     assert.ok(Array.isArray(body.stack) && body.stack.length > 0, "should return a stack");
-    // #1025: a role now carries a candidate set rather than one winning vendor.
     for (const role of body.stack) {
       assert.ok(Array.isArray(role.candidates) && role.candidates.length > 0, `${role.role} should have candidates`);
       for (const c of role.candidates) {

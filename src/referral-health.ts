@@ -115,7 +115,6 @@ function collectReferralUrls(): { vendor: string; url: string; source: "curated"
       }
     }
   } catch {
-    // agent codes file may not exist
   }
 
   return urls;

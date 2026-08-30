@@ -53,12 +53,10 @@ export function registerAgent(opts: {
 }): RegisterResult {
   const agents = loadAgents();
 
-  // Check for duplicate name
   if (agents.some(a => a.name.toLowerCase() === opts.name.toLowerCase())) {
     throw new Error(`Agent with name "${opts.name}" already exists`);
   }
 
-  // Check for duplicate vestauth URL
   if (opts.vestauth_public_key_url) {
     if (agents.some(a => a.vestauth_public_key_url === opts.vestauth_public_key_url)) {
       throw new Error(`Agent with vestauth URL "${opts.vestauth_public_key_url}" already exists`);
@@ -70,11 +68,9 @@ export function registerAgent(opts: {
   let apiKeyHash = "";
 
   if (opts.api_key !== false && !opts.vestauth_public_key_url) {
-    // Default to API key auth if no vestauth URL provided
     apiKey = generateApiKey();
     apiKeyHash = hashApiKey(apiKey);
   } else if (opts.api_key) {
-    // Explicitly requested API key alongside vestauth
     apiKey = generateApiKey();
     apiKeyHash = hashApiKey(apiKey);
   }
@@ -112,18 +108,9 @@ export function getAgentById(id: string): Agent | null {
   return agents.find(a => a.id === id) ?? null;
 }
 
-/**
- * Authenticate an incoming HTTP request.
- * Returns the authenticated Agent or null.
- *
- * Supports:
- * 1. Bearer token (API key) — Authorization: Bearer agd_...
- * 2. Vestauth HTTP Message Signatures (RFC 9421) — Signature + Signature-Input headers
- */
 export async function authenticateRequest(req: {
   headers: Record<string, string | string[] | undefined>;
 }): Promise<Agent | null> {
-  // Method 1: Bearer token (API key)
   const authHeader = req.headers["authorization"];
   if (typeof authHeader === "string" && authHeader.startsWith("Bearer ")) {
     const token = authHeader.slice(7).trim();
@@ -133,23 +120,18 @@ export async function authenticateRequest(req: {
     }
   }
 
-  // Method 2: Vestauth HTTP Message Signatures
   const signature = req.headers["signature"];
   const signatureInput = req.headers["signature-input"];
   if (typeof signature === "string" && typeof signatureInput === "string") {
-    // Extract the keyid from signature-input to find the agent
-    // RFC 9421 format: sig1=(...);keyid="https://example.com/.well-known/vestauth"
     const keyIdMatch = signatureInput.match(/keyid="([^"]+)"/);
     if (keyIdMatch) {
       const keyId = keyIdMatch[1];
       const agent = getAgentByVestauthUrl(keyId);
       if (agent) {
-        // Verify the signature by fetching the public key
         try {
           const verified = await verifyVestauthSignature(keyId, signature, signatureInput, req.headers);
           if (verified) return agent;
         } catch {
-          // Signature verification failed
         }
       }
     }
@@ -164,7 +146,6 @@ async function verifyVestauthSignature(
   _signatureInput: string,
   _headers: Record<string, string | string[] | undefined>
 ): Promise<boolean> {
-  // Fetch the public key from the .well-known endpoint
   try {
     const resp = await fetch(publicKeyUrl, {
       signal: AbortSignal.timeout(5000),
@@ -173,27 +154,14 @@ async function verifyVestauthSignature(
     if (!resp.ok) return false;
 
     const data = await resp.json() as Record<string, unknown>;
-    // Vestauth .well-known response should contain a public key
     if (!data || !data.public_key) return false;
 
-    // TODO: Full RFC 9421 signature verification using the public key
-    // For Phase 2 MVP, we verify the key is fetchable and the agent is registered.
-    // Full cryptographic verification will be added when vestauth adoption grows.
-    // The agent being registered with this URL + the URL being reachable is the
-    // identity assertion for now.
     return true;
   } catch {
     return false;
   }
 }
 
-/**
- * Validate a vestauth public key URL by fetching it.
- * Returns true if the URL is reachable and returns valid JSON with a public_key field.
- */
-/**
- * Update an agent's x402 address. Validates format before persisting.
- */
 export function updateAgentX402Address(agentId: string, x402Address: string | null): Agent {
   const agents = loadAgents();
   if (!agents.some(a => a.id === agentId)) {
@@ -204,9 +172,6 @@ export function updateAgentX402Address(agentId: string, x402Address: string | nu
   return next.find(a => a.id === agentId)!;
 }
 
-/**
- * Update an agent's trust tier. Called after conversion confirmation or clawback events.
- */
 export function updateAgentTrustTier(agentId: string, newTier: "new" | "verified" | "trusted"): Agent {
   const agents = loadAgents();
   if (!agents.some(a => a.id === agentId)) {

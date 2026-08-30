@@ -23,7 +23,6 @@ describe("checkVendorRisk logic", () => {
 
   it("returns caution for vendor with pricing_restructured", async () => {
     const { checkVendorRisk } = await import("../dist/data.js");
-    // Vercel has pricing_restructured change
     const result = checkVendorRisk("Vercel");
     assert.ok(!("error" in result), "Vercel should be found");
     assert.strictEqual(result.result.risk_level, "caution", "Vercel should be caution due to pricing_restructured");
@@ -33,7 +32,6 @@ describe("checkVendorRisk logic", () => {
 
   it("returns caution for vendor with limits_reduced", async () => {
     const { checkVendorRisk } = await import("../dist/data.js");
-    // Supabase has limits_reduced change
     const result = checkVendorRisk("Supabase");
     assert.ok(!("error" in result), "Supabase should be found");
     assert.strictEqual(result.result.risk_level, "caution", "Supabase should be caution due to limits_reduced");
@@ -49,9 +47,7 @@ describe("checkVendorRisk logic", () => {
 
   it("returns fuzzy match suggestions for partial vendor name", async () => {
     const { checkVendorRisk } = await import("../dist/data.js");
-    // "Cloud" should fuzzy match multiple vendors
     const result = checkVendorRisk("Cloud");
-    // Could either fuzzy-match a single vendor or return suggestions
     if ("error" in result) {
       assert.ok(result.suggestions && result.suggestions.length > 0, "Should have suggestions");
     }

@@ -16,7 +16,6 @@ describe("stack recommendation logic", () => {
     assert.ok(Array.isArray(result.limitations));
     assert.ok(typeof result.upgrade_path === "string");
 
-    // Check roles and their candidates have required fields
     for (const role of result.stack) {
       assert.ok(role.role, "Should have role");
       assert.ok(role.candidates.length > 0, "Should have candidates");
@@ -28,7 +27,6 @@ describe("stack recommendation logic", () => {
       }
     }
 
-    // Should include hosting and database roles
     const roles = result.stack.map((c: any) => c.role);
     assert.ok(roles.includes("Hosting"), "SaaS stack should include Hosting");
     assert.ok(roles.includes("Database"), "SaaS stack should include Database");
@@ -76,7 +74,6 @@ describe("stack recommendation logic", () => {
   it("falls back gracefully for unknown use case", async () => {
     const { getStackRecommendation } = await import("../dist/stacks.js");
     const result = getStackRecommendation("quantum teleporter management system");
-    // Should return fallback stack with common categories
     assert.ok(result.stack.length >= 3);
     assert.strictEqual(result.total_monthly_cost, "$0");
   });
@@ -113,7 +110,6 @@ describe("stack recommendation logic", () => {
     const { getStackRecommendation } = await import("../dist/stacks.js");
     const result = getStackRecommendation("Next.js SaaS app");
     assert.ok(Array.isArray(result.risk_warnings));
-    // Each warning should name the vendor and role
     for (const w of result.risk_warnings) {
       assert.ok(typeof w === "string");
       assert.ok(w.length > 0);
@@ -131,10 +127,6 @@ describe("stack recommendation logic", () => {
   });
 });
 
-// #1025: plan_stack stops naming one winner per role. The old behaviour put
-// Supabase in every database slot of every template because it was typed first
-// in `preferredVendors`; the fallback was `publicOffers[0]`, index order in the
-// JSON file. Both are gone.
 describe("plan_stack does not name a winner", () => {
   it("returns a candidate set per role, not a single vendor", async () => {
     const { getStackRecommendation } = await import("../dist/stacks.js");
@@ -183,9 +175,6 @@ describe("plan_stack does not name a winner", () => {
         for (const c of role.candidates) seen.add(c.tier);
       }
     }
-    // `findBestOffer()` gated on {Free, Hobby, Open Source, Free Credits}, so no
-    // offer outside that set could ever appear. Any tier outside it proves the
-    // allowlist is gone.
     const outsideOldAllowlist = [...seen].filter((t) => !["Free", "Hobby", "Open Source", "Free Credits"].includes(t));
     assert.ok(outsideOldAllowlist.length > 0, "no tier outside the old allowlist appeared — the gate may not have changed");
   });

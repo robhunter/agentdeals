@@ -92,12 +92,12 @@ describe("rolling re-verification", () => {
     });
 
     it("returns yesterday when rand picks offset 1", () => {
-      const stamp = staggeredDate(now, () => 0.4); // floor(0.4*3) = 1
+      const stamp = staggeredDate(now, () => 0.4);
       assert.strictEqual(stamp, "2026-04-20");
     });
 
     it("returns day-before when rand picks offset 2", () => {
-      const stamp = staggeredDate(now, () => 0.8); // floor(0.8*3) = 2
+      const stamp = staggeredDate(now, () => 0.8);
       assert.strictEqual(stamp, "2026-04-19");
     });
 

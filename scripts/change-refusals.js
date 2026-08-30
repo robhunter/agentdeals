@@ -1,12 +1,3 @@
-/**
- * Durable record of every change candidate the gate refused.
- *
- * The gate's refusals were previously visible only in the job log, which
- * expires. This module writes them to data/change_refusals.json and reads
- * them back so a refused record does not return to the head of the
- * re-verification queue on the next run.
- */
-
 import { readFileSync, writeFileSync } from "node:fs";
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";

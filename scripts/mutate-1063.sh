@@ -1,6 +1,4 @@
 #!/bin/bash
-# Mutation pass for #1063. Each entry mutates real source, rebuilds, runs the
-# tests that should notice, and reports whether anything bit.
 set -u
 cd "$(dirname "$0")/.." || exit 1
 

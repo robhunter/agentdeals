@@ -107,11 +107,9 @@ let indexNowLastSubmission: { ts: string; urlCount: number; status: number } | n
 const GOOGLE_VERIFICATION_META = process.env.GOOGLE_SITE_VERIFICATION
   ? `<meta name="google-site-verification" content="${process.env.GOOGLE_SITE_VERIFICATION}">\n` : "";
 
-// Patch OpenAPI spec with BASE_URL
 openapiSpec.info.contact.url = BASE_URL;
 openapiSpec.servers[0].url = BASE_URL;
 
-// Load favicon from logo PNG at startup
 const faviconBuffer = readFileSync(join(__dirname, "..", "assets", "logo-400.png"));
 
 interface PressItem {
@@ -136,10 +134,8 @@ const pressItems: PressItem[] = (() => {
   }
 })();
 
-// Load OG image at startup
 const ogImageBuffer = readFileSync(join(__dirname, "..", "assets", "og-image.png"));
 
-// OG image meta tags shared across all pages
 const OG_IMAGE_META = `<meta property="og:image" content="${BASE_URL}/og-image.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -165,7 +161,6 @@ function searchQueryAnchor(href: string, inner: string, attrs = ""): string {
   return '<a href="' + escHtmlServer(href) + '"' + crawlRel(href) + attrs + '>' + inner + '</a>';
 }
 
-// Swagger UI dist path
 const swaggerUiDistPath = join(__dirname, "..", "node_modules", "swagger-ui-dist");
 
 const swaggerDocsHtml = `<!DOCTYPE html>
@@ -259,8 +254,8 @@ const SWAGGER_MIME_TYPES: Record<string, string> = {
   ".png": "image/png",
   ".map": "application/json",
 };
-const SESSION_IDLE_TIMEOUT_MS = 15 * 60 * 1000; // 15 minutes
-const CLEANUP_INTERVAL_MS = 60 * 1000; // 60 seconds
+const SESSION_IDLE_TIMEOUT_MS = 15 * 60 * 1000;
+const CLEANUP_INTERVAL_MS = 60 * 1000;
 
 interface ClientInfo {
   name: string;
@@ -281,7 +276,6 @@ interface SessionEntry {
   sse?: StandaloneStream;
 }
 
-// Map of session ID → transport + last activity for multi-session support
 const sessions = new Map<string, SessionEntry>();
 
 const SSE_KEEPALIVE_INTERVAL_MS = keepaliveIntervalMs();
@@ -365,7 +359,6 @@ function touchSession(sessionId: string): void {
   }
 }
 
-// Periodic cleanup of idle sessions
 setInterval(() => {
   const now = Date.now();
   for (const [sid, entry] of sessions) {
@@ -386,7 +379,6 @@ setInterval(() => {
   }
 }, CLEANUP_INTERVAL_MS).unref();
 
-// Load cumulative telemetry from Redis or disk (survives deploys)
 const telemetryFile = join(__dirname, "..", "data", "telemetry.json");
 await loadTelemetry(telemetryFile);
 
@@ -429,7 +421,6 @@ const durableHistoryBody = JSON.stringify({
 
 const registrationLimiter = createRegistrationLimiter();
 
-// Build landing page HTML at startup with real stats
 const offers = loadOffers();
 const categories = getCategories();
 const dealChanges = loadDealChanges();
@@ -451,13 +442,11 @@ export function changeLogFreshnessNote(now: Date = new Date()): string {
 const today = new Date().toISOString().slice(0, 10);
 const hasAlreadyTakenEffect = (c: { date: string }) => c.date <= today;
 
-// Prepare recent deal changes for landing page (5 most recent, sorted newest first)
 const recentChanges = [...dealChanges]
   .filter(hasAlreadyTakenEffect)
   .sort((a, b) => b.date.localeCompare(a.date))
   .slice(0, 5);
 
-// Prepare upcoming deadlines (future dates, soonest first, max 5)
 const upcomingDeadlines = [...dealChanges]
   .filter((c) => !hasAlreadyTakenEffect(c))
   .sort((a, b) => a.date.localeCompare(b.date))
@@ -485,18 +474,6 @@ function riskCauseLabel(cause: RiskCause): string {
   return `${changeDateLabel(cause)} ${changeTypeBadge[cause.change_type]?.label ?? cause.change_type.replace(/_/g, " ")}`;
 }
 
-/**
- * The only way a risk level reaches an HTML surface (#1038).
- *
- * `caution` and `risky` are negative factual claims about a named company, so
- * they render *with* the dated record that produced them, and render nothing
- * at all without one — a warning a reader cannot check is an assertion. Before
- * this, `/vendor/railway` carried `caution` in its `<h1>` because Railway had
- * expanded its free tier, and `/vendor/neon` carried one whose cause was seven
- * months old and therefore invisible on the page.
- *
- * `stable` needs no cause: it is the absence of a claim against the vendor.
- */
 function riskBadgeHtml(
   level: string | null | undefined,
   cause: RiskCause | null | undefined,
@@ -533,12 +510,9 @@ function stabilityCellHtml(
   return `<span class="stability-dot" style="background:${color}"></span> <span${title}>${escHtmlServer(published)}</span>`;
 }
 
-/** Table-cell form of the same rule: the level, and under it the dated cause. */
 function riskCellHtml(level: string | null | undefined, cause: RiskCause | null | undefined): string {
   if (level === null) return `<span style="color:var(--text-dim)">&mdash;</span>`;
   const resolved = level ?? "stable";
-  // A level with no cause is neither publishable as a warning nor rewritable
-  // into "stable" — that would be a positive claim we also cannot back.
   if (resolved !== "stable" && !cause) return `<span style="color:var(--text-dim)">&mdash;</span>`;
   const color = RISK_COLORS[resolved] ?? "#8b949e";
   const causeHtml = resolved !== "stable" && cause
@@ -670,14 +644,11 @@ ${entries}
   </div>`;
 }
 
-// Build category slug → name lookup
 const categorySlugMap = new Map<string, string>();
 for (const cat of categories) {
   categorySlugMap.set(toSlug(cat.name), cat.name);
 }
 
-// Build vendor slug → most recent verifiedDate for sitemap lastmod
-// (vendorSlugMap itself now lives in vendor-slug.ts and is imported above.)
 const vendorLastmod = new Map<string, string>();
 for (const o of offers) {
   const slug = toSlug(o.vendor);
@@ -688,7 +659,6 @@ for (const o of offers) {
   }
 }
 
-// Build category slug → most recent verifiedDate for sitemap lastmod
 const categoryLastmod = new Map<string, string>();
 for (const o of offers) {
   const catSlug = toSlug(o.category);
@@ -698,7 +668,6 @@ for (const o of offers) {
   }
 }
 
-// Build vendor name → primary category (first offer's category wins)
 const vendorCategoryMap = new Map<string, string>();
 for (const o of offers) {
   const key = o.vendor.toLowerCase();
@@ -715,15 +684,12 @@ function escHtmlServer(s: string): string {
   return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 }
 
-// --- Badge SVG generation ---
-
 type BadgeStatus = "active" | "at-risk" | "removed" | "unknown";
 
 function getBadgeStatus(vendorSlug: string): { status: BadgeStatus; label: string; verifiedDate: string | null } {
   const vendorName = vendorSlugMap.get(vendorSlug);
   if (!vendorName) return { status: "unknown", label: "unknown", verifiedDate: null };
 
-  // Check for removal/deprecation in deal changes
   const vendorChanges = dealChanges.filter(c => toSlug(c.vendor) === vendorSlug);
   const hasRemoval = vendorChanges.some(c =>
     c.change_type === "free_tier_removed" || c.change_type === "product_deprecated" || c.change_type === "open_source_killed"
@@ -735,14 +701,12 @@ function getBadgeStatus(vendorSlug: string): { status: BadgeStatus; label: strin
     return { status: "removed", label: removal.change_type === "product_deprecated" ? "deprecated" : "free tier removed", verifiedDate: removal.date };
   }
 
-  // Find most recent verifiedDate for this vendor
   const vendorOffers = offers.filter(o => toSlug(o.vendor) === vendorSlug);
   if (vendorOffers.length === 0) return { status: "unknown", label: "unknown", verifiedDate: null };
 
   const latestVerified = vendorOffers.reduce((max, o) => o.verifiedDate > max ? o.verifiedDate : max, vendorOffers[0].verifiedDate);
   const daysSince = Math.floor((Date.now() - new Date(latestVerified).getTime()) / (1000 * 60 * 60 * 24));
 
-  // Check for recent negative changes (at-risk)
   const hasRecentNegativeChange = vendorChanges.some(c =>
     (c.change_type === "limits_reduced" || c.change_type === "pricing_restructured" || c.change_type === "pricing_model_change") &&
     Math.floor((Date.now() - new Date(c.date).getTime()) / (1000 * 60 * 60 * 24)) <= 90
@@ -767,8 +731,6 @@ function escXml(s: string): string {
 }
 
 function measureTextWidth(text: string, fontSize: number): number {
-  // Approximate character width for DejaVu Sans / Verdana at given font size
-  // Average char width ~6.5px at 11px font size
   const avgWidth = fontSize * 0.59;
   return Math.ceil(text.length * avgWidth);
 }
@@ -816,11 +778,9 @@ function generateBadgeSvg(vendorSlug: string, style: "flat" | "flat-square" = "f
 function generateStackBadgeSvg(vendorsParam: string, style: "flat" | "flat-square" = "flat"): string {
   const vendorNames = vendorsParam.split(",").map(v => v.trim()).filter(Boolean);
   if (vendorNames.length === 0) {
-    // No vendors provided — return gray unknown badge
     return generateShieldBadge("Stack Health", "no services", "#8b949e", style);
   }
 
-  // Compute risk levels for each vendor using getBadgeStatus
   let totalFound = 0;
   let riskyCount = 0;
   let cautionCount = 0;
@@ -1021,8 +981,6 @@ if(e.key==='ArrowUp'){e.preventDefault();links[Math.max(idx-1,0)].focus()}
 })();`;
 }
 
-// --- Shared MCP install CTA banner ---
-
 function mcpCtaCss(): string {
   return `.mcp-cta{margin:2rem 0;padding:1.5rem;border:1px solid var(--border);border-radius:12px;background:var(--bg-elevated)}
 .mcp-cta h3{font-family:var(--serif);font-size:1.1rem;color:var(--text);margin:0 0 .5rem}
@@ -1050,7 +1008,6 @@ function mcpCtaScript(): string {
   return `function copyCta(btn){var code=btn.parentElement.querySelector('code');if(!code)return;navigator.clipboard.writeText(code.textContent).then(function(){btn.textContent='Copied!';btn.classList.add('copied');setTimeout(function(){btn.textContent='Copy';btn.classList.remove('copied')},2000)})}`;
 }
 
-// Related categories map for cross-linking (2-3 per category)
 const relatedCategoriesMap: Record<string, string[]> = {
   "Databases": ["Cloud Hosting", "Search", "Headless CMS"],
   "Cloud Hosting": ["Databases", "CI/CD", "CDN"],
@@ -1123,7 +1080,6 @@ function buildCategoryPage(slug: string): string | null {
           <td style="font-family:var(--mono);color:var(--text-dim);white-space:nowrap">${escHtmlServer(o.verifiedDate)}</td>
         </tr>`).join("\n");
 
-  // Adjacent categories for navigation
   const sortedCats = categories.map(c => c.name).sort();
   const catIdx = sortedCats.indexOf(categoryName);
   const prevCat = catIdx > 0 ? sortedCats[catIdx - 1] : null;
@@ -1135,17 +1091,14 @@ function buildCategoryPage(slug: string): string | null {
     nextCat ? `<a href="/category/${toSlug(nextCat)}" style="color:var(--accent)">${escHtmlServer(nextCat)} &rarr;</a>` : "<span></span>",
   ].join("");
 
-  // All categories list for internal linking
   const allCatLinks = categories.map((c) =>
     c.name === categoryName
       ? `<span style="display:inline-block;padding:.25rem .7rem;border-radius:20px;font-size:.75rem;font-weight:600;background:var(--accent);color:var(--bg)">${escHtmlServer(c.name)} (${c.count})</span>`
       : `<a href="/category/${toSlug(c.name)}" style="display:inline-block;padding:.25rem .7rem;border-radius:20px;font-size:.75rem;color:var(--text-muted);border:1px solid var(--border);text-decoration:none;transition:all .2s">${escHtmlServer(c.name)} (${c.count})</a>`
   ).join("\n        ");
 
-  // --- Editorial enrichment ---
   const catMapping = categoryComparisonMap[categoryName];
 
-  // Stability summary: count pricing changes for vendors in this category
   const catVendors = new Set(catOffers.map(o => o.vendor.toLowerCase()));
   const catChanges = dealChanges.filter(c => catVendors.has(c.vendor.toLowerCase()));
   const catChangeCount = catChanges.length;
@@ -1157,18 +1110,14 @@ function buildCategoryPage(slug: string): string | null {
     ? `This category has been relatively stable &mdash; only ${catChangeCount} pricing changes recorded across all vendors.`
     : `This category has seen some movement &mdash; ${catChangeCount} pricing changes recorded across vendors.`;
 
-  // Top vendor by most generous description length as a proxy for detail (first vendor in list is often most notable)
   const topVendor = catOffers[0];
-  // Extract a key limit from top vendor description
   const keyLimitMatch = topVendor?.description.match(/(\d[\d,]*\s*(?:GB|GiB|MB|TB|requests?|calls?|MAU|users?|emails?|messages?|builds?|minutes?|hours?|projects?|repos?|sites?|apps?|databases?|invocations?|events?))/i);
   const keyLimit = keyLimitMatch ? keyLimitMatch[1] : "a generous free tier";
 
-  // Editorial intro
   const introHtml = `<div class="cat-intro">
     <p>We track <strong>${catCount}</strong> ${categoryName.toLowerCase()} services with free tiers.${topVendor ? ` ${escHtmlServer(topVendor.vendor)} leads with ${escHtmlServer(keyLimit)}.` : ""} ${stabilitySummary}</p>
   </div>`;
 
-  // "Our Analysis" CTA — only if comparison page exists
   const analysisCta = catMapping?.comparison
     ? `<div class="analysis-cta">
     <a href="${catMapping.comparison}">
@@ -1178,7 +1127,6 @@ function buildCategoryPage(slug: string): string | null {
   </div>`
     : "";
 
-  // Related Guides section
   const guideLinks: string[] = [];
   if (catMapping?.comparison) {
     guideLinks.push(`<span class="guide-pill"><a href="${catMapping.comparison}">${escHtmlServer(categoryName)} Comparison</a></span>`);
@@ -1207,7 +1155,6 @@ function buildCategoryPage(slug: string): string | null {
   </div>`
     : "";
 
-  // Cross-links to related categories
   const related = (relatedCategoriesMap[categoryName] ?? [])
     .filter(rc => categorySlugMap.has(toSlug(rc)));
   const relatedCatsHtml = related.length > 0
@@ -1222,7 +1169,6 @@ function buildCategoryPage(slug: string): string | null {
   </div>`
     : "";
 
-  // Category FAQ
   const topAlts = catOffers.slice(0, 5).map(o => escHtmlServer(o.vendor)).join(", ");
 
   const faqItems = [
@@ -1250,10 +1196,8 @@ function buildCategoryPage(slug: string): string | null {
     </details>`).join("\n    ")}
   </div>`;
 
-  // FAQ JSON-LD
   const faqJsonLd = faqPageJsonLd("/category/" + slug, faqItems);
 
-  // JSON-LD structured data (ItemList + FAQPage)
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "ItemList",
@@ -1364,11 +1308,9 @@ ${offersHtml}
 
   ${relatedGuidesHtml}
   ${(() => {
-    // Popular Comparisons section — VS pages + editorial vs pages in this category
     const catVsPages = Array.from(vsPageMap.entries()).filter(([, v]) => v.category === categoryName);
     const catEditorialVs = ALTERNATIVES_PAGES.filter(p => {
       if (!p.slug.includes("-vs-")) return false;
-      // Check if the editorial vs page's primary vendor is in this category
       const primaryOffer = offers.find(o => o.vendor === p.primaryVendor);
       return primaryOffer?.category === categoryName;
     });
@@ -1479,19 +1421,8 @@ ${globalNavCss()}
 </html>`;
 }
 
-// --- Best-of pages ---
-
-// Minimum category size to generate a best-of page
 const BEST_OF_MIN_VENDORS = 5;
 
-/**
- * Which /best/ pages exist is fixed at startup so the URL set is stable for a
- * crawler. WHAT is on them, and in what order, is resolved per request through
- * the shared ranking module (src/ranking.ts) — there is no per-surface scorer
- * here any more, and no truncation to a "top N": the page shows every offer
- * that clears the gates, because 44 of 57 categories have more offers tied at
- * zero demerits than any top-N could hold.
- */
 const bestOfSlugMap = new Map<string, { categoryName: string }>();
 for (const cat of categories) {
   const catOffers = offers.filter((o) => o.category === cat.name && !o.eligibility);
@@ -1501,7 +1432,6 @@ for (const cat of categories) {
 
 type EnrichedOfferRow = ReturnType<typeof enrichOffers>[number];
 
-/** Rank a category's offers for today. Every ranked surface goes through here. */
 function rankCategory(categoryName: string, date = utcDate()): RankingResult<EnrichedOfferRow> {
   const catOffers = enrichOffers(offers.filter((o) => o.category === categoryName));
   return rankOffers(catOffers, {
@@ -1521,16 +1451,12 @@ function buildBestOfMiniReview(offer: ReturnType<typeof enrichOffers>[number]): 
   if (desc.includes("student") || desc.includes("education")) bestFor.push("students");
   if (desc.includes("unlimited") || desc.includes("no limit")) bestFor.push("unlimited usage needs");
   const bestForText = bestFor.length > 0 ? ` Best for ${bestFor.join(" and ")}.` : "";
-  // #1038: this used to say "pricing has changed in the past" / "changed
-  // multiple times" off a count of records of any type, so a vendor that
-  // *raised* its limits got the caveat. It now quotes the record itself.
   const caveat = offer.risk_level !== "stable" && offer.risk_cause
     ? ` Note — ${changeDateLabel(offer.risk_cause)}: ${escHtmlServer(offer.risk_cause.summary)}`
     : "";
   return `${escHtmlServer(offer.description)}${bestForText}${caveat}`;
 }
 
-/** Recorded facts that are shown wherever the offer appears but never move rank. */
 function renderDisclosures(entry: RankedEntry<EnrichedOfferRow>): string {
   if (entry.disclosures.length === 0) return "";
   const items = entry.disclosures.map((d) =>
@@ -1539,7 +1465,6 @@ function renderDisclosures(entry: RankedEntry<EnrichedOfferRow>): string {
   return `<div class="best-disclosure"><span class="best-disclosure-label">Recorded, but does not affect rank:</span><ul>${items}</ul></div>`;
 }
 
-/** Each demerit names the specific recorded fact that caused the demotion. */
 function renderDemerits(entry: RankedEntry<EnrichedOfferRow>): string {
   if (entry.demerits.length === 0) return "";
   const items = entry.demerits.map((d) =>
@@ -1625,7 +1550,6 @@ function buildBestOfPage(slug: string): string | null {
     ? `      <p style="color:var(--text-muted);font-size:.9rem">Nothing in this category is demoted today &mdash; we hold no disqualifying record against any of these offers.</p>`
     : demoted.map((e, i) => renderCard(e, i, true)).join("\n");
 
-  // Comparison table
   const tableRows = qualified.map((e) => {
     const o = e.offer;
     return `        <tr>
@@ -1637,7 +1561,6 @@ function buildBestOfPage(slug: string): string | null {
         </tr>`;
   }).join("\n");
 
-  // JSON-LD structured data (ItemList)
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "ItemList",
@@ -1658,7 +1581,6 @@ function buildBestOfPage(slug: string): string | null {
     })),
   };
 
-  // Other best-of pages for cross-linking
   const otherBestOf = Array.from(bestOfSlugMap.entries())
     .filter(([s]) => s !== slug)
     .sort((a, b) => offers.filter(o => o.category === b[1].categoryName).length - offers.filter(o => o.category === a[1].categoryName).length)
@@ -1869,15 +1791,12 @@ ${globalNavCss()}
 </html>`;
 }
 
-// --- Ranking criteria page ---
-
 interface BestOfTieSummary {
   bestOfPageCount: number;
   categoriesWithUniqueTop: string[];
   meanTie: string;
 }
 
-// Measured live rather than asserted, so the numbers on the page are today's.
 function summariseBestOfTies(date = utcDate()): BestOfTieSummary {
   const categoriesWithUniqueTop: string[] = [];
   let tieSum = 0;
@@ -1902,10 +1821,6 @@ function uniqueTopClause(s: BestOfTieSummary): string {
   return `${found.length} ${scope} ${found.length === 1 ? "has" : "have"} a unique number one${named}`;
 }
 
-/**
- * The published method. Every claim on this page is generated from the same
- * constants the ranking itself uses, so the page cannot drift from the code.
- */
 function buildCriteriaPage(): string {
   const date = utcDate();
 
@@ -2068,8 +1983,6 @@ ${membershipGateRows}
 </html>`;
 }
 
-// --- The signal page (#1024) ---
-
 function buildSignalPage(): string {
   const title = "Tell us what you recommended — the agent signal endpoint — AgentDeals";
   const metaDesc =
@@ -2159,11 +2072,8 @@ ${globalNavCss()}
 </html>`;
 }
 
-// --- Comparison pages ---
-
 const comparisonMap = buildComparisonMap();
 
-// Group comparisons by category for the index page
 function getComparisonsByCategory(): Map<string, Array<{ slug: string; a: string; b: string }>> {
   const byCat = new Map<string, Array<{ slug: string; a: string; b: string }>>();
   for (const [slug, [a, b]] of comparisonMap) {
@@ -2257,15 +2167,6 @@ ${categorySections}
 </html>`;
 }
 
-/**
- * Resolve a `x-vs-y` slug to a vendor pair.
- *
- * `comparisonMap` decides which comparisons we LINK and put in the sitemap.
- * It does not decide which ones exist: any pair of vendors we hold offers for
- * renders, so changing the generated set never 404s a URL that was already
- * indexed. A vendor slug can itself contain "-vs-" in principle, so every
- * split point is tried.
- */
 function resolveComparisonSlug(slug: string): [string, string] | null {
   const mapped = comparisonMap.get(slug);
   if (mapped) return mapped;
@@ -2316,7 +2217,6 @@ function buildComparisonPage(slug: string): string | null {
     }).join("\n") + truncationNote;
   };
 
-  // Category context
   const sameCategory = a.category === b.category;
   const primaryCategory = sameCategory ? a.category : null;
   const catOthersCount = primaryCategory ? offers.filter(o => o.category === primaryCategory).map(o => o.vendor).filter((v, i, arr) => arr.indexOf(v) === i).length - 2 : 0;
@@ -2326,13 +2226,10 @@ function buildComparisonPage(slug: string): string | null {
     <a href="/category/${catSlug}">${catOthersCount} other ${escHtmlServer(primaryCategory.toLowerCase())} option${catOthersCount !== 1 ? "s" : ""} &rarr;</a>
   </div>` : "";
 
-  // Auto-generated verdict
   const tierA = a.tier.toLowerCase();
   const tierB = b.tier.toLowerCase();
   const hasFreeA = tierA !== "none" && !a.description.toLowerCase().includes("no free tier");
   const hasFreeB = tierB !== "none" && !b.description.toLowerCase().includes("no free tier");
-  // These are risk levels, not stability classes — two different scales.
-  // They render only when their cause does (#1038).
   const comparisonSide = (
     vendor: string,
     risk: typeof riskA,
@@ -2373,7 +2270,6 @@ function buildComparisonPage(slug: string): string | null {
     </div>
   </div>`;
 
-  // Watchlist CTA
   const watchlistSnippet = `curl -X POST ${BASE_URL}/api/watchlist \\
   -H "Content-Type: application/json" \\
   -d '{"vendor": "${a.vendor.replace(/'/g, "\\'")}", "webhook_url": "https://your-server.com/webhook"}'`;
@@ -2385,7 +2281,6 @@ function buildComparisonPage(slug: string): string | null {
     <p style="margin-top:.75rem;font-size:.8rem"><a href="/developer-hub">Watchlist API docs &rarr;</a></p>
   </div>`;
 
-  // FAQ items for JSON-LD
   const faqItems = [
     { q: `Which is cheaper, ${a.vendor} or ${b.vendor}?`, a: hasFreeA && hasFreeB ? `Both offer free tiers. ${a.vendor} provides "${a.tier}" and ${b.vendor} offers "${b.tier}". Compare the specific limits above to determine which fits your usage.` : hasFreeA ? `${a.vendor} offers a free tier ("${a.tier}") while ${b.vendor} does not.` : hasFreeB ? `${b.vendor} offers a free tier ("${b.tier}") while ${a.vendor} does not.` : `Neither currently offers a free tier.` },
     { q: `Is ${a.vendor} or ${b.vendor} more stable?`, a: stabilityFaqAnswer(sideA, sideB) },
@@ -2418,7 +2313,6 @@ function buildComparisonPage(slug: string): string | null {
 
   const faqJsonLd = faqPageJsonLd("/" + slug, faqItems);
 
-  // Related comparisons (share a vendor with this pair)
   const relatedComparisons = Array.from(comparisonMap.entries())
     .filter(([s, [ra, rb]]) => s !== slug && (ra === vendorA || ra === vendorB || rb === vendorA || rb === vendorB))
     .slice(0, 6);
@@ -2544,19 +2438,16 @@ ${relatedHtml}
 </html>`;
 }
 
-// --- Programmatic vendor-vs-vendor comparison pages (root-level URLs) ---
-
 interface VsPageConfig {
-  vendorA: string;  // Alphabetical first
-  vendorB: string;  // Alphabetical second
-  verdict: string;  // 2-3 sentence quick verdict (plain text)
-  keyDifferences: string;  // HTML for key differences section
-  recommendation: string;  // HTML for recommendation section
-  category: string;  // For grouping in hub pages
+  vendorA: string;
+  vendorB: string;
+  verdict: string;
+  keyDifferences: string;
+  recommendation: string;
+  category: string;
 }
 
 const VS_PAGES: VsPageConfig[] = [
-  // Databases
   {
     vendorA: "CockroachDB", vendorB: "MongoDB",
     category: "Databases",
@@ -2583,7 +2474,6 @@ const VS_PAGES: VsPageConfig[] = [
     recommendation: `<p><strong>Choose Neon if</strong> you need PostgreSQL compatibility, database branching for development workflows, or plan to use an ORM that expects Postgres (Django, Rails, Prisma).</p>
     <p><strong>Choose Turso if</strong> you need edge-native reads, SQLite simplicity, or are building with frameworks that work well with SQLite (Laravel, Remix with better-sqlite3).</p>`,
   },
-  // Cloud Hosting
   {
     vendorA: "Cloudflare Pages", vendorB: "Vercel",
     category: "Cloud Hosting",
@@ -2610,7 +2500,6 @@ const VS_PAGES: VsPageConfig[] = [
     recommendation: `<p><strong>Choose Netlify if</strong> you're building a frontend/Jamstack site, need form handling and identity built-in, or want preview deploys for every PR.</p>
     <p><strong>Choose Render if</strong> you need a free backend (API server, database, Redis), want to run Docker containers, or need a full-stack hosting solution beyond just static sites.</p>`,
   },
-  // Monitoring
   {
     vendorA: "Datadog", vendorB: "Sentry",
     category: "Monitoring",
@@ -2637,7 +2526,6 @@ const VS_PAGES: VsPageConfig[] = [
     recommendation: `<p><strong>Choose Grafana Cloud if</strong> you want the most generous free monitoring tier, prefer open standards, or want to avoid vendor lock-in.</p>
     <p><strong>Choose Datadog if</strong> you prioritize out-of-the-box integrations and polished UX — but only if you can justify the cost when you outgrow the very limited free tier.</p>`,
   },
-  // Auth
   {
     vendorA: "Auth0", vendorB: "Clerk",
     category: "Auth",
@@ -2664,7 +2552,6 @@ const VS_PAGES: VsPageConfig[] = [
     recommendation: `<p><strong>Choose Auth0 if</strong> you need the largest free MAU count, enterprise-grade stability, or deep integrations with the Okta ecosystem.</p>
     <p><strong>Choose Kinde if</strong> you want auth + feature flags in one service, prefer a simpler setup experience, or are building an early-stage product that values bundled functionality over enterprise depth.</p>`,
   },
-  // CI/CD
   {
     vendorA: "CircleCI", vendorB: "GitHub Actions",
     category: "CI/CD",
@@ -2691,7 +2578,6 @@ const VS_PAGES: VsPageConfig[] = [
     recommendation: `<p><strong>Choose GitHub Actions if</strong> your code lives on GitHub, you need more free build minutes, or you want access to the largest ecosystem of community actions.</p>
     <p><strong>Choose GitLab CI if</strong> you want an all-in-one DevOps platform with built-in security scanning and container registry, and your team is under 5 members.</p>`,
   },
-  // Email
   {
     vendorA: "Brevo", vendorB: "Resend",
     category: "Email",
@@ -2718,7 +2604,6 @@ const VS_PAGES: VsPageConfig[] = [
     recommendation: `<p><strong>Choose Resend if</strong> you want a generous free tier, modern DX with React Email, or you're building a side project that needs to actually send email for free.</p>
     <p><strong>Choose Postmark if</strong> deliverability is your #1 priority and you're willing to pay for it — Postmark's free tier is effectively a trial, not a production tier.</p>`,
   },
-  // Storage
   {
     vendorA: "Backblaze B2", vendorB: "Cloudflare R2",
     category: "Storage",
@@ -2745,7 +2630,6 @@ const VS_PAGES: VsPageConfig[] = [
     recommendation: `<p><strong>Choose Cloudinary if</strong> you need advanced AI-powered transformations, rich video processing, or have complex media workflows.</p>
     <p><strong>Choose ImageKit if</strong> you want straightforward pricing, generous bandwidth, and unlimited image transformations without worrying about credit math.</p>`,
   },
-  // Analytics
   {
     vendorA: "Amplitude", vendorB: "PostHog",
     category: "Analytics",
@@ -2772,7 +2656,6 @@ const VS_PAGES: VsPageConfig[] = [
     recommendation: `<p><strong>Choose Mixpanel if</strong> you want the most events and session replays for free, prefer per-event pricing clarity, or need unlimited team seats.</p>
     <p><strong>Choose Amplitude if</strong> you have high-frequency event tracking per user (where MTU pricing saves money), or need Amplitude's experiment and feature flag capabilities.</p>`,
   },
-  // AI / ML
   {
     vendorA: "Groq", vendorB: "Hugging Face",
     category: "AI / ML",
@@ -2801,11 +2684,9 @@ const VS_PAGES: VsPageConfig[] = [
   },
 ];
 
-// VS page lookup maps — populated after alternativesPageMap is built (below ALTERNATIVES_PAGES)
 const vsPageMap = new Map<string, VsPageConfig>();
 const vsPageByVendor = new Map<string, VsPageConfig[]>();
 
-// Group VS pages by category for hub pages
 function getVsPagesByCategory(): Map<string, Array<{ slug: string; a: string; b: string }>> {
   const byCat = new Map<string, Array<{ slug: string; a: string; b: string }>>();
   for (const [slug, vs] of vsPageMap) {
@@ -2827,7 +2708,6 @@ function buildVsPage(slug: string): string | null {
   const title = `${a.vendor} vs ${b.vendor}: Free Tier Comparison — AgentDeals`;
   const metaDesc = `Compare ${a.vendor} and ${b.vendor} free tiers side by side. ${config.verdict.split(".")[0]}.`;
 
-  // Enriched data for risk badges
   const riskA = enrichOffers([offers.find(o => o.vendor === a.vendor)!])[0];
   const riskB = enrichOffers([offers.find(o => o.vendor === b.vendor)!])[0];
 
@@ -2839,7 +2719,6 @@ function buildVsPage(slug: string): string | null {
     return `<span style="display:inline-block;padding:.15rem .5rem;border-radius:12px;font-size:.7rem;font-weight:600;background:${color}20;color:${color};border:1px solid ${color}40">${stability}</span>`;
   };
 
-  // Deal changes for pricing history
   const changesHtml = (changes: typeof a.deal_changes, vendor: string) => {
     if (changes.length === 0) return `<p style="color:var(--text-dim);font-size:.85rem">No recorded pricing changes for ${escHtmlServer(vendor)}.</p>`;
     return changes.sort((x, y) => y.date.localeCompare(x.date)).slice(0, 5).map(c => {
@@ -2855,11 +2734,9 @@ function buildVsPage(slug: string): string | null {
     }).join("\n");
   };
 
-  // Related comparisons: other VS pages sharing a vendor, plus /compare/ pages
   const relatedVs = Array.from(vsPageMap.entries())
     .filter(([s, v]) => s !== slug && (v.vendorA === config.vendorA || v.vendorA === config.vendorB || v.vendorB === config.vendorA || v.vendorB === config.vendorB))
     .slice(0, 4);
-  // Also check editorial vs pages
   const editorialVs = ALTERNATIVES_PAGES.filter(p => {
     if (!p.slug.includes("-vs-")) return false;
     const slugLower = p.slug.toLowerCase();
@@ -2875,7 +2752,6 @@ ${editorialVs.map(p => `      <a href="/${p.slug}" class="related-card">${escHtm
     </div>
   </div>` : "";
 
-  // Category hub link
   const catMapping = categoryComparisonMap[a.category];
   const categoryHubLink = catMapping?.hub
     ? `<div class="category-hub-link">
@@ -2891,7 +2767,6 @@ ${editorialVs.map(p => `      <a href="/${p.slug}" class="related-card">${escHtm
   </div>`
     : "";
 
-  // FAQ structured data
   const faqItems = [
     { q: `Is ${a.vendor} or ${b.vendor} better for free tier?`, a: config.verdict },
     { q: `What is ${a.vendor}'s free tier?`, a: `${a.vendor} offers a ${a.tier} plan: ${a.description.substring(0, 200)}${a.description.length > 200 ? "..." : ""}` },
@@ -3052,9 +2927,6 @@ ${faqItems.map(f => `    <div class="faq-item">
 </html>`;
 }
 
-// --- Weekly digest pages ---
-
-// ISO 8601 week number calculation
 function getISOWeek(date: Date): { year: number; week: number } {
   const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
   d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay() || 7));
@@ -3063,7 +2935,6 @@ function getISOWeek(date: Date): { year: number; week: number } {
   return { year: d.getUTCFullYear(), week };
 }
 
-// Get Monday of a given ISO week
 function getWeekStart(year: number, week: number): Date {
   const jan4 = new Date(Date.UTC(year, 0, 4));
   const dayOfWeek = jan4.getUTCDay() || 7;
@@ -3081,7 +2952,6 @@ function parseWeekKey(key: string): { year: number; week: number } | null {
   return { year: parseInt(m[1], 10), week: parseInt(m[2], 10) };
 }
 
-// Group deal changes by ISO week
 function getChangesByWeek(): Map<string, typeof dealChanges> {
   const byWeek = new Map<string, typeof dealChanges>();
   for (const c of dealChanges) {
@@ -3164,7 +3034,6 @@ function buildDigestPage(weekKey: string): string | null {
     ? `${changes.length} pricing changes tracked for developer tools during ${dateRange}. ${changes.filter(c => c.impact === "high").length} high-impact changes.${discoveryClause}`
     : `No pricing changes tracked for developer tools during ${dateRange}.${discoveryClause}`;
 
-  // Stats
   const byType = new Map<string, number>();
   for (const c of changes) {
     byType.set(c.change_type, (byType.get(c.change_type) ?? 0) + 1);
@@ -3185,7 +3054,6 @@ function buildDigestPage(weekKey: string): string | null {
     <div class="stat-pill"><strong>0</strong> changes</div>${discoveryPill}
   </div>` : "");
 
-  // Group by impact
   const byImpact: Record<string, typeof changes> = { high: [], medium: [], low: [] };
   for (const c of changes) {
     (byImpact[c.impact] ?? byImpact.low).push(c);
@@ -3224,7 +3092,6 @@ function buildDigestPage(weekKey: string): string | null {
 
   const bodyHtml = [changesHtml, firstReadHtml].filter(Boolean).join("\n");
 
-  // Trending categories
   const catCounts = new Map<string, number>();
   for (const c of changes) {
     catCounts.set(c.category, (catCounts.get(c.category) ?? 0) + 1);
@@ -3239,12 +3106,10 @@ function buildDigestPage(weekKey: string): string | null {
     </div>
   </div>` : "";
 
-  // Navigation to prev/next week
   const allWeeks = Array.from(byWeek.keys()).sort();
   const idx = allWeeks.indexOf(weekKey);
   const prevWeek = idx > 0 ? allWeeks[idx - 1] : null;
   const nextWeek = idx < allWeeks.length - 1 ? allWeeks[idx + 1] : null;
-  // For weeks not in allWeeks, navigate to nearest
   const navHtml = `
   <div class="week-nav">
     ${prevWeek ? `<a href="/digest/${prevWeek}">&larr; ${prevWeek}</a>` : "<span></span>"}
@@ -3303,7 +3168,7 @@ ${navHtml}
 function buildDigestArchivePage(): string {
   const byWeek = getChangesByWeek();
   const weeks = Array.from(byWeek.entries())
-    .sort((a, b) => b[0].localeCompare(a[0])); // newest first
+    .sort((a, b) => b[0].localeCompare(a[0]));
   const title = "Pricing Change Digest Archive — AgentDeals";
   const metaDesc = `Browse ${weeks.length} weeks of developer tool pricing changes. Free tier removals, limit changes, and new deals tracked weekly.`;
 
@@ -3539,29 +3404,23 @@ ${navHtml}
 </html>`;
 }
 
-// Get current week key
 function getCurrentWeekKey(): string {
   const now = new Date();
   const { year, week } = getISOWeek(now);
   return formatWeekKey(year, week);
 }
 
-// Get last N week keys for sitemap
 function getRecentWeekKeys(n: number): string[] {
   const byWeek = getChangesByWeek();
   return Array.from(byWeek.keys()).sort().reverse().slice(0, n);
 }
 
-// Get ALL week keys that have at least 1 deal change (past or future)
 function getAllWeekKeys(): string[] {
   const byWeek = getChangesByWeek();
   return Array.from(byWeek.keys()).sort().reverse();
 }
 
-// --- Vendor profile pages ---
-
 function buildVendorIndexPage(): string {
-  // Group vendors by category
   const byCategory = new Map<string, Array<{ vendor: string; slug: string; tier: string }>>();
   const seen = new Set<string>();
   for (const o of offers) {
@@ -3571,7 +3430,6 @@ function buildVendorIndexPage(): string {
     if (!byCategory.has(o.category)) byCategory.set(o.category, []);
     byCategory.get(o.category)!.push({ vendor: o.vendor, slug, tier: o.tier });
   }
-  // Sort categories and vendors within
   const sortedCategories = Array.from(byCategory.entries()).sort((a, b) => a[0].localeCompare(b[0]));
   for (const [, vendors] of sortedCategories) {
     vendors.sort((a, b) => a.vendor.localeCompare(b.vendor));
@@ -3688,7 +3546,6 @@ ${categorySections}
 </html>`;
 }
 
-// Category-to-page mappings for vendor page enrichment
 const categoryComparisonMap: Record<string, { comparison?: string; hub?: string }> = {
   "Databases": { comparison: "/database-free-tier-comparison-2026", hub: "/database-alternatives" },
   "Cloud Hosting": { comparison: "/hosting-pricing", hub: "/hosting-alternatives" },
@@ -3745,19 +3602,16 @@ const categoryComparisonMap: Record<string, { comparison?: string; hub?: string 
   "API Gateway": { hub: "/api-development-alternatives" },
 };
 
-// SaaS-relevant categories for cross-linking to /free-saas-stack
 const saasRelevantCategories = new Set([
   "Databases", "Cloud Hosting", "Auth", "Payments", "Email", "Cloud Storage",
   "Storage", "Monitoring", "Error Tracking", "CI/CD", "Analytics", "Background Jobs",
   "Search", "Feature Flags",
 ]);
 
-// Hosting/deployment categories for cross-linking to framework guides
 const hostingCategories = new Set([
   "Cloud Hosting", "Infrastructure", "Cloud IaaS", "Server Management",
 ]);
 
-// Categories most affected by free tier erosion — for cross-linking to the State of Free Tiers report
 const erosionAffectedCategories = (() => {
   const negTypes = new Set(["free_tier_removed", "limits_reduced", "restriction", "open_source_killed", "product_deprecated"]);
   const catNeg = new Map<string, number>();
@@ -3773,7 +3627,6 @@ function buildVendorPage(slug: string): string | null {
   const vendorName = vendorSlugMap.get(slug);
   if (!vendorName) return null;
 
-  // Get all offers for this vendor (some vendors appear in multiple categories)
   const vendorOffers = offers.filter(o => o.vendor === vendorName);
   if (vendorOffers.length === 0) return null;
 
@@ -3781,21 +3634,15 @@ function buildVendorPage(slug: string): string | null {
   const enriched = enrichOffers([primary])[0];
   const allCategories = [...new Set(vendorOffers.map(o => o.category))];
 
-  // Get deal changes for this vendor
   const allChanges = loadDealChanges();
   const vendorChanges = allChanges
     .filter(c => c.vendor.toLowerCase() === vendorName.toLowerCase())
     .sort((a, b) => b.date.localeCompare(a.date));
 
-  // Risk assessment
   const riskColors: Record<string, string> = { stable: "#3fb950", caution: "#d29922", risky: "#f85149" };
   const riskCause = enriched.risk_cause;
-  // #1038: a level we cannot show the cause for is not publishable in the H1.
   const riskLevel = publishedVendorLevel(enriched.risk_level ?? null, riskCause);
   const riskColor = riskColors[riskLevel] ?? "#8b949e";
-  // The badge sits in the largest text on the page. Its reason sits directly
-  // under it — not only in the history section further down, which for a cause
-  // older than 90 days did not carry it at all (Neon, #1038).
   const riskCauseLine = riskLevel !== "stable" && riskCause
     ? `  <p class="risk-cause-line" style="margin:.4rem 0 .6rem;font-size:.9rem;color:var(--text-muted)"><strong style="color:${riskColor}">Why ${riskLevel}:</strong> <span class="risk-cause-date" style="font-family:var(--mono)">${escHtmlServer(changeDateLabel(riskCause))}</span> &mdash; ${escHtmlServer(riskCause.summary)} <a href="#changes" style="white-space:nowrap">Full history &darr;</a></p>`
     : "";
@@ -3810,11 +3657,6 @@ function buildVendorPage(slug: string): string | null {
     ? `  <p class="link-unreachable-line" style="margin:.4rem 0 .6rem;font-size:.9rem;color:var(--text-muted)"><strong style="color:#f85149">Link unreachable:</strong> ${escHtmlServer(primary.url)} did not resolve on our check of <span class="link-checked-date" style="font-family:var(--mono)">${escHtmlServer(linkUnreachable.checked)}</span>. ${linkUnreachable.last_reachable ? `Last reachable <span class="link-last-reachable" style="font-family:var(--mono)">${escHtmlServer(linkUnreachable.last_reachable)}</span>.` : "We have no date on which it was reachable."}</p>`
     : "";
 
-  // Alternatives: other vendors in the same primary category
-  // "Alternatives to X" is a recommendation, so it goes through the shared
-  // module. It used to be `.slice(0, 12)` over raw file order — whoever was
-  // typed into data/index.json first won, on the single highest-traffic page
-  // type on the site.
   const productRoleLine = (() => {
     const role = primary.product_role;
     const sentence = productRoleSentence(primary);
@@ -3832,11 +3674,9 @@ function buildVendorPage(slug: string): string | null {
   );
   const alternatives = alternativesRanking.entries.slice(0, 12).map(e => e.offer);
 
-  // Comparison pages featuring this vendor
   const vendorComparisons = Array.from(comparisonMap.entries())
     .filter(([, [a, b]]) => a === vendorName || b === vendorName);
 
-  // Title and meta
   const currentYear = new Date().getFullYear();
   const hasFree = primary.tier.toLowerCase() !== "none" && !primary.description.toLowerCase().includes("no free tier");
   const title = hasFree
@@ -3851,7 +3691,6 @@ function buildVendorPage(slug: string): string | null {
     ? `${vendorName} free tier includes ${descLimits}.${verifiedSentence} Compare with ${alternatives.length} alternatives in ${primary.category}.`
     : `${vendorName} pricing details and ${alternatives.length} free alternatives in ${primary.category}.${verifiedSentence}`;
 
-  // --- NEW: Quick Verdict ---
   const keyLimit = primary.description.slice(0, 120).replace(/\.\s.*$/, "");
   const unconfirmableSince = linkUnreachable
     ? (linkUnreachable.last_reachable ? ` since ${linkUnreachable.last_reachable}` : "")
@@ -3876,7 +3715,6 @@ function buildVendorPage(slug: string): string | null {
     <p>${escHtmlServer(vendorName)}'s free tier offers ${escHtmlServer(keyLimit)}. ${verdictLine2}${verdictLine3 ? " " + verdictLine3 : ""}</p>
   </div>`;
 
-  // --- NEW: Category Context ---
   const catMapping = categoryComparisonMap[primary.category];
   const categoryCount = offers.filter(o => o.category === primary.category).length;
   const catContextLink = catMapping?.comparison
@@ -3889,7 +3727,6 @@ function buildVendorPage(slug: string): string | null {
     <span class="cat-context-label">One of ${categoryCount} ${escHtmlServer(primary.category)} services we track.</span> See our ${catContextLink} &rarr;
   </div>`;
 
-  // --- NEW: Growth Path ---
   const growthBullets: string[] = [];
   for (const phrase of growthLimitPhrases(primary.description)) {
     growthBullets.push(levelWithheld
@@ -3911,7 +3748,6 @@ function buildVendorPage(slug: string): string | null {
     </ul>
   </div>` : "";
 
-  // --- NEW: How [Vendor] Compares mini table ---
   const enrichedAlts = enrichOffers(alternatives.slice(0, 3));
   const compareTableHtml = enrichedAlts.length > 0 ? `
   <div class="section compare-table-section">
@@ -3944,7 +3780,6 @@ ${enrichedAlts.map(a => {
     ${catMapping?.comparison ? `<p class="compare-more"><a href="${catMapping.comparison}">See full comparison &rarr;</a></p>` : catMapping?.hub ? `<p class="compare-more"><a href="${catMapping.hub}">See all ${escHtmlServer(primary.category)} options &rarr;</a></p>` : ""}
   </div>` : "";
 
-  // Changes HTML — with link to /pricing-changes#anchor
   const changesHtml = vendorChanges.length > 0 ? vendorChanges.map(c => {
     const badge = changeTypeBadge[c.change_type] ?? { label: c.change_type, color: "#8b949e" };
     const anchor = `${toSlug(c.vendor)}-${c.date}`;
@@ -3961,13 +3796,7 @@ ${enrichedAlts.map(a => {
     ? `<p class="no-changes">No recorded pricing changes for ${escHtmlServer(vendorName)} — but ${escHtmlServer(withheldClause)}, so nothing we have read describes these terms. Treat the empty history as a statement about our records, not about this vendor's pricing.</p>`
     : `<p class="no-changes">No recorded pricing changes for ${escHtmlServer(vendorName)}. This is a good sign — stable pricing.</p>`;
 
-  // Prominent change notice for vendors with significant changes
   const latestChange = vendorChanges[0];
-  // #1038: this was a seventh inline copy of the change-direction taxonomy, and
-  // it keyed on the *latest* record rather than the one that earned the badge —
-  // so it could show a different record from the one the <h1> is warning about,
-  // or none at all. It reads the shared set, and it stands down when the cause
-  // line above has already published this exact record.
   const causeAlreadyShown = riskCause !== null && latestChange !== undefined && latestChange !== null
     && latestChange.date === riskCause.date && latestChange.change_type === riskCause.change_type;
   const changeNoticeHtml = latestChange && !causeAlreadyShown && NEGATIVE_CHANGE_TYPES.has(latestChange.change_type) ? (() => {
@@ -3996,7 +3825,6 @@ ${enrichedAlts.map(a => {
     </div>
   </div>` : "";
 
-  // Referral program section (shown when vendor has a program, whether or not we have a code)
   const referralProgramHtml = primary.referral_program?.available ? `
   <div class="section" style="margin-top:1.5rem">
     <h2>Referral Program</h2>
@@ -4011,7 +3839,6 @@ ${enrichedAlts.map(a => {
     </div>
   </div>` : "";
 
-  // Alternatives HTML
   const membershipExclusionsHtml = alternativesMembership.removed.length > 0 ? `
     <p class="alt-excluded" style="margin:.7rem 0 0;font-size:.85rem;color:var(--text-muted)">Left out of this list: ${alternativesMembership.removed.map(r => `<a href="/vendor/${toSlug(r.offer.vendor)}">${escHtmlServer(r.offer.vendor)}</a> (${escHtmlServer(MEMBERSHIP_GATE_RULES[r.gate].label.toLowerCase())})`).join(", ")}. Each is still listed in <a href="/category/${toSlug(primary.category)}">${escHtmlServer(primary.category)}</a>, with the vendor's own words we read that from on its page. <a href="${CRITERIA_PATH}#membership">How we decide this</a>.</p>` : "";
   const alternativesHtml = alternatives.length > 0 ? `
@@ -4026,7 +3853,6 @@ ${alternatives.map(a => `      <a href="/vendor/${toSlug(a.vendor)}" class="alt-
 ${renderAuditBlock(alternativesRanking.tie_break, { shown: alternatives.length, total: alternativesRanking.entries.length })}
   </div>` : "";
 
-  // Comparisons HTML — include both /compare/ pages and root-level VS pages
   const vendorVsPages = vsPageByVendor.get(vendorName.toLowerCase()) ?? [];
   const vsLinks = vendorVsPages.map(vs => {
     const slug = `${toSlug(vs.vendorA)}-vs-${toSlug(vs.vendorB)}`;
@@ -4042,7 +3868,6 @@ ${allCompareLinks.join("\n")}
     </div>
   </div>` : "";
 
-  // --- NEW: Internal Links ---
   const internalLinks: string[] = [];
   if (catMapping?.comparison) {
     internalLinks.push(`<a href="${catMapping.comparison}">${escHtmlServer(primary.category)} Free Tier Comparison</a>`);
@@ -4067,7 +3892,6 @@ ${allCompareLinks.join("\n")}
     </div>
   </div>`;
 
-  // Related alternatives pages (editorial /X-alternatives pages featuring this vendor)
   const vendorAltPages = altPagesByVendor.get(vendorName.toLowerCase()) ?? [];
   const altPagesHtml = vendorAltPages.length > 0 ? `
   <div class="section">
@@ -4077,7 +3901,6 @@ ${allCompareLinks.join("\n")}
     </div>
   </div>` : "";
 
-  // Monthly report appearances
   const reportMonths = getAvailableReportMonths();
   const vendorReportMonths = reportMonths.filter(m => {
     return changesEffectiveIn(dealChanges, m).some((c) => c.vendor.toLowerCase() === vendorName.toLowerCase());
@@ -4094,11 +3917,9 @@ ${allCompareLinks.join("\n")}
     </div>
   </div>` : "";
 
-  // Last updated timestamp
   const lastPricingChange = latestEventDate(vendorChanges);
   const lastUpdated = lastPricingChange && lastPricingChange > primary.verifiedDate ? lastPricingChange : primary.verifiedDate;
 
-  // Watchlist CTA
   const watchlistSnippet = `curl -X POST ${BASE_URL}/api/watchlist \\
   -H "Content-Type: application/json" \\
   -d '{
@@ -4113,9 +3934,6 @@ ${allCompareLinks.join("\n")}
     <p style="margin-top:.75rem;font-size:.8rem"><a href="/developer-hub">Watchlist API docs &rarr;</a></p>
   </div>`;
 
-  // Marketplace solicitation (low-pressure) — shown only when this vendor has no
-  // platform code, no documented program, and no offer-level referral. Converts
-  // dormant vendor pages into acquisition surfaces for code submitters.
   const marketplaceSolicitationHtml = !hasAnyReferralSurface(vendorName, primary) ? `
   <div class="section marketplace-solicitation">
     <div style="border:1px dashed var(--border);border-radius:8px;padding:1rem;background:var(--bg-card);opacity:.92">
@@ -4125,7 +3943,6 @@ ${allCompareLinks.join("\n")}
     </div>
   </div>` : "";
 
-  // MCP snippet
   const mcpSnippet = `{
   "tool": "search_deals",
   "arguments": {
@@ -4134,7 +3951,6 @@ ${allCompareLinks.join("\n")}
   }
 }`;
 
-  // JSON-LD structured data (enriched with pricing history)
   const pricingEvents = vendorChanges.slice(0, 10).map(c => ({
     "@type": "Event",
     name: `${vendorName} pricing change: ${c.change_type.replace(/_/g, " ")}`,
@@ -4167,7 +3983,6 @@ ${allCompareLinks.join("\n")}
     jsonLd.about = pricingEvents;
   }
 
-  // FAQ data for vendor pages — expanded to 6-8 questions
   const storedTerms = `${primary.description.slice(0, 200)}${primary.description.length > 200 ? "..." : ""}`;
   const unconfirmedTermsPreamble = levelWithheld
     ? `We cannot confirm that today. ${withheldLevelSentence(levelWithheld, vendorName, unconfirmableSince)} `
@@ -4180,12 +3995,6 @@ ${allCompareLinks.join("\n")}
   const faqTierAnswer = levelWithheld
     ? `${unconfirmedTermsPreamble}Our stored record calls ${vendorName}'s free tier "${primary.tier}". ${withUnconfirmedTermsCaveat(primary.description)}`
     : `${vendorName}'s free tier is called "${primary.tier}". ${primary.description}`;
-  // #1038: these answers ship inside FAQPage JSON-LD, which is the version of
-  // this page an AI search engine quotes. They used to reach for the *count* of
-  // recorded changes and for `vendorChanges[0]` — the most recent record of any
-  // type — so a vendor could be told it "requires caution" and then handed a
-  // free-tier expansion as the evidence. They now quote the record that
-  // produced the level, and nothing else.
   const faqReliableAnswer = levelWithheld
     ? `We cannot say. ${withheldLevelSentence(levelWithheld, vendorName, unconfirmableSince)} Nothing we have read describes these terms, so we are not publishing a stability judgement for this vendor until that is fixed.`
     : riskLevel === "stable"
@@ -4195,7 +4004,6 @@ ${allCompareLinks.join("\n")}
     : `${vendorName}'s free tier is considered risky because of one specific recorded change${riskCause ? `, ${changeDateClause(riskCause)}: ${riskCause.summary}` : "."} Consider alternatives.`;
   const faqCategoryAnswer = `${vendorName} is categorized under ${allCategories.join(", ")} on AgentDeals.${alternatives.length > 0 ? ` Other vendors in ${primary.category} include ${alternatives.slice(0, 5).map(a => a.vendor).join(", ")}.` : ""}`;
 
-  // NEW: Additional FAQ items
   const faqProductionAnswer = levelWithheld
     ? `${withheldLevelSentence(levelWithheld, vendorName, unconfirmableSince)} We cannot confirm what this offer provides today, so we are not recommending it for production or for anything else until we can.`
     : hasFree
@@ -4397,8 +4205,6 @@ ${faqHtml}
 </html>`;
 }
 
-// --- "Free alternative to X" pages ---
-
 function buildAlternativesPage(slug: string): string | null {
   const vendorName = vendorSlugMap.get(slug);
   if (!vendorName) return null;
@@ -4425,17 +4231,13 @@ function buildAlternativesPage(slug: string): string | null {
   const altWithheldClause = altLevelWithheld
     ? withheldLevelClause(altLevelWithheld, altUnconfirmableSince)
     : "";
-  // #1038: no publishable cause, no warning.
   const riskLevel = enriched.risk_level && (enriched.risk_level === "stable" || riskCause) ? enriched.risk_level : "stable";
   const riskColor = riskColors[riskLevel] ?? "#8b949e";
 
-  // Get all categories this vendor belongs to
   const vendorCategories = [...new Set(vendorOffers.map(o => o.category))];
 
-  // Find alternatives across all vendor categories, sorted by stability
   const allAlternatives = offers
     .filter(o => vendorCategories.includes(o.category) && o.vendor !== vendorName);
-  // Dedupe by vendor name (some vendors appear in multiple categories)
   const seen = new Set<string>();
   const dedupedAlts: typeof allAlternatives = [];
   for (const a of allAlternatives) {
@@ -4444,10 +4246,6 @@ function buildAlternativesPage(slug: string): string | null {
       dedupedAlts.push(a);
     }
   }
-  // Order through the shared module. This used to sort by the derived
-  // risk_level bucket — the count-of-recorded-changes signal that demotes
-  // prominent vendors 3.2x more often than obscure ones — with file order
-  // deciding everything inside a bucket.
   const altMembership = partitionAlternativesAcross(dedupedAlts, vendorOffers);
   const altRanking = rankForListing(enrichOffers(altMembership.kept), {
     queryKey: `alternative-to:${vendorName}`,
@@ -4456,7 +4254,6 @@ function buildAlternativesPage(slug: string): string | null {
   const enrichedAlts = altRanking.entries.map(e => e.offer);
   const altDemerits = new Map(altRanking.entries.map(e => [e.offer.vendor, e]));
 
-  // Deal-change-driven alternatives (editorially curated)
   const curatedAltNames = new Set<string>();
   for (const c of vendorChanges) {
     if (c.alternatives && c.alternatives.length > 0) {
@@ -4467,13 +4264,11 @@ function buildAlternativesPage(slug: string): string | null {
     ? enrichedAlts.filter(a => curatedAltNames.has(a.vendor))
     : [];
 
-  // Title and meta
   const currentYear = new Date().getFullYear();
   const title = `Best ${vendorName} Alternatives with Free Tiers (${currentYear}) | AgentDeals`;
   const topAlts = enrichedAlts.slice(0, 3).map(a => a.vendor).join(", ");
   const metaDesc = `Compare ${enrichedAlts.length} free alternatives to ${vendorName} for ${vendorCategories[0]}. ${topAlts ? `Side-by-side free tier limits for ${topAlts}.` : "Find stable, verified free-tier tools."}`;
 
-  // Situation section: why look for alternatives
   const situationHtml = (() => {
     const parts: string[] = [];
     parts.push(
@@ -4510,8 +4305,7 @@ function buildAlternativesPage(slug: string): string | null {
     return parts.join("\n");
   })();
 
-  // Build alternative cards
-  const vName = vendorName; // narrowed for closure
+  const vName = vendorName;
   function altCard(a: typeof enrichedAlts[0], curated: boolean): string {
     const aSlug = toSlug(a.vendor);
     const compSlug = comparisonSlug(vName < a.vendor ? vName : a.vendor, vName < a.vendor ? a.vendor : vName);
@@ -4537,7 +4331,6 @@ function buildAlternativesPage(slug: string): string | null {
       </div>`;
   }
 
-  // Curated alternatives section
   const curatedHtml = curatedAlts.length > 0 ? `
   <div class="section">
     <h2>Recommended Migration Targets</h2>
@@ -4547,7 +4340,6 @@ ${curatedAlts.map(a => altCard(a, true)).join("\n")}
     </div>
   </div>` : "";
 
-  // All alternatives section
   const allAltsHtml = enrichedAlts.length > 0 ? `
   <div class="section">
     <h2>All Free Alternatives (${enrichedAlts.length})</h2>
@@ -4559,12 +4351,10 @@ ${enrichedAlts.map(a => altCard(a, false)).join("\n")}
 ${renderAuditBlock(altRanking.tie_break)}
   </div>` : `<div class="section"><p class="no-changes">No alternatives found for ${escHtmlServer(vendorName)}.</p></div>`;
 
-  // Category trends link
   const trendsHtml = vendorCategories.map(c =>
     `<a href="/trends/${toSlug(c)}" class="action-pill">&#x2191; ${escHtmlServer(c)} Pricing Trends</a>`
   ).join(" ");
 
-  // JSON-LD structured data
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "ItemList",
@@ -4586,14 +4376,10 @@ ${renderAuditBlock(altRanking.tie_break)}
     })),
   };
 
-  // FAQ data for alternative-to pages
   const topStableAlts = enrichedAlts.filter(a => a.risk_level === "stable").slice(0, 5);
   const faqBestAltsAnswer = topStableAlts.length > 0
     ? `The best free alternatives to ${vendorName} include ${topStableAlts.map(a => `${a.vendor} (${a.tier})`).join(", ")}. We hold no free tier removal, limit reduction or pricing restructure on record for any of them.`
     : `There are ${enrichedAlts.length} free alternatives to ${vendorName} available. ${enrichedAlts.slice(0, 3).map(a => a.vendor).join(", ")} are among the options.`;
-  // #1038: "flagged due to N recorded pricing changes" then quoting
-  // vendorChanges[0] could hand the reader a limits_increased record as the
-  // reason for a warning. The flag has exactly one cause and this names it.
   const faqFreeTierAnswer = altLevelWithheld
     ? `We cannot confirm that today. ${altWithheldSentence} Our stored record says ${vendorName} offers a free tier (${primary.tier}), but we have not confirmed those terms against the source we cite.`
     : riskLevel === "stable"
@@ -4746,13 +4532,6 @@ ${altFaqHtml}
 function buildAlternativesIndexPage(): string {
   const allChanges = loadDealChanges();
 
-  // Identify vendors with strongest "look elsewhere" signals
-  // Priority: vendors with deal changes indicating negative trends, or risky ratings
-  // #1038: this list used to score `+1 per other change`, so a vendor that
-  // expanded its free tier earned a place on a page headed "Free Alternatives
-  // to Popular Tools" — we recommended leaving a vendor for improving. A
-  // vendor appears here only if it carries a risk level we can name a cause
-  // for, and the row publishes that cause instead of a change count.
   const vendorSignals = new Map<string, { riskLevel: string; riskCause: RiskCause | null; categories: string[] }>();
 
   for (const o of offers) {
@@ -4846,8 +4625,6 @@ ${vendorListHtml}
 </html>`;
 }
 
-// --- Timely alternatives pages ---
-
 interface AlternativesPageConfig {
   slug: string;
   title: string;
@@ -4856,7 +4633,7 @@ interface AlternativesPageConfig {
   tag: string;
   primaryVendor: string;
   serviceMatrixHtml?: string;
-  hubDesc: string; // One-line description for the /alternatives hub page and cross-links
+  hubDesc: string;
 }
 
 const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
@@ -6043,36 +5820,36 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     slug: "ai-free-tiers",
     title: "Best Free AI APIs and Coding Tools in 2026",
     metaDesc: "Compare free AI APIs, LLM inference, and coding tools — exact rate limits and free tier details for Groq, Cerebras, Mistral, OpenAI, Gemini, Cursor, GitHub Copilot, and 50+ more. Updated March 2026.",
-    contextHtml: "", // Custom page — contextHtml not used by buildTimelyAlternativesPage
-    tag: "ai-free-tier", // Not used — custom build function
-    primaryVendor: "OpenAI", // Not used — custom build function
+    contextHtml: "",
+    tag: "ai-free-tier",
+    primaryVendor: "OpenAI",
     hubDesc: "Compare 65 free AI APIs, LLM inference, vector databases, and coding tools — exact limits and rate caps",
   },
   {
     slug: "database-alternatives",
     title: "Best Free Database Hosting for Developers in 2026",
     metaDesc: "Compare 30+ free database hosting options — Postgres, MongoDB, Redis, SQLite, graph, vector, and time-series. Exact free tier limits for Supabase, Neon, Turso, Upstash, and more. Updated March 2026.",
-    contextHtml: "", // Custom page — contextHtml not used by buildTimelyAlternativesPage
-    tag: "database-alternative", // Not used — custom build function
-    primaryVendor: "Supabase", // Not used — custom build function
+    contextHtml: "",
+    tag: "database-alternative",
+    primaryVendor: "Supabase",
     hubDesc: "Compare 30+ free databases by type — Postgres, document, key-value, edge, graph, vector, and time-series",
   },
   {
     slug: "hosting-alternatives",
     title: "Best Free Hosting for Developers in 2026 — PaaS, Static, Serverless, Containers & VPS",
     metaDesc: "Compare 30+ free hosting options — Railway, Render, Vercel, Netlify, Cloudflare, Fly.io, Oracle Cloud, and more. Exact free tier limits for PaaS, static, serverless, container, and VPS hosting. Updated March 2026.",
-    contextHtml: "", // Custom page — contextHtml not used by buildTimelyAlternativesPage
-    tag: "hosting-alternative", // Not used — custom build function
-    primaryVendor: "Heroku", // Not used — custom build function
+    contextHtml: "",
+    tag: "hosting-alternative",
+    primaryVendor: "Heroku",
     hubDesc: "Compare 30+ free hosting options by type — PaaS, static/JAMstack, serverless, containers, VPS, and edge/CDN",
   },
   {
     slug: "monitoring-alternatives",
     title: "Best Free Monitoring Tools for Developers in 2026 — APM, Uptime, Logs & Error Tracking",
     metaDesc: "Compare 70+ free monitoring tools — New Relic, Grafana Cloud, Datadog, Sentry, BetterStack, UptimeRobot, and more. Exact free tier limits by monitoring type. Updated March 2026.",
-    contextHtml: "", // Custom page — contextHtml not used by buildTimelyAlternativesPage
-    tag: "monitoring-alternative", // Not used — custom build function
-    primaryVendor: "Datadog", // Not used — custom build function
+    contextHtml: "",
+    tag: "monitoring-alternative",
+    primaryVendor: "Datadog",
     hubDesc: "Compare 70+ free monitoring tools by type — APM, uptime, logs, error tracking, and infrastructure",
   },
   {
@@ -6864,7 +6641,6 @@ for (const page of ALTERNATIVES_PAGES) {
   }
 }
 
-// Populate VS page maps now that alternativesPageMap is available
 for (const vs of VS_PAGES) {
   const slug = `${toSlug(vs.vendorA)}-vs-${toSlug(vs.vendorB)}`;
   const offerA = offers.find(o => o.vendor === vs.vendorA);
@@ -6885,22 +6661,17 @@ function buildTimelyAlternativesPage(slug: string): string | null {
 
   const riskColors: Record<string, string> = { stable: "#3fb950", caution: "#d29922", risky: "#f85149" };
 
-  // Get the primary vendor's deal change
   const primaryChange = dealChanges.find(c => c.vendor === config.primaryVendor);
 
-  // Get all alternatives tagged in our index (excluding the primary vendor)
   const taggedOffers = offers.filter(o => o.tags?.includes(config.tag) && o.vendor !== config.primaryVendor);
   const enriched = enrichOffers(taggedOffers);
 
-  // Also get any other offers in the same category that might be relevant
-  // Skip category section when we have enough tagged alternatives (6+)
   const primaryOffer = offers.find(o => o.vendor === config.primaryVendor);
   const categoryOffers = taggedOffers.length >= 6 ? [] : (primaryOffer
     ? partitionAlternatives(offers.filter(o => o.category === primaryOffer.category && o.vendor !== config.primaryVendor && !taggedOffers.some(t => t.vendor === o.vendor)), primaryOffer).kept
     : []);
   const enrichedCategory = enrichOffers(categoryOffers.slice(0, 5));
 
-  // Build alternative cards
   const altCards = enriched.map((o) => {
     const riskBadge = riskBadgeHtml(o.risk_level, o.risk_cause);
     return `      <div class="alt-card">
@@ -6919,7 +6690,6 @@ function buildTimelyAlternativesPage(slug: string): string | null {
       </div>`;
   }).join("\n");
 
-  // Category offers section
   const categoryHtml = enrichedCategory.length > 0 ? `
   <h2>Other ${escHtmlServer(primaryOffer?.category ?? "")} Tools</h2>
   <p style="color:var(--text-muted);margin-bottom:1rem">More free tools in the same category that may fit your needs.</p>
@@ -6940,7 +6710,6 @@ function buildTimelyAlternativesPage(slug: string): string | null {
       </div>`;
   }).join("\n")}` : "";
 
-  // Comparison table
   const allAlts = [...enriched, ...enrichedCategory];
   const tableRows = allAlts.map((o) => `        <tr>
           <td style="font-weight:600"><a href="/vendor/${toSlug(o.vendor)}" style="color:var(--text)">${escHtmlServer(o.vendor)}</a></td>
@@ -6949,7 +6718,6 @@ function buildTimelyAlternativesPage(slug: string): string | null {
           <td>${riskCellHtml(o.risk_level, o.risk_cause)}</td>
         </tr>`).join("\n");
 
-  // JSON-LD
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "ItemList",
@@ -6969,7 +6737,6 @@ function buildTimelyAlternativesPage(slug: string): string | null {
     })),
   };
 
-  // Deal change context
   const changeHtml = primaryChange ? `
   <div class="context-box" style="border-left:3px solid ${riskColors.risky}">
     <div style="font-weight:600;color:${riskColors.risky};margin-bottom:.25rem">${escHtmlServer(primaryChange.change_type.replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase()))}</div>
@@ -7095,8 +6862,6 @@ function buildMoreAlternativesGuides(currentSlug: string): string {
   </div>`;
 }
 
-// --- Alternatives hub page ---
-
 function buildAlternativesHubPage(): string {
   const title = "Alternatives Guides — Developer Tool Migration Guides";
   const metaDesc = `In-depth comparison guides for ${ALTERNATIVES_PAGES.length} major developer tool changes. Free tier comparisons, service matrices, and migration timelines.`;
@@ -7183,8 +6948,6 @@ ${mcpCtaCss()}
 </html>`;
 }
 
-// --- Guides hub page ---
-
 type GuideContentType = "pricing" | "comparison" | "stack" | "alternatives" | "report" | "integration";
 
 function classifyGuide(slug: string): GuideContentType {
@@ -7223,10 +6986,8 @@ const guideSectionOrder: { type: GuideContentType; heading: string; description:
   { type: "integration", heading: "Framework Integration Guides", description: "Step-by-step guides for using AgentDeals MCP tools with popular AI agent frameworks." },
 ];
 
-// --- Framework Integration Guides (/guides/:slug) ---
-
 interface IntegrationGuide {
-  slug: string; // e.g. "langchain" — served at /guides/langchain
+  slug: string;
   title: string;
   metaDesc: string;
   hubDesc: string;
@@ -7779,8 +7540,6 @@ function buildIntegrationGuidePage(slug: string): string | null {
     '</body>\n</html>';
 }
 
-// --- Events pages ---
-
 interface EventDef {
   slug: string;
   title: string;
@@ -8332,7 +8091,6 @@ function buildMonthlyReportPage(yearMonth: string): string | null {
   }
   const sortedCats = [...catCounts.entries()].sort((a, b) => b[1].total - a[1].total);
 
-  // Previous month comparison
   const prevMonth = monthNum === 1 ? (parseInt(yearStr) - 1) + "-12" : yearStr + "-" + String(monthNum - 1).padStart(2, "0");
   const prevChanges = changesEffectiveIn(allChanges, prevMonth);
   const prevNeg = prevChanges.filter(c => negativeTypes.has(c.change_type)).length;
@@ -8346,7 +8104,6 @@ function buildMonthlyReportPage(yearMonth: string): string | null {
     return ' <span class="mom-flat">same as last month</span>';
   }
 
-  // Editorial summary
   let editorialSummary: string;
   if (negative.length > positive.length * 2) {
     editorialSummary = monthName + " " + yearStr + " was a tough month for developer free tiers. With " + negative.length + " negative changes versus " + positive.length + " positive, the trend continues toward tighter limits and eliminated offerings. Developers relying on free tiers should review their dependencies.";
@@ -8360,12 +8117,10 @@ function buildMonthlyReportPage(yearMonth: string): string | null {
     editorialSummary = monthName + " " + yearStr + " was a mixed month with " + monthChanges.length + " total changes. " + negative.length + " negative and " + positive.length + " positive changes balanced out.";
   }
 
-  // Biggest losers (vendors with most negative changes)
   const vendorNegCounts = new Map<string, number>();
   for (const c of negative) vendorNegCounts.set(c.vendor, (vendorNegCounts.get(c.vendor) || 0) + 1);
   const biggestLosers = [...vendorNegCounts.entries()].sort((a, b) => b[1] - a[1]).slice(0, 10);
 
-  // Biggest winners (vendors with most positive changes)
   const vendorPosCounts = new Map<string, number>();
   for (const c of positive) vendorPosCounts.set(c.vendor, (vendorPosCounts.get(c.vendor) || 0) + 1);
   const biggestWinners = [...vendorPosCounts.entries()].sort((a, b) => b[1] - a[1]).slice(0, 10);
@@ -8401,7 +8156,6 @@ function buildMonthlyReportPage(yearMonth: string): string | null {
       }).join("") + '</ul>'
     : '';
 
-  // Navigation to prev/next report
   const months = getAvailableReportMonths();
   const currentIdx = months.indexOf(yearMonth);
   const newerMonth = currentIdx > 0 ? months[currentIdx - 1] : null;
@@ -8634,26 +8388,21 @@ ${mcpCtaCss()}
 </html>`;
 }
 
-// --- AI Free Tiers editorial page ---
-
 function buildAiFreeTiersPage(): string {
   const title = "Best Free AI APIs and Coding Tools in 2026";
   const metaDesc = "Compare free AI APIs, LLM inference, and coding tools — exact rate limits and free tier details for Groq, Cerebras, Mistral, OpenAI, Gemini, Cursor, GitHub Copilot, and 50+ more. Updated March 2026.";
   const slug = "ai-free-tiers";
 
-  // Get AI/ML and AI Coding offers
   const aiMlOffers = offers.filter(o => o.category === "AI / ML");
   const aiCodingOffers = offers.filter(o => o.category === "AI Coding");
   const allAiOffers = [...aiMlOffers, ...aiCodingOffers];
   const enrichedMl = enrichOffers(aiMlOffers);
   const enrichedCoding = enrichOffers(aiCodingOffers);
 
-  // Get AI-related deal changes
   const aiChangeVendors = ["Google Gemini", "OpenAI", "Cursor", "GitHub Copilot", "Google Gemini 2.0 Flash", "Cloudflare Workers AI"];
   const aiChanges = dealChanges.filter(c => aiChangeVendors.some(v => c.vendor.includes(v)));
   const riskColors: Record<string, string> = { stable: "#3fb950", caution: "#d29922", risky: "#f85149" };
 
-  // Group AI/ML by subcategory
   const llmInference = enrichedMl.filter(o =>
     ["Groq", "Cerebras", "OpenRouter", "Mistral AI", "Cohere", "OpenAI", "Google Gemini API", "Cloudflare Workers AI", "Hugging Face", "Anthropic API", "xAI", "Replicate", "Baseten"].includes(o.vendor)
   );
@@ -8664,7 +8413,6 @@ function buildAiFreeTiersPage(): string {
     !llmInference.some(l => l.vendor === o.vendor) && !vectorDbs.some(v => v.vendor === o.vendor)
   );
 
-  // Build alternative cards helper
   const buildCards = (items: ReturnType<typeof enrichOffers>) => items.map(o => {
     const riskBadge = riskBadgeHtml(o.risk_level, o.risk_cause);
     return `<div class="alt-card">
@@ -8683,7 +8431,6 @@ function buildAiFreeTiersPage(): string {
       </div>`;
   }).join("\n");
 
-  // Recent changes callout
   const changesHtml = aiChanges.length > 0 ? `
   <div class="context-box" style="border-left:3px solid ${riskColors.caution}">
     <div style="font-weight:600;color:${riskColors.caution};margin-bottom:.5rem">Recent AI Pricing Changes</div>
@@ -8693,12 +8440,10 @@ function buildAiFreeTiersPage(): string {
     <p style="margin:.75rem 0 0;font-size:.8rem"><a href="/changes">View all ${dealChanges.length} pricing changes &rarr;</a></p>
   </div>` : "";
 
-  // LLM inference comparison table
   const topLlms = llmInference.filter(o =>
     ["Groq", "Cerebras", "Mistral AI", "OpenRouter", "Cohere", "OpenAI", "Google Gemini API", "Cloudflare Workers AI", "Hugging Face"].includes(o.vendor)
   );
 
-  // JSON-LD
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "ItemList",
@@ -8891,19 +8636,15 @@ ${buildCards(enrichedCoding)}
 </html>`;
 }
 
-// --- Hosting Alternatives category hub page ---
-
 function buildHostingAlternativesPage(): string {
   const title = "Best Free Hosting for Developers in 2026 — PaaS, Static, Serverless, Containers & VPS";
   const metaDesc = "Compare 30+ free hosting options — Railway, Render, Vercel, Netlify, Cloudflare, Fly.io, Oracle Cloud, and more. Exact free tier limits by hosting type. Updated March 2026.";
   const slug = "hosting-alternatives";
 
-  // Get all hosting offers
   const hostingOffers = offers.filter(o => o.category === "Cloud Hosting" || o.category === "Cloud IaaS");
   const enrichedAll = enrichOffers(hostingOffers);
   const riskColors: Record<string, string> = { stable: "#3fb950", caution: "#d29922", risky: "#f85149" };
 
-  // Group by hosting type
   const paas = enrichedAll.filter(o =>
     ["Railway", "Render", "Fly.io", "Koyeb", "Back4App", "Deno Deploy", "Northflank", "Coolify", "Sevalla (formerly Kinsta)", "Zeabur", "Alwaysdata", "Qoddi", "Claw.cloud"].includes(o.vendor)
   );
@@ -8916,7 +8657,6 @@ function buildHostingAlternativesPage(): string {
   const containers = enrichedAll.filter(o =>
     ["Google Cloud Run", "Fly.io", "Railway", "Render", "Koyeb"].includes(o.vendor) && !paas.some(p => p.vendor === o.vendor)
   );
-  // Only include vendors not already in PaaS
   const containerDedicated = enrichedAll.filter(o =>
     ["Google Cloud Run"].includes(o.vendor)
   );
@@ -8930,7 +8670,6 @@ function buildHostingAlternativesPage(): string {
     ["AWS Activate", "Microsoft Founders Hub", "Cloudflare Startup Program", "Heroku for Startups Program", "Scaleway Startup Program", "Microsoft for Startups", "Startup with IBM", "Create@Alibaba Cloud", "Clever Bootstrap Program", "Google Cloud"].includes(o.vendor)
   );
 
-  // Build cards helper
   const buildCards = (items: ReturnType<typeof enrichOffers>) => items.map(o => {
     const riskBadge = riskBadgeHtml(o.risk_level, o.risk_cause);
     return `<div class="alt-card">
@@ -8949,7 +8688,6 @@ function buildHostingAlternativesPage(): string {
       </div>`;
   }).join("\n");
 
-  // Hosting deal changes
   const hostingChangeVendors = ["Railway", "Render", "Fly.io", "Heroku", "Vercel", "Hetzner", "Netlify", "Cloudflare", "Koyeb", "Oracle Cloud", "DigitalOcean"];
   const hostingChanges = dealChanges.filter(c => hostingChangeVendors.some(v => c.vendor.includes(v)));
   const changesHtml = hostingChanges.length > 0 ? `
@@ -8961,7 +8699,6 @@ function buildHostingAlternativesPage(): string {
     <p style="margin:.75rem 0 0;font-size:.8rem"><a href="/changes">View all ${dealChanges.length} pricing changes &rarr;</a></p>
   </div>` : "";
 
-  // JSON-LD
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "ItemList",
@@ -9240,19 +8977,15 @@ ${buildCards(startupCredits)}
 </html>`;
 }
 
-// --- Database Alternatives category hub page ---
-
 function buildDatabaseAlternativesPage(): string {
   const title = "Best Free Database Hosting for Developers in 2026";
   const metaDesc = "Compare 30+ free database hosting options — Postgres, MongoDB, Redis, SQLite, graph, vector, and time-series. Exact free tier limits for Supabase, Neon, Turso, Upstash, and more. Updated March 2026.";
   const slug = "database-alternatives";
 
-  // Get all database offers
   const dbOffers = offers.filter(o => o.category === "Databases");
   const enrichedAll = enrichOffers(dbOffers);
   const riskColors: Record<string, string> = { stable: "#3fb950", caution: "#d29922", risky: "#f85149" };
 
-  // Group by database type
   const relational = enrichedAll.filter(o =>
     ["Supabase", "Neon", "CockroachDB", "Xata", "Aiven", "Nile", "Nhost", "Hasura Cloud"].includes(o.vendor)
   );
@@ -9275,7 +9008,6 @@ function buildDatabaseAlternativesPage(): string {
     ["InfluxDB Cloud", "CrateDB"].includes(o.vendor)
   );
 
-  // Build cards helper
   const buildCards = (items: ReturnType<typeof enrichOffers>) => items.map(o => {
     const riskBadge = riskBadgeHtml(o.risk_level, o.risk_cause);
     return `<div class="alt-card">
@@ -9294,7 +9026,6 @@ function buildDatabaseAlternativesPage(): string {
       </div>`;
   }).join("\n");
 
-  // Database deal changes
   const dbChangeVendors = ["MongoDB Atlas", "Redis Cloud", "Firebase", "Supabase", "Neon", "Turso", "Upstash", "CockroachDB"];
   const dbChanges = dealChanges.filter(c => dbChangeVendors.some(v => c.vendor.includes(v)));
   const changesHtml = dbChanges.length > 0 ? `
@@ -9306,7 +9037,6 @@ function buildDatabaseAlternativesPage(): string {
     <p style="margin:.75rem 0 0;font-size:.8rem"><a href="/changes">View all ${dealChanges.length} pricing changes &rarr;</a></p>
   </div>` : "";
 
-  // JSON-LD
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "ItemList",
@@ -9580,19 +9310,15 @@ ${buildCards(timeSeries)}
 </html>`;
 }
 
-// --- Monitoring Alternatives category hub page ---
-
 function buildMonitoringAlternativesPage(): string {
   const title = "Best Free Monitoring Tools for Developers in 2026 — APM, Uptime, Logs & Error Tracking";
   const metaDesc = "Compare 70+ free monitoring tools — New Relic, Grafana Cloud, Datadog, Sentry, BetterStack, UptimeRobot, and more. Exact free tier limits by monitoring type. Updated March 2026.";
   const slug = "monitoring-alternatives";
 
-  // Get all monitoring + error tracking offers
   const monitoringOffers = offers.filter(o => o.category === "Monitoring" || o.category === "Error Tracking");
   const enrichedAll = enrichOffers(monitoringOffers);
   const riskColors: Record<string, string> = { stable: "#3fb950", caution: "#d29922", risky: "#f85149" };
 
-  // Group by monitoring type
   const apmObservability = enrichedAll.filter(o =>
     ["New Relic", "Grafana Cloud", "Datadog", "Sentry", "Middleware.io", "AppSignal", "Axiom", "Sematext", "Inspector.dev", "skylight.io"].includes(o.vendor)
   );
@@ -9621,7 +9347,6 @@ function buildMonitoringAlternativesPage(): string {
     ["Instabug for Startups", "Experian"].includes(o.vendor)
   );
 
-  // Build cards helper
   const buildCards = (items: ReturnType<typeof enrichOffers>) => items.map(o => {
     const riskBadge = riskBadgeHtml(o.risk_level, o.risk_cause);
     return `<div class="alt-card">
@@ -9640,7 +9365,6 @@ function buildMonitoringAlternativesPage(): string {
       </div>`;
   }).join("\n");
 
-  // Monitoring deal changes
   const monitoringChangeVendors = ["Datadog", "New Relic", "Sentry", "Freshping", "Grafana", "BetterStack", "Rollbar", "Bugsnag", "PagerDuty"];
   const monitoringChanges = dealChanges.filter(c => monitoringChangeVendors.some(v => c.vendor.includes(v)));
   const changesHtml = monitoringChanges.length > 0 ? `
@@ -9652,7 +9376,6 @@ function buildMonitoringAlternativesPage(): string {
     <p style="margin:.75rem 0 0;font-size:.8rem"><a href="/changes">View all ${dealChanges.length} pricing changes &rarr;</a></p>
   </div>` : "";
 
-  // JSON-LD
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "ItemList",
@@ -9932,12 +9655,10 @@ function buildCiCdAlternativesPage(): string {
   const metaDesc = "Compare 35+ free CI/CD tools — GitHub Actions, GitLab CI, CircleCI, Buildkite, Harness CI, Drone CI, and more. Exact free tier limits by CI/CD type. Updated March 2026.";
   const slug = "ci-cd-alternatives";
 
-  // Get all CI/CD offers
   const cicdOffers = offers.filter(o => o.category === "CI/CD");
   const enrichedAll = enrichOffers(cicdOffers);
   const riskColors: Record<string, string> = { stable: "#3fb950", caution: "#d29922", risky: "#f85149" };
 
-  // Group by CI/CD type
   const generalPurpose = enrichedAll.filter(o =>
     ["GitHub Actions", "GitLab CI", "CircleCI", "Buildkite", "Bitbucket Pipelines", "Semaphore CI", "Buddy", "Harness CI", "appveyor.com", "cirrus-ci.org"].includes(o.vendor)
   );
@@ -9954,7 +9675,6 @@ function buildCiCdAlternativesPage(): string {
     ["Unity DevOps", "bytebase.com", "cirun.io", "deployhq.com", "RunMyJob", "Squash Labs", "Tugboat"].includes(o.vendor)
   );
 
-  // Build cards helper
   const buildCards = (items: ReturnType<typeof enrichOffers>) => items.map(o => {
     const riskBadge = riskBadgeHtml(o.risk_level, o.risk_cause);
     return `<div class="alt-card">
@@ -9973,7 +9693,6 @@ function buildCiCdAlternativesPage(): string {
       </div>`;
   }).join("\n");
 
-  // CI/CD deal changes
   const cicdChangeVendors = ["GitHub Actions", "GitLab", "CircleCI", "Buildkite", "Harness", "Bitrise", "Codefresh"];
   const cicdChanges = dealChanges.filter(c => cicdChangeVendors.some(v => c.vendor.includes(v)));
   const changesHtml = cicdChanges.length > 0 ? `
@@ -9985,7 +9704,6 @@ function buildCiCdAlternativesPage(): string {
     <p style="margin:.75rem 0 0;font-size:.8rem"><a href="/changes">View all ${dealChanges.length} pricing changes &rarr;</a></p>
   </div>` : "";
 
-  // JSON-LD
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "ItemList",
@@ -10245,19 +9963,15 @@ ${buildCards(specialized)}
 </html>`;
 }
 
-// --- Security alternatives hub page ---
-
 function buildSecurityAlternativesPage(): string {
   const title = "Best Free Security Tools for Developers in 2026 — SAST, Secrets, Auth & Container Security";
   const metaDesc = "Compare 100+ free security tools — Snyk, Semgrep, CodeQL, GitGuardian, Trivy, Auth0, Clerk, and more. Exact free tier limits by security domain. Updated March 2026.";
   const slug = "security-alternatives";
 
-  // Get all security-related offers across categories
   const securityOffers = offers.filter(o => o.category === "Security" || o.category === "Secrets Management" || o.category === "Auth" || o.category === "Error Tracking");
   const enrichedAll = enrichOffers(securityOffers);
   const riskColors: Record<string, string> = { stable: "#3fb950", caution: "#d29922", risky: "#f85149" };
 
-  // Group by security domain
   const appSecurity = enrichedAll.filter(o =>
     ["Snyk", "SonarCloud", "Semgrep", "CodeQL", "FOSSA", "aikido.dev", "Bearer", "Corgea", "Datree", "hostedscan.com", "meterian.io", "SOOS", "Probely", "StackHawk", "OWASP ZAP", "Nuclei", "qualys.com", "Checkov"].includes(o.vendor)
   );
@@ -10283,7 +9997,6 @@ function buildSecurityAlternativesPage(): string {
     ["1Password", "FraudLabs Pro", "LoginLlama", "Have I been pwned?", "CyberChef", "Protectumus", "URLscan.io", "VirusTotal", "RandomKeygen", "Virgil Security", "Cookiefirst", "Iubenda", "Ketch", "Pareto Security"].includes(o.vendor)
   );
 
-  // Build cards helper
   const buildCards = (items: ReturnType<typeof enrichOffers>) => items.map(o => {
     const riskBadge = riskBadgeHtml(o.risk_level, o.risk_cause);
     return `<div class="alt-card">
@@ -10302,7 +10015,6 @@ function buildSecurityAlternativesPage(): string {
       </div>`;
   }).join("\n");
 
-  // Security deal changes
   const secChangeVendors = ["Snyk", "Auth0", "GitGuardian", "SonarCloud", "Trivy", "Tailscale", "HashiCorp", "Clerk", "Sentry"];
   const secChanges = dealChanges.filter(c => secChangeVendors.some(v => c.vendor.includes(v)));
   const changesHtml = secChanges.length > 0 ? `
@@ -10314,7 +10026,6 @@ function buildSecurityAlternativesPage(): string {
     <p style="margin:.75rem 0 0;font-size:.8rem"><a href="/changes">View all ${dealChanges.length} pricing changes &rarr;</a></p>
   </div>` : "";
 
-  // JSON-LD
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "ItemList",
@@ -10593,12 +10304,10 @@ function buildTestingAlternativesPage(): string {
   const metaDesc = "Compare 45+ free testing tools — Cypress, BrowserStack, Playwright, k6, Percy, Chromatic, Postman, Selenium, and more. Exact free tier limits by testing domain. Updated March 2026.";
   const slug = "testing-alternatives";
 
-  // Get all testing-related offers
   const testingOffers = offers.filter(o => o.category === "Testing");
   const enrichedAll = enrichOffers(testingOffers);
   const riskColors: Record<string, string> = { stable: "#3fb950", caution: "#d29922", risky: "#f85149" };
 
-  // Group by testing domain
   const browserTesting = enrichedAll.filter(o =>
     ["BrowserStack", "Sauce Labs", "LambdaTest", "Appetize", "gridlastic.com", "testingbot.com", "Selenium Grid"].includes(o.vendor)
   );
@@ -10625,7 +10334,6 @@ function buildTestingAlternativesPage(): string {
     !e2eTesting.includes(o) && !apiTesting.includes(o) && !codeQuality.includes(o) && !localDev.includes(o)
   );
 
-  // Build cards helper
   const buildCards = (items: ReturnType<typeof enrichOffers>) => items.map(o => {
     const riskBadge = riskBadgeHtml(o.risk_level, o.risk_cause);
     return `<div class="alt-card">
@@ -10644,7 +10352,6 @@ function buildTestingAlternativesPage(): string {
       </div>`;
   }).join("\n");
 
-  // Testing deal changes
   const testingChangeVendors = ["Cypress", "Postman", "LocalStack", "BrowserStack", "Sauce Labs", "Chromatic"];
   const testingChanges = dealChanges.filter(c => testingChangeVendors.some(v => c.vendor.includes(v)));
   const changesHtml = testingChanges.length > 0 ? `
@@ -10656,7 +10363,6 @@ function buildTestingAlternativesPage(): string {
     <p style="margin:.75rem 0 0;font-size:.8rem"><a href="/changes">View all ${dealChanges.length} pricing changes &rarr;</a></p>
   </div>` : "";
 
-  // JSON-LD
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "ItemList",
@@ -10929,12 +10635,10 @@ function buildStorageAlternativesPage(): string {
   const metaDesc = "Compare 55+ free cloud storage tools — Cloudflare R2, Backblaze B2, Tigris, Cloudinary, ImageKit, Google Cloud Storage, and more. Exact free tier limits by storage type. Updated March 2026.";
   const slug = "storage-alternatives";
 
-  // Get all storage-related offers
   const storageOffers = offers.filter(o => o.category === "Storage" || o.category === "CDN");
   const enrichedAll = enrichOffers(storageOffers);
   const riskColors: Record<string, string> = { stable: "#3fb950", caution: "#d29922", risky: "#f85149" };
 
-  // Group by storage domain
   const objectStorage = enrichedAll.filter(o =>
     ["Cloudflare R2", "Backblaze B2", "Tigris", "MinIO", "Google Cloud Storage", "Backblaze", "Pinata IPFS", "packagecloud.io"].includes(o.vendor)
   );
@@ -10951,7 +10655,6 @@ function buildStorageAlternativesPage(): string {
     !objectStorage.includes(o) && !mediaCdn.includes(o) && !cdnDelivery.includes(o) && !fileStorageSync.includes(o)
   );
 
-  // Build cards helper
   const buildCards = (items: ReturnType<typeof enrichOffers>) => items.map(o => {
     const riskBadge = riskBadgeHtml(o.risk_level, o.risk_cause);
     return `<div class="alt-card">
@@ -10970,7 +10673,6 @@ function buildStorageAlternativesPage(): string {
       </div>`;
   }).join("\n");
 
-  // Storage deal changes
   const storageChangeVendors = ["Cloudflare", "Backblaze", "Cloudinary", "ImageKit", "Google Cloud", "Tigris", "Fastly"];
   const storageChanges = dealChanges.filter(c => storageChangeVendors.some(v => c.vendor.includes(v)));
   const changesHtml = storageChanges.length > 0 ? `
@@ -10982,7 +10684,6 @@ function buildStorageAlternativesPage(): string {
     <p style="margin:.75rem 0 0;font-size:.8rem"><a href="/changes">View all ${dealChanges.length} pricing changes &rarr;</a></p>
   </div>` : "";
 
-  // JSON-LD
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "ItemList",
@@ -11243,12 +10944,10 @@ function buildAnalyticsAlternativesPage(): string {
   const metaDesc = "Compare 45+ free analytics tools — PostHog, Amplitude, Mixpanel, Plausible, Umami, Tinybird, Segment, and more. Exact free tier limits by analytics domain. Updated March 2026.";
   const slug = "analytics-alternatives";
 
-  // Get all analytics offers
   const analyticsOffers = offers.filter(o => o.category === "Analytics");
   const enrichedAll = enrichOffers(analyticsOffers);
   const riskColors: Record<string, string> = { stable: "#3fb950", caution: "#d29922", risky: "#f85149" };
 
-  // Group by analytics domain
   const productAnalytics = enrichedAll.filter(o =>
     ["PostHog", "Amplitude", "Mixpanel", "heap.io", "Indicative", "Trackingplan"].includes(o.vendor)
   );
@@ -11268,7 +10967,6 @@ function buildAnalyticsAlternativesPage(): string {
     !productAnalytics.includes(o) && !webAnalytics.includes(o) && !sessionReplay.includes(o) && !eventTracking.includes(o) && !dataInfra.includes(o)
   );
 
-  // Build cards helper
   const buildCards = (items: ReturnType<typeof enrichOffers>) => items.map(o => {
     const riskBadge = riskBadgeHtml(o.risk_level, o.risk_cause);
     return `<div class="alt-card">
@@ -11287,7 +10985,6 @@ function buildAnalyticsAlternativesPage(): string {
       </div>`;
   }).join("\n");
 
-  // Analytics deal changes
   const analyticsChangeVendors = ["PostHog", "Amplitude", "Mixpanel", "Plausible", "Umami", "Google Analytics", "Segment", "Tinybird", "Hotjar"];
   const analyticsChanges = dealChanges.filter(c => analyticsChangeVendors.some(v => c.vendor.includes(v)));
   const changesHtml = analyticsChanges.length > 0 ? `
@@ -11299,7 +10996,6 @@ function buildAnalyticsAlternativesPage(): string {
     <p style="margin:.75rem 0 0;font-size:.8rem"><a href="/changes">View all ${dealChanges.length} pricing changes &rarr;</a></p>
   </div>` : "";
 
-  // JSON-LD
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "ItemList",
@@ -11564,12 +11260,10 @@ function buildAiMlAlternativesPage(): string {
   const metaDesc = "Compare 65+ free AI/ML tools — Groq, Cerebras, OpenAI, Hugging Face, GitHub Copilot, Cursor, Langfuse, and more. Exact free tier limits by AI domain. Updated March 2026.";
   const slug = "ai-ml-alternatives";
 
-  // Get all AI/ML and AI Coding offers
   const aiOffers = offers.filter(o => o.category === "AI / ML" || o.category === "AI Coding");
   const enrichedAll = enrichOffers(aiOffers);
   const riskColors: Record<string, string> = { stable: "#3fb950", caution: "#d29922", risky: "#f85149" };
 
-  // Group by AI domain
   const llmApis = enrichedAll.filter(o =>
     ["OpenAI", "Anthropic API", "Google Gemini API", "Mistral AI", "Groq", "Cerebras", "Cohere", "xAI", "OpenRouter", "Cloudflare Workers AI", "Pollinations.AI", "Mediaworkbench.ai", "Lumenfall.ai"].includes(o.vendor)
   );
@@ -11589,7 +11283,6 @@ function buildAiMlAlternativesPage(): string {
     !llmApis.includes(o) && !aiCoding.includes(o) && !mlPlatforms.includes(o) && !aiObservability.includes(o) && !specializedAi.includes(o)
   );
 
-  // Build cards helper
   const buildCards = (items: ReturnType<typeof enrichOffers>) => items.map(o => {
     const riskBadge = riskBadgeHtml(o.risk_level, o.risk_cause);
     return `<div class="alt-card">
@@ -11608,7 +11301,6 @@ function buildAiMlAlternativesPage(): string {
       </div>`;
   }).join("\n");
 
-  // AI deal changes
   const aiChangeVendors = ["OpenAI", "Anthropic", "Google Gemini", "Mistral", "Groq", "GitHub Copilot", "Cursor", "Windsurf", "Cerebras"];
   const aiChanges = dealChanges.filter(c => aiChangeVendors.some(v => c.vendor.includes(v)));
   const changesHtml = aiChanges.length > 0 ? `
@@ -11620,7 +11312,6 @@ function buildAiMlAlternativesPage(): string {
     <p style="margin:.75rem 0 0;font-size:.8rem"><a href="/changes">View all ${dealChanges.length} pricing changes &rarr;</a></p>
   </div>` : "";
 
-  // JSON-LD
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "ItemList",
@@ -11885,12 +11576,10 @@ function buildEmailAlternativesPage(): string {
   const metaDesc = "Compare 59+ free email tools — Resend, Brevo, Mailjet, SendGrid, Mailchimp, SimpleLogin, Proton Mail, and more. Exact free tier limits by email domain. Updated March 2026.";
   const slug = "email-alternatives";
 
-  // Get all Email offers
   const emailOffers = offers.filter(o => o.category === "Email");
   const enrichedAll = enrichOffers(emailOffers);
   const riskColors: Record<string, string> = { stable: "#3fb950", caution: "#d29922", risky: "#f85149" };
 
-  // Group by email domain
   const transactionalApis = enrichedAll.filter(o =>
     ["Resend", "Postmark", "MailerSend.com", "Mailtrap.io", "Mailjet", "AhaSend", "EmailLabs.io", "mailchannels.com", "Sweego", "Maileroo", "SendStreak", "Plunk"].includes(o.vendor)
   );
@@ -11916,7 +11605,6 @@ function buildEmailAlternativesPage(): string {
     !transactionalApis.includes(o) && !marketingNewsletter.includes(o) && !verificationDeliverability.includes(o) && !forwardingAliases.includes(o) && !temporaryTesting.includes(o) && !securePrivacy.includes(o) && !otherEmailTools.includes(o)
   );
 
-  // Build cards helper
   const buildCards = (items: ReturnType<typeof enrichOffers>) => items.map(o => {
     const riskBadge = riskBadgeHtml(o.risk_level, o.risk_cause);
     return `<div class="alt-card">
@@ -11935,7 +11623,6 @@ function buildEmailAlternativesPage(): string {
       </div>`;
   }).join("\n");
 
-  // Email deal changes
   const emailChangeVendors = ["SendGrid", "Mailchimp", "Resend", "Brevo", "Postmark", "Mailjet"];
   const emailChanges = dealChanges.filter(c => emailChangeVendors.some(v => c.vendor.includes(v)));
   const changesHtml = emailChanges.length > 0 ? `
@@ -11947,7 +11634,6 @@ function buildEmailAlternativesPage(): string {
     <p style="margin:.75rem 0 0;font-size:.8rem"><a href="/changes">View all ${dealChanges.length} pricing changes &rarr;</a></p>
   </div>` : "";
 
-  // JSON-LD
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "ItemList",
@@ -12220,12 +11906,10 @@ function buildDesignAlternativesPage(): string {
   const metaDesc = "Compare 100+ free design tools — Figma, Penpot, Canva, ShadcnUI, Lucide, Unsplash, Coolors, and more. Exact free tier limits by design domain. Updated March 2026.";
   const slug = "design-alternatives";
 
-  // Get all Design offers
   const designOffers = offers.filter(o => o.category === "Design");
   const enrichedAll = enrichOffers(designOffers);
   const riskColors: Record<string, string> = { stable: "#3fb950", caution: "#d29922", risky: "#f85149" };
 
-  // Group by design domain
   const designEditors = enrichedAll.filter(o =>
     ["Figma", "Canva", "Penpot", "Lunacy", "Pixlr", "Excalidraw", "vectr.com", "Pixelixe"].includes(o.vendor)
   );
@@ -12254,7 +11938,6 @@ function buildDesignAlternativesPage(): string {
     !designEditors.includes(o) && !prototyping.includes(o) && !uiComponents.includes(o) && !iconsIllustrations.includes(o) && !stockAssets.includes(o) && !colorCssTools.includes(o) && !mockupsWireframing.includes(o) && !conversionTools.includes(o)
   );
 
-  // Build cards helper
   const buildCards = (items: ReturnType<typeof enrichOffers>) => items.map(o => {
     const riskBadge = riskBadgeHtml(o.risk_level, o.risk_cause);
     return `<div class="alt-card">
@@ -12273,7 +11956,6 @@ function buildDesignAlternativesPage(): string {
       </div>`;
   }).join("\n");
 
-  // Design deal changes
   const designChangeVendors = ["Figma", "Canva", "Penpot", "Webflow", "Framer", "Lucide"];
   const designChanges = dealChanges.filter(c => designChangeVendors.some(v => c.vendor.includes(v)));
   const changesHtml = designChanges.length > 0 ? `
@@ -12285,7 +11967,6 @@ function buildDesignAlternativesPage(): string {
     <p style="margin:.75rem 0 0;font-size:.8rem"><a href="/changes">View all ${dealChanges.length} pricing changes &rarr;</a></p>
   </div>` : "";
 
-  // JSON-LD
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "ItemList",
@@ -12562,12 +12243,10 @@ function buildProjectManagementAlternativesPage(): string {
   const metaDesc = "Compare 93+ free project management tools — Linear, Asana, Trello, ClickUp, Notion, Slack alternatives, Cal.com, and more. Exact free tier limits. Updated March 2026.";
   const slug = "project-management-alternatives";
 
-  // Get all Project Management + Team Collaboration offers
   const pmOffers = offers.filter(o => o.category === "Project Management" || o.category === "Team Collaboration");
   const enrichedAll = enrichOffers(pmOffers);
   const riskColors: Record<string, string> = { stable: "#3fb950", caution: "#d29922", risky: "#f85149" };
 
-  // Group by domain
   const issueTracking = enrichedAll.filter(o =>
     ["Linear", "Atlassian", "Plane", "Huly", "Shortcut", "clickup.com", "asana.com", "Basecamp", "taiga.io", "nTask", "freedcamp.com", "bitrix24.com", "teamwork.com", "Backlog", "GForge", "Tenzu", "Crosswork", "Sflow", "Kitemaker.co", "leiga.com", "Teamcamp", "titanapps.io", "Wikifactory", "RightFeature", "zenhub.com", "zenkit.com"].includes(o.vendor)
   );
@@ -12596,7 +12275,6 @@ function buildProjectManagementAlternativesPage(): string {
     !issueTracking.includes(o) && !kanbanBoards.includes(o) && !agileScrumRetro.includes(o) && !timeTracking.includes(o) && !teamChat.includes(o) && !videoMeetings.includes(o) && !docsKnowledge.includes(o) && !scheduling.includes(o)
   );
 
-  // Build cards helper
   const buildCards = (items: ReturnType<typeof enrichOffers>) => items.map(o => {
     const riskBadge = riskBadgeHtml(o.risk_level, o.risk_cause);
     return `<div class="alt-card">
@@ -12615,7 +12293,6 @@ function buildProjectManagementAlternativesPage(): string {
       </div>`;
   }).join("\n");
 
-  // PM deal changes
   const pmChangeVendors = ["Linear", "Atlassian", "Asana", "Trello", "ClickUp", "Notion", "Jira", "Slack"];
   const pmChanges = dealChanges.filter(c => pmChangeVendors.some(v => c.vendor.includes(v)));
   const changesHtml = pmChanges.length > 0 ? `
@@ -12627,7 +12304,6 @@ function buildProjectManagementAlternativesPage(): string {
     <p style="margin:.75rem 0 0;font-size:.8rem"><a href="/changes">View all ${dealChanges.length} pricing changes &rarr;</a></p>
   </div>` : "";
 
-  // JSON-LD
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "ItemList",
@@ -12904,12 +12580,10 @@ function buildIdeCodeEditorsAlternativesPage(): string {
   const metaDesc = "Compare 59+ free IDEs and coding tools — VS Code, Cursor, GitHub Copilot, Zed, Replit, Windsurf, Devin, and more. Exact free tier limits. Updated March 2026.";
   const slug = "ide-code-editors-alternatives";
 
-  // Get all IDE & Code Editors + AI Coding offers
   const ideOffers = offers.filter(o => o.category === "IDE & Code Editors" || o.category === "AI Coding");
   const enrichedAll = enrichOffers(ideOffers);
   const riskColors: Record<string, string> = { stable: "#3fb950", caution: "#d29922", risky: "#f85149" };
 
-  // Group by domain
   const desktopIdes = enrichedAll.filter(o =>
     ["Visual Studio Code", "VSCodium", "JetBrains", "Zed", "Sublime Text", "Android Studio", "Visual Studio Community", "Apache Netbeans", "Code::Blocks", "Brackets", "BBEdit", "Wave Terminal", "AndroidIDE"].includes(o.vendor)
   );
@@ -12929,7 +12603,6 @@ function buildIdeCodeEditorsAlternativesPage(): string {
     !desktopIdes.includes(o) && !cloudIdes.includes(o) && !aiAssistants.includes(o) && !aiAppBuilders.includes(o) && !specialized.includes(o)
   );
 
-  // Build cards helper
   const buildCards = (items: ReturnType<typeof enrichOffers>) => items.map(o => {
     const riskBadge = riskBadgeHtml(o.risk_level, o.risk_cause);
     return `<div class="alt-card">
@@ -12948,7 +12621,6 @@ function buildIdeCodeEditorsAlternativesPage(): string {
       </div>`;
   }).join("\n");
 
-  // IDE deal changes
   const ideChangeVendors = ["GitHub Copilot", "Cursor", "Windsurf", "Devin", "Replit", "JetBrains", "VS Code"];
   const ideChanges = dealChanges.filter(c => ideChangeVendors.some(v => c.vendor.includes(v)));
   const changesHtml = ideChanges.length > 0 ? `
@@ -12960,7 +12632,6 @@ function buildIdeCodeEditorsAlternativesPage(): string {
     <p style="margin:.75rem 0 0;font-size:.8rem"><a href="/changes">View all ${dealChanges.length} pricing changes &rarr;</a></p>
   </div>` : "";
 
-  // JSON-LD
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "ItemList",
@@ -13225,12 +12896,10 @@ function buildFreeLlmApisPage(): string {
   const metaDesc = "Compare 25+ free LLM API providers — Groq, Cerebras, OpenRouter, Gemini, Mistral, OpenAI, Anthropic, NVIDIA NIM, and more. Exact rate limits and token quotas. Updated March 2026.";
   const slug = "free-llm-apis";
 
-  // Get LLM API offers from AI / ML category
   const aiOffers = offers.filter(o => o.category === "AI / ML");
   const enrichedAll = enrichOffers(aiOffers);
   const riskColors: Record<string, string> = { stable: "#3fb950", caution: "#d29922", risky: "#f85149" };
 
-  // Group by provider type
   const providerApis = enrichedAll.filter(o =>
     ["OpenAI", "Anthropic API", "Google Gemini API", "Mistral AI", "Cohere", "xAI"].includes(o.vendor)
   );
@@ -13243,7 +12912,6 @@ function buildFreeLlmApisPage(): string {
 
   const allLlmOffers = [...providerApis, ...inferencePlatforms, ...aiGateways];
 
-  // Build cards helper
   const buildCards = (items: ReturnType<typeof enrichOffers>) => items.map(o => {
     const riskBadge = riskBadgeHtml(o.risk_level, o.risk_cause);
     return `<div class="alt-card">
@@ -13262,7 +12930,6 @@ function buildFreeLlmApisPage(): string {
       </div>`;
   }).join("\n");
 
-  // LLM pricing changes
   const llmChangeVendors = ["OpenAI", "Anthropic", "Google Gemini", "Mistral", "Groq", "Cerebras", "Cohere", "xAI"];
   const llmChanges = dealChanges.filter(c => llmChangeVendors.some(v => c.vendor.includes(v)));
   const changesHtml = llmChanges.length > 0 ? `
@@ -13274,7 +12941,6 @@ function buildFreeLlmApisPage(): string {
     <p style="margin:.75rem 0 0;font-size:.8rem"><a href="/changes">View all ${dealChanges.length} pricing changes &rarr;</a></p>
   </div>` : "";
 
-  // JSON-LD
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "ItemList",
@@ -13533,19 +13199,15 @@ ${buildCards(aiGateways)}
 </html>`;
 }
 
-// --- API Development Alternatives hub page ---
-
 function buildApiDevelopmentAlternativesPage(): string {
   const title = "Best Free API Development Tools in 2026 — REST, GraphQL, Mocking & Documentation Compared";
   const metaDesc = "Compare 39+ free API development tools — Postman, Hoppscotch, Insomnia, Bruno, Mintlify, Swagger, RapidAPI, Nango, and more. Exact free tier limits. Updated March 2026.";
   const slug = "api-development-alternatives";
 
-  // Get API Development category offers
   const apiOffers = offers.filter(o => o.category === "API Development");
   const enrichedAll = enrichOffers(apiOffers);
   const riskColors: Record<string, string> = { stable: "#3fb950", caution: "#d29922", risky: "#f85149" };
 
-  // Group by domain
   const apiClients = enrichedAll.filter(o =>
     ["Postman", "Hoppscotch", "Insomnia", "Bruno", "Thunder Client", "Apidog", "Kreya", "ReqBin", "ExtendsClass", "CurlHub", "Apollo GraphOS", "Hasura"].includes(o.vendor)
   );
@@ -13562,15 +13224,12 @@ function buildApiDevelopmentAlternativesPage(): string {
     ["Nango", "Hook0", "Sofodata", "PDFBolt", "Treblle", "Imitate Email"].includes(o.vendor)
   );
 
-  // Catch any uncategorized
   const categorized = new Set([...apiClients, ...apiDocs, ...apiMocking, ...apiMarketplaces, ...apiIntegration].map(o => o.vendor));
   const uncategorized = enrichedAll.filter(o => !categorized.has(o.vendor));
-  // Add uncategorized to integration (catch-all)
   apiIntegration.push(...uncategorized);
 
   const allApiOffers = [...apiClients, ...apiDocs, ...apiMocking, ...apiMarketplaces, ...apiIntegration];
 
-  // Build cards helper
   const buildCards = (items: ReturnType<typeof enrichOffers>) => items.map(o => {
     const riskBadge = riskBadgeHtml(o.risk_level, o.risk_cause);
     return `<div class="alt-card">
@@ -13589,7 +13248,6 @@ function buildApiDevelopmentAlternativesPage(): string {
       </div>`;
   }).join("\n");
 
-  // API pricing changes
   const apiChangeVendors = ["Postman", "Hoppscotch", "Insomnia", "RapidAPI", "Swagger", "Mintlify"];
   const apiChanges = dealChanges.filter(c => apiChangeVendors.some(v => c.vendor.includes(v)));
   const changesHtml = apiChanges.length > 0 ? `
@@ -13601,7 +13259,6 @@ function buildApiDevelopmentAlternativesPage(): string {
     <p style="margin:.75rem 0 0;font-size:.8rem"><a href="/changes">View all ${dealChanges.length} pricing changes &rarr;</a></p>
   </div>` : "";
 
-  // JSON-LD
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "ItemList",
@@ -13855,14 +13512,11 @@ ${buildCards(apiIntegration)}
 </html>`;
 }
 
-// --- Team Collaboration Hub ---
-
 function buildTeamCollaborationAlternativesPage(): string {
   const title = "Best Free Team Collaboration Tools in 2026 — Chat, Video, Docs & Scheduling Compared";
   const metaDesc = "Compare 60+ free team collaboration tools — Slack, Discord, Zoom, Jitsi, Notion, Cal.com, Rocket.Chat, and more. Exact free tier limits. Updated March 2026.";
   const slug = "team-collaboration-alternatives";
 
-  // Get Team Collaboration + Communication + Video offers (excluding startup programs)
   const collabOffers = offers.filter(o =>
     (o.category === "Team Collaboration" || o.category === "Communication" || o.category === "Video") &&
     o.tier !== "Startup Program"
@@ -13870,7 +13524,6 @@ function buildTeamCollaborationAlternativesPage(): string {
   const enrichedAll = enrichOffers(collabOffers);
   const riskColors: Record<string, string> = { stable: "#3fb950", caution: "#d29922", risky: "#f85149" };
 
-  // Group by domain
   const chatMessaging = enrichedAll.filter(o =>
     ["Slack API", "Discord API", "Rocket.Chat", "Pumble", "Chanty.com", "element.io", "Revolt.chat", "Zulip", "flock.com", "gitter.im", "Keybase", "Braid", "twist.com", "Tawk.to", "Crisp", "Helploom"].includes(o.vendor)
   );
@@ -13887,13 +13540,11 @@ function buildTeamCollaborationAlternativesPage(): string {
     ["ruttl.com", "SiteDots", "Webvizio", "GraphComment", "Remarkbox", "IntenseDebate", "Utterances"].includes(o.vendor)
   );
 
-  // Catch uncategorized
   const categorized = new Set([...chatMessaging, ...videoMeetings, ...docsKnowledge, ...scheduling, ...feedbackReview].map(o => o.vendor));
   const other = enrichedAll.filter(o => !categorized.has(o.vendor));
 
   const allCollabOffers = [...chatMessaging, ...videoMeetings, ...docsKnowledge, ...scheduling, ...feedbackReview, ...other];
 
-  // Build cards helper
   const buildCards = (items: ReturnType<typeof enrichOffers>) => items.map(o => {
     const riskBadge = riskBadgeHtml(o.risk_level, o.risk_cause);
     return `<div class="alt-card">
@@ -13912,7 +13563,6 @@ function buildTeamCollaborationAlternativesPage(): string {
       </div>`;
   }).join("\n");
 
-  // Collaboration deal changes
   const collabChangeVendors = ["Slack", "Discord", "Zoom", "Notion", "Jitsi", "Webex", "Loom"];
   const collabChanges = dealChanges.filter(c => collabChangeVendors.some(v => c.vendor.includes(v)));
   const changesHtml = collabChanges.length > 0 ? `
@@ -13924,7 +13574,6 @@ function buildTeamCollaborationAlternativesPage(): string {
     <p style="margin:.75rem 0 0;font-size:.8rem"><a href="/changes">View all ${dealChanges.length} pricing changes &rarr;</a></p>
   </div>` : "";
 
-  // JSON-LD
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "ItemList",
@@ -14184,8 +13833,6 @@ ${buildCards(other)}
 </html>`;
 }
 
-// --- Free Startup Stack Guide ---
-
 function buildFreeStartupStackPage(): string {
   const title = "The Complete Free Startup Stack for 2026 — $0/Month SaaS Infrastructure Guide";
   const metaDesc = "Build a complete SaaS startup on free tiers. 10 infrastructure categories with recommended picks, exact limits, scaling guidance, and stability notes. Updated March 2026.";
@@ -14193,7 +13840,6 @@ function buildFreeStartupStackPage(): string {
 
   const riskColors: Record<string, string> = { stable: "#3fb950", caution: "#d29922", risky: "#f85149" };
 
-  // Define the stack categories with recommended picks and alternatives
   const stackCategories = [
     {
       name: "Hosting & Compute",
@@ -14277,7 +13923,6 @@ function buildFreeStartupStackPage(): string {
     },
   ];
 
-  // Resolve offer data for each vendor
   const resolveVendor = (vendorName: string) => {
     const offer = offers.find(o => o.vendor === vendorName);
     if (!offer) return null;
@@ -14285,11 +13930,9 @@ function buildFreeStartupStackPage(): string {
     return enriched;
   };
 
-  // Get deal changes for stack vendors
   const stackVendors = stackCategories.flatMap(c => [c.recommended.vendor, ...c.alternatives]);
   const stackChanges = dealChanges.filter(c => stackVendors.some(v => c.vendor.includes(v)));
 
-  // JSON-LD
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Article",
@@ -14301,7 +13944,6 @@ function buildFreeStartupStackPage(): string {
     author: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
   };
 
-  // Build category sections
   const categorySections = stackCategories.map(cat => {
     const rec = resolveVendor(cat.recommended.vendor);
     const altVendors = cat.alternatives.filter(v => v !== cat.recommended.vendor).map(v => resolveVendor(v)).filter(Boolean) as ReturnType<typeof enrichOffers>;
@@ -14343,7 +13985,6 @@ function buildFreeStartupStackPage(): string {
     </div>`;
   }).join("\n");
 
-  // Build stability notes from deal changes
   const stabilityNotes = stackChanges.length > 0 ? `
   <h2>Stability Notes</h2>
   <p style="color:var(--text-muted);margin-bottom:1rem;font-size:.9rem">Recent pricing changes affecting vendors in this stack. Based on our tracking of ${dealChanges.length} deal changes across ${offers.length.toLocaleString()}+ developer tools.</p>
@@ -14363,7 +14004,6 @@ function buildFreeStartupStackPage(): string {
   </div>
   <p style="margin-top:1rem;font-size:.85rem"><a href="/changes">View all ${dealChanges.length} pricing changes &rarr;</a></p>` : "";
 
-  // Build comparison table
   const tableRows = stackCategories.map(cat => {
     const rec = resolveVendor(cat.recommended.vendor);
     const limits = rec ? rec.description.split(". ")[0].substring(0, 80) : "—";
@@ -14506,8 +14146,6 @@ ${stabilityNotes}
 </body>
 </html>`;
 }
-
-// --- Free AI/ML Stack Guide ---
 
 function buildFreeAiStackPage(): string {
   const title = "The Complete Free AI/ML Stack for 2026 — $0/Month AI Development Infrastructure";
@@ -14691,7 +14329,6 @@ function buildFreeAiStackPage(): string {
       </tr>`;
   }).join("\n");
 
-  // Open-source self-hosted alternatives
   const ossAlternatives = [
     { category: "LLM Inference", tool: "Ollama", desc: "Run Llama, Mistral, Gemma locally — no API limits, complete privacy. GPU recommended." },
     { category: "Experiment Tracking", tool: "MLflow", desc: "Apache-licensed ML lifecycle platform. Self-host for unlimited experiments and model registry." },
@@ -14859,8 +14496,6 @@ ${ossAlternatives.map(oss => `      <tr>
 </body>
 </html>`;
 }
-
-// --- Free DevOps Stack Guide ---
 
 function buildFreeDevopsStackPage(): string {
   const title = "The Complete Free DevOps Stack for 2026 — $0/Month Infrastructure Ops";
@@ -15044,7 +14679,6 @@ function buildFreeDevopsStackPage(): string {
       </tr>`;
   }).join("\n");
 
-  // Open-source self-hosted alternatives
   const ossAlternatives = [
     { category: "CI/CD", tool: "Gitea Actions", desc: "GitHub Actions-compatible CI/CD built into Gitea. Self-host for unlimited minutes and runners." },
     { category: "Monitoring", tool: "Prometheus + Grafana", desc: "Industry-standard metrics collection and visualization. Unlimited metrics, retention, and users." },
@@ -15213,8 +14847,6 @@ ${ossAlternatives.map(oss => `      <tr>
 </body>
 </html>`;
 }
-
-// --- Free Frontend Stack Guide ---
 
 function buildFreeFrontendStackPage(): string {
   const title = "The Complete Free Frontend Stack for 2026 — $0/Month Jamstack & Web Development";
@@ -15567,8 +15199,6 @@ ${ossAlternatives.map(oss => `      <tr>
 </html>`;
 }
 
-// --- Free Next.js Stack Guide ---
-
 function buildFreeNextjsStackPage(): string {
   const title = "The Complete Free Next.js Stack for 2026 — $0/Month Full-Stack Infrastructure";
   const metaDesc = "Build a complete Next.js app on free tiers. 10 infrastructure layers — hosting, database, auth, storage, email, monitoring, CI/CD, analytics, search, and background jobs. Exact limits, growth costs. Updated April 2026.";
@@ -15774,7 +15404,6 @@ function buildFreeNextjsStackPage(): string {
       </tr>`;
   }).join("\n");
 
-  // Growth cost analysis — the "$20/month upgrade" section
   const growthCosts = [
     { layer: "Database", vendor: "Neon", freeLimit: "0.5 GiB storage", firstPaid: "Launch $19/mo", gets: "10 GiB storage, 300 compute hours, autoscaling", hitFirst: true },
     { layer: "Hosting", vendor: "Vercel", freeLimit: "100 GB bandwidth", firstPaid: "Pro $20/mo/member", gets: "1 TB bandwidth, commercial use, faster builds", hitFirst: true },
@@ -15955,8 +15584,6 @@ GitHub → GitHub Actions (CI: tests + lint) → Vercel (CD: auto-deploy)</div>
 </html>`;
 }
 
-// --- Free Django/Python Stack Guide ---
-
 function buildFreeDjangoStackPage(): string {
   const title = "The Complete Free Django/Python Stack for 2026 — $0/Month Full-Stack Infrastructure";
   const metaDesc = "Build a complete Django app on free tiers. 10 infrastructure layers — WSGI hosting, Postgres, Redis/cache, auth, storage, email, monitoring, CI/CD, task queue, and search. Exact limits, growth costs. Updated April 2026.";
@@ -16059,13 +15686,12 @@ function buildFreeDjangoStackPage(): string {
 
   const resolveVendor = (vendorName: string) => {
     if (vendorName === "Django Built-in Auth" || vendorName === "Upstash") {
-      // Upstash appears in both cache and task queue — resolve once
       if (vendorName === "Upstash") {
         const offer = offers.find(o => o.vendor === "Upstash");
         if (!offer) return null;
         return enrichOffers([offer])[0];
       }
-      return null; // Django built-in auth has no vendor entry
+      return null;
     }
     const offer = offers.find(o => o.vendor === vendorName);
     if (!offer) return null;
@@ -16194,7 +15820,6 @@ function buildFreeDjangoStackPage(): string {
       </tr>`;
   }).join("\n");
 
-  // Growth cost analysis
   const growthCosts = [
     { layer: "Database", vendor: "Neon", freeLimit: "0.5 GiB storage", firstPaid: "Launch $19/mo", gets: "10 GiB storage, 300 compute hours, autoscaling", hitFirst: true },
     { layer: "Hosting", vendor: "Railway", freeLimit: "$5/mo credit", firstPaid: "Hobby $5/mo", gets: "$5 + usage-based, no sleep, more RAM", hitFirst: true },
@@ -16396,8 +16021,6 @@ GitHub → GitHub Actions (CI: pytest + ruff) → Railway (CD: auto-deploy)</div
 </body>
 </html>`;
 }
-
-// --- Free FastAPI/Python Stack Guide ---
 
 function buildFreeFastapiStackPage(): string {
   const title = "The Complete Free FastAPI/Python Stack for 2026 — $0/Month Full-Stack Infrastructure";
@@ -16633,7 +16256,6 @@ function buildFreeFastapiStackPage(): string {
       </tr>`;
   }).join("\n");
 
-  // Growth cost analysis
   const growthCosts = [
     { layer: "Database", vendor: "Neon", freeLimit: "0.5 GiB storage", firstPaid: "Launch $19/mo", gets: "10 GiB storage, 300 compute hours, autoscaling", hitFirst: true },
     { layer: "Hosting", vendor: "Railway", freeLimit: "$5/mo credit", firstPaid: "Hobby $5/mo", gets: "$5 + usage-based, no sleep, more RAM", hitFirst: true },
@@ -16852,8 +16474,6 @@ GitHub → GitHub Actions (CI: pytest + ruff) → Railway (CD: auto-deploy)</div
 </body>
 </html>`;
 }
-
-// --- Free Go/Golang Stack Guide ---
 
 function buildFreeGoStackPage(): string {
   const title = "The Complete Free Go/Golang Stack for 2026 — $0/Month Full-Stack Infrastructure";
@@ -17089,7 +16709,6 @@ function buildFreeGoStackPage(): string {
       </tr>`;
   }).join("\n");
 
-  // Growth cost analysis
   const growthCosts = [
     { layer: "Database", vendor: "Neon", freeLimit: "0.5 GiB storage", firstPaid: "Launch $19/mo", gets: "10 GiB storage, 300 compute hours, autoscaling", hitFirst: true },
     { layer: "Hosting", vendor: "Railway", freeLimit: "$5/mo credit", firstPaid: "Hobby $5/mo", gets: "$5 + usage-based, no sleep, more RAM", hitFirst: true },
@@ -17299,8 +16918,6 @@ GitHub → GitHub Actions (CI: go test + golangci-lint) → Railway (CD: auto-de
 </body>
 </html>`;
 }
-
-// --- Free SaaS Starter Stack Guide ---
 
 function buildFreeSaasStackPage(): string {
   const title = "The Complete Free SaaS Starter Stack for 2026 — Build and Launch for $0/Month";
@@ -17579,7 +17196,6 @@ function buildFreeSaasStackPage(): string {
       </tr>`;
   }).join("\n");
 
-  // Growth cost analysis at 4 scale points
   const growthCosts = [
     { layer: "Database", vendor: "Neon", freeLimit: "0.5 GiB", firstPaid: "Launch $19/mo", atScale: "$69/mo (Scale)", hitFirst: true },
     { layer: "Hosting", vendor: "Railway", freeLimit: "$5/mo credit", firstPaid: "Hobby $5/mo", atScale: "$20+/mo (usage)", hitFirst: true },
@@ -17831,21 +17447,16 @@ ${upgradeTable}
 </html>`;
 }
 
-// --- Hetzner April 2026 Pricing Analysis ---
-
 function buildHetznerPricing2026Page(): string {
   const title = "Hetzner April 2026 Pricing Analysis — Before/After, Impact & Alternatives";
   const metaDesc = "Hetzner raises cloud prices 30-50% on April 1, 2026. Before/after pricing for CX, CAX, CPX, CCX lines. Memory add-ons up 575%. Impact assessment, alternatives comparison, and industry context.";
   const slug = "hetzner-pricing-2026";
   const pubDate = "2026-03-25";
 
-  // Hetzner change from our deal_changes
   const hetznerChange = dealChanges.find(c => c.vendor === "Hetzner");
 
-  // Alternatives from our index (tagged hetzner-alternative)
   const altOffers = offers.filter(o => (o.tags ?? []).includes("hetzner-alternative"));
 
-  // Before/after pricing data (from hetzexit.org, Hetzner pressroom, HN community data)
   const pricingData = [
     { product: "CX22 (2 vCPU, 4 GB)", region: "EU", before: "€3.29", after: "€4.49", pctChange: 36, impact: "high" as const },
     { product: "CAX11 (2 Arm vCPU, 4 GB)", region: "EU", before: "€3.29", after: "€4.49", pctChange: 36, impact: "high" as const },
@@ -17861,7 +17472,6 @@ function buildHetznerPricing2026Page(): string {
 
   const impactColors: Record<string, string> = { high: "#f85149", medium: "#d29922", low: "#3fb950" };
 
-  // Build pricing table rows
   const pricingRows = pricingData.map(p => {
     const impactColor = impactColors[p.impact];
     return `<tr>
@@ -17874,7 +17484,6 @@ function buildHetznerPricing2026Page(): string {
     </tr>`;
   }).join("\n        ");
 
-  // Build alternatives comparison
   const competitorPricing = [
     { vendor: "Hetzner (post-increase)", spec: "CX22 — 2 vCPU, 4 GB", price: "€4.49/mo", region: "EU", note: "Still cheapest EU cloud" },
     { vendor: "DigitalOcean", spec: "Basic — 1 vCPU, 1 GB", price: "$6/mo", region: "Global", note: "~3x more for less spec" },
@@ -17900,12 +17509,10 @@ function buildHetznerPricing2026Page(): string {
     </tr>`;
   }).join("\n        ");
 
-  // Related editorial pages
   const relatedPages = ALTERNATIVES_PAGES.filter(p =>
     ["hetzner-alternatives", "hosting-alternatives", "q1-2026-developer-pricing-report"].includes(p.slug)
   );
 
-  // JSON-LD Article schema
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Article",
@@ -18158,18 +17765,14 @@ ${mcpCtaCss()}
 </html>`;
 }
 
-// --- Q1 2026 Developer Pricing Report ---
-
 function buildQ1PricingReportPage(): string {
   const title = "Q1 2026 Developer Pricing Report — The Great Free Tier Reckoning";
   const metaDesc = "50 verified pricing changes across developer tools in Q1 2026: 8 free tiers removed, 6 limits reduced, 1 OSS project killed, while Cloudflare bucked the trend. The definitive quarterly analysis of developer tool pricing.";
   const slug = "q1-2026-developer-pricing-report";
   const pubDate = "2026-03-24";
 
-  // Filter Q1 2026 changes
   const q1Changes = dealChanges.filter(c => c.date >= "2026-01-01" && c.date <= "2026-03-31");
 
-  // Categorize by theme
   const negativeTypes = new Set(["free_tier_removed", "limits_reduced", "restriction", "open_source_killed", "product_deprecated"]);
   const positiveTypes = new Set(["limits_increased", "new_free_tier", "startup_program_expanded", "pricing_postponed"]);
   const removals = q1Changes.filter(c => c.change_type === "free_tier_removed");
@@ -18230,13 +17833,11 @@ function buildQ1PricingReportPage(): string {
     "</div>";
   };
 
-  // Summary stats
   const highImpact = q1Changes.filter(c => c.impact === "high").length;
   const medImpact = q1Changes.filter(c => c.impact === "medium").length;
   const lowImpact = q1Changes.filter(c => c.impact === "low").length;
   const uniqueVendors = new Set(q1Changes.map(c => c.vendor)).size;
 
-  // Change type counts for "By the Numbers" breakdown
   const changeTypeCounts = new Map<string, number>();
   for (const c of q1Changes) {
     changeTypeCounts.set(c.change_type, (changeTypeCounts.get(c.change_type) ?? 0) + 1);
@@ -18244,7 +17845,6 @@ function buildQ1PricingReportPage(): string {
   const sortedChangeTypes = [...changeTypeCounts.entries()].sort((a, b) => b[1] - a[1]);
   const maxChangeTypeCount = Math.max(...sortedChangeTypes.map(([, v]) => v), 1);
 
-  // Category breakdown
   const catChangeCounts = new Map<string, { total: number; negative: number; positive: number; high: number }>();
   for (const c of q1Changes) {
     if (c.category) {
@@ -18259,7 +17859,6 @@ function buildQ1PricingReportPage(): string {
   const sortedCategories = [...catChangeCounts.entries()].sort((a, b) => b[1].total - a[1].total);
   const maxCatTotal = Math.max(...sortedCategories.map(([, v]) => v.total), 1);
 
-  // Monthly breakdown
   const monthlyData = new Map<string, { total: number; negative: number; positive: number; high: number }>();
   for (const c of q1Changes) {
     const month = c.date.slice(0, 7);
@@ -18274,15 +17873,12 @@ function buildQ1PricingReportPage(): string {
   const sortedMonths = [...monthlyData.entries()].sort((a, b) => a[0].localeCompare(b[0]));
   const maxMonthTotal = Math.max(...sortedMonths.map(([, v]) => v.total), 1);
 
-  // Upcoming deadlines (changes with dates in Q2+ 2026)
   const upcomingDeadlines = dealChanges.filter(c => c.date > "2026-03-31").slice(0, 6);
 
-  // Cross-links to editorial pages
   const relatedPages = ALTERNATIVES_PAGES.filter(p =>
     ["localstack-alternatives", "postman-alternatives", "hetzner-alternatives", "hetzner-pricing-2026", "firebase-alternatives", "github-actions-alternatives", "hosting-alternatives", "monitoring-alternatives", "ai-ml-alternatives", "database-alternatives", "terraform-cloud-free-tier-removed", "gemini-api-pricing-changes"].includes(p.slug)
   );
 
-  // JSON-LD Article schema
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Article",
@@ -18300,7 +17896,6 @@ function buildQ1PricingReportPage(): string {
     },
   };
 
-  // Build monthly timeline bars
   const monthlyTimelineHtml = sortedMonths.map(([month, data]) => {
     const totalWidth = Math.round((data.total / maxMonthTotal) * 100);
     const negPct = data.total > 0 ? Math.round((data.negative / data.total) * 100) : 0;
@@ -18317,7 +17912,6 @@ function buildQ1PricingReportPage(): string {
     "</div>";
   }).join("\n    ");
 
-  // Build change type breakdown bars
   const changeTypeBreakdownHtml = sortedChangeTypes.map(([type, count]) => {
     const badgeColor = changeTypeBadgeColors[type] ?? "#8b949e";
     const label = changeTypeLabels[type] ?? type.replace(/_/g, " ");
@@ -18331,7 +17925,6 @@ function buildQ1PricingReportPage(): string {
     "</div>";
   }).join("\n    ");
 
-  // Build category breakdown bars
   const categoryBreakdownHtml = sortedCategories.map(([cat, data]) => {
     const barWidth = Math.round((data.total / maxCatTotal) * 100);
     const catSlug = toSlug(cat);
@@ -18429,7 +18022,6 @@ mcpCtaCss() + "\n" +
   "<p class=\"subtitle\">The Great Free Tier Reckoning</p>\n" +
   "<p class=\"pub-date\">Published " + pubDate + pageFreshness("/q1-2026-developer-pricing-report") + " &middot; " + q1Changes.length + " changes recorded across " + uniqueVendors + " developer tools &middot; " + pageDataProvenance("/q1-2026-developer-pricing-report", offers.length) + "</p>\n" +
 
-  // --- Executive Summary ---
   "<h2>Executive Summary</h2>\n" +
   "<div class=\"executive-summary\">\n" +
     "<p><strong>Q1 2026 was the worst quarter for developer free tiers in recent memory.</strong> We tracked " + q1Changes.length + " verified pricing changes across " + uniqueVendors + " developer tools. " + removals.length + " free tiers were completely removed, " + restrictions.length + " had limits tightened or restrictions added, and 1 open-source project was killed. " + highImpact + " of " + q1Changes.length + " changes were rated high impact.</p>\n" +
@@ -18437,7 +18029,6 @@ mcpCtaCss() + "\n" +
     "<p><strong>One notable counter-trend:</strong> While most vendors contracted, Cloudflare expanded &mdash; adding free Queues, reducing Durable Objects pricing, and launching a $250K startup credit program. They are betting that developer goodwill converts to enterprise revenue.</p>\n" +
   "</div>\n" +
 
-  // --- By the Numbers ---
   "<h2>By the Numbers</h2>\n" +
   "<div class=\"summary-stats\">\n" +
     "<div class=\"stat-card\"><div class=\"stat-number\">" + q1Changes.length + "</div><div class=\"stat-label\">Total Changes</div></div>\n" +
@@ -18458,7 +18049,6 @@ mcpCtaCss() + "\n" +
     "<span><span style=\"display:inline-block;width:10px;height:10px;border-radius:2px;background:#3fb950;vertical-align:middle;margin-right:.25rem\"></span> Positive</span>" +
   "</div>\n" +
 
-  // --- Impact Analysis ---
   "<h2>Impact Analysis</h2>\n" +
   "<p class=\"section-intro\">We rate each change by its impact on the developer community &mdash; factoring in the size of the user base, severity of the change, and availability of alternatives.</p>\n" +
   "<div class=\"impact-grid\">\n" +
@@ -18467,7 +18057,6 @@ mcpCtaCss() + "\n" +
     "<div class=\"impact-card\"><span class=\"impact-count\" style=\"color:#3fb950\">" + lowImpact + "</span><span class=\"impact-label\">Low Impact</span><p class=\"impact-desc\">Minor changes, postponed deadlines, or improvements. Little to no developer action needed.</p></div>\n" +
   "</div>\n" +
 
-  // --- Biggest Stories of Q1 ---
   "<h2>Biggest Stories of Q1</h2>\n" +
   "<p class=\"section-intro\">The 7 most significant pricing events that shaped the developer ecosystem in Q1 2026.</p>\n" +
 
@@ -18520,7 +18109,6 @@ mcpCtaCss() + "\n" +
     "<p><a href=\"/vendor/hcp-terraform\">View vendor profile</a> &middot; <a href=\"/terraform-cloud-free-tier-removed\">Removal guide</a> &middot; <a href=\"/hcp-terraform-migration\">Migration guide</a></p>\n" +
   "</div>\n" +
 
-  // --- The Counter-Trend: Cloudflare ---
   "<h2>The Counter-Trend: Cloudflare</h2>\n" +
   "<div class=\"callout callout-green\">\n" +
     "<p><strong>While most vendors contracted, Cloudflare expanded.</strong> In Q1 2026, Cloudflare made 3 developer-positive moves:</p>\n" +
@@ -18532,12 +18120,10 @@ mcpCtaCss() + "\n" +
     "<p><strong>Why the difference?</strong> Cloudflare&rsquo;s business model is built on network effects &mdash; every developer using Workers, R2, or Queues drives traffic through Cloudflare&rsquo;s edge network. Free tiers are a customer acquisition channel, not a cost center. This stands in contrast to companies like HashiCorp or LocalStack, where free tiers are a direct cost with no infrastructure flywheel to offset them.</p>\n" +
   "</div>\n" +
 
-  // --- Category Breakdown ---
   "<h2>Category Breakdown</h2>\n" +
   "<p class=\"section-intro\">Which categories saw the most pricing churn? Cloud IaaS (" + (catChangeCounts.get("Cloud IaaS")?.total ?? 0) + " changes), Databases (" + (catChangeCounts.get("Databases")?.total ?? 0) + "), and APIs (" + (catChangeCounts.get("APIs")?.total ?? 0) + ") were the most active. Red = negative, purple = restructured, green = positive.</p>\n" +
   "<div style=\"margin:1.5rem 0\">\n    " + categoryBreakdownHtml + "\n</div>\n" +
 
-  // --- Monthly Timeline ---
   "<h2>Monthly Timeline: Did the Pace Accelerate?</h2>\n" +
   "<p class=\"section-intro\">Yes. Q1 started with " + (monthlyData.get("2026-01")?.total ?? 0) + " changes in January and ended with " + (monthlyData.get("2026-03")?.total ?? 0) + " in March &mdash; a " + Math.round(((monthlyData.get("2026-03")?.total ?? 0) / Math.max(monthlyData.get("2026-01")?.total ?? 1, 1) - 1) * 100) + "% increase. March was particularly brutal with " + (monthlyData.get("2026-03")?.high ?? 0) + " high-impact changes.</p>\n" +
   "<div style=\"margin:1.5rem 0\">\n    " + monthlyTimelineHtml + "\n" +
@@ -18548,7 +18134,6 @@ mcpCtaCss() + "\n" +
   "</div>\n" +
   "</div>\n" +
 
-  // --- All Q1 Changes by Category ---
   "<h2 style=\"color:" + impactColors.high + "\">Free Tiers Removed (" + removals.length + ")</h2>\n" +
   "<p class=\"section-intro\">These tools completely eliminated their free tier in Q1 2026. If you were using them for free, you need to migrate or pay.</p>\n" +
   removals.map(buildChangeCard).join("\n  ") + "\n" +
@@ -18569,7 +18154,6 @@ mcpCtaCss() + "\n" +
   "<p class=\"section-intro\">Not all news is bad. These tools increased free tier limits or added new free offerings.</p>\n" +
   expansions.map(buildChangeCard).join("\n  ") + "\n" +
 
-  // --- What to Watch in Q2 ---
   "<h2>What to Watch in Q2 2026</h2>\n" +
   "<p class=\"section-intro\">Key deadlines and trends to monitor in April&ndash;June 2026.</p>\n" +
   "<div class=\"callout\">\n" +
@@ -18587,12 +18171,10 @@ mcpCtaCss() + "\n" +
   (upcomingDeadlines.length > 0 ? "<h3>Confirmed Q2 Changes</h3>\n<p class=\"section-intro\">These pricing changes take effect after Q1. Plan your migrations now.</p>\n" +
   upcomingDeadlines.map(buildChangeCard).join("\n  ") + "\n" : "") +
 
-  // --- Methodology ---
   "<div class=\"methodology\">\n" +
     "<strong>Methodology:</strong> All " + q1Changes.length + " pricing changes were read by hand from vendor pricing pages, blog announcements, or official documentation on " + pubDate + ". Each entry includes a source URL for independent verification. Changes are categorized by type (removal, restriction, restructure, expansion) and rated by impact (high, medium, low) based on the size of the affected developer community and the severity of the change. Impact ratings consider: (1) estimated user base, (2) magnitude of change, (3) availability of alternatives, and (4) migration difficulty. Data is continuously tracked at <a href=\"/changes\">/changes</a>.\n" +
   "</div>\n" +
 
-  // --- Related Guides ---
   "<h2>Related Guides</h2>\n" +
   "<p class=\"section-intro\">Deep-dive comparison guides for tools affected by Q1 2026 changes.</p>\n" +
   "<div class=\"related-pages\">\n" +
@@ -18612,19 +18194,14 @@ mcpCtaCss() + "\n" +
 "</body>\n</html>";
 }
 
-// --- Q2 2026 Pricing Preview ---
-
 function buildQ2PricingPreview2026Page(): string {
   const title = "Q2 2026 Developer Pricing Preview — What's Changing April–June";
   const metaDesc = "Upcoming developer tool pricing changes for Q2 2026. Hetzner +30-50%, Google Tenor shutdown, GitHub Actions runner fees, odrive removal, and more. Timeline, impact analysis, and alternatives.";
   const slug = "q2-pricing-preview-2026";
   const pubDate = "2026-03-25";
 
-  // Confirmed Q2 changes from our deal_changes data
   const q2Changes = dealChanges.filter(c => c.date >= "2026-04-01" && c.date <= "2026-06-30");
-  // Late Q1 changes with Q2 impact
   const lateQ1Changes = dealChanges.filter(c => c.date >= "2026-03-25" && c.date < "2026-04-01");
-  // All timeline entries
   const timelineChanges = [...lateQ1Changes, ...q2Changes].sort((a, b) => a.date.localeCompare(b.date));
 
   const impactColors: Record<string, string> = { high: "#f85149", medium: "#d29922", low: "#3fb950" };
@@ -18667,7 +18244,6 @@ function buildQ2PricingPreview2026Page(): string {
   const highImpact = timelineChanges.filter(c => c.impact === "high").length;
   const uniqueVendors = new Set(timelineChanges.map(c => c.vendor)).size;
 
-  // "What to Watch" items — signals not yet confirmed as deal changes
   const watchItems = [
     { vendor: "GitHub Actions", signal: "Self-hosted runners now $0.002/min in private repos (started March 1). Q2 is the first full quarter of impact — watch for community migration patterns to alternatives like GitLab CI or Dagger.", impact: "medium" as const },
     { vendor: "Microsoft 365", signal: "E3 price increase to $39.60/user/mo announced March 24. Takes effect in Q2. Not a developer tool per se, but signals broader Microsoft pricing trends that could affect Azure and GitHub.", impact: "medium" as const },
@@ -18676,7 +18252,6 @@ function buildQ2PricingPreview2026Page(): string {
     { vendor: "Cloud Providers", signal: "DRAM prices up 171% YoY driving Hetzner's increase. OVHcloud, Netcup also raising prices. AWS, GCP, Azure haven't announced increases yet, but memory-heavy instances may follow.", impact: "medium" as const },
   ];
 
-  // Cross-links to related pages
   const relatedPages = ALTERNATIVES_PAGES.filter(p =>
     ["q1-2026-developer-pricing-report", "hetzner-pricing-2026", "hosting-alternatives", "ci-cd-alternatives", "ai-ml-alternatives", "free-llm-apis"].includes(p.slug)
   );
@@ -18845,19 +18420,15 @@ ${mcpCtaCss()}
 </html>`;
 }
 
-// --- Google Developer Program 2026 Pricing Analysis ---
-
 function buildGoogleDeveloperProgram2026Page(): string {
   const title = "Google Developer Program 2026 — Premium Ending, Migration Guide & Alternatives";
   const metaDesc = "Google Developer Program Premium ($299/year) ends March 30, 2026. Compare GDP Premium vs AI Pro ($19.99/mo) vs AI Ultra ($249.99/mo). Migration steps, free alternatives for Cloud credits, Gemini API, Firebase. Updated March 2026.";
   const slug = "google-developer-program-2026";
   const pubDate = "2026-03-26";
 
-  // Google-related changes from our deal_changes
   const gdpChange = dealChanges.find(c => c.vendor === "Google" && c.change_type === "pricing_restructured" && c.date === "2026-03-30");
   const geminiChange = dealChanges.find(c => c.vendor === "Google Gemini" && c.change_type === "limits_reduced");
 
-  // Free alternatives from our index
   const cloudOffers = offers.filter(o =>
     o.category === "Cloud IaaS" && o.tier !== "Credits" && o.tier !== "Portfolio" &&
     ["AWS", "Azure", "Oracle Cloud", "DigitalOcean", "Google Cloud Run", "Google Compute Engine"].includes(o.vendor)
@@ -18870,7 +18441,6 @@ function buildGoogleDeveloperProgram2026Page(): string {
     ["Supabase", "Appwrite Cloud", "Firebase"].includes(o.vendor) && o.category === "Databases"
   );
 
-  // Price comparison data
   const planComparison = [
     { plan: "GDP Premium (ending)", price: "$299/year (~$24.92/mo)", credits: "$500/year (~$41.67/mo)", gemini: "API access included", firebase: "Premium perks", community: "Exclusive events + badges", status: "ending" as const },
     { plan: "Google AI Pro", price: "$19.99/mo ($239.88/yr)", credits: "$10/mo ($120/yr)", gemini: "Gemini Advanced + API", firebase: "Standard quotas", community: "None", status: "new" as const },
@@ -18892,7 +18462,6 @@ function buildGoogleDeveloperProgram2026Page(): string {
     </tr>`;
   }).join("\n        ");
 
-  // Cloud credit alternatives
   const creditAlternatives = [
     { vendor: "AWS Free Tier", credits: "12 months free + always-free services", highlight: "750h EC2 t2.micro, 5GB S3, 1M Lambda requests", link: "/vendor/aws" },
     { vendor: "Azure Free Account", credits: "$200 credits (30 days) + 12 months free", highlight: "750h B1s VM, 5GB Blob Storage, 250GB SQL", link: "/vendor/azure" },
@@ -18908,7 +18477,6 @@ function buildGoogleDeveloperProgram2026Page(): string {
       <td style="color:var(--text-muted);font-size:.85rem">${escHtmlServer(c.highlight)}</td>
     </tr>`).join("\n        ");
 
-  // LLM API alternatives
   const llmAlternatives = [
     { vendor: "Groq", free: "30 RPM, 100K-500K tokens/day", models: "Llama 3, Mixtral, Gemma", link: "/vendor/groq" },
     { vendor: "OpenRouter", free: "Free models available", models: "100+ models aggregated", link: "/vendor/openrouter" },
@@ -18924,7 +18492,6 @@ function buildGoogleDeveloperProgram2026Page(): string {
       <td style="color:var(--text-muted);font-size:.85rem">${escHtmlServer(c.models)}</td>
     </tr>`).join("\n        ");
 
-  // Firebase alternatives
   const firebaseAlternatives = [
     { vendor: "Supabase", free: "500MB DB, 1GB storage, 50K auth users", highlight: "Postgres-based, real-time, auth included", link: "/vendor/supabase" },
     { vendor: "Appwrite Cloud", free: "75K+ requests, 10GB bandwidth", highlight: "Self-hostable, auth, DB, storage, functions", link: "/vendor/appwrite-cloud" },
@@ -18938,12 +18505,10 @@ function buildGoogleDeveloperProgram2026Page(): string {
       <td style="color:var(--text-muted);font-size:.85rem">${escHtmlServer(c.highlight)}</td>
     </tr>`).join("\n        ");
 
-  // Related editorial pages
   const relatedPages = ALTERNATIVES_PAGES.filter(p =>
     ["free-ai-stack", "free-startup-stack", "free-llm-apis", "ai-ml-alternatives", "hosting-alternatives", "q2-pricing-preview-2026"].includes(p.slug)
   );
 
-  // JSON-LD Article schema
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Article",
@@ -19272,29 +18837,23 @@ ${mcpCtaCss()}
 </html>`;
 }
 
-// --- Supabase vs Firebase comparison page ---
-
 function buildSupabaseVsFirebasePage(): string {
   const title = "Supabase vs Firebase Free Tier Comparison — 2026 Deep Dive";
   const metaDesc = "Compare Supabase and Firebase free tiers side-by-side. Database, auth, storage, functions, bandwidth — verified data, cost-at-scale analysis, and BaaS alternatives. Updated March 2026.";
   const slug = "supabase-vs-firebase";
   const pubDate = "2026-03-26";
 
-  // Pull verified data from our index
   const supabaseOffer = offers.find(o => o.vendor === "Supabase" && o.category === "Databases");
   const firebaseOffer = offers.find(o => o.vendor === "Firebase" && o.category === "Databases");
 
-  // Deal changes
   const supabasePause = dealChanges.find(c => c.vendor === "Supabase" && c.change_type === "limits_reduced");
   const firebaseStorage = dealChanges.find(c => c.vendor === "Firebase" && c.change_type === "limits_reduced");
   const firebaseStudio = dealChanges.find(c => c.vendor === "Firebase" && c.change_type === "product_deprecated");
 
-  // BaaS alternatives from index
   const baasAlts = offers.filter(o =>
     ["Appwrite Cloud", "PocketBase", "Nhost", "Convex"].includes(o.vendor) && o.category === "Databases"
   );
 
-  // Comparison data
   const comparisonRows = [
     { feature: "Database", supabase: "500 MB PostgreSQL", firebase: "1 GiB Firestore", notes: "Supabase: SQL + joins. Firebase: NoSQL document model" },
     { feature: "Auth", supabase: "50K MAU", firebase: "50K MAU", notes: "Equivalent. Both include email, OAuth, social login" },
@@ -19313,7 +18872,6 @@ function buildSupabaseVsFirebasePage(): string {
       <td style="color:var(--text-muted);font-size:.8rem">${escHtmlServer(r.notes)}</td>
     </tr>`).join("\n        ");
 
-  // Key differences
   const differences = [
     { title: "Open Source vs. Proprietary", desc: "Supabase is fully open source (MIT license) — you can self-host and avoid vendor lock-in entirely. Firebase is proprietary to Google with no self-hosting option. If you leave Firebase, you rewrite your data layer." },
     { title: "SQL vs. NoSQL", desc: "Supabase runs PostgreSQL — full relational queries, joins, indexes, migrations. Firebase uses Firestore (document model) — great for simple reads but complex queries require denormalization. Choose based on your data model needs." },
@@ -19321,7 +18879,6 @@ function buildSupabaseVsFirebasePage(): string {
     { title: "Ecosystem & Lock-in", desc: "Firebase deeply integrates with Google Cloud — great if you're already on GCP, but creates tight coupling. Supabase uses standard Postgres, compatible with any Postgres client, ORM, or hosting provider." },
   ];
 
-  // Cost at scale
   const scalingComparison = [
     { metric: "Starter paid plan", supabase: "$25/mo (Pro)", firebase: "Pay-as-you-go (Blaze)", notes: "Supabase: predictable flat rate. Firebase: usage-based, no spending cap" },
     { metric: "Database at 10 GB", supabase: "$25/mo (8 GB included)", firebase: "$1.56/mo (Firestore)", notes: "Firebase cheaper for pure storage. Supabase includes more in base price" },
@@ -19338,7 +18895,6 @@ function buildSupabaseVsFirebasePage(): string {
       <td style="color:var(--text-muted);font-size:.8rem">${escHtmlServer(r.notes)}</td>
     </tr>`).join("\n        ");
 
-  // BaaS alternative rows
   const altRows = baasAlts.map(o => {
     const vendorSlug = o.vendor.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/-+$/, "");
     return `<tr>
@@ -19348,12 +18904,10 @@ function buildSupabaseVsFirebasePage(): string {
     </tr>`;
   }).join("\n        ");
 
-  // Related editorial pages
   const relatedPages = ALTERNATIVES_PAGES.filter(p =>
     ["database-alternatives", "firebase-alternatives", "mongodb-alternatives", "auth0-alternatives", "hosting-alternatives", "free-startup-stack"].includes(p.slug)
   );
 
-  // JSON-LD Article schema
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Article",
@@ -19606,28 +19160,22 @@ ${mcpCtaCss()}
 </html>`;
 }
 
-// --- Vercel vs Netlify comparison page ---
-
 function buildVercelVsNetlifyPage(): string {
   const title = "Vercel vs Netlify Free Tier Comparison — 2026 Deep Dive";
   const metaDesc = "Compare Vercel and Netlify free tiers side-by-side. Bandwidth, serverless functions, build minutes, storage, commercial use — verified data, cost-at-scale analysis, and hosting alternatives. Updated March 2026.";
   const slug = "vercel-vs-netlify";
   const pubDate = "2026-03-26";
 
-  // Pull verified data from our index
   const vercelOffer = offers.find(o => o.vendor === "Vercel" && o.category === "Cloud Hosting");
   const netlifyOffer = offers.find(o => o.vendor === "Netlify" && o.category === "Cloud Hosting");
 
-  // Deal changes
   const vercelChange = dealChanges.find(c => c.vendor === "Vercel" && c.change_type === "pricing_restructured");
   const netlifyChange = dealChanges.find(c => c.vendor === "Netlify" && c.change_type === "pricing_restructured");
 
-  // Hosting alternatives from index
   const hostingAlts = offers.filter(o =>
     ["Cloudflare Pages", "Railway", "Render", "Fly.io", "Coolify", "Deno Deploy"].includes(o.vendor) && o.category === "Cloud Hosting"
   );
 
-  // Comparison data
   const comparisonRows = [
     { feature: "Bandwidth", vercel: "100 GB/mo Fast Data Transfer", netlify: "300 credits/mo (10 credits/GB ≈ 30 GB)", notes: "Vercel has 3× more raw bandwidth. Netlify's credit model bundles bandwidth with deploys and compute" },
     { feature: "Serverless Functions", vercel: "1M invocations, 4 hrs Active CPU", netlify: "Credit-based (shared pool)", notes: "Vercel has explicit function limits. Netlify shares credits across all usage" },
@@ -19646,7 +19194,6 @@ function buildVercelVsNetlifyPage(): string {
       <td style="color:var(--text-muted);font-size:.8rem">${escHtmlServer(r.notes)}</td>
     </tr>`).join("\n        ");
 
-  // Key differences
   const differences = [
     { title: "Pricing Model: Usage-Based vs. Credit-Based", desc: "Vercel uses per-resource usage limits (100 GB bandwidth, 1M invocations, etc.) — each metric tracked independently. Netlify uses a unified credit pool (300 credits/month) shared across deploys, bandwidth, and compute. Vercel is more predictable; Netlify's credits can be confusing but offer flexibility." },
     { title: "Framework Support: Next.js-Native vs. Framework-Agnostic", desc: "Vercel is built by the Next.js team — you get the deepest integration, fastest builds, and latest features first. Netlify supports any framework equally well (Astro, SvelteKit, Nuxt, Remix, Hugo, 11ty) and doesn't favor any specific framework. Choose Vercel for Next.js, Netlify for everything else." },
@@ -19654,7 +19201,6 @@ function buildVercelVsNetlifyPage(): string {
     { title: "Credit Exhaustion vs. Hard Limits", desc: "When Netlify credits run out, sites pause (no overage charges). When Vercel limits are hit on the Hobby plan, requests may be throttled. Neither charges overages on free tiers, but the failure modes differ — Netlify stops serving entirely, Vercel degrades." },
   ];
 
-  // Cost at scale
   const scalingComparison = [
     { metric: "Starter paid plan", vercel: "$20/member/mo (Pro)", netlify: "$19/member/mo (Pro)", notes: "Nearly identical price. Both per-seat billing" },
     { metric: "Bandwidth at 1 TB", vercel: "$20/mo + $40 overage (1 TB included in Pro)", netlify: "$19/mo + usage (100 GB base)", notes: "Vercel Pro includes 1 TB. Netlify Pro includes less, so overages kick in sooner" },
@@ -19671,7 +19217,6 @@ function buildVercelVsNetlifyPage(): string {
       <td style="color:var(--text-muted);font-size:.8rem">${escHtmlServer(r.notes)}</td>
     </tr>`).join("\n        ");
 
-  // Hosting alternative rows
   const altRows = hostingAlts.map(o => {
     const vendorSlug = o.vendor.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/-+$/, "");
     return `<tr>
@@ -19681,12 +19226,10 @@ function buildVercelVsNetlifyPage(): string {
     </tr>`;
   }).join("\n        ");
 
-  // Related editorial pages
   const relatedPages = ALTERNATIVES_PAGES.filter(p =>
     ["hosting-alternatives", "heroku-alternatives", "hetzner-alternatives", "free-frontend-stack", "free-startup-stack", "supabase-vs-firebase"].includes(p.slug)
   );
 
-  // JSON-LD Article schema
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Article",
@@ -19940,20 +19483,16 @@ function buildNeonVsSupabasePage(): string {
   const slug = "neon-vs-supabase";
   const pubDate = "2026-03-26";
 
-  // Pull verified data from our index
   const neonOffer = offers.find(o => o.vendor === "Neon" && o.category === "Databases");
   const supabaseOffer = offers.find(o => o.vendor === "Supabase" && o.category === "Databases");
 
-  // Deal changes
   const neonChange = dealChanges.find(c => c.vendor === "Neon" && c.change_type === "pricing_restructured");
   const supabaseChange = dealChanges.find(c => c.vendor === "Supabase" && c.change_type === "limits_reduced");
 
-  // Database alternatives from index
   const dbAlts = offers.filter(o =>
     ["CockroachDB", "Turso", "Railway", "Xata Lite", "Convex"].includes(o.vendor) && o.category === "Databases"
   );
 
-  // Comparison data
   const comparisonRows = [
     { feature: "Database Storage", neon: "0.5 GB per project", supabase: "500 MB", notes: "Similar raw limits. Neon is per-project (up to 100 projects = potential 50 GB total), Supabase is total across 2 projects" },
     { feature: "Projects", neon: "100", supabase: "2", notes: "Neon allows 50× more projects — ideal for microservices, multi-tenant apps, or per-client databases" },
@@ -19974,7 +19513,6 @@ function buildNeonVsSupabasePage(): string {
       <td style="color:var(--text-muted);font-size:.8rem">${escHtmlServer(r.notes)}</td>
     </tr>`).join("\n        ");
 
-  // Key differences
   const differences = [
     { title: "Database-Only vs. Full Platform", desc: "Neon is a pure serverless Postgres service — it does one thing (database) and does it well. Supabase is a full BaaS platform that bundles Postgres with Auth, Storage, Realtime, Edge Functions, and a dashboard. Choose Neon if you want to pick your own auth/storage/functions stack; choose Supabase if you want everything integrated out of the box." },
     { title: "Project Limits: 100 vs. 2", desc: "Neon's 100 free projects is the standout difference. Each project gets its own 0.5 GB storage and 100 CU-hours/month. This makes Neon ideal for per-client databases, microservices architectures, or agencies managing multiple sites. Supabase's 2-project limit means you'll hit the paid tier quickly if you need more than a couple apps." },
@@ -19982,7 +19520,6 @@ function buildNeonVsSupabasePage(): string {
     { title: "Scale-to-Zero vs. Inactivity Pausing", desc: "Neon scales to zero after 5 minutes of idle and resumes in ~1 second — designed for intermittent workloads. Supabase pauses projects entirely after 1 week of inactivity (tightened Feb 2026), requiring manual unpause from the dashboard. For always-on projects this doesn't matter, but for side projects you check weekly, Neon's approach is significantly better." },
   ];
 
-  // Cost at scale
   const scalingComparison = [
     { metric: "Starter paid plan", neon: "Launch: $19/mo", supabase: "Pro: $25/mo", notes: "Neon is $6/mo cheaper at the entry paid tier" },
     { metric: "Storage included", neon: "10 GB (Launch)", supabase: "8 GB database + 100 GB file storage (Pro)", notes: "Supabase Pro includes file storage. Neon is database-only" },
@@ -19999,7 +19536,6 @@ function buildNeonVsSupabasePage(): string {
       <td style="color:var(--text-muted);font-size:.8rem">${escHtmlServer(r.notes)}</td>
     </tr>`).join("\n        ");
 
-  // Database alternative rows
   const altRows = dbAlts.map(o => {
     const vendorSlug = o.vendor.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/-+$/, "");
     return `<tr>
@@ -20009,12 +19545,10 @@ function buildNeonVsSupabasePage(): string {
     </tr>`;
   }).join("\n        ");
 
-  // Related editorial pages
   const relatedPages = ALTERNATIVES_PAGES.filter(p =>
     ["database-alternatives", "supabase-vs-firebase", "mongodb-alternatives", "firebase-alternatives", "free-startup-stack", "free-ai-stack"].includes(p.slug)
   );
 
-  // JSON-LD Article schema
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Article",
@@ -20262,28 +19796,22 @@ ${mcpCtaCss()}
 </html>`;
 }
 
-// --- Railway vs Render comparison page ---
-
 function buildRailwayVsRenderPage(): string {
   const title = "Railway vs Render — Free Tier Comparison (2026)";
   const metaDesc = "Compare Railway and Render free tiers side-by-side. RAM, CPU, databases, Redis, sleep behavior, bandwidth, custom domains — verified data from 1,600+ developer tools. Usage-based flexibility vs predictable billing.";
   const slug = "railway-vs-render";
   const pubDate = "2026-03-26";
 
-  // Pull verified data from our index
   const railwayOffer = offers.find(o => o.vendor === "Railway" && o.category === "Cloud Hosting");
   const renderOffer = offers.find(o => o.vendor === "Render" && o.category === "Cloud Hosting");
 
-  // Deal changes
   const railwayChange = dealChanges.find(c => c.vendor === "Railway" && c.change_type === "limits_increased");
   const renderChange = dealChanges.find(c => c.vendor === "Render" && c.change_type === "limits_reduced");
 
-  // Hosting alternatives from index
   const hostingAlts = offers.filter(o =>
     ["Fly.io", "Vercel", "Netlify", "Coolify", "DigitalOcean App Platform", "Koyeb"].includes(o.vendor) && o.category === "Cloud Hosting"
   );
 
-  // Comparison data
   const comparisonRows = [
     { feature: "Free Tier Cost", railway: "$0/mo (Trial plan)", render: "$0/mo (Hobby plan)", notes: "Both offer free tiers. Railway's Trial has a $5/mo credit cap; Render's Hobby has compute limits" },
     { feature: "RAM per Service", railway: "0.5 GB", render: "512 MB", notes: "Effectively identical — both ~512 MB per service" },
@@ -20306,7 +19834,6 @@ function buildRailwayVsRenderPage(): string {
       <td style="color:var(--text-muted);font-size:.8rem">${escHtmlServer(r.notes)}</td>
     </tr>`).join("\n        ");
 
-  // Key differences
   const differences = [
     { title: "Pricing Philosophy: Usage-Based vs. Fixed-Rate", desc: "Railway charges per-second for CPU, RAM, and egress — you pay exactly what you use. Render charges fixed monthly rates per instance ($7/mo Starter). Railway is cheaper for variable-traffic apps (idle = near-zero cost). Render is predictable — you know the bill before the month starts." },
     { title: "Databases: Managed vs. DIY", desc: "Render includes managed PostgreSQL (256 MB, 30-day free expiry) and Redis (25 MB) — no setup required. Railway treats databases as containers — you can run Postgres or Redis, but they count toward your service limit and you manage backups yourself. For quick prototypes needing a database, Render wins on convenience." },
@@ -20314,7 +19841,6 @@ function buildRailwayVsRenderPage(): string {
     { title: "Developer Experience: Fast Iteration vs. Full Platform", desc: "Railway is widely praised for developer experience — fast deploys (often under 30 seconds), intuitive dashboard, and nixpacks auto-detection. Render offers a broader platform (managed DBs, Redis, cron, static sites) but deploys are slower. Railway optimizes for speed; Render optimizes for completeness." },
   ];
 
-  // Cost at scale — break-even analysis
   const scalingComparison = [
     { metric: "Cheapest paid plan", railway: "$5/mo Hobby ($5 credit incl.)", render: "$7/mo Starter (512 MB, 0.5 CPU)", notes: "Railway Hobby effectively free if usage stays under $5. Render Starter is fixed $7/mo regardless of usage" },
     { metric: "At low utilization (10%)", railway: "~$0.50-1/mo", render: "$7/mo", notes: "Railway wins big for variable/low-traffic workloads — pay only for what you use" },
@@ -20331,7 +19857,6 @@ function buildRailwayVsRenderPage(): string {
       <td style="color:var(--text-muted);font-size:.8rem">${escHtmlServer(r.notes)}</td>
     </tr>`).join("\n        ");
 
-  // Hosting alternative rows
   const altRows = hostingAlts.map(o => {
     const vendorSlug = o.vendor.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/-+$/, "");
     return `<tr>
@@ -20341,12 +19866,10 @@ function buildRailwayVsRenderPage(): string {
     </tr>`;
   }).join("\n        ");
 
-  // Related editorial pages
   const relatedPages = ALTERNATIVES_PAGES.filter(p =>
     ["hosting-alternatives", "heroku-alternatives", "hetzner-alternatives", "vercel-vs-netlify", "free-startup-stack", "free-devops-stack"].includes(p.slug)
   );
 
-  // JSON-LD Article schema
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Article",
@@ -20594,29 +20117,23 @@ ${mcpCtaCss()}
 </html>`;
 }
 
-// --- Datadog vs New Relic comparison page ---
-
 function buildDatadogVsNewRelicPage(): string {
   const title = "Datadog vs New Relic — Free Tier Comparison (2026)";
   const metaDesc = "Compare Datadog and New Relic free tiers side-by-side. Hosts, data ingest, APM, logs, synthetics, retention, alerting — verified data from 1,600+ developer tools. Per-host pricing vs per-GB pricing.";
   const slug = "datadog-vs-new-relic";
   const pubDate = "2026-03-26";
 
-  // Pull verified data from our index
   const datadogOffer = offers.find(o => o.vendor === "Datadog" && o.category === "Monitoring");
   const newRelicOffer = offers.find(o => o.vendor === "New Relic" && o.category === "Monitoring");
 
-  // Deal changes
   const datadogChanges = dealChanges.filter(c => c.vendor === "Datadog");
   const newRelicChanges = dealChanges.filter(c => c.vendor === "New Relic");
   const relatedChanges = [...datadogChanges, ...newRelicChanges];
 
-  // Monitoring alternatives from index
   const monitoringAlts = offers.filter(o =>
     ["Grafana Cloud", "Sentry", "Axiom", "BetterStack", "Middleware.io"].includes(o.vendor) && o.category === "Monitoring"
   );
 
-  // Comparison data
   const comparisonRows = [
     { feature: "Pricing Model", datadog: "Per-host", newrelic: "Per-GB data ingest", notes: "Fundamental architectural difference. Datadog charges per monitored host. New Relic charges per GB of data sent." },
     { feature: "Free Hosts/Agents", datadog: "5 hosts", newrelic: "Unlimited", notes: "New Relic has no host limit on free tier. Datadog caps at 5 infrastructure hosts." },
@@ -20638,7 +20155,6 @@ function buildDatadogVsNewRelicPage(): string {
       <td style="color:var(--text-muted);font-size:.8rem">${escHtmlServer(r.notes)}</td>
     </tr>`).join("\n        ");
 
-  // Key differences
   const differences = [
     { title: "Pricing Philosophy: Per-Host vs. Per-GB", desc: "Datadog charges per monitored host — costs scale linearly with infrastructure size regardless of data volume. New Relic charges per GB of data ingested — costs scale with observability depth regardless of host count. For teams with many hosts but low data volume, Datadog gets expensive fast. For teams ingesting massive logs/traces from few hosts, New Relic's per-GB model costs more." },
     { title: "Free Tier Scope: Products vs. Platform", desc: "Datadog's free tier includes only infrastructure monitoring (5 hosts, 1-day retention) and feature flags. APM, logs, synthetics, RUM, security — all paid add-ons. New Relic's free tier includes ALL 50+ platform capabilities (APM, logs, infra, synthetics, browser, mobile, serverless, AIOps) — just capped at 100 GB/mo data. For startups wanting full observability without paying, New Relic is dramatically more generous." },
@@ -20646,7 +20162,6 @@ function buildDatadogVsNewRelicPage(): string {
     { title: "Enterprise vs. Developer Experience", desc: "Datadog is widely considered the gold standard for enterprise observability — best-in-class per-product tools, deep AWS/GCP/Azure integrations, and mature compliance features. New Relic has repositioned as developer-friendly — the free tier is designed to get individual developers and startups using the platform with zero friction. Datadog sells to ops teams; New Relic sells to developers." },
   ];
 
-  // Cost at scale — break-even analysis
   const scalingComparison = [
     { metric: "Cheapest paid plan", datadog: "Pro $15/host/mo (infra only)", newrelic: "Standard $0.30/GB over 100 GB", notes: "Datadog per-product pricing. New Relic charges only for data above free 100 GB" },
     { metric: "10 hosts, light usage", datadog: "~$150/mo (Pro infra only)", newrelic: "$0/mo (under 100 GB)", notes: "New Relic free tier covers this. Datadog requires Pro at $15/host/mo" },
@@ -20663,7 +20178,6 @@ function buildDatadogVsNewRelicPage(): string {
       <td style="color:var(--text-muted);font-size:.8rem">${escHtmlServer(r.notes)}</td>
     </tr>`).join("\n        ");
 
-  // Monitoring alternative rows
   const altRows = monitoringAlts.map(o => {
     const vendorSlug = o.vendor.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/-+$/, "");
     return `<tr>
@@ -20673,12 +20187,10 @@ function buildDatadogVsNewRelicPage(): string {
     </tr>`;
   }).join("\n        ");
 
-  // Related editorial pages
   const relatedPages = ALTERNATIVES_PAGES.filter(p =>
     ["monitoring-alternatives", "datadog-alternatives", "free-devops-stack", "free-startup-stack", "railway-vs-render"].includes(p.slug)
   );
 
-  // JSON-LD Article schema
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Article",
@@ -20921,25 +20433,18 @@ ${mcpCtaCss()}
 </html>`;
 }
 
-// --- Free Tier Risk Index page ---
-
-// --- HCP Terraform Migration Guide ---
-
 function buildHcpTerraformMigrationPage(): string {
   const title = "HCP Terraform Migration Guide — What to Do Before the March 31 Deadline";
   const metaDesc = "HCP Terraform legacy free plan ends March 31, 2026. Step-by-step migration guide: stay on enhanced free tier, migrate to Spacelift, Scalr, Terragrunt Scale, or self-host with OpenTofu. Decision matrix included.";
   const slug = "hcp-terraform-migration";
   const pubDate = "2026-03-26";
 
-  // HCP Terraform changes from our deal_changes
   const hcpChange = dealChanges.find(c => c.vendor === "HCP Terraform" && c.change_type === "pricing_restructured");
   const hcpLicense = dealChanges.find(c => c.vendor === "HCP Terraform" && c.summary?.includes("BSL"));
   const terragruntLaunch = dealChanges.find(c => c.vendor === "Terragrunt Scale");
 
-  // Alternatives from our index
   const altOffers = offers.filter(o => (o.tags ?? []).includes("terraform-alternative"));
 
-  // Migration paths
   const migrationPaths = [
     {
       name: "Stay on HCP Terraform Enhanced Free",
@@ -21008,7 +20513,6 @@ function buildHcpTerraformMigrationPage(): string {
     },
   ];
 
-  // Decision matrix data
   const decisionMatrix = [
     { scenario: "Small team, <500 resources, no rush", recommendation: "Stay on Enhanced Free", reason: "Zero migration effort, auto-migrated, SSO included" },
     { scenario: "Growing team, approaching 500 resources", recommendation: "Scalr", reason: "Unlimited resources + users, 50 runs/month, SSO, OPA policy" },
@@ -21020,12 +20524,10 @@ function buildHcpTerraformMigrationPage(): string {
     { scenario: "Want to evaluate before March 31", recommendation: "Stay on Enhanced + trial alternatives", reason: "Auto-migration buys time; trial Scalr/Spacelift in parallel" },
   ];
 
-  // Related editorial pages
   const relatedPages = ALTERNATIVES_PAGES.filter(p =>
     ["terraform-alternatives", "ci-cd-alternatives", "free-devops-stack", "free-tier-risk", "q2-pricing-preview-2026"].includes(p.slug)
   );
 
-  // JSON-LD Article schema
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Article",
@@ -21374,12 +20876,10 @@ function buildTerraformCloudFreeTierRemovedPage(): string {
 
   const stabilityMap = getStabilityMap();
 
-  // Terraform-related deal changes from our tracker
   const tfChanges = dealChanges.filter(c =>
     c.vendor?.toLowerCase().includes("terraform") || c.vendor?.toLowerCase().includes("opentofu") || c.vendor?.toLowerCase().includes("terragrunt")
   ).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
-  // IaC alternatives for comparison
   interface IacAlternative {
     name: string;
     slug: string;
@@ -21406,7 +20906,6 @@ function buildTerraformCloudFreeTierRemovedPage(): string {
     { name: "Terraform CE (local)", slug: "terraform-ce", type: "CLI", freeResources: "Unlimited", freeUsers: "N/A", stateManagement: "Local/remote backend", hosting: "Local machine / CI runner", bestFor: "Solo developers or CI pipelines with simple state needs", monthlyCost10: "$0", monthlyCost50: "$0", monthlyCost200: "$0", monthlyCost500: "$0" },
   ];
 
-  // Cost analysis by resource scale
   const costTiers = [
     { resources: "10", description: "Solo developer, side project", hcpBefore: "$0", hcpAfter: "$0 (enhanced free)", opentofu: "$0", spacelift: "$0", scalr: "$0", env0: "$0", atlantis: "$0 + ~$5 hosting" },
     { resources: "50", description: "Small team, early-stage startup", hcpBefore: "$0", hcpAfter: "$0 (enhanced free)", opentofu: "$0", spacelift: "$0", scalr: "$0", env0: "$0", atlantis: "$0 + ~$5 hosting" },
@@ -21414,7 +20913,6 @@ function buildTerraformCloudFreeTierRemovedPage(): string {
     { resources: "500", description: "At the cap — the breaking point", hcpBefore: "$0", hcpAfter: "$0 (at limit)", opentofu: "$0", spacelift: "$40/mo", scalr: "$0", env0: "$0", atlantis: "$0 + ~$15 hosting" },
   ];
 
-  // Related pages
   const relatedPages = ALTERNATIVES_PAGES.filter(p =>
     ["hcp-terraform-migration", "terraform-alternatives", "ci-cd-alternatives", "free-devops-stack", "free-tier-risk", "free-tier-tracker"].includes(p.slug)
   );
@@ -21537,7 +21035,6 @@ function buildTerraformCloudFreeTierRemovedPage(): string {
     + '  <h1>Terraform Cloud Free Tier Removed</h1>\n'
     + '  <p class="pub-date">Published ' + pubDate + ' &middot; Effective March 31, 2026 &middot; Legacy plan discontinued &middot; 500 resource cap &middot; ' + alternatives.length + ' alternatives compared &middot; ' + pageDataProvenance("/terraform-cloud-free-tier-removed", offers.length) + '</p>\n'
     + '\n'
-    // Summary stats
     + '  <div class="summary-stats">\n'
     + '    <div class="stat-card"><div class="stat-number red">500</div><div class="stat-label">Resource Cap (New)</div></div>\n'
     + '    <div class="stat-card"><div class="stat-number red">1</div><div class="stat-label">Concurrent Run</div></div>\n'
@@ -21545,13 +21042,11 @@ function buildTerraformCloudFreeTierRemovedPage(): string {
     + '    <div class="stat-card"><div class="stat-number">$0</div><div class="stat-label">Best Alt Cost</div></div>\n'
     + '  </div>\n'
     + '\n'
-    // Executive summary
     + '  <div class="executive-summary">\n'
     + '    <p><strong>On March 31, 2026, HashiCorp discontinued the legacy HCP Terraform Cloud free plan.</strong> The plan that let small teams manage unlimited infrastructure resources for free has been replaced by an enhanced free tier capped at 500 managed resources with 1 concurrent run. Teams that grew beyond the cap must now pay or migrate.</p>\n'
     + '    <p>This guide provides a <strong>complete cost analysis</strong> at 4 resource scales (10, 50, 200, 500), <strong>' + alternatives.length + ' alternative platforms compared</strong> (including OpenTofu, Spacelift, Scalr, env0, and Atlantis), <strong>a free alternatives table</strong>, and <strong>practical migration recommendations</strong> by team profile. For pre-deadline migration steps, see our <a href="/hcp-terraform-migration">HCP Terraform Migration Guide</a>.</p>\n'
     + '  </div>\n'
     + '\n'
-    // TOC
     + '  <div class="toc">\n'
     + '    <h3>In This Guide</h3>\n'
     + '    <ol>\n'
@@ -21565,7 +21060,6 @@ function buildTerraformCloudFreeTierRemovedPage(): string {
     + '    </ol>\n'
     + '  </div>\n'
     + '\n'
-    // Section 1: What Changed
     + '  <h2 id="what-changed">1. What Changed — Before vs After</h2>\n'
     + '  <p class="section-intro">A side-by-side comparison of HCP Terraform\'s legacy free plan versus the new enhanced free tier that replaced it on March 31, 2026.</p>\n'
     + '\n'
@@ -21589,7 +21083,6 @@ function buildTerraformCloudFreeTierRemovedPage(): string {
     + '    <strong>Context:</strong> HashiCorp switched Terraform from MPL 2.0 to BSL 1.1 in August 2023, triggering the <a href="/search?q=opentofu" rel="nofollow">OpenTofu</a> fork under the Linux Foundation. IBM acquired HashiCorp for $6.4B in 2024. The free tier restructuring continues the trend of monetizing the Terraform ecosystem. The enhanced free tier adds SSO and policy features but imposes the 500-resource hard cap that affects growing teams.\n'
     + '  </div>\n'
     + '\n'
-    // Section 2: Who's Affected
     + '  <h2 id="who-affected">2. Who\'s Affected</h2>\n'
     + '  <p class="section-intro">The impact depends on your team size and resource count. Here\'s a breakdown by developer profile.</p>\n'
     + '\n'
@@ -21614,7 +21107,6 @@ function buildTerraformCloudFreeTierRemovedPage(): string {
     + '    <p class="impact-desc">Teams running Terraform in CI/CD pipelines hit the 1 concurrent run bottleneck. Multiple PRs trigger sequential runs, slowing development velocity. Alternatives like Scalr (5 concurrent runs free), Atlantis (unlimited), or self-hosted OpenTofu offer parallel execution.</p>\n'
     + '  </div>\n'
     + '\n'
-    // Section 3: Cost Analysis
     + '  <h2 id="cost-analysis">3. Migration Cost Analysis</h2>\n'
     + '  <p class="section-intro">What does it cost to manage your infrastructure at different scales? We compare HCP Terraform\'s legacy and new pricing against the top alternatives at 4 resource levels.</p>\n'
     + '\n'
@@ -21644,7 +21136,6 @@ function buildTerraformCloudFreeTierRemovedPage(): string {
     + '    <strong>Key insight:</strong> For teams under 500 resources, the enhanced free tier still works &mdash; and it\'s actually better than the legacy plan (SSO, policy as code). The pain point is the <strong>500 resource ceiling</strong> and <strong>1 concurrent run</strong>. For teams at or near 500 resources, <strong>Scalr and env0 offer unlimited resources for free</strong> with no cap. OpenTofu and Atlantis are also $0 but require self-hosting. Spacelift\'s free tier is limited to 1 stack but has no resource cap within that stack.\n'
     + '  </div>\n'
     + '\n'
-    // Section 4: Alternatives Comparison
     + '  <h2 id="alternatives">4. Alternative Platforms Comparison</h2>\n'
     + '  <p class="section-intro">' + alternatives.length + ' IaC platforms compared by free tier resources, user limits, state management, and hosting model. Sorted by platform type.</p>\n'
     + '\n'
@@ -21674,7 +21165,6 @@ function buildTerraformCloudFreeTierRemovedPage(): string {
     + '  </table>\n'
     + '  </div>\n'
     + '\n'
-    // Section 5: Free Alternatives Table
     + '  <h2 id="free-alternatives">5. Free Alternatives Table</h2>\n'
     + '  <p class="section-intro">Which IaC tools still have genuinely free tiers? Here\'s the definitive list, with the catch for each.</p>\n'
     + '\n'
@@ -21696,7 +21186,6 @@ function buildTerraformCloudFreeTierRemovedPage(): string {
     + '    </tbody>\n'
     + '  </table>\n'
     + '\n'
-    // Section 6: Migration Guide
     + '  <h2 id="migration-guide">6. Migration Recommendations</h2>\n'
     + '  <p class="section-intro">Practical recommendations based on your team profile and needs. For detailed step-by-step migration instructions, see our <a href="/hcp-terraform-migration">HCP Terraform Migration Guide</a>.</p>\n'
     + '\n'
@@ -21732,7 +21221,6 @@ function buildTerraformCloudFreeTierRemovedPage(): string {
     + '    </div>\n'
     + '  </div>\n'
     + '\n'
-    // Section 7: FAQ
     + '  <h2 id="faq">7. FAQ</h2>\n'
     + '  <div class="faq-section">\n'
     + faqItems.map(f =>
@@ -21743,7 +21231,6 @@ function buildTerraformCloudFreeTierRemovedPage(): string {
     ).join("")
     + '  </div>\n'
     + '\n'
-    // Related pages
     + '  <h2>Related Guides</h2>\n'
     + '  <div class="related-pages">\n'
     + relatedPages.map(p =>
@@ -21781,12 +21268,10 @@ function buildGeminiApiPricing2026Page(): string {
   const slug = "gemini-api-pricing-2026";
   const pubDate = "2026-03-26";
 
-  // Gemini deal changes from our tracker
   const rateLimitChange = dealChanges.find(c => c.vendor === "Google Gemini" && c.change_type === "limits_reduced");
   const deprecationChange = dealChanges.find(c => c.vendor === "Google Gemini 2.0 Flash" && c.change_type === "product_deprecated");
   const spendCapChange = dealChanges.find(c => c.vendor === "Google Gemini API" && c.change_type === "restriction");
 
-  // LLM API competitors for comparison table
   const llmProviders = [
     { name: "Google Gemini API", freeLimit: "10 RPM (Flash), 15 RPM (Flash-Lite)", context: "1M tokens", models: "2.5 Flash, Flash-Lite (free); 3.1 Pro (paid-only)", notes: "Spend caps enforced April 1. 3.1 Pro paid-only. Prepaid billing for new users.", risk: "high" },
     { name: "Anthropic Claude API", freeLimit: "Pay-as-you-go only", context: "200K tokens", models: "Opus 4.6, Sonnet 4.6, Haiku 4.5", notes: "No free tier — $5/$25 per MTok (Opus). Batch API at 50% off.", risk: "none" },
@@ -21800,12 +21285,10 @@ function buildGeminiApiPricing2026Page(): string {
 
   const riskColors: Record<string, string> = { low: "#3fb950", medium: "#d29922", high: "#f85149", none: "#64748b" };
 
-  // Related pages
   const relatedPages = ALTERNATIVES_PAGES.filter(p =>
     ["free-llm-apis", "ai-ml-alternatives", "free-ai-stack", "free-tier-risk", "google-developer-program-2026", "q2-pricing-preview-2026"].includes(p.slug)
   );
 
-  // JSON-LD Article schema
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Article",
@@ -22134,12 +21617,10 @@ function buildGeminiApiPricingChangesPage(): string {
 
   const stabilityMap = getStabilityMap();
 
-  // Gemini deal changes from our tracker
   const geminiChanges = dealChanges.filter(c =>
     c.vendor?.toLowerCase().includes("gemini") || (c.vendor?.toLowerCase().includes("google") && c.summary?.toLowerCase().includes("gemini"))
   ).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
-  // Alternative LLM API providers for comparison — expanded per issue requirements
   interface LlmAlternative {
     name: string;
     slug: string;
@@ -22165,14 +21646,12 @@ function buildGeminiApiPricingChangesPage(): string {
     { name: "Google Gemini API", slug: "google-gemini-api", freeRequests: "5 RPM, ~100 RPD", freeTokens: "Flash/Flash-Lite only", models: "2.5 Flash, Flash-Lite", context: "1M", bestFor: "Long context (1M tokens)", monthlyCostAt1K: "$10-30" },
   ];
 
-  // Cost analysis by usage tier
   const costTiers = [
     { tier: "Light", requests: "100 req/day", description: "Hobby projects, learning, prototyping", geminiBefore: "$0", geminiAfter: "$0 (Flash only, was Flash + Pro)", groq: "$0", cerebras: "$0", mistral: "$0", openrouter: "$0", deepseek: "~$0.08/day" },
     { tier: "Moderate", requests: "1,000 req/day", description: "Active development, small apps", geminiBefore: "$0 (within old limits)", geminiAfter: "$15-30/mo (paid plan required)", groq: "$0", cerebras: "$0", mistral: "$0", openrouter: "$0-5/mo", deepseek: "~$2.50/mo" },
     { tier: "Heavy", requests: "10,000 req/day", description: "Production apps, startups", geminiBefore: "$0-50/mo (generous free + cheap paid)", geminiAfter: "$100-300/mo (spend cap territory)", groq: "$20-50/mo", cerebras: "$30-80/mo", mistral: "$20-60/mo", openrouter: "$30-100/mo", deepseek: "~$25/mo" },
   ];
 
-  // Related pages
   const relatedPages = ALTERNATIVES_PAGES.filter(p =>
     ["gemini-api-pricing-2026", "free-llm-apis", "ai-ml-alternatives", "free-ai-stack", "free-tier-risk", "google-developer-program-2026", "ai-coding-tools-pricing", "llm-api-pricing"].includes(p.slug)
   );
@@ -22326,7 +21805,6 @@ function buildGeminiApiPricingChangesPage(): string {
     + '    </ol>\n'
     + '  </div>\n'
     + '\n'
-    // Section 1: What Changed
     + '  <h2 id="what-changed">1. What Changed — Before vs After</h2>\n'
     + '  <p class="section-intro">A side-by-side comparison of Gemini API free tier limits before and after the April 2026 overhaul. The changes are among the most dramatic free tier reductions we\'ve tracked across ' + offers.length.toLocaleString() + ' developer tools.</p>\n'
     + '\n'
@@ -22347,7 +21825,6 @@ function buildGeminiApiPricingChangesPage(): string {
     + '    </tbody>\n'
     + '  </table>\n'
     + '\n'
-    // Section 2: Who's Affected
     + '  <h2 id="who-affected">2. Who\'s Affected</h2>\n'
     + '  <p class="section-intro">The impact depends on your usage pattern. Here\'s a quantified breakdown by developer profile.</p>\n'
     + '\n'
@@ -22368,7 +21845,6 @@ function buildGeminiApiPricingChangesPage(): string {
     + '    <p class="impact-desc">If you make fewer than 100 requests/day with Flash, the free tier still works. The 1M token context window remains Gemini\'s unique advantage &mdash; no other free API offers this. For occasional document processing or long-context tasks, Gemini Flash free is still the best option.</p>\n'
     + '  </div>\n'
     + '\n'
-    // Section 3: Cost Analysis
     + '  <h2 id="cost-analysis">3. Cost Analysis by Usage Tier</h2>\n'
     + '  <p class="section-intro">What does it cost to maintain your previous usage level? We compare Gemini\'s old and new pricing against the top alternatives at three usage tiers.</p>\n'
     + '\n'
@@ -22397,7 +21873,6 @@ function buildGeminiApiPricingChangesPage(): string {
     + '    <strong>Key insight:</strong> For light usage (100 req/day), Gemini is still free but Flash-only. For moderate usage (1,000 req/day), <strong>Groq, Cerebras, and Mistral all handle this volume for free</strong> &mdash; compared to $15-30/mo on Gemini. For heavy usage (10,000 req/day), DeepSeek is the cheapest paid option at ~$25/mo. The cost gap is stark: what was $0 on Gemini\'s old free tier now costs $15-300/mo depending on volume.\n'
     + '  </div>\n'
     + '\n'
-    // Section 4: Alternatives
     + '  <h2 id="alternatives">4. Alternative Free LLM APIs</h2>\n'
     + '  <p class="section-intro">11 LLM API providers compared by free tier limits, available models, context window, and estimated cost at 1,000 requests/day. Sorted by free tier generosity. For the full comparison of 25+ providers, see <a href="/free-llm-apis">Free LLM APIs</a>.</p>\n'
     + '\n'
@@ -22435,7 +21910,6 @@ function buildGeminiApiPricingChangesPage(): string {
     + '    </ul>\n'
     + '  </div>\n'
     + '\n'
-    // Section 5: Migration Recommendations
     + '  <h2 id="migration">5. Migration Recommendations by Use Case</h2>\n'
     + '  <p class="section-intro">If you were using Gemini for a specific task, here\'s where to go based on the use case. Each recommendation considers free tier limits, model quality for the task, and migration effort.</p>\n'
     + '\n'
@@ -22460,7 +21934,6 @@ function buildGeminiApiPricingChangesPage(): string {
     + '    <p class="impact-desc"><strong>Stay on Gemini Flash for free</strong>, but at reduced limits. Gemini\'s vision capabilities remain strong on Flash. For paid alternatives, <a href="/vendor/anthropic-api">Claude Sonnet 4.6</a> and <a href="/vendor/openai">GPT-4o</a> both handle images well. <a href="/vendor/groq">Groq</a> supports Llama vision models for free.</p>\n'
     + '  </div>\n'
     + '\n'
-    // Section 6: What's Still Free
     + '  <h2 id="still-free">6. What\'s Still Free</h2>\n'
     + '  <p class="section-intro">Not everything changed. Here\'s what remains on Gemini\'s free tier &mdash; and when it still makes sense to use it.</p>\n'
     + '\n'
@@ -22488,7 +21961,6 @@ function buildGeminiApiPricingChangesPage(): string {
     + '    <strong>When to stay on Gemini\'s free tier:</strong> If your use case involves long documents (>128K tokens), you need fewer than ~100 API calls/day, and Flash-quality is sufficient. The 1M context window is genuinely unique and valuable. <strong>When to leave:</strong> If you need >100 RPD, need Pro-class quality, or can\'t risk spend caps pausing your app mid-month.\n'
     + '  </div>\n'
     + '\n'
-    // Section 7: Timeline
     + '  <h2 id="timeline">7. Timeline</h2>\n'
     + '  <p class="section-intro">Key dates in Gemini API\'s pricing evolution, from the initial generous free tier through the April 2026 overhaul.</p>\n'
     + '\n'
@@ -22523,7 +21995,6 @@ function buildGeminiApiPricingChangesPage(): string {
     + '\n'
     + (geminiChanges.length > 0 ? '  <div class="context-box">\n    <strong>From our deal change tracker (' + geminiChanges.length + ' Gemini changes tracked):</strong>\n    <ul>\n' + geminiChanges.slice(0, 5).map(c => '      <li><strong>' + escHtmlServer(new Date(c.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })) + ':</strong> ' + escHtmlServer(c.summary) + '</li>\n').join("") + '    </ul>\n    <p>See the full timeline at <a href="/changes">Pricing Changes</a>.</p>\n  </div>\n' : "")
     + '\n'
-    // Section 8: FAQ
     + '  <h2 id="faq">8. Frequently Asked Questions</h2>\n'
     + '  <div class="faq-section">\n'
     + faqItems.map(f =>
@@ -22534,7 +22005,6 @@ function buildGeminiApiPricingChangesPage(): string {
     ).join("")
     + '  </div>\n'
     + '\n'
-    // Related Guides
     + '  <h2>Related Guides</h2>\n'
     + '  <p class="section-intro">More resources for evaluating LLM APIs and tracking developer tool pricing changes.</p>\n'
     + '  <div class="related-pages">\n'
@@ -22573,13 +22043,11 @@ function buildFreeTierRiskPage(): string {
   const slug = "free-tier-risk";
   const pubDate = "2026-03-26";
 
-  // Categorize deal changes
   const negativeTypes = ["free_tier_removed", "limits_reduced", "restriction", "product_deprecated", "open_source_killed", "pricing_model_change", "pricing_restructured"];
   const positiveTypes = ["limits_increased", "new_free_tier", "startup_program_expanded", "pricing_postponed"];
   const negativeChanges = dealChanges.filter(c => negativeTypes.includes(c.change_type));
   const positiveChanges = dealChanges.filter(c => positiveTypes.includes(c.change_type));
 
-  // Build vendor risk profiles — scored from our deal_changes data
   interface RiskEntry {
     vendor: string;
     risk: "low" | "medium" | "high" | "dead";
@@ -22590,7 +22058,6 @@ function buildFreeTierRiskPage(): string {
   }
 
   const riskEntries: RiskEntry[] = [
-    // LOW RISK — safe to build on
     { vendor: "Cloudflare", risk: "low", category: "Cloud/CDN", reasoning: "Actively expanding free tiers (Workers, Pages, Queues added free Feb 2026). Profitable, no VC subsidy pressure. Free tier is a strategic funnel — core business is paid enterprise CDN.", lastChange: "2026-02-04", changeType: "new_free_tier" },
     { vendor: "GitHub", risk: "low", category: "Version Control", reasoning: "Microsoft-backed, free tier stable since 2019. Actions self-hosted runner fee was proposed then postponed after backlash (Jan 2026). Track record of expanding, not contracting.", lastChange: "2026-01-01", changeType: "pricing_postponed" },
     { vendor: "Grafana Cloud", risk: "low", category: "Monitoring", reasoning: "Open-source core (Prometheus, Loki, Tempo). Free tier includes 10K metrics, 50 GB logs, 50 GB traces. Company profitable, recent IPO path. Open-source foundation means community forks prevent lock-in." },
@@ -22602,7 +22069,6 @@ function buildFreeTierRiskPage(): string {
     { vendor: "GitHub Copilot Free", risk: "low", category: "AI Coding", reasoning: "New free tier launched Dec 2025 (2K completions + 50 chat/mo). Microsoft strategic investment in AI developer tools. Competitive pressure from Cursor/Claude ensures free tier stays.", lastChange: "2025-12-18", changeType: "new_free_tier" },
     { vendor: "Anthropic", risk: "low", category: "AI/ML APIs", reasoning: "Limits increased Feb 2026 and Mar 2026. Currently in growth mode, well-funded ($7.3B raised). Free API tier is competitive necessity against OpenAI/Google.", lastChange: "2026-03-13", changeType: "limits_increased" },
 
-    // MEDIUM RISK — use with caution
     { vendor: "Supabase", risk: "medium", category: "Databases/BaaS", reasoning: "Project pause tightened to 1 week inactivity (Feb 2026). Core free tier preserved but signals efficiency pressure. Post-Series C ($80M) — profitable path unclear.", lastChange: "2026-02-01", changeType: "limits_reduced" },
     { vendor: "Vercel", risk: "medium", category: "Hosting", reasoning: "Restructured to credit-based model (Jan 2026). Free tier still generous for personal projects but commercial use restricted (Hobby plan). Watch for further tightening.", lastChange: "2026-01-01", changeType: "pricing_restructured" },
     { vendor: "Netlify", risk: "medium", category: "Hosting", reasoning: "Restructured to credit-based pricing (Sep 2025) — sites pause on exhaustion. 300 credits/month is sufficient for small sites but represents a philosophical shift toward metered billing.", lastChange: "2025-09-04", changeType: "pricing_restructured" },
@@ -22616,7 +22082,6 @@ function buildFreeTierRiskPage(): string {
     { vendor: "Dub.co", risk: "medium", category: "Dev Utilities", reasoning: "Free tier limits reduced sharply (Mar 2026). Link shortener with declining free allowance signals monetization pressure.", lastChange: "2026-03-22", changeType: "limits_reduced" },
     { vendor: "Google Gemini API", risk: "medium", category: "AI/ML", reasoning: "Free tier rate limits slashed 50-80% (Dec 2025). Pro model free access removed entirely. A Google PM admitted generous limits were only for a promotional weekend. Still has free tier but heavily restricted.", lastChange: "2025-12-15", changeType: "limits_reduced" },
 
-    // HIGH RISK — plan your exit
     { vendor: "Heroku", risk: "high", category: "Hosting/PaaS", reasoning: "Free tier removed Nov 2022. Now in 'sustaining mode' under Salesforce — minimal investment, no innovation. The canonical cautionary tale for relying on free tiers.", lastChange: "2022-11-28", changeType: "free_tier_removed" },
     { vendor: "Postman", risk: "high", category: "API Testing", reasoning: "Team collaboration removed from free tier (Mar 2026). Aggressive monetization of previously-free features. Pattern suggests further restrictions ahead.", lastChange: "2026-03-01", changeType: "restriction" },
     { vendor: "OpenAI", risk: "high", category: "AI/ML", reasoning: "Multiple free tier reductions: limits cut Jun 2025, further reduced Feb 2026. GPT-4 free access removed. Market leader extracting value — expect continued tightening.", lastChange: "2026-02-09", changeType: "limits_reduced" },
@@ -22627,7 +22092,6 @@ function buildFreeTierRiskPage(): string {
     { vendor: "Spotify API", risk: "high", category: "APIs", reasoning: "Premium subscription now required for dev mode (Feb 2026). Test users cut from 25 to 5. Multiple endpoints deprecated. Hostile to free developers.", lastChange: "2026-02-11", changeType: "limits_reduced" },
     { vendor: "Amazon SP-API", risk: "high", category: "APIs", reasoning: "Free access ended after 10+ years — now $1,400/year + per-call fees (Apr 2026). Zero warning. Shows even long-stable APIs can go paid overnight.", lastChange: "2026-01-31", changeType: "pricing_restructured" },
 
-    // DEAD — already changed
     { vendor: "PlanetScale", risk: "dead", category: "Databases", reasoning: "Free tier removed April 2024. Hobby plan eliminated entirely. Migrate to Neon, Turso, or CockroachDB.", lastChange: "2024-04-08", changeType: "free_tier_removed" },
     { vendor: "Fauna", risk: "dead", category: "Databases", reasoning: "Product deprecated May 2025. Entire service shutting down. Migrate immediately to MongoDB Atlas, CockroachDB, or Supabase.", lastChange: "2025-05-30", changeType: "product_deprecated" },
     { vendor: "MinIO (OSS)", risk: "dead", category: "Storage", reasoning: "Open-source version killed Feb 2026 (GNU AGPL → proprietary). Self-hosted MinIO is no longer free for production. Use S3-compatible alternatives.", lastChange: "2026-02-12", changeType: "open_source_killed" },
@@ -22657,7 +22121,6 @@ function buildFreeTierRiskPage(): string {
     </tr>`;
   };
 
-  // Category heatmap data — aggregate changes by normalized category
   const categoryMap = new Map<string, { total: number; negative: number; positive: number }>();
   const normCat = (c: string) => {
     const cl = c.toLowerCase();
@@ -22685,7 +22148,6 @@ function buildFreeTierRiskPage(): string {
     .map(([cat, d]) => ({ category: cat, ...d, pctNeg: Math.round((d.negative / d.total) * 100) }))
     .sort((a, b) => b.total - a.total);
 
-  // Pattern analysis data
   const monthlyChanges = new Map<string, number>();
   const monthlyNeg = new Map<string, number>();
   for (const dc of dealChanges) {
@@ -22697,7 +22159,6 @@ function buildFreeTierRiskPage(): string {
   }
   const sortedMonths = [...monthlyChanges.keys()].sort();
 
-  // Vendors with multiple changes (repeat offenders)
   const vendorChangeCount = new Map<string, number>();
   for (const dc of dealChanges) {
     vendorChangeCount.set(dc.vendor, (vendorChangeCount.get(dc.vendor) ?? 0) + 1);
@@ -22706,7 +22167,6 @@ function buildFreeTierRiskPage(): string {
     .filter(([, count]) => count >= 2)
     .sort((a, b) => b[1] - a[1]);
 
-  // FAQ data
   const faqs = [
     { q: "How often is the Free Tier Risk Index updated?", a: "We update risk scores whenever a new pricing change is tracked. Our dataset currently includes " + dealChanges.length + " changes across " + offers.length.toLocaleString() + " developer tools, and we add new changes within 48 hours of announcement." },
     { q: "Which free tiers are safest to build on in 2026?", a: "Cloudflare, GitHub, Grafana Cloud, AWS Always Free, and Google Cloud Always Free are our lowest-risk picks. They share three traits: backed by profitable companies, the free tier is a strategic acquisition funnel, and strong competitive pressure prevents removal." },
@@ -22716,12 +22176,10 @@ function buildFreeTierRiskPage(): string {
     { q: "Are there any categories where free tiers are expanding?", a: "Yes — AI coding tools (GitHub Copilot Free, Anthropic increases, Windsurf launch) and cloud infrastructure (Cloudflare Queues, Workers expansion, AWS restructuring). Competition for developer mindshare drives expansion. See the Counter-Trends section for details." },
   ];
 
-  // Related editorial pages
   const relatedPages = ALTERNATIVES_PAGES.filter(p =>
     ["state-of-free-tiers", "q1-2026-developer-pricing-report", "q2-pricing-preview-2026", "free-startup-stack", "stability", "free-tier-tracker"].includes(p.slug)
   );
 
-  // JSON-LD — Article + FAQPage
   const faqJsonLd = faqPageJsonLd("/free-tier-risk", faqs);
   const jsonLd = {
     "@context": "https://schema.org",
@@ -23099,8 +22557,6 @@ ${mcpCtaCss()}
 </html>`;
 }
 
-// --- Stability Dashboard page ---
-
 function buildStabilityDashboardPage(): string {
   const title = "Developer Free Tier Stability Dashboard";
   const metaDesc = "Real-time stability ratings for developer free tiers based on tracked pricing changes. See which tools are stable, which need watching, and which are deteriorating.";
@@ -23109,7 +22565,6 @@ function buildStabilityDashboardPage(): string {
   const stabilityMap = getStabilityMap();
   const allChanges = loadDealChanges();
 
-  // Build vendor → changes map for detail display
   const vendorChangesMap = new Map<string, typeof allChanges>();
   for (const c of allChanges) {
     const key = c.vendor.toLowerCase();
@@ -23117,7 +22572,6 @@ function buildStabilityDashboardPage(): string {
     vendorChangesMap.get(key)!.push(c);
   }
 
-  // Count by stability class
   const volatileVendors: { vendor: string; stability: string; changes: typeof allChanges }[] = [];
   const watchVendors: { vendor: string; stability: string; changes: typeof allChanges }[] = [];
   const improvingVendors: { vendor: string; stability: string; changes: typeof allChanges }[] = [];
@@ -23132,10 +22586,8 @@ function buildStabilityDashboardPage(): string {
     else stableVendorsWithChanges.push(entry);
   }
 
-  // Total stable = offers not in stability map + explicitly stable
   const totalStable = offers.length - volatileVendors.length - watchVendors.length - improvingVendors.length;
 
-  // Sort by most recent change date
   const sortByRecent = (a: { changes: typeof allChanges }, b: { changes: typeof allChanges }) => {
     const aDate = a.changes.length > 0 ? a.changes.reduce((latest, c) => c.date > latest ? c.date : latest, "") : "";
     const bDate = b.changes.length > 0 ? b.changes.reduce((latest, c) => c.date > latest ? c.date : latest, "") : "";
@@ -23147,14 +22599,12 @@ function buildStabilityDashboardPage(): string {
 
   const toVendorSlug = (name: string) => name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/-+$/g, "");
 
-  // Find category for a vendor from offers
   const vendorCategory = new Map<string, string>();
   for (const o of offers) {
     if (!vendorCategory.has(o.vendor.toLowerCase())) {
       vendorCategory.set(o.vendor.toLowerCase(), o.category);
     }
   }
-  // Also use deal change categories
   for (const c of allChanges) {
     if (!vendorCategory.has(c.vendor.toLowerCase()) && c.category) {
       vendorCategory.set(c.vendor.toLowerCase(), c.category);
@@ -23172,7 +22622,6 @@ function buildStabilityDashboardPage(): string {
     const latestChange = entry.changes.reduce((latest, c) => c.date > (latest?.date ?? "") ? c : latest, entry.changes[0]);
     const changeTypeLabel = latestChange?.change_type.replace(/_/g, " ") ?? "";
 
-    // Check if there's an editorial alternative page for this vendor
     const editorialLink = ALTERNATIVES_PAGES.find(p =>
       p.primaryVendor.toLowerCase() === entry.vendor.toLowerCase() ||
       p.slug.includes(toVendorSlug(entry.vendor))
@@ -23193,7 +22642,6 @@ function buildStabilityDashboardPage(): string {
     </div>`;
   };
 
-  // Top stable categories
   const stableCategoryCounts = new Map<string, number>();
   for (const o of offers) {
     const vKey = o.vendor.toLowerCase();
@@ -23206,16 +22654,13 @@ function buildStabilityDashboardPage(): string {
     .sort((a, b) => b[1] - a[1])
     .slice(0, 12);
 
-  // Methodology change type mappings
   const negativeTypes = ["free_tier_removed", "open_source_killed", "limits_reduced", "restriction", "pricing_restructured", "product_deprecated"];
   const positiveTypes = ["limits_increased", "new_free_tier", "startup_program_expanded", "pricing_postponed"];
 
-  // Related pages
   const relatedPages = ALTERNATIVES_PAGES.filter(p =>
     ["free-tier-risk", "state-of-free-tiers", "free-tier-tracker", "free-startup-stack", "q1-2026-developer-pricing-report"].includes(p.slug)
   );
 
-  // JSON-LD
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Dataset",
@@ -23430,8 +22875,6 @@ ${mcpCtaCss()}
 </html>`;
 }
 
-// --- OpenAI Assistants API Sunset Guide page ---
-
 function buildOpenaiAssistantsAlternativesPage(): string {
   const title = "OpenAI Assistants API Sunset: Free Alternatives & Migration Guide for AI Agent Builders";
   const metaDesc = "OpenAI Assistants API shuts down August 26, 2026. Compare migration paths: Responses API, Claude, Gemini, open-source frameworks. Free tier comparison for 10+ AI API providers with stability ratings.";
@@ -23440,19 +22883,16 @@ function buildOpenaiAssistantsAlternativesPage(): string {
 
   const stabilityMap = getStabilityMap();
 
-  // Pull AI API providers from our index
   const aiProviderSlugs = ["openai", "anthropic-api", "google-gemini-api", "github-models", "openrouter", "cohere", "groq", "fireworks-ai", "together-ai", "mistral-ai", "deepseek-api", "cerebras"];
   const aiOffers = offers.filter(o =>
     (o.category === "AI / ML" || o.category === "AI Coding") &&
     aiProviderSlugs.some(s => toSlug(o.vendor) === s)
   );
 
-  // OpenAI deal changes
   const openaiChanges = dealChanges.filter(c =>
     c.vendor === "OpenAI"
   ).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
-  // Provider comparison data
   interface AiProvider {
     name: string;
     slug: string;
@@ -23481,7 +22921,6 @@ function buildOpenaiAssistantsAlternativesPage(): string {
   const openaiStability = stabilityMap.get("openai") ?? "stable";
   const stabilityColor = openaiStability === "volatile" ? "#f85149" : openaiStability === "watch" ? "#d29922" : openaiStability === "improving" ? "#3fb950" : "var(--text-muted)";
 
-  // Calculate days until shutdown
   const shutdownDate = new Date("2026-08-26");
   const today = new Date();
   const daysLeft = Math.max(0, Math.ceil((shutdownDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24)));
@@ -23509,7 +22948,6 @@ function buildOpenaiAssistantsAlternativesPage(): string {
     </tr>`;
   }).join("\n        ");
 
-  // Related editorial pages
   const relatedPages = ALTERNATIVES_PAGES.filter(p =>
     ["ai-ml-alternatives", "ai-coding-pricing-2026", "free-ai-stack", "free-llm-apis", "free-tier-risk", "stability"].includes(p.slug)
   );
@@ -23835,8 +23273,6 @@ ${mcpCtaCss()}
 </html>`;
 }
 
-// --- OpenAI Assistants API Migration Guide 2026 (comprehensive) ---
-
 function buildOpenaiAssistantsMigration2026Page(): string {
   const title = "OpenAI Assistants API Migration Guide 2026: Responses API, Alternatives & Decision Framework";
   const metaDesc = "Complete OpenAI Assistants API migration guide. Feature mapping to Responses API, migration complexity assessment, decision framework (stay vs switch vs go agnostic), 15+ alternatives compared, cost analysis. Shutdown August 26, 2026.";
@@ -23845,12 +23281,10 @@ function buildOpenaiAssistantsMigration2026Page(): string {
 
   const stabilityMap = getStabilityMap();
 
-  // OpenAI deal changes
   const openaiChanges = dealChanges.filter(c =>
     c.vendor === "OpenAI"
   ).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
-  // Calculate days until shutdown
   const shutdownDate = new Date("2026-08-26");
   const today = new Date();
   const daysLeft = Math.max(0, Math.ceil((shutdownDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24)));
@@ -23858,7 +23292,6 @@ function buildOpenaiAssistantsMigration2026Page(): string {
   const openaiStability = stabilityMap.get("openai") ?? "stable";
   const stabilityColor = openaiStability === "volatile" ? "#f85149" : openaiStability === "watch" ? "#d29922" : openaiStability === "improving" ? "#3fb950" : "var(--text-muted)";
 
-  // Feature migration map
   interface FeatureMapping {
     assistantsFeature: string;
     responsesReplacement: string;
@@ -23877,7 +23310,6 @@ function buildOpenaiAssistantsMigration2026Page(): string {
     { assistantsFeature: "N/A (new)", responsesReplacement: "MCP support, deep research, web search, computer use", complexity: "—", notes: "New capabilities not available in Assistants API." },
   ];
 
-  // Direct API alternatives
   interface ApiProvider {
     name: string;
     slug: string;
@@ -23897,7 +23329,6 @@ function buildOpenaiAssistantsMigration2026Page(): string {
     { name: "Meta Llama (via Groq)", slug: "groq", freeTier: "Free (rate-limited)", toolUse: "Via Llama models", codeExec: "No built-in", pricing: "Free within rate limits", bestFor: "Fastest inference, open-source" },
   ];
 
-  // Agent frameworks
   interface AgentFramework {
     name: string;
     type: string;
@@ -23915,7 +23346,6 @@ function buildOpenaiAssistantsMigration2026Page(): string {
     { name: "Vercel AI SDK", type: "Streaming toolkit", license: "Apache 2.0", languages: "TypeScript", stateManagement: "React state / server actions", bestFor: "Next.js apps, streaming UI" },
   ];
 
-  // Wire-compatible bridges
   interface WireBridge {
     name: string;
     approach: string;
@@ -23928,7 +23358,6 @@ function buildOpenaiAssistantsMigration2026Page(): string {
     { name: "DataStax astra-assistants-api", approach: "Assistants API wire-compatible server backed by Astra DB + any LLM", status: "Active, open-source", effort: "Low — deploy server, change base URL" },
   ];
 
-  // Cost comparison
   interface CostRow {
     operation: string;
     responsesApi: string;
@@ -24439,8 +23868,6 @@ ${mcpCtaCss()}
 </html>`;
 }
 
-// --- Tenor API Shutdown Migration Guide page ---
-
 function buildTenorAlternativesPage(): string {
   const title = "Tenor API Shutdown: GIF API Alternatives & Migration Guide";
   const metaDesc = "Google Tenor API shuts down June 30, 2026. Compare GIF API alternatives: Klipy (ex-Tenor team, same API structure), Giphy, Imgur, self-hosted options. Migration code examples and free tier comparison.";
@@ -24449,7 +23876,6 @@ function buildTenorAlternativesPage(): string {
 
   const stabilityMap = getStabilityMap();
 
-  // Tenor deal changes
   const tenorChanges = dealChanges.filter(c =>
     c.vendor === "Google Tenor API"
   ).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
@@ -24476,7 +23902,6 @@ function buildTenorAlternativesPage(): string {
   const tenorStability = stabilityMap.get("google-tenor-api") ?? "volatile";
   const stabilityColor = tenorStability === "volatile" ? "#f85149" : tenorStability === "watch" ? "#d29922" : tenorStability === "improving" ? "#3fb950" : "var(--text-muted)";
 
-  // Calculate days until shutdown
   const shutdownDate = new Date("2026-06-30");
   const today = new Date();
   const daysLeft = Math.max(0, Math.ceil((shutdownDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24)));
@@ -24503,7 +23928,6 @@ function buildTenorAlternativesPage(): string {
     </tr>`;
   }).join("\n        ");
 
-  // Related editorial pages
   const relatedPages = ALTERNATIVES_PAGES.filter(p =>
     ["shutdowns", "stability", "free-tier-risk", "state-of-free-tiers"].includes(p.slug)
   );
@@ -24883,8 +24307,6 @@ ${mcpCtaCss()}
 </html>`;
 }
 
-// --- Firebase Studio Shutdown Guide page ---
-
 function buildFirebaseStudioShutdownPage(): string {
   const title = "Firebase Studio Shutdown: Migration Cost Guide & Free IDE Alternatives";
   const metaDesc = "Firebase Studio shuts down June 22, 2026. Compare migration costs for GitHub Codespaces, Gitpod, Replit, StackBlitz, CodeSandbox, Coder. Hidden costs of switching, free tier comparison, and step-by-step migration checklist.";
@@ -24893,7 +24315,6 @@ function buildFirebaseStudioShutdownPage(): string {
 
   const stabilityMap = getStabilityMap();
 
-  // Firebase deal changes
   const firebaseChanges = dealChanges.filter(c =>
     c.vendor === "Firebase" || c.vendor === "Google"
   ).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
@@ -24901,18 +24322,15 @@ function buildFirebaseStudioShutdownPage(): string {
   const firebaseStability = stabilityMap.get("firebase") ?? "volatile";
   const stabilityColor = firebaseStability === "volatile" ? "#f85149" : firebaseStability === "watch" ? "#d29922" : firebaseStability === "improving" ? "#3fb950" : "var(--text-muted)";
 
-  // Deadline calculations
   const workspaceFreeze = new Date("2026-06-22");
   const fullShutdown = new Date("2027-03-22");
   const today = new Date();
   const daysToFreeze = Math.max(0, Math.ceil((workspaceFreeze.getTime() - today.getTime()) / (1000 * 60 * 60 * 24)));
   const daysToShutdown = Math.max(0, Math.ceil((fullShutdown.getTime() - today.getTime()) / (1000 * 60 * 60 * 24)));
 
-  // Count IDE alternatives for cross-link
   const ideCategory = categories.find(c => c.name.toLowerCase().includes("ide") || c.name.toLowerCase().includes("code editor"));
   const ideAlternativesCount = ideCategory ? ideCategory.count : 59;
 
-  // Cloud IDE alternatives comparison data
   interface CloudIDE {
     name: string;
     slug: string;
@@ -24970,7 +24388,6 @@ function buildFirebaseStudioShutdownPage(): string {
     </tr>`;
   }).join("\n        ");
 
-  // Related editorial pages
   const relatedPages = ALTERNATIVES_PAGES.filter(p =>
     ["firebase-alternatives", "stability", "shutdowns", "ide-code-editors-alternatives", "ai-coding-pricing-2026", "google-developer-program-2026"].includes(p.slug)
   );
@@ -25371,25 +24788,20 @@ ${mcpCtaCss()}
 </html>`;
 }
 
-// --- OpenAI Assistants API Migration Cost Guide ---
-
 function buildOpenAIAssistantsMigrationPage(): string {
   const title = "OpenAI Assistants API Sunset: Migration Cost Guide & Alternatives";
   const metaDesc = "OpenAI Assistants API shuts down August 26, 2026. Compare migration costs: Responses API, Azure OpenAI, Anthropic Claude, LangChain, open-source alternatives. Cost analysis at 3 usage tiers, free tier options, and migration timeline.";
   const slug = "openai-assistants-migration";
   const pubDate = "2026-04-09";
 
-  // OpenAI deal changes
   const openaiChanges = dealChanges.filter(c =>
     c.vendor === "OpenAI"
   ).sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
-  // Deadline calculation
   const shutdownDate = new Date("2026-08-26");
   const today = new Date();
   const daysToShutdown = Math.max(0, Math.ceil((shutdownDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24)));
 
-  // Migration paths
   interface MigrationPath {
     name: string;
     slug: string;
@@ -25497,7 +24909,6 @@ function buildOpenAIAssistantsMigrationPage(): string {
     "High": "#f85149",
   };
 
-  // Cost comparison table rows
   const costTableRows = migrationPaths.map(p => {
     const efColor = effortColors[p.migrationEffort] || "var(--text-muted)";
     const vendorLink = p.slug ? '<a href="/vendor/' + escHtmlServer(p.slug) + '" style="color:var(--text)">' + escHtmlServer(p.name) + '</a>' : escHtmlServer(p.name);
@@ -25510,7 +24921,6 @@ function buildOpenAIAssistantsMigrationPage(): string {
       '</tr>';
   }).join("\n        ");
 
-  // Migration path detail cards
   const pathCards = migrationPaths.map(p => {
     const borderColor = pathTypeColors[p.type] || "var(--accent)";
     const vendorLink = p.slug ? '<a href="/vendor/' + escHtmlServer(p.slug) + '" style="color:var(--text)">' + escHtmlServer(p.name) + '</a>' : escHtmlServer(p.name);
@@ -25523,7 +24933,6 @@ function buildOpenAIAssistantsMigrationPage(): string {
       '</div>';
   }).join("\n    ");
 
-  // Timeline data
   const timelineEntries = [
     { date: "August 2025", event: "OpenAI announces Assistants API deprecation", impact: "low" },
     { date: "April 2026", event: "4 months to shutdown \u2014 recommended migration start", impact: "medium" },
@@ -25540,7 +24949,6 @@ function buildOpenAIAssistantsMigrationPage(): string {
       '</tr>';
   }).join("\n        ");
 
-  // OpenAI change timeline rows
   const changeTimelineRows = openaiChanges.slice(0, 10).map(c => {
     const dateStr = new Date(c.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
     const impactColor = c.impact === "high" ? "#f85149" : c.impact === "medium" ? "#d29922" : "#3fb950";
@@ -25551,12 +24959,10 @@ function buildOpenAIAssistantsMigrationPage(): string {
       '</tr>';
   }).join("\n        ");
 
-  // Related pages
   const relatedPages = ALTERNATIVES_PAGES.filter(p =>
     ["ai-ml-alternatives", "free-llm-apis", "free-ai-stack", "ai-coding-tools-pricing", "gemini-api-pricing-2026", "free-tier-risk", "shutdowns", "llm-api-pricing"].includes(p.slug)
   );
 
-  // FAQ entries
   const faqEntries = [
     { q: "When does the OpenAI Assistants API shut down?", a: "The Assistants API will be fully shut down on August 26, 2026. After this date, all Assistants API calls will return errors. OpenAI recommends migrating to the Responses API (for prompts and tool use) and Conversations API (for thread/session management)." },
     { q: "What is the cheapest alternative to the OpenAI Assistants API?", a: "Google Gemini API offers the most generous free tier with 1,500 free requests/day (Flash model). For open-source options, LangChain and CrewAI are free frameworks \u2014 you only pay for the LLM API you choose (or use free local models via Ollama). Anthropic Claude also offers a free tier with rate limits." },
@@ -25565,7 +24971,6 @@ function buildOpenAIAssistantsMigrationPage(): string {
     { q: "How much will migration cost in developer time?", a: "For a small project (single assistant), expect 1\u20132 days of developer time for the Responses API migration. For complex multi-assistant systems, budget 1\u20132 weeks. Switching to a different provider (Anthropic, Gemini, LangChain) adds additional time for API differences and testing. See our cost comparison table for per-path estimates." },
   ];
 
-  // JSON-LD
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "WebPage",
@@ -25672,13 +25077,11 @@ function buildOpenAIAssistantsMigrationPage(): string {
     '  <h1>OpenAI Assistants API Sunset \u2014 Migration Cost Guide</h1>\n' +
     '  <p class="pub-date">Published ' + pubDate + pageFreshness("/openai-assistants-migration") + ' &middot; ' + migrationPaths.length + ' migration paths compared &middot; ' + pageDataProvenance("/openai-assistants-migration", offers.length) + ' &middot; ' + openaiChanges.length + ' OpenAI pricing changes tracked</p>\n' +
     '\n' +
-    // Deadline banner
     '  <div class="deadline-banner">\n' +
     '    <div class="days">' + daysToShutdown + ' days</div>\n' +
     '    <div class="label">until Assistants API shutdown &middot; August 26, 2026</div>\n' +
     '  </div>\n' +
     '\n' +
-    // Summary stats
     '  <div class="summary-stats">\n' +
     '    <div class="stat-card"><div class="stat-number red">' + daysToShutdown + '</div><div class="stat-label">Days to Shutdown</div></div>\n' +
     '    <div class="stat-card"><div class="stat-number">' + migrationPaths.length + '</div><div class="stat-label">Migration Paths</div></div>\n' +
@@ -25686,14 +25089,12 @@ function buildOpenAIAssistantsMigrationPage(): string {
     '    <div class="stat-card"><div class="stat-number yellow">2</div><div class="stat-label">Open Source</div></div>\n' +
     '  </div>\n' +
     '\n' +
-    // Executive summary
     '  <div class="executive-summary">\n' +
     '    <p><strong>What\'s happening:</strong> OpenAI is sunsetting the Assistants API on ' + ASSISTANTS_API_SHUTDOWN.date + '. All Assistants, Threads, and associated API calls will stop working. Developers must migrate to the Responses API + Conversations API, or move to an alternative platform entirely. Azure is not a way out: Microsoft retired the Azure OpenAI Assistants API on the same date, ' + ASSISTANTS_API_SHUTDOWN.date + ', and points agentic workloads at ' + ASSISTANTS_API_SHUTDOWN.azureSuccessor + '.</p>\n' +
     '    <p><strong>The cost question:</strong> Migration isn\'t just about code changes \u2014 it\'s about ongoing costs. Staying with OpenAI means the same token pricing but new API patterns. Switching providers can reduce costs 30\u201370% (Gemini\'s free tier) or increase them (Azure\'s enterprise overhead). Open-source frameworks (LangChain, CrewAI) eliminate platform lock-in but require more engineering investment.</p>\n' +
     '    <p><strong>This guide covers:</strong> cost comparison at 3 usage tiers (hobby, production, scale), migration effort estimates, free tier options, and a recommended timeline \u2014 compiled by hand from vendor pricing pages.</p>\n' +
     '  </div>\n' +
     '\n' +
-    // Table of contents
     '  <div class="toc" style="background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:1.5rem 0">\n' +
     '    <h3 style="margin:0 0 .5rem;font-size:.9rem;color:var(--text-muted)">Jump to section</h3>\n' +
     '    <ol style="padding-left:1.25rem;margin:0">\n' +
@@ -25707,7 +25108,6 @@ function buildOpenAIAssistantsMigrationPage(): string {
     '    </ol>\n' +
     '  </div>\n' +
     '\n' +
-    // Section 1: Cost Comparison Table
     '  <h2 id="cost-comparison">Cost Comparison by Usage Tier</h2>\n' +
     '  <p class="section-intro">What does each migration path cost at three usage levels? Hobby (occasional use, &lt;1K requests/day), Production (steady workload, 1K\u201310K requests/day), and Scale (high-volume, 10K+ requests/day).</p>\n' +
     '\n' +
@@ -25732,13 +25132,11 @@ function buildOpenAIAssistantsMigrationPage(): string {
     '    <strong>Cost insight:</strong> If cost is your primary concern, <a href="/vendor/google-gemini-api">Google Gemini API</a> offers the best free tier (1,500 requests/day on Flash). If migration speed is the priority, the Responses API is the path of least resistance. Teams already on Azure face the same deadline: Microsoft retired the Azure OpenAI Assistants API on ' + ASSISTANTS_API_SHUTDOWN.date + ' and directs agents to ' + ASSISTANTS_API_SHUTDOWN.azureSuccessor + '.\n' +
     '  </div>\n' +
     '\n' +
-    // Section 2: Migration Paths Detailed
     '  <h2 id="migration-paths">Migration Paths Detailed</h2>\n' +
     '  <p class="section-intro">Each path trades off differently on cost, migration effort, and long-term flexibility.</p>\n' +
     '\n' +
     '  ' + pathCards + '\n' +
     '\n' +
-    // Section 3: Free Tier Alternatives
     '  <h2 id="free-tiers">Free Tier Alternatives</h2>\n' +
     '  <p class="section-intro">If you\'re looking to reduce costs or run a prototype for free, these options have meaningful free tiers.</p>\n' +
     '\n' +
@@ -25763,7 +25161,6 @@ function buildOpenAIAssistantsMigrationPage(): string {
     '  </table>\n' +
     '  </div>\n' +
     '\n' +
-    // Section 4: Timeline
     '  <h2 id="timeline">Migration Timeline</h2>\n' +
     '  <p class="section-intro">Key dates and recommended migration schedule. Start now \u2014 the shutdown date is firm.</p>\n' +
     '\n' +
@@ -25782,7 +25179,6 @@ function buildOpenAIAssistantsMigrationPage(): string {
     '  </table>\n' +
     '  </div>\n' +
     '\n' +
-    // Section 5: Recommendations
     '  <h2 id="recommendations">Best-for-Use-Case Recommendations</h2>\n' +
     '\n' +
     '  <div class="verdict-box">\n' +
@@ -25795,7 +25191,6 @@ function buildOpenAIAssistantsMigrationPage(): string {
     '    <div class="verdict-item"><strong>Multi-agent workflows:</strong><p>CrewAI \u2014 if your Assistants setup used multiple coordinating agents, CrewAI\'s role-based agent model is a natural fit.</p></div>\n' +
     '  </div>\n' +
     '\n' +
-    // Section 6: OpenAI pricing changes
     '  <h2 id="openai-changes">OpenAI Pricing Changes Timeline</h2>\n' +
     '  <p class="section-intro">Recent pricing and policy changes we\'ve tracked for OpenAI. See <a href="/pricing-changes">full change timeline</a> for all tracked changes across all vendors.</p>\n' +
     '\n' +
@@ -25814,7 +25209,6 @@ function buildOpenAIAssistantsMigrationPage(): string {
     '  </table>\n' +
     '  </div>\n' +
     '\n' +
-    // Section 7: FAQ
     '  <h2 id="faq">Frequently Asked Questions</h2>\n' +
     '\n' +
     faqEntries.map(f =>
@@ -25824,12 +25218,10 @@ function buildOpenAIAssistantsMigrationPage(): string {
       '  </div>'
     ).join("\n") + '\n' +
     '\n' +
-    // Methodology
     '  <div class="methodology">\n' +
     '    <strong>Methodology:</strong> Cost estimates are based on published API pricing as of April 2026, and were not cross-referenced against our index. "Hobby" assumes <1,000 requests/day with short prompts. "Production" assumes 1,000\u201310,000 requests/day with moderate context. "Scale" assumes 10,000+ requests/day with full context windows. Migration effort is estimated for a typical single-assistant application. Open-source framework costs reflect only the underlying LLM API charges.\n' +
     '  </div>\n' +
     '\n' +
-    // Related pages
     '  <h2>Related Guides</h2>\n' +
     '  <div class="related-pages">\n' +
     relatedPages.map(p =>
@@ -25844,8 +25236,6 @@ function buildOpenAIAssistantsMigrationPage(): string {
     '<script>' + mcpCtaScript() + '</script>\n' +
     '</body>\n</html>';
 }
-
-// --- Developer Tool Shutdown Tracker page ---
 
 function buildShutdownTrackerPage(): string {
   const title = "Developer Tool Shutdown Tracker 2026";
@@ -26058,10 +25448,8 @@ function buildShutdownTrackerPage(): string {
     },
   ];
 
-  // Sort by deadline
   shutdowns.sort((a, b) => new Date(a.deadline).getTime() - new Date(b.deadline).getTime());
 
-  // Categorize by urgency
   const imminent: ShutdownEntry[] = [];
   const upcoming: ShutdownEntry[] = [];
   const later: ShutdownEntry[] = [];
@@ -26148,13 +25536,11 @@ function buildShutdownTrackerPage(): string {
     ${entries.map(s => buildShutdownCard(s)).join("\n    ")}`;
   }
 
-  // Get deal changes for vendors in our shutdown list
   const shutdownVendorSlugs = [...new Set(shutdowns.map(s => s.vendorSlug))];
   const relevantChanges = dealChanges.filter(c =>
     shutdownVendorSlugs.some(slug => toSlug(c.vendor) === slug)
   ).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()).slice(0, 10);
 
-  // Related editorial pages
   const relatedPages = ALTERNATIVES_PAGES.filter(p =>
     ["openai-assistants-alternatives", "stability", "free-tier-risk", "free-tier-tracker", "state-of-free-tiers", "ai-ml-alternatives"].includes(p.slug)
   );
@@ -26327,15 +25713,12 @@ ${buildGlobalNav("guides")}
 </html>`;
 }
 
-// --- Free Tier Erosion Tracker page ---
-
 function buildFreeTierTrackerPage(): string {
   const title = "Free Tier Tracker — Q1 2026 Developer Tool Pricing Changes";
   const metaDesc = "Systematic tracker of developer tool free tiers removed, reduced, or expanded in Q1 2026. Postman, LocalStack, Brave Search, HCP Terraform, Windsurf, and more. Powered by AgentDeals deal_changes data.";
   const slug = "free-tier-tracker";
   const pubDate = "2026-03-27";
 
-  // Categorize Q1 2026 changes (Jan-Mar 2026)
   const q1Start = "2026-01-01";
   const q1End = "2026-03-31";
   const q1Changes = dealChanges.filter(c => c.date >= q1Start && c.date <= q1End);
@@ -26343,7 +25726,6 @@ function buildFreeTierTrackerPage(): string {
   const negativeTypes = ["free_tier_removed", "limits_reduced", "restriction", "open_source_killed", "pricing_model_change", "pricing_restructured", "product_deprecated"];
   const positiveTypes = ["limits_increased", "new_free_tier", "startup_program_expanded", "pricing_postponed"];
 
-  // Separate negative and positive
   const removedOrReduced = q1Changes.filter(c => SEVERE_CHANGE_TYPES.has(c.change_type));
   const limitsReduced = q1Changes.filter(c => ["limits_reduced", "restriction"].includes(c.change_type));
   const restructured = q1Changes.filter(c => ["pricing_restructured", "pricing_model_change", "product_deprecated"].includes(c.change_type));
@@ -26352,7 +25734,6 @@ function buildFreeTierTrackerPage(): string {
   const totalNegative = q1Changes.filter(c => negativeTypes.includes(c.change_type)).length;
   const totalPositive = expanded.length;
 
-  // Key erosion events for featured section
   interface ErosionEntry {
     vendor: string;
     slug: string;
@@ -26510,7 +25891,6 @@ function buildFreeTierTrackerPage(): string {
     },
   ];
 
-  // Trend patterns
   const patterns = [
     {
       name: "Open-core \u2192 Paid",
@@ -26578,7 +25958,6 @@ function buildFreeTierTrackerPage(): string {
       }).join(", ")}</p>` : ""}
     </div>`;
 
-  // Build all Q1 changes table
   const buildChangeRow = (c: typeof dealChanges[0]) => {
     const color = changeTypeColors[c.change_type] ?? "var(--text-dim)";
     const label = changeTypeLabels[c.change_type] ?? c.change_type;
@@ -26591,14 +25970,11 @@ function buildFreeTierTrackerPage(): string {
     </tr>`;
   };
 
-  // Sort Q1 changes by date descending
   const sortedQ1 = [...q1Changes].sort((a, b) => b.date.localeCompare(a.date));
 
-  // Related editorial pages
   const relatedSlugs = ["free-tier-risk", "q1-2026-developer-pricing-report", "q2-pricing-preview-2026", "localstack-alternatives", "postman-alternatives", "hcp-terraform-migration", "free-startup-stack"];
   const relatedPages = ALTERNATIVES_PAGES.filter(p => relatedSlugs.includes(p.slug));
 
-  // JSON-LD
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Article",
@@ -26793,8 +26169,6 @@ ${mcpCtaCss()}
 </html>`;
 }
 
-// --- Startup Credits & Programs Directory ---
-
 function buildStartupCreditsPage(): string {
   const title = "Startup Credits Comparison 2026 — Cloud Credits, Eligibility & Hidden Constraints";
   const metaDesc = "Compare 15+ startup programs: AWS Activate, Google for Startups, Microsoft Founders Hub, Cloudflare, DigitalOcean Hatch, Stripe Atlas, Brex, Mercury, and more. Credit values, eligibility, vesting, and stacking strategies. Updated April 2026.";
@@ -26841,23 +26215,19 @@ function buildStartupCreditsPage(): string {
   };
 
   const programs: StartupProgram[] = [
-    // Cloud Infrastructure
     { name: "AWS Activate", slug: "aws-activate", category: "cloud-infrastructure", creditValue: "$1K (self-funded), $100K (VC-backed)", eligibility: "Any startup (Founders) / VC/accelerator-backed (Portfolio)", duration: "1-2 years", applicationDifficulty: "open", whatsIncluded: "AWS credits, technical support, training. Business Support (1yr) for Portfolio tier. Separate program for each funding stage.", hiddenConstraints: "Founders tier is self-serve \u2014 easy to get but only $1K. Portfolio tier requires VC/accelerator letter. Credits expire in 12 months (Founders) or 24 months (Portfolio). Cannot combine with other AWS promotional credits.", vestingSchedule: "Founders: lump sum. Portfolio: annual tranches" },
     { name: "Google Cloud for Startups", slug: "google-cloud-for-startups", category: "cloud-infrastructure", creditValue: "$200K (Scale) / $350K (Scale AI)", eligibility: "Equity-funded startups, Series A or earlier", duration: "2 years", applicationDifficulty: "vc-backed", whatsIncluded: "Google Cloud credits, Firebase, Google Workspace, technical training, partner perks. Scale AI includes $100K extra for AI/ML workloads.", hiddenConstraints: "Equity funding required \u2014 bootstrapped startups don\u2019t qualify for Scale tier. $200K is split $100K/year. Must use within Google Cloud (not transferable). 24-month expiry. Requires application review.", vestingSchedule: "$100K Y1 + $100K Y2 (Scale); $250K Y1 + $100K Y2 (Scale AI)" },
     { name: "Microsoft Founders Hub", slug: "microsoft-founders-hub", category: "cloud-infrastructure", creditValue: "$5K-$150K Azure credits", eligibility: "Any startup (basic) / investor-backed (premium)", duration: "1 year", applicationDifficulty: "open", whatsIncluded: "Azure credits, M365 Business Premium, GitHub Enterprise, LinkedIn Premium, technical mentoring, Visual Studio Enterprise.", hiddenConstraints: "Basic path gives only $5K without investor connection. Premium path up to $150K requires investor network verification. Credits expire in 12 months. Azure-only (not applicable to M365 or other Microsoft products).", vestingSchedule: "Lump sum on approval" },
     { name: "DigitalOcean Hatch", slug: "digitalocean-hatch", category: "cloud-infrastructure", creditValue: "Up to $100K compute credits", eligibility: "Startups affiliated with VC/accelerator partners", duration: "12 months", applicationDifficulty: "accelerator-only", whatsIncluded: "Compute credits, GPU Droplets at $1.90/GPU/hr (H100 equivalent), dedicated support, technical architecture review.", hiddenConstraints: "Must be affiliated with a partner VC or accelerator \u2014 not open application. GPU pricing is discounted but still significant at scale. Credits expire in 12 months. Cannot transfer between accounts.", vestingSchedule: "Lump sum per partner agreement" },
     { name: "IBM Cloud Startup", slug: "ibm-cloud-startup", category: "cloud-infrastructure", creditValue: "$12K (Builder) / $120K (Premium)", eligibility: "Builder: any startup. Premium: VC/accelerator-backed", duration: "12 months", applicationDifficulty: "open", whatsIncluded: "IBM Cloud credits ($1K/mo Builder, $10K/mo Premium), Watson AI services, Red Hat OpenShift, technical mentoring.", hiddenConstraints: "Builder is $1K/month for 12 months \u2014 use-it-or-lose-it monthly. Premium requires VC letter and formal application. IBM Cloud has smaller ecosystem than AWS/GCP/Azure. Some Watson services have separate quotas.", vestingSchedule: "$1K/mo (Builder) or $10K/mo (Premium)" },
     { name: "Cloudflare Startup Program", slug: "cloudflare-startup-program", category: "cloud-infrastructure", creditValue: "$5K-$250K credits", eligibility: "4 tiers based on funding: Bootstrapped ($5K), Up-and-Coming ($25K), Seed-Funded ($100K), High Growth ($250K)", duration: "1 year", applicationDifficulty: "open", whatsIncluded: "Cloudflare credits covering Workers, R2, CDN, security, analytics. Access to startup community and events.", hiddenConstraints: "Tier is based on funding stage \u2014 bootstrapped startups get only $5K. Higher tiers require more funding documentation. Credits are Cloudflare-only. Limited time window to use credits.", vestingSchedule: "Lump sum per tier" },
-    // Fintech/Banking
     { name: "Stripe Atlas", slug: "stripe-atlas", category: "fintech-banking", creditValue: "$50K+ in founder perks", eligibility: "Atlas customers (incorporation via Stripe)", duration: "Varies by perk", applicationDifficulty: "open", whatsIncluded: "$5K AWS credits, $5K DigitalOcean credits, 1yr GitHub, $2.5K Stripe processing credits, legal perks, banking setup.", hiddenConstraints: "Requires Stripe Atlas incorporation ($500 one-time fee). Perks are from third parties \u2014 each has own eligibility requirements. Processing credits only apply to Stripe payments. Some perks expire 90 days after incorporation.", vestingSchedule: "Available on Atlas completion" },
     { name: "Brex", slug: "brex", category: "fintech-banking", creditValue: "$350K+ in partner perks", eligibility: "Brex cardholders (startups)", duration: "Varies by partner", applicationDifficulty: "open", whatsIncluded: "$5K AWS credits, $2.5K OpenAI credits, $200K Google Cloud credits, partner discounts on Notion, Slack, and 50+ tools.", hiddenConstraints: "Must be a Brex cardholder. Individual perks have separate eligibility and expiry. Some require minimum card spend. Google Cloud $200K requires separate Google for Startups qualification. Partner perks change frequently.", vestingSchedule: "Per-partner activation" },
     { name: "Mercury", slug: "mercury", category: "fintech-banking", creditValue: "Banking perks bundle", eligibility: "Mercury banking customers", duration: "Varies by perk", applicationDifficulty: "open", whatsIncluded: "1 year free Datadog (up to $100K value), $5K AWS credits, up to $200K Google Cloud credits, 30% off QuickBooks Online.", hiddenConstraints: "Must have Mercury business account. Datadog credit is usage-based cap \u2014 may not reach full $100K value. Google Cloud credits require separate application to Google for Startups. Perks are subject to partner availability.", vestingSchedule: "Per-partner activation" },
     { name: "Ramp", slug: "ramp", category: "fintech-banking", creditValue: "$5K AWS + partner discounts", eligibility: "Ramp cardholders", duration: "Varies", applicationDifficulty: "open", whatsIncluded: "Up to $5K AWS credits, partner discounts on Notion, and other tools. Part of $350K+ total partner rewards program.", hiddenConstraints: "Must be Ramp cardholder. AWS credits are a subset of what AWS Activate offers separately. Partner perks overlap with Brex offerings. Some discounts require annual commitments.", vestingSchedule: "Per-partner activation" },
     { name: "SVB (Silicon Valley Bank)", slug: "svb-silicon-valley-bank", category: "fintech-banking", creditValue: "$5K AWS + $100K Google Cloud", eligibility: "SVB banking customers (startups)", duration: "Varies", applicationDifficulty: "open", whatsIncluded: "$5K AWS credits, up to $100K Google Cloud credits (annual cap), $5K MongoDB credits, $9K off Slack, $50K+ in total partner value.", hiddenConstraints: "SVB was acquired by First Citizens Bank (2023) \u2014 program continuity uncertain for new applicants. Google Cloud credits are usage-based annual cap (not guaranteed full amount). Partner perks change over time.", vestingSchedule: "Annual cap on cloud credits" },
-    // Developer Tools
     { name: "PostHog YC Deal", slug: "posthog-yc-deal", category: "developer-tools", creditValue: "$50K/year credits", eligibility: "Y Combinator companies (raised less than $25M)", duration: "Renews annually", applicationDifficulty: "accelerator-only", whatsIncluded: "Full PostHog platform: product analytics, session replay, feature flags, experimentation. Auto-renews each year.", hiddenConstraints: "YC companies only \u2014 not open to general startups. $25M fundraising cap. Must maintain active YC alumni status. Covers PostHog only \u2014 not transferable.", vestingSchedule: "Annual renewal" },
     { name: "Segment Startup Program", slug: "segment-startup-program", category: "developer-tools", creditValue: "$50K in Team plan credits", eligibility: "Early-stage startups (application required)", duration: "Up to 2 years", applicationDifficulty: "open", whatsIncluded: "$50K toward monthly Team plan. Access to $1M+ in partner deals (AWS, Google, Intercom). Analytics Academy training.", hiddenConstraints: "Credits apply to Team plan pricing only. Application requires company details and growth metrics. Partner deals are separate programs with their own eligibility. 2-year maximum regardless of credit usage.", vestingSchedule: "Monthly against Team plan" },
-    // AI Tools
     { name: "Amazon Kiro (AWS Startups)", slug: "amazon-kiro-aws-startups", category: "ai-tools", creditValue: "1 year free Pro+ ($480/yr value)", eligibility: "AWS Startups program members", duration: "1 year", applicationDifficulty: "accelerator-only", whatsIncluded: "Kiro Pro+ with expanded credits. Three tiers: Starter (2 users), Growth (50 users), Scale (100 users). Includes SWE-1.5 model access.", hiddenConstraints: "Requires existing AWS Startups membership (not standalone). Pro+ credit allocation is model-dependent (Sonnet 4 costs 1.3x). Free tier duration is exactly 12 months. Not combinable with other Kiro promotions.", vestingSchedule: "Monthly credit allocation" },
     { name: "Amplitude Startup Scholarship", slug: "amplitude-startup-scholarship", category: "ai-tools", creditValue: "1 year free Growth plan", eligibility: "Startups building digital products", duration: "1 year", applicationDifficulty: "open", whatsIncluded: "Growth plan with 200K MTUs or 100M events/month. Behavioral Cohorts, Pathfinder, and all Growth features.", hiddenConstraints: "Growth plan converts to paid ($49+/mo) after 1 year. Application review required. MTU/event limits are soft \u2014 overage may be billed. Plan features may change during the free year.", vestingSchedule: "Full plan for 12 months" },
   ];
@@ -26870,7 +26240,6 @@ function buildStartupCreditsPage(): string {
   const openCount = programs.filter(p => p.applicationDifficulty === "open").length;
   const categories: Array<"cloud-infrastructure" | "fintech-banking" | "developer-tools" | "ai-tools"> = ["cloud-infrastructure", "fintech-banking", "developer-tools", "ai-tools"];
 
-  // Hero table rows
   const heroTableRows = programs.map(p => {
     const diffColor = difficultyColors[p.applicationDifficulty] || "var(--text-muted)";
     return '<tr>' +
@@ -26882,7 +26251,6 @@ function buildStartupCreditsPage(): string {
       '</tr>';
   }).join("\n        ");
 
-  // Category breakdown sections
   const categorySections = categories.map(cat => {
     const catPrograms = programs.filter(p => p.category === cat);
     const cards = catPrograms.map(p => {
@@ -26902,7 +26270,6 @@ function buildStartupCreditsPage(): string {
       cards;
   }).join("\n\n  ");
 
-  // Hidden constraints cards
   const hiddenConstraintCards = [
     { title: "Credit Expiry Timelines", desc: "Most credits expire 12\u201324 months from activation, not application. Unused credits are lost \u2014 no extensions. Google splits $200K into $100K/year; AWS Founders gives all $1K at once but expires in 12 months." },
     { title: "Vesting Schedules", desc: "Google, IBM, and some others release credits in monthly or annual tranches. You can\u2019t front-load usage. IBM Builder gives $1K/month \u2014 if you need $12K in month 1, you only get $1K." },
@@ -26911,7 +26278,6 @@ function buildStartupCreditsPage(): string {
     { title: "Overlapping Perks Problem", desc: "Brex, Mercury, SVB, and Stripe Atlas all offer AWS credits \u2014 but you can\u2019t stack them. The $5K AWS credit from Brex and the $5K from Stripe Atlas may be the same underlying AWS Activate program." },
   ];
 
-  // Changes timeline
   const changeTimelineRows = startupChanges.map(c => {
     const dateStr = new Date(c.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
     const impactColor = c.impact === "high" ? "#f85149" : c.impact === "medium" ? "#d29922" : "#3fb950";
@@ -26923,7 +26289,6 @@ function buildStartupCreditsPage(): string {
       '</tr>';
   }).join("\n        ");
 
-  // FAQ entries
   const faqEntries = [
     { q: "What are the highest-value startup credit programs?", a: "The top programs by credit value are: Google Cloud for Startups Scale AI ($350K), Cloudflare High Growth ($250K), Google Cloud Scale ($200K), Microsoft Founders Hub Premium ($150K), IBM Cloud Premium ($120K), AWS Activate Portfolio ($100K), and DigitalOcean Hatch ($100K). Most of these require VC backing or accelerator affiliation." },
     { q: "Can I stack multiple startup programs?", a: "Yes, most programs are compatible since they apply to different platforms. For example: Google for Startups ($200K) + AWS Activate ($100K) + DigitalOcean Hatch ($100K) = $400K+ across three clouds. Banking programs (Brex, Mercury) layer additional perks on top. However, AWS credits from different sources (Brex, Stripe Atlas, SVB) typically don't stack \u2014 they're often the same underlying AWS Activate allocation." },
@@ -26932,11 +26297,9 @@ function buildStartupCreditsPage(): string {
     { q: "Are startup credits worth the lock-in?", a: "Credits significantly lower early-stage cloud costs but create platform dependency. After credits expire, you're on full production pricing with established data gravity. Mitigate this by using credits for experimentation and development rather than production architecture. A multi-cloud strategy with credits from 2\u20133 providers reduces single-vendor risk." },
   ];
 
-  // Related pages
   const relatedSlugs = ["aws-free-tier-2026", "gcp-free-tier-2026", "hosting-alternatives", "free-startup-stack"];
   const relatedPages = ALTERNATIVES_PAGES.filter(p => relatedSlugs.includes(p.slug));
 
-  // JSON-LD
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Article",
@@ -27203,25 +26566,19 @@ function buildStartupCreditsPage(): string {
     '</body>\n</html>';
 }
 
-
-// --- AI Coding Tools Pricing Guide page ---
-
 function buildAiCodingPricing2026Page(): string {
   const title = "AI Coding Tools Pricing Guide — 2026 Comparison";
   const metaDesc = "Side-by-side pricing comparison of Cursor, Windsurf, GitHub Copilot, Gemini Code Assist, Amazon Q, Claude Code, Augment Code and more. Free tiers, pro plans, and recent pricing changes. Updated March 2026.";
   const slug = "ai-coding-pricing-2026";
   const pubDate = "2026-03-27";
 
-  // Pull verified data from our index
   const aiCodingOffers = offers.filter(o => o.category === "AI Coding");
   const ideCodingOffers = offers.filter(o => o.category === "IDE & Code Editors" && o.tags?.some(t => t === "ai" || t === "code completion"));
 
-  // Deal changes for AI coding tools
   const aiCodingChanges = dealChanges.filter(c =>
     ["Cursor", "Windsurf", "GitHub Copilot", "Augment Code", "Google Gemini Code Assist"].includes(c.vendor)
   ).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
-  // Pricing comparison data (verified March 2026)
   interface PricingTool {
     name: string;
     slug: string;
@@ -27358,12 +26715,10 @@ function buildAiCodingPricing2026Page(): string {
     </tr>`;
   }).join("\n        ");
 
-  // Related editorial pages
   const relatedPages = ALTERNATIVES_PAGES.filter(p =>
     ["ide-code-editors-alternatives", "ai-ml-alternatives", "free-ai-stack", "free-llm-apis", "free-tier-risk", "free-tier-tracker"].includes(p.slug)
   );
 
-  // JSON-LD Article schema
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Article",
@@ -27594,28 +26949,23 @@ ${mcpCtaCss()}
 </html>`;
 }
 
-// --- AI Coding Tools Pricing — Definitive Comparison ---
-
 function buildAiCodingToolsPricingPage(): string {
   const title = "AI Coding Tools Pricing Comparison 2026 — The Definitive Free Tier Breakdown";
   const metaDesc = "Compare 17 AI coding tools: Cursor, Windsurf, Amazon Kiro, GitHub Copilot, Claude Code, Devin, Bolt.new, Lovable, Codex, Gemini CLI and more. Free tiers, hidden costs, cost analysis for solo devs and teams. Updated April 2026.";
   const slug = "ai-coding-tools-pricing";
   const pubDate = "2026-04-08";
 
-  // Pull verified data from our index
   const aiCodingOffers = offers.filter(o => o.category === "AI Coding");
   const ideCodingOffers = offers.filter(o =>
     o.category === "IDE & Code Editors" && o.tags?.some((t: string) => t === "ai" || t === "code completion" || t === "coding")
   );
   const allAiCodingOffers = [...aiCodingOffers, ...ideCodingOffers];
 
-  // Deal changes for AI coding tools
   const aiVendors = ["Cursor", "Windsurf", "GitHub Copilot", "Augment Code", "Google Gemini Code Assist", "Claude Code", "Devin", "Bolt.new", "Lovable", "OpenAI Codex", "Google Antigravity", "Gemini CLI", "Amazon Q Developer", "Cline", "Aider", "MarsCode", "Amazon Kiro"];
   const aiCodingChanges = dealChanges.filter(c =>
     aiVendors.includes(c.vendor)
   ).sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
-  // Tool data organized by category
   interface CodingTool {
     name: string;
     slug: string;
@@ -27633,7 +26983,6 @@ function buildAiCodingToolsPricingPage(): string {
   }
 
   const tools: CodingTool[] = [
-    // IDE-based
     {
       name: "Cursor",
       slug: "cursor",
@@ -27724,7 +27073,6 @@ function buildAiCodingToolsPricingPage(): string {
       monthlyCostTeam5: "$0",
       hiddenCosts: "Free during preview only \u2014 pricing not announced. Google will almost certainly monetize this. Treat as temporary.",
     },
-    // CLI-based
     {
       name: "Claude Code",
       slug: "claude-code",
@@ -27815,7 +27163,6 @@ function buildAiCodingToolsPricingPage(): string {
       monthlyCostTeam5: "Custom",
       hiddenCosts: "Credit-based means unpredictable costs. Usage can spike to $60/mo under heavy load. Codebase indexing is the value-add but costs scale with repo size.",
     },
-    // Cloud agents
     {
       name: "OpenAI Codex",
       slug: "openai-codex",
@@ -27846,7 +27193,6 @@ function buildAiCodingToolsPricingPage(): string {
       monthlyCostTeam5: "$500",
       hiddenCosts: "Base $20/mo is just the entry \u2014 ACUs (Autonomous Compute Units) charged at $2.25 each on top. A complex task can consume 5\u201320 ACUs ($11\u201345). Team plan at $500/mo is the real starting price.",
     },
-    // App builders
     {
       name: "Bolt.new",
       slug: "bolt-new",
@@ -27926,11 +27272,9 @@ function buildAiCodingToolsPricingPage(): string {
     "none": "#f85149",
   };
 
-  // Summary stats
   const freeCount = tools.filter(t => t.freeType === "generous" || t.freeType === "byok" || t.freeType === "preview").length;
   const limitedCount = tools.filter(t => t.freeType === "limited" || t.freeType === "freemium").length;
 
-  // Pricing table rows
   const pricingTableRows = tools.map(t => {
     const freeColor = freeTypeColors[t.freeType] || "var(--text-muted)";
     return '<tr>' +
@@ -27942,7 +27286,6 @@ function buildAiCodingToolsPricingPage(): string {
       '</tr>';
   }).join("\n        ");
 
-  // Category sections
   const categories: Array<"ide" | "cli" | "cloud-agent" | "app-builder"> = ["ide", "cli", "cloud-agent", "app-builder"];
   const categorySections = categories.map(cat => {
     const catTools = tools.filter(t => t.category === cat);
@@ -27959,7 +27302,6 @@ function buildAiCodingToolsPricingPage(): string {
       cards;
   }).join("\n\n  ");
 
-  // Cost comparison table
   const costRows = tools.map(t => {
     return '<tr>' +
       '<td style="font-weight:600"><a href="/vendor/' + escHtmlServer(t.slug) + '" style="color:var(--text)">' + escHtmlServer(t.name) + '</a></td>' +
@@ -27969,7 +27311,6 @@ function buildAiCodingToolsPricingPage(): string {
       '</tr>';
   }).join("\n        ");
 
-  // Change timeline
   const changeTimelineRows = aiCodingChanges.map(c => {
     const dateStr = new Date(c.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
     const impactColor = c.impact === "high" ? "#f85149" : c.impact === "medium" ? "#d29922" : "#3fb950";
@@ -27981,12 +27322,10 @@ function buildAiCodingToolsPricingPage(): string {
       '</tr>';
   }).join("\n        ");
 
-  // Related editorial pages
   const relatedPages = ALTERNATIVES_PAGES.filter(p =>
     ["ide-code-editors-alternatives", "ai-ml-alternatives", "free-ai-stack", "free-llm-apis", "free-tier-risk", "cursor-alternatives", "ai-coding-pricing-2026"].includes(p.slug)
   );
 
-  // JSON-LD
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Article",
@@ -28000,7 +27339,6 @@ function buildAiCodingToolsPricingPage(): string {
     about: tools.map(t => ({ "@type": "SoftwareApplication", name: t.name })),
   };
 
-  // FAQ structured data
   const faqEntries = [
     { q: "What is the best free AI coding tool in 2026?", a: "Gemini Code Assist offers the most generous free tier with 6,000 completions/day (180,000/month) and 240 chat messages/day. For open-source alternatives, Cline and Aider are fully free with BYO API keys. Gemini CLI offers 1,000 free requests/day. Amazon Kiro offers 50 free credits/month — limited, but enough to try spec-driven development." },
     { q: "How much does Cursor cost vs Windsurf?", a: "Both charge $20/month Pro and $200/month Power (Ultra/Max). Cursor now has 6 plans (added Hobby at $10/mo), Windsurf has 4 (Free, Pro $20, Teams $40, Max $200). Windsurf raised Pro from $15 to $20 in March 2026. Windsurf's SWE-1.5 Fast Agent model optimizes for iteration speed." },
@@ -28138,7 +27476,6 @@ function buildAiCodingToolsPricingPage(): string {
     '    </ol>\n' +
     '  </div>\n' +
     '\n' +
-    // Section 1: Pricing table
     '  <h2 id="pricing-table">Pricing Comparison Table</h2>\n' +
     '  <p class="section-intro">All prices verified as of April 2026. Hover rows to highlight. Click tool names for full vendor profiles with free tier details.</p>\n' +
     '\n' +
@@ -28163,13 +27500,11 @@ function buildAiCodingToolsPricingPage(): string {
     '    <strong>Price convergence:</strong> Cursor, Windsurf, Augment, Bolt.new, Lovable, Codex (via ChatGPT Plus), and Devin all land at or near $20/month for their entry paid tier. GitHub Copilot at $10/mo is the outlier \u2014 kept low by Microsoft\'s distribution strategy. Google is the wildcard: Gemini Code Assist, Antigravity, and Gemini CLI are all free or have extremely generous free tiers.\n' +
     '  </div>\n' +
     '\n' +
-    // Section 2: Category breakdown
     '  <h2 id="categories">Category Breakdown</h2>\n' +
     '  <p class="section-intro">AI coding tools fall into four distinct categories, each with different use cases and pricing models.</p>\n' +
     '\n' +
     '  ' + categorySections + '\n' +
     '\n' +
-    // Section 3: What you actually get for free
     '  <h2 id="free-tiers">What You Actually Get for Free</h2>\n' +
     '  <p class="section-intro">Free tiers vary wildly. Here\'s the honest breakdown \u2014 not marketing copy, but what you actually get at zero cost and when you\'ll hit the wall.</p>\n' +
     '\n' +
@@ -28202,7 +27537,6 @@ function buildAiCodingToolsPricingPage(): string {
     '  </table>\n' +
     '  </div>\n' +
     '\n' +
-    // Section 4: Cost analysis
     '  <h2 id="cost-analysis">Cost Comparison by Use Case</h2>\n' +
     '  <p class="section-intro">What does each tool actually cost for a solo developer coding 4 hours/day versus a team of 5?</p>\n' +
     '\n' +
@@ -28226,7 +27560,6 @@ function buildAiCodingToolsPricingPage(): string {
     '    <strong>Best value picks:</strong> For a solo developer on a budget, <a href="/vendor/google-gemini-code-assist">Gemini Code Assist</a> ($0) or <a href="/vendor/github-copilot">GitHub Copilot</a> ($10/mo) offer the best cost-to-capability ratio. For teams, Copilot Business ($19/seat = $95/mo for 5) is the cheapest managed option. BYO-key tools (Cline, Aider) can be cheapest or most expensive depending on usage patterns.\n' +
     '  </div>\n' +
     '\n' +
-    // Section 5: Hidden costs
     '  <h2 id="hidden-costs">Hidden Costs</h2>\n' +
     '  <p class="section-intro">The sticker price is rarely the full story. Here are the costs that don\'t show up on pricing pages.</p>\n' +
     '\n' +
@@ -28251,7 +27584,6 @@ function buildAiCodingToolsPricingPage(): string {
     '    <p>All cloud-based tools send your code to external servers. Cline, Aider, and Gemini CLI with local models are the only fully private options. MarsCode (ByteDance) and cloud agents may process code on servers with varying data retention policies.</p>\n' +
     '  </div>\n' +
     '\n' +
-    // Section 6: Changes timeline
     '  <h2 id="changes">Recent Pricing Changes</h2>\n' +
     '  <p class="section-intro">The AI coding market has been in flux. Here are the pricing changes we\'ve tracked. See <a href="/pricing-changes">full change timeline</a> for all tracked changes.</p>\n' +
     '\n' +
@@ -28277,7 +27609,6 @@ function buildAiCodingToolsPricingPage(): string {
     '    <strong>The pattern:</strong> Credits and quotas are replacing flat subscriptions. Cursor moved first (June 2025), Augment Code followed (October 2025), and Windsurf completed the shift (March 2026). This lets vendors monetize power users at $200/month while keeping entry prices at $20. Expect GitHub Copilot to adopt a similar model as competitive pressure mounts.\n' +
     '  </div>\n' +
     '\n' +
-    // Section 7: Recommendations
     '  <h2 id="recommendations">Best-for-Use-Case Recommendations</h2>\n' +
     '\n' +
     '  <div class="verdict-box">\n' +
@@ -28319,7 +27650,6 @@ function buildAiCodingToolsPricingPage(): string {
     '    </div>\n' +
     '  </div>\n' +
     '\n' +
-    // Section 8: FAQ
     '  <h2 id="faq">Frequently Asked Questions</h2>\n' +
     faqEntries.map(f =>
       '  <div class="faq-item">\n' +
@@ -28328,7 +27658,6 @@ function buildAiCodingToolsPricingPage(): string {
       '  </div>'
     ).join("\n") + '\n' +
     '\n' +
-    // Data source
     '  <h2>Data Source &amp; Methodology</h2>\n' +
     '  <div class="methodology">\n' +
     '    <strong>Powered by AgentDeals.</strong> The tables on this page were compiled by hand from official vendor pricing pages and have not been re-checked since. Pricing changes are tracked via our <a href="/pricing-changes">deal changes timeline</a> (' + dealChanges.length + ' total changes tracked). The pricing changes we track are updated continuously; the tables above are not.<br><br>\n' +
@@ -28362,24 +27691,19 @@ function buildAiCodingToolsPricingPage(): string {
     '</body>\n</html>';
 }
 
-// --- CI/CD Pricing Comparison page ---
-
 function buildCiCdPricingPage(): string {
   const title = "CI/CD Tools Pricing Comparison 2026 — Build Minutes, Runners & Costs Compared";
   const metaDesc = "Compare 17+ CI/CD tools: GitHub Actions, GitLab CI, CircleCI, Buildkite, Harness CI, Google Cloud Build, Bitrise and more. Free tiers, build minutes, concurrent jobs, pricing models, and hidden costs. Updated April 2026.";
   const slug = "ci-cd-pricing";
   const pubDate = "2026-04-09";
 
-  // Pull verified data from our index
   const cicdOffers = offers.filter(o => o.category === "CI/CD");
 
-  // Deal changes for CI/CD tools
   const cicdVendors = ["GitHub Actions", "GitLab CI", "CircleCI", "Buildkite", "Semaphore CI", "Drone CI", "Bitbucket Pipelines", "Azure DevOps", "AWS CodeBuild", "Google Cloud Build", "Harness CI", "Codefresh", "Buddy", "Bitrise", "Codemagic", "Appcircle", "Woodpecker CI", "Travis CI", "Nx Cloud", "appveyor.com"];
   const cicdChanges = dealChanges.filter(c =>
     cicdVendors.includes(c.vendor)
   ).sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
-  // Tool data organized by category
   interface CiCdTool {
     name: string;
     slug: string;
@@ -28397,7 +27721,6 @@ function buildCiCdPricingPage(): string {
   }
 
   const tools: CiCdTool[] = [
-    // General CI/CD
     {
       name: "GitHub Actions",
       slug: "github-actions",
@@ -28518,7 +27841,6 @@ function buildCiCdPricingPage(): string {
       monthlyCostTeam: "Custom",
       hiddenCosts: "Free plan limited to 1 user. Kubernetes-native approach is powerful but has a learning curve. Enterprise pricing is opaque — requires sales call.",
     },
-    // Cloud-native CI/CD
     {
       name: "AWS CodeBuild",
       slug: "aws",
@@ -28579,7 +27901,6 @@ function buildCiCdPricingPage(): string {
       monthlyCostTeam: "$15/user + overages",
       hiddenCosts: "50 minutes is extremely stingy — barely enough for a few builds. Standard plan ($15/user) includes 2,500 minutes. Self-hosted runners require Standard plan or higher. Additional minutes: $10/1,000 min.",
     },
-    // Mobile CI/CD
     {
       name: "Bitrise",
       slug: "bitrise",
@@ -28625,7 +27946,6 @@ function buildCiCdPricingPage(): string {
       monthlyCostTeam: "$49+ (Pro)",
       hiddenCosts: "300 minutes is tight for iOS builds. Professional at $49/mo adds more minutes and concurrent builds. Self-hosted runners only on Enterprise tier. Testing distribution portal is a nice differentiator.",
     },
-    // Self-hosted / OSS
     {
       name: "Jenkins",
       slug: "jenkins",
@@ -28703,11 +28023,9 @@ function buildCiCdPricingPage(): string {
     "none": "#f85149",
   };
 
-  // Summary stats
   const freeCount = tools.filter(t => t.freeType === "generous" || t.freeType === "oss-only").length;
   const limitedCount = tools.filter(t => t.freeType === "limited").length;
 
-  // Pricing table rows
   const pricingTableRows = tools.map(t => {
     const freeColor = freeTypeColors[t.freeType] || "var(--text-muted)";
     return '<tr>' +
@@ -28720,7 +28038,6 @@ function buildCiCdPricingPage(): string {
       '</tr>';
   }).join("\n        ");
 
-  // Category sections
   const categories: Array<"general" | "cloud-native" | "mobile" | "self-hosted"> = ["general", "cloud-native", "mobile", "self-hosted"];
   const categorySections = categories.map(cat => {
     const catTools = tools.filter(t => t.category === cat);
@@ -28737,7 +28054,6 @@ function buildCiCdPricingPage(): string {
       cards;
   }).join("\n\n  ");
 
-  // Cost comparison table
   const costRows = tools.map(t => {
     return '<tr>' +
       '<td style="font-weight:600"><a href="/vendor/' + escHtmlServer(t.slug) + '" style="color:var(--text)">' + escHtmlServer(t.name) + '</a></td>' +
@@ -28747,7 +28063,6 @@ function buildCiCdPricingPage(): string {
       '</tr>';
   }).join("\n        ");
 
-  // Change timeline
   const changeTimelineRows = cicdChanges.map(c => {
     const dateStr = new Date(c.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
     const impactColor = c.impact === "high" ? "#f85149" : c.impact === "medium" ? "#d29922" : "#3fb950";
@@ -28759,12 +28074,10 @@ function buildCiCdPricingPage(): string {
       '</tr>';
   }).join("\n        ");
 
-  // Related editorial pages
   const relatedPages = ALTERNATIVES_PAGES.filter(p =>
     ["ci-cd-alternatives", "cicd-free-tier-comparison-2026", "github-actions-alternatives", "free-devops-stack", "free-tier-risk", "testing-free-tier-comparison-2026"].includes(p.slug)
   );
 
-  // JSON-LD
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Article",
@@ -28778,7 +28091,6 @@ function buildCiCdPricingPage(): string {
     about: tools.map(t => ({ "@type": "SoftwareApplication", name: t.name })),
   };
 
-  // FAQ structured data
   const faqEntries = [
     { q: "Which CI/CD tool has the best free tier?", a: "Google Cloud Build offers 120 build minutes/day (~3,600/month) on e2-medium instances for free. GitHub Actions offers unlimited minutes for public repos and 2,000 min/month for private repos. For self-hosted, Jenkins and Woodpecker CI are 100% free with no limits." },
     { q: "Is Jenkins really free?", a: "Yes, Jenkins is 100% free and open-source (MIT license). The software costs nothing. However, you need to provide and maintain your own servers, which typically costs $20-100/month in cloud hosting. You also handle security patches, plugin updates, and scaling." },
@@ -28915,7 +28227,6 @@ function buildCiCdPricingPage(): string {
     '    </ol>\n' +
     '  </div>\n' +
     '\n' +
-    // Section 1: Pricing table
     '  <h2 id="pricing-table">Pricing Comparison Table</h2>\n' +
     '  <p class="section-intro">All prices verified as of April 2026. Hover rows to highlight. Click tool names for full vendor profiles with free tier details.</p>\n' +
     '\n' +
@@ -28941,13 +28252,11 @@ function buildCiCdPricingPage(): string {
     '    <strong>The self-hosted advantage:</strong> GitHub Actions, GitLab CI, Buildkite, Harness CI, and Azure DevOps all offer free unlimited execution on self-hosted runners. If you have existing infrastructure or need custom hardware (GPUs, Apple Silicon), self-hosted runners eliminate per-minute CI/CD costs entirely. The trade-off: you maintain the infrastructure.\n' +
     '  </div>\n' +
     '\n' +
-    // Section 2: Category breakdown
     '  <h2 id="categories">Category Breakdown</h2>\n' +
     '  <p class="section-intro">CI/CD tools fall into four distinct categories, each optimized for different workflows and team sizes.</p>\n' +
     '\n' +
     '  ' + categorySections + '\n' +
     '\n' +
-    // Section 3: What you actually get for free
     '  <h2 id="free-tiers">What You Actually Get for Free</h2>\n' +
     '  <p class="section-intro">Free tiers vary dramatically. Here\'s the honest breakdown of what you get at zero cost and when you\'ll need to upgrade.</p>\n' +
     '\n' +
@@ -28979,7 +28288,6 @@ function buildCiCdPricingPage(): string {
     '  </table>\n' +
     '  </div>\n' +
     '\n' +
-    // Section 4: Cost analysis
     '  <h2 id="cost-analysis">Cost Comparison by Team Size</h2>\n' +
     '  <p class="section-intro">What does each tool cost for a solo developer or small project versus a team of 5\u201310 running regular CI pipelines?</p>\n' +
     '\n' +
@@ -29003,7 +28311,6 @@ function buildCiCdPricingPage(): string {
     '    <strong>Best value picks:</strong> For open-source projects, <a href="/vendor/github-actions">GitHub Actions</a> (unlimited free minutes). For private repos on a budget, <a href="/vendor/google-cloud-build">Google Cloud Build</a> (120 min/day free) or <a href="/vendor/github-actions">GitHub Actions</a> (2,000 min/mo). For teams wanting zero CI cost, self-hosted <a href="/vendor/jenkins">Jenkins</a> or <a href="/vendor/woodpecker-ci">Woodpecker CI</a> with your own infrastructure.\n' +
     '  </div>\n' +
     '\n' +
-    // Section 5: Hidden costs
     '  <h2 id="hidden-costs">Hidden Costs</h2>\n' +
     '  <p class="section-intro">The sticker price rarely tells the full story. Here are CI/CD costs that catch teams off guard.</p>\n' +
     '\n' +
@@ -29028,7 +28335,6 @@ function buildCiCdPricingPage(): string {
     '    <p>Self-hosted runners are "free" but your servers are not. A capable CI runner needs 4+ CPU cores, 8+ GB RAM, and fast SSD storage. Cloud cost: $40\u2013150/month per runner. At scale, this is still cheaper than per-minute pricing, but the break-even point is around 5,000\u201310,000 build minutes/month.</p>\n' +
     '  </div>\n' +
     '\n' +
-    // Section 6: Changes timeline
     '  <h2 id="changes">Recent Pricing Changes</h2>\n' +
     '  <p class="section-intro">CI/CD pricing is generally stable, but runner costs and free tier limits are shifting. See <a href="/pricing-changes">full change timeline</a> for all tracked changes.</p>\n' +
     '\n' +
@@ -29054,7 +28360,6 @@ function buildCiCdPricingPage(): string {
     '    <strong>The trend:</strong> Free CI/CD minutes are shrinking while self-hosted runner support is expanding. GitHub Actions introduced per-minute fees for private self-hosted runners in March 2026 \u2014 previously free. The counter-trend: Google Cloud Build\'s generous 120 min/day free tier has remained stable, and Buildkite continues to offer unlimited free self-hosted agents.\n' +
     '  </div>\n' +
     '\n' +
-    // Section 7: Recommendations
     '  <h2 id="recommendations">Best-for-Use-Case Recommendations</h2>\n' +
     '\n' +
     '  <div class="verdict-box">\n' +
@@ -29096,7 +28401,6 @@ function buildCiCdPricingPage(): string {
     '    </div>\n' +
     '  </div>\n' +
     '\n' +
-    // Section 8: FAQ
     '  <h2 id="faq">Frequently Asked Questions</h2>\n' +
     faqEntries.map(f =>
       '  <div class="faq-item">\n' +
@@ -29105,7 +28409,6 @@ function buildCiCdPricingPage(): string {
       '  </div>'
     ).join("\n") + '\n' +
     '\n' +
-    // Data source
     '  <h2>Data Source &amp; Methodology</h2>\n' +
     '  <div class="methodology">\n' +
     '    <strong>Powered by AgentDeals.</strong> The tables on this page were compiled by hand from official vendor pricing pages and have not been re-checked since. Pricing changes are tracked via our <a href="/pricing-changes">deal changes timeline</a> (' + dealChanges.length + ' total changes tracked). The pricing changes we track are updated continuously; the tables above are not.<br><br>\n' +
@@ -29138,8 +28441,6 @@ function buildCiCdPricingPage(): string {
     '<script>' + mcpCtaScript() + '</script>\n' +
     '</body>\n</html>';
 }
-
-// --- Database Pricing Comparison page ---
 
 function buildDatabasePricingPage(): string {
   const title = "Database Pricing Comparison 2026 — Free Tiers, Storage Limits & Costs Compared";
@@ -30027,8 +29328,6 @@ function buildDatabasePricingPage(): string {
     '</body>\n</html>';
 }
 
-// --- Vector Database Pricing page ---
-
 function buildVectorDatabasePricingPage(): string {
   const title = "Vector Database Pricing Comparison 2026 — Free Tiers, Storage Limits & Costs for RAG/AI";
   const metaDesc = "Compare 11+ vector databases: Pinecone, Qdrant, Weaviate, Chroma, Zilliz Cloud, LanceDB, Upstash Vector, Supabase pgvector, Neon pgvector, MongoDB Atlas Vector Search and more. Free tiers, vector limits, dimensions, pricing models. Updated April 2026.";
@@ -30690,8 +29989,6 @@ function buildVectorDatabasePricingPage(): string {
     '</body>\n</html>';
 }
 
-// --- Cloud Hosting / PaaS Pricing Comparison page ---
-
 function buildHostingPricingPage(): string {
   const title = "Cloud Hosting & PaaS Pricing Comparison 2026 — Free Tiers, Limits & Hidden Costs";
   const metaDesc = "Compare 15+ cloud hosting and PaaS services: Railway, Vercel, Render, Netlify, Fly.io, Cloudflare Workers/Pages, Deno Deploy, Koyeb, Val Town, Google Cloud Run and more. Free tiers, bandwidth limits, build minutes, and pricing gotchas. Updated April 2026.";
@@ -30722,7 +30019,6 @@ function buildHostingPricingPage(): string {
   }
 
   const services: HostingService[] = [
-    // Traditional PaaS
     {
       name: "Railway",
       slug: "railway",
@@ -30798,7 +30094,6 @@ function buildHostingPricingPage(): string {
       monthlyCostTeam: "Usage-based",
       hiddenCosts: "Limited to 2 services on free tier. Database add-ons are separate. Scaling beyond free resources is usage-based.",
     },
-    // Edge / Serverless
     {
       name: "Cloudflare Workers",
       slug: "cloudflare-workers",
@@ -30874,7 +30169,6 @@ function buildHostingPricingPage(): string {
       monthlyCostTeam: "$10+",
       hiddenCosts: "Free tier vals are public. Private vals require Pro ($10/mo). Limited compute per val execution. Not designed for traditional full-stack apps.",
     },
-    // Full-featured platforms
     {
       name: "Vercel",
       slug: "vercel",
@@ -30985,7 +30279,6 @@ function buildHostingPricingPage(): string {
   const freeCount = services.filter(s => s.freeType === "generous").length;
   const limitedCount = services.filter(s => s.freeType === "limited" || s.freeType === "credits" || s.freeType === "trial").length;
 
-  // Check for Railway referral
   const railwayOffer = offers.find(o => o.vendor === "Railway");
   const hostingReferral = ourReferralLinkFor("Railway", railwayOffer ?? null);
 
@@ -31419,8 +30712,6 @@ function buildHostingPricingPage(): string {
     '</body>\n</html>';
 }
 
-// --- LLM API Pricing Comparison page ---
-
 function buildLlmApiPricingPage(): string {
   const title = "LLM API Pricing Comparison 2026 — Free Tiers, Token Costs & Hidden Limits";
   const metaDesc = "Compare 20+ LLM API providers: OpenAI, Anthropic, Google Gemini, Mistral, Groq, DeepSeek, Cerebras, OpenRouter, Cohere, xAI and more. Free tiers, per-token pricing, rate limits, and context windows. Updated April 2026.";
@@ -31450,7 +30741,6 @@ function buildLlmApiPricingPage(): string {
   }
 
   const providers: LlmProvider[] = [
-    // Frontier labs
     {
       name: "OpenAI",
       slug: "openai",
@@ -31535,7 +30825,6 @@ function buildLlmApiPricingPage(): string {
       freeType: "credits",
       differentiator: "Cheapest frontier pricing ($0.20/M input); $175/month possible in free credits via data sharing",
     },
-    // Inference providers
     {
       name: "Groq",
       slug: "groq",
@@ -31606,7 +30895,6 @@ function buildLlmApiPricingPage(): string {
       freeType: "limited",
       differentiator: "China-based with competitive pricing; strong DeepSeek model support",
     },
-    // Open-source hosts
     {
       name: "Hugging Face",
       slug: "hugging-face",
@@ -31663,7 +30951,6 @@ function buildLlmApiPricingPage(): string {
       freeType: "generous",
       differentiator: "Edge inference on 300+ locations; zero cold starts; bundled with Workers ecosystem",
     },
-    // Specialized
     {
       name: "DeepSeek",
       slug: "deepseek-api",
@@ -32149,20 +31436,16 @@ function buildLlmApiPricingPage(): string {
     '</body>\n</html>';
 }
 
-// --- Agent Payments page ---
-
 function buildAgentPaymentsPage(): string {
   const title = "Developer Services That Accept Agent Payments (2026) — x402 & MPP Directory";
   const metaDesc = "Directory of developer services accepting autonomous AI agent payments via x402 and Stripe MPP. Firecrawl, Cloudflare, Vercel, Pinata and more. Per-call pricing, free tiers, and integration guides.";
   const slug = "agent-payments";
   const pubDate = "2026-04-09";
 
-  // Get all offers with payment_protocols
   const x402Offers = offers.filter(o => o.payment_protocols?.some(p => p.protocol === "x402"));
   const mppOffers = offers.filter(o => o.payment_protocols?.some(p => p.protocol === "stripe-mpp"));
   const allPaymentOffers = offers.filter(o => o.payment_protocols && o.payment_protocols.length > 0);
 
-  // Group x402 offers by category
   const x402ByCategory = new Map<string, typeof x402Offers>();
   for (const o of x402Offers) {
     const cat = o.category;
@@ -32191,7 +31474,6 @@ function buildAgentPaymentsPage(): string {
 
   const faqJsonLd = faqPageJsonLd("/agent-payments", faqItems);
 
-  // Group MPP offers by category
   const mppByCategory = new Map<string, typeof mppOffers>();
   for (const o of mppOffers) {
     const cat = o.category;
@@ -32199,12 +31481,10 @@ function buildAgentPaymentsPage(): string {
     mppByCategory.get(cat)!.push(o);
   }
 
-  // Services supporting both protocols
   const bothOffers = allPaymentOffers.filter(o =>
     o.payment_protocols!.some(p => p.protocol === "x402") && o.payment_protocols!.some(p => p.protocol === "stripe-mpp")
   );
 
-  // Build the service table rows — all payment-enabled services
   const serviceRows = allPaymentOffers.map(o => {
     const vendorSlug = toSlug(o.vendor);
     const shortDesc = o.description.split(". ")[0].substring(0, 120);
@@ -32220,7 +31500,6 @@ function buildAgentPaymentsPage(): string {
     </tr>`;
   }).join("\n");
 
-  // Build category breakdown sections — all payment-enabled services grouped by category
   const allByCategory = new Map<string, typeof allPaymentOffers>();
   for (const o of allPaymentOffers) {
     const cat = o.category;
@@ -32441,8 +31720,6 @@ ${faqHtml}
 </html>`;
 }
 
-// --- x402 Services Directory page ---
-
 function buildX402ServicesPage(): string {
   const title = "x402 Payment Protocol Services Directory (2026) — Developer Tools with HTTP 402 Micropayments";
   const metaDesc = "Directory of developer tools and APIs supporting x402 HTTP 402 micropayments. Pay-per-call pricing for AI agents — no signup, no API keys. Exa, Cloudflare, Firecrawl, OpenVPS, GPU-Bridge, and more.";
@@ -32661,8 +31938,6 @@ ${faqHtml}
 </html>`;
 }
 
-// --- DALL-E API Shutdown Migration Guide page ---
-
 function buildDallEShutdownPage(): string {
   const title = "DALL-E API Shutdown: Migration Guide & Free Image Generation Alternatives (2026)";
   const metaDesc = "OpenAI shuts down DALL-E 2 and DALL-E 3 API on May 12, 2026. Migrate to gpt-image-1 or free alternatives: Pollinations.AI, Lumenfall.ai, Cloudflare Workers AI. Code examples, pricing comparison, and migration paths.";
@@ -32671,7 +31946,6 @@ function buildDallEShutdownPage(): string {
 
   const stabilityMap = getStabilityMap();
 
-  // DALL-E / OpenAI deal changes
   const dalleChanges = dealChanges.filter(c =>
     c.vendor === "OpenAI" || c.vendor === "DALL-E"
   ).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
@@ -32700,7 +31974,6 @@ function buildDallEShutdownPage(): string {
   const openaiStability = stabilityMap.get("openai") ?? "watch";
   const stabilityColor = openaiStability === "volatile" ? "#f85149" : openaiStability === "watch" ? "#d29922" : openaiStability === "improving" ? "#3fb950" : "var(--text-muted)";
 
-  // Calculate days until shutdown
   const shutdownDate = new Date("2026-05-12");
   const today = new Date();
   const daysLeft = Math.max(0, Math.ceil((shutdownDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24)));
@@ -32746,12 +32019,10 @@ function buildDallEShutdownPage(): string {
     </tr>`;
   }).join("\n        ");
 
-  // Related editorial pages
   const relatedPages = ALTERNATIVES_PAGES.filter(p =>
     ["shutdowns", "stability", "free-tier-risk", "state-of-free-tiers", "ai-image-generation-alternatives"].includes(p.slug)
   );
 
-  // FAQ data
   const faqs = [
     { q: "When does the DALL-E API shut down?", a: "OpenAI is shutting down DALL-E 2 and DALL-E 3 API access on May 12, 2026. After this date, all API calls to DALL-E models will stop working. The DALL-E image editor in ChatGPT is unaffected \u2014 only the developer API is being discontinued." },
     { q: "What replaces DALL-E API?", a: "OpenAI\u2019s gpt-image-1 is the direct replacement. It uses the same OpenAI SDK and images.generate endpoint \u2014 you only need to change the model parameter from \"dall-e-3\" to \"gpt-image-1\" and update quality values from standard/hd to low/medium/high." },
@@ -32760,7 +32031,6 @@ function buildDallEShutdownPage(): string {
     { q: "What happens to DALL-E images after shutdown?", a: "Previously generated images remain accessible at their existing URLs. Only the API for generating new images is discontinued. If you stored image URLs from previous generations, they will continue to work. However, OpenAI may eventually expire old image URLs, so it\u2019s recommended to download and store images you want to keep." },
   ];
 
-  // JSON-LD \u2014 Article
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Article",
@@ -32774,10 +32044,8 @@ function buildDallEShutdownPage(): string {
     about: providers.map(p => ({ "@type": "SoftwareApplication", name: p.name })),
   };
 
-  // JSON-LD \u2014 FAQPage
   const faqJsonLd = faqPageJsonLd("/dall-e-shutdown", faqs);
 
-  // JSON-LD \u2014 BreadcrumbList
   const breadcrumbJsonLd = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
@@ -33186,8 +32454,6 @@ response = client.images.generate(
 </html>`;
 }
 
-// --- OpenAI Realtime API Beta Migration Guide page ---
-
 function buildOpenAIRealtimeMigrationPage(): string {
   const title = "OpenAI Realtime API Beta Shutdown: Migration Guide & Real-Time Audio Alternatives (2026)";
   const metaDesc = "OpenAI Realtime API beta shuts down May 7, 2026. Migrate to GA Realtime API or switch to Deepgram, AssemblyAI, ElevenLabs, Azure OpenAI, or Google Cloud Speech-to-Text. Code examples and pricing comparison.";
@@ -33196,12 +32462,10 @@ function buildOpenAIRealtimeMigrationPage(): string {
 
   const stabilityMap = getStabilityMap();
 
-  // OpenAI deal changes
   const openaiChanges = dealChanges.filter(c =>
     c.vendor === "OpenAI" && (c.summary.toLowerCase().includes("realtime") || c.summary.toLowerCase().includes("real-time") || c.summary.toLowerCase().includes("real time"))
   ).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
-  // Fall back to all OpenAI changes if no realtime-specific ones
   const relevantChanges = openaiChanges.length > 0 ? openaiChanges : dealChanges.filter(c =>
     c.vendor === "OpenAI"
   ).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
@@ -33229,7 +32493,6 @@ function buildOpenAIRealtimeMigrationPage(): string {
   const openaiStability = stabilityMap.get("openai") ?? "watch";
   const stabilityColor = openaiStability === "volatile" ? "#f85149" : openaiStability === "watch" ? "#d29922" : openaiStability === "improving" ? "#3fb950" : "var(--text-muted)";
 
-  // Calculate days until shutdown
   const shutdownDate = new Date("2026-05-07");
   const today = new Date();
   const daysLeft = Math.max(0, Math.ceil((shutdownDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24)));
@@ -33259,12 +32522,10 @@ function buildOpenAIRealtimeMigrationPage(): string {
     return '<tr>\n      <td style="font-family:var(--mono);font-size:.8rem;white-space:nowrap">' + escHtmlServer(dateStr) + '</td>\n      <td style="font-size:.85rem">' + escHtmlServer(c.summary) + '</td>\n      <td><span style="color:' + impactColor + ';font-size:.8rem;font-weight:600">' + escHtmlServer(c.impact?.toUpperCase() ?? "N/A") + "</span></td>\n    </tr>";
   }).join("\n        ");
 
-  // Related editorial pages
   const relatedPages = ALTERNATIVES_PAGES.filter(p =>
     ["shutdowns", "dall-e-shutdown", "ai-free-tiers", "state-of-free-tiers"].includes(p.slug)
   );
 
-  // FAQ data
   const faqs = [
     { q: "When does the OpenAI Realtime API beta shut down?", a: "OpenAI is deprecating the Realtime API beta on May 7, 2026. After this date, requests using the OpenAI-Beta: realtime=v1 header will stop working. The stable (GA) Realtime API continues to function and is the direct replacement." },
     { q: "What are the key breaking changes from beta to GA?", a: "There are four main changes: (1) Remove the OpenAI-Beta: realtime=v1 header, (2) Use the new POST /v1/realtime/client_secrets endpoint for ephemeral keys instead of the beta session creation flow, (3) Specify session_type as either 'speech-to-speech' or 'transcription' when creating sessions, and (4) Some event names and payload structures have been updated." },
@@ -33273,7 +32534,6 @@ function buildOpenAIRealtimeMigrationPage(): string {
     { q: "Is the OpenAI Realtime API GA more expensive than the beta?", a: "The GA pricing model is the same as the beta: audio input costs approximately $0.06/minute and audio output costs approximately $0.24/minute (based on token pricing). There is no price increase with the GA release. However, if cost is a concern, alternatives like Deepgram ($0.0043/min) offer significantly lower per-minute pricing for speech-to-text use cases." },
   ];
 
-  // JSON-LD \u2014 Article
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Article",
@@ -33287,10 +32547,8 @@ function buildOpenAIRealtimeMigrationPage(): string {
     about: providers.map(p => ({ "@type": "SoftwareApplication", name: p.name })),
   };
 
-  // JSON-LD \u2014 FAQPage
   const faqJsonLd = faqPageJsonLd("/openai-realtime-migration", faqs);
 
-  // JSON-LD \u2014 BreadcrumbList
   const breadcrumbJsonLd = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
@@ -33304,8 +32562,6 @@ function buildOpenAIRealtimeMigrationPage(): string {
   return '<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width,initial-scale=1">\n<title>' + escHtmlServer(title) + ' \u2014 AgentDeals</title>\n<meta name="description" content="' + escHtmlServer(metaDesc) + '">\n<link rel="canonical" href="' + BASE_URL + '/' + slug + '">\n<meta property="og:title" content="' + escHtmlServer(title) + '">\n<meta property="og:description" content="' + escHtmlServer(metaDesc) + '">\n<meta property="og:type" content="article">\n<meta property="og:url" content="' + BASE_URL + '/' + slug + '">\n<meta property="article:published_time" content="' + pubDate + '">\n<meta name="keywords" content="openai realtime api, realtime api beta shutdown, realtime api migration, real-time audio api, speech-to-text api, deepgram alternative, assemblyai, elevenlabs, voice ai api 2026">\n' + OG_IMAGE_META + GOOGLE_VERIFICATION_META + '<link rel="icon" type="image/png" href="/favicon.png">\n<link rel="alternate" type="application/atom+xml" title="AgentDeals \u2014 Pricing Changes" href="/feed.xml">\n<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">\n<script type="application/ld+json">' + JSON.stringify(jsonLd) + '</script>\n<script type="application/ld+json">' + JSON.stringify(faqJsonLd) + '</script>\n<script type="application/ld+json">' + JSON.stringify(breadcrumbJsonLd) + '</script>\n<style>\n*{margin:0;padding:0;box-sizing:border-box}\n:root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--border-hover:#3b82f6;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--accent-glow:rgba(59,130,246,0.15);--serif:\'Inter\',-apple-system,sans-serif;--sans:\'Inter\',-apple-system,sans-serif;--mono:\'JetBrains Mono\',SFMono-Regular,monospace}\nbody{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}\na{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}\n.container{max-width:960px;margin:0 auto;padding:0 1.5rem}\n.breadcrumb{padding:1.5rem 0 0;font-size:.8rem;color:var(--text-dim)}\n.breadcrumb a{color:var(--text-muted)}\nh1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5rem;letter-spacing:-.02em}\nh2{font-family:var(--serif);font-size:1.4rem;color:var(--text);margin:2.5rem 0 1rem;letter-spacing:-.01em}\nh3{font-family:var(--serif);font-size:1.1rem;color:var(--text);margin:1.5rem 0 .5rem}\n.pub-date{color:var(--text-dim);font-size:.85rem;margin-bottom:1.5rem}\n.deadline-banner{background:linear-gradient(135deg,rgba(248,81,73,0.15),rgba(210,153,34,0.1));border:1px solid #f85149;border-radius:12px;padding:1.5rem;margin:1.5rem 0;text-align:center}\n.deadline-days{font-size:2.5rem;font-weight:700;font-family:var(--mono);color:#f85149}\n.deadline-label{font-size:.9rem;color:var(--text-muted);margin-top:.25rem}\n.deadline-date{font-size:.85rem;color:var(--text-dim);margin-top:.5rem}\n.summary-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem;margin:1.5rem 0 2rem}\n.stat-card{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1rem;text-align:center}\n.stat-number{font-size:1.8rem;font-weight:700;font-family:var(--mono);color:var(--accent)}\n.stat-number.red{color:#f85149}\n.stat-number.green{color:#3fb950}\n.stat-label{font-size:.8rem;color:var(--text-muted);margin-top:.25rem}\n.executive-summary{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.5rem;margin:1.5rem 0;line-height:1.8}\n.executive-summary p{color:var(--text-muted);margin-bottom:.75rem;font-size:.95rem}\n.executive-summary p:last-child{margin-bottom:0}\n.executive-summary strong{color:var(--text)}\n.section-intro{color:var(--text-muted);font-size:.95rem;margin-bottom:1.25rem;line-height:1.7}\n.pricing-table{width:100%;border-collapse:collapse;margin:1rem 0 2rem;font-size:.85rem}\n.pricing-table th{text-align:left;padding:.75rem .5rem;border-bottom:2px solid var(--border);color:var(--text-muted);font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.05em}\n.pricing-table td{padding:.6rem .5rem;border-bottom:1px solid var(--border)}\n.pricing-table tr:hover{background:var(--accent-glow)}\n.diff-card{padding:1.25rem;border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:8px;background:var(--bg-card);margin-bottom:.75rem}\n.diff-card h3{margin:0 0 .5rem;font-size:1rem}\n.diff-desc{color:var(--text-muted);font-size:.9rem;line-height:1.6}\n.context-box{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:1rem 0;font-size:.9rem;color:var(--text-muted);line-height:1.7}\n.context-box strong{color:var(--text)}\n.decision-tree{display:grid;gap:1rem;margin:1.5rem 0}\n.decision-path{padding:1.25rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);transition:border-color .15s}\n.decision-path:hover{border-color:var(--accent)}\n.decision-path h3{margin:0 0 .5rem;font-size:1rem;color:var(--accent)}\n.decision-path p{color:var(--text-muted);font-size:.9rem;margin-bottom:.5rem}\n.decision-path .best-for{font-size:.8rem;color:var(--text-dim);font-style:italic}\n.verdict-box{background:linear-gradient(135deg,rgba(59,130,246,0.1),rgba(139,92,246,0.1));border:1px solid var(--accent);border-radius:12px;padding:1.5rem;margin:1.5rem 0}\n.verdict-box h3{color:var(--accent);margin:0 0 .75rem;font-size:1.1rem}\n.verdict-item{margin-bottom:.75rem;padding-left:1rem;border-left:2px solid var(--border)}\n.verdict-item strong{color:var(--text)}\n.verdict-item p{color:var(--text-muted);font-size:.9rem;margin:.25rem 0 0}\n.methodology{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:2rem 0;font-size:.9rem;color:var(--text-muted);line-height:1.7}\n.methodology strong{color:var(--text)}\n.related-pages{display:flex;flex-direction:column;gap:.5rem;margin:1rem 0}\n.related-page-link{padding:.75rem 1rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);text-decoration:none;transition:border-color .15s}\n.related-page-link:hover{border-color:var(--accent);text-decoration:none}\n.related-page-link .link-title{color:var(--accent);font-weight:600;font-size:.95rem}\n.related-page-link .link-desc{color:var(--text-muted);font-size:.8rem;margin-top:.25rem}\n.toc{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:1.5rem 0}\n.toc h3{margin:0 0 .5rem;font-size:.9rem;color:var(--text-muted)}\n.toc ol{padding-left:1.25rem;margin:0}\n.toc li{margin-bottom:.35rem;font-size:.9rem}\n.toc a{color:var(--accent)}\n.code-block{background:#0d1117;border:1px solid var(--border);border-radius:8px;padding:1.25rem;margin:1rem 0;overflow-x:auto;font-family:var(--mono);font-size:.8rem;line-height:1.5;color:#c9d1d9}\n.code-block .comment{color:#8b949e}\n.code-block .keyword{color:#ff7b72}\n.code-block .string{color:#a5d6ff}\n.code-block .highlight{color:#ffa657}\n.faq-section{margin:2rem 0}\n.faq-item{border:1px solid var(--border);border-radius:8px;margin-bottom:.75rem;overflow:hidden}\n.faq-question{padding:1rem 1.25rem;background:var(--bg-card);cursor:pointer;font-weight:600;font-size:.95rem;display:flex;justify-content:space-between;align-items:center}\n.faq-question:hover{background:var(--accent-glow)}\n.faq-answer{padding:0 1.25rem 1rem;color:var(--text-muted);font-size:.9rem;line-height:1.7}\nfooter{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}\nfooter a{color:var(--accent)}\n@media(max-width:768px){h1{font-size:1.6rem}.summary-stats{grid-template-columns:1fr 1fr}.pricing-table{font-size:.75rem}.pricing-table td,.pricing-table th{padding:.4rem .25rem}.deadline-days{font-size:1.8rem}}\n' + globalNavCss() + '\n' + mcpCtaCss() + '\n</style>\n</head>\n<body>\n<div class="container">\n  ' + buildGlobalNav("alternatives") + '\n  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/alternatives">Guides</a> &rsaquo; Realtime API Migration Guide</div>\n  <h1>OpenAI Realtime API Beta Shutdown: Migration Guide &amp; Real-Time Audio Alternatives</h1>\n  <p class="pub-date">Published ' + pubDate + pageFreshness("/openai-realtime-migration") + ' &middot; ' + pageDataProvenance("/openai-realtime-migration", offers.length) + ' &middot; ' + relevantChanges.length + ' OpenAI pricing change' + (relevantChanges.length !== 1 ? "s" : "") + ' tracked</p>\n\n  <div class="deadline-banner">\n    <div class="deadline-days">' + daysLeft + ' days</div>\n    <div class="deadline-label">until Realtime API beta shutdown</div>\n    <div class="deadline-date">May 7, 2026 &middot; <span style="color:' + stabilityColor + ';font-weight:600">OpenAI stability: ' + openaiStability.toUpperCase() + '</span></div>\n  </div>\n\n  <div class="summary-stats">\n    <div class="stat-card"><div class="stat-number red">' + daysLeft + '</div><div class="stat-label">Days Remaining</div></div>\n    <div class="stat-card"><div class="stat-number">' + providers.length + '</div><div class="stat-label">Alternatives Compared</div></div>\n    <div class="stat-card"><div class="stat-number green">' + freeProviderCount + '</div><div class="stat-label">With Free Tiers</div></div>\n    <div class="stat-card"><div class="stat-number">4</div><div class="stat-label">Breaking Changes</div></div>\n  </div>\n\n  <div class="executive-summary">\n    <p><strong>What\'s happening:</strong> OpenAI is deprecating the Realtime API <strong>beta</strong> on <strong>May 7, 2026</strong>. The beta endpoints (which required the <code style="font-family:var(--mono);background:rgba(255,255,255,0.1);padding:.1rem .3rem;border-radius:3px">OpenAI-Beta: realtime=v1</code> header) will stop working. The GA (stable) Realtime API is the replacement.</p>\n    <p><strong>Easiest migration:</strong> <strong>Remove the beta header, update session creation to use client_secrets, and add session_type.</strong> If you are already using the OpenAI SDK, the changes are minimal. The GA API uses the same WebSocket protocol with updated event names.</p>\n    <p><strong>Alternatives exist:</strong> If you are reconsidering OpenAI for real-time audio, <strong>Deepgram</strong> ($200 free credit, $0.0043/min), <strong>AssemblyAI</strong> (free tier), and <strong>Google Cloud Speech-to-Text</strong> (60 min/month free) offer real-time transcription at lower per-minute costs.</p>\n  </div>\n\n  <div class="toc">\n    <h3>Jump to section</h3>\n    <ol>\n      <li><a href="#breaking-changes">Breaking Changes</a></li>\n      <li><a href="#comparison-table">Alternative Comparison Table</a></li>\n      <li><a href="#pricing">Pricing Comparison</a></li>\n      <li><a href="#migration-paths">Migration Paths</a></li>\n      <li><a href="#code-migration">Code Migration Examples</a></li>\n      <li><a href="#faq">FAQ</a></li>\n      <li><a href="#openai-timeline">OpenAI Change Timeline</a></li>\n      <li><a href="#recommendations">Recommendations</a></li>\n      <li><a href="#methodology">Methodology</a></li>\n    </ol>\n  </div>\n\n  <h2 id="breaking-changes">Breaking Changes: Beta to GA</h2>\n  <p class="section-intro">Four key changes required when migrating from the Realtime API beta to the stable GA release.</p>\n\n  <div class="diff-card">\n    <h3>1. Remove the Beta Header</h3>\n    <div class="diff-desc">The <code style="font-family:var(--mono);background:rgba(255,255,255,0.1);padding:.1rem .3rem;border-radius:3px">OpenAI-Beta: realtime=v1</code> header is no longer needed. The GA Realtime API is the default. Remove this header from all requests.</div>\n  </div>\n  <div class="diff-card">\n    <h3>2. New Ephemeral Key Endpoint</h3>\n    <div class="diff-desc">Use <code style="font-family:var(--mono);background:rgba(255,255,255,0.1);padding:.1rem .3rem;border-radius:3px">POST /v1/realtime/client_secrets</code> to generate ephemeral keys for client-side WebSocket connections. This replaces the beta session creation flow.</div>\n  </div>\n  <div class="diff-card">\n    <h3>3. Required session_type Parameter</h3>\n    <div class="diff-desc">You must now specify <code style="font-family:var(--mono);background:rgba(255,255,255,0.1);padding:.1rem .3rem;border-radius:3px">session_type</code> when creating sessions: <strong>"speech-to-speech"</strong> for bidirectional voice conversations or <strong>"transcription"</strong> for audio-to-text. The beta used a single session type for both.</div>\n  </div>\n  <div class="diff-card">\n    <h3>4. Updated Event Names and Payloads</h3>\n    <div class="diff-desc">Some WebSocket event names and payload structures have been updated in the GA release. Review the <a href="https://platform.openai.com/docs/guides/realtime" style="color:var(--accent)">official documentation</a> for the updated event reference.</div>\n  </div>\n\n  <h2 id="comparison-table">Real-Time Audio API Alternatives</h2>\n  <p class="section-intro">All ' + providers.length + ' alternatives compared. Migration effort rated from the perspective of an OpenAI Realtime API integration.</p>\n\n  <div style="overflow-x:auto">\n  <table class="pricing-table">\n    <thead>\n      <tr>\n        <th>Provider</th>\n        <th>Free Tier</th>\n        <th>Pricing</th>\n        <th>Capability</th>\n        <th>Latency</th>\n        <th>Migration</th>\n      </tr>\n    </thead>\n    <tbody>\n        ' + providerTableRows + '\n    </tbody>\n  </table>\n  </div>\n\n  <div class="context-box">\n    <strong>OpenAI vs alternatives:</strong> OpenAI Realtime API is unique in offering <strong>speech-to-speech</strong> (bidirectional voice conversations with an AI model). Most alternatives focus on either speech-to-text (Deepgram, AssemblyAI, Google) or text-to-speech (ElevenLabs). If you need full voice conversation capability, OpenAI GA or Azure OpenAI are your primary options.\n  </div>\n\n  <h2 id="pricing">Pricing Comparison</h2>\n  <p class="section-intro">Per-minute costs across all providers. OpenAI Realtime beta pricing shown for reference.</p>\n\n  <div style="overflow-x:auto">\n  <table class="pricing-table">\n    <thead>\n      <tr>\n        <th>Provider</th>\n        <th>Free Tier</th>\n        <th>Per-Minute Cost</th>\n        <th>Features</th>\n      </tr>\n    </thead>\n    <tbody>\n        ' + pricingTableRows + '\n    </tbody>\n  </table>\n  </div>\n\n  <div class="context-box">\n    <strong>Cost comparison:</strong> OpenAI Realtime API is significantly more expensive per minute than speech-to-text alternatives because it includes AI model inference (GPT-4o) in the pipeline. If you only need transcription, <strong>Deepgram at $0.0043/min</strong> is roughly 14x cheaper than OpenAI\'s audio input rate. However, for full speech-to-speech with AI reasoning, OpenAI remains the most integrated option.\n  </div>\n\n  <h2 id="migration-paths">Migration Paths</h2>\n  <p class="section-intro">Three paths depending on your use case. The right choice depends on whether you need speech-to-speech, transcription only, or voice synthesis.</p>\n\n  <div class="decision-tree">\n    <div class="decision-path" style="border-left:3px solid #3fb950">\n      <h3>Path 1: Stay with OpenAI (Beta to GA)</h3>\n      <p>The easiest migration. Remove the beta header, update session creation to use <code style="font-family:var(--mono);background:rgba(255,255,255,0.1);padding:.1rem .3rem;border-radius:3px">/v1/realtime/client_secrets</code>, add <code style="font-family:var(--mono);background:rgba(255,255,255,0.1);padding:.1rem .3rem;border-radius:3px">session_type</code>, and update any changed event names. Same SDK, same pricing, same capabilities.</p>\n      <p class="best-for">Best for: Existing OpenAI Realtime users who need speech-to-speech and want minimal code changes</p>\n    </div>\n    <div class="decision-path" style="border-left:3px solid var(--accent)">\n      <h3>Path 2: Transcription-Only (Deepgram, AssemblyAI, Google)</h3>\n      <p>If you only need speech-to-text, dedicated transcription services offer better per-minute pricing and often lower latency. Deepgram Nova-2 leads on accuracy and speed. AssemblyAI adds AI-powered analysis via LeMUR. Google offers the widest language support (125+).</p>\n      <p class="best-for">Best for: Applications that process audio input but generate text responses, transcription services, meeting recorders</p>\n    </div>\n    <div class="decision-path" style="border-left:3px solid #8b5cf6">\n      <h3>Path 3: Voice Synthesis (ElevenLabs)</h3>\n      <p>If your use case is generating spoken audio from text, ElevenLabs offers the lowest latency (~75ms) and highest quality voice synthesis with voice cloning capabilities. 10K characters/month free to start.</p>\n      <p class="best-for">Best for: Voice assistants, audiobook generation, voice cloning, accessibility features</p>\n    </div>\n  </div>\n\n  <h2 id="code-migration">Code Migration Examples</h2>\n\n  <h3>Python: Beta to GA Migration</h3>\n  <p class="section-intro">Key changes to your server-side session creation:</p>\n\n  <div class="code-block">\n<span class="comment"># Before: Beta session creation</span>\n<span class="keyword">import</span> openai\n\nclient = openai.OpenAI()\nresponse = client.chat.completions.create(\n    model=<span class="string">"gpt-4o-realtime-preview"</span>,\n    <span class="comment"># Beta required OpenAI-Beta header (set automatically by SDK)</span>\n    extra_headers={<span class="string">"OpenAI-Beta"</span>: <span class="string">"realtime=v1"</span>},\n)\n\n<span class="comment"># After: GA session creation with client_secrets</span>\n<span class="keyword">import</span> openai\n\nclient = openai.OpenAI()\n<span class="comment"># Create ephemeral key for client-side WebSocket</span>\nresponse = client.post(\n    <span class="string">"/v1/realtime/client_secrets"</span>,\n    body={\n        <span class="string">"model"</span>: <span class="string">"gpt-4o-realtime"</span>,\n        <span class="string">"session_type"</span>: <span class="string">"speech-to-speech"</span>,  <span class="comment"># NEW: required</span>\n    },\n)\nephemeral_key = response[<span class="string">"client_secret"</span>][<span class="string">"value"</span>]\n  </div>\n\n  <h3>Node.js: Beta to GA Migration</h3>\n  <p class="section-intro">Same pattern \u2014 update session creation and remove beta header:</p>\n\n  <div class="code-block">\n<span class="comment">// Before: Beta WebSocket connection</span>\n<span class="keyword">const</span> ws = <span class="keyword">new</span> WebSocket(\n  <span class="string">"wss://api.openai.com/v1/realtime?model=gpt-4o-realtime-preview"</span>,\n  {\n    headers: {\n      <span class="string">"Authorization"</span>: <span class="string">"Bearer "</span> + apiKey,\n      <span class="string">"OpenAI-Beta"</span>: <span class="string">"realtime=v1"</span>,  <span class="comment">// REMOVE this</span>\n    },\n  }\n);\n\n<span class="comment">// After: GA \u2014 get ephemeral key, then connect</span>\n<span class="keyword">const</span> resp = <span class="keyword">await</span> fetch(<span class="string">"https://api.openai.com/v1/realtime/client_secrets"</span>, {\n  method: <span class="string">"POST"</span>,\n  headers: {\n    <span class="string">"Authorization"</span>: <span class="string">"Bearer "</span> + apiKey,\n    <span class="string">"Content-Type"</span>: <span class="string">"application/json"</span>,\n  },\n  body: JSON.stringify({\n    model: <span class="string">"gpt-4o-realtime"</span>,\n    session_type: <span class="string">"speech-to-speech"</span>,  <span class="comment">// NEW: required</span>\n  }),\n});\n<span class="keyword">const</span> { client_secret } = <span class="keyword">await</span> resp.json();\n<span class="keyword">const</span> ws = <span class="keyword">new</span> WebSocket(\n  <span class="string">"wss://api.openai.com/v1/realtime?model=gpt-4o-realtime"</span>,\n  { headers: { <span class="string">"Authorization"</span>: <span class="string">"Bearer "</span> + client_secret.value } }\n);\n  </div>\n\n  <h3>Alternative: Deepgram Real-Time Transcription</h3>\n  <p class="section-intro">For speech-to-text only, Deepgram offers a simpler WebSocket API with lower per-minute costs:</p>\n\n  <div class="code-block">\n<span class="comment">// Deepgram real-time transcription (Node.js)</span>\n<span class="keyword">const</span> { createClient, LiveTranscriptionEvents } = require(<span class="string">"@deepgram/sdk"</span>);\n\n<span class="keyword">const</span> deepgram = createClient(<span class="string">"YOUR_DEEPGRAM_API_KEY"</span>);\n<span class="keyword">const</span> connection = deepgram.listen.live({\n  model: <span class="string">"nova-2"</span>,\n  language: <span class="string">"en"</span>,\n  smart_format: <span class="highlight">true</span>,\n});\n\nconnection.on(LiveTranscriptionEvents.Transcript, (data) =&gt; {\n  <span class="keyword">const</span> transcript = data.channel.alternatives[<span class="highlight">0</span>].transcript;\n  console.log(<span class="string">"Transcript:"</span>, transcript);\n});\n\n<span class="comment">// Send audio data to connection.send(audioBuffer)</span>\n  </div>\n\n  <div class="context-box">\n    <strong>session_type options:</strong> The GA Realtime API requires specifying <code style="font-family:var(--mono);background:rgba(255,255,255,0.1);padding:.1rem .3rem;border-radius:3px">"speech-to-speech"</code> for bidirectional voice conversations (the model speaks back) or <code style="font-family:var(--mono);background:rgba(255,255,255,0.1);padding:.1rem .3rem;border-radius:3px">"transcription"</code> for audio-to-text only. The beta handled both in a single session type, so you need to choose which mode your application uses.\n  </div>\n\n  <h2 id="faq">Frequently Asked Questions</h2>\n\n  <div class="faq-section">\n    ' + faqs.map(f => '<div class="faq-item">\n      <div class="faq-question">' + escHtmlServer(f.q) + '<span style="color:var(--text-dim)">\u25BC</span></div>\n      <div class="faq-answer">' + escHtmlServer(f.a) + '</div>\n    </div>').join("\n    ") + '\n  </div>\n\n  ' + (relevantChanges.length > 0 ? '<h2 id="openai-timeline">OpenAI Change Timeline</h2>\n  <p class="section-intro">Changes tracked in our <a href="/changes">deal changes database</a>:</p>\n\n  <div style="overflow-x:auto">\n  <table class="pricing-table">\n    <thead>\n      <tr>\n        <th>Date</th>\n        <th>Change</th>\n        <th>Impact</th>\n      </tr>\n    </thead>\n    <tbody>\n        ' + changeTimelineRows + '\n    </tbody>\n  </table>\n  </div>' : '<h2 id="openai-timeline">OpenAI Change Timeline</h2>\n  <p class="section-intro">Check our <a href="/changes">deal changes database</a> for the latest OpenAI updates.</p>') + '\n\n  <h2 id="recommendations">Recommendations</h2>\n\n  <div class="verdict-box">\n    <h3>Best Alternative for Each Use Case</h3>\n    <div class="verdict-item">\n      <strong>Fastest migration (recommended for most):</strong>\n      <p>OpenAI Realtime API GA \u2014 same SDK, same pricing. Remove the beta header, update session creation, add session_type. If it worked in beta, it will work in GA with minimal changes.</p>\n    </div>\n    <div class="verdict-item">\n      <strong>Best for transcription:</strong>\n      <p>Deepgram Nova-2 \u2014 $200 free credit, $0.0043/min (14x cheaper than OpenAI audio input). Industry-leading accuracy and very low latency (~100ms). Supports 30+ languages.</p>\n    </div>\n    <div class="verdict-item">\n      <strong>Best for transcription + AI analysis:</strong>\n      <p>AssemblyAI \u2014 real-time transcription plus LeMUR for summarization, sentiment analysis, and Q&amp;A on transcribed content. Free tier available.</p>\n    </div>\n    <div class="verdict-item">\n      <strong>Best for enterprise:</strong>\n      <p>Azure OpenAI Realtime \u2014 same API as OpenAI with Azure compliance, data residency, and enterprise support. $200 credit for new accounts.</p>\n    </div>\n    <div class="verdict-item">\n      <strong>Best for voice synthesis:</strong>\n      <p>ElevenLabs \u2014 ultra-low latency (~75ms) text-to-speech with voice cloning. 10K characters/month free. Best quality synthetic voices on the market.</p>\n    </div>\n    <div class="verdict-item">\n      <strong>Best for multi-language:</strong>\n      <p>Google Cloud Speech-to-Text \u2014 125+ languages and variants, 60 min/month free. Best choice if you need broad language coverage.</p>\n    </div>\n  </div>\n\n  <h2 id="methodology">Methodology</h2>\n\n  <div class="methodology">\n    <p><strong>How we track this data:</strong> AgentDeals monitors free tier changes across ' + offers.length.toLocaleString() + ' developer tools in ' + categories.length + ' categories. The Realtime API beta deprecation is tracked in our <a href="/shutdowns">shutdown tracker</a> and <a href="/stability">stability dashboard</a>.</p>\n    <p><strong>Migration recommendations:</strong> Based on API documentation review, SDK compatibility analysis, and community reports. Pricing data verified against official provider pricing pages as of ' + pubDate + '. Free tier availability confirmed via official documentation.</p>\n    <p>For real-time data, use our <a href="/stability">stability dashboard</a>, <a href="/feed.xml">Atom feed</a>, or <a href="/setup">MCP server</a>. Full dataset available via <a href="/api/offers">REST API</a>.</p>\n  </div>\n\n  <h2>Related Guides</h2>\n  <div class="related-pages">\n    ' + relatedPages.map(p => '<a href="/' + p.slug + '" class="related-page-link">\n      <div class="link-title">' + escHtmlServer(p.title.split(" \u2014 ")[0]) + '</div>\n      <div class="link-desc">' + escHtmlServer(p.hubDesc) + '</div>\n    </a>').join("\n    ") + '\n  </div>\n\n  ' + buildMoreAlternativesGuides(slug) + '\n\n  ' + buildMcpCta("Track real-time API shutdowns and compare developer tool free tiers from your AI assistant. Get stability ratings, migration alerts, and pricing comparisons \u2014 directly in your editor.") + '\n  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>\n</div>\n<script>' + mcpCtaScript() + '</script>\n</body>\n</html>';
 }
 
-// --- AWS App Runner Migration Guide page ---
-
 function buildAppRunnerMigrationPage(): string {
   const title = "AWS App Runner Migration Guide: Alternatives with Free Tiers & Pricing (2026)";
   const metaDesc = "AWS App Runner closes to new customers April 30, 2026. Migrate to ECS Express Mode, Google Cloud Run, Railway, Render, Fly.io, or Azure Container Apps. Free tier comparison, pricing, and migration paths.";
@@ -33314,7 +32570,6 @@ function buildAppRunnerMigrationPage(): string {
 
   const stabilityMap = getStabilityMap();
 
-  // AWS deal changes
   const awsChanges = dealChanges.filter(c =>
     c.vendor === "AWS" || c.vendor === "Amazon AWS" || c.summary.toLowerCase().includes("app runner")
   ).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
@@ -33347,7 +32602,6 @@ function buildAppRunnerMigrationPage(): string {
   const awsStability = stabilityMap.get("aws") ?? "stable";
   const stabilityColor = awsStability === "volatile" ? "#f85149" : awsStability === "watch" ? "#d29922" : awsStability === "improving" ? "#3fb950" : "var(--text-muted)";
 
-  // Calculate days until deadline
   const deadlineDate = new Date("2026-04-30");
   const today = new Date();
   const daysLeft = Math.max(0, Math.ceil((deadlineDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24)));
@@ -33394,12 +32648,10 @@ function buildAppRunnerMigrationPage(): string {
     </tr>`;
   }).join("\n        ");
 
-  // Related editorial pages
   const relatedPages = ALTERNATIVES_PAGES.filter(p =>
     ["shutdowns", "aws-free-tier-2026", "cloud-comparison-2026", "free-tier-risk", "state-of-free-tiers"].includes(p.slug)
   );
 
-  // FAQ data
   const faqs = [
     { q: "When does AWS App Runner shut down?", a: "AWS App Runner stops accepting new customers on April 30, 2026. Existing customers can continue using the service, but it has entered maintenance mode with no new features planned. AWS has not announced a final shutdown date for existing services, but recommends migrating to Amazon ECS Express Mode." },
     { q: "What is ECS Express Mode and how does it replace App Runner?", a: "ECS Express Mode is AWS's recommended migration path. It simplifies Amazon ECS by providing a streamlined container deployment experience similar to App Runner — easier configuration, managed networking, and automatic scaling — while giving you access to the full ECS ecosystem. The main difference is that ECS Express Mode only supports container images (no source code deploy), so you'll need to build your container first." },
@@ -33408,7 +32660,6 @@ function buildAppRunnerMigrationPage(): string {
     { q: "Which alternative supports source code deployment like App Runner?", a: "App Runner's source code deployment (push code, AWS builds the container) is available on: Google Cloud Run (Cloud Build + buildpacks), Railway (GitHub auto-deploy), Render (GitHub auto-deploy), Fly.io (Dockerfiles + buildpacks), DigitalOcean App Platform (GitHub/GitLab auto-deploy), Azure Container Apps (source code via buildpacks), Elastic Beanstalk (source bundles + Dockerfiles), and Northflank (buildpacks + Dockerfiles). ECS Express Mode does NOT support source code deploy — you must provide a container image." },
   ];
 
-  // JSON-LD — Article
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Article",
@@ -33422,10 +32673,8 @@ function buildAppRunnerMigrationPage(): string {
     about: providers.map(p => ({ "@type": "SoftwareApplication", name: p.name })),
   };
 
-  // JSON-LD — FAQPage
   const faqJsonLd = faqPageJsonLd("/aws-app-runner-migration", faqs);
 
-  // JSON-LD — BreadcrumbList
   const breadcrumbJsonLd = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
@@ -33873,27 +33122,22 @@ railway up
 </html>`;
 }
 
-// --- AWS Free Tier 2026 guide page ---
-
 function buildAwsFreeTier2026Page(): string {
   const title = "AWS Free Tier Complete Guide 2026 — Every Free Service, Real Limits, and Hidden Costs";
   const metaDesc = "Comprehensive guide to every AWS free tier service in 2026. Always Free, 12-month, and trial tiers explained. Aurora PostgreSQL Serverless just added. Hidden costs, gotchas, and cheaper alternatives compared.";
   const slug = "aws-free-tier-2026";
   const pubDate = "2026-03-27";
 
-  // Pull AWS-related offers from our index
   const awsOffers = offers.filter(o =>
     o.vendor === "AWS" || o.vendor.startsWith("Amazon ") || o.vendor.startsWith("AWS ") ||
     o.tags?.some((t: string) => t === "aws")
   );
 
-  // Deal changes related to AWS
   const awsChanges = dealChanges.filter((c: any) =>
     c.vendor === "AWS" || c.vendor.startsWith("Amazon ") || c.vendor.startsWith("AWS ") ||
     c.vendor === "GitHub Actions"
   ).sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
-  // Always Free services (no expiration)
   interface AwsService {
     name: string;
     slug: string;
@@ -33957,7 +33201,6 @@ function buildAwsFreeTier2026Page(): string {
     { title: "Multi-AZ deployments", desc: "RDS Multi-AZ doubles your cost. The free tier only covers single-AZ. Some tutorials default to Multi-AZ.", cost: "2× RDS cost" },
   ];
 
-  // Alternative cloud providers comparison
   interface CloudAlt {
     name: string;
     slug: string;
@@ -34017,12 +33260,10 @@ function buildAwsFreeTier2026Page(): string {
     </tr>`;
   }).join("\n        ");
 
-  // Related editorial pages
   const relatedPages = ALTERNATIVES_PAGES.filter(p =>
     ["cloud-free-tier-comparison-2026", "gcp-free-tier-2026", "azure-free-tier-2026", "digitalocean-free-tier-2026", "database-alternatives", "hosting-alternatives", "neon-vs-supabase", "free-startup-stack", "free-tier-risk", "startup-credits"].includes(p.slug)
   );
 
-  // JSON-LD Article schema
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Article",
@@ -34320,27 +33561,22 @@ ${mcpCtaCss()}
 </html>`;
 }
 
-// --- GCP Free Tier guide page ---
-
 function buildGcpFreeTier2026Page(): string {
   const title = "GCP Free Tier Complete Guide 2026 — Every Free Service, Real Limits, and Hidden Costs";
   const metaDescGcp = "Comprehensive guide to every Google Cloud free tier service in 2026. 30+ Always Free products, $300 trial credit, and hidden costs explained. BigQuery 1 TiB, Cloud Run 2M req/mo, e2-micro VM, and more.";
   const slug = "gcp-free-tier-2026";
   const pubDate = "2026-03-27";
 
-  // Pull GCP-related offers from our index
   const gcpOffers = offers.filter(o =>
     o.vendor === "Google Cloud" || o.vendor.startsWith("Google Cloud") || o.vendor.startsWith("Google ") ||
     o.vendor === "Firebase" || o.tags?.some((t: string) => t === "gcp" || t === "google-cloud")
   );
 
-  // Deal changes related to GCP
   const gcpChanges = dealChanges.filter((c: any) =>
     c.vendor === "Google Cloud" || c.vendor.startsWith("Google") || c.vendor === "Firebase" ||
     c.vendor.includes("Gemini")
   ).sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
-  // Always Free services (no expiration)
   interface GcpService {
     name: string;
     slug: string;
@@ -34409,7 +33645,6 @@ function buildGcpFreeTier2026Page(): string {
     { title: "BigQuery streaming inserts", desc: "BigQuery queries are free up to 1 TiB/month, but streaming inserts cost $0.01/200 MB. Batch loading is free. If your app streams data in real-time, costs can add up.", cost: "$0.05/GB streamed" },
   ];
 
-  // Alternative cloud providers comparison
   interface CloudAlt {
     name: string;
     slug: string;
@@ -34463,12 +33698,10 @@ function buildGcpFreeTier2026Page(): string {
     </tr>`;
   }).join("\n        ");
 
-  // Related editorial pages
   const relatedPages = ALTERNATIVES_PAGES.filter(p =>
     ["cloud-free-tier-comparison-2026", "aws-free-tier-2026", "azure-free-tier-2026", "digitalocean-free-tier-2026", "firebase-alternatives", "hosting-alternatives", "database-alternatives", "free-startup-stack", "supabase-vs-firebase", "gemini-api-pricing-2026", "google-developer-program-2026"].includes(p.slug)
   );
 
-  // JSON-LD Article schema
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Article",
@@ -34746,27 +33979,22 @@ ${mcpCtaCss()}
 </html>`;
 }
 
-// --- Azure Free Tier guide page ---
-
 function buildAzureFreeTier2026Page(): string {
   const title = "Azure Free Tier Complete Guide 2026 — Every Free Service, Real Limits, and Hidden Costs";
   const metaDescAzure = "Comprehensive guide to every Azure free tier service in 2026. 65+ always-free services, $200 trial credit, 12-month free VMs and SQL. Cosmos DB lifetime free tier, Azure Functions 1M req/mo, and hidden costs explained.";
   const slug = "azure-free-tier-2026";
   const pubDate = "2026-03-31";
 
-  // Pull Azure-related offers from our index
   const azureOffers = offers.filter(o =>
     o.vendor === "Azure" || o.vendor.startsWith("Azure ") || o.vendor.startsWith("Microsoft ") ||
     o.tags?.some((t: string) => t === "azure" || t === "microsoft")
   );
 
-  // Deal changes related to Azure
   const azureChanges = dealChanges.filter((c: any) =>
     c.vendor === "Azure" || c.vendor.startsWith("Azure ") || c.vendor.startsWith("Microsoft ") ||
     c.vendor.includes("Azure")
   ).sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
-  // Always Free services (no expiration)
   interface AzureService {
     name: string;
     slug: string;
@@ -34830,7 +34058,6 @@ function buildAzureFreeTier2026Page(): string {
     { title: "Managed disk charges on deallocated VMs", desc: "Even when a VM is deallocated, you pay for its managed disks. A 64 GB P6 SSD costs ~$9.60/month. Delete disks you don't need.", cost: "$9.60/mo per P6 disk" },
   ];
 
-  // Alternative cloud providers comparison
   interface CloudAlt {
     name: string;
     slug: string;
@@ -34890,12 +34117,10 @@ function buildAzureFreeTier2026Page(): string {
     </tr>`;
   }).join("\n        ");
 
-  // Related editorial pages
   const relatedPages = ALTERNATIVES_PAGES.filter(p =>
     ["cloud-free-tier-comparison-2026", "aws-free-tier-2026", "gcp-free-tier-2026", "digitalocean-free-tier-2026", "database-alternatives", "hosting-alternatives", "free-startup-stack", "free-tier-risk", "startup-credits"].includes(p.slug)
   );
 
-  // JSON-LD Article schema
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Article",
@@ -35215,27 +34440,22 @@ ${mcpCtaCss()}
 </html>`;
 }
 
-// --- DigitalOcean Free Tier 2026 guide ---
-
 function buildDigitalOceanFreeTier2026Page(): string {
   const title = "DigitalOcean Free Tier Complete Guide 2026 — Pricing, Free Credits, and Hidden Costs";
   const metaDescDO = "Complete guide to DigitalOcean pricing and free tier in 2026. $200 free credits for 60 days, App Platform free static sites, 20% Droplet price cuts, per-second billing, Functions serverless, and comparison with AWS, GCP, and Azure.";
   const slug = "digitalocean-free-tier-2026";
   const pubDate = "2026-03-31";
 
-  // Pull DO-related offers from our index
   const doOffers = offers.filter(o =>
     o.vendor === "DigitalOcean" || o.vendor.startsWith("DigitalOcean ") ||
     o.tags?.some((t: string) => t === "digitalocean-free-tier-2026")
   );
 
-  // Deal changes related to DigitalOcean
   const doChanges = dealChanges.filter((c: any) =>
     c.vendor === "DigitalOcean" || c.vendor.startsWith("DigitalOcean ") ||
     c.vendor.includes("DigitalOcean")
   ).sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
-  // Free services (permanent)
   interface DOService {
     name: string;
     slug: string;
@@ -35254,7 +34474,6 @@ function buildDigitalOceanFreeTier2026Page(): string {
     { name: "Container Registry", slug: "digitalocean", limits: "Starter plan: 1 repo, 500 MB storage (free with account)", category: "Containers" },
   ];
 
-  // Paid services with competitive pricing (2026 price cuts)
   interface PaidService {
     name: string;
     price: string;
@@ -35289,7 +34508,6 @@ function buildDigitalOceanFreeTier2026Page(): string {
     { title: "Credit card required for free credits", desc: "You need a valid credit card or PayPal to claim the $200 free credits. If you forget to cancel or exceed limits during the trial, charges begin immediately.", cost: "Immediate billing" },
   ];
 
-  // Alternative cloud providers comparison
   interface CloudAlt {
     name: string;
     slug: string;
@@ -35344,12 +34562,10 @@ function buildDigitalOceanFreeTier2026Page(): string {
     </tr>`;
   }).join("\n        ");
 
-  // Related editorial pages
   const relatedPages = ALTERNATIVES_PAGES.filter(p =>
     ["cloud-free-tier-comparison-2026", "aws-free-tier-2026", "gcp-free-tier-2026", "azure-free-tier-2026", "hosting-alternatives", "database-alternatives", "free-startup-stack", "free-tier-risk", "startup-credits"].includes(p.slug)
   );
 
-  // JSON-LD Article schema
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Article",
@@ -35664,14 +34880,12 @@ ${mcpCtaCss()}
 </html>`;
 }
 
-// --- Comparison Page Enrichment Helpers ---
-
 interface ComparisonPageMeta {
   slug: string;
   categoryName: string;
   categorySlug: string;
   shortName: string;
-  relatedSlugs: string[];  // slugs of related comparison pages
+  relatedSlugs: string[];
 }
 
 const comparisonPagesMeta: ComparisonPageMeta[] = [
@@ -35785,15 +34999,12 @@ function buildComparisonBreadcrumbJsonLd(slug: string, title: string): string {
   return `<script type="application/ld+json">${JSON.stringify(breadcrumbJsonLd)}</script>`;
 }
 
-// --- Cloud Free Tier Comparison 2026 ---
-
 function buildCloudFreeTierComparison2026Page(): string {
   const title = "Cloud Free Tier Comparison 2026 — AWS vs GCP vs Azure vs DigitalOcean";
   const metaDescComp = "Side-by-side comparison of AWS, GCP, Azure, and DigitalOcean free tiers in 2026. Compare always-free compute, databases, serverless, storage, startup credits, and hidden costs across all 4 major clouds.";
   const slug = "cloud-free-tier-comparison-2026";
   const pubDate = "2026-03-31";
 
-  // Collect cloud-related deal changes
   const cloudChanges = dealChanges.filter((c: any) =>
     ["AWS", "Amazon", "Google Cloud", "GCP", "Azure", "DigitalOcean"].some(v =>
       c.vendor === v || c.vendor.startsWith(v + " ") || c.vendor.includes(v)
@@ -35811,12 +35022,10 @@ function buildCloudFreeTierComparison2026Page(): string {
     </tr>`;
   }).join("\n        ");
 
-  // Related editorial pages
   const relatedPages = ALTERNATIVES_PAGES.filter(p =>
     ["aws-free-tier-2026", "gcp-free-tier-2026", "azure-free-tier-2026", "digitalocean-free-tier-2026", "hosting-alternatives", "free-startup-stack", "free-tier-risk", "startup-credits", "free-devops-stack", "serverless-free-tier-comparison-2026"].includes(p.slug)
   );
 
-  // JSON-LD Article schema
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Article",
@@ -36392,15 +35601,12 @@ ${mcpCtaCss()}
 </html>`;
 }
 
-// --- Database Free Tier Comparison 2026 ---
-
 function buildDatabaseFreeTierComparison2026Page(): string {
   const title = "Database Free Tier Comparison 2026 — Supabase vs Neon vs Firebase vs Turso vs PlanetScale";
   const metaDescDb = "Side-by-side comparison of 10+ database free tiers in 2026. Compare Supabase, Neon, Firebase, Turso, MongoDB, CockroachDB, Upstash, Cloudflare D1, and more — storage, compute, connections, and lock-in risk.";
   const slug = "database-free-tier-comparison-2026";
   const pubDate = "2026-03-31";
 
-  // Collect database-related deal changes
   const dbVendorKeywords = ["Supabase", "Neon", "Firebase", "Turso", "PlanetScale", "MongoDB", "CockroachDB", "Upstash", "Cloudflare D1", "Redis", "Appwrite", "Convex", "Weaviate", "Zilliz", "Aiven", "Aurora", "Neo4j", "Hasura"];
   const dbChanges = dealChanges.filter((c: any) =>
     dbVendorKeywords.some(v => c.vendor === v || c.vendor.startsWith(v + " ") || c.vendor.includes(v))
@@ -36417,7 +35623,6 @@ function buildDatabaseFreeTierComparison2026Page(): string {
     </tr>`;
   }).join("\n        ");
 
-  // Related editorial pages
   const relatedPages = ALTERNATIVES_PAGES.filter(p =>
     ["database-alternatives", "neon-vs-supabase", "supabase-vs-firebase", "cloud-free-tier-comparison-2026", "free-tier-risk", "free-startup-stack", "firebase-alternatives", "mongodb-alternatives", "redis-alternatives"].includes(p.slug)
   );
@@ -36443,7 +35648,6 @@ function buildDatabaseFreeTierComparison2026Page(): string {
   </table>
   </div>` : `<p class="section-intro">No database-specific pricing changes tracked yet.</p>`;
 
-  // JSON-LD Article schema
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Article",
@@ -37084,7 +36288,6 @@ function buildCicdFreeTierComparison2026Page(): string {
   const slug = "cicd-free-tier-comparison-2026";
   const pubDate = "2026-03-31";
 
-  // Collect CI/CD-related deal changes
   const cicdVendorKeywords = ["GitHub Actions", "GitLab CI", "CircleCI", "Buildkite", "Bitbucket Pipelines", "Harness CI", "Bitrise", "Codemagic", "Drone CI", "Semaphore", "Buddy", "Google Cloud Build", "Codefresh", "Nx Cloud", "Appcircle"];
   const cicdChanges = dealChanges.filter((c: any) =>
     cicdVendorKeywords.some(v => c.vendor === v || c.vendor.startsWith(v + " ") || c.vendor.includes(v)) || c.category === "CI/CD"
@@ -37101,7 +36304,6 @@ function buildCicdFreeTierComparison2026Page(): string {
     </tr>`;
   }).join("\n        ");
 
-  // Related editorial pages
   const relatedPages = ALTERNATIVES_PAGES.filter(p =>
     ["ci-cd-alternatives", "cloud-free-tier-comparison-2026", "database-free-tier-comparison-2026", "free-tier-risk", "free-devops-stack", "free-startup-stack"].includes(p.slug)
   );
@@ -37127,7 +36329,6 @@ function buildCicdFreeTierComparison2026Page(): string {
   </table>
   </div>` : `<p class="section-intro">No CI/CD-specific pricing changes tracked yet.</p>`;
 
-  // JSON-LD Article schema
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Article",
@@ -37755,7 +36956,6 @@ function buildServerlessFreeTierComparison2026Page(): string {
   const slug = "serverless-free-tier-comparison-2026";
   const pubDate = "2026-03-31";
 
-  // Collect serverless-related deal changes
   const serverlessVendorKeywords = ["Vercel", "Cloudflare Workers", "Cloudflare Durable Objects", "Cloudflare Queues", "Deno Deploy", "Val Town", "Google Cloud", "AWS", "Azure", "Cloud Run", "Lambda", "Cloud Functions", "Azure Functions", "DBOS", "Inngest", "Trigger.dev"];
   const serverlessChanges = dealChanges.filter((c: any) =>
     serverlessVendorKeywords.some(v => c.vendor === v || c.vendor.startsWith(v + " ") || c.vendor.includes(v)) ||
@@ -37773,7 +36973,6 @@ function buildServerlessFreeTierComparison2026Page(): string {
     </tr>`;
   }).join("\n        ");
 
-  // Related editorial pages
   const relatedPages = ALTERNATIVES_PAGES.filter(p =>
     ["hosting-alternatives", "cloud-free-tier-comparison-2026", "database-free-tier-comparison-2026", "free-tier-risk", "free-devops-stack", "free-ai-stack", "cicd-free-tier-comparison-2026"].includes(p.slug)
   );
@@ -37799,7 +36998,6 @@ function buildServerlessFreeTierComparison2026Page(): string {
   </table>
   </div>` : `<p class="section-intro">No serverless-specific pricing changes tracked yet.</p>`;
 
-  // JSON-LD Article schema
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Article",
@@ -38398,15 +37596,12 @@ ${mcpCtaCss()}
 </html>`;
 }
 
-// --- Auth free tier comparison page ---
-
 function buildAuthComparison2026Page(): string {
   const title = "Auth & Identity Comparison 2026 — Auth0 vs Clerk vs Supabase Auth vs Firebase Auth";
   const metaDescAuth = "Comprehensive comparison of 20+ auth free tiers in 2026. Compare Auth0, Clerk, Supabase Auth, Firebase Auth, PropelAuth, Kinde, Keycloak, Authentik, Authelia, Appwrite, and more — MAU/MRU limits, overage costs, MFA, SSO, agentic AI support, and growth pricing.";
   const slug = "auth-comparison-2026";
   const pubDate = "2026-04-03";
 
-  // Collect auth-related deal changes
   const authVendorKeywords = ["Auth0", "Clerk", "Kinde", "Stytch", "Descope", "WorkOS", "Supabase", "Firebase", "Cognito", "Keycloak", "FusionAuth", "SuperTokens", "Hanko", "Ory", "Okta", "Permit.io", "Cerbos", "Authress", "Logto", "PropelAuth", "Authentik", "Authelia", "Appwrite", "Authgear", "MojoAuth", "Stack Auth"];
   const authChanges = dealChanges.filter((c: any) =>
     authVendorKeywords.some(v => c.vendor === v || c.vendor.startsWith(v + " ") || c.vendor.includes(v)) ||
@@ -38424,7 +37619,6 @@ function buildAuthComparison2026Page(): string {
     </tr>`;
   }).join("\n        ");
 
-  // Related editorial pages
   const relatedPages = ALTERNATIVES_PAGES.filter(p =>
     ["security-alternatives", "supabase-vs-firebase", "free-startup-stack", "free-tier-risk", "database-free-tier-comparison-2026", "free-ai-stack"].includes(p.slug)
   );
@@ -38450,7 +37644,6 @@ function buildAuthComparison2026Page(): string {
   </table>
   </div>` : `<p class="section-intro">No auth-specific pricing changes tracked yet.</p>`;
 
-  // JSON-LD Article schema
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Article",
@@ -39344,15 +38537,12 @@ ${mcpCtaCss()}
 </html>`;
 }
 
-// --- Email & transactional messaging comparison page (expanded) ---
-
 function buildEmailComparison2026Page(): string {
   const title = "Email & Transactional Messaging Comparison 2026 — SendGrid Alternatives After Free Tier Death";
   const metaDescEmail = "Comprehensive comparison of 20+ email service free tiers in 2026. Resend, Postmark, Amazon SES, Brevo, Mailtrap, Loops, MailerSend, Mailjet, Maileroo, SMTP2GO, Mailchimp, MailerLite, EmailOctopus — SendGrid exodus migration guide, growth cost analysis at 10K/50K/100K/500K emails, deliverability traps.";
   const slug = "email-comparison-2026";
   const pubDate = "2026-04-03";
 
-  // Collect email-related deal changes
   const emailVendorKeywords = ["SendGrid", "Resend", "Postmark", "Brevo", "Mailchimp", "Amazon SES", "Mailgun", "Mailtrap", "Loops", "MailerSend", "Mailjet", "SparkPost", "MessageBird", "Plunk", "EmailOctopus", "Buttondown", "ImprovMX", "SimpleLogin", "ForwardEmail", "Postal", "Maileroo", "AhaSend", "Sweego", "SMTP2GO", "MailerLite", "EmailLabs", "Substack", "Inboxes App", "debugmail"];
   const emailChanges = dealChanges.filter((c: any) =>
     emailVendorKeywords.some(v => c.vendor === v || c.vendor.startsWith(v + " ") || c.vendor.includes(v)) ||
@@ -39370,7 +38560,6 @@ function buildEmailComparison2026Page(): string {
     </tr>`;
   }).join("\n        ");
 
-  // Related editorial pages
   const relatedPages = ALTERNATIVES_PAGES.filter(p =>
     ["email-alternatives", "auth-comparison-2026", "monitoring-comparison-2026", "storage-comparison-2026", "free-startup-stack", "free-tier-risk", "free-tier-tracker", "state-of-free-tiers"].includes(p.slug)
   );
@@ -39396,7 +38585,6 @@ function buildEmailComparison2026Page(): string {
   </table>
   </div>` : `<p class="section-intro">No email-specific pricing changes tracked yet.</p>`;
 
-  // JSON-LD Article schema
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Article",
@@ -40323,15 +39511,12 @@ ${mcpCtaCss()}
 </html>`;
 }
 
-// --- Monitoring free tier comparison page ---
-
 function buildMonitoringComparison2026Page(): string {
   const title = "Monitoring & Observability Comparison 2026 — Datadog vs Grafana Cloud vs New Relic vs Better Stack";
   const metaDescMonitoring = "Comprehensive comparison of 25+ monitoring free tiers in 2026. Datadog, Grafana Cloud, New Relic, Better Stack, Sentry, Checkly, SigNoz, HyperDX, Elastic, and more — data ingest, retention, APM, scaling costs at 10/50/100/500 hosts.";
   const slug = "monitoring-comparison-2026";
   const pubDate = "2026-04-03";
 
-  // Collect monitoring-related deal changes
   const monitoringVendorKeywords = ["Datadog", "Grafana", "New Relic", "Sentry", "Axiom", "Sematext", "Middleware", "BetterStack", "Better Stack", "UptimeRobot", "StatusCake", "Hyperping", "Pulsetic", "Pingbreak", "OnlineOrNot", "PagerDuty", "incident.io", "PagerTree", "Healthchecks", "Cronitor", "Dead Man", "Prometheus", "Jaeger", "Netdata", "Robusta", "AppSignal", "Inspector", "Uptimia", "Checkly", "Rollbar", "Bugsnag", "HyperDX", "SigNoz", "Elastic"];
   const monitoringChanges = dealChanges.filter((c: any) =>
     monitoringVendorKeywords.some(v => c.vendor === v || c.vendor.startsWith(v + " ") || c.vendor.includes(v)) ||
@@ -40349,7 +39534,6 @@ function buildMonitoringComparison2026Page(): string {
     </tr>`;
   }).join("\n        ");
 
-  // Related editorial pages
   const relatedPages = ALTERNATIVES_PAGES.filter(p =>
     ["monitoring-alternatives", "datadog-vs-new-relic", "cloud-free-tier-comparison-2026", "auth-comparison-2026", "free-devops-stack", "free-tier-risk"].includes(p.slug)
   );
@@ -40375,7 +39559,6 @@ function buildMonitoringComparison2026Page(): string {
   </table>
   </div>` : `<p class="section-intro">No monitoring-specific pricing changes tracked yet.</p>`;
 
-  // JSON-LD Article schema
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Article",
@@ -41325,15 +40508,12 @@ ${mcpCtaCss()}
 </html>`;
 }
 
-// --- Storage free tier comparison page ---
-
 function buildStorageComparison2026Page(): string {
   const title = "Storage & CDN Comparison 2026 — S3 vs R2 vs B2 vs Supabase Storage vs Cloudinary";
   const metaDescStorage = "Comprehensive comparison of 15+ storage and CDN free tiers in 2026. AWS S3, Cloudflare R2, Backblaze B2, Tigris, Storj, Supabase Storage, Cloudinary, ImageKit, BunnyCDN, MinIO — storage limits, egress fees, S3 compatibility, CDN, and the S3 egress tax at scale.";
   const slug = "storage-comparison-2026";
   const pubDate = "2026-04-03";
 
-  // Collect storage-related deal changes
   const storageVendorKeywords = ["Cloudflare R2", "Cloudflare", "Backblaze", "AWS S3", "Amazon S3", "Google Cloud Storage", "Azure Blob", "DigitalOcean Spaces", "Supabase", "Firebase", "Storj", "Tigris", "Wasabi", "MinIO", "Cloudinary", "ImageKit", "Uploadcare", "Vercel Blob", "Oracle Cloud", "BunnyCDN", "Bunny", "KeyCDN", "Gumlet", "Pinata", "SeaweedFS", "Garage"];
   const storageChanges = dealChanges.filter((c: any) =>
     storageVendorKeywords.some(v => c.vendor === v || c.vendor.startsWith(v + " ") || c.vendor.includes(v)) ||
@@ -41351,7 +40531,6 @@ function buildStorageComparison2026Page(): string {
     </tr>`;
   }).join("\n        ");
 
-  // Related editorial pages
   const relatedPages = ALTERNATIVES_PAGES.filter(p =>
     ["storage-alternatives", "cloud-free-tier-comparison-2026", "monitoring-comparison-2026", "auth-comparison-2026", "free-startup-stack", "free-tier-risk", "free-devops-stack"].includes(p.slug)
   );
@@ -41377,7 +40556,6 @@ function buildStorageComparison2026Page(): string {
   </table>
   </div>` : `<p class="section-intro">No storage-specific pricing changes tracked yet.</p>`;
 
-  // JSON-LD Article schema
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Article",
@@ -42140,7 +41318,6 @@ function buildTestingFreeTierComparison2026Page(): string {
   const slug = "testing-free-tier-comparison-2026";
   const pubDate = "2026-04-01";
 
-  // Collect testing-related deal changes
   const testingVendorKeywords = ["Cypress", "Playwright", "BrowserStack", "Checkly", "Chromatic", "Codecov", "Postman", "LocalStack", "Testcontainers", "Percy", "Katalon", "Selenium", "Sauce Labs", "LambdaTest", "Applitools", "k6", "Grafana k6", "Artillery", "Gatling", "Locust", "BlazeMeter", "Argos", "BugBug", "Bencher"];
   const testingChanges = dealChanges.filter((c: any) =>
     testingVendorKeywords.some(v => c.vendor === v || c.vendor.startsWith(v + " ") || c.vendor.includes(v)) ||
@@ -42158,7 +41335,6 @@ function buildTestingFreeTierComparison2026Page(): string {
     </tr>`;
   }).join("\n        ");
 
-  // Related editorial pages
   const relatedPages = ALTERNATIVES_PAGES.filter(p =>
     ["testing-alternatives", "cicd-free-tier-comparison-2026", "monitoring-comparison-2026", "free-startup-stack", "free-tier-risk"].includes(p.slug)
   );
@@ -42184,7 +41360,6 @@ function buildTestingFreeTierComparison2026Page(): string {
   </table>
   </div>` : `<p class="section-intro">No testing-specific pricing changes tracked yet.</p>`;
 
-  // JSON-LD Article schema
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Article",
@@ -42812,7 +41987,6 @@ function buildAnalyticsFreeTierComparison2026Page(): string {
   const slug = "analytics-free-tier-comparison-2026";
   const pubDate = "2026-04-01";
 
-  // Collect analytics-related deal changes
   const analyticsVendorKeywords = ["PostHog", "Mixpanel", "Amplitude", "Plausible", "Google Analytics", "Umami", "Matomo", "Heap", "June", "Countly", "Fathom", "Simple Analytics", "Pirsch", "Pendo"];
   const analyticsChanges = dealChanges.filter((c: any) =>
     analyticsVendorKeywords.some(v => c.vendor === v || c.vendor.startsWith(v + " ") || c.vendor.includes(v)) ||
@@ -42830,7 +42004,6 @@ function buildAnalyticsFreeTierComparison2026Page(): string {
     </tr>`;
   }).join("\n        ");
 
-  // Related editorial pages
   const relatedPages = ALTERNATIVES_PAGES.filter(p =>
     ["analytics-alternatives", "monitoring-comparison-2026", "free-startup-stack", "free-tier-risk", "free-ai-stack"].includes(p.slug)
   );
@@ -42856,7 +42029,6 @@ function buildAnalyticsFreeTierComparison2026Page(): string {
   </table>
   </div>` : `<p class="section-intro">No analytics-specific pricing changes tracked yet.</p>`;
 
-  // JSON-LD Article schema
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Article",
@@ -43498,7 +42670,6 @@ function buildApiDevelopmentFreeTierComparison2026Page(): string {
   const slug = "api-development-free-tier-comparison-2026";
   const pubDate = "2026-04-01";
 
-  // Collect API development-related deal changes
   const apiDevVendorKeywords = ["Postman", "Bruno", "Hoppscotch", "Insomnia", "Thunder Client", "Apidog", "HTTPie", "RapidAPI", "Paw", "Stoplight", "Swagger", "Scalar", "Mockoon", "Yaak"];
   const apiDevChanges = dealChanges.filter((c: any) =>
     apiDevVendorKeywords.some(v => c.vendor === v || c.vendor.startsWith(v + " ") || c.vendor.includes(v)) ||
@@ -43516,7 +42687,6 @@ function buildApiDevelopmentFreeTierComparison2026Page(): string {
     </tr>`;
   }).join("\n        ");
 
-  // Related editorial pages
   const relatedPages = ALTERNATIVES_PAGES.filter(p =>
     ["api-development-alternatives", "testing-free-tier-comparison-2026", "cicd-free-tier-comparison-2026", "free-startup-stack", "free-tier-risk"].includes(p.slug)
   );
@@ -43542,7 +42712,6 @@ function buildApiDevelopmentFreeTierComparison2026Page(): string {
   </table>
   </div>` : `<p class="section-intro">No API development-specific pricing changes tracked yet.</p>`;
 
-  // JSON-LD Article schema
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Article",
@@ -44098,7 +43267,6 @@ function buildSecurityFreeTierComparison2026Page(): string {
   const slug = "security-free-tier-comparison-2026";
   const pubDate = "2026-04-01";
 
-  // Collect security-related deal changes
   const secVendorKeywords = ["Snyk", "SonarCloud", "GitGuardian", "Semgrep", "Trivy", "OWASP ZAP", "Nuclei", "CodeQL", "Dependabot", "Renovate", "FOSSA", "Socket", "Tailscale", "Twingate", "1Password", "Checkov", "Grype", "Falco", "StackHawk", "Probely", "Gitleaks", "TruffleHog", "aikido", "SOOS"];
   const secChanges = dealChanges.filter((c: any) =>
     secVendorKeywords.some(v => c.vendor === v || c.vendor.startsWith(v + " ") || c.vendor.includes(v)) ||
@@ -44116,7 +43284,6 @@ function buildSecurityFreeTierComparison2026Page(): string {
     </tr>`;
   }).join("\n        ");
 
-  // Related editorial pages
   const relatedPages = ALTERNATIVES_PAGES.filter(p =>
     ["security-alternatives", "auth-comparison-2026", "cloud-free-tier-comparison-2026", "free-startup-stack", "free-tier-risk"].includes(p.slug)
   );
@@ -44142,7 +43309,6 @@ function buildSecurityFreeTierComparison2026Page(): string {
   </table>
   </div>` : `<p class="section-intro">No security-specific pricing changes tracked yet.</p>`;
 
-  // JSON-LD Article schema
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Article",
@@ -44813,15 +43979,12 @@ ${mcpCtaCss()}
 </html>`;
 }
 
-// --- Hosting & PaaS Free Tier Comparison 2026 ---
-
 function buildHostingFreeTierComparison2026Page(): string {
   const title = "Hosting & PaaS Free Tier Comparison 2026 — Vercel vs Netlify vs Render vs Cloudflare vs Railway";
   const metaDescHosting = "Side-by-side comparison of 12+ developer hosting free tiers in 2026. Compare Vercel, Netlify, Render, Railway, Cloudflare Pages, Fly.io, Koyeb, Deno Deploy, GitHub Pages, and more — bandwidth, compute, build minutes, cold starts, and scaling costs.";
   const slug = "hosting-free-tier-comparison-2026";
   const pubDate = "2026-04-03";
 
-  // Collect hosting-related deal changes
   const hostingVendorKeywords = ["Vercel", "Netlify", "Render", "Railway", "Fly.io", "Cloudflare Pages", "Cloudflare Workers", "Koyeb", "Deno Deploy", "GitHub Pages", "PythonAnywhere", "Hetzner", "Heroku", "Clever Cloud"];
   const hostingChanges = dealChanges.filter((c: any) =>
     hostingVendorKeywords.some(v => c.vendor === v || c.vendor.startsWith(v + " ") || c.vendor.includes(v)) ||
@@ -44839,7 +44002,6 @@ function buildHostingFreeTierComparison2026Page(): string {
     </tr>`;
   }).join("\n        ");
 
-  // Related editorial pages
   const relatedPages = ALTERNATIVES_PAGES.filter(p =>
     ["hosting-alternatives", "vercel-alternatives", "cloud-free-tier-comparison-2026", "serverless-free-tier-comparison-2026", "free-startup-stack", "free-devops-stack", "free-tier-risk"].includes(p.slug)
   );
@@ -44865,7 +44027,6 @@ function buildHostingFreeTierComparison2026Page(): string {
   </table>
   </div>` : `<p class="section-intro">No hosting-specific pricing changes tracked yet.</p>`;
 
-  // JSON-LD Article schema
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Article",
@@ -45441,14 +44602,11 @@ ${mcpCtaCss()}
 </html>`;
 }
 
-// --- State of Developer Free Tiers 2026 report ---
-
 function buildStateOfFreeTiersPage(): string {
   const title = "State of Developer Free Tiers (2026) — Data from " + offers.length.toLocaleString() + "+ Tools | AgentDeals";
   const metaDesc = `${dealChanges.length} pricing changes tracked across ${offers.length.toLocaleString()} developer tools. ${categories.length} categories analyzed. The authoritative data on developer free tier trends, erosion patterns, and which vendors are still expanding.`;
   const now = new Date().toISOString().split("T")[0];
 
-  // --- Compute dynamic stats from actual data ---
   const freeTierOffers = offers.filter(o => {
     const t = o.tier.toLowerCase();
     return t.includes("free") || t === "hobby" || t === "starter" || t === "personal" || t === "developer" || t === "community" || t === "open source";
@@ -45458,7 +44616,6 @@ function buildStateOfFreeTiersPage(): string {
   const eligibilityOffers = offers.filter(o => o.eligibility);
   const startupOffers = offers.filter(o => o.tier.toLowerCase().includes("startup") || (o.eligibility && JSON.stringify(o.eligibility).toLowerCase().includes("startup")));
 
-  // Monthly trend data
   const monthlyChanges = new Map<string, { total: number; negative: number; positive: number }>();
   const negativeTypes = new Set(["free_tier_removed", "limits_reduced", "restriction", "open_source_killed", "product_deprecated"]);
   const positiveTypes = new Set(["new_free_tier", "limits_increased", "startup_program_expanded"]);
@@ -45473,7 +44630,6 @@ function buildStateOfFreeTiersPage(): string {
   const sortedMonths = [...monthlyChanges.entries()].sort((a, b) => a[0].localeCompare(b[0]));
   const maxMonthTotal = Math.max(...sortedMonths.map(([, v]) => v.total), 1);
 
-  // Change type counts
   const changeTypeCounts = new Map<string, number>();
   for (const c of dealChanges) {
     changeTypeCounts.set(c.change_type, (changeTypeCounts.get(c.change_type) ?? 0) + 1);
@@ -45481,7 +44637,6 @@ function buildStateOfFreeTiersPage(): string {
   const sortedChangeTypes = [...changeTypeCounts.entries()].sort((a, b) => b[1] - a[1]);
   const maxChangeTypeCount = Math.max(...sortedChangeTypes.map(([, v]) => v), 1);
 
-  // Category erosion analysis
   const catChangeCounts = new Map<string, { negative: number; positive: number; total: number }>();
   for (const c of dealChanges) {
     if (c.category) {
@@ -45496,7 +44651,6 @@ function buildStateOfFreeTiersPage(): string {
     .sort((a, b) => b[1].negative - a[1].negative)
     .slice(0, 15);
 
-  // Category stats
   const catCounts = new Map<string, number>();
   const catFreeCounts = new Map<string, number>();
   for (const o of offers) {
@@ -45508,16 +44662,13 @@ function buildStateOfFreeTiersPage(): string {
   }
   const sortedCats = [...catCounts.entries()].sort((a, b) => b[1] - a[1]);
 
-  // Deal changes analysis (negativeTypes/positiveTypes/changeTypeCounts defined above)
   const negativeChanges = dealChanges.filter(c => negativeTypes.has(c.change_type)).sort((a, b) => b.date.localeCompare(a.date));
   const positiveChanges = dealChanges.filter(c => positiveTypes.has(c.change_type)).sort((a, b) => b.date.localeCompare(a.date));
 
-  // Most generous free tiers by category (top categories with most free options)
   const topFreeCategories = [...catFreeCounts.entries()]
     .sort((a, b) => b[1] - a[1])
     .slice(0, 12);
 
-  // Category free tier percentage
   const catFreePercentage = sortedCats.map(([cat, total]) => ({
     category: cat,
     total,
@@ -45539,7 +44690,6 @@ function buildStateOfFreeTiersPage(): string {
     pricing_postponed: { label: "Postponed", color: "#d29922" },
   };
 
-  // Build negative changes timeline HTML
   const squeezeHtml = negativeChanges.slice(0, 15).map(c => {
     const badge = changeTypeBadgeMap[c.change_type] ?? { label: c.change_type, color: "#8b949e" };
     const impactColor = c.impact === "high" ? "#f85149" : c.impact === "medium" ? "#d29922" : "#8b949e";
@@ -45554,7 +44704,6 @@ function buildStateOfFreeTiersPage(): string {
     </div>`;
   }).join("\n");
 
-  // Build positive changes HTML
   const brightSpotsHtml = positiveChanges.slice(0, 10).map(c => {
     const badge = changeTypeBadgeMap[c.change_type] ?? { label: c.change_type, color: "#3fb950" };
     return `<div style="margin-bottom:.75rem;padding:.75rem 1rem;border-left:3px solid ${badge.color};background:var(--bg-card);border-radius:0 8px 8px 0">
@@ -45567,7 +44716,6 @@ function buildStateOfFreeTiersPage(): string {
     </div>`;
   }).join("\n");
 
-  // Category landscape table
   const categoryTableRows = catFreePercentage.slice(0, 20).map(c => {
     const barWidth = Math.max(c.pct, 2);
     return `<tr>
@@ -45579,7 +44727,6 @@ function buildStateOfFreeTiersPage(): string {
     </tr>`;
   }).join("\n");
 
-  // Cross-links to comparison pages
   const comparisonLinks = ALTERNATIVES_PAGES
     .filter(p => p.slug.includes("-comparison-") || p.slug.includes("-vs-"))
     .slice(0, 12)
@@ -45944,8 +45091,6 @@ ${globalNavCss()}
 </body>
 </html>`;
 }
-
-// --- Setup guide page ---
 
 function buildSetupPage(): string {
   const baseUrl = BASE_URL;
@@ -46373,33 +45518,31 @@ function copyConfig(btn){
 </html>`;
 }
 
-// --- Curated Stack Templates (/stacks) ---
-
 interface StackService {
-  category: string;      // e.g. "Database", "Hosting"
-  vendor: string;        // display name
-  slug: string;          // for /vendor/:slug links and estimator pre-fill
-  estimatorCategory: string; // maps to estimator category id (database, hosting, auth, etc.)
-  freeTier: string;      // free tier summary
-  whyChosen: string;     // short reason for recommendation
-  starter: number;       // $/mo at ~1K MAU
-  growth: number;        // $/mo at ~10K MAU
-  scale: number;         // $/mo at ~100K MAU
+  category: string;
+  vendor: string;
+  slug: string;
+  estimatorCategory: string;
+  freeTier: string;
+  whyChosen: string;
+  starter: number;
+  growth: number;
+  scale: number;
 }
 
 interface StackSwap {
-  from: string;          // vendor name
-  to: string;            // vendor name
-  toSlug: string;        // for /vendor/:slug link
-  saving: string;        // e.g. "Save $50/mo at 100K users"
+  from: string;
+  to: string;
+  toSlug: string;
+  saving: string;
 }
 
 interface StackTemplate {
-  slug: string;          // URL: /stacks/:slug
-  title: string;         // page title
+  slug: string;
+  title: string;
   metaDesc: string;
-  heroSubtitle: string;  // one-line value prop
-  description: string;   // 2-3 sentence intro
+  heroSubtitle: string;
+  description: string;
   services: StackService[];
   swaps: StackSwap[];
   relatedComparisons: { href: string; label: string }[];
@@ -46557,7 +45700,6 @@ function buildStackTemplatePage(slug: string): string | null {
 
   const stabilityMap = getStabilityMap();
 
-  // Compute totals
   const totals = { free: 0, starter: 0, growth: 0, scale: 0 };
   for (const s of template.services) {
     totals.starter += s.starter;
@@ -46565,7 +45707,6 @@ function buildStackTemplatePage(slug: string): string | null {
     totals.scale += s.scale;
   }
 
-  // Build estimator pre-fill URL
   const estimatorParams = template.services.map(s => `${encodeURIComponent(s.estimatorCategory)}=${encodeURIComponent(s.slug)}`).join("&");
 
   const stabilityColors: Record<string, string> = { stable: "#3fb950", watch: "#d29922", volatile: "#f85149", improving: "#58a6ff" };
@@ -46574,7 +45715,6 @@ function buildStackTemplatePage(slug: string): string | null {
   const costClass = (amount: number) => amount === 0 ? "cost-free" : amount <= 25 ? "cost-low" : amount <= 100 ? "cost-mid" : "cost-high";
   const formatCost = (amount: number) => amount === 0 ? "$0" : `$${amount.toLocaleString()}`;
 
-  // Stack table rows
   const tableRows = template.services.map(s => {
     const stability = stabilityMap.get(s.slug) ?? "stable";
     const sColor = stabilityColors[stability] ?? stabilityColors.stable;
@@ -46590,7 +45730,6 @@ function buildStackTemplatePage(slug: string): string | null {
     </tr>`;
   }).join("\n");
 
-  // Why-chosen cards
   const whyCards = template.services.map(s => {
     const stability = stabilityMap.get(s.slug) ?? "stable";
     const sColor = stabilityColors[stability] ?? stabilityColors.stable;
@@ -46605,7 +45744,6 @@ function buildStackTemplatePage(slug: string): string | null {
     </div>`;
   }).join("\n");
 
-  // Swaps section
   const swapsHtml = template.swaps.map(sw =>
     `<div class="swap-card">
       <strong>Swap ${escHtmlServer(sw.from)} for <a href="/vendor/${escHtmlServer(sw.toSlug)}">${escHtmlServer(sw.to)}</a></strong>
@@ -46613,7 +45751,6 @@ function buildStackTemplatePage(slug: string): string | null {
     </div>`
   ).join("\n");
 
-  // Related links
   const comparisonLinks = template.relatedComparisons.map(c => `<a href="${c.href}" class="related-link">${escHtmlServer(c.label)}</a>`).join("");
   const guideLinks = template.relatedGuides.map(g => `<a href="${g.href}" class="related-link">${escHtmlServer(g.label)}</a>`).join("");
 
@@ -46921,16 +46058,14 @@ function buildStacksIndexPage(): string {
 </html>`;
 }
 
-// --- Stack Cost Estimator page ---
-
 interface EstimatorVendorCost {
   slug: string;
   name: string;
-  free: string;         // free tier summary
-  starter: number;      // $/mo at ~1K MAU
-  growth: number;       // $/mo at ~10K MAU
-  scale: number;        // $/mo at ~100K MAU
-  notes: string;        // pricing model notes
+  free: string;
+  starter: number;
+  growth: number;
+  scale: number;
+  notes: string;
 }
 
 interface EstimatorCategory {
@@ -46940,8 +46075,6 @@ interface EstimatorCategory {
 }
 
 function buildEstimatorData(): EstimatorCategory[] {
-  // Curated cost data for popular vendors at different scale points
-  // Prices sourced from vendor pricing pages as of 2026-04
   return [
     {
       id: "database",
@@ -47047,10 +46180,6 @@ function buildStackCheckPage(): string {
   const totalOffers = allOffers.length;
   const totalChanges = allChanges.length;
 
-  // Build vendor lookup for client-side enrichment
-  // #1038: this page carried its own third definition of risk — an inline
-  // type test over only the 3 most recent records, with no date window. It now
-  // reads the one definition, and ships the cause so the client can render it.
   const vendorLookup: Record<string, { vendor: string; category: string; description: string; tier: string; slug: string; risk_level: string; risk_cause: RiskCause | null; stability: string; recent_changes: Array<{ date: string; change_type: string; summary: string; impact: string }> }> = {};
   for (const offer of allOffers) {
     const slug = toSlug(offer.vendor);
@@ -47073,11 +46202,9 @@ function buildStackCheckPage(): string {
       stability,
       recent_changes: vendorChanges.map(c => ({ date: changeDateLabel(c), change_type: c.change_type, summary: c.summary, impact: c.impact })),
     };
-    // Also add by lowercase vendor name for easy matching
     vendorLookup[offer.vendor.toLowerCase()] = vendorLookup[slug];
   }
 
-  // Preset popular stacks
   const presetStacks = [
     { name: "MERN Stack", services: "MongoDB, Express, React, Node.js, Vercel" },
     { name: "JAMstack", services: "Netlify, Supabase, Cloudflare, GitHub Actions" },
@@ -47509,10 +46636,8 @@ function buildCompareToolPage(): string {
   const allOffers = loadOffers();
   const totalOffers = allOffers.length;
 
-  // Build vendor list for autocomplete
   const vendorNames = allOffers.map(o => o.vendor).sort();
 
-  // Popular matchup presets
   const presetMatchups = [
     { label: "Vercel vs Netlify", a: "Vercel", b: "Netlify" },
     { label: "Supabase vs Firebase", a: "Supabase", b: "Firebase" },
@@ -47884,7 +47009,6 @@ function buildEstimatePage(): string {
   const totalVendors = new Set(estimatorData.flatMap(c => c.vendors.map(v => v.slug))).size;
   const totalCategories = estimatorData.length;
 
-  // Build vendor info map from our index data for free tier descriptions
   const vendorInfo: Record<string, { description: string; url: string; category: string }> = {};
   for (const cat of estimatorData) {
     for (const v of cat.vendors) {
@@ -47907,7 +47031,6 @@ function buildEstimatePage(): string {
     "publisher": { "@type": "Organization", "name": "AgentDeals", "url": BASE_URL },
   };
 
-  // Build dropdown options HTML for each category
   const dropdownsHtml = estimatorData.map(cat => {
     const options = cat.vendors.map(v =>
       `<option value="${escHtmlServer(v.slug)}">${escHtmlServer(v.name)}</option>`
@@ -48194,12 +47317,6 @@ function buildBudgetBuilderPage(): string {
   const totalOffers = allOffers.length;
   const totalChanges = allChanges.length;
 
-  // Build per-category vendor data with risk levels for client-side recommendation engine
-  // #1038: a fourth definition of risk lived here — its own inline type test,
-  // no date window, on a high/medium/low scale of its own — and unlike the
-  // others it *ranks*: `riskPenalty` below moves a vendor down the client-side
-  // recommender. It reads the one definition now, and the card publishes the
-  // dated cause, so nothing here demotes a vendor for a reason we won't show.
   const categoryVendors: Record<string, Array<{ slug: string; name: string; free: string; starter: number; growth: number; scale: number; notes: string; risk_level: string; risk_cause: RiskCause | null }>> = {};
   for (const cat of estimatorData) {
     categoryVendors[cat.id] = cat.vendors.map(v => {
@@ -48213,7 +47330,6 @@ function buildBudgetBuilderPage(): string {
   const categoryLabels: Record<string, string> = {};
   for (const cat of estimatorData) { categoryLabels[cat.id] = cat.label; }
 
-  // Project type presets — map project type to relevant categories
   const projectPresets = [
     { id: "side-project", name: "Side Project", categories: ["hosting", "database", "analytics"], icon: "&#x1f680;" },
     { id: "startup-mvp", name: "Startup MVP", categories: ["hosting", "database", "auth", "email", "monitoring", "analytics"], icon: "&#x1f4a1;" },
@@ -48628,10 +47744,7 @@ function buildBudgetBuilderPage(): string {
     + '</html>';
 }
 
-// --- Pricing Changes Changelog page ---
-
 function buildBadgesPage(): string {
-  // Popular vendors for preview
   const previewVendors = ["vercel", "supabase", "cloudflare", "neon", "railway", "sentry", "auth0", "stripe", "github", "netlify", "heroku", "render", "clerk", "postmark", "datadog"];
   const previewBadges = previewVendors
     .filter(slug => vendorSlugMap.has(slug))
@@ -48641,7 +47754,6 @@ function buildBadgesPage(): string {
       return { slug, name, status };
     });
 
-  // All vendors grouped by status
   const allVendors = Array.from(vendorSlugMap.entries())
     .map(([slug, name]) => ({ slug, name, ...getBadgeStatus(slug) }))
     .sort((a, b) => a.name.localeCompare(b.name));
@@ -48813,8 +47925,6 @@ ${allVendors.filter(v => v.status !== "unknown").map(v =>
 </body>
 </html>`;
 }
-
-// --- Embeddable widget builders ---
 
 const EMBED_CORS_HEADERS = {
   "Access-Control-Allow-Origin": "*",
@@ -49459,11 +48569,9 @@ function buildPricingChangesPage(): string {
   const today = new Date().toISOString().slice(0, 10);
   const currentYear = new Date().getFullYear();
 
-  // Sort all changes reverse chronological
   const sorted = [...eventDated].sort((a, b) => b.date.localeCompare(a.date));
   const undatedSorted = [...undatedChanges].sort((a, b) => b.date.localeCompare(a.date));
 
-  // Group by month
   const byMonth = new Map<string, typeof sorted>();
   for (const c of sorted) {
     const monthKey = c.date.slice(0, 7);
@@ -49477,12 +48585,10 @@ function buildPricingChangesPage(): string {
     return `${monthNames[parseInt(m, 10) - 1]} ${y}`;
   }
 
-  // Anchor ID for each change: vendor-slug + date
   function changeAnchor(c: typeof allChanges[0]): string {
     return `${toSlug(c.vendor)}-${c.date}`;
   }
 
-  // Change type filter category mapping
   const filterCategory: Record<string, string> = {
     free_tier_removed: "negative",
     limits_reduced: "negative",
@@ -49534,13 +48640,11 @@ ${altHtml}
       </div>`;
   }
 
-  // Stats
   const upcomingCount = sorted.filter(c => c.date >= today).length;
   const removedCount = sorted.filter(c => c.change_type === "free_tier_removed" || c.change_type === "open_source_killed" || c.change_type === "product_deprecated").length;
   const thisMonth = today.slice(0, 7);
   const thisMonthCount = sorted.filter(c => c.date.slice(0, 7) === thisMonth).length;
 
-  // Year-to-date stats for trend summary
   const currentYearStr = String(currentYear);
   const ytdChanges = sorted.filter(c => c.date.startsWith(currentYearStr) && c.date <= today);
   const ytdRemovals = ytdChanges.filter(c => c.change_type === "free_tier_removed" || c.change_type === "open_source_killed" || c.change_type === "product_deprecated").length;
@@ -49553,14 +48657,11 @@ ${altHtml}
   const ytdNetLabel = ytdNet > 0 ? "net positive" : ytdNet < 0 ? "net negative" : "neutral";
   const ytdNetColor = ytdNet > 0 ? "#3fb950" : ytdNet < 0 ? "#f85149" : "#8b949e";
 
-  // Upcoming changes (future-dated)
   const upcomingChanges = sorted.filter(c => c.date >= today);
 
-  // Collect unique vendor categories and years for filter dropdowns
   const vendorCategories = [...new Set(sorted.map(c => c.category || "").filter(Boolean))].sort();
   const years = [...new Set(sorted.map(c => c.date.slice(0, 4)))].sort().reverse();
 
-  // Collect unique change types for filter buttons
   const changeTypes = [...new Set(sorted.map(c => c.change_type))];
 
   const categoryOptionsHtml = vendorCategories.map(cat => {
@@ -49943,8 +49044,6 @@ ${entries}
 </feed>`;
 }
 
-// --- Deal changes timeline page ---
-
 function buildChangesPage(): string {
   const allChanges = loadDealChanges();
   const { dated: eventDated, discovered: undatedChanges } = partitionByDateProvenance(allChanges);
@@ -49952,12 +49051,10 @@ function buildChangesPage(): string {
   const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
   const last30DaysCount = eventDated.filter(c => c.date >= thirtyDaysAgo).length;
 
-  // Sort all changes reverse chronological
   const sorted = [...eventDated].sort((a, b) => b.date.localeCompare(a.date));
   const undatedSorted = [...undatedChanges].sort((a, b) => b.date.localeCompare(a.date));
   const newestFirst = [...allChanges].sort((a, b) => b.date.localeCompare(a.date));
 
-  // Group by month
   const byMonth = new Map<string, typeof sorted>();
   for (const c of sorted) {
     const monthKey = c.date.slice(0, 7);
@@ -50149,24 +49246,20 @@ ${monthsHtml}
 </html>`;
 }
 
-// --- Expiring deals timeline page ---
-
 function buildExpiringPage(): string {
   const allChanges = loadDealChanges();
   const { dated: eventDated, discovered: undatedChanges } = partitionByDateProvenance(allChanges);
   const today = new Date().toISOString().slice(0, 10);
   const todayMs = new Date(today + "T00:00:00Z").getTime();
 
-  // Split into upcoming (future) and recent (past 30 days)
   const thirtyDaysAgo = new Date(todayMs - 30 * 86400000).toISOString().slice(0, 10);
   const upcoming = eventDated.filter(c => c.date >= today).sort((a, b) => a.date.localeCompare(b.date));
   const recent = eventDated.filter(c => c.date < today && c.date >= thirtyDaysAgo).sort((a, b) => b.date.localeCompare(a.date));
   const recentlyDiscovered = undatedChanges.filter(c => c.date >= thirtyDaysAgo).sort((a, b) => b.date.localeCompare(a.date));
 
-  // Group upcoming by month
   const upcomingByMonth = new Map<string, typeof upcoming>();
   for (const c of upcoming) {
-    const monthKey = c.date.slice(0, 7); // YYYY-MM
+    const monthKey = c.date.slice(0, 7);
     if (!upcomingByMonth.has(monthKey)) upcomingByMonth.set(monthKey, []);
     upcomingByMonth.get(monthKey)!.push(c);
   }
@@ -50210,7 +49303,6 @@ function buildExpiringPage(): string {
       </div>`;
   }
 
-  // Build upcoming months HTML
   const upcomingHtml = Array.from(upcomingByMonth.entries()).map(([month, changes]) => {
     const entriesHtml = changes.map(c => buildEntry(c, true)).join("\n");
     return `    <div class="month-group">
@@ -50219,7 +49311,6 @@ ${entriesHtml}
     </div>`;
   }).join("\n");
 
-  // Build recently changed HTML
   const recentHtml = recent.length > 0 ? recent.map(c => buildEntry(c, false)).join("\n") : "";
 
   const totalUpcoming = upcoming.length;
@@ -50371,8 +49462,6 @@ ${recentlyDiscovered.map(c => buildEntry(c, false)).join("\n")}
 </html>`;
 }
 
-// --- Data freshness dashboard ---
-
 function freshnessGrade(score: number): { grade: string; color: string } {
   if (score >= 90) return { grade: "A", color: "#3fb950" };
   if (score >= 75) return { grade: "B", color: "#3b82f6" };
@@ -50398,7 +49487,6 @@ function buildFreshnessPage(): string {
     creator: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
   };
 
-  // Category table rows
   const categoryRows = m.by_category.map((c) => {
     const { grade: catGrade, color: catColor } = freshnessGrade(c.freshness_score);
     return `        <tr>
@@ -50409,7 +49497,6 @@ function buildFreshnessPage(): string {
         </tr>`;
   }).join("\n");
 
-  // Stalest entries
   const stalestRows = m.stalest_entries.map((e) =>
     `        <tr>
           <td><a href="/vendor/${toSlug(e.vendor)}">${escHtmlServer(e.vendor)}</a></td>
@@ -50458,7 +49545,6 @@ ${quarantineRows}
 
 `;
 
-  // Freshest entries
   const freshestRows = m.freshest_entries.map((e) =>
     `        <tr>
           <td><a href="/vendor/${toSlug(e.vendor)}">${escHtmlServer(e.vendor)}</a></td>
@@ -50606,19 +49692,15 @@ ${freshestRows}
 </html>`;
 }
 
-// --- Deadline Tracker page ---
-
 function buildDeadlinesPage(): string {
   const allChanges = loadDealChanges();
   const today = new Date().toISOString().slice(0, 10);
   const todayMs = new Date(today + "T00:00:00Z").getTime();
 
-  // Filter to future-dated changes only
   const deadlines = allChanges
     .filter(c => c.date > today)
     .sort((a, b) => a.date.localeCompare(b.date));
 
-  // Migration guide mapping for known deadlines
   const migrationGuides: Record<string, string> = {
     "dall-e": "/dall-e-shutdown",
     "tenor": "/tenor-alternatives",
@@ -50654,7 +49736,6 @@ function buildDeadlinesPage(): string {
     return `${Math.ceil(diff / 30)} months`;
   }
 
-  // Count by change type for filter display
   const typeGroups = new Map<string, number>();
   for (const c of deadlines) {
     const count = typeGroups.get(c.change_type) ?? 0;
@@ -50671,7 +49752,6 @@ function buildDeadlinesPage(): string {
     return diff > 14 && diff <= 30;
   }).length;
 
-  // Build deadline cards
   const cardsHtml = deadlines.map(c => {
     const badge = changeTypeBadge[c.change_type] ?? { label: c.change_type, color: "#8b949e" };
     const urgency = urgencyBadge(c.date);
@@ -50703,7 +49783,6 @@ ${altHtml}${guideHtml}
       </div>`;
   }).join("\n");
 
-  // Build filter buttons
   const filterButtons = Array.from(typeGroups.entries())
     .sort((a, b) => b[1] - a[1])
     .map(([type, count]) => {
@@ -50882,8 +49961,6 @@ ${cardsHtml}
 </html>`;
 }
 
-// --- Agent Stack Guide page ---
-
 interface StackBundle {
   id: string;
   name: string;
@@ -50947,7 +50024,6 @@ function buildAgentStackPage(): string {
   const title = "AI Agent Builder\u2019s Free Stack Guide \u2014 AgentDeals";
   const metaDesc = "Curated free-tier infrastructure stacks for AI agents \u2014 RAG, coding agents, data pipelines, and chatbots. $0/month to start.";
 
-  // Resolve vendor data for each bundle
   const resolvedBundles = AGENT_STACK_BUNDLES.map((bundle) => {
     const resolvedServices = bundle.services.map((svc) => {
       const offer = offers.find((o) => o.vendor === svc.vendorName);
@@ -50978,7 +50054,6 @@ function buildAgentStackPage(): string {
   const bundleHtml = resolvedBundles.map((bundle) => {
     const serviceRows = bundle.resolvedServices.map((svc) => {
       const limits = svc.description;
-      // Extract a concise limit string — first sentence or first 120 chars
       const shortLimits = limits.split(". ")[0].substring(0, 140);
       return `          <tr>
             <td class="role-cell">${escHtmlServer(svc.role)}</td>
@@ -51082,10 +50157,7 @@ ${bundleHtml}
 </html>`;
 }
 
-// --- Referral Programs directory page ---
-
 function buildReferralProgramsPage(): string {
-  // Collect unique vendors with referral_program metadata
   const seen = new Set<string>();
   const programVendors: { vendor: string; category: string; referrer_benefit: string; referee_benefit: string; program_url: string; type: string; commission_type?: string; hasCode: boolean; referralUrl?: string; refereeValue?: string }[] = [];
   for (const o of offers) {
@@ -51106,18 +50178,6 @@ function buildReferralProgramsPage(): string {
       });
     }
   }
-  /**
-   * This page used to be one list sorted "vendors we hold a referral code for
-   * first, then alphabetical" — so the page about referral programmes was
-   * ordered by our commercial interest in them, silently.
-   *
-   * Separation plus labelling beats hidden ordering. We do have commercial
-   * relationships; they just don't get to be invisible. Within each section the
-   * order comes from the shared unbiased rotation rather than the alphabet,
-   * which is the bias we are removing everywhere else. This is an inventory
-   * listing, not a quality ranking, so it does not go through the demerit
-   * model — that would be a category error.
-   */
   const paidSection = rotateListing(programVendors.filter(v => v.hasCode), "referral-programs:with-code");
   const unpaidSection = rotateListing(programVendors.filter(v => !v.hasCode), "referral-programs:without-code");
   const inventoryOrder = rotateListing([...programVendors], "referral-programs:inventory");
@@ -51127,7 +50187,6 @@ function buildReferralProgramsPage(): string {
   const withCodes = paidSection.length;
   const withoutCodes = unpaidSection.length;
 
-  // Group by category
   const categoryGroups = new Map<string, typeof programVendors>();
   for (const v of programVendors) {
     const existing = categoryGroups.get(v.category) || [];
@@ -51377,8 +50436,6 @@ document.querySelectorAll('.filter-btn').forEach(btn => {
 </html>`;
 }
 
-// --- Marketplace onboarding page (public) ---
-
 function buildMarketplacePage(): string {
   const title = "Agent Marketplace — Earn Revenue with Referral Codes | AgentDeals";
   const metaDesc = "Join the AgentDeals marketplace. Register your AI agent, submit referral codes, earn revenue when they convert. Trust tiers, competitive ranking, and x402 payouts.";
@@ -51570,8 +50627,6 @@ ${leaderboard.entries.map((e, i) => `      <div class="lb-row"><span class="lb-r
 </html>`;
 }
 
-// --- Agent dashboard page (authenticated) ---
-
 function buildAgentDashboardPage(agent: Agent, balance: AgentBalance | null, codes: SubmittedReferralCode[], leaderboardRank: number, leaderboardTotal: number): string {
   const title = "Agent Dashboard — AgentDeals";
   const metaDesc = "Your agent dashboard on AgentDeals. View your referral codes, earnings, trust tier, and leaderboard rank.";
@@ -51580,10 +50635,8 @@ function buildAgentDashboardPage(agent: Agent, balance: AgentBalance | null, cod
   const totalEarnings = balance ? balance.total_earned : 0;
   const totalPaidOut = balance ? balance.total_paid_out : 0;
 
-  // Sort codes by earnings (conversions * commission_rate as proxy) — default by conversions
   const sortedCodes = [...codes].sort((a, b) => b.conversions - a.conversions);
 
-  // 7-day trend: compare last 7 days conversions vs prior 7 days
   const now = Date.now();
   const sevenDays = 7 * 24 * 60 * 60 * 1000;
   const recentConversions = codes.reduce((sum, c) => {
@@ -51725,8 +50778,6 @@ ${payoutsAvailable() && (balance?.confirmed_balance ?? 0) >= 10 ? `    <a href="
 </html>`;
 }
 
-// --- Privacy policy page ---
-
 function buildPressPage(): string {
   const title = "AgentDeals in the Press \u2014 External Coverage";
   const metaDesc = "AgentDeals in the press \u2014 external coverage and community discussions of developer tool pricing changes tracked on AgentDeals.";
@@ -51849,7 +50900,6 @@ function buildDisclosurePage(): string {
     publisher: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
   };
 
-  // Find all offers with referral data
   const ourReferralLinks = allOurReferralLinks(offers);
   const vendorsWithOwnProgram = new Set(offers.filter(o => o.referral_program?.available === true).map(o => toSlug(o.vendor)));
   for (const link of ourReferralLinks) vendorsWithOwnProgram.delete(toSlug(link.vendor));
@@ -52086,8 +51136,6 @@ ${globalNavCss()}
 </html>`;
 }
 
-// --- Web search page ---
-
 function buildSearchPage(query: string, categoryFilter: string, typeFilter: string, sortParam: string, page: number): string {
   const PAGE_SIZE = 50;
   const hasQuery = query.length > 0;
@@ -52110,7 +51158,6 @@ function buildSearchPage(query: string, categoryFilter: string, typeFilter: stri
     { value: "category", label: "By Category" },
   ];
 
-  // Search results
   let results: ReturnType<typeof enrichOffers> = [];
   let totalResults = 0;
   if (hasFilters) {
@@ -52138,34 +51185,29 @@ function buildSearchPage(query: string, categoryFilter: string, typeFilter: stri
     return searchQueryHref(params);
   }
 
-  // Category pills
   const catPillsHtml = categories.map(c => {
     const isActive = categoryFilter.toLowerCase() === c.name.toLowerCase();
     const href = buildFilterUrl({ category: isActive ? "" : c.name });
     return searchQueryAnchor(href, escHtmlServer(c.name) + ' <span class="cat-count">' + c.count + '</span>', ' class="cat-filter' + (isActive ? " active" : "") + '"');
   }).join("\n");
 
-  // Type filter pills
   const typePillsHtml = eligibilityTypes.map(t => {
     const isActive = typeFilter.toLowerCase() === t.value.toLowerCase();
     const href = buildFilterUrl({ type: isActive ? "" : t.value });
     return searchQueryAnchor(href, escHtmlServer(t.label), ' class="type-filter' + (isActive ? " active" : "") + '"');
   }).join("\n");
 
-  // Sort options
   const sortOptionsHtml = sortOptions.map(s => {
     const isActive = sortParam === s.value;
     return '<option value="' + escHtmlServer(s.value) + '"' + (isActive ? ' selected' : '') + '>' + escHtmlServer(s.label) + '</option>';
   }).join("");
 
-  // Group results by category for comparison CTAs
   const catGroups = new Map<string, typeof results>();
   for (const r of results) {
     if (!catGroups.has(r.category)) catGroups.set(r.category, []);
     catGroups.get(r.category)!.push(r);
   }
 
-  // Results HTML
   const resultsHtml = results.map((r, idx) => {
 
     let card = '<a href="/vendor/' + toSlug(r.vendor) + '" class="result-card">'
@@ -52181,7 +51223,6 @@ function buildSearchPage(query: string, categoryFilter: string, typeFilter: stri
       + (r.expires_soon ? ' &middot; <span style="color:#f85149">' + escHtmlServer(r.expires_soon) + '</span>' : '')
       + '</div></a>';
 
-    // Comparison CTA: show after last result in a category group with 2+ results
     const group = catGroups.get(r.category)!;
     if (group.length >= 2 && group[group.length - 1] === r) {
       const slugA = toSlug(group[0].vendor);
@@ -52191,7 +51232,6 @@ function buildSearchPage(query: string, categoryFilter: string, typeFilter: stri
     return card;
   }).join("\n");
 
-  // Empty state / suggested searches
   const suggestedSearches = ["database", "hosting", "auth", "monitoring", "CI/CD", "email", "search", "storage"];
   let emptyStateHtml = "";
   if (hasFilters) {
@@ -52208,7 +51248,6 @@ function buildSearchPage(query: string, categoryFilter: string, typeFilter: stri
       + '</div>';
   }
 
-  // Pagination
   const paginationHtml = totalPages > 1 ? (() => {
     const links: string[] = [];
     if (page > 1) {
@@ -52340,9 +51379,6 @@ function buildSearchPage(query: string, categoryFilter: string, typeFilter: stri
     + '</body>\n</html>';
 }
 
-// --- Pricing trends pages ---
-
-// Negative change types that indicate prices rising / free tiers shrinking
 const NEGATIVE_TYPES = new Set(["free_tier_removed", "limits_reduced", "restriction", "open_source_killed", "product_deprecated"]);
 const POSITIVE_TYPES = new Set(["new_free_tier", "limits_increased", "startup_program_expanded"]);
 
@@ -52353,8 +51389,8 @@ function getTrendDirection(changes: Array<{ change_type: string }>): "rising" | 
     if (POSITIVE_TYPES.has(c.change_type)) pos++;
   }
   if (neg === 0 && pos === 0) return "stable";
-  if (neg > pos) return "rising"; // prices rising = bad
-  if (pos > neg) return "declining"; // prices declining = good
+  if (neg > pos) return "rising";
+  if (pos > neg) return "declining";
   return "stable";
 }
 
@@ -52367,17 +51403,14 @@ const trendEmoji: Record<string, { icon: string; color: string; label: string }>
 function buildTrendsIndexPage(): string {
   const allChanges = loadDealChanges();
 
-  // Group changes by category
   const byCat = new Map<string, typeof allChanges>();
   for (const c of allChanges) {
     if (!byCat.has(c.category)) byCat.set(c.category, []);
     byCat.get(c.category)!.push(c);
   }
 
-  // Sort categories by change count (most volatile first)
   const sorted = Array.from(byCat.entries()).sort((a, b) => b[1].length - a[1].length);
 
-  // Also include categories with zero changes
   const allCatNames = new Set(categories.map(c => c.name));
   const categoriesWithChanges = new Set(byCat.keys());
   const zeroCats = [...allCatNames].filter(c => !categoriesWithChanges.has(c)).sort();
@@ -52487,27 +51520,22 @@ function buildTrendsPage(slug: string): string | null {
   const direction = getTrendDirection(catChanges);
   const t = trendEmoji[direction];
 
-  // Change type breakdown
   const typeBreakdown = new Map<string, number>();
   for (const c of catChanges) {
     typeBreakdown.set(c.change_type, (typeBreakdown.get(c.change_type) ?? 0) + 1);
   }
 
-  // At-risk vendors (risky or caution)
   const atRisk = enriched.filter(o => (o.risk_level === "risky" || o.risk_level === "caution") && o.risk_cause)
     .sort((a, b) => (a.risk_level === "risky" ? 0 : 1) - (b.risk_level === "risky" ? 0 : 1));
 
-  // Stable picks (stable risk, no recent changes)
   const stablePicks = enriched.filter(o => o.risk_level === "stable" && !o.recent_change).slice(0, 12);
 
-  // Overall stats
   const totalAll = allChanges.length;
   const categoryPct = totalAll > 0 ? Math.round((catChanges.length / totalAll) * 100) : 0;
 
   const title = `${categoryName} Pricing Trends — AgentDeals`;
   const metaDesc = `Pricing trends for ${categoryName}: ${catChanges.length} tracked changes across ${catOffers.length} vendors. Direction: ${t.label.toLowerCase()}.`;
 
-  // Timeline HTML
   const timelineHtml = catChanges.length > 0 ? catChanges.map(c => {
     const badge = changeTypeBadge[c.change_type] ?? { label: c.change_type, color: "#8b949e" };
     return `      <div class="timeline-item" style="border-left-color:${badge.color}">
@@ -52521,7 +51549,6 @@ function buildTrendsPage(slug: string): string | null {
       </div>`;
   }).join("\n") : `<p class="no-data">No pricing changes tracked for ${escHtmlServer(categoryName)}. All vendors in this category have stable pricing.</p>`;
 
-  // Breakdown HTML
   const breakdownHtml = Array.from(typeBreakdown.entries()).sort((a, b) => b[1] - a[1]).map(([type, count]) => {
     const badge = changeTypeBadge[type] ?? { label: type, color: "#8b949e" };
     return `<span class="breakdown-item"><span class="badge" style="background:${badge.color}">${badge.label}</span> ${count}</span>`;
@@ -52529,7 +51556,6 @@ function buildTrendsPage(slug: string): string | null {
 
   const riskColors: Record<string, string> = { stable: "#3fb950", caution: "#d29922", risky: "#f85149" };
 
-  // At-risk HTML
   const atRiskHtml = atRisk.length > 0 ? `
   <div class="section">
     <h2>At-Risk Vendors</h2>
@@ -52543,7 +51569,6 @@ ${atRisk.map(o => {
     </div>
   </div>` : "";
 
-  // Stable picks HTML
   const stableHtml = stablePicks.length > 0 ? `
   <div class="section">
     <h2>Stable Picks</h2>
@@ -53525,41 +52550,20 @@ function extractClientInfo(body: unknown): ClientInfo | undefined {
   return undefined;
 }
 
-// Parse canonical hostname from BASE_URL for redirect logic
 const canonicalHost = (() => {
   try { return new URL(BASE_URL).hostname; } catch { return undefined; }
 })();
 
-// Requests that are not a client consuming our content. Excluded from client-class
-// attribution so the web-vs-MCP comparison stays meaningful (#1019):
-//   /mcp    — that IS the MCP side of the comparison; counting it as a web hit would
-//             put the same traffic on both sides of the ratio
-//   assets  — a browser fetching a favicon is one page view, not two requests
 const TRAFFIC_EXCLUDED_PATHS = new Set(["/mcp", "/favicon.png", "/favicon.ico", "/og-image.png"]);
 function isCountableTraffic(pathname: string): boolean {
   if (TRAFFIC_EXCLUDED_PATHS.has(pathname)) return false;
   return !pathname.startsWith("/.well-known/");
 }
 
-/**
- * Surface 2 of the invitation (#1024): an `_agent` block on the JSON endpoints where a
- * recommendation gets made. Applied explicitly per endpoint rather than by wrapping every
- * JSON response — most of what this server returns is not a candidate set, and inviting a
- * recommendation report from /api/freshness would be noise.
- */
 function withAgentBlock<T extends object>(payload: T, slug?: string | null): T & { _agent: Record<string, unknown> } {
   return { ...payload, _agent: agentBlock(BASE_URL, slug ?? null) };
 }
 
-/**
- * The vendor a response is *about*, when it is about exactly one — so the beacon's
- * invitation can name it instead of printing `<slug>` (#1024).
- *
- * Deliberately excludes `/alternative-to/:slug`. That page's subject is one vendor but its
- * recommendations are the alternatives to it, so prefilling the subject would invite a
- * report for the one vendor on the page the agent is least likely to have recommended.
- * Multi-vendor pages keep the placeholder and show a real slug as an example instead.
- */
 const SINGLE_VENDOR_PREFIXES = ["/vendor/", "/api/vendor/", "/api/details/", "/embed/vendor/"] as const;
 function singleVendorSlug(pathname: string): string | null {
   for (const prefix of SINGLE_VENDOR_PREFIXES) {
@@ -53567,8 +52571,6 @@ function singleVendorSlug(pathname: string): string | null {
     const rest = pathname.slice(prefix.length).replace(/\/$/, "");
     if (!rest || rest.includes("/")) return null;
     const slug = decodeURIComponent(rest).toLowerCase();
-    // Only a slug we actually index: an unresolvable one would put a name we do not know
-    // into a copyable example, and the first thing an agent does with it is send it back.
     return vendorSlugMap.has(slug) ? slug : null;
   }
   return null;
@@ -53578,10 +52580,6 @@ const httpServer = createHttpServer(async (req, res) => {
   const url = new URL(req.url ?? "/", `http://localhost:${PORT}`);
   const isGetOrHead = req.method === "GET" || req.method === "HEAD";
 
-  // Client-class attribution, on every request rather than only HTML pages (#1019).
-  // Registered first so a request that redirects or 404s is still attributed — the
-  // page-view hook sits below the redirect branches and misses all of them. Recorded
-  // on finish so the served status is known; costs no Redis commands.
   if (isCountableTraffic(url.pathname)) {
     res.on("finish", () => {
       const classification = classifyRequest(url.pathname, req.headers["user-agent"]);
@@ -53598,23 +52596,14 @@ const httpServer = createHttpServer(async (req, res) => {
     });
   }
 
-  // The beacon invitation, surface 1 (#1024). Wrapping writeHead is what makes this one
-  // insertion point instead of ~120 — and it is also what makes the rule enforceable:
-  // the header goes on 2xx HTML and JSON only. Advertising a "tell us what you
-  // recommended" address on a 404 is incoherent, and today it would mean attaching it to
-  // 3,070 scanner 404s a day — 54% of all traffic — for nothing.
   const rawWriteHead = res.writeHead.bind(res);
   res.writeHead = ((status: number, ...rest: unknown[]) => {
     if (status >= 200 && status < 300 && !res.hasHeader(SIGNAL_HEADER_NAME)) {
-      // Read the content type off whatever form writeHead was called in, since this
-      // codebase passes headers positionally rather than setting them first.
       const headers = rest.find(a => a && typeof a === "object") as Record<string, string> | undefined;
       const contentType = String(
         headers?.["Content-Type"] ?? headers?.["content-type"] ?? res.getHeader("Content-Type") ?? "",
       );
       if (/^(text\/html|application\/json)/.test(contentType)) {
-        // Prefilled where the page is about one vendor, placeholder where it is not:
-        // "copy this line" beats "understand our slug scheme, then construct a call".
         const slug = singleVendorSlug(url.pathname);
         res.setHeader(SIGNAL_HEADER_NAME, signalHeaderValue(BASE_URL, slug));
       }
@@ -53622,15 +52611,12 @@ const httpServer = createHttpServer(async (req, res) => {
     return rawWriteHead(status as never, ...(rest as never[]));
   }) as typeof res.writeHead;
 
-  // --- Agent attribution beacon (#1024) ---
   if (url.pathname === SIGNAL_PATH) {
     if (req.method !== "POST" && !isGetOrHead) {
       res.writeHead(405, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*", "Allow": "GET, POST" });
       res.end(JSON.stringify({ ok: false, error: "Use POST, or GET with ack=1", docs: SIGNAL_DOC_PATH }));
       return;
     }
-    // Rate limit before parsing: the limiter is what bounds the work an unauthenticated
-    // caller can make us do, so it has to sit in front of the work.
     const decision = checkRateLimit(clientAddress(req.headers["x-forwarded-for"], req.socket.remoteAddress));
     if (!decision.allowed) {
       res.writeHead(429, {
@@ -53666,8 +52652,6 @@ const httpServer = createHttpServer(async (req, res) => {
         const parsed = body.trim() ? JSON.parse(body) : {};
         input = (parsed && typeof parsed === "object" && !Array.isArray(parsed)) ? parsed as SignalInput : {};
       } catch {
-        // Fall back to form encoding rather than 400: an agent that can only send a form
-        // post is exactly the population the GET form exists for.
         input = Object.fromEntries(new URLSearchParams(body)) as SignalInput;
       }
     } else {
@@ -53695,10 +52679,6 @@ const httpServer = createHttpServer(async (req, res) => {
   }
 
   if (url.pathname === "/api/signals" && isGetOrHead) {
-    // Aggregates only. getSignalVendorBreakdown() exists and is deliberately not called
-    // here: a public per-vendor counter is a placement metric a vendor could acquire by
-    // firing the endpoint at itself, which is the one thing every published order on this
-    // site is built to exclude. A test asserts no per-vendor count reaches this response.
     const full = getSignalReport();
     res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
     res.end(JSON.stringify(authorizedAsPlatform(req.headers) ? full : publicSignalReport(full)));
@@ -53802,7 +52782,6 @@ const httpServer = createHttpServer(async (req, res) => {
     return;
   }
 
-  // 301 redirect non-canonical hostnames to BASE_URL (SEO canonical domain)
   if (canonicalHost) {
     const requestHost = (req.headers.host ?? "").split(":")[0];
     if (requestHost && requestHost !== canonicalHost) {
@@ -53826,56 +52805,48 @@ const httpServer = createHttpServer(async (req, res) => {
     }
   }
 
-  // Feed URL aliases — redirect common feed paths to canonical /feed.xml
   if ((url.pathname === "/rss" || url.pathname === "/feed" || url.pathname === "/atom") && isGetOrHead) {
     res.writeHead(301, { Location: "/feed.xml" });
     res.end();
     return;
   }
 
-  // Gemini API pricing alias — redirect to canonical slug with year
   if (url.pathname === "/gemini-api-pricing" && isGetOrHead) {
     res.writeHead(301, { Location: "/gemini-api-pricing-2026" });
     res.end();
     return;
   }
 
-  // Auth comparison aliases — redirect old/short slugs to canonical
   if ((url.pathname === "/auth-free-tier-comparison-2026" || url.pathname === "/auth-pricing" || url.pathname === "/auth-identity-pricing") && isGetOrHead) {
     res.writeHead(301, { Location: "/auth-comparison-2026" });
     res.end();
     return;
   }
 
-  // Monitoring comparison alias — redirect old slug to new canonical
   if ((url.pathname === "/monitoring-free-tier-comparison-2026" || url.pathname === "/monitoring-pricing" || url.pathname === "/monitoring-observability-pricing") && isGetOrHead) {
     res.writeHead(301, { Location: "/monitoring-comparison-2026" });
     res.end();
     return;
   }
 
-  // Storage comparison alias — redirect old slug to new canonical
   if (url.pathname === "/storage-free-tier-comparison-2026" && isGetOrHead) {
     res.writeHead(301, { Location: "/storage-comparison-2026" });
     res.end();
     return;
   }
 
-  // Email comparison alias — redirect old slug to new canonical
   if (url.pathname === "/email-free-tier-comparison-2026" && isGetOrHead) {
     res.writeHead(301, { Location: "/email-comparison-2026" });
     res.end();
     return;
   }
 
-  // State of free tiers — redirect old year-suffixed slug to canonical
   if (url.pathname === "/state-of-free-tiers-2026" && isGetOrHead) {
     res.writeHead(301, { Location: "/state-of-free-tiers" });
     res.end();
     return;
   }
 
-  // Plural /vendors → singular /vendor redirect
   if (url.pathname === "/vendors" && isGetOrHead) {
     res.writeHead(301, { Location: "/vendor" });
     res.end();
@@ -53887,8 +52858,6 @@ const httpServer = createHttpServer(async (req, res) => {
     return;
   }
 
-  // Server-side page view tracking (fire-and-forget, no latency impact)
-  // Track HTML page requests only — exclude API, MCP, static assets, health
   const isPagePath = req.method === "GET" && !url.pathname.startsWith("/api/") &&
     url.pathname !== "/mcp" && url.pathname !== "/health" &&
     url.pathname !== "/favicon.png" && url.pathname !== "/favicon.ico" &&
@@ -53897,8 +52866,6 @@ const httpServer = createHttpServer(async (req, res) => {
     !url.pathname.startsWith("/.well-known/") &&
     url.pathname !== "/feed.xml";
   if (isPagePath) {
-    // Recorded on response finish so the served status is known: a path we 404 is not a
-    // route of ours and must not mint its own analytics key (#1018).
     res.on("finish", () => {
       recordPageView(url.pathname, req.headers["user-agent"] ?? "", req.headers["referer"], res.statusCode);
     });
@@ -53923,12 +52890,10 @@ const httpServer = createHttpServer(async (req, res) => {
       const sessionId = req.headers["mcp-session-id"] as string | undefined;
 
       if (sessionId && sessions.has(sessionId)) {
-        // Existing session — route to its transport
         touchSession(sessionId);
         const { transport } = sessions.get(sessionId)!;
         await transport.handleRequest(req, res, parsedBody);
       } else if (!sessionId && isInitializeRequest(parsedBody)) {
-        // New session — create transport + server
         const ip = getClientIp(req);
         const userAgent = req.headers["user-agent"] ?? "unknown";
         const clientInfo = extractClientInfo(parsedBody);
@@ -53986,12 +52951,10 @@ const httpServer = createHttpServer(async (req, res) => {
         await mcpServer.connect(transport);
         await transport.handleRequest(req, res, parsedBody);
       } else {
-        // Invalid: has session ID but unknown, or missing session ID on non-init request
         res.writeHead(400, { "Content-Type": "application/json" });
         res.end(JSON.stringify(sessionRecoveryBody(sessionId ? "unknown_session" : "no_session")));
       }
     } else if (req.method === "GET") {
-      // SSE stream — route to existing session
       const sessionId = req.headers["mcp-session-id"] as string | undefined;
       const entry = sessionId ? sessions.get(sessionId) : undefined;
       if (sessionId && entry) {
@@ -54007,7 +52970,6 @@ const httpServer = createHttpServer(async (req, res) => {
         res.end(JSON.stringify(sessionRecoveryBody(sessionId ? "unknown_session" : "no_session")));
       }
     } else if (req.method === "DELETE") {
-      // Session termination
       const sessionId = req.headers["mcp-session-id"] as string | undefined;
       if (sessionId && sessions.has(sessionId)) {
         const entry = sessions.get(sessionId)!;
@@ -54165,8 +53127,6 @@ const httpServer = createHttpServer(async (req, res) => {
     res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
     res.end(JSON.stringify(data));
   } else if (url.pathname === "/api/traffic" && isGetOrHead) {
-    // Traffic by client class (#1019). Not recorded as an API hit and classified
-    // `internal` by path: observing the system is not using it.
     const data = getTrafficReport();
     res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
     res.end(JSON.stringify({ ...data, vendor_series: vendorSeriesGauge() }));
@@ -54188,8 +53148,6 @@ const httpServer = createHttpServer(async (req, res) => {
     const results = searchOffers(sanitizedQ || undefined, category, eligibilityType, sort, validStability, validPaymentProtocol);
     const total = results.length;
     const paged = enrichOffers(results.slice(offset, offset + limit));
-    // Enrich each offer with: (1) best referral_code (platform > agent-submitted, explicit null if none)
-    // and (2) full ranked agent-submitted codes list for detailed consumers.
     const offersWithCodes = paged.map(offer => {
       const agentCodes = getRankedCodesForVendor(offer.vendor);
       const enriched: typeof offer & { referral_code: ReturnType<typeof getBestReferralCode>; agent_referral_codes?: unknown[] } = {
@@ -54208,8 +53166,6 @@ const httpServer = createHttpServer(async (req, res) => {
       }
       return enriched;
     });
-    // `total` is post-filter. For the catalog-gap signal we need what the query alone
-    // matches, and only when a filter was actually applied (#1018 Defect C).
     const offersFiltered = Boolean(category || eligibilityType || validStability || validPaymentProtocol);
     recordSearchQuery(q, total, {
       category,
@@ -54348,13 +53304,11 @@ const httpServer = createHttpServer(async (req, res) => {
     const vendorFilter = url.searchParams.get("vendor") || undefined;
     const vendorsFilter = url.searchParams.get("vendors") || undefined;
     const categoriesFilter = url.searchParams.get("categories") || undefined;
-    // Validate since is a valid date if provided
     if (since && !/^\d{4}-\d{2}-\d{2}/.test(since)) {
       res.writeHead(400, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
       res.end(JSON.stringify({ error: "Invalid 'since' parameter. Expected ISO date string (YYYY-MM-DD)." }));
       return;
     }
-    // Personalized mode when vendors or categories filter is active
     const isPersonalized = !!(vendorsFilter || categoriesFilter);
     const changeLogFreshness = getChangeLogFreshness();
     if (isPersonalized) {
@@ -54556,8 +53510,6 @@ const httpServer = createHttpServer(async (req, res) => {
         }
       }
     }
-    // Inventory listing, ordered by the shared unbiased rotation rather than
-    // the alphabet — the same treatment as the rendered /referral-programs page.
     const refOrdered = rotateListing(refPrograms, "referral-programs:api");
     refPrograms.length = 0;
     refPrograms.push(...refOrdered);
@@ -54614,8 +53566,6 @@ const httpServer = createHttpServer(async (req, res) => {
     let detailResult = getOfferDetails(vendorParam, includeAlternatives);
     let resolvedFrom: string | null = null;
     if ("error" in detailResult) {
-      // Fuzzy-resolve: treat vendorParam as a slug and see if it maps to a
-      // known vendor (e.g. "kiro" → "Amazon Kiro", "amazon-kiro" → exact).
       const resolution = resolveVendorSlug(toSlug(vendorParam));
       if (resolution.type === "exact" || resolution.type === "redirect") {
         const canonicalName = vendorSlugMap.get(resolution.slug);
@@ -54923,8 +53873,6 @@ ${catList}
     const latestVerified = offers.reduce((max, o) => o.verifiedDate > max ? o.verifiedDate : max, offers[0]?.verifiedDate || now);
     const editorialDate = "2026-04-10";
     const comparisonDate = "2026-04-04";
-    // /this-week in sitemap-reports uses `now` as lastmod, so the sitemap index
-    // lastmod for reports must be `now` too (Google uses this to decide re-crawl).
     const latestReport = now;
     const sitemapIndex = '<?xml version="1.0" encoding="UTF-8"?>\n'
       + '<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
@@ -55120,7 +54068,6 @@ ${catList}
     res.end(buildCompareIndexPage());
   } else if (url.pathname.startsWith("/compare/") && isGetOrHead) {
     const slug = url.pathname.slice("/compare/".length).replace(/\/$/, "");
-    // Check for reverse URL (e.g., netlify-vs-vercel → vercel-vs-netlify)
     if (!comparisonMap.has(slug) && slug.includes("-vs-")) {
       const parts = slug.split("-vs-");
       if (parts.length === 2) {
@@ -55131,8 +54078,6 @@ ${catList}
           return;
         }
       }
-      // Not a generated pair, but both vendors are known: send the reader to
-      // the canonical (alphabetical) URL so the two orderings never both 200.
       const resolved = resolveComparisonSlug(slug);
       if (resolved) {
         const canonical = comparisonSlug(...(resolved.slice().sort() as [string, string]));
@@ -55160,7 +54105,6 @@ ${catList}
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
     res.end(buildThisWeekPage(weeksAgo));
   } else if (url.pathname === "/digest" && isGetOrHead) {
-    // Redirect to current week's digest
     const currentWeek = getCurrentWeekKey();
     res.writeHead(302, { Location: `/digest/${currentWeek}` });
     res.end();
@@ -55809,7 +54753,6 @@ ${catList}
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
     res.end(buildVsPage(slug)!);
   } else if (isGetOrHead && url.pathname.includes("-vs-") && url.pathname.split("/").length === 2) {
-    // Reverse URL redirect for vendor-vs-vendor pages (e.g., /vercel-vs-cloudflare-pages → /cloudflare-pages-vs-vercel)
     const slug = url.pathname.slice(1);
     const vsIdx = slug.indexOf("-vs-");
     if (vsIdx > 0) {
@@ -55936,7 +54879,6 @@ ${catList}
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/embed/changes", params: { theme }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600", ...EMBED_CORS_HEADERS });
     res.end(buildEmbedChangesWidget(theme));
-  // --- Agent Registry API ---
 
   } else if (url.pathname === "/api/agents/register" && req.method === "POST") {
     const registration = registrationLimiter.check(clientAddress(req.headers["x-forwarded-for"], req.socket.remoteAddress));
@@ -55975,7 +54917,6 @@ ${catList}
     }
 
     try {
-      // If vestauth URL provided, validate it before registering
       if (parsed.vestauth_public_key_url) {
         const validation = await validateVestauthUrl(parsed.vestauth_public_key_url);
         if (!validation.valid) {
@@ -56035,8 +54976,6 @@ ${catList}
       x402_address: agent.x402_address,
     }));
 
-  // --- Referral Attribution API ---
-
   } else if (url.pathname.startsWith("/api/referral/") && isGetOrHead) {
     const vendor = decodeURIComponent(url.pathname.slice("/api/referral/".length));
     if (!vendor) {
@@ -56069,7 +55008,6 @@ ${catList}
       attribution_note: attribution.note,
     }));
 
-  // --- POST /api/conversions: Record a new conversion ---
   } else if (url.pathname === "/api/conversions" && req.method === "POST") {
     if (!authorizedAsPlatform(req.headers)) {
       res.writeHead(401, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
@@ -56130,7 +55068,6 @@ ${catList}
       res.end(JSON.stringify({ error: err.message }));
     }
 
-  // --- GET /api/agents/:id/balance: Get agent balance ---
   } else if (url.pathname.match(/^\/api\/agents\/[^/]+\/balance$/) && isGetOrHead) {
     const parts = url.pathname.split("/");
     const agentId = decodeURIComponent(parts[3]);
@@ -56169,7 +55106,6 @@ ${catList}
         : PAYOUTS_UNAVAILABLE_REASON,
     }));
 
-  // --- POST /api/conversions/confirm: Confirm eligible entries ---
   } else if (url.pathname === "/api/conversions/confirm" && req.method === "POST") {
     if (!authorizedAsPlatform(req.headers)) {
       res.writeHead(401, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
@@ -56189,7 +55125,6 @@ ${catList}
       res.end(JSON.stringify({ error: err.message }));
     }
 
-  // --- POST /api/conversions/clawback: Clawback a pending entry ---
   } else if (url.pathname === "/api/conversions/clawback" && req.method === "POST") {
     if (!authorizedAsPlatform(req.headers)) {
       res.writeHead(401, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
@@ -56229,7 +55164,6 @@ ${catList}
     res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
     res.end(JSON.stringify({ success: true, entry_id: parsed.entry_id }));
 
-  // --- PATCH /api/agents/me: Update agent profile (x402_address) ---
   } else if (url.pathname === "/api/agents/me" && req.method === "PATCH") {
     const agent = await authenticateRequest(req as any);
     if (!agent) {
@@ -56283,7 +55217,6 @@ ${catList}
       res.end(JSON.stringify({ error: "No updatable fields provided. Supported: x402_address" }));
     }
 
-  // --- POST /api/agents/:id/payout: Request payout ---
   } else if (url.pathname.match(/^\/api\/agents\/[^/]+\/payout$/) && req.method === "POST") {
     const parts = url.pathname.split("/");
     const agentId = decodeURIComponent(parts[3]);
@@ -56307,7 +55240,6 @@ ${catList}
       return;
     }
 
-    // Check x402 address
     if (!agent.x402_address) {
       res.writeHead(402, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
       res.end(JSON.stringify({
@@ -56317,7 +55249,6 @@ ${catList}
       return;
     }
 
-    // Check balance
     const balance = getAgentBalance(agentId);
     const confirmedBalance = balance ? balance.confirmed_balance : 0;
     if (confirmedBalance < MINIMUM_PAYOUT_AMOUNT) {
@@ -56330,7 +55261,6 @@ ${catList}
       return;
     }
 
-    // Execute x402 transfer
     const correlationId = generateCorrelationId();
     try {
       const transferResult = await executeTransfer({
@@ -56351,7 +55281,6 @@ ${catList}
         return;
       }
 
-      // Transfer succeeded — record payout in ledger
       const entry = recordPayout({
         agent_id: agentId,
         x402_address: agent.x402_address,
@@ -56386,7 +55315,6 @@ ${catList}
       res.end(JSON.stringify({ error: err.message, correlation_id: correlationId }));
     }
 
-  // --- GET /api/referral-codes: List all active referral codes (platform + agent-submitted) ---
   } else if (url.pathname === "/api/referral-codes" && isGetOrHead) {
     const rawSource = url.searchParams.get("source");
     let sourceFilter: "platform" | "agent" | undefined;
@@ -56419,7 +55347,6 @@ ${catList}
     res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
     res.end(JSON.stringify({ codes: filtered, total: filtered.length }));
 
-  // --- POST /api/referral-codes: Submit a referral code ---
   } else if (url.pathname === "/api/referral-codes" && req.method === "POST") {
     const agent = await authenticateRequest(req as any);
     if (!agent) {
@@ -56458,7 +55385,6 @@ ${catList}
     }
 
     try {
-      // Calculate current trust tier from ledger
       const ledgerEntries = getAgentLedgerEntries(agent.id);
       const trustTier = calculateTrustTier(agent.id, ledgerEntries);
 
@@ -56484,7 +55410,6 @@ ${catList}
       res.end(JSON.stringify({ error: err.message }));
     }
 
-  // --- GET /api/referral-codes/mine: List my submitted codes ---
   } else if (url.pathname === "/api/referral-codes/mine" && isGetOrHead) {
     const agent = await authenticateRequest(req as any);
     if (!agent) {
@@ -56509,7 +55434,6 @@ ${catList}
       daily_limit: dailyLimit,
     }));
 
-  // --- GET /api/referral-codes/:vendor: Get best available code for a vendor ---
   } else if (url.pathname.match(/^\/api\/referral-codes\/[^/]+$/) && isGetOrHead && url.pathname !== "/api/referral-codes/mine") {
     const vendorParam = decodeURIComponent(url.pathname.split("/").pop()!);
 
@@ -56530,11 +55454,9 @@ ${catList}
       return;
     }
 
-    // No codes available
     res.writeHead(404, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
     res.end(JSON.stringify({ error: `No referral codes available for "${vendorParam}"` }));
 
-  // --- PUT /api/referral-codes/:id: Update a code ---
   } else if (url.pathname.match(/^\/api\/referral-codes\/[^/]+$/) && req.method === "PUT") {
     const codeId = decodeURIComponent(url.pathname.split("/").pop()!);
 
@@ -56578,7 +55500,6 @@ ${catList}
       res.end(JSON.stringify({ error: err.message }));
     }
 
-  // --- DELETE /api/referral-codes/:id: Revoke a code ---
   } else if (url.pathname.match(/^\/api\/referral-codes\/[^/]+$/) && req.method === "DELETE") {
     const codeId = decodeURIComponent(url.pathname.split("/").pop()!);
 
@@ -56603,7 +55524,6 @@ ${catList}
       res.end(JSON.stringify({ error: err.message }));
     }
 
-  // --- POST /api/friends: Add a friend ---
   } else if (url.pathname === "/api/friends" && req.method === "POST") {
     const agent = await authenticateRequest(req as any);
     if (!agent) {
@@ -56644,7 +55564,6 @@ ${catList}
       res.end(JSON.stringify({ error: err.message }));
     }
 
-  // --- DELETE /api/friends/:agent_id: Remove a friend ---
   } else if (url.pathname.match(/^\/api\/friends\/[^/]+$/) && req.method === "DELETE") {
     const agent = await authenticateRequest(req as any);
     if (!agent) {
@@ -56667,7 +55586,6 @@ ${catList}
       res.end(JSON.stringify({ error: err.message }));
     }
 
-  // --- GET /api/friends: List my friends ---
   } else if (url.pathname === "/api/friends" && isGetOrHead) {
     const agent = await authenticateRequest(req as any);
     if (!agent) {
@@ -56693,7 +55611,6 @@ ${catList}
     res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
     res.end(JSON.stringify({ friends }));
 
-  // --- GET /api/friends/codes: List vendors where friends have codes ---
   } else if (url.pathname === "/api/friends/codes" && isGetOrHead) {
     const agent = await authenticateRequest(req as any);
     if (!agent) {
@@ -56709,7 +55626,6 @@ ${catList}
     res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
     res.end(JSON.stringify({ vendors: vendorCodes }));
 
-  // --- GET /api/leaderboard: Agent leaderboard ---
   } else if (url.pathname === "/api/leaderboard" && isGetOrHead) {
     const limit = Math.min(parseInt(url.searchParams.get("limit") ?? "10", 10), 50);
     const offset = Math.max(parseInt(url.searchParams.get("offset") ?? "0", 10), 0);
@@ -56857,13 +55773,10 @@ httpServer.listen(PORT, () => {
   console.error(`agentdeals MCP server running on http://localhost:${actualPort}/mcp`);
 });
 
-// Referral health check on startup + every 24 hours
 runHealthCheck().catch((err) => console.error(`[referral-health] Startup check failed: ${err.message}`));
 startPeriodicChecks();
 
-// IndexNow + sitemap ping on startup (fire-and-forget, no impact on server readiness)
 async function pingSearchEngines(): Promise<void> {
-  // Build priority URL list for IndexNow (most important pages first)
   const urlList: string[] = [
     `${BASE_URL}/`,
     `${BASE_URL}/changes`,
@@ -56888,34 +55801,27 @@ async function pingSearchEngines(): Promise<void> {
     `${BASE_URL}/vendor`,
     `${BASE_URL}/alternative-to`,
   ];
-  // Add alternatives hub + individual pages
   urlList.push(`${BASE_URL}/alternatives`);
   for (const p of ALTERNATIVES_PAGES) {
     urlList.push(`${BASE_URL}/${p.slug}`);
   }
-  // Add category pages
   for (const c of categories) {
     urlList.push(`${BASE_URL}/category/${toSlug(c.name)}`);
   }
-  // Add best-of pages
   for (const s of bestOfSlugMap.keys()) {
     urlList.push(`${BASE_URL}/best/${s}`);
   }
-  // Add comparison pages
   for (const s of comparisonMap.keys()) {
     urlList.push(`${BASE_URL}/compare/${s}`);
   }
-  // Add report pages
   urlList.push(`${BASE_URL}/reports`);
   for (const m of getAvailableReportMonths()) {
     urlList.push(`${BASE_URL}/reports/${m}`);
   }
-  // Add event pages
   urlList.push(`${BASE_URL}/events`);
   for (const e of EVENTS) {
     urlList.push(`${BASE_URL}/events/${e.slug}`);
   }
-  // Add vendor pages (top by recent changes first, then alphabetical — cap at ~2000 to stay well under 10k limit)
   const changedVendorSlugs = new Set(dealChanges.map((dc: any) => toSlug(dc.vendor)));
   const vendorSlugs = Array.from(vendorSlugMap.keys());
   const sortedVendorSlugs = [
@@ -56926,7 +55832,6 @@ async function pingSearchEngines(): Promise<void> {
     urlList.push(`${BASE_URL}/vendor/${s}`);
   }
 
-  // Ping sitemap to search engines
   const sitemapUrl = `${BASE_URL}/sitemap.xml`;
   const sitemapPings = [
     `https://www.bing.com/ping?sitemap=${encodeURIComponent(sitemapUrl)}`,
@@ -56941,7 +55846,6 @@ async function pingSearchEngines(): Promise<void> {
     }
   }
 
-  // Submit to IndexNow (requires INDEXNOW_KEY)
   if (!INDEXNOW_KEY) {
     console.error("IndexNow: skipped (INDEXNOW_KEY not set)");
     return;
@@ -56966,18 +55870,13 @@ async function pingSearchEngines(): Promise<void> {
   }
 }
 
-// Run ping in background on production only — don't block server startup or interfere with tests
 if (!BASE_URL.includes("localhost")) {
   pingSearchEngines().catch((err) => console.error(`pingSearchEngines error: ${err.message}`));
 }
 
-// Flush telemetry every 5 minutes
 const FLUSH_INTERVAL_MS = 5 * 60 * 1000;
 setInterval(() => flushTelemetry(), FLUSH_INTERVAL_MS).unref();
 
-// Page-view counters and the request log are buffered in memory and written as aggregated
-// batches on this interval, so Redis command volume is O(flush intervals) rather than
-// O(requests served) (#1023).
 setInterval(() => {
   flushPending().catch((err) => console.error(`[telemetry] flush failed: ${err?.message ?? err}`));
 }, FLUSH_INTERVAL_SECONDS * 1000).unref();
@@ -56996,9 +55895,6 @@ setInterval(() => {
   persistDurableStores().catch((err) => console.error(`[durable-store] flush failed: ${err?.message ?? err}`));
 }, FLUSH_INTERVAL_SECONDS * 1000).unref();
 
-// Flush on graceful shutdown. Buffered counters go first: they exist only in memory, so
-// a missed flush here is the one interval of data this design accepts losing on an
-// *unclean* exit and should never lose on a clean one.
 let shuttingDown = false;
 async function onShutdown() {
   if (shuttingDown) return;

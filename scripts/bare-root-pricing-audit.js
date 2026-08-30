@@ -1,25 +1,5 @@
 #!/usr/bin/env node
 
-/**
- * Audit the offers whose stored URL is a bare domain root.
- *
- * The re-verification job reads offer.url every morning. When that URL is a
- * domain root the page it reads often states no terms at all, so this reports
- * how many of those offers have a page we can actually read pricing from —
- * established by fetching candidates and looking for price text, not by
- * status code.
- *
- * The same question is worth asking of any population whose stored URL reads
- * badly, not only of the bare roots, so --outcome selects the offers by the
- * verdict their own cited page earned instead.
- *
- * Usage:
- *   node scripts/bare-root-pricing-audit.js                  # every bare-root offer
- *   node scripts/bare-root-pricing-audit.js --limit 40       # first 40 only
- *   node scripts/bare-root-pricing-audit.js --outcome unreadable
- *   node scripts/bare-root-pricing-audit.js --out /tmp/x.json
- */
-
 import { readFileSync, writeFileSync } from "node:fs";
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";

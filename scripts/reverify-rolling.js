@@ -1,20 +1,5 @@
 #!/usr/bin/env node
 
-/**
- * Rolling data re-verification.
- *
- * Picks the N oldest-verified entries (regardless of staleness threshold),
- * checks them, and stamps verifiedDate across a 3-day window so future
- * re-verifications stay smoothly distributed instead of cliffing on a
- * single date.
- *
- * Usage:
- *   npm run reverify:rolling                    # 100 oldest, URL-only
- *   npm run reverify:rolling -- --limit 50      # 50 oldest
- *   npm run reverify:rolling -- --ai            # read the vendor's terms and detect changes
- *   npm run reverify:rolling -- --dry-run       # report only
- */
-
 import { readFileSync, writeFileSync } from "node:fs";
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -88,7 +73,7 @@ export function pickOldestEntries(offers, limit, now = new Date(), options = {})
     const key = offerKey(offer?.vendor, offer?.url);
     const record = state.get(key) ?? null;
     const attempted = lastAttemptedDate(offer, holds.get(key), record);
-    const ts = attempted ? new Date(attempted).getTime() : 0; // never looked sorts oldest
+    const ts = attempted ? new Date(attempted).getTime() : 0;
     return { index, offer, record, ts };
   });
   const byAge = (a, b) => a.ts - b.ts;

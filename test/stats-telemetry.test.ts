@@ -1,14 +1,3 @@
-// Telemetry storage-layer tests (#1018, #1023).
-//
-// These are hermetic: Upstash is stubbed at `globalThis.fetch`, so every case runs
-// offline and deterministically. The behaviour under test is specifically what the
-// old code could not express — the difference between "this counter is zero" and
-// "we could not read this counter".
-//
-// Page-view counters no longer live one Redis key per (day, path); they are buffered in
-// memory and persisted as a single JSON snapshot on a flush interval (#1023), so the
-// assertions here look at what a flush *writes* rather than at per-request INCRs.
-
 import { describe, it, beforeEach, afterEach } from "node:test";
 import assert from "node:assert";
 
@@ -33,7 +22,6 @@ type Call = { cmd: string; args: unknown[] };
 
 const realFetch = globalThis.fetch;
 let calls: Call[] = [];
-/** Maps a Redis command name to the JSON body Upstash should answer with. */
 let responder: (cmd: string, args: unknown[]) => unknown = () => ({ result: 1 });
 
 const PAGE_VIEWS_KEY = "agentdeals:pageviews";
@@ -59,14 +47,12 @@ function callsFor(cmd: string): Call[] {
   return calls.filter(c => c.cmd === cmd);
 }
 
-/** The SET that persisted the page-view snapshot, parsed. */
 function writtenSnapshot(): any {
   const set = callsFor("SET").find(c => String(c.args[0]) === PAGE_VIEWS_KEY);
   assert.ok(set, `no SET of ${PAGE_VIEWS_KEY}; SETs: ${callsFor("SET").map(c => c.args[0]).join(", ")}`);
   return JSON.parse(String(set!.args[1]));
 }
 
-/** An empty-but-healthy store: every read succeeds and returns nothing. */
 const emptyStore = (cmd: string): unknown => {
   if (cmd === "GET") return { result: null };
   if (cmd === "SCAN") return { result: ["0", []] };
@@ -74,7 +60,6 @@ const emptyStore = (cmd: string): unknown => {
   return { result: "OK" };
 };
 
-/** Boots the module against a store, leaving it in the loaded state a live server has. */
 async function boot(store: (cmd: string, args: unknown[]) => unknown = emptyStore): Promise<void> {
   responder = store;
   await loadTelemetry(TMP_TELEMETRY);
@@ -114,7 +99,6 @@ describe("telemetry storage layer (#1018)", () => {
     });
 
     it("buckets the scanner paths found in the live keyspace", () => {
-      // Every one of these was a permanent Redis key in production.
       assert.strictEqual(normalizePagePath("/$(pwd)/.env"), UNMATCHED_PAGE_KEY);
       assert.strictEqual(normalizePagePath("/$(pwd)/.git/config"), UNMATCHED_PAGE_KEY);
       assert.strictEqual(normalizePagePath("/$(pwd)/terraform.tfstate"), UNMATCHED_PAGE_KEY);
@@ -145,10 +129,6 @@ describe("telemetry storage layer (#1018)", () => {
       assert.ok(!JSON.stringify(snapshot).includes("hetzner"), "raw slug must not reach Redis");
     });
 
-    // Contract changed by #1029. It used to be "a 404 buckets to __unmatched__", which
-    // bounded the key space but still counted the request as a page view — 84% of a day's
-    // recorded views on the day that was found. It is now "a 404 is not a page view":
-    // counted, under its own name, outside the total.
     it("counts a 404 as not-found rather than as a page view, however page-like the path", async () => {
       await boot();
       recordPageView("/wp-login", "Mozilla/5.0", undefined, 404);
@@ -209,8 +189,6 @@ describe("telemetry storage layer (#1018)", () => {
     });
 
     it("marks the report unavailable when the legacy migration scan fails", async () => {
-      // The snapshot key is genuinely absent, but the legacy key space is unreadable —
-      // seeding an empty snapshot here would erase real history on the next flush.
       responder = (cmd) => {
         if (cmd === "GET") return { result: null };
         if (cmd === "SCAN") return { error: "ERR unavailable" };
@@ -308,7 +286,6 @@ describe("telemetry storage layer (#1018)", () => {
       await loadTelemetry(TMP_TELEMETRY);
       assert.strictEqual(telemetryLoadDidFail(), true);
 
-      // Storage comes back with the real historical totals.
       responder = (cmd) => {
         if (cmd === "GET") return { result: JSON.stringify({ cumulative_api_hits: 282802, cumulative_sessions: 24955 }) };
         return { result: "OK" };
@@ -340,7 +317,6 @@ describe("telemetry storage layer (#1018)", () => {
 
   describe("MGET chunking", () => {
     it("never sends more than 100 keys in one command", async () => {
-      // Only the one-time migration off the legacy key space still reads this way.
       const keys = Array.from({ length: 250 }, (_, i) => `pv:all:/page-${i}`);
       responder = (cmd, args) => {
         if (cmd === "GET") return { result: null };

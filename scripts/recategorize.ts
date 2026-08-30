@@ -8,8 +8,6 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const indexPath = resolve(__dirname, "../data/index.json");
 const mappingPath = resolve(__dirname, "../data/category-mapping.json");
 
-// Keyword-based categorization rules for Developer Tools entries
-// that aren't in the explicit mapping. Applied in order — first match wins.
 const keywordRules: Array<{ category: string; test: (v: string, d: string, tags: string[]) => boolean }> = [
   { category: "Startup Perks", test: (_v, d) => d.includes("Access via:") },
   { category: "Startup Perks", test: (v) => /startup|accelerat/i.test(v) },
@@ -44,14 +42,12 @@ function main() {
   for (const offer of data.offers) {
     if (offer.category !== "Developer Tools") continue;
 
-    // Check explicit mapping first
     if (mapping[offer.vendor]) {
       offer.category = mapping[offer.vendor];
       moved++;
       continue;
     }
 
-    // Fall back to keyword rules
     let matched = false;
     for (const rule of keywordRules) {
       if (rule.test(offer.vendor, offer.description || "", offer.tags || [])) {
@@ -68,7 +64,6 @@ function main() {
     }
   }
 
-  // Count categories after recategorization
   const cats: Record<string, number> = {};
   for (const offer of data.offers) {
     cats[offer.category] = (cats[offer.category] || 0) + 1;
@@ -87,7 +82,6 @@ function main() {
       console.log(`  ${count.toString().padStart(4)} ${cat}`);
     });
 
-  // Verify acceptance criteria
   const maxCategory = Object.entries(cats).reduce((a, b) => a[1] > b[1] ? a : b);
   const devToolsRemaining = cats["Developer Tools"] || 0;
   const startupPerks = cats["Startup Perks"] || 0;

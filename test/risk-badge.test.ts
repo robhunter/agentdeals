@@ -1,19 +1,3 @@
-// #1038: the risk badge in every vendor page's <h1> counted our own change
-// records, all-time, of any type. Railway rendered `caution` for expanding its
-// free tier; DigitalOcean rendered `risky` above a recorded 20% price cut.
-//
-// Two properties are under test here, and they are different properties:
-//
-//   1. The level is earned. Nothing neutral or favourable to the user can
-//      raise it, and the number of records we happen to hold cannot move it.
-//   2. The level is checkable. `caution` and `risky` are negative factual
-//      claims about a named company, so every surface that publishes one also
-//      publishes the dated record behind it — or publishes nothing.
-//
-// The second is the one that generalises, and it is the one that needs an
-// end-to-end test: the computation can be right while a page still renders a
-// warning a reader cannot check.
-
 import { describe, it, before, after } from "node:test";
 import assert from "node:assert";
 import { spawn, type ChildProcess } from "node:child_process";
@@ -79,8 +63,6 @@ describe("#1038 — the level is earned", () => {
 
   it("no neutral or favourable change type can raise a risk level", async () => {
     const { vendorRiskAssessment } = await import("../dist/data.js");
-    // The six the issue names, plus the whole table read back — a type that
-    // moves from null to a demotion has to be a deliberate edit here too.
     const favourable = ["limits_increased", "new_free_tier", "new_tier", "startup_program_expanded", "pricing_postponed", "rebranded"];
     for (const change_type of favourable) {
       const assessment = vendorRiskAssessment([
@@ -92,8 +74,6 @@ describe("#1038 — the level is earned", () => {
   });
 
   it("a vendor whose only history is limits_increased renders stable, live", async () => {
-    // Railway is the issue's headline example: `caution` in its <h1> because
-    // it expanded its free tier after a $100M Series B.
     const { loadDealChanges } = await import("../dist/data.js");
     const railway = changesByVendor(loadDealChanges()).get("railway") ?? [];
     assert.ok(railway.length > 0, "expected Railway to still hold change records");
@@ -112,7 +92,6 @@ describe("#1038 — the level is earned", () => {
     const rec = (change_type: string, date: string) => ({
       vendor: "V", change_type, date, summary: "s", previous_state: "", current_state: "", impact: "low" as const, source_url: "", category: "c", alternatives: [],
     });
-    // Ten favourable records is still stable; one demoting record is not.
     const many = Array.from({ length: 10 }, (_, i) => rec("limits_increased", `2026-0${(i % 9) + 1}-01`));
     assert.strictEqual(vendorRiskAssessment(many).level, "stable");
     assert.strictEqual(vendorRiskAssessment([...many, rec("limits_reduced", "2026-08-01")]).level, "caution");
@@ -125,16 +104,10 @@ describe("#1038 — the level is earned", () => {
       vendor: "V", change_type: "free_tier_removed", date, summary: "s", previous_state: "", current_state: "", impact: "high" as const, source_url: "", category: "c", alternatives: [],
     });
     assert.strictEqual(vendorRiskAssessment([removed("2026-06-01")], nowMs).level, "risky");
-    // 15 months old — SendGrid's case. `stable` would be a false statement we
-    // made ourselves: we hold a record of the free tier being removed.
     assert.strictEqual(vendorRiskAssessment([removed("2025-05-27")], nowMs).level, "caution");
   });
 
   it("nothing the risk scale demotes is called positive or neutral by the direction table", async () => {
-    // The two tables answer different questions — direction is what we call a
-    // change, risk is what we publish a warning for — but they may not
-    // contradict each other. Before #1038 five drifted copies of the direction
-    // idea existed and they did.
     const { RISK_DEMOTION, CHANGE_DIRECTION } = await import("../dist/data.js");
     for (const [type, demotion] of Object.entries(RISK_DEMOTION)) {
       if (!demotion) continue;
@@ -144,22 +117,16 @@ describe("#1038 — the level is earned", () => {
         `${type} demotes to ${demotion} but the direction table does not call it negative`,
       );
     }
-    // And the direction table is exhaustive over the risk table's keys.
     for (const type of Object.keys(RISK_DEMOTION)) {
       assert.ok(type in CHANGE_DIRECTION, `${type} has no direction`);
     }
   });
 
   it("there is one definition of risk in src/, not four", () => {
-    // Before this issue there were four: enrichOffers counted records,
-    // vendorRiskLevel read types, and serve.ts carried two more inline — one on
-    // the stack checker and one that *ranked* on the cost estimator.
     const sources = ["src/data.ts", "src/serve.ts", "src/stacks.ts", "src/mcp-apps.ts"]
       .map((f) => ({ f, src: readFileSync(path.join(REPO, f), "utf8") }));
     for (const { f, src } of sources) {
       const executable = src.split("\n").filter((l) => !/^\s*(\*|\/\/|\/\*|\*\/)/.test(l)).join("\n");
-      // The signature of a hand-rolled definition: a literal list of change
-      // types tested inline to produce a level.
       const inline = executable.match(/\[\s*"free_tier_removed"[^\]]*\]\s*\.includes\(/g) ?? [];
       assert.deepStrictEqual(inline, [], `${f} classifies change types inline; risk has one definition and it is vendorRiskAssessment`);
     }
@@ -197,11 +164,9 @@ describe("#1038 — the level is checkable", () => {
   });
 
   it("a cause older than the 90-day recent-change window still renders", async () => {
-    // Neon's cause is dated 2026-01-15. `recent_change` reaches back 90 days,
-    // so before this the page showed a warning and nothing that explained it.
     const { enrichOffers, loadOffers } = await import("../dist/data.js");
     const neon = enrichOffers(loadOffers().filter((o: { vendor: string }) => o.vendor === "Neon"))[0];
-    if (!neon || neon.risk_level === "stable") return; // records changed; nothing to assert
+    if (!neon || neon.risk_level === "stable") return;
     assert.ok(neon.risk_cause, "Neon carries a warning with no cause");
     assert.strictEqual(neon.recent_change, null, "this test is anchored on Neon's cause being outside the 90-day window");
     const { text } = await get("/vendor/neon");
@@ -213,14 +178,11 @@ describe("#1038 — the level is checkable", () => {
     const warned = enrichOffers(loadOffers()).find((o: { risk_level: string | null }) => o.risk_level && o.risk_level !== "stable");
     assert.ok(warned, "expected a warned vendor");
     const { text } = await get(`/alternative-to/${toSlug(warned.vendor)}`);
-    if (!/Risk Level:/.test(text)) return; // page shape changed
+    if (!/Risk Level:/.test(text)) return;
     assert.ok(text.includes(warned.risk_cause.date), `/alternative-to/${toSlug(warned.vendor)} shows a level with no dated cause`);
   });
 
   it("the alternatives index lists nobody it cannot name a reason for", async () => {
-    // This page used to score `+1 per other change`, so a vendor that expanded
-    // its free tier earned a row on a page headed "Free Alternatives to
-    // Popular Tools" — we recommended leaving a vendor for improving.
     const { text } = await get("/alternative-to");
     const rows = text.match(/<a href="\/alternative-to\/[^"]+" class="idx-row">[\s\S]*?<\/a>/g) ?? [];
     assert.ok(rows.length > 0, "no rows on /alternative-to");
@@ -356,8 +318,6 @@ describe("#1038 — risk does not rank", () => {
   });
 
   it("mutating risk_level and stability does not change the order rankForListing returns", async () => {
-    // The stronger form of the same claim: the comment at src/data.ts said the
-    // risk bucket had been removed from one sort, and a comment is not a test.
     const { rankForListing } = await import("../dist/ranking.js");
     const { enrichOffers, loadOffers, loadDealChanges } = await import("../dist/data.js");
     const changes = loadDealChanges();

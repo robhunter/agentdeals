@@ -1,21 +1,5 @@
 #!/usr/bin/env node
 
-/**
- * Automated pricing page monitor for high-churn vendors.
- *
- * Reads data/watchlist.json, fetches pricing pages in parallel,
- * compares content hashes against stored baselines, and logs
- * detected changes to data/pricing-changes.jsonl.
- *
- * Usage:
- *   npm run monitor:pricing              # check all vendors due today
- *   npm run monitor:pricing -- --init    # create baseline (first run)
- *   npm run monitor:pricing -- --all     # check all vendors regardless of interval
- *   npm run monitor:pricing -- --vendor "Vercel"  # check a specific vendor
- *
- * Add new vendors by editing data/watchlist.json.
- */
-
 import { readFileSync, writeFileSync, appendFileSync, existsSync } from "node:fs";
 import { createHash } from "node:crypto";
 import { resolve, dirname } from "node:path";
@@ -163,7 +147,6 @@ async function main() {
   const allErrors = [];
   let unchangedCount = 0;
 
-  // Process in batches for concurrency control
   for (let i = 0; i < vendors.length; i += CONCURRENCY) {
     const batch = vendors.slice(i, i + CONCURRENCY);
     const results = await checkBatch(batch, hashes, isInit);
@@ -171,16 +154,13 @@ async function main() {
     allErrors.push(...results.errors);
     unchangedCount += results.unchanged.length;
 
-    // Log each change immediately
     for (const c of results.changed) {
       logChange(c);
     }
   }
 
-  // Save updated hashes
   writeFileSync(HASHES_PATH, JSON.stringify(hashes, null, 2) + "\n");
 
-  // Summary
   if (isInit) {
     console.log(`Baseline created: ${Object.keys(hashes).length} vendors hashed.`);
   } else if (allChanged.length === 0) {

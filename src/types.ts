@@ -77,13 +77,6 @@ export type StabilityClass = "stable" | "watch" | "volatile" | "improving";
 
 export type RiskLevel = "stable" | "caution" | "risky";
 
-/**
- * The one recorded fact that produced a non-stable risk level (#1038).
- *
- * A warning a reader cannot check is an assertion, so `caution` and `risky`
- * travel with the dated record that earned them and every surface that shows
- * the level shows the cause beside it.
- */
 export interface RiskCause {
   date: string;
   date_source?: ChangeDateSource;
@@ -101,7 +94,6 @@ export interface EnrichedOffer extends Offer {
   recent_change: string | null;
   expires_soon: string | null;
   risk_level: RiskLevel | null;
-  /** Never null when `risk_level` is `caution` or `risky`. */
   risk_cause: RiskCause | null;
   stability: StabilityClass;
   days_since_verified: number;

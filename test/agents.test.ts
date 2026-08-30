@@ -8,7 +8,6 @@ import { fileURLToPath } from "node:url";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const AGENTS_PATH = path.join(__dirname, "..", "data", "agents.json");
 
-// Unit tests for agents module
 const { registerAgent, hashApiKey, getAgentByApiKeyHash, getAgentById, authenticateRequest, resetAgentsCache } = await import("../dist/agents.js");
 
 function resetAgentsFile() {
@@ -48,7 +47,6 @@ describe("Agent Registration", () => {
     const expectedHash = hashApiKey(result.api_key);
     assert.strictEqual(result.agent.api_key_hash, expectedHash);
 
-    // Verify the key is not stored anywhere in the file
     const raw = fs.readFileSync(AGENTS_PATH, "utf-8");
     assert.ok(!raw.includes(result.api_key));
     assert.ok(raw.includes(expectedHash));
@@ -63,7 +61,6 @@ describe("Agent Registration", () => {
   });
 
   it("rejects duplicate vestauth URL", () => {
-    // Register with a vestauth URL (skip validation in unit test by using direct function)
     const agents = JSON.parse(fs.readFileSync(AGENTS_PATH, "utf-8"));
     agents.agents.push({
       id: "agent_test1",
@@ -147,7 +144,6 @@ describe("API Key Authentication", () => {
   });
 
   it("does not authenticate suspended agents", () => {
-    // Manually suspend the agent
     const data = JSON.parse(fs.readFileSync(AGENTS_PATH, "utf-8"));
     const agentIdx = data.agents.findIndex((a: any) => a.name === "AuthTestBot");
     data.agents[agentIdx].status = "suspended";
@@ -158,7 +154,6 @@ describe("API Key Authentication", () => {
     const agent = getAgentByApiKeyHash(hash);
     assert.strictEqual(agent, null);
 
-    // Restore active status for other tests
     data.agents[agentIdx].status = "active";
     fs.writeFileSync(AGENTS_PATH, JSON.stringify(data), "utf-8");
     resetAgentsCache();
@@ -170,7 +165,7 @@ describe("hashApiKey", () => {
     const hash1 = hashApiKey("test-key");
     const hash2 = hashApiKey("test-key");
     assert.strictEqual(hash1, hash2);
-    assert.strictEqual(hash1.length, 64); // SHA-256 hex is 64 chars
+    assert.strictEqual(hash1.length, 64);
   });
 
   it("produces different hashes for different keys", () => {
@@ -179,8 +174,6 @@ describe("hashApiKey", () => {
     assert.notStrictEqual(hash1, hash2);
   });
 });
-
-// --- HTTP endpoint tests ---
 
 let serverPort = 0;
 
@@ -291,7 +284,6 @@ describe("Agent Registry HTTP Endpoints", () => {
   });
 
   it("GET /api/agents/me returns agent info with valid Bearer token", async () => {
-    // Register a new agent to get API key
     const regRes = await fetch(`http://localhost:${serverPort}/api/agents/register`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -307,7 +299,6 @@ describe("Agent Registry HTTP Endpoints", () => {
     assert.strictEqual(data.name, "MeTestBot");
     assert.strictEqual(data.id, regData.id);
     assert.strictEqual(data.status, "active");
-    // Should not expose api_key_hash
     assert.strictEqual(data.api_key_hash, undefined);
   });
 
@@ -326,7 +317,6 @@ describe("Agent Registry HTTP Endpoints", () => {
     });
     const regData = await regRes.json() as any;
 
-    // Registration response should not include api_key_hash
     assert.strictEqual(regData.api_key_hash, undefined);
   });
 });

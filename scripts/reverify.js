@@ -1,17 +1,5 @@
 #!/usr/bin/env node
 
-/**
- * Automated data re-verification pipeline.
- *
- * Finds stale entries (verifiedDate older than threshold), checks URL
- * reachability, and bumps verifiedDate for reachable vendors.
- *
- * Usage:
- *   npm run reverify                        # re-verify entries older than 25 days
- *   npm run reverify -- --threshold 14      # custom threshold
- *   npm run reverify -- --dry-run           # report only, don't modify data
- */
-
 import { readFileSync, writeFileSync } from "node:fs";
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -47,7 +35,6 @@ async function checkUrl(url) {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
   try {
-    // Try HEAD first (lighter)
     let res = await fetch(url, {
       method: "HEAD",
       signal: controller.signal,
@@ -57,7 +44,6 @@ async function checkUrl(url) {
       },
       redirect: "follow",
     });
-    // Some servers reject HEAD — fall back to GET
     if (!res.ok) {
       clearTimeout(timeout);
       const controller2 = new AbortController();
@@ -143,23 +129,20 @@ async function main() {
   if (dryRun) console.log("(dry-run mode — no changes will be written)\n");
   else console.log("");
 
-  const today = new Date().toISOString().split("T")[0]; // YYYY-MM-DD
+  const today = new Date().toISOString().split("T")[0];
   let totalVerified = 0;
   let totalFlagged = 0;
 
-  // Process in batches for concurrency control
   for (let i = 0; i < stale.length; i += CONCURRENCY) {
     const batch = stale.slice(i, i + CONCURRENCY);
     const results = await reverifyBatch(batch, today);
 
-    // Update verifiedDate for reachable entries
     if (!dryRun) {
       for (const v of results.verified) {
         data.offers[v.index].verifiedDate = today;
       }
     }
 
-    // Log flagged entries
     for (const f of results.flagged) {
       console.log(`  ⚠ ${f.vendor} — ${f.error} (${f.url})`);
     }
@@ -168,7 +151,6 @@ async function main() {
     totalFlagged += results.flagged.length;
   }
 
-  // Write updated index
   if (!dryRun && totalVerified > 0) {
     writeFileSync(INDEX_PATH, JSON.stringify(data, null, 2) + "\n");
   }

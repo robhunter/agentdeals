@@ -54,8 +54,6 @@ run_mutation() {
 
 py() { python3 - "$@"; }
 
-# --- The projection ---
-
 m_the_projection_publishes_everything() {
   py <<'PY'
 p = "src/stats.ts"
@@ -132,8 +130,6 @@ open(p, "w").write(s)
 PY
 }
 
-# --- The endpoint ---
-
 m_the_endpoint_publishes_the_full_report() {
   py <<'PY'
 p = "src/serve.ts"
@@ -164,8 +160,6 @@ open(p, "w").write(s)
 PY
 }
 
-# --- The page ---
-
 m_the_page_denies_the_referral_links_again() {
   py <<'PY'
 p = "src/serve.ts"
@@ -190,8 +184,8 @@ m_the_page_offers_the_machine_readable_figures_again() {
   py <<'PY'
 p = "src/serve.ts"
 s = open(p).read()
-s = s.replace("  <footer>AgentDeals &mdash; open source, built for agents | <a href=\"${CRITERIA_PATH}\">How we rank</a> | <a href=\"/privacy\">Privacy</a> | <a href=\"/disclosure\">Affiliate Disclosure</a></footer>\n</div>\n</body>\n</html>`;\n}\n\n// --- Comparison pages ---",
-              "  <p>Machine-readable: <a href=\"/api/signals\"><code>/api/signals</code></a>.</p>\n\n  <footer>AgentDeals &mdash; open source, built for agents | <a href=\"${CRITERIA_PATH}\">How we rank</a> | <a href=\"/privacy\">Privacy</a> | <a href=\"/disclosure\">Affiliate Disclosure</a></footer>\n</div>\n</body>\n</html>`;\n}\n\n// --- Comparison pages ---")
+s = s.replace("  <footer>AgentDeals &mdash; open source, built for agents | <a href=\"${CRITERIA_PATH}\">How we rank</a> | <a href=\"/privacy\">Privacy</a> | <a href=\"/disclosure\">Affiliate Disclosure</a></footer>\n</div>\n</body>\n</html>`;\n}\n\nconst comparisonMap = buildComparisonMap();",
+              "  <p>Machine-readable: <a href=\"/api/signals\"><code>/api/signals</code></a>.</p>\n\n  <footer>AgentDeals &mdash; open source, built for agents | <a href=\"${CRITERIA_PATH}\">How we rank</a> | <a href=\"/privacy\">Privacy</a> | <a href=\"/disclosure\">Affiliate Disclosure</a></footer>\n</div>\n</body>\n</html>`;\n}\n\nconst comparisonMap = buildComparisonMap();")
 open(p, "w").write(s)
 PY
 }
@@ -256,8 +250,6 @@ s = s.replace('export const SIGNAL_EXAMPLE_SLUGS = ["supabase", "sentry", "cloud
 open(p, "w").write(s)
 PY
 }
-
-# --- llms.txt and /criteria ---
 
 m_llms_denies_the_referral_links_again() {
   py <<'PY'

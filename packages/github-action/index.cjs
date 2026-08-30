@@ -8,8 +8,6 @@ const https = require("https");
 const API_BASE = "https://agentdeals.dev";
 const VENDOR_MAP_PATH = path.join(__dirname, "package-vendor-map.json");
 
-// --- Dependency parsing ---
-
 function parseDependencies(packageJsonPath) {
   const raw = fs.readFileSync(packageJsonPath, "utf8");
   const pkg = JSON.parse(raw);
@@ -18,15 +16,13 @@ function parseDependencies(packageJsonPath) {
   return [...new Set([...deps, ...devDeps])];
 }
 
-// --- Vendor mapping ---
-
 function loadVendorMap() {
   const raw = fs.readFileSync(VENDOR_MAP_PATH, "utf8");
   return JSON.parse(raw).mappings;
 }
 
 function matchDependenciesToVendors(deps, mappings) {
-  const matched = new Map(); // vendor -> [packages]
+  const matched = new Map();
 
   for (const dep of deps) {
     for (const mapping of mappings) {
@@ -34,11 +30,9 @@ function matchDependenciesToVendors(deps, mappings) {
       let isMatch = false;
 
       if (pattern.endsWith("/*")) {
-        // Scope pattern: @scope/* matches @scope/anything
         const scope = pattern.slice(0, -2);
         isMatch = dep.startsWith(scope + "/");
       } else {
-        // Exact match
         isMatch = dep === pattern;
       }
 
@@ -46,15 +40,13 @@ function matchDependenciesToVendors(deps, mappings) {
         const existing = matched.get(mapping.vendor) || [];
         existing.push(dep);
         matched.set(mapping.vendor, existing);
-        break; // First match wins for this dep
+        break;
       }
     }
   }
 
   return matched;
 }
-
-// --- API integration ---
 
 function fetchJSON(url) {
   return new Promise((resolve, reject) => {
@@ -85,7 +77,6 @@ async function fetchVendorData(vendorName) {
   const url = `${API_BASE}/api/offers?q=${encoded}&limit=5`;
   const data = await fetchJSON(url);
   const offers = data.offers || [];
-  // Find exact or close match
   const exact = offers.find((o) => o.vendor.toLowerCase() === vendorName.toLowerCase());
   return exact || offers[0] || null;
 }
@@ -100,15 +91,12 @@ async function fetchAllVendorData(vendorNames, delayMs = 200) {
       console.warn(`Warning: Failed to fetch data for ${vendor}: ${err.message}`);
       results.set(vendor, null);
     }
-    // Rate limit courtesy delay
     if (delayMs > 0) {
       await new Promise((r) => setTimeout(r, delayMs));
     }
   }
   return results;
 }
-
-// --- Output formatting ---
 
 const STABILITY_ICONS = {
   stable: "\u2705 Stable",
@@ -174,7 +162,6 @@ function formatSummaryTable(vendorDataMap, vendorPackagesMap) {
 }
 
 function formatPRComment(vendorDataMap, vendorPackagesMap, threshold) {
-  // Only include vendors meeting the alert threshold
   const alertVendors = [];
   for (const [vendor, data] of vendorDataMap) {
     if (!data) continue;
@@ -216,8 +203,6 @@ function slugify(str) {
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-|-$/g, "");
 }
-
-// --- GitHub Actions integration ---
 
 function getInput(name, defaultValue) {
   const envKey = `INPUT_${name.replace(/-/g, "_").toUpperCase()}`;
@@ -283,8 +268,6 @@ async function postPRComment(body) {
   });
 }
 
-// --- Main ---
-
 async function run() {
   const packageJsonPath = getInput("package-json-path", "./package.json");
   const postPrComment = getInput("post-pr-comment", "true") === "true";
@@ -295,7 +278,6 @@ async function run() {
   console.log(`  Alert threshold: ${alertThreshold}`);
   console.log(`  PR comments: ${postPrComment}`);
 
-  // Parse dependencies
   const resolvedPath = path.resolve(packageJsonPath);
   if (!fs.existsSync(resolvedPath)) {
     console.error(`\u274c package.json not found at ${resolvedPath}`);
@@ -306,7 +288,6 @@ async function run() {
   const deps = parseDependencies(resolvedPath);
   console.log(`\n\ud83d\udce6 Found ${deps.length} dependencies`);
 
-  // Match to vendors
   const mappings = loadVendorMap();
   const vendorPackagesMap = matchDependenciesToVendors(deps, mappings);
   console.log(`\ud83c\udfaf Matched ${vendorPackagesMap.size} vendors: ${[...vendorPackagesMap.keys()].join(", ")}`);
@@ -320,20 +301,16 @@ async function run() {
     return;
   }
 
-  // Fetch vendor data from API
   console.log("\n\ud83c\udf10 Fetching vendor data from AgentDeals API...");
   const vendorDataMap = await fetchAllVendorData([...vendorPackagesMap.keys()]);
 
-  // Generate summary
   const { markdown, alertVendors } = formatSummaryTable(vendorDataMap, vendorPackagesMap);
   console.log("\n" + markdown);
 
-  // Write to GitHub step summary
   writeSummary(markdown);
   setOutput("vendor-count", String(vendorDataMap.size));
   setOutput("alert-count", String(alertVendors.length));
 
-  // Post PR comment if applicable
   if (postPrComment && process.env.GITHUB_EVENT_NAME === "pull_request") {
     const commentBody = formatPRComment(vendorDataMap, vendorPackagesMap, alertThreshold);
     if (commentBody) {
@@ -345,8 +322,6 @@ async function run() {
     }
   }
 }
-
-// --- Exports for testing ---
 
 module.exports = {
   parseDependencies,
@@ -362,7 +337,6 @@ module.exports = {
   getInput,
 };
 
-// Run if executed directly
 if (require.main === module) {
   run().catch((err) => {
     console.error(`\u274c ${err.message}`);

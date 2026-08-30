@@ -146,7 +146,6 @@ function validateOffers(offers: Offer[]): ValidationError[] {
     const offer = offers[i];
     const vendor = offer.vendor || `(index ${i})`;
 
-    // Required fields
     for (const field of REQUIRED_OFFER_FIELDS) {
       if (offer[field] === undefined || offer[field] === null) {
         errors.push({
@@ -159,7 +158,6 @@ function validateOffers(offers: Offer[]): ValidationError[] {
       }
     }
 
-    // URL format
     if (offer.url && !URL_REGEX.test(offer.url)) {
       errors.push({
         file: "data/index.json",
@@ -170,7 +168,6 @@ function validateOffers(offers: Offer[]): ValidationError[] {
       });
     }
 
-    // Description length
     if (offer.description && offer.description.length < 30) {
       errors.push({
         file: "data/index.json",
@@ -181,7 +178,6 @@ function validateOffers(offers: Offer[]): ValidationError[] {
       });
     }
 
-    // verifiedDate format
     if (offer.verifiedDate && !ISO_DATE_REGEX.test(offer.verifiedDate)) {
       errors.push({
         file: "data/index.json",
@@ -192,7 +188,6 @@ function validateOffers(offers: Offer[]): ValidationError[] {
       });
     }
 
-    // Valid verifiedDate
     if (offer.verifiedDate && ISO_DATE_REGEX.test(offer.verifiedDate)) {
       const d = new Date(offer.verifiedDate);
       if (isNaN(d.getTime())) {
@@ -206,7 +201,6 @@ function validateOffers(offers: Offer[]): ValidationError[] {
       }
     }
 
-    // Category validation
     if (offer.category && !VALID_CATEGORIES.includes(offer.category)) {
       errors.push({
         file: "data/index.json",
@@ -217,7 +211,6 @@ function validateOffers(offers: Offer[]): ValidationError[] {
       });
     }
 
-    // Duplicate detection (same vendor + category)
     const key = `${offer.vendor}|||${offer.category}`;
     if (seen.has(key)) {
       errors.push({
@@ -242,7 +235,6 @@ function validateDealChanges(changes: DealChange[]): ValidationError[] {
     const change = changes[i];
     const vendor = change.vendor || `(index ${i})`;
 
-    // Required fields
     for (const field of REQUIRED_CHANGE_FIELDS) {
       if (
         (change as Record<string, unknown>)[field] === undefined ||
@@ -258,7 +250,6 @@ function validateDealChanges(changes: DealChange[]): ValidationError[] {
       }
     }
 
-    // Date format
     if (change.date && !ISO_DATE_REGEX.test(change.date)) {
       errors.push({
         file: "data/deal_changes.json",
@@ -269,7 +260,6 @@ function validateDealChanges(changes: DealChange[]): ValidationError[] {
       });
     }
 
-    // Source URL format
     if (change.source_url && !URL_REGEX.test(change.source_url)) {
       errors.push({
         file: "data/deal_changes.json",
@@ -324,7 +314,6 @@ function main(): void {
   process.exit(1);
 }
 
-// Export for testing
 export {
   validateOffers,
   validateDealChanges,
