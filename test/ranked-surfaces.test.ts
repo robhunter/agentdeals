@@ -225,3 +225,114 @@ describe("the criteria are discoverable by an agent that never renders HTML", ()
     assert.match(text, /the <code>\/api\/stack<\/code> endpoint and the <code>plan_stack<\/code> MCP tool/);
   });
 });
+
+// #1166: /criteria offers a recompute. A surface that ranks and then drops its
+// tie_break turns that offer into an assertion, which is what this enumeration
+// exists to prevent. Adding a ranked surface means adding a row here.
+const RANKED_SURFACES: Array<{
+  queryKeyPrefix: string;
+  publishedAt: string;
+  seedIn: "html" | "json";
+  jsonSeed?: (body: any) => unknown;
+}> = [
+  { queryKeyPrefix: "best-of", publishedAt: "/best/free-databases", seedIn: "html" },
+  { queryKeyPrefix: "alternatives", publishedAt: "/vendor/doppler", seedIn: "html" },
+  { queryKeyPrefix: "alternative-to", publishedAt: "/alternative-to/doppler", seedIn: "html" },
+  { queryKeyPrefix: "related", publishedAt: "/api/details/doppler", seedIn: "json", jsonSeed: (b) => b.offer?.tie_break?.seed },
+  { queryKeyPrefix: "vendor-risk-alternatives", publishedAt: "/api/vendor-risk/doppler", seedIn: "json", jsonSeed: (b) => b.tie_break?.seed },
+  { queryKeyPrefix: "stack", publishedAt: "/api/stack?use_case=Next.js+SaaS+app", seedIn: "json", jsonSeed: (b) => b.stack?.[0]?.tie_break?.seed },
+];
+
+function rankingCallQueryKeyPrefixes(): string[] {
+  const prefixes: string[] = [];
+  for (const file of ["serve.ts", "data.ts", "stacks.ts"]) {
+    const src = readFileSync(path.join(REPO, "src", file), "utf8");
+    for (const m of src.matchAll(/\brank(?:Offers|ForListing)\(/g)) {
+      const window = src.slice(m.index!, m.index! + 600);
+      const key = window.match(/queryKey:\s*`([a-z-]+)/);
+      assert.ok(key, `a ranking call in src/${file} passes no literal query key prefix`);
+      prefixes.push(key![1]);
+    }
+  }
+  return prefixes;
+}
+
+describe("every ranked surface publishes the seed that ordered it", () => {
+  it("no ranking call site is missing from the enumeration above", () => {
+    const found = [...new Set(rankingCallQueryKeyPrefixes())].sort();
+    const registered = [...new Set(RANKED_SURFACES.map((s) => s.queryKeyPrefix))].sort();
+    assert.deepStrictEqual(
+      found,
+      registered,
+      "a surface resolves through the ranking module without a row saying where it publishes its seed",
+    );
+  });
+
+  for (const surface of RANKED_SURFACES) {
+    it(`${surface.publishedAt} publishes the date, query_key, seed and tie_count for ${surface.queryKeyPrefix}`, async () => {
+      const { status, text } = await get(surface.publishedAt);
+      assert.strictEqual(status, 200);
+      if (surface.seedIn === "json") {
+        assert.match(String(surface.jsonSeed!(JSON.parse(text))), /^[0-9a-f]{64}$/);
+        return;
+      }
+      const block = text.match(/<div class="audit-block">[\s\S]*?<\/div>/);
+      assert.ok(block, "the page ranks a list and renders no audit block");
+      assert.match(block[0], /<dt>date<\/dt><dd>\d{4}-\d{2}-\d{2}<\/dd>/);
+      assert.match(block[0], new RegExp(`<dt>query_key</dt><dd>${surface.queryKeyPrefix}:`));
+      assert.match(block[0], /<dt>seed<\/dt><dd>[0-9a-f]{64}<\/dd>/);
+      assert.match(block[0], /<dt>tie_count<\/dt><dd>\d+<\/dd>/);
+    });
+  }
+
+  it("the seed a page prints is the one the published algorithm derives", async () => {
+    const { createHash } = await import("node:crypto");
+    for (const p of ["/best/free-databases", "/vendor/supabase", "/alternative-to/vercel"]) {
+      const { text } = await get(p);
+      const block = text.match(/<div class="audit-block">[\s\S]*?<\/div>/)![0];
+      const date = block.match(/<dt>date<\/dt><dd>([^<]+)</)![1];
+      const queryKey = block.match(/<dt>query_key<\/dt><dd>([^<]+)</)![1].replace(/&amp;/g, "&");
+      const seed = block.match(/<dt>seed<\/dt><dd>([^<]+)</)![1];
+      assert.strictEqual(createHash("sha256").update(`${date}|${queryKey}|p0`).digest("hex"), seed, `${p} prints a seed its own inputs do not produce`);
+    }
+  });
+
+  it("every best-of card previews a ranked order the page it links to publishes a seed for", async () => {
+    const { text } = await get("/best");
+    const slugs = [...new Set([...text.matchAll(/href="\/best\/([a-z0-9-]+)"/g)].map((m) => m[1]))];
+    assert.ok(slugs.length > 40, `expected the full best-of index, got ${slugs.length}`);
+    for (const slug of slugs.slice(0, 5)) {
+      const { text: page } = await get(`/best/${slug}`);
+      assert.match(page, /<div class="audit-block">/, `/best/${slug} carries no seed for the order previewed on /best`);
+    }
+  });
+
+  it("the tie figures on /criteria are the ones the best-of pages themselves publish", async () => {
+    const { text: index } = await get("/best");
+    const slugs = [...new Set([...index.matchAll(/href="\/best\/([a-z0-9-]+)"/g)].map((m) => m[1]))];
+    const tieCounts: number[] = [];
+    for (const slug of slugs) {
+      const { text } = await get(`/best/${slug}`);
+      const block = text.match(/<div class="audit-block">[\s\S]*?<\/div>/)![0];
+      tieCounts.push(Number(block.match(/<dt>tie_count<\/dt><dd>(\d+)<\/dd>/)![1]));
+    }
+    const uniqueTop = tieCounts.filter((n) => n === 1).length;
+    const meanTie = (tieCounts.reduce((a, b) => a + b, 0) / tieCounts.length).toFixed(1);
+
+    const { text: criteria } = await get("/criteria");
+    const claim = criteria.match(/<div class="callout">([\s\S]*?)<\/div>/)![1];
+    assert.match(claim, new RegExp(`of the ${slugs.length} categories with a best-of page`), "the denominator must be the number of best-of pages");
+    assert.match(claim, new RegExp(`${uniqueTop === 0 ? "Zero" : String(uniqueTop)} of the`), `the page must publish the ${uniqueTop} its own best-of pages add up to`);
+    assert.ok(claim.includes(`${meanTie} offers tie at the top`), `the mean must be ${meanTie}, the mean of the published tie counts`);
+
+    const { text: llms } = await get("/llms.txt");
+    assert.match(llms, new RegExp(`${uniqueTop} of the ${slugs.length} categories with a best-of page`), "llms.txt must carry the same figure and the same scope");
+  });
+
+  it("the vendor page says how much of the ranked order it is showing", async () => {
+    const { text: truncated } = await get("/vendor/supabase");
+    assert.match(truncated, /The list above is the first \d+ of \d+ entries in that order\./);
+    const { text: whole } = await get("/vendor/doppler");
+    assert.ok(!/The list above is the first/.test(whole), "a list that shows every entry must not claim to be a prefix");
+  });
+});
