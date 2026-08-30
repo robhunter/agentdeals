@@ -220,6 +220,7 @@ const RANKED_SURFACES: Array<{
   { queryKeyPrefix: "best-of", publishedAt: "/best/free-databases", seedIn: "html" },
   { queryKeyPrefix: "alternatives", publishedAt: "/vendor/doppler", seedIn: "html" },
   { queryKeyPrefix: "alternative-to", publishedAt: "/alternative-to/doppler", seedIn: "html" },
+  { queryKeyPrefix: "curated-alternatives", publishedAt: "/vendor/postman", seedIn: "html" },
   { queryKeyPrefix: "related", publishedAt: "/api/details/doppler", seedIn: "json", jsonSeed: (b) => b.offer?.tie_break?.seed },
   { queryKeyPrefix: "vendor-risk-alternatives", publishedAt: "/api/vendor-risk/doppler", seedIn: "json", jsonSeed: (b) => b.tie_break?.seed },
   { queryKeyPrefix: "stack", publishedAt: "/api/stack?use_case=Next.js+SaaS+app", seedIn: "json", jsonSeed: (b) => b.stack?.[0]?.tie_break?.seed },
@@ -258,12 +259,13 @@ describe("every ranked surface publishes the seed that ordered it", () => {
         assert.match(String(surface.jsonSeed!(JSON.parse(text))), /^[0-9a-f]{64}$/);
         return;
       }
-      const block = text.match(/<div class="audit-block">[\s\S]*?<\/div>/);
-      assert.ok(block, "the page ranks a list and renders no audit block");
-      assert.match(block[0], /<dt>date<\/dt><dd>\d{4}-\d{2}-\d{2}<\/dd>/);
-      assert.match(block[0], new RegExp(`<dt>query_key</dt><dd>${surface.queryKeyPrefix}:`));
-      assert.match(block[0], /<dt>seed<\/dt><dd>[0-9a-f]{64}<\/dd>/);
-      assert.match(block[0], /<dt>tie_count<\/dt><dd>\d+<\/dd>/);
+      const blocks = text.match(/<div class="audit-block">[\s\S]*?<\/div>/g) ?? [];
+      assert.ok(blocks.length > 0, "the page ranks a list and renders no audit block");
+      const block = blocks.find((b) => new RegExp(`<dt>query_key</dt><dd>${surface.queryKeyPrefix}:`).test(b));
+      assert.ok(block, `no audit block on the page names ${surface.queryKeyPrefix}`);
+      assert.match(block, /<dt>date<\/dt><dd>\d{4}-\d{2}-\d{2}<\/dd>/);
+      assert.match(block, /<dt>seed<\/dt><dd>[0-9a-f]{64}<\/dd>/);
+      assert.match(block, /<dt>tie_count<\/dt><dd>\d+<\/dd>/);
     });
   }
 
