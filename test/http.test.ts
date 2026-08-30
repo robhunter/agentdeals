@@ -2036,7 +2036,10 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("/api/docs"), "Should link to Swagger docs");
     assert.ok(html.includes("/api/digest/weekly"), "Should show weekly digest endpoint in quickstart");
     assert.ok(html.includes("Rate Limits"), "Should have rate limits section");
-    assert.ok(html.includes("no rate limits"), "Should state no rate limits");
+    assert.ok(html.includes("no rate limits"), "Should state where there are no rate limits");
+    assert.ok(html.includes("X-RateLimit-Limit"), "Should name the headers the limited endpoints return");
+    assert.ok(html.includes("registrations per hour per client"), "Should state the registration limit");
+    assert.ok(!/no rate limits\.?<\/p>/.test(html), "Should not claim the whole API is unlimited");
     assert.ok(html.includes("/feed.xml"), "Should link to RSS feed");
     assert.ok(!html.includes("${BASE_URL}"), "Should not have unresolved BASE_URL");
   });

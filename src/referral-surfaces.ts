@@ -75,6 +75,12 @@ export function hasAnyReferralSurface(vendorName: string, offer?: Offer | null):
   return hasOurReferralLink(vendorName, offer) || documentsVendorReferralProgram(offer);
 }
 
+export function heldReferralLinkForVendor(offers: Offer[], vendorName: string): OurReferralLink | null {
+  const slug = toSlug(vendorName);
+  if (!slug) return null;
+  return allOurReferralLinks(offers).find(link => toSlug(link.vendor) === slug) ?? null;
+}
+
 export function allOurReferralLinks(offers: Offer[]): OurReferralLink[] {
   const offerBySlug = new Map<string, Offer>();
   for (const offer of offers) {

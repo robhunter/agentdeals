@@ -12,6 +12,9 @@ const LEDGER_PATH = path.join(__dirname, "..", "data", "ledger_entries.json");
 const BALANCES_PATH = path.join(__dirname, "..", "data", "agent_balances.json");
 const REQUESTS_PATH = path.join(__dirname, "..", "data", "referral_requests.json");
 
+const PLATFORM_SECRET = "marketplace-api-test-secret";
+const PLATFORM_AUTH = { Authorization: `Bearer ${PLATFORM_SECRET}` };
+
 let serverPort = 0;
 let serverProc: ChildProcess;
 
@@ -61,7 +64,7 @@ function startHttpServer(): Promise<ChildProcess> {
     const serverPath = path.join(__dirname, "..", "dist", "serve.js");
     const proc = spawn("node", [serverPath], {
       stdio: ["pipe", "pipe", "pipe"],
-      env: { ...process.env, PORT: "0", BASE_URL: "http://localhost" },
+      env: { ...process.env, PORT: "0", BASE_URL: "http://localhost", AGENTDEALS_PLATFORM_SECRET: PLATFORM_SECRET },
     });
 
     const timeout = setTimeout(() => {
@@ -115,7 +118,7 @@ describe("Marketplace API Endpoints", () => {
   it("POST /api/conversions records a conversion", async () => {
     const res = await fetch(`http://localhost:${serverPort}/api/conversions`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", ...PLATFORM_AUTH },
       body: JSON.stringify({
         vendor: "Railway",
         referral_code: "TEST123",
@@ -134,7 +137,7 @@ describe("Marketplace API Endpoints", () => {
   it("POST /api/conversions rejects missing vendor", async () => {
     const res = await fetch(`http://localhost:${serverPort}/api/conversions`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", ...PLATFORM_AUTH },
       body: JSON.stringify({ commission_amount: 5.00 }),
     });
     assert.strictEqual(res.status, 400);
@@ -145,7 +148,7 @@ describe("Marketplace API Endpoints", () => {
   it("POST /api/conversions rejects invalid commission_amount", async () => {
     const res = await fetch(`http://localhost:${serverPort}/api/conversions`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", ...PLATFORM_AUTH },
       body: JSON.stringify({ vendor: "Railway", commission_amount: -1 }),
     });
     assert.strictEqual(res.status, 400);
@@ -156,7 +159,7 @@ describe("Marketplace API Endpoints", () => {
   it("POST /api/conversions rejects invalid JSON", async () => {
     const res = await fetch(`http://localhost:${serverPort}/api/conversions`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", ...PLATFORM_AUTH },
       body: "not-json",
     });
     assert.strictEqual(res.status, 400);
@@ -169,6 +172,7 @@ describe("Marketplace API Endpoints", () => {
   it("POST /api/conversions/confirm returns confirmed count", async () => {
     const res = await fetch(`http://localhost:${serverPort}/api/conversions/confirm`, {
       method: "POST",
+      headers: { "Content-Type": "application/json", ...PLATFORM_AUTH },
     });
     assert.strictEqual(res.status, 200);
     const body = await res.json();
@@ -181,7 +185,7 @@ describe("Marketplace API Endpoints", () => {
   it("POST /api/conversions/clawback rejects missing entry_id", async () => {
     const res = await fetch(`http://localhost:${serverPort}/api/conversions/clawback`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", ...PLATFORM_AUTH },
       body: JSON.stringify({}),
     });
     assert.strictEqual(res.status, 400);
@@ -192,7 +196,7 @@ describe("Marketplace API Endpoints", () => {
   it("POST /api/conversions/clawback returns 404 for nonexistent entry", async () => {
     const res = await fetch(`http://localhost:${serverPort}/api/conversions/clawback`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", ...PLATFORM_AUTH },
       body: JSON.stringify({ entry_id: "nonexistent_id" }),
     });
     assert.strictEqual(res.status, 404);
@@ -203,7 +207,7 @@ describe("Marketplace API Endpoints", () => {
   it("POST /api/conversions/clawback rejects invalid JSON", async () => {
     const res = await fetch(`http://localhost:${serverPort}/api/conversions/clawback`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", ...PLATFORM_AUTH },
       body: "bad-json",
     });
     assert.strictEqual(res.status, 400);
