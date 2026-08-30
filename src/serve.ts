@@ -44815,7 +44815,6 @@ ${globalNavCss()}
   <h1>State of Developer Free Tiers (2026)</h1>
   <p class="page-meta">${dealChanges.length} pricing changes tracked across ${offers.length.toLocaleString()} developer tools. ${negativeChanges.length} negative vs ${positiveChanges.length} positive. The ratio tells the story.${dataChangesSegment(dealChanges)}${pageFreshnessSentence("/state-of-free-tiers")}</p>
 
-  <!-- 1. Executive Summary -->
   <h2>Executive Summary</h2>
   <p class="section-desc">We analyzed ${offers.length.toLocaleString()} developer tool offerings across ${categories.length} categories, tracking ${dealChanges.length} pricing changes over 2024&ndash;2026. Here&rsquo;s what the data shows:</p>
   <ul class="key-takeaways">
@@ -44826,7 +44825,6 @@ ${globalNavCss()}
     <li><strong>Open source is the safety net</strong> &mdash; in security tools, a $0 OSS stack matches $23K&ndash;$73K/yr hosted alternatives on capability.</li>
   </ul>
 
-  <!-- 2. By the Numbers -->
   <h2>By the Numbers</h2>
   <div class="stat-grid">
     <div class="stat-card"><span class="stat-number">${offers.length.toLocaleString()}</span><span class="stat-label">Offers Tracked</span></div>
@@ -44840,7 +44838,6 @@ ${globalNavCss()}
     <strong>How to read this data:</strong> We track publicly available developer tool free tiers, startup programs, and OSS eligibility across ${categories.length} categories. Every offer is manually verified against pricing pages. &ldquo;Free tier&rdquo; includes perpetual free plans, generous hobby tiers, and always-free offerings &mdash; not limited trials.
   </div>
 
-  <!-- Monthly Trend Visualization -->
   <h2>Monthly Pricing Change Trend</h2>
   <p class="section-desc">Pricing changes by month, showing the acceleration in 2026. Red bars = negative changes (removals, reductions, restrictions). Green bars = positive changes (new free tiers, expansions).</p>
   <div style="margin:1.5rem 0;overflow-x:auto">
@@ -44866,7 +44863,6 @@ ${globalNavCss()}
     </div>
   </div>
 
-  <!-- Change Type Breakdown -->
   <h2>Change Type Breakdown</h2>
   <p class="section-desc">What kinds of pricing changes are we seeing? The breakdown by change type reveals the dominant patterns.</p>
   <div style="margin:1.5rem 0">
@@ -44883,7 +44879,6 @@ ${globalNavCss()}
     }).join("\n    ")}
   </div>
 
-  <!-- 3. The Free Tier Squeeze -->
   <h2>The Free Tier Squeeze: Who&rsquo;s Cutting Back</h2>
   <p class="section-desc">Of ${dealChanges.length} tracked pricing changes, ${negativeChanges.length} (${Math.round((negativeChanges.length / dealChanges.length) * 100)}%) are negative for developers &mdash; free tier removals, limit reductions, and new restrictions. The pattern is clear: as companies mature, raise prices, or get acquired, free tiers shrink.</p>
   <div class="callout callout-warn">
@@ -44891,7 +44886,6 @@ ${globalNavCss()}
   </div>
   ${squeezeHtml}
 
-  <!-- 4. Bright Spots -->
   <h2>The Bright Spots: Who&rsquo;s Expanding</h2>
   <p class="section-desc">${positiveChanges.length} tracked changes are developer-positive: new free tiers, expanded limits, and improved startup programs. Notable expansions include GitHub Copilot Free, Auth0 tripling MAU limits, and Amazon Aurora PostgreSQL joining the AWS Free Tier.</p>
   <div class="callout callout-good">
@@ -44899,7 +44893,6 @@ ${globalNavCss()}
   </div>
   ${brightSpotsHtml}
 
-  <!-- Category Erosion Analysis -->
   <h2>Category Erosion: Where Free Tiers Are Disappearing</h2>
   <p class="section-desc">Which of our ${categories.length} categories have been hit hardest by negative pricing changes? This breakdown shows where developers face the most free tier erosion.</p>
   <div class="cost-table">
@@ -44925,7 +44918,6 @@ ${globalNavCss()}
   </table>
   </div>
 
-  <!-- Still Free: Stable Vendors -->
   <h2>Still Free: Vendors You Can Count On</h2>
   <p class="section-desc">Not everything is eroding. These vendors have strong structural commitment to free tiers &mdash; through open-source foundations, developer-first business models, or cloud provider loss-leader strategies. They represent the safe bets for long-term architecture decisions.</p>
   <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1rem;margin:1.5rem 0">
@@ -44949,7 +44941,6 @@ ${globalNavCss()}
     <strong>Architecture advice:</strong> For each critical infrastructure component, ensure at least one of your shortlisted vendors is either open-source or a cloud-provider loss leader. When a vendor like PlanetScale or Heroku removes their free tier, you want an exit plan that doesn&rsquo;t require rewriting your stack.
   </div>
 
-  <!-- 5. Startup Credit Programs -->
   <h2>Startup Credit Programs: The Hidden Goldmine</h2>
   <p class="section-desc">${eligibilityOffers.length} offers in our index include eligibility restrictions or startup programs. The combined value exceeds $1M in available credits for qualifying startups. Key programs:</p>
   <div class="cost-table">
@@ -44968,7 +44959,6 @@ ${globalNavCss()}
   </div>
   <p style="color:var(--text-dim);font-size:.85rem;margin-top:.5rem">See our full <a href="/startup-credits">startup credits directory</a> for 19 programs across 3 tiers.</p>
 
-  <!-- 6. Category Landscape -->
   <h2>Category Landscape</h2>
   <p class="section-desc">Which categories have the most free tier options? The table below shows our top 20 categories ranked by free tier density.</p>
   <div class="cost-table">
@@ -44981,7 +44971,6 @@ ${globalNavCss()}
   </div>
   <p style="color:var(--text-dim);font-size:.85rem;margin-top:.5rem">Browse all ${categories.length} categories at <a href="/category">/category</a>.</p>
 
-  <!-- 7. Cost Trap -->
   <h2>The Cost Trap: When Free Tiers Become Expensive</h2>
   <p class="section-desc">Free tiers are acquisition tools. The real question is: what happens at 10x, 100x, and 1000x the free limit? Our comparison data reveals dramatic cost divergence at scale.</p>
 
@@ -45015,7 +45004,6 @@ ${globalNavCss()}
     <span style="display:block;margin-top:.5rem;font-size:.85rem"><a href="/security-free-tier-comparison-2026">Full security comparison &rarr;</a></span>
   </div>
 
-  <!-- 8. Methodology -->
   <h2>Methodology</h2>
   <p class="section-desc">How we built this dataset:</p>
   <ul style="color:var(--text-muted);font-size:.9rem;padding-left:1.25rem;margin-bottom:1rem">
@@ -45026,7 +45014,6 @@ ${globalNavCss()}
     <li style="margin-bottom:.4rem"><strong>Open data:</strong> All data is accessible via our <a href="/developers">REST API</a> and <a href="/setup">MCP server</a>. Query it from your AI coding assistant.</li>
   </ul>
 
-  <!-- Track Changes Yourself CTA -->
   <h2>Track Changes Yourself</h2>
   <p class="section-desc">All the data behind this report is open and machine-readable. Stay updated on free tier changes through multiple channels:</p>
   <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin:1.5rem 0">
