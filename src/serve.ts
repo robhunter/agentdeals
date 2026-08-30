@@ -40,7 +40,7 @@ import { faqPageJsonLd, type FaqItem } from "./faq-provenance.js";
 import { SSE_KEEPALIVE_FRAME, keepaliveIntervalMs, sessionRecoveryBody } from "./mcp-stream.js";
 import { ASSISTANTS_API_SHUTDOWN } from "./assistants-shutdown.js";
 import { discontinuedOnOrBefore } from "./product-deprecation.js";
-import { rankOffers, rankForListing, rotateListing, utcDate, CRITERIA_PATH, DEMOTE_ONLY_POLICY, DISCLOSURE_RATIONALE, TIE_BREAK_ALGORITHM, GATE_TABLE, DEMERIT_TABLE, NOT_FREE_TIER_RULES, TIME_LIMITED_TIER_RULES } from "./ranking.js";
+import { rankOffers, rankForListing, rotateListing, utcDate, CRITERIA_PATH, DEMOTE_ONLY_POLICY, DISCLOSURE_RATIONALE, TIE_BREAK_ALGORITHM, GATE_TABLE, DEMERIT_TABLE, NOT_FREE_TIER_RULES, TIME_LIMITED_TIER_RULES, type TieBreak } from "./ranking.js";
 import type { RankedEntry, RankingResult } from "./ranking.js";
 import { verificationLedger, QUARANTINE_AFTER_FAILURES } from "./verification-state.js";
 import { partitionAlternatives, partitionAlternativesAcross, productRoleSentence, MEMBERSHIP_GATE_RULES, MEMBERSHIP_GATE_ORDER, MEMBERSHIP_GATE_SYMMETRY, MEMBERSHIP_GATE_SCOPE, MEMBERSHIP_GATE_CORRECTIONS } from "./product-role.js";
@@ -1548,6 +1548,29 @@ function renderDemerits(entry: RankedEntry<EnrichedOfferRow>): string {
   return `<ul class="demerit-list">${items}</ul>`;
 }
 
+function auditBlockCss(): string {
+  return `.audit-block{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1rem 1.25rem;margin:2rem 0;font-size:.8rem;color:var(--text-muted)}
+.audit-block dl{display:grid;grid-template-columns:auto 1fr;gap:.25rem .75rem;margin:.5rem 0 0}
+.audit-block dt{color:var(--text-dim)}
+.audit-block dd{font-family:var(--mono);color:var(--text);word-break:break-all}
+@media(max-width:768px){.audit-block dl{grid-template-columns:1fr}}`;
+}
+
+function renderAuditBlock(tie: TieBreak, listed?: { shown: number; total: number }): string {
+  const truncationNote = listed && listed.shown < listed.total
+    ? ` The list above is the first ${listed.shown} of ${listed.total} entries in that order.`
+    : "";
+  return `  <div class="audit-block">
+    <strong style="color:var(--text)">Recompute today's order yourself.</strong> The order above is a permutation seeded only on the UTC date and the query key &mdash; no vendor name, slug, id or offer field is an input.${truncationNote} <a href="${CRITERIA_PATH}">The algorithm is published</a>, so anyone can reproduce this page's order without asking us.
+    <dl>
+      <dt>date</dt><dd>${escHtmlServer(tie.date)}</dd>
+      <dt>query_key</dt><dd>${escHtmlServer(tie.query_key)}</dd>
+      <dt>seed</dt><dd>${escHtmlServer(tie.seed)}</dd>
+      <dt>tie_count</dt><dd>${tie.tie_count}</dd>
+    </dl>
+  </div>`;
+}
+
 function buildBestOfPage(slug: string): string | null {
   const entry = bestOfSlugMap.get(slug);
   if (!entry) return null;
@@ -1701,12 +1724,9 @@ h2{font-family:var(--serif);font-size:1.4rem;color:var(--text);margin:2.5rem 0 1
 .best-disclosure{margin:.5rem 0;font-size:.78rem;color:var(--text-dim)}
 .best-disclosure-label{text-transform:uppercase;letter-spacing:.04em;font-size:.68rem}
 .best-disclosure ul{margin:.25rem 0 0 1rem}
-.audit-block{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:1rem 1.25rem;margin:2rem 0;font-size:.8rem;color:var(--text-muted)}
-.audit-block dl{display:grid;grid-template-columns:auto 1fr;gap:.25rem .75rem;margin:.5rem 0 0}
-.audit-block dt{color:var(--text-dim)}
-.audit-block dd{font-family:var(--mono);color:var(--text);word-break:break-all}
+${auditBlockCss()}
 footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}
-@media(max-width:768px){h1{font-size:1.5rem}.best-pick{flex-direction:column;gap:.5rem}.best-pick-rank{text-align:left}.compare-table{font-size:.75rem}.compare-table th,.compare-table td{padding:.4rem .5rem}.audit-block dl{grid-template-columns:1fr}}
+@media(max-width:768px){h1{font-size:1.5rem}.best-pick{flex-direction:column;gap:.5rem}.best-pick-rank{text-align:left}.compare-table{font-size:.75rem}.compare-table th,.compare-table td{padding:.4rem .5rem}}
 ${globalNavCss()}
 ${mcpCtaCss()}
 </style>
@@ -1730,15 +1750,7 @@ ${reviewsHtml}
   <p class="page-meta" style="margin-bottom:1rem">These offers are in this category but rank below the list above. Each one names the recorded fact behind it. ${escHtmlServer(DISCLOSURE_RATIONALE)}</p>
 ${demotedHtml}
 
-  <div class="audit-block">
-    <strong style="color:var(--text)">Recompute today's order yourself.</strong> The order above is a permutation seeded only on the UTC date and the query key &mdash; no vendor name, slug, id or offer field is an input. <a href="${CRITERIA_PATH}">The algorithm is published</a>, so anyone can reproduce this page's order without asking us.
-    <dl>
-      <dt>date</dt><dd>${escHtmlServer(tie.date)}</dd>
-      <dt>query_key</dt><dd>${escHtmlServer(tie.query_key)}</dd>
-      <dt>seed</dt><dd>${escHtmlServer(tie.seed)}</dd>
-      <dt>tie_count</dt><dd>${tie.tie_count}</dd>
-    </dl>
-  </div>
+${renderAuditBlock(tie)}
 
   <h2>Quick Comparison</h2>
   <table class="compare-table">
@@ -1859,6 +1871,37 @@ ${globalNavCss()}
 
 // --- Ranking criteria page ---
 
+interface BestOfTieSummary {
+  bestOfPageCount: number;
+  categoriesWithUniqueTop: string[];
+  meanTie: string;
+}
+
+// Measured live rather than asserted, so the numbers on the page are today's.
+function summariseBestOfTies(date = utcDate()): BestOfTieSummary {
+  const categoriesWithUniqueTop: string[] = [];
+  let tieSum = 0;
+  let bestOfPageCount = 0;
+  for (const [, { categoryName }] of bestOfSlugMap) {
+    const r = rankCategory(categoryName, date);
+    bestOfPageCount++;
+    tieSum += r.tie_break.tie_count;
+    if (r.tie_break.tie_count === 1) categoriesWithUniqueTop.push(categoryName);
+  }
+  return {
+    bestOfPageCount,
+    categoriesWithUniqueTop,
+    meanTie: bestOfPageCount > 0 ? (tieSum / bestOfPageCount).toFixed(1) : "0",
+  };
+}
+
+function uniqueTopClause(s: BestOfTieSummary): string {
+  const found = s.categoriesWithUniqueTop;
+  const scope = `of the ${s.bestOfPageCount} categories with a best-of page`;
+  const named = found.length === 0 ? "" : ` (${found.join(", ")})`;
+  return `${found.length} ${scope} ${found.length === 1 ? "has" : "have"} a unique number one${named}`;
+}
+
 /**
  * The published method. Every claim on this page is generated from the same
  * constants the ranking itself uses, so the page cannot drift from the code.
@@ -1866,17 +1909,8 @@ ${globalNavCss()}
 function buildCriteriaPage(): string {
   const date = utcDate();
 
-  // Measured live rather than asserted, so the numbers on the page are today's.
-  let pagesWithUniqueTop = 0;
-  let tieSum = 0;
-  let pageCount = 0;
-  for (const [, { categoryName }] of bestOfSlugMap) {
-    const r = rankCategory(categoryName, date);
-    pageCount++;
-    tieSum += r.tie_break.tie_count;
-    if (r.tie_break.tie_count === 1) pagesWithUniqueTop++;
-  }
-  const meanTie = pageCount > 0 ? (tieSum / pageCount).toFixed(1) : "0";
+  const tieSummary = summariseBestOfTies(date);
+  const { bestOfPageCount, categoriesWithUniqueTop, meanTie } = tieSummary;
 
   const title = "How AgentDeals ranks — published criteria — AgentDeals";
   const metaDesc = "Our ranking method in full: the gates, the demerits and their weights, the tie-break seed, and the reason there is no top slot to sell. Recompute any ranked page yourself.";
@@ -1992,7 +2026,9 @@ ${demeritRows}
 
   <h2>3. Ties, and why there is no top slot to sell</h2>
   <div class="callout">
-    <strong>Zero of ${pageCount} categories have a unique number one.</strong> Under every criterion we currently record, there is no single best free database, no best free AI/ML tool, no best free anything. On average ${meanTie} offers tie at the top of a category.
+    <strong>${uniqueTopClause(tieSummary).replace(/^0 /, "Zero ")}.</strong> ${categoriesWithUniqueTop.length === 0
+      ? "Under every criterion we currently record, there is no single best free database, no best free AI/ML tool, no best free anything."
+      : "Everywhere else, under every criterion we currently record, there is no single best free tier of anything."} On average ${meanTie} offers tie at the top of those categories. The site publishes ${categories.length} categories in all; the ${categories.length - bestOfPageCount} with fewer than ${BEST_OF_MIN_VENDORS} generally-available offers have no best-of page and are not counted here.
   </div>
   <p>We think that is the honest answer and a better thing to publish than a manufactured winner. It is also the strongest form of &ldquo;our recommendations are not for sale&rdquo;: there is no top slot, so there is nothing to buy. A vendor cannot improve its position by talking to us &mdash; only by improving its offer, or by us being able to verify it.</p>
 
@@ -3790,10 +3826,11 @@ function buildVendorPage(slug: string): string | null {
     offers.filter(o => o.category === primary.category && o.vendor !== vendorName),
     primary,
   );
-  const alternatives = rankForListing(
+  const alternativesRanking = rankForListing(
     alternativesMembership.kept,
     { queryKey: `alternatives:${primary.category}:${vendorName}`, changes: dealChanges },
-  ).entries.slice(0, 12).map(e => e.offer);
+  );
+  const alternatives = alternativesRanking.entries.slice(0, 12).map(e => e.offer);
 
   // Comparison pages featuring this vendor
   const vendorComparisons = Array.from(comparisonMap.entries())
@@ -3986,6 +4023,7 @@ ${alternatives.map(a => `      <a href="/vendor/${toSlug(a.vendor)}" class="alt-
         <span class="alt-tier">${escHtmlServer(a.tier)}</span>
       </a>`).join("\n")}
     </div>${membershipExclusionsHtml}
+${renderAuditBlock(alternativesRanking.tie_break, { shown: alternatives.length, total: alternativesRanking.entries.length })}
   </div>` : "";
 
   // Comparisons HTML — include both /compare/ pages and root-level VS pages
@@ -4260,6 +4298,7 @@ h1 .risk-badge{font-size:.75rem;font-weight:600;padding:.2rem .6rem;border-radiu
 .change-detail{font-size:.8rem;color:var(--text-dim);margin-top:.25rem}
 .state-label{font-family:var(--mono);font-size:.7rem;color:var(--text-dim)}
 .no-changes{color:var(--text-dim);font-size:.9rem;font-style:italic}
+${auditBlockCss()}
 .alt-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:.5rem}
 .alt-card{display:block;padding:.5rem .75rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);transition:all .2s;text-decoration:none}
 .alt-card:hover{border-color:var(--accent);background:var(--accent-glow);text-decoration:none}
@@ -4517,6 +4556,7 @@ ${curatedAlts.map(a => altCard(a, true)).join("\n")}
     <div class="alt-list">
 ${enrichedAlts.map(a => altCard(a, false)).join("\n")}
     </div>
+${renderAuditBlock(altRanking.tie_break)}
   </div>` : `<div class="section"><p class="no-changes">No alternatives found for ${escHtmlServer(vendorName)}.</p></div>`;
 
   // Category trends link
@@ -4631,6 +4671,7 @@ h3{font-family:var(--serif);font-size:1rem;color:var(--text);margin-bottom:.5rem
 .more-link{font-size:.85rem;margin-top:.5rem}
 .section{margin-bottom:2rem;padding-top:1.5rem;border-top:1px solid var(--border)}
 .section-note{color:var(--text-dim);font-size:.85rem;margin-bottom:1rem}
+${auditBlockCss()}
 .alt-list{display:flex;flex-direction:column;gap:.5rem}
 .alt-row{padding:.75rem 1rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);transition:border-color .2s}
 .alt-row:hover{border-color:var(--accent)}
@@ -54730,7 +54771,7 @@ AgentDeals helps developers find free tiers, startup credits, and deals on devel
 
 ## How ranking works — read this before trusting an order
 
-Recommendations are not for sale. Every ranked surface resolves through one module in which offers start at zero and can only be demoted, on a specific recorded fact with a date. There is no signal a vendor can acquire, lobby for or buy. Because almost nothing separates one healthy free tier from another, large ties are the normal case — 0 of 57 categories has a unique number one — and tied offers are ordered by a permutation seeded on the UTC date and the query key alone. Every ranked response publishes that seed so you can recompute the order yourself. We do NOT model technical fit between a product and a role; apply that yourself. Full method: ${BASE_URL}${CRITERIA_PATH}
+Recommendations are not for sale. Every ranked surface resolves through one module in which offers start at zero and can only be demoted, on a specific recorded fact with a date. There is no signal a vendor can acquire, lobby for or buy. Because almost nothing separates one healthy free tier from another, large ties are the normal case — ${uniqueTopClause(summariseBestOfTies())} — and tied offers are ordered by a permutation seeded on the UTC date and the query key alone. Every ranked response publishes that seed so you can recompute the order yourself. We do NOT model technical fit between a product and a role; apply that yourself. Full method: ${BASE_URL}${CRITERIA_PATH}
 
 ${signalLlmsSection(BASE_URL)}
 ## MCP Tools (4)

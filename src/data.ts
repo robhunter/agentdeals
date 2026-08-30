@@ -3,7 +3,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import type { Offer, EnrichedOffer, OfferIndex, DealChange, DealChangesIndex, ChangeDateSource, StabilityClass, Referral, RiskCause, LinkUnreachable } from "./types.js";
 import { isUrlSuspended } from "./referral-health.js";
-import { rankForListing } from "./ranking.js";
+import { rankForListing, type TieBreak } from "./ranking.js";
 import { unreachableNoticeForUrl, resetLinkHealthCache } from "./link-health.js";
 import { quarantineSummary, resetVerificationStateCache, type QuarantineSummary } from "./verification-state.js";
 import { cannotVouchForLevel, levelWithheldReason, withheldLevelSentence } from "./source-check.js";
@@ -80,7 +80,7 @@ export function getCategories(): { name: string; count: number }[] {
 export function getOfferDetails(
   vendorName: string,
   includeAlternatives: boolean = false
-): { offer: Offer & { relatedVendors: string[]; alternatives?: Offer[] } } | { error: string; suggestions: string[] } {
+): { offer: Offer & { relatedVendors: string[]; alternatives?: Offer[]; tie_break: TieBreak } } | { error: string; suggestions: string[] } {
   const offers = loadOffers();
   const lowerName = vendorName.toLowerCase();
   const match = offers.find((o) => o.vendor.toLowerCase() === lowerName);
@@ -89,12 +89,17 @@ export function getOfferDetails(
     // Related vendors and alternatives are a recommendation, so they resolve
     // through the shared selection module (#1025) rather than `.slice(0, 5)`
     // over data/index.json order.
-    const sameCategoryOffers = rankForListing(
+    const relatedRanking = rankForListing(
       filterAlternatives(offers.filter((o) => o.category === match.category && o.vendor !== match.vendor), match),
       { queryKey: `related:${match.category}:${match.vendor}`, changes: loadDealChanges() },
-    ).entries.slice(0, 5).map((e) => e.offer);
+    );
+    const sameCategoryOffers = relatedRanking.entries.slice(0, 5).map((e) => e.offer);
     const relatedVendors = sameCategoryOffers.map((o) => o.vendor);
-    const result: Offer & { relatedVendors: string[]; alternatives?: Offer[] } = { ...match, relatedVendors };
+    const result: Offer & { relatedVendors: string[]; alternatives?: Offer[]; tie_break: TieBreak } = {
+      ...match,
+      relatedVendors,
+      tie_break: relatedRanking.tie_break,
+    };
     if (includeAlternatives) {
       result.alternatives = sameCategoryOffers.map(o => stripReferrerValue(o));
     }
@@ -666,6 +671,7 @@ export interface VendorRiskResult {
   free_tier_longevity_days: number;
   changes: DealChange[];
   alternatives: Array<{ vendor: string; category: string; tier: string; risk_level: "stable" | "caution" | "risky" | null; risk_cause: RiskCause | null; link_unreachable: LinkUnreachable | null; demerits: Array<{ code: string; points: number; reason: string }> }>;
+  tie_break: TieBreak;
   summary: string;
 }
 
@@ -784,10 +790,11 @@ export function checkVendorRisk(
   // resolves through the shared selection module (#1025) rather than the old
   // "risk bucket, then alphabetical" sort — which ranked on the count of
   // changes we happen to have recorded and broke ties with the alphabet.
-  const alternatives = rankForListing(
+  const alternativesRanking = rankForListing(
     filterAlternatives(offers.filter((o) => o.category === offer.category && o.vendor !== offer.vendor), offer),
     { queryKey: `vendor-risk-alternatives:${offer.vendor}`, changes: allChanges },
-  ).entries.slice(0, 3).map((e) => ({
+  );
+  const alternatives = alternativesRanking.entries.slice(0, 3).map((e) => ({
     vendor: e.offer.vendor,
     category: e.offer.category,
     tier: e.offer.tier,
@@ -833,6 +840,7 @@ export function checkVendorRisk(
       free_tier_longevity_days: longevityDays,
       changes: vendorChanges,
       alternatives,
+      tie_break: alternativesRanking.tie_break,
       summary,
     },
   };

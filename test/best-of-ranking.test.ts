@@ -162,9 +162,11 @@ describe("/criteria publishes the method", () => {
     assert.match(html, /No vendor name, slug, id, index or offer field is an input/);
   });
 
-  it("publishes the finding rather than hiding it", async () => {
+  it("publishes the finding rather than hiding it, and says what it counted", async () => {
     const { html } = await get("/criteria");
-    assert.match(html, /Zero of \d+ categories have a unique number one/);
+    assert.match(html, /Zero of the \d+ categories with a best-of page have a unique number one/);
+    assert.match(html, /The site publishes \d+ categories in all/);
+    assert.ok(!/of 57 categories have/.test(html), "57 counts best-of pages, and the site publishes more categories than that");
   });
 
   it("says what we do not model", async () => {
