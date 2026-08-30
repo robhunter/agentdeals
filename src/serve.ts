@@ -448,15 +448,18 @@ export function changeLogFreshnessNote(now: Date = new Date()): string {
   return `  <p class="log-freshness" style="color:var(--text-dim);font-size:.8rem;margin:-1rem 0 1.5rem">We last added an entry to this log ${when}, on ${freshness.last_recorded_date}. The counts above are changes by the date they took effect, not by the date we recorded them.</p>\n`;
 }
 
+const today = new Date().toISOString().slice(0, 10);
+const hasAlreadyTakenEffect = (c: { date: string }) => c.date <= today;
+
 // Prepare recent deal changes for landing page (5 most recent, sorted newest first)
 const recentChanges = [...dealChanges]
+  .filter(hasAlreadyTakenEffect)
   .sort((a, b) => b.date.localeCompare(a.date))
   .slice(0, 5);
 
 // Prepare upcoming deadlines (future dates, soonest first, max 5)
-const today = new Date().toISOString().slice(0, 10);
 const upcomingDeadlines = [...dealChanges]
-  .filter((c) => c.date > today)
+  .filter((c) => !hasAlreadyTakenEffect(c))
   .sort((a, b) => a.date.localeCompare(b.date))
   .slice(0, 5);
 

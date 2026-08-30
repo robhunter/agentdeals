@@ -124,8 +124,8 @@ describe("the machine-readable change lists carry the entries the pages carry", 
   for (const route of ROUTES) {
     it(`states the effective date of a dated entry on ${route}`, () => {
       assert.strictEqual(
-        itemFor(changeList(bodies.get(route)!, route), UPCOMING, route).datePublished,
-        UPCOMING_DATE,
+        itemFor(changeList(bodies.get(route)!, route), RECENT, route).datePublished,
+        RECENT_DATE,
         `${route} dropped the effective date from an entry that has one`
       );
     });
@@ -138,6 +138,22 @@ describe("the machine-readable change lists carry the entries the pages carry", 
       );
     });
   }
+
+  it("carries an entry that has not taken effect on the routes that list changes by date, and not on the home page", () => {
+    for (const route of ["/changes", "/expiring"]) {
+      assert.strictEqual(
+        itemFor(changeList(bodies.get(route)!, route), UPCOMING, route).datePublished,
+        UPCOMING_DATE,
+        `${route} dropped an announced change that has not taken effect yet`
+      );
+    }
+    const home = changeList(bodies.get("/")!, "/");
+    assert.ok(home.items.length > 0, "the home page listed no changes at all, so the absence below proves nothing");
+    assert.ok(
+      !home.items.some((it) => it.headline?.startsWith(`${UPCOMING}:`)),
+      `the home page dated ${UPCOMING} as a change that has already happened`
+    );
+  });
 
   it("counts the entry it could not date in the total it advertises", () => {
     const list = changeList(bodies.get("/expiring")!, "/expiring");
