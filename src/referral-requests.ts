@@ -64,34 +64,6 @@ export function logReferralRequest(opts: {
 }
 
 /**
- * Last-touch attribution: find the most recent agent that requested a referral
- * code for the given vendor within the lookback window.
- * Returns the agent_id or null if no match.
- */
-export function attributeConversion(
-  vendor: string,
-  conversionDate: Date,
-  lookbackDays: number = 90
-): string | null {
-  const requests = loadRequests();
-  const cutoff = new Date(conversionDate.getTime() - lookbackDays * 24 * 60 * 60 * 1000);
-  const vendorLower = vendor.toLowerCase();
-
-  // Filter to matching vendor within lookback window
-  const eligible = requests.filter(r => {
-    if (r.vendor.toLowerCase() !== vendorLower) return false;
-    const requestedAt = new Date(r.requested_at);
-    return requestedAt >= cutoff && requestedAt <= conversionDate;
-  });
-
-  if (eligible.length === 0) return null;
-
-  // Last-touch: most recent request wins
-  eligible.sort((a, b) => new Date(b.requested_at).getTime() - new Date(a.requested_at).getTime());
-  return eligible[0].agent_id;
-}
-
-/**
  * Get all referral requests for a specific agent.
  */
 export function getRequestsByAgent(agentId: string): ReferralRequest[] {
@@ -103,14 +75,4 @@ export function getRequestsByAgent(agentId: string): ReferralRequest[] {
  */
 export function getRequestById(id: string): ReferralRequest | null {
   return loadRequests().find(r => r.id === id) ?? null;
-}
-
-/**
- * Mark a referral request as converted by setting the conversion_id.
- */
-export function markConversion(requestId: string, conversionId: string): boolean {
-  const requests = loadRequests();
-  if (!requests.some(r => r.id === requestId)) return false;
-  saveRequests(requests.map(r => (r.id === requestId ? { ...r, conversion_id: conversionId } : r)));
-  return true;
 }

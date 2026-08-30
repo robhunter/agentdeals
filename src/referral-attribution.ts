@@ -21,14 +21,15 @@ export interface AttributableReferral {
 }
 
 export const ATTRIBUTION_NOTES: Record<AttributionStatus, string> = {
-  attributed: "Recorded for attribution against your agent.",
+  attributed:
+    "Recorded against your agent. Requesting a code does not itself earn a share of a commission — a commission is credited to the agent that submitted the code it was reported against.",
   no_key: "No API key was supplied, so this request was not attributed to any agent.",
   key_not_recognised:
     "This API key is not in the agent registry, so nothing was attributed. Register again with register_agent to get a key that resolves.",
   registry_unavailable:
     "The agent registry could not be read, so this request was not attributed. Your key may still be valid — retry later.",
   not_recorded:
-    "Your key was recognised, but the attribution could not be stored, so no credit will be recorded for this request.",
+    "Your key was recognised, but the request could not be stored, so it was not recorded against your agent.",
 };
 
 function outcome(status: AttributionStatus): AttributionOutcome {

@@ -122,9 +122,29 @@ describe("Marketplace Page", () => {
     const res = await fetch(`http://localhost:${serverPort}/marketplace`);
     const html = await res.text();
     assert.ok(html.includes("Revenue Splits"));
-    assert.ok(html.includes("70%"));
-    assert.ok(html.includes("80%"));
     assert.ok(html.includes("40%"));
+    assert.ok(html.includes("60%"));
+  });
+
+  it("marketplace page publishes no share for surfacing a code", async () => {
+    const res = await fetch(`http://localhost:${serverPort}/marketplace`);
+    const html = await res.text();
+    const splits = html.slice(html.indexOf("Revenue Splits"), html.indexOf("Code Ranking"));
+    assert.ok(splits.includes("There is no share for surfacing a code."));
+    assert.ok(!/>\s*Surfer\s*</.test(splits), "the split table names no surfer column");
+    assert.ok(!splits.includes("70%") && !splits.includes("80%"), "no share is published that the ledger cannot pay");
+  });
+
+  it("marketplace page publishes the share the ledger actually pays", async () => {
+    const { SUBMITTER_SHARE_RATE } = await import("../dist/ledger.js");
+    const submitter = Math.round(SUBMITTER_SHARE_RATE * 100);
+    const res = await fetch(`http://localhost:${serverPort}/marketplace`);
+    const html = await res.text();
+    const splits = html.slice(html.indexOf("Revenue Splits"), html.indexOf("Code Ranking"));
+    assert.ok(
+      splits.includes(`<td>${submitter}%</td><td>${100 - submitter}%</td>`),
+      `the published split must be ${submitter}/${100 - submitter}, the rate the ledger accrues at`,
+    );
   });
 
   it("marketplace page has registration instructions with curl example", async () => {
