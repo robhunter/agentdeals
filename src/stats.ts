@@ -3083,11 +3083,10 @@ export const SIGNAL_NOTES = [
   "Self-reported and unverified. Anyone can POST to /api/signal without authenticating, so every count here is a claim by its sender, not an observation of ours.",
   "Signal counts never feed ranking, sorting or ordering on any surface. That is asserted by a test, not just stated here — see /criteria.",
   "post and get are reported separately and are never summed into a headline. The GET form exists for agents that cannot POST, requires ?ack=1, and is never published as a fireable URL — so the two populations are not comparable.",
-  "client_class is the sender's classification from the same table that attributes page traffic. A signal arriving as seo_crawler is not an agent telling us something.",
   "recommended and converted are two independent counters, never a funnel. Agents rarely observe whether their user signed up, so converted undercounts by an unknown factor and is not a conversion rate.",
-  "The report rate is signals divided by ai_agent fetches of the pages where a recommendation gets made (/vendor, /alternative-to, /compare, /best, /category). sdk_client fetches are reported beside it and never folded in.",
-  `No rate is computed below ${SIGNAL_MIN_SAMPLE} qualifying fetches, nor over any window whose denominator covers fewer days than the window itself. Signals are retained for ${CLASS_DAY_RETENTION} days and the counters they divide by for ${PAGE_VIEW_DAY_RETENTION}, so the 30-day window reports both counts and refuses the division — each window states its own denominator_days_available.`,
   "Per-vendor counts are recorded and are not published. A visible per-vendor counter would be a placement metric a vendor could acquire by firing it themselves.",
+  "The sender's client class, the self-identifier it chose, the surface it names as its source, the vendor names we do not index and the event strings we do not recognise are all recorded and none of them is published.",
+  "Our own traffic to the pages where a recommendation gets made is recorded and is not published, so no report rate is published either. It is our measurement of who reads us, and it is not a fact about any vendor.",
   "This call records the vendor slug, the event, an optional name the caller chooses for itself, and the sender's client class. Nothing about the caller's user, no IP, no identity.",
 ];
 
@@ -3123,6 +3122,43 @@ export function getSignalReport(): SignalReport {
     since_boot: signalsSinceBoot,
     notes: SIGNAL_NOTES,
     storage: getTelemetryHealth(),
+  };
+}
+
+export const SIGNAL_WITHHELD_WINDOW_FIELDS = [
+  "qualifying_fetches",
+  "qualifying_fetches_sdk_client",
+  "report_rate",
+  "rate_note",
+  "denominator_days_available",
+  "by_reporting_agent",
+  "by_source",
+  "by_client_class",
+  "unresolved_vendor_names",
+  "unrecognized_events",
+] as const;
+
+export type PublicSignalWindow = Omit<SignalWindow, (typeof SIGNAL_WITHHELD_WINDOW_FIELDS)[number]>;
+export type PublicSignalReport = Omit<SignalReport, "today" | "last_7d" | "last_30d" | "all_time"> & {
+  today: PublicSignalWindow;
+  last_7d: PublicSignalWindow;
+  last_30d: PublicSignalWindow;
+  all_time: PublicSignalWindow;
+};
+
+function publicSignalWindow(window: SignalWindow): PublicSignalWindow {
+  const out: Record<string, unknown> = { ...window };
+  for (const field of SIGNAL_WITHHELD_WINDOW_FIELDS) delete out[field];
+  return out as PublicSignalWindow;
+}
+
+export function publicSignalReport(report: SignalReport): PublicSignalReport {
+  return {
+    ...report,
+    today: publicSignalWindow(report.today),
+    last_7d: publicSignalWindow(report.last_7d),
+    last_30d: publicSignalWindow(report.last_30d),
+    all_time: publicSignalWindow(report.all_time),
   };
 }
 

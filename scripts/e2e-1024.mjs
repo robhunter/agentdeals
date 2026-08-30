@@ -93,6 +93,7 @@ const SEEDED = {
 // 26 + 2 + 1 = 29. /criteria is not a decision page and must not count.
 const EXPECTED_DENOMINATOR = 29;
 
+const OPERATOR_CREDENTIAL = "e2e-1024-operator-credential";
 const AGENT = "Mozilla/5.0 (compatible; ChatGPT-User/1.0; +https://openai.com/bot)";
 const CRAWLER = "Mozilla/5.0 (compatible; AhrefsBot/7.0; +http://ahrefs.com/robot/)";
 const BROWSER = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36";
@@ -121,6 +122,7 @@ const child = spawn("node", ["dist/serve.js"], {
     UPSTASH_REDIS_REST_URL: upstashUrl,
     UPSTASH_REDIS_REST_TOKEN: "fake",
     TELEMETRY_FLUSH_INTERVAL_SECONDS: "5",
+    AGENTDEALS_PLATFORM_SECRET: OPERATOR_CREDENTIAL,
   },
 });
 
@@ -133,7 +135,9 @@ const port = await new Promise((resolve, reject) => {
 });
 const base = `http://localhost:${port}`;
 const url = p => `${base}${p}`;
-const signals = () => fetch(url("/api/signals")).then(r => r.json());
+const signals = () =>
+  fetch(url("/api/signals"), { headers: { Authorization: `Bearer ${OPERATOR_CREDENTIAL}` } }).then(r => r.json());
+const publishedSignals = () => fetch(url("/api/signals")).then(r => r.json());
 
 // Let the boot load land before counting commands.
 await new Promise(r => setTimeout(r, 800));
@@ -210,10 +214,25 @@ console.log("\n6. Nothing per-vendor reaches a public surface");
   const raw = JSON.stringify(await signals());
   checkTrue("no vendor slug in /api/signals", !/neon/i.test(raw));
   const page = await (await fetch(url("/signal"))).text();
-  checkTrue("no vendor slug in the /signal numbers section",
-    !/neon/i.test(page.slice(page.indexOf("Our numbers"))));
-  checkTrue("but the endpoint example still names one", /"vendor":"neon"/.test(page));
+  checkTrue("no vendor slug on the /signal page beyond its worked example",
+    !/neon/i.test(page));
   checkTrue("and the note prose is never rendered", !/serverless postgres/.test(page));
+
+  // #1083 — the operator reads the full report with a credential; nobody else does.
+  const published = await publishedSignals();
+  const withheld = [
+    "qualifying_fetches", "qualifying_fetches_sdk_client", "report_rate", "rate_note",
+    "denominator_days_available", "by_reporting_agent", "by_source", "by_client_class",
+    "unresolved_vendor_names", "unrecognized_events",
+  ];
+  checkTrue("no withheld field reaches an unauthenticated caller",
+    withheld.every(f => !JSON.stringify(published).includes(`"${f}"`)),
+    withheld.filter(f => JSON.stringify(published).includes(`"${f}"`)).join(", "));
+  const operatorView = await signals();
+  checkTrue("the operator still reads every one of them",
+    withheld.every(f => f in operatorView.today),
+    withheld.filter(f => !(f in operatorView.today)).join(", "));
+  check("and the aggregate the endpoint exists for survives", typeof published.today.total, "number");
 }
 
 console.log("\n7. The invitation is on the surfaces, and only on served responses");

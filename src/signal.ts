@@ -1,9 +1,9 @@
 // Agent attribution beacon (#1024).
 //
 // The one measurement this index has never had: whether an agent that read a vendor page
-// went on to recommend that vendor. There are no referral links and no tracking, so the
-// trail ends when the agent leaves. The only way to close it is to ask, on every surface
-// an agent reads, and to make answering free.
+// went on to recommend that vendor. We cannot observe what an agent does after it leaves,
+// so the only way to close that gap is to ask, on every surface an agent reads, and to
+// make answering free.
 //
 // Everything here is self-reported and unverifiable by construction. That is fine for a
 // directional read and fatal if presented as attribution, so the reporting side labels it
