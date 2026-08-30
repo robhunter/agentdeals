@@ -13,7 +13,7 @@ process.env.AGENTDEALS_REFERRAL_REQUESTS_PATH = REQUESTS_PATH;
 const AGENTS_PATH = path.join(__dirname, "..", "data", "agents.json");
 
 // Unit tests for referral-requests module
-const { logReferralRequest, attributeConversion, getRequestsByAgent, getRequestById, markConversion, resetReferralRequestsCache } = await import("../dist/referral-requests.js");
+const { logReferralRequest, getRequestsByAgent, getRequestById, resetReferralRequestsCache } = await import("../dist/referral-requests.js");
 const { registerAgent, resetAgentsCache } = await import("../dist/agents.js");
 
 function resetRequestsFile() {
@@ -71,95 +71,6 @@ describe("Referral Request Logging", () => {
   });
 });
 
-describe("Attribution Logic", () => {
-  beforeEach(() => {
-    resetRequestsFile();
-  });
-
-  after(() => {
-    resetRequestsFile();
-  });
-
-  it("attributes to the single matching agent", () => {
-    const now = new Date();
-    // Log a request 1 day ago
-    const req = logReferralRequest({ agent_id: "agent_1", vendor: "Railway", referral_code: "C1", referral_url: "http://u1" });
-    // Override timestamp to 1 day ago
-    const data = JSON.parse(fs.readFileSync(REQUESTS_PATH, "utf-8"));
-    data.referral_requests[0].requested_at = new Date(now.getTime() - 24 * 60 * 60 * 1000).toISOString();
-    fs.writeFileSync(REQUESTS_PATH, JSON.stringify(data), "utf-8");
-    resetReferralRequestsCache();
-
-    const result = attributeConversion("Railway", now);
-    assert.strictEqual(result, "agent_1");
-  });
-
-  it("last-touch wins: attributes to the most recent requester", () => {
-    const now = new Date();
-    const data = { referral_requests: [
-      { id: "rr_old", agent_id: "agent_first", vendor: "Railway", referral_code: "C1", referral_url: "http://u1", requested_at: new Date(now.getTime() - 48 * 60 * 60 * 1000).toISOString(), conversion_id: null },
-      { id: "rr_new", agent_id: "agent_second", vendor: "Railway", referral_code: "C1", referral_url: "http://u1", requested_at: new Date(now.getTime() - 12 * 60 * 60 * 1000).toISOString(), conversion_id: null },
-    ]};
-    fs.writeFileSync(REQUESTS_PATH, JSON.stringify(data), "utf-8");
-    resetReferralRequestsCache();
-
-    const result = attributeConversion("Railway", now);
-    assert.strictEqual(result, "agent_second");
-  });
-
-  it("returns null when no requests exist for the vendor", () => {
-    const result = attributeConversion("NonExistent", new Date());
-    assert.strictEqual(result, null);
-  });
-
-  it("returns null when requests are outside the lookback window", () => {
-    const now = new Date();
-    const data = { referral_requests: [
-      { id: "rr_1", agent_id: "agent_old", vendor: "Railway", referral_code: "C1", referral_url: "http://u1", requested_at: new Date(now.getTime() - 100 * 24 * 60 * 60 * 1000).toISOString(), conversion_id: null },
-    ]};
-    fs.writeFileSync(REQUESTS_PATH, JSON.stringify(data), "utf-8");
-    resetReferralRequestsCache();
-
-    const result = attributeConversion("Railway", now, 90);
-    assert.strictEqual(result, null);
-  });
-
-  it("respects custom lookback window", () => {
-    const now = new Date();
-    const data = { referral_requests: [
-      { id: "rr_1", agent_id: "agent_1", vendor: "Railway", referral_code: "C1", referral_url: "http://u1", requested_at: new Date(now.getTime() - 5 * 24 * 60 * 60 * 1000).toISOString(), conversion_id: null },
-    ]};
-    fs.writeFileSync(REQUESTS_PATH, JSON.stringify(data), "utf-8");
-    resetReferralRequestsCache();
-
-    // Within 7-day window
-    assert.strictEqual(attributeConversion("Railway", now, 7), "agent_1");
-    // Outside 3-day window
-    assert.strictEqual(attributeConversion("Railway", now, 3), null);
-  });
-
-  it("vendor matching is case-insensitive", () => {
-    logReferralRequest({ agent_id: "agent_1", vendor: "Railway", referral_code: "C1", referral_url: "http://u1" });
-    const now = new Date();
-    const result = attributeConversion("railway", now);
-    assert.strictEqual(result, "agent_1", "a request logged in the millisecond after the conversion date is not attributed");
-  });
-
-  it("does not attribute requests after the conversion date", () => {
-    const now = new Date();
-    const conversionDate = new Date(now.getTime() - 24 * 60 * 60 * 1000);
-    // Request is after conversion date
-    const data = { referral_requests: [
-      { id: "rr_1", agent_id: "agent_future", vendor: "Railway", referral_code: "C1", referral_url: "http://u1", requested_at: now.toISOString(), conversion_id: null },
-    ]};
-    fs.writeFileSync(REQUESTS_PATH, JSON.stringify(data), "utf-8");
-    resetReferralRequestsCache();
-
-    const result = attributeConversion("Railway", conversionDate);
-    assert.strictEqual(result, null);
-  });
-});
-
 describe("Request Lookups", () => {
   beforeEach(() => {
     resetRequestsFile();
@@ -189,31 +100,6 @@ describe("Request Lookups", () => {
   it("returns null for nonexistent request ID", () => {
     const found = getRequestById("rr_nonexistent");
     assert.strictEqual(found, null);
-  });
-});
-
-describe("Conversion Marking", () => {
-  beforeEach(() => {
-    resetRequestsFile();
-  });
-
-  after(() => {
-    resetRequestsFile();
-  });
-
-  it("marks a request as converted", () => {
-    const req = logReferralRequest({ agent_id: "agent_a", vendor: "V1", referral_code: "C1", referral_url: "http://u1" });
-    const result = markConversion(req.id, "conv_123");
-    assert.strictEqual(result, true);
-
-    resetReferralRequestsCache();
-    const updated = getRequestById(req.id);
-    assert.strictEqual(updated!.conversion_id, "conv_123");
-  });
-
-  it("returns false for nonexistent request", () => {
-    const result = markConversion("rr_nonexistent", "conv_123");
-    assert.strictEqual(result, false);
   });
 });
 

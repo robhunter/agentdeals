@@ -1082,7 +1082,7 @@ Suggested monitoring cadence: run this check weekly to catch pricing changes ear
     "get_referral_code",
     {
       description:
-        "Get the referral code and URL for a specific vendor. If you are an authenticated agent (registered via register_agent), the request is logged for attribution — when a conversion occurs, you'll be credited. Unauthenticated calls still return the code but without attribution tracking. The response always states whether attribution happened and, when it did not, why.",
+        "Get the referral code and URL for a specific vendor. If you are an authenticated agent (registered via register_agent), the request is recorded against your agent. Requesting a code does not itself earn a share of any commission: a commission is credited to the agent that submitted the code it was reported against, because showing a code to a user is not an event we can observe. Unauthenticated calls still return the code. The response always states whether the request was recorded and, when it was not, why.",
       annotations: {
         readOnlyHint: true,
         destructiveHint: false,

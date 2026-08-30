@@ -20,6 +20,7 @@ const {
   isInColdStart,
   recordImpression,
   recordCodeConversion,
+  revokeCode,
   resetReferralCodesCache,
 } = await import("../dist/referral-codes.js");
 
@@ -264,94 +265,141 @@ describe("Code Ranking Algorithm", () => {
   });
 });
 
-describe("Dual-Agent Revenue Split", () => {
+describe("Conversion revenue split", () => {
   before(() => saveOriginals());
   after(() => restoreOriginals());
   beforeEach(() => resetFiles());
 
-  it("applies 80/20 split when same agent submitted and surfaced", () => {
-    const { agent } = createTestAgent("SameBot");
-    // Log a referral request so attribution finds this agent
-    logReferralRequest({ vendor: "Railway", agent_id: agent.id });
+  function submitCode(agentId: string, vendor: string, code: string) {
+    return submitReferralCode({
+      vendor,
+      code,
+      referral_url: `https://example.com?ref=${code.toLowerCase()}`,
+      description: "Test",
+      agent_id: agentId,
+      trust_tier: "new",
+    });
+  }
+
+  it("credits 40% to the agent that submitted the converting code", () => {
+    const { agent } = createTestAgent("SubmitBot");
+    submitCode(agent.id, "Railway", "SUB1");
 
     const entry = recordConversion({
       vendor: "Railway",
-      referral_code: "SAME1",
+      referral_code: "SUB1",
       commission_amount: 100,
-      submitter_id: agent.id,
     });
 
-    // Same agent: 80% to agent, 20% platform
-    assert.strictEqual(entry.agent_share, 80);
-    assert.strictEqual(entry.submitter_share, 0); // no separate submitter share since same agent
     assert.strictEqual(entry.agent_id, agent.id);
     assert.strictEqual(entry.submitter_id, agent.id);
-
-    const balance = getAgentBalance(agent.id);
-    assert.strictEqual(balance.pending_balance, 80);
-  });
-
-  it("applies 40/40/20 split when different agents", () => {
-    const { agent: submitter } = createTestAgent("SubmitBot");
-    const { agent: surfer } = createTestAgent("SurfBot");
-
-    // Log a referral request for the surfacing agent
-    logReferralRequest({ vendor: "Railway", agent_id: surfer.id });
-
-    const entry = recordConversion({
-      vendor: "Railway",
-      referral_code: "DUAL1",
-      commission_amount: 100,
-      submitter_id: submitter.id,
-    });
-
-    // Different agents: 40% surfer, 40% submitter, 20% platform
     assert.strictEqual(entry.agent_share, 40);
-    assert.strictEqual(entry.submitter_share, 40);
-    assert.strictEqual(entry.agent_id, surfer.id);
-    assert.strictEqual(entry.submitter_id, submitter.id);
-
-    const surferBalance = getAgentBalance(surfer.id);
-    assert.strictEqual(surferBalance.pending_balance, 40);
-
-    const submitterBalance = getAgentBalance(submitter.id);
-    assert.strictEqual(submitterBalance.pending_balance, 40);
-  });
-
-  it("applies standard 70/30 split for curated codes (no submitter)", () => {
-    const { agent } = createTestAgent("CuratedBot");
-    logReferralRequest({ vendor: "Railway", agent_id: agent.id });
-
-    const entry = recordConversion({
-      vendor: "Railway",
-      referral_code: "CURATED1",
-      commission_amount: 100,
-    });
-
-    // Curated: 70% to surfer, 30% platform
-    assert.strictEqual(entry.agent_share, 70);
-    assert.strictEqual(entry.submitter_share, 0);
 
     const balance = getAgentBalance(agent.id);
-    assert.strictEqual(balance.pending_balance, 70);
+    assert.strictEqual(balance.pending_balance, 40);
   });
 
-  it("gives submitter 40% when no surfacing agent exists", () => {
-    const { agent: submitter } = createTestAgent("LoneSubmitter");
+  it("credits no agent when the converting code is one of ours", () => {
+    const { agent } = createTestAgent("BystanderBot");
+    submitCode(agent.id, "Railway", "SUB1");
 
     const entry = recordConversion({
       vendor: "Railway",
-      referral_code: "LONE1",
+      referral_code: "OUR-OWN-CODE",
       commission_amount: 100,
-      submitter_id: submitter.id,
     });
 
     assert.strictEqual(entry.agent_id, null);
     assert.strictEqual(entry.agent_share, 0);
-    assert.strictEqual(entry.submitter_share, 40);
+    assert.strictEqual(getAgentBalance(agent.id), null);
+  });
 
-    const balance = getAgentBalance(submitter.id);
-    assert.strictEqual(balance.pending_balance, 40);
+  it("credits nothing for requesting a code", () => {
+    const { agent } = createTestAgent("RequesterBot");
+    logReferralRequest({ vendor: "Railway", agent_id: agent.id });
+
+    const entry = recordConversion({
+      vendor: "Railway",
+      referral_code: "OUR-OWN-CODE",
+      commission_amount: 100,
+    });
+
+    assert.strictEqual(entry.agent_id, null);
+    assert.strictEqual(entry.agent_share, 0);
+    assert.strictEqual(getAgentBalance(agent.id), null);
+  });
+
+  it("does not let a later code request displace the submitter", () => {
+    const { agent: submitter } = createTestAgent("OwnerBot");
+    const { agent: latecomer } = createTestAgent("LatecomerBot");
+    submitCode(submitter.id, "Railway", "SUB1");
+    logReferralRequest({ vendor: "Railway", agent_id: latecomer.id });
+
+    const entry = recordConversion({
+      vendor: "Railway",
+      referral_code: "SUB1",
+      commission_amount: 100,
+    });
+
+    assert.strictEqual(entry.agent_id, submitter.id);
+    assert.strictEqual(getAgentBalance(submitter.id).pending_balance, 40);
+    assert.strictEqual(getAgentBalance(latecomer.id), null);
+  });
+
+  it("resolves the submitter when the vendor name differs in case", () => {
+    const { agent } = createTestAgent("CaseBot");
+    submitCode(agent.id, "Railway", "SUB1");
+
+    const entry = recordConversion({
+      vendor: "railway",
+      referral_code: "SUB1",
+      commission_amount: 100,
+    });
+
+    assert.strictEqual(entry.agent_id, agent.id);
+    assert.strictEqual(entry.agent_share, 40);
+  });
+
+  it("does not credit the submitter of the same code string for another vendor", () => {
+    const { agent } = createTestAgent("OtherVendorBot");
+    submitCode(agent.id, "Vercel", "SHARED");
+
+    const entry = recordConversion({
+      vendor: "Railway",
+      referral_code: "SHARED",
+      commission_amount: 100,
+    });
+
+    assert.strictEqual(entry.agent_id, null);
+    assert.strictEqual(entry.agent_share, 0);
+  });
+
+  it("credits the submitter of a revoked code that still converts", () => {
+    const { agent } = createTestAgent("RevokedBot");
+    const code = submitCode(agent.id, "Railway", "SUB1");
+    revokeCode(code.id, agent.id);
+
+    const entry = recordConversion({
+      vendor: "Railway",
+      referral_code: "SUB1",
+      commission_amount: 100,
+    });
+
+    assert.strictEqual(entry.agent_id, agent.id);
+    assert.strictEqual(entry.agent_share, 40);
+  });
+
+  it("rounds the submitter share to cents", () => {
+    const { agent } = createTestAgent("RoundBot");
+    submitCode(agent.id, "Railway", "SUB1");
+
+    const entry = recordConversion({
+      vendor: "Railway",
+      referral_code: "SUB1",
+      commission_amount: 33.33,
+    });
+
+    assert.strictEqual(entry.agent_share, 13.33);
   });
 });
 
@@ -360,18 +408,27 @@ describe("Agent Leaderboard", () => {
   after(() => restoreOriginals());
   beforeEach(() => resetFiles());
 
+  function submitCode(agentId: string, vendor: string, code: string) {
+    return submitReferralCode({
+      vendor,
+      code,
+      referral_url: `https://example.com?ref=${code.toLowerCase()}`,
+      description: "Test",
+      agent_id: agentId,
+      trust_tier: "new",
+    });
+  }
+
   it("returns agents ranked by total conversions", () => {
     const { agent: a1 } = createTestAgent("TopAgent");
     const { agent: a2 } = createTestAgent("MidAgent");
 
-    // a1 gets 3 conversions via referral requests
+    submitCode(a1.id, "Railway", "TOP");
     for (let i = 0; i < 3; i++) {
-      logReferralRequest({ vendor: "Railway", agent_id: a1.id });
       recordConversion({ vendor: "Railway", referral_code: "TOP", commission_amount: 50 });
     }
 
-    // a2 gets 1 conversion
-    logReferralRequest({ vendor: "Vercel", agent_id: a2.id });
+    submitCode(a2.id, "Vercel", "MID");
     recordConversion({ vendor: "Vercel", referral_code: "MID", commission_amount: 30 });
 
     const result = getLeaderboard();
@@ -387,16 +444,16 @@ describe("Agent Leaderboard", () => {
     const { agent: a2 } = createTestAgent("Second");
     const { agent: a3 } = createTestAgent("Third");
 
-    logReferralRequest({ vendor: "Railway", agent_id: a1.id });
+    submitCode(a1.id, "Railway", "A");
     recordConversion({ vendor: "Railway", referral_code: "A", commission_amount: 50 });
     recordConversion({ vendor: "Railway", referral_code: "A", commission_amount: 50 });
     recordConversion({ vendor: "Railway", referral_code: "A", commission_amount: 50 });
 
-    logReferralRequest({ vendor: "Vercel", agent_id: a2.id });
+    submitCode(a2.id, "Vercel", "B");
     recordConversion({ vendor: "Vercel", referral_code: "B", commission_amount: 30 });
     recordConversion({ vendor: "Vercel", referral_code: "B", commission_amount: 30 });
 
-    logReferralRequest({ vendor: "Render", agent_id: a3.id });
+    submitCode(a3.id, "Render", "C");
     recordConversion({ vendor: "Render", referral_code: "C", commission_amount: 20 });
 
     const page1 = getLeaderboard({ limit: 2, offset: 0 });
@@ -435,7 +492,6 @@ describe("Agent Leaderboard", () => {
     });
 
     // Record conversions
-    logReferralRequest({ vendor: "Railway", agent_id: agent.id });
     recordConversion({ vendor: "Railway", referral_code: "EARN1", commission_amount: 100 });
 
     const result = getLeaderboard();
@@ -446,7 +502,8 @@ describe("Agent Leaderboard", () => {
 
   it("excludes clawed-back conversions from count", () => {
     const { agent } = createTestAgent("ClawBot");
-    logReferralRequest({ vendor: "Railway", agent_id: agent.id });
+    submitCode(agent.id, "Railway", "CLAW");
+    submitCode(agent.id, "Vercel", "VALID");
 
     const entry = recordConversion({ vendor: "Railway", referral_code: "CLAW", commission_amount: 50 });
 
@@ -454,7 +511,7 @@ describe("Agent Leaderboard", () => {
     clawbackEntry(entry.id);
 
     // Record one more valid conversion
-    recordConversion({ vendor: "Railway", referral_code: "VALID", commission_amount: 50 });
+    recordConversion({ vendor: "Vercel", referral_code: "VALID", commission_amount: 50 });
 
     const result = getLeaderboard();
     // Clawed back one shouldn't count
@@ -462,31 +519,35 @@ describe("Agent Leaderboard", () => {
   });
 });
 
-describe("Leaderboard includes submitter conversions", () => {
+describe("Leaderboard counts the submitter and nobody else", () => {
   before(() => saveOriginals());
   after(() => restoreOriginals());
   beforeEach(() => resetFiles());
 
-  it("counts submitter contributions in leaderboard", () => {
+  it("lists the submitter of the converting code, not the agent that requested it", () => {
     const { agent: submitter } = createTestAgent("CodeSubmitter");
-    const { agent: surfer } = createTestAgent("CodeSurfer");
+    const { agent: requester } = createTestAgent("CodeRequester");
 
-    logReferralRequest({ vendor: "Railway", agent_id: surfer.id });
+    submitReferralCode({
+      vendor: "Railway",
+      code: "SUBMITTED",
+      referral_url: "https://railway.app?ref=submitted",
+      description: "Test",
+      agent_id: submitter.id,
+      trust_tier: "new",
+    });
+    logReferralRequest({ vendor: "Railway", agent_id: requester.id });
+
     recordConversion({
       vendor: "Railway",
-      referral_code: "DUAL",
+      referral_code: "SUBMITTED",
       commission_amount: 100,
-      submitter_id: submitter.id,
     });
 
     const result = getLeaderboard();
-    // Both agents should appear
-    assert.strictEqual(result.total, 2);
-    const submitterEntry = result.entries.find((e: any) => e.agent_name === "CodeSubmitter");
-    const surferEntry = result.entries.find((e: any) => e.agent_name === "CodeSurfer");
-    assert.ok(submitterEntry);
-    assert.ok(surferEntry);
-    assert.strictEqual(submitterEntry.total_conversions, 1);
-    assert.strictEqual(surferEntry.total_conversions, 1);
+    assert.strictEqual(result.total, 1);
+    assert.strictEqual(result.entries[0].agent_name, "CodeSubmitter");
+    assert.strictEqual(result.entries[0].total_conversions, 1);
+    assert.strictEqual(result.entries.find((e: any) => e.agent_name === "CodeRequester"), undefined);
   });
 });

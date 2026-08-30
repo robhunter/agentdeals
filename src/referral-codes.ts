@@ -228,6 +228,19 @@ export function getCodeById(id: string): SubmittedReferralCode | null {
 }
 
 /**
+ * Resolve the agent that submitted a code, from the vendor and code string a
+ * conversion was reported against. Returns null for one of our own curated
+ * codes, and for any code we hold no submission record for. Revoked and expired
+ * submissions still resolve: the agent did submit the code that converted.
+ */
+export function submitterOfCode(vendorName: string, code: string): string | null {
+  if (!code) return null;
+  const lowerName = vendorName.toLowerCase();
+  const match = loadCodes().find(c => c.vendor.toLowerCase() === lowerName && c.code === code);
+  return match ? match.submitted_by : null;
+}
+
+/**
  * Update a submitted code. Only the owner can update.
  * Returns the updated code or throws.
  */

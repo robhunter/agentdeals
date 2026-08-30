@@ -9,6 +9,7 @@ const LEDGER_PATH = path.join(__dirname, "..", "data", "ledger_entries.json");
 const BALANCES_PATH = path.join(__dirname, "..", "data", "agent_balances.json");
 const CLAWBACK_PATH = path.join(__dirname, "..", "data", "vendor_clawback.json");
 const REQUESTS_PATH = path.join(__dirname, "..", "data", "referral_requests.json");
+const CODES_PATH = path.join(__dirname, "..", "data", "referral_codes.json");
 const AGENTS_PATH = path.join(__dirname, "..", "data", "agents.json");
 
 const {
@@ -21,7 +22,8 @@ const {
   resetLedgerCache,
 } = await import("../dist/ledger.js");
 
-const { logReferralRequest, resetReferralRequestsCache } = await import("../dist/referral-requests.js");
+const { resetReferralRequestsCache } = await import("../dist/referral-requests.js");
+const { resetReferralCodesCache } = await import("../dist/referral-codes.js");
 const { registerAgent, resetAgentsCache, updateAgentX402Address } = await import("../dist/agents.js");
 const { validateX402Address, setTransferFn, resetTransferFn, generateCorrelationId } = await import("../dist/x402.js");
 
@@ -29,12 +31,14 @@ const { validateX402Address, setTransferFn, resetTransferFn, generateCorrelation
 let origLedger: string | null = null;
 let origBalances: string | null = null;
 let origRequests: string | null = null;
+let origCodes: string | null = null;
 let origAgents: string | null = null;
 
 function saveOriginals() {
   origLedger = fs.existsSync(LEDGER_PATH) ? fs.readFileSync(LEDGER_PATH, "utf-8") : null;
   origBalances = fs.existsSync(BALANCES_PATH) ? fs.readFileSync(BALANCES_PATH, "utf-8") : null;
   origRequests = fs.existsSync(REQUESTS_PATH) ? fs.readFileSync(REQUESTS_PATH, "utf-8") : null;
+  origCodes = fs.existsSync(CODES_PATH) ? fs.readFileSync(CODES_PATH, "utf-8") : null;
   origAgents = fs.existsSync(AGENTS_PATH) ? fs.readFileSync(AGENTS_PATH, "utf-8") : null;
 }
 
@@ -45,10 +49,13 @@ function restoreOriginals() {
   else if (fs.existsSync(BALANCES_PATH)) fs.unlinkSync(BALANCES_PATH);
   if (origRequests !== null) fs.writeFileSync(REQUESTS_PATH, origRequests);
   else if (fs.existsSync(REQUESTS_PATH)) fs.unlinkSync(REQUESTS_PATH);
+  if (origCodes !== null) fs.writeFileSync(CODES_PATH, origCodes);
+  else if (fs.existsSync(CODES_PATH)) fs.unlinkSync(CODES_PATH);
   if (origAgents !== null) fs.writeFileSync(AGENTS_PATH, origAgents);
   else if (fs.existsSync(AGENTS_PATH)) fs.unlinkSync(AGENTS_PATH);
   resetLedgerCache();
   resetReferralRequestsCache();
+  resetReferralCodesCache();
   resetAgentsCache();
   resetTransferFn();
 }
@@ -57,11 +64,39 @@ function resetFiles() {
   fs.writeFileSync(LEDGER_PATH, JSON.stringify({ ledger_entries: [] }), "utf-8");
   fs.writeFileSync(BALANCES_PATH, JSON.stringify({ agent_balances: [] }), "utf-8");
   fs.writeFileSync(REQUESTS_PATH, JSON.stringify({ referral_requests: [] }), "utf-8");
+  fs.writeFileSync(CODES_PATH, JSON.stringify({ referral_codes: [] }), "utf-8");
   fs.writeFileSync(AGENTS_PATH, JSON.stringify({ agents: [] }), "utf-8");
   resetLedgerCache();
   resetReferralRequestsCache();
+  resetReferralCodesCache();
   resetAgentsCache();
   resetTransferFn();
+}
+
+/** Seed a submission record so a conversion on this code credits this agent. */
+function writeSubmittedCode(opts: { agent_id: string; vendor: string; code: string }) {
+  const raw = JSON.parse(fs.readFileSync(CODES_PATH, "utf-8"));
+  const now = new Date().toISOString();
+  raw.referral_codes.push({
+    id: `code_test_${Date.now()}_${Math.random().toString(36).slice(2)}`,
+    vendor: opts.vendor,
+    code: opts.code,
+    referral_url: "https://example.com?ref=test",
+    description: "",
+    commission_rate: null,
+    expiry: null,
+    submitted_by: opts.agent_id,
+    source: "agent-submitted",
+    status: "active",
+    trust_tier_at_submission: "new",
+    impressions: 0,
+    clicks: 0,
+    conversions: 0,
+    submitted_at: now,
+    updated_at: now,
+  });
+  fs.writeFileSync(CODES_PATH, JSON.stringify(raw), "utf-8");
+  resetReferralCodesCache();
 }
 
 /** Create an agent with confirmed balance ready for payout. */
@@ -73,27 +108,14 @@ function setupAgentWithBalance(name: string, confirmedAmount: number, x402Addres
     updateAgentX402Address(agentId, x402Address);
   }
 
-  // Seed a referral request directly in data (with a past timestamp for attribution)
   const pastDate = new Date();
   pastDate.setDate(pastDate.getDate() - 60); // Well past clawback
 
-  // Write referral request with past timestamp so attribution matches
-  const requests = JSON.parse(fs.readFileSync(REQUESTS_PATH, "utf-8"));
-  requests.referral_requests.push({
-    id: `rr_test_${Date.now()}`,
-    agent_id: agentId,
-    vendor: "Railway",
-    referral_code: "TEST_CODE",
-    referral_url: "https://railway.com?ref=test",
-    requested_at: new Date(pastDate.getTime() - 86400000).toISOString(), // 1 day before conversion
-    conversion_id: null,
-  });
-  fs.writeFileSync(REQUESTS_PATH, JSON.stringify(requests), "utf-8");
-  resetReferralRequestsCache();
+  writeSubmittedCode({ agent_id: agentId, vendor: "Railway", code: "TEST_CODE" });
 
   // Record conversion with enough commission to produce the desired confirmed balance
-  // agent_share = commission * 0.7, so commission = confirmedAmount / 0.7
-  const commission = Math.round((confirmedAmount / 0.7) * 100) / 100;
+  // agent_share = commission * 0.4, so commission = confirmedAmount / 0.4
+  const commission = Math.round((confirmedAmount / 0.4) * 100) / 100;
   recordConversion({
     vendor: "Railway",
     referral_code: "TEST_CODE",
@@ -334,12 +356,7 @@ describe("payout endpoint integration", () => {
     const result = registerAgent({ name: "PendingBot" });
     const agentId = result.agent.id;
 
-    logReferralRequest({
-      agent_id: agentId,
-      vendor: "Railway",
-      referral_code: "TEST_CODE",
-      referral_url: "https://railway.com?ref=test",
-    });
+    writeSubmittedCode({ agent_id: agentId, vendor: "Railway", code: "TEST_CODE" });
 
     // Record conversion that will be within clawback window
     recordConversion({

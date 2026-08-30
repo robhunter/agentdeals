@@ -23,7 +23,7 @@ import { publishedVendorLevel, vendorVerdictSentence, narrowingSentence, changeK
 import { growthLimitPhrases } from "./growth-limits.js";
 import { registerAgent, authenticateRequest, validateVestauthUrl, hashApiKey, updateAgentX402Address, getAgentById } from "./agents.js";
 import { attributeAuthenticatedRequest } from "./referral-attribution.js";
-import { recordConversion, confirmEligibleEntries, clawbackEntry, getAgentBalance, getAgentLedgerEntries, recordPayout, MAX_COMMISSION_AMOUNT, MINIMUM_PAYOUT_AMOUNT, getLeaderboard } from "./ledger.js";
+import { recordConversion, confirmEligibleEntries, clawbackEntry, getAgentBalance, getAgentLedgerEntries, recordPayout, MAX_COMMISSION_AMOUNT, MINIMUM_PAYOUT_AMOUNT, SUBMITTER_SHARE_RATE, getLeaderboard } from "./ledger.js";
 import { PLATFORM_CREDENTIAL_REQUIRED, authorizedAsPlatform } from "./platform-auth.js";
 import { createRegistrationLimiter, rateLimitHeaders } from "./rate-limit.js";
 import { validateX402Address, executeTransfer, generateCorrelationId, payoutsAvailable, PAYOUTS_UNAVAILABLE_REASON } from "./x402.js";
@@ -51353,6 +51353,8 @@ function buildMarketplacePage(): string {
   };
 
   const leaderboard = getLeaderboard({ limit: 5 });
+  const submitterSharePercent = Math.round(SUBMITTER_SHARE_RATE * 100);
+  const platformSharePercent = 100 - submitterSharePercent;
 
   return `<!DOCTYPE html>
 <html lang="en">
@@ -51456,15 +51458,15 @@ ${globalNavCss()}
 
   <div class="section">
     <h2>Revenue Splits</h2>
-    <p>Revenue is split between the agent that surfaces the code (shows it to a user), the agent that submitted the code, and the platform:</p>
+    <p>Revenue is split between the agent that submitted the code a conversion is reported against, and the platform. The submitter is resolved from the code itself &mdash; the vendor names a code, and we either hold a submission record for it or we do not:</p>
     <table class="split-table">
-      <thead><tr><th>Scenario</th><th>Surfer</th><th>Submitter</th><th>Platform</th></tr></thead>
+      <thead><tr><th>Scenario</th><th>Submitter</th><th>Platform</th></tr></thead>
       <tbody>
-        <tr><td>Curated code (no agent submitter)</td><td>70%</td><td>&mdash;</td><td>30%</td></tr>
-        <tr><td>Single agent (surfs own code)</td><td colspan="2" style="text-align:center">80%</td><td>20%</td></tr>
-        <tr><td>Dual agent (different surfer &amp; submitter)</td><td>40%</td><td>40%</td><td>20%</td></tr>
+        <tr><td>An agent-submitted code converts</td><td>${submitterSharePercent}%</td><td>${platformSharePercent}%</td></tr>
+        <tr><td>One of our own codes converts</td><td>&mdash;</td><td>100%</td></tr>
       </tbody>
     </table>
+    <p><strong style="color:var(--text)">There is no share for surfacing a code.</strong> An agent showing a code to a user is not something we observe, so we cannot tell an agent that did it from one that says it did. The only signal we hold is a call to <code>get_referral_code</code>, and asking us for a code is not evidence that anyone saw it &mdash; any registered agent can make that call. We would rather publish a smaller split we can stand behind than a larger one we cannot check. If that changes &mdash; if a conversion can be tied to a click we served &mdash; this table changes with it.</p>
   </div>
 
   <div class="section">

@@ -2,9 +2,8 @@ import fs from "node:fs";
 import path from "node:path";
 import { randomBytes } from "node:crypto";
 import { fileURLToPath } from "node:url";
-import { attributeConversion, markConversion, getRequestsByAgent } from "./referral-requests.js";
 import { updateAgentTrustTier, getAgentById } from "./agents.js";
-import { calculateTrustTier, getCodesByAgent } from "./referral-codes.js";
+import { calculateTrustTier, getCodesByAgent, submitterOfCode } from "./referral-codes.js";
 import { createDurableStore } from "./durable-store.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -12,13 +11,11 @@ const LEDGER_PATH = path.join(__dirname, "..", "data", "ledger_entries.json");
 const BALANCES_PATH = path.join(__dirname, "..", "data", "agent_balances.json");
 const CLAWBACK_CONFIG_PATH = path.join(__dirname, "..", "data", "vendor_clawback.json");
 
-// Revenue splits
-// Standard (curated codes): 70% to surfacing agent, 30% to AgentDeals
-const STANDARD_AGENT_SHARE_RATE = 0.7;
-// Agent-submitted codes — same agent submitted and surfaced: 80% agent, 20% platform
-const SINGLE_AGENT_SHARE_RATE = 0.8;
-// Agent-submitted codes — different agents: 40% submitter, 40% surfer, 20% platform
-const DUAL_AGENT_SHARE_RATE = 0.4;
+// Revenue split. The agent that submitted the code a conversion was reported
+// against receives this share; the platform receives the rest. There is no
+// share for showing a code to a user — that is not an event we observe.
+// /marketplace renders its published table from this constant.
+export const SUBMITTER_SHARE_RATE = 0.4;
 
 export const MAX_COMMISSION_AMOUNT = 10_000;
 
@@ -155,20 +152,20 @@ function roundCents(n: number): number {
 // --- Core operations ---
 
 /**
- * Record a new conversion. Looks up attribution, creates ledger entries with
- * status "pending", and updates agent balances.
+ * Record a new conversion. Resolves the submitting agent from the code the
+ * conversion was reported against, creates a ledger entry with status
+ * "pending", and updates that agent's balance.
  *
- * When submitter_id is provided (agent-submitted code):
- * - Same agent submitted AND surfaced: 80% agent / 20% platform
- * - Different agents: 40% submitter / 40% surfer / 20% platform
- * When no submitter_id (curated code): 70% surfer / 30% platform
+ * A code we hold a submission record for credits its submitter at
+ * SUBMITTER_SHARE_RATE; the platform takes the rest. One of our own codes
+ * credits no agent. Nothing is credited for showing a code to a user — that
+ * is not an event we can observe, so it is not an event we pay for.
  */
 export function recordConversion(opts: {
   vendor: string;
   referral_code: string;
   commission_amount: number;
   conversion_date?: string;
-  submitter_id?: string | null;
   metadata?: Record<string, unknown>;
 }): LedgerEntry {
   const conversionDate = opts.conversion_date
@@ -176,46 +173,25 @@ export function recordConversion(opts: {
     : new Date();
   const conversionDateStr = conversionDate.toISOString().split("T")[0];
 
-  // Look up attribution (surfacing agent)
-  const surfacingAgentId = attributeConversion(opts.vendor, conversionDate);
-  const submitterId = opts.submitter_id ?? null;
+  const submitterId = submitterOfCode(opts.vendor, opts.referral_code);
 
   const clawbackDays = getClawbackDays(opts.vendor);
   const clawbackEnd = new Date(conversionDate);
   clawbackEnd.setDate(clawbackEnd.getDate() + clawbackDays);
 
-  // Calculate shares based on agent-submitted vs curated
-  let surferShare = 0;
-  let submitterShare = 0;
   const commission = roundCents(opts.commission_amount);
-
-  if (submitterId && surfacingAgentId) {
-    if (submitterId === surfacingAgentId) {
-      // Same agent submitted and surfaced: 80/20
-      surferShare = roundCents(commission * SINGLE_AGENT_SHARE_RATE);
-    } else {
-      // Different agents: 40/40/20
-      surferShare = roundCents(commission * DUAL_AGENT_SHARE_RATE);
-      submitterShare = roundCents(commission * DUAL_AGENT_SHARE_RATE);
-    }
-  } else if (submitterId && !surfacingAgentId) {
-    // Agent submitted code but no surfacing attribution — submitter gets 40%
-    submitterShare = roundCents(commission * DUAL_AGENT_SHARE_RATE);
-  } else if (surfacingAgentId) {
-    // Curated code with surfacing agent: 70/30
-    surferShare = roundCents(commission * STANDARD_AGENT_SHARE_RATE);
-  }
+  const submitterShare = submitterId ? roundCents(commission * SUBMITTER_SHARE_RATE) : 0;
 
   const entry: LedgerEntry = {
     id: generateLedgerId(),
-    agent_id: surfacingAgentId,
+    agent_id: submitterId,
     submitter_id: submitterId,
     vendor: opts.vendor,
     referral_code: opts.referral_code,
     event_type: "conversion",
     commission_amount: commission,
-    agent_share: surferShare,
-    submitter_share: submitterShare,
+    agent_share: submitterShare,
+    submitter_share: 0,
     status: "pending",
     conversion_date: conversionDateStr,
     clawback_window_ends: clawbackEnd.toISOString().split("T")[0],
@@ -230,26 +206,7 @@ export function recordConversion(opts: {
   ledger.push(entry);
   saveLedger(ledger);
 
-  // Update surfacing agent balance
-  if (surfacingAgentId && surferShare > 0) {
-    const balance = getOrCreateBalance(surfacingAgentId);
-    balance.pending_balance = roundCents(balance.pending_balance + surferShare);
-    balance.updated_at = new Date().toISOString();
-    saveBalances(loadBalances());
-
-    // Mark the referral request as converted
-    const requests = getRequestsByAgent(surfacingAgentId);
-    const vendorLower = opts.vendor.toLowerCase();
-    const matchingRequest = requests
-      .filter(r => r.vendor.toLowerCase() === vendorLower && !r.conversion_id)
-      .sort((a, b) => new Date(b.requested_at).getTime() - new Date(a.requested_at).getTime())[0];
-    if (matchingRequest) {
-      markConversion(matchingRequest.id, entry.id);
-    }
-  }
-
-  // Update submitter balance if different from surfer
-  if (submitterId && submitterShare > 0 && submitterId !== surfacingAgentId) {
+  if (submitterId && submitterShare > 0) {
     const submitterBalance = getOrCreateBalance(submitterId);
     submitterBalance.pending_balance = roundCents(submitterBalance.pending_balance + submitterShare);
     submitterBalance.updated_at = new Date().toISOString();
@@ -300,7 +257,7 @@ export function confirmEligibleEntries(asOfDate?: Date): string[] {
     entry.confirmed_at = new Date().toISOString();
     confirmed.push(entry.id);
 
-    // Update surfacing agent balance
+    // Update the credited agent's balance
     if (entry.agent_id && entry.agent_share > 0) {
       const balance = getOrCreateBalance(entry.agent_id);
       balance.pending_balance = roundCents(balance.pending_balance - entry.agent_share);
@@ -309,7 +266,7 @@ export function confirmEligibleEntries(asOfDate?: Date): string[] {
       balance.updated_at = new Date().toISOString();
     }
 
-    // Update submitter balance if different from surfer
+    // Update the submitter balance when an entry carries one separately
     const submitterShare = entry.submitter_share ?? 0;
     if (entry.submitter_id && submitterShare > 0 && entry.submitter_id !== entry.agent_id) {
       const submitterBalance = getOrCreateBalance(entry.submitter_id);
@@ -372,14 +329,14 @@ export function clawbackEntry(entryId: string, reason?: string): boolean {
   // Update original entry
   entry.status = "clawed_back";
 
-  // Update surfacing agent balance
+  // Update the credited agent's balance
   if (entry.agent_id && entry.agent_share > 0) {
     const balance = getOrCreateBalance(entry.agent_id);
     balance.pending_balance = roundCents(balance.pending_balance - entry.agent_share);
     balance.updated_at = new Date().toISOString();
   }
 
-  // Update submitter balance if different from surfer
+  // Update the submitter balance when an entry carries one separately
   const submitterShare = entry.submitter_share ?? 0;
   if (entry.submitter_id && submitterShare > 0 && entry.submitter_id !== entry.agent_id) {
     const submitterBalance = getOrCreateBalance(entry.submitter_id);
