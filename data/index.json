@@ -28486,9 +28486,9 @@
     {
       "vendor": "OpenAI Codex",
       "category": "AI Coding",
-      "description": "Cloud-native coding agent by OpenAI. Switched to pay-as-you-go token-based pricing (April 2026). Included in ChatGPT Plus ($20/mo), Pro ($200/mo), and Business ($20/user/mo, cut from $25). Teams can add Codex-only seats with no rate limits, billed on token consumption. $100 credit per new Codex team member (up to $500/team, limited time). 2M+ weekly users. API via codex-mini at $1.50/1M input, $6/1M output tokens.",
+      "description": "Cloud-native coding agent by OpenAI. Available with a ChatGPT subscription and, separately, with an API key billed on token use; both routes are current. ChatGPT Business has two seat types, both carrying Codex: Standard at $20/user/mo billed annually ($25 monthly) and Premium at $100/user/mo billed annually ($125 monthly), where Premium buys 5x more usage than Standard and removes the five-hour usage limit. Also in ChatGPT Plus ($20/mo) and Pro (from $100/mo). Codex-only pay-as-you-go seats closed to new Business workspaces in June 2026; existing seats continue. The Codex pricing page we cite lists only the Standard seat — the Premium seat is published on OpenAI's business pricing page. $100 credit per new Codex team member (up to $500/team, limited time). 2M+ weekly users. API via codex-mini at $1.50/1M input, $6/1M output tokens.",
       "tier": "Freemium",
-      "url": "https://openai.com/index/codex-flexible-pricing-for-teams/",
+      "url": "https://developers.openai.com/codex/pricing/",
       "tags": [
         "ai",
         "coding",
@@ -28497,7 +28497,7 @@
         "openai",
         "developer tools"
       ],
-      "verifiedDate": "2026-08-02",
+      "verifiedDate": "2026-08-30",
       "referral_program": {
         "available": false,
         "referrer_benefit": "N/A",
@@ -28507,9 +28507,9 @@
         "notes": "No public affiliate/referral program."
       },
       "source_check": {
-        "checked": "2026-08-28",
-        "outcome": "unreadable",
-        "detail": "HTTP 403"
+        "checked": "2026-08-30",
+        "outcome": "ok",
+        "detail": "url"
       }
     },
     {
