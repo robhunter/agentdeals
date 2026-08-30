@@ -1,6 +1,9 @@
 import type { DealChange, ChangeDateSource } from "./types.js";
+import { PRODUCT_DEPRECATED, deprecationEndsTheListedProduct } from "./product-deprecation.js";
 
 type DatedChange = Pick<DealChange, "date" | "date_source">;
+
+type ExpiringChange = Pick<DealChange, "date" | "date_source" | "change_type" | "vendor" | "summary">;
 
 export const DISCOVERED_DATE_PREFIX = "discovered";
 
@@ -102,6 +105,22 @@ export function feedEntryUpdated(day: string, now: Date = new Date()): string {
   const noon = Date.parse(`${day}T12:00:00Z`);
   if (Number.isNaN(noon)) return now.toISOString();
   return new Date(Math.min(noon, now.getTime())).toISOString();
+}
+
+export function endsTheListedOffer(change: ExpiringChange): boolean {
+  if (change.change_type !== PRODUCT_DEPRECATED) return true;
+  return deprecationEndsTheListedProduct(change);
+}
+
+export function offerExpiryAfter(changes: ExpiringChange[], onDate: string): string | null {
+  let earliest: string | null = null;
+  for (const c of changes) {
+    if (!c.date || c.date <= onDate) continue;
+    if (!isEventDated(c)) continue;
+    if (!endsTheListedOffer(c)) continue;
+    if (earliest === null || c.date < earliest) earliest = c.date;
+  }
+  return earliest;
 }
 
 export function latestEventDate(changes: DatedChange[], notAfter?: string): string | null {

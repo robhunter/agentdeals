@@ -46,7 +46,7 @@ import { verificationLedger, QUARANTINE_AFTER_FAILURES } from "./verification-st
 import { partitionAlternatives, partitionAlternativesAcross, productRoleSentence, MEMBERSHIP_GATE_RULES, MEMBERSHIP_GATE_ORDER, MEMBERSHIP_GATE_SYMMETRY, MEMBERSHIP_GATE_SCOPE, MEMBERSHIP_GATE_CORRECTIONS } from "./product-role.js";
 import { resolveCuratedAlternatives, curatedAlternativesFor, addCuratedToPool } from "./curated-alternatives.js";
 import type { Agent, ChangeDateSource, DealChange, RiskCause, LinkUnreachable, Offer } from "./types.js";
-import { changeDateLabel, changeDateClause, changeDatePublished, changeEventStartDate, capListSections, latestEventDate, feedEntryUpdated, undatedGroupHeading, firstReadHeading, discoveryBatchNote, DISCOVERED_DATE_PREFIX, UNDATED_GROUP_NOTE } from "./change-dates.js";
+import { changeDateLabel, changeDateClause, changeDatePublished, changeEventStartDate, capListSections, latestEventDate, offerExpiryAfter, feedEntryUpdated, undatedGroupHeading, firstReadHeading, discoveryBatchNote, DISCOVERED_DATE_PREFIX, UNDATED_GROUP_NOTE } from "./change-dates.js";
 import { FEED_CORRECTIONS, correctionEntriesXml } from "./feed-corrections.js";
 import type { AgentBalance } from "./ledger.js";
 import type { SubmittedReferralCode } from "./referral-codes.js";
@@ -3654,7 +3654,8 @@ function buildVendorPage(slug: string): string | null {
     ? `  <p class="risk-cause-line" style="margin:.4rem 0 .6rem;font-size:.9rem;color:var(--text-muted)"><strong style="color:${riskColor}">Why ${riskLevel}:</strong> <span class="risk-cause-date" style="font-family:var(--mono)">${escHtmlServer(changeDateLabel(riskCause))}</span> &mdash; ${escHtmlServer(riskCause.summary)} <a href="#changes" style="white-space:nowrap">Full history &darr;</a></p>`
     : "";
 
-  const discontinuedOn = discontinuedOnOrBefore(vendorChanges, new Date().toISOString().slice(0, 10));
+  const servedOn = new Date().toISOString().slice(0, 10);
+  const discontinuedOn = discontinuedOnOrBefore(vendorChanges, servedOn);
 
   const linkUnreachable = enriched.link_unreachable;
   const h1RiskBadge = enriched.risk_level === null || (linkUnreachable && riskLevel === "stable")
@@ -3948,6 +3949,7 @@ ${allCompareLinks.join("\n")}
 
   const lastPricingChange = latestEventDate(vendorChanges);
   const lastUpdated = lastPricingChange && lastPricingChange > primary.verifiedDate ? lastPricingChange : primary.verifiedDate;
+  const offerExpiry = offerExpiryAfter(vendorChanges, servedOn);
 
   const watchlistSnippet = `curl -X POST ${BASE_URL}/api/watchlist \\
   -H "Content-Type: application/json" \\
@@ -4004,7 +4006,7 @@ ${allCompareLinks.join("\n")}
         price: "0",
         priceCurrency: "USD",
         description: primary.tier,
-        priceValidUntil: lastPricingChange ?? primary.verifiedDate,
+        ...(offerExpiry ? { priceValidUntil: offerExpiry } : {}),
       },
     },
   };

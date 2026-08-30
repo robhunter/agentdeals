@@ -1436,7 +1436,7 @@ describe("HTTP transport", () => {
     const response = await fetch(`http://localhost:${serverPort}/vendor/railway`);
     const html = await response.text();
     assert.ok(html.includes("dateModified"), "JSON-LD should include dateModified");
-    assert.ok(html.includes("priceValidUntil"), "JSON-LD should include priceValidUntil");
+    assert.ok(html.includes('"@type":"Offer"'), "JSON-LD should include an Offer");
   });
 
   it("GET /vendor/:slug includes watchlist CTA", async () => {
