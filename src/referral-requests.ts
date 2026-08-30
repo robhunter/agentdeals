@@ -40,9 +40,6 @@ function generateRequestId(): string {
   return `rr_${randomBytes(16).toString("hex")}`;
 }
 
-/**
- * Log a referral request from an authenticated agent.
- */
 export function logReferralRequest(opts: {
   agent_id: string;
   vendor: string;
@@ -63,16 +60,10 @@ export function logReferralRequest(opts: {
   return request;
 }
 
-/**
- * Get all referral requests for a specific agent.
- */
 export function getRequestsByAgent(agentId: string): ReferralRequest[] {
   return loadRequests().filter(r => r.agent_id === agentId);
 }
 
-/**
- * Get a referral request by ID.
- */
 export function getRequestById(id: string): ReferralRequest | null {
   return loadRequests().find(r => r.id === id) ?? null;
 }

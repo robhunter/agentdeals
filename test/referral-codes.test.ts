@@ -60,7 +60,6 @@ describe("Referral Code Submission", () => {
     assert.strictEqual(code.code, "MYAGENT-RAILWAY");
     assert.strictEqual(code.referral_url, "https://railway.app?ref=myagent");
     assert.strictEqual(code.source, "agent-submitted");
-    // Issue #906: all agent-submitted codes are active immediately, regardless of tier.
     assert.strictEqual(code.status, "active");
     assert.strictEqual(code.trust_tier_at_submission, "new");
     assert.strictEqual(code.impressions, 0);
@@ -82,7 +81,6 @@ describe("Referral Code Submission", () => {
     assert.strictEqual(code.status, "active");
     assert.strictEqual(code.trust_tier_at_submission, "new");
 
-    // Code must be visible via the active-codes surface that search uses.
     const activeCodes = getActiveCodesForVendor("Railway");
     assert.strictEqual(activeCodes.length, 1);
     assert.strictEqual(activeCodes[0].code, "NEW-AGENT-CODE");
@@ -471,7 +469,6 @@ describe("Active Codes for Vendor", () => {
     const { agent: agent1 } = createTestAgent("Bot1");
     const { agent: agent2 } = createTestAgent("Bot2");
 
-    // Active code
     submitReferralCode({
       vendor: "Railway",
       code: "ACTIVE-CODE",
@@ -481,8 +478,6 @@ describe("Active Codes for Vendor", () => {
       trust_tier: "verified",
     });
 
-    // Seed a legacy pending code directly (pre-#906 data may still exist in
-    // production files). getActiveCodesForVendor must continue to exclude it.
     const data = JSON.parse(fs.readFileSync(CODES_PATH, "utf-8"));
     data.referral_codes.push({
       id: "code_legacy_pending",
@@ -527,7 +522,6 @@ describe("Active Codes for Vendor", () => {
 
   it("expires codes past their expiry date", () => {
     const { agent } = createTestAgent();
-    // Manually create a code with past expiry
     const codesPath = path.join(__dirname, "..", "data", "referral_codes.json");
     const data = JSON.parse(fs.readFileSync(codesPath, "utf-8"));
     data.referral_codes.push({
@@ -601,7 +595,6 @@ describe("Trust Tier Calculation", () => {
     for (let i = 0; i < 20; i++) {
       entries.push({ event_type: "conversion", agent_id: "agent_1", status: "confirmed" });
     }
-    // 2 clawbacks out of 22 = ~9% clawback rate
     entries.push({ event_type: "clawback", agent_id: "agent_1", status: "clawed_back" });
     entries.push({ event_type: "clawback", agent_id: "agent_1", status: "clawed_back" });
     assert.strictEqual(calculateTrustTier("agent_1", entries), "new");
@@ -624,7 +617,6 @@ describe("Trust Tier Calculation", () => {
       { event_type: "conversion", agent_id: "agent_1", status: "confirmed" },
       { event_type: "conversion", agent_id: "agent_1", status: "clawed_back" },
     ];
-    // 2 non-clawed-back conversions, 0 clawback events
     assert.strictEqual(calculateTrustTier("agent_1", entries), "new");
   });
 });

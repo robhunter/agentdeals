@@ -1,29 +1,3 @@
-// Source and docs must not carry private operational context.
-//
-// This repo is public. Comments, test fixtures and docs are read by anyone who clones it,
-// and they are the easiest place for context to leak, because a comment feels like a note
-// to yourself rather than something published. It is not: it ships.
-//
-// Four things went in this way and had to be taken back out (2026-08-25):
-//   - a business identity block (entity name, tax ID, street address) in a docs/ file,
-//     added as a convenience for filling in affiliate registrations
-//   - two comments explaining a retention choice by pointing at a private commercial
-//     conversation, which is context the reader cannot have and we do not want to give
-//   - a scatter of comments and test names attributing a decision to an internal role
-//     rather than stating the reason for it
-//   - a test name saying a published figure was "going to a partner", which named a
-//     counterparty without naming a conversation and so slipped the rule above
-//
-// The last one is the instructive case, because it is also just worse commenting. "X
-// overrode this during review" tells you who to blame; "a 400 here throws away the most
-// interesting data this endpoint collects" tells you whether you may change it. Writing
-// the reason instead of the authority removes the leak and improves the comment, so this
-// guard costs nothing to satisfy.
-//
-// A note on scope: this bans phrases that only make sense with private context, never
-// names on their own. "Rob Hunter" is the author field of package.json and manifest.json
-// and belongs there. "Approved by Rob" in a source comment does not.
-
 import { describe, it } from "node:test";
 import assert from "node:assert";
 import { readFileSync, readdirSync, statSync } from "node:fs";
@@ -33,14 +7,10 @@ import { fileURLToPath } from "node:url";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const REPO = join(__dirname, "..");
 
-// Human-authored surfaces. data/ is excluded deliberately: it is scraped vendor copy,
-// not anything we wrote, and it is large enough that a prose pattern would false-positive
-// on some vendor's description of their own billing address.
 const ROOTS = ["src", "test", "scripts", "docs"];
 const EXTENSIONS = [".ts", ".js", ".mjs", ".md", ".json"];
 const SKIP_DIRS = new Set(["node_modules", "dist", ".git", "data", "coverage"]);
 
-// This file names the banned patterns in order to ban them.
 const SELF = relative(REPO, fileURLToPath(import.meta.url));
 
 function walk(dir: string, out: string[] = []): string[] {
@@ -62,7 +32,6 @@ function walk(dir: string, out: string[] = []): string[] {
 function scannedFiles(): string[] {
   const files: string[] = [];
   for (const root of ROOTS) walk(join(REPO, root), files);
-  // Root-level markdown (README, AGENTS, CONTRIBUTING, CHANGELOG...) and the manifests.
   for (const entry of readdirSync(REPO)) {
     if (entry.endsWith(".md") || entry.endsWith(".json")) {
       const full = join(REPO, entry);
@@ -131,7 +100,6 @@ describe("no private operational context in tracked source", () => {
   const files = scannedFiles();
 
   it("scans a meaningful number of files", () => {
-    // A guard that silently stops scanning is worse than no guard: it reports success.
     assert.ok(files.length > 50, `only ${files.length} files scanned — the walk is broken`);
     const rel = files.map((f) => relative(REPO, f));
     for (const expected of ["src/serve.ts", "src/stats.ts", "README.md"]) {

@@ -6,7 +6,6 @@ import { fileURLToPath } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-// Start a local HTTP server so stdio MCP tests hit local data (not production API)
 let LOCAL_API_URL = "";
 
 const httpServerPath = path.join(__dirname, "..", "dist", "serve.js");
@@ -61,7 +60,6 @@ function sendMcpMessages(
               resolve(responses);
             }
           } catch {
-            // not valid JSON yet
           }
         }
       }
@@ -115,19 +113,16 @@ describe("MCP Resources", () => {
       assert.ok(Array.isArray(listResponse.result.resources), "result should have resources array");
 
       const uris = listResponse.result.resources.map((r: any) => r.uri);
-      // Static resources
       assert.ok(uris.includes("agentdeals://categories"), "should include categories");
       assert.ok(uris.includes("agentdeals://vendors"), "should include vendors");
       assert.ok(uris.includes("agentdeals://changes"), "should include changes");
       assert.ok(uris.includes("agentdeals://changes/latest"), "should include changes/latest");
       assert.ok(uris.includes("agentdeals://guides"), "should include guides");
 
-      // Template-expanded resources
       assert.ok(uris.some((u: string) => u.startsWith("agentdeals://category/")), "should include category templates");
       assert.ok(uris.some((u: string) => u.startsWith("agentdeals://vendor/")), "should include vendor templates");
       assert.ok(uris.some((u: string) => u.startsWith("agentdeals://guide/")), "should include guide templates");
 
-      // Should have many resources (static + templates)
       assert.ok(listResponse.result.resources.length > 50, `should have many resources, got ${listResponse.result.resources.length}`);
     } finally {
       proc.kill();

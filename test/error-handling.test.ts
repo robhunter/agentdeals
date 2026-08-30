@@ -32,7 +32,6 @@ function sendMcpMessages(
               resolve(responses);
             }
           } catch {
-            // not valid JSON yet
           }
         }
       }
@@ -69,9 +68,6 @@ function startServerWithBadApi() {
     },
   });
 }
-
-// These tests verify the stdio server handles API errors gracefully
-// by pointing it at a non-existent API endpoint.
 
 describe("error handling", () => {
   it("returns error for search_deals categories when API is unreachable", async () => {

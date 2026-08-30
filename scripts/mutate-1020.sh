@@ -1,16 +1,4 @@
 #!/usr/bin/env bash
-#
-# Mutation testing for the per-offer verification state, the quarantine, and
-# the wires that carry both into the daily selection.
-#
-# Each mutation breaks one property the change is supposed to hold and runs the
-# tests that claim to pin it. A surviving mutation means no test asserts that
-# property. A mutation that changes no file proves nothing and is reported as a
-# survivor rather than silently passing.
-#
-# Usage:
-#   bash scripts/mutate-1020.sh
-#
 set -u
 
 REPO="$(cd "$(dirname "$0")/.." && pwd)"

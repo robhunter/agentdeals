@@ -130,7 +130,6 @@ async function deliverWebhook(
       });
       if (resp.ok) return true;
     } catch {
-      // retry
     }
     if (attempt < MAX_RETRIES) {
       await new Promise(r => setTimeout(r, Math.pow(2, attempt) * 1000));

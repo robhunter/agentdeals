@@ -43,7 +43,6 @@ describe("reverify pipeline", () => {
       { vendor: "A", category: "Hosting", url: "https://example.com", verifiedDate: "2026-03-10" },
       { vendor: "B", category: "Hosting", url: "https://example.com", verifiedDate: "2026-03-14" },
     ];
-    // threshold=5: A is 6 days old (stale), B is 2 days old (fresh)
     const { stale, freshCount } = findStaleOffers(offers, 5, now);
     assert.strictEqual(stale.length, 1);
     assert.strictEqual(stale[0].offer.vendor, "A");

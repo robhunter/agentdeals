@@ -5,25 +5,20 @@ describe("sanitizeQuery", () => {
   it("strips backticks and other special characters from queries", async () => {
     const { sanitizeQuery } = await import("../dist/data.js");
 
-    // Backtick (the real user case from analytics)
     assert.strictEqual(sanitizeQuery("database`"), "database");
 
-    // Quotes, brackets, parentheses, semicolons, pipes
     assert.strictEqual(sanitizeQuery('database"hosting'), "databasehosting");
     assert.strictEqual(sanitizeQuery("redis[free]"), "redisfree");
     assert.strictEqual(sanitizeQuery("postgres(free)"), "postgresfree");
     assert.strictEqual(sanitizeQuery("test;drop"), "testdrop");
     assert.strictEqual(sanitizeQuery("a|b"), "ab");
 
-    // Preserves valid characters: hyphens, spaces, dots, plus signs
     assert.strictEqual(sanitizeQuery("ci-cd tools"), "ci-cd tools");
     assert.strictEqual(sanitizeQuery("node.js"), "node.js");
     assert.strictEqual(sanitizeQuery("c++"), "c++");
 
-    // Trims and normalizes whitespace
     assert.strictEqual(sanitizeQuery("  database  hosting  "), "database hosting");
 
-    // Empty after sanitization
     assert.strictEqual(sanitizeQuery("```"), "");
   });
 

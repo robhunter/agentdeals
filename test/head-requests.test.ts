@@ -56,7 +56,6 @@ describe("HEAD requests return same status as GET", () => {
         headRes.headers.get("content-type")?.includes("text/html"),
         `HEAD ${pagePath} should return text/html, got ${headRes.headers.get("content-type")}`
       );
-      // HEAD responses should have no body
       const body = await headRes.text();
       assert.strictEqual(body, "", `HEAD ${pagePath} should have empty body`);
     });

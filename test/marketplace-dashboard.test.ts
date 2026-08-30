@@ -15,7 +15,6 @@ const REQUESTS_PATH = path.join(__dirname, "..", "data", "referral_requests.json
 let serverPort = 0;
 let serverProc: ChildProcess;
 
-// Save/restore originals
 let origAgents: string | null = null;
 let origCodes: string | null = null;
 let origLedger: string | null = null;
@@ -72,7 +71,6 @@ function startHttpServer(): Promise<ChildProcess> {
   });
 }
 
-// Pre-create a test agent with known API key before the server starts
 const { registerAgent, resetAgentsCache } = await import("../dist/agents.js");
 const { resetReferralCodesCache, submitReferralCode } = await import("../dist/referral-codes.js");
 const { resetLedgerCache, recordConversion } = await import("../dist/ledger.js");
@@ -188,7 +186,6 @@ describe("Agent Dashboard", () => {
 
   before(async () => {
     saveOriginals();
-    // Reset data files for clean state
     fs.writeFileSync(AGENTS_PATH, JSON.stringify({ agents: [] }), "utf-8");
     fs.writeFileSync(CODES_PATH, JSON.stringify({ referral_codes: [] }), "utf-8");
     fs.writeFileSync(LEDGER_PATH, JSON.stringify({ ledger_entries: [] }), "utf-8");
@@ -198,12 +195,10 @@ describe("Agent Dashboard", () => {
     resetReferralCodesCache();
     resetLedgerCache();
 
-    // Create a test agent
     const result = registerAgent({ name: "DashboardTestBot" });
     testApiKey = result.api_key;
     testAgentId = result.agent.id;
 
-    // Submit a referral code for this agent
     submitReferralCode({
       vendor: "Railway",
       code: "TESTCODE",
@@ -213,7 +208,6 @@ describe("Agent Dashboard", () => {
       trust_tier: "new",
     });
 
-    // Start server after data setup
     serverProc = await startHttpServer();
   });
 

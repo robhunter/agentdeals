@@ -1,6 +1,3 @@
-// Editorial guide metadata for MCP resources.
-// This is a lightweight index — the full HTML content lives in serve.ts.
-
 export interface GuideMetadata {
   slug: string;
   title: string;
@@ -17,7 +14,6 @@ function classifyGuide(slug: string): GuideMetadata["type"] {
   return "report";
 }
 
-// Guide entries: slug, title, one-line description
 const GUIDE_ENTRIES: Array<{ slug: string; title: string; description: string }> = [
   { slug: "localstack-alternatives", title: "LocalStack CE Alternatives", description: "LocalStack CE shuts down March 23, 2026 — compare 9 free open-source AWS emulators" },
   { slug: "postman-alternatives", title: "Postman Alternatives", description: "Postman killed free team collaboration March 1, 2026 — 5 free API testing alternatives" },

@@ -50,7 +50,7 @@ describe("MCP initialize response includes instructions (issue #977)", () => {
     const results: any[] = [];
     for (const line of text.split("\n")) {
       if (line.startsWith("data: ")) {
-        try { results.push(JSON.parse(line.slice(6))); } catch { /* ignore */ }
+        try { results.push(JSON.parse(line.slice(6))); } catch {}
       }
     }
     return results;

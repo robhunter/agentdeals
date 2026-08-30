@@ -1,13 +1,3 @@
-// Telemetry write-path budget tests (#1023).
-//
-// The 2026-08-07 outage was not bad luck: with one Redis command per HTTP request,
-// steady-state command volume sat over the plan's 500,000/month ceiling, so the write
-// path died and stayed dead. These tests lock the property that fixed it — Redis command
-// volume is a function of *flush intervals*, not of requests served.
-//
-// Hermetic: Upstash is replaced by an in-process fake that actually stores values, so the
-// assertions can check both the command count and the data that ends up persisted.
-
 import { describe, it, beforeEach, afterEach } from "node:test";
 import assert from "node:assert";
 import { tmpdir } from "node:os";
@@ -39,16 +29,12 @@ const REQUEST_LOG_FLUSH_MAX = 250;
 
 type Call = { cmd: string; args: unknown[] };
 
-/** Minimal stateful Upstash stand-in: enough of the command set to run the write path. */
 class FakeUpstash {
   values = new Map<string, string>();
   lists = new Map<string, string[]>();
   calls: Call[] = [];
-  /** When set, commands answer with this error in a 200 body, as Upstash does. */
   failWith: string | null = null;
-  /** Restricts `failWith` to these commands, so a read can fail while writes still work. */
   failOnly: Set<string> | null = null;
-  /** Runs while a command is in flight — lets a test act inside the await window. */
   onCommand: ((cmd: string, args: unknown[]) => void) | null = null;
 
   reset(): void {
@@ -128,7 +114,6 @@ function installFetchStub(): void {
   }) as unknown as typeof fetch;
 }
 
-/** Boots the module against the fake and clears the call log, as a live server would be. */
 async function boot(): Promise<void> {
   await loadTelemetry(telemetryFile);
   redis.reset();
@@ -211,8 +196,6 @@ describe("telemetry command budget (#1023)", () => {
   describe("command volume is a function of flushes, not of traffic", () => {
     it("costs the same whether the interval carried 10 events or 10,000", async () => {
       await boot();
-      // Warm-up: the first flush after boot also spends its one-shot deploy-race re-read,
-      // so steady state is what the two measured intervals below have to agree on.
       pageView("/");
       await flushPending();
 
@@ -221,7 +204,6 @@ describe("telemetry command budget (#1023)", () => {
       await flushPending();
       const small = redis.commandCount();
 
-      // Second interval, three orders of magnitude more traffic.
       redis.reset();
       for (let i = 0; i < 10_000; i++) { pageView("/"); logRequest(entry(i)); }
       await flushPending();
@@ -253,8 +235,6 @@ describe("telemetry command budget (#1023)", () => {
     it("does not drop views recorded while the snapshot write is in flight", async () => {
       await boot();
       pageView("/");
-      // Requests keep arriving during the round trip. This one is not in the batch being
-      // written, so clearing the buffer after the await would lose it permanently.
       redis.onCommand = (cmd) => {
         if (cmd === "SET") { redis.onCommand = null; pageView("/"); }
       };
@@ -274,7 +254,6 @@ describe("telemetry command budget (#1023)", () => {
 
     it("stays inside the monthly budget when every interval is busy", async () => {
       await boot();
-      // Cost of one fully-loaded interval: page views AND request-log entries pending.
       for (let i = 0; i < 100; i++) { pageView("/"); logRequest(entry(i)); }
       await flushPending();
       const perFlush = redis.commandCount();
@@ -356,7 +335,6 @@ describe("telemetry command budget (#1023)", () => {
       pageView("/estimate");
       logRequest(entry(1));
 
-      // What serve.ts does on SIGTERM.
       await flushPending();
 
       assert.strictEqual(storedSnapshot().days[today()].total, 2);
@@ -367,9 +345,8 @@ describe("telemetry command budget (#1023)", () => {
       await boot();
       for (let i = 0; i < 30; i++) pageView("/");
       await flushPending();
-      for (let i = 0; i < 7; i++) pageView("/"); // buffered, never flushed
+      for (let i = 0; i < 7; i++) pageView("/");
 
-      // Unclean exit: the process dies with deltas still in memory.
       resetTelemetryBuffers();
       await loadTelemetry(telemetryFile);
 
@@ -385,7 +362,6 @@ describe("telemetry command budget (#1023)", () => {
       await flushPending();
       const before = redis.values.get(PAGE_VIEWS_KEY);
 
-      // Restart into an outage.
       resetTelemetryBuffers();
       redis.failWith = "ERR max requests limit exceeded. Limit: 500000, Usage: 500000";
       await loadTelemetry(telemetryFile);
@@ -396,7 +372,6 @@ describe("telemetry command budget (#1023)", () => {
       const blind = await getPageViews();
       assert.strictEqual(blind.available, false, "and we must say so rather than report 5");
 
-      // Storage recovers: the base is re-read and the buffered deltas land on top of it.
       redis.failWith = null;
       await flushPending();
       const report = await getPageViews();
@@ -405,9 +380,6 @@ describe("telemetry command budget (#1023)", () => {
     });
 
     it("refuses to persist when only the read failed and writes still work", async () => {
-      // The dangerous shape: a transient read error leaves us with an empty in-memory
-      // view while SET keeps succeeding, so a blind flush would replace real history with
-      // whatever this process has seen since boot.
       await boot();
       for (let i = 0; i < 40; i++) pageView("/");
       await flushPending();
@@ -448,10 +420,6 @@ describe("telemetry command budget (#1023)", () => {
       const report = await getPageViews();
 
       assert.strictEqual(report.all_time.total, 10_675, "the all-time history the migration must carry across");
-      // The legacy day counter says 89 while its page keys account for 70. That gap is
-      // what the old build counted and could not name — 404s, mostly. #1029 reports the
-      // page keys as the total and the gap under its own name, so nothing is dropped and
-      // nothing unnameable is inside a number anyone would quote.
       assert.strictEqual(report.today.total, 70);
       assert.strictEqual(report.today.unclassified_legacy, 19);
       assert.strictEqual(report.referrers_today["news.ycombinator.com"], 12);
@@ -489,10 +457,6 @@ describe("telemetry command budget (#1023)", () => {
       );
     });
 
-    // The fold bucket is __other_pages__, not __unmatched__ (#1029): these are pages we
-    // served and cannot name individually, and they belong in the total. __unmatched__ is
-    // now the legacy bucket for traffic recorded before outcomes were counted, and is
-    // reported outside the total — folding served hits there would delete them from it.
     it("folds overflowing all-time paths into __other_pages__ without losing the total", async () => {
       for (let i = 0; i < 400; i++) redis.values.set(`pv:all:/page-${i}`, "3");
       await loadTelemetry(telemetryFile);
@@ -502,7 +466,6 @@ describe("telemetry command budget (#1023)", () => {
       assert.strictEqual(report.all_time.unclassified_legacy, 0, "an overflowing page is not legacy traffic");
       const snapshot = (await getPageViews()).all_time.top_pages;
       assert.ok(snapshot.length <= 20);
-      // 400 paths capped to 300 named + one fold bucket.
       pageView("/");
       await flushPending();
       const keys = Object.keys(storedSnapshot().all_time);

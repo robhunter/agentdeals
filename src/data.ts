@@ -86,9 +86,6 @@ export function getOfferDetails(
   const match = offers.find((o) => o.vendor.toLowerCase() === lowerName);
 
   if (match) {
-    // Related vendors and alternatives are a recommendation, so they resolve
-    // through the shared selection module (#1025) rather than `.slice(0, 5)`
-    // over data/index.json order.
     const relatedRanking = rankForListing(
       filterAlternatives(offers.filter((o) => o.category === match.category && o.vendor !== match.vendor), match),
       { queryKey: `related:${match.category}:${match.vendor}`, changes: loadDealChanges() },
@@ -106,7 +103,6 @@ export function getOfferDetails(
     return { offer: stripReferrerValue(result) };
   }
 
-  // No exact match — suggest similar vendors
   const suggestions = offers
     .filter((o) => o.vendor.toLowerCase().includes(lowerName) || lowerName.includes(o.vendor.toLowerCase()))
     .slice(0, 5)
@@ -126,28 +122,24 @@ function scoreOffer(offer: Offer, terms: string[]): number {
   const descLower = offer.description.toLowerCase();
 
   for (const term of terms) {
-    // Vendor name match (highest weight)
     if (vendorLower === term) {
-      score += 100; // exact vendor name match
+      score += 100;
     } else if (vendorLower.includes(term)) {
-      score += 50; // partial vendor name match
+      score += 50;
     }
 
-    // Category name match (high weight)
     if (categoryLower === term) {
       score += 80;
     } else if (categoryLower.includes(term)) {
       score += 40;
     }
 
-    // Tag match (medium weight)
     if (tagsLower.some((tag) => tag === term)) {
-      score += 30; // exact tag match
+      score += 30;
     } else if (tagsLower.some((tag) => tag.includes(term))) {
-      score += 15; // partial tag match
+      score += 15;
     }
 
-    // Description match (lowest weight)
     if (descLower.includes(term)) {
       score += 5;
     }
@@ -156,10 +148,6 @@ function scoreOffer(offer: Offer, terms: string[]): number {
   return score;
 }
 
-/**
- * Strip special characters from search queries that break matching.
- * Keeps alphanumeric, hyphens, spaces, dots, and plus signs.
- */
 export function sanitizeQuery(raw: string): string {
   return raw.replace(/[^a-zA-Z0-9\s.\-+]/g, "").replace(/\s+/g, " ").trim();
 }
@@ -216,7 +204,6 @@ export function searchOffers(
       return terms.every((term) => searchable.includes(term));
     });
 
-    // Rank by relevance when no explicit sort requested
     if (!sort) {
       const scores = new Map<Offer, number>();
       for (const offer of results) {
@@ -241,20 +228,6 @@ export function searchOffers(
   return results;
 }
 
-/**
- * Which way a change points for the user. One table, because before #1038
- * five copies of this idea existed in the codebase and they had drifted:
- * `classifyStability` counted `pricing_model_change` as neither negative nor
- * positive (so Xata retiring its SaaS free tier read as `stable`) and left
- * `new_tier` out of the positive set, while the weekly digest had its own two
- * lists that disagreed with both.
- *
- * Direction is not the same question as risk. RISK_DEMOTION below is stricter:
- * it decides what we are willing to publish a warning label for. This table
- * decides what we are willing to *call* negative. The invariant between them —
- * nothing RISK_DEMOTION demotes may be positive or neutral here — is asserted
- * in risk-badge.test.ts.
- */
 export const CHANGE_DIRECTION: Record<DealChange["change_type"], "negative" | "positive" | "neutral"> = {
   free_tier_removed: "negative",
   open_source_killed: "negative",
@@ -284,7 +257,6 @@ const directionSet = (d: "negative" | "positive" | "neutral") =>
 export const NEGATIVE_CHANGE_TYPES = directionSet("negative");
 export const POSITIVE_CHANGE_TYPES = directionSet("positive");
 
-/** Severity, not direction: the negatives that end a free tier outright. */
 export const VOLATILE_TYPES = new Set([
   "free_tier_removed",
   "open_source_killed",
@@ -315,7 +287,6 @@ export function isSevereChange(
   return VOLATILE_TYPES.has(change.change_type) && demotionForChange(change) !== null;
 }
 
-/** The two the risk scale treats as severe. Exported so no caller inlines them. */
 export const SEVERE_CHANGE_TYPES = new Set(["free_tier_removed", "open_source_killed"]);
 
 const NEGATIVE_STABILITY_TYPES = NEGATIVE_CHANGE_TYPES;
@@ -329,20 +300,15 @@ export function classifyStability(vendorChanges: DealChange[]): StabilityClass {
   const positiveCount = vendorChanges.filter(c => POSITIVE_STABILITY_TYPES.has(c.change_type)).length;
   const riskScaleActs = vendorChanges.some(c => demotionForChange(c) !== null);
 
-  // Volatile: a severe change, or multiple negative changes the risk scale acts on
   if (hasVolatile || (negativeCount >= 2 && riskScaleActs)) return "volatile";
 
-  // Improving: only positive changes (no negative)
   if (positiveCount > 0 && negativeCount === 0) return "improving";
 
-  // Watch: at least one negative change
   if (negativeCount >= 1) return "watch";
 
-  // No negative or positive (e.g. only pricing_model_change) = stable
   return "stable";
 }
 
-// Build a map of vendor name (lowercase) → stability class from deal_changes
 export function getStabilityMap(): Map<string, StabilityClass> {
   const changes = loadDealChanges();
   const vendorChangesMap = new Map<string, DealChange[]>();
@@ -365,7 +331,6 @@ export function enrichOffers(offers: Offer[]): EnrichedOffer[] {
   const ninetyDaysMs = 90 * 24 * 60 * 60 * 1000;
   const cutoffDate = new Date(now.getTime() - ninetyDaysMs).toISOString().slice(0, 10);
 
-  // Build vendor → changes map (only recent changes within 90 days)
   const vendorChanges = new Map<string, DealChange[]>();
   for (const c of changes) {
     if (c.date >= cutoffDate) {
@@ -375,7 +340,6 @@ export function enrichOffers(offers: Offer[]): EnrichedOffer[] {
     }
   }
 
-  // Build vendor → all changes for risk assessment and stability classification
   const vendorAllChangesList = new Map<string, DealChange[]>();
   for (const c of changes) {
     const key = c.vendor.toLowerCase();
@@ -386,7 +350,6 @@ export function enrichOffers(offers: Offer[]): EnrichedOffer[] {
   return offers.map((offer) => {
     const key = offer.vendor.toLowerCase();
 
-    // recent_change: most recent change within 90 days
     const recentChanges = vendorChanges.get(key);
     let recent_change: string | null = null;
     if (recentChanges && recentChanges.length > 0) {
@@ -394,7 +357,6 @@ export function enrichOffers(offers: Offer[]): EnrichedOffer[] {
       recent_change = `${mostRecent.date}: ${mostRecent.summary}`;
     }
 
-    // expires_soon: flag if expires within 90 days
     let expires_soon: string | null = null;
     if (offer.expires_date) {
       const expiresMs = new Date(offer.expires_date).getTime() - now.getTime();
@@ -403,11 +365,6 @@ export function enrichOffers(offers: Offer[]): EnrichedOffer[] {
       }
     }
 
-    // risk_level: the single definition in vendorRiskAssessment (#1038). It
-    // used to be a count of every change record of every type, which measured
-    // how closely we had watched the vendor rather than anything about the
-    // vendor. The cause travels with the level so no surface can render the
-    // warning without the dated fact behind it.
     const assessment = vendorRiskAssessment(vendorAllChangesList.get(key) ?? []);
     const link_unreachable = unreachableNoticeForUrl(offer.url, now.getTime());
     const risk_level =
@@ -418,7 +375,6 @@ export function enrichOffers(offers: Offer[]): EnrichedOffer[] {
       ? { date: assessment.cause.date, date_source: assessment.cause.date_source, change_type: assessment.cause.change_type, summary: assessment.cause.summary }
       : null;
 
-    // stability: derived from change types, not just count
     const stability = classifyStability(vendorAllChangesList.get(key) ?? []);
 
     const days_since_verified = Math.floor(
@@ -542,7 +498,6 @@ export function getDealChanges(
   if (since) {
     results = results.filter((c) => c.date >= since);
   } else {
-    // Default: last 30 days
     const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000)
       .toISOString()
       .slice(0, 10);
@@ -554,7 +509,6 @@ export function getDealChanges(
     results = results.filter((c) => c.change_type === lowerType);
   }
 
-  // vendors (comma-separated) takes precedence over vendor (single)
   if (vendors) {
     const vendorList = vendors.split(",").map((v) => v.trim().toLowerCase()).filter(Boolean);
     results = results.filter((c) => {
@@ -566,7 +520,6 @@ export function getDealChanges(
     results = results.filter((c) => c.vendor.toLowerCase().includes(lowerVendor));
   }
 
-  // Category filtering (comma-separated, case-insensitive partial match)
   if (categories) {
     const catList = categories.split(",").map((c) => c.trim().toLowerCase()).filter(Boolean);
     results = results.filter((c) => {
@@ -575,7 +528,6 @@ export function getDealChanges(
     });
   }
 
-  // Sort by date, newest first
   results = [...results].sort((a, b) => b.date.localeCompare(a.date));
 
   return { changes: results, total: results.length };
@@ -603,29 +555,23 @@ export function getPersonalizedChanges(
   vendors?: string,
   categories?: string
 ): PersonalizedChanges {
-  // Get the user's stack changes
   const stackResult = getDealChanges(since, changeType, vendor, vendors, categories);
 
-  // Get ALL changes in the same time window (no vendor/category filter)
   const allResult = getDealChanges(since, changeType);
 
-  // Build a set of vendor names already in the stack results for dedup
   const stackVendorDates = new Set(
     stackResult.changes.map((c) => `${c.vendor}|${c.date}|${c.change_type}`)
   );
 
-  // Advisory: high-impact changes outside the user's filter, top 3
   const advisory = allResult.changes
     .filter((c) => c.impact === "high" && HIGH_IMPACT_CHANGE_TYPES.has(c.change_type))
     .filter((c) => !stackVendorDates.has(`${c.vendor}|${c.date}|${c.change_type}`))
     .slice(0, 3);
 
-  // Count high-impact ecosystem-wide
   const ecosystemHighImpact = allResult.changes.filter(
     (c) => c.impact === "high"
   ).length;
 
-  // Calculate period in days
   const sinceDate = since ? new Date(since) : new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
   const periodDays = Math.max(1, Math.ceil((Date.now() - sinceDate.getTime()) / (24 * 60 * 60 * 1000)));
 
@@ -645,7 +591,6 @@ function findVendor(offers: Offer[], name: string): { offer: Offer | null; sugge
   const exact = offers.find((o) => o.vendor.toLowerCase() === lower);
   if (exact) return { offer: exact, suggestions: [] };
 
-  // Fuzzy: substring match
   const fuzzy = offers.filter(
     (o) => o.vendor.toLowerCase().includes(lower) || lower.includes(o.vendor.toLowerCase())
   );
@@ -665,7 +610,6 @@ export interface VendorRiskResult {
   vendor: string;
   category: string;
   risk_level: "stable" | "caution" | "risky" | null;
-  /** Never null when risk_level is caution or risky (#1038). */
   risk_cause: RiskCause | null;
   link_unreachable: LinkUnreachable | null;
   free_tier_longevity_days: number;
@@ -675,40 +619,18 @@ export interface VendorRiskResult {
   summary: string;
 }
 
-/**
- * Every change type that appears in data/deal_changes.json, and how far it
- * demotes the vendor. `null` demotes nothing.
- *
- * #1038: the definition the public surfaces used counted change records of
- * *any* type, all-time. `limits_increased` — a vendor expanding its free tier
- * — pushed that vendor toward `caution`, and a vendor we had never examined
- * rendered `stable` because we had written nothing about it. The badge was a
- * map of our own coverage, so it flagged the companies we watch most closely
- * and rewarded obscurity.
- *
- * The table is exhaustive on purpose. A type left out of it is a silent
- * decision either way, so `risk-badge.test.ts` asserts it covers every type
- * present in the data.
- */
 export const RISK_DEMOTION: Record<DealChange["change_type"], "risky" | "caution" | null> = {
-  // The free tier we list stopped existing.
   free_tier_removed: "risky",
   open_source_killed: "risky",
-  // The free tier still exists and is worth less than it was.
   limits_reduced: "caution",
   pricing_restructured: "caution",
-  // Neutral or favourable to the user. These can never raise a risk level.
   limits_increased: null,
   new_free_tier: null,
   new_tier: null,
   startup_program_expanded: null,
   pricing_postponed: null,
-  rebranded: null, // a naming event, not a pricing one
-  record_corrected: null, // a repair to our own entry, not an act of the vendor
-  // Negative, but not risk inputs today — see the #1038 PR description. In
-  // short: `product_deprecated` is dominated by unrelated products of large
-  // vendors (an AWS Lambda runtime deprecation says nothing about AWS's free
-  // tier).
+  rebranded: null,
+  record_corrected: null,
   product_deprecated: null,
   restriction: null,
   pricing_model_change: null,
@@ -718,16 +640,9 @@ const RISK_RANK: Record<"stable" | "caution" | "risky", number> = { stable: 0, c
 
 export interface VendorRiskAssessment {
   level: "stable" | "caution" | "risky";
-  /** The record that produced the level. Never null when level !== "stable". */
   cause: DealChange | null;
 }
 
-/**
- * The only definition of vendor risk in the codebase.
- *
- * Returns the level *and* the dated record that earned it, because no surface
- * may publish a warning it cannot show the reason for (#1038).
- */
 export function vendorRiskAssessment(vendorChanges: DealChange[], nowMs: number = Date.now()): VendorRiskAssessment {
   const twelveMonthsAgo = new Date(nowMs - 365 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
 
@@ -735,10 +650,6 @@ export function vendorRiskAssessment(vendorChanges: DealChange[], nowMs: number 
   for (const c of vendorChanges) {
     const demotion = demotionForChange(c);
     if (!demotion) continue;
-    // A severe change ages into `caution`, never into `stable`. We still hold
-    // the record, and `stable` is itself a published claim — SendGrid's free
-    // tier removal is 15 months old and calling that vendor stable would be a
-    // false statement we made ourselves.
     const level = demotion === "risky" && c.date < twelveMonthsAgo ? "caution" : demotion;
     if (!best || RISK_RANK[level] > RISK_RANK[best.level] || (level === best.level && c.date > best.cause.date)) {
       best = { level, cause: c };
@@ -775,7 +686,6 @@ export function checkVendorRisk(
   const linkUnreachable = unreachableNoticeForUrl(offer.url);
   const riskLevel = assessment.level;
 
-  // Free tier longevity: days since verifiedDate with no negative changes after it
   const verifiedDate = new Date(offer.verifiedDate);
   const lastNegativeChange = vendorChanges.find((c) => NEGATIVE_CHANGE_TYPES.has(c.change_type));
   const longevityStart = lastNegativeChange
@@ -786,10 +696,6 @@ export function checkVendorRisk(
     Math.floor((Date.now() - longevityStart.getTime()) / (24 * 60 * 60 * 1000))
   );
 
-  // Up to 3 alternatives in the same category. This is a recommendation, so it
-  // resolves through the shared selection module (#1025) rather than the old
-  // "risk bucket, then alphabetical" sort — which ranked on the count of
-  // changes we happen to have recorded and broke ties with the alphabet.
   const alternativesRanking = rankForListing(
     filterAlternatives(offers.filter((o) => o.category === offer.category && o.vendor !== offer.vendor), offer),
     { queryKey: `vendor-risk-alternatives:${offer.vendor}`, changes: allChanges },
@@ -810,9 +716,6 @@ export function checkVendorRisk(
     demerits: e.demerits.map((d) => ({ code: d.code, points: d.points, reason: d.reason })),
   }));
 
-  // Build summary. Every non-stable summary names the dated record that
-  // produced the level (#1038) — the tool result is a surface like any other,
-  // and a warning without its reason is an assertion.
   let summary: string;
   const cause = assessment.cause;
   const unreachableSince = linkUnreachable?.last_reachable ? ` since ${linkUnreachable.last_reachable}` : "";
@@ -846,7 +749,6 @@ export function checkVendorRisk(
   };
 }
 
-// Common infrastructure categories for gap detection
 const CORE_CATEGORIES = [
   "Databases", "Cloud Hosting", "Monitoring", "Logging", "CI/CD",
   "Auth", "Email", "Search", "Feature Flags",
@@ -908,13 +810,11 @@ export function auditStack(serviceNames: string[]): AuditResult {
     const riskLevel = vendorRiskLevel(vendorChanges);
     if (riskLevel !== "stable") risksFound++;
 
-    // Find a cheaper/free alternative in same category
     let cheaperAlternative: AuditServiceResult["cheaper_alternative"];
     const sameCat = offers.filter(
       (o) => o.category === offer.category && o.vendor !== offer.vendor && o.tier.toLowerCase().includes("free")
     );
     if (sameCat.length > 0) {
-      // Pick one with stable risk
       const stableAlt = sameCat.find((o) => {
         const oChanges = allChanges.filter((c) => c.vendor.toLowerCase() === o.vendor.toLowerCase());
         return vendorRiskLevel(oChanges) === "stable";
@@ -943,7 +843,6 @@ export function auditStack(serviceNames: string[]): AuditResult {
     services.push(svc);
   }
 
-  // Gap detection
   const gaps: AuditGap[] = [];
   for (const cat of CORE_CATEGORIES) {
     if (!coveredCategories.has(cat)) {
@@ -1105,7 +1004,6 @@ export function getFreshnessMetrics(): FreshnessMetrics {
     vendor: o.vendor, category: o.category, verifiedDate: o.verifiedDate, url: o.url, days_since_verified: o.days_since_verified,
   }));
 
-  // Category breakdown
   const catMap = new Map<string, { count: number; totalDays: number; within90: number }>();
   for (const o of withAge) {
     const entry = catMap.get(o.category) ?? { count: 0, totalDays: 0, within90: 0 };
@@ -1167,14 +1065,12 @@ export function getWeeklyDigest(): {
   const discovered = [...inWeek.discovered].sort((a, b) => b.date.localeCompare(a.date));
   const discoveryNote = discovered.length > 0 ? discoveryBatchNote(discovered.length, "this week") : "";
 
-  // New offers added in last 7 days
   const newOffers = getNewOffers(7).offers.slice(0, 10).map((o) => ({
     vendor: o.vendor,
     category: o.category,
     description: o.description,
   }));
 
-  // Upcoming deadlines (next 30 days) — from expiring offers
   const expiringDeadlines = getExpiringDeals(30).deals.map((d) => ({
     vendor: d.vendor,
     date: d.expires_date!,
@@ -1191,7 +1087,6 @@ export function getWeeklyDigest(): {
       summary: c.summary,
     }));
 
-  // Merge, deduplicate by vendor+date, sort by date ascending
   const seen = new Set<string>();
   const deadlines = [...expiringDeadlines, ...changeDeadlines]
     .sort((a, b) => a.date.localeCompare(b.date))
@@ -1203,7 +1098,6 @@ export function getWeeklyDigest(): {
     })
     .slice(0, 25);
 
-  // Build summary
   const parts: string[] = [];
   if (changes.length > 0) {
     const negative = changes.filter((c) => CHANGE_DIRECTION[c.change_type] === "negative");
@@ -1446,10 +1340,6 @@ export function stripReferrerValue<T extends { referral?: Referral }>(offer: T):
   return { ...offer, referral: publicReferral as Referral };
 }
 
-/**
- * Get the referral data for a specific vendor (with referrer_value stripped).
- * Returns null if the vendor has no referral or vendor not found.
- */
 export function getVendorReferral(vendorName: string): { vendor: string; referral: Omit<Referral, "referrer_value"> } | null {
   const offers = loadOffers();
   const lowerName = vendorName.toLowerCase();

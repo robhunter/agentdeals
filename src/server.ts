@@ -23,12 +23,6 @@ import { registerMcpAppsResources, TOOL_UI_META } from "./mcp-apps.js";
 import { MCP_INSTRUCTIONS } from "./mcp-instructions.js";
 import { MCP_SIGNAL_FOOTER } from "./signal-copy.js";
 
-// Surface 5 of the beacon invitation (#1024), appended to the tool results that carry a
-// recommendation. A second content block rather than text appended to the JSON one: the
-// first block is a parseable document and prose glued onto it would break every strict
-// consumer. This is also the one channel where the imperative form is correct and stays —
-// the operator installed this server deliberately, so tool instructions are legitimately
-// authoritative here in a way that fetched web content is not.
 const SIGNAL_FOOTER_CONTENT = { type: "text" as const, text: MCP_SIGNAL_FOOTER };
 
 const __dirname_server = dirname(fileURLToPath(import.meta.url));
@@ -38,8 +32,6 @@ function toConciseOffer(offer: Offer | EnrichedOffer) {
   const base = { vendor: offer.vendor, tier: offer.tier, description: offer.description, url: offer.url, ...(offer.payment_protocols?.length ? { payment_protocols: offer.payment_protocols.map(p => p.protocol) } : {}) };
   const enriched = offer as Partial<EnrichedOffer>;
   if (enriched.risk_level !== undefined) {
-    // risk_cause travels with risk_level everywhere (#1038) — a client that
-    // renders the level has to be able to render the reason for it.
     return { ...base, risk_level: enriched.risk_level, risk_cause: enriched.risk_cause ?? null, stability: enriched.stability };
   }
   return base;
@@ -79,8 +71,6 @@ export function createServer(getSessionId?: () => string | undefined, getClientN
     }
   );
 
-  // --- Tool 1: search_deals ---
-
   server.registerTool(
     "search_deals",
     {
@@ -109,7 +99,6 @@ export function createServer(getSessionId?: () => string | undefined, getClientN
       try {
         recordToolCall("search_deals", getClientName?.());
 
-        // Mode: list categories
         if (category === "list") {
           const categories = getCategories();
           logRequest({ ts: new Date().toISOString(), type: "mcp", endpoint: "search_deals", params: { category: "list" }, result_count: categories.length, session_id: getSessionId?.() });
@@ -118,13 +107,10 @@ export function createServer(getSessionId?: () => string | undefined, getClientN
           };
         }
 
-        // Mode: vendor details
         if (vendor) {
           let result = getOfferDetails(vendor, true);
           let resolvedFrom: string | null = null;
           if ("error" in result) {
-            // Fuzzy-resolve: treat vendor as a slug and see if it maps to a
-            // known vendor (e.g. "kiro" → "Amazon Kiro").
             const resolution = resolveVendorSlug(toSlug(vendor));
             if (resolution.type === "exact" || resolution.type === "redirect") {
               const canonicalName = vendorSlugMap.get(resolution.slug);
@@ -162,7 +148,6 @@ export function createServer(getSessionId?: () => string | undefined, getClientN
           };
         }
 
-        // Mode: recent deals (since param)
         if (since && !query && !category) {
           const result = getNewestDeals({ since, limit, category: undefined });
           logRequest({ ts: new Date().toISOString(), type: "mcp", endpoint: "search_deals", params: { since, limit }, result_count: result.total, session_id: getSessionId?.() });
@@ -175,14 +160,12 @@ export function createServer(getSessionId?: () => string | undefined, getClientN
           };
         }
 
-        // Mode: search/browse
         const sanitizedQuery = query ? sanitizeQuery(query) : undefined;
         const allResults = searchOffers(sanitizedQuery || undefined, category, eligibility, sort, stability, payment_protocol);
         const total = allResults.length;
         const effectiveOffset = offset ?? 0;
         const effectiveLimit = limit ?? 20;
 
-        // If since is provided alongside search, filter by date
         let filtered = allResults;
         if (since) {
           const sinceDate = new Date(since);
@@ -192,11 +175,6 @@ export function createServer(getSessionId?: () => string | undefined, getClientN
         const paged = filtered.slice(effectiveOffset, effectiveOffset + effectiveLimit);
         const results = enrichOffers(paged);
         const finalTotal = since ? filtered.length : total;
-        // `finalTotal` is what this caller got after its own category / eligibility /
-        // stability / payment-protocol / since filters. Recording only that made a
-        // filtered-to-zero MCP call look identical to a query the catalog has nothing
-        // for — and this is the highest-volume search path, so it dominated the
-        // zero-result list that catalog priorities are read off (#1018 Defect C).
         const searchFiltered = Boolean(category || eligibility || stability || payment_protocol || since);
         recordSearchQuery(query, finalTotal, {
           category,
@@ -206,7 +184,6 @@ export function createServer(getSessionId?: () => string | undefined, getClientN
         });
         logRequest({ ts: new Date().toISOString(), type: "mcp", endpoint: "search_deals", params: { query, category, eligibility, sort, limit: effectiveLimit, offset: effectiveOffset, since }, result_count: results.length, session_id: getSessionId?.() });
 
-        // Zero-result suggestion (only when no results match at all, not just paginated past end)
         if (results.length === 0 && finalTotal === 0) {
           const searchTerm = query || category || "";
           return {
@@ -214,8 +191,6 @@ export function createServer(getSessionId?: () => string | undefined, getClientN
           };
         }
 
-        // Enrich each result with: (1) best referral_code (platform > agent-submitted, explicit null when absent)
-        // and (2) full ranked agent-submitted codes list for verbose consumers.
         const resultsWithCodes = results.map(offer => {
           const agentCodes = getRankedCodesForVendor(offer.vendor);
           const enriched: typeof offer & { referral_code: ReturnType<typeof getBestReferralCode>; agent_referral_codes?: unknown[] } = {
@@ -248,8 +223,6 @@ export function createServer(getSessionId?: () => string | undefined, getClientN
       }
     }
   );
-
-  // --- Tool 2: plan_stack ---
 
   server.registerTool(
     "plan_stack",
@@ -329,8 +302,6 @@ export function createServer(getSessionId?: () => string | undefined, getClientN
     }
   );
 
-  // --- Tool 3: compare_vendors ---
-
   server.registerTool(
     "compare_vendors",
     {
@@ -351,7 +322,6 @@ export function createServer(getSessionId?: () => string | undefined, getClientN
         recordToolCall("compare_vendors", getClientName?.());
         const doRisk = include_risk !== false;
 
-        // Single vendor = risk check
         if (vendors.length === 1) {
           const result = checkVendorRisk(vendors[0]);
           if ("error" in result) {
@@ -373,7 +343,6 @@ export function createServer(getSessionId?: () => string | undefined, getClientN
           };
         }
 
-        // Two vendors = comparison
         if (vendors.length === 2) {
           const comparison = compareServices(vendors[0], vendors[1]);
           if ("error" in comparison) {
@@ -386,7 +355,6 @@ export function createServer(getSessionId?: () => string | undefined, getClientN
 
           let result: any = comparison.comparison;
 
-          // Add stability + risk_level indicators (always included, regardless of include_risk detail toggle)
           const stabMap = getStabilityMap();
           const riskA = checkVendorRisk(vendors[0]);
           const riskB = checkVendorRisk(vendors[1]);
@@ -436,8 +404,6 @@ export function createServer(getSessionId?: () => string | undefined, getClientN
     }
   );
 
-  // --- Tool 4: track_changes ---
-
   server.registerTool(
     "track_changes",
     {
@@ -463,7 +429,6 @@ export function createServer(getSessionId?: () => string | undefined, getClientN
       try {
         recordToolCall("track_changes", getClientName?.());
 
-        // No params = weekly digest
         if (!since && !change_type && !vendor && !vendors && !categories && include_expiring === undefined) {
           const digest = getWeeklyDigest();
           logRequest({ ts: new Date().toISOString(), type: "mcp", endpoint: "track_changes", params: {}, result_count: digest.deal_changes.length, session_id: getSessionId?.() });
@@ -481,7 +446,6 @@ export function createServer(getSessionId?: () => string | undefined, getClientN
         const doExpiring = include_expiring !== false;
         const days = Math.min(Math.max(lookahead_days ?? 30, 1), 365);
 
-        // Personalized mode: when vendors or categories filter is active
         const isPersonalized = !!(vendors || categories);
 
         if (isPersonalized) {
@@ -506,7 +470,6 @@ export function createServer(getSessionId?: () => string | undefined, getClientN
           };
         }
 
-        // Standard filtered changes (single vendor or change_type only)
         const changes = getDealChanges(since, change_type, vendor, vendors, categories);
 
         let result: any = changes;
@@ -532,8 +495,6 @@ export function createServer(getSessionId?: () => string | undefined, getClientN
       }
     }
   );
-
-  // --- Prompt Templates ---
 
   server.registerPrompt(
     "new-project-setup",
@@ -733,9 +694,6 @@ Suggested monitoring cadence: run this check weekly to catch pricing changes ear
     }
   );
 
-  // --- Resources ---
-
-  // Static: all categories with offer counts
   server.registerResource(
     "categories",
     "agentdeals://categories",
@@ -751,7 +709,6 @@ Suggested monitoring cadence: run this check weekly to catch pricing changes ear
     }
   );
 
-  // Template: category detail
   server.registerResource(
     "category",
     new ResourceTemplate("agentdeals://category/{slug}", {
@@ -780,7 +737,6 @@ Suggested monitoring cadence: run this check weekly to catch pricing changes ear
     },
     async (_uri, { slug }) => {
       const offers = loadOffers();
-      // Match category by slug (case-insensitive, slug-to-name)
       const match = offers.filter(o =>
         o.category.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/-+$/, "") === slug
       );
@@ -794,7 +750,6 @@ Suggested monitoring cadence: run this check weekly to catch pricing changes ear
     }
   );
 
-  // Static: all vendors
   server.registerResource(
     "vendors",
     "agentdeals://vendors",
@@ -812,7 +767,6 @@ Suggested monitoring cadence: run this check weekly to catch pricing changes ear
     }
   );
 
-  // Template: vendor detail
   server.registerResource(
     "vendor",
     new ResourceTemplate("agentdeals://vendor/{slug}", {
@@ -887,7 +841,6 @@ Suggested monitoring cadence: run this check weekly to catch pricing changes ear
     }
   );
 
-  // Static: all pricing changes
   server.registerResource(
     "changes",
     "agentdeals://changes",
@@ -906,7 +859,6 @@ Suggested monitoring cadence: run this check weekly to catch pricing changes ear
     }
   );
 
-  // Static: latest changes (most recent 10)
   server.registerResource(
     "changes-latest",
     "agentdeals://changes/latest",
@@ -925,7 +877,6 @@ Suggested monitoring cadence: run this check weekly to catch pricing changes ear
     }
   );
 
-  // Static: all editorial guides
   server.registerResource(
     "guides",
     "agentdeals://guides",
@@ -951,7 +902,6 @@ Suggested monitoring cadence: run this check weekly to catch pricing changes ear
     }
   );
 
-  // Template: guide detail
   server.registerResource(
     "guide",
     new ResourceTemplate("agentdeals://guide/{slug}", {
@@ -987,12 +937,10 @@ Suggested monitoring cadence: run this check weekly to catch pricing changes ear
       text += `**Description:** ${guide.description}\n`;
       text += `**URL:** /${guide.slug}\n`;
 
-      // Add related vendor data if this is a vendor-specific guide
       const offers = loadOffers();
       const changes = loadDealChanges();
       const slugLower = guide.slug.toLowerCase();
 
-      // Extract vendor names mentioned in the slug for context
       const relatedChanges = changes.filter(c => {
         const vendorSlug = c.vendor.toLowerCase().replace(/[^a-z0-9]+/g, "-");
         return slugLower.includes(vendorSlug) || vendorSlug.includes(slugLower.replace(/-alternatives$/, "").replace(/-vs-.*/, ""));
@@ -1008,8 +956,6 @@ Suggested monitoring cadence: run this check weekly to catch pricing changes ear
       return { contents: [{ uri: `agentdeals://guide/${slug}`, text, mimeType: "text/plain" }] };
     }
   );
-
-  // --- Tool 5: register_agent ---
 
   server.registerTool(
     "register_agent",
@@ -1076,8 +1022,6 @@ Suggested monitoring cadence: run this check weekly to catch pricing changes ear
     }
   );
 
-  // --- Tool 6: get_referral_code ---
-
   server.registerTool(
     "get_referral_code",
     {
@@ -1132,7 +1076,6 @@ Suggested monitoring cadence: run this check weekly to catch pricing changes ear
     }
   );
 
-  // --- Tool 7: check_balance ---
   server.registerTool(
     "check_balance",
     {
@@ -1192,7 +1135,6 @@ Suggested monitoring cadence: run this check weekly to catch pricing changes ear
     }
   );
 
-  // --- Tool 8: request_payout ---
   server.registerTool(
     "request_payout",
     {
@@ -1226,7 +1168,6 @@ Suggested monitoring cadence: run this check weekly to catch pricing changes ear
           };
         }
 
-        // Check x402 address
         if (!agent.x402_address) {
           return {
             isError: true,
@@ -1234,7 +1175,6 @@ Suggested monitoring cadence: run this check weekly to catch pricing changes ear
           };
         }
 
-        // Check balance
         const balance = getAgentBalance(agent.id);
         const confirmedBalance = balance ? balance.confirmed_balance : 0;
         if (confirmedBalance < MINIMUM_PAYOUT_AMOUNT) {
@@ -1244,7 +1184,6 @@ Suggested monitoring cadence: run this check weekly to catch pricing changes ear
           };
         }
 
-        // Execute x402 transfer
         const correlationId = generateCorrelationId();
         const transferResult = await executeTransfer({
           to_address: agent.x402_address,
@@ -1260,7 +1199,6 @@ Suggested monitoring cadence: run this check weekly to catch pricing changes ear
           };
         }
 
-        // Record payout
         const entry = recordPayout({
           agent_id: agent.id,
           x402_address: agent.x402_address,
@@ -1296,7 +1234,6 @@ Suggested monitoring cadence: run this check weekly to catch pricing changes ear
     }
   );
 
-  // --- Tool 9: submit_referral_code ---
   server.registerTool(
     "submit_referral_code",
     {
@@ -1365,7 +1302,6 @@ Suggested monitoring cadence: run this check weekly to catch pricing changes ear
     }
   );
 
-  // --- Tool 10: my_referral_codes ---
   server.registerTool(
     "my_referral_codes",
     {
@@ -1419,8 +1355,6 @@ Suggested monitoring cadence: run this check weekly to catch pricing changes ear
       }
     }
   );
-
-  // --- Tool 11: leaderboard ---
 
   server.registerTool(
     "leaderboard",
@@ -1525,14 +1459,10 @@ Suggested monitoring cadence: run this check weekly to catch pricing changes ear
     }
   );
 
-  // --- MCP Apps UI Resources ---
   registerMcpAppsResources(server);
 
   return server;
 }
-
-// --- MCP Server Card (/.well-known/mcp.json) ---
-// Generated from actual server configuration so it stays in sync
 
 export function getServerCard(baseUrl: string) {
   return {

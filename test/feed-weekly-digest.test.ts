@@ -75,12 +75,6 @@ describe("/feed.xml weekly digest feed", () => {
     proc = await startHttpServer();
     const res = await fetch(`http://localhost:${serverPort}/feed.xml`);
     const xml = await res.text();
-    // Each weekly-digest entry links to its /this-week page: the current week
-    // (w=0) to the bare /this-week, prior weeks (w>=1) to /this-week?week=N.
-    // Weeks with no tracked pricing changes are omitted from the feed, so which
-    // specific weeks appear is data-dependent (the current week is often empty
-    // early on). Assert the URL format of whatever entries exist rather than
-    // assuming a particular week is always present.
     const hrefs = [...xml.matchAll(/<link href="([^"]*\/this-week[^"]*)" rel="alternate"\/>/g)].map((m) => m[1]);
     assert.ok(hrefs.length > 0, "Should have at least one /this-week entry link");
     for (const href of hrefs) {

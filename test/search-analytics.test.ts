@@ -129,12 +129,8 @@ describe("search analytics", () => {
     assert.strictEqual(analytics.top_queries_7d.length, 2);
   });
 
-  // #1018 Defect C. zero_result_queries_7d is read as "queries the catalog has nothing
-  // for" and drives what we go add. Counting a search the *caller* narrowed to nothing
-  // put queries we cover perfectly well at the top of that list.
   describe("catalog gaps vs caller filters", () => {
     it("does not call a search a gap when the caller's own filter emptied it", () => {
-      // "auth0 alternative" matches 10 offers; the caller's stability filter removed them.
       recordSearchQuery("auth0 alternative", 0, { filtered: true, unfilteredCount: 10, source: "mcp" });
       const analytics = getSearchAnalytics();
       assert.deepStrictEqual(analytics.zero_result_queries_7d, [], "we cover this query — it is not a gap");
@@ -166,9 +162,6 @@ describe("search analytics", () => {
     });
 
     it("falls back to results_count for entries recorded before this existed", () => {
-      // A pre-#1018-C ring entry carries no unfiltered_count. Reading it as a gap is the
-      // old behaviour, and the only honest reading of a record that never captured the
-      // distinction.
       recordSearchQuery("legacy-zero", 0);
       assert.deepStrictEqual(getSearchAnalytics().zero_result_queries_7d, [{ query: "legacy-zero", count: 1 }]);
     });

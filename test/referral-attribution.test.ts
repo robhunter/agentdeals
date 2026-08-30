@@ -12,7 +12,6 @@ const REQUESTS_PATH = path.join(SCRATCH, "referral_requests.json");
 process.env.AGENTDEALS_REFERRAL_REQUESTS_PATH = REQUESTS_PATH;
 const AGENTS_PATH = path.join(__dirname, "..", "data", "agents.json");
 
-// Unit tests for referral-requests module
 const { logReferralRequest, getRequestsByAgent, getRequestById, resetReferralRequestsCache } = await import("../dist/referral-requests.js");
 const { registerAgent, resetAgentsCache } = await import("../dist/agents.js");
 
@@ -103,8 +102,6 @@ describe("Request Lookups", () => {
   });
 });
 
-// --- HTTP endpoint tests ---
-
 let serverPort = 0;
 
 function startHttpServer(): Promise<ChildProcess> {
@@ -169,7 +166,6 @@ describe("GET /api/referral/:vendor", () => {
   });
 
   it("logs attribution for authenticated caller", async () => {
-    // Register an agent
     const regRes = await fetch(`http://localhost:${serverPort}/api/agents/register`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -177,7 +173,6 @@ describe("GET /api/referral/:vendor", () => {
     });
     const regData = await regRes.json() as any;
 
-    // Request referral with auth
     const res = await fetch(`http://localhost:${serverPort}/api/referral/Railway`, {
       headers: { Authorization: `Bearer ${regData.api_key}` },
     });
@@ -186,7 +181,6 @@ describe("GET /api/referral/:vendor", () => {
     assert.strictEqual(data.attributed, true);
     assert.strictEqual(data.vendor, "Railway");
 
-    // Verify the request was logged
     resetReferralRequestsCache();
     const raw = JSON.parse(fs.readFileSync(REQUESTS_PATH, "utf-8"));
     const agentRequests = raw.referral_requests.filter((r: any) => r.vendor === "Railway");

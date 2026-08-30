@@ -1,7 +1,6 @@
 import { describe, it } from "node:test";
 import assert from "node:assert";
 
-// Import the exported function from the JS script
 const { findStaleEntries } = await import("../scripts/check-staleness.js");
 
 describe("staleness detection", () => {
@@ -43,8 +42,6 @@ describe("staleness detection", () => {
       { vendor: "A", category: "Hosting", verifiedDate: "2026-03-10" },
       { vendor: "B", category: "Hosting", verifiedDate: "2026-03-14" },
     ];
-    // With threshold 2, entries older than 2 days from March 15 are stale
-    // A is 5 days old (stale), B is 1 day old (fresh)
     const stale = findStaleEntries(offers, 2, now);
     assert.strictEqual(stale.length, 1);
     assert.strictEqual(stale[0].vendor, "A");

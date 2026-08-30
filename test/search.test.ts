@@ -6,7 +6,6 @@ import { fileURLToPath } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-// Start a local HTTP server so stdio MCP tests hit local data (not production API)
 let LOCAL_API_PORT = 0;
 let LOCAL_API_URL = "";
 
@@ -63,7 +62,6 @@ function sendMcpMessages(
               resolve(responses);
             }
           } catch {
-            // not valid JSON yet
           }
         }
       }
@@ -605,7 +603,6 @@ describe("search sorting", () => {
 
       const result = responses.find((r: any) => r.id === 2) as any;
       const body = JSON.parse(result.result.content[0].text);
-      // First entry in index is Vercel
       assert.strictEqual(body.results[0].vendor, "Vercel");
     } finally {
       proc.kill();
@@ -615,7 +612,6 @@ describe("search sorting", () => {
   it("sorting works with pagination", async () => {
     const proc = startServer();
     try {
-      // Get first page sorted by vendor
       const responses1 = (await sendMcpMessages(proc, [
         ...INIT_MESSAGES,
         {
@@ -641,7 +637,6 @@ describe("search sorting", () => {
       const page1 = JSON.parse((responses1.find((r: any) => r.id === 2) as any).result.content[0].text);
       const page2 = JSON.parse((responses1.find((r: any) => r.id === 3) as any).result.content[0].text);
 
-      // Last vendor on page 1 should come before first vendor on page 2
       const lastPage1 = page1.results[page1.results.length - 1].vendor;
       const firstPage2 = page2.results[0].vendor;
       assert.ok(
@@ -672,7 +667,6 @@ describe("search relevance ranking", () => {
       const body = JSON.parse(result.result.content[0].text);
       const top5 = body.results.slice(0, 5);
 
-      // All top 5 should be in the Databases category
       for (const offer of top5) {
         assert.strictEqual(
           offer.category,
@@ -757,7 +751,6 @@ describe("search relevance ranking", () => {
       const body = JSON.parse(result.result.content[0].text);
       const vendors = body.results.map((o: any) => o.vendor);
 
-      // Should be sorted alphabetically, not by relevance
       for (let i = 1; i < vendors.length; i++) {
         assert.ok(
           vendors[i - 1].localeCompare(vendors[i]) <= 0,
@@ -1013,7 +1006,6 @@ describe("search_deals vendor alternatives", () => {
   it("returns empty alternatives array for vendor with no same-category alternatives", async () => {
     const proc = startServer();
     try {
-      // Use a vendor that's likely alone in its category — find one via search first
       const searchResponses = (await sendMcpMessages(proc, [
         ...INIT_MESSAGES,
         {
@@ -1027,7 +1019,6 @@ describe("search_deals vendor alternatives", () => {
       const searchResult = searchResponses.find((r: any) => r.id === 2) as any;
       assert.ok(!searchResult.result.isError);
       const offer = JSON.parse(searchResult.result.content[0].text);
-      // Alternatives should be capped at 5
       assert.ok(offer.alternatives.length <= 5);
     } finally {
       proc.kill();
@@ -1037,7 +1028,6 @@ describe("search_deals vendor alternatives", () => {
   it("caps alternatives at 5", async () => {
     const proc = startServer();
     try {
-      // Databases category has many vendors, so alternatives should be capped
       const responses = (await sendMcpMessages(proc, [
         ...INIT_MESSAGES,
         {
@@ -1052,7 +1042,6 @@ describe("search_deals vendor alternatives", () => {
       assert.ok(!result.result.isError);
       const offer = JSON.parse(result.result.content[0].text);
       assert.ok(offer.alternatives.length <= 5);
-      // relatedVendors should match alternatives vendor names
       assert.deepStrictEqual(
         offer.relatedVendors,
         offer.alternatives.map((a: any) => a.vendor)
@@ -1089,7 +1078,6 @@ describe("compare_vendors tool", () => {
       assert.ok(typeof comparison.vendor_b.description === "string");
       assert.ok(Array.isArray(comparison.vendor_a.deal_changes));
       assert.ok(Array.isArray(comparison.vendor_b.deal_changes));
-      // compare_vendors includes risk by default
       assert.ok(comparison.risk);
     } finally {
       proc.kill();
@@ -1182,7 +1170,6 @@ describe("compare_vendors tool", () => {
       const result = responses.find((r: any) => r.id === 2) as any;
       assert.ok(result.result.isError);
       const text = result.result.content[0].text;
-      // Both should be mentioned as not found
       assert.ok(text.includes("zzzzz"));
       assert.ok(text.includes("yyyyy"));
     } finally {
@@ -1258,12 +1245,10 @@ describe("response_format=concise", () => {
       const body = JSON.parse(result.result.content[0].text);
       assert.ok(body.results.length > 0);
       const offer = body.results[0];
-      // Concise: only vendor, tier, description, url
       assert.ok(typeof offer.vendor === "string");
       assert.ok(typeof offer.tier === "string");
       assert.ok(typeof offer.description === "string");
       assert.ok(typeof offer.url === "string");
-      // Should NOT have enriched fields
       assert.strictEqual(offer.category, undefined);
       assert.strictEqual(offer.tags, undefined);
       assert.strictEqual(offer.risk_level, undefined);
@@ -1293,12 +1278,10 @@ describe("response_format=concise", () => {
       const body = JSON.parse(result.result.content[0].text);
       assert.ok(body.changes.length > 0);
       const change = body.changes[0];
-      // Concise: only vendor, change_type, date, summary
       assert.ok(typeof change.vendor === "string");
       assert.ok(typeof change.change_type === "string");
       assert.ok(typeof change.date === "string");
       assert.ok(typeof change.summary === "string");
-      // Should NOT have full fields
       assert.strictEqual(change.previous_state, undefined);
       assert.strictEqual(change.current_state, undefined);
       assert.strictEqual(change.impact, undefined);

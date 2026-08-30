@@ -1,16 +1,4 @@
 #!/usr/bin/env bash
-#
-# Mutation testing for the rule that withholds a stability judgement when we
-# could not read the page a record cites.
-#
-# Each mutation breaks one property the change is supposed to hold, rebuilds,
-# and runs the tests that claim to pin it. A surviving mutation means no test
-# is asserting that property. A mutation that changes no file proves nothing
-# and is reported as a survivor rather than silently passing.
-#
-# Usage:
-#   bash scripts/mutate-1113.sh
-#
 set -u
 
 REPO="$(cd "$(dirname "$0")/.." && pwd)"

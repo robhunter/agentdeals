@@ -14,8 +14,6 @@ const {
   stabilityLevel,
 } = require("./index.cjs");
 
-// --- parseDependencies ---
-
 describe("parseDependencies", () => {
   const tmpDir = path.join(__dirname, ".tmp-test");
   const tmpPkg = path.join(tmpDir, "package.json");
@@ -61,8 +59,6 @@ describe("parseDependencies", () => {
   });
 });
 
-// --- loadVendorMap ---
-
 describe("loadVendorMap", () => {
   it("loads mappings array", () => {
     const mappings = loadVendorMap();
@@ -78,8 +74,6 @@ describe("loadVendorMap", () => {
     }
   });
 });
-
-// --- matchDependenciesToVendors ---
 
 describe("matchDependenciesToVendors", () => {
   const mappings = [
@@ -105,9 +99,6 @@ describe("matchDependenciesToVendors", () => {
 
   it("groups multiple packages under same vendor", () => {
     const result = matchDependenciesToVendors(["supabase", "@supabase/supabase-js"], mappings);
-    // supabase matches exact, @supabase/supabase-js matches scope — but both go to Supabase
-    // Actually, "supabase" matches "@supabase/*" first since scope check happens first
-    // Let's check what happens
     assert.equal(result.size, 1);
     assert.ok(result.has("Supabase"));
   });
@@ -123,8 +114,6 @@ describe("matchDependenciesToVendors", () => {
   });
 });
 
-// --- slugify ---
-
 describe("slugify", () => {
   it("converts vendor names to URL slugs", () => {
     assert.equal(slugify("Supabase"), "supabase");
@@ -133,8 +122,6 @@ describe("slugify", () => {
     assert.equal(slugify("MongoDB Atlas"), "mongodb-atlas");
   });
 });
-
-// --- stabilityLevel / meetsThreshold ---
 
 describe("stabilityLevel", () => {
   it("orders stability correctly", () => {
@@ -158,8 +145,6 @@ describe("meetsThreshold", () => {
     assert.equal(meetsThreshold("stable", "volatile"), false);
   });
 });
-
-// --- formatSummaryTable ---
 
 describe("formatSummaryTable", () => {
   it("generates markdown table with vendor data", () => {
@@ -199,8 +184,6 @@ describe("formatSummaryTable", () => {
   });
 });
 
-// --- formatPRComment ---
-
 describe("formatPRComment", () => {
   it("returns null when no vendors meet threshold", () => {
     const vendorDataMap = new Map([
@@ -223,7 +206,7 @@ describe("formatPRComment", () => {
     const result = formatPRComment(vendorDataMap, vendorPackagesMap, "watch");
     assert.ok(result !== null);
     assert.ok(result.includes("Supabase"));
-    assert.ok(!result.includes("Stripe")); // Stable, below threshold
+    assert.ok(!result.includes("Stripe"));
     assert.ok(result.includes("Alert"));
   });
 
@@ -234,8 +217,6 @@ describe("formatPRComment", () => {
     assert.equal(result, null);
   });
 });
-
-// --- Integration: full vendor map matching ---
 
 describe("vendor map integration", () => {
   it("matches real-world dependencies to vendors", () => {
@@ -251,8 +232,8 @@ describe("vendor map integration", () => {
       "inngest",
       "@upstash/redis",
       "posthog-node",
-      "express", // not mapped
-      "react",   // not mapped
+      "express",
+      "react",
     ];
     const result = matchDependenciesToVendors(deps, mappings);
     assert.ok(result.has("Supabase"));

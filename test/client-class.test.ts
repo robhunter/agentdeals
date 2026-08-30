@@ -1,10 +1,3 @@
-// Client-class attribution — the pure classifier (#1019).
-//
-// The whole point of the issue is that we were dropping AI-agent traffic on the floor,
-// so the cases that matter most are the ones where a wrong answer is invisible: a
-// ChatGPT-User read as a crawler, an Applebot-Extended read as a search engine, a
-// headless browser read as a human. Each of those is asserted by name below.
-
 import { describe, it } from "node:test";
 import assert from "node:assert";
 const {
@@ -15,7 +8,6 @@ const {
 } = await import("../src/client-class.ts");
 type ClientClass = import("../src/client-class.ts").ClientClass;
 
-// Real strings, as they appear in the wild and in our own request log.
 const UA = {
   chatgptUser: "Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko); compatible; ChatGPT-User/1.0; +https://openai.com/bot",
   oaiSearch: "Mozilla/5.0 (compatible; OAI-SearchBot/1.0; +https://openai.com/searchbot)",
@@ -74,9 +66,6 @@ describe("classifyClient — AI agents", () => {
     });
   }
 
-  // These are the exact user agents the issue found in the request log being dropped by
-  // `isBot()`. If any of them ever reads as anything but ai_agent, we are back to
-  // discarding the traffic the product exists to measure.
   it("counts every AI agent the old isBot() filter discarded", () => {
     const discarded = [UA.chatgptUser, UA.oaiSearch, UA.claudeUser, UA.gptbot, UA.claudeBot];
     for (const ua of discarded) {
@@ -107,7 +96,6 @@ describe("classifyClient — ordering traps", () => {
 
   it("a Mozilla-shaped UA that also declares itself a bot is not a browser", () => {
     assert.equal(classifyClient(UA.unknownBot).client_class, "other_bot");
-    // ...and the browser rules would have matched it, which is why the guard exists.
     assert.match(UA.unknownBot, /Mozilla/);
   });
 });
@@ -133,7 +121,6 @@ describe("classifyClient — the rest of the taxonomy", () => {
     for (const key of ["chrome", "safariIos", "firefox", "edge"] as const) {
       assert.equal(classifyClient(UA[key]).client_class, "browser", key);
     }
-    // Edge's UA contains Chrome/ and Safari/ too; the more specific token has to win.
     assert.equal(classifyClient(UA.edge).family, "edge");
   });
 
@@ -164,8 +151,6 @@ describe("classifyClient — invariants", () => {
   });
 
   it("never returns the user agent, or any fragment of it, as the family — NO PII", () => {
-    // A long, distinctive UA. The family must come from the rule table, so nothing
-    // request-derived can reach storage through it.
     const nonce = "SECRET-abc123-DEVICE-ID";
     for (const shape of [`Mozilla/5.0 (${nonce}) Chrome/126.0`, `curl/8.5.0 ${nonce}`, nonce]) {
       const { family } = classifyClient(shape);
@@ -175,7 +160,6 @@ describe("classifyClient — invariants", () => {
   });
 
   it("is pure — repeated calls give the same answer", () => {
-    // Regex objects with the /g flag carry lastIndex state and would fail this.
     for (const ua of Object.values(UA)) {
       const a = classifyClient(ua);
       const b = classifyClient(ua);
@@ -214,8 +198,6 @@ describe("classifyRequest — internal attribution", () => {
 
   it("the internal user-agent marker works, and is an additional signal not the mechanism", () => {
     assert.equal(classifyRequest("/vendor/neon", UA.internal).client_class, "internal");
-    // The documented gap: a bare curl against a content page cannot be inferred as ours.
-    // It must land in sdk_client — never in ai_agent, which is the number we quote.
     assert.equal(classifyRequest("/best/free-databases", UA.curl).client_class, "sdk_client");
   });
 

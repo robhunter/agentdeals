@@ -7,7 +7,6 @@ import { fileURLToPath } from "node:url";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const serverPath = path.join(__dirname, "..", "dist", "serve.js");
 
-// Start local HTTP server and wait for it to be ready
 async function startHttpServer(): Promise<{ proc: ChildProcess; port: number }> {
   const proc = spawn("node", [serverPath], {
     env: { ...process.env, PORT: "0" },

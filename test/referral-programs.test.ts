@@ -6,7 +6,6 @@ import { fileURLToPath } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-// Unit tests for referral_program metadata in data
 const { loadOffers } = await import("../dist/data.js");
 const offers = loadOffers();
 
@@ -56,7 +55,6 @@ describe("referral_program metadata", () => {
   });
 });
 
-// HTTP server tests
 let serverPort = 0;
 let serverProc: ChildProcess | null = null;
 

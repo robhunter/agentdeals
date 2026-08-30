@@ -1,16 +1,3 @@
-// End-to-end verification for #1024, the agent attribution beacon.
-//
-// Unit and wiring tests cover the logic and the hooks. This covers what neither can: the
-// real dist/serve.js, against a stored snapshot with today's production shape, driving
-// real HTTP and a real MCP session through it — then reading the numbers back off the
-// live endpoints and checking that a full flush round-trip preserves them.
-//
-// The property this exists to prove is the one the whole issue turns on: recording a
-// signal costs ZERO additional Redis commands. It counts every command the server issues
-// and asserts the count is unchanged by traffic.
-//
-// Usage: node scripts/e2e-1024.mjs
-
 import { createServer } from "node:http";
 import { spawn } from "node:child_process";
 
@@ -18,7 +5,6 @@ const store = new Map();
 const lists = new Map();
 const commands = [];
 
-// --- Fake Upstash -----------------------------------------------------------------
 const upstash = createServer((req, res) => {
   let body = "";
   req.on("data", c => (body += c));
@@ -63,8 +49,6 @@ const upstash = createServer((req, res) => {
 
 const today = new Date().toISOString().slice(0, 10);
 
-// Today's live shape, post-#1029: outcomes already split, and a class×route map with real
-// ai_agent decision-page hits in it so the denominator has something to be.
 const SEEDED = {
   days: { [today]: { total: 916, "/": 49, "/vendor/:slug": 217, "/category/:slug": 123 } },
   referrers: {},
@@ -90,7 +74,6 @@ const SEEDED = {
   outcome_split_from: today,
 };
 
-// 26 + 2 + 1 = 29. /criteria is not a decision page and must not count.
 const EXPECTED_DENOMINATOR = 29;
 
 const OPERATOR_CREDENTIAL = "e2e-1024-operator-credential";
@@ -139,7 +122,6 @@ const signals = () =>
   fetch(url("/api/signals"), { headers: { Authorization: `Bearer ${OPERATOR_CREDENTIAL}` } }).then(r => r.json());
 const publishedSignals = () => fetch(url("/api/signals")).then(r => r.json());
 
-// Let the boot load land before counting commands.
 await new Promise(r => setTimeout(r, 800));
 
 console.log("\n1. The endpoint accepts a signal over real HTTP");
@@ -202,8 +184,6 @@ console.log("\n5. The denominator is the decision pages, ai_agent only");
   check("no rate below the minimum sample", r.today.report_rate, null);
   checkTrue("and it says why", /below minimum sample/.test(r.today.rate_note), r.today.rate_note);
   check("today has a full day of fetch data behind it", r.today.denominator_days_available, 1);
-  // Signals are kept 30 days, the counters they divide by 7 — so a 30-day rate would
-  // divide a longer numerator by a shorter denominator. It must refuse rather than round.
   checkTrue("the 30-day window refuses a rate its denominator cannot support",
     r.last_30d.report_rate === null && /denominator covers \d+ of 30 days/.test(r.last_30d.rate_note),
     r.last_30d.rate_note);
@@ -218,7 +198,6 @@ console.log("\n6. Nothing per-vendor reaches a public surface");
     !/neon/i.test(page));
   checkTrue("and the note prose is never rendered", !/serverless postgres/.test(page));
 
-  // #1083 — the operator reads the full report with a credential; nobody else does.
   const published = await publishedSignals();
   const withheld = [
     "qualifying_fetches", "qualifying_fetches_sdk_client", "report_rate", "rate_note",
@@ -312,7 +291,6 @@ console.log("\n8. MCP: a real initialize, then a real tool call");
   const callText = await call.text();
   checkTrue("tool call succeeded", call.status === 200, String(call.status));
   checkTrue("tool result carries the signal footer", /Recommended one of these\?/.test(callText));
-  // The footer must be a separate content block, so the first one still parses as JSON.
   const payload = callText.split("\n").filter(l => l.startsWith("data: ")).map(l => JSON.parse(l.slice(6)))[0];
   const blocks = payload?.result?.content ?? [];
   checkTrue("the JSON block is still parseable", (() => {

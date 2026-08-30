@@ -26,8 +26,6 @@ const SCALE_DESCRIPTIONS: Record<Scale, string> = {
   growth: "Exceeding most free tiers — established product with significant usage",
 };
 
-// Scale multipliers for rough cost estimation
-// hobby = free, startup = $5-50/service, growth = $25-200/service
 const SCALE_COST_RANGES: Record<Scale, { min: number; max: number }> = {
   hobby: { min: 0, max: 0 },
   startup: { min: 5, max: 50 },
@@ -35,7 +33,6 @@ const SCALE_COST_RANGES: Record<Scale, { min: number; max: number }> = {
 };
 
 function extractFreeTierLimits(offer: Offer): string {
-  // Extract the most useful part of the description (up to 200 chars)
   const desc = offer.description;
   if (desc.length <= 200) return desc;
   return desc.slice(0, 197) + "...";
@@ -85,7 +82,6 @@ function generateWarnings(
 
     const desc = offer.description.toLowerCase();
 
-    // Warn about tight free tier limits at startup/growth scale
     if (scale !== "hobby") {
       if (desc.includes("1,000") || desc.includes("1000 ")) {
         warnings.push(
@@ -104,7 +100,6 @@ function generateWarnings(
       }
     }
 
-    // Warn about recent pricing changes
     if (svc.recent_changes && svc.recent_changes.length > 0) {
       warnings.push(
         `${svc.vendor} has had recent pricing changes — review current terms`
@@ -156,7 +151,6 @@ export function estimateCosts(
       estimated_monthly_cost: estimatedCost,
     };
 
-    // Only suggest alternatives for paid tiers or when scaling past free
     if (scale !== "hobby" || offer.tier !== "Free") {
       const alt = findFreeAlternative(offer);
       if (alt) svc.free_alternative = alt;
@@ -176,7 +170,6 @@ export function estimateCosts(
     );
   }
 
-  // Calculate totals
   let totalEstimated: string;
   let savingsAvailable: string;
   const knownCount = services.length - unknownVendors.length;

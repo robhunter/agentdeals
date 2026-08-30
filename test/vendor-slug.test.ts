@@ -138,8 +138,6 @@ describe("vendor-slug: resolveVendorSlug", () => {
   });
 
   it("returns type=redirect (generalization) for input more specific than any known slug", () => {
-    // Construct a super-specific input not in vendorSlugMap by appending to a known slug.
-    // The generalizations branch should resolve it back to the longest matching known slug.
     const input = "amazon-kiro-does-not-exist";
     assert.ok(!vendorSlugMap.has(input), "Test premise: input must not be a known slug");
     const result = resolveVendorSlug(input);
@@ -150,9 +148,6 @@ describe("vendor-slug: resolveVendorSlug", () => {
   });
 
   it("does not false-match when input is embedded mid-word in a known slug", () => {
-    // "tally" appears inside "totally-bogus-slug-xyz" but NOT at a segment boundary.
-    // isSubSlug's boundary semantics prevent this from surfacing as a completion.
-    // Regression guard for the op-learning #64 bug (PR #990).
     const result = resolveVendorSlug("totally-bogus-slug-xyz");
     assert.strictEqual(result.type, "none");
   });

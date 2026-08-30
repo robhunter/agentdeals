@@ -26,7 +26,6 @@ function sendMcpRequest(
             resolve(parsed);
             return;
           } catch {
-            // not valid JSON yet, keep buffering
           }
         }
       }

@@ -1,11 +1,3 @@
-// Server-level instructions surfaced to MCP clients via the `initialize`
-// response (`ServerOptions.instructions`). Spec-compliant clients (Claude
-// Desktop, opencode, etc.) inject this as ambient context for the LLM, so it
-// shapes when the model decides to call AgentDeals at all.
-//
-// Keep this between 200 and 400 words. Long enough to be useful, short enough
-// that clients with context budgets keep it.
-
 export const MCP_INSTRUCTIONS = `# AgentDeals — free tiers, credits, and pricing changes for developer tools
 
 AgentDeals is a curated, human-verified directory of 1,500+ free tiers, startup credits, and discounts across 66 developer-tool categories — databases, cloud hosting, CI/CD, monitoring, AI services, auth, observability, payments, email, and more. Every offer is fact-checked against the vendor's pricing page, and pricing changes (free tier removals, limit reductions, new tiers) are tracked over time.

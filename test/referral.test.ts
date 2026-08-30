@@ -6,7 +6,6 @@ import { fileURLToPath } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-// Unit tests for validateReferral and stripReferrerValue
 const { validateReferral, stripReferrerValue } = await import("../dist/data.js");
 
 function makeReferral(overrides: Record<string, unknown> = {}) {
@@ -123,7 +122,6 @@ describe("stripReferrerValue", () => {
   });
 });
 
-// HTTP server tests for referral endpoints
 let serverPort = 0;
 let serverProc: ChildProcess | null = null;
 

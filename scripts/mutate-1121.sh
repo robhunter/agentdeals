@@ -1,17 +1,4 @@
 #!/usr/bin/env bash
-#
-# Mutation testing for the rule that the "when you'll outgrow it" threshold
-# states the period its own description states, invents none where the
-# description states none, and withholds where the stability verdict does.
-#
-# Each mutation breaks one property the change is supposed to hold, rebuilds,
-# and runs the tests that claim to pin it. A surviving mutation means no test
-# is asserting that property. A mutation that changes no file proves nothing
-# and is reported as a survivor rather than silently passing.
-#
-# Usage:
-#   bash scripts/mutate-1121.sh
-#
 set -u
 
 REPO="$(cd "$(dirname "$0")/.." && pwd)"
@@ -65,8 +52,6 @@ run_mutation() {
 }
 
 py() { python3 - "$@"; }
-
-# --- The period a description states is the period the page states ---
 
 m_absent_period_defaults_to_a_month() {
   py <<'PY'
@@ -189,8 +174,6 @@ s = s.replace('  return period.scope ? `${base} per ${period.scope}` : base;', '
 open(p, "w").write(s)
 PY
 }
-
-# --- The threshold withholds where the stability verdict withholds ---
 
 m_a_withheld_record_asserts_its_threshold() {
   py <<'PY'

@@ -1,18 +1,5 @@
 #!/usr/bin/env node
 
-/**
- * Audit every offer's cited source page: does it name the vendor, and does it
- * state any terms?
- *
- * Fetches each distinct `url` in the index once with the same fetcher the
- * detector uses, then answers both questions per offer. Writes a JSON report.
- *
- * Usage:
- *   node scripts/source-naming-audit.js --out /tmp/source-naming.json
- *   node scripts/source-naming-audit.js --urls https://a,https://b   # subset
- *   node scripts/source-naming-audit.js --limit 50
- */
-
 import { readFileSync, writeFileSync, existsSync, mkdirSync } from "node:fs";
 import { createHash } from "node:crypto";
 import { resolve, dirname, join } from "node:path";

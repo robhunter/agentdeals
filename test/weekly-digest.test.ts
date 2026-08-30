@@ -27,8 +27,6 @@ describe("getWeeklyDigest logic", () => {
 
     const digest = getWeeklyDigest();
 
-    // upcoming_deadlines is capped at 25 entries, sorted by date ascending
-    // Verify: deadlines are a subset of future changes, sorted, and properly structured
     assert.ok(digest.upcoming_deadlines.length <= 25, "Should be capped at 25 entries");
     assert.ok(digest.upcoming_deadlines.length > 0, "Should have at least one upcoming deadline");
     for (const d of digest.upcoming_deadlines) {

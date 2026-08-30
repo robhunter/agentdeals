@@ -11,33 +11,19 @@ const INDEX_PATH = resolve(__dirname, "..", "data", "index.json");
 const FETCH_TIMEOUT_MS = 15000;
 
 function extractTextContent(html) {
-  // Extract visible text content only — far more stable than hashing full HTML.
-  // Dynamic elements (nonces, hydration data, build hashes, session tokens)
-  // live in tags/attributes, not visible text.
   let cleaned = html;
-  // Remove entire head section (meta tags, scripts, styles, link tags)
   cleaned = cleaned.replace(/<head[\s\S]*?<\/head>/gi, "");
-  // Remove script and style tags
   cleaned = cleaned.replace(/<script[\s\S]*?<\/script>/gi, "");
   cleaned = cleaned.replace(/<style[\s\S]*?<\/style>/gi, "");
-  // Remove SVG content (icon hashes change)
   cleaned = cleaned.replace(/<svg[\s\S]*?<\/svg>/gi, "");
-  // Remove all HTML tags, keeping text content
   cleaned = cleaned.replace(/<[^>]+>/g, " ");
-  // Decode common HTML entities
   cleaned = cleaned.replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">")
     .replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&nbsp;/g, " ");
-  // Remove remaining HTML entities
   cleaned = cleaned.replace(/&#?\w+;/g, " ");
-  // Remove hex strings (build hashes, trace IDs) — 8+ hex chars
   cleaned = cleaned.replace(/\b[0-9a-f]{8,}\b/gi, "");
-  // Remove UUIDs
   cleaned = cleaned.replace(/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/gi, "");
-  // Remove ISO timestamps and date-time strings
   cleaned = cleaned.replace(/\d{4}-\d{2}-\d{2}[T ]\d{2}:\d{2}[^\s]*/g, "");
-  // Remove Unix timestamps (10-13 digits)
   cleaned = cleaned.replace(/\b\d{10,13}\b/g, "");
-  // Normalize whitespace
   cleaned = cleaned.replace(/\s+/g, " ").trim();
   return cleaned;
 }
@@ -85,7 +71,6 @@ async function main() {
     }
   }
 
-  // Load existing hashes
   let previousHashes = {};
   const isBaseline = !existsSync(HASHES_PATH);
   if (!isBaseline) {
@@ -126,7 +111,6 @@ async function main() {
     }
   }
 
-  // Write updated hashes
   writeFileSync(HASHES_PATH, JSON.stringify(currentHashes, null, 2) + "\n");
 
   console.log("");

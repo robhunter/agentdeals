@@ -1,11 +1,3 @@
-// #1025 part 2: the surfaces that were still resolving order by file order,
-// by a risk bucket, or by our commercial interest.
-//
-// The enumeration behind this file matters more than any single assertion:
-// three of these were recommendation surfaces nobody had listed, and one of
-// them (`/vendor/:slug` alternatives) sits on the highest-traffic page type on
-// the site while being decided by nothing but the order of data/index.json.
-
 import { describe, it, before, after } from "node:test";
 import assert from "node:assert";
 import { spawn, type ChildProcess } from "node:child_process";
@@ -112,8 +104,6 @@ describe("/alternative-to/:slug", () => {
   });
 
   it("does not empty out a page whose category peers are all eligibility-gated", async () => {
-    // 91 /alternative-to pages would have gone to zero alternatives if the
-    // gates removed offers here the way they do on a /best/ page.
     const { status, text } = await get("/alternative-to/brex");
     assert.strictEqual(status, 200);
     const shown = (text.match(/class="alt-vendor-name"/g) ?? []).length;
@@ -157,7 +147,6 @@ describe("/referral-programs stops being ordered by our own money", () => {
     const { text } = await get("/referral-programs");
     const tables = text.split("<table class=\"programs-table\">").length - 1;
     assert.strictEqual(tables, 2, "expected exactly two tables, one per section");
-    // Every "Use our code" link must be inside the first table.
     const secondTableAt = text.indexOf("<table class=\"programs-table\">", text.indexOf("<table class=\"programs-table\">") + 1);
     const paidLinksAfterSplit = text.slice(secondTableAt).match(/status-active/g) ?? [];
     assert.strictEqual(paidLinksAfterSplit.length, 0, "a monetized link leaked into the unpaid section");
@@ -165,16 +154,12 @@ describe("/referral-programs stops being ordered by our own money", () => {
 
   it("orders within a section by rotation, not the alphabet", async () => {
     const { text } = await get("/referral-programs");
-    // The unpaid section — the second table — is the larger of the two, and is
-    // the one this pins.
     const secondBodyAt = text.indexOf("<tbody>", text.indexOf("</tbody>"));
     const secondTable = text.slice(secondBodyAt, text.indexOf("</tbody>", secondBodyAt));
     const vendors = [...secondTable.matchAll(/class="vendor-link">([^<]+)</g)].map((m) => m[1]);
     assert.ok(vendors.length >= 4, `expected several unpaid programmes, got ${vendors.length}`);
     assert.notDeepStrictEqual(vendors, [...vendors].sort((a, b) => a.localeCompare(b)), "still alphabetical inside the section");
 
-    // Pinned to the rotation the module actually produces over the source
-    // order, so reintroducing any other sort fails here.
     const { rotateListing } = await import("../src/ranking.ts");
     const { hasOurReferralLink } = await import("../dist/referral-surfaces.js");
     const index = JSON.parse(readFileSync(path.join(REPO, "data", "index.json"), "utf8")) as {
@@ -226,9 +211,6 @@ describe("the criteria are discoverable by an agent that never renders HTML", ()
   });
 });
 
-// #1166: /criteria offers a recompute. A surface that ranks and then drops its
-// tie_break turns that offer into an assertion, which is what this enumeration
-// exists to prevent. Adding a ranked surface means adding a row here.
 const RANKED_SURFACES: Array<{
   queryKeyPrefix: string;
   publishedAt: string;

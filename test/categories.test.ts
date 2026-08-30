@@ -32,7 +32,6 @@ function sendMcpMessages(
               resolve(responses);
             }
           } catch {
-            // not valid JSON yet
           }
         }
       }
@@ -83,14 +82,12 @@ describe("search_deals category list", () => {
       assert.ok(Array.isArray(categories));
       assert.ok(categories.length > 0);
 
-      // Each category should have name and count
       for (const cat of categories) {
         assert.ok(typeof cat.name === "string");
         assert.ok(typeof cat.count === "number");
         assert.ok(cat.count > 0);
       }
 
-      // Verify categories are sorted alphabetically
       const names = categories.map((c: any) => c.name);
       const sorted = [...names].sort((a: string, b: string) => a.localeCompare(b));
       assert.deepStrictEqual(names, sorted);

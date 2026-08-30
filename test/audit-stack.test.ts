@@ -36,7 +36,6 @@ describe("auditStack logic", () => {
 
   it("detects gaps in infrastructure coverage", async () => {
     const { auditStack } = await import("../dist/data.js");
-    // Only providing a hosting vendor — should detect gaps in databases, auth, etc.
     const result = auditStack(["Vercel"]);
     assert.ok(result.gaps.length > 0, "Should detect missing categories");
     for (const gap of result.gaps) {
@@ -48,7 +47,6 @@ describe("auditStack logic", () => {
 
   it("detects risk from deal changes", async () => {
     const { auditStack } = await import("../dist/data.js");
-    // Vercel has pricing_restructured, Supabase has limits_reduced — both are caution
     const result = auditStack(["Vercel", "Supabase"]);
     assert.ok(result.risks_found >= 2, `Should find at least 2 risks, got ${result.risks_found}`);
     const vercel = result.services.find(s => s.vendor === "Vercel");

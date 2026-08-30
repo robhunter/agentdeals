@@ -27,7 +27,6 @@ const { resetReferralCodesCache } = await import("../dist/referral-codes.js");
 const { registerAgent, resetAgentsCache, updateAgentX402Address } = await import("../dist/agents.js");
 const { validateX402Address, setTransferFn, resetTransferFn, generateCorrelationId } = await import("../dist/x402.js");
 
-// Save original data
 let origLedger: string | null = null;
 let origBalances: string | null = null;
 let origRequests: string | null = null;
@@ -73,7 +72,6 @@ function resetFiles() {
   resetTransferFn();
 }
 
-/** Seed a submission record so a conversion on this code credits this agent. */
 function writeSubmittedCode(opts: { agent_id: string; vendor: string; code: string }) {
   const raw = JSON.parse(fs.readFileSync(CODES_PATH, "utf-8"));
   const now = new Date().toISOString();
@@ -99,7 +97,6 @@ function writeSubmittedCode(opts: { agent_id: string; vendor: string; code: stri
   resetReferralCodesCache();
 }
 
-/** Create an agent with confirmed balance ready for payout. */
 function setupAgentWithBalance(name: string, confirmedAmount: number, x402Address?: string) {
   const result = registerAgent({ name });
   const agentId = result.agent.id;
@@ -109,12 +106,10 @@ function setupAgentWithBalance(name: string, confirmedAmount: number, x402Addres
   }
 
   const pastDate = new Date();
-  pastDate.setDate(pastDate.getDate() - 60); // Well past clawback
+  pastDate.setDate(pastDate.getDate() - 60);
 
   writeSubmittedCode({ agent_id: agentId, vendor: "Railway", code: "TEST_CODE" });
 
-  // Record conversion with enough commission to produce the desired confirmed balance
-  // agent_share = commission * 0.4, so commission = confirmedAmount / 0.4
   const commission = Math.round((confirmedAmount / 0.4) * 100) / 100;
   recordConversion({
     vendor: "Railway",
@@ -123,10 +118,8 @@ function setupAgentWithBalance(name: string, confirmedAmount: number, x402Addres
     conversion_date: pastDate.toISOString().split("T")[0],
   });
 
-  // Reset cache to pick up fresh data
   resetLedgerCache();
 
-  // Confirm the entry (it's past clawback window)
   confirmEligibleEntries();
 
   return { agentId, apiKey: result.api_key };
@@ -298,7 +291,6 @@ describe("x402 transfer mock", () => {
     assert.strictEqual(result.tx_hash, "0xmocktx123");
     assert.strictEqual(result.chain, "base");
 
-    // Now record the payout
     const entry = recordPayout({
       agent_id: agentId,
       x402_address: "0x742d35Cc6634C0532925a3b844Bc9e7595f2bD18",
@@ -328,7 +320,6 @@ describe("x402 transfer mock", () => {
 
     assert.strictEqual(result.success, false);
 
-    // Balance should be unchanged
     const balance = getAgentBalance(agentId);
     assert.ok(balance);
     assert.strictEqual(balance.confirmed_balance, 50);
@@ -352,13 +343,11 @@ describe("payout endpoint integration", () => {
   });
 
   it("cannot payout pending balance (only confirmed)", () => {
-    // Create agent with pending (not confirmed) balance
     const result = registerAgent({ name: "PendingBot" });
     const agentId = result.agent.id;
 
     writeSubmittedCode({ agent_id: agentId, vendor: "Railway", code: "TEST_CODE" });
 
-    // Record conversion that will be within clawback window
     recordConversion({
       vendor: "Railway",
       referral_code: "TEST_CODE",
@@ -370,7 +359,6 @@ describe("payout endpoint integration", () => {
     assert.ok(balance.pending_balance > 0);
     assert.strictEqual(balance.confirmed_balance, 0);
 
-    // Payout should fail — only confirmed balance is withdrawable
     assert.throws(
       () => recordPayout({
         agent_id: agentId,

@@ -1,11 +1,3 @@
-// The shared selection module (#1025).
-//
-// This is the trust surface: it decides what we put in front of an agent as a
-// recommendation, and the product claim is that the answer is not for sale.
-// So the tests that matter most are the ones that would catch a thumb on the
-// scale — an input derived from our own copy, a vendor name reachable from the
-// scoring path, a tie-break that quietly favours whoever sorts first.
-
 import { describe, it } from "node:test";
 import assert from "node:assert";
 import { readFileSync } from "node:fs";
@@ -79,8 +71,6 @@ describe("tier classification", () => {
   });
 
   it("stops hiding the 290 offers the old hand-typed allowlist dropped", () => {
-    // findBestOffer() gated on {Free, Hobby, Open Source, Free Credits}. Every
-    // tier below was invisible to plan_stack purely because nobody typed it.
     for (const tier of ["Always Free", "Free OSS", "Free Forever", "Free Tier", "Free (Basic)", "Community", "Personal", "Developer", "Starter"]) {
       assert.strictEqual(classifyTier(tier).class, "free", `${tier} should be an ordinary free tier`);
     }
@@ -230,8 +220,6 @@ describe("recorded changes that must not move rank", () => {
   }
 
   it("Supabase and Neon stay in the top band despite their recorded changes", () => {
-    // The coverage-bias case: both have exactly one recorded negative change,
-    // which under a stability-scoring model put them 37th and 40th of 42.
     const dbs = index.offers.filter((o) => o.category === "Databases");
     const r = rankOffers(dbs, { queryKey: "best-of:Databases", changes: dealChanges, date: TODAY });
     for (const vendor of ["Supabase", "Neon"]) {
@@ -307,7 +295,6 @@ describe("tie-break", () => {
     const renamed = tied.map((o, i) => ({ ...o, vendor: `zzz-${100 - i}` }));
     const a = rankOffers(tied, { queryKey: "k", changes: [], date: TODAY });
     const b = rankOffers(renamed, { queryKey: "k", changes: [], date: TODAY });
-    // Same input positions land in the same output positions regardless of name.
     const posA = vendorsOf(a.ranked).map((v) => tied.findIndex((o) => o.vendor === v));
     const posB = vendorsOf(b.ranked).map((v) => renamed.findIndex((o) => o.vendor === v));
     assert.deepStrictEqual(posA, posB);
@@ -323,8 +310,6 @@ describe("tie-break", () => {
   });
 
   it("gives every member of a tie the top slot about equally often", () => {
-    // 3,650 consecutive dates over a 41-way tie. Expected 89.0 first places
-    // each; chi-square must clear the 99% critical value for df=40 (63.7).
     const N = 41;
     const DAYS = 3650;
     const items = Array.from({ length: N }, (_, i) => i);
@@ -341,8 +326,6 @@ describe("tie-break", () => {
     const chi2 = first.reduce((s, o) => s + (o - expected) ** 2 / expected, 0);
     assert.ok(chi2 < 63.7, `chi-square ${chi2.toFixed(1)} suggests a non-uniform tie-break`);
 
-    // And no residual file-order bias: first and last incoming index should sit
-    // at the middle of the distribution over time, like everyone else.
     const meanPos = positionSum.map((s) => s / DAYS);
     const centre = (N - 1) / 2;
     for (const idx of [0, N - 1]) {
@@ -363,7 +346,6 @@ describe("tie-break", () => {
       ...Array.from({ length: 20 }, (_, i) => offer({ vendor: `Clean${i}` })),
       offer({ vendor: "Stale", verifiedDate: "2026-04-01" }),
     ];
-    // Dates chosen so "Stale" is past 90 days but not yet past the 180-day gate.
     for (const date of ["2026-07-05", "2026-08-25", "2026-09-01", "2026-09-25"]) {
       const r = rankOffers(candidates, { queryKey: "k", changes: [], date });
       assert.strictEqual(r.ranked.length, 21, `${date}: nothing should be gated out`);
@@ -373,8 +355,6 @@ describe("tie-break", () => {
 
   it("rotateListing is stable across days — URL sets must not churn", () => {
     const vendors = Array.from({ length: 10 }, (_, i) => `V${i}`);
-    // Pinned to the date-free seed: which /compare/ pages exist must not depend
-    // on when the process happened to boot, or the site churns 300+ URLs a day.
     assert.deepStrictEqual(
       rotateListing(vendors, "compare-pairs:Databases"),
       seededShuffle(vendors, tieBreakSeed("", "compare-pairs:Databases", 0)),
@@ -387,9 +367,6 @@ describe("tie-break", () => {
 describe("no thumb on the scale", () => {
   const source = readFileSync(join(REPO, "src", "ranking.ts"), "utf8");
 
-  // Comments in this module exist precisely to explain which levers were
-  // removed and why, so they name the banned things. The assertions below are
-  // about executable code.
   const stripComments = (src: string) =>
     src.split("\n").filter((l) => !/^\s*(\*|\/\/|\/\*|\*\/)/.test(l)).join("\n");
   const code = stripComments(source);

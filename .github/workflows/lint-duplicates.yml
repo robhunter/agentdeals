@@ -19,8 +19,6 @@ permissions:
 jobs:
   lint-duplicates:
     runs-on: ubuntu-latest
-    # Advisory only — the script always exits 0. `continue-on-error` adds an
-    # extra belt so an accidental non-zero exit still does not block merges.
     continue-on-error: true
     steps:
       - uses: actions/checkout@v4

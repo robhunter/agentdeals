@@ -113,8 +113,6 @@ describe("Marketplace API Endpoints", () => {
     restoreOriginals();
   });
 
-  // --- POST /api/conversions ---
-
   it("POST /api/conversions records a conversion", async () => {
     const res = await fetch(`http://localhost:${serverPort}/api/conversions`, {
       method: "POST",
@@ -167,8 +165,6 @@ describe("Marketplace API Endpoints", () => {
     assert.ok(body.error.includes("Invalid JSON"));
   });
 
-  // --- POST /api/conversions/confirm ---
-
   it("POST /api/conversions/confirm returns confirmed count", async () => {
     const res = await fetch(`http://localhost:${serverPort}/api/conversions/confirm`, {
       method: "POST",
@@ -179,8 +175,6 @@ describe("Marketplace API Endpoints", () => {
     assert.ok("confirmed_count" in body);
     assert.ok(Array.isArray(body.confirmed_ids));
   });
-
-  // --- POST /api/conversions/clawback ---
 
   it("POST /api/conversions/clawback rejects missing entry_id", async () => {
     const res = await fetch(`http://localhost:${serverPort}/api/conversions/clawback`, {
@@ -215,8 +209,6 @@ describe("Marketplace API Endpoints", () => {
     assert.ok(body.error.includes("Invalid JSON"));
   });
 
-  // --- GET /api/agents/:id/balance ---
-
   it("GET /api/agents/:id/balance requires auth", async () => {
     const res = await fetch(`http://localhost:${serverPort}/api/agents/${testAgentId}/balance`);
     assert.strictEqual(res.status, 401);
@@ -243,8 +235,6 @@ describe("Marketplace API Endpoints", () => {
     const body = await res.json();
     assert.ok(body.error.includes("only view your own"));
   });
-
-  // --- PATCH /api/agents/me ---
 
   it("PATCH /api/agents/me requires auth", async () => {
     const res = await fetch(`http://localhost:${serverPort}/api/agents/me`, {
@@ -298,8 +288,6 @@ describe("Marketplace API Endpoints", () => {
     assert.strictEqual(body.x402_address, null);
   });
 
-  // --- POST /api/agents/:id/payout ---
-
   it("POST /api/agents/:id/payout requires auth", async () => {
     const res = await fetch(`http://localhost:${serverPort}/api/agents/${testAgentId}/payout`, {
       method: "POST",
@@ -343,8 +331,6 @@ describe("Marketplace API Endpoints", () => {
     });
     assert.strictEqual(withAddress.status, 501, "registering an address must not imply a payout is possible");
   });
-
-  // --- POST /api/referral-codes ---
 
   it("POST /api/referral-codes requires auth", async () => {
     const res = await fetch(`http://localhost:${serverPort}/api/referral-codes`, {
@@ -406,8 +392,6 @@ describe("Marketplace API Endpoints", () => {
     assert.ok(body.error.includes("referral_url"));
   });
 
-  // --- GET /api/referral-codes/mine ---
-
   it("GET /api/referral-codes/mine requires auth", async () => {
     const res = await fetch(`http://localhost:${serverPort}/api/referral-codes/mine`);
     assert.strictEqual(res.status, 401);
@@ -424,8 +408,6 @@ describe("Marketplace API Endpoints", () => {
     assert.ok("daily_submissions" in body);
     assert.ok("daily_limit" in body);
   });
-
-  // --- PUT /api/referral-codes/:id ---
 
   it("PUT /api/referral-codes/:id requires auth", async () => {
     const res = await fetch(`http://localhost:${serverPort}/api/referral-codes/some_id`, {
@@ -445,8 +427,6 @@ describe("Marketplace API Endpoints", () => {
     assert.strictEqual(res.status, 404);
   });
 
-  // --- DELETE /api/referral-codes/:id ---
-
   it("DELETE /api/referral-codes/:id requires auth", async () => {
     const res = await fetch(`http://localhost:${serverPort}/api/referral-codes/some_id`, {
       method: "DELETE",
@@ -461,8 +441,6 @@ describe("Marketplace API Endpoints", () => {
     });
     assert.strictEqual(res.status, 404);
   });
-
-  // --- GET /api/leaderboard ---
 
   it("GET /api/leaderboard returns leaderboard data", async () => {
     const res = await fetch(`http://localhost:${serverPort}/api/leaderboard`);

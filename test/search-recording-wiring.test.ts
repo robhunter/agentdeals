@@ -1,11 +1,3 @@
-// Locks the wiring between the search endpoints and the analytics ring (#1018 Defect C).
-//
-// The unit tests in search-analytics.test.ts prove `getSearchAnalytics` classifies an
-// entry correctly once it carries `unfiltered_count`. They cannot prove a call site
-// actually supplies it — a handler that forgets keeps producing entries that look like
-// catalog gaps, which is the bug. So this runs the real server and reads the real
-// /api/metrics.
-
 import { describe, it, after, before } from "node:test";
 import assert from "node:assert";
 import { spawn, type ChildProcess } from "node:child_process";
@@ -22,16 +14,10 @@ let port = 0;
 let proc: ChildProcess;
 let movedAside = false;
 
-// A query with no offers behind it, unique per run.
 const GAP_QUERY = `wiring-gap-${process.pid}`;
-// A query the catalog does cover, paired with a filter that removes everything.
 const COVERED_QUERY = "database";
 
 before(async () => {
-  // The server hydrates data/telemetry.json at boot. That file is gitignored local
-  // detritus which accumulates across test runs, and the analytics lists are truncated to
-  // a top-N — so leftover entries can push this test's queries off the list it asserts
-  // on. Boot against an empty ring and put the file back afterwards.
   if (existsSync(telemetryPath)) {
     renameSync(telemetryPath, telemetryBackup);
     movedAside = true;
@@ -52,8 +38,6 @@ before(async () => {
 });
 
 after(() => {
-  // SIGKILL rather than SIGTERM: the graceful path flushes this run's ring to
-  // data/telemetry.json, which would land on top of the file we are about to restore.
   proc?.kill("SIGKILL");
   if (movedAside) renameSync(telemetryBackup, telemetryPath);
   else if (existsSync(telemetryPath)) rmSync(telemetryPath);
@@ -73,10 +57,6 @@ function countFor(list: { query: string; count: number }[], query: string): numb
   return list.find(e => e.query === query.toLowerCase())?.count ?? 0;
 }
 
-// The server hydrates data/telemetry.json at boot, so the ring may already contain
-// entries for common queries — including pre-#1018-C ones that legitimately read as gaps
-// under the documented fallback. Assert on the change this request makes, not on the
-// absolute state.
 describe("search recording wiring (#1018 Defect C)", () => {
   it("a filter that empties a covered query is not recorded as a catalog gap", async () => {
     const covered = await get(`/api/offers?q=${COVERED_QUERY}&limit=1`);
@@ -118,8 +98,6 @@ describe("search recording wiring (#1018 Defect C)", () => {
     assert.ok(a.queries_by_source_7d.api > 0, "/api/offers should report source=api");
   });
 
-  // The MCP tool is the highest-volume search path and the one that skips bot filtering,
-  // so a filtered-to-zero call here is what dominated the gap list.
   it("applies the same rule to the MCP search_deals tool", async () => {
     const sessionId = await mcpInitialize();
 
@@ -151,7 +129,6 @@ describe("search recording wiring (#1018 Defect C)", () => {
   });
 });
 
-/** Upstream returns SSE frames; the payload is the last `data:` line. */
 function parseSse(body: string): any {
   const lines = body.split("\n").filter(l => l.startsWith("data:"));
   assert.ok(lines.length > 0, `no SSE data frame in: ${body.slice(0, 200)}`);

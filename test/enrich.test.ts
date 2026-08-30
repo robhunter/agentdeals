@@ -15,19 +15,16 @@ describe("enrichOffers", () => {
       assert.ok("expires_soon" in offer, "Should have expires_soon field");
       assert.ok("risk_level" in offer, "Should have risk_level field");
 
-      // risk_level should be one of the valid values or null
       assert.ok(
         offer.risk_level === null || ["stable", "caution", "risky"].includes(offer.risk_level),
         `risk_level should be stable/caution/risky/null, got: ${offer.risk_level}`
       );
 
-      // recent_change should be string or null
       assert.ok(
         offer.recent_change === null || typeof offer.recent_change === "string",
         "recent_change should be string or null"
       );
 
-      // expires_soon should be string or null
       assert.ok(
         offer.expires_soon === null || typeof offer.expires_soon === "string",
         "expires_soon should be string or null"
@@ -39,7 +36,6 @@ describe("enrichOffers", () => {
     const { enrichOffers, loadOffers } = await import("../dist/data.js");
     const offers = loadOffers();
 
-    // Find a vendor with no deal changes — most vendors have none
     const { loadDealChanges } = await import("../dist/data.js");
     const changes = loadDealChanges();
     const changedVendors = new Set(changes.map((c: { vendor: string }) => c.vendor.toLowerCase()));
@@ -52,11 +48,6 @@ describe("enrichOffers", () => {
     assert.strictEqual(enriched[0].recent_change, null);
   });
 
-  // #1038: these two tests used to assert the count-based rule directly — "1
-  // change = caution, 2+ = risky". That rule is the defect: it counted records
-  // we happened to have written, so `limits_increased` demoted a vendor and a
-  // vendor we had never examined rendered stable. What replaces them asserts
-  // the property the rule is supposed to have.
   it("counts nothing — the number of records a vendor has cannot move its risk level", async () => {
     const { enrichOffers, loadOffers, loadDealChanges } = await import("../dist/data.js");
     const { levelWithheldReason } = await import("../dist/source-check.js");
@@ -69,7 +60,6 @@ describe("enrichOffers", () => {
       counts.set(key, (counts.get(key) ?? 0) + 1);
     }
 
-    // A vendor with several records, none of them demoting, must stay stable.
     const FAVOURABLE = new Set(["limits_increased", "new_free_tier", "new_tier", "startup_program_expanded", "pricing_postponed", "rebranded"]);
     const byVendor = new Map<string, { change_type: string }[]>();
     for (const c of changes) {
@@ -102,8 +92,6 @@ describe("enrichOffers", () => {
       vendor: "Testing Vendor 1038", category: "Databases", tier: "Free", description: "d",
       url: "https://example.com", verifiedDate: "2026-08-01", tags: [],
     };
-    // enrichOffers reads the live change file, so assert through the function
-    // that decides, with the record the issue is named for.
     const { vendorRiskAssessment } = await import("../dist/data.js");
     const assessment = vendorRiskAssessment([
       { vendor: "Testing Vendor 1038", change_type: "limits_increased", date: "2026-08-01", summary: "Free tier expanded", previous_state: "", current_state: "", impact: "high", source_url: "", category: "Databases", alternatives: [] },
@@ -170,7 +158,6 @@ describe("enrichOffers", () => {
 
     if (changes.length === 0) return;
 
-    // Find a vendor that has a recent change (within 90 days)
     const ninetyDaysAgo = new Date(Date.now() - 90 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
     const recentChange = changes.find((c: { date: string }) => c.date >= ninetyDaysAgo);
     if (!recentChange) return;

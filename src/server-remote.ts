@@ -69,8 +69,6 @@ export function createServer(): McpServer {
     }
   );
 
-  // --- Tool 1: search_deals ---
-
   server.registerTool(
     "search_deals",
     {
@@ -97,13 +95,11 @@ export function createServer(): McpServer {
     },
     async ({ query, category, vendor, eligibility, sort, stability, payment_protocol, since, limit, offset, response_format }) => {
       try {
-        // Mode: list categories
         if (category === "list") {
           const categories = await fetchCategories();
           return mcpText(categories);
         }
 
-        // Mode: vendor details
         if (vendor) {
           try {
             const data = await fetchOfferDetails(vendor, true) as {
@@ -112,8 +108,6 @@ export function createServer(): McpServer {
               disambiguation?: { slug: string; name: string }[];
               resolved_from?: string;
             };
-            // Fuzzy-match disambiguation: input matched multiple vendors.
-            // Return isError with a structured vendors list so agents can parse.
             if (data.disambiguation && data.disambiguation.length > 0) {
               return mcpError(JSON.stringify({ error: `Vendor "${vendor}" matched multiple vendors. Pick one from 'vendors' and retry.`, vendors: data.disambiguation }, null, 2));
             }
@@ -134,13 +128,11 @@ export function createServer(): McpServer {
           }
         }
 
-        // Mode: recent deals (since param without search)
         if (since && !query && !category) {
           const data = await fetchNewestDeals({ since, limit, category: undefined });
           return mcpText(data);
         }
 
-        // Mode: search/browse
         const effectiveOffset = offset ?? 0;
         const effectiveLimit = limit ?? 20;
         const data = await fetchOffers({
@@ -154,7 +146,6 @@ export function createServer(): McpServer {
           offset: effectiveOffset,
         }) as { offers: Record<string, unknown>[]; total: number };
 
-        // Zero-result suggestion (only when no results match at all, not just paginated past end)
         if (data.offers.length === 0 && data.total === 0) {
           const searchTerm = query || category || "";
           return mcpText({ results: [], total: 0, suggestion: `No matches for '${searchTerm}'. Try searching by category (e.g., 'databases', 'hosting') or browse all categories with search_deals({category: "list"}).` });
@@ -169,8 +160,6 @@ export function createServer(): McpServer {
       }
     }
   );
-
-  // --- Tool 2: plan_stack ---
 
   server.registerTool(
     "plan_stack",
@@ -214,8 +203,6 @@ export function createServer(): McpServer {
     }
   );
 
-  // --- Tool 3: compare_vendors ---
-
   server.registerTool(
     "compare_vendors",
     {
@@ -235,7 +222,6 @@ export function createServer(): McpServer {
       try {
         const doRisk = include_risk !== false;
 
-        // Single vendor = risk check
         if (vendors.length === 1) {
           try {
             const data = await fetchVendorRisk(vendors[0]);
@@ -247,15 +233,14 @@ export function createServer(): McpServer {
           }
         }
 
-        // Two vendors = comparison
         if (vendors.length === 2) {
           try {
             let comparison = await fetchCompare(vendors[0], vendors[1]);
             if (doRisk) {
               let riskA = null;
               let riskB = null;
-              try { riskA = await fetchVendorRisk(vendors[0]); } catch { /* skip */ }
-              try { riskB = await fetchVendorRisk(vendors[1]); } catch { /* skip */ }
+              try { riskA = await fetchVendorRisk(vendors[0]); } catch {}
+              try { riskB = await fetchVendorRisk(vendors[1]); } catch {}
               comparison = { ...(comparison as object), risk: { [vendors[0]]: riskA, [vendors[1]]: riskB } };
             }
             return mcpText(comparison);
@@ -272,8 +257,6 @@ export function createServer(): McpServer {
       }
     }
   );
-
-  // --- Tool 4: track_changes ---
 
   server.registerTool(
     "track_changes",
@@ -298,7 +281,6 @@ export function createServer(): McpServer {
     },
     async ({ since, change_type, vendor, vendors, categories, include_expiring, lookahead_days, response_format }) => {
       try {
-        // No params = weekly digest
         if (!since && !change_type && !vendor && !vendors && !categories && include_expiring === undefined) {
           const data = await fetchWeeklyDigest() as Record<string, unknown>;
           if (response_format === "concise" && Array.isArray(data.deal_changes)) {
@@ -308,7 +290,6 @@ export function createServer(): McpServer {
           return mcpText(data);
         }
 
-        // Filtered changes — pass categories to API
         const params: Record<string, string | undefined> = { since, type: change_type, vendor, vendors };
         if (categories) params.categories = categories;
         const changes = await fetchDealChanges(params) as Record<string, unknown>;
@@ -322,7 +303,6 @@ export function createServer(): McpServer {
         }
 
         if (response_format === "concise") {
-          // Handle both personalized and standard response shapes
           if (Array.isArray(result.changes)) {
             result = { ...result, changes: result.changes.map((c: Record<string, unknown>) => ({ vendor: c.vendor, change_type: c.change_type, date: c.date, summary: c.summary })) };
           }
@@ -341,8 +321,6 @@ export function createServer(): McpServer {
       }
     }
   );
-
-  // --- Prompt Templates ---
 
   server.registerPrompt(
     "new-project-setup",
@@ -542,13 +520,10 @@ Suggested monitoring cadence: run this check weekly to catch pricing changes ear
     }
   );
 
-  // --- Resources ---
-
   function toSlug(name: string): string {
     return name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/-+$/, "");
   }
 
-  // Static: all categories
   server.registerResource(
     "categories",
     "agentdeals://categories",
@@ -565,7 +540,6 @@ Suggested monitoring cadence: run this check weekly to catch pricing changes ear
     }
   );
 
-  // Template: category detail
   server.registerResource(
     "category",
     new ResourceTemplate("agentdeals://category/{slug}", {
@@ -603,7 +577,6 @@ Suggested monitoring cadence: run this check weekly to catch pricing changes ear
     }
   );
 
-  // Static: all vendors
   server.registerResource(
     "vendors",
     "agentdeals://vendors",
@@ -620,7 +593,6 @@ Suggested monitoring cadence: run this check weekly to catch pricing changes ear
     }
   );
 
-  // Template: vendor detail
   server.registerResource(
     "vendor",
     new ResourceTemplate("agentdeals://vendor/{slug}", {
@@ -691,7 +663,6 @@ Suggested monitoring cadence: run this check weekly to catch pricing changes ear
     }
   );
 
-  // Static: all pricing changes
   server.registerResource(
     "changes",
     "agentdeals://changes",
@@ -707,7 +678,6 @@ Suggested monitoring cadence: run this check weekly to catch pricing changes ear
     }
   );
 
-  // Static: latest changes
   server.registerResource(
     "changes-latest",
     "agentdeals://changes/latest",
@@ -726,7 +696,6 @@ Suggested monitoring cadence: run this check weekly to catch pricing changes ear
     }
   );
 
-  // Static: all editorial guides
   server.registerResource(
     "guides",
     "agentdeals://guides",
@@ -752,7 +721,6 @@ Suggested monitoring cadence: run this check weekly to catch pricing changes ear
     }
   );
 
-  // Template: guide detail
   server.registerResource(
     "guide",
     new ResourceTemplate("agentdeals://guide/{slug}", {
@@ -788,7 +756,6 @@ Suggested monitoring cadence: run this check weekly to catch pricing changes ear
       text += `**Description:** ${guide.description}\n`;
       text += `**URL:** /${guide.slug}\n`;
 
-      // Add related vendor data from changes
       try {
         const changesData = (await fetchDealChanges({ since: "2020-01-01" })) as { changes: Array<{ date: string; vendor: string; change_type: string; summary: string }> };
         const slugLower = guide.slug.toLowerCase();
@@ -803,14 +770,12 @@ Suggested monitoring cadence: run this check weekly to catch pricing changes ear
           }
         }
       } catch {
-        // Changes endpoint not available — skip
       }
 
       return { contents: [{ uri: `agentdeals://guide/${slug}`, text, mimeType: "text/plain" }] };
     }
   );
 
-  // --- MCP Apps UI Resources ---
   registerMcpAppsResources(server);
 
   return server;

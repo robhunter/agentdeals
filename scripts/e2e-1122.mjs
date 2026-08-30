@@ -1,12 +1,3 @@
-/**
- * Drives every surface #1122 names against a server running the real index.
- *
- * Nothing here is stubbed: the server loads data/index.json, and each check
- * reads the page or the FAQPage structured data a caller would receive.
- *
- * Usage: node scripts/e2e-1122.mjs
- */
-
 import { spawn } from "node:child_process";
 import { readFileSync } from "node:fs";
 import path from "node:path";

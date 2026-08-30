@@ -61,9 +61,7 @@ describe("estimate_costs logic", () => {
   it("suggests free alternatives at startup/growth scale", async () => {
     const { estimateCosts } = await import("../dist/costs.js");
     const result = estimateCosts(["Vercel", "Supabase"], "startup");
-    // At least one service should have a free alternative suggestion
     const withAlternatives = result.services.filter(s => s.free_alternative);
-    // Not guaranteed, but highly likely given our index size
     assert.ok(result.savings_available, "Should have savings_available field");
   });
 
@@ -113,11 +111,10 @@ describe("estimate_costs MCP tool via stdio", () => {
       const timeout = setTimeout(() => reject(new Error("Timeout")), 10000);
       proc!.stdout!.on("data", (chunk: Buffer) => {
         data += chunk.toString();
-        // Count complete JSON responses
         const lines = data.split("\n").filter(Boolean);
         if (lines.length >= 2) {
           clearTimeout(timeout);
-          resolve(lines[1]); // Second response is the tool call result
+          resolve(lines[1]);
         }
       });
       proc!.stdin!.write(initMsg + "\n");

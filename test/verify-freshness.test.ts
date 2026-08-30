@@ -62,7 +62,6 @@ describe("verify-freshness", () => {
       ];
       const { stale } = findStaleOffers(offers, 25, now);
       assert.strictEqual(stale.length, 3);
-      // B is oldest (106 days), then C (60 days), then A (34 days)
       assert.strictEqual(stale[0].offer.vendor, "B");
       assert.strictEqual(stale[1].offer.vendor, "C");
       assert.strictEqual(stale[2].offer.vendor, "A");
@@ -75,7 +74,6 @@ describe("verify-freshness", () => {
         { vendor: "AlsoStale", category: "C", url: "https://example.com", verifiedDate: "2026-01-15" },
       ];
       const { stale } = findStaleOffers(offers, 25, now);
-      // Stale (index 1) is 74 days old, AlsoStale (index 2) is 60 days — sorted by staleness
       assert.strictEqual(stale[0].index, 1);
       assert.strictEqual(stale[0].offer.vendor, "Stale");
       assert.strictEqual(stale[1].index, 2);
@@ -295,7 +293,6 @@ describe("verify-freshness", () => {
       writeFileSync(indexPath, JSON.stringify({ offers }));
 
       const result = await verifyFreshness({ thresholdDays: 25, dryRun: true, limit: 3, indexPath, now, client: stubClient('{"status":"confirmed"}') });
-      // Should attempt at most 3, skip the rest
       assert.strictEqual(result.skipped, 7);
       assert.ok(result.failed <= 3);
     });

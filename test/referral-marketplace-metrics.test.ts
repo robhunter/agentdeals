@@ -66,7 +66,6 @@ describe("referral marketplace stats module", () => {
     assert.strictEqual(s.vendor_lookups_top.length, 10);
     assert.strictEqual(s.vendor_lookups_top[0].vendor, "vendor14");
     assert.strictEqual(s.vendor_lookups_top[0].count, 15);
-    // Sorted descending
     for (let i = 1; i < s.vendor_lookups_top.length; i++) {
       assert.ok(s.vendor_lookups_top[i - 1].count >= s.vendor_lookups_top[i].count);
     }
@@ -110,7 +109,6 @@ describe("referral marketplace telemetry persistence", () => {
     assert.strictEqual(s0.vendor_lookups_top[0].vendor, "railway");
     assert.strictEqual(s0.vendor_lookups_top[0].count, 20);
 
-    // Simulate new activity this deployment
     recordReferralListingCall("platform");
     recordReferralListingCall(null);
     recordReferralVendorLookup("railway");
@@ -127,7 +125,6 @@ describe("referral marketplace telemetry persistence", () => {
     assert.ok(newv);
     assert.strictEqual(newv.count, 1);
 
-    // Flush and confirm persisted
     await flushTelemetry();
     const persisted = JSON.parse(readFileSync(telemetryFile, "utf-8"));
     assert.strictEqual(persisted.cumulative_referral_listing_calls, 27);
@@ -194,7 +191,6 @@ describe("GET /api/metrics endpoint", () => {
     assert.strictEqual(typeof rm.listing_calls_by_source.agent, "number");
     assert.strictEqual(typeof rm.listing_calls_by_source.null, "number");
     assert.ok(Array.isArray(rm.vendor_lookups_top));
-    // Existing stats should still be present
     assert.strictEqual(typeof body.cumulative_tool_calls, "number");
     assert.strictEqual(typeof body.cumulative_api_hits, "number");
   });

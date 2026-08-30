@@ -1,13 +1,3 @@
-/**
- * Drives the outgrow line on every surface #1121 names, against a server
- * running the real index.
- *
- * Nothing here is stubbed: the server loads data/index.json, and each check
- * reads the rendered block or the FAQPage structured data a caller receives.
- *
- * Usage: node scripts/e2e-1121.mjs
- */
-
 import { spawn } from "node:child_process";
 import { readFileSync } from "node:fs";
 import path from "node:path";

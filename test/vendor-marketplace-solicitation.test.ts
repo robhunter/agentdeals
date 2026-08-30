@@ -34,7 +34,6 @@ describe("vendor marketplace solicitation CTA (#858)", () => {
   after(() => { serverProc?.kill(); });
 
   it("vendor with neither program nor code shows the solicitation block", async () => {
-    // Deno Deploy: no referral_program, no referral, no platform code.
     const res = await fetch(`http://localhost:${serverPort}/vendor/deno-deploy`);
     assert.strictEqual(res.status, 200);
     const html = await res.text();
@@ -43,7 +42,6 @@ describe("vendor marketplace solicitation CTA (#858)", () => {
     assert.ok(html.includes('href="/marketplace"'), "Should link to /marketplace");
     assert.ok(html.includes("60% commission"), "Should mention commission split");
     assert.ok(html.includes("x402"), "Should mention payout rail");
-    // Should NOT show the active program callout for this vendor
     assert.ok(!html.includes(">Referral Program</h2>"), "Should not show 'Referral Program' h2 (no program available)");
   });
 
@@ -53,7 +51,6 @@ describe("vendor marketplace solicitation CTA (#858)", () => {
     const html = await res.text();
     assert.ok(!html.includes("marketplace-solicitation"), "Solicitation should be suppressed when a platform code exists");
     assert.ok(!html.includes("Know a referral or partner program for Railway?"), "Solicitation heading should not appear for Railway");
-    // Existing platform CTA still rendered
     assert.ok(html.includes("Sign up via our referral link"), "Existing platform CTA should still render");
   });
 
@@ -63,14 +60,12 @@ describe("vendor marketplace solicitation CTA (#858)", () => {
     const html = await res.text();
     assert.ok(!html.includes("marketplace-solicitation"), "Solicitation should be suppressed when program is available");
     assert.ok(!html.includes("Know a referral or partner program for Vercel?"), "Solicitation heading should not appear for Vercel");
-    // Existing program callout still renders
     assert.ok(html.includes(">Referral Program</h2>"), "Existing 'Referral Program' h2 should still render");
   });
 
   it("solicitation block uses muted/secondary styling (dashed border, h3 not h2)", async () => {
     const res = await fetch(`http://localhost:${serverPort}/vendor/deno-deploy`);
     const html = await res.text();
-    // Visually distinguishable from active program promo (which uses h2 + solid border)
     const idx = html.indexOf("marketplace-solicitation");
     assert.ok(idx > 0, "Section must exist");
     const slice = html.slice(idx, idx + 800);
