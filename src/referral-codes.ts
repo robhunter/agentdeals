@@ -1,7 +1,7 @@
-import fs from "node:fs";
 import path from "node:path";
 import { randomBytes } from "node:crypto";
 import { fileURLToPath } from "node:url";
+import { createDurableStore } from "./durable-store.js";
 import { getAgentById } from "./agents.js";
 import { loadOffers } from "./data.js";
 
@@ -30,33 +30,22 @@ export interface SubmittedReferralCode {
   updated_at: string;
 }
 
-let cachedCodes: SubmittedReferralCode[] | null = null;
+const codeStore = createDurableStore<SubmittedReferralCode>({
+  name: "referral_codes",
+  property: "referral_codes",
+  filePath: () => CODES_PATH,
+});
 
 function loadCodes(): SubmittedReferralCode[] {
-  if (cachedCodes) return cachedCodes;
-
-  if (!fs.existsSync(CODES_PATH)) {
-    cachedCodes = [];
-    return cachedCodes;
-  }
-
-  try {
-    const raw = fs.readFileSync(CODES_PATH, "utf-8");
-    const data = JSON.parse(raw) as { referral_codes?: SubmittedReferralCode[] };
-    cachedCodes = Array.isArray(data.referral_codes) ? data.referral_codes : [];
-  } catch {
-    cachedCodes = [];
-  }
-  return cachedCodes;
+  return codeStore.read();
 }
 
 function saveCodes(codes: SubmittedReferralCode[]): void {
-  fs.writeFileSync(CODES_PATH, JSON.stringify({ referral_codes: codes }, null, 2), "utf-8");
-  cachedCodes = codes;
+  codeStore.save(codes);
 }
 
 export function resetReferralCodesCache(): void {
-  cachedCodes = null;
+  codeStore.reset();
 }
 
 function generateCodeId(): string {

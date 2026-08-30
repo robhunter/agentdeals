@@ -70,6 +70,13 @@ async function defaultTransferFn(req: TransferRequest): Promise<TransferResult> 
 
 let transferFn: (req: TransferRequest) => Promise<TransferResult> = defaultTransferFn;
 
+export const PAYOUTS_UNAVAILABLE_REASON =
+  "Payouts are not enabled: no transfer provider is configured, so confirmed credit cannot be withdrawn yet. Credit continues to accrue and check_balance reports it.";
+
+export function payoutsAvailable(): boolean {
+  return transferFn !== defaultTransferFn;
+}
+
 /**
  * Replace the transfer implementation (for testing).
  */

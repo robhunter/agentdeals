@@ -1,7 +1,7 @@
-import fs from "node:fs";
 import path from "node:path";
 import crypto from "node:crypto";
 import { fileURLToPath } from "node:url";
+import { createDurableStore } from "./durable-store.js";
 import { loadDealChanges } from "./data.js";
 import type { DealChange } from "./types.js";
 
@@ -24,31 +24,22 @@ interface WatchlistData {
   subscriptions: WatchlistSubscription[];
 }
 
-let cached: WatchlistData | null = null;
+const watchlistStore = createDurableStore<WatchlistSubscription>({
+  name: "watchlist",
+  property: "subscriptions",
+  filePath: () => WATCHLIST_PATH,
+});
 
 function load(): WatchlistData {
-  if (cached) return cached;
-  if (!fs.existsSync(WATCHLIST_PATH)) {
-    cached = { subscriptions: [] };
-    return cached;
-  }
-  try {
-    const raw = fs.readFileSync(WATCHLIST_PATH, "utf-8");
-    cached = JSON.parse(raw) as WatchlistData;
-    if (!Array.isArray(cached!.subscriptions)) cached = { subscriptions: [] };
-  } catch {
-    cached = { subscriptions: [] };
-  }
-  return cached!;
+  return { subscriptions: watchlistStore.read() };
 }
 
 function save(data: WatchlistData): void {
-  fs.writeFileSync(WATCHLIST_PATH, JSON.stringify(data, null, 2), "utf-8");
-  cached = data;
+  watchlistStore.save(data.subscriptions);
 }
 
 export function resetWatchlistCache(): void {
-  cached = null;
+  watchlistStore.reset();
 }
 
 export function subscribe(vendor: string, webhookUrl: string): WatchlistSubscription {

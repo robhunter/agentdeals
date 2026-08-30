@@ -787,7 +787,7 @@ describe("#1083 the operator's read path is a credential, not a second endpoint"
     proc = await new Promise<ChildProcess>((resolve, reject) => {
       const child = spawn("node", [path.join(REPO, "dist", "serve.js")], {
         stdio: ["pipe", "pipe", "pipe"],
-        env: { ...process.env, PORT: "0", BASE_URL: "http://localhost", AGENTDEALS_PLATFORM_SECRET: SECRET },
+        env: { ...process.env, PORT: "0", BASE_URL: "http://localhost", AGENTDEALS_PLATFORM_SECRET: SECRET, UPSTASH_REDIS_REST_URL: "", UPSTASH_REDIS_REST_TOKEN: "" },
       });
       const timeout = setTimeout(() => { child.kill(); reject(new Error("startup timeout")); }, 20000);
       child.stderr!.on("data", (d: Buffer) => {

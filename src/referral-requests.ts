@@ -1,7 +1,7 @@
-import fs from "node:fs";
 import path from "node:path";
 import { randomBytes } from "node:crypto";
 import { fileURLToPath } from "node:url";
+import { createDurableStore } from "./durable-store.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REQUESTS_PATH =
@@ -18,33 +18,22 @@ export interface ReferralRequest {
   conversion_id: string | null;
 }
 
-let cachedRequests: ReferralRequest[] | null = null;
+const requestStore = createDurableStore<ReferralRequest>({
+  name: "referral_requests",
+  property: "referral_requests",
+  filePath: () => REQUESTS_PATH,
+});
 
 function loadRequests(): ReferralRequest[] {
-  if (cachedRequests) return cachedRequests;
-
-  if (!fs.existsSync(REQUESTS_PATH)) {
-    cachedRequests = [];
-    return cachedRequests;
-  }
-
-  try {
-    const raw = fs.readFileSync(REQUESTS_PATH, "utf-8");
-    const data = JSON.parse(raw) as { referral_requests?: ReferralRequest[] };
-    cachedRequests = Array.isArray(data.referral_requests) ? data.referral_requests : [];
-  } catch {
-    cachedRequests = [];
-  }
-  return cachedRequests;
+  return requestStore.read();
 }
 
 function saveRequests(requests: ReferralRequest[]): void {
-  fs.writeFileSync(REQUESTS_PATH, JSON.stringify({ referral_requests: requests }, null, 2), "utf-8");
-  cachedRequests = requests;
+  requestStore.save(requests);
 }
 
 export function resetReferralRequestsCache(): void {
-  cachedRequests = null;
+  requestStore.reset();
 }
 
 function generateRequestId(): string {
@@ -70,8 +59,7 @@ export function logReferralRequest(opts: {
     requested_at: new Date().toISOString(),
     conversion_id: null,
   };
-  requests.push(request);
-  saveRequests(requests);
+  saveRequests([...requests, request]);
   return request;
 }
 
@@ -122,9 +110,7 @@ export function getRequestById(id: string): ReferralRequest | null {
  */
 export function markConversion(requestId: string, conversionId: string): boolean {
   const requests = loadRequests();
-  const request = requests.find(r => r.id === requestId);
-  if (!request) return false;
-  request.conversion_id = conversionId;
-  saveRequests(requests);
+  if (!requests.some(r => r.id === requestId)) return false;
+  saveRequests(requests.map(r => (r.id === requestId ? { ...r, conversion_id: conversionId } : r)));
   return true;
 }
