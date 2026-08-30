@@ -315,21 +315,33 @@ describe("Marketplace API Endpoints", () => {
     assert.strictEqual(res.status, 403);
   });
 
-  it("POST /api/agents/:id/payout requires x402_address", async () => {
-    // Clear the x402 address first
+  it("POST /api/agents/:id/payout reports that payouts are not enabled, whatever the address is", async () => {
     await fetch(`http://localhost:${serverPort}/api/agents/me`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json", Authorization: `Bearer ${testApiKey}` },
       body: JSON.stringify({ x402_address: null }),
     });
 
-    const res = await fetch(`http://localhost:${serverPort}/api/agents/${testAgentId}/payout`, {
+    const withoutAddress = await fetch(`http://localhost:${serverPort}/api/agents/${testAgentId}/payout`, {
       method: "POST",
       headers: { Authorization: `Bearer ${testApiKey}` },
     });
-    assert.strictEqual(res.status, 402);
-    const body = await res.json();
-    assert.ok(body.error.includes("No x402 address"));
+    assert.strictEqual(withoutAddress.status, 501);
+    const body = await withoutAddress.json() as { error: string; payouts_available: boolean };
+    assert.strictEqual(body.payouts_available, false);
+    assert.match(body.error, /not enabled/i);
+    assert.doesNotMatch(body.error, /No x402 address/);
+
+    await fetch(`http://localhost:${serverPort}/api/agents/me`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${testApiKey}` },
+      body: JSON.stringify({ x402_address: "0x742d35Cc6634C0532925a3b844Bc9e7595f2bD18" }),
+    });
+    const withAddress = await fetch(`http://localhost:${serverPort}/api/agents/${testAgentId}/payout`, {
+      method: "POST",
+      headers: { Authorization: `Bearer ${testApiKey}` },
+    });
+    assert.strictEqual(withAddress.status, 501, "registering an address must not imply a payout is possible");
   });
 
   // --- POST /api/referral-codes ---

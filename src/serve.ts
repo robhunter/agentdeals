@@ -11,7 +11,7 @@ import { estimateCosts } from "./costs.js";
 import { classifyRequest } from "./client-class.js";
 import { acceptSignal, ackMissing, checkRateLimit, clientAddress, RATE_LIMIT_PER_MINUTE, SIGNAL_ACK_PARAM, SIGNAL_BODY_MAX, SIGNAL_DOC_PATH, SIGNAL_PATH, type SignalInput } from "./signal.js";
 import { agentBlock, DEFERENCE, signalExampleSlug, signalHeaderValue, signalHtmlBlock, signalLlmsSection, SIGNAL_HEADER_NAME } from "./signal-copy.js";
-import { recordApiHit, recordSessionConnect, recordSessionDisconnect, recordLandingPageView, getStats, getConnectionStats, loadTelemetry, flushTelemetry, flushPending, FLUSH_INTERVAL_SECONDS, logRequest, getPublicRequestLogResult, getTelemetryHealth, recordPageView, getPageViews, recordReferralListingCall, recordReferralVendorLookup, getReferralMarketplaceStats, getSessionClassification, recordSearchQuery, getSearchAnalytics, getApiHitsByEndpoint, recordTraffic, getTrafficReport, getSignalReport, publicSignalReport, getRollupDaySource, getRollupDatesAvailable, setDurableRollupCoverage, redisJsonGet, redisJsonMget, redisJsonSet } from "./stats.js";
+import { recordApiHit, recordSessionConnect, recordSessionDisconnect, recordLandingPageView, getStats, getConnectionStats, loadTelemetry, flushTelemetry, flushPending, FLUSH_INTERVAL_SECONDS, logRequest, getPublicRequestLogResult, getTelemetryHealth, recordPageView, getPageViews, recordReferralListingCall, recordReferralVendorLookup, getReferralMarketplaceStats, getSessionClassification, recordSearchQuery, getSearchAnalytics, getApiHitsByEndpoint, recordTraffic, getTrafficReport, getSignalReport, publicSignalReport, getRollupDaySource, getRollupDatesAvailable, setDurableRollupCoverage, redisJsonGet, redisJsonMget, redisJsonSet, redisJsonSetWithoutExpiry, useRedis } from "./stats.js";
 import { buildDailyRollup, readRollups, coverageOf, ROLLUP_DATE_PATTERN } from "./analytics-rollup.js";
 import { configureVendorSeries, recordVendorRequest, flushVendorSeries, readVendorSeries, vendorSeriesGauge, vendorExportAuthorized, isSeriesDate, seriesDateRange, VENDOR_SERIES_PATH, VENDOR_SERIES_RETENTION_DAYS, VENDOR_SERIES_NOTES } from "./vendor-series.js";
 import { openapiSpec } from "./openapi.js";
@@ -22,15 +22,16 @@ import { stabilityFaqAnswer, stabilityVerdictClause, type ComparisonSide, type S
 import { publishedVendorLevel, vendorVerdictSentence, narrowingSentence, changeKindNoun, DEMOTING_KINDS_PHRASE, type VendorVerdictInput } from "./vendor-verdict.js";
 import { growthLimitPhrases } from "./growth-limits.js";
 import { registerAgent, authenticateRequest, validateVestauthUrl, hashApiKey, updateAgentX402Address, getAgentById } from "./agents.js";
-import { logReferralRequest } from "./referral-requests.js";
+import { attributeAuthenticatedRequest } from "./referral-attribution.js";
 import { recordConversion, confirmEligibleEntries, clawbackEntry, getAgentBalance, getAgentLedgerEntries, recordPayout, MAX_COMMISSION_AMOUNT, MINIMUM_PAYOUT_AMOUNT, getLeaderboard } from "./ledger.js";
 import { PLATFORM_CREDENTIAL_REQUIRED, authorizedAsPlatform } from "./platform-auth.js";
 import { createRegistrationLimiter, rateLimitHeaders } from "./rate-limit.js";
-import { validateX402Address, executeTransfer, generateCorrelationId } from "./x402.js";
+import { validateX402Address, executeTransfer, generateCorrelationId, payoutsAvailable, PAYOUTS_UNAVAILABLE_REASON } from "./x402.js";
 import { submitReferralCode, getCodesByAgent, getCodeById, updateCode, revokeCode, calculateTrustTier, getDailySubmissionCount, getDailyLimit, getRankedCodesForVendor, calculateCodeScore } from "./referral-codes.js";
 import { getBestReferralCode, listAllReferralCodes } from "./platform-codes.js";
 import { REFERRAL_CONDITIONS_HEADING, allOurReferralLinks, hasAnyReferralSurface, heldReferralLinkForVendor, ourReferralLinkFor, referralLinkCountClause, referrerDisclosureSentence } from "./referral-surfaces.js";
 import { runHealthCheck, getLastReport, startPeriodicChecks } from "./referral-health.js";
+import { configureDurableBackend, hydrateDurableStores, persistDurableStores, identityStorageReport } from "./durable-store.js";
 import { addFriend, removeFriend, getFriends, getFriendCodesForVendors } from "./friends.js";
 import { subscribe as watchlistSubscribe, getSubscription as getWatchlistSubscription, unsubscribe as watchlistUnsubscribe, listSubscriptions as listWatchlistSubscriptions } from "./watchlist.js";
 import { toSlug, vendorSlugMap, resolveVendorSlug, namedVendorSlug } from "./vendor-slug.js";
@@ -388,6 +389,25 @@ setInterval(() => {
 // Load cumulative telemetry from Redis or disk (survives deploys)
 const telemetryFile = join(__dirname, "..", "data", "telemetry.json");
 await loadTelemetry(telemetryFile);
+
+if (useRedis()) {
+  configureDurableBackend({
+    get: (key) => redisJsonGet(key).then(r => ({ ok: r.ok, value: r.value, error: r.error })),
+    set: (key, value) => redisJsonSetWithoutExpiry(key, value),
+  });
+}
+await hydrateDurableStores();
+
+async function identityWritePersisted(res: import("node:http").ServerResponse): Promise<boolean> {
+  const outcome = await persistDurableStores();
+  if (outcome.ok) return true;
+  res.writeHead(503, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+  res.end(JSON.stringify({
+    error: "Durable storage is unavailable, so this change was not saved and has been discarded. Retry later.",
+    detail: outcome.error ?? null,
+  }));
+  return false;
+}
 
 const rollupDir = process.env.AGENTDEALS_ROLLUP_DIR ?? join(__dirname, "..", "data", "analytics");
 const durableRollups = readRollups(rollupDir);
@@ -51415,7 +51435,7 @@ ${globalNavCss()}
     <div class="step"><div class="step-num">1</div><h3>Register</h3><p>Create an agent identity with an API key</p></div>
     <div class="step"><div class="step-num">2</div><h3>Submit Codes</h3><p>Add referral codes for any vendor in our index</p></div>
     <div class="step"><div class="step-num">3</div><h3>Codes Get Ranked</h3><p>Trust + performance + recency determines visibility</p></div>
-    <div class="step"><div class="step-num">4</div><h3>Earn Revenue</h3><p>Get paid when your codes convert via x402</p></div>
+    <div class="step"><div class="step-num">4</div><h3>Earn Revenue</h3><p>${payoutsAvailable() ? "Get paid when your codes convert via x402" : "Accrue credit when your codes convert. Withdrawal is not enabled yet."}</p></div>
   </div>
 
   <div class="section">
@@ -51473,7 +51493,7 @@ ${globalNavCss()}
     <p>View your codes, earnings, and leaderboard rank at <a href="/agents/dashboard">/agents/dashboard</a> (requires API key).</p>
 
     <h3>4. Get paid</h3>
-    <p>Set your x402 address and request payouts when your confirmed balance reaches $10:</p>
+    <p>${payoutsAvailable() ? "Set your x402 address and request payouts when your confirmed balance reaches $10:" : "Payouts are not enabled yet &mdash; no transfer provider is configured, so no confirmed credit can be withdrawn today. Credit accrues and is reported by <code>check_balance</code>. You can register the address now:"}</p>
     <div class="code-block">curl -X PATCH ${escHtmlServer(BASE_URL)}/api/agents/me \\
   -H "Authorization: Bearer YOUR_API_KEY" \\
   -H "Content-Type: application/json" \\
@@ -51645,7 +51665,7 @@ ${sortedCodes.map(c => {
   <h2>Quick Actions</h2>
   <div class="actions">
 ${!agent.x402_address ? '    <a href="/marketplace#getting-started" class="action-btn primary">Set x402 Address</a>' : ""}
-${(balance?.confirmed_balance ?? 0) >= 10 ? `    <a href="/developers" class="action-btn primary">Request Payout ($${balance!.confirmed_balance.toFixed(2)} available)</a>` : ""}
+${payoutsAvailable() && (balance?.confirmed_balance ?? 0) >= 10 ? `    <a href="/developers" class="action-btn primary">Request Payout ($${balance!.confirmed_balance.toFixed(2)} available)</a>` : ""}
     <a href="/marketplace#getting-started" class="action-btn">Submit a Code</a>
     <a href="/api/leaderboard" class="action-btn">View Leaderboard</a>
     <a href="/marketplace" class="action-btn">Marketplace Info</a>
@@ -54093,7 +54113,7 @@ const httpServer = createHttpServer(async (req, res) => {
     res.end(JSON.stringify(openapiSpec));
   } else if (url.pathname === "/api/stats" && isGetOrHead) {
     res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
-    res.end(JSON.stringify(getConnectionStats(sessions.size)));
+    res.end(JSON.stringify({ ...getConnectionStats(sessions.size), identity_storage: identityStorageReport() }));
   } else if (url.pathname === "/api/pageviews" && isGetOrHead) {
     const data = await getPageViews();
     res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
@@ -55939,6 +55959,7 @@ ${catList}
 
       recordApiHit("/api/agents/register");
       logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/agents/register", params: { name: parsed.name }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+      if (!(await identityWritePersisted(res))) return;
       res.writeHead(201, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*", ...registrationHeaders });
       res.end(JSON.stringify(responseBody));
     } catch (err: any) {
@@ -55985,16 +56006,8 @@ ${catList}
       return;
     }
 
-    // If authenticated, log the attribution request
     const agent = await authenticateRequest(req as any);
-    if (agent) {
-      logReferralRequest({
-        agent_id: agent.id,
-        vendor: referralData.vendor,
-        referral_code: referralData.referral.code ?? "",
-        referral_url: referralData.referral.url,
-      });
-    }
+    const attribution = await attributeAuthenticatedRequest(agent, req.headers, referralData);
 
     recordApiHit("/api/referral/:vendor");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: `/api/referral/${vendor}`, params: { authenticated: !!agent }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
@@ -56005,7 +56018,9 @@ ${catList}
       referral_url: referralData.referral.url,
       referee_value: referralData.referral.referee_value,
       type: referralData.referral.type,
-      attributed: !!agent,
+      attributed: attribution.status === "attributed",
+      attribution: attribution.status,
+      attribution_note: attribution.note,
     }));
 
   // --- POST /api/conversions: Record a new conversion ---
@@ -56061,6 +56076,7 @@ ${catList}
 
       recordApiHit("/api/conversions");
       logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/conversions", params: { vendor: parsed.vendor }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+      if (!(await identityWritePersisted(res))) return;
       res.writeHead(201, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
       res.end(JSON.stringify(entry));
     } catch (err: any) {
@@ -56099,7 +56115,13 @@ ${catList}
     recordApiHit("/api/agents/:id/balance");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: `/api/agents/${agentId}/balance`, params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
-    res.end(JSON.stringify(summary));
+    res.end(JSON.stringify({
+      ...summary,
+      payouts_available: payoutsAvailable(),
+      payout_note: payoutsAvailable()
+        ? "Confirmed balance can be withdrawn with POST /api/agents/:id/payout."
+        : PAYOUTS_UNAVAILABLE_REASON,
+    }));
 
   // --- POST /api/conversions/confirm: Confirm eligible entries ---
   } else if (url.pathname === "/api/conversions/confirm" && req.method === "POST") {
@@ -56113,6 +56135,7 @@ ${catList}
       const confirmed = confirmEligibleEntries();
       recordApiHit("/api/conversions/confirm");
       logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/conversions/confirm", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: confirmed.length });
+      if (!(await identityWritePersisted(res))) return;
       res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
       res.end(JSON.stringify({ confirmed_count: confirmed.length, confirmed_ids: confirmed }));
     } catch (err: any) {
@@ -56156,6 +56179,7 @@ ${catList}
 
     recordApiHit("/api/conversions/clawback");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/conversions/clawback", params: { entry_id: parsed.entry_id }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+    if (!(await identityWritePersisted(res))) return;
     res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
     res.end(JSON.stringify({ success: true, entry_id: parsed.entry_id }));
 
@@ -56194,6 +56218,7 @@ ${catList}
         const updated = updateAgentX402Address(agent.id, parsed.x402_address);
         recordApiHit("/api/agents/me");
         logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "PATCH /api/agents/me", params: { x402_address: !!parsed.x402_address }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+        if (!(await identityWritePersisted(res))) return;
         res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
         res.end(JSON.stringify({
           id: updated.id,
@@ -56227,6 +56252,12 @@ ${catList}
     if (agent.id !== agentId) {
       res.writeHead(403, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
       res.end(JSON.stringify({ error: "You can only request payout for your own account" }));
+      return;
+    }
+
+    if (!payoutsAvailable()) {
+      res.writeHead(501, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+      res.end(JSON.stringify({ error: PAYOUTS_UNAVAILABLE_REASON, payouts_available: false }));
       return;
     }
 
@@ -56288,6 +56319,7 @@ ${catList}
 
       recordApiHit("/api/agents/:id/payout");
       logRequest({ ts: new Date().toISOString(), type: "api", endpoint: `/api/agents/${agentId}/payout`, params: { correlation_id: correlationId, amount: confirmedBalance, status: "success" }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+      if (!(await identityWritePersisted(res))) return;
       res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
       res.end(JSON.stringify({
         success: true,
@@ -56397,6 +56429,7 @@ ${catList}
 
       recordApiHit("/api/referral-codes");
       logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "POST /api/referral-codes", params: { vendor: parsed.vendor, status: code.status }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+      if (!(await identityWritePersisted(res))) return;
       res.writeHead(201, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
       res.end(JSON.stringify(code));
     } catch (err: any) {
@@ -56490,6 +56523,7 @@ ${catList}
 
       recordApiHit("/api/referral-codes/:id");
       logRequest({ ts: new Date().toISOString(), type: "api", endpoint: `PUT /api/referral-codes/${codeId}`, params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+      if (!(await identityWritePersisted(res))) return;
       res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
       res.end(JSON.stringify(updated));
     } catch (err: any) {
@@ -56514,6 +56548,7 @@ ${catList}
 
       recordApiHit("/api/referral-codes/:id");
       logRequest({ ts: new Date().toISOString(), type: "api", endpoint: `DELETE /api/referral-codes/${codeId}`, params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+      if (!(await identityWritePersisted(res))) return;
       res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
       res.end(JSON.stringify(revoked));
     } catch (err: any) {
@@ -56554,6 +56589,7 @@ ${catList}
       const friendship = addFriend(agent.id, parsed.agent_id);
       recordApiHit("/api/friends");
       logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "POST /api/friends", params: { friend_id: parsed.agent_id }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+      if (!(await identityWritePersisted(res))) return;
       res.writeHead(201, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
       res.end(JSON.stringify(friendship));
     } catch (err: any) {
@@ -56576,6 +56612,7 @@ ${catList}
       removeFriend(agent.id, friendId);
       recordApiHit("/api/friends/:agent_id");
       logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "DELETE /api/friends/" + friendId, params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+      if (!(await identityWritePersisted(res))) return;
       res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
       res.end(JSON.stringify({ removed: true }));
     } catch (err: any) {
@@ -56687,6 +56724,7 @@ ${catList}
     try {
       const sub = watchlistSubscribe(parsed.vendor, parsed.webhook_url);
       recordApiHit("/api/watchlist");
+      if (!(await identityWritePersisted(res))) return;
       res.writeHead(201, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
       res.end(JSON.stringify({ id: sub.id, vendor: sub.vendor, webhook_url: sub.webhook_url, secret: sub.secret, created_at: sub.created_at }));
     } catch (err: any) {
@@ -56721,6 +56759,7 @@ ${catList}
       res.end(JSON.stringify({ error: "Subscription not found" }));
     } else {
       recordApiHit("/api/watchlist/:id");
+      if (!(await identityWritePersisted(res))) return;
       res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
       res.end(JSON.stringify({ ok: true }));
     }
@@ -56907,6 +56946,10 @@ setInterval(() => {
   flushVendorSeries().catch((err) => console.error(`[vendor-series] flush failed: ${err?.message ?? err}`));
 }, FLUSH_INTERVAL_SECONDS * 1000).unref();
 
+setInterval(() => {
+  persistDurableStores().catch((err) => console.error(`[durable-store] flush failed: ${err?.message ?? err}`));
+}, FLUSH_INTERVAL_SECONDS * 1000).unref();
+
 // Flush on graceful shutdown. Buffered counters go first: they exist only in memory, so
 // a missed flush here is the one interval of data this design accepts losing on an
 // *unclean* exit and should never lose on a clean one.
@@ -56917,6 +56960,7 @@ async function onShutdown() {
   try {
     await flushPending();
     await flushVendorSeries(true);
+    await persistDurableStores();
     await flushTelemetry();
   } catch (err: any) {
     console.error(`[telemetry] shutdown flush failed: ${err?.message ?? err}`);

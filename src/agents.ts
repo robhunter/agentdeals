@@ -1,39 +1,32 @@
-import fs from "node:fs";
 import path from "node:path";
 import { createHash, randomBytes } from "node:crypto";
 import { fileURLToPath } from "node:url";
 import type { Agent } from "./types.js";
+import { createDurableStore } from "./durable-store.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const AGENTS_PATH = path.join(__dirname, "..", "data", "agents.json");
 
-let cachedAgents: Agent[] | null = null;
+const agentStore = createDurableStore<Agent>({
+  name: "agents",
+  property: "agents",
+  filePath: () => AGENTS_PATH,
+});
 
 function loadAgents(): Agent[] {
-  if (cachedAgents) return cachedAgents;
-
-  if (!fs.existsSync(AGENTS_PATH)) {
-    cachedAgents = [];
-    return cachedAgents;
-  }
-
-  try {
-    const raw = fs.readFileSync(AGENTS_PATH, "utf-8");
-    const data = JSON.parse(raw) as { agents?: Agent[] };
-    cachedAgents = Array.isArray(data.agents) ? data.agents : [];
-  } catch {
-    cachedAgents = [];
-  }
-  return cachedAgents;
+  return agentStore.read();
 }
 
 function saveAgents(agents: Agent[]): void {
-  fs.writeFileSync(AGENTS_PATH, JSON.stringify({ agents }, null, 2), "utf-8");
-  cachedAgents = agents;
+  agentStore.save(agents);
 }
 
 export function resetAgentsCache(): void {
-  cachedAgents = null;
+  agentStore.reset();
+}
+
+export function agentRegistryReadable(): boolean {
+  return agentStore.status().hydrated;
 }
 
 export function hashApiKey(key: string): string {
@@ -97,8 +90,7 @@ export function registerAgent(opts: {
     registered_at: new Date().toISOString(),
   };
 
-  agents.push(agent);
-  saveAgents(agents);
+  saveAgents([...agents, agent]);
 
   const result: RegisterResult = { agent };
   if (apiKey) result.api_key = apiKey;
@@ -204,13 +196,12 @@ async function verifyVestauthSignature(
  */
 export function updateAgentX402Address(agentId: string, x402Address: string | null): Agent {
   const agents = loadAgents();
-  const agent = agents.find(a => a.id === agentId);
-  if (!agent) {
+  if (!agents.some(a => a.id === agentId)) {
     throw new Error(`Agent not found: ${agentId}`);
   }
-  agent.x402_address = x402Address;
-  saveAgents(agents);
-  return agent;
+  const next = agents.map(a => (a.id === agentId ? { ...a, x402_address: x402Address } : a));
+  saveAgents(next);
+  return next.find(a => a.id === agentId)!;
 }
 
 /**
@@ -218,13 +209,12 @@ export function updateAgentX402Address(agentId: string, x402Address: string | nu
  */
 export function updateAgentTrustTier(agentId: string, newTier: "new" | "verified" | "trusted"): Agent {
   const agents = loadAgents();
-  const agent = agents.find(a => a.id === agentId);
-  if (!agent) {
+  if (!agents.some(a => a.id === agentId)) {
     throw new Error(`Agent not found: ${agentId}`);
   }
-  agent.trust_tier = newTier;
-  saveAgents(agents);
-  return agent;
+  const next = agents.map(a => (a.id === agentId ? { ...a, trust_tier: newTier } : a));
+  saveAgents(next);
+  return next.find(a => a.id === agentId)!;
 }
 
 export async function validateVestauthUrl(url: string): Promise<{ valid: boolean; error?: string }> {

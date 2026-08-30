@@ -1,6 +1,6 @@
-import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { createDurableStore } from "./durable-store.js";
 import { getAgentById } from "./agents.js";
 import { getActiveCodesForVendor, getAllActiveCodes, calculateCodeScore, type SubmittedReferralCode } from "./referral-codes.js";
 
@@ -13,33 +13,22 @@ export interface AgentFriendship {
   created_at: string;
 }
 
-let cachedFriends: AgentFriendship[] | null = null;
+const friendStore = createDurableStore<AgentFriendship>({
+  name: "agent_friends",
+  property: "agent_friends",
+  filePath: () => FRIENDS_PATH,
+});
 
 function loadFriends(): AgentFriendship[] {
-  if (cachedFriends) return cachedFriends;
-
-  if (!fs.existsSync(FRIENDS_PATH)) {
-    cachedFriends = [];
-    return cachedFriends;
-  }
-
-  try {
-    const raw = fs.readFileSync(FRIENDS_PATH, "utf-8");
-    const data = JSON.parse(raw) as { agent_friends?: AgentFriendship[] };
-    cachedFriends = Array.isArray(data.agent_friends) ? data.agent_friends : [];
-  } catch {
-    cachedFriends = [];
-  }
-  return cachedFriends;
+  return friendStore.read();
 }
 
 function saveFriends(friends: AgentFriendship[]): void {
-  fs.writeFileSync(FRIENDS_PATH, JSON.stringify({ agent_friends: friends }, null, 2), "utf-8");
-  cachedFriends = friends;
+  friendStore.save(friends);
 }
 
 export function resetFriendsCache(): void {
-  cachedFriends = null;
+  friendStore.reset();
 }
 
 const MAX_FRIENDS = 100;

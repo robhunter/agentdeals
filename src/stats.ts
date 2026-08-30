@@ -1796,6 +1796,11 @@ export async function redisJsonSet(key: string, value: unknown, ttlSeconds: numb
   return res.ok ? { ok: true } : { ok: false, error: res.error };
 }
 
+export async function redisJsonSetWithoutExpiry(key: string, value: unknown): Promise<JsonWriteResult> {
+  const res = await redisCommand<string>(["SET", key, JSON.stringify(value)]);
+  return res.ok ? { ok: true } : { ok: false, error: res.error };
+}
+
 async function redisMget(keys: string[]): Promise<RedisResult<(string | null)[]>> {
   const res = await redisCommand<(string | null)[]>(["MGET", ...keys]);
   if (!res.ok) return res;

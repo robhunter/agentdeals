@@ -5,6 +5,7 @@ import { fileURLToPath } from "node:url";
 import { attributeConversion, markConversion, getRequestsByAgent } from "./referral-requests.js";
 import { updateAgentTrustTier, getAgentById } from "./agents.js";
 import { calculateTrustTier, getCodesByAgent } from "./referral-codes.js";
+import { createDurableStore } from "./durable-store.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const LEDGER_PATH = path.join(__dirname, "..", "data", "ledger_entries.json");
@@ -58,52 +59,36 @@ export interface VendorClawbackConfig {
 }
 
 // --- Caches ---
-let cachedLedger: LedgerEntry[] | null = null;
-let cachedBalances: AgentBalance[] | null = null;
 let cachedClawbackConfig: VendorClawbackConfig[] | null = null;
+
+const ledgerStore = createDurableStore<LedgerEntry>({
+  name: "ledger_entries",
+  property: "ledger_entries",
+  filePath: () => LEDGER_PATH,
+});
+
+const balanceStore = createDurableStore<AgentBalance>({
+  name: "agent_balances",
+  property: "agent_balances",
+  filePath: () => BALANCES_PATH,
+});
 
 // --- Load/Save helpers ---
 
 function loadLedger(): LedgerEntry[] {
-  if (cachedLedger) return cachedLedger;
-  if (!fs.existsSync(LEDGER_PATH)) {
-    cachedLedger = [];
-    return cachedLedger;
-  }
-  try {
-    const raw = fs.readFileSync(LEDGER_PATH, "utf-8");
-    const data = JSON.parse(raw) as { ledger_entries?: LedgerEntry[] };
-    cachedLedger = Array.isArray(data.ledger_entries) ? data.ledger_entries : [];
-  } catch {
-    cachedLedger = [];
-  }
-  return cachedLedger;
+  return ledgerStore.read();
 }
 
 function saveLedger(entries: LedgerEntry[]): void {
-  fs.writeFileSync(LEDGER_PATH, JSON.stringify({ ledger_entries: entries }, null, 2), "utf-8");
-  cachedLedger = entries;
+  ledgerStore.save(entries);
 }
 
 function loadBalances(): AgentBalance[] {
-  if (cachedBalances) return cachedBalances;
-  if (!fs.existsSync(BALANCES_PATH)) {
-    cachedBalances = [];
-    return cachedBalances;
-  }
-  try {
-    const raw = fs.readFileSync(BALANCES_PATH, "utf-8");
-    const data = JSON.parse(raw) as { agent_balances?: AgentBalance[] };
-    cachedBalances = Array.isArray(data.agent_balances) ? data.agent_balances : [];
-  } catch {
-    cachedBalances = [];
-  }
-  return cachedBalances;
+  return balanceStore.read();
 }
 
 function saveBalances(balances: AgentBalance[]): void {
-  fs.writeFileSync(BALANCES_PATH, JSON.stringify({ agent_balances: balances }, null, 2), "utf-8");
-  cachedBalances = balances;
+  balanceStore.save(balances);
 }
 
 function loadClawbackConfig(): VendorClawbackConfig[] {
@@ -123,8 +108,8 @@ function loadClawbackConfig(): VendorClawbackConfig[] {
 }
 
 export function resetLedgerCache(): void {
-  cachedLedger = null;
-  cachedBalances = null;
+  ledgerStore.reset();
+  balanceStore.reset();
   cachedClawbackConfig = null;
 }
 

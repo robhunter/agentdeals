@@ -7,11 +7,12 @@ import { getCategories, getDealChanges, getPersonalizedChanges, getNewOffers, ge
 import { toSlug, vendorSlugMap, resolveVendorSlug } from "./vendor-slug.js";
 import { recordToolCall, logRequest, recordSearchQuery } from "./stats.js";
 import { registerAgent, validateVestauthUrl, getAgentByApiKeyHash, hashApiKey, updateAgentX402Address } from "./agents.js";
-import { logReferralRequest } from "./referral-requests.js";
+import { attributeByApiKey } from "./referral-attribution.js";
+import { persistDurableStores } from "./durable-store.js";
 import { getAgentBalance, getAgentLedgerEntries, recordPayout, MINIMUM_PAYOUT_AMOUNT, getLeaderboard } from "./ledger.js";
 import { submitReferralCode, getCodesByAgent, calculateTrustTier, getDailySubmissionCount, getDailyLimit, getRankedCodesForVendor, calculateCodeScore } from "./referral-codes.js";
 import { getBestReferralCode } from "./platform-codes.js";
-import { validateX402Address, executeTransfer, generateCorrelationId } from "./x402.js";
+import { validateX402Address, executeTransfer, generateCorrelationId, payoutsAvailable, PAYOUTS_UNAVAILABLE_REASON } from "./x402.js";
 import { addFriend, removeFriend, getFriends, getFriendCodesForVendors } from "./friends.js";
 import { getStackRecommendation } from "./stacks.js";
 import { estimateCosts } from "./costs.js";
@@ -46,6 +47,24 @@ function toConciseOffer(offer: Offer | EnrichedOffer) {
 
 function toConciseDealChange(change: DealChange) {
   return { vendor: change.vendor, change_type: change.change_type, date: change.date, date_source: change.date_source, summary: change.summary };
+}
+
+interface ToolTextResult {
+  [key: string]: unknown;
+  isError: true;
+  content: { type: "text"; text: string }[];
+}
+
+async function unpersistedWriteResult(): Promise<ToolTextResult | null> {
+  const persisted = await persistDurableStores();
+  if (persisted.ok) return null;
+  return {
+    isError: true,
+    content: [{
+      type: "text" as const,
+      text: `Not saved: durable storage is unavailable, so this change was discarded and nothing was recorded. Retry later.${persisted.error ? ` (${persisted.error})` : ""}`,
+    }],
+  };
 }
 
 export function createServer(getSessionId?: () => string | undefined, getClientName?: () => string | undefined): McpServer {
@@ -1040,6 +1059,9 @@ Suggested monitoring cadence: run this check weekly to catch pricing changes ear
           response.vestauth_public_key_url = result.agent.vestauth_public_key_url;
         }
 
+        const unpersisted = await unpersistedWriteResult();
+        if (unpersisted) return unpersisted;
+
         logRequest({ ts: new Date().toISOString(), type: "mcp", endpoint: "register_agent", params: { name }, result_count: 1, session_id: getSessionId?.() });
 
         return {
@@ -1060,7 +1082,7 @@ Suggested monitoring cadence: run this check weekly to catch pricing changes ear
     "get_referral_code",
     {
       description:
-        "Get the referral code and URL for a specific vendor. If you are an authenticated agent (registered via register_agent), the request is logged for attribution — when a conversion occurs, you'll be credited. Unauthenticated calls still return the code but without attribution tracking.",
+        "Get the referral code and URL for a specific vendor. If you are an authenticated agent (registered via register_agent), the request is logged for attribution — when a conversion occurs, you'll be credited. Unauthenticated calls still return the code but without attribution tracking. The response always states whether attribution happened and, when it did not, why.",
       annotations: {
         readOnlyHint: true,
         destructiveHint: false,
@@ -1082,21 +1104,8 @@ Suggested monitoring cadence: run this check weekly to catch pricing changes ear
           };
         }
 
-        // If API key provided, authenticate and log attribution
-        let attributed = false;
-        if (api_key) {
-          const hash = hashApiKey(api_key);
-          const agent = getAgentByApiKeyHash(hash);
-          if (agent) {
-            logReferralRequest({
-              agent_id: agent.id,
-              vendor: referralData.vendor,
-              referral_code: referralData.referral.code ?? "",
-              referral_url: referralData.referral.url,
-            });
-            attributed = true;
-          }
-        }
+        const outcome = await attributeByApiKey(api_key, referralData);
+        const attributed = outcome.status === "attributed";
 
         const response = {
           vendor: referralData.vendor,
@@ -1105,6 +1114,8 @@ Suggested monitoring cadence: run this check weekly to catch pricing changes ear
           referee_value: referralData.referral.referee_value,
           type: referralData.referral.type,
           attributed,
+          attribution: outcome.status,
+          attribution_note: outcome.note,
         };
 
         logRequest({ ts: new Date().toISOString(), type: "mcp", endpoint: "get_referral_code", params: { vendor, attributed }, result_count: 1, session_id: getSessionId?.() });
@@ -1126,7 +1137,7 @@ Suggested monitoring cadence: run this check weekly to catch pricing changes ear
     "check_balance",
     {
       description:
-        "Check your referral credit balance. Requires authentication via API key (from register_agent). Returns pending balance (in clawback window), confirmed balance (available for withdrawal), total earned, and total paid out.",
+        "Check your referral credit balance. Requires authentication via API key (from register_agent). Returns pending balance (in the clawback window), confirmed balance, total earned, and total paid out, plus whether payouts are currently available. Confirmed credit is not withdrawable while payouts_available is false.",
       annotations: {
         readOnlyHint: true,
         destructiveHint: false,
@@ -1158,10 +1169,19 @@ Suggested monitoring cadence: run this check weekly to catch pricing changes ear
           updated_at: null,
         };
 
+        const payoutsEnabled = payoutsAvailable();
+        const balanceResponse = {
+          ...summary,
+          payouts_available: payoutsEnabled,
+          payout_note: payoutsEnabled
+            ? "Confirmed balance can be withdrawn with request_payout."
+            : PAYOUTS_UNAVAILABLE_REASON,
+        };
+
         logRequest({ ts: new Date().toISOString(), type: "mcp", endpoint: "check_balance", params: { agent_id: agent.id }, result_count: 1, session_id: getSessionId?.() });
 
         return {
-          content: [{ type: "text" as const, text: JSON.stringify(summary, null, 2) }],
+          content: [{ type: "text" as const, text: JSON.stringify(balanceResponse, null, 2) }],
         };
       } catch (err: any) {
         return {
@@ -1177,7 +1197,7 @@ Suggested monitoring cadence: run this check weekly to catch pricing changes ear
     "request_payout",
     {
       description:
-        "Request a payout of your confirmed referral credits via x402 stablecoin transfer. Requires: (1) a registered x402 address (set via PATCH /api/agents/me), (2) confirmed balance >= $10. Full balance is withdrawn — no partial payouts in Phase 2.",
+        "Request a payout of your confirmed referral credits. Payouts are not enabled yet — no transfer provider is configured, so this call reports that and moves no funds. When enabled it will require a registered payout address (set via PATCH /api/agents/me) and a confirmed balance of at least $10, and will withdraw the full balance.",
       annotations: {
         readOnlyHint: false,
         destructiveHint: false,
@@ -1189,6 +1209,13 @@ Suggested monitoring cadence: run this check weekly to catch pricing changes ear
     async ({ api_key }) => {
       try {
         recordToolCall("request_payout", getClientName?.());
+
+        if (!payoutsAvailable()) {
+          return {
+            isError: true,
+            content: [{ type: "text" as const, text: PAYOUTS_UNAVAILABLE_REASON }],
+          };
+        }
 
         const hash = hashApiKey(api_key);
         const agent = getAgentByApiKeyHash(hash);
@@ -1241,6 +1268,9 @@ Suggested monitoring cadence: run this check weekly to catch pricing changes ear
           correlation_id: correlationId,
           metadata: { chain: transferResult.chain, token: transferResult.token },
         });
+
+        const unpersisted = await unpersistedWriteResult();
+        if (unpersisted) return unpersisted;
 
         logRequest({ ts: new Date().toISOString(), type: "mcp", endpoint: "request_payout", params: { agent_id: agent.id, correlation_id: correlationId, amount: confirmedBalance, status: "success" }, result_count: 1, session_id: getSessionId?.() });
 
@@ -1312,6 +1342,9 @@ Suggested monitoring cadence: run this check weekly to catch pricing changes ear
           agent_id: agent.id,
           trust_tier: trustTier,
         });
+
+        const unpersisted = await unpersistedWriteResult();
+        if (unpersisted) return unpersisted;
 
         logRequest({ ts: new Date().toISOString(), type: "mcp", endpoint: "submit_referral_code", params: { vendor, status: submitted.status }, result_count: 1, session_id: getSessionId?.() });
 
@@ -1471,6 +1504,11 @@ Suggested monitoring cadence: run this check weekly to catch pricing changes ear
         } else {
           const codes = getFriendCodesForVendors(agent.id);
           result = { action: "codes", vendors: codes, total_vendors: codes.length };
+        }
+
+        if (action === "add" || action === "remove") {
+          const unpersisted = await unpersistedWriteResult();
+          if (unpersisted) return unpersisted;
         }
 
         logRequest({ ts: new Date().toISOString(), type: "mcp", endpoint: "manage_friends", params: { action, agent_id }, result_count: 1, session_id: getSessionId?.() });
