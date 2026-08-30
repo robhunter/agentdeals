@@ -44,6 +44,7 @@ import { rankOffers, rankForListing, rotateListing, utcDate, CRITERIA_PATH, DEMO
 import type { RankedEntry, RankingResult } from "./ranking.js";
 import { verificationLedger, QUARANTINE_AFTER_FAILURES } from "./verification-state.js";
 import { partitionAlternatives, partitionAlternativesAcross, productRoleSentence, MEMBERSHIP_GATE_RULES, MEMBERSHIP_GATE_ORDER, MEMBERSHIP_GATE_SYMMETRY, MEMBERSHIP_GATE_SCOPE, MEMBERSHIP_GATE_CORRECTIONS } from "./product-role.js";
+import { resolveCuratedAlternatives, curatedAlternativesFor, addCuratedToPool } from "./curated-alternatives.js";
 import type { Agent, ChangeDateSource, DealChange, RiskCause, LinkUnreachable, Offer } from "./types.js";
 import { changeDateLabel, changeDateClause, changeDatePublished, changeEventStartDate, capListSections, latestEventDate, feedEntryUpdated, undatedGroupHeading, firstReadHeading, discoveryBatchNote, DISCOVERED_DATE_PREFIX, UNDATED_GROUP_NOTE } from "./change-dates.js";
 import { FEED_CORRECTIONS, correctionEntriesXml } from "./feed-corrections.js";
@@ -3623,6 +3624,12 @@ const erosionAffectedCategories = (() => {
   return new Set([...catNeg.entries()].sort((a, b) => b[1] - a[1]).slice(0, 10).map(e => e[0]));
 })();
 
+const CURATED_ALTS_HEADING = "Recommended Migration Targets";
+
+function curatedAltsNote(vendorName: string): string {
+  return `These alternatives were identified from ${escHtmlServer(vendorName)}&rsquo;s pricing changes as recommended replacements.`;
+}
+
 function buildVendorPage(slug: string): string | null {
   const vendorName = vendorSlugMap.get(slug);
   if (!vendorName) return null;
@@ -3673,6 +3680,16 @@ function buildVendorPage(slug: string): string | null {
     { queryKey: `alternatives:${primary.category}:${vendorName}`, changes: dealChanges },
   );
   const alternatives = alternativesRanking.entries.slice(0, 12).map(e => e.offer);
+
+  const curatedVendorRanking = (() => {
+    const kept = curatedAlternativesFor(vendorName, allChanges, offers, vendorOffers).kept;
+    if (kept.length === 0) return null;
+    return rankForListing(kept, {
+      queryKey: `curated-alternatives:${vendorName}`,
+      changes: dealChanges,
+    });
+  })();
+  const curatedVendorAlts = curatedVendorRanking?.entries.map(e => e.offer) ?? [];
 
   const vendorComparisons = Array.from(comparisonMap.entries())
     .filter(([, [a, b]]) => a === vendorName || b === vendorName);
@@ -3841,6 +3858,18 @@ ${enrichedAlts.map(a => {
 
   const membershipExclusionsHtml = alternativesMembership.removed.length > 0 ? `
     <p class="alt-excluded" style="margin:.7rem 0 0;font-size:.85rem;color:var(--text-muted)">Left out of this list: ${alternativesMembership.removed.map(r => `<a href="/vendor/${toSlug(r.offer.vendor)}">${escHtmlServer(r.offer.vendor)}</a> (${escHtmlServer(MEMBERSHIP_GATE_RULES[r.gate].label.toLowerCase())})`).join(", ")}. Each is still listed in <a href="/category/${toSlug(primary.category)}">${escHtmlServer(primary.category)}</a>, with the vendor's own words we read that from on its page. <a href="${CRITERIA_PATH}#membership">How we decide this</a>.</p>` : "";
+  const curatedAlternativesHtml = curatedVendorRanking ? `
+  <div class="section">
+    <h2>${CURATED_ALTS_HEADING}</h2>
+    <p class="section-note" style="margin:0 0 1rem;font-size:.85rem;color:var(--text-muted)">${curatedAltsNote(vendorName)}</p>
+    <div class="alt-grid">
+${curatedVendorAlts.map(a => `      <a href="/vendor/${toSlug(a.vendor)}" class="alt-card">
+        <span class="alt-name">${escHtmlServer(a.vendor)}</span>
+        <span class="alt-tier">${escHtmlServer(a.tier)}</span>
+      </a>`).join("\n")}
+    </div>
+${renderAuditBlock(curatedVendorRanking.tie_break, { shown: curatedVendorAlts.length, total: curatedVendorRanking.entries.length })}
+  </div>` : "";
   const alternativesHtml = alternatives.length > 0 ? `
   <div class="section">
     <h2>Alternatives in ${escHtmlServer(primary.category)}</h2>
@@ -4182,7 +4211,7 @@ ${growthPathHtml}
     ${changesHtml}
     <p style="margin-top:.75rem;font-size:.8rem"><a href="/pricing-changes">View all ${dealChanges.length} pricing changes across all vendors &rarr;</a></p>
   </div>
-${alternativesHtml}
+${curatedAlternativesHtml}${alternativesHtml}
 ${comparisonsHtml}
 ${altPagesHtml}
 ${reportAppearancesHtml}
@@ -4246,7 +4275,9 @@ function buildAlternativesPage(slug: string): string | null {
       dedupedAlts.push(a);
     }
   }
-  const altMembership = partitionAlternativesAcross(dedupedAlts, vendorOffers);
+  const curated = resolveCuratedAlternatives(vendorName, allChanges, offers);
+  const curatedAltNames = new Set(curated.matched.map(o => o.vendor));
+  const altMembership = partitionAlternativesAcross(addCuratedToPool(dedupedAlts, curated.matched), vendorOffers);
   const altRanking = rankForListing(enrichOffers(altMembership.kept), {
     queryKey: `alternative-to:${vendorName}`,
     changes: dealChanges,
@@ -4254,15 +4285,11 @@ function buildAlternativesPage(slug: string): string | null {
   const enrichedAlts = altRanking.entries.map(e => e.offer);
   const altDemerits = new Map(altRanking.entries.map(e => [e.offer.vendor, e]));
 
-  const curatedAltNames = new Set<string>();
-  for (const c of vendorChanges) {
-    if (c.alternatives && c.alternatives.length > 0) {
-      for (const alt of c.alternatives) curatedAltNames.add(alt);
-    }
+  const curatedAlts = enrichedAlts.filter(a => curatedAltNames.has(a.vendor));
+  const listedCategories = [...vendorCategories];
+  for (const a of enrichedAlts) {
+    if (!listedCategories.includes(a.category)) listedCategories.push(a.category);
   }
-  const curatedAlts = curatedAltNames.size > 0
-    ? enrichedAlts.filter(a => curatedAltNames.has(a.vendor))
-    : [];
 
   const currentYear = new Date().getFullYear();
   const title = `Best ${vendorName} Alternatives with Free Tiers (${currentYear}) | AgentDeals`;
@@ -4333,8 +4360,8 @@ function buildAlternativesPage(slug: string): string | null {
 
   const curatedHtml = curatedAlts.length > 0 ? `
   <div class="section">
-    <h2>Recommended Migration Targets</h2>
-    <p class="section-note">These alternatives were identified from ${escHtmlServer(vendorName)}&rsquo;s pricing changes as recommended replacements.</p>
+    <h2>${CURATED_ALTS_HEADING}</h2>
+    <p class="section-note">${curatedAltsNote(vendorName)}</p>
     <div class="alt-list">
 ${curatedAlts.map(a => altCard(a, true)).join("\n")}
     </div>
@@ -4387,7 +4414,7 @@ ${renderAuditBlock(altRanking.tie_break)}
     : riskLevel === "caution"
     ? `${vendorName} has a free tier (${primary.tier}), but it's flagged as "caution" because of one specific recorded change${riskCause ? `, ${changeDateClause(riskCause)}: ${riskCause.summary}` : "."}`
     : `${vendorName}'s free tier (${primary.tier}) is considered risky because of one specific recorded change${riskCause ? `, ${changeDateClause(riskCause)}: ${riskCause.summary}` : "."} Consider migrating to a more stable alternative.`;
-  const faqCountAnswer = `There are ${enrichedAlts.length} free alternatives to ${vendorName} tracked on AgentDeals across the ${vendorCategories.join(", ")} categor${vendorCategories.length > 1 ? "ies" : "y"}.`;
+  const faqCountAnswer = `There are ${enrichedAlts.length} free alternatives to ${vendorName} tracked on AgentDeals across the ${listedCategories.join(", ")} categor${listedCategories.length > 1 ? "ies" : "y"}.`;
   const faqChangesAnswer = vendorChanges.length > 0
     ? `Yes, ${vendorName} has ${vendorChanges.length} recorded pricing change${vendorChanges.length !== 1 ? "s" : ""}. The most recent was ${changeDateClause(vendorChanges[0])}: ${vendorChanges[0].summary}`
     : altLevelWithheld

@@ -1,0 +1,817 @@
+{
+  "unmatched": [
+    {
+      "name": "Amazon ECS Express Mode",
+      "named_by": [
+        "AWS"
+      ]
+    },
+    {
+      "name": "Amazon EKS native service mesh",
+      "named_by": [
+        "AWS"
+      ]
+    },
+    {
+      "name": "Amazon Neptune",
+      "named_by": [
+        "Neo4j AuraDB"
+      ]
+    },
+    {
+      "name": "Amazon WorkSpaces",
+      "named_by": [
+        "Microsoft"
+      ]
+    },
+    {
+      "name": "Anthropic Claude",
+      "named_by": [
+        "OpenAI"
+      ]
+    },
+    {
+      "name": "Anthropic Claude API",
+      "named_by": [
+        "DeepSeek",
+        "Google Gemini API",
+        "OpenAI"
+      ]
+    },
+    {
+      "name": "Apache Ozone",
+      "named_by": [
+        "MinIO"
+      ]
+    },
+    {
+      "name": "Apollo.io",
+      "named_by": [
+        "Prospect.io"
+      ]
+    },
+    {
+      "name": "AWS CDK",
+      "named_by": [
+        "AWS"
+      ]
+    },
+    {
+      "name": "AWS Fargate",
+      "named_by": [
+        "AWS"
+      ]
+    },
+    {
+      "name": "AWS Free Tier",
+      "named_by": [
+        "LocalStack"
+      ]
+    },
+    {
+      "name": "AWS Lambda",
+      "named_by": [
+        "Atlassian Forge"
+      ]
+    },
+    {
+      "name": "AWS Partner Network",
+      "named_by": [
+        "Microsoft Partner Developer Benefits"
+      ]
+    },
+    {
+      "name": "AWS S3",
+      "named_by": [
+        "Firebase",
+        "Uploadthing"
+      ]
+    },
+    {
+      "name": "Azure Container Apps",
+      "named_by": [
+        "AWS"
+      ]
+    },
+    {
+      "name": "Azure for Startups",
+      "named_by": [
+        "Cloudflare Startup Program",
+        "DigitalOcean",
+        "Google Cloud"
+      ]
+    },
+    {
+      "name": "Azure GPU VMs",
+      "named_by": [
+        "AWS"
+      ]
+    },
+    {
+      "name": "Azure OpenAI Realtime",
+      "named_by": [
+        "OpenAI"
+      ]
+    },
+    {
+      "name": "Azure Virtual Desktop",
+      "named_by": [
+        "Microsoft"
+      ]
+    },
+    {
+      "name": "BigCommerce API",
+      "named_by": [
+        "Amazon SP-API",
+        "Google Content API for Shopping"
+      ]
+    },
+    {
+      "name": "Bing Web Search API",
+      "named_by": [
+        "Google Programmable Search Engine"
+      ]
+    },
+    {
+      "name": "Bitly",
+      "named_by": [
+        "Dub.co"
+      ]
+    },
+    {
+      "name": "Bluesky API",
+      "named_by": [
+        "X (Twitter)",
+        "X API (Twitter)"
+      ]
+    },
+    {
+      "name": "Bluesky AT Protocol",
+      "named_by": [
+        "X (Twitter)"
+      ]
+    },
+    {
+      "name": "Ceph",
+      "named_by": [
+        "MinIO"
+      ]
+    },
+    {
+      "name": "Citrix DaaS",
+      "named_by": [
+        "Microsoft"
+      ]
+    },
+    {
+      "name": "Codacy",
+      "named_by": [
+        "SonarQube Cloud"
+      ]
+    },
+    {
+      "name": "CodeClimate",
+      "named_by": [
+        "SonarQube Cloud"
+      ]
+    },
+    {
+      "name": "Codeium",
+      "named_by": [
+        "Alibaba Cloud Qwen Code"
+      ]
+    },
+    {
+      "name": "CodeSandbox",
+      "named_by": [
+        "Replit"
+      ]
+    },
+    {
+      "name": "Cody",
+      "named_by": [
+        "GitHub Copilot"
+      ]
+    },
+    {
+      "name": "Cohere API",
+      "named_by": [
+        "OpenAI"
+      ]
+    },
+    {
+      "name": "Crossplane",
+      "named_by": [
+        "HashiCorp"
+      ]
+    },
+    {
+      "name": "Cyberduck",
+      "named_by": [
+        "odrive"
+      ]
+    },
+    {
+      "name": "DALL-E (credits)",
+      "named_by": [
+        "xAI (Grok)"
+      ]
+    },
+    {
+      "name": "Dgraph Cloud",
+      "named_by": [
+        "Neo4j AuraDB"
+      ]
+    },
+    {
+      "name": "DigitalOcean App Platform",
+      "named_by": [
+        "AWS"
+      ]
+    },
+    {
+      "name": "DigitalOcean Hatch",
+      "named_by": [
+        "Google Cloud"
+      ]
+    },
+    {
+      "name": "Docker Desktop",
+      "named_by": [
+        "Testcontainers Cloud"
+      ]
+    },
+    {
+      "name": "DragonflyDB",
+      "named_by": [
+        "Redis"
+      ]
+    },
+    {
+      "name": "DynamoDB",
+      "named_by": [
+        "Fauna"
+      ]
+    },
+    {
+      "name": "Elastic Cloud",
+      "named_by": [
+        "searchly.com"
+      ]
+    },
+    {
+      "name": "ElevenLabs",
+      "named_by": [
+        "OpenAI"
+      ]
+    },
+    {
+      "name": "env0",
+      "named_by": [
+        "HCP Terraform",
+        "Terragrunt Scale"
+      ]
+    },
+    {
+      "name": "Fargate Platform Version 1.4.0+",
+      "named_by": [
+        "AWS"
+      ]
+    },
+    {
+      "name": "Firebase Auth",
+      "named_by": [
+        "Auth0"
+      ]
+    },
+    {
+      "name": "FreshBooks API",
+      "named_by": [
+        "Xero Developer API"
+      ]
+    },
+    {
+      "name": "GarageHQ",
+      "named_by": [
+        "MinIO"
+      ]
+    },
+    {
+      "name": "Gemini 2.5 Flash",
+      "named_by": [
+        "Google Gemini API"
+      ]
+    },
+    {
+      "name": "Gemini 3.0 Flash",
+      "named_by": [
+        "Google Gemini API"
+      ]
+    },
+    {
+      "name": "Gemini Code Assist",
+      "named_by": [
+        "GitHub Copilot"
+      ]
+    },
+    {
+      "name": "Giphy API",
+      "named_by": [
+        "Google Tenor API"
+      ]
+    },
+    {
+      "name": "Git LFS",
+      "named_by": [
+        "Unity DevOps"
+      ]
+    },
+    {
+      "name": "GitHub Copilot Free",
+      "named_by": [
+        "Gemini Code Assist"
+      ]
+    },
+    {
+      "name": "Gitpod",
+      "named_by": [
+        "Replit"
+      ]
+    },
+    {
+      "name": "Google Cloud for Startups",
+      "named_by": [
+        "DigitalOcean"
+      ]
+    },
+    {
+      "name": "Google Cloud GPUs",
+      "named_by": [
+        "AWS"
+      ]
+    },
+    {
+      "name": "Google Cloud Partner Advantage",
+      "named_by": [
+        "Microsoft Partner Developer Benefits"
+      ]
+    },
+    {
+      "name": "Google Cloud Speech-to-Text",
+      "named_by": [
+        "OpenAI"
+      ]
+    },
+    {
+      "name": "Google Custom Search",
+      "named_by": [
+        "Brave Search API"
+      ]
+    },
+    {
+      "name": "Google for Startups Cloud",
+      "named_by": [
+        "Google"
+      ]
+    },
+    {
+      "name": "Google for Startups Cloud Program",
+      "named_by": [
+        "Cloudflare Startup Program"
+      ]
+    },
+    {
+      "name": "Google Gemini",
+      "named_by": [
+        "Anthropic",
+        "OpenAI"
+      ]
+    },
+    {
+      "name": "Google Gemini 2.5 Flash",
+      "named_by": [
+        "Google Gemini 2.0 Flash"
+      ]
+    },
+    {
+      "name": "Google Gemini 2.5 Pro",
+      "named_by": [
+        "Google Gemini 2.0 Flash"
+      ]
+    },
+    {
+      "name": "Google Gemini Advanced",
+      "named_by": [
+        "Anthropic Claude"
+      ]
+    },
+    {
+      "name": "Google Maps API key authentication",
+      "named_by": [
+        "Google Maps"
+      ]
+    },
+    {
+      "name": "Google Merchant API",
+      "named_by": [
+        "Google Content API for Shopping"
+      ]
+    },
+    {
+      "name": "Google Workspace Enterprise Plus",
+      "named_by": [
+        "Microsoft"
+      ]
+    },
+    {
+      "name": "gpt-image-1",
+      "named_by": [
+        "OpenAI"
+      ]
+    },
+    {
+      "name": "Imgur API",
+      "named_by": [
+        "Google Tenor API"
+      ]
+    },
+    {
+      "name": "Istio",
+      "named_by": [
+        "AWS"
+      ]
+    },
+    {
+      "name": "JetBrains AI",
+      "named_by": [
+        "Google"
+      ]
+    },
+    {
+      "name": "Jira Cloud",
+      "named_by": [
+        "Atlassian"
+      ]
+    },
+    {
+      "name": "KeyDB",
+      "named_by": [
+        "Redis"
+      ]
+    },
+    {
+      "name": "Lambda Cloud",
+      "named_by": [
+        "AWS"
+      ]
+    },
+    {
+      "name": "Last.fm API",
+      "named_by": [
+        "Spotify API"
+      ]
+    },
+    {
+      "name": "Lemlist",
+      "named_by": [
+        "Prospect.io"
+      ]
+    },
+    {
+      "name": "Linkerd",
+      "named_by": [
+        "AWS"
+      ]
+    },
+    {
+      "name": "Linode",
+      "named_by": [
+        "DigitalOcean",
+        "OVHcloud"
+      ]
+    },
+    {
+      "name": "Mac client",
+      "named_by": [
+        "AWS"
+      ]
+    },
+    {
+      "name": "MailerSend",
+      "named_by": [
+        "Amazon SES"
+      ]
+    },
+    {
+      "name": "Mailgun",
+      "named_by": [
+        "SendGrid",
+        "SendGrid Accelerate"
+      ]
+    },
+    {
+      "name": "Mastodon API",
+      "named_by": [
+        "X (Twitter)",
+        "X API (Twitter)"
+      ]
+    },
+    {
+      "name": "Mistral",
+      "named_by": [
+        "Anthropic"
+      ]
+    },
+    {
+      "name": "Mistral API",
+      "named_by": [
+        "OpenAI"
+      ]
+    },
+    {
+      "name": "Moto (open-source AWS mock)",
+      "named_by": [
+        "LocalStack"
+      ]
+    },
+    {
+      "name": "MultCloud",
+      "named_by": [
+        "odrive"
+      ]
+    },
+    {
+      "name": "MusicBrainz API",
+      "named_by": [
+        "Spotify API"
+      ]
+    },
+    {
+      "name": "Node.js 22 Lambda runtime",
+      "named_by": [
+        "AWS"
+      ]
+    },
+    {
+      "name": "OpenAI API",
+      "named_by": [
+        "DeepSeek",
+        "Google Gemini API"
+      ]
+    },
+    {
+      "name": "OpenAI ChatGPT Plus",
+      "named_by": [
+        "Anthropic Claude"
+      ]
+    },
+    {
+      "name": "OpenAI GPT-4o",
+      "named_by": [
+        "Anthropic"
+      ]
+    },
+    {
+      "name": "OpenAI Realtime API (GA)",
+      "named_by": [
+        "OpenAI"
+      ]
+    },
+    {
+      "name": "OpenTofu",
+      "named_by": [
+        "HashiCorp"
+      ]
+    },
+    {
+      "name": "OrbStack",
+      "named_by": [
+        "Docker Desktop"
+      ]
+    },
+    {
+      "name": "Perforce",
+      "named_by": [
+        "Unity DevOps"
+      ]
+    },
+    {
+      "name": "Perplexity",
+      "named_by": [
+        "OpenAI"
+      ]
+    },
+    {
+      "name": "PlanetScale",
+      "named_by": [
+        "Amazon Aurora PostgreSQL",
+        "DigitalOcean",
+        "Supabase",
+        "Xata Lite"
+      ]
+    },
+    {
+      "name": "Podman",
+      "named_by": [
+        "Docker Hub",
+        "Testcontainers Cloud"
+      ]
+    },
+    {
+      "name": "Podman Desktop",
+      "named_by": [
+        "Docker Desktop"
+      ]
+    },
+    {
+      "name": "QuickBooks API",
+      "named_by": [
+        "Xero Developer API"
+      ]
+    },
+    {
+      "name": "Rancher Desktop",
+      "named_by": [
+        "Docker Desktop"
+      ]
+    },
+    {
+      "name": "rclone",
+      "named_by": [
+        "odrive"
+      ]
+    },
+    {
+      "name": "Reddit API",
+      "named_by": [
+        "X (Twitter)"
+      ]
+    },
+    {
+      "name": "SeaweedFS",
+      "named_by": [
+        "MinIO"
+      ]
+    },
+    {
+      "name": "Selenium IDE",
+      "named_by": [
+        "everystep-automation.com"
+      ]
+    },
+    {
+      "name": "Self-hosted Connect apps",
+      "named_by": [
+        "Atlassian Forge"
+      ]
+    },
+    {
+      "name": "SerpAPI",
+      "named_by": [
+        "Brave Search API",
+        "Google Programmable Search Engine"
+      ]
+    },
+    {
+      "name": "Shopify API",
+      "named_by": [
+        "Amazon SP-API",
+        "Google Content API for Shopping"
+      ]
+    },
+    {
+      "name": "Short.io",
+      "named_by": [
+        "Dub.co"
+      ]
+    },
+    {
+      "name": "Stability AI",
+      "named_by": [
+        "OpenAI"
+      ]
+    },
+    {
+      "name": "Stable Diffusion (self-hosted)",
+      "named_by": [
+        "xAI (Grok)"
+      ]
+    },
+    {
+      "name": "Standard WorkSpaces clients",
+      "named_by": [
+        "AWS"
+      ]
+    },
+    {
+      "name": "Supabase Auth",
+      "named_by": [
+        "Auth0"
+      ]
+    },
+    {
+      "name": "Supabase Storage",
+      "named_by": [
+        "Firebase"
+      ]
+    },
+    {
+      "name": "Temporal",
+      "named_by": [
+        "DBOS"
+      ]
+    },
+    {
+      "name": "Terraform",
+      "named_by": [
+        "AWS"
+      ]
+    },
+    {
+      "name": "Testcontainers (open-source)",
+      "named_by": [
+        "Testcontainers Cloud"
+      ]
+    },
+    {
+      "name": "Upstash Redis",
+      "named_by": [
+        "Cloudflare Durable Objects"
+      ]
+    },
+    {
+      "name": "UptimeObserver",
+      "named_by": [
+        "Servervana"
+      ]
+    },
+    {
+      "name": "Valkey",
+      "named_by": [
+        "Redis"
+      ]
+    },
+    {
+      "name": "Vercel Blob",
+      "named_by": [
+        "Uploadthing"
+      ]
+    },
+    {
+      "name": "Vultr",
+      "named_by": [
+        "DigitalOcean",
+        "Hetzner",
+        "OVHcloud"
+      ]
+    },
+    {
+      "name": "Wave API",
+      "named_by": [
+        "Xero Developer API"
+      ]
+    },
+    {
+      "name": "Web client",
+      "named_by": [
+        "AWS"
+      ]
+    },
+    {
+      "name": "Windmill",
+      "named_by": [
+        "n8n"
+      ]
+    },
+    {
+      "name": "Windows client",
+      "named_by": [
+        "AWS"
+      ]
+    },
+    {
+      "name": "WooCommerce API",
+      "named_by": [
+        "Amazon SP-API"
+      ]
+    },
+    {
+      "name": "Xitoring",
+      "named_by": [
+        "Servervana"
+      ]
+    },
+    {
+      "name": "ZITADEL",
+      "named_by": [
+        "Phase Two"
+      ]
+    },
+    {
+      "name": "Zoho Workplace",
+      "named_by": [
+        "Microsoft"
+      ]
+    }
+  ]
+}
