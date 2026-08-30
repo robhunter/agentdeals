@@ -189,7 +189,7 @@ function startHttpServer(): Promise<ChildProcess> {
     const serverPath = path.join(__dirname, "..", "dist", "serve.js");
     const proc = spawn("node", [serverPath], {
       stdio: ["pipe", "pipe", "pipe"],
-      env: { ...process.env, PORT: "0", BASE_URL: "http://localhost" },
+      env: { ...process.env, PORT: "0", BASE_URL: "http://localhost", AGENTDEALS_REGISTER_LIMIT_PER_HOUR: "50" },
     });
 
     const timeout = setTimeout(() => {

@@ -60,6 +60,14 @@ The HTTP server port defaults to 3000 and can be configured via the `PORT` envir
 PORT=8080 npm run serve
 ```
 
+### Environment
+
+| Variable | Default | Effect |
+|---|---|---|
+| `PORT` | `3000` | HTTP server port |
+| `AGENTDEALS_PLATFORM_SECRET` | unset | The credential for `POST /api/conversions`, `/api/conversions/confirm` and `/api/conversions/clawback`, presented as `Authorization: Bearer <secret>`. **While it is unset every one of those requests is refused with `401`** — a conversion is an assertion about commission paid to us, so an unconfigured deployment must record none rather than record any. |
+| `AGENTDEALS_REGISTER_LIMIT_PER_HOUR` | `5` | Registrations allowed per client per hour on `POST /api/agents/register`. Registration stays open to anyone; the limit bounds how many identities one client can mint, and the developer API page states whatever value is configured. |
+
 Endpoints:
 - `POST /mcp` — MCP JSON-RPC requests (requires `Accept: application/json, text/event-stream` header)
 - `GET /mcp` — SSE stream for server-initiated notifications. The server writes an SSE comment frame as soon as the stream opens and every 25s after (`MCP_SSE_KEEPALIVE_MS` overrides the interval), so a proxy that closes an idle response does not cut it. A second `GET` on a session that already holds a stream replaces it rather than being refused — a session has one client, so a repeat `GET` is that client reconnecting. A `GET` or `POST` naming a session the server is not holding answers `400` with a JSON-RPC body giving the condition (`unknown_session` or `no_session`) and the recovery (`reinitialize`)

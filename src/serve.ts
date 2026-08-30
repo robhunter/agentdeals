@@ -23,11 +23,13 @@ import { publishedVendorLevel, vendorVerdictSentence, narrowingSentence, changeK
 import { growthLimitPhrases } from "./growth-limits.js";
 import { registerAgent, authenticateRequest, validateVestauthUrl, hashApiKey, updateAgentX402Address, getAgentById } from "./agents.js";
 import { logReferralRequest } from "./referral-requests.js";
-import { recordConversion, confirmEligibleEntries, clawbackEntry, getAgentBalance, getAgentLedgerEntries, recordPayout, MINIMUM_PAYOUT_AMOUNT, getLeaderboard } from "./ledger.js";
+import { recordConversion, confirmEligibleEntries, clawbackEntry, getAgentBalance, getAgentLedgerEntries, recordPayout, MAX_COMMISSION_AMOUNT, MINIMUM_PAYOUT_AMOUNT, getLeaderboard } from "./ledger.js";
+import { PLATFORM_CREDENTIAL_REQUIRED, authorizedAsPlatform } from "./platform-auth.js";
+import { createRegistrationLimiter, rateLimitHeaders } from "./rate-limit.js";
 import { validateX402Address, executeTransfer, generateCorrelationId } from "./x402.js";
 import { submitReferralCode, getCodesByAgent, getCodeById, updateCode, revokeCode, calculateTrustTier, getDailySubmissionCount, getDailyLimit, getRankedCodesForVendor, calculateCodeScore } from "./referral-codes.js";
 import { getBestReferralCode, listAllReferralCodes } from "./platform-codes.js";
-import { REFERRAL_CONDITIONS_HEADING, allOurReferralLinks, hasAnyReferralSurface, ourReferralLinkFor, referralLinkCountClause, referrerDisclosureSentence } from "./referral-surfaces.js";
+import { REFERRAL_CONDITIONS_HEADING, allOurReferralLinks, hasAnyReferralSurface, heldReferralLinkForVendor, ourReferralLinkFor, referralLinkCountClause, referrerDisclosureSentence } from "./referral-surfaces.js";
 import { runHealthCheck, getLastReport, startPeriodicChecks } from "./referral-health.js";
 import { addFriend, removeFriend, getFriends, getFriendCodesForVendors } from "./friends.js";
 import { subscribe as watchlistSubscribe, getSubscription as getWatchlistSubscription, unsubscribe as watchlistUnsubscribe, listSubscriptions as listWatchlistSubscriptions } from "./watchlist.js";
@@ -404,6 +406,8 @@ const durableHistoryBody = JSON.stringify({
     by_class: r.traffic.by_class,
   })),
 });
+
+const registrationLimiter = createRegistrationLimiter();
 
 // Build landing page HTML at startup with real stats
 const offers = loadOffers();
@@ -49218,7 +49222,7 @@ function buildDeveloperHubPage(): string {
     + "    " + buildGlobalNav("developers") + "\n"
     + "\n"
     + "    <h1>REST API for Developer Tool Pricing</h1>\n"
-    + "    <p class=\"subtitle\">Free, open, and ready to use. No API key, no rate limits, no signup. Query " + offers.length.toLocaleString() + "+ deals across " + categories.length + " categories with plain HTTP requests.</p>\n"
+    + "    <p class=\"subtitle\">Free, open, and ready to use. No API key, no signup, and no rate limits on the read endpoints. Query " + offers.length.toLocaleString() + "+ deals across " + categories.length + " categories with plain HTTP requests.</p>\n"
     + "\n"
     + "    <div class=\"badge-row\">\n"
     + "      <span class=\"api-badge\"><span class=\"dot\"></span>No Authentication</span>\n"
@@ -49410,7 +49414,8 @@ function buildDeveloperHubPage(): string {
     + "}</div>\n"
     + "\n"
     + "    <h2>Rate Limits</h2>\n"
-    + "    <p>There are currently <strong>no rate limits</strong>. We trust developers to be reasonable. If this changes, we will add an <code>X-RateLimit-*</code> header before enforcing any limits.</p>\n"
+    + "    <p>The read endpoints above have <strong>no rate limits</strong>. We trust developers to be reasonable.</p>\n"
+    + "    <p>Two write paths are limited. <code>POST /api/agents/register</code> allows " + registrationLimiter.limit + " registrations per hour per client and returns <code>X-RateLimit-Limit</code>, <code>X-RateLimit-Remaining</code> and <code>X-RateLimit-Reset</code> on every response. The attribution beacon at <code>" + SIGNAL_PATH + "</code> allows " + RATE_LIMIT_PER_MINUTE + " per minute &mdash; <a href=\"" + SIGNAL_DOC_PATH + "\">its own page</a> covers how that limit is keyed. Over either limit you get a <code>429</code> with <code>Retry-After</code>.</p>\n"
     + "\n"
     + "    " + buildMcpCta("Prefer AI-native access? AgentDeals is also an MCP server — 4 tools that work in Claude, Cursor, Cline, and any MCP-compatible client.") + "\n"
     + "\n"
@@ -55935,6 +55940,22 @@ ${catList}
   // --- Agent Registry API ---
 
   } else if (url.pathname === "/api/agents/register" && req.method === "POST") {
+    const registration = registrationLimiter.check(clientAddress(req.headers["x-forwarded-for"], req.socket.remoteAddress));
+    const registrationHeaders = rateLimitHeaders(registration);
+    if (!registration.allowed) {
+      res.writeHead(429, {
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+        "Retry-After": String(registration.resetSeconds),
+        ...registrationHeaders,
+      });
+      res.end(JSON.stringify({
+        error: "Too many registrations from this client. Registration is open to anyone, but rate limited.",
+        retry_after_seconds: registration.resetSeconds,
+      }));
+      return;
+    }
+
     let body = "";
     for await (const chunk of req) {
       body += chunk;
@@ -55943,13 +55964,13 @@ ${catList}
     try {
       parsed = JSON.parse(body);
     } catch {
-      res.writeHead(400, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+      res.writeHead(400, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*", ...registrationHeaders });
       res.end(JSON.stringify({ error: "Invalid JSON body" }));
       return;
     }
 
     if (!parsed.name || typeof parsed.name !== "string" || parsed.name.trim().length === 0) {
-      res.writeHead(400, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+      res.writeHead(400, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*", ...registrationHeaders });
       res.end(JSON.stringify({ error: "name is required and must be a non-empty string" }));
       return;
     }
@@ -55959,7 +55980,7 @@ ${catList}
       if (parsed.vestauth_public_key_url) {
         const validation = await validateVestauthUrl(parsed.vestauth_public_key_url);
         if (!validation.valid) {
-          res.writeHead(400, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+          res.writeHead(400, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*", ...registrationHeaders });
           res.end(JSON.stringify({ error: `Invalid vestauth URL: ${validation.error}` }));
           return;
         }
@@ -55985,11 +56006,11 @@ ${catList}
 
       recordApiHit("/api/agents/register");
       logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/agents/register", params: { name: parsed.name }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
-      res.writeHead(201, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+      res.writeHead(201, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*", ...registrationHeaders });
       res.end(JSON.stringify(responseBody));
     } catch (err: any) {
       const status = err.message.includes("already exists") ? 409 : 500;
-      res.writeHead(status, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+      res.writeHead(status, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*", ...registrationHeaders });
       res.end(JSON.stringify({ error: err.message }));
     }
 
@@ -56056,6 +56077,12 @@ ${catList}
 
   // --- POST /api/conversions: Record a new conversion ---
   } else if (url.pathname === "/api/conversions" && req.method === "POST") {
+    if (!authorizedAsPlatform(req.headers)) {
+      res.writeHead(401, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+      res.end(JSON.stringify({ error: PLATFORM_CREDENTIAL_REQUIRED }));
+      return;
+    }
+
     let body = "";
     for await (const chunk of req) {
       body += chunk;
@@ -56074,9 +56101,19 @@ ${catList}
       res.end(JSON.stringify({ error: "vendor is required and must be a string" }));
       return;
     }
-    if (typeof parsed.commission_amount !== "number" || parsed.commission_amount <= 0) {
+    if (!Number.isFinite(parsed.commission_amount) || parsed.commission_amount <= 0) {
       res.writeHead(400, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
       res.end(JSON.stringify({ error: "commission_amount is required and must be a positive number" }));
+      return;
+    }
+    if (parsed.commission_amount > MAX_COMMISSION_AMOUNT) {
+      res.writeHead(400, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+      res.end(JSON.stringify({ error: `commission_amount exceeds the maximum recordable commission of $${MAX_COMMISSION_AMOUNT}` }));
+      return;
+    }
+    if (!heldReferralLinkForVendor(offers, parsed.vendor)) {
+      res.writeHead(400, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+      res.end(JSON.stringify({ error: `No referral link of ours for vendor "${parsed.vendor}" — a commission cannot be attributed to a relationship we do not hold` }));
       return;
     }
 
@@ -56133,6 +56170,12 @@ ${catList}
 
   // --- POST /api/conversions/confirm: Confirm eligible entries ---
   } else if (url.pathname === "/api/conversions/confirm" && req.method === "POST") {
+    if (!authorizedAsPlatform(req.headers)) {
+      res.writeHead(401, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+      res.end(JSON.stringify({ error: PLATFORM_CREDENTIAL_REQUIRED }));
+      return;
+    }
+
     try {
       const confirmed = confirmEligibleEntries();
       recordApiHit("/api/conversions/confirm");
@@ -56146,6 +56189,12 @@ ${catList}
 
   // --- POST /api/conversions/clawback: Clawback a pending entry ---
   } else if (url.pathname === "/api/conversions/clawback" && req.method === "POST") {
+    if (!authorizedAsPlatform(req.headers)) {
+      res.writeHead(401, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+      res.end(JSON.stringify({ error: PLATFORM_CREDENTIAL_REQUIRED }));
+      return;
+    }
+
     let body = "";
     for await (const chunk of req) {
       body += chunk;

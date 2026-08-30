@@ -19,6 +19,8 @@ const SINGLE_AGENT_SHARE_RATE = 0.8;
 // Agent-submitted codes — different agents: 40% submitter, 40% surfer, 20% platform
 const DUAL_AGENT_SHARE_RATE = 0.4;
 
+export const MAX_COMMISSION_AMOUNT = 10_000;
+
 export type EventType = "conversion" | "confirmation" | "clawback" | "payout";
 export type LedgerStatus = "pending" | "confirmed" | "paid_out" | "clawed_back";
 
