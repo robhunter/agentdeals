@@ -8035,13 +8035,13 @@
     },
     {
       "vendor": "Google Colab",
-      "category": "Cloud IaaS",
+      "category": "Notebooks & Data Science",
       "description": "Free Jupyter notebooks with GPU access (T4 when available). Sessions up to 12 hours. Python with pre-installed ML libraries (TensorFlow, PyTorch, scikit-learn). Dynamic resource limits based on availability",
       "tier": "Free",
       "url": "https://colab.research.google.com/",
       "tags": [
-        "cloud",
-        "iaas",
+        "data-science",
+        "notebooks",
         "free-for-dev"
       ],
       "verifiedDate": "2026-08-13",
@@ -8053,13 +8053,12 @@
     },
     {
       "vendor": "Zoho",
-      "category": "Cloud IaaS",
+      "category": "Productivity & Notes",
       "description": "Suite of 45+ business apps with free tiers — Zoho Mail (5 users, 5 GB/user), CRM (3 users), Projects (3 users, 2 projects), Invoice (5 customers), Cliq (unlimited users), Forms (3 forms), and more",
       "tier": "Free",
       "url": "https://www.zoho.com",
       "tags": [
-        "cloud",
-        "iaas",
+        "productivity",
         "free-for-dev"
       ],
       "verifiedDate": "2026-08-14",
@@ -8071,13 +8070,12 @@
     },
     {
       "vendor": "Zoho Assist",
-      "category": "Cloud IaaS",
+      "category": "Server Management",
       "description": "Zoho Assist's forever free plan includes one concurrent remote support license and Access to 5 unattended computer licenses for unlimited duration available for both professional and personnel use.",
       "tier": "Free",
       "url": "https://www.zoho.com/assist",
       "tags": [
-        "cloud",
-        "iaas",
+        "server-management",
         "free-for-dev"
       ],
       "verifiedDate": "2026-07-29",
@@ -8088,14 +8086,13 @@
       }
     },
     {
-      "vendor": "Docs",
-      "category": "Cloud IaaS",
+      "vendor": "Zoho Docs",
+      "category": "Productivity & Notes",
       "description": "Free for 5 users with 1 GB upload limit & 5GB storage. Zoho Office Suite (Writer, Sheets & Show) comes bundled.",
       "tier": "Free",
       "url": "https://zoho.com/docs",
       "tags": [
-        "cloud",
-        "iaas",
+        "productivity",
         "free-for-dev"
       ],
       "verifiedDate": "2026-08-01",
@@ -8106,14 +8103,13 @@
       }
     },
     {
-      "vendor": "Projects",
-      "category": "Cloud IaaS",
+      "vendor": "Zoho Projects",
+      "category": "Project Management",
       "description": "Free for 3 users, 2 projects & 10 MB attachment limit. The same plan applies to [Bugtracker](https://zoho.com/bugtracker).",
       "tier": "Free",
       "url": "https://zoho.com/projects",
       "tags": [
-        "cloud",
-        "iaas",
+        "project-management",
         "free-for-dev"
       ],
       "verifiedDate": "2026-07-31",
@@ -8124,14 +8120,13 @@
       }
     },
     {
-      "vendor": "Connect",
-      "category": "Cloud IaaS",
+      "vendor": "Zoho Connect",
+      "category": "Team Collaboration",
       "description": "Team Collaboration free for 25 users with three groups, three custom apps, 3 Boards, 3 Manuals, and 10 Integrations along with channels, events & forums.",
       "tier": "Free",
       "url": "https://zoho.com/connect",
       "tags": [
-        "cloud",
-        "iaas",
+        "collaboration",
         "free-for-dev"
       ],
       "verifiedDate": "2026-08-01",
@@ -8142,14 +8137,13 @@
       }
     },
     {
-      "vendor": "Meeting",
-      "category": "Cloud IaaS",
+      "vendor": "Zoho Meeting",
+      "category": "Video",
       "description": "Meetings with upto 3 meeting participants & 10 Webinar attendees.",
       "tier": "Free",
       "url": "https://zoho.com/meeting",
       "tags": [
-        "cloud",
-        "iaas",
+        "video",
         "free-for-dev"
       ],
       "verifiedDate": "2026-07-31",
@@ -8160,14 +8154,14 @@
       }
     },
     {
-      "vendor": "Vault",
-      "category": "Cloud IaaS",
+      "vendor": "Zoho Vault",
+      "category": "Password Managers",
       "description": "Password manager (Zoho) — unlimited passwords for 1 user, password generator, browser extensions (Chrome/Firefox/Safari/Edge), mobile apps, secure sharing, offline access",
       "tier": "Free",
       "url": "https://zoho.com/vault",
       "tags": [
-        "cloud",
-        "iaas",
+        "security",
+        "passwords",
         "free-for-dev"
       ],
       "verifiedDate": "2026-08-15",
@@ -8178,14 +8172,13 @@
       }
     },
     {
-      "vendor": "Showtime",
-      "category": "Cloud IaaS",
+      "vendor": "Zoho Showtime",
+      "category": "Video",
       "description": "Yet another Meeting software for training for a remote session of up to 5 attendees.",
       "tier": "Free",
       "url": "https://zoho.com/showtime",
       "tags": [
-        "cloud",
-        "iaas",
+        "video",
         "free-for-dev"
       ],
       "verifiedDate": "2026-07-31",
@@ -8196,14 +8189,13 @@
       }
     },
     {
-      "vendor": "Notebook",
-      "category": "Cloud IaaS",
+      "vendor": "Zoho Notebook",
+      "category": "Productivity & Notes",
       "description": "A free alternative to Evernote.",
       "tier": "Free",
       "url": "https://zoho.com/notebook",
       "tags": [
-        "cloud",
-        "iaas",
+        "productivity",
         "free-for-dev"
       ],
       "verifiedDate": "2026-08-26",
@@ -8214,14 +8206,13 @@
       }
     },
     {
-      "vendor": "Wiki",
-      "category": "Cloud IaaS",
+      "vendor": "Zoho Wiki",
+      "category": "Documentation",
       "description": "Free for three users with 50 MB storage, unlimited pages, zip backups, RSS & Atom feed, access controls & customizable CSS.",
       "tier": "Free",
       "url": "https://zoho.com/wiki",
       "tags": [
-        "cloud",
-        "iaas",
+        "documentation",
         "free-for-dev"
       ],
       "verifiedDate": "2026-07-27",
@@ -8232,14 +8223,13 @@
       }
     },
     {
-      "vendor": "Checkout",
-      "category": "Cloud IaaS",
+      "vendor": "Zoho Checkout",
+      "category": "Payments",
       "description": "Product Billing management with 3 pages & up to 50 payments.",
       "tier": "Free",
       "url": "https://zoho.com/checkout",
       "tags": [
-        "cloud",
-        "iaas",
+        "payments",
         "free-for-dev"
       ],
       "verifiedDate": "2026-07-30",
@@ -8250,14 +8240,13 @@
       }
     },
     {
-      "vendor": "Desk",
-      "category": "Cloud IaaS",
+      "vendor": "Zoho Desk",
+      "category": "Communication",
       "description": "Customer Support management with three agents, private knowledge base, and email tickets. Integrates with [Assist](https://zoho.com/assist) for one remote technician & 5 unattended computers.",
       "tier": "Free",
       "url": "https://zoho.com/desk",
       "tags": [
-        "cloud",
-        "iaas",
+        "communication",
         "free-for-dev"
       ],
       "verifiedDate": "2026-07-31",
@@ -8268,14 +8257,13 @@
       }
     },
     {
-      "vendor": "Cliq",
-      "category": "Cloud IaaS",
+      "vendor": "Zoho Cliq",
+      "category": "Messaging",
       "description": "Team chat software with 100 GB storage, unlimited users, 100 users per channel & SSO.",
       "tier": "Free",
       "url": "https://zoho.com/cliq",
       "tags": [
-        "cloud",
-        "iaas",
+        "messaging",
         "free-for-dev"
       ],
       "verifiedDate": "2026-07-30",
@@ -18519,13 +18507,12 @@
     },
     {
       "vendor": "4EVERLAND",
-      "category": "Cloud IaaS",
+      "category": "Storage",
       "description": "Compatible with AWS S3 - APIs, interface operations, CLI, and other upload methods, upload and store files from the IPFS and Arweave networks in a safe, convenient, and efficient manner. Registered users can get 6 GB of IPFS storage and 300MB of Arweave storage for free. Any Arweave file uploads smaller than 150 KB are free.",
       "tier": "Free",
       "url": "https://www.4everland.org/",
       "tags": [
-        "cloud",
-        "iaas",
+        "storage",
         "free-for-dev"
       ],
       "verifiedDate": "2026-08-08",
@@ -18537,13 +18524,12 @@
     },
     {
       "vendor": "C2 Object Storage",
-      "category": "Cloud IaaS",
+      "category": "Storage",
       "description": "S3 compatibility object storage. 15 GB free storage and 15 GB downloads per month.",
       "tier": "Free",
       "url": "https://c2.synology.com/en-us/pricing/object-storage",
       "tags": [
-        "cloud",
-        "iaas",
+        "storage",
         "free-for-dev"
       ],
       "verifiedDate": "2026-08-07",
@@ -18554,14 +18540,13 @@
       }
     },
     {
-      "vendor": "filebase.com",
-      "category": "Cloud IaaS",
+      "vendor": "Filebase",
+      "category": "Storage",
       "description": "S3 Compatible Object Storage Powered by Blockchain. 5 GB free storage for an unlimited duration.",
       "tier": "Free",
       "url": "https://filebase.com/",
       "tags": [
-        "cloud",
-        "iaas",
+        "storage",
         "free-for-dev"
       ],
       "verifiedDate": "2026-08-10",
