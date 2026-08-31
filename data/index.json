@@ -8613,7 +8613,7 @@
       ],
       "verifiedDate": "2026-08-01",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-08-31",
         "outcome": "ok",
         "detail": "url"
       }
@@ -8630,7 +8630,7 @@
       ],
       "verifiedDate": "2026-07-31",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-08-31",
         "outcome": "ok",
         "detail": "text"
       }
@@ -8664,7 +8664,7 @@
       ],
       "verifiedDate": "2026-07-31",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-08-31",
         "outcome": "ok",
         "detail": "text"
       }
@@ -8750,7 +8750,7 @@
       ],
       "verifiedDate": "2026-07-30",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-08-31",
         "outcome": "ok",
         "detail": "text"
       }
@@ -15043,9 +15043,9 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-08-06",
+      "verifiedDate": "2026-08-31",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-08-31",
         "outcome": "ok",
         "detail": "text"
       }

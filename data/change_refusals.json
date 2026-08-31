@@ -1441,6 +1441,42 @@
       "refused_date": "2026-08-29"
     },
     {
+      "vendor": "Zoho Checkout",
+      "change_type": "limits_reduced",
+      "reason": "unquantified_limit",
+      "detail": "limits_reduced claimed, but the current state names no quantity for anything the stored state measured (3 pag, 50 payment)",
+      "summary": "The free tier still exists, but the description is different. The stored information states 'Product Billing management with 3 pages & up to 50 payments', while the current pricing page states 'Start creating checkout pages for free'.",
+      "previous_state": "Product Billing management with 3 pages & up to 50 payments.",
+      "current_state": "The free tier allows you to 'Start creating checkout pages for free'. It does not mention a page limit or payment limit.",
+      "source_url": "https://zoho.com/checkout",
+      "category": "Payments",
+      "refused_date": "2026-08-31"
+    },
+    {
+      "vendor": "Zoho Meeting",
+      "change_type": "limits_reduced",
+      "reason": "measures_the_opposite",
+      "detail": "limits_reduced claimed, and every quantity that moved between the two states moved the other way — 3 meeting against 60 minut, 3 meeting against 100 meeting",
+      "summary": "The free tier now has a 60-minute meeting limit and supports up to 100 participants, whereas the stored information stated up to 3 meeting participants and 10 webinar attendees with no time limit specified.",
+      "previous_state": "Meetings with upto 3 meeting participants & 10 Webinar attendees.",
+      "current_state": "Free tier offers up to 60 minutes of meetings and supports 100 meeting participants.",
+      "source_url": "https://zoho.com/meeting",
+      "category": "Video",
+      "refused_date": "2026-08-31"
+    },
+    {
+      "vendor": "Zoho Projects",
+      "change_type": "pricing_restructured",
+      "reason": "confirmed_unchanged",
+      "detail": "The current page does not detail the free tier limits; it's a general marketing description. The report's claim of 'unlimited users, 3 projects, and 5MB of storage' isn't supported by the current page and is a misinterpretation.",
+      "summary": "The free tier now allows unlimited users, 3 projects, and 5MB of storage.",
+      "previous_state": "Free for 3 users, 2 projects & 10 MB attachment limit. The same plan applies to [Bugtracker](https://zoho.com/bugtracker).",
+      "current_state": "The page states that Zoho Projects is a free project management platform that does not compromise on quality and functionality. With just the free version, you can break down your project activities, allocate resources, and schedule your work items using the Gantt chart.",
+      "source_url": "https://zoho.com/projects",
+      "category": "Project Management",
+      "refused_date": "2026-08-31"
+    },
+    {
       "vendor": "Zoho Survey",
       "change_type": "limits_reduced",
       "reason": "unquantified_limit",

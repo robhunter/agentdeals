@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-28",
+  "generated_at": "2026-08-31",
   "records": [
     {
       "vendor": "10minutemail",
@@ -1509,17 +1509,6 @@
       "quarantined_since": null
     },
     {
-      "vendor": "Checkout",
-      "url": "https://zoho.com/checkout",
-      "last_attempt_at": "2026-08-28",
-      "last_outcome": "changed",
-      "last_error": null,
-      "failure_category": null,
-      "consecutive_failures": 0,
-      "last_success": null,
-      "quarantined_since": null
-    },
-    {
       "vendor": "Checkov",
       "url": "https://github.com/bridgecrewio/checkov",
       "last_attempt_at": "2026-08-28",
@@ -1671,17 +1660,6 @@
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
       "last_success": "2026-07-29",
-      "quarantined_since": null
-    },
-    {
-      "vendor": "Cliq",
-      "url": "https://zoho.com/cliq",
-      "last_attempt_at": "2026-08-28",
-      "last_outcome": "source_unusable",
-      "last_error": "the page names Cliq but states no amount, tier or rate we can read",
-      "failure_category": "source_unusable",
-      "consecutive_failures": 1,
-      "last_success": "2026-07-30",
       "quarantined_since": null
     },
     {
@@ -2133,17 +2111,6 @@
       "failure_category": null,
       "consecutive_failures": 0,
       "last_success": "2026-08-28",
-      "quarantined_since": null
-    },
-    {
-      "vendor": "Connect",
-      "url": "https://zoho.com/connect",
-      "last_attempt_at": "2026-08-28",
-      "last_outcome": "source_unusable",
-      "last_error": "the page names Connect but states no amount, tier or rate we can read",
-      "failure_category": "source_unusable",
-      "consecutive_failures": 1,
-      "last_success": "2026-08-01",
       "quarantined_since": null
     },
     {
@@ -2818,17 +2785,6 @@
       "quarantined_since": null
     },
     {
-      "vendor": "Desk",
-      "url": "https://zoho.com/desk",
-      "last_attempt_at": "2026-08-28",
-      "last_outcome": "source_unusable",
-      "last_error": "the page names Desk but states no amount, tier or rate we can read",
-      "failure_category": "source_unusable",
-      "consecutive_failures": 1,
-      "last_success": "2026-07-31",
-      "quarantined_since": null
-    },
-    {
       "vendor": "developers.google.com",
       "url": "https://developers.google.com/speed/libraries/",
       "last_attempt_at": "2026-08-28",
@@ -3040,17 +2996,6 @@
     {
       "vendor": "Docker Hub",
       "url": "https://www.docker.com/pricing/",
-      "last_attempt_at": "2026-08-28",
-      "last_outcome": "changed",
-      "last_error": null,
-      "failure_category": null,
-      "consecutive_failures": 0,
-      "last_success": null,
-      "quarantined_since": null
-    },
-    {
-      "vendor": "Docs",
-      "url": "https://zoho.com/docs",
       "last_attempt_at": "2026-08-28",
       "last_outcome": "changed",
       "last_error": null,
@@ -6272,6 +6217,17 @@
       "quarantined_since": null
     },
     {
+      "vendor": "localizely.com",
+      "url": "https://localizely.com/",
+      "last_attempt_at": "2026-08-31",
+      "last_outcome": "confirmed",
+      "last_error": null,
+      "failure_category": null,
+      "consecutive_failures": 0,
+      "last_success": "2026-08-31",
+      "quarantined_since": null
+    },
+    {
       "vendor": "localtunnel",
       "url": "https://theboroer.github.io/localtunnel-www/",
       "last_attempt_at": "2026-08-28",
@@ -6764,17 +6720,6 @@
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
       "last_success": "2026-08-04",
-      "quarantined_since": null
-    },
-    {
-      "vendor": "Meeting",
-      "url": "https://zoho.com/meeting",
-      "last_attempt_at": "2026-08-28",
-      "last_outcome": "changed",
-      "last_error": null,
-      "failure_category": null,
-      "consecutive_failures": 0,
-      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -7405,17 +7350,6 @@
       "quarantined_since": null
     },
     {
-      "vendor": "Notebook",
-      "url": "https://zoho.com/notebook",
-      "last_attempt_at": "2026-08-28",
-      "last_outcome": "confirmed",
-      "last_error": null,
-      "failure_category": null,
-      "consecutive_failures": 0,
-      "last_success": "2026-08-28",
-      "quarantined_since": null
-    },
-    {
       "vendor": "Notion",
       "url": "https://www.notion.com/pricing",
       "last_attempt_at": "2026-08-28",
@@ -7666,17 +7600,6 @@
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
       "last_success": "2026-07-10",
-      "quarantined_since": null
-    },
-    {
-      "vendor": "OpenAI Codex",
-      "url": "https://openai.com/index/codex-flexible-pricing-for-teams/",
-      "last_attempt_at": "2026-08-28",
-      "last_outcome": "fetch_failed",
-      "last_error": "HTTP 403",
-      "failure_category": "bot_block",
-      "consecutive_failures": 1,
-      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -8590,17 +8513,6 @@
       "failure_category": null,
       "consecutive_failures": 0,
       "last_success": "2026-08-28",
-      "quarantined_since": null
-    },
-    {
-      "vendor": "Projects",
-      "url": "https://zoho.com/projects",
-      "last_attempt_at": "2026-08-28",
-      "last_outcome": "changed",
-      "last_error": null,
-      "failure_category": null,
-      "consecutive_failures": 0,
-      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -9855,17 +9767,6 @@
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
       "last_success": "2026-08-13",
-      "quarantined_since": null
-    },
-    {
-      "vendor": "Showtime",
-      "url": "https://zoho.com/showtime",
-      "last_attempt_at": "2026-08-28",
-      "last_outcome": "source_unusable",
-      "last_error": "the page names Showtime but states no amount, tier or rate we can read",
-      "failure_category": "source_unusable",
-      "consecutive_failures": 1,
-      "last_success": "2026-07-31",
       "quarantined_since": null
     },
     {
@@ -12289,17 +12190,6 @@
       "quarantined_since": null
     },
     {
-      "vendor": "Wiki",
-      "url": "https://zoho.com/wiki",
-      "last_attempt_at": "2026-08-28",
-      "last_outcome": "source_unusable",
-      "last_error": "the page names Wiki but states no amount, tier or rate we can read",
-      "failure_category": "source_unusable",
-      "consecutive_failures": 1,
-      "last_success": "2026-07-27",
-      "quarantined_since": null
-    },
-    {
       "vendor": "windmill.dev",
       "url": "https://windmill.dev/",
       "last_attempt_at": "2026-08-28",
@@ -12663,6 +12553,61 @@
       "quarantined_since": null
     },
     {
+      "vendor": "Zoho Checkout",
+      "url": "https://zoho.com/checkout",
+      "last_attempt_at": "2026-08-31",
+      "last_outcome": "changed",
+      "last_error": null,
+      "failure_category": null,
+      "consecutive_failures": 0,
+      "last_success": null,
+      "quarantined_since": null
+    },
+    {
+      "vendor": "Zoho Cliq",
+      "url": "https://zoho.com/cliq",
+      "last_attempt_at": "2026-08-28",
+      "last_outcome": "source_unusable",
+      "last_error": "the page names Cliq but states no amount, tier or rate we can read",
+      "failure_category": "source_unusable",
+      "consecutive_failures": 1,
+      "last_success": "2026-07-30",
+      "quarantined_since": null
+    },
+    {
+      "vendor": "Zoho Connect",
+      "url": "https://zoho.com/connect",
+      "last_attempt_at": "2026-08-28",
+      "last_outcome": "source_unusable",
+      "last_error": "the page names Connect but states no amount, tier or rate we can read",
+      "failure_category": "source_unusable",
+      "consecutive_failures": 1,
+      "last_success": "2026-08-01",
+      "quarantined_since": null
+    },
+    {
+      "vendor": "Zoho Desk",
+      "url": "https://zoho.com/desk",
+      "last_attempt_at": "2026-08-28",
+      "last_outcome": "source_unusable",
+      "last_error": "the page names Desk but states no amount, tier or rate we can read",
+      "failure_category": "source_unusable",
+      "consecutive_failures": 1,
+      "last_success": "2026-07-31",
+      "quarantined_since": null
+    },
+    {
+      "vendor": "Zoho Docs",
+      "url": "https://zoho.com/docs",
+      "last_attempt_at": "2026-08-31",
+      "last_outcome": "changed",
+      "last_error": null,
+      "failure_category": null,
+      "consecutive_failures": 0,
+      "last_success": null,
+      "quarantined_since": null
+    },
+    {
       "vendor": "Zoho Forms",
       "url": "https://zoho.com/forms",
       "last_attempt_at": "2026-08-28",
@@ -12671,6 +12616,39 @@
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
       "last_success": "2026-08-01",
+      "quarantined_since": null
+    },
+    {
+      "vendor": "Zoho Meeting",
+      "url": "https://zoho.com/meeting",
+      "last_attempt_at": "2026-08-31",
+      "last_outcome": "changed",
+      "last_error": null,
+      "failure_category": null,
+      "consecutive_failures": 0,
+      "last_success": null,
+      "quarantined_since": null
+    },
+    {
+      "vendor": "Zoho Projects",
+      "url": "https://zoho.com/projects",
+      "last_attempt_at": "2026-08-31",
+      "last_outcome": "changed",
+      "last_error": null,
+      "failure_category": null,
+      "consecutive_failures": 0,
+      "last_success": null,
+      "quarantined_since": null
+    },
+    {
+      "vendor": "Zoho Showtime",
+      "url": "https://zoho.com/showtime",
+      "last_attempt_at": "2026-08-28",
+      "last_outcome": "source_unusable",
+      "last_error": "the page names Showtime but states no amount, tier or rate we can read",
+      "failure_category": "source_unusable",
+      "consecutive_failures": 1,
+      "last_success": "2026-07-31",
       "quarantined_since": null
     },
     {
@@ -12693,6 +12671,17 @@
       "failure_category": null,
       "consecutive_failures": 0,
       "last_success": null,
+      "quarantined_since": null
+    },
+    {
+      "vendor": "Zoho Wiki",
+      "url": "https://zoho.com/wiki",
+      "last_attempt_at": "2026-08-28",
+      "last_outcome": "source_unusable",
+      "last_error": "the page names Wiki but states no amount, tier or rate we can read",
+      "failure_category": "source_unusable",
+      "consecutive_failures": 1,
+      "last_success": "2026-07-27",
       "quarantined_since": null
     },
     {

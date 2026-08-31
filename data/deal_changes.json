@@ -6924,6 +6924,21 @@
       "alternatives": [],
       "detected_by": "reverify-ai",
       "recorded_date": "2026-08-28"
+    },
+    {
+      "vendor": "Zoho Docs",
+      "change_type": "limits_reduced",
+      "date": "2026-08-31",
+      "date_source": "discovered",
+      "summary": "The free tier now offers 5GB of storage. No user limit is mentioned. The bundled Zoho Office Suite is also mentioned. Previously 1GB upload limit.",
+      "previous_state": "Free for 5 users with 1 GB upload limit & 5GB storage. Zoho Office Suite (Writer, Sheets & Show) comes bundled.",
+      "current_state": "FREE - 5GB Secure cloud storage for individual use",
+      "impact": "medium",
+      "source_url": "https://zoho.com/docs",
+      "category": "Productivity & Notes",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-08-31"
     }
   ]
 }
