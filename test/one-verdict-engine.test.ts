@@ -249,4 +249,63 @@ describe("#1206 the badge and the vendor page read the same scale", () => {
     }
     assert.deepStrictEqual(wrong, [], "these pages list the change types a stable verdict rules out");
   });
+
+  const RECENCY = /recently/i;
+  const STATES_A_DATE = /\d{4}-\d{2}-\d{2}/;
+
+  interface FaqItem { path: string; question: string; answer: string }
+
+  const faqItemsIn = (pagePath: string, html: string): FaqItem[] => {
+    const items: FaqItem[] = [];
+    for (const block of html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)) {
+      let parsed: unknown;
+      try { parsed = JSON.parse(block[1]); } catch { continue; }
+      for (const entry of (Array.isArray(parsed) ? parsed : [parsed]) as Array<Record<string, any>>) {
+        if (!entry || entry["@type"] !== "FAQPage" || !Array.isArray(entry.mainEntity)) continue;
+        for (const q of entry.mainEntity) {
+          const answer = q?.acceptedAnswer?.text;
+          if (typeof q?.name === "string" && typeof answer === "string") {
+            items.push({ path: pagePath, question: q.name, answer });
+          }
+        }
+      }
+    }
+    return items;
+  };
+
+  const faqSample = async (): Promise<FaqItem[]> => {
+    const changes = loadDealChanges();
+    const withChanges = new Set(changes.map(c => c.vendor.toLowerCase()));
+    const slugs = [...vendorSlugMap.entries()];
+    const recorded = slugs.filter(([, v]) => withChanges.has(v.toLowerCase())).slice(0, 30);
+    const silent = slugs.filter(([, v]) => !withChanges.has(v.toLowerCase())).slice(0, 30);
+    const items: FaqItem[] = [];
+    for (const [slug] of [...recorded, ...silent]) {
+      for (const prefix of ["/vendor/", "/alternative-to/"]) {
+        const res = await fetch(`http://localhost:${serverPort}${prefix}${slug}`);
+        if (res.status !== 200) continue;
+        items.push(...faqItemsIn(prefix + slug, await res.text()));
+      }
+    }
+    return items;
+  };
+
+  it("asks no question about a vendor's pricing history that presumes it is recent", async () => {
+    const items = await faqSample();
+    const fromVendorPages = items.filter(i => i.path.startsWith("/vendor/"));
+    const fromAlternativePages = items.filter(i => i.path.startsWith("/alternative-to/"));
+    assert.ok(fromVendorPages.length > 0, "no vendor page published a structured FAQ, so this asserts nothing");
+    assert.ok(fromAlternativePages.length > 0, "no alternatives page published a structured FAQ, so this asserts nothing");
+    const presuming = items.filter(i => RECENCY.test(i.question)).map(i => `${i.path}: ${i.question}`);
+    assert.deepStrictEqual([...new Set(presuming)].slice(0, 10), [],
+      "a question carries no date, so it cannot say when the change it asks about happened");
+  });
+
+  it("dates every answer that calls a change recent", async () => {
+    const undated = (await faqSample())
+      .filter(i => RECENCY.test(i.answer) && !STATES_A_DATE.test(i.answer))
+      .map(i => `${i.path}: ${i.answer.slice(0, 120)}`);
+    assert.deepStrictEqual([...new Set(undated)].slice(0, 10), [],
+      "these answers call a change recent without saying when it happened");
+  });
 });
