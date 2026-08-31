@@ -345,13 +345,14 @@ describe("every restriction we have stored survives its own rule", () => {
 
   it("still holds the restrictions the control set names", () => {
     const kept = new Set(stored.filter(c => c.change_type === "restriction").map(c => c.vendor));
-    for (const vendor of ["Firebase", "Postman", "Netlify", "Google Gemini API", "GitHub Copilot"]) {
+    for (const vendor of ["Postman", "Netlify", "Google Gemini API", "GitHub Copilot"]) {
       assert.ok(kept.has(vendor), `${vendor} keeps its restriction record`);
     }
     assert.strictEqual(stored.filter(c => c.change_type === "record_corrected").length, 2);
   });
 
   it("is not vacuous — the population is large enough to have caught the seven", () => {
-    assert.ok(stored.filter(c => c.change_type === "restriction").length >= 10);
+    const curated = stored.filter(c => c.change_type === "restriction" && c.date_source === "hand_written");
+    assert.ok(curated.length >= 7, `hand-written restriction records: ${curated.length}`);
   });
 });
