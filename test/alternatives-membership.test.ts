@@ -359,21 +359,21 @@ describe("#1032 a classification must not contradict what we already publish", (
   });
 
   it("keeps a curated name whose subtype differs from the subject's on both published surfaces", async () => {
-    const subject = "Vercel";
+    const subject = "PythonAnywhere";
     const crossing = ["Render", "Railway"];
     const { partitionAlternatives } = await import("../dist/product-role.js");
-    const vercel = offers.find((o) => o.vendor === subject)!;
+    const subjectOffer = offers.find((o) => o.vendor === subject)!;
     for (const name of crossing) {
       const candidate = offers.find((o) => o.vendor === name)!;
       assert.equal(
-        partitionAlternatives([candidate], vercel).removed[0]?.gate,
+        partitionAlternatives([candidate], subjectOffer).removed[0]?.gate,
         "subtype_mismatch",
         `${name} must be subtype-gated against ${subject} for this test to mean anything`
       );
     }
     const cardName: Record<string, string> = {
-      "/vendor/vercel": "alt-name",
-      "/alternative-to/vercel": "alt-vendor-name",
+      "/vendor/pythonanywhere": "alt-name",
+      "/alternative-to/pythonanywhere": "alt-vendor-name",
     };
     for (const [url, cls] of Object.entries(cardName)) {
       const { body } = await get(url);
@@ -383,6 +383,100 @@ describe("#1032 a classification must not contradict what we already publish", (
         assert.ok(listed.includes(name), `${url} drops the curated name ${name} from its cards`);
       }
     }
+  });
+});
+
+describe("#1195 how a product is deployed does not decide what can replace it", () => {
+  const GROUPED = ["static_site", "serverless_function", "container_app"];
+  const labelsOf = (vendor: string) => (offers.find((o) => o.vendor === vendor)?.product_subtypes?.labels ?? []).map((l) => l.subtype);
+
+  const subject = "Vercel";
+  const hosting = offers.filter((o) => o.category === "Cloud Hosting");
+
+  it("classifies the subject as a grouped subtype only, so the assertions below have a boundary to cross", () => {
+    const own = labelsOf(subject);
+    assert.ok(own.length > 0, `${subject} must carry subtypes for this test to mean anything`);
+    assert.ok(own.every((s) => GROUPED.includes(s)), `${subject} must carry only grouped subtypes, carries ${own.join(", ")}`);
+    assert.ok(!own.includes("container_app"), `${subject} must not itself be a container platform, or nothing below crosses a boundary`);
+  });
+
+  const NAMED_ON_THE_ISSUE = ["Northflank", "Clever Cloud", "Qoddi", "gigalixir.com", "leapcell"];
+
+  it("lists the container platforms the issue names among the subject's published alternatives", async () => {
+    const curated = new Set<string>();
+    const changes = JSON.parse(readFileSync(path.join(REPO, "data", "deal_changes.json"), "utf-8")).changes as Array<{ vendor: string; alternatives?: string[] }>;
+    for (const c of changes) {
+      if (c.vendor.toLowerCase() !== subject.toLowerCase()) continue;
+      for (const a of c.alternatives ?? []) curated.add(a);
+    }
+    for (const vendor of NAMED_ON_THE_ISSUE) {
+      assert.deepStrictEqual(labelsOf(vendor), ["container_app"], `${vendor} must be a container platform for this test to mean anything`);
+      assert.ok(!curated.has(vendor), `${vendor} is a curated name for ${subject} and is exempt already, so it proves nothing here`);
+    }
+    const { body } = await get(`/alternative-to/${slugOf(subject)}`);
+    const listed = [...body.matchAll(/class="alt-vendor-name">([^<]+)</g)].map((m) => m[1]);
+    assert.ok(listed.length > 10, `/alternative-to/${slugOf(subject)} rendered too few entries to check, found ${listed.length}`);
+    const missing = NAMED_ON_THE_ISSUE.filter((v) => !listed.includes(v));
+    assert.deepStrictEqual(missing, [], `a reader leaving ${subject} can deploy on these: ${missing.join(", ")}`);
+  });
+
+  const SURFACES = [`/vendor/${slugOf(subject)}`, `/alternative-to/${slugOf(subject)}`];
+
+  async function exclusionNotice(url: string): Promise<string[]> {
+    const { body } = await get(url);
+    const notice = body.match(/<p class="alt-excluded"[\s\S]*?<\/p>/);
+    assert.ok(notice, `${url} must publish the exclusion notice for this test to mean anything`);
+    const named = [...notice[0].matchAll(/<a href="\/vendor\/[^"]+">([^<]+)<\/a>/g)].map((m) => m[1]);
+    assert.ok(named.length > 3, `${url} must name exclusions for this test to mean anything, found ${named.length}`);
+    assert.ok(notice[0].includes("shares no subtype with this product"), `${url} must publish the subtype reason unchanged`);
+    return named;
+  }
+
+  it("names none of them in the notice that says who was left out", async () => {
+    for (const url of SURFACES) {
+      const named = await exclusionNotice(url);
+      const wrongly = named.filter((v) => labelsOf(v).some((s) => GROUPED.includes(s)));
+      assert.deepStrictEqual(
+        wrongly,
+        [],
+        `${url} says these cannot replace ${subject}, and a reader leaving it can deploy on every one: ${wrongly.join(", ")}`
+      );
+    }
+  });
+
+  it("keeps every ungrouped subtype out, with the reason unchanged", async () => {
+    const ungrouped = hosting
+      .filter((o) => o.vendor !== subject)
+      .filter((o) => {
+        const own = labelsOf(o.vendor);
+        return own.length > 0 && own.every((s) => !GROUPED.includes(s));
+      })
+      .map((o) => o.vendor);
+    assert.ok(ungrouped.length > 10, `this test needs ungrouped records to check, found ${ungrouped.length}`);
+    for (const url of SURFACES) {
+      const named = await exclusionNotice(url);
+      const missing = ungrouped.filter((v) => !named.includes(v));
+      assert.deepStrictEqual(missing, [], `${url} must still leave these out and name them: ${missing.join(", ")}`);
+    }
+    const { body } = await get(`/alternative-to/${slugOf(subject)}`);
+    const listed = [...body.matchAll(/class="alt-vendor-name">([^<]+)</g)].map((m) => m[1]);
+    const admitted = ungrouped.filter((v) => listed.includes(v));
+    assert.deepStrictEqual(admitted, [], `these share no subtype and no group with ${subject}: ${admitted.join(", ")}`);
+  });
+
+  it("publishes the group and which subtypes are in it on the criteria page", async () => {
+    const { SUBTYPE_MEMBERSHIP_GROUPS } = await import("../dist/product-role.js");
+    const { status, body } = await get("/criteria");
+    assert.equal(status, 200);
+    const groups = (SUBTYPE_MEMBERSHIP_GROUPS as Record<string, Array<{ subtypes: string[]; rule: string }>>)["Cloud Hosting"];
+    assert.ok(groups?.length, "Cloud Hosting must declare a membership group for this test to mean anything");
+    for (const group of groups) {
+      assert.ok(body.includes(group.rule.replace(/&/g, "&amp;")), "the criteria page must state the rule the group gates by");
+      for (const subtype of group.subtypes) {
+        assert.ok(body.includes(`<code>${subtype}</code>`), `${subtype} is not named on the criteria page`);
+      }
+    }
+    assert.ok(body.includes("<th>Group</th>"), "the taxonomy table must mark which subtypes are in a group");
   });
 });
 
