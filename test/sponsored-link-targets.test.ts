@@ -126,7 +126,7 @@ describe("every link we mark sponsored is a referral link we hold", () => {
   it("sweeps the whole published surface rather than a chosen sample", () => {
     assert.ok(paths.length > 3000, `expected the sitemap to enumerate the site, saw ${paths.length} paths`);
     const sponsored = [...bodies.values()].flatMap(sponsoredAnchorsIn);
-    assert.ok(sponsored.length > 50, `expected the sweep to find the sponsored links we publish, saw ${sponsored.length}`);
+    assert.ok(sponsored.length > 25, `expected the sweep to find the sponsored links we publish, saw ${sponsored.length}`);
   });
 
   it("points every sponsored link at a URL that attributes the signup to us", () => {

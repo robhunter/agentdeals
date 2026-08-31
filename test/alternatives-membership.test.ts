@@ -341,16 +341,86 @@ describe("#1032 a classification must not contradict what we already publish", (
       `we recommend these as alternatives in our own dated records and cannot also hold that they replace nothing: ${conflicts.join(", ")}`
     );
   });
+
+  it("never lets a subtype remove a pair a person wrote into a change record", async () => {
+    const { curatedAlternativesFor } = await import("../dist/curated-alternatives.js");
+    const allChanges = JSON.parse(readFileSync(path.join(REPO, "data", "deal_changes.json"), "utf-8")).changes;
+    const dropped: string[] = [];
+    let pairs = 0;
+    for (const vendor of new Set(offers.map((o) => o.vendor))) {
+      const result = curatedAlternativesFor(vendor, allChanges, offers, offers.filter((o) => o.vendor === vendor));
+      pairs += result.kept.length + result.removed.length;
+      for (const r of result.removed) {
+        if (r.gate === "subtype_mismatch" || r.gate === "not_in_taxonomy") dropped.push(`${vendor} -> ${r.offer.vendor}`);
+      }
+    }
+    assert.ok(pairs > 100, `the change records must resolve to pairs for this test to mean anything, found ${pairs}`);
+    assert.deepStrictEqual(dropped, [], `a curated pair is a stronger claim than a taxonomy match: ${dropped.join(", ")}`);
+  });
+
+  it("keeps a curated name whose subtype differs from the subject's on both published surfaces", async () => {
+    const subject = "Vercel";
+    const crossing = ["Render", "Railway"];
+    const { partitionAlternatives } = await import("../dist/product-role.js");
+    const vercel = offers.find((o) => o.vendor === subject)!;
+    for (const name of crossing) {
+      const candidate = offers.find((o) => o.vendor === name)!;
+      assert.equal(
+        partitionAlternatives([candidate], vercel).removed[0]?.gate,
+        "subtype_mismatch",
+        `${name} must be subtype-gated against ${subject} for this test to mean anything`
+      );
+    }
+    const cardName: Record<string, string> = {
+      "/vendor/vercel": "alt-name",
+      "/alternative-to/vercel": "alt-vendor-name",
+    };
+    for (const [url, cls] of Object.entries(cardName)) {
+      const { body } = await get(url);
+      const listed = [...body.matchAll(new RegExp(`class="${cls}">([^<]+)<`, "g"))].map(m => m[1]);
+      assert.ok(listed.length > 3, `${url} rendered no alternatives cards, so this test proves nothing`);
+      for (const name of crossing) {
+        assert.ok(listed.includes(name), `${url} drops the curated name ${name} from its cards`);
+      }
+    }
+  });
 });
 
 describe("#1032 the rule is published", () => {
-  it("explains both properties on the criteria page", async () => {
+  it("explains every membership property on the criteria page", async () => {
     const { status, body } = await get("/criteria");
     assert.equal(status, 200);
     assert.ok(body.includes('id="membership"'), "the criteria page must carry the anchor the vendor pages link to");
     assert.ok(body.includes("local_dev_only"), "the criteria page must name the deployment property");
     assert.ok(body.includes("addon"), "the criteria page must name the add-on property");
-    assert.match(body, /Neither property is available on request/, "the criteria page must say the classification cannot be requested");
+    assert.match(body, /available on request/, "the criteria page must say the classification cannot be requested");
     assert.match(body, /has not been reviewed/, "the criteria page must say what an unclassified record means");
+  });
+
+  it("publishes every subtype it gates on, with the definition it gates by", async () => {
+    const { SUBTYPE_TAXONOMIES } = await import("../dist/product-role.js");
+    const { status, body } = await get("/criteria");
+    assert.equal(status, 200);
+    assert.ok(body.includes('id="subtypes"'), "the criteria page must carry the subtype anchor the vendor pages link to");
+    for (const [taxonomy, entries] of Object.entries(SUBTYPE_TAXONOMIES) as [string, Array<{ subtype: string; definition: string }>][]) {
+      assert.ok(body.includes(taxonomy), `${taxonomy} is not named on the criteria page`);
+      for (const entry of entries) {
+        assert.ok(body.includes(`<code>${entry.subtype}</code>`), `${entry.subtype} is not named on the criteria page`);
+        assert.ok(body.includes(entry.definition.replace(/&/g, "&amp;")), `${entry.subtype} is named without the definition it gates by`);
+      }
+    }
+  });
+
+  it("publishes the subtypes and their source on the vendor page that carries them", async () => {
+    const { body } = await get("/vendor/neon");
+    const line = body.match(/<p class="product-subtypes-line"[\s\S]*?<\/p>/);
+    assert.ok(line, "the vendor page must publish its subtypes");
+    const neon = offers.find((o) => o.vendor === "Neon")!;
+    for (const label of neon.product_subtypes!.labels) {
+      assert.ok(line[0].includes(`<code>${label.subtype}</code>`), `${label.subtype} is not published on /vendor/neon`);
+      assert.ok(line[0].includes(label.source_url), `${label.subtype} is published without the URL it was read from`);
+      assert.ok(line[0].includes(label.source_quote.slice(0, 40)), `${label.subtype} is published without the sentence it was read from`);
+    }
+    assert.ok(line[0].includes(neon.product_subtypes!.reviewed), "the vendor page must publish the date the subtypes were reviewed");
   });
 });

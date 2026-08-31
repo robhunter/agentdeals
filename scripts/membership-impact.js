@@ -1,5 +1,5 @@
 import { loadOffers } from "../dist/data.js";
-import { partitionAlternatives, partitionRoleCandidates, MEMBERSHIP_GATE_RULES } from "../dist/product-role.js";
+import { partitionAlternatives, partitionRoleCandidates, MEMBERSHIP_GATE_RULES, SUBTYPE_TAXONOMIES } from "../dist/product-role.js";
 
 const HELP = `membership-impact.js — report what the #1032 membership gates remove.
 
@@ -29,8 +29,29 @@ const gated = classified.filter((o) => o.product_role.deployment_model === "loca
 const removalsByOffer = new Map();
 const listsAffected = new Map();
 const categoryShrink = [];
+const removalsByGate = new Map();
+const pagesBelowThree = [];
 
 const categories = [...new Set(offers.map((o) => o.category))].sort();
+
+const subtypeCoverage = Object.keys(SUBTYPE_TAXONOMIES).map((taxonomy) => {
+  const inTaxonomy = offers.filter((o) => o.category === taxonomy);
+  const labelled = inTaxonomy.filter((o) => o.product_subtypes && o.product_subtypes.labels.length > 0);
+  const emptied = inTaxonomy.filter((o) => o.product_subtypes && o.product_subtypes.labels.length === 0);
+  const unclassified = inTaxonomy.filter((o) => !o.product_subtypes);
+  const bySubtype = SUBTYPE_TAXONOMIES[taxonomy].map((entry) => ({
+    subtype: entry.subtype,
+    records: labelled.filter((o) => o.product_subtypes.labels.some((l) => l.subtype === entry.subtype)).map((o) => o.vendor),
+  }));
+  return {
+    taxonomy,
+    records: inTaxonomy.length,
+    labelled: labelled.length,
+    classified_as_none: emptied.map((o) => o.vendor),
+    unclassified: unclassified.map((o) => o.vendor),
+    by_subtype: bySubtype,
+  };
+});
 
 for (const category of categories) {
   const inCategory = offers.filter((o) => o.category === category);
@@ -49,7 +70,11 @@ for (const category of categories) {
         const entry = removalsByOffer.get(k) ?? { gate: r.gate, lists: 0 };
         entry.lists += 1;
         removalsByOffer.set(k, entry);
+        removalsByGate.set(r.gate, (removalsByGate.get(r.gate) ?? 0) + 1);
       }
+    }
+    if (kept.length < 3) {
+      pagesBelowThree.push({ page: `/vendor/${subject.vendor}`, category, kept: kept.map((o) => o.vendor) });
     }
     if (kept.length < minKept) {
       minKept = kept.length;
@@ -83,7 +108,10 @@ const report = {
   })),
   alternatives_lists_shrunk: [...listsAffected.entries()].map(([category, lists]) => ({ category, lists })),
   removals: [...removalsByOffer.entries()].map(([offer, v]) => ({ offer, gate: v.gate, lists: v.lists })),
+  removals_by_gate: [...removalsByGate.entries()].map(([gate, removals]) => ({ gate, removals })),
   categories_below_three: categoryShrink,
+  pages_below_three: pagesBelowThree,
+  subtype_coverage: subtypeCoverage,
   role_recommendation_impact: roleImpact,
 };
 
@@ -103,10 +131,28 @@ if (asJson) {
   for (const a of report.alternatives_lists_shrunk) {
     console.log(`  ${a.category}: ${a.lists} lists`);
   }
+  console.log("\nremovals by gate, summed over every page:");
+  for (const g of report.removals_by_gate) {
+    console.log(`  ${g.gate}: ${g.removals}`);
+  }
+  console.log("\nsubtype coverage:");
+  for (const c of report.subtype_coverage) {
+    console.log(`  ${c.taxonomy}: ${c.labelled} labelled of ${c.records}, ${c.classified_as_none.length} classified as none, ${c.unclassified.length} unclassified`);
+    for (const s of c.by_subtype) {
+      console.log(`    ${s.subtype} (${s.records.length}): ${s.records.join(", ")}`);
+    }
+    if (c.classified_as_none.length > 0) console.log(`    none apply: ${c.classified_as_none.join(", ")}`);
+    if (c.unclassified.length > 0) console.log(`    unclassified: ${c.unclassified.join(", ")}`);
+  }
   console.log("\ncategories where an alternatives list falls below 3:");
   if (report.categories_below_three.length === 0) console.log("  none");
   for (const c of report.categories_below_three) {
     console.log(`  ${c.category}: ${c.min_alternatives} on /vendor/${c.on_page} (${c.total_in_category} in category)`);
+  }
+  console.log("\nevery page whose alternatives list falls below 3:");
+  if (report.pages_below_three.length === 0) console.log("  none");
+  for (const p of report.pages_below_three) {
+    console.log(`  ${p.page} (${p.category}): ${p.kept.length} — ${p.kept.join(", ") || "empty"}`);
   }
   console.log("\nrole recommendations (/api/stack, plan_stack):");
   if (report.role_recommendation_impact.length === 0) console.log("  none");

@@ -1,10 +1,10 @@
-import type { Offer, ProductRole } from "./types.js";
+import type { Offer, ProductRole, ProductSubtypes } from "./types.js";
 
-export type RoleCarrier = { product_role?: ProductRole };
+export type RoleCarrier = { product_role?: ProductRole; product_subtypes?: ProductSubtypes };
 
-export type MembershipGate = "local_dev_only" | "addon";
+export type MembershipGate = "local_dev_only" | "addon" | "not_in_taxonomy" | "subtype_mismatch";
 
-export const MEMBERSHIP_GATE_ORDER: MembershipGate[] = ["local_dev_only", "addon"];
+export const MEMBERSHIP_GATE_ORDER: MembershipGate[] = ["local_dev_only", "addon", "not_in_taxonomy", "subtype_mismatch"];
 
 export const MEMBERSHIP_GATE_RULES: Record<MembershipGate, { label: string; rule: string }> = {
   local_dev_only: {
@@ -15,7 +15,78 @@ export const MEMBERSHIP_GATE_RULES: Record<MembershipGate, { label: string; rule
     label: "Extends another product",
     rule: "The product adds a capability to another product rather than replacing it. It is not an alternative to the thing it augments.",
   },
+  not_in_taxonomy: {
+    label: "None of this category's subtypes apply",
+    rule: "The offer is listed in the category, but it is not one of the kinds of product the category's subtypes describe, so it is not an alternative to any of them.",
+  },
+  subtype_mismatch: {
+    label: "Shares no subtype with this product",
+    rule: "Two offers in a category are alternatives when their subtype sets share at least one member. This offer shares none with the vendor the list is about.",
+  },
 };
+
+export const SUBTYPE_TAXONOMIES: Record<string, Array<{ subtype: string; definition: string }>> = {
+  Databases: [
+    { subtype: "relational", definition: "tables, rows and joins under SQL — Postgres, MySQL, SQLite family" },
+    { subtype: "document", definition: "schemaless JSON/BSON documents as the stored unit" },
+    { subtype: "vector", definition: "stores embeddings and answers similarity queries as its primary access path" },
+    { subtype: "kv_cache", definition: "key to value, no query language over the value" },
+    { subtype: "graph", definition: "nodes and edges are the primary model, with a traversal query language" },
+    { subtype: "timeseries", definition: "rows are time-indexed measurements, retention is a first-class setting" },
+    { subtype: "analytical", definition: "columnar warehouse for aggregate scans, not row-level transactions" },
+    { subtype: "backend_platform", definition: "bundles a database with auth, functions or storage as one product" },
+  ],
+  "Cloud Hosting": [
+    { subtype: "static_site", definition: "serves prebuilt files from a CDN; there is no server process you control" },
+    { subtype: "serverless_function", definition: "your code runs per request with no long-lived instance, billed by invocation or CPU time" },
+    { subtype: "container_app", definition: "you deploy an app or image and the platform keeps a process running for it" },
+    { subtype: "shared_web_hosting", definition: "a directory on a managed server, reached by FTP or SSH, with a bundled MySQL or Postgres" },
+    { subtype: "managed_cms_hosting", definition: "hosting specialised to one CMS or documentation framework, provisioned and updated by the host" },
+    { subtype: "site_builder", definition: "you author the site in the vendor's own editor and it is served from there" },
+    { subtype: "backend_as_a_service", definition: "an API bundling a datastore with auth, push or realtime; there is no server you deploy" },
+    { subtype: "agent_sandbox", definition: "isolated execution environments provisioned programmatically, sold for AI agent workloads" },
+  ],
+};
+
+export const SUBTYPE_MEMBERSHIP_RULE =
+  "Two offers in the same category are alternatives when their subtype sets share at least one member. A record we have not classified carries no subtype gate at all, in either direction.";
+
+export function subtypeDefinition(taxonomy: string, subtype: string): string | null {
+  return SUBTYPE_TAXONOMIES[taxonomy]?.find(t => t.subtype === subtype)?.definition ?? null;
+}
+
+export interface SubtypeProfile {
+  taxonomy: string;
+  subtypes: Set<string>;
+}
+
+export function subtypesOf(offer: RoleCarrier): SubtypeProfile | null {
+  const classified = offer.product_subtypes;
+  if (!classified) return null;
+  return { taxonomy: classified.taxonomy, subtypes: new Set(classified.labels.map(l => l.subtype)) };
+}
+
+export function subtypesAcross(subjects: RoleCarrier[]): SubtypeProfile[] {
+  const byTaxonomy = new Map<string, Set<string>>();
+  for (const subject of subjects) {
+    const own = subtypesOf(subject);
+    if (!own) continue;
+    if (!byTaxonomy.has(own.taxonomy)) byTaxonomy.set(own.taxonomy, new Set());
+    for (const subtype of own.subtypes) byTaxonomy.get(own.taxonomy)!.add(subtype);
+  }
+  return [...byTaxonomy.entries()].map(([taxonomy, subtypes]) => ({ taxonomy, subtypes }));
+}
+
+function subtypeGate(candidate: RoleCarrier, subjectProfiles: SubtypeProfile[]): MembershipGate | null {
+  const own = subtypesOf(candidate);
+  if (!own) return null;
+  const shared = subjectProfiles.find(p => p.taxonomy === own.taxonomy);
+  if (!shared || shared.subtypes.size === 0) return null;
+  for (const subtype of own.subtypes) {
+    if (shared.subtypes.has(subtype)) return null;
+  }
+  return own.subtypes.size === 0 ? "not_in_taxonomy" : "subtype_mismatch";
+}
 
 export const MEMBERSHIP_GATE_SYMMETRY =
   "A gate removes an offer from an alternatives list only when the vendor the list is about does not carry the same gate. One local emulator is still an alternative to another; one add-on is still an alternative to another.";
@@ -35,8 +106,10 @@ export function membershipGatesFor(offer: RoleCarrier): Set<MembershipGate> {
   return gates;
 }
 
-function gateAgainst(candidate: RoleCarrier, subjectGates: Set<MembershipGate>): MembershipGate | null {
+function gateAgainst(candidate: RoleCarrier, subjectGates: Set<MembershipGate>, subjectProfiles: SubtypeProfile[]): MembershipGate | null {
   const candidateGates = membershipGatesFor(candidate);
+  const fromSubtypes = subtypeGate(candidate, subjectProfiles);
+  if (fromSubtypes) candidateGates.add(fromSubtypes);
   for (const gate of MEMBERSHIP_GATE_ORDER) {
     if (candidateGates.has(gate) && !subjectGates.has(gate)) return gate;
   }
@@ -44,7 +117,7 @@ function gateAgainst(candidate: RoleCarrier, subjectGates: Set<MembershipGate>):
 }
 
 export function alternativeMembershipGate(candidate: RoleCarrier, subject: RoleCarrier): MembershipGate | null {
-  return gateAgainst(candidate, membershipGatesFor(subject));
+  return gateAgainst(candidate, membershipGatesFor(subject), subtypesAcross([subject]));
 }
 
 export function membershipGatesAcross(subjects: RoleCarrier[]): Set<MembershipGate> {
@@ -68,12 +141,22 @@ export interface AlternativesPartition<T extends RoleCarrier> {
   removed: Array<{ offer: T; gate: MembershipGate }>;
 }
 
-export function partitionAlternativesAcross<T extends RoleCarrier>(candidates: T[], subjects: RoleCarrier[]): AlternativesPartition<T> {
+export interface MembershipOptions<T extends RoleCarrier = RoleCarrier> {
+  applySubtypes?: boolean;
+  subtypeExempt?: (candidate: T) => boolean;
+}
+
+export const CURATED_SUBTYPE_EXEMPTION =
+  "A curated alternative is a pair a person wrote down for this vendor by name. That is a stronger claim than a subtype match, so subtypes never remove one; the product-role gates still do, because a local emulator does not replace a hosted service whoever names it.";
+
+export function partitionAlternativesAcross<T extends RoleCarrier>(candidates: T[], subjects: RoleCarrier[], options: MembershipOptions<T> = {}): AlternativesPartition<T> {
   const subjectGates = membershipGatesAcross(subjects);
+  const subjectProfiles = options.applySubtypes === false ? [] : subtypesAcross(subjects);
   const kept: T[] = [];
   const removed: Array<{ offer: T; gate: MembershipGate }> = [];
   for (const candidate of candidates) {
-    const gate = gateAgainst(candidate, subjectGates);
+    const profiles = options.subtypeExempt?.(candidate) ? [] : subjectProfiles;
+    const gate = gateAgainst(candidate, subjectGates, profiles);
     if (gate) removed.push({ offer: candidate, gate });
     else kept.push(candidate);
   }

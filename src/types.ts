@@ -48,6 +48,18 @@ export interface ProductRole {
   reviewed: string;
 }
 
+export interface SubtypeLabel {
+  subtype: string;
+  source_url: string;
+  source_quote: string;
+}
+
+export interface ProductSubtypes {
+  taxonomy: string;
+  labels: SubtypeLabel[];
+  reviewed: string;
+}
+
 export interface Offer {
   vendor: string;
   category: string;
@@ -62,6 +74,7 @@ export interface Offer {
   referral?: Referral;
   referral_program?: ReferralProgram;
   product_role?: ProductRole;
+  product_subtypes?: ProductSubtypes;
   source_check?: SourceCheck;
 }
 

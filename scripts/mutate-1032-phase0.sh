@@ -69,8 +69,8 @@ m_pool_is_intersected_again() {
 p = "src/serve.ts"
 s = open(p).read()
 s = s.replace(
-  "partitionAlternativesAcross(addCuratedToPool(dedupedAlts, curated.matched), vendorOffers)",
-  "partitionAlternativesAcross(dedupedAlts, vendorOffers)")
+  "partitionAlternativesAcross(addCuratedToPool(dedupedAlts, curated.matched), vendorOffers, {",
+  "partitionAlternativesAcross(dedupedAlts, vendorOffers, {")
 open(p, "w").write(s)
 PY
 }
@@ -205,7 +205,7 @@ m_curated_block_skips_the_membership_gate() {
   py <<'PY'
 p = "src/curated-alternatives.ts"
 s = open(p).read()
-s = s.replace("  const partition = partitionAlternativesAcross(matched, subjects);",
+s = s.replace("  const partition = partitionAlternativesAcross(matched, subjects, { applySubtypes: false });",
               "  const partition = { kept: matched, removed: [] };")
 open(p, "w").write(s)
 PY
@@ -215,8 +215,8 @@ m_curated_gate_ignores_the_subject_s_own_gates() {
   py <<'PY'
 p = "src/curated-alternatives.ts"
 s = open(p).read()
-s = s.replace("  const partition = partitionAlternativesAcross(matched, subjects);",
-              "  const partition = partitionAlternativesAcross(matched, []);")
+s = s.replace("  const partition = partitionAlternativesAcross(matched, subjects, { applySubtypes: false });",
+              "  const partition = partitionAlternativesAcross(matched, [], { applySubtypes: false });")
 open(p, "w").write(s)
 PY
 }

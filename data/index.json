@@ -41,6 +41,22 @@
         "checked": "2026-08-28",
         "outcome": "ok",
         "detail": "text"
+      },
+      "product_subtypes": {
+        "taxonomy": "Cloud Hosting",
+        "labels": [
+          {
+            "subtype": "static_site",
+            "source_url": "https://vercel.com/docs",
+            "source_quote": "Ship anything with Vercel"
+          },
+          {
+            "subtype": "serverless_function",
+            "source_url": "https://vercel.com/docs",
+            "source_quote": "Ship anything with Vercel"
+          }
+        ],
+        "reviewed": "2026-08-31"
       }
     },
     {
@@ -86,6 +102,17 @@
         "checked": "2026-08-28",
         "outcome": "ok",
         "detail": "text"
+      },
+      "product_subtypes": {
+        "taxonomy": "Cloud Hosting",
+        "labels": [
+          {
+            "subtype": "container_app",
+            "source_url": "https://render.com/docs",
+            "source_quote": "Run your code in just a few clicks with Render. You decide what's possible, and we'll help bring it to life."
+          }
+        ],
+        "reviewed": "2026-08-31"
       }
     },
     {
@@ -126,6 +153,17 @@
         "checked": "2026-08-28",
         "outcome": "ok",
         "detail": "text"
+      },
+      "product_subtypes": {
+        "taxonomy": "Cloud Hosting",
+        "labels": [
+          {
+            "subtype": "serverless_function",
+            "source_url": "https://developers.cloudflare.com/workers/",
+            "source_quote": "Build and deploy serverless applications across Cloudflare"
+          }
+        ],
+        "reviewed": "2026-08-31"
       }
     },
     {
@@ -157,6 +195,22 @@
         "checked": "2026-08-28",
         "outcome": "ok",
         "detail": "text"
+      },
+      "product_subtypes": {
+        "taxonomy": "Cloud Hosting",
+        "labels": [
+          {
+            "subtype": "static_site",
+            "source_url": "https://docs.netlify.com/",
+            "source_quote": "Build & deploy faster with any modern frontend stack or AI agent."
+          },
+          {
+            "subtype": "serverless_function",
+            "source_url": "https://docs.netlify.com/",
+            "source_quote": "Build & deploy faster with any modern frontend stack or AI agent."
+          }
+        ],
+        "reviewed": "2026-08-31"
       }
     },
     {
@@ -194,6 +248,17 @@
         "checked": "2026-08-28",
         "outcome": "ok",
         "detail": "text"
+      },
+      "product_subtypes": {
+        "taxonomy": "Cloud Hosting",
+        "labels": [
+          {
+            "subtype": "static_site",
+            "source_url": "https://developers.cloudflare.com/pages/",
+            "source_quote": "Deploy full-stack applications instantly to the Cloudflare global network with Pages."
+          }
+        ],
+        "reviewed": "2026-08-31"
       }
     },
     {
@@ -255,6 +320,17 @@
         "checked": "2026-08-28",
         "outcome": "ok",
         "detail": "text"
+      },
+      "product_subtypes": {
+        "taxonomy": "Cloud Hosting",
+        "labels": [
+          {
+            "subtype": "container_app",
+            "source_url": "https://railway.com/",
+            "source_quote": "Railway is a full-stack cloud for deploying web apps, servers, databases, and more with automatic scaling, monitoring, and security."
+          }
+        ],
+        "reviewed": "2026-08-31"
       }
     },
     {
@@ -296,6 +372,17 @@
         "checked": "2026-08-28",
         "outcome": "ok",
         "detail": "text"
+      },
+      "product_subtypes": {
+        "taxonomy": "Cloud Hosting",
+        "labels": [
+          {
+            "subtype": "container_app",
+            "source_url": "https://fly.io/",
+            "source_quote": "Sandboxes aren't enough. Give your agent a real computer and get back to building."
+          }
+        ],
+        "reviewed": "2026-08-31"
       }
     },
     {
@@ -328,6 +415,17 @@
         "checked": "2026-08-28",
         "outcome": "ok",
         "detail": "text"
+      },
+      "product_subtypes": {
+        "taxonomy": "Cloud Hosting",
+        "labels": [
+          {
+            "subtype": "serverless_function",
+            "source_url": "https://deno.com/deploy",
+            "source_quote": "One simple platform for anything that runs with JavaScript or Typescript."
+          }
+        ],
+        "reviewed": "2026-08-31"
       }
     },
     {
@@ -349,6 +447,17 @@
         "checked": "2026-08-28",
         "outcome": "ok",
         "detail": "text"
+      },
+      "product_subtypes": {
+        "taxonomy": "Cloud Hosting",
+        "labels": [
+          {
+            "subtype": "serverless_function",
+            "source_url": "https://docs.val.town/",
+            "source_quote": "Val Town lets you - and your LLM - write and run JavaScript, always deployed in 100ms. You can make websites, APIs, MCP servers, crons, Slack bots, email automations, webhook handlers, and more."
+          }
+        ],
+        "reviewed": "2026-08-31"
       }
     },
     {
@@ -370,6 +479,17 @@
         "checked": "2026-08-28",
         "outcome": "ok",
         "detail": "text"
+      },
+      "product_subtypes": {
+        "taxonomy": "Cloud Hosting",
+        "labels": [
+          {
+            "subtype": "container_app",
+            "source_url": "https://www.koyeb.com/",
+            "source_quote": "Deploy intensive applications across GPUs, CPUs, and Accelerators in minutes - scale in 50+ locations."
+          }
+        ],
+        "reviewed": "2026-08-31"
       }
     },
     {
@@ -522,6 +642,27 @@
         "checked": "2026-08-28",
         "outcome": "ok",
         "detail": "text"
+      },
+      "product_subtypes": {
+        "taxonomy": "Databases",
+        "labels": [
+          {
+            "subtype": "relational",
+            "source_url": "https://supabase.com/",
+            "source_quote": "Build production-grade applications with a Postgres database, Authentication, instant APIs, Realtime, Functions, Storage and Vector embeddings."
+          },
+          {
+            "subtype": "vector",
+            "source_url": "https://supabase.com/",
+            "source_quote": "Build production-grade applications with a Postgres database, Authentication, instant APIs, Realtime, Functions, Storage and Vector embeddings."
+          },
+          {
+            "subtype": "backend_platform",
+            "source_url": "https://supabase.com/",
+            "source_quote": "Build production-grade applications with a Postgres database, Authentication, instant APIs, Realtime, Functions, Storage and Vector embeddings."
+          }
+        ],
+        "reviewed": "2026-08-31"
       }
     },
     {
@@ -567,6 +708,22 @@
         "checked": "2026-08-28",
         "outcome": "ok",
         "detail": "text"
+      },
+      "product_subtypes": {
+        "taxonomy": "Databases",
+        "labels": [
+          {
+            "subtype": "relational",
+            "source_url": "https://neon.com/",
+            "source_quote": "The backend for apps and agents. Build with Lakebase Postgres, Auth, Functions, Storage, and an AI Gateway: instant, branchable, serverless."
+          },
+          {
+            "subtype": "backend_platform",
+            "source_url": "https://neon.com/",
+            "source_quote": "The backend for apps and agents. Build with Lakebase Postgres, Auth, Functions, Storage, and an AI Gateway: instant, branchable, serverless."
+          }
+        ],
+        "reviewed": "2026-08-31"
       }
     },
     {
@@ -597,6 +754,17 @@
         "checked": "2026-08-28",
         "outcome": "ok",
         "detail": "text"
+      },
+      "product_subtypes": {
+        "taxonomy": "Databases",
+        "labels": [
+          {
+            "subtype": "document",
+            "source_url": "https://www.mongodb.com/products/platform/atlas-database",
+            "source_quote": "Find out how the document model eliminates operational complexity while ensuring unmatched resilience, scalability, and enterprise-grade security through the Atlas cloud database."
+          }
+        ],
+        "reviewed": "2026-08-31"
       }
     },
     {
@@ -618,6 +786,17 @@
         "checked": "2026-08-28",
         "outcome": "ok",
         "detail": "text"
+      },
+      "product_subtypes": {
+        "taxonomy": "Databases",
+        "labels": [
+          {
+            "subtype": "relational",
+            "source_url": "https://www.cockroachlabs.com/",
+            "source_quote": "CockroachDB is a cloud-agnostic, AI-native, PostgreSQL-compatible data platform built for modern applications."
+          }
+        ],
+        "reviewed": "2026-08-31"
       }
     },
     {
@@ -639,6 +818,17 @@
         "checked": "2026-08-28",
         "outcome": "ok",
         "detail": "text"
+      },
+      "product_subtypes": {
+        "taxonomy": "Databases",
+        "labels": [
+          {
+            "subtype": "relational",
+            "source_url": "https://turso.tech/",
+            "source_quote": "A full SQLite drop-in replacement, built for the agentic future."
+          }
+        ],
+        "reviewed": "2026-08-31"
       }
     },
     {
@@ -661,6 +851,22 @@
         "checked": "2026-08-28",
         "outcome": "ok",
         "detail": "text"
+      },
+      "product_subtypes": {
+        "taxonomy": "Databases",
+        "labels": [
+          {
+            "subtype": "kv_cache",
+            "source_url": "https://upstash.com/",
+            "source_quote": "Serverless Redis, Vector and Search databases with low latency and pay-as-you-go pricing."
+          },
+          {
+            "subtype": "vector",
+            "source_url": "https://upstash.com/",
+            "source_quote": "Serverless Redis, Vector and Search databases with low latency and pay-as-you-go pricing."
+          }
+        ],
+        "reviewed": "2026-08-31"
       }
     },
     {
@@ -685,6 +891,22 @@
         "checked": "2026-08-28",
         "outcome": "ok",
         "detail": "text"
+      },
+      "product_subtypes": {
+        "taxonomy": "Databases",
+        "labels": [
+          {
+            "subtype": "document",
+            "source_url": "https://firebase.google.com/docs/firestore",
+            "source_quote": "Use the flexible, scalable NoSQL cloud database from Google Cloud to store and sync data for client and server-side development."
+          },
+          {
+            "subtype": "backend_platform",
+            "source_url": "https://firebase.google.com/docs/firestore",
+            "source_quote": "Use the flexible, scalable NoSQL cloud database from Google Cloud to store and sync data for client and server-side development."
+          }
+        ],
+        "reviewed": "2026-08-31"
       }
     },
     {
@@ -705,6 +927,11 @@
         "checked": "2026-08-28",
         "outcome": "states_no_terms",
         "detail": "the page names Databricks (Lakeflow Connect) but states no amount, tier or rate we can read"
+      },
+      "product_subtypes": {
+        "taxonomy": "Databases",
+        "labels": [],
+        "reviewed": "2026-08-31"
       }
     },
     {
@@ -728,6 +955,17 @@
         "checked": "2026-08-28",
         "outcome": "ok",
         "detail": "text"
+      },
+      "product_subtypes": {
+        "taxonomy": "Databases",
+        "labels": [
+          {
+            "subtype": "backend_platform",
+            "source_url": "https://www.convex.dev/",
+            "source_quote": "Convex is the reactive backend platform that keeps up with you and your agents."
+          }
+        ],
+        "reviewed": "2026-08-31"
       }
     },
     {
@@ -752,6 +990,17 @@
         "checked": "2026-08-28",
         "outcome": "ok",
         "detail": "text"
+      },
+      "product_subtypes": {
+        "taxonomy": "Databases",
+        "labels": [
+          {
+            "subtype": "backend_platform",
+            "source_url": "https://appwrite.io/docs",
+            "source_quote": "Ship faster with Appwrite. Quick starts and deep guides for web and mobile: Authentication, Databases, Storage, Functions, Messaging, and hosting."
+          }
+        ],
+        "reviewed": "2026-08-31"
       }
     },
     {
@@ -774,6 +1023,17 @@
         "checked": "2026-08-28",
         "outcome": "ok",
         "detail": "text"
+      },
+      "product_subtypes": {
+        "taxonomy": "Databases",
+        "labels": [
+          {
+            "subtype": "relational",
+            "source_url": "https://aiven.io/postgresql",
+            "source_quote": "Aiven for PostgreSQL - Managed Postgres database service with Postgres extensions, database forking, connection pooling."
+          }
+        ],
+        "reviewed": "2026-08-31"
       }
     },
     {
@@ -796,6 +1056,17 @@
         "checked": "2026-08-28",
         "outcome": "ok",
         "detail": "text"
+      },
+      "product_subtypes": {
+        "taxonomy": "Databases",
+        "labels": [
+          {
+            "subtype": "relational",
+            "source_url": "https://xata.io/",
+            "source_quote": "Postgres platform with instant branching and scale-to-zero compute."
+          }
+        ],
+        "reviewed": "2026-08-31"
       }
     },
     {
@@ -835,6 +1106,17 @@
         "checked": "2026-08-28",
         "outcome": "ok",
         "detail": "text"
+      },
+      "product_subtypes": {
+        "taxonomy": "Databases",
+        "labels": [
+          {
+            "subtype": "relational",
+            "source_url": "https://developers.cloudflare.com/d1/",
+            "source_quote": "Build serverless SQL databases on Cloudflare"
+          }
+        ],
+        "reviewed": "2026-08-31"
       }
     },
     {
@@ -857,6 +1139,22 @@
         "checked": "2026-08-28",
         "outcome": "ok",
         "detail": "text"
+      },
+      "product_subtypes": {
+        "taxonomy": "Databases",
+        "labels": [
+          {
+            "subtype": "relational",
+            "source_url": "https://nhost.io/",
+            "source_quote": "Nhost is a managed backend platform with Postgres, GraphQL, Auth, Storage, and serverless Functions."
+          },
+          {
+            "subtype": "backend_platform",
+            "source_url": "https://nhost.io/",
+            "source_quote": "Nhost is a managed backend platform with Postgres, GraphQL, Auth, Storage, and serverless Functions."
+          }
+        ],
+        "reviewed": "2026-08-31"
       }
     },
     {
@@ -881,6 +1179,17 @@
         "checked": "2026-08-28",
         "outcome": "states_no_terms",
         "detail": "the page names PocketBase but states no amount, tier or rate we can read"
+      },
+      "product_subtypes": {
+        "taxonomy": "Databases",
+        "labels": [
+          {
+            "subtype": "backend_platform",
+            "source_url": "https://pocketbase.io/",
+            "source_quote": "Open Source backend in 1 file with realtime database, authentication, file storage and admin dashboard"
+          }
+        ],
+        "reviewed": "2026-08-31"
       }
     },
     {
@@ -1654,6 +1963,17 @@
         "checked": "2026-08-28",
         "outcome": "ok",
         "detail": "text"
+      },
+      "product_subtypes": {
+        "taxonomy": "Databases",
+        "labels": [
+          {
+            "subtype": "kv_cache",
+            "source_url": "https://developers.cloudflare.com/kv/",
+            "source_quote": "Workers KV is a global, low-latency, key-value data store for building dynamic and performant APIs and websites."
+          }
+        ],
+        "reviewed": "2026-08-31"
       }
     },
     {
@@ -1693,6 +2013,17 @@
         "checked": "2026-08-28",
         "outcome": "ok",
         "detail": "text"
+      },
+      "product_subtypes": {
+        "taxonomy": "Cloud Hosting",
+        "labels": [
+          {
+            "subtype": "serverless_function",
+            "source_url": "https://developers.cloudflare.com/durable-objects/",
+            "source_quote": "Build stateful serverless applications with Durable Objects, including AI agents, real-time chat, and collaborative apps."
+          }
+        ],
+        "reviewed": "2026-08-31"
       }
     },
     {
@@ -2620,6 +2951,17 @@
         "checked": "2026-08-28",
         "outcome": "ok",
         "detail": "text"
+      },
+      "product_subtypes": {
+        "taxonomy": "Databases",
+        "labels": [
+          {
+            "subtype": "kv_cache",
+            "source_url": "https://www.gomomento.com/",
+            "source_quote": "Run Valkey with a web-scale gateway, Kubernetes-native control, hardened runtime images, and production modules built for platform teams."
+          }
+        ],
+        "reviewed": "2026-08-31"
       }
     },
     {
@@ -3655,6 +3997,17 @@
         "checked": "2026-08-28",
         "outcome": "states_no_terms",
         "detail": "the page names GitHub Pages but states no amount, tier or rate we can read"
+      },
+      "product_subtypes": {
+        "taxonomy": "Cloud Hosting",
+        "labels": [
+          {
+            "subtype": "static_site",
+            "source_url": "https://docs.github.com/en/pages",
+            "source_quote": "GitHub Pages turns any GitHub repository into a live website - no separate hosting required."
+          }
+        ],
+        "reviewed": "2026-08-31"
       }
     },
     {
@@ -3694,6 +4047,17 @@
         "checked": "2026-08-28",
         "outcome": "ok",
         "detail": "text"
+      },
+      "product_subtypes": {
+        "taxonomy": "Databases",
+        "labels": [
+          {
+            "subtype": "relational",
+            "source_url": "https://www.thenile.dev/",
+            "source_quote": "Postgres re-engineered for multi-tenant apps."
+          }
+        ],
+        "reviewed": "2026-08-31"
       }
     },
     {
@@ -6404,6 +6768,17 @@
         "checked": "2026-08-28",
         "outcome": "ok",
         "detail": "text"
+      },
+      "product_subtypes": {
+        "taxonomy": "Cloud Hosting",
+        "labels": [
+          {
+            "subtype": "shared_web_hosting",
+            "source_url": "https://www.pythonanywhere.com/",
+            "source_quote": "Host, run, and code Python in the cloud"
+          }
+        ],
+        "reviewed": "2026-08-31"
       }
     },
     {
@@ -6491,6 +6866,17 @@
         "checked": "2026-08-28",
         "outcome": "ok",
         "detail": "text"
+      },
+      "product_subtypes": {
+        "taxonomy": "Databases",
+        "labels": [
+          {
+            "subtype": "kv_cache",
+            "source_url": "https://redis.io/about/",
+            "source_quote": "Learn about Redis, the fast in-memory database for caching, vector search, and NoSQL."
+          }
+        ],
+        "reviewed": "2026-08-31"
       }
     },
     {
@@ -6826,6 +7212,32 @@
         "checked": "2026-08-28",
         "outcome": "ok",
         "detail": "text"
+      },
+      "product_subtypes": {
+        "taxonomy": "Databases",
+        "labels": [
+          {
+            "subtype": "relational",
+            "source_url": "https://surrealdb.com/",
+            "source_quote": "SurrealDB is a database and an agent memory layer. Documents, graphs, vectors, and SQL in one engine - and context for your AI agents wherever your data lives."
+          },
+          {
+            "subtype": "document",
+            "source_url": "https://surrealdb.com/",
+            "source_quote": "SurrealDB is a database and an agent memory layer. Documents, graphs, vectors, and SQL in one engine - and context for your AI agents wherever your data lives."
+          },
+          {
+            "subtype": "graph",
+            "source_url": "https://surrealdb.com/",
+            "source_quote": "SurrealDB is a database and an agent memory layer. Documents, graphs, vectors, and SQL in one engine - and context for your AI agents wherever your data lives."
+          },
+          {
+            "subtype": "vector",
+            "source_url": "https://surrealdb.com/",
+            "source_quote": "SurrealDB is a database and an agent memory layer. Documents, graphs, vectors, and SQL in one engine - and context for your AI agents wherever your data lives."
+          }
+        ],
+        "reviewed": "2026-08-31"
       }
     },
     {
@@ -7145,6 +7557,17 @@
         "checked": "2026-08-28",
         "outcome": "ok",
         "detail": "text"
+      },
+      "product_subtypes": {
+        "taxonomy": "Databases",
+        "labels": [
+          {
+            "subtype": "vector",
+            "source_url": "https://weaviate.io/pricing",
+            "source_quote": "Compare pricing options for our different levels of vector database services and solutions."
+          }
+        ],
+        "reviewed": "2026-08-31"
       }
     },
     {
@@ -7165,6 +7588,17 @@
         "checked": "2026-08-28",
         "outcome": "ok",
         "detail": "text"
+      },
+      "product_subtypes": {
+        "taxonomy": "Databases",
+        "labels": [
+          {
+            "subtype": "vector",
+            "source_url": "https://zilliz.com/",
+            "source_quote": "Zilliz offers a fully managed Vector Lakebase powered by Milvus, unifying real-time vector search, lake-scale discovery, and AI data operations."
+          }
+        ],
+        "reviewed": "2026-08-31"
       }
     },
     {
@@ -7186,6 +7620,17 @@
         "checked": "2026-08-28",
         "outcome": "ok",
         "detail": "text"
+      },
+      "product_subtypes": {
+        "taxonomy": "Databases",
+        "labels": [
+          {
+            "subtype": "analytical",
+            "source_url": "https://docs.lancedb.com/",
+            "source_quote": "Multimodal lakehouse for AI."
+          }
+        ],
+        "reviewed": "2026-08-31"
       }
     },
     {
@@ -7206,6 +7651,17 @@
         "checked": "2026-08-28",
         "outcome": "ok",
         "detail": "text"
+      },
+      "product_subtypes": {
+        "taxonomy": "Databases",
+        "labels": [
+          {
+            "subtype": "vector",
+            "source_url": "https://upstash.com/",
+            "source_quote": "Serverless Redis, Vector and Search databases with low latency and pay-as-you-go pricing."
+          }
+        ],
+        "reviewed": "2026-08-31"
       }
     },
     {
@@ -7226,6 +7682,17 @@
         "checked": "2026-08-28",
         "outcome": "ok",
         "detail": "text"
+      },
+      "product_subtypes": {
+        "taxonomy": "Databases",
+        "labels": [
+          {
+            "subtype": "vector",
+            "source_url": "https://www.trychroma.com/",
+            "source_quote": "Fast, serverless, and scalable infrastructure supporting vector, full-text, regex, and metadata search."
+          }
+        ],
+        "reviewed": "2026-08-31"
       }
     },
     {
@@ -7246,6 +7713,17 @@
         "checked": "2026-08-28",
         "outcome": "ok",
         "detail": "text"
+      },
+      "product_subtypes": {
+        "taxonomy": "Databases",
+        "labels": [
+          {
+            "subtype": "vector",
+            "source_url": "https://turbopuffer.com/",
+            "source_quote": "vector and full-text search built on object storage: fast, 10x cheaper, and extremely scalable"
+          }
+        ],
+        "reviewed": "2026-08-31"
       }
     },
     {
@@ -7631,6 +8109,22 @@
         "checked": "2026-08-28",
         "outcome": "states_no_terms",
         "detail": "the page names CrateDB but states no amount, tier or rate we can read"
+      },
+      "product_subtypes": {
+        "taxonomy": "Databases",
+        "labels": [
+          {
+            "subtype": "relational",
+            "source_url": "https://cratedb.com/",
+            "source_quote": "CrateDB is the operational analytics database for fast-moving data. Ingest millions of events per second and query billions of records in milliseconds. Standard SQL, no pre-aggregation, no schema redesign."
+          },
+          {
+            "subtype": "analytical",
+            "source_url": "https://cratedb.com/",
+            "source_quote": "CrateDB is the operational analytics database for fast-moving data. Ingest millions of events per second and query billions of records in milliseconds. Standard SQL, no pre-aggregation, no schema redesign."
+          }
+        ],
+        "reviewed": "2026-08-31"
       }
     },
     {
@@ -7651,6 +8145,17 @@
         "checked": "2026-08-28",
         "outcome": "ok",
         "detail": "text"
+      },
+      "product_subtypes": {
+        "taxonomy": "Databases",
+        "labels": [
+          {
+            "subtype": "graph",
+            "source_url": "https://neo4j.com/",
+            "source_quote": "Connect data as it's stored with Neo4j. Perform powerful, complex queries at scale and speed with our graph data platform."
+          }
+        ],
+        "reviewed": "2026-08-31"
       }
     },
     {
@@ -7671,6 +8176,17 @@
         "checked": "2026-08-28",
         "outcome": "ok",
         "detail": "text"
+      },
+      "product_subtypes": {
+        "taxonomy": "Databases",
+        "labels": [
+          {
+            "subtype": "timeseries",
+            "source_url": "https://www.influxdata.com/influxdb-pricing/",
+            "source_quote": "The time series database built to scale with you"
+          }
+        ],
+        "reviewed": "2026-08-31"
       }
     },
     {
@@ -17221,6 +17737,17 @@
         "checked": "2026-08-28",
         "outcome": "states_no_terms",
         "detail": "the page names ampt.dev but states no amount, tier or rate we can read"
+      },
+      "product_subtypes": {
+        "taxonomy": "Cloud Hosting",
+        "labels": [
+          {
+            "subtype": "serverless_function",
+            "source_url": "https://getampt.com/docs",
+            "source_quote": "Ampt lets developers write apps with their favorite tools and JavaScript frameworks, then automatically provisions, manages, and optimizes cloud resources for them."
+          }
+        ],
+        "reviewed": "2026-08-31"
       }
     },
     {
@@ -17239,6 +17766,17 @@
         "checked": "2026-08-28",
         "outcome": "states_no_terms",
         "detail": "the page names anvil.works but states no amount, tier or rate we can read"
+      },
+      "product_subtypes": {
+        "taxonomy": "Cloud Hosting",
+        "labels": [
+          {
+            "subtype": "site_builder",
+            "source_url": "https://anvil.works/",
+            "source_quote": "Anvil is a free Python-based drag-and-drop web app builder"
+          }
+        ],
+        "reviewed": "2026-08-31"
       }
     },
     {
@@ -17257,6 +17795,17 @@
         "checked": "2026-08-28",
         "outcome": "ok",
         "detail": "text"
+      },
+      "product_subtypes": {
+        "taxonomy": "Cloud Hosting",
+        "labels": [
+          {
+            "subtype": "container_app",
+            "source_url": "https://apply.build/",
+            "source_quote": "Deploy from GitHub in minutes to European infrastructure. WAF, vulnerability scanning, metrics, and logs included in every plan."
+          }
+        ],
+        "reviewed": "2026-08-31"
       }
     },
     {
@@ -17275,6 +17824,17 @@
         "checked": "2026-08-28",
         "outcome": "states_no_terms",
         "detail": "the page names Clever Cloud but states no amount, tier or rate we can read"
+      },
+      "product_subtypes": {
+        "taxonomy": "Cloud Hosting",
+        "labels": [
+          {
+            "subtype": "container_app",
+            "source_url": "https://clever.cloud/",
+            "source_quote": "Clever Cloud provides you with the best tools to host, deploy and maintain your applications in operational conditions, at a controlled cost."
+          }
+        ],
+        "reviewed": "2026-08-31"
       }
     },
     {
@@ -17293,6 +17853,17 @@
         "checked": "2026-08-28",
         "outcome": "states_no_terms",
         "detail": "the page names Choreo but states no amount, tier or rate we can read"
+      },
+      "product_subtypes": {
+        "taxonomy": "Cloud Hosting",
+        "labels": [
+          {
+            "subtype": "container_app",
+            "source_url": "https://wso2.com/choreo/",
+            "source_quote": "Automate workflows, reduce complexity, and empower teams to build, secure, and deploy at scale with an all-in-one AI-native internal developer platform."
+          }
+        ],
+        "reviewed": "2026-08-31"
       }
     },
     {
@@ -17311,6 +17882,11 @@
         "checked": "2026-08-28",
         "outcome": "states_no_terms",
         "detail": "the page names codenameone.com but states no amount, tier or rate we can read"
+      },
+      "product_subtypes": {
+        "taxonomy": "Cloud Hosting",
+        "labels": [],
+        "reviewed": "2026-08-31"
       }
     },
     {
@@ -17329,6 +17905,17 @@
         "checked": "2026-08-28",
         "outcome": "states_no_terms",
         "detail": "the page names Daestro but states no amount, tier or rate we can read"
+      },
+      "product_subtypes": {
+        "taxonomy": "Cloud Hosting",
+        "labels": [
+          {
+            "subtype": "container_app",
+            "source_url": "https://daestro.com/",
+            "source_quote": "Container Orchestrator for Batch & Cron Jobs"
+          }
+        ],
+        "reviewed": "2026-08-31"
       }
     },
     {
@@ -17347,6 +17934,17 @@
         "checked": "2026-08-28",
         "outcome": "ok",
         "detail": "url"
+      },
+      "product_subtypes": {
+        "taxonomy": "Cloud Hosting",
+        "labels": [
+          {
+            "subtype": "shared_web_hosting",
+            "source_url": "https://domcloud.co/",
+            "source_quote": "DOM Cloud is a free, modern hosting service for your web applications."
+          }
+        ],
+        "reviewed": "2026-08-31"
       }
     },
     {
@@ -17365,6 +17963,17 @@
         "checked": "2026-08-28",
         "outcome": "ok",
         "detail": "text"
+      },
+      "product_subtypes": {
+        "taxonomy": "Cloud Hosting",
+        "labels": [
+          {
+            "subtype": "container_app",
+            "source_url": "https://encore.dev/",
+            "source_quote": "Encore automates infrastructure from development to production, so developers and agents ship without waiting on Terraform PRs or platform tickets."
+          }
+        ],
+        "reviewed": "2026-08-31"
       }
     },
     {
@@ -17383,6 +17992,17 @@
         "checked": "2026-08-28",
         "outcome": "ok",
         "detail": "text"
+      },
+      "product_subtypes": {
+        "taxonomy": "Cloud Hosting",
+        "labels": [
+          {
+            "subtype": "container_app",
+            "source_url": "https://flightcontrol.dev/",
+            "source_quote": "Provision, deploy, and operate production-grade AWS infrastructure with developers and AI agents."
+          }
+        ],
+        "reviewed": "2026-08-31"
       }
     },
     {
@@ -17401,6 +18021,17 @@
         "checked": "2026-08-28",
         "outcome": "ok",
         "detail": "text"
+      },
+      "product_subtypes": {
+        "taxonomy": "Cloud Hosting",
+        "labels": [
+          {
+            "subtype": "container_app",
+            "source_url": "https://gigalixir.com/",
+            "source_quote": "The only platform built to unlock the full power of Elixir and Phoenix, while providing a high-performance, buildpack-driven home for all your production applications."
+          }
+        ],
+        "reviewed": "2026-08-31"
       }
     },
     {
@@ -17419,6 +18050,17 @@
         "checked": "2026-08-28",
         "outcome": "ok",
         "detail": "text"
+      },
+      "product_subtypes": {
+        "taxonomy": "Cloud Hosting",
+        "labels": [
+          {
+            "subtype": "container_app",
+            "source_url": "https://leapcell.io/",
+            "source_quote": "Leapcell is a modern cloud platform and PaaS for developers, offering seamless web hosting for apps, APIs, and databases."
+          }
+        ],
+        "reviewed": "2026-08-31"
       }
     },
     {
@@ -17437,6 +18079,17 @@
         "checked": "2026-08-28",
         "outcome": "ok",
         "detail": "text"
+      },
+      "product_subtypes": {
+        "taxonomy": "Cloud Hosting",
+        "labels": [
+          {
+            "subtype": "container_app",
+            "source_url": "https://northflank.com/",
+            "source_quote": "Run AI agents, services, databases, and GPUs in secure microVMs. One governed path from commit to production, on our cloud or your own."
+          }
+        ],
+        "reviewed": "2026-08-31"
       }
     },
     {
@@ -17455,6 +18108,11 @@
         "checked": "2026-08-28",
         "outcome": "states_no_terms",
         "detail": "the page names WunderGraph but states no amount, tier or rate we can read"
+      },
+      "product_subtypes": {
+        "taxonomy": "Cloud Hosting",
+        "labels": [],
+        "reviewed": "2026-08-31"
       }
     },
     {
@@ -17473,6 +18131,11 @@
         "checked": "2026-08-28",
         "outcome": "states_no_terms",
         "detail": "the page names YepCode but states no amount, tier or rate we can read"
+      },
+      "product_subtypes": {
+        "taxonomy": "Cloud Hosting",
+        "labels": [],
+        "reviewed": "2026-08-31"
       }
     },
     {
@@ -17491,6 +18154,11 @@
         "checked": "2026-08-28",
         "outcome": "ok",
         "detail": "text"
+      },
+      "product_subtypes": {
+        "taxonomy": "Cloud Hosting",
+        "labels": [],
+        "reviewed": "2026-08-31"
       }
     },
     {
@@ -17511,6 +18179,17 @@
         "checked": "2026-08-28",
         "outcome": "ok",
         "detail": "text"
+      },
+      "product_subtypes": {
+        "taxonomy": "Cloud Hosting",
+        "labels": [
+          {
+            "subtype": "backend_as_a_service",
+            "source_url": "https://www.back4app.com/",
+            "source_quote": "Launch your backend in minutes with no infrastructure hassles. Our low-code platform, ready-to-use components, and AI-powered tools will help you build faster and scale without limits."
+          }
+        ],
+        "reviewed": "2026-08-31"
       }
     },
     {
@@ -17565,6 +18244,11 @@
         "checked": "2026-08-28",
         "outcome": "states_no_terms",
         "detail": "the page names connectycube.com but states no amount, tier or rate we can read"
+      },
+      "product_subtypes": {
+        "taxonomy": "Cloud Hosting",
+        "labels": [],
+        "reviewed": "2026-08-31"
       }
     },
     {
@@ -17583,6 +18267,11 @@
         "checked": "2026-08-28",
         "outcome": "states_no_terms",
         "detail": "the page names ETLR but states no amount, tier or rate we can read"
+      },
+      "product_subtypes": {
+        "taxonomy": "Cloud Hosting",
+        "labels": [],
+        "reviewed": "2026-08-31"
       }
     },
     {
@@ -17601,6 +18290,11 @@
         "checked": "2026-08-28",
         "outcome": "states_no_terms",
         "detail": "the page names Flutter Flow but states no amount, tier or rate we can read"
+      },
+      "product_subtypes": {
+        "taxonomy": "Cloud Hosting",
+        "labels": [],
+        "reviewed": "2026-08-31"
       }
     },
     {
@@ -17619,6 +18313,11 @@
         "checked": "2026-08-28",
         "outcome": "states_no_terms",
         "detail": "the page names IFTTT but states no amount, tier or rate we can read"
+      },
+      "product_subtypes": {
+        "taxonomy": "Cloud Hosting",
+        "labels": [],
+        "reviewed": "2026-08-31"
       }
     },
     {
@@ -17637,6 +18336,11 @@
         "checked": "2026-08-28",
         "outcome": "ok",
         "detail": "text"
+      },
+      "product_subtypes": {
+        "taxonomy": "Cloud Hosting",
+        "labels": [],
+        "reviewed": "2026-08-31"
       }
     },
     {
@@ -17655,6 +18359,17 @@
         "checked": "2026-08-28",
         "outcome": "states_no_terms",
         "detail": "the page names LeanCloud but states no amount, tier or rate we can read"
+      },
+      "product_subtypes": {
+        "taxonomy": "Cloud Hosting",
+        "labels": [
+          {
+            "subtype": "backend_as_a_service",
+            "source_url": "https://leancloud.app/",
+            "source_quote": "LeanCloud is the leading backend-as-a-service provider that offers a complete set of cloud services including object storage, file storage, web hosting, container, instant messaging, push notification"
+          }
+        ],
+        "reviewed": "2026-08-31"
       }
     },
     {
@@ -17673,6 +18388,17 @@
         "checked": "2026-08-28",
         "outcome": "ok",
         "detail": "url"
+      },
+      "product_subtypes": {
+        "taxonomy": "Cloud Hosting",
+        "labels": [
+          {
+            "subtype": "backend_as_a_service",
+            "source_url": "https://paraio.com/",
+            "source_quote": "ParaIO.com is a cloud-based backend service built with open source Para framework. Your objects - stored, indexed and cached."
+          }
+        ],
+        "reviewed": "2026-08-31"
       }
     },
     {
@@ -17691,6 +18417,17 @@
         "checked": "2026-08-28",
         "outcome": "states_no_terms",
         "detail": "the page names simperium.com but states no amount, tier or rate we can read"
+      },
+      "product_subtypes": {
+        "taxonomy": "Cloud Hosting",
+        "labels": [
+          {
+            "subtype": "backend_as_a_service",
+            "source_url": "https://simperium.com/",
+            "source_quote": "Simperium is a cross-platform data sync service."
+          }
+        ],
+        "reviewed": "2026-08-31"
       }
     },
     {
@@ -17845,6 +18582,17 @@
         "checked": "2026-08-28",
         "outcome": "states_no_terms",
         "detail": "the page names Alwaysdata but states no amount, tier or rate we can read"
+      },
+      "product_subtypes": {
+        "taxonomy": "Cloud Hosting",
+        "labels": [
+          {
+            "subtype": "shared_web_hosting",
+            "source_url": "https://www.alwaysdata.com/en/",
+            "source_quote": "Fully managed and all-inclusive hosting, without unexpected expenses. Unlimited databases, mailboxes and websites."
+          }
+        ],
+        "reviewed": "2026-08-31"
       }
     },
     {
@@ -17863,6 +18611,17 @@
         "checked": "2026-08-28",
         "outcome": "ok",
         "detail": "text"
+      },
+      "product_subtypes": {
+        "taxonomy": "Cloud Hosting",
+        "labels": [
+          {
+            "subtype": "shared_web_hosting",
+            "source_url": "https://www.awardspace.com/",
+            "source_quote": "AwardSpace.com is a pioneer in web hosting, offering Free Hosting with PHP/MySQL and no ads, alongside premium plans like Shared, WordPress, Semi-Dedicated, and VPS Cloud Hosting."
+          }
+        ],
+        "reviewed": "2026-08-31"
       }
     },
     {
@@ -17881,6 +18640,17 @@
         "checked": "2026-08-28",
         "outcome": "states_no_terms",
         "detail": "the page names Bubble but states no amount, tier or rate we can read"
+      },
+      "product_subtypes": {
+        "taxonomy": "Cloud Hosting",
+        "labels": [
+          {
+            "subtype": "site_builder",
+            "source_url": "https://bubble.io/",
+            "source_quote": "Build web & mobile apps with the only no-code AI app builder"
+          }
+        ],
+        "reviewed": "2026-08-31"
       }
     },
     {
@@ -17899,6 +18669,17 @@
         "checked": "2026-08-28",
         "outcome": "states_no_terms",
         "detail": "the page names dAppling Network but states no amount, tier or rate we can read"
+      },
+      "product_subtypes": {
+        "taxonomy": "Cloud Hosting",
+        "labels": [
+          {
+            "subtype": "static_site",
+            "source_url": "https://www.dappling.network/",
+            "source_quote": "Decentralized Web Hosting for the Future."
+          }
+        ],
+        "reviewed": "2026-08-31"
       }
     },
     {
@@ -17917,6 +18698,17 @@
         "checked": "2026-08-28",
         "outcome": "states_no_terms",
         "detail": "the page names FreeFlarum but states no amount, tier or rate we can read"
+      },
+      "product_subtypes": {
+        "taxonomy": "Cloud Hosting",
+        "labels": [
+          {
+            "subtype": "managed_cms_hosting",
+            "source_url": "https://freeflarum.com/",
+            "source_quote": "Create your own Flarum forum in under 1 minute with 1-click installation!"
+          }
+        ],
+        "reviewed": "2026-08-31"
       }
     },
     {
@@ -17936,6 +18728,22 @@
         "checked": "2026-08-28",
         "outcome": "ok",
         "detail": "text"
+      },
+      "product_subtypes": {
+        "taxonomy": "Cloud Hosting",
+        "labels": [
+          {
+            "subtype": "static_site",
+            "source_url": "https://sevalla.com/",
+            "source_quote": "Ship production apps without infrastructure overhead. Run applications, databases, storage, and static sites on one platform."
+          },
+          {
+            "subtype": "container_app",
+            "source_url": "https://sevalla.com/",
+            "source_quote": "Ship production apps without infrastructure overhead. Run applications, databases, storage, and static sites on one platform."
+          }
+        ],
+        "reviewed": "2026-08-31"
       }
     },
     {
@@ -17954,6 +18762,17 @@
         "checked": "2026-08-28",
         "outcome": "states_no_terms",
         "detail": "the page names MDB GO but states no amount, tier or rate we can read"
+      },
+      "product_subtypes": {
+        "taxonomy": "Cloud Hosting",
+        "labels": [
+          {
+            "subtype": "container_app",
+            "source_url": "https://mdbgo.com/",
+            "source_quote": "Create and host anything with a single command"
+          }
+        ],
+        "reviewed": "2026-08-31"
       }
     },
     {
@@ -17972,6 +18791,17 @@
         "checked": "2026-08-28",
         "outcome": "states_no_terms",
         "detail": "the page names Neocities but states no amount, tier or rate we can read"
+      },
+      "product_subtypes": {
+        "taxonomy": "Cloud Hosting",
+        "labels": [
+          {
+            "subtype": "static_site",
+            "source_url": "https://neocities.org/about",
+            "source_quote": "Neocities gives you a free place to create a personal, static HTML web site that looks, sounds, and feels like you."
+          }
+        ],
+        "reviewed": "2026-08-31"
       }
     },
     {
@@ -17990,6 +18820,17 @@
         "checked": "2026-08-28",
         "outcome": "ok",
         "detail": "url"
+      },
+      "product_subtypes": {
+        "taxonomy": "Cloud Hosting",
+        "labels": [
+          {
+            "subtype": "site_builder",
+            "source_url": "https://oaysus.com/",
+            "source_quote": "Mirin designs and builds your site, then gives you a simple way to update it after launch."
+          }
+        ],
+        "reviewed": "2026-08-31"
       }
     },
     {
@@ -18008,6 +18849,27 @@
         "checked": "2026-08-28",
         "outcome": "ok",
         "detail": "text"
+      },
+      "product_subtypes": {
+        "taxonomy": "Cloud Hosting",
+        "labels": [
+          {
+            "subtype": "serverless_function",
+            "source_url": "https://www.pandastack.io/",
+            "source_quote": "Firecracker microVMs that boot in 49ms. Agent sandboxes with fork & snapshot, git-driven app hosting, dedicated Postgres 16 and serverless functions on one open-source substrate."
+          },
+          {
+            "subtype": "container_app",
+            "source_url": "https://www.pandastack.io/",
+            "source_quote": "Firecracker microVMs that boot in 49ms. Agent sandboxes with fork & snapshot, git-driven app hosting, dedicated Postgres 16 and serverless functions on one open-source substrate."
+          },
+          {
+            "subtype": "agent_sandbox",
+            "source_url": "https://www.pandastack.io/",
+            "source_quote": "Firecracker microVMs that boot in 49ms. Agent sandboxes with fork & snapshot, git-driven app hosting, dedicated Postgres 16 and serverless functions on one open-source substrate."
+          }
+        ],
+        "reviewed": "2026-08-31"
       }
     },
     {
@@ -18026,6 +18888,17 @@
         "checked": "2026-08-28",
         "outcome": "ok",
         "detail": "text"
+      },
+      "product_subtypes": {
+        "taxonomy": "Cloud Hosting",
+        "labels": [
+          {
+            "subtype": "managed_cms_hosting",
+            "source_url": "https://pantheon.io/",
+            "source_quote": "Pantheon.io is the platform built for WordPress, Drupal, and Next.js. We deliver your business needs to build, host, and manage with digital speed and agility."
+          }
+        ],
+        "reviewed": "2026-08-31"
       }
     },
     {
@@ -18044,6 +18917,17 @@
         "checked": "2026-08-28",
         "outcome": "ok",
         "detail": "text"
+      },
+      "product_subtypes": {
+        "taxonomy": "Cloud Hosting",
+        "labels": [
+          {
+            "subtype": "container_app",
+            "source_url": "https://qoddi.com/",
+            "source_quote": "App Hosting Platform - Deploy, manage and scale Node.js, Python, GO, Java, Ruby, PHP apps in seconds."
+          }
+        ],
+        "reviewed": "2026-08-31"
       }
     },
     {
@@ -18062,6 +18946,17 @@
         "checked": "2026-08-28",
         "outcome": "ok",
         "detail": "text"
+      },
+      "product_subtypes": {
+        "taxonomy": "Cloud Hosting",
+        "labels": [
+          {
+            "subtype": "managed_cms_hosting",
+            "source_url": "https://readthedocs.org/",
+            "source_quote": "Read the Docs is a documentation building and hosting platform aimed at helping developers creating documentation from code with versioned documentation, integrated search, pull request previews and more."
+          }
+        ],
+        "reviewed": "2026-08-31"
       }
     },
     {
@@ -18080,6 +18975,17 @@
         "checked": "2026-08-28",
         "outcome": "ok",
         "detail": "text"
+      },
+      "product_subtypes": {
+        "taxonomy": "Cloud Hosting",
+        "labels": [
+          {
+            "subtype": "shared_web_hosting",
+            "source_url": "https://serv00.com/",
+            "source_quote": "Revolutionary hosting for FREE! 3 GB for free, no adverts, no hooks"
+          }
+        ],
+        "reviewed": "2026-08-31"
       }
     },
     {
@@ -18116,6 +19022,17 @@
         "checked": "2026-08-28",
         "outcome": "states_no_terms",
         "detail": "the page names surge.sh but states no amount, tier or rate we can read"
+      },
+      "product_subtypes": {
+        "taxonomy": "Cloud Hosting",
+        "labels": [
+          {
+            "subtype": "static_site",
+            "source_url": "https://surge.sh/",
+            "source_quote": "Shipping web projects should be fast, easy, and low risk. Surge is static web publishing for Front-End Developers, right from the CLI."
+          }
+        ],
+        "reviewed": "2026-08-31"
       }
     },
     {
@@ -18134,6 +19051,17 @@
         "checked": "2026-08-28",
         "outcome": "states_no_terms",
         "detail": "the page names tilda.cc but states no amount, tier or rate we can read"
+      },
+      "product_subtypes": {
+        "taxonomy": "Cloud Hosting",
+        "labels": [
+          {
+            "subtype": "site_builder",
+            "source_url": "https://tilda.cc/",
+            "source_quote": "Create a website, online store, landing page with Tilda intuitive website builder. Build your site from hundreds of pre-designed templates and publish it today."
+          }
+        ],
+        "reviewed": "2026-08-31"
       }
     },
     {
@@ -18152,6 +19080,17 @@
         "checked": "2026-08-28",
         "outcome": "states_no_terms",
         "detail": "the page names Versoly but states no amount, tier or rate we can read"
+      },
+      "product_subtypes": {
+        "taxonomy": "Cloud Hosting",
+        "labels": [
+          {
+            "subtype": "site_builder",
+            "source_url": "https://versoly.com/",
+            "source_quote": "Versoly is the most flexible no-code website builder. Easily create beautiful landing pages and CMS driven websites."
+          }
+        ],
+        "reviewed": "2026-08-31"
       }
     },
     {
@@ -18572,6 +19511,17 @@
         "checked": "2026-08-28",
         "outcome": "states_no_terms",
         "detail": "the page names 8base.com but states no amount, tier or rate we can read"
+      },
+      "product_subtypes": {
+        "taxonomy": "Databases",
+        "labels": [
+          {
+            "subtype": "backend_platform",
+            "source_url": "https://www.8base.com/product",
+            "source_quote": "Serverless graphql backend-as-a-service"
+          }
+        ],
+        "reviewed": "2026-08-31"
       }
     },
     {
@@ -18590,6 +19540,17 @@
         "checked": "2026-08-28",
         "outcome": "ok",
         "detail": "text"
+      },
+      "product_subtypes": {
+        "taxonomy": "Databases",
+        "labels": [
+          {
+            "subtype": "backend_platform",
+            "source_url": "https://codehooks.io/docs",
+            "source_quote": "Codehooks.io is the complete backend for webhooks and automations. Receive, store, process, and deliver webhooks with a built-in database, queues, cron, and retries behind every endpoint."
+          }
+        ],
+        "reviewed": "2026-08-31"
       }
     },
     {
@@ -18608,6 +19569,17 @@
         "checked": "2026-08-28",
         "outcome": "states_no_terms",
         "detail": "the page names Couchbase Capella but states no amount, tier or rate we can read"
+      },
+      "product_subtypes": {
+        "taxonomy": "Databases",
+        "labels": [
+          {
+            "subtype": "document",
+            "source_url": "https://docs.couchbase.com/cloud/get-started/intro.html",
+            "source_quote": "Capella is the easiest way to use our Couchbase NoSQL database."
+          }
+        ],
+        "reviewed": "2026-08-31"
       }
     },
     {
@@ -18626,6 +19598,22 @@
         "checked": "2026-08-28",
         "outcome": "ok",
         "detail": "text"
+      },
+      "product_subtypes": {
+        "taxonomy": "Databases",
+        "labels": [
+          {
+            "subtype": "relational",
+            "source_url": "https://filess.io",
+            "source_quote": "Ship your full stack apps in seconds. Web Hosting, Managed Databases (MySQL, PostgreSQL, MongoDB, MariaDB & SQL Server) and Secure Tunnels."
+          },
+          {
+            "subtype": "document",
+            "source_url": "https://filess.io",
+            "source_quote": "Ship your full stack apps in seconds. Web Hosting, Managed Databases (MySQL, PostgreSQL, MongoDB, MariaDB & SQL Server) and Secure Tunnels."
+          }
+        ],
+        "reviewed": "2026-08-31"
       }
     },
     {
@@ -18644,6 +19632,17 @@
         "checked": "2026-08-28",
         "outcome": "ok",
         "detail": "text"
+      },
+      "product_subtypes": {
+        "taxonomy": "Databases",
+        "labels": [
+          {
+            "subtype": "document",
+            "source_url": "https://restdb.io/",
+            "source_quote": "Simple online NoSQL database backend with automatic APIs and low code JavaScript hooks"
+          }
+        ],
+        "reviewed": "2026-08-31"
       }
     },
     {
@@ -18662,6 +19661,11 @@
         "checked": "2026-08-28",
         "outcome": "states_no_terms",
         "detail": "the page names SeaTable but states no amount, tier or rate we can read"
+      },
+      "product_subtypes": {
+        "taxonomy": "Databases",
+        "labels": [],
+        "reviewed": "2026-08-31"
       }
     },
     {
@@ -18680,6 +19684,11 @@
         "checked": "2026-08-28",
         "outcome": "ok",
         "detail": "text"
+      },
+      "product_subtypes": {
+        "taxonomy": "Databases",
+        "labels": [],
+        "reviewed": "2026-08-31"
       }
     },
     {
@@ -18698,6 +19707,11 @@
         "checked": "2026-08-28",
         "outcome": "ok",
         "detail": "text"
+      },
+      "product_subtypes": {
+        "taxonomy": "Databases",
+        "labels": [],
+        "reviewed": "2026-08-31"
       }
     },
     {
@@ -24988,6 +26002,11 @@
         "checked": "2026-08-28",
         "outcome": "ok",
         "detail": "text"
+      },
+      "product_subtypes": {
+        "taxonomy": "Databases",
+        "labels": [],
+        "reviewed": "2026-08-31"
       }
     },
     {
@@ -26565,6 +27584,11 @@
         "checked": "2026-08-28",
         "outcome": "does_not_name_vendor",
         "detail": "the page never names MongoDB and is not served from its domain"
+      },
+      "product_subtypes": {
+        "taxonomy": "Databases",
+        "labels": [],
+        "reviewed": "2026-08-31"
       }
     },
     {
@@ -28582,6 +29606,17 @@
         "checked": "2026-08-28",
         "outcome": "ok",
         "detail": "text"
+      },
+      "product_subtypes": {
+        "taxonomy": "Databases",
+        "labels": [
+          {
+            "subtype": "analytical",
+            "source_url": "https://cloud.google.com/bigquery/pricing",
+            "source_quote": "BigQuery is a serverless data analytics platform."
+          }
+        ],
+        "reviewed": "2026-08-31"
       }
     },
     {
@@ -28602,6 +29637,22 @@
         "checked": "2026-08-28",
         "outcome": "ok",
         "detail": "url"
+      },
+      "product_subtypes": {
+        "taxonomy": "Cloud Hosting",
+        "labels": [
+          {
+            "subtype": "serverless_function",
+            "source_url": "https://cloud.google.com/run/docs",
+            "source_quote": "Fully managed application platform to run your code, function, or container on top of Google's highly scalable infrastructure."
+          },
+          {
+            "subtype": "container_app",
+            "source_url": "https://cloud.google.com/run/docs",
+            "source_quote": "Fully managed application platform to run your code, function, or container on top of Google's highly scalable infrastructure."
+          }
+        ],
+        "reviewed": "2026-08-31"
       }
     },
     {
@@ -29058,6 +30109,17 @@
         "checked": "2026-08-28",
         "outcome": "ok",
         "detail": "text"
+      },
+      "product_subtypes": {
+        "taxonomy": "Databases",
+        "labels": [
+          {
+            "subtype": "relational",
+            "source_url": "https://aws.amazon.com/rds/aurora/",
+            "source_quote": "Amazon Aurora is a global-scale relational database service built for the cloud with full MySQL and PostgreSQL compatibility."
+          }
+        ],
+        "reviewed": "2026-08-31"
       }
     },
     {
@@ -30386,6 +31448,17 @@
         "checked": "2026-08-28",
         "outcome": "states_no_terms",
         "detail": "the page names Cloudflare Sandboxes but states no amount, tier or rate we can read"
+      },
+      "product_subtypes": {
+        "taxonomy": "Cloud Hosting",
+        "labels": [
+          {
+            "subtype": "agent_sandbox",
+            "source_url": "https://developers.cloudflare.com/sandbox/",
+            "source_quote": "Build secure, isolated code execution environments powered by Cloudflare Workers and Containers."
+          }
+        ],
+        "reviewed": "2026-08-31"
       }
     },
     {
@@ -30416,6 +31489,17 @@
         "checked": "2026-08-28",
         "outcome": "unreadable",
         "detail": "HTTP 404"
+      },
+      "product_subtypes": {
+        "taxonomy": "Cloud Hosting",
+        "labels": [
+          {
+            "subtype": "agent_sandbox",
+            "source_url": "https://developers.cloudflare.com/dynamic-workers/",
+            "source_quote": "Spin up isolated Workers on demand to execute code."
+          }
+        ],
+        "reviewed": "2026-08-31"
       }
     },
     {

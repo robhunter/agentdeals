@@ -62,7 +62,7 @@ export function curatedAlternativesFor(
   subjects: RoleCarrier[],
 ): CuratedAlternativesForVendor {
   const { matched, unmatched } = resolveCuratedAlternatives(vendorName, changes, offers);
-  const partition = partitionAlternativesAcross(matched, subjects);
+  const partition = partitionAlternativesAcross(matched, subjects, { applySubtypes: false });
   return { kept: partition.kept, removed: partition.removed, unmatched };
 }
 
