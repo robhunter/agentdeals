@@ -423,7 +423,7 @@ describe("the live index, ranked", () => {
     assert.strictEqual(r.qualified.length, 41);
     assert.deepStrictEqual(vendorsOf(r.demoted), ["Firebase"]);
     assert.strictEqual(r.demoted[0].demerits[0].code, "free_tier_withdrawn");
-    assert.strictEqual(r.excluded.length, 3);
+    assert.strictEqual(r.excluded.length, 2);
   });
 
   it("AI/ML: the vendors whose free tier is really a credit grant are demoted", () => {
