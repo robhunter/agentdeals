@@ -4750,7 +4750,7 @@
       "change_type": "pricing_restructured",
       "date": "2026-08-28",
       "date_source": "discovered",
-      "summary": "The deal now includes $2,500 in Stripe product credits instead of $5K, and over $50,000 in partner discounts (including Google, Xero, and OAI) instead of listing specific perks like $5K AWS and DigitalOcean credits, 1yr GitHub, etc. There is a $500 one-time setup fee and $100 annual fee after the first year.",
+      "summary": "The page no longer lists specific partner perks ($5K AWS credits, $5K DigitalOcean credits, 1yr GitHub) and instead states over $50,000 in partner discounts, including Google, Xero and OAI. It states a $500 one-time setup fee and a $100 annual fee after the first year. The Stripe credit is stated at $2,500 in both states and is unchanged.",
       "previous_state": "$50,000+ in founder perks — $5K AWS credits, $5K DigitalOcean credits, 1yr GitHub, $2.5K Stripe processing credits, plus Notion, Slack, Zendesk, Intercom, and more",
       "current_state": "Incorporation costs $500 and includes company incorporation in Delaware, a company tax ID, founder equity issuance, 83(b) election filing, document templates, $2,500 in Stripe product credits, and access to over $50,000 in partner discounts.  Annual registered agent services are $100 after the first year.",
       "impact": "high",
