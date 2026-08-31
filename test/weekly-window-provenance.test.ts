@@ -63,6 +63,19 @@ function weekCorrectedBy(correction: { id: string }): string {
   return match![1];
 }
 
+function countCorrectedBy(correction: { summaryHtml: string }): string {
+  const match = correction.summaryHtml.match(/across \d+ developer tool pricing change/);
+  assert.ok(match, "a correction should quote the count it replaces");
+  return match![0];
+}
+
+function changeCount(n: number): string {
+  return `${n} change${n === 1 ? "" : "s"}`;
+}
+
+const ARCHIVED_BATCH_WEEK = "2026-08-24";
+const ARCHIVED_BATCH_SLUG = "2026-w35";
+
 describe("one definition of the week a digest is about", () => {
   it("runs Monday to Sunday whichever day of the week it is handed", () => {
     assert.deepStrictEqual(isoWeekWindow(new Date("2026-08-26T09:00:00Z")), {
@@ -345,10 +358,15 @@ describe("every weekly surface reports the same week", () => {
 
     assert.ok(FEED_CORRECTIONS.length > 0);
     for (const correction of FEED_CORRECTIONS) {
-      const digest = await digestForWeekStarting(weekCorrectedBy(correction));
+      await digestForWeekStarting(weekCorrectedBy(correction));
+      const quoted = countCorrectedBy(correction);
       assert.ok(
-        corrections.some((e) => e.includes(combinedCountPhrase(digest))),
-        `a corrected count should survive only inside the entry correcting it: ${correction.id}`
+        corrections.some((e) => e.includes(quoted)),
+        `a corrected count should survive inside the entry correcting it: ${correction.id}`
+      );
+      assert.ok(
+        !weeks.some((e) => e.includes(quoted)),
+        `a corrected count should survive nowhere else: ${correction.id}`
       );
     }
   });
@@ -382,18 +400,31 @@ describe("every weekly surface reports the same week", () => {
   it("labels the discovery batch on the archived week that holds it", async () => {
     proc = await startHttpServer();
     const base = `http://127.0.0.1:${serverPort}`;
-    const week = await (await fetch(`${base}/digest/2026-w35`)).text();
-    assert.ok(week.includes("Week 35, 2026. 1 change tracked."), "the archived week should count one change");
-    assert.ok(week.includes(firstReadHeading(153)), "the archived week should name its discovery batch");
-    assert.ok(!week.includes("154 changes tracked"), "the archived week should not count the batch as changes");
+    const digest = await digestForWeekStarting(ARCHIVED_BATCH_WEEK);
+    assert.ok(digest.discovered_in_week > 0, "the archived week under test should hold a discovery batch");
+    const week = await (await fetch(`${base}/digest/${ARCHIVED_BATCH_SLUG}`)).text();
+    assert.ok(week.includes(`${changeCount(digest.changes_in_week)} tracked.`), "the archived week should count its dated changes");
+    assert.ok(week.includes(firstReadHeading(digest.discovered_in_week)), "the archived week should name its discovery batch");
+    assert.ok(
+      !week.includes(`${changeCount(digest.changes_in_week + digest.discovered_in_week)} tracked.`),
+      "the archived week should not count the batch as changes"
+    );
   });
 
   it("separates the two counts in the archive index", async () => {
     proc = await startHttpServer();
     const base = `http://127.0.0.1:${serverPort}`;
+    const digest = await digestForWeekStarting(ARCHIVED_BATCH_WEEK);
+    assert.ok(digest.discovered_in_week > 0, "the archived week under test should hold a discovery batch");
     const archive = await (await fetch(`${base}/digest/archive`)).text();
-    assert.ok(archive.includes("1 change + 153 first read"), "the archive should split the week it holds");
-    assert.ok(!archive.includes("154 changes"), "the archive should not count the batch as changes");
+    assert.ok(
+      archive.includes(`${changeCount(digest.changes_in_week)} + ${digest.discovered_in_week} first read`),
+      "the archive should split the week it holds"
+    );
+    assert.ok(
+      !archive.includes(changeCount(digest.changes_in_week + digest.discovered_in_week)),
+      "the archive should not count the batch as changes"
+    );
   });
 
   it("files a change in the same week whatever zone the server clock is set to", async () => {

@@ -5,7 +5,11 @@ import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { reverifyBatch } from "./reverify.js";
 import { fetchPageText, verifyOfferAgainstPage, createVerifierClient, VERIFIER_MODEL } from "./verify-freshness.js";
-import { buildChangeEntry, appendChangeEntries } from "./change-log.js";
+import {
+  buildChangeEntry,
+  appendChangeEntries,
+  SUPPRESSED_SAME_TRANSITION_REGRADED,
+} from "./change-log.js";
 import {
   gateCandidates,
   confirmDescribesChange,
@@ -286,21 +290,21 @@ export async function runAiMode(picked, data, dryRun, now, options = {}) {
     console.log(`  ? ${candidate.vendor} (${candidate.change_type}) recorded without a second opinion: ${error}`);
   }
 
-  const refusals = (options.recordRefusalsFn ?? recordRefusals)(rejected, {
-    dryRun,
-    now,
-    path: options.refusalsPath,
-  });
-  console.log(`  → ${refusals.written.length} refusal(s) written to ${refusals.path}`);
-
   const { appended, suppressed } = appendFn(accepted, {
     dryRun,
     windowDays: options.windowDays,
     path: options.changesPath,
   });
-  for (const { candidate, reason } of suppressed) {
-    console.log(`  – ${candidate.vendor} (${candidate.change_type}) not recorded: ${reason}`);
+  for (const { candidate, reason, collidedWith } of suppressed) {
+    const against = collidedWith ? ` (collides with ${collidedWith})` : "";
+    console.log(`  – ${candidate.vendor} (${candidate.change_type}) not recorded: ${reason}${against}`);
   }
+
+  const refusals = (options.recordRefusalsFn ?? recordRefusals)(
+    [...rejected, ...regradeRefusals(suppressed)],
+    { dryRun, now, path: options.refusalsPath }
+  );
+  console.log(`  → ${refusals.written.length} refusal(s) written to ${refusals.path}`);
 
   return { verified, flagged, changed, changes, recorded: appended, suppressed, unclassified, rejected, unchecked, reclassified, rewritten, overruled, sourceChecks, attempts: recorder.attempts };
 }
@@ -308,6 +312,17 @@ export async function runAiMode(picked, data, dryRun, now, options = {}) {
 export function repickWindowDays(total, batchSize) {
   if (!batchSize || batchSize < 1) return 1;
   return Math.max(1, Math.ceil(total / batchSize));
+}
+
+export function regradeRefusals(suppressed) {
+  return (suppressed ?? [])
+    .filter((entry) => entry.reason === SUPPRESSED_SAME_TRANSITION_REGRADED)
+    .map(({ candidate, reason, collidedWith }) => ({
+      candidate,
+      reason,
+      detail: `same vendor, date, source_url and previous_state as ${collidedWith}`,
+      collidedWith,
+    }));
 }
 
 export function refusedVendorLines(rejected) {
@@ -354,7 +369,9 @@ export function summaryLines(result, { useAi, checked, oldestRemaining, total, q
     }
     lines.push(`Recorded without a second opinion: ${(result.unchecked ?? []).length}`);
     lines.push(`Recorded to data/deal_changes.json: ${result.recorded.length}`);
-    lines.push(`Already recorded, not written again: ${result.suppressed.length}`);
+    const regraded = regradeRefusals(result.suppressed).length;
+    lines.push(`Already recorded, not written again: ${result.suppressed.length - regraded}`);
+    lines.push(`Same transition re-read and graded differently, not written again: ${regraded}`);
     lines.push(`Detected but not recordable: ${result.unclassified.length}`);
   } else {
     lines.push("Change detection: not run. URL mode compares nothing and cannot report a change.");

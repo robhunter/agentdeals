@@ -110,6 +110,22 @@ describe("a refusal outlives the run that made it", () => {
     );
   });
 
+  it("stores the record a refusal collided with when there was one", () => {
+    const collidedWith = "Weaviate|limits_increased|2026-08-28|https://weaviate.io/pricing";
+    const entry = buildRefusalEntry(
+      { ...WEAVIATE_REFUSED, reason: "same_transition_graded_differently", collidedWith },
+      { now: NOW }
+    );
+    assert.strictEqual(entry.collided_with, collidedWith);
+    assert.strictEqual(entry.change_type, "limits_reduced");
+    assert.strictEqual(entry.previous_state, WEAVIATE_OFFER.description);
+  });
+
+  it("adds no collision field to a refusal that did not collide with anything", () => {
+    const entry = buildRefusalEntry(WEAVIATE_REFUSED, { now: NOW });
+    assert.ok(!("collided_with" in entry), "a gate refusal carries a collision key");
+  });
+
   it("reads no refusals from a file that is not there yet", () => {
     assert.deepStrictEqual(readRefusals(path.join(tmpdir(), "no-such-refusals.json")), []);
   });

@@ -47,8 +47,18 @@ export function isEventDated(change) {
   return EVENT_DATED_SOURCES.includes(change?.date_source);
 }
 
+export const SUPPRESSED_ALREADY_RECORDED = "already_recorded";
+export const SUPPRESSED_WITHIN_REPICK_WINDOW = "recorded_within_repick_window";
+export const SUPPRESSED_SAME_TRANSITION_REGRADED = "same_transition_graded_differently";
+
 export function changeKey(change) {
   return [change.vendor, change.change_type, change.date, change.source_url].join("|");
+}
+
+export function baselineKey(change) {
+  const previous = typeof change?.previous_state === "string" ? change.previous_state.trim() : "";
+  if (!previous) return null;
+  return [change.vendor, change.date, change.source_url, previous].join("|");
 }
 
 export function isoDay(now) {
@@ -101,12 +111,15 @@ export function buildChangeEntry(offer, result, options = {}) {
 export function selectNewChanges(existing, candidates, options = {}) {
   const windowDays = options.windowDays ?? DEFAULT_REPICK_WINDOW_DAYS;
   const keys = new Set(existing.map(changeKey));
+  const baselines = new Map();
   const recent = new Map();
   for (const change of existing) {
     const stamp = change.recorded_date || change.date;
     const pair = `${change.vendor}|${change.change_type}`;
     const previous = recent.get(pair);
     if (!previous || stamp > previous) recent.set(pair, stamp);
+    const baseline = baselineKey(change);
+    if (baseline && !baselines.has(baseline)) baselines.set(baseline, changeKey(change));
   }
 
   const fresh = [];
@@ -114,17 +127,27 @@ export function selectNewChanges(existing, candidates, options = {}) {
   for (const candidate of candidates) {
     const key = changeKey(candidate);
     if (keys.has(key)) {
-      suppressed.push({ candidate, reason: "already_recorded" });
+      suppressed.push({ candidate, reason: SUPPRESSED_ALREADY_RECORDED });
+      continue;
+    }
+    const baseline = baselineKey(candidate);
+    if (baseline && baselines.has(baseline)) {
+      suppressed.push({
+        candidate,
+        reason: SUPPRESSED_SAME_TRANSITION_REGRADED,
+        collidedWith: baselines.get(baseline),
+      });
       continue;
     }
     const pair = `${candidate.vendor}|${candidate.change_type}`;
     const lastStamp = recent.get(pair);
     if (lastStamp && daysBetween(lastStamp, candidate.recorded_date) < windowDays) {
-      suppressed.push({ candidate, reason: "recorded_within_repick_window" });
+      suppressed.push({ candidate, reason: SUPPRESSED_WITHIN_REPICK_WINDOW });
       continue;
     }
     fresh.push(candidate);
     keys.add(key);
+    if (baseline) baselines.set(baseline, key);
     recent.set(pair, candidate.recorded_date);
   }
   return { fresh, suppressed };
