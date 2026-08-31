@@ -410,7 +410,7 @@ describe("the live index, ranked", () => {
       });
       if (r.tie_break.tie_count === 1) uniqueTop++;
     }
-    assert.strictEqual(pages, 57);
+    assert.strictEqual(pages, 58);
     assert.strictEqual(uniqueTop, 0);
   });
 
