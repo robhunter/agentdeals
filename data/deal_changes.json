@@ -882,11 +882,11 @@
     },
     {
       "vendor": "Firebase",
-      "change_type": "limits_reduced",
+      "change_type": "restriction",
       "date": "2026-02-03",
-      "summary": "Cloud Storage removed from Spark (free) plan. Projects on Spark with default appspot.com buckets lose console access and API calls return 402/403 errors. Must upgrade to Blaze (pay-as-you-go) to use Cloud Storage",
-      "previous_state": "Spark plan included Cloud Storage: 5 GB storage, 1 GB/day download, 20K uploads/day, 50K downloads/day",
-      "current_state": "Cloud Storage requires Blaze plan. Blaze provides no-cost quota (1 GiB storage, 10 GB download/month) before charges begin, but credit card required. Other Spark limits unchanged (Firestore, Auth, Functions, Hosting)",
+      "summary": "Cloud Storage for Firebase now requires the pay-as-you-go Blaze plan, in effect from February 3, 2026. Projects on the no-cost Spark plan lose access to all Cloud Storage buckets, including default buckets; console access redirects to an upgrade page and API calls return 402 or 403. Provisioning a new default bucket also requires Blaze.",
+      "previous_state": "Spark plan included Cloud Storage with a *.appspot.com default bucket and no card required: 5 GB stored, 1 GB downloaded/day, 20,000 uploads/day, 50,000 downloads/day",
+      "current_state": "Any Cloud Storage access requires the Blaze plan and a billing account. No-cost usage continues on Blaze: a legacy *.appspot.com default bucket keeps 5 GB stored, 1 GB downloaded/day, 20,000 uploads/day, 50,000 downloads/day; default buckets created after September 2024 are *.firebasestorage.app and follow Google Cloud Storage pricing with its Always Free tier in US-CENTRAL1, US-EAST1 and US-WEST1. Other Spark limits unchanged (Firestore, Auth, Functions, Hosting)",
       "impact": "high",
       "source_url": "https://firebase.google.com/docs/storage/faqs-storage-changes-announced-sept-2024",
       "category": "Cloud Storage",
@@ -1363,26 +1363,6 @@
       "current_state": "Discontinued. Projects accessible until March 2027 for data export only. Google recommends migrating to other IDEs",
       "impact": "medium",
       "source_url": "https://firebase.google.com/docs/studio",
-      "category": "Databases",
-      "alternatives": [
-        "Supabase",
-        "Appwrite Cloud",
-        "PocketBase",
-        "Nhost",
-        "Convex"
-      ],
-      "recorded_date": "2026-03-21",
-      "date_source": "hand_written"
-    },
-    {
-      "vendor": "Firebase",
-      "change_type": "restriction",
-      "date": "2026-02-01",
-      "summary": "Spark plan projects using legacy *.appspot.com Cloud Storage buckets forced to upgrade to Blaze (pay-as-you-go) plan or lose Cloud Storage access. No billing caps on Blaze plan — developers risk unexpected charges",
-      "previous_state": "Spark plan: free Cloud Storage with *.appspot.com buckets, no credit card required",
-      "current_state": "Legacy bucket projects must upgrade to Blaze (pay-as-you-go). No hard billing caps. New projects use Firebase Storage buckets on Spark plan",
-      "impact": "high",
-      "source_url": "https://firebase.google.com/docs/storage/web/start",
       "category": "Databases",
       "alternatives": [
         "Supabase",
