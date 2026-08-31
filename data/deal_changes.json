@@ -4626,36 +4626,6 @@
       "recorded_date": "2026-08-28"
     },
     {
-      "vendor": "Algolia",
-      "change_type": "pricing_restructured",
-      "date": "2026-08-28",
-      "date_source": "discovered",
-      "summary": "The 'Grow' plan offers 10K search requests/month and 100K records included. It's now a paid plan with overage fees. A 'Free' plan is available with 10K search requests/month and 50K records. It has fewer features.",
-      "previous_state": "Search-as-a-service — 10K search requests/month, 1M records, AI recommendations included",
-      "current_state": "A 'Free' plan includes 10K search requests/month and 50K records. The 'Grow' plan includes 10K search requests /month and 100K records, with overages at $0.50/1K requests and $0.40/1K records.",
-      "impact": "high",
-      "source_url": "https://www.algolia.com/pricing",
-      "category": "Search",
-      "alternatives": [],
-      "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
-    },
-    {
-      "vendor": "Stripe Atlas",
-      "change_type": "limits_reduced",
-      "date": "2026-08-28",
-      "date_source": "discovered",
-      "summary": "The perks offered have changed. While the $50,000+ in discounts is still mentioned, the specific credits for AWS ($5K) and DigitalOcean ($5K) are no longer listed. The Stripe product credits are now $2,500 instead of $2.5K processing credits.",
-      "previous_state": "$50,000+ in founder perks — $5K AWS credits, $5K DigitalOcean credits, 1yr GitHub, $2.5K Stripe processing credits, plus Notion, Slack, Zendesk, Intercom, and more",
-      "current_state": "Atlas incorporates your company for $500 and includes $2,500 in Stripe product credits for your first year after incorporation, plus access to over $50,000 in partner discounts.",
-      "impact": "medium",
-      "source_url": "https://stripe.com/atlas",
-      "category": "Startup Programs",
-      "alternatives": [],
-      "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
-    },
-    {
       "vendor": "Semgrep",
       "change_type": "limits_reduced",
       "date": "2026-08-28",
@@ -4926,21 +4896,6 @@
       "recorded_date": "2026-08-28"
     },
     {
-      "vendor": "Tomorrow.io Weather API",
-      "change_type": "limits_reduced",
-      "date": "2026-08-28",
-      "date_source": "discovered",
-      "summary": "The free tier now has limitations on forecast days (5-day forecast), historical data (24 hours), and monitored locations (1). It also includes access to core weather data layers and industry-based insights templates. There are also paid tiers with increased limits and features.",
-      "previous_state": "Offers free plan of weather API. Provides accurate and up-to-date weather forecasting with global coverage, historical data and weather monitoring solutions.",
-      "current_state": "The free plan includes a 5-Day Forecast, Weather Timelines and Trendlines, Weather API Access, Core Weather Data Layers, Industry-Based Insights Templates, 24 hours Historical Weather Data, and 1 Automatically monitored Location.",
-      "impact": "medium",
-      "source_url": "https://www.tomorrow.io/weather-api/",
-      "category": "Dev Utilities",
-      "alternatives": [],
-      "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
-    },
-    {
       "vendor": "StreamBackdrops",
       "change_type": "pricing_model_change",
       "date": "2026-08-28",
@@ -5106,21 +5061,6 @@
       "recorded_date": "2026-08-28"
     },
     {
-      "vendor": "Bitrise",
-      "change_type": "limits_reduced",
-      "date": "2026-08-28",
-      "date_source": "discovered",
-      "summary": "The Hobby plan now has a monthly build credit limit and a build timeout of 210 minutes, and includes access to Linux Medium and macOS Medium build compute types. Previously 300 credits/month and 90-minute build timeout.",
-      "previous_state": "Mobile CI/CD platform — free Hobby plan: 300 credits/month, 1 private app (unlimited public apps), 1 user, 5 concurrent builds, 90-minute build timeout. Supports iOS, Android, Flutter, React Native",
-      "current_state": "Hobby: Free, Access for a team of one, Enough build credits for you to build your small project a few times per month, Support from the Bitrise Community via Slack or Discuss forum, Linux Medium, M2 Pro Medium, macOS Medium build compute types, 2 GB dependency cache storage, 210 minute build timeout.",
-      "impact": "medium",
-      "source_url": "https://bitrise.io/pricing",
-      "category": "CI/CD",
-      "alternatives": [],
-      "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
-    },
-    {
       "vendor": "Zipcodestack",
       "change_type": "limits_reduced",
       "date": "2026-08-28",
@@ -5211,21 +5151,6 @@
       "recorded_date": "2026-08-28"
     },
     {
-      "vendor": "Algolia",
-      "change_type": "new_free_tier",
-      "date": "2026-08-28",
-      "date_source": "discovered",
-      "summary": "The 'Grow' plan offers 10K search requests/month and 100K records included. The 'Build' tier name is absent. There's also a 'Free' tier with 10K search requests/month and 50K records.",
-      "previous_state": "Search-as-a-service — 10K search requests/month, 1M records, AI recommendations included",
-      "current_state": "The 'Grow' plan includes 10K search requests /month and 100K records. A 'Free' plan includes 10K search requests/month and 50K records.",
-      "impact": "medium",
-      "source_url": "https://www.algolia.com/pricing",
-      "category": "Search",
-      "alternatives": [],
-      "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
-    },
-    {
       "vendor": "userforge.com",
       "change_type": "limits_increased",
       "date": "2026-08-28",
@@ -5236,21 +5161,6 @@
       "impact": "medium",
       "source_url": "https://userforge.com/",
       "category": "Design",
-      "alternatives": [],
-      "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
-    },
-    {
-      "vendor": "StreamBackdrops",
-      "change_type": "free_tier_removed",
-      "date": "2026-08-28",
-      "date_source": "discovered",
-      "summary": "Free samples are available with no signup, the vendor now primarily offers HD editions starting at $4.99.",
-      "previous_state": "Free HD virtual backgrounds for video calls and team meetings. Professional backgrounds for Zoom, Teams, and Google Meet. No signup required, free for personal use.",
-      "current_state": "HD editions from $4.99. Free samples — no signup.",
-      "impact": "high",
-      "source_url": "https://streambackdrops.com",
-      "category": "Dev Utilities",
       "alternatives": [],
       "detected_by": "reverify-ai",
       "recorded_date": "2026-08-28"

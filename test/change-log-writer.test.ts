@@ -18,11 +18,13 @@ const {
   appendChangeEntries,
   changeLogFreshness,
   changeKey,
+  baselineKey,
   CHANGE_TYPES,
   DETECTED_BY_AI,
+  SUPPRESSED_SAME_TRANSITION_REGRADED,
 } = await import("../scripts/change-log.js");
 
-const { runUrlMode, runAiMode, summaryLines, repickWindowDays } = await import("../scripts/reverify-rolling.js");
+const { runUrlMode, runAiMode, summaryLines, repickWindowDays, regradeRefusals } = await import("../scripts/reverify-rolling.js");
 const { firstSeenDates } = await import("../scripts/backfill-change-recorded-dates.js");
 const { report, DEFAULT_THRESHOLD_DAYS, detectorSchedule, flagTokens, DETECTOR_CLI_OPTIONS, WORKFLOW_PATH } = await import("../scripts/check-change-log-staleness.js");
 const { VERIFIER_API_KEY_ENV, VERIFIER_MODEL } = await import("../scripts/verify-freshness.js");
@@ -206,6 +208,106 @@ describe("change log writer", () => {
       assert.strictEqual(fresh.length, 0);
       assert.strictEqual(suppressed[0].reason, "already_recorded");
     });
+
+    it("writes one record for one transition however the re-read grades it", () => {
+      const first = candidate();
+      const regraded = { ...candidate(), change_type: "limits_increased" };
+      const { fresh, suppressed } = selectNewChanges([first], [regraded], { windowDays: 0 });
+      assert.strictEqual(fresh.length, 0);
+      assert.strictEqual(suppressed[0].reason, SUPPRESSED_SAME_TRANSITION_REGRADED);
+      assert.strictEqual(suppressed[0].collidedWith, changeKey(first));
+    });
+
+    it("holds one transition to one record within a single batch", () => {
+      const graded = (change_type: string) => ({ ...candidate(), change_type });
+      const { fresh, suppressed } = selectNewChanges(
+        [],
+        [graded("limits_reduced"), graded("limits_increased"), graded("new_free_tier")],
+        { windowDays: 0 }
+      );
+      assert.strictEqual(fresh.length, 1);
+      assert.strictEqual(fresh[0].change_type, "limits_reduced");
+      assert.deepStrictEqual(
+        suppressed.map((s: any) => s.reason),
+        [SUPPRESSED_SAME_TRANSITION_REGRADED, SUPPRESSED_SAME_TRANSITION_REGRADED]
+      );
+    });
+
+    it("writes both records when one pricing page moves two products", () => {
+      const vps = {
+        ...candidate(),
+        change_type: "pricing_restructured",
+        previous_state: "VPS-1 $4.90/mo, VPS-2 ~$8/mo, VPS-4 $26.00/mo",
+      };
+      const cloud = {
+        ...candidate(),
+        change_type: "limits_reduced",
+        previous_state: "Standard pricing on Public Cloud instances and Bare Metal",
+      };
+      const { fresh, suppressed } = selectNewChanges([vps], [cloud], { windowDays: 0 });
+      assert.strictEqual(fresh.length, 1);
+      assert.strictEqual(suppressed.length, 0);
+    });
+
+    it("does not read two records with no baseline as one transition", () => {
+      const stored = { ...candidate(), previous_state: "" };
+      const incoming = { ...candidate(), change_type: "limits_increased", previous_state: "" };
+      assert.strictEqual(baselineKey(stored), null);
+      const { fresh, suppressed } = selectNewChanges([stored], [incoming], { windowDays: 0 });
+      assert.strictEqual(fresh.length, 1);
+      assert.strictEqual(suppressed.length, 0);
+    });
+
+    it("hands the collided key to the refusal log", () => {
+      const first = candidate();
+      const { suppressed } = selectNewChanges([first], [{ ...candidate(), change_type: "limits_increased" }], {
+        windowDays: 0,
+      });
+      const refusals = regradeRefusals(suppressed);
+      assert.strictEqual(refusals.length, 1);
+      assert.strictEqual(refusals[0].reason, SUPPRESSED_SAME_TRANSITION_REGRADED);
+      assert.strictEqual(refusals[0].collidedWith, changeKey(first));
+      assert.match(refusals[0].detail, /previous_state/);
+    });
+
+    it("leaves the other suppression reasons out of the refusal log", () => {
+      const { suppressed } = selectNewChanges([candidate()], [candidate()], { windowDays: 0 });
+      assert.strictEqual(suppressed[0].reason, "already_recorded");
+      assert.deepStrictEqual(regradeRefusals(suppressed), []);
+    });
+  });
+
+  describe("one transition holds one record across the whole stored log", () => {
+    const stored = JSON.parse(
+      readFileSync(path.join(REPO, "data", "deal_changes.json"), "utf-8")
+    ).changes as Array<Record<string, string>>;
+
+    it("stores no two records for one vendor, date, page and baseline", () => {
+      const groups = new Map<string, Array<Record<string, string>>>();
+      for (const change of stored) {
+        const key = baselineKey(change);
+        if (!key) continue;
+        if (!groups.has(key)) groups.set(key, []);
+        groups.get(key)!.push(change);
+      }
+      const collisions = [...groups.values()]
+        .filter(group => group.length > 1)
+        .map(group => `${group[0].vendor} ${group[0].date}: ${group.map(c => c.change_type).join(" + ")}`);
+      assert.deepStrictEqual(collisions, []);
+    });
+
+    it("keeps both records where one page moved two products on one day", () => {
+      const pair = stored.filter(c => c.vendor === "OVHcloud" && c.date === "2026-04-01");
+      assert.strictEqual(pair.length, 2);
+      assert.strictEqual(pair[0].source_url, pair[1].source_url);
+      assert.notStrictEqual(pair[0].previous_state, pair[1].previous_state);
+      assert.notStrictEqual(baselineKey(pair[0]), baselineKey(pair[1]));
+    });
+
+    it("is not vacuous — most of the log carries a baseline the rule can read", () => {
+      const withBaseline = stored.filter(c => baselineKey(c) !== null);
+      assert.ok(withBaseline.length > stored.length / 2, `records carrying a baseline: ${withBaseline.length}`);
+    });
   });
 
   describe("what the run tells whoever reads the log", () => {
@@ -224,6 +326,17 @@ describe("change log writer", () => {
       assert.ok(lines.includes("Recorded to data/deal_changes.json: 1"));
       assert.ok(lines.includes("Already recorded, not written again: 1"));
       assert.ok(lines.includes("Detected but not recordable: 1"));
+    });
+
+    it("counts a re-read that agreed apart from one that graded the same transition differently", () => {
+      const suppressed = [
+        { candidate: {}, reason: "already_recorded" },
+        { candidate: {}, reason: "recorded_within_repick_window" },
+        { candidate: {}, reason: SUPPRESSED_SAME_TRANSITION_REGRADED, collidedWith: "k" },
+      ];
+      const lines = summaryLines({ ...aiResult, suppressed }, { ...context, useAi: true });
+      assert.ok(lines.includes("Already recorded, not written again: 2"));
+      assert.ok(lines.includes("Same transition re-read and graded differently, not written again: 1"));
     });
 
     it("derives the re-pick window from how long the catalogue takes to come round", () => {

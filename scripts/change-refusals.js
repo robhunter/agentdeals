@@ -19,9 +19,9 @@ export function refusalKey(refusal) {
   return [refusal.vendor, refusal.source_url, refusal.reason].join("|");
 }
 
-export function buildRefusalEntry({ candidate, reason, detail }, options = {}) {
+export function buildRefusalEntry({ candidate, reason, detail, collidedWith }, options = {}) {
   const now = options.now ?? new Date();
-  return {
+  const entry = {
     vendor: candidate.vendor,
     change_type: candidate.change_type,
     reason,
@@ -33,6 +33,8 @@ export function buildRefusalEntry({ candidate, reason, detail }, options = {}) {
     category: candidate.category ?? null,
     refused_date: isoDay(now),
   };
+  if (collidedWith) entry.collided_with = collidedWith;
+  return entry;
 }
 
 export function readRefusals(path = refusalsPath()) {
