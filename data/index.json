@@ -27584,11 +27584,6 @@
         "checked": "2026-08-28",
         "outcome": "does_not_name_vendor",
         "detail": "the page never names MongoDB and is not served from its domain"
-      },
-      "product_subtypes": {
-        "taxonomy": "Databases",
-        "labels": [],
-        "reviewed": "2026-08-31"
       }
     },
     {
