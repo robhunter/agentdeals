@@ -46,7 +46,7 @@ import { verificationLedger, QUARANTINE_AFTER_FAILURES } from "./verification-st
 import { partitionAlternatives, partitionAlternativesAcross, productRoleSentence, MEMBERSHIP_GATE_RULES, MEMBERSHIP_GATE_ORDER, MEMBERSHIP_GATE_SYMMETRY, MEMBERSHIP_GATE_SCOPE, MEMBERSHIP_GATE_CORRECTIONS, SUBTYPE_TAXONOMIES, SUBTYPE_MEMBERSHIP_RULE, SUBTYPE_MEMBERSHIP_GROUP_SCOPE, membershipGroupsFor, subtypeDefinition } from "./product-role.js";
 import { resolveCuratedAlternatives, curatedAlternativesFor, addCuratedToPool } from "./curated-alternatives.js";
 import type { Agent, ChangeDateSource, DealChange, RiskCause, LinkUnreachable, Offer } from "./types.js";
-import { changeDateLabel, changeDateClause, changeDatePublished, changeEventStartDate, capListSections, latestEventDate, offerExpiryAfter, feedEntryUpdated, undatedGroupHeading, firstReadHeading, discoveryBatchNote, DISCOVERED_DATE_PREFIX, UNDATED_GROUP_NOTE } from "./change-dates.js";
+import { changeDateLabel, changeDateClause, changeDatePublished, changeEventStartDate, capListSections, latestEventDate, offerExpiryAfter, feedEntryUpdated, undatedGroupHeading, firstReadHeading, discoveryBatchNote, isoWeekOf, DISCOVERED_DATE_PREFIX, UNDATED_GROUP_NOTE } from "./change-dates.js";
 import { FEED_CORRECTIONS, correctionEntriesXml } from "./feed-corrections.js";
 import type { AgentBalance } from "./ledger.js";
 import type { SubmittedReferralCode } from "./referral-codes.js";
@@ -2949,14 +2949,6 @@ ${faqItems.map(f => `    <div class="faq-item">
 </html>`;
 }
 
-function getISOWeek(date: Date): { year: number; week: number } {
-  const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
-  d.setUTCDate(d.getUTCDate() + 4 - (d.getUTCDay() || 7));
-  const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1));
-  const week = Math.ceil(((d.getTime() - yearStart.getTime()) / 86400000 + 1) / 7);
-  return { year: d.getUTCFullYear(), week };
-}
-
 function getWeekStart(year: number, week: number): Date {
   const jan4 = new Date(Date.UTC(year, 0, 4));
   const dayOfWeek = jan4.getUTCDay() || 7;
@@ -2978,7 +2970,7 @@ function getChangesByWeek(): Map<string, typeof dealChanges> {
   const byWeek = new Map<string, typeof dealChanges>();
   for (const c of dealChanges) {
     const d = new Date(c.date + "T00:00:00Z");
-    const { year, week } = getISOWeek(d);
+    const { year, week } = isoWeekOf(d);
     const key = formatWeekKey(year, week);
     if (!byWeek.has(key)) byWeek.set(key, []);
     byWeek.get(key)!.push(c);
@@ -3428,7 +3420,7 @@ ${navHtml}
 
 function getCurrentWeekKey(): string {
   const now = new Date();
-  const { year, week } = getISOWeek(now);
+  const { year, week } = isoWeekOf(now);
   return formatWeekKey(year, week);
 }
 
