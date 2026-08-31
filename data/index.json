@@ -462,17 +462,15 @@
     },
     {
       "vendor": "Koyeb",
-      "category": "Cloud Hosting",
+      "category": "Databases",
       "description": "Free Postgres database (0.25 vCPU, 1 GB RAM, 1 GB storage, 5 hr/month runtime). No free compute tier — Pro plan starts at $29/month with $10 included compute.",
       "tier": "Free (Database Only)",
       "url": "https://www.koyeb.com/pricing",
       "tags": [
-        "hosting",
-        "paas",
-        "deployment",
         "free tier",
-        "heroku-alternative",
-        "vercel-alternative"
+        "database",
+        "postgres",
+        "serverless"
       ],
       "verifiedDate": "2026-08-13",
       "source_check": {
@@ -481,12 +479,12 @@
         "detail": "text"
       },
       "product_subtypes": {
-        "taxonomy": "Cloud Hosting",
+        "taxonomy": "Databases",
         "labels": [
           {
-            "subtype": "container_app",
-            "source_url": "https://www.koyeb.com/",
-            "source_quote": "Deploy intensive applications across GPUs, CPUs, and Accelerators in minutes - scale in 50+ locations."
+            "subtype": "relational",
+            "source_url": "https://www.koyeb.com/pricing",
+            "source_quote": "Serverless Postgres — Fully managed, highly available, and scalable serverless Postgres databases billed by the second."
           }
         ],
         "reviewed": "2026-08-31"
@@ -18990,13 +18988,14 @@
     },
     {
       "vendor": "SourceForge",
-      "category": "Cloud Hosting",
+      "category": "Source Control",
       "description": "Find, Create, and Publish Open Source software for free",
       "tier": "Free",
       "url": "https://sourceforge.net/",
       "tags": [
-        "hosting",
-        "paas",
+        "source-control",
+        "git",
+        "open-source",
         "free-for-dev"
       ],
       "verifiedDate": "2026-04-12",
