@@ -388,12 +388,16 @@ describe("curated alternatives on the published pages", () => {
     }
   });
 
-  it("keeps every category member on a page whose curated names are all in category", async () => {
+  it("keeps every ungated category member on a page whose curated names are all in category", async () => {
+    const { partitionAlternativesAcross } = await import("../dist/product-role.js");
     const res = await get("/alternative-to/xata");
     assert.strictEqual(res.status, 200);
     const count = res.body.match(/All Free Alternatives \((\d+)\)/);
     assert.ok(count, "no alternatives count");
-    assert.ok(Number(count[1]) >= categoryPoolFor("Xata").length - 5, `only ${count[1]} alternatives`);
+    const xata = offers.filter(o => o.vendor === "Xata");
+    const ungated = partitionAlternativesAcross(categoryPoolFor("Xata"), xata).kept.length;
+    assert.ok(ungated > 0, "the ungated pool must not be empty for this test to mean anything");
+    assert.strictEqual(Number(count[1]), ungated, `expected every ungated category member, saw ${count[1]} of ${ungated}`);
     for (const vendor of ["Neon", "Supabase", "CockroachDB"]) {
       assert.ok(res.body.includes(`>${vendor}<`), `${vendor} is not listed`);
     }

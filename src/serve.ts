@@ -43,7 +43,7 @@ import { discontinuedOnOrBefore } from "./product-deprecation.js";
 import { rankOffers, rankForListing, rotateListing, utcDate, CRITERIA_PATH, DEMOTE_ONLY_POLICY, DISCLOSURE_RATIONALE, TIE_BREAK_ALGORITHM, GATE_TABLE, DEMERIT_TABLE, NOT_FREE_TIER_RULES, TIME_LIMITED_TIER_RULES, type TieBreak } from "./ranking.js";
 import type { RankedEntry, RankingResult } from "./ranking.js";
 import { verificationLedger, QUARANTINE_AFTER_FAILURES } from "./verification-state.js";
-import { partitionAlternatives, partitionAlternativesAcross, productRoleSentence, MEMBERSHIP_GATE_RULES, MEMBERSHIP_GATE_ORDER, MEMBERSHIP_GATE_SYMMETRY, MEMBERSHIP_GATE_SCOPE, MEMBERSHIP_GATE_CORRECTIONS } from "./product-role.js";
+import { partitionAlternatives, partitionAlternativesAcross, productRoleSentence, MEMBERSHIP_GATE_RULES, MEMBERSHIP_GATE_ORDER, MEMBERSHIP_GATE_SYMMETRY, MEMBERSHIP_GATE_SCOPE, MEMBERSHIP_GATE_CORRECTIONS, SUBTYPE_TAXONOMIES, SUBTYPE_MEMBERSHIP_RULE, subtypeDefinition } from "./product-role.js";
 import { resolveCuratedAlternatives, curatedAlternativesFor, addCuratedToPool } from "./curated-alternatives.js";
 import type { Agent, ChangeDateSource, DealChange, RiskCause, LinkUnreachable, Offer } from "./types.js";
 import { changeDateLabel, changeDateClause, changeDatePublished, changeEventStartDate, capListSections, latestEventDate, offerExpiryAfter, feedEntryUpdated, undatedGroupHeading, firstReadHeading, discoveryBatchNote, DISCOVERED_DATE_PREFIX, UNDATED_GROUP_NOTE } from "./change-dates.js";
@@ -1836,6 +1836,18 @@ function buildCriteriaPage(): string {
   const membershipGateRows = MEMBERSHIP_GATE_ORDER.map(g => `<tr><td><code>${escHtmlServer(g)}</code> &mdash; ${escHtmlServer(MEMBERSHIP_GATE_RULES[g].label)}</td><td>${escHtmlServer(MEMBERSHIP_GATE_RULES[g].rule)}</td></tr>`).join("\n");
   const classifiedCount = offers.filter(o => o.product_role).length;
   const gatedCount = offers.filter(o => o.product_role && (o.product_role.deployment_model === "local_dev_only" || o.product_role.is_addon)).length;
+  const subtypeTaxonomyTables = Object.entries(SUBTYPE_TAXONOMIES).map(([taxonomy, entries]) => `  <h4>${escHtmlServer(taxonomy)}</h4>
+  <table><thead><tr><th>Subtype</th><th>What it means</th></tr></thead><tbody>
+${entries.map(e => `<tr><td><code>${escHtmlServer(e.subtype)}</code></td><td>${escHtmlServer(e.definition)}</td></tr>`).join("\n")}
+  </tbody></table>`).join("\n");
+  const subtypeCoverageClause = (() => {
+    const parts = Object.keys(SUBTYPE_TAXONOMIES).map(taxonomy => {
+      const inTaxonomy = offers.filter(o => o.category === taxonomy);
+      const done = inTaxonomy.filter(o => o.product_subtypes).length;
+      return `${done} of ${inTaxonomy.length} in ${taxonomy}`;
+    });
+    return `We have classified ${parts.join(", ")}; the other ${offers.length - offers.filter(o => o.product_subtypes).length} records in the index carry no subtype and are gated by none.`;
+  })();
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -1954,15 +1966,20 @@ ${demeritRows}
   <h2>4. What we do not model</h2>
   <p>We rank on offer terms, verification recency and recorded adverse changes. <strong style="color:var(--text)">We do not model technical fit</strong> &mdash; whether a particular product suits a particular role in your architecture. A vector database and a relational database sit in the same category here. If you are asking us which of two products fits your app, we are the wrong source; if you are asking whose free tier we could confirm this week and whose was withdrawn in March, that is exactly what this is for.</p>
 
-  <h2 id="membership">5. Two product properties that decide membership, and never order</h2>
-  <p>Section 4 is about fit and it still stands. This is a different thing: two factual properties of a product, of the same kind as its category and read from the vendor's own words. They answer whether a product <em>could</em> stand in for another at all, not whether it would suit you better.</p>
+  <h2 id="membership">5. Product properties that decide membership, and never order</h2>
+  <p>Section 4 is about fit and it still stands. This is a different thing: factual properties of a product, of the same kind as its category and read from the vendor's own words. They answer whether a product <em>could</em> stand in for another at all, not whether it would suit you better.</p>
   <table><thead><tr><th>Property</th><th>What it means</th></tr></thead><tbody>
 ${membershipGateRows}
   </tbody></table>
   <p>${escHtmlServer(MEMBERSHIP_GATE_SYMMETRY)}</p>
   <p>${escHtmlServer(MEMBERSHIP_GATE_SCOPE)}</p>
-  <p><strong style="color:var(--text)">Neither property is available on request.</strong> A vendor cannot ask to be classified, declassified, or exempted, for the same reason there is no top slot to buy. ${escHtmlServer(MEMBERSHIP_GATE_CORRECTIONS)}</p>
+  <p><strong style="color:var(--text)">No property here is available on request.</strong> A vendor cannot ask to be classified, declassified, or exempted, for the same reason there is no top slot to buy. ${escHtmlServer(MEMBERSHIP_GATE_CORRECTIONS)}</p>
   <p>The honest limit: we have classified ${classifiedCount} of ${offers.length} records, ${gatedCount} of which carry a gate. <strong style="color:var(--text)">A record with no classification has not been reviewed &mdash; it does not mean we have checked and found it hosted.</strong> Absence of the property publishes nothing in either direction and gates nothing, which is the same rule we use for a link we were merely refused.</p>
+
+  <h3 id="subtypes">Subtypes</h3>
+  <p>A category is a coarse property. Where we have published a subtype taxonomy for a category, the same discipline applies one level finer: a subtype is what the vendor's own copy says the product <em>is</em>, it is multi-label, and it decides membership only. ${escHtmlServer(SUBTYPE_MEMBERSHIP_RULE)}</p>
+${subtypeTaxonomyTables}
+  <p>Subtypes are published on every classified vendor page with the source URL and the sentence they were read from, exactly as the properties above are. ${subtypeCoverageClause}</p>
 
   <h2>6. What agents tell us, and what we do with it</h2>
   <p>Agents can report which vendor they recommended, at <a href="${SIGNAL_DOC_PATH}"><code>${escHtmlServer(SIGNAL_PATH)}</code></a>. <strong style="color:var(--text)">Those counts never affect any order we publish</strong> &mdash; not now, not behind a flag. A self-reported counter that influenced placement would be a purchasable ranking with extra steps, and the whole reason to trust this index is that there is no such thing.</p>
@@ -3670,6 +3687,24 @@ function buildVendorPage(slug: string): string | null {
     return `  <p class="product-role-line" style="margin:.4rem 0 .6rem;font-size:.9rem;color:var(--text-muted)"><strong>Product role:</strong> ${escHtmlServer(sentence)} We read that from <a href="${escHtmlServer(role.source_url)}" rel="nofollow noopener">${escHtmlServer(role.source_url)}</a> on <span class="product-role-reviewed" style="font-family:var(--mono)">${escHtmlServer(role.reviewed)}</span>, where it says: &ldquo;${escHtmlServer(role.source_quote)}&rdquo; <a href="${CRITERIA_PATH}#membership">How we use this</a>.</p>`;
   })();
 
+  const productSubtypesLine = (() => {
+    const classified = primary.product_subtypes;
+    if (!classified) return "";
+    const body = classified.labels.length === 0
+      ? `${escHtmlServer(MEMBERSHIP_GATE_RULES.not_in_taxonomy.label)}.`
+      : classified.labels
+          .map(l => `<code>${escHtmlServer(l.subtype)}</code> &mdash; ${escHtmlServer(subtypeDefinition(classified.taxonomy, l.subtype) ?? "")}`)
+          .join("; ") + ".";
+    const sources = [...new Map(classified.labels.map(l => [l.source_url, l])).values()];
+    const provenance = sources
+      .map(l => `<a href="${escHtmlServer(l.source_url)}" rel="nofollow noopener">${escHtmlServer(l.source_url)}</a>, where it says: &ldquo;${escHtmlServer(l.source_quote)}&rdquo;`)
+      .join(" and from ");
+    const read = sources.length > 0
+      ? ` We read that on <span class="product-subtypes-reviewed" style="font-family:var(--mono)">${escHtmlServer(classified.reviewed)}</span> from ${provenance}`
+      : "";
+    return `\n  <p class="product-subtypes-line" style="margin:.4rem 0 .6rem;font-size:.9rem;color:var(--text-muted)"><strong>Subtypes in ${escHtmlServer(classified.taxonomy)}:</strong> ${body}${read} <a href="${CRITERIA_PATH}#subtypes">How we use this</a>.</p>`;
+  })();
+
   const alternativesMembership = partitionAlternatives(
     offers.filter(o => o.category === primary.category && o.vendor !== vendorName),
     primary,
@@ -4058,7 +4093,7 @@ ${allCompareLinks.join("\n")}
     { q: `Is ${vendorName}'s free tier reliable?`, a: faqReliableAnswer },
     { q: `Is ${vendorName}'s free tier good for production?`, a: faqProductionAnswer },
     { q: `What changed in ${vendorName}'s pricing recently?`, a: faqChangedAnswer },
-    { q: `What are the best free alternatives to ${vendorName}?`, a: faqAlternativesAnswer },
+    ...(alternatives.length > 0 ? [{ q: `What are the best free alternatives to ${vendorName}?`, a: faqAlternativesAnswer }] : []),
     { q: `When will I outgrow ${vendorName}'s free tier?`, a: faqOutgrowAnswer },
     { q: `What category is ${vendorName} in?`, a: faqCategoryAnswer },
   ];
@@ -4171,7 +4206,7 @@ ${mcpCtaCss()}
   <h1>${escHtmlServer(vendorName)} Free Tier ${currentYear}${h1RiskBadge}</h1>
 ${riskCauseLine}
 ${linkUnreachableLine}
-${productRoleLine}
+${productRoleLine}${productSubtypesLine}
   <p class="page-meta">Limits, pricing history, and ${alternatives.length} alternatives.${verifiedSentence} Last updated ${escHtmlServer(lastUpdated)}.</p>
 ${quickVerdictHtml}
 ${categoryContextHtml}
@@ -4277,7 +4312,9 @@ function buildAlternativesPage(slug: string): string | null {
   }
   const curated = resolveCuratedAlternatives(vendorName, allChanges, offers);
   const curatedAltNames = new Set(curated.matched.map(o => o.vendor));
-  const altMembership = partitionAlternativesAcross(addCuratedToPool(dedupedAlts, curated.matched), vendorOffers);
+  const altMembership = partitionAlternativesAcross(addCuratedToPool(dedupedAlts, curated.matched), vendorOffers, {
+    subtypeExempt: candidate => curatedAltNames.has(candidate.vendor),
+  });
   const altRanking = rankForListing(enrichOffers(altMembership.kept), {
     queryKey: `alternative-to:${vendorName}`,
     changes: dealChanges,

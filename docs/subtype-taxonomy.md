@@ -1,8 +1,14 @@
 # Subtype taxonomy — `Databases` and `Cloud Hosting`
 
-Status: **proposed by PM, not yet applied to any record.** This is the document
-[#1032](https://github.com/robhunter/agentdeals/issues/1032) Phase 2 is blocked on. It covers two of 66
-categories on purpose — prove the shape here before anyone touches the other 64.
+Status: **superseded.** Phase 2 shipped against the two taxonomies published later on
+[#1032](https://github.com/robhunter/agentdeals/issues/1032), in
+[the Databases comment](https://github.com/robhunter/agentdeals/issues/1032#issuecomment-5470406203) and
+[the Cloud Hosting comment](https://github.com/robhunter/agentdeals/issues/1032#issuecomment-5473686674).
+Those differ from this document in the subtype names, in the assignment of several records, and in Rule 3
+below, which the Databases comment reverses: a page must not backfill from the category to reach three
+entries. The applied taxonomies and their definitions are in `src/product-role.ts` and published at
+`/criteria#subtypes`. The four rules and the reasoning here are what the applied version was built from.
+It covers two of 66 categories on purpose — prove the shape here before anyone touches the other 64.
 
 ## What a subtype is for
 

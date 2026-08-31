@@ -12,8 +12,11 @@ import {
   partitionRoleCandidates,
   filterAlternatives,
   productRoleSentence,
+  subtypesOf,
+  subtypeDefinition,
   MEMBERSHIP_GATE_ORDER,
   MEMBERSHIP_GATE_RULES,
+  SUBTYPE_TAXONOMIES,
 } from "../src/product-role.ts";
 import { rankForListing, rankOffers } from "../src/ranking.ts";
 import type { Offer, ProductRole, DeploymentModel } from "../src/types.ts";
@@ -45,6 +48,22 @@ function offer(vendor: string, role?: Partial<ProductRole>): Offer {
           } as ProductRole,
         }
       : {}),
+  };
+}
+
+function labelled(vendor: string, subtypes: string[], taxonomy = "Databases"): Offer {
+  return {
+    ...offer(vendor),
+    category: taxonomy,
+    product_subtypes: {
+      taxonomy,
+      labels: subtypes.map(subtype => ({
+        subtype,
+        source_url: `https://${vendor.toLowerCase()}.example/`,
+        source_quote: `${vendor} is a ${subtype}`,
+      })),
+      reviewed: "2026-08-31",
+    },
   };
 }
 
@@ -88,6 +107,99 @@ describe("#1032 which product properties gate membership", () => {
       [...MEMBERSHIP_GATE_ORDER].sort(),
       "the published table and the applied order must name the same gates"
     );
+  });
+});
+
+describe("#1032 Phase 2 subtypes gate on sharing at least one label", () => {
+  const relational = labelled("Relational", ["relational"]);
+  const vector = labelled("Vector", ["vector"]);
+  const multi = labelled("Multi", ["relational", "vector"]);
+  const none = labelled("None", []);
+  const unlabelled = offer("Unlabelled");
+  const otherTaxonomy = labelled("Hosted App", ["container_app"], "Cloud Hosting");
+
+  it("removes a candidate that shares no subtype with the subject", () => {
+    assert.equal(alternativeMembershipGate(vector, relational), "subtype_mismatch");
+  });
+
+  it("keeps a candidate that shares one subtype out of several", () => {
+    assert.equal(alternativeMembershipGate(multi, relational), null);
+    assert.equal(alternativeMembershipGate(multi, vector), null);
+  });
+
+  it("keeps a candidate on the page of a subject that shares one of its labels", () => {
+    assert.equal(alternativeMembershipGate(relational, multi), null);
+    assert.equal(alternativeMembershipGate(vector, multi), null);
+  });
+
+  it("removes a candidate that carries no subtype from a labelled subject", () => {
+    assert.equal(alternativeMembershipGate(none, relational), "not_in_taxonomy");
+  });
+
+  it("never gates a record we have not classified, in either direction", () => {
+    assert.equal(alternativeMembershipGate(unlabelled, relational), null);
+    assert.equal(alternativeMembershipGate(relational, unlabelled), null);
+  });
+
+  it("applies no subtype gate on the page of a subject that carries no subtype of its own", () => {
+    assert.equal(alternativeMembershipGate(relational, none), null);
+    assert.equal(alternativeMembershipGate(vector, none), null);
+  });
+
+  it("never compares subtypes across two different taxonomies", () => {
+    assert.equal(alternativeMembershipGate(otherTaxonomy, relational), null);
+    assert.equal(alternativeMembershipGate(relational, otherTaxonomy), null);
+  });
+
+  it("lets a caller exempt a candidate from the subtype gate without exempting the role gates", () => {
+    const gatedAddon = { ...labelled("CuratedAddon", ["vector"]), product_role: addon.product_role };
+    const exempt = partitionAlternativesAcross([vector, gatedAddon], [relational], { subtypeExempt: () => true });
+    assert.deepStrictEqual(exempt.kept.map(o => o.vendor), ["Vector"]);
+    assert.deepStrictEqual(exempt.removed.map(r => r.gate), ["addon"]);
+    const applied = partitionAlternativesAcross([vector], [relational]);
+    assert.deepStrictEqual(applied.removed.map(r => r.gate), ["subtype_mismatch"]);
+  });
+
+  it("publishes a definition for every subtype the taxonomies name", () => {
+    for (const [taxonomy, entries] of Object.entries(SUBTYPE_TAXONOMIES)) {
+      for (const entry of entries) {
+        assert.equal(subtypeDefinition(taxonomy, entry.subtype), entry.definition);
+      }
+    }
+  });
+
+  it("uses only subtypes its own taxonomy names", () => {
+    const strays: string[] = [];
+    for (const record of index.offers) {
+      const classified = record.product_subtypes;
+      if (!classified) continue;
+      const known = new Set((SUBTYPE_TAXONOMIES[classified.taxonomy] ?? []).map(e => e.subtype));
+      assert.ok(known.size > 0, `${classified.taxonomy} has no published taxonomy`);
+      assert.equal(classified.taxonomy, record.category, `${record.vendor} is classified under a taxonomy that is not its category`);
+      for (const label of classified.labels) {
+        if (!known.has(label.subtype)) strays.push(`${record.vendor}: ${label.subtype}`);
+      }
+    }
+    assert.deepStrictEqual(strays, []);
+  });
+
+  it("carries a source URL and the sentence read from it on every label", () => {
+    const bare: string[] = [];
+    for (const record of index.offers) {
+      for (const label of record.product_subtypes?.labels ?? []) {
+        if (!/^https:\/\//.test(label.source_url) || label.source_quote.trim().length < 10) {
+          bare.push(`${record.vendor}: ${label.subtype}`);
+        }
+      }
+    }
+    assert.deepStrictEqual(bare, [], "a subtype nobody can check is not a published property");
+  });
+
+  it("reads back the labels it was given", () => {
+    assert.deepStrictEqual([...subtypesOf(multi)!.subtypes], ["relational", "vector"]);
+    assert.equal(subtypesOf(multi)!.taxonomy, "Databases");
+    assert.equal(subtypesOf(unlabelled), null);
+    assert.deepStrictEqual([...subtypesOf(none)!.subtypes], []);
   });
 });
 
@@ -165,9 +277,35 @@ describe("#1032 neither property can reach scoring or ordering", () => {
   const rankingSource = readFileSync(join(REPO, "src", "ranking.ts"), "utf8");
 
   it("the selection module does not mention either property", () => {
-    for (const banned of [/product_role/, /deployment_model/, /is_addon/, /local_dev_only/]) {
+    for (const banned of [/product_role/, /deployment_model/, /is_addon/, /local_dev_only/, /product_subtypes/, /subtypes/]) {
       assert.ok(!banned.test(rankingSource), `the selection module must not read ${banned}`);
     }
+  });
+
+  it("relabelling every subtype leaves the order of a listing byte-identical", () => {
+    const candidates = index.offers.filter((o) => o.category === "Databases");
+    assert.ok(candidates.length > 10, "this test needs a category with enough records to order");
+    const opts = { queryKey: "order-check", changes: [], date: "2026-08-25" };
+    const before = rankForListing(candidates, opts);
+    const relabelled = candidates.map((o) => ({
+      ...o,
+      product_subtypes: {
+        taxonomy: "Databases",
+        labels: [{ subtype: "graph", source_url: "https://example.invalid/docs", source_quote: "relabelled for this test" }],
+        reviewed: "2026-08-25",
+      },
+    }));
+    const after = rankForListing(relabelled as Offer[], opts);
+    assert.deepStrictEqual(
+      after.entries.map((e) => e.offer.vendor),
+      before.entries.map((e) => e.offer.vendor),
+      "a subtype must not move a single position"
+    );
+    assert.deepStrictEqual(
+      after.entries.map((e) => e.demerit_total),
+      before.entries.map((e) => e.demerit_total),
+      "a subtype must not add or remove a single demerit point"
+    );
   });
 
   it("flipping every classification leaves the order of a listing byte-identical", () => {
@@ -269,17 +407,30 @@ describe("#1032 what the gates do to the catalogue", () => {
     assert.ok(!kept.includes("DynamoDB Local"), "a downloadable emulator is not an alternative to a hosted database");
   });
 
-  it("does not drop any category's alternatives list below three entries", () => {
-    const thin: string[] = [];
+  function keptCounts(): Array<{ label: string; kept: number }> {
+    const counts: Array<{ label: string; kept: number }> = [];
     for (const category of categories) {
       const inCategory = index.offers.filter((o) => o.category === category);
       if (inCategory.length < 4) continue;
       for (const subject of inCategory) {
         const kept = filterAlternatives(inCategory.filter((o) => o.vendor !== subject.vendor), subject);
-        if (kept.length < 3) thin.push(`${subject.vendor} (${category}): ${kept.length}`);
+        counts.push({ label: `${subject.vendor} (${category})`, kept: kept.length });
       }
     }
-    assert.deepStrictEqual(thin, [], `these alternatives lists fall below three entries: ${thin.join("; ")}`);
+    return counts;
+  }
+
+  it("leaves no alternatives list empty", () => {
+    const empty = keptCounts().filter((c) => c.kept === 0).map((c) => c.label).sort();
+    assert.deepStrictEqual(empty, [], `an empty list states in our own voice that we index no peer at all: ${empty.join("; ")}`);
+  });
+
+  it("names every alternatives list the gates leave below three entries", () => {
+    const thin = keptCounts().filter((c) => c.kept < 3).map((c) => `${c.label}: ${c.kept}`).sort();
+    assert.deepStrictEqual(thin, [
+      "InfluxDB Cloud (Databases): 1",
+      "Neo4j AuraDB (Databases): 2",
+    ]);
   });
 
   it("leaves reviewed products that are their own category's real thing ungated", () => {
