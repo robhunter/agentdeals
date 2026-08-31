@@ -882,7 +882,7 @@
     },
     {
       "vendor": "Firebase",
-      "change_type": "restriction",
+      "change_type": "limits_reduced",
       "date": "2026-02-03",
       "summary": "Cloud Storage for Firebase now requires the pay-as-you-go Blaze plan, in effect from February 3, 2026. Projects on the no-cost Spark plan lose access to all Cloud Storage buckets, including default buckets; console access redirects to an upgrade page and API calls return 402 or 403. Provisioning a new default bucket also requires Blaze.",
       "previous_state": "Spark plan included Cloud Storage with a *.appspot.com default bucket and no card required: 5 GB stored, 1 GB downloaded/day, 20,000 uploads/day, 50,000 downloads/day",
