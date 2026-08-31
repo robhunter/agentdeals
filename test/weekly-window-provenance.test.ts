@@ -43,6 +43,26 @@ async function mostRecentWeekWithADiscoveryBatch() {
   );
 }
 
+async function digestForWeekStarting(weekStart: string) {
+  const { getFormattedWeeklyDigest } = await import("../dist/data.js");
+  const weeksAgo = Math.round(
+    (Date.parse(isoWeekWindow(new Date()).start) - Date.parse(weekStart)) / (7 * 86400000)
+  );
+  const digest = getFormattedWeeklyDigest(weeksAgo, 200);
+  assert.strictEqual(digest.week_of, weekStart);
+  return digest;
+}
+
+function combinedCountPhrase(digest: { changes_in_week: number; discovered_in_week: number }): string {
+  return `across ${digest.changes_in_week + digest.discovered_in_week} developer tool pricing change`;
+}
+
+function weekCorrectedBy(correction: { id: string }): string {
+  const match = correction.id.match(/weekly-digest-(\d{4}-\d{2}-\d{2})$/);
+  assert.ok(match, `a correction id should name the week it replaces: ${correction.id}`);
+  return match![1];
+}
+
 describe("one definition of the week a digest is about", () => {
   it("runs Monday to Sunday whichever day of the week it is handed", () => {
     assert.deepStrictEqual(isoWeekWindow(new Date("2026-08-26T09:00:00Z")), {
@@ -265,12 +285,12 @@ describe("every weekly surface reports the same week", () => {
   let serverPort = 0;
   let proc: ChildProcess | null = null;
 
-  function startHttpServer(): Promise<ChildProcess> {
+  function startHttpServer(timeZone = "UTC"): Promise<ChildProcess> {
     return new Promise((resolve, reject) => {
       const serverPath = path.join(REPO, "dist", "serve.js");
       const p = spawn("node", [serverPath], {
         stdio: ["pipe", "pipe", "pipe"],
-        env: { ...process.env, PORT: "0", BASE_URL: "http://127.0.0.1" },
+        env: { ...process.env, PORT: "0", BASE_URL: "http://127.0.0.1", TZ: timeZone },
       });
       const timeout = setTimeout(() => { p.kill("SIGKILL"); reject(new Error("Server startup timeout")); }, 20000);
       p.stderr!.on("data", (data: Buffer) => {
@@ -307,17 +327,30 @@ describe("every weekly surface reports the same week", () => {
     proc = await startHttpServer();
     const base = `http://127.0.0.1:${serverPort}`;
     const feed = await (await fetch(`${base}/feed.xml`)).text();
-    const corrected = await mostRecentWeekWithADiscoveryBatch();
-    const inflated = `across ${corrected.changes_in_week + corrected.discovered_in_week} developer tool pricing change`;
 
     const entries = feed.split("<entry>").slice(1);
     const corrections = entries.filter((e) => e.includes("urn:agentdeals:correction:"));
     const weeks = entries.filter((e) => !e.includes("urn:agentdeals:correction:"));
-    for (const entry of weeks) assert.ok(!entry.includes(inflated), "/feed.xml weekly entry");
-    assert.ok(
-      corrections.some((e) => e.includes(inflated)),
-      "a corrected count should survive only inside the entry correcting it"
-    );
+
+    for (const entry of weeks) {
+      const id = entry.match(/<id>urn:agentdeals:weekly-digest:(\d{4}-\d{2}-\d{2})<\/id>/);
+      assert.ok(id, "a weekly entry should name the week it covers");
+      const digest = await digestForWeekStarting(id![1]);
+      if (digest.discovered_in_week === 0) continue;
+      assert.ok(
+        !entry.includes(combinedCountPhrase(digest)),
+        `/feed.xml weekly entry for ${digest.week_of}`
+      );
+    }
+
+    assert.ok(FEED_CORRECTIONS.length > 0);
+    for (const correction of FEED_CORRECTIONS) {
+      const digest = await digestForWeekStarting(weekCorrectedBy(correction));
+      assert.ok(
+        corrections.some((e) => e.includes(combinedCountPhrase(digest))),
+        `a corrected count should survive only inside the entry correcting it: ${correction.id}`
+      );
+    }
   });
 
   it("carries a feed entry for each recent week that tracked a change, and for no other", async () => {
@@ -361,6 +394,15 @@ describe("every weekly surface reports the same week", () => {
     const archive = await (await fetch(`${base}/digest/archive`)).text();
     assert.ok(archive.includes("1 change + 153 first read"), "the archive should split the week it holds");
     assert.ok(!archive.includes("154 changes"), "the archive should not count the batch as changes");
+  });
+
+  it("files a change in the same week whatever zone the server clock is set to", async () => {
+    proc = await startHttpServer("UTC");
+    const utc = await (await fetch(`http://127.0.0.1:${serverPort}/digest/archive`)).text();
+    proc.kill("SIGKILL");
+    proc = await startHttpServer("America/Los_Angeles");
+    const behindUtc = await (await fetch(`http://127.0.0.1:${serverPort}/digest/archive`)).text();
+    assert.strictEqual(behindUtc, utc);
   });
 
   it("tells an API caller how many of its records carry an effective date", async () => {

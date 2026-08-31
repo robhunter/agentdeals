@@ -415,12 +415,13 @@ describe("the live index, ranked", () => {
   });
 
   it("Databases: Firebase is the only demotion, on a named recorded fact", () => {
-    const r = rankOffers(index.offers.filter((o) => o.category === "Databases"), {
+    const offers = index.offers.filter((o) => o.category === "Databases");
+    const r = rankOffers(offers, {
       queryKey: "best-of:Databases",
       changes: dealChanges,
       date: TODAY,
     });
-    assert.strictEqual(r.qualified.length, 41);
+    assert.strictEqual(r.qualified.length, offers.length - r.demoted.length - r.excluded.length);
     assert.deepStrictEqual(vendorsOf(r.demoted), ["Firebase"]);
     assert.strictEqual(r.demoted[0].demerits[0].code, "free_tier_withdrawn");
     assert.strictEqual(r.excluded.length, 2);

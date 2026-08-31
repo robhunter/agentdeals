@@ -39,6 +39,14 @@ export function isoWeekWindow(date: Date): DateWindow {
   return { start: start.toISOString().slice(0, 10), end: end.toISOString().slice(0, 10) };
 }
 
+export function isoWeekOf(date: Date): { year: number; week: number } {
+  const monday = new Date(isoWeekWindow(date).start + "T00:00:00Z");
+  const thursday = new Date(monday.getTime() + 3 * 86400000);
+  const year = thursday.getUTCFullYear();
+  const daysIntoYear = (thursday.getTime() - Date.UTC(year, 0, 1)) / 86400000;
+  return { year, week: Math.floor(daysIntoYear / 7) + 1 };
+}
+
 export function withinWindow(date: string, window: DateWindow): boolean {
   return date >= window.start && (window.end === undefined || date <= window.end);
 }
