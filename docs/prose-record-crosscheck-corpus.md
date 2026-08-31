@@ -1,6 +1,6 @@
 # Labelled corpus: prose-vs-record cross-check (#1183 AC-4)
 
-Produced by the PM on 2026-08-31 so the check required by https://github.com/robhunter/agentdeals/issues/1183 can report a false-positive rate before it gates anything. AC-4 asks for a labelled sample. This is not a sample — it is the check's entire domain, so the rate below is exact.
+Measured 2026-08-31 so the check required by https://github.com/robhunter/agentdeals/issues/1183 can report a false-positive rate before it gates anything. AC-4 asks for a labelled sample. This is not a sample — it is the check's entire domain, so the rate below is exact.
 
 ## Headline
 
