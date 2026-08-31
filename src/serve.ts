@@ -175,7 +175,6 @@ const swaggerDocsHtml = `<!DOCTYPE html>
     *, *:before, *:after { box-sizing: inherit; }
     body { margin: 0; background: #0f172a; color: #f1f5f9; }
     .topbar { display: none; }
-    /* Dark theme overrides matching landing page */
     .swagger-ui { background: #0f172a; }
     .swagger-ui .opblock-tag { color: #f1f5f9; border-bottom-color: #334155; }
     .swagger-ui .opblock-tag:hover { background: rgba(59,130,246,0.05); }
@@ -223,7 +222,6 @@ const swaggerDocsHtml = `<!DOCTYPE html>
     .swagger-ui .opblock-body pre.microlight { background: #1e293b !important; color: #f1f5f9; border: 1px solid #334155; }
     .swagger-ui .response-control-media-type__accept-message { color: #3b82f6; }
     .swagger-ui .loading-container .loading::after { color: #3b82f6; }
-    /* Back link */
     .back-link { display: block; padding: 12px 20px; background: #1e293b; border-bottom: 1px solid #334155; font-family: 'Inter', sans-serif; font-size: 14px; }
     .back-link a { color: #3b82f6; text-decoration: none; }
     .back-link a:hover { text-decoration: underline; }
@@ -46288,7 +46286,6 @@ function buildStackCheckPage(): string {
     a:hover{text-decoration:underline}
     .subtitle{color:var(--text-muted);font-size:1rem;margin-bottom:1.5rem}
 
-    /* Input section */
     .input-section{background:var(--bg-elevated);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin:1.5rem 0}
     .input-row{display:flex;gap:.75rem;margin-bottom:1rem}
     .input-row input{flex:1;background:var(--bg);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:.75rem 1rem;font-size:.95rem;font-family:var(--sans)}
@@ -46298,13 +46295,11 @@ function buildStackCheckPage(): string {
     .btn-primary:hover{opacity:.9}
     .btn-primary:disabled{opacity:.5;cursor:not-allowed}
 
-    /* Preset stacks */
     .presets{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:.5rem}
     .presets label{font-size:.8rem;color:var(--text-muted);margin-bottom:.25rem;display:block;width:100%}
     .preset-btn{background:var(--bg);color:var(--text-muted);border:1px solid var(--border);border-radius:6px;padding:.4rem .8rem;font-size:.8rem;font-family:var(--sans);cursor:pointer;transition:all .15s}
     .preset-btn:hover{border-color:var(--accent);color:var(--accent)}
 
-    /* Health grade */
     .grade-section{text-align:center;padding:2rem 1.5rem;background:var(--bg-elevated);border:1px solid var(--border);border-radius:12px;margin:1.5rem 0}
     .grade-badge{display:inline-flex;align-items:center;justify-content:center;width:80px;height:80px;border-radius:50%;font-size:2.5rem;font-weight:800;font-family:var(--serif);margin-bottom:.75rem}
     .grade-A{background:rgba(63,185,80,.15);color:var(--green);border:3px solid var(--green)}
@@ -46315,7 +46310,6 @@ function buildStackCheckPage(): string {
     .grade-label{font-size:1rem;color:var(--text);font-weight:600;margin-bottom:.25rem}
     .grade-desc{font-size:.85rem;color:var(--text-muted)}
 
-    /* Risk summary */
     .risk-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:.75rem;margin:1.5rem 0}
     .risk-stat{text-align:center;padding:1rem;background:var(--bg-elevated);border:1px solid var(--border);border-radius:10px}
     .risk-stat .count{font-size:1.8rem;font-weight:700}
@@ -46324,7 +46318,6 @@ function buildStackCheckPage(): string {
     .risk-moderate .count{color:var(--yellow)}
     .risk-high .count{color:var(--red)}
 
-    /* Service cards */
     .service-cards{display:grid;gap:.75rem;margin:1.5rem 0}
     .service-card{background:var(--bg-elevated);border:1px solid var(--border);border-radius:10px;padding:1.25rem;transition:border-color .15s}
     .service-card:hover{border-color:var(--accent)}
@@ -46350,7 +46343,6 @@ function buildStackCheckPage(): string {
     .card-not-found{opacity:.7}
     .card-suggestions{font-size:.8rem;color:var(--text-dim);margin-top:.25rem}
 
-    /* Gaps & recommendations */
     .recs-section{background:var(--bg-elevated);border:1px solid var(--border);border-radius:12px;padding:1.25rem;margin:1.5rem 0}
     .rec-item{font-size:.85rem;color:var(--text-muted);padding:.5rem 0;border-bottom:1px solid var(--border)}
     .rec-item:last-child{border-bottom:none}
@@ -46359,25 +46351,21 @@ function buildStackCheckPage(): string {
     .gap-cat{font-weight:600;color:var(--text);min-width:100px}
     .gap-rec{color:var(--text-muted)}
 
-    /* Share bar */
     .share-bar{display:flex;align-items:center;gap:.75rem;margin:1.5rem 0;padding:.75rem 1rem;background:var(--bg-elevated);border:1px solid var(--border);border-radius:10px}
     .share-url{flex:1;font-family:var(--mono);font-size:.8rem;color:var(--text-dim);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
     .share-btn{background:var(--accent);color:#fff;border:none;padding:.5rem 1rem;border-radius:6px;font-size:.8rem;font-family:var(--sans);cursor:pointer;font-weight:600;white-space:nowrap;transition:all .15s}
     .share-btn:hover{opacity:.9}
     .share-btn.copied{background:var(--green)}
 
-    /* FAQ */
     .faq-section{margin:2rem 0}
     .faq-item{border-bottom:1px solid var(--border);padding:1rem 0}
     .faq-q{font-weight:600;color:var(--text);font-size:.95rem;margin-bottom:.25rem}
     .faq-a{color:var(--text-muted);font-size:.85rem;line-height:1.6}
 
-    /* Related links */
     .related-links{display:flex;flex-wrap:wrap;gap:.5rem;margin:1.5rem 0}
     .related-link{font-size:.8rem;color:var(--accent);background:var(--bg-elevated);border:1px solid var(--border);border-radius:6px;padding:.4rem .8rem;text-decoration:none;transition:all .15s}
     .related-link:hover{border-color:var(--accent);text-decoration:none}
 
-    /* Loading state */
     .loading{text-align:center;padding:2rem;color:var(--text-muted)}
     .loading .spinner{display:inline-block;width:20px;height:20px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .6s linear infinite;margin-right:.5rem;vertical-align:middle}
     @keyframes spin{to{transform:rotate(360deg)}}
@@ -46478,7 +46466,6 @@ function buildStackCheckPage(): string {
       var services = input.split(',').map(function(s) { return s.trim(); }).filter(Boolean);
       if (services.length === 0) return;
 
-      // Update URL
       var newUrl = window.location.pathname + '?s=' + encodeURIComponent(services.join(','));
       history.replaceState(null, '', newUrl);
 
@@ -46501,7 +46488,6 @@ function buildStackCheckPage(): string {
       document.getElementById('results').style.display = 'block';
       document.getElementById('check-btn').disabled = false;
 
-      // Compute health grade
       var riskCounts = { stable: 0, caution: 0, risky: 0, not_found: 0 };
       var totalFound = 0;
       for (var i = 0; i < data.services.length; i++) {
@@ -46532,18 +46518,15 @@ function buildStackCheckPage(): string {
         '<div class="grade-label">' + gradeLabel + '</div>' +
         '<div class="grade-desc">' + gradeDesc + '</div>';
 
-      // Share URL
       var shareUrl = window.location.origin + '/stack-check?s=' + encodeURIComponent(inputServices.join(','));
       document.getElementById('share-url').textContent = shareUrl;
       document.getElementById('share-bar').style.display = 'flex';
 
-      // Risk summary
       document.getElementById('risk-summary').innerHTML =
         '<div class="risk-stat risk-low"><div class="count">' + riskCounts.stable + '</div><div class="label">Stable</div></div>' +
         '<div class="risk-stat risk-moderate"><div class="count">' + riskCounts.caution + '</div><div class="label">Caution</div></div>' +
         '<div class="risk-stat risk-high"><div class="count">' + riskCounts.risky + '</div><div class="label">High Risk</div></div>';
 
-      // Service cards
       var cardsHtml = '';
       var negTypes = ['free_tier_removed','limits_reduced','restriction','product_deprecated','open_source_killed','pricing_model_change','pricing_restructured'];
       var posTypes = ['limits_increased','new_free_tier','startup_program_expanded','pricing_postponed'];
@@ -46560,7 +46543,6 @@ function buildStackCheckPage(): string {
         }
         var rl = svc.risk_level || 'stable';
         var rc = svc.risk_cause || null;
-        // #1038: a warning renders only with its dated cause.
         if (rl !== 'stable' && !rc) rl = 'stable';
         var slug = toSlug(svc.vendor);
         cardsHtml += '<div class="service-card"><div class="card-header"><span class="card-vendor"><a href="/vendor/' + esc(slug) + '">' + esc(svc.vendor) + '</a></span>';
@@ -46587,7 +46569,6 @@ function buildStackCheckPage(): string {
       }
       document.getElementById('service-cards').innerHTML = cardsHtml;
 
-      // Gaps
       if (data.gaps && data.gaps.length > 0) {
         document.getElementById('gaps-section').style.display = 'block';
         var gapsHtml = '';
@@ -46601,7 +46582,6 @@ function buildStackCheckPage(): string {
         document.getElementById('gaps-section').style.display = 'none';
       }
 
-      // Recommendations
       if (data.recommendations && data.recommendations.length > 0) {
         document.getElementById('recs-section').style.display = 'block';
         var recsHtml = '';
@@ -46634,7 +46614,6 @@ function buildStackCheckPage(): string {
       });
     }
 
-    // Auto-check if URL has ?s= parameter
     (function() {
       var params = new URLSearchParams(window.location.search);
       var s = params.get('s');
@@ -46848,11 +46827,9 @@ ${globalNavCss()}
 
     if (!a && !b) { results.innerHTML = ''; shareBar.style.display = 'none'; return; }
 
-    // Single-vendor mode
     if (a && !b) { fetchSingle(a); return; }
     if (b && !a) { fetchSingle(b); return; }
 
-    // Update URL
     var params = new URLSearchParams();
     params.set('a', a); params.set('b', b);
     history.replaceState(null, '', '/compare-tool?' + params.toString());
@@ -46899,7 +46876,6 @@ ${globalNavCss()}
   }
 
   function riskBadge(level, cause) {
-    // #1038: caution/risky render only with the dated record behind them.
     if (level !== 'stable' && !cause) return '';
     var cls = level === 'stable' ? 'badge-stable' : level === 'caution' ? 'badge-caution' : 'badge-risky';
     var badge = '<span class="badge ' + cls + '">' + level + '</span>';
@@ -46947,14 +46923,12 @@ ${globalNavCss()}
     html += renderVendorCard(b);
     html += '</div>';
 
-    // Category match info
     if (data.shared_categories) {
       html += '<p style="margin-top:1rem;font-size:.85rem;color:var(--text-muted)">Both vendors are in the <strong>' + escHtml(data.category_overlap[0]) + '</strong> category — direct competitors.</p>';
     } else {
       html += '<p style="margin-top:1rem;font-size:.85rem;color:var(--text-muted)">Cross-category comparison: <strong>' + escHtml(a.category) + '</strong> vs <strong>' + escHtml(b.category) + '</strong>.</p>';
     }
 
-    // Links to related pages
     html += '<div style="margin-top:1rem;font-size:.85rem;display:flex;gap:1rem;flex-wrap:wrap">';
     html += '<a href="/compare">Browse all comparisons</a>';
     html += '<a href="/category/' + toSlug(a.category) + '">' + escHtml(a.category) + ' category</a>';
@@ -47006,7 +46980,6 @@ ${globalNavCss()}
     }
   }
 
-  // Auto-load from URL params
   (function() {
     var params = new URLSearchParams(window.location.search);
     var a = params.get('a');
@@ -47264,7 +47237,6 @@ function buildEstimatePage(): string {
           + '<td class="notes-col">' + v.notes + '</td>'
           + '</tr>');
 
-        // Check for cheaper alternatives at the highest paid tier
         var bestTier = v.scale > 0 ? 'scale' : v.growth > 0 ? 'growth' : v.starter > 0 ? 'starter' : null;
         if (bestTier) {
           var alt = findCheaperAlt(catId, slug, bestTier);
@@ -47306,7 +47278,6 @@ function buildEstimatePage(): string {
       });
     }
 
-    // Load from URL params on page load
     (function() {
       var params = new URLSearchParams(window.location.search);
       var hasAny = false;
@@ -47583,7 +47554,6 @@ function buildBudgetBuilderPage(): string {
     + '  else { selectedCategories.add(catId); }\n'
     + '  var btn = document.querySelector(".cat-toggle[data-cat=\'" + catId + "\']");\n'
     + '  if (btn) btn.classList.toggle("active", selectedCategories.has(catId));\n'
-    + '  // Clear project preset active state if manually changed\n'
     + '  document.querySelectorAll(".project-preset").forEach(function(b) { b.classList.remove("active"); });\n'
     + '  updateBuildBtn();\n'
     + '}\n'
@@ -47610,15 +47580,13 @@ function buildBudgetBuilderPage(): string {
     + 'function recommendVendor(catId, budget) {\n'
     + '  var vendors = CATEGORY_VENDORS[catId] || [];\n'
     + '  if (vendors.length === 0) return null;\n'
-    + '  // Score each vendor: lower cost + lower risk = better\n'
     + '  var scored = vendors.map(function(v) {\n'
-    + '    var cost = v.starter; // use starter tier cost as baseline\n'
+    + '    var cost = v.starter;\n'
     + '    if (budget === 0) {\n'
-    + '      // For $0 budget, only consider free tiers\n'
     + '      cost = 0;\n'
     + '    }\n'
     + '    var riskPenalty = v.risk_cause ? (v.risk_level === "risky" ? 100 : v.risk_level === "caution" ? 30 : 0) : 0;\n'
-    + '    var score = cost + riskPenalty - (v.free !== "" && cost === 0 ? 50 : 0); // bonus for free tier\n'
+    + '    var score = cost + riskPenalty - (v.free !== "" && cost === 0 ? 50 : 0);\n'
     + '    return { vendor: v, cost: cost, score: score };\n'
     + '  });\n'
     + '  scored.sort(function(a, b) { return a.score - b.score; });\n'
@@ -47633,7 +47601,7 @@ function buildBudgetBuilderPage(): string {
     + '  var riskCounts = { stable: 0, caution: 0, risky: 0 };\n'
     + '  var stackHtml = "";\n'
     + '  var catKeys = Array.from(selectedCategories);\n'
-    + '  var paidEquivalent = 0; // Estimate what these services would cost at paid tier\n'
+    + '  var paidEquivalent = 0;\n'
     + '\n'
     + '  catKeys.forEach(function(catId) {\n'
     + '    var rec = recommendVendor(catId, selectedBudget);\n'
@@ -47641,9 +47609,8 @@ function buildBudgetBuilderPage(): string {
     + '    var cost = selectedBudget === 0 ? 0 : rec.starter;\n'
     + '    totalCost += cost;\n'
     + '    if (riskCounts[rec.risk_level] !== undefined) riskCounts[rec.risk_level]++;\n'
-    + '    paidEquivalent += rec.growth > 0 ? rec.growth : rec.starter > 0 ? rec.starter : 25; // estimate paid value\n'
+    + '    paidEquivalent += rec.growth > 0 ? rec.growth : rec.starter > 0 ? rec.starter : 25;\n'
     + '\n'
-    + '    // Get alternatives (next 2 vendors)\n'
     + '    var vendors = CATEGORY_VENDORS[catId] || [];\n'
     + '    var alts = vendors.filter(function(v) { return v.slug !== rec.slug; }).slice(0, 2);\n'
     + '\n'
@@ -47672,7 +47639,6 @@ function buildBudgetBuilderPage(): string {
     + '\n'
     + '  document.getElementById("stack-cards").innerHTML = stackHtml;\n'
     + '\n'
-    + '  // Budget bar\n'
     + '  var budgetMax = Math.max(selectedBudget, totalCost, 1);\n'
     + '  var pct = Math.min(100, (totalCost / budgetMax) * 100);\n'
     + '  var barColor = totalCost <= selectedBudget || selectedBudget === 0 ? "var(--green)" : "var(--red)";\n'
@@ -47683,7 +47649,6 @@ function buildBudgetBuilderPage(): string {
     + '  var barLabel = document.getElementById("budget-bar-label");\n'
     + '  barLabel.textContent = selectedBudget === 0 ? "Free tier only" : "of $" + selectedBudget + "/mo budget";\n'
     + '\n'
-    + '  // Summary cards\n'
     + '  var totalServices = catKeys.length;\n'
     + '  var freeCount = 0;\n'
     + '  catKeys.forEach(function(catId) {\n'
@@ -47697,7 +47662,6 @@ function buildBudgetBuilderPage(): string {
     + '    <div class="summary-card"><div class="value">\' + (totalServices - freeCount) + \'</div><div class="label">Paid Services</div></div>\n'
     + '  \';\n'
     + '\n'
-    + '  // Savings callout\n'
     + '  var savings = paidEquivalent - totalCost;\n'
     + '  if (savings > 0) {\n'
     + '    document.getElementById("savings-callout").style.display = "block";\n'
@@ -47706,7 +47670,6 @@ function buildBudgetBuilderPage(): string {
     + '    document.getElementById("savings-callout").style.display = "none";\n'
     + '  }\n'
     + '\n'
-    + '  // Risk summary\n'
     + '  var total = riskCounts.stable + riskCounts.caution + riskCounts.risky;\n'
     + '  var riskHtml = \'<h3>Stack Risk Assessment</h3>\';\n'
     + '  riskHtml += \'<div class="risk-meter">\';\n'
@@ -47718,7 +47681,6 @@ function buildBudgetBuilderPage(): string {
     + '  if (riskCounts.risky > 0) riskHtml += \'<p style="color:var(--red);font-size:.85rem;margin-top:.25rem">&#x26a0; \' + riskCounts.risky + \' service(s) have removed a free tier or changed an open-source licence in the last 12 months. Consider alternatives.</p>\';\n'
     + '  document.getElementById("risk-summary").innerHTML = riskHtml;\n'
     + '\n'
-    + '  // Shareable URL\n'
     + '  var shareUrl = window.location.origin + "/budget-builder?budget=" + selectedBudget + "&categories=" + Array.from(selectedCategories).join(",");\n'
     + '  document.getElementById("share-url").textContent = shareUrl;\n'
     + '  document.getElementById("share-bar").style.display = "flex";\n'
@@ -47735,7 +47697,6 @@ function buildBudgetBuilderPage(): string {
     + '  });\n'
     + '}\n'
     + '\n'
-    + '// Auto-load from URL params\n'
     + '(function() {\n'
     + '  var params = new URLSearchParams(window.location.search);\n'
     + '  var budget = params.get("budget");\n'
@@ -48777,12 +48738,10 @@ ${undatedSorted.map(c => buildChangeEntry(c)).join("\n")}
       }
     });
     document.getElementById('pc-visible-count').textContent = visible;
-    // Hide empty month groups
     document.querySelectorAll('.month-group').forEach(function(g) {
       var visEntries = g.querySelectorAll('.pc-entry:not([style*="display: none"])');
       g.style.display = visEntries.length > 0 ? '' : 'none';
     });
-    // Hide upcoming section entries too
     var upSection = document.querySelector('.upcoming-section');
     if (upSection) {
       var upVis = upSection.querySelectorAll('.pc-entry:not([style*="display: none"])');
@@ -48827,7 +48786,6 @@ ${undatedSorted.map(c => buildChangeEntry(c)).join("\n")}
       applyFilters();
     });
   }
-  // Highlight anchor on load
   if (window.location.hash) {
     var target = document.getElementById(window.location.hash.slice(1));
     if (target) {
@@ -51794,7 +51752,6 @@ a:hover{color:var(--accent-hover);text-decoration:underline}
 .container{max-width:960px;margin:0 auto;padding:0 1.5rem;position:relative;z-index:1}
 .accent-bar{width:100%;height:4px;background:linear-gradient(90deg,#3b82f6,#8b5cf6);position:fixed;top:0;left:0;z-index:100}
 
-/* Hero */
 .hero{text-align:center;padding:5rem 0 3rem}
 .hero-label{display:inline-block;font-family:var(--mono);font-size:.75rem;font-weight:500;color:var(--accent);text-transform:uppercase;letter-spacing:.15em;border:1px solid var(--border);border-radius:20px;padding:.35rem 1rem;margin-bottom:1.5rem;background:var(--accent-glow)}
 .hero h1{font-family:var(--sans);font-size:3.5rem;color:var(--text);line-height:1.1;margin-bottom:1rem;letter-spacing:-.02em;font-weight:700}
@@ -51806,7 +51763,6 @@ a:hover{color:var(--accent-hover);text-decoration:underline}
 .btn-secondary{display:inline-flex;align-items:center;gap:.5rem;padding:.75rem 1.75rem;background:transparent;color:var(--text);border-radius:8px;font-size:.95rem;font-weight:500;transition:all .2s;border:1px solid var(--border)}
 .btn-secondary:hover{border-color:var(--accent);color:var(--accent);text-decoration:none}
 
-/* Stats bar */
 .stats-bar{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin:0 auto 4rem;max-width:640px;background:var(--bg-card);backdrop-filter:blur(12px)}
 .stat-item{text-align:center;padding:1.25rem 1rem;position:relative}
 .stat-item+.stat-item::before{content:'';position:absolute;left:0;top:20%;height:60%;width:1px;background:var(--border)}
@@ -51815,22 +51771,18 @@ a:hover{color:var(--accent-hover);text-decoration:underline}
 .stat-num.stat-cyan{color:var(--accent-cyan)}
 .stat-label{font-size:.75rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:.1em;margin-top:.15rem}
 
-/* Section divider */
 .divider{width:100%;height:1px;background:var(--border);margin:0}
 .wavy-divider{width:100%;overflow:hidden;line-height:0;margin:0}
 .wavy-divider svg{display:block;width:100%;height:40px}
 
-/* Sections */
 .section{padding:4rem 0}
 .section-label{font-family:var(--mono);font-size:.7rem;font-weight:500;color:var(--accent);text-transform:uppercase;letter-spacing:.2em;margin-bottom:.75rem}
 .section h2{font-family:var(--sans);font-size:2rem;color:var(--text);margin-bottom:1rem;letter-spacing:-.01em;font-weight:700}
 .section p{color:var(--text-muted);margin-bottom:1rem;max-width:600px}
 
-/* Problem / solution */
 .problem-text{font-family:var(--sans);font-size:1.35rem;color:var(--text-muted);line-height:1.6;max-width:600px;margin-bottom:1rem}
 .problem-text strong{color:var(--text)}
 
-/* How it works cards */
 .how-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:2rem}
 .how-card{background:var(--bg-card);backdrop-filter:blur(12px);border:1px solid var(--border);border-radius:12px;padding:1.5rem;transition:border-color .2s}
 .how-card:hover{border-color:var(--accent)}
@@ -51840,7 +51792,6 @@ a:hover{color:var(--accent-hover);text-decoration:underline}
 .how-card pre{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:.75rem;font-size:.75rem;color:var(--text-muted);line-height:1.5;overflow-x:auto}
 .how-card code{font-family:var(--mono);font-size:.75rem}
 
-/* Changes */
 .change-entry{padding:.75rem 0;border-bottom:1px solid rgba(51,65,85,0.6)}
 .change-entry:last-child{border-bottom:none}
 .change-header{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;margin-bottom:.2rem}
@@ -51851,7 +51802,6 @@ a:hover{color:var(--accent-hover);text-decoration:underline}
 .see-all-link{display:inline-flex;align-items:center;gap:.3rem;margin-top:1rem;font-size:.85rem;font-family:var(--mono);color:var(--accent);text-decoration:none;padding:.5rem 0}
 .see-all-link:hover{color:var(--accent-hover);text-decoration:underline}
 
-/* Recent Changes Section */
 .rc-list{display:flex;flex-direction:column;gap:.5rem;margin-top:1rem}
 .rc-entry{padding:.75rem 1rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);transition:border-color .2s}
 .rc-entry:hover{border-color:var(--accent)}
@@ -51861,7 +51811,6 @@ a:hover{color:var(--accent-hover);text-decoration:underline}
 .rc-date{font-family:var(--mono);color:var(--text-dim);font-size:.75rem;margin-left:auto}
 .rc-summary{color:var(--text-muted);font-size:.85rem}
 
-/* Deadlines */
 .deadlines-section{background:linear-gradient(180deg,rgba(248,81,73,0.04) 0%,transparent 100%);border:1px solid rgba(248,81,73,0.15);border-radius:12px;padding:1.5rem;margin-bottom:2rem}
 .deadline-item{display:flex;gap:1rem;padding:.75rem 0;border-bottom:1px solid rgba(51,65,85,0.6);align-items:flex-start}
 .deadline-item:last-child{border-bottom:none}
@@ -51875,7 +51824,6 @@ a:hover{color:var(--accent-hover);text-decoration:underline}
 .deadline-header{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;margin-bottom:.2rem}
 .deadline-date{font-family:var(--mono);color:var(--text-dim);font-size:.75rem;margin-left:auto}
 
-/* Changing Soon */
 .cs-list{display:flex;flex-direction:column;gap:0}
 .cs-entry{display:flex;gap:1rem;padding:.75rem 0;border-bottom:1px solid rgba(51,65,85,0.6);align-items:flex-start}
 .cs-entry:last-child{border-bottom:none}
@@ -51889,7 +51837,6 @@ a:hover{color:var(--accent-hover);text-decoration:underline}
 .cs-rel{font-family:var(--mono);color:var(--text-dim);font-size:.75rem;margin-left:auto}
 .cs-summary{color:var(--text-muted);font-size:.85rem;line-height:1.4}
 
-/* Browse */
 .browse-controls{margin-bottom:1.25rem}
 .search-input{width:100%;padding:.75rem 1rem;background:var(--bg-elevated);border:1px solid var(--border);border-radius:10px;color:var(--text);font-family:var(--sans);font-size:.9rem;outline:none;transition:border-color .2s}
 .search-input:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-glow)}
@@ -51912,7 +51859,6 @@ a:hover{color:var(--accent-hover);text-decoration:underline}
 .show-more:hover{border-color:var(--accent);background:var(--accent-glow)}
 .browse-status{color:var(--text-dim);font-size:.8rem;margin-top:.5rem;font-family:var(--mono)}
 
-/* Connect */
 .connect-block{background:var(--bg-card);backdrop-filter:blur(12px);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin-top:1.5rem}
 .connect-block pre{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:1rem;overflow-x:auto;font-size:.8rem;color:var(--text-muted);line-height:1.5;margin-top:.75rem;position:relative}
 .connect-block code{font-family:var(--mono)}
@@ -51932,13 +51878,11 @@ a:hover{color:var(--accent-hover);text-decoration:underline}
 .transport-content{display:none}
 .transport-content.active{display:block}
 
-/* Badges row */
 .badges{display:flex;gap:1rem;flex-wrap:wrap;margin-top:1.5rem}
 .badge{display:inline-flex;align-items:center;gap:.5rem;padding:.5rem 1rem;border:1px solid var(--border);border-radius:10px;color:var(--text-muted);font-size:.85rem;transition:all .2s}
 .badge:hover{border-color:var(--accent);color:var(--text);text-decoration:none}
 .badge-dot{width:6px;height:6px;border-radius:50%;background:var(--accent)}
 
-/* Stack builder */
 .sb-form{display:flex;gap:.75rem;margin-top:1.5rem}
 .sb-input{flex:1;padding:.75rem 1rem;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:.95rem;font-family:var(--sans);outline:none;transition:border-color .2s}
 .sb-input:focus{border-color:var(--accent)}
@@ -51972,11 +51916,9 @@ a:hover{color:var(--accent-hover);text-decoration:underline}
 .sb-cta p{max-width:none;margin:0 auto .5rem;text-align:center;font-size:.9rem;color:var(--text-muted)}
 .sb-cta a{font-family:var(--mono);font-size:.85rem}
 
-/* Footer */
 footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}
 footer a{color:var(--text-muted)}
 
-/* Responsive */
 @media(max-width:768px){
   .hero{padding:3rem 0 2rem}
   .hero h1{font-size:2.25rem}
@@ -52331,7 +52273,6 @@ ${buildRecentChangesSection()}
   <footer>AgentDeals &mdash; open source, built for agents | <a href="/developers">REST API</a> | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
 </div>
 <script>
-/* Client tab switching */
 (function(){
   var tabs=document.querySelectorAll('.client-tab');
   var panels=document.querySelectorAll('.client-panel');
@@ -52344,7 +52285,6 @@ ${buildRecentChangesSection()}
       if(panel)panel.classList.add('active');
     });
   });
-  /* Transport toggle within each panel */
   document.querySelectorAll('.transport-toggle').forEach(function(toggle){
     var block=toggle.closest('.connect-block');
     toggle.querySelectorAll('.transport-btn').forEach(function(btn){
@@ -52357,7 +52297,6 @@ ${buildRecentChangesSection()}
     });
   });
 })();
-/* Copy config button */
 function copyConfig(btn){
   var code=btn.parentElement.querySelector('code');
   if(!code)return;

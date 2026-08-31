@@ -81,7 +81,6 @@ function render(args, data) {
   const el = document.getElementById("app");
   if (!data) { el.innerHTML = '<div class="empty">Loading...</div>'; return; }
 
-  // Category list mode
   if (Array.isArray(data) && data[0]?.name && data[0]?.count !== undefined) {
     const total = data.reduce((s, c) => s + c.count, 0);
     el.innerHTML = \`
@@ -96,7 +95,6 @@ function render(args, data) {
     return;
   }
 
-  // Single vendor detail mode
   if (data.vendor && !data.results) {
     const stability = data.stability || "unknown";
     const stabBadge = stability === "stable" ? "badge-green" : stability === "watch" ? "badge-yellow" : stability === "volatile" ? "badge-red" : "badge-gray";
@@ -123,7 +121,6 @@ function render(args, data) {
     return;
   }
 
-  // Search results mode
   const results = data.results || [];
   const total = data.total || results.length;
   el.innerHTML = \`
@@ -168,7 +165,6 @@ function render(args, data) {
   if (!data) { el.innerHTML = '<div class="empty">Loading...</div>'; return; }
   const mode = args.mode || "recommend";
 
-  // Recommend mode
   if (mode === "recommend" && data.recommendations) {
     const recs = data.recommendations || [];
     el.innerHTML = \`
@@ -189,7 +185,6 @@ function render(args, data) {
     return;
   }
 
-  // Estimate mode
   if (mode === "estimate" && (data.services || data.costs)) {
     const services = data.services || data.costs || [];
     const total = data.total_monthly || services.reduce((s, v) => s + (v.monthly_cost || 0), 0);
@@ -216,7 +211,6 @@ function render(args, data) {
     return;
   }
 
-  // Audit mode
   if (mode === "audit") {
     const risks = data.risks || data.risk_flags || [];
     const gaps = data.gaps || data.coverage_gaps || [];
@@ -247,7 +241,6 @@ function render(args, data) {
     return;
   }
 
-  // Fallback: render raw data
   el.innerHTML = \`<div class="card"><h2>Stack Analysis</h2><pre style="font-size:12px;color:#94a3b8;overflow-x:auto;white-space:pre-wrap">\${esc(JSON.stringify(data, null, 2))}</pre></div>\`;
 }
 
@@ -273,13 +266,10 @@ function render(args, data) {
   const el = document.getElementById("app");
   if (!data) { el.innerHTML = '<div class="empty">Loading...</div>'; return; }
 
-  // Single vendor risk check
   if (data.risk_level || data.stability) {
     const vendor = data.vendor || (args.vendors && args.vendors[0]) || "Vendor";
     let risk = data.risk_level || data.stability || "unknown";
     const cause = data.risk_cause || null;
-    // #1038: caution/risky are negative claims about a named company. They
-    // render only alongside the dated record that produced them.
     const showRisk = risk === "stable" || risk === "low" || risk === "unknown" || !!cause;
     if (!showRisk) risk = "unknown";
     const riskBadge = risk === "stable" || risk === "low" ? "badge-green" : risk === "watch" || risk === "medium" ? "badge-yellow" : risk === "unknown" ? "badge-gray" : "badge-red";
@@ -305,7 +295,6 @@ function render(args, data) {
     return;
   }
 
-  // Two-vendor comparison
   const vendorA = data.vendor_a || data.vendors?.[0] || {};
   const vendorB = data.vendor_b || data.vendors?.[1] || {};
   const nameA = vendorA.vendor || vendorA.name || (args.vendors && args.vendors[0]) || "Vendor A";
@@ -384,14 +373,12 @@ function render(args, data) {
   const el = document.getElementById("app");
   if (!data) { el.innerHTML = '<div class="empty">Loading...</div>'; return; }
 
-  // Detect personalized vs standard response
   const isPersonalized = Array.isArray(data.your_stack_changes);
   const changes = isPersonalized ? data.your_stack_changes : (data.deal_changes || data.changes || []);
   const advisory = isPersonalized ? (data.advisory || []) : [];
   const summary = isPersonalized ? data.summary : null;
   const expiring = data.expiring_deals || data.expiring || [];
 
-  // Categorize changes
   const removals = changes.filter(c => c.change_type === "free_tier_removed" || c.change_type === "open_source_killed" || c.change_type === "product_deprecated");
   const reductions = changes.filter(c => c.change_type === "limits_reduced" || c.change_type === "restriction");
   const positive = changes.filter(c => c.change_type === "limits_increased" || c.change_type === "new_free_tier" || c.change_type === "startup_program_expanded");
@@ -479,7 +466,6 @@ function render(args, data) {
     <div class="link-row"><a href="${BASE_URL}/pricing-changes" target="_blank">Full changelog on agentdeals.dev \\u2192</a></div>
   \`;
 
-  // Wire up filter buttons
   el.querySelectorAll(".filter-btn").forEach(btn => {
     btn.addEventListener("click", () => {
       el.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
@@ -488,7 +474,6 @@ function render(args, data) {
     });
   });
 
-  // Wire up advisory toggle
   const advisoryEl = document.getElementById("advisory-section");
   if (advisoryEl) {
     advisoryEl.querySelector("h3").addEventListener("click", () => {
