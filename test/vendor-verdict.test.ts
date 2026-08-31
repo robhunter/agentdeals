@@ -5,7 +5,6 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import {
   CHANGE_KIND_NOUN,
-  DEMOTING_KINDS_PHRASE,
   narrowingSentence,
   publishedVendorLevel,
   vendorVerdictSentence,
@@ -101,7 +100,7 @@ describe("vendor verdict — a stable rating reports direction, not volume", () 
   it("says the one record it holds did not narrow the terms", () => {
     const c = change({ change_type: "limits_increased" });
     const sentence = vendorVerdictSentence(input({ changes: [c] }));
-    assert.ok(sentence.includes(`we hold no ${DEMOTING_KINDS_PHRASE} for this vendor`));
+    assert.ok(sentence.startsWith("We rate it stable."));
     assert.ok(sentence.endsWith("The one change we have recorded did not narrow the terms."));
   });
 
@@ -443,8 +442,9 @@ describe("vendor verdict — as rendered", () => {
 
   it("counts one narrowing on the route that carried a repair as a second", async () => {
     const digitalocean = verdictParagraph(await get("/vendor/digitalocean"));
-    assert.match(digitalocean, /One recorded restriction narrowed the terms/);
+    assert.match(digitalocean, /one recorded restriction/);
     assert.doesNotMatch(digitalocean, /2 recorded changes narrowed the terms/);
+    assert.doesNotMatch(digitalocean, /corrects our own earlier entry/);
 
     const neo4j = verdictParagraph(await get("/vendor/neo4j-auradb"));
     assert.match(neo4j, /The one record we hold corrects our own earlier entry rather than reporting a change the vendor made\./);
@@ -461,7 +461,8 @@ describe("vendor verdict — as rendered", () => {
       const verdict = verdictParagraph(html);
       assert.doesNotMatch(verdict, STABILITY_SCALE_WORDS, `/vendor/${slug} verdict`);
       assert.ok(verdict.includes(row.sentence), `/vendor/${slug} verdict does not render "${row.sentence}"`);
-      assert.match(row.sentence, /narrowed the terms/, `/vendor/${slug} still names the records that pointed down`);
+      assert.notStrictEqual(row.expected, "stable", `/vendor/${slug} still reads stable over a record that points down`);
+      assert.match(row.sentence, /one recorded /, `/vendor/${slug} still names no record behind its level`);
     }
   });
 

@@ -21,21 +21,39 @@ describe("checkVendorRisk logic", () => {
     assert.ok(result.result.category.length > 0);
   });
 
-  it("returns caution for vendor with pricing_restructured", async () => {
-    const { checkVendorRisk } = await import("../dist/data.js");
-    const result = checkVendorRisk("Vercel");
-    assert.ok(!("error" in result), "Vercel should be found");
-    assert.strictEqual(result.result.risk_level, "caution", "Vercel should be caution due to pricing_restructured");
-    assert.ok(result.result.changes.length > 0, "Should have recorded changes");
-    assert.ok(result.result.changes.some(c => c.change_type === "pricing_restructured"), "Should have pricing_restructured change");
+  it("gives every demoting change type the level the risk map assigns it", async () => {
+    const { vendorRiskAssessment, RISK_DEMOTION, VERDICT_WINDOW_DAYS } = await import("../dist/data.js");
+    const insideTheWindow = new Date(Date.now() - (VERDICT_WINDOW_DAYS - 1) * 24 * 60 * 60 * 1000)
+      .toISOString().slice(0, 10);
+    const demoting = Object.entries(RISK_DEMOTION).filter(([, level]) => level !== null);
+    assert.ok(demoting.length > 0, "no change type demotes, so this asserts nothing");
+    for (const [changeType, level] of demoting) {
+      const record = {
+        vendor: "V", change_type: changeType, date: insideTheWindow, summary: "s",
+        previous_state: "", current_state: "", impact: "medium", source_url: "", category: "c", alternatives: [],
+      };
+      const assessment = vendorRiskAssessment([record]);
+      assert.strictEqual(assessment.level, level, `${changeType} inside the window`);
+      assert.strictEqual(assessment.cause?.change_type, changeType, `${changeType} names its own record`);
+    }
   });
 
-  it("returns caution for vendor with limits_reduced", async () => {
-    const { checkVendorRisk } = await import("../dist/data.js");
-    const result = checkVendorRisk("Supabase");
-    assert.ok(!("error" in result), "Supabase should be found");
-    assert.strictEqual(result.result.risk_level, "caution", "Supabase should be caution due to limits_reduced");
-    assert.ok(result.result.changes.length > 0, "Should have recorded changes");
+  it("reports the level the risk engine reached for every vendor it demotes", async () => {
+    const { checkVendorRisk, loadOffers, loadDealChanges, vendorRiskAssessment } = await import("../dist/data.js");
+    const changes = loadDealChanges();
+    const forVendor = (v: string) => changes.filter(c => c.vendor.toLowerCase() === v.toLowerCase());
+    const demoted = [...new Set(loadOffers().map(o => o.vendor))]
+      .filter(v => vendorRiskAssessment(forVendor(v)).level !== "stable");
+    assert.ok(demoted.length > 0, "the index holds no vendor the risk scale demotes");
+    let published = 0;
+    for (const vendor of demoted) {
+      const result = checkVendorRisk(vendor);
+      if ("error" in result || result.result.risk_level === null) continue;
+      published++;
+      assert.strictEqual(result.result.risk_level, vendorRiskAssessment(forVendor(vendor)).level, vendor);
+      assert.ok(result.result.changes.length > 0, `${vendor} carries a level with no record behind it`);
+    }
+    assert.ok(published > 0, "no demoted vendor published a level");
   });
 
   it("returns error with suggestions for unknown vendor", async () => {

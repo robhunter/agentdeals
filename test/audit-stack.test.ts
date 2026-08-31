@@ -46,12 +46,19 @@ describe("auditStack logic", () => {
   });
 
   it("detects risk from deal changes", async () => {
-    const { auditStack } = await import("../dist/data.js");
-    const result = auditStack(["Vercel", "Supabase"]);
+    const { auditStack, loadOffers, loadDealChanges, vendorRiskLevel } = await import("../dist/data.js");
+    const changes = loadDealChanges();
+    const demoted = [...new Set(loadOffers().map(o => o.vendor))]
+      .filter(v => vendorRiskLevel(changes.filter(c => c.vendor.toLowerCase() === v.toLowerCase())) !== "stable")
+      .slice(0, 2);
+    assert.strictEqual(demoted.length, 2, "the index holds fewer than two vendors the risk scale demotes");
+    const result = auditStack(demoted);
     assert.ok(result.risks_found >= 2, `Should find at least 2 risks, got ${result.risks_found}`);
-    const vercel = result.services.find(s => s.vendor === "Vercel");
-    assert.ok(vercel);
-    assert.strictEqual(vercel.risk_level, "caution");
+    for (const vendor of demoted) {
+      const service = result.services.find(s => s.vendor === vendor);
+      assert.ok(service, `${vendor} is missing from the audit`);
+      assert.notStrictEqual(service.risk_level, "stable", `${vendor} audits as stable`);
+    }
   });
 
   it("includes recommendations for risky/caution vendors", async () => {

@@ -19,7 +19,7 @@ import { LINK_GRACE_DAYS } from "./link-health.js";
 import { levelWithheldReason, withheldLevelClause, withheldLevelSentence } from "./source-check.js";
 import { buildComparisonMap, comparisonSlug } from "./comparison-pairs.js";
 import { stabilityFaqAnswer, stabilityVerdictClause, type ComparisonSide, type StabilityRating } from "./comparison-verdict.js";
-import { publishedVendorLevel, vendorVerdictSentence, narrowingSentence, changeKindNoun, DEMOTING_KINDS_PHRASE, type VendorVerdictInput } from "./vendor-verdict.js";
+import { publishedVendorLevel, vendorVerdictSentence, narrowingSentence, changeKindNoun, type VendorVerdictInput } from "./vendor-verdict.js";
 import { growthLimitPhrases } from "./growth-limits.js";
 import { registerAgent, authenticateRequest, validateVestauthUrl, hashApiKey, updateAgentX402Address, getAgentById } from "./agents.js";
 import { attributeAuthenticatedRequest } from "./referral-attribution.js";
@@ -39,7 +39,7 @@ import { linkifyVerdictBlocks, overdueReport, pageCompiledClause, pageDataProven
 import { faqPageJsonLd, type FaqItem } from "./faq-provenance.js";
 import { SSE_KEEPALIVE_FRAME, keepaliveIntervalMs, sessionRecoveryBody } from "./mcp-stream.js";
 import { ASSISTANTS_API_SHUTDOWN } from "./assistants-shutdown.js";
-import { discontinuedOnOrBefore } from "./product-deprecation.js";
+import { discontinuedOnOrBefore, PRODUCT_DEPRECATED } from "./product-deprecation.js";
 import { rankOffers, rankForListing, rotateListing, utcDate, CRITERIA_PATH, DEMOTE_ONLY_POLICY, DISCLOSURE_RATIONALE, TIE_BREAK_ALGORITHM, GATE_TABLE, DEMERIT_TABLE, NOT_FREE_TIER_RULES, TIME_LIMITED_TIER_RULES, type TieBreak } from "./ranking.js";
 import type { RankedEntry, RankingResult } from "./ranking.js";
 import { verificationLedger, QUARANTINE_AFTER_FAILURES } from "./verification-state.js";
@@ -690,14 +690,14 @@ function getBadgeStatus(vendorSlug: string): { status: BadgeStatus; label: strin
   if (!vendorName) return { status: "unknown", label: "unknown", verifiedDate: null };
 
   const vendorChanges = dealChanges.filter(c => toSlug(c.vendor) === vendorSlug);
-  const hasRemoval = vendorChanges.some(c =>
-    c.change_type === "free_tier_removed" || c.change_type === "product_deprecated" || c.change_type === "open_source_killed"
-  );
-  if (hasRemoval) {
-    const removal = vendorChanges.find(c =>
-      c.change_type === "free_tier_removed" || c.change_type === "product_deprecated" || c.change_type === "open_source_killed"
-    )!;
-    return { status: "removed", label: removal.change_type === "product_deprecated" ? "deprecated" : "free tier removed", verifiedDate: removal.date };
+  const assessment = vendorRiskAssessment(vendorChanges);
+
+  if (assessment.level === "risky" && assessment.cause) {
+    return {
+      status: "removed",
+      label: assessment.cause.change_type === PRODUCT_DEPRECATED ? "deprecated" : "free tier removed",
+      verifiedDate: assessment.cause.date,
+    };
   }
 
   const vendorOffers = offers.filter(o => toSlug(o.vendor) === vendorSlug);
@@ -706,13 +706,11 @@ function getBadgeStatus(vendorSlug: string): { status: BadgeStatus; label: strin
   const latestVerified = vendorOffers.reduce((max, o) => o.verifiedDate > max ? o.verifiedDate : max, vendorOffers[0].verifiedDate);
   const daysSince = Math.floor((Date.now() - new Date(latestVerified).getTime()) / (1000 * 60 * 60 * 24));
 
-  const hasRecentNegativeChange = vendorChanges.some(c =>
-    (c.change_type === "limits_reduced" || c.change_type === "pricing_restructured" || c.change_type === "pricing_model_change") &&
-    Math.floor((Date.now() - new Date(c.date).getTime()) / (1000 * 60 * 60 * 24)) <= 90
-  );
-
-  if (hasRecentNegativeChange || daysSince > 30) {
-    return { status: "at-risk", label: hasRecentNegativeChange ? "at risk" : "stale", verifiedDate: latestVerified };
+  if (assessment.level === "caution") {
+    return { status: "at-risk", label: "at risk", verifiedDate: latestVerified };
+  }
+  if (daysSince > 30) {
+    return { status: "at-risk", label: "stale", verifiedDate: latestVerified };
   }
 
   return { status: "active", label: "active", verifiedDate: latestVerified };
@@ -4060,7 +4058,7 @@ ${allCompareLinks.join("\n")}
   const faqReliableAnswer = levelWithheld
     ? `We cannot say. ${withheldLevelSentence(levelWithheld, vendorName, unconfirmableSince)} Nothing we have read describes these terms, so we are not publishing a stability judgement for this vendor until that is fixed.`
     : riskLevel === "stable"
-    ? `${vendorName}'s free tier is considered stable: we hold no ${DEMOTING_KINDS_PHRASE} on record for this vendor.${vendorChanges.length > 0 ? ` ${narrowingSentence(vendorChanges)} See the pricing history below.` : ""}`
+    ? `${vendorName}'s free tier is considered stable.${vendorChanges.length > 0 ? ` ${narrowingSentence(vendorChanges)} See the pricing history below.` : ""}`
     : riskLevel === "caution"
     ? `${vendorName}'s free tier requires caution because of one specific recorded change${riskCause ? `, ${changeDateClause(riskCause)}: ${riskCause.summary}` : "."}`
     : `${vendorName}'s free tier is considered risky because of one specific recorded change${riskCause ? `, ${changeDateClause(riskCause)}: ${riskCause.summary}` : "."} Consider alternatives.`;
@@ -4074,7 +4072,7 @@ ${allCompareLinks.join("\n")}
       : `${vendorName}'s free tier is usable for prototyping and development, but we rate it ${riskLevel}${riskCause ? ` because of one recorded ${changeKindNoun(riskCause.change_type)}, ${changeDateClause(riskCause)}` : ""}. Consider alternatives with more stable pricing for critical services.`)
     : `${vendorName} does not offer a free tier for production use. Consider free alternatives in ${primary.category}.`;
   const faqChangedAnswer = vendorChanges.length > 0
-    ? `Yes, ${vendorName} has had ${vendorChanges.length} recorded pricing change${vendorChanges.length > 1 ? "s" : ""}. Most recently: ${vendorChanges[0].summary} (${changeDateLabel(vendorChanges[0])}).`
+    ? `${vendorName} has had ${vendorChanges.length} recorded pricing change${vendorChanges.length > 1 ? "s" : ""}. Most recently: ${vendorChanges[0].summary} (${changeDateLabel(vendorChanges[0])}).`
     : levelWithheld
     ? `We hold no recorded pricing changes for ${vendorName}, but ${withheldClause}, so that is a statement about our records rather than a positive signal.`
     : `No, ${vendorName} has had no recorded pricing changes. This is a positive stability signal.`;
@@ -4440,7 +4438,7 @@ ${renderAuditBlock(altRanking.tie_break)}
 
   const topStableAlts = enrichedAlts.filter(a => a.risk_level === "stable").slice(0, 5);
   const faqBestAltsAnswer = topStableAlts.length > 0
-    ? `The best free alternatives to ${vendorName} include ${topStableAlts.map(a => `${a.vendor} (${a.tier})`).join(", ")}. We hold no free tier removal, limit reduction or pricing restructure on record for any of them.`
+    ? `The best free alternatives to ${vendorName} include ${topStableAlts.map(a => `${a.vendor} (${a.tier})`).join(", ")}.`
     : `There are ${enrichedAlts.length} free alternatives to ${vendorName} available. ${enrichedAlts.slice(0, 3).map(a => a.vendor).join(", ")} are among the options.`;
   const faqFreeTierAnswer = altLevelWithheld
     ? `We cannot confirm that today. ${altWithheldSentence} Our stored record says ${vendorName} offers a free tier (${primary.tier}), but we have not confirmed those terms against the source we cite.`
@@ -4451,7 +4449,7 @@ ${renderAuditBlock(altRanking.tie_break)}
     : `${vendorName}'s free tier (${primary.tier}) is considered risky because of one specific recorded change${riskCause ? `, ${changeDateClause(riskCause)}: ${riskCause.summary}` : "."} Consider migrating to a more stable alternative.`;
   const faqCountAnswer = `There are ${enrichedAlts.length} free alternatives to ${vendorName} tracked on AgentDeals across the ${listedCategories.join(", ")} categor${listedCategories.length > 1 ? "ies" : "y"}.`;
   const faqChangesAnswer = vendorChanges.length > 0
-    ? `Yes, ${vendorName} has ${vendorChanges.length} recorded pricing change${vendorChanges.length !== 1 ? "s" : ""}. The most recent was ${changeDateClause(vendorChanges[0])}: ${vendorChanges[0].summary}`
+    ? `${vendorName} has ${vendorChanges.length} recorded pricing change${vendorChanges.length !== 1 ? "s" : ""}. The most recent was ${changeDateClause(vendorChanges[0])}: ${vendorChanges[0].summary}`
     : altLevelWithheld
     ? `We hold no recorded pricing changes for ${vendorName}, but ${altWithheldClause}, so that is a statement about our records rather than a positive signal.`
     : `No, ${vendorName} has no recorded pricing changes on AgentDeals. This indicates stable pricing.`;
@@ -19172,7 +19170,7 @@ ${mcpCtaCss()}
   </div>
 
   <h2 id="changes">6. Recent Deal Changes</h2>
-  <p class="section-intro">Both platforms have had significant free tier changes recently. From our deal change tracker:</p>
+  <p class="section-intro">From our deal change tracker:</p>
   <div style="display:grid;gap:.75rem;margin:1rem 0">
     ${supabasePause ? `<div class="diff-card" style="border-left-color:#d29922">
       <h3>Supabase — ${escHtmlServer(supabasePause.date)}</h3>
@@ -19494,7 +19492,7 @@ ${mcpCtaCss()}
   </div>
 
   <h2 id="changes">6. Recent Deal Changes</h2>
-  <p class="section-intro">Both platforms have restructured their pricing recently. From our deal change tracker:</p>
+  <p class="section-intro">From our deal change tracker:</p>
   <div style="display:grid;gap:.75rem;margin:1rem 0">
     ${vercelChange ? `<div class="diff-card" style="border-left-color:#d29922">
       <h3>Vercel — ${escHtmlServer(vercelChange.date)}</h3>
@@ -19813,7 +19811,7 @@ ${mcpCtaCss()}
   </div>
 
   <h2 id="changes">6. Recent Deal Changes</h2>
-  <p class="section-intro">Both platforms have restructured their pricing recently. From our deal change tracker:</p>
+  <p class="section-intro">From our deal change tracker:</p>
   <div style="display:grid;gap:.75rem;margin:1rem 0">
     ${neonChange ? `<div class="diff-card" style="border-left-color:#d29922">
       <h3>Neon — ${escHtmlServer(neonChange.date)}</h3>
@@ -20134,7 +20132,7 @@ ${mcpCtaCss()}
   </div>
 
   <h2 id="changes">6. Recent Deal Changes</h2>
-  <p class="section-intro">Both platforms have evolved their free tier positioning recently. From our deal change tracker:</p>
+  <p class="section-intro">From our deal change tracker:</p>
   <div style="display:grid;gap:.75rem;margin:1rem 0">
     ${railwayChange ? `<div class="diff-card" style="border-left-color:#d29922">
       <h3>Railway — ${escHtmlServer(railwayChange.date)}</h3>
