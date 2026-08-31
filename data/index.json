@@ -107,6 +107,11 @@
         "taxonomy": "Cloud Hosting",
         "labels": [
           {
+            "subtype": "static_site",
+            "source_url": "https://render.com/docs/static-sites",
+            "source_quote": "Host your website's frontend (React, Next.js, etc.) over a global CDN."
+          },
+          {
             "subtype": "container_app",
             "source_url": "https://render.com/docs",
             "source_quote": "Run your code in just a few clicks with Render. You decide what's possible, and we'll help bring it to life."
