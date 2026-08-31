@@ -4088,7 +4088,7 @@ ${allCompareLinks.join("\n")}
     { q: `What is ${vendorName}'s free tier?`, a: faqTierAnswer },
     { q: `Is ${vendorName}'s free tier reliable?`, a: faqReliableAnswer },
     { q: `Is ${vendorName}'s free tier good for production?`, a: faqProductionAnswer },
-    { q: `What changed in ${vendorName}'s pricing recently?`, a: faqChangedAnswer },
+    { q: `What changed in ${vendorName}'s pricing?`, a: faqChangedAnswer },
     ...(alternatives.length > 0 ? [{ q: `What are the best free alternatives to ${vendorName}?`, a: faqAlternativesAnswer }] : []),
     { q: `When will I outgrow ${vendorName}'s free tier?`, a: faqOutgrowAnswer },
     { q: `What category is ${vendorName} in?`, a: faqCategoryAnswer },
@@ -4458,7 +4458,7 @@ ${renderAuditBlock(altRanking.tie_break)}
     { q: `What are the best free alternatives to ${vendorName}?`, a: faqBestAltsAnswer },
     { q: `Is ${vendorName}'s free tier still available?`, a: faqFreeTierAnswer },
     { q: `How many free alternatives to ${vendorName} exist?`, a: faqCountAnswer },
-    { q: `Has ${vendorName} changed their pricing recently?`, a: faqChangesAnswer },
+    { q: `Has ${vendorName} changed their pricing?`, a: faqChangesAnswer },
   ];
 
   const altFaqJsonLd = faqPageJsonLd("/alternative-to/" + slug, altFaqItems);
