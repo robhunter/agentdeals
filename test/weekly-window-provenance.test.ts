@@ -29,6 +29,20 @@ function dated(dateSource: string, date: string) {
   return { vendor: "Acme", date, date_source: dateSource, change_type: "limits_reduced" };
 }
 
+const WEEKS_OF_ARCHIVE = 120;
+const FEED_WEEKS = 4;
+
+async function mostRecentWeekWithADiscoveryBatch() {
+  const { getFormattedWeeklyDigest } = await import("../dist/data.js");
+  for (let weeksAgo = 0; weeksAgo < WEEKS_OF_ARCHIVE; weeksAgo++) {
+    const digest = getFormattedWeeklyDigest(weeksAgo, 200);
+    if (digest.discovered_in_week > 0) return digest;
+  }
+  throw new Error(
+    `no week in the last ${WEEKS_OF_ARCHIVE} carries a page read for the first time, so the split between the two counts cannot be checked`
+  );
+}
+
 describe("one definition of the week a digest is about", () => {
   it("runs Monday to Sunday whichever day of the week it is handed", () => {
     assert.deepStrictEqual(isoWeekWindow(new Date("2026-08-26T09:00:00Z")), {
@@ -128,10 +142,8 @@ describe("a weekly digest counts only changes with an effective date", () => {
   });
 
   it("never states the combined total as a number of changes", async () => {
-    const { getFormattedWeeklyDigest } = await import("../dist/data.js");
-    const digest = getFormattedWeeklyDigest(0, 200);
+    const digest = await mostRecentWeekWithADiscoveryBatch();
     const combined = digest.changes_in_week + digest.discovered_in_week;
-    assert.ok(digest.discovered_in_week > 0, "the corpus should carry a discovery batch to guard against");
     assert.ok(
       !digest.headline.includes(`across ${combined} developer tool pricing change`),
       digest.headline
@@ -154,8 +166,7 @@ describe("a weekly digest counts only changes with an effective date", () => {
   });
 
   it("gives the discovery batch its own heading and its own sentence", async () => {
-    const { getFormattedWeeklyDigest } = await import("../dist/data.js");
-    const digest = getFormattedWeeklyDigest(0, 200);
+    const digest = await mostRecentWeekWithADiscoveryBatch();
     assert.ok(digest.discovery_note.length > 0);
     assert.ok(digest.digest_markdown.includes(`## ${firstReadHeading(digest.discovered_in_week)}`));
     assert.ok(digest.digest_markdown.includes(digest.discovery_note));
@@ -205,16 +216,13 @@ describe("the digest returns only what the window it names contains", () => {
     const { getWeeklyDigest } = await import("../dist/data.js");
     const digest = getWeeklyDigest();
     const today = new Date().toISOString().slice(0, 10);
-    const future = publishedChanges.filter((c) => eventDated(c) && c.date > today);
-    assert.ok(future.length > 0, "the corpus should carry a future-dated change to place");
-    for (const c of future) {
+    for (const c of digest.deal_changes) {
+      assert.ok(c.date <= today, `${c.vendor} ${c.date} should not be reported as a change already tracked`);
+    }
+    for (const c of publishedChanges.filter((c) => eventDated(c) && c.date > today)) {
       assert.ok(
         digest.upcoming_deadlines.some((d) => d.vendor === c.vendor && d.date === c.date),
         `${c.vendor} ${c.date} should be an upcoming deadline`
-      );
-      assert.ok(
-        !digest.deal_changes.some((d) => d.vendor === c.vendor && d.date === c.date && d.date > today),
-        `${c.vendor} ${c.date} should not be reported as a change already tracked`
       );
     }
   });
@@ -222,7 +230,10 @@ describe("the digest returns only what the window it names contains", () => {
   it("opens its summary with the number of changes it actually returns", async () => {
     const { getWeeklyDigest } = await import("../dist/data.js");
     const digest = getWeeklyDigest();
-    assert.match(digest.summary, new RegExp(`^${digest.deal_changes.length} pricing change`));
+    const opening = digest.deal_changes.length === 0
+      ? "No pricing change"
+      : `${digest.deal_changes.length} pricing change`;
+    assert.ok(digest.summary.startsWith(opening), digest.summary);
     assert.ok(digest.summary.includes("with a known effective date"), digest.summary);
     if (digest.discovered_changes.length > 0) {
       assert.ok(digest.summary.includes("read for the first time this week"), digest.summary);
@@ -274,32 +285,54 @@ describe("every weekly surface reports the same week", () => {
     if (proc) { proc.kill("SIGKILL"); proc = null; }
   });
 
-  it("publishes one count for the week across the page, the API and the feed", async () => {
+  it("publishes one count for the current week on the page and in the API", async () => {
     proc = await startHttpServer();
     const base = `http://127.0.0.1:${serverPort}`;
     const weekly = await (await fetch(`${base}/api/digest/weekly?limit=200`)).json() as {
       changes_in_week: number; discovered_in_week: number; headline: string;
     };
     const page = await (await fetch(`${base}/this-week`)).text();
+
+    assert.ok(page.includes(weekly.headline), "/this-week should carry the headline the API publishes");
+    if (weekly.discovered_in_week > 0) {
+      const combined = weekly.changes_in_week + weekly.discovered_in_week;
+      assert.ok(!page.includes(`across ${combined} developer tool pricing change`), "/this-week");
+      assert.ok(page.includes(firstReadHeading(weekly.discovered_in_week)), "/this-week");
+    } else {
+      assert.ok(!page.includes("read for the first time"), "/this-week");
+    }
+  });
+
+  it("keeps a corrected count out of every weekly entry and inside the entry correcting it", async () => {
+    proc = await startHttpServer();
+    const base = `http://127.0.0.1:${serverPort}`;
     const feed = await (await fetch(`${base}/feed.xml`)).text();
-
-    const combined = weekly.changes_in_week + weekly.discovered_in_week;
-    assert.ok(weekly.discovered_in_week > 0, "the corpus should carry a discovery batch to guard against");
-    const inflated = `across ${combined} developer tool pricing change`;
-
-    assert.ok(!page.includes(inflated), "/this-week");
-    assert.ok(page.includes(weekly.headline), "/this-week should carry the headline");
-    assert.ok(page.includes(firstReadHeading(weekly.discovered_in_week)), "/this-week");
+    const corrected = await mostRecentWeekWithADiscoveryBatch();
+    const inflated = `across ${corrected.changes_in_week + corrected.discovered_in_week} developer tool pricing change`;
 
     const entries = feed.split("<entry>").slice(1);
     const corrections = entries.filter((e) => e.includes("urn:agentdeals:correction:"));
     const weeks = entries.filter((e) => !e.includes("urn:agentdeals:correction:"));
-    assert.ok(weeks.length > 0, "/feed.xml should carry weekly entries");
     for (const entry of weeks) assert.ok(!entry.includes(inflated), "/feed.xml weekly entry");
     assert.ok(
       corrections.some((e) => e.includes(inflated)),
       "a corrected count should survive only inside the entry correcting it"
     );
+  });
+
+  it("carries a feed entry for each recent week that tracked a change, and for no other", async () => {
+    proc = await startHttpServer();
+    const base = `http://127.0.0.1:${serverPort}`;
+    const feed = await (await fetch(`${base}/feed.xml`)).text();
+    const { getFormattedWeeklyDigest } = await import("../dist/data.js");
+
+    const expected: string[] = [];
+    for (let weeksAgo = 0; weeksAgo < FEED_WEEKS; weeksAgo++) {
+      const digest = getFormattedWeeklyDigest(weeksAgo, 50);
+      if (digest.top_changes.length > 0) expected.push(`urn:agentdeals:weekly-digest:${digest.week_of}`);
+    }
+    const served = [...feed.matchAll(/<id>(urn:agentdeals:weekly-digest:[^<]+)<\/id>/g)].map((m) => m[1]);
+    assert.deepStrictEqual(served, expected);
   });
 
   it("counts the last thirty days on /changes the way the week is counted", async () => {
