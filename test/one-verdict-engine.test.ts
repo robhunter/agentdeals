@@ -1,0 +1,252 @@
+import { describe, it, before, after } from "node:test";
+import assert from "node:assert";
+import { spawn, type ChildProcess } from "node:child_process";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+import {
+  CHANGE_DIRECTION,
+  CHANGE_IS_AN_EVENT,
+  CHANGE_IS_A_CONDITION,
+  RISK_DEMOTION,
+  SEVERE_TYPES_WITHOUT_FLAT_DEMOTION,
+  VERDICT_WINDOW_DAYS,
+  VOLATILE_TYPES,
+  changeTypesThatCanDemote,
+  demotionInForce,
+  loadDealChanges,
+  loadOffers,
+  vendorRiskAssessment,
+  verdictHasLapsed,
+} from "../dist/data.js";
+import { PRODUCT_DEPRECATED, deprecationEndsTheListedProduct } from "../dist/product-deprecation.js";
+import { vendorSlugMap } from "../dist/vendor-slug.js";
+import type { DealChange } from "../src/types.ts";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const REPO = path.join(__dirname, "..");
+
+const DAY = 24 * 60 * 60 * 1000;
+const NOW = Date.parse("2026-06-15T00:00:00Z");
+
+function record(overrides: Partial<DealChange> = {}): DealChange {
+  return {
+    vendor: "V",
+    change_type: "pricing_restructured",
+    date: "2026-06-01",
+    summary: "s",
+    previous_state: "",
+    current_state: "",
+    impact: "medium",
+    source_url: "",
+    category: "c",
+    alternatives: [],
+    ...overrides,
+  } as DealChange;
+}
+
+const isoDaysBefore = (days: number) => new Date(NOW - days * DAY).toISOString().slice(0, 10);
+
+describe("#1206 one risk scale, and every change type sits on one side of it", () => {
+  it("classifies every change type the risk scale can act on as an event or a condition", () => {
+    const unclassified: string[] = [];
+    const both: string[] = [];
+    for (const changeType of changeTypesThatCanDemote()) {
+      const isEvent = CHANGE_IS_AN_EVENT.has(changeType);
+      const isCondition = CHANGE_IS_A_CONDITION.has(changeType);
+      if (!isEvent && !isCondition) unclassified.push(changeType);
+      if (isEvent && isCondition) both.push(changeType);
+    }
+    assert.deepStrictEqual(unclassified, [], "these demote a vendor and nothing says whether the verdict expires");
+    assert.deepStrictEqual(both, [], "these are classified as both an event and a condition");
+  });
+
+  it("keeps the types that skip the expiry check off the expiring side", () => {
+    const wrong = [...VOLATILE_TYPES].filter(t => CHANGE_IS_AN_EVENT.has(t as DealChange["change_type"]));
+    assert.deepStrictEqual(wrong, [], "these expire, and the volatility scale reads them without the expiry check");
+  });
+
+  it("acts on every change type it calls negative, apart from the one it judges per record", () => {
+    const ignored = Object.entries(CHANGE_DIRECTION)
+      .filter(([type, direction]) => direction === "negative" && RISK_DEMOTION[type as DealChange["change_type"]] === null)
+      .map(([type]) => type);
+    assert.deepStrictEqual(
+      ignored,
+      Object.keys(SEVERE_TYPES_WITHOUT_FLAT_DEMOTION),
+      "these point down and the risk scale does not act on them",
+    );
+  });
+
+  it("publishes no stable verdict over a record it calls negative and still holds in force", () => {
+    const held = new Map<string, DealChange[]>();
+    for (const c of loadDealChanges()) {
+      const key = c.vendor.toLowerCase();
+      if (!held.has(key)) held.set(key, []);
+      held.get(key)!.push(c);
+    }
+    const wrong: string[] = [];
+    let checked = 0;
+    for (const vendor of new Set(loadOffers().map(o => o.vendor))) {
+      const changes = held.get(vendor.toLowerCase()) ?? [];
+      const inForce = changes.filter(c =>
+        CHANGE_DIRECTION[c.change_type] === "negative" &&
+        !verdictHasLapsed(c) &&
+        !(c.change_type === PRODUCT_DEPRECATED && !deprecationEndsTheListedProduct(c)));
+      if (inForce.length === 0) continue;
+      checked++;
+      if (vendorRiskAssessment(changes).level === "stable") {
+        wrong.push(`${vendor} holds ${inForce.map(c => c.change_type).join(", ")} and reads stable`);
+      }
+    }
+    assert.ok(checked > 0, "no vendor holds a record that points down, so this asserts nothing");
+    assert.deepStrictEqual(wrong.slice(0, 20), [], `stable verdicts over a record that points down:\n${wrong.slice(0, 20).join("\n")}`);
+  });
+});
+
+describe("#1206 an event verdict expires, a condition verdict does not", () => {
+  it("drops an event verdict once the record falls outside the window", () => {
+    for (const changeType of CHANGE_IS_AN_EVENT) {
+      if (RISK_DEMOTION[changeType] === null) continue;
+      const inside = record({ change_type: changeType, date: isoDaysBefore(VERDICT_WINDOW_DAYS - 1) });
+      const outside = record({ change_type: changeType, date: isoDaysBefore(VERDICT_WINDOW_DAYS + 1) });
+      assert.strictEqual(verdictHasLapsed(inside, NOW), false, `${changeType} inside the window`);
+      assert.strictEqual(verdictHasLapsed(outside, NOW), true, `${changeType} outside the window`);
+      assert.strictEqual(vendorRiskAssessment([inside], NOW).level, RISK_DEMOTION[changeType], changeType);
+      assert.strictEqual(vendorRiskAssessment([outside], NOW).level, "stable", changeType);
+      assert.strictEqual(vendorRiskAssessment([outside], NOW).cause, null, changeType);
+    }
+  });
+
+  it("holds a condition verdict however old the record is", () => {
+    for (const changeType of CHANGE_IS_A_CONDITION) {
+      const ancient = record({ change_type: changeType, date: isoDaysBefore(VERDICT_WINDOW_DAYS * 10) });
+      assert.strictEqual(verdictHasLapsed(ancient, NOW), false, changeType);
+      assert.strictEqual(demotionInForce(ancient, NOW), demotionInForce(record({ change_type: changeType }), NOW), changeType);
+    }
+  });
+
+  it("keeps the newest record in force when an older one on the same vendor has expired", () => {
+    const expired = record({ change_type: "pricing_restructured", date: isoDaysBefore(VERDICT_WINDOW_DAYS + 30) });
+    const live = record({ change_type: "limits_reduced", date: isoDaysBefore(10) });
+    const assessment = vendorRiskAssessment([expired, live], NOW);
+    assert.strictEqual(assessment.level, "caution");
+    assert.strictEqual(assessment.cause?.change_type, "limits_reduced");
+  });
+});
+
+describe("#1206 the badge and the vendor page read the same scale", () => {
+  let serverPort = 0;
+  let proc: ChildProcess | null = null;
+
+  before(async () => {
+    const started = await new Promise<{ child: ChildProcess; port: number }>((resolve, reject) => {
+      const child = spawn("node", [path.join(REPO, "dist", "serve.js")], {
+        stdio: ["pipe", "pipe", "pipe"],
+        env: { ...process.env, PORT: "0", BASE_URL: "http://localhost" },
+      });
+      const timeout = setTimeout(() => { child.kill(); reject(new Error("Server startup timeout")); }, 30000);
+      child.stderr!.on("data", (data: Buffer) => {
+        const m = data.toString().match(/running on http:\/\/localhost:(\d+)/);
+        if (m) { clearTimeout(timeout); resolve({ child, port: parseInt(m[1], 10) }); }
+      });
+      child.on("error", (err) => { clearTimeout(timeout); reject(err); });
+    });
+    proc = started.child;
+    serverPort = started.port;
+  });
+
+  after(() => { if (proc) proc.kill(); });
+
+  const LEVEL_FOR_BADGE: Record<string, string> = {
+    "deprecated": "risky",
+    "free tier removed": "risky",
+    "at risk": "caution",
+    "stale": "stable",
+    "active": "stable",
+  };
+
+  const badgeLabel = (svg: string): string | null => {
+    const title = svg.match(/<title>([\s\S]*?)<\/title>/)?.[1] ?? "";
+    const right = title.split(": ").slice(1).join(": ");
+    if (!right) return null;
+    return right.split(" · ")[0].trim();
+  };
+
+  it("gives the badge the level the risk scale reached, for every vendor", async () => {
+    const changes = loadDealChanges();
+    const held = new Map<string, DealChange[]>();
+    for (const c of changes) {
+      const key = c.vendor.toLowerCase();
+      if (!held.has(key)) held.set(key, []);
+      held.get(key)!.push(c);
+    }
+    const slugs = [...vendorSlugMap.entries()];
+    const disagreeing: string[] = [];
+    let queue = 0;
+    const worker = async () => {
+      while (queue < slugs.length) {
+        const [slug, vendor] = slugs[queue++];
+        const res = await fetch(`http://localhost:${serverPort}/badge/${slug}.svg`);
+        if (res.status !== 200) { disagreeing.push(`/badge/${slug}.svg returned ${res.status}`); continue; }
+        const label = badgeLabel(await res.text());
+        if (label === null) { disagreeing.push(`/badge/${slug}.svg carries no readable label`); continue; }
+        if (label === "not found") continue;
+        const level = LEVEL_FOR_BADGE[label];
+        if (level === undefined) { disagreeing.push(`/badge/${slug}.svg reads "${label}"`); continue; }
+        const expected = vendorRiskAssessment(held.get(vendor.toLowerCase()) ?? []).level;
+        if (level !== expected) disagreeing.push(`/badge/${slug}.svg reads ${level}, the risk scale reads ${expected}`);
+      }
+    };
+    await Promise.all(Array.from({ length: 12 }, worker));
+    assert.deepStrictEqual(disagreeing.slice(0, 20), [], `badges disagreeing with the risk scale:\n${disagreeing.slice(0, 20).join("\n")}`);
+  });
+
+  it("calls a badge deprecated only where the record ends the product we list", async () => {
+    const changes = loadDealChanges();
+    const wrong: string[] = [];
+    let checked = 0;
+    for (const [slug, vendor] of vendorSlugMap) {
+      const deprecations = changes.filter(c =>
+        c.vendor.toLowerCase() === vendor.toLowerCase() && c.change_type === "product_deprecated");
+      if (deprecations.length === 0) continue;
+      if (deprecations.some(c => deprecationEndsTheListedProduct(c))) continue;
+      checked++;
+      const svg = await (await fetch(`http://localhost:${serverPort}/badge/${slug}.svg`)).text();
+      if (badgeLabel(svg) === "deprecated") wrong.push(`/badge/${slug}.svg`);
+    }
+    assert.ok(checked > 0, "no vendor retired one of its other products, so this asserts nothing");
+    assert.deepStrictEqual(wrong, [], "these badges call a vendor deprecated over a record that ends another product");
+  });
+
+  it("gives the vendor risk endpoint the level the risk scale reached", async () => {
+    const changes = loadDealChanges();
+    const vendors = [...new Set(loadOffers().map(o => o.vendor))];
+    const demoted = vendors.filter(v =>
+      vendorRiskAssessment(changes.filter(c => c.vendor.toLowerCase() === v.toLowerCase())).level !== "stable");
+    const sample = [...demoted.slice(0, 15), ...vendors.filter(v => !demoted.includes(v)).slice(0, 15)];
+    assert.ok(demoted.length > 0, "the index holds no vendor the risk scale demotes");
+    const wrong: string[] = [];
+    for (const vendor of sample) {
+      const res = await fetch(`http://localhost:${serverPort}/api/vendor-risk/${encodeURIComponent(vendor)}`);
+      if (res.status !== 200) continue;
+      const body = await res.json() as { risk_level: string | null };
+      if (body.risk_level === null) continue;
+      const expected = vendorRiskAssessment(changes.filter(c => c.vendor.toLowerCase() === vendor.toLowerCase())).level;
+      if (body.risk_level !== expected) wrong.push(`${vendor}: endpoint ${body.risk_level}, risk scale ${expected}`);
+    }
+    assert.deepStrictEqual(wrong, [], "the vendor risk endpoint disagrees with the risk scale");
+  });
+
+  it("names no change type in a stable verdict, so the sentence survives a change to the risk map", async () => {
+    const changes = loadDealChanges();
+    const stable = [...vendorSlugMap.entries()].filter(([, vendor]) =>
+      vendorRiskAssessment(changes.filter(c => c.vendor.toLowerCase() === vendor.toLowerCase())).level === "stable");
+    assert.ok(stable.length > 0, "no vendor reads stable, so this asserts nothing");
+    const enumerating = /no free tier removal, limit reduction or pricing restructure/;
+    const wrong: string[] = [];
+    for (const [slug] of stable.slice(0, 40)) {
+      const html = await (await fetch(`http://localhost:${serverPort}/vendor/${slug}`)).text();
+      if (enumerating.test(html)) wrong.push(`/vendor/${slug}`);
+    }
+    assert.deepStrictEqual(wrong, [], "these pages list the change types a stable verdict rules out");
+  });
+});

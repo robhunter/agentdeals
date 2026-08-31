@@ -5,8 +5,6 @@ import { withheldLevelClause, type LevelWithheldReason } from "./source-check.js
 
 export type PublishedRiskLevel = "stable" | "caution" | "risky";
 
-export const DEMOTING_KINDS_PHRASE = "free tier removal, limit reduction or pricing restructure";
-
 export const CHANGE_KIND_NOUN: Record<DealChange["change_type"], string> = {
   free_tier_removed: "free tier removal",
   open_source_killed: "move away from open source",
@@ -102,5 +100,5 @@ export function vendorVerdictSentence(input: VendorVerdictInput): string {
   }
 
   if (input.changes.length === 0) return `It's stable — zero pricing changes recorded.`;
-  return `We rate it stable — we hold no ${DEMOTING_KINDS_PHRASE} for this vendor. ${narrowingSentence(input.changes)}`;
+  return `We rate it stable. ${narrowingSentence(input.changes)}`;
 }

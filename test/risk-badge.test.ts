@@ -241,28 +241,22 @@ describe("#1147 — a shutdown of the product we list demotes the vendor", () =>
 
   it("a vendor that retired one of its other services keeps the level its own record earned", async () => {
     const { enrichOffers, loadOffers, loadDealChanges } = await import("../dist/data.js");
+    const { deprecationEndsTheListedProduct } = await import("../dist/product-deprecation.js");
     const enriched = enrichOffers(loadOffers());
     const held = changesByVendor(loadDealChanges() as Change[]);
-    const expected: Record<string, string> = {
-      "Google Gemini API": "stable",
-      "MiniMax": "stable",
-      "AWS": "caution",
-      "Firebase": "caution",
-    };
-    for (const [vendor, level] of Object.entries(expected)) {
-      const offer = enriched.find((o: { vendor: string }) => o.vendor === vendor);
-      assert.ok(offer, `${vendor} has no offer to rate`);
-      assert.ok(
-        (held.get(vendor.toLowerCase()) ?? []).some((c) => c.change_type === "product_deprecated"),
-        `${vendor} holds no deprecation record, so it is not controlling anything`,
-      );
-      assert.strictEqual(offer.risk_level, level, `${vendor} should stay ${level}`);
+    let controlled = 0;
+    for (const offer of enriched) {
+      const deprecations = (held.get(offer.vendor.toLowerCase()) ?? [])
+        .filter((c) => c.change_type === "product_deprecated");
+      if (deprecations.length === 0 || deprecations.some((c) => deprecationEndsTheListedProduct(c))) continue;
+      controlled++;
       assert.notStrictEqual(
         offer.risk_cause?.change_type,
         "product_deprecated",
-        `${vendor} was demoted for retiring one of its other products`,
+        `${offer.vendor} was demoted for retiring one of its other products`,
       );
     }
+    assert.ok(controlled > 0, "no vendor retired one of its other services, so this asserts nothing");
   });
 
   it("no offer in the index carries a stable level beside a volatile stability", async () => {
@@ -274,14 +268,17 @@ describe("#1147 — a shutdown of the product we list demotes the vendor", () =>
   });
 
   it("keeps a vendor whose narrowings the risk scale does not act on off both ends of the scale", async () => {
-    const { classifyStability } = await import("../dist/data.js");
-    const restriction = (date: string) => ({
-      vendor: "V", change_type: "restriction", date, summary: "Free tier narrowed",
+    const { classifyStability, demotionForChange, NEGATIVE_CHANGE_TYPES } = await import("../dist/data.js");
+    const retiredElsewhere = (date: string) => ({
+      vendor: "V", change_type: "product_deprecated", date, summary: "Widget Pro is discontinued.",
       previous_state: "", current_state: "", impact: "medium" as const, source_url: "", category: "c", alternatives: [],
     });
-    const three = [restriction("2026-01-01"), restriction("2026-04-01"), restriction("2026-06-01")];
+    const one = retiredElsewhere("2026-01-01");
+    assert.ok(NEGATIVE_CHANGE_TYPES.has(one.change_type), "the fixture stopped being a narrowing");
+    assert.strictEqual(demotionForChange(one), null, "the risk scale now acts on the fixture");
+    const three = [retiredElsewhere("2026-01-01"), retiredElsewhere("2026-04-01"), retiredElsewhere("2026-06-01")];
     assert.strictEqual(classifyStability(three), "watch");
-    assert.strictEqual(classifyStability([restriction("2026-01-01")]), "watch");
+    assert.strictEqual(classifyStability([one]), "watch");
   });
 
   it("never calls a vendor stable on a scale where it holds a narrowing", async () => {

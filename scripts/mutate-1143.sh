@@ -117,8 +117,8 @@ m_a_stable_rating_never_mentions_the_records_it_holds() {
   py <<'PY'
 p = "src/vendor-verdict.ts"
 s = open(p).read()
-s = s.replace('  return `We rate it stable — we hold no ${DEMOTING_KINDS_PHRASE} for this vendor. ${narrowingSentence(input.changes)}`;',
-              '  return `We rate it stable — we hold no ${DEMOTING_KINDS_PHRASE} for this vendor.`;')
+s = s.replace('  return `We rate it stable. ${narrowingSentence(input.changes)}`;',
+              '  return `We rate it stable.`;')
 open(p, "w").write(s)
 PY
 }

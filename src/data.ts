@@ -292,13 +292,13 @@ export const SEVERE_CHANGE_TYPES = new Set(["free_tier_removed", "open_source_ki
 const NEGATIVE_STABILITY_TYPES = NEGATIVE_CHANGE_TYPES;
 const POSITIVE_STABILITY_TYPES = POSITIVE_CHANGE_TYPES;
 
-export function classifyStability(vendorChanges: DealChange[]): StabilityClass {
+export function classifyStability(vendorChanges: DealChange[], nowMs: number = Date.now()): StabilityClass {
   if (vendorChanges.length === 0) return "stable";
 
   const hasVolatile = vendorChanges.some(isSevereChange);
   const negativeCount = vendorChanges.filter(c => NEGATIVE_STABILITY_TYPES.has(c.change_type)).length;
   const positiveCount = vendorChanges.filter(c => POSITIVE_STABILITY_TYPES.has(c.change_type)).length;
-  const riskScaleActs = vendorChanges.some(c => demotionForChange(c) !== null);
+  const riskScaleActs = vendorChanges.some(c => demotionInForce(c, nowMs) !== null);
 
   if (hasVolatile || (negativeCount >= 2 && riskScaleActs)) return "volatile";
 
@@ -624,6 +624,8 @@ export const RISK_DEMOTION: Record<DealChange["change_type"], "risky" | "caution
   open_source_killed: "risky",
   limits_reduced: "caution",
   pricing_restructured: "caution",
+  restriction: "caution",
+  pricing_model_change: "caution",
   limits_increased: null,
   new_free_tier: null,
   new_tier: null,
@@ -632,9 +634,45 @@ export const RISK_DEMOTION: Record<DealChange["change_type"], "risky" | "caution
   rebranded: null,
   record_corrected: null,
   product_deprecated: null,
-  restriction: null,
-  pricing_model_change: null,
 };
+
+export const VERDICT_WINDOW_DAYS = 180;
+
+export const CHANGE_IS_AN_EVENT = new Set<DealChange["change_type"]>([
+  "pricing_restructured",
+  "limits_reduced",
+  "pricing_model_change",
+]);
+
+export const CHANGE_IS_A_CONDITION = new Set<DealChange["change_type"]>([
+  "free_tier_removed",
+  "open_source_killed",
+  "restriction",
+  "product_deprecated",
+]);
+
+export function changeTypesThatCanDemote(): Set<DealChange["change_type"]> {
+  const types = Object.entries(RISK_DEMOTION)
+    .filter(([, level]) => level !== null)
+    .map(([type]) => type as DealChange["change_type"]);
+  return new Set([...types, PRODUCT_DEPRECATED as DealChange["change_type"]]);
+}
+
+export function verdictHasLapsed(
+  change: Pick<DealChange, "change_type" | "date">,
+  nowMs: number = Date.now(),
+): boolean {
+  if (!CHANGE_IS_AN_EVENT.has(change.change_type)) return false;
+  const windowOpens = new Date(nowMs - VERDICT_WINDOW_DAYS * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
+  return change.date < windowOpens;
+}
+
+export function demotionInForce(
+  change: Pick<DealChange, "change_type" | "vendor" | "summary" | "date">,
+  nowMs: number = Date.now(),
+): "risky" | "caution" | null {
+  return verdictHasLapsed(change, nowMs) ? null : demotionForChange(change);
+}
 
 const RISK_RANK: Record<"stable" | "caution" | "risky", number> = { stable: 0, caution: 1, risky: 2 };
 
@@ -648,7 +686,7 @@ export function vendorRiskAssessment(vendorChanges: DealChange[], nowMs: number 
 
   let best: { level: "caution" | "risky"; cause: DealChange } | null = null;
   for (const c of vendorChanges) {
-    const demotion = demotionForChange(c);
+    const demotion = demotionInForce(c, nowMs);
     if (!demotion) continue;
     const level = demotion === "risky" && c.date < twelveMonthsAgo ? "caution" : demotion;
     if (!best || RISK_RANK[level] > RISK_RANK[best.level] || (level === best.level && c.date > best.cause.date)) {
@@ -728,9 +766,9 @@ export function checkVendorRisk(
   } else if (riskLevel === "caution" && cause) {
     summary = `${offer.vendor} warrants caution — ${changeDateClause(cause)}: ${cause.summary} Monitor for further changes.${unreachableClause}`;
   } else if (withheldReason) {
-    summary = `We hold no free tier removal, limit reduction or pricing restructure on record for ${offer.vendor}. ${withheldLevelSentence(withheldReason, offer.vendor, unreachableSince)} Nothing we have read describes this offer. Treat that as a statement about our records, not as a stable pricing history.`;
+    summary = `${withheldLevelSentence(withheldReason, offer.vendor, unreachableSince)} Nothing we have read describes this offer. Treat that as a statement about our records, not as a stable pricing history.`;
   } else {
-    summary = `${offer.vendor} has a stable pricing history with no free tier removal, limit reduction or pricing restructure on record. Free tier verified for ${longevityDays} days.`;
+    summary = `${offer.vendor} has a stable pricing history. Free tier verified for ${longevityDays} days.`;
   }
 
   return {
