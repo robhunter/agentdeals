@@ -125,8 +125,7 @@ m_empty_labels_report_the_wrong_gate() {
   py <<'PY'
 p = "src/product-role.ts"
 s = open(p).read()
-s = s.replace('  return own.subtypes.size === 0 ? "not_in_taxonomy" : "subtype_mismatch";',
-              '  return "subtype_mismatch";')
+s = s.replace('  if (own.subtypes.size === 0) return "not_in_taxonomy";\n', '')
 open(p, "w").write(s)
 PY
 }
@@ -200,8 +199,8 @@ m_criteria_page_prints_names_without_definitions() {
   py <<'PY'
 p = "src/serve.ts"
 s = open(p).read()
-s = s.replace("<td>${escHtmlServer(e.definition)}</td></tr>",
-              "<td></td></tr>")
+s = s.replace("<td>${escHtmlServer(e.definition)}</td><td",
+              "<td></td><td")
 open(p, "w").write(s)
 PY
 }

@@ -43,7 +43,7 @@ import { discontinuedOnOrBefore } from "./product-deprecation.js";
 import { rankOffers, rankForListing, rotateListing, utcDate, CRITERIA_PATH, DEMOTE_ONLY_POLICY, DISCLOSURE_RATIONALE, TIE_BREAK_ALGORITHM, GATE_TABLE, DEMERIT_TABLE, NOT_FREE_TIER_RULES, TIME_LIMITED_TIER_RULES, type TieBreak } from "./ranking.js";
 import type { RankedEntry, RankingResult } from "./ranking.js";
 import { verificationLedger, QUARANTINE_AFTER_FAILURES } from "./verification-state.js";
-import { partitionAlternatives, partitionAlternativesAcross, productRoleSentence, MEMBERSHIP_GATE_RULES, MEMBERSHIP_GATE_ORDER, MEMBERSHIP_GATE_SYMMETRY, MEMBERSHIP_GATE_SCOPE, MEMBERSHIP_GATE_CORRECTIONS, SUBTYPE_TAXONOMIES, SUBTYPE_MEMBERSHIP_RULE, subtypeDefinition } from "./product-role.js";
+import { partitionAlternatives, partitionAlternativesAcross, productRoleSentence, MEMBERSHIP_GATE_RULES, MEMBERSHIP_GATE_ORDER, MEMBERSHIP_GATE_SYMMETRY, MEMBERSHIP_GATE_SCOPE, MEMBERSHIP_GATE_CORRECTIONS, SUBTYPE_TAXONOMIES, SUBTYPE_MEMBERSHIP_RULE, SUBTYPE_MEMBERSHIP_GROUP_SCOPE, membershipGroupsFor, subtypeDefinition } from "./product-role.js";
 import { resolveCuratedAlternatives, curatedAlternativesFor, addCuratedToPool } from "./curated-alternatives.js";
 import type { Agent, ChangeDateSource, DealChange, RiskCause, LinkUnreachable, Offer } from "./types.js";
 import { changeDateLabel, changeDateClause, changeDatePublished, changeEventStartDate, capListSections, latestEventDate, offerExpiryAfter, feedEntryUpdated, undatedGroupHeading, firstReadHeading, discoveryBatchNote, DISCOVERED_DATE_PREFIX, UNDATED_GROUP_NOTE } from "./change-dates.js";
@@ -1836,10 +1836,15 @@ function buildCriteriaPage(): string {
   const membershipGateRows = MEMBERSHIP_GATE_ORDER.map(g => `<tr><td><code>${escHtmlServer(g)}</code> &mdash; ${escHtmlServer(MEMBERSHIP_GATE_RULES[g].label)}</td><td>${escHtmlServer(MEMBERSHIP_GATE_RULES[g].rule)}</td></tr>`).join("\n");
   const classifiedCount = offers.filter(o => o.product_role).length;
   const gatedCount = offers.filter(o => o.product_role && (o.product_role.deployment_model === "local_dev_only" || o.product_role.is_addon)).length;
-  const subtypeTaxonomyTables = Object.entries(SUBTYPE_TAXONOMIES).map(([taxonomy, entries]) => `  <h4>${escHtmlServer(taxonomy)}</h4>
-  <table><thead><tr><th>Subtype</th><th>What it means</th></tr></thead><tbody>
-${entries.map(e => `<tr><td><code>${escHtmlServer(e.subtype)}</code></td><td>${escHtmlServer(e.definition)}</td></tr>`).join("\n")}
-  </tbody></table>`).join("\n");
+  const subtypeTaxonomyTables = Object.entries(SUBTYPE_TAXONOMIES).map(([taxonomy, entries]) => {
+    const groups = membershipGroupsFor(taxonomy);
+    const grouped = new Set(groups.flatMap(g => g.subtypes));
+    const groupParagraphs = groups.map(g => `\n  <p><strong style="color:var(--text)">${g.subtypes.map(s => `<code>${escHtmlServer(s)}</code>`).join(", ")} are one membership group.</strong> ${escHtmlServer(g.rule)}</p>`).join("");
+    return `  <h4>${escHtmlServer(taxonomy)}</h4>
+  <table><thead><tr><th>Subtype</th><th>What it means</th><th>Group</th></tr></thead><tbody>
+${entries.map(e => `<tr><td><code>${escHtmlServer(e.subtype)}</code></td><td>${escHtmlServer(e.definition)}</td><td style="text-align:center;font-family:var(--mono)">${grouped.has(e.subtype) ? "&#10003;" : "&mdash;"}</td></tr>`).join("\n")}
+  </tbody></table>${groupParagraphs}`;
+  }).join("\n");
   const subtypeCoverageClause = (() => {
     const parts = Object.keys(SUBTYPE_TAXONOMIES).map(taxonomy => {
       const inTaxonomy = offers.filter(o => o.category === taxonomy);
@@ -1979,6 +1984,7 @@ ${membershipGateRows}
   <h3 id="subtypes">Subtypes</h3>
   <p>A category is a coarse property. Where we have published a subtype taxonomy for a category, the same discipline applies one level finer: a subtype is what the vendor's own copy says the product <em>is</em>, it is multi-label, and it decides membership only. ${escHtmlServer(SUBTYPE_MEMBERSHIP_RULE)}</p>
 ${subtypeTaxonomyTables}
+  <p>${escHtmlServer(SUBTYPE_MEMBERSHIP_GROUP_SCOPE)}</p>
   <p>Subtypes are published on every classified vendor page with the source URL and the sentence they were read from, exactly as the properties above are. ${subtypeCoverageClause}</p>
 
   <h2>6. What agents tell us, and what we do with it</h2>

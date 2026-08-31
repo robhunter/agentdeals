@@ -21,7 +21,7 @@ export const MEMBERSHIP_GATE_RULES: Record<MembershipGate, { label: string; rule
   },
   subtype_mismatch: {
     label: "Shares no subtype with this product",
-    rule: "Two offers in a category are alternatives when their subtype sets share at least one member. This offer shares none with the vendor the list is about.",
+    rule: "Two offers in a category are alternatives when their subtype sets share at least one member, or when both carry a subtype from one of the category's membership groups. This offer does neither with the vendor the list is about.",
   },
 };
 
@@ -48,8 +48,39 @@ export const SUBTYPE_TAXONOMIES: Record<string, Array<{ subtype: string; definit
   ],
 };
 
+export interface SubtypeMembershipGroup {
+  subtypes: string[];
+  rule: string;
+}
+
+export const SUBTYPE_MEMBERSHIP_GROUPS: Record<string, SubtypeMembershipGroup[]> = {
+  "Cloud Hosting": [
+    {
+      subtypes: ["static_site", "serverless_function", "container_app"],
+      rule: "These three describe how your code is executed, not what can replace what. A reader leaving one of them is asking where else they can deploy the thing they have, and all three answer that question, so two offers that each carry one are alternatives whether or not they carry the same one. Every other subtype in this category keeps the shared-member rule unchanged.",
+    },
+  ],
+};
+
 export const SUBTYPE_MEMBERSHIP_RULE =
-  "Two offers in the same category are alternatives when their subtype sets share at least one member. A record we have not classified carries no subtype gate at all, in either direction.";
+  "Two offers in the same category are alternatives when their subtype sets share at least one member, or when both carry a subtype from one of the membership groups below. A record we have not classified carries no subtype gate at all, in either direction.";
+
+export const SUBTYPE_MEMBERSHIP_GROUP_SCOPE =
+  "A group answers whether a product could substitute at all. Which one is the better answer is ordering, and ordering is a separate, seeded, published concern that reads none of this.";
+
+export function membershipGroupsFor(taxonomy: string): SubtypeMembershipGroup[] {
+  return SUBTYPE_MEMBERSHIP_GROUPS[taxonomy] ?? [];
+}
+
+function sharesMembershipGroup(taxonomy: string, candidate: Set<string>, subject: Set<string>): boolean {
+  for (const group of membershipGroupsFor(taxonomy)) {
+    const members = new Set(group.subtypes);
+    const candidateIn = [...candidate].some(s => members.has(s));
+    const subjectIn = [...subject].some(s => members.has(s));
+    if (candidateIn && subjectIn) return true;
+  }
+  return false;
+}
 
 export function subtypeDefinition(taxonomy: string, subtype: string): string | null {
   return SUBTYPE_TAXONOMIES[taxonomy]?.find(t => t.subtype === subtype)?.definition ?? null;
@@ -85,7 +116,9 @@ function subtypeGate(candidate: RoleCarrier, subjectProfiles: SubtypeProfile[]):
   for (const subtype of own.subtypes) {
     if (shared.subtypes.has(subtype)) return null;
   }
-  return own.subtypes.size === 0 ? "not_in_taxonomy" : "subtype_mismatch";
+  if (own.subtypes.size === 0) return "not_in_taxonomy";
+  if (sharesMembershipGroup(own.taxonomy, own.subtypes, shared.subtypes)) return null;
+  return "subtype_mismatch";
 }
 
 export const MEMBERSHIP_GATE_SYMMETRY =

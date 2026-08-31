@@ -14,9 +14,11 @@ import {
   productRoleSentence,
   subtypesOf,
   subtypeDefinition,
+  membershipGroupsFor,
   MEMBERSHIP_GATE_ORDER,
   MEMBERSHIP_GATE_RULES,
   SUBTYPE_TAXONOMIES,
+  SUBTYPE_MEMBERSHIP_GROUPS,
 } from "../src/product-role.ts";
 import { rankForListing, rankOffers } from "../src/ranking.ts";
 import type { Offer, ProductRole, DeploymentModel } from "../src/types.ts";
@@ -160,6 +162,45 @@ describe("#1032 Phase 2 subtypes gate on sharing at least one label", () => {
     assert.deepStrictEqual(applied.removed.map(r => r.gate), ["subtype_mismatch"]);
   });
 
+  it("keeps two offers whose only shared property is a membership group", () => {
+    const staticHost = labelled("StaticHost", ["static_site"], "Cloud Hosting");
+    const containerHost = labelled("ContainerHost", ["container_app"], "Cloud Hosting");
+    assert.equal(alternativeMembershipGate(containerHost, staticHost), null);
+    assert.equal(alternativeMembershipGate(staticHost, containerHost), null);
+  });
+
+  it("still removes a subtype the group does not name from a grouped subject", () => {
+    const staticHost = labelled("StaticHost", ["static_site"], "Cloud Hosting");
+    const docsHost = labelled("DocsHost", ["managed_cms_hosting"], "Cloud Hosting");
+    assert.equal(alternativeMembershipGate(docsHost, staticHost), "subtype_mismatch");
+    assert.equal(alternativeMembershipGate(staticHost, docsHost), "subtype_mismatch");
+  });
+
+  it("removes an unlabelled record from a grouped subject as it always did", () => {
+    const staticHost = labelled("StaticHost", ["static_site"], "Cloud Hosting");
+    const noLabels = labelled("NoLabels", [], "Cloud Hosting");
+    assert.equal(alternativeMembershipGate(noLabels, staticHost), "not_in_taxonomy");
+  });
+
+  it("applies no group to a taxonomy that declares none", () => {
+    assert.deepStrictEqual(membershipGroupsFor("Databases"), []);
+    assert.equal(alternativeMembershipGate(vector, relational), "subtype_mismatch");
+  });
+
+  it("names only subtypes its own taxonomy publishes in every group", () => {
+    for (const [taxonomy, groups] of Object.entries(SUBTYPE_MEMBERSHIP_GROUPS)) {
+      const known = new Set((SUBTYPE_TAXONOMIES[taxonomy] ?? []).map(e => e.subtype));
+      assert.ok(known.size > 0, `${taxonomy} declares a group without a published taxonomy`);
+      for (const group of groups) {
+        assert.ok(group.subtypes.length > 1, `${taxonomy} declares a group of one, which is the rule it replaces`);
+        assert.ok(group.rule.length > 40, `${taxonomy} needs a group rule a reader can check`);
+        for (const subtype of group.subtypes) {
+          assert.ok(known.has(subtype), `${taxonomy} groups ${subtype}, which its taxonomy does not name`);
+        }
+      }
+    }
+  });
+
   it("publishes a definition for every subtype the taxonomies name", () => {
     for (const [taxonomy, entries] of Object.entries(SUBTYPE_TAXONOMIES)) {
       for (const entry of entries) {
@@ -270,6 +311,58 @@ describe("#1032 a role recommendation has no subject to compare against", () => 
     assert.equal(roleMembershipGate(addon), "addon");
     assert.equal(roleMembershipGate(selfHosted), null);
     assert.equal(roleMembershipGate(unreviewed), null);
+  });
+});
+
+describe("#1195 no commercial field can reach a membership decision", () => {
+  const membershipSource = readFileSync(join(REPO, "src", "product-role.ts"), "utf8");
+
+  it("the membership module does not mention a referral, sponsorship or commission field", () => {
+    for (const banned of [/referral/i, /sponsor/i, /commission/i, /payout/i, /affiliate/i, /revenue/i]) {
+      assert.ok(!banned.test(membershipSource), `the membership module must not read ${banned}`);
+    }
+  });
+
+  it("attaching a referral to every candidate leaves every hosting page's partition identical", () => {
+    const hosting = index.offers.filter(o => o.category === "Cloud Hosting");
+    assert.ok(hosting.length > 20, `this test needs a category with enough records, found ${hosting.length}`);
+    const paid = hosting.map(o => ({
+      ...o,
+      referral: {
+        url: `https://${o.vendor.toLowerCase()}.example/r/agentdeals`,
+        referee_value: "$100 credit",
+        referrer_value: "$100 cash",
+        referrer_compensation: "commission" as const,
+        type: "dual-sided" as const,
+        source: "curated" as const,
+      },
+      referral_program: {
+        available: true,
+        referrer_benefit: "$100 cash",
+        referee_benefit: "$100 credit",
+        program_url: `https://${o.vendor.toLowerCase()}.example/partners`,
+        type: "affiliate-network" as const,
+      },
+    }));
+    let subjectsChecked = 0;
+    for (const subject of hosting) {
+      const plainSubject = hosting.filter(o => o.vendor !== subject.vendor);
+      const paidSubject = paid.filter(o => o.vendor !== subject.vendor);
+      const before = partitionAlternatives(plainSubject, subject);
+      const after = partitionAlternatives(paidSubject, paid.find(o => o.vendor === subject.vendor)!);
+      subjectsChecked += 1;
+      assert.deepStrictEqual(
+        after.kept.map(o => o.vendor),
+        before.kept.map(o => o.vendor),
+        `${subject.vendor} keeps a different set once every candidate pays`
+      );
+      assert.deepStrictEqual(
+        after.removed.map(r => `${r.offer.vendor}:${r.gate}`),
+        before.removed.map(r => `${r.offer.vendor}:${r.gate}`),
+        `${subject.vendor} removes a different set once every candidate pays`
+      );
+    }
+    assert.ok(subjectsChecked > 20, `the sweep must actually run, ran ${subjectsChecked} times`);
   });
 });
 
