@@ -16,6 +16,7 @@ import { buildDailyRollup, readRollups, coverageOf, ROLLUP_DATE_PATTERN } from "
 import { configureVendorSeries, recordVendorRequest, flushVendorSeries, readVendorSeries, vendorSeriesGauge, vendorExportAuthorized, isSeriesDate, seriesDateRange, VENDOR_SERIES_PATH, VENDOR_SERIES_RETENTION_DAYS, VENDOR_SERIES_NOTES } from "./vendor-series.js";
 import { openapiSpec } from "./openapi.js";
 import { LINK_GRACE_DAYS, unreachableNoticeForUrl } from "./link-health.js";
+import { offerRetired, recordedTierSentence, type OfferTierAndUrl } from "./retirement.js";
 import { levelWithheldReason, withheldLevelClause, withheldLevelSentence } from "./source-check.js";
 import { buildComparisonMap, comparisonSlug } from "./comparison-pairs.js";
 import { stabilityFaqAnswer, stabilityVerdictClause, type ComparisonSide, type StabilityRating } from "./comparison-verdict.js";
@@ -684,6 +685,11 @@ function escHtmlServer(s: string): string {
   return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 }
 
+function offerPricingLink(offer: OfferTierAndUrl, label: string): string {
+  if (offerRetired(offer)) return "";
+  return `<a href="${escHtmlServer(offer.url)}" target="_blank" rel="noopener">${label}</a>`;
+}
+
 type BadgeStatus = "active" | "at-risk" | "removed" | "unknown";
 
 function getBadgeStatus(vendorSlug: string): { status: BadgeStatus; label: string; verifiedDate: string | null } {
@@ -1228,7 +1234,7 @@ function buildCategoryPage(slug: string): string | null {
         description: o.description,
         applicationCategory: categoryName,
         offers: { "@type": "Offer", price: "0", priceCurrency: "USD", description: o.tier },
-        url: o.url,
+        ...(offerRetired(o) ? {} : { url: o.url }),
       },
     })),
   };
@@ -1554,7 +1560,7 @@ function buildBestOfPage(slug: string): string | null {
             <a href="/vendor/${toSlug(o.vendor)}">Full profile</a>
             <a href="/alternative-to/${toSlug(o.vendor)}">Alternatives</a>
             ${relatedCompareLinks}
-            <a href="${escHtmlServer(o.url)}" target="_blank" rel="noopener">Pricing page &nearr;</a>
+            ${offerPricingLink(o, "Pricing page &nearr;")}
           </div>
         </div>
       </div>`;
@@ -1591,7 +1597,7 @@ function buildBestOfPage(slug: string): string | null {
         description: e.offer.description,
         applicationCategory: categoryName,
         offers: { "@type": "Offer", price: "0", priceCurrency: "USD", description: e.offer.tier },
-        url: e.offer.url,
+        ...(offerRetired(e.offer) ? {} : { url: e.offer.url }),
       },
     })),
   };
@@ -3758,7 +3764,8 @@ function buildVendorPage(slug: string): string | null {
     .filter(([, [a, b]]) => a === vendorName || b === vendorName);
 
   const currentYear = new Date().getFullYear();
-  const hasFree = primary.tier.toLowerCase() !== "none" && !primary.description.toLowerCase().includes("no free tier");
+  const retiredSentence = offerRetired(primary) ? recordedTierSentence(vendorName, primary.tier) : "";
+  const hasFree = !retiredSentence && primary.tier.toLowerCase() !== "none" && !primary.description.toLowerCase().includes("no free tier");
   const title = hasFree
     ? `${vendorName} Free Tier ${currentYear}: Limits, Pricing & What Changed | AgentDeals`
     : `${vendorName} Pricing ${currentYear}: Plans, Costs & Free Alternatives | AgentDeals`;
@@ -3793,7 +3800,7 @@ function buildVendorPage(slug: string): string | null {
     : "";
   const quickVerdictHtml = `
   <div class="quick-verdict">
-    <p>${escHtmlServer(vendorName)}'s free tier offers ${escHtmlServer(keyLimit)}. ${verdictLine2}${verdictLine3 ? " " + verdictLine3 : ""}</p>
+    <p>${retiredSentence ? `${escHtmlServer(retiredSentence)} ${escHtmlServer(keyLimit)}.` : `${escHtmlServer(vendorName)}'s free tier offers ${escHtmlServer(keyLimit)}.`} ${verdictLine2}${verdictLine3 ? " " + verdictLine3 : ""}</p>
   </div>`;
 
   const catMapping = categoryComparisonMap[primary.category];
@@ -4063,7 +4070,7 @@ ${allCompareLinks.join("\n")}
       name: vendorName,
       description: primary.description,
       applicationCategory: primary.category,
-      url: primary.url,
+      ...(offerRetired(primary) ? {} : { url: primary.url }),
       offers: {
         "@type": "Offer",
         price: "0",
@@ -4086,12 +4093,16 @@ ${allCompareLinks.join("\n")}
   const eligibilityConditionsSentence = primaryEligibilityConditions.length > 0
     ? ` Eligibility: ${primaryEligibilityConditions.join("; ")}.`
     : "";
-  const faqFreeAnswer = levelWithheld
+  const faqFreeAnswer = retiredSentence
+    ? `${retiredSentence} ${storedTerms}`
+    : levelWithheld
     ? `${eligibilityGateSentence}${unconfirmedTermsPreamble}Our stored record says ${vendorName} offers a free tier: ${primary.tier}. ${withUnconfirmedTermsCaveat(storedTerms)}${eligibilityConditionsSentence}`
     : primaryEligibilityGate
     ? `${eligibilityGateSentence}${vendorName} offers a free tier: ${primary.tier}. ${storedTerms}${eligibilityConditionsSentence}`
     : `Yes, ${vendorName} offers a free tier: ${primary.tier}. ${storedTerms}`;
-  const faqTierAnswer = levelWithheld
+  const faqTierAnswer = retiredSentence
+    ? `${retiredSentence} ${primary.description}`
+    : levelWithheld
     ? `${unconfirmedTermsPreamble}Our stored record calls ${vendorName}'s free tier "${primary.tier}". ${withUnconfirmedTermsCaveat(primary.description)}`
     : `${vendorName}'s free tier is called "${primary.tier}". ${primary.description}`;
   const faqReliableAnswer = levelWithheld
@@ -4259,11 +4270,11 @@ ${referralCalloutHtml}
         <div class="cat-pills">${allCategories.map(c => `<a href="/category/${toSlug(c)}" class="cat-pill">${escHtmlServer(c)}</a>`).join("")}</div>
       </div>
     </div>
-    <div class="detail-card">
+    ${offerRetired(primary) ? "" : `<div class="detail-card">
       <div class="detail-label">Pricing Page</div>
       <div class="detail-value"><a href="${escHtmlServer(primary.url)}" rel="noopener" target="_blank">Visit &rarr;</a></div>
     </div>
-    <div class="detail-card">
+    `}<div class="detail-card">
       <div class="detail-label">${discontinuedOn ? "Discontinued" : linkUnreachable ? "Link last reachable" : "Verified"}</div>
       <div class="detail-value" style="font-family:var(--mono)">${escHtmlServer(discontinuedOn ?? (linkUnreachable ? (linkUnreachable.last_reachable ?? "no reachable date on record") : primary.verifiedDate))}</div>
     </div>
@@ -4412,7 +4423,9 @@ function buildAlternativesPage(slug: string): string | null {
       parts.push(`<div class="risk-row"><span class="risk-label">Why:</span> <span class="risk-cause-date" style="font-family:var(--mono)">${escHtmlServer(changeDateLabel(riskCause))}</span> &mdash; ${escHtmlServer(riskCause.summary)}</div>`);
     }
     parts.push(`<div class="risk-row"><span class="risk-label">Category:</span> ${vendorCategories.map(c => `<a href="/category/${toSlug(c)}" class="cat-pill">${escHtmlServer(c)}</a>`).join(" ")}</div>`);
-    parts.push(`<div class="risk-row"><span class="risk-label">Pricing Page:</span> <a href="${escHtmlServer(primary.url)}" rel="noopener" target="_blank">${escHtmlServer(primary.url.replace(/^https?:\/\//, "").slice(0, 50))}${primary.url.replace(/^https?:\/\//, "").length > 50 ? "..." : ""}</a></div>`);
+    if (!offerRetired(primary)) {
+      parts.push(`<div class="risk-row"><span class="risk-label">Pricing Page:</span> <a href="${escHtmlServer(primary.url)}" rel="noopener" target="_blank">${escHtmlServer(primary.url.replace(/^https?:\/\//, "").slice(0, 50))}${primary.url.replace(/^https?:\/\//, "").length > 50 ? "..." : ""}</a></div>`);
+    }
     if (vendorChanges.length > 0) {
       parts.push(`<div class="changes-summary"><h3>Recent Pricing Changes (${vendorChanges.length})</h3>`);
       parts.push(vendorChanges.slice(0, 5).map(c => {
@@ -6816,7 +6829,7 @@ function buildTimelyAlternativesPage(slug: string): string | null {
         <div class="alt-card-links">
           <a href="/vendor/${toSlug(o.vendor)}">Full profile</a>
           <a href="/alternative-to/${toSlug(o.vendor)}">More alternatives</a>
-          <a href="${escHtmlServer(o.url)}" target="_blank" rel="noopener">Pricing page &nearr;</a>
+          ${offerPricingLink(o, "Pricing page &nearr;")}
         </div>
         ${o.referral ? `<div style="margin-top:.5rem;padding:.4rem .75rem;border:1px solid #3fb95040;border-left:3px solid #3fb950;border-radius:0 6px 6px 0;background:#3fb95010;font-size:.8rem">\ud83d\udd17 <a href="${escHtmlServer(o.referral.url)}" rel="noopener sponsored" target="_blank" style="color:#3fb950">${escHtmlServer(o.referral.referee_value ?? "Save with our referral link")}</a> <a href="/disclosure" style="font-size:.7rem;color:var(--text-dim)">(disclosure)</a></div>` : ""}
       </div>`;
@@ -6836,7 +6849,7 @@ function buildTimelyAlternativesPage(slug: string): string | null {
         <p class="alt-card-desc">${escHtmlServer(o.description)}</p>
         <div class="alt-card-links">
           <a href="/vendor/${toSlug(o.vendor)}">Full profile</a>
-          <a href="${escHtmlServer(o.url)}" target="_blank" rel="noopener">Pricing page &nearr;</a>
+          ${offerPricingLink(o, "Pricing page &nearr;")}
         </div>
         ${o.referral ? `<div style="margin-top:.5rem;padding:.4rem .75rem;border:1px solid #3fb95040;border-left:3px solid #3fb950;border-radius:0 6px 6px 0;background:#3fb95010;font-size:.8rem">\ud83d\udd17 <a href="${escHtmlServer(o.referral.url)}" rel="noopener sponsored" target="_blank" style="color:#3fb950">${escHtmlServer(o.referral.referee_value ?? "Save with our referral link")}</a> <a href="/disclosure" style="font-size:.7rem;color:var(--text-dim)">(disclosure)</a></div>` : ""}
       </div>`;
@@ -6864,7 +6877,7 @@ function buildTimelyAlternativesPage(slug: string): string | null {
         name: o.vendor,
         description: o.description,
         offers: { "@type": "Offer", price: "0", priceCurrency: "USD", description: o.tier },
-        url: o.url,
+        ...(offerRetired(o) ? {} : { url: o.url }),
       },
     })),
   };
@@ -8557,7 +8570,7 @@ function buildAiFreeTiersPage(): string {
         <div class="alt-card-links">
           <a href="/vendor/${toSlug(o.vendor)}">Full profile</a>
           <a href="/alternative-to/${toSlug(o.vendor)}">Alternatives</a>
-          <a href="${escHtmlServer(o.url)}" target="_blank" rel="noopener">Pricing &nearr;</a>
+          ${offerPricingLink(o, "Pricing &nearr;")}
         </div>
         ${o.referral ? `<div style="margin-top:.5rem;padding:.4rem .75rem;border:1px solid #3fb95040;border-left:3px solid #3fb950;border-radius:0 6px 6px 0;background:#3fb95010;font-size:.8rem">\ud83d\udd17 <a href="${escHtmlServer(o.referral.url)}" rel="noopener sponsored" target="_blank" style="color:#3fb950">${escHtmlServer(o.referral.referee_value ?? "Save with our referral link")}</a> <a href="/disclosure" style="font-size:.7rem;color:var(--text-dim)">(disclosure)</a></div>` : ""}
       </div>`;
@@ -8590,7 +8603,7 @@ function buildAiFreeTiersPage(): string {
         name: o.vendor,
         description: o.description,
         offers: { "@type": "Offer", price: "0", priceCurrency: "USD", description: o.tier },
-        url: o.url,
+        ...(offerRetired(o) ? {} : { url: o.url }),
       },
     })),
   };
@@ -8814,7 +8827,7 @@ function buildHostingAlternativesPage(): string {
         <div class="alt-card-links">
           <a href="/vendor/${toSlug(o.vendor)}">Full profile</a>
           <a href="/alternative-to/${toSlug(o.vendor)}">Alternatives</a>
-          <a href="${escHtmlServer(o.url)}" target="_blank" rel="noopener">Pricing &nearr;</a>
+          ${offerPricingLink(o, "Pricing &nearr;")}
         </div>
         ${o.referral ? `<div style="margin-top:.5rem;padding:.4rem .75rem;border:1px solid #3fb95040;border-left:3px solid #3fb950;border-radius:0 6px 6px 0;background:#3fb95010;font-size:.8rem">\ud83d\udd17 <a href="${escHtmlServer(o.referral.url)}" rel="noopener sponsored" target="_blank" style="color:#3fb950">${escHtmlServer(o.referral.referee_value ?? "Save with our referral link")}</a> <a href="/disclosure" style="font-size:.7rem;color:var(--text-dim)">(disclosure)</a></div>` : ""}
       </div>`;
@@ -8845,7 +8858,7 @@ function buildHostingAlternativesPage(): string {
         name: o.vendor,
         description: o.description,
         offers: { "@type": "Offer", price: "0", priceCurrency: "USD", description: o.tier },
-        url: o.url,
+        ...(offerRetired(o) ? {} : { url: o.url }),
       },
     })),
   };
@@ -9152,7 +9165,7 @@ function buildDatabaseAlternativesPage(): string {
         <div class="alt-card-links">
           <a href="/vendor/${toSlug(o.vendor)}">Full profile</a>
           <a href="/alternative-to/${toSlug(o.vendor)}">Alternatives</a>
-          <a href="${escHtmlServer(o.url)}" target="_blank" rel="noopener">Pricing &nearr;</a>
+          ${offerPricingLink(o, "Pricing &nearr;")}
         </div>
         ${o.referral ? `<div style="margin-top:.5rem;padding:.4rem .75rem;border:1px solid #3fb95040;border-left:3px solid #3fb950;border-radius:0 6px 6px 0;background:#3fb95010;font-size:.8rem">\ud83d\udd17 <a href="${escHtmlServer(o.referral.url)}" rel="noopener sponsored" target="_blank" style="color:#3fb950">${escHtmlServer(o.referral.referee_value ?? "Save with our referral link")}</a> <a href="/disclosure" style="font-size:.7rem;color:var(--text-dim)">(disclosure)</a></div>` : ""}
       </div>`;
@@ -9183,7 +9196,7 @@ function buildDatabaseAlternativesPage(): string {
         name: o.vendor,
         description: o.description,
         offers: { "@type": "Offer", price: "0", priceCurrency: "USD", description: o.tier },
-        url: o.url,
+        ...(offerRetired(o) ? {} : { url: o.url }),
       },
     })),
   };
@@ -9491,7 +9504,7 @@ function buildMonitoringAlternativesPage(): string {
         <div class="alt-card-links">
           <a href="/vendor/${toSlug(o.vendor)}">Full profile</a>
           <a href="/alternative-to/${toSlug(o.vendor)}">Alternatives</a>
-          <a href="${escHtmlServer(o.url)}" target="_blank" rel="noopener">Pricing &nearr;</a>
+          ${offerPricingLink(o, "Pricing &nearr;")}
         </div>
         ${o.referral ? `<div style="margin-top:.5rem;padding:.4rem .75rem;border:1px solid #3fb95040;border-left:3px solid #3fb950;border-radius:0 6px 6px 0;background:#3fb95010;font-size:.8rem">\ud83d\udd17 <a href="${escHtmlServer(o.referral.url)}" rel="noopener sponsored" target="_blank" style="color:#3fb950">${escHtmlServer(o.referral.referee_value ?? "Save with our referral link")}</a> <a href="/disclosure" style="font-size:.7rem;color:var(--text-dim)">(disclosure)</a></div>` : ""}
       </div>`;
@@ -9522,7 +9535,7 @@ function buildMonitoringAlternativesPage(): string {
         name: o.vendor,
         description: o.description,
         offers: { "@type": "Offer", price: "0", priceCurrency: "USD", description: o.tier },
-        url: o.url,
+        ...(offerRetired(o) ? {} : { url: o.url }),
       },
     })),
   };
@@ -9819,7 +9832,7 @@ function buildCiCdAlternativesPage(): string {
         <div class="alt-card-links">
           <a href="/vendor/${toSlug(o.vendor)}">Full profile</a>
           <a href="/alternative-to/${toSlug(o.vendor)}">Alternatives</a>
-          <a href="${escHtmlServer(o.url)}" target="_blank" rel="noopener">Pricing &nearr;</a>
+          ${offerPricingLink(o, "Pricing &nearr;")}
         </div>
         ${o.referral ? `<div style="margin-top:.5rem;padding:.4rem .75rem;border:1px solid #3fb95040;border-left:3px solid #3fb950;border-radius:0 6px 6px 0;background:#3fb95010;font-size:.8rem">\ud83d\udd17 <a href="${escHtmlServer(o.referral.url)}" rel="noopener sponsored" target="_blank" style="color:#3fb950">${escHtmlServer(o.referral.referee_value ?? "Save with our referral link")}</a> <a href="/disclosure" style="font-size:.7rem;color:var(--text-dim)">(disclosure)</a></div>` : ""}
       </div>`;
@@ -9850,7 +9863,7 @@ function buildCiCdAlternativesPage(): string {
         name: o.vendor,
         description: o.description,
         offers: { "@type": "Offer", price: "0", priceCurrency: "USD", description: o.tier },
-        url: o.url,
+        ...(offerRetired(o) ? {} : { url: o.url }),
       },
     })),
   };
@@ -10141,7 +10154,7 @@ function buildSecurityAlternativesPage(): string {
         <div class="alt-card-links">
           <a href="/vendor/${toSlug(o.vendor)}">Full profile</a>
           <a href="/alternative-to/${toSlug(o.vendor)}">Alternatives</a>
-          <a href="${escHtmlServer(o.url)}" target="_blank" rel="noopener">Pricing &nearr;</a>
+          ${offerPricingLink(o, "Pricing &nearr;")}
         </div>
         ${o.referral ? `<div style="margin-top:.5rem;padding:.4rem .75rem;border:1px solid #3fb95040;border-left:3px solid #3fb950;border-radius:0 6px 6px 0;background:#3fb95010;font-size:.8rem">\ud83d\udd17 <a href="${escHtmlServer(o.referral.url)}" rel="noopener sponsored" target="_blank" style="color:#3fb950">${escHtmlServer(o.referral.referee_value ?? "Save with our referral link")}</a> <a href="/disclosure" style="font-size:.7rem;color:var(--text-dim)">(disclosure)</a></div>` : ""}
       </div>`;
@@ -10172,7 +10185,7 @@ function buildSecurityAlternativesPage(): string {
         name: o.vendor,
         description: o.description,
         offers: { "@type": "Offer", price: "0", priceCurrency: "USD", description: o.tier },
-        url: o.url,
+        ...(offerRetired(o) ? {} : { url: o.url }),
       },
     })),
   };
@@ -10478,7 +10491,7 @@ function buildTestingAlternativesPage(): string {
         <div class="alt-card-links">
           <a href="/vendor/${toSlug(o.vendor)}">Full profile</a>
           <a href="/alternative-to/${toSlug(o.vendor)}">Alternatives</a>
-          <a href="${escHtmlServer(o.url)}" target="_blank" rel="noopener">Pricing &nearr;</a>
+          ${offerPricingLink(o, "Pricing &nearr;")}
         </div>
         ${o.referral ? `<div style="margin-top:.5rem;padding:.4rem .75rem;border:1px solid #3fb95040;border-left:3px solid #3fb950;border-radius:0 6px 6px 0;background:#3fb95010;font-size:.8rem">\ud83d\udd17 <a href="${escHtmlServer(o.referral.url)}" rel="noopener sponsored" target="_blank" style="color:#3fb950">${escHtmlServer(o.referral.referee_value ?? "Save with our referral link")}</a> <a href="/disclosure" style="font-size:.7rem;color:var(--text-dim)">(disclosure)</a></div>` : ""}
       </div>`;
@@ -10509,7 +10522,7 @@ function buildTestingAlternativesPage(): string {
         name: o.vendor,
         description: o.description,
         offers: { "@type": "Offer", price: "0", priceCurrency: "USD", description: o.tier },
-        url: o.url,
+        ...(offerRetired(o) ? {} : { url: o.url }),
       },
     })),
   };
@@ -10799,7 +10812,7 @@ function buildStorageAlternativesPage(): string {
         <div class="alt-card-links">
           <a href="/vendor/${toSlug(o.vendor)}">Full profile</a>
           <a href="/alternative-to/${toSlug(o.vendor)}">Alternatives</a>
-          <a href="${escHtmlServer(o.url)}" target="_blank" rel="noopener">Pricing &nearr;</a>
+          ${offerPricingLink(o, "Pricing &nearr;")}
         </div>
         ${o.referral ? `<div style="margin-top:.5rem;padding:.4rem .75rem;border:1px solid #3fb95040;border-left:3px solid #3fb950;border-radius:0 6px 6px 0;background:#3fb95010;font-size:.8rem">\ud83d\udd17 <a href="${escHtmlServer(o.referral.url)}" rel="noopener sponsored" target="_blank" style="color:#3fb950">${escHtmlServer(o.referral.referee_value ?? "Save with our referral link")}</a> <a href="/disclosure" style="font-size:.7rem;color:var(--text-dim)">(disclosure)</a></div>` : ""}
       </div>`;
@@ -10830,7 +10843,7 @@ function buildStorageAlternativesPage(): string {
         name: o.vendor,
         description: o.description,
         offers: { "@type": "Offer", price: "0", priceCurrency: "USD", description: o.tier },
-        url: o.url,
+        ...(offerRetired(o) ? {} : { url: o.url }),
       },
     })),
   };
@@ -11111,7 +11124,7 @@ function buildAnalyticsAlternativesPage(): string {
         <div class="alt-card-links">
           <a href="/vendor/${toSlug(o.vendor)}">Full profile</a>
           <a href="/alternative-to/${toSlug(o.vendor)}">Alternatives</a>
-          <a href="${escHtmlServer(o.url)}" target="_blank" rel="noopener">Pricing &nearr;</a>
+          ${offerPricingLink(o, "Pricing &nearr;")}
         </div>
         ${o.referral ? `<div style="margin-top:.5rem;padding:.4rem .75rem;border:1px solid #3fb95040;border-left:3px solid #3fb950;border-radius:0 6px 6px 0;background:#3fb95010;font-size:.8rem">\ud83d\udd17 <a href="${escHtmlServer(o.referral.url)}" rel="noopener sponsored" target="_blank" style="color:#3fb950">${escHtmlServer(o.referral.referee_value ?? "Save with our referral link")}</a> <a href="/disclosure" style="font-size:.7rem;color:var(--text-dim)">(disclosure)</a></div>` : ""}
       </div>`;
@@ -11142,7 +11155,7 @@ function buildAnalyticsAlternativesPage(): string {
         name: o.vendor,
         description: o.description,
         offers: { "@type": "Offer", price: "0", priceCurrency: "USD", description: o.tier },
-        url: o.url,
+        ...(offerRetired(o) ? {} : { url: o.url }),
       },
     })),
   };
@@ -11427,7 +11440,7 @@ function buildAiMlAlternativesPage(): string {
         <div class="alt-card-links">
           <a href="/vendor/${toSlug(o.vendor)}">Full profile</a>
           <a href="/alternative-to/${toSlug(o.vendor)}">Alternatives</a>
-          <a href="${escHtmlServer(o.url)}" target="_blank" rel="noopener">Pricing &nearr;</a>
+          ${offerPricingLink(o, "Pricing &nearr;")}
         </div>
         ${o.referral ? `<div style="margin-top:.5rem;padding:.4rem .75rem;border:1px solid #3fb95040;border-left:3px solid #3fb950;border-radius:0 6px 6px 0;background:#3fb95010;font-size:.8rem">\ud83d\udd17 <a href="${escHtmlServer(o.referral.url)}" rel="noopener sponsored" target="_blank" style="color:#3fb950">${escHtmlServer(o.referral.referee_value ?? "Save with our referral link")}</a> <a href="/disclosure" style="font-size:.7rem;color:var(--text-dim)">(disclosure)</a></div>` : ""}
       </div>`;
@@ -11458,7 +11471,7 @@ function buildAiMlAlternativesPage(): string {
         name: o.vendor,
         description: o.description,
         offers: { "@type": "Offer", price: "0", priceCurrency: "USD", description: o.tier },
-        url: o.url,
+        ...(offerRetired(o) ? {} : { url: o.url }),
       },
     })),
   };
@@ -11749,7 +11762,7 @@ function buildEmailAlternativesPage(): string {
         <div class="alt-card-links">
           <a href="/vendor/${toSlug(o.vendor)}">Full profile</a>
           <a href="/alternative-to/${toSlug(o.vendor)}">Alternatives</a>
-          <a href="${escHtmlServer(o.url)}" target="_blank" rel="noopener">Pricing &nearr;</a>
+          ${offerPricingLink(o, "Pricing &nearr;")}
         </div>
         ${o.referral ? `<div style="margin-top:.5rem;padding:.4rem .75rem;border:1px solid #3fb95040;border-left:3px solid #3fb950;border-radius:0 6px 6px 0;background:#3fb95010;font-size:.8rem">\ud83d\udd17 <a href="${escHtmlServer(o.referral.url)}" rel="noopener sponsored" target="_blank" style="color:#3fb950">${escHtmlServer(o.referral.referee_value ?? "Save with our referral link")}</a> <a href="/disclosure" style="font-size:.7rem;color:var(--text-dim)">(disclosure)</a></div>` : ""}
       </div>`;
@@ -11780,7 +11793,7 @@ function buildEmailAlternativesPage(): string {
         name: o.vendor,
         description: o.description,
         offers: { "@type": "Offer", price: "0", priceCurrency: "USD", description: o.tier },
-        url: o.url,
+        ...(offerRetired(o) ? {} : { url: o.url }),
       },
     })),
   };
@@ -12082,7 +12095,7 @@ function buildDesignAlternativesPage(): string {
         <div class="alt-card-links">
           <a href="/vendor/${toSlug(o.vendor)}">Full profile</a>
           <a href="/alternative-to/${toSlug(o.vendor)}">Alternatives</a>
-          <a href="${escHtmlServer(o.url)}" target="_blank" rel="noopener">Pricing &nearr;</a>
+          ${offerPricingLink(o, "Pricing &nearr;")}
         </div>
         ${o.referral ? `<div style="margin-top:.5rem;padding:.4rem .75rem;border:1px solid #3fb95040;border-left:3px solid #3fb950;border-radius:0 6px 6px 0;background:#3fb95010;font-size:.8rem">\ud83d\udd17 <a href="${escHtmlServer(o.referral.url)}" rel="noopener sponsored" target="_blank" style="color:#3fb950">${escHtmlServer(o.referral.referee_value ?? "Save with our referral link")}</a> <a href="/disclosure" style="font-size:.7rem;color:var(--text-dim)">(disclosure)</a></div>` : ""}
       </div>`;
@@ -12113,7 +12126,7 @@ function buildDesignAlternativesPage(): string {
         name: o.vendor,
         description: o.description,
         offers: { "@type": "Offer", price: "0", priceCurrency: "USD", description: o.tier },
-        url: o.url,
+        ...(offerRetired(o) ? {} : { url: o.url }),
       },
     })),
   };
@@ -12419,7 +12432,7 @@ function buildProjectManagementAlternativesPage(): string {
         <div class="alt-card-links">
           <a href="/vendor/${toSlug(o.vendor)}">Full profile</a>
           <a href="/alternative-to/${toSlug(o.vendor)}">Alternatives</a>
-          <a href="${escHtmlServer(o.url)}" target="_blank" rel="noopener">Pricing &nearr;</a>
+          ${offerPricingLink(o, "Pricing &nearr;")}
         </div>
         ${o.referral ? `<div style="margin-top:.5rem;padding:.4rem .75rem;border:1px solid #3fb95040;border-left:3px solid #3fb950;border-radius:0 6px 6px 0;background:#3fb95010;font-size:.8rem">\ud83d\udd17 <a href="${escHtmlServer(o.referral.url)}" rel="noopener sponsored" target="_blank" style="color:#3fb950">${escHtmlServer(o.referral.referee_value ?? "Save with our referral link")}</a> <a href="/disclosure" style="font-size:.7rem;color:var(--text-dim)">(disclosure)</a></div>` : ""}
       </div>`;
@@ -12450,7 +12463,7 @@ function buildProjectManagementAlternativesPage(): string {
         name: o.vendor,
         description: o.description,
         offers: { "@type": "Offer", price: "0", priceCurrency: "USD", description: o.tier },
-        url: o.url,
+        ...(offerRetired(o) ? {} : { url: o.url }),
       },
     })),
   };
@@ -12747,7 +12760,7 @@ function buildIdeCodeEditorsAlternativesPage(): string {
         <div class="alt-card-links">
           <a href="/vendor/${toSlug(o.vendor)}">Full profile</a>
           <a href="/alternative-to/${toSlug(o.vendor)}">Alternatives</a>
-          <a href="${escHtmlServer(o.url)}" target="_blank" rel="noopener">Pricing &nearr;</a>
+          ${offerPricingLink(o, "Pricing &nearr;")}
         </div>
         ${o.referral ? `<div style="margin-top:.5rem;padding:.4rem .75rem;border:1px solid #3fb95040;border-left:3px solid #3fb950;border-radius:0 6px 6px 0;background:#3fb95010;font-size:.8rem">\ud83d\udd17 <a href="${escHtmlServer(o.referral.url)}" rel="noopener sponsored" target="_blank" style="color:#3fb950">${escHtmlServer(o.referral.referee_value ?? "Save with our referral link")}</a> <a href="/disclosure" style="font-size:.7rem;color:var(--text-dim)">(disclosure)</a></div>` : ""}
       </div>`;
@@ -12778,7 +12791,7 @@ function buildIdeCodeEditorsAlternativesPage(): string {
         name: o.vendor,
         description: o.description,
         offers: { "@type": "Offer", price: "0", priceCurrency: "USD", description: o.tier },
-        url: o.url,
+        ...(offerRetired(o) ? {} : { url: o.url }),
       },
     })),
   };
@@ -13056,7 +13069,7 @@ function buildFreeLlmApisPage(): string {
         <div class="alt-card-links">
           <a href="/vendor/${toSlug(o.vendor)}">Full profile</a>
           <a href="/alternative-to/${toSlug(o.vendor)}">Alternatives</a>
-          <a href="${escHtmlServer(o.url)}" target="_blank" rel="noopener">Pricing &nearr;</a>
+          ${offerPricingLink(o, "Pricing &nearr;")}
         </div>
         ${o.referral ? `<div style="margin-top:.5rem;padding:.4rem .75rem;border:1px solid #3fb95040;border-left:3px solid #3fb950;border-radius:0 6px 6px 0;background:#3fb95010;font-size:.8rem">\ud83d\udd17 <a href="${escHtmlServer(o.referral.url)}" rel="noopener sponsored" target="_blank" style="color:#3fb950">${escHtmlServer(o.referral.referee_value ?? "Save with our referral link")}</a> <a href="/disclosure" style="font-size:.7rem;color:var(--text-dim)">(disclosure)</a></div>` : ""}
       </div>`;
@@ -13087,7 +13100,7 @@ function buildFreeLlmApisPage(): string {
         name: o.vendor,
         description: o.description,
         offers: { "@type": "Offer", price: "0", priceCurrency: "USD", description: o.tier },
-        url: o.url,
+        ...(offerRetired(o) ? {} : { url: o.url }),
       },
     })),
   };
@@ -13374,7 +13387,7 @@ function buildApiDevelopmentAlternativesPage(): string {
         <div class="alt-card-links">
           <a href="/vendor/${toSlug(o.vendor)}">Full profile</a>
           <a href="/alternative-to/${toSlug(o.vendor)}">Alternatives</a>
-          <a href="${escHtmlServer(o.url)}" target="_blank" rel="noopener">Pricing &nearr;</a>
+          ${offerPricingLink(o, "Pricing &nearr;")}
         </div>
         ${o.referral ? `<div style="margin-top:.5rem;padding:.4rem .75rem;border:1px solid #3fb95040;border-left:3px solid #3fb950;border-radius:0 6px 6px 0;background:#3fb95010;font-size:.8rem">\ud83d\udd17 <a href="${escHtmlServer(o.referral.url)}" rel="noopener sponsored" target="_blank" style="color:#3fb950">${escHtmlServer(o.referral.referee_value ?? "Save with our referral link")}</a> <a href="/disclosure" style="font-size:.7rem;color:var(--text-dim)">(disclosure)</a></div>` : ""}
       </div>`;
@@ -13405,7 +13418,7 @@ function buildApiDevelopmentAlternativesPage(): string {
         name: o.vendor,
         description: o.description,
         offers: { "@type": "Offer", price: "0", priceCurrency: "USD", description: o.tier },
-        url: o.url,
+        ...(offerRetired(o) ? {} : { url: o.url }),
       },
     })),
   };
@@ -13689,7 +13702,7 @@ function buildTeamCollaborationAlternativesPage(): string {
         <div class="alt-card-links">
           <a href="/vendor/${toSlug(o.vendor)}">Full profile</a>
           <a href="/alternative-to/${toSlug(o.vendor)}">Alternatives</a>
-          <a href="${escHtmlServer(o.url)}" target="_blank" rel="noopener">Pricing &nearr;</a>
+          ${offerPricingLink(o, "Pricing &nearr;")}
         </div>
         ${o.referral ? `<div style="margin-top:.5rem;padding:.4rem .75rem;border:1px solid #3fb95040;border-left:3px solid #3fb950;border-radius:0 6px 6px 0;background:#3fb95010;font-size:.8rem">\ud83d\udd17 <a href="${escHtmlServer(o.referral.url)}" rel="noopener sponsored" target="_blank" style="color:#3fb950">${escHtmlServer(o.referral.referee_value ?? "Save with our referral link")}</a> <a href="/disclosure" style="font-size:.7rem;color:var(--text-dim)">(disclosure)</a></div>` : ""}
       </div>`;
@@ -13720,7 +13733,7 @@ function buildTeamCollaborationAlternativesPage(): string {
         name: o.vendor,
         description: o.description,
         offers: { "@type": "Offer", price: "0", priceCurrency: "USD", description: o.tier },
-        url: o.url,
+        ...(offerRetired(o) ? {} : { url: o.url }),
       },
     })),
   };
@@ -14093,7 +14106,7 @@ function buildFreeStartupStackPage(): string {
         <div class="pick-links">
           <a href="/vendor/${toSlug(rec.vendor)}">Full profile</a>
           <a href="/alternative-to/${toSlug(rec.vendor)}">Alternatives</a>
-          <a href="${escHtmlServer(rec.url)}" target="_blank" rel="noopener">Pricing &nearr;</a>
+          ${offerPricingLink(rec, "Pricing &nearr;")}
         </div>
       </div>` : "";
 
@@ -14406,7 +14419,7 @@ function buildFreeAiStackPage(): string {
         <div class="pick-links">
           <a href="/vendor/${toSlug(rec.vendor)}">Full profile</a>
           <a href="/alternative-to/${toSlug(rec.vendor)}">Alternatives</a>
-          <a href="${escHtmlServer(rec.url)}" target="_blank" rel="noopener">Pricing &nearr;</a>
+          ${offerPricingLink(rec, "Pricing &nearr;")}
         </div>
       </div>` : "";
 
@@ -14756,7 +14769,7 @@ function buildFreeDevopsStackPage(): string {
         <div class="pick-links">
           <a href="/vendor/${toSlug(rec.vendor)}">Full profile</a>
           <a href="/alternative-to/${toSlug(rec.vendor)}">Alternatives</a>
-          <a href="${escHtmlServer(rec.url)}" target="_blank" rel="noopener">Pricing &nearr;</a>
+          ${offerPricingLink(rec, "Pricing &nearr;")}
         </div>
       </div>` : "";
 
@@ -15107,7 +15120,7 @@ function buildFreeFrontendStackPage(): string {
         <div class="pick-links">
           <a href="/vendor/${toSlug(rec.vendor)}">Full profile</a>
           <a href="/alternative-to/${toSlug(rec.vendor)}">Alternatives</a>
-          <a href="${escHtmlServer(rec.url)}" target="_blank" rel="noopener">Pricing &nearr;</a>
+          ${offerPricingLink(rec, "Pricing &nearr;")}
         </div>
       </div>` : "";
 
@@ -15475,7 +15488,7 @@ function buildFreeNextjsStackPage(): string {
         <div class="pick-links">
           <a href="/vendor/${toSlug(rec.vendor)}">Full profile</a>
           <a href="/alternative-to/${toSlug(rec.vendor)}">Alternatives</a>
-          <a href="${escHtmlServer(rec.url)}" target="_blank" rel="noopener">Pricing &nearr;</a>
+          ${offerPricingLink(rec, "Pricing &nearr;")}
         </div>
       </div>` : "";
 
@@ -15871,7 +15884,7 @@ function buildFreeDjangoStackPage(): string {
         <div class="pick-links">
           <a href="/vendor/${toSlug(rec.vendor)}">Full profile</a>
           <a href="/alternative-to/${toSlug(rec.vendor)}">Alternatives</a>
-          <a href="${escHtmlServer(rec.url)}" target="_blank" rel="noopener">Pricing &nearr;</a>
+          ${offerPricingLink(rec, "Pricing &nearr;")}
         </div>
       </div>` : cat.recommended.vendor === "Django Built-in Auth" ? `
       <div class="stack-pick">
@@ -16307,7 +16320,7 @@ function buildFreeFastapiStackPage(): string {
         <div class="pick-links">
           <a href="/vendor/${toSlug(rec.vendor)}">Full profile</a>
           <a href="/alternative-to/${toSlug(rec.vendor)}">Alternatives</a>
-          <a href="${escHtmlServer(rec.url)}" target="_blank" rel="noopener">Pricing &nearr;</a>
+          ${offerPricingLink(rec, "Pricing &nearr;")}
         </div>
       </div>` : cat.recommended.vendor === "FastAPI Built-in" ? `
       <div class="stack-pick">
@@ -16760,7 +16773,7 @@ function buildFreeGoStackPage(): string {
         <div class="pick-links">
           <a href="/vendor/${toSlug(rec.vendor)}">Full profile</a>
           <a href="/alternative-to/${toSlug(rec.vendor)}">Alternatives</a>
-          <a href="${escHtmlServer(rec.url)}" target="_blank" rel="noopener">Pricing &nearr;</a>
+          ${offerPricingLink(rec, "Pricing &nearr;")}
         </div>
       </div>` : (cat.recommended.vendor === "Go Goroutines" || cat.recommended.vendor === "swaggo/swag") ? `
       <div class="stack-pick">
@@ -17247,7 +17260,7 @@ function buildFreeSaasStackPage(): string {
         <div class="pick-links">
           <a href="/vendor/${toSlug(rec.vendor)}">Full profile</a>
           <a href="/alternative-to/${toSlug(rec.vendor)}">Alternatives</a>
-          <a href="${escHtmlServer(rec.url)}" target="_blank" rel="noopener">Pricing &nearr;</a>
+          ${offerPricingLink(rec, "Pricing &nearr;")}
         </div>
       </div>` : (cat.recommended.vendor === "Stripe") ? `
       <div class="stack-pick">
@@ -31876,7 +31889,7 @@ function buildX402ServicesPage(): string {
       "@type": "ListItem",
       position: i + 1,
       name: o.vendor,
-      url: o.url,
+      ...(offerRetired(o) ? {} : { url: o.url }),
     })),
   };
 
@@ -50137,7 +50150,7 @@ function buildAgentStackPage(): string {
             <td class="role-cell">${escHtmlServer(svc.role)}</td>
             <td><a href="/vendor/${svc.slug}" class="vendor-link">${escHtmlServer(svc.vendorName)}</a> <span class="tier-badge">${escHtmlServer(svc.tier)}</span></td>
             <td class="limits-cell">${escHtmlServer(shortLimits)}</td>
-            <td class="link-cell"><a href="${escHtmlServer(svc.url)}" target="_blank" rel="noopener">Pricing \u2192</a></td>
+            <td class="link-cell">${offerPricingLink(svc, "Pricing →")}</td>
           </tr>`;
     }).join("\n");
 
