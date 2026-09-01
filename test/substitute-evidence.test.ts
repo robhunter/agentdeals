@@ -185,6 +185,16 @@ describe("a page with no evidence of a product class", () => {
     );
   });
 
+  it("counts no list on the vendor page either", async () => {
+    const { status, body } = await get("/vendor/datadog");
+    assert.strictEqual(status, 200);
+    const subhead = body.match(/<p class="page-meta">([\s\S]*?)<\/p>/)?.[1] ?? "";
+    assert.ok(subhead.length > 0, "the vendor page must carry a subhead for this to test anything");
+    assert.doesNotMatch(subhead, /\b0 alternatives\b/, "the subhead counts a list the page does not publish");
+    const metaDesc = body.match(/<meta name="description" content="([^"]*)"/)?.[1] ?? "";
+    assert.doesNotMatch(metaDesc, /\b0 (free )?alternatives\b/);
+  });
+
   it("names none of them through the vendor page or the API either", async () => {
     const vendor = await get("/vendor/sendgrid");
     assert.strictEqual(vendor.status, 200);

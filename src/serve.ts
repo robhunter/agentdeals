@@ -4203,7 +4203,7 @@ ${mcpCtaCss()}
 ${riskCauseLine}
 ${linkUnreachableLine}
 ${productRoleLine}${productSubtypesLine}
-  <p class="page-meta">Limits, pricing history, and ${alternatives.length} alternatives.${verifiedSentence} Last updated ${escHtmlServer(lastUpdated)}.</p>
+  <p class="page-meta">Limits, pricing history${alternatives.length > 0 ? `, and ${alternatives.length} alternatives` : ""}.${verifiedSentence} Last updated ${escHtmlServer(lastUpdated)}.</p>
 ${quickVerdictHtml}
 ${categoryContextHtml}
 ${changeNoticeHtml}
