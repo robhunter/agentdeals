@@ -5,16 +5,47 @@ import { readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { partitionSubstitutes, subtypeGateBinds, substitutesFor } from "../dist/product-role.js";
-import type { Offer } from "../src/types.ts";
+import { toSlug, vendorSlugMap } from "../dist/vendor-slug.js";
+import { curatedAlternativeNames } from "../dist/curated-alternatives.js";
+import type { DealChange, Offer } from "../src/types.ts";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(__dirname, "..");
 
 const offers: Offer[] = JSON.parse(readFileSync(path.join(REPO, "data", "index.json"), "utf-8")).offers;
+const changes: DealChange[] = JSON.parse(readFileSync(path.join(REPO, "data", "deal_changes.json"), "utf-8")).changes;
 
 const CLASSIFIED_CATEGORIES = ["Databases", "Cloud Hosting"];
 const SENDGRID_WRONG_CLASS = ["Bench", "Remote for Startups", "Esri Startup Program"];
 const SENDGRID_CURATED = ["Postmark", "Resend", "Amazon SES"];
+
+interface UnclassifiedSubject {
+  vendor: string;
+  slug: string;
+  category: string;
+  peers: number;
+}
+
+function unclassifiedSubject(): UnclassifiedSubject | null {
+  const inCategory = new Map<string, Offer[]>();
+  const classified = new Set<string>();
+  for (const offer of offers) {
+    if (!inCategory.has(offer.category)) inCategory.set(offer.category, []);
+    inCategory.get(offer.category)!.push(offer);
+    if ((offer.product_subtypes?.labels.length ?? 0) > 0) classified.add(offer.category);
+  }
+  const ranked = [...inCategory.entries()]
+    .filter(([category]) => !classified.has(category))
+    .sort((a, b) => b[1].length - a[1].length || a[0].localeCompare(b[0]));
+  for (const [category, list] of ranked) {
+    const vendors = [...new Set(list.map(o => o.vendor))].sort();
+    const vendor = vendors.find(v => curatedAlternativeNames(v, changes).length === 0 && vendorSlugMap.get(toSlug(v)) === v);
+    if (vendor) return { vendor, slug: toSlug(vendor), category, peers: vendors.length - 1 };
+  }
+  return null;
+}
+
+const subjectWithNoClass = unclassifiedSubject();
 
 function offerFixture(vendor: string, category: string, subtypes?: string[]): Offer {
   return {
@@ -162,10 +193,18 @@ describe("/alternative-to/sendgrid", () => {
 });
 
 describe("a page with no evidence of a product class", () => {
+  it("draws its subject from the largest category no record carries a subtype for", () => {
+    assert.ok(
+      subjectWithNoClass,
+      "every category now carries a subtype, so this block has no subject left and needs one that publishes an empty substitute list for another reason",
+    );
+    assert.ok(subjectWithNoClass!.peers >= 3, `${subjectWithNoClass!.vendor} must have same-category peers it would be offered but for the gate, found ${subjectWithNoClass!.peers}`);
+  });
+
   it("offers no substitute, heads no list of them, and still answers", async () => {
-    const { status, body } = await get("/alternative-to/datadog");
+    const { status, body } = await get(`/alternative-to/${subjectWithNoClass!.slug}`);
     assert.strictEqual(status, 200);
-    assert.strictEqual((body.match(/class="alt-vendor-name"/g) ?? []).length, 0);
+    assert.strictEqual((body.match(/class="alt-vendor-name"/g) ?? []).length, 0, `/alternative-to/${subjectWithNoClass!.slug} names a substitute`);
     assert.doesNotMatch(body, /All Free Alternatives \(/);
     assert.ok(!jsonLdBlocks(body).some(b => b["@type"] === "ItemList"), "an empty set must not ship as an ItemList");
     const ogDescription = body.match(/<meta property="og:description" content="([^"]*)"/)?.[1] ?? "";
@@ -176,10 +215,10 @@ describe("a page with no evidence of a product class", () => {
   });
 
   it("asks no question it cannot answer", async () => {
-    const { body } = await get("/alternative-to/datadog");
+    const { body } = await get(`/alternative-to/${subjectWithNoClass!.slug}`);
     const faq = jsonLdBlocks(body).find(b => b["@type"] === "FAQPage");
     assert.ok(!faq, "a page with no substitute list publishes no questions about one");
-    const vendor = await get("/vendor/datadog");
+    const vendor = await get(`/vendor/${subjectWithNoClass!.slug}`);
     const vendorFaq = jsonLdBlocks(vendor.body).find(b => b["@type"] === "FAQPage") as { mainEntity: Array<{ name: string }> } | undefined;
     assert.ok(vendorFaq, "the questions we can answer about the vendor stay published on the vendor page");
     assert.ok(
@@ -189,7 +228,7 @@ describe("a page with no evidence of a product class", () => {
   });
 
   it("counts no list on the vendor page either", async () => {
-    const { status, body } = await get("/vendor/datadog");
+    const { status, body } = await get(`/vendor/${subjectWithNoClass!.slug}`);
     assert.strictEqual(status, 200);
     const subhead = body.match(/<p class="page-meta">([\s\S]*?)<\/p>/)?.[1] ?? "";
     assert.ok(subhead.length > 0, "the vendor page must carry a subhead for this to test anything");
