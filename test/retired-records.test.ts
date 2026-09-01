@@ -6,6 +6,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const { offerRetired, recordedTierSentence } = await import("../dist/retirement.js");
+const { gateFor, utcDate } = await import("../dist/ranking.js");
 
 type Offer = import("../src/types.ts").Offer;
 
@@ -197,6 +198,7 @@ describe("a record that is not retired keeps everything the gate would take away
   it("still answers yes where nothing else withholds the answer", () => {
     const plainlyFree = renderedVendorPages.filter(
       p => !offerRetired(p.offer) && !p.offer.eligibility && p.offer.source_check?.outcome === "ok"
+        && !gateFor(p.offer, utcDate())
         && p.offer.tier.toLowerCase() !== "none"
         && !p.offer.description.toLowerCase().includes("no free tier"),
     );
