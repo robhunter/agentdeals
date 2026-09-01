@@ -177,11 +177,14 @@ describe("a page with no evidence of a product class", () => {
 
   it("asks no question it cannot answer", async () => {
     const { body } = await get("/alternative-to/datadog");
-    const faq = jsonLdBlocks(body).find(b => b["@type"] === "FAQPage") as { mainEntity: Array<{ name: string }> } | undefined;
-    assert.ok(faq, "the page must still ship FAQPage structured data");
+    const faq = jsonLdBlocks(body).find(b => b["@type"] === "FAQPage");
+    assert.ok(!faq, "a page with no substitute list publishes no questions about one");
+    const vendor = await get("/vendor/datadog");
+    const vendorFaq = jsonLdBlocks(vendor.body).find(b => b["@type"] === "FAQPage") as { mainEntity: Array<{ name: string }> } | undefined;
+    assert.ok(vendorFaq, "the questions we can answer about the vendor stay published on the vendor page");
     assert.ok(
-      !faq.mainEntity.some(q => q.name.startsWith("What are the best free alternatives")),
-      "the page asks for a best alternative it publishes none of",
+      !vendorFaq.mainEntity.some(q => q.name.startsWith("What are the best free alternatives")),
+      "the vendor page asks for a best alternative it publishes none of",
     );
   });
 

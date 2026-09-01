@@ -63,7 +63,7 @@ export const SUBTYPE_MEMBERSHIP_GROUPS: Record<string, SubtypeMembershipGroup[]>
 };
 
 export const SUBTYPE_MEMBERSHIP_RULE =
-  "Two offers in the same category are alternatives when their subtype sets share at least one member, or when both carry a subtype from one of the membership groups below.";
+  "Two offers in the same category are alternatives when their subtype sets share at least one member, or when both carry a subtype from one of the membership groups below. A record we have not classified is offered no substitutes and is offered as one to no one. It stays listed in its category, in search, and on best-of pages.";
 
 export const SUBTYPE_MEMBERSHIP_GROUP_SCOPE =
   "A group answers whether a product could substitute at all. Which one is the better answer is ordering, and ordering is a separate, seeded, published concern that reads none of this.";

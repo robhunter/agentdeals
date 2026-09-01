@@ -52,7 +52,7 @@ case_run "the disallow names a path nothing serves" \
   'Disallow: /nothing-we-serve'
 
 case_run "the search page drops its robots meta" \
-  "+ SEARCH_PAGE_ROBOTS_META + '\\n'
+  "+ NOINDEX_FOLLOW_META + '\\n'
     " \
   "+ "
 

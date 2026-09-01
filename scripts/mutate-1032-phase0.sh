@@ -69,8 +69,8 @@ m_pool_is_intersected_again() {
 p = "src/serve.ts"
 s = open(p).read()
 s = s.replace(
-  "partitionAlternativesAcross(addCuratedToPool(dedupedAlts, curated.matched), vendorOffers, {",
-  "partitionAlternativesAcross(dedupedAlts, vendorOffers, {")
+  "partitionSubstitutes(addCuratedToPool(pool, curated.matched), vendorOffers, {",
+  "partitionSubstitutes(pool, vendorOffers, {")
 open(p, "w").write(s)
 PY
 }

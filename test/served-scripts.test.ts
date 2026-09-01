@@ -76,11 +76,17 @@ const TEMPLATE_SAMPLES = 5;
 
 async function everyPageTemplate(): Promise<string[]> {
   const routes = new Set<string>(["/"]);
+  const vendorSlugs: string[] = [];
   for (const sitemap of locsIn(await body("/sitemap.xml"))) {
     const repeated = /vendors|comparisons/.test(sitemap);
     const locs = locsIn(await body(sitemap));
+    for (const loc of locs) {
+      const slug = loc.match(/^\/vendor\/([^/]+)$/)?.[1];
+      if (slug) vendorSlugs.push(slug);
+    }
     for (const loc of repeated ? locs.slice(0, TEMPLATE_SAMPLES) : locs) routes.add(loc);
   }
+  for (const slug of vendorSlugs) routes.add(`/alternative-to/${slug}`);
   return [...routes].filter((route) => !route.endsWith(".xml"));
 }
 
