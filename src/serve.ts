@@ -41,7 +41,7 @@ import { faqPageJsonLd, type FaqItem } from "./faq-provenance.js";
 import { SSE_KEEPALIVE_FRAME, keepaliveIntervalMs, sessionRecoveryBody } from "./mcp-stream.js";
 import { ASSISTANTS_API_SHUTDOWN } from "./assistants-shutdown.js";
 import { discontinuedOnOrBefore, PRODUCT_DEPRECATED } from "./product-deprecation.js";
-import { rankOffers, rankForListing, rotateListing, utcDate, CRITERIA_PATH, DEMOTE_ONLY_POLICY, DISCLOSURE_RATIONALE, TIE_BREAK_ALGORITHM, GATE_TABLE, DEMERIT_TABLE, NOT_FREE_TIER_RULES, TIME_LIMITED_TIER_RULES, type TieBreak } from "./ranking.js";
+import { rankOffers, rankForListing, rotateListing, utcDate, gateFor, CRITERIA_PATH, DEMOTE_ONLY_POLICY, DISCLOSURE_RATIONALE, TIE_BREAK_ALGORITHM, GATE_TABLE, DEMERIT_TABLE, NOT_FREE_TIER_RULES, TIME_LIMITED_TIER_RULES, type TieBreak } from "./ranking.js";
 import type { RankedEntry, RankingResult } from "./ranking.js";
 import { eligibilityGate, gatedShareDescriptionClause, gatedShareLede, publishableEligibilityConditions } from "./eligibility.js";
 import { verificationLedger, QUARANTINE_AFTER_FAILURES } from "./verification-state.js";
@@ -3668,6 +3668,10 @@ const erosionAffectedCategories = (() => {
 
 const CURATED_ALTS_HEADING = "Recommended Migration Targets";
 
+const NO_FREE_TIER_FOR_PRODUCTION = "There is no free tier here to run in production.";
+
+const GATES_LEAVING_NO_FREE_TIER: readonly string[] = ["not_a_free_offer", "offer_expired"];
+
 function curatedAltsNote(vendorName: string): string {
   return `These alternatives were identified from ${escHtmlServer(vendorName)}&rsquo;s pricing changes as recommended replacements.`;
 }
@@ -3713,8 +3717,12 @@ function buildVendorPage(slug: string): string | null {
 
   const primaryEligibilityGate = eligibilityGate(primary);
   const primaryEligibilityConditions = publishableEligibilityConditions(primary);
-  const eligibilityGateLine = primaryEligibilityGate
-    ? `\n  <p class="eligibility-gate-line" style="margin:.4rem 0 .6rem;font-size:.9rem;color:var(--text-muted)"><strong style="color:#d29922;font-family:var(--mono)">${escHtmlServer(primaryEligibilityGate.code)}</strong> ${escHtmlServer(primaryEligibilityGate.reason)} <a href="${CRITERIA_PATH}#gates">How we use this</a>.</p>${
+  const primaryGate = gateFor(primary, servedOn);
+  const primaryGateBeyondEligibility = primaryGate && primaryGate.code !== "eligibility_restricted" ? primaryGate : null;
+  const productionGate = primaryGate && GATES_LEAVING_NO_FREE_TIER.includes(primaryGate.code) ? primaryGate : null;
+  const linedGate = primaryGate && primaryGate.code !== "offer_retired" ? primaryGate : null;
+  const gateLine = linedGate
+    ? `\n  <p class="gate-line" style="margin:.4rem 0 .6rem;font-size:.9rem;color:var(--text-muted)"><strong style="color:#d29922;font-family:var(--mono)">${escHtmlServer(linedGate.code)}</strong> ${escHtmlServer(linedGate.reason)} <a href="${CRITERIA_PATH}#gates">How we use this</a>.</p>${
         primaryEligibilityConditions.length > 0
           ? `\n  <ul class="eligibility-conditions" style="margin:.2rem 0 .6rem 1.1rem;padding:0;font-size:.9rem;color:var(--text-muted)">${primaryEligibilityConditions.map(c => `<li>${escHtmlServer(c)}</li>`).join("")}</ul>`
           : ""
@@ -3772,9 +3780,12 @@ function buildVendorPage(slug: string): string | null {
   const currentYear = new Date().getFullYear();
   const retiredSentence = offerRetired(primary) ? recordedTierSentence(vendorName, primary.tier) : "";
   const hasFree = !retiredSentence && primary.tier.toLowerCase() !== "none" && !primary.description.toLowerCase().includes("no free tier");
+  const freeTierHeadline = `${vendorName} Free Tier ${currentYear}`;
+  const pricingHeadline = `${vendorName} Pricing ${currentYear}`;
+  const headline = offerHasEnded ? endedHeadline(vendorName) : hasFree ? freeTierHeadline : pricingHeadline;
   const title = hasFree
-    ? `${vendorName} Free Tier ${currentYear}: Limits, Pricing & What Changed | AgentDeals`
-    : `${vendorName} Pricing ${currentYear}: Plans, Costs & Free Alternatives | AgentDeals`;
+    ? `${freeTierHeadline}: Limits, Pricing & What Changed | AgentDeals`
+    : `${pricingHeadline}: Plans, Costs & Free Alternatives | AgentDeals`;
   const descLimits = primary.description.slice(0, 100).replace(/\.\s.*$/, "");
   const verifiedMonth = (() => { const d = primary.verifiedDate.split("-"); const months = ["January","February","March","April","May","June","July","August","September","October","November","December"]; return `${months[parseInt(d[1],10)-1]} ${d[0]}`; })();
   const verifiedSentence = discontinuedOn
@@ -4104,6 +4115,8 @@ ${allCompareLinks.join("\n")}
     : "";
   const faqFreeAnswer = retiredSentence
     ? `${retiredSentence} ${storedTerms}`
+    : primaryGateBeyondEligibility
+    ? `${primaryGateBeyondEligibility.reason} ${levelWithheld ? `${unconfirmedTermsPreamble}${withUnconfirmedTermsCaveat(storedTerms)}` : storedTerms}`
     : levelWithheld
     ? `${eligibilityGateSentence}${unconfirmedTermsPreamble}Our stored record says ${vendorName} offers a free tier: ${primary.tier}. ${withUnconfirmedTermsCaveat(storedTerms)}${eligibilityConditionsSentence}`
     : primaryEligibilityGate
@@ -4111,6 +4124,8 @@ ${allCompareLinks.join("\n")}
     : `Yes, ${vendorName} offers a free tier: ${primary.tier}. ${storedTerms}`;
   const faqTierAnswer = retiredSentence
     ? `${retiredSentence} ${primary.description}`
+    : primaryGateBeyondEligibility
+    ? `${primaryGateBeyondEligibility.reason} ${levelWithheld ? `${unconfirmedTermsPreamble}${withUnconfirmedTermsCaveat(primary.description)}` : primary.description}`
     : eligibilityGateSentence + (levelWithheld
     ? `${unconfirmedTermsPreamble}Our stored record calls ${vendorName}'s free tier "${primary.tier}". ${withUnconfirmedTermsCaveat(primary.description)}`
     : `${vendorName}'s free tier is called "${primary.tier}". ${primary.description}`);
@@ -4125,11 +4140,13 @@ ${allCompareLinks.join("\n")}
     : `${vendorName}'s free tier is considered risky because of one specific recorded change${riskCause ? `, ${changeDateClause(riskCause)}: ${riskCause.summary}` : "."} Consider alternatives.`;
   const faqCategoryAnswer = `${vendorName} is categorized under ${allCategories.join(", ")} on AgentDeals.${alternatives.length > 0 ? ` Other vendors in ${primary.category} include ${alternatives.slice(0, 5).map(a => a.vendor).join(", ")}.` : ""}`;
 
-  const faqProductionAnswer = eligibilityGateSentence + (levelWithheld
+  const faqProductionAnswer = productionGate
+    ? `${productionGate.reason} ${NO_FREE_TIER_FOR_PRODUCTION}`
+    : eligibilityGateSentence + (levelWithheld
     ? `${withheldLevelSentence(levelWithheld, vendorName, unconfirmableSince)} We cannot confirm what this offer provides today, so we are not recommending it for production or for anything else until we can.`
     : hasFree
     ? (riskLevel === "stable"
-      ? `${vendorName}'s free tier can be suitable for small production workloads and side projects. We rate it stable and it offers ${escHtmlServer(keyLimit)}, so it's a reasonable starting point.${vendorChanges.length > 0 ? ` ${narrowingSentence(vendorChanges)}` : ""} Monitor your usage against the limits and have an upgrade plan ready.`
+      ? `${vendorName}'s free tier can be suitable for small production workloads and side projects. ${primaryGate ? "It" : "We rate it stable and it"} offers ${escHtmlServer(keyLimit)}, so it's a reasonable starting point.${vendorChanges.length > 0 ? ` ${narrowingSentence(vendorChanges)}` : ""} Monitor your usage against the limits and have an upgrade plan ready.`
       : `${vendorName}'s free tier is usable for prototyping and development, but we rate it ${riskLevel}${riskCause ? ` because of one recorded ${changeKindNoun(riskCause.change_type)}, ${changeDateClause(riskCause)}` : ""}. Consider alternatives with more stable pricing for critical services.`)
     : `${vendorName} does not offer a free tier for production use. Consider free alternatives in ${primary.category}.`);
   const faqChangedAnswer = vendorChanges.length > 0
@@ -4262,7 +4279,7 @@ ${mcpCtaCss()}
 <div class="container">
   ${buildGlobalNav("categories")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/vendor">Vendors</a> &rsaquo; ${escHtmlServer(vendorName)}</div>
-  <h1>${offerHasEnded ? escHtmlServer(endedHeadline(vendorName)) : `${escHtmlServer(vendorName)} Free Tier ${currentYear}`}${h1RiskBadge}</h1>${eligibilityGateLine}
+  <h1>${escHtmlServer(headline)}${h1RiskBadge}</h1>${gateLine}
 ${riskCauseLine}
 ${linkUnreachableLine}
 ${productRoleLine}${productSubtypesLine}

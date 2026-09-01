@@ -7,7 +7,7 @@ import { fileURLToPath } from "node:url";
 
 const { eligibilityGate, publishableEligibilityConditions, CONDITION_RECORDING_AN_UNREAD_PROGRAM } =
   await import("../dist/eligibility.js");
-const { gateFor } = await import("../dist/ranking.js");
+const { gateFor, utcDate } = await import("../dist/ranking.js");
 
 type Offer = import("../src/types.ts").Offer;
 
@@ -122,7 +122,7 @@ describe("a vendor page whose record is gated on eligibility says so", () => {
   });
 
   it("still answers yes where the page renders an ungated record for a vendor that also holds a gated one", () => {
-    const controls = rendered.filter(p => !p.offer.eligibility);
+    const controls = rendered.filter(p => !p.offer.eligibility && !gateFor(p.offer, utcDate()));
     assert.ok(
       controls.length > 0,
       "every vendor holding a gated record now renders it, so the over-fire control has no subject",
@@ -132,7 +132,7 @@ describe("a vendor page whose record is gated on eligibility says so", () => {
         (faqAnswer(p.html, `Is ${p.vendor} free?`) ?? "").startsWith("Yes"),
         `${p.slug} lost an answer it was entitled to`,
       );
-      assert.ok(!p.html.includes("eligibility-gate-line"), `${p.slug} renders a gate it does not carry`);
+      assert.ok(!p.html.includes("gate-line"), `${p.slug} renders a gate it does not carry`);
     }
   });
 
@@ -163,7 +163,7 @@ describe("a vendor page whose record is gated on eligibility says so", () => {
       "the placeholder condition is gone from the data, so this branch has no subject",
     );
     for (const p of placeholderOnly) {
-      assert.ok(p.html.includes("eligibility-gate-line"), `${p.slug} states no restriction`);
+      assert.ok(p.html.includes("gate-line"), `${p.slug} states no restriction`);
       assert.ok(!p.html.includes(escapeHtml(CONDITION_RECORDING_AN_UNREAD_PROGRAM)), `${p.slug} publishes the placeholder`);
     }
   });

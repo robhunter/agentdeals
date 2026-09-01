@@ -71,6 +71,11 @@ function headingOf(html: string): string {
   return m ? m[1] : "";
 }
 
+function titleOf(html: string): string {
+  const m = /<title>([\s\S]*?)<\/title>/.exec(html);
+  return m ? m[1] : "";
+}
+
 function faqAnswer(html: string, questionFragment: string): string {
   const pattern = new RegExp(`"name":"([^"]*${questionFragment}[^"]*)","acceptedAnswer":\\{"@type":"Answer","text":"([\\s\\S]*?)"\\}`);
   const m = pattern.exec(html);
@@ -332,14 +337,18 @@ describe("a deprecated offer the ranker still rates keeps its rating", () => {
 });
 
 describe("the live catalog keeps the page it had", () => {
-  it("heads all but the ended records with the free-tier form", async () => {
+  it("heads all but the ended records with the form their own title uses", async () => {
     const live = offers.filter(o => !offerEnded(o)).slice(0, 60);
     let headed = 0;
+    let titled = 0;
     for (const record of live) {
-      const heading = headingOf(await page(`/vendor/${slugOf(record.vendor)}`));
+      const html = await page(`/vendor/${slugOf(record.vendor)}`);
+      const heading = headingOf(html);
       if (/Free Tier \d{4}/.test(heading)) headed++;
+      if (/ Free Tier \d{4}:/.test(titleOf(html))) titled++;
       assert.ok(!heading.includes("free tier retired"), `${record.vendor} is headed as retired`);
     }
-    assert.strictEqual(headed, live.length, `${live.length - headed} live records lost the free-tier heading`);
+    assert.ok(titled > 0, "no live record in this sample carries the free-tier title");
+    assert.strictEqual(headed, titled, `${titled - headed} live records lost the free-tier heading`);
   });
 });
