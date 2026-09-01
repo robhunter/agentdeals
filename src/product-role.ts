@@ -46,6 +46,21 @@ export const SUBTYPE_TAXONOMIES: Record<string, Array<{ subtype: string; definit
     { subtype: "backend_as_a_service", definition: "an API bundling a datastore with auth, push or realtime; there is no server you deploy" },
     { subtype: "agent_sandbox", definition: "isolated execution environments provisioned programmatically, sold for AI agent workloads" },
   ],
+  Monitoring: [
+    { subtype: "uptime_check", definition: "polls a URL or host from outside your infrastructure on a fixed interval and alerts when it stops answering; it runs no code of yours" },
+    { subtype: "synthetic_check", definition: "runs a check you author — a scripted browser session, a multi-step API call, or an assertion on a response body — on a schedule from outside your infrastructure, and reports whether the behaviour it asserts still holds" },
+    { subtype: "host_metrics", definition: "an agent you install on a machine reports CPU, memory, disk and process state for that machine" },
+    { subtype: "apm_traces", definition: "instruments application code and reports per-request latency, throughput and spans across services" },
+    { subtype: "log_management", definition: "ingests, stores and queries log lines; the line is the stored unit and retention is a priced dimension" },
+    { subtype: "metrics_backend", definition: "stores time-indexed measurements and serves queries over them; dashboards and alerting are built on top rather than sold as the product" },
+    { subtype: "dashboards", definition: "renders charts, dashboards and alert rules over telemetry held in stores it does not own; what is sold is the view, not the store" },
+    { subtype: "error_tracking", definition: "captures unhandled exceptions with stack traces and groups repeat occurrences into one issue" },
+    { subtype: "cron_monitor", definition: "waits for a scheduled job to check in and alerts on the absence of the check-in rather than on a failure it observed" },
+    { subtype: "status_page", definition: "publishes a page your own users read to see whether your service is up" },
+    { subtype: "upstream_status_watch", definition: "watches status pages or endpoints belonging to third parties you depend on, and reports to you rather than to your users" },
+    { subtype: "on_call_response", definition: "routes a firing alert to a named human by schedule and escalation policy" },
+    { subtype: "page_change_watch", definition: "fetches a web page on a schedule and notifies you when its content differs from last time" },
+  ],
 };
 
 export interface SubtypeMembershipGroup {
@@ -58,6 +73,12 @@ export const SUBTYPE_MEMBERSHIP_GROUPS: Record<string, SubtypeMembershipGroup[]>
     {
       subtypes: ["static_site", "serverless_function", "container_app"],
       rule: "These three describe how your code is executed, not what can replace what. A reader leaving one of them is asking where else they can deploy the thing they have, and all three answer that question, so two offers that each carry one are alternatives whether or not they carry the same one. Every other subtype in this category keeps the shared-member rule unchanged.",
+    },
+  ],
+  Monitoring: [
+    {
+      subtypes: ["host_metrics", "apm_traces", "log_management", "metrics_backend", "dashboards"],
+      rule: "A reader leaving one of these is asking where else to send telemetry, what will store it and what will show it, and all five answer some part of that, so two offers that each carry one are alternatives whether or not they carry the same one. error_tracking sits outside this group deliberately: a reader leaving Sentry wants exception grouping, and every platform that also offers it carries the error_tracking label itself. Every other subtype in this category keeps the shared-member rule unchanged.",
     },
   ],
 };

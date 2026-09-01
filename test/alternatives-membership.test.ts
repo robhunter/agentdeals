@@ -483,12 +483,15 @@ describe("#1195 how a product is deployed does not decide what can replace it", 
     const { SUBTYPE_MEMBERSHIP_GROUPS } = await import("../dist/product-role.js");
     const { status, body } = await get("/criteria");
     assert.equal(status, 200);
-    const groups = (SUBTYPE_MEMBERSHIP_GROUPS as Record<string, Array<{ subtypes: string[]; rule: string }>>)["Cloud Hosting"];
-    assert.ok(groups?.length, "Cloud Hosting must declare a membership group for this test to mean anything");
-    for (const group of groups) {
-      assert.ok(body.includes(group.rule.replace(/&/g, "&amp;")), "the criteria page must state the rule the group gates by");
-      for (const subtype of group.subtypes) {
-        assert.ok(body.includes(`<code>${subtype}</code>`), `${subtype} is not named on the criteria page`);
+    const declared = SUBTYPE_MEMBERSHIP_GROUPS as Record<string, Array<{ subtypes: string[]; rule: string }>>;
+    const taxonomies = Object.keys(declared);
+    assert.ok(taxonomies.length > 0, "a taxonomy must declare a membership group for this test to mean anything");
+    for (const taxonomy of taxonomies) {
+      for (const group of declared[taxonomy]) {
+        assert.ok(body.includes(group.rule.replace(/&/g, "&amp;")), `the criteria page must state the rule ${taxonomy}'s group gates by`);
+        for (const subtype of group.subtypes) {
+          assert.ok(body.includes(`<code>${subtype}</code>`), `${subtype} is not named on the criteria page`);
+        }
       }
     }
     assert.ok(body.includes("<th>Group</th>"), "the taxonomy table must mark which subtypes are in a group");
@@ -517,6 +520,19 @@ describe("#1032 the rule is published", () => {
         assert.ok(body.includes(`<code>${entry.subtype}</code>`), `${entry.subtype} is not named on the criteria page`);
         assert.ok(body.includes(entry.definition.replace(/&/g, "&amp;")), `${entry.subtype} is named without the definition it gates by`);
       }
+    }
+  });
+
+  it("states how far classification has got in every taxonomy it publishes", async () => {
+    const { SUBTYPE_TAXONOMIES } = await import("../dist/product-role.js");
+    const { body } = await get("/criteria");
+    for (const taxonomy of Object.keys(SUBTYPE_TAXONOMIES as Record<string, unknown>)) {
+      const inTaxonomy = offers.filter((o) => o.category === taxonomy);
+      const labelled = inTaxonomy.filter((o) => o.product_subtypes).length;
+      assert.ok(
+        body.includes(`${labelled} of ${inTaxonomy.length} in ${taxonomy}`),
+        `the criteria page must say how many of the ${inTaxonomy.length} ${taxonomy} records carry a subtype`
+      );
     }
   });
 
