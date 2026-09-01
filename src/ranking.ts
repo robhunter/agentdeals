@@ -1,5 +1,6 @@
 import { createHash } from "node:crypto";
 import { LINK_GRACE_DAYS, unreachableNoticeForUrl } from "./link-health.js";
+import { listEndedTiers, offerEnded, recordedTierSentence } from "./retirement.js";
 import { withheldLevelSentence } from "./source-check.js";
 import type { ChangeDateSource, DealChange, LinkUnreachable, Offer } from "./types.js";
 
@@ -17,7 +18,9 @@ const VERIFICATION_LAPSED_DAYS = 180;
 const EXPIRING_SOON_DAYS = 90;
 const ADVERSE_CHANGE_WINDOW_DAYS = 365;
 
-export type TierClass = "free" | "time_limited" | "not_free";
+export type TierClass = "free" | "time_limited" | "not_free" | "retired";
+
+export const RETIRED_TIER_NOTE = "an offer the vendor has ended";
 
 export const NOT_FREE_TIER_RULES: { pattern: RegExp; note: string }[] = [
   { pattern: /^paid$/i, note: "no free offer at all" },
@@ -36,6 +39,7 @@ export const TIME_LIMITED_TIER_RULES: { pattern: RegExp; note: string }[] = [
 ];
 
 export function classifyTier(tier: string): { class: TierClass; note: string } {
+  if (offerEnded({ tier })) return { class: "retired", note: RETIRED_TIER_NOTE };
   for (const rule of TIME_LIMITED_TIER_RULES) {
     if (rule.pattern.test(tier)) return { class: "time_limited", note: rule.note };
   }
@@ -49,6 +53,7 @@ export type GateCode =
   | "eligibility_restricted"
   | "not_a_free_offer"
   | "offer_expired"
+  | "offer_retired"
   | "verification_lapsed";
 
 export interface Gate {
@@ -70,6 +75,11 @@ export const GATE_TABLE: { code: GateCode; description: string }[] = [
   {
     code: "offer_expired",
     description: "The offer's own stated expiry date has already passed.",
+  },
+  {
+    code: "offer_retired",
+    description:
+      `The tier we hold records the offer as ended: ${listEndedTiers()}. The vendor page stays up and still answers whether the offer exists, but an ended offer is not ranked at any position.`,
   },
   {
     code: "verification_lapsed",
@@ -250,14 +260,28 @@ function shiftDays(dateIso: string, days: number): string {
   return new Date(Date.parse(dateIso) + days * DAY_MS).toISOString().slice(0, 10);
 }
 
+export function eligibilityGateFor(offer: Pick<Offer, "eligibility">): Gate | null {
+  if (!offer.eligibility) return null;
+  const program = offer.eligibility.program ? ` (${offer.eligibility.program})` : "";
+  return {
+    code: "eligibility_restricted",
+    reason: `Restricted to ${offer.eligibility.type}${program} applicants — not generally available.`,
+  };
+}
+
+export function retiredGateFor(offer: Pick<Offer, "tier" | "vendor">): Gate | null {
+  if (!offerEnded(offer)) return null;
+  return {
+    code: "offer_retired",
+    reason: recordedTierSentence(offer.vendor, offer.tier),
+  };
+}
+
 export function gateFor(offer: Offer, date: string): Gate | null {
-  if (offer.eligibility) {
-    const program = offer.eligibility.program ? ` (${offer.eligibility.program})` : "";
-    return {
-      code: "eligibility_restricted",
-      reason: `Restricted to ${offer.eligibility.type}${program} applicants — not generally available.`,
-    };
-  }
+  const retired = retiredGateFor(offer);
+  if (retired) return retired;
+  const restricted = eligibilityGateFor(offer);
+  if (restricted) return restricted;
   const tierClass = classifyTier(offer.tier);
   if (tierClass.class === "not_free") {
     return {
