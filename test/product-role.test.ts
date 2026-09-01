@@ -337,6 +337,67 @@ describe("#1212 the functions Monitoring splits by", () => {
   });
 });
 
+describe("#1222 the functions AI / ML splits by", () => {
+  const AI_ML_SUBTYPES = [
+    "llm_api",
+    "llm_observability",
+    "llm_evaluation",
+    "model_gateway",
+    "model_hosting",
+    "embeddings_api",
+    "gpu_compute",
+    "speech_api",
+    "document_extraction",
+    "image_video_generation",
+    "vector_store",
+    "data_labeling",
+    "experiment_tracking",
+    "web_search_api",
+    "agent_sandbox",
+    "agent_tool_access",
+  ];
+
+  const INFERENCE_GROUP = ["llm_api", "model_gateway"];
+
+  it("publishes all sixteen, so a record may carry any of them", () => {
+    assert.deepStrictEqual(SUBTYPE_TAXONOMIES["AI / ML"]?.map(e => e.subtype), AI_ML_SUBTYPES);
+  });
+
+  it("groups the two that answer where a prompt goes, and only those two", () => {
+    assert.deepStrictEqual(membershipGroupsFor("AI / ML").map(g => g.subtypes), [INFERENCE_GROUP]);
+  });
+
+  it("offers a router as a substitute for a provider that runs the weights itself", () => {
+    const provider = labelled("Provider", ["llm_api"], "AI / ML");
+    const router = labelled("Router", ["model_gateway"], "AI / ML");
+    assert.equal(alternativeMembershipGate(router, provider), null);
+    assert.equal(alternativeMembershipGate(provider, router), null);
+  });
+
+  it("keeps everything else in the category on the shared-label rule", () => {
+    const provider = labelled("Provider", ["llm_api"], "AI / ML");
+    const tracing = labelled("Tracing", ["llm_observability"], "AI / ML");
+    const scoring = labelled("Scoring", ["llm_evaluation"], "AI / ML");
+    assert.equal(alternativeMembershipGate(tracing, provider), "subtype_mismatch");
+    assert.equal(alternativeMembershipGate(scoring, tracing), "subtype_mismatch");
+    assert.equal(alternativeMembershipGate(labelled("SecondTracing", ["llm_observability"], "AI / ML"), tracing), null);
+  });
+
+  it("shares a subtype name with Cloud Hosting and compares nothing across the two", () => {
+    const hostingSandbox = labelled("HostingSandbox", ["agent_sandbox"], "Cloud Hosting");
+    const aiSandbox = labelled("AiSandbox", ["agent_sandbox"], "AI / ML");
+    assert.ok(SUBTYPE_TAXONOMIES["Cloud Hosting"]?.some(e => e.subtype === "agent_sandbox"));
+    assert.ok(SUBTYPE_TAXONOMIES["AI / ML"]?.some(e => e.subtype === "agent_sandbox"));
+    assert.equal(alternativeMembershipGate(hostingSandbox, aiSandbox), null);
+    assert.equal(alternativeMembershipGate(aiSandbox, hostingSandbox), null);
+  });
+
+  it("defines the name it shares with Cloud Hosting in each taxonomy's own words", () => {
+    assert.ok((subtypeDefinition("Cloud Hosting", "agent_sandbox") ?? "").length > 20);
+    assert.ok((subtypeDefinition("AI / ML", "agent_sandbox") ?? "").length > 20);
+  });
+});
+
 describe("#1032 a gate removes a candidate only where the subject cannot carry it too", () => {
   it("removes a local-only product from a hosted product's alternatives", () => {
     assert.equal(alternativeMembershipGate(emulator, hosted), "local_dev_only");
