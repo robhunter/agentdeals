@@ -18,7 +18,7 @@ import { getStackRecommendation } from "./stacks.js";
 import { estimateCosts } from "./costs.js";
 import { getGuideList, getGuideBySlug } from "./guides.js";
 import type { Offer, EnrichedOffer, DealChange } from "./types.js";
-import { filterAlternatives } from "./product-role.js";
+import { substitutesFor } from "./product-role.js";
 import { registerMcpAppsResources, TOOL_UI_META } from "./mcp-apps.js";
 import { MCP_INSTRUCTIONS } from "./mcp-instructions.js";
 import { MCP_SIGNAL_FOOTER } from "./signal-copy.js";
@@ -803,10 +803,7 @@ Suggested monitoring cadence: run this check weekly to catch pricing changes ear
       }
       const changes = loadDealChanges().filter(c => c.vendor.toLowerCase() === match.vendor.toLowerCase());
       const stability = classifyStability(changes);
-      const alternatives = filterAlternatives(
-        offers.filter(o => o.category === match.category && o.vendor !== match.vendor),
-        match,
-      ).slice(0, 5);
+      const alternatives = substitutesFor(offers, match).slice(0, 5);
 
       let text = `# ${match.vendor}\n\n`;
       text += `**Category:** ${match.category}\n`;

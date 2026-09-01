@@ -7,7 +7,7 @@ import { rankForListing, type TieBreak } from "./ranking.js";
 import { unreachableNoticeForUrl, resetLinkHealthCache } from "./link-health.js";
 import { quarantineSummary, resetVerificationStateCache, type QuarantineSummary } from "./verification-state.js";
 import { cannotVouchForLevel, levelWithheldReason, withheldLevelSentence } from "./source-check.js";
-import { filterAlternatives } from "./product-role.js";
+import { substitutesFor } from "./product-role.js";
 import { DATE_SOURCES, isEventDated, changeDateClause, isoWeekWindow, changesInWindow, discoveryBatchNote, firstReadHeading, type DateWindow } from "./change-dates.js";
 import { PRODUCT_DEPRECATED, deprecationEndsTheListedProduct } from "./product-deprecation.js";
 
@@ -87,7 +87,7 @@ export function getOfferDetails(
 
   if (match) {
     const relatedRanking = rankForListing(
-      filterAlternatives(offers.filter((o) => o.category === match.category && o.vendor !== match.vendor), match),
+      substitutesFor(offers, match),
       { queryKey: `related:${match.category}:${match.vendor}`, changes: loadDealChanges() },
     );
     const sameCategoryOffers = relatedRanking.entries.slice(0, 5).map((e) => e.offer);
@@ -735,7 +735,7 @@ export function checkVendorRisk(
   );
 
   const alternativesRanking = rankForListing(
-    filterAlternatives(offers.filter((o) => o.category === offer.category && o.vendor !== offer.vendor), offer),
+    substitutesFor(offers, offer),
     { queryKey: `vendor-risk-alternatives:${offer.vendor}`, changes: allChanges },
   );
   const alternatives = alternativesRanking.entries.slice(0, 3).map((e) => ({

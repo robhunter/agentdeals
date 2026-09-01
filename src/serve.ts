@@ -43,7 +43,7 @@ import { discontinuedOnOrBefore, PRODUCT_DEPRECATED } from "./product-deprecatio
 import { rankOffers, rankForListing, rotateListing, utcDate, CRITERIA_PATH, DEMOTE_ONLY_POLICY, DISCLOSURE_RATIONALE, TIE_BREAK_ALGORITHM, GATE_TABLE, DEMERIT_TABLE, NOT_FREE_TIER_RULES, TIME_LIMITED_TIER_RULES, type TieBreak } from "./ranking.js";
 import type { RankedEntry, RankingResult } from "./ranking.js";
 import { verificationLedger, QUARANTINE_AFTER_FAILURES } from "./verification-state.js";
-import { partitionAlternatives, partitionAlternativesAcross, productRoleSentence, MEMBERSHIP_GATE_RULES, MEMBERSHIP_GATE_ORDER, MEMBERSHIP_GATE_SYMMETRY, MEMBERSHIP_GATE_SCOPE, MEMBERSHIP_GATE_CORRECTIONS, SUBTYPE_TAXONOMIES, SUBTYPE_MEMBERSHIP_RULE, SUBTYPE_MEMBERSHIP_GROUP_SCOPE, membershipGroupsFor, subtypeDefinition } from "./product-role.js";
+import { partitionAlternatives, partitionSubstitutes, productRoleSentence, MEMBERSHIP_GATE_RULES, MEMBERSHIP_GATE_ORDER, MEMBERSHIP_GATE_SYMMETRY, MEMBERSHIP_GATE_SCOPE, MEMBERSHIP_GATE_CORRECTIONS, SUBTYPE_TAXONOMIES, SUBTYPE_MEMBERSHIP_RULE, SUBTYPE_MEMBERSHIP_GROUP_SCOPE, membershipGroupsFor, subtypeDefinition } from "./product-role.js";
 import { resolveCuratedAlternatives, curatedAlternativesFor, addCuratedToPool } from "./curated-alternatives.js";
 import type { Agent, ChangeDateSource, DealChange, RiskCause, LinkUnreachable, Offer } from "./types.js";
 import { changeDateLabel, changeDateClause, changeDatePublished, changeEventStartDate, capListSections, latestEventDate, offerExpiryAfter, feedEntryUpdated, undatedGroupHeading, firstReadHeading, discoveryBatchNote, isoWeekOf, DISCOVERED_DATE_PREFIX, UNDATED_GROUP_NOTE } from "./change-dates.js";
@@ -1849,7 +1849,7 @@ ${entries.map(e => `<tr><td><code>${escHtmlServer(e.subtype)}</code></td><td>${e
       const done = inTaxonomy.filter(o => o.product_subtypes).length;
       return `${done} of ${inTaxonomy.length} in ${taxonomy}`;
     });
-    return `We have classified ${parts.join(", ")}; the other ${offers.length - offers.filter(o => o.product_subtypes).length} records in the index carry no subtype and are gated by none.`;
+    return `We have classified ${parts.join(", ")}; the other ${offers.length - offers.filter(o => o.product_subtypes).length} records in the index carry no subtype.`;
   })();
 
   const jsonLd = {
@@ -3701,9 +3701,9 @@ function buildVendorPage(slug: string): string | null {
     return `\n  <p class="product-subtypes-line" style="margin:.4rem 0 .6rem;font-size:.9rem;color:var(--text-muted)"><strong>Subtypes in ${escHtmlServer(classified.taxonomy)}:</strong> ${body}${read} <a href="${CRITERIA_PATH}#subtypes">How we use this</a>.</p>`;
   })();
 
-  const alternativesMembership = partitionAlternatives(
+  const alternativesMembership = partitionSubstitutes(
     offers.filter(o => o.category === primary.category && o.vendor !== vendorName),
-    primary,
+    [primary],
   );
   const alternativesRanking = rankForListing(
     alternativesMembership.kept,
@@ -3735,8 +3735,8 @@ function buildVendorPage(slug: string): string | null {
     ? ` Discontinued ${discontinuedOn}.`
     : enriched.link_unreachable ? "" : ` Verified ${verifiedMonth}.`;
   const metaDesc = hasFree
-    ? `${vendorName} free tier includes ${descLimits}.${verifiedSentence} Compare with ${alternatives.length} alternatives in ${primary.category}.`
-    : `${vendorName} pricing details and ${alternatives.length} free alternatives in ${primary.category}.${verifiedSentence}`;
+    ? `${vendorName} free tier includes ${descLimits}.${verifiedSentence}${alternatives.length > 0 ? ` Compare with ${alternatives.length} alternatives in ${primary.category}.` : ""}`
+    : `${vendorName} pricing details${alternatives.length > 0 ? ` and ${alternatives.length} free alternatives in ${primary.category}` : ""}.${verifiedSentence}`;
 
   const keyLimit = primary.description.slice(0, 120).replace(/\.\s.*$/, "");
   const unconfirmableSince = linkUnreachable
@@ -4308,7 +4308,7 @@ function buildAlternativesPage(slug: string): string | null {
   }
   const curated = resolveCuratedAlternatives(vendorName, allChanges, offers);
   const curatedAltNames = new Set(curated.matched.map(o => o.vendor));
-  const altMembership = partitionAlternativesAcross(addCuratedToPool(dedupedAlts, curated.matched), vendorOffers, {
+  const altMembership = partitionSubstitutes(addCuratedToPool(dedupedAlts, curated.matched), vendorOffers, {
     subtypeExempt: candidate => curatedAltNames.has(candidate.vendor),
   });
   const altRanking = rankForListing(enrichOffers(altMembership.kept), {
@@ -4327,7 +4327,10 @@ function buildAlternativesPage(slug: string): string | null {
   const currentYear = new Date().getFullYear();
   const title = `Best ${vendorName} Alternatives with Free Tiers (${currentYear}) | AgentDeals`;
   const topAlts = enrichedAlts.slice(0, 3).map(a => a.vendor).join(", ");
-  const metaDesc = `Compare ${enrichedAlts.length} free alternatives to ${vendorName} for ${vendorCategories[0]}. ${topAlts ? `Side-by-side free tier limits for ${topAlts}.` : "Find stable, verified free-tier tools."}`;
+  const noAlternativesSentence = `No alternatives found for ${vendorName}.`;
+  const metaDesc = enrichedAlts.length > 0
+    ? `Compare ${enrichedAlts.length} free alternatives to ${vendorName} for ${vendorCategories[0]}. ${topAlts ? `Side-by-side free tier limits for ${topAlts}.` : "Find stable, verified free-tier tools."}`
+    : noAlternativesSentence;
 
   const situationHtml = (() => {
     const parts: string[] = [];
@@ -4409,7 +4412,7 @@ ${curatedAlts.map(a => altCard(a, true)).join("\n")}
 ${enrichedAlts.map(a => altCard(a, false)).join("\n")}
     </div>
 ${renderAuditBlock(altRanking.tie_break)}
-  </div>` : `<div class="section"><p class="no-changes">No alternatives found for ${escHtmlServer(vendorName)}.</p></div>`;
+  </div>` : `<div class="section"><p class="no-changes">${escHtmlServer(noAlternativesSentence)}</p></div>`;
 
   const trendsHtml = vendorCategories.map(c =>
     `<a href="/trends/${toSlug(c)}" class="action-pill">&#x2191; ${escHtmlServer(c)} Pricing Trends</a>`
@@ -4455,7 +4458,7 @@ ${renderAuditBlock(altRanking.tie_break)}
     : `No, ${vendorName} has no recorded pricing changes on AgentDeals. This indicates stable pricing.`;
 
   const altFaqItems = [
-    { q: `What are the best free alternatives to ${vendorName}?`, a: faqBestAltsAnswer },
+    ...(enrichedAlts.length > 0 ? [{ q: `What are the best free alternatives to ${vendorName}?`, a: faqBestAltsAnswer }] : []),
     { q: `Is ${vendorName}'s free tier still available?`, a: faqFreeTierAnswer },
     { q: `How many free alternatives to ${vendorName} exist?`, a: faqCountAnswer },
     { q: `Has ${vendorName} changed their pricing?`, a: faqChangesAnswer },
@@ -4487,8 +4490,7 @@ ${renderAuditBlock(altRanking.tie_break)}
 ${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
 <link rel="alternate" type="application/atom+xml" title="AgentDeals — Weekly Pricing Digest" href="/feed.xml">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
-<script type="application/ld+json">${JSON.stringify(altFaqJsonLd)}</script>
+${enrichedAlts.length > 0 ? `<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>\n` : ""}<script type="application/ld+json">${JSON.stringify(altFaqJsonLd)}</script>
 ${buildBreadcrumbJsonLd([{ name: "Home", url: BASE_URL + "/" }, { name: "Alternatives", url: BASE_URL + "/alternatives" }, { name: vendorName + " Alternatives", url: BASE_URL + "/alternative-to/" + slug }])}
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -4558,7 +4560,7 @@ ${mcpCtaCss()}
   ${buildGlobalNav("alternatives")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/alternative-to">Alternatives</a> &rsaquo; ${escHtmlServer(vendorName)}</div>
   <h1>Best ${escHtmlServer(vendorName)} Alternatives with Free Tiers (${currentYear})</h1>
-  <p class="page-meta">${enrichedAlts.length} free alternative${enrichedAlts.length !== 1 ? "s" : ""} in ${vendorCategories.map(c => escHtmlServer(c)).join(", ")}. Sorted by pricing stability.</p>
+  <p class="page-meta">${enrichedAlts.length > 0 ? `${enrichedAlts.length} free alternative${enrichedAlts.length !== 1 ? "s" : ""} in ${vendorCategories.map(c => escHtmlServer(c)).join(", ")}. Sorted by pricing stability.` : escHtmlServer(noAlternativesSentence)}</p>
 
   <div class="situation-box">
     <h2>Current ${escHtmlServer(vendorName)} Situation</h2>

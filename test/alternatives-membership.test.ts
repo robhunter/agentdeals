@@ -205,8 +205,15 @@ describe("#1032 every page in an affected category, not only the one in the issu
     gatedByCategory.set(o.category, [...(gatedByCategory.get(o.category) ?? []), o]);
   }
 
+  const bindsIn = (category: string) =>
+    offers.some((o) => o.category === category && (o.product_subtypes?.labels.length ?? 0) > 0);
+
   it("has categories to sweep, so the assertions below have subjects", () => {
     assert.ok(gatedByCategory.size > 0, "no category carries a gated record, so the sweep below checks nothing");
+    assert.ok(
+      [...gatedByCategory.keys()].some(bindsIn),
+      "no category with a gated record carries a taxonomy, so the grid sweep below asserts only absence",
+    );
   });
 
   for (const [category, gatedHere] of gatedByCategory) {
@@ -226,6 +233,10 @@ describe("#1032 every page in an affected category, not only the one in the issu
           if (grid.includes(gated.vendor)) offenders.push(`${gated.vendor} on /vendor/${slugOf(subject.vendor)}`);
         }
       }
+      if (!bindsIn(category)) {
+        assert.strictEqual(gridsChecked, 0, `${category} carries no subtype taxonomy, so no page in it may offer a category grid`);
+        return;
+      }
       assert.ok(gridsChecked > 5, `the sweep must actually read grids, read ${gridsChecked}`);
       assert.deepStrictEqual(offenders, [], `these offers cannot replace the vendor whose page lists them: ${offenders.join("; ")}`);
     });
@@ -234,6 +245,10 @@ describe("#1032 every page in an affected category, not only the one in the issu
       const subject = offers.find((o) => o.category === category && !gatedHere.some((g) => g.vendor === o.vendor))!;
       const { body } = await get(`/vendor/${slugOf(subject.vendor)}`);
       const notice = body.match(/<p class="alt-excluded"[\s\S]*?<\/p>/);
+      if (!bindsIn(category)) {
+        assert.strictEqual(notice, null, `${category} offers no category grid, so it has nothing to name a removal from`);
+        return;
+      }
       assert.ok(notice, `/vendor/${slugOf(subject.vendor)} removed offers without naming them`);
       for (const gated of gatedHere) {
         assert.ok(notice[0].includes(gated.vendor), `${gated.vendor} must be named on /vendor/${slugOf(subject.vendor)}`);

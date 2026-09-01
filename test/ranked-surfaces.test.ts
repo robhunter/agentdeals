@@ -72,14 +72,21 @@ describe("/vendor/:slug alternatives", () => {
 });
 
 describe("/alternative-to/:slug", () => {
-  it("names the recorded fact behind every demotion", async () => {
-    const { status, text } = await get("/alternative-to/openai");
-    assert.strictEqual(status, 200);
-    assert.match(text, /<strong>&minus;3 free_tier_withdrawn<\/strong> Recorded [a-z ]+ on \d{4}-\d{2}-\d{2}/, "a withdrawn free tier must name the change and its date");
-    assert.match(text, /<strong>&minus;2 time_limited_offer<\/strong> Tier &quot;[^&]+&quot; is a credit grant/, "a credit grant must say so");
-    assert.match(text, /<strong>&minus;1 stale_verification<\/strong>[^<]*not a change by the vendor/, "our own verification gap must be labelled as ours");
-    assert.match(text, /How we rank/);
-  });
+  const DEMOTION_EVIDENCE: Array<{ path: string; pattern: RegExp; why: string }> = [
+    { path: "/alternative-to/openai", pattern: /<strong>&minus;3 free_tier_withdrawn<\/strong> Recorded [a-z ]+ on \d{4}-\d{2}-\d{2}/, why: "a withdrawn free tier must name the change and its date" },
+    { path: "/alternative-to/openai", pattern: /<strong>&minus;2 time_limited_offer<\/strong> Tier &quot;[^&]+&quot; is a credit grant/, why: "a credit grant must say so" },
+    { path: "/alternative-to/vercel", pattern: /<strong>&minus;1 stale_verification<\/strong>[^<]*not a change by the vendor/, why: "our own verification gap must be labelled as ours" },
+  ];
+
+  for (const { path, pattern, why } of DEMOTION_EVIDENCE) {
+    it(`names the recorded fact behind every demotion on ${path}`, async () => {
+      const { status, text } = await get(path);
+      assert.strictEqual(status, 200);
+      assert.match(text, /All Free Alternatives \(\d+\)/, `${path} must rank a list for the assertion to mean anything`);
+      assert.match(text, pattern, why);
+      assert.match(text, /How we rank/);
+    });
+  }
 
   it("no longer claims to be sorted by stability", async () => {
     const { text } = await get("/alternative-to/vercel");
@@ -103,12 +110,13 @@ describe("/alternative-to/:slug", () => {
     assert.notDeepStrictEqual(vendors, [...vendors].sort((a, b) => a.localeCompare(b)), "alternatives are still alphabetical");
   });
 
-  it("does not empty out a page whose category peers are all eligibility-gated", async () => {
+  it("offers no substitute from a category we hold no product taxonomy for", async () => {
     const { status, text } = await get("/alternative-to/brex");
     assert.strictEqual(status, 200);
     const shown = (text.match(/class="alt-vendor-name"/g) ?? []).length;
-    assert.ok(shown > 0, "a gated category must still list its peers, labelled");
-    assert.match(text, /eligibility_restricted/, "the gate must be stated on the entries it applies to");
+    assert.strictEqual(shown, 0, "Startup Perks carries no subtype taxonomy, so no record in it is offered as a substitute");
+    assert.doesNotMatch(text, /All Free Alternatives \(/, "a page with no substitutes must not head a list of them");
+    assert.doesNotMatch(text, /"@type":"ItemList"/, "an empty set must not ship as structured data");
   });
 });
 
@@ -218,8 +226,8 @@ const RANKED_SURFACES: Array<{
   jsonSeed?: (body: any) => unknown;
 }> = [
   { queryKeyPrefix: "best-of", publishedAt: "/best/free-databases", seedIn: "html" },
-  { queryKeyPrefix: "alternatives", publishedAt: "/vendor/doppler", seedIn: "html" },
-  { queryKeyPrefix: "alternative-to", publishedAt: "/alternative-to/doppler", seedIn: "html" },
+  { queryKeyPrefix: "alternatives", publishedAt: "/vendor/vercel", seedIn: "html" },
+  { queryKeyPrefix: "alternative-to", publishedAt: "/alternative-to/vercel", seedIn: "html" },
   { queryKeyPrefix: "curated-alternatives", publishedAt: "/vendor/postman", seedIn: "html" },
   { queryKeyPrefix: "related", publishedAt: "/api/details/doppler", seedIn: "json", jsonSeed: (b) => b.offer?.tie_break?.seed },
   { queryKeyPrefix: "vendor-risk-alternatives", publishedAt: "/api/vendor-risk/doppler", seedIn: "json", jsonSeed: (b) => b.tie_break?.seed },

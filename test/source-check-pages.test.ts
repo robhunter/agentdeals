@@ -17,6 +17,11 @@ const SOURCED_FROM_A_MARKETPLACE = {
   url: "https://dealmarket.example/offers",
   tags: ["databases"],
   verifiedDate: "2026-08-11",
+  product_subtypes: {
+    taxonomy: "Databases",
+    labels: [{ subtype: "relational", source_url: "https://dealmarket.example/offers", source_quote: "managed Postgres" }],
+    reviewed: "2026-08-28",
+  },
   source_check: {
     checked: "2026-08-28",
     outcome: "does_not_name_vendor",
