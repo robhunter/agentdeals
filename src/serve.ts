@@ -42,6 +42,7 @@ import { ASSISTANTS_API_SHUTDOWN } from "./assistants-shutdown.js";
 import { discontinuedOnOrBefore, PRODUCT_DEPRECATED } from "./product-deprecation.js";
 import { rankOffers, rankForListing, rotateListing, utcDate, CRITERIA_PATH, DEMOTE_ONLY_POLICY, DISCLOSURE_RATIONALE, TIE_BREAK_ALGORITHM, GATE_TABLE, DEMERIT_TABLE, NOT_FREE_TIER_RULES, TIME_LIMITED_TIER_RULES, type TieBreak } from "./ranking.js";
 import type { RankedEntry, RankingResult } from "./ranking.js";
+import { eligibilityGate, publishableEligibilityConditions } from "./eligibility.js";
 import { verificationLedger, QUARANTINE_AFTER_FAILURES } from "./verification-state.js";
 import { partitionAlternatives, partitionSubstitutes, type SubstitutesPartition, productRoleSentence, MEMBERSHIP_GATE_RULES, MEMBERSHIP_GATE_ORDER, MEMBERSHIP_GATE_SYMMETRY, MEMBERSHIP_GATE_SCOPE, MEMBERSHIP_GATE_CORRECTIONS, SUBTYPE_TAXONOMIES, SUBTYPE_MEMBERSHIP_RULE, SUBTYPE_MEMBERSHIP_GROUP_SCOPE, CURATED_SUBTYPE_EXEMPTION, membershipGroupsFor, subtypeDefinition } from "./product-role.js";
 import { resolveCuratedAlternatives, curatedAlternativesFor, addCuratedToPool } from "./curated-alternatives.js";
@@ -1068,6 +1069,16 @@ function listingUnreachableNoticeHtml(offer: Offer): string {
   return `<span class="listing-link-unreachable" style="display:block;margin-top:.3rem;color:#f85149">${escHtmlServer(withheldLevelSentence("link_unreachable", offer.vendor, since))}</span>`;
 }
 
+function listingEligibilityNoticeHtml(offer: Offer): string {
+  const gate = eligibilityGate(offer);
+  if (!gate) return "";
+  const conditions = publishableEligibilityConditions(offer);
+  const conditionsHtml = conditions.length > 0
+    ? `<span class="listing-eligibility-conditions" style="display:block;color:var(--text-dim)">Eligibility: ${conditions.map(c => escHtmlServer(c)).join("; ")}</span>`
+    : "";
+  return `<span class="listing-eligibility-restricted" style="display:block;margin-top:.3rem;color:#d29922">${escHtmlServer(gate.reason)}${conditionsHtml}</span>`;
+}
+
 function buildCategoryPage(slug: string): string | null {
   const categoryName = categorySlugMap.get(slug);
   if (!categoryName) return null;
@@ -1080,7 +1091,7 @@ function buildCategoryPage(slug: string): string | null {
   const offersHtml = catOffers.map((o) => `        <tr>
           <td style="font-weight:600;color:var(--text);white-space:nowrap"><a href="/vendor/${toSlug(o.vendor)}" style="color:var(--text)">${escHtmlServer(o.vendor)}</a></td>
           <td style="font-family:var(--mono);color:var(--accent);white-space:nowrap">${escHtmlServer(o.tier)}</td>
-          <td style="color:var(--text-muted)">${escHtmlServer(o.description)}${listingUnreachableNoticeHtml(o)}</td>
+          <td style="color:var(--text-muted)">${escHtmlServer(o.description)}${listingEligibilityNoticeHtml(o)}${listingUnreachableNoticeHtml(o)}</td>
           <td style="font-family:var(--mono);color:var(--text-dim);white-space:nowrap">${escHtmlServer(o.verifiedDate)}</td>
         </tr>`).join("\n");
 
@@ -1923,7 +1934,7 @@ ${globalNavCss()}
 
   <p>Every surface that presents vendors as a recommendation &mdash; the <a href="/best">best-of pages</a>, the alternatives on every vendor page, the <code>/api/stack</code> endpoint and the <code>plan_stack</code> MCP tool &mdash; resolves through one shared module. There is no second scorer, no per-page ordering, no vendor allowlist, pin, boost or override anywhere in the selection path. Nothing derived from our own editorial copy is an input: an offer cannot rank higher because we wrote more words about it.</p>
 
-  <h2>1. Gates &mdash; what is excluded, and why</h2>
+  <h2 id="gates">1. Gates &mdash; what is excluded, and why</h2>
   <p>A gate removes an offer from ranked surfaces entirely. It still appears on its category page and its vendor page; it is simply not something we would put in front of you as a recommendation.</p>
   <table><thead><tr><th>Gate</th><th>Meaning</th></tr></thead><tbody>
 ${gateRows}
@@ -3688,6 +3699,16 @@ function buildVendorPage(slug: string): string | null {
     ? `  <p class="link-unreachable-line" style="margin:.4rem 0 .6rem;font-size:.9rem;color:var(--text-muted)"><strong style="color:#f85149">Link unreachable:</strong> ${escHtmlServer(primary.url)} did not resolve on our check of <span class="link-checked-date" style="font-family:var(--mono)">${escHtmlServer(linkUnreachable.checked)}</span>. ${linkUnreachable.last_reachable ? `Last reachable <span class="link-last-reachable" style="font-family:var(--mono)">${escHtmlServer(linkUnreachable.last_reachable)}</span>.` : "We have no date on which it was reachable."}</p>`
     : "";
 
+  const primaryEligibilityGate = eligibilityGate(primary);
+  const primaryEligibilityConditions = publishableEligibilityConditions(primary);
+  const eligibilityGateLine = primaryEligibilityGate
+    ? `\n  <p class="eligibility-gate-line" style="margin:.4rem 0 .6rem;font-size:.9rem;color:var(--text-muted)"><strong style="color:#d29922;font-family:var(--mono)">${escHtmlServer(primaryEligibilityGate.code)}</strong> ${escHtmlServer(primaryEligibilityGate.reason)} <a href="${CRITERIA_PATH}#gates">How we use this</a>.</p>${
+        primaryEligibilityConditions.length > 0
+          ? `\n  <ul class="eligibility-conditions" style="margin:.2rem 0 .6rem 1.1rem;padding:0;font-size:.9rem;color:var(--text-muted)">${primaryEligibilityConditions.map(c => `<li>${escHtmlServer(c)}</li>`).join("")}</ul>`
+          : ""
+      }`
+    : "";
+
   const productRoleLine = (() => {
     const role = primary.product_role;
     const sentence = productRoleSentence(primary);
@@ -3746,9 +3767,10 @@ function buildVendorPage(slug: string): string | null {
   const verifiedSentence = discontinuedOn
     ? ` Discontinued ${discontinuedOn}.`
     : enriched.link_unreachable ? "" : ` Verified ${verifiedMonth}.`;
-  const metaDesc = hasFree
+  const eligibilityGateSentence = primaryEligibilityGate ? `${primaryEligibilityGate.reason} ` : "";
+  const metaDesc = eligibilityGateSentence + (hasFree
     ? `${vendorName} free tier includes ${descLimits}.${verifiedSentence}${alternatives.length > 0 ? ` Compare with ${alternatives.length} alternatives in ${primary.category}.` : ""}`
-    : `${vendorName} pricing details${alternatives.length > 0 ? ` and ${alternatives.length} free alternatives in ${primary.category}` : ""}.${verifiedSentence}`;
+    : `${vendorName} pricing details${alternatives.length > 0 ? ` and ${alternatives.length} free alternatives in ${primary.category}` : ""}.${verifiedSentence}`);
 
   const keyLimit = primary.description.slice(0, 120).replace(/\.\s.*$/, "");
   const unconfirmableSince = linkUnreachable
@@ -4061,8 +4083,13 @@ ${allCompareLinks.join("\n")}
     : "";
   const withUnconfirmedTermsCaveat = (terms: string) =>
     `${terms}${/[.!?…]$/.test(terms.trim()) ? "" : "."} We have not confirmed these terms against the source we cite, so treat them as unverified.`;
+  const eligibilityConditionsSentence = primaryEligibilityConditions.length > 0
+    ? ` Eligibility: ${primaryEligibilityConditions.join("; ")}.`
+    : "";
   const faqFreeAnswer = levelWithheld
-    ? `${unconfirmedTermsPreamble}Our stored record says ${vendorName} offers a free tier: ${primary.tier}. ${withUnconfirmedTermsCaveat(storedTerms)}`
+    ? `${eligibilityGateSentence}${unconfirmedTermsPreamble}Our stored record says ${vendorName} offers a free tier: ${primary.tier}. ${withUnconfirmedTermsCaveat(storedTerms)}${eligibilityConditionsSentence}`
+    : primaryEligibilityGate
+    ? `${eligibilityGateSentence}${vendorName} offers a free tier: ${primary.tier}. ${storedTerms}${eligibilityConditionsSentence}`
     : `Yes, ${vendorName} offers a free tier: ${primary.tier}. ${storedTerms}`;
   const faqTierAnswer = levelWithheld
     ? `${unconfirmedTermsPreamble}Our stored record calls ${vendorName}'s free tier "${primary.tier}". ${withUnconfirmedTermsCaveat(primary.description)}`
@@ -4211,7 +4238,7 @@ ${mcpCtaCss()}
 <div class="container">
   ${buildGlobalNav("categories")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/vendor">Vendors</a> &rsaquo; ${escHtmlServer(vendorName)}</div>
-  <h1>${escHtmlServer(vendorName)} Free Tier ${currentYear}${h1RiskBadge}</h1>
+  <h1>${escHtmlServer(vendorName)} Free Tier ${currentYear}${h1RiskBadge}</h1>${eligibilityGateLine}
 ${riskCauseLine}
 ${linkUnreachableLine}
 ${productRoleLine}${productSubtypesLine}
