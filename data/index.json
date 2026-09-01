@@ -1429,27 +1429,7 @@
           {
             "subtype": "host_metrics",
             "source_url": "https://www.datadoghq.com/pricing/",
-            "source_quote": "into your stack’s health & performance Infrastructure Infrastructure Monitoring Metrics Network Monitoring Container Monitoring Kubernetes Autoscaling"
-          },
-          {
-            "subtype": "apm_traces",
-            "source_url": "https://www.datadoghq.com/pricing/",
-            "source_quote": "Cloud Cost Management Applications Application Performance Monitoring OTLP APM Ingest Serverless Monitoring Universal Service Monitoring"
-          },
-          {
-            "subtype": "log_management",
-            "source_url": "https://www.datadoghq.com/pricing/",
-            "source_quote": "Logs Log Management Error Tracking Sensitive Data Scanner Audit Trail Observability Pipelines"
-          },
-          {
-            "subtype": "metrics_backend",
-            "source_url": "https://www.datadoghq.com/pricing/",
-            "source_quote": "updateQueryParam('product', product)"
-          },
-          {
-            "subtype": "synthetic_check",
-            "source_url": "https://www.datadoghq.com/pricing/",
-            "source_quote": "Real User Monitoring & Session Replay Synthetic Testing & Monitoring Software Delivery Code Coverage"
+            "source_quote": "Standard Events and Metrics Up to 5 hosts"
           }
         ],
         "reviewed": "2026-09-01"
@@ -2845,6 +2825,22 @@
         "checked": "2026-09-01",
         "outcome": "ok",
         "detail": "text"
+      },
+      "product_subtypes": {
+        "taxonomy": "AI / ML",
+        "labels": [
+          {
+            "subtype": "model_gateway",
+            "source_url": "https://huggingface.co/docs/inference-providers/pricing",
+            "source_quote": "route requests through Hugging Face"
+          },
+          {
+            "subtype": "model_hosting",
+            "source_url": "https://huggingface.co/docs/inference-providers/pricing",
+            "source_quote": "Inference Endpoints (dedicated)"
+          }
+        ],
+        "reviewed": "2026-09-01"
       }
     },
     {
@@ -2881,6 +2877,17 @@
         "checked": "2026-08-28",
         "outcome": "ok",
         "detail": "text"
+      },
+      "product_subtypes": {
+        "taxonomy": "AI / ML",
+        "labels": [
+          {
+            "subtype": "llm_api",
+            "source_url": "https://groq.com/pricing",
+            "source_quote": "One fully integrated platform for infrastructure, inference, and control"
+          }
+        ],
+        "reviewed": "2026-09-01"
       }
     },
     {
@@ -2904,6 +2911,27 @@
         "checked": "2026-08-28",
         "outcome": "ok",
         "detail": "url"
+      },
+      "product_subtypes": {
+        "taxonomy": "AI / ML",
+        "labels": [
+          {
+            "subtype": "llm_api",
+            "source_url": "https://ai.google.dev/pricing",
+            "source_quote": "Our first hybrid reasoning model which supports a 1M token context"
+          },
+          {
+            "subtype": "embeddings_api",
+            "source_url": "https://ai.google.dev/pricing",
+            "source_quote": "Our first multimodal embedding model, mapping text, images, video, audio, and PDFs into a unified embedding space"
+          },
+          {
+            "subtype": "speech_api",
+            "source_url": "https://ai.google.dev/pricing",
+            "source_quote": "Our 3.1 Flash Text-to-Speech audio model optimized for price-performant, low-latency, controllable speech generation."
+          }
+        ],
+        "reviewed": "2026-09-01"
       }
     },
     {
@@ -2934,6 +2962,17 @@
         "checked": "2026-08-28",
         "outcome": "ok",
         "detail": "text"
+      },
+      "product_subtypes": {
+        "taxonomy": "AI / ML",
+        "labels": [
+          {
+            "subtype": "llm_api",
+            "source_url": "https://mistral.ai/pricing",
+            "source_quote": "Frontier-scale infrastructure for training and inference"
+          }
+        ],
+        "reviewed": "2026-09-01"
       }
     },
     {
@@ -2970,6 +3009,17 @@
         "checked": "2026-08-28",
         "outcome": "ok",
         "detail": "text"
+      },
+      "product_subtypes": {
+        "taxonomy": "AI / ML",
+        "labels": [
+          {
+            "subtype": "model_gateway",
+            "source_url": "https://openrouter.ai/pricing",
+            "source_quote": "Pay only for what you use with access to 500+ AI models"
+          }
+        ],
+        "reviewed": "2026-09-01"
       }
     },
     {
@@ -3008,6 +3058,17 @@
         "checked": "2026-09-01",
         "outcome": "ok",
         "detail": "text"
+      },
+      "product_subtypes": {
+        "taxonomy": "AI / ML",
+        "labels": [
+          {
+            "subtype": "llm_api",
+            "source_url": "https://developers.cloudflare.com/workers-ai/platform/pricing/",
+            "source_quote": "prepaid AI Gateway credits to pay for Workers AI inference"
+          }
+        ],
+        "reviewed": "2026-09-01"
       }
     },
     {
@@ -6228,6 +6289,17 @@
         "checked": "2026-08-28",
         "outcome": "ok",
         "detail": "text"
+      },
+      "product_subtypes": {
+        "taxonomy": "AI / ML",
+        "labels": [
+          {
+            "subtype": "llm_api",
+            "source_url": "https://cerebras.ai/",
+            "source_quote": "Cerebras powers the world's fastest AI inference"
+          }
+        ],
+        "reviewed": "2026-09-01"
       }
     },
     {
@@ -6257,6 +6329,32 @@
         "checked": "2026-08-28",
         "outcome": "ok",
         "detail": "text"
+      },
+      "product_subtypes": {
+        "taxonomy": "AI / ML",
+        "labels": [
+          {
+            "subtype": "llm_api",
+            "source_url": "https://cohere.com/pricing",
+            "source_quote": "Command Generative language models"
+          },
+          {
+            "subtype": "embeddings_api",
+            "source_url": "https://cohere.com/pricing",
+            "source_quote": "Embed Search and discovery model"
+          },
+          {
+            "subtype": "speech_api",
+            "source_url": "https://cohere.com/pricing",
+            "source_quote": "Transcribe New Speech recognition model"
+          },
+          {
+            "subtype": "document_extraction",
+            "source_url": "https://cohere.com/pricing",
+            "source_quote": "Parse New Document parsing model"
+          }
+        ],
+        "reviewed": "2026-09-01"
       }
     },
     {
@@ -6901,6 +6999,17 @@
         "checked": "2026-08-28",
         "outcome": "unreadable",
         "detail": "HTTP 403"
+      },
+      "product_subtypes": {
+        "taxonomy": "AI / ML",
+        "labels": [
+          {
+            "subtype": "llm_api",
+            "source_url": "https://openai.com/api/pricing/",
+            "source_quote": "Our industry-leading models deliver advanced intelligence and multimodal capabilities."
+          }
+        ],
+        "reviewed": "2026-09-01"
       }
     },
     {
@@ -7140,6 +7249,22 @@
         "checked": "2026-08-28",
         "outcome": "ok",
         "detail": "text"
+      },
+      "product_subtypes": {
+        "taxonomy": "AI / ML",
+        "labels": [
+          {
+            "subtype": "vector_store",
+            "source_url": "https://www.pinecone.io/",
+            "source_quote": "Pinecone is a fully managed vector database built for AI. Writes are instantly searchable, indexing is automatic, and queries stay fast at any scale."
+          },
+          {
+            "subtype": "embeddings_api",
+            "source_url": "https://pinecone.io/pricing",
+            "source_quote": "Inference - Embedding llama-text-embed-v2 5M tokens/mo included"
+          }
+        ],
+        "reviewed": "2026-09-01"
       }
     },
     {
@@ -7169,6 +7294,17 @@
         "checked": "2026-08-28",
         "outcome": "ok",
         "detail": "text"
+      },
+      "product_subtypes": {
+        "taxonomy": "AI / ML",
+        "labels": [
+          {
+            "subtype": "vector_store",
+            "source_url": "https://qdrant.tech/pricing/",
+            "source_quote": "Scale to production with fully managed vector search"
+          }
+        ],
+        "reviewed": "2026-09-01"
       }
     },
     {
@@ -7316,6 +7452,17 @@
         "checked": "2026-08-28",
         "outcome": "ok",
         "detail": "text"
+      },
+      "product_subtypes": {
+        "taxonomy": "AI / ML",
+        "labels": [
+          {
+            "subtype": "speech_api",
+            "source_url": "https://deepgram.com/pricing",
+            "source_quote": "Speech-to-Text (STT), Text-to-Speech (TTS), and Voice Agent APIs"
+          }
+        ],
+        "reviewed": "2026-09-01"
       }
     },
     {
@@ -7800,6 +7947,17 @@
         "checked": "2026-08-28",
         "outcome": "unreadable",
         "detail": "page content too short (likely JS-rendered SPA)"
+      },
+      "product_subtypes": {
+        "taxonomy": "AI / ML",
+        "labels": [
+          {
+            "subtype": "gpu_compute",
+            "source_url": "https://www.kaggle.com/docs/notebooks",
+            "source_quote": "a cloud computational environment that enables reproducible and collaborative analysis"
+          }
+        ],
+        "reviewed": "2026-09-01"
       }
     },
     {
@@ -7820,6 +7978,22 @@
         "checked": "2026-08-28",
         "outcome": "ok",
         "detail": "text"
+      },
+      "product_subtypes": {
+        "taxonomy": "AI / ML",
+        "labels": [
+          {
+            "subtype": "data_labeling",
+            "source_url": "https://roboflow.com/pricing",
+            "source_quote": "Label images fast with AI-assisted data annotation"
+          },
+          {
+            "subtype": "model_hosting",
+            "source_url": "https://roboflow.com/pricing",
+            "source_quote": "Data labeling suite w/ AI features Model training Workflow builder Cloud hosted deployment"
+          }
+        ],
+        "reviewed": "2026-09-01"
       }
     },
     {
@@ -7840,6 +8014,17 @@
         "checked": "2026-08-28",
         "outcome": "states_no_terms",
         "detail": "the page names Scale AI but states no amount, tier or rate we can read"
+      },
+      "product_subtypes": {
+        "taxonomy": "AI / ML",
+        "labels": [
+          {
+            "subtype": "data_labeling",
+            "source_url": "https://scale.com/pricing",
+            "source_quote": "find the right plan for your AI and data labeling projects"
+          }
+        ],
+        "reviewed": "2026-09-01"
       }
     },
     {
@@ -8057,6 +8242,17 @@
         "checked": "2026-08-28",
         "outcome": "ok",
         "detail": "text"
+      },
+      "product_subtypes": {
+        "taxonomy": "AI / ML",
+        "labels": [
+          {
+            "subtype": "speech_api",
+            "source_url": "https://www.assemblyai.com/pricing",
+            "source_quote": "Pre-recorded Speech-to-Text API"
+          }
+        ],
+        "reviewed": "2026-09-01"
       }
     },
     {
@@ -8100,6 +8296,17 @@
         "checked": "2026-08-28",
         "outcome": "ok",
         "detail": "text"
+      },
+      "product_subtypes": {
+        "taxonomy": "AI / ML",
+        "labels": [
+          {
+            "subtype": "model_hosting",
+            "source_url": "https://replicate.com/pricing",
+            "source_quote": "Thousands of open-source machine learning models have been contributed"
+          }
+        ],
+        "reviewed": "2026-09-01"
       }
     },
     {
@@ -8130,6 +8337,22 @@
         "checked": "2026-08-28",
         "outcome": "ok",
         "detail": "text"
+      },
+      "product_subtypes": {
+        "taxonomy": "AI / ML",
+        "labels": [
+          {
+            "subtype": "model_hosting",
+            "source_url": "https://www.baseten.co/pricing/",
+            "source_quote": "You can deploy open source and custom models on Baseten"
+          },
+          {
+            "subtype": "llm_api",
+            "source_url": "https://www.baseten.co/pricing/",
+            "source_quote": "Model APIs Instant access to pre-optimized models"
+          }
+        ],
+        "reviewed": "2026-09-01"
       }
     },
     {
@@ -8150,6 +8373,17 @@
         "checked": "2026-08-28",
         "outcome": "ok",
         "detail": "text"
+      },
+      "product_subtypes": {
+        "taxonomy": "AI / ML",
+        "labels": [
+          {
+            "subtype": "experiment_tracking",
+            "source_url": "https://wandb.ai/site/",
+            "source_quote": "Experiments Track and visualize your experiments"
+          }
+        ],
+        "reviewed": "2026-09-01"
       }
     },
     {
@@ -8170,6 +8404,27 @@
         "checked": "2026-08-28",
         "outcome": "ok",
         "detail": "url"
+      },
+      "product_subtypes": {
+        "taxonomy": "AI / ML",
+        "labels": [
+          {
+            "subtype": "llm_observability",
+            "source_url": "https://www.comet.com/site/pricing/",
+            "source_quote": "Full AI observability & agent testing feature set"
+          },
+          {
+            "subtype": "llm_evaluation",
+            "source_url": "https://www.comet.com/site/pricing/",
+            "source_quote": "Systematically test your AI application over an entire dataset"
+          },
+          {
+            "subtype": "experiment_tracking",
+            "source_url": "https://www.comet.com/site/pricing/",
+            "source_quote": "Track and compare machine learning training runs Dataset management and versioning Model Registry"
+          }
+        ],
+        "reviewed": "2026-09-01"
       }
     },
     {
@@ -8230,6 +8485,17 @@
         "checked": "2026-08-28",
         "outcome": "unreadable",
         "detail": "HTTP 404"
+      },
+      "product_subtypes": {
+        "taxonomy": "AI / ML",
+        "labels": [
+          {
+            "subtype": "data_labeling",
+            "source_url": "https://labelbox.com/",
+            "source_quote": "The data, environments, and evaluation infrastructure the world's frontier AI labs build on"
+          }
+        ],
+        "reviewed": "2026-09-01"
       }
     },
     {
@@ -8784,7 +9050,7 @@
           {
             "subtype": "log_management",
             "source_url": "https://middleware.io/pricing/",
-            "source_quote": "Customer Stories Product Updates Ebooks & Whitepaper Blogs Events Webinar Docs Podcasts 4,200+ engineers SREs, backend, and platform"
+            "source_quote": "Data volume is the sum total of uncompressed logs, metrics, and traces."
           },
           {
             "subtype": "host_metrics",
@@ -9641,6 +9907,22 @@
         "checked": "2026-08-28",
         "outcome": "ok",
         "detail": "text"
+      },
+      "product_subtypes": {
+        "taxonomy": "AI / ML",
+        "labels": [
+          {
+            "subtype": "llm_observability",
+            "source_url": "https://arize.com/pricing",
+            "source_quote": "trace, evaluate, and iterate on your LLM applications"
+          },
+          {
+            "subtype": "llm_evaluation",
+            "source_url": "https://arize.com/pricing",
+            "source_quote": "Trace, evaluate, and improve your agents"
+          }
+        ],
+        "reviewed": "2026-09-01"
       }
     },
     {
@@ -9803,6 +10085,17 @@
         "checked": "2026-08-28",
         "outcome": "ok",
         "detail": "text"
+      },
+      "product_subtypes": {
+        "taxonomy": "AI / ML",
+        "labels": [
+          {
+            "subtype": "agent_tool_access",
+            "source_url": "https://composio.dev/",
+            "source_quote": "secure delegated auth, sandboxed environments, and parallel execution across 1,000+ apps"
+          }
+        ],
+        "reviewed": "2026-09-01"
       }
     },
     {
@@ -10058,6 +10351,11 @@
         "checked": "2026-08-28",
         "outcome": "states_no_terms",
         "detail": "the page names DeepAR but states no amount, tier or rate we can read"
+      },
+      "product_subtypes": {
+        "taxonomy": "AI / ML",
+        "labels": [],
+        "reviewed": "2026-09-01"
       }
     },
     {
@@ -10708,6 +11006,17 @@
         "checked": "2026-08-28",
         "outcome": "states_no_terms",
         "detail": "the page names Maxim AI but states no amount, tier or rate we can read"
+      },
+      "product_subtypes": {
+        "taxonomy": "AI / ML",
+        "labels": [
+          {
+            "subtype": "model_gateway",
+            "source_url": "https://getmaxim.ai/",
+            "source_quote": "The fastest, most resilient, enterprise-grade LLM, MCP, and agent gateway"
+          }
+        ],
+        "reviewed": "2026-09-01"
       }
     },
     {
@@ -10892,6 +11201,17 @@
         "checked": "2026-08-28",
         "outcome": "ok",
         "detail": "text"
+      },
+      "product_subtypes": {
+        "taxonomy": "AI / ML",
+        "labels": [
+          {
+            "subtype": "document_extraction",
+            "source_url": "https://ocr.space/",
+            "source_quote": "Web API to extract text from images and convert scans to searchable PDF"
+          }
+        ],
+        "reviewed": "2026-09-01"
       }
     },
     {
@@ -10926,6 +11246,17 @@
         "checked": "2026-08-28",
         "outcome": "ok",
         "detail": "text"
+      },
+      "product_subtypes": {
+        "taxonomy": "AI / ML",
+        "labels": [
+          {
+            "subtype": "document_extraction",
+            "source_url": "https://parseur.com",
+            "source_quote": "automate text extraction from PDFs, emails, and other documents"
+          }
+        ],
+        "reviewed": "2026-09-01"
       }
     },
     {
@@ -11071,6 +11402,17 @@
         "checked": "2026-08-28",
         "outcome": "ok",
         "detail": "text"
+      },
+      "product_subtypes": {
+        "taxonomy": "AI / ML",
+        "labels": [
+          {
+            "subtype": "document_extraction",
+            "source_url": "https://reducto.ai",
+            "source_quote": "Reducto's parser reads documents like a human would"
+          }
+        ],
+        "reviewed": "2026-09-01"
       }
     },
     {
@@ -11301,6 +11643,17 @@
         "checked": "2026-08-28",
         "outcome": "ok",
         "detail": "url"
+      },
+      "product_subtypes": {
+        "taxonomy": "AI / ML",
+        "labels": [
+          {
+            "subtype": "web_search_api",
+            "source_url": "https://tavily.com/",
+            "source_quote": "Fast and secure APIs for web search and content extraction"
+          }
+        ],
+        "reviewed": "2026-09-01"
       }
     },
     {
@@ -11573,6 +11926,22 @@
         "checked": "2026-08-28",
         "outcome": "ok",
         "detail": "text"
+      },
+      "product_subtypes": {
+        "taxonomy": "AI / ML",
+        "labels": [
+          {
+            "subtype": "gpu_compute",
+            "source_url": "https://www.paperspace.com/pricing",
+            "source_quote": "Instances outside of the free-tier are billed per hour at their hourly rate"
+          },
+          {
+            "subtype": "model_hosting",
+            "source_url": "https://www.paperspace.com/pricing",
+            "source_quote": "Deployments (inference) - Model Repository"
+          }
+        ],
+        "reviewed": "2026-09-01"
       }
     },
     {
@@ -18013,6 +18382,22 @@
         "checked": "2026-08-28",
         "outcome": "ok",
         "detail": "text"
+      },
+      "product_subtypes": {
+        "taxonomy": "AI / ML",
+        "labels": [
+          {
+            "subtype": "llm_observability",
+            "source_url": "https://arize.com/pricing",
+            "source_quote": "Arize AX is the AI native platform for agent observability"
+          },
+          {
+            "subtype": "llm_evaluation",
+            "source_url": "https://arize.com/pricing",
+            "source_quote": "Trace, evaluate, and improve your agents"
+          }
+        ],
+        "reviewed": "2026-09-01"
       }
     },
     {
@@ -18032,6 +18417,11 @@
         "checked": "2026-08-28",
         "outcome": "unreadable",
         "detail": "fetch failed"
+      },
+      "product_subtypes": {
+        "taxonomy": "AI / ML",
+        "labels": [],
+        "reviewed": "2026-09-01"
       }
     },
     {
@@ -18051,6 +18441,22 @@
         "checked": "2026-08-28",
         "outcome": "ok",
         "detail": "text"
+      },
+      "product_subtypes": {
+        "taxonomy": "AI / ML",
+        "labels": [
+          {
+            "subtype": "llm_evaluation",
+            "source_url": "https://www.braintrust.dev/pricing",
+            "source_quote": "Transparent pricing for AI evaluation, monitoring, and observability"
+          },
+          {
+            "subtype": "llm_observability",
+            "source_url": "https://www.braintrust.dev/pricing",
+            "source_quote": "Free usage is included for traces, evals, and your whole team"
+          }
+        ],
+        "reviewed": "2026-09-01"
       }
     },
     {
@@ -18070,6 +18476,11 @@
         "checked": "2026-08-28",
         "outcome": "states_no_terms",
         "detail": "the page names Clair but states no amount, tier or rate we can read"
+      },
+      "product_subtypes": {
+        "taxonomy": "AI / ML",
+        "labels": [],
+        "reviewed": "2026-09-01"
       }
     },
     {
@@ -18089,6 +18500,27 @@
         "checked": "2026-09-01",
         "outcome": "ok",
         "detail": "text"
+      },
+      "product_subtypes": {
+        "taxonomy": "AI / ML",
+        "labels": [
+          {
+            "subtype": "llm_observability",
+            "source_url": "https://keywordsai.co",
+            "source_quote": "Observe calls in traces, watch spend in metrics, and run evals"
+          },
+          {
+            "subtype": "llm_evaluation",
+            "source_url": "https://keywordsai.co",
+            "source_quote": "Route, observe, and evaluate every LLM call"
+          },
+          {
+            "subtype": "model_gateway",
+            "source_url": "https://keywordsai.co",
+            "source_quote": "Point the SDK you already use at one endpoint to reach 1,000+ models"
+          }
+        ],
+        "reviewed": "2026-09-01"
       }
     },
     {
@@ -18117,6 +18549,22 @@
         "checked": "2026-09-01",
         "outcome": "ok",
         "detail": "text"
+      },
+      "product_subtypes": {
+        "taxonomy": "AI / ML",
+        "labels": [
+          {
+            "subtype": "llm_observability",
+            "source_url": "https://langfuse.com/",
+            "source_quote": "Trace, evaluate, and improve AI agents with one open platform"
+          },
+          {
+            "subtype": "llm_evaluation",
+            "source_url": "https://langfuse.com/",
+            "source_quote": "Evaluation LLM-as-a-judge, heuristic functions, or human review. Run evaluators on production data or during experiments."
+          }
+        ],
+        "reviewed": "2026-09-01"
       }
     },
     {
@@ -18136,6 +18584,22 @@
         "checked": "2026-09-01",
         "outcome": "ok",
         "detail": "text"
+      },
+      "product_subtypes": {
+        "taxonomy": "AI / ML",
+        "labels": [
+          {
+            "subtype": "llm_observability",
+            "source_url": "https://www.langchain.com/pricing",
+            "source_quote": "Observability See exactly what your agents are doing"
+          },
+          {
+            "subtype": "llm_evaluation",
+            "source_url": "https://www.langchain.com/pricing",
+            "source_quote": "Evaluation Score and improve agent performance"
+          }
+        ],
+        "reviewed": "2026-09-01"
       }
     },
     {
@@ -18174,6 +18638,22 @@
         "checked": "2026-08-28",
         "outcome": "states_no_terms",
         "detail": "the page names LangWatch but states no amount, tier or rate we can read"
+      },
+      "product_subtypes": {
+        "taxonomy": "AI / ML",
+        "labels": [
+          {
+            "subtype": "llm_evaluation",
+            "source_url": "https://langwatch.ai",
+            "source_quote": "AI agent testing and evaluation that turns unpredictable agents into reliable production systems"
+          },
+          {
+            "subtype": "llm_observability",
+            "source_url": "https://langwatch.ai",
+            "source_quote": "simulations, evals, observability, and governance"
+          }
+        ],
+        "reviewed": "2026-09-01"
       }
     },
     {
@@ -18193,6 +18673,22 @@
         "checked": "2026-09-01",
         "outcome": "ok",
         "detail": "text"
+      },
+      "product_subtypes": {
+        "taxonomy": "AI / ML",
+        "labels": [
+          {
+            "subtype": "model_gateway",
+            "source_url": "https://lumenfall.ai/",
+            "source_quote": "unified access to the top image and video models across leading providers"
+          },
+          {
+            "subtype": "image_video_generation",
+            "source_url": "https://lumenfall.ai/",
+            "source_quote": "The Unified API for AI Image and Video Generation"
+          }
+        ],
+        "reviewed": "2026-09-01"
       }
     },
     {
@@ -18212,6 +18708,11 @@
         "checked": "2026-09-01",
         "outcome": "ok",
         "detail": "url"
+      },
+      "product_subtypes": {
+        "taxonomy": "AI / ML",
+        "labels": [],
+        "reviewed": "2026-09-01"
       }
     },
     {
@@ -18231,6 +18732,11 @@
         "checked": "2026-08-28",
         "outcome": "states_no_terms",
         "detail": "the page names Othor AI but states no amount, tier or rate we can read"
+      },
+      "product_subtypes": {
+        "taxonomy": "AI / ML",
+        "labels": [],
+        "reviewed": "2026-09-01"
       }
     },
     {
@@ -18250,6 +18756,17 @@
         "checked": "2026-08-28",
         "outcome": "states_no_terms",
         "detail": "the page names Pollinations.AI but states no amount, tier or rate we can read"
+      },
+      "product_subtypes": {
+        "taxonomy": "AI / ML",
+        "labels": [
+          {
+            "subtype": "image_video_generation",
+            "source_url": "https://pollinations.ai/",
+            "source_quote": "Generate images, text, audio and video with state-of-the-art AI models"
+          }
+        ],
+        "reviewed": "2026-09-01"
       }
     },
     {
@@ -18278,6 +18795,22 @@
         "checked": "2026-08-28",
         "outcome": "ok",
         "detail": "text"
+      },
+      "product_subtypes": {
+        "taxonomy": "AI / ML",
+        "labels": [
+          {
+            "subtype": "model_gateway",
+            "source_url": "https://portkey.ai/",
+            "source_quote": "Portkey is now PRISMA AIRS AI Gateway"
+          },
+          {
+            "subtype": "llm_observability",
+            "source_url": "https://portkey.ai/",
+            "source_quote": "Monitor LLM behavior, catch anomalies early"
+          }
+        ],
+        "reviewed": "2026-09-01"
       }
     },
     {
@@ -18297,6 +18830,11 @@
         "checked": "2026-09-01",
         "outcome": "ok",
         "detail": "text"
+      },
+      "product_subtypes": {
+        "taxonomy": "AI / ML",
+        "labels": [],
+        "reviewed": "2026-09-01"
       }
     },
     {
@@ -18316,6 +18854,11 @@
         "checked": "2026-09-01",
         "outcome": "ok",
         "detail": "text"
+      },
+      "product_subtypes": {
+        "taxonomy": "AI / ML",
+        "labels": [],
+        "reviewed": "2026-09-01"
       }
     },
     {
@@ -30033,6 +30576,17 @@
         "checked": "2026-08-28",
         "outcome": "ok",
         "detail": "text"
+      },
+      "product_subtypes": {
+        "taxonomy": "AI / ML",
+        "labels": [
+          {
+            "subtype": "gpu_compute",
+            "source_url": "https://vast.ai/startup",
+            "source_quote": "From a single GPU to full clusters"
+          }
+        ],
+        "reviewed": "2026-09-01"
       }
     },
     {
@@ -30063,6 +30617,17 @@
         "checked": "2026-08-28",
         "outcome": "ok",
         "detail": "url"
+      },
+      "product_subtypes": {
+        "taxonomy": "AI / ML",
+        "labels": [
+          {
+            "subtype": "llm_api",
+            "source_url": "https://docs.x.ai/developers/models",
+            "source_quote": "Compare all current Grok models: capabilities, context windows, and per-token API pricing"
+          }
+        ],
+        "reviewed": "2026-09-01"
       }
     },
     {
@@ -30424,6 +30989,17 @@
         "checked": "2026-08-28",
         "outcome": "ok",
         "detail": "text"
+      },
+      "product_subtypes": {
+        "taxonomy": "AI / ML",
+        "labels": [
+          {
+            "subtype": "llm_api",
+            "source_url": "https://docs.anthropic.com/en/docs/about-claude/models",
+            "source_quote": "Claude is a family of state-of-the-art large language models"
+          }
+        ],
+        "reviewed": "2026-09-01"
       }
     },
     {
@@ -30763,6 +31339,17 @@
         "checked": "2026-08-28",
         "outcome": "states_no_terms",
         "detail": "the page names NVIDIA NIM but states no amount, tier or rate we can read"
+      },
+      "product_subtypes": {
+        "taxonomy": "AI / ML",
+        "labels": [
+          {
+            "subtype": "llm_api",
+            "source_url": "https://build.nvidia.com",
+            "source_quote": "Experience the leading models to build enterprise generative AI apps now"
+          }
+        ],
+        "reviewed": "2026-09-01"
       }
     },
     {
@@ -30785,6 +31372,17 @@
         "checked": "2026-08-28",
         "outcome": "ok",
         "detail": "url"
+      },
+      "product_subtypes": {
+        "taxonomy": "AI / ML",
+        "labels": [
+          {
+            "subtype": "llm_api",
+            "source_url": "https://ollama.com",
+            "source_quote": "Ollama lets you use open models with your coding agents"
+          }
+        ],
+        "reviewed": "2026-09-01"
       }
     },
     {
@@ -30828,6 +31426,17 @@
         "checked": "2026-08-28",
         "outcome": "states_no_terms",
         "detail": "the page names LLM7.io but states no amount, tier or rate we can read"
+      },
+      "product_subtypes": {
+        "taxonomy": "AI / ML",
+        "labels": [
+          {
+            "subtype": "model_gateway",
+            "source_url": "https://llm7.io",
+            "source_quote": "Connect to leading AI models with one endpoint"
+          }
+        ],
+        "reviewed": "2026-09-01"
       }
     },
     {
@@ -30858,6 +31467,17 @@
         "checked": "2026-08-28",
         "outcome": "states_no_terms",
         "detail": "the page names SiliconFlow but states no amount, tier or rate we can read"
+      },
+      "product_subtypes": {
+        "taxonomy": "AI / ML",
+        "labels": [
+          {
+            "subtype": "llm_api",
+            "source_url": "https://siliconflow.cn",
+            "source_quote": "硅基流动（SiliconFlow）专注于提供高效能、低成本的多品类 AI 模型服务"
+          }
+        ],
+        "reviewed": "2026-09-01"
       }
     },
     {
@@ -30879,6 +31499,17 @@
         "checked": "2026-08-28",
         "outcome": "does_not_name_vendor",
         "detail": "the page never names Zhipu AI and is not served from its domain"
+      },
+      "product_subtypes": {
+        "taxonomy": "AI / ML",
+        "labels": [
+          {
+            "subtype": "llm_api",
+            "source_url": "https://open.bigmodel.cn",
+            "source_quote": "研发了多款LLM模型，多模态视觉模型产品"
+          }
+        ],
+        "reviewed": "2026-09-01"
       }
     },
     {
@@ -30910,6 +31541,17 @@
         "checked": "2026-08-28",
         "outcome": "ok",
         "detail": "text"
+      },
+      "product_subtypes": {
+        "taxonomy": "AI / ML",
+        "labels": [
+          {
+            "subtype": "llm_api",
+            "source_url": "https://api-docs.deepseek.com/quick_start/pricing",
+            "source_quote": "We will bill based on the total number of input and output tokens by the model"
+          }
+        ],
+        "reviewed": "2026-09-01"
       }
     },
     {
@@ -30937,6 +31579,17 @@
         "checked": "2026-08-28",
         "outcome": "ok",
         "detail": "text"
+      },
+      "product_subtypes": {
+        "taxonomy": "AI / ML",
+        "labels": [
+          {
+            "subtype": "llm_api",
+            "source_url": "https://platform.minimax.io/docs/guides/pricing-paygo",
+            "source_quote": "A new-generation open general-purpose multimo"
+          }
+        ],
+        "reviewed": "2026-09-01"
       }
     },
     {
@@ -32818,6 +33471,17 @@
         "checked": "2026-08-28",
         "outcome": "ok",
         "detail": "text"
+      },
+      "product_subtypes": {
+        "taxonomy": "AI / ML",
+        "labels": [
+          {
+            "subtype": "web_search_api",
+            "source_url": "https://exa.ai/pricing",
+            "source_quote": "Exa is a modern AI search engine with SERP API, website crawler tools, and deep research API"
+          }
+        ],
+        "reviewed": "2026-09-01"
       }
     },
     {
@@ -33013,6 +33677,17 @@
         "checked": "2026-08-28",
         "outcome": "ok",
         "detail": "url"
+      },
+      "product_subtypes": {
+        "taxonomy": "AI / ML",
+        "labels": [
+          {
+            "subtype": "vector_store",
+            "source_url": "https://cloud.google.com/vertex-ai/docs/vector-search/overview",
+            "source_quote": "Vector Search is a powerful vector search engine built on groundbreaking technology"
+          }
+        ],
+        "reviewed": "2026-09-01"
       }
     },
     {
@@ -33034,6 +33709,17 @@
         "checked": "2026-08-28",
         "outcome": "states_no_terms",
         "detail": "the page names Google GLM 5 but states no amount, tier or rate we can read"
+      },
+      "product_subtypes": {
+        "taxonomy": "AI / ML",
+        "labels": [
+          {
+            "subtype": "llm_api",
+            "source_url": "https://cloud.google.com/vertex-ai/docs/generative-ai/model-reference/overview",
+            "source_quote": "Use the Model API for Gemini in Gemini Enterprise Agent Platform to create custom applications"
+          }
+        ],
+        "reviewed": "2026-09-01"
       }
     },
     {
@@ -33055,6 +33741,17 @@
         "checked": "2026-08-28",
         "outcome": "states_no_terms",
         "detail": "the page names Google Gemini Embedding 2 but states no amount, tier or rate we can read"
+      },
+      "product_subtypes": {
+        "taxonomy": "AI / ML",
+        "labels": [
+          {
+            "subtype": "embeddings_api",
+            "source_url": "https://cloud.google.com/vertex-ai/docs/generative-ai/embeddings/get-text-embeddings",
+            "source_quote": "Generate text embeddings with Agent Platform Text Embeddings API"
+          }
+        ],
+        "reviewed": "2026-09-01"
       }
     },
     {
@@ -33098,6 +33795,11 @@
         "checked": "2026-08-28",
         "outcome": "unreadable",
         "detail": "page content too short (likely JS-rendered SPA)"
+      },
+      "product_subtypes": {
+        "taxonomy": "AI / ML",
+        "labels": [],
+        "reviewed": "2026-09-01"
       }
     },
     {
@@ -33127,6 +33829,17 @@
         "checked": "2026-08-28",
         "outcome": "ok",
         "detail": "text"
+      },
+      "product_subtypes": {
+        "taxonomy": "AI / ML",
+        "labels": [
+          {
+            "subtype": "agent_sandbox",
+            "source_url": "https://e2b.dev/pricing",
+            "source_quote": "We charge per second of a running sandbox"
+          }
+        ],
+        "reviewed": "2026-09-01"
       }
     },
     {
@@ -33156,6 +33869,22 @@
         "checked": "2026-08-28",
         "outcome": "ok",
         "detail": "text"
+      },
+      "product_subtypes": {
+        "taxonomy": "AI / ML",
+        "labels": [
+          {
+            "subtype": "llm_api",
+            "source_url": "https://www.together.ai/pricing",
+            "source_quote": "Most teams start with serverless inference and move to dedicated endpoints at scale"
+          },
+          {
+            "subtype": "embeddings_api",
+            "source_url": "https://www.together.ai/pricing",
+            "source_quote": "Chat Vision Image Audio Video Transcribe Embeddings Rerank Moderation"
+          }
+        ],
+        "reviewed": "2026-09-01"
       }
     },
     {
@@ -33185,6 +33914,22 @@
         "checked": "2026-08-28",
         "outcome": "ok",
         "detail": "text"
+      },
+      "product_subtypes": {
+        "taxonomy": "AI / ML",
+        "labels": [
+          {
+            "subtype": "llm_api",
+            "source_url": "https://fireworks.ai/pricing",
+            "source_quote": "To view the current pricing for our most popular models across Standard, Priority, and Fast serverless tiers"
+          },
+          {
+            "subtype": "model_hosting",
+            "source_url": "https://fireworks.ai/pricing",
+            "source_quote": "priced per GPU hour (billed per second), at the same price as Fireworks on-demand deployments"
+          }
+        ],
+        "reviewed": "2026-09-01"
       }
     },
     {
@@ -33214,6 +33959,22 @@
         "checked": "2026-08-28",
         "outcome": "ok",
         "detail": "text"
+      },
+      "product_subtypes": {
+        "taxonomy": "AI / ML",
+        "labels": [
+          {
+            "subtype": "gpu_compute",
+            "source_url": "https://modal.com/pricing",
+            "source_quote": "Simple, transparent pricing that scales based on the amount of compute you use"
+          },
+          {
+            "subtype": "agent_sandbox",
+            "source_url": "https://modal.com/pricing",
+            "source_quote": "Modal Sandbox + Notebooks Pricing"
+          }
+        ],
+        "reviewed": "2026-09-01"
       }
     },
     {
@@ -33329,17 +34090,12 @@
           {
             "subtype": "log_management",
             "source_url": "https://www.elastic.co/pricing/self-managed",
-            "source_quote": "Centralize and analyze logs"
+            "source_quote": "Observability APM, logging, and metrics via Kibana Discover and Dashboards"
           },
           {
             "subtype": "metrics_backend",
             "source_url": "https://www.elastic.co/pricing/self-managed",
             "source_quote": "optimized storage of metrics"
-          },
-          {
-            "subtype": "synthetic_check",
-            "source_url": "https://www.elastic.co/pricing/self-managed",
-            "source_quote": "users' experience with real user monitoring (RUM), synthetic testing, and uptime monitoring App performance monitoring Monitor,"
           }
         ],
         "reviewed": "2026-09-01"
@@ -33371,12 +34127,7 @@
           {
             "subtype": "dashboards",
             "source_url": "https://grafana.com/oss/grafana/",
-            "source_quote": "60 min Getting started with Grafana dashboard design Watch"
-          },
-          {
-            "subtype": "synthetic_check",
-            "source_url": "https://grafana.com/oss/grafana/",
-            "source_quote": "Database Observability Frontend Observability Synthetic Monitoring Performance & Load Testing Incident Response & Management AI"
+            "source_quote": "Easily collect, correlate, and visualize data with beautiful dashboards using Grafana — the open source data visualization and monitoring solution"
           }
         ],
         "reviewed": "2026-09-01"
