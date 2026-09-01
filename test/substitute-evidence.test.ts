@@ -4,7 +4,7 @@ import { spawn, type ChildProcess } from "node:child_process";
 import { readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { partitionSubstitutes, subtypeGateBinds, substitutesFor } from "../dist/product-role.js";
+import { partitionSubstitutes, subtypeGateBinds, substitutesFor, MEMBERSHIP_GATE_ORDER, MEMBERSHIP_GATE_RULES } from "../dist/product-role.js";
 import { toSlug, vendorSlugMap } from "../dist/vendor-slug.js";
 import { curatedAlternativeNames } from "../dist/curated-alternatives.js";
 import type { DealChange, Offer } from "../src/types.ts";
@@ -250,16 +250,128 @@ describe("a page with no evidence of a product class", () => {
   });
 });
 
-describe("the categories we did classify are untouched", () => {
-  const CONTROLS: Array<[string, number]> = [["neon", 20], ["vercel", 31], ["supabase", 26]];
+describe("what a classified page leaves out, and why it says it left it out", () => {
+  const SUBJECT = "Vercel";
 
-  for (const [slug, expected] of CONTROLS) {
-    it(`/alternative-to/${slug} still offers ${expected}`, async () => {
+  function pagePartition(vendorName: string) {
+    const vendorOffers = offers.filter(o => o.vendor === vendorName);
+    const categories = new Set(vendorOffers.map(o => o.category));
+    const seen = new Set<string>();
+    const pool: Offer[] = [];
+    for (const o of offers) {
+      if (o.vendor === vendorName || !categories.has(o.category) || seen.has(o.vendor)) continue;
+      seen.add(o.vendor);
+      pool.push(o);
+    }
+    return partitionSubstitutes(pool, vendorOffers);
+  }
+
+  it("names every excluded record with the reason our own partition assigned it", async () => {
+    const { status, body } = await get(`/alternative-to/${toSlug(SUBJECT)}`);
+    assert.strictEqual(status, 200);
+    const notice = body.match(/<p class="alt-excluded"[\s\S]*?<\/p>/)?.[0];
+    assert.ok(notice, `/alternative-to/${toSlug(SUBJECT)} must publish the line that names what it left out`);
+
+    const removed = pagePartition(SUBJECT).removed;
+    assert.ok(removed.length > 0, `${SUBJECT} must exclude something for this to test anything`);
+    for (const { offer, gate } of removed) {
+      const label = MEMBERSHIP_GATE_RULES[gate].label.toLowerCase();
+      assert.ok(
+        notice.includes(`>${offer.vendor}</a> (${label})`),
+        `${offer.vendor} is excluded as ${gate} and the page does not say so`
+      );
+    }
+  });
+
+  it("separates a record it read and found nothing for from one it never read", async () => {
+    const { body } = await get(`/alternative-to/${toSlug(SUBJECT)}`);
+    const notice = body.match(/<p class="alt-excluded"[\s\S]*?<\/p>/)?.[0] ?? "";
+    const byGate = new Map<string, string[]>();
+    for (const { offer, gate } of pagePartition(SUBJECT).removed) {
+      if (!byGate.has(gate)) byGate.set(gate, []);
+      byGate.get(gate)!.push(offer.vendor);
+    }
+    for (const gate of ["not_in_taxonomy", "not_yet_classified"] as const) {
+      assert.ok((byGate.get(gate) ?? []).length > 0, `${SUBJECT}'s page must exclude at least one record as ${gate}`);
+    }
+    assert.notStrictEqual(
+      MEMBERSHIP_GATE_RULES.not_in_taxonomy.label.toLowerCase(),
+      MEMBERSHIP_GATE_RULES.not_yet_classified.label.toLowerCase()
+    );
+    assert.ok(notice.includes(MEMBERSHIP_GATE_RULES.not_in_taxonomy.label.toLowerCase()));
+    assert.ok(notice.includes(MEMBERSHIP_GATE_RULES.not_yet_classified.label.toLowerCase()));
+  });
+
+  it("still turns a product-role finding away under its own reason", () => {
+    const neon = offers.filter(o => o.vendor === "Neon");
+    assert.ok(neon.length > 0, "Neon must be in the index");
+    const gates = new Map(pagePartition("Neon").removed.map(r => [r.offer.vendor, r.gate]));
+    assert.strictEqual(gates.get("Hasura Cloud"), "addon");
+    assert.strictEqual(gates.get("Prisma Accelerate"), "addon");
+    assert.strictEqual(gates.get("DynamoDB Local"), "local_dev_only");
+  });
+
+  it("does not blame a record that does say what kind of product it is", async () => {
+    const classifiedWithNothingToOffer = offers
+      .filter(o => (o.product_subtypes?.labels.length ?? 0) > 0 && vendorSlugMap.get(toSlug(o.vendor)) === o.vendor)
+      .find(o => substitutesFor(offers, o).length === 0);
+    assert.ok(
+      classifiedWithNothingToOffer,
+      "every classified record now has a substitute, so the branch that explains an empty list to a classified subject has no subject"
+    );
+    const { status, body } = await get(`/alternative-to/${toSlug(classifiedWithNothingToOffer!.vendor)}`);
+    assert.strictEqual(status, 200);
+    assert.doesNotMatch(
+      body,
+      /'s does not yet, so this page names none/,
+      `${classifiedWithNothingToOffer!.vendor} carries a subtype and the page says its record does not`
+    );
+    assert.match(body, /nothing else we track says it is the same kind of product/);
+  });
+
+  it("publishes the new reason on /criteria beside the four it already published", async () => {
+    const { status, body } = await get("/criteria");
+    assert.strictEqual(status, 200);
+    for (const gate of MEMBERSHIP_GATE_ORDER) {
+      assert.ok(body.includes(`<code>${gate}</code>`), `/criteria does not name the ${gate} gate it applies`);
+      assert.ok(body.includes(MEMBERSHIP_GATE_RULES[gate].label), `/criteria does not publish the ${gate} label the pages render`);
+    }
+    assert.doesNotMatch(body, /offered as one to no one/, "the page claims an absolute the curated exemption breaks");
+  });
+});
+
+describe("the categories we did classify are untouched", () => {
+  const CONTROLS = ["neon", "vercel", "supabase"];
+  const readAgainstItsSubtypes = new Set(offers.filter(o => o.product_subtypes).map(o => o.vendor));
+
+  for (const slug of CONTROLS) {
+    it(`/alternative-to/${slug} heads a list, and every name on it is one we read`, async () => {
       const { status, body } = await get(`/alternative-to/${slug}`);
       assert.strictEqual(status, 200);
       const heading = body.match(/All Free Alternatives \((\d+)\)/);
       assert.ok(heading, `/alternative-to/${slug} must still head a list`);
-      assert.strictEqual(Number(heading[1]), expected);
+
+      const listed = body.slice(body.indexOf("All Free Alternatives"));
+      const rendered = [...listed.matchAll(/class="alt-vendor-name">([^<]+)</g)].map(m => m[1]);
+      assert.strictEqual(rendered.length, Number(heading[1]), "the heading counts a different list from the one below it");
+      assert.ok(rendered.length >= 15, `/alternative-to/${slug} publishes ${rendered.length}, which is a collapse rather than a gate`);
+
+      const curated = new Set(curatedAlternativeNames(vendorSlugMap.get(slug)!, changes));
+      const unread = rendered.filter(v => !readAgainstItsSubtypes.has(v) && !curated.has(v));
+      assert.deepStrictEqual(unread, [], `offered as substitutes without ever being read against ${slug}'s taxonomy: ${unread.join(", ")}`);
     });
   }
+
+  it("offers no record it has never read as a substitute anywhere, unless a person named it", () => {
+    const curatedEverywhere = new Set(changes.flatMap(c => c.alternatives ?? []));
+    const leaked = new Set<string>();
+    for (const subject of offers) {
+      for (const substitute of substitutesFor(offers, subject)) {
+        if (!substitute.product_subtypes && !curatedEverywhere.has(substitute.vendor)) {
+          leaked.add(`${subject.vendor} -> ${substitute.vendor}`);
+        }
+      }
+    }
+    assert.deepStrictEqual([...leaked].sort(), [], `substitutes we never read against the subject's taxonomy: ${[...leaked].sort().join("; ")}`);
+  });
 });

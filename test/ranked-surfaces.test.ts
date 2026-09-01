@@ -4,6 +4,9 @@ import { spawn, type ChildProcess } from "node:child_process";
 import { readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { loadOffers, enrichOffers } from "../dist/data.js";
+import { substitutesFor } from "../dist/product-role.js";
+import { toSlug, vendorSlugMap } from "../dist/vendor-slug.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(__dirname, "..");
@@ -35,6 +38,23 @@ after(() => { if (proc) proc.kill(); });
 
 const stripComments = (src: string) =>
   src.split("\n").filter((l) => !/^\s*(\*|\/\/|\/\*|\*\/)/.test(l)).join("\n");
+
+const deadLinkSubjectSlug = (() => {
+  const offers = loadOffers();
+  const dated = new Set(
+    enrichOffers(offers)
+      .filter((o) => o.link_unreachable && !o.link_unreachable.terminal && o.link_unreachable.last_reachable)
+      .map((o) => o.vendor)
+  );
+  if (dated.size === 0) return null;
+  const subjects = [...new Set(offers.map((o) => o.vendor))].sort();
+  for (const vendor of subjects) {
+    if (vendorSlugMap.get(toSlug(vendor)) !== vendor) continue;
+    const subject = offers.find((o) => o.vendor === vendor)!;
+    if (substitutesFor(offers, subject).some((a) => dated.has(a.vendor))) return toSlug(vendor);
+  }
+  return null;
+})();
 
 describe("the templates no longer name winners", () => {
   const stacks = stripComments(readFileSync(path.join(REPO, "src", "stacks.ts"), "utf8"));
@@ -76,8 +96,15 @@ describe("/alternative-to/:slug", () => {
     { path: "/alternative-to/openai", pattern: /<strong>&minus;3 free_tier_withdrawn<\/strong> Recorded [a-z ]+ on \d{4}-\d{2}-\d{2}/, why: "a withdrawn free tier must name the change and its date" },
     { path: "/alternative-to/openai", pattern: /<strong>&minus;2 time_limited_offer<\/strong> Tier &quot;[^&]+&quot; is a credit grant/, why: "a credit grant must say so" },
     { path: "/alternative-to/n8n", pattern: /<strong>&minus;1 stale_verification<\/strong>[^<]*not a change by the vendor/, why: "our own verification gap must be labelled as ours" },
-    { path: "/alternative-to/vercel", pattern: /<strong>&minus;2 link_unreachable<\/strong>[^<]*pricing page has not resolved for us since \d{4}-\d{2}-\d{2}/, why: "a dead pricing page must name the date it was last reachable" },
+    { path: `/alternative-to/${deadLinkSubjectSlug ?? ""}`, pattern: /<strong>&minus;2 link_unreachable<\/strong>[^<]*pricing page has not resolved for us since \d{4}-\d{2}-\d{2}/, why: "a dead pricing page must name the date it was last reachable" },
   ];
+
+  it("draws the dead-link subject from a list that publishes one today", () => {
+    assert.ok(
+      deadLinkSubjectSlug,
+      "no alternatives list publishes a record with an unreachable pricing page, so the row below asserts nothing and needs a surface that does"
+    );
+  });
 
   for (const { path, pattern, why } of DEMOTION_EVIDENCE) {
     it(`names the recorded fact behind every demotion on ${path}`, async () => {

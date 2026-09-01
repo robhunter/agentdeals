@@ -1,10 +1,10 @@
 import type { Offer, ProductRole, ProductSubtypes } from "./types.js";
 
-export type RoleCarrier = { product_role?: ProductRole; product_subtypes?: ProductSubtypes };
+export type RoleCarrier = { product_role?: ProductRole; product_subtypes?: ProductSubtypes; category?: string };
 
-export type MembershipGate = "local_dev_only" | "addon" | "not_in_taxonomy" | "subtype_mismatch";
+export type MembershipGate = "local_dev_only" | "addon" | "not_yet_classified" | "not_in_taxonomy" | "subtype_mismatch";
 
-export const MEMBERSHIP_GATE_ORDER: MembershipGate[] = ["local_dev_only", "addon", "not_in_taxonomy", "subtype_mismatch"];
+export const MEMBERSHIP_GATE_ORDER: MembershipGate[] = ["local_dev_only", "addon", "not_yet_classified", "not_in_taxonomy", "subtype_mismatch"];
 
 export const MEMBERSHIP_GATE_RULES: Record<MembershipGate, { label: string; rule: string }> = {
   local_dev_only: {
@@ -14,6 +14,10 @@ export const MEMBERSHIP_GATE_RULES: Record<MembershipGate, { label: string; rule
   addon: {
     label: "Extends another product",
     rule: "The product adds a capability to another product rather than replacing it. It is not an alternative to the thing it augments.",
+  },
+  not_yet_classified: {
+    label: "We have not classified this record",
+    rule: "The offer is listed in a category whose subtypes we publish, and we have not yet read it against them. We therefore hold no basis for offering it as an alternative to anything here. This states what we have not done rather than a finding about the product, and it stops applying the day we classify the record.",
   },
   not_in_taxonomy: {
     label: "None of this category's subtypes apply",
@@ -84,7 +88,7 @@ export const SUBTYPE_MEMBERSHIP_GROUPS: Record<string, SubtypeMembershipGroup[]>
 };
 
 export const SUBTYPE_MEMBERSHIP_RULE =
-  "Two offers in the same category are alternatives when their subtype sets share at least one member, or when both carry a subtype from one of the membership groups below. A record we have not classified is offered no substitutes and is offered as one to no one. It stays listed in its category, in search, and on best-of pages.";
+  "Two offers in the same category are alternatives when their subtype sets share at least one member, or when both carry a subtype from one of the membership groups below. A record we have not classified is offered no substitutes, and is offered as one only where a person wrote the pair down by name. It stays listed in its category, in search, and on best-of pages.";
 
 export const SUBTYPE_MEMBERSHIP_GROUP_SCOPE =
   "A group answers whether a product could substitute at all. Which one is the better answer is ordering, and ordering is a separate, seeded, published concern that reads none of this.";
@@ -129,11 +133,17 @@ export function subtypesAcross(subjects: RoleCarrier[]): SubtypeProfile[] {
   return [...byTaxonomy.entries()].map(([taxonomy, subtypes]) => ({ taxonomy, subtypes }));
 }
 
+function classifiedSubjectProfile(taxonomy: string | undefined, subjectProfiles: SubtypeProfile[]): SubtypeProfile | null {
+  if (!taxonomy) return null;
+  const shared = subjectProfiles.find(p => p.taxonomy === taxonomy);
+  return shared && shared.subtypes.size > 0 ? shared : null;
+}
+
 function subtypeGate(candidate: RoleCarrier, subjectProfiles: SubtypeProfile[]): MembershipGate | null {
   const own = subtypesOf(candidate);
-  if (!own) return null;
-  const shared = subjectProfiles.find(p => p.taxonomy === own.taxonomy);
-  if (!shared || shared.subtypes.size === 0) return null;
+  if (!own) return classifiedSubjectProfile(candidate.category, subjectProfiles) ? "not_yet_classified" : null;
+  const shared = classifiedSubjectProfile(own.taxonomy, subjectProfiles);
+  if (!shared) return null;
   for (const subtype of own.subtypes) {
     if (shared.subtypes.has(subtype)) return null;
   }

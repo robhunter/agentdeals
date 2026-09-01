@@ -43,7 +43,7 @@ import { discontinuedOnOrBefore, PRODUCT_DEPRECATED } from "./product-deprecatio
 import { rankOffers, rankForListing, rotateListing, utcDate, CRITERIA_PATH, DEMOTE_ONLY_POLICY, DISCLOSURE_RATIONALE, TIE_BREAK_ALGORITHM, GATE_TABLE, DEMERIT_TABLE, NOT_FREE_TIER_RULES, TIME_LIMITED_TIER_RULES, type TieBreak } from "./ranking.js";
 import type { RankedEntry, RankingResult } from "./ranking.js";
 import { verificationLedger, QUARANTINE_AFTER_FAILURES } from "./verification-state.js";
-import { partitionAlternatives, partitionSubstitutes, type SubstitutesPartition, productRoleSentence, MEMBERSHIP_GATE_RULES, MEMBERSHIP_GATE_ORDER, MEMBERSHIP_GATE_SYMMETRY, MEMBERSHIP_GATE_SCOPE, MEMBERSHIP_GATE_CORRECTIONS, SUBTYPE_TAXONOMIES, SUBTYPE_MEMBERSHIP_RULE, SUBTYPE_MEMBERSHIP_GROUP_SCOPE, membershipGroupsFor, subtypeDefinition } from "./product-role.js";
+import { partitionAlternatives, partitionSubstitutes, type SubstitutesPartition, productRoleSentence, MEMBERSHIP_GATE_RULES, MEMBERSHIP_GATE_ORDER, MEMBERSHIP_GATE_SYMMETRY, MEMBERSHIP_GATE_SCOPE, MEMBERSHIP_GATE_CORRECTIONS, SUBTYPE_TAXONOMIES, SUBTYPE_MEMBERSHIP_RULE, SUBTYPE_MEMBERSHIP_GROUP_SCOPE, CURATED_SUBTYPE_EXEMPTION, membershipGroupsFor, subtypeDefinition } from "./product-role.js";
 import { resolveCuratedAlternatives, curatedAlternativesFor, addCuratedToPool } from "./curated-alternatives.js";
 import type { Agent, ChangeDateSource, DealChange, RiskCause, LinkUnreachable, Offer } from "./types.js";
 import { changeDateLabel, changeDateClause, changeDatePublished, changeEventStartDate, capListSections, latestEventDate, offerExpiryAfter, feedEntryUpdated, undatedGroupHeading, firstReadHeading, discoveryBatchNote, isoWeekOf, DISCOVERED_DATE_PREFIX, UNDATED_GROUP_NOTE } from "./change-dates.js";
@@ -1856,7 +1856,9 @@ ${entries.map(e => `<tr><td><code>${escHtmlServer(e.subtype)}</code></td><td>${e
       const done = inTaxonomy.filter(o => o.product_subtypes).length;
       return `${done} of ${inTaxonomy.length} in ${taxonomy}`;
     });
-    return `We have classified ${parts.join(", ")}; the other ${offers.length - offers.filter(o => o.product_subtypes).length} records carry no subtype, so they are offered no substitutes and are offered as one to no one. Classifying a category restores both directions.`;
+    const unclassified = offers.filter(o => !o.product_subtypes);
+    const inPublishedTaxonomy = unclassified.filter(o => SUBTYPE_TAXONOMIES[o.category]).length;
+    return `We have classified ${parts.join(", ")}; the other ${unclassified.length} records carry no subtype, so they are offered no substitutes, and are offered as one only where a person wrote the pair down by name. ${inPublishedTaxonomy} of them sit in a category whose subtypes we do publish. Classifying a category restores both directions.`;
   })();
 
   const jsonLd = {
@@ -1984,13 +1986,15 @@ ${membershipGateRows}
   <p>${escHtmlServer(MEMBERSHIP_GATE_SYMMETRY)}</p>
   <p>${escHtmlServer(MEMBERSHIP_GATE_SCOPE)}</p>
   <p><strong style="color:var(--text)">No property here is available on request.</strong> A vendor cannot ask to be classified, declassified, or exempted, for the same reason there is no top slot to buy. ${escHtmlServer(MEMBERSHIP_GATE_CORRECTIONS)}</p>
-  <p>The honest limit: we have classified ${classifiedCount} of ${offers.length} records, ${gatedCount} of which carry a gate. <strong style="color:var(--text)">A record with no classification has not been reviewed &mdash; it does not mean we have checked and found it hosted.</strong> Absence of the property publishes nothing in either direction and gates nothing, which is the same rule we use for a link we were merely refused.</p>
+  <p>The honest limit: we have classified ${classifiedCount} of ${offers.length} records, ${gatedCount} of which carry a gate. <strong style="color:var(--text)">A record with no classification has not been reviewed &mdash; it does not mean we have checked and found it hosted.</strong> Absence of the property publishes nothing in either direction and gates nothing, which is the same rule we use for a link we were merely refused. Subtypes are the deliberate exception, and the next section says why.</p>
 
   <h3 id="subtypes">Subtypes</h3>
   <p>A category is a coarse property. Where we have published a subtype taxonomy for a category, the same discipline applies one level finer: a subtype is what the vendor's own copy says the product <em>is</em>, it is multi-label, and it decides membership only. ${escHtmlServer(SUBTYPE_MEMBERSHIP_RULE)}</p>
 ${subtypeTaxonomyTables}
   <p>${escHtmlServer(SUBTYPE_MEMBERSHIP_GROUP_SCOPE)}</p>
   <p>Subtypes are published on every classified vendor page with the source URL and the sentence they were read from, exactly as the properties above are. ${subtypeCoverageClause}</p>
+  <p><strong style="color:var(--text)">Where a taxonomy is published, silence is not a pass.</strong> A record we have not read against it is held out of that category's alternatives lists and named there, rather than offered on the strength of a reading we never did. That is the opposite of how the properties above treat absence, and it is deliberate: those describe a product we looked at, while a missing subtype describes only us.</p>
+  <p>${escHtmlServer(CURATED_SUBTYPE_EXEMPTION)}</p>
 
   <h2>6. What agents tell us, and what we do with it</h2>
   <p>Agents can report which vendor they recommended, at <a href="${SIGNAL_DOC_PATH}"><code>${escHtmlServer(SIGNAL_PATH)}</code></a>. <strong style="color:var(--text)">Those counts never affect any order we publish</strong> &mdash; not now, not behind a flag. A self-reported counter that influenced placement would be a purchasable ranking with extra steps, and the whole reason to trust this index is that there is no such thing.</p>
@@ -4360,7 +4364,11 @@ function buildAlternativesPage(slug: string): string | null {
   const metaDesc = publishesSubstitutes
     ? `Compare ${enrichedAlts.length} free alternatives to ${vendorName} for ${homeCategory}. ${topAlts ? `Side-by-side free tier limits for ${topAlts}.` : "Find stable, verified free-tier tools."}`
     : `We publish no substitute list for ${vendorName} yet. See the ${homeCategory} category for every offer we track alongside it.`;
-  const noSubstitutesHtml = `We publish a substitute list only where a record says what kind of product it is. ${escHtmlServer(vendorName)}'s does not yet, so this page names none. The <a href="/category/${toSlug(homeCategory)}">${escHtmlServer(homeCategory)}</a> category lists every offer we track alongside it.`;
+  const subjectSaysWhatItIs = vendorOffers.some(o => (o.product_subtypes?.labels.length ?? 0) > 0);
+  const noSubstitutesReason = subjectSaysWhatItIs
+    ? `${escHtmlServer(vendorName)}'s does, and nothing else we track says it is the same kind of product, so this page names none.`
+    : `${escHtmlServer(vendorName)}'s does not yet, so this page names none.`;
+  const noSubstitutesHtml = `We publish a substitute list only where a record says what kind of product it is. ${noSubstitutesReason} The <a href="/category/${toSlug(homeCategory)}">${escHtmlServer(homeCategory)}</a> category lists every offer we track alongside it.`;
 
   const situationHtml = (() => {
     const parts: string[] = [];
