@@ -30707,9 +30707,9 @@
     {
       "vendor": "GitHub Models",
       "category": "AI / ML",
-      "description": "Free access to 100+ AI models via GitHub Marketplace — GPT-4o, Llama, Mistral, Phi, and more. Free tier: 10-15 RPM, 50-150 requests/day depending on model tier. OpenAI-compatible API endpoint",
-      "tier": "Free",
-      "url": "https://github.com/marketplace/models",
+      "description": "GitHub retired GitHub Models on 2026-07-30, so there is no free tier. GitHub's own documentation states \"GitHub Models has been retired.\" The former offer was free access to 100+ models via GitHub Marketplace at 10-15 RPM and 50-150 requests/day.",
+      "tier": "Retired",
+      "url": "https://docs.github.com/en/github-models/about-github-models",
       "tags": [
         "ai",
         "ml",
@@ -30720,15 +30720,6 @@
         "openai-compatible"
       ],
       "verifiedDate": "2026-08-20",
-      "payment_protocols": [
-        {
-          "protocol": "x402",
-          "chain": "Base",
-          "settlement": "USDC",
-          "pricing_model": "per-request",
-          "example_cost": "$0.001-0.01/request"
-        }
-      ],
       "referral_program": {
         "available": false,
         "referrer_benefit": "N/A",
