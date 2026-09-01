@@ -5496,21 +5496,6 @@
       "recorded_date": "2026-08-28"
     },
     {
-      "vendor": "Oaysus",
-      "change_type": "limits_increased",
-      "date": "2026-08-28",
-      "date_source": "discovered",
-      "summary": "The free tier now includes up to 10 pages. Previously 3 pages. The description of the service has changed to focus on a website scorecard and homepage redesign, rather than a visual page builder for React, Vue, or Svelte components.",
-      "previous_state": "Visual page builder for developer-built React, Vue, or Svelte components. Free tier includes 1 site with 3 pages, form submissions, and global CDN hosting.",
-      "current_state": "Free to see it. No credit card. No sales calls. No setup fee. Up to 10 pages. Cancel any month from your dashboard.",
-      "impact": "medium",
-      "source_url": "https://oaysus.com",
-      "category": "Cloud Hosting",
-      "alternatives": [],
-      "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
-    },
-    {
       "vendor": "readthedocs.org",
       "change_type": "pricing_restructured",
       "date": "2026-08-28",
