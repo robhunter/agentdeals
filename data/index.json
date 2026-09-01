@@ -10066,7 +10066,7 @@
       "category": "AI / ML",
       "description": "Integration platform for AI Agents and LLMs. Integrate over 200+ tools across the agentic internet.",
       "tier": "Free",
-      "url": "https://composio.dev/",
+      "url": "https://composio.dev/pricing",
       "tags": [
         "developer-tools",
         "free-for-dev"
@@ -11624,7 +11624,7 @@
       "category": "AI / ML",
       "description": "API for online search and rapid insights and comprehensive research, with the capability of organization of research results. 1000 request/month for the Free tier with No credit card required.",
       "tier": "Free",
-      "url": "https://tavily.com/",
+      "url": "https://www.tavily.com/pricing",
       "tags": [
         "developer-tools",
         "free-for-dev"
@@ -18528,7 +18528,7 @@
       "category": "AI / ML",
       "description": "Open-source LLM engineering platform that helps teams collaboratively debug, analyze, and iterate on their LLM applications. Free forever plan includes 50k observations per month and all platform features. [#opensource](https://github.com/langfuse/langfuse)",
       "tier": "Free",
-      "url": "https://langfuse.com/",
+      "url": "https://langfuse.com/pricing",
       "tags": [
         "ai",
         "ml",
@@ -18626,7 +18626,7 @@
       "category": "AI / ML",
       "description": "A LLMOps platform helping AI teams measure, monitor, and optimize LLM applications for reliability, cost-efficiency, and performance. With a powerful DSPy component, we enable seamless collaboration between engineers and non-technical teams to fine-tune and productionize GenAI products. Free plan includes all platform features, 1k traces/month and 1 workflow DSPy optimizers. [#opensource](https://github.com/langwatch/langwatch)",
       "tier": "Free",
-      "url": "https://langwatch.ai",
+      "url": "https://langwatch.ai/pricing",
       "tags": [
         "ai",
         "ml",
@@ -18661,7 +18661,7 @@
       "category": "AI / ML",
       "description": "AI media gateway providing unified access to leading image generation models via an OpenAI-compatible API. The platform itself is free to use with zero markup and no subscription fee. Inference costs for most models are billed at provider price, but FLUX.1 [schnell] FP8 is offered free forever with unlimited usage for registered users. Built-in failover and provider resilience included.",
       "tier": "Free",
-      "url": "https://lumenfall.ai/",
+      "url": "https://lumenfall.ai/pricing",
       "tags": [
         "ai",
         "ml",
@@ -18720,7 +18720,7 @@
       "category": "AI / ML",
       "description": "An AI-native fast, simple, and secure alternative to popular business intelligence solutions like Tableau, Power BI, and Looker. Othor utilizes large language models (LLMs) to deliver custom business intelligence solutions in minutes. The Free Forever plan provides one workspace with five datasource connections for one user, with no limits on analytics. [#opensource](https://github.com/othorai/othor.ai)",
       "tier": "Free",
-      "url": "https://othor.ai/",
+      "url": "https://othor.ai/pricing",
       "tags": [
         "ai",
         "ml",
@@ -31357,7 +31357,7 @@
       "category": "AI / ML",
       "description": "Cloud-hosted Ollama for running open-source LLMs — free tier for light usage with 1 concurrent model. Access Llama, Mistral, Gemma, and other open models via API",
       "tier": "Free",
-      "url": "https://ollama.com",
+      "url": "https://ollama.com/pricing",
       "tags": [
         "ai",
         "ml",
@@ -31444,7 +31444,7 @@
       "category": "AI / ML",
       "description": "Free inference for open-source models with 100 requests/day limit and $1 free credits. Supports DeepSeek-R1, DeepSeek-V3, QwQ-32B, and other open-source models. China-based provider.",
       "tier": "Free (Limited)",
-      "url": "https://siliconflow.cn",
+      "url": "https://siliconflow.cn/pricing",
       "tags": [
         "ai",
         "ml",
