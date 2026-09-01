@@ -43,7 +43,7 @@ import { ASSISTANTS_API_SHUTDOWN } from "./assistants-shutdown.js";
 import { discontinuedOnOrBefore, PRODUCT_DEPRECATED } from "./product-deprecation.js";
 import { rankOffers, rankForListing, rotateListing, utcDate, CRITERIA_PATH, DEMOTE_ONLY_POLICY, DISCLOSURE_RATIONALE, TIE_BREAK_ALGORITHM, GATE_TABLE, DEMERIT_TABLE, NOT_FREE_TIER_RULES, TIME_LIMITED_TIER_RULES, type TieBreak } from "./ranking.js";
 import type { RankedEntry, RankingResult } from "./ranking.js";
-import { eligibilityGate, publishableEligibilityConditions } from "./eligibility.js";
+import { eligibilityGate, gatedShareDescriptionClause, gatedShareLede, publishableEligibilityConditions } from "./eligibility.js";
 import { verificationLedger, QUARANTINE_AFTER_FAILURES } from "./verification-state.js";
 import { partitionAlternatives, partitionSubstitutes, type SubstitutesPartition, productRoleSentence, MEMBERSHIP_GATE_RULES, MEMBERSHIP_GATE_ORDER, MEMBERSHIP_GATE_SYMMETRY, MEMBERSHIP_GATE_SCOPE, MEMBERSHIP_GATE_CORRECTIONS, SUBTYPE_TAXONOMIES, SUBTYPE_MEMBERSHIP_RULE, SUBTYPE_MEMBERSHIP_GROUP_SCOPE, CURATED_SUBTYPE_EXEMPTION, membershipGroupsFor, subtypeDefinition } from "./product-role.js";
 import { resolveCuratedAlternatives, curatedAlternativesFor, addCuratedToPool } from "./curated-alternatives.js";
@@ -1091,8 +1091,10 @@ function buildCategoryPage(slug: string): string | null {
 
   const catOffers = offers.filter((o) => o.category === categoryName);
   const catCount = catOffers.length;
+  const catGatedCount = catOffers.filter((o) => eligibilityGate(o)).length;
+  const catGatedClause = gatedShareDescriptionClause(catCount, catGatedCount);
   const title = `Free ${categoryName} Tools & Deals (${catCount} offers) — AgentDeals`;
-  const metaDesc = `Compare ${catCount} free ${categoryName.toLowerCase()} tools, free tiers, and developer deals. Verified pricing for ${catOffers.slice(0, 5).map(o => o.vendor).join(", ")}${catCount > 5 ? " and more" : ""}.`;
+  const metaDesc = `Compare ${catCount} free ${categoryName.toLowerCase()} tools, free tiers, and developer deals.${catGatedClause ? ` ${catGatedClause}` : ""} Verified pricing for ${catOffers.slice(0, 5).map(o => o.vendor).join(", ")}${catCount > 5 ? " and more" : ""}.`;
 
   const offersHtml = catOffers.map((o) => `        <tr>
           <td style="font-weight:600;color:var(--text);white-space:nowrap"><a href="/vendor/${toSlug(o.vendor)}" style="color:var(--text)">${escHtmlServer(o.vendor)}</a></td>
@@ -1308,7 +1310,7 @@ ${mcpCtaCss()}
   ${buildGlobalNav("categories")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; ${escHtmlServer(categoryName)}</div>
   <h1>Free ${escHtmlServer(categoryName)} Tools</h1>
-  <p class="cat-meta">${catCount} verified free tiers and developer deals.${dataVerifiedSegment(catOffers)}</p>
+  <p class="cat-meta">${gatedShareLede(catCount, catGatedCount)}${dataVerifiedSegment(catOffers)}</p>
 
   ${introHtml}
   ${analysisCta}
@@ -4102,9 +4104,9 @@ ${allCompareLinks.join("\n")}
     : `Yes, ${vendorName} offers a free tier: ${primary.tier}. ${storedTerms}`;
   const faqTierAnswer = retiredSentence
     ? `${retiredSentence} ${primary.description}`
-    : levelWithheld
+    : eligibilityGateSentence + (levelWithheld
     ? `${unconfirmedTermsPreamble}Our stored record calls ${vendorName}'s free tier "${primary.tier}". ${withUnconfirmedTermsCaveat(primary.description)}`
-    : `${vendorName}'s free tier is called "${primary.tier}". ${primary.description}`;
+    : `${vendorName}'s free tier is called "${primary.tier}". ${primary.description}`);
   const faqReliableAnswer = levelWithheld
     ? `We cannot say. ${withheldLevelSentence(levelWithheld, vendorName, unconfirmableSince)} Nothing we have read describes these terms, so we are not publishing a stability judgement for this vendor until that is fixed.`
     : riskLevel === "stable"
@@ -4114,13 +4116,13 @@ ${allCompareLinks.join("\n")}
     : `${vendorName}'s free tier is considered risky because of one specific recorded change${riskCause ? `, ${changeDateClause(riskCause)}: ${riskCause.summary}` : "."} Consider alternatives.`;
   const faqCategoryAnswer = `${vendorName} is categorized under ${allCategories.join(", ")} on AgentDeals.${alternatives.length > 0 ? ` Other vendors in ${primary.category} include ${alternatives.slice(0, 5).map(a => a.vendor).join(", ")}.` : ""}`;
 
-  const faqProductionAnswer = levelWithheld
+  const faqProductionAnswer = eligibilityGateSentence + (levelWithheld
     ? `${withheldLevelSentence(levelWithheld, vendorName, unconfirmableSince)} We cannot confirm what this offer provides today, so we are not recommending it for production or for anything else until we can.`
     : hasFree
     ? (riskLevel === "stable"
       ? `${vendorName}'s free tier can be suitable for small production workloads and side projects. We rate it stable and it offers ${escHtmlServer(keyLimit)}, so it's a reasonable starting point.${vendorChanges.length > 0 ? ` ${narrowingSentence(vendorChanges)}` : ""} Monitor your usage against the limits and have an upgrade plan ready.`
       : `${vendorName}'s free tier is usable for prototyping and development, but we rate it ${riskLevel}${riskCause ? ` because of one recorded ${changeKindNoun(riskCause.change_type)}, ${changeDateClause(riskCause)}` : ""}. Consider alternatives with more stable pricing for critical services.`)
-    : `${vendorName} does not offer a free tier for production use. Consider free alternatives in ${primary.category}.`;
+    : `${vendorName} does not offer a free tier for production use. Consider free alternatives in ${primary.category}.`);
   const faqChangedAnswer = vendorChanges.length > 0
     ? `${vendorName} has had ${vendorChanges.length} recorded pricing change${vendorChanges.length > 1 ? "s" : ""}. Most recently: ${vendorChanges[0].summary} (${changeDateLabel(vendorChanges[0])}).`
     : levelWithheld
