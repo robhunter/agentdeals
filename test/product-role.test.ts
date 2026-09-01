@@ -29,10 +29,10 @@ const index = JSON.parse(readFileSync(join(REPO, "data", "index.json"), "utf8"))
 
 const DEPLOYMENT_MODELS: DeploymentModel[] = ["hosted", "self_hosted", "local_dev_only"];
 
-function offer(vendor: string, role?: Partial<ProductRole>): Offer {
+function offer(vendor: string, role?: Partial<ProductRole>, category = "Databases"): Offer {
   return {
     vendor,
-    category: "Databases",
+    category,
     description: `${vendor} description`,
     tier: "Free",
     url: `https://${vendor.toLowerCase()}.example/pricing`,
@@ -138,9 +138,29 @@ describe("#1032 Phase 2 subtypes gate on sharing at least one label", () => {
     assert.equal(alternativeMembershipGate(none, relational), "not_in_taxonomy");
   });
 
-  it("never gates a record we have not classified, in either direction", () => {
-    assert.equal(alternativeMembershipGate(unlabelled, relational), null);
+  it("gates a record we have never read against the subject's taxonomy, and says which of us that is about", () => {
+    assert.equal(alternativeMembershipGate(unlabelled, relational), "not_yet_classified");
+    assert.notEqual(
+      MEMBERSHIP_GATE_RULES.not_yet_classified.label,
+      MEMBERSHIP_GATE_RULES.not_in_taxonomy.label,
+      "a record we did not read and a record we read and found nothing for are two different findings"
+    );
+  });
+
+  it("gates nothing on the page of a subject we have not classified", () => {
     assert.equal(alternativeMembershipGate(relational, unlabelled), null);
+    assert.equal(alternativeMembershipGate(unlabelled, unlabelled), null);
+  });
+
+  it("leaves an unread record alone where the subject is classified in another taxonomy", () => {
+    assert.equal(alternativeMembershipGate(offer("Unread Host", undefined, "Cloud Hosting"), relational), null);
+  });
+
+  it("prefers what we found over what we have not looked at", () => {
+    const unreadAddon = { ...offer("Unread Addon"), product_role: addon.product_role };
+    const unreadEmulator = { ...offer("Unread Emulator"), product_role: emulator.product_role };
+    assert.equal(alternativeMembershipGate(unreadAddon, relational), "addon");
+    assert.equal(alternativeMembershipGate(unreadEmulator, relational), "local_dev_only");
   });
 
   it("applies no subtype gate on the page of a subject that carries no subtype of its own", () => {
@@ -595,9 +615,9 @@ describe("#1032 what the gates do to the catalogue", () => {
     return counts;
   }
 
-  it("leaves no alternatives list empty", () => {
-    const empty = keptCounts().filter((c) => c.kept === 0).map((c) => c.label).sort();
-    assert.deepStrictEqual(empty, [], `an empty list states in our own voice that we index no peer at all: ${empty.join("; ")}`);
+  it("empties no alternatives list the subtype gate alone would have filled", () => {
+    const empty = keptCounts().filter((c) => c.kept === 0 && c.subtypePool > 0).map((c) => c.label).sort();
+    assert.deepStrictEqual(empty, [], `a product-role gate, not a subtype, is what left these lists with nothing in them: ${empty.join("; ")}`);
   });
 
   it("names every alternatives list below three entries that the subtype pool does not account for", () => {
@@ -608,10 +628,7 @@ describe("#1032 what the gates do to the catalogue", () => {
       .sort();
     assert.deepStrictEqual(
       notFromTheSubtype,
-      [
-        "InfluxDB Cloud (Databases): 1 of 4",
-        "Neo4j AuraDB (Databases): 2 of 5",
-      ],
+      [],
       `every list below three entries, whatever thinned it: ${thin.map((c) => `${c.label}: ${c.kept}`).sort().join("; ")}`
     );
   });
