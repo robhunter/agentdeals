@@ -573,14 +573,23 @@ describe("#1032 what the gates do to the catalogue", () => {
     assert.ok(!kept.includes("DynamoDB Local"), "a downloadable emulator is not an alternative to a hosted database");
   });
 
-  function keptCounts(): Array<{ label: string; kept: number }> {
-    const counts: Array<{ label: string; kept: number }> = [];
+  function withoutRole(offer: Offer): Offer {
+    const { product_role, ...rest } = offer;
+    return rest as Offer;
+  }
+
+  function keptCounts(): Array<{ label: string; kept: number; subtypePool: number }> {
+    const counts: Array<{ label: string; kept: number; subtypePool: number }> = [];
     for (const category of categories) {
       const inCategory = index.offers.filter((o) => o.category === category);
       if (inCategory.length < 4) continue;
       for (const subject of inCategory) {
-        const kept = filterAlternatives(inCategory.filter((o) => o.vendor !== subject.vendor), subject);
-        counts.push({ label: `${subject.vendor} (${category})`, kept: kept.length });
+        const peers = inCategory.filter((o) => o.vendor !== subject.vendor);
+        counts.push({
+          label: `${subject.vendor} (${category})`,
+          kept: filterAlternatives(peers, subject).length,
+          subtypePool: filterAlternatives(peers.map(withoutRole), subject).length,
+        });
       }
     }
     return counts;
@@ -591,12 +600,20 @@ describe("#1032 what the gates do to the catalogue", () => {
     assert.deepStrictEqual(empty, [], `an empty list states in our own voice that we index no peer at all: ${empty.join("; ")}`);
   });
 
-  it("names every alternatives list the gates leave below three entries", () => {
-    const thin = keptCounts().filter((c) => c.kept < 3).map((c) => `${c.label}: ${c.kept}`).sort();
-    assert.deepStrictEqual(thin, [
-      "InfluxDB Cloud (Databases): 1",
-      "Neo4j AuraDB (Databases): 2",
-    ]);
+  it("names every alternatives list below three entries that the subtype pool does not account for", () => {
+    const thin = keptCounts().filter((c) => c.kept < 3);
+    const notFromTheSubtype = thin
+      .filter((c) => c.subtypePool >= 3)
+      .map((c) => `${c.label}: ${c.kept} of ${c.subtypePool}`)
+      .sort();
+    assert.deepStrictEqual(
+      notFromTheSubtype,
+      [
+        "InfluxDB Cloud (Databases): 1 of 4",
+        "Neo4j AuraDB (Databases): 2 of 5",
+      ],
+      `every list below three entries, whatever thinned it: ${thin.map((c) => `${c.label}: ${c.kept}`).sort().join("; ")}`
+    );
   });
 
   it("leaves reviewed products that are their own category's real thing ungated", () => {
