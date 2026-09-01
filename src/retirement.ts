@@ -25,3 +25,29 @@ export function listEndedTiers(): string {
 export function recordedTierSentence(vendorName: string, tier: string): string {
   return `${vendorName}'s offer is recorded as ${tier}.`;
 }
+
+export const ENDED_OFFER_CLAUSE = "the offer has ended";
+
+export const ENDED_BADGE_LABEL = "retired";
+
+export function endedHeadline(vendorName: string): string {
+  return `${vendorName} — free tier retired`;
+}
+
+export function endedVerdictSentence(): string {
+  return "This offer has ended — we keep the page for the record and no longer rate it.";
+}
+
+export function endedHistorySentence(vendorName: string): string {
+  return `No recorded pricing changes for ${vendorName} — but ${ENDED_OFFER_CLAUSE}, so this history describes a tier that is no longer available. An empty history is not evidence of stability here.`;
+}
+
+export function endedReliabilitySentence(vendorName: string): string {
+  return `${vendorName} has ended this offer, so there is nothing to rate. We keep the page so the question has an answer, but a stability judgement only applies to an offer you can still get.`;
+}
+
+export function endedEmptyChangeHistorySentence(vendorName: string): string {
+  return `${vendorName} has no recorded pricing changes, but ${ENDED_OFFER_CLAUSE} — so the empty history describes a tier that is no longer available, not a stable one.`;
+}
+
+export const ENDED_SINCE_CHANGES_SENTENCE = "The offer has since ended.";

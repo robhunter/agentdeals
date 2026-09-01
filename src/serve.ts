@@ -16,7 +16,7 @@ import { buildDailyRollup, readRollups, coverageOf, ROLLUP_DATE_PATTERN } from "
 import { configureVendorSeries, recordVendorRequest, flushVendorSeries, readVendorSeries, vendorSeriesGauge, vendorExportAuthorized, isSeriesDate, seriesDateRange, VENDOR_SERIES_PATH, VENDOR_SERIES_RETENTION_DAYS, VENDOR_SERIES_NOTES } from "./vendor-series.js";
 import { openapiSpec } from "./openapi.js";
 import { LINK_GRACE_DAYS, unreachableNoticeForUrl } from "./link-health.js";
-import { offerRetired, recordedTierSentence, type OfferTierAndUrl } from "./retirement.js";
+import { offerEnded, offerRetired, recordedTierSentence, endedHeadline, endedHistorySentence, endedReliabilitySentence, endedEmptyChangeHistorySentence, ENDED_BADGE_LABEL, ENDED_SINCE_CHANGES_SENTENCE, type OfferTierAndUrl } from "./retirement.js";
 import { levelWithheldReason, withheldLevelClause, withheldLevelSentence } from "./source-check.js";
 import { buildComparisonMap, comparisonSlug } from "./comparison-pairs.js";
 import { stabilityFaqAnswer, stabilityVerdictClause, type ComparisonSide, type StabilityRating } from "./comparison-verdict.js";
@@ -3700,7 +3700,11 @@ function buildVendorPage(slug: string): string | null {
   const discontinuedOn = discontinuedOnOrBefore(vendorChanges, servedOn);
 
   const linkUnreachable = enriched.link_unreachable;
-  const h1RiskBadge = enriched.risk_level === null || (linkUnreachable && riskLevel === "stable")
+  const offerHasEnded = offerEnded(primary);
+  const retiredBadgeColor = "#8b949e";
+  const h1RiskBadge = offerHasEnded
+    ? ` <span class="risk-badge" style="background:${retiredBadgeColor}20;color:${retiredBadgeColor};border:1px solid ${retiredBadgeColor}40">${ENDED_BADGE_LABEL}</span>`
+    : enriched.risk_level === null || (linkUnreachable && riskLevel === "stable")
     ? ""
     : ` <span class="risk-badge" style="background:${riskColor}20;color:${riskColor};border:1px solid ${riskColor}40">${riskLevel}</span>`;
   const linkUnreachableLine = linkUnreachable
@@ -3793,6 +3797,7 @@ function buildVendorPage(slug: string): string | null {
     changes: vendorChanges,
     levelWithheld,
     unconfirmableSince,
+    offerEnded: offerHasEnded,
   };
   const verdictLine2 = vendorVerdictSentence(verdictInput);
   const verdictLine3 = discontinuedOn
@@ -3882,7 +3887,9 @@ ${enrichedAlts.map(a => {
         <div class="change-summary">${escHtmlServer(c.summary)}</div>
         ${c.previous_state && c.current_state ? `<div class="change-detail"><span class="state-label">Before:</span> ${escHtmlServer(c.previous_state)}</div><div class="change-detail"><span class="state-label">After:</span> ${escHtmlServer(c.current_state)}</div>` : ""}
       </div>`;
-  }).join("\n") : levelWithheld
+  }).join("\n") : offerHasEnded
+    ? `<p class="no-changes">${escHtmlServer(endedHistorySentence(vendorName))}</p>`
+    : levelWithheld
     ? `<p class="no-changes">No recorded pricing changes for ${escHtmlServer(vendorName)} — but ${escHtmlServer(withheldClause)}, so nothing we have read describes these terms. Treat the empty history as a statement about our records, not about this vendor's pricing.</p>`
     : `<p class="no-changes">No recorded pricing changes for ${escHtmlServer(vendorName)}. This is a good sign — stable pricing.</p>`;
 
@@ -4107,7 +4114,9 @@ ${allCompareLinks.join("\n")}
     : eligibilityGateSentence + (levelWithheld
     ? `${unconfirmedTermsPreamble}Our stored record calls ${vendorName}'s free tier "${primary.tier}". ${withUnconfirmedTermsCaveat(primary.description)}`
     : `${vendorName}'s free tier is called "${primary.tier}". ${primary.description}`);
-  const faqReliableAnswer = levelWithheld
+  const faqReliableAnswer = offerHasEnded
+    ? endedReliabilitySentence(vendorName)
+    : levelWithheld
     ? `We cannot say. ${withheldLevelSentence(levelWithheld, vendorName, unconfirmableSince)} Nothing we have read describes these terms, so we are not publishing a stability judgement for this vendor until that is fixed.`
     : riskLevel === "stable"
     ? `${vendorName}'s free tier is considered stable.${vendorChanges.length > 0 ? ` ${narrowingSentence(vendorChanges)} See the pricing history below.` : ""}`
@@ -4124,7 +4133,9 @@ ${allCompareLinks.join("\n")}
       : `${vendorName}'s free tier is usable for prototyping and development, but we rate it ${riskLevel}${riskCause ? ` because of one recorded ${changeKindNoun(riskCause.change_type)}, ${changeDateClause(riskCause)}` : ""}. Consider alternatives with more stable pricing for critical services.`)
     : `${vendorName} does not offer a free tier for production use. Consider free alternatives in ${primary.category}.`);
   const faqChangedAnswer = vendorChanges.length > 0
-    ? `${vendorName} has had ${vendorChanges.length} recorded pricing change${vendorChanges.length > 1 ? "s" : ""}. Most recently: ${vendorChanges[0].summary} (${changeDateLabel(vendorChanges[0])}).`
+    ? `${vendorName} has had ${vendorChanges.length} recorded pricing change${vendorChanges.length > 1 ? "s" : ""}. Most recently: ${vendorChanges[0].summary} (${changeDateLabel(vendorChanges[0])}).${offerHasEnded ? ` ${ENDED_SINCE_CHANGES_SENTENCE}` : ""}`
+    : offerHasEnded
+    ? endedEmptyChangeHistorySentence(vendorName)
     : levelWithheld
     ? `We hold no recorded pricing changes for ${vendorName}, but ${withheldClause}, so that is a statement about our records rather than a positive signal.`
     : `No, ${vendorName} has had no recorded pricing changes. This is a positive stability signal.`;
@@ -4251,7 +4262,7 @@ ${mcpCtaCss()}
 <div class="container">
   ${buildGlobalNav("categories")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/vendor">Vendors</a> &rsaquo; ${escHtmlServer(vendorName)}</div>
-  <h1>${escHtmlServer(vendorName)} Free Tier ${currentYear}${h1RiskBadge}</h1>${eligibilityGateLine}
+  <h1>${offerHasEnded ? escHtmlServer(endedHeadline(vendorName)) : `${escHtmlServer(vendorName)} Free Tier ${currentYear}`}${h1RiskBadge}</h1>${eligibilityGateLine}
 ${riskCauseLine}
 ${linkUnreachableLine}
 ${productRoleLine}${productSubtypesLine}

@@ -2,6 +2,7 @@ import type { DealChange, RiskCause } from "./types.js";
 import { CHANGE_DIRECTION, isACorrectionToOurOwnRecord } from "./data.js";
 import { changeDateClause } from "./change-dates.js";
 import { withheldLevelClause, type LevelWithheldReason } from "./source-check.js";
+import { endedVerdictSentence } from "./retirement.js";
 
 export type PublishedRiskLevel = "stable" | "caution" | "risky";
 
@@ -32,6 +33,7 @@ export interface VendorVerdictInput {
   changes: Array<Pick<DealChange, "date" | "date_source" | "change_type">>;
   levelWithheld: LevelWithheldReason | null;
   unconfirmableSince: string;
+  offerEnded?: boolean;
 }
 
 export function publishedVendorLevel(
@@ -59,6 +61,7 @@ export function withholdingDecides(input: VendorVerdictInput): boolean {
 }
 
 export function vendorVerdictWord(input: VendorVerdictInput): PublishedRiskLevel | null {
+  if (input.offerEnded) return null;
   if (withholdingDecides(input)) return null;
   return publishedVendorLevel(input.level, input.cause);
 }
@@ -86,6 +89,7 @@ export function narrowingSentence(changes: VendorVerdictInput["changes"]): strin
 }
 
 export function vendorVerdictSentence(input: VendorVerdictInput): string {
+  if (input.offerEnded) return endedVerdictSentence();
   if (withholdingDecides(input)) {
     const clause = withheldLevelClause(input.levelWithheld!, input.unconfirmableSince);
     return `${clause.charAt(0).toUpperCase()}${clause.slice(1)}, so we cannot confirm these terms today.`;
