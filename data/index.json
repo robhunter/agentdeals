@@ -1429,27 +1429,7 @@
           {
             "subtype": "host_metrics",
             "source_url": "https://www.datadoghq.com/pricing/",
-            "source_quote": "into your stack’s health & performance Infrastructure Infrastructure Monitoring Metrics Network Monitoring Container Monitoring Kubernetes Autoscaling"
-          },
-          {
-            "subtype": "apm_traces",
-            "source_url": "https://www.datadoghq.com/pricing/",
-            "source_quote": "Cloud Cost Management Applications Application Performance Monitoring OTLP APM Ingest Serverless Monitoring Universal Service Monitoring"
-          },
-          {
-            "subtype": "log_management",
-            "source_url": "https://www.datadoghq.com/pricing/",
-            "source_quote": "Logs Log Management Error Tracking Sensitive Data Scanner Audit Trail Observability Pipelines"
-          },
-          {
-            "subtype": "metrics_backend",
-            "source_url": "https://www.datadoghq.com/pricing/",
-            "source_quote": "updateQueryParam('product', product)"
-          },
-          {
-            "subtype": "synthetic_check",
-            "source_url": "https://www.datadoghq.com/pricing/",
-            "source_quote": "Real User Monitoring & Session Replay Synthetic Testing & Monitoring Software Delivery Code Coverage"
+            "source_quote": "Standard Events and Metrics Up to 5 hosts"
           }
         ],
         "reviewed": "2026-09-01"
@@ -8008,9 +7988,9 @@
             "source_quote": "Label images fast with AI-assisted data annotation"
           },
           {
-            "subtype": "gpu_compute",
+            "subtype": "model_hosting",
             "source_url": "https://roboflow.com/pricing",
-            "source_quote": "Hosted model training infrastructure and GPU access"
+            "source_quote": "Data labeling suite w/ AI features Model training Workflow builder Cloud hosted deployment"
           }
         ],
         "reviewed": "2026-09-01"
@@ -9070,7 +9050,7 @@
           {
             "subtype": "log_management",
             "source_url": "https://middleware.io/pricing/",
-            "source_quote": "Customer Stories Product Updates Ebooks & Whitepaper Blogs Events Webinar Docs Podcasts 4,200+ engineers SREs, backend, and platform"
+            "source_quote": "Data volume is the sum total of uncompressed logs, metrics, and traces."
           },
           {
             "subtype": "host_metrics",
@@ -34110,17 +34090,12 @@
           {
             "subtype": "log_management",
             "source_url": "https://www.elastic.co/pricing/self-managed",
-            "source_quote": "Centralize and analyze logs"
+            "source_quote": "Observability APM, logging, and metrics via Kibana Discover and Dashboards"
           },
           {
             "subtype": "metrics_backend",
             "source_url": "https://www.elastic.co/pricing/self-managed",
             "source_quote": "optimized storage of metrics"
-          },
-          {
-            "subtype": "synthetic_check",
-            "source_url": "https://www.elastic.co/pricing/self-managed",
-            "source_quote": "users' experience with real user monitoring (RUM), synthetic testing, and uptime monitoring App performance monitoring Monitor,"
           }
         ],
         "reviewed": "2026-09-01"
@@ -34152,12 +34127,7 @@
           {
             "subtype": "dashboards",
             "source_url": "https://grafana.com/oss/grafana/",
-            "source_quote": "60 min Getting started with Grafana dashboard design Watch"
-          },
-          {
-            "subtype": "synthetic_check",
-            "source_url": "https://grafana.com/oss/grafana/",
-            "source_quote": "Database Observability Frontend Observability Synthetic Monitoring Performance & Load Testing Incident Response & Management AI"
+            "source_quote": "Easily collect, correlate, and visualize data with beautiful dashboards using Grafana — the open source data visualization and monitoring solution"
           }
         ],
         "reviewed": "2026-09-01"
