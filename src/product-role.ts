@@ -63,7 +63,7 @@ export const SUBTYPE_MEMBERSHIP_GROUPS: Record<string, SubtypeMembershipGroup[]>
 };
 
 export const SUBTYPE_MEMBERSHIP_RULE =
-  "Two offers in the same category are alternatives when their subtype sets share at least one member, or when both carry a subtype from one of the membership groups below. A record we have not classified carries no subtype gate at all, in either direction.";
+  "Two offers in the same category are alternatives when their subtype sets share at least one member, or when both carry a subtype from one of the membership groups below.";
 
 export const SUBTYPE_MEMBERSHIP_GROUP_SCOPE =
   "A group answers whether a product could substitute at all. Which one is the better answer is ordering, and ordering is a separate, seeded, published concern that reads none of this.";
@@ -198,6 +198,40 @@ export function partitionAlternativesAcross<T extends RoleCarrier>(candidates: T
 
 export function partitionAlternatives<T extends RoleCarrier>(candidates: T[], subject: RoleCarrier): AlternativesPartition<T> {
   return partitionAlternativesAcross(candidates, [subject]);
+}
+
+export interface SubstitutesPartition<T extends RoleCarrier> extends AlternativesPartition<T> {
+  unclassified: T[];
+}
+
+export function classifiedTaxonomies(subjects: RoleCarrier[]): Set<string> {
+  return new Set(subtypesAcross(subjects).filter(p => p.subtypes.size > 0).map(p => p.taxonomy));
+}
+
+export function subtypeGateBinds(subjects: RoleCarrier[], category: string): boolean {
+  return classifiedTaxonomies(subjects).has(category);
+}
+
+export function partitionSubstitutes<T extends RoleCarrier & { category: string }>(
+  candidates: T[],
+  subjects: RoleCarrier[],
+  options: MembershipOptions<T> = {},
+): SubstitutesPartition<T> {
+  const binds = classifiedTaxonomies(subjects);
+  const admissible: T[] = [];
+  const unclassified: T[] = [];
+  for (const candidate of candidates) {
+    if (options.subtypeExempt?.(candidate) || binds.has(candidate.category)) admissible.push(candidate);
+    else unclassified.push(candidate);
+  }
+  const partition = partitionAlternativesAcross(admissible, subjects, options);
+  return { kept: partition.kept, removed: partition.removed, unclassified };
+}
+
+export type SubstituteCandidate = RoleCarrier & { vendor: string; category: string };
+
+export function substitutesFor<T extends SubstituteCandidate>(all: T[], subject: SubstituteCandidate): T[] {
+  return partitionSubstitutes(all.filter(o => o.category === subject.category && o.vendor !== subject.vendor), [subject]).kept;
 }
 
 export function filterAlternatives<T extends RoleCarrier>(candidates: T[], subject: RoleCarrier): T[] {

@@ -427,10 +427,12 @@ describe("curated alternatives on the published pages", () => {
   });
 
   it("leaves the category heading on the vendor page describing the category list", async () => {
-    const res = await get("/vendor/postman");
-    assert.ok(res.body.includes("<h2>Alternatives in Testing</h2>"));
-    const categoryList = res.body.slice(res.body.indexOf("<h2>Alternatives in Testing</h2>"));
-    for (const vendor of POSTMAN_CURATED) {
+    const heading = "<h2>Alternatives in Databases</h2>";
+    const res = await get("/vendor/firebase");
+    assert.ok(res.body.includes(heading), "the subject must render a category list for the assertion to mean anything");
+    const categoryList = res.body.slice(res.body.indexOf(heading));
+    for (const vendor of ["Cloudflare R2", "Backblaze B2"]) {
+      assert.ok(res.body.includes(`>${vendor}<`), `${vendor} must be curated onto the page for this to test anything`);
       assert.ok(!categoryList.includes(`>${vendor}<`), `${vendor} is inside the category list`);
     }
   });
