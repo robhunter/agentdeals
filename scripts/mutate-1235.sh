@@ -2,7 +2,7 @@
 set -u
 cd "$(dirname "$0")/.." || exit 1
 
-TESTS="test/tier-vocabulary.test.ts test/ranking.test.ts"
+TESTS="test/tier-vocabulary.test.ts test/eligibility-vocabulary.test.ts test/ranking.test.ts"
 
 run_case() {
   local name="$1" file="$2" from="$3" to="$4"
@@ -61,3 +61,16 @@ run_case "the free class stops being the fall-through default" src/ranking.ts \
 run_case "the time-limited rules stop being consulted" src/ranking.ts \
   '  for (const rule of TIME_LIMITED_TIER_RULES) {' \
   '  for (const rule of [] as typeof TIME_LIMITED_TIER_RULES) {'
+
+run_case "a record carries an eligibility type nobody has decided about" data/index.json \
+  '"type": "subscription"' \
+  '"type": "membership"'
+
+run_case "the eligibility fixture stops listing a type the data still carries" test/eligibility-vocabulary.json \
+  '  "startup",' \
+  ''
+
+run_case "the eligibility fixture lists a type no record carries" test/eligibility-vocabulary.json \
+  '  "oss",' \
+  '  "geographic",
+  "oss",'
