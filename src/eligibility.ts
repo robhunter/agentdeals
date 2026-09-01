@@ -1,13 +1,11 @@
-import { gateFor } from "./ranking.js";
+import { eligibilityGateFor } from "./ranking.js";
 import type { Gate } from "./ranking.js";
 import type { Offer } from "./types.js";
 
 export const CONDITION_RECORDING_AN_UNREAD_PROGRAM = "Startup program — check vendor for eligibility details";
 
 export function eligibilityGate(offer: Pick<Offer, "eligibility">): Gate | null {
-  if (!offer.eligibility) return null;
-  const gate = gateFor(offer as Offer, "");
-  return gate && gate.code === "eligibility_restricted" ? gate : null;
+  return eligibilityGateFor(offer);
 }
 
 export function gatedShareLede(total: number, gated: number): string {

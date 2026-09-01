@@ -65,7 +65,7 @@ describe("tier classification", () => {
     const unclassified = new Set<string>();
     for (const o of index.offers) {
       const c = classifyTier(o.tier);
-      if (!["free", "time_limited", "not_free"].includes(c.class)) unclassified.add(o.tier);
+      if (!["free", "time_limited", "not_free", "retired"].includes(c.class)) unclassified.add(o.tier);
     }
     assert.strictEqual(unclassified.size, 0, `unclassified tiers: ${[...unclassified].join(", ")}`);
   });
@@ -94,14 +94,14 @@ describe("tier classification", () => {
   });
 
   it("puts every offer in exactly one class and lets no expiring tier into the free bucket", () => {
-    const counts = { free: 0, time_limited: 0, not_free: 0 };
+    const counts = { free: 0, time_limited: 0, not_free: 0, retired: 0 };
     const freeTiers = new Set<string>();
     for (const o of index.offers) {
       const tierClass = classifyTier(o.tier).class;
       counts[tierClass]++;
       if (tierClass === "free") freeTiers.add(o.tier);
     }
-    assert.strictEqual(counts.free + counts.time_limited + counts.not_free, index.offers.length);
+    assert.strictEqual(counts.free + counts.time_limited + counts.not_free + counts.retired, index.offers.length);
     assert.ok(counts.time_limited >= 20, `expected the time-limited class to be populated, found ${counts.time_limited}`);
     assert.ok(counts.not_free >= 15, `expected the not-free class to be populated, found ${counts.not_free}`);
     for (const tier of freeTiers) {
@@ -135,8 +135,12 @@ describe("gates", () => {
 
   it("every gate code is documented on the criteria page table", () => {
     const documented = new Set(GATE_TABLE.map((g) => g.code));
-    for (const code of ["eligibility_restricted", "not_a_free_offer", "offer_expired", "verification_lapsed"]) {
+    for (const code of ["eligibility_restricted", "not_a_free_offer", "offer_expired", "offer_retired", "verification_lapsed"]) {
       assert.ok(documented.has(code as never), `${code} must be documented`);
+    }
+    for (const o of index.offers) {
+      const gate = gateFor(o, TODAY);
+      if (gate) assert.ok(documented.has(gate.code), `${o.vendor} is gated ${gate.code}, which the table does not describe`);
     }
   });
 });
