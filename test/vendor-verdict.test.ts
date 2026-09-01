@@ -14,6 +14,7 @@ import {
 import { CHANGE_DIRECTION, enrichOffers, loadDealChanges, loadOffers, vendorRiskAssessment, classifyStability } from "../dist/data.js";
 import { vendorSlugMap } from "../dist/vendor-slug.js";
 import { levelWithheldReason } from "../dist/source-check.js";
+import { offerEnded, ENDED_BADGE_LABEL } from "../dist/retirement.js";
 import type { DealChange, RiskCause } from "../dist/types.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -191,6 +192,8 @@ interface VendorRow {
   slug: string;
   vendor: string;
   expected: "stable" | "caution" | "risky";
+  badge: string;
+  ended: boolean;
   withheld: ReturnType<typeof levelWithheldReason>;
   badgeRendered: boolean;
   sentence: string;
@@ -210,6 +213,7 @@ function vendorRows(): VendorRow[] {
       .sort((a, b) => b.date.localeCompare(a.date));
     const withheld = levelWithheldReason(primary, enriched.link_unreachable);
     const expected = publishedVendorLevel(enriched.risk_level ?? null, enriched.risk_cause ?? null);
+    const ended = offerEnded(primary);
     const unconfirmableSince = enriched.link_unreachable?.last_reachable
       ? ` since ${enriched.link_unreachable.last_reachable}`
       : "";
@@ -217,14 +221,17 @@ function vendorRows(): VendorRow[] {
       slug,
       vendor,
       expected,
+      ended,
+      badge: ended ? ENDED_BADGE_LABEL : expected,
       withheld,
-      badgeRendered: !(enriched.risk_level === null || (enriched.link_unreachable && expected === "stable")),
+      badgeRendered: ended || !(enriched.risk_level === null || (enriched.link_unreachable && expected === "stable")),
       sentence: vendorVerdictSentence({
         level: enriched.risk_level ?? null,
         cause: enriched.risk_cause ?? null,
         changes: vendorChanges,
         levelWithheld: withheld,
         unconfirmableSince,
+        offerEnded: ended,
       }),
       changes: vendorChanges,
     });
@@ -359,8 +366,8 @@ describe("vendor verdict — as rendered", () => {
         const verdict = verdictParagraph(html);
         const cell = comparisonCell(html);
 
-        if (row.badgeRendered && badge !== row.expected) {
-          wrong.push(`${row.slug}: h1 badge is ${badge ?? "absent"}, expected ${row.expected}`);
+        if (row.badgeRendered && badge !== row.badge) {
+          wrong.push(`${row.slug}: h1 badge is ${badge ?? "absent"}, expected ${row.badge}`);
         }
         if (!row.badgeRendered && badge !== null) {
           wrong.push(`${row.slug}: h1 badge renders ${badge} for a rating we are withholding`);
