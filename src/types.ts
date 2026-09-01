@@ -108,7 +108,7 @@ export interface EnrichedOffer extends Offer {
   expires_soon: string | null;
   risk_level: RiskLevel | null;
   risk_cause: RiskCause | null;
-  stability: StabilityClass;
+  stability: StabilityClass | null;
   days_since_verified: number;
   link_unreachable: LinkUnreachable | null;
 }

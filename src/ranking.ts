@@ -1,5 +1,7 @@
 import { createHash } from "node:crypto";
-import type { ChangeDateSource, DealChange, Offer } from "./types.js";
+import { LINK_GRACE_DAYS, unreachableNoticeForUrl } from "./link-health.js";
+import { withheldLevelSentence } from "./source-check.js";
+import type { ChangeDateSource, DealChange, LinkUnreachable, Offer } from "./types.js";
 
 export const CRITERIA_PATH = "/criteria";
 
@@ -78,6 +80,8 @@ export const GATE_TABLE: { code: GateCode; description: string }[] = [
 
 export type DemeritCode =
   | "free_tier_withdrawn"
+  | "link_gone"
+  | "link_unreachable"
   | "time_limited_offer"
   | "stale_verification"
   | "expiring_soon";
@@ -98,10 +102,22 @@ export const DEMERIT_TABLE: { code: DemeritCode; points: number; trigger: string
       `A recorded free-tier removal, open-source licence change or product deprecation within the last ${ADVERSE_CHANGE_WINDOW_DAYS} days.`,
   },
   {
+    code: "link_gone",
+    points: 3,
+    trigger:
+      "The vendor's own server answers 410 for the pricing page we cite, stating the page is permanently gone. Recorded on the first such check, with no grace period.",
+  },
+  {
     code: "time_limited_offer",
     points: 2,
     trigger:
       "The stated tier is a credit grant, trial, scholarship, beta, preview or sandbox allowance — the free part runs out.",
+  },
+  {
+    code: "link_unreachable",
+    points: 2,
+    trigger:
+      `The pricing page we cite did not resolve on our check — a 404 answered by a full request, or a hostname with no address — and has still not resolved ${LINK_GRACE_DAYS} days after the last date it was reachable. Being refused (403, 429, 5xx, timeout) is evidence about our checker and never produces this.`,
   },
   {
     code: "stale_verification",
@@ -213,11 +229,14 @@ export function utcDate(now: Date = new Date()): string {
   return now.toISOString().slice(0, 10);
 }
 
+export type LinkHealthLookup = (url: string, nowMs?: number) => LinkUnreachable | null;
+
 export interface RankOptions {
   queryKey: string;
   changes: DealChange[];
   date?: string;
   verificationLedger?: VerificationLedger;
+  linkHealth?: LinkHealthLookup;
 }
 
 function daysBetween(fromIso: string, toIso: string): number {
@@ -296,11 +315,31 @@ function staleVerificationDemerit(
   };
 }
 
+export function unreachableLinkDemerit(
+  offer: Offer,
+  unreachable: LinkUnreachable | null,
+): Demerit | null {
+  if (!unreachable) return null;
+  const since = unreachable.last_reachable ? ` since ${unreachable.last_reachable}` : "";
+  return {
+    code: unreachable.terminal ? "link_gone" : "link_unreachable",
+    points: unreachable.terminal ? 3 : 2,
+    date: unreachable.checked,
+    reason: withheldLevelSentence("link_unreachable", offer.vendor, since),
+  };
+}
+
 export function evaluate<T extends Offer>(
   offer: T,
-  opts: { date: string; changesForVendor: DealChange[]; verificationLedger?: VerificationLedger },
+  opts: {
+    date: string;
+    changesForVendor: DealChange[];
+    verificationLedger?: VerificationLedger;
+    linkHealth?: LinkHealthLookup;
+  },
 ): RankedEntry<T> {
   const { date, changesForVendor, verificationLedger } = opts;
+  const lookUpLink = opts.linkHealth ?? unreachableNoticeForUrl;
   const demerits: Demerit[] = [];
   const disclosures: Disclosure[] = [];
 
@@ -334,6 +373,9 @@ export function evaluate<T extends Offer>(
     });
   }
 
+  const linkDemerit = unreachableLinkDemerit(offer, lookUpLink(offer.url, Date.parse(date)));
+  if (linkDemerit) demerits.push(linkDemerit);
+
   const tierClass = classifyTier(offer.tier);
   if (tierClass.class === "time_limited") {
     demerits.push({
@@ -343,7 +385,7 @@ export function evaluate<T extends Offer>(
     });
   }
 
-  const stale = staleVerificationDemerit(offer, date, verificationLedger);
+  const stale = linkDemerit ? null : staleVerificationDemerit(offer, date, verificationLedger);
   if (stale) demerits.push(stale);
 
   if (offer.expires_date && offer.expires_date >= date) {
@@ -390,6 +432,7 @@ export function rankOffers<T extends Offer>(candidates: T[], opts: RankOptions):
         date,
         changesForVendor: byVendor.get(offer.vendor.toLowerCase()) ?? [],
         verificationLedger: opts.verificationLedger,
+        linkHealth: opts.linkHealth,
       }),
     );
   }

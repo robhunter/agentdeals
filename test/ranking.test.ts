@@ -15,7 +15,7 @@ const {
   utcDate,
   DEMERIT_TABLE,
   GATE_TABLE,
-} = await import("../src/ranking.ts");
+} = await import("../dist/ranking.js");
 
 type Offer = import("../src/types.ts").Offer;
 type DealChange = import("../src/types.ts").DealChange;

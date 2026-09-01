@@ -195,7 +195,7 @@ describe("the referral programs directory labels our commercial relationships", 
       .find((d: any) => d["@type"] === type);
 
   const inventoryRotation = async () => {
-    const { rotateListing } = await import("../src/ranking.ts");
+    const { rotateListing } = await import("../dist/ranking.js");
     const seen = new Set<string>();
     const sourceOrder: string[] = [];
     for (const o of offers) {

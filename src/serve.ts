@@ -15,7 +15,7 @@ import { recordApiHit, recordSessionConnect, recordSessionDisconnect, recordLand
 import { buildDailyRollup, readRollups, coverageOf, ROLLUP_DATE_PATTERN } from "./analytics-rollup.js";
 import { configureVendorSeries, recordVendorRequest, flushVendorSeries, readVendorSeries, vendorSeriesGauge, vendorExportAuthorized, isSeriesDate, seriesDateRange, VENDOR_SERIES_PATH, VENDOR_SERIES_RETENTION_DAYS, VENDOR_SERIES_NOTES } from "./vendor-series.js";
 import { openapiSpec } from "./openapi.js";
-import { LINK_GRACE_DAYS } from "./link-health.js";
+import { LINK_GRACE_DAYS, unreachableNoticeForUrl } from "./link-health.js";
 import { levelWithheldReason, withheldLevelClause, withheldLevelSentence } from "./source-check.js";
 import { buildComparisonMap, comparisonSlug } from "./comparison-pairs.js";
 import { stabilityFaqAnswer, stabilityVerdictClause, type ComparisonSide, type StabilityRating } from "./comparison-verdict.js";
@@ -1061,6 +1061,13 @@ const relatedCategoriesMap: Record<string, string[]> = {
   "API Gateway": ["API Development", "Cloud Hosting", "Security"],
 };
 
+function listingUnreachableNoticeHtml(offer: Offer): string {
+  const unreachable = unreachableNoticeForUrl(offer.url);
+  if (!unreachable) return "";
+  const since = unreachable.last_reachable ? ` since ${unreachable.last_reachable}` : "";
+  return `<span class="listing-link-unreachable" style="display:block;margin-top:.3rem;color:#f85149">${escHtmlServer(withheldLevelSentence("link_unreachable", offer.vendor, since))}</span>`;
+}
+
 function buildCategoryPage(slug: string): string | null {
   const categoryName = categorySlugMap.get(slug);
   if (!categoryName) return null;
@@ -1073,7 +1080,7 @@ function buildCategoryPage(slug: string): string | null {
   const offersHtml = catOffers.map((o) => `        <tr>
           <td style="font-weight:600;color:var(--text);white-space:nowrap"><a href="/vendor/${toSlug(o.vendor)}" style="color:var(--text)">${escHtmlServer(o.vendor)}</a></td>
           <td style="font-family:var(--mono);color:var(--accent);white-space:nowrap">${escHtmlServer(o.tier)}</td>
-          <td style="color:var(--text-muted)">${escHtmlServer(o.description)}</td>
+          <td style="color:var(--text-muted)">${escHtmlServer(o.description)}${listingUnreachableNoticeHtml(o)}</td>
           <td style="font-family:var(--mono);color:var(--text-dim);white-space:nowrap">${escHtmlServer(o.verifiedDate)}</td>
         </tr>`).join("\n");
 

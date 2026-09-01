@@ -20,7 +20,7 @@ import {
   SUBTYPE_TAXONOMIES,
   SUBTYPE_MEMBERSHIP_GROUPS,
 } from "../src/product-role.ts";
-import { rankForListing, rankOffers } from "../src/ranking.ts";
+import { rankForListing, rankOffers } from "../dist/ranking.js";
 import type { Offer, ProductRole, DeploymentModel } from "../src/types.ts";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));

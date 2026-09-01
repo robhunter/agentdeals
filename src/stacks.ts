@@ -1,6 +1,7 @@
-import { searchOffers, loadDealChanges, vendorRiskLevel, classifyStability } from "./data.js";
+import { searchOffers, loadDealChanges, vendorRiskLevel, classifyStability, withheldStability } from "./data.js";
 import { rankOffers, utcDate, CRITERIA_PATH, DEMOTE_ONLY_POLICY, NOT_MODELLED_NOTICE } from "./ranking.js";
 import type { Demerit, Disclosure, TieBreak } from "./ranking.js";
+import { unreachableNoticeForUrl } from "./link-health.js";
 import { verificationLedger } from "./verification-state.js";
 import type { Offer, StabilityClass, DealChange } from "./types.js";
 import { partitionRoleCandidates, MEMBERSHIP_GATE_RULES } from "./product-role.js";
@@ -12,7 +13,7 @@ export interface StackCandidate {
   url: string;
   verified_date: string;
   risk_level: "stable" | "caution" | "risky";
-  stability: StabilityClass;
+  stability: StabilityClass | null;
   demerits: Demerit[];
   disclosures: Disclosure[];
 }
@@ -221,7 +222,7 @@ function toCandidate(
     url: offer.url,
     verified_date: offer.verifiedDate,
     risk_level: vendorRiskLevel(vendorChanges),
-    stability: classifyStability(vendorChanges),
+    stability: withheldStability(unreachableNoticeForUrl(offer.url), classifyStability(vendorChanges)),
     demerits,
     disclosures,
   };
