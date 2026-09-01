@@ -242,6 +242,79 @@ describe("#1032 Phase 2 subtypes gate on sharing at least one label", () => {
     assert.equal(subtypesOf(unlabelled), null);
     assert.deepStrictEqual([...subtypesOf(none)!.subtypes], []);
   });
+
+  it("publishes no subtype name twice in one taxonomy", () => {
+    for (const [taxonomy, entries] of Object.entries(SUBTYPE_TAXONOMIES)) {
+      const names = entries.map(e => e.subtype);
+      assert.deepStrictEqual([...new Set(names)], names, `${taxonomy} names a subtype twice, and the second definition is unreachable`);
+    }
+  });
+
+  it("gives every subtype a definition long enough to classify by", () => {
+    for (const [taxonomy, entries] of Object.entries(SUBTYPE_TAXONOMIES)) {
+      for (const entry of entries) {
+        assert.ok(entry.definition.length > 40, `${taxonomy}/${entry.subtype} needs a definition a labeller can apply`);
+      }
+    }
+  });
+});
+
+describe("#1212 the functions Monitoring splits by", () => {
+  const MONITORING_SUBTYPES = [
+    "uptime_check",
+    "synthetic_check",
+    "host_metrics",
+    "apm_traces",
+    "log_management",
+    "metrics_backend",
+    "dashboards",
+    "error_tracking",
+    "cron_monitor",
+    "status_page",
+    "upstream_status_watch",
+    "on_call_response",
+    "page_change_watch",
+  ];
+
+  const TELEMETRY_GROUP = ["host_metrics", "apm_traces", "log_management", "metrics_backend", "dashboards"];
+
+  it("publishes all thirteen, so a record may carry any of them", () => {
+    assert.deepStrictEqual(SUBTYPE_TAXONOMIES["Monitoring"]?.map(e => e.subtype), MONITORING_SUBTYPES);
+  });
+
+  it("groups the five that answer where telemetry goes, and only those five", () => {
+    assert.deepStrictEqual(membershipGroupsFor("Monitoring").map(g => g.subtypes), [TELEMETRY_GROUP]);
+  });
+
+  it("offers two telemetry products as substitutes whichever part of the pipeline each carries", () => {
+    const traces = labelled("Traces", ["apm_traces"], "Monitoring");
+    const view = labelled("View", ["dashboards"], "Monitoring");
+    assert.equal(alternativeMembershipGate(view, traces), null);
+    assert.equal(alternativeMembershipGate(traces, view), null);
+  });
+
+  it("keeps exception grouping outside that group in both directions", () => {
+    const logs = labelled("Logs", ["log_management"], "Monitoring");
+    const exceptions = labelled("Exceptions", ["error_tracking"], "Monitoring");
+    assert.equal(alternativeMembershipGate(exceptions, logs), "subtype_mismatch");
+    assert.equal(alternativeMembershipGate(logs, exceptions), "subtype_mismatch");
+  });
+
+  it("leaves every subtype outside the group on the shared-label rule", () => {
+    const uptime = labelled("Uptime", ["uptime_check"], "Monitoring");
+    const secondUptime = labelled("SecondUptime", ["uptime_check"], "Monitoring");
+    const onCall = labelled("OnCall", ["on_call_response"], "Monitoring");
+    const traces = labelled("Traces", ["apm_traces"], "Monitoring");
+    assert.equal(alternativeMembershipGate(secondUptime, uptime), null);
+    assert.equal(alternativeMembershipGate(onCall, uptime), "subtype_mismatch");
+    assert.equal(alternativeMembershipGate(traces, uptime), "subtype_mismatch");
+  });
+
+  it("compares a Monitoring label against nothing in another category", () => {
+    const traces = labelled("Traces", ["apm_traces"], "Monitoring");
+    const relationalDb = labelled("RelationalDb", ["relational"]);
+    assert.equal(alternativeMembershipGate(traces, relationalDb), null);
+  });
 });
 
 describe("#1032 a gate removes a candidate only where the subject cannot carry it too", () => {
