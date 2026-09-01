@@ -65,6 +65,24 @@ export const SUBTYPE_TAXONOMIES: Record<string, Array<{ subtype: string; definit
     { subtype: "on_call_response", definition: "routes a firing alert to a named human by schedule and escalation policy" },
     { subtype: "page_change_watch", definition: "fetches a web page on a schedule and notifies you when its content differs from last time" },
   ],
+  "AI / ML": [
+    { subtype: "llm_api", definition: "the vendor runs language or multimodal models on its own infrastructure and sells calls to them by model name; you send a prompt and receive a completion" },
+    { subtype: "llm_observability", definition: "records the prompts, responses, latency, cost and tool calls an application sent to a model, for reading afterwards" },
+    { subtype: "llm_evaluation", definition: "scores model or agent output against a dataset, a rubric or a judge model on runs you trigger" },
+    { subtype: "model_gateway", definition: "one endpoint that reaches models run by several independent providers; what is sold is the routing, key management and fallback, not the weights" },
+    { subtype: "model_hosting", definition: "you supply or select a model and the platform serves it behind an endpoint on hardware you choose" },
+    { subtype: "embeddings_api", definition: "returns a vector for text or media so it can be compared to other vectors; the vector is the output, not a completion" },
+    { subtype: "gpu_compute", definition: "sells accelerator time for code you write; the unit billed is machine time, not a model call" },
+    { subtype: "speech_api", definition: "converts recorded or streamed speech to text, or text to speech" },
+    { subtype: "document_extraction", definition: "turns a document or a scan into text or structured fields" },
+    { subtype: "image_video_generation", definition: "produces images or video from a prompt or a source image" },
+    { subtype: "vector_store", definition: "stores embeddings and answers nearest-neighbour queries as its primary access path" },
+    { subtype: "data_labeling", definition: "produces labelled or annotated training data" },
+    { subtype: "experiment_tracking", definition: "records training or evaluation runs, their metrics and artifacts, and keeps a registry of model versions" },
+    { subtype: "web_search_api", definition: "answers a query with current web results shaped for a model to read" },
+    { subtype: "agent_sandbox", definition: "isolated execution environments provisioned programmatically for code an agent writes" },
+    { subtype: "agent_tool_access", definition: "supplies an agent with authenticated connections to third-party applications it can call as tools" },
+  ],
 };
 
 export interface SubtypeMembershipGroup {
@@ -83,6 +101,12 @@ export const SUBTYPE_MEMBERSHIP_GROUPS: Record<string, SubtypeMembershipGroup[]>
     {
       subtypes: ["host_metrics", "apm_traces", "log_management", "metrics_backend", "dashboards"],
       rule: "A reader leaving one of these is asking where else to send telemetry, what will store it and what will show it, and all five answer some part of that, so two offers that each carry one are alternatives whether or not they carry the same one. error_tracking sits outside this group deliberately: a reader leaving Sentry wants exception grouping, and every platform that also offers it carries the error_tracking label itself. Every other subtype in this category keeps the shared-member rule unchanged.",
+    },
+  ],
+  "AI / ML": [
+    {
+      subtypes: ["llm_api", "model_gateway"],
+      rule: "A reader leaving one of these is asking where else to send a prompt and get a completion back. Whether the vendor runs the weights itself or routes the call to a provider that does is a procurement question, not a different product, so two offers that each carry one are alternatives whether or not they carry the same one. Every other subtype in this category keeps the shared-member rule unchanged.",
     },
   ],
 };

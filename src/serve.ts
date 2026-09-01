@@ -1857,8 +1857,9 @@ ${entries.map(e => `<tr><td><code>${escHtmlServer(e.subtype)}</code></td><td>${e
       return `${done} of ${inTaxonomy.length} in ${taxonomy}`;
     });
     const unclassified = offers.filter(o => !o.product_subtypes);
-    const inPublishedTaxonomy = unclassified.filter(o => SUBTYPE_TAXONOMIES[o.category]).length;
-    return `We have classified ${parts.join(", ")}; the other ${unclassified.length} records carry no subtype, so they are offered no substitutes, and are offered as one only where a person wrote the pair down by name. ${inPublishedTaxonomy} of them sit in a category whose subtypes we do publish. Classifying a category restores both directions.`;
+    const started = new Set(offers.filter(o => (o.product_subtypes?.labels.length ?? 0) > 0).map(o => o.category));
+    const whereTheGateBinds = unclassified.filter(o => started.has(o.category)).length;
+    return `We have classified ${parts.join(", ")}; the other ${unclassified.length} records carry no subtype, so they are offered no substitutes, and are offered as one only where a person wrote the pair down by name. ${whereTheGateBinds} of them sit in a category we have started, where that gate binds on them today. Classifying a category restores both directions.`;
   })();
 
   const jsonLd = {
