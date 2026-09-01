@@ -27345,7 +27345,7 @@
         "conditions": [
           "Startup program — check vendor for eligibility details"
         ],
-        "program": "Scaleway Startup Program Startup Program"
+        "program": "Scaleway Startup Program"
       },
       "source_check": {
         "checked": "2026-08-28",
@@ -27371,7 +27371,7 @@
         "conditions": [
           "Startup program — check vendor for eligibility details"
         ],
-        "program": "ScaleGrid Startup Program Startup Program"
+        "program": "ScaleGrid Startup Program"
       },
       "source_check": {
         "checked": "2026-08-28",
@@ -27662,7 +27662,7 @@
         "conditions": [
           "Startup program — check vendor for eligibility details"
         ],
-        "program": "Shotstack Startup Program Startup Program"
+        "program": "Shotstack Startup Program"
       },
       "expires_date": "2026-07-31",
       "source_check": {
@@ -27688,7 +27688,7 @@
         "conditions": [
           "Startup program — check vendor for eligibility details"
         ],
-        "program": "Esri Startup Program Startup Program"
+        "program": "Esri Startup Program"
       },
       "source_check": {
         "checked": "2026-08-28",
