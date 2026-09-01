@@ -77,10 +77,16 @@ export function getCategories(): { name: string; count: number }[] {
     .sort((a, b) => a.name.localeCompare(b.name));
 }
 
+export type OfferWithLinkHealth = Offer & { link_unreachable: LinkUnreachable | null };
+
+export function withLinkHealth<T extends Offer>(offer: T): T & { link_unreachable: LinkUnreachable | null } {
+  return { ...offer, link_unreachable: unreachableNoticeForUrl(offer.url) };
+}
+
 export function getOfferDetails(
   vendorName: string,
   includeAlternatives: boolean = false
-): { offer: Offer & { relatedVendors: string[]; alternatives?: Offer[]; tie_break: TieBreak } } | { error: string; suggestions: string[] } {
+): { offer: OfferWithLinkHealth & { relatedVendors: string[]; alternatives?: OfferWithLinkHealth[]; tie_break: TieBreak } } | { error: string; suggestions: string[] } {
   const offers = loadOffers();
   const lowerName = vendorName.toLowerCase();
   const match = offers.find((o) => o.vendor.toLowerCase() === lowerName);
@@ -92,13 +98,13 @@ export function getOfferDetails(
     );
     const sameCategoryOffers = relatedRanking.entries.slice(0, 5).map((e) => e.offer);
     const relatedVendors = sameCategoryOffers.map((o) => o.vendor);
-    const result: Offer & { relatedVendors: string[]; alternatives?: Offer[]; tie_break: TieBreak } = {
-      ...match,
+    const result: OfferWithLinkHealth & { relatedVendors: string[]; alternatives?: OfferWithLinkHealth[]; tie_break: TieBreak } = {
+      ...withLinkHealth(match),
       relatedVendors,
       tie_break: relatedRanking.tie_break,
     };
     if (includeAlternatives) {
-      result.alternatives = sameCategoryOffers.map(o => stripReferrerValue(o));
+      result.alternatives = sameCategoryOffers.map(o => stripReferrerValue(withLinkHealth(o)));
     }
     return { offer: stripReferrerValue(result) };
   }
@@ -309,6 +315,24 @@ export function classifyStability(vendorChanges: DealChange[], nowMs: number = D
   return "stable";
 }
 
+const FAVOURABLE_STABILITY_CLASSES = new Set<StabilityClass>(["stable", "improving"]);
+
+export function withheldStability(
+  linkUnreachable: LinkUnreachable | null,
+  stability: StabilityClass,
+): StabilityClass | null {
+  if (!linkUnreachable) return stability;
+  return FAVOURABLE_STABILITY_CLASSES.has(stability) ? null : stability;
+}
+
+export function publishedStabilityFor(vendorName: string): StabilityClass | null {
+  const key = vendorName.toLowerCase();
+  const stability = classifyStability(loadDealChanges().filter((c) => c.vendor.toLowerCase() === key));
+  const offer = loadOffers().find((o) => o.vendor.toLowerCase() === key);
+  if (!offer) return stability;
+  return withheldStability(unreachableNoticeForUrl(offer.url), stability);
+}
+
 export function getStabilityMap(): Map<string, StabilityClass> {
   const changes = loadDealChanges();
   const vendorChangesMap = new Map<string, DealChange[]>();
@@ -375,7 +399,10 @@ export function enrichOffers(offers: Offer[]): EnrichedOffer[] {
       ? { date: assessment.cause.date, date_source: assessment.cause.date_source, change_type: assessment.cause.change_type, summary: assessment.cause.summary }
       : null;
 
-    const stability = classifyStability(vendorAllChangesList.get(key) ?? []);
+    const stability = withheldStability(
+      link_unreachable,
+      classifyStability(vendorAllChangesList.get(key) ?? []),
+    );
 
     const days_since_verified = Math.floor(
       (now.getTime() - new Date(offer.verifiedDate).getTime()) / (24 * 60 * 60 * 1000)

@@ -3,7 +3,7 @@ import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { McpServer, ResourceTemplate } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import { getCategories, getDealChanges, getPersonalizedChanges, getNewOffers, getNewestDeals, getOfferDetails, searchOffers, enrichOffers, compareServices, checkVendorRisk, auditStack, getExpiringDeals, getWeeklyDigest, loadOffers, loadDealChanges, classifyStability, getStabilityMap, getVendorReferral, sanitizeQuery } from "./data.js";
+import { getCategories, getDealChanges, getPersonalizedChanges, getNewOffers, getNewestDeals, getOfferDetails, searchOffers, enrichOffers, compareServices, checkVendorRisk, auditStack, getExpiringDeals, getWeeklyDigest, loadOffers, loadDealChanges, classifyStability, getStabilityMap, publishedStabilityFor, getVendorReferral, sanitizeQuery } from "./data.js";
 import { toSlug, vendorSlugMap, resolveVendorSlug } from "./vendor-slug.js";
 import { recordToolCall, logRequest, recordSearchQuery } from "./stats.js";
 import { registerAgent, validateVestauthUrl, getAgentByApiKeyHash, hashApiKey, updateAgentX402Address } from "./agents.js";
@@ -331,10 +331,9 @@ export function createServer(getSessionId?: () => string | undefined, getClientN
               content: [{ type: "text" as const, text: result.error }],
             };
           }
-          const stabMap = getStabilityMap();
           const enrichedResult = {
             ...result.result,
-            stability: stabMap.get(result.result.vendor.toLowerCase()) ?? "stable",
+            stability: publishedStabilityFor(result.result.vendor),
             referral_code: getBestReferralCode(result.result.vendor),
           };
           logRequest({ ts: new Date().toISOString(), type: "mcp", endpoint: "compare_vendors", params: { vendors }, result_count: 1, session_id: getSessionId?.() });
@@ -355,14 +354,13 @@ export function createServer(getSessionId?: () => string | undefined, getClientN
 
           let result: any = comparison.comparison;
 
-          const stabMap = getStabilityMap();
           const riskA = checkVendorRisk(vendors[0]);
           const riskB = checkVendorRisk(vendors[1]);
           result = {
             ...result,
             stability: {
-              [vendors[0]]: stabMap.get(comparison.comparison.vendor_a.vendor.toLowerCase()) ?? "stable",
-              [vendors[1]]: stabMap.get(comparison.comparison.vendor_b.vendor.toLowerCase()) ?? "stable",
+              [vendors[0]]: publishedStabilityFor(comparison.comparison.vendor_a.vendor),
+              [vendors[1]]: publishedStabilityFor(comparison.comparison.vendor_b.vendor),
             },
             risk_level: {
               [vendors[0]]: "result" in riskA ? riskA.result.risk_level : "stable",

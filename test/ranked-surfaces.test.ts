@@ -75,7 +75,8 @@ describe("/alternative-to/:slug", () => {
   const DEMOTION_EVIDENCE: Array<{ path: string; pattern: RegExp; why: string }> = [
     { path: "/alternative-to/openai", pattern: /<strong>&minus;3 free_tier_withdrawn<\/strong> Recorded [a-z ]+ on \d{4}-\d{2}-\d{2}/, why: "a withdrawn free tier must name the change and its date" },
     { path: "/alternative-to/openai", pattern: /<strong>&minus;2 time_limited_offer<\/strong> Tier &quot;[^&]+&quot; is a credit grant/, why: "a credit grant must say so" },
-    { path: "/alternative-to/vercel", pattern: /<strong>&minus;1 stale_verification<\/strong>[^<]*not a change by the vendor/, why: "our own verification gap must be labelled as ours" },
+    { path: "/alternative-to/n8n", pattern: /<strong>&minus;1 stale_verification<\/strong>[^<]*not a change by the vendor/, why: "our own verification gap must be labelled as ours" },
+    { path: "/alternative-to/vercel", pattern: /<strong>&minus;2 link_unreachable<\/strong>[^<]*pricing page has not resolved for us since \d{4}-\d{2}-\d{2}/, why: "a dead pricing page must name the date it was last reachable" },
   ];
 
   for (const { path, pattern, why } of DEMOTION_EVIDENCE) {
@@ -168,7 +169,7 @@ describe("/referral-programs stops being ordered by our own money", () => {
     assert.ok(vendors.length >= 4, `expected several unpaid programmes, got ${vendors.length}`);
     assert.notDeepStrictEqual(vendors, [...vendors].sort((a, b) => a.localeCompare(b)), "still alphabetical inside the section");
 
-    const { rotateListing } = await import("../src/ranking.ts");
+    const { rotateListing } = await import("../dist/ranking.js");
     const { hasOurReferralLink } = await import("../dist/referral-surfaces.js");
     const index = JSON.parse(readFileSync(path.join(REPO, "data", "index.json"), "utf8")) as {
       offers: { vendor: string; referral?: unknown; referral_program?: { available?: boolean } }[];
