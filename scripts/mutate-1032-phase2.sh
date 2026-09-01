@@ -156,7 +156,7 @@ m_alternatives_page_subtype_gates_curated_names() {
   py <<'PY'
 p = "src/serve.ts"
 s = open(p).read()
-s = s.replace("    subtypeExempt: candidate => curatedAltNames.has(candidate.vendor),",
+s = s.replace("    subtypeExempt: candidate => curatedNames.has(candidate.vendor),",
               "    subtypeExempt: () => false,")
 open(p, "w").write(s)
 PY

@@ -43,7 +43,7 @@ import { discontinuedOnOrBefore, PRODUCT_DEPRECATED } from "./product-deprecatio
 import { rankOffers, rankForListing, rotateListing, utcDate, CRITERIA_PATH, DEMOTE_ONLY_POLICY, DISCLOSURE_RATIONALE, TIE_BREAK_ALGORITHM, GATE_TABLE, DEMERIT_TABLE, NOT_FREE_TIER_RULES, TIME_LIMITED_TIER_RULES, type TieBreak } from "./ranking.js";
 import type { RankedEntry, RankingResult } from "./ranking.js";
 import { verificationLedger, QUARANTINE_AFTER_FAILURES } from "./verification-state.js";
-import { partitionAlternatives, partitionSubstitutes, productRoleSentence, MEMBERSHIP_GATE_RULES, MEMBERSHIP_GATE_ORDER, MEMBERSHIP_GATE_SYMMETRY, MEMBERSHIP_GATE_SCOPE, MEMBERSHIP_GATE_CORRECTIONS, SUBTYPE_TAXONOMIES, SUBTYPE_MEMBERSHIP_RULE, SUBTYPE_MEMBERSHIP_GROUP_SCOPE, membershipGroupsFor, subtypeDefinition } from "./product-role.js";
+import { partitionAlternatives, partitionSubstitutes, type SubstitutesPartition, productRoleSentence, MEMBERSHIP_GATE_RULES, MEMBERSHIP_GATE_ORDER, MEMBERSHIP_GATE_SYMMETRY, MEMBERSHIP_GATE_SCOPE, MEMBERSHIP_GATE_CORRECTIONS, SUBTYPE_TAXONOMIES, SUBTYPE_MEMBERSHIP_RULE, SUBTYPE_MEMBERSHIP_GROUP_SCOPE, membershipGroupsFor, subtypeDefinition } from "./product-role.js";
 import { resolveCuratedAlternatives, curatedAlternativesFor, addCuratedToPool } from "./curated-alternatives.js";
 import type { Agent, ChangeDateSource, DealChange, RiskCause, LinkUnreachable, Offer } from "./types.js";
 import { changeDateLabel, changeDateClause, changeDatePublished, changeEventStartDate, capListSections, latestEventDate, offerExpiryAfter, feedEntryUpdated, undatedGroupHeading, firstReadHeading, discoveryBatchNote, isoWeekOf, DISCOVERED_DATE_PREFIX, UNDATED_GROUP_NOTE } from "./change-dates.js";
@@ -146,7 +146,7 @@ const OG_IMAGE_META = `<meta property="og:image" content="${BASE_URL}/og-image.p
 
 const SEARCH_QUERY_DISALLOW = "Disallow: /search?";
 const ROBOTS_MAX_AGE_SECONDS = 3600;
-const SEARCH_PAGE_ROBOTS_META = '<meta name="robots" content="noindex,follow">';
+const NOINDEX_FOLLOW_META = '<meta name="robots" content="noindex,follow">';
 const NOFOLLOW_ATTR = ' rel="nofollow"';
 
 function searchQueryHref(params: URLSearchParams | string): string {
@@ -1849,7 +1849,7 @@ ${entries.map(e => `<tr><td><code>${escHtmlServer(e.subtype)}</code></td><td>${e
       const done = inTaxonomy.filter(o => o.product_subtypes).length;
       return `${done} of ${inTaxonomy.length} in ${taxonomy}`;
     });
-    return `We have classified ${parts.join(", ")}; the other ${offers.length - offers.filter(o => o.product_subtypes).length} records in the index carry no subtype.`;
+    return `We have classified ${parts.join(", ")}; the other ${offers.length - offers.filter(o => o.product_subtypes).length} records carry no subtype, so they are offered no substitutes and are offered as one to no one. Classifying a category restores both directions.`;
   })();
 
   const jsonLd = {
@@ -4265,6 +4265,37 @@ ${faqHtml}
 </html>`;
 }
 
+interface VendorSubstitutes {
+  categories: string[];
+  curatedNames: Set<string>;
+  membership: SubstitutesPartition<Offer>;
+}
+
+function vendorSubstitutes(vendorName: string, vendorOffers: Offer[], allChanges: DealChange[]): VendorSubstitutes {
+  const categories = [...new Set(vendorOffers.map(o => o.category))];
+  const seen = new Set<string>();
+  const pool: Offer[] = [];
+  for (const o of offers) {
+    if (o.vendor === vendorName || !categories.includes(o.category) || seen.has(o.vendor)) continue;
+    seen.add(o.vendor);
+    pool.push(o);
+  }
+  const curated = resolveCuratedAlternatives(vendorName, allChanges, offers);
+  const curatedNames = new Set(curated.matched.map(o => o.vendor));
+  const membership = partitionSubstitutes(addCuratedToPool(pool, curated.matched), vendorOffers, {
+    subtypeExempt: candidate => curatedNames.has(candidate.vendor),
+  });
+  return { categories, curatedNames, membership };
+}
+
+function alternativesPagePublishesSubstitutes(slug: string, allChanges: DealChange[]): boolean {
+  const vendorName = vendorSlugMap.get(slug);
+  if (!vendorName) return false;
+  const vendorOffers = offers.filter(o => o.vendor === vendorName);
+  if (vendorOffers.length === 0) return false;
+  return vendorSubstitutes(vendorName, vendorOffers, allChanges).membership.kept.length > 0;
+}
+
 function buildAlternativesPage(slug: string): string | null {
   const vendorName = vendorSlugMap.get(slug);
   if (!vendorName) return null;
@@ -4294,23 +4325,10 @@ function buildAlternativesPage(slug: string): string | null {
   const riskLevel = enriched.risk_level && (enriched.risk_level === "stable" || riskCause) ? enriched.risk_level : "stable";
   const riskColor = riskColors[riskLevel] ?? "#8b949e";
 
-  const vendorCategories = [...new Set(vendorOffers.map(o => o.category))];
-
-  const allAlternatives = offers
-    .filter(o => vendorCategories.includes(o.category) && o.vendor !== vendorName);
-  const seen = new Set<string>();
-  const dedupedAlts: typeof allAlternatives = [];
-  for (const a of allAlternatives) {
-    if (!seen.has(a.vendor)) {
-      seen.add(a.vendor);
-      dedupedAlts.push(a);
-    }
-  }
-  const curated = resolveCuratedAlternatives(vendorName, allChanges, offers);
-  const curatedAltNames = new Set(curated.matched.map(o => o.vendor));
-  const altMembership = partitionSubstitutes(addCuratedToPool(dedupedAlts, curated.matched), vendorOffers, {
-    subtypeExempt: candidate => curatedAltNames.has(candidate.vendor),
-  });
+  const substitutes = vendorSubstitutes(vendorName, vendorOffers, allChanges);
+  const vendorCategories = substitutes.categories;
+  const curatedAltNames = substitutes.curatedNames;
+  const altMembership = substitutes.membership;
   const altRanking = rankForListing(enrichOffers(altMembership.kept), {
     queryKey: `alternative-to:${vendorName}`,
     changes: dealChanges,
@@ -4325,12 +4343,17 @@ function buildAlternativesPage(slug: string): string | null {
   }
 
   const currentYear = new Date().getFullYear();
-  const title = `Best ${vendorName} Alternatives with Free Tiers (${currentYear}) | AgentDeals`;
+  const publishesSubstitutes = enrichedAlts.length > 0;
+  const homeCategory = vendorCategories[0];
+  const heading = `${vendorName} Alternatives`;
+  const title = publishesSubstitutes
+    ? `Best ${vendorName} Alternatives with Free Tiers (${currentYear}) | AgentDeals`
+    : `${heading} — none listed yet | AgentDeals`;
   const topAlts = enrichedAlts.slice(0, 3).map(a => a.vendor).join(", ");
-  const noAlternativesSentence = `No alternatives found for ${vendorName}.`;
-  const metaDesc = enrichedAlts.length > 0
-    ? `Compare ${enrichedAlts.length} free alternatives to ${vendorName} for ${vendorCategories[0]}. ${topAlts ? `Side-by-side free tier limits for ${topAlts}.` : "Find stable, verified free-tier tools."}`
-    : noAlternativesSentence;
+  const metaDesc = publishesSubstitutes
+    ? `Compare ${enrichedAlts.length} free alternatives to ${vendorName} for ${homeCategory}. ${topAlts ? `Side-by-side free tier limits for ${topAlts}.` : "Find stable, verified free-tier tools."}`
+    : `We publish no substitute list for ${vendorName} yet. See the ${homeCategory} category for every offer we track alongside it.`;
+  const noSubstitutesHtml = `We publish a substitute list only where a record says what kind of product it is. ${escHtmlServer(vendorName)}'s does not yet, so this page names none. The <a href="/category/${toSlug(homeCategory)}">${escHtmlServer(homeCategory)}</a> category lists every offer we track alongside it.`;
 
   const situationHtml = (() => {
     const parts: string[] = [];
@@ -4412,7 +4435,7 @@ ${curatedAlts.map(a => altCard(a, true)).join("\n")}
 ${enrichedAlts.map(a => altCard(a, false)).join("\n")}
     </div>
 ${renderAuditBlock(altRanking.tie_break)}
-  </div>` : `<div class="section"><p class="no-changes">${escHtmlServer(noAlternativesSentence)}</p></div>`;
+  </div>` : "";
 
   const trendsHtml = vendorCategories.map(c =>
     `<a href="/trends/${toSlug(c)}" class="action-pill">&#x2191; ${escHtmlServer(c)} Pricing Trends</a>`
@@ -4457,23 +4480,27 @@ ${renderAuditBlock(altRanking.tie_break)}
     ? `We hold no recorded pricing changes for ${vendorName}, but ${altWithheldClause}, so that is a statement about our records rather than a positive signal.`
     : `No, ${vendorName} has no recorded pricing changes on AgentDeals. This indicates stable pricing.`;
 
-  const altFaqItems = [
-    ...(enrichedAlts.length > 0 ? [{ q: `What are the best free alternatives to ${vendorName}?`, a: faqBestAltsAnswer }] : []),
-    { q: `Is ${vendorName}'s free tier still available?`, a: faqFreeTierAnswer },
-    { q: `How many free alternatives to ${vendorName} exist?`, a: faqCountAnswer },
-    { q: `Has ${vendorName} changed their pricing?`, a: faqChangesAnswer },
-  ];
+  const altFaqItems = publishesSubstitutes
+    ? [
+      { q: `What are the best free alternatives to ${vendorName}?`, a: faqBestAltsAnswer },
+      { q: `Is ${vendorName}'s free tier still available?`, a: faqFreeTierAnswer },
+      { q: `How many free alternatives to ${vendorName} exist?`, a: faqCountAnswer },
+      { q: `Has ${vendorName} changed their pricing?`, a: faqChangesAnswer },
+    ]
+    : [];
 
-  const altFaqJsonLd = faqPageJsonLd("/alternative-to/" + slug, altFaqItems);
+  const altFaqJsonLd = altFaqItems.length > 0
+    ? `<script type="application/ld+json">${JSON.stringify(faqPageJsonLd("/alternative-to/" + slug, altFaqItems))}</script>`
+    : "";
 
-  const altFaqHtml = `
+  const altFaqHtml = altFaqItems.length > 0 ? `
   <div class="section faq-section">
     <h2>Frequently Asked Questions</h2>
     ${altFaqItems.map(item => `<details class="faq-item">
       <summary class="faq-q">${escHtmlServer(item.q)}</summary>
       <div class="faq-a">${escHtmlServer(item.a)}</div>
     </details>`).join("\n    ")}
-  </div>`;
+  </div>` : "";
 
   return `<!DOCTYPE html>
 <html lang="en">
@@ -4482,7 +4509,7 @@ ${renderAuditBlock(altRanking.tie_break)}
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>${escHtmlServer(title)}</title>
 <meta name="description" content="${escHtmlServer(metaDesc)}">
-<link rel="canonical" href="${BASE_URL}/alternative-to/${slug}">
+${publishesSubstitutes ? "" : NOINDEX_FOLLOW_META + "\n"}<link rel="canonical" href="${BASE_URL}/alternative-to/${slug}">
 <meta property="og:title" content="${escHtmlServer(title)}">
 <meta property="og:description" content="${escHtmlServer(metaDesc)}">
 <meta property="og:type" content="website">
@@ -4490,7 +4517,7 @@ ${renderAuditBlock(altRanking.tie_break)}
 ${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
 <link rel="alternate" type="application/atom+xml" title="AgentDeals — Weekly Pricing Digest" href="/feed.xml">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-${enrichedAlts.length > 0 ? `<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>\n` : ""}<script type="application/ld+json">${JSON.stringify(altFaqJsonLd)}</script>
+${publishesSubstitutes ? `<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>\n` : ""}${altFaqJsonLd}
 ${buildBreadcrumbJsonLd([{ name: "Home", url: BASE_URL + "/" }, { name: "Alternatives", url: BASE_URL + "/alternatives" }, { name: vendorName + " Alternatives", url: BASE_URL + "/alternative-to/" + slug }])}
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -4559,8 +4586,8 @@ ${mcpCtaCss()}
 <div class="container">
   ${buildGlobalNav("alternatives")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/alternative-to">Alternatives</a> &rsaquo; ${escHtmlServer(vendorName)}</div>
-  <h1>Best ${escHtmlServer(vendorName)} Alternatives with Free Tiers (${currentYear})</h1>
-  <p class="page-meta">${enrichedAlts.length > 0 ? `${enrichedAlts.length} free alternative${enrichedAlts.length !== 1 ? "s" : ""} in ${vendorCategories.map(c => escHtmlServer(c)).join(", ")}. Sorted by pricing stability.` : escHtmlServer(noAlternativesSentence)}</p>
+  <h1>${publishesSubstitutes ? `Best ${escHtmlServer(vendorName)} Alternatives with Free Tiers (${currentYear})` : escHtmlServer(heading)}</h1>
+  <p class="page-meta">${publishesSubstitutes ? `${enrichedAlts.length} free alternative${enrichedAlts.length !== 1 ? "s" : ""} in ${vendorCategories.map(c => escHtmlServer(c)).join(", ")}. Sorted by pricing stability.` : noSubstitutesHtml}</p>
 
   <div class="situation-box">
     <h2>Current ${escHtmlServer(vendorName)} Situation</h2>
@@ -51284,7 +51311,7 @@ function buildSearchPage(query: string, categoryFilter: string, typeFilter: stri
   return '<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="utf-8">\n<meta name="viewport" content="width=device-width,initial-scale=1">\n'
     + '<title>' + titleText + '</title>\n'
     + '<meta name="description" content="' + escHtmlServer(metaDescText) + '">\n'
-    + SEARCH_PAGE_ROBOTS_META + '\n'
+    + NOINDEX_FOLLOW_META + '\n'
     + '<link rel="canonical" href="' + BASE_URL + '/search">\n'
     + '<meta property="og:title" content="' + titleText + '">\n'
     + '<meta property="og:description" content="' + escHtmlServer(metaDescText) + '">\n'
@@ -53969,7 +53996,9 @@ ${catList}
     }
     xml += '  <url>\n    <loc>' + BASE_URL + '/x402-services</loc>\n    <lastmod>' + editorialDate + '</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>\n'
       + '  <url>\n    <loc>' + BASE_URL + '/alternative-to</loc>\n    <lastmod>' + latestVerified + '</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.7</priority>\n  </url>\n';
+    const sitemapChanges = loadDealChanges();
     for (const s of vendorSlugMap.keys()) {
+      if (!alternativesPagePublishesSubstitutes(s, sitemapChanges)) continue;
       const altLastmod = vendorLastmod.get(s) || now;
       xml += '  <url>\n    <loc>' + BASE_URL + '/alternative-to/' + s + '</loc>\n    <lastmod>' + altLastmod + '</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.5</priority>\n  </url>\n';
     }

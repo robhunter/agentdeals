@@ -49,6 +49,10 @@ async function everyPublishedPath(base: string): Promise<string[]> {
   for (const extra of ["/", "/hosting-pricing", "/disclosure", "/referral-programs", "/marketplace"]) {
     if (!paths.includes(extra)) paths.push(extra);
   }
+  for (const p of [...paths]) {
+    const slug = p.match(/^\/vendor\/([^/]+)$/)?.[1];
+    if (slug) paths.push(`/alternative-to/${slug}`);
+  }
   return [...new Set(paths)];
 }
 
