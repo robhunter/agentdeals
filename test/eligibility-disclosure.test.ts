@@ -200,6 +200,109 @@ describe("the category page a gated offer is sent to states the restriction", ()
   });
 });
 
+describe("a category page does not count a gated offer as a plain free tier", () => {
+  const categoryNames = [...new Set(offers.map(o => o.category))].sort();
+  const censusOf = (category: string) => {
+    const inCategory = offers.filter(o => o.category === category);
+    return { total: inCategory.length, gated: inCategory.filter(o => eligibilityGate(o)).length };
+  };
+  const ledeOf = (html: string) => html.match(/<p class="cat-meta">([\s\S]*?)<\/p>/)?.[1] ?? "";
+  const descriptionOf = (html: string) => html.match(/<meta name="description" content="([^"]*)"/)?.[1] ?? "";
+  const restrictedRows = (html: string) => [...html.matchAll(/class="listing-eligibility-restricted"/g)].length;
+  const QUALIFICATION = "application or qualification";
+
+  it("has an entirely gated category, a partly gated one and an ungated one to measure", () => {
+    const censuses = categoryNames.map(censusOf);
+    assert.ok(censuses.some(c => c.gated > 0 && c.gated === c.total), "no category is entirely gated");
+    assert.ok(censuses.some(c => c.gated > 0 && c.gated < c.total), "no category is partly gated");
+    assert.ok(censuses.some(c => c.gated === 0), "every category holds a gated record");
+  });
+
+  it("qualifies the count claim rather than closing it", async () => {
+    for (const category of categoryNames) {
+      const { total, gated } = censusOf(category);
+      const html = await page(`/category/${slugOf(category)}`);
+      const lede = ledeOf(html);
+      const where = `/category/${slugOf(category)} (${gated} of ${total})`;
+      if (gated === 0) {
+        assert.ok(lede.startsWith(`${total} verified free tiers and developer deals.`), `${where} lede is ${lede}`);
+        assert.ok(!lede.includes(QUALIFICATION), `${where} states a restriction it does not hold`);
+        continue;
+      }
+      assert.ok(lede.includes(QUALIFICATION), `${where} lede is ${lede}`);
+      if (gated === total) {
+        assert.ok(lede.includes("none of them generally available"), `${where} lede is ${lede}`);
+        assert.ok(
+          !lede.startsWith(`${total} verified free tiers and developer deals.`),
+          `${where} closes the count claim before qualifying it: ${lede}`,
+        );
+      } else {
+        assert.ok(lede.includes(`${gated} of them`), `${where} lede does not name ${gated}: ${lede}`);
+      }
+    }
+  });
+
+  it("states a number the rows below it agree with", async () => {
+    for (const category of categoryNames) {
+      const { total, gated } = censusOf(category);
+      const html = await page(`/category/${slugOf(category)}`);
+      assert.strictEqual(restrictedRows(html), gated, `/category/${slugOf(category)} restricted rows`);
+      if (gated > 0 && gated < total) {
+        assert.ok(ledeOf(html).includes(`${restrictedRows(html)} of them`), `/category/${slugOf(category)}`);
+      }
+    }
+  });
+
+  it("carries the same qualification into the search snippet, ahead of the vendor list", async () => {
+    for (const category of categoryNames) {
+      const { total, gated } = censusOf(category);
+      const html = await page(`/category/${slugOf(category)}`);
+      const description = descriptionOf(html);
+      const where = `/category/${slugOf(category)} (${gated} of ${total})`;
+      if (gated === 0) {
+        assert.ok(!description.includes(QUALIFICATION), `${where} description is ${description}`);
+        continue;
+      }
+      assert.ok(description.includes(QUALIFICATION), `${where} description is ${description}`);
+      assert.ok(
+        description.indexOf(QUALIFICATION) < description.indexOf("Verified pricing for"),
+        `${where} appends the qualification after the vendor list, where a snippet truncates it`,
+      );
+    }
+  });
+});
+
+describe("the other answers on a gated vendor page", () => {
+  const gatedPages = () => rendered.filter(p => p.offer.eligibility);
+
+  it("qualifies the two that state or recommend the terms", () => {
+    assert.ok(gatedPages().length > 0, "no vendor page renders a gated record");
+    for (const p of gatedPages()) {
+      const reason = gateFor(p.offer, "")!.reason;
+      for (const question of [`What is ${p.vendor}'s free tier?`, `Is ${p.vendor}'s free tier good for production?`]) {
+        const answer = faqAnswer(p.html, question) ?? "";
+        assert.ok(answer.startsWith(reason), `${p.slug} answers "${question}" with ${answer.slice(0, 70)}`);
+      }
+    }
+  });
+
+  it("leaves the four that describe our record rather than the offer alone", () => {
+    for (const p of gatedPages()) {
+      const reason = gateFor(p.offer, "")!.reason;
+      for (const question of [
+        `Is ${p.vendor}'s free tier reliable?`,
+        `What changed in ${p.vendor}'s pricing?`,
+        `When will I outgrow ${p.vendor}'s free tier?`,
+        `What category is ${p.vendor} in?`,
+      ]) {
+        const answer = faqAnswer(p.html, question);
+        if (answer === undefined) continue;
+        assert.ok(!answer.startsWith(reason), `${p.slug} qualified "${question}", which is about our record`);
+      }
+    }
+  });
+});
+
 describe("the disclosure reuses one composition", () => {
   it("returns the ranking gate unchanged for a record carrying eligibility", () => {
     const gated = offers.find(o => o.eligibility)!;
