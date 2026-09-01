@@ -267,6 +267,7 @@ describe("an ended offer is not rated, on every surface that rates one", () => {
 
 describe("the retirement branch is decided before the withholding branch", () => {
   const withheldAndEnded = {
+    vendor: "Oaysus",
     level: null,
     cause: null,
     changes: [],

@@ -10,6 +10,7 @@ import { cannotVouchForLevel, levelWithheldReason, withheldLevelSentence } from 
 import { substitutesFor } from "./product-role.js";
 import { DATE_SOURCES, isEventDated, changeDateClause, isoWeekWindow, changesInWindow, discoveryBatchNote, firstReadHeading, type DateWindow } from "./change-dates.js";
 import { PRODUCT_DEPRECATED, deprecationEndsTheListedProduct } from "./product-deprecation.js";
+import { vendorHistorySentence } from "./vendor-history.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const INDEX_PATH =
@@ -788,14 +789,12 @@ export function checkVendorRisk(
   const unreachableClause = linkUnreachable
     ? ` Its pricing page has not resolved for us${unreachableSince}, so we cannot confirm its current terms.`
     : "";
-  if (riskLevel === "risky" && cause) {
-    summary = `${offer.vendor} is high risk — ${changeDateClause(cause)}: ${cause.summary} Consider alternatives.${unreachableClause}`;
-  } else if (riskLevel === "caution" && cause) {
-    summary = `${offer.vendor} warrants caution — ${changeDateClause(cause)}: ${cause.summary} Monitor for further changes.${unreachableClause}`;
+  if ((riskLevel === "risky" || riskLevel === "caution") && cause) {
+    summary = `${vendorHistorySentence(offer.vendor, riskLevel, cause)}${unreachableClause}`;
   } else if (withheldReason) {
     summary = `${withheldLevelSentence(withheldReason, offer.vendor, unreachableSince)} Nothing we have read describes this offer. Treat that as a statement about our records, not as a stable pricing history.`;
   } else {
-    summary = `${offer.vendor} has a stable pricing history. Free tier verified for ${longevityDays} days.`;
+    summary = `${vendorHistorySentence(offer.vendor, "stable", cause)} Free tier verified for ${longevityDays} days.`;
   }
 
   return {

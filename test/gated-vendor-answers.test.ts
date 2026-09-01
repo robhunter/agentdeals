@@ -134,8 +134,8 @@ describe("the page a gated record renders does not answer the free-tier question
     assert.ok(rendered.length > 1500, `only ${rendered.length} vendor pages rendered`);
     for (const p of rendered) {
       assert.strictEqual(
-        blockOfType(p.html, "WebPage")?.mainEntity?.offers?.description,
-        p.primary.tier,
+        blockOfType(p.html, "WebPage")?.mainEntity?.description,
+        p.primary.description,
         `/vendor/${p.slug} renders a record other than the first this vendor holds`,
       );
     }
@@ -344,6 +344,152 @@ describe("a reader sees why the record is gated without opening the FAQ", () => 
     assert.ok(
       (gateLineOf(digitalocean.html) ?? "").includes(DIGITALOCEAN_EXPIRY_REASON),
       gateLineOf(digitalocean.html) ?? "no gate line",
+    );
+  });
+});
+
+const CLAIMS_A_RATING = (vendor: string) => [
+  `${vendor}'s free tier offers `,
+  `${vendor}'s free tier is considered `,
+  `${vendor}'s free tier requires caution`,
+  "We rate it stable",
+  "We rate it caution",
+  "We rate it risky",
+  "It's stable —",
+  "This is a good sign",
+  "This is a positive stability signal",
+  `Yes, ${vendor} offers a free tier`,
+];
+
+const NAMES_A_FREE_TIER = (vendor: string) => [
+  `${vendor}'s free tier is called`,
+  `${vendor} offers a free tier:`,
+];
+
+function visibleText(html: string): string {
+  const stripped = html
+    .replace(/<script[\s\S]*?<\/script>/g, " ")
+    .replace(/<style[\s\S]*?<\/style>/g, " ")
+    .replace(/<[^>]+>/g, " ");
+  return stripped
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&amp;/g, "&")
+    .replace(/\s+/g, " ");
+}
+
+function pageProse(p: VendorPage): string {
+  const faq = blockOfType(p.html, "FAQPage");
+  const answers = (faq?.mainEntity ?? []).map((q: { acceptedAnswer: { text: string } }) => q.acceptedAnswer.text);
+  return `${visibleText(p.html)} ${answers.join(" ")}`;
+}
+
+function outgrowQuestionAsked(p: VendorPage): boolean {
+  const faq = blockOfType(p.html, "FAQPage");
+  return (faq?.mainEntity ?? []).some((q: { name: string }) => q.name.startsWith("When will I outgrow"));
+}
+
+const offerBlock = (p: VendorPage) => blockOfType(p.html, "WebPage")?.mainEntity?.offers;
+
+const currentVendorRow = (html: string) => /<tr class="current-vendor-row">[\s\S]*?<\/tr>/.exec(html)?.[0] ?? null;
+
+const UNGATED_VERDICTS_OPENING_ON_A_FREE_TIER = 1414;
+const UNGATED_PAGES_RATING_RELIABILITY = 745;
+const UNGATED_PAGES_ASKING_ABOUT_OUTGROWING = 1415;
+const UNGATED_PAGES_PUBLISHING_A_ZERO_PRICE = 1415;
+
+describe("no page a gated record renders claims a free tier or rates one", () => {
+  it("makes none of the claims a page makes about an offer it does list", () => {
+    const offenders: string[] = [];
+    for (const p of gated()) {
+      const prose = pageProse(p);
+      for (const claim of CLAIMS_A_RATING(p.vendor)) {
+        if (prose.includes(claim)) offenders.push(`${p.slug} (${p.gate!.code}): ${claim}`);
+      }
+      if (p.gate!.code === "eligibility_restricted") continue;
+      for (const claim of NAMES_A_FREE_TIER(p.vendor)) {
+        if (prose.includes(claim)) offenders.push(`${p.slug} (${p.gate!.code}): ${claim}`);
+      }
+    }
+    assert.deepStrictEqual(offenders.slice(0, 20), []);
+  });
+
+  it("opens the verdict with the gate's own sentence instead", () => {
+    for (const p of gated()) {
+      const verdict = /<div class="quick-verdict">\s*<p>([\s\S]*?)<\/p>/.exec(p.html)?.[1] ?? "";
+      assert.ok(
+        textOf(verdict).startsWith(textOf(p.gate!.reason)),
+        `/vendor/${p.slug} opens ${textOf(verdict).slice(0, 90)}`,
+      );
+    }
+  });
+
+  it("offers no upgrade threshold for a tier it does not list", () => {
+    const asked = gated().filter(outgrowQuestionAsked).map(p => p.slug);
+    assert.deepStrictEqual(asked.slice(0, 20), []);
+    const sectioned = gated().filter(p => p.html.includes('class="section growth-section"')).map(p => p.slug);
+    assert.deepStrictEqual(sectioned.slice(0, 20), []);
+  });
+
+  it("publishes no zero-price Offer in its structured data", () => {
+    const offenders = gated().filter(p => offerBlock(p) !== undefined).map(p => `${p.slug} ${JSON.stringify(offerBlock(p))}`);
+    assert.deepStrictEqual(offenders.slice(0, 20), []);
+  });
+
+  it("names the gate rather than a rating in its own comparison row", () => {
+    const rows = gated().map(p => ({ p, row: currentVendorRow(p.html) })).filter(r => r.row !== null);
+    assert.ok(rows.length > 0, "no gated page renders itself in a comparison table");
+    for (const { p, row } of rows) {
+      assert.ok(!/stability-dot/.test(row!), `/vendor/${p.slug} rates itself in its comparison row`);
+      assert.ok(row!.includes(p.gate!.code), `/vendor/${p.slug} states no gate in its comparison row`);
+    }
+  });
+});
+
+describe("the same page an ungated record renders is unchanged", () => {
+  it("still makes every one of those claims somewhere", () => {
+    const unmade: string[] = [];
+    for (const claim of [...CLAIMS_A_RATING("<vendor>"), ...NAMES_A_FREE_TIER("<vendor>")]) {
+      const made = ungated().filter(p => pageProse(p).includes(claim.replace(/<vendor>/g, p.vendor))).length;
+      if (made === 0) unmade.push(claim);
+    }
+    assert.deepStrictEqual(unmade, [], "claims no ungated page makes, so the gated assertion above is vacuous for them");
+  });
+
+  it("still opens its verdict on the free tier", () => {
+    const opening = ungated().filter(p => pageProse(p).includes(`${p.vendor}'s free tier offers `)).length;
+    assert.ok(
+      opening >= UNGATED_VERDICTS_OPENING_ON_A_FREE_TIER,
+      `${opening} ungated verdicts open on the free tier, down from ${UNGATED_VERDICTS_OPENING_ON_A_FREE_TIER}`,
+    );
+  });
+
+  it("still rates the free tier in its reliability answer", () => {
+    const rating = ungated().filter(p => {
+      const answer = faqAnswer(p.html, `Is ${p.vendor}'s free tier reliable?`);
+      return /is considered stable|requires caution|is considered risky/.test(answer);
+    }).length;
+    assert.ok(
+      rating >= UNGATED_PAGES_RATING_RELIABILITY,
+      `${rating} ungated pages rate the tier, down from ${UNGATED_PAGES_RATING_RELIABILITY}`,
+    );
+  });
+
+  it("still answers when the reader will outgrow it", () => {
+    const asked = ungated().filter(outgrowQuestionAsked).length;
+    assert.ok(
+      asked >= UNGATED_PAGES_ASKING_ABOUT_OUTGROWING,
+      `${asked} ungated pages answer it, down from ${UNGATED_PAGES_ASKING_ABOUT_OUTGROWING}`,
+    );
+  });
+
+  it("still publishes a zero-price Offer", () => {
+    const publishing = ungated().filter(p => offerBlock(p)?.price === "0").length;
+    assert.ok(
+      publishing >= UNGATED_PAGES_PUBLISHING_A_ZERO_PRICE,
+      `${publishing} ungated pages publish one, down from ${UNGATED_PAGES_PUBLISHING_A_ZERO_PRICE}`,
     );
   });
 });

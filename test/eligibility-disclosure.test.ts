@@ -72,9 +72,9 @@ function faqAnswer(html: string, prefix: string): string | undefined {
 function renderedOffer(html: string): Offer | undefined {
   const webPage = blockOfType(html, "WebPage");
   const vendor = webPage?.mainEntity?.name;
-  const tier = webPage?.mainEntity?.offers?.description;
-  if (typeof vendor !== "string" || typeof tier !== "string") return undefined;
-  return offers.find(o => o.vendor === vendor && o.tier === tier);
+  const description = webPage?.mainEntity?.description;
+  if (typeof vendor !== "string" || typeof description !== "string") return undefined;
+  return offers.find(o => o.vendor === vendor && o.description === description);
 }
 
 type RenderedPage = { vendor: string; slug: string; html: string; offer: Offer };
@@ -286,18 +286,16 @@ describe("the other answers on a gated vendor page", () => {
     }
   });
 
-  it("leaves the four that describe our record rather than the offer alone", () => {
+  it("leaves the two that describe our record rather than the offer alone", () => {
     for (const p of gatedPages()) {
       const reason = gateFor(p.offer, "")!.reason;
       for (const question of [
-        `Is ${p.vendor}'s free tier reliable?`,
         `What changed in ${p.vendor}'s pricing?`,
-        `When will I outgrow ${p.vendor}'s free tier?`,
         `What category is ${p.vendor} in?`,
       ]) {
         const answer = faqAnswer(p.html, question);
-        if (answer === undefined) continue;
-        assert.ok(!answer.startsWith(reason), `${p.slug} qualified "${question}", which is about our record`);
+        assert.ok(answer !== undefined, `${p.slug} no longer answers "${question}"`);
+        assert.ok(!answer!.startsWith(reason), `${p.slug} qualified "${question}", which is about our record`);
       }
     }
   });
