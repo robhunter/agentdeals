@@ -1371,17 +1371,27 @@
           {
             "subtype": "error_tracking",
             "source_url": "https://sentry.io/pricing/",
-            "source_quote": "Error Monitoring"
+            "source_quote": "Errors 50K $0.00"
           },
           {
             "subtype": "apm_traces",
             "source_url": "https://sentry.io/pricing/",
-            "source_quote": "Tracing"
+            "source_quote": "Tracing 5M spans"
           },
           {
             "subtype": "log_management",
             "source_url": "https://sentry.io/pricing/",
-            "source_quote": "Logs"
+            "source_quote": "Logs 5GB 5GB +$0.50/GB additional"
+          },
+          {
+            "subtype": "uptime_check",
+            "source_url": "https://sentry.io/pricing/",
+            "source_quote": "Uptime Monitoring 1 uptime monitor"
+          },
+          {
+            "subtype": "cron_monitor",
+            "source_url": "https://sentry.io/pricing/",
+            "source_quote": "Cron Monitoring 1 cron monitor"
           }
         ],
         "reviewed": "2026-09-01"
