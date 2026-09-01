@@ -224,4 +224,13 @@ describe("the best-of pages count what they list", () => {
     const criteria = await page("/criteria");
     assert.match(criteria, /<code>offer_retired<\/code>/);
   });
+
+  it("names every value of the ended vocabulary in the published gate row", async () => {
+    const criteria = await page("/criteria");
+    const row = /<code>offer_retired<\/code><\/td><td>(.*?)<\/td>/s.exec(criteria);
+    assert.ok(row, "the criteria table has no offer_retired row");
+    for (const tier of ENDED_TIERS) {
+      assert.ok(row![1].includes(tier), `the published row does not name ${tier}`);
+    }
+  });
 });

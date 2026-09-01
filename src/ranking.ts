@@ -1,6 +1,6 @@
 import { createHash } from "node:crypto";
 import { LINK_GRACE_DAYS, unreachableNoticeForUrl } from "./link-health.js";
-import { offerEnded, recordedTierSentence } from "./retirement.js";
+import { listEndedTiers, offerEnded, recordedTierSentence } from "./retirement.js";
 import { withheldLevelSentence } from "./source-check.js";
 import type { ChangeDateSource, DealChange, LinkUnreachable, Offer } from "./types.js";
 
@@ -79,7 +79,7 @@ export const GATE_TABLE: { code: GateCode; description: string }[] = [
   {
     code: "offer_retired",
     description:
-      "The tier we hold records the offer as ended. The vendor page stays up, because it answers the question the reader arrived with, but a withdrawn offer is not ranked at any position.",
+      `The tier we hold records the offer as ended: ${listEndedTiers()}. The vendor page stays up and still answers whether the offer exists, but an ended offer is not ranked at any position.`,
   },
   {
     code: "verification_lapsed",

@@ -16,6 +16,12 @@ export function offerEnded(offer: Pick<Offer, "tier"> | null | undefined): boole
   return ENDED_TIER_SET.has((offer?.tier ?? "").trim().toLowerCase());
 }
 
+export function listEndedTiers(): string {
+  const all = [...ENDED_TIERS];
+  const last = all.pop()!;
+  return all.length ? `${all.join(", ")} or ${last}` : last;
+}
+
 export function recordedTierSentence(vendorName: string, tier: string): string {
   return `${vendorName}'s offer is recorded as ${tier}.`;
 }
