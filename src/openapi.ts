@@ -275,8 +275,8 @@ export const openapiSpec = {
         summary: "Compare two vendors side by side",
         description: "Returns a structured comparison of two developer tool vendors including free tier details, pricing, and recent deal changes.",
         parameters: [
-          { name: "a", in: "query", required: true, description: "First vendor name (case-insensitive, fuzzy match supported)", schema: { type: "string" }, example: "Supabase" },
-          { name: "b", in: "query", required: true, description: "Second vendor name (case-insensitive, fuzzy match supported)", schema: { type: "string" }, example: "Neon" }
+          { name: "a", in: "query", required: true, description: "First vendor name (case-insensitive; a qualified name such as 'Supabase database' resolves to the vendor it names, see VendorMatch)", schema: { type: "string" }, example: "Supabase" },
+          { name: "b", in: "query", required: true, description: "Second vendor name (case-insensitive; a qualified name such as 'Neon free tier' resolves to the vendor it names, see VendorMatch)", schema: { type: "string" }, example: "Neon" }
         ],
         responses: {
           "200": {
@@ -288,6 +288,8 @@ export const openapiSpec = {
                   properties: {
                     vendor_a: { $ref: "#/components/schemas/Offer" },
                     vendor_b: { $ref: "#/components/schemas/Offer" },
+                    vendor_a_match: { $ref: "#/components/schemas/VendorMatch" },
+                    vendor_b_match: { $ref: "#/components/schemas/VendorMatch" },
                     shared_categories: { type: "boolean" },
                     category_overlap: { type: "array", items: { type: "string" } }
                   }
@@ -326,7 +328,7 @@ export const openapiSpec = {
         summary: "Audit your infrastructure stack",
         description: "Analyze your current services for pricing risks, cost savings, and missing capabilities. Returns per-service risk assessment, cheaper alternatives, and gap analysis.",
         parameters: [
-          { name: "services", in: "query", required: true, description: "Comma-separated vendor names (e.g. 'Vercel,Supabase,Clerk')", schema: { type: "string" }, example: "Vercel,Supabase,Clerk" }
+          { name: "services", in: "query", required: true, description: "Comma-separated vendor names (e.g. 'Vercel,Supabase,Clerk'). An audit reports only names it matched exactly; anything else comes back as status not_found with suggestions, so that risks_found and cheaper_alternative are never computed for a product you did not name (#1269).", schema: { type: "string" }, example: "Vercel,Supabase,Clerk" }
         ],
         responses: {
           "200": {
@@ -363,7 +365,7 @@ export const openapiSpec = {
         summary: "Check vendor pricing stability and risk",
         description: "Before depending on a vendor's free tier, check if their pricing is stable. Returns risk level (stable/caution/risky), pricing change history, free tier longevity, and more-stable alternatives.",
         parameters: [
-          { name: "vendor", in: "path", required: true, description: "Vendor name (case-insensitive, fuzzy match supported)", schema: { type: "string" }, example: "Vercel" }
+          { name: "vendor", in: "path", required: true, description: "Vendor name (case-insensitive; a qualified name such as 'Vercel Pro plan' resolves to the vendor it names, see VendorMatch)", schema: { type: "string" }, example: "Vercel" }
         ],
         responses: {
           "200": {
@@ -374,6 +376,7 @@ export const openapiSpec = {
                   type: "object",
                   properties: {
                     vendor: { type: "string" },
+                    vendor_match: { $ref: "#/components/schemas/VendorMatch" },
                     category: { type: "string" },
                     risk_level: { type: "string", enum: ["stable", "caution", "risky"], nullable: true, description: "Null where the offer's own link is confirmed unreachable (#1046) — we withhold the level rather than publish a favourable one we cannot check. Also null where gate is non-null (#1241): an offer we have decided not to list is not one we rate." },
                     link_unreachable: { type: "object", nullable: true, description: "Non-null only where a check reached a conclusion about the destination: a 404 confirmed by a full request, a 410, or a hostname with no address. Being refused (403, 429, 5xx, timeout) is evidence about our checker and never produces one of these.", properties: { last_reachable: { type: "string", format: "date", nullable: true }, checked: { type: "string", format: "date" }, terminal: { type: "boolean" } } },
@@ -928,6 +931,16 @@ export const openapiSpec = {
           source_check: { $ref: "#/components/schemas/SourceCheck" }
         },
         required: ["vendor", "category", "description", "tier", "url", "tags", "verifiedDate"]
+      },
+      VendorMatch: {
+        type: "object",
+        description: "Which name you asked about and which record answered. A name we hold verbatim matches exact. A name we do not hold matches inferred only when a vendor name we do hold appears in it as a whole word or dotted segment — \"AWS Lambda Free\" resolves to AWS, \"launchdarkly.com\" to LaunchDarkly. A fragment that merely appears inside a longer vendor name resolves to nothing and returns 404 with suggestions, because an accidental hit used to be returned shaped exactly like an exact one (#1269).",
+        properties: {
+          requested: { type: "string", description: "The name as you sent it." },
+          matched: { type: "string", description: "The vendor this response is about." },
+          type: { type: "string", enum: ["exact", "inferred"] }
+        },
+        required: ["requested", "matched", "type"]
       },
       SourceCheck: {
         type: "object",
