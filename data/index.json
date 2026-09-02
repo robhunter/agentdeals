@@ -18313,7 +18313,7 @@
     {
       "vendor": "WaiverStevie.com",
       "category": "Forms",
-      "description": "Now WaiverCat — waiverstevie.com redirects to waivercat.com, which still lists info@waiverstevie.com as its contact address. Electronic signature platform with a REST API and webhooks. Free plan includes API access, custom fields, chained signatures, mobile signature and text/email notifications; all PDFs are watermarked. The vendor's pricing page states no signature allowance for the free plan.",
+      "description": "Now WaiverCat — waiverstevie.com redirects to waivercat.com, which still lists info@waiverstevie.com as its contact address. Electronic signature platform with a REST API and webhooks. The free plan includes API access, custom fields, chained signatures, mobile signature and text/email notifications; all PDFs are watermarked and the page frames it as an account to set up your environment and run tests. It states no signature allowance, where Basic at $15/mo includes 250 signatures and Premium at $25/mo includes 500. Checked 2026-09-02.",
       "tier": "Free",
       "url": "https://waivercat.com/pricing/",
       "tags": [
@@ -30077,7 +30077,7 @@
     {
       "vendor": "LambdaTest",
       "category": "Testing",
-      "description": "Now TestMu AI — the pricing page is titled \"TestMu AI (Formerly LambdaTest)\". Cross-browser and real-device testing cloud. Free account signup is offered, but the vendor publishes no free plan or quota: the pricing page lists no $0 tier and the cheapest named plan is $17/month. The former free allowance (60 live testing minutes, 10 screenshot tests and 10 responsive tests per month, 1 parallel session) is no longer stated anywhere on the site.",
+      "description": "Now TestMu AI — the pricing page is titled \"TestMu AI (Formerly LambdaTest)\". Testing cloud for web and mobile. The pricing page is tabbed by product (KaneAI, Test Manager, Agent Testing, HyperExecute, Performance Testing, Live Testing, Automation, SmartUI) and free availability differs by tab. Test Manager publishes a $0 \"Free Forever\" plan: unlimited projects, advanced folder management, centralised test case management, unlimited test run creation and management, and 24×7 support; Test Manager Premium is $49/month billed annually. KaneAI Starter is $17/month billed annually. Checked 2026-09-02.",
       "tier": "Free",
       "url": "https://www.testmuai.com/pricing/",
       "tags": [
