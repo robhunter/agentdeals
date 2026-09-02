@@ -37,7 +37,7 @@ import { configureDurableBackend, hydrateDurableStores, persistDurableStores, id
 import { addFriend, removeFriend, getFriends, getFriendCodesForVendors } from "./friends.js";
 import { subscribe as watchlistSubscribe, getSubscription as getWatchlistSubscription, unsubscribe as watchlistUnsubscribe, listSubscriptions as listWatchlistSubscriptions } from "./watchlist.js";
 import { toSlug, vendorSlugMap, resolveVendorSlug, namedVendorSlug } from "./vendor-slug.js";
-import { linkifyVerdictBlocks, overdueReport, pageCompiledClause, pageDataProvenance, pageDateModified, pageFreshness, pageFreshnessSentence, utcToday, verdictsOutdatedBy } from "./page-reviews.js";
+import { STALE_FACT_PAGES_BASELINE, factsOutdatedBy, linkifyVerdictBlocks, newestChangeBySlug, overdueReport, pageCompiledClause, pageDataProvenance, pageDateModified, pageFreshness, pageFreshnessSentence, utcToday, verdictsOutdatedBy } from "./page-reviews.js";
 import { faqPageJsonLd, type FaqItem } from "./faq-provenance.js";
 import { SSE_KEEPALIVE_FRAME, keepaliveIntervalMs, sessionRecoveryBody } from "./mcp-stream.js";
 import { ASSISTANTS_API_SHUTDOWN } from "./assistants-shutdown.js";
@@ -54,17 +54,6 @@ import { changeDateLabel, changeDateClause, changeDatePublished, changeEventStar
 import { FEED_CORRECTIONS, correctionEntriesXml } from "./feed-corrections.js";
 import type { AgentBalance } from "./ledger.js";
 import type { SubmittedReferralCode } from "./referral-codes.js";
-
-function newestChangeBySlug(changes: Array<{ vendor?: string; date?: string }>, notAfter: string): Map<string, string> {
-  const newest = new Map<string, string>();
-  for (const c of changes) {
-    if (!c.vendor || !c.date || c.date > notAfter) continue;
-    const slug = toSlug(c.vendor);
-    const current = newest.get(slug);
-    if (!current || c.date > current) newest.set(slug, c.date);
-  }
-  return newest;
-}
 
 function latestChangeDate(changes: Array<{ date?: string }>, notAfter = utcToday()): string | null {
   let latest: string | null = null;
@@ -52825,18 +52814,22 @@ const httpServer = createHttpServer(async (req, res) => {
   if (url.pathname === "/api/page-reviews" && isGetOrHead) {
     const today = utcToday();
     const report = overdueReport(today);
-    const changeDateFor = newestChangeBySlug(loadDealChanges(), today);
+    const changeDateFor = newestChangeBySlug(loadDealChanges(), today, toSlug);
     const pages = report.pages.map(p => ({
       ...p,
       names_no_resolvable_vendor: p.tier === "A" && p.vendors_asserted.length === 0,
       verdict_records_changed_since_review: verdictsOutdatedBy(p, slug => changeDateFor.get(slug) ?? null),
+      records_changed_since_read: factsOutdatedBy(p, slug => changeDateFor.get(slug) ?? null),
     }));
     res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
     res.end(JSON.stringify({
       ...report,
+      stale_fact_pages_budget: STALE_FACT_PAGES_BASELINE,
       totals: {
         ...report.totals,
         pages_with_outdated_verdicts: pages.filter(p => p.verdict_records_changed_since_review.length > 0).length,
+        pages_with_records_changed_since_read: pages.filter(p => p.records_changed_since_read.length > 0).length,
+        records_changed_since_read: pages.reduce((n, p) => n + p.records_changed_since_read.length, 0),
         unresolved_badge_subjects: [...new Set(pages.flatMap(p => p.badge_subjects_unresolved))].sort(),
       },
       pages,
