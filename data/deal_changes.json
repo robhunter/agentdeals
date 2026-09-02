@@ -4506,9 +4506,9 @@
       "vendor": "GitHub Copilot",
       "change_type": "restriction",
       "date": "2026-04-10",
-      "summary": "GitHub paused new Copilot Pro trials due to abuse. Existing trials continue through their term. New users could still sign up for Pro directly (paid) until the broader April 20 signup pause closed that path too.",
+      "summary": "GitHub paused new Copilot Pro trials due to abuse. Existing trials continued through their term. New users could still subscribe to Pro directly (paid) until the broader April 20 signup pause closed that path too.",
       "previous_state": "Copilot Pro offered a 30-day free trial to any new user",
-      "current_state": "Copilot Pro trials paused indefinitely; direct Pro signup also paused as of 2026-04-20",
+      "current_state": "Resolved. Copilot Pro is open to new subscribers today (verified 2026-09-02 against GitHub's plans documentation); the trial pause is no longer reflected in GitHub's current plan pages.",
       "impact": "medium",
       "source_url": "https://github.blog/changelog/2026-04-10-pausing-new-github-copilot-pro-trials/",
       "category": "AI Coding",
@@ -4527,7 +4527,7 @@
       "date": "2026-04-20",
       "summary": "GitHub paused new signups for Copilot Pro, Pro+, and Copilot Student plans citing infrastructure strain from agentic AI workflows (long-running, parallelized sessions overwhelming capacity). Existing users are unaffected. Free tier signups remain open. Same announcement also removed Claude Opus from Pro (now Pro+ only) and tightened usage limits on individual plans.",
       "previous_state": "Pro ($10/mo), Pro+ ($39/mo), and Copilot Student plans accepting new signups. Claude Opus available on Pro. Standard individual-plan usage limits.",
-      "current_state": "Pro/Pro+/Student new signups paused. Claude Opus Pro+ only. Individual-plan usage limits tightened. Free tier unaffected.",
+      "current_state": "Reversed. GitHub's changelog post for this change is marked Retired, and its plans documentation offers Copilot Pro, Pro+, Max and Copilot Student to new users today (verified 2026-09-02). The pause that remains in force is a separate one dated 2026-04-22 on self-serve purchase of Copilot Business and Copilot Enterprise. Free tier was unaffected throughout.",
       "impact": "high",
       "source_url": "https://github.blog/changelog/2026-04-20-changes-to-github-copilot-plans-for-individuals/",
       "category": "AI Coding",
@@ -6117,7 +6117,7 @@
       "date_source": "discovered",
       "summary": "The free tier has been removed. The lowest tier is now a paid 'Business' plan at $100/month.",
       "previous_state": "AI coding assistant with deep codebase understanding. No free tier. Indie plan $20/month (40K credits). Standard $60/dev/month (130K credits, up to 20 users). Credit-based consumption model. Supports VS Code, JetBrains, and CLI. SOC 2 Type II certified",
-      "current_state": "Pricing starts at $100/month for a 'Business' plan which includes $100 of usage and up to 50 seats. An 'Enterprise' plan is also available with custom pricing.",
+      "current_state": "No free tier. Standard $20/month flat and Business $100/month flat, each up to 50 seats with $20 and $100 of included monthly usage; Enterprise custom-priced (verified 2026-09-02).",
       "impact": "high",
       "source_url": "https://www.augmentcode.com/pricing",
       "category": "AI Coding",
@@ -7639,6 +7639,23 @@
       "alternatives": [],
       "detected_by": "reverify-ai",
       "recorded_date": "2026-09-02"
+    },
+    {
+      "vendor": "Cursor",
+      "change_type": "record_corrected",
+      "date": "2026-09-02",
+      "summary": "Data correction — we published a Hobby tier at $10/month that Cursor has never offered. Hobby is the name of Cursor's free plan. Our free-tier description also carried GitHub Copilot's 2,000-completions figure, which appears nowhere on cursor.com/pricing.",
+      "previous_state": "6-plan structure: Free (2,000 completions/month, 50 slow premium requests), Hobby $10/month (lighter paid tier), Pro $20/month, Pro+ $60/month, Business $40/seat/month, Ultra $200/month",
+      "current_state": "Hobby is the free plan (no credit card, limited Agent requests, Composer access). Individual from $20/month (Pro), Teams $40/user/month, Enterprise custom.",
+      "impact": "medium",
+      "source_url": "https://cursor.com/pricing",
+      "category": "AI Coding",
+      "alternatives": [
+        "GitHub Copilot",
+        "Windsurf"
+      ],
+      "recorded_date": "2026-09-02",
+      "date_source": "hand_written"
     }
   ]
 }

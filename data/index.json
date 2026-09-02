@@ -2325,7 +2325,7 @@
     {
       "vendor": "Cursor",
       "category": "AI Coding",
-      "description": "AI-powered code editor built on VS Code. 6-plan structure: Free (2,000 completions/month, 50 slow premium requests), Hobby $10/month (lighter paid tier), Pro $20/month (unlimited completions, 500 fast premium requests), Pro+ $60/month (10x premium requests vs Pro, priority access, more context), Business $40/seat/month, Ultra $200/month (highest credit limits for power users). Credit-based pricing model since June 2025.",
+      "description": "AI-powered code editor built on VS Code. Hobby is the free plan: no credit card required, limited Agent requests, access to Composer — cursor.com/pricing states no completion or request figure for it. Individual paid plans start at $20/month (Pro), with Pro+ at 3x Pro's Agent limits and Ultra at 20x. Teams $40/user/month (Standard; Premium at 5x Standard's Agent limits). Enterprise is custom-priced with pooled usage, invoice/PO billing and SCIM.",
       "tier": "Free",
       "url": "https://www.cursor.com/pricing",
       "tags": [
@@ -30649,7 +30649,7 @@
     {
       "vendor": "GitHub Copilot",
       "category": "AI Coding",
-      "description": "AI coding assistant by GitHub/Microsoft. Works in VS Code/JetBrains/GitHub.com. Free tier: 2,000 completions/month, 50 premium requests/month. Pro $10/mo (unlimited completions, 300 premium requests). Pro+ $39/mo (1,500 premium requests, all advanced models incl. Claude Opus). Business $19/seat/mo (300/user). Enterprise $39/seat/mo (1,000/user). Overage $0.04/premium request. Model multipliers: advanced reasoning 5x-20x per interaction. **April 20, 2026: GitHub paused new signups for Pro, Pro+, and Copilot Student plans citing infrastructure strain from agentic AI workflows (long-running, parallelized sessions overwhelming capacity); Free tier signups remain open.** Pro trials paused April 10, 2026 (abuse). Claude Opus removed from Pro (now Pro+ only); individual-plan usage limits tightened. Copilot Student: existing students unaffected; premium models via Auto mode only (no manual selection). OSS maintainers get Pro free (when signups reopen).",
+      "description": "AI coding assistant by GitHub/Microsoft. Works in VS Code/JetBrains/GitHub.com. Copilot Free: 2,000 completions/month, an allowance of GitHub AI Credits, limited agents, auto model selection only. Copilot Student is free to verified students. Pro $10/mo (base 1,000 AI credits), Pro+ $39/mo (3,900), Max $100/mo (10,000), Business $19/granted seat/mo (1,900 per user), Enterprise $39/granted seat/mo (3,900 per user). Usage beyond the allowance is billed at $0.01/AI credit; code completions and next edit suggestions are unlimited on paid plans and not billed in credits. The April 2026 pause on new Pro, Pro+ and Student signups has been lifted — all individual plans accept new signups today. New self-serve purchase of Copilot Business and Copilot Enterprise remains paused (2026-04-22), with GitHub saying sign-ups reopen soon for card and PayPal customers.",
       "tier": "Free",
       "url": "https://github.com/features/copilot",
       "tags": [
@@ -30767,7 +30767,7 @@
     {
       "vendor": "Augment Code",
       "category": "AI Coding",
-      "description": "AI coding assistant with deep codebase understanding. No free tier. Indie plan $20/month (40K credits). Standard $60/dev/month (130K credits, up to 20 users). Credit-based consumption model. Supports VS Code, JetBrains, and CLI. SOC 2 Type II certified",
+      "description": "AI coding assistant with deep codebase understanding. No free tier. Standard $20/month flat and Business $100/month flat, each covering up to 50 seats with $20 and $100 of included monthly usage respectively across LLM, Context Engine and compute; top-ups are pay-as-you-go. Enterprise is custom-priced. Flat team pricing with no per-seat charge. Supports VS Code, JetBrains and CLI. SOC 2 Type II certified",
       "tier": "Retired",
       "url": "https://www.augmentcode.com/pricing",
       "tags": [
