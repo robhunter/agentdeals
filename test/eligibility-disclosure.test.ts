@@ -250,6 +250,12 @@ describe("a category page does not count a gated offer as a plain free tier", ()
           !lede.startsWith(`${total} verified free tiers and developer deals.`),
           `${where} closes the count claim before qualifying it: ${lede}`,
         );
+      } else if (gated === total && total > 1) {
+        assert.ok(lede.includes("None of them are on our ranked list"), `${where} lede is ${lede}`);
+        assert.ok(
+          !lede.includes("none of them generally available"),
+          `${where} says each record requires an application, on ${restricted} restricted of ${gated} gated: ${lede}`,
+        );
       } else if (gated === 1) {
         assert.ok(lede.includes("One of them is not on our ranked list"), `${where} lede is ${lede}`);
       } else {
