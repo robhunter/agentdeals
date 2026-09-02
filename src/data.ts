@@ -14,6 +14,7 @@ import {
   withheldLevelSentence,
 } from "./source-check.js";
 import { substitutesFor } from "./product-role.js";
+import { isSubSlug, toSlug } from "./slug.js";
 import { DATE_SOURCES, isEventDated, changeDateClause, isoWeekWindow, changesInWindow, discoveryBatchNote, firstReadHeading, type DateWindow } from "./change-dates.js";
 import { PRODUCT_DEPRECATED, deprecationEndsTheListedProduct } from "./product-deprecation.js";
 import { vendorHistorySentence } from "./vendor-history.js";
@@ -634,28 +635,56 @@ export function getPersonalizedChanges(
   };
 }
 
-function findVendor(offers: Offer[], name: string): { offer: Offer | null; suggestions: string[] } {
+export type VendorMatch =
+  | { type: "exact"; offer: Offer }
+  | { type: "inferred"; offer: Offer }
+  | { type: "none"; suggestions: string[] };
+
+export interface VendorMatchNotice {
+  requested: string;
+  matched: string;
+  type: "exact" | "inferred";
+}
+
+const MAX_SUGGESTIONS = 5;
+
+export function vendorMatchNotice(requested: string, match: VendorMatch): VendorMatchNotice | null {
+  if (match.type === "none") return null;
+  return { requested, matched: match.offer.vendor, type: match.type };
+}
+
+export function answeredAboutAnotherNameSentence(notice: VendorMatchNotice): string {
+  return `We have no record under "${notice.requested}", so this answer is about ${notice.matched}.`;
+}
+
+export function findVendor(offers: Offer[], name: string): VendorMatch {
   const lower = name.toLowerCase();
   const exact = offers.find((o) => o.vendor.toLowerCase() === lower);
-  if (exact) return { offer: exact, suggestions: [] };
+  if (exact) return { type: "exact", offer: exact };
 
-  const fuzzy = offers.filter(
-    (o) => o.vendor.toLowerCase().includes(lower) || lower.includes(o.vendor.toLowerCase())
-  );
-  if (fuzzy.length === 1) return { offer: fuzzy[0], suggestions: [] };
+  const asked = toSlug(name);
+  if (!asked) return { type: "none", suggestions: [] };
 
-  return { offer: null, suggestions: fuzzy.slice(0, 5).map((o) => o.vendor) };
+  const namedWithQualifiers = offers.filter((o) => isSubSlug(toSlug(o.vendor), asked));
+  if (namedWithQualifiers.length === 1) return { type: "inferred", offer: namedWithQualifiers[0] };
+
+  const longerNamesContainingIt = offers.filter((o) => isSubSlug(asked, toSlug(o.vendor)));
+  const suggestions = [...new Set([...namedWithQualifiers, ...longerNamesContainingIt].map((o) => o.vendor))];
+  return { type: "none", suggestions: suggestions.slice(0, MAX_SUGGESTIONS) };
 }
 
 export interface ComparisonResult {
   vendor_a: Offer & { deal_changes: DealChange[] };
   vendor_b: Offer & { deal_changes: DealChange[] };
+  vendor_a_match: VendorMatchNotice;
+  vendor_b_match: VendorMatchNotice;
   shared_categories: boolean;
   category_overlap: string[];
 }
 
 export interface VendorRiskResult {
   vendor: string;
+  vendor_match: VendorMatchNotice;
   category: string;
   risk_level: "stable" | "caution" | "risky" | null;
   risk_cause: RiskCause | null;
@@ -757,7 +786,7 @@ export function checkVendorRisk(
   const offers = loadOffers();
   const match = findVendor(offers, vendorName);
 
-  if (!match.offer) {
+  if (match.type === "none") {
     return {
       error: `Vendor "${vendorName}" not found.${match.suggestions.length > 0 ? ` Did you mean: ${match.suggestions.join(", ")}?` : ""}`,
       ...(match.suggestions.length > 0 ? { suggestions: match.suggestions } : {}),
@@ -765,6 +794,7 @@ export function checkVendorRisk(
   }
 
   const offer = match.offer;
+  const matchNotice = vendorMatchNotice(vendorName, match)!;
   const gate = gateForOffer(offer);
   const allChanges = loadDealChanges();
   const vendorChanges = allChanges
@@ -829,10 +859,14 @@ export function checkVendorRisk(
   if (!gate && !withheldReason && sourceStatesNoAmount(offer)) {
     summary = `${summary} ${amountUnstatedSentence(offer.vendor)}`;
   }
+  if (matchNotice.type === "inferred") {
+    summary = `${answeredAboutAnotherNameSentence(matchNotice)} ${summary}`;
+  }
 
   return {
     result: {
       vendor: offer.vendor,
+      vendor_match: matchNotice,
       category: offer.category,
       risk_level: gate || (cannotVouchForLevel(offer, linkUnreachable) && riskLevel === "stable") ? null : riskLevel,
       risk_cause: cause ? { date: cause.date, date_source: cause.date_source, change_type: cause.change_type, summary: cause.summary } : null,
@@ -890,11 +924,12 @@ export function auditStack(serviceNames: string[]): AuditResult {
   for (const name of serviceNames) {
     const match = findVendor(offers, name);
 
-    if (!match.offer) {
+    if (match.type !== "exact") {
+      const suggestions = match.type === "inferred" ? [match.offer.vendor] : match.suggestions;
       services.push({
         vendor: name,
         status: "not_found",
-        ...(match.suggestions.length > 0 ? { suggestions: match.suggestions } : {}),
+        ...(suggestions.length > 0 ? { suggestions } : {}),
       });
       continue;
     }
@@ -984,28 +1019,34 @@ export function compareServices(
   const matchA = findVendor(offers, vendorA);
   const matchB = findVendor(offers, vendorB);
 
-  if (!matchA.offer || !matchB.offer) {
+  if (matchA.type === "none" || matchB.type === "none") {
+    const suggestionsA = matchA.type === "none" ? matchA.suggestions : [];
+    const suggestionsB = matchB.type === "none" ? matchB.suggestions : [];
     return {
       error: [
-        !matchA.offer ? `Vendor "${vendorA}" not found.${matchA.suggestions.length > 0 ? ` Did you mean: ${matchA.suggestions.join(", ")}?` : ""}` : null,
-        !matchB.offer ? `Vendor "${vendorB}" not found.${matchB.suggestions.length > 0 ? ` Did you mean: ${matchB.suggestions.join(", ")}?` : ""}` : null,
+        matchA.type === "none" ? `Vendor "${vendorA}" not found.${suggestionsA.length > 0 ? ` Did you mean: ${suggestionsA.join(", ")}?` : ""}` : null,
+        matchB.type === "none" ? `Vendor "${vendorB}" not found.${suggestionsB.length > 0 ? ` Did you mean: ${suggestionsB.join(", ")}?` : ""}` : null,
       ].filter(Boolean).join(" "),
-      ...(matchA.suggestions.length > 0 ? { suggestions_a: matchA.suggestions } : {}),
-      ...(matchB.suggestions.length > 0 ? { suggestions_b: matchB.suggestions } : {}),
+      ...(suggestionsA.length > 0 ? { suggestions_a: suggestionsA } : {}),
+      ...(suggestionsB.length > 0 ? { suggestions_b: suggestionsB } : {}),
     };
   }
 
+  const offerA = matchA.offer;
+  const offerB = matchB.offer;
   const changes = loadDealChanges();
-  const changesA = changes.filter((c) => c.vendor.toLowerCase() === matchA.offer!.vendor.toLowerCase());
-  const changesB = changes.filter((c) => c.vendor.toLowerCase() === matchB.offer!.vendor.toLowerCase());
+  const changesA = changes.filter((c) => c.vendor.toLowerCase() === offerA.vendor.toLowerCase());
+  const changesB = changes.filter((c) => c.vendor.toLowerCase() === offerB.vendor.toLowerCase());
 
-  const sharedCategories = matchA.offer.category === matchB.offer.category;
-  const categoryOverlap = sharedCategories ? [matchA.offer.category] : [];
+  const sharedCategories = offerA.category === offerB.category;
+  const categoryOverlap = sharedCategories ? [offerA.category] : [];
 
   return {
     comparison: {
-      vendor_a: stripReferrerValue({ ...matchA.offer, deal_changes: changesA }),
-      vendor_b: stripReferrerValue({ ...matchB.offer, deal_changes: changesB }),
+      vendor_a: stripReferrerValue({ ...offerA, deal_changes: changesA }),
+      vendor_b: stripReferrerValue({ ...offerB, deal_changes: changesB }),
+      vendor_a_match: vendorMatchNotice(vendorA, matchA)!,
+      vendor_b_match: vendorMatchNotice(vendorB, matchB)!,
       shared_categories: sharedCategories,
       category_overlap: categoryOverlap,
     },

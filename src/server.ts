@@ -240,7 +240,7 @@ export function createServer(getSessionId?: () => string | undefined, getClientN
       inputSchema: {
         mode: z.enum(["recommend", "estimate", "audit"]).describe("recommend: free-tier stack for a use case. estimate: cost analysis at scale. audit: risk + cost + gap analysis."),
         use_case: z.string().optional().describe("What you're building (for recommend mode, e.g. 'Next.js SaaS app')"),
-        services: z.array(z.string()).optional().describe("Current vendor names (for estimate/audit mode, e.g. ['Vercel', 'Supabase'])"),
+        services: z.array(z.string()).optional().describe("Current vendor names (for estimate/audit mode, e.g. ['Vercel', 'Supabase']). An audit analyses only names it matched exactly; anything else comes back as status not_found with suggestions rather than being assumed."),
         scale: z.enum(["hobby", "startup", "growth"]).optional().describe("Scale for cost estimation (default: hobby)"),
         requirements: z.array(z.string()).optional().describe("Specific infra needs for recommend mode (e.g. ['database', 'auth', 'email'])"),
       },

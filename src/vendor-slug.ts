@@ -1,8 +1,7 @@
 import { loadOffers } from "./data.js";
+import { isSubSlug, toSlug } from "./slug.js";
 
-export function toSlug(name: string): string {
-  return name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
-}
+export { isSubSlug, toSlug };
 
 function buildVendorSlugMap(): Map<string, string> {
   const offers = loadOffers();
@@ -22,13 +21,6 @@ export type VendorSlugResolution =
   | { type: "redirect"; slug: string }
   | { type: "disambiguate"; slugs: string[] }
   | { type: "none" };
-
-export function isSubSlug(needle: string, haystack: string): boolean {
-  if (needle === haystack) return true;
-  if (haystack.startsWith(needle + "-")) return true;
-  if (haystack.endsWith("-" + needle)) return true;
-  return haystack.includes("-" + needle + "-");
-}
 
 const NAMES_MORE_THAN_ONE_SUBJECT = /\s(?:\+|&|and|or|vs\.?|versus)\s|\s*\/\s*|,/i;
 
