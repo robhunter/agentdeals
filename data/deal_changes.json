@@ -6951,21 +6951,6 @@
       "recorded_date": "2026-09-01"
     },
     {
-      "vendor": "Keywords AI",
-      "change_type": "free_tier_removed",
-      "date": "2026-09-01",
-      "date_source": "discovered",
-      "summary": "Keywords AI's own page now redirects to respan.ai.",
-      "previous_state": "The best LLM monitoring platform. One format to call 200+ LLMs with 2 lines of code. 10,000 free requests every month and $0 for platform features!",
-      "current_state": "The page does not explicitly state a free tier. It showcases features and capabilities of the platform, with mentions of cost savings and budget controls, but does not detail a free usage allowance.",
-      "impact": "high",
-      "source_url": "https://keywordsai.co",
-      "category": "AI / ML",
-      "alternatives": [],
-      "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-01"
-    },
-    {
       "vendor": "LangSmith",
       "change_type": "pricing_model_change",
       "date": "2026-09-01",

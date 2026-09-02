@@ -3537,18 +3537,15 @@
     {
       "vendor": "Stripe Atlas",
       "category": "Startup Programs",
-      "description": "$50,000+ in founder perks — $5K AWS credits, $5K DigitalOcean credits, 1yr GitHub, $2.5K Stripe processing credits, plus Notion, Slack, Zendesk, Intercom, and more",
+      "description": "$500 one-time incorporation (Delaware filing and fees, tax ID, founder equity issuance, 83(b) filing, document templates, first year of registered agent), $100/year after. Includes $2,500 in Stripe product credits and access to over $50,000 in partner discounts.",
       "tier": "Founder Perks",
       "url": "https://stripe.com/atlas",
       "tags": [
         "fintech",
         "incorporation",
-        "startup perks",
-        "aws",
-        "digitalocean",
-        "github"
+        "startup perks"
       ],
-      "verifiedDate": "2026-07-05",
+      "verifiedDate": "2026-09-02",
       "eligibility": {
         "type": "fintech",
         "conditions": [
@@ -3556,7 +3553,6 @@
         ],
         "program": "Stripe Atlas Founder Perks"
       },
-      "expires_date": "2026-06-30",
       "referral_program": {
         "available": false,
         "referrer_benefit": "N/A",
@@ -3566,7 +3562,7 @@
         "notes": "Partner ecosystem for integrations. No individual referral program."
       },
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-02",
         "outcome": "ok",
         "detail": "text"
       }
@@ -3709,9 +3705,9 @@
     {
       "vendor": "Highlight.io",
       "category": "Logging",
-      "description": "500 sessions, 1K errors, 1M logs, 25M traces/month. 3-month retention for sessions/errors, 30-day for logs/traces. Up to 15 seats",
-      "tier": "Free",
-      "url": "https://www.highlight.io/pricing",
+      "description": "Acquired by LaunchDarkly; highlight.io now redirects to launchdarkly.com and the hosted free tier is no longer offered under this name. The open-source project remains self-hostable (repo active, last pushed 2026-08-20).",
+      "tier": "Free OSS",
+      "url": "https://github.com/highlight/highlight",
       "tags": [
         "logging",
         "observability",
@@ -3719,11 +3715,11 @@
         "error-tracking",
         "tracing"
       ],
-      "verifiedDate": "2026-07-23",
+      "verifiedDate": "2026-09-02",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-02",
         "outcome": "ok",
-        "detail": "url"
+        "detail": "text"
       }
     },
     {
@@ -18486,18 +18482,18 @@
     {
       "vendor": "Keywords AI",
       "category": "AI / ML",
-      "description": "The best LLM monitoring platform. One format to call 200+ LLMs with 2 lines of code. 10,000 free requests every month and $0 for platform features!",
+      "description": "Rebranded to Respan; keywordsai.co redirects to respan.ai. Free plan: full platform, 100k logs, 1k scores, 5 datasets, 2 evaluators, 5 prompts. No credit card required.",
       "tier": "Free",
-      "url": "https://keywordsai.co",
+      "url": "https://www.respan.ai/pricing",
       "tags": [
         "ai",
         "ml",
         "generative-ai",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-08-08",
+      "verifiedDate": "2026-09-02",
       "source_check": {
-        "checked": "2026-09-01",
+        "checked": "2026-09-02",
         "outcome": "ok",
         "detail": "text"
       },
@@ -18506,21 +18502,21 @@
         "labels": [
           {
             "subtype": "llm_observability",
-            "source_url": "https://keywordsai.co",
+            "source_url": "https://www.respan.ai",
             "source_quote": "Observe calls in traces, watch spend in metrics, and run evals"
           },
           {
             "subtype": "llm_evaluation",
-            "source_url": "https://keywordsai.co",
+            "source_url": "https://www.respan.ai",
             "source_quote": "Route, observe, and evaluate every LLM call"
           },
           {
             "subtype": "model_gateway",
-            "source_url": "https://keywordsai.co",
+            "source_url": "https://www.respan.ai",
             "source_quote": "Point the SDK you already use at one endpoint to reach 1,000+ models"
           }
         ],
-        "reviewed": "2026-09-01"
+        "reviewed": "2026-09-02"
       }
     },
     {
@@ -18694,7 +18690,7 @@
     {
       "vendor": "Mediaworkbench.ai",
       "category": "AI / ML",
-      "description": "MediaWorkbench.ai offers 100,000 free words for Azure OpenAI, DeepSeek, and Google Gemini models, enabling users to access powerful tools for code generation, deep research, and image creation.",
+      "description": "Social media scheduling, publishing and analytics. Free plan at $0/month. The pricing page states no per-plan entitlements: the feature list shown is identical for all four plans.",
       "tier": "Free",
       "url": "https://mediaworkbench.ai",
       "tags": [
@@ -18703,11 +18699,11 @@
         "generative-ai",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-08-10",
+      "verifiedDate": "2026-09-02",
       "source_check": {
-        "checked": "2026-09-01",
+        "checked": "2026-09-02",
         "outcome": "ok",
-        "detail": "url"
+        "detail": "text"
       },
       "product_subtypes": {
         "taxonomy": "AI / ML",

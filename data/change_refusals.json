@@ -1667,6 +1667,18 @@
       "source_url": "https://www.zoneedit.com/free-dns/",
       "category": "DNS & Domain Management",
       "refused_date": "2026-09-01"
+    },
+    {
+      "vendor": "Keywords AI",
+      "change_type": "free_tier_removed",
+      "reason": "free_tier_still_offered",
+      "detail": "a free tier was recorded as removed because keywordsai.co redirects off-domain, and the redirect destination still offers one — respan.ai/pricing lists Free $0 with 100k logs, 1k scores, 5 datasets, 2 evaluators and 5 prompts. The vendor rebranded to Respan, a change already recorded on 2026-04-13. Refused by hand: auditRecord returns on the off-domain redirect branch before any free_tier_removed gate is reached",
+      "summary": "Keywords AI's own page now redirects to respan.ai.",
+      "previous_state": "The best LLM monitoring platform. One format to call 200+ LLMs with 2 lines of code. 10,000 free requests every month and $0 for platform features!",
+      "current_state": "The page does not explicitly state a free tier. It showcases features and capabilities of the platform, with mentions of cost savings and budget controls, but does not detail a free usage allowance.",
+      "source_url": "https://keywordsai.co",
+      "category": "AI / ML",
+      "refused_date": "2026-09-02"
     }
   ]
 }
