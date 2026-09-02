@@ -27146,8 +27146,8 @@
       "verifiedDate": "2026-09-02",
       "source_check": {
         "checked": "2026-09-02",
-        "outcome": "ok",
-        "detail": "url"
+        "outcome": "does_not_name_vendor",
+        "detail": "the page never names Instabug for Startups and is not served from its domain"
       }
     },
     {
@@ -27401,8 +27401,8 @@
       },
       "source_check": {
         "checked": "2026-09-02",
-        "outcome": "ok",
-        "detail": "url"
+        "outcome": "states_no_terms",
+        "detail": "the page names Twilio Startups Program but states no amount, tier or rate we can read"
       }
     },
     {
@@ -27446,8 +27446,8 @@
       "verifiedDate": "2026-09-02",
       "source_check": {
         "checked": "2026-09-02",
-        "outcome": "ok",
-        "detail": "url"
+        "outcome": "does_not_name_vendor",
+        "detail": "the page never names The GoSquared Early Stage Plan and is not served from its domain"
       }
     },
     {
@@ -27519,8 +27519,8 @@
       "verifiedDate": "2026-09-02",
       "source_check": {
         "checked": "2026-09-02",
-        "outcome": "ok",
-        "detail": "url"
+        "outcome": "states_no_terms",
+        "detail": "the page names Drift for Early Stage Startups but states no amount, tier or rate we can read"
       }
     },
     {
@@ -27694,8 +27694,8 @@
       "verifiedDate": "2026-09-02",
       "source_check": {
         "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names FeedBear but states no amount, tier or rate we can read"
+        "outcome": "ok",
+        "detail": "text"
       }
     },
     {
