@@ -111,6 +111,7 @@ export interface EnrichedOffer extends Offer {
   stability: StabilityClass | null;
   days_since_verified: number;
   link_unreachable: LinkUnreachable | null;
+  gate: import("./ranking.js").Gate | null;
 }
 
 export interface OfferIndex {
