@@ -84,6 +84,18 @@ function faqAnswer(html: string, prefix: string): string {
   return item?.acceptedAnswer?.text ?? "";
 }
 
+function faqPairs(html: string): { q: string; a: string }[] {
+  const faq = blockOfType(html, "FAQPage");
+  return (faq?.mainEntity ?? []).map((item: { name: string; acceptedAnswer: { text: string } }) => ({
+    q: item.name,
+    a: item.acceptedAnswer.text,
+  }));
+}
+
+function asks(html: string, question: string): boolean {
+  return faqPairs(html).some(pair => pair.q === question);
+}
+
 function textOf(html: string): string {
   return html.replace(/<[^>]*>/g, " ").replace(/&quot;/g, '"').replace(/&amp;/g, "&").replace(/\s+/g, " ").trim();
 }
@@ -185,17 +197,13 @@ describe("the page a gated record renders does not answer the free-tier question
     assert.ok(freeAnswer(digitalocean).startsWith(DIGITALOCEAN_EXPIRY_REASON), freeAnswer(digitalocean).slice(0, 90));
   });
 
-  it("names no free tier in the tier answer either", () => {
+  it("asks nothing about a free tier its own gate says is not there", () => {
     const subjects = gated().filter(p => p.gate!.code !== "eligibility_restricted" && !offerEnded(p.primary));
     assert.ok(subjects.length > 0, "no vendor page renders a record gated outside eligibility");
-    for (const p of subjects) {
-      const answer = faqAnswer(p.html, `What is ${p.vendor}'s free tier?`);
-      assert.ok(answer.startsWith(p.gate!.reason), `/vendor/${p.slug} opens with ${answer.slice(0, 70)}`);
-      assert.ok(
-        !answer.includes(`${p.vendor}'s free tier is called`),
-        `/vendor/${p.slug} still names a free tier`,
-      );
-    }
+    const asking = subjects
+      .filter(p => asks(p.html, `What is ${p.vendor}'s free tier?`))
+      .map(p => `${p.slug} (${p.gate!.code})`);
+    assert.deepStrictEqual(asking, []);
   });
 
   it("keeps the unverified-terms caveat where the source check also withholds the level", () => {
@@ -480,7 +488,94 @@ describe("no page a gated record renders claims a free tier or rates one", () =>
   });
 });
 
+const DECLINES_TO_RATE = [
+  "so there is nothing to rate",
+  "we are not publishing a stability judgement",
+];
+
+const RATES_THE_FREE_TIER = (vendor: string) => [
+  `${vendor}'s free tier is considered stable`,
+  `${vendor}'s free tier is considered risky`,
+  `${vendor}'s free tier requires caution`,
+  "We rate it stable",
+  "We rate it caution",
+  "We rate it risky",
+];
+
+const QUESTIONS_A_GATE_DOES_NOT_TOUCH = (vendor: string) => [
+  `Is ${vendor} free?`,
+  `Is ${vendor}'s free tier good for production?`,
+  `What changed in ${vendor}'s pricing?`,
+  `What category is ${vendor} in?`,
+];
+
+const GATED_PAGES_DECLINING_TO_RATE = 100;
+const GATED_PAGES_NAMING_A_RESTRICTED_TIER = 130;
+
+describe("no question a gated page asks presupposes what its own answer denies", () => {
+  const reliability = (p: VendorPage) => faqAnswer(p.html, `Is ${p.vendor}'s free tier reliable?`);
+
+  it("asks whether the free tier is reliable only where the answer declines to rate it", () => {
+    const asking = gated().filter(p => asks(p.html, `Is ${p.vendor}'s free tier reliable?`));
+    assert.ok(
+      asking.length > GATED_PAGES_DECLINING_TO_RATE,
+      `only ${asking.length} gated pages still ask it, so this assertion has almost no subject`,
+    );
+    const rating = asking
+      .filter(p => !DECLINES_TO_RATE.some(form => reliability(p).includes(form)))
+      .map(p => `${p.slug} (${p.gate!.code}): ${reliability(p).slice(0, 90)}`);
+    assert.deepStrictEqual(rating.slice(0, 20), []);
+  });
+
+  it("answers no question naming a free tier with a rating of that tier", () => {
+    const subjects = gated().filter(p => faqPairs(p.html).some(pair => /free tier/i.test(pair.q)));
+    assert.ok(subjects.length > 0, "no gated page asks about a free tier at all, so this has no subject");
+    const offenders: string[] = [];
+    for (const p of subjects) {
+      for (const { q, a } of faqPairs(p.html)) {
+        if (!/free tier/i.test(q)) continue;
+        for (const form of RATES_THE_FREE_TIER(p.vendor)) {
+          if (a.includes(form)) offenders.push(`${p.slug} (${p.gate!.code}) asked "${q}": ${form}`);
+        }
+      }
+    }
+    assert.deepStrictEqual(offenders.slice(0, 20), []);
+  });
+
+  it("keeps every question the gate does not touch", () => {
+    for (const p of gated()) {
+      for (const q of QUESTIONS_A_GATE_DOES_NOT_TOUCH(p.vendor)) {
+        assert.ok(asks(p.html, q), `/vendor/${p.slug} no longer asks "${q}"`);
+      }
+    }
+  });
+
+  it("still asks what the tier is where the gate is the restriction rather than the tier", () => {
+    const asking = gated().filter(p => asks(p.html, `What is ${p.vendor}'s free tier?`)).length;
+    assert.ok(
+      asking > GATED_PAGES_NAMING_A_RESTRICTED_TIER,
+      `only ${asking} gated pages still ask what the tier is, down from ${GATED_PAGES_NAMING_A_RESTRICTED_TIER}`,
+    );
+  });
+});
+
+const UNGATED_PAGES_ASKING_WHAT_THE_TIER_IS = 1415;
+const UNGATED_PAGES_ASKING_WHETHER_IT_IS_RELIABLE = 1415;
+
 describe("the same page an ungated record renders is unchanged", () => {
+  it("still asks what its free tier is and whether that tier is reliable", () => {
+    const tier = ungated().filter(p => asks(p.html, `What is ${p.vendor}'s free tier?`)).length;
+    const reliable = ungated().filter(p => asks(p.html, `Is ${p.vendor}'s free tier reliable?`)).length;
+    assert.ok(
+      tier >= UNGATED_PAGES_ASKING_WHAT_THE_TIER_IS,
+      `${tier} ungated pages ask what the tier is, down from ${UNGATED_PAGES_ASKING_WHAT_THE_TIER_IS}`,
+    );
+    assert.ok(
+      reliable >= UNGATED_PAGES_ASKING_WHETHER_IT_IS_RELIABLE,
+      `${reliable} ungated pages ask whether it is reliable, down from ${UNGATED_PAGES_ASKING_WHETHER_IT_IS_RELIABLE}`,
+    );
+  });
+
   it("still makes every one of those claims somewhere", () => {
     const unmade: string[] = [];
     for (const claim of [...CLAIMS_A_RATING("<vendor>", "<category>"), ...NAMES_A_FREE_TIER("<vendor>")]) {

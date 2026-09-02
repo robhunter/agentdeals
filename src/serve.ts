@@ -4141,8 +4141,6 @@ ${allCompareLinks.join("\n")}
     : `Yes, ${vendorName} offers a free tier: ${primary.tier}. ${storedTerms}`;
   const faqTierAnswer = retiredSentence
     ? `${retiredSentence} ${primary.description}`
-    : primaryGateBeyondEligibility
-    ? `${primaryGateBeyondEligibility.reason} ${levelWithheld ? `${unconfirmedTermsPreamble}${withUnconfirmedTermsCaveat(primary.description)}` : primary.description}`
     : eligibilityGateSentence + (levelWithheld
     ? `${unconfirmedTermsPreamble}Our stored record calls ${vendorName}'s free tier "${primary.tier}". ${withUnconfirmedTermsCaveat(primary.description)}`
     : `${vendorName}'s free tier is called "${primary.tier}". ${primary.description}`);
@@ -4150,8 +4148,6 @@ ${allCompareLinks.join("\n")}
     ? endedReliabilitySentence(vendorName)
     : levelWithheld
     ? `We cannot say. ${withheldLevelSentence(levelWithheld, vendorName, unconfirmableSince)} Nothing we have read describes these terms, so we are not publishing a stability judgement for this vendor until that is fixed.`
-    : primaryGate
-    ? `${primaryGate.reason} ${vendorHistorySentence(vendorName, riskLevel, riskCause)}${riskLevel === "stable" && vendorChanges.length > 0 ? ` ${narrowingSentence(vendorChanges)} See the pricing history below.` : ""}`
     : riskLevel === "stable"
     ? `${vendorName}'s free tier is considered stable.${vendorChanges.length > 0 ? ` ${narrowingSentence(vendorChanges)} See the pricing history below.` : ""}`
     : riskLevel === "caution"
@@ -4186,10 +4182,13 @@ ${allCompareLinks.join("\n")}
     ? `${growthBullets[0].replace(/<[^>]*>/g, "")} When you outgrow the free tier, evaluate paid plans against alternatives — sometimes a competitor's free tier covers what you need.`
     : `When your usage exceeds the free tier limits, you'll need to upgrade or evaluate alternatives in the same category.`;
 
+  const gateStatesThereIsNoFreeTier = productionGate !== null;
+  const reliabilityAnswerWouldRateAGatedOffer = primaryGate !== null && !offerHasEnded && !levelWithheld;
+
   const vendorFaqItems = [
     { q: `Is ${vendorName} free?`, a: faqFreeAnswer },
-    { q: `What is ${vendorName}'s free tier?`, a: faqTierAnswer },
-    { q: `Is ${vendorName}'s free tier reliable?`, a: faqReliableAnswer },
+    ...(gateStatesThereIsNoFreeTier ? [] : [{ q: `What is ${vendorName}'s free tier?`, a: faqTierAnswer }]),
+    ...(reliabilityAnswerWouldRateAGatedOffer ? [] : [{ q: `Is ${vendorName}'s free tier reliable?`, a: faqReliableAnswer }]),
     { q: `Is ${vendorName}'s free tier good for production?`, a: faqProductionAnswer },
     { q: `What changed in ${vendorName}'s pricing?`, a: faqChangedAnswer },
     ...(alternatives.length > 0 ? [{ q: `What are the best free alternatives to ${vendorName}?`, a: faqAlternativesAnswer }] : []),
