@@ -21,6 +21,7 @@ import { levelWithheldReason, withheldLevelClause, withheldLevelSentence } from 
 import { buildComparisonMap, comparisonSlug } from "./comparison-pairs.js";
 import { stabilityFaqAnswer, stabilityVerdictClause, type ComparisonSide, type StabilityRating } from "./comparison-verdict.js";
 import { publishedVendorLevel, vendorVerdictSentence, narrowingSentence, changeKindNoun, type VendorVerdictInput } from "./vendor-verdict.js";
+import { vendorHistorySentence } from "./vendor-history.js";
 import { growthLimitPhrases } from "./growth-limits.js";
 import { registerAgent, authenticateRequest, validateVestauthUrl, hashApiKey, updateAgentX402Address, getAgentById } from "./agents.js";
 import { attributeAuthenticatedRequest } from "./referral-attribution.js";
@@ -41,7 +42,7 @@ import { faqPageJsonLd, type FaqItem } from "./faq-provenance.js";
 import { SSE_KEEPALIVE_FRAME, keepaliveIntervalMs, sessionRecoveryBody } from "./mcp-stream.js";
 import { ASSISTANTS_API_SHUTDOWN } from "./assistants-shutdown.js";
 import { discontinuedOnOrBefore, PRODUCT_DEPRECATED } from "./product-deprecation.js";
-import { rankOffers, rankForListing, rotateListing, utcDate, gateFor, CRITERIA_PATH, DEMOTE_ONLY_POLICY, DISCLOSURE_RATIONALE, TIE_BREAK_ALGORITHM, GATE_TABLE, DEMERIT_TABLE, NOT_FREE_TIER_RULES, TIME_LIMITED_TIER_RULES, type TieBreak } from "./ranking.js";
+import { rankOffers, rankForListing, rotateListing, utcDate, gateFor, CRITERIA_PATH, DEMOTE_ONLY_POLICY, DISCLOSURE_RATIONALE, TIE_BREAK_ALGORITHM, GATE_TABLE, DEMERIT_TABLE, NOT_FREE_TIER_RULES, TIME_LIMITED_TIER_RULES, type TieBreak, type Gate } from "./ranking.js";
 import type { RankedEntry, RankingResult } from "./ranking.js";
 import { eligibilityGate, gatedShareDescriptionClause, gatedShareLede, publishableEligibilityConditions } from "./eligibility.js";
 import { verificationLedger, QUARANTINE_AFTER_FAILURES } from "./verification-state.js";
@@ -495,7 +496,11 @@ function stabilityCellHtml(
   cause: RiskCause | null | undefined,
   linkUnreachable: LinkUnreachable | null | undefined,
   offer?: Pick<Offer, "source_check">,
+  gate?: Gate | null,
 ): string {
+  if (gate) {
+    return `<span class="stability-gate" style="color:var(--text-dim);font-family:var(--mono)" title="${escHtmlServer(gate.reason)}">${escHtmlServer(gate.code)}</span>`;
+  }
   if (linkUnreachable) {
     const since = linkUnreachable.last_reachable ? ` since ${linkUnreachable.last_reachable}` : "";
     return `<span style="color:var(--text-dim)" title="Link has not resolved${escHtmlServer(since)}">link unreachable</span>`;
@@ -3779,7 +3784,7 @@ function buildVendorPage(slug: string): string | null {
 
   const currentYear = new Date().getFullYear();
   const retiredSentence = offerRetired(primary) ? recordedTierSentence(vendorName, primary.tier) : "";
-  const hasFree = !retiredSentence && primary.tier.toLowerCase() !== "none" && !primary.description.toLowerCase().includes("no free tier");
+  const hasFree = !retiredSentence && !productionGate && primary.tier.toLowerCase() !== "none" && !primary.description.toLowerCase().includes("no free tier");
   const freeTierHeadline = `${vendorName} Free Tier ${currentYear}`;
   const pricingHeadline = `${vendorName} Pricing ${currentYear}`;
   const headline = offerHasEnded ? endedHeadline(vendorName) : hasFree ? freeTierHeadline : pricingHeadline;
@@ -3803,22 +3808,28 @@ function buildVendorPage(slug: string): string | null {
   const levelWithheld = levelWithheldReason(primary, linkUnreachable);
   const withheldClause = levelWithheld ? withheldLevelClause(levelWithheld, unconfirmableSince) : "";
   const verdictInput: VendorVerdictInput = {
+    vendor: vendorName,
     level: enriched.risk_level ?? null,
     cause: riskCause,
     changes: vendorChanges,
     levelWithheld,
     unconfirmableSince,
     offerEnded: offerHasEnded,
+    gated: primaryGate !== null,
   };
   const verdictLine2 = vendorVerdictSentence(verdictInput);
   const verdictLine3 = discontinuedOn
     ? `${vendorName} was discontinued on ${discontinuedOn}, so it is not a current option${alternatives.length > 0 ? ` — the ${alternatives.length} alternatives below are replacements` : ""}.`
-    : alternatives.length > 0 && !levelWithheld
+    : alternatives.length > 0 && !levelWithheld && !primaryGate
     ? `Best for ${primary.category.toLowerCase()} workloads${alternatives.length >= 5 ? ` — ${alternatives.length} alternatives available` : ""}.`
     : "";
+  const verdictSubject = primaryGate ? primaryGate.reason : retiredSentence;
+  const verdictOpening = verdictSubject
+    ? `${escHtmlServer(verdictSubject)} ${escHtmlServer(keyLimit)}.`
+    : `${escHtmlServer(vendorName)}'s free tier offers ${escHtmlServer(keyLimit)}.`;
   const quickVerdictHtml = `
   <div class="quick-verdict">
-    <p>${retiredSentence ? `${escHtmlServer(retiredSentence)} ${escHtmlServer(keyLimit)}.` : `${escHtmlServer(vendorName)}'s free tier offers ${escHtmlServer(keyLimit)}.`} ${verdictLine2}${verdictLine3 ? " " + verdictLine3 : ""}</p>
+    <p>${verdictOpening} ${verdictLine2}${verdictLine3 ? " " + verdictLine3 : ""}</p>
   </div>`;
 
   const catMapping = categoryComparisonMap[primary.category];
@@ -3846,7 +3857,7 @@ function buildVendorPage(slug: string): string | null {
     const topAlt = alternatives[0];
     growthBullets.push(`At that point, consider <a href="/vendor/${toSlug(topAlt.vendor)}">${escHtmlServer(topAlt.vendor)}</a> which offers ${escHtmlServer(topAlt.tier)} in the same category.`);
   }
-  const growthPathHtml = growthBullets.length > 0 && !discontinuedOn ? `
+  const growthPathHtml = growthBullets.length > 0 && !discontinuedOn && !primaryGate ? `
   <div class="section growth-section">
     <h2>When You'll Outgrow ${escHtmlServer(vendorName)}'s Free Tier</h2>
     <ul class="growth-list">
@@ -3871,7 +3882,7 @@ function buildVendorPage(slug: string): string | null {
           <tr class="current-vendor-row">
             <td><strong>${escHtmlServer(vendorName)}</strong></td>
             <td>${escHtmlServer(primary.tier)}</td>
-            <td>${stabilityCellHtml(enriched.risk_level, riskCause, linkUnreachable, primary)}</td>
+            <td>${stabilityCellHtml(enriched.risk_level, riskCause, linkUnreachable, primary, primaryGate)}</td>
           </tr>
 ${enrichedAlts.map(a => {
   return `          <tr>
@@ -3902,6 +3913,8 @@ ${enrichedAlts.map(a => {
     ? `<p class="no-changes">${escHtmlServer(endedHistorySentence(vendorName))}</p>`
     : levelWithheld
     ? `<p class="no-changes">No recorded pricing changes for ${escHtmlServer(vendorName)} — but ${escHtmlServer(withheldClause)}, so nothing we have read describes these terms. Treat the empty history as a statement about our records, not about this vendor's pricing.</p>`
+    : primaryGate
+    ? `<p class="no-changes">No recorded pricing changes for ${escHtmlServer(vendorName)}.</p>`
     : `<p class="no-changes">No recorded pricing changes for ${escHtmlServer(vendorName)}. This is a good sign — stable pricing.</p>`;
 
   const latestChange = vendorChanges[0];
@@ -4091,13 +4104,17 @@ ${allCompareLinks.join("\n")}
       description: primary.description,
       applicationCategory: primary.category,
       ...(offerRetired(primary) ? {} : { url: primary.url }),
-      offers: {
-        "@type": "Offer",
-        price: "0",
-        priceCurrency: "USD",
-        description: primary.tier,
-        ...(offerExpiry ? { priceValidUntil: offerExpiry } : {}),
-      },
+      ...(primaryGate
+        ? {}
+        : {
+            offers: {
+              "@type": "Offer",
+              price: "0",
+              priceCurrency: "USD",
+              description: primary.tier,
+              ...(offerExpiry ? { priceValidUntil: offerExpiry } : {}),
+            },
+          }),
     },
   };
   if (pricingEvents.length > 0) {
@@ -4133,6 +4150,8 @@ ${allCompareLinks.join("\n")}
     ? endedReliabilitySentence(vendorName)
     : levelWithheld
     ? `We cannot say. ${withheldLevelSentence(levelWithheld, vendorName, unconfirmableSince)} Nothing we have read describes these terms, so we are not publishing a stability judgement for this vendor until that is fixed.`
+    : primaryGate
+    ? `${primaryGate.reason} ${vendorHistorySentence(vendorName, riskLevel, riskCause)}${riskLevel === "stable" && vendorChanges.length > 0 ? ` ${narrowingSentence(vendorChanges)} See the pricing history below.` : ""}`
     : riskLevel === "stable"
     ? `${vendorName}'s free tier is considered stable.${vendorChanges.length > 0 ? ` ${narrowingSentence(vendorChanges)} See the pricing history below.` : ""}`
     : riskLevel === "caution"
@@ -4147,6 +4166,8 @@ ${allCompareLinks.join("\n")}
     : hasFree
     ? (riskLevel === "stable"
       ? `${vendorName}'s free tier can be suitable for small production workloads and side projects. ${primaryGate ? "It" : "We rate it stable and it"} offers ${escHtmlServer(keyLimit)}, so it's a reasonable starting point.${vendorChanges.length > 0 ? ` ${narrowingSentence(vendorChanges)}` : ""} Monitor your usage against the limits and have an upgrade plan ready.`
+      : primaryGate
+      ? `${vendorName}'s free tier is usable for prototyping and development. ${vendorHistorySentence(vendorName, riskLevel, riskCause)}`
       : `${vendorName}'s free tier is usable for prototyping and development, but we rate it ${riskLevel}${riskCause ? ` because of one recorded ${changeKindNoun(riskCause.change_type)}, ${changeDateClause(riskCause)}` : ""}. Consider alternatives with more stable pricing for critical services.`)
     : `${vendorName} does not offer a free tier for production use. Consider free alternatives in ${primary.category}.`);
   const faqChangedAnswer = vendorChanges.length > 0
@@ -4155,6 +4176,8 @@ ${allCompareLinks.join("\n")}
     ? endedEmptyChangeHistorySentence(vendorName)
     : levelWithheld
     ? `We hold no recorded pricing changes for ${vendorName}, but ${withheldClause}, so that is a statement about our records rather than a positive signal.`
+    : primaryGate
+    ? `No, ${vendorName} has had no recorded pricing changes.`
     : `No, ${vendorName} has had no recorded pricing changes. This is a positive stability signal.`;
   const faqAlternativesAnswer = alternatives.length > 0
     ? `The top free alternatives to ${vendorName} in ${primary.category} include ${alternatives.slice(0, 5).map(a => `${a.vendor} (${a.tier})`).join(", ")}. See all ${alternatives.length} alternatives above.`
@@ -4170,7 +4193,7 @@ ${allCompareLinks.join("\n")}
     { q: `Is ${vendorName}'s free tier good for production?`, a: faqProductionAnswer },
     { q: `What changed in ${vendorName}'s pricing?`, a: faqChangedAnswer },
     ...(alternatives.length > 0 ? [{ q: `What are the best free alternatives to ${vendorName}?`, a: faqAlternativesAnswer }] : []),
-    { q: `When will I outgrow ${vendorName}'s free tier?`, a: faqOutgrowAnswer },
+    ...(primaryGate ? [] : [{ q: `When will I outgrow ${vendorName}'s free tier?`, a: faqOutgrowAnswer }]),
     { q: `What category is ${vendorName} in?`, a: faqCategoryAnswer },
   ];
 
