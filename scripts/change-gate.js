@@ -1,4 +1,4 @@
-import { pageNamesVendor } from "./vendor-naming.js";
+import { pageNamesVendor, statesAnAmount } from "./vendor-naming.js";
 import { definedEquivalences } from "./unit-aliases.js";
 import { readPeriod, renderPeriod } from "../src/growth-limits.ts";
 
@@ -182,6 +182,10 @@ export function priceSignals(text) {
     for (const match of text.matchAll(pattern)) found.push(match[0].trim());
   }
   return found;
+}
+
+export function numericPriceSignals(text) {
+  return priceSignals(text).filter(statesAnAmount);
 }
 
 export function quantities(text) {

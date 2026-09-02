@@ -17,7 +17,7 @@ import { configureVendorSeries, recordVendorRequest, flushVendorSeries, readVend
 import { openapiSpec } from "./openapi.js";
 import { LINK_GRACE_DAYS, unreachableNoticeForUrl } from "./link-health.js";
 import { offerEnded, offerRetired, recordedTierSentence, endedHeadline, endedHistorySentence, endedReliabilitySentence, endedEmptyChangeHistorySentence, ENDED_BADGE_LABEL, ENDED_SINCE_CHANGES_SENTENCE, type OfferTierAndUrl } from "./retirement.js";
-import { levelWithheldReason, withheldLevelClause, withheldLevelSentence } from "./source-check.js";
+import { amountUnstatedSentence, levelWithheldReason, sourceStatesNoAmount, withheldLevelClause, withheldLevelSentence } from "./source-check.js";
 import { buildComparisonMap, comparisonSlug } from "./comparison-pairs.js";
 import { stabilityFaqAnswer, stabilityVerdictClause, type ComparisonSide, type StabilityRating } from "./comparison-verdict.js";
 import { publishedVendorLevel, vendorVerdictSentence, vendorBadge, statesRiskCause, narrowingSentence, changeKindNoun, type VendorVerdictInput } from "./vendor-verdict.js";
@@ -3744,6 +3744,10 @@ function buildVendorPage(slug: string): string | null {
     ? `  <p class="link-unreachable-line" style="margin:.4rem 0 .6rem;font-size:.9rem;color:var(--text-muted)"><strong style="color:#f85149">Link unreachable:</strong> ${escHtmlServer(primary.url)} did not resolve on our check of <span class="link-checked-date" style="font-family:var(--mono)">${escHtmlServer(linkUnreachable.checked)}</span>. ${linkUnreachable.last_reachable ? `Last reachable <span class="link-last-reachable" style="font-family:var(--mono)">${escHtmlServer(linkUnreachable.last_reachable)}</span>.` : "We have no date on which it was reachable."}</p>`
     : "";
 
+  const amountUnstatedLine = !levelWithheld && sourceStatesNoAmount(primary)
+    ? `\n  <p class="amount-unstated-line" style="margin:.4rem 0 .6rem;font-size:.9rem;color:var(--text-muted)"><strong style="color:#d29922">Source states no amount:</strong> ${escHtmlServer(amountUnstatedSentence(vendorName))}</p>`
+    : "";
+
   const primaryEligibilityGate = eligibilityGateAsPublished(primary, servedOn);
   const primaryEligibilityConditions = publishableEligibilityConditions(primary);
   const primaryGateBeyondEligibility = primaryGate && primaryGate.code !== "eligibility_restricted" ? primaryGate : null;
@@ -4312,7 +4316,7 @@ ${mcpCtaCss()}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/vendor">Vendors</a> &rsaquo; ${escHtmlServer(vendorName)}</div>
   <h1>${escHtmlServer(headline)}${h1RiskBadge}</h1>${gateLine}
 ${riskCauseLine}
-${linkUnreachableLine}
+${linkUnreachableLine}${amountUnstatedLine}
 ${productRoleLine}${productSubtypesLine}
   <p class="page-meta">Limits, pricing history${alternatives.length > 0 ? `, and ${alternatives.length} alternatives` : ""}.${verifiedSentence} Last updated ${escHtmlServer(lastUpdated)}.</p>
 ${quickVerdictHtml}

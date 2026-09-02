@@ -54,7 +54,7 @@ const OFFER = {
 
 function outcomeFor(text: string) {
   const page = { ok: true, text };
-  return classifySource(OFFER, page, priceSignals(text).length).outcome;
+  return classifySource(OFFER, page, priceSignals(text)).outcome;
 }
 
 describe("a page is read to its end, not to a fixed number of characters", () => {

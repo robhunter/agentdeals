@@ -12,16 +12,34 @@ const MIN_FORM_LENGTH = 3;
 const MIN_DISTINCTIVE_WORD = 7;
 
 export const SOURCE_CHECK_OK = "ok";
+export const SOURCE_CHECK_NO_AMOUNT = "states_no_amount";
 export const SOURCE_CHECK_NOT_NAMED = "does_not_name_vendor";
 export const SOURCE_CHECK_NO_TERMS = "states_no_terms";
 export const SOURCE_CHECK_UNREADABLE = "unreadable";
 
 export const SOURCE_CHECK_OUTCOMES = [
   SOURCE_CHECK_OK,
+  SOURCE_CHECK_NO_AMOUNT,
   SOURCE_CHECK_NOT_NAMED,
   SOURCE_CHECK_NO_TERMS,
   SOURCE_CHECK_UNREADABLE,
 ];
+
+const OUTCOMES_THAT_HOLD_THE_VERIFIED_DATE = new Set([
+  SOURCE_CHECK_NOT_NAMED,
+  SOURCE_CHECK_NO_TERMS,
+  SOURCE_CHECK_UNREADABLE,
+]);
+
+export function holdsVerifiedDate(outcome) {
+  return OUTCOMES_THAT_HOLD_THE_VERIFIED_DATE.has(outcome);
+}
+
+const A_FIGURE = /\d/;
+
+export function statesAnAmount(signal) {
+  return typeof signal === "string" && A_FIGURE.test(signal);
+}
 
 export function normalizeForMatch(text) {
   if (typeof text !== "string") return "";
@@ -146,7 +164,7 @@ export function pageNamesVendor(pageText, vendor, options = {}) {
   return result(false, null, null);
 }
 
-export function classifySource(offer, page, priceSignalCount) {
+export function classifySource(offer, page, signals) {
   if (!page || !page.ok) {
     return { outcome: SOURCE_CHECK_UNREADABLE, detail: page?.error ?? "not fetched" };
   }
@@ -157,16 +175,23 @@ export function classifySource(offer, page, priceSignalCount) {
       detail: `the page never names ${offer.vendor} and is not served from its domain`,
     };
   }
-  if (!(priceSignalCount > 0)) {
+  const found = Array.isArray(signals) ? signals : [];
+  if (found.length === 0) {
     return {
       outcome: SOURCE_CHECK_NO_TERMS,
       detail: `the page names ${offer.vendor} but states no amount, tier or rate we can read`,
     };
   }
+  if (!found.some(statesAnAmount)) {
+    return {
+      outcome: SOURCE_CHECK_NO_AMOUNT,
+      detail: `the page names ${offer.vendor} and says "${found[0]}" but states no amount, rate or price we can read`,
+    };
+  }
   return { outcome: SOURCE_CHECK_OK, detail: naming.via };
 }
 
-export function sourceCheckRecord(offer, page, priceSignalCount, checked) {
-  const { outcome, detail } = classifySource(offer, page, priceSignalCount);
+export function sourceCheckRecord(offer, page, signals, checked) {
+  const { outcome, detail } = classifySource(offer, page, signals);
   return { checked, outcome, detail };
 }

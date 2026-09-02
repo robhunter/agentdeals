@@ -1,12 +1,18 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import type { Offer, EnrichedOffer, OfferIndex, DealChange, DealChangesIndex, ChangeDateSource, StabilityClass, Referral, RiskCause, LinkUnreachable } from "./types.js";
+import type { Offer, EnrichedOffer, OfferIndex, DealChange, DealChangesIndex, ChangeDateSource, StabilityClass, Referral, RiskCause, LinkUnreachable, SourceCheck } from "./types.js";
 import { isUrlSuspended } from "./referral-health.js";
 import { rankForListing, gateFor, utcDate, type TieBreak, type Gate, type GateCode } from "./ranking.js";
 import { unreachableNoticeForUrl, resetLinkHealthCache } from "./link-health.js";
 import { quarantineSummary, resetVerificationStateCache, type QuarantineSummary } from "./verification-state.js";
-import { cannotVouchForLevel, levelWithheldReason, withheldLevelSentence } from "./source-check.js";
+import {
+  amountUnstatedSentence,
+  cannotVouchForLevel,
+  levelWithheldReason,
+  sourceStatesNoAmount,
+  withheldLevelSentence,
+} from "./source-check.js";
 import { substitutesFor } from "./product-role.js";
 import { DATE_SOURCES, isEventDated, changeDateClause, isoWeekWindow, changesInWindow, discoveryBatchNote, firstReadHeading, type DateWindow } from "./change-dates.js";
 import { PRODUCT_DEPRECATED, deprecationEndsTheListedProduct } from "./product-deprecation.js";
@@ -654,6 +660,7 @@ export interface VendorRiskResult {
   risk_level: "stable" | "caution" | "risky" | null;
   risk_cause: RiskCause | null;
   link_unreachable: LinkUnreachable | null;
+  source_check: SourceCheck | null;
   gate: Gate | null;
   free_tier_longevity_days: number | null;
   changes: DealChange[];
@@ -819,6 +826,9 @@ export function checkVendorRisk(
   } else {
     summary = `${vendorHistorySentence(offer.vendor, "stable", cause)} Free tier verified for ${longevityDays} days.`;
   }
+  if (!gate && !withheldReason && sourceStatesNoAmount(offer)) {
+    summary = `${summary} ${amountUnstatedSentence(offer.vendor)}`;
+  }
 
   return {
     result: {
@@ -827,6 +837,7 @@ export function checkVendorRisk(
       risk_level: gate || (cannotVouchForLevel(offer, linkUnreachable) && riskLevel === "stable") ? null : riskLevel,
       risk_cause: cause ? { date: cause.date, date_source: cause.date_source, change_type: cause.change_type, summary: cause.summary } : null,
       link_unreachable: linkUnreachable,
+      source_check: offer.source_check ?? null,
       gate,
       free_tier_longevity_days: gate && GATES_WITHOUT_A_LONGEVITY_REFERENT.has(gate.code) ? null : longevityDays,
       changes: vendorChanges,

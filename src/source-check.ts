@@ -2,6 +2,7 @@ import type { Offer, SourceCheck, SourceCheckOutcome } from "./types.js";
 
 export const SOURCE_CHECK_OUTCOMES: SourceCheckOutcome[] = [
   "ok",
+  "states_no_amount",
   "does_not_name_vendor",
   "states_no_terms",
   "unreadable",
@@ -47,6 +48,14 @@ export function withheldLevelSentence(
 
 export function sourceDoesNotNameVendor(offer: Pick<Offer, "source_check">): boolean {
   return offer.source_check?.outcome === "does_not_name_vendor";
+}
+
+export function sourceStatesNoAmount(offer: Pick<Offer, "source_check">): boolean {
+  return offer.source_check?.outcome === "states_no_amount";
+}
+
+export function amountUnstatedSentence(subject: string): string {
+  return `The page we cite for ${subject} names a plan but states no amount, so these limits come from our own record rather than from that page.`;
 }
 
 export function sourceCheckNotice(offer: Pick<Offer, "source_check">): SourceCheck | null {

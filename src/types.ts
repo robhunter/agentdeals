@@ -78,7 +78,12 @@ export interface Offer {
   source_check?: SourceCheck;
 }
 
-export type SourceCheckOutcome = "ok" | "does_not_name_vendor" | "states_no_terms" | "unreadable";
+export type SourceCheckOutcome =
+  | "ok"
+  | "states_no_amount"
+  | "does_not_name_vendor"
+  | "states_no_terms"
+  | "unreadable";
 
 export interface SourceCheck {
   checked: string;

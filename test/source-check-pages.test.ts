@@ -76,6 +76,19 @@ const QUOTED_FROM_THE_PAGE_IT_CITES = {
   source_check: { checked: "2026-09-02", outcome: "ok", detail: "text" },
 };
 
+const SOURCED_FROM_A_PAGE_NAMING_ONLY_A_PLAN = {
+  ...SOURCED_FROM_A_MARKETPLACE,
+  vendor: "Plancorp",
+  url: "https://plancorp.example/pricing",
+  description: "10 GB storage, 5 projects",
+  tier: "Free",
+  source_check: {
+    checked: "2026-09-02",
+    outcome: "states_no_amount",
+    detail: 'the page names Plancorp and says "Free forever" but states no amount, rate or price we can read',
+  },
+};
+
 let fixtureDir = "";
 let serverPort = 0;
 let proc: ChildProcess | null = null;
@@ -130,6 +143,7 @@ before(async () => {
           SOURCED_FROM_ITS_OWN_PAGE,
           SOURCED_FROM_A_PAGE_WE_COULD_NOT_READ,
           SOURCED_FROM_A_PAGE_STATING_NO_FIGURES,
+          SOURCED_FROM_A_PAGE_NAMING_ONLY_A_PLAN,
           QUOTED_FROM_THE_PAGE_IT_CITES,
         ],
       },
@@ -266,6 +280,61 @@ describe("a vendor page whose cited source names it but states no terms we can r
     assert.match(own, /states no terms we can read/);
     assert.doesNotMatch(own, /could not read the page we cite/);
     assert.doesNotMatch(own, /does not name it/);
+  });
+});
+
+describe("a vendor page whose cited source names a plan but states no amount", () => {
+  it("says on the page which of the two its record rests on", async () => {
+    const { body } = await get("/vendor/plancorp");
+    assert.equal(body.includes("Plancorp"), true);
+    const line = body.match(/<p class="amount-unstated-line"[\s\S]*?<\/p>/)?.[0] ?? "";
+    assert.match(line, /names a plan but states no amount/);
+    assert.match(line, /our own record/);
+  });
+
+  it("keeps its stability level rather than withholding it", async () => {
+    const { body } = await get("/vendor/plancorp");
+    const row = body.match(/<tr class="current-vendor-row">[\s\S]*?<\/tr>/)?.[0] ?? "";
+    assert.ok(row.includes("Plancorp"), "the row under test must be the vendor's own");
+    assert.match(row, /stability-dot/);
+    assert.doesNotMatch(row, /source unconfirmed/);
+  });
+
+  it("does not borrow the sentence written for a page that states nothing", async () => {
+    const own = aboutThisVendor(await get("/vendor/plancorp"));
+    assert.doesNotMatch(own, /states no terms we can read/);
+    assert.doesNotMatch(own, /could not read the page we cite/);
+    assert.doesNotMatch(own, /does not name it/);
+  });
+
+  it("carries the grade and its reason through the API", async () => {
+    const { body } = await get("/api/offers?q=plancorp");
+    const offer = JSON.parse(body).offers[0];
+    assert.strictEqual(offer.source_check.outcome, "states_no_amount");
+    assert.strictEqual(offer.risk_level, "stable");
+    assert.match(offer.source_check.detail, /Free forever/);
+  });
+
+  it("qualifies the level the risk endpoint publishes instead of leaving it bare", async () => {
+    const { body } = await get("/api/vendor-risk/plancorp");
+    const risk = JSON.parse(body);
+    assert.strictEqual(risk.risk_level, "stable");
+    assert.strictEqual(risk.source_check.outcome, "states_no_amount");
+    assert.match(risk.summary, /names a plan but states no amount/);
+  });
+
+  it("says nothing of the kind on a page whose source stated an amount", async () => {
+    const { body } = await get("/vendor/controlcorp");
+    assert.equal(body.includes("Controlcorp"), true);
+    assert.doesNotMatch(body, /amount-unstated-line/);
+    assert.doesNotMatch(body, /names a plan but states no amount/);
+  });
+
+  it("leaves the endpoint's answer for a page we could read alone", async () => {
+    const { body } = await get("/api/vendor-risk/controlcorp");
+    const risk = JSON.parse(body);
+    assert.strictEqual(risk.source_check.outcome, "ok");
+    assert.doesNotMatch(risk.summary, /states no amount/);
   });
 });
 

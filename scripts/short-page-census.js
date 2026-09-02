@@ -83,7 +83,7 @@ async function mapWithConcurrency(items, limit, fn) {
 
 function outcomeAt(offer, page, floor) {
   const floored = withMinimumLength(page, floor);
-  const signals = floored.ok ? priceSignals(floored.text).length : 0;
+  const signals = floored.ok ? priceSignals(floored.text) : [];
   return classifySource(offer, floored, signals).outcome;
 }
 
@@ -162,7 +162,7 @@ async function main() {
         offer.source_check = sourceCheckRecord(
           offer,
           floored,
-          floored.ok ? priceSignals(floored.text).length : 0,
+          floored.ok ? priceSignals(floored.text) : [],
           checked
         );
         restamped++;

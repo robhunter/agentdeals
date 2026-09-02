@@ -379,6 +379,7 @@ export const openapiSpec = {
                     link_unreachable: { type: "object", nullable: true, description: "Non-null only where a check reached a conclusion about the destination: a 404 confirmed by a full request, a 410, or a hostname with no address. Being refused (403, 429, 5xx, timeout) is evidence about our checker and never produces one of these.", properties: { last_reachable: { type: "string", format: "date", nullable: true }, checked: { type: "string", format: "date" }, terminal: { type: "boolean" } } },
                     risk_cause: { type: "object", nullable: true, description: "The single dated record that produced a non-stable risk_level. Never null when risk_level is caution or risky (#1038) — a client that renders the level must be able to render the reason.", properties: { date: { type: "string" }, change_type: { type: "string" }, summary: { type: "string" } } },
                     gate: { $ref: "#/components/schemas/Gate" },
+                    source_check: { $ref: "#/components/schemas/SourceCheck" },
                     free_tier_longevity_days: { type: "number", nullable: true, description: "Null where the gate code is offer_retired or not_a_free_offer (#1241) — a count of days a free tier has held has no referent where our own record says there is no free tier." },
                     changes: { type: "array", items: { $ref: "#/components/schemas/DealChange" } },
                     alternatives: {
@@ -923,9 +924,32 @@ export const openapiSpec = {
           tags: { type: "array", items: { type: "string" }, description: "Searchable tags" },
           verifiedDate: { type: "string", format: "date", description: "Date the offer was last verified (YYYY-MM-DD)" },
           eligibility: { $ref: "#/components/schemas/Eligibility" },
-          gate: { $ref: "#/components/schemas/Gate" }
+          gate: { $ref: "#/components/schemas/Gate" },
+          source_check: { $ref: "#/components/schemas/SourceCheck" }
         },
         required: ["vendor", "category", "description", "tier", "url", "tags", "verifiedDate"]
+      },
+      SourceCheck: {
+        type: "object",
+        nullable: true,
+        description: "What we found on the page at url when we last read it, and so how much of this record that page supports. The outcome grades our evidence, not the offer (#1268).",
+        properties: {
+          checked: { type: "string", format: "date", description: "The day we last read the page." },
+          outcome: {
+            type: "string",
+            enum: ["ok", "states_no_amount", "does_not_name_vendor", "states_no_terms", "unreadable"],
+            description: [
+              "ok — the page names the vendor and states at least one amount, rate or price in figures.",
+              "states_no_amount — the page names the vendor and names a plan or tier, but every price signal on it is a phrase such as \"Enterprise plan\" or \"Free forever\" and none is a figure (#1268). The quantities in description come from our own entry, not from that page. risk_level is still published and the summary says so, rather than being withheld.",
+              "does_not_name_vendor — the page never names the vendor and is not served from its domain.",
+              "states_no_terms — the page names the vendor but carries no price signal of any kind.",
+              "unreadable — the fetch produced no body we could read.",
+              "The last three withhold a favourable risk_level; the first two do not."
+            ].join(" ")
+          },
+          detail: { type: "string", description: "What the check found, in its own words: for ok, how the page named the vendor; for states_no_amount, the phrase that was the page's entire price evidence; otherwise why the page cannot confirm the record." }
+        },
+        required: ["checked", "outcome", "detail"]
       },
       Gate: {
         type: "object",
