@@ -826,7 +826,7 @@ export function checkVendorRisk(
   } else {
     summary = `${vendorHistorySentence(offer.vendor, "stable", cause)} Free tier verified for ${longevityDays} days.`;
   }
-  if (!withheldReason && sourceStatesNoAmount(offer)) {
+  if (!gate && !withheldReason && sourceStatesNoAmount(offer)) {
     summary = `${summary} ${amountUnstatedSentence(offer.vendor)}`;
   }
 

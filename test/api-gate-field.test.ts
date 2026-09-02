@@ -7,6 +7,7 @@ import { fileURLToPath } from "node:url";
 
 const { gateFor, utcDate, GATE_TABLE } = await import("../dist/ranking.js");
 const { gateClauseList, gateDisclosureSentence, matchingSubject } = await import("../dist/gate-disclosure.js");
+const { LEVEL_WITHHOLDING_OUTCOMES } = await import("../dist/source-check.js");
 
 type Offer = import("../src/types.ts").Offer;
 type Gate = { code: string; reason: string } | null;
@@ -343,7 +344,7 @@ describe("/api/vendor-risk does not rate an offer we do not list (issue #1241 Pa
   });
 
   it("a gated record whose cited page we could not read still says which page we could not read", async () => {
-    const withheld = gatedRecords.filter(o => firstRecordForItsVendor(o) && o.source_check && o.source_check.outcome !== "ok");
+    const withheld = gatedRecords.filter(o => firstRecordForItsVendor(o) && o.source_check && LEVEL_WITHHOLDING_OUTCOMES.includes(o.source_check.outcome));
     assert.ok(withheld.length > 0, "no gated record currently carries a source check we could not read");
     let cited = 0;
     for (const record of withheld.slice(0, 25)) {

@@ -348,7 +348,7 @@ describe("every restriction we have stored survives its own rule", () => {
     for (const vendor of ["Postman", "Netlify", "Google Gemini API", "GitHub Copilot"]) {
       assert.ok(kept.has(vendor), `${vendor} keeps its restriction record`);
     }
-    assert.strictEqual(stored.filter(c => c.change_type === "record_corrected").length, 2);
+    assert.strictEqual(stored.filter(c => c.change_type === "record_corrected").length, 3);
   });
 
   it("is not vacuous — the population is large enough to have caught the seven", () => {
