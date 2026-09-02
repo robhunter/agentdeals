@@ -2325,7 +2325,7 @@
     {
       "vendor": "Cursor",
       "category": "AI Coding",
-      "description": "AI-powered code editor built on VS Code. Hobby is the free plan: no credit card required, limited Agent requests, access to Composer — cursor.com/pricing states no completion or request figure for it. Individual paid plans start at $20/month (Pro), with Pro+ at 3x Pro's Agent limits and Ultra at 20x. Teams $40/user/month (Standard; Premium at 5x Standard's Agent limits). Enterprise is custom-priced with pooled usage, invoice/PO billing and SCIM.",
+      "description": "AI-powered code editor built on VS Code. Hobby is the free plan: no credit card required, limited Agent requests, access to Composer — cursor.com/pricing states no completion or request figure for it. Individual paid plans: Pro $20/month, Pro+ $60/month (3x Pro's Agent limits), Ultra $200/month (20x). Teams $40/user/month (Standard; Premium at 5x Standard's Agent limits). Enterprise is custom-priced with pooled usage, invoice/PO billing and SCIM. Cursor renders only the selected tier's price in the page body; the full ladder is published in the page's JSON-LD Offer list.",
       "tier": "Free",
       "url": "https://www.cursor.com/pricing",
       "tags": [
