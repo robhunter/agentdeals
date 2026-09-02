@@ -14,6 +14,7 @@ const {
   pageTooLargeError,
   MAX_PAGE_TEXT_LENGTH,
   MAX_PAGE_BYTES,
+  MIN_PAGE_TEXT_LENGTH,
   VERIFIER_MODEL,
   VERIFIER_BASE_URL,
 } = await import("../scripts/verify-freshness.js");
@@ -30,7 +31,8 @@ function pageStatingNoTermsAtAnyLength(vendor: string) {
   return `<html><body><nav>${nav(vendor)}</nav><main>${vendor} helps teams ship. Talk to our team about what you need.</main></body></html>`;
 }
 
-const SHORT_PAGE = `<html><body><p>Widgetson pricing. The free plan is $0 per month for up to 5 hosts, with 1-day retention.</p></body></html>`;
+const SHORT_PAGE_BODY = `Widgetson pricing. The free plan is $0 per month for up to 5 hosts, with 1-day retention.${" Paid plans add retention, alerting and single sign-on.".repeat(9)}`;
+const SHORT_PAGE = `<html><body><p>${SHORT_PAGE_BODY}</p></body></html>`;
 
 async function readWith(body: string, init: ResponseInit = {}, options = {}) {
   const original = globalThis.fetch;
@@ -98,6 +100,7 @@ describe("a page is read to its end, not to a fixed number of characters", () =>
     const page = await readWith(SHORT_PAGE);
     assert.strictEqual(page.ok, true);
     assert.strictEqual(page.truncated, false);
+    assert.ok(page.text.length >= MIN_PAGE_TEXT_LENGTH && page.text.length < MAX_PAGE_TEXT_LENGTH);
     assert.strictEqual(outcomeFor(page.text), "ok");
   });
 });

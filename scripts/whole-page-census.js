@@ -4,7 +4,7 @@ import { readFileSync, writeFileSync, existsSync, mkdirSync } from "node:fs";
 import { createHash } from "node:crypto";
 import { resolve, dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { MAX_PAGE_TEXT_LENGTH, readBodyWithin } from "./verify-freshness.js";
+import { MAX_PAGE_TEXT_LENGTH, readBodyWithin, withMinimumLength } from "./verify-freshness.js";
 import { priceSignals } from "./change-gate.js";
 import { pageNamesVendor, classifySource, sourceCheckRecord } from "./vendor-naming.js";
 
@@ -54,10 +54,7 @@ async function fetchMeasured(url) {
     if (body.tooLarge) return { ok: false, error: `page too large: ${body.bytes} bytes` };
     const bytes = Buffer.byteLength(body.html);
     const text = stripHtml(body.html);
-    if (text.length < 50) {
-      return { ok: false, error: "page content too short (likely JS-rendered SPA)" };
-    }
-    return { ok: true, text, bytes };
+    return withMinimumLength({ ok: true, text, bytes });
   } catch (err) {
     return { ok: false, error: err.name === "AbortError" ? "timeout" : err.message };
   } finally {
