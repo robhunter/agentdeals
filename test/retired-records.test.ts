@@ -88,13 +88,26 @@ function renderedOffer(html: string): Offer | undefined {
   return offers.find(o => o.vendor === vendor && o.tier === tier);
 }
 
-function anchorsTo(html: string, url: string): number {
-  const pattern = new RegExp(`<a [^>]*href="${url.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}"`, "g");
-  return [...html.matchAll(pattern)].length;
+const CITATION_CLASS = "change-source";
+
+function openingTagsFor(html: string, url: string): string[] {
+  const pattern = new RegExp(`<a [^>]*href="${url.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}"[^>]*>`, "g");
+  return [...html.matchAll(pattern)].map(m => m[0]);
 }
+
+function anchorsTo(html: string, url: string): number {
+  return openingTagsFor(html, url).filter(tag => !tag.includes(`class="${CITATION_CLASS}"`)).length;
+}
+
+function citationsTo(html: string, url: string): number {
+  return openingTagsFor(html, url).filter(tag => tag.includes(`class="${CITATION_CLASS}"`)).length;
+}
+
+const changes: Array<{ source_url?: string }> = JSON.parse(readFileSync(path.join(REPO, "data", "deal_changes.json"), "utf-8")).changes;
 
 const retiredRecords = offers.filter(o => offerRetired(o));
 const retiredUrls = [...new Set(retiredRecords.map(o => o.url))];
+const citedRetiredUrls = retiredUrls.filter(url => changes.some(c => c.source_url === url));
 const vendorPaths = [...new Set(offers.map(o => `/vendor/${slugOf(o.vendor)}`))];
 
 type RenderedPage = { slug: string; html: string; offer: Offer };
@@ -178,6 +191,24 @@ describe("a record marked retired in its tier is read as retired", () => {
       }
     }
     assert.deepStrictEqual(offenders, []);
+  });
+
+  it("keeps citing the page a change was read from, even where the offer has since ended", (t) => {
+    if (citedRetiredUrls.length === 0) return t.skip("no ended offer's URL is the source of a change record");
+    for (const url of citedRetiredUrls) {
+      const citing = sweptPaths.filter(p => citationsTo(pages.get(p) ?? "", escapeHtml(url)) > 0);
+      assert.ok(citing.length > 0, `no page cites ${url} as the source of the change recorded against it`);
+    }
+  });
+
+  it("counts a citation apart from an offer of the thing, so the exemption cannot cover a live link", () => {
+    const cited = '<a href="https://x.test/pricing" target="_blank" rel="noopener" class="change-source">Source</a>';
+    const offered = '<a href="https://x.test/pricing" class="cta">Get it</a>';
+    assert.strictEqual(anchorsTo(cited, "https://x.test/pricing"), 0);
+    assert.strictEqual(citationsTo(cited, "https://x.test/pricing"), 1);
+    assert.strictEqual(anchorsTo(offered, "https://x.test/pricing"), 1);
+    assert.strictEqual(citationsTo(offered, "https://x.test/pricing"), 0);
+    assert.strictEqual(anchorsTo(cited + offered, "https://x.test/pricing"), 1);
   });
 });
 

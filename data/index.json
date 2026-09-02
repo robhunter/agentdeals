@@ -30768,7 +30768,7 @@
       "vendor": "Augment Code",
       "category": "AI Coding",
       "description": "AI coding assistant with deep codebase understanding. No free tier. Indie plan $20/month (40K credits). Standard $60/dev/month (130K credits, up to 20 users). Credit-based consumption model. Supports VS Code, JetBrains, and CLI. SOC 2 Type II certified",
-      "tier": "Free",
+      "tier": "Retired",
       "url": "https://www.augmentcode.com/pricing",
       "tags": [
         "ai",
