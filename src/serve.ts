@@ -20,7 +20,7 @@ import { offerEnded, offerRetired, recordedTierSentence, endedHeadline, endedHis
 import { levelWithheldReason, withheldLevelClause, withheldLevelSentence } from "./source-check.js";
 import { buildComparisonMap, comparisonSlug } from "./comparison-pairs.js";
 import { stabilityFaqAnswer, stabilityVerdictClause, type ComparisonSide, type StabilityRating } from "./comparison-verdict.js";
-import { publishedVendorLevel, vendorVerdictSentence, narrowingSentence, changeKindNoun, type VendorVerdictInput } from "./vendor-verdict.js";
+import { publishedVendorLevel, vendorVerdictSentence, vendorBadge, statesRiskCause, narrowingSentence, changeKindNoun, type VendorVerdictInput } from "./vendor-verdict.js";
 import { vendorHistorySentence } from "./vendor-history.js";
 import { growthLimitPhrases } from "./growth-limits.js";
 import { registerAgent, authenticateRequest, validateVestauthUrl, hashApiKey, updateAgentX402Address, getAgentById } from "./agents.js";
@@ -3703,28 +3703,47 @@ function buildVendorPage(slug: string): string | null {
   const riskCause = enriched.risk_cause;
   const riskLevel = publishedVendorLevel(enriched.risk_level ?? null, riskCause);
   const riskColor = riskColors[riskLevel] ?? "#8b949e";
-  const riskCauseLine = riskLevel !== "stable" && riskCause
-    ? `  <p class="risk-cause-line" style="margin:.4rem 0 .6rem;font-size:.9rem;color:var(--text-muted)"><strong style="color:${riskColor}">Why ${riskLevel}:</strong> <span class="risk-cause-date" style="font-family:var(--mono)">${escHtmlServer(changeDateLabel(riskCause))}</span> &mdash; ${escHtmlServer(riskCause.summary)} <a href="#changes" style="white-space:nowrap">Full history &darr;</a></p>`
-    : "";
 
   const servedOn = new Date().toISOString().slice(0, 10);
   const discontinuedOn = discontinuedOnOrBefore(vendorChanges, servedOn);
 
   const linkUnreachable = enriched.link_unreachable;
   const offerHasEnded = offerEnded(primary);
+  const primaryGate = gateFor(primary, servedOn);
+  const unconfirmableSince = linkUnreachable
+    ? (linkUnreachable.last_reachable ? ` since ${linkUnreachable.last_reachable}` : "")
+    : "";
+  const levelWithheld = levelWithheldReason(primary, linkUnreachable);
+  const withheldClause = levelWithheld ? withheldLevelClause(levelWithheld, unconfirmableSince) : "";
+  const verdictInput: VendorVerdictInput = {
+    vendor: vendorName,
+    level: enriched.risk_level ?? null,
+    cause: riskCause,
+    changes: vendorChanges,
+    levelWithheld,
+    unconfirmableSince,
+    offerEnded: offerHasEnded,
+    gated: primaryGate !== null,
+    linkUnreachable: Boolean(linkUnreachable),
+  };
+
+  const riskCauseLine = statesRiskCause(verdictInput) && riskCause
+    ? `  <p class="risk-cause-line" style="margin:.4rem 0 .6rem;font-size:.9rem;color:var(--text-muted)"><strong style="color:${riskColor}">Why ${riskLevel}:</strong> <span class="risk-cause-date" style="font-family:var(--mono)">${escHtmlServer(changeDateLabel(riskCause))}</span> &mdash; ${escHtmlServer(riskCause.summary)} <a href="#changes" style="white-space:nowrap">Full history &darr;</a></p>`
+    : "";
+
   const retiredBadgeColor = "#8b949e";
-  const h1RiskBadge = offerHasEnded
+  const badge = vendorBadge(verdictInput);
+  const h1RiskBadge = badge.kind === "ended"
     ? ` <span class="risk-badge" style="background:${retiredBadgeColor}20;color:${retiredBadgeColor};border:1px solid ${retiredBadgeColor}40">${ENDED_BADGE_LABEL}</span>`
-    : enriched.risk_level === null || (linkUnreachable && riskLevel === "stable")
-    ? ""
-    : ` <span class="risk-badge" style="background:${riskColor}20;color:${riskColor};border:1px solid ${riskColor}40">${riskLevel}</span>`;
+    : badge.kind === "rating"
+    ? ` <span class="risk-badge" style="background:${riskColor}20;color:${riskColor};border:1px solid ${riskColor}40">${badge.word}</span>`
+    : "";
   const linkUnreachableLine = linkUnreachable
     ? `  <p class="link-unreachable-line" style="margin:.4rem 0 .6rem;font-size:.9rem;color:var(--text-muted)"><strong style="color:#f85149">Link unreachable:</strong> ${escHtmlServer(primary.url)} did not resolve on our check of <span class="link-checked-date" style="font-family:var(--mono)">${escHtmlServer(linkUnreachable.checked)}</span>. ${linkUnreachable.last_reachable ? `Last reachable <span class="link-last-reachable" style="font-family:var(--mono)">${escHtmlServer(linkUnreachable.last_reachable)}</span>.` : "We have no date on which it was reachable."}</p>`
     : "";
 
   const primaryEligibilityGate = eligibilityGate(primary);
   const primaryEligibilityConditions = publishableEligibilityConditions(primary);
-  const primaryGate = gateFor(primary, servedOn);
   const primaryGateBeyondEligibility = primaryGate && primaryGate.code !== "eligibility_restricted" ? primaryGate : null;
   const productionGate = primaryGate && GATES_LEAVING_NO_FREE_TIER.includes(primaryGate.code) ? primaryGate : null;
   const linedGate = primaryGate && primaryGate.code !== "offer_retired" ? primaryGate : null;
@@ -3804,21 +3823,6 @@ function buildVendorPage(slug: string): string | null {
     : `${vendorName} pricing details${alternatives.length > 0 ? ` and ${alternatives.length} free alternatives in ${primary.category}` : ""}.${verifiedSentence}`);
 
   const keyLimit = primary.description.slice(0, 120).replace(/\.\s.*$/, "");
-  const unconfirmableSince = linkUnreachable
-    ? (linkUnreachable.last_reachable ? ` since ${linkUnreachable.last_reachable}` : "")
-    : "";
-  const levelWithheld = levelWithheldReason(primary, linkUnreachable);
-  const withheldClause = levelWithheld ? withheldLevelClause(levelWithheld, unconfirmableSince) : "";
-  const verdictInput: VendorVerdictInput = {
-    vendor: vendorName,
-    level: enriched.risk_level ?? null,
-    cause: riskCause,
-    changes: vendorChanges,
-    levelWithheld,
-    unconfirmableSince,
-    offerEnded: offerHasEnded,
-    gated: primaryGate !== null,
-  };
   const verdictLine2 = vendorVerdictSentence(verdictInput);
   const verdictLine3 = discontinuedOn
     ? `${vendorName} was discontinued on ${discontinuedOn}, so it is not a current option${alternatives.length > 0 ? ` — the ${alternatives.length} alternatives below are replacements` : ""}.`

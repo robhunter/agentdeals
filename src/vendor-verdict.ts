@@ -37,7 +37,13 @@ export interface VendorVerdictInput {
   unconfirmableSince: string;
   offerEnded?: boolean;
   gated?: boolean;
+  linkUnreachable?: boolean;
 }
+
+export type VendorBadge =
+  | { kind: "ended" }
+  | { kind: "rating"; word: PublishedRiskLevel }
+  | { kind: "none" };
 
 export function publishedVendorLevel(
   level: PublishedRiskLevel | null,
@@ -67,6 +73,20 @@ export function vendorVerdictWord(input: VendorVerdictInput): PublishedRiskLevel
   if (input.offerEnded) return null;
   if (withholdingDecides(input)) return null;
   return publishedVendorLevel(input.level, input.cause);
+}
+
+export function vendorBadge(input: VendorVerdictInput): VendorBadge {
+  if (input.offerEnded) return { kind: "ended" };
+  if (input.gated) return { kind: "none" };
+  if (input.level === null) return { kind: "none" };
+  const level = publishedVendorLevel(input.level, input.cause);
+  if (input.linkUnreachable && level === "stable") return { kind: "none" };
+  return { kind: "rating", word: level };
+}
+
+export function statesRiskCause(input: VendorVerdictInput): boolean {
+  const word = vendorVerdictWord(input);
+  return word !== null && word !== "stable" && input.cause !== null;
 }
 
 export function narrowingSentence(changes: VendorVerdictInput["changes"]): string {
