@@ -19,7 +19,12 @@ import {
   REJECT_PAGE_NOT_ABOUT_VENDOR,
   REJECT_UNQUANTIFIED_LIMIT,
 } from "./change-gate.js";
-import { sourceCheckRecord, SOURCE_CHECK_OK, SOURCE_CHECK_OUTCOMES } from "./vendor-naming.js";
+import {
+  sourceCheckRecord,
+  holdsVerifiedDate,
+  SOURCE_CHECK_OK,
+  SOURCE_CHECK_OUTCOMES,
+} from "./vendor-naming.js";
 import { isoDay } from "./change-log.js";
 import { recordRefusals, readRefusals, refusalHolds, offerKey } from "./change-refusals.js";
 import {
@@ -60,7 +65,7 @@ const QUARANTINE_RETRY_SHARE = 0.2;
 
 export function lastAttemptedDate(offer, refusedOn = null, verificationRecord = null) {
   const check = offer?.source_check;
-  const held = check && check.outcome !== SOURCE_CHECK_OK ? check.checked : null;
+  const held = check && holdsVerifiedDate(check.outcome) ? check.checked : null;
   const dates = [offer?.verifiedDate, held, refusedOn, verificationRecord?.last_attempt_at].filter(Boolean);
   return dates.length > 0 ? dates.sort().pop() : null;
 }
@@ -125,11 +130,11 @@ function sleep(ms) {
 }
 
 function applySourceCheck(offer, index, page, data, dryRun, now, counters) {
-  const signals = page?.ok ? priceSignals(page.text).length : 0;
+  const signals = page?.ok ? priceSignals(page.text) : [];
   const check = sourceCheckRecord(offer, page, signals, isoDay(now));
   counters.set(check.outcome, (counters.get(check.outcome) ?? 0) + 1);
   if (!dryRun) data.offers[index].source_check = check;
-  if (check.outcome !== SOURCE_CHECK_OK) {
+  if (holdsVerifiedDate(check.outcome)) {
     console.log(`  ⊘ ${offer.vendor} — verifiedDate held at ${offer.verifiedDate}: ${check.detail} (${offer.url})`);
   }
   return check;
@@ -164,7 +169,7 @@ export async function runUrlMode(picked, data, dryRun, now, options = {}) {
       const offer = byIndex.get(v.index);
       const page = await fetchFn(offer.url);
       const check = applySourceCheck(offer, v.index, page, data, dryRun, now, sourceChecks);
-      if (check.outcome !== SOURCE_CHECK_OK) {
+      if (holdsVerifiedDate(check.outcome)) {
         recorder.note(offer, ATTEMPT_SOURCE_UNUSABLE, check.detail, FAILURE_SOURCE_UNUSABLE);
         continue;
       }
@@ -210,7 +215,7 @@ export async function runAiMode(picked, data, dryRun, now, options = {}) {
     const { offer, index } = entry;
     const page = await fetchFn(offer.url);
     const check = applySourceCheck(offer, index, page, data, dryRun, now, sourceChecks);
-    const sourceOk = check.outcome === SOURCE_CHECK_OK;
+    const sourceOk = !holdsVerifiedDate(check.outcome);
     if (!page.ok) {
       console.log(`  ⚠ ${offer.vendor} — ${page.error} (${offer.url})`);
       recorder.note(offer, ATTEMPT_FETCH_FAILED, page.error, classifyFetchError(page.error));
@@ -379,7 +384,8 @@ export function summaryLines(result, { useAi, checked, oldestRemaining, total, q
   const sourceChecks = result.sourceChecks ?? new Map();
   for (const outcome of SOURCE_CHECK_OUTCOMES) {
     if (outcome === SOURCE_CHECK_OK) continue;
-    lines.push(`Held back (source ${outcome}): ${sourceChecks.get(outcome) ?? 0}`);
+    const label = holdsVerifiedDate(outcome) ? "Held back" : "Verified on weaker evidence";
+    lines.push(`${label} (source ${outcome}): ${sourceChecks.get(outcome) ?? 0}`);
   }
   lines.push(`Flagged (URL/AI failure): ${result.flagged}`);
   for (const line of quarantineLines(quarantine)) lines.push(line);

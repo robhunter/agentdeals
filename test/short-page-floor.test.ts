@@ -60,7 +60,7 @@ async function readWith(body: string) {
 }
 
 function outcomeFor(page: { ok: boolean; text?: string }) {
-  const signals = page.ok ? priceSignals(page.text as string).length : 0;
+  const signals = page.ok ? priceSignals(page.text as string) : [];
   return classifySource(OFFER, page, signals).outcome;
 }
 

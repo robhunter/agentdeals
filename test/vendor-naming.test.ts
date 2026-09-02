@@ -160,19 +160,19 @@ describe("what a re-verification learned about the cited page", () => {
   const offer = { vendor: "Cloudways", url: "https://www.joinsecret.com/offers" };
 
   it("separates a page about somebody else from a page that says nothing", () => {
-    const notNamed = classifySource(offer, { ok: true, text: JOINSECRET_OFFERS_PAGE }, 78);
+    const notNamed = classifySource(offer, { ok: true, text: JOINSECRET_OFFERS_PAGE }, priceSignals(JOINSECRET_OFFERS_PAGE));
     assert.strictEqual(notNamed.outcome, SOURCE_CHECK_NOT_NAMED);
 
     const noTerms = classifySource(
       { vendor: "Doczilla", url: "https://doczilla.app" },
       { ok: true, text: "Doczilla creates PDFs and screenshots." },
-      0
+      []
     );
     assert.strictEqual(noTerms.outcome, SOURCE_CHECK_NO_TERMS);
   });
 
   it("records a fetch failure as its own outcome rather than as a naming verdict", () => {
-    const result = classifySource(offer, { ok: false, error: "HTTP 503" }, 0);
+    const result = classifySource(offer, { ok: false, error: "HTTP 503" }, []);
     assert.strictEqual(result.outcome, SOURCE_CHECK_UNREADABLE);
     assert.match(result.detail, /503/);
   });
@@ -181,7 +181,7 @@ describe("what a re-verification learned about the cited page", () => {
     const result = classifySource(
       { vendor: "Vercel", url: "https://vercel.com/pricing" },
       { ok: true, text: "Vercel Hobby plan, free forever. Pro is $20/month." },
-      3
+      priceSignals("Vercel Hobby plan, free forever. Pro is $20/month.")
     );
     assert.strictEqual(result.outcome, SOURCE_CHECK_OK);
   });

@@ -119,8 +119,8 @@ async function main() {
     const cut = whole.ok
       ? { ok: true, text: whole.text.slice(0, MAX_PAGE_TEXT_LENGTH) }
       : whole;
-    const wholeClass = classifySource(offer, whole, whole.ok ? priceSignals(whole.text).length : 0);
-    const cutClass = classifySource(offer, cut, cut.ok ? priceSignals(cut.text).length : 0);
+    const wholeClass = classifySource(offer, whole, whole.ok ? priceSignals(whole.text) : []);
+    const cutClass = classifySource(offer, cut, cut.ok ? priceSignals(cut.text) : []);
     const firstSignal = whole.ok
       ? (() => {
           const sigs = priceSignals(whole.text);
@@ -136,7 +136,7 @@ async function main() {
         offer.source_check = sourceCheckRecord(
           offer,
           whole,
-          priceSignals(whole.text).length,
+          priceSignals(whole.text),
           checked
         );
         restamped++;

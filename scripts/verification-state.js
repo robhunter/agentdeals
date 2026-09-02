@@ -6,7 +6,7 @@ import { fileURLToPath } from "node:url";
 import { isoDay } from "./change-log.js";
 import { offerKey } from "./change-refusals.js";
 import {
-  SOURCE_CHECK_OK,
+  holdsVerifiedDate,
   SOURCE_CHECK_UNREADABLE,
 } from "./vendor-naming.js";
 
@@ -237,7 +237,7 @@ export function backfillVerificationState(state, offers, options = {}) {
     const key = offerKey(offer?.vendor, offer?.url);
     if (state.has(key)) continue;
     const check = offer?.source_check;
-    if (!check || check.outcome === SOURCE_CHECK_OK) continue;
+    if (!check || !holdsVerifiedDate(check.outcome)) continue;
     const link = linkHealth.get(offer.url) ?? null;
     const failures = backfillFailureCount(link);
     const record = {

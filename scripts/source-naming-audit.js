@@ -70,7 +70,7 @@ async function main() {
 
   const rows = offers.map((offer) => {
     const page = pages.get(offer.url) ?? { ok: false, error: "not fetched" };
-    const signals = page.ok ? priceSignals(page.text).length : 0;
+    const signals = page.ok ? priceSignals(page.text) : [];
     if (writeIndex) offer.source_check = sourceCheckRecord(offer, page, signals, checked);
     if (!page.ok) {
       return { vendor: offer.vendor, category: offer.category, url: offer.url, fetch_ok: false, error: page.error };
