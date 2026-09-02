@@ -37,15 +37,19 @@ export const PAGE_DATA_SOURCE_RULE: Record<PageDataSource, string> = {
 
 export const UNSOURCED_TIER_A_BASELINE = 43;
 
+export const STALE_FACT_PAGES_BASELINE = 57;
+
 export interface PageReviewRecord {
   path: string;
   published: string;
   tier: ReviewTier;
   vendors_asserted: string[];
+  vendors_tabulated: string[];
   badge_subjects_unresolved: string[];
   reviewed_at: string | null;
   reviewer: string | null;
   review_outcome: ReviewOutcome | null;
+  review_note: string | null;
   reads_index: boolean;
   reads_changes: boolean;
   data_source: PageDataSource;
@@ -69,7 +73,9 @@ export interface ReviewStatus {
   days_overdue: number;
   state: ReviewState;
   review_outcome: ReviewOutcome | null;
+  review_note: string | null;
   vendors_asserted: string[];
+  vendors_tabulated: string[];
   badge_subjects_unresolved: string[];
   reads_index: boolean;
   reads_changes: boolean;
@@ -102,10 +108,12 @@ function normalizeRecord(raw: any): PageReviewRecord | null {
     published: raw.published,
     tier,
     vendors_asserted: Array.isArray(raw.vendors_asserted) ? raw.vendors_asserted.filter((s: unknown) => typeof s === "string") : [],
+    vendors_tabulated: Array.isArray(raw.vendors_tabulated) ? raw.vendors_tabulated.filter((s: unknown) => typeof s === "string") : [],
     badge_subjects_unresolved: Array.isArray(raw.badge_subjects_unresolved) ? raw.badge_subjects_unresolved.filter((s: unknown) => typeof s === "string") : [],
     reviewed_at: reviewedAt,
     reviewer: typeof raw.reviewer === "string" && raw.reviewer ? raw.reviewer : null,
     review_outcome: reviewedAt !== null && REVIEW_OUTCOMES.includes(raw.review_outcome) ? raw.review_outcome : null,
+    review_note: reviewedAt !== null && typeof raw.review_note === "string" && raw.review_note.trim() ? raw.review_note.trim() : null,
     reads_index: raw.reads_index === true,
     reads_changes: raw.reads_changes === true,
     data_source: PAGE_DATA_SOURCES.includes(raw.data_source) ? raw.data_source : "unsourced",
@@ -181,7 +189,9 @@ export function reviewStatus(record: PageReviewRecord, today: string): ReviewSta
     days_overdue: overdue,
     state,
     review_outcome: reviewedAt === null ? null : record.review_outcome,
+    review_note: reviewedAt === null ? null : record.review_note,
     vendors_asserted: record.vendors_asserted,
+    vendors_tabulated: record.vendors_tabulated,
     badge_subjects_unresolved: record.badge_subjects_unresolved,
     reads_index: record.reads_index,
     reads_changes: record.reads_changes,
@@ -275,6 +285,85 @@ export function verdictsOutdatedBy(status: ReviewStatus, changeDateFor: (slug: s
     if (changed && changed > status.clock_starts) out.push({ slug, changed });
   }
   return out.sort((a, b) => b.changed.localeCompare(a.changed) || a.slug.localeCompare(b.slug));
+}
+
+export function newestChangeBySlug(
+  changes: Array<{ vendor?: string; date?: string }>,
+  notAfter: string,
+  slugFor: (vendor: string) => string
+): Map<string, string> {
+  const newest = new Map<string, string>();
+  for (const c of changes) {
+    if (!c.vendor || !c.date || c.date > notAfter) continue;
+    const slug = slugFor(c.vendor);
+    const current = newest.get(slug);
+    if (!current || c.date > current) newest.set(slug, c.date);
+  }
+  return newest;
+}
+
+export type FactSurface = "verdict" | "table";
+
+export interface OutdatedFact extends OutdatedVerdict {
+  surface: FactSurface;
+}
+
+export interface StatedVendors {
+  vendors_asserted: string[];
+  vendors_tabulated: string[];
+}
+
+export function vendorsStatedBy(record: StatedVendors): string[] {
+  return [...new Set([...record.vendors_asserted, ...record.vendors_tabulated])].sort();
+}
+
+export function factsOutdatedBy(status: ReviewStatus, changeDateFor: (slug: string) => string | null): OutdatedFact[] {
+  const asserted = new Set(status.vendors_asserted);
+  const out: OutdatedFact[] = [];
+  for (const slug of vendorsStatedBy(status)) {
+    const changed = changeDateFor(slug);
+    if (changed && changed > status.clock_starts) out.push({ slug, changed, surface: asserted.has(slug) ? "verdict" : "table" });
+  }
+  return out.sort((a, b) => b.changed.localeCompare(a.changed) || a.slug.localeCompare(b.slug));
+}
+
+export interface StaleFactPage {
+  path: string;
+  clock_starts: string;
+  state: ReviewState;
+  facts: OutdatedFact[];
+}
+
+export function staleFactPages(
+  pages: PageReviewRecord[],
+  today: string,
+  changeDateFor: (slug: string) => string | null
+): StaleFactPage[] {
+  const out: StaleFactPage[] = [];
+  for (const page of pages) {
+    const status = reviewStatus(page, today);
+    const facts = factsOutdatedBy(status, changeDateFor);
+    if (facts.length > 0) out.push({ path: page.path, clock_starts: status.clock_starts, state: status.state, facts });
+  }
+  return out.sort((a, b) => b.facts.length - a.facts.length || a.path.localeCompare(b.path));
+}
+
+export function staleFactViolations(
+  pages: PageReviewRecord[],
+  today: string,
+  changeDateFor: (slug: string) => string | null,
+  budget: number = STALE_FACT_PAGES_BASELINE
+): PageSourceViolation[] {
+  const stale = staleFactPages(pages, today, changeDateFor);
+  if (stale.length === budget) return [];
+  const direction =
+    stale.length > budget
+      ? `${stale.length - budget} more than the budget allows, and the budget does not rise. The cohort is ${stale.map(p => p.path).sort().join(", ")}`
+      : `lower STALE_FACT_PAGES_BASELINE to ${stale.length} so the slot cannot be reused`;
+  return [{
+    path: "",
+    problem: `${stale.length} pages state a vendor fact whose record moved after the page was last read — ${direction}`,
+  }];
 }
 
 export interface OverdueReport {

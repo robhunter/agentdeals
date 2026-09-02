@@ -1,5 +1,5 @@
 import { readFileSync, writeFileSync } from "node:fs";
-import { overdueReport, pageReviewsPath, parsePageReviews } from "../dist/page-reviews.js";
+import { overdueReport, pageReviewsPath, parsePageReviews, vendorsStatedBy } from "../dist/page-reviews.js";
 
 const HELP = `Record that an editorial page was re-read, and what the reading found.
 
@@ -11,10 +11,11 @@ model actually read the prose.
 than a review passed. A page whose review found defects renders "corrections outstanding"
 beside its compilation date until someone fixes them and reviews it again.
 
-A pass is refused unless --checked names every vendor the page's verdict blocks commit
-us to. A verdict that awards a badge to a vendor whose record has since moved is the
-failure this guards against, so a review that skipped that vendor is not a pass. A fail
-carries no such requirement: a reader who finds one wrong number has found the page
+A pass is refused unless --checked names every vendor the page states a fact about —
+both the ones its verdict blocks commit us to and the ones it puts a number beside in a
+table. A figure that has since moved is the failure this guards against, and it does not
+matter which surface published it, so a review that skipped that vendor is not a pass. A
+fail carries no such requirement: a reader who finds one wrong number has found the page
 wrong, and making them finish the sweep first is what leaves the defect unrecorded.
 
 Usage: node scripts/review-page.js --path <route> --outcome <pass|fail> --reviewer <name> [options]
@@ -90,12 +91,13 @@ if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) fail(`--date must be YYYY-MM-DD, got ${da
 if (date > today) fail(`--date ${date} is in the future`);
 if (date < record.published) fail(`--date ${date} precedes the page's publication (${record.published})`);
 
+const stated = vendorsStatedBy(record);
 const checked = new Set((opts.checked ?? "").split(",").map(s => s.trim()).filter(Boolean));
-const missing = record.vendors_asserted.filter(slug => !checked.has(slug));
+const missing = stated.filter(slug => !checked.has(slug));
 if (opts.outcome === "pass" && missing.length > 0) {
-  fail(`${opts.path} states a verdict about ${record.vendors_asserted.length} vendors and --checked omits ${missing.length}: ${missing.join(", ")}`);
+  fail(`${opts.path} states a fact about ${stated.length} vendors and --checked omits ${missing.length}: ${missing.join(", ")}`);
 }
-const unexpected = [...checked].filter(slug => !record.vendors_asserted.includes(slug));
+const unexpected = [...checked].filter(slug => !stated.includes(slug));
 
 record.reviewed_at = date;
 record.reviewer = opts.reviewer;
@@ -103,8 +105,9 @@ record.review_outcome = opts.outcome;
 
 console.log(`${opts.path} reviewed ${date} by ${opts.reviewer} — ${opts.outcome}`);
 console.log(`  vendors its verdicts commit us to: ${record.vendors_asserted.length ? record.vendors_asserted.join(", ") : "(none stated)"}`);
+console.log(`  vendors it puts a number beside in a table: ${record.vendors_tabulated.length ? record.vendors_tabulated.join(", ") : "(none)"}`);
 if (missing.length > 0) console.log(`  of those, not checked: ${missing.join(", ")}`);
-if (unexpected.length > 0) console.log(`  also checked, not stated in a verdict block: ${unexpected.join(", ")}`);
+if (unexpected.length > 0) console.log(`  also checked, not a fact the page states: ${unexpected.join(", ")}`);
 if (opts.dryRun) {
   console.log("dry run — nothing written");
   process.exit(0);

@@ -6,7 +6,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import {
   CATALOGUE_TEXT_FIELDS, CHANGE_LOG_TEXT_FIELDS, deriveTier, parsePageReviews, pageReviewsPath,
-  perturbTextFields, unresolvedBadgeSubjects, vendorsAssertedIn,
+  perturbTextFields, unresolvedBadgeSubjects, vendorFactRows, vendorsAssertedIn,
 } from "../dist/page-reviews.js";
 import { assertedVendorSlugs, isNonVendorSubject, namedVendorSlug, vendorSlugMap } from "../dist/vendor-slug.js";
 
@@ -16,8 +16,10 @@ const HELP = `Rebuild the editorial page review registry.
 
 Renders every page that carries hand-written prose, derives its review tier from
 whether it states a verdict naming a vendor, and records which vendors that verdict
-commits us to. Review dates already on record are carried over untouched: this
-regenerates what is derived, never what a reviewer asserted.
+commits us to. It records separately which vendors the page puts a number beside in a
+table, because a table row states a fact about a vendor whether or not a verdict does.
+Review dates already on record are carried over untouched: this regenerates what is
+derived, never what a reviewer asserted.
 
 Which stores a page reads is measured rather than carried over. Each page is rendered
 again against a catalogue and a change log whose text fields have been replaced, and a
@@ -162,10 +164,12 @@ async function main() {
         published,
         tier: deriveTier(html),
         vendors_asserted: vendorsAssertedIn(html, lookup),
+        vendors_tabulated: [...new Set(vendorFactRows(html, namedVendorSlug).map(r => r.slug))].sort(),
         badge_subjects_unresolved: unresolvedBadgeSubjects(html, resolver).map(b => b.subject),
         reviewed_at: prior?.reviewed_at ?? null,
         reviewer: prior?.reviewer ?? null,
         review_outcome: prior?.review_outcome ?? null,
+        review_note: prior?.review_note ?? null,
         reads_index: readsIndex,
         reads_changes: html !== withoutChanges,
         data_source: readsIndex ? "catalogue" : prior && prior.data_source !== "catalogue" ? prior.data_source : "unsourced",
@@ -179,6 +183,8 @@ async function main() {
         if (prior.data_source !== record.data_source) changes.push(`~ ${route} data_source ${prior.data_source} -> ${record.data_source}`);
         const before = prior.vendors_asserted.join(","), after = record.vendors_asserted.join(",");
         if (before !== after) changes.push(`~ ${route} vendors ${prior.vendors_asserted.length} -> ${record.vendors_asserted.length}`);
+        const tabulatedBefore = prior.vendors_tabulated.join(","), tabulatedAfter = record.vendors_tabulated.join(",");
+        if (tabulatedBefore !== tabulatedAfter) changes.push(`~ ${route} tabulated vendors ${prior.vendors_tabulated.length} -> ${record.vendors_tabulated.length}`);
         const unresolvedBefore = prior.badge_subjects_unresolved.join(","), unresolvedAfter = record.badge_subjects_unresolved.join(",");
         if (unresolvedBefore !== unresolvedAfter) changes.push(`~ ${route} unresolved badge subjects [${unresolvedBefore}] -> [${unresolvedAfter}]`);
       }
