@@ -5,7 +5,7 @@ import { readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
-const { eligibilityGate, publishableEligibilityConditions, CONDITION_RECORDING_AN_UNREAD_PROGRAM } =
+const { eligibilityGate, eligibilityGateAsPublished, publishableEligibilityConditions, CONDITION_RECORDING_AN_UNREAD_PROGRAM } =
   await import("../dist/eligibility.js");
 const { gateFor, utcDate } = await import("../dist/ranking.js");
 
@@ -21,6 +21,10 @@ function slugOf(vendor: string): string {
 }
 
 const vendorsHoldingAGatedRecord = [...new Set(offers.filter(o => o.eligibility).map(o => o.vendor))];
+
+const TODAY = utcDate();
+
+const publishesARestriction = (offer: Offer) => gateFor(offer, TODAY)?.code === "eligibility_restricted";
 
 let port = 0;
 let proc: ChildProcess | null = null;
@@ -137,15 +141,30 @@ describe("a vendor page whose record is gated on eligibility says so", () => {
   });
 
   it("carries the qualification into the page description too", () => {
-    for (const p of rendered.filter(x => x.offer.eligibility)) {
+    const subjects = rendered.filter(x => publishesARestriction(x.offer));
+    assert.ok(subjects.length > 0, "no rendered page has the restriction as its effective gate");
+    for (const p of subjects) {
       const description = blockOfType(p.html, "WebPage")?.description ?? "";
-      assert.ok(description.startsWith(gateFor(p.offer, "")!.reason), `${p.slug} description is unqualified`);
+      assert.ok(description.startsWith(gateFor(p.offer, TODAY)!.reason), `${p.slug} description is unqualified`);
+    }
+  });
+
+  it("states the restriction in that description only where the restriction is the effective gate", () => {
+    const others = rendered.filter(x => !publishesARestriction(x.offer));
+    assert.ok(others.length > 0, "every rendered page has the restriction as its effective gate");
+    for (const p of others) {
+      const description = blockOfType(p.html, "WebPage")?.description ?? "";
+      const restriction = eligibilityGate(p.offer)?.reason;
+      assert.ok(
+        restriction === undefined || !description.includes(restriction),
+        `${p.slug} states a restriction its own gate outranks: ${description.slice(0, 90)}`,
+      );
     }
   });
 
   it("publishes every condition it holds except the one recording that no program was read", () => {
     const withRealConditions = rendered.filter(
-      p => p.offer.eligibility && publishableEligibilityConditions(p.offer).length > 0,
+      p => publishesARestriction(p.offer) && publishableEligibilityConditions(p.offer).length > 0,
     );
     assert.ok(withRealConditions.length > 0, "no gated record holds a publishable condition");
     for (const p of withRealConditions) {
@@ -156,7 +175,7 @@ describe("a vendor page whose record is gated on eligibility says so", () => {
       }
     }
     const placeholderOnly = rendered.filter(
-      p => p.offer.eligibility && publishableEligibilityConditions(p.offer).length === 0,
+      p => publishesARestriction(p.offer) && publishableEligibilityConditions(p.offer).length === 0,
     );
     assert.ok(
       placeholderOnly.length > 0,
@@ -173,7 +192,7 @@ describe("the category page a gated offer is sent to states the restriction", ()
   it("names it on the row for every gated offer in the category", async () => {
     const gatedByCategory = new Map<string, Offer[]>();
     for (const o of offers) {
-      if (!o.eligibility) continue;
+      if (!publishesARestriction(o)) continue;
       const list = gatedByCategory.get(o.category) ?? [];
       list.push(o);
       gatedByCategory.set(o.category, list);
@@ -183,7 +202,7 @@ describe("the category page a gated offer is sent to states the restriction", ()
       const html = await page(`/category/${slugOf(category)}`);
       for (const o of gated) {
         assert.ok(
-          html.includes(escapeHtml(gateFor(o, "")!.reason)),
+          html.includes(escapeHtml(gateFor(o, TODAY)!.reason)),
           `/category/${slugOf(category)} omits the restriction on ${o.vendor}`,
         );
       }
@@ -206,7 +225,7 @@ describe("a category page does not count a gated offer as a plain free tier", ()
     const inCategory = offers.filter(o => o.category === category);
     return {
       total: inCategory.length,
-      restricted: inCategory.filter(o => eligibilityGate(o)).length,
+      restricted: inCategory.filter(publishesARestriction).length,
       gated: inCategory.filter(o => gateFor(o, utcDate())).length,
     };
   };
@@ -345,6 +364,43 @@ describe("the disclosure reuses one composition", () => {
     assert.strictEqual(gateFor(expired, "2026-09-01")!.code, "offer_expired");
     assert.strictEqual(eligibilityGate(expired), null);
     assert.deepStrictEqual(publishableEligibilityConditions(expired), []);
+  });
+
+  it("publishes the restriction where nothing outranks it", () => {
+    const restricted: Offer = {
+      vendor: "Acme", category: "Databases", description: "A free tier.", tier: "Free",
+      url: "https://example.com/pricing", tags: [], verifiedDate: "2026-08-20",
+      eligibility: { type: "startup", conditions: ["Pre-Series B"], program: "Acme for Startups" },
+    };
+    assert.strictEqual(gateFor(restricted, "2026-09-02")!.code, "eligibility_restricted");
+    assert.deepStrictEqual(
+      eligibilityGateAsPublished(restricted, "2026-09-02"),
+      gateFor(restricted, "2026-09-02"),
+    );
+  });
+
+  it("withholds it from a record whose own tier records the offer as ended", () => {
+    const ended: Offer = {
+      vendor: "Acme", category: "Databases", description: "A free tier.", tier: "Retired",
+      url: "https://example.com/pricing", tags: [], verifiedDate: "2026-08-20",
+      eligibility: { type: "startup", conditions: ["Pre-Series B"], program: "Acme for Startups" },
+    };
+    assert.strictEqual(gateFor(ended, "2026-09-02")!.code, "offer_retired");
+    assert.ok(eligibilityGate(ended), "the record still carries an eligibility block");
+    assert.strictEqual(eligibilityGateAsPublished(ended, "2026-09-02"), null);
+  });
+
+  it("keeps it where the expiry date has passed, because the ranker still returns the restriction", () => {
+    const expired: Offer = {
+      vendor: "Acme", category: "Databases", description: "A free tier.", tier: "Free",
+      url: "https://example.com/pricing", tags: [], verifiedDate: "2026-08-20", expires_date: "2026-01-01",
+      eligibility: { type: "startup", conditions: ["Pre-Series B"], program: "Acme for Startups" },
+    };
+    assert.strictEqual(gateFor(expired, "2026-09-02")!.code, "eligibility_restricted");
+    assert.deepStrictEqual(
+      eligibilityGateAsPublished(expired, "2026-09-02"),
+      gateFor(expired, "2026-09-02"),
+    );
   });
 
   it("drops only the condition that records an unread program", () => {
