@@ -348,7 +348,22 @@ describe("every restriction we have stored survives its own rule", () => {
     for (const vendor of ["Postman", "Netlify", "Google Gemini API", "GitHub Copilot"]) {
       assert.ok(kept.has(vendor), `${vendor} keeps its restriction record`);
     }
-    assert.strictEqual(stored.filter(c => c.change_type === "record_corrected").length, 2);
+  });
+
+  it("keeps both records the corpus pass retyped as corrections", () => {
+    const corrections = new Set(
+      stored.filter(c => c.change_type === RECLASSIFIED_AS_CORRECTION).map(c => `${c.vendor} ${c.date}`)
+    );
+    for (const id of ["DigitalOcean 2026-03-21", "Neo4j AuraDB 2026-03-22"]) {
+      assert.ok(corrections.has(id), `${id} is still typed ${RECLASSIFIED_AS_CORRECTION}`);
+    }
+  });
+
+  it("holds no correction record whose summary does not say it corrects our own entry", () => {
+    const unsupported = stored
+      .filter(c => c.change_type === RECLASSIFIED_AS_CORRECTION && !correctsOurOwnRecord(c))
+      .map(c => `${c.vendor} ${c.date}`);
+    assert.deepStrictEqual(unsupported, []);
   });
 
   it("is not vacuous — the population is large enough to have caught the seven", () => {
