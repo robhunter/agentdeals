@@ -1097,8 +1097,9 @@ function buildCategoryPage(slug: string): string | null {
 
   const catOffers = offers.filter((o) => o.category === categoryName);
   const catCount = catOffers.length;
-  const catGatedCount = catOffers.filter((o) => eligibilityGate(o)).length;
-  const catGatedClause = gatedShareDescriptionClause(catCount, catGatedCount);
+  const catServedOn = utcDate();
+  const catGates = catOffers.map((o) => gateFor(o, catServedOn));
+  const catGatedClause = gatedShareDescriptionClause(catCount, catGates);
   const title = `Free ${categoryName} Tools & Deals (${catCount} offers) — AgentDeals`;
   const metaDesc = `Compare ${catCount} free ${categoryName.toLowerCase()} tools, free tiers, and developer deals.${catGatedClause ? ` ${catGatedClause}` : ""} Verified pricing for ${catOffers.slice(0, 5).map(o => o.vendor).join(", ")}${catCount > 5 ? " and more" : ""}.`;
 
@@ -1139,7 +1140,7 @@ function buildCategoryPage(slug: string): string | null {
     ? `This category has been relatively stable &mdash; only ${catChangeCount} pricing changes recorded across all vendors.`
     : `This category has seen some movement &mdash; ${catChangeCount} pricing changes recorded across vendors.`;
 
-  const topVendor = catOffers[0];
+  const topVendor = catOffers.find((_, i) => catGates[i] === null);
   const keyLimitMatch = topVendor?.description.match(/(\d[\d,]*\s*(?:GB|GiB|MB|TB|requests?|calls?|MAU|users?|emails?|messages?|builds?|minutes?|hours?|projects?|repos?|sites?|apps?|databases?|invocations?|events?))/i);
   const keyLimit = keyLimitMatch ? keyLimitMatch[1] : "a generous free tier";
 
@@ -1203,7 +1204,7 @@ function buildCategoryPage(slug: string): string | null {
   const faqItems = [
     {
       q: `What is the best free ${categoryName.toLowerCase()} service?`,
-      a: `Based on our data, the most popular free ${categoryName.toLowerCase()} services include ${topAlts}. ${topVendor ? `${escHtmlServer(topVendor.vendor)} offers ${escHtmlServer(keyLimit)} on their ${escHtmlServer(topVendor.tier)} plan.` : ""} The best choice depends on your specific requirements.`,
+      a: `Based on our data, the most popular free ${categoryName.toLowerCase()} services include ${topAlts}.${topVendor ? ` ${escHtmlServer(topVendor.vendor)} offers ${escHtmlServer(keyLimit)} on their ${escHtmlServer(topVendor.tier)} plan.` : ""} The best choice depends on your specific requirements.`,
     },
     {
       q: `How many free ${categoryName.toLowerCase()} tools are there?`,
@@ -1316,7 +1317,7 @@ ${mcpCtaCss()}
   ${buildGlobalNav("categories")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; ${escHtmlServer(categoryName)}</div>
   <h1>Free ${escHtmlServer(categoryName)} Tools</h1>
-  <p class="cat-meta">${gatedShareLede(catCount, catGatedCount)}${dataVerifiedSegment(catOffers)}</p>
+  <p class="cat-meta">${gatedShareLede(catCount, catGates)}${dataVerifiedSegment(catOffers)}</p>
 
   ${introHtml}
   ${analysisCta}

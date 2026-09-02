@@ -204,7 +204,11 @@ describe("a category page does not count a gated offer as a plain free tier", ()
   const categoryNames = [...new Set(offers.map(o => o.category))].sort();
   const censusOf = (category: string) => {
     const inCategory = offers.filter(o => o.category === category);
-    return { total: inCategory.length, gated: inCategory.filter(o => eligibilityGate(o)).length };
+    return {
+      total: inCategory.length,
+      restricted: inCategory.filter(o => eligibilityGate(o)).length,
+      gated: inCategory.filter(o => gateFor(o, utcDate())).length,
+    };
   };
   const ledeOf = (html: string) => html.match(/<p class="cat-meta">([\s\S]*?)<\/p>/)?.[1] ?? "";
   const descriptionOf = (html: string) => html.match(/<meta name="description" content="([^"]*)"/)?.[1] ?? "";
@@ -218,24 +222,36 @@ describe("a category page does not count a gated offer as a plain free tier", ()
     assert.ok(censuses.some(c => c.gated === 0), "every category holds a gated record");
   });
 
+  it("holds a category gated by something other than eligibility, so the two counts are separable", () => {
+    const censuses = categoryNames.map(censusOf);
+    assert.ok(censuses.some(c => c.gated > c.restricted), "eligibility accounts for every gated record");
+    assert.ok(censuses.some(c => c.gated > 0 && c.restricted === 0), "no category is gated without eligibility");
+  });
+
   it("qualifies the count claim rather than closing it", async () => {
     for (const category of categoryNames) {
-      const { total, gated } = censusOf(category);
+      const { total, restricted, gated } = censusOf(category);
       const html = await page(`/category/${slugOf(category)}`);
       const lede = ledeOf(html);
-      const where = `/category/${slugOf(category)} (${gated} of ${total})`;
+      const where = `/category/${slugOf(category)} (${gated} gated, ${restricted} restricted, of ${total})`;
       if (gated === 0) {
         assert.ok(lede.startsWith(`${total} verified free tiers and developer deals.`), `${where} lede is ${lede}`);
         assert.ok(!lede.includes(QUALIFICATION), `${where} states a restriction it does not hold`);
         continue;
       }
-      assert.ok(lede.includes(QUALIFICATION), `${where} lede is ${lede}`);
-      if (gated === total) {
+      assert.strictEqual(
+        lede.includes(QUALIFICATION),
+        restricted > 0,
+        `${where} states the eligibility clause on ${restricted} restricted records: ${lede}`,
+      );
+      if (gated === total && restricted === total) {
         assert.ok(lede.includes("none of them generally available"), `${where} lede is ${lede}`);
         assert.ok(
           !lede.startsWith(`${total} verified free tiers and developer deals.`),
           `${where} closes the count claim before qualifying it: ${lede}`,
         );
+      } else if (gated === 1) {
+        assert.ok(lede.includes("One of them is not on our ranked list"), `${where} lede is ${lede}`);
       } else {
         assert.ok(lede.includes(`${gated} of them`), `${where} lede does not name ${gated}: ${lede}`);
       }
@@ -244,22 +260,29 @@ describe("a category page does not count a gated offer as a plain free tier", ()
 
   it("states a number the rows below it agree with", async () => {
     for (const category of categoryNames) {
-      const { total, gated } = censusOf(category);
+      const { total, restricted, gated } = censusOf(category);
       const html = await page(`/category/${slugOf(category)}`);
-      assert.strictEqual(restrictedRows(html), gated, `/category/${slugOf(category)} restricted rows`);
-      if (gated > 0 && gated < total) {
-        assert.ok(ledeOf(html).includes(`${restrictedRows(html)} of them`), `/category/${slugOf(category)}`);
+      const lede = ledeOf(html);
+      assert.strictEqual(restrictedRows(html), restricted, `/category/${slugOf(category)} restricted rows`);
+      if (gated > 1 && gated < total) {
+        assert.ok(lede.includes(`${gated} of them`), `/category/${slugOf(category)} lede is ${lede}`);
+      }
+      if (restricted > 0 && gated < total) {
+        const clause = restricted === 1
+          ? "1 requires an application or qualification"
+          : `${restricted} require an application or qualification`;
+        assert.ok(lede.includes(clause), `/category/${slugOf(category)} does not name ${restricted}: ${lede}`);
       }
     }
   });
 
   it("carries the same qualification into the search snippet, ahead of the vendor list", async () => {
     for (const category of categoryNames) {
-      const { total, gated } = censusOf(category);
+      const { total, restricted } = censusOf(category);
       const html = await page(`/category/${slugOf(category)}`);
       const description = descriptionOf(html);
-      const where = `/category/${slugOf(category)} (${gated} of ${total})`;
-      if (gated === 0) {
+      const where = `/category/${slugOf(category)} (${restricted} restricted of ${total})`;
+      if (restricted === 0) {
         assert.ok(!description.includes(QUALIFICATION), `${where} description is ${description}`);
         continue;
       }
