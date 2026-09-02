@@ -19,7 +19,7 @@ trap restore EXIT
 
 killed=0
 survived=0
-TESTS="test/eligibility-disclosure.test.ts"
+TESTS="test/eligibility-disclosure.test.ts test/category-gate-lede.test.ts"
 
 run_mutation() {
   local name="$1"
@@ -57,7 +57,7 @@ m_lede_never_qualifies() {
   py <<'PY'
 p = "src/eligibility.ts"
 s = open(p).read()
-s = s.replace("  if (gated === 0) return `${counted}.`;", "  if (gated >= 0) return `${counted}.`;")
+s = s.replace("  if (codes.length === 0) return `${counted}.`;", "  if (codes.length >= 0) return `${counted}.`;")
 open(p, "w").write(s)
 PY
 }
@@ -66,7 +66,7 @@ m_lede_always_qualifies() {
   py <<'PY'
 p = "src/eligibility.ts"
 s = open(p).read()
-s = s.replace("  if (gated === 0) return `${counted}.`;", "")
+s = s.replace("  if (codes.length === 0) return `${counted}.`;", "")
 open(p, "w").write(s)
 PY
 }
@@ -75,7 +75,7 @@ m_lede_counts_the_whole_category() {
   py <<'PY'
 p = "src/serve.ts"
 s = open(p).read()
-s = s.replace("${gatedShareLede(catCount, catGatedCount)}", "${gatedShareLede(catCount, catCount)}")
+s = s.replace("${gatedShareLede(catCount, catGates)}", "${gatedShareLede(catCount, catGates.map(() => null))}")
 open(p, "w").write(s)
 PY
 }
@@ -84,8 +84,8 @@ m_lede_states_a_partial_share_as_total() {
   py <<'PY'
 p = "src/eligibility.ts"
 s = open(p).read()
-s = s.replace("  if (gated >= total) return `${counted}, none of them generally available",
-              "  if (gated >= 1) return `${counted}, none of them generally available")
+s = s.replace("  return codes.length >= total && codes.every((code) => code === \"eligibility_restricted\");",
+              "  return codes.length >= 1 && codes.every((code) => code === \"eligibility_restricted\");")
 open(p, "w").write(s)
 PY
 }
