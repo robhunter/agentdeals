@@ -12,6 +12,7 @@ const DEFAULT_THRESHOLD_DAYS = 25;
 const FETCH_TIMEOUT_MS = 15_000;
 const RATE_LIMIT_MS = 500;
 export const MAX_PAGE_TEXT_LENGTH = 12_000;
+export const MAX_PAGE_BYTES = 16_000_000;
 const MAX_RESPONSE_TOKENS = 400;
 
 export const VERIFIER_MODEL = "google/gemma-3-27b-it";
@@ -56,7 +57,42 @@ function stripHtml(html) {
     .trim();
 }
 
-export async function fetchPageText(url) {
+export function pageTooLargeError(bytes) {
+  return `page too large: ${bytes} bytes`;
+}
+
+async function cancelBody(res) {
+  try {
+    await res.body?.cancel();
+  } catch {}
+}
+
+export async function readBodyWithin(res, ceiling) {
+  const declared = Number(res.headers?.get?.("content-length"));
+  if (Number.isFinite(declared) && declared > ceiling) {
+    await cancelBody(res);
+    return { tooLarge: true, bytes: declared };
+  }
+  if (!res.body) {
+    const html = await res.text();
+    const bytes = Buffer.byteLength(html);
+    return bytes > ceiling ? { tooLarge: true, bytes } : { html };
+  }
+  const chunks = [];
+  let bytes = 0;
+  for await (const chunk of res.body) {
+    bytes += chunk.length;
+    if (bytes > ceiling) {
+      await cancelBody(res);
+      return { tooLarge: true, bytes };
+    }
+    chunks.push(chunk);
+  }
+  return { html: Buffer.concat(chunks).toString("utf-8") };
+}
+
+export async function fetchPageText(url, options = {}) {
+  const ceiling = options.maxBytes ?? MAX_PAGE_BYTES;
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
   try {
@@ -71,17 +107,21 @@ export async function fetchPageText(url) {
       redirect: "follow",
     });
     if (!res.ok) {
+      await cancelBody(res);
       return { ok: false, error: `HTTP ${res.status}` };
     }
-    const html = await res.text();
-    const text = stripHtml(html);
+    const body = await readBodyWithin(res, ceiling);
+    if (body.tooLarge) {
+      return { ok: false, error: pageTooLargeError(body.bytes) };
+    }
+    const text = stripHtml(body.html);
     if (text.length < 50) {
       return { ok: false, error: "page content too short (likely JS-rendered SPA)" };
     }
     return {
       ok: true,
-      text: text.slice(0, MAX_PAGE_TEXT_LENGTH),
-      truncated: text.length > MAX_PAGE_TEXT_LENGTH,
+      text,
+      truncated: false,
       finalUrl: res.url || url,
     };
   } catch (err) {
@@ -156,7 +196,8 @@ export function parseVerifierResponse(raw) {
   return { status: "unclear", summary: "Could not parse AI response" };
 }
 
-export async function verifyOfferAgainstPage(client, offer, pageText) {
+export async function verifyOfferAgainstPage(client, offer, wholePageText) {
+  const pageText = String(wholePageText ?? "").slice(0, MAX_PAGE_TEXT_LENGTH);
   const prompt = `You are verifying whether a vendor's deal/free-tier information is still accurate.
 
 STORED DEAL INFO:
