@@ -27134,51 +27134,36 @@
     {
       "vendor": "Instabug for Startups",
       "category": "Error Tracking",
-      "description": "Over 25,000 innovative mobile teams rely on Instabug's Real-Time Contextual Insights to build better apps and we want to support yours as well. Eligible startups can receive a discount on all our plans.",
-      "tier": "Startup Program",
-      "url": "https://instabug.com/startups",
+      "description": "There is no startup program: instabug.com/startups no longer serves one. Checked 2026-09-02, the URL redirects to www.luciq.ai, the company's site after its rebrand to Luciq, whose navigation carries no startups or program page. The former offer was a discount on all Instabug plans for eligible startups.",
+      "tier": "Retired",
+      "url": "https://www.luciq.ai/",
       "tags": [
         "error-tracking",
         "bug-tracking",
         "startup-credits",
         "awesome-startup-credits"
       ],
-      "verifiedDate": "2026-08-12",
-      "eligibility": {
-        "type": "startup",
-        "conditions": [
-          "Startup program — check vendor for eligibility details"
-        ],
-        "program": "Instabug for Startups Startup Program"
-      },
+      "verifiedDate": "2026-09-02",
       "source_check": {
-        "checked": "2026-08-28",
-        "outcome": "states_no_terms",
-        "detail": "the page names Instabug for Startups but states no amount, tier or rate we can read"
+        "checked": "2026-09-02",
+        "outcome": "ok",
+        "detail": "url"
       }
     },
     {
       "vendor": "Freshworks for Startups",
       "category": "Startup Perks",
-      "description": "The Freshworks platform enables developers, partners, and customers to customize, integrate, and automate business workflows for support, CRM, and IT use cases. Claim up to $10000 credits on their intuitive, scalable, and affordable software suite.",
-      "tier": "Startup Program",
-      "url": "https://www.freshworks.com/company/partners/",
+      "description": "There is no startup program: freshworks.com/company/partners/ redirects to the general partners directory, which states nothing about startups, credits or eligibility. Checked 2026-09-02, the words startup, credits and eligible return zero occurrences on the page. The former offer was up to $10,000 in credits across the Freshworks suite.",
+      "tier": "Retired",
+      "url": "https://www.freshworks.com/partners/",
       "tags": [
         "developer-tools",
         "startup-credits",
         "awesome-startup-credits"
       ],
-      "verifiedDate": "2026-07-21",
-      "eligibility": {
-        "type": "startup",
-        "conditions": [
-          "Startup program — check vendor for eligibility details"
-        ],
-        "program": "Freshworks for Startups Startup Program"
-      },
-      "expires_date": "2026-09-30",
+      "verifiedDate": "2026-09-02",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-02",
         "outcome": "states_no_terms",
         "detail": "the page names Freshworks for Startups but states no amount, tier or rate we can read"
       }
@@ -27186,26 +27171,18 @@
     {
       "vendor": "Startup with IBM",
       "category": "Cloud IaaS",
-      "description": "With $120,000 in free IBM Cloud credits, Startup with IBM can put your business on the path to transformative growth. Disrupt your industry with IBM.",
-      "tier": "Startup Program",
-      "url": "https://developer.ibm.com/startups/",
+      "description": "There is no startup program: developer.ibm.com/startups/ redirects to the IBM Build Partners Technical Group, a community forum with threads, blogs and a member directory. Checked 2026-09-02, the destination states no credit amount, application or eligibility rule. The former offer was $120,000 in IBM Cloud credits.",
+      "tier": "Retired",
+      "url": "https://community.ibm.com/community/user/groups/community-home?CommunityKey=4ddd8881-1445-4366-8d9f-01951486d421",
       "tags": [
         "cloud",
         "iaas",
         "startup-credits",
         "awesome-startup-credits"
       ],
-      "verifiedDate": "2026-08-14",
-      "eligibility": {
-        "type": "startup",
-        "conditions": [
-          "Startup program — check vendor for eligibility details"
-        ],
-        "program": "Startup with IBM Startup Program"
-      },
-      "expires_date": "2026-07-31",
+      "verifiedDate": "2026-09-02",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-02",
         "outcome": "states_no_terms",
         "detail": "the page names Startup with IBM but states no amount, tier or rate we can read"
       }
@@ -27291,24 +27268,16 @@
     {
       "vendor": "Heroku for Startups Program",
       "category": "Cloud IaaS",
-      "description": "The Heroku for Startups Program provides teams with the resources they need to quickly get started on Heroku—including platform credits, technical support, and networking.",
-      "tier": "Startup Program",
-      "url": "https://www.heroku.com/accelerate",
+      "description": "There is no startup program: heroku.com/accelerate redirects to heroku.com/startups/, a marketing page on which the word program returns zero occurrences. Checked 2026-09-02, the page states no credit amount, application or eligibility rule. The former offer was platform credits, technical support and networking.",
+      "tier": "Retired",
+      "url": "https://www.heroku.com/startups/",
       "tags": [
         "cloud",
         "iaas",
         "startup-credits",
         "awesome-startup-credits"
       ],
-      "verifiedDate": "2026-08-14",
-      "eligibility": {
-        "type": "startup",
-        "conditions": [
-          "Startup program — check vendor for eligibility details"
-        ],
-        "program": "Heroku for Startups Program Startup Program"
-      },
-      "expires_date": "2026-04-30",
+      "verifiedDate": "2026-09-02",
       "referral_program": {
         "available": false,
         "referrer_benefit": "N/A",
@@ -27318,7 +27287,7 @@
         "notes": "No affiliate program. Consulting and add-on partner programs exist."
       },
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-02",
         "outcome": "states_no_terms",
         "detail": "the page names Heroku for Startups Program but states no amount, tier or rate we can read"
       }
@@ -27408,22 +27377,15 @@
     {
       "vendor": "Twilio Startups Program",
       "category": "Communication",
-      "description": "The Twilio Startups team is on a mission to serve startup founders all over the world through education, mentoring, and introductions.",
-      "tier": "Startup Program",
-      "url": "https://docs.google.com/forms/d/e/1FAIpQLSfcc7bGIqosjJ-vWdSi4iFW2oQ_lcCQh9JXNpREXPCkFBssRw/viewform",
+      "description": "There is no startup program: the application form we cite now serves Google Forms' closedform page, which states the form is no longer accepting responses. Checked 2026-09-02. The former offer was education, mentoring and introductions for startup founders.",
+      "tier": "Retired",
+      "url": "https://docs.google.com/forms/d/e/1FAIpQLSfcc7bGIqosjJ-vWdSi4iFW2oQ_lcCQh9JXNpREXPCkFBssRw/closedform",
       "tags": [
         "communication",
         "startup-credits",
         "awesome-startup-credits"
       ],
-      "verifiedDate": "2026-07-27",
-      "eligibility": {
-        "type": "startup",
-        "conditions": [
-          "Startup program — check vendor for eligibility details"
-        ],
-        "program": "Twilio Startups Program Startup Program"
-      },
+      "verifiedDate": "2026-09-02",
       "referral_program": {
         "available": true,
         "referrer_benefit": "10% of minimum spend (max $500K)",
@@ -27434,9 +27396,9 @@
         "notes": "Enterprise-focused. Order form minimum 12 months, $25K+ ARR required. Top partner tiers only."
       },
       "source_check": {
-        "checked": "2026-08-28",
-        "outcome": "states_no_terms",
-        "detail": "the page names Twilio Startups Program but states no amount, tier or rate we can read"
+        "checked": "2026-09-02",
+        "outcome": "ok",
+        "detail": "url"
       }
     },
     {
@@ -27467,26 +27429,19 @@
     {
       "vendor": "The GoSquared Early Stage Plan",
       "category": "Communication",
-      "description": "GoSquared makes elegant software to help you grow your SaaS business. Get all GoSquared features for a fixed, low price for the first year of use.",
-      "tier": "Startup Program",
-      "url": "https://www.gosquared.com/early-stage/",
+      "description": "There is no early stage plan: gosquared.com/early-stage/ redirects to ecosend.io, an email marketing product with its own pricing and no startup offer. Checked 2026-09-02, GoSquared's analytics product is not sold at the destination. The former offer was all GoSquared features at a fixed low price for the first year.",
+      "tier": "Retired",
+      "url": "https://ecosend.io/",
       "tags": [
         "communication",
         "startup-credits",
         "awesome-startup-credits"
       ],
-      "verifiedDate": "2026-08-13",
-      "eligibility": {
-        "type": "startup",
-        "conditions": [
-          "Startup program — check vendor for eligibility details"
-        ],
-        "program": "The GoSquared Early Stage Plan Startup Program"
-      },
+      "verifiedDate": "2026-09-02",
       "source_check": {
-        "checked": "2026-08-28",
-        "outcome": "states_no_terms",
-        "detail": "the page names The GoSquared Early Stage Plan but states no amount, tier or rate we can read"
+        "checked": "2026-09-02",
+        "outcome": "ok",
+        "detail": "url"
       }
     },
     {
@@ -27542,26 +27497,19 @@
     {
       "vendor": "Drift for Early Stage Startups",
       "category": "Communication",
-      "description": "Using Drift will give you an edge and 10X your business by allowing you to speed up your sales cycles, increase your pipeline, and more. Get 93% off of the Essential Plan for 1 year.",
-      "tier": "Startup Program",
-      "url": "https://www.drift.com/startups/",
+      "description": "There is no startup program: drift.com/startups/ answers 200 with a meta-refresh to salesloft.com/platform/drift, where Drift is sold as a Salesloft product with no startup offer. Checked 2026-09-02. The former offer was 93% off the Essential Plan for one year.",
+      "tier": "Retired",
+      "url": "https://www.salesloft.com/platform/drift",
       "tags": [
         "communication",
         "startup-credits",
         "awesome-startup-credits"
       ],
-      "verifiedDate": "2026-08-12",
-      "eligibility": {
-        "type": "startup",
-        "conditions": [
-          "Startup program — check vendor for eligibility details"
-        ],
-        "program": "Drift for Early Stage Startups Startup Program"
-      },
+      "verifiedDate": "2026-09-02",
       "source_check": {
-        "checked": "2026-08-28",
-        "outcome": "states_no_terms",
-        "detail": "the page names Drift for Early Stage Startups but states no amount, tier or rate we can read"
+        "checked": "2026-09-02",
+        "outcome": "ok",
+        "detail": "url"
       }
     },
     {
@@ -27720,26 +27668,19 @@
     {
       "vendor": "FeedBear",
       "category": "Startup Perks",
-      "description": "Affordable feedback management for Startup plan startups. Eligible startups get all FeedBear features for just $49/mo for up to one year.",
-      "tier": "Startup Program",
-      "url": "https://www.feedbear.com/early-stage",
+      "description": "There is no startup program and no free tier: feedbear.com/early-stage redirects to the pricing page, where Startup is the second of four paid plans at $49/month, described as being for early stage businesses that need more powerful community features. Checked 2026-09-02, entry is a 14-day trial. The former record read that price as a startup discount.",
+      "tier": "Retired",
+      "url": "https://www.feedbear.com/pricing",
       "tags": [
         "developer-tools",
         "startup-credits",
         "awesome-startup-credits"
       ],
-      "verifiedDate": "2026-07-22",
-      "eligibility": {
-        "type": "startup",
-        "conditions": [
-          "Startup program — check vendor for eligibility details"
-        ],
-        "program": "FeedBear Startup Program"
-      },
+      "verifiedDate": "2026-09-02",
       "source_check": {
-        "checked": "2026-08-28",
-        "outcome": "ok",
-        "detail": "text"
+        "checked": "2026-09-02",
+        "outcome": "states_no_terms",
+        "detail": "the page names FeedBear but states no amount, tier or rate we can read"
       }
     },
     {
