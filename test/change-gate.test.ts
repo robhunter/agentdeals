@@ -46,7 +46,7 @@ const {
 } = await import("../scripts/change-gate.js");
 
 const { runAiMode, summaryLines } = await import("../scripts/reverify-rolling.js");
-const { fetchPageText, MAX_PAGE_TEXT_LENGTH } = await import("../scripts/verify-freshness.js");
+const { fetchPageText, MAX_PAGE_TEXT_LENGTH, MIN_PAGE_TEXT_LENGTH } = await import("../scripts/verify-freshness.js");
 const { CHANGE_TYPES } = await import("../scripts/change-log.js");
 
 const NOW = new Date("2026-08-28T09:00:00Z");
@@ -577,9 +577,11 @@ describe("a recorded change must describe a change", () => {
     }
 
     it("says a short page was read whole", async () => {
-      const page = await readWith(html(10));
+      const repeats = Math.ceil(MIN_PAGE_TEXT_LENGTH / "pricing detail ".length);
+      const page = await readWith(html(repeats));
       assert.strictEqual(page.ok, true);
       assert.strictEqual(page.truncated, false);
+      assert.ok(page.text.length < MAX_PAGE_TEXT_LENGTH);
     });
 
     it("says a page longer than the verifier's prompt limit was also read whole", async () => {

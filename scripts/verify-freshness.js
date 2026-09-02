@@ -13,6 +13,8 @@ const FETCH_TIMEOUT_MS = 15_000;
 const RATE_LIMIT_MS = 500;
 export const MAX_PAGE_TEXT_LENGTH = 12_000;
 export const MAX_PAGE_BYTES = 16_000_000;
+export const MIN_PAGE_TEXT_LENGTH = 500;
+export const PAGE_TOO_SHORT_ERROR = "page content too short (likely JS-rendered SPA)";
 const MAX_RESPONSE_TOKENS = 400;
 
 export const VERIFIER_MODEL = "google/gemma-3-27b-it";
@@ -59,6 +61,14 @@ function stripHtml(html) {
 
 export function pageTooLargeError(bytes) {
   return `page too large: ${bytes} bytes`;
+}
+
+export function withMinimumLength(page, floor = MIN_PAGE_TEXT_LENGTH) {
+  if (!page.ok) return page;
+  if (page.text.length < floor) {
+    return { ok: false, error: PAGE_TOO_SHORT_ERROR, chars: page.text.length };
+  }
+  return page;
 }
 
 async function cancelBody(res) {
@@ -115,15 +125,12 @@ export async function fetchPageText(url, options = {}) {
       return { ok: false, error: pageTooLargeError(body.bytes) };
     }
     const text = stripHtml(body.html);
-    if (text.length < 50) {
-      return { ok: false, error: "page content too short (likely JS-rendered SPA)" };
-    }
-    return {
+    return withMinimumLength({
       ok: true,
       text,
       truncated: false,
       finalUrl: res.url || url,
-    };
+    });
   } catch (err) {
     const reason = err.name === "AbortError" ? "timeout" : err.message;
     return { ok: false, error: reason };

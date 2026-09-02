@@ -2541,8 +2541,8 @@
       "verifiedDate": "2026-07-23",
       "source_check": {
         "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names deSEC but states no amount, tier or rate we can read"
+        "outcome": "unreadable",
+        "detail": "page content too short (likely JS-rendered SPA)"
       }
     },
     {
@@ -3375,8 +3375,8 @@
       },
       "source_check": {
         "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names JetBrains but states no amount, tier or rate we can read"
+        "outcome": "unreadable",
+        "detail": "page content too short (likely JS-rendered SPA)"
       }
     },
     {
@@ -4640,8 +4640,8 @@
       "verifiedDate": "2026-07-23",
       "source_check": {
         "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names BrowserStack Percy but states no amount, tier or rate we can read"
+        "outcome": "unreadable",
+        "detail": "page content too short (likely JS-rendered SPA)"
       }
     },
     {
@@ -5027,8 +5027,8 @@
       "verifiedDate": "2026-04-23",
       "source_check": {
         "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names Canva but states no amount, tier or rate we can read"
+        "outcome": "unreadable",
+        "detail": "page content too short (likely JS-rendered SPA)"
       }
     },
     {
@@ -5863,8 +5863,8 @@
       "verifiedDate": "2026-07-28",
       "source_check": {
         "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names Formspree but states no amount, tier or rate we can read"
+        "outcome": "unreadable",
+        "detail": "page content too short (likely JS-rendered SPA)"
       }
     },
     {
@@ -6056,8 +6056,8 @@
       "verifiedDate": "2026-08-23",
       "source_check": {
         "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names Excalidraw but states no amount, tier or rate we can read"
+        "outcome": "unreadable",
+        "detail": "page content too short (likely JS-rendered SPA)"
       }
     },
     {
@@ -6656,8 +6656,8 @@
       "verifiedDate": "2026-07-29",
       "source_check": {
         "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names Hoppscotch but states no amount, tier or rate we can read"
+        "outcome": "unreadable",
+        "detail": "page content too short (likely JS-rendered SPA)"
       }
     },
     {
@@ -7025,8 +7025,8 @@
       "verifiedDate": "2026-07-07",
       "source_check": {
         "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names X (Twitter) but states no amount, tier or rate we can read"
+        "outcome": "unreadable",
+        "detail": "page content too short (likely JS-rendered SPA)"
       }
     },
     {
@@ -7920,8 +7920,8 @@
       "verifiedDate": "2026-08-25",
       "source_check": {
         "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names VirusTotal but states no amount, tier or rate we can read"
+        "outcome": "unreadable",
+        "detail": "page content too short (likely JS-rendered SPA)"
       }
     },
     {
@@ -10107,8 +10107,8 @@
       "verifiedDate": "2026-08-25",
       "source_check": {
         "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names Conversion Tools but states no amount, tier or rate we can read"
+        "outcome": "unreadable",
+        "detail": "page content too short (likely JS-rendered SPA)"
       }
     },
     {
@@ -10294,8 +10294,8 @@
       "verifiedDate": "2026-08-02",
       "source_check": {
         "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names Datalore but states no amount, tier or rate we can read"
+        "outcome": "unreadable",
+        "detail": "page content too short (likely JS-rendered SPA)"
       }
     },
     {
@@ -10345,8 +10345,8 @@
       "verifiedDate": "2026-07-31",
       "source_check": {
         "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names DeepAR but states no amount, tier or rate we can read"
+        "outcome": "unreadable",
+        "detail": "page content too short (likely JS-rendered SPA)"
       },
       "product_subtypes": {
         "taxonomy": "AI / ML",
@@ -10452,8 +10452,8 @@
       "verifiedDate": "2026-08-02",
       "source_check": {
         "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names drawDB but states no amount, tier or rate we can read"
+        "outcome": "unreadable",
+        "detail": "page content too short (likely JS-rendered SPA)"
       }
     },
     {
@@ -10932,8 +10932,8 @@
       "verifiedDate": "2026-07-09",
       "source_check": {
         "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names KillBait API but states no amount, tier or rate we can read"
+        "outcome": "unreadable",
+        "detail": "page content too short (likely JS-rendered SPA)"
       }
     },
     {
@@ -11302,8 +11302,8 @@
       "verifiedDate": "2026-07-06",
       "source_check": {
         "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names pdfEndpoint.com but states no amount, tier or rate we can read"
+        "outcome": "unreadable",
+        "detail": "page content too short (likely JS-rendered SPA)"
       }
     },
     {
@@ -11526,8 +11526,8 @@
       "verifiedDate": "2026-08-02",
       "source_check": {
         "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names Simplescraper but states no amount, tier or rate we can read"
+        "outcome": "unreadable",
+        "detail": "page content too short (likely JS-rendered SPA)"
       }
     },
     {
@@ -12004,8 +12004,8 @@
       "verifiedDate": "2026-08-01",
       "source_check": {
         "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names 3Cols but states no amount, tier or rate we can read"
+        "outcome": "unreadable",
+        "detail": "page content too short (likely JS-rendered SPA)"
       }
     },
     {
@@ -12293,8 +12293,8 @@
       "verifiedDate": "2026-07-06",
       "source_check": {
         "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names gokanban.io but states no amount, tier or rate we can read"
+        "outcome": "unreadable",
+        "detail": "page content too short (likely JS-rendered SPA)"
       }
     },
     {
@@ -12650,8 +12650,8 @@
       "verifiedDate": "2026-07-07",
       "source_check": {
         "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names StatusPile but states no amount, tier or rate we can read"
+        "outcome": "unreadable",
+        "detail": "page content too short (likely JS-rendered SPA)"
       },
       "product_subtypes": {
         "taxonomy": "Monitoring",
@@ -12797,8 +12797,8 @@
       "verifiedDate": "2026-08-05",
       "source_check": {
         "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names tldraw.com but states no amount, tier or rate we can read"
+        "outcome": "unreadable",
+        "detail": "page content too short (likely JS-rendered SPA)"
       }
     },
     {
@@ -12967,8 +12967,8 @@
       "verifiedDate": "2026-07-12",
       "source_check": {
         "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names wormhol.org but states no amount, tier or rate we can read"
+        "outcome": "unreadable",
+        "detail": "page content too short (likely JS-rendered SPA)"
       }
     },
     {
@@ -13495,8 +13495,8 @@
       "verifiedDate": "2026-08-05",
       "source_check": {
         "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names gerrithub.io but states no amount, tier or rate we can read"
+        "outcome": "unreadable",
+        "detail": "page content too short (likely JS-rendered SPA)"
       }
     },
     {
@@ -13631,8 +13631,8 @@
       "verifiedDate": "2026-08-06",
       "source_check": {
         "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names semanticdiff.com but states no amount, tier or rate we can read"
+        "outcome": "unreadable",
+        "detail": "page content too short (likely JS-rendered SPA)"
       }
     },
     {
@@ -14456,8 +14456,8 @@
       "verifiedDate": "2026-07-10",
       "source_check": {
         "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names CertKit but states no amount, tier or rate we can read"
+        "outcome": "unreadable",
+        "detail": "page content too short (likely JS-rendered SPA)"
       }
     },
     {
@@ -14557,7 +14557,7 @@
       ],
       "verifiedDate": "2026-07-11",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-02",
         "outcome": "states_no_terms",
         "detail": "the page names Dotenv but states no amount, tier or rate we can read"
       }
@@ -14711,8 +14711,8 @@
       "verifiedDate": "2026-07-10",
       "source_check": {
         "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names Smart Grow Vault but states no amount, tier or rate we can read"
+        "outcome": "unreadable",
+        "detail": "page content too short (likely JS-rendered SPA)"
       }
     },
     {
@@ -15330,8 +15330,8 @@
       "verifiedDate": "2026-08-03",
       "source_check": {
         "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names runcloud.io but states no amount, tier or rate we can read"
+        "outcome": "unreadable",
+        "detail": "page content too short (likely JS-rendered SPA)"
       }
     },
     {
@@ -15472,8 +15472,8 @@
       "verifiedDate": "2026-08-08",
       "source_check": {
         "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names httpSMS but states no amount, tier or rate we can read"
+        "outcome": "unreadable",
+        "detail": "page content too short (likely JS-rendered SPA)"
       }
     },
     {
@@ -15794,8 +15794,8 @@
       "verifiedDate": "2026-08-08",
       "source_check": {
         "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names Free PO editor but states no amount, tier or rate we can read"
+        "outcome": "unreadable",
+        "detail": "page content too short (likely JS-rendered SPA)"
       }
     },
     {
@@ -17435,8 +17435,8 @@
       "verifiedDate": "2026-07-12",
       "source_check": {
         "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names Inboxes App but states no amount, tier or rate we can read"
+        "outcome": "unreadable",
+        "detail": "page content too short (likely JS-rendered SPA)"
       }
     },
     {
@@ -18750,8 +18750,8 @@
       "verifiedDate": "2026-08-07",
       "source_check": {
         "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names Pollinations.AI but states no amount, tier or rate we can read"
+        "outcome": "unreadable",
+        "detail": "page content too short (likely JS-rendered SPA)"
       },
       "product_subtypes": {
         "taxonomy": "AI / ML",
@@ -19487,8 +19487,8 @@
       "verifiedDate": "2026-07-12",
       "source_check": {
         "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names WunderGraph but states no amount, tier or rate we can read"
+        "outcome": "unreadable",
+        "detail": "page content too short (likely JS-rendered SPA)"
       },
       "product_subtypes": {
         "taxonomy": "Cloud Hosting",
@@ -20019,8 +20019,8 @@
       "verifiedDate": "2026-08-12",
       "source_check": {
         "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names Bubble but states no amount, tier or rate we can read"
+        "outcome": "unreadable",
+        "detail": "page content too short (likely JS-rendered SPA)"
       },
       "product_subtypes": {
         "taxonomy": "Cloud Hosting",
@@ -20514,8 +20514,8 @@
       "verifiedDate": "2026-08-09",
       "source_check": {
         "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names duckdns.org but states no amount, tier or rate we can read"
+        "outcome": "unreadable",
+        "detail": "page content too short (likely JS-rendered SPA)"
       }
     },
     {
@@ -20586,8 +20586,8 @@
       "verifiedDate": "2026-08-09",
       "source_check": {
         "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names LocalCert but states no amount, tier or rate we can read"
+        "outcome": "unreadable",
+        "detail": "page content too short (likely JS-rendered SPA)"
       }
     },
     {
@@ -21302,8 +21302,8 @@
       "verifiedDate": "2026-08-17",
       "source_check": {
         "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names Xirsys but states no amount, tier or rate we can read"
+        "outcome": "unreadable",
+        "detail": "page content too short (likely JS-rendered SPA)"
       }
     },
     {
@@ -21506,8 +21506,8 @@
       "verifiedDate": "2026-08-10",
       "source_check": {
         "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names diagrams.net but states no amount, tier or rate we can read"
+        "outcome": "unreadable",
+        "detail": "page content too short (likely JS-rendered SPA)"
       }
     },
     {
@@ -22033,8 +22033,8 @@
       "verifiedDate": "2026-07-16",
       "source_check": {
         "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names Tweek but states no amount, tier or rate we can read"
+        "outcome": "unreadable",
+        "detail": "page content too short (likely JS-rendered SPA)"
       }
     },
     {
@@ -22138,8 +22138,8 @@
       "verifiedDate": "2026-07-16",
       "source_check": {
         "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names Dropshare but states no amount, tier or rate we can read"
+        "outcome": "unreadable",
+        "detail": "page content too short (likely JS-rendered SPA)"
       }
     },
     {
@@ -22246,8 +22246,8 @@
       "verifiedDate": "2026-07-17",
       "source_check": {
         "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names GoFile.io but states no amount, tier or rate we can read"
+        "outcome": "unreadable",
+        "detail": "page content too short (likely JS-rendered SPA)"
       }
     },
     {
@@ -22822,8 +22822,8 @@
       "verifiedDate": "2026-07-17",
       "source_check": {
         "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names Ant Design Landing Page but states no amount, tier or rate we can read"
+        "outcome": "unreadable",
+        "detail": "page content too short (likely JS-rendered SPA)"
       }
     },
     {
@@ -23164,8 +23164,8 @@
       "verifiedDate": "2026-07-17",
       "source_check": {
         "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names Gradientos but states no amount, tier or rate we can read"
+        "outcome": "unreadable",
+        "detail": "page content too short (likely JS-rendered SPA)"
       }
     },
     {
@@ -23470,8 +23470,8 @@
       "verifiedDate": "2026-07-20",
       "source_check": {
         "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names Mastershot but states no amount, tier or rate we can read"
+        "outcome": "unreadable",
+        "detail": "page content too short (likely JS-rendered SPA)"
       }
     },
     {
@@ -23542,8 +23542,8 @@
       "verifiedDate": "2026-07-21",
       "source_check": {
         "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names mockupmark.com but states no amount, tier or rate we can read"
+        "outcome": "unreadable",
+        "detail": "page content too short (likely JS-rendered SPA)"
       }
     },
     {
@@ -23668,8 +23668,8 @@
       "verifiedDate": "2026-07-20",
       "source_check": {
         "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names okso.app but states no amount, tier or rate we can read"
+        "outcome": "unreadable",
+        "detail": "page content too short (likely JS-rendered SPA)"
       }
     },
     {
@@ -23740,8 +23740,8 @@
       "verifiedDate": "2026-08-25",
       "source_check": {
         "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names Pravatar but states no amount, tier or rate we can read"
+        "outcome": "unreadable",
+        "detail": "page content too short (likely JS-rendered SPA)"
       }
     },
     {
@@ -23902,8 +23902,8 @@
       "verifiedDate": "2026-04-05",
       "source_check": {
         "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names smartmockups.com but states no amount, tier or rate we can read"
+        "outcome": "unreadable",
+        "detail": "page content too short (likely JS-rendered SPA)"
       }
     },
     {
@@ -24028,8 +24028,8 @@
       "verifiedDate": "2026-07-19",
       "source_check": {
         "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names Tailark but states no amount, tier or rate we can read"
+        "outcome": "unreadable",
+        "detail": "page content too short (likely JS-rendered SPA)"
       }
     },
     {
@@ -24118,8 +24118,8 @@
       "verifiedDate": "2026-07-20",
       "source_check": {
         "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names tweakcn but states no amount, tier or rate we can read"
+        "outcome": "unreadable",
+        "detail": "page content too short (likely JS-rendered SPA)"
       }
     },
     {
@@ -24586,8 +24586,8 @@
       "verifiedDate": "2026-08-09",
       "source_check": {
         "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names osmnames but states no amount, tier or rate we can read"
+        "outcome": "unreadable",
+        "detail": "page content too short (likely JS-rendered SPA)"
       }
     },
     {
@@ -24639,8 +24639,8 @@
       "verifiedDate": "2026-07-20",
       "source_check": {
         "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names build.opensuse.org but states no amount, tier or rate we can read"
+        "outcome": "ok",
+        "detail": "text"
       }
     },
     {
@@ -24996,8 +24996,8 @@
       "verifiedDate": "2026-08-12",
       "source_check": {
         "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names JDoodle but states no amount, tier or rate we can read"
+        "outcome": "unreadable",
+        "detail": "page content too short (likely JS-rendered SPA)"
       }
     },
     {
@@ -25592,8 +25592,8 @@
       "verifiedDate": "2026-07-22",
       "source_check": {
         "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names LogSpot but states no amount, tier or rate we can read"
+        "outcome": "ok",
+        "detail": "text"
       }
     },
     {
@@ -26094,8 +26094,8 @@
       "verifiedDate": "2026-08-12",
       "source_check": {
         "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names ParityVend but states no amount, tier or rate we can read"
+        "outcome": "unreadable",
+        "detail": "page content too short (likely JS-rendered SPA)"
       }
     },
     {
@@ -26515,8 +26515,8 @@
       "verifiedDate": "2026-07-21",
       "source_check": {
         "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names BinShare.net but states no amount, tier or rate we can read"
+        "outcome": "unreadable",
+        "detail": "page content too short (likely JS-rendered SPA)"
       }
     },
     {
@@ -26549,8 +26549,8 @@
       "verifiedDate": "2026-07-24",
       "source_check": {
         "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names Bricks Note Calculator but states no amount, tier or rate we can read"
+        "outcome": "unreadable",
+        "detail": "page content too short (likely JS-rendered SPA)"
       }
     },
     {
@@ -26566,8 +26566,8 @@
       "verifiedDate": "2026-07-24",
       "source_check": {
         "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names Carbon.now.sh but states no amount, tier or rate we can read"
+        "outcome": "unreadable",
+        "detail": "page content too short (likely JS-rendered SPA)"
       }
     },
     {
@@ -26855,8 +26855,8 @@
       "verifiedDate": "2026-07-27",
       "source_check": {
         "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names ray.so but states no amount, tier or rate we can read"
+        "outcome": "unreadable",
+        "detail": "page content too short (likely JS-rendered SPA)"
       }
     },
     {
@@ -27025,8 +27025,8 @@
       "verifiedDate": "2026-07-21",
       "source_check": {
         "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names UUID Generator but states no amount, tier or rate we can read"
+        "outcome": "unreadable",
+        "detail": "page content too short (likely JS-rendered SPA)"
       }
     },
     {
@@ -27401,8 +27401,8 @@
       },
       "source_check": {
         "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names Twilio Startups Program but states no amount, tier or rate we can read"
+        "outcome": "unreadable",
+        "detail": "page content too short (likely JS-rendered SPA)"
       }
     },
     {
@@ -31358,8 +31358,8 @@
       "verifiedDate": "2026-08-17",
       "source_check": {
         "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names LLM7.io but states no amount, tier or rate we can read"
+        "outcome": "unreadable",
+        "detail": "page content too short (likely JS-rendered SPA)"
       },
       "product_subtypes": {
         "taxonomy": "AI / ML",
@@ -31431,8 +31431,8 @@
       "verifiedDate": "2026-08-20",
       "source_check": {
         "checked": "2026-09-02",
-        "outcome": "does_not_name_vendor",
-        "detail": "the page never names Zhipu AI and is not served from its domain"
+        "outcome": "unreadable",
+        "detail": "page content too short (likely JS-rendered SPA)"
       },
       "product_subtypes": {
         "taxonomy": "AI / ML",
@@ -31595,8 +31595,8 @@
       "verifiedDate": "2026-08-20",
       "source_check": {
         "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names YouTube but states no amount, tier or rate we can read"
+        "outcome": "unreadable",
+        "detail": "page content too short (likely JS-rendered SPA)"
       }
     },
     {
@@ -31696,8 +31696,8 @@
       "verifiedDate": "2026-08-20",
       "source_check": {
         "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names Pandora but states no amount, tier or rate we can read"
+        "outcome": "unreadable",
+        "detail": "page content too short (likely JS-rendered SPA)"
       }
     },
     {
@@ -31737,8 +31737,8 @@
       "verifiedDate": "2026-08-22",
       "source_check": {
         "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names SoundCloud but states no amount, tier or rate we can read"
+        "outcome": "unreadable",
+        "detail": "page content too short (likely JS-rendered SPA)"
       }
     },
     {
@@ -32576,7 +32576,7 @@
       ],
       "verifiedDate": "2026-08-27",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-02",
         "outcome": "states_no_terms",
         "detail": "the page names Inkscape but states no amount, tier or rate we can read"
       }
@@ -33278,8 +33278,8 @@
       "verifiedDate": "2026-08-21",
       "source_check": {
         "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names Insight Timer but states no amount, tier or rate we can read"
+        "outcome": "unreadable",
+        "detail": "page content too short (likely JS-rendered SPA)"
       }
     },
     {
