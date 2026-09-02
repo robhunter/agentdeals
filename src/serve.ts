@@ -44,7 +44,7 @@ import { ASSISTANTS_API_SHUTDOWN } from "./assistants-shutdown.js";
 import { discontinuedOnOrBefore, PRODUCT_DEPRECATED } from "./product-deprecation.js";
 import { rankOffers, rankForListing, rotateListing, utcDate, gateFor, CRITERIA_PATH, DEMOTE_ONLY_POLICY, DISCLOSURE_RATIONALE, TIE_BREAK_ALGORITHM, GATE_TABLE, DEMERIT_TABLE, NOT_FREE_TIER_RULES, TIME_LIMITED_TIER_RULES, type TieBreak, type Gate } from "./ranking.js";
 import type { RankedEntry, RankingResult } from "./ranking.js";
-import { eligibilityGate, gatedShareDescriptionClause, gatedShareLede, publishableEligibilityConditions } from "./eligibility.js";
+import { eligibilityGateAsPublished, gatedShareDescriptionClause, gatedShareLede, publishableEligibilityConditions } from "./eligibility.js";
 import { gateDisclosureFor } from "./gate-disclosure.js";
 import { verificationLedger, QUARANTINE_AFTER_FAILURES } from "./verification-state.js";
 import { partitionAlternatives, partitionSubstitutes, type SubstitutesPartition, productRoleSentence, MEMBERSHIP_GATE_RULES, MEMBERSHIP_GATE_ORDER, MEMBERSHIP_GATE_SYMMETRY, MEMBERSHIP_GATE_SCOPE, MEMBERSHIP_GATE_CORRECTIONS, SUBTYPE_TAXONOMIES, SUBTYPE_MEMBERSHIP_RULE, SUBTYPE_MEMBERSHIP_GROUP_SCOPE, CURATED_SUBTYPE_EXEMPTION, membershipGroupsFor, subtypeDefinition } from "./product-role.js";
@@ -1082,7 +1082,7 @@ function listingUnreachableNoticeHtml(offer: Offer): string {
 }
 
 function listingEligibilityNoticeHtml(offer: Offer): string {
-  const gate = eligibilityGate(offer);
+  const gate = eligibilityGateAsPublished(offer, utcDate());
   if (!gate) return "";
   const conditions = publishableEligibilityConditions(offer);
   const conditionsHtml = conditions.length > 0
@@ -3679,6 +3679,8 @@ const NO_FREE_TIER_FOR_PRODUCTION = "There is no free tier here to run in produc
 
 const GATES_LEAVING_NO_FREE_TIER: readonly string[] = ["not_a_free_offer", "offer_expired"];
 
+const GATES_LEAVING_NOTHING_TO_RUN_IN_PRODUCTION: readonly string[] = [...GATES_LEAVING_NO_FREE_TIER, "offer_retired"];
+
 function curatedAltsNote(vendorName: string): string {
   return `These alternatives were identified from ${escHtmlServer(vendorName)}&rsquo;s pricing changes as recommended replacements.`;
 }
@@ -3742,10 +3744,11 @@ function buildVendorPage(slug: string): string | null {
     ? `  <p class="link-unreachable-line" style="margin:.4rem 0 .6rem;font-size:.9rem;color:var(--text-muted)"><strong style="color:#f85149">Link unreachable:</strong> ${escHtmlServer(primary.url)} did not resolve on our check of <span class="link-checked-date" style="font-family:var(--mono)">${escHtmlServer(linkUnreachable.checked)}</span>. ${linkUnreachable.last_reachable ? `Last reachable <span class="link-last-reachable" style="font-family:var(--mono)">${escHtmlServer(linkUnreachable.last_reachable)}</span>.` : "We have no date on which it was reachable."}</p>`
     : "";
 
-  const primaryEligibilityGate = eligibilityGate(primary);
+  const primaryEligibilityGate = eligibilityGateAsPublished(primary, servedOn);
   const primaryEligibilityConditions = publishableEligibilityConditions(primary);
   const primaryGateBeyondEligibility = primaryGate && primaryGate.code !== "eligibility_restricted" ? primaryGate : null;
-  const productionGate = primaryGate && GATES_LEAVING_NO_FREE_TIER.includes(primaryGate.code) ? primaryGate : null;
+  const noFreeTierGate = primaryGate && GATES_LEAVING_NO_FREE_TIER.includes(primaryGate.code) ? primaryGate : null;
+  const productionGate = primaryGate && GATES_LEAVING_NOTHING_TO_RUN_IN_PRODUCTION.includes(primaryGate.code) ? primaryGate : null;
   const linedGate = primaryGate && primaryGate.code !== "offer_retired" ? primaryGate : null;
   const gateLine = linedGate
     ? `\n  <p class="gate-line" style="margin:.4rem 0 .6rem;font-size:.9rem;color:var(--text-muted)"><strong style="color:#d29922;font-family:var(--mono)">${escHtmlServer(linedGate.code)}</strong> ${escHtmlServer(linedGate.reason)} <a href="${CRITERIA_PATH}#gates">How we use this</a>.</p>${
@@ -3805,7 +3808,7 @@ function buildVendorPage(slug: string): string | null {
 
   const currentYear = new Date().getFullYear();
   const retiredSentence = offerRetired(primary) ? recordedTierSentence(vendorName, primary.tier) : "";
-  const hasFree = !retiredSentence && !productionGate && primary.tier.toLowerCase() !== "none" && !primary.description.toLowerCase().includes("no free tier");
+  const hasFree = !retiredSentence && !noFreeTierGate && primary.tier.toLowerCase() !== "none" && !primary.description.toLowerCase().includes("no free tier");
   const freeTierHeadline = `${vendorName} Free Tier ${currentYear}`;
   const pricingHeadline = `${vendorName} Pricing ${currentYear}`;
   const headline = offerHasEnded ? endedHeadline(vendorName) : hasFree ? freeTierHeadline : pricingHeadline;
@@ -4188,7 +4191,7 @@ ${allCompareLinks.join("\n")}
     ? `${growthBullets[0].replace(/<[^>]*>/g, "")} When you outgrow the free tier, evaluate paid plans against alternatives — sometimes a competitor's free tier covers what you need.`
     : `When your usage exceeds the free tier limits, you'll need to upgrade or evaluate alternatives in the same category.`;
 
-  const gateStatesThereIsNoFreeTier = productionGate !== null;
+  const gateStatesThereIsNoFreeTier = noFreeTierGate !== null;
   const reliabilityAnswerWouldRateAGatedOffer = primaryGate !== null && !offerHasEnded && !levelWithheld;
 
   const vendorFaqItems = [
