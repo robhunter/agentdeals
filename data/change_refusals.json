@@ -109,6 +109,18 @@
       "refused_date": "2026-08-28"
     },
     {
+      "vendor": "Amplitude",
+      "change_type": "new_tier",
+      "reason": "dangling_reference",
+      "detail": "the summary now opens on a reference to a clause that was dropped, so the sentence that travels alone has no subject",
+      "summary": "The stored deal info for the Starter tier is inaccurate. The pricing page no longer mentions a 'Starter' tier. Instead, it offers a 'Free' plan with 2M events/month, and a 'Plus' plan starting at $0 with a free allotment of 2M events/month. The stored information of 10K MTU, 1K session replays, 10 saved charts, and 5 projects is no longer applicable as the tier has been replaced.",
+      "previous_state": "Product analytics — 10K MTU, 10M events, 1K session replays/month (1-month replay retention), unlimited feature flags, 1-year data access, 10 saved charts, 5 projects",
+      "current_state": "The Free plan includes 2M Events/month, unlimited seats, session replay, A/B tests, feature flags, AI analytics, and unlimited AI Agents, MCP, AI Visibility, and AI Feedback. The Plus plan starts at $0 and scales with event volume.",
+      "source_url": "https://amplitude.com/pricing",
+      "category": "Analytics",
+      "refused_date": "2026-09-02"
+    },
+    {
       "vendor": "APIVerve",
       "change_type": "limits_increased",
       "reason": "unquantified_limit",
@@ -145,6 +157,18 @@
       "refused_date": "2026-08-29"
     },
     {
+      "vendor": "asana.com",
+      "change_type": "free_tier_removed",
+      "reason": "removal_read_from_root",
+      "detail": "a free tier was recorded as removed from https://asana.com/, a domain root that states no price, ending or replacement where the free tier was — a homepage's silence is not evidence that one ended",
+      "summary": "The pricing page does not explicitly mention a free tier with the previously stated features (up to 10 users, unlimited tasks/projects, etc.). It only states \"Try Asana for free. No credit card required.\", but does not detail the limits of this free trial.",
+      "previous_state": "Project management — up to 10 users, unlimited tasks, unlimited projects, list/board/calendar views, 100+ integrations, assignees, due dates, comments, mobile apps",
+      "current_state": "Offers a free trial with no credit card required, but details of limits are not provided.",
+      "source_url": "https://asana.com/",
+      "category": "Project Management",
+      "refused_date": "2026-09-02"
+    },
+    {
       "vendor": "asgardeo.io",
       "change_type": "pricing_restructured",
       "reason": "states_no_terms",
@@ -169,6 +193,18 @@
       "refused_date": "2026-08-29"
     },
     {
+      "vendor": "Auth0",
+      "change_type": "limits_increased",
+      "reason": "measures_no_change",
+      "detail": "limits_increased claimed, and every quantity the record compares holds the same value once notation and period are normalised — 1 enterprise against 1 enterprise, 5 organization against 5 organization, 1 custom against 1 custom",
+      "summary": "The free tier now requires credit card verification for custom domains. The free tier also includes Passkeys, Adaptive MFA, and Token Vault, which were not mentioned in the stored deal info. The free tier now includes 1 custom domain, whereas previously it was not specified.",
+      "previous_state": "Identity platform — 25K MAU (B2C), unlimited logins, social + database connections, Universal Login, 1 Enterprise Connection, 5 Organizations, 1 Custom Domain. No credit card required",
+      "current_state": "The Free tier is $0/month and includes up to 25,000 monthly active users, 1 Custom Domain* (credit card verification required for custom domains), Passwordless Authentication, Unlimited Social Connections**, 5 Organizations, Brand Customization, Basic Attack Protection, Community Support, 1 Enterprise Connection, Passkeys, and includes Token Vault 2 and Auth for MCP.",
+      "source_url": "https://auth0.com/pricing",
+      "category": "Auth",
+      "refused_date": "2026-09-02"
+    },
+    {
       "vendor": "Authress",
       "change_type": "pricing_model_change",
       "reason": "confirmed_unchanged",
@@ -191,6 +227,18 @@
       "source_url": "https://www.baseten.co/pricing/",
       "category": "AI / ML",
       "refused_date": "2026-08-28"
+    },
+    {
+      "vendor": "BlazeMeter",
+      "change_type": "pricing_restructured",
+      "reason": "dangling_reference",
+      "detail": "the summary now opens on a reference to a clause that was dropped, so the sentence that travels alone has no subject",
+      "summary": "The free tier now appears to be a 'Starter' plan with 50 max virtual users, 10 tests/month, and a 20-minute max test duration, but it is no longer explicitly stated as 'free'. There are now paid tiers (Basic, Pro, Unleashed) with varying limits and pricing.",
+      "previous_state": "Free Starter plan: 50 max virtual users, 10 tests/month, 20-minute max test duration, 1-week data retention, 1,000 API monitoring requests/month.",
+      "current_state": "The 'Starter' plan includes 50 max virtual users, 10 tests/month, 20-minute max test duration, 1-week data retention, and 1,000 API monitoring requests/month. Other paid plans are available: Basic ($149/month), Pro ($649/month), and Unleashed (Contact Us for pricing).",
+      "source_url": "https://www.blazemeter.com/pricing",
+      "category": "Testing",
+      "refused_date": "2026-09-02"
     },
     {
       "vendor": "Braid",
@@ -277,6 +325,30 @@
       "refused_date": "2026-08-28"
     },
     {
+      "vendor": "Cerebras",
+      "change_type": "free_tier_removed",
+      "reason": "removal_read_from_root",
+      "detail": "a free tier was recorded as removed from https://cerebras.ai/, a domain root that states no price, ending or replacement where the free tier was — a homepage's silence is not evidence that one ended",
+      "summary": "The page mentions a free trial on the Cerebras Inference Cloud, but does not detail a persistent free tier with specific token/request limits like the stored information. It focuses on speed and cost savings compared to GPUs, and offers various models, but doesn't explicitly confirm the 1M tokens/day and 10-30 requests/min free tier.",
+      "previous_state": "Ultra-fast LLM inference API. Free tier: 1M tokens/day, 10-30 requests/min (varies by model). Models include Llama 3.1 8B, Qwen 3 235B, GPT-OSS 120B. Multi-thousand tokens/sec inference speed",
+      "current_state": "Offers a free trial on the Cerebras Inference Cloud.",
+      "source_url": "https://cerebras.ai/",
+      "category": "AI / ML",
+      "refused_date": "2026-09-02"
+    },
+    {
+      "vendor": "Chanty.com",
+      "change_type": "free_tier_removed",
+      "reason": "removal_read_from_root",
+      "detail": "a free tier was recorded as removed from https://chanty.com/, a domain root that states no price, ending or replacement where the free tier was — a homepage's silence is not evidence that one ended",
+      "summary": "The free tier is no longer explicitly mentioned. The pricing page now focuses on Business and Enterprise plans, both of which are paid.",
+      "previous_state": "Chanty is another alternative to Slack. It has a free forever plan for small teams (up to 5) with unlimited public and private conversations, searchable history, unlimited 1:1 audio calls, unlimited voice messages, ten integrations, and 20 GB storage per team.",
+      "current_state": "The page details Business ($3/user/month) and Enterprise plans with various features. There is no mention of a free plan.",
+      "source_url": "https://chanty.com/",
+      "category": "Team Collaboration",
+      "refused_date": "2026-09-02"
+    },
+    {
       "vendor": "checkbot.io",
       "change_type": "limits_reduced",
       "reason": "unquantified_limit",
@@ -337,6 +409,18 @@
       "refused_date": "2026-08-28"
     },
     {
+      "vendor": "Cloudflare Pages",
+      "change_type": "limits_reduced",
+      "reason": "unquantified_limit",
+      "detail": "limits_reduced claimed, but the current state names no quantity for anything the stored state measured (100 sit, 500 build, 100 custom)",
+      "summary": "The number of projects allowed on the free tier has been reduced.",
+      "previous_state": "Up to 100 sites (soft limit), unlimited bandwidth, 500 builds/month, 100 custom domains per project",
+      "current_state": "Cloudflare Pages has a limit of 100 projects per account on the Free plan.",
+      "source_url": "https://developers.cloudflare.com/pages/platform/limits/",
+      "category": "Cloud Hosting",
+      "refused_date": "2026-09-02"
+    },
+    {
       "vendor": "Cloudflare Workers",
       "change_type": "pricing_restructured",
       "reason": "states_no_difference",
@@ -373,6 +457,18 @@
       "refused_date": "2026-08-28"
     },
     {
+      "vendor": "Cohere",
+      "change_type": "free_tier_removed",
+      "reason": "no_removal_evidence",
+      "detail": "a free tier was recorded as removed on the evidence that the page did not mention it, and the summary states no price, ending or replacement where the free tier was",
+      "summary": "The free trial key with 1,000 API calls/month is no longer described. The page states that Trial API keys are available and free, but rate limited, and not for commercial use. Production API keys are pay-as-you-go. Model Vault pricing is available, but not a free tier.",
+      "previous_state": "AI model API. Trial key: 1,000 API calls/month across all endpoints (Chat, Embed, Rerank). Access to Command R+, Rerank 3.5, Embed 4. Non-commercial use only",
+      "current_state": "When an account is created, a Trial API key is automatically created, available on the dashboard. Trial keys are rate limited and not for production/commercial use. Production keys are pay-as-you-go.",
+      "source_url": "https://cohere.com/pricing",
+      "category": "AI / ML",
+      "refused_date": "2026-09-02"
+    },
+    {
       "vendor": "CoinMarketCap",
       "change_type": "limits_increased",
       "reason": "unquantified_limit",
@@ -383,6 +479,18 @@
       "source_url": "https://coinmarketcap.com/api/",
       "category": "Payments",
       "refused_date": "2026-09-01"
+    },
+    {
+      "vendor": "Cosmic",
+      "change_type": "limits_reduced",
+      "reason": "states_no_terms",
+      "detail": "every clause of the summary states absence rather than a term the page carries, so it reports the reading rather than a change",
+      "summary": "The page does not explicitly state the details of a free tier. It only mentions \"Get Started Free\" and \"No credit card required • Free forever\" without specifying any limits on projects, users, objects, API requests, storage, bandwidth, or AI agents/tokens.",
+      "previous_state": "Headless CMS — 1 project, 2 users, 1,000 objects, 10K API requests/month (100K cached), 1 GB storage, 1 GB API bandwidth, 3 AI agents, 300K AI tokens/month",
+      "current_state": "The page offers a 'Get Started Free' option with no credit card required and states it is 'Free forever', but does not detail any specific limits or features included in the free tier.",
+      "source_url": "https://www.cosmicjs.com/",
+      "category": "Headless CMS",
+      "refused_date": "2026-09-02"
     },
     {
       "vendor": "Coupler",
@@ -419,6 +527,18 @@
       "source_url": "https://cronhooks.io/",
       "category": "Dev Utilities",
       "refused_date": "2026-08-28"
+    },
+    {
+      "vendor": "currencylayer",
+      "change_type": "limits_reduced",
+      "reason": "measures_no_change",
+      "detail": "limits_reduced claimed, and every quantity the record compares holds the same value once notation and period are normalised — 100 api/mo against 100 api",
+      "summary": "The free tier now includes 100 API calls daily, but also states 'No Support'. The stored information did not mention lack of support.",
+      "previous_state": "Reliable Exchange Rates and Currency Conversion for your Business, 100 API requests/month free.",
+      "current_state": "The Free plan is $0.00 with 100 API Calls, Daily Updates, Historical Rates, and HTTPS Encryption, but includes No Support.",
+      "source_url": "https://currencylayer.com/",
+      "category": "Payments",
+      "refused_date": "2026-09-02"
     },
     {
       "vendor": "DatoCMS",
@@ -553,6 +673,18 @@
       "refused_date": "2026-08-28"
     },
     {
+      "vendor": "Expensify",
+      "change_type": "pricing_model_change",
+      "reason": "confirmed_unchanged",
+      "detail": "The stored description only covers individuals, and the current page confirms that. The information about company plans is new information, but doesn't contradict the stored description.",
+      "summary": "Expensify is free for individuals, the page indicates that for companies, plans start at $5 per member.",
+      "previous_state": "Expense management — unlimited receipt scanning (SmartScan OCR), expense reports, next-day reimbursement, corporate card program. Free for individuals",
+      "current_state": "Expensify is completely free to use as an individual. For companies, plans start at $5 per member , but you can offset that cost with cash back from the Expensify Card.",
+      "source_url": "https://www.expensify.com/",
+      "category": "Analytics",
+      "refused_date": "2026-09-02"
+    },
+    {
       "vendor": "FabForm",
       "change_type": "limits_increased",
       "reason": "unquantified_limit",
@@ -647,6 +779,18 @@
       "source_url": "https://education.github.com/pack",
       "category": "Source Control",
       "refused_date": "2026-08-28"
+    },
+    {
+      "vendor": "Google Vector Search 2.0",
+      "change_type": "pricing_model_change",
+      "reason": "dangling_reference",
+      "detail": "the summary now opens on a reference to a clause that was dropped, so the sentence that travels alone has no subject",
+      "summary": "The pricing page details Vector Search as part of the Gemini Enterprise Agent Platform and includes pricing information. It states that Vector Search pricing includes the cost of virtual machines and building/updating indexes, and even a minimal setup can be under $100/month. There is a link to the Google Cloud pricing calculator. This contradicts the stored information of a simple 'pay-as-you-go' tier.",
+      "previous_state": "Vector Search 2.0 now GA on Vertex AI. High-performance approximate nearest neighbor (ANN) vector similarity search for AI/RAG applications. Supports billion-scale indexes.",
+      "current_state": "Vector Search pricing includes the cost of virtual machines used to host deployed indexes, as well as expenses for building and updating indexes. A minimal setup can be under $100 per month. Pricing can be estimated using the Google Cloud pricing calculator.",
+      "source_url": "https://cloud.google.com/vertex-ai/docs/vector-search/overview",
+      "category": "AI / ML",
+      "refused_date": "2026-09-02"
     },
     {
       "vendor": "Harness CI",
@@ -803,6 +947,30 @@
       "source_url": "https://www.jotform.com/pricing/",
       "category": "Forms",
       "refused_date": "2026-08-28"
+    },
+    {
+      "vendor": "Keywords AI",
+      "change_type": "free_tier_removed",
+      "reason": "free_tier_still_offered",
+      "detail": "a free tier was recorded as removed because keywordsai.co redirects off-domain, and the redirect destination still offers one — respan.ai/pricing lists Free $0 with 100k logs, 1k scores, 5 datasets, 2 evaluators and 5 prompts. The vendor rebranded to Respan, a change already recorded on 2026-04-13. Refused by hand: auditRecord returns on the off-domain redirect branch before any free_tier_removed gate is reached",
+      "summary": "Keywords AI's own page now redirects to respan.ai.",
+      "previous_state": "The best LLM monitoring platform. One format to call 200+ LLMs with 2 lines of code. 10,000 free requests every month and $0 for platform features!",
+      "current_state": "The page does not explicitly state a free tier. It showcases features and capabilities of the platform, with mentions of cost savings and budget controls, but does not detail a free usage allowance.",
+      "source_url": "https://keywordsai.co",
+      "category": "AI / ML",
+      "refused_date": "2026-09-02"
+    },
+    {
+      "vendor": "Koyeb",
+      "change_type": "pricing_restructured",
+      "reason": "confirmed_unchanged",
+      "detail": "The descriptions are functionally equivalent; both offer the same resources (0.25 vCPU, 1 GB RAM, 1 GB storage, 5 hours/month). The change is simply to 'Serverless Postgres' which is still a Postgres database.",
+      "summary": "The free tier now offers Serverless Postgres with limited resources (0.25 vCPU, 1 GB RAM, 1 GB storage, 5 hours/month) instead of a free Postgres database with limits.",
+      "previous_state": "Free Postgres database (0.25 vCPU, 1 GB RAM, 1 GB storage, 5 hr/month runtime). No free compute tier — Pro plan starts at $29/month with $10 included compute.",
+      "current_state": "Serverless Postgres is available for free with 0.25 vCPU, 1 GB RAM, 1GB Storage, and 5 hours of usage per month. Storage costs $0.50/mo per GB.",
+      "source_url": "https://www.koyeb.com/pricing",
+      "category": "Databases",
+      "refused_date": "2026-09-02"
     },
     {
       "vendor": "LaunchDarkly",
@@ -1009,6 +1177,18 @@
       "refused_date": "2026-08-29"
     },
     {
+      "vendor": "Neo4j AuraDB",
+      "change_type": "limits_reduced",
+      "reason": "unquantified_limit",
+      "detail": "limits_reduced claimed, but the current state names no quantity for anything the stored state measured (200,000 nod, 400,000 relationship)",
+      "summary": "The free tier now has a limit of 0GB and does not include many features that were previously included.",
+      "previous_state": "Graph database cloud service — free tier: single database, up to 200,000 nodes and 400,000 relationships. Full Cypher query language support. No credit card required",
+      "current_state": "AuraDB Free is $0 with a database size limit of up to 0GB. It is a single-zone service with no SLA. It includes auto-pause/resume, automated rolling updates, and the Aura Console. It does *not* include database monitoring, query log forwarding, advanced metrics, secondaries, vector optimization, RBAC, SSO, customer managed keys, security log forwarding, private endpoints, or change data capture.",
+      "source_url": "https://neo4j.com/pricing/",
+      "category": "Databases",
+      "refused_date": "2026-09-02"
+    },
+    {
       "vendor": "Notion",
       "change_type": "limits_reduced",
       "reason": "unquantified_limit",
@@ -1019,6 +1199,18 @@
       "source_url": "https://www.notion.com/pricing",
       "category": "Productivity & Notes",
       "refused_date": "2026-08-28"
+    },
+    {
+      "vendor": "NS1 Connect",
+      "change_type": "free_tier_removed",
+      "reason": "no_removal_evidence",
+      "detail": "a free tier was recorded as removed on the evidence that the page did not mention it, and the summary states no price, ending or replacement where the free tier was",
+      "summary": "The free tier is no longer explicitly mentioned. The lowest tier available is 'Essentials' which is a paid tier. The limits from the stored deal info (5 million queries, 500 DNS records, etc.) are not available in a free tier.",
+      "previous_state": "Free Developer tier: 5 million queries/month, 500 DNS records, 1 filter chain, 1 monitor. Full API access and traffic steering. No time limit.",
+      "current_state": "The 'Essentials' plan offers 30 to 80 million queries per month, 1000 DNS Records, and 2 Health Check Monitors. It is a paid plan.",
+      "source_url": "https://www.ibm.com/products/ns1-connect/pricing",
+      "category": "DNS & Domain Management",
+      "refused_date": "2026-09-02"
     },
     {
       "vendor": "Okta",
@@ -1055,6 +1247,18 @@
       "source_url": "https://www.openstatus.dev/",
       "category": "Status Pages",
       "refused_date": "2026-08-28"
+    },
+    {
+      "vendor": "Ory",
+      "change_type": "limits_reduced",
+      "reason": "unquantified_limit",
+      "detail": "limits_reduced claimed, but the current state names no quantity for anything the stored state measured (2 oidc, 25 mau)",
+      "summary": "The free tier is now a 'Developer' tier with limited features and no monthly credit. The self-hosted unlimited option is no longer explicitly mentioned.",
+      "previous_state": "Open-source identity infrastructure — Kratos (identity), Hydra (OAuth2/OIDC), Oathkeeper (API gateway), Keto (permissions). Cloud: 25K MAU free. Self-hosted: unlimited, Apache 2.0",
+      "current_state": "The 'Developer' tier is free and includes 1 member, 0 production environments, 0 staging environments, and 2 development environments. It includes password, passkeys, and passwordless email code authentication. It does not include a monthly credit.",
+      "source_url": "https://www.ory.sh/pricing/",
+      "category": "Auth",
+      "refused_date": "2026-09-02"
     },
     {
       "vendor": "Paddle",
@@ -1151,6 +1355,18 @@
       "source_url": "https://pinggy.io",
       "category": "Tunneling & Networking",
       "refused_date": "2026-09-01"
+    },
+    {
+      "vendor": "Portkey",
+      "change_type": "free_tier_removed",
+      "reason": "states_no_terms",
+      "detail": "every clause of the summary states absence or narration rather than a term the page carries, so it reports the reading rather than a change",
+      "summary": "The free tier with 10,000 requests is no longer mentioned. The pricing page focuses on enterprise solutions and features like observability, governance, and an AI gateway, but does not detail a free tier. It highlights integrations and capabilities but lacks specific free usage limits.",
+      "previous_state": "Control panel for Gen AI apps featuring an observability suite & an AI gateway. Send & log up to 10,000 requests for free every month.",
+      "current_state": "The page does not mention a free tier. It focuses on enterprise solutions and features like observability, governance, and an AI gateway.",
+      "source_url": "https://portkey.ai/",
+      "category": "AI / ML",
+      "refused_date": "2026-09-02"
     },
     {
       "vendor": "PostHog",
@@ -1259,6 +1475,18 @@
       "source_url": "https://renamer.ai",
       "category": "Dev Utilities",
       "refused_date": "2026-08-28"
+    },
+    {
+      "vendor": "Replicate",
+      "change_type": "free_tier_removed",
+      "reason": "states_no_terms",
+      "detail": "every clause of the summary states absence or bookkeeping rather than a term the page carries, so it reports the reading rather than a change",
+      "summary": "The free tier as described in the stored information no longer exists. The pricing page details pay-per-second billing for various hardware options and does not mention a free allowance or the ability to run models without a credit card.",
+      "previous_state": "ML model hosting and inference platform — free runs on curated model collection without billing. Pay-per-second billing by hardware type (CPU/GPU) after free allowance. No credit card required to start",
+      "current_state": "You only pay for what you use on Replicate. Some models are billed by hardware and time, others by input and output. Hardware pricing is detailed with per-second and per-hour costs for various CPUs and GPUs.",
+      "source_url": "https://replicate.com/pricing",
+      "category": "AI / ML",
+      "refused_date": "2026-09-02"
     },
     {
       "vendor": "RepoForge",
@@ -1561,6 +1789,18 @@
       "refused_date": "2026-08-28"
     },
     {
+      "vendor": "vatlayer",
+      "change_type": "pricing_restructured",
+      "reason": "states_no_difference",
+      "detail": "the summary states that the page agrees with what we hold, and names no figure the stored description did not already carry",
+      "summary": "The free tier still exists, but the description is more detailed. The page also lists paid tiers with increased request limits.",
+      "previous_state": "Instant VAT number validation and EU VAT rates API, free 100 API requests/month",
+      "current_state": "The free plan comes with a full stack of features and 100 API Requests. Paid plans start at $9.99/month for 1,000 requests, $29.99/month for 4,000 requests, and $99.99/month for 20,000 requests.",
+      "source_url": "https://vatlayer.com/",
+      "category": "Payments",
+      "refused_date": "2026-09-02"
+    },
+    {
       "vendor": "Visual Studio Community",
       "change_type": "restriction",
       "reason": "no_terms_to_narrow",
@@ -1657,6 +1897,18 @@
       "refused_date": "2026-08-28"
     },
     {
+      "vendor": "Zoho Vault",
+      "change_type": "limits_increased",
+      "reason": "unquantified_limit",
+      "detail": "limits_increased claimed, but the current state names no quantity for anything the stored state measured (1 user)",
+      "summary": "The free tier now has more features than originally stated. It includes access from unlimited devices, passwordless authentication, and free migration/onboarding assistance.",
+      "previous_state": "Password manager (Zoho) — unlimited passwords for 1 user, password generator, browser extensions (Chrome/Firefox/Safari/Edge), mobile apps, secure sharing, offline access",
+      "current_state": "The free plan includes unlimited passwords, notes, and documents, fine-grained password sharing with access control workflow, identity and access management + multi-factor authentication bundled with the app, exhaustive integrations and audit trails, passwordless authentication, free migration and onboarding assistance, and access from unlimited devices.",
+      "source_url": "https://zoho.com/vault",
+      "category": "Password Managers",
+      "refused_date": "2026-09-02"
+    },
+    {
       "vendor": "zoneedit.com",
       "change_type": "restriction",
       "reason": "no_terms_to_narrow",
@@ -1667,18 +1919,6 @@
       "source_url": "https://www.zoneedit.com/free-dns/",
       "category": "DNS & Domain Management",
       "refused_date": "2026-09-01"
-    },
-    {
-      "vendor": "Keywords AI",
-      "change_type": "free_tier_removed",
-      "reason": "free_tier_still_offered",
-      "detail": "a free tier was recorded as removed because keywordsai.co redirects off-domain, and the redirect destination still offers one — respan.ai/pricing lists Free $0 with 100k logs, 1k scores, 5 datasets, 2 evaluators and 5 prompts. The vendor rebranded to Respan, a change already recorded on 2026-04-13. Refused by hand: auditRecord returns on the off-domain redirect branch before any free_tier_removed gate is reached",
-      "summary": "Keywords AI's own page now redirects to respan.ai.",
-      "previous_state": "The best LLM monitoring platform. One format to call 200+ LLMs with 2 lines of code. 10,000 free requests every month and $0 for platform features!",
-      "current_state": "The page does not explicitly state a free tier. It showcases features and capabilities of the platform, with mentions of cost savings and budget controls, but does not detail a free usage allowance.",
-      "source_url": "https://keywordsai.co",
-      "category": "AI / ML",
-      "refused_date": "2026-09-02"
     }
   ]
 }

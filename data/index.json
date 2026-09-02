@@ -99,7 +99,7 @@
         }
       ],
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-02",
         "outcome": "ok",
         "detail": "text"
       },
@@ -245,7 +245,7 @@
         "notes": "Channel partner program only. No individual referral program."
       },
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-02",
         "outcome": "ok",
         "detail": "text"
       },
@@ -474,7 +474,7 @@
       ],
       "verifiedDate": "2026-08-13",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-02",
         "outcome": "ok",
         "detail": "text"
       },
@@ -589,7 +589,7 @@
       ],
       "verifiedDate": "2026-08-15",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-02",
         "outcome": "ok",
         "detail": "text"
       }
@@ -779,9 +779,9 @@
         "free tier",
         "mongodb-alternative"
       ],
-      "verifiedDate": "2026-08-12",
+      "verifiedDate": "2026-08-31",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-02",
         "outcome": "ok",
         "detail": "text"
       },
@@ -1242,7 +1242,7 @@
         "notes": "No individual referral program."
       },
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-02",
         "outcome": "ok",
         "detail": "text"
       }
@@ -1452,7 +1452,7 @@
       ],
       "verifiedDate": "2026-08-14",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-02",
         "outcome": "ok",
         "detail": "text"
       },
@@ -1495,7 +1495,7 @@
       ],
       "verifiedDate": "2026-08-13",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-02",
         "outcome": "ok",
         "detail": "text"
       },
@@ -1610,7 +1610,7 @@
         "free tier",
         "datadog-alternative"
       ],
-      "verifiedDate": "2026-08-14",
+      "verifiedDate": "2026-08-31",
       "referral_program": {
         "available": false,
         "referrer_benefit": "N/A",
@@ -1620,7 +1620,7 @@
         "notes": "Partner program exists. Legacy affiliate program (2008-2010) appears discontinued."
       },
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-02",
         "outcome": "ok",
         "detail": "text"
       },
@@ -1738,7 +1738,7 @@
         "notes": "Part of Okta. Enterprise referral via Okta partner program only ($100 charity donation per qualified referral)."
       },
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-02",
         "outcome": "ok",
         "detail": "text"
       }
@@ -1869,9 +1869,9 @@
         "free tier",
         "email-service-alternative"
       ],
-      "verifiedDate": "2026-08-13",
+      "verifiedDate": "2026-08-31",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-02",
         "outcome": "ok",
         "detail": "text"
       }
@@ -1938,7 +1938,7 @@
         "cdn",
         "free tier"
       ],
-      "verifiedDate": "2026-08-16",
+      "verifiedDate": "2026-08-31",
       "payment_protocols": [
         {
           "protocol": "x402",
@@ -1957,7 +1957,7 @@
         "notes": "Channel partner program only. No individual referral program."
       },
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-02",
         "outcome": "ok",
         "detail": "text"
       }
@@ -2120,7 +2120,7 @@
         "notes": "Channel partner program only. No individual referral program."
       },
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-02",
         "outcome": "ok",
         "detail": "text"
       },
@@ -2170,7 +2170,7 @@
         "notes": "Channel partner program only. No individual referral program."
       },
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-02",
         "outcome": "ok",
         "detail": "text"
       },
@@ -2264,9 +2264,9 @@
         "free tier",
         "mcp-server"
       ],
-      "verifiedDate": "2026-08-14",
+      "verifiedDate": "2026-08-31",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-02",
         "outcome": "ok",
         "detail": "text"
       }
@@ -2388,9 +2388,9 @@
         "container-security",
         "iac"
       ],
-      "verifiedDate": "2026-08-15",
+      "verifiedDate": "2026-08-31",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-02",
         "outcome": "ok",
         "detail": "text"
       }
@@ -2412,7 +2412,7 @@
       ],
       "verifiedDate": "2026-08-15",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-02",
         "outcome": "ok",
         "detail": "text"
       }
@@ -2874,7 +2874,7 @@
         }
       ],
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-02",
         "outcome": "ok",
         "detail": "text"
       },
@@ -3108,7 +3108,7 @@
       ],
       "verifiedDate": "2026-08-15",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-02",
         "outcome": "ok",
         "detail": "text"
       }
@@ -3166,9 +3166,9 @@
         "queues",
         "free tier"
       ],
-      "verifiedDate": "2026-08-12",
+      "verifiedDate": "2026-09-02",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-02",
         "outcome": "ok",
         "detail": "text"
       }
@@ -3220,7 +3220,7 @@
       ],
       "verifiedDate": "2026-08-13",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-02",
         "outcome": "ok",
         "detail": "text"
       }
@@ -4050,7 +4050,7 @@
       ],
       "verifiedDate": "2026-08-16",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-02",
         "outcome": "ok",
         "detail": "text"
       }
@@ -4555,9 +4555,9 @@
         "free tier",
         "terraform-alternative"
       ],
-      "verifiedDate": "2026-08-15",
+      "verifiedDate": "2026-09-02",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-02",
         "outcome": "ok",
         "detail": "text"
       }
@@ -4694,7 +4694,7 @@
         }
       ],
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-02",
         "outcome": "ok",
         "detail": "text"
       }
@@ -5379,7 +5379,7 @@
       },
       "expires_date": "2026-08-31",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-02",
         "outcome": "ok",
         "detail": "text"
       }
@@ -5546,7 +5546,7 @@
       ],
       "verifiedDate": "2026-08-15",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-02",
         "outcome": "ok",
         "detail": "text"
       }
@@ -5566,7 +5566,7 @@
       ],
       "verifiedDate": "2026-08-13",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-02",
         "outcome": "ok",
         "detail": "text"
       }
@@ -6282,7 +6282,7 @@
         }
       ],
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-02",
         "outcome": "ok",
         "detail": "text"
       },
@@ -6322,7 +6322,7 @@
         }
       ],
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-02",
         "outcome": "ok",
         "detail": "text"
       },
@@ -7337,7 +7337,7 @@
       ],
       "verifiedDate": "2026-08-13",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-02",
         "outcome": "ok",
         "detail": "text"
       },
@@ -8132,7 +8132,7 @@
       ],
       "verifiedDate": "2026-08-13",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-02",
         "outcome": "ok",
         "detail": "text"
       },
@@ -8289,7 +8289,7 @@
         }
       ],
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-02",
         "outcome": "ok",
         "detail": "text"
       },
@@ -8707,7 +8707,7 @@
       ],
       "verifiedDate": "2026-08-15",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-02",
         "outcome": "ok",
         "detail": "text"
       },
@@ -9384,7 +9384,7 @@
       ],
       "verifiedDate": "2026-08-15",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-02",
         "outcome": "ok",
         "detail": "text"
       }
@@ -9696,7 +9696,7 @@
       ],
       "verifiedDate": "2026-08-12",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-02",
         "outcome": "ok",
         "detail": "text"
       }
@@ -11625,7 +11625,7 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-08-01",
+      "verifiedDate": "2026-09-02",
       "payment_protocols": [
         {
           "protocol": "x402",
@@ -11636,7 +11636,7 @@
         }
       ],
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-02",
         "outcome": "ok",
         "detail": "url"
       },
@@ -12105,7 +12105,7 @@
       ],
       "verifiedDate": "2026-08-15",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-02",
         "outcome": "ok",
         "detail": "text"
       }
@@ -13053,7 +13053,7 @@
       ],
       "verifiedDate": "2026-08-14",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-02",
         "outcome": "ok",
         "detail": "text"
       }
@@ -13072,7 +13072,7 @@
       ],
       "verifiedDate": "2026-08-12",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-02",
         "outcome": "ok",
         "detail": "text"
       }
@@ -15006,7 +15006,7 @@
       ],
       "verifiedDate": "2026-08-16",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-02",
         "outcome": "ok",
         "detail": "text"
       }
@@ -15066,7 +15066,7 @@
       ],
       "verifiedDate": "2026-08-13",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-02",
         "outcome": "ok",
         "detail": "text"
       }
@@ -17142,9 +17142,9 @@
         "free-for-dev",
         "email-service-alternative"
       ],
-      "verifiedDate": "2026-08-14",
+      "verifiedDate": "2026-09-01",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-02",
         "outcome": "ok",
         "detail": "text"
       }
@@ -18788,7 +18788,7 @@
         }
       ],
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-02",
         "outcome": "ok",
         "detail": "text"
       },
@@ -19341,7 +19341,7 @@
       ],
       "verifiedDate": "2026-08-16",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-02",
         "outcome": "ok",
         "detail": "text"
       },
@@ -20104,9 +20104,9 @@
         "free-for-dev",
         "kinsta-alternative"
       ],
-      "verifiedDate": "2026-08-13",
+      "verifiedDate": "2026-09-01",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-02",
         "outcome": "ok",
         "detail": "text"
       },
@@ -21267,7 +21267,7 @@
       ],
       "verifiedDate": "2026-08-12",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-02",
         "outcome": "ok",
         "detail": "text"
       }
@@ -21352,7 +21352,7 @@
       ],
       "verifiedDate": "2026-08-12",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-02",
         "outcome": "ok",
         "detail": "text"
       }
@@ -21437,7 +21437,7 @@
       ],
       "verifiedDate": "2026-08-16",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-02",
         "outcome": "ok",
         "detail": "text"
       }
@@ -24315,7 +24315,7 @@
       ],
       "verifiedDate": "2026-08-14",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-02",
         "outcome": "ok",
         "detail": "text"
       }
@@ -24421,9 +24421,9 @@
         "geolocation",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-08-12",
+      "verifiedDate": "2026-08-31",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-02",
         "outcome": "ok",
         "detail": "text"
       }
@@ -24457,9 +24457,9 @@
         "geolocation",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-08-12",
+      "verifiedDate": "2026-09-01",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-02",
         "outcome": "ok",
         "detail": "text"
       }
@@ -24789,9 +24789,9 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-08-12",
+      "verifiedDate": "2026-09-02",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-02",
         "outcome": "ok",
         "detail": "text"
       }
@@ -25078,9 +25078,9 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-08-14",
+      "verifiedDate": "2026-09-02",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-02",
         "outcome": "ok",
         "detail": "text"
       }
@@ -25465,7 +25465,7 @@
       ],
       "verifiedDate": "2026-08-15",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-02",
         "outcome": "ok",
         "detail": "text"
       }
@@ -26003,7 +26003,7 @@
       ],
       "verifiedDate": "2026-08-11",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-02",
         "outcome": "ok",
         "detail": "text"
       }
@@ -26021,7 +26021,7 @@
       ],
       "verifiedDate": "2026-08-14",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-02",
         "outcome": "ok",
         "detail": "text"
       }
@@ -26109,9 +26109,9 @@
         "billing",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-08-14",
+      "verifiedDate": "2026-09-01",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-02",
         "outcome": "ok",
         "detail": "text"
       }
@@ -26127,9 +26127,9 @@
         "billing",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-08-14",
+      "verifiedDate": "2026-08-31",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-02",
         "outcome": "ok",
         "detail": "text"
       }
@@ -26147,7 +26147,7 @@
       ],
       "verifiedDate": "2026-08-16",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-02",
         "outcome": "ok",
         "detail": "text"
       }
@@ -26199,9 +26199,9 @@
         "containers",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-08-11",
+      "verifiedDate": "2026-09-01",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-02",
         "outcome": "ok",
         "detail": "text"
       }
@@ -26252,9 +26252,9 @@
       ],
       "verifiedDate": "2026-08-13",
       "source_check": {
-        "checked": "2026-08-28",
-        "outcome": "ok",
-        "detail": "text"
+        "checked": "2026-09-02",
+        "outcome": "unreadable",
+        "detail": "fetch failed"
       }
     },
     {
@@ -26285,9 +26285,9 @@
         "screenshots",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-08-14",
+      "verifiedDate": "2026-08-31",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-02",
         "outcome": "ok",
         "detail": "text"
       }
@@ -26303,9 +26303,9 @@
         "screenshots",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-08-15",
+      "verifiedDate": "2026-09-02",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-02",
         "outcome": "ok",
         "detail": "text"
       }
@@ -26357,9 +26357,9 @@
         "screenshots",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-08-15",
+      "verifiedDate": "2026-08-31",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-02",
         "outcome": "ok",
         "detail": "text"
       }
@@ -26375,9 +26375,9 @@
         "screenshots",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-08-14",
+      "verifiedDate": "2026-08-31",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-02",
         "outcome": "ok",
         "detail": "text"
       }
@@ -26922,9 +26922,9 @@
       ],
       "verifiedDate": "2026-08-12",
       "source_check": {
-        "checked": "2026-08-28",
-        "outcome": "ok",
-        "detail": "text"
+        "checked": "2026-09-02",
+        "outcome": "unreadable",
+        "detail": "HTTP 403"
       }
     },
     {
@@ -27208,7 +27208,7 @@
         "program": "Microsoft for Startups Startup Program"
       },
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-02",
         "outcome": "ok",
         "detail": "text"
       }
@@ -30067,7 +30067,7 @@
       ],
       "verifiedDate": "2026-08-13",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-02",
         "outcome": "ok",
         "detail": "text"
       }
@@ -30125,7 +30125,7 @@
       ],
       "verifiedDate": "2026-08-14",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-02",
         "outcome": "ok",
         "detail": "text"
       }
@@ -30416,7 +30416,7 @@
       ],
       "verifiedDate": "2026-08-15",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-02",
         "outcome": "ok",
         "detail": "text"
       }
@@ -30507,7 +30507,7 @@
         "program": "Vast.ai Startup Program"
       },
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-02",
         "outcome": "ok",
         "detail": "text"
       },
@@ -30548,7 +30548,7 @@
         }
       ],
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-02",
         "outcome": "ok",
         "detail": "url"
       },
@@ -30920,7 +30920,7 @@
         "notes": "Enterprise referral program. Must bring new enterprise customers. Commission negotiated per deal."
       },
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-02",
         "outcome": "ok",
         "detail": "text"
       },
@@ -31092,9 +31092,9 @@
         "packages",
         "google cloud"
       ],
-      "verifiedDate": "2026-08-15",
+      "verifiedDate": "2026-09-02",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-02",
         "outcome": "ok",
         "detail": "text"
       }
@@ -33608,7 +33608,7 @@
       ],
       "verifiedDate": "2026-08-15",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-02",
         "outcome": "ok",
         "detail": "url"
       },
