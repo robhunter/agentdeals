@@ -13519,9 +13519,9 @@
     {
       "vendor": "gtmetrix.com",
       "category": "Code Quality",
-      "description": "Website performance testing — Lighthouse-based reports with Core Web Vitals, waterfall charts, and optimization recommendations. Free plan: 5 monitored URLs, daily checks, 20 on-demand tests/day",
+      "description": "Website performance testing — Lighthouse-based reports with Core Web Vitals, waterfall charts, and optimization recommendations. Free account: testing from Seattle and London, dashboard with filters and tags, daily/weekly/monthly monitoring, e-mail alerts, and 1-month CrUX history. GTmetrix states no on-demand test or monitored-slot quantity for the free account; the cheapest paid plan (Lite, $5.99/mo) lists 50 monthly on-demand tests and 1 monitored slot.",
       "tier": "Free",
-      "url": "https://gtmetrix.com/",
+      "url": "https://gtmetrix.com/free-plan-features.html",
       "tags": [
         "developer-tools",
         "free-for-dev"
@@ -31140,7 +31140,7 @@
       "category": "Dev Utilities",
       "description": "Always Free: browser-based terminal with 5 GB persistent disk, pre-installed tools (gcloud, kubectl, docker, git), and built-in code editor",
       "tier": "Always Free",
-      "url": "https://cloud.google.com/shell",
+      "url": "https://docs.cloud.google.com/shell/docs/quotas-limits",
       "tags": [
         "terminal",
         "ide",
