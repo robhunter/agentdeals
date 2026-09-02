@@ -278,6 +278,22 @@ describe("the production answer reads the same gate", () => {
     assert.deepStrictEqual(offenders, []);
   });
 
+  it("states the pricing history rather than a rating where the level is not stable", () => {
+    const subjects = gated().filter(p => productionAnswer(p).includes("is usable for prototyping and development"));
+    assert.ok(subjects.length > 0, "no gated page takes the branch that rated the tier");
+    for (const p of subjects) {
+      const answer = productionAnswer(p);
+      assert.ok(answer.startsWith(p.gate!.reason), `/vendor/${p.slug} drops the restriction`);
+      assert.ok(!/we rate it (stable|caution|risky)/i.test(answer), `/vendor/${p.slug}: ${answer.slice(0, 160)}`);
+      assert.ok(
+        ["warrants caution", "is high risk", "has a stable pricing history"].some(
+          form => answer.includes(`${p.vendor} ${form}`),
+        ),
+        `/vendor/${p.slug} names no pricing history: ${answer.slice(0, 160)}`,
+      );
+    }
+  });
+
   it("keeps the restriction prefix and the rest of the sentence on an eligibility-gated record", () => {
     const subjects = gated().filter(
       p => p.gate!.code === "eligibility_restricted" && productionAnswer(p).includes(RECOMMENDATION_CLAUSE),
@@ -301,6 +317,21 @@ describe("the heading agrees with the title on the same page", () => {
       if (titleClaimsFree !== headingClaimsFree) disagreeing.push(p.slug);
     }
     assert.deepStrictEqual(disagreeing, []);
+  });
+
+  it("withholds the free-tier form from a page whose gate says there is no free tier", () => {
+    const subjects = gated().filter(p => p.gate!.code === "not_a_free_offer" || p.gate!.code === "offer_expired");
+    assert.ok(subjects.length > 0, "no record is gated as not a free offer or as expired");
+    for (const p of subjects) {
+      assert.ok(!/ Free Tier \d{4}/.test(headingOf(p.html)), `/vendor/${p.slug} is headed ${headingOf(p.html)}`);
+      assert.ok(!/ Free Tier \d{4}:/.test(titleOf(p.html)), `/vendor/${p.slug} is titled ${titleOf(p.html)}`);
+    }
+  });
+
+  it("keeps it on a page whose gate is the restriction rather than the tier", () => {
+    const restricted = gated().filter(p => p.gate!.code === "eligibility_restricted");
+    const heading = restricted.filter(p => / Free Tier \d{4}/.test(headingOf(p.html))).length;
+    assert.ok(heading > 100, `only ${heading} of ${restricted.length} restricted pages still head a free tier`);
   });
 
   it("heads a page whose title withholds the free-tier form with the pricing form", () => {
@@ -348,7 +379,7 @@ describe("a reader sees why the record is gated without opening the FAQ", () => 
   });
 });
 
-const CLAIMS_A_RATING = (vendor: string) => [
+const CLAIMS_A_RATING = (vendor: string, category: string) => [
   `${vendor}'s free tier offers `,
   `${vendor}'s free tier is considered `,
   `${vendor}'s free tier requires caution`,
@@ -359,6 +390,7 @@ const CLAIMS_A_RATING = (vendor: string) => [
   "This is a good sign",
   "This is a positive stability signal",
   `Yes, ${vendor} offers a free tier`,
+  `Best for ${category.toLowerCase()} workloads`,
 ];
 
 const NAMES_A_FREE_TIER = (vendor: string) => [
@@ -405,7 +437,7 @@ describe("no page a gated record renders claims a free tier or rates one", () =>
     const offenders: string[] = [];
     for (const p of gated()) {
       const prose = pageProse(p);
-      for (const claim of CLAIMS_A_RATING(p.vendor)) {
+      for (const claim of CLAIMS_A_RATING(p.vendor, p.primary.category)) {
         if (prose.includes(claim)) offenders.push(`${p.slug} (${p.gate!.code}): ${claim}`);
       }
       if (p.gate!.code === "eligibility_restricted") continue;
@@ -451,8 +483,12 @@ describe("no page a gated record renders claims a free tier or rates one", () =>
 describe("the same page an ungated record renders is unchanged", () => {
   it("still makes every one of those claims somewhere", () => {
     const unmade: string[] = [];
-    for (const claim of [...CLAIMS_A_RATING("<vendor>"), ...NAMES_A_FREE_TIER("<vendor>")]) {
-      const made = ungated().filter(p => pageProse(p).includes(claim.replace(/<vendor>/g, p.vendor))).length;
+    for (const claim of [...CLAIMS_A_RATING("<vendor>", "<category>"), ...NAMES_A_FREE_TIER("<vendor>")]) {
+      const made = ungated().filter(p =>
+        pageProse(p).includes(
+          claim.replace(/<vendor>/g, p.vendor).replace(/<category>/g, p.primary.category.toLowerCase()),
+        ),
+      ).length;
       if (made === 0) unmade.push(claim);
     }
     assert.deepStrictEqual(unmade, [], "claims no ungated page makes, so the gated assertion above is vacuous for them");

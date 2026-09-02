@@ -204,3 +204,29 @@ describe("check_vendor_risk REST endpoint", () => {
     assert.ok(body.error.includes("not found"));
   });
 });
+
+describe("the summary names the level it publishes", () => {
+  it("uses one sentence form per level, over the whole catalog", async () => {
+    const { checkVendorRisk, loadOffers } = await import("../dist/data.js");
+    const forms: Record<string, string> = {
+      stable: "has a stable pricing history.",
+      caution: "warrants caution —",
+      risky: "is high risk —",
+    };
+    const seen = new Set<string>();
+    const wrong: string[] = [];
+    for (const vendor of [...new Set(loadOffers().map(o => o.vendor))]) {
+      const checked = checkVendorRisk(vendor);
+      if ("error" in checked) continue;
+      const { risk_level, summary } = checked.result;
+      if (risk_level === null) continue;
+      if (!summary.startsWith(vendor)) continue;
+      seen.add(risk_level);
+      if (!summary.includes(`${vendor} ${forms[risk_level]}`)) {
+        wrong.push(`${vendor} (${risk_level}): ${summary.slice(0, 110)}`);
+      }
+    }
+    assert.deepStrictEqual(wrong.slice(0, 10), []);
+    assert.deepStrictEqual([...seen].sort(), ["caution", "risky", "stable"]);
+  });
+});
