@@ -5,7 +5,7 @@ import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
 import { createServer, getServerCard } from "./server.js";
-import { vendorRiskAssessment, NEGATIVE_CHANGE_TYPES, POSITIVE_CHANGE_TYPES, SEVERE_CHANGE_TYPES, loadOffers, getCategories, getNewOffers, getNewestDeals, searchOffers, enrichOffers, loadDealChanges, getDealChanges, getPersonalizedChanges, getOfferDetails, compareServices, checkVendorRisk, auditStack, getExpiringDeals, getWeeklyDigest, getFormattedWeeklyDigest, getFreshnessMetrics, getStabilityMap, getVendorReferral, sanitizeQuery, getChangeLogFreshness, isEventDated, partitionByDateProvenance } from "./data.js";
+import { vendorRiskAssessment, NEGATIVE_CHANGE_TYPES, POSITIVE_CHANGE_TYPES, SEVERE_CHANGE_TYPES, loadOffers, getCategories, getNewOffers, getNewestDeals, searchOffers, enrichOffers, gateForOffer, loadDealChanges, getDealChanges, getPersonalizedChanges, getOfferDetails, compareServices, checkVendorRisk, auditStack, getExpiringDeals, getWeeklyDigest, getFormattedWeeklyDigest, getFreshnessMetrics, getStabilityMap, getVendorReferral, sanitizeQuery, getChangeLogFreshness, isEventDated, partitionByDateProvenance } from "./data.js";
 import { getStackRecommendation } from "./stacks.js";
 import { estimateCosts } from "./costs.js";
 import { classifyRequest } from "./client-class.js";
@@ -20,7 +20,8 @@ import { offerEnded, offerRetired, recordedTierSentence, endedHeadline, endedHis
 import { levelWithheldReason, withheldLevelClause, withheldLevelSentence } from "./source-check.js";
 import { buildComparisonMap, comparisonSlug } from "./comparison-pairs.js";
 import { stabilityFaqAnswer, stabilityVerdictClause, type ComparisonSide, type StabilityRating } from "./comparison-verdict.js";
-import { publishedVendorLevel, vendorVerdictSentence, narrowingSentence, changeKindNoun, type VendorVerdictInput } from "./vendor-verdict.js";
+import { publishedVendorLevel, vendorVerdictSentence, vendorBadge, statesRiskCause, narrowingSentence, changeKindNoun, type VendorVerdictInput } from "./vendor-verdict.js";
+import { vendorHistorySentence } from "./vendor-history.js";
 import { growthLimitPhrases } from "./growth-limits.js";
 import { registerAgent, authenticateRequest, validateVestauthUrl, hashApiKey, updateAgentX402Address, getAgentById } from "./agents.js";
 import { attributeAuthenticatedRequest } from "./referral-attribution.js";
@@ -41,9 +42,10 @@ import { faqPageJsonLd, type FaqItem } from "./faq-provenance.js";
 import { SSE_KEEPALIVE_FRAME, keepaliveIntervalMs, sessionRecoveryBody } from "./mcp-stream.js";
 import { ASSISTANTS_API_SHUTDOWN } from "./assistants-shutdown.js";
 import { discontinuedOnOrBefore, PRODUCT_DEPRECATED } from "./product-deprecation.js";
-import { rankOffers, rankForListing, rotateListing, utcDate, gateFor, CRITERIA_PATH, DEMOTE_ONLY_POLICY, DISCLOSURE_RATIONALE, TIE_BREAK_ALGORITHM, GATE_TABLE, DEMERIT_TABLE, NOT_FREE_TIER_RULES, TIME_LIMITED_TIER_RULES, type TieBreak } from "./ranking.js";
+import { rankOffers, rankForListing, rotateListing, utcDate, gateFor, CRITERIA_PATH, DEMOTE_ONLY_POLICY, DISCLOSURE_RATIONALE, TIE_BREAK_ALGORITHM, GATE_TABLE, DEMERIT_TABLE, NOT_FREE_TIER_RULES, TIME_LIMITED_TIER_RULES, type TieBreak, type Gate } from "./ranking.js";
 import type { RankedEntry, RankingResult } from "./ranking.js";
-import { eligibilityGate, gatedShareDescriptionClause, gatedShareLede, publishableEligibilityConditions } from "./eligibility.js";
+import { eligibilityGateAsPublished, gatedShareDescriptionClause, gatedShareLede, publishableEligibilityConditions } from "./eligibility.js";
+import { gateDisclosureFor } from "./gate-disclosure.js";
 import { verificationLedger, QUARANTINE_AFTER_FAILURES } from "./verification-state.js";
 import { partitionAlternatives, partitionSubstitutes, type SubstitutesPartition, productRoleSentence, MEMBERSHIP_GATE_RULES, MEMBERSHIP_GATE_ORDER, MEMBERSHIP_GATE_SYMMETRY, MEMBERSHIP_GATE_SCOPE, MEMBERSHIP_GATE_CORRECTIONS, SUBTYPE_TAXONOMIES, SUBTYPE_MEMBERSHIP_RULE, SUBTYPE_MEMBERSHIP_GROUP_SCOPE, CURATED_SUBTYPE_EXEMPTION, membershipGroupsFor, subtypeDefinition } from "./product-role.js";
 import { resolveCuratedAlternatives, curatedAlternativesFor, addCuratedToPool } from "./curated-alternatives.js";
@@ -495,7 +497,11 @@ function stabilityCellHtml(
   cause: RiskCause | null | undefined,
   linkUnreachable: LinkUnreachable | null | undefined,
   offer?: Pick<Offer, "source_check">,
+  gate?: Gate | null,
 ): string {
+  if (gate) {
+    return `<span class="stability-gate" style="color:var(--text-dim);font-family:var(--mono)" title="${escHtmlServer(gate.reason)}">${escHtmlServer(gate.code)}</span>`;
+  }
   if (linkUnreachable) {
     const since = linkUnreachable.last_reachable ? ` since ${linkUnreachable.last_reachable}` : "";
     return `<span style="color:var(--text-dim)" title="Link has not resolved${escHtmlServer(since)}">link unreachable</span>`;
@@ -1076,7 +1082,7 @@ function listingUnreachableNoticeHtml(offer: Offer): string {
 }
 
 function listingEligibilityNoticeHtml(offer: Offer): string {
-  const gate = eligibilityGate(offer);
+  const gate = eligibilityGateAsPublished(offer, utcDate());
   if (!gate) return "";
   const conditions = publishableEligibilityConditions(offer);
   const conditionsHtml = conditions.length > 0
@@ -1091,8 +1097,9 @@ function buildCategoryPage(slug: string): string | null {
 
   const catOffers = offers.filter((o) => o.category === categoryName);
   const catCount = catOffers.length;
-  const catGatedCount = catOffers.filter((o) => eligibilityGate(o)).length;
-  const catGatedClause = gatedShareDescriptionClause(catCount, catGatedCount);
+  const catServedOn = utcDate();
+  const catGates = catOffers.map((o) => gateFor(o, catServedOn));
+  const catGatedClause = gatedShareDescriptionClause(catCount, catGates);
   const title = `Free ${categoryName} Tools & Deals (${catCount} offers) — AgentDeals`;
   const metaDesc = `Compare ${catCount} free ${categoryName.toLowerCase()} tools, free tiers, and developer deals.${catGatedClause ? ` ${catGatedClause}` : ""} Verified pricing for ${catOffers.slice(0, 5).map(o => o.vendor).join(", ")}${catCount > 5 ? " and more" : ""}.`;
 
@@ -1133,7 +1140,7 @@ function buildCategoryPage(slug: string): string | null {
     ? `This category has been relatively stable &mdash; only ${catChangeCount} pricing changes recorded across all vendors.`
     : `This category has seen some movement &mdash; ${catChangeCount} pricing changes recorded across vendors.`;
 
-  const topVendor = catOffers[0];
+  const topVendor = catOffers.find((_, i) => catGates[i] === null);
   const keyLimitMatch = topVendor?.description.match(/(\d[\d,]*\s*(?:GB|GiB|MB|TB|requests?|calls?|MAU|users?|emails?|messages?|builds?|minutes?|hours?|projects?|repos?|sites?|apps?|databases?|invocations?|events?))/i);
   const keyLimit = keyLimitMatch ? keyLimitMatch[1] : "a generous free tier";
 
@@ -1197,7 +1204,7 @@ function buildCategoryPage(slug: string): string | null {
   const faqItems = [
     {
       q: `What is the best free ${categoryName.toLowerCase()} service?`,
-      a: `Based on our data, the most popular free ${categoryName.toLowerCase()} services include ${topAlts}. ${topVendor ? `${escHtmlServer(topVendor.vendor)} offers ${escHtmlServer(keyLimit)} on their ${escHtmlServer(topVendor.tier)} plan.` : ""} The best choice depends on your specific requirements.`,
+      a: `Based on our data, the most popular free ${categoryName.toLowerCase()} services include ${topAlts}.${topVendor ? ` ${escHtmlServer(topVendor.vendor)} offers ${escHtmlServer(keyLimit)} on their ${escHtmlServer(topVendor.tier)} plan.` : ""} The best choice depends on your specific requirements.`,
     },
     {
       q: `How many free ${categoryName.toLowerCase()} tools are there?`,
@@ -1310,7 +1317,7 @@ ${mcpCtaCss()}
   ${buildGlobalNav("categories")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; ${escHtmlServer(categoryName)}</div>
   <h1>Free ${escHtmlServer(categoryName)} Tools</h1>
-  <p class="cat-meta">${gatedShareLede(catCount, catGatedCount)}${dataVerifiedSegment(catOffers)}</p>
+  <p class="cat-meta">${gatedShareLede(catCount, catGates)}${dataVerifiedSegment(catOffers)}</p>
 
   ${introHtml}
   ${analysisCta}
@@ -3672,6 +3679,8 @@ const NO_FREE_TIER_FOR_PRODUCTION = "There is no free tier here to run in produc
 
 const GATES_LEAVING_NO_FREE_TIER: readonly string[] = ["not_a_free_offer", "offer_expired"];
 
+const GATES_LEAVING_NOTHING_TO_RUN_IN_PRODUCTION: readonly string[] = [...GATES_LEAVING_NO_FREE_TIER, "offer_retired"];
+
 function curatedAltsNote(vendorName: string): string {
   return `These alternatives were identified from ${escHtmlServer(vendorName)}&rsquo;s pricing changes as recommended replacements.`;
 }
@@ -3696,30 +3705,50 @@ function buildVendorPage(slug: string): string | null {
   const riskCause = enriched.risk_cause;
   const riskLevel = publishedVendorLevel(enriched.risk_level ?? null, riskCause);
   const riskColor = riskColors[riskLevel] ?? "#8b949e";
-  const riskCauseLine = riskLevel !== "stable" && riskCause
-    ? `  <p class="risk-cause-line" style="margin:.4rem 0 .6rem;font-size:.9rem;color:var(--text-muted)"><strong style="color:${riskColor}">Why ${riskLevel}:</strong> <span class="risk-cause-date" style="font-family:var(--mono)">${escHtmlServer(changeDateLabel(riskCause))}</span> &mdash; ${escHtmlServer(riskCause.summary)} <a href="#changes" style="white-space:nowrap">Full history &darr;</a></p>`
-    : "";
 
   const servedOn = new Date().toISOString().slice(0, 10);
   const discontinuedOn = discontinuedOnOrBefore(vendorChanges, servedOn);
 
   const linkUnreachable = enriched.link_unreachable;
   const offerHasEnded = offerEnded(primary);
+  const primaryGate = gateFor(primary, servedOn);
+  const unconfirmableSince = linkUnreachable
+    ? (linkUnreachable.last_reachable ? ` since ${linkUnreachable.last_reachable}` : "")
+    : "";
+  const levelWithheld = levelWithheldReason(primary, linkUnreachable);
+  const withheldClause = levelWithheld ? withheldLevelClause(levelWithheld, unconfirmableSince) : "";
+  const verdictInput: VendorVerdictInput = {
+    vendor: vendorName,
+    level: enriched.risk_level ?? null,
+    cause: riskCause,
+    changes: vendorChanges,
+    levelWithheld,
+    unconfirmableSince,
+    offerEnded: offerHasEnded,
+    gated: primaryGate !== null,
+    linkUnreachable: Boolean(linkUnreachable),
+  };
+
+  const riskCauseLine = statesRiskCause(verdictInput) && riskCause
+    ? `  <p class="risk-cause-line" style="margin:.4rem 0 .6rem;font-size:.9rem;color:var(--text-muted)"><strong style="color:${riskColor}">Why ${riskLevel}:</strong> <span class="risk-cause-date" style="font-family:var(--mono)">${escHtmlServer(changeDateLabel(riskCause))}</span> &mdash; ${escHtmlServer(riskCause.summary)} <a href="#changes" style="white-space:nowrap">Full history &darr;</a></p>`
+    : "";
+
   const retiredBadgeColor = "#8b949e";
-  const h1RiskBadge = offerHasEnded
+  const badge = vendorBadge(verdictInput);
+  const h1RiskBadge = badge.kind === "ended"
     ? ` <span class="risk-badge" style="background:${retiredBadgeColor}20;color:${retiredBadgeColor};border:1px solid ${retiredBadgeColor}40">${ENDED_BADGE_LABEL}</span>`
-    : enriched.risk_level === null || (linkUnreachable && riskLevel === "stable")
-    ? ""
-    : ` <span class="risk-badge" style="background:${riskColor}20;color:${riskColor};border:1px solid ${riskColor}40">${riskLevel}</span>`;
+    : badge.kind === "rating"
+    ? ` <span class="risk-badge" style="background:${riskColor}20;color:${riskColor};border:1px solid ${riskColor}40">${badge.word}</span>`
+    : "";
   const linkUnreachableLine = linkUnreachable
     ? `  <p class="link-unreachable-line" style="margin:.4rem 0 .6rem;font-size:.9rem;color:var(--text-muted)"><strong style="color:#f85149">Link unreachable:</strong> ${escHtmlServer(primary.url)} did not resolve on our check of <span class="link-checked-date" style="font-family:var(--mono)">${escHtmlServer(linkUnreachable.checked)}</span>. ${linkUnreachable.last_reachable ? `Last reachable <span class="link-last-reachable" style="font-family:var(--mono)">${escHtmlServer(linkUnreachable.last_reachable)}</span>.` : "We have no date on which it was reachable."}</p>`
     : "";
 
-  const primaryEligibilityGate = eligibilityGate(primary);
+  const primaryEligibilityGate = eligibilityGateAsPublished(primary, servedOn);
   const primaryEligibilityConditions = publishableEligibilityConditions(primary);
-  const primaryGate = gateFor(primary, servedOn);
   const primaryGateBeyondEligibility = primaryGate && primaryGate.code !== "eligibility_restricted" ? primaryGate : null;
-  const productionGate = primaryGate && GATES_LEAVING_NO_FREE_TIER.includes(primaryGate.code) ? primaryGate : null;
+  const noFreeTierGate = primaryGate && GATES_LEAVING_NO_FREE_TIER.includes(primaryGate.code) ? primaryGate : null;
+  const productionGate = primaryGate && GATES_LEAVING_NOTHING_TO_RUN_IN_PRODUCTION.includes(primaryGate.code) ? primaryGate : null;
   const linedGate = primaryGate && primaryGate.code !== "offer_retired" ? primaryGate : null;
   const gateLine = linedGate
     ? `\n  <p class="gate-line" style="margin:.4rem 0 .6rem;font-size:.9rem;color:var(--text-muted)"><strong style="color:#d29922;font-family:var(--mono)">${escHtmlServer(linedGate.code)}</strong> ${escHtmlServer(linedGate.reason)} <a href="${CRITERIA_PATH}#gates">How we use this</a>.</p>${
@@ -3779,7 +3808,7 @@ function buildVendorPage(slug: string): string | null {
 
   const currentYear = new Date().getFullYear();
   const retiredSentence = offerRetired(primary) ? recordedTierSentence(vendorName, primary.tier) : "";
-  const hasFree = !retiredSentence && primary.tier.toLowerCase() !== "none" && !primary.description.toLowerCase().includes("no free tier");
+  const hasFree = !retiredSentence && !noFreeTierGate && primary.tier.toLowerCase() !== "none" && !primary.description.toLowerCase().includes("no free tier");
   const freeTierHeadline = `${vendorName} Free Tier ${currentYear}`;
   const pricingHeadline = `${vendorName} Pricing ${currentYear}`;
   const headline = offerHasEnded ? endedHeadline(vendorName) : hasFree ? freeTierHeadline : pricingHeadline;
@@ -3797,28 +3826,19 @@ function buildVendorPage(slug: string): string | null {
     : `${vendorName} pricing details${alternatives.length > 0 ? ` and ${alternatives.length} free alternatives in ${primary.category}` : ""}.${verifiedSentence}`);
 
   const keyLimit = primary.description.slice(0, 120).replace(/\.\s.*$/, "");
-  const unconfirmableSince = linkUnreachable
-    ? (linkUnreachable.last_reachable ? ` since ${linkUnreachable.last_reachable}` : "")
-    : "";
-  const levelWithheld = levelWithheldReason(primary, linkUnreachable);
-  const withheldClause = levelWithheld ? withheldLevelClause(levelWithheld, unconfirmableSince) : "";
-  const verdictInput: VendorVerdictInput = {
-    level: enriched.risk_level ?? null,
-    cause: riskCause,
-    changes: vendorChanges,
-    levelWithheld,
-    unconfirmableSince,
-    offerEnded: offerHasEnded,
-  };
   const verdictLine2 = vendorVerdictSentence(verdictInput);
   const verdictLine3 = discontinuedOn
     ? `${vendorName} was discontinued on ${discontinuedOn}, so it is not a current option${alternatives.length > 0 ? ` — the ${alternatives.length} alternatives below are replacements` : ""}.`
-    : alternatives.length > 0 && !levelWithheld
+    : alternatives.length > 0 && !levelWithheld && !primaryGate
     ? `Best for ${primary.category.toLowerCase()} workloads${alternatives.length >= 5 ? ` — ${alternatives.length} alternatives available` : ""}.`
     : "";
+  const verdictSubject = primaryGate ? primaryGate.reason : retiredSentence;
+  const verdictOpening = verdictSubject
+    ? `${escHtmlServer(verdictSubject)} ${escHtmlServer(keyLimit)}.`
+    : `${escHtmlServer(vendorName)}'s free tier offers ${escHtmlServer(keyLimit)}.`;
   const quickVerdictHtml = `
   <div class="quick-verdict">
-    <p>${retiredSentence ? `${escHtmlServer(retiredSentence)} ${escHtmlServer(keyLimit)}.` : `${escHtmlServer(vendorName)}'s free tier offers ${escHtmlServer(keyLimit)}.`} ${verdictLine2}${verdictLine3 ? " " + verdictLine3 : ""}</p>
+    <p>${verdictOpening} ${verdictLine2}${verdictLine3 ? " " + verdictLine3 : ""}</p>
   </div>`;
 
   const catMapping = categoryComparisonMap[primary.category];
@@ -3846,7 +3866,7 @@ function buildVendorPage(slug: string): string | null {
     const topAlt = alternatives[0];
     growthBullets.push(`At that point, consider <a href="/vendor/${toSlug(topAlt.vendor)}">${escHtmlServer(topAlt.vendor)}</a> which offers ${escHtmlServer(topAlt.tier)} in the same category.`);
   }
-  const growthPathHtml = growthBullets.length > 0 && !discontinuedOn ? `
+  const growthPathHtml = growthBullets.length > 0 && !discontinuedOn && !primaryGate ? `
   <div class="section growth-section">
     <h2>When You'll Outgrow ${escHtmlServer(vendorName)}'s Free Tier</h2>
     <ul class="growth-list">
@@ -3871,7 +3891,7 @@ function buildVendorPage(slug: string): string | null {
           <tr class="current-vendor-row">
             <td><strong>${escHtmlServer(vendorName)}</strong></td>
             <td>${escHtmlServer(primary.tier)}</td>
-            <td>${stabilityCellHtml(enriched.risk_level, riskCause, linkUnreachable, primary)}</td>
+            <td>${stabilityCellHtml(enriched.risk_level, riskCause, linkUnreachable, primary, primaryGate)}</td>
           </tr>
 ${enrichedAlts.map(a => {
   return `          <tr>
@@ -3902,6 +3922,8 @@ ${enrichedAlts.map(a => {
     ? `<p class="no-changes">${escHtmlServer(endedHistorySentence(vendorName))}</p>`
     : levelWithheld
     ? `<p class="no-changes">No recorded pricing changes for ${escHtmlServer(vendorName)} — but ${escHtmlServer(withheldClause)}, so nothing we have read describes these terms. Treat the empty history as a statement about our records, not about this vendor's pricing.</p>`
+    : primaryGate
+    ? `<p class="no-changes">No recorded pricing changes for ${escHtmlServer(vendorName)}.</p>`
     : `<p class="no-changes">No recorded pricing changes for ${escHtmlServer(vendorName)}. This is a good sign — stable pricing.</p>`;
 
   const latestChange = vendorChanges[0];
@@ -4091,13 +4113,17 @@ ${allCompareLinks.join("\n")}
       description: primary.description,
       applicationCategory: primary.category,
       ...(offerRetired(primary) ? {} : { url: primary.url }),
-      offers: {
-        "@type": "Offer",
-        price: "0",
-        priceCurrency: "USD",
-        description: primary.tier,
-        ...(offerExpiry ? { priceValidUntil: offerExpiry } : {}),
-      },
+      ...(primaryGate
+        ? {}
+        : {
+            offers: {
+              "@type": "Offer",
+              price: "0",
+              priceCurrency: "USD",
+              description: primary.tier,
+              ...(offerExpiry ? { priceValidUntil: offerExpiry } : {}),
+            },
+          }),
     },
   };
   if (pricingEvents.length > 0) {
@@ -4124,8 +4150,6 @@ ${allCompareLinks.join("\n")}
     : `Yes, ${vendorName} offers a free tier: ${primary.tier}. ${storedTerms}`;
   const faqTierAnswer = retiredSentence
     ? `${retiredSentence} ${primary.description}`
-    : primaryGateBeyondEligibility
-    ? `${primaryGateBeyondEligibility.reason} ${levelWithheld ? `${unconfirmedTermsPreamble}${withUnconfirmedTermsCaveat(primary.description)}` : primary.description}`
     : eligibilityGateSentence + (levelWithheld
     ? `${unconfirmedTermsPreamble}Our stored record calls ${vendorName}'s free tier "${primary.tier}". ${withUnconfirmedTermsCaveat(primary.description)}`
     : `${vendorName}'s free tier is called "${primary.tier}". ${primary.description}`);
@@ -4147,6 +4171,8 @@ ${allCompareLinks.join("\n")}
     : hasFree
     ? (riskLevel === "stable"
       ? `${vendorName}'s free tier can be suitable for small production workloads and side projects. ${primaryGate ? "It" : "We rate it stable and it"} offers ${escHtmlServer(keyLimit)}, so it's a reasonable starting point.${vendorChanges.length > 0 ? ` ${narrowingSentence(vendorChanges)}` : ""} Monitor your usage against the limits and have an upgrade plan ready.`
+      : primaryGate
+      ? `${vendorName}'s free tier is usable for prototyping and development. ${vendorHistorySentence(vendorName, riskLevel, riskCause)}`
       : `${vendorName}'s free tier is usable for prototyping and development, but we rate it ${riskLevel}${riskCause ? ` because of one recorded ${changeKindNoun(riskCause.change_type)}, ${changeDateClause(riskCause)}` : ""}. Consider alternatives with more stable pricing for critical services.`)
     : `${vendorName} does not offer a free tier for production use. Consider free alternatives in ${primary.category}.`);
   const faqChangedAnswer = vendorChanges.length > 0
@@ -4155,6 +4181,8 @@ ${allCompareLinks.join("\n")}
     ? endedEmptyChangeHistorySentence(vendorName)
     : levelWithheld
     ? `We hold no recorded pricing changes for ${vendorName}, but ${withheldClause}, so that is a statement about our records rather than a positive signal.`
+    : primaryGate
+    ? `No, ${vendorName} has had no recorded pricing changes.`
     : `No, ${vendorName} has had no recorded pricing changes. This is a positive stability signal.`;
   const faqAlternativesAnswer = alternatives.length > 0
     ? `The top free alternatives to ${vendorName} in ${primary.category} include ${alternatives.slice(0, 5).map(a => `${a.vendor} (${a.tier})`).join(", ")}. See all ${alternatives.length} alternatives above.`
@@ -4163,14 +4191,17 @@ ${allCompareLinks.join("\n")}
     ? `${growthBullets[0].replace(/<[^>]*>/g, "")} When you outgrow the free tier, evaluate paid plans against alternatives — sometimes a competitor's free tier covers what you need.`
     : `When your usage exceeds the free tier limits, you'll need to upgrade or evaluate alternatives in the same category.`;
 
+  const gateStatesThereIsNoFreeTier = noFreeTierGate !== null;
+  const reliabilityAnswerWouldRateAGatedOffer = primaryGate !== null && !offerHasEnded && !levelWithheld;
+
   const vendorFaqItems = [
     { q: `Is ${vendorName} free?`, a: faqFreeAnswer },
-    { q: `What is ${vendorName}'s free tier?`, a: faqTierAnswer },
-    { q: `Is ${vendorName}'s free tier reliable?`, a: faqReliableAnswer },
+    ...(gateStatesThereIsNoFreeTier ? [] : [{ q: `What is ${vendorName}'s free tier?`, a: faqTierAnswer }]),
+    ...(reliabilityAnswerWouldRateAGatedOffer ? [] : [{ q: `Is ${vendorName}'s free tier reliable?`, a: faqReliableAnswer }]),
     { q: `Is ${vendorName}'s free tier good for production?`, a: faqProductionAnswer },
     { q: `What changed in ${vendorName}'s pricing?`, a: faqChangedAnswer },
     ...(alternatives.length > 0 ? [{ q: `What are the best free alternatives to ${vendorName}?`, a: faqAlternativesAnswer }] : []),
-    { q: `When will I outgrow ${vendorName}'s free tier?`, a: faqOutgrowAnswer },
+    ...(primaryGate ? [] : [{ q: `When will I outgrow ${vendorName}'s free tier?`, a: faqOutgrowAnswer }]),
     { q: `What category is ${vendorName} in?`, a: faqCategoryAnswer },
   ];
 
@@ -53277,8 +53308,9 @@ const httpServer = createHttpServer(async (req, res) => {
       unfilteredCount: offersFiltered && sanitizedQ ? searchOffers(sanitizedQ).length : total,
     });
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/offers", params: { q, category, limit, offset }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: paged.length });
+    const offersDisclosure = gateDisclosureFor("offer", results.map(o => gateForOffer(o)));
     res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
-    res.end(JSON.stringify(withAgentBlock({ offers: offersWithCodes, total })));
+    res.end(JSON.stringify(withAgentBlock({ offers: offersWithCodes, total, ...offersDisclosure })));
   } else if (url.pathname === "/api/compare" && isGetOrHead) {
     recordApiHit("/api/compare");
     const a = url.searchParams.get("a") || "";

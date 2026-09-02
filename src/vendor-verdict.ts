@@ -3,8 +3,9 @@ import { CHANGE_DIRECTION, isACorrectionToOurOwnRecord } from "./data.js";
 import { changeDateClause } from "./change-dates.js";
 import { withheldLevelClause, type LevelWithheldReason } from "./source-check.js";
 import { endedVerdictSentence } from "./retirement.js";
+import { vendorHistorySentence, type PublishedRiskLevel } from "./vendor-history.js";
 
-export type PublishedRiskLevel = "stable" | "caution" | "risky";
+export type { PublishedRiskLevel };
 
 export const CHANGE_KIND_NOUN: Record<DealChange["change_type"], string> = {
   free_tier_removed: "free tier removal",
@@ -28,13 +29,21 @@ export function changeKindNoun(changeType: string): string {
 }
 
 export interface VendorVerdictInput {
+  vendor: string;
   level: PublishedRiskLevel | null;
   cause: RiskCause | null;
   changes: Array<Pick<DealChange, "date" | "date_source" | "change_type">>;
   levelWithheld: LevelWithheldReason | null;
   unconfirmableSince: string;
   offerEnded?: boolean;
+  gated?: boolean;
+  linkUnreachable?: boolean;
 }
+
+export type VendorBadge =
+  | { kind: "ended" }
+  | { kind: "rating"; word: PublishedRiskLevel }
+  | { kind: "none" };
 
 export function publishedVendorLevel(
   level: PublishedRiskLevel | null,
@@ -66,6 +75,20 @@ export function vendorVerdictWord(input: VendorVerdictInput): PublishedRiskLevel
   return publishedVendorLevel(input.level, input.cause);
 }
 
+export function vendorBadge(input: VendorVerdictInput): VendorBadge {
+  if (input.offerEnded) return { kind: "ended" };
+  if (input.gated) return { kind: "none" };
+  if (input.level === null) return { kind: "none" };
+  const level = publishedVendorLevel(input.level, input.cause);
+  if (input.linkUnreachable && level === "stable") return { kind: "none" };
+  return { kind: "rating", word: level };
+}
+
+export function statesRiskCause(input: VendorVerdictInput): boolean {
+  const word = vendorVerdictWord(input);
+  return word !== null && word !== "stable" && input.cause !== null;
+}
+
 export function narrowingSentence(changes: VendorVerdictInput["changes"]): string {
   const corrections = changes.filter(isACorrectionToOurOwnRecord);
   const byTheVendor = changes.filter(c => !isACorrectionToOurOwnRecord(c));
@@ -94,8 +117,9 @@ export function vendorVerdictSentence(input: VendorVerdictInput): string {
     const clause = withheldLevelClause(input.levelWithheld!, input.unconfirmableSince);
     return `${clause.charAt(0).toUpperCase()}${clause.slice(1)}, so we cannot confirm these terms today.`;
   }
-
   const level = publishedVendorLevel(input.level, input.cause);
+  if (input.gated) return vendorHistorySentence(input.vendor, level, input.cause);
+
   if (level !== "stable" && input.cause) {
     const unconfirmed = input.levelWithheld
       ? ` ${capitalise(withheldLevelClause(input.levelWithheld, input.unconfirmableSince))}, so we cannot confirm the terms above.`

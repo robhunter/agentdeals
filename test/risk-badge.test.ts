@@ -143,12 +143,30 @@ describe("#1038 — the level is checkable", () => {
 
   it("the vendor page publishes the dated cause beside the badge in the <h1>", async () => {
     const { enrichOffers, loadOffers } = await import("../dist/data.js");
+    const { gateFor, utcDate } = await import("../dist/ranking.js");
+    const seen = new Set<string>();
     const warned = enrichOffers(loadOffers())
-      .filter((o: { risk_level: string | null }) => o.risk_level && o.risk_level !== "stable")
-      .slice(0, 6);
-    assert.ok(warned.length > 0, "expected at least one warned vendor to test");
+      .filter((o: { vendor: string }) => {
+        if (seen.has(o.vendor)) return false;
+        seen.add(o.vendor);
+        return true;
+      })
+      .filter((o: { risk_level: string | null }) => o.risk_level && o.risk_level !== "stable");
+    const listed = warned.filter((o: object) => gateFor(o, utcDate()) === null).slice(0, 6);
+    const gated = warned.filter((o: object) => gateFor(o, utcDate()) !== null).slice(0, 6);
+    assert.ok(listed.length > 0, "expected at least one warned vendor the ranker lists");
+    assert.ok(gated.length > 0, "no warned vendor is gated, so the withheld badge is unchecked here");
 
-    for (const offer of warned) {
+    for (const offer of gated) {
+      const { text } = await get(`/vendor/${toSlug(offer.vendor)}`);
+      const h1 = text.match(/<h1>[\s\S]*?<\/h1>/)?.[0] ?? "";
+      assert.ok(
+        !new RegExp(offer.risk_level!).test(h1),
+        `${offer.vendor}: the <h1> of a ${gateFor(offer, utcDate())!.code} record reads ${offer.risk_level}`,
+      );
+    }
+
+    for (const offer of listed) {
       const { text } = await get(`/vendor/${toSlug(offer.vendor)}`);
       const h1 = text.match(/<h1>[\s\S]*?<\/h1>/)?.[0] ?? "";
       assert.ok(new RegExp(offer.risk_level!).test(h1), `${offer.vendor}: expected ${offer.risk_level} in the <h1>`);

@@ -6951,21 +6951,6 @@
       "recorded_date": "2026-09-01"
     },
     {
-      "vendor": "Keywords AI",
-      "change_type": "free_tier_removed",
-      "date": "2026-09-01",
-      "date_source": "discovered",
-      "summary": "Keywords AI's own page now redirects to respan.ai.",
-      "previous_state": "The best LLM monitoring platform. One format to call 200+ LLMs with 2 lines of code. 10,000 free requests every month and $0 for platform features!",
-      "current_state": "The page does not explicitly state a free tier. It showcases features and capabilities of the platform, with mentions of cost savings and budget controls, but does not detail a free usage allowance.",
-      "impact": "high",
-      "source_url": "https://keywordsai.co",
-      "category": "AI / ML",
-      "alternatives": [],
-      "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-01"
-    },
-    {
       "vendor": "LangSmith",
       "change_type": "pricing_model_change",
       "date": "2026-09-01",
@@ -7090,9 +7075,9 @@
       "change_type": "pricing_restructured",
       "date": "2026-09-01",
       "date_source": "discovered",
-      "summary": "The free tier no longer offers 100,000 free words for AI models. It is now a general free plan with access to analytics, publishing, AI publishing, bulk post, RSS schedules, AI contents, URL shortener, team member access, and a watermark.",
+      "summary": "The product at this domain changed. The previous state described 100,000 free words across Azure OpenAI, DeepSeek and Gemini; the page is now a social media scheduling tool and carries none of those terms. A free plan remains at $0/month.",
       "previous_state": "MediaWorkbench.ai offers 100,000 free words for Azure OpenAI, DeepSeek, and Google Gemini models, enabling users to access powerful tools for code generation, deep research, and image creation.",
-      "current_state": "The free plan includes analytics, publishing, AI publishing, bulk post, RSS schedules, AI contents, URL shortener, team member access, and a watermark.",
+      "current_state": "A free plan at $0/month. The only feature list on the page sits behind an Access Features tooltip and renders identically for all four plans ($49, $39, $29 and $0), so the page states no per-plan entitlement.",
       "impact": "high",
       "source_url": "https://mediaworkbench.ai",
       "category": "AI / ML",

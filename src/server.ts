@@ -3,7 +3,8 @@ import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { McpServer, ResourceTemplate } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import { getCategories, getDealChanges, getPersonalizedChanges, getNewOffers, getNewestDeals, getOfferDetails, searchOffers, enrichOffers, compareServices, checkVendorRisk, auditStack, getExpiringDeals, getWeeklyDigest, loadOffers, loadDealChanges, classifyStability, publishedStabilityFor, getVendorReferral, sanitizeQuery } from "./data.js";
+import { getCategories, getDealChanges, getPersonalizedChanges, getNewOffers, getNewestDeals, getOfferDetails, searchOffers, enrichOffers, gateForOffer, compareServices, checkVendorRisk, auditStack, getExpiringDeals, getWeeklyDigest, loadOffers, loadDealChanges, classifyStability, publishedStabilityFor, getVendorReferral, sanitizeQuery } from "./data.js";
+import { gateDisclosureFor } from "./gate-disclosure.js";
 import { toSlug, vendorSlugMap, resolveVendorSlug } from "./vendor-slug.js";
 import { recordToolCall, logRequest, recordSearchQuery } from "./stats.js";
 import { registerAgent, validateVestauthUrl, getAgentByApiKeyHash, hashApiKey, updateAgentX402Address } from "./agents.js";
@@ -29,7 +30,7 @@ const __dirname_server = dirname(fileURLToPath(import.meta.url));
 const PKG_VERSION = JSON.parse(readFileSync(join(__dirname_server, "..", "package.json"), "utf-8")).version;
 
 function toConciseOffer(offer: Offer | EnrichedOffer) {
-  const base = { vendor: offer.vendor, tier: offer.tier, description: offer.description, url: offer.url, ...(offer.payment_protocols?.length ? { payment_protocols: offer.payment_protocols.map(p => p.protocol) } : {}) };
+  const base = { vendor: offer.vendor, tier: offer.tier, description: offer.description, url: offer.url, gate: gateForOffer(offer), ...(offer.payment_protocols?.length ? { payment_protocols: offer.payment_protocols.map(p => p.protocol) } : {}) };
   const enriched = offer as Partial<EnrichedOffer>;
   if (enriched.risk_level !== undefined) {
     return { ...base, risk_level: enriched.risk_level, risk_cause: enriched.risk_cause ?? null, stability: enriched.stability };
@@ -154,6 +155,7 @@ export function createServer(getSessionId?: () => string | undefined, getClientN
           const enrichedResult = {
             ...result,
             deals: result.deals.map(o => ({ ...o, referral_code: getBestReferralCode(o.vendor) })),
+            ...gateDisclosureFor("deal", result.deals.map(o => o.gate)),
           };
           return {
             content: [{ type: "text" as const, text: JSON.stringify(enrichedResult, null, 2) }, SIGNAL_FOOTER_CONTENT],
@@ -211,8 +213,9 @@ export function createServer(getSessionId?: () => string | undefined, getClientN
         const outputResults = response_format === "concise"
           ? resultsWithCodes.map(r => ({ ...toConciseOffer(r), referral_code: r.referral_code }))
           : resultsWithCodes;
+        const disclosure = gateDisclosureFor("result", filtered.map(o => gateForOffer(o)));
         return {
-          content: [{ type: "text" as const, text: JSON.stringify({ results: outputResults, total: finalTotal, limit: effectiveLimit, offset: effectiveOffset }, null, 2) }, SIGNAL_FOOTER_CONTENT],
+          content: [{ type: "text" as const, text: JSON.stringify({ results: outputResults, total: finalTotal, limit: effectiveLimit, offset: effectiveOffset, ...disclosure }, null, 2) }, SIGNAL_FOOTER_CONTENT],
         };
       } catch (err) {
         console.error("search_deals error:", err);

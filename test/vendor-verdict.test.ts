@@ -7,6 +7,8 @@ import {
   CHANGE_KIND_NOUN,
   narrowingSentence,
   publishedVendorLevel,
+  statesRiskCause,
+  vendorBadge,
   vendorVerdictSentence,
   vendorVerdictWord,
   type VendorVerdictInput,
@@ -14,8 +16,17 @@ import {
 import { CHANGE_DIRECTION, enrichOffers, loadDealChanges, loadOffers, vendorRiskAssessment, classifyStability } from "../dist/data.js";
 import { vendorSlugMap } from "../dist/vendor-slug.js";
 import { levelWithheldReason } from "../dist/source-check.js";
-import { offerEnded, ENDED_BADGE_LABEL } from "../dist/retirement.js";
+import { offerEnded, endedVerdictSentence, ENDED_BADGE_LABEL } from "../dist/retirement.js";
+import { gateFor, utcDate } from "../dist/ranking.js";
 import type { DealChange, RiskCause } from "../dist/types.js";
+
+type Gate = { code: string; reason: string };
+
+const GATED_LEVEL_PHRASE: Record<"stable" | "caution" | "risky", string> = {
+  stable: "has a stable pricing history",
+  caution: "warrants caution",
+  risky: "is high risk",
+};
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(__dirname, "..");
@@ -43,7 +54,7 @@ function causeOf(c: DealChange): RiskCause {
 }
 
 function input(over: Partial<VendorVerdictInput> = {}): VendorVerdictInput {
-  return { level: "stable", cause: null, changes: [], levelWithheld: null, unconfirmableSince: "", ...over };
+  return { vendor: "Vendor A", level: "stable", cause: null, changes: [], levelWithheld: null, unconfirmableSince: "", ...over };
 }
 
 describe("vendor verdict — one rating word, and it carries its cause", () => {
@@ -89,6 +100,45 @@ describe("vendor verdict — one rating word, and it carries its cause", () => {
       vendorVerdictSentence(withheld),
       "Its pricing page has not resolved for us since 2026-05-02, so we cannot confirm these terms today.",
     );
+  });
+});
+
+describe("the badge beside a vendor's name says what the verdict below it says", () => {
+  const cause = causeOf(change({ change_type: "pricing_restructured", date: "2026-08-28" }));
+
+  it("rates a record the ranker lists", () => {
+    assert.deepStrictEqual(vendorBadge(input({ level: "stable" })), { kind: "rating", word: "stable" });
+    assert.deepStrictEqual(vendorBadge(input({ level: "caution", cause })), { kind: "rating", word: "caution" });
+  });
+
+  it("states no rating on a record the ranker gates", () => {
+    for (const level of ["stable", "caution", "risky"] as const) {
+      const gated = input({ level, cause, gated: true, changes: [change()] });
+      assert.deepStrictEqual(vendorBadge(gated), { kind: "none" }, `a gated record rated ${level}`);
+    }
+  });
+
+  it("states the offer has ended rather than rating it, whatever its history says", () => {
+    const ended = input({ level: "caution", cause, gated: true, offerEnded: true, changes: [change(), change()] });
+    assert.deepStrictEqual(vendorBadge(ended), { kind: "ended" });
+    assert.strictEqual(vendorVerdictSentence(ended), endedVerdictSentence());
+    assert.strictEqual(statesRiskCause(ended), false);
+  });
+
+  it("withholds the badge on the two grounds it withheld it on before", () => {
+    assert.deepStrictEqual(vendorBadge(input({ level: null })), { kind: "none" });
+    assert.deepStrictEqual(vendorBadge(input({ level: "stable", linkUnreachable: true })), { kind: "none" });
+    assert.deepStrictEqual(
+      vendorBadge(input({ level: "risky", cause, linkUnreachable: true })),
+      { kind: "rating", word: "risky" },
+    );
+  });
+
+  it("explains a level only where the verdict states one", () => {
+    assert.strictEqual(statesRiskCause(input({ level: "caution", cause })), true);
+    assert.strictEqual(statesRiskCause(input({ level: "caution", cause, gated: true })), true);
+    assert.strictEqual(statesRiskCause(input({ level: "stable" })), false);
+    assert.strictEqual(statesRiskCause(input({ level: "caution", cause, offerEnded: true })), false);
   });
 });
 
@@ -198,6 +248,8 @@ interface VendorRow {
   badgeRendered: boolean;
   sentence: string;
   changes: DealChange[];
+  gate: Gate | null;
+  cause: RiskCause | null;
 }
 
 function vendorRows(): VendorRow[] {
@@ -217,6 +269,7 @@ function vendorRows(): VendorRow[] {
     const unconfirmableSince = enriched.link_unreachable?.last_reachable
       ? ` since ${enriched.link_unreachable.last_reachable}`
       : "";
+    const gate = gateFor(primary, utcDate());
     rows.push({
       slug,
       vendor,
@@ -224,16 +277,20 @@ function vendorRows(): VendorRow[] {
       ended,
       badge: ended ? ENDED_BADGE_LABEL : expected,
       withheld,
-      badgeRendered: ended || !(enriched.risk_level === null || (enriched.link_unreachable && expected === "stable")),
+      badgeRendered: ended || !(gate || enriched.risk_level === null || (enriched.link_unreachable && expected === "stable")),
       sentence: vendorVerdictSentence({
+        vendor,
         level: enriched.risk_level ?? null,
         cause: enriched.risk_cause ?? null,
         changes: vendorChanges,
         levelWithheld: withheld,
         unconfirmableSince,
         offerEnded: ended,
+        gated: gate !== null,
       }),
       changes: vendorChanges,
+      gate,
+      cause: enriched.risk_cause ?? null,
     });
   }
   return rows;
@@ -246,6 +303,23 @@ describe("vendor verdict — corpus invariant, computed offline", () => {
       if (row.changes.length === 0) continue;
       if (STABILITY_SCALE_WORDS.test(row.sentence)) {
         wrong.push(`${row.slug}: verdict reaches for a second scale — ${row.sentence}`);
+        continue;
+      }
+      if (row.ended) {
+        if (row.sentence !== endedVerdictSentence()) {
+          wrong.push(`${row.slug}: badge says ${row.badge}, verdict of an ended offer says ${row.sentence}`);
+        }
+        continue;
+      }
+      if (row.withheld && row.expected === "stable") {
+        if (/\bWe rate it\b/.test(row.sentence)) wrong.push(`${row.slug}: rates a vendor whose level we withhold`);
+        continue;
+      }
+      if (row.gate) {
+        if (row.badgeRendered) wrong.push(`${row.slug}: rates a gated record ${row.badge} beside its name`);
+        if (!row.sentence.includes(`${row.vendor} ${GATED_LEVEL_PHRASE[row.expected]}`)) {
+          wrong.push(`${row.slug}: gated verdict says ${row.sentence}, over a history we read as ${row.expected}`);
+        }
         continue;
       }
       if (!row.badgeRendered) {
@@ -337,26 +411,25 @@ describe("vendor verdict — as rendered", () => {
     };
   };
 
-  const faqAnswers = (html: string, vendor: string): { reliable: string; production: string } => {
+  const faqAnswers = (html: string, vendor: string): { reliable: string | null; production: string } => {
     const blocks = [...html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)]
       .map(m => JSON.parse(m[1]) as Record<string, unknown>);
     const faq = blocks.find(b => b["@type"] === "FAQPage") as
       { mainEntity: Array<{ name: string; acceptedAnswer: { text: string } }> } | undefined;
     assert.ok(faq, `${vendor} emits FAQ structured data`);
-    const find = (name: string) => {
-      const q = faq.mainEntity.find(e => e.name === name);
-      assert.ok(q, `the structured data answers "${name}"`);
-      return q.acceptedAnswer.text;
-    };
+    const find = (name: string) => faq.mainEntity.find(e => e.name === name)?.acceptedAnswer.text ?? null;
+    const production = find(`Is ${vendor}'s free tier good for production?`);
+    assert.ok(production, `the structured data answers "Is ${vendor}'s free tier good for production?"`);
     return {
       reliable: find(`Is ${vendor}'s free tier reliable?`),
-      production: find(`Is ${vendor}'s free tier good for production?`),
+      production,
     };
   };
 
   it("renders on every vendor route the one rating its own records support", async () => {
     const rows = vendorRows();
     const wrong: string[] = [];
+    let rating = 0;
     let index = 0;
     const worker = async () => {
       while (index < rows.length) {
@@ -366,6 +439,13 @@ describe("vendor verdict — as rendered", () => {
         const verdict = verdictParagraph(html);
         const cell = comparisonCell(html);
 
+        if (badge !== null && badge !== ENDED_BADGE_LABEL) rating++;
+        if (row.gate && !row.ended && badge !== null) {
+          wrong.push(`${row.slug}: the h1 of a ${row.gate.code} record rates it ${badge}`);
+        }
+        if (row.gate && row.ended && badge !== ENDED_BADGE_LABEL) {
+          wrong.push(`${row.slug}: the h1 of an ended offer reads ${badge ?? "nothing"}`);
+        }
         if (row.badgeRendered && badge !== row.badge) {
           wrong.push(`${row.slug}: h1 badge is ${badge ?? "absent"}, expected ${row.badge}`);
         }
@@ -381,13 +461,18 @@ describe("vendor verdict — as rendered", () => {
         if (COUNT_AS_EVIDENCE.test(verdict) && row.changes.length > 0) {
           wrong.push(`${row.slug}: verdict offers a count of changes as its evidence`);
         }
-        if (cell.rendered && !row.withheld && cell.word !== row.expected) {
+        if (cell.rendered && row.gate && cell.word !== null) {
+          wrong.push(`${row.slug}: comparison table rates a gated record ${cell.word}`);
+        }
+        if (cell.rendered && !row.withheld && !row.gate && cell.word !== row.expected) {
           wrong.push(`${row.slug}: comparison table says ${cell.word ?? "nothing"}, h1 badge says ${row.expected}`);
         }
       }
     };
     await Promise.all(Array.from({ length: 12 }, worker));
     assert.deepStrictEqual(wrong.slice(0, 20), [], `vendor routes rendering more than one judgement:\n${wrong.slice(0, 20).join("\n")}`);
+    assert.ok(rating > 700, `only ${rating} vendor pages rate the vendor beside its name`);
+    assert.ok(rows.some(r => r.gate && !r.ended), "no gated record reaches a vendor page, so the gate criterion has no subject");
   });
 
   it("answers both of its own stability questions with the same word", async () => {
@@ -400,15 +485,24 @@ describe("vendor verdict — as rendered", () => {
         const html = await get(`/vendor/${row.slug}`);
         const answers = faqAnswers(html, row.vendor);
         for (const [name, text] of Object.entries(answers)) {
-          if (OTHER_SCALE_ON_A_SURFACE_THAT_EMBEDS_SUMMARIES.test(text)) {
+          if (text !== null && OTHER_SCALE_ON_A_SURFACE_THAT_EMBEDS_SUMMARIES.test(text)) {
             wrong.push(`${row.slug}: the "${name}" answer reaches for a second scale — ${text}`);
           }
         }
-        if (!row.withheld && !answers.reliable.includes(row.expected)) {
-          wrong.push(`${row.slug}: the reliability answer does not carry the ${row.expected} rating`);
+        const wouldRateAGatedOffer = row.gate !== null && !row.withheld && !row.ended;
+        if (wouldRateAGatedOffer && answers.reliable !== null) {
+          wrong.push(`${row.slug}: asks whether a gated free tier is reliable — ${answers.reliable}`);
         }
-        if (!row.withheld && row.expected === "stable" && !answers.reliable.includes(narrowingSentence(row.changes))) {
-          wrong.push(`${row.slug}: the reliability answer does not say what the records it holds did — ${answers.reliable}`);
+        if (!wouldRateAGatedOffer && answers.reliable === null) {
+          wrong.push(`${row.slug}: no longer asks whether its free tier is reliable`);
+        }
+        if (answers.reliable !== null && !row.withheld && !row.ended) {
+          if (!answers.reliable.includes(row.expected)) {
+            wrong.push(`${row.slug}: the reliability answer does not carry the ${row.expected} rating`);
+          }
+          if (row.expected === "stable" && !answers.reliable.includes(narrowingSentence(row.changes))) {
+            wrong.push(`${row.slug}: the reliability answer does not say what the records it holds did — ${answers.reliable}`);
+          }
         }
         const productionRating = answers.production.match(/we rate it (stable|caution|risky)\b/)?.[1];
         if (productionRating && productionRating !== row.expected) {
@@ -447,11 +541,16 @@ describe("vendor verdict — as rendered", () => {
     assert.deepStrictEqual(wrong.slice(0, 20), [], `vendor routes claiming a narrowing they cannot show:\n${wrong.slice(0, 20).join("\n")}`);
   });
 
-  it("counts one narrowing on the route that carried a repair as a second", async () => {
-    const digitalocean = verdictParagraph(await get("/vendor/digitalocean"));
-    assert.match(digitalocean, /one recorded restriction/);
-    assert.doesNotMatch(digitalocean, /2 recorded changes narrowed the terms/);
-    assert.doesNotMatch(digitalocean, /corrects our own earlier entry/);
+  it("counts one narrowing where a repair to our own entry sits beside it", async () => {
+    const digitalocean = vendorRows().find(r => r.slug === "digitalocean")!;
+    assert.ok(
+      digitalocean.gate,
+      "/vendor/digitalocean renders an ungated record again, so assert this on the page rather than on the composer",
+    );
+    const composed = narrowingSentence(digitalocean.changes);
+    assert.match(composed, /One recorded restriction/);
+    assert.doesNotMatch(composed, /2 recorded changes narrowed the terms/);
+    assert.doesNotMatch(composed, /corrects our own earlier entry/);
 
     const neo4j = verdictParagraph(await get("/vendor/neo4j-auradb"));
     assert.match(neo4j, /The one record we hold corrects our own earlier entry rather than reporting a change the vendor made\./);
@@ -464,7 +563,11 @@ describe("vendor verdict — as rendered", () => {
       const row = vendorRows().find(r => r.slug === slug);
       assert.ok(row, `/vendor/${slug} is a rendered route`);
       const html = await get(`/vendor/${slug}`);
-      assert.strictEqual(badgeWord(html), row.expected, `/vendor/${slug} badge`);
+      assert.strictEqual(
+        badgeWord(html),
+        row.gate ? null : row.expected,
+        `/vendor/${slug} badge, over a ${row.gate?.code ?? "listed"} record`,
+      );
       const cell = comparisonCell(html);
       if (cell.rendered) {
         cellsChecked += 1;
@@ -474,9 +577,16 @@ describe("vendor verdict — as rendered", () => {
       assert.doesNotMatch(verdict, STABILITY_SCALE_WORDS, `/vendor/${slug} verdict`);
       assert.ok(verdict.includes(row.sentence), `/vendor/${slug} verdict does not render "${row.sentence}"`);
       assert.notStrictEqual(row.expected, "stable", `/vendor/${slug} still reads stable over a record that points down`);
-      assert.match(row.sentence, /one recorded /, `/vendor/${slug} still names no record behind its level`);
+      assert.ok(
+        row.gate ? row.sentence.includes(row.cause!.summary) : /one recorded /.test(row.sentence),
+        `/vendor/${slug} still names no record behind its level`,
+      );
     }
     assert.ok(cellsChecked > 0, "no route under test rendered a comparison cell, so the badge agreement is unchecked");
+    assert.ok(
+      vendorRows().some(r => ["digitalocean", "google-gemini-api", "postman", "xata"].includes(r.slug) && !r.gate),
+      "every route under test is now gated, so no rendered badge is checked against its verdict here",
+    );
   });
 
   it("stops offering a product whose own shutdown date has passed", async () => {

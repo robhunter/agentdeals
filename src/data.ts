@@ -3,13 +3,26 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import type { Offer, EnrichedOffer, OfferIndex, DealChange, DealChangesIndex, ChangeDateSource, StabilityClass, Referral, RiskCause, LinkUnreachable } from "./types.js";
 import { isUrlSuspended } from "./referral-health.js";
-import { rankForListing, type TieBreak } from "./ranking.js";
+import { rankForListing, gateFor, utcDate, type TieBreak, type Gate, type GateCode } from "./ranking.js";
 import { unreachableNoticeForUrl, resetLinkHealthCache } from "./link-health.js";
 import { quarantineSummary, resetVerificationStateCache, type QuarantineSummary } from "./verification-state.js";
 import { cannotVouchForLevel, levelWithheldReason, withheldLevelSentence } from "./source-check.js";
 import { substitutesFor } from "./product-role.js";
 import { DATE_SOURCES, isEventDated, changeDateClause, isoWeekWindow, changesInWindow, discoveryBatchNote, firstReadHeading, type DateWindow } from "./change-dates.js";
 import { PRODUCT_DEPRECATED, deprecationEndsTheListedProduct } from "./product-deprecation.js";
+import { vendorHistorySentence } from "./vendor-history.js";
+import { endedVerdictSentence } from "./retirement.js";
+
+export function gateForOffer(offer: Offer): Gate | null {
+  return gateFor(offer, utcDate());
+}
+
+export function gateRiskSummary(gate: Gate): string {
+  if (gate.code === "offer_retired") return endedVerdictSentence();
+  return `${gate.reason} We do not rate an offer we do not list.`;
+}
+
+const GATES_WITHOUT_A_LONGEVITY_REFERENT = new Set<GateCode>(["offer_retired", "not_a_free_offer"]);
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const INDEX_PATH =
@@ -86,7 +99,7 @@ export function withLinkHealth<T extends Offer>(offer: T): T & { link_unreachabl
 export function getOfferDetails(
   vendorName: string,
   includeAlternatives: boolean = false
-): { offer: OfferWithLinkHealth & { relatedVendors: string[]; alternatives?: OfferWithLinkHealth[]; tie_break: TieBreak } } | { error: string; suggestions: string[] } {
+): { offer: OfferWithLinkHealth & { gate: Gate | null; relatedVendors: string[]; alternatives?: Array<OfferWithLinkHealth & { gate: Gate | null }>; tie_break: TieBreak } } | { error: string; suggestions: string[] } {
   const offers = loadOffers();
   const lowerName = vendorName.toLowerCase();
   const match = offers.find((o) => o.vendor.toLowerCase() === lowerName);
@@ -98,13 +111,14 @@ export function getOfferDetails(
     );
     const sameCategoryOffers = relatedRanking.entries.slice(0, 5).map((e) => e.offer);
     const relatedVendors = sameCategoryOffers.map((o) => o.vendor);
-    const result: OfferWithLinkHealth & { relatedVendors: string[]; alternatives?: OfferWithLinkHealth[]; tie_break: TieBreak } = {
+    const result: OfferWithLinkHealth & { gate: Gate | null; relatedVendors: string[]; alternatives?: Array<OfferWithLinkHealth & { gate: Gate | null }>; tie_break: TieBreak } = {
       ...withLinkHealth(match),
+      gate: gateForOffer(match),
       relatedVendors,
       tie_break: relatedRanking.tie_break,
     };
     if (includeAlternatives) {
-      result.alternatives = sameCategoryOffers.map(o => stripReferrerValue(withLinkHealth(o)));
+      result.alternatives = sameCategoryOffers.map(o => stripReferrerValue({ ...withLinkHealth(o), gate: gateForOffer(o) }));
     }
     return { offer: stripReferrerValue(result) };
   }
@@ -352,6 +366,7 @@ export function getStabilityMap(): Map<string, StabilityClass> {
 export function enrichOffers(offers: Offer[]): EnrichedOffer[] {
   const changes = loadDealChanges();
   const now = new Date();
+  const servedOn = utcDate();
   const ninetyDaysMs = 90 * 24 * 60 * 60 * 1000;
   const cutoffDate = new Date(now.getTime() - ninetyDaysMs).toISOString().slice(0, 10);
 
@@ -408,7 +423,7 @@ export function enrichOffers(offers: Offer[]): EnrichedOffer[] {
       (now.getTime() - new Date(offer.verifiedDate).getTime()) / (24 * 60 * 60 * 1000)
     );
 
-    const enriched = { ...offer, recent_change, expires_soon, risk_level, risk_cause, stability, days_since_verified, link_unreachable };
+    const enriched = { ...offer, recent_change, expires_soon, risk_level, risk_cause, stability, days_since_verified, link_unreachable, gate: gateFor(offer, servedOn) };
     return stripReferrerValue(enriched);
   });
 }
@@ -639,9 +654,10 @@ export interface VendorRiskResult {
   risk_level: "stable" | "caution" | "risky" | null;
   risk_cause: RiskCause | null;
   link_unreachable: LinkUnreachable | null;
-  free_tier_longevity_days: number;
+  gate: Gate | null;
+  free_tier_longevity_days: number | null;
   changes: DealChange[];
-  alternatives: Array<{ vendor: string; category: string; tier: string; risk_level: "stable" | "caution" | "risky" | null; risk_cause: RiskCause | null; link_unreachable: LinkUnreachable | null; demerits: Array<{ code: string; points: number; reason: string }> }>;
+  alternatives: Array<{ vendor: string; category: string; tier: string; risk_level: "stable" | "caution" | "risky" | null; risk_cause: RiskCause | null; link_unreachable: LinkUnreachable | null; gate: Gate | null; demerits: Array<{ code: string; points: number; reason: string }> }>;
   tie_break: TieBreak;
   summary: string;
 }
@@ -742,6 +758,7 @@ export function checkVendorRisk(
   }
 
   const offer = match.offer;
+  const gate = gateForOffer(offer);
   const allChanges = loadDealChanges();
   const vendorChanges = allChanges
     .filter((c) => c.vendor.toLowerCase() === offer.vendor.toLowerCase())
@@ -772,10 +789,12 @@ export function checkVendorRisk(
     ...(() => {
       const a = vendorRiskAssessment(allChanges.filter((c) => c.vendor.toLowerCase() === e.offer.vendor.toLowerCase()));
       const unreachable = unreachableNoticeForUrl(e.offer.url);
+      const altGate = gateForOffer(e.offer);
       return {
-        risk_level: cannotVouchForLevel(e.offer, unreachable) && a.level === "stable" ? null : a.level,
+        risk_level: altGate || (cannotVouchForLevel(e.offer, unreachable) && a.level === "stable") ? null : a.level,
         risk_cause: a.cause ? { date: a.cause.date, date_source: a.cause.date_source, change_type: a.cause.change_type, summary: a.cause.summary } : null,
         link_unreachable: unreachable,
+        gate: altGate,
       };
     })(),
     demerits: e.demerits.map((d) => ({ code: d.code, points: d.points, reason: d.reason })),
@@ -788,24 +807,28 @@ export function checkVendorRisk(
   const unreachableClause = linkUnreachable
     ? ` Its pricing page has not resolved for us${unreachableSince}, so we cannot confirm its current terms.`
     : "";
-  if (riskLevel === "risky" && cause) {
-    summary = `${offer.vendor} is high risk — ${changeDateClause(cause)}: ${cause.summary} Consider alternatives.${unreachableClause}`;
-  } else if (riskLevel === "caution" && cause) {
-    summary = `${offer.vendor} warrants caution — ${changeDateClause(cause)}: ${cause.summary} Monitor for further changes.${unreachableClause}`;
+  if (gate) {
+    const unreadCitation = withheldReason
+      ? ` ${withheldLevelSentence(withheldReason, offer.vendor, unreachableSince)}`
+      : "";
+    summary = `${gateRiskSummary(gate)}${unreadCitation}`;
+  } else if ((riskLevel === "risky" || riskLevel === "caution") && cause) {
+    summary = `${vendorHistorySentence(offer.vendor, riskLevel, cause)}${unreachableClause}`;
   } else if (withheldReason) {
     summary = `${withheldLevelSentence(withheldReason, offer.vendor, unreachableSince)} Nothing we have read describes this offer. Treat that as a statement about our records, not as a stable pricing history.`;
   } else {
-    summary = `${offer.vendor} has a stable pricing history. Free tier verified for ${longevityDays} days.`;
+    summary = `${vendorHistorySentence(offer.vendor, "stable", cause)} Free tier verified for ${longevityDays} days.`;
   }
 
   return {
     result: {
       vendor: offer.vendor,
       category: offer.category,
-      risk_level: cannotVouchForLevel(offer, linkUnreachable) && riskLevel === "stable" ? null : riskLevel,
+      risk_level: gate || (cannotVouchForLevel(offer, linkUnreachable) && riskLevel === "stable") ? null : riskLevel,
       risk_cause: cause ? { date: cause.date, date_source: cause.date_source, change_type: cause.change_type, summary: cause.summary } : null,
       link_unreachable: linkUnreachable,
-      free_tier_longevity_days: longevityDays,
+      gate,
+      free_tier_longevity_days: gate && GATES_WITHOUT_A_LONGEVITY_REFERENT.has(gate.code) ? null : longevityDays,
       changes: vendorChanges,
       alternatives,
       tie_break: alternativesRanking.tie_break,
@@ -982,7 +1005,7 @@ export function getNewestDeals(params: {
   since?: string;
   limit?: number;
   category?: string;
-}): { deals: Array<Offer & { days_since_update: number }>; total: number } {
+}): { deals: Array<Offer & { days_since_update: number; gate: Gate | null }>; total: number } {
   const now = new Date();
   const defaultSince = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000)
     .toISOString()
@@ -1004,6 +1027,7 @@ export function getNewestDeals(params: {
     days_since_update: Math.floor(
       (now.getTime() - new Date(o.verifiedDate).getTime()) / (24 * 60 * 60 * 1000)
     ),
+    gate: gateForOffer(o),
   }));
 
   return { deals, total: deals.length };

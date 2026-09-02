@@ -40,12 +40,15 @@ export const openapiSpec = {
                   type: "object",
                   properties: {
                     offers: { type: "array", items: { $ref: "#/components/schemas/Offer" } },
-                    total: { type: "integer", description: "Total matching offers (before pagination)" }
+                    total: { type: "integer", description: "Total matching offers (before pagination)" },
+                    gated: { type: "integer", description: "How many of the `total` matching offers carry a non-null `gate` — counted over the whole match, not the returned page (#1241)." },
+                    gate_summary: { type: "string", description: "One line stating how many of the matching offers are not on our ranked list and why. Absent when `gated` is 0." }
                   }
                 },
                 example: {
-                  offers: [{ vendor: "Supabase", category: "Cloud Hosting", description: "Open-source Firebase alternative with Postgres database, auth, storage, and edge functions. Free tier: 2 projects, 500MB database, 1GB file storage, 50K monthly active users.", tier: "Free", url: "https://supabase.com/pricing", tags: ["database", "auth", "serverless"], verifiedDate: "2026-03-01" }],
-                  total: 1
+                  offers: [{ vendor: "Supabase", category: "Cloud Hosting", description: "Open-source Firebase alternative with Postgres database, auth, storage, and edge functions. Free tier: 2 projects, 500MB database, 1GB file storage, 50K monthly active users.", tier: "Free", url: "https://supabase.com/pricing", tags: ["database", "auth", "serverless"], verifiedDate: "2026-03-01", gate: null }],
+                  total: 1,
+                  gated: 0
                 }
               }
             }
@@ -372,10 +375,11 @@ export const openapiSpec = {
                   properties: {
                     vendor: { type: "string" },
                     category: { type: "string" },
-                    risk_level: { type: "string", enum: ["stable", "caution", "risky"], nullable: true, description: "Null where the offer's own link is confirmed unreachable (#1046) — we withhold the level rather than publish a favourable one we cannot check." },
+                    risk_level: { type: "string", enum: ["stable", "caution", "risky"], nullable: true, description: "Null where the offer's own link is confirmed unreachable (#1046) — we withhold the level rather than publish a favourable one we cannot check. Also null where gate is non-null (#1241): an offer we have decided not to list is not one we rate." },
                     link_unreachable: { type: "object", nullable: true, description: "Non-null only where a check reached a conclusion about the destination: a 404 confirmed by a full request, a 410, or a hostname with no address. Being refused (403, 429, 5xx, timeout) is evidence about our checker and never produces one of these.", properties: { last_reachable: { type: "string", format: "date", nullable: true }, checked: { type: "string", format: "date" }, terminal: { type: "boolean" } } },
                     risk_cause: { type: "object", nullable: true, description: "The single dated record that produced a non-stable risk_level. Never null when risk_level is caution or risky (#1038) — a client that renders the level must be able to render the reason.", properties: { date: { type: "string" }, change_type: { type: "string" }, summary: { type: "string" } } },
-                    free_tier_longevity_days: { type: "number" },
+                    gate: { $ref: "#/components/schemas/Gate" },
+                    free_tier_longevity_days: { type: "number", nullable: true, description: "Null where the gate code is offer_retired or not_a_free_offer (#1241) — a count of days a free tier has held has no referent where our own record says there is no free tier." },
                     changes: { type: "array", items: { $ref: "#/components/schemas/DealChange" } },
                     alternatives: {
                       type: "array",
@@ -385,8 +389,9 @@ export const openapiSpec = {
                           vendor: { type: "string" },
                           category: { type: "string" },
                           tier: { type: "string" },
-                          risk_level: { type: "string", enum: ["stable", "caution", "risky"], nullable: true, description: "Null where this alternative's own link is confirmed unreachable (#1046)." },
+                          risk_level: { type: "string", enum: ["stable", "caution", "risky"], nullable: true, description: "Null where this alternative's own link is confirmed unreachable (#1046), and null where its gate is non-null (#1241) — rankForListing demotes a gated record to the tail rather than dropping it, so an alternative can be one we do not list." },
                           link_unreachable: { type: "object", nullable: true, properties: { last_reachable: { type: "string", format: "date", nullable: true }, checked: { type: "string", format: "date" }, terminal: { type: "boolean" } } },
+                          gate: { $ref: "#/components/schemas/Gate" },
                           risk_cause: { type: "object", nullable: true, description: "The single dated record that produced a non-stable risk_level. Never null when risk_level is caution or risky (#1038) — a client that renders the level must be able to render the reason.", properties: { date: { type: "string" }, change_type: { type: "string" }, summary: { type: "string" } } }
                         }
                       }
@@ -917,9 +922,20 @@ export const openapiSpec = {
           url: { type: "string", format: "uri", description: "Pricing/offer page URL" },
           tags: { type: "array", items: { type: "string" }, description: "Searchable tags" },
           verifiedDate: { type: "string", format: "date", description: "Date the offer was last verified (YYYY-MM-DD)" },
-          eligibility: { $ref: "#/components/schemas/Eligibility" }
+          eligibility: { $ref: "#/components/schemas/Eligibility" },
+          gate: { $ref: "#/components/schemas/Gate" }
         },
         required: ["vendor", "category", "description", "tier", "url", "tags", "verifiedDate"]
+      },
+      Gate: {
+        type: "object",
+        nullable: true,
+        description: "Why we do not rank this offer, or null where we do. The same verdict rankOffers applies, from the same function (#1241) — nothing is filtered out of a response because of it, so a caller asking whether an offer exists still gets the record. The full code table is published at /criteria.",
+        properties: {
+          code: { type: "string", enum: ["eligibility_restricted", "not_a_free_offer", "offer_expired", "offer_retired", "verification_lapsed"] },
+          reason: { type: "string", description: "The reason we publish for this record, naming the tier, date or restriction the code was decided on." }
+        },
+        required: ["code", "reason"]
       },
       Eligibility: {
         type: "object",

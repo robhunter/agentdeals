@@ -3537,18 +3537,15 @@
     {
       "vendor": "Stripe Atlas",
       "category": "Startup Programs",
-      "description": "$50,000+ in founder perks — $5K AWS credits, $5K DigitalOcean credits, 1yr GitHub, $2.5K Stripe processing credits, plus Notion, Slack, Zendesk, Intercom, and more",
+      "description": "$500 one-time incorporation (Delaware filing and fees, tax ID, founder equity issuance, 83(b) filing, document templates, first year of registered agent), $100/year after. Includes $2,500 in Stripe product credits and access to over $50,000 in partner discounts.",
       "tier": "Founder Perks",
       "url": "https://stripe.com/atlas",
       "tags": [
         "fintech",
         "incorporation",
-        "startup perks",
-        "aws",
-        "digitalocean",
-        "github"
+        "startup perks"
       ],
-      "verifiedDate": "2026-07-05",
+      "verifiedDate": "2026-09-02",
       "eligibility": {
         "type": "fintech",
         "conditions": [
@@ -3556,7 +3553,6 @@
         ],
         "program": "Stripe Atlas Founder Perks"
       },
-      "expires_date": "2026-06-30",
       "referral_program": {
         "available": false,
         "referrer_benefit": "N/A",
@@ -3566,7 +3562,7 @@
         "notes": "Partner ecosystem for integrations. No individual referral program."
       },
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-02",
         "outcome": "ok",
         "detail": "text"
       }
@@ -3709,7 +3705,7 @@
     {
       "vendor": "Highlight.io",
       "category": "Logging",
-      "description": "Free OSS (source-available). The hosted product is gone: highlight.io now redirects to launchdarkly.com, which does not name Highlight anywhere on the page, and the former hosted free tier (500 sessions, 1K errors, 1M logs, 25M traces per month, 15 seats) is no longer published. The open-source project is still maintained — self-hostable full-stack monitoring with error tracking, session replay, logging and distributed tracing.",
+      "description": "Acquired by LaunchDarkly; highlight.io now redirects to launchdarkly.com and the hosted free tier is no longer offered under this name. The open-source project remains self-hostable (repo active, last pushed 2026-08-20).",
       "tier": "Free OSS",
       "url": "https://github.com/highlight/highlight",
       "tags": [
@@ -3719,11 +3715,11 @@
         "error-tracking",
         "tracing"
       ],
-      "verifiedDate": "2026-07-23",
+      "verifiedDate": "2026-09-02",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-02",
         "outcome": "ok",
-        "detail": "url"
+        "detail": "text"
       }
     },
     {
@@ -18486,7 +18482,7 @@
     {
       "vendor": "Keywords AI",
       "category": "AI / ML",
-      "description": "Now Respan — keywordsai.co redirects to respan.ai, whose footer reads \"2026 Keywords AI, Inc. - Respan is a registered trademark\". LLM engineering platform: gateway, tracing, observability and evaluations. Free plan is $0: full platform, 100k logs, 1k scores, 5 datasets, 2 evaluators, 5 prompts. No credit card required.",
+      "description": "Rebranded to Respan; keywordsai.co redirects to respan.ai. Free plan: full platform, 100k logs, 1k scores, 5 datasets, 2 evaluators, 5 prompts. No credit card required.",
       "tier": "Free",
       "url": "https://www.respan.ai/pricing",
       "tags": [
@@ -18495,9 +18491,9 @@
         "generative-ai",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-08-08",
+      "verifiedDate": "2026-09-02",
       "source_check": {
-        "checked": "2026-09-01",
+        "checked": "2026-09-02",
         "outcome": "ok",
         "detail": "text"
       },
@@ -18520,7 +18516,7 @@
             "source_quote": "Point the SDK you already use at one endpoint to reach 1,000+ models"
           }
         ],
-        "reviewed": "2026-09-01"
+        "reviewed": "2026-09-02"
       }
     },
     {
@@ -18694,7 +18690,7 @@
     {
       "vendor": "Mediaworkbench.ai",
       "category": "AI / ML",
-      "description": "MediaWorkbench.ai offers 100,000 free words for Azure OpenAI, DeepSeek, and Google Gemini models, enabling users to access powerful tools for code generation, deep research, and image creation.",
+      "description": "Social media scheduling, publishing and analytics. Free plan at $0/month. The pricing page states no per-plan entitlements: the feature list shown is identical for all four plans.",
       "tier": "Free",
       "url": "https://mediaworkbench.ai",
       "tags": [
@@ -18703,11 +18699,11 @@
         "generative-ai",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-08-10",
+      "verifiedDate": "2026-09-02",
       "source_check": {
-        "checked": "2026-09-01",
+        "checked": "2026-09-02",
         "outcome": "ok",
-        "detail": "url"
+        "detail": "text"
       },
       "product_subtypes": {
         "taxonomy": "AI / ML",
@@ -27269,25 +27265,25 @@
     {
       "vendor": "Clever Bootstrap Program",
       "category": "Cloud IaaS",
-      "description": "Clever Cloud is an IT Automation platform. They manage all the ops work while you focus on your business value. The Clever Bootstrap Program provides startups with 90% off on the first three months. Then a 10% discount is applied on your first apps for an unlimited amount of time.",
+      "description": "Clever Cloud's startup programme is now called UP. It offers up to €10,000 in cloud credits for the first year, onboarding and training with Clever Cloud engineers, a monthly coaching session, premium support access, workshops and masterclasses for technical teams, mentoring, and access to Angel Start financial planning tools. Admission is by selection round; the page names the next as 16 September 2026.",
       "tier": "Startup Program",
-      "url": "https://www.clever-cloud.com/en/early-stage",
+      "url": "https://www.clever.cloud/up-program/",
       "tags": [
         "cloud",
         "iaas",
         "startup-credits",
         "awesome-startup-credits"
       ],
-      "verifiedDate": "2026-08-12",
+      "verifiedDate": "2026-09-02",
       "eligibility": {
         "type": "startup",
         "conditions": [
-          "Startup program — check vendor for eligibility details"
+          "Selected by application through a periodic selection round"
         ],
-        "program": "Clever Bootstrap Program Startup Program"
+        "program": "UP"
       },
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-02",
         "outcome": "ok",
         "detail": "text"
       }
@@ -27330,7 +27326,7 @@
     {
       "vendor": "Scaleway Startup Program",
       "category": "Cloud IaaS",
-      "description": "The Scaleway Startup Program is a time-limited cloud computing partnership program designed for startups. Benefits include access to public cloud infrastructure combined with technical assistance, resources, advisory and advertising.",
+      "description": "Three tiers, all cloud credits: Founders gives up to €1,000 over one year; Early Stage gives €1,500/month for 6 months, up to €9,000; Growth gives €3,000/month for 12 months, up to €36,000. Applications are reviewed weekly by a committee. All tiers except Founders include a dedicated customer success manager.",
       "tier": "Startup Program",
       "url": "https://www.scaleway.com/en/startup-program/",
       "tags": [
@@ -27339,16 +27335,18 @@
         "startup-credits",
         "awesome-startup-credits"
       ],
-      "verifiedDate": "2026-08-12",
+      "verifiedDate": "2026-09-02",
       "eligibility": {
         "type": "startup",
         "conditions": [
-          "Startup program — check vendor for eligibility details"
+          "Less than 5 years old",
+          "Fewer than 50 employees",
+          "Not yet a Scaleway client"
         ],
         "program": "Scaleway Startup Program"
       },
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-02",
         "outcome": "ok",
         "detail": "text"
       }
@@ -27356,25 +27354,27 @@
     {
       "vendor": "ScaleGrid Startup Program",
       "category": "Databases",
-      "description": "Save up to $50,000 for a year with 50% off on ScaleGrid's fully managed hosting plans for MySQL, PostgreSQL, Redis and MongoDB.",
+      "description": "ScaleGrid's startup offer is now called Startup Saver: up to 50% off for 12 months on managed MySQL, PostgreSQL, Redis and MongoDB. Bring Your Own Cloud plans get 50% off at medium size or larger; Dedicated Hosting gets 25% off at medium or larger. Small plan sizes get 50% off BYOC and 25% off Dedicated Hosting for 3 months.",
       "tier": "Startup Program",
-      "url": "https://scalegrid.io/pricing/offers/startup-program.html",
+      "url": "https://scalegrid.io/pricing/offers/startup-saver/",
       "tags": [
         "database",
         "data",
         "startup-credits",
         "awesome-startup-credits"
       ],
-      "verifiedDate": "2026-07-26",
+      "verifiedDate": "2026-09-02",
       "eligibility": {
         "type": "startup",
         "conditions": [
-          "Startup program — check vendor for eligibility details"
+          "Less than $1.5M in revenue",
+          "Less than $1.5M in funding",
+          "New to ScaleGrid"
         ],
-        "program": "ScaleGrid Startup Program"
+        "program": "Startup Saver"
       },
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-02",
         "outcome": "ok",
         "detail": "text"
       },
@@ -27446,7 +27446,7 @@
     {
       "vendor": "The Intercom Early Stage Program",
       "category": "Communication",
-      "description": "Intercom helps you build customer relationships through conversational, messenger-based experiences across the customer journey. Eligible startups get all of Intercom’s Pro products for a flat rate of $49/mo for up to one year.",
+      "description": "Intercom Early Stage pricing starts at $33/month, with 93% off in the first year, 50% off in the second and 25% off in the third. The first year includes 300 Fin outcomes and 15 Fin qualifications per month. The discount does not apply to additional outcomes or qualifications; phone, SMS and WhatsApp are charged at list price.",
       "tier": "Startup Program",
       "url": "https://www.intercom.com/early-stage",
       "tags": [
@@ -27454,16 +27454,18 @@
         "startup-credits",
         "awesome-startup-credits"
       ],
-      "verifiedDate": "2026-08-14",
+      "verifiedDate": "2026-09-02",
       "eligibility": {
         "type": "startup",
         "conditions": [
-          "Startup program — check vendor for eligibility details"
+          "Up to $10M in funding",
+          "Fewer than 15 employees",
+          "Not currently an Intercom customer"
         ],
         "program": "The Intercom Early Stage Program Startup Program"
       },
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-02",
         "outcome": "ok",
         "detail": "text"
       }
@@ -27496,24 +27498,27 @@
     {
       "vendor": "Zendesk for Startups",
       "category": "Communication",
-      "description": "The program provides qualifying net new startup customers access to Zendesk's full family of products at a 100% discount for their first 6 months of subscription of product selection (up to 100 agent seats).",
+      "description": "Qualified startups get the Zendesk Resolution Platform free for up to 2 years for up to 50 agents, with the length depending on funding profile and partner. The baseline program length for all accepted startups is 6 months.",
       "tier": "Startup Program",
-      "url": "https://www.zendesk.com/startups/",
+      "url": "https://www.zendesk.com/business/startups/",
       "tags": [
         "communication",
         "startup-credits",
         "awesome-startup-credits"
       ],
-      "verifiedDate": "2026-08-14",
+      "verifiedDate": "2026-09-02",
       "eligibility": {
         "type": "startup",
         "conditions": [
-          "Startup program — check vendor for eligibility details"
+          "Must be a brand new Zendesk subscriber (previous or active paid customers may not participate)",
+          "Must have fewer than 250 employees",
+          "If employee size 50-249, must be referred by a partner",
+          "Company must be under 10 years old"
         ],
         "program": "Zendesk for Startups Startup Program"
       },
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-02",
         "outcome": "ok",
         "detail": "text"
       }
@@ -27521,7 +27526,7 @@
     {
       "vendor": "Help Scout for Startups",
       "category": "Communication",
-      "description": "Help Scout has everything you need to start talking with customers and growing your business. For eligible startups, your first year with Help Scout is just $50/month.",
+      "description": "Qualifying startups get 6 months of Help Scout free — the page states no charge for the first six months, not a discounted monthly rate.",
       "tier": "Startup Program",
       "url": "https://www.helpscout.com/startups/",
       "tags": [
@@ -27529,16 +27534,18 @@
         "startup-credits",
         "awesome-startup-credits"
       ],
-      "verifiedDate": "2026-08-13",
+      "verifiedDate": "2026-09-02",
       "eligibility": {
         "type": "startup",
         "conditions": [
-          "Startup program — check vendor for eligibility details"
+          "New Help Scout customer",
+          "Incorporated tech startup less than two years old",
+          "Generating under $1 million in annual recurring revenue"
         ],
         "program": "Help Scout for Startups Startup Program"
       },
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-02",
         "outcome": "ok",
         "detail": "text"
       }
@@ -27596,25 +27603,27 @@
     {
       "vendor": "Chargebee Launch Programme",
       "category": "Payments",
-      "description": "Chargebee makes managing subscription billing easier for you. With Chargebee’s Launch Plan, you get your first USD 50k in revenue for free.",
+      "description": "Chargebee's startup offer is now called Chargebee for Startups: Chargebee Billing is free until you have billed your first $1 million in cumulative revenue, not $50k. Cumulative billing is the total invoiced through Chargebee over time, not ARR or MRR. After $1M you move to a pay-as-you-go plan with no annual commitment.",
       "tier": "Startup Program",
-      "url": "https://www.chargebee.com/launch/",
+      "url": "https://www.chargebee.com/startups/",
       "tags": [
         "payments",
         "billing",
         "startup-credits",
         "awesome-startup-credits"
       ],
-      "verifiedDate": "2026-08-14",
+      "verifiedDate": "2026-09-02",
       "eligibility": {
         "type": "startup",
         "conditions": [
-          "Startup program — check vendor for eligibility details"
+          "New customer to Chargebee (not currently on a paid plan)",
+          "Part of a partner accelerator or VC portfolio network",
+          "Raised less than $5 million in funding"
         ],
-        "program": "Chargebee Launch Programme Startup Program"
+        "program": "Chargebee for Startups"
       },
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-02",
         "outcome": "ok",
         "detail": "text"
       }
@@ -27622,7 +27631,7 @@
     {
       "vendor": "HubSpot for Startups",
       "category": "Startup Perks",
-      "description": "Startups using the HubSpot Growth Platform acquire and retain more customers with HubSpot’s software, educational resources, and robust integrations. All at startup-friendly pricing up to 90% off.",
+      "description": "Two discount bands: startups meeting both conditions get 90% off in year one, then 50% off in year two and 25% off in year three. Startups meeting neither get 30% off in year one and 15% off in year two. Eligibility is checked against 4,000+ approved partners, or against funding verified through Pitchbook or Crunchbase.",
       "tier": "Startup Program",
       "url": "https://www.hubspot.com/startups",
       "tags": [
@@ -27630,25 +27639,26 @@
         "startup-credits",
         "awesome-startup-credits"
       ],
-      "verifiedDate": "2026-07-22",
+      "verifiedDate": "2026-09-02",
       "eligibility": {
         "type": "startup",
         "conditions": [
-          "Startup program — check vendor for eligibility details"
+          "Raised pre-seed, seed or Series A funding, but not Series B or later",
+          "Affiliated with an approved HubSpot for Startups partner, or have raised verified venture funding"
         ],
         "program": "HubSpot for Startups Startup Program"
       },
       "expires_date": "2026-12-31",
       "source_check": {
-        "checked": "2026-08-28",
-        "outcome": "states_no_terms",
-        "detail": "the page names HubSpot for Startups but states no amount, tier or rate we can read"
+        "checked": "2026-09-02",
+        "outcome": "ok",
+        "detail": "text"
       }
     },
     {
       "vendor": "Shotstack Startup Program",
       "category": "Video",
-      "description": "Shotstack enables startups to build innovative video applications with their cloud-based video-editing API infrastructure. Eligible startups get $5,000 in Shotstack credits (valid for 12 months), technical support, and a community to support their growth.",
+      "description": "Qualifying startups get 80% off Shotstack's Professional plans for one year, applied as a discount code to a purchased plan. The page states no credit grant. Shotstack is a cloud video-editing API.",
       "tier": "Startup Program",
       "url": "https://shotstack.io/solutions/startups/",
       "tags": [
@@ -27656,42 +27666,43 @@
         "startup-credits",
         "awesome-startup-credits"
       ],
-      "verifiedDate": "2026-08-13",
+      "verifiedDate": "2026-09-02",
       "eligibility": {
         "type": "startup",
         "conditions": [
-          "Startup program — check vendor for eligibility details"
+          "Incorporated less than three years ago",
+          "Up to Series A in funding"
         ],
         "program": "Shotstack Startup Program"
       },
-      "expires_date": "2026-07-31",
       "source_check": {
-        "checked": "2026-08-28",
-        "outcome": "states_no_terms",
-        "detail": "the page names Shotstack Startup Program but states no amount, tier or rate we can read"
+        "checked": "2026-09-02",
+        "outcome": "ok",
+        "detail": "text"
       }
     },
     {
       "vendor": "Esri Startup Program",
       "category": "Startup Perks",
-      "description": "The Esri Startup Program is a global three-year program that helps startups build mapping and location intelligence into their products and businesses.",
+      "description": "A global three-year program that helps startups build mapping and location intelligence into their products.",
       "tier": "Startup Program",
-      "url": "https://www.esri.com/en-us/about/esri-partner-network/our-partners/esri-startup-program",
+      "url": "https://www.esri.com/en-us/about/partners/our-partners/startups",
       "tags": [
         "developer-tools",
         "startup-credits",
         "awesome-startup-credits"
       ],
-      "verifiedDate": "2026-08-28",
+      "verifiedDate": "2026-09-02",
       "eligibility": {
         "type": "startup",
         "conditions": [
-          "Startup program — check vendor for eligibility details"
+          "Founded within the last five years",
+          "Generating less than US$2 million annually"
         ],
         "program": "Esri Startup Program"
       },
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-02",
         "outcome": "ok",
         "detail": "text"
       }
@@ -27749,7 +27760,7 @@
     {
       "vendor": "Remote for Startups",
       "category": "Startup Perks",
-      "description": "The Remote for Startups Program is designed to help you legally and compliantly employ global talent with world-class payroll, tax, benefits, and compliance solutions. Get access to the same powerful platform, HR experts, and localized legal support, at a fraction of the cost.",
+      "description": "A partner-referred discount on Remote's global payroll, benefits and compliance platform. The page states the discount reaches up to 20%, with an additional 5% for introducing an investor who becomes a partner. No headline rate is published for startups without a partner referral.",
       "tier": "Startup Program",
       "url": "https://remote.com/global-hr/startups",
       "tags": [
@@ -27757,16 +27768,16 @@
         "startup-credits",
         "awesome-startup-credits"
       ],
-      "verifiedDate": "2026-07-23",
+      "verifiedDate": "2026-09-02",
       "eligibility": {
         "type": "startup",
         "conditions": [
-          "Startup program — check vendor for eligibility details"
+          "Referred by a Remote for Startups partner (incubator, accelerator, VC, PE firm or angel syndicate)"
         ],
         "program": "Remote for Startups Startup Program"
       },
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-02",
         "outcome": "ok",
         "detail": "text"
       }
@@ -27774,24 +27785,17 @@
     {
       "vendor": "Pareto Security",
       "category": "Security",
-      "description": "A suite of essential macOS security apps for small businesses. Non-invasive alternative to corporate MDM and RMM solutions for small businesses that care about security but know it doesn't have to be invasive for their team members. Use the coupon code `STARTUP` at checkout.",
-      "tier": "Startup Program",
-      "url": "https://paretosecurity.com/pricing",
+      "description": "Pareto Cloud is free for up to 5 devices, with no credit card required. The free tier includes the cloud dashboard, alerts to email, Slack and Teams, and the API. Paid Team and Business plans are priced per device per month. The macOS, Linux and Windows apps are open source.",
+      "tier": "Free",
+      "url": "https://paretosecurity.com/pricing/",
       "tags": [
         "developer-tools",
         "startup-credits",
         "awesome-startup-credits"
       ],
-      "verifiedDate": "2026-07-24",
-      "eligibility": {
-        "type": "startup",
-        "conditions": [
-          "Startup program — check vendor for eligibility details"
-        ],
-        "program": "Pareto Security Startup Program"
-      },
+      "verifiedDate": "2026-09-02",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-02",
         "outcome": "ok",
         "detail": "text"
       }
