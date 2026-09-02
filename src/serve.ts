@@ -14366,7 +14366,7 @@ function buildFreeAiStackPage(): string {
     {
       name: "AI Coding Assistant",
       icon: "💻",
-      recommended: { vendor: "GitHub Copilot", why: "2,000 completions/month + 50 premium requests free. VS Code native with deep GitHub integration. The simplest on-ramp to AI-assisted development." },
+      recommended: { vendor: "GitHub Copilot", why: "2,000 completions/month free. VS Code native with deep GitHub integration. The simplest on-ramp to AI-assisted development." },
       alternatives: ["Cursor", "Amazon Q Developer", "Cline", "Aider"],
       outgrow: "When you exceed 2,000 completions/month or need unlimited chat. Cline and Aider are free with your own API keys — no completion limits, just API costs.",
       relatedPage: "/ide-code-editors-alternatives",
@@ -26796,10 +26796,10 @@ function buildAiCodingPricing2026Page(): string {
       slug: "cursor",
       free: "Limited Agent requests",
       pro: "$20/mo",
-      power: "Pro+ / Ultra",
+      power: "$200/mo (Ultra)",
       teams: "$40/user/mo",
       model: "Credit-based",
-      freeDetails: "Hobby is the free plan: no credit card, limited Agent requests, Composer access — Cursor publishes no completion or request figure for it. Paid: Individual $20/mo (Pro), Pro+ (3x Pro's Agent limits), Ultra (20x), Teams $40/user/mo, Enterprise custom.",
+      freeDetails: "Hobby is the free plan: no credit card, limited Agent requests, Composer access — Cursor publishes no completion or request figure for it. Paid: Pro $20/mo, Pro+ $60/mo (3x Pro's Agent limits), Ultra $200/mo (20x), Teams $40/user/mo, Enterprise custom.",
     },
     {
       name: "Windsurf",
@@ -26816,10 +26816,10 @@ function buildAiCodingPricing2026Page(): string {
       slug: "github-copilot",
       free: "2K completions/mo",
       pro: "$10/mo",
-      power: "$39/mo (Pro+)",
+      power: "$100/mo (Max)",
       teams: "$19/seat",
-      model: "Tier + premium requests",
-      freeDetails: "2,000 code completions/month, 50 premium requests/month. Pro: 300 premium requests. Pro+ ($39): 1,500 premium requests, all models (Claude Opus 4, o3). Business: 300/user. Enterprise ($39/seat): 1,000/user. Overage $0.04/request. Student plan (Mar 2026): premium models via Auto mode only, no manual selection.",
+      model: "Tier + AI credits",
+      freeDetails: "2,000 code completions/month plus limited chat and agent use. On paid plans completions and next edit suggestions are unlimited and consume nothing; everything else is metered in GitHub AI Credits at $0.01 each — Pro $10/mo ($15 of credits), Pro+ $39/mo ($70), Max $100/mo ($200). Business $19/seat (1,900 credits/user), Enterprise $39/seat (3,900/user). Student plan (Mar 2026): premium models via Auto mode only, no manual selection.",
     },
     {
       name: "Gemini Code Assist",
@@ -27197,10 +27197,10 @@ function buildAiCodingToolsPricingPage(): string {
       category: "ide",
       free: "Limited Agent requests",
       pro: "$20/mo",
-      power: "Pro+ / Ultra",
+      power: "$200/mo (Ultra)",
       teams: "$40/user/mo",
       model: "Credit-based",
-      freeDetails: "Hobby is Cursor's free plan — no credit card required, limited Agent requests, access to Composer. Cursor's pricing page states no completion or premium-request figure for it. Individual plans start at $20/mo (Pro), with Pro+ at 3x Pro's Agent limits and Ultra at 20x. Teams $40/user/mo (Premium at 5x Standard). Enterprise is custom-priced with pooled usage and SCIM.",
+      freeDetails: "Hobby is Cursor's free plan — no credit card required, limited Agent requests, access to Composer. Cursor's pricing page states no completion or premium-request figure for it. Pro is $20/mo, Pro+ $60/mo at 3x Pro's Agent limits, Ultra $200/mo at 20x. Teams $40/user/mo (Premium at 5x Standard). Enterprise is custom-priced with pooled usage and SCIM. Cursor renders only the selected tier's price in the page body; the full ladder is in the page's JSON-LD Offer list.",
       freeType: "limited",
       monthlyCostSolo: "$20",
       monthlyCostTeam5: "$200",
@@ -27242,14 +27242,14 @@ function buildAiCodingToolsPricingPage(): string {
       category: "ide",
       free: "2K completions/mo",
       pro: "$10/mo",
-      power: "$39/mo (Pro+)",
+      power: "$100/mo (Max)",
       teams: "$19/seat",
-      model: "Tier + premium requests",
-      freeDetails: "2,000 code completions/month, 50 premium requests/month. Pro ($10/mo): 300 premium requests. Pro+ ($39/mo): 1,500 premium requests, all AI models including Claude Opus 4 and o3. Business ($19/seat): 300 premium requests/user. Enterprise ($39/seat): 1,000/user. Overage: $0.04/premium request. Advanced reasoning models consume 5x–20x per interaction. Student plan (Mar 2026): premium models (GPT-5.4, Claude Opus/Sonnet) removed from self-selection — available only via Auto mode.",
+      model: "Tier + AI credits",
+      freeDetails: "2,000 code completions/month plus limited chat and agent usage, no credit card. On every paid plan, code completions and next edit suggestions are unlimited and do not consume credits — all other usage is metered in GitHub AI Credits at $0.01 per credit. Pro $10/mo: $15 of monthly credits (1,000 base + 500 flex). Pro+ $39/mo: $70 (3,900 + 3,100), adds premium models including Opus. Max $100/mo: $200 (10,000 + 10,000), 2.9x Pro+'s included usage. Business $19/seat: 1,900 credits/user. Enterprise $39/seat: 3,900/user. Student plan (Mar 2026): premium models available only via Auto mode.",
       freeType: "limited",
       monthlyCostSolo: "$10",
       monthlyCostTeam5: "$95",
-      hiddenCosts: "Premium request model means advanced models (Claude Opus 4, o3) burn requests 5x–20x faster. Free tier's 50 premium requests can exhaust in a few complex sessions. Overage at $0.04/request adds up — 100 extra requests = $4. Pro+ at $39/mo required for full model access and 1,500 premium requests. Student plan (Mar 2026): premium model self-selection removed — GPT-5.4, Claude Opus, Sonnet only via Auto mode.",
+      hiddenCosts: "Agent and chat usage is metered — an AI credit is $0.01, and Pro's $15 monthly allowance drains faster on premium models. Code completions and next edit suggestions are exempt and unlimited on every paid plan. Premium requests, their 5x–20x model multipliers and the $0.04 per-request overage are retired; GitHub's own billing docs label that model legacy. Reaching the full model lineup still means Pro+ at $39/mo. Student plan (Mar 2026): premium model self-selection removed — GPT-5.4, Claude Opus, Sonnet only via Auto mode.",
     },
     {
       name: "Gemini Code Assist",
@@ -27515,7 +27515,7 @@ function buildAiCodingToolsPricingPage(): string {
       '<td style="font-weight:600"><a href="/vendor/' + escHtmlServer(t.slug) + '" style="color:var(--text)">' + escHtmlServer(t.name) + '</a></td>' +
       '<td style="font-family:var(--mono);font-size:.85rem">' + escHtmlServer(t.monthlyCostSolo) + '</td>' +
       '<td style="font-family:var(--mono);font-size:.85rem">' + escHtmlServer(t.monthlyCostTeam5) + '</td>' +
-      '<td style="font-size:.85rem;color:var(--text-muted)">' + escHtmlServer(t.hiddenCosts.substring(0, 80)) + (t.hiddenCosts.length > 80 ? "..." : "") + '</td>' +
+      '<td style="font-size:.85rem;color:var(--text-muted)">' + escHtmlServer(t.hiddenCosts) + '</td>' +
       '</tr>';
   }).join("\n        ");
 
@@ -27555,8 +27555,8 @@ function buildAiCodingToolsPricingPage(): string {
 
   const faqEntries = [
     { q: "What is the best free AI coding tool in 2026?", a: "Gemini Code Assist offers the most generous free tier with 6,000 completions/day (180,000/month) and 240 chat messages/day. For open-source alternatives, Cline and Aider are fully free with BYO API keys. Gemini CLI offers 1,000 free requests/day. Amazon Kiro offers 50 free credits/month — limited, but enough to try spec-driven development." },
-    { q: "How much does Cursor cost vs Windsurf?", a: "Both start at $20/month for an individual paid plan and $40/user/month for teams. Cursor's free plan is called Hobby. Above Pro at $20/mo, Cursor lists Pro+ at 3x Pro's Agent limits and Ultra at 20x, with Enterprise custom-priced. Windsurf has 4 plans (Free, Pro $20, Teams $40/seat, Max $200) and raised Pro from $15 to $20 in March 2026. Windsurf's SWE-1.5 Fast Agent model optimizes for iteration speed." },
-    { q: "Is GitHub Copilot still the cheapest AI coding tool?", a: "Yes, GitHub Copilot Pro at $10/month is the cheapest paid AI coding subscription. It also offers a free tier with 2,000 completions/month and 50 premium requests/month. Pro includes 300 premium requests. Overage costs $0.04/request. Note: advanced reasoning models (Claude Opus 4, o3) consume 5x\u201320x premium requests per interaction." },
+    { q: "How much does Cursor cost vs Windsurf?", a: "Both start at $20/month for an individual paid plan and $40/user/month for teams, and both top out at $200/month — Cursor Ultra and Windsurf Max. Cursor's free plan is called Hobby. Between them sits Pro+ at $60/mo with 3x Pro's Agent limits; Ultra is 20x. Windsurf has 4 plans (Free, Pro $20, Teams $40/seat, Max $200) and raised Pro from $15 to $20 in March 2026. Windsurf's SWE-1.5 Fast Agent model optimizes for iteration speed." },
+    { q: "Is GitHub Copilot still the cheapest AI coding tool?", a: "Yes \u2014 Copilot Pro at $10/month is the cheapest paid plan among the tools compared here. The free tier gives 2,000 code completions a month plus limited chat and agent use. On paid plans, completions and next edit suggestions are unlimited and consume nothing; agent and chat work is metered in GitHub AI Credits at $0.01 each \u2014 $15 of credits on Pro, $70 on Pro+ ($39/mo), $200 on Max ($100/mo). GitHub's premium-request billing and its $0.04 overage are retired; the docs now label that model legacy." },
     { q: "What are the hidden costs of BYO-key AI coding tools?", a: "Tools like Cline and Aider are free to install but require API keys. Typical costs: $5-50/month for moderate use with Claude Sonnet or GPT-4o. Heavy agentic usage (Cline with Opus) can reach $50-100/month in API costs alone." },
     { q: "Which AI coding tool is best for teams?", a: "GitHub Copilot Business ($19/seat) is cheapest for teams. Gemini Code Assist Enterprise matches at $19/seat with Google Cloud integration. Cursor and Windsurf Business ($40/seat) offer the highest AI throughput per developer." },
     { q: "Are AI app builders like Bolt.new and Lovable worth it?", a: "For prototyping and MVPs, yes. Bolt.new offers 1M free tokens/month and Lovable gives 5 daily credits. Both generate full-stack apps from natural language. They are not designed for production-grade software development." },
