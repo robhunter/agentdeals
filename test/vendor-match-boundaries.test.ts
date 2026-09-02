@@ -108,13 +108,18 @@ describe("findVendor", () => {
   });
 
   it("suggests each vendor once even where several records share the name", () => {
-    for (const query of ["hosting", "models", "GitHub Actions minutes", "Cloudflare R2 storage"]) {
-      const match = findVendor(offers, query);
+    const sharedNames = [...new Map<string, number>(
+      offers.map((o) => [o.vendor, offers.filter((x) => x.vendor === o.vendor).length]),
+    )].filter(([, n]) => n > 1).map(([vendor]) => vendor);
+    assert.ok(sharedNames.length > 0, "no vendor has more than one record, so this asserts nothing");
+
+    for (const vendor of sharedNames) {
+      const match = findVendor(offers, `${toSlug(vendor)}.com`);
       if (match.type !== "none") continue;
       assert.deepStrictEqual(
         match.suggestions,
         [...new Set(match.suggestions)],
-        `${query} repeats a suggestion`,
+        `a query naming ${vendor} repeats it in its suggestions`,
       );
     }
   });
@@ -123,6 +128,26 @@ describe("findVendor", () => {
     for (const query of ["", "   ", "!!!", "稀宇科技"]) {
       assert.strictEqual(findVendor(offers, query).type, "none");
     }
+  });
+
+  it("does not match a vendor whose own name slugs to nothing", () => {
+    const unslugabble = [{
+      vendor: "稀宇科技",
+      category: "AI / ML",
+      description: "",
+      tier: "Free",
+      url: "https://example.com",
+      tags: [],
+      verifiedDate: "2026-01-01",
+    }] as unknown as typeof offers;
+    for (const query of ["", "   ", "!!!"]) {
+      assert.strictEqual(
+        findVendor(unslugabble, query).type,
+        "none",
+        `${JSON.stringify(query)} resolved to a vendor with no slug`,
+      );
+    }
+    assert.strictEqual(findVendor(unslugabble, "稀宇科技").type, "exact");
   });
 
   it("resolves every word it does resolve by naming that vendor in full", () => {
