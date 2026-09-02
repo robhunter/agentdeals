@@ -58,6 +58,24 @@ const SOURCED_FROM_A_PAGE_STATING_NO_FIGURES = {
   },
 };
 
+const QUOTED_FROM_THE_PAGE_IT_CITES = {
+  ...SOURCED_FROM_A_MARKETPLACE,
+  vendor: "Longcorp",
+  url: "https://longcorp.example/pricing",
+  product_subtypes: {
+    taxonomy: "Databases",
+    labels: [
+      {
+        subtype: "relational",
+        source_url: "https://longcorp.example/pricing",
+        source_quote: "Standard Events and Metrics Up to 5 hosts",
+      },
+    ],
+    reviewed: "2026-09-02",
+  },
+  source_check: { checked: "2026-09-02", outcome: "ok", detail: "text" },
+};
+
 let fixtureDir = "";
 let serverPort = 0;
 let proc: ChildProcess | null = null;
@@ -112,6 +130,7 @@ before(async () => {
           SOURCED_FROM_ITS_OWN_PAGE,
           SOURCED_FROM_A_PAGE_WE_COULD_NOT_READ,
           SOURCED_FROM_A_PAGE_STATING_NO_FIGURES,
+          QUOTED_FROM_THE_PAGE_IT_CITES,
         ],
       },
       null,
@@ -310,4 +329,30 @@ describe("an alternatives page for a vendor whose source we cannot vouch for", (
       assert.match(stillAvailable, reason);
     });
   }
+});
+
+describe("a page we quote from is not also a page we say we can read nothing on", () => {
+  it("renders, so the assertions below are about a real page", async () => {
+    const res = await get("/vendor/longcorp");
+    assert.equal(res.status, 200);
+  });
+
+  it("quotes the page it cites", async () => {
+    const { body } = await get("/vendor/longcorp");
+    assert.match(
+      body,
+      /https:\/\/longcorp\.example\/pricing<\/a>, where it says: &ldquo;Standard Events and Metrics Up to 5 hosts&rdquo;/
+    );
+  });
+
+  it("does not also say that page states no terms it can read", async () => {
+    const { body } = await get("/vendor/longcorp");
+    assert.doesNotMatch(body, /states no terms we can read/);
+  });
+
+  it("keeps saying so where the quote comes from a different page", async () => {
+    const { body } = await get("/vendor/prosecorp");
+    assert.match(body, /dealmarket\.example\/offers<\/a>, where it says:/);
+    assert.match(body, /states no terms we can read/);
+  });
 });
