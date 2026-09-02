@@ -273,6 +273,30 @@ describe("the production answer reads the same gate", () => {
     }
   });
 
+  it("recommends no record whose own tier records the offer as ended", () => {
+    const subjects = gated().filter(p => offerEnded(p.primary));
+    assert.ok(subjects.length > 0, "no vendor page renders an offer its own tier records as ended");
+    for (const p of subjects) {
+      assert.strictEqual(
+        productionAnswer(p),
+        `${p.gate!.reason} ${NO_FREE_TIER_FOR_PRODUCTION}`,
+        `/vendor/${p.slug}`,
+      );
+    }
+  });
+
+  it("opens with whatever opens the free-tier answer on the same page", () => {
+    const subjects = gated().filter(p => freeAnswer(p).startsWith(p.gate!.reason));
+    assert.ok(
+      subjects.length > 100,
+      `only ${subjects.length} gated pages open the free-tier answer with the gate, so this has no subject`,
+    );
+    const contradicting = subjects
+      .filter(p => !productionAnswer(p).startsWith(p.gate!.reason))
+      .map(p => `${p.slug} (${p.gate!.code}): ${productionAnswer(p).slice(0, 60)}`);
+    assert.deepStrictEqual(contradicting, []);
+  });
+
   it("publishes that answer verbatim on the pages the issue names", () => {
     const stripe = rendered.find(p => p.slug === "stripe")!;
     assert.strictEqual(
