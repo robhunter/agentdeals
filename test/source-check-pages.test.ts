@@ -323,6 +323,13 @@ describe("a vendor page whose cited source names a plan but states no amount", (
     assert.match(risk.summary, /names a plan but states no amount/);
   });
 
+  it("says nothing of the kind on a page whose source stated an amount", async () => {
+    const { body } = await get("/vendor/controlcorp");
+    assert.equal(body.includes("Controlcorp"), true);
+    assert.doesNotMatch(body, /amount-unstated-line/);
+    assert.doesNotMatch(body, /names a plan but states no amount/);
+  });
+
   it("leaves the endpoint's answer for a page we could read alone", async () => {
     const { body } = await get("/api/vendor-risk/controlcorp");
     const risk = JSON.parse(body);
