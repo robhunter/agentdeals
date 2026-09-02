@@ -12521,9 +12521,9 @@
     {
       "vendor": "Revolt.chat",
       "category": "Team Collaboration",
-      "description": "An OpenSource alternative for[Discord](https://discord.com/), that respects your privacy. It also have most proprietary features from discord for free. Revolt is a all in one application that is secure and fast, while being 100% free. every features are free. They also have (official & unofficial) plugins support unlike most main-stream chatting applications.",
+      "description": "Now Stoat — revolt.chat redirects to stoat.chat, which serves the same product. Open-source group chat and Discord alternative: servers, channels, voice chat, file sharing, markdown, role-based permissions and moderation tools. Free; no ads and no data mining. Windows, macOS, Linux, Android, iOS and web.",
       "tier": "Free",
-      "url": "https://revolt.chat/",
+      "url": "https://stoat.chat/",
       "tags": [
         "developer-tools",
         "free-for-dev"
@@ -13875,9 +13875,9 @@
     {
       "vendor": "RunMyJob",
       "category": "CI/CD",
-      "description": "Run GitHub Actions and GitLab CI pipelines smarter with real-time scaling Spike Instances. Free tier includes 400 vCPU-minutes, 800 GB-minutes, and 10 concurrent jobs with high-performance runners (12 vCPU and 32 GB RAM per job).",
+      "description": "Now RunJob — runmyjob.io redirects to runjob.eu, which serves the same product. Cloud runners for GitHub Actions and GitLab CI. Free plan is EUR 0/month: 1 integration with a GitLab or GitHub organisation, 10 concurrent jobs, 12 vCPU and 32 GB of memory per job, 400 vCPU-minutes and 800 GB-minutes included monthly, usage-priced above that. GitHub runners work with organisation accounts only.",
       "tier": "Free",
-      "url": "https://runmyjob.io",
+      "url": "https://runjob.eu/",
       "tags": [
         "ci",
         "cd",
@@ -13886,9 +13886,9 @@
       ],
       "verifiedDate": "2026-08-28",
       "source_check": {
-        "checked": "2026-08-28",
-        "outcome": "ok",
-        "detail": "url"
+        "checked": "2026-09-02",
+        "outcome": "does_not_name_vendor",
+        "detail": "the page never names RunMyJob and is not served from its domain"
       }
     },
     {
@@ -15112,9 +15112,9 @@
     {
       "vendor": "Stack Auth",
       "category": "Auth",
-      "description": "Open-source authentication that doesn't suck. The most developer-friendly solution, getting you started in just five minutes. Self-hostable for free, or offers a managed SaaS version with 10k free Monthly Active Users.",
+      "description": "Now Hexclave — stack-auth.com redirects to hexclave.com, and the GitHub org stack-auth/stack-auth redirects to hexclave/hexclave (same repository). Open-source user infrastructure: auth, teams, RBAC, API keys, emails. Free tier is $0 forever: up to 10,000 auth users, 1 dashboard admin, 1,000 emails per month, email/OAuth/magic links, community support. Also self-hostable for free.",
       "tier": "Free",
-      "url": "https://stack-auth.com",
+      "url": "https://www.hexclave.com/pricing",
       "tags": [
         "auth",
         "authentication",
@@ -15124,8 +15124,8 @@
       "verifiedDate": "2026-07-09",
       "source_check": {
         "checked": "2026-09-02",
-        "outcome": "ok",
-        "detail": "url"
+        "outcome": "does_not_name_vendor",
+        "detail": "the page never names Stack Auth and is not served from its domain"
       }
     },
     {
@@ -18313,9 +18313,9 @@
     {
       "vendor": "WaiverStevie.com",
       "category": "Forms",
-      "description": "Electronic Signature platform with a REST API. You can receive notifications with webhooks. Free plan watermarks signed documents but allow unlimited envelopes + signatures.",
+      "description": "Now WaiverCat — waiverstevie.com redirects to waivercat.com, which still lists info@waiverstevie.com as its contact address. Electronic signature platform with a REST API and webhooks. The free plan includes API access, custom fields, chained signatures, mobile signature and text/email notifications; all PDFs are watermarked and the page frames it as an account to set up your environment and run tests. It states no signature allowance, where Basic at $15/mo includes 250 signatures and Premium at $25/mo includes 500. Checked 2026-09-02.",
       "tier": "Free",
-      "url": "https://waiverstevie.com",
+      "url": "https://waivercat.com/pricing/",
       "tags": [
         "forms",
         "free-for-dev"
@@ -18323,8 +18323,8 @@
       "verifiedDate": "2026-08-08",
       "source_check": {
         "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names WaiverStevie.com but states no amount, tier or rate we can read"
+        "outcome": "ok",
+        "detail": "text"
       }
     },
     {
@@ -19360,9 +19360,9 @@
     {
       "vendor": "flightcontrol.dev",
       "category": "Cloud Hosting",
-      "description": "Deploy web services, databases, and more on your own AWS account with a Git push style workflow. Free tier for users with 1 developer on personal GitHub repos. AWS costs are billed through AWS, but you can use credits and the AWS free tier.",
+      "description": "Now Ravion — flightcontrol.dev redirects to ravion.com, which states \"Ravion is the successor to Flightcontrol. Nothing changes for existing customers.\" Deploy and operate applications in your own AWS account. Free plan for individuals: 1 user, up to 50 modules of any type, 2,000 pipeline minutes, $20 of AI tokens, preview environments, multiple GitHub collaborators, community support. AWS bills compute directly at $0 markup.",
       "tier": "Free",
-      "url": "https://flightcontrol.dev/",
+      "url": "https://www.ravion.com/pricing",
       "tags": [
         "hosting",
         "paas",
@@ -19370,7 +19370,7 @@
       ],
       "verifiedDate": "2026-07-13",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-02",
         "outcome": "ok",
         "detail": "text"
       },
@@ -19379,7 +19379,7 @@
         "labels": [
           {
             "subtype": "container_app",
-            "source_url": "https://flightcontrol.dev/",
+            "source_url": "https://www.ravion.com/",
             "source_quote": "Provision, deploy, and operate production-grade AWS infrastructure with developers and AI agents."
           }
         ],
@@ -20674,9 +20674,9 @@
     {
       "vendor": "sslip.io",
       "category": "DNS & Domain Management",
-      "description": "Free DNS service that when queried with a hostname with an embedded IP address returns that IP address.",
+      "description": "Free DNS service that, queried with a hostname containing an embedded IP address, returns that IP address. sslip.io and nip.io are run together and the domains are interchangeable; sslip.io redirects to the shared nip.io site. Dot, dash, IPv6 and hexadecimal notations are supported. In operation for over ten years.",
       "tier": "Free",
-      "url": "https://sslip.io/",
+      "url": "https://nip.io/",
       "tags": [
         "dns",
         "domain",
@@ -30018,9 +30018,9 @@
     {
       "vendor": "LambdaTest",
       "category": "Testing",
-      "description": "Free plan with 60 minutes/month live browser testing (6 sessions of 10 min), 10 screenshot tests/month, 10 responsive tests/month, 1 parallel session.",
+      "description": "Now TestMu AI — the pricing page is titled \"TestMu AI (Formerly LambdaTest)\". Testing cloud for web and mobile. The pricing page is tabbed by product (KaneAI, Test Manager, Agent Testing, HyperExecute, Performance Testing, Live Testing, Automation, SmartUI) and free availability differs by tab. Test Manager publishes a $0 \"Free Forever\" plan: unlimited projects, advanced folder management, centralised test case management, unlimited test run creation and management, and 24×7 support; Test Manager Premium is $49/month billed annually. KaneAI Starter is $17/month billed annually. Checked 2026-09-02.",
       "tier": "Free",
-      "url": "https://www.lambdatest.com/pricing",
+      "url": "https://www.testmuai.com/pricing/",
       "tags": [
         "testing",
         "browser",
@@ -30029,7 +30029,7 @@
       ],
       "verifiedDate": "2026-08-16",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-02",
         "outcome": "ok",
         "detail": "text"
       }
