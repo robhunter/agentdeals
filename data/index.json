@@ -3709,9 +3709,9 @@
     {
       "vendor": "Highlight.io",
       "category": "Logging",
-      "description": "500 sessions, 1K errors, 1M logs, 25M traces/month. 3-month retention for sessions/errors, 30-day for logs/traces. Up to 15 seats",
-      "tier": "Free",
-      "url": "https://www.highlight.io/pricing",
+      "description": "Free OSS (source-available). The hosted product is gone: highlight.io now redirects to launchdarkly.com, which does not name Highlight anywhere on the page, and the former hosted free tier (500 sessions, 1K errors, 1M logs, 25M traces per month, 15 seats) is no longer published. The open-source project is still maintained — self-hostable full-stack monitoring with error tracking, session replay, logging and distributed tracing.",
+      "tier": "Free OSS",
+      "url": "https://github.com/highlight/highlight",
       "tags": [
         "logging",
         "observability",
@@ -12525,9 +12525,9 @@
     {
       "vendor": "Revolt.chat",
       "category": "Team Collaboration",
-      "description": "An OpenSource alternative for[Discord](https://discord.com/), that respects your privacy. It also have most proprietary features from discord for free. Revolt is a all in one application that is secure and fast, while being 100% free. every features are free. They also have (official & unofficial) plugins support unlike most main-stream chatting applications.",
+      "description": "Now Stoat — revolt.chat redirects to stoat.chat, which serves the same product. Open-source group chat and Discord alternative: servers, channels, voice chat, file sharing, markdown, role-based permissions and moderation tools. Free; no ads and no data mining. Windows, macOS, Linux, Android, iOS and web.",
       "tier": "Free",
-      "url": "https://revolt.chat/",
+      "url": "https://stoat.chat/",
       "tags": [
         "developer-tools",
         "free-for-dev"
@@ -13879,9 +13879,9 @@
     {
       "vendor": "RunMyJob",
       "category": "CI/CD",
-      "description": "Run GitHub Actions and GitLab CI pipelines smarter with real-time scaling Spike Instances. Free tier includes 400 vCPU-minutes, 800 GB-minutes, and 10 concurrent jobs with high-performance runners (12 vCPU and 32 GB RAM per job).",
+      "description": "Now RunJob — runmyjob.io redirects to runjob.eu, which serves the same product. Cloud runners for GitHub Actions and GitLab CI. Free plan is EUR 0/month: 1 integration with a GitLab or GitHub organisation, 10 concurrent jobs, 12 vCPU and 32 GB of memory per job, 400 vCPU-minutes and 800 GB-minutes included monthly, usage-priced above that. GitHub runners work with organisation accounts only.",
       "tier": "Free",
-      "url": "https://runmyjob.io",
+      "url": "https://runjob.eu/",
       "tags": [
         "ci",
         "cd",
@@ -15116,9 +15116,9 @@
     {
       "vendor": "Stack Auth",
       "category": "Auth",
-      "description": "Open-source authentication that doesn't suck. The most developer-friendly solution, getting you started in just five minutes. Self-hostable for free, or offers a managed SaaS version with 10k free Monthly Active Users.",
+      "description": "Now Hexclave — stack-auth.com redirects to hexclave.com, and the GitHub org stack-auth/stack-auth redirects to hexclave/hexclave (same repository). Open-source user infrastructure: auth, teams, RBAC, API keys, emails. Free tier is $0 forever: up to 10,000 auth users, 1 dashboard admin, 1,000 emails per month, email/OAuth/magic links, community support. Also self-hostable for free.",
       "tier": "Free",
-      "url": "https://stack-auth.com",
+      "url": "https://www.hexclave.com/pricing",
       "tags": [
         "auth",
         "authentication",
@@ -18317,9 +18317,9 @@
     {
       "vendor": "WaiverStevie.com",
       "category": "Forms",
-      "description": "Electronic Signature platform with a REST API. You can receive notifications with webhooks. Free plan watermarks signed documents but allow unlimited envelopes + signatures.",
+      "description": "Now WaiverCat — waiverstevie.com redirects to waivercat.com, which still lists info@waiverstevie.com as its contact address. Electronic signature platform with a REST API and webhooks. Free plan includes API access, custom fields, chained signatures, mobile signature and text/email notifications; all PDFs are watermarked. The vendor's pricing page states no signature allowance for the free plan.",
       "tier": "Free",
-      "url": "https://waiverstevie.com",
+      "url": "https://waivercat.com/pricing/",
       "tags": [
         "forms",
         "free-for-dev"
@@ -18486,9 +18486,9 @@
     {
       "vendor": "Keywords AI",
       "category": "AI / ML",
-      "description": "The best LLM monitoring platform. One format to call 200+ LLMs with 2 lines of code. 10,000 free requests every month and $0 for platform features!",
+      "description": "Now Respan — keywordsai.co redirects to respan.ai, whose footer reads \"2026 Keywords AI, Inc. - Respan is a registered trademark\". LLM engineering platform: gateway, tracing, observability and evaluations. Free plan is $0: full platform, 100k logs, 1k scores, 5 datasets, 2 evaluators, 5 prompts. No credit card required.",
       "tier": "Free",
-      "url": "https://keywordsai.co",
+      "url": "https://www.respan.ai/pricing",
       "tags": [
         "ai",
         "ml",
@@ -18506,17 +18506,17 @@
         "labels": [
           {
             "subtype": "llm_observability",
-            "source_url": "https://keywordsai.co",
+            "source_url": "https://www.respan.ai",
             "source_quote": "Observe calls in traces, watch spend in metrics, and run evals"
           },
           {
             "subtype": "llm_evaluation",
-            "source_url": "https://keywordsai.co",
+            "source_url": "https://www.respan.ai",
             "source_quote": "Route, observe, and evaluate every LLM call"
           },
           {
             "subtype": "model_gateway",
-            "source_url": "https://keywordsai.co",
+            "source_url": "https://www.respan.ai",
             "source_quote": "Point the SDK you already use at one endpoint to reach 1,000+ models"
           }
         ],
@@ -19364,9 +19364,9 @@
     {
       "vendor": "flightcontrol.dev",
       "category": "Cloud Hosting",
-      "description": "Deploy web services, databases, and more on your own AWS account with a Git push style workflow. Free tier for users with 1 developer on personal GitHub repos. AWS costs are billed through AWS, but you can use credits and the AWS free tier.",
+      "description": "Now Ravion — flightcontrol.dev redirects to ravion.com, which states \"Ravion is the successor to Flightcontrol. Nothing changes for existing customers.\" Deploy and operate applications in your own AWS account. Free plan for individuals: 1 user, up to 50 modules of any type, 2,000 pipeline minutes, $20 of AI tokens, preview environments, multiple GitHub collaborators, community support. AWS bills compute directly at $0 markup.",
       "tier": "Free",
-      "url": "https://flightcontrol.dev/",
+      "url": "https://www.ravion.com/pricing",
       "tags": [
         "hosting",
         "paas",
@@ -19383,7 +19383,7 @@
         "labels": [
           {
             "subtype": "container_app",
-            "source_url": "https://flightcontrol.dev/",
+            "source_url": "https://www.ravion.com/",
             "source_quote": "Provision, deploy, and operate production-grade AWS infrastructure with developers and AI agents."
           }
         ],
@@ -20678,9 +20678,9 @@
     {
       "vendor": "sslip.io",
       "category": "DNS & Domain Management",
-      "description": "Free DNS service that when queried with a hostname with an embedded IP address returns that IP address.",
+      "description": "Free DNS service that, queried with a hostname containing an embedded IP address, returns that IP address. sslip.io and nip.io are run together and the domains are interchangeable; sslip.io redirects to the shared nip.io site. Dot, dash, IPv6 and hexadecimal notations are supported. In operation for over ten years.",
       "tier": "Free",
-      "url": "https://sslip.io/",
+      "url": "https://nip.io/",
       "tags": [
         "dns",
         "domain",
@@ -27471,8 +27471,8 @@
     {
       "vendor": "The GoSquared Early Stage Plan",
       "category": "Communication",
-      "description": "GoSquared makes elegant software to help you grow your SaaS business. Get all GoSquared features for a fixed, low price for the first year of use.",
-      "tier": "Startup Program",
+      "description": "There is no early-stage plan: gosquared.com/early-stage redirects to ecosend.io, an email marketing platform, and GoSquared's SaaS growth suite is no longer sold. Checked 2026-09-01. The former offer was all GoSquared features at a fixed low price for the first year.",
+      "tier": "Retired",
       "url": "https://www.gosquared.com/early-stage/",
       "tags": [
         "communication",
@@ -28964,8 +28964,8 @@
     {
       "vendor": "Ninja Outreach",
       "category": "Logging",
-      "description": "20% discount on Blogger plan for lifetime. Access via: Free",
-      "tier": "Startup Program",
+      "description": "There is no verifiable offer: the cited page is a third-party blog roundup on userlike.com that now redirects to lime-technologies.com and never names Ninja Outreach. Checked 2026-09-01. The record came from a bulk import — it was filed under Logging for an outreach tool, and its stated terms (\"20% discount on Blogger plan for lifetime\") have no primary source.",
+      "tier": "Retired",
       "url": "https://www.userlike.com/en/blog/startup-deals",
       "tags": [
         "developer-tools",
@@ -30073,9 +30073,9 @@
     {
       "vendor": "LambdaTest",
       "category": "Testing",
-      "description": "Free plan with 60 minutes/month live browser testing (6 sessions of 10 min), 10 screenshot tests/month, 10 responsive tests/month, 1 parallel session.",
+      "description": "Now TestMu AI — the pricing page is titled \"TestMu AI (Formerly LambdaTest)\". Cross-browser and real-device testing cloud. Free account signup is offered, but the vendor publishes no free plan or quota: the pricing page lists no $0 tier and the cheapest named plan is $17/month. The former free allowance (60 live testing minutes, 10 screenshot tests and 10 responsive tests per month, 1 parallel session) is no longer stated anywhere on the site.",
       "tier": "Free",
-      "url": "https://www.lambdatest.com/pricing",
+      "url": "https://www.testmuai.com/pricing/",
       "tags": [
         "testing",
         "browser",
