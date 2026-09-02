@@ -582,11 +582,11 @@ describe("a recorded change must describe a change", () => {
       assert.strictEqual(page.truncated, false);
     });
 
-    it("says a page longer than the fetch limit was cut", async () => {
+    it("says a page longer than the verifier's prompt limit was also read whole", async () => {
       const page = await readWith(html(2000));
       assert.strictEqual(page.ok, true);
-      assert.strictEqual(page.truncated, true);
-      assert.strictEqual(page.text.length, MAX_PAGE_TEXT_LENGTH);
+      assert.strictEqual(page.truncated, false);
+      assert.ok(page.text.length > MAX_PAGE_TEXT_LENGTH);
     });
   });
 
