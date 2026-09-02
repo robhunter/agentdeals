@@ -7,6 +7,8 @@ import {
   CHANGE_KIND_NOUN,
   narrowingSentence,
   publishedVendorLevel,
+  statesRiskCause,
+  vendorBadge,
   vendorVerdictSentence,
   vendorVerdictWord,
   type VendorVerdictInput,
@@ -14,7 +16,7 @@ import {
 import { CHANGE_DIRECTION, enrichOffers, loadDealChanges, loadOffers, vendorRiskAssessment, classifyStability } from "../dist/data.js";
 import { vendorSlugMap } from "../dist/vendor-slug.js";
 import { levelWithheldReason } from "../dist/source-check.js";
-import { offerEnded, ENDED_BADGE_LABEL } from "../dist/retirement.js";
+import { offerEnded, endedVerdictSentence, ENDED_BADGE_LABEL } from "../dist/retirement.js";
 import { gateFor, utcDate } from "../dist/ranking.js";
 import type { DealChange, RiskCause } from "../dist/types.js";
 
@@ -98,6 +100,45 @@ describe("vendor verdict — one rating word, and it carries its cause", () => {
       vendorVerdictSentence(withheld),
       "Its pricing page has not resolved for us since 2026-05-02, so we cannot confirm these terms today.",
     );
+  });
+});
+
+describe("the badge beside a vendor's name says what the verdict below it says", () => {
+  const cause = causeOf(change({ change_type: "pricing_restructured", date: "2026-08-28" }));
+
+  it("rates a record the ranker lists", () => {
+    assert.deepStrictEqual(vendorBadge(input({ level: "stable" })), { kind: "rating", word: "stable" });
+    assert.deepStrictEqual(vendorBadge(input({ level: "caution", cause })), { kind: "rating", word: "caution" });
+  });
+
+  it("states no rating on a record the ranker gates", () => {
+    for (const level of ["stable", "caution", "risky"] as const) {
+      const gated = input({ level, cause, gated: true, changes: [change()] });
+      assert.deepStrictEqual(vendorBadge(gated), { kind: "none" }, `a gated record rated ${level}`);
+    }
+  });
+
+  it("states the offer has ended rather than rating it, whatever its history says", () => {
+    const ended = input({ level: "caution", cause, gated: true, offerEnded: true, changes: [change(), change()] });
+    assert.deepStrictEqual(vendorBadge(ended), { kind: "ended" });
+    assert.strictEqual(vendorVerdictSentence(ended), endedVerdictSentence());
+    assert.strictEqual(statesRiskCause(ended), false);
+  });
+
+  it("withholds the badge on the two grounds it withheld it on before", () => {
+    assert.deepStrictEqual(vendorBadge(input({ level: null })), { kind: "none" });
+    assert.deepStrictEqual(vendorBadge(input({ level: "stable", linkUnreachable: true })), { kind: "none" });
+    assert.deepStrictEqual(
+      vendorBadge(input({ level: "risky", cause, linkUnreachable: true })),
+      { kind: "rating", word: "risky" },
+    );
+  });
+
+  it("explains a level only where the verdict states one", () => {
+    assert.strictEqual(statesRiskCause(input({ level: "caution", cause })), true);
+    assert.strictEqual(statesRiskCause(input({ level: "caution", cause, gated: true })), true);
+    assert.strictEqual(statesRiskCause(input({ level: "stable" })), false);
+    assert.strictEqual(statesRiskCause(input({ level: "caution", cause, offerEnded: true })), false);
   });
 });
 
@@ -236,7 +277,7 @@ function vendorRows(): VendorRow[] {
       ended,
       badge: ended ? ENDED_BADGE_LABEL : expected,
       withheld,
-      badgeRendered: ended || !(enriched.risk_level === null || (enriched.link_unreachable && expected === "stable")),
+      badgeRendered: ended || !(gate || enriched.risk_level === null || (enriched.link_unreachable && expected === "stable")),
       sentence: vendorVerdictSentence({
         vendor,
         level: enriched.risk_level ?? null,
@@ -264,14 +305,25 @@ describe("vendor verdict — corpus invariant, computed offline", () => {
         wrong.push(`${row.slug}: verdict reaches for a second scale — ${row.sentence}`);
         continue;
       }
-      if (!row.badgeRendered) {
-        if (/\bWe rate it\b/.test(row.sentence)) wrong.push(`${row.slug}: rates a vendor whose badge is withheld`);
+      if (row.ended) {
+        if (row.sentence !== endedVerdictSentence()) {
+          wrong.push(`${row.slug}: badge says ${row.badge}, verdict of an ended offer says ${row.sentence}`);
+        }
+        continue;
+      }
+      if (row.withheld && row.expected === "stable") {
+        if (/\bWe rate it\b/.test(row.sentence)) wrong.push(`${row.slug}: rates a vendor whose level we withhold`);
         continue;
       }
       if (row.gate) {
+        if (row.badgeRendered) wrong.push(`${row.slug}: rates a gated record ${row.badge} beside its name`);
         if (!row.sentence.includes(`${row.vendor} ${GATED_LEVEL_PHRASE[row.expected]}`)) {
-          wrong.push(`${row.slug}: badge says ${row.expected}, gated verdict says ${row.sentence}`);
+          wrong.push(`${row.slug}: gated verdict says ${row.sentence}, over a history we read as ${row.expected}`);
         }
+        continue;
+      }
+      if (!row.badgeRendered) {
+        if (/\bWe rate it\b/.test(row.sentence)) wrong.push(`${row.slug}: rates a vendor whose badge is withheld`);
         continue;
       }
       const named = row.sentence.match(/We rate it (stable|caution|risky)\b/)?.[1]
@@ -377,6 +429,7 @@ describe("vendor verdict — as rendered", () => {
   it("renders on every vendor route the one rating its own records support", async () => {
     const rows = vendorRows();
     const wrong: string[] = [];
+    let rating = 0;
     let index = 0;
     const worker = async () => {
       while (index < rows.length) {
@@ -386,6 +439,13 @@ describe("vendor verdict — as rendered", () => {
         const verdict = verdictParagraph(html);
         const cell = comparisonCell(html);
 
+        if (badge !== null && badge !== ENDED_BADGE_LABEL) rating++;
+        if (row.gate && !row.ended && badge !== null) {
+          wrong.push(`${row.slug}: the h1 of a ${row.gate.code} record rates it ${badge}`);
+        }
+        if (row.gate && row.ended && badge !== ENDED_BADGE_LABEL) {
+          wrong.push(`${row.slug}: the h1 of an ended offer reads ${badge ?? "nothing"}`);
+        }
         if (row.badgeRendered && badge !== row.badge) {
           wrong.push(`${row.slug}: h1 badge is ${badge ?? "absent"}, expected ${row.badge}`);
         }
@@ -411,6 +471,8 @@ describe("vendor verdict — as rendered", () => {
     };
     await Promise.all(Array.from({ length: 12 }, worker));
     assert.deepStrictEqual(wrong.slice(0, 20), [], `vendor routes rendering more than one judgement:\n${wrong.slice(0, 20).join("\n")}`);
+    assert.ok(rating > 700, `only ${rating} vendor pages rate the vendor beside its name`);
+    assert.ok(rows.some(r => r.gate && !r.ended), "no gated record reaches a vendor page, so the gate criterion has no subject");
   });
 
   it("answers both of its own stability questions with the same word", async () => {
@@ -501,7 +563,11 @@ describe("vendor verdict — as rendered", () => {
       const row = vendorRows().find(r => r.slug === slug);
       assert.ok(row, `/vendor/${slug} is a rendered route`);
       const html = await get(`/vendor/${slug}`);
-      assert.strictEqual(badgeWord(html), row.expected, `/vendor/${slug} badge`);
+      assert.strictEqual(
+        badgeWord(html),
+        row.gate ? null : row.expected,
+        `/vendor/${slug} badge, over a ${row.gate?.code ?? "listed"} record`,
+      );
       const cell = comparisonCell(html);
       if (cell.rendered) {
         cellsChecked += 1;
@@ -517,6 +583,10 @@ describe("vendor verdict — as rendered", () => {
       );
     }
     assert.ok(cellsChecked > 0, "no route under test rendered a comparison cell, so the badge agreement is unchecked");
+    assert.ok(
+      vendorRows().some(r => ["digitalocean", "google-gemini-api", "postman", "xata"].includes(r.slug) && !r.gate),
+      "every route under test is now gated, so no rendered badge is checked against its verdict here",
+    );
   });
 
   it("stops offering a product whose own shutdown date has passed", async () => {
