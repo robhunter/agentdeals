@@ -3745,7 +3745,7 @@ function buildVendorPage(slug: string): string | null {
     : "";
 
   const amountUnstatedLine = !levelWithheld && sourceStatesNoAmount(primary)
-    ? `  <p class="amount-unstated-line" style="margin:.4rem 0 .6rem;font-size:.9rem;color:var(--text-muted)"><strong style="color:#d29922">Source states no amount:</strong> ${escHtmlServer(amountUnstatedSentence(vendorName))}</p>`
+    ? `\n  <p class="amount-unstated-line" style="margin:.4rem 0 .6rem;font-size:.9rem;color:var(--text-muted)"><strong style="color:#d29922">Source states no amount:</strong> ${escHtmlServer(amountUnstatedSentence(vendorName))}</p>`
     : "";
 
   const primaryEligibilityGate = eligibilityGateAsPublished(primary, servedOn);
@@ -4316,8 +4316,7 @@ ${mcpCtaCss()}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/vendor">Vendors</a> &rsaquo; ${escHtmlServer(vendorName)}</div>
   <h1>${escHtmlServer(headline)}${h1RiskBadge}</h1>${gateLine}
 ${riskCauseLine}
-${linkUnreachableLine}
-${amountUnstatedLine}
+${linkUnreachableLine}${amountUnstatedLine}
 ${productRoleLine}${productSubtypesLine}
   <p class="page-meta">Limits, pricing history${alternatives.length > 0 ? `, and ${alternatives.length} alternatives` : ""}.${verifiedSentence} Last updated ${escHtmlServer(lastUpdated)}.</p>
 ${quickVerdictHtml}

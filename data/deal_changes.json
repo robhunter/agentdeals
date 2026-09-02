@@ -7639,24 +7639,6 @@
       "alternatives": [],
       "detected_by": "reverify-ai",
       "recorded_date": "2026-09-02"
-    },
-    {
-      "vendor": "openobserve.ai",
-      "change_type": "record_corrected",
-      "date": "2026-09-02",
-      "summary": "Correction to our own entry. We listed a 200 GB/month ingestion free tier with 15 days retention; openobserve.ai states no such tier. Its free offerings are self-hosted: the open-source edition with no usage limits, and the Self-Hosted Enterprise edition free up to 50 GB/day ingestion. OpenObserve Cloud offers a 14-day trial, not a free tier.",
-      "previous_state": "Listed as: 200 GB Ingestion/month free, 15 Days Retention",
-      "current_state": "Self-hosted Enterprise free up to 50 GB/day ingestion; open-source self-hosted free with no usage limits",
-      "impact": "medium",
-      "source_url": "https://openobserve.ai/",
-      "category": "Logging",
-      "alternatives": [
-        "Grafana Loki",
-        "Better Stack Logs",
-        "Logz.io"
-      ],
-      "recorded_date": "2026-09-02",
-      "date_source": "hand_written"
     }
   ]
 }
