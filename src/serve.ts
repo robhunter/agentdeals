@@ -22,6 +22,7 @@ import { buildComparisonMap, comparisonSlug } from "./comparison-pairs.js";
 import { stabilityFaqAnswer, stabilityVerdictClause, type ComparisonSide, type StabilityRating } from "./comparison-verdict.js";
 import { publishedVendorLevel, vendorVerdictSentence, vendorBadge, statesRiskCause, narrowingSentence, changeKindNoun, type VendorVerdictInput } from "./vendor-verdict.js";
 import { vendorHistorySentence } from "./vendor-history.js";
+import { changeTimelineDate, supersededLineups, supersessionNote } from "./change-lineup.js";
 import { growthLimitPhrases } from "./growth-limits.js";
 import { registerAgent, authenticateRequest, validateVestauthUrl, hashApiKey, updateAgentX402Address, getAgentById } from "./agents.js";
 import { attributeAuthenticatedRequest } from "./referral-attribution.js";
@@ -5357,7 +5358,7 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     slug: "cursor-alternatives",
     title: "Cursor Alternatives — Best Free AI Code Editors for 2026",
     metaDesc: "Cursor moved to credit-based pricing in 2025. Compare free AI coding alternatives: Claude Code, GitHub Copilot, Cline, Aider, Windsurf, Augment Code, Amazon Q Developer, Gemini CLI. Verified 2026 limits.",
-    contextHtml: `<p><strong>Cursor</strong> — the AI-powered code editor built on VS Code — shifted to <strong>credit-based pricing</strong> in mid-2025, plus a new <strong>$200/month Ultra tier</strong>. The free tier still exists (2,000 completions/month, 50 slow premium requests), but the credit model makes costs less predictable for heavy users. Developers are actively evaluating alternatives.</p>
+    contextHtml: `<p><strong>Cursor</strong> — the AI-powered code editor built on VS Code — shifted to <strong>credit-based pricing</strong> in mid-2025, plus a new <strong>$200/month Ultra tier</strong>. The free tier still exists (limited Agent requests, no published figure), but the credit model makes costs less predictable for heavy users. Developers are actively evaluating alternatives.</p>
       <p>The AI coding tool landscape has exploded in 2026. Terminal-based agents (Claude Code, Aider, Gemini CLI), IDE extensions (GitHub Copilot, Windsurf, Augment Code), and open-source autonomous agents (Cline) each offer different trade-offs between cost, flexibility, and capability.</p>
       <p>Below are the best free alternatives to Cursor, compared by <strong>what you actually get for free</strong> — exact limits, open-source status, and what each tool is best at.</p>`,
     tag: "cursor-alternative",
@@ -5380,7 +5381,7 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
     <tbody>
       <tr>
         <td style="font-weight:600;color:var(--text-dim)">Cursor</td>
-        <td>2,000 completions/mo, 50 slow premium req</td>
+        <td>Limited Agent requests</td>
         <td>IDE (VS Code fork)</td>
         <td>\u2014</td>
         <td style="color:var(--text-dim)">Inline editing + chat in one IDE</td>
@@ -11676,7 +11677,7 @@ ${buildCards(other)}
       <tr>
         <td style="font-weight:600"><a href="/vendor/cursor" style="color:var(--text)">Cursor</a></td>
         <td>AI Coding</td>
-        <td>2,000 completions, 50 requests</td>
+        <td>Limited Agent requests</td>
         <td>No</td>
         <td>AI-native code editor with Composer</td>
       </tr>
@@ -12982,7 +12983,7 @@ ${buildCards(other)}
       <tr>
         <td style="font-weight:600"><a href="/vendor/cursor" style="color:var(--text)">Cursor</a></td>
         <td>AI IDE</td>
-        <td>2,000 completions/mo, 50 slow requests</td>
+        <td>Limited Agent requests</td>
         <td>No</td>
         <td>AI-native editor with deep codebase understanding</td>
       </tr>
@@ -24550,7 +24551,7 @@ function buildFirebaseStudioShutdownPage(): string {
     { name: "CodeSandbox", slug: "codesandbox", freeCompute: "400 VM credits/month", freeStorage: "20 GB", collaboration: "Real-time collaboration", aiFeatures: "AI code suggestions", bestFor: "Web development, React/Vue/Angular projects", type: "cloud-ide" },
     { name: "StackBlitz", slug: "stackblitz", freeCompute: "Unlimited (WebContainer, runs in browser)", freeStorage: "Browser-based", collaboration: "Share via URL", aiFeatures: "Bolt.new integration", bestFor: "Instant startup, frontend frameworks, no server needed", type: "cloud-ide" },
     { name: "Coder", slug: "coder", freeCompute: "Unlimited (self-hosted OSS)", freeStorage: "Your infrastructure", collaboration: "Team workspaces", aiFeatures: "AI assistant integration", bestFor: "Enterprise, self-hosted, full control", type: "cloud-ide" },
-    { name: "Cursor", slug: "cursor", freeCompute: "Local (2,000 completions + 50 premium requests/mo)", freeStorage: "Local", collaboration: "N/A", aiFeatures: "AI-first: chat, edit, compose, multi-file", bestFor: "AI-assisted coding, VS Code users wanting AI superpowers", type: "cloud-ide" },
+    { name: "Cursor", slug: "cursor", freeCompute: "Local (limited Agent requests)", freeStorage: "Local", collaboration: "N/A", aiFeatures: "AI-first: chat, edit, compose, multi-file", bestFor: "AI-assisted coding, VS Code users wanting AI superpowers", type: "cloud-ide" },
     { name: "Windsurf", slug: "windsurf", freeCompute: "Local (free tier with quotas)", freeStorage: "Local", collaboration: "N/A", aiFeatures: "Cascade flows, AI agents, multi-file edits", bestFor: "Agentic coding, AI-driven development", type: "cloud-ide" },
     { name: "Bolt.new", slug: "bolt-new", freeCompute: "Limited free tokens", freeStorage: "Project-based", collaboration: "Share via URL", aiFeatures: "Full-stack AI builder from prompts", bestFor: "Non-coders building full apps, rapid prototyping", type: "ai-builder" },
     { name: "Lovable", slug: "lovable", freeCompute: "5 free generations/day", freeStorage: "Project-based", collaboration: "Team sharing", aiFeatures: "AI app builder, Supabase integration", bestFor: "MVPs, startup prototyping, design-to-code", type: "ai-builder" },
@@ -26793,12 +26794,12 @@ function buildAiCodingPricing2026Page(): string {
     {
       name: "Cursor",
       slug: "cursor",
-      free: "Limited requests",
+      free: "Limited Agent requests",
       pro: "$20/mo",
-      power: "$60/mo (Pro+) / $200/mo (Ultra)",
-      teams: "$40/seat",
-      model: "Credit-based (6 plans)",
-      freeDetails: "6 plans: Free (2,000 completions/month), Hobby ($10/mo), Pro ($20/mo, 500 fast premium requests), Pro+ ($60/mo, 10x premium vs Pro), Business ($40/seat), Ultra ($200/mo). Credit-based pricing since June 2025.",
+      power: "Pro+ / Ultra",
+      teams: "$40/user/mo",
+      model: "Credit-based",
+      freeDetails: "Hobby is the free plan: no credit card, limited Agent requests, Composer access — Cursor publishes no completion or request figure for it. Paid: Individual $20/mo (Pro), Pro+ (3x Pro's Agent limits), Ultra (20x), Teams $40/user/mo, Enterprise custom.",
     },
     {
       name: "Windsurf",
@@ -26853,12 +26854,12 @@ function buildAiCodingPricing2026Page(): string {
     {
       name: "Augment Code",
       slug: "augment-code",
-      free: "Limited usage",
-      pro: "$20\u201360/mo",
-      power: "\u2014",
-      teams: "Custom",
-      model: "Credit-based (Oct 2025)",
-      freeDetails: "Free tier for individual developers with limited usage. Professional plan uses credit-based consumption ($20\u201360/month depending on usage). Shifted from flat per-seat to credit-based model in October 2025. Deep codebase understanding is the key differentiator.",
+      free: "No free tier",
+      pro: "$20/mo flat",
+      power: "$100/mo flat (Business)",
+      teams: "Included up to 50 seats",
+      model: "Flat + pay-as-you-go top-ups",
+      freeDetails: "No free tier. Standard $20/month flat and Business $100/month flat, each covering up to 50 seats with $20 and $100 of included monthly usage respectively across LLM, Context Engine and compute; top-ups are pay-as-you-go. Enterprise is custom-priced. Flat team pricing with no per-seat charge.",
     },
     {
       name: "Cline",
@@ -26903,13 +26904,19 @@ function buildAiCodingPricing2026Page(): string {
     </div>`;
   }).join("\n    ");
 
+  const supersededAiCodingLineups = supersededLineups(aiCodingChanges);
+
   const changeTimelineRows = aiCodingChanges.map(c => {
-    const dateStr = new Date(c.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+    const dateStr = changeTimelineDate(c.date);
     const impactColor = c.impact === "high" ? "#f85149" : c.impact === "medium" ? "#d29922" : "#3fb950";
-    return `<tr>
+    const newest = supersededAiCodingLineups.get(c);
+    const historyNote = newest
+      ? `<div class="superseded-note">${escHtmlServer(supersessionNote(newest, changeTimelineDate))}</div>`
+      : "";
+    return `<tr${newest ? ` class="superseded-row"` : ""}>
       <td style="font-family:var(--mono);font-size:.8rem;white-space:nowrap">${escHtmlServer(dateStr)}</td>
       <td style="font-weight:600">${escHtmlServer(c.vendor)}</td>
-      <td style="font-size:.85rem">${escHtmlServer(c.summary)}</td>
+      <td style="font-size:.85rem">${escHtmlServer(c.summary)}${historyNote}</td>
       <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(c.impact?.toUpperCase() ?? "N/A")}</span></td>
     </tr>`;
   }).join("\n        ");
@@ -26974,6 +26981,8 @@ h3{font-family:var(--serif);font-size:1.1rem;color:var(--text);margin:1.5rem 0 .
 .pricing-table th{text-align:left;padding:.75rem .5rem;border-bottom:2px solid var(--border);color:var(--text-muted);font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.05em}
 .pricing-table td{padding:.6rem .5rem;border-bottom:1px solid var(--border)}
 .pricing-table tr:hover{background:var(--accent-glow)}
+.superseded-row td{color:var(--text-dim)}
+.superseded-note{margin-top:.35rem;font-size:.75rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:.04em}
 .diff-card{padding:1.25rem;border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:8px;background:var(--bg-card);margin-bottom:.75rem}
 .diff-card h3{margin:0 0 .5rem;font-size:1rem}
 .diff-desc{color:var(--text-muted);font-size:.9rem;line-height:1.6}
@@ -27186,16 +27195,16 @@ function buildAiCodingToolsPricingPage(): string {
       name: "Cursor",
       slug: "cursor",
       category: "ide",
-      free: "2K completions/mo",
+      free: "Limited Agent requests",
       pro: "$20/mo",
-      power: "$60/mo (Pro+) / $200/mo (Ultra)",
-      teams: "$40/seat",
-      model: "Credit-based (6 plans)",
-      freeDetails: "6-plan structure: Free (2,000 completions/month, 50 slow premium requests), Hobby ($10/mo — lighter paid tier), Pro ($20/mo — unlimited completions, 500 fast premium requests), Pro+ ($60/mo — 10x premium vs Pro, priority access), Business ($40/seat — admin controls, SSO), Ultra ($200/mo — highest credit limits). Credit-based pricing model since June 2025.",
+      power: "Pro+ / Ultra",
+      teams: "$40/user/mo",
+      model: "Credit-based",
+      freeDetails: "Hobby is Cursor's free plan — no credit card required, limited Agent requests, access to Composer. Cursor's pricing page states no completion or premium-request figure for it. Individual plans start at $20/mo (Pro), with Pro+ at 3x Pro's Agent limits and Ultra at 20x. Teams $40/user/mo (Premium at 5x Standard). Enterprise is custom-priced with pooled usage and SCIM.",
       freeType: "limited",
-      monthlyCostSolo: "$10–$60",
+      monthlyCostSolo: "$20",
       monthlyCostTeam5: "$200",
-      hiddenCosts: "6 tiers now (added Hobby at $10/mo). Credit consumption varies by model — Opus burns 10x faster than Sonnet. Pro+ ($60/mo) fills the gap between Pro and Ultra. Ultra ($200/mo) still needed for highest limits.",
+      hiddenCosts: "Credit consumption varies by model — Opus burns 10x faster than Sonnet.",
     },
     {
       name: "Windsurf",
@@ -27351,16 +27360,16 @@ function buildAiCodingToolsPricingPage(): string {
       name: "Augment Code",
       slug: "augment-code",
       category: "ide",
-      free: "Limited usage",
-      pro: "$20\u201360/mo",
-      power: "\u2014",
-      teams: "Custom",
-      model: "Credit-based (Oct 2025)",
-      freeDetails: "Free tier for individual developers with limited usage. Professional plan uses credit-based consumption ($20\u201360/month depending on usage). Shifted from flat per-seat to credit-based model in October 2025. Deep codebase understanding is the key differentiator.",
-      freeType: "limited",
-      monthlyCostSolo: "$20\u201360",
-      monthlyCostTeam5: "Custom",
-      hiddenCosts: "Credit-based means unpredictable costs. Usage can spike to $60/mo under heavy load. Codebase indexing is the value-add but costs scale with repo size.",
+      free: "No free tier",
+      pro: "$20/mo flat",
+      power: "$100/mo flat (Business)",
+      teams: "Included up to 50 seats",
+      model: "Flat + pay-as-you-go top-ups",
+      freeDetails: "No free tier. Standard $20/month flat and Business $100/month flat, each covering up to 50 seats with $20 and $100 of included monthly usage respectively across LLM, Context Engine and compute; top-ups are pay-as-you-go. Enterprise is custom-priced. Flat team pricing with no per-seat charge.",
+      freeType: "none",
+      monthlyCostSolo: "$20",
+      monthlyCostTeam5: "$20",
+      hiddenCosts: "Included usage is $20/month on Standard and $100/month on Business; beyond it, top-ups are pay-as-you-go. Codebase indexing is the value-add but costs scale with repo size.",
     },
     {
       name: "OpenAI Codex",
@@ -27510,13 +27519,19 @@ function buildAiCodingToolsPricingPage(): string {
       '</tr>';
   }).join("\n        ");
 
-  const changeTimelineRows = aiCodingChanges.map(c => {
-    const dateStr = new Date(c.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+  const supersededAiCodingLineups = supersededLineups(aiCodingChanges);
+
+  const changeTimelineRows = aiCodingChanges.map((c: any) => {
+    const dateStr = changeTimelineDate(c.date);
     const impactColor = c.impact === "high" ? "#f85149" : c.impact === "medium" ? "#d29922" : "#3fb950";
-    return '<tr>' +
+    const newest = supersededAiCodingLineups.get(c);
+    const historyNote = newest
+      ? '<div class="superseded-note">' + escHtmlServer(supersessionNote(newest, changeTimelineDate)) + '</div>'
+      : "";
+    return '<tr' + (newest ? ' class="superseded-row"' : "") + '>' +
       '<td style="font-family:var(--mono);font-size:.8rem;white-space:nowrap">' + escHtmlServer(dateStr) + '</td>' +
       '<td style="font-weight:600">' + escHtmlServer(c.vendor) + '</td>' +
-      '<td style="font-size:.85rem">' + escHtmlServer(c.summary) + '</td>' +
+      '<td style="font-size:.85rem">' + escHtmlServer(c.summary) + historyNote + '</td>' +
       '<td><span style="color:' + impactColor + ';font-size:.8rem;font-weight:600">' + escHtmlServer(c.impact?.toUpperCase() ?? "N/A") + '</span></td>' +
       '</tr>';
   }).join("\n        ");
@@ -27540,7 +27555,7 @@ function buildAiCodingToolsPricingPage(): string {
 
   const faqEntries = [
     { q: "What is the best free AI coding tool in 2026?", a: "Gemini Code Assist offers the most generous free tier with 6,000 completions/day (180,000/month) and 240 chat messages/day. For open-source alternatives, Cline and Aider are fully free with BYO API keys. Gemini CLI offers 1,000 free requests/day. Amazon Kiro offers 50 free credits/month — limited, but enough to try spec-driven development." },
-    { q: "How much does Cursor cost vs Windsurf?", a: "Both charge $20/month Pro and $200/month Power (Ultra/Max). Cursor now has 6 plans (added Hobby at $10/mo), Windsurf has 4 (Free, Pro $20, Teams $40, Max $200). Windsurf raised Pro from $15 to $20 in March 2026. Windsurf's SWE-1.5 Fast Agent model optimizes for iteration speed." },
+    { q: "How much does Cursor cost vs Windsurf?", a: "Both start at $20/month for an individual paid plan and $40/user/month for teams. Cursor's free plan is called Hobby. Above Pro at $20/mo, Cursor lists Pro+ at 3x Pro's Agent limits and Ultra at 20x, with Enterprise custom-priced. Windsurf has 4 plans (Free, Pro $20, Teams $40/seat, Max $200) and raised Pro from $15 to $20 in March 2026. Windsurf's SWE-1.5 Fast Agent model optimizes for iteration speed." },
     { q: "Is GitHub Copilot still the cheapest AI coding tool?", a: "Yes, GitHub Copilot Pro at $10/month is the cheapest paid AI coding subscription. It also offers a free tier with 2,000 completions/month and 50 premium requests/month. Pro includes 300 premium requests. Overage costs $0.04/request. Note: advanced reasoning models (Claude Opus 4, o3) consume 5x\u201320x premium requests per interaction." },
     { q: "What are the hidden costs of BYO-key AI coding tools?", a: "Tools like Cline and Aider are free to install but require API keys. Typical costs: $5-50/month for moderate use with Claude Sonnet or GPT-4o. Heavy agentic usage (Cline with Opus) can reach $50-100/month in API costs alone." },
     { q: "Which AI coding tool is best for teams?", a: "GitHub Copilot Business ($19/seat) is cheapest for teams. Gemini Code Assist Enterprise matches at $19/seat with Google Cloud integration. Cursor and Windsurf Business ($40/seat) offer the highest AI throughput per developer." },
@@ -27606,6 +27621,8 @@ function buildAiCodingToolsPricingPage(): string {
     '.pricing-table th{text-align:left;padding:.75rem .5rem;border-bottom:2px solid var(--border);color:var(--text-muted);font-weight:600;font-size:.75rem;text-transform:uppercase;letter-spacing:.05em}\n' +
     '.pricing-table td{padding:.6rem .5rem;border-bottom:1px solid var(--border)}\n' +
     '.pricing-table tr:hover{background:var(--accent-glow)}\n' +
+    '.superseded-row td{color:var(--text-dim)}\n' +
+    '.superseded-note{margin-top:.35rem;font-size:.75rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:.04em}\n' +
     '.diff-card{padding:1.25rem;border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:8px;background:var(--bg-card);margin-bottom:.75rem}\n' +
     '.diff-card h3{margin:0 0 .5rem;font-size:1rem}\n' +
     '.diff-desc{color:var(--text-muted);font-size:.9rem;line-height:1.6}\n' +
