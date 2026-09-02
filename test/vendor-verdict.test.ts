@@ -359,20 +359,18 @@ describe("vendor verdict — as rendered", () => {
     };
   };
 
-  const faqAnswers = (html: string, vendor: string): { reliable: string; production: string } => {
+  const faqAnswers = (html: string, vendor: string): { reliable: string | null; production: string } => {
     const blocks = [...html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)]
       .map(m => JSON.parse(m[1]) as Record<string, unknown>);
     const faq = blocks.find(b => b["@type"] === "FAQPage") as
       { mainEntity: Array<{ name: string; acceptedAnswer: { text: string } }> } | undefined;
     assert.ok(faq, `${vendor} emits FAQ structured data`);
-    const find = (name: string) => {
-      const q = faq.mainEntity.find(e => e.name === name);
-      assert.ok(q, `the structured data answers "${name}"`);
-      return q.acceptedAnswer.text;
-    };
+    const find = (name: string) => faq.mainEntity.find(e => e.name === name)?.acceptedAnswer.text ?? null;
+    const production = find(`Is ${vendor}'s free tier good for production?`);
+    assert.ok(production, `the structured data answers "Is ${vendor}'s free tier good for production?"`);
     return {
       reliable: find(`Is ${vendor}'s free tier reliable?`),
-      production: find(`Is ${vendor}'s free tier good for production?`),
+      production,
     };
   };
 
@@ -425,18 +423,24 @@ describe("vendor verdict — as rendered", () => {
         const html = await get(`/vendor/${row.slug}`);
         const answers = faqAnswers(html, row.vendor);
         for (const [name, text] of Object.entries(answers)) {
-          if (OTHER_SCALE_ON_A_SURFACE_THAT_EMBEDS_SUMMARIES.test(text)) {
+          if (text !== null && OTHER_SCALE_ON_A_SURFACE_THAT_EMBEDS_SUMMARIES.test(text)) {
             wrong.push(`${row.slug}: the "${name}" answer reaches for a second scale — ${text}`);
           }
         }
-        const carriesTheRating = row.gate
-          ? answers.reliable.includes(`${row.vendor} ${GATED_LEVEL_PHRASE[row.expected]}`)
-          : answers.reliable.includes(row.expected);
-        if (!row.withheld && !row.ended && !carriesTheRating) {
-          wrong.push(`${row.slug}: the reliability answer does not carry the ${row.expected} rating`);
+        const wouldRateAGatedOffer = row.gate !== null && !row.withheld && !row.ended;
+        if (wouldRateAGatedOffer && answers.reliable !== null) {
+          wrong.push(`${row.slug}: asks whether a gated free tier is reliable — ${answers.reliable}`);
         }
-        if (!row.withheld && !row.ended && row.expected === "stable" && !answers.reliable.includes(narrowingSentence(row.changes))) {
-          wrong.push(`${row.slug}: the reliability answer does not say what the records it holds did — ${answers.reliable}`);
+        if (!wouldRateAGatedOffer && answers.reliable === null) {
+          wrong.push(`${row.slug}: no longer asks whether its free tier is reliable`);
+        }
+        if (answers.reliable !== null && !row.withheld && !row.ended) {
+          if (!answers.reliable.includes(row.expected)) {
+            wrong.push(`${row.slug}: the reliability answer does not carry the ${row.expected} rating`);
+          }
+          if (row.expected === "stable" && !answers.reliable.includes(narrowingSentence(row.changes))) {
+            wrong.push(`${row.slug}: the reliability answer does not say what the records it holds did — ${answers.reliable}`);
+          }
         }
         const productionRating = answers.production.match(/we rate it (stable|caution|risky)\b/)?.[1];
         if (productionRating && productionRating !== row.expected) {
