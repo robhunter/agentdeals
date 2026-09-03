@@ -121,7 +121,8 @@ export function structuredDetail(structured) {
   if (!structured) return null;
   if (structured.blocks === 0) return NO_STRUCTURED_DATA;
   if (structured.prices.length === 0) {
-    return `the ${structured.blocks} structured-data block${structured.blocks === 1 ? "" : "s"} in its markup state no price`;
+    const many = structured.blocks !== 1;
+    return `the ${structured.blocks} structured-data block${many ? "s" : ""} in its markup ${many ? "state" : "states"} no price`;
   }
   return `its markup states ${priceList(structured.prices)}`;
 }

@@ -20,7 +20,7 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: "24.20.0"
           cache: "npm"
 
       - name: Install dependencies
@@ -39,17 +39,12 @@ jobs:
           echo "unreachable=$UNREACHABLE" >> "$GITHUB_OUTPUT"
           echo "unknown=$UNKNOWN" >> "$GITHUB_OUTPUT"
 
-      - name: Commit and push if changed
+      - name: Run the suite, then push to main only if it is green
         env:
           UNREACHABLE: ${{ steps.liveness.outputs.unreachable }}
           UNKNOWN: ${{ steps.liveness.outputs.unknown }}
         run: |
-          if git diff --quiet -- data/link_health.json; then
-            echo "No change to data/link_health.json — skipping commit."
-            exit 0
-          fi
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/link_health.json
-          git commit -m "data(auto): link liveness — ${UNREACHABLE} unreachable, ${UNKNOWN} could not be checked"
-          git push origin HEAD:main
+          bash scripts/gate-data-push.sh \
+            data-quarantine/link-liveness \
+            "data(auto): link liveness — ${UNREACHABLE} unreachable, ${UNKNOWN} could not be checked" \
+            data/link_health.json

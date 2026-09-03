@@ -16,6 +16,7 @@ let movedAside = false;
 
 const GAP_QUERY = `wiring-gap-${process.pid}`;
 const COVERED_QUERY = "database";
+let emptyingCategory = "";
 
 before(async () => {
   if (existsSync(telemetryPath)) {
@@ -35,6 +36,8 @@ before(async () => {
     });
     proc.on("error", (err) => { clearTimeout(timeout); reject(err); });
   });
+
+  emptyingCategory = await categoryThatEmpties(COVERED_QUERY);
 });
 
 after(() => {
@@ -57,14 +60,33 @@ function countFor(list: { query: string; count: number }[], query: string): numb
   return list.find(e => e.query === query.toLowerCase())?.count ?? 0;
 }
 
+async function categoryThatEmpties(query: string): Promise<string> {
+  const covered = await get(`/api/offers?q=${query}&limit=2000`);
+  assert.ok(covered.total > 0, `${query} matches nothing in the catalog, so it is no longer a covered query`);
+  const matched = new Set<string>(covered.offers.map((o: { category: string }) => o.category.toLowerCase()));
+  const catalog = await get("/api/offers?limit=2000");
+  const outside = catalog.offers
+    .map((o: { category: string }) => o.category)
+    .find((c: string) => !matched.has(c.toLowerCase()));
+  assert.ok(
+    outside,
+    `every one of the catalog's categories now holds a match for "${query}", so no filter can narrow it to zero`,
+  );
+  return outside;
+}
+
 describe("search recording wiring (#1018 Defect C)", () => {
   it("a filter that empties a covered query is not recorded as a catalog gap", async () => {
     const covered = await get(`/api/offers?q=${COVERED_QUERY}&limit=1`);
     assert.ok(covered.total > 0, `${COVERED_QUERY} should match offers; got ${covered.total}`);
 
     const before = await analytics();
-    const filtered = await get(`/api/offers?q=${COVERED_QUERY}&stability=volatile&payment_protocol=x402&limit=1`);
-    assert.strictEqual(filtered.total, 0, "this filter combination should empty the result set");
+    const filtered = await get(`/api/offers?q=${COVERED_QUERY}&category=${encodeURIComponent(emptyingCategory)}&limit=1`);
+    assert.strictEqual(
+      filtered.total,
+      0,
+      `no offer in ${emptyingCategory} matched "${COVERED_QUERY}" when the category was chosen; the catalog now holds ${filtered.total} that do`,
+    );
     const after = await analytics();
 
     assert.strictEqual(
@@ -102,8 +124,12 @@ describe("search recording wiring (#1018 Defect C)", () => {
     const sessionId = await mcpInitialize();
 
     const before = await analytics();
-    const filtered = await mcpSearch(sessionId, { query: COVERED_QUERY, payment_protocol: "x402", stability: "volatile" });
-    assert.strictEqual(filtered.total, 0, "this filter combination should empty the result set");
+    const filtered = await mcpSearch(sessionId, { query: COVERED_QUERY, category: emptyingCategory });
+    assert.strictEqual(
+      filtered.total,
+      0,
+      `no offer in ${emptyingCategory} matched "${COVERED_QUERY}" when the category was chosen; the catalog now holds ${filtered.total} that do`,
+    );
     const mid = await analytics();
 
     assert.strictEqual(

@@ -217,10 +217,15 @@ describe("a malformed block does not cost us the page", () => {
     assert.match(gradeOf(none).detail, /carries no structured data/);
 
     const priceless = await readWith(page(`<p>${PROSE}</p>`) + ldBlock({ "@type": "Organization", name: "Widgetson" }));
-    assert.match(structuredDetail(priceless.structured) ?? "", /1 structured-data block .* state no price/);
-    assert.match(gradeOf(priceless).detail, /state no price/);
+    assert.strictEqual(structuredDetail(priceless.structured), "the 1 structured-data block in its markup states no price");
+    assert.match(gradeOf(priceless).detail, /states no price/);
 
     assert.strictEqual(structuredDetail(null), null);
+  });
+
+  it("agrees the verb with the number of blocks it counted", () => {
+    assert.strictEqual(structuredDetail({ blocks: 1, parsed: 1, prices: [] }), "the 1 structured-data block in its markup states no price");
+    assert.strictEqual(structuredDetail({ blocks: 2, parsed: 2, prices: [] }), "the 2 structured-data blocks in its markup state no price");
   });
 
   it("leaves a page read without a markup pass described as it was", () => {
