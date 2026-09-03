@@ -44,7 +44,7 @@ import { faqPageJsonLd, type FaqItem } from "./faq-provenance.js";
 import { SSE_KEEPALIVE_FRAME, keepaliveIntervalMs, sessionRecoveryBody } from "./mcp-stream.js";
 import { ASSISTANTS_API_SHUTDOWN } from "./assistants-shutdown.js";
 import { discontinuedOnOrBefore, PRODUCT_DEPRECATED } from "./product-deprecation.js";
-import { rankOffers, rankForListing, rotateListing, utcDate, gateFor, CRITERIA_PATH, DEMOTE_ONLY_POLICY, DISCLOSURE_RATIONALE, TIE_BREAK_ALGORITHM, GATE_TABLE, DEMERIT_TABLE, NOT_FREE_TIER_RULES, TIME_LIMITED_TIER_RULES, type TieBreak, type Gate } from "./ranking.js";
+import { rankOffers, rankForListing, rotateListing, utcDate, gateFor, notAFreeOfferGateFor, descriptionDeniesFreeTier, CRITERIA_PATH, DEMOTE_ONLY_POLICY, DISCLOSURE_RATIONALE, TIE_BREAK_ALGORITHM, GATE_TABLE, DEMERIT_TABLE, NOT_FREE_TIER_RULES, TIME_LIMITED_TIER_RULES, type TieBreak, type Gate } from "./ranking.js";
 import type { RankedEntry, RankingResult } from "./ranking.js";
 import { eligibilityGateAsPublished, gatedShareDescriptionClause, gatedShareLede, publishableEligibilityConditions } from "./eligibility.js";
 import { gateDisclosureFor } from "./gate-disclosure.js";
@@ -3676,6 +3676,10 @@ function curatedAltsNote(vendorName: string): string {
   return `These alternatives were identified from ${escHtmlServer(vendorName)}&rsquo;s pricing changes as recommended replacements.`;
 }
 
+function storedTermsOf(offer: Pick<Offer, "description">): string {
+  return `${offer.description.slice(0, 200)}${offer.description.length > 200 ? "..." : ""}`;
+}
+
 function buildVendorPage(slug: string): string | null {
   const vendorName = vendorSlugMap.get(slug);
   if (!vendorName) return null;
@@ -3741,8 +3745,9 @@ function buildVendorPage(slug: string): string | null {
 
   const primaryEligibilityGate = eligibilityGateAsPublished(primary, servedOn);
   const primaryEligibilityConditions = publishableEligibilityConditions(primary);
-  const primaryGateBeyondEligibility = primaryGate && primaryGate.code !== "eligibility_restricted" ? primaryGate : null;
-  const noFreeTierGate = primaryGate && GATES_LEAVING_NO_FREE_TIER.includes(primaryGate.code) ? primaryGate : null;
+  const primaryNotAFreeOfferGate = notAFreeOfferGateFor(primary);
+  const primaryGateBeyondEligibility = primaryGate && primaryGate.code !== "eligibility_restricted" ? primaryGate : primaryNotAFreeOfferGate;
+  const noFreeTierGate = primaryGate && GATES_LEAVING_NO_FREE_TIER.includes(primaryGate.code) ? primaryGate : primaryNotAFreeOfferGate;
   const productionGate = primaryGate && GATES_LEAVING_NOTHING_TO_RUN_IN_PRODUCTION.includes(primaryGate.code) ? primaryGate : null;
   const linedGate = primaryGate && primaryGate.code !== "offer_retired" ? primaryGate : null;
   const gateLine = linedGate
@@ -3803,7 +3808,7 @@ function buildVendorPage(slug: string): string | null {
 
   const currentYear = new Date().getFullYear();
   const retiredSentence = offerRetired(primary) ? recordedTierSentence(vendorName, primary.tier) : "";
-  const hasFree = !retiredSentence && !noFreeTierGate && primary.tier.toLowerCase() !== "none" && !primary.description.toLowerCase().includes("no free tier");
+  const hasFree = !retiredSentence && !noFreeTierGate && primary.tier.toLowerCase() !== "none" && !descriptionDeniesFreeTier(primary.description);
   const freeTierHeadline = `${vendorName} Free Tier ${currentYear}`;
   const pricingHeadline = `${vendorName} Pricing ${currentYear}`;
   const headline = offerHasEnded ? endedHeadline(vendorName) : hasFree ? freeTierHeadline : pricingHeadline;
@@ -4126,7 +4131,7 @@ ${allCompareLinks.join("\n")}
     jsonLd.about = pricingEvents;
   }
 
-  const storedTerms = `${primary.description.slice(0, 200)}${primary.description.length > 200 ? "..." : ""}`;
+  const storedTerms = storedTermsOf(primary);
   const unconfirmedTermsPreamble = levelWithheld
     ? `We cannot confirm that today. ${withheldLevelSentence(levelWithheld, vendorName, unconfirmableSince)} `
     : "";
@@ -4138,7 +4143,7 @@ ${allCompareLinks.join("\n")}
   const faqFreeAnswer = retiredSentence
     ? `${retiredSentence} ${storedTerms}`
     : primaryGateBeyondEligibility
-    ? `${primaryGateBeyondEligibility.reason} ${levelWithheld ? `${unconfirmedTermsPreamble}${withUnconfirmedTermsCaveat(storedTerms)}` : storedTerms}`
+    ? `${eligibilityGateSentence}${primaryGateBeyondEligibility.reason} ${levelWithheld ? `${unconfirmedTermsPreamble}${withUnconfirmedTermsCaveat(storedTerms)}` : storedTerms}${eligibilityConditionsSentence}`
     : levelWithheld
     ? `${eligibilityGateSentence}${unconfirmedTermsPreamble}Our stored record says ${vendorName} offers a free tier: ${primary.tier}. ${withUnconfirmedTermsCaveat(storedTerms)}${eligibilityConditionsSentence}`
     : primaryEligibilityGate
@@ -4580,7 +4585,10 @@ ${renderAuditBlock(altRanking.tie_break)}
   const faqBestAltsAnswer = topStableAlts.length > 0
     ? `The best free alternatives to ${vendorName} include ${topStableAlts.map(a => `${a.vendor} (${a.tier})`).join(", ")}.`
     : `There are ${enrichedAlts.length} free alternatives to ${vendorName} available. ${enrichedAlts.slice(0, 3).map(a => a.vendor).join(", ")} are among the options.`;
-  const faqFreeTierAnswer = altLevelWithheld
+  const altNotAFreeOffer = notAFreeOfferGateFor(primary);
+  const faqFreeTierAnswer = altNotAFreeOffer
+    ? `${altNotAFreeOffer.reason}${altLevelWithheld ? ` ${altWithheldSentence}` : ""} ${storedTermsOf(primary)}`
+    : altLevelWithheld
     ? `We cannot confirm that today. ${altWithheldSentence} Our stored record says ${vendorName} offers a free tier (${primary.tier}), but we have not confirmed those terms against the source we cite.`
     : riskLevel === "stable"
     ? `Yes, ${vendorName} currently offers a free tier (${primary.tier}). ${vendorChanges.length === 0 ? "No pricing changes have been recorded." : narrowingSentence(vendorChanges)}`

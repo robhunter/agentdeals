@@ -28,7 +28,7 @@ export const NOT_FREE_TIER_RULES: { pattern: RegExp; note: string }[] = [
   { pattern: /^pay[-\s]?as[-\s]?you[-\s]?go$/i, note: "usage-billed from the first request" },
   { pattern: /^pay[-\s]?per[-\s]?use\b/i, note: "usage-billed from the first request" },
   { pattern: /^legacy free$/i, note: "a free tier closed to new accounts" },
-  { pattern: /^conditional$/i, note: "availability is not stated in terms we can check" },
+  { pattern: /^conditional$/i, note: "an offer whose availability is not stated in terms we can check" },
   { pattern: /^exempt\s*\/\s*paid$/i, note: "free only by case-by-case exemption" },
 ];
 
@@ -38,6 +38,12 @@ export const TIME_LIMITED_TIER_RULES: { pattern: RegExp; note: string }[] = [
   { pattern: /scholarship/i, note: "a scholarship award, not an ongoing tier" },
   { pattern: /\bbeta\b|preview|sandbox/i, note: "a beta/preview/sandbox allowance that may end without notice" },
 ];
+
+export const NO_FREE_TIER_IN_DESCRIPTION = /no free tier/i;
+
+export function descriptionDeniesFreeTier(description: string | undefined): boolean {
+  return description !== undefined && NO_FREE_TIER_IN_DESCRIPTION.test(description);
+}
 
 export function classifyTier(tier: string): { class: TierClass; note: string } {
   if (offerEnded({ tier })) return { class: "retired", note: RETIRED_TIER_NOTE };
@@ -278,18 +284,22 @@ export function retiredGateFor(offer: Pick<Offer, "tier" | "vendor">): Gate | nu
   };
 }
 
+export function notAFreeOfferGateFor(offer: Pick<Offer, "tier">): Gate | null {
+  const tierClass = classifyTier(offer.tier);
+  if (tierClass.class !== "not_free") return null;
+  return {
+    code: "not_a_free_offer",
+    reason: `Tier "${offer.tier}" is ${tierClass.note}.`,
+  };
+}
+
 export function gateFor(offer: Offer, date: string): Gate | null {
   const retired = retiredGateFor(offer);
   if (retired) return retired;
   const restricted = eligibilityGateFor(offer);
   if (restricted) return restricted;
-  const tierClass = classifyTier(offer.tier);
-  if (tierClass.class === "not_free") {
-    return {
-      code: "not_a_free_offer",
-      reason: `Tier "${offer.tier}" is ${tierClass.note}.`,
-    };
-  }
+  const notAFreeOffer = notAFreeOfferGateFor(offer);
+  if (notAFreeOffer) return notAFreeOffer;
   if (offer.expires_date && offer.expires_date < date) {
     return { code: "offer_expired", reason: `Offer expired on ${offer.expires_date}.` };
   }

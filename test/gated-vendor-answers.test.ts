@@ -459,10 +459,7 @@ const offerBlock = (p: VendorPage) => blockOfType(p.html, "WebPage")?.mainEntity
 
 const currentVendorRow = (html: string) => /<tr class="current-vendor-row">[\s\S]*?<\/tr>/.exec(html)?.[0] ?? null;
 
-const UNGATED_VERDICTS_OPENING_ON_A_FREE_TIER = 1414;
 const UNGATED_PAGES_RATING_RELIABILITY = 745;
-const UNGATED_PAGES_ASKING_ABOUT_OUTGROWING = 1415;
-const UNGATED_PAGES_PUBLISHING_A_ZERO_PRICE = 1415;
 
 describe("no page a gated record renders claims a free tier or rates one", () => {
   it("makes none of the claims a page makes about an offer it does list", () => {
@@ -583,21 +580,16 @@ describe("no question a gated page asks presupposes what its own answer denies",
   });
 });
 
-const UNGATED_PAGES_ASKING_WHAT_THE_TIER_IS = 1415;
-const UNGATED_PAGES_ASKING_WHETHER_IT_IS_RELIABLE = 1415;
-
 describe("the same page an ungated record renders is unchanged", () => {
+  it("reads a non-empty ungated population, so the checks below are not vacuous", () => {
+    assert.ok(ungated().length > 0, "no record renders an ungated page, so nothing below is checked");
+  });
+
   it("still asks what its free tier is and whether that tier is reliable", () => {
-    const tier = ungated().filter(p => asks(p.html, `What is ${p.vendor}'s free tier?`)).length;
-    const reliable = ungated().filter(p => asks(p.html, `Is ${p.vendor}'s free tier reliable?`)).length;
-    assert.ok(
-      tier >= UNGATED_PAGES_ASKING_WHAT_THE_TIER_IS,
-      `${tier} ungated pages ask what the tier is, down from ${UNGATED_PAGES_ASKING_WHAT_THE_TIER_IS}`,
-    );
-    assert.ok(
-      reliable >= UNGATED_PAGES_ASKING_WHETHER_IT_IS_RELIABLE,
-      `${reliable} ungated pages ask whether it is reliable, down from ${UNGATED_PAGES_ASKING_WHETHER_IT_IS_RELIABLE}`,
-    );
+    const silentOnTier = ungated().filter(p => !asks(p.html, `What is ${p.vendor}'s free tier?`)).map(p => p.slug);
+    const silentOnReliability = ungated().filter(p => !asks(p.html, `Is ${p.vendor}'s free tier reliable?`)).map(p => p.slug);
+    assert.deepStrictEqual(silentOnTier.slice(0, 20), [], "ungated pages that stopped asking what the tier is");
+    assert.deepStrictEqual(silentOnReliability.slice(0, 20), [], "ungated pages that stopped asking whether it is reliable");
   });
 
   it("still makes every one of those claims somewhere", () => {
@@ -614,10 +606,10 @@ describe("the same page an ungated record renders is unchanged", () => {
   });
 
   it("still opens its verdict on the free tier", () => {
-    const opening = ungated().filter(p => pageProse(p).includes(`${p.vendor}'s free tier offers `)).length;
+    const notOpening = ungated().filter(p => !pageProse(p).includes(`${p.vendor}'s free tier offers `)).map(p => p.slug);
     assert.ok(
-      opening >= UNGATED_VERDICTS_OPENING_ON_A_FREE_TIER,
-      `${opening} ungated verdicts open on the free tier, down from ${UNGATED_VERDICTS_OPENING_ON_A_FREE_TIER}`,
+      notOpening.length < ungated().length * 0.01,
+      `${notOpening.length} ungated verdicts do not open on the free tier: ${notOpening.slice(0, 20).join(", ")}`,
     );
   });
 
@@ -633,18 +625,12 @@ describe("the same page an ungated record renders is unchanged", () => {
   });
 
   it("still answers when the reader will outgrow it", () => {
-    const asked = ungated().filter(outgrowQuestionAsked).length;
-    assert.ok(
-      asked >= UNGATED_PAGES_ASKING_ABOUT_OUTGROWING,
-      `${asked} ungated pages answer it, down from ${UNGATED_PAGES_ASKING_ABOUT_OUTGROWING}`,
-    );
+    const unanswered = ungated().filter(p => !outgrowQuestionAsked(p)).map(p => p.slug);
+    assert.deepStrictEqual(unanswered.slice(0, 20), [], "ungated pages that stopped answering when the reader outgrows the tier");
   });
 
   it("still publishes a zero-price Offer", () => {
-    const publishing = ungated().filter(p => offerBlock(p)?.price === "0").length;
-    assert.ok(
-      publishing >= UNGATED_PAGES_PUBLISHING_A_ZERO_PRICE,
-      `${publishing} ungated pages publish one, down from ${UNGATED_PAGES_PUBLISHING_A_ZERO_PRICE}`,
-    );
+    const missing = ungated().filter(p => offerBlock(p)?.price !== "0").map(p => p.slug);
+    assert.deepStrictEqual(missing.slice(0, 20), [], "ungated pages that stopped publishing a zero-price Offer");
   });
 });
