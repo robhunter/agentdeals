@@ -15,6 +15,7 @@ import {
 } from "../dist/vendor-verdict.js";
 import { CHANGE_DIRECTION, enrichOffers, loadDealChanges, loadOffers, vendorRiskAssessment, classifyStability } from "../dist/data.js";
 import { vendorSlugMap } from "../dist/vendor-slug.js";
+import { isNoLongerInForce } from "../dist/change-resolution.js";
 import { levelWithheldReason } from "../dist/source-check.js";
 import { offerEnded, endedVerdictSentence, ENDED_BADGE_LABEL } from "../dist/retirement.js";
 import { gateFor, utcDate } from "../dist/ranking.js";
@@ -523,9 +524,11 @@ describe("vendor verdict — as rendered", () => {
         const row = rows[index++];
         const html = await get(`/vendor/${row.slug}`);
         const verdict = verdictParagraph(html);
-        const narrowing = row.changes.filter(c => CHANGE_DIRECTION[c.change_type] === "negative");
+        const narrowing = row.changes.filter(
+          c => CHANGE_DIRECTION[c.change_type] === "negative" && !isNoLongerInForce(c),
+        );
         if (CLAIMS_A_NARROWING.test(verdict) && narrowing.length === 0) {
-          wrong.push(`${row.slug}: names a narrowing over ${row.changes.length} record(s), none of which point down`);
+          wrong.push(`${row.slug}: names a narrowing over ${row.changes.length} record(s), none of which still point down`);
         }
         if (row.changes.every(c => c.change_type === "record_corrected")) {
           if (!/corrects? our own earlier entr/.test(verdict)) {
