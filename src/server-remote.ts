@@ -18,6 +18,8 @@ import { getGuideList, getGuideBySlug } from "./guides.js";
 import { registerMcpAppsResources, TOOL_UI_META } from "./mcp-apps.js";
 import { MCP_INSTRUCTIONS } from "./mcp-instructions.js";
 import { substitutesFor } from "./product-role.js";
+
+export const TRACK_CHANGES_LIMIT = 1000;
 import type { ProductRole, ProductSubtypes } from "./types.js";
 
 function mcpError(msg: string) {
@@ -300,7 +302,7 @@ export function createServer(): McpServer {
           return mcpText(data);
         }
 
-        const params: Record<string, string | undefined> = { since, type: change_type, vendor, vendors };
+        const params: Record<string, string | undefined> = { since, type: change_type, vendor, vendors, limit: String(TRACK_CHANGES_LIMIT) };
         if (categories) params.categories = categories;
         const changes = await fetchDealChanges(params) as Record<string, unknown>;
         const doExpiring = include_expiring !== false;
@@ -316,11 +318,10 @@ export function createServer(): McpServer {
           if (Array.isArray(result.changes)) {
             result = { ...result, changes: result.changes.map((c: Record<string, unknown>) => ({ vendor: c.vendor, change_type: c.change_type, date: c.date, summary: c.summary })) };
           }
-          if (Array.isArray(result.your_stack_changes)) {
+          if (Array.isArray(result.advisory)) {
             result = {
               ...result,
-              your_stack_changes: result.your_stack_changes.map((c: Record<string, unknown>) => ({ vendor: c.vendor, change_type: c.change_type, date: c.date, summary: c.summary })),
-              advisory: (result.advisory || []).map((c: Record<string, unknown>) => ({ vendor: c.vendor, change_type: c.change_type, date: c.date, summary: c.summary })),
+              advisory: result.advisory.map((c: Record<string, unknown>) => ({ vendor: c.vendor, change_type: c.change_type, date: c.date, summary: c.summary })),
             };
           }
         }

@@ -548,6 +548,8 @@ export function getChangeLogFreshness(now: Date = new Date()): ChangeLogFreshnes
   return changeLogFreshness(loadDealChanges(), now);
 }
 
+export const DEFAULT_CHANGE_WINDOW_DAYS = 30;
+
 export function getDealChanges(
   since?: string,
   changeType?: string,
@@ -560,10 +562,10 @@ export function getDealChanges(
   if (since) {
     results = results.filter((c) => c.date >= since);
   } else {
-    const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000)
+    const windowStart = new Date(Date.now() - DEFAULT_CHANGE_WINDOW_DAYS * 24 * 60 * 60 * 1000)
       .toISOString()
       .slice(0, 10);
-    results = results.filter((c) => c.date >= thirtyDaysAgo);
+    results = results.filter((c) => c.date >= windowStart);
   }
 
   if (changeType) {
@@ -610,6 +612,42 @@ const HIGH_IMPACT_CHANGE_TYPES = new Set([
   "limits_reduced", "new_free_tier",
 ]);
 
+export interface ChangeContext {
+  advisory: DealChange[];
+  summary: PersonalizedChanges["summary"];
+}
+
+export function changeContext(
+  matched: DealChange[],
+  since?: string,
+  changeType?: string
+): ChangeContext {
+  const allResult = getDealChanges(since, changeType);
+
+  const matchedKeys = new Set(matched.map((c) => `${c.vendor}|${c.date}|${c.change_type}`));
+
+  const advisory = allResult.changes
+    .filter((c) => c.impact === "high" && HIGH_IMPACT_CHANGE_TYPES.has(c.change_type))
+    .filter((c) => !matchedKeys.has(`${c.vendor}|${c.date}|${c.change_type}`))
+    .slice(0, 3);
+
+  const ecosystemHighImpact = allResult.changes.filter(
+    (c) => c.impact === "high"
+  ).length;
+
+  const sinceDate = since ? new Date(since) : new Date(Date.now() - DEFAULT_CHANGE_WINDOW_DAYS * 24 * 60 * 60 * 1000);
+  const periodDays = Math.max(1, Math.ceil((Date.now() - sinceDate.getTime()) / (24 * 60 * 60 * 1000)));
+
+  return {
+    advisory,
+    summary: {
+      stack_changes_count: matched.length,
+      ecosystem_high_impact_count: ecosystemHighImpact,
+      period_days: periodDays,
+    },
+  };
+}
+
 export function getPersonalizedChanges(
   since?: string,
   changeType?: string,
@@ -618,33 +656,12 @@ export function getPersonalizedChanges(
   categories?: string
 ): PersonalizedChanges {
   const stackResult = getDealChanges(since, changeType, vendor, vendors, categories);
-
-  const allResult = getDealChanges(since, changeType);
-
-  const stackVendorDates = new Set(
-    stackResult.changes.map((c) => `${c.vendor}|${c.date}|${c.change_type}`)
-  );
-
-  const advisory = allResult.changes
-    .filter((c) => c.impact === "high" && HIGH_IMPACT_CHANGE_TYPES.has(c.change_type))
-    .filter((c) => !stackVendorDates.has(`${c.vendor}|${c.date}|${c.change_type}`))
-    .slice(0, 3);
-
-  const ecosystemHighImpact = allResult.changes.filter(
-    (c) => c.impact === "high"
-  ).length;
-
-  const sinceDate = since ? new Date(since) : new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
-  const periodDays = Math.max(1, Math.ceil((Date.now() - sinceDate.getTime()) / (24 * 60 * 60 * 1000)));
+  const context = changeContext(stackResult.changes, since, changeType);
 
   return {
     your_stack_changes: stackResult.changes,
-    advisory,
-    summary: {
-      stack_changes_count: stackResult.changes.length,
-      ecosystem_high_impact_count: ecosystemHighImpact,
-      period_days: periodDays,
-    },
+    advisory: context.advisory,
+    summary: context.summary,
   };
 }
 

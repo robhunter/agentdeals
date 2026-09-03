@@ -439,7 +439,7 @@ describe("every weekly surface reports the same week", () => {
   it("tells an API caller how many of its records carry an effective date", async () => {
     proc = await startHttpServer();
     const base = `http://127.0.0.1:${serverPort}`;
-    const body = await (await fetch(`${base}/api/changes?since=2026-08-22`)).json() as {
+    const body = await (await fetch(`${base}/api/changes?since=2026-08-22&limit=10000`)).json() as {
       changes: Array<{ date_source: string }>;
       date_provenance: { event_dated: number; discovered: number; note: string };
     };
