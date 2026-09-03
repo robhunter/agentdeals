@@ -6,6 +6,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import type { DealChange } from "../src/types.ts";
 import {
+  EVENT_CANCELLED,
   RESOLUTION_STATES,
   fieldsAssertingAResolution,
   isNoLongerInForce,
@@ -241,6 +242,28 @@ function startServer(): Promise<ChildProcess> {
   });
 }
 
+async function vendorEvents(get: (p: string) => Promise<string>, page: string): Promise<any[]> {
+  const body = await get(page);
+  const blocks = [...body.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)];
+  const events: any[] = [];
+  for (const [, raw] of blocks) {
+    let parsed: any;
+    try {
+      parsed = JSON.parse(raw);
+    } catch {
+      continue;
+    }
+    for (const value of Object.values(parsed ?? {})) {
+      if (!Array.isArray(value)) continue;
+      for (const entry of value) {
+        if (entry && typeof entry === "object" && (entry as any)["@type"] === "Event") events.push(entry);
+      }
+    }
+  }
+  assert.ok(events.length > 0, `${page} publishes at least one Event`);
+  return events;
+}
+
 describe("what a reader and an agent are told about a resolved change", () => {
   before(async () => { proc = await startServer(); });
   after(() => { proc?.kill(); });
@@ -301,5 +324,52 @@ describe("what a reader and an agent are told about a resolved change", () => {
     assert.ok(pause, "the API serves the April 20 record");
     assert.strictEqual(pause.resolution?.state, "reversed");
     assert.ok(pause.summary.includes("marked Retired"), "the summary cannot be read without the reversal");
+  });
+
+  it("marks the resolved record on the alternatives page, where no detail sentence carries it", async () => {
+    const body = await get("/alternative-to/netlify");
+    const items = body.split('<div class="change-item').slice(1);
+    const lifted = items.find((i) => i.includes("charged as a full Pro seat"));
+    assert.ok(lifted, "/alternative-to/netlify renders the March record");
+    assert.ok(lifted!.startsWith(" change-resolved"), "the reversed record is marked");
+    const standing = items.find((i) => i.includes("Restructured to credit-based pricing"));
+    assert.ok(standing && !standing.startsWith(" change-resolved"), "a standing record is not marked");
+    assert.ok(body.includes(".change-resolved{"), "the page carries the rule that dims it");
+  });
+
+  it("ends the structured event on the vendor page for a change the vendor reversed", async () => {
+    const events = await vendorEvents(get, "/vendor/netlify");
+    const march = events.find((e) => e.startDate === "2026-03-01");
+    assert.ok(march, "the vendor page publishes the March record as an Event");
+    assert.strictEqual(march.endDate, "2026-04-14", "the event ends on the date it stopped being in force");
+    const standing = events.find((e) => e.startDate === "2026-04-17");
+    assert.ok(standing && !("endDate" in standing), "a standing record has no end");
+  });
+
+  it("cancels the structured event for a record we withdrew", async () => {
+    const events = await vendorEvents(get, "/vendor/cursor");
+    const retracted = events.find((e) => e.eventStatus);
+    assert.ok(retracted, "the retracted record is published with a status");
+    assert.strictEqual(retracted.eventStatus, EVENT_CANCELLED);
+    assert.strictEqual(retracted.startDate, "2026-04-13");
+    assert.ok(!events.some((e) => e.startDate === "2026-04-07" && e.eventStatus), "a standing record has no status");
+  });
+
+  it("tells the stack checker which of its changes are no longer in force", async () => {
+    const body = await get("/stack-check");
+    assert.ok(body.includes('"resolved":true'), "a resolved record reaches the page's data");
+    assert.ok(body.includes('"resolved":false'), "a standing record reaches it too");
+    assert.ok(body.includes(".change-resolved{"), "the page carries the rule that dims it");
+    assert.ok(body.includes("' change-resolved'"), "the renderer applies it");
+  });
+
+  it("gives the comparison tool the resolution it renders on", async () => {
+    const compared = await getJson("/api/compare?a=Netlify&b=Vercel");
+    const march = compared.vendor_a.deal_changes.find((c: any) => c.date === "2026-03-01");
+    assert.ok(march, "/api/compare serves the March record");
+    assert.strictEqual(march.resolution?.state, "reversed");
+    const body = await get("/compare-tool");
+    assert.ok(body.includes(".change-resolved{"), "the page carries the rule that dims it");
+    assert.ok(body.includes("' change-resolved'"), "the renderer applies it");
   });
 });

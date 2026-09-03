@@ -23,7 +23,7 @@ import { stabilityFaqAnswer, stabilityVerdictClause, type ComparisonSide, type S
 import { publishedVendorLevel, vendorVerdictSentence, vendorBadge, statesRiskCause, narrowingSentence, changeKindNoun, type VendorVerdictInput } from "./vendor-verdict.js";
 import { vendorHistorySentence } from "./vendor-history.js";
 import { changeTimelineDate, supersededLineups, supersessionNote } from "./change-lineup.js";
-import { isNoLongerInForce } from "./change-resolution.js";
+import { isNoLongerInForce, eventResolutionFields } from "./change-resolution.js";
 import { growthLimitPhrases } from "./growth-limits.js";
 import { registerAgent, authenticateRequest, validateVestauthUrl, hashApiKey, updateAgentX402Address, getAgentById } from "./agents.js";
 import { attributeAuthenticatedRequest } from "./referral-attribution.js";
@@ -4093,6 +4093,7 @@ ${allCompareLinks.join("\n")}
     "@type": "Event",
     name: `${vendorName} pricing change: ${c.change_type.replace(/_/g, " ")}`,
     ...changeEventStartDate(c),
+    ...eventResolutionFields(c),
     description: c.summary,
   }));
   const jsonLd: Record<string, any> = {
@@ -4487,7 +4488,7 @@ function buildAlternativesPage(slug: string): string | null {
       parts.push(`<div class="changes-summary"><h3>Recent Pricing Changes (${vendorChanges.length})</h3>`);
       parts.push(vendorChanges.slice(0, 5).map(c => {
         const badge = changeTypeBadge[c.change_type] ?? { label: c.change_type, color: "#8b949e" };
-        return `<div class="change-item">
+        return `<div class="change-item${isNoLongerInForce(c) ? " change-resolved" : ""}">
           <div class="change-head">
             <span class="badge" style="background:${badge.color}">${badge.label}</span>
             <span class="change-date">${changeDateLabel(c)}</span>
@@ -4651,6 +4652,7 @@ h3{font-family:var(--serif);font-size:1rem;color:var(--text);margin-bottom:.5rem
 .cat-pill{display:inline-block;padding:.15rem .5rem;border-radius:12px;font-size:.7rem;font-weight:500;background:var(--accent-glow);color:var(--accent);border:1px solid rgba(59,130,246,0.2)}
 .changes-summary{margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border)}
 .change-item{margin-bottom:.5rem;padding:.5rem .75rem;border-left:3px solid var(--border);background:var(--bg-card);border-radius:0 8px 8px 0}
+.change-resolved{opacity:.6;border-left-style:dashed}
 .change-head{display:flex;align-items:center;gap:.5rem;margin-bottom:.2rem;flex-wrap:wrap}
 .badge{display:inline-block;padding:.1rem .4rem;border-radius:10px;font-size:.65rem;font-weight:600;color:#fff}
 .change-date{font-family:var(--mono);font-size:.75rem;color:var(--text-dim)}
@@ -46385,7 +46387,7 @@ function buildStackCheckPage(): string {
   const totalOffers = allOffers.length;
   const totalChanges = allChanges.length;
 
-  const vendorLookup: Record<string, { vendor: string; category: string; description: string; tier: string; slug: string; risk_level: string; risk_cause: RiskCause | null; stability: string; recent_changes: Array<{ date: string; change_type: string; summary: string; impact: string }> }> = {};
+  const vendorLookup: Record<string, { vendor: string; category: string; description: string; tier: string; slug: string; risk_level: string; risk_cause: RiskCause | null; stability: string; recent_changes: Array<{ date: string; change_type: string; summary: string; impact: string; resolved: boolean }> }> = {};
   for (const offer of allOffers) {
     const slug = toSlug(offer.vendor);
     const allVendorChanges = allChanges
@@ -46405,7 +46407,7 @@ function buildStackCheckPage(): string {
         ? { date: changeDateLabel(assessment.cause), date_source: assessment.cause.date_source, change_type: assessment.cause.change_type, summary: assessment.cause.summary }
         : null,
       stability,
-      recent_changes: vendorChanges.map(c => ({ date: changeDateLabel(c), change_type: c.change_type, summary: c.summary, impact: c.impact })),
+      recent_changes: vendorChanges.map(c => ({ date: changeDateLabel(c), change_type: c.change_type, summary: c.summary, impact: c.impact, resolved: isNoLongerInForce(c) })),
     };
     vendorLookup[offer.vendor.toLowerCase()] = vendorLookup[slug];
   }
@@ -46525,6 +46527,7 @@ function buildStackCheckPage(): string {
     .card-tier{font-size:.85rem;color:var(--text-muted);margin:.25rem 0}
     .card-changes{margin:.5rem 0}
     .change-item{font-size:.8rem;color:var(--text-dim);padding:.25rem 0;border-top:1px solid var(--border)}
+    .change-resolved{opacity:.6;border-top-style:dashed}
     .change-item:first-child{border-top:none}
     .change-type{font-size:.7rem;font-weight:600;text-transform:uppercase;letter-spacing:.03em;margin-right:.4rem}
     .change-negative{color:var(--red)}
@@ -46747,7 +46750,7 @@ function buildStackCheckPage(): string {
           for (var j = 0; j < shown; j++) {
             var ch = svc.recent_changes[j];
             var cls = negTypes.indexOf(ch.change_type) >= 0 ? 'change-negative' : posTypes.indexOf(ch.change_type) >= 0 ? 'change-positive' : 'change-neutral';
-            cardsHtml += '<div class="change-item"><span class="change-type ' + cls + '">' + esc(ch.change_type.replace(/_/g, ' ')) + '</span>' + esc(ch.date) + ' — ' + esc(ch.summary) + '</div>';
+            cardsHtml += '<div class="change-item' + (ch.resolved ? ' change-resolved' : '') + '"><span class="change-type ' + cls + '">' + esc(ch.change_type.replace(/_/g, ' ')) + '</span>' + esc(ch.date) + ' — ' + esc(ch.summary) + '</div>';
           }
           cardsHtml += '</div>';
         }
@@ -46924,6 +46927,7 @@ h2{font-family:var(--serif);font-size:1.25rem;color:var(--text);margin:1.5rem 0 
 .vendor-links{display:flex;gap:.75rem;margin-top:.75rem;font-size:.85rem}
 .changes-timeline{margin-top:1rem}
 .change-item{padding:.5rem 0;border-bottom:1px solid rgba(51,65,85,0.5);font-size:.85rem}
+.change-resolved{opacity:.6;border-bottom-style:dashed}
 .change-item:last-child{border-bottom:none}
 .change-date{color:var(--text-dim);font-family:var(--mono);font-size:.8rem}
 .change-type{font-family:var(--mono);font-size:.75rem;padding:.1rem .4rem;border-radius:3px;margin:0 .25rem}
@@ -47096,7 +47100,7 @@ ${globalNavCss()}
     if (changes.length > 0) {
       html += '<div class="changes-timeline"><strong style="font-size:.85rem">Recent Changes</strong>';
       changes.slice(0, 5).forEach(function(c) {
-        html += '<div class="change-item"><span class="change-date">' + escHtml(c.date) + '</span> ' + changeTypeBadge(c.change_type) + ' ' + escHtml(c.summary.length > 120 ? c.summary.slice(0, 120) + '...' : c.summary) + '</div>';
+        html += '<div class="change-item' + (c.resolution ? ' change-resolved' : '') + '"><span class="change-date">' + escHtml(c.date) + '</span> ' + changeTypeBadge(c.change_type) + ' ' + escHtml(c.summary.length > 120 ? c.summary.slice(0, 120) + '...' : c.summary) + '</div>';
       });
       html += '</div>';
     }
