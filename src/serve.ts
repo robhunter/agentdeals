@@ -48699,6 +48699,22 @@ function buildDeveloperHubPage(): string {
     + "  \"total\": 42\n"
     + "}</div>\n"
     + "\n"
+    + "    <h2>Provenance</h2>\n"
+    + "    <p>Every response that carries index data includes a <code>_provenance</code> object, so an agent can attribute a figure without parsing prose out of a sentence.</p>\n"
+    + "    <table class=\"endpoint-table\">\n"
+    + "      <thead><tr><th>Field</th><th>Meaning</th></tr></thead>\n"
+    + "      <tbody>\n"
+    + "      <tr><td><code>source</code></td><td>Always <code>AgentDeals</code>.</td></tr>\n"
+    + "      <tr><td><code>url</code></td><td>The page on agentdeals.dev that publishes this data.</td></tr>\n"
+    + "      <tr><td><code>checked</code></td><td>The oldest verification date among the records in this response. Omitted where the response holds no dated record.</td></tr>\n"
+    + "      <tr><td><code>verified</code></td><td>The same date as <code>checked</code>. Kept for callers written before <code>checked</code> existed.</td></tr>\n"
+    + "      <tr><td><code>cite_as</code></td><td>A citation sentence built from the three fields above, ready to use as written.</td></tr>\n"
+    + "      <tr><td><code>note</code></td><td>Our request that you cite the source if you use a figure from the response.</td></tr>\n"
+    + "      </tbody>\n"
+    + "    </table>\n"
+    + "    <p>Operational endpoints &mdash; <code>/api/stats</code>, <code>/api/traffic</code>, <code>/api/query-log</code>, <code>/api/pageviews</code>, <code>/api/freshness</code> and <code>/api/watchlist</code> &mdash; carry no provenance block. They report on this service rather than on the index.</p>\n"
+    + "    <p>If you use a figure, cite <code>url</code> and <code>checked</code>. The index is free and we keep it current; attribution is how the people who need it find their way here.</p>\n"
+    + "\n"
     + "    <h2>Rate Limits</h2>\n"
     + "    <p>The read endpoints above have <strong>no rate limits</strong>. We trust developers to be reasonable.</p>\n"
     + "    <p>Two write paths are limited. <code>POST /api/agents/register</code> allows " + registrationLimiter.limit + " registrations per hour per client and returns <code>X-RateLimit-Limit</code>, <code>X-RateLimit-Remaining</code> and <code>X-RateLimit-Reset</code> on every response. The attribution beacon at <code>" + SIGNAL_PATH + "</code> allows " + RATE_LIMIT_PER_MINUTE + " per minute &mdash; <a href=\"" + SIGNAL_DOC_PATH + "\">its own page</a> covers how that limit is keyed. Over either limit you get a <code>429</code> with <code>Retry-After</code>.</p>\n"
@@ -52728,6 +52744,33 @@ function cited<T extends object>(payload: T, listingPath?: string): T & { _prove
   };
 }
 
+const LLM_PRICING_CATEGORY = "AI / ML";
+const HOSTING_PRICING_CATEGORY = "Cloud Hosting";
+const LLM_PRICING_PAGE = `/category/${toSlug(LLM_PRICING_CATEGORY)}`;
+const HOSTING_PRICING_PAGE = `/category/${toSlug(HOSTING_PRICING_CATEGORY)}`;
+const REFERRAL_CODE_LISTING_PAGE = "/marketplace";
+
+function digestWeekPath(weekOf: string): string {
+  const { year, week } = isoWeekOf(new Date(weekOf + "T00:00:00Z"));
+  return `/digest/${formatWeekKey(year, week)}`;
+}
+
+function referralCodePage(vendor: string): string {
+  const slug = toSlug(vendor);
+  return vendorSlugMap.has(slug) ? `/vendor/${slug}` : REFERRAL_CODE_LISTING_PAGE;
+}
+
+function citedUndated<T extends object>(payload: T, path: string): T & { _provenance: Record<string, unknown> } {
+  return { ...payload, _provenance: provenanceBlock(BASE_URL, payload, { path }) };
+}
+
+function citedAt<T extends object>(payload: T, path: string): T & { _provenance: Record<string, unknown> } {
+  return {
+    ...payload,
+    _provenance: provenanceBlock(BASE_URL, payload, { path, dateForSlug: oldestVerifiedDateForSlug }),
+  };
+}
+
 function withAgentBlock<T extends object>(payload: T, slug?: string | null): T & { _agent: Record<string, unknown>; _provenance: Record<string, unknown> } {
   return {
     ...payload,
@@ -53539,7 +53582,7 @@ const httpServer = createHttpServer(async (req, res) => {
       }));
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/deadlines", params: { type: typeFilter }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: deadlines.length });
     res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
-    res.end(JSON.stringify({ deadlines, count: deadlines.length }));
+    res.end(JSON.stringify(citedAt({ deadlines, count: deadlines.length }, "/deadlines")));
   } else if (url.pathname === "/api/ai-coding-pricing" && isGetOrHead) {
     recordApiHit("/api/ai-coding-pricing");
     const aiCodingOffers = offers.filter(o => o.category === "AI Coding");
@@ -53576,10 +53619,10 @@ const httpServer = createHttpServer(async (req, res) => {
     }).filter(t => !categoryFilter || !validCategories.includes(categoryFilter) || t.category === categoryFilter);
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/ai-coding-pricing", params: { type: categoryFilter }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: tools.length });
     res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
-    res.end(JSON.stringify({ tools, changes: aiChanges, count: tools.length, categories: Object.keys(categoryMap) }));
+    res.end(JSON.stringify(citedAt({ tools, changes: aiChanges, count: tools.length, categories: Object.keys(categoryMap) }, "/ai-coding-tools-pricing")));
   } else if (url.pathname === "/api/hosting-pricing" && isGetOrHead) {
     recordApiHit("/api/hosting-pricing");
-    const hostingOffers = offers.filter(o => o.category === "Cloud Hosting");
+    const hostingOffers = offers.filter(o => o.category === HOSTING_PRICING_CATEGORY);
     const hostingCategoryMap: Record<string, string[]> = {
       "traditional-paas": ["Railway", "Render", "Fly.io", "Koyeb", "Northflank"],
       "edge-serverless": ["Cloudflare Workers", "Cloudflare Pages", "Netlify", "Deno Deploy", "Val Town"],
@@ -53610,10 +53653,10 @@ const httpServer = createHttpServer(async (req, res) => {
     }).filter(t => !hostingTypeFilter || !validHostingTypes.includes(hostingTypeFilter) || t.category === hostingTypeFilter);
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/hosting-pricing", params: { type: hostingTypeFilter }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: hostingTools.length });
     res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
-    res.end(JSON.stringify({ platforms: hostingTools, changes: hostingApiChanges, count: hostingTools.length, categories: Object.keys(hostingCategoryMap) }));
+    res.end(JSON.stringify(citedAt({ platforms: hostingTools, changes: hostingApiChanges, count: hostingTools.length, categories: Object.keys(hostingCategoryMap) }, HOSTING_PRICING_PAGE)));
   } else if (url.pathname === "/api/llm-pricing" && isGetOrHead) {
     recordApiHit("/api/llm-pricing");
-    const llmOffers = offers.filter(o => o.category === "AI / ML");
+    const llmOffers = offers.filter(o => o.category === LLM_PRICING_CATEGORY);
     const llmCategoryMap: Record<string, string[]> = {
       "frontier": ["OpenAI", "Anthropic", "Google Gemini", "Mistral", "Cohere", "xAI"],
       "inference": ["Groq", "Cerebras", "OpenRouter", "NVIDIA NIM", "SiliconFlow"],
@@ -53643,7 +53686,7 @@ const httpServer = createHttpServer(async (req, res) => {
     }).filter(t => !llmTypeFilter || !validLlmTypes.includes(llmTypeFilter) || t.category === llmTypeFilter);
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/llm-pricing", params: { type: llmTypeFilter }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: llmProviders.length });
     res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
-    res.end(JSON.stringify({ providers: llmProviders, changes: llmApiChanges, count: llmProviders.length, categories: Object.keys(llmCategoryMap) }));
+    res.end(JSON.stringify(citedAt({ providers: llmProviders, changes: llmApiChanges, count: llmProviders.length, categories: Object.keys(llmCategoryMap) }, LLM_PRICING_PAGE)));
   } else if (url.pathname === "/api/startup-credits" && isGetOrHead) {
     recordApiHit("/api/startup-credits");
     const startupOffers = offers.filter(o =>
@@ -53679,7 +53722,7 @@ const httpServer = createHttpServer(async (req, res) => {
     }).filter(t => !startupTypeFilter || !validStartupTypes.includes(startupTypeFilter) || t.category === startupTypeFilter);
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/startup-credits", params: { type: startupTypeFilter }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: startupPrograms.length });
     res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
-    res.end(JSON.stringify({ programs: startupPrograms, changes: startupApiChanges, count: startupPrograms.length, categories: Object.keys(startupCategoryMap) }));
+    res.end(JSON.stringify(citedAt({ programs: startupPrograms, changes: startupApiChanges, count: startupPrograms.length, categories: Object.keys(startupCategoryMap) }, "/startup-credits")));
   } else if (url.pathname === "/api/referral-programs" && isGetOrHead) {
     recordApiHit("/api/referral-programs");
     const seen = new Set<string>();
@@ -53710,7 +53753,7 @@ const httpServer = createHttpServer(async (req, res) => {
     const refCategories = [...new Set(refPrograms.map(p => p.category))].sort();
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/referral-programs", params: { category: refCategoryFilter }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: refPrograms.length });
     res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
-    res.end(JSON.stringify({ programs: refPrograms, count: refPrograms.length, categories: refCategories }));
+    res.end(JSON.stringify(citedAt({ programs: refPrograms, count: refPrograms.length, categories: refCategories }, "/referral-programs")));
   } else if (url.pathname === "/api/audit-stack" && isGetOrHead) {
     recordApiHit("/api/audit-stack");
     const servicesParam = url.searchParams.get("services");
@@ -53816,7 +53859,7 @@ const httpServer = createHttpServer(async (req, res) => {
       res.end(digest.digest_html);
     } else {
       res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*", "Cache-Control": "public, max-age=3600" });
-      res.end(JSON.stringify(digest));
+      res.end(JSON.stringify(citedAt(digest, digestWeekPath(digest.week_of))));
     }
   } else if (url.pathname === "/api/digest" && isGetOrHead) {
     recordApiHit("/api/digest");
@@ -55541,7 +55584,9 @@ ${catList}
     recordReferralListingCall(sourceFilter ?? null);
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "GET /api/referral-codes", params: { source: sourceFilter ?? "all", category: categoryName ?? "all" }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: filtered.length });
     res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
-    res.end(JSON.stringify({ codes: filtered, total: filtered.length }));
+    const codeVendors = new Set(filtered.map(c => c.vendor));
+    const codeListingPage = codeVendors.size === 1 ? referralCodePage([...codeVendors][0]) : REFERRAL_CODE_LISTING_PAGE;
+    res.end(JSON.stringify(citedUndated({ codes: filtered, total: filtered.length }, codeListingPage)));
 
   } else if (url.pathname === "/api/referral-codes" && req.method === "POST") {
     const agent = await authenticateRequest(req as any);
@@ -55639,14 +55684,14 @@ ${catList}
       recordApiHit("/api/referral-codes/:vendor");
       logRequest({ ts: new Date().toISOString(), type: "api", endpoint: `/api/referral-codes/${vendorParam}`, params: { source: best.source }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
       res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
-      res.end(JSON.stringify({
+      res.end(JSON.stringify(citedUndated({
         vendor: best.vendor,
         code: best.code,
         referral_url: best.referral_url,
         referee_benefit: best.referee_benefit,
         restrictions: best.restrictions,
         source: best.source,
-      }));
+      }, referralCodePage(best.vendor))));
       return;
     }
 
