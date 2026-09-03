@@ -27,9 +27,19 @@ function mcpError(msg: string) {
   };
 }
 
-function mcpText(data: unknown) {
+function carriedProvenance(source: unknown): unknown {
+  if (source === null || typeof source !== "object" || Array.isArray(source)) return undefined;
+  return (source as Record<string, unknown>)._provenance;
+}
+
+function mcpText(data: unknown, source?: unknown) {
+  const carried = carriedProvenance(source);
+  const cited =
+    carried && data !== null && typeof data === "object" && !Array.isArray(data) && !("_provenance" in data)
+      ? { ...(data as object), _provenance: carried }
+      : data;
   return {
-    content: [{ type: "text" as const, text: JSON.stringify(data, null, 2) }],
+    content: [{ type: "text" as const, text: JSON.stringify(cited, null, 2) }],
   };
 }
 
@@ -120,7 +130,7 @@ export function createServer(): McpServer {
             if (data.resolved_from) {
               data.offer.resolved_from = data.resolved_from;
             }
-            return mcpText(data.offer);
+            return mcpText(data.offer, data);
           } catch (err) {
             const parsed = parse404Error(err);
             if (parsed) return mcpError(parsed);
@@ -148,13 +158,13 @@ export function createServer(): McpServer {
 
         if (data.offers.length === 0 && data.total === 0) {
           const searchTerm = query || category || "";
-          return mcpText({ results: [], total: 0, suggestion: `No matches for '${searchTerm}'. Try searching by category (e.g., 'databases', 'hosting') or browse all categories with search_deals({category: "list"}).` });
+          return mcpText({ results: [], total: 0, suggestion: `No matches for '${searchTerm}'. Try searching by category (e.g., 'databases', 'hosting') or browse all categories with search_deals({category: "list"}).` }, data);
         }
 
         const outputResults = response_format === "concise"
           ? data.offers.map((o) => ({ vendor: o.vendor, tier: o.tier, description: o.description, url: o.url }))
           : data.offers;
-        return mcpText({ results: outputResults, total: data.total, limit: effectiveLimit, offset: effectiveOffset });
+        return mcpText({ results: outputResults, total: data.total, limit: effectiveLimit, offset: effectiveOffset }, data);
       } catch (err) {
         return mcpError(`Error: ${err instanceof Error ? err.message : String(err)}`);
       }
