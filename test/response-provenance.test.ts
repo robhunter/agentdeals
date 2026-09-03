@@ -30,6 +30,12 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const BASE = "https://agentdeals.dev";
 const opts = { dateForSlug: oldestVerifiedDateForSlug };
 
+function citedUrl(sentence: unknown): string {
+  const match = String(sentence).match(/\((https?:\/\/[^,)]+)/);
+  assert.ok(match, `citation names no URL: ${sentence}`);
+  return match[1];
+}
+
 describe("cited records are read out of the payload", () => {
   it("reads a vendor, its category and its verification date", () => {
     const records = citedRecords({ vendor: "Supabase", category: "Databases", verifiedDate: "2026-08-17" });
@@ -125,6 +131,36 @@ describe("the citation names us, a page and a date", () => {
     assert.strictEqual(citeAs(BASE + "/", "/", null, false), "Source: AgentDeals (https://agentdeals.dev)");
   });
 
+  it("publishes the page as a field, not only inside the sentence", () => {
+    const block = provenanceBlock(BASE, { vendor: "Supabase", category: "Databases", verifiedDate: "2026-08-17" });
+    assert.strictEqual(block.source, "AgentDeals");
+    assert.strictEqual(block.url, "https://agentdeals.dev/vendor/supabase");
+    assert.strictEqual(block.checked, "2026-08-17");
+    assert.strictEqual(
+      block.cite_as,
+      "Source: AgentDeals (https://agentdeals.dev/vendor/supabase, checked 2026-08-17)",
+    );
+  });
+
+  it("omits the check date rather than emptying it where no record carries one", () => {
+    const block = provenanceBlock(BASE, { categories: ["Databases"] }, { listingPath: "/category" });
+    assert.strictEqual(block.url, "https://agentdeals.dev/category");
+    assert.ok(!("checked" in block), `carries checked: ${JSON.stringify(block.checked)}`);
+    assert.strictEqual(block.cite_as, "Source: AgentDeals (https://agentdeals.dev/category)");
+  });
+
+  it("gives the same page in the field and in the sentence when the set spans a category", () => {
+    const block = provenanceBlock(BASE, {
+      results: [
+        { vendor: "A", category: "Databases", verifiedDate: "2026-08-17" },
+        { vendor: "B", category: "Databases", verifiedDate: "2026-02-25" },
+      ],
+    });
+    assert.strictEqual(block.url, "https://agentdeals.dev/category/databases");
+    assert.strictEqual(block.checked, "2026-02-25");
+    assert.strictEqual(citedUrl(block.cite_as), block.url);
+  });
+
   it("carries the oldest date in the set, not the newest and not today", () => {
     const block = provenanceBlock(BASE, {
       results: [
@@ -218,6 +254,17 @@ describe("every response shape we serve can be cited", () => {
       assert.ok(typeof block.verified === "string", `${shape.name} carries no verification date`);
       assert.ok(String(block.verified) <= today, `${shape.name} is dated in the future`);
       assert.ok(String(block.cite_as).startsWith("Source: AgentDeals (https://agentdeals.dev"));
+    });
+
+    it(`gives the ${shape.name} a page and a date it can lift out whole`, () => {
+      const block = provenanceBlock(BASE, shape.payload, {
+        ...opts,
+        ...(shape.listingPath ? { listingPath: shape.listingPath } : {}),
+      });
+      assert.strictEqual(block.source, "AgentDeals", `${shape.name} does not name us in a field`);
+      assert.ok(typeof block.url === "string", `${shape.name} carries no url field`);
+      assert.strictEqual(citedUrl(block.cite_as), block.url, `${shape.name} cites two different pages`);
+      assert.strictEqual(block.checked, block.verified, `${shape.name} states two different check dates`);
     });
   }
 });

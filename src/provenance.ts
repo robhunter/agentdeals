@@ -91,11 +91,26 @@ function absolute(baseUrl: string, path: string): string {
   return path === "/" ? root : `${root}${path}`;
 }
 
+export interface Citation {
+  source: string;
+  url: string;
+  checked?: string;
+  cite_as: string;
+}
+
+export function citation(baseUrl: string, path: string, date: string | null, single: boolean): Citation {
+  const url = absolute(baseUrl, path);
+  const clause = date ? (single ? `checked ${date}` : `oldest figure checked ${date}`) : null;
+  return {
+    source: CITE_NAME,
+    url,
+    ...(date ? { checked: date } : {}),
+    cite_as: clause ? `Source: ${CITE_NAME} (${url}, ${clause})` : `Source: ${CITE_NAME} (${url})`,
+  };
+}
+
 export function citeAs(baseUrl: string, path: string, date: string | null, single: boolean): string {
-  const where = absolute(baseUrl, path);
-  if (!date) return `Source: ${CITE_NAME} (${where})`;
-  const clause = single ? `checked ${date}` : `oldest figure checked ${date}`;
-  return `Source: ${CITE_NAME} (${where}, ${clause})`;
+  return citation(baseUrl, path, date, single).cite_as;
 }
 
 export interface ProvenanceOptions {
@@ -122,7 +137,7 @@ export function provenanceBlock(
   const path = derived === "/" ? options.listingPath ?? "/" : derived;
 
   const block: Record<string, unknown> = {
-    cite_as: citeAs(baseUrl, path, date, dated.length === 1),
+    ...citation(baseUrl, path, date, dated.length === 1),
     ...(date ? { verified: date } : {}),
     verified_records: ranked.length,
     ...(withheld > 0 ? { withheld_records: withheld } : {}),
