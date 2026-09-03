@@ -5926,13 +5926,19 @@
       "date_source": "discovered",
       "summary": "Highlight.io's own page now redirects to launchdarkly.com.",
       "previous_state": "500 sessions, 1K errors, 1M logs, 25M traces/month. 3-month retention for sessions/errors, 30-day for logs/traces. Up to 15 seats",
-      "current_state": "The page promotes a free trial and then paid plans for CodeControl and AgentControl. No specific limits for a free tier are provided.",
+      "current_state": "LaunchDarkly's Developer plan is $0/month forever and includes 5,000 session replays and 5,000 errors a month, 1 project and 3 environments, with 14-day data retention. The open-source project remains self-hostable.",
       "impact": "high",
       "source_url": "https://www.highlight.io/pricing",
       "category": "Logging",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
+      "recorded_date": "2026-08-28",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-03",
+        "detail": "Retracted 2026-09-03: no free tier was removed. Highlight.io was acquired by LaunchDarkly, and LaunchDarkly's free Developer plan carries 5,000 session replays and 5,000 errors a month at $0/month. This row was our error.",
+        "source_url": "https://launchdarkly.com/pricing/"
+      }
     },
     {
       "vendor": "Harness Feature Flags",

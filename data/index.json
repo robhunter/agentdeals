@@ -3734,7 +3734,7 @@
     {
       "vendor": "Highlight.io",
       "category": "Logging",
-      "description": "Acquired by LaunchDarkly; highlight.io now redirects to launchdarkly.com and the hosted free tier is no longer offered under this name. The open-source project remains self-hostable (repo active, last pushed 2026-08-20).",
+      "description": "Acquired by LaunchDarkly; highlight.io now redirects to launchdarkly.com. LaunchDarkly's free Developer plan carries 5,000 session replays and 5,000 errors a month. The open-source project remains self-hostable (repo active, last pushed 2026-08-20).",
       "tier": "Free OSS",
       "url": "https://github.com/highlight/highlight",
       "tags": [
