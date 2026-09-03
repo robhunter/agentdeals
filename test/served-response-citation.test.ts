@@ -26,10 +26,25 @@ const JSON_ROUTES = [
   "/api/newest?limit=10",
 ];
 
-function citedPathname(citeAs: unknown): string {
+function citedUrl(citeAs: unknown): string {
   const match = String(citeAs).match(/\((https?:\/\/[^,)]+)/);
   assert.ok(match, `citation names no URL: ${citeAs}`);
-  return new URL(match[1]).pathname;
+  return match[1];
+}
+
+function citedPathname(citeAs: unknown): string {
+  return new URL(citedUrl(citeAs)).pathname;
+}
+
+function assertLiftable(label: string, block: Record<string, unknown>): void {
+  assert.strictEqual(block.source, "AgentDeals", `${label} does not name us in a field`);
+  assert.ok(typeof block.url === "string", `${label} carries no url field`);
+  assert.strictEqual(citedUrl(block.cite_as), block.url, `${label} cites two different pages`);
+  if (block.verified === undefined) {
+    assert.ok(!("checked" in block), `${label} states a check date over no dated record`);
+  } else {
+    assert.strictEqual(block.checked, block.verified, `${label} states two different check dates`);
+  }
 }
 
 describe("the served responses carry a citation", () => {
@@ -107,6 +122,11 @@ describe("the served responses carry a citation", () => {
       const deferences = whole.split(DEFERENCE).length - 1;
       assert.strictEqual(deferences, 1, `${name} states the deference sentence ${deferences} times`);
     });
+
+    it(`${name} publishes the page as a field, not only inside the sentence`, async () => {
+      const { json } = await callTool(name, args, 200 + index);
+      assertLiftable(name, json._provenance as Record<string, unknown>);
+    });
   }
 
   for (const route of JSON_ROUTES) {
@@ -117,6 +137,11 @@ describe("the served responses carry a citation", () => {
       assert.ok(String(json._provenance.cite_as).startsWith(CITATION_OPENING));
       const deferences = body.split(DEFERENCE).length - 1;
       assert.strictEqual(deferences, 1, `${route} states the deference sentence ${deferences} times`);
+    });
+
+    it(`${route} publishes the page as a field, not only inside the sentence`, async () => {
+      const json = JSON.parse(await (await fetch(`${base}${route}`)).text());
+      assertLiftable(route, json._provenance as Record<string, unknown>);
     });
   }
 
@@ -134,6 +159,27 @@ describe("the served responses carry a citation", () => {
     for (const pathname of cited) {
       const res = await fetch(`${base}${pathname}`, { redirect: "manual" });
       assert.strictEqual(res.status, 200, `cited page ${pathname} answers ${res.status}`);
+    }
+  });
+
+  it("the page in the url field answers on every surface", async () => {
+    const linked = new Set<string>();
+    for (const [index, [name, args]] of TOOLS.entries()) {
+      const { json } = await callTool(name, args, 400 + index);
+      const url = (json._provenance as Record<string, unknown>)?.url;
+      assert.ok(typeof url === "string", `${name} carries no url field`);
+      linked.add(url);
+    }
+    for (const route of JSON_ROUTES) {
+      const json = JSON.parse(await (await fetch(`${base}${route}`)).text());
+      const url = (json._provenance as Record<string, unknown>)?.url;
+      assert.ok(typeof url === "string", `${route} carries no url field`);
+      linked.add(url);
+    }
+    assert.ok(linked.size >= 3, `only ${linked.size} distinct pages linked`);
+    for (const url of linked) {
+      const res = await fetch(`${base}${new URL(url).pathname}`, { redirect: "manual" });
+      assert.strictEqual(res.status, 200, `linked page ${url} answers ${res.status}`);
     }
   });
 });
@@ -221,6 +267,7 @@ describe("the stdio transport carries the citation the API served", () => {
       assert.ok(json._provenance, `${label} lost the citation in the proxy`);
       assert.ok(String(json._provenance.cite_as).startsWith(CITATION_OPENING));
       assert.strictEqual(json._provenance.note, EXPECTED_NOTE);
+      assertLiftable(label, json._provenance);
     });
   }
 });
