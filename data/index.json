@@ -317,7 +317,7 @@
         }
       ],
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-03",
         "outcome": "ok",
         "detail": "text"
       },
@@ -369,7 +369,7 @@
         }
       ],
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-03",
         "outcome": "ok",
         "detail": "text"
       },
@@ -526,9 +526,9 @@
         "azure",
         "microsoft"
       ],
-      "verifiedDate": "2026-08-19",
+      "verifiedDate": "2026-09-02",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-03",
         "outcome": "ok",
         "detail": "text"
       }
@@ -567,7 +567,7 @@
         "notes": "Both referrer and referee receive credits."
       },
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-03",
         "outcome": "ok",
         "detail": "text"
       }
@@ -637,7 +637,7 @@
         }
       ],
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-03",
         "outcome": "ok",
         "detail": "text"
       },
@@ -958,7 +958,7 @@
       ],
       "verifiedDate": "2026-08-20",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-03",
         "outcome": "ok",
         "detail": "text"
       },
@@ -1299,7 +1299,7 @@
       ],
       "verifiedDate": "2026-08-20",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-03",
         "outcome": "ok",
         "detail": "text"
       }
@@ -1601,9 +1601,9 @@
         "free tier",
         "freshping-alternative"
       ],
-      "verifiedDate": "2026-08-18",
+      "verifiedDate": "2026-09-02",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-03",
         "outcome": "ok",
         "detail": "text"
       }
@@ -1691,7 +1691,7 @@
       ],
       "verifiedDate": "2026-08-19",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-03",
         "outcome": "ok",
         "detail": "text"
       },
@@ -1722,7 +1722,7 @@
       ],
       "verifiedDate": "2026-08-20",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-03",
         "outcome": "ok",
         "detail": "text"
       }
@@ -1771,9 +1771,9 @@
         "free tier",
         "auth0-alternative"
       ],
-      "verifiedDate": "2026-08-19",
+      "verifiedDate": "2026-09-03",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-03",
         "outcome": "ok",
         "detail": "text"
       }
@@ -1863,7 +1863,7 @@
       ],
       "verifiedDate": "2026-08-20",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-03",
         "outcome": "ok",
         "detail": "text"
       }
@@ -2614,11 +2614,11 @@
         "github",
         "free tier"
       ],
-      "verifiedDate": "2026-08-20",
+      "verifiedDate": "2026-09-02",
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-03",
         "outcome": "states_no_amount",
-        "detail": "the page names jsDelivr and says \"free API\" but states no amount, rate or price we can read"
+        "detail": "the page names jsDelivr and says \"free API\" but states no amount, rate or price we can read, and the 1 structured-data block in its markup state no price"
       }
     },
     {
@@ -2937,7 +2937,7 @@
       ],
       "verifiedDate": "2026-08-18",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-03",
         "outcome": "ok",
         "detail": "url"
       },
@@ -2988,7 +2988,7 @@
         }
       ],
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-03",
         "outcome": "ok",
         "detail": "text"
       },
@@ -4116,9 +4116,9 @@
         "automation",
         "email-service-alternative"
       ],
-      "verifiedDate": "2026-08-19",
+      "verifiedDate": "2026-09-01",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-03",
         "outcome": "ok",
         "detail": "text"
       }
@@ -4399,7 +4399,7 @@
       ],
       "verifiedDate": "2026-08-17",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-03",
         "outcome": "ok",
         "detail": "text"
       }
@@ -5034,7 +5034,7 @@
       ],
       "verifiedDate": "2026-08-17",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-03",
         "outcome": "ok",
         "detail": "text"
       }
@@ -5344,7 +5344,7 @@
       ],
       "verifiedDate": "2026-08-20",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-03",
         "outcome": "ok",
         "detail": "text"
       }
@@ -6139,7 +6139,7 @@
       ],
       "verifiedDate": "2026-08-18",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-03",
         "outcome": "ok",
         "detail": "text"
       }
@@ -6999,7 +6999,7 @@
       ],
       "verifiedDate": "2026-08-19",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-03",
         "outcome": "ok",
         "detail": "text"
       }
@@ -7566,7 +7566,7 @@
       ],
       "verifiedDate": "2026-08-18",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-03",
         "outcome": "ok",
         "detail": "text"
       },
@@ -8250,7 +8250,7 @@
       ],
       "verifiedDate": "2026-08-19",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-03",
         "outcome": "ok",
         "detail": "text"
       },
@@ -8422,7 +8422,7 @@
       ],
       "verifiedDate": "2026-08-17",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-03",
         "outcome": "ok",
         "detail": "text"
       },
@@ -8845,7 +8845,7 @@
       ],
       "verifiedDate": "2026-08-18",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-03",
         "outcome": "ok",
         "detail": "text"
       }
@@ -9238,7 +9238,7 @@
       ],
       "verifiedDate": "2026-08-19",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-03",
         "outcome": "ok",
         "detail": "text"
       }
@@ -9660,7 +9660,7 @@
       ],
       "verifiedDate": "2026-08-20",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-03",
         "outcome": "ok",
         "detail": "text"
       }
@@ -12807,7 +12807,7 @@
       ],
       "verifiedDate": "2026-08-19",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-03",
         "outcome": "ok",
         "detail": "text"
       }
@@ -17137,9 +17137,9 @@
         "crash-reporting",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-08-20",
+      "verifiedDate": "2026-09-03",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-03",
         "outcome": "ok",
         "detail": "text"
       }
@@ -17843,11 +17843,11 @@
         "email",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-08-17",
+      "verifiedDate": "2026-09-02",
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-03",
         "outcome": "states_no_amount",
-        "detail": "the page names SimpleLogin and says \"free forever\" but states no amount, rate or price we can read"
+        "detail": "the page names SimpleLogin and says \"free forever\" but states no amount, rate or price we can read, and the 3 structured-data blocks in its markup state no price"
       }
     },
     {
@@ -18458,7 +18458,7 @@
       ],
       "verifiedDate": "2026-08-08",
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-03",
         "outcome": "ok",
         "detail": "text"
       }
@@ -18509,9 +18509,9 @@
         "generative-ai",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-08-20",
+      "verifiedDate": "2026-09-02",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-03",
         "outcome": "ok",
         "detail": "text"
       },
@@ -18570,7 +18570,7 @@
       ],
       "verifiedDate": "2026-08-20",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-03",
         "outcome": "ok",
         "detail": "text"
       },
@@ -19507,7 +19507,7 @@
       ],
       "verifiedDate": "2026-07-13",
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-03",
         "outcome": "ok",
         "detail": "text"
       },
@@ -19693,9 +19693,9 @@
         "backend",
         "firebase-alternative"
       ],
-      "verifiedDate": "2026-08-17",
+      "verifiedDate": "2026-09-03",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-03",
         "outcome": "ok",
         "detail": "text"
       },
@@ -21599,9 +21599,9 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-08-18",
+      "verifiedDate": "2026-09-03",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-03",
         "outcome": "ok",
         "detail": "text"
       }
@@ -26524,9 +26524,9 @@
         "screenshots",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-08-16",
+      "verifiedDate": "2026-09-03",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-03",
         "outcome": "ok",
         "detail": "text"
       }
@@ -27445,7 +27445,7 @@
         "program": "Create@Alibaba Cloud Startup Program"
       },
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-03",
         "outcome": "ok",
         "detail": "text"
       }
@@ -30222,7 +30222,7 @@
         "program": "Open Sauce"
       },
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-03",
         "outcome": "ok",
         "detail": "text"
       }
@@ -30241,7 +30241,7 @@
       ],
       "verifiedDate": "2026-08-16",
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-03",
         "outcome": "ok",
         "detail": "text"
       }
@@ -30260,7 +30260,7 @@
       ],
       "verifiedDate": "2026-08-20",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-03",
         "outcome": "ok",
         "detail": "text"
       }
@@ -30298,7 +30298,7 @@
       ],
       "verifiedDate": "2026-08-16",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-03",
         "outcome": "ok",
         "detail": "text"
       }
@@ -30610,7 +30610,7 @@
       ],
       "verifiedDate": "2026-08-17",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-03",
         "outcome": "ok",
         "detail": "url"
       }
@@ -30831,9 +30831,9 @@
       ],
       "verifiedDate": "2026-08-17",
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-03",
         "outcome": "states_no_amount",
-        "detail": "the page names Lovable and says \"free plan\" but states no amount, rate or price we can read"
+        "detail": "the page names Lovable and says \"free plan\" but states no amount, rate or price we can read, and the 2 structured-data blocks in its markup state no price"
       }
     },
     {
@@ -31163,7 +31163,7 @@
       ],
       "verifiedDate": "2026-08-17",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-03",
         "outcome": "ok",
         "detail": "text"
       },
@@ -31194,7 +31194,7 @@
       ],
       "verifiedDate": "2026-08-18",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-03",
         "outcome": "ok",
         "detail": "url"
       },
@@ -31248,9 +31248,9 @@
       ],
       "verifiedDate": "2026-08-18",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-03",
         "outcome": "ok",
-        "detail": "url"
+        "detail": "text"
       }
     },
     {
@@ -31267,7 +31267,7 @@
       ],
       "verifiedDate": "2026-08-17",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-03",
         "outcome": "ok",
         "detail": "url"
       }
@@ -31285,9 +31285,9 @@
         "google cloud",
         "github-actions-alternative"
       ],
-      "verifiedDate": "2026-08-16",
+      "verifiedDate": "2026-09-02",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-03",
         "outcome": "ok",
         "detail": "url"
       }
@@ -31322,9 +31322,9 @@
         "observability",
         "google cloud"
       ],
-      "verifiedDate": "2026-08-19",
+      "verifiedDate": "2026-09-03",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-03",
         "outcome": "ok",
         "detail": "text"
       }
@@ -31340,9 +31340,9 @@
         "security",
         "google cloud"
       ],
-      "verifiedDate": "2026-08-20",
+      "verifiedDate": "2026-09-01",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-03",
         "outcome": "ok",
         "detail": "text"
       }
@@ -31380,7 +31380,7 @@
       ],
       "verifiedDate": "2026-08-18",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-03",
         "outcome": "ok",
         "detail": "text"
       },
@@ -31421,7 +31421,7 @@
       ],
       "verifiedDate": "2026-08-17",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-03",
         "outcome": "ok",
         "detail": "text"
       }
@@ -31515,7 +31515,7 @@
       ],
       "verifiedDate": "2026-08-19",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-03",
         "outcome": "ok",
         "detail": "url"
       },
@@ -31684,7 +31684,7 @@
         }
       ],
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-03",
         "outcome": "ok",
         "detail": "text"
       },
@@ -31753,9 +31753,9 @@
         "aurora",
         "rds"
       ],
-      "verifiedDate": "2026-08-18",
+      "verifiedDate": "2026-09-02",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-03",
         "outcome": "ok",
         "detail": "text"
       },
@@ -31784,11 +31784,11 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-08-18",
+      "verifiedDate": "2026-09-03",
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-03",
         "outcome": "states_no_amount",
-        "detail": "the page names Spotify and says \"Premium plans\" but states no amount, rate or price we can read"
+        "detail": "the page names Spotify and says \"Premium plans\" but states no amount, rate or price we can read, and the 2 structured-data blocks in its markup state no price"
       }
     },
     {
@@ -32121,9 +32121,9 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-08-20",
+      "verifiedDate": "2026-09-02",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-03",
         "outcome": "ok",
         "detail": "text"
       }
@@ -32141,7 +32141,7 @@
       ],
       "verifiedDate": "2026-08-16",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-03",
         "outcome": "ok",
         "detail": "url"
       }
@@ -32201,7 +32201,7 @@
       ],
       "verifiedDate": "2026-08-17",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-03",
         "outcome": "ok",
         "detail": "text"
       }
@@ -32337,7 +32337,7 @@
       ],
       "verifiedDate": "2026-08-19",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-03",
         "outcome": "ok",
         "detail": "text"
       }
@@ -32392,7 +32392,7 @@
       ],
       "verifiedDate": "2026-08-19",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-03",
         "outcome": "ok",
         "detail": "text"
       }
@@ -32430,9 +32430,9 @@
       ],
       "verifiedDate": "2026-08-19",
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-03",
         "outcome": "states_no_amount",
-        "detail": "the page names pCloud and says \"free plan\" but states no amount, rate or price we can read"
+        "detail": "the page names pCloud and says \"free plan\" but states no amount, rate or price we can read, and its markup carries no structured data"
       }
     },
     {
@@ -32451,7 +32451,7 @@
       ],
       "verifiedDate": "2026-08-18",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-03",
         "outcome": "ok",
         "detail": "text"
       }
@@ -32471,7 +32471,7 @@
       ],
       "verifiedDate": "2026-08-19",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-03",
         "outcome": "ok",
         "detail": "text"
       }
@@ -32559,9 +32559,9 @@
       ],
       "verifiedDate": "2026-08-20",
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-03",
         "outcome": "states_no_amount",
-        "detail": "the page names LastPass and says \"Business Plans\" but states no amount, rate or price we can read"
+        "detail": "the page names LastPass and says \"Business Plans\" but states no amount, rate or price we can read, and the 1 structured-data block in its markup state no price"
       }
     },
     {
@@ -32597,7 +32597,7 @@
       ],
       "verifiedDate": "2026-08-18",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-03",
         "outcome": "ok",
         "detail": "text"
       }
@@ -32675,7 +32675,7 @@
       ],
       "verifiedDate": "2026-08-19",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-03",
         "outcome": "ok",
         "detail": "text"
       }
@@ -32814,9 +32814,9 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-08-20",
+      "verifiedDate": "2026-09-03",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-03",
         "outcome": "ok",
         "detail": "text"
       }
@@ -32919,7 +32919,7 @@
       ],
       "verifiedDate": "2026-08-20",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-03",
         "outcome": "ok",
         "detail": "text"
       }
@@ -32940,7 +32940,7 @@
       ],
       "verifiedDate": "2026-08-20",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-03",
         "outcome": "ok",
         "detail": "text"
       }
@@ -33055,7 +33055,7 @@
         "workers",
         "free-for-students"
       ],
-      "verifiedDate": "2026-08-19",
+      "verifiedDate": "2026-09-03",
       "eligibility": {
         "type": "student",
         "conditions": [
@@ -33073,7 +33073,7 @@
         "notes": "Channel partner program only. No individual referral program."
       },
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-03",
         "outcome": "ok",
         "detail": "text"
       }
@@ -33538,7 +33538,7 @@
       ],
       "verifiedDate": "2026-08-18",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-03",
         "outcome": "ok",
         "detail": "url"
       }
@@ -33622,7 +33622,7 @@
         }
       ],
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-03",
         "outcome": "ok",
         "detail": "text"
       },

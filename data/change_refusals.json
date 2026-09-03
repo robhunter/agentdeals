@@ -145,6 +145,18 @@
       "refused_date": "2026-08-28"
     },
     {
+      "vendor": "Apple Notes",
+      "change_type": "limits_reduced",
+      "reason": "measures_no_change",
+      "detail": "limits_reduced claimed, and every quantity the record compares holds the same value once notation and period are normalised — 5 GB icloud against 5 GB storage",
+      "summary": "While Apple Notes itself remains free, the pricing page clarifies that the 5GB of iCloud storage (which is required for syncing Notes) is a free tier, and additional storage requires a paid iCloud+ subscription. The stored information implied unlimited notes without mentioning the iCloud storage limit.",
+      "previous_state": "Fully free on Apple devices. Unlimited notes with rich text, checklists, tables, sketches, document scanning. Shared notes. iCloud sync counts against 5 GB iCloud free storage. Locked notes with password/biometric.",
+      "current_state": "iCloud+ offers 5GB of free storage, with paid tiers starting at $0.99/month for 50GB. Features like iCloud Private Relay, Hide My Email, and Custom Email Domain are only included with paid subscriptions.",
+      "source_url": "https://www.apple.com/icloud/",
+      "category": "Productivity & Notes",
+      "refused_date": "2026-09-03"
+    },
+    {
       "vendor": "Argos",
       "change_type": "free_tier_removed",
       "reason": "states_no_terms",
@@ -229,6 +241,18 @@
       "refused_date": "2026-08-28"
     },
     {
+      "vendor": "Bitwarden",
+      "change_type": "limits_increased",
+      "reason": "unquantified_limit",
+      "detail": "limits_increased claimed, but the current state names no quantity for anything the stored state measured (2 email)",
+      "summary": "The free tier now includes TOTP authenticator, file attachments, and emergency access, which were previously only available on paid tiers. The free tier also includes sharing with one other user.",
+      "previous_state": "Unlimited vault items (passwords, notes, cards, identities). Unlimited devices. Password generator. Basic 2FA (email, authenticator app). No TOTP code storage, no emergency access, no Vault Health Reports on free. Open-source.",
+      "current_state": "Core features included in every Bitwarden account: Security and protection Open source security Zero-knowledge encryption Advanced two-step login Built-in phishing protection Credential Management Store notes, credit cards, identities Passkey management and usage Username and password generator Email alias integration Encrypted export Access and Sharing Unlimited devices, unlimited passwords Browser, Mobile, Desktop apps Free sharing with another user",
+      "source_url": "https://bitwarden.com/pricing/",
+      "category": "Password Managers",
+      "refused_date": "2026-09-03"
+    },
+    {
       "vendor": "BlazeMeter",
       "change_type": "pricing_restructured",
       "reason": "dangling_reference",
@@ -251,6 +275,18 @@
       "source_url": "https://www.braidchat.com/",
       "category": "Team Collaboration",
       "refused_date": "2026-08-29"
+    },
+    {
+      "vendor": "Brave Search API",
+      "change_type": "free_tier_removed",
+      "reason": "confirmed_unchanged",
+      "detail": "The stored description already stated the 2,000 queries/mo free tier was eliminated Feb 2026 and that $5 in credits were provided. The current page simply rephrases this, offering $5 credits monthly and pricing per 1000 requests.",
+      "summary": "The free tier of 2,000 queries/mo has been eliminated. The pricing is now $5 per 1,000 requests with $5 in free monthly credits.",
+      "previous_state": "$5 prepaid metered credits ($0.003-$0.005 per query depending on endpoint). Web search, news, videos, images, LLM context endpoints. 50 req/sec rate limit. Attribution required. Credit card required, overages billed with no spending cap. Free tier (2,000 queries/mo) eliminated Feb 2026",
+      "current_state": "$5 per 1,000 requests. Includes $5 in free credits every month.",
+      "source_url": "https://brave.com/search/api/",
+      "category": "Search",
+      "refused_date": "2026-09-03"
     },
     {
       "vendor": "Brex",
@@ -385,6 +421,18 @@
       "refused_date": "2026-08-28"
     },
     {
+      "vendor": "ClickUp",
+      "change_type": "limits_reduced",
+      "reason": "no_baseline",
+      "detail": "limits_reduced claimed, and the clause that named the terms the change was measured on was dropped — what is left states no earlier figure and nothing the stored description measured",
+      "summary": "The Free Forever plan still exists, but the details have changed. The stored information stated 1 form, while the current pricing page states 1 Form. The stored information did not mention limits on Spaces, Folders, or Custom Views, which are now limited on the Free Forever plan (5 Spaces, 100 Folders, Unlimited Custom Views). The stored information did not mention limits on API calls, which are now limited to 100/minute on the Free Forever plan.",
+      "previous_state": "Free Forever plan — unlimited tasks, unlimited members, collaborative docs, kanban boards, sprint management, calendar view, in-app video recording, 24/7 support. 60MB storage, 1 form.",
+      "current_state": "Free Forever plan includes: 60MB Storage, Unlimited Tasks, Unlimited Free Plan Members, Two-Factor Authentication, Collaborative Docs, Kanban Boards, Sprint Management, Calendar View, Basic Custom Field Manager, In-App Video Recording, 24/7 Support, 1 Form, 5 Spaces, 100 Folders, Unlimited Custom Views, 100 API calls/minute.",
+      "source_url": "https://clickup.com/pricing",
+      "category": "Project Management",
+      "refused_date": "2026-09-03"
+    },
+    {
       "vendor": "CloudAMQP",
       "change_type": "limits_reduced",
       "reason": "confirmed_unchanged",
@@ -481,6 +529,18 @@
       "refused_date": "2026-09-01"
     },
     {
+      "vendor": "Convex",
+      "change_type": "limits_increased",
+      "reason": "states_no_difference",
+      "detail": "the summary states that the page agrees with what we hold, and names no figure the stored description did not already carry",
+      "summary": "The free tier still exists, but the description is more detailed. The free tier includes 1M function calls, 0.5 GB database storage, 1 GB file storage, and 0.5 GB vector storage.",
+      "previous_state": "Reactive backend — 1M function calls/month, 0.5 GB database + vector storage, 1 GB file storage, real-time sync",
+      "current_state": "The Free plan includes 1M function calls per month, 0.5 GB database storage, 1 GB file storage, and 0.5 GB vector storage.",
+      "source_url": "https://www.convex.dev/plans",
+      "category": "Databases",
+      "refused_date": "2026-09-03"
+    },
+    {
       "vendor": "Cosmic",
       "change_type": "limits_reduced",
       "reason": "states_no_terms",
@@ -527,6 +587,18 @@
       "source_url": "https://cronhooks.io/",
       "category": "Dev Utilities",
       "refused_date": "2026-08-28"
+    },
+    {
+      "vendor": "Cronitor",
+      "change_type": "limits_reduced",
+      "reason": "measures_no_change",
+      "detail": "limits_reduced claimed, and every quantity the record compares holds the same value once notation and period are normalised — 5 monitor against 5 monitor",
+      "summary": "The Hacker plan still exists but the features and limits have changed. SMS alerts are no longer included, and a branded status page is no longer included.",
+      "previous_state": "Cron job and uptime monitoring — free Hacker plan: 5 monitors, 5-minute check frequency, email, Slack, and webhook alerts, 1 status page (50 subscribers), 12-month data retention, single user",
+      "current_state": "Hacker $0 free forever. Limited monitoring for homelabs and small projects. 5 monitors. Email and Slack alerts. Basic status page. No SMS alerts. No premium integrations.",
+      "source_url": "https://cronitor.io/pricing",
+      "category": "Monitoring",
+      "refused_date": "2026-09-03"
     },
     {
       "vendor": "currencylayer",
@@ -601,6 +673,18 @@
       "refused_date": "2026-08-29"
     },
     {
+      "vendor": "DigitalOcean",
+      "change_type": "free_tier_removed",
+      "reason": "states_no_terms",
+      "detail": "every clause of the summary states absence rather than a term the page carries, so it reports the reading rather than a change",
+      "summary": "The $200 credit for 60 days is not mentioned on the pricing page. While there are free tiers for App Platform, Functions, Container Registry, VPC, Uptime, and CSPM, there is no mention of a general new account credit.",
+      "previous_state": "$200 credit for 60 days for new accounts. Basic Droplets from $4/mo (1 vCPU, 512 MB RAM, 10 GB SSD — 20% price cut Jan 2026). Per-second billing (min 60s or $0.01). App Platform: 3 free static sites (1 GiB outbound/mo each). Functions: 25,000 GiB-seconds/mo free. Spaces: 250 GB + 1 TB transfer for $5/mo. Managed databases start at $15/mo (not free). No perpetual free compute tier",
+      "current_state": "The page details several free tiers for specific products (App Platform, Functions, Container Registry, VPC, Uptime, CSPM) but does not mention a $200 credit for new accounts.",
+      "source_url": "https://www.digitalocean.com/pricing",
+      "category": "Cloud IaaS",
+      "refused_date": "2026-09-03"
+    },
+    {
       "vendor": "Docker Hub",
       "change_type": "limits_reduced",
       "reason": "confirmed_unchanged",
@@ -635,6 +719,18 @@
       "source_url": "https://www.doczilla.app/",
       "category": "Dev Utilities",
       "refused_date": "2026-08-29"
+    },
+    {
+      "vendor": "Dropbox",
+      "change_type": "limits_reduced",
+      "reason": "confirmed_unchanged",
+      "detail": "The report restates a detail from the stored description.",
+      "summary": "The free tier (Basic) still exists. The description has been updated. Previously a 100MB max file size via web.",
+      "previous_state": "2 GB storage. Up to 3 devices linked. File sharing. 30-day version history. Dropbox Paper access. 100 MB max file size via web (larger via desktop app). Dropbox Transfer up to 100 MB.",
+      "current_state": "Basic Free 2 GB to store and share your files",
+      "source_url": "https://www.dropbox.com/plans",
+      "category": "Cloud Storage",
+      "refused_date": "2026-09-03"
     },
     {
       "vendor": "duo.com",
@@ -709,6 +805,18 @@
       "refused_date": "2026-08-28"
     },
     {
+      "vendor": "flightcontrol.dev",
+      "change_type": "restriction",
+      "reason": "confirmed_unchanged",
+      "detail": "The stored description already stated the free plan was for individuals.",
+      "summary": "The free tier now has a more limited scope. Still offering 1 user, up to 50 modules, 2,000 pipeline minutes, and $20 of AI tokens, the free tier is now explicitly for individuals only.",
+      "previous_state": "Now Ravion — flightcontrol.dev redirects to ravion.com, which states \"Ravion is the successor to Flightcontrol. Nothing changes for existing customers.\" Deploy and operate applications in your own AWS account. Free plan for individuals: 1 user, up to 50 modules of any type, 2,000 pipeline minutes, $20 of AI tokens, preview environments, multiple GitHub collaborators, community support. AWS bills compute directly at $0 markup.",
+      "current_state": "Individuals can use the free tier with 1 User, up to 50 modules of any type, 2,000 pipeline minutes, $20 of AI tokens, and community support.",
+      "source_url": "https://www.ravion.com/pricing",
+      "category": "Cloud Hosting",
+      "refused_date": "2026-09-03"
+    },
+    {
       "vendor": "Flows",
       "change_type": "limits_reduced",
       "reason": "unquantified_limit",
@@ -721,6 +829,18 @@
       "refused_date": "2026-08-28"
     },
     {
+      "vendor": "Fly.io",
+      "change_type": "free_tier_removed",
+      "reason": "confirmed_unchanged",
+      "detail": "The stored description already stated no free tier for new accounts and that volume snapshots would be charged after the initial 10GB free.",
+      "summary": "The Legacy Free tier no longer exists for new accounts. Volume snapshots will be charged starting January 1st, 2026.",
+      "previous_state": "Pay-as-you-go only — no free tier for new accounts (since Oct 2024). Legacy accounts (Hobby/Launch/Scale plans) retain: 3 shared-cpu-1x VMs (256 MB RAM), 3 GB volume storage, 100 GB transfer/month. Volume snapshots: first 10 GB free, then $0.08/GB/month.",
+      "current_state": "Fly.io services are billed per organization based on usage. Compute is charged per started/stopped machine, with pricing varying by region and RAM. Volumes cost $0.15/GB per month. Volume snapshots will cost $0.08/GB per month starting January 1st, 2026, with the first 10GB free each month.",
+      "source_url": "https://fly.io/docs/about/pricing/",
+      "category": "Cloud Hosting",
+      "refused_date": "2026-09-03"
+    },
+    {
       "vendor": "FormKeep.com",
       "change_type": "limits_reduced",
       "reason": "confirmed_unchanged",
@@ -731,6 +851,18 @@
       "source_url": "https://www.formkeep.com/",
       "category": "Forms",
       "refused_date": "2026-08-28"
+    },
+    {
+      "vendor": "Gatling",
+      "change_type": "limits_reduced",
+      "reason": "unquantified_limit",
+      "detail": "limits_reduced claimed, but the current state names no quantity for anything the stored state measured (2.0 self)",
+      "summary": "The Community Edition is still available, but it is now more clearly positioned as a limited version compared to the Enterprise Edition. The stored information stated 'No usage limits' which is no longer accurate. The pricing page details several paid tiers (Basic, Team, Enterprise) with specific limits on VUs, testing time, and load generators.",
+      "previous_state": "Community Edition: open source load testing tool (Apache 2.0). Self-hosted local execution with multi-language SDKs (Java, Scala, Kotlin, JS, TS). No usage limits.",
+      "current_state": "The Community Edition is available for download and offers local use only. Paid tiers start at €89/month (Basic) with up to 60,000 VUs and 1 hour of testing.",
+      "source_url": "https://gatling.io/pricing",
+      "category": "Testing",
+      "refused_date": "2026-09-03"
     },
     {
       "vendor": "Geocodio",
@@ -781,6 +913,54 @@
       "refused_date": "2026-08-28"
     },
     {
+      "vendor": "Google Cloud BigQuery",
+      "change_type": "limits_reduced",
+      "reason": "confirmed_unchanged",
+      "detail": "The current page clarifies that only the *first* 1 TiB is free, but the stored description already implies this by stating '1 TiB queries/month' without mentioning any additional free allowance. The report's claim of a cost after 1 TiB is not a change from the original description, which didn't specify what happens after the free tier is used.",
+      "summary": "The free tier is now 1 TiB of queries per month. Only the first 1 TiB is free, after that it costs $6.25 / 1 TiB.",
+      "previous_state": "Always Free: 1 TiB queries/month, 10 GiB storage. Serverless data warehouse with SQL, ML, and BI built in. No infrastructure to manage",
+      "current_state": "The first 1 TiB per month is free. If you pay in a currency other than USD, the prices listed in your currency on Cloud Platform SKUs apply.",
+      "source_url": "https://cloud.google.com/bigquery/pricing",
+      "category": "Databases",
+      "refused_date": "2026-09-03"
+    },
+    {
+      "vendor": "Google Cloud Monitoring",
+      "change_type": "limits_reduced",
+      "reason": "unquantified_limit",
+      "detail": "limits_reduced claimed, but the current state names no quantity for anything the stored state measured (1 monitoring)",
+      "summary": "The free tier for Monitoring API calls has changed. It was previously 1M calls/month, now it's 1 million time series returned per billing account for read API calls and no charge for write API calls. The free allotment for metrics has also changed from 'all non-chargeable Google Cloud metrics' to 'First 150 MiB per billing account for metrics charged by bytes ingested'.",
+      "previous_state": "Always Free: all non-chargeable Google Cloud metrics, first 1M monitoring API calls/month. Dashboards, alerting, and uptime checks for GCP resources",
+      "current_state": "Read API calls: First 1 million time series returned per billing account. Write API calls: No charge. Metrics: First 150 MiB per billing account for metrics charged by bytes ingested.",
+      "source_url": "https://cloud.google.com/monitoring/pricing",
+      "category": "Monitoring",
+      "refused_date": "2026-09-03"
+    },
+    {
+      "vendor": "Google Cloud Run",
+      "change_type": "limits_reduced",
+      "reason": "measures_the_opposite",
+      "detail": "limits_reduced claimed, and every quantity that moved between the two states moved the other way — 180 vcpu against 240,000 vcpu",
+      "summary": "The free tier limits have changed. The stored information states 2M requests/month, 360K GB-seconds memory, and 180K vCPU-seconds compute. The current pricing page states 2 million requests, 360,000 GiB-seconds memory, and 180,000 vCPU-seconds compute for request-based billing, and 240,000 vCPU-seconds and 450,000 GiB-seconds for instance-based billing.",
+      "previous_state": "Always Free: 2M requests/month, 360K GB-seconds memory, 180K vCPU-seconds compute, 1 GB North America egress. Fully managed serverless containers",
+      "current_state": "The free tier includes 2 million requests per month. For request-based billing, it also includes 180,000 vCPU-seconds and 360,000 GiB-seconds per month. For instance-based billing, it includes 240,000 vCPU-seconds and 450,000 GiB-seconds per month.",
+      "source_url": "https://cloud.google.com/run/pricing",
+      "category": "Cloud Hosting",
+      "refused_date": "2026-09-03"
+    },
+    {
+      "vendor": "Google Cloud Storage",
+      "change_type": "pricing_restructured",
+      "reason": "states_no_terms",
+      "detail": "every clause of the summary states absence or narration rather than a term the page carries, so it reports the reading rather than a change",
+      "summary": "The 'Always Free' tier details are not explicitly stated as a pre-defined tier. The page details pricing for operations (Class A, Class B, Free) and storage costs based on class and location. While there are 'Free operations' listed, the specific 5GB regional storage and operation limits (5K Class A, 50K Class B) are not mentioned as part of a dedicated 'Always Free' tier.",
+      "previous_state": "Always Free: 5 GB regional storage (US regions), 5K Class A ops/month, 50K Class B ops/month, 100 GB North America egress",
+      "current_state": "Pricing is based on data storage, data processing, and network usage. Operation charges apply based on class (A, B, Free) and storage class (Standard, Nearline, Coldline, Archive, Rapid). Free operations are available, but specific limits are not presented as a bundled 'Always Free' tier.",
+      "source_url": "https://cloud.google.com/storage/pricing",
+      "category": "Storage",
+      "refused_date": "2026-09-03"
+    },
+    {
       "vendor": "Google Vector Search 2.0",
       "change_type": "pricing_model_change",
       "reason": "dangling_reference",
@@ -803,6 +983,18 @@
       "source_url": "https://www.harness.io/pricing",
       "category": "Dev Utilities",
       "refused_date": "2026-08-29"
+    },
+    {
+      "vendor": "Hasura",
+      "change_type": "pricing_restructured",
+      "reason": "confirmed_unchanged",
+      "detail": "More detail, but no change in core limits.",
+      "summary": "The free tier still exists, but the description is more detailed. The free tier includes unlimited models, 1 supergraph developer, and observability with 15-minute retention. It also details many other features included in the free tier, such as API requests/month with no limit, concurrent API users with no limit, autoscaling, and various connectors. There are now paid tiers (Base and Advanced) with additional features and limits.",
+      "previous_state": "Instant GraphQL API engine over any database — Hasura DDN Free plan: unlimited API requests and unlimited concurrent users, unlimited models at any scale. 1 supergraph developer, 15-minute observability retention. Auto-generates GraphQL APIs from Postgres, SQL Server, BigQuery via database/code/API connectors",
+      "current_state": "DDN Free: Includes unlimited models, 1 supergraph developer, observability with 15-minute retention, unlimited API requests/month, unlimited concurrent API users, autoscaling, zero cold-start, global edge network, intelligent geo routing, DDoS protection, database/code/API connectors, supergraph explorer & registry, query plan & trace viewer.",
+      "source_url": "https://hasura.io/pricing",
+      "category": "API Development",
+      "refused_date": "2026-09-03"
     },
     {
       "vendor": "heap.io",
@@ -851,6 +1043,18 @@
       "source_url": "https://hyperping.com/pricing",
       "category": "Monitoring",
       "refused_date": "2026-08-28"
+    },
+    {
+      "vendor": "iCloud",
+      "change_type": "restriction",
+      "reason": "confirmed_unchanged",
+      "detail": "The stored description explicitly states Private Relay and Hide My Email are *not* included, which matches the current page. The report highlights Apple Invites, which wasn't mentioned in the stored description.",
+      "summary": "iCloud Private Relay and Hide My Email are no longer included in the free tier. Apple Invites is now included with all paid tiers, and has limited features on the free tier.",
+      "previous_state": "5 GB total across iCloud Drive, Photos, Mail, backups, Notes. Device backups, iCloud Keychain, Find My included. No iCloud Private Relay or Hide My Email on free tier.",
+      "current_state": "The free tier includes 5GB of storage. iCloud Private Relay and Hide My Email are not included. Apple Invites has limited features. Paid tiers include iCloud Private Relay, Hide My Email, Custom Email Domain, and HomeKit Secure Video.",
+      "source_url": "https://www.apple.com/icloud/",
+      "category": "Cloud Storage",
+      "refused_date": "2026-09-03"
     },
     {
       "vendor": "image-charts.com",
@@ -1069,6 +1273,18 @@
       "refused_date": "2026-08-29"
     },
     {
+      "vendor": "Mailchimp",
+      "change_type": "limits_reduced",
+      "reason": "measures_no_change",
+      "detail": "limits_reduced claimed, and every quantity the record compares holds the same value once notation and period are normalised — 250 contact against 250 contact, 250 contact against 250 contact",
+      "summary": "The free tier now has a contact limit and send limit. The stored information stated unlimited sends within the 250 contact limit.",
+      "previous_state": "Email marketing — 250 contacts, 500 sends/month (250/day cap), 1 audience, 1 seat, marketing CRM, forms and landing pages, email support first 30 days",
+      "current_state": "The free plan has a limit of 250 contacts and sending is limited. The page states 'Under 250 contacts? It's free.' and 'Sending will be paused if contact or email send limit is exceeded.'",
+      "source_url": "https://mailchimp.com/pricing/",
+      "category": "Email",
+      "refused_date": "2026-09-03"
+    },
+    {
       "vendor": "mailsac.com",
       "change_type": "limits_reduced",
       "reason": "unquantified_limit",
@@ -1177,6 +1393,18 @@
       "refused_date": "2026-08-29"
     },
     {
+      "vendor": "MyFitnessPal",
+      "change_type": "limits_reduced",
+      "reason": "unquantified_limit",
+      "detail": "limits_reduced claimed, but the current state names no quantity for anything the stored state measured (14 food)",
+      "summary": "The free tier now has significantly reduced functionality. While a free calorie counter exists, features like meal planning, food analysis, and advanced macros are now part of paid Premium tiers. The free tier includes barcode scanning and basic logging, but the premium tiers offer more advanced features like customized meal plans, recipe access, and grocery app syncing.",
+      "previous_state": "Free food diary and calorie counter. Database of 14M+ foods. Barcode scanner. Basic nutrition tracking (calories, macros). Exercise logging. No meal planning, no food analysis, no advanced macros on free.",
+      "current_state": "MyFitnessPal offers a free version with basic logging and tracking. Premium plans ($8.34/mo annually or $24.99/mo monthly) include features like customized meal plans, 1,500+ recipes, automated grocery lists, and more advanced tracking. A Premium+ tier ($6.67/mo annually or $24.99/mo monthly) adds meal planning, grocery app syncing, and other features.",
+      "source_url": "https://www.myfitnesspal.com/premium",
+      "category": "Fitness & Health",
+      "refused_date": "2026-09-03"
+    },
+    {
       "vendor": "Neo4j AuraDB",
       "change_type": "limits_reduced",
       "reason": "unquantified_limit",
@@ -1223,6 +1451,18 @@
       "source_url": "https://developer.okta.com/signup/",
       "category": "Auth",
       "refused_date": "2026-08-29"
+    },
+    {
+      "vendor": "Ollama Cloud",
+      "change_type": "limits_reduced",
+      "reason": "unquantified_limit",
+      "detail": "limits_reduced claimed, but the current state names no quantity for anything the stored state measured (1 model)",
+      "summary": "The free tier now includes starter usage credits and access to starter models, but requires adding credits to unlock all models. It also limits users to 1 concurrent request. The original stored information stated a free tier for light usage with 1 concurrent model and access to Llama, Mistral, Gemma, and other open models via API, but did not mention usage credits or starter models.",
+      "previous_state": "Cloud-hosted Ollama for running open-source LLMs — free tier for light usage with 1 concurrent model. Access Llama, Mistral, Gemma, and other open models via API",
+      "current_state": "The Free tier costs $0 and includes starter usage credits and access to starter models. It allows 1 concurrent request. Adding credits unlocks all models.",
+      "source_url": "https://ollama.com/pricing",
+      "category": "AI / ML",
+      "refused_date": "2026-09-03"
     },
     {
       "vendor": "OnlineOrNot",
@@ -1355,6 +1595,18 @@
       "source_url": "https://pinggy.io",
       "category": "Tunneling & Networking",
       "refused_date": "2026-09-01"
+    },
+    {
+      "vendor": "Pixlr",
+      "change_type": "limits_reduced",
+      "reason": "unquantified_limit",
+      "detail": "limits_reduced claimed, but the current state names no quantity for anything the stored state measured (500 graphic, 5 sav)",
+      "summary": "The free tier still exists, but the description is significantly expanded to include a wide range of AI tools (image generator, video generator, face swap, etc.) beyond just a photo editor and graphics. The ~5 saves/day limit is no longer mentioned. Paid plans are now available with additional features and AI credits.",
+      "previous_state": "Free online photo editor and design tool. Basic and advanced editing modes, 500K+ free graphics. Ad-supported, ~5 saves/day on free plan",
+      "current_state": "Pixlr offers a free version with a robust set of features, including AI image generator, AI generative fill, AI remove background, AI remove object and AI image expand. Paid plans (Plus and Premium) are available for ad-free editing, more AI credits, and access to more models.",
+      "source_url": "https://pixlr.com",
+      "category": "Design",
+      "refused_date": "2026-09-03"
     },
     {
       "vendor": "Portkey",
@@ -1525,6 +1777,18 @@
       "refused_date": "2026-08-29"
     },
     {
+      "vendor": "Sauce Labs",
+      "change_type": "free_tier_removed",
+      "reason": "dangling_reference",
+      "detail": "the summary now opens on a reference to a clause that was dropped, so the sentence that travels alone has no subject",
+      "summary": "The open source offering is no longer described as 'unlimited testing minutes on 3 parallel sessions'. Instead, Sauce Labs now offers a free trial and paid plans starting at $39/month. They mention a commitment to supporting open source projects with free accounts for qualifying initiatives, but details are limited to 'More about open source' link.",
+      "previous_state": "Free for open source: unlimited testing minutes on 3 parallel sessions across 96+ OS/browser combinations. Test results are publicly accessible.",
+      "current_state": "Sauce Labs offers paid plans starting at $39/month for 1 parallel test with unlimited users and unlimited testing minutes. They also mention free accounts for qualifying open source initiatives, but details are limited.",
+      "source_url": "https://saucelabs.com/pricing",
+      "category": "Testing",
+      "refused_date": "2026-09-03"
+    },
+    {
       "vendor": "Semaphore CI",
       "change_type": "pricing_restructured",
       "reason": "confirmed_unchanged",
@@ -1571,6 +1835,18 @@
       "source_url": "https://stackby.com/",
       "category": "Databases",
       "refused_date": "2026-08-28"
+    },
+    {
+      "vendor": "Standard Notes",
+      "change_type": "limits_reduced",
+      "reason": "unquantified_limit",
+      "detail": "limits_reduced claimed, but the current state names no quantity for anything the stored state measured (100 mb)",
+      "summary": "The free tier still exists, but the description of limits has changed. The stored information stated 100MB of storage, but the current pricing page does not mention a storage limit for the free tier. The free tier now includes unlimited device sync, plain text notes, offline access, password protection, data export, two-factor authentication, and daily encrypted email backups.",
+      "previous_state": "Unlimited notes with end-to-end encryption. Cross-platform sync. Plain text editor only on free. 100 MB total storage. No rich text, spreadsheets, file attachments, or note history on free tier.",
+      "current_state": "Standard Free includes End-to-end encryption, Unlimited device sync on web, desktop, and mobile, Plain text notes, Offline access, Organize your notes into tags, Password protect individual notes, Full data export in encrypted or plaintext format, Two-factor authentication, Daily encrypted email backups, Community support.",
+      "source_url": "https://standardnotes.com/plans",
+      "category": "Productivity & Notes",
+      "refused_date": "2026-09-03"
     },
     {
       "vendor": "Stream",
@@ -1751,6 +2027,18 @@
       "source_url": "https://unirateapi.com",
       "category": "Dev Utilities",
       "refused_date": "2026-08-28"
+    },
+    {
+      "vendor": "UptimeRobot",
+      "change_type": "limits_increased",
+      "reason": "measures_no_change",
+      "detail": "limits_increased claimed, and every quantity the record compares holds the same value once notation and period are normalised — 50 uptime against 50 monitor",
+      "summary": "The free tier now includes dependency monitoring, HTTP, port & ping monitors, keyword monitoring, API monitoring, UDP monitoring, location-specific monitoring, slow response alerts, DNS monitoring, SSL & Domain exp. monitoring, and basic status pages. It also states 'No credit card required!'",
+      "previous_state": "50 uptime monitors, 5-minute check intervals, 3-month log retention, email alerts. Personal/non-commercial use only on free tier",
+      "current_state": "Free $ 0 /month. 50 monitors, 5 min. monitoring interval, Dependency monitoring, HTTP, port & ping monitor, Keyword monitor, API monitoring, UDP monitoring, Location-specific monitoring, Slow response alerts, DNS monitoring, SSL & Domain exp. monitor, Only 5 integrations, Basic status pages.",
+      "source_url": "https://uptimerobot.com/pricing/",
+      "category": "Monitoring",
+      "refused_date": "2026-09-03"
     },
     {
       "vendor": "uptimetoolbox.com",
