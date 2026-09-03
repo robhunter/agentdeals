@@ -37,6 +37,9 @@ const OTHER_SCALE_ON_A_SURFACE_THAT_EMBEDS_SUMMARIES = /\bvolatile\b|on our watc
 const COUNT_AS_EVIDENCE = /\b\d+ pricing changes? recorded/;
 const CLAIMS_A_NARROWING = /(?:One recorded [^.]*|(?<!None of the )\d+ recorded changes) narrowed the terms/;
 
+const establishesANarrowing = (c: DealChange): boolean =>
+  CHANGE_DIRECTION[c.change_type] === "negative" && !isNoLongerInForce(c);
+
 function change(over: Partial<DealChange> = {}): DealChange {
   return {
     vendor: "Vendor A",
@@ -185,6 +188,25 @@ describe("vendor verdict — a stable rating reports direction, not volume", () 
       change({ change_type: "rebranded", date: "2026-03-01" }),
     ];
     assert.strictEqual(narrowingSentence(changes), "None of the 3 recorded changes narrowed the terms.");
+  });
+
+  it("does not let a withdrawn record establish the narrowing the verdict says is not there", () => {
+    const standing = change({ change_type: "free_tier_removed", date: "2026-08-28" });
+    const withdrawn = change({
+      change_type: "free_tier_removed",
+      date: "2026-08-28",
+      resolution: { state: "retracted", date: "2026-09-03", source_url: "https://example.test/withdrawal" },
+    });
+
+    assert.strictEqual(establishesANarrowing(standing), true);
+    assert.match(narrowingSentence([standing]), /One recorded free tier removal narrowed the terms/);
+
+    assert.strictEqual(establishesANarrowing(withdrawn), false);
+    assert.strictEqual(narrowingSentence([withdrawn]), "The one change we have recorded did not narrow the terms.");
+    assert.doesNotMatch(
+      vendorVerdictSentence(input({ level: "stable", changes: [withdrawn] })),
+      /narrowed the terms/,
+    );
   });
 
   it("says what a record that repairs our own entry is, rather than counting it as a change", () => {
@@ -524,9 +546,7 @@ describe("vendor verdict — as rendered", () => {
         const row = rows[index++];
         const html = await get(`/vendor/${row.slug}`);
         const verdict = verdictParagraph(html);
-        const narrowing = row.changes.filter(
-          c => CHANGE_DIRECTION[c.change_type] === "negative" && !isNoLongerInForce(c),
-        );
+        const narrowing = row.changes.filter(establishesANarrowing);
         if (CLAIMS_A_NARROWING.test(verdict) && narrowing.length === 0) {
           wrong.push(`${row.slug}: names a narrowing over ${row.changes.length} record(s), none of which still point down`);
         }
