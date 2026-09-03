@@ -275,6 +275,26 @@ open(p, "w").write(s)
 PY
 }
 
+m_any_node_naming_a_vendor_counts_as_a_record() {
+  py <<'PY2'
+p = "src/provenance.ts"
+s = open(p).read()
+s = s.replace('  return RECORD_FIELDS.some((field) => node[field] !== undefined && node[field] !== null);',
+              '  return node !== null;')
+open(p, "w").write(s)
+PY2
+}
+
+m_only_a_dated_node_counts_as_a_record() {
+  py <<'PY2'
+p = "src/provenance.ts"
+s = open(p).read()
+s = s.replace('const RECORD_FIELDS = ["verifiedDate", "verified_date", "change_type", "tier", "current_tier", "category"] as const;',
+              'const RECORD_FIELDS = ["verifiedDate", "verified_date"] as const;')
+open(p, "w").write(s)
+PY2
+}
+
 run_mutation "the newest date stands in for the oldest" m_the_newest_date_stands_in_for_the_oldest
 run_mutation "the response time stands in for the record date" m_the_response_time_stands_in_for_the_record_date
 run_mutation "a set is dated as though it were one record" m_a_set_is_dated_as_though_it_were_one_record
@@ -298,6 +318,9 @@ run_mutation "the search tool stops citing" m_the_search_tool_stops_citing
 run_mutation "the json routes stop citing" m_the_json_routes_stop_citing
 run_mutation "the proxy drops the citation" m_the_proxy_drops_the_citation
 run_mutation "the root url doubles its slash" m_the_root_url_doubles_its_slash
+
+run_mutation "any node naming a vendor counts as a record" m_any_node_naming_a_vendor_counts_as_a_record
+run_mutation "only a dated node counts as a record" m_only_a_dated_node_counts_as_a_record
 
 echo ""
 echo "killed=$killed survived=$survived"
