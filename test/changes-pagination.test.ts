@@ -123,7 +123,18 @@ describe("/api/changes answers one shape and pages", () => {
       body.length <= DEFAULT_BUDGET_BYTES,
       `the default response is ${body.length} bytes against a budget of ${DEFAULT_BUDGET_BYTES}`,
     );
-    assert.strictEqual(json.limit, 20, "the default page size is not the one /developers publishes");
+    assert.strictEqual(json.limit, 20, "the default page size moved");
+  });
+
+  it("serves the page size /developers states, and states one at all", async () => {
+    const page = await (await fetch(`${base}/developers`)).text();
+    const stated = page.match(/<code>\/api\/changes<\/code> returns <strong>(\d+) records by default<\/strong>/);
+    assert.ok(stated, "/developers states no default page size for /api/changes");
+    const published = parseInt(stated[1], 10);
+    const { json } = await get("");
+    assert.strictEqual(json.limit, published, `/developers states ${published} and the route serves ${json.limit}`);
+    assert.strictEqual(json.returned, published);
+    assert.strictEqual((json.changes as unknown[]).length, published);
   });
 
   it("reaches the whole window by asking rather than by omitting a parameter", async () => {
