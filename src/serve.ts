@@ -30357,7 +30357,7 @@ function buildHostingPricingPage(): string {
       freeType: "limited",
       monthlyCostSolo: "$0–19",
       monthlyCostTeam: "$19/seat",
-      hiddenCosts: "CRITICAL: Every repo committer is now charged as a full Pro seat ($19/mo) when using CMS/Identity with private repos (changed March 2026). Credit-based pricing can pause sites on exhaustion. 300 build minutes is tight for large sites. Bandwidth overage is $55/100 GB.",
+      hiddenCosts: "Credit-based pricing can pause sites on exhaustion. 300 build minutes is tight for large sites. Bandwidth overage is $55/100 GB.",
     },
     {
       name: "Deno Deploy",
@@ -44577,7 +44577,7 @@ ${mcpCtaCss()}
 
   <div class="diff-card">
     <h3><a href="/vendor/netlify">Netlify</a> &mdash; Credit-Based Free Tier</h3>
-    <div class="diff-desc"><strong>Free tier:</strong> 300 credits/month. Bandwidth costs 10 credits/GB (~30 GB), builds cost 15 credits each (~20 builds). Sites pause on credit exhaustion &mdash; no overages. Serverless functions at Level 0 (125K invocations). Legacy accounts (pre-Sep 2025) keep the old model: 100 GB bandwidth + 300 build minutes. <strong>Key limitation:</strong> The credit system is less predictable than flat limits. Heavy builders or bandwidth-intensive sites can exhaust credits quickly. Every repo committer is now charged as a Pro seat ($19/mo) when using Netlify CMS or Identity with private repos.</div>
+    <div class="diff-desc"><strong>Free tier:</strong> 300 credits/month. Bandwidth costs 10 credits/GB (~30 GB), builds cost 15 credits each (~20 builds). Sites pause on credit exhaustion &mdash; no overages. Serverless functions at Level 0 (125K invocations). Legacy accounts (pre-Sep 2025) keep the old model: 100 GB bandwidth + 300 build minutes. <strong>Key limitation:</strong> The credit system is less predictable than flat limits. Heavy builders or bandwidth-intensive sites can exhaust credits quickly.</div>
   </div>
 
   <div class="diff-card">

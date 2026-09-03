@@ -70,8 +70,8 @@ m_the_summary_states_the_resolution_twice() {
   py <<'PY'
 p = "src/change-resolution.ts"
 s = open(p).read()
-s = s.replace('  return change.summary.includes(detail) ? change.summary : `${change.summary} ${detail}`;',
-              '  return `${change.summary} ${detail}`;')
+s = s.replace('  if (!detail || tagged.includes(detail)) return tagged;\n  return `${tagged} ${detail}`;',
+              '  return detail ? `${tagged} ${detail}` : tagged;')
 open(p, "w").write(s)
 PY
 }
@@ -130,9 +130,9 @@ m_the_detail_is_not_stripped_before_the_guard_reads_it() {
   py <<'PY'
 p = "src/change-resolution.ts"
 s = open(p).read()
-s = s.replace('''  const withoutDetail = (text: string | undefined) =>
-    detail && text ? text.split(detail).join(" ") : text;''',
-'''  const withoutDetail = (text: string | undefined) => text;''')
+s = s.replace('''  const withoutWhatTheFieldItselfWrote = (text: string | undefined) =>
+    text ? written.reduce((rest, piece) => rest.split(piece).join(" "), text) : text;''',
+'''  const withoutWhatTheFieldItselfWrote = (text: string | undefined) => text;''')
 open(p, "w").write(s)
 PY
 }

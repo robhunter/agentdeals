@@ -11,6 +11,7 @@ import {
   fieldsAssertingAResolution,
   isNoLongerInForce,
   prosePutsAResolutionIn,
+  resolutionTag,
   resolvingRecord,
   summaryWithResolution,
   theEventNeverHappened,
@@ -56,8 +57,36 @@ describe("a record can say its change is no longer in force", () => {
   it("carries the resolution wherever the summary is read", () => {
     assert.strictEqual(
       summaryWithResolution(reversed()),
-      "The vendor paused new signups. Reversed: signups are open again."
+      "No longer in force (2026-09-02). The vendor paused new signups. Reversed: signups are open again."
     );
+  });
+
+  it("states the resolution before the claim, and the explanation after it", () => {
+    const served = summaryWithResolution(reversed());
+    const tag = resolutionTag(reversed().resolution!);
+    assert.ok(served.startsWith(tag), "the derived tag leads");
+    assert.ok(
+      served.indexOf("paused new signups") < served.indexOf("signups are open again"),
+      "the detail stays behind the claim it explains"
+    );
+  });
+
+  it("marks a record whose resolution carries no written detail", () => {
+    const bare = change({ resolution: { state: "retracted", date: "2026-09-02" } });
+    assert.strictEqual(
+      summaryWithResolution(bare),
+      "Retracted — this record was our error (2026-09-02). The vendor paused new signups."
+    );
+  });
+
+  it("derives a different tag for a change the vendor ended than for one we withdrew", () => {
+    assert.notStrictEqual(
+      resolutionTag({ state: "reversed", date: "2026-09-02" }),
+      resolutionTag({ state: "retracted", date: "2026-09-02" })
+    );
+    for (const state of RESOLUTION_STATES) {
+      assert.match(resolutionTag({ state, date: "2026-09-02" }), /2026-09-02/, `${state} names its date`);
+    }
   });
 
   it("leaves a record with no resolution exactly as stored", () => {
@@ -69,6 +98,8 @@ describe("a record can say its change is no longer in force", () => {
   it("does not state the resolution twice when the summary already carries it", () => {
     const once = withResolutionInSummary(reversed());
     assert.strictEqual(withResolutionInSummary(once).summary, once.summary);
+    const bare = withResolutionInSummary(change({ resolution: { state: "retracted", date: "2026-09-02" } }));
+    assert.strictEqual(withResolutionInSummary(bare).summary, bare.summary);
   });
 
   it("separates a change the vendor ended from a record we withdrew", () => {
@@ -78,6 +109,60 @@ describe("a record can say its change is no longer in force", () => {
       true
     );
     assert.strictEqual(isNoLongerInForce(change()), false);
+  });
+});
+
+describe("the resolution survives the render sites that cut the summary short", () => {
+  const serveSource = readFileSync(path.join(REPO, "src", "serve.ts"), "utf-8");
+  const cuts = [
+    ...serveSource.matchAll(/summary[^\n]{0,60}?\.(?:substring|slice)\(0,\s*(\d+)\)/g),
+  ].map((m) => Number(m[1]));
+  const resolvedRecords = stored.filter(isNoLongerInForce);
+
+  it("is measuring render sites that exist", () => {
+    assert.ok(cuts.length >= 20, `render sites truncating a summary: ${cuts.length}`);
+    assert.ok(resolvedRecords.length >= 3, `resolved records: ${resolvedRecords.length}`);
+  });
+
+  it("states the resolution inside the narrowest cut any render site makes", () => {
+    const narrowest = Math.min(...cuts);
+    for (const record of resolvedRecords) {
+      const shown = summaryWithResolution(record).slice(0, narrowest);
+      assert.ok(
+        shown.includes(resolutionTag(record.resolution!)),
+        `${record.vendor} ${record.date} cut at ${narrowest}: ${shown}`
+      );
+    }
+  });
+
+  it("leaves room for the claim itself after the tag", () => {
+    const narrowest = Math.min(...cuts);
+    for (const record of resolvedRecords) {
+      const tag = resolutionTag(record.resolution!);
+      assert.ok(
+        narrowest - tag.length >= 60,
+        `${record.vendor} ${record.date} leaves ${narrowest - tag.length} characters of claim`
+      );
+    }
+  });
+
+  it("reaches records a trailing sentence cannot", () => {
+    const widest = Math.max(...cuts);
+    const narrowest = Math.min(...cuts);
+    const beyondAnAppend = resolvedRecords.filter((c) => {
+      const detail = c.resolution!.detail;
+      return detail ? !`${c.summary} ${detail}`.slice(0, widest).includes(detail) : false;
+    });
+    assert.ok(
+      beyondAnAppend.length > 0,
+      `resolved records whose detail cannot reach the widest cut: ${beyondAnAppend.length}`
+    );
+    for (const record of beyondAnAppend) {
+      assert.ok(
+        summaryWithResolution(record).slice(0, narrowest).includes(resolutionTag(record.resolution!)),
+        `${record.vendor} ${record.date} is marked where its own detail could not reach`
+      );
+    }
   });
 });
 
@@ -140,6 +225,13 @@ describe("no record publishes a retraction the structured field does not hold", 
     assert.deepStrictEqual(fieldsAssertingAResolution(withResolutionInSummary(reversed())), []);
   });
 
+  it("does not count the derived tag as free text either", () => {
+    const bare = withResolutionInSummary(change({ resolution: { state: "retracted", date: "2026-09-02" } }));
+    assert.ok(prosePutsAResolutionIn(bare.summary), "the tag reads as a resolution");
+    assert.deepStrictEqual(fieldsAssertingAResolution(bare), []);
+    assert.deepStrictEqual(fieldsAssertingAResolution({ ...bare, resolution: null }), ["summary"]);
+  });
+
   it("holds across every stored change record", () => {
     const proseOnly = stored
       .filter((c) => !isNoLongerInForce(c) && fieldsAssertingAResolution(c).length > 0)
@@ -175,6 +267,22 @@ describe("no record publishes a retraction the structured field does not hold", 
       assert.strictEqual(resolver!.vendor, record.vendor);
       assert.ok(resolver!.date >= record.date, `${record.vendor} is resolved by a later record`);
     }
+  });
+
+  it("is not also typed into a page, where no resolution can follow it", () => {
+    const serveSource = readFileSync(path.join(REPO, "src", "serve.ts"), "utf-8");
+    const opening = (c: DealChange) => c.summary.slice(0, 40);
+    const typedIn = (records: DealChange[]) =>
+      records.filter((c) => opening(c).length >= 30 && serveSource.includes(opening(c)));
+
+    assert.deepStrictEqual(
+      typedIn(stored.filter(isNoLongerInForce)).map((c) => `${c.vendor} ${c.date}`),
+      []
+    );
+    assert.ok(
+      typedIn(stored.filter((c) => !isNoLongerInForce(c))).length > 0,
+      "change text does reach page copy, so the check above has something to find"
+    );
   });
 
   it("serves the resolution alongside the claim it withdraws", () => {
