@@ -11,6 +11,7 @@ export const REJECT_CONFIRMED_UNCHANGED = "confirmed_unchanged";
 export const REJECT_STATES_NO_TERMS = "states_no_terms";
 export const REJECT_NO_REMOVAL_EVIDENCE = "no_removal_evidence";
 export const REJECT_REMOVAL_READ_FROM_ROOT = "removal_read_from_root";
+export const REJECT_REMOVAL_READ_FROM_REDIRECT = "removal_read_from_redirect";
 export const REJECT_FREE_TIER_STILL_OFFERED = "free_tier_still_offered";
 export const REJECT_NO_BASELINE = "no_baseline";
 export const REJECT_DANGLING_REFERENCE = "dangling_reference";
@@ -29,6 +30,7 @@ export const GATE_REASONS = [
   REJECT_STATES_NO_TERMS,
   REJECT_NO_REMOVAL_EVIDENCE,
   REJECT_REMOVAL_READ_FROM_ROOT,
+  REJECT_REMOVAL_READ_FROM_REDIRECT,
   REJECT_FREE_TIER_STILL_OFFERED,
   REJECT_NO_BASELINE,
   REJECT_DANGLING_REFERENCE,
@@ -861,6 +863,16 @@ export function registrableHost(url) {
   }
 }
 
+const STATES_A_REDIRECT = /\b(?:page|site|domain|url)\s+(?:now\s+)?redirects?\s+to\b/i;
+
+export function statesARedirect(text) {
+  return typeof text === "string" && STATES_A_REDIRECT.test(text);
+}
+
+export function redirectClauseFor(vendor, host) {
+  return `${vendor}'s own page now redirects to ${host}`;
+}
+
 export function redirectedOffDomain(requestedUrl, finalUrl) {
   const from = registrableHost(requestedUrl);
   const to = registrableHost(finalUrl);
@@ -1195,21 +1207,17 @@ export function lostTheSubjectOfItsClaim(record, evidence, summary) {
 }
 
 export function auditRecord(record, context = {}) {
-  let evidence = summaryEvidence(record?.summary);
+  const movedTo = redirectedOffDomain(record?.source_url, context.finalUrl)
+    ? registrableHost(context.finalUrl)
+    : null;
+  const annotated =
+    movedTo && !statesARedirect(record?.summary)
+      ? summaryFromClauses([redirectClauseFor(record?.vendor, movedTo), record?.summary])
+      : record?.summary;
+
+  let evidence = summaryEvidence(annotated);
   let dropped = evidence.dropped;
   const refuse = (reason, detail) => ({ outcome: OUTCOME_REFUSED, reason, detail, summary: null, dropped });
-
-  const movedOffDomain = redirectedOffDomain(record?.source_url, context.finalUrl);
-  if (movedOffDomain) {
-    const host = registrableHost(context.finalUrl);
-    return {
-      outcome: OUTCOME_REWRITTEN,
-      reason: null,
-      detail: `the page we cite redirects to ${host}, so the change is sourced from the redirect rather than from what the page failed to say`,
-      summary: summaryFromClauses([`${record.vendor}'s own page now redirects to ${host}`, ...evidence.kept]),
-      dropped,
-    };
-  }
 
   if (evidence.kept.length === 0) {
     const restated = withBaselineRestored(evidence, true);
@@ -1272,6 +1280,12 @@ export function auditRecord(record, context = {}) {
         `a free tier was recorded as removed from ${record.source_url}, a domain root that states no price, ending or replacement where the free tier was — a homepage's silence is not evidence that one ended`
       );
     }
+    if (!evidenced && evidence.kept.every(statesARedirect)) {
+      return refuse(
+        REJECT_REMOVAL_READ_FROM_REDIRECT,
+        `a free tier was recorded as removed and the only surviving evidence is that ${record.source_url} redirects elsewhere — a redirect states where a page moved to, not what the destination charges`
+      );
+    }
     if (!evidenced && dropped.some(({ kind }) => kind === CLAUSE_ABSENCE)) {
       return refuse(
         REJECT_NO_REMOVAL_EVIDENCE,
@@ -1309,13 +1323,18 @@ export function auditRecord(record, context = {}) {
   }
 
   const restored = evidence.restored ?? 0;
-  if ((dropped.length === 0 && restored === 0) || rewritten === record?.summary) {
+  const nothingMoved = annotated === record?.summary && dropped.length === 0 && restored === 0;
+  if (nothingMoved || rewritten === record?.summary) {
     return { outcome: OUTCOME_UNCHANGED, reason: null, detail: null, summary: null, dropped };
   }
+  const droppedClauses = `dropped ${dropped.length} clause(s) that stated our reading rather than the vendor's terms, and restated ${restored} as the vendor's earlier terms`;
   return {
     outcome: OUTCOME_REWRITTEN,
     reason: null,
-    detail: `dropped ${dropped.length} clause(s) that stated our reading rather than the vendor's terms, and restated ${restored} as the vendor's earlier terms`,
+    detail:
+      annotated === record?.summary
+        ? droppedClauses
+        : `the page we cite redirects to ${movedTo}, so the summary now states that before the terms it carried — ${droppedClauses}`,
     summary: rewritten,
     dropped,
   };
