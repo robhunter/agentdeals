@@ -97,11 +97,29 @@ export type StabilityClass = "stable" | "watch" | "volatile" | "improving";
 
 export type RiskLevel = "stable" | "caution" | "risky";
 
+export type ChangeResolutionState = "reversed" | "retracted";
+
+export interface ChangeRecordRef {
+  vendor: string;
+  date: string;
+  change_type: string;
+}
+
+export interface ChangeResolution {
+  state: ChangeResolutionState;
+  date: string;
+  detail?: string;
+  source_url?: string;
+  resolved_by?: ChangeRecordRef;
+}
+
 export interface RiskCause {
   date: string;
   date_source?: ChangeDateSource;
   change_type: string;
   summary: string;
+  current_state?: string;
+  resolution?: ChangeResolution | null;
 }
 
 export interface LinkUnreachable {
@@ -141,6 +159,7 @@ export interface DealChange {
   detected_by?: string;
   recorded_date?: string;
   date_source?: ChangeDateSource;
+  resolution?: ChangeResolution | null;
 }
 
 export interface DealChangesIndex {

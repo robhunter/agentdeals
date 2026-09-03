@@ -1,9 +1,13 @@
+import { theEventNeverHappened } from "./change-resolution.js";
+import type { ChangeResolution } from "./types.js";
+
 export interface LineupClaim {
   vendor: string;
   date: string;
   change_type?: string;
   summary?: string;
   current_state?: string;
+  resolution?: ChangeResolution | null;
 }
 
 const PRICE_TOKEN = /\$\d[\d,]*(?:\.\d+)?/g;
@@ -18,6 +22,7 @@ export function statedPrices(change: LineupClaim): Set<string> {
 
 export function statesAPlanLineup(change: LineupClaim): boolean {
   if (change.change_type === NOT_A_VENDOR_CHANGE) return false;
+  if (theEventNeverHappened(change)) return false;
   return statedPrices(change).size >= PRICES_THAT_MAKE_A_LINEUP;
 }
 

@@ -285,7 +285,17 @@
         "GitHub Pages"
       ],
       "recorded_date": "2026-03-31",
-      "date_source": "hand_written"
+      "date_source": "hand_written",
+      "resolution": {
+        "state": "reversed",
+        "date": "2026-04-14",
+        "source_url": "https://www.netlify.com/pricing/",
+        "resolved_by": {
+          "vendor": "Netlify",
+          "date": "2026-04-14",
+          "change_type": "limits_increased"
+        }
+      }
     },
     {
       "vendor": "Supabase",
@@ -4179,7 +4189,7 @@
       "vendor": "Cursor",
       "change_type": "pricing_restructured",
       "date": "2026-04-13",
-      "summary": "Cursor now offers 6 plans: Free, Hobby ($10/mo), Pro ($20/mo), Pro+ ($60/mo), Business ($40/seat), Ultra ($200/mo). Hobby tier added as lighter paid option between Free and Pro. Credit-based pricing model since June 2025. Retracted 2026-09-02: Cursor has never offered a $10/month Hobby tier - Hobby is the name of its free plan. This row was our error, not a change Cursor made.",
+      "summary": "Cursor now offers 6 plans: Free, Hobby ($10/mo), Pro ($20/mo), Pro+ ($60/mo), Business ($40/seat), Ultra ($200/mo). Hobby tier added as lighter paid option between Free and Pro. Credit-based pricing model since June 2025.",
       "previous_state": "5-tier structure (Free, Pro, Pro+, Business, Ultra)",
       "current_state": "Retracted 2026-09-02. Cursor has no $10/month Hobby tier and there is no evidence it ever had one — Hobby is the name of its free plan. The lineup on cursor.com/pricing today is Hobby (free), Pro $20, Pro+ $60, Ultra $200, Teams $40/user, Enterprise custom. This row is our error, not a vendor change.",
       "impact": "low",
@@ -4191,7 +4201,18 @@
         "Claude Code"
       ],
       "recorded_date": "2026-04-13",
-      "date_source": "hand_written"
+      "date_source": "hand_written",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-02",
+        "detail": "Retracted 2026-09-02: Cursor has never offered a $10/month Hobby tier - Hobby is the name of its free plan. This row was our error, not a change Cursor made.",
+        "source_url": "https://www.cursor.com/pricing",
+        "resolved_by": {
+          "vendor": "Cursor",
+          "date": "2026-09-02",
+          "change_type": "record_corrected"
+        }
+      }
     },
     {
       "vendor": "n8n",
@@ -4506,7 +4527,7 @@
       "vendor": "GitHub Copilot",
       "change_type": "restriction",
       "date": "2026-04-10",
-      "summary": "GitHub paused new Copilot Pro trials due to abuse. Existing trials continued through their term. New users could still subscribe to Pro directly (paid) until the broader April 20 signup pause closed that path too. Resolved: Copilot Pro is open to new subscribers, verified 2026-09-02 against GitHub's plans documentation.",
+      "summary": "GitHub paused new Copilot Pro trials due to abuse. Existing trials continued through their term. New users could still subscribe to Pro directly (paid) until the broader April 20 signup pause closed that path too.",
       "previous_state": "Copilot Pro offered a 30-day free trial to any new user",
       "current_state": "Resolved. Copilot Pro is open to new subscribers today (verified 2026-09-02 against GitHub's plans documentation); the trial pause is no longer reflected in GitHub's current plan pages.",
       "impact": "medium",
@@ -4519,13 +4540,19 @@
         "Claude Code"
       ],
       "recorded_date": "2026-04-21",
-      "date_source": "hand_written"
+      "date_source": "hand_written",
+      "resolution": {
+        "state": "reversed",
+        "date": "2026-09-02",
+        "detail": "Resolved: Copilot Pro is open to new subscribers, verified 2026-09-02 against GitHub's plans documentation.",
+        "source_url": "https://docs.github.com/en/copilot/get-started/plans"
+      }
     },
     {
       "vendor": "GitHub Copilot",
       "change_type": "restriction",
       "date": "2026-04-20",
-      "summary": "GitHub paused new signups for Copilot Pro, Pro+, and Copilot Student plans citing infrastructure strain from agentic AI workflows (long-running, parallelized sessions overwhelming capacity). Existing users are unaffected. Free tier signups remain open. Same announcement also removed Claude Opus from Pro (now Pro+ only) and tightened usage limits on individual plans. Reversed: GitHub's changelog post for this change is marked Retired, and its plans documentation offers Copilot Pro, Pro+, Max and Copilot Student to new users, verified 2026-09-02. The only pause still on that page is a separate one dated 2026-04-22 on self-serve purchases of Copilot Business and Copilot Enterprise.",
+      "summary": "GitHub paused new signups for Copilot Pro, Pro+, and Copilot Student plans citing infrastructure strain from agentic AI workflows (long-running, parallelized sessions overwhelming capacity). Existing users are unaffected. Free tier signups remain open. Same announcement also removed Claude Opus from Pro (now Pro+ only) and tightened usage limits on individual plans.",
       "previous_state": "Pro ($10/mo), Pro+ ($39/mo), and Copilot Student plans accepting new signups. Claude Opus available on Pro. Standard individual-plan usage limits.",
       "current_state": "Reversed. GitHub's changelog post for this change is marked Retired, and its plans documentation offers Copilot Pro, Pro+, Max and Copilot Student to new users today (verified 2026-09-02). The pause that remains in force is a separate one dated 2026-04-22 on self-serve purchase of Copilot Business and Copilot Enterprise. Free tier was unaffected throughout.",
       "impact": "high",
@@ -4539,7 +4566,13 @@
         "Cline"
       ],
       "recorded_date": "2026-04-21",
-      "date_source": "hand_written"
+      "date_source": "hand_written",
+      "resolution": {
+        "state": "reversed",
+        "date": "2026-09-02",
+        "detail": "Reversed: GitHub's changelog post for this change is marked Retired, and its plans documentation offers Copilot Pro, Pro+, Max and Copilot Student to new users, verified 2026-09-02. The only pause still on that page is a separate one dated 2026-04-22 on self-serve purchases of Copilot Business and Copilot Enterprise.",
+        "source_url": "https://docs.github.com/en/copilot/get-started/plans"
+      }
     },
     {
       "vendor": "Amazon SES",

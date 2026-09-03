@@ -11,7 +11,7 @@ import {
   statesAPlanLineup,
   supersededLineups,
   supersessionNote,
-} from "../src/change-lineup.ts";
+} from "../dist/change-lineup.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(__dirname, "..");
@@ -128,10 +128,12 @@ describe("the stored change log, read through the rule", () => {
     assert.strictEqual(superseded.get(march)?.date, "2026-04-13");
   });
 
-  it("marks the Cursor record that prices a Hobby plan the free plan is named after", () => {
-    const april = find("Cursor", "2026-04-13");
+  it("leaves the retracted Cursor Hobby record out of the lineup population entirely", () => {
+    const april = stored.find(c => c.vendor === "Cursor" && c.date === "2026-04-13")!;
     assert.ok(april.summary.includes("Hobby ($10/mo)"));
-    assert.strictEqual(superseded.get(april)?.date, "2026-08-28");
+    assert.strictEqual(april.resolution?.state, "retracted");
+    assert.strictEqual(statesAPlanLineup(april), false);
+    assert.strictEqual(superseded.has(april), false);
   });
 
   it("leaves our newest read of a vendor standing when a correction follows it", () => {
