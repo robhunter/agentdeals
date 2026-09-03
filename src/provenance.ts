@@ -27,6 +27,12 @@ function recordDate(node: Record<string, unknown>): string | null {
   return isoDate(node.recorded_date) ?? isoDate(node.date);
 }
 
+const RECORD_FIELDS = ["verifiedDate", "verified_date", "change_type", "tier", "current_tier", "category"] as const;
+
+function isRecord(node: Record<string, unknown>): boolean {
+  return RECORD_FIELDS.some((field) => node[field] !== undefined && node[field] !== null);
+}
+
 function isWithheld(node: Record<string, unknown>): boolean {
   const gate = node.gate;
   return typeof gate === "object" && gate !== null && typeof (gate as { code?: unknown }).code === "string";
@@ -45,7 +51,7 @@ export function citedRecords(payload: unknown): CitedRecord[] {
       return;
     }
     const obj = node as Record<string, unknown>;
-    if (typeof obj.vendor === "string" && obj.vendor.trim()) {
+    if (typeof obj.vendor === "string" && obj.vendor.trim() && isRecord(obj)) {
       const slug = toSlug(obj.vendor);
       if (slug) {
         found.push({

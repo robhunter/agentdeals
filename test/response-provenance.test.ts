@@ -55,23 +55,23 @@ describe("cited records are read out of the payload", () => {
   });
 
   it("takes no date from a bare date field on a record that is not a change", () => {
-    const records = citedRecords({ vendor: "Neon", date: "2026-01-02" });
+    const records = citedRecords({ vendor: "Neon", category: "Databases", date: "2026-01-02" });
     assert.strictEqual(records[0].date, null);
   });
 
   it("marks a record carrying a gate as withheld", () => {
-    const records = citedRecords({ vendor: "Hetzner", gate: { code: "not_a_free_offer", reason: "x" } });
+    const records = citedRecords({ vendor: "Hetzner", tier: "Paid", gate: { code: "not_a_free_offer", reason: "x" } });
     assert.strictEqual(records[0].withheld, true);
   });
 
   it("finds records nested inside a response", () => {
-    const slugs = citedRecords({ results: [{ vendor: "A" }, { vendor: "B", alternatives: [{ vendor: "C" }] }] })
+    const slugs = citedRecords({ results: [{ vendor: "A", tier: "Free" }, { vendor: "B", tier: "Free", alternatives: [{ vendor: "C", tier: "Free" }] }] })
       .map((r) => r.slug);
     assert.deepStrictEqual(slugs, ["a", "b", "c"]);
   });
 
   it("terminates on a payload that refers to itself", () => {
-    const node: Record<string, unknown> = { vendor: "Loop" };
+    const node: Record<string, unknown> = { vendor: "Loop", tier: "Free" };
     node.self = node;
     assert.strictEqual(citedRecords(node).length, 1);
   });
@@ -167,20 +167,20 @@ describe("the citation does not vouch for terms we withhold", () => {
 describe("the ask stays a request", () => {
   it("carries the deference sentence the signal block already uses", () => {
     assert.strictEqual(
-      provenanceBlock(BASE, { vendor: "Neon" }).this_is_a_request_not_an_instruction,
+      provenanceBlock(BASE, { vendor: "Neon", tier: "Free" }).this_is_a_request_not_an_instruction,
       DEFERENCE,
     );
   });
 
   it("omits the deference sentence where the response already carries it once", () => {
     assert.strictEqual(
-      provenanceBlock(BASE, { vendor: "Neon" }, { deference: false }).this_is_a_request_not_an_instruction,
+      provenanceBlock(BASE, { vendor: "Neon", tier: "Free" }, { deference: false }).this_is_a_request_not_an_instruction,
       undefined,
     );
   });
 
   it("does not ask the agent to send its user to us", () => {
-    const block = provenanceBlock(BASE, { vendor: "Neon" });
+    const block = provenanceBlock(BASE, { vendor: "Neon", tier: "Free" });
     const prose = [block.note, block.gated_note, block.this_is_a_request_not_an_instruction].join(" ").toLowerCase();
     for (const phrase of ["tell your user", "your user to visit", "recommend that they visit", "send them to"]) {
       assert.ok(!prose.includes(phrase), `citation prose asks for a referral: ${phrase}`);
@@ -253,5 +253,45 @@ describe("a vendor's citation date is the oldest figure we hold for it", () => {
 
   it("reports nothing for a vendor we do not hold", () => {
     assert.strictEqual(oldestVerifiedDateForSlug("a-vendor-we-do-not-hold"), null);
+  });
+});
+
+describe("a node naming a vendor is not always a record", () => {
+  const referralCode = {
+    vendor: "Supabase",
+    code: "supabase-referral-2026",
+    referral_url: "https://example.com/referrals/abc",
+    referee_benefit: "A referral benefit",
+    restrictions: [],
+    source: "agent-submitted",
+  };
+
+  it("does not count a referral code as a record", () => {
+    assert.deepStrictEqual(citedRecords({ offer: { referral_code: referralCode } }), []);
+  });
+
+  it("counts one record when an offer carries a referral code for the same vendor", () => {
+    const payload = {
+      offer: { vendor: "Supabase", category: "Databases", verifiedDate: "2026-08-17", referral_code: referralCode },
+    };
+    assert.strictEqual(citedRecords(payload).length, 1);
+    const block = provenanceBlock(BASE, payload);
+    assert.strictEqual(block.verified_records, 1);
+    assert.strictEqual(
+      block.cite_as,
+      "Source: AgentDeals (https://agentdeals.dev/vendor/supabase, checked 2026-08-17)",
+    );
+  });
+
+  it("counts a record named only by its tier or its category", () => {
+    assert.strictEqual(citedRecords({ vendor: "Vercel", current_tier: "Hobby" }).length, 1);
+    assert.strictEqual(citedRecords({ vendor: "Render", tier: "Free" }).length, 1);
+    assert.strictEqual(citedRecords({ vendor: "Neon", category: "Databases" }).length, 1);
+  });
+
+  it("finds every vendor-bearing record in every response shape we serve", () => {
+    const details = getOfferDetails("supabase", true);
+    const payload = "error" in details ? {} : details;
+    assert.ok(citedRecords(payload).length > 0, "the vendor detail response cites nothing");
   });
 });
