@@ -1,5 +1,6 @@
 import type { DealChange, RiskCause } from "./types.js";
 import { CHANGE_DIRECTION, isACorrectionToOurOwnRecord } from "./data.js";
+import { isNoLongerInForce } from "./change-resolution.js";
 import { changeDateClause } from "./change-dates.js";
 import { withheldLevelClause, type LevelWithheldReason } from "./source-check.js";
 import { endedVerdictSentence } from "./retirement.js";
@@ -32,7 +33,7 @@ export interface VendorVerdictInput {
   vendor: string;
   level: PublishedRiskLevel | null;
   cause: RiskCause | null;
-  changes: Array<Pick<DealChange, "date" | "date_source" | "change_type">>;
+  changes: Array<Pick<DealChange, "date" | "date_source" | "change_type"> & { resolution?: DealChange["resolution"] }>;
   levelWithheld: LevelWithheldReason | null;
   unconfirmableSince: string;
   offerEnded?: boolean;
@@ -60,7 +61,7 @@ function narrowingChanges(
   changes: VendorVerdictInput["changes"],
 ): VendorVerdictInput["changes"] {
   return changes
-    .filter(c => CHANGE_DIRECTION[c.change_type] === "negative")
+    .filter(c => CHANGE_DIRECTION[c.change_type] === "negative" && !isNoLongerInForce(c))
     .slice()
     .sort((a, b) => b.date.localeCompare(a.date));
 }

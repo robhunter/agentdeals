@@ -18,6 +18,7 @@ import {
   vendorRiskAssessment,
   verdictHasLapsed,
 } from "../dist/data.js";
+import { isNoLongerInForce } from "../dist/change-resolution.js";
 import { PRODUCT_DEPRECATED, deprecationEndsTheListedProduct } from "../dist/product-deprecation.js";
 import { vendorSlugMap } from "../dist/vendor-slug.js";
 import type { DealChange } from "../src/types.ts";
@@ -45,6 +46,18 @@ function record(overrides: Partial<DealChange> = {}): DealChange {
 }
 
 const isoDaysBefore = (days: number) => new Date(NOW - days * DAY).toISOString().slice(0, 10);
+
+const withdrawn = (change: DealChange): DealChange => ({
+  ...change,
+  resolution: { state: "retracted", date: isoDaysBefore(1), source_url: "https://example.test/withdrawal" },
+});
+
+function pointsDownAndStillHolds(change: DealChange, nowMs: number = Date.now()): boolean {
+  if (CHANGE_DIRECTION[change.change_type] !== "negative") return false;
+  if (isNoLongerInForce(change)) return false;
+  if (verdictHasLapsed(change, nowMs)) return false;
+  return !(change.change_type === PRODUCT_DEPRECATED && !deprecationEndsTheListedProduct(change));
+}
 
 describe("#1206 one risk scale, and every change type sits on one side of it", () => {
   it("classifies every change type the risk scale can act on as an event or a condition", () => {
@@ -87,10 +100,7 @@ describe("#1206 one risk scale, and every change type sits on one side of it", (
     let checked = 0;
     for (const vendor of new Set(loadOffers().map(o => o.vendor))) {
       const changes = held.get(vendor.toLowerCase()) ?? [];
-      const inForce = changes.filter(c =>
-        CHANGE_DIRECTION[c.change_type] === "negative" &&
-        !verdictHasLapsed(c) &&
-        !(c.change_type === PRODUCT_DEPRECATED && !deprecationEndsTheListedProduct(c)));
+      const inForce = changes.filter(c => pointsDownAndStillHolds(c));
       if (inForce.length === 0) continue;
       checked++;
       if (vendorRiskAssessment(changes).level === "stable") {
@@ -99,6 +109,16 @@ describe("#1206 one risk scale, and every change type sits on one side of it", (
     }
     assert.ok(checked > 0, "no vendor holds a record that points down, so this asserts nothing");
     assert.deepStrictEqual(wrong.slice(0, 20), [], `stable verdicts over a record that points down:\n${wrong.slice(0, 20).join("\n")}`);
+  });
+
+  it("checks a vendor whose one adverse record stands, and exempts the same one withdrawn", () => {
+    const standing = record({ change_type: "free_tier_removed", date: isoDaysBefore(30) });
+
+    assert.strictEqual(pointsDownAndStillHolds(standing, NOW), true, "the invariant no longer checks a standing removal");
+    assert.notStrictEqual(vendorRiskAssessment([standing], NOW).level, "stable");
+
+    assert.strictEqual(pointsDownAndStillHolds(withdrawn(standing), NOW), false, "the invariant still checks a withdrawn removal");
+    assert.strictEqual(vendorRiskAssessment([withdrawn(standing)], NOW).level, "stable");
   });
 });
 

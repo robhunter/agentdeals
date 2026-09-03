@@ -36,7 +36,13 @@ after(() => { if (proc) proc.kill(); });
 
 const toSlug = (v: string) => v.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 
-type Change = { vendor: string; change_type: string; date: string; summary: string };
+type Change = {
+  vendor: string;
+  change_type: string;
+  date: string;
+  summary: string;
+  resolution?: { state: string; date: string; source_url?: string } | null;
+};
 
 function changesByVendor(changes: Change[]): Map<string, Change[]> {
   const m = new Map<string, Change[]>();
@@ -299,17 +305,44 @@ describe("#1147 — a shutdown of the product we list demotes the vendor", () =>
     assert.strictEqual(classifyStability([one]), "watch");
   });
 
-  it("never calls a vendor stable on a scale where it holds a narrowing", async () => {
+  it("never calls a vendor stable on a scale where it holds a narrowing that still stands", async () => {
     const { classifyStability, loadDealChanges, NEGATIVE_CHANGE_TYPES } = await import("../dist/data.js");
+    const { isNoLongerInForce } = await import("../dist/change-resolution.js");
     const held = changesByVendor(loadDealChanges() as Change[]);
     const wrong: string[] = [];
+    let checked = 0;
     for (const [vendor, changes] of held) {
-      const narrowing = changes.filter((c) => NEGATIVE_CHANGE_TYPES.has(c.change_type)).length;
-      if (narrowing > 0 && classifyStability(changes as never) === "stable") {
-        wrong.push(`${vendor} holds ${narrowing} narrowing record(s) and reads stable`);
+      const narrowing = changes.filter(
+        (c) => NEGATIVE_CHANGE_TYPES.has(c.change_type) && !isNoLongerInForce(c as never),
+      ).length;
+      if (narrowing === 0) continue;
+      checked++;
+      if (classifyStability(changes as never) === "stable") {
+        wrong.push(`${vendor} holds ${narrowing} standing narrowing record(s) and reads stable`);
       }
     }
+    assert.ok(checked > 0, "no vendor holds a narrowing that still stands, so this asserts nothing");
     assert.deepStrictEqual(wrong, []);
+  });
+
+  it("counts a vendor's one standing narrowing, and stops counting the same one withdrawn", async () => {
+    const { classifyStability, NEGATIVE_CHANGE_TYPES } = await import("../dist/data.js");
+    const { isNoLongerInForce } = await import("../dist/change-resolution.js");
+    const standing: Change = {
+      vendor: "V", change_type: "free_tier_removed", date: "2026-06-01",
+      summary: "The free plan is gone.",
+    };
+    const counts = (c: Change) => NEGATIVE_CHANGE_TYPES.has(c.change_type) && !isNoLongerInForce(c as never);
+    const retracted: Change = {
+      ...standing,
+      resolution: { state: "retracted", date: "2026-06-10", source_url: "https://example.test/withdrawal" },
+    };
+
+    assert.strictEqual(counts(standing), true, "the invariant no longer counts a standing narrowing");
+    assert.notStrictEqual(classifyStability([standing] as never), "stable");
+
+    assert.strictEqual(counts(retracted), false, "the invariant still counts a withdrawn narrowing");
+    assert.strictEqual(classifyStability([retracted] as never), "stable");
   });
 
   it("the volatile population is not empty, so that invariant is not vacuous", async () => {

@@ -51,6 +51,7 @@ describe("enrichOffers", () => {
   it("counts nothing — the number of records a vendor has cannot move its risk level", async () => {
     const { enrichOffers, loadOffers, loadDealChanges } = await import("../dist/data.js");
     const { levelWithheldReason } = await import("../dist/source-check.js");
+    const { isNoLongerInForce } = await import("../dist/change-resolution.js");
     const changes = loadDealChanges();
     const offers = loadOffers();
 
@@ -68,9 +69,12 @@ describe("enrichOffers", () => {
       byVendor.get(key)!.push(c);
     }
 
+    const nothingLeftToWarnAbout = (c: { change_type: string }) =>
+      FAVOURABLE.has(c.change_type) || isNoLongerInForce(c as never);
+
     let checked = 0;
     for (const [vendor, vendorChanges] of byVendor) {
-      if (!vendorChanges.every((c) => FAVOURABLE.has(c.change_type))) continue;
+      if (!vendorChanges.every(nothingLeftToWarnAbout)) continue;
       const offer = offers.find((o: { vendor: string }) => o.vendor.toLowerCase() === vendor);
       if (!offer) continue;
       const enriched = enrichOffers([offer])[0];
@@ -78,7 +82,7 @@ describe("enrichOffers", () => {
       assert.strictEqual(
         enriched.risk_level,
         "stable",
-        `${offer.vendor} has ${vendorChanges.length} record(s), all favourable or neutral (${vendorChanges.map((c) => c.change_type).join(", ")}), and must not be warned`,
+        `${offer.vendor} has ${vendorChanges.length} record(s), none of them a standing warning (${vendorChanges.map((c) => c.change_type).join(", ")}), and must not be warned`,
       );
       assert.strictEqual(enriched.risk_cause, null);
       checked++;
