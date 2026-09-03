@@ -18,6 +18,7 @@ import { isSubSlug, toSlug } from "./slug.js";
 import { DATE_SOURCES, isEventDated, changeDateClause, isoWeekWindow, changesInWindow, discoveryBatchNote, firstReadHeading, type DateWindow } from "./change-dates.js";
 import { PRODUCT_DEPRECATED, deprecationEndsTheListedProduct } from "./product-deprecation.js";
 import { vendorHistorySentence } from "./vendor-history.js";
+import { isNoLongerInForce, withResolutionInSummary } from "./change-resolution.js";
 import { endedVerdictSentence } from "./retirement.js";
 
 export function gateForOffer(offer: Offer): Gate | null {
@@ -298,8 +299,9 @@ export const SEVERE_TYPES_WITHOUT_FLAT_DEMOTION: Record<string, string> = {
 };
 
 export function demotionForChange(
-  change: Pick<DealChange, "change_type" | "vendor" | "summary">,
+  change: Pick<DealChange, "change_type" | "vendor" | "summary"> & { resolution?: DealChange["resolution"] },
 ): "risky" | "caution" | null {
+  if (isNoLongerInForce(change)) return null;
   const flat = RISK_DEMOTION[change.change_type];
   if (flat) return flat;
   if (change.change_type === PRODUCT_DEPRECATED) {
@@ -309,7 +311,7 @@ export function demotionForChange(
 }
 
 export function isSevereChange(
-  change: Pick<DealChange, "change_type" | "vendor" | "summary">,
+  change: Pick<DealChange, "change_type" | "vendor" | "summary"> & { resolution?: DealChange["resolution"] },
 ): boolean {
   return VOLATILE_TYPES.has(change.change_type) && demotionForChange(change) !== null;
 }
@@ -322,10 +324,11 @@ const POSITIVE_STABILITY_TYPES = POSITIVE_CHANGE_TYPES;
 export function classifyStability(vendorChanges: DealChange[], nowMs: number = Date.now()): StabilityClass {
   if (vendorChanges.length === 0) return "stable";
 
-  const hasVolatile = vendorChanges.some(isSevereChange);
-  const negativeCount = vendorChanges.filter(c => NEGATIVE_STABILITY_TYPES.has(c.change_type)).length;
-  const positiveCount = vendorChanges.filter(c => POSITIVE_STABILITY_TYPES.has(c.change_type)).length;
-  const riskScaleActs = vendorChanges.some(c => demotionInForce(c, nowMs) !== null);
+  const stillInForce = vendorChanges.filter((c) => !isNoLongerInForce(c));
+  const hasVolatile = stillInForce.some(isSevereChange);
+  const negativeCount = stillInForce.filter(c => NEGATIVE_STABILITY_TYPES.has(c.change_type)).length;
+  const positiveCount = stillInForce.filter(c => POSITIVE_STABILITY_TYPES.has(c.change_type)).length;
+  const riskScaleActs = stillInForce.some(c => demotionInForce(c, nowMs) !== null);
 
   if (hasVolatile || (negativeCount >= 2 && riskScaleActs)) return "volatile";
 
@@ -418,7 +421,7 @@ export function enrichOffers(offers: Offer[]): EnrichedOffer[] {
         ? null
         : assessment.level;
     const risk_cause = assessment.cause
-      ? { date: assessment.cause.date, date_source: assessment.cause.date_source, change_type: assessment.cause.change_type, summary: assessment.cause.summary }
+      ? riskCauseOf(assessment.cause)
       : null;
 
     const stability = withheldStability(
@@ -481,7 +484,7 @@ export function loadDealChanges(): DealChange[] {
     return cachedChanges;
   }
 
-  cachedChanges = data.changes;
+  cachedChanges = data.changes.map(withResolutionInSummary);
   return cachedChanges;
 }
 
@@ -747,7 +750,7 @@ export function verdictHasLapsed(
 }
 
 export function demotionInForce(
-  change: Pick<DealChange, "change_type" | "vendor" | "summary" | "date">,
+  change: Pick<DealChange, "change_type" | "vendor" | "summary" | "date"> & { resolution?: DealChange["resolution"] },
   nowMs: number = Date.now(),
 ): "risky" | "caution" | null {
   return verdictHasLapsed(change, nowMs) ? null : demotionForChange(change);
@@ -774,6 +777,18 @@ export function vendorRiskAssessment(vendorChanges: DealChange[], nowMs: number 
   }
 
   return best ? { level: best.level, cause: best.cause } : { level: "stable", cause: null };
+}
+
+export function riskCauseOf(cause: DealChange | null | undefined): RiskCause | null {
+  if (!cause) return null;
+  return {
+    date: cause.date,
+    date_source: cause.date_source,
+    change_type: cause.change_type,
+    summary: cause.summary,
+    current_state: cause.current_state,
+    resolution: cause.resolution ?? null,
+  };
 }
 
 export function vendorRiskLevel(vendorChanges: DealChange[]): "stable" | "caution" | "risky" {
@@ -829,7 +844,7 @@ export function checkVendorRisk(
       const altGate = gateForOffer(e.offer);
       return {
         risk_level: altGate || (cannotVouchForLevel(e.offer, unreachable) && a.level === "stable") ? null : a.level,
-        risk_cause: a.cause ? { date: a.cause.date, date_source: a.cause.date_source, change_type: a.cause.change_type, summary: a.cause.summary } : null,
+        risk_cause: riskCauseOf(a.cause),
         link_unreachable: unreachable,
         gate: altGate,
       };
@@ -869,7 +884,7 @@ export function checkVendorRisk(
       vendor_match: matchNotice,
       category: offer.category,
       risk_level: gate || (cannotVouchForLevel(offer, linkUnreachable) && riskLevel === "stable") ? null : riskLevel,
-      risk_cause: cause ? { date: cause.date, date_source: cause.date_source, change_type: cause.change_type, summary: cause.summary } : null,
+      risk_cause: riskCauseOf(cause),
       link_unreachable: linkUnreachable,
       source_check: offer.source_check ?? null,
       gate,

@@ -380,7 +380,7 @@ export const openapiSpec = {
                     category: { type: "string" },
                     risk_level: { type: "string", enum: ["stable", "caution", "risky"], nullable: true, description: "Null where the offer's own link is confirmed unreachable (#1046) — we withhold the level rather than publish a favourable one we cannot check. Also null where gate is non-null (#1241): an offer we have decided not to list is not one we rate." },
                     link_unreachable: { type: "object", nullable: true, description: "Non-null only where a check reached a conclusion about the destination: a 404 confirmed by a full request, a 410, or a hostname with no address. Being refused (403, 429, 5xx, timeout) is evidence about our checker and never produces one of these.", properties: { last_reachable: { type: "string", format: "date", nullable: true }, checked: { type: "string", format: "date" }, terminal: { type: "boolean" } } },
-                    risk_cause: { type: "object", nullable: true, description: "The single dated record that produced a non-stable risk_level. Never null when risk_level is caution or risky (#1038) — a client that renders the level must be able to render the reason.", properties: { date: { type: "string" }, change_type: { type: "string" }, summary: { type: "string" } } },
+                    risk_cause: { type: "object", nullable: true, description: "The single dated record that produced a non-stable risk_level. Never null when risk_level is caution or risky (#1038) — a client that renders the level must be able to render the reason.", properties: { date: { type: "string" }, change_type: { type: "string" }, summary: { type: "string" }, current_state: { type: "string" }, resolution: { $ref: "#/components/schemas/ChangeResolution" } } },
                     gate: { $ref: "#/components/schemas/Gate" },
                     source_check: { $ref: "#/components/schemas/SourceCheck" },
                     free_tier_longevity_days: { type: "number", nullable: true, description: "Null where the gate code is offer_retired or not_a_free_offer (#1241) — a count of days a free tier has held has no referent where our own record says there is no free tier." },
@@ -396,7 +396,7 @@ export const openapiSpec = {
                           risk_level: { type: "string", enum: ["stable", "caution", "risky"], nullable: true, description: "Null where this alternative's own link is confirmed unreachable (#1046), and null where its gate is non-null (#1241) — rankForListing demotes a gated record to the tail rather than dropping it, so an alternative can be one we do not list." },
                           link_unreachable: { type: "object", nullable: true, properties: { last_reachable: { type: "string", format: "date", nullable: true }, checked: { type: "string", format: "date" }, terminal: { type: "boolean" } } },
                           gate: { $ref: "#/components/schemas/Gate" },
-                          risk_cause: { type: "object", nullable: true, description: "The single dated record that produced a non-stable risk_level. Never null when risk_level is caution or risky (#1038) — a client that renders the level must be able to render the reason.", properties: { date: { type: "string" }, change_type: { type: "string" }, summary: { type: "string" } } }
+                          risk_cause: { type: "object", nullable: true, description: "The single dated record that produced a non-stable risk_level. Never null when risk_level is caution or risky (#1038) — a client that renders the level must be able to render the reason.", properties: { date: { type: "string" }, change_type: { type: "string" }, summary: { type: "string" }, current_state: { type: "string" }, resolution: { $ref: "#/components/schemas/ChangeResolution" } } }
                         }
                       }
                     },
@@ -1015,9 +1015,23 @@ export const openapiSpec = {
           impact: { type: "string", enum: ["high", "medium", "low"] },
           source_url: { type: "string", format: "uri" },
           category: { type: "string" },
-          alternatives: { type: "array", items: { type: "string" } }
+          alternatives: { type: "array", items: { type: "string" } },
+          resolution: { $ref: "#/components/schemas/ChangeResolution" }
         },
         required: ["vendor", "change_type", "date", "summary", "previous_state", "current_state", "impact", "source_url", "category", "alternatives"]
+      },
+      ChangeResolution: {
+        type: "object",
+        nullable: true,
+        description: "Present when the change this record describes is no longer in force. state is 'reversed' when the vendor ended it and 'retracted' when the record was our error. date is the day from which it stopped being in force, or the day we established that, whichever we can source. resolved_by names the change record that ended it, when one exists. A record carrying this field never rates the vendor.",
+        properties: {
+          state: { type: "string", enum: ["reversed", "retracted"] },
+          date: { type: "string", format: "date" },
+          detail: { type: "string" },
+          source_url: { type: "string", format: "uri" },
+          resolved_by: { type: "object", properties: { vendor: { type: "string" }, date: { type: "string", format: "date" }, change_type: { type: "string" } } }
+        },
+        required: ["state", "date"]
       }
     }
   }

@@ -23,6 +23,7 @@ import { stabilityFaqAnswer, stabilityVerdictClause, type ComparisonSide, type S
 import { publishedVendorLevel, vendorVerdictSentence, vendorBadge, statesRiskCause, narrowingSentence, changeKindNoun, type VendorVerdictInput } from "./vendor-verdict.js";
 import { vendorHistorySentence } from "./vendor-history.js";
 import { changeTimelineDate, supersededLineups, supersessionNote } from "./change-lineup.js";
+import { isNoLongerInForce } from "./change-resolution.js";
 import { growthLimitPhrases } from "./growth-limits.js";
 import { registerAgent, authenticateRequest, validateVestauthUrl, hashApiKey, updateAgentX402Address, getAgentById } from "./agents.js";
 import { attributeAuthenticatedRequest } from "./referral-attribution.js";
@@ -3903,7 +3904,7 @@ ${enrichedAlts.map(a => {
   const changesHtml = vendorChanges.length > 0 ? vendorChanges.map(c => {
     const badge = changeTypeBadge[c.change_type] ?? { label: c.change_type, color: "#8b949e" };
     const anchor = `${toSlug(c.vendor)}-${c.date}`;
-    return `<div class="change-item">
+    return `<div class="change-item${isNoLongerInForce(c) ? " change-resolved" : ""}">
         <div class="change-head">
           <span class="badge" style="background:${badge.color}">${badge.label}</span>
           <span class="change-date"><a href="/pricing-changes#${anchor}" style="color:var(--text-dim);text-decoration:none">${changeDateLabel(c)}</a></span>
@@ -4270,6 +4271,7 @@ h1 .risk-badge{font-size:.75rem;font-weight:600;padding:.2rem .6rem;border-radiu
 .change-summary{font-size:.85rem;color:var(--text-muted)}
 .change-detail{font-size:.8rem;color:var(--text-dim);margin-top:.25rem}
 .state-label{font-family:var(--mono);font-size:.7rem;color:var(--text-dim)}
+.change-resolved{opacity:.6;border-left-style:dashed}
 .no-changes{color:var(--text-dim);font-size:.9rem;font-style:italic}
 ${auditBlockCss()}
 .alt-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:.5rem}
@@ -26913,7 +26915,7 @@ function buildAiCodingPricing2026Page(): string {
     const historyNote = newest
       ? `<div class="superseded-note">${escHtmlServer(supersessionNote(newest, changeTimelineDate))}</div>`
       : "";
-    return `<tr${newest ? ` class="superseded-row"` : ""}>
+    return `<tr${newest || isNoLongerInForce(c) ? ` class="superseded-row"` : ""}>
       <td style="font-family:var(--mono);font-size:.8rem;white-space:nowrap">${escHtmlServer(dateStr)}</td>
       <td style="font-weight:600">${escHtmlServer(c.vendor)}</td>
       <td style="font-size:.85rem">${escHtmlServer(c.summary)}${historyNote}</td>
@@ -27528,7 +27530,7 @@ function buildAiCodingToolsPricingPage(): string {
     const historyNote = newest
       ? '<div class="superseded-note">' + escHtmlServer(supersessionNote(newest, changeTimelineDate)) + '</div>'
       : "";
-    return '<tr' + (newest ? ' class="superseded-row"' : "") + '>' +
+    return '<tr' + (newest || isNoLongerInForce(c) ? ' class="superseded-row"' : "") + '>' +
       '<td style="font-family:var(--mono);font-size:.8rem;white-space:nowrap">' + escHtmlServer(dateStr) + '</td>' +
       '<td style="font-weight:600">' + escHtmlServer(c.vendor) + '</td>' +
       '<td style="font-size:.85rem">' + escHtmlServer(c.summary) + historyNote + '</td>' +
@@ -48786,7 +48788,7 @@ function buildPricingChangesPage(): string {
       : "";
     const vendorCat = (c.category || "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
     const changeYear = dated ? c.date.slice(0, 4) : "";
-    return `      <div class="pc-entry${isUpcoming ? " pc-upcoming" : ""}${dated ? "" : " pc-undated"}" id="${changeAnchor(c)}" data-type="${escHtmlServer(c.change_type)}" data-impact="${escHtmlServer(c.impact)}" data-category="${category}" data-vendor-cat="${vendorCat}" data-year="${changeYear}">
+    return `      <div class="pc-entry${isUpcoming ? " pc-upcoming" : ""}${dated ? "" : " pc-undated"}${isNoLongerInForce(c) ? " pc-resolved" : ""}" id="${changeAnchor(c)}" data-type="${escHtmlServer(c.change_type)}" data-impact="${escHtmlServer(c.impact)}" data-category="${category}" data-vendor-cat="${vendorCat}" data-year="${changeYear}">
         <div class="pc-left">
           <div class="pc-date">${dated ? c.date : `${DISCOVERED_DATE_PREFIX} ${c.date}`}</div>
           ${isUpcoming ? `<div class="pc-upcoming-badge">upcoming</div>` : ""}
@@ -49030,6 +49032,7 @@ h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5
 .month-group{margin-bottom:2rem}
 .month-heading{font-family:var(--serif);font-size:1.15rem;color:var(--text);margin-bottom:.75rem;padding-bottom:.5rem;border-bottom:1px solid var(--border)}
 .pc-entry{display:flex;gap:1rem;padding:.75rem;margin-bottom:.5rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);transition:border-color .2s,background .2s}
+.pc-resolved{opacity:.6;border-style:dashed}
 .pc-entry:hover{border-color:var(--accent)}
 .pc-entry:target{border-color:var(--accent);background:var(--accent-glow)}
 .pc-upcoming{border-color:rgba(88,166,255,0.3)}
