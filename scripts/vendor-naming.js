@@ -1,3 +1,5 @@
+import { priceLabel, structuredDetail, unrenderedPrices } from "./structured-prices.js";
+
 const NAME_QUALIFIERS = new Set([
   "cloud", "ci", "cd", "api", "apis", "ai", "app", "apps", "platform", "hosting",
   "storage", "object", "free", "inc", "ltd", "llc", "labs", "software", "services",
@@ -164,6 +166,13 @@ export function pageNamesVendor(pageText, vendor, options = {}) {
   return result(false, null, null);
 }
 
+export const READ_FROM_MARKUP = "markup";
+
+function markupClause(structured) {
+  const detail = structuredDetail(structured);
+  return detail ? `, and ${detail}` : "";
+}
+
 export function classifySource(offer, page, signals) {
   if (!page || !page.ok) {
     return { outcome: SOURCE_CHECK_UNREADABLE, detail: page?.error ?? "not fetched" };
@@ -175,23 +184,41 @@ export function classifySource(offer, page, signals) {
       detail: `the page never names ${offer.vendor} and is not served from its domain`,
     };
   }
+  const structured = page.structured ?? null;
   const found = Array.isArray(signals) ? signals : [];
+  const rendersAnAmount = found.some(statesAnAmount);
+  if (!rendersAnAmount && structured && structured.prices.length > 0) {
+    const rendered = found.length === 0 ? "renders no terms we can read" : `renders "${found[0]}" and no amount`;
+    return {
+      outcome: SOURCE_CHECK_OK,
+      detail: `the page names ${offer.vendor}, ${rendered}, and ${structuredDetail(structured)}`,
+      read: READ_FROM_MARKUP,
+    };
+  }
   if (found.length === 0) {
     return {
       outcome: SOURCE_CHECK_NO_TERMS,
-      detail: `the page names ${offer.vendor} but states no amount, tier or rate we can read`,
+      detail: `the page names ${offer.vendor} but states no amount, tier or rate we can read${markupClause(structured)}`,
     };
   }
-  if (!found.some(statesAnAmount)) {
+  if (!rendersAnAmount) {
     return {
       outcome: SOURCE_CHECK_NO_AMOUNT,
-      detail: `the page names ${offer.vendor} and says "${found[0]}" but states no amount, rate or price we can read`,
+      detail: `the page names ${offer.vendor} and says "${found[0]}" but states no amount, rate or price we can read${markupClause(structured)}`,
     };
   }
   return { outcome: SOURCE_CHECK_OK, detail: naming.via };
 }
 
+export const MAX_UNRENDERED_PRICES_RECORDED = 6;
+
 export function sourceCheckRecord(offer, page, signals, checked) {
-  const { outcome, detail } = classifySource(offer, page, signals);
-  return { checked, outcome, detail };
+  const { outcome, detail, read } = classifySource(offer, page, signals);
+  const record = { checked, outcome, detail };
+  if (read) record.read = read;
+  const unrendered = page?.ok ? unrenderedPrices(page.structured, page.text) : [];
+  if (unrendered.length > 0) {
+    record.unrendered_prices = unrendered.slice(0, MAX_UNRENDERED_PRICES_RECORDED).map(priceLabel);
+  }
+  return record;
 }

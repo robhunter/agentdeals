@@ -89,6 +89,8 @@ export interface SourceCheck {
   checked: string;
   outcome: SourceCheckOutcome;
   detail: string;
+  read?: "markup";
+  unrendered_prices?: string[];
 }
 
 export type StabilityClass = "stable" | "watch" | "volatile" | "improving";

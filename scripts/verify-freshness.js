@@ -4,6 +4,7 @@ import { readFileSync, writeFileSync } from "node:fs";
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { CHANGE_TYPES } from "./change-log.js";
+import { readStructuredPrices } from "./structured-prices.js";
 
 const CHANGE_TYPE_VALUES = CHANGE_TYPES.join(", ");
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -66,7 +67,9 @@ export function pageTooLargeError(bytes) {
 export function withMinimumLength(page, floor = MIN_PAGE_TEXT_LENGTH) {
   if (!page.ok) return page;
   if (page.text.length < floor) {
-    return { ok: false, error: PAGE_TOO_SHORT_ERROR, chars: page.text.length };
+    const short = { ok: false, error: PAGE_TOO_SHORT_ERROR, chars: page.text.length };
+    if (page.structured) short.structured = page.structured;
+    return short;
   }
   return page;
 }
@@ -128,6 +131,7 @@ export async function fetchPageText(url, options = {}) {
     return withMinimumLength({
       ok: true,
       text,
+      structured: readStructuredPrices(body.html),
       truncated: false,
       finalUrl: res.url || url,
     });

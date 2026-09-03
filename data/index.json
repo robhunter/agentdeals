@@ -749,9 +749,12 @@
         "notes": "Referee must run M10+ cluster for 30+ days. Not valid for existing MongoDB users."
       },
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-03",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "text",
+        "unrendered_prices": [
+          "Dedicated Clusters USD 57"
+        ]
       },
       "product_subtypes": {
         "taxonomy": "Databases",
@@ -813,9 +816,14 @@
       ],
       "verifiedDate": "2026-08-11",
       "source_check": {
-        "checked": "2026-09-01",
+        "checked": "2026-09-03",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "text",
+        "unrendered_prices": [
+          "Developer USD 5.99",
+          "Scaler USD 29",
+          "Pro USD 499"
+        ]
       },
       "product_subtypes": {
         "taxonomy": "Databases",
@@ -1361,9 +1369,14 @@
         "notes": "No affiliate/referral program for Sentry.io error monitoring. Sponsored account program available for open source."
       },
       "source_check": {
-        "checked": "2026-09-01",
+        "checked": "2026-09-03",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "text",
+        "unrendered_prices": [
+          "Business Annual Subscription USD 960.00",
+          "Business Monthly Subscription USD 89",
+          "Team Monthly Subscription USD 29"
+        ]
       },
       "product_subtypes": {
         "taxonomy": "Monitoring",
@@ -1900,9 +1913,17 @@
         "commission_type": "one-time"
       },
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-03",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "text",
+        "unrendered_prices": [
+          "Starter USD 9",
+          "Standard USD 18",
+          "Professional USD 499",
+          "Starter USD 96.96",
+          "Standard USD 194.04",
+          "Professional USD 5388.96"
+        ]
       }
     },
     {
@@ -2242,9 +2263,12 @@
       ],
       "verifiedDate": "2026-07-24",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-03",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "text",
+        "unrendered_prices": [
+          "Monthly Active Users USD 0.05"
+        ]
       }
     },
     {
@@ -2346,9 +2370,13 @@
         "notes": "No referral or affiliate program. Community has requested it but not available."
       },
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-03",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "text",
+        "unrendered_prices": [
+          "Pro+ USD 60",
+          "Ultra USD 200"
+        ]
       }
     },
     {
@@ -2647,9 +2675,10 @@
       ],
       "verifiedDate": "2026-07-24",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_amount",
-        "detail": "the page names Harness Feature Flags and says \"free tier\" but states no amount, rate or price we can read"
+        "checked": "2026-09-03",
+        "outcome": "ok",
+        "detail": "the page names Harness Feature Flags, renders \"free tier\" and no amount, and its markup states 1 typed price (Free Plan USD 0)",
+        "read": "markup"
       }
     },
     {
@@ -4417,9 +4446,10 @@
         "reviewed": "2026-08-25"
       },
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names MinIO but states no amount, tier or rate we can read"
+        "checked": "2026-09-03",
+        "outcome": "ok",
+        "detail": "the page names MinIO, renders no terms we can read, and its markup states 1 typed price (AIStor Free USD 0)",
+        "read": "markup"
       }
     },
     {
@@ -5505,9 +5535,15 @@
       ],
       "verifiedDate": "2026-08-26",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_amount",
-        "detail": "the page names Crowdin and says \"Team plan\" but states no amount, rate or price we can read"
+        "checked": "2026-09-03",
+        "outcome": "ok",
+        "detail": "the page names Crowdin, renders \"Team plan\" and no amount, and its markup states 4 typed prices (Free Plan USD 0.00, Pro USD 50.00, Team USD 150.00, +1 more)",
+        "read": "markup",
+        "unrendered_prices": [
+          "Pro USD 50.00",
+          "Team USD 150.00",
+          "Team+ USD 450.00"
+        ]
       }
     },
     {
@@ -5670,9 +5706,13 @@
       ],
       "verifiedDate": "2026-07-27",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-03",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "text",
+        "unrendered_prices": [
+          "Pro USD 100",
+          "Scale USD 500"
+        ]
       }
     },
     {
@@ -5881,9 +5921,10 @@
       ],
       "verifiedDate": "2026-07-27",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_amount",
-        "detail": "the page names JotForm and says \"Enterprise plan\" but states no amount, rate or price we can read"
+        "checked": "2026-09-03",
+        "outcome": "ok",
+        "detail": "the page names JotForm, renders \"Enterprise plan\" and no amount, and its markup states 1 typed price (USD 0.00)",
+        "read": "markup"
       }
     },
     {
@@ -5919,9 +5960,13 @@
       ],
       "verifiedDate": "2026-08-21",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-03",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "text",
+        "unrendered_prices": [
+          "IPinfo Core USD 31",
+          "IPinfo Max USD 196"
+        ]
       }
     },
     {
@@ -5938,9 +5983,10 @@
       ],
       "verifiedDate": "2026-07-26",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names Meilisearch but states no amount, tier or rate we can read"
+        "checked": "2026-09-03",
+        "outcome": "ok",
+        "detail": "the page names Meilisearch, renders no terms we can read, and its markup states 1 typed price (USD 0)",
+        "read": "markup"
       }
     },
     {
@@ -7162,9 +7208,12 @@
       ],
       "verifiedDate": "2026-08-28",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-03",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "text",
+        "unrendered_prices": [
+          "Hobbyist (annual) USD 96"
+        ]
       }
     },
     {
@@ -7681,9 +7730,12 @@
       ],
       "verifiedDate": "2026-07-05",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-03",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "text",
+        "unrendered_prices": [
+          "USD 69.00"
+        ]
       },
       "product_subtypes": {
         "taxonomy": "Monitoring",
@@ -7841,9 +7893,13 @@
       ],
       "verifiedDate": "2026-08-23",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-03",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "text",
+        "unrendered_prices": [
+          "Growth Annual USD 499.99",
+          "Professional Annual USD 999.99"
+        ]
       }
     },
     {
@@ -9246,9 +9302,10 @@
       ],
       "verifiedDate": "2026-07-05",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_amount",
-        "detail": "the page names Harness CI and says \"free tier\" but states no amount, rate or price we can read"
+        "checked": "2026-09-03",
+        "outcome": "ok",
+        "detail": "the page names Harness CI, renders \"free tier\" and no amount, and its markup states 1 typed price (Free Plan USD 0)",
+        "read": "markup"
       }
     },
     {
@@ -9418,9 +9475,14 @@
       ],
       "verifiedDate": "2026-08-26",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_amount",
-        "detail": "the page names Zoho Notebook and says \"free plan\" but states no amount, rate or price we can read"
+        "checked": "2026-09-03",
+        "outcome": "ok",
+        "detail": "the page names Zoho Notebook, renders \"free plan\" and no amount, and its markup states 3 typed prices (Notebook Essential INR 0, Notebook Pro INR 83.25, Notebook for Business INR 333.25)",
+        "read": "markup",
+        "unrendered_prices": [
+          "Notebook Pro INR 83.25",
+          "Notebook for Business INR 333.25"
+        ]
       }
     },
     {
@@ -9558,9 +9620,10 @@
       ],
       "verifiedDate": "2026-08-01",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_amount",
-        "detail": "the page names Zoho Survey and says \"free version\" but states no amount, rate or price we can read"
+        "checked": "2026-09-03",
+        "outcome": "ok",
+        "detail": "the page names Zoho Survey, renders \"free version\" and no amount, and its markup states 1 typed price (INR 0)",
+        "read": "markup"
       }
     },
     {
@@ -9576,9 +9639,10 @@
       ],
       "verifiedDate": "2026-07-30",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_amount",
-        "detail": "the page names Zoho Bookings and says \"free plan\" but states no amount, rate or price we can read"
+        "checked": "2026-09-03",
+        "outcome": "ok",
+        "detail": "the page names Zoho Bookings, renders \"free plan\" and no amount, and its markup states 1 typed price (Free plan up to 1 service USD 0)",
+        "read": "markup"
       }
     },
     {
@@ -9616,9 +9680,10 @@
       ],
       "verifiedDate": "2026-08-01",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_amount",
-        "detail": "the page names Brainboard and says \"free tier\" but states no amount, rate or price we can read"
+        "checked": "2026-09-03",
+        "outcome": "ok",
+        "detail": "the page names Brainboard, renders \"free tier\" and no amount, and its markup states 1 typed price (USD 0)",
+        "read": "markup"
       }
     },
     {
@@ -9654,9 +9719,10 @@
       ],
       "verifiedDate": "2026-08-02",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names deployment.io but states no amount, tier or rate we can read"
+        "checked": "2026-09-03",
+        "outcome": "ok",
+        "detail": "the page names deployment.io, renders no terms we can read, and its markup states 1 typed price (USD 0)",
+        "read": "markup"
       }
     },
     {
@@ -9950,9 +10016,13 @@
       ],
       "verifiedDate": "2026-07-30",
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-03",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "text",
+        "unrendered_prices": [
+          "Personal Plan USD 19",
+          "Professional Plan USD 69"
+        ]
       }
     },
     {
@@ -10242,9 +10312,10 @@
       ],
       "verifiedDate": "2026-08-03",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names Data Fetcher but states no amount, tier or rate we can read"
+        "checked": "2026-09-03",
+        "outcome": "ok",
+        "detail": "the page names Data Fetcher, renders no terms we can read, and its markup states 1 typed price (Free USD 0)",
+        "read": "markup"
       }
     },
     {
@@ -10276,9 +10347,10 @@
       ],
       "verifiedDate": "2026-08-22",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names Dataimporter.io but states no amount, tier or rate we can read"
+        "checked": "2026-09-03",
+        "outcome": "ok",
+        "detail": "the page names Dataimporter.io, renders no terms we can read, and its markup states 1 typed price (USD 0)",
+        "read": "markup"
       }
     },
     {
@@ -10502,9 +10574,10 @@
       ],
       "verifiedDate": "2026-08-02",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names ExtendsClass but states no amount, tier or rate we can read"
+        "checked": "2026-09-03",
+        "outcome": "ok",
+        "detail": "the page names ExtendsClass, renders no terms we can read, and its markup states 1 typed price (0)",
+        "read": "markup"
       }
     },
     {
@@ -10536,9 +10609,10 @@
       ],
       "verifiedDate": "2026-07-08",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names FormatJSONOnline.com but states no amount, tier or rate we can read"
+        "checked": "2026-09-03",
+        "outcome": "ok",
+        "detail": "the page names FormatJSONOnline.com, renders no terms we can read, and its markup states 1 typed price (USD 0)",
+        "read": "markup"
       }
     },
     {
@@ -11078,9 +11152,10 @@
       ],
       "verifiedDate": "2026-08-27",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_amount",
-        "detail": "the page names Mockfly and says \"free plan\" but states no amount, rate or price we can read"
+        "checked": "2026-09-03",
+        "outcome": "ok",
+        "detail": "the page names Mockfly, renders \"free plan\" and no amount, and its markup states 1 typed price (USD 0)",
+        "read": "markup"
       }
     },
     {
@@ -11335,9 +11410,10 @@
       ],
       "verifiedDate": "2026-08-02",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_amount",
-        "detail": "the page names PrefectCloud and says \"Hobby tier\" but states no amount, rate or price we can read"
+        "checked": "2026-09-03",
+        "outcome": "ok",
+        "detail": "the page names PrefectCloud, renders \"Hobby tier\" and no amount, and its markup states 3 typed prices (Hobby USD 0, Starter USD 100, Team USD 100)",
+        "read": "markup"
       }
     },
     {
@@ -11352,9 +11428,10 @@
       ],
       "verifiedDate": "2026-08-04",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names Preset Cloud but states no amount, tier or rate we can read"
+        "checked": "2026-09-03",
+        "outcome": "ok",
+        "detail": "the page names Preset Cloud, renders no terms we can read, and its markup states 1 typed price (Starter Plan USD 0)",
+        "read": "markup"
       }
     },
     {
@@ -11395,9 +11472,10 @@
         }
       ],
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_amount",
-        "detail": "the page names Reducto and says \"Standard tier\" but states no amount, rate or price we can read"
+        "checked": "2026-09-03",
+        "outcome": "ok",
+        "detail": "the page names Reducto, renders \"Standard tier\" and no amount, and its markup states 1 typed price (USD 0)",
+        "read": "markup"
       },
       "product_subtypes": {
         "taxonomy": "AI / ML",
@@ -12190,9 +12268,10 @@
       ],
       "verifiedDate": "2026-07-09",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names Fibo but states no amount, tier or rate we can read"
+        "checked": "2026-09-03",
+        "outcome": "ok",
+        "detail": "the page names Fibo, renders no terms we can read, and its markup states 1 typed price (EUR 0)",
+        "read": "markup"
       }
     },
     {
@@ -12762,9 +12841,10 @@
       ],
       "verifiedDate": "2026-08-04",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_amount",
-        "detail": "the page names Tencent RTC and says \"Starter Plan\" but states no amount, rate or price we can read"
+        "checked": "2026-09-03",
+        "outcome": "ok",
+        "detail": "the page names Tencent RTC, renders \"Starter Plan\" and no amount, and its markup states 1 typed price (USD 0)",
+        "read": "markup"
       }
     },
     {
@@ -13053,9 +13133,10 @@
       ],
       "verifiedDate": "2026-08-14",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_amount",
-        "detail": "the page names Cosmic and says \"Free forever\" but states no amount, rate or price we can read"
+        "checked": "2026-09-03",
+        "outcome": "ok",
+        "detail": "the page names Cosmic, renders \"Free forever\" and no amount, and its markup states 1 typed price (USD 0)",
+        "read": "markup"
       }
     },
     {
@@ -13110,9 +13191,10 @@
       ],
       "verifiedDate": "2026-08-02",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names Prismic but states no amount, tier or rate we can read"
+        "checked": "2026-09-03",
+        "outcome": "ok",
+        "detail": "the page names Prismic, renders no terms we can read, and its markup states 1 typed price (0)",
+        "read": "markup"
       }
     },
     {
@@ -13341,9 +13423,10 @@
       ],
       "verifiedDate": "2026-08-13",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names codacy.com but states no amount, tier or rate we can read"
+        "checked": "2026-09-03",
+        "outcome": "ok",
+        "detail": "the page names codacy.com, renders no terms we can read, and its markup states 1 typed price (USD 0)",
+        "read": "markup"
       }
     },
     {
@@ -13753,9 +13836,10 @@
       ],
       "verifiedDate": "2026-07-10",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names bytebase.com but states no amount, tier or rate we can read"
+        "checked": "2026-09-03",
+        "outcome": "ok",
+        "detail": "the page names bytebase.com, renders no terms we can read, and its markup states 1 typed price (USD 0)",
+        "read": "markup"
       }
     },
     {
@@ -13810,9 +13894,17 @@
       ],
       "verifiedDate": "2026-07-09",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-03",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "text",
+        "unrendered_prices": [
+          "USD 21",
+          "EUR 21",
+          "GBP 21",
+          "USD 43",
+          "EUR 43",
+          "GBP 43"
+        ]
       }
     },
     {
@@ -13829,9 +13921,10 @@
       ],
       "verifiedDate": "2026-07-08",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_amount",
-        "detail": "the page names LocalOps and says \"Free tier\" but states no amount, rate or price we can read"
+        "checked": "2026-09-03",
+        "outcome": "ok",
+        "detail": "the page names LocalOps, renders \"Free tier\" and no amount, and its markup states 1 typed price (USD 0)",
+        "read": "markup"
       }
     },
     {
@@ -13905,9 +13998,10 @@
       ],
       "verifiedDate": "2026-07-10",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names Shipfox but states no amount, tier or rate we can read"
+        "checked": "2026-09-03",
+        "outcome": "ok",
+        "detail": "the page names Shipfox, renders no terms we can read, and its markup states 1 typed price (USD 0)",
+        "read": "markup"
       }
     },
     {
@@ -14169,9 +14263,10 @@
       ],
       "verifiedDate": "2026-08-05",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names loadmill.com but states no amount, tier or rate we can read"
+        "checked": "2026-09-03",
+        "outcome": "ok",
+        "detail": "the page names loadmill.com, renders no terms we can read, and its markup states 1 typed price (USD 0)",
+        "read": "markup"
       }
     },
     {
@@ -14814,9 +14909,10 @@
       ],
       "verifiedDate": "2026-07-11",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names 360username but states no amount, tier or rate we can read"
+        "checked": "2026-09-03",
+        "outcome": "ok",
+        "detail": "the page names 360username, renders no terms we can read, and its markup states 1 typed price (USD 0)",
+        "read": "markup"
       }
     },
     {
@@ -14947,9 +15043,10 @@
       ],
       "verifiedDate": "2026-07-07",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names Cloud-IAM but states no amount, tier or rate we can read"
+        "checked": "2026-09-03",
+        "outcome": "ok",
+        "detail": "the page names Cloud-IAM, renders no terms we can read, and its markup states 1 typed price (EUR 0)",
+        "read": "markup"
       }
     },
     {
@@ -15176,9 +15273,10 @@
       ],
       "verifiedDate": "2026-08-04",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names Diawi but states no amount, tier or rate we can read"
+        "checked": "2026-09-03",
+        "outcome": "ok",
+        "detail": "the page names Diawi, renders no terms we can read, and its markup states 1 typed price (USD 0)",
+        "read": "markup"
       }
     },
     {
@@ -15507,9 +15605,13 @@
       ],
       "verifiedDate": "2026-08-30",
       "source_check": {
-        "checked": "2026-09-01",
+        "checked": "2026-09-03",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "text",
+        "unrendered_prices": [
+          "Medium USD 12",
+          "Large USD 25"
+        ]
       }
     },
     {
@@ -15561,9 +15663,10 @@
       ],
       "verifiedDate": "2026-08-08",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names SMSGate but states no amount, tier or rate we can read"
+        "checked": "2026-09-03",
+        "outcome": "ok",
+        "detail": "the page names SMSGate, renders no terms we can read, and its markup states 1 typed price (USD 0)",
+        "read": "markup"
       }
     },
     {
@@ -15912,9 +16015,13 @@
       ],
       "verifiedDate": "2026-08-27",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-03",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "text",
+        "unrendered_prices": [
+          "Business Plan EUR 99.00",
+          "Team Plan EUR 35.00"
+        ]
       }
     },
     {
@@ -16010,9 +16117,13 @@
       ],
       "verifiedDate": "2026-07-11",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_amount",
-        "detail": "the page names bleemeo.com and says \"enterprise tier\" but states no amount, rate or price we can read"
+        "checked": "2026-09-03",
+        "outcome": "ok",
+        "detail": "the page names bleemeo.com, renders \"enterprise tier\" and no amount, and its markup states 1 typed price (EUR 10.99)",
+        "read": "markup",
+        "unrendered_prices": [
+          "EUR 10.99"
+        ]
       },
       "product_subtypes": {
         "taxonomy": "Monitoring",
@@ -16125,9 +16236,10 @@
       ],
       "verifiedDate": "2026-07-12",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names economize.cloud but states no amount, tier or rate we can read"
+        "checked": "2026-09-03",
+        "outcome": "ok",
+        "detail": "the page names economize.cloud, renders no terms we can read, and its markup states 1 typed price (USD 0)",
+        "read": "markup"
       },
       "product_subtypes": {
         "taxonomy": "Monitoring",
@@ -16148,9 +16260,12 @@
       ],
       "verifiedDate": "2026-07-07",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-03",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "text",
+        "unrendered_prices": [
+          "Pro EUR 49"
+        ]
       },
       "product_subtypes": {
         "taxonomy": "Monitoring",
@@ -16382,9 +16497,12 @@
       ],
       "verifiedDate": "2026-07-12",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-03",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "text",
+        "unrendered_prices": [
+          "Ultimate USD 99"
+        ]
       },
       "product_subtypes": {
         "taxonomy": "Monitoring",
@@ -16875,9 +16993,10 @@
       ],
       "verifiedDate": "2026-07-11",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names Wachete but states no amount, tier or rate we can read"
+        "checked": "2026-09-03",
+        "outcome": "ok",
+        "detail": "the page names Wachete, renders no terms we can read, and its markup states 1 typed price (USD 0)",
+        "read": "markup"
       },
       "product_subtypes": {
         "taxonomy": "Monitoring",
@@ -17126,9 +17245,10 @@
       ],
       "verifiedDate": "2026-07-12",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names 10minutemail but states no amount, tier or rate we can read"
+        "checked": "2026-09-03",
+        "outcome": "ok",
+        "detail": "the page names 10minutemail, renders no terms we can read, and its markup states 1 typed price (USD 0)",
+        "read": "markup"
       }
     },
     {
@@ -17298,9 +17418,10 @@
       ],
       "verifiedDate": "2026-08-27",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_amount",
-        "detail": "the page names EmailJS and says \"free version\" but states no amount, rate or price we can read"
+        "checked": "2026-09-03",
+        "outcome": "ok",
+        "detail": "the page names EmailJS, renders \"free version\" and no amount, and its markup states 1 typed price (USD 0)",
+        "read": "markup"
       }
     },
     {
@@ -17366,9 +17487,10 @@
       ],
       "verifiedDate": "2026-07-12",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names EtherealMail but states no amount, tier or rate we can read"
+        "checked": "2026-09-03",
+        "outcome": "ok",
+        "detail": "the page names EtherealMail, renders no terms we can read, and its markup states 1 typed price (USD 0)",
+        "read": "markup"
       }
     },
     {
@@ -17774,9 +17896,10 @@
       ],
       "verifiedDate": "2026-07-12",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names temp-mail.io but states no amount, tier or rate we can read"
+        "checked": "2026-09-03",
+        "outcome": "ok",
+        "detail": "the page names temp-mail.io, renders no terms we can read, and its markup states 1 typed price (USD 0)",
+        "read": "markup"
       }
     },
     {
@@ -17982,9 +18105,10 @@
       ],
       "verifiedDate": "2026-08-06",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_amount",
-        "detail": "the page names FabForm and says \"premium plans\" but states no amount, rate or price we can read"
+        "checked": "2026-09-03",
+        "outcome": "ok",
+        "detail": "the page names FabForm, renders \"premium plans\" and no amount, and its markup states 1 typed price (USD 0)",
+        "read": "markup"
       }
     },
     {
@@ -18067,9 +18191,13 @@
       ],
       "verifiedDate": "2026-08-31",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_amount",
-        "detail": "the page names Formester.com and says \"Free Forever\" but states no amount, rate or price we can read"
+        "checked": "2026-09-03",
+        "outcome": "ok",
+        "detail": "the page names Formester.com, renders \"Free Forever\" and no amount, and its markup states 1 typed price (USD 13)",
+        "read": "markup",
+        "unrendered_prices": [
+          "USD 13"
+        ]
       }
     },
     {
@@ -18152,9 +18280,13 @@
       ],
       "verifiedDate": "2026-08-07",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names Formware.io but states no amount, tier or rate we can read"
+        "checked": "2026-09-03",
+        "outcome": "ok",
+        "detail": "the page names Formware.io, renders no terms we can read, and its markup states 2 typed prices (Free Plan USD 0, PRO Plan USD 29.99)",
+        "read": "markup",
+        "unrendered_prices": [
+          "PRO Plan USD 29.99"
+        ]
       }
     },
     {
@@ -18254,9 +18386,13 @@
       ],
       "verifiedDate": "2026-08-06",
       "source_check": {
-        "checked": "2026-09-01",
+        "checked": "2026-09-03",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "text",
+        "unrendered_prices": [
+          "Pro Plan USD 9",
+          "Agency Plan USD 19"
+        ]
       }
     },
     {
@@ -19231,9 +19367,10 @@
       ],
       "verifiedDate": "2026-07-17",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names Choreo but states no amount, tier or rate we can read"
+        "checked": "2026-09-03",
+        "outcome": "ok",
+        "detail": "the page names Choreo, renders no terms we can read, and its markup states 1 typed price (USD 0.00)",
+        "read": "markup"
       },
       "product_subtypes": {
         "taxonomy": "Cloud Hosting",
@@ -19399,9 +19536,10 @@
       ],
       "verifiedDate": "2026-07-15",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_amount",
-        "detail": "the page names gigalixir.com and says \"free tier\" but states no amount, rate or price we can read"
+        "checked": "2026-09-03",
+        "outcome": "ok",
+        "detail": "the page names gigalixir.com, renders \"free tier\" and no amount, and its markup states 1 typed price (USD 0)",
+        "read": "markup"
       },
       "product_subtypes": {
         "taxonomy": "Cloud Hosting",
@@ -19691,9 +19829,10 @@
       ],
       "verifiedDate": "2026-07-17",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names IFTTT but states no amount, tier or rate we can read"
+        "checked": "2026-09-03",
+        "outcome": "ok",
+        "detail": "the page names IFTTT, renders no terms we can read, and its markup states 1 typed price (USD 0)",
+        "read": "markup"
       },
       "product_subtypes": {
         "taxonomy": "Cloud Hosting",
@@ -19891,9 +20030,13 @@
       ],
       "verifiedDate": "2026-07-05",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-03",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "text",
+        "unrendered_prices": [
+          "Mendix Basic Plan USD 75.00",
+          "Mendix Standard Plan USD 998.00"
+        ]
       }
     },
     {
@@ -21075,9 +21218,10 @@
       ],
       "verifiedDate": "2026-07-16",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_amount",
-        "detail": "the page names StackBy and says \"Free Forever\" but states no amount, rate or price we can read"
+        "checked": "2026-09-03",
+        "outcome": "ok",
+        "detail": "the page names StackBy, renders \"Free Forever\" and no amount, and its markup states 1 typed price (USD 0)",
+        "read": "markup"
       },
       "product_subtypes": {
         "taxonomy": "Databases",
@@ -21216,9 +21360,12 @@
       ],
       "verifiedDate": "2026-08-28",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-03",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "text",
+        "unrendered_prices": [
+          "USD 30"
+        ]
       }
     },
     {
@@ -21726,9 +21873,10 @@
       ],
       "verifiedDate": "2026-08-11",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names Lucidchart but states no amount, tier or rate we can read"
+        "checked": "2026-09-03",
+        "outcome": "ok",
+        "detail": "the page names Lucidchart, renders no terms we can read, and its markup states 1 typed price (USD 0.00)",
+        "read": "markup"
       }
     },
     {
@@ -21743,9 +21891,14 @@
       ],
       "verifiedDate": "2026-07-14",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names MeisterTask but states no amount, tier or rate we can read"
+        "checked": "2026-09-03",
+        "outcome": "ok",
+        "detail": "the page names MeisterTask, renders no terms we can read, and its markup states 3 typed prices (Basic USD 0, Pro USD 13, Business USD 25)",
+        "read": "markup",
+        "unrendered_prices": [
+          "Pro USD 13",
+          "Business USD 25"
+        ]
       }
     },
     {
@@ -21777,9 +21930,10 @@
       ],
       "verifiedDate": "2026-07-17",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names Plane but states no amount, tier or rate we can read"
+        "checked": "2026-09-03",
+        "outcome": "ok",
+        "detail": "the page names Plane, renders no terms we can read, and its markup states 1 typed price (USD 0)",
+        "read": "markup"
       }
     },
     {
@@ -21879,9 +22033,14 @@
       ],
       "verifiedDate": "2026-08-26",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_amount",
-        "detail": "the page names Shortcut and says \"free forever\" but states no amount, rate or price we can read"
+        "checked": "2026-09-03",
+        "outcome": "ok",
+        "detail": "the page names Shortcut, renders \"free forever\" and no amount, and its markup states 3 typed prices (Free USD 0, Team USD 8.50, Business USD 12)",
+        "read": "markup",
+        "unrendered_prices": [
+          "Team USD 8.50",
+          "Business USD 12"
+        ]
       }
     },
     {
@@ -21913,9 +22072,12 @@
       ],
       "verifiedDate": "2026-07-18",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-03",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "text",
+        "unrendered_prices": [
+          "Enterprise USD 250"
+        ]
       }
     },
     {
@@ -21947,9 +22109,10 @@
       ],
       "verifiedDate": "2026-08-14",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names teamwork.com but states no amount, tier or rate we can read"
+        "checked": "2026-09-03",
+        "outcome": "ok",
+        "detail": "the page names teamwork.com, renders no terms we can read, and its markup states 1 typed price (USD 0.00)",
+        "read": "markup"
       }
     },
     {
@@ -21964,9 +22127,10 @@
       ],
       "verifiedDate": "2026-08-28",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_amount",
-        "detail": "the page names teleretro.com and says \"free plan\" but states no amount, rate or price we can read"
+        "checked": "2026-09-03",
+        "outcome": "ok",
+        "detail": "the page names teleretro.com, renders \"free plan\" and no amount, and its markup states 1 typed price (USD 0)",
+        "read": "markup"
       }
     },
     {
@@ -22015,9 +22179,13 @@
       ],
       "verifiedDate": "2026-08-28",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_amount",
-        "detail": "the page names Toggl and says \"free plan\" but states no amount, rate or price we can read"
+        "checked": "2026-09-03",
+        "outcome": "ok",
+        "detail": "the page names Toggl, renders \"free plan\" and no amount, and its markup states 3 typed prices (Toggl Track's Free plan USD 00.00, Toggl Track's Starter plan USD 10.00, Toggl Track's Premium plan USD 20.00)",
+        "read": "markup",
+        "unrendered_prices": [
+          "Toggl Track's Starter plan USD 10.00"
+        ]
       }
     },
     {
@@ -22173,9 +22341,15 @@
       ],
       "verifiedDate": "2026-08-28",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-03",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "text",
+        "unrendered_prices": [
+          "EUR 0.99",
+          "EUR 4.99",
+          "EUR 9.99",
+          "EUR 19.99"
+        ]
       }
     },
     {
@@ -22263,9 +22437,13 @@
       ],
       "verifiedDate": "2026-07-15",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names gumlet.com but states no amount, tier or rate we can read"
+        "checked": "2026-09-03",
+        "outcome": "ok",
+        "detail": "the page names gumlet.com, renders no terms we can read, and its markup states 1 typed price (USD 6)",
+        "read": "markup",
+        "unrendered_prices": [
+          "USD 6"
+        ]
       }
     },
     {
@@ -22568,9 +22746,17 @@
         "commission_type": "credits"
       },
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-03",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "text",
+        "unrendered_prices": [
+          "CHF 4.99",
+          "CHF 3.99",
+          "CHF 12.99",
+          "CHF 9.99",
+          "CHF 19.99",
+          "CHF 14.99"
+        ]
       }
     },
     {
@@ -23019,9 +23205,10 @@
       ],
       "verifiedDate": "2026-07-19",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names css-gradient.com but states no amount, tier or rate we can read"
+        "checked": "2026-09-03",
+        "outcome": "ok",
+        "detail": "the page names css-gradient.com, renders no terms we can read, and its markup states 1 typed price (USD 0)",
+        "read": "markup"
       }
     },
     {
@@ -23721,9 +23908,10 @@
       ],
       "verifiedDate": "2026-07-18",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names PNG to WebP Converter but states no amount, tier or rate we can read"
+        "checked": "2026-09-03",
+        "outcome": "ok",
+        "detail": "the page names PNG to WebP Converter, renders no terms we can read, and its markup states 1 typed price (USD 0)",
+        "read": "markup"
       }
     },
     {
@@ -24153,9 +24341,10 @@
       ],
       "verifiedDate": "2026-07-19",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names unDraw but states no amount, tier or rate we can read"
+        "checked": "2026-09-03",
+        "outcome": "ok",
+        "detail": "the page names unDraw, renders no terms we can read, and its markup states 1 typed price (USD 0)",
+        "read": "markup"
       }
     },
     {
@@ -24621,9 +24810,10 @@
       ],
       "verifiedDate": "2026-08-08",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names stadiamaps.com but states no amount, tier or rate we can read"
+        "checked": "2026-09-03",
+        "outcome": "ok",
+        "detail": "the page names stadiamaps.com, renders no terms we can read, and its markup states 1 typed price (USD 0)",
+        "read": "markup"
       }
     },
     {
@@ -24808,9 +24998,10 @@
       ],
       "verifiedDate": "2026-08-10",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names Brackets but states no amount, tier or rate we can read"
+        "checked": "2026-09-03",
+        "outcome": "ok",
+        "detail": "the page names Brackets, renders no terms we can read, and its markup states 1 typed price (USD 0)",
+        "read": "markup"
       }
     },
     {
@@ -24961,9 +25152,10 @@
       ],
       "verifiedDate": "2026-08-09",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names ForgeCode but states no amount, tier or rate we can read"
+        "checked": "2026-09-03",
+        "outcome": "ok",
+        "detail": "the page names ForgeCode, renders no terms we can read, and its markup states 1 typed price (USD 0)",
+        "read": "markup"
       }
     },
     {
@@ -25183,9 +25375,10 @@
       ],
       "verifiedDate": "2026-08-10",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names Visual Studio Code but states no amount, tier or rate we can read"
+        "checked": "2026-09-03",
+        "outcome": "ok",
+        "detail": "the page names Visual Studio Code, renders no terms we can read, and its markup states 1 typed price (USD 0)",
+        "read": "markup"
       }
     },
     {
@@ -25429,9 +25622,16 @@
       ],
       "verifiedDate": "2026-08-28",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_amount",
-        "detail": "the page names DocBeacon and says \"Free plan\" but states no amount, rate or price we can read"
+        "checked": "2026-09-03",
+        "outcome": "ok",
+        "detail": "the page names DocBeacon, renders \"Free plan\" and no amount, and its markup states 6 typed prices (Free Monthly USD 0, Free Annual USD 0, Pro Monthly USD 25, +3 more)",
+        "read": "markup",
+        "unrendered_prices": [
+          "Pro Monthly USD 25",
+          "Pro Annual USD 20",
+          "Business Monthly USD 300",
+          "Business Annual USD 240"
+        ]
       }
     },
     {
@@ -25735,9 +25935,10 @@
       ],
       "verifiedDate": "2026-07-21",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_amount",
-        "detail": "the page names Trackingplan and says \"Growth plan\" but states no amount, rate or price we can read"
+        "checked": "2026-09-03",
+        "outcome": "ok",
+        "detail": "the page names Trackingplan, renders \"Growth plan\" and no amount, and its markup states 1 typed price (USD 0)",
+        "read": "markup"
       }
     },
     {
@@ -25771,9 +25972,10 @@
       ],
       "verifiedDate": "2026-07-20",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names Lyssna but states no amount, tier or rate we can read"
+        "checked": "2026-09-03",
+        "outcome": "ok",
+        "detail": "the page names Lyssna, renders no terms we can read, and its markup states 1 typed price (USD 0)",
+        "read": "markup"
       }
     },
     {
@@ -25879,9 +26081,10 @@
       ],
       "verifiedDate": "2026-07-21",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names OpenReplay.com but states no amount, tier or rate we can read"
+        "checked": "2026-09-03",
+        "outcome": "ok",
+        "detail": "the page names OpenReplay.com, renders no terms we can read, and its markup states 1 typed price (Self-Hosted (Open Source) USD 0)",
+        "read": "markup"
       }
     },
     {
@@ -26480,9 +26683,12 @@
       ],
       "verifiedDate": "2026-07-21",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-03",
         "outcome": "ok",
-        "detail": "url"
+        "detail": "url",
+        "unrendered_prices": [
+          "IDR 1399000"
+        ]
       }
     },
     {
@@ -26616,9 +26822,10 @@
       ],
       "verifiedDate": "2026-07-20",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names CodeToImage but states no amount, tier or rate we can read"
+        "checked": "2026-09-03",
+        "outcome": "ok",
+        "detail": "the page names CodeToImage, renders no terms we can read, and its markup states 1 typed price (USD 0)",
+        "read": "markup"
       }
     },
     {
@@ -26684,9 +26891,10 @@
       ],
       "verifiedDate": "2026-07-21",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names Exif Editor but states no amount, tier or rate we can read"
+        "checked": "2026-09-03",
+        "outcome": "ok",
+        "detail": "the page names Exif Editor, renders no terms we can read, and its markup states 1 typed price (USD 0)",
+        "read": "markup"
       }
     },
     {
@@ -26735,9 +26943,10 @@
       ],
       "verifiedDate": "2026-08-26",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_amount",
-        "detail": "the page names Hosting Checker and says \"Free Forever\" but states no amount, rate or price we can read"
+        "checked": "2026-09-03",
+        "outcome": "ok",
+        "detail": "the page names Hosting Checker, renders \"Free Forever\" and no amount, and its markup states 1 typed price (USD 0)",
+        "read": "markup"
       }
     },
     {
@@ -26837,9 +27046,10 @@
       ],
       "verifiedDate": "2026-08-28",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_amount",
-        "detail": "the page names RandomKeygen and says \"premium tier\" but states no amount, rate or price we can read"
+        "checked": "2026-09-03",
+        "outcome": "ok",
+        "detail": "the page names RandomKeygen, renders \"premium tier\" and no amount, and its markup states 1 typed price (USD 0)",
+        "read": "markup"
       }
     },
     {
@@ -27126,9 +27336,10 @@
       ],
       "verifiedDate": "2026-07-25",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names Dadroit V Web but states no amount, tier or rate we can read"
+        "checked": "2026-09-03",
+        "outcome": "ok",
+        "detail": "the page names Dadroit V Web, renders no terms we can read, and its markup states 1 typed price (USD 0)",
+        "read": "markup"
       }
     },
     {
@@ -27736,9 +27947,10 @@
       ],
       "verifiedDate": "2026-09-02",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_amount",
-        "detail": "the page names Pareto Security and says \"Team Plans\" but states no amount, rate or price we can read"
+        "checked": "2026-09-03",
+        "outcome": "ok",
+        "detail": "the page names Pareto Security, renders \"Team Plans\" and no amount, and its markup states 1 typed price (USD 0)",
+        "read": "markup"
       }
     },
     {
@@ -31654,9 +31866,17 @@
       ],
       "verifiedDate": "2026-08-19",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-03",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "text",
+        "unrendered_prices": [
+          "Peacock Select Monthly USD 7.99",
+          "Peacock Select Annual USD 79.99",
+          "Peacock Premium Monthly USD 10.99",
+          "Peacock Premium Annual USD 109.99",
+          "Peacock Premium Plus Monthly USD 16.99",
+          "Peacock Premium Plus Annual USD 169.99"
+        ]
       }
     },
     {
@@ -33800,9 +34020,13 @@
         }
       ],
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-03",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "text",
+        "unrendered_prices": [
+          "USD 6.49",
+          "Image generation (per image) USD 0.0006"
+        ]
       },
       "product_subtypes": {
         "taxonomy": "AI / ML",

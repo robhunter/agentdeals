@@ -11,6 +11,7 @@ import {
   withMinimumLength,
 } from "./verify-freshness.js";
 import { priceSignals } from "./change-gate.js";
+import { readStructuredPrices } from "./structured-prices.js";
 import { classifySource, sourceCheckRecord } from "./vendor-naming.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -61,7 +62,12 @@ async function fetchUnfloored(url) {
     const body = await readBodyWithin(res, HARD_CEILING);
     if (body.tooLarge) return { ok: false, error: `page too large: ${body.bytes} bytes` };
     const text = stripHtml(body.html);
-    return { ok: true, text, bytes: Buffer.byteLength(body.html) };
+    return {
+      ok: true,
+      text,
+      bytes: Buffer.byteLength(body.html),
+      structured: readStructuredPrices(body.html),
+    };
   } catch (err) {
     return { ok: false, error: err.name === "AbortError" ? "timeout" : err.message };
   } finally {
