@@ -294,7 +294,8 @@
           "vendor": "Netlify",
           "date": "2026-04-14",
           "change_type": "limits_increased"
-        }
+        },
+        "detail": "Reversed 2026-04-14: Netlify's pricing page now states that as of April 14th, credit-based Pro plans no longer charge for any seat. The per-committer charge described here is no longer in force."
       }
     },
     {
