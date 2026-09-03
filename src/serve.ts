@@ -4583,7 +4583,7 @@ ${renderAuditBlock(altRanking.tie_break)}
   const faqFreeTierAnswer = altLevelWithheld
     ? `We cannot confirm that today. ${altWithheldSentence} Our stored record says ${vendorName} offers a free tier (${primary.tier}), but we have not confirmed those terms against the source we cite.`
     : riskLevel === "stable"
-    ? `Yes, ${vendorName} currently offers a free tier (${primary.tier}). ${vendorChanges.length === 0 ? "No pricing changes have been recorded." : `We hold ${vendorChanges.length === 1 ? "1 recorded change" : `${vendorChanges.length} recorded changes`} for this vendor, none of them a free tier removal, limit reduction or pricing restructure.`}`
+    ? `Yes, ${vendorName} currently offers a free tier (${primary.tier}). ${vendorChanges.length === 0 ? "No pricing changes have been recorded." : narrowingSentence(vendorChanges)}`
     : riskLevel === "caution"
     ? `${vendorName} has a free tier (${primary.tier}), but it's flagged as "caution" because of one specific recorded change${riskCause ? `, ${changeDateClause(riskCause)}: ${riskCause.summary}` : "."}`
     : `${vendorName}'s free tier (${primary.tier}) is considered risky because of one specific recorded change${riskCause ? `, ${changeDateClause(riskCause)}: ${riskCause.summary}` : "."} Consider migrating to a more stable alternative.`;
