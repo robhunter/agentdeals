@@ -6,6 +6,7 @@ import { resolve, dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { MAX_PAGE_TEXT_LENGTH, readBodyWithin, withMinimumLength } from "./verify-freshness.js";
 import { priceSignals } from "./change-gate.js";
+import { readStructuredPrices } from "./structured-prices.js";
 import { pageNamesVendor, classifySource, sourceCheckRecord } from "./vendor-naming.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -54,7 +55,7 @@ async function fetchMeasured(url) {
     if (body.tooLarge) return { ok: false, error: `page too large: ${body.bytes} bytes` };
     const bytes = Buffer.byteLength(body.html);
     const text = stripHtml(body.html);
-    return withMinimumLength({ ok: true, text, bytes });
+    return withMinimumLength({ ok: true, text, bytes, structured: readStructuredPrices(body.html) });
   } catch (err) {
     return { ok: false, error: err.name === "AbortError" ? "timeout" : err.message };
   } finally {

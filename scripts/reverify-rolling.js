@@ -22,6 +22,7 @@ import {
 import {
   sourceCheckRecord,
   holdsVerifiedDate,
+  READ_FROM_MARKUP,
   SOURCE_CHECK_OK,
   SOURCE_CHECK_OUTCOMES,
 } from "./vendor-naming.js";
@@ -133,6 +134,16 @@ function applySourceCheck(offer, index, page, data, dryRun, now, counters) {
   const signals = page?.ok ? priceSignals(page.text) : [];
   const check = sourceCheckRecord(offer, page, signals, isoDay(now));
   counters.set(check.outcome, (counters.get(check.outcome) ?? 0) + 1);
+  if (check.read === READ_FROM_MARKUP) {
+    counters.set(READ_FROM_MARKUP, (counters.get(READ_FROM_MARKUP) ?? 0) + 1);
+    console.log(`  ⌗ ${offer.vendor} — ${check.detail} (${offer.url})`);
+  }
+  if (check.unrendered_prices) {
+    counters.set(UNRENDERED, (counters.get(UNRENDERED) ?? 0) + 1);
+    console.log(
+      `  ⌗ ${offer.vendor} — the page publishes prices it does not render: ${check.unrendered_prices.join(", ")} (${offer.url})`
+    );
+  }
   if (!dryRun) data.offers[index].source_check = check;
   if (holdsVerifiedDate(check.outcome)) {
     console.log(`  ⊘ ${offer.vendor} — verifiedDate held at ${offer.verifiedDate}: ${check.detail} (${offer.url})`);
@@ -140,8 +151,10 @@ function applySourceCheck(offer, index, page, data, dryRun, now, counters) {
   return check;
 }
 
+const UNRENDERED = "unrendered_prices";
+
 function emptySourceCounters() {
-  return new Map(SOURCE_CHECK_OUTCOMES.map((outcome) => [outcome, 0]));
+  return new Map([...SOURCE_CHECK_OUTCOMES, READ_FROM_MARKUP, UNRENDERED].map((key) => [key, 0]));
 }
 
 function attemptRecorder() {
@@ -387,6 +400,8 @@ export function summaryLines(result, { useAi, checked, oldestRemaining, total, q
     const label = holdsVerifiedDate(outcome) ? "Held back" : "Verified on weaker evidence";
     lines.push(`${label} (source ${outcome}): ${sourceChecks.get(outcome) ?? 0}`);
   }
+  lines.push(`Graded on a price the page states in its markup, not its text: ${sourceChecks.get(READ_FROM_MARKUP) ?? 0}`);
+  lines.push(`Publishing a price in markup the page never renders: ${sourceChecks.get(UNRENDERED) ?? 0}`);
   lines.push(`Flagged (URL/AI failure): ${result.flagged}`);
   for (const line of quarantineLines(quarantine)) lines.push(line);
   if (repicked !== undefined) {
@@ -468,7 +483,8 @@ async function main() {
       })
     : await runUrlMode(picked, data, dryRun, now);
 
-  const sourceChecksWritten = [...(result.sourceChecks ?? new Map()).values()].reduce((a, b) => a + b, 0);
+  const checks = result.sourceChecks ?? new Map();
+  const sourceChecksWritten = SOURCE_CHECK_OUTCOMES.reduce((a, outcome) => a + (checks.get(outcome) ?? 0), 0);
   if (!dryRun && (result.verified > 0 || sourceChecksWritten > 0)) {
     writeFileSync(INDEX_PATH, JSON.stringify(data, null, 2) + "\n");
   }
