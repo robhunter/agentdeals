@@ -6363,8 +6363,8 @@
     {
       "vendor": "Deepgram",
       "change_type": "new_free_tier",
-      "date": "2026-09-12",
-      "date_source": "vendor_page",
+      "date": "2026-08-28",
+      "date_source": "discovered",
       "summary": "The $200 free credit is still offered, but the details have expanded. Text-to-Speech's Flux TTS is free until September 12, 2026, and Voice Agent API's Flux TTS is also free until September 12, 2026.",
       "previous_state": "Speech-to-text and text-to-speech API — $200 free credits on signup (no credit card required), ~43K minutes transcription with Nova model, credits never expire. Access to all model endpoints",
       "current_state": "Free $200 Credit then pay-as-you-go. Flux TTS is free until 9/12/2026. Voice Agent API's Flux TTS is free through September 12, 2026.",
