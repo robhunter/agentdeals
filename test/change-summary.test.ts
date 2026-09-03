@@ -40,9 +40,11 @@ const {
   REJECT_FREE_TIER_STILL_OFFERED,
   REJECT_NO_BASELINE,
   REJECT_NO_REMOVAL_EVIDENCE,
+  REJECT_REMOVAL_READ_FROM_REDIRECT,
   REJECT_REMOVAL_READ_FROM_ROOT,
   REJECT_STATES_NO_DIFFERENCE,
   REJECT_STATES_NO_TERMS,
+  statesARedirect,
 } = await import("../scripts/change-gate.js");
 
 const { sweepRecords } = await import("../scripts/sweep-change-summaries.js");
@@ -104,6 +106,29 @@ const A_REMOVAL_WHOSE_PRODUCT_MOVED_TO_ANOTHER_COMPANY = {
   current_state: "The page promotes a free trial and then paid plans.",
   impact: "high",
   source_url: "https://www.highlight.io/pricing",
+};
+
+const A_REMOVAL_SOURCED_FROM_NOTHING_BUT_A_REDIRECT = {
+  vendor: "Keywords AI",
+  change_type: "free_tier_removed",
+  summary:
+    "The page does not explicitly state a free tier. It showcases features and capabilities of the platform, with mentions of cost savings and budget controls, but does not detail a free usage allowance.",
+  previous_state:
+    "The best LLM monitoring platform. 10,000 free requests every month and $0 for platform features!",
+  current_state: "The page does not explicitly state a free tier.",
+  impact: "high",
+  source_url: "https://keywordsai.co",
+};
+
+const A_MEASURED_CHANGE_READ_AFTER_A_REDIRECT = {
+  vendor: "staticforms.xyz",
+  change_type: "limits_reduced",
+  summary: "The free plan now offers 500 submissions per month instead of 250.",
+  previous_state:
+    "Integrate HTML forms easily without any server-side code for free. After the user submits the form, an email with the form content will be sent to your registered address.",
+  current_state: "Free plan, 500 a month",
+  impact: "low",
+  source_url: "https://www.staticforms.xyz/",
 };
 
 const A_REAL_REDUCTION_WEARING_OUR_SUBJECT = {
@@ -382,11 +407,98 @@ describe("a change record must state a term the vendor's page carries now", () =
       assert.strictEqual(verdict.outcome, OUTCOME_REFUSED);
     });
 
-    it("keeps the same removal when the page it read belongs to somebody else now", () => {
+    it("reads a clause that reports where a page moved to", () => {
+      assert.strictEqual(statesARedirect("Highlight.io's own page now redirects to launchdarkly.com."), true);
+      assert.strictEqual(statesARedirect("The free plan now offers 500 submissions per month."), false);
+    });
+
+    it("refuses a removal whose only surviving evidence is that the page moved", () => {
       const verdict = auditRecord(A_REMOVAL_WHOSE_PRODUCT_MOVED_TO_ANOTHER_COMPANY, {
         finalUrl: "https://launchdarkly.com/",
       });
+      assert.strictEqual(verdict.outcome, OUTCOME_REFUSED);
+      assert.strictEqual(verdict.reason, REJECT_REMOVAL_READ_FROM_REDIRECT);
+    });
+
+    it("refuses it again when re-read from the summary the redirect already produced", () => {
+      const asPublished = {
+        ...A_REMOVAL_WHOSE_PRODUCT_MOVED_TO_ANOTHER_COMPANY,
+        summary: "Highlight.io's own page now redirects to launchdarkly.com.",
+      };
+      const verdict = auditRecord(asPublished, { finalUrl: "https://launchdarkly.com/" });
+      assert.strictEqual(verdict.outcome, OUTCOME_REFUSED);
+      assert.strictEqual(verdict.reason, REJECT_REMOVAL_READ_FROM_REDIRECT);
+    });
+
+    it("refuses a removal read from a root that redirects, which no gate below the redirect could reach", () => {
+      const verdict = auditRecord(A_REMOVAL_SOURCED_FROM_NOTHING_BUT_A_REDIRECT, {
+        finalUrl: "https://www.respan.ai",
+      });
+      assert.strictEqual(verdict.outcome, OUTCOME_REFUSED);
+      assert.strictEqual(verdict.reason, REJECT_REMOVAL_READ_FROM_ROOT);
+    });
+
+    it("refuses the same record at the gate", () => {
+      const verdict = describesChange(A_REMOVAL_SOURCED_FROM_NOTHING_BUT_A_REDIRECT, {
+        finalUrl: "https://www.respan.ai",
+      });
+      assert.strictEqual(verdict.ok, false);
+      assert.strictEqual(verdict.reason, REJECT_REMOVAL_READ_FROM_ROOT);
+    });
+
+    it("keeps a measured change that survives alongside the redirect, and states both", () => {
+      const verdict = auditRecord(A_MEASURED_CHANGE_READ_AFTER_A_REDIRECT, {
+        finalUrl: "https://www.staticforms.dev/",
+      });
+      assert.strictEqual(verdict.outcome, OUTCOME_REWRITTEN);
+      assert.strictEqual(
+        verdict.summary,
+        "staticforms.xyz's own page now redirects to staticforms.dev. The free plan now offers 500 submissions per month instead of 250."
+      );
+    });
+
+    it("states the redirect once when the summary it audits already carries it", () => {
+      const asPublished = applyAudit(
+        A_MEASURED_CHANGE_READ_AFTER_A_REDIRECT,
+        auditRecord(A_MEASURED_CHANGE_READ_AFTER_A_REDIRECT, {
+          finalUrl: "https://www.staticforms.dev/",
+        })
+      );
+      const verdict = auditRecord(asPublished, { finalUrl: "https://www.staticforms.dev/" });
+      assert.strictEqual(verdict.outcome, OUTCOME_UNCHANGED);
+      assert.strictEqual(applyAudit(asPublished, verdict).summary, asPublished.summary);
+    });
+
+    it("keeps a removal whose one surviving clause states the removal as well as the redirect", () => {
+      const statesWhereItWentAndWhatIsLeft = {
+        ...A_REMOVAL_WHOSE_PRODUCT_MOVED_TO_ANOTHER_COMPANY,
+        summary: "The pricing page now redirects to a subscription-only replacement",
+      };
+      const verdict = auditRecord(statesWhereItWentAndWhatIsLeft);
       assert.notStrictEqual(verdict.outcome, OUTCOME_REFUSED);
+    });
+
+    it("keeps a removal that names what the destination charges beside the redirect", () => {
+      const namesThePriceItLandedOn = {
+        ...A_REMOVAL_WHOSE_PRODUCT_MOVED_TO_ANOTHER_COMPANY,
+        summary:
+          "Highlight.io's own page now redirects to launchdarkly.com. The entry plan is $89 per month.",
+      };
+      const verdict = auditRecord(namesThePriceItLandedOn, {
+        finalUrl: "https://launchdarkly.com/",
+      });
+      assert.notStrictEqual(verdict.outcome, OUTCOME_REFUSED);
+    });
+
+    it("still refuses a removal for its own change type when the page redirects", () => {
+      const stillOffered = {
+        ...A_REMOVAL_SOURCED_FROM_NOTHING_BUT_A_REDIRECT,
+        source_url: "https://keywordsai.co/pricing",
+        summary: "Sign up for free with 100k logs. The page no longer names the old allowance.",
+      };
+      const verdict = auditRecord(stillOffered, { finalUrl: "https://www.respan.ai" });
+      assert.strictEqual(verdict.outcome, OUTCOME_REFUSED);
+      assert.strictEqual(verdict.reason, REJECT_FREE_TIER_STILL_OFFERED);
     });
   });
 
