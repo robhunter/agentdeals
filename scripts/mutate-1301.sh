@@ -156,7 +156,7 @@ m_the_alternatives_answer_ignores_the_tier_gate() {
 p = "src/serve.ts"
 s = open(p).read()
 s = s.replace("  const altNotAFreeOffer = notAFreeOfferGateFor(primary);\n",
-              "  const altNotAFreeOffer: ReturnType<typeof notAFreeOfferGateFor> = null;\n")
+              "  const altNotAFreeOffer = notAFreeOfferGateFor({ tier: \"Free\" });\n")
 open(p, "w").write(s)
 PY
 }
