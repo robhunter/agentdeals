@@ -37,10 +37,23 @@ export function resolvingRecord<T extends { vendor: string; date: string; change
   );
 }
 
+const RESOLUTION_TAGS: Record<ChangeResolutionState, (date: string) => string> = {
+  reversed: (date) => `No longer in force (${date}).`,
+  retracted: (date) => `Retracted — this record was our error (${date}).`,
+};
+
+export function resolutionTag(resolution: ChangeResolution): string {
+  return RESOLUTION_TAGS[resolution.state](resolution.date);
+}
+
 export function summaryWithResolution(change: ResolvableChange): string {
-  const detail = change.resolution?.detail;
-  if (!detail) return change.summary;
-  return change.summary.includes(detail) ? change.summary : `${change.summary} ${detail}`;
+  const resolution = change.resolution;
+  if (!resolution) return change.summary;
+  const tag = resolutionTag(resolution);
+  const detail = resolution.detail;
+  const tagged = change.summary.startsWith(tag) ? change.summary : `${tag} ${change.summary}`;
+  if (!detail || tagged.includes(detail)) return tagged;
+  return `${tagged} ${detail}`;
 }
 
 export function withResolutionInSummary<T extends ResolvableChange>(change: T): T {
@@ -63,12 +76,14 @@ export function prosePutsAResolutionIn(text: string | undefined | null): boolean
 }
 
 export function fieldsAssertingAResolution(change: ResolvableChange): string[] {
-  const detail = change.resolution?.detail ?? "";
-  const withoutDetail = (text: string | undefined) =>
-    detail && text ? text.split(detail).join(" ") : text;
+  const written = change.resolution
+    ? [resolutionTag(change.resolution), change.resolution.detail ?? ""].filter(Boolean)
+    : [];
+  const withoutWhatTheFieldItselfWrote = (text: string | undefined) =>
+    text ? written.reduce((rest, piece) => rest.split(piece).join(" "), text) : text;
   const fields: Array<[string, string | undefined]> = [
-    ["summary", withoutDetail(change.summary)],
-    ["current_state", withoutDetail(change.current_state)],
+    ["summary", withoutWhatTheFieldItselfWrote(change.summary)],
+    ["current_state", withoutWhatTheFieldItselfWrote(change.current_state)],
   ];
   return fields.filter(([, text]) => prosePutsAResolutionIn(text)).map(([name]) => name);
 }
