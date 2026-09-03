@@ -7,7 +7,7 @@ import { fileURLToPath } from "node:url";
 
 const { eligibilityGate, eligibilityGateAsPublished, publishableEligibilityConditions, CONDITION_RECORDING_AN_UNREAD_PROGRAM } =
   await import("../dist/eligibility.js");
-const { gateFor, utcDate } = await import("../dist/ranking.js");
+const { gateFor, notAFreeOfferGateFor, utcDate } = await import("../dist/ranking.js");
 
 type Offer = import("../src/types.ts").Offer;
 
@@ -323,9 +323,14 @@ describe("a category page does not count a gated offer as a plain free tier", ()
 describe("the other answers on a gated vendor page", () => {
   const gatedPages = () => rendered.filter(p => p.offer.eligibility);
 
+  const pagesStillNamingATier = () => gatedPages().filter(p => notAFreeOfferGateFor(p.offer) === null);
+
   it("qualifies the two that state or recommend the terms", () => {
-    assert.ok(gatedPages().length > 0, "no vendor page renders a gated record");
-    for (const p of gatedPages()) {
+    assert.ok(
+      pagesStillNamingATier().length > 0,
+      "no vendor page renders a record gated only by its eligibility, so this check reads nothing",
+    );
+    for (const p of pagesStillNamingATier()) {
       const reason = gateFor(p.offer, "")!.reason;
       for (const question of [`What is ${p.vendor}'s free tier?`, `Is ${p.vendor}'s free tier good for production?`]) {
         const answer = faqAnswer(p.html, question) ?? "";
