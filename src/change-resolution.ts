@@ -16,6 +16,16 @@ export function theEventNeverHappened(change: { resolution?: ChangeResolution | 
   return change.resolution?.state === "retracted";
 }
 
+export const EVENT_CANCELLED = "https://schema.org/EventCancelled";
+
+export function eventResolutionFields(change: {
+  resolution?: ChangeResolution | null;
+}): { eventStatus: string } | { endDate: string } | Record<string, never> {
+  if (!change.resolution) return {};
+  if (theEventNeverHappened(change)) return { eventStatus: EVENT_CANCELLED };
+  return change.resolution.date ? { endDate: change.resolution.date } : {};
+}
+
 export function resolvingRecord<T extends { vendor: string; date: string; change_type: string }>(
   change: { resolution?: ChangeResolution | null },
   log: readonly T[],
