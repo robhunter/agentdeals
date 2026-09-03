@@ -425,7 +425,7 @@ describe("what a reader and an agent are told about a resolved change", () => {
   });
 
   it("serves the reversal wherever the change log is read", async () => {
-    const changes = await getJson("/api/changes?since=2026-04-01");
+    const changes = await getJson("/api/changes?since=2026-04-01&limit=10000");
     const pause = (changes.changes ?? changes).find(
       (c: any) => c.vendor === "GitHub Copilot" && c.date === "2026-04-20"
     );

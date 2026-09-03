@@ -5,7 +5,7 @@ import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
 import { createServer, getServerCard } from "./server.js";
-import { oldestVerifiedDateForSlug, vendorRiskAssessment, NEGATIVE_CHANGE_TYPES, POSITIVE_CHANGE_TYPES, SEVERE_CHANGE_TYPES, loadOffers, getCategories, getNewOffers, getNewestDeals, searchOffers, enrichOffers, gateForOffer, loadDealChanges, getDealChanges, getPersonalizedChanges, getOfferDetails, compareServices, checkVendorRisk, auditStack, getExpiringDeals, getWeeklyDigest, getFormattedWeeklyDigest, getFreshnessMetrics, getStabilityMap, getVendorReferral, sanitizeQuery, getChangeLogFreshness, isEventDated, partitionByDateProvenance } from "./data.js";
+import { oldestVerifiedDateForSlug, vendorRiskAssessment, NEGATIVE_CHANGE_TYPES, POSITIVE_CHANGE_TYPES, SEVERE_CHANGE_TYPES, loadOffers, getCategories, getNewOffers, getNewestDeals, searchOffers, enrichOffers, gateForOffer, loadDealChanges, getDealChanges, changeContext, DEFAULT_CHANGE_WINDOW_DAYS, getOfferDetails, compareServices, checkVendorRisk, auditStack, getExpiringDeals, getWeeklyDigest, getFormattedWeeklyDigest, getFreshnessMetrics, getStabilityMap, getVendorReferral, sanitizeQuery, getChangeLogFreshness, isEventDated, partitionByDateProvenance } from "./data.js";
 import { getStackRecommendation } from "./stacks.js";
 import { estimateCosts } from "./costs.js";
 import { classifyRequest } from "./client-class.js";
@@ -48363,7 +48363,7 @@ function buildDeveloperHubPage(): string {
     { method: "GET", path: "/api/categories", desc: "List all categories with counts", params: "" },
     { method: "GET", path: "/api/new", desc: "Recently added or updated offers", params: "days" },
     { method: "GET", path: "/api/newest", desc: "Newest deals by verification date", params: "limit" },
-    { method: "GET", path: "/api/changes", desc: "Pricing and deal changes", params: "vendors, categories" },
+    { method: "GET", path: "/api/changes", desc: "Pricing and deal changes", params: "since, type, vendor, vendors, category, categories, limit, offset" },
     { method: "GET", path: "/api/details/:vendor", desc: "Vendor detail with alternatives", params: "" },
     { method: "GET", path: "/api/compare", desc: "Compare two vendors side by side", params: "a, b" },
     { method: "GET", path: "/api/audit-stack", desc: "Audit your infrastructure stack", params: "services" },
@@ -52713,6 +52713,8 @@ const canonicalHost = (() => {
   try { return new URL(BASE_URL).hostname; } catch { return undefined; }
 })();
 
+const CHANGES_DEFAULT_LIMIT = 20;
+
 const TRAFFIC_EXCLUDED_PATHS = new Set(["/mcp", "/favicon.png", "/favicon.ico", "/og-image.png"]);
 function isCountableTraffic(pathname: string): boolean {
   if (TRAFFIC_EXCLUDED_PATHS.has(pathname)) return false;
@@ -53478,32 +53480,49 @@ const httpServer = createHttpServer(async (req, res) => {
     const type = url.searchParams.get("type") || undefined;
     const vendorFilter = url.searchParams.get("vendor") || undefined;
     const vendorsFilter = url.searchParams.get("vendors") || undefined;
-    const categoriesFilter = url.searchParams.get("categories") || undefined;
+    const categoriesFilter = url.searchParams.get("categories") || url.searchParams.get("category") || undefined;
     if (since && !/^\d{4}-\d{2}-\d{2}/.test(since)) {
       res.writeHead(400, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
       res.end(JSON.stringify({ error: "Invalid 'since' parameter. Expected ISO date string (YYYY-MM-DD)." }));
       return;
     }
-    const isPersonalized = !!(vendorsFilter || categoriesFilter);
-    const changeLogFreshness = getChangeLogFreshness();
-    if (isPersonalized) {
-      const result = getPersonalizedChanges(since, type, vendorFilter, vendorsFilter, categoriesFilter);
-      logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/changes", params: { since, type, vendor: vendorFilter, vendors: vendorsFilter, categories: categoriesFilter, personalized: true }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: result.your_stack_changes.length });
-      res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
-      res.end(JSON.stringify(cited({ ...result, change_log_freshness: changeLogFreshness }, "/changes")));
-    } else {
-      const result = getDealChanges(since, type, vendorFilter, vendorsFilter, categoriesFilter);
-      const allTimeTotal = loadDealChanges().length;
-      const { dated, discovered } = partitionByDateProvenance(result.changes);
-      const dateProvenance = {
-        event_dated: dated.length,
-        discovered: discovered.length,
-        note: discovered.length > 0 ? discoveryBatchNote(discovered.length, "in this window") : "",
-      };
-      logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/changes", params: { since, type, vendor: vendorFilter, vendors: vendorsFilter }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: result.changes.length });
-      res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
-      res.end(JSON.stringify(cited({ ...result, date_provenance: dateProvenance, all_time_total: allTimeTotal, change_log_freshness: changeLogFreshness }, "/changes")));
+    const limitParam = url.searchParams.get("limit");
+    const offsetParam = url.searchParams.get("offset");
+    const badPaging = [["limit", limitParam], ["offset", offsetParam]].find(
+      ([, value]) => value !== null && !/^\d+$/.test(value as string),
+    );
+    if (badPaging) {
+      res.writeHead(400, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+      res.end(JSON.stringify({ error: `Invalid '${badPaging[0]}' parameter. Expected a non-negative integer.` }));
+      return;
     }
+    const limit = limitParam === null ? CHANGES_DEFAULT_LIMIT : parseInt(limitParam, 10);
+    const offset = offsetParam === null ? 0 : parseInt(offsetParam, 10);
+    const changeLogFreshness = getChangeLogFreshness();
+    const result = getDealChanges(since, type, vendorFilter, vendorsFilter, categoriesFilter);
+    const page = result.changes.slice(offset, offset + limit);
+    const context = changeContext(result.changes, since, type);
+    const allTimeTotal = loadDealChanges().length;
+    const { dated, discovered } = partitionByDateProvenance(result.changes);
+    const dateProvenance = {
+      event_dated: dated.length,
+      discovered: discovered.length,
+      note: discovered.length > 0 ? discoveryBatchNote(discovered.length, "in this window") : "",
+    };
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/changes", params: { since, type, vendor: vendorFilter, vendors: vendorsFilter, categories: categoriesFilter, limit, offset }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: page.length });
+    res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+    res.end(JSON.stringify(cited({
+      changes: page,
+      total: result.total,
+      returned: page.length,
+      limit,
+      offset,
+      advisory: context.advisory,
+      summary: context.summary,
+      date_provenance: dateProvenance,
+      all_time_total: allTimeTotal,
+      change_log_freshness: changeLogFreshness,
+    }, "/changes")));
   } else if (url.pathname === "/api/deadlines" && isGetOrHead) {
     recordApiHit("/api/deadlines");
     const allChanges = loadDealChanges();
@@ -54003,7 +54022,7 @@ Parameters:
 
 - GET /api/offers — Search deals (params: q, category, eligibility_type, sort, limit, offset)
 - GET /api/categories — List all categories with counts
-- GET /api/changes — Pricing changes (params: since, change_type, vendor)
+- GET /api/changes — Pricing changes (params: since, type, vendor, vendors, category, categories, limit, offset)
 - GET /api/new — Recently added offers (params: days)
 - GET /api/newest — Newest deals (params: since, limit, category)
 - GET /api/compare — Compare two vendors (params: a, b)
