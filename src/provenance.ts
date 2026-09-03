@@ -114,6 +114,7 @@ export function citeAs(baseUrl: string, path: string, date: string | null, singl
 }
 
 export interface ProvenanceOptions {
+  path?: string;
   listingPath?: string;
   deference?: boolean;
   dateForSlug?: (slug: string) => string | null;
@@ -133,7 +134,7 @@ export function provenanceBlock(
   const withheld = records.length - ranked.length;
   const dated = ranked.length > 0 ? ranked : records;
   const date = oldestDate(dated);
-  const derived = narrowestPath(records);
+  const derived = options.path ?? narrowestPath(records);
   const path = derived === "/" ? options.listingPath ?? "/" : derived;
 
   const block: Record<string, unknown> = {
