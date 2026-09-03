@@ -63,6 +63,11 @@ function countFor(list: { query: string; count: number }[], query: string): numb
 async function categoryThatEmpties(query: string): Promise<string> {
   const covered = await get(`/api/offers?q=${query}&limit=2000`);
   assert.ok(covered.total > 0, `${query} matches nothing in the catalog, so it is no longer a covered query`);
+  assert.strictEqual(
+    covered.offers.length,
+    covered.total,
+    `the route returned ${covered.offers.length} of ${covered.total} matches, so the categories below are only part of what "${query}" covers`,
+  );
   const matched = new Set<string>(covered.offers.map((o: { category: string }) => o.category.toLowerCase()));
   const catalog = await get("/api/offers?limit=2000");
   const outside = catalog.offers
