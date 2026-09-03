@@ -85,6 +85,16 @@ export function resetCache(): void {
   resetVerificationStateCache();
 }
 
+export function oldestVerifiedDateForSlug(slug: string): string | null {
+  let oldest: string | null = null;
+  for (const offer of loadOffers()) {
+    if (toSlug(offer.vendor) !== slug) continue;
+    if (!offer.verifiedDate) continue;
+    if (oldest === null || offer.verifiedDate < oldest) oldest = offer.verifiedDate;
+  }
+  return oldest;
+}
+
 export function getCategories(): { name: string; count: number }[] {
   const offers = loadOffers();
   const categoryMap = new Map<string, number>();

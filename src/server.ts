@@ -3,7 +3,7 @@ import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { McpServer, ResourceTemplate } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import { getCategories, getDealChanges, getPersonalizedChanges, getNewOffers, getNewestDeals, getOfferDetails, searchOffers, enrichOffers, gateForOffer, compareServices, checkVendorRisk, auditStack, getExpiringDeals, getWeeklyDigest, loadOffers, loadDealChanges, classifyStability, publishedStabilityFor, getVendorReferral, sanitizeQuery } from "./data.js";
+import { oldestVerifiedDateForSlug, getCategories, getDealChanges, getPersonalizedChanges, getNewOffers, getNewestDeals, getOfferDetails, searchOffers, enrichOffers, gateForOffer, compareServices, checkVendorRisk, auditStack, getExpiringDeals, getWeeklyDigest, loadOffers, loadDealChanges, classifyStability, publishedStabilityFor, getVendorReferral, sanitizeQuery } from "./data.js";
 import { gateDisclosureFor } from "./gate-disclosure.js";
 import { toSlug, vendorSlugMap, resolveVendorSlug } from "./vendor-slug.js";
 import { recordToolCall, logRequest, recordSearchQuery } from "./stats.js";
@@ -23,8 +23,18 @@ import { substitutesFor } from "./product-role.js";
 import { registerMcpAppsResources, TOOL_UI_META } from "./mcp-apps.js";
 import { MCP_INSTRUCTIONS } from "./mcp-instructions.js";
 import { MCP_SIGNAL_FOOTER } from "./signal-copy.js";
+import { BASE_URL } from "./base-url.js";
+import { withProvenance } from "./provenance.js";
 
 const SIGNAL_FOOTER_CONTENT = { type: "text" as const, text: MCP_SIGNAL_FOOTER };
+
+function citedJson<T extends object>(payload: T, listingPath?: string): string {
+  return JSON.stringify(
+    withProvenance(BASE_URL, payload, { dateForSlug: oldestVerifiedDateForSlug, ...(listingPath ? { listingPath } : {}) }),
+    null,
+    2,
+  );
+}
 
 const __dirname_server = dirname(fileURLToPath(import.meta.url));
 const PKG_VERSION = JSON.parse(readFileSync(join(__dirname_server, "..", "package.json"), "utf-8")).version;
@@ -145,7 +155,7 @@ export function createServer(getSessionId?: () => string | undefined, getClientN
           const offerWithCode: Record<string, unknown> = { ...result.offer, referral_code: getBestReferralCode(result.offer.vendor) };
           if (resolvedFrom) offerWithCode.resolved_from = resolvedFrom;
           return {
-            content: [{ type: "text" as const, text: JSON.stringify(offerWithCode, null, 2) }, SIGNAL_FOOTER_CONTENT],
+            content: [{ type: "text" as const, text: citedJson(offerWithCode) }, SIGNAL_FOOTER_CONTENT],
           };
         }
 
@@ -158,7 +168,7 @@ export function createServer(getSessionId?: () => string | undefined, getClientN
             ...gateDisclosureFor("deal", result.deals.map(o => o.gate)),
           };
           return {
-            content: [{ type: "text" as const, text: JSON.stringify(enrichedResult, null, 2) }, SIGNAL_FOOTER_CONTENT],
+            content: [{ type: "text" as const, text: citedJson(enrichedResult) }, SIGNAL_FOOTER_CONTENT],
           };
         }
 
@@ -189,7 +199,7 @@ export function createServer(getSessionId?: () => string | undefined, getClientN
         if (results.length === 0 && finalTotal === 0) {
           const searchTerm = query || category || "";
           return {
-            content: [{ type: "text" as const, text: JSON.stringify({ results: [], total: 0, suggestion: `No matches for '${searchTerm}'. Try searching by category (e.g., 'databases', 'hosting') or browse all categories with search_deals({category: "list"}).` }, null, 2) }],
+            content: [{ type: "text" as const, text: citedJson({ results: [], total: 0, suggestion: `No matches for '${searchTerm}'. Try searching by category (e.g., 'databases', 'hosting') or browse all categories with search_deals({category: "list"}).` }) }],
           };
         }
 
@@ -215,7 +225,7 @@ export function createServer(getSessionId?: () => string | undefined, getClientN
           : resultsWithCodes;
         const disclosure = gateDisclosureFor("result", filtered.map(o => gateForOffer(o)));
         return {
-          content: [{ type: "text" as const, text: JSON.stringify({ results: outputResults, total: finalTotal, limit: effectiveLimit, offset: effectiveOffset, ...disclosure }, null, 2) }, SIGNAL_FOOTER_CONTENT],
+          content: [{ type: "text" as const, text: citedJson({ results: outputResults, total: finalTotal, limit: effectiveLimit, offset: effectiveOffset, ...disclosure }) }, SIGNAL_FOOTER_CONTENT],
         };
       } catch (err) {
         console.error("search_deals error:", err);
@@ -259,7 +269,7 @@ export function createServer(getSessionId?: () => string | undefined, getClientN
           const result = getStackRecommendation(use_case, requirements);
           logRequest({ ts: new Date().toISOString(), type: "mcp", endpoint: "plan_stack", params: { mode, use_case, requirements }, result_count: result.stack.length, session_id: getSessionId?.() });
           return {
-            content: [{ type: "text" as const, text: JSON.stringify(result, null, 2) }, SIGNAL_FOOTER_CONTENT],
+            content: [{ type: "text" as const, text: citedJson(result) }, SIGNAL_FOOTER_CONTENT],
           };
         }
 
@@ -273,7 +283,7 @@ export function createServer(getSessionId?: () => string | undefined, getClientN
           const result = estimateCosts(services, scale ?? "hobby");
           logRequest({ ts: new Date().toISOString(), type: "mcp", endpoint: "plan_stack", params: { mode, services, scale: scale ?? "hobby" }, result_count: result.services.length, session_id: getSessionId?.() });
           return {
-            content: [{ type: "text" as const, text: JSON.stringify(result, null, 2) }, SIGNAL_FOOTER_CONTENT],
+            content: [{ type: "text" as const, text: citedJson(result) }, SIGNAL_FOOTER_CONTENT],
           };
         }
 
@@ -287,7 +297,7 @@ export function createServer(getSessionId?: () => string | undefined, getClientN
           const result = auditStack(services);
           logRequest({ ts: new Date().toISOString(), type: "mcp", endpoint: "plan_stack", params: { mode, services }, result_count: result.services_analyzed, session_id: getSessionId?.() });
           return {
-            content: [{ type: "text" as const, text: JSON.stringify(result, null, 2) }, SIGNAL_FOOTER_CONTENT],
+            content: [{ type: "text" as const, text: citedJson(result) }, SIGNAL_FOOTER_CONTENT],
           };
         }
 
@@ -341,7 +351,7 @@ export function createServer(getSessionId?: () => string | undefined, getClientN
           };
           logRequest({ ts: new Date().toISOString(), type: "mcp", endpoint: "compare_vendors", params: { vendors }, result_count: 1, session_id: getSessionId?.() });
           return {
-            content: [{ type: "text" as const, text: JSON.stringify(enrichedResult, null, 2) }, SIGNAL_FOOTER_CONTENT],
+            content: [{ type: "text" as const, text: citedJson(enrichedResult) }, SIGNAL_FOOTER_CONTENT],
           };
         }
 
@@ -387,7 +397,7 @@ export function createServer(getSessionId?: () => string | undefined, getClientN
 
           logRequest({ ts: new Date().toISOString(), type: "mcp", endpoint: "compare_vendors", params: { vendors, include_risk: doRisk }, result_count: 2, session_id: getSessionId?.() });
           return {
-            content: [{ type: "text" as const, text: JSON.stringify(result, null, 2) }, SIGNAL_FOOTER_CONTENT],
+            content: [{ type: "text" as const, text: citedJson(result) }, SIGNAL_FOOTER_CONTENT],
           };
         }
 
@@ -436,11 +446,11 @@ export function createServer(getSessionId?: () => string | undefined, getClientN
           if (response_format === "concise") {
             const conciseDigest = { ...digest, deal_changes: digest.deal_changes.map(toConciseDealChange) };
             return {
-              content: [{ type: "text" as const, text: JSON.stringify(conciseDigest, null, 2) }],
+              content: [{ type: "text" as const, text: citedJson(conciseDigest, "/changes") }],
             };
           }
           return {
-            content: [{ type: "text" as const, text: JSON.stringify(digest, null, 2) }],
+            content: [{ type: "text" as const, text: citedJson(digest, "/changes") }],
           };
         }
 
@@ -467,7 +477,7 @@ export function createServer(getSessionId?: () => string | undefined, getClientN
 
           logRequest({ ts: new Date().toISOString(), type: "mcp", endpoint: "track_changes", params: { since, change_type, vendor, vendors, categories, include_expiring: doExpiring, lookahead_days: days, personalized: true }, result_count: personalized.your_stack_changes.length, session_id: getSessionId?.() });
           return {
-            content: [{ type: "text" as const, text: JSON.stringify(result, null, 2) }],
+            content: [{ type: "text" as const, text: citedJson(result, "/changes") }],
           };
         }
 
@@ -485,7 +495,7 @@ export function createServer(getSessionId?: () => string | undefined, getClientN
 
         logRequest({ ts: new Date().toISOString(), type: "mcp", endpoint: "track_changes", params: { since, change_type, vendor, vendors, categories, include_expiring: doExpiring, lookahead_days: days }, result_count: changes.changes.length, session_id: getSessionId?.() });
         return {
-          content: [{ type: "text" as const, text: JSON.stringify(result, null, 2) }],
+          content: [{ type: "text" as const, text: citedJson(result, "/changes") }],
         };
       } catch (err) {
         console.error("track_changes error:", err);

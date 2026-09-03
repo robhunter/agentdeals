@@ -5,12 +5,14 @@ import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
 import { createServer, getServerCard } from "./server.js";
-import { vendorRiskAssessment, NEGATIVE_CHANGE_TYPES, POSITIVE_CHANGE_TYPES, SEVERE_CHANGE_TYPES, loadOffers, getCategories, getNewOffers, getNewestDeals, searchOffers, enrichOffers, gateForOffer, loadDealChanges, getDealChanges, getPersonalizedChanges, getOfferDetails, compareServices, checkVendorRisk, auditStack, getExpiringDeals, getWeeklyDigest, getFormattedWeeklyDigest, getFreshnessMetrics, getStabilityMap, getVendorReferral, sanitizeQuery, getChangeLogFreshness, isEventDated, partitionByDateProvenance } from "./data.js";
+import { oldestVerifiedDateForSlug, vendorRiskAssessment, NEGATIVE_CHANGE_TYPES, POSITIVE_CHANGE_TYPES, SEVERE_CHANGE_TYPES, loadOffers, getCategories, getNewOffers, getNewestDeals, searchOffers, enrichOffers, gateForOffer, loadDealChanges, getDealChanges, getPersonalizedChanges, getOfferDetails, compareServices, checkVendorRisk, auditStack, getExpiringDeals, getWeeklyDigest, getFormattedWeeklyDigest, getFreshnessMetrics, getStabilityMap, getVendorReferral, sanitizeQuery, getChangeLogFreshness, isEventDated, partitionByDateProvenance } from "./data.js";
 import { getStackRecommendation } from "./stacks.js";
 import { estimateCosts } from "./costs.js";
 import { classifyRequest } from "./client-class.js";
 import { acceptSignal, ackMissing, checkRateLimit, clientAddress, RATE_LIMIT_PER_MINUTE, SIGNAL_ACK_PARAM, SIGNAL_BODY_MAX, SIGNAL_DOC_PATH, SIGNAL_PATH, type SignalInput } from "./signal.js";
 import { agentBlock, DEFERENCE, signalExampleSlug, signalHeaderValue, signalHtmlBlock, signalLlmsSection, SIGNAL_HEADER_NAME } from "./signal-copy.js";
+import { BASE_URL } from "./base-url.js";
+import { provenanceBlock } from "./provenance.js";
 import { recordApiHit, recordSessionConnect, recordSessionDisconnect, recordLandingPageView, getStats, getConnectionStats, loadTelemetry, flushTelemetry, flushPending, FLUSH_INTERVAL_SECONDS, logRequest, getPublicRequestLogResult, getTelemetryHealth, recordPageView, getPageViews, recordReferralListingCall, recordReferralVendorLookup, getReferralMarketplaceStats, getSessionClassification, recordSearchQuery, getSearchAnalytics, getApiHitsByEndpoint, recordTraffic, getTrafficReport, getSignalReport, publicSignalReport, getRollupDaySource, getRollupDatesAvailable, setDurableRollupCoverage, redisJsonGet, redisJsonMget, redisJsonSet, redisJsonSetWithoutExpiry, useRedis } from "./stats.js";
 import { buildDailyRollup, readRollups, coverageOf, ROLLUP_DATE_PATTERN } from "./analytics-rollup.js";
 import { configureVendorSeries, recordVendorRequest, flushVendorSeries, readVendorSeries, vendorSeriesGauge, vendorExportAuthorized, isSeriesDate, seriesDateRange, VENDOR_SERIES_PATH, VENDOR_SERIES_RETENTION_DAYS, VENDOR_SERIES_NOTES } from "./vendor-series.js";
@@ -94,7 +96,6 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 const PORT = parseInt(process.env.PORT ?? "3000", 10);
-const BASE_URL = (process.env.BASE_URL ?? "https://agentdeals.dev").replace(/\/+$/, "");
 
 const INDEXNOW_KEY = process.env.INDEXNOW_KEY ?? "";
 
@@ -52718,8 +52719,19 @@ function isCountableTraffic(pathname: string): boolean {
   return !pathname.startsWith("/.well-known/");
 }
 
-function withAgentBlock<T extends object>(payload: T, slug?: string | null): T & { _agent: Record<string, unknown> } {
-  return { ...payload, _agent: agentBlock(BASE_URL, slug ?? null) };
+function cited<T extends object>(payload: T, listingPath?: string): T & { _provenance: Record<string, unknown> } {
+  return {
+    ...payload,
+    _provenance: provenanceBlock(BASE_URL, payload, { dateForSlug: oldestVerifiedDateForSlug, ...(listingPath ? { listingPath } : {}) }),
+  };
+}
+
+function withAgentBlock<T extends object>(payload: T, slug?: string | null): T & { _agent: Record<string, unknown>; _provenance: Record<string, unknown> } {
+  return {
+    ...payload,
+    _provenance: provenanceBlock(BASE_URL, payload, { deference: false, dateForSlug: oldestVerifiedDateForSlug }),
+    _agent: agentBlock(BASE_URL, slug ?? null),
+  };
 }
 
 const SINGLE_VENDOR_PREFIXES = ["/vendor/", "/api/vendor/", "/api/details/", "/embed/vendor/"] as const;
@@ -53263,7 +53275,7 @@ const httpServer = createHttpServer(async (req, res) => {
     const result = estimateCosts(services, scale);
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/costs", params: { services, scale }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: result.services.length });
     res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
-    res.end(JSON.stringify(result));
+    res.end(JSON.stringify(cited(result)));
   } else if (url.pathname === "/api/query-log" && isGetOrHead) {
     const limit = Math.min(Math.max(parseInt(url.searchParams.get("limit") ?? "50", 10) || 50, 1), 200);
     const log = await getPublicRequestLogResult(limit);
@@ -53372,7 +53384,7 @@ const httpServer = createHttpServer(async (req, res) => {
     const result = getNewOffers(days);
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/new", params: { days }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: result.offers.length });
     res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
-    res.end(JSON.stringify(result));
+    res.end(JSON.stringify(cited(result)));
   } else if (url.pathname === "/api/newest" && isGetOrHead) {
     recordApiHit("/api/newest");
     const since = url.searchParams.get("since") || undefined;
@@ -53390,13 +53402,13 @@ const httpServer = createHttpServer(async (req, res) => {
       deals: result.deals.map(o => ({ ...o, referral_code: getBestReferralCode(o.vendor) })),
     };
     res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
-    res.end(JSON.stringify(dealsWithCodes));
+    res.end(JSON.stringify(cited(dealsWithCodes)));
   } else if (url.pathname === "/api/categories" && isGetOrHead) {
     recordApiHit("/api/categories");
     const cats = getCategories();
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/categories", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: cats.length });
     res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
-    res.end(JSON.stringify({ categories: cats }));
+    res.end(JSON.stringify(cited({ categories: cats }, "/category")));
   } else if (url.pathname === "/api/agent-payments" && isGetOrHead) {
     recordApiHit("/api/agent-payments");
     const protocolFilter = url.searchParams.get("protocol") || undefined;
@@ -53478,7 +53490,7 @@ const httpServer = createHttpServer(async (req, res) => {
       const result = getPersonalizedChanges(since, type, vendorFilter, vendorsFilter, categoriesFilter);
       logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/changes", params: { since, type, vendor: vendorFilter, vendors: vendorsFilter, categories: categoriesFilter, personalized: true }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: result.your_stack_changes.length });
       res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
-      res.end(JSON.stringify({ ...result, change_log_freshness: changeLogFreshness }));
+      res.end(JSON.stringify(cited({ ...result, change_log_freshness: changeLogFreshness }, "/changes")));
     } else {
       const result = getDealChanges(since, type, vendorFilter, vendorsFilter, categoriesFilter);
       const allTimeTotal = loadDealChanges().length;
@@ -53490,7 +53502,7 @@ const httpServer = createHttpServer(async (req, res) => {
       };
       logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/changes", params: { since, type, vendor: vendorFilter, vendors: vendorsFilter }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: result.changes.length });
       res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
-      res.end(JSON.stringify({ ...result, date_provenance: dateProvenance, all_time_total: allTimeTotal, change_log_freshness: changeLogFreshness }));
+      res.end(JSON.stringify(cited({ ...result, date_provenance: dateProvenance, all_time_total: allTimeTotal, change_log_freshness: changeLogFreshness }, "/changes")));
     }
   } else if (url.pathname === "/api/deadlines" && isGetOrHead) {
     recordApiHit("/api/deadlines");
@@ -53697,7 +53709,7 @@ const httpServer = createHttpServer(async (req, res) => {
     const auditResult = auditStack(servicesList);
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/audit-stack", params: { services: servicesList }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: auditResult.services_analyzed });
     res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
-    res.end(JSON.stringify(auditResult));
+    res.end(JSON.stringify(cited(auditResult)));
   } else if (url.pathname.startsWith("/api/vendor-risk/") && isGetOrHead) {
     recordApiHit("/api/vendor-risk");
     const vendorParam = decodeURIComponent(url.pathname.slice("/api/vendor-risk/".length));
@@ -53716,7 +53728,7 @@ const httpServer = createHttpServer(async (req, res) => {
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/vendor-risk", params: { vendor: vendorParam }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     const riskWithCode = { ...riskResult.result, referral_code: getBestReferralCode(riskResult.result.vendor) };
     res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
-    res.end(JSON.stringify(riskWithCode));
+    res.end(JSON.stringify(cited(riskWithCode)));
   } else if (url.pathname.startsWith("/api/details/") && isGetOrHead) {
     recordApiHit("/api/details");
     const vendorParam = decodeURIComponent(url.pathname.slice("/api/details/".length));
@@ -53763,7 +53775,7 @@ const httpServer = createHttpServer(async (req, res) => {
     const result = getExpiringDeals(withinDays);
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/expiring", params: { within_days: withinDays }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: result.total });
     res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
-    res.end(JSON.stringify(result));
+    res.end(JSON.stringify(cited(result)));
   } else if (url.pathname === "/api/freshness" && isGetOrHead) {
     recordApiHit("/api/freshness");
     const result = getFreshnessMetrics();
@@ -53792,7 +53804,7 @@ const httpServer = createHttpServer(async (req, res) => {
     const digest = getWeeklyDigest();
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/digest", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: digest.deal_changes.length });
     res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
-    res.end(JSON.stringify(digest));
+    res.end(JSON.stringify(cited(digest, "/changes")));
   } else if (url.pathname === "/api" && isGetOrHead) {
     res.writeHead(301, { "Location": "/api/docs" });
     res.end();
