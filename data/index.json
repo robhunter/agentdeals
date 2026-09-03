@@ -2469,7 +2469,7 @@
       "vendor": "Hetzner",
       "category": "Infrastructure",
       "description": "Budget cloud VMs, no free tier. As of 2026-09-03 hetzner.com marks every shared-vCPU plan — CX23, CX33, CX43, CX53 and the Arm CAX11–CAX41 — \"not available\". The cheapest orderable plan is CPX12 at €11.99/month (1 vCPU AMD, 2 GB RAM, 40 GB NVMe, 0.5 TB traffic); CPX22 is €19.99 (2 vCPU, 4 GB, 80 GB, 20 TB traffic). Dedicated-vCPU CCX13 is €43.49/month in the EU and $51.59 in the US. Two 2026 increases: April 1 across all lines, then June 15, which applies to new orders and rescales only — existing contracts keep their terms. The June round also renamed the lineup, so the CX22/CX32/CX42 names no longer exist. Server Auction, IPs, storage, Load Balancers, Volumes, Snapshots and Object Storage were excluded from the June round.",
-      "tier": "Budget",
+      "tier": "Paid",
       "url": "https://www.hetzner.com/cloud/",
       "tags": [
         "infrastructure",
@@ -3794,7 +3794,7 @@
       "vendor": "Paddle",
       "category": "Payments",
       "description": "Merchant of record — no monthly fee, 5% + $0.50 per transaction. All-in-one: payments, tax compliance, fraud protection, buyer support",
-      "tier": "Standard",
+      "tier": "Pay-as-you-go",
       "url": "https://www.paddle.com/pricing",
       "tags": [
         "payments",
@@ -33579,7 +33579,7 @@
       "vendor": "OVHcloud",
       "category": "Infrastructure",
       "description": "Dedicated servers starting from ~€55/mo (Rise line: Intel Xeon, 32 GB RAM, 2×480 GB SSD). Kimsufi budget line discontinued, replaced by Eco range from ~€30/mo. Game line with DDoS protection and high-frequency CPU. Storage line for NAS/backup from ~€40/mo. All include unmetered bandwidth (500 Mbps-1 Gbps depending on range). Post-April 2026: Bare Metal prices increased 9-11% for new deployments",
-      "tier": "Budget",
+      "tier": "Paid",
       "url": "https://www.ovhcloud.com/en/bare-metal/",
       "tags": [
         "infrastructure",
