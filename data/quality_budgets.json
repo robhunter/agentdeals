@@ -1,7 +1,7 @@
 {
   "version": 1,
   "budgets": {
-    "stale_fact_pages": 57,
+    "stale_fact_pages": 56,
     "unsourced_tier_a": 43,
     "faq_answers": 166,
     "faq_answers_stating_a_figure": 77,
