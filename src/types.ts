@@ -76,6 +76,7 @@ export interface Offer {
   product_role?: ProductRole;
   product_subtypes?: ProductSubtypes;
   source_check?: SourceCheck;
+  free_tier_is_the_product?: true;
 }
 
 export type SourceCheckOutcome =
