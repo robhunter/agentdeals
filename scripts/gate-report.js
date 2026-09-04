@@ -1,10 +1,23 @@
 #!/usr/bin/env node
 
+import { readFileSync } from "node:fs";
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { readChangeLog, CHANGES_PATH, DETECTED_BY_AI } from "./change-log.js";
 import { gateCandidates, confirmDescribesChange } from "./change-gate.js";
 import { createVerifierClient, VERIFIER_MODEL, fetchPageText } from "./verify-freshness.js";
+
+const INDEX_PATH =
+  process.env.AGENTDEALS_INDEX_PATH ||
+  resolve(dirname(fileURLToPath(import.meta.url)), "..", "data", "index.json");
+
+export function readOffers(path = INDEX_PATH) {
+  try {
+    return JSON.parse(readFileSync(path, "utf-8")).offers ?? [];
+  } catch {
+    return [];
+  }
+}
 
 export async function readSourcePages(candidates, fetchFn = fetchPageText) {
   const pages = new Map();
@@ -77,6 +90,7 @@ async function main() {
   const pages = fetchPages ? await readSourcePages(candidates) : new Map();
   const result = await gateCandidates(candidates, {
     confirmFn,
+    offers: readOffers(),
     pageTextFor: (candidate) => pages.get(candidate),
   });
   for (const line of reportLines({ candidates, ...result })) console.log(line);

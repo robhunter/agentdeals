@@ -14,6 +14,7 @@ export const REJECT_REMOVAL_READ_FROM_ROOT = "removal_read_from_root";
 export const REJECT_REMOVAL_READ_FROM_REDIRECT = "removal_read_from_redirect";
 export const REJECT_FREE_TIER_STILL_OFFERED = "free_tier_still_offered";
 export const REJECT_FREE_PLAN_STILL_DESCRIBED = "free_plan_still_described";
+export const REJECT_FREE_TIER_IS_THE_PRODUCT = "free_tier_is_the_product";
 export const REJECT_NO_BASELINE = "no_baseline";
 export const REJECT_DANGLING_REFERENCE = "dangling_reference";
 export const REJECT_MEASURES_NO_CHANGE = "measures_no_change";
@@ -34,6 +35,7 @@ export const GATE_REASONS = [
   REJECT_REMOVAL_READ_FROM_REDIRECT,
   REJECT_FREE_TIER_STILL_OFFERED,
   REJECT_FREE_PLAN_STILL_DESCRIBED,
+  REJECT_FREE_TIER_IS_THE_PRODUCT,
   REJECT_NO_BASELINE,
   REJECT_DANGLING_REFERENCE,
   REJECT_MEASURES_NO_CHANGE,
@@ -44,6 +46,16 @@ export const GATE_REASONS = [
 
 export const FREE_TIER_REMOVED = "free_tier_removed";
 export const RESTRICTION = "restriction";
+
+export const FREE_TIER_IS_THE_PRODUCT_FIELD = "free_tier_is_the_product";
+
+export function marksFreeTierAsTheProduct(offer) {
+  return offer?.[FREE_TIER_IS_THE_PRODUCT_FIELD] === true;
+}
+
+export function vendorsWhoseFreeTierIsTheProduct(offers = []) {
+  return new Set(offers.filter(marksFreeTierAsTheProduct).map((offer) => offer?.vendor));
+}
 
 const QUANTITY_CHANGE_TYPES = ["limits_reduced", "limits_increased"];
 
@@ -1073,6 +1085,7 @@ export async function gateCandidates(candidates, options = {}) {
   const pageTextFor = options.pageTextFor ?? (() => undefined);
   const pageCompleteFor = options.pageCompleteFor ?? (() => false);
   const finalUrlFor = options.finalUrlFor ?? (() => undefined);
+  const productIsTheFreeTier = vendorsWhoseFreeTierIsTheProduct(options.offers);
   const accepted = [];
   const rejected = [];
   const unchecked = [];
@@ -1085,6 +1098,7 @@ export async function gateCandidates(candidates, options = {}) {
       pageText: pageTextFor(original),
       pageComplete: pageCompleteFor(original),
       finalUrl: finalUrlFor(original),
+      freeTierIsTheProduct: productIsTheFreeTier.has(original?.vendor),
     });
     if (!verdict.ok) {
       rejected.push({ candidate: original, reason: verdict.reason, detail: verdict.detail });
@@ -1306,6 +1320,12 @@ export function auditRecord(record, context = {}) {
 
   if (record?.change_type === FREE_TIER_REMOVED) {
     const evidenced = statesARemoval(rewritten);
+    if (context.freeTierIsTheProduct === true) {
+      return refuse(
+        REJECT_FREE_TIER_IS_THE_PRODUCT,
+        `${record.vendor}'s free tier is the product itself, so the vendor publishes no plan with a free row anywhere — a page that names only the paid add-on states what it charges for, not that the product stopped being free`
+      );
+    }
     if (reportsSomethingStillFree(record?.summary)) {
       return refuse(
         REJECT_FREE_TIER_STILL_OFFERED,
