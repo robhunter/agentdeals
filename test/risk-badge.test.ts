@@ -79,18 +79,33 @@ describe("#1038 — the level is earned", () => {
     }
   });
 
-  it("a vendor whose only history is limits_increased renders stable, live", async () => {
-    const { loadDealChanges } = await import("../dist/data.js");
-    const railway = changesByVendor(loadDealChanges()).get("railway") ?? [];
-    assert.ok(railway.length > 0, "expected Railway to still hold change records");
+  it("every vendor whose only history is limits_increased renders stable, live", async () => {
+    const { loadDealChanges, loadOffers } = await import("../dist/data.js");
+    const changes = loadDealChanges() as Change[];
+    const subjects = new Map<string, string>();
+    for (const offer of loadOffers()) {
+      const own = changes.filter((c) => c.vendor.toLowerCase() === offer.vendor.toLowerCase());
+      if (own.length > 0 && own.every((c) => c.change_type === "limits_increased")) {
+        subjects.set(toSlug(offer.vendor), offer.vendor);
+      }
+    }
     assert.ok(
-      railway.every((c) => c.change_type === "limits_increased"),
-      "this test is anchored on Railway holding only limits_increased; its records have changed, re-anchor it",
+      subjects.size > 0,
+      "no vendor in the catalog holds a limits_increased-only history, so this assertion has no subject",
     );
-    const { text } = await get("/vendor/railway");
-    const h1 = text.match(/<h1>[\s\S]*?<\/h1>/)?.[0] ?? "";
-    assert.ok(h1.length > 0, "no <h1> on /vendor/railway");
-    assert.ok(!/caution|risky/.test(h1), `Railway's <h1> still carries a warning: ${h1}`);
+
+    const warned: string[] = [];
+    for (const [slug, vendor] of subjects) {
+      const { status, text } = await get(`/vendor/${slug}`);
+      if (status !== 200) {
+        warned.push(`${vendor} has a favourable-only history and no page at /vendor/${slug} (${status})`);
+        continue;
+      }
+      const h1 = text.match(/<h1>[\s\S]*?<\/h1>/)?.[0] ?? "";
+      if (h1.length === 0) warned.push(`no <h1> on /vendor/${slug}`);
+      else if (/caution|risky/.test(h1)) warned.push(`${vendor}: ${h1.replace(/\s+/g, " ")}`);
+    }
+    assert.deepStrictEqual(warned, [], `a favourable-only history earned a warning on ${warned.length} of ${subjects.size} pages`);
   });
 
   it("the count of records we hold does not move the level", async () => {

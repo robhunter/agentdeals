@@ -20,6 +20,7 @@ const INDEX_PATH = path.join(__dirname, "..", "data", "index.json");
 const { priceSignals, numericPriceSignals } = await import("../scripts/change-gate.js");
 const { classifySource, holdsVerifiedDate, statesAnAmount, SOURCE_CHECK_NO_AMOUNT } =
   await import("../scripts/vendor-naming.js");
+const { structuredDetail, NO_STRUCTURED_DATA } = await import("../scripts/structured-prices.js");
 
 const OFFER = {
   vendor: "Widgetson",
@@ -209,8 +210,36 @@ describe("the catalog after the grade was applied", () => {
     for (const offer of graded) {
       assert.match(
         offer.source_check!.detail,
-        /^the page names .+ and says ".+" but states no amount, rate or price we can read$/,
+        /^the page names .+ and says ".+" but states no amount, rate or price we can read(, and .+)?$/,
         `${offer.vendor} carries a detail the grade did not write`
+      );
+    }
+  });
+
+  it("closes a markup clause with the phrase the writer composes, not one an older shape allowed", () => {
+    const clauses = graded
+      .map((o) => ({
+        vendor: o.vendor,
+        clause: o.source_check!.detail.match(/ but states no amount, rate or price we can read, and (.+)$/)?.[1],
+      }))
+      .filter((c): c is { vendor: string; clause: string } => Boolean(c.clause));
+    assert.ok(clauses.length > 0, "no graded record carries a markup clause, so this assertion has no subject");
+
+    for (const { vendor, clause } of clauses) {
+      if (clause === NO_STRUCTURED_DATA) continue;
+      const blocks = Number(clause.match(/^the (\d+) structured-data blocks? in its markup states? no price$/)?.[1]);
+      if (Number.isInteger(blocks)) {
+        assert.strictEqual(
+          clause,
+          structuredDetail({ blocks, parsed: blocks, prices: [] }),
+          `${vendor} carries a clause the writer would compose differently`
+        );
+        continue;
+      }
+      assert.match(
+        clause,
+        /^its markup states \d+ typed prices? \(.+\)$/,
+        `${vendor} carries a clause structuredDetail does not compose: ${clause}`
       );
     }
   });

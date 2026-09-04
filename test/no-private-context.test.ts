@@ -7,8 +7,8 @@ import { fileURLToPath } from "node:url";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const REPO = join(__dirname, "..");
 
-const ROOTS = ["src", "test", "scripts", "docs"];
-const EXTENSIONS = [".ts", ".js", ".mjs", ".md", ".json"];
+const ROOTS = ["src", "test", "scripts", "docs", join(".github", "workflows")];
+const EXTENSIONS = [".ts", ".js", ".mjs", ".md", ".json", ".sh", ".yml", ".yaml"];
 const SKIP_DIRS = new Set(["node_modules", "dist", ".git", "data", "coverage"]);
 
 const SELF = relative(REPO, fileURLToPath(import.meta.url));
@@ -102,9 +102,11 @@ describe("no private operational context in tracked source", () => {
   it("scans a meaningful number of files", () => {
     assert.ok(files.length > 50, `only ${files.length} files scanned — the walk is broken`);
     const rel = files.map((f) => relative(REPO, f));
-    for (const expected of ["src/serve.ts", "src/stats.ts", "README.md"]) {
+    for (const expected of ["src/serve.ts", "src/stats.ts", "README.md", join(".github", "workflows", "tests.yml")]) {
       assert.ok(rel.includes(expected), `${expected} was not scanned`);
     }
+    const shell = rel.filter((f) => f.endsWith(".sh"));
+    assert.ok(shell.length > 0, "no shell script was scanned, and the repository ships them");
   });
 
   for (const rule of RULES) {
