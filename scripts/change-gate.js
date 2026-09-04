@@ -13,6 +13,7 @@ export const REJECT_NO_REMOVAL_EVIDENCE = "no_removal_evidence";
 export const REJECT_REMOVAL_READ_FROM_ROOT = "removal_read_from_root";
 export const REJECT_REMOVAL_READ_FROM_REDIRECT = "removal_read_from_redirect";
 export const REJECT_FREE_TIER_STILL_OFFERED = "free_tier_still_offered";
+export const REJECT_FREE_PLAN_STILL_DESCRIBED = "free_plan_still_described";
 export const REJECT_NO_BASELINE = "no_baseline";
 export const REJECT_DANGLING_REFERENCE = "dangling_reference";
 export const REJECT_MEASURES_NO_CHANGE = "measures_no_change";
@@ -32,6 +33,7 @@ export const GATE_REASONS = [
   REJECT_REMOVAL_READ_FROM_ROOT,
   REJECT_REMOVAL_READ_FROM_REDIRECT,
   REJECT_FREE_TIER_STILL_OFFERED,
+  REJECT_FREE_PLAN_STILL_DESCRIBED,
   REJECT_NO_BASELINE,
   REJECT_DANGLING_REFERENCE,
   REJECT_MEASURES_NO_CHANGE,
@@ -773,6 +775,42 @@ export function reportsSomethingStillFree(summary) {
   return FREE_STILL_OFFERED.some((pattern) => pattern.test(withoutTrials));
 }
 
+const A_PLAN_ASSERTED_FREE = [
+  /\b(?:the\s+)?['"‘“]?[\w.+-]+['"’”]?\s+plan\s+is\s+free\b/i,
+  /\bfree\s+(?:plan|tier)\s+(?:now\s+)?(?:provides?|offers?|includes?|gives?)\b/i,
+  /\bthe\s+free\s+(?:plan|tier),?\s*['"‘“]?[\w .+-]{0,24}['"’”]?,?\s+(?:offers?|includes?|provides?)\b/i,
+  /\bis\s+\$0\s*(?:\/|\s+per\s+)\s*(?:month|mo|year|yr)\b/i,
+  /\$0\s*(?:\/|\s+per\s+)\s*(?:month|mo|year|yr)\s+forever\b/i,
+];
+
+const REPLACED_BY_SOMETHING_TEMPORARY =
+  /(?:\b\d+[- ]?(?:day|days|week|weeks|month|months)\b[^.;]{0,20}\b(?:trial|free)\b|\bfree\s+trial\b|\btrial\b[^.;]{0,20}\b(?:with|of|includes?)\b)/i;
+const TAKEN_AWAY =
+  /\b(?:no\s+longer|removing|removed|discontinu\w*|retir\w*|does\s+not\s+(?:offer|include)|ended|eliminat\w*|is\s+gone)\b/i;
+const QUALIFIER_WINDOW = 40;
+
+function sentences(text) {
+  return String(text ?? "").split(/(?<=[.;])\s+/).filter(Boolean);
+}
+
+export function clauseStatingAPlanIsStillFree(record) {
+  const stated = [record?.summary, record?.current_state].filter((f) => typeof f === "string");
+  for (const sentence of sentences(stated.join(" "))) {
+    if (TAKEN_AWAY.test(sentence)) continue;
+    for (const pattern of A_PLAN_ASSERTED_FREE) {
+      const found = pattern.exec(sentence);
+      if (!found) continue;
+      const around = sentence.slice(
+        Math.max(0, found.index - QUALIFIER_WINDOW),
+        found.index + found[0].length + QUALIFIER_WINDOW
+      );
+      if (REPLACED_BY_SOMETHING_TEMPORARY.test(around)) continue;
+      return sentence.trim();
+    }
+  }
+  return null;
+}
+
 const ONLY_THE_WORDING_MOVED = [
   /\b(?:description|wording|phrasing)\s+is\s+(?:now\s+)?less\s+(?:specific|detailed|explicit)\b/i,
   /\bonly\s+the\s+(?:description|wording|phrasing)\s+(?:has\s+)?changed\b/i,
@@ -1272,6 +1310,13 @@ export function auditRecord(record, context = {}) {
       return refuse(
         REJECT_FREE_TIER_STILL_OFFERED,
         `a free tier was recorded as removed by a summary that reports the page still offering one`
+      );
+    }
+    const stillFree = clauseStatingAPlanIsStillFree(record);
+    if (stillFree) {
+      return refuse(
+        REJECT_FREE_PLAN_STILL_DESCRIBED,
+        `a free tier was recorded as removed by a record that describes a free plan on offer now — "${stillFree}". A free tier on different limits has been narrowed, not removed`
       );
     }
     if (!evidenced && isDomainRoot(record?.source_url)) {
