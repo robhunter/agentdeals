@@ -638,7 +638,7 @@
       "vendor": "Hetzner",
       "change_type": "pricing_restructured",
       "date": "2026-04-01",
-      "summary": "Cloud & dedicated server prices increasing 30-50%. Entry-level CX23: €2.99→€3.99/mo (+33%). Applies to new and existing customers. Driven by DRAM (+171% YoY) and NVMe SSD cost surges from AI infrastructure demand. Superseded 2026-06-15: Hetzner ran a second adjustment across all cloud and dedicated lines, applying to new orders and rescales only, and renamed the lineup. Read from hetzner.com on 2026-09-03: CX23 is €5.99 and is marked \"not available\", as is every other shared-vCPU plan, and the cheapest orderable plan is CPX12 at €11.99/mo.",
+      "summary": "Cloud & dedicated server prices increasing 30-50%. Entry-level CX23: €2.99→€3.99/mo (+33%). Applies to new and existing customers. Driven by DRAM (+171% YoY) and NVMe SSD cost surges from AI infrastructure demand. Superseded 2026-06-15: Hetzner ran a second adjustment across all cloud and dedicated lines, applying to new orders and rescales only. Read from hetzner.com on 2026-09-03: CX23 is €5.99 and is marked \"not available\", as is every other shared-vCPU plan, and the cheapest orderable plan is CPX12 at €11.99/mo.",
       "previous_state": "Lower cloud server pricing across Germany, Finland, US, and Singapore data centers (e.g., CX23 at €2.99/mo)",
       "current_state": "30-37% increase on cloud servers, up to 50% on select dedicated/storage products. All regions and all customers (new and existing) affected. Announced Feb 23, 2026",
       "impact": "high",
@@ -650,6 +650,24 @@
         "OVHcloud"
       ],
       "recorded_date": "2026-02-26",
+      "date_source": "hand_written"
+    },
+    {
+      "vendor": "Hetzner",
+      "change_type": "pricing_restructured",
+      "date": "2026-06-15",
+      "summary": "Hetzner's second 2026 adjustment, effective 15 June, moved the two cloud lines at very different rates: shared-vCPU plans rose 30-38% (CX23 €3.99→€5.49, CAX11 €4.49→€5.99) and dedicated-vCPU plans rose 113-175% (CPX22 €7.99→€19.49, CCX13 €15.99→€42.99, CCX53 €249.99→€533.49). EU figures, taken from Hetzner's own old/new table and excluding the €0.50/mo primary IPv4 that hetzner.com's plan cards include in their displayed price. Scope: all dedicated servers and cloud plans at all locations, for new orders and rescales only — existing contracts keep their terms. Excluded: web hosting, managed servers, Server Auction, IPs, storage products, Load Balancers, Volumes, Snapshots and Object Storage. Setup fees on most dedicated servers were cut at the same time. Read on 2026-09-04: every Cost-Optimized plan (CX23-CX53, CAX11-CAX41) is marked \"not available\" on hetzner.com, so the line that rose least is the line nobody can order.",
+      "previous_state": "Post-April 2026 EU prices excluding IPv4: CX23 €3.99/mo, CX33 €6.49, CX43 €11.99, CX53 €22.49, CAX11 €4.49, CPX22 €7.99, CPX62 €50.49, CCX13 €15.99, CCX63 €374.49. Both the shared-vCPU and dedicated-vCPU lines orderable.",
+      "current_state": "EU prices excluding IPv4 from 2026-06-15: CX23 €5.49 (+37.6%), CX33 €8.49 (+30.8%), CX43 €15.99 (+33.4%), CX53 €29.49 (+31.1%), CAX11 €5.99 (+33.4%), CPX22 €19.49 (+143.9%), CPX62 €129.99 (+157.5%), CCX13 €42.99 (+168.9%), CCX63 €853.49 (+127.9%). US and Singapore moved by comparable multiples on the plans offered there. Applies to new orders and rescales; servers already running keep their contract terms.",
+      "impact": "high",
+      "source_url": "https://docs.hetzner.com/general/infrastructure-and-availability/price-adjustment/",
+      "category": "Cloud Hosting",
+      "alternatives": [
+        "DigitalOcean",
+        "Vultr",
+        "OVHcloud"
+      ],
+      "recorded_date": "2026-09-04",
       "date_source": "hand_written"
     },
     {
