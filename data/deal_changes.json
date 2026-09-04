@@ -6285,10 +6285,10 @@
     },
     {
       "vendor": "Formbricks",
-      "change_type": "free_tier_removed",
+      "change_type": "limits_reduced",
       "date": "2026-08-28",
       "date_source": "discovered",
-      "summary": "The Community/Free tier with unlimited surveys and responses no longer exists. The free tier, 'Hobby', offers 250 responses per month and core survey features.",
+      "summary": "The free tier on Formbricks Cloud is now 'Hobby' — 1 Workspace and 250 responses per month, where the Community Edition carried unlimited seats, surveys and responses. Self-hosting is still offered free.",
       "previous_state": "Open-source survey platform — Community Edition (self-hosted): unlimited seats, unlimited surveys, unlimited responses, all question types, advanced logic, custom styling, API access, all SDKs and integrations (MPL 2.0)",
       "current_state": "The Hobby plan is free and includes 1 Workspace, 250 responses per month, and core survey features like all question types, conditional logic, and full API access.",
       "impact": "high",
@@ -8068,7 +8068,13 @@
       "category": "Communication & Messaging",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-03"
+      "recorded_date": "2026-09-03",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-04",
+        "detail": "Retracted 2026-09-04: no free tier was removed. Microsoft Teams (free) is still offered, with 1:1 calls up to 30 hours and group meetings up to 60 minutes. The page this row was read from compares the paid business plans and does not carry the free version. This row was our error.",
+        "source_url": "https://www.microsoft.com/en-us/microsoft-teams/free"
+      }
     },
     {
       "vendor": "CircleCI",
@@ -8102,10 +8108,10 @@
     },
     {
       "vendor": "Mistral AI",
-      "change_type": "free_tier_removed",
+      "change_type": "pricing_restructured",
       "date": "2026-09-03",
       "date_source": "discovered",
-      "summary": "Previously 2 RPM and 1B tokens/month with no credit card required. The free tier now provides limited access to Vibe, including chat, search, creation, and Vibe for code, with limited messages, web searches, and image generations. It also includes access to Mistral Studio. There is a $10/month API credit option.",
+      "summary": "The free tier is no longer an API allowance of 2 RPM and 1B tokens a month across all models. It now carries limited messages, web searches and image generations in Vibe, plus access to Mistral Studio. $10 a month in API credits is sold separately.",
       "previous_state": "Access to all Mistral models including Large, Codestral, Pixtral — 2 RPM, 1B tokens/month. No credit card required",
       "current_state": "The free plan provides limited access to Vibe, including chat, search, creation, and Vibe for code. It includes limited messages, web searches, and image generations, and access to Mistral Studio. $10 /mo in API credits is also available.",
       "impact": "high",
