@@ -53,14 +53,10 @@ jobs:
           echo "retried=$RETRIED" >> "$GITHUB_OUTPUT"
           echo "repicked=$REPICKED" >> "$GITHUB_OUTPUT"
 
-      - name: Lower any quality budget this run's data has earned
-        run: |
-          npm run build
-          node scripts/ratchet-quality-budgets.js --lower
-
       - name: Run the suite, then push to main only if it is green
         id: gate
         env:
+          GATE_RATCHET_BUDGETS: "1"
           VERIFIED: ${{ steps.reverify.outputs.verified }}
           FLAGGED: ${{ steps.reverify.outputs.flagged }}
           RECORDED: ${{ steps.reverify.outputs.recorded }}

@@ -3,12 +3,13 @@ import assert from "node:assert";
 import { spawnSync } from "node:child_process";
 import { mkdtempSync, mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync, existsSync } from "node:fs";
 import { tmpdir } from "node:os";
-import { dirname, join } from "node:path";
+import { dirname, join, relative, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import {
   gateVerdict, parseNonBlockingTests, readNonBlockingTests,
 } from "../src/data-push-gate.ts";
+import { qualityBudgetsPath } from "../src/page-reviews.ts";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const REPO = join(__dirname, "..");
@@ -16,6 +17,27 @@ const WORKFLOWS = join(REPO, ".github", "workflows");
 const GATE = join(REPO, "scripts", "gate-data-push.sh");
 
 const GATED_WORKFLOWS = ["reverify.yml", "liveness.yml", "analytics-rollup.yml"];
+
+interface WorkflowStep {
+  name: string;
+  body: string;
+}
+
+function stepsOf(text: string): WorkflowStep[] {
+  const out: WorkflowStep[] = [];
+  for (const line of text.split("\n")) {
+    const start = line.match(/^ {6}- (?:name|uses):\s*(.+)$/);
+    if (start) out.push({ name: start[1]!.trim(), body: `${line}\n` });
+    else if (out.length > 0) out[out.length - 1]!.body += `${line}\n`;
+  }
+  return out;
+}
+
+function gateStepOf(file: string): WorkflowStep {
+  const step = stepsOf(source(file)).find((s) => /gate-data-push\.sh/.test(s.body));
+  assert.ok(step, `${file} has no step that invokes the gate`);
+  return step;
+}
 
 function workflowFiles(): string[] {
   return readdirSync(WORKFLOWS).filter((f) => /\.ya?ml$/.test(f)).sort();
@@ -167,6 +189,21 @@ const BUILD = `if (process.env.GATE_FIXTURE_BUILD === "fail") {
 }
 `;
 
+const BUDGETS_BEFORE = `${JSON.stringify({ version: 1, budgets: { fixture_pages: 57 } }, null, 2)}\n`;
+const BUDGETS_AFTER = `${JSON.stringify({ version: 1, budgets: { fixture_pages: 56 } }, null, 2)}\n`;
+
+const RATCHET = `import { writeFileSync } from "node:fs";
+const mode = process.env.GATE_FIXTURE_RATCHET || "lower";
+if (mode === "throw") {
+  console.log("the fixture ratchet could not read the data it measures");
+  process.exit(1);
+}
+if (mode === "lower") {
+  writeFileSync("data/quality_budgets.json", ${JSON.stringify(BUDGETS_AFTER)});
+  console.log("Lowered fixture_pages 57 -> 56");
+}
+`;
+
 const ALLOWLIST = JSON.stringify(
   {
     version: 1,
@@ -188,7 +225,11 @@ const PACKAGE = JSON.stringify(
     version: "1.0.0",
     private: true,
     type: "module",
-    scripts: { build: "node build.js", "test:gated": "node suite.js" },
+    scripts: {
+      build: "node build.js",
+      "test:gated": "node suite.js",
+      "ratchet:budgets": "node ratchet.js",
+    },
   },
   null,
   2,
@@ -214,8 +255,10 @@ function fixtureRepo(): { work: string; origin: string } {
   writeFileSync(join(work, "package.json"), PACKAGE);
   writeFileSync(join(work, "suite.js"), SUITE);
   writeFileSync(join(work, "build.js"), BUILD);
+  writeFileSync(join(work, "ratchet.js"), RATCHET);
   writeFileSync(join(work, "allowlist.json"), ALLOWLIST);
   writeFileSync(join(work, "data", "health.json"), '{"checked":1}\n');
+  writeFileSync(join(work, "data", "quality_budgets.json"), BUDGETS_BEFORE);
   writeFileSync(join(work, "untracked-by-the-gate.txt"), "before\n");
   git(work, "add", "-A");
   git(work, "commit", "-m", "fixture");
@@ -225,17 +268,26 @@ function fixtureRepo(): { work: string; origin: string } {
 
 type GateMode = keyof typeof FAILING_BY_MODE;
 
-function runGate(work: string, mode: GateMode | { mode: GateMode; build: "fail" }, ...args: string[]) {
-  const tests = typeof mode === "string" ? mode : mode.mode;
-  const build = typeof mode === "string" ? "ok" : mode.build;
+type RatchetMode = "lower" | "throw";
+
+interface GateRun {
+  mode: GateMode;
+  build?: "fail";
+  ratchet?: RatchetMode;
+}
+
+function runGate(work: string, mode: GateMode | GateRun, ...args: string[]) {
+  const opts: GateRun = typeof mode === "string" ? { mode } : mode;
   const outputs = join(work, "step-outputs.txt");
   const run = spawnSync("bash", [GATE, ...args], {
     cwd: work,
     encoding: "utf8",
     env: {
       ...process.env,
-      GATE_FIXTURE_TESTS: tests,
-      GATE_FIXTURE_BUILD: build,
+      GATE_FIXTURE_TESTS: opts.mode,
+      GATE_FIXTURE_BUILD: opts.build ?? "ok",
+      GATE_FIXTURE_RATCHET: opts.ratchet ?? "lower",
+      GATE_RATCHET_BUDGETS: opts.ratchet === undefined ? "" : "1",
       GITHUB_OUTPUT: outputs,
       AGENTDEALS_NON_BLOCKING_TESTS_PATH: join(work, "allowlist.json"),
     },
@@ -425,6 +477,161 @@ describe("#1321 a measurement of our own reading does not stop the catalogue adv
     assert.strictEqual(refs.length, 2, `two refusals left ${refs.length} refs: ${refs.join(", ")}`);
     const held = refs.map((r) => git(origin, "show", `${r}:data/health.json`)).sort();
     assert.deepStrictEqual(held, ['{"checked":10}', '{"checked":11}'], "a day's findings were overwritten");
+  });
+});
+
+describe("#1326 nothing that can fail stands between the day's data and the gate", () => {
+  it("runs the gate as the next step after the one that produced the data", () => {
+    for (const file of GATED_WORKFLOWS) {
+      const steps = stepsOf(source(file));
+      const gate = steps.findIndex((s) => /gate-data-push\.sh/.test(s.body));
+      assert.ok(gate > 0, `${file} has no gate step, or the gate is its first step`);
+      let producer = -1;
+      for (let i = 0; i < gate; i++) if (/\$GITHUB_OUTPUT/.test(steps[i]!.body)) producer = i;
+      assert.ok(producer >= 0, `${file} reaches its gate without a step that produced anything`);
+      assert.strictEqual(
+        gate,
+        producer + 1,
+        `${file} runs ${steps.slice(producer + 1, gate).map((s) => s.name).join(", ")} after producing the day's data ` +
+          `and before the gate that holds it — a failure there takes the data with the runner`,
+      );
+    }
+  });
+
+  it("lowers the daily run's budgets from inside the gate, where a failure is quarantined", () => {
+    const gate = gateStepOf("reverify.yml");
+    assert.match(gate.body, /GATE_RATCHET_BUDGETS: "1"/, "the daily run no longer banks the improvement its data earned");
+    assert.match(gate.body, /data\/quality_budgets\.json/, "the gate may lower a budget it is not allowed to commit");
+    assert.doesNotMatch(
+      source("reverify.yml"),
+      /ratchet-quality-budgets/,
+      "the ratchet still runs in a step of its own, upstream of every failure path the gate provides",
+    );
+  });
+
+  it("asks for the ratchet only where a budget is in the paths being committed", () => {
+    for (const file of GATED_WORKFLOWS) {
+      const gate = gateStepOf(file);
+      if (!/GATE_RATCHET_BUDGETS/.test(gate.body)) continue;
+      assert.match(gate.body, /data\/quality_budgets\.json/, `${file} lowers a budget it then leaves in the workspace`);
+    }
+  });
+
+  it("names the budgets file the code reads, so the shell and the code cannot drift", () => {
+    const declared = readFileSync(GATE, "utf8").match(/^BUDGETS_PATH="([^"]+)"$/m)?.[1];
+    assert.strictEqual(declared, relative(REPO, qualityBudgetsPath()).split(sep).join("/"));
+  });
+});
+
+describe("#1326 the gate, asked to lower a budget", () => {
+  before(() => {
+    scratch = mkdtempSync(join(tmpdir(), "gate-ratchet-"));
+  });
+
+  after(() => {
+    if (scratch && existsSync(scratch)) rmSync(scratch, { recursive: true, force: true });
+  });
+
+  const PATHS = ["data-quarantine/fixture", "data(auto): fixture", "data/health.json", "data/quality_budgets.json"];
+
+  it("puts the budget it lowers in the same commit as the data that earned it", () => {
+    const { work, origin } = fixtureRepo();
+    const before = mainSha(origin);
+    writeFileSync(join(work, "data", "health.json"), '{"checked":12}\n');
+
+    const run = runGate(work, { mode: "green", ratchet: "lower" }, ...PATHS);
+
+    assert.strictEqual(run.status, 0, `the gate refused a green run: ${run.stdout}${run.stderr}`);
+    assert.strictEqual(
+      git(origin, "rev-list", "--count", `${before}..main`),
+      "1",
+      "the lowered budget arrived as a commit of its own rather than with the data",
+    );
+    assert.deepStrictEqual(
+      git(origin, "show", "--name-only", "--format=", "main").split("\n").filter(Boolean).sort(),
+      ["data/health.json", "data/quality_budgets.json"],
+    );
+    assert.strictEqual(git(origin, "show", "main:data/quality_budgets.json"), BUDGETS_AFTER.trim());
+    assert.strictEqual(
+      git(origin, "log", "-1", "--format=%s", "main"),
+      "data(auto): fixture",
+      "amending the commit lost the message the run wrote",
+    );
+  });
+
+  it("holds the day's data on a ref of its own when the build the ratchet needs does not compile", () => {
+    const { work, origin } = fixtureRepo();
+    const before = mainSha(origin);
+    writeFileSync(join(work, "data", "health.json"), '{"checked":13}\n');
+
+    const run = runGate(work, { mode: "green", build: "fail", ratchet: "lower" }, ...PATHS);
+
+    assert.strictEqual(run.status, 1, `a build failure reached main: ${run.stdout}${run.stderr}`);
+    assert.strictEqual(mainSha(origin), before);
+    const refs = quarantineRefs(origin, "data-quarantine/fixture");
+    assert.strictEqual(refs.length, 1, `the day's data was discarded rather than held: ${refs.join(", ")}`);
+    assert.strictEqual(
+      git(origin, "show", `${refs[0]}:data/health.json`),
+      '{"checked":13}',
+      "the quarantine ref does not carry the data the run produced",
+    );
+    assert.match(run.stdout, /does not compile/);
+    assert.match(run.outputs, /quarantined=true/, "nothing downstream can report a refusal it is not told of");
+    assert.match(run.outputs, new RegExp(`quarantine_ref=${refs[0]}`));
+  });
+
+  it("holds the day's data on a ref of its own when the ratchet itself fails", () => {
+    const { work, origin } = fixtureRepo();
+    const before = mainSha(origin);
+    writeFileSync(join(work, "data", "health.json"), '{"checked":14}\n');
+
+    const run = runGate(work, { mode: "green", ratchet: "throw" }, ...PATHS);
+
+    assert.strictEqual(run.status, 1, `a run that could not measure a budget pushed anyway: ${run.stdout}${run.stderr}`);
+    assert.strictEqual(mainSha(origin), before);
+    const refs = quarantineRefs(origin, "data-quarantine/fixture");
+    assert.strictEqual(refs.length, 1, `failing to measure a budget cost the day's catalogue data: ${refs.join(", ")}`);
+    assert.strictEqual(git(origin, "show", `${refs[0]}:data/health.json`), '{"checked":14}');
+    assert.strictEqual(
+      git(origin, "show", `${refs[0]}:data/quality_budgets.json`),
+      BUDGETS_BEFORE.trim(),
+      "a ratchet that failed still moved a budget",
+    );
+    assert.match(run.stdout, /budgets could not be measured/);
+    assert.match(run.outputs, /quarantined=true/);
+    assert.match(run.outputs, new RegExp(`quarantine_ref=${refs[0]}`));
+  });
+
+  it("refuses to lower a budget it has not been given permission to commit", () => {
+    const { work, origin } = fixtureRepo();
+    const before = mainSha(origin);
+    writeFileSync(join(work, "data", "health.json"), '{"checked":15}\n');
+
+    const run = runGate(
+      work,
+      { mode: "green", ratchet: "lower" },
+      "data-quarantine/fixture",
+      "data(auto): fixture",
+      "data/health.json",
+    );
+
+    assert.strictEqual(run.status, 2, `${run.stdout}${run.stderr}`);
+    assert.match(run.stderr, /not among the paths this run may commit/);
+    assert.strictEqual(mainSha(origin), before);
+  });
+
+  it("leaves the budgets where they are on a run that did not ask for the ratchet", () => {
+    const { work, origin } = fixtureRepo();
+    writeFileSync(join(work, "data", "health.json"), '{"checked":16}\n');
+
+    const run = runGate(work, "green", ...PATHS);
+
+    assert.strictEqual(run.status, 0, `${run.stdout}${run.stderr}`);
+    assert.strictEqual(
+      git(origin, "show", "main:data/quality_budgets.json"),
+      BUDGETS_BEFORE.trim(),
+      "the gate lowered a budget for a job that never asked it to",
+    );
   });
 });
 

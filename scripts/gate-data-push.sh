@@ -12,6 +12,19 @@ shift 2
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 OUTPUT="${GITHUB_OUTPUT:-/dev/null}"
+RATCHET_BUDGETS="${GATE_RATCHET_BUDGETS:-}"
+BUDGETS_PATH="data/quality_budgets.json"
+
+if [ -n "$RATCHET_BUDGETS" ]; then
+  BUDGETS_COMMITTABLE=""
+  for path in "$@"; do
+    case "$BUDGETS_PATH" in "$path"|"$path"/*) BUDGETS_COMMITTABLE="yes" ;; esac
+  done
+  if [ -z "$BUDGETS_COMMITTABLE" ]; then
+    echo "usage: GATE_RATCHET_BUDGETS is set but $BUDGETS_PATH is not among the paths this run may commit ($*), so a budget lowered here would be left behind in the workspace." >&2
+    exit 2
+  fi
+fi
 
 if [ -z "$(git status --porcelain -- "$@")" ]; then
   echo "No change under $* — nothing to commit or push."
@@ -35,6 +48,7 @@ push_to_main() {
 }
 
 quarantine() {
+  local why="$1"
   local ref="${QUARANTINE_PREFIX}-$(date -u +%Y%m%dT%H%M%SZ)-${COMMIT}"
   {
     echo "quarantined=true"
@@ -42,9 +56,9 @@ quarantine() {
     echo "quarantined_commit=$COMMIT"
   } >>"$OUTPUT"
   if git push origin "HEAD:refs/heads/$ref"; then
-    echo "Suite red — $COMMIT is held on $ref and main is unchanged."
+    echo "$why — $COMMIT is held on $ref and main is unchanged."
   else
-    echo "Suite red — $COMMIT could not be held on $ref and main is unchanged. This run's data exists only in its own workspace."
+    echo "$why — $COMMIT could not be held on $ref and main is unchanged. This run's data exists only in its own workspace."
   fi
   exit 1
 }
@@ -56,7 +70,21 @@ summarize() {
 if ! npm run build >"$LOG" 2>&1; then
   tail -n 60 "$LOG"
   echo "The build failed, and no test-file allowance covers code that does not compile."
-  quarantine
+  quarantine "Build red"
+fi
+
+if [ -n "$RATCHET_BUDGETS" ]; then
+  echo "── Lowering any quality budget this run's data has earned ──"
+  if ! npm run ratchet:budgets; then
+    echo "The budgets could not be measured. That decides nothing about whether this run's data is right, so the data is held rather than discarded."
+    quarantine "Budget ratchet red"
+  fi
+  if [ -n "$(git status --porcelain -- "$@")" ]; then
+    git add -- "$@"
+    git commit -q --amend --no-edit
+    COMMIT="$(git rev-parse --short HEAD)"
+    echo "A budget fell to what this run's data measures, in the same commit as the data that earned it."
+  fi
 fi
 
 if npm run test:gated >>"$LOG" 2>&1; then
@@ -86,4 +114,4 @@ if node "$SCRIPT_DIR/gate-verdict.js" "$GATE_FAILING_FILES" >"$VERDICT" 2>&1; th
 fi
 
 cat "$VERDICT"
-quarantine
+quarantine "Suite red"
