@@ -563,7 +563,8 @@ describe("the live index, ranked", () => {
 
     assert.ok(demoted.get(subject)?.demerits.some((d) => d.code === "free_tier_withdrawn"), `${subject} withdrew a free tier and must be demoted`);
     assert.ok(demoted.get("Firebase")?.demerits.some((d) => d.code === "free_tier_withdrawn"), "an unrelated demotion must survive a new one");
-    assert.strictEqual(after.demoted.length, before.demoted.length + 1);
+    const offersUnderSubject = offers.filter((o) => o.vendor === subject).length;
+    assert.strictEqual(after.demoted.length, before.demoted.length + offersUnderSubject);
     assert.strictEqual(after.qualified.length, offers.length - after.demoted.length - after.excluded.length);
 
     const byVendor = changesByVendor(changes);
