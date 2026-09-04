@@ -53,14 +53,10 @@ jobs:
           echo "retried=$RETRIED" >> "$GITHUB_OUTPUT"
           echo "repicked=$REPICKED" >> "$GITHUB_OUTPUT"
 
-      - name: Lower any quality budget this run's data has earned
-        run: |
-          npm run build
-          node scripts/ratchet-quality-budgets.js --lower
-
       - name: Run the suite, then push to main only if it is green
         id: gate
         env:
+          GATE_RATCHET_BUDGETS: "1"
           VERIFIED: ${{ steps.reverify.outputs.verified }}
           FLAGGED: ${{ steps.reverify.outputs.flagged }}
           RECORDED: ${{ steps.reverify.outputs.recorded }}
@@ -79,10 +75,11 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           QUARANTINED: ${{ steps.gate.outputs.quarantined }}
           QUARANTINE_REF: ${{ steps.gate.outputs.quarantine_ref }}
+          QUARANTINE_REASON: ${{ steps.gate.outputs.quarantine_reason }}
           NON_BLOCKING_FILES: ${{ steps.gate.outputs.non_blocking_files }}
         run: |
           if [ "$QUARANTINED" = "true" ]; then
-            bash scripts/report-data-push-outcome.sh "Daily rolling re-verification" refused "$QUARANTINE_REF"
+            bash scripts/report-data-push-outcome.sh "Daily rolling re-verification" refused "$QUARANTINE_REF" "$QUARANTINE_REASON"
           else
             bash scripts/report-data-push-outcome.sh "Daily rolling re-verification" shipped-over-failures "$NON_BLOCKING_FILES"
           fi

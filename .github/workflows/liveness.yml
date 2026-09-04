@@ -57,10 +57,11 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           QUARANTINED: ${{ steps.gate.outputs.quarantined }}
           QUARANTINE_REF: ${{ steps.gate.outputs.quarantine_ref }}
+          QUARANTINE_REASON: ${{ steps.gate.outputs.quarantine_reason }}
           NON_BLOCKING_FILES: ${{ steps.gate.outputs.non_blocking_files }}
         run: |
           if [ "$QUARANTINED" = "true" ]; then
-            bash scripts/report-data-push-outcome.sh "Link liveness" refused "$QUARANTINE_REF"
+            bash scripts/report-data-push-outcome.sh "Link liveness" refused "$QUARANTINE_REF" "$QUARANTINE_REASON"
           else
             bash scripts/report-data-push-outcome.sh "Link liveness" shipped-over-failures "$NON_BLOCKING_FILES"
           fi
