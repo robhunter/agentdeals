@@ -5,6 +5,8 @@ import { writeFileSync, mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { LEVEL_WITHHOLDING_OUTCOMES, levelWithheldReason, withheldLevelClause } from "../dist/source-check.js";
+import type { LevelWithheldReason } from "../src/source-check.ts";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(__dirname, "..");
@@ -131,26 +133,29 @@ function aboutThisVendor({ body }: { body: string }): string {
   return [verdict, history, ...answers].join("\n");
 }
 
+function saidOfTheSubject(body: string): string {
+  const ownRow = body.match(/<tr class="current-vendor-row">[\s\S]*?<\/tr>/)?.[0];
+  assert.ok(ownRow, "the page must carry its own row in the comparison table");
+  const scope = [aboutThisVendor({ body }), ownRow, faqAnswers(body).join("\n")].join("\n");
+  const rows = scope.match(/<tr[ >]/g) ?? [];
+  assert.equal(rows.length, 1, "the scope holds the subject's row and no other vendor's");
+  assert.ok(scope.length < body.length, "the scope is narrower than the document it comes from");
+  return scope;
+}
+
+const FIXTURES = [
+  SOURCED_FROM_A_MARKETPLACE,
+  SOURCED_FROM_ITS_OWN_PAGE,
+  SOURCED_FROM_A_PAGE_WE_COULD_NOT_READ,
+  SOURCED_FROM_A_PAGE_STATING_NO_FIGURES,
+  SOURCED_FROM_A_PAGE_NAMING_ONLY_A_PLAN,
+  QUOTED_FROM_THE_PAGE_IT_CITES,
+];
+
 before(async () => {
   fixtureDir = mkdtempSync(path.join(tmpdir(), "source-check-"));
   const indexPath = path.join(fixtureDir, "index.json");
-  writeFileSync(
-    indexPath,
-    JSON.stringify(
-      {
-        offers: [
-          SOURCED_FROM_A_MARKETPLACE,
-          SOURCED_FROM_ITS_OWN_PAGE,
-          SOURCED_FROM_A_PAGE_WE_COULD_NOT_READ,
-          SOURCED_FROM_A_PAGE_STATING_NO_FIGURES,
-          SOURCED_FROM_A_PAGE_NAMING_ONLY_A_PLAN,
-          QUOTED_FROM_THE_PAGE_IT_CITES,
-        ],
-      },
-      null,
-      2
-    )
-  );
+  writeFileSync(indexPath, JSON.stringify({ offers: FIXTURES }, null, 2));
   proc = await startServer(indexPath);
 });
 
@@ -416,12 +421,32 @@ describe("a page we quote from is not also a page we say we can read nothing on"
 
   it("does not also say that page states no terms it can read", async () => {
     const { body } = await get("/vendor/longcorp");
-    assert.doesNotMatch(body, /states no terms we can read/);
+    assert.doesNotMatch(saidOfTheSubject(body), /states no terms we can read/);
   });
 
   it("keeps saying so where the quote comes from a different page", async () => {
     const { body } = await get("/vendor/prosecorp");
     assert.match(body, /dealmarket\.example\/offers<\/a>, where it says:/);
-    assert.match(body, /states no terms we can read/);
+    assert.match(saidOfTheSubject(body), /states no terms we can read/);
+  });
+
+  for (const subject of FIXTURES) {
+    const withheld = levelWithheldReason(subject, null);
+    it(`states of ${subject.vendor} only the withheld-source clause its own check earns`, async () => {
+      const { body } = await get(`/vendor/${subject.vendor.toLowerCase()}`);
+      const scope = saidOfTheSubject(body);
+      for (const reason of LEVEL_WITHHOLDING_OUTCOMES as LevelWithheldReason[]) {
+        const clause = withheldLevelClause(reason, "");
+        const pattern = new RegExp(clause.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i");
+        if (reason === withheld) assert.match(scope, pattern);
+        else assert.doesNotMatch(scope, pattern);
+      }
+    });
+  }
+
+  it("holds a fixture for every outcome that withholds a level, and one that withholds none", () => {
+    const outcomes = new Set(FIXTURES.map(f => f.source_check.outcome));
+    for (const reason of LEVEL_WITHHOLDING_OUTCOMES) assert.ok(outcomes.has(reason), reason);
+    assert.ok(FIXTURES.some(f => levelWithheldReason(f, null) === null));
   });
 });
