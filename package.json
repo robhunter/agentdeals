@@ -32,6 +32,8 @@
     "serve": "node dist/serve.js",
     "dev": "ts-node src/index.ts",
     "test": "node --test --test-concurrency 1 test/**/*.test.ts",
+    "test:gated": "node --test --test-concurrency 1 --test-reporter=spec --test-reporter-destination=stdout --test-reporter=./scripts/reporters/failing-test-files.js --test-reporter-destination=$GATE_FAILING_FILES test/**/*.test.ts",
+    "ratchet:budgets": "node scripts/ratchet-quality-budgets.js --lower",
     "lint": "tsc --noEmit",
     "check:staleness": "node scripts/check-staleness.js",
     "check:liveness": "node scripts/check-liveness.js",

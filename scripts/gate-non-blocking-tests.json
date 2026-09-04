@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "rule": "A test belongs here only when everything it fires on is a statement about how current our own editorial reading is, and nothing it fires on is a statement that the catalogue we are about to publish is wrong. Everything else holds the commit. This file is under scripts/, so no scheduled job can add to it — widening the gate takes a pull request.",
+  "tests": [
+    {
+      "file": "test/stale-page-facts.test.ts",
+      "reason": "counts the pages stating a vendor fact whose record has moved since the page was last read. Every pair it names is unread, not incorrect, and the count rises whenever the catalogue is re-verified."
+    },
+    {
+      "file": "test/page-data-provenance.test.ts",
+      "reason": "holds the register's declaration of where each page's numbers come from against what the page renders. A catalogue change can move a page from one class to the other, which means the register is behind, not that the catalogue is wrong."
+    }
+  ]
+}

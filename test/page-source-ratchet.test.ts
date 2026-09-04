@@ -110,7 +110,10 @@ describe("the number of tier-A pages asserting vendor facts from nowhere only go
   it("refuses a budget left above what the register now holds, so a freed slot cannot be reused", () => {
     const pages = filled(3);
     const problems = problemsFor(pages, measurementsFor(pages), 4);
-    assert.ok(problems.some(p => p.includes("lower UNSOURCED_TIER_A_BASELINE to 3")), problems.join(" | "));
+    assert.ok(
+      problems.some(p => p.includes("set unsourced_tier_a to 3 in data/quality_budgets.json")),
+      problems.join(" | ")
+    );
   });
 
   it("counts only tier A, because the budget is a claim about pages that state a verdict", () => {

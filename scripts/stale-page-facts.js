@@ -16,8 +16,8 @@ vendor, or one of its tables puts a number beside it. Either is a published clai
 either counts. A record dated after the page was last read means nobody has checked the
 claim against the record since the record moved — the pair is reported, not judged.
 
-The count of such pages is budgeted by STALE_FACT_PAGES_BASELINE and the budget does not
-rise. Run this when that budget refuses a build, to see which page entered.
+The count of such pages is budgeted by stale_fact_pages in data/quality_budgets.json and the
+budget does not rise. Run this when that budget refuses a build, to see which page entered.
 
 Usage: node scripts/stale-page-facts.js [options]
 
@@ -68,7 +68,7 @@ const tableOnlyPages = stale.filter(p => p.facts.every(f => f.surface === "table
 
 console.log(`${stale.length} of ${index.pages.length} pages state a vendor fact a record has moved under, on ${opts.date}`);
 console.log(`${pairs} page-vendor pairs, of which ${tableOnlyPairs} are named only by a table; ${tableOnlyPages} pages are in the cohort on a table alone`);
-console.log(`budget ${STALE_FACT_PAGES_BASELINE}`);
+console.log(`budget ${STALE_FACT_PAGES_BASELINE} (stale_fact_pages in data/quality_budgets.json)`);
 console.log("");
 
 for (const p of stale) {
