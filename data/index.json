@@ -442,9 +442,9 @@
         "free tier",
         "vercel-alternative"
       ],
-      "verifiedDate": "2026-08-21",
+      "verifiedDate": "2026-09-02",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-04",
         "outcome": "ok",
         "detail": "text"
       },
@@ -506,7 +506,7 @@
       ],
       "verifiedDate": "2026-08-22",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-04",
         "outcome": "ok",
         "detail": "text"
       }
@@ -854,7 +854,7 @@
       ],
       "verifiedDate": "2026-08-23",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-04",
         "outcome": "ok",
         "detail": "text"
       },
@@ -993,7 +993,7 @@
       ],
       "verifiedDate": "2026-08-23",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-04",
         "outcome": "ok",
         "detail": "text"
       },
@@ -1059,7 +1059,7 @@
       ],
       "verifiedDate": "2026-08-22",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-04",
         "outcome": "ok",
         "detail": "text"
       },
@@ -1222,7 +1222,7 @@
         "reviewed": "2026-08-25"
       },
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-04",
         "outcome": "ok",
         "detail": "text"
       }
@@ -1269,7 +1269,7 @@
         "free tier",
         "github-actions-alternative"
       ],
-      "verifiedDate": "2026-08-23",
+      "verifiedDate": "2026-09-04",
       "referral_program": {
         "available": false,
         "referrer_benefit": "N/A",
@@ -1279,9 +1279,9 @@
         "notes": "Channel partner program for resellers. No individual referral program."
       },
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-04",
         "outcome": "ok",
-        "detail": "url"
+        "detail": "text"
       }
     },
     {
@@ -1320,7 +1320,7 @@
       ],
       "verifiedDate": "2026-08-23",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-04",
         "outcome": "ok",
         "detail": "text"
       }
@@ -1339,9 +1339,9 @@
         "free tier",
         "github-actions-alternative"
       ],
-      "verifiedDate": "2026-08-24",
+      "verifiedDate": "2026-09-02",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-04",
         "outcome": "ok",
         "detail": "text"
       }
@@ -1795,7 +1795,7 @@
       ],
       "verifiedDate": "2026-08-22",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-04",
         "outcome": "ok",
         "detail": "text"
       }
@@ -1814,7 +1814,7 @@
       ],
       "verifiedDate": "2026-08-22",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-04",
         "outcome": "ok",
         "detail": "text"
       }
@@ -1832,7 +1832,7 @@
         "free tier",
         "email-service-alternative"
       ],
-      "verifiedDate": "2026-08-24",
+      "verifiedDate": "2026-09-04",
       "referral_program": {
         "available": true,
         "referrer_benefit": "20% recurring commission (12 months)",
@@ -1842,7 +1842,7 @@
         "commission_type": "one-time"
       },
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-04",
         "outcome": "ok",
         "detail": "text"
       }
@@ -1913,7 +1913,7 @@
         "commission_type": "one-time"
       },
       "source_check": {
-        "checked": "2026-09-03",
+        "checked": "2026-09-04",
         "outcome": "ok",
         "detail": "text",
         "unrendered_prices": [
@@ -2047,7 +2047,7 @@
       ],
       "verifiedDate": "2026-08-21",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-04",
         "outcome": "ok",
         "detail": "text"
       }
@@ -2104,7 +2104,7 @@
         "notes": "Channel partner program only. No individual referral program."
       },
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-04",
         "outcome": "ok",
         "detail": "text"
       }
@@ -2392,9 +2392,9 @@
         "agile",
         "free tier"
       ],
-      "verifiedDate": "2026-08-23",
+      "verifiedDate": "2026-09-02",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-04",
         "outcome": "ok",
         "detail": "text"
       }
@@ -2714,7 +2714,7 @@
         "subscriptions",
         "free tier"
       ],
-      "verifiedDate": "2026-08-22",
+      "verifiedDate": "2026-09-02",
       "payment_protocols": [
         {
           "protocol": "stripe-mpp",
@@ -2732,7 +2732,7 @@
         "notes": "Partner ecosystem but no individual referral/affiliate program. Integration partners only."
       },
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-04",
         "outcome": "ok",
         "detail": "text"
       }
@@ -2772,7 +2772,7 @@
       ],
       "verifiedDate": "2026-07-25",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-04",
         "outcome": "unreadable",
         "detail": "HTTP 429"
       }
@@ -3155,9 +3155,9 @@
         "retention",
         "free tier"
       ],
-      "verifiedDate": "2026-08-24",
+      "verifiedDate": "2026-09-02",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-04",
         "outcome": "ok",
         "detail": "text"
       }
@@ -3218,7 +3218,7 @@
       ],
       "verifiedDate": "2026-08-23",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-04",
         "outcome": "ok",
         "detail": "text"
       },
@@ -3558,9 +3558,9 @@
       },
       "expires_date": "2026-07-15",
       "source_check": {
-        "checked": "2026-08-28",
-        "outcome": "unreadable",
-        "detail": "HTTP 404"
+        "checked": "2026-09-04",
+        "outcome": "ok",
+        "detail": "text"
       }
     },
     {
@@ -3870,7 +3870,7 @@
         "notes": "Technology and SI partner programs. No individual referral program."
       },
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-04",
         "outcome": "unreadable",
         "detail": "HTTP 429"
       }
@@ -4058,7 +4058,7 @@
       ],
       "verifiedDate": "2026-08-22",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-04",
         "outcome": "ok",
         "detail": "text"
       }
@@ -4331,7 +4331,7 @@
       ],
       "verifiedDate": "2026-08-23",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-04",
         "outcome": "ok",
         "detail": "text"
       },
@@ -4609,7 +4609,7 @@
       ],
       "verifiedDate": "2026-04-19",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-04",
         "outcome": "unreadable",
         "detail": "HTTP 429"
       }
@@ -4875,7 +4875,7 @@
       ],
       "verifiedDate": "2026-04-19",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-04",
         "outcome": "unreadable",
         "detail": "HTTP 403"
       }
@@ -4973,9 +4973,9 @@
         "developer-portal",
         "free tier"
       ],
-      "verifiedDate": "2026-08-22",
+      "verifiedDate": "2026-09-04",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-04",
         "outcome": "ok",
         "detail": "text"
       }
@@ -5375,7 +5375,7 @@
         "program": "IBM Cloud for Startups"
       },
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-04",
         "outcome": "unreadable",
         "detail": "HTTP 404"
       }
@@ -5493,7 +5493,7 @@
       ],
       "verifiedDate": "2026-08-22",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-04",
         "outcome": "ok",
         "detail": "text"
       }
@@ -5768,7 +5768,7 @@
       ],
       "verifiedDate": "2026-05-02",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-04",
         "outcome": "unreadable",
         "detail": "HTTP 404"
       }
@@ -5960,7 +5960,7 @@
       ],
       "verifiedDate": "2026-08-21",
       "source_check": {
-        "checked": "2026-09-03",
+        "checked": "2026-09-04",
         "outcome": "ok",
         "detail": "text",
         "unrendered_prices": [
@@ -6256,7 +6256,7 @@
       ],
       "verifiedDate": "2026-08-23",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-04",
         "outcome": "ok",
         "detail": "text"
       }
@@ -6788,7 +6788,7 @@
       ],
       "verifiedDate": "2026-08-22",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-04",
         "outcome": "ok",
         "detail": "text"
       }
@@ -7038,7 +7038,7 @@
         "notes": "No public affiliate/referral program. Referral features reportedly in development but not launched."
       },
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-04",
         "outcome": "unreadable",
         "detail": "HTTP 403"
       },
@@ -7179,7 +7179,7 @@
         "github",
         "containers"
       ],
-      "verifiedDate": "2026-08-23",
+      "verifiedDate": "2026-09-03",
       "referral_program": {
         "available": false,
         "referrer_benefit": "N/A",
@@ -7189,7 +7189,7 @@
         "notes": "No individual referral program."
       },
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-04",
         "outcome": "ok",
         "detail": "text"
       }
@@ -7229,9 +7229,9 @@
         "zero-trust",
         "wireguard"
       ],
-      "verifiedDate": "2026-08-22",
+      "verifiedDate": "2026-09-02",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-04",
         "outcome": "ok",
         "detail": "text"
       }
@@ -7366,7 +7366,7 @@
       ],
       "verifiedDate": "2026-08-23",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-04",
         "outcome": "ok",
         "detail": "text"
       }
@@ -7641,7 +7641,7 @@
         "reviewed": "2026-08-25"
       },
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-04",
         "outcome": "ok",
         "detail": "text"
       }
@@ -7853,7 +7853,7 @@
       ],
       "verifiedDate": "2026-08-23",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-04",
         "outcome": "ok",
         "detail": "text"
       }
@@ -7893,7 +7893,7 @@
       ],
       "verifiedDate": "2026-08-23",
       "source_check": {
-        "checked": "2026-09-03",
+        "checked": "2026-09-04",
         "outcome": "ok",
         "detail": "text",
         "unrendered_prices": [
@@ -7953,9 +7953,9 @@
         "api",
         "malware"
       ],
-      "verifiedDate": "2026-08-23",
+      "verifiedDate": "2026-09-02",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-04",
         "outcome": "ok",
         "detail": "text"
       }
@@ -8494,7 +8494,7 @@
       ],
       "verifiedDate": "2026-07-15",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-04",
         "outcome": "unreadable",
         "detail": "fetch failed"
       }
@@ -8514,9 +8514,9 @@
       ],
       "verifiedDate": "2026-05-13",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-04",
         "outcome": "unreadable",
-        "detail": "HTTP 502"
+        "detail": "fetch failed"
       }
     },
     {
@@ -8534,7 +8534,7 @@
       ],
       "verifiedDate": "2026-06-09",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-04",
         "outcome": "unreadable",
         "detail": "HTTP 404"
       },
@@ -8887,7 +8887,7 @@
       ],
       "verifiedDate": "2026-08-22",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-04",
         "outcome": "ok",
         "detail": "text"
       },
@@ -9741,7 +9741,7 @@
       ],
       "verifiedDate": "2026-08-22",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-04",
         "outcome": "ok",
         "detail": "text"
       }
@@ -9813,7 +9813,7 @@
       ],
       "verifiedDate": "2026-06-12",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-04",
         "outcome": "unreadable",
         "detail": "HTTP 403"
       }
@@ -10037,7 +10037,7 @@
       ],
       "verifiedDate": "2026-06-10",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-04",
         "outcome": "unreadable",
         "detail": "HTTP 402"
       }
@@ -10678,7 +10678,7 @@
       ],
       "verifiedDate": "2026-08-22",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-04",
         "outcome": "ok",
         "detail": "text"
       }
@@ -11997,7 +11997,7 @@
       ],
       "verifiedDate": "2026-08-22",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-04",
         "outcome": "ok",
         "detail": "text"
       },
@@ -12217,9 +12217,9 @@
       ],
       "verifiedDate": "2026-08-02",
       "source_check": {
-        "checked": "2026-08-28",
-        "outcome": "unreadable",
-        "detail": "HTTP 503"
+        "checked": "2026-09-04",
+        "outcome": "states_no_terms",
+        "detail": "the page names Duckly but states no amount, tier or rate we can read, and its markup carries no structured data"
       }
     },
     {
@@ -13338,9 +13338,9 @@
       ],
       "verifiedDate": "2026-08-04",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-04",
         "outcome": "unreadable",
-        "detail": "HTTP 502"
+        "detail": "fetch failed"
       }
     },
     {
@@ -17228,7 +17228,7 @@
       ],
       "verifiedDate": "2026-08-23",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-04",
         "outcome": "ok",
         "detail": "text"
       }
@@ -21565,9 +21565,9 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-08-21",
+      "verifiedDate": "2026-09-03",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-04",
         "outcome": "ok",
         "detail": "text"
       }
@@ -21735,9 +21735,9 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-08-23",
+      "verifiedDate": "2026-09-02",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-04",
         "outcome": "ok",
         "detail": "text"
       }
@@ -32179,9 +32179,9 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-08-21",
+      "verifiedDate": "2026-09-02",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-04",
         "outcome": "ok",
         "detail": "text"
       }
@@ -32297,9 +32297,9 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-08-23",
+      "verifiedDate": "2026-09-02",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-04",
         "outcome": "ok",
         "detail": "url"
       }
@@ -32318,7 +32318,7 @@
       ],
       "verifiedDate": "2026-08-22",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-04",
         "outcome": "ok",
         "detail": "text"
       }
@@ -32355,7 +32355,7 @@
       ],
       "verifiedDate": "2026-08-21",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-04",
         "outcome": "ok",
         "detail": "text"
       }
@@ -32412,7 +32412,7 @@
       ],
       "verifiedDate": "2026-08-21",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-04",
         "outcome": "ok",
         "detail": "text"
       }
@@ -32500,7 +32500,7 @@
         "commission_type": "credits"
       },
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-04",
         "outcome": "ok",
         "detail": "text"
       }
@@ -32578,9 +32578,9 @@
       ],
       "verifiedDate": "2026-08-22",
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-04",
         "outcome": "states_no_amount",
-        "detail": "the page names NordPass and says \"Premium plans\" but states no amount, rate or price we can read"
+        "detail": "the page names NordPass and says \"Premium plans\" but states no amount, rate or price we can read, and the 2 structured-data blocks in its markup state no price"
       }
     },
     {
@@ -32618,7 +32618,7 @@
       ],
       "verifiedDate": "2026-08-22",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-04",
         "outcome": "ok",
         "detail": "text"
       }
@@ -32656,9 +32656,9 @@
       ],
       "verifiedDate": "2026-08-21",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-04",
         "outcome": "ok",
-        "detail": "url"
+        "detail": "text"
       }
     },
     {
@@ -32958,9 +32958,9 @@
         "consumer",
         "free"
       ],
-      "verifiedDate": "2026-08-21",
+      "verifiedDate": "2026-09-04",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-04",
         "outcome": "ok",
         "detail": "text"
       }
@@ -32978,7 +32978,7 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-08-20",
+      "verifiedDate": "2026-09-02",
       "referral_program": {
         "available": true,
         "referrer_benefit": "Free months of service",
@@ -32988,9 +32988,9 @@
         "commission_type": "credits"
       },
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-04",
         "outcome": "states_no_amount",
-        "detail": "the page names Proton VPN and says \"free forever\" but states no amount, rate or price we can read"
+        "detail": "the page names Proton VPN and says \"free forever\" but states no amount, rate or price we can read, and the 1 structured-data block in its markup states no price"
       }
     },
     {
@@ -33008,7 +33008,7 @@
       ],
       "verifiedDate": "2026-08-23",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-04",
         "outcome": "ok",
         "detail": "text"
       }
@@ -33235,7 +33235,7 @@
       ],
       "verifiedDate": "2026-08-22",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-04",
         "outcome": "ok",
         "detail": "text"
       }
@@ -33319,7 +33319,7 @@
         "commission_type": "credits"
       },
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-04",
         "outcome": "ok",
         "detail": "text"
       }
@@ -33338,9 +33338,9 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-08-23",
+      "verifiedDate": "2026-09-03",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-04",
         "outcome": "ok",
         "detail": "host"
       }
@@ -33378,7 +33378,7 @@
       ],
       "verifiedDate": "2026-08-20",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-04",
         "outcome": "ok",
         "detail": "text"
       }
@@ -33437,7 +33437,7 @@
       ],
       "verifiedDate": "2026-08-22",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-04",
         "outcome": "ok",
         "detail": "text"
       }
@@ -33475,9 +33475,9 @@
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-08-23",
+      "verifiedDate": "2026-09-04",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-04",
         "outcome": "ok",
         "detail": "text"
       }
@@ -33980,7 +33980,7 @@
         }
       ],
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-04",
         "outcome": "ok",
         "detail": "text"
       },
@@ -34103,7 +34103,7 @@
         "inference",
         "free tier"
       ],
-      "verifiedDate": "2026-08-21",
+      "verifiedDate": "2026-09-02",
       "payment_protocols": [
         {
           "protocol": "x402",
@@ -34114,7 +34114,7 @@
         }
       ],
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-04",
         "outcome": "ok",
         "detail": "text"
       },
