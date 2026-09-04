@@ -882,10 +882,13 @@ function globalNavCss(): string {
 .nav-dropdown .nav-link:hover{background:var(--accent-glow)}
 .nav-hamburger{display:none;background:none;border:none;color:var(--text);font-size:1.3rem;cursor:pointer;padding:.3rem;margin-left:auto;line-height:1}
 .nav-items{display:flex;align-items:center;gap:.25rem}
+.page-head{display:flex;flex-direction:column}
+.page-head .global-nav{order:1}
+.page-claim{order:2;margin:0;padding:1rem 0 0;font-size:.95rem;line-height:1.6;color:var(--text-muted)}
 @media(max-width:768px){.nav-hamburger{display:block}.nav-items{display:none;position:absolute;top:100%;left:0;right:0;background:var(--bg-elevated);border:1px solid var(--border);border-radius:0 0 8px 8px;padding:.5rem;flex-direction:column;align-items:stretch;gap:0;z-index:99;box-shadow:0 4px 12px rgba(0,0,0,.1)}.nav-items.open{display:flex}.global-nav{flex-wrap:wrap;position:relative}.nav-group{width:100%}.nav-group-toggle{width:100%;justify-content:space-between;padding:.5rem .75rem}.nav-dropdown{position:static;box-shadow:none;border:none;padding:0 0 0 1rem;background:transparent;min-width:auto}.nav-group:hover .nav-dropdown{display:none}.nav-group.open .nav-dropdown{display:block}.nav-link{padding:.4rem .75rem}.nav-link.standalone{padding:.5rem .75rem}}`;
 }
 
-function buildGlobalNav(active: NavSection): string {
+function buildGlobalNav(active: NavSection, pageClaim?: string): string {
   type NavLink = { href: string; label: string; section: NavSection };
   type NavGroup = { label: string; items: NavLink[] };
 
@@ -940,12 +943,17 @@ function buildGlobalNav(active: NavSection): string {
       + '</div>';
   }).join("");
 
-  return '<nav class="global-nav">'
+  const nav = '<nav class="global-nav">'
     + '<a href="/" class="global-nav-home">AgentDeals</a>'
     + '<button class="nav-hamburger" aria-label="Toggle menu" aria-expanded="false">&#9776;</button>'
     + '<div class="nav-items">' + searchLink + groupsHtml + '</div>'
-    + '</nav>'
-    + '<script>' + globalNavJs() + '</script>';
+    + '</nav>';
+
+  const head = pageClaim
+    ? '<div class="page-head"><p class="page-claim">' + escHtmlServer(pageClaim) + '</p>' + nav + '</div>'
+    : nav;
+
+  return head + '<script>' + globalNavJs() + '</script>';
 }
 
 function globalNavJs(): string {
@@ -4839,6 +4847,14 @@ ${vendorListHtml}
 </html>`;
 }
 
+const MONITORING_COMPARISON_TITLE = "Free Tiers for Error Tracking, Monitoring & Observability 2026 — Datadog vs Grafana Cloud vs New Relic vs Better Stack vs Sentry";
+const MONITORING_COMPARISON_META_DESC = "Which error tracking, application monitoring and observability services still have a genuinely free tier in 2026. 25+ compared — Datadog, Grafana Cloud, New Relic, Better Stack, Sentry, Checkly, SigNoz, HyperDX, Elastic — free data ingest, retention and APM limits, and what monitoring costs at 10/50/100/500 hosts.";
+const MONITORING_COMPARISON_CLAIM = "Free tiers for error tracking, application monitoring and observability: what Datadog, Grafana Cloud, New Relic, Better Stack and Sentry give away, and what monitoring costs once you outgrow it.";
+
+const LLM_API_PRICING_TITLE = "LLM API Free Tiers & Free Credits 2026 — LLM API Pricing Comparison: Token Costs, Rate Limits & Hidden Limits";
+const LLM_API_PRICING_META_DESC = "Which LLM APIs have a genuinely free tier or free credits in 2026, and what tokens cost once you exceed it. OpenAI, Anthropic, Google Gemini, Mistral, Groq, DeepSeek, Cerebras, OpenRouter, Cohere and xAI compared — free tier limits, rate limits, context windows and per-token pricing.";
+const LLM_API_PRICING_CLAIM = "Which LLM APIs have a genuinely free tier or free credits, and which only sell tokens: free limits, rate limits and per-token cost for OpenAI, Anthropic, Google Gemini, Groq, DeepSeek and more.";
+
 interface AlternativesPageConfig {
   slug: string;
   title: string;
@@ -6576,12 +6592,12 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
   },
   {
     slug: "llm-api-pricing",
-    title: "LLM API Pricing Comparison 2026 — Free Tiers, Token Costs & Hidden Limits",
-    metaDesc: "Compare 20+ LLM API providers: OpenAI, Anthropic, Google Gemini, Mistral, Groq, DeepSeek, Cerebras, OpenRouter, Cohere, xAI and more. Free tiers, per-token pricing, rate limits, and context windows. Updated April 2026.",
+    title: LLM_API_PRICING_TITLE,
+    metaDesc: LLM_API_PRICING_META_DESC,
     contextHtml: "",
     tag: "llm-api-pricing",
     primaryVendor: "OpenAI",
-    hubDesc: "The definitive LLM API pricing comparison — 20+ providers across frontier labs, inference providers, open-source hosts, and specialized services with free tier analysis and token cost breakdowns",
+    hubDesc: "Which LLM APIs have a genuinely free tier or free credits — frontier labs, inference providers, open-source hosts, and specialized services with free tier analysis and token cost breakdowns",
   },
   {
     slug: "aws-free-tier-2026",
@@ -6666,8 +6682,8 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
   },
   {
     slug: "monitoring-comparison-2026",
-    title: "Monitoring & Observability Comparison 2026 — Datadog vs Grafana Cloud vs New Relic vs Better Stack",
-    metaDesc: "Comprehensive comparison of 25+ monitoring free tiers in 2026. Datadog, Grafana Cloud, New Relic, Better Stack, Sentry, Checkly, SigNoz, HyperDX, and more — data ingest, retention, APM, scaling costs at 10/50/100/500 hosts.",
+    title: MONITORING_COMPARISON_TITLE,
+    metaDesc: MONITORING_COMPARISON_META_DESC,
     contextHtml: "",
     tag: "monitoring-comparison-2026",
     primaryVendor: "Datadog",
@@ -30953,8 +30969,8 @@ function buildHostingPricingPage(): string {
 }
 
 function buildLlmApiPricingPage(): string {
-  const title = "LLM API Pricing Comparison 2026 — Free Tiers, Token Costs & Hidden Limits";
-  const metaDesc = "Compare 20+ LLM API providers: OpenAI, Anthropic, Google Gemini, Mistral, Groq, DeepSeek, Cerebras, OpenRouter, Cohere, xAI and more. Free tiers, per-token pricing, rate limits, and context windows. Updated April 2026.";
+  const title = LLM_API_PRICING_TITLE;
+  const metaDesc = LLM_API_PRICING_META_DESC;
   const slug = "llm-api-pricing";
   const pubDate = "2026-04-13";
 
@@ -31445,9 +31461,9 @@ function buildLlmApiPricingPage(): string {
     mcpCtaCss() + '\n' +
     '</style>\n</head>\n<body>\n' +
     '<div class="container">\n' +
-    '  ' + buildGlobalNav("changes") + '\n' +
+    '  ' + buildGlobalNav("changes", LLM_API_PRICING_CLAIM) + '\n' +
     '  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/ai-ml-alternatives">AI / ML</a> &rsaquo; LLM API Pricing</div>\n' +
-    '  <h1>LLM API Pricing &mdash; The 2026 Comparison</h1>\n' +
+    '  <h1>LLM API Free Tiers and Free Credits &mdash; The 2026 Comparison</h1>\n' +
     '  <p class="pub-date">Published ' + pubDate + pageFreshness("/llm-api-pricing") + ' &middot; ' + providers.length + ' providers compared &middot; ' + pageDataProvenance("/llm-api-pricing", offers.length) + ' &middot; ' + llmChanges.length + ' pricing changes tracked</p>\n' +
     '\n' +
     '  <div class="summary-stats">\n' +
@@ -39752,8 +39768,8 @@ ${mcpCtaCss()}
 }
 
 function buildMonitoringComparison2026Page(): string {
-  const title = "Monitoring & Observability Comparison 2026 — Datadog vs Grafana Cloud vs New Relic vs Better Stack";
-  const metaDescMonitoring = "Comprehensive comparison of 25+ monitoring free tiers in 2026. Datadog, Grafana Cloud, New Relic, Better Stack, Sentry, Checkly, SigNoz, HyperDX, Elastic, and more — data ingest, retention, APM, scaling costs at 10/50/100/500 hosts.";
+  const title = MONITORING_COMPARISON_TITLE;
+  const metaDescMonitoring = MONITORING_COMPARISON_META_DESC;
   const slug = "monitoring-comparison-2026";
   const pubDate = "2026-04-03";
 
@@ -39903,9 +39919,9 @@ ${mcpCtaCss()}
 </head>
 <body>
 <div class="container">
-  ${buildGlobalNav("guides")}
+  ${buildGlobalNav("guides", MONITORING_COMPARISON_CLAIM)}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/category/monitoring">Monitoring</a> &rsaquo; Monitoring &amp; Observability Comparison</div>
-  <h1>Monitoring &amp; Observability Comparison 2026</h1>
+  <h1>Free Tiers for Error Tracking, Monitoring &amp; Observability 2026</h1>
   <p class="pub-date">Published ${pubDate}${pageFreshness("/monitoring-comparison-2026")} &middot; ${pageDataProvenance("/monitoring-comparison-2026", offers.length)} &middot; 25+ monitoring services compared</p>
 
   ${buildComparisonCategoryBackLink(slug)}
