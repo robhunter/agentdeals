@@ -2,13 +2,14 @@
 set -euo pipefail
 
 if [ "$#" -lt 2 ]; then
-  echo "usage: report-data-push-outcome.sh <job-name> refused|shipped-over-failures [detail]" >&2
+  echo "usage: report-data-push-outcome.sh <job-name> refused|shipped-over-failures [detail] [reason]" >&2
   exit 2
 fi
 
 JOB="$1"
 OUTCOME="$2"
 DETAIL="${3:-}"
+REASON="${4:-the suite refused it}"
 SERVER="${GITHUB_SERVER_URL:-https://github.com}"
 REPO="${GITHUB_REPOSITORY:-robhunter/agentdeals}"
 RUN_URL="$SERVER/$REPO/actions/runs/${GITHUB_RUN_ID:-unknown}"
@@ -23,7 +24,7 @@ case "$OUTCOME" in
     LABEL="priority/high"
     COMMENT_EVERY_TIME="yes"
     {
-      echo "\`$JOB\` produced data the suite refused, so \`main\` did not move and the catalogue did not advance."
+      echo "\`$JOB\` produced data that did not reach \`main\`, because $REASON. The catalogue did not advance."
       echo
       if [ -n "$DETAIL" ]; then
         echo "The refused commit is held on [\`$DETAIL\`]($SERVER/$REPO/tree/$DETAIL). Each refusal gets its own ref, so this one is not overwritten by the next."
@@ -35,7 +36,7 @@ case "$OUTCOME" in
       echo
       echo "Until this clears, the queue does not advance: the next run picks the same entries, finds the same things, and is refused again."
       echo
-      echo "What to do: read the failing tests in the run, fix them on \`main\`, then merge the quarantined data or let the next scheduled run redo it."
+      echo "What to do: read the run for what went red, fix it on \`main\`, then merge the quarantined data or let the next scheduled run redo it."
     } >"$BODY"
     ;;
   shipped-over-failures)

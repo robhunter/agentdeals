@@ -521,6 +521,29 @@ describe("#1326 nothing that can fail stands between the day's data and the gate
     const declared = readFileSync(GATE, "utf8").match(/^BUDGETS_PATH="([^"]+)"$/m)?.[1];
     assert.strictEqual(declared, relative(REPO, qualityBudgetsPath()).split(sep).join("/"));
   });
+
+  it("tells the refusal issue which of the three things went wrong, not just that something did", () => {
+    const gate = readFileSync(GATE, "utf8");
+    const reasons = [...gate.matchAll(/^\s*quarantine "([^"]+)"$/gm)].map((m) => m[1]!);
+    assert.deepStrictEqual(
+      reasons.sort(),
+      ["the build does not compile", "the quality budgets could not be measured", "the suite refused it"],
+      "the gate can hold a commit for a reason the issue it opens cannot name",
+    );
+    assert.match(gate, /echo "quarantine_reason=\$why"/, "the reason never reaches the step output");
+    for (const file of GATED_WORKFLOWS) {
+      assert.match(
+        source(file),
+        /report-data-push-outcome\.sh "[^"]+" refused "\$QUARANTINE_REF" "\$QUARANTINE_REASON"/,
+        `${file} opens an issue that tells a reader to look for failing tests whatever went wrong`,
+      );
+    }
+    assert.doesNotMatch(
+      readFileSync(join(REPO, "scripts", "report-data-push-outcome.sh"), "utf8"),
+      /read the failing tests in the run/,
+      "the refusal issue still sends a reader to failing tests when the build is what broke",
+    );
+  });
 });
 
 describe("#1326 the gate, asked to lower a budget", () => {
@@ -578,6 +601,7 @@ describe("#1326 the gate, asked to lower a budget", () => {
     assert.match(run.stdout, /does not compile/);
     assert.match(run.outputs, /quarantined=true/, "nothing downstream can report a refusal it is not told of");
     assert.match(run.outputs, new RegExp(`quarantine_ref=${refs[0]}`));
+    assert.match(run.outputs, /quarantine_reason=the build does not compile/);
   });
 
   it("holds the day's data on a ref of its own when the ratchet itself fails", () => {
@@ -600,6 +624,7 @@ describe("#1326 the gate, asked to lower a budget", () => {
     assert.match(run.stdout, /budgets could not be measured/);
     assert.match(run.outputs, /quarantined=true/);
     assert.match(run.outputs, new RegExp(`quarantine_ref=${refs[0]}`));
+    assert.match(run.outputs, /quarantine_reason=the quality budgets could not be measured/);
   });
 
   it("refuses to lower a budget it has not been given permission to commit", () => {

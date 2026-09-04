@@ -54,11 +54,12 @@ quarantine() {
     echo "quarantined=true"
     echo "quarantine_ref=$ref"
     echo "quarantined_commit=$COMMIT"
+    echo "quarantine_reason=$why"
   } >>"$OUTPUT"
   if git push origin "HEAD:refs/heads/$ref"; then
-    echo "$why — $COMMIT is held on $ref and main is unchanged."
+    echo "Held back because $why — $COMMIT is on $ref and main is unchanged."
   else
-    echo "$why — $COMMIT could not be held on $ref and main is unchanged. This run's data exists only in its own workspace."
+    echo "Held back because $why — $COMMIT could not be pushed to $ref and main is unchanged. This run's data exists only in its own workspace."
   fi
   exit 1
 }
@@ -70,14 +71,14 @@ summarize() {
 if ! npm run build >"$LOG" 2>&1; then
   tail -n 60 "$LOG"
   echo "The build failed, and no test-file allowance covers code that does not compile."
-  quarantine "Build red"
+  quarantine "the build does not compile"
 fi
 
 if [ -n "$RATCHET_BUDGETS" ]; then
   echo "── Lowering any quality budget this run's data has earned ──"
   if ! npm run ratchet:budgets; then
     echo "The budgets could not be measured. That decides nothing about whether this run's data is right, so the data is held rather than discarded."
-    quarantine "Budget ratchet red"
+    quarantine "the quality budgets could not be measured"
   fi
   if [ -n "$(git status --porcelain -- "$@")" ]; then
     git add -- "$@"
@@ -114,4 +115,4 @@ if node "$SCRIPT_DIR/gate-verdict.js" "$GATE_FAILING_FILES" >"$VERDICT" 2>&1; th
 fi
 
 cat "$VERDICT"
-quarantine "Suite red"
+quarantine "the suite refused it"
