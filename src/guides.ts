@@ -18,7 +18,7 @@ const GUIDE_ENTRIES: Array<{ slug: string; title: string; description: string }>
   { slug: "localstack-alternatives", title: "LocalStack CE Alternatives", description: "LocalStack CE shuts down March 23, 2026 — compare 9 free open-source AWS emulators" },
   { slug: "postman-alternatives", title: "Postman Alternatives", description: "Postman killed free team collaboration March 1, 2026 — 5 free API testing alternatives" },
   { slug: "terraform-alternatives", title: "HCP Terraform Alternatives", description: "HCP Terraform legacy plan ends March 31, 2026 — free IaC alternatives compared" },
-  { slug: "hetzner-alternatives", title: "Hetzner Alternatives", description: "Hetzner raises prices 30–50% on April 1, 2026 — cloud hosting alternatives with free tiers" },
+  { slug: "hetzner-alternatives", title: "Hetzner Alternatives", description: "Hetzner raised prices twice in 2026 and its shared-vCPU line is unavailable — cloud hosting alternatives with free tiers" },
   { slug: "freshping-alternatives", title: "Freshping Alternatives", description: "Freshping shut down March 6, 2026 — 13 free uptime monitoring alternatives" },
   { slug: "heroku-alternatives", title: "Heroku Alternatives", description: "Heroku removed free tier Nov 2022, entered sustaining mode Feb 2026 — 8 free PaaS options" },
   { slug: "firebase-alternatives", title: "Firebase Alternatives", description: "Firebase Studio shut down March 19, 2026 + Spark forced Blaze migration — 7 BaaS alternatives" },
