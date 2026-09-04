@@ -2544,7 +2544,7 @@ const VS_PAGES: VsPageConfig[] = [
     verdict: "Netlify excels at frontend/Jamstack deployments with its credit-based system, while Render is the best free option for backend services with containers, Postgres, and Redis included. Different tools for different layers of the stack.",
     keyDifferences: `<ul>
       <li><strong>Specialization:</strong> Netlify is frontend-focused (static sites, serverless functions, edge). Render is full-stack (web services, databases, Redis, cron jobs, Docker containers).</li>
-      <li><strong>Free tier model:</strong> Netlify uses 300 credits/month (deploys cost 15 credits, bandwidth costs 10 credits/GB). Render offers free web services with 512 MB RAM plus free PostgreSQL and Redis instances.</li>
+      <li><strong>Free tier model:</strong> Netlify uses 300 credits/month (deploys cost 15 credits, bandwidth costs 20 credits/GB). Render offers free web services with 512 MB RAM plus free PostgreSQL and Redis instances.</li>
       <li><strong>Backend support:</strong> Render provides persistent containers with 512 MB RAM, managed Postgres (256 MB), and Redis (25 MB). Netlify's backend is limited to serverless functions with execution limits.</li>
       <li><strong>Cold starts:</strong> Render free services spin down after 15 minutes of inactivity (30-60s cold start). Netlify's serverless functions have typical cold start latency but no spin-down.</li>
     </ul>`,
@@ -5624,7 +5624,7 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
       <tr>
         <td style="font-weight:600"><a href="/vendor/netlify" style="color:var(--text)">Netlify</a></td>
         <td>Free (300 credits/mo)</td>
-        <td>~30 GB (credit-based)</td>
+        <td>~15 GB (credit-based)</td>
         <td>~20 builds (credit-based)</td>
         <td>Jamstack + form handling</td>
       </tr>
@@ -19405,7 +19405,7 @@ function buildVercelVsNetlifyPage(): string {
   );
 
   const comparisonRows = [
-    { feature: "Bandwidth", vercel: "100 GB/mo Fast Data Transfer", netlify: "300 credits/mo (10 credits/GB ≈ 30 GB)", notes: "Vercel has 3× more raw bandwidth. Netlify's credit model bundles bandwidth with deploys and compute" },
+    { feature: "Bandwidth", vercel: "100 GB/mo Fast Data Transfer", netlify: "300 credits/mo (20 credits/GB ≈ 15 GB)", notes: "Vercel has 6.7× more raw bandwidth. Netlify's credit model bundles bandwidth with deploys and compute" },
     { feature: "Serverless Functions", vercel: "1M invocations, 4 hrs Active CPU", netlify: "Credit-based (shared pool)", notes: "Vercel has explicit function limits. Netlify shares credits across all usage" },
     { feature: "Edge Requests", vercel: "1M/month", netlify: "Included in credits", notes: "Vercel tracks edge requests separately" },
     { feature: "Build Minutes", vercel: "Included (no separate limit)", netlify: "300/month (15 credits/deploy)", notes: "Vercel includes builds. Netlify's 300 credits cover ~20 deploys at 15 credits each" },
@@ -19566,7 +19566,7 @@ ${mcpCtaCss()}
 
   <div class="executive-summary">
     <p><strong>Quick verdict:</strong> Choose <strong>Vercel</strong> if you're building with Next.js and don't need commercial use on the free tier. Choose <strong>Netlify</strong> if you want framework flexibility and commercial use allowed on the free plan.</p>
-    <p><strong>On free tiers:</strong> Vercel offers more generous explicit limits — 100 GB bandwidth, 1M function invocations, 1 GB Blob Storage, and 5K image optimizations. Netlify's credit-based model (300 credits/month) is harder to compare directly but covers roughly 30 GB bandwidth or ~20 deploys before credits run out.</p>
+    <p><strong>On free tiers:</strong> Vercel offers more generous explicit limits — 100 GB bandwidth, 1M function invocations, 1 GB Blob Storage, and 5K image optimizations. Netlify's credit-based model (300 credits/month) is harder to compare directly but covers roughly 15 GB bandwidth or ~20 deploys before credits run out.</p>
     <p><strong>The big difference:</strong> Vercel's Hobby plan is <strong>non-commercial only</strong> — if your site earns revenue (ads, subscriptions, paid features), you need Pro at $20/member/mo. Netlify's Starter plan allows commercial use. This is the single most important distinction for most developers.</p>
   </div>
 
@@ -30582,7 +30582,7 @@ function buildHostingPricingPage(): string {
     { q: "Is Heroku still worth it without a free tier?", a: "Heroku removed its free tier in November 2022. The cheapest option is now Eco dynos at $5/month (shared compute, sleeps after 30 min). For most use cases, Railway ($5/mo with $5 credit), Render (free tier with spin-down), or Fly.io provide better value." },
     { q: "What are the hidden costs of Vercel?", a: "New Pro projects default to Turbo build machines at $0.126/min — 9x the cost of Standard builds ($0.014/min). The Pro plan moved to a credit-based model ($20/mo credit pool) in January 2026. Image Optimization has separate quotas. The Hobby plan is restricted to personal, non-commercial use." },
     { q: "Which PaaS is best for side projects?", a: "For static sites: Cloudflare Pages (unlimited free bandwidth) or GitHub Pages. For full-stack: Railway ($5 free credit, no card required), Render (free tier with 15-min spin-down), or Vercel Hobby. For serverless APIs: Cloudflare Workers (100K req/day free) or Deno Deploy (1M req/month)." },
-    { q: "Which hosting platform is best for production apps?", a: "Vercel for Next.js/React apps ($20/seat). Railway for general-purpose apps ($5/mo hobby, $20/seat team). Google Cloud Run for container workloads with auto-scaling. Fly.io for latency-sensitive apps needing multi-region deployment. Avoid Netlify for teams — the per-committer billing ($19/seat per repo committer) can be expensive." },
+    { q: "Which hosting platform is best for production apps?", a: "Vercel for Next.js/React apps ($20/seat). Railway for general-purpose apps ($5/mo hobby, $20/seat team). Google Cloud Run for container workloads with auto-scaling. Fly.io for latency-sensitive apps needing multi-region deployment." },
   ];
 
   const jsonLd = {
@@ -30713,7 +30713,7 @@ function buildHostingPricingPage(): string {
     '\n' +
     '  <div class="executive-summary">\n' +
     '    <p><strong>Cloud hosting in April 2026:</strong> ' + services.length + ' platforms across four categories \u2014 traditional PaaS, edge/serverless, full-featured platforms, and static/specialized hosts. $5/month has become the entry price for always-on compute (Railway Hobby, Heroku Eco). Cloudflare dominates the free tier with unlimited bandwidth and 100K requests/day. The big shift: credit-based pricing is replacing flat-rate plans (Vercel Jan 2026, Netlify Sep 2025).</p>\n' +
-    '    <p><strong>Key trends:</strong> Heroku\'s free tier removal (2022) drove a migration wave to Railway, Render, and Fly.io. Netlify\'s per-committer billing (March 2026) is pushing teams to Vercel or Cloudflare Pages. Google is flooding the market with generous always-free tiers (Cloud Run: 2M requests/month). Edge computing is making traditional PaaS less necessary for many workloads.</p>\n' +
+    '    <p><strong>Key trends:</strong> Heroku\'s free tier removal (2022) drove a migration wave to Railway, Render, and Fly.io. Netlify\'s move to credit-based pricing (Sep 2025) replaced flat bandwidth and build-minute limits with a single 300-credit monthly allowance. Google is flooding the market with generous always-free tiers (Cloud Run: 2M requests/month). Edge computing is making traditional PaaS less necessary for many workloads.</p>\n' +
     '    <p><strong>This guide covers:</strong> pricing tables, category breakdowns, free tier analysis, cost comparison for solo devs and teams, hidden costs, pricing gotchas, and best-for-use-case recommendations \u2014 compiled by hand from vendor pricing pages.</p>\n' +
     '  </div>\n' +
     '\n' +
@@ -30837,11 +30837,7 @@ function buildHostingPricingPage(): string {
     '    <h4>Vercel Turbo Builds: 9x Cost Multiplier</h4>\n' +
     '    <p>New Pro projects on Vercel default to Turbo build machines at $0.126/min \u2014 9 times the cost of Standard builds ($0.014/min). A 5-minute build costs $0.63 on Turbo vs $0.07 on Standard. Switch to Standard builds in project settings unless you genuinely need faster builds.</p>\n' +
     '  </div>\n' +
-    '  <div class="hidden-cost-card">\n' +
-    '    <h4>Netlify Per-Committer Billing</h4>\n' +
-    '    <p>Since March 2026, every repo committer on a Netlify-connected private repo is charged as a full Pro seat ($19/month) when using CMS or Identity. A team of 10 with 3 occasional committers pays for all 10. This is the most controversial pricing change in the hosting space.</p>\n' +
-    '  </div>\n' +
-    '  <div class="hidden-cost-card">\n' +
+    '    <div class="hidden-cost-card">\n' +
     '    <h4>Render Free Tier Spin-Down</h4>\n' +
     '    <p>Free web services on Render spin down after 15 minutes of inactivity (tightened from 30 minutes in Sep 2025). Cold starts take 30\u201360 seconds. Not viable for APIs that need to respond quickly. The workaround costs $7/month (Individual plan, always-on).</p>\n' +
     '  </div>\n' +
@@ -30906,7 +30902,7 @@ function buildHostingPricingPage(): string {
     '\n' +
     '    <div class="verdict-item">\n' +
     '      <strong>Best for teams on a budget</strong>\n' +
-    '      <p><a href="/vendor/railway">Railway</a> ($20/seat) or <a href="/vendor/render">Render</a> ($19/seat). Avoid Netlify for teams due to per-committer billing. <a href="/vendor/google-cloud-run">Google Cloud Run</a> has no per-seat pricing \u2014 purely usage-based.</p>\n' +
+    '      <p><a href="/vendor/railway">Railway</a> ($20/seat) or <a href="/vendor/render">Render</a> ($19/seat). <a href="/vendor/google-cloud-run">Google Cloud Run</a> has no per-seat pricing \u2014 purely usage-based.</p>\n' +
     '    </div>\n' +
     '\n' +
     '    <div class="verdict-item">\n' +
@@ -44447,7 +44443,7 @@ ${mcpCtaCss()}
       <tr>
         <td class="provider-col"><a href="/vendor/netlify">Netlify</a></td>
         <td>Free (300 credits/mo)</td>
-        <td>~30 GB (at 10 credits/GB)</td>
+        <td>~15 GB (at 20 credits/GB)</td>
         <td>Serverless only</td>
         <td>~20 (at 15 credits/build)</td>
         <td>Unlimited</td>
@@ -44601,7 +44597,7 @@ ${mcpCtaCss()}
 
   <div class="diff-card">
     <h3><a href="/vendor/netlify">Netlify</a> &mdash; Credit-Based Free Tier</h3>
-    <div class="diff-desc"><strong>Free tier:</strong> 300 credits/month. Bandwidth costs 10 credits/GB (~30 GB), builds cost 15 credits each (~20 builds). Sites pause on credit exhaustion &mdash; no overages. Serverless functions at Level 0 (125K invocations). Legacy accounts (pre-Sep 2025) keep the old model: 100 GB bandwidth + 300 build minutes. <strong>Key limitation:</strong> The credit system is less predictable than flat limits. Heavy builders or bandwidth-intensive sites can exhaust credits quickly.</div>
+    <div class="diff-desc"><strong>Free tier:</strong> 300 credits/month. Bandwidth costs 20 credits/GB (~15 GB), builds cost 15 credits each (~20 builds). Sites pause on credit exhaustion &mdash; no overages. Serverless functions at Level 0 (125K invocations). Legacy accounts (pre-Sep 2025) keep the old model: 100 GB bandwidth + 300 build minutes. <strong>Key limitation:</strong> The credit system is less predictable than flat limits. Heavy builders or bandwidth-intensive sites can exhaust credits quickly.</div>
   </div>
 
   <div class="diff-card">
@@ -44762,7 +44758,7 @@ ${mcpCtaCss()}
 
     <div class="verdict-item">
       <strong>Most generous free bandwidth &rarr; Cloudflare Pages</strong>
-      <p>Unlimited bandwidth, no asterisks. Vercel offers 100 GB, GitHub Pages 100 GB, Netlify ~30 GB (credit-based). For bandwidth-intensive sites (media, downloads, high-traffic blogs), Cloudflare Pages has no equal.</p>
+      <p>Unlimited bandwidth, no asterisks. Vercel offers 100 GB, GitHub Pages 100 GB, Netlify ~15 GB (credit-based). For bandwidth-intensive sites (media, downloads, high-traffic blogs), Cloudflare Pages has no equal.</p>
     </div>
 
     <div class="verdict-item">
@@ -44800,7 +44796,7 @@ ${mcpCtaCss()}
 
   <div class="diff-card">
     <h3>Netlify credit math is tricky</h3>
-    <div class="diff-desc">300 credits/month sounds generous, but credits are consumed by multiple actions: builds (15 credits each), bandwidth (10 credits/GB), and compute (5 credits/GB-hour). A site with 10 builds/day and 20 GB bandwidth uses ~4,500 + 200 = 4,700 credits &mdash; well over the 300 limit. Sites pause on credit exhaustion. Additionally, every repo committer now counts as a Pro seat ($19/mo) when using Netlify CMS or Identity with private repos.</div>
+    <div class="diff-desc">300 credits/month sounds generous, but credits are consumed by multiple actions: builds (15 credits each), bandwidth (20 credits/GB), compute (10 credits/GB-hour), and web requests (2 credits/10K). A site with 10 builds/day and 20 GB bandwidth uses ~4,500 + 400 = 4,900 credits &mdash; well over the 300 limit. Sites pause on credit exhaustion.</div>
   </div>
 
   <div class="diff-card">
