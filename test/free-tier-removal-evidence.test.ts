@@ -125,15 +125,26 @@ describe("a free tier a record still describes has not been removed", () => {
     });
 
     it("requires a trial qualifier to sit beside the free claim, not merely in the same sentence", () => {
-      const retentionWindowIsNotATrial = {
-        ...HIGHLIGHT,
+      const theTrialIsOnADifferentPlan = {
+        ...FORMBRICKS,
+        summary: "",
         current_state:
-          "The Developer plan is $0/month forever and includes 5,000 session replays, with 14-day data retention.",
+          "The Hobby plan is free and includes 1 Workspace and 250 responses per month, and the Pro tier can be evaluated with a 14-day free trial.",
       };
       assert.ok(
-        clauseStatingAPlanIsStillFree(retentionWindowIsNotATrial),
-        "a retention window elsewhere in the sentence was read as the free plan being temporary"
+        clauseStatingAPlanIsStillFree(theTrialIsOnADifferentPlan),
+        "a trial offered on another plan was read as the free plan itself being temporary"
       );
+    });
+
+    it("keeps a removal a vendor announced while still describing the plan going away", () => {
+      const announcedButNotYetGone = {
+        ...FORMBRICKS,
+        summary: "",
+        current_state:
+          "The free plan offers 500 MB of storage and is being removed for all workspaces on 1 October.",
+      };
+      assert.strictEqual(clauseStatingAPlanIsStillFree(announcedButNotYetGone), null);
     });
 
     it("reads no plan on offer in a record that states neither summary nor current state", () => {
