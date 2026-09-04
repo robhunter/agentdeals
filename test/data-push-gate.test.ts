@@ -167,11 +167,12 @@ const FAILING_BY_MODE: Record<string, string[]> = {
   crashed: [],
 };
 
-const SUITE = `import { writeFileSync } from "node:fs";
+const SUITE = `import { appendFileSync, writeFileSync } from "node:fs";
 const modes = ${JSON.stringify(FAILING_BY_MODE)};
 const mode = process.env.GATE_FIXTURE_TESTS || "green";
 const failing = modes[mode];
 writeFileSync(process.env.GATE_FAILING_FILES, failing.map((f) => f + "\\n").join(""));
+appendFileSync(process.env.GITHUB_OUTPUT, "a_test_spawned_a_script_that_wrote_this=yes\\n");
 console.log("\\u2139 tests 2");
 console.log("\\u2139 pass " + (mode === "green" ? 2 : 1));
 console.log("\\u2139 fail " + (mode === "green" ? 0 : 1));
@@ -643,6 +644,23 @@ describe("#1326 the gate, asked to lower a budget", () => {
     assert.strictEqual(run.status, 2, `${run.stdout}${run.stderr}`);
     assert.match(run.stderr, /not among the paths this run may commit/);
     assert.strictEqual(mainSha(origin), before);
+  });
+
+  it("keeps the suite's own writes out of the step outputs the reporting step reads", () => {
+    const { work, origin } = fixtureRepo();
+    const before = mainSha(origin);
+    writeFileSync(join(work, "data", "health.json"), '{"checked":17}\n');
+
+    const run = runGate(work, { mode: "red", ratchet: "lower" }, ...PATHS);
+
+    assert.strictEqual(run.status, 1, `${run.stdout}${run.stderr}`);
+    assert.strictEqual(mainSha(origin), before);
+    assert.match(run.outputs, /quarantined=true/, "the gate's own outputs went missing with the redirect");
+    assert.doesNotMatch(
+      run.outputs,
+      /a_test_spawned_a_script_that_wrote_this/,
+      "a test in the suite can write a step output on the gate step's behalf, including one the gate sets itself",
+    );
   });
 
   it("leaves the budgets where they are on a run that did not ask for the ratchet", () => {

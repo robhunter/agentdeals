@@ -40,8 +40,10 @@ COMMIT="$(git rev-parse --short HEAD)"
 LOG="$(mktemp)"
 VERDICT="$(mktemp)"
 GATE_FAILING_FILES="$(mktemp)"
+SUBPROCESS_OUTPUT="$(mktemp)"
 export GATE_FAILING_FILES
-trap 'rm -f "$LOG" "$VERDICT" "$GATE_FAILING_FILES"' EXIT
+export GITHUB_OUTPUT="$SUBPROCESS_OUTPUT"
+trap 'rm -f "$LOG" "$VERDICT" "$GATE_FAILING_FILES" "$SUBPROCESS_OUTPUT"' EXIT
 
 push_to_main() {
   git push origin HEAD:main
