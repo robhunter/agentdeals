@@ -4573,7 +4573,7 @@
       "date": "2026-04-20",
       "summary": "GitHub paused new signups for Copilot Pro, Pro+, and Copilot Student plans citing infrastructure strain from agentic AI workflows (long-running, parallelized sessions overwhelming capacity). Existing users are unaffected. Free tier signups remain open. Same announcement also removed Claude Opus from Pro (now Pro+ only) and tightened usage limits on individual plans.",
       "previous_state": "Pro ($10/mo), Pro+ ($39/mo), and Copilot Student plans accepting new signups. Claude Opus available on Pro. Standard individual-plan usage limits.",
-      "current_state": "Reversed. GitHub's changelog post for this change is marked Retired, and its plans documentation offers Copilot Pro, Pro+, Max and Copilot Student to new users today (verified 2026-09-02). The pause that remains in force is a separate one dated 2026-04-22 on self-serve purchase of Copilot Business and Copilot Enterprise. Free tier was unaffected throughout.",
+      "current_state": "Reversed. GitHub's changelog post for this change is marked Retired, and its plans documentation offers Copilot Pro, Pro+, Max and Copilot Student to new users today (verified 2026-09-02). A separate pause dated 2026-04-22 covered new self-serve signups for Copilot Business by organizations on GitHub Free and GitHub Team plans, and did not cover Copilot Enterprise; GitHub reenabled signups for new Copilot Business and Copilot Enterprise customers paying by credit card or PayPal from 2026-09-01. Free tier was unaffected throughout.",
       "impact": "high",
       "source_url": "https://github.blog/changelog/2026-04-20-changes-to-github-copilot-plans-for-individuals/",
       "category": "AI Coding",
@@ -4589,8 +4589,33 @@
       "resolution": {
         "state": "reversed",
         "date": "2026-09-02",
-        "detail": "Reversed: GitHub's changelog post for this change is marked Retired, and its plans documentation offers Copilot Pro, Pro+, Max and Copilot Student to new users, verified 2026-09-02. The only pause still on that page is a separate one dated 2026-04-22 on self-serve purchases of Copilot Business and Copilot Enterprise.",
+        "detail": "Reversed: GitHub's changelog post for this change is marked Retired, and its plans documentation offers Copilot Pro, Pro+, Max and Copilot Student to new users, verified 2026-09-02. A separate pause dated 2026-04-22 covered new self-serve signups for Copilot Business by organizations on GitHub Free and GitHub Team plans, and did not cover Copilot Enterprise; GitHub reenabled signups for new Copilot Business and Copilot Enterprise customers paying by credit card or PayPal from 2026-09-01.",
         "source_url": "https://docs.github.com/en/copilot/get-started/plans"
+      }
+    },
+    {
+      "vendor": "GitHub Copilot",
+      "change_type": "restriction",
+      "date": "2026-04-22",
+      "summary": "GitHub paused new self-serve signups for Copilot Business by organizations on GitHub Free and GitHub Team plans, two days after the pause on individual plans. Existing Copilot Business customers were unaffected and could keep adding seats. Copilot Enterprise was not named in the announcement.",
+      "previous_state": "Organizations on GitHub Free and GitHub Team could buy Copilot Business ($19/user/month) self-serve.",
+      "current_state": "Reversed. GitHub's changelog post for this pause is marked Retired, and its 2026-08-28 billing announcement says signups for new Copilot Business and Copilot Enterprise customers paying by credit card or PayPal were reenabled from 2026-09-01. The same announcement adds an upfront per-seat charge on assignment, reaching existing Business and Enterprise customers on those payment methods from 2026-10-01.",
+      "impact": "high",
+      "source_url": "https://github.blog/changelog/2026-04-22-pausing-new-self-serve-signups-for-github-copilot-business/",
+      "category": "AI Coding",
+      "alternatives": [
+        "Cursor",
+        "Windsurf",
+        "Gemini Code Assist",
+        "Claude Code"
+      ],
+      "recorded_date": "2026-09-04",
+      "date_source": "hand_written",
+      "resolution": {
+        "state": "reversed",
+        "date": "2026-09-01",
+        "detail": "Reversed: GitHub's 2026-08-28 changelog states \"Starting September 1, 2026, GitHub will start reenabling sign-ups for new Copilot Business and Copilot Enterprise customers paying by credit card or PayPal.\" The pause announcement is marked Retired.",
+        "source_url": "https://github.blog/changelog/2026-08-28-upcoming-changes-to-github-copilot-policies-and-billing/"
       }
     },
     {
