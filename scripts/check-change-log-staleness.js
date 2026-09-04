@@ -1,13 +1,33 @@
 #!/usr/bin/env node
 
 import { appendFileSync, readFileSync } from "node:fs";
-import { resolve, dirname } from "node:path";
+import { resolve, dirname, relative } from "node:path";
 import { fileURLToPath } from "node:url";
+import { spawnSync } from "node:child_process";
 import { readChangeLog, changeLogFreshness, CHANGES_PATH } from "./change-log.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 export const DEFAULT_THRESHOLD_DAYS = 14;
+
+export const REPO = resolve(__dirname, "..");
+
+export function changeLogAtRef(ref, path = CHANGES_PATH, repo = REPO) {
+  const tracked = relative(repo, path).split("\\").join("/");
+  const show = spawnSync("git", ["show", `${ref}:${tracked}`], {
+    cwd: repo,
+    encoding: "utf-8",
+    maxBuffer: 256 * 1024 * 1024,
+  });
+  if (show.status !== 0) {
+    throw new Error(
+      `Cannot read ${tracked} at ${ref}: ${(show.stderr || show.error?.message || "git failed").toString().trim()}`
+    );
+  }
+  const data = JSON.parse(show.stdout);
+  if (!Array.isArray(data.changes)) throw new Error(`${tracked} at ${ref} has no changes array`);
+  return data;
+}
 
 export const WORKFLOW_PATH =
   process.env.AGENTDEALS_REVERIFY_WORKFLOW_PATH ||
@@ -197,13 +217,25 @@ function main() {
     process.exit(2);
   }
 
+  const refIdx = args.indexOf("--from-ref");
+  const ref = refIdx !== -1 ? args[refIdx + 1] : null;
+  if (refIdx !== -1 && !ref) {
+    console.error("--from-ref needs a git ref, so the check knows which tree it is reading.");
+    process.exit(2);
+  }
+
   let data;
   try {
-    data = readChangeLog(CHANGES_PATH);
+    data = ref ? changeLogAtRef(ref) : readChangeLog(CHANGES_PATH);
   } catch (err) {
     console.error(`Failed to read change log: ${err.message}`);
     process.exit(2);
   }
+  console.log(
+    ref
+      ? `Reading the change log as it stands at ${ref}, not as this run left it on disk.`
+      : "Reading the change log from this checkout."
+  );
 
   let workflowYaml;
   try {

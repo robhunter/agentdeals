@@ -7,6 +7,7 @@ on:
 
 permissions:
   contents: write
+  issues: write
 
 concurrency:
   group: link-liveness
@@ -40,6 +41,7 @@ jobs:
           echo "unknown=$UNKNOWN" >> "$GITHUB_OUTPUT"
 
       - name: Run the suite, then push to main only if it is green
+        id: gate
         env:
           UNREACHABLE: ${{ steps.liveness.outputs.unreachable }}
           UNKNOWN: ${{ steps.liveness.outputs.unknown }}
@@ -48,3 +50,17 @@ jobs:
             data-quarantine/link-liveness \
             "data(auto): link liveness — ${UNREACHABLE} unreachable, ${UNKNOWN} could not be checked" \
             data/link_health.json
+
+      - name: Say where it can be seen what the gate did with this run's data
+        if: always() && (steps.gate.outputs.quarantined == 'true' || steps.gate.outputs.pushed_over_failures == 'true')
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          QUARANTINED: ${{ steps.gate.outputs.quarantined }}
+          QUARANTINE_REF: ${{ steps.gate.outputs.quarantine_ref }}
+          NON_BLOCKING_FILES: ${{ steps.gate.outputs.non_blocking_files }}
+        run: |
+          if [ "$QUARANTINED" = "true" ]; then
+            bash scripts/report-data-push-outcome.sh "Link liveness" refused "$QUARANTINE_REF"
+          else
+            bash scripts/report-data-push-outcome.sh "Link liveness" shipped-over-failures "$NON_BLOCKING_FILES"
+          fi

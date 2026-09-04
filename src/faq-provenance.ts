@@ -1,4 +1,4 @@
-import { compiledNotice, getPageReview, reviewStatus, utcToday, type PageReviewRecord } from "./page-reviews.js";
+import { compiledNotice, getPageReview, qualityBudget, reviewStatus, utcToday, type PageReviewRecord } from "./page-reviews.js";
 
 export interface FaqItem {
   q: string;
@@ -6,9 +6,9 @@ export interface FaqItem {
 }
 
 export const FAQ_BASELINE = {
-  answers: 166,
-  stating_a_figure: 77,
-  a_digit_but_no_figure: 40,
+  answers: qualityBudget("faq_answers"),
+  stating_a_figure: qualityBudget("faq_answers_stating_a_figure"),
+  a_digit_but_no_figure: qualityBudget("faq_answers_with_a_digit_but_no_figure"),
 };
 
 const CURRENCY_AMOUNT = /[$€£¢]\s?\d|\d\s?¢|\b\d[\d,.]*\s?(?:USD|EUR|GBP)\b/;

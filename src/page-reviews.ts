@@ -8,6 +8,78 @@ export function pageReviewsPath(): string {
   return process.env.AGENTDEALS_PAGE_REVIEWS_PATH || path.join(__dirname, "..", "data", "page-reviews.json");
 }
 
+export const QUALITY_BUDGET_NAMES = [
+  "stale_fact_pages",
+  "unsourced_tier_a",
+  "faq_answers",
+  "faq_answers_stating_a_figure",
+  "faq_answers_with_a_digit_but_no_figure",
+] as const;
+
+export type QualityBudgetName = (typeof QUALITY_BUDGET_NAMES)[number];
+
+export interface QualityBudgets {
+  version: number;
+  budgets: Record<QualityBudgetName, number>;
+}
+
+export function qualityBudgetsPath(): string {
+  return (
+    process.env.AGENTDEALS_QUALITY_BUDGETS_PATH ||
+    path.join(__dirname, "..", "data", "quality_budgets.json")
+  );
+}
+
+export function parseQualityBudgets(text: string, source: string): QualityBudgets {
+  let raw: unknown;
+  try {
+    raw = JSON.parse(text);
+  } catch (err) {
+    throw new Error(`${source} is not valid JSON: ${(err as Error).message}`);
+  }
+  if (typeof raw !== "object" || raw === null) throw new Error(`${source} is not an object`);
+  const file = raw as { version?: unknown; budgets?: unknown };
+  if (file.version !== 1) throw new Error(`${source} has version ${String(file.version)}, expected 1`);
+  if (typeof file.budgets !== "object" || file.budgets === null) {
+    throw new Error(`${source} carries no budgets object`);
+  }
+  const budgets = file.budgets as Record<string, unknown>;
+  const known = new Set<string>(QUALITY_BUDGET_NAMES);
+  const unread = Object.keys(budgets).filter(name => !known.has(name)).sort();
+  if (unread.length > 0) {
+    throw new Error(`${source} names ${unread.join(", ")}, which no budget in the code reads`);
+  }
+  const out = {} as Record<QualityBudgetName, number>;
+  for (const name of QUALITY_BUDGET_NAMES) {
+    const value = budgets[name];
+    if (typeof value !== "number" || !Number.isInteger(value) || value < 0) {
+      throw new Error(`${source} gives ${name} as ${JSON.stringify(value)}, expected a whole number`);
+    }
+    out[name] = value;
+  }
+  return { version: 1, budgets: out };
+}
+
+export function readQualityBudgets(file: string = qualityBudgetsPath()): QualityBudgets {
+  let text: string;
+  try {
+    text = fs.readFileSync(file, "utf-8");
+  } catch (err) {
+    throw new Error(`Cannot read the quality budgets at ${file}: ${(err as Error).message}`);
+  }
+  return parseQualityBudgets(text, file);
+}
+
+export function qualityBudget(name: QualityBudgetName): number {
+  return readQualityBudgets().budgets[name];
+}
+
+export function serializeQualityBudgets(budgets: QualityBudgets): string {
+  const ordered = {} as Record<QualityBudgetName, number>;
+  for (const name of QUALITY_BUDGET_NAMES) ordered[name] = budgets.budgets[name];
+  return `${JSON.stringify({ version: budgets.version, budgets: ordered }, null, 2)}\n`;
+}
+
 export type ReviewTier = "A" | "B";
 
 export const SLA_DAYS: Record<ReviewTier, number> = { A: 30, B: 90 };
@@ -35,9 +107,14 @@ export const PAGE_DATA_SOURCE_RULE: Record<PageDataSource, string> = {
   unsourced: "asserts vendor facts that are literals in the page and reach no record",
 };
 
-export const UNSOURCED_TIER_A_BASELINE = 43;
+export const UNSOURCED_TIER_A_BASELINE = qualityBudget("unsourced_tier_a");
 
-export const STALE_FACT_PAGES_BASELINE = 57;
+export const STALE_FACT_PAGES_BASELINE = qualityBudget("stale_fact_pages");
+
+export function lowerBudgetInstruction(name: string, to: number): string {
+  const file = qualityBudgetsPath().split(path.sep).slice(-2).join("/");
+  return `set ${name} to ${to} in ${file} — run npm run ratchet:budgets — so the slot cannot be reused`;
+}
 
 export interface PageReviewRecord {
   path: string;
@@ -359,7 +436,7 @@ export function staleFactViolations(
   const direction =
     stale.length > budget
       ? `${stale.length - budget} more than the budget allows, and the budget does not rise. The cohort is ${stale.map(p => p.path).sort().join(", ")}`
-      : `lower STALE_FACT_PAGES_BASELINE to ${stale.length} so the slot cannot be reused`;
+      : lowerBudgetInstruction("stale_fact_pages", stale.length);
   return [{
     path: "",
     problem: `${stale.length} pages state a vendor fact whose record moved after the page was last read — ${direction}`,
@@ -732,7 +809,7 @@ export function pageSourceViolations(
     const direction =
       unsourced.length > tierABudget
         ? `${unsourced.length - tierABudget} more than the budget allows, and the budget does not rise`
-        : `${tierABudget - unsourced.length} fewer than the budget; lower UNSOURCED_TIER_A_BASELINE to ${unsourced.length} so the slot cannot be reused`;
+        : `${tierABudget - unsourced.length} fewer than the budget; ${lowerBudgetInstruction("unsourced_tier_a", unsourced.length)}`;
     violations.push({
       path: "",
       problem: `${unsourced.length} tier-A pages assert vendor facts and read no catalogue record — ${direction}`,

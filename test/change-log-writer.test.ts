@@ -26,7 +26,7 @@ const {
 
 const { runUrlMode, runAiMode, summaryLines, repickWindowDays, regradeRefusals } = await import("../scripts/reverify-rolling.js");
 const { firstSeenDates } = await import("../scripts/backfill-change-recorded-dates.js");
-const { report, DEFAULT_THRESHOLD_DAYS, detectorSchedule, flagTokens, DETECTOR_CLI_OPTIONS, WORKFLOW_PATH } = await import("../scripts/check-change-log-staleness.js");
+const { report, DEFAULT_THRESHOLD_DAYS, detectorSchedule, flagTokens, DETECTOR_CLI_OPTIONS, WORKFLOW_PATH, changeLogAtRef } = await import("../scripts/check-change-log-staleness.js");
 const { VERIFIER_API_KEY_ENV, VERIFIER_MODEL } = await import("../scripts/verify-freshness.js");
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -1025,5 +1025,79 @@ describe("the change log's age reaches the surfaces that publish freshness", () 
     const html = await res.text();
     assert.match(html, /class="log-freshness"/);
     assert.match(html, /We last added an entry to this log/);
+  });
+});
+
+describe("#1321 the alarm on a frozen change log reads what main holds", () => {
+  let repo: string;
+
+  const entry = (detected: string) => ({
+    changes: [
+      {
+        vendor: "Fixture Vendor",
+        change_type: "limits_reduced",
+        effective_date: detected,
+        recorded_date: detected,
+        detected_by: DETECTED_BY_AI,
+        summary: "a fixture entry",
+      },
+    ],
+  });
+
+  const gitIn = (...args: string[]) => {
+    const run = spawnSync("git", args, { cwd: repo, encoding: "utf-8" });
+    assert.strictEqual(run.status, 0, `git ${args.join(" ")}: ${run.stderr}`);
+  };
+
+  before(() => {
+    repo = mkdtempSync(path.join(tmpdir(), "change-log-ref-"));
+    spawnSync("git", ["init", "--initial-branch=main", repo], { encoding: "utf-8" });
+    gitIn("config", "user.email", "fixture@example.com");
+    gitIn("config", "user.name", "fixture");
+    spawnSync("mkdir", ["-p", path.join(repo, "data")], { encoding: "utf-8" });
+    writeFileSync(path.join(repo, "data", "deal_changes.json"), JSON.stringify(entry("2026-01-01"), null, 2));
+    gitIn("add", "-A");
+    gitIn("commit", "-m", "what main holds");
+    writeFileSync(path.join(repo, "data", "deal_changes.json"), JSON.stringify(entry("2026-08-27"), null, 2));
+  });
+
+  after(() => {
+    if (repo) rmSync(repo, { recursive: true, force: true });
+  });
+
+  it("reads the committed log, not the one this run just wrote to disk", () => {
+    const onDisk = JSON.parse(readFileSync(path.join(repo, "data", "deal_changes.json"), "utf-8"));
+    const onRef = changeLogAtRef("main", path.join(repo, "data", "deal_changes.json"), repo);
+    assert.strictEqual(onDisk.changes[0].recorded_date, "2026-08-27");
+    assert.strictEqual(onRef.changes[0].recorded_date, "2026-01-01");
+  });
+
+  it("calls the log stale from the ref on the same run that calls it fresh from disk", () => {
+    const scheduled = { known: true, scheduled: true, reason: null };
+    const fromDisk = report(
+      changeLogFreshness(JSON.parse(readFileSync(path.join(repo, "data", "deal_changes.json"), "utf-8")).changes, NOW),
+      DEFAULT_THRESHOLD_DAYS,
+      scheduled
+    );
+    const fromRef = report(
+      changeLogFreshness(changeLogAtRef("main", path.join(repo, "data", "deal_changes.json"), repo).changes, NOW),
+      DEFAULT_THRESHOLD_DAYS,
+      scheduled
+    );
+    assert.strictEqual(fromDisk.failJob, false, "the run's own write already looked stale, so the pair proves nothing");
+    assert.strictEqual(fromRef.failJob, true, "a log frozen on main since January is still reported as fresh");
+  });
+
+  it("refuses to guess when the ref cannot be read", () => {
+    assert.throws(
+      () => changeLogAtRef("no-such-ref", path.join(repo, "data", "deal_changes.json"), repo),
+      /Cannot read data\/deal_changes\.json at no-such-ref/
+    );
+  });
+
+  it("is what the daily job runs, so the alarm cannot go back to reading its own checkout", () => {
+    const workflow = readFileSync(WORKFLOW_PATH, "utf-8");
+    assert.match(workflow, /check-change-log-staleness\.js --from-ref origin\/main/);
+    assert.match(workflow, /git fetch origin main/);
   });
 });
