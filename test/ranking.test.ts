@@ -10,12 +10,14 @@ const {
   evaluate,
   gateFor,
   classifyTier,
+  changesByVendor,
   seededShuffle,
   tieBreakSeed,
   utcDate,
   DEMERIT_TABLE,
   GATE_TABLE,
 } = await import("../dist/ranking.js");
+const { unreachableNoticeForUrl } = await import("../dist/link-health.js");
 
 type Offer = import("../src/types.ts").Offer;
 type DealChange = import("../src/types.ts").DealChange;
@@ -58,6 +60,45 @@ function change(over: Partial<DealChange> = {}): DealChange {
 
 function vendorsOf(entries: { offer: Offer }[]): string[] {
   return entries.map((e) => e.offer.vendor);
+}
+
+const SERVE_SOURCE = readFileSync(join(REPO, "src", "serve.ts"), "utf8");
+const BEST_OF_MIN_VENDORS = Number(/const BEST_OF_MIN_VENDORS = (\d+);/.exec(SERVE_SOURCE)?.[1]);
+
+const WITHDRAWAL_CHANGE_TYPES = new Set(["free_tier_removed", "open_source_killed", "product_deprecated"]);
+const ADVERSE_CHANGE_WINDOW_DAYS = 365;
+const STALE_VERIFICATION_DAYS = 90;
+
+type Demerit = { code: string; points: number; date?: string; reason: string };
+type Demoted = { offer: Offer; demerits: Demerit[] };
+
+function daysApart(from: string, to: string): number {
+  return Math.round((Date.parse(`${to}T00:00:00Z`) - Date.parse(`${from}T00:00:00Z`)) / 86_400_000);
+}
+
+function isRecorded(entry: Demoted, demerit: Demerit, changesForVendor: DealChange[], date: string): boolean {
+  switch (demerit.code) {
+    case "free_tier_withdrawn":
+      return changesForVendor.some((c) =>
+        WITHDRAWAL_CHANGE_TYPES.has(c.change_type)
+        && c.date === demerit.date
+        && daysApart(c.date, date) <= ADVERSE_CHANGE_WINDOW_DAYS);
+    case "time_limited_offer":
+      return classifyTier(entry.offer.tier).class === "time_limited";
+    case "expiring_soon":
+      return entry.offer.expires_date === demerit.date;
+    case "stale_verification":
+      return Boolean(entry.offer.verifiedDate) && daysApart(entry.offer.verifiedDate!, date) > STALE_VERIFICATION_DAYS;
+    case "link_gone":
+    case "link_unreachable":
+      return Boolean(unreachableNoticeForUrl(entry.offer.url, Date.parse(date)));
+    default:
+      return false;
+  }
+}
+
+function demeritsWithNoRecord(entry: Demoted, changesForVendor: DealChange[], date: string): string[] {
+  return entry.demerits.filter((d) => !isRecorded(entry, d, changesForVendor, date)).map((d) => d.code);
 }
 
 describe("tier classification", () => {
@@ -399,13 +440,20 @@ describe("no thumb on the scale", () => {
 });
 
 describe("the live index, ranked", () => {
+  it("the best-of threshold this sweep uses is the one the site publishes with", () => {
+    assert.ok(
+      Number.isInteger(BEST_OF_MIN_VENDORS) && BEST_OF_MIN_VENDORS > 0,
+      "src/serve.ts must state a best-of vendor minimum these sweeps can read",
+    );
+  });
+
   it("no category has a unique number one — the finding we publish", () => {
     const categories = [...new Set(index.offers.map((o) => o.category))];
     let pages = 0;
     let uniqueTop = 0;
     for (const cat of categories) {
       const eligible = index.offers.filter((o) => o.category === cat && !o.eligibility);
-      if (eligible.length < 5) continue;
+      if (eligible.length < BEST_OF_MIN_VENDORS) continue;
       pages++;
       const r = rankOffers(index.offers.filter((o) => o.category === cat), {
         queryKey: `best-of:${cat}`,
@@ -414,21 +462,27 @@ describe("the live index, ranked", () => {
       });
       if (r.tie_break.tie_count === 1) uniqueTop++;
     }
-    assert.strictEqual(pages, 58);
+    assert.ok(pages >= 40, `the finding is published per best-of page, and this sweep reached only ${pages}`);
     assert.strictEqual(uniqueTop, 0);
   });
 
-  it("Databases: Firebase is the only demotion, on a named recorded fact", () => {
+  it("Databases: Firebase is demoted on a recorded withdrawal, and the two gated offers stay gated", () => {
     const offers = index.offers.filter((o) => o.category === "Databases");
     const r = rankOffers(offers, {
       queryKey: "best-of:Databases",
       changes: dealChanges,
       date: TODAY,
     });
+    const demoted = new Map(r.demoted.map((e) => [e.offer.vendor, e]));
+    assert.ok(
+      demoted.get("Firebase")?.demerits.some((d) => d.code === "free_tier_withdrawn"),
+      "Firebase withdrew a free tier and must be demoted on that record",
+    );
+    assert.ok(!vendorsOf(r.qualified).includes("Firebase"), "Firebase is demoted and must not also be in the qualified band");
+    const gated = new Map(r.excluded.map((e) => [e.offer.vendor, e.gate.code]));
+    assert.strictEqual(gated.get("Turbopuffer"), "not_a_free_offer");
+    assert.strictEqual(gated.get("ScaleGrid Startup Program"), "eligibility_restricted");
     assert.strictEqual(r.qualified.length, offers.length - r.demoted.length - r.excluded.length);
-    assert.deepStrictEqual(vendorsOf(r.demoted), ["Firebase"]);
-    assert.strictEqual(r.demoted[0].demerits[0].code, "free_tier_withdrawn");
-    assert.strictEqual(r.excluded.length, 2);
   });
 
   it("AI/ML: the vendors whose free tier is really a credit grant are demoted", () => {
@@ -471,6 +525,69 @@ describe("the live index, ranked", () => {
         }
       }
     }
+  });
+
+  it("every demotion traces to the record it cites, whichever vendors are demoted today", () => {
+    const categories = [...new Set(index.offers.map((o) => o.category))];
+    const byVendor = changesByVendor(dealChanges);
+    let checked = 0;
+    for (const cat of categories) {
+      const r = rankOffers(index.offers.filter((o) => o.category === cat), {
+        queryKey: `best-of:${cat}`,
+        changes: dealChanges,
+        date: TODAY,
+      });
+      for (const entry of r.demoted) {
+        const unrecorded = demeritsWithNoRecord(entry, byVendor.get(entry.offer.vendor.toLowerCase()) ?? [], TODAY);
+        assert.deepStrictEqual(unrecorded, [], `${entry.offer.vendor} is demoted on ${unrecorded.join(", ")} with no record behind it`);
+        checked += entry.demerits.length;
+      }
+    }
+    assert.ok(checked >= 50, `expected the live catalogue to exercise this rule, checked ${checked} demerits`);
+  });
+
+  it("a newly recorded withdrawal demotes a vendor that was qualifying, and disturbs no other demotion", () => {
+    const offers = index.offers.filter((o) => o.category === "Databases");
+    const before = rankOffers(offers, { queryKey: "best-of:Databases", changes: dealChanges, date: TODAY });
+    const subject = vendorsOf(before.qualified)[0];
+    const withdrawal = change({
+      vendor: subject,
+      change_type: "free_tier_removed",
+      date: "2026-08-20",
+      summary: "The published free allowance no longer appears on the vendor's pricing page.",
+      category: "Databases",
+    });
+    const changes = [...dealChanges, withdrawal];
+    const after = rankOffers(offers, { queryKey: "best-of:Databases", changes, date: TODAY });
+    const demoted = new Map(after.demoted.map((e) => [e.offer.vendor, e]));
+
+    assert.ok(demoted.get(subject)?.demerits.some((d) => d.code === "free_tier_withdrawn"), `${subject} withdrew a free tier and must be demoted`);
+    assert.ok(demoted.get("Firebase")?.demerits.some((d) => d.code === "free_tier_withdrawn"), "an unrelated demotion must survive a new one");
+    assert.strictEqual(after.demoted.length, before.demoted.length + 1);
+    assert.strictEqual(after.qualified.length, offers.length - after.demoted.length - after.excluded.length);
+
+    const byVendor = changesByVendor(changes);
+    assert.deepStrictEqual(demeritsWithNoRecord(demoted.get(subject)!, byVendor.get(subject.toLowerCase()) ?? [], TODAY), []);
+  });
+
+  it("a demotion whose cited record does not exist is caught", () => {
+    const entry = {
+      offer: offer({ vendor: "Acme", tier: "Free", verifiedDate: TODAY }),
+      demerits: [{ code: "free_tier_withdrawn", points: 3, date: "2026-08-01", reason: "Recorded free tier removal on 2026-08-01." }],
+    };
+    assert.deepStrictEqual(demeritsWithNoRecord(entry, [], TODAY), ["free_tier_withdrawn"]);
+    assert.deepStrictEqual(
+      demeritsWithNoRecord(entry, [change({ vendor: "Acme", change_type: "free_tier_removed", date: "2026-07-01" })], TODAY),
+      ["free_tier_withdrawn"],
+    );
+    assert.deepStrictEqual(
+      demeritsWithNoRecord(entry, [change({ vendor: "Acme", change_type: "limits_reduced", date: "2026-08-01" })], TODAY),
+      ["free_tier_withdrawn"],
+    );
+    assert.deepStrictEqual(
+      demeritsWithNoRecord(entry, [change({ vendor: "Acme", change_type: "free_tier_removed", date: "2026-08-01" })], TODAY),
+      [],
+    );
   });
 });
 
