@@ -4747,7 +4747,8 @@
         "checked": "2026-08-28",
         "outcome": "ok",
         "detail": "text"
-      }
+      },
+      "free_tier_is_the_product": true
     },
     {
       "vendor": "Slack API",
@@ -32607,7 +32608,7 @@
       "category": "Communication & Messaging",
       "description": "Unlimited servers, channels, messages. Voice/video calls (up to 25 in DM groups). Screen sharing (720p/30fps). Go Live streaming (720p/30fps). 25 MB file upload limit. No HD streaming or animated avatars on free.",
       "tier": "Free",
-      "url": "https://discord.com/nitro",
+      "url": "https://discord.com/",
       "tags": [
         "messaging",
         "voice-chat",
@@ -32617,11 +32618,7 @@
         "free-tier"
       ],
       "verifiedDate": "2026-08-22",
-      "source_check": {
-        "checked": "2026-08-28",
-        "outcome": "ok",
-        "detail": "text"
-      }
+      "free_tier_is_the_product": true
     },
     {
       "vendor": "Zoom",
@@ -32647,7 +32644,7 @@
       "category": "Communication & Messaging",
       "description": "1-hour group meetings (up to 100 participants). Unlimited 1-on-1 calls (24-hour limit). Screen sharing. Real-time captions. Background effects. No recording or breakout rooms on free.",
       "tier": "Free",
-      "url": "https://apps.google.com/meet/pricing/",
+      "url": "https://workspace.google.com/products/meet/",
       "tags": [
         "video-conferencing",
         "meetings",
@@ -32655,30 +32652,21 @@
         "free-tier"
       ],
       "verifiedDate": "2026-08-21",
-      "source_check": {
-        "checked": "2026-08-28",
-        "outcome": "ok",
-        "detail": "url"
-      }
+      "free_tier_is_the_product": true
     },
     {
       "vendor": "Microsoft Teams",
       "category": "Communication & Messaging",
       "description": "Unlimited chat messages and search. Group meetings up to 60 minutes, up to 100 participants. 5 GB per user file storage. Screen sharing. No meeting recording or webinars on free.",
       "tier": "Free",
-      "url": "https://www.microsoft.com/en-us/microsoft-teams/compare-microsoft-teams-options",
+      "url": "https://www.microsoft.com/en-us/microsoft-teams/free",
       "tags": [
         "video-conferencing",
         "messaging",
         "consumer",
         "free-tier"
       ],
-      "verifiedDate": "2026-08-19",
-      "source_check": {
-        "checked": "2026-09-03",
-        "outcome": "ok",
-        "detail": "text"
-      }
+      "verifiedDate": "2026-08-19"
     },
     {
       "vendor": "Signal",
@@ -32699,7 +32687,8 @@
         "checked": "2026-09-02",
         "outcome": "states_no_terms",
         "detail": "the page names Signal but states no amount, tier or rate we can read"
-      }
+      },
+      "free_tier_is_the_product": true
     },
     {
       "vendor": "Telegram",
@@ -32718,7 +32707,8 @@
         "checked": "2026-09-02",
         "outcome": "states_no_terms",
         "detail": "the page names Telegram but states no amount, tier or rate we can read"
-      }
+      },
+      "free_tier_is_the_product": true
     },
     {
       "vendor": "WhatsApp",
@@ -32737,7 +32727,8 @@
         "checked": "2026-09-02",
         "outcome": "states_no_terms",
         "detail": "the page names WhatsApp but states no amount, tier or rate we can read"
-      }
+      },
+      "free_tier_is_the_product": true
     },
     {
       "vendor": "Photopea",
@@ -32950,7 +32941,7 @@
       "category": "Fitness & Health",
       "description": "Fully free health data aggregation on iOS. Steps, distance, flights climbed, sleep, heart rate, cycle tracking, medications, medical ID, health records. Data sharing with doctors. Third-party app integration hub.",
       "tier": "Free",
-      "url": "https://www.apple.com/ios/health/",
+      "url": "https://www.apple.com/health/",
       "tags": [
         "fitness",
         "health",
@@ -32959,11 +32950,7 @@
         "free"
       ],
       "verifiedDate": "2026-08-21",
-      "source_check": {
-        "checked": "2026-08-28",
-        "outcome": "ok",
-        "detail": "text"
-      }
+      "free_tier_is_the_product": true
     },
     {
       "vendor": "Proton VPN",

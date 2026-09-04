@@ -288,6 +288,7 @@ export async function runAiMode(picked, data, dryRun, now, options = {}) {
 
   const { accepted, rejected, unchecked, reclassified, rewritten, overruled } = await gateCandidates(changes, {
     confirmFn,
+    offers: data.offers,
     pageTextFor: (candidate) => pageTexts.get(candidate),
     pageCompleteFor: (candidate) => wholePages.has(candidate),
     finalUrlFor: (candidate) => finalUrls.get(candidate),
