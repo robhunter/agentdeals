@@ -3205,8 +3205,8 @@
     {
       "vendor": "Momento",
       "category": "Databases",
-      "description": "Serverless cache and pub/sub — 5 GB data transfer/month free, sub-millisecond latency, no infrastructure to manage",
-      "tier": "Free",
+      "description": "Managed Valkey cache, cluster and pub/sub, formerly a serverless cache with a free tier. No free tier. gomomento.com/pricing, read 2026-09-05, prices every plan: Momento Cache Flex from $13 per GB-month, Momento Cache Cluster from $0.0105 per instance-hour, Pub/sub Topics from $1 per 1M operations, Valkey Router $0.01 per GB of data transfer. The only $0 on the page is the Starter Basic Support plan, which is a support level and not a product allowance.",
+      "tier": "Retired",
       "url": "https://www.gomomento.com/pricing",
       "tags": [
         "database",
@@ -3216,11 +3216,11 @@
         "free tier",
         "redis-alternative"
       ],
-      "verifiedDate": "2026-08-23",
+      "verifiedDate": "2026-09-05",
       "source_check": {
         "checked": "2026-09-05",
         "outcome": "ok",
-        "detail": "the page names Momento as \"momento\" and states \"$13\""
+        "detail": "the page states \"Momento Cache Flex from $13 per GB-month\" and \"Pub / sub Topics from $1 per 1M operations\"; the string \"free\" occurs once in 6,635 characters of visible text, in \"freeing up your team\""
       },
       "product_subtypes": {
         "taxonomy": "Databases",
