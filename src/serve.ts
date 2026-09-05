@@ -20,6 +20,7 @@ import { openapiSpec } from "./openapi.js";
 import { LINK_GRACE_DAYS, unreachableNoticeForUrl } from "./link-health.js";
 import { offerEnded, offerRetired, recordedTierSentence, endedHeadline, endedHistorySentence, endedReliabilitySentence, endedEmptyChangeHistorySentence, ENDED_BADGE_LABEL, ENDED_SINCE_CHANGES_SENTENCE, type OfferTierAndUrl } from "./retirement.js";
 import { amountUnstatedSentence, levelWithheldReason, sourceStatesNoAmount, withheldLevelClause, withheldLevelSentence } from "./source-check.js";
+import { SUPERSEDED_TERMS_LABEL, supersededTermsAnswer, supersededTermsMetaSentence, supersededTermsNotice, supersededTermsVerdictSentence, supersedingChange } from "./superseded-description.js";
 import { buildComparisonMap, comparisonSlug } from "./comparison-pairs.js";
 import { stabilityFaqAnswer, stabilityVerdictClause, type ComparisonSide, type StabilityRating } from "./comparison-verdict.js";
 import { publishedVendorLevel, vendorVerdictSentence, vendorBadge, statesRiskCause, narrowingSentence, changeKindNoun, type VendorVerdictInput } from "./vendor-verdict.js";
@@ -3751,6 +3752,9 @@ function buildVendorPage(slug: string): string | null {
     .filter(c => c.vendor.toLowerCase() === vendorName.toLowerCase())
     .sort((a, b) => b.date.localeCompare(a.date));
 
+  const termsSuperseded = supersedingChange(primary, vendorChanges);
+  const publishableTerms = termsSuperseded ? "" : primary.description;
+
   const riskColors: Record<string, string> = { stable: "#3fb950", caution: "#d29922", risky: "#f85149" };
   const riskCause = enriched.risk_cause;
   const riskLevel = publishedVendorLevel(enriched.risk_level ?? null, riskCause);
@@ -3876,17 +3880,19 @@ function buildVendorPage(slug: string): string | null {
   const title = hasFree
     ? `${freeTierHeadline}: Limits, Pricing & What Changed | AgentDeals`
     : `${pricingHeadline}: Plans, Costs & Free Alternatives | AgentDeals`;
-  const descLimits = primary.description.slice(0, 100).replace(/\.\s.*$/, "");
+  const descLimits = publishableTerms.slice(0, 100).replace(/\.\s.*$/, "");
   const verifiedMonth = (() => { const d = primary.verifiedDate.split("-"); const months = ["January","February","March","April","May","June","July","August","September","October","November","December"]; return `${months[parseInt(d[1],10)-1]} ${d[0]}`; })();
   const verifiedSentence = discontinuedOn
     ? ` Discontinued ${discontinuedOn}.`
     : enriched.link_unreachable ? "" : ` Verified ${verifiedMonth}.`;
   const eligibilityGateSentence = primaryEligibilityGate ? `${primaryEligibilityGate.reason} ` : "";
-  const metaDesc = eligibilityGateSentence + (hasFree
+  const metaDesc = eligibilityGateSentence + (termsSuperseded
+    ? `${supersededTermsMetaSentence(vendorName, termsSuperseded)} See the recorded change history${alternatives.length > 0 ? ` and ${alternatives.length} alternatives in ${primary.category}` : ""}.`
+    : hasFree
     ? `${vendorName} free tier includes ${descLimits}.${verifiedSentence}${alternatives.length > 0 ? ` Compare with ${alternatives.length} alternatives in ${primary.category}.` : ""}`
     : `${vendorName} pricing details${alternatives.length > 0 ? ` and ${alternatives.length} free alternatives in ${primary.category}` : ""}.${verifiedSentence}`);
 
-  const keyLimit = primary.description.slice(0, 120).replace(/\.\s.*$/, "");
+  const keyLimit = publishableTerms.slice(0, 120).replace(/\.\s.*$/, "");
   const verdictLine2 = vendorVerdictSentence(verdictInput);
   const verdictLine3 = discontinuedOn
     ? `${vendorName} was discontinued on ${discontinuedOn}, so it is not a current option${alternatives.length > 0 ? ` — the ${alternatives.length} alternatives below are replacements` : ""}.`
@@ -3894,9 +3900,12 @@ function buildVendorPage(slug: string): string | null {
     ? `Best for ${primary.category.toLowerCase()} workloads${alternatives.length >= 5 ? ` — ${alternatives.length} alternatives available` : ""}.`
     : "";
   const verdictSubject = primaryGate ? primaryGate.reason : retiredSentence;
+  const verdictTerms = termsSuperseded
+    ? escHtmlServer(supersededTermsVerdictSentence(vendorName, termsSuperseded))
+    : "";
   const verdictOpening = verdictSubject
-    ? `${escHtmlServer(verdictSubject)} ${escHtmlServer(keyLimit)}.`
-    : `${escHtmlServer(vendorName)}'s free tier offers ${escHtmlServer(keyLimit)}.`;
+    ? `${escHtmlServer(verdictSubject)} ${verdictTerms || `${escHtmlServer(keyLimit)}.`}`
+    : verdictTerms || `${escHtmlServer(vendorName)}'s free tier offers ${escHtmlServer(keyLimit)}.`;
   const quickVerdictHtml = `
   <div class="quick-verdict">
     <p>${verdictOpening} ${verdictLine2}${verdictLine3 ? " " + verdictLine3 : ""}</p>
@@ -3915,15 +3924,15 @@ function buildVendorPage(slug: string): string | null {
   </div>`;
 
   const growthBullets: string[] = [];
-  for (const phrase of growthLimitPhrases(primary.description)) {
+  for (const phrase of growthLimitPhrases(publishableTerms)) {
     growthBullets.push(levelWithheld
       ? `We record ${phrase} as the limit, but ${withheldClause}, so we cannot confirm that threshold today.`
       : `At ${phrase}, you'll need to upgrade.`);
   }
-  if (growthBullets.length === 0 && hasFree) {
+  if (growthBullets.length === 0 && hasFree && !termsSuperseded) {
     growthBullets.push(`When your usage exceeds the free tier limits, you'll need to upgrade.`);
   }
-  if (alternatives.length > 2) {
+  if (alternatives.length > 2 && !termsSuperseded) {
     const topAlt = alternatives[0];
     growthBullets.push(`At that point, consider <a href="/vendor/${toSlug(topAlt.vendor)}">${escHtmlServer(topAlt.vendor)}</a> which offers ${escHtmlServer(topAlt.tier)} in the same category.`);
   }
@@ -4175,10 +4184,10 @@ ${allCompareLinks.join("\n")}
     mainEntity: {
       "@type": "SoftwareApplication",
       name: vendorName,
-      description: primary.description,
+      description: termsSuperseded ? supersededTermsNotice(vendorName, termsSuperseded) : primary.description,
       applicationCategory: primary.category,
       ...(offerRetired(primary) ? {} : { url: primary.url }),
-      ...(primaryGate
+      ...(primaryGate || termsSuperseded
         ? {}
         : {
             offers: {
@@ -4204,7 +4213,10 @@ ${allCompareLinks.join("\n")}
   const eligibilityConditionsSentence = primaryEligibilityConditions.length > 0
     ? ` Eligibility: ${primaryEligibilityConditions.join("; ")}.`
     : "";
-  const faqFreeAnswer = retiredSentence
+  const gateSentencesBeforeTheTerms = `${eligibilityGateSentence}${primaryGateBeyondEligibility ? `${primaryGateBeyondEligibility.reason} ` : ""}`;
+  const faqFreeAnswer = termsSuperseded
+    ? `${gateSentencesBeforeTheTerms}${supersededTermsAnswer(vendorName, termsSuperseded)}`
+    : retiredSentence
     ? `${retiredSentence} ${storedTerms}`
     : primaryGateBeyondEligibility
     ? `${eligibilityGateSentence}${primaryGateBeyondEligibility.reason} ${levelWithheld ? `${unconfirmedTermsPreamble}${withUnconfirmedTermsCaveat(storedTerms)}` : storedTerms}${eligibilityConditionsSentence}`
@@ -4213,7 +4225,9 @@ ${allCompareLinks.join("\n")}
     : primaryEligibilityGate
     ? `${eligibilityGateSentence}${vendorName} offers a free tier: ${primary.tier}. ${storedTerms}${eligibilityConditionsSentence}`
     : `Yes, ${vendorName} offers a free tier: ${primary.tier}. ${storedTerms}`;
-  const faqTierAnswer = retiredSentence
+  const faqTierAnswer = termsSuperseded
+    ? `${eligibilityGateSentence}${vendorName}'s free tier is called "${primary.tier}". ${supersededTermsNotice(vendorName, termsSuperseded)}`
+    : retiredSentence
     ? `${retiredSentence} ${primary.description}`
     : eligibilityGateSentence + (levelWithheld
     ? `${unconfirmedTermsPreamble}Our stored record calls ${vendorName}'s free tier "${primary.tier}". ${withUnconfirmedTermsCaveat(primary.description)}`
@@ -4231,6 +4245,8 @@ ${allCompareLinks.join("\n")}
 
   const faqProductionAnswer = productionGate
     ? `${productionGate.reason} ${NO_FREE_TIER_FOR_PRODUCTION}`
+    : termsSuperseded
+    ? `${eligibilityGateSentence}${supersededTermsVerdictSentence(vendorName, termsSuperseded)} Until we have re-read the page we cannot say what capacity ${vendorName} gives you, so we are not recommending it for production on figures we have already superseded.`
     : eligibilityGateSentence + (levelWithheld
     ? `${withheldLevelSentence(levelWithheld, vendorName, unconfirmableSince)} We cannot confirm what this offer provides today, so we are not recommending it for production or for anything else until we can.`
     : hasFree
@@ -4410,7 +4426,9 @@ ${referralCalloutHtml}
 
   <div class="desc-block">
     <h2>Free Tier Details</h2>
-    <p class="desc-text">${escHtmlServer(primary.description)}</p>
+    ${termsSuperseded
+      ? `<p class="terms-superseded-text"><strong>${SUPERSEDED_TERMS_LABEL}:</strong> ${escHtmlServer(supersededTermsNotice(vendorName, termsSuperseded))} <a href="#changes">Read what we recorded &darr;</a></p>`
+      : `<p class="desc-text">${escHtmlServer(primary.description)}</p>`}
   </div>
 ${compareTableHtml}
 ${growthPathHtml}

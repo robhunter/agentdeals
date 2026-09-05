@@ -1438,7 +1438,7 @@ describe("HTTP transport", () => {
   it("GET /vendor/:slug includes enriched JSON-LD with dateModified", async () => {
     proc = await startHttpServer();
 
-    const response = await fetch(`http://localhost:${serverPort}/vendor/railway`);
+    const response = await fetch(`http://localhost:${serverPort}/vendor/vercel`);
     const html = await response.text();
     assert.ok(html.includes("dateModified"), "JSON-LD should include dateModified");
     assert.ok(html.includes('"@type":"Offer"'), "JSON-LD should include an Offer");

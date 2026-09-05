@@ -8,15 +8,34 @@ import { fileURLToPath } from "node:url";
 const { gateFor, utcDate } = await import("../dist/ranking.js");
 const { vendorSlugMap } = await import("../dist/vendor-slug.js");
 const { offerEnded } = await import("../dist/retirement.js");
+const { supersededTermsNotice, supersedingChange } = await import("../dist/superseded-description.js");
 
 type Offer = import("../src/types.ts").Offer;
+type DealChange = import("../src/types.ts").DealChange;
 type Gate = { code: string; reason: string };
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(__dirname, "..");
 
 const offers: Offer[] = JSON.parse(readFileSync(path.join(REPO, "data", "index.json"), "utf-8")).offers;
+const dealChanges: DealChange[] = JSON.parse(
+  readFileSync(path.join(REPO, "data", "deal_changes.json"), "utf-8"),
+).changes;
 const TODAY = utcDate();
+
+const supersededBy = new Map<Offer, DealChange>();
+for (const offer of offers) {
+  const superseding = supersedingChange(
+    offer,
+    dealChanges.filter(c => c.vendor.toLowerCase() === offer.vendor.toLowerCase()),
+  );
+  if (superseding) supersededBy.set(offer, superseding);
+}
+
+function publishedDescriptionOf(offer: Offer): string {
+  const superseding = supersededBy.get(offer);
+  return superseding ? supersededTermsNotice(offer.vendor, superseding) : offer.description;
+}
 
 const PAY_AS_YOU_GO_REASON = 'Tier "Pay-as-you-go" is usage-billed from the first request.';
 const DIGITALOCEAN_EXPIRY_REASON = "Offer expired on 2026-06-30.";
@@ -24,8 +43,9 @@ const NO_FREE_TIER_FOR_PRODUCTION = "There is no free tier here to run in produc
 const STABLE_RATING_CLAUSE = "We rate it stable and";
 const RECOMMENDATION_CLAUSE = "so it's a reasonable starting point";
 
-const UNGATED_PAGES_ANSWERING_YES = 745;
-const UNGATED_PAGES_RECOMMENDING = 582;
+const UNGATED_PAGES_ANSWERING_YES = 588;
+const UNGATED_PAGES_RECOMMENDING = 559;
+const UNGATED_PAGES_WITHHOLDING_SUPERSEDED_TERMS = 222;
 
 let port = 0;
 let proc: ChildProcess | null = null;
@@ -138,6 +158,8 @@ after(() => { proc?.kill(); });
 
 const gated = () => rendered.filter(p => p.gate);
 const ungated = () => rendered.filter(p => !p.gate);
+const supersededTerms = (p: VendorPage) => supersededBy.has(p.primary);
+const publishingItsTerms = () => ungated().filter(p => !supersededTerms(p));
 const freeAnswer = (p: VendorPage) => faqAnswer(p.html, `Is ${p.vendor} free?`);
 const productionAnswer = (p: VendorPage) => faqAnswer(p.html, `Is ${p.vendor}'s free tier good for production?`);
 
@@ -147,7 +169,7 @@ describe("the page a gated record renders does not answer the free-tier question
     for (const p of rendered) {
       assert.strictEqual(
         blockOfType(p.html, "WebPage")?.mainEntity?.description,
-        p.primary.description,
+        publishedDescriptionOf(p.primary),
         `/vendor/${p.slug} renders a record other than the first this vendor holds`,
       );
     }
@@ -178,13 +200,29 @@ describe("the page a gated record renders does not answer the free-tier question
   });
 
   it("states the terms the record does hold after that sentence", () => {
-    for (const p of gated().filter(x => x.gate!.code !== "eligibility_restricted" && !offerEnded(x.primary))) {
+    const subjects = gated().filter(
+      x => x.gate!.code !== "eligibility_restricted" && !offerEnded(x.primary) && !supersededTerms(x),
+    );
+    assert.ok(subjects.length > 0, "no gated record still publishes its stored terms, so this assertion has no subject");
+    for (const p of subjects) {
       const answer = freeAnswer(p);
       const opening = p.primary.description.slice(0, 60);
       assert.ok(
         answer.includes(opening),
         `/vendor/${p.slug} drops the stored terms: ${answer.slice(0, 120)}`,
       );
+    }
+  });
+
+  it("says why it withholds them where the change log supersedes them instead", () => {
+    const subjects = gated().filter(
+      x => x.gate!.code !== "eligibility_restricted" && !offerEnded(x.primary) && supersededTerms(x),
+    );
+    assert.ok(subjects.length > 0, "no gated record has superseded terms, so this assertion has no subject");
+    for (const p of subjects) {
+      const answer = freeAnswer(p);
+      assert.ok(!answer.includes(p.primary.description.slice(0, 60)), `/vendor/${p.slug} still states them: ${answer.slice(0, 120)}`);
+      assert.ok(answer.includes("names them as the previous terms"), `/vendor/${p.slug}: ${answer.slice(0, 160)}`);
     }
   });
 
@@ -228,7 +266,7 @@ describe("the page a gated record renders does not answer the free-tier question
 
 describe("the ungated pages keep the answer they had", () => {
   it("answers yes on every ungated record nothing else withholds", () => {
-    const plainlyFree = ungated().filter(
+    const plainlyFree = publishingItsTerms().filter(
       p => p.primary.source_check?.outcome === "ok"
         && p.primary.tier.toLowerCase() !== "none"
         && !p.primary.description.toLowerCase().includes("no free tier"),
@@ -236,6 +274,12 @@ describe("the ungated pages keep the answer they had", () => {
     assert.ok(plainlyFree.length > 100, `only ${plainlyFree.length} ungated pages are plainly free`);
     const quiet = plainlyFree.filter(p => !freeAnswer(p).startsWith("Yes")).map(p => p.slug);
     assert.deepStrictEqual(quiet, []);
+  });
+
+  it("counts the ungated pages that withhold their terms, so the drop below is accounted for", () => {
+    const withholding = ungated().filter(supersededTerms).length;
+    assert.strictEqual(withholding, UNGATED_PAGES_WITHHOLDING_SUPERSEDED_TERMS);
+    assert.deepStrictEqual(ungated().filter(p => supersededTerms(p) && freeAnswer(p).startsWith("Yes")).map(p => p.slug), []);
   });
 
   it("counts at least as many ungated pages answering yes as the census found", () => {
@@ -606,11 +650,22 @@ describe("the same page an ungated record renders is unchanged", () => {
   });
 
   it("still opens its verdict on the free tier", () => {
-    const notOpening = ungated().filter(p => !pageProse(p).includes(`${p.vendor}'s free tier offers `)).map(p => p.slug);
+    const notOpening = publishingItsTerms().filter(p => !pageProse(p).includes(`${p.vendor}'s free tier offers `)).map(p => p.slug);
     assert.ok(
-      notOpening.length < ungated().length * 0.01,
+      notOpening.length < publishingItsTerms().length * 0.01,
       `${notOpening.length} ungated verdicts do not open on the free tier: ${notOpening.slice(0, 20).join(", ")}`,
     );
+  });
+
+  it("opens the verdict on the supersession where the change log holds one", () => {
+    const subjects = ungated().filter(supersededTerms);
+    assert.ok(subjects.length > 100, `only ${subjects.length} ungated pages withhold superseded terms`);
+    const opening = subjects.filter(p => pageProse(p).includes(`${p.vendor}'s free tier offers `)).map(p => p.slug);
+    assert.deepStrictEqual(opening.slice(0, 20), [], "verdicts still opening on figures the change log supersedes");
+    const silent = subjects
+      .filter(p => !pageProse(p).includes(`names them as the previous ones`))
+      .map(p => p.slug);
+    assert.deepStrictEqual(silent.slice(0, 20), [], "verdicts that withhold the figures without saying why");
   });
 
   it("still rates the free tier in its reliability answer", () => {
@@ -630,7 +685,12 @@ describe("the same page an ungated record renders is unchanged", () => {
   });
 
   it("still publishes a zero-price Offer", () => {
-    const missing = ungated().filter(p => offerBlock(p)?.price !== "0").map(p => p.slug);
+    const missing = publishingItsTerms().filter(p => offerBlock(p)?.price !== "0").map(p => p.slug);
     assert.deepStrictEqual(missing.slice(0, 20), [], "ungated pages that stopped publishing a zero-price Offer");
+  });
+
+  it("publishes none where the change log supersedes the terms behind it", () => {
+    const offering = ungated().filter(p => supersededTerms(p) && offerBlock(p) !== undefined).map(p => p.slug);
+    assert.deepStrictEqual(offering.slice(0, 20), [], "pages offering a price of zero for terms we withhold");
   });
 });
