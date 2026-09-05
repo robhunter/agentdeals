@@ -8300,16 +8300,22 @@
       "category": "Maps/Geolocation",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-05"
+      "recorded_date": "2026-09-05",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-05",
+        "detail": "Retracted 2026-09-05: IPinfo Lite's API request allowance was not cut to 50 per month. The \"50 API req / mo\" this record quotes is the value in the Web lookups row, not the API request row. ipinfo.io/pricing, fetched 2026-09-05, renders the same row as \"Web lookups 500 API req / mo\" for Core and \"Web lookups 2,500 API req / mo\" for Max — the figure scales with plan price and is a browser-lookup quota. API requests are stated in a separate block: \"API Requests per Month | Unlimited | 150k - 5M | 250k - 5M | Custom\", where Lite reads Unlimited. That is what our stored description already said. The correct value sits inside this record's own current_state, three words after the quoted one: \"Web lookups 50 API req / mo Unlimited Country-level only\".",
+        "source_url": "https://ipinfo.io/pricing"
+      }
     },
     {
       "vendor": "MEGA",
       "change_type": "pricing_restructured",
       "date": "2026-09-05",
       "date_source": "discovered",
-      "summary": "The transfer quota is now 'Limited' instead of 1 GB replenishing.",
+      "summary": "MEGA's free transfer quota is now stated as \"Limited\" where our record held a 1 GB quota that replenishes.",
       "previous_state": "20 GB permanent storage. End-to-end encrypted. MEGA Chat. File sharing with encryption. Desktop and mobile sync. 1 GB transfer quota that replenishes. Up to 5 GB additional via achievements (temporary).",
-      "current_state": "The free plan offers !{freePlanStorage} storage and limited transfer for €0 forever.",
+      "current_state": "MEGA's pricing page, fetched 2026-09-05, renders its plan table as \"Transfer | Free: Limited | Pro plans: Up to 20 TB | Pro Flexi: Flexible starting at 3 TB | Business: Flexible starting at 3 TB\". The free storage figure is not readable from this page: it renders as the unresolved template variable !{freePlanStorage} in all three places the page states it, including the FAQ answer \"Yes, our free plan includes !{freePlanStorage} of storage.\" Our stored description's 20 GB was not re-verified here and is not contradicted.",
       "impact": "high",
       "source_url": "https://mega.io/pricing",
       "category": "Cloud Storage",
@@ -8330,7 +8336,13 @@
       "category": "Password Managers",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-05"
+      "recorded_date": "2026-09-05",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-05",
+        "detail": "Retracted 2026-09-05: Proton Pass's free tier was not reduced to 0 vaults. proton.me/pass/pricing, fetched 2026-09-05, renders that row as \"Organize stored items in vaults 0 vaults 0 vaults undefined vaults (per user account) 0 vaults\" and the next as \"Securely share vaults 0 others 0 others undefined others (per user account)\". Every plan column reads 0 or the literal string \"undefined\", including the paid Pass Plus, Unlimited and Family columns — so 0 is what an unresolved client-side counter renders, not a limit Proton publishes. The literal \"undefined\" in the same row is the proof. The same page's free column states \"Unlimited logins, notes and credit cards\" and \"Unlimited devices\" in prose that did render, which is what our stored description already carried.",
+        "source_url": "https://proton.me/pass/pricing"
+      }
     },
     {
       "vendor": "Google Meet",
@@ -8630,7 +8642,13 @@
       "category": "VPN & Privacy",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-05"
+      "recorded_date": "2026-09-05",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-05",
+        "detail": "Retracted 2026-09-05: Windscribe's free tier was not reduced to 0 GB. The string this record reads as the free tier's terms — \"0 GB/Month 0 Location(s)\" — is the zero position of the build-your-own-plan configurator on windscribe.com/upgrade, which the page renders immediately before \"Unlimited Data + R.O.B.E.R.T\" and \"Your old subscription will be cancelled and a partial refund will be applied\". It is the paid plan builder with no location selected yet, not a statement of what the free plan offers. The page's 5,803 characters of visible text, fetched 2026-09-05, contain no occurrence of \"10 GB\" at all, because /upgrade does not state the free allowance anywhere; the only free/paid comparison on it is a table of server locations. Our own offer record, unchanged, reads \"10 GB/month free data\", and agentdeals.dev/vendor/windscribe published both sentences at once: the badge said 0 GB/month and the body two sentences later said 10 GB/month.",
+        "source_url": "https://windscribe.com/upgrade"
+      }
     },
     {
       "vendor": "Ramp",
