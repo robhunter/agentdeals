@@ -12,6 +12,7 @@ export const QUALITY_BUDGET_NAMES = [
   "stale_fact_pages",
   "unsourced_tier_a",
   "uncited_change_records",
+  "source_checks_ok_without_quoted_evidence",
   "faq_answers",
   "faq_answers_stating_a_figure",
   "faq_answers_with_a_digit_but_no_figure",

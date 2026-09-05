@@ -336,6 +336,7 @@ describe("#1321 the FAQ counts are budgets too, and they live in the same file",
       stale_fact_pages: 57,
       unsourced_tier_a: 43,
       uncited_change_records: budgets.uncited_change_records,
+      source_checks_ok_without_quoted_evidence: budgets.source_checks_ok_without_quoted_evidence,
     });
     assert.deepStrictEqual(unmeasured, [
       "faq_answers",

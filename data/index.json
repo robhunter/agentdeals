@@ -1279,9 +1279,9 @@
         "notes": "Channel partner program for resellers. No individual referral program."
       },
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-05",
         "outcome": "ok",
-        "detail": "url"
+        "detail": "the page names GitLab CI as \"gitlab ci\" and states \"$ 0\""
       }
     },
     {
@@ -2937,9 +2937,9 @@
       ],
       "verifiedDate": "2026-08-18",
       "source_check": {
-        "checked": "2026-09-03",
+        "checked": "2026-09-05",
         "outcome": "ok",
-        "detail": "url"
+        "detail": "the page writes \"google\", the domain we cite Google Gemini API from, and states \"$0.75\""
       },
       "product_subtypes": {
         "taxonomy": "AI / ML",
@@ -3620,9 +3620,9 @@
       },
       "expires_date": "2026-08-31",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-05",
         "outcome": "ok",
-        "detail": "url"
+        "detail": "the page names SVB (Silicon Valley Bank) as \"silicon\" and states \"$1\""
       }
     },
     {
@@ -4765,9 +4765,9 @@
       ],
       "verifiedDate": "2026-08-26",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-05",
         "outcome": "ok",
-        "detail": "url"
+        "detail": "the page writes \"slack\", the domain we cite Slack API from, and states \"$0\""
       }
     },
     {
@@ -6179,9 +6179,9 @@
       ],
       "verifiedDate": "2026-07-29",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-05",
         "outcome": "ok",
-        "detail": "url"
+        "detail": "the page writes \"amazon\", the domain we cite Amazon ECR Public from, and states \"$200\""
       }
     },
     {
@@ -8454,9 +8454,9 @@
       ],
       "verifiedDate": "2026-07-31",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-05",
         "outcome": "ok",
-        "detail": "url"
+        "detail": "the page names Comet ML as \"comet ml\" and states \"$0\""
       },
       "product_subtypes": {
         "taxonomy": "AI / ML",
@@ -8606,9 +8606,9 @@
       ],
       "verifiedDate": "2026-07-30",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-05",
         "outcome": "ok",
-        "detail": "url"
+        "detail": "the page writes \"swagger\", the domain we cite SwaggerHub from, and states \"2600 EUR\""
       }
     },
     {
@@ -9195,9 +9195,9 @@
       ],
       "verifiedDate": "2026-07-08",
       "source_check": {
-        "checked": "2026-08-28",
-        "outcome": "ok",
-        "detail": "url"
+        "checked": "2026-09-05",
+        "outcome": "does_not_name_vendor",
+        "detail": "the page never names Codefresh, on a domain that carries its name"
       }
     },
     {
@@ -11689,9 +11689,9 @@
       ],
       "verifiedDate": "2026-07-14",
       "source_check": {
-        "checked": "2026-08-28",
-        "outcome": "ok",
-        "detail": "url"
+        "checked": "2026-09-05",
+        "outcome": "does_not_name_vendor",
+        "detail": "the page never names Supportivekoala, on a domain that carries its name"
       }
     },
     {
@@ -11715,9 +11715,9 @@
         }
       ],
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-05",
         "outcome": "ok",
-        "detail": "url"
+        "detail": "the page writes \"tavily\", the domain we cite Tavily AI from, and states \"$0.008\""
       },
       "product_subtypes": {
         "taxonomy": "AI / ML",
@@ -12774,9 +12774,9 @@
       ],
       "verifiedDate": "2026-07-08",
       "source_check": {
-        "checked": "2026-08-28",
-        "outcome": "ok",
-        "detail": "url"
+        "checked": "2026-09-05",
+        "outcome": "does_not_name_vendor",
+        "detail": "the page never names StreamBackdrops, on a domain that carries its name"
       }
     },
     {
@@ -14704,9 +14704,9 @@
       ],
       "verifiedDate": "2026-08-27",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-05",
         "outcome": "ok",
-        "detail": "url"
+        "detail": "the page writes \"letsencrypt\", the domain we cite letsencrypt.org from, and states \"2025 Annual R\""
       }
     },
     {
@@ -15292,9 +15292,9 @@
       ],
       "verifiedDate": "2026-08-26",
       "source_check": {
-        "checked": "2026-08-28",
-        "outcome": "ok",
-        "detail": "url"
+        "checked": "2026-09-05",
+        "outcome": "does_not_name_vendor",
+        "detail": "the page never names GetUpdraft, on a domain that carries its name"
       }
     },
     {
@@ -15791,9 +15791,9 @@
       ],
       "verifiedDate": "2026-08-25",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-05",
         "outcome": "ok",
-        "detail": "url"
+        "detail": "the page writes \"betterstack\", the domain we cite Better Stack Logs from, and states \"$0\""
       }
     },
     {
@@ -19234,9 +19234,9 @@
       ],
       "verifiedDate": "2026-08-31",
       "source_check": {
-        "checked": "2026-09-01",
-        "outcome": "ok",
-        "detail": "url"
+        "checked": "2026-09-05",
+        "outcome": "does_not_name_vendor",
+        "detail": "the page never names weserv, on a domain that carries its name"
       }
     },
     {
@@ -20342,9 +20342,9 @@
       ],
       "verifiedDate": "2026-07-16",
       "source_check": {
-        "checked": "2026-08-28",
-        "outcome": "ok",
-        "detail": "url"
+        "checked": "2026-09-05",
+        "outcome": "does_not_name_vendor",
+        "detail": "the page never names Oaysus, on a domain that carries its name"
       }
     },
     {
@@ -20810,9 +20810,9 @@
       ],
       "verifiedDate": "2026-09-01",
       "source_check": {
-        "checked": "2026-09-01",
+        "checked": "2026-09-05",
         "outcome": "ok",
-        "detail": "url"
+        "detail": "the page names noip as \"noip\" and states \"$24.95\""
       }
     },
     {
@@ -22685,9 +22685,9 @@
         }
       ],
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-05",
         "outcome": "ok",
-        "detail": "url"
+        "detail": "the page writes \"pinata\", the domain we cite Pinata IPFS from, and states \"1 Gateway Total 10G Bandwidth Per month\""
       }
     },
     {
@@ -26684,9 +26684,9 @@
       ],
       "verifiedDate": "2026-07-21",
       "source_check": {
-        "checked": "2026-09-03",
-        "outcome": "ok",
-        "detail": "url",
+        "checked": "2026-09-05",
+        "outcome": "does_not_name_vendor",
+        "detail": "the page never names BackgroundStyler.com, on a domain that carries its name",
         "unrendered_prices": [
           "IDR 1399000"
         ]
@@ -30611,9 +30611,9 @@
       ],
       "verifiedDate": "2026-08-17",
       "source_check": {
-        "checked": "2026-09-03",
+        "checked": "2026-09-05",
         "outcome": "ok",
-        "detail": "url"
+        "detail": "the page writes \"gcore\", the domain we cite Gcore DNS from, and states \"€0\""
       }
     },
     {
@@ -30761,9 +30761,9 @@
         }
       ],
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "ok",
-        "detail": "url"
+        "checked": "2026-09-05",
+        "outcome": "does_not_name_vendor",
+        "detail": "the page never names xAI, on a domain that carries its name"
       },
       "product_subtypes": {
         "taxonomy": "AI / ML",
@@ -30812,9 +30812,9 @@
       ],
       "verifiedDate": "2026-08-26",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-05",
         "outcome": "ok",
-        "detail": "url"
+        "detail": "the page writes \"bolt\", the domain we cite Bolt.new from, and states \"$100\""
       }
     },
     {
@@ -31066,9 +31066,9 @@
         "notes": "No public affiliate/referral program."
       },
       "source_check": {
-        "checked": "2026-08-30",
+        "checked": "2026-09-05",
         "outcome": "ok",
-        "detail": "url"
+        "detail": "the page writes \"openai\", the domain we cite OpenAI Codex from, and states \"$0\""
       }
     },
     {
@@ -31195,9 +31195,9 @@
       ],
       "verifiedDate": "2026-08-18",
       "source_check": {
-        "checked": "2026-09-03",
+        "checked": "2026-09-05",
         "outcome": "ok",
-        "detail": "url"
+        "detail": "the page writes \"google\", the domain we cite Google Cloud Run from, and states \"$0.000018\""
       },
       "product_subtypes": {
         "taxonomy": "Cloud Hosting",
@@ -31268,9 +31268,9 @@
       ],
       "verifiedDate": "2026-08-17",
       "source_check": {
-        "checked": "2026-09-03",
+        "checked": "2026-09-05",
         "outcome": "ok",
-        "detail": "url"
+        "detail": "the page writes \"google\", the domain we cite Google Cloud Pub/Sub from, and states \"$169\""
       }
     },
     {
@@ -31288,9 +31288,9 @@
       ],
       "verifiedDate": "2026-09-02",
       "source_check": {
-        "checked": "2026-09-03",
+        "checked": "2026-09-05",
         "outcome": "ok",
-        "detail": "url"
+        "detail": "the page writes \"google\", the domain we cite Google Cloud Build from, and states \"$0.006\""
       }
     },
     {
@@ -31516,9 +31516,9 @@
       ],
       "verifiedDate": "2026-08-19",
       "source_check": {
-        "checked": "2026-09-03",
+        "checked": "2026-09-05",
         "outcome": "ok",
-        "detail": "url"
+        "detail": "the page writes \"ollama\", the domain we cite Ollama Cloud from, and states \"$0\""
       },
       "product_subtypes": {
         "taxonomy": "AI / ML",
@@ -31549,9 +31549,9 @@
       ],
       "verifiedDate": "2026-08-27",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "ok",
-        "detail": "url"
+        "checked": "2026-09-05",
+        "outcome": "does_not_name_vendor",
+        "detail": "the page never names Google Gemini Code Assist and is not served from its domain"
       }
     },
     {
@@ -32142,9 +32142,9 @@
       ],
       "verifiedDate": "2026-08-16",
       "source_check": {
-        "checked": "2026-09-03",
+        "checked": "2026-09-05",
         "outcome": "ok",
-        "detail": "url"
+        "detail": "the page writes \"apple\", the domain we cite Apple Notes from, and states \"$0.99\""
       }
     },
     {
@@ -32300,9 +32300,9 @@
       ],
       "verifiedDate": "2026-08-23",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-05",
         "outcome": "ok",
-        "detail": "url"
+        "detail": "the page writes \"google\", the domain we cite Google Drive from, and states \"$1.99\""
       }
     },
     {
@@ -32319,9 +32319,9 @@
       ],
       "verifiedDate": "2026-08-22",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-05",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names Google Photos as \"google photos\" and states \"$1.99\""
       }
     },
     {
@@ -32338,9 +32338,9 @@
       ],
       "verifiedDate": "2026-08-19",
       "source_check": {
-        "checked": "2026-09-03",
+        "checked": "2026-09-05",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names iCloud as \"icloud\" and states \"$0.99\""
       }
     },
     {
@@ -32598,9 +32598,9 @@
       ],
       "verifiedDate": "2026-08-18",
       "source_check": {
-        "checked": "2026-09-03",
+        "checked": "2026-09-05",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names Slack as \"slack\" and states \"$0\""
       }
     },
     {
@@ -33327,9 +33327,9 @@
       ],
       "verifiedDate": "2026-08-23",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-05",
         "outcome": "ok",
-        "detail": "host"
+        "detail": "the page writes \"tuta\", the domain we cite Tutanota from, and states \"€3\""
       }
     },
     {
@@ -33444,9 +33444,9 @@
       ],
       "verifiedDate": "2026-08-23",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "ok",
-        "detail": "url"
+        "checked": "2026-09-05",
+        "outcome": "does_not_name_vendor",
+        "detail": "the page never names Mint (Credit Karma) and is not served from its domain"
       }
     },
     {
@@ -33525,9 +33525,9 @@
       ],
       "verifiedDate": "2026-08-18",
       "source_check": {
-        "checked": "2026-09-03",
+        "checked": "2026-09-05",
         "outcome": "ok",
-        "detail": "url"
+        "detail": "the page writes \"kiro\", the domain we cite Amazon Kiro from, and states \"$20\""
       }
     },
     {
@@ -33815,9 +33815,9 @@
       ],
       "verifiedDate": "2026-08-15",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "ok",
-        "detail": "url"
+        "checked": "2026-09-05",
+        "outcome": "states_no_terms",
+        "detail": "the page names Google Vector Search 2.0 but states no amount, tier or rate we can read, and the 2 structured-data blocks in its markup state no price"
       },
       "product_subtypes": {
         "taxonomy": "AI / ML",
@@ -33847,9 +33847,9 @@
       ],
       "verifiedDate": "2026-08-19",
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-05",
         "outcome": "ok",
-        "detail": "url"
+        "detail": "the page writes \"google\", the domain we cite Google GLM 5 from, and states \"10 frames per second\""
       },
       "product_subtypes": {
         "taxonomy": "AI / ML",
