@@ -3486,7 +3486,12 @@
       "category": "AI / ML",
       "alternatives": [],
       "recorded_date": "2026-04-13",
-      "date_source": "hand_written"
+      "date_source": "hand_written",
+      "resolution": {
+        "state": "reversed",
+        "date": "2026-09-05",
+        "detail": "No longer in force as of 2026-09-05. This record cites nothing and xAI does not publish its sign-up credit terms on a page we can read, so it cannot be retracted on evidence; it is withdrawn because the claim it makes is contradicted by our own later record. Our xAI offer, verified 2026-08-14 and re-checked 2026-09-02, reads \"Sign-up gives $25 in free API credits\". Recorded separately: the URL that offer cites, docs.x.ai/developers/models, contains no occurrence of \"free\", \"credit\" or \"$25\" in its 5,452 characters of visible text, so that claim is also uncited and needs a source of its own."
+      }
     },
     {
       "vendor": "Clarifai",
@@ -3500,7 +3505,13 @@
       "category": "AI / ML",
       "alternatives": [],
       "recorded_date": "2026-04-13",
-      "date_source": "hand_written"
+      "date_source": "hand_written",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-05",
+        "detail": "Retracted 2026-09-05: Clarifai's Community plan was not replaced by a trial. The Internet Archive's 2026-03-04 capture of clarifai.com/pricing, five weeks before this record, and its 2026-04-17 capture, four days after it, both carry the same Compare Plans ladder: \"Community | Get Community | Essential | Get Essential | Professional | Get Professional | Hybrid AI Enterprise | Contact Us | Private AI Enterprise | Contact Us\", with \"Monthly requests: Limited\" and \"Requests per second: 1\" in the Community column. Community is an orderable plan on both sides of this record's date. The 14-day trial named here is the hero banner above that table - \"Benchmark your models on the world's fastest inference engine with a free 14-day trial\" - which offers a trial of the Reasoning Engine, not a replacement for the plan ladder. Our own offer record, verified 2026-07-15, reads \"Community tier: 1,000 API calls/month\".",
+        "source_url": "https://web.archive.org/web/20260304155253/https://www.clarifai.com/pricing"
+      }
     },
     {
       "vendor": "Typeform",
@@ -3538,7 +3549,7 @@
       "previous_state": "",
       "current_state": "Free community plan replaced by trial only",
       "impact": "low",
-      "source_url": "",
+      "source_url": "https://swagger.io/product/pricing/",
       "category": "API Development",
       "alternatives": [],
       "recorded_date": "2026-04-13",
@@ -3930,7 +3941,7 @@
       "previous_state": "",
       "current_state": "No free tier, pay-as-you-go only ($0.92/GB/day)",
       "impact": "low",
-      "source_url": "",
+      "source_url": "https://logz.io/pricing/",
       "category": "Logging",
       "alternatives": [],
       "recorded_date": "2026-04-13",
