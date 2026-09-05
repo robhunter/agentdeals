@@ -57,6 +57,7 @@ jobs:
         id: gate
         env:
           GATE_RATCHET_BUDGETS: "1"
+          GATE_UPDATE_PAGE_LASTMOD: "1"
           VERIFIED: ${{ steps.reverify.outputs.verified }}
           FLAGGED: ${{ steps.reverify.outputs.flagged }}
           RECORDED: ${{ steps.reverify.outputs.recorded }}
@@ -67,7 +68,7 @@ jobs:
           bash scripts/gate-data-push.sh \
             data-quarantine/rolling-reverification \
             "data(auto): rolling re-verification — ${VERIFIED} verified, ${FLAGGED} flagged, ${RECORDED} changes recorded, ${RETRIED} retried from quarantine, ${QUARANTINED} in quarantine, ${REPICKED} to be checked again" \
-            data/index.json data/deal_changes.json data/change_refusals.json data/verification_state.json data/quality_budgets.json
+            data/index.json data/deal_changes.json data/change_refusals.json data/verification_state.json data/quality_budgets.json data/page-lastmod.json
 
       - name: Say where it can be seen what the gate did with this run's data
         if: always() && (steps.gate.outputs.quarantined == 'true' || steps.gate.outputs.pushed_over_failures == 'true')
