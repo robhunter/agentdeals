@@ -14,16 +14,26 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 OUTPUT="${GITHUB_OUTPUT:-/dev/null}"
 RATCHET_BUDGETS="${GATE_RATCHET_BUDGETS:-}"
 BUDGETS_PATH="data/quality_budgets.json"
+UPDATE_PAGE_LASTMOD="${GATE_UPDATE_PAGE_LASTMOD:-}"
+PAGE_LASTMOD_PATH="data/page-lastmod.json"
 
-if [ -n "$RATCHET_BUDGETS" ]; then
-  BUDGETS_COMMITTABLE=""
+among_the_committable() {
+  local wanted="$1"
+  shift
   for path in "$@"; do
-    case "$BUDGETS_PATH" in "$path"|"$path"/*) BUDGETS_COMMITTABLE="yes" ;; esac
+    case "$wanted" in "$path"|"$path"/*) return 0 ;; esac
   done
-  if [ -z "$BUDGETS_COMMITTABLE" ]; then
-    echo "usage: GATE_RATCHET_BUDGETS is set but $BUDGETS_PATH is not among the paths this run may commit ($*), so a budget lowered here would be left behind in the workspace." >&2
-    exit 2
-  fi
+  return 1
+}
+
+if [ -n "$RATCHET_BUDGETS" ] && ! among_the_committable "$BUDGETS_PATH" "$@"; then
+  echo "usage: GATE_RATCHET_BUDGETS is set but $BUDGETS_PATH is not among the paths this run may commit ($*), so a budget lowered here would be left behind in the workspace." >&2
+  exit 2
+fi
+
+if [ -n "$UPDATE_PAGE_LASTMOD" ] && ! among_the_committable "$PAGE_LASTMOD_PATH" "$@"; then
+  echo "usage: GATE_UPDATE_PAGE_LASTMOD is set but $PAGE_LASTMOD_PATH is not among the paths this run may commit ($*), so the days read here would be left behind in the workspace." >&2
+  exit 2
 fi
 
 if [ -z "$(git status --porcelain -- "$@")" ]; then
@@ -87,6 +97,20 @@ if [ -n "$RATCHET_BUDGETS" ]; then
     git commit -q --amend --no-edit
     COMMIT="$(git rev-parse --short HEAD)"
     echo "A budget fell to what this run's data measures, in the same commit as the data that earned it."
+  fi
+fi
+
+if [ -n "$UPDATE_PAGE_LASTMOD" ]; then
+  echo "── Reading every page this run renders, to date the ones whose output moved ──"
+  if node "$SCRIPT_DIR/update-page-lastmod.js"; then
+    if [ -n "$(git status --porcelain -- "$@")" ]; then
+      git add -- "$@"
+      git commit -q --amend --no-edit
+      COMMIT="$(git rev-parse --short HEAD)"
+      echo "The pages whose output this run moved are dated today, in the same commit as the data that moved them."
+    fi
+  else
+    echo "The pages could not be read, so each one keeps the day it last changed. That says nothing about whether this run's data is right, so the data goes on to the suite."
   fi
 fi
 
