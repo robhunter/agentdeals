@@ -62,7 +62,7 @@
     {
       "vendor": "Render",
       "category": "Cloud Hosting",
-      "description": "Free web services (512 MB RAM, 0.1 CPU), free PostgreSQL (256 MB RAM, 30-day expiry), free Redis (25 MB). 100 GB bandwidth/month, 500 build minutes/month. 1 project with 2 environments. Auto-deploy from Git",
+      "description": "Free web services (512 MB RAM, less than 1 CPU), free PostgreSQL (256 MB RAM, 30-day expiry), free Redis (25 MB). 5 GB bandwidth/month included then $0.15/GB, 500 build minutes/month. Up to 25 services, 2 environments per project. Auto-deploy from Git",
       "tier": "Hobby",
       "url": "https://render.com/pricing",
       "tags": [
