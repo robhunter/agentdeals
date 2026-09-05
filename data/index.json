@@ -2966,7 +2966,7 @@
     {
       "vendor": "Mistral AI",
       "category": "AI / ML",
-      "description": "Access to all Mistral models including Large, Codestral, Pixtral — 2 RPM, 1B tokens/month. No credit card required",
+      "description": "Free plan includes $10/mo in API credits and access to Mistral models in Studio, alongside limited messages, web searches and coding sessions. Paid API rates start at $0.5/M input and $1.5/M output tokens for Mistral Large; batch processing halves the price and cached input tokens cost up to 90% less.",
       "tier": "Experiment",
       "url": "https://mistral.ai/pricing",
       "tags": [
@@ -2977,7 +2977,7 @@
         "code",
         "free tier"
       ],
-      "verifiedDate": "2026-08-20",
+      "verifiedDate": "2026-09-05",
       "payment_protocols": [
         {
           "protocol": "x402",
@@ -2988,9 +2988,9 @@
         }
       ],
       "source_check": {
-        "checked": "2026-09-03",
+        "checked": "2026-09-05",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names the plan \"Free\" and states \"$10 /mo in API credits\", and states \"Mistral Large costs $0.5 /M tokens in and $1.5 /M tokens out\""
       },
       "product_subtypes": {
         "taxonomy": "AI / ML",
