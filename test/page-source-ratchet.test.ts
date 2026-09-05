@@ -122,7 +122,7 @@ describe("the number of tier-A pages asserting vendor facts from nowhere only go
   });
 
   it("is the number the shipped register holds", () => {
-    assert.strictEqual(UNSOURCED_TIER_A_BASELINE, 43);
+    assert.strictEqual(UNSOURCED_TIER_A_BASELINE, 41);
   });
 });
 

@@ -2967,7 +2967,7 @@
       "vendor": "Mistral AI",
       "category": "AI / ML",
       "description": "Free plan includes $10/mo in API credits and access to Mistral models in Studio, alongside limited messages, web searches and coding sessions. Paid API rates start at $0.5/M input and $1.5/M output tokens for Mistral Large; batch processing halves the price and cached input tokens cost up to 90% less.",
-      "tier": "Experiment",
+      "tier": "Free",
       "url": "https://mistral.ai/pricing",
       "tags": [
         "ai",
