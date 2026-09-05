@@ -8,13 +8,26 @@ import { fileURLToPath } from "node:url";
 const { eligibilityGate, eligibilityGateAsPublished, publishableEligibilityConditions, CONDITION_RECORDING_AN_UNREAD_PROGRAM } =
   await import("../dist/eligibility.js");
 const { gateFor, notAFreeOfferGateFor, utcDate } = await import("../dist/ranking.js");
+const { supersededTermsNotice, supersedingChange } = await import("../dist/superseded-description.js");
 
 type Offer = import("../src/types.ts").Offer;
+type DealChange = import("../src/types.ts").DealChange;
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(__dirname, "..");
 
 const offers: Offer[] = JSON.parse(readFileSync(path.join(REPO, "data", "index.json"), "utf-8")).offers;
+const dealChanges: DealChange[] = JSON.parse(
+  readFileSync(path.join(REPO, "data", "deal_changes.json"), "utf-8"),
+).changes;
+
+function publishedDescriptionOf(offer: Offer): string {
+  const superseding = supersedingChange(
+    offer,
+    dealChanges.filter(c => c.vendor.toLowerCase() === offer.vendor.toLowerCase()),
+  );
+  return superseding ? supersededTermsNotice(offer.vendor, superseding) : offer.description;
+}
 
 function slugOf(vendor: string): string {
   return vendor.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
@@ -78,7 +91,7 @@ function renderedOffer(html: string): Offer | undefined {
   const vendor = webPage?.mainEntity?.name;
   const description = webPage?.mainEntity?.description;
   if (typeof vendor !== "string" || typeof description !== "string") return undefined;
-  return offers.find(o => o.vendor === vendor && o.description === description);
+  return offers.find(o => o.vendor === vendor && publishedDescriptionOf(o) === description);
 }
 
 type RenderedPage = { vendor: string; slug: string; html: string; offer: Offer };
