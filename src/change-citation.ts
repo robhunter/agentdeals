@@ -18,6 +18,19 @@ export function uncitedChanges<T extends CitableChange>(changes: readonly T[]): 
   return changes.filter(changeIsUncited);
 }
 
+export function citationLabel(url: string): string {
+  const trimmed = (url ?? "").trim();
+  let parsed: URL;
+  try {
+    parsed = new URL(trimmed);
+  } catch {
+    return trimmed;
+  }
+  const host = parsed.hostname.replace(/^www\./, "");
+  const withinHost = `${parsed.pathname}${parsed.search}`.replace(/\/+$/, "");
+  return `${host}${withinHost}`;
+}
+
 export const UNCITED_CHANGE_LABEL = "Unsourced";
 
 export function uncitedChangeNotice(vendor: string): string {

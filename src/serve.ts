@@ -20,7 +20,7 @@ import { openapiSpec } from "./openapi.js";
 import { LINK_GRACE_DAYS, unreachableNoticeForUrl } from "./link-health.js";
 import { offerEnded, offerRetired, recordedTierSentence, endedHeadline, endedHistorySentence, endedReliabilitySentence, endedEmptyChangeHistorySentence, ENDED_BADGE_LABEL, ENDED_SINCE_CHANGES_SENTENCE, type OfferTierAndUrl } from "./retirement.js";
 import { amountUnstatedSentence, levelWithheldReason, sourceStatesNoAmount, withheldLevelClause, withheldLevelSentence } from "./source-check.js";
-import { SUPERSEDED_TERMS_LABEL, supersededTermsAnswer, supersededTermsMetaSentence, supersededTermsNotice, supersededTermsVerdictSentence, supersedingChange } from "./superseded-description.js";
+import { SUPERSEDED_TERMS_LABEL, supersededTermsAnswer, supersededTermsMetaSentence, supersededTermsNotice, supersededTermsNoticeHtml, supersededTermsVerdictSentence, supersedingChange } from "./superseded-description.js";
 import { buildComparisonMap, comparisonSlug } from "./comparison-pairs.js";
 import { stabilityFaqAnswer, stabilityVerdictClause, type ComparisonSide, type StabilityRating } from "./comparison-verdict.js";
 import { publishedVendorLevel, vendorVerdictSentence, vendorBadge, statesRiskCause, narrowingSentence, changeKindNoun, type VendorVerdictInput } from "./vendor-verdict.js";
@@ -4427,7 +4427,7 @@ ${referralCalloutHtml}
   <div class="desc-block">
     <h2>Free Tier Details</h2>
     ${termsSuperseded
-      ? `<p class="terms-superseded-text"><strong>${SUPERSEDED_TERMS_LABEL}:</strong> ${escHtmlServer(supersededTermsNotice(vendorName, termsSuperseded))} <a href="#changes">Read what we recorded &darr;</a></p>`
+      ? `<p class="terms-superseded-text"><strong>${SUPERSEDED_TERMS_LABEL}:</strong> ${supersededTermsNoticeHtml(vendorName, termsSuperseded, escHtmlServer)} <a href="#changes">Read what we recorded &darr;</a></p>`
       : `<p class="desc-text">${escHtmlServer(primary.description)}</p>`}
   </div>
 ${compareTableHtml}

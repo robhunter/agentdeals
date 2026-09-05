@@ -8,7 +8,7 @@ import { fileURLToPath } from "node:url";
 const { gateFor, utcDate } = await import("../dist/ranking.js");
 const { vendorSlugMap } = await import("../dist/vendor-slug.js");
 const { offerEnded } = await import("../dist/retirement.js");
-const { supersededTermsNotice, supersedingChange } = await import("../dist/superseded-description.js");
+const { STORED_TERMS_WITHHELD_PHRASE, supersededTermsNotice, supersedingChange } = await import("../dist/superseded-description.js");
 const { qualityBudget } = await import("../dist/page-reviews.js");
 
 type Offer = import("../src/types.ts").Offer;
@@ -222,7 +222,7 @@ describe("the page a gated record renders does not answer the free-tier question
     for (const p of subjects) {
       const answer = freeAnswer(p);
       assert.ok(!answer.includes(p.primary.description.slice(0, 60)), `/vendor/${p.slug} still states them: ${answer.slice(0, 120)}`);
-      assert.ok(answer.includes("names them as the previous terms"), `/vendor/${p.slug}: ${answer.slice(0, 160)}`);
+      assert.ok(answer.includes(STORED_TERMS_WITHHELD_PHRASE), `/vendor/${p.slug}: ${answer.slice(0, 160)}`);
     }
   });
 
@@ -669,7 +669,7 @@ describe("the same page an ungated record renders is unchanged", () => {
     const opening = subjects.filter(p => pageProse(p).includes(`${p.vendor}'s free tier offers `)).map(p => p.slug);
     assert.deepStrictEqual(opening.slice(0, 20), [], "verdicts still opening on figures the change log supersedes");
     const silent = subjects
-      .filter(p => !pageProse(p).includes(`names them as the previous ones`))
+      .filter(p => !pageProse(p).includes(STORED_TERMS_WITHHELD_PHRASE))
       .map(p => p.slug);
     assert.deepStrictEqual(silent.slice(0, 20), [], "verdicts that withhold the figures without saying why");
   });

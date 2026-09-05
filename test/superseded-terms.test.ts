@@ -7,10 +7,20 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const {
+  STORED_TERMS_WITHHELD_META_PHRASE,
+  STORED_TERMS_WITHHELD_PHRASE,
+  openingOfTerms,
   quotesTheStoredTermsAsPrevious,
+  readingBehindTheChange,
+  supersededTermsAnswer,
+  supersededTermsMetaSentence,
+  supersededTermsNotice,
+  supersededTermsNoticeHtml,
+  supersededTermsVerdictSentence,
   supersedingChange,
   storedTermsAreSuperseded,
 } = await import("../dist/superseded-description.js");
+const { citationLabel } = await import("../dist/change-citation.js");
 const { toSlug } = await import("../dist/slug.js");
 const { qualityBudget } = await import("../dist/page-reviews.js");
 const { supersededCensus } = await import("../dist/superseded-census.js");
@@ -340,6 +350,132 @@ describe("#1383 which of the two directions holds a scheduled data commit", () =
   });
 });
 
+describe("#1386 the reading the superseding record already holds", () => {
+  const NO_READING_TO_PUBLISH = [
+    ["no source", { source_url: "" }],
+    ["a blank source", { source_url: "   " }],
+    ["no source field", { source_url: undefined }],
+    ["nothing read", { current_state: "" }],
+    ["a blank reading", { current_state: "  \n " }],
+  ] as const;
+
+  it("is the current state, dated by the day the record was written, attributed to its source", () => {
+    const reading = readingBehindTheChange({ ...A_CHANGE_QUOTING_IT, recorded_date: "2026-08-29" })!;
+    assert.strictEqual(reading.terms, A_CHANGE_QUOTING_IT.current_state);
+    assert.strictEqual(reading.url, A_CHANGE_QUOTING_IT.source_url);
+    assert.strictEqual(reading.label, "quotacorp.example/pricing");
+    assert.strictEqual(reading.date, "2026-08-29");
+  });
+
+  it("falls back to the change date where the record does not say when it was written", () => {
+    assert.strictEqual(readingBehindTheChange(A_CHANGE_QUOTING_IT)!.date, A_CHANGE_QUOTING_IT.date);
+  });
+
+  it("is nothing at all where the record cites no page or read nothing off it", () => {
+    for (const [why, missing] of NO_READING_TO_PUBLISH) {
+      assert.strictEqual(readingBehindTheChange({ ...A_CHANGE_QUOTING_IT, ...missing }), null, why);
+    }
+  });
+
+  it("shortens a URL to what a reader can place, and leaves one it cannot parse alone", () => {
+    assert.strictEqual(citationLabel("https://www.turso.tech/pricing/"), "turso.tech/pricing");
+    assert.strictEqual(citationLabel("https://supabase.com/"), "supabase.com");
+    assert.strictEqual(citationLabel("https://vendor.test/plans?tab=free"), "vendor.test/plans?tab=free");
+    assert.strictEqual(citationLabel("not a url"), "not a url");
+  });
+
+  it("takes whole sentences up to the cap rather than cutting mid-figure", () => {
+    const terms = "Free plan: 20 GiB egress. Paid plans start at $19/month. Enterprise is quoted.";
+    assert.strictEqual(openingOfTerms(terms, 200), terms);
+    assert.strictEqual(openingOfTerms(terms, 60), "Free plan: 20 GiB egress. Paid plans start at $19/month.");
+    assert.strictEqual(openingOfTerms(terms, 30), "Free plan: 20 GiB egress.");
+  });
+
+  it("clips a single long sentence on a word boundary and marks it as clipped", () => {
+    const oneSentence = "The free tier includes 500 million rows read per month and 10 million rows written per month";
+    const opening = openingOfTerms(oneSentence, 40);
+    assert.ok(opening.endsWith("…"), opening);
+    assert.ok(opening.length <= 41, opening);
+    assert.ok(oneSentence.startsWith(opening.slice(0, -1)), opening);
+    assert.ok(!/\s$/.test(opening.slice(0, -1)), opening);
+  });
+
+  it("publishes the reading, its date and its source in every wording that withholds our terms", () => {
+    const reading = readingBehindTheChange(A_CHANGE_QUOTING_IT)!;
+    const wordings = {
+      notice: supersededTermsNotice(A_RECORD.vendor, A_CHANGE_QUOTING_IT),
+      answer: supersededTermsAnswer(A_RECORD.vendor, A_CHANGE_QUOTING_IT),
+      meta: supersededTermsMetaSentence(A_RECORD.vendor, A_CHANGE_QUOTING_IT),
+      verdict: supersededTermsVerdictSentence(A_RECORD.vendor, A_CHANGE_QUOTING_IT),
+    };
+    for (const [surface, text] of Object.entries(wordings)) {
+      assert.ok(text.includes(reading.label), `${surface}: ${text}`);
+      assert.ok(text.includes(reading.date), `${surface}: ${text}`);
+      assert.ok(text.includes(openingOfTerms(reading.terms, 90)), `${surface}: ${text}`);
+    }
+    assert.ok(wordings.answer.includes(A_CHANGE_QUOTING_IT.summary), wordings.answer);
+
+    assert.ok(!/[.!?…]$/.test(reading.terms), "the fixture must read terms with no closing stop for the next assertion to bite");
+    for (const [surface, text] of Object.entries(wordings)) {
+      const after = text.indexOf(reading.terms) + reading.terms.length;
+      assert.strictEqual(text.slice(after, after + 2), ". ", `${surface} runs the reading into the next sentence: ${text}`);
+    }
+  });
+
+  it("closes the reading on every record that read terms with no stop of their own", () => {
+    const unstopped = supersededRecords()
+      .map(({ offer, change }) => ({ offer, change, reading: readingBehindTheChange(change)! }))
+      .filter(({ reading }) => reading && !/[.!?…]$/.test(reading.terms));
+    assert.ok(unstopped.length > 10, `only ${unstopped.length} records read terms with no closing stop`);
+    for (const { offer, change, reading } of unstopped) {
+      const notice = supersededTermsNotice(offer.vendor, change);
+      const after = notice.indexOf(reading.terms) + reading.terms.length;
+      assert.strictEqual(notice.slice(after, after + 2), ". ", `${offer.vendor}: ${notice}`);
+    }
+  });
+
+  it("says why it withholds, and invents no reading, where the record cites nothing", () => {
+    const uncited = { ...A_CHANGE_QUOTING_IT, source_url: "" };
+    const wordings = [
+      supersededTermsNotice(A_RECORD.vendor, uncited),
+      supersededTermsAnswer(A_RECORD.vendor, uncited),
+      supersededTermsMetaSentence(A_RECORD.vendor, uncited),
+      supersededTermsVerdictSentence(A_RECORD.vendor, uncited),
+    ];
+    for (const text of wordings) {
+      assert.ok(text.includes(STORED_TERMS_WITHHELD_PHRASE), text);
+      assert.ok(!text.includes("As of"), text);
+      assert.ok(!text.includes(uncited.current_state), text);
+    }
+  });
+
+  it("links the page in the description block and escapes what it puts in the href", () => {
+    const hostile = {
+      ...A_CHANGE_QUOTING_IT,
+      source_url: 'https://quotacorp.example/pricing?a=1&b="x"',
+      current_state: 'Free plan: <b>20 GiB</b> egress & "burst"',
+    };
+    const html = supersededTermsNoticeHtml(A_RECORD.vendor, hostile, escapedFor);
+    assert.ok(html.includes('href="https://quotacorp.example/pricing?a=1&amp;b=&quot;x&quot;"'), html);
+    assert.ok(html.includes('class="change-source"'), html);
+    assert.ok(!html.includes("<b>"), html);
+    assert.ok(html.includes("&lt;b&gt;20 GiB&lt;/b&gt;"), html);
+  });
+
+  it("prints no link, and no reading, where the record cites nothing", () => {
+    const uncited = { ...A_CHANGE_QUOTING_IT, source_url: "" };
+    const html = supersededTermsNoticeHtml(A_RECORD.vendor, uncited, escapedFor);
+    assert.ok(!html.includes("<a "), html);
+    assert.strictEqual(unescaped(html), supersededTermsNotice(A_RECORD.vendor, uncited));
+  });
+
+  it("renders the same words as the plain notice once the markup is taken out", () => {
+    const html = supersededTermsNoticeHtml(A_RECORD.vendor, A_CHANGE_QUOTING_IT, escapedFor);
+    const asText = unescaped(html.replace(/<[^>]+>/g, ""));
+    assert.strictEqual(asText, supersededTermsNotice(A_RECORD.vendor, A_CHANGE_QUOTING_IT));
+  });
+});
+
 const FIXTURE_VENDOR = "Deno Deploy";
 const FIXTURE_SLUG = toSlug(FIXTURE_VENDOR);
 
@@ -404,7 +540,34 @@ function faqAnswersOf(html: string): { question: string; answer: string }[] {
 }
 
 function unescaped(html: string): string {
-  return html.replace(/&#39;/g, "'").replace(/&quot;/g, '"').replace(/&amp;/g, "&");
+  return html
+    .replace(/&#39;/g, "'")
+    .replace(/&quot;/g, '"')
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&amp;/g, "&");
+}
+
+function escapedFor(text: string): string {
+  return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+}
+
+function quickVerdictOf(html: string): string {
+  return /<div class="quick-verdict">[\s\S]*?<\/div>/.exec(html)?.[0] ?? "";
+}
+
+function withholdingSurfacesOf(html: string): [string, string][] {
+  const page = jsonLdOfType(html, "WebPage");
+  const surfaces: [string, string][] = [
+    ["meta description", unescaped(metaDescriptionOf(html))],
+    ["description block", unescaped(descriptionBlockOf(html))],
+    ["quick verdict", unescaped(quickVerdictOf(html))],
+    ["structured description", String(page?.mainEntity?.description ?? "")],
+    ...faqAnswersOf(html).map(({ question, answer }) => [question, answer] as [string, string]),
+  ];
+  return surfaces.filter(
+    ([, text]) => text.includes(STORED_TERMS_WITHHELD_PHRASE) || text.includes(STORED_TERMS_WITHHELD_META_PHRASE),
+  );
 }
 
 describe("#1103 a page whose stored terms its own change log quotes as previous", () => {
@@ -463,7 +626,7 @@ describe("#1103 a page whose stored terms its own change log quotes as previous"
   it("does not state the stored terms in the meta description", () => {
     const meta = unescaped(metaDescriptionOf(supersededPage));
     assert.ok(!meta.includes(storedTerms.slice(0, 60)), meta);
-    assert.ok(meta.includes("superseded by a pricing change we recorded on"), meta);
+    assert.ok(meta.includes(STORED_TERMS_WITHHELD_META_PHRASE), meta);
   });
 
   it("offers no upgrade threshold read off terms it will not publish", () => {
@@ -488,7 +651,7 @@ describe("#1103 a page whose stored terms its own change log quotes as previous"
     const isFree = answers.find((pair) => pair.question === `Is ${FIXTURE_VENDOR} free?`);
     assert.ok(isFree, "the page must still ask whether the vendor is free");
     assert.ok(!isFree!.answer.startsWith("Yes,"), isFree!.answer);
-    assert.ok(isFree!.answer.includes("previous terms"), isFree!.answer);
+    assert.ok(isFree!.answer.includes(STORED_TERMS_WITHHELD_PHRASE), isFree!.answer);
   });
 
   it("still names the tier while withholding the figures behind it", () => {
@@ -532,6 +695,7 @@ describe("#1103 every catalogue record whose stored terms are superseded", () =>
   let server: { proc: ChildProcess; port: number } | null = null;
   const bodies = new Map<string, string>();
   const population = supersededPagesRender();
+  const withARecordedReading = () => population.filter(({ change }) => readingBehindTheChange(change));
 
   before(async () => {
     server = await startServer({});
@@ -551,6 +715,21 @@ describe("#1103 every catalogue record whose stored terms are superseded", () =>
 
   it("renders a page for every one of them", () => {
     assert.strictEqual(bodies.size, population.length);
+  });
+
+  it("holds a dated, sourced reading for most of them, so the citations below have subjects", () => {
+    assert.ok(
+      withARecordedReading().length > population.length * 0.9,
+      `only ${withARecordedReading().length} of ${population.length} superseding records carry a citable reading`,
+    );
+  });
+
+  it("says why it withholds on the rest, where there is no reading to publish instead", () => {
+    const silent = population
+      .filter(({ change }) => !readingBehindTheChange(change))
+      .filter(({ offer }) => withholdingSurfacesOf(bodies.get(`/vendor/${toSlug(offer.vendor)}`)!).length === 0)
+      .map(({ offer }) => offer.vendor);
+    assert.deepStrictEqual(silent.slice(0, 20), []);
   });
 
   it("states the stored terms in no description block", () => {
@@ -592,8 +771,51 @@ describe("#1103 every catalogue record whose stored terms are superseded", () =>
 
   it("says in the meta description of every one why the terms are withheld", () => {
     const silent = population
-      .filter(({ offer }) => !metaDescriptionOf(bodies.get(`/vendor/${toSlug(offer.vendor)}`)!).includes("superseded by a pricing change we recorded on"))
+      .filter(({ offer }) => !metaDescriptionOf(bodies.get(`/vendor/${toSlug(offer.vendor)}`)!).includes(STORED_TERMS_WITHHELD_META_PHRASE))
       .map(({ offer }) => offer.vendor);
     assert.deepStrictEqual(silent.slice(0, 20), []);
+  });
+
+  it("publishes the terms the record read, dated and linked to the page it read them from", () => {
+    const missing: string[] = [];
+    for (const { offer, change } of withARecordedReading()) {
+      const reading = readingBehindTheChange(change)!;
+      const html = bodies.get(`/vendor/${toSlug(offer.vendor)}`)!;
+      const block = unescaped(descriptionBlockOf(html));
+      if (!block.includes(reading.terms)) missing.push(`${offer.vendor} :: terms`);
+      if (!block.includes(reading.date)) missing.push(`${offer.vendor} :: date`);
+      if (!descriptionBlockOf(html).includes(`href="${escapedFor(reading.url)}"`)) missing.push(`${offer.vendor} :: link`);
+      if (!block.includes(reading.label)) missing.push(`${offer.vendor} :: label`);
+    }
+    assert.deepStrictEqual(missing.slice(0, 20), []);
+  });
+
+  it("cites the page beside every sentence that withholds our stored terms", () => {
+    const uncited: string[] = [];
+    for (const { offer, change } of withARecordedReading()) {
+      const reading = readingBehindTheChange(change)!;
+      for (const [surface, text] of withholdingSurfacesOf(bodies.get(`/vendor/${toSlug(offer.vendor)}`)!)) {
+        if (!text.includes(reading.label)) uncited.push(`${offer.vendor} :: ${surface} :: no source`);
+        if (!text.includes(reading.date)) uncited.push(`${offer.vendor} :: ${surface} :: no date`);
+      }
+    }
+    assert.deepStrictEqual(uncited.slice(0, 20), []);
+  });
+
+  it("finds those sentences on every page, so the assertion above has subjects", () => {
+    const bare = withARecordedReading()
+      .filter(({ offer }) => withholdingSurfacesOf(bodies.get(`/vendor/${toSlug(offer.vendor)}`)!).length < 4)
+      .map(({ offer }) => offer.vendor);
+    assert.deepStrictEqual(bare.slice(0, 20), []);
+  });
+
+  it("opens the meta description on what it read rather than on what it will not say", () => {
+    const refusing = withARecordedReading()
+      .filter(({ offer, change }) => {
+        const meta = unescaped(metaDescriptionOf(bodies.get(`/vendor/${toSlug(offer.vendor)}`)!));
+        return !meta.includes(openingOfTerms(readingBehindTheChange(change)!.terms, 90));
+      })
+      .map(({ offer }) => offer.vendor);
+    assert.deepStrictEqual(refusing.slice(0, 20), []);
   });
 });

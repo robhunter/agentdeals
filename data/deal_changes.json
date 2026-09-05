@@ -5782,7 +5782,7 @@
     },
     {
       "vendor": "tabler-icons.io",
-      "change_type": "pricing_restructured",
+      "change_type": "limits_increased",
       "date": "2026-08-28",
       "date_source": "discovered",
       "summary": "While a free tier still exists, the number of icons has increased from 5,800 to 6184. There are also options to purchase bundles and support the project with optional payments.",
@@ -7254,7 +7254,13 @@
       "category": "Databases",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-01"
+      "recorded_date": "2026-09-01",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-05",
+        "detail": "Retracted 2026-09-05: Turso's free tier was not reduced. turso.tech/pricing, fetched 2026-09-05, states the Free column as \"Databases Free 100\", \"Storage Free 5GB\", \"Monthly Rows Read Free 500 Million\" and \"Monthly Rows Written Free 10 Million\" — all four are the figures our stored description already carried. This record's own summary says the same in its own words: \"500 Million rows read/month and 10 Million rows written/month, matching previously\" and \"The free tier now includes 5GB of storage. Previously 5GB.\" This row was our error, not a change Turso made.",
+        "source_url": "https://turso.tech/pricing"
+      }
     },
     {
       "vendor": "Firecrawl",
@@ -8132,7 +8138,13 @@
       "category": "Auth",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-03"
+      "recorded_date": "2026-09-03",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-05",
+        "detail": "Retracted 2026-09-05: Clerk's Hobby plan was not restructured. clerk.com/pricing, fetched 2026-09-05, renders Hobby as \"Free\", \"No credit card required\", \"Unlimited applications\" and \"50,000 MRU limit per app\", and the same page's FAQ states \"Clerk pricing is based on Monthly Retained Users (MRU)\" — which is what our stored description already carried. This record's own summary says the tier still exists and that what changed is the level of detail in the feature list. This row was our error, not a change Clerk made.",
+        "source_url": "https://clerk.com/pricing"
+      }
     },
     {
       "vendor": "Mistral AI",
