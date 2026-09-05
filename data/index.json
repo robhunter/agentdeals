@@ -977,7 +977,7 @@
     {
       "vendor": "Appwrite Cloud",
       "category": "Databases",
-      "description": "Open-source BaaS — 75K MAU, 2 GB storage, 750K function executions/month, 5 GB bandwidth. Projects pause after 1 week of inactivity",
+      "description": "Open-source BaaS — 75K MAU, 2 GB storage, 750K function executions/month, 5 GB bandwidth, 1 database, 1 bucket and 2 functions per project. Limit of 2 projects. Projects pause after 1 week of inactivity",
       "tier": "Free",
       "url": "https://appwrite.io/pricing",
       "tags": [
@@ -1803,7 +1803,7 @@
     {
       "vendor": "Resend",
       "category": "Email",
-      "description": "Developer-first email API — 3K emails/month free (100/day cap), 1 domain, 1K marketing contacts/month, 5 AI credits, 30-day data retention",
+      "description": "Developer-first email API — 3K emails/month free (100/day cap), 3 domains, 1K marketing contacts/month, 5 AI credits, 30-day data retention",
       "tier": "Free",
       "url": "https://resend.com/pricing",
       "tags": [
@@ -17684,7 +17684,7 @@
     {
       "vendor": "MailerLite.com",
       "category": "Email",
-      "description": "500 subscribers/month, 12,000 emails/month free",
+      "description": "250 subscribers, 2,500 emails/month free, 2 user seats, community support",
       "tier": "Free",
       "url": "https://www.mailerlite.com",
       "tags": [

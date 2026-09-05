@@ -12147,7 +12147,7 @@ ${buildCards(other)}
   <div class="decision-guide">
     <dl>
       <dt>Need transactional email for your app?</dt>
-      <dd><a href="/vendor/resend">Resend</a> — 3K/mo with React Email templates. <a href="/vendor/mailjet">Mailjet</a> — 6K/mo with EU data residency. <a href="/vendor/mailersend-com">MailerSend</a> — 3K/mo. See our <a href="/email-service-alternatives">email service deep comparison</a> for more.</dd>
+      <dd><a href="/vendor/resend">Resend</a> — 3K/mo with React Email templates. <a href="/vendor/mailjet">Mailjet</a> — 6K/mo with EU data residency. <a href="/vendor/mailersend-com">MailerSend</a> — 500/mo. See our <a href="/email-service-alternatives">email service deep comparison</a> for more.</dd>
 
       <dt>Running an email newsletter?</dt>
       <dd><a href="/vendor/substack">Substack</a> — unlimited free subscribers with built-in monetization. <a href="/vendor/buttondown">Buttondown</a> — 100 subscribers free. <a href="/vendor/emailoctopus">EmailOctopus</a> — 2,500 subscribers, 10K emails/mo.</dd>
@@ -39132,16 +39132,16 @@ ${mcpCtaCss()}
         <td><span style="color:#3fb950">Stable</span></td>
       </tr>
       <tr>
-        <td class="provider-col">MailerSend</td>
+        <td class="provider-col">MailerSend<span class="caution-badge">SHRINKING</span></td>
         <td>Transactional</td>
-        <td>3,000/mo</td>
+        <td>500/mo</td>
         <td>None</td>
         <td>Unlimited</td>
         <td class="check">&#10003;</td>
         <td class="check">&#10003; Both</td>
         <td class="check">&#10003;</td>
         <td class="cross">Paid</td>
-        <td><span style="color:#3fb950">Stable</span></td>
+        <td><span style="color:#d29922">Watch</span></td>
       </tr>
       <tr>
         <td class="provider-col">Brevo<span class="winner-badge">BEST ALL-IN-ONE</span></td>
@@ -39228,16 +39228,16 @@ ${mcpCtaCss()}
         <td><span style="color:#3fb950">Stable</span></td>
       </tr>
       <tr>
-        <td class="provider-col">MailerLite</td>
+        <td class="provider-col">MailerLite<span class="caution-badge">SHRINKING</span></td>
         <td>Marketing</td>
-        <td>12,000/mo</td>
+        <td>2,500/mo</td>
         <td>N/A</td>
-        <td>1,000</td>
+        <td>250</td>
         <td class="check">&#10003;</td>
         <td class="check">&#10003; API</td>
         <td class="check">&#10003;</td>
         <td class="cross">Paid</td>
-        <td><span style="color:#3fb950">Stable</span></td>
+        <td><span style="color:#d29922">Watch</span></td>
       </tr>
       <tr>
         <td class="provider-col">Buttondown</td>
@@ -39349,17 +39349,17 @@ ${mcpCtaCss()}
 
   <div class="diff-card">
     <h3>Resend <span class="winner-badge">BEST DX</span></h3>
-    <div class="diff-desc"><strong>Free tier:</strong> 3,000 emails/month, 100/day cap, 1 custom domain. Created by the team behind React Email. Modern REST API with excellent TypeScript SDK, React component-based email templates, and real-time delivery webhooks. Batch sending support. The daily cap (100/day) is the main constraint &mdash; you can't burst-send a newsletter. Best for developers building modern web apps who want the cleanest API experience.</div>
+    <div class="diff-desc"><strong>Free tier:</strong> 3,000 emails/month, 100/day cap, 3 custom domains. Created by the team behind React Email. Modern REST API with excellent TypeScript SDK, React component-based email templates, and real-time delivery webhooks. Batch sending support. The daily cap (100/day) is the main constraint &mdash; you can't burst-send a newsletter. Best for developers building modern web apps who want the cleanest API experience.</div>
   </div>
 
   <div class="diff-card">
     <h3>Maileroo <span class="winner-badge">HIDDEN GEM</span></h3>
-    <div class="diff-desc"><strong>Free tier:</strong> 3,000 emails/month with no daily cap. REST API and SMTP relay. Custom domain support, delivery tracking, and webhooks. Relatively new entrant matching Resend and MailerSend on monthly volume, with no daily sending limit. Worth evaluating for early-stage projects that need burst capacity. Good email verification built in.</div>
+    <div class="diff-desc"><strong>Free tier:</strong> 3,000 emails/month with no daily cap. REST API and SMTP relay. Custom domain support, delivery tracking, and webhooks. Relatively new entrant matching Resend on monthly volume and clearing MailerSend's free plan six times over, with no daily sending limit. Worth evaluating for early-stage projects that need burst capacity. Good email verification built in.</div>
   </div>
 
   <div class="diff-card">
-    <h3>MailerSend</h3>
-    <div class="diff-desc"><strong>Free tier:</strong> 3,000 emails/month. Built by the team behind MailerLite. Clean API, inbound email processing, and email verification included. No daily cap (unlike Resend). Good template editor. SMS support on paid tiers. A solid Resend alternative with slightly fewer developer-focused features but no daily sending limit.</div>
+    <h3>MailerSend <span class="caution-badge">SHRINKING</span></h3>
+    <div class="diff-desc"><strong>Free tier:</strong> 500 emails/month, down from 3,000 in April 2026. Free accounts get 1 domain, 10 templates, 5 seats, 1,000 daily API requests and 1-day activity retention; the 14-day Professional trial carries the same 500 emails/month. Built by the team behind MailerLite. Clean API, inbound email processing, and email verification included. No daily cap. Good template editor. SMS support on paid tiers. Hobby is $7.00/month for 5,000 emails ($5.60/month billed yearly), which is where a project sending more than 500 lands.</div>
   </div>
 
   <div class="diff-card">
@@ -39414,8 +39414,8 @@ ${mcpCtaCss()}
   </div>
 
   <div class="diff-card">
-    <h3>MailerLite</h3>
-    <div class="diff-desc"><strong>Free tier:</strong> 1,000 subscribers, 12,000 emails/month. Full-featured email marketing with drag-and-drop editor, landing pages, automations, and A/B testing. Strong deliverability. Built by the same team behind MailerSend (transactional). Good migration path: start with MailerLite for marketing, add MailerSend for transactional when needed.</div>
+    <h3>MailerLite <span class="caution-badge">SHRINKING</span></h3>
+    <div class="diff-desc"><strong>Free tier:</strong> 250 subscribers, 2,500 emails/month, 2 user seats, community support. The subscriber allowance was 1,000 until April 2026 and the send allowance 12,000. Full-featured email marketing with drag-and-drop editor, landing pages, automations, and A/B testing. Strong deliverability. Built by the same team behind MailerSend (transactional). Good migration path: start with MailerLite for marketing, add MailerSend for transactional when needed.</div>
   </div>
 
   <div class="diff-card">
@@ -39647,7 +39647,7 @@ ${mcpCtaCss()}
         <td>$0.30</td>
         <td class="cheapest">$0 (free)</td>
         <td class="cheapest">$0 (free)</td>
-        <td class="cheapest">$0 (free)</td>
+        <td>$7.00</td>
         <td>$19.95</td>
         <td>$15.00</td>
         <td class="cheapest">$0 (free)</td>
@@ -39739,7 +39739,7 @@ ${mcpCtaCss()}
 
     <div class="verdict-item">
       <strong>Best for marketing &rarr; EmailOctopus or MailerLite</strong>
-      <p>EmailOctopus: 2,500 subscribers + 10K emails/mo free, simplest interface. MailerLite: 1,000 subscribers + 12K emails/mo, more automation features. Both are affordable at scale. Avoid Mailchimp &mdash; shrinking free tier and expensive growth pricing.</p>
+      <p>EmailOctopus: 2,500 subscribers + 10K emails/mo free, simplest interface. MailerLite: 250 subscribers + 2.5K emails/mo, more automation features. Both are affordable at scale. Avoid Mailchimp &mdash; shrinking free tier and expensive growth pricing.</p>
     </div>
 
     <div class="verdict-item">
