@@ -13417,7 +13417,7 @@ ${buildCards(aiGateways)}
         <td>Provider</td>
         <td>Pay-as-you-go</td>
         <td>No free tier</td>
-        <td>Claude Opus 4.6, Sonnet 4.6</td>
+        <td>Claude Fable 5.1, Opus 5, Sonnet 5</td>
         <td>Best for complex reasoning tasks</td>
       </tr>
       <tr>
@@ -21573,7 +21573,7 @@ function buildGeminiApiPricing2026Page(): string {
 
   const llmProviders = [
     { name: "Google Gemini API", freeLimit: "10 RPM (Flash), 15 RPM (Flash-Lite)", context: "1M tokens", models: "2.5 Flash, Flash-Lite, 2.5 Pro (free); 3.1 Pro (paid-only)", notes: "Spend caps enforced April 1. 3.1 Pro paid-only. Prepaid billing for new users.", risk: "high" },
-    { name: "Anthropic Claude API", freeLimit: "Pay-as-you-go only", context: "200K tokens", models: "Opus 4.6, Sonnet 4.6, Haiku 4.5", notes: "No free tier — $5/$25 per MTok (Opus). Batch API at 50% off.", risk: "none" },
+    { name: "Anthropic Claude API", freeLimit: "Pay-as-you-go only", context: "1M tokens", models: "Fable 5.1, Opus 5, Sonnet 5, Haiku 4.5", notes: "No free tier — $10/$50 per MTok (Fable 5.1), $5/$25 (Opus 5). Batch API at 50% off.", risk: "none" },
     { name: "OpenAI API", freeLimit: "GPT-3.5 only, 3 RPM", context: "128K tokens", models: "GPT-3.5 Turbo (free), GPT-4o (paid)", notes: "Free trial credits discontinued mid-2025. Very limited free access.", risk: "medium" },
     { name: "Groq", freeLimit: "30 RPM, 100K-500K tokens/day", context: "128K tokens", models: "Llama 4, Qwen3, Whisper", notes: "Ultra-fast LPU inference. Most generous free RPM. No credit card needed.", risk: "low" },
     { name: "Mistral AI", freeLimit: "2 RPM, 1B tokens/month", context: "128K tokens", models: "Large, Codestral, Pixtral", notes: "Highest free token volume among proprietary providers.", risk: "low" },
@@ -21939,7 +21939,7 @@ function buildGeminiApiPricingChangesPage(): string {
     { name: "Together.ai", slug: "together-ai", freeRequests: "~60 RPM", freeTokens: "$1 free credit", models: "Llama 4, Mistral, Qwen", context: "128K", bestFor: "Fine-tuning, open models", monthlyCostAt1K: "$5-15" },
     { name: "Fireworks.ai", slug: "fireworks-ai", freeRequests: "~600 RPM", freeTokens: "$1 free credit", models: "Llama 4, Mixtral, DeepSeek", context: "128K", bestFor: "Production inference, low latency", monthlyCostAt1K: "$5-20" },
     { name: "NVIDIA NIM", slug: "nvidia-nim", freeRequests: "~50 RPM", freeTokens: "1,000 free credits", models: "Llama 4, Mistral, Gemma", context: "128K", bestFor: "GPU-optimized inference", monthlyCostAt1K: "$10-25" },
-    { name: "Anthropic Claude API", slug: "anthropic-api", freeRequests: "Pay-as-you-go only", freeTokens: "No free tier", models: "Opus 4.6, Sonnet 4.6, Haiku 4.5", context: "200K", bestFor: "Complex reasoning, coding", monthlyCostAt1K: "$15-75" },
+    { name: "Anthropic Claude API", slug: "anthropic-api", freeRequests: "Pay-as-you-go only", freeTokens: "No free tier", models: "Fable 5.1, Opus 5, Sonnet 5, Haiku 4.5", context: "1M", bestFor: "Complex reasoning, coding", monthlyCostAt1K: "$15-75" },
     { name: "OpenAI API", slug: "openai", freeRequests: "GPT-3.5: 3 RPM", freeTokens: "Very limited", models: "GPT-4o, o3, GPT-3.5 Turbo", context: "128K", bestFor: "Broad ecosystem, plugins", monthlyCostAt1K: "$10-50" },
     { name: "DeepSeek", slug: "deepseek", freeRequests: "Pay-as-you-go", freeTokens: "No free tier", models: "DeepSeek-V3, DeepSeek-R1", context: "128K", bestFor: "Cheapest frontier-class API", monthlyCostAt1K: "$1-5" },
     { name: "Google Gemini API", slug: "google-gemini-api", freeRequests: "5 RPM, ~100 RPD", freeTokens: "Flash, Flash-Lite, 2.5 Pro", models: "2.5 Flash, Flash-Lite, 2.5 Pro", context: "1M", bestFor: "Long context (1M tokens)", monthlyCostAt1K: "$10-30" },
@@ -22218,7 +22218,7 @@ function buildGeminiApiPricingChangesPage(): string {
     + '  </div>\n'
     + '  <div class="impact-card" style="border-left-color:#8b5cf6">\n'
     + '    <h3 style="color:#8b5cf6">Code Generation</h3>\n'
-    + '    <p class="impact-desc"><strong>Switch to: <a href="/vendor/mistral-ai">Mistral AI</a> (Codestral)</strong> &mdash; purpose-built code model with 1B free tokens/month. For heavier usage or better code quality, <a href="/vendor/deepseek">DeepSeek-V3</a> at $0.27/MTok input is the cheapest high-quality option. <a href="/vendor/anthropic-api">Claude Sonnet 4.6</a> offers the best code quality but requires payment.</p>\n'
+    + '    <p class="impact-desc"><strong>Switch to: <a href="/vendor/mistral-ai">Mistral AI</a> (Codestral)</strong> &mdash; purpose-built code model with 1B free tokens/month. For heavier usage or better code quality, <a href="/vendor/deepseek">DeepSeek-V3</a> at $0.27/MTok input is the cheapest high-quality option. <a href="/vendor/anthropic-api">Claude Sonnet 5</a> at $2/$10 per MTok offers the best code quality but requires payment.</p>\n'
     + '  </div>\n'
     + '  <div class="impact-card" style="border-left-color:#8b5cf6">\n'
     + '    <h3 style="color:#8b5cf6">Document Processing &amp; Long Context</h3>\n'
@@ -22230,7 +22230,7 @@ function buildGeminiApiPricingChangesPage(): string {
     + '  </div>\n'
     + '  <div class="impact-card" style="border-left-color:#8b5cf6">\n'
     + '    <h3 style="color:#8b5cf6">Multi-Modal (Vision)</h3>\n'
-    + '    <p class="impact-desc"><strong>Stay on Gemini Flash for free</strong>, but at reduced limits. Gemini\'s vision capabilities remain strong on Flash. For paid alternatives, <a href="/vendor/anthropic-api">Claude Sonnet 4.6</a> and <a href="/vendor/openai">GPT-4o</a> both handle images well. <a href="/vendor/groq">Groq</a> supports Llama vision models for free.</p>\n'
+    + '    <p class="impact-desc"><strong>Stay on Gemini Flash for free</strong>, but at reduced limits. Gemini\'s vision capabilities remain strong on Flash. For paid alternatives, <a href="/vendor/anthropic-api">Claude Sonnet 5</a> and <a href="/vendor/openai">GPT-5.6 Terra</a> both handle images well. <a href="/vendor/groq">Groq</a> supports Llama vision models for free.</p>\n'
     + '  </div>\n'
     + '\n'
     + '  <h2 id="still-free">6. What\'s Still Free</h2>\n'
@@ -23487,7 +23487,7 @@ ${mcpCtaCss()}
   </div>
 
   <div class="context-box">
-    <strong>Cost comparison at scale:</strong> OpenAI GPT-4o costs $2.50/$10 per MTok (input/output). Claude Opus 4.6 is $5/$25 but with stronger reasoning. Gemini 2.5 Pro has a free tier up to rate limits, then $1.25/$5 per MTok \u2014 cheapest frontier model. DeepSeek V3 is ~$0.27/$1.10 per MTok \u2014 cheapest overall. Open-source models via Groq or Cerebras are free within rate limits.
+    <strong>Cost comparison at scale:</strong> OpenAI GPT-4o costs $2.50/$10 per MTok (input/output). Claude Opus 5 is $5/$25 but with stronger reasoning. Gemini 2.5 Pro has a free tier up to rate limits, then $1.25/$10 per MTok. DeepSeek V3 is ~$0.27/$1.10 per MTok \u2014 cheapest overall. Open-source models via Groq or Cerebras are free within rate limits.
   </div>
 
   <h2 id="openai-timeline">OpenAI Pricing Change Timeline</h2>
@@ -23518,7 +23518,7 @@ ${mcpCtaCss()}
     </div>
     <div class="verdict-item">
       <strong>Best reasoning &amp; long context:</strong>
-      <p>Anthropic Claude API \u2014 Opus 4.6 at $5/$25 MTok with 200K context. Best for complex multi-step agent workflows that need strong reasoning.</p>
+      <p>Anthropic Claude API \u2014 Opus 5 at $5/$25 MTok with 1M context. Best for complex multi-step agent workflows that need strong reasoning.</p>
     </div>
     <div class="verdict-item">
       <strong>Free tier available:</strong>
@@ -24120,7 +24120,7 @@ ${mcpCtaCss()}
     </div>
     <div class="verdict-item">
       <strong>Best reasoning &amp; long context:</strong>
-      <p>Anthropic Claude \u2014 Opus 4.6 with 200K context. Best for complex multi-step agent workflows.</p>
+      <p>Anthropic Claude \u2014 Opus 5 with 1M context. Best for complex multi-step agent workflows.</p>
     </div>
     <div class="verdict-item">
       <strong>Free tier available:</strong>
@@ -31023,6 +31023,8 @@ function buildHostingPricingPage(): string {
     '</body>\n</html>';
 }
 
+const FRONTIER_PRICES_READ_ON = "2026-09-05";
+
 function buildLlmApiPricingPage(): string {
   const title = LLM_API_PRICING_TITLE;
   const metaDesc = LLM_API_PRICING_META_DESC;
@@ -31049,6 +31051,8 @@ function buildLlmApiPricingPage(): string {
     freeDetails: string;
     freeType: "generous" | "limited" | "credits" | "trial" | "pay-as-you-go" | "none";
     differentiator: string;
+    readOn?: string;
+    readFrom?: string;
   }
 
   const providers: LlmProvider[] = [
@@ -31057,56 +31061,64 @@ function buildLlmApiPricingPage(): string {
       slug: "openai",
       category: "frontier",
       freeTier: "GPT-3.5 only",
-      flagshipModel: "GPT-4o",
-      inputPrice: "$2.50/M",
-      outputPrice: "$10/M",
-      contextWindow: "128K",
+      flagshipModel: "GPT-6 Astra",
+      inputPrice: "$10/M",
+      outputPrice: "$50/M",
+      contextWindow: "1M",
       rateLimit: "3 RPM (free)",
-      freeDetails: "Limited to GPT-3.5 Turbo only, 3 requests/minute rate limit. No free trial credits for new accounts (discontinued mid-2025). Paid tiers unlock GPT-4o, GPT-4.1, o3/o4-mini reasoning models. Batch processing at 50% discount.",
+      freeDetails: "Limited to GPT-3.5 Turbo only, 3 requests/minute rate limit. No free trial credits for new accounts (discontinued mid-2025). Paid tiers unlock GPT-6 Astra at $10/$50 per MTok, GPT-5.6 Sol at $4/$20, GPT-5.6 Terra at $2/$12 and GPT-5.6 Luna at $0.20/$1.20. GPT-4o remains available at $2.50/$10. Batch and Flex at 50% of standard rates.",
       freeType: "limited",
       differentiator: "Widest model selection; ecosystem leader with function calling, vision, and structured outputs",
+      readOn: FRONTIER_PRICES_READ_ON,
+      readFrom: "developers.openai.com/api/docs/pricing",
     },
     {
       name: "Anthropic",
       slug: "anthropic-api",
       category: "frontier",
       freeTier: "Console access",
-      flagshipModel: "Claude Opus 4.6",
-      inputPrice: "$5/M",
-      outputPrice: "$25/M",
-      contextWindow: "200K",
+      flagshipModel: "Claude Fable 5.1",
+      inputPrice: "$10/M",
+      outputPrice: "$50/M",
+      contextWindow: "1M",
       rateLimit: "Rate-limited (free)",
-      freeDetails: "Limited access via console with rate limits. Opus 4.6: $5/$25 per MTok (67% below previous Opus pricing). Sonnet 4.6: $3/$15 per MTok. Haiku 4.5: $0.80/$4 per MTok. Batch API at 50% discount. Extended thinking for complex reasoning.",
+      freeDetails: "Limited access via console with rate limits. Fable 5.1: $10/$50 per MTok (input/output). Opus 5: $5/$25 per MTok. Sonnet 5: $2/$10 per MTok. Haiku 4.5: $1/$5 per MTok. Batch API at 50% discount. Adaptive thinking across the current lineup.",
       freeType: "pay-as-you-go",
-      differentiator: "Largest context window (200K); extended thinking; 67% Opus price drop makes frontier reasoning affordable",
+      differentiator: "1M-token context on Fable 5.1, Opus 5 and Sonnet 5; adaptive thinking; Opus 5 holds frontier reasoning at $5/$25",
+      readOn: FRONTIER_PRICES_READ_ON,
+      readFrom: "platform.claude.com/docs/en/about-claude/pricing",
     },
     {
       name: "Google Gemini",
       slug: "google-gemini-api",
       category: "frontier",
       freeTier: "Flash, Flash-Lite, 2.5 Pro",
-      flagshipModel: "Gemini 2.5 Pro",
-      inputPrice: "$1.25/M",
-      outputPrice: "$10/M",
+      flagshipModel: "Gemini 3.8 Flash",
+      inputPrice: "$0.75/M",
+      outputPrice: "$3.75/M",
       contextWindow: "1M",
       rateLimit: "10-15 RPM (free)",
-      freeDetails: "Free tier covers Flash, Flash-Lite and Gemini 2.5 Pro (April 2026). Flash: 10 RPM, Flash-Lite: 15 RPM. 1M token context window. Gemini 3.1 Pro requires paid billing. Mandatory spend caps enforced since April 1, 2026.",
+      freeDetails: "Free tier covers Flash, Flash-Lite and Gemini 2.5 Pro. Gemini 3.8 Flash is $0.75/$3.75 per MTok through December 31, 2026 and $1.50/$7.50 from January 1, 2027. Gemini 2.5 Pro stays at $1.25/$10. Gemini 3.1 Pro is in preview at $2/$12 and requires paid billing. Mandatory spend caps enforced since April 1, 2026.",
       freeType: "limited",
       differentiator: "1M token context window; cheapest frontier input tokens; Flash models genuinely free",
+      readOn: FRONTIER_PRICES_READ_ON,
+      readFrom: "ai.google.dev/gemini-api/docs/pricing",
     },
     {
       name: "Mistral AI",
       slug: "mistral-ai",
       category: "frontier",
       freeTier: "2 RPM, 1B tok/mo",
-      flagshipModel: "Mistral Large",
-      inputPrice: "$2/M",
-      outputPrice: "$6/M",
-      contextWindow: "128K",
+      flagshipModel: "Mistral Medium 3.5",
+      inputPrice: "$1.50/M",
+      outputPrice: "$7.50/M",
+      contextWindow: "256K",
       rateLimit: "2 RPM (free)",
-      freeDetails: "Experiment tier: 2 RPM, 1 billion tokens/month. No credit card required. Access to all Mistral models including Large, Codestral, Pixtral. Le Chat consumer app included.",
+      freeDetails: "Experiment tier: 2 RPM, 1 billion tokens/month. No credit card required. Access to the current lineup: Mistral Medium 3.5 at $1.50/$7.50 per MTok, Mistral Large 3 at $0.50/$1.50, Mistral Small 4 at $0.15/$0.60 and Codestral at $0.30/$0.90. Le Chat consumer app included.",
       freeType: "generous",
-      differentiator: "European AI lab; strong open-weight models (Mixtral); Codestral for code generation",
+      differentiator: "European AI lab; open weights through Mistral Large 3 and the Ministral 3 family; Codestral for code generation",
+      readOn: FRONTIER_PRICES_READ_ON,
+      readFrom: "docs.mistral.ai/inference/pricing",
     },
     {
       name: "Cohere",
@@ -31355,6 +31367,15 @@ function buildLlmApiPricingPage(): string {
   const generousCount = providers.filter(p => p.freeType === "generous").length;
   const creditsCount = providers.filter(p => p.freeType === "credits" || p.freeType === "limited" || p.freeType === "trial").length;
 
+  const frontierReads = providers.filter(p => p.readOn && p.readFrom);
+  const frontierReadOn = frontierReads.map(p => p.readOn as string).sort()[0] ?? null;
+  const rowsWithNoReadDate = providers.length - frontierReads.length;
+  const frontierReadLine = frontierReadOn === null
+    ? "No row on this table carries a date on which its price was read."
+    : "Frontier prices read from each vendor's own pricing page on " + frontierReadOn + ": "
+      + frontierReads.map(p => p.name + " (" + p.readFrom + ")").join(", ")
+      + ". The other " + rowsWithNoReadDate + " rows carry no read date.";
+
   const pricingTableRows = providers.map(p => {
     const freeColor = freeTypeColors[p.freeType] || "var(--text-muted)";
     return '<tr>' +
@@ -31402,7 +31423,7 @@ function buildLlmApiPricingPage(): string {
   const faqEntries = [
     { q: "Which LLM API has the best free tier in 2026?", a: "Groq offers the most generous free tier: 30 RPM with 100K-500K tokens/day, no credit card required, with fast LPU-accelerated inference. GitHub Models gives free access to 100+ models (GPT-4o, Llama, Mistral) for GitHub users. OpenRouter provides ~30 free open-source models. For frontier models specifically, Mistral's Experiment tier (1B tokens/month, 2 RPM) is the most generous." },
     { q: "How much does GPT-4o cost per token?", a: "GPT-4o costs $2.50 per million input tokens and $10 per million output tokens. For reference, 1 million tokens is roughly 750,000 words. The batch API offers 50% discount ($1.25/$5 per M tokens). GPT-4o-mini is significantly cheaper at $0.15/$0.60 per M tokens." },
-    { q: "How much does Claude cost per token?", a: "Claude Opus 4.6 costs $5/M input and $25/M output tokens — a 67% price drop from previous Opus pricing ($15/$75). Sonnet 4.6 is $3/$15 per M tokens. Haiku 4.5 is the budget option at $0.80/$4 per M tokens. The Batch API offers 50% discount on all models." },
+    { q: "How much does Claude cost per token?", a: "Claude Fable 5.1 costs $10/M input and $50/M output tokens. Opus 5 is $5/$25 per M tokens, Sonnet 5 is $2/$10, and Haiku 4.5 is the budget option at $1/$5. The Batch API offers 50% discount on all models." },
     { q: "What is the cheapest LLM API for production use?", a: "For frontier-quality models: xAI Grok 4.1 Fast at $0.20/M input, $0.50/M output. For open-source models: DeepSeek V4 at $0.30/M input, $0.50/M output with cache-hit discounts up to 90%. Groq and Cerebras offer free tiers that can handle moderate production traffic. Google Gemini Flash models are free with rate limits." },
     { q: "Should I use a frontier lab API or an inference provider?", a: "Use frontier lab APIs (OpenAI, Anthropic, Google) when you need their proprietary models (GPT-4o, Claude, Gemini Pro) or specific features (function calling, vision, extended thinking). Use inference providers (Groq, Cerebras, OpenRouter) when running open-source models — they're 5-10x cheaper and often faster. Many apps work well with Llama 3.3 70B or DeepSeek R1 at a fraction of frontier pricing." },
   ];
@@ -31529,14 +31550,14 @@ function buildLlmApiPricingPage(): string {
     '  </div>\n' +
     '\n' +
     '  <div class="executive-summary">\n' +
-    '    <p><strong>LLM API pricing in April 2026:</strong> ' + providers.length + ' providers across four categories — frontier labs, inference providers, open-source hosts, and specialized services. The biggest story: Claude Opus 4.6 pricing dropped 67% ($5/$25 per M tokens, down from $15/$75). Google\'s Gemini free tier keeps Flash, Flash-Lite and 2.5 Pro, with 3.1 Pro paid-only. DeepSeek V4 delivers 1M context at $0.30/M input — the cheapest long-context option. Groq and Cerebras offer genuinely free inference at thousands of tokens/second.</p>\n' +
+    '    <p><strong>LLM API pricing, frontier rows read ' + escHtmlServer(frontierReadOn ?? "on no recorded date") + ':</strong> ' + providers.length + ' providers across four categories — frontier labs, inference providers, open-source hosts, and specialized services. OpenAI and Anthropic price their top model identically: GPT-6 Astra and Claude Fable 5.1 are both $10/$50 per M tokens. Gemini 3.8 Flash is $0.75/$3.75 through December 31, 2026 and $1.50/$7.50 after it. Mistral Medium 3.5 is $1.50/$7.50. Google\'s Gemini free tier keeps Flash, Flash-Lite and 2.5 Pro, with 3.1 Pro paid-only. DeepSeek V4 delivers 1M context at $0.30/M input — the cheapest long-context option. Groq and Cerebras offer genuinely free inference at thousands of tokens/second.</p>\n' +
     '    <p><strong>Key trends:</strong> Inference providers (Groq, Cerebras, OpenRouter) are commoditizing open-source model access — free tiers with no credit card required. xAI Grok 4.1 is the cheapest frontier model at $0.20/M input. The gap between frontier and open-source quality is narrowing, making the price delta harder to justify for many use cases.</p>\n' +
     '    <p><strong>This guide covers:</strong> pricing tables, provider breakdowns, free tier analysis, cheapest-per-token rankings, pricing gotchas, recent changes, and best-for-use-case recommendations — compiled by hand from vendor pricing pages.</p>\n' +
     '  </div>\n' +
     '\n' +
     '  <div class="highlight-box">\n' +
     '    <h3>Cheapest per Million Tokens</h3>\n' +
-    '    <p><strong>Frontier:</strong> xAI Grok 4.1 Fast ($0.20/M input, $0.50/M output) &middot; <strong>Open-source:</strong> Groq Llama 4 Scout ($0.11/M input) &middot; <strong>Long context (1M):</strong> DeepSeek V4 ($0.30/M input) &middot; <strong>Reasoning:</strong> DeepSeek R1 ($0.55/M input) vs Claude Opus 4.6 ($5/M) vs OpenAI o3 ($10/M)</p>\n' +
+    '    <p><strong>Frontier:</strong> xAI Grok 4.1 Fast ($0.20/M input, $0.50/M output) &middot; <strong>Open-source:</strong> Groq Llama 4 Scout ($0.11/M input) &middot; <strong>Long context (1M):</strong> DeepSeek V4 ($0.30/M input) &middot; <strong>Reasoning:</strong> DeepSeek R1 ($0.55/M input) vs Claude Opus 5 ($5/M) vs OpenAI o3 ($2/M)</p>\n' +
     '  </div>\n' +
     '\n' +
     '  <div class="highlight-box">\n' +
@@ -31558,7 +31579,7 @@ function buildLlmApiPricingPage(): string {
     '  </div>\n' +
     '\n' +
     '  <h2 id="pricing-table">Pricing Comparison Table</h2>\n' +
-    '  <p class="section-intro">All prices verified as of April 2026. Per-million-token pricing for flagship models. Hover rows to highlight. Click provider names for full vendor profiles.</p>\n' +
+    '  <p class="section-intro">' + escHtmlServer(frontierReadLine) + ' Per-million-token pricing for flagship models. Hover rows to highlight. Click provider names for full vendor profiles.</p>\n' +
     '\n' +
     '  <div style="overflow-x:auto">\n' +
     '  <table class="pricing-table">\n' +
@@ -31630,7 +31651,7 @@ function buildLlmApiPricingPage(): string {
     '  </div>\n' +
     '  <div class="hidden-cost-card">\n' +
     '    <h4>Anthropic Extended Thinking: Output Tokens Add Up</h4>\n' +
-    '    <p>Claude\'s extended thinking generates visible thinking tokens billed at output rates ($25/M for Opus 4.6). A complex reasoning task can produce 10K+ thinking tokens before the actual answer. Budget for 2–5x the output tokens you\'d expect from a non-thinking request.</p>\n' +
+    '    <p>Claude\'s thinking tokens are billed at output rates ($25/M on Opus 5, $50/M on Fable 5.1). A complex reasoning task can produce 10K+ thinking tokens before the actual answer. Budget for 2–5x the output tokens you\'d expect from a non-thinking request. Anthropic\'s current lineup decides its own thinking budget rather than taking one from the request, so the multiplier is harder to cap than it was on the 4.6 generation.</p>\n' +
     '  </div>\n' +
     '  <div class="hidden-cost-card">\n' +
     '    <h4>Gemini Free Tier: Gemini 3.1 Pro Needs a Paid Account</h4>\n' +
@@ -31682,12 +31703,12 @@ function buildLlmApiPricingPage(): string {
     '\n' +
     '    <div class="verdict-item">\n' +
     '      <strong>Best for production chat / assistants</strong>\n' +
-    '      <p><a href="/vendor/openai">OpenAI GPT-4o</a> ($2.50/M in, $10/M out) — widest ecosystem, function calling, structured outputs. <a href="/vendor/anthropic-api">Claude Sonnet 4.6</a> ($3/$15/M) for nuanced conversation and longer context.</p>\n' +
+    '      <p><a href="/vendor/openai">OpenAI GPT-5.6 Terra</a> ($2/M in, $12/M out) — widest ecosystem, function calling, structured outputs; GPT-4o is still sold at $2.50/$10. <a href="/vendor/anthropic-api">Claude Sonnet 5</a> ($2/$10/M) for nuanced conversation and a 1M-token context.</p>\n' +
     '    </div>\n' +
     '\n' +
     '    <div class="verdict-item">\n' +
     '      <strong>Best for complex reasoning</strong>\n' +
-    '      <p><a href="/vendor/anthropic-api">Claude Opus 4.6</a> ($5/$25/M) with extended thinking — 67% cheaper than before. <a href="/vendor/deepseek-api">DeepSeek R1</a> ($0.55/$2.19/M) for budget reasoning. OpenAI o3 for math/science benchmarks.</p>\n' +
+    '      <p><a href="/vendor/anthropic-api">Claude Opus 5</a> ($5/$25/M), or <a href="/vendor/anthropic-api">Claude Fable 5.1</a> ($10/$50/M) for long-horizon agentic work. <a href="/vendor/deepseek-api">DeepSeek R1</a> ($0.55/$2.19/M) for budget reasoning. OpenAI GPT-6 Astra ($10/$50/M) for the hardest end-to-end work.</p>\n' +
     '    </div>\n' +
     '\n' +
     '    <div class="verdict-item">\n' +
