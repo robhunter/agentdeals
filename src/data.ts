@@ -3,6 +3,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import type { Offer, EnrichedOffer, OfferIndex, DealChange, DealChangesIndex, ChangeDateSource, StabilityClass, Referral, RiskCause, RatingWithheld, LinkUnreachable, SourceCheck } from "./types.js";
 import { isUrlSuspended } from "./referral-health.js";
+import { CHANGE_DIRECTION, type ChangeDirection } from "./change-direction.js";
 import { rankForListing, gateFor, utcDate, type TieBreak, type Gate, type GateCode } from "./ranking.js";
 import { unreachableNoticeForUrl, resetLinkHealthCache } from "./link-health.js";
 import { quarantineSummary, resetVerificationStateCache, type QuarantineSummary } from "./verification-state.js";
@@ -267,22 +268,7 @@ export function searchOffers(
   return results;
 }
 
-export const CHANGE_DIRECTION: Record<DealChange["change_type"], "negative" | "positive" | "neutral"> = {
-  free_tier_removed: "negative",
-  open_source_killed: "negative",
-  product_deprecated: "negative",
-  limits_reduced: "negative",
-  restriction: "negative",
-  pricing_restructured: "negative",
-  pricing_model_change: "negative",
-  limits_increased: "positive",
-  new_free_tier: "positive",
-  new_tier: "positive",
-  startup_program_expanded: "positive",
-  pricing_postponed: "positive",
-  rebranded: "neutral",
-  record_corrected: "neutral",
-};
+export { CHANGE_DIRECTION, narrowsTheStoredTerms } from "./change-direction.js";
 
 export const CORRECTION_TO_OUR_OWN_RECORD = "record_corrected";
 
@@ -290,7 +276,7 @@ export function isACorrectionToOurOwnRecord(change: Pick<DealChange, "change_typ
   return change.change_type === CORRECTION_TO_OUR_OWN_RECORD;
 }
 
-const directionSet = (d: "negative" | "positive" | "neutral") =>
+const directionSet = (d: ChangeDirection) =>
   new Set(Object.entries(CHANGE_DIRECTION).filter(([, v]) => v === d).map(([k]) => k));
 
 export const NEGATIVE_CHANGE_TYPES = directionSet("negative");
