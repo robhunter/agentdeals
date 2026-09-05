@@ -7,6 +7,7 @@ import {
 } from "../dist/page-reviews.js";
 import { toSlug } from "../dist/vendor-slug.js";
 import { uncitedChanges } from "../dist/change-citation.js";
+import { passedWithoutQuotingThePage } from "../dist/source-check.js";
 
 const REPO = join(dirname(fileURLToPath(import.meta.url)), "..");
 
@@ -54,10 +55,12 @@ export function measureBudgets(date) {
   const changes = JSON.parse(readFileSync(join(REPO, "data", "deal_changes.json"), "utf-8")).changes;
   const newest = newestChangeBySlug(changes, date, toSlug);
   const stale = staleFactPages(index.pages, date, slug => newest.get(slug) ?? null);
+  const offers = JSON.parse(readFileSync(join(REPO, "data", "index.json"), "utf-8")).offers ?? [];
   return {
     stale_fact_pages: stale.length,
     unsourced_tier_a: unsourcedTierAPaths(index.pages).length,
     uncited_change_records: uncitedChanges(changes).length,
+    source_checks_ok_without_quoted_evidence: offers.filter(passedWithoutQuotingThePage).length,
   };
 }
 

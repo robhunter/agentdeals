@@ -953,13 +953,13 @@ export const openapiSpec = {
             description: [
               "ok — the page names the vendor and states at least one amount, rate or price, either in figures the page renders or as a typed price in its schema.org markup (#1279).",
               "states_no_amount — the page names the vendor and names a plan or tier, but every price signal on it is a phrase such as \"Enterprise plan\" or \"Free forever\" and none is a figure (#1268). The quantities in description come from our own entry, not from that page. risk_level is still published and the summary says so, rather than being withheld.",
-              "does_not_name_vendor — the page never names the vendor and is not served from its domain.",
+              "does_not_name_vendor — the page we read never writes the vendor's name. The URL we asked for is not evidence for this check, so a domain that keeps the vendor's name and loses its product reaches this outcome too (#1355).",
               "states_no_terms — the page names the vendor but carries no price signal of any kind.",
               "unreadable — the fetch produced no body we could read.",
               "The last three withhold a favourable risk_level; the first two do not."
             ].join(" ")
           },
-          detail: { type: "string", description: "What the check found, in its own words: for ok, how the page named the vendor, or what its markup states when the rendered page states no amount; for states_no_amount, the phrase that was the page's entire price evidence; otherwise why the page cannot confirm the record. Where the page was read for schema.org markup, the detail says whether that markup was absent, present and priceless, or priced." },
+          detail: { type: "string", description: "What the check found, in its own words: for ok, the name the page writes for the vendor and the price evidence quoted from it, or what its markup states when the rendered page states no amount; for states_no_amount, the phrase that was the page's entire price evidence; otherwise why the page cannot confirm the record. Where the page was read for schema.org markup, the detail says whether that markup was absent, present and priceless, or priced." },
           read: { type: "string", enum: ["markup"], description: "Present when the ok grade rests on typed prices in the page's schema.org markup rather than on a figure the page renders (#1279)." },
           unrendered_prices: {
             type: "array",

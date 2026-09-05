@@ -470,7 +470,7 @@ describe("change log writer", () => {
 
   describe("AI mode is the only mode that can write a change", () => {
     const picked = [{ index: 0, offer: { ...OFFER, verifiedDate: "2026-01-01" } }];
-    const fetchFn = async () => ({ ok: true, text: "500 MB for 14 days, then $19/month" });
+    const fetchFn = async () => ({ ok: true, text: "Examplebase pricing — 500 MB for 14 days, then $19/month" });
 
     it("writes the detected change to the log", async () => {
       const file = tempLog([]);

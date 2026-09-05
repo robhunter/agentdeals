@@ -46,6 +46,23 @@ export function withheldLevelSentence(
   return WITHHELD_LEVEL_SENTENCES[reason](subject, since);
 }
 
+export const NAMING_TOKENS_RECORDED_INSTEAD_OF_EVIDENCE = ["text", "url", "host"];
+
+export const NAMING_TOKENS_TAKEN_FROM_THE_URL_WE_ASKED_FOR = ["url", "host"];
+
+function passedOnDetail(offer: Pick<Offer, "source_check">, tokens: string[]): boolean {
+  const check = offer.source_check;
+  return check?.outcome === "ok" && tokens.includes(check.detail ?? "");
+}
+
+export function passedWithoutQuotingThePage(offer: Pick<Offer, "source_check">): boolean {
+  return passedOnDetail(offer, NAMING_TOKENS_RECORDED_INSTEAD_OF_EVIDENCE);
+}
+
+export function passedOnTheUrlWeAskedFor(offer: Pick<Offer, "source_check">): boolean {
+  return passedOnDetail(offer, NAMING_TOKENS_TAKEN_FROM_THE_URL_WE_ASKED_FOR);
+}
+
 export function sourceDoesNotNameVendor(offer: Pick<Offer, "source_check">): boolean {
   return offer.source_check?.outcome === "does_not_name_vendor";
 }

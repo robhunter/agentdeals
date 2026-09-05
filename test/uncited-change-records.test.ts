@@ -29,6 +29,15 @@ import type { DealChange } from "../dist/types.js";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(__dirname, "..");
 
+function withEntitiesDecoded(html: string): string {
+  return html
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&amp;/g, "&");
+}
+
 const NOW = Date.parse("2026-09-05T00:00:00Z");
 
 const record = (over: Partial<DealChange> = {}): DealChange => ({
@@ -281,7 +290,7 @@ describe("the vendor page, for a vendor whose records cite no source", () => {
       const uncitedHere = changes.filter(c =>
         c.vendor.toLowerCase() === offer.vendor.toLowerCase() && changeIsUncited(c));
       for (const c of uncitedHere) {
-        assert.ok(html.includes(c.summary), `${offer.vendor} does not render ${c.date}`);
+        assert.ok(withEntitiesDecoded(html).includes(c.summary), `${offer.vendor} does not render ${c.date}`);
       }
       const marked = [...html.matchAll(/class="change-item[^"]*"/g)].filter(m => m[0].includes("change-unsourced"));
       assert.strictEqual(marked.length, uncitedHere.length, `${offer.vendor} marks the wrong number of records`);

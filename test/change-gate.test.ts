@@ -1085,7 +1085,7 @@ describe("the run does not write a change the gate refused", () => {
     verifiedDate: "2026-01-01",
   };
   const picked = [{ index: 0, offer }];
-  const fetchFn = async () => ({ ok: true, text: SAME_TERMS_EITHER_SIDE.current_state });
+  const fetchFn = async () => ({ ok: true, text: `Abby pricing — ${SAME_TERMS_EITHER_SIDE.current_state}` });
   const detection = {
     status: "changed",
     summary: SAME_TERMS_EITHER_SIDE.summary,
@@ -1223,7 +1223,7 @@ describe("the run does not write a change the gate refused", () => {
     const file = tempLog([]);
     const data = { offers: [{ ...movedOffer }] };
     const result = await runAiMode([{ index: 0, offer: movedOffer }], data, false, NOW, {
-      fetchFn: async () => ({ ok: true, text: A_LIMIT_ACTUALLY_MOVED.current_state }),
+      fetchFn: async () => ({ ok: true, text: `Deno Deploy pricing — ${A_LIMIT_ACTUALLY_MOVED.current_state}` }),
       verifyFn: async () => ({
         status: "changed",
         summary: A_LIMIT_ACTUALLY_MOVED.summary,

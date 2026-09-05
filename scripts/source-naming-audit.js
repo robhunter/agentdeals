@@ -57,7 +57,9 @@ async function main() {
       page = JSON.parse(readFileSync(cachePath(url), "utf-8"));
     } else {
       const fetched = await fetchPageText(url);
-      page = fetched.ok ? { ok: true, text: fetched.text } : { ok: false, error: fetched.error };
+      page = fetched.ok
+        ? { ok: true, text: fetched.text, structured: fetched.structured ?? null }
+        : { ok: false, error: fetched.error };
       if (cacheDir) writeFileSync(cachePath(url), JSON.stringify(page));
     }
     done++;

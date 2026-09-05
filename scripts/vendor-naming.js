@@ -91,19 +91,6 @@ export function vendorNameForms(vendor, extra = []) {
   return [...forms];
 }
 
-export function vendorUrlForms(vendor, extra = []) {
-  const forms = new Set(vendorNameForms(vendor, extra));
-  for (const raw of names(vendor, extra)) {
-    const words = normalizeForMatch(raw).trim().split(" ").filter(Boolean);
-    if (words.length < 2) continue;
-    for (const word of words) {
-      if (NAME_QUALIFIERS.has(word)) continue;
-      if (word.length >= MIN_FORM_LENGTH) forms.add(word);
-    }
-  }
-  return [...forms];
-}
-
 function shortNameForms(vendor, extra = []) {
   const forms = new Set();
   for (const raw of names(vendor, extra)) {
@@ -125,16 +112,24 @@ export function hostLabels(url) {
   }
 }
 
-export function urlText(url) {
-  try {
-    const parsed = new URL(url);
-    return `${parsed.hostname} ${parsed.pathname}`;
-  } catch {
-    return "";
+const MIN_HOST_PREFIX = 4;
+
+export const NAMED_IN_PAGE_TEXT = "text";
+export const NAMED_BY_A_HOST_THE_PAGE_WRITES = "host_in_text";
+
+function hostLabelMatchesVendor(label, vendor, aliases) {
+  for (const form of shortNameForms(vendor, aliases)) {
+    if (label === form) return true;
+    if (label.length >= MIN_HOST_PREFIX && form.startsWith(label)) return true;
   }
+  return false;
 }
 
-const MIN_HOST_PREFIX = 4;
+export function servedFromTheVendorsDomain(offer, aliases = []) {
+  return hostLabels(offer?.url ?? "")
+    .slice(0, -1)
+    .some((label) => hostLabelMatchesVendor(label, offer?.vendor ?? "", aliases));
+}
 
 export function pageNamesVendor(pageText, vendor, options = {}) {
   const aliases = options.aliases ?? [];
@@ -144,22 +139,14 @@ export function pageNamesVendor(pageText, vendor, options = {}) {
 
   const haystack = normalizeForMatch(pageText);
   for (const form of forms) {
-    if (haystack.includes(` ${form} `)) return result(true, "text", form);
+    if (haystack.includes(` ${form} `)) return result(true, NAMED_IN_PAGE_TEXT, form);
   }
 
-  const url = options.url ?? "";
-  const flatUrl = normalizeForMatch(urlText(url)).replace(/ /g, "");
-  for (const form of vendorUrlForms(vendor, aliases)) {
-    const flat = form.replace(/ /g, "");
-    if (flat.length >= MIN_FORM_LENGTH && flatUrl.includes(flat)) return result(true, "url", form);
-  }
-
-  const labels = hostLabels(url).slice(0, -1);
-  const short = shortNameForms(vendor, aliases);
-  for (const label of labels) {
-    for (const form of short) {
-      if (label === form) return result(true, "host", form);
-      if (label.length >= MIN_HOST_PREFIX && form.startsWith(label)) return result(true, "host", form);
+  const written = haystack.replace(/ /g, "");
+  for (const label of hostLabels(options.url ?? "").slice(0, -1).reverse()) {
+    if (label.length < MIN_FORM_LENGTH || !written.includes(label)) continue;
+    if (hostLabelMatchesVendor(label, vendor, aliases)) {
+      return result(true, NAMED_BY_A_HOST_THE_PAGE_WRITES, label);
     }
   }
 
@@ -173,6 +160,12 @@ function markupClause(structured) {
   return detail ? `, and ${detail}` : "";
 }
 
+function namedClause(vendor, naming) {
+  return naming.via === NAMED_BY_A_HOST_THE_PAGE_WRITES
+    ? `the page writes "${naming.form}", the domain we cite ${vendor} from,`
+    : `the page names ${vendor} as "${naming.form}"`;
+}
+
 export function classifySource(offer, page, signals) {
   if (!page || !page.ok) {
     return { outcome: SOURCE_CHECK_UNREADABLE, detail: page?.error ?? "not fetched" };
@@ -181,7 +174,9 @@ export function classifySource(offer, page, signals) {
   if (!naming.named) {
     return {
       outcome: SOURCE_CHECK_NOT_NAMED,
-      detail: `the page never names ${offer.vendor} and is not served from its domain`,
+      detail: servedFromTheVendorsDomain(offer)
+        ? `the page never names ${offer.vendor}, on a domain that carries its name`
+        : `the page never names ${offer.vendor} and is not served from its domain`,
     };
   }
   const structured = page.structured ?? null;
@@ -207,7 +202,7 @@ export function classifySource(offer, page, signals) {
       detail: `the page names ${offer.vendor} and says "${found[0]}" but states no amount, rate or price we can read${markupClause(structured)}`,
     };
   }
-  return { outcome: SOURCE_CHECK_OK, detail: naming.via };
+  return { outcome: SOURCE_CHECK_OK, detail: `${namedClause(offer.vendor, naming)} and states "${found[0]}"` };
 }
 
 export const MAX_UNRENDERED_PRICES_RECORDED = 6;

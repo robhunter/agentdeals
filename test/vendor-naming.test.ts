@@ -10,6 +10,9 @@ import {
   SOURCE_CHECK_UNREADABLE,
 } from "../scripts/vendor-naming.js";
 import { priceSignals, MIN_PRICE_SIGNALS } from "../scripts/change-gate.js";
+import { passedOnTheUrlWeAskedFor, passedWithoutQuotingThePage } from "../dist/source-check.js";
+import { qualityBudget } from "../dist/page-reviews.js";
+import { loadOffers } from "../dist/data.js";
 import { JOINSECRET_OFFERS_PAGE, BREX_REWARDS_PAGE } from "./vendor-page-fixture.ts";
 
 describe("does the page state terms about THIS vendor", () => {
@@ -71,41 +74,70 @@ describe("does the page state terms about THIS vendor", () => {
     });
   });
 
-  describe("evidence outside the page text", () => {
-    it("accepts a page served from the vendor's own domain", () => {
+  describe("the page is the only thing this check reads", () => {
+    it("refuses a page served from the vendor's own domain that never writes its name", () => {
       const result = pageNamesVendor("Sign in to continue", "PrefectCloud", {
         url: "https://www.prefect.io/",
       });
-      assert.strictEqual(result.named, true);
-      assert.strictEqual(result.via, "host");
+      assert.strictEqual(result.named, false);
     });
 
-    it("accepts a name too short to search prose for when the host is exactly it", () => {
-      const result = pageNamesVendor("Enable JavaScript to continue", "v0.dev", {
-        url: "https://v0.app/",
-      });
-      assert.strictEqual(result.named, true);
-      assert.strictEqual(result.via, "host");
-    });
-
-    it("accepts a host label that opens the stored name", () => {
-      const result = pageNamesVendor("Secure email, calendar and contacts", "Tutanota", {
-        url: "https://tuta.com/pricing",
-      });
-      assert.strictEqual(result.named, true);
-      assert.strictEqual(result.via, "host");
-    });
-
-    it("accepts a vendor the URL path names", () => {
+    it("refuses a URL path that names the vendor when the page does not", () => {
       const result = pageNamesVendor("Loading…", "SwaggerHub", {
         url: "https://swagger.io/tools/swaggerhub/pricing/",
       });
+      assert.strictEqual(result.named, false);
+    });
+
+    it("refuses a page whose content belongs to somebody else, on a domain that still carries the name", () => {
+      const result = pageNamesVendor(
+        "Langit77 Pusat Situs Resmi Online Slot Pasti Menang. Daftar sekarang.",
+        "BackgroundStyler.com",
+        { url: "https://backgroundstyler.com" }
+      );
+      assert.strictEqual(result.named, false);
+    });
+
+    it("accepts a host label the page itself writes", () => {
+      const result = pageNamesVendor("Tuta — secure email, calendar and contacts", "Tutanota", {
+        url: "https://tuta.com/pricing",
+      });
       assert.strictEqual(result.named, true);
-      assert.strictEqual(result.via, "url");
+      assert.strictEqual(result.via, "host_in_text");
+      assert.strictEqual(result.form, "tuta");
+    });
+
+    it("records the domain rather than the subdomain when the page writes both", () => {
+      const result = pageNamesVendor("Cloud Run pricing, from Google", "Google Cloud Run", {
+        url: "https://cloud.google.com/run/pricing",
+      });
+      assert.strictEqual(result.via, "host_in_text");
+      assert.strictEqual(result.form, "google");
+    });
+
+    it("will not take a host label off a page about a different company", () => {
+      const result = pageNamesVendor("joinsecret offers for founders", "Cloudways", {
+        url: "https://www.joinsecret.com/offers",
+      });
+      assert.strictEqual(result.named, false);
+    });
+
+    it("refuses a host label too short to mean anything where the page happens to carry it", () => {
+      const result = pageNamesVendor("Grok models and pricing from SpaceXAI Docs", "xAI", {
+        url: "https://docs.x.ai/developers/models",
+      });
+      assert.strictEqual(result.named, false);
+    });
+
+    it("refuses a host too short to be worth finding in prose", () => {
+      const result = pageNamesVendor("Enable JavaScript to continue", "v0.dev", {
+        url: "https://v0.app/",
+      });
+      assert.strictEqual(result.named, false);
     });
 
     it("refuses a host that merely shares a prefix with the stored name", () => {
-      const result = pageNamesVendor("Free currency conversion API", "CurrencyScoop", {
+      const result = pageNamesVendor("Free currency conversion from currencybeacon", "CurrencyScoop", {
         url: "https://currencybeacon.com/",
       });
       assert.strictEqual(result.named, false);
@@ -184,5 +216,57 @@ describe("what a re-verification learned about the cited page", () => {
       priceSignals("Vercel Hobby plan, free forever. Pro is $20/month.")
     );
     assert.strictEqual(result.outcome, SOURCE_CHECK_OK);
+  });
+
+  it("says what it read on the page it passed, rather than which layer matched", () => {
+    const text = "Vercel Hobby plan, free forever. Pro is $20/month.";
+    const result = classifySource({ vendor: "Vercel", url: "https://vercel.com/pricing" }, { ok: true, text }, priceSignals(text));
+    assert.strictEqual(passedWithoutQuotingThePage({ source_check: result }), false, result.detail);
+    assert.match(result.detail, /names Vercel/);
+    assert.match(result.detail, /\$20/);
+  });
+
+  it("does not claim a page named the vendor when all it wrote was the domain", () => {
+    const text = "Tuta — secure email, calendar and contacts. Legend from €3/month.";
+    const result = classifySource({ vendor: "Tutanota", url: "https://tuta.com/pricing" }, { ok: true, text }, priceSignals(text));
+    assert.strictEqual(result.outcome, SOURCE_CHECK_OK);
+    assert.match(result.detail, /the page writes "tuta", the domain we cite Tutanota from/);
+    assert.doesNotMatch(result.detail, /names Tutanota/);
+  });
+
+  it("refuses a takeover of the vendor's own domain and says the domain is still theirs", () => {
+    const text = "Langit77 Pusat Situs Resmi Online Slot. Bonus $107.50 setiap hari.";
+    const result = classifySource(
+      { vendor: "BackgroundStyler.com", url: "https://backgroundstyler.com" },
+      { ok: true, text },
+      priceSignals(text)
+    );
+    assert.strictEqual(result.outcome, SOURCE_CHECK_NOT_NAMED);
+    assert.match(result.detail, /on a domain that carries its name/);
+  });
+
+  it("keeps saying so when the page is somebody else's domain as well as somebody else's page", () => {
+    const result = classifySource(offer, { ok: true, text: JOINSECRET_OFFERS_PAGE }, priceSignals(JOINSECRET_OFFERS_PAGE));
+    assert.match(result.detail, /is not served from its domain/);
+  });
+});
+
+describe("what data/index.json publishes as a passed source check", () => {
+  const offers = loadOffers();
+
+  it("passes nothing on evidence that is only the URL we asked for", () => {
+    assert.deepStrictEqual(
+      offers.filter(passedOnTheUrlWeAskedFor).map((offer) => `${offer.vendor} — ${offer.url}`),
+      [],
+    );
+  });
+
+  it("holds no more passes that quote nothing from the page than the budget allows", () => {
+    const budget = qualityBudget("source_checks_ok_without_quoted_evidence");
+    const measured = offers.filter(passedWithoutQuotingThePage).length;
+    assert.ok(
+      measured <= budget,
+      `${measured} offers pass a source check without quoting the page, over the budget of ${budget} in data/quality_budgets.json`,
+    );
   });
 });
