@@ -38,7 +38,7 @@ function record(overrides: Partial<DealChange> = {}): DealChange {
     previous_state: "",
     current_state: "",
     impact: "medium",
-    source_url: "",
+    source_url: "https://example.test/pricing",
     category: "c",
     alternatives: [],
     ...overrides,
@@ -103,7 +103,8 @@ describe("#1206 one risk scale, and every change type sits on one side of it", (
       const inForce = changes.filter(c => pointsDownAndStillHolds(c));
       if (inForce.length === 0) continue;
       checked++;
-      if (vendorRiskAssessment(changes).level === "stable") {
+      const assessment = vendorRiskAssessment(changes);
+      if (assessment.level === "stable" && !assessment.rating_withheld) {
         wrong.push(`${vendor} holds ${inForce.map(c => c.change_type).join(", ")} and reads stable`);
       }
     }
@@ -176,6 +177,8 @@ describe("#1206 the badge and the vendor page read the same scale", () => {
 
   after(() => { if (proc) proc.kill(); });
 
+  const UNRATED_BADGE_LABEL = "unrated \u2014 no source";
+
   const LEVEL_FOR_BADGE: Record<string, string> = {
     "deprecated": "risky",
     "free tier removed": "risky",
@@ -210,6 +213,12 @@ describe("#1206 the badge and the vendor page read the same scale", () => {
         const label = badgeLabel(await res.text());
         if (label === null) { disagreeing.push(`/badge/${slug}.svg carries no readable label`); continue; }
         if (label === "not found") continue;
+        if (label === UNRATED_BADGE_LABEL) {
+          if (vendorRiskAssessment(held.get(vendor.toLowerCase()) ?? []).rating_withheld === null) {
+            disagreeing.push(`/badge/${slug}.svg withholds a rating the risk scale reached`);
+          }
+          continue;
+        }
         const level = LEVEL_FOR_BADGE[label];
         if (level === undefined) { disagreeing.push(`/badge/${slug}.svg reads "${label}"`); continue; }
         const expected = vendorRiskAssessment(held.get(vendor.toLowerCase()) ?? []).level;

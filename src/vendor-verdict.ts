@@ -1,6 +1,7 @@
-import type { DealChange, RiskCause } from "./types.js";
+import type { DealChange, RatingWithheld, RiskCause } from "./types.js";
 import { CHANGE_DIRECTION, isACorrectionToOurOwnRecord } from "./data.js";
 import { isNoLongerInForce } from "./change-resolution.js";
+import { changeIsUncited, ratingWithheldForNoSourceSentence } from "./change-citation.js";
 import { changeDateClause } from "./change-dates.js";
 import { withheldLevelClause, type LevelWithheldReason } from "./source-check.js";
 import { endedVerdictSentence } from "./retirement.js";
@@ -33,9 +34,10 @@ export interface VendorVerdictInput {
   vendor: string;
   level: PublishedRiskLevel | null;
   cause: RiskCause | null;
-  changes: Array<Pick<DealChange, "date" | "date_source" | "change_type"> & { resolution?: DealChange["resolution"] }>;
+  changes: Array<Pick<DealChange, "date" | "date_source" | "change_type"> & { source_url?: string | null } & { resolution?: DealChange["resolution"] }>;
   levelWithheld: LevelWithheldReason | null;
   unconfirmableSince: string;
+  ratingWithheld?: RatingWithheld | null;
   offerEnded?: boolean;
   gated?: boolean;
   linkUnreachable?: boolean;
@@ -66,8 +68,13 @@ function narrowingChanges(
     .sort((a, b) => b.date.localeCompare(a.date));
 }
 
+export function ratingWithheldForNoSource(input: VendorVerdictInput): boolean {
+  return Boolean(input.ratingWithheld) && publishedVendorLevel(input.level, input.cause) === "stable";
+}
+
 export function withholdingDecides(input: VendorVerdictInput): boolean {
-  return input.levelWithheld !== null && publishedVendorLevel(input.level, input.cause) === "stable";
+  return (input.levelWithheld !== null || ratingWithheldForNoSource(input))
+    && publishedVendorLevel(input.level, input.cause) === "stable";
 }
 
 export function vendorVerdictWord(input: VendorVerdictInput): PublishedRiskLevel | null {
@@ -79,6 +86,7 @@ export function vendorVerdictWord(input: VendorVerdictInput): PublishedRiskLevel
 export function vendorBadge(input: VendorVerdictInput): VendorBadge {
   if (input.offerEnded) return { kind: "ended" };
   if (input.gated) return { kind: "none" };
+  if (ratingWithheldForNoSource(input)) return { kind: "none" };
   if (input.level === null) return { kind: "none" };
   const level = publishedVendorLevel(input.level, input.cause);
   if (input.linkUnreachable && level === "stable") return { kind: "none" };
@@ -90,12 +98,20 @@ export function statesRiskCause(input: VendorVerdictInput): boolean {
   return word !== null && word !== "stable" && input.cause !== null;
 }
 
+export function uncitedOnlySentence(records: number): string {
+  if (records === 0) return "";
+  return records === 1
+    ? `The one record we hold cites no source, so it sets no rating.`
+    : `All ${records} records we hold cite no source, so none of them sets a rating.`;
+}
+
 export function narrowingSentence(changes: VendorVerdictInput["changes"]): string {
-  const corrections = changes.filter(isACorrectionToOurOwnRecord);
-  const byTheVendor = changes.filter(c => !isACorrectionToOurOwnRecord(c));
+  const cited = changes.filter(c => !changeIsUncited(c));
+  const corrections = cited.filter(isACorrectionToOurOwnRecord);
+  const byTheVendor = cited.filter(c => !isACorrectionToOurOwnRecord(c));
   const total = byTheVendor.length;
   if (total === 0) {
-    if (corrections.length === 0) return "";
+    if (corrections.length === 0) return uncitedOnlySentence(changes.length);
     return corrections.length === 1
       ? `The one record we hold corrects our own earlier entry rather than reporting a change the vendor made.`
       : `All ${corrections.length} records we hold correct our own earlier entries rather than reporting changes the vendor made.`;
@@ -115,7 +131,8 @@ export function narrowingSentence(changes: VendorVerdictInput["changes"]): strin
 export function vendorVerdictSentence(input: VendorVerdictInput): string {
   if (input.offerEnded) return endedVerdictSentence();
   if (withholdingDecides(input)) {
-    const clause = withheldLevelClause(input.levelWithheld!, input.unconfirmableSince);
+    if (input.levelWithheld === null) return ratingWithheldForNoSourceSentence(input.vendor);
+    const clause = withheldLevelClause(input.levelWithheld, input.unconfirmableSince);
     return `${clause.charAt(0).toUpperCase()}${clause.slice(1)}, so we cannot confirm these terms today.`;
   }
   const level = publishedVendorLevel(input.level, input.cause);

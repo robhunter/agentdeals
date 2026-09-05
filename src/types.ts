@@ -129,11 +129,17 @@ export interface LinkUnreachable {
   terminal: boolean;
 }
 
+export interface RatingWithheld {
+  reason: "no_source";
+  records: number;
+}
+
 export interface EnrichedOffer extends Offer {
   recent_change: string | null;
   expires_soon: string | null;
   risk_level: RiskLevel | null;
   risk_cause: RiskCause | null;
+  rating_withheld: RatingWithheld | null;
   stability: StabilityClass | null;
   days_since_verified: number;
   link_unreachable: LinkUnreachable | null;

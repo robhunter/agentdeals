@@ -30,7 +30,7 @@ describe("checkVendorRisk logic", () => {
     for (const [changeType, level] of demoting) {
       const record = {
         vendor: "V", change_type: changeType, date: insideTheWindow, summary: "s",
-        previous_state: "", current_state: "", impact: "medium", source_url: "", category: "c", alternatives: [],
+        previous_state: "", current_state: "", impact: "medium", source_url: "https://example.test/pricing", category: "c", alternatives: [],
       };
       const assessment = vendorRiskAssessment([record]);
       assert.strictEqual(assessment.level, level, `${changeType} inside the window`);

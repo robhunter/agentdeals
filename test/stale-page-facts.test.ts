@@ -331,7 +331,12 @@ describe("#1321 the FAQ counts are budgets too, and they live in the same file",
 
   it("says plainly that the ratchet cannot lower a budget it does not measure", async () => {
     const { ratchet } = await import("../scripts/ratchet-quality-budgets.js");
-    const { unmeasured, lowered, over } = ratchet(readQualityBudgets().budgets, { stale_fact_pages: 57, unsourced_tier_a: 43 });
+    const budgets = readQualityBudgets().budgets;
+    const { unmeasured, lowered, over } = ratchet(budgets, {
+      stale_fact_pages: 57,
+      unsourced_tier_a: 43,
+      uncited_change_records: budgets.uncited_change_records,
+    });
     assert.deepStrictEqual(unmeasured, [
       "faq_answers",
       "faq_answers_stating_a_figure",

@@ -6,6 +6,7 @@ import {
   readQualityBudgets, serializeQualityBudgets, staleFactPages, unsourcedTierAPaths,
 } from "../dist/page-reviews.js";
 import { toSlug } from "../dist/vendor-slug.js";
+import { uncitedChanges } from "../dist/change-citation.js";
 
 const REPO = join(dirname(fileURLToPath(import.meta.url)), "..");
 
@@ -56,6 +57,7 @@ export function measureBudgets(date) {
   return {
     stale_fact_pages: stale.length,
     unsourced_tier_a: unsourcedTierAPaths(index.pages).length,
+    uncited_change_records: uncitedChanges(changes).length,
   };
 }
 
