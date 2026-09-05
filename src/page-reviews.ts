@@ -11,6 +11,7 @@ export function pageReviewsPath(): string {
 export const QUALITY_BUDGET_NAMES = [
   "stale_fact_pages",
   "unsourced_tier_a",
+  "uncited_change_records",
   "faq_answers",
   "faq_answers_stating_a_figure",
   "faq_answers_with_a_digit_but_no_figure",
@@ -110,6 +111,8 @@ export const PAGE_DATA_SOURCE_RULE: Record<PageDataSource, string> = {
 export const UNSOURCED_TIER_A_BASELINE = qualityBudget("unsourced_tier_a");
 
 export const STALE_FACT_PAGES_BASELINE = qualityBudget("stale_fact_pages");
+
+export const UNCITED_CHANGE_RECORDS_BASELINE = qualityBudget("uncited_change_records");
 
 export function lowerBudgetInstruction(name: string, to: number): string {
   const file = qualityBudgetsPath().split(path.sep).slice(-2).join("/");

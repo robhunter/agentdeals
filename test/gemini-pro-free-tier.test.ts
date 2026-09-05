@@ -215,11 +215,7 @@ describe("Gemini free tier claims", () => {
     assert.deepStrictEqual(fromPageCopy, []);
   });
 
-  it("traces every remaining claim to a change record already filed for correction", () => {
-    const prose = storedChangeProse();
-    const fromRecords = claims.filter((c) => quotesStoredProse(c, prose));
-    assert.ok(fromRecords.length >= 0);
-
+  it("adds no change record making the claim beyond those already filed for correction", () => {
     const unfiled = changeRecordsMakingTheClaim()
       .filter((r) => !CHANGE_RECORDS_AWAITING_A_DATA_FIX.includes(r))
       .sort();

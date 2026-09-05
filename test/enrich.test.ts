@@ -117,7 +117,8 @@ describe("enrichOffers", () => {
     const { levelWithheldReason } = await import("../dist/source-check.js");
     const withheld = enrichOffers(loadOffers()).filter((o: { risk_level: string | null }) => o.risk_level === null);
     const unexplained = withheld.filter(
-      (o: { link_unreachable: unknown }) => !levelWithheldReason(o as never, o.link_unreachable)
+      (o: { link_unreachable: unknown; rating_withheld: unknown }) =>
+        !levelWithheldReason(o as never, o.link_unreachable) && !o.rating_withheld
     );
     assert.strictEqual(unexplained.length, 0, `${unexplained.length} offers publish no level and no reason for withholding it`);
   });

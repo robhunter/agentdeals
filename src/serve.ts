@@ -27,6 +27,7 @@ import { vendorHistorySentence } from "./vendor-history.js";
 import { HETZNER_APRIL_CHANGES, HETZNER_CLOUD_PLANS, HETZNER_PRICES_READ, HETZNER_PRICE_SOURCE, HETZNER_SINGAPORE_EXAMPLE, cheapestOrderableHetznerPlan, hetznerEntryPriceClause, unorderableHetznerPlans } from "./hetzner-pricing.js";
 import { changeTimelineDate, supersededLineups, supersessionNote } from "./change-lineup.js";
 import { isNoLongerInForce, eventResolutionFields } from "./change-resolution.js";
+import { changeIsUncited, citedChanges, uncitedChangeNotice, ratingWithheldForNoSourceClause, ratingWithheldForNoSourceSentence, UNCITED_CHANGE_LABEL } from "./change-citation.js";
 import { growthLimitPhrases } from "./growth-limits.js";
 import { registerAgent, authenticateRequest, validateVestauthUrl, hashApiKey, updateAgentX402Address, getAgentById } from "./agents.js";
 import { attributeAuthenticatedRequest } from "./referral-attribution.js";
@@ -54,7 +55,7 @@ import { gateDisclosureFor } from "./gate-disclosure.js";
 import { verificationLedger, QUARANTINE_AFTER_FAILURES } from "./verification-state.js";
 import { partitionAlternatives, partitionSubstitutes, type SubstitutesPartition, productRoleSentence, MEMBERSHIP_GATE_RULES, MEMBERSHIP_GATE_ORDER, MEMBERSHIP_GATE_SYMMETRY, MEMBERSHIP_GATE_SCOPE, MEMBERSHIP_GATE_CORRECTIONS, SUBTYPE_TAXONOMIES, SUBTYPE_MEMBERSHIP_RULE, SUBTYPE_MEMBERSHIP_GROUP_SCOPE, CURATED_SUBTYPE_EXEMPTION, membershipGroupsFor, subtypeDefinition } from "./product-role.js";
 import { resolveCuratedAlternatives, curatedAlternativesFor, addCuratedToPool } from "./curated-alternatives.js";
-import type { Agent, ChangeDateSource, DealChange, RiskCause, LinkUnreachable, Offer } from "./types.js";
+import type { Agent, ChangeDateSource, DealChange, RiskCause, RatingWithheld, LinkUnreachable, Offer } from "./types.js";
 import { changeDateLabel, changeDateClause, changeDatePublished, changeEventStartDate, capListSections, latestEventDate, offerExpiryAfter, feedEntryUpdated, undatedGroupHeading, firstReadHeading, discoveryBatchNote, isoWeekOf, DISCOVERED_DATE_PREFIX, UNDATED_GROUP_NOTE } from "./change-dates.js";
 import { FEED_CORRECTIONS, correctionEntriesXml } from "./feed-corrections.js";
 import { buildDay, emptyPageLastmod, fallbackDay, httpDate, lastmodFor, newestLastmod, readPageLastmod, type PageLastmodLedger } from "./page-lastmod.js";
@@ -507,15 +508,27 @@ function riskBadgeHtml(
   return `${badge} <span style="font-size:${size};color:var(--text-dim)" title="${escHtmlServer(cause.summary)}">${escHtmlServer(riskCauseLabel(cause))}</span>`;
 }
 
+function unsourcedTagHtml(): string {
+  return `<span class="unsourced-tag" style="display:inline-block;padding:.1rem .4rem;border-radius:10px;font-size:.65rem;font-weight:600;background:#8b949e22;color:#8b949e">${UNCITED_CHANGE_LABEL}</span>`;
+}
+
+function unsourcedNoteHtml(vendor: string): string {
+  return `<div class="unsourced-note" style="font-size:.75rem;color:var(--text-dim);margin-top:.25rem">${escHtmlServer(uncitedChangeNotice(vendor))}</div>`;
+}
+
 function stabilityCellHtml(
   level: "stable" | "caution" | "risky" | null | undefined,
   cause: RiskCause | null | undefined,
   linkUnreachable: LinkUnreachable | null | undefined,
   offer?: Pick<Offer, "source_check">,
   gate?: Gate | null,
+  ratingWithheld?: RatingWithheld | null,
 ): string {
   if (gate) {
     return `<span class="stability-gate" style="color:var(--text-dim);font-family:var(--mono)" title="${escHtmlServer(gate.reason)}">${escHtmlServer(gate.code)}</span>`;
+  }
+  if (ratingWithheld) {
+    return `<span class="stability-unsourced" style="color:var(--text-dim)" title="${escHtmlServer(ratingWithheldForNoSourceClause())}">unrated &mdash; no source</span>`;
   }
   if (linkUnreachable) {
     const since = linkUnreachable.last_reachable ? ` since ${linkUnreachable.last_reachable}` : "";
@@ -711,7 +724,7 @@ function offerPricingLink(offer: OfferTierAndUrl, label: string): string {
   return `<a href="${escHtmlServer(offer.url)}" target="_blank" rel="noopener">${label}</a>`;
 }
 
-type BadgeStatus = "active" | "at-risk" | "removed" | "unknown";
+type BadgeStatus = "active" | "at-risk" | "removed" | "unrated" | "unknown";
 
 function getBadgeStatus(vendorSlug: string): { status: BadgeStatus; label: string; verifiedDate: string | null } {
   const vendorName = vendorSlugMap.get(vendorSlug);
@@ -719,6 +732,10 @@ function getBadgeStatus(vendorSlug: string): { status: BadgeStatus; label: strin
 
   const vendorChanges = dealChanges.filter(c => toSlug(c.vendor) === vendorSlug);
   const assessment = vendorRiskAssessment(vendorChanges);
+
+  if (assessment.rating_withheld) {
+    return { status: "unrated", label: "unrated \u2014 no source", verifiedDate: null };
+  }
 
   if (assessment.level === "risky" && assessment.cause) {
     return {
@@ -748,6 +765,7 @@ const BADGE_COLORS: Record<BadgeStatus, string> = {
   "active": "#3fb950",
   "at-risk": "#d29922",
   "removed": "#f85149",
+  "unrated": "#8b949e",
   "unknown": "#8b949e",
 };
 
@@ -812,7 +830,7 @@ function generateStackBadgeSvg(vendorsParam: string, style: "flat" | "flat-squar
   for (const name of vendorNames) {
     const slug = toSlug(name);
     const { status } = getBadgeStatus(slug);
-    if (status === "unknown") continue;
+    if (status === "unknown" || status === "unrated") continue;
     totalFound++;
     if (status === "removed") riskyCount++;
     else if (status === "at-risk") cautionCount++;
@@ -2292,8 +2310,10 @@ function buildComparisonPage(slug: string): string | null {
           <span style="display:inline-block;padding:.1rem .4rem;border-radius:10px;font-size:.65rem;font-weight:600;background:${badge.color};color:#fff">${badge.label}</span>
           <span style="font-family:var(--mono);font-size:.75rem;color:var(--text-dim)">${changeDateLabel(c)}</span>
           <span style="font-size:.7rem;color:${c.impact === "high" ? "#f85149" : c.impact === "medium" ? "#d29922" : "#8b949e"}">${c.impact} impact</span>
+          ${changeIsUncited(c) ? unsourcedTagHtml() : ""}
         </div>
         <div style="font-size:.85rem;color:var(--text-muted)">${escHtmlServer(c.summary)}</div>
+        ${changeIsUncited(c) ? unsourcedNoteHtml(vendor) : ""}
       </div>`;
     }).join("\n") + truncationNote;
   };
@@ -2809,8 +2829,10 @@ function buildVsPage(slug: string): string | null {
           <span style="display:inline-block;padding:.1rem .4rem;border-radius:10px;font-size:.65rem;font-weight:600;background:${badge.color};color:#fff">${badge.label}</span>
           <span style="font-family:var(--mono);font-size:.75rem;color:var(--text-dim)">${changeDateLabel(c)}</span>
           <span style="font-size:.7rem;color:${c.impact === "high" ? "#f85149" : c.impact === "medium" ? "#d29922" : "#8b949e"}">${c.impact} impact</span>
+          ${changeIsUncited(c) ? unsourcedTagHtml() : ""}
         </div>
         <div style="font-size:.85rem;color:var(--text-muted)">${escHtmlServer(c.summary)}</div>
+        ${changeIsUncited(c) ? unsourcedNoteHtml(vendor) : ""}
       </div>`;
     }).join("\n");
   };
@@ -3744,6 +3766,7 @@ function buildVendorPage(slug: string): string | null {
     : "";
   const levelWithheld = levelWithheldReason(primary, linkUnreachable);
   const withheldClause = levelWithheld ? withheldLevelClause(levelWithheld, unconfirmableSince) : "";
+  const ratingWithheld = enriched.rating_withheld;
   const verdictInput: VendorVerdictInput = {
     vendor: vendorName,
     level: enriched.risk_level ?? null,
@@ -3751,6 +3774,7 @@ function buildVendorPage(slug: string): string | null {
     changes: vendorChanges,
     levelWithheld,
     unconfirmableSince,
+    ratingWithheld,
     offerEnded: offerHasEnded,
     gated: primaryGate !== null,
     linkUnreachable: Boolean(linkUnreachable),
@@ -3773,6 +3797,10 @@ function buildVendorPage(slug: string): string | null {
 
   const amountUnstatedLine = !levelWithheld && sourceStatesNoAmount(primary)
     ? `\n  <p class="amount-unstated-line" style="margin:.4rem 0 .6rem;font-size:.9rem;color:var(--text-muted)"><strong style="color:#d29922">Source states no amount:</strong> ${escHtmlServer(amountUnstatedSentence(vendorName))}</p>`
+    : "";
+
+  const ratingWithheldLine = ratingWithheld && !offerHasEnded && !primaryGate
+    ? `\n  <p class="rating-withheld-line" style="margin:.4rem 0 .6rem;font-size:.9rem;color:var(--text-muted)"><strong style="color:#8b949e">No rating:</strong> ${escHtmlServer(ratingWithheldForNoSourceSentence(vendorName))} ${ratingWithheld.records === 1 ? "It is" : `All ${ratingWithheld.records} are`} listed below, marked. <a href="#changes" style="white-space:nowrap">Full history &darr;</a></p>`
     : "";
 
   const primaryEligibilityGate = eligibilityGateAsPublished(primary, servedOn);
@@ -3923,13 +3951,13 @@ function buildVendorPage(slug: string): string | null {
           <tr class="current-vendor-row">
             <td><strong>${escHtmlServer(vendorName)}</strong></td>
             <td>${escHtmlServer(primary.tier)}</td>
-            <td>${stabilityCellHtml(enriched.risk_level, riskCause, linkUnreachable, primary, primaryGate)}</td>
+            <td>${stabilityCellHtml(enriched.risk_level, riskCause, linkUnreachable, primary, primaryGate, enriched.rating_withheld)}</td>
           </tr>
 ${enrichedAlts.map(a => {
   return `          <tr>
             <td><a href="/vendor/${toSlug(a.vendor)}">${escHtmlServer(a.vendor)}</a></td>
             <td>${escHtmlServer(a.tier)}</td>
-            <td>${stabilityCellHtml(a.risk_level, a.risk_cause, a.link_unreachable, a)}</td>
+            <td>${stabilityCellHtml(a.risk_level, a.risk_cause, a.link_unreachable, a, null, a.rating_withheld)}</td>
           </tr>`;
 }).join("\n")}
         </tbody>
@@ -3941,13 +3969,16 @@ ${enrichedAlts.map(a => {
   const changesHtml = vendorChanges.length > 0 ? vendorChanges.map(c => {
     const badge = changeTypeBadge[c.change_type] ?? { label: c.change_type, color: "#8b949e" };
     const anchor = `${toSlug(c.vendor)}-${c.date}`;
-    return `<div class="change-item${isNoLongerInForce(c) ? " change-resolved" : ""}">
+    const uncited = changeIsUncited(c);
+    return `<div class="change-item${isNoLongerInForce(c) ? " change-resolved" : ""}${uncited ? " change-unsourced" : ""}">
         <div class="change-head">
           <span class="badge" style="background:${badge.color}">${badge.label}</span>
           <span class="change-date"><a href="/pricing-changes#${anchor}" style="color:var(--text-dim);text-decoration:none">${changeDateLabel(c)}</a></span>
           <span class="impact impact-${c.impact}">${c.impact} impact</span>
+          ${uncited ? unsourcedTagHtml() : ""}
         </div>
         <div class="change-summary">${escHtmlServer(c.summary)}</div>
+        ${uncited ? unsourcedNoteHtml(vendorName) : ""}
         ${c.previous_state && c.current_state ? `<div class="change-detail"><span class="state-label">Before:</span> ${escHtmlServer(c.previous_state)}</div><div class="change-detail"><span class="state-label">After:</span> ${escHtmlServer(c.current_state)}</div>` : ""}
       </div>`;
   }).join("\n") : offerHasEnded
@@ -3958,7 +3989,7 @@ ${enrichedAlts.map(a => {
     ? `<p class="no-changes">No recorded pricing changes for ${escHtmlServer(vendorName)}.</p>`
     : `<p class="no-changes">No recorded pricing changes for ${escHtmlServer(vendorName)}. This is a good sign — stable pricing.</p>`;
 
-  const latestChange = vendorChanges[0];
+  const latestChange = citedChanges(vendorChanges)[0];
   const causeAlreadyShown = riskCause !== null && latestChange !== undefined && latestChange !== null
     && latestChange.date === riskCause.date && latestChange.change_type === riskCause.change_type;
   const changeNoticeHtml = latestChange && !causeAlreadyShown && NEGATIVE_CHANGE_TYPES.has(latestChange.change_type) ? (() => {
@@ -4126,7 +4157,7 @@ ${allCompareLinks.join("\n")}
   }
 }`;
 
-  const pricingEvents = vendorChanges.slice(0, 10).map(c => ({
+  const pricingEvents = citedChanges(vendorChanges).slice(0, 10).map(c => ({
     "@type": "Event",
     name: `${vendorName} pricing change: ${c.change_type.replace(/_/g, " ")}`,
     ...changeEventStartDate(c),
@@ -4310,6 +4341,7 @@ h1 .risk-badge{font-size:.75rem;font-weight:600;padding:.2rem .6rem;border-radiu
 .change-detail{font-size:.8rem;color:var(--text-dim);margin-top:.25rem}
 .state-label{font-family:var(--mono);font-size:.7rem;color:var(--text-dim)}
 .change-resolved{opacity:.6;border-left-style:dashed}
+.change-unsourced{opacity:.75;border-left-style:dotted}
 .no-changes{color:var(--text-dim);font-size:.9rem;font-style:italic}
 ${auditBlockCss()}
 .alt-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:.5rem}
@@ -4345,7 +4377,7 @@ ${mcpCtaCss()}
   ${buildGlobalNav("categories")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/vendor">Vendors</a> &rsaquo; ${escHtmlServer(vendorName)}</div>
   <h1>${escHtmlServer(headline)}${h1RiskBadge}</h1>${gateLine}
-${riskCauseLine}
+${riskCauseLine}${ratingWithheldLine}
 ${linkUnreachableLine}${amountUnstatedLine}
 ${productRoleLine}${productSubtypesLine}
   <p class="page-meta">Limits, pricing history${alternatives.length > 0 ? `, and ${alternatives.length} alternatives` : ""}.${verifiedSentence} Last updated ${escHtmlServer(lastUpdated)}.</p>
@@ -4693,6 +4725,7 @@ h3{font-family:var(--serif);font-size:1rem;color:var(--text);margin-bottom:.5rem
 .changes-summary{margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border)}
 .change-item{margin-bottom:.5rem;padding:.5rem .75rem;border-left:3px solid var(--border);background:var(--bg-card);border-radius:0 8px 8px 0}
 .change-resolved{opacity:.6;border-left-style:dashed}
+.change-unsourced{opacity:.75;border-left-style:dotted}
 .change-head{display:flex;align-items:center;gap:.5rem;margin-bottom:.2rem;flex-wrap:wrap}
 .badge{display:inline-block;padding:.1rem .4rem;border-radius:10px;font-size:.65rem;font-weight:600;color:#fff}
 .change-date{font-family:var(--mono);font-size:.75rem;color:var(--text-dim)}
@@ -47987,7 +48020,7 @@ function buildBadgesPage(): string {
     .map(([slug, name]) => ({ slug, name, ...getBadgeStatus(slug) }))
     .sort((a, b) => a.name.localeCompare(b.name));
 
-  const statusCounts = { active: 0, "at-risk": 0, removed: 0, unknown: 0 };
+  const statusCounts = { active: 0, "at-risk": 0, removed: 0, unrated: 0, unknown: 0 };
   for (const v of allVendors) statusCounts[v.status]++;
 
   return `<!DOCTYPE html>
@@ -48869,7 +48902,7 @@ function buildPricingChangesPage(): string {
       : "";
     const vendorCat = (c.category || "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
     const changeYear = dated ? c.date.slice(0, 4) : "";
-    return `      <div class="pc-entry${isUpcoming ? " pc-upcoming" : ""}${dated ? "" : " pc-undated"}${isNoLongerInForce(c) ? " pc-resolved" : ""}" id="${changeAnchor(c)}" data-type="${escHtmlServer(c.change_type)}" data-impact="${escHtmlServer(c.impact)}" data-category="${category}" data-vendor-cat="${vendorCat}" data-year="${changeYear}">
+    return `      <div class="pc-entry${isUpcoming ? " pc-upcoming" : ""}${dated ? "" : " pc-undated"}${isNoLongerInForce(c) ? " pc-resolved" : ""}${changeIsUncited(c) ? " pc-unsourced" : ""}" id="${changeAnchor(c)}" data-type="${escHtmlServer(c.change_type)}" data-impact="${escHtmlServer(c.impact)}" data-category="${category}" data-vendor-cat="${vendorCat}" data-year="${changeYear}">
         <div class="pc-left">
           <div class="pc-date">${dated ? c.date : `${DISCOVERED_DATE_PREFIX} ${c.date}`}</div>
           ${isUpcoming ? `<div class="pc-upcoming-badge">upcoming</div>` : ""}
@@ -48880,8 +48913,10 @@ function buildPricingChangesPage(): string {
             <span class="badge" style="background:${badge.color}">${badge.label}</span>
             <a href="/vendor/${vendorSlug}" class="pc-vendor">${escHtmlServer(c.vendor)}</a>
             <span class="pc-impact" style="color:${impactColor}">${c.impact} impact</span>
+            ${changeIsUncited(c) ? unsourcedTagHtml() : ""}
           </div>
           <div class="pc-summary">${escHtmlServer(c.summary)}</div>
+          ${changeIsUncited(c) ? unsourcedNoteHtml(c.vendor) : ""}
 ${stateHtml}
 ${altHtml}
         </div>
@@ -49114,6 +49149,7 @@ h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5
 .month-heading{font-family:var(--serif);font-size:1.15rem;color:var(--text);margin-bottom:.75rem;padding-bottom:.5rem;border-bottom:1px solid var(--border)}
 .pc-entry{display:flex;gap:1rem;padding:.75rem;margin-bottom:.5rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);transition:border-color .2s,background .2s}
 .pc-resolved{opacity:.6;border-style:dashed}
+.pc-unsourced{opacity:.75}
 .pc-entry:hover{border-color:var(--accent)}
 .pc-entry:target{border-color:var(--accent);background:var(--accent-glow)}
 .pc-upcoming{border-color:rgba(88,166,255,0.3)}

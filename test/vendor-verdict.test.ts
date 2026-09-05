@@ -48,6 +48,7 @@ function change(over: Partial<DealChange> = {}): DealChange {
     change_type: "limits_reduced",
     summary: "Free tier storage cut from 10 GB to 1 GB",
     impact: "medium",
+    source_url: "https://example.test/pricing",
     category: "Databases",
     ...over,
   } as DealChange;
@@ -308,6 +309,7 @@ function vendorRows(): VendorRow[] {
         changes: vendorChanges,
         levelWithheld: withheld,
         unconfirmableSince,
+        ratingWithheld: enriched.rating_withheld ?? null,
         offerEnded: ended,
         gated: gate !== null,
       }),

@@ -1,4 +1,4 @@
-import { searchOffers, loadDealChanges, vendorRiskLevel, classifyStability, withheldStability } from "./data.js";
+import { searchOffers, loadDealChanges, vendorRiskAssessment, classifyStability, withheldStability } from "./data.js";
 import { rankOffers, utcDate, CRITERIA_PATH, DEMOTE_ONLY_POLICY, NOT_MODELLED_NOTICE } from "./ranking.js";
 import type { Demerit, Disclosure, TieBreak } from "./ranking.js";
 import { unreachableNoticeForUrl } from "./link-health.js";
@@ -12,7 +12,7 @@ export interface StackCandidate {
   description: string;
   url: string;
   verified_date: string;
-  risk_level: "stable" | "caution" | "risky";
+  risk_level: "stable" | "caution" | "risky" | null;
   stability: StabilityClass | null;
   demerits: Demerit[];
   disclosures: Disclosure[];
@@ -215,14 +215,19 @@ function toCandidate(
   disclosures: Disclosure[],
   vendorChanges: DealChange[],
 ): StackCandidate {
+  const assessment = vendorRiskAssessment(vendorChanges);
   return {
     vendor: offer.vendor,
     tier: offer.tier,
     description: offer.description.length > 200 ? offer.description.slice(0, 197) + "..." : offer.description,
     url: offer.url,
     verified_date: offer.verifiedDate,
-    risk_level: vendorRiskLevel(vendorChanges),
-    stability: withheldStability(unreachableNoticeForUrl(offer.url), classifyStability(vendorChanges)),
+    risk_level: assessment.rating_withheld ? null : assessment.level,
+    stability: withheldStability(
+      unreachableNoticeForUrl(offer.url),
+      classifyStability(vendorChanges),
+      vendorChanges,
+    ),
     demerits,
     disclosures,
   };

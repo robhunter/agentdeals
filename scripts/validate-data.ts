@@ -281,7 +281,35 @@ function validateDealChanges(changes: DealChange[]): ValidationError[] {
     }
   }
 
-  return errors;
+  return [...errors, ...uncitedOverBudget(changes)];
+}
+
+function uncitedChangeBudget(): number {
+  const file = resolve(ROOT, "data/quality_budgets.json");
+  const budgets = JSON.parse(readFileSync(file, "utf8")).budgets;
+  const budget = budgets?.uncited_change_records;
+  if (typeof budget !== "number") {
+    throw new Error(`${file} carries no uncited_change_records budget`);
+  }
+  return budget;
+}
+
+function uncitedOverBudget(changes: DealChange[]): ValidationError[] {
+  const uncited = changes
+    .map((change, index) => ({ change, index }))
+    .filter(({ change }) => typeof change.source_url !== "string" || change.source_url.trim() === "");
+  const budget = uncitedChangeBudget();
+  if (uncited.length <= budget) return [];
+  return uncited.slice(budget).map(({ change, index }) => ({
+    file: "data/deal_changes.json",
+    index,
+    vendor: change.vendor || `(index ${index})`,
+    field: "source_url",
+    message:
+      `${uncited.length} change records cite no source, over the budget of ${budget} in data/quality_budgets.json. ` +
+      `A record with no source_url is withheld from every rating it would set, so a new one may not be written: ` +
+      `cite a source here, or retract an existing uncited record and run npm run ratchet:budgets to free the slot.`,
+  }));
 }
 
 function main(): void {

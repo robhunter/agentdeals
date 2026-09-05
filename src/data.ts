@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import type { Offer, EnrichedOffer, OfferIndex, DealChange, DealChangesIndex, ChangeDateSource, StabilityClass, Referral, RiskCause, LinkUnreachable, SourceCheck } from "./types.js";
+import type { Offer, EnrichedOffer, OfferIndex, DealChange, DealChangesIndex, ChangeDateSource, StabilityClass, Referral, RiskCause, RatingWithheld, LinkUnreachable, SourceCheck } from "./types.js";
 import { isUrlSuspended } from "./referral-health.js";
 import { rankForListing, gateFor, utcDate, type TieBreak, type Gate, type GateCode } from "./ranking.js";
 import { unreachableNoticeForUrl, resetLinkHealthCache } from "./link-health.js";
@@ -19,6 +19,7 @@ import { DATE_SOURCES, isEventDated, changeDateClause, isoWeekWindow, changesInW
 import { PRODUCT_DEPRECATED, deprecationEndsTheListedProduct } from "./product-deprecation.js";
 import { vendorHistorySentence } from "./vendor-history.js";
 import { isNoLongerInForce, withResolutionInSummary } from "./change-resolution.js";
+import { changeCitesASource, changeIsUncited, ratingWithheldForNoSourceSentence, type CitableChange } from "./change-citation.js";
 import { endedVerdictSentence } from "./retirement.js";
 
 export function gateForOffer(offer: Offer): Gate | null {
@@ -308,7 +309,7 @@ export const SEVERE_TYPES_WITHOUT_FLAT_DEMOTION: Record<string, string> = {
     "one of its other services. demotionForChange decides per record.",
 };
 
-export function demotionForChange(
+function demotionTheRecordCarries(
   change: Pick<DealChange, "change_type" | "vendor" | "summary"> & { resolution?: DealChange["resolution"] },
 ): "risky" | "caution" | null {
   if (isNoLongerInForce(change)) return null;
@@ -318,6 +319,18 @@ export function demotionForChange(
     return deprecationEndsTheListedProduct(change) ? "risky" : null;
   }
   return null;
+}
+
+export function demotionForChange(
+  change: Pick<DealChange, "change_type" | "vendor" | "summary"> & CitableChange & { resolution?: DealChange["resolution"] },
+): "risky" | "caution" | null {
+  return changeCitesASource(change) ? demotionTheRecordCarries(change) : null;
+}
+
+export function demotionWithheldForNoSource(
+  change: Pick<DealChange, "change_type" | "vendor" | "summary"> & CitableChange & { resolution?: DealChange["resolution"] },
+): "risky" | "caution" | null {
+  return changeCitesASource(change) ? null : demotionTheRecordCarries(change);
 }
 
 export function isSevereChange(
@@ -334,7 +347,7 @@ const POSITIVE_STABILITY_TYPES = POSITIVE_CHANGE_TYPES;
 export function classifyStability(vendorChanges: DealChange[], nowMs: number = Date.now()): StabilityClass {
   if (vendorChanges.length === 0) return "stable";
 
-  const stillInForce = vendorChanges.filter((c) => !isNoLongerInForce(c));
+  const stillInForce = vendorChanges.filter((c) => !isNoLongerInForce(c) && changeCitesASource(c));
   const hasVolatile = stillInForce.some(isSevereChange);
   const negativeCount = stillInForce.filter(c => NEGATIVE_STABILITY_TYPES.has(c.change_type)).length;
   const positiveCount = stillInForce.filter(c => POSITIVE_STABILITY_TYPES.has(c.change_type)).length;
@@ -351,20 +364,28 @@ export function classifyStability(vendorChanges: DealChange[], nowMs: number = D
 
 const FAVOURABLE_STABILITY_CLASSES = new Set<StabilityClass>(["stable", "improving"]);
 
+export function standingNarrowingsCitingNoSource(vendorChanges: readonly DealChange[]): DealChange[] {
+  return vendorChanges.filter(
+    (c) => changeIsUncited(c) && !isNoLongerInForce(c) && NEGATIVE_STABILITY_TYPES.has(c.change_type),
+  );
+}
+
 export function withheldStability(
   linkUnreachable: LinkUnreachable | null,
   stability: StabilityClass,
+  vendorChanges: readonly DealChange[] = [],
 ): StabilityClass | null {
-  if (!linkUnreachable) return stability;
+  if (!linkUnreachable && standingNarrowingsCitingNoSource(vendorChanges).length === 0) return stability;
   return FAVOURABLE_STABILITY_CLASSES.has(stability) ? null : stability;
 }
 
 export function publishedStabilityFor(vendorName: string): StabilityClass | null {
   const key = vendorName.toLowerCase();
-  const stability = classifyStability(loadDealChanges().filter((c) => c.vendor.toLowerCase() === key));
+  const vendorChanges = loadDealChanges().filter((c) => c.vendor.toLowerCase() === key);
+  const stability = classifyStability(vendorChanges);
   const offer = loadOffers().find((o) => o.vendor.toLowerCase() === key);
   if (!offer) return stability;
-  return withheldStability(unreachableNoticeForUrl(offer.url), stability);
+  return withheldStability(unreachableNoticeForUrl(offer.url), stability, vendorChanges);
 }
 
 export function getStabilityMap(): Map<string, StabilityClass> {
@@ -426,8 +447,9 @@ export function enrichOffers(offers: Offer[]): EnrichedOffer[] {
 
     const assessment = vendorRiskAssessment(vendorAllChangesList.get(key) ?? []);
     const link_unreachable = unreachableNoticeForUrl(offer.url, now.getTime());
+    const rating_withheld = assessment.rating_withheld;
     const risk_level =
-      cannotVouchForLevel(offer, link_unreachable) && assessment.level === "stable"
+      rating_withheld || (cannotVouchForLevel(offer, link_unreachable) && assessment.level === "stable")
         ? null
         : assessment.level;
     const risk_cause = assessment.cause
@@ -437,13 +459,14 @@ export function enrichOffers(offers: Offer[]): EnrichedOffer[] {
     const stability = withheldStability(
       link_unreachable,
       classifyStability(vendorAllChangesList.get(key) ?? []),
+      vendorAllChangesList.get(key) ?? [],
     );
 
     const days_since_verified = Math.floor(
       (now.getTime() - new Date(offer.verifiedDate).getTime()) / (24 * 60 * 60 * 1000)
     );
 
-    const enriched = { ...offer, recent_change, expires_soon, risk_level, risk_cause, stability, days_since_verified, link_unreachable, gate: gateFor(offer, servedOn) };
+    const enriched = { ...offer, recent_change, expires_soon, risk_level, risk_cause, rating_withheld, stability, days_since_verified, link_unreachable, gate: gateFor(offer, servedOn) };
     return stripReferrerValue(enriched);
   });
 }
@@ -718,12 +741,13 @@ export interface VendorRiskResult {
   category: string;
   risk_level: "stable" | "caution" | "risky" | null;
   risk_cause: RiskCause | null;
+  rating_withheld: RatingWithheld | null;
   link_unreachable: LinkUnreachable | null;
   source_check: SourceCheck | null;
   gate: Gate | null;
   free_tier_longevity_days: number | null;
   changes: DealChange[];
-  alternatives: Array<{ vendor: string; category: string; tier: string; risk_level: "stable" | "caution" | "risky" | null; risk_cause: RiskCause | null; link_unreachable: LinkUnreachable | null; gate: Gate | null; demerits: Array<{ code: string; points: number; reason: string }> }>;
+  alternatives: Array<{ vendor: string; category: string; tier: string; risk_level: "stable" | "caution" | "risky" | null; risk_cause: RiskCause | null; rating_withheld: RatingWithheld | null; link_unreachable: LinkUnreachable | null; gate: Gate | null; demerits: Array<{ code: string; points: number; reason: string }> }>;
   tie_break: TieBreak;
   summary: string;
 }
@@ -777,10 +801,17 @@ export function verdictHasLapsed(
 }
 
 export function demotionInForce(
-  change: Pick<DealChange, "change_type" | "vendor" | "summary" | "date"> & { resolution?: DealChange["resolution"] },
+  change: Pick<DealChange, "change_type" | "vendor" | "summary" | "date"> & CitableChange & { resolution?: DealChange["resolution"] },
   nowMs: number = Date.now(),
 ): "risky" | "caution" | null {
   return verdictHasLapsed(change, nowMs) ? null : demotionForChange(change);
+}
+
+export function demotionWithheldInForce(
+  change: Pick<DealChange, "change_type" | "vendor" | "summary" | "date"> & CitableChange & { resolution?: DealChange["resolution"] },
+  nowMs: number = Date.now(),
+): "risky" | "caution" | null {
+  return verdictHasLapsed(change, nowMs) ? null : demotionWithheldForNoSource(change);
 }
 
 const RISK_RANK: Record<"stable" | "caution" | "risky", number> = { stable: 0, caution: 1, risky: 2 };
@@ -788,22 +819,47 @@ const RISK_RANK: Record<"stable" | "caution" | "risky", number> = { stable: 0, c
 export interface VendorRiskAssessment {
   level: "stable" | "caution" | "risky";
   cause: DealChange | null;
+  rating_withheld: RatingWithheld | null;
 }
 
 export function vendorRiskAssessment(vendorChanges: DealChange[], nowMs: number = Date.now()): VendorRiskAssessment {
   const twelveMonthsAgo = new Date(nowMs - 365 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
+  const atTwelveMonths = (demotion: "risky" | "caution", date: string) =>
+    demotion === "risky" && date < twelveMonthsAgo ? "caution" : demotion;
 
   let best: { level: "caution" | "risky"; cause: DealChange } | null = null;
+  let uncited: { level: "caution" | "risky"; cause: DealChange } | null = null;
+  const better = (
+    held: { level: "caution" | "risky"; cause: DealChange } | null,
+    level: "caution" | "risky",
+    cause: DealChange,
+  ) => !held || RISK_RANK[level] > RISK_RANK[held.level] || (level === held.level && cause.date > held.cause.date);
+
   for (const c of vendorChanges) {
     const demotion = demotionInForce(c, nowMs);
-    if (!demotion) continue;
-    const level = demotion === "risky" && c.date < twelveMonthsAgo ? "caution" : demotion;
-    if (!best || RISK_RANK[level] > RISK_RANK[best.level] || (level === best.level && c.date > best.cause.date)) {
-      best = { level, cause: c };
+    if (demotion) {
+      const level = atTwelveMonths(demotion, c.date);
+      if (better(best, level, c)) best = { level, cause: c };
+      continue;
     }
+    const withheld = demotionWithheldInForce(c, nowMs);
+    if (!withheld) continue;
+    const level = atTwelveMonths(withheld, c.date);
+    if (better(uncited, level, c)) uncited = { level, cause: c };
   }
 
-  return best ? { level: best.level, cause: best.cause } : { level: "stable", cause: null };
+  if (best) return { level: best.level, cause: best.cause, rating_withheld: null };
+  if (uncited) {
+    return {
+      level: "stable",
+      cause: null,
+      rating_withheld: {
+        reason: "no_source",
+        records: vendorChanges.filter(c => demotionWithheldInForce(c, nowMs) !== null).length,
+      },
+    };
+  }
+  return { level: "stable", cause: null, rating_withheld: null };
 }
 
 export function riskCauseOf(cause: DealChange | null | undefined): RiskCause | null {
@@ -870,8 +926,9 @@ export function checkVendorRisk(
       const unreachable = unreachableNoticeForUrl(e.offer.url);
       const altGate = gateForOffer(e.offer);
       return {
-        risk_level: altGate || (cannotVouchForLevel(e.offer, unreachable) && a.level === "stable") ? null : a.level,
+        risk_level: altGate || a.rating_withheld || (cannotVouchForLevel(e.offer, unreachable) && a.level === "stable") ? null : a.level,
         risk_cause: riskCauseOf(a.cause),
+        rating_withheld: a.rating_withheld,
         link_unreachable: unreachable,
         gate: altGate,
       };
@@ -893,6 +950,8 @@ export function checkVendorRisk(
     summary = `${gateRiskSummary(gate)}${unreadCitation}`;
   } else if ((riskLevel === "risky" || riskLevel === "caution") && cause) {
     summary = `${vendorHistorySentence(offer.vendor, riskLevel, cause)}${unreachableClause}`;
+  } else if (assessment.rating_withheld) {
+    summary = `${ratingWithheldForNoSourceSentence(offer.vendor)}${unreachableClause}`;
   } else if (withheldReason) {
     summary = `${withheldLevelSentence(withheldReason, offer.vendor, unreachableSince)} Nothing we have read describes this offer. Treat that as a statement about our records, not as a stable pricing history.`;
   } else {
@@ -910,8 +969,9 @@ export function checkVendorRisk(
       vendor: offer.vendor,
       vendor_match: matchNotice,
       category: offer.category,
-      risk_level: gate || (cannotVouchForLevel(offer, linkUnreachable) && riskLevel === "stable") ? null : riskLevel,
+      risk_level: gate || assessment.rating_withheld || (cannotVouchForLevel(offer, linkUnreachable) && riskLevel === "stable") ? null : riskLevel,
       risk_cause: riskCauseOf(cause),
+      rating_withheld: assessment.rating_withheld,
       link_unreachable: linkUnreachable,
       source_check: offer.source_check ?? null,
       gate,

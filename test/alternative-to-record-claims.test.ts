@@ -182,7 +182,7 @@ describe("#1297 the answer about our records reads the records", () => {
     );
 
     const derived = `Yes, Neon currently offers a free tier (Free). ${narrowingSentence([
-      { vendor: "Neon", change_type: "pricing_restructured", date: "2026-01-15", date_source: "announced" },
+      { vendor: "Neon", change_type: "pricing_restructured", date: "2026-01-15", date_source: "announced", source_url: "https://neon.tech/pricing" },
     ] as DealChange[])}`;
     assert.match(derived, /pricing restructure narrowed the terms/);
     assert.deepStrictEqual(

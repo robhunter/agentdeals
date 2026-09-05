@@ -41,6 +41,7 @@ type Change = {
   change_type: string;
   date: string;
   summary: string;
+  source_url?: string;
   resolution?: { state: string; date: string; source_url?: string } | null;
 };
 
@@ -72,7 +73,7 @@ describe("#1038 — the level is earned", () => {
     const favourable = ["limits_increased", "new_free_tier", "new_tier", "startup_program_expanded", "pricing_postponed", "rebranded"];
     for (const change_type of favourable) {
       const assessment = vendorRiskAssessment([
-        { vendor: "V", change_type, date: "2026-08-01", summary: "s", previous_state: "", current_state: "", impact: "high", source_url: "", category: "c", alternatives: [] },
+        { vendor: "V", change_type, date: "2026-08-01", summary: "s", previous_state: "", current_state: "", impact: "high", source_url: "https://example.test/pricing", category: "c", alternatives: [] },
       ]);
       assert.strictEqual(assessment.level, "stable", `${change_type} must not demote`);
       assert.strictEqual(assessment.cause, null);
@@ -111,7 +112,7 @@ describe("#1038 — the level is earned", () => {
   it("the count of records we hold does not move the level", async () => {
     const { vendorRiskAssessment } = await import("../dist/data.js");
     const rec = (change_type: string, date: string) => ({
-      vendor: "V", change_type, date, summary: "s", previous_state: "", current_state: "", impact: "low" as const, source_url: "", category: "c", alternatives: [],
+      vendor: "V", change_type, date, summary: "s", previous_state: "", current_state: "", impact: "low" as const, source_url: "https://example.test/pricing", category: "c", alternatives: [],
     });
     const many = Array.from({ length: 10 }, (_, i) => rec("limits_increased", `2026-0${(i % 9) + 1}-01`));
     assert.strictEqual(vendorRiskAssessment(many).level, "stable");
@@ -122,7 +123,7 @@ describe("#1038 — the level is earned", () => {
     const { vendorRiskAssessment } = await import("../dist/data.js");
     const nowMs = Date.parse("2026-08-25T00:00:00Z");
     const removed = (date: string) => ({
-      vendor: "V", change_type: "free_tier_removed", date, summary: "s", previous_state: "", current_state: "", impact: "high" as const, source_url: "", category: "c", alternatives: [],
+      vendor: "V", change_type: "free_tier_removed", date, summary: "s", previous_state: "", current_state: "", impact: "high" as const, source_url: "https://example.test/pricing", category: "c", alternatives: [],
     });
     assert.strictEqual(vendorRiskAssessment([removed("2026-06-01")], nowMs).level, "risky");
     assert.strictEqual(vendorRiskAssessment([removed("2025-05-27")], nowMs).level, "caution");
@@ -310,7 +311,7 @@ describe("#1147 — a shutdown of the product we list demotes the vendor", () =>
     const { classifyStability, demotionForChange, NEGATIVE_CHANGE_TYPES } = await import("../dist/data.js");
     const retiredElsewhere = (date: string) => ({
       vendor: "V", change_type: "product_deprecated", date, summary: "Widget Pro is discontinued.",
-      previous_state: "", current_state: "", impact: "medium" as const, source_url: "", category: "c", alternatives: [],
+      previous_state: "", current_state: "", impact: "medium" as const, source_url: "https://example.test/pricing", category: "c", alternatives: [],
     });
     const one = retiredElsewhere("2026-01-01");
     assert.ok(NEGATIVE_CHANGE_TYPES.has(one.change_type), "the fixture stopped being a narrowing");
@@ -321,7 +322,7 @@ describe("#1147 — a shutdown of the product we list demotes the vendor", () =>
   });
 
   it("never calls a vendor stable on a scale where it holds a narrowing that still stands", async () => {
-    const { classifyStability, loadDealChanges, NEGATIVE_CHANGE_TYPES } = await import("../dist/data.js");
+    const { classifyStability, withheldStability, loadDealChanges, NEGATIVE_CHANGE_TYPES } = await import("../dist/data.js");
     const { isNoLongerInForce } = await import("../dist/change-resolution.js");
     const held = changesByVendor(loadDealChanges() as Change[]);
     const wrong: string[] = [];
@@ -332,7 +333,8 @@ describe("#1147 — a shutdown of the product we list demotes the vendor", () =>
       ).length;
       if (narrowing === 0) continue;
       checked++;
-      if (classifyStability(changes as never) === "stable") {
+      const published = withheldStability(null, classifyStability(changes as never), changes as never);
+      if (published === "stable") {
         wrong.push(`${vendor} holds ${narrowing} standing narrowing record(s) and reads stable`);
       }
     }
@@ -345,7 +347,7 @@ describe("#1147 — a shutdown of the product we list demotes the vendor", () =>
     const { isNoLongerInForce } = await import("../dist/change-resolution.js");
     const standing: Change = {
       vendor: "V", change_type: "free_tier_removed", date: "2026-06-01",
-      summary: "The free plan is gone.",
+      summary: "The free plan is gone.", source_url: "https://example.test/pricing",
     };
     const counts = (c: Change) => NEGATIVE_CHANGE_TYPES.has(c.change_type) && !isNoLongerInForce(c as never);
     const retracted: Change = {

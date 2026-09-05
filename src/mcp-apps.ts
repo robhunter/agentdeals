@@ -266,7 +266,7 @@ function render(args, data) {
   const el = document.getElementById("app");
   if (!data) { el.innerHTML = '<div class="empty">Loading...</div>'; return; }
 
-  if (data.risk_level || data.stability) {
+  if (data.risk_level || data.stability || data.rating_withheld) {
     const vendor = data.vendor || (args.vendors && args.vendors[0]) || "Vendor";
     let risk = data.risk_level || data.stability || "unknown";
     const cause = data.risk_cause || null;
