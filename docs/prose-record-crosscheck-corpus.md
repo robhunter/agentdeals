@@ -97,3 +97,51 @@ Candidate 12 is the derived figure on the same line, `≈ 30 GB`. It is also wro
 ## Reproducing
 
 `/tmp` artifacts are not durable; the method is: fetch each route with a `agentdeals-internal` UA, extract `<div class="context-box"><strong>NAME verified data:</strong>` blocks as the record side, map table columns to vendors from `<thead>`, and compare quantities by unit family after normalising MB/GiB/TB to GB. Labels are mine, checked against `supabase.com/pricing` and `railway.com/pricing` on 2026-08-31 where the call was not obvious from the page.
+
+## Re-measured 2026-09-05, after the check was built
+
+`scripts/prose-record-crosscheck.js` implements the design above. Run against the same five
+pages — the entire domain the 18 labelled pairs came from:
+
+| measure | 2026-08-31 | 2026-09-05 |
+|---|---|---|
+| candidates emitted | 18 | **0** |
+| false positives | 16 | **0** |
+| **false-positive rate** | 88.9% | **0%** |
+
+The two true positives are absent because the defect they found is fixed. The check still
+finds them: `test/hosting-free-tier-figures.test.ts` feeds it the pre-fix table markup and
+requires the Netlify bandwidth rate to be flagged, then requires the flag to disappear once
+the cell agrees with the record. A check that only reports zero because nothing is left to
+find is indistinguishable from a broken one, so both directions are asserted.
+
+Coverage did not pay for the precision. Across all 144 single-segment standalone routes the
+check emits **79 candidates on 33 routes**, against 78 for the noisier version it replaced.
+
+### What removed each class
+
+| class | n | what fixed it |
+|---|---|---|
+| `plan` | 7 | the plan named on the page must be one the record describes; a free-tier alias (`Starter`, `Hobby`) may stand in for a record tiered `Free`, a paid plan name never does |
+| `dimension` | 6 | the dimension is read from the clause holding the figure, not from the cell or sentence containing it, and a quantity only compares to another quantity with the same denominator — `$0` is not comparable to `$0.15/GB` |
+| `record-historical` | 2 | clauses on either side carrying `previously`, `legacy`, `down from` and their kin are excluded from both sides, not just from the page |
+| `record-narrower` | 1 | a figure whose clause says `total` and equals the sum of the record's own parts is agreement, not disagreement |
+
+Two further classes came out of the census rather than the corpus:
+
+- **binary against decimal.** `512 MiB` and `0.5 GB` are one quantity spelled two ways, a 7%
+  gap. Quantities within 10% are treated as agreement, which cost 12 candidates and no
+  finding.
+- **a flattened table row read as a sentence.** A run of text carrying three or more
+  quantities between commas is a table that lost its markup, not a claim about one number.
+
+### What the census found that the corpus could not
+
+`/railway-vs-render` published Render's free workspace as `1 (2 environments)` project.
+Render's own plan table reads `Projects — Unlimited` for Hobby and caps the workspace at 25
+services instead. Nothing in #1183 or in this corpus listed it; the check found it on its
+first full run, which is the argument for the check.
+
+The evidence it printed was the wrong clause — it matched `Up to 25 services` against a
+project count. The finding was right and its justification was not, which is the same shape
+as candidate 12 above and the reason AC-8 asks for the clause rather than the number.
