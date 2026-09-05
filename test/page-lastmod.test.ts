@@ -1,7 +1,7 @@
 import { describe, it, before, after } from "node:test";
 import assert from "node:assert";
 import { spawn, type ChildProcess } from "node:child_process";
-import { mkdtempSync, readFileSync, rmSync } from "node:fs";
+import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -149,6 +149,94 @@ describe("page lastmod ledger", () => {
     assert.equal(httpDate("2026-09-04"), "Fri, 04 Sep 2026 00:00:00 GMT");
     assert.equal(httpDate("2026-09-05"), "Sat, 05 Sep 2026 00:00:00 GMT");
     assert.equal(httpDate("yesterday"), null);
+  });
+
+  it("counts the days between two days", () => {
+    assert.equal(daysBetween("2026-09-01", "2026-09-08"), 7);
+    assert.equal(daysBetween("2026-09-08", "2026-09-01"), -7);
+    assert.equal(daysBetween("2026-09-08", "2026-09-08"), 0);
+  });
+});
+
+describe("a page keeps the day it changed, whenever that was", () => {
+  const FIXTURE = {
+    version: 1,
+    generated: "2026-08-20",
+    pages: {
+      "/privacy": { hash: "unchanged-since-february", changed: "2026-02-03" },
+      "/compare/netlify-vs-vercel": { hash: "moved-in-august", changed: "2026-08-19" },
+    },
+  };
+  let fixtureServer: ChildProcess;
+  let fixtureBase = "";
+  let fixtureDir = "";
+
+  before(async () => {
+    fixtureDir = mkdtempSync(path.join(tmpdir(), "page-lastmod-fixture-"));
+    const ledgerPath = path.join(fixtureDir, "page-lastmod.json");
+    writeFileSync(ledgerPath, JSON.stringify(FIXTURE, null, 2));
+    fixtureServer = await new Promise<ChildProcess>((resolve, reject) => {
+      const proc = spawn("node", [path.join(REPO, "dist", "serve.js")], {
+        stdio: ["pipe", "pipe", "pipe"],
+        env: { ...process.env, PORT: "0", BASE_URL: "http://localhost", AGENTDEALS_PAGE_LASTMOD_PATH: ledgerPath },
+      });
+      const timeout = setTimeout(() => {
+        proc.kill();
+        reject(new Error("Server startup timeout"));
+      }, 30000);
+      proc.stderr!.on("data", (data: Buffer) => {
+        const match = data.toString().match(/running on http:\/\/localhost:(\d+)/);
+        if (match) {
+          fixtureBase = `http://localhost:${match[1]}`;
+          clearTimeout(timeout);
+          resolve(proc);
+        }
+      });
+      proc.on("error", err => {
+        clearTimeout(timeout);
+        reject(err);
+      });
+    });
+  });
+
+  after(() => {
+    if (fixtureServer) fixtureServer.kill();
+    if (fixtureDir) rmSync(fixtureDir, { recursive: true, force: true });
+  });
+
+  async function entries(name: string): Promise<Map<string, string>> {
+    const xml = await (await fetch(`${fixtureBase}/sitemap-${name}.xml`)).text();
+    return new Map([...xml.matchAll(/<loc>([^<]+)<\/loc>\s*<lastmod>([^<]+)<\/lastmod>/g)]
+      .map(m => [m[1].replace("http://localhost", ""), m[2]]));
+  }
+
+  it("advertises the recorded day, not the day the build shipped", async () => {
+    assert.equal((await entries("pages")).get("/privacy"), "2026-02-03");
+    assert.equal((await entries("comparisons")).get("/compare/netlify-vs-vercel"), "2026-08-19");
+  });
+
+  it("serves that same day as Last-Modified", async () => {
+    const response = await fetch(`${fixtureBase}/privacy`);
+    await response.text();
+    assert.equal(response.headers.get("last-modified"), "Tue, 03 Feb 2026 00:00:00 GMT");
+  });
+
+  it("summarises a sitemap by the newest page in it", async () => {
+    const xml = await (await fetch(`${fixtureBase}/sitemap.xml`)).text();
+    const comparisons = xml.match(/<loc>[^<]*sitemap-comparisons\.xml<\/loc>\s*<lastmod>([^<]+)<\/lastmod>/);
+    const listed = await entries("comparisons");
+    const newest = [...listed.values()].sort().pop();
+    assert.equal(comparisons![1], newest);
+  });
+
+  it("falls back to the day the build shipped for a page it has no record of", async () => {
+    const listed = await entries("pages");
+    const today = new Date().toISOString().slice(0, 10);
+    for (const loc of ["/press", "/setup", "/badges", "/guides"]) {
+      const day = listed.get(loc);
+      assert.ok(day, `${loc} is missing from the pages sitemap`);
+      assert.ok(day! > FIXTURE.generated && day! <= today, `${loc} fell back to ${day}`);
+    }
   });
 });
 
