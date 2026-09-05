@@ -22374,7 +22374,6 @@ function buildFreeTierRiskPage(): string {
     { vendor: "Neon", risk: "medium", category: "Databases", reasoning: "Pricing restructured Jan 2026 post-Databricks acquisition. Free tier preserved (0.5 GB/project, 100 projects) but acquisition creates uncertainty about long-term free tier commitment.", lastChange: "2026-01-15", changeType: "pricing_restructured" },
     { vendor: "Railway", risk: "medium", category: "Hosting/PaaS", reasoning: "Free tier expanded with $100M Series B (Oct 2025). Currently generous ($5 credit, no sleep). But VC-funded PaaS companies have a history of removing free tiers (see: Heroku). Watch burn rate.", lastChange: "2025-10-01", changeType: "limits_increased" },
     { vendor: "Render", risk: "medium", category: "Hosting/PaaS", reasoning: "Sleep time reduced (Sep 2025) — 15-min spin-down is aggressive. Free PostgreSQL limited to 256 MB with 30-day expiry. Signals tightening, though core free tier intact.", lastChange: "2025-09-01", changeType: "limits_reduced" },
-    { vendor: "Fly.io", risk: "medium", category: "Hosting", reasoning: "Pricing restructured Jan 2026. Free tier narrowed — credit-card-required, 3 shared VMs. Still usable but not as generous as before. Startup funding means free tier may be temporary.", lastChange: "2026-01-01", changeType: "pricing_restructured" },
     { vendor: "Stripe", risk: "medium", category: "Payments", reasoning: "Processing fees restructured Feb 2026 (2.7% + 5¢ domestic card). No free tier per se — pay-per-transaction model. Risk is in rate changes, not tier removal.", lastChange: "2026-02-01", changeType: "pricing_restructured" },
     { vendor: "Firebase", risk: "medium", category: "BaaS", reasoning: "Multiple changes in 2026: Cloud Storage limits reduced (Feb), Realtime Database EOL announced (Mar), restrictions tightened (Feb). Google consolidating around Firestore. Migration advisable for RTDB users.", lastChange: "2026-03-19", changeType: "product_deprecated" },
     { vendor: "Docker Hub", risk: "medium", category: "Containers", reasoning: "Rate limits tightened (Dec 2024) — 100 pulls/6h anonymous, 200 authenticated. Docker Desktop commercial license required for large orgs ($5/user/mo+). Free for small teams but trending paid.", lastChange: "2024-12-10", changeType: "pricing_restructured" },
@@ -22382,6 +22381,7 @@ function buildFreeTierRiskPage(): string {
     { vendor: "Google Gemini API", risk: "medium", category: "AI/ML", reasoning: "Free tier rate limits slashed 50-80% (Dec 2025). The flagship Gemini 3.1 Pro is paid-only, though Gemini 2.5 Pro is still free. A Google PM admitted generous limits were only for a promotional weekend. Still has free tier but heavily restricted.", lastChange: "2025-12-15", changeType: "limits_reduced" },
 
     { vendor: "Heroku", risk: "high", category: "Hosting/PaaS", reasoning: "Free tier removed Nov 2022. Now in 'sustaining mode' under Salesforce — minimal investment, no innovation. The canonical cautionary tale for relying on free tiers.", lastChange: "2022-11-28", changeType: "free_tier_removed" },
+    { vendor: "Fly.io", risk: "high", category: "Hosting", reasoning: "Free tier removed for new accounts in October 2024. New signups get a trial of 2 hours runtime or 7 days, whichever comes first, then pay-as-you-go from the first machine — the smallest is $2.02/month. Only legacy Hobby/Launch/Scale accounts still carry 3 shared-cpu-1x VMs, 3 GB volume storage and 100 GB transfer. Volume snapshots became billable in January 2026.", lastChange: "2024-10-01", changeType: "free_tier_removed" },
     { vendor: "Postman", risk: "high", category: "API Testing", reasoning: "Team collaboration removed from free tier (Mar 2026). Aggressive monetization of previously-free features. Pattern suggests further restrictions ahead.", lastChange: "2026-03-01", changeType: "restriction" },
     { vendor: "OpenAI", risk: "high", category: "AI/ML", reasoning: "Multiple free tier reductions: limits cut Jun 2025, further reduced Feb 2026. GPT-4 free access removed. Market leader extracting value — expect continued tightening.", lastChange: "2026-02-09", changeType: "limits_reduced" },
     { vendor: "HCP Terraform", risk: "high", category: "Infrastructure", reasoning: "Legacy tier EOL March 31, 2026. HashiCorp BSL license change (Aug 2023) already fractured community. IBM acquisition adds enterprise pricing pressure. Migrate to OpenTofu.", lastChange: "2026-03-31", changeType: "pricing_restructured" },
@@ -40133,22 +40133,22 @@ ${mcpCtaCss()}
       </tr>
       <tr>
         <td class="provider-col">BetterStack</td>
-        <td>1GB logs</td>
+        <td>3 GB logs</td>
         <td>3 days</td>
         <td>3 days</td>
         <td>10 monitors</td>
         <td>Unlimited</td>
         <td class="check">&#10003;</td>
         <td class="check">&#10003;</td>
-        <td class="cross">&#10007;</td>
+        <td class="check">&#10003; 3GB traces</td>
         <td class="cross">&#10007;</td>
         <td><span style="color:#3fb950">Low</span></td>
       </tr>
       <tr>
         <td class="provider-col">Sentry</td>
-        <td>5K errors/mo + 10K replays</td>
+        <td>5K errors/mo + 50 replays</td>
         <td>N/A</td>
-        <td>90 days</td>
+        <td>30 days</td>
         <td>Unlimited</td>
         <td>1 user</td>
         <td class="check">&#10003;</td>
@@ -40417,7 +40417,7 @@ ${mcpCtaCss()}
 
   <div class="diff-card">
     <h3>Sentry <span class="winner-badge">BEST ERROR TRACKING</span></h3>
-    <div class="diff-desc"><strong>Free tier (Developer):</strong> 5,000 errors/month, 10,000 session replays, 10,000 performance units, 1 user. 90-day retention. Supports 30+ platforms. Source map support, breadcrumbs, and issue grouping included. The de facto standard for error tracking. Self-hosted option available for unlimited scale.</div>
+    <div class="diff-desc"><strong>Free tier (Developer):</strong> 5,000 errors/month, 50 session replays, 5M spans/month, 5 GB logs, 1 user. 30 days retention &mdash; the 90-day lookback is the Team plan. Supports 30+ platforms. Source map support, breadcrumbs, and issue grouping included. The de facto standard for error tracking. Self-hosted option available for unlimited scale.</div>
   </div>
 
   <div class="diff-card">
@@ -45983,12 +45983,12 @@ const STACK_TEMPLATES: StackTemplate[] = [
   {
     slug: "api-first",
     title: "Best Free Stack for an API-First Product — Build APIs for $0/Month in 2026",
-    metaDesc: "Build API products on free tiers. Neon, Fly.io, Auth0, New Relic, Mailgun, GitHub Actions — verified limits, cost at scale, stability ratings. Updated April 2026.",
+    metaDesc: "Build API products on free tiers. Neon, Cloudflare Workers, Auth0, New Relic, Mailgun, GitHub Actions — verified limits, cost at scale, stability ratings. Updated September 2026.",
     heroSubtitle: "Purpose-built for API products. Low latency, strong auth, and excellent observability.",
-    description: "API-first products need low-latency hosting, robust authentication with API keys and OAuth, and deep observability into request patterns. This stack pairs Fly.io's edge compute with Auth0's enterprise-grade auth and New Relic's generous free APM — giving you production-ready API infrastructure at $0/month.",
+    description: "API-first products need low-latency hosting, robust authentication with API keys and OAuth, and deep observability into request patterns. This stack pairs Cloudflare Workers' edge compute with Auth0's enterprise-grade auth and New Relic's generous free APM — giving you production-ready API infrastructure at $0/month. Fly.io held this row until September 2026 and was replaced because it has had no free tier for new accounts since October 2024.",
     services: [
       { category: "Database", vendor: "Neon", slug: "neon", estimatorCategory: "database", freeTier: "0.5 GB storage, 100 CU-hours", whyChosen: "Serverless Postgres scales to zero between requests. Connection pooling handles concurrent API clients.", starter: 19, growth: 69, scale: 350 },
-      { category: "Hosting", vendor: "Fly.io", slug: "fly-io", estimatorCategory: "hosting", freeTier: "3 shared VMs, 160 GB transfer", whyChosen: "Edge compute in 30+ regions. Low latency for API consumers worldwide.", starter: 0, growth: 15, scale: 75 },
+      { category: "Hosting", vendor: "Cloudflare Workers", slug: "cloudflare-workers", estimatorCategory: "hosting", freeTier: "100K requests/day", whyChosen: "Edge compute in 300+ locations with 10 ms CPU time per invocation. Low latency for API consumers worldwide, and the free allowance is permanent.", starter: 5, growth: 5, scale: 5 },
       { category: "Auth", vendor: "Auth0", slug: "auth0", estimatorCategory: "auth", freeTier: "25K MAU", whyChosen: "Enterprise-grade OAuth2/OIDC. API key management, rate limiting, and machine-to-machine tokens.", starter: 0, growth: 35, scale: 240 },
       { category: "Monitoring", vendor: "New Relic", slug: "new-relic", estimatorCategory: "monitoring", freeTier: "100 GB ingest/mo", whyChosen: "100 GB free ingest with APM — see every API request, latency distribution, and error rate.", starter: 0, growth: 0, scale: 49 },
       { category: "Email", vendor: "Mailgun", slug: "mailgun", estimatorCategory: "email", freeTier: "100 emails/day", whyChosen: "Reliable transactional email with detailed delivery analytics. Good for API key notifications and alerts.", starter: 0, growth: 35, scale: 90 },
@@ -46034,13 +46034,18 @@ function buildStackTemplatePage(slug: string): string | null {
   const costClass = (amount: number) => amount === 0 ? "cost-free" : amount <= 25 ? "cost-low" : amount <= 100 ? "cost-mid" : "cost-high";
   const formatCost = (amount: number) => amount === 0 ? "$0" : `$${amount.toLocaleString()}`;
 
+  const vendorLabel = (s: StackService) =>
+    vendorSlugMap.has(s.slug)
+      ? `<a href="/vendor/${escHtmlServer(s.slug)}">${escHtmlServer(s.vendor)}</a>`
+      : escHtmlServer(s.vendor);
+
   const tableRows = template.services.map(s => {
     const stability = stabilityMap.get(s.slug) ?? "stable";
     const sColor = stabilityColors[stability] ?? stabilityColors.stable;
     const sLabel = stabilityLabels[stability] ?? "Stable";
     return `<tr>
       <td>${escHtmlServer(s.category)}</td>
-      <td class="vendor-name"><a href="/vendor/${escHtmlServer(s.slug)}">${escHtmlServer(s.vendor)}</a><span class="free-tier-info">${escHtmlServer(s.freeTier)}</span></td>
+      <td class="vendor-name">${vendorLabel(s)}<span class="free-tier-info">${escHtmlServer(s.freeTier)}</span></td>
       <td><span class="stability-dot" style="background:${sColor}" title="${sLabel}"></span> ${sLabel}</td>
       <td class="cost-free">$0</td>
       <td class="${costClass(s.starter)}">${formatCost(s.starter)}</td>
@@ -46055,7 +46060,7 @@ function buildStackTemplatePage(slug: string): string | null {
     const sLabel = stabilityLabels[stability] ?? "Stable";
     return `<div class="why-card">
       <div class="why-card-header">
-        <strong>${escHtmlServer(s.category)}: <a href="/vendor/${escHtmlServer(s.slug)}">${escHtmlServer(s.vendor)}</a></strong>
+        <strong>${escHtmlServer(s.category)}: ${vendorLabel(s)}</strong>
         <span class="stability-badge" style="background:${sColor}20;color:${sColor};border:1px solid ${sColor}40">${sLabel}</span>
       </div>
       <p>${escHtmlServer(s.whyChosen)}</p>
@@ -46417,7 +46422,7 @@ function buildEstimatorData(): EstimatorCategory[] {
         { slug: "railway", name: "Railway", free: "$5 one-time credit", starter: 5, growth: 20, scale: 100, notes: "Hobby $5/mo, usage-based" },
         { slug: "render", name: "Render", free: "512 MB RAM, 0.1 CPU", starter: 7, growth: 25, scale: 85, notes: "Starter $7/mo per service" },
         { slug: "netlify", name: "Netlify", free: "300 credits/mo", starter: 19, growth: 19, scale: 99, notes: "Pro $19/mo, overages billed" },
-        { slug: "fly-io", name: "Fly.io", free: "3 shared VMs, 160 GB transfer", starter: 0, growth: 15, scale: 75, notes: "Pay-as-you-go after free tier" },
+        { slug: "fly-io", name: "Fly.io", free: "None — 2 hrs or 7-day trial", starter: 2, growth: 15, scale: 75, notes: "No free tier since Oct 2024; smallest machine $2.02/mo" },
         { slug: "cloudflare-workers", name: "Cloudflare Workers", free: "100K req/day", starter: 5, growth: 5, scale: 5, notes: "Paid $5/mo, 10M req included" },
         { slug: "cloudflare-pages", name: "Cloudflare Pages", free: "Unlimited bandwidth, 500 builds", starter: 0, growth: 0, scale: 0, notes: "Free for most use cases" },
       ],
@@ -46466,7 +46471,7 @@ function buildEstimatorData(): EstimatorCategory[] {
         { slug: "sendgrid", name: "SendGrid", free: "100 emails/day", starter: 0, growth: 20, scale: 50, notes: "Essentials $20/mo (50K emails)" },
         { slug: "mailgun", name: "Mailgun", free: "100 emails/day", starter: 0, growth: 35, scale: 90, notes: "Foundation $35/mo (50K emails)" },
         { slug: "brevo", name: "Brevo", free: "300 emails/day", starter: 0, growth: 25, scale: 65, notes: "Starter $25/mo (20K emails)" },
-        { slug: "amazon-ses", name: "Amazon SES", free: "3K messages/mo (from EC2)", starter: 0, growth: 10, scale: 100, notes: "$0.10/1K emails" },
+        { slug: "amazon-ses", name: "Amazon SES", free: "None — $200 in expiring credits", starter: 0, growth: 10, scale: 100, notes: "$0.10/1K emails; credits expire 12 months after signup" },
       ],
     },
     {
