@@ -114,7 +114,7 @@ if [ -n "$UPDATE_PAGE_LASTMOD" ]; then
   fi
 fi
 
-if npm run test:gated >>"$LOG" 2>&1; then
+if env -u GATE_RATCHET_BUDGETS -u GATE_UPDATE_PAGE_LASTMOD npm run test:gated >>"$LOG" 2>&1; then
   summarize
   push_to_main
   echo "Suite green — $COMMIT is on main."
