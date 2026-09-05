@@ -8594,8 +8594,8 @@
     {
       "vendor": "SwaggerHub",
       "category": "API Development",
-      "description": "API design and documentation platform (SmartBear) — free tier: 1 designer seat for individual/personal use. OpenAPI editor, API mocking, code generation. Limited API definitions on free plan",
-      "tier": "Free",
+      "description": "API design and documentation platform (SmartBear) — no permanent free tier. Swagger's own pricing FAQ, read 2026-09-05: \"You can get started with Swagger with a free trial, no credit card required, then choose the plan that best fits your usage and requirements.\" The same FAQ puts the free Swagger tools on the open-source side — Swagger Editor, Swagger UI and Swagger Codegen, run locally — and SwaggerHub among the commercial products. Plan prices are client-rendered and were not read.",
+      "tier": "Trial",
       "url": "https://swagger.io/tools/swaggerhub/pricing/",
       "tags": [
         "api-design",
