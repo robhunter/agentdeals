@@ -64,14 +64,14 @@ const PRO_IS_WITHHELD_BEFORE = /\b(?:no|zero|0)\s+free\s+$|\bremoval of free\s+$
 const VERSION_IMMEDIATELY_BEFORE = /\d+\.\d+\s+$/;
 
 const FREE_TIER_IS_FLASH_ONLY = [
-  /\bflash[- ]only\b/i,
-  /\bflash(?:\s*(?:and|,|\/)\s*flash[- ]lite)?\s*(?:models\s*)?only\b/i,
-  /\b(?:restricted|limited|preserved|reserved|covers?|covered)\b[^.]{0,15}?\b(?:to|for)\s+flash\b[^.]{0,60}/i,
+  { pattern: /\bflash[- ]only\b/i, enumerationContinues: false },
+  { pattern: /\bflash(?:\s*(?:and|,|\/)\s*flash[- ]lite)?\s*(?:models\s*)?only\b/i, enumerationContinues: false },
+  { pattern: /\b(?:restricted|limited|preserved|reserved|covers?|covered)\b[^.]{0,15}?\b(?:to|for)\s+flash\b[^.]{0,60}/i, enumerationContinues: true },
 ];
 
 export type Claim = { route: string; surface: "page" | "metadata"; sentence: string; trigger: string };
 
-function claimsIn(route: string, surface: "page" | "metadata", body: string): Claim[] {
+function claimsIn(route: string, surface: "page" | "metadata", body: string, wholePageIsAboutGemini = false): Claim[] {
   const found: Claim[] = [];
   const seen = new Set<string>();
   const record = (sentence: string, trigger: string) => {
@@ -81,7 +81,8 @@ function claimsIn(route: string, surface: "page" | "metadata", body: string): Cl
     found.push({ route, surface, sentence: trimmed, trigger: trigger.trim() });
   };
   const mentionsGemini = (index: number, length: number) =>
-    /gemini/i.test(body.slice(Math.max(0, index - 240), Math.min(body.length, index + length + 240)));
+    wholePageIsAboutGemini
+    || /gemini/i.test(body.slice(Math.max(0, index - 240), Math.min(body.length, index + length + 240)));
 
   const quotable = (index: number, length: number) =>
     body.slice(Math.max(0, index - 34), Math.min(body.length, index + length + 90));
@@ -98,9 +99,11 @@ function claimsIn(route: string, surface: "page" | "metadata", body: string): Cl
     record(quotable(index, m[0].length), `${m[0]}${after}`);
   }
 
-  for (const pattern of FREE_TIER_IS_FLASH_ONLY) {
+  for (const { pattern, enumerationContinues } of FREE_TIER_IS_FLASH_ONLY) {
     for (const m of body.matchAll(new RegExp(pattern.source, "gi"))) {
-      const span = body.slice(m.index!, m.index! + Math.max(m[0].length, 60));
+      const span = enumerationContinues
+        ? body.slice(m.index!, m.index! + Math.max(m[0].length, 60))
+        : m[0];
       if (/\bpro\b/i.test(span)) continue;
       if (!mentionsGemini(m.index!, m[0].length)) continue;
       record(quotable(m.index!, m[0].length), m[0]);
@@ -170,8 +173,10 @@ async function claimsAcrossTheSite(routes: string[]): Promise<{ claims: Claim[];
       const html = await response.text();
       if (!/gemini/i.test(html)) continue;
       geminiPages++;
-      claims.push(...claimsIn(route, "page", readableText(html)));
-      claims.push(...claimsIn(route, "metadata", metaAndStructuredData(html)));
+      const heading = html.match(/<h1[^>]*>([\s\S]*?)<\/h1>/i)?.[1] ?? "";
+      const aboutGemini = /gemini/i.test(route) || /gemini/i.test(heading);
+      claims.push(...claimsIn(route, "page", readableText(html), aboutGemini));
+      claims.push(...claimsIn(route, "metadata", metaAndStructuredData(html), aboutGemini));
     }
   };
   await Promise.all(Array.from({ length: 12 }, worker));
