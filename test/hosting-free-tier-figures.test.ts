@@ -113,9 +113,27 @@ const RETIRED_FIGURES: Retired[] = [
   },
   {
     what: "a Fly.io free tier for new accounts",
-    pattern: /Fly\.io(?:'s)?[^.]{0,70}(?:free tier includes|gives 3 shared|3 shared-cpu VMs)|3 shared-cpu-1x VMs, 160 ?GB|3 shared VMs free/i,
+    pattern: /Fly\.io(?:'s)?[^.]{0,70}(?:free tier includes|gives 3 shared|3 shared-cpu VMs)|3 shared-cpu-1x VMs, 160 ?GB|3 shared VMs free|3 shared VMs, 160 ?GB/i,
     replacedBy: /no free tier for new accounts|2 hrs? runtime|2 hours runtime|7-day trial/i,
     vendorRecord: () => recordFor("Fly.io", "Cloud Hosting").description,
+  },
+  {
+    what: "a Sentry free session-replay allowance of 10K",
+    pattern: /10K replays|10,000 (?:session )?replays/i,
+    replacedBy: /50 (?:session )?replays/i,
+    vendorRecord: () => recordFor("Sentry", "Monitoring").description,
+  },
+  {
+    what: "Sentry's free data retention as 90 days",
+    pattern: /Sentry[^.|]{0,60}90 days|90 days[^.|]{0,60}Sentry/i,
+    replacedBy: /30 days/i,
+    vendorRecord: () => recordFor("Sentry", "Monitoring").description,
+  },
+  {
+    what: "a Better Stack free log allowance of 1 GB",
+    pattern: /BetterStack[^.|]{0,40}1 ?GB logs|1 ?GB logs[^.|]{0,40}BetterStack/i,
+    replacedBy: /3 ?GB logs/i,
+    vendorRecord: () => recordFor("BetterStack", "Monitoring").description,
   },
   {
     what: "Railway's $5 Hobby credit described as free",
@@ -213,7 +231,10 @@ describe("hosting pages publish the free-tier figures our records hold (#1183)",
       "Deno Deploy free CPU allowance of 15 hours": ["/hosting-free-tier-comparison-2026", "/serverless-free-tier-comparison-2026", "/heroku-alternatives"],
       "a Koyeb free web service": ["/hosting-free-tier-comparison-2026", "/free-fastapi-stack"],
       "Supabase free egress of 2 GB": ["/database-free-tier-comparison-2026"],
-      "a Fly.io free tier for new accounts": ["/hetzner-pricing-2026", "/free-django-stack", "/railway-vs-render", "/aws-app-runner-migration"],
+      "a Fly.io free tier for new accounts": ["/hetzner-pricing-2026", "/free-django-stack", "/railway-vs-render", "/aws-app-runner-migration", "/free-tier-risk"],
+      "a Sentry free session-replay allowance of 10K": ["/monitoring-comparison-2026"],
+      "Sentry's free data retention as 90 days": ["/monitoring-comparison-2026"],
+      "a Better Stack free log allowance of 1 GB": ["/monitoring-comparison-2026"],
       "Railway's $5 Hobby credit described as free": ["/hetzner-pricing-2026", "/hosting-pricing", "/hosting-alternatives"],
     };
     const missing: string[] = [];
