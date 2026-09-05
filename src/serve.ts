@@ -52865,7 +52865,7 @@ function miscSitemapLedgerPaths(): string[] {
   return paths;
 }
 
-export function ledgerPagePaths(): string[] {
+function ledgerPagePaths(): string[] {
   return [...comparisonSitemapPaths(), ...pagesSitemapLedgerPaths(), ...miscSitemapLedgerPaths()];
 }
 

@@ -266,12 +266,31 @@ describe("what the sitemaps say about when a page changed", () => {
     assert.equal(seen.size, Object.keys(ledger.pages).length);
   });
 
-  it("covers every page whose date has no other derivation", async () => {
+  it("dates a page it has no record of no earlier than the day the ledger was written", async () => {
     const ledger = readPageLastmod();
-    const uncovered = inventory.filter(p => !ledger.pages[p]);
-    assert.deepEqual(uncovered, [], `${uncovered.length} pages would fall back to the build day`);
-    assert.equal(inventory.length, Object.keys(ledger.pages).length);
-    assert.ok(inventory.length > 400, `Expected the ledger to cover the comparison and editorial pages, got ${inventory.length}`);
+    const known = new Set(inventory);
+    assert.ok(known.size > 400, `Expected the comparison and editorial pages, got ${known.size}`);
+    const entries = new Map<string, string>();
+    for (const name of SITEMAPS) {
+      for (const { loc, lastmod } of await sitemapEntries(name)) entries.set(loc, lastmod);
+    }
+    for (const page of inventory) {
+      const lastmod = entries.get(page);
+      assert.ok(lastmod, `${page} is missing from the sitemaps`);
+      const recorded = ledger.pages[page];
+      if (recorded) assert.equal(lastmod, recorded.changed);
+      else assert.ok(lastmod! >= ledger.generated, `${page} has no record and advertises ${lastmod}, older than the ledger itself`);
+    }
+  });
+
+  it("holds no page that no sitemap publishes", async () => {
+    const ledger = readPageLastmod();
+    const published = new Set<string>();
+    for (const name of SITEMAPS) {
+      for (const { loc } of await sitemapEntries(name)) published.add(loc);
+    }
+    const orphans = Object.keys(ledger.pages).filter(p => !published.has(p));
+    assert.deepEqual(orphans, [], `The ledger dates pages nothing publishes; run npm run lastmod:pages`);
   });
 
   it("names no day as a literal in the code that renders a sitemap", () => {
