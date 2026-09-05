@@ -167,11 +167,17 @@ const FAILING_BY_MODE: Record<string, string[]> = {
   crashed: [],
 };
 
+const GATE_CONFIGURATION = ["GATE_RATCHET_BUDGETS", "GATE_UPDATE_PAGE_LASTMOD"];
+
 const SUITE = `import { appendFileSync, writeFileSync } from "node:fs";
 const modes = ${JSON.stringify(FAILING_BY_MODE)};
 const mode = process.env.GATE_FIXTURE_TESTS || "green";
 const failing = modes[mode];
 writeFileSync(process.env.GATE_FAILING_FILES, failing.map((f) => f + "\\n").join(""));
+writeFileSync(
+  process.env.GATE_FIXTURE_ENV_REPORT,
+  ${JSON.stringify(GATE_CONFIGURATION)}.filter((name) => process.env[name]).join(","),
+);
 appendFileSync(process.env.GITHUB_OUTPUT, "a_test_spawned_a_script_that_wrote_this=yes\\n");
 console.log("\\u2139 tests 2");
 console.log("\\u2139 pass " + (mode === "green" ? 2 : 1));
@@ -260,6 +266,7 @@ function fixtureRepo(): { work: string; origin: string } {
   writeFileSync(join(work, "allowlist.json"), ALLOWLIST);
   writeFileSync(join(work, "data", "health.json"), '{"checked":1}\n');
   writeFileSync(join(work, "data", "quality_budgets.json"), BUDGETS_BEFORE);
+  writeFileSync(join(work, "data", "page-lastmod.json"), '{"version":1,"pages":{}}\n');
   writeFileSync(join(work, "untracked-by-the-gate.txt"), "before\n");
   git(work, "add", "-A");
   git(work, "commit", "-m", "fixture");
@@ -275,11 +282,13 @@ interface GateRun {
   mode: GateMode;
   build?: "fail";
   ratchet?: RatchetMode;
+  lastmod?: true;
 }
 
 function runGate(work: string, mode: GateMode | GateRun, ...args: string[]) {
   const opts: GateRun = typeof mode === "string" ? { mode } : mode;
   const outputs = join(work, "step-outputs.txt");
+  const envReport = join(work, "the-environment-the-suite-ran-in.txt");
   const run = spawnSync("bash", [GATE, ...args], {
     cwd: work,
     encoding: "utf8",
@@ -288,12 +297,19 @@ function runGate(work: string, mode: GateMode | GateRun, ...args: string[]) {
       GATE_FIXTURE_TESTS: opts.mode,
       GATE_FIXTURE_BUILD: opts.build ?? "ok",
       GATE_FIXTURE_RATCHET: opts.ratchet ?? "lower",
+      GATE_FIXTURE_ENV_REPORT: envReport,
       GATE_RATCHET_BUDGETS: opts.ratchet === undefined ? "" : "1",
+      GATE_UPDATE_PAGE_LASTMOD: opts.lastmod ? "1" : "",
       GITHUB_OUTPUT: outputs,
       AGENTDEALS_NON_BLOCKING_TESTS_PATH: join(work, "allowlist.json"),
+      AGENTDEALS_PAGE_LASTMOD_PATH: join(work, "data", "page-lastmod.json"),
     },
   });
-  return { ...run, outputs: existsSync(outputs) ? readFileSync(outputs, "utf8") : "" };
+  return {
+    ...run,
+    outputs: existsSync(outputs) ? readFileSync(outputs, "utf8") : "",
+    suiteSawGateConfig: existsSync(envReport) ? readFileSync(envReport, "utf8") : null,
+  };
 }
 
 function mainSha(origin: string): string {
@@ -544,6 +560,50 @@ describe("#1326 nothing that can fail stands between the day's data and the gate
       /read the failing tests in the run/,
       "the refusal issue still sends a reader to failing tests when the build is what broke",
     );
+  });
+});
+
+describe("#1335 the gate's own configuration does not configure the suite it runs", () => {
+  before(() => {
+    scratch = mkdtempSync(join(tmpdir(), "gate-config-"));
+  });
+
+  after(() => {
+    if (scratch && existsSync(scratch)) rmSync(scratch, { recursive: true, force: true });
+  });
+
+  const PATHS = [
+    "data-quarantine/fixture",
+    "data(auto): fixture",
+    "data/health.json",
+    "data/quality_budgets.json",
+    "data/page-lastmod.json",
+  ];
+
+  it("hands the suite neither variable, so a nested run reads its own arguments", () => {
+    const { work } = fixtureRepo();
+    writeFileSync(join(work, "data", "health.json"), '{"checked":21}\n');
+
+    const run = runGate(work, { mode: "green", ratchet: "lower", lastmod: true }, ...PATHS);
+
+    assert.notStrictEqual(run.suiteSawGateConfig, null, "the suite did not run, so this asserts nothing about what it saw");
+    assert.strictEqual(
+      run.suiteSawGateConfig,
+      "",
+      `the suite ran with ${run.suiteSawGateConfig} still set, so anything it starts is configured by this run rather than its own arguments`,
+    );
+  });
+
+  it("still acts on both variables itself", () => {
+    const { work, origin } = fixtureRepo();
+    writeFileSync(join(work, "data", "health.json"), '{"checked":22}\n');
+
+    const run = runGate(work, { mode: "green", ratchet: "lower", lastmod: true }, ...PATHS);
+
+    assert.strictEqual(run.status, 0, run.stdout + run.stderr);
+    assert.match(run.stdout, /Lowering any quality budget/, "the gate no longer lowers the budget its data earned");
+    assert.match(run.stdout, /Reading every page this run renders/, "the gate no longer dates the pages this run moved");
+    assert.notStrictEqual(mainSha(origin), "", "the fixture origin has no main");
   });
 });
 
