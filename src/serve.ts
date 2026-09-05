@@ -43,19 +43,20 @@ import { configureDurableBackend, hydrateDurableStores, persistDurableStores, id
 import { addFriend, removeFriend, getFriends, getFriendCodesForVendors } from "./friends.js";
 import { subscribe as watchlistSubscribe, getSubscription as getWatchlistSubscription, unsubscribe as watchlistUnsubscribe, listSubscriptions as listWatchlistSubscriptions } from "./watchlist.js";
 import { toSlug, vendorSlugMap, resolveVendorSlug, namedVendorSlug } from "./vendor-slug.js";
+import { offerForSlug, vendorRates, cheapestRate, dearestRate, spanOfRates, formatRate, formatRateSpan, monthlyTokenCost, formatDollars, type ModelRate } from "./model-rates.js";
 import { STALE_FACT_PAGES_BASELINE, factsOutdatedBy, linkifyVerdictBlocks, newestChangeBySlug, overdueReport, pageCompiledClause, pageDataProvenance, pageDateModified, pageFreshness, pageFreshnessSentence, utcToday, verdictsOutdatedBy } from "./page-reviews.js";
 import { faqPageJsonLd, type FaqItem } from "./faq-provenance.js";
 import { SSE_KEEPALIVE_FRAME, keepaliveIntervalMs, sessionRecoveryBody } from "./mcp-stream.js";
 import { ASSISTANTS_API_SHUTDOWN } from "./assistants-shutdown.js";
 import { discontinuedOnOrBefore, PRODUCT_DEPRECATED } from "./product-deprecation.js";
-import { rankOffers, rankForListing, rotateListing, utcDate, gateFor, notAFreeOfferGateFor, descriptionDeniesFreeTier, CRITERIA_PATH, DEMOTE_ONLY_POLICY, DISCLOSURE_RATIONALE, TIE_BREAK_ALGORITHM, GATE_TABLE, DEMERIT_TABLE, NOT_FREE_TIER_RULES, TIME_LIMITED_TIER_RULES, type TieBreak, type Gate } from "./ranking.js";
+import { rankOffers, rankForListing, rotateListing, utcDate, gateFor, notAFreeOfferGateFor, descriptionDeniesFreeTier, classifyTier, CRITERIA_PATH, DEMOTE_ONLY_POLICY, DISCLOSURE_RATIONALE, TIE_BREAK_ALGORITHM, GATE_TABLE, DEMERIT_TABLE, NOT_FREE_TIER_RULES, TIME_LIMITED_TIER_RULES, type TieBreak, type Gate } from "./ranking.js";
 import type { RankedEntry, RankingResult } from "./ranking.js";
 import { eligibilityGateAsPublished, gatedShareDescriptionClause, gatedShareLede, publishableEligibilityConditions } from "./eligibility.js";
 import { gateDisclosureFor } from "./gate-disclosure.js";
 import { verificationLedger, QUARANTINE_AFTER_FAILURES } from "./verification-state.js";
 import { partitionAlternatives, partitionSubstitutes, type SubstitutesPartition, productRoleSentence, MEMBERSHIP_GATE_RULES, MEMBERSHIP_GATE_ORDER, MEMBERSHIP_GATE_SYMMETRY, MEMBERSHIP_GATE_SCOPE, MEMBERSHIP_GATE_CORRECTIONS, SUBTYPE_TAXONOMIES, SUBTYPE_MEMBERSHIP_RULE, SUBTYPE_MEMBERSHIP_GROUP_SCOPE, CURATED_SUBTYPE_EXEMPTION, membershipGroupsFor, subtypeDefinition } from "./product-role.js";
 import { resolveCuratedAlternatives, curatedAlternativesFor, addCuratedToPool } from "./curated-alternatives.js";
-import type { Agent, ChangeDateSource, DealChange, RiskCause, RatingWithheld, LinkUnreachable, Offer } from "./types.js";
+import type { Agent, ChangeDateSource, DealChange, RiskCause, RatingWithheld, LinkUnreachable, Offer, StabilityClass } from "./types.js";
 import { changeDateLabel, changeDateClause, changeDatePublished, changeEventStartDate, capListSections, latestEventDate, offerExpiryAfter, feedEntryUpdated, undatedGroupHeading, firstReadHeading, discoveryBatchNote, isoWeekOf, DISCOVERED_DATE_PREFIX, UNDATED_GROUP_NOTE } from "./change-dates.js";
 import { FEED_CORRECTIONS, correctionEntriesXml } from "./feed-corrections.js";
 import { buildDay, emptyPageLastmod, fallbackDay, httpDate, lastmodFor, newestLastmod, readPageLastmod, type PageLastmodLedger } from "./page-lastmod.js";
@@ -18780,7 +18781,7 @@ function buildGoogleDeveloperProgram2026Page(): string {
     { vendor: "Groq", free: "30 RPM, 100K-500K tokens/day", models: "Llama 3, Mixtral, Gemma", link: "/vendor/groq" },
     { vendor: "OpenRouter", free: "Free models available", models: "100+ models aggregated", link: "/vendor/openrouter" },
     { vendor: "Cerebras", free: "Free tier available", models: "Llama 3, fast inference", link: "/vendor/cerebras" },
-    { vendor: "Mistral AI", free: "Experiment tier", models: "Mistral, Mixtral, Codestral", link: "/vendor/mistral-ai" },
+    { vendor: "Mistral AI", free: "Free plan, $10/mo API credits", models: "Mistral, Mixtral, Codestral", link: "/vendor/mistral-ai" },
     { vendor: "GitHub Models", free: "Free for GitHub users", models: "GPT-4o, Llama, Phi, Mistral", link: "/vendor/github-models" },
     { vendor: "Cohere", free: "Trial key available", models: "Command, Embed, Rerank", link: "/vendor/cohere" },
   ];
@@ -23174,6 +23175,47 @@ ${mcpCtaCss()}
 </html>`;
 }
 
+function joinWithAnd(items: string[]): string {
+  if (items.length <= 1) return items[0] ?? "";
+  return `${items.slice(0, -1).join(", ")} and ${items[items.length - 1]}`;
+}
+
+const RECORD_ENDED_COLOR = "#8b949e";
+const RESPONSES_TOOL_PRICES_URL = "https://developers.openai.com/api/docs/pricing";
+const RESPONSES_TOOL_PRICES_READ = "2026-09-05";
+
+interface ProviderRecordCells {
+  tier: string;
+  tierColor: string;
+  stability: string;
+  stabilityColor: string;
+  rateCell: string;
+  rates: ModelRate[];
+  retired: boolean;
+}
+
+function providerRecordCells(slug: string, stabilityMap: Map<string, StabilityClass>): ProviderRecordCells {
+  const record = offerForSlug(slug);
+  const retired = offerRetired(record);
+  const rates = vendorRates(slug);
+  const span = formatRateSpan(rates);
+  const stability = stabilityMap.get(slug) ?? "stable";
+  const pricingLink = record && !retired
+    ? `&mdash; <a href="${escHtmlServer(record.url)}" target="_blank" rel="noopener nofollow">vendor pricing</a>`
+    : "&mdash;";
+  return {
+    tier: record ? record.tier : "Not in our index",
+    tierColor: retired ? RECORD_ENDED_COLOR : /free/i.test(record?.tier ?? "") ? "#3fb950" : "var(--accent)",
+    stability: retired ? ENDED_BADGE_LABEL : stability,
+    stabilityColor: retired
+      ? RECORD_ENDED_COLOR
+      : stability === "volatile" ? "#f85149" : stability === "watch" ? "#d29922" : stability === "improving" ? "#3fb950" : "var(--text-dim)",
+    rateCell: span ? escHtmlServer(`${span} per MTok`) : pricingLink,
+    rates,
+    retired,
+  };
+}
+
 function buildOpenaiAssistantsAlternativesPage(): string {
   const title = "OpenAI Assistants API Sunset: Free Alternatives & Migration Guide for AI Agent Builders";
   const metaDesc = "OpenAI Assistants API shuts down August 26, 2026. Compare migration paths: Responses API, Claude, Gemini, open-source frameworks. Free tier comparison for 10+ AI API providers with stability ratings.";
@@ -23195,7 +23237,6 @@ function buildOpenaiAssistantsAlternativesPage(): string {
   interface AiProvider {
     name: string;
     slug: string;
-    freeTier: string;
     toolUse: string;
     codeExec: string;
     fileHandling: string;
@@ -23203,18 +23244,18 @@ function buildOpenaiAssistantsAlternativesPage(): string {
   }
 
   const providers: AiProvider[] = [
-    { name: "OpenAI (Responses API)", slug: "openai", freeTier: "Pay-per-use only", toolUse: "Native (function calling)", codeExec: "Code interpreter tool", fileHandling: "File search tool", bestFor: "Direct migration — least code changes" },
-    { name: "Anthropic Claude API", slug: "anthropic-api", freeTier: "Pay-per-use ($5/$25 MTok)", toolUse: "Native (tool use)", codeExec: "Computer use, code execution", fileHandling: "PDF + document processing", bestFor: "Best reasoning, long context (200K)" },
-    { name: "Google Gemini API", slug: "google-gemini-api", freeTier: "Free tier (rate-limited)", toolUse: "Native (function calling)", codeExec: "Code execution tool", fileHandling: "Multimodal (images, audio, video)", bestFor: "Free tier available, multimodal input" },
-    { name: "GitHub Models", slug: "github-models", freeTier: "Free (rate-limited)", toolUse: "Via hosted models", codeExec: "No built-in", fileHandling: "Model-dependent", bestFor: "Free access to multiple models" },
-    { name: "OpenRouter", slug: "openrouter", freeTier: "Free models available", toolUse: "Model-dependent", codeExec: "Model-dependent", fileHandling: "Model-dependent", bestFor: "Multi-provider abstraction, price comparison" },
-    { name: "Cohere", slug: "cohere", freeTier: "Trial key (rate-limited)", toolUse: "Native (tool use)", codeExec: "No built-in", fileHandling: "Document parsing", bestFor: "RAG and enterprise search" },
-    { name: "Groq", slug: "groq", freeTier: "Free (rate-limited)", toolUse: "Native (function calling)", codeExec: "No built-in", fileHandling: "No built-in", bestFor: "Fastest inference, open-source models" },
-    { name: "Fireworks AI", slug: "fireworks-ai", freeTier: "Free credits", toolUse: "Native (function calling)", codeExec: "No built-in", fileHandling: "No built-in", bestFor: "Fast open-source model hosting" },
-    { name: "Together AI", slug: "together-ai", freeTier: "Free credits", toolUse: "Native (function calling)", codeExec: "No built-in", fileHandling: "No built-in", bestFor: "Open-source fine-tuning + inference" },
-    { name: "Mistral AI", slug: "mistral-ai", freeTier: "Experiment tier (free)", toolUse: "Native (function calling)", codeExec: "No built-in", fileHandling: "Document understanding", bestFor: "European hosting, code generation" },
-    { name: "DeepSeek API", slug: "deepseek-api", freeTier: "Free credits + pay-as-you-go", toolUse: "Native (function calling)", codeExec: "No built-in", fileHandling: "No built-in", bestFor: "Cheapest frontier-class reasoning" },
-    { name: "Cerebras", slug: "cerebras", freeTier: "Free (rate-limited)", toolUse: "Via Llama models", codeExec: "No built-in", fileHandling: "No built-in", bestFor: "Ultra-fast inference (custom silicon)" },
+    { name: "OpenAI (Responses API)", slug: "openai", toolUse: "Native (function calling)", codeExec: "Code interpreter tool", fileHandling: "File search tool", bestFor: "Direct migration — least code changes" },
+    { name: "Anthropic Claude API", slug: "anthropic-api", toolUse: "Native (tool use)", codeExec: "Computer use, code execution", fileHandling: "PDF + document processing", bestFor: "Best reasoning, long context" },
+    { name: "Google Gemini API", slug: "google-gemini-api", toolUse: "Native (function calling)", codeExec: "Code execution tool", fileHandling: "Multimodal (images, audio, video)", bestFor: "Free tier available, multimodal input" },
+    { name: "GitHub Models", slug: "github-models", toolUse: "Via hosted models", codeExec: "No built-in", fileHandling: "Model-dependent", bestFor: "Free access to multiple models" },
+    { name: "OpenRouter", slug: "openrouter", toolUse: "Model-dependent", codeExec: "Model-dependent", fileHandling: "Model-dependent", bestFor: "Multi-provider abstraction, price comparison" },
+    { name: "Cohere", slug: "cohere", toolUse: "Native (tool use)", codeExec: "No built-in", fileHandling: "Document parsing", bestFor: "RAG and enterprise search" },
+    { name: "Groq", slug: "groq", toolUse: "Native (function calling)", codeExec: "No built-in", fileHandling: "No built-in", bestFor: "Fastest inference, open-source models" },
+    { name: "Fireworks AI", slug: "fireworks-ai", toolUse: "Native (function calling)", codeExec: "No built-in", fileHandling: "No built-in", bestFor: "Fast open-source model hosting" },
+    { name: "Together AI", slug: "together-ai", toolUse: "Native (function calling)", codeExec: "No built-in", fileHandling: "No built-in", bestFor: "Open-source fine-tuning + inference" },
+    { name: "Mistral AI", slug: "mistral-ai", toolUse: "Native (function calling)", codeExec: "No built-in", fileHandling: "Document understanding", bestFor: "European hosting, code generation" },
+    { name: "DeepSeek API", slug: "deepseek-api", toolUse: "Native (function calling)", codeExec: "No built-in", fileHandling: "No built-in", bestFor: "Cheapest frontier-class reasoning" },
+    { name: "Cerebras", slug: "cerebras", toolUse: "Via Llama models", codeExec: "No built-in", fileHandling: "No built-in", bestFor: "Ultra-fast inference (custom silicon)" },
   ];
 
   const openaiStability = stabilityMap.get("openai") ?? "stable";
@@ -23225,17 +23266,49 @@ function buildOpenaiAssistantsAlternativesPage(): string {
   const daysLeft = Math.max(0, Math.ceil((shutdownDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24)));
 
   const providerTableRows = providers.map(p => {
-    const stability = stabilityMap.get(p.slug) ?? "stable";
-    const stabColor = stability === "volatile" ? "#f85149" : stability === "watch" ? "#d29922" : stability === "improving" ? "#3fb950" : "var(--text-dim)";
-    const freeColor = p.freeTier.includes("Free") || p.freeTier.includes("free") ? "#3fb950" : "var(--accent)";
+    const cells = providerRecordCells(p.slug, stabilityMap);
     return `<tr>
       <td style="font-weight:600"><a href="/vendor/${p.slug}" style="color:var(--text)">${escHtmlServer(p.name)}</a></td>
-      <td style="font-family:var(--mono);font-size:.8rem;color:${freeColor}">${escHtmlServer(p.freeTier)}</td>
+      <td style="font-family:var(--mono);font-size:.8rem;color:${cells.tierColor}">${escHtmlServer(cells.tier)}</td>
+      <td style="font-family:var(--mono);font-size:.8rem">${cells.rateCell}</td>
       <td style="font-size:.8rem">${escHtmlServer(p.toolUse)}</td>
       <td style="font-size:.8rem">${escHtmlServer(p.codeExec)}</td>
-      <td><span style="color:${stabColor};font-size:.8rem;font-weight:600;text-transform:uppercase">${escHtmlServer(stability)}</span></td>
+      <td><span style="color:${cells.stabilityColor};font-size:.8rem;font-weight:600;text-transform:uppercase">${escHtmlServer(cells.stability)}</span></td>
     </tr>`;
   }).join("\n        ");
+
+  const monthlyAtScale = providers
+    .flatMap(p => spanOfRates(vendorRates(p.slug)).map(rate => ({ name: p.name, rate, monthly: monthlyTokenCost(rate, 100, 100) })))
+    .filter((x): x is { name: string; rate: ModelRate; monthly: number } => x.monthly !== null)
+    .sort((a, b) => a.monthly - b.monthly);
+  const cheapestAtScale = monthlyAtScale[0] ?? null;
+  const dearestAtScale = monthlyAtScale[monthlyAtScale.length - 1] ?? null;
+
+  const freeWithinLimits = providers
+    .filter(p => !formatRateSpan(vendorRates(p.slug)) && !offerRetired(offerForSlug(p.slug)))
+    .map(p => p.name.replace(/\s*\(.*\)$/, ""));
+
+  const claudeFlagship = dearestRate(vendorRates("anthropic-api"));
+  const cheapestNamed = providers
+    .map(p => ({ provider: p, rate: cheapestRate(vendorRates(p.slug)) }))
+    .filter((p): p is { provider: AiProvider; rate: ModelRate } => p.rate !== null && p.rate.output !== null)
+    .sort((a, b) => (monthlyTokenCost(a.rate, 1, 1) ?? 0) - (monthlyTokenCost(b.rate, 1, 1) ?? 0))[0] ?? null;
+  const openaiRate = cheapestRate(vendorRates("openai"));
+  const openaiMonthly = openaiRate ? monthlyTokenCost(openaiRate, 100, 100) : null;
+  const cheapestMonthly = cheapestNamed ? monthlyTokenCost(cheapestNamed.rate, 100, 100) : null;
+  const cheapestMultipleClause = openaiMonthly && cheapestMonthly
+    ? ` That is ${Math.round(openaiMonthly / cheapestMonthly)}× cheaper than ${openaiRate!.model} at the same volume.`
+    : "";
+
+  const githubModelsRecord = offerForSlug("github-models");
+  const openrouterRecord = offerForSlug("openrouter");
+
+  const startableWithoutPaying = providers.filter(p => {
+    const record = offerForSlug(p.slug);
+    if (!record) return false;
+    const tierClass = classifyTier(record.tier).class;
+    return tierClass === "free" || tierClass === "time_limited";
+  });
 
   const changeTimelineRows = openaiChanges.map(c => {
     const dateStr = new Date(c.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
@@ -23363,7 +23436,7 @@ ${mcpCtaCss()}
   <div class="summary-stats">
     <div class="stat-card"><div class="stat-number red">${daysLeft}</div><div class="stat-label">Days Remaining</div></div>
     <div class="stat-card"><div class="stat-number">${providers.length}</div><div class="stat-label">Alternatives Compared</div></div>
-    <div class="stat-card"><div class="stat-number green">${providers.filter(p => p.freeTier.includes("Free") || p.freeTier.includes("free")).length}</div><div class="stat-label">With Free Tiers</div></div>
+    <div class="stat-card"><div class="stat-number green">${startableWithoutPaying.length}</div><div class="stat-label">Free or Trial Tiers</div></div>
     <div class="stat-card"><div class="stat-number">4</div><div class="stat-label">Migration Paths</div></div>
   </div>
 
@@ -23447,7 +23520,7 @@ ${mcpCtaCss()}
     </div>
     <div class="decision-path" style="border-left:3px solid #8b5cf6">
       <h3>Path 2: Diversify to Another AI API</h3>
-      <p>Claude (best reasoning, 200K context), Gemini (free tier, multimodal), Cohere (RAG/enterprise search). Each has native tool use/function calling. Requires API integration changes but not architectural rewrites.</p>
+      <p>Claude (best reasoning, long context), Gemini (free tier, multimodal), Cohere (RAG/enterprise search). Each has native tool use/function calling. Requires API integration changes but not architectural rewrites.</p>
       <p class="best-for">Best for: Teams wanting to reduce single-vendor dependency, those needing specific capabilities (long context, multimodal, search)</p>
     </div>
     <div class="decision-path" style="border-left:3px solid #3fb950">
@@ -23463,14 +23536,15 @@ ${mcpCtaCss()}
   </div>
 
   <h2 id="comparison-table">Free Tier Comparison Table</h2>
-  <p class="section-intro">All ${providers.length} alternative AI API providers compared. Free tier details from our index, stability ratings from our <a href="/stability">stability dashboard</a>. Click provider names for full vendor profiles.</p>
+  <p class="section-intro">All ${providers.length} alternative AI API providers compared. The tier and paid-rate columns are read from each provider's record in our index at request time, and the stability ratings come from our <a href="/stability">stability dashboard</a>. A dash means the record carries no paid rate; the link goes to the vendor's own pricing page. Click provider names for full vendor profiles.</p>
 
   <div style="overflow-x:auto">
-  <table class="pricing-table">
+  <table class="pricing-table" data-figures="index">
     <thead>
       <tr>
         <th>Provider</th>
-        <th>Free Tier</th>
+        <th>Recorded Tier</th>
+        <th>Paid Rate</th>
         <th>Tool Use</th>
         <th>Code Execution</th>
         <th>Stability</th>
@@ -23487,7 +23561,7 @@ ${mcpCtaCss()}
   </div>
 
   <div class="context-box">
-    <strong>Cost comparison at scale:</strong> OpenAI GPT-4o costs $2.50/$10 per MTok (input/output). Claude Opus 5 is $5/$25 but with stronger reasoning. Gemini 2.5 Pro has a free tier up to rate limits, then $1.25/$10 per MTok. DeepSeek V3 is ~$0.27/$1.10 per MTok \u2014 cheapest overall. Open-source models via Groq or Cerebras are free within rate limits.
+    <strong>Cost comparison at scale:</strong> ${cheapestAtScale && dearestAtScale && cheapestAtScale !== dearestAtScale ? `At 100M input and 100M output tokens a month, the cheapest rate our index holds for the providers above is ${escHtmlServer(cheapestAtScale.rate.model ?? cheapestAtScale.name)} at ${escHtmlServer(formatDollars(cheapestAtScale.monthly))}, and the dearest is ${escHtmlServer(dearestAtScale.rate.model ?? dearestAtScale.name)} at ${escHtmlServer(formatDollars(dearestAtScale.monthly))}.` : ""} ${escHtmlServer(joinWithAnd(freeWithinLimits))} carry no paid rate in our index &mdash; their records describe rate-limited free access only, so what you pay above the free tier is on the vendor's own page.
   </div>
 
   <h2 id="openai-timeline">OpenAI Pricing Change Timeline</h2>
@@ -23518,19 +23592,19 @@ ${mcpCtaCss()}
     </div>
     <div class="verdict-item">
       <strong>Best reasoning &amp; long context:</strong>
-      <p>Anthropic Claude API \u2014 Opus 5 at $5/$25 MTok with 1M context. Best for complex multi-step agent workflows that need strong reasoning.</p>
+      <p>Anthropic Claude API${claudeFlagship ? ` \u2014 ${escHtmlServer(formatRate(claudeFlagship))} per MTok at the top of the lineup our record holds` : ""}. Best for complex multi-step agent workflows that need strong reasoning.</p>
     </div>
     <div class="verdict-item">
       <strong>Free tier available:</strong>
       <p>Google Gemini API \u2014 free tier with rate limits, multimodal input (images, audio, video). Best for prototyping and low-volume production.</p>
     </div>
     <div class="verdict-item">
-      <strong>Multi-model access (free):</strong>
-      <p>GitHub Models \u2014 free access to GPT-4o, Llama, Mistral, and more. Rate-limited but $0 cost. Good for experimentation.</p>
+      <strong>Multi-model access:</strong>
+      <p>GitHub Models is recorded as ${escHtmlServer(githubModelsRecord?.tier ?? "not in our index")} \u2014 GitHub ended it, so it is no longer a way to reach several models for free. ${openrouterRecord ? `OpenRouter is the multi-model route still open in our index, recorded as ${escHtmlServer(openrouterRecord.tier)}.` : ""}</p>
     </div>
     <div class="verdict-item">
       <strong>Cheapest at scale:</strong>
-      <p>DeepSeek API \u2014 frontier-class reasoning at ~$0.27/$1.10 per MTok. 10\u00d7 cheaper than GPT-4o for comparable quality on many tasks.</p>
+      <p>${cheapestNamed ? `${escHtmlServer(cheapestNamed.provider.name)} \u2014 ${escHtmlServer(formatRate(cheapestNamed.rate))} per MTok, the lowest paid rate our index carries for any provider on this page.${escHtmlServer(cheapestMultipleClause)}` : "No provider on this page carries a paid rate in our index."}</p>
     </div>
     <div class="verdict-item">
       <strong>Fastest inference:</strong>
@@ -23612,20 +23686,18 @@ function buildOpenaiAssistantsMigration2026Page(): string {
   interface ApiProvider {
     name: string;
     slug: string;
-    freeTier: string;
     toolUse: string;
     codeExec: string;
-    pricing: string;
     bestFor: string;
   }
 
   const apiProviders: ApiProvider[] = [
-    { name: "OpenAI (Responses API)", slug: "openai", freeTier: "Pay-per-use only", toolUse: "Native function calling + MCP", codeExec: "Code interpreter tool", pricing: "$2.50/$10 per MTok (GPT-4o)", bestFor: "Direct migration, least code changes" },
-    { name: "Anthropic Claude", slug: "anthropic-api", freeTier: "Pay-per-use ($5/$25 MTok)", toolUse: "Native tool use", codeExec: "Computer use, code execution", pricing: "$3/$15 (Sonnet), $5/$25 (Opus)", bestFor: "Best reasoning, 200K context" },
-    { name: "Google Gemini", slug: "google-gemini-api", freeTier: "Free tier (rate-limited)", toolUse: "Native function calling", codeExec: "Code execution tool", pricing: "Free → $1.25/$5 (2.5 Pro)", bestFor: "Free tier, multimodal" },
-    { name: "DeepSeek", slug: "deepseek-api", freeTier: "Free credits + pay-as-you-go", toolUse: "Native function calling", codeExec: "No built-in", pricing: "~$0.27/$1.10 per MTok", bestFor: "Cheapest frontier reasoning" },
-    { name: "Mistral AI", slug: "mistral-ai", freeTier: "Experiment tier (free)", toolUse: "Native function calling", codeExec: "No built-in", pricing: "$2/$6 (Large), free (Small)", bestFor: "European hosting, code generation" },
-    { name: "Meta Llama (via Groq)", slug: "groq", freeTier: "Free (rate-limited)", toolUse: "Via Llama models", codeExec: "No built-in", pricing: "Free within rate limits", bestFor: "Fastest inference, open-source" },
+    { name: "OpenAI (Responses API)", slug: "openai", toolUse: "Native function calling + MCP", codeExec: "Code interpreter tool", bestFor: "Direct migration, least code changes" },
+    { name: "Anthropic Claude", slug: "anthropic-api", toolUse: "Native tool use", codeExec: "Computer use, code execution", bestFor: "Best reasoning, long context" },
+    { name: "Google Gemini", slug: "google-gemini-api", toolUse: "Native function calling", codeExec: "Code execution tool", bestFor: "Free tier, multimodal" },
+    { name: "DeepSeek", slug: "deepseek-api", toolUse: "Native function calling", codeExec: "No built-in", bestFor: "Cheapest frontier reasoning" },
+    { name: "Mistral AI", slug: "mistral-ai", toolUse: "Native function calling", codeExec: "No built-in", bestFor: "European hosting, code generation" },
+    { name: "Meta Llama (via Groq)", slug: "groq", toolUse: "Via Llama models", codeExec: "No built-in", bestFor: "Fastest inference, open-source" },
   ];
 
   interface AgentFramework {
@@ -23658,20 +23730,14 @@ function buildOpenaiAssistantsMigration2026Page(): string {
   ];
 
   interface CostRow {
-    operation: string;
-    responsesApi: string;
-    claude: string;
-    gemini: string;
-    deepseek: string;
+    provider: string;
+    slug: string;
+    rate: ModelRate;
   }
 
-  const costRows: CostRow[] = [
-    { operation: "Input tokens (per MTok)", responsesApi: "$2.50", claude: "$3.00 (Sonnet)", gemini: "Free → $1.25", deepseek: "$0.27" },
-    { operation: "Output tokens (per MTok)", responsesApi: "$10.00", claude: "$15.00 (Sonnet)", gemini: "Free → $5.00", deepseek: "$1.10" },
-    { operation: "File search (per GB/day)", responsesApi: "$0.10", claude: "N/A (PDF native)", gemini: "N/A (multimodal)", deepseek: "N/A" },
-    { operation: "Code interpreter (per call)", responsesApi: "$0.03", claude: "N/A", gemini: "Included", deepseek: "N/A" },
-    { operation: "Web search (per 1K calls)", responsesApi: "$25.00–$50.00", claude: "N/A", gemini: "Included (grounding)", deepseek: "N/A" },
-  ];
+  const costRows: CostRow[] = apiProviders.flatMap(p =>
+    spanOfRates(vendorRates(p.slug)).map(rate => ({ provider: p.name, slug: p.slug, rate })),
+  );
 
   const featureRows = featureMappings.map(f => {
     const compColor = f.complexity === "Low" ? "#3fb950" : f.complexity === "Medium" ? "#d29922" : f.complexity === "High" ? "#f85149" : "var(--text-dim)";
@@ -23684,15 +23750,13 @@ function buildOpenaiAssistantsMigration2026Page(): string {
   }).join("\n        ");
 
   const providerRows = apiProviders.map(p => {
-    const stability = stabilityMap.get(p.slug) ?? "stable";
-    const stabColor = stability === "volatile" ? "#f85149" : stability === "watch" ? "#d29922" : stability === "improving" ? "#3fb950" : "var(--text-dim)";
-    const freeColor = p.freeTier.includes("Free") || p.freeTier.includes("free") ? "#3fb950" : "var(--accent)";
+    const cells = providerRecordCells(p.slug, stabilityMap);
     return `<tr>
       <td style="font-weight:600"><a href="/vendor/${p.slug}" style="color:var(--text)">${escHtmlServer(p.name)}</a></td>
-      <td style="font-family:var(--mono);font-size:.8rem;color:${freeColor}">${escHtmlServer(p.freeTier)}</td>
+      <td style="font-family:var(--mono);font-size:.8rem;color:${cells.tierColor}">${escHtmlServer(cells.tier)}</td>
       <td style="font-size:.8rem">${escHtmlServer(p.toolUse)}</td>
-      <td style="font-size:.8rem">${escHtmlServer(p.pricing)}</td>
-      <td><span style="color:${stabColor};font-size:.8rem;font-weight:600;text-transform:uppercase">${escHtmlServer(stability)}</span></td>
+      <td style="font-family:var(--mono);font-size:.8rem">${cells.rateCell}</td>
+      <td><span style="color:${cells.stabilityColor};font-size:.8rem;font-weight:600;text-transform:uppercase">${escHtmlServer(cells.stability)}</span></td>
     </tr>`;
   }).join("\n        ");
 
@@ -23716,15 +23780,29 @@ function buildOpenaiAssistantsMigration2026Page(): string {
     </tr>`;
   }).join("\n        ");
 
-  const costTableRows = costRows.map(c =>
-    `<tr>
-      <td style="font-weight:600;font-size:.85rem">${escHtmlServer(c.operation)}</td>
-      <td style="font-family:var(--mono);font-size:.85rem">${escHtmlServer(c.responsesApi)}</td>
-      <td style="font-family:var(--mono);font-size:.85rem">${escHtmlServer(c.claude)}</td>
-      <td style="font-family:var(--mono);font-size:.85rem">${escHtmlServer(c.gemini)}</td>
-      <td style="font-family:var(--mono);font-size:.85rem">${escHtmlServer(c.deepseek)}</td>
-    </tr>`
-  ).join("\n        ");
+  const monthlyByRow = costRows
+    .map(c => ({ c, monthly: monthlyTokenCost(c.rate, 100, 100) }))
+    .filter((x): x is { c: CostRow; monthly: number } => x.monthly !== null)
+    .sort((a, b) => a.monthly - b.monthly);
+  const cheapestMonth = monthlyByRow[0] ?? null;
+  const dearestMonth = monthlyByRow[monthlyByRow.length - 1] ?? null;
+  const migrationClaudeFlagship = dearestRate(vendorRates("anthropic-api"));
+  const scaleEconomicsBox = cheapestMonth && dearestMonth && cheapestMonth !== dearestMonth
+    ? `<div class="context-box">
+    <strong>Scale economics:</strong> at 100M input and 100M output tokens a month, the cheapest rate our index holds for these providers is ${escHtmlServer(cheapestMonth.c.rate.model ?? cheapestMonth.c.provider)} at ${escHtmlServer(formatDollars(cheapestMonth.monthly))}, and the dearest is ${escHtmlServer(dearestMonth.c.rate.model ?? dearestMonth.c.provider)} at ${escHtmlServer(formatDollars(dearestMonth.monthly))} &mdash; ${Math.round(dearestMonth.monthly / cheapestMonth.monthly)}&times; the bill for the same traffic. Capability differs with it; the spread is the reason to measure your own workload rather than pick on price alone.
+  </div>`
+    : "";
+
+  const costTableRows = costRows.map(c => {
+    const monthly = monthlyTokenCost(c.rate, 100, 100);
+    return `<tr>
+      <td style="font-weight:600;font-size:.85rem"><a href="/vendor/${c.slug}" style="color:var(--text)">${escHtmlServer(c.provider)}</a></td>
+      <td style="font-size:.85rem">${escHtmlServer(c.rate.model ?? "Not named in the record")}</td>
+      <td style="font-family:var(--mono);font-size:.85rem">${escHtmlServer(c.rate.input)}</td>
+      <td style="font-family:var(--mono);font-size:.85rem">${c.rate.output === null ? "&mdash;" : escHtmlServer(c.rate.output)}</td>
+      <td style="font-family:var(--mono);font-size:.85rem">${monthly === null ? "&mdash;" : escHtmlServer(formatDollars(monthly))}</td>
+    </tr>`;
+  }).join("\n        ");
 
   const changeTimelineRows = openaiChanges.map(c => {
     const dateStr = new Date(c.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
@@ -23886,7 +23964,7 @@ ${mcpCtaCss()}
       <li><a href="#complexity">Migration Complexity Assessment</a></li>
       <li><a href="#decision">Decision Framework: Migrate vs. Leave</a></li>
       <li><a href="#alternatives">Alternatives: APIs, Frameworks &amp; Bridges</a></li>
-      <li><a href="#cost">Cost Comparison</a></li>
+      <li><a href="#cost">Token Cost Comparison</a></li>
       <li><a href="#openai-changes">OpenAI Pricing Change Timeline</a></li>
       <li><a href="#methodology">Methodology</a></li>
     </ol>
@@ -23981,7 +24059,7 @@ ${mcpCtaCss()}
     </div>
     <div class="decision-path" style="border-left:3px solid #8b5cf6">
       <h3>\ud83d\udd00 Path 2: Switch to Another AI API Provider</h3>
-      <p>Claude (best reasoning, 200K context), Gemini (free tier, multimodal), DeepSeek (cheapest frontier reasoning), Mistral (European hosting). Each has native tool use/function calling. Requires API integration changes but not architectural rewrites.</p>
+      <p>Claude (best reasoning, long context), Gemini (free tier, multimodal), DeepSeek (cheapest frontier reasoning), Mistral (European hosting). Each has native tool use/function calling. Requires API integration changes but not architectural rewrites.</p>
       <p><strong>Choose this when:</strong> You want to reduce single-vendor dependency, need specific capabilities (long context, multimodal, EU hosting), or were already considering alternatives after repeated OpenAI API changes.</p>
       <p><strong>Watch out for:</strong> Different API shapes require code changes. Some features (code interpreter, web search) may not have direct equivalents. Evaluate each provider\u2019s tool use implementation carefully.</p>
       <p class="best-for">Effort: Medium &middot; Cost: Varies (often cheaper) &middot; Lock-in: Medium</p>
@@ -23998,16 +24076,16 @@ ${mcpCtaCss()}
   <h2 id="alternatives">5. Alternatives</h2>
 
   <h3>Direct API Alternatives</h3>
-  <p class="section-intro">${apiProviders.length} AI API providers compared. Free tier details from our index, stability ratings from our <a href="/stability">stability dashboard</a>.</p>
+  <p class="section-intro">${apiProviders.length} AI API providers compared. The tier and paid-rate columns are read from each provider's record in our index at request time, and the stability ratings come from our <a href="/stability">stability dashboard</a>. A dash means the record carries no paid rate; the link goes to the vendor's own pricing page.</p>
 
   <div style="overflow-x:auto">
-  <table class="pricing-table">
+  <table class="pricing-table" data-figures="index">
     <thead>
       <tr>
         <th>Provider</th>
-        <th>Free Tier</th>
+        <th>Recorded Tier</th>
         <th>Tool Use</th>
-        <th>Pricing</th>
+        <th>Paid Rate</th>
         <th>Stability</th>
       </tr>
     </thead>
@@ -24060,18 +24138,18 @@ ${mcpCtaCss()}
     <strong>Wire-compatible bridges explained:</strong> These services implement the same HTTP endpoints and request/response shapes as the Assistants API, so your existing client code works with just a base URL change. <strong>Ragwalla</strong> proxies to OpenAI\u2019s Responses API under the hood, preserving the familiar Assistants interface. <strong>DataStax astra-assistants-api</strong> is open-source and backs the API with Astra DB, letting you swap in any LLM provider. Both are useful as interim solutions while you plan a full migration.
   </div>
 
-  <h2 id="cost">6. Cost Comparison</h2>
-  <p class="section-intro">Responses API introduces per-tool pricing (file search, code interpreter, web search) on top of token costs. Here\u2019s how it compares to alternatives.</p>
+  <h2 id="cost">6. Token Cost Comparison</h2>
+  <p class="section-intro">Every figure below is read from the provider's record in our index at request time \u2014 the model name included. Each provider contributes the cheapest and the dearest model its record carries a rate for. The last column prices 100M input plus 100M output tokens in a month at that rate. Per-tool charges are separate and are covered under the table.</p>
 
   <div style="overflow-x:auto">
-  <table class="pricing-table">
+  <table class="pricing-table" data-figures="index">
     <thead>
       <tr>
-        <th>Operation</th>
-        <th>OpenAI Responses</th>
-        <th>Claude (Sonnet)</th>
-        <th>Gemini 2.5</th>
-        <th>DeepSeek</th>
+        <th>Provider</th>
+        <th>Model</th>
+        <th>Input (per MTok)</th>
+        <th>Output (per MTok)</th>
+        <th>100M in + 100M out</th>
       </tr>
     </thead>
     <tbody>
@@ -24081,12 +24159,10 @@ ${mcpCtaCss()}
   </div>
 
   <div class="context-box">
-    <strong>The hidden cost of Responses API tools:</strong> File search at $0.10/GB/day and web search at $25\u2013$50 per 1K calls add up quickly. A RAG app processing 10 GB of documents costs $1/day in file search alone \u2014 $30/month before any token costs. Compare: Claude processes PDFs natively with no per-file charge, and Gemini includes grounding (web search) in the base token price.
+    <strong>The hidden cost of Responses API tools:</strong> token rates are not the whole bill. From <a href="${RESPONSES_TOOL_PRICES_URL}" target="_blank" rel="noopener nofollow">OpenAI\u2019s pricing documentation</a>, read on ${RESPONSES_TOOL_PRICES_READ}: file search storage is $0.10 per GB per day with the first GB free, and the file search tool call is billed separately at $2.50 per 1,000 calls. Hosted Shell and Code Interpreter run on containers charged per 20-minute session, from $0.03 at 1 GB to $1.92 at 64 GB, with a five-minute minimum. Web search is $10.00 per 1,000 calls, or $25.00 for the preview tool on non-reasoning models, and retrieved content is billed as input tokens at the model\u2019s own rate. We hold no record for any of these, so nothing re-verifies them \u2014 that date is when we read them. Claude processes PDFs with no per-file charge and Gemini includes grounding in the base token price.
   </div>
 
-  <div class="context-box">
-    <strong>Scale economics:</strong> At 100M tokens/month (a moderately busy production app): OpenAI GPT-4o costs ~$1,250. Claude Sonnet costs ~$1,800 but with stronger reasoning. Gemini 2.5 Pro costs ~$625 (cheapest frontier after free tier). DeepSeek V3 costs ~$137 \u2014 10\u00d7 cheaper than GPT-4o for comparable quality on many benchmarks.
-  </div>
+  ${scaleEconomicsBox}
 
   <h2 id="openai-changes">7. OpenAI Pricing Change Timeline</h2>
   <p class="section-intro">OpenAI\u2019s stability rating is <strong style="color:${stabilityColor}">${openaiStability}</strong>. We\u2019ve tracked ${openaiChanges.length} changes. Pattern: repeated free tier erosion and API paradigm shifts.</p>
@@ -24120,7 +24196,7 @@ ${mcpCtaCss()}
     </div>
     <div class="verdict-item">
       <strong>Best reasoning &amp; long context:</strong>
-      <p>Anthropic Claude \u2014 Opus 5 with 1M context. Best for complex multi-step agent workflows.</p>
+      <p>Anthropic Claude${migrationClaudeFlagship ? ` \u2014 ${escHtmlServer(formatRate(migrationClaudeFlagship))} per MTok at the top of the lineup our record holds` : ""}. Best for complex multi-step agent workflows.</p>
     </div>
     <div class="verdict-item">
       <strong>Free tier available:</strong>
@@ -24128,7 +24204,7 @@ ${mcpCtaCss()}
     </div>
     <div class="verdict-item">
       <strong>Cheapest at scale:</strong>
-      <p>DeepSeek \u2014 frontier reasoning at ~$0.27/$1.10 per MTok. 10\u00d7 cheaper than GPT-4o.</p>
+      <p>${cheapestMonth ? `${escHtmlServer(cheapestMonth.c.provider)} \u2014 ${escHtmlServer(formatRate(cheapestMonth.c.rate))} per MTok, the lowest paid rate our index carries for any provider on this page.` : "No provider on this page carries a paid rate in our index."}</p>
     </div>
     <div class="verdict-item">
       <strong>Future-proof against deprecations:</strong>
