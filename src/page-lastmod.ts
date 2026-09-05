@@ -156,3 +156,7 @@ export function buildDay(modulePath: string, fallback: string): string {
     return fallback;
   }
 }
+
+export function fallbackDay(build: string, ledgerGenerated: string): string {
+  return build > ledgerGenerated ? build : ledgerGenerated;
+}

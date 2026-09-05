@@ -6,7 +6,7 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import {
-  daysBetween, emptyPageLastmod, hashPageBody, httpDate, lastmodFor, newestLastmod, parsePageLastmod,
+  daysBetween, emptyPageLastmod, fallbackDay, hashPageBody, httpDate, lastmodFor, newestLastmod, parsePageLastmod,
   readPageLastmod, serializePageLastmod, updatePageLastmod, type PageLastmodLedger,
 } from "../dist/page-lastmod.js";
 
@@ -149,6 +149,12 @@ describe("page lastmod ledger", () => {
     assert.equal(httpDate("2026-09-04"), "Fri, 04 Sep 2026 00:00:00 GMT");
     assert.equal(httpDate("2026-09-05"), "Sat, 05 Sep 2026 00:00:00 GMT");
     assert.equal(httpDate("yesterday"), null);
+  });
+
+  it("never dates an unread page earlier than the ledger that shipped with it", () => {
+    assert.equal(fallbackDay("2026-09-05", "2026-08-20"), "2026-09-05");
+    assert.equal(fallbackDay("1980-01-01", "2026-08-20"), "2026-08-20");
+    assert.equal(fallbackDay("2026-08-20", "2026-08-20"), "2026-08-20");
   });
 
   it("counts the days between two days", () => {

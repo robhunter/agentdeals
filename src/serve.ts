@@ -57,7 +57,7 @@ import { resolveCuratedAlternatives, curatedAlternativesFor, addCuratedToPool } 
 import type { Agent, ChangeDateSource, DealChange, RiskCause, LinkUnreachable, Offer } from "./types.js";
 import { changeDateLabel, changeDateClause, changeDatePublished, changeEventStartDate, capListSections, latestEventDate, offerExpiryAfter, feedEntryUpdated, undatedGroupHeading, firstReadHeading, discoveryBatchNote, isoWeekOf, DISCOVERED_DATE_PREFIX, UNDATED_GROUP_NOTE } from "./change-dates.js";
 import { FEED_CORRECTIONS, correctionEntriesXml } from "./feed-corrections.js";
-import { buildDay, emptyPageLastmod, httpDate, lastmodFor, newestLastmod, readPageLastmod, type PageLastmodLedger } from "./page-lastmod.js";
+import { buildDay, emptyPageLastmod, fallbackDay, httpDate, lastmodFor, newestLastmod, readPageLastmod, type PageLastmodLedger } from "./page-lastmod.js";
 import type { AgentBalance } from "./ledger.js";
 import type { SubmittedReferralCode } from "./referral-codes.js";
 
@@ -109,8 +109,10 @@ try {
   pageLastmodLedger = emptyPageLastmod(BUILD_DAY);
 }
 
+const UNREAD_PAGE_DAY = fallbackDay(BUILD_DAY, pageLastmodLedger.generated);
+
 function pageLastmod(pagePath: string): string {
-  return lastmodFor(pageLastmodLedger, pagePath, BUILD_DAY);
+  return lastmodFor(pageLastmodLedger, pagePath, UNREAD_PAGE_DAY);
 }
 
 function pageLastmodHeader(pagePath: string): string | null {
@@ -54199,9 +54201,9 @@ ${catList}
   } else if (url.pathname === "/sitemap.xml" && isGetOrHead) {
     const now = new Date().toISOString().split("T")[0];
     const latestVerified = offers.reduce((max, o) => o.verifiedDate > max ? o.verifiedDate : max, offers[0]?.verifiedDate || now);
-    const comparisonDate = newestLastmod(pageLastmodLedger, comparisonSitemapPaths(), BUILD_DAY);
-    const pagesDate = [latestVerified, newestLastmod(pageLastmodLedger, pagesSitemapLedgerPaths(), BUILD_DAY)].sort().pop()!;
-    const miscDate = [latestVerified, newestLastmod(pageLastmodLedger, miscSitemapLedgerPaths(), BUILD_DAY)].sort().pop()!;
+    const comparisonDate = newestLastmod(pageLastmodLedger, comparisonSitemapPaths(), UNREAD_PAGE_DAY);
+    const pagesDate = [latestVerified, newestLastmod(pageLastmodLedger, pagesSitemapLedgerPaths(), UNREAD_PAGE_DAY)].sort().pop()!;
+    const miscDate = [latestVerified, newestLastmod(pageLastmodLedger, miscSitemapLedgerPaths(), UNREAD_PAGE_DAY)].sort().pop()!;
     const latestReport = now;
     const sitemapIndex = '<?xml version="1.0" encoding="UTF-8"?>\n'
       + '<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
