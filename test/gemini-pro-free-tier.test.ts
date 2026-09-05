@@ -69,16 +69,16 @@ const FREE_TIER_IS_FLASH_ONLY = [
   /\b(?:restricted|limited|preserved|reserved|covers?|covered)\b[^.]{0,15}?\b(?:to|for)\s+flash\b[^.]{0,60}/i,
 ];
 
-export type Claim = { route: string; surface: "page" | "metadata"; sentence: string };
+export type Claim = { route: string; surface: "page" | "metadata"; sentence: string; trigger: string };
 
 function claimsIn(route: string, surface: "page" | "metadata", body: string): Claim[] {
   const found: Claim[] = [];
   const seen = new Set<string>();
-  const record = (sentence: string) => {
+  const record = (sentence: string, trigger: string) => {
     const trimmed = sentence.trim();
     if (seen.has(trimmed)) return;
     seen.add(trimmed);
-    found.push({ route, surface, sentence: trimmed });
+    found.push({ route, surface, sentence: trimmed, trigger: trigger.trim() });
   };
   const mentionsGemini = (index: number, length: number) =>
     /gemini/i.test(body.slice(Math.max(0, index - 240), Math.min(body.length, index + length + 240)));
@@ -95,7 +95,7 @@ function claimsIn(route: string, surface: "page" | "metadata", body: string): Cl
     if (!withheld) continue;
     if (VERSION_IMMEDIATELY_BEFORE.test(before)) continue;
     if (!mentionsGemini(index, m[0].length)) continue;
-    record(quotable(index, m[0].length));
+    record(quotable(index, m[0].length), `${m[0]}${after}`);
   }
 
   for (const pattern of FREE_TIER_IS_FLASH_ONLY) {
@@ -103,21 +103,19 @@ function claimsIn(route: string, surface: "page" | "metadata", body: string): Cl
       const span = body.slice(m.index!, m.index! + Math.max(m[0].length, 60));
       if (/\bpro\b/i.test(span)) continue;
       if (!mentionsGemini(m.index!, m[0].length)) continue;
-      record(quotable(m.index!, m[0].length));
+      record(quotable(m.index!, m[0].length), m[0]);
     }
   }
   return found;
 }
 
-const WORDS_THAT_MAKE_A_QUOTE = 6;
+const SHORTEST_TRACEABLE_TRIGGER = 15;
+const LONGEST_TRACEABLE_TRIGGER = 40;
 
 function quotesStoredProse(claim: Claim, prose: string): boolean {
-  const words = claim.sentence.split(/\s+/);
-  for (let start = 0; start + WORDS_THAT_MAKE_A_QUOTE <= words.length; start++) {
-    const run = words.slice(start, start + WORDS_THAT_MAKE_A_QUOTE).join(" ");
-    if (prose.includes(run)) return true;
-  }
-  return false;
+  const quoted = claim.trigger.split(/\s*(?:\.\.\.|…)/)[0].trim();
+  if (quoted.length < SHORTEST_TRACEABLE_TRIGGER) return false;
+  return prose.includes(quoted.slice(0, LONGEST_TRACEABLE_TRIGGER));
 }
 
 function storedChangeProse(): string {
