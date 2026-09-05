@@ -12,6 +12,9 @@ const {
   storedTermsAreSuperseded,
 } = await import("../dist/superseded-description.js");
 const { toSlug } = await import("../dist/slug.js");
+const { qualityBudget } = await import("../dist/page-reviews.js");
+const { supersededCensus } = await import("../dist/superseded-census.js");
+const { utcDate } = await import("../dist/ranking.js");
 
 type Offer = import("../src/types.ts").Offer;
 type DealChange = import("../src/types.ts").DealChange;
@@ -24,8 +27,10 @@ const changes: DealChange[] = JSON.parse(
   readFileSync(path.join(REPO, "data", "deal_changes.json"), "utf-8"),
 ).changes;
 
-const RECORDS_WHOSE_STORED_TERMS_ARE_SUPERSEDED = 237;
-const VENDOR_PAGES_RENDERING_ONE_OF_THEM = 235;
+const A_RUN_MAY_RAISE_IT =
+  "The daily re-verification run raises this by reading pages, and lowers it by correcting a " +
+  "record, so scripts/ratchet-quality-budgets.js writes what it measures into " +
+  "data/quality_budgets.json in the same commit as the data. Nothing else may raise it.";
 
 const changesByVendor = new Map<string, DealChange[]>();
 for (const change of changes) {
@@ -140,12 +145,61 @@ describe("#1103 a change record that quotes our stored terms as the previous one
 });
 
 describe("#1103 the catalogue population", () => {
-  it("holds the count, so a new one has to be looked at", () => {
-    assert.strictEqual(supersededRecords().length, RECORDS_WHOSE_STORED_TERMS_ARE_SUPERSEDED);
+  it("holds no more records than the recorded count, so a widening has to be looked at", () => {
+    const budget = qualityBudget("records_with_superseded_terms");
+    const measured = supersededRecords().length;
+    assert.ok(
+      measured <= budget,
+      `${measured} records hold terms a change record supersedes, over the ${budget} recorded in ` +
+        `data/quality_budgets.json. ${A_RUN_MAY_RAISE_IT}`,
+    );
   });
 
-  it("holds the count a vendor page renders, which is smaller where the vendor has a second record", () => {
-    assert.strictEqual(supersededPagesRender().length, VENDOR_PAGES_RENDERING_ONE_OF_THEM);
+  it("holds no more vendor pages than the recorded count, which is smaller where the vendor has a second record", () => {
+    const budget = qualityBudget("vendor_pages_withholding_superseded_terms");
+    const measured = supersededPagesRender().length;
+    assert.ok(
+      measured <= budget,
+      `${measured} vendor pages render a superseded record, over the ${budget} recorded in ` +
+        `data/quality_budgets.json. ${A_RUN_MAY_RAISE_IT}`,
+    );
+  });
+
+  it("measures the same population the ratchet writes the budget from", () => {
+    const census = supersededCensus(offers, changes, utcDate());
+    assert.strictEqual(census.records_with_superseded_terms, supersededRecords().length);
+    assert.strictEqual(census.vendor_pages_withholding_superseded_terms, supersededPagesRender().length);
+  });
+
+  it("puts one more record over the ceiling every run leaves behind", () => {
+    const today = utcDate();
+    const atRest = supersededCensus(offers, changes, today).records_with_superseded_terms;
+    assert.ok(atRest <= qualityBudget("records_with_superseded_terms"));
+
+    const untouched = offers.find((o) => !supersedingChange(o, changesFor(o.vendor)))!;
+    const joining = {
+      ...A_CHANGE_QUOTING_IT,
+      vendor: untouched.vendor,
+      previous_state: untouched.description,
+    } as DealChange;
+
+    const grown = supersededCensus(offers, [...changes, joining], today).records_with_superseded_terms;
+    assert.strictEqual(grown, atRest + 1);
+    assert.ok(!(grown <= atRest), `${grown} passed a ceiling of ${atRest}`);
+  });
+
+  it("keeps a record correction under the ceiling, which is the only exit a data pull request has", () => {
+    const today = utcDate();
+    const budget = qualityBudget("records_with_superseded_terms");
+    const atRest = supersededCensus(offers, changes, today).records_with_superseded_terms;
+    const { offer } = supersededRecords()[0];
+    const corrected = offers.map((o) =>
+      o === offer ? { ...o, description: `${o.description}, re-read on ${today}` } : o,
+    );
+
+    const after = supersededCensus(corrected, changes, today).records_with_superseded_terms;
+    assert.strictEqual(after, atRest - 1);
+    assert.ok(after <= budget, "correcting a record must not go red");
   });
 
   it("finds one superseding change per record, so no page has to choose between two", () => {
@@ -154,6 +208,66 @@ describe("#1103 the catalogue population", () => {
         (c) => !c.resolution && quotesTheStoredTermsAsPrevious(c, offer.description),
       );
       assert.ok(quoting.length <= 1, `${offer.vendor} has ${quoting.length} changes quoting its stored terms`);
+    }
+  });
+});
+
+describe("#1383 which of the two directions holds a scheduled data commit", () => {
+  const CENSUS = [
+    "records_with_superseded_terms",
+    "vendor_pages_withholding_superseded_terms",
+    "ungated_pages_withholding_superseded_terms",
+  ] as const;
+
+  it("names the three counts a data run may raise, and no others", async () => {
+    const { QUALITY_BUDGETS_A_DATA_RUN_MAY_RAISE, QUALITY_BUDGET_NAMES } = await import("../dist/page-reviews.js");
+    assert.deepStrictEqual([...QUALITY_BUDGETS_A_DATA_RUN_MAY_RAISE], [...CENSUS]);
+    for (const name of CENSUS) assert.ok(QUALITY_BUDGET_NAMES.includes(name), `${name} is not a budget`);
+  });
+
+  it("writes a rise in one of the three rather than reporting it over budget", async () => {
+    const { ratchet } = await import("../scripts/ratchet-quality-budgets.js");
+    const budgets = { records_with_superseded_terms: 237, stale_fact_pages: 57 };
+    const { next, raised, over } = ratchet(budgets, { records_with_superseded_terms: 263, stale_fact_pages: 57 });
+    assert.strictEqual(next.records_with_superseded_terms, 263);
+    assert.deepStrictEqual(raised, [{ name: "records_with_superseded_terms", from: 237, to: 263 }]);
+    assert.deepStrictEqual(over, []);
+  });
+
+  it("still reports a rise in a budget outside the three, so that one holds the commit", async () => {
+    const { ratchet } = await import("../scripts/ratchet-quality-budgets.js");
+    const budgets = { records_with_superseded_terms: 237, stale_fact_pages: 57 };
+    const { next, raised, over } = ratchet(budgets, { records_with_superseded_terms: 237, stale_fact_pages: 58 });
+    assert.strictEqual(next.stale_fact_pages, 57);
+    assert.deepStrictEqual(raised, []);
+    assert.deepStrictEqual(over, [{ name: "stale_fact_pages", budget: 57, measured: 58 }]);
+  });
+
+  it("lowers one of the three the same way every other budget is lowered", async () => {
+    const { ratchet } = await import("../scripts/ratchet-quality-budgets.js");
+    const budgets = { records_with_superseded_terms: 237 };
+    const { next, lowered, raised } = ratchet(budgets, { records_with_superseded_terms: 235 });
+    assert.strictEqual(next.records_with_superseded_terms, 235);
+    assert.deepStrictEqual(lowered, [{ name: "records_with_superseded_terms", from: 237, to: 235 }]);
+    assert.deepStrictEqual(raised, []);
+  });
+
+  it("measures the three from the shipped data under the ceilings the shipped budgets hold", async () => {
+    const { measureBudgets } = await import("../scripts/ratchet-quality-budgets.js");
+    const measured = measureBudgets(utcDate());
+    for (const name of CENSUS) {
+      assert.ok(
+        measured[name] <= qualityBudget(name),
+        `the ratchet measures ${name} at ${measured[name]}, over the ${qualityBudget(name)} it holds`,
+      );
+    }
+  });
+
+  it("leaves no equality assertion pinning the population in either direction", () => {
+    const pinned = /assert\.strictEqual\([^)]*(SUPERSEDED|WITHHOLDING|RENDERING)/;
+    for (const file of ["superseded-terms.test.ts", "gated-vendor-answers.test.ts"]) {
+      const source = readFileSync(path.join(REPO, "test", file), "utf-8");
+      assert.ok(!pinned.test(source), `${file} still pins the population with an equality assertion`);
     }
   });
 });

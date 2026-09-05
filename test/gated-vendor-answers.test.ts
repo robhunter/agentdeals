@@ -9,6 +9,7 @@ const { gateFor, utcDate } = await import("../dist/ranking.js");
 const { vendorSlugMap } = await import("../dist/vendor-slug.js");
 const { offerEnded } = await import("../dist/retirement.js");
 const { supersededTermsNotice, supersedingChange } = await import("../dist/superseded-description.js");
+const { qualityBudget } = await import("../dist/page-reviews.js");
 
 type Offer = import("../src/types.ts").Offer;
 type DealChange = import("../src/types.ts").DealChange;
@@ -45,7 +46,6 @@ const RECOMMENDATION_CLAUSE = "so it's a reasonable starting point";
 
 const UNGATED_PAGES_ANSWERING_YES = 588;
 const UNGATED_PAGES_RECOMMENDING = 559;
-const UNGATED_PAGES_WITHHOLDING_SUPERSEDED_TERMS = 222;
 
 let port = 0;
 let proc: ChildProcess | null = null;
@@ -276,9 +276,15 @@ describe("the ungated pages keep the answer they had", () => {
     assert.deepStrictEqual(quiet, []);
   });
 
-  it("counts the ungated pages that withhold their terms, so the drop below is accounted for", () => {
+  it("holds no more ungated pages withholding their terms than the recorded count, so the drop below is accounted for", () => {
+    const budget = qualityBudget("ungated_pages_withholding_superseded_terms");
     const withholding = ungated().filter(supersededTerms).length;
-    assert.strictEqual(withholding, UNGATED_PAGES_WITHHOLDING_SUPERSEDED_TERMS);
+    assert.ok(
+      withholding <= budget,
+      `${withholding} ungated pages withhold superseded terms, over the ${budget} recorded in ` +
+        `data/quality_budgets.json. The daily re-verification run raises this by reading pages and ` +
+        `scripts/ratchet-quality-budgets.js records what it measures in the same commit; nothing else may raise it.`,
+    );
     assert.deepStrictEqual(ungated().filter(p => supersededTerms(p) && freeAnswer(p).startsWith("Yes")).map(p => p.slug), []);
   });
 
