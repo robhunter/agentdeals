@@ -1637,7 +1637,13 @@
         "Anthropic Claude API"
       ],
       "recorded_date": "2026-04-08",
-      "date_source": "hand_written"
+      "date_source": "hand_written",
+      "resolution": {
+        "state": "reversed",
+        "date": "2026-09-05",
+        "detail": "No longer in force as of 2026-09-05: this record's own source page gives Gemini 2.5 Pro a Free Tier of \"Free of charge\" for input and for output. The contrast is on the same table - Gemini 3.1 Pro Preview reads \"Not available\" in the Free Tier column, which is what a paid-only model looks like there. Gemini 3.1 Pro is paid-only; 2.5 Pro is not. We hold no evidence either way about the state on 2026-04-08, so this is recorded as no longer in force rather than retracted.",
+        "source_url": "https://ai.google.dev/gemini-api/docs/pricing"
+      }
     },
     {
       "vendor": "OVHcloud",
@@ -3998,7 +4004,18 @@
       "category": "Headless CMS",
       "alternatives": [],
       "recorded_date": "2026-04-13",
-      "date_source": "hand_written"
+      "date_source": "hand_written",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-05",
+        "detail": "Retracted 2026-09-05: Storyblok's Starter plan is free and was free when this row was written. The Internet Archive's 2026-04-11 capture of storyblok.com/pricing - two days before this record's date - lists \"Starter ... Monthly price if billed monthly: Free\", and the live page reads the same today. The 45-day free trial named here is a trial of the paid Growth Plus plan offered on top of the free Starter plan, not a replacement for it. This row was our error, not a change Storyblok made.",
+        "source_url": "https://www.storyblok.com/pricing",
+        "resolved_by": {
+          "vendor": "Storyblok",
+          "date": "2026-09-05",
+          "change_type": "record_corrected"
+        }
+      }
     },
     {
       "vendor": "Imgix",
@@ -8210,6 +8227,24 @@
       "alternatives": [],
       "detected_by": "reverify-ai",
       "recorded_date": "2026-09-03"
+    },
+    {
+      "vendor": "Storyblok",
+      "change_type": "record_corrected",
+      "date": "2026-09-05",
+      "summary": "Data correction - we published \"free tier removed\" for Storyblok against a pricing page that listed a free Starter plan on the day the row was written. Storyblok's free tier has not been removed.",
+      "previous_state": "Recorded 2026-04-13 as: no permanent free tier, 45-day trial only",
+      "current_state": "Starter is free: 1 space, 1 user seat, 100K API requests/month, 2 locales, 200 components. The 45-day free trial is a trial of the paid Growth Plus plan, offered alongside the free Starter plan.",
+      "impact": "medium",
+      "source_url": "https://www.storyblok.com/pricing",
+      "category": "Headless CMS",
+      "alternatives": [
+        "Sanity",
+        "Contentful",
+        "Hygraph"
+      ],
+      "recorded_date": "2026-09-05",
+      "date_source": "hand_written"
     }
   ]
 }
