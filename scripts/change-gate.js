@@ -21,6 +21,7 @@ export const REJECT_MEASURES_NO_CHANGE = "measures_no_change";
 export const REJECT_MEASURES_THE_OPPOSITE = "measures_the_opposite";
 export const REJECT_STATES_NO_NARROWING = "states_no_narrowing";
 export const REJECT_NO_TERMS_TO_NARROW = "no_terms_to_narrow";
+export const REJECT_ZERO_ALLOWANCE = "zero_allowance";
 
 export const GATE_REASONS = [
   REJECT_NULL_COMPARISON,
@@ -42,6 +43,7 @@ export const GATE_REASONS = [
   REJECT_MEASURES_THE_OPPOSITE,
   REJECT_STATES_NO_NARROWING,
   REJECT_NO_TERMS_TO_NARROW,
+  REJECT_ZERO_ALLOWANCE,
 ];
 
 export const FREE_TIER_REMOVED = "free_tier_removed";
@@ -58,6 +60,7 @@ export function vendorsWhoseFreeTierIsTheProduct(offers = []) {
 }
 
 const QUANTITY_CHANGE_TYPES = ["limits_reduced", "limits_increased"];
+const DEMOTING_QUANTITY_TYPES = ["limits_reduced", "free_tier_removed"];
 
 export const RECLASSIFIED_AS_RESTRUCTURE = "pricing_restructured";
 export const RECLASSIFIED_AS_CORRECTION = "record_corrected";
@@ -258,7 +261,7 @@ export function readQuantities(text) {
       spanOf(durationMatch ? durationMatch[1] : null) ??
       1;
     const period = rate?.period ?? null;
-    read.push({ value: match[0], words, unit, scale, period, spellsAPeriod: match.index < readThrough });
+    read.push({ value: match[0], words, unit, scale, period, at: match.index, spellsAPeriod: match.index < readThrough });
     if (rate) readThrough = start + rate.ends;
   }
   return read;
@@ -266,6 +269,44 @@ export function readQuantities(text) {
 
 export function quantifiedAttributes(text) {
   return readQuantities(text).filter(({ words, spellsAPeriod }) => words.length > 0 && !spellsAPeriod);
+}
+
+export const ALLOWANCE_NOUNS = new Set([
+  "user", "seat", "member", "collaborator", "device", "session",
+  "request", "call", "query", "lookup", "operation", "invocation", "execution",
+  "project", "site", "app", "application", "workspace", "environment", "vault",
+  "repository", "repo", "database", "table", "dataset", "bucket", "container",
+  "instance", "node", "sandbox", "machine", "worker", "runner",
+  "build", "deployment", "deploy", "job", "run", "pipeline", "check", "monitor",
+  "minute", "hour", "credit", "token", "message", "email", "notification",
+  "contact", "subscriber", "record", "row", "document", "image", "video",
+  "domain", "location", "region", "alias", "key", "form", "submission",
+  "event", "replay", "span", "log", "trace", "metric", "view", "page",
+]);
+
+function namedAllowance(quantity) {
+  if (quantity.words.includes(PRICE_ATTRIBUTE)) return null;
+  if (quantity.unit && BYTE_UNITS.has(quantity.unit)) return quantity.unit;
+  return quantity.words.find((word) => ALLOWANCE_NOUNS.has(word)) ?? null;
+}
+
+function labelFor(text, quantity) {
+  const from = text.slice(quantity.at, quantity.at + ATTRIBUTE_WINDOW);
+  const named = namedAllowance(quantity);
+  const beside = from.slice(quantity.value.length);
+  const stops = [beside.search(A_FIGURE), beside.search(CLAUSE_ENDS), beside.search(A_SCOPE)];
+  const fallback = Math.min(...stops.filter((at) => at !== -1), beside.length);
+  const spelled = named ? beside.match(new RegExp(`\\b${named}\\w*`, "i")) : null;
+  const ends = spelled ? Math.min(spelled.index + spelled[0].length, fallback) : fallback;
+  return from.slice(0, quantity.value.length + ends).trim();
+}
+
+export function zeroedAllowances(text) {
+  if (typeof text !== "string") return [];
+  return quantifiedAttributes(text)
+    .filter((quantity) => Number(String(quantity.value).replace(/,/g, "")) === 0)
+    .filter((quantity) => namedAllowance(quantity) !== null)
+    .map((quantity) => ({ ...quantity, label: labelFor(text, quantity) }));
 }
 
 function isAMeasureWord(word) {
@@ -1018,6 +1059,19 @@ export function describesChange(entry, context = {}) {
   }
 
   if (refusedByAudit) return refusedByAudit;
+
+  if (DEMOTING_QUANTITY_TYPES.includes(entry?.change_type)) {
+    const zeroed = zeroedAllowances(entry?.current_state);
+    if (zeroed.length > 0) {
+      const read = zeroed.map(({ label }) => `"${label}"`).join(", ");
+      return {
+        ok: false,
+        reason: REJECT_ZERO_ALLOWANCE,
+        detail: `${entry.change_type} claimed on a state that grants zero of a resource — ${read}. A vendor states a withdrawn allowance by dropping the row, not by publishing a zero, so a literal zero reads as a widget or plan configurator that had not populated when the page was fetched`,
+      };
+    }
+  }
+
   return { ok: true, rewriteSummary: audit.summary ?? undefined };
 }
 
