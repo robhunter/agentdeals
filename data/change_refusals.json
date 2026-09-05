@@ -229,6 +229,18 @@
       "refused_date": "2026-08-28"
     },
     {
+      "vendor": "AWS",
+      "change_type": "limits_increased",
+      "reason": "confirmed_unchanged",
+      "detail": "The descriptions both state a $100 initial credit plus up to $100 more, totaling up to $200 over 6 months.",
+      "summary": "The free tier now offers up to $200 in credits over 6 months, instead of $100 + up to $100 more.",
+      "previous_state": "Always-free tier includes Lambda (1M invocations/mo), DynamoDB (25 GB), CloudWatch. New accounts get $100 credit at sign-up + up to $100 more via activities, free plan for 6 months",
+      "current_state": "When you create a new AWS Free Tier account, you get $100 in credits immediately. As you explore key services, you can earn up to $100 more. That's up to $200 over 6 months to build, break things, and experiment with no charges and no surprise bills on the Free plan. The account closes on its own 6 months after you open it or when your credits run out, whichever comes first. You won’t be charged unless you convert to a Paid plan.",
+      "source_url": "https://aws.amazon.com/free/",
+      "category": "Cloud IaaS",
+      "refused_date": "2026-09-05"
+    },
+    {
       "vendor": "Baseten",
       "change_type": "limits_reduced",
       "reason": "unquantified_limit",
@@ -287,6 +299,18 @@
       "source_url": "https://brave.com/search/api/",
       "category": "Search",
       "refused_date": "2026-09-03"
+    },
+    {
+      "vendor": "Brevo",
+      "change_type": "new_free_tier",
+      "reason": "confirmed_unchanged",
+      "detail": "The stored description already stated 300 emails/day.",
+      "summary": "The free tier now has a limit of 300 emails per day.",
+      "previous_state": "300 emails/day, unlimited contacts (fair use policy), marketing automation, segmentation, landing pages. Formerly Sendinblue",
+      "current_state": "There is a 'Free forever, no credit card needed' plan for individuals and solopreneurs, allowing up to 300 emails per day.",
+      "source_url": "https://www.brevo.com/pricing/",
+      "category": "Email",
+      "refused_date": "2026-09-05"
     },
     {
       "vendor": "Brex",
@@ -565,6 +589,18 @@
       "refused_date": "2026-08-29"
     },
     {
+      "vendor": "Coursera",
+      "change_type": "pricing_restructured",
+      "reason": "confirmed_unchanged",
+      "detail": "The report highlights a detail already present in the stored description.",
+      "summary": "The 7-day free trial for specializations is also mentioned.",
+      "previous_state": "Free audit mode for most courses. Video lectures, readings, quizzes. No certificates, no graded assignments, no peer reviews on audit. Some courses have free certificates via financial aid. 7-day free trial for specializations.",
+      "current_state": "Coursera offers thousands of courses that you can preview for free, including access to the first module. Learners who want full course access or a certificate can join with a 7-day free trial through Coursera Plus or a subscription-based program. Coursera Plus is an annual subscription that gives learners unlimited access to thousands of courses, Specializations, and Professional Certificates.",
+      "source_url": "https://www.coursera.org",
+      "category": "Education",
+      "refused_date": "2026-09-05"
+    },
+    {
       "vendor": "Crisp",
       "change_type": "limits_increased",
       "reason": "confirmed_unchanged",
@@ -599,6 +635,18 @@
       "source_url": "https://cronitor.io/pricing",
       "category": "Monitoring",
       "refused_date": "2026-09-03"
+    },
+    {
+      "vendor": "CurrencyFreaks",
+      "change_type": "limits_reduced",
+      "reason": "measures_no_change",
+      "detail": "limits_reduced claimed, and every quantity the record compares holds the same value once notation and period are normalised — 1,000 api/mo against 1000 api/mo",
+      "summary": "The free tier now only offers 1000 API Calls/Month instead of the previously stated 1,000 API requests/month.",
+      "previous_state": "Currency exchange rate API — free tier: 1,000 API requests/month, 170+ response currencies, daily updated rates, USD base currency only (paid plans unlock all base currencies). Includes latest rates and historical data endpoints.",
+      "current_state": "Developer Free /Month 1000 API Calls/Month 24 Hour Updates USD as Base Currency Limited Support SSL Encryption",
+      "source_url": "https://currencyfreaks.com/pricing.html",
+      "category": "Dev Utilities",
+      "refused_date": "2026-09-05"
     },
     {
       "vendor": "currencylayer",
@@ -985,6 +1033,18 @@
       "refused_date": "2026-08-29"
     },
     {
+      "vendor": "Hasura Cloud",
+      "change_type": "limits_increased",
+      "reason": "states_no_difference",
+      "detail": "the summary states that the page agrees with what we hold, and names no figure the stored description did not already carry",
+      "summary": "The free tier still exists, but the stored information is incomplete. The current page details more features included in the free tier, such as Relay API, nested filtering/aggregations/pagination/sorting, API versioning, field & entity level authorization, autoscaling, zero cold-start, global edge network, intelligent geo routing, DDoS protection, and various connectors. The stored information also doesn't mention the optional hosting costs for third-party connectors.",
+      "previous_state": "Hasura DDN Free plan — unlimited API requests, unlimited concurrent users, unlimited models at any scale. Includes full GraphQL API (filtering, pagination, sorting, aggregations), database/code/API connectors, and CI/CD tools. Limits: 1 supergraph developer, 15-minute observability retention.",
+      "current_state": "The DDN Free plan is always $0 and includes unlimited models, 1 supergraph developer, observability with 15-minute retention, GraphQL API (filtering, pagination, sorting, aggregations), Relay API, Nested filtering, Nested aggregations, Nested pagination, Nested sorting, API versioning, Field & entity level authorization, unlimited API requests, unlimited concurrent users, autoscaling, zero cold-start, global edge network, intelligent geo routing, DDoS protection, database/code/API connectors, and CI/CD tools. Optional hosting for third-party & code connectors costs $0.075/vCPU-hour and $0.0075/GiB-hour.",
+      "source_url": "https://hasura.io/pricing",
+      "category": "Databases",
+      "refused_date": "2026-09-05"
+    },
+    {
       "vendor": "Hasura",
       "change_type": "pricing_restructured",
       "reason": "confirmed_unchanged",
@@ -1031,6 +1091,18 @@
       "source_url": "https://huggingface.co/docs/inference-providers/pricing",
       "category": "AI / ML",
       "refused_date": "2026-09-01"
+    },
+    {
+      "vendor": "Hunter.io",
+      "change_type": "limits_reduced",
+      "reason": "states_no_difference",
+      "detail": "limits_reduced claimed, summary asserts the page matches what we stored, and the two states carry the same quantities",
+      "summary": "The free tier still exists, but the description of the limits has changed. The free tier now includes 50 credits per month, but the stored information also mentioned 1 connected email account, 500 recipients per sequence, and unlimited team members, which are still present in the free tier.",
+      "previous_state": "Email finder and verification API — free tier: 50 credits/month (searches + verifications), 1 connected email account, 500 recipients per sequence, unlimited team members",
+      "current_state": "The free tier offers 50 credits per month. It includes 1 connected email account, 500 recipients per sequence, and unlimited team members.",
+      "source_url": "https://hunter.io/pricing",
+      "category": "Dev Utilities",
+      "refused_date": "2026-09-05"
     },
     {
       "vendor": "Hyperping",
@@ -1417,6 +1489,30 @@
       "refused_date": "2026-09-02"
     },
     {
+      "vendor": "Nile",
+      "change_type": "limits_reduced",
+      "reason": "null_comparison",
+      "detail": "summary states \"down from\" between two values of 500 and no stored quantity is absent from the current state",
+      "summary": "The free tier now offers 1 GB of storage and 50 million query tokens, down from the stored 1 GB storage and 50M query tokens. The number of connections is now 500, down from the stored 500 max connections.",
+      "previous_state": "Postgres for multi-tenant apps — 1 GB storage, 50M serverless query tokens, 500 max connections. Unlimited databases and tenant DBs. Always-on (no cold starts)",
+      "current_state": "Free tier includes 1 GB storage, 50 million query tokens, and 500 connections.",
+      "source_url": "https://www.thenile.dev/pricing",
+      "category": "Databases",
+      "refused_date": "2026-09-05"
+    },
+    {
+      "vendor": "NordPass",
+      "change_type": "limits_increased",
+      "reason": "unquantified_limit",
+      "detail": "limits_increased claimed, but the current state names no quantity for anything the stored state measured (1 device)",
+      "summary": "The free tier now includes access on multiple devices, Password Health, and Data Breach Scanner, which were previously exclusive to paid tiers.",
+      "previous_state": "Unlimited passwords on 1 device at a time. Password generator. Import/export. AutoFill. No passkey storage, no item sharing, no email masking, no password health, no data breach scanner on free.",
+      "current_state": "The Free plan includes unlimited password storage, autosave & autofill, secure storage, access on multiple devices, Password Health, and Data Breach Scanner.",
+      "source_url": "https://nordpass.com/plans/",
+      "category": "Password Managers",
+      "refused_date": "2026-09-05"
+    },
+    {
       "vendor": "Notion",
       "change_type": "limits_reduced",
       "reason": "unquantified_limit",
@@ -1463,6 +1559,18 @@
       "source_url": "https://ollama.com/pricing",
       "category": "AI / ML",
       "refused_date": "2026-09-03"
+    },
+    {
+      "vendor": "OneDrive",
+      "change_type": "free_tier_removed",
+      "reason": "no_removal_evidence",
+      "detail": "a free tier was recorded as removed on the evidence that the page did not mention it, and the summary states no price, ending or replacement where the free tier was",
+      "summary": "The free tier of 5GB is no longer explicitly mentioned. The lowest paid tier is Microsoft 365 Basic which offers 100GB of cloud storage for $1.99/month or $19.99/year.",
+      "previous_state": "5 GB storage. File sharing and collaboration. Office for the web (Word, Excel, PowerPoint — basic editing). Personal Vault (3 files limit on free). Photo upload. Mobile app.",
+      "current_state": "The lowest paid tier is Microsoft 365 Basic which offers 100 GB of cloud storage for $1.99/month or $19.99/year.",
+      "source_url": "https://www.microsoft.com/en-us/microsoft-365/onedrive/compare-onedrive-plans",
+      "category": "Cloud Storage",
+      "refused_date": "2026-09-05"
     },
     {
       "vendor": "OnlineOrNot",
@@ -1633,6 +1741,18 @@
       "refused_date": "2026-08-29"
     },
     {
+      "vendor": "Prisma Accelerate",
+      "change_type": "limits_reduced",
+      "reason": "measures_the_opposite",
+      "detail": "limits_reduced claimed, and every quantity that moved between the two states moved the other way — 100,000 operation/mo against 200 operation/mo",
+      "summary": "The free tier now offers 200,000 operations/month for Prisma Postgres, down from 100,000 operations/month. The free tier also includes 1M requests/month for Prisma Compute, which was not previously mentioned.",
+      "previous_state": "Connection pooling and caching for any database — 100,000 operations/month, 10 connection pool limit, auto-scaling. Also available: Prisma Postgres free tier with 500 MB storage and up to 5 databases",
+      "current_state": "Free tier includes 200k operations / month for Prisma Postgres, 1M requests / month for Prisma Compute, 360 GB-hours memory / month, 4 active vCPU-hours / month, 10 GB outbound bandwidth / month.",
+      "source_url": "https://www.prisma.io/pricing",
+      "category": "Databases",
+      "refused_date": "2026-09-05"
+    },
+    {
       "vendor": "Projects",
       "change_type": "pricing_restructured",
       "reason": "confirmed_unchanged",
@@ -1643,6 +1763,18 @@
       "source_url": "https://zoho.com/projects",
       "category": "Cloud IaaS",
       "refused_date": "2026-08-28"
+    },
+    {
+      "vendor": "Proton Mail",
+      "change_type": "limits_reduced",
+      "reason": "confirmed_unchanged",
+      "detail": "The current page still offers 1GB storage, potentially expandable from 500MB, which doesn't contradict the stored description of 1GB.",
+      "summary": "The free tier now offers 500MB of storage, expandable to 1GB by completing a checklist. Previously 1GB.",
+      "previous_state": "1 GB storage. 150 messages/day send limit. 1 email address. End-to-end encrypted. Zero-access encryption. No custom domains, no filters, no auto-reply on free. Swiss privacy jurisdiction.",
+      "current_state": "Proton Free /month Get Proton for free Close Get Mail Plus for only $XX.XX Special offer: Save XX% off our premium plan Get the deal Continue with Proton Free Renews at $XX.XX /month, cancel anytime. 1 GB storage 1 user 1 encrypted email address",
+      "source_url": "https://proton.me/mail/pricing",
+      "category": "Consumer Email",
+      "refused_date": "2026-09-05"
     },
     {
       "vendor": "pubnub.com",
@@ -1763,6 +1895,18 @@
       "source_url": "https://ReportGPT.app",
       "category": "AI / ML",
       "refused_date": "2026-09-01"
+    },
+    {
+      "vendor": "Robinhood",
+      "change_type": "new_tier",
+      "reason": "confirmed_unchanged",
+      "detail": "The current page describes paid services not present in the stored description, but the report focuses on a paid subscription (Gold) which is a *new* offering, not a change to the free tier described in the stored description.",
+      "summary": "Robinhood now offers a Gold subscription for $5/month with additional benefits like zero management fees on over $100K and access to portfolio management.",
+      "previous_state": "Commission-free stock, ETF, options, and crypto trading. No account minimums. Fractional shares. Dividend reinvestment. Basic market data. No advanced charts, no Level II data, no margin on free. FDIC-insured cash sweep.",
+      "current_state": "Robinhood offers a Gold subscription for $5/month. They also offer Agentic Trading, Agentic Credit Card, Gold Card, Platinum Card, and other services.",
+      "source_url": "https://robinhood.com",
+      "category": "Banking & Finance",
+      "refused_date": "2026-09-05"
     },
     {
       "vendor": "robusta.dev",
@@ -2029,6 +2173,18 @@
       "refused_date": "2026-08-28"
     },
     {
+      "vendor": "Upstash",
+      "change_type": "limits_reduced",
+      "reason": "measures_no_change",
+      "detail": "limits_reduced claimed, and every quantity the record compares holds the same value once notation and period are normalised — 500 command/mo against 500 command/mo, 256 MB data against 256 MB data",
+      "summary": "The free tier still exists, but the Vector and QStash free allowances are no longer explicitly mentioned. The free tier now includes 256 MB data and 500K commands/month, which matches the stored information, but the page does not mention the 10K vectors or 1,000 QStash messages.",
+      "previous_state": "Serverless Redis — 500K commands/month (256MB data). Vector: 10K vectors free. QStash: 1,000 messages/day free",
+      "current_state": "Free tier includes 256 MB data size and 500K commands per month.",
+      "source_url": "https://upstash.com/pricing",
+      "category": "Databases",
+      "refused_date": "2026-09-05"
+    },
+    {
       "vendor": "UptimeRobot",
       "change_type": "limits_increased",
       "reason": "measures_no_change",
@@ -2051,6 +2207,30 @@
       "source_url": "https://uptimetoolbox.com/",
       "category": "Monitoring",
       "refused_date": "2026-08-28"
+    },
+    {
+      "vendor": "Uptimia",
+      "change_type": "limits_reduced",
+      "reason": "unquantified_limit",
+      "detail": "limits_reduced claimed, but the current state names no quantity for anything the stored state measured (1 website, 5 check)",
+      "summary": "The free plan now includes 10 uptime checks, and a 1-minute testing interval is available on paid plans, not the free plan as previously stated. The free plan is now offered *after* a trial period.",
+      "previous_state": "Website uptime monitoring — free plan: 1 website, 5-minute check interval, basic uptime monitoring, email alerts. No credit card required",
+      "current_state": "There is a free plan available after a trial, but the pricing page details paid plans starting at $9/month. The free plan is not detailed on the pricing page, but is mentioned elsewhere as 'one website, checked as often as every 5 minutes'.",
+      "source_url": "https://www.uptimia.com/pricing",
+      "category": "Monitoring",
+      "refused_date": "2026-09-05"
+    },
+    {
+      "vendor": "URLscan.io",
+      "change_type": "limits_increased",
+      "reason": "states_no_difference",
+      "detail": "limits_increased claimed, summary asserts the page matches what we stored, and the two states carry the same quantities",
+      "summary": "The free tier still exists, but the limits for Private Scans, Unlisted Scans, Public Scans, Search Requests, and Result Requests have been increased.",
+      "previous_state": "URL and website security scanner API — free tier: 50 private scans/day, 1,000 unlisted scans/day, 5,000 public scans/day, 1,000 search requests/day, 10,000 result requests/day",
+      "current_state": "Free tier offers 50 Private Scans, 1,000 Unlisted Scans, 5,000 Public Scans, 1,000 Search Requests, and 10,000 Result Requests per day.",
+      "source_url": "https://urlscan.io/pricing",
+      "category": "Security",
+      "refused_date": "2026-09-05"
     },
     {
       "vendor": "userforge.com",
@@ -2099,6 +2279,30 @@
       "source_url": "https://visualstudio.microsoft.com/vs/community/",
       "category": "IDE & Code Editors",
       "refused_date": "2026-09-01"
+    },
+    {
+      "vendor": "Wise",
+      "change_type": "limits_reduced",
+      "reason": "unquantified_limit",
+      "detail": "limits_reduced claimed, but the current state names no quantity for anything the stored state measured (40 currency, 10 currency)",
+      "summary": "While a free multi-currency account is still offered, there are fees associated with ATM withdrawals beyond a $250 USD monthly limit, and fees for receiving Swift payments. There is also a $9 USD fee for the Multi-Currency Card.",
+      "previous_state": "Free multi-currency account. Hold 40+ currencies. Local bank details in 10+ currencies. Debit card available. No monthly fees. Transparent exchange rates (mid-market rate). Small fees only on conversions and transfers.",
+      "current_state": "ATM withdrawals up to a total of 250 USD per calendar month will not have an ATM withdrawal fee. 1.95 USD + 1.95% fee applies to each ATM withdrawal after you withdraw 250 USD in a calendar month. Getting the Wise Multi-Currency Card costs 9 USD. Receiving USD wire and Swift payments has a fixed fee of 6.11 USD. Receiving GBP Swift payments has a fixed fee of 2.16 GBP. Receiving EUR Swift payments has a fixed fee of 2.39 EUR.",
+      "source_url": "https://wise.com/pricing",
+      "category": "Banking & Finance",
+      "refused_date": "2026-09-05"
+    },
+    {
+      "vendor": "Xata",
+      "change_type": "pricing_model_change",
+      "reason": "confirmed_unchanged",
+      "detail": "The stored description already stated the managed platform was now paid with a 14-day trial. The current page simply provides pricing details.",
+      "summary": "The self-hosted, free forever option is still mentioned, but the managed platform is now paid, with pricing starting at $0.012/hr + $0.28/GB/month. A 14-day free trial with no credit card required is offered for the commercial tier.",
+      "previous_state": "Open-source Postgres platform (Apache 2.0) with copy-on-write branching and scale-to-zero. Self-hosted on Kubernetes — free forever. Managed platform is now paid (compute + storage billed hourly); 14-day free trial with $100 credit on the commercial tier.",
+      "current_state": "Xata Cloud is a fully managed, pay-as-you-go service starting at $0.012 /hr + $0.28/GB/mo storage. A 14-day free trial is available. Self-managed is free to self-host.",
+      "source_url": "https://xata.io/pricing",
+      "category": "Databases",
+      "refused_date": "2026-09-05"
     },
     {
       "vendor": "Zapier",
