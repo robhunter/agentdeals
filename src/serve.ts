@@ -52902,12 +52902,12 @@ const httpServer = createHttpServer(async (req, res) => {
 
   const rawWriteHead = res.writeHead.bind(res);
   res.writeHead = ((status: number, ...rest: unknown[]) => {
-    if (status >= 200 && status < 300 && !res.hasHeader(SIGNAL_HEADER_NAME)) {
+    if (status >= 200 && status < 300) {
       const headers = rest.find(a => a && typeof a === "object") as Record<string, string> | undefined;
       const contentType = String(
         headers?.["Content-Type"] ?? headers?.["content-type"] ?? res.getHeader("Content-Type") ?? "",
       );
-      if (/^(text\/html|application\/json)/.test(contentType)) {
+      if (/^(text\/html|application\/json)/.test(contentType) && !res.hasHeader(SIGNAL_HEADER_NAME)) {
         const slug = singleVendorSlug(url.pathname);
         res.setHeader(SIGNAL_HEADER_NAME, signalHeaderValue(BASE_URL, slug));
       }
