@@ -2,12 +2,13 @@ import { readFileSync, writeFileSync } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import {
-  QUALITY_BUDGET_NAMES, newestChangeBySlug, pageReviewsPath, parsePageReviews, qualityBudgetsPath,
-  readQualityBudgets, serializeQualityBudgets, staleFactPages, unsourcedTierAPaths,
+  QUALITY_BUDGET_NAMES, aDataRunMayRaise, newestChangeBySlug, pageReviewsPath, parsePageReviews,
+  qualityBudgetsPath, readQualityBudgets, serializeQualityBudgets, staleFactPages, unsourcedTierAPaths,
 } from "../dist/page-reviews.js";
 import { toSlug } from "../dist/vendor-slug.js";
 import { uncitedChanges } from "../dist/change-citation.js";
 import { passedWithoutQuotingThePage } from "../dist/source-check.js";
+import { supersededCensus } from "../dist/superseded-census.js";
 
 const REPO = join(dirname(fileURLToPath(import.meta.url)), "..");
 
@@ -23,6 +24,15 @@ A budget above its measurement is lowered. A budget below its measurement is lef
 reported: raising it is a decision, and the suite is what fails until someone makes it. The FAQ
 budgets are measured by booting a server, which this does not do, so it reports them and leaves
 them to be edited by hand from the number the suite prints.
+
+Three budgets are exceptions, listed in QUALITY_BUDGETS_A_DATA_RUN_MAY_RAISE. They count the
+records whose stored terms one of our own change records names as the previous ones, and the
+pages that therefore withhold them. A record joins that population when the re-verification run
+reads a vendor page and records a narrowing, which is the run doing its job on data it has just
+fetched, not a regression in anything we ship. So this raises those three to what the run
+measures, in the same commit as the data that moved them. Nothing outside a run of this script
+can raise them: a code change that widened the predicate would leave the measurement over the
+budget and the suite fails, which is the direction that carries information.
 
 Usage: node scripts/ratchet-quality-budgets.js [options]
 
@@ -61,11 +71,13 @@ export function measureBudgets(date) {
     unsourced_tier_a: unsourcedTierAPaths(index.pages).length,
     uncited_change_records: uncitedChanges(changes).length,
     source_checks_ok_without_quoted_evidence: offers.filter(passedWithoutQuotingThePage).length,
+    ...supersededCensus(offers, changes, date),
   };
 }
 
 export function ratchet(budgets, measured) {
   const lowered = [];
+  const raised = [];
   const over = [];
   const unmeasured = [];
   const next = { ...budgets };
@@ -77,11 +89,14 @@ export function ratchet(budgets, measured) {
     } else if (is < was) {
       next[name] = is;
       lowered.push({ name, from: was, to: is });
+    } else if (is > was && aDataRunMayRaise(name)) {
+      next[name] = is;
+      raised.push({ name, from: was, to: is });
     } else if (is > was) {
       over.push({ name, budget: was, measured: is });
     }
   }
-  return { next, lowered, over, unmeasured };
+  return { next, lowered, raised, over, unmeasured };
 }
 
 function main() {
@@ -93,10 +108,10 @@ function main() {
 
   const file = readQualityBudgets();
   const measured = measureBudgets(opts.date);
-  const { next, lowered, over, unmeasured } = ratchet(file.budgets, measured);
+  const { next, lowered, raised, over, unmeasured } = ratchet(file.budgets, measured);
 
   if (opts.json) {
-    console.log(JSON.stringify({ measured_for: opts.date, budgets: file.budgets, measured, lowered, over, unmeasured }, null, 2));
+    console.log(JSON.stringify({ measured_for: opts.date, budgets: file.budgets, measured, lowered, raised, over, unmeasured }, null, 2));
   } else {
     console.log(`── Quality budgets, measured for ${opts.date} ──`);
     for (const name of QUALITY_BUDGET_NAMES) {
@@ -106,16 +121,30 @@ function main() {
         console.log(`${name}: budget ${was}, measured only by the suite — this cannot lower it`);
         continue;
       }
-      const verdict = is === was ? "at budget" : is < was ? `${was - is} below budget` : `${is - was} OVER BUDGET`;
+      const verdict = is === was
+        ? "at budget"
+        : is < was
+          ? `${was - is} below budget`
+          : aDataRunMayRaise(name)
+            ? `${is - was} more than the last run recorded`
+            : `${is - was} OVER BUDGET`;
       console.log(`${name}: budget ${was}, measured ${is} — ${verdict}`);
     }
   }
 
-  if (lowered.length > 0 && opts.lower) {
+  const moved = [...lowered, ...raised];
+  if (moved.length > 0 && opts.lower) {
     writeFileSync(qualityBudgetsPath(), serializeQualityBudgets({ version: file.version, budgets: next }));
     for (const l of lowered) console.log(`Lowered ${l.name} ${l.from} → ${l.to} in ${qualityBudgetsPath()}`);
-  } else if (lowered.length > 0) {
+    for (const r of raised) {
+      console.log(
+        `Recorded ${r.name} ${r.from} → ${r.to} in ${qualityBudgetsPath()}. This run read the pages that ` +
+          `moved it, so the count follows the data it fetched rather than holding the commit.`
+      );
+    }
+  } else if (moved.length > 0) {
     for (const l of lowered) console.log(`Would lower ${l.name} ${l.from} → ${l.to} — pass --lower to write it`);
+    for (const r of raised) console.log(`Would record ${r.name} ${r.from} → ${r.to} — pass --lower to write it`);
   }
 
   for (const o of over) {

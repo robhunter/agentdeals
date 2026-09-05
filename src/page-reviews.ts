@@ -16,9 +16,22 @@ export const QUALITY_BUDGET_NAMES = [
   "faq_answers",
   "faq_answers_stating_a_figure",
   "faq_answers_with_a_digit_but_no_figure",
+  "records_with_superseded_terms",
+  "vendor_pages_withholding_superseded_terms",
+  "ungated_pages_withholding_superseded_terms",
 ] as const;
 
 export type QualityBudgetName = (typeof QUALITY_BUDGET_NAMES)[number];
+
+export const QUALITY_BUDGETS_A_DATA_RUN_MAY_RAISE: readonly QualityBudgetName[] = [
+  "records_with_superseded_terms",
+  "vendor_pages_withholding_superseded_terms",
+  "ungated_pages_withholding_superseded_terms",
+];
+
+export function aDataRunMayRaise(name: QualityBudgetName): boolean {
+  return QUALITY_BUDGETS_A_DATA_RUN_MAY_RAISE.includes(name);
+}
 
 export interface QualityBudgets {
   version: number;

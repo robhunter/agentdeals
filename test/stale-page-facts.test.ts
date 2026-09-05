@@ -314,8 +314,10 @@ describe("#1321 a budget follows its measurement down and never up", () => {
 
   it("measures what the shipped budgets already hold, so a run at rest writes nothing", async () => {
     const { ratchet, measureBudgets } = await import("../scripts/ratchet-quality-budgets.js");
-    const { lowered, over } = ratchet(readQualityBudgets().budgets, measureBudgets(TODAY));
-    assert.deepStrictEqual(lowered, []);
+    const { aDataRunMayRaise } = await import("../dist/page-reviews.js");
+    const { lowered, raised, over } = ratchet(readQualityBudgets().budgets, measureBudgets(TODAY));
+    assert.deepStrictEqual(lowered.filter(l => !aDataRunMayRaise(l.name)), []);
+    assert.deepStrictEqual(raised.filter(r => !aDataRunMayRaise(r.name)), []);
     assert.deepStrictEqual(over, []);
   });
 });
@@ -337,6 +339,9 @@ describe("#1321 the FAQ counts are budgets too, and they live in the same file",
       unsourced_tier_a: 41,
       uncited_change_records: budgets.uncited_change_records,
       source_checks_ok_without_quoted_evidence: budgets.source_checks_ok_without_quoted_evidence,
+      records_with_superseded_terms: budgets.records_with_superseded_terms,
+      vendor_pages_withholding_superseded_terms: budgets.vendor_pages_withholding_superseded_terms,
+      ungated_pages_withholding_superseded_terms: budgets.ungated_pages_withholding_superseded_terms,
     });
     assert.deepStrictEqual(unmeasured, [
       "faq_answers",
