@@ -1,8 +1,9 @@
 import { changeDateClause } from "./change-dates.js";
+import { narrowsTheStoredTerms } from "./change-direction.js";
 import { isNoLongerInForce } from "./change-resolution.js";
 import type { ChangeResolution, DealChange } from "./types.js";
 
-export interface QuotingChange extends Pick<DealChange, "date" | "date_source"> {
+export interface QuotingChange extends Pick<DealChange, "date" | "date_source" | "change_type"> {
   summary: string;
   previous_state?: string | null;
   resolution?: ChangeResolution | null;
@@ -22,14 +23,19 @@ export function quotesTheStoredTermsAsPrevious(change: QuotingChange, descriptio
   return quoted !== "" && quoted === comparableTerms(description);
 }
 
+export function supersedesTheStoredTerms(change: QuotingChange, description: string): boolean {
+  if (isNoLongerInForce(change)) return false;
+  if (!narrowsTheStoredTerms(change.change_type)) return false;
+  return quotesTheStoredTermsAsPrevious(change, description);
+}
+
 export function supersedingChange<T extends QuotingChange>(
   offer: Pick<StoredTerms, "description">,
   vendorChanges: readonly T[],
 ): T | null {
   let newest: T | null = null;
   for (const change of vendorChanges) {
-    if (isNoLongerInForce(change)) continue;
-    if (!quotesTheStoredTermsAsPrevious(change, offer.description)) continue;
+    if (!supersedesTheStoredTerms(change, offer.description)) continue;
     if (!newest || change.date > newest.date) newest = change;
   }
   return newest;

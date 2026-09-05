@@ -212,6 +212,74 @@ describe("#1103 the catalogue population", () => {
   });
 });
 
+describe("#1103 which recorded changes make the stored terms unpublishable", () => {
+  const NARROWS = [
+    "free_tier_removed",
+    "limits_reduced",
+    "restriction",
+    "product_deprecated",
+    "open_source_killed",
+    "pricing_restructured",
+    "pricing_model_change",
+  ];
+  const LEAVES_THE_STORED_FIGURE_CONSERVATIVE = [
+    "limits_increased",
+    "new_free_tier",
+    "new_tier",
+    "rebranded",
+    "startup_program_expanded",
+    "pricing_postponed",
+    "record_corrected",
+  ];
+
+  it("withholds on a change that narrows the terms and publishes on one that does not", async () => {
+    const { narrowsTheStoredTerms } = await import("../dist/change-direction.js");
+    for (const type of NARROWS) assert.strictEqual(narrowsTheStoredTerms(type), true, type);
+    for (const type of LEAVES_THE_STORED_FIGURE_CONSERVATIVE) {
+      assert.strictEqual(narrowsTheStoredTerms(type), false, type);
+    }
+  });
+
+  it("classifies every change type the data model declares, and nothing is left over", async () => {
+    const { CHANGE_DIRECTION } = await import("../dist/change-direction.js");
+    const declared = Object.keys(CHANGE_DIRECTION).sort();
+    assert.deepStrictEqual([...NARROWS, ...LEAVES_THE_STORED_FIGURE_CONSERVATIVE].sort(), declared);
+  });
+
+  it("withholds on a change type it does not recognise, which is the safe direction", async () => {
+    const { narrowsTheStoredTerms, directionOfChange } = await import("../dist/change-direction.js");
+    assert.strictEqual(directionOfChange("terms_rewritten_by_a_type_we_have_not_met"), null);
+    assert.strictEqual(narrowsTheStoredTerms("terms_rewritten_by_a_type_we_have_not_met"), true);
+    assert.strictEqual(narrowsTheStoredTerms(undefined as unknown as string), true);
+  });
+
+  it("does not supersede the terms on a quoting change that widened them", () => {
+    const widening = { ...A_CHANGE_QUOTING_IT, change_type: "limits_increased" };
+    assert.strictEqual(quotesTheStoredTermsAsPrevious(widening, A_RECORD.description), true);
+    assert.strictEqual(storedTermsAreSuperseded(A_RECORD, [widening]), false);
+    assert.strictEqual(storedTermsAreSuperseded(A_RECORD, [A_CHANGE_QUOTING_IT]), true);
+  });
+
+  it("takes the newest narrowing change and passes over a newer widening one", () => {
+    const olderNarrowing = { ...A_CHANGE_QUOTING_IT, date: "2026-08-02" };
+    const newerWidening = { ...A_CHANGE_QUOTING_IT, date: "2026-09-04", change_type: "limits_increased" };
+    assert.strictEqual(supersedingChange(A_RECORD, [olderNarrowing, newerWidening])?.date, "2026-08-02");
+  });
+
+  it("leaves every record the change log only ever widened publishing its terms", () => {
+    const widenedOnly = offers.filter((offer) => {
+      const quoting = changesFor(offer.vendor).filter(
+        (c) => !c.resolution && quotesTheStoredTermsAsPrevious(c, offer.description),
+      );
+      return quoting.length > 0 && !supersedingChange(offer, changesFor(offer.vendor));
+    });
+    assert.ok(widenedOnly.length > 0, "no record in the shipped data exercises this, so the assertion is vacuous");
+    for (const offer of widenedOnly) {
+      assert.strictEqual(supersedingChange(offer, changesFor(offer.vendor)), null, offer.vendor);
+    }
+  });
+});
+
 describe("#1383 which of the two directions holds a scheduled data commit", () => {
   const CENSUS = [
     "records_with_superseded_terms",
@@ -275,19 +343,20 @@ describe("#1383 which of the two directions holds a scheduled data commit", () =
 const FIXTURE_VENDOR = "Deno Deploy";
 const FIXTURE_SLUG = toSlug(FIXTURE_VENDOR);
 
-function fixtureFrom(withResolution: boolean) {
+function fixtureFrom(withResolution: boolean, changeType?: string) {
   const record = JSON.parse(JSON.stringify(offers.find((o) => o.vendor === FIXTURE_VENDOR)));
   const change = JSON.parse(JSON.stringify(changes.find((c) => c.vendor === FIXTURE_VENDOR)));
   assert.ok(record && change, "the fixture is built from the record and change this issue names");
   record.description = change.previous_state;
+  if (changeType) change.change_type = changeType;
   if (withResolution) {
     change.resolution = { state: "reversed", date: "2026-09-04", detail: "The vendor restored the earlier limits." };
   }
   return { record, change };
 }
 
-function writeFixture(dir: string, name: string, withResolution: boolean) {
-  const { record, change } = fixtureFrom(withResolution);
+function writeFixture(dir: string, name: string, withResolution: boolean, changeType?: string) {
+  const { record, change } = fixtureFrom(withResolution, changeType);
   writeFileSync(path.join(dir, `${name}-index.json`), JSON.stringify({ offers: [record, ...offers.filter((o) => o.vendor !== FIXTURE_VENDOR)] }));
   writeFileSync(path.join(dir, `${name}-changes.json`), JSON.stringify({ changes: [change] }));
   return { record, change };
@@ -342,16 +411,19 @@ describe("#1103 a page whose stored terms its own change log quotes as previous"
   let dir = "";
   let superseded: { proc: ChildProcess; port: number } | null = null;
   let resolved: { proc: ChildProcess; port: number } | null = null;
+  let improved: { proc: ChildProcess; port: number } | null = null;
   let supersededPage = "";
   let resolvedPage = "";
+  let improvedPage = "";
   let storedTerms = "";
 
   before(async () => {
     dir = mkdtempSync(path.join(tmpdir(), "superseded-terms-"));
     const built = writeFixture(dir, "superseded", false);
     writeFixture(dir, "resolved", true);
+    writeFixture(dir, "improved", false, "limits_increased");
     storedTerms = built.record.description;
-    [superseded, resolved] = await Promise.all([
+    [superseded, resolved, improved] = await Promise.all([
       startServer({
         AGENTDEALS_INDEX_PATH: path.join(dir, "superseded-index.json"),
         AGENTDEALS_CHANGES_PATH: path.join(dir, "superseded-changes.json"),
@@ -360,14 +432,20 @@ describe("#1103 a page whose stored terms its own change log quotes as previous"
         AGENTDEALS_INDEX_PATH: path.join(dir, "resolved-index.json"),
         AGENTDEALS_CHANGES_PATH: path.join(dir, "resolved-changes.json"),
       }),
+      startServer({
+        AGENTDEALS_INDEX_PATH: path.join(dir, "improved-index.json"),
+        AGENTDEALS_CHANGES_PATH: path.join(dir, "improved-changes.json"),
+      }),
     ]);
     supersededPage = await fetch(`http://localhost:${superseded.port}/vendor/${FIXTURE_SLUG}`).then((r) => r.text());
     resolvedPage = await fetch(`http://localhost:${resolved.port}/vendor/${FIXTURE_SLUG}`).then((r) => r.text());
+    improvedPage = await fetch(`http://localhost:${improved.port}/vendor/${FIXTURE_SLUG}`).then((r) => r.text());
   });
 
   after(() => {
     superseded?.proc.kill();
     resolved?.proc.kill();
+    improved?.proc.kill();
     if (dir) rmSync(dir, { recursive: true, force: true });
   });
 
@@ -430,6 +508,16 @@ describe("#1103 a page whose stored terms its own change log quotes as previous"
   it("keeps the terms on the page as what the change record replaced", () => {
     assert.ok(unescaped(supersededPage).includes(storedTerms));
     assert.ok(supersededPage.includes("Before:"));
+  });
+
+  it("publishes the same terms as current where the recorded change widened them", () => {
+    const { change } = fixtureFrom(false, "limits_increased");
+    assert.strictEqual(change.previous_state, fixtureFrom(false).record.description);
+    assert.ok(unescaped(descriptionBlockOf(improvedPage)).includes(storedTerms));
+    const isFree = faqAnswersOf(improvedPage).find((pair) => pair.question === `Is ${FIXTURE_VENDOR} free?`);
+    assert.ok(isFree!.answer.startsWith("Yes,"), isFree!.answer);
+    assert.ok("offers" in jsonLdOfType(improvedPage, "WebPage")!.mainEntity);
+    assert.ok(!improvedPage.includes(`class="terms-superseded-text"`), "the page withheld terms a widening replaced");
   });
 
   it("publishes the same terms as current once the change is resolved", () => {
