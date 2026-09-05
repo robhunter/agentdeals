@@ -2298,7 +2298,7 @@
     {
       "vendor": "Firecrawl",
       "category": "Web Scraping",
-      "description": "Web scraping API — 500 credits (up to 500 pages), 2 concurrent requests, no credit card required",
+      "description": "Web scraping API — 1,000 credits/month (500 searches or 1,000 pages scraped), 2 concurrent requests, no credit card required",
       "tier": "Free",
       "url": "https://www.firecrawl.dev/pricing",
       "tags": [
@@ -3165,7 +3165,7 @@
     {
       "vendor": "Inngest",
       "category": "Background Jobs",
-      "description": "Serverless workflow orchestration — 50K function executions/month, 100K events, 5 concurrent steps, 3 users, unlimited environments",
+      "description": "Serverless workflow orchestration — 50K executions, 500K events ingested, 5 concurrent steps, 500 MB span data ingested, 100K queue depth, 50 realtime connections",
       "tier": "Hobby",
       "url": "https://www.inngest.com/pricing",
       "tags": [
