@@ -6,6 +6,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { classifyTier } from "../dist/ranking.js";
 import { toSlug } from "../dist/vendor-slug.js";
+import { limitsPublishedOn } from "../dist/stack-claim.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.join(__dirname, "..");
@@ -59,9 +60,9 @@ describe("a stack that totals $0 names no vendor our catalogue says is paid (#11
     for (const stack of stackPaths) {
       const html = await (await fetch(`${base}${stack}`)).text();
       for (const m of html.matchAll(
-        /<td class="vendor-name">(?:<a href="\/vendor\/([a-z0-9.-]+)">)?([^<]+)(?:<\/a>)?<span class="free-tier-info">([^<]*)<\/span>/g,
+        /<td class="vendor-name">(?:<a href="\/vendor\/([a-z0-9.-]+)">)?([^<]+)(?:<\/a>)?<span class="free-tier-info">([\s\S]*?)<\/span><\/td>/g,
       )) {
-        rows.push({ stack, vendor: m[2], slug: m[1] ?? toSlug(m[2]), freeTier: m[3] });
+        rows.push({ stack, vendor: m[2], slug: m[1] ?? toSlug(m[2]), freeTier: limitsPublishedOn(`<tr><a href="/vendor/x"></a><span class="free-tier-info">${m[3]}</span></tr>`)[0]?.limit ?? "" });
       }
     }
 

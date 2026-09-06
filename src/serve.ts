@@ -21,7 +21,8 @@ import { LINK_GRACE_DAYS, unreachableNoticeForUrl } from "./link-health.js";
 import { offerEnded, offerRetired, recordedTierSentence, endedHeadline, endedHistorySentence, endedReliabilitySentence, endedEmptyChangeHistorySentence, ENDED_BADGE_LABEL, ENDED_SINCE_CHANGES_SENTENCE, type OfferTierAndUrl } from "./retirement.js";
 import { amountUnstatedSentence, levelWithheldReason, sourceStatesNoAmount, withheldLevelClause, withheldLevelSentence, type LevelWithheldReason } from "./source-check.js";
 import { readingIsBehindTheLoop, reverificationIntervalDays } from "./badge-staleness.js";
-import { SUPERSEDED_TERMS_LABEL, supersededTermsAnswer, supersededTermsMetaSentence, supersededTermsNotice, supersededTermsNoticeHtml, supersededTermsRecord, supersededTermsVerdictSentence, supersedingChange, type SupersededTermsRecord } from "./superseded-description.js";
+import { SUPERSEDED_TERMS_LABEL, openingOfTerms, readingBehindTheChange, supersededTermsAnswer, supersededTermsMetaSentence, supersededTermsNotice, supersededTermsNoticeHtml, supersededTermsRecord, supersededTermsVerdictSentence, supersedingChange, type SupersededTermsRecord } from "./superseded-description.js";
+import { NO_CURRENT_FIGURE, costHeadlineCaveat, limitCellText, mayRecommendAsFree, proseWithoutNames, readsActive, stackFreshnessStatement } from "./stack-claim.js";
 import { changesByVendor } from "./superseded-census.js";
 import { buildComparisonMap, comparisonSlug } from "./comparison-pairs.js";
 import { comparisonVerdictText, freeTierFaqAnswer, stabilityFaqAnswer, type ComparisonSide, type FreeTierSide, type SideFreeTier, type StabilityRating } from "./comparison-verdict.js";
@@ -940,6 +941,193 @@ const BADGE_COLORS: Record<BadgeStatus, string> = {
   "withheld": "#8b949e",
   "unknown": "#8b949e",
 };
+
+interface StackPickReading {
+  slug: string;
+  vendor: string;
+  tier: string;
+  status: BadgeStatus;
+  verdict: string;
+  why: string;
+  recommendable: boolean;
+  verifiedDate: string;
+  primary: Offer;
+}
+
+function stackPickReading(vendorName: string): StackPickReading | null {
+  return stackReadingForSlug(toSlug(vendorName));
+}
+
+function stackReadingForSlug(slug: string): StackPickReading | null {
+  const canonical = vendorSlugMap.get(slug);
+  if (!canonical) return null;
+  const context = vendorVerdictContext(canonical, utcDate());
+  if (!context) return null;
+  const badge = getBadgeStatus(slug);
+  return {
+    slug,
+    vendor: canonical,
+    tier: context.primary.tier,
+    status: badge.status,
+    verdict: badge.label,
+    why: vendorVerdictSentence(context.input),
+    recommendable: mayRecommendAsFree(badge.status),
+    verifiedDate: context.primary.verifiedDate,
+    primary: context.primary,
+  };
+}
+
+function stackKeyLimit(offer: StoredTermsOf, cap: number): string | null {
+  const superseded = supersedingChangeFor(offer);
+  if (!superseded) return limitCellText(offer.description, cap);
+  const reading = readingBehindTheChange(superseded);
+  return reading ? limitCellText(reading.terms, cap) : null;
+}
+
+function stackKeyLimitHtml(reading: StackPickReading, cap: number): string {
+  const limit = stackKeyLimit(reading.primary, cap);
+  if (limit === null) {
+    return `<span class="stack-no-figure" style="color:var(--text-dim)" title="${escHtmlServer(reading.why)}">${escHtmlServer(NO_CURRENT_FIGURE)}</span>`;
+  }
+  const superseded = supersedingChangeFor(reading.primary);
+  const source = superseded ? readingBehindTheChange(superseded) : null;
+  if (!source) return escHtmlServer(limit);
+  return `<span class="stack-limit-read" title="${escHtmlServer(`Our stored ${reading.vendor} terms are superseded. This is what ${source.label} read on ${source.date}.`)}">${escHtmlServer(limit)}</span>` +
+    ` <a href="/vendor/${reading.slug}#changes" class="stack-limit-source" style="font-size:.7rem;color:var(--text-dim)">read ${escHtmlServer(source.date)}</a>`;
+}
+
+function stackVerdictChipHtml(reading: StackPickReading, opts: { compact?: boolean } = {}): string {
+  const color = BADGE_COLORS[reading.status];
+  const size = opts.compact ? ".65rem" : ".7rem";
+  return `<span class="stack-verdict" style="display:inline-block;font-size:${size};padding:.15rem .5rem;border-radius:10px;background:${color}22;color:${color};font-weight:600" title="${escHtmlServer(reading.why)}">${escHtmlServer(reading.verdict)}</span>`;
+}
+
+function stackPickCostCaveat(readings: readonly StackPickReading[]): string {
+  const caveat = costHeadlineCaveat(readings.map(r => ({
+    vendor: r.vendor,
+    verdict: r.verdict,
+    readsActive: readsActive(r.status),
+  })));
+  if (caveat === "") return "";
+  return `\n    <div class="cost-caveat" style="margin-top:.75rem;font-size:.8rem;color:var(--text-muted);line-height:1.5">${escHtmlServer(caveat)}</div>`;
+}
+
+function stackFreshnessNote(readings: readonly StackPickReading[]): string {
+  return escHtmlServer(stackFreshnessStatement(readings.map(r => r.verifiedDate)));
+}
+
+function stackRecCardHtml(rec: EnrichedOfferRow, why: string): string {
+  const reading = stackPickReading(rec.vendor);
+  if (!reading) {
+    return `
+      <div class="stack-pick">
+        <div class="pick-header">
+          <span class="pick-badge">Recommended</span>
+          <a href="/vendor/${toSlug(rec.vendor)}" class="pick-name">${escHtmlServer(rec.vendor)}</a>
+          <span class="pick-tier">${escHtmlServer(rec.tier)}</span>
+        </div>
+        <p class="pick-why">${escHtmlServer(why)}</p>
+        <p class="pick-limits">${escHtmlServer(publishedTermsOpening(rec, 2))}</p>
+      </div>`;
+  }
+  const tier = reading.recommendable ? `\n          <span class="pick-tier">${escHtmlServer(reading.tier)}</span>` : "";
+  return `
+      <div class="stack-pick">
+        <div class="pick-header">
+          <span class="pick-badge">${reading.recommendable ? "Recommended" : "No longer a free-tier pick"}</span>
+          <a href="/vendor/${reading.slug}" class="pick-name">${escHtmlServer(reading.vendor)}</a>${tier}
+          ${stackVerdictChipHtml(reading, { compact: true })}
+        </div>
+        <p class="pick-why">${escHtmlServer(reading.recommendable ? why : reading.why)}</p>
+        <p class="pick-limits">${stackKeyLimitHtml(reading, 220)}</p>
+        <div class="pick-links">
+          <a href="/vendor/${reading.slug}">Full profile</a>
+          <a href="/alternative-to/${reading.slug}">Alternatives</a>
+          ${offerPricingLink(reading.primary, "Pricing &nearr;")}
+        </div>
+      </div>`;
+}
+
+function stackProseHtml(prose: string, names: readonly string[]): string {
+  const ended = names.filter(name => {
+    const reading = stackPickReading(name);
+    return reading !== null && !reading.recommendable;
+  });
+  return escHtmlServer(proseWithoutNames(prose, ended));
+}
+
+function stackPrimaryReadings(cats: readonly { recommended: { vendor: string } }[]): StackPickReading[] {
+  const seen = new Set<string>();
+  const readings: StackPickReading[] = [];
+  for (const cat of cats) {
+    const reading = stackPickReading(cat.recommended.vendor);
+    if (!reading || seen.has(reading.slug)) continue;
+    seen.add(reading.slug);
+    readings.push(reading);
+  }
+  return readings;
+}
+
+function stackTableCellsHtml(vendorName: string, fallbackLimit: string): { vendorLink: string; limits: string; verdict: string } {
+  const reading = stackPickReading(vendorName);
+  if (!reading) {
+    return {
+      vendorLink: `<span style="font-weight:600">${escHtmlServer(vendorName)}</span>`,
+      limits: escHtmlServer(fallbackLimit),
+      verdict: `<span style="color:var(--text-dim)">&mdash;</span>`,
+    };
+  }
+  return {
+    vendorLink: `<a href="/vendor/${reading.slug}" style="color:var(--text);font-weight:600">${escHtmlServer(vendorName)}</a>`,
+    limits: stackKeyLimitHtml(reading, 110),
+    verdict: stackVerdictChipHtml(reading),
+  };
+}
+
+function stackNamedPickHtml(vendorName: string, why: string, tier: string, limits: string): string {
+  const reading = stackPickReading(vendorName);
+  const limitsLine = limits === "" ? "" : `\n        <p class="pick-limits">${escHtmlServer(limits)}</p>`;
+  if (!reading) {
+    return `
+      <div class="stack-pick">
+        <div class="pick-header">
+          <span class="pick-badge">Recommended</span>
+          <span class="pick-name">${escHtmlServer(vendorName)}</span>
+          <span class="pick-tier">${escHtmlServer(tier)}</span>
+        </div>
+        <p class="pick-why">${escHtmlServer(why)}</p>${limitsLine}
+      </div>`;
+  }
+  return `
+      <div class="stack-pick">
+        <div class="pick-header">
+          <span class="pick-badge">${reading.recommendable ? "Recommended" : "No longer a free-tier pick"}</span>
+          <a href="/vendor/${reading.slug}" class="pick-name">${escHtmlServer(vendorName)}</a>
+          <span class="pick-tier">${escHtmlServer(tier)}</span>
+          ${stackVerdictChipHtml(reading, { compact: true })}
+        </div>
+        <p class="pick-why">${escHtmlServer(reading.recommendable ? why : reading.why)}</p>
+        <p class="pick-limits">${stackKeyLimitHtml(reading, 220)}</p>
+      </div>`;
+}
+
+function stackAltPicksHtml(altVendors: readonly EnrichedOfferRow[]): string {
+  if (altVendors.length === 0) return "";
+  const readings = altVendors.map(a => ({ offer: a, reading: stackPickReading(a.vendor) }));
+  const kept = readings.filter(r => r.reading === null || r.reading.recommendable);
+  const ended = readings.flatMap(r => (r.reading !== null && !r.reading.recommendable) ? [r.reading] : []);
+
+  const chips = kept.length === 0 ? "" : `
+      <div class="alt-picks">
+        <p class="alt-label">Also consider:</p>
+        ${kept.map(({ offer, reading }) => `<a href="/vendor/${toSlug(offer.vendor)}" class="alt-chip">${escHtmlServer(offer.vendor)} <span class="chip-tier">${escHtmlServer(offer.tier)}</span>${reading ? ` ${stackVerdictChipHtml(reading, { compact: true })}` : ""}</a>`).join(" ")}
+      </div>`;
+
+  const dropped = ended.length === 0 ? "" : `
+      <p class="alt-ended" style="font-size:.8rem;color:var(--text-muted);margin-top:.5rem">No longer a free-tier pick: ${ended.map(r => `<a href="/vendor/${r.slug}">${escHtmlServer(r.vendor)}</a> — ${escHtmlServer(r.verdict)}`).join("; ")}.</p>`;
+
+  return `${chips}${dropped}`;
+}
 
 function escXml(s: string): string {
   return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&apos;");
@@ -6559,7 +6747,7 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
   {
     slug: "free-startup-stack",
     title: "The Complete Free Startup Stack for 2026 — $0/Month SaaS Infrastructure Guide",
-    metaDesc: "Build a complete SaaS startup on free tiers. 10 infrastructure categories with recommended picks, exact limits, scaling guidance, and stability notes. Updated March 2026.",
+    metaDesc: "Build a complete SaaS startup on free tiers. 10 infrastructure categories with recommended picks, exact limits, scaling guidance, and stability notes.",
     contextHtml: "",
     tag: "startup-stack-guide",
     primaryVendor: "Vercel",
@@ -6568,7 +6756,7 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
   {
     slug: "free-ai-stack",
     title: "The Complete Free AI/ML Stack for 2026 — $0/Month AI Development Infrastructure",
-    metaDesc: "Build AI apps on free tiers. 10 AI/ML infrastructure categories — LLM APIs, vector databases, experiment tracking, observability, and more. Exact limits, scaling guidance. Updated March 2026.",
+    metaDesc: "Build AI apps on free tiers. 10 AI/ML infrastructure categories — LLM APIs, vector databases, experiment tracking, observability, and more. Exact limits, scaling guidance.",
     contextHtml: "",
     tag: "ai-stack-guide",
     primaryVendor: "Groq",
@@ -6577,7 +6765,7 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
   {
     slug: "free-devops-stack",
     title: "The Complete Free DevOps Stack for 2026 — $0/Month Infrastructure Ops",
-    metaDesc: "Build and run infrastructure on free tiers. 10 DevOps categories — CI/CD, monitoring, logging, container registries, secrets management, and more. Exact limits, scaling guidance. Updated March 2026.",
+    metaDesc: "Build and run infrastructure on free tiers. 10 DevOps categories — CI/CD, monitoring, logging, container registries, secrets management, and more. Exact limits, scaling guidance.",
     contextHtml: "",
     tag: "devops-stack-guide",
     primaryVendor: "GitHub Actions",
@@ -6586,7 +6774,7 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
   {
     slug: "free-frontend-stack",
     title: "The Complete Free Frontend Stack for 2026 — $0/Month Jamstack & Web Development",
-    metaDesc: "Build and ship frontend projects on free tiers. 10 categories — hosting, CDN, CMS, forms, analytics, error tracking, image optimization, and more. Exact limits, scaling guidance. Updated March 2026.",
+    metaDesc: "Build and ship frontend projects on free tiers. 10 categories — hosting, CDN, CMS, forms, analytics, error tracking, image optimization, and more. Exact limits, scaling guidance.",
     contextHtml: "",
     tag: "frontend-stack-guide",
     primaryVendor: "Cloudflare Pages",
@@ -6595,7 +6783,7 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
   {
     slug: "free-nextjs-stack",
     title: "The Complete Free Next.js Stack for 2026 — $0/Month Full-Stack Infrastructure",
-    metaDesc: "Build a complete Next.js app on free tiers. 10 infrastructure layers — hosting, database, auth, storage, email, monitoring, CI/CD, analytics, search, and background jobs. Exact limits, growth costs. Updated April 2026.",
+    metaDesc: "Build a complete Next.js app on free tiers. 10 infrastructure layers — hosting, database, auth, storage, email, monitoring, CI/CD, analytics, search, and background jobs. Exact limits, growth costs.",
     contextHtml: "",
     tag: "nextjs-stack-guide",
     primaryVendor: "Vercel",
@@ -6604,7 +6792,7 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
   {
     slug: "free-django-stack",
     title: "The Complete Free Django/Python Stack for 2026 — $0/Month Full-Stack Infrastructure",
-    metaDesc: "Build a complete Django app on free tiers. 10 infrastructure layers — WSGI hosting, Postgres, Redis/cache, auth, storage, email, monitoring, CI/CD, task queue, and search. Exact limits, growth costs. Updated April 2026.",
+    metaDesc: "Build a complete Django app on free tiers. 10 infrastructure layers — WSGI hosting, Postgres, Redis/cache, auth, storage, email, monitoring, CI/CD, task queue, and search. Exact limits, growth costs.",
     contextHtml: "",
     tag: "django-stack-guide",
     primaryVendor: "Railway",
@@ -6613,7 +6801,7 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
   {
     slug: "free-fastapi-stack",
     title: "The Complete Free FastAPI/Python Stack for 2026 — $0/Month Full-Stack Infrastructure",
-    metaDesc: "Build a complete FastAPI app on free tiers. 10 infrastructure layers — ASGI hosting, async Postgres, Redis, auth, storage, email, monitoring, CI/CD, background tasks, and API docs. Exact limits, growth costs. Updated April 2026.",
+    metaDesc: "Build a complete FastAPI app on free tiers. 10 infrastructure layers — ASGI hosting, async Postgres, Redis, auth, storage, email, monitoring, CI/CD, background tasks, and API docs. Exact limits, growth costs.",
     contextHtml: "",
     tag: "fastapi-stack-guide",
     primaryVendor: "Railway",
@@ -6622,7 +6810,7 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
   {
     slug: "free-go-stack",
     title: "The Complete Free Go/Golang Stack for 2026 — $0/Month Full-Stack Infrastructure",
-    metaDesc: "Build a complete Go app on free tiers. 10 infrastructure layers — single binary hosting, Postgres via pgx, Redis, auth, storage, email, monitoring, CI/CD, background jobs, and API docs. Exact limits, growth costs. Updated April 2026.",
+    metaDesc: "Build a complete Go app on free tiers. 10 infrastructure layers — single binary hosting, Postgres via pgx, Redis, auth, storage, email, monitoring, CI/CD, background jobs, and API docs. Exact limits, growth costs.",
     contextHtml: "",
     tag: "go-stack-guide",
     primaryVendor: "Railway",
@@ -6631,7 +6819,7 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
   {
     slug: "free-saas-stack",
     title: "The Complete Free SaaS Starter Stack for 2026 — Build and Launch for $0/Month",
-    metaDesc: "Build a complete SaaS product on free tiers. 12 infrastructure categories — hosting, database, auth, payments, email, storage, monitoring, CI/CD, analytics. Exact limits, growth costs at 1K/10K/100K users. Updated April 2026.",
+    metaDesc: "Build a complete SaaS product on free tiers. 12 infrastructure categories — hosting, database, auth, payments, email, storage, monitoring, CI/CD, analytics. Exact limits, growth costs at 1K/10K/100K users.",
     contextHtml: "",
     tag: "saas-stack-guide",
     primaryVendor: "Neon",
@@ -14301,10 +14489,8 @@ ${buildCards(other)}
 
 function buildFreeStartupStackPage(): string {
   const title = "The Complete Free Startup Stack for 2026 — $0/Month SaaS Infrastructure Guide";
-  const metaDesc = "Build a complete SaaS startup on free tiers. 10 infrastructure categories with recommended picks, exact limits, scaling guidance, and stability notes. Updated March 2026.";
+  const metaDesc = "Build a complete SaaS startup on free tiers. 10 infrastructure categories with recommended picks, exact limits, scaling guidance, and stability notes.";
   const slug = "free-startup-stack";
-
-  const riskColors: Record<string, string> = { stable: "#3fb950", caution: "#d29922", risky: "#f85149" };
 
   const stackCategories = [
     {
@@ -14410,32 +14596,14 @@ function buildFreeStartupStackPage(): string {
     author: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
   };
 
+  const pageReadings = stackPrimaryReadings(stackCategories);
   const categorySections = stackCategories.map(cat => {
     const rec = resolveVendor(cat.recommended.vendor);
     const altVendors = cat.alternatives.filter(v => v !== cat.recommended.vendor).map(v => resolveVendor(v)).filter(Boolean) as ReturnType<typeof enrichOffers>;
 
-    const recCard = rec ? `
-      <div class="stack-pick">
-        <div class="pick-header">
-          <span class="pick-badge">Recommended</span>
-          <a href="/vendor/${toSlug(rec.vendor)}" class="pick-name">${escHtmlServer(rec.vendor)}</a>
-          <span class="pick-tier">${escHtmlServer(rec.tier)}</span>
-          ${riskBadgeHtml(rec.risk_level, rec.risk_cause, { compact: true, margin: false })}
-        </div>
-        <p class="pick-why">${escHtmlServer(cat.recommended.why)}</p>
-        <p class="pick-limits">${escHtmlServer(publishedTermsOpening(rec, 2))}</p>
-        <div class="pick-links">
-          <a href="/vendor/${toSlug(rec.vendor)}">Full profile</a>
-          <a href="/alternative-to/${toSlug(rec.vendor)}">Alternatives</a>
-          ${offerPricingLink(rec, "Pricing &nearr;")}
-        </div>
-      </div>` : "";
+    const recCard = rec ? stackRecCardHtml(rec, cat.recommended.why) : "";
 
-    const altCards = altVendors.length > 0 ? `
-      <div class="alt-picks">
-        <p class="alt-label">Also consider:</p>
-        ${altVendors.map(a => `<a href="/vendor/${toSlug(a.vendor)}" class="alt-chip">${escHtmlServer(a.vendor)} <span class="chip-tier">${escHtmlServer(a.tier)}</span></a>`).join(" ")}
-      </div>` : "";
+    const altCards = stackAltPicksHtml(altVendors);
 
     const relatedLink = cat.relatedPage ? `<a href="${cat.relatedPage}" class="related-link">Full comparison guide &rarr;</a>` : "";
 
@@ -14445,7 +14613,7 @@ function buildFreeStartupStackPage(): string {
       ${recCard}
       ${altCards}
       <div class="outgrow-box">
-        <strong>When you'll outgrow it:</strong> ${escHtmlServer(cat.outgrow)}
+        <strong>When you'll outgrow it:</strong> ${stackProseHtml(cat.outgrow, [cat.recommended.vendor, ...cat.alternatives])}
       </div>
       ${relatedLink}
     </div>`;
@@ -14471,14 +14639,12 @@ function buildFreeStartupStackPage(): string {
   <p style="margin-top:1rem;font-size:.85rem"><a href="/changes">View all ${dealChanges.length} pricing changes &rarr;</a></p>` : "";
 
   const tableRows = stackCategories.map(cat => {
-    const rec = resolveVendor(cat.recommended.vendor);
-    const limits = rec ? publishedTermsOpening(rec, 1, 80) : "—";
-    const riskBadge = rec ? riskCellHtml(rec.risk_level, rec.risk_cause) : riskCellHtml("stable", null);
+    const cells = stackTableCellsHtml(cat.recommended.vendor, "—");
     return `      <tr>
         <td style="font-weight:600">${cat.icon} ${escHtmlServer(cat.name)}</td>
-        <td><a href="/vendor/${toSlug(cat.recommended.vendor)}" style="color:var(--text);font-weight:600">${escHtmlServer(cat.recommended.vendor)}</a></td>
-        <td style="font-family:var(--mono);font-size:.8rem;color:var(--accent)">${escHtmlServer(limits)}</td>
-        <td>${riskBadge}</td>
+        <td>${cells.vendorLink}</td>
+        <td style="font-family:var(--mono);font-size:.8rem;color:var(--accent)">${cells.limits}</td>
+        <td>${cells.verdict}</td>
       </tr>`;
   }).join("\n");
 
@@ -14557,12 +14723,12 @@ ${mcpCtaCss()}
 
   <div class="context">
     <p>You can build and launch a complete SaaS product without spending a dollar on infrastructure. This guide recommends the best free tier for each layer of a typical startup stack — <strong>10 categories</strong> from hosting to analytics — with exact limits pulled from our index of ${offers.length.toLocaleString()}+ verified developer tools.</p>
-    <p>Each recommendation includes alternatives, a "when you'll outgrow it" guide, and stability notes based on our tracking of ${dealChanges.length} real pricing changes. All limits verified against live pricing pages, March 2026.</p>
+    <p>Each recommendation includes alternatives, a "when you'll outgrow it" guide, and stability notes based on our tracking of ${dealChanges.length} real pricing changes. ${stackFreshnessNote(pageReadings)}</p>
   </div>
 
   <div class="cost-banner">
     <div class="cost-amount">$0<span style="font-size:1rem;color:var(--text-muted)">/month</span></div>
-    <div class="cost-label">Total estimated monthly cost for the complete stack below</div>
+    <div class="cost-label">Total estimated monthly cost for the complete stack below</div>${stackPickCostCaveat(pageReadings)}
   </div>
 
   <h2>Stack Overview</h2>
@@ -14615,10 +14781,8 @@ ${stabilityNotes}
 
 function buildFreeAiStackPage(): string {
   const title = "The Complete Free AI/ML Stack for 2026 — $0/Month AI Development Infrastructure";
-  const metaDesc = "Build AI apps on free tiers. 10 AI/ML infrastructure categories — LLM APIs, vector databases, experiment tracking, observability, and more. Exact limits, scaling guidance. Updated March 2026.";
+  const metaDesc = "Build AI apps on free tiers. 10 AI/ML infrastructure categories — LLM APIs, vector databases, experiment tracking, observability, and more. Exact limits, scaling guidance.";
   const slug = "free-ai-stack";
-
-  const riskColors: Record<string, string> = { stable: "#3fb950", caution: "#d29922", risky: "#f85149" };
 
   const stackCategories = [
     {
@@ -14723,32 +14887,14 @@ function buildFreeAiStackPage(): string {
     author: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
   };
 
+  const pageReadings = stackPrimaryReadings(stackCategories);
   const categorySections = stackCategories.map(cat => {
     const rec = resolveVendor(cat.recommended.vendor);
     const altVendors = cat.alternatives.filter(v => v !== cat.recommended.vendor).map(v => resolveVendor(v)).filter(Boolean) as ReturnType<typeof enrichOffers>;
 
-    const recCard = rec ? `
-      <div class="stack-pick">
-        <div class="pick-header">
-          <span class="pick-badge">Recommended</span>
-          <a href="/vendor/${toSlug(rec.vendor)}" class="pick-name">${escHtmlServer(rec.vendor)}</a>
-          <span class="pick-tier">${escHtmlServer(rec.tier)}</span>
-          ${riskBadgeHtml(rec.risk_level, rec.risk_cause, { compact: true, margin: false })}
-        </div>
-        <p class="pick-why">${escHtmlServer(cat.recommended.why)}</p>
-        <p class="pick-limits">${escHtmlServer(publishedTermsOpening(rec, 2))}</p>
-        <div class="pick-links">
-          <a href="/vendor/${toSlug(rec.vendor)}">Full profile</a>
-          <a href="/alternative-to/${toSlug(rec.vendor)}">Alternatives</a>
-          ${offerPricingLink(rec, "Pricing &nearr;")}
-        </div>
-      </div>` : "";
+    const recCard = rec ? stackRecCardHtml(rec, cat.recommended.why) : "";
 
-    const altCards = altVendors.length > 0 ? `
-      <div class="alt-picks">
-        <p class="alt-label">Also consider:</p>
-        ${altVendors.map(a => `<a href="/vendor/${toSlug(a.vendor)}" class="alt-chip">${escHtmlServer(a.vendor)} <span class="chip-tier">${escHtmlServer(a.tier)}</span></a>`).join(" ")}
-      </div>` : "";
+    const altCards = stackAltPicksHtml(altVendors);
 
     const relatedLink = cat.relatedPage ? `<a href="${cat.relatedPage}" class="related-link">Full comparison guide &rarr;</a>` : "";
 
@@ -14758,7 +14904,7 @@ function buildFreeAiStackPage(): string {
       ${recCard}
       ${altCards}
       <div class="outgrow-box">
-        <strong>When you'll outgrow it:</strong> ${escHtmlServer(cat.outgrow)}
+        <strong>When you'll outgrow it:</strong> ${stackProseHtml(cat.outgrow, [cat.recommended.vendor, ...cat.alternatives])}
       </div>
       ${relatedLink}
     </div>`;
@@ -14784,14 +14930,12 @@ function buildFreeAiStackPage(): string {
   <p style="margin-top:1rem;font-size:.85rem"><a href="/changes">View all ${dealChanges.length} pricing changes &rarr;</a></p>` : "";
 
   const tableRows = stackCategories.map(cat => {
-    const rec = resolveVendor(cat.recommended.vendor);
-    const limits = rec ? publishedTermsOpening(rec, 1, 80) : "—";
-    const riskBadge = rec ? riskCellHtml(rec.risk_level, rec.risk_cause) : riskCellHtml("stable", null);
+    const cells = stackTableCellsHtml(cat.recommended.vendor, "—");
     return `      <tr>
         <td style="font-weight:600">${cat.icon} ${escHtmlServer(cat.name)}</td>
-        <td><a href="/vendor/${toSlug(cat.recommended.vendor)}" style="color:var(--text);font-weight:600">${escHtmlServer(cat.recommended.vendor)}</a></td>
-        <td style="font-family:var(--mono);font-size:.8rem;color:var(--accent)">${escHtmlServer(limits)}</td>
-        <td>${riskBadge}</td>
+        <td>${cells.vendorLink}</td>
+        <td style="font-family:var(--mono);font-size:.8rem;color:var(--accent)">${cells.limits}</td>
+        <td>${cells.verdict}</td>
       </tr>`;
   }).join("\n");
 
@@ -14886,12 +15030,12 @@ ${mcpCtaCss()}
 
   <div class="context">
     <p>Everything you need to build, train, and deploy AI applications — without spending a dollar. This guide recommends the best free tier for each layer of an AI/ML development stack — <strong>10 categories</strong> from LLM APIs to speech AI — with exact limits pulled from our index of ${offers.length.toLocaleString()}+ verified developer tools.</p>
-    <p>Designed for solo AI developers, indie hackers, and startup teams prototyping AI features. Each recommendation includes alternatives, a "when you'll outgrow it" guide, and stability notes based on our tracking of ${dealChanges.length} real pricing changes. All limits verified March 2026.</p>
+    <p>Designed for solo AI developers, indie hackers, and startup teams prototyping AI features. Each recommendation includes alternatives, a "when you'll outgrow it" guide, and stability notes based on our tracking of ${dealChanges.length} real pricing changes. ${stackFreshnessNote(pageReadings)}</p>
   </div>
 
   <div class="cost-banner">
     <div class="cost-amount">$0<span style="font-size:1rem;color:var(--text-muted)">/month</span></div>
-    <div class="cost-label">Total estimated monthly cost for prototyping and experimentation</div>
+    <div class="cost-label">Total estimated monthly cost for prototyping and experimentation</div>${stackPickCostCaveat(pageReadings)}
   </div>
 
   <h2>Stack Overview</h2>
@@ -14965,10 +15109,8 @@ ${ossAlternatives.map(oss => `      <tr>
 
 function buildFreeDevopsStackPage(): string {
   const title = "The Complete Free DevOps Stack for 2026 — $0/Month Infrastructure Ops";
-  const metaDesc = "Build and run infrastructure on free tiers. 10 DevOps categories — CI/CD, monitoring, logging, container registries, secrets management, and more. Exact limits, scaling guidance. Updated March 2026.";
+  const metaDesc = "Build and run infrastructure on free tiers. 10 DevOps categories — CI/CD, monitoring, logging, container registries, secrets management, and more. Exact limits, scaling guidance.";
   const slug = "free-devops-stack";
-
-  const riskColors: Record<string, string> = { stable: "#3fb950", caution: "#d29922", risky: "#f85149" };
 
   const stackCategories = [
     {
@@ -15073,32 +15215,14 @@ function buildFreeDevopsStackPage(): string {
     author: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
   };
 
+  const pageReadings = stackPrimaryReadings(stackCategories);
   const categorySections = stackCategories.map(cat => {
     const rec = resolveVendor(cat.recommended.vendor);
     const altVendors = cat.alternatives.filter(v => v !== cat.recommended.vendor).map(v => resolveVendor(v)).filter(Boolean) as ReturnType<typeof enrichOffers>;
 
-    const recCard = rec ? `
-      <div class="stack-pick">
-        <div class="pick-header">
-          <span class="pick-badge">Recommended</span>
-          <a href="/vendor/${toSlug(rec.vendor)}" class="pick-name">${escHtmlServer(rec.vendor)}</a>
-          <span class="pick-tier">${escHtmlServer(rec.tier)}</span>
-          ${riskBadgeHtml(rec.risk_level, rec.risk_cause, { compact: true, margin: false })}
-        </div>
-        <p class="pick-why">${escHtmlServer(cat.recommended.why)}</p>
-        <p class="pick-limits">${escHtmlServer(publishedTermsOpening(rec, 2))}</p>
-        <div class="pick-links">
-          <a href="/vendor/${toSlug(rec.vendor)}">Full profile</a>
-          <a href="/alternative-to/${toSlug(rec.vendor)}">Alternatives</a>
-          ${offerPricingLink(rec, "Pricing &nearr;")}
-        </div>
-      </div>` : "";
+    const recCard = rec ? stackRecCardHtml(rec, cat.recommended.why) : "";
 
-    const altCards = altVendors.length > 0 ? `
-      <div class="alt-picks">
-        <p class="alt-label">Also consider:</p>
-        ${altVendors.map(a => `<a href="/vendor/${toSlug(a.vendor)}" class="alt-chip">${escHtmlServer(a.vendor)} <span class="chip-tier">${escHtmlServer(a.tier)}</span></a>`).join(" ")}
-      </div>` : "";
+    const altCards = stackAltPicksHtml(altVendors);
 
     const relatedLink = cat.relatedPage ? `<a href="${cat.relatedPage}" class="related-link">Full comparison guide &rarr;</a>` : "";
 
@@ -15108,7 +15232,7 @@ function buildFreeDevopsStackPage(): string {
       ${recCard}
       ${altCards}
       <div class="outgrow-box">
-        <strong>When you'll outgrow it:</strong> ${escHtmlServer(cat.outgrow)}
+        <strong>When you'll outgrow it:</strong> ${stackProseHtml(cat.outgrow, [cat.recommended.vendor, ...cat.alternatives])}
       </div>
       ${relatedLink}
     </div>`;
@@ -15134,14 +15258,12 @@ function buildFreeDevopsStackPage(): string {
   <p style="margin-top:1rem;font-size:.85rem"><a href="/changes">View all ${dealChanges.length} pricing changes &rarr;</a></p>` : "";
 
   const tableRows = stackCategories.map(cat => {
-    const rec = resolveVendor(cat.recommended.vendor);
-    const limits = rec ? publishedTermsOpening(rec, 1, 80) : "—";
-    const riskBadge = rec ? riskCellHtml(rec.risk_level, rec.risk_cause) : riskCellHtml("stable", null);
+    const cells = stackTableCellsHtml(cat.recommended.vendor, "—");
     return `      <tr>
         <td style="font-weight:600">${cat.icon} ${escHtmlServer(cat.name)}</td>
-        <td><a href="/vendor/${toSlug(cat.recommended.vendor)}" style="color:var(--text);font-weight:600">${escHtmlServer(cat.recommended.vendor)}</a></td>
-        <td style="font-family:var(--mono);font-size:.8rem;color:var(--accent)">${escHtmlServer(limits)}</td>
-        <td>${riskBadge}</td>
+        <td>${cells.vendorLink}</td>
+        <td style="font-family:var(--mono);font-size:.8rem;color:var(--accent)">${cells.limits}</td>
+        <td>${cells.verdict}</td>
       </tr>`;
   }).join("\n");
 
@@ -15237,12 +15359,12 @@ ${mcpCtaCss()}
 
   <div class="context">
     <p>Everything you need to build, deploy, and operate software infrastructure — without spending a dollar. This guide recommends the best free tier for each layer of a DevOps stack — <strong>10 categories</strong> from CI/CD pipelines to secrets management — with exact limits pulled from our index of ${offers.length.toLocaleString()}+ verified developer tools.</p>
-    <p>Designed for solo developers, small teams, and startups setting up their first production infrastructure. Each recommendation includes alternatives, a "when you'll outgrow it" guide, and stability notes based on our tracking of ${dealChanges.length} real pricing changes. All limits verified March 2026.</p>
+    <p>Designed for solo developers, small teams, and startups setting up their first production infrastructure. Each recommendation includes alternatives, a "when you'll outgrow it" guide, and stability notes based on our tracking of ${dealChanges.length} real pricing changes. ${stackFreshnessNote(pageReadings)}</p>
   </div>
 
   <div class="cost-banner">
     <div class="cost-amount">$0<span style="font-size:1rem;color:var(--text-muted)">/month</span></div>
-    <div class="cost-label">Total estimated monthly cost for a solo developer or small team</div>
+    <div class="cost-label">Total estimated monthly cost for a solo developer or small team</div>${stackPickCostCaveat(pageReadings)}
   </div>
 
   <h2>Stack Overview</h2>
@@ -15316,10 +15438,8 @@ ${ossAlternatives.map(oss => `      <tr>
 
 function buildFreeFrontendStackPage(): string {
   const title = "The Complete Free Frontend Stack for 2026 — $0/Month Jamstack & Web Development";
-  const metaDesc = "Build and ship frontend projects on free tiers. 10 categories — hosting, CDN, CMS, forms, analytics, error tracking, image optimization, and more. Exact limits, scaling guidance. Updated March 2026.";
+  const metaDesc = "Build and ship frontend projects on free tiers. 10 categories — hosting, CDN, CMS, forms, analytics, error tracking, image optimization, and more. Exact limits, scaling guidance.";
   const slug = "free-frontend-stack";
-
-  const riskColors: Record<string, string> = { stable: "#3fb950", caution: "#d29922", risky: "#f85149" };
 
   const stackCategories = [
     {
@@ -15424,32 +15544,14 @@ function buildFreeFrontendStackPage(): string {
     author: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
   };
 
+  const pageReadings = stackPrimaryReadings(stackCategories);
   const categorySections = stackCategories.map(cat => {
     const rec = resolveVendor(cat.recommended.vendor);
     const altVendors = cat.alternatives.filter(v => v !== cat.recommended.vendor).map(v => resolveVendor(v)).filter(Boolean) as ReturnType<typeof enrichOffers>;
 
-    const recCard = rec ? `
-      <div class="stack-pick">
-        <div class="pick-header">
-          <span class="pick-badge">Recommended</span>
-          <a href="/vendor/${toSlug(rec.vendor)}" class="pick-name">${escHtmlServer(rec.vendor)}</a>
-          <span class="pick-tier">${escHtmlServer(rec.tier)}</span>
-          ${riskBadgeHtml(rec.risk_level, rec.risk_cause, { compact: true, margin: false })}
-        </div>
-        <p class="pick-why">${escHtmlServer(cat.recommended.why)}</p>
-        <p class="pick-limits">${escHtmlServer(publishedTermsOpening(rec, 2))}</p>
-        <div class="pick-links">
-          <a href="/vendor/${toSlug(rec.vendor)}">Full profile</a>
-          <a href="/alternative-to/${toSlug(rec.vendor)}">Alternatives</a>
-          ${offerPricingLink(rec, "Pricing &nearr;")}
-        </div>
-      </div>` : "";
+    const recCard = rec ? stackRecCardHtml(rec, cat.recommended.why) : "";
 
-    const altCards = altVendors.length > 0 ? `
-      <div class="alt-picks">
-        <p class="alt-label">Also consider:</p>
-        ${altVendors.map(a => `<a href="/vendor/${toSlug(a.vendor)}" class="alt-chip">${escHtmlServer(a.vendor)} <span class="chip-tier">${escHtmlServer(a.tier)}</span></a>`).join(" ")}
-      </div>` : "";
+    const altCards = stackAltPicksHtml(altVendors);
 
     const relatedLink = cat.relatedPage ? `<a href="${cat.relatedPage}" class="related-link">Full comparison guide &rarr;</a>` : "";
 
@@ -15459,7 +15561,7 @@ function buildFreeFrontendStackPage(): string {
       ${recCard}
       ${altCards}
       <div class="outgrow-box">
-        <strong>When you'll outgrow it:</strong> ${escHtmlServer(cat.outgrow)}
+        <strong>When you'll outgrow it:</strong> ${stackProseHtml(cat.outgrow, [cat.recommended.vendor, ...cat.alternatives])}
       </div>
       ${relatedLink}
     </div>`;
@@ -15485,14 +15587,12 @@ function buildFreeFrontendStackPage(): string {
   <p style="margin-top:1rem;font-size:.85rem"><a href="/changes">View all ${dealChanges.length} pricing changes &rarr;</a></p>` : "";
 
   const tableRows = stackCategories.map(cat => {
-    const rec = resolveVendor(cat.recommended.vendor);
-    const limits = rec ? publishedTermsOpening(rec, 1, 80) : "—";
-    const riskBadge = rec ? riskCellHtml(rec.risk_level, rec.risk_cause) : riskCellHtml("stable", null);
+    const cells = stackTableCellsHtml(cat.recommended.vendor, "—");
     return `      <tr>
         <td style="font-weight:600">${cat.icon} ${escHtmlServer(cat.name)}</td>
-        <td><a href="/vendor/${toSlug(cat.recommended.vendor)}" style="color:var(--text);font-weight:600">${escHtmlServer(cat.recommended.vendor)}</a></td>
-        <td style="font-family:var(--mono);font-size:.8rem;color:var(--accent)">${escHtmlServer(limits)}</td>
-        <td>${riskBadge}</td>
+        <td>${cells.vendorLink}</td>
+        <td style="font-family:var(--mono);font-size:.8rem;color:var(--accent)">${cells.limits}</td>
+        <td>${cells.verdict}</td>
       </tr>`;
   }).join("\n");
 
@@ -15588,12 +15688,12 @@ ${mcpCtaCss()}
 
   <div class="context">
     <p>Everything you need to build, deploy, and ship frontend projects — without spending a dollar. This guide recommends the best free tier for each layer of a frontend/Jamstack stack — <strong>10 categories</strong> from static hosting to feature flags — with exact limits pulled from our index of ${offers.length.toLocaleString()}+ verified developer tools.</p>
-    <p>Designed for solo developers, freelancers, and small teams building websites, web apps, and Jamstack projects. Each recommendation includes alternatives, a "when you'll outgrow it" guide, and stability notes based on our tracking of ${dealChanges.length} real pricing changes. All limits verified March 2026.</p>
+    <p>Designed for solo developers, freelancers, and small teams building websites, web apps, and Jamstack projects. Each recommendation includes alternatives, a "when you'll outgrow it" guide, and stability notes based on our tracking of ${dealChanges.length} real pricing changes. ${stackFreshnessNote(pageReadings)}</p>
   </div>
 
   <div class="cost-banner">
     <div class="cost-amount">$0<span style="font-size:1rem;color:var(--text-muted)">/month</span></div>
-    <div class="cost-label">Total estimated monthly cost for a personal site or small project</div>
+    <div class="cost-label">Total estimated monthly cost for a personal site or small project</div>${stackPickCostCaveat(pageReadings)}
   </div>
 
   <h2>Stack Overview</h2>
@@ -15667,10 +15767,8 @@ ${ossAlternatives.map(oss => `      <tr>
 
 function buildFreeNextjsStackPage(): string {
   const title = "The Complete Free Next.js Stack for 2026 — $0/Month Full-Stack Infrastructure";
-  const metaDesc = "Build a complete Next.js app on free tiers. 10 infrastructure layers — hosting, database, auth, storage, email, monitoring, CI/CD, analytics, search, and background jobs. Exact limits, growth costs. Updated April 2026.";
+  const metaDesc = "Build a complete Next.js app on free tiers. 10 infrastructure layers — hosting, database, auth, storage, email, monitoring, CI/CD, analytics, search, and background jobs. Exact limits, growth costs.";
   const slug = "free-nextjs-stack";
-
-  const riskColors: Record<string, string> = { stable: "#3fb950", caution: "#d29922", risky: "#f85149" };
 
   const stackCategories = [
     {
@@ -15792,36 +15890,18 @@ function buildFreeNextjsStackPage(): string {
     { q: "What's the first thing to spend money on when scaling a Next.js app?", a: "Database. Neon's 0.5 GiB free storage is the tightest limit in the stack. The Neon Launch plan at $19/month gets you 10 GiB storage, 300 compute hours, and autoscaling. After that, hosting: Vercel Pro at $20/month unlocks commercial use, 1 TB bandwidth, and faster builds. Everything else (auth, email, monitoring, analytics) scales to meaningful traffic on free tiers." },
   ]);
 
+  const pageReadings = stackPrimaryReadings(stackCategories);
   const categorySections = stackCategories.map(cat => {
     const rec = resolveVendor(cat.recommended.vendor);
     const altVendors = cat.alternatives.filter(v => v !== cat.recommended.vendor).map(v => resolveVendor(v)).filter(Boolean) as ReturnType<typeof enrichOffers>;
 
-    const recCard = rec ? `
-      <div class="stack-pick">
-        <div class="pick-header">
-          <span class="pick-badge">Recommended</span>
-          <a href="/vendor/${toSlug(rec.vendor)}" class="pick-name">${escHtmlServer(rec.vendor)}</a>
-          <span class="pick-tier">${escHtmlServer(rec.tier)}</span>
-          ${riskBadgeHtml(rec.risk_level, rec.risk_cause, { compact: true, margin: false })}
-        </div>
-        <p class="pick-why">${escHtmlServer(cat.recommended.why)}</p>
-        <p class="pick-limits">${escHtmlServer(publishedTermsOpening(rec, 2))}</p>
-        <div class="pick-links">
-          <a href="/vendor/${toSlug(rec.vendor)}">Full profile</a>
-          <a href="/alternative-to/${toSlug(rec.vendor)}">Alternatives</a>
-          ${offerPricingLink(rec, "Pricing &nearr;")}
-        </div>
-      </div>` : "";
+    const recCard = rec ? stackRecCardHtml(rec, cat.recommended.why) : "";
 
-    const altCards = altVendors.length > 0 ? `
-      <div class="alt-picks">
-        <p class="alt-label">Also consider:</p>
-        ${altVendors.map(a => `<a href="/vendor/${toSlug(a.vendor)}" class="alt-chip">${escHtmlServer(a.vendor)} <span class="chip-tier">${escHtmlServer(a.tier)}</span></a>`).join(" ")}
-      </div>` : "";
+    const altCards = stackAltPicksHtml(altVendors);
 
     const whyNotBox = cat.whyNot ? `
       <div class="whynot-box">
-        <strong>⚠️ ${escHtmlServer(cat.whyNot)}</strong>
+        <strong>⚠️ ${stackProseHtml(cat.whyNot, [cat.recommended.vendor, ...cat.alternatives])}</strong>
       </div>` : "";
 
     const relatedLink = cat.relatedPage ? `<a href="${cat.relatedPage}" class="related-link">Full comparison guide &rarr;</a>` : "";
@@ -15832,7 +15912,7 @@ function buildFreeNextjsStackPage(): string {
       ${recCard}
       ${altCards}
       <div class="outgrow-box">
-        <strong>When you'll outgrow it:</strong> ${escHtmlServer(cat.outgrow)}
+        <strong>When you'll outgrow it:</strong> ${stackProseHtml(cat.outgrow, [cat.recommended.vendor, ...cat.alternatives])}
       </div>
       ${whyNotBox}
       ${relatedLink}
@@ -15859,14 +15939,12 @@ function buildFreeNextjsStackPage(): string {
   <p style="margin-top:1rem;font-size:.85rem"><a href="/changes">View all ${dealChanges.length} pricing changes &rarr;</a></p>` : "";
 
   const tableRows = stackCategories.map(cat => {
-    const rec = resolveVendor(cat.recommended.vendor);
-    const limits = rec ? publishedTermsOpening(rec, 1, 80) : "—";
-    const riskBadge = rec ? riskCellHtml(rec.risk_level, rec.risk_cause) : riskCellHtml("stable", null);
+    const cells = stackTableCellsHtml(cat.recommended.vendor, "—");
     return `      <tr>
         <td style="font-weight:600">${cat.icon} ${escHtmlServer(cat.name)}</td>
-        <td><a href="/vendor/${toSlug(cat.recommended.vendor)}" style="color:var(--text);font-weight:600">${escHtmlServer(cat.recommended.vendor)}</a></td>
-        <td style="font-family:var(--mono);font-size:.8rem;color:var(--accent)">${escHtmlServer(limits)}</td>
-        <td>${riskBadge}</td>
+        <td>${cells.vendorLink}</td>
+        <td style="font-family:var(--mono);font-size:.8rem;color:var(--accent)">${cells.limits}</td>
+        <td>${cells.verdict}</td>
       </tr>`;
   }).join("\n");
 
@@ -15966,12 +16044,12 @@ ${mcpCtaCss()}
 
   <div class="context">
     <p>Everything you need to build and ship a Next.js app — without spending a dollar. This guide recommends the best free tier for each layer of your Next.js infrastructure — <strong>10 layers</strong> from hosting to background jobs — with exact limits pulled from our index of ${offers.length.toLocaleString()}+ verified developer tools.</p>
-    <p>Designed for solo developers, indie hackers, and small teams building SaaS products, side projects, or MVPs with Next.js. Each recommendation includes alternatives, a "when you'll outgrow it" guide, "why not X" callouts for popular-but-not-recommended options, and stability notes based on our tracking of ${dealChanges.length} real pricing changes. All limits verified April 2026.</p>
+    <p>Designed for solo developers, indie hackers, and small teams building SaaS products, side projects, or MVPs with Next.js. Each recommendation includes alternatives, a "when you'll outgrow it" guide, "why not X" callouts for popular-but-not-recommended options, and stability notes based on our tracking of ${dealChanges.length} real pricing changes. ${stackFreshnessNote(pageReadings)}</p>
   </div>
 
   <div class="cost-banner">
     <div class="cost-amount">$0<span style="font-size:1rem;color:var(--text-muted)">/month</span></div>
-    <div class="cost-label">Total infrastructure cost for a Next.js SaaS on free tiers</div>
+    <div class="cost-label">Total infrastructure cost for a Next.js SaaS on free tiers</div>${stackPickCostCaveat(pageReadings)}
   </div>
 
   <h2>Stack Overview</h2>
@@ -16052,10 +16130,8 @@ GitHub → GitHub Actions (CI: tests + lint) → Vercel (CD: auto-deploy)</div>
 
 function buildFreeDjangoStackPage(): string {
   const title = "The Complete Free Django/Python Stack for 2026 — $0/Month Full-Stack Infrastructure";
-  const metaDesc = "Build a complete Django app on free tiers. 10 infrastructure layers — WSGI hosting, Postgres, Redis/cache, auth, storage, email, monitoring, CI/CD, task queue, and search. Exact limits, growth costs. Updated April 2026.";
+  const metaDesc = "Build a complete Django app on free tiers. 10 infrastructure layers — WSGI hosting, Postgres, Redis/cache, auth, storage, email, monitoring, CI/CD, task queue, and search. Exact limits, growth costs.";
   const slug = "free-django-stack";
-
-  const riskColors: Record<string, string> = { stable: "#3fb950", caution: "#d29922", risky: "#f85149" };
 
   const stackCategories = [
     {
@@ -16188,36 +16264,17 @@ function buildFreeDjangoStackPage(): string {
     { q: "PythonAnywhere vs Railway vs Render for Django?", a: "Railway is the best overall — a 30-day $5 trial credit then a $1/month minimum, no sleep timer, managed Postgres, and auto-deploy from GitHub. PythonAnywhere is great for learning (free WSGI hosting, built-in console) but limits you to one web app with no custom domain on free tier. Render has a free tier but your app sleeps after 15 minutes, causing 30-60 second cold starts that hurt user experience. For production Django apps, Railway or Fly.io." },
   ]);
 
+  const pageReadings = stackPrimaryReadings(stackCategories);
   const categorySections = stackCategories.map(cat => {
     const rec = resolveVendor(cat.recommended.vendor);
     const altVendors = cat.alternatives.filter(v => v !== cat.recommended.vendor).map(v => resolveVendor(v)).filter(Boolean) as ReturnType<typeof enrichOffers>;
 
-    const recCard = rec ? `
-      <div class="stack-pick">
-        <div class="pick-header">
-          <span class="pick-badge">Recommended</span>
-          <a href="/vendor/${toSlug(rec.vendor)}" class="pick-name">${escHtmlServer(rec.vendor)}</a>
-          <span class="pick-tier">${escHtmlServer(rec.tier)}</span>
-          ${riskBadgeHtml(rec.risk_level, rec.risk_cause, { compact: true, margin: false })}
-        </div>
-        <p class="pick-why">${escHtmlServer(cat.recommended.why)}</p>
-        <p class="pick-limits">${escHtmlServer(publishedTermsOpening(rec, 2))}</p>
-        <div class="pick-links">
-          <a href="/vendor/${toSlug(rec.vendor)}">Full profile</a>
-          <a href="/alternative-to/${toSlug(rec.vendor)}">Alternatives</a>
-          ${offerPricingLink(rec, "Pricing &nearr;")}
-        </div>
-      </div>` : cat.recommended.vendor === "Django Built-in Auth" ? `
-      <div class="stack-pick">
-        <div class="pick-header">
-          <span class="pick-badge">Recommended</span>
-          <span class="pick-name">Django Built-in Auth</span>
-          <span class="pick-tier">Free (included)</span>
-          <span style="display:inline-block;font-size:.65rem;padding:.1rem .4rem;border-radius:10px;background:${riskColors.stable}22;color:${riskColors.stable};font-weight:600">stable</span>
-        </div>
-        <p class="pick-why">${escHtmlServer(cat.recommended.why)}</p>
-        <p class="pick-limits">django.contrib.auth — unlimited users, sessions, permissions, groups. Add django-allauth for social login.</p>
-      </div>` : `
+    const recCard = rec ? stackRecCardHtml(rec, cat.recommended.why) : cat.recommended.vendor === "Django Built-in Auth" ? stackNamedPickHtml(
+      "Django Built-in Auth",
+      cat.recommended.why,
+      "Free (included)",
+      "django.contrib.auth — unlimited users, sessions, permissions, groups. Add django-allauth for social login.",
+    ) : `
       <div class="stack-pick">
         <div class="pick-header">
           <span class="pick-badge">Recommended</span>
@@ -16227,15 +16284,11 @@ function buildFreeDjangoStackPage(): string {
         <p class="pick-why">${escHtmlServer(cat.recommended.why)}</p>
       </div>`;
 
-    const altCards = altVendors.length > 0 ? `
-      <div class="alt-picks">
-        <p class="alt-label">Also consider:</p>
-        ${altVendors.map(a => `<a href="/vendor/${toSlug(a.vendor)}" class="alt-chip">${escHtmlServer(a.vendor)} <span class="chip-tier">${escHtmlServer(a.tier)}</span></a>`).join(" ")}
-      </div>` : "";
+    const altCards = stackAltPicksHtml(altVendors);
 
     const whyNotBox = cat.whyNot ? `
       <div class="whynot-box">
-        <strong>⚠️ ${escHtmlServer(cat.whyNot)}</strong>
+        <strong>⚠️ ${stackProseHtml(cat.whyNot, [cat.recommended.vendor, ...cat.alternatives])}</strong>
       </div>` : "";
 
     const relatedLink = cat.relatedPage ? `<a href="${cat.relatedPage}" class="related-link">Full comparison guide &rarr;</a>` : "";
@@ -16246,7 +16299,7 @@ function buildFreeDjangoStackPage(): string {
       ${recCard}
       ${altCards}
       <div class="outgrow-box">
-        <strong>When you'll outgrow it:</strong> ${escHtmlServer(cat.outgrow)}
+        <strong>When you'll outgrow it:</strong> ${stackProseHtml(cat.outgrow, [cat.recommended.vendor, ...cat.alternatives])}
       </div>
       ${whyNotBox}
       ${relatedLink}
@@ -16273,16 +16326,13 @@ function buildFreeDjangoStackPage(): string {
   <p style="margin-top:1rem;font-size:.85rem"><a href="/changes">View all ${dealChanges.length} pricing changes &rarr;</a></p>` : "";
 
   const tableRows = stackCategories.map(cat => {
-    const rec = resolveVendor(cat.recommended.vendor);
     const vendorName = cat.recommended.vendor;
-    const limits = rec ? publishedTermsOpening(rec, 1, 80) : vendorName === "Django Built-in Auth" ? "Unlimited — included in Django" : "—";
-    const riskBadge = rec ? riskCellHtml(rec.risk_level, rec.risk_cause) : riskCellHtml("stable", null);
-    const vendorLink = rec ? `<a href="/vendor/${toSlug(rec.vendor)}" style="color:var(--text);font-weight:600">${escHtmlServer(vendorName)}</a>` : `<span style="font-weight:600">${escHtmlServer(vendorName)}</span>`;
+    const cells = stackTableCellsHtml(vendorName, vendorName === "Django Built-in Auth" ? "Unlimited — included in Django" : "—");
     return `      <tr>
         <td style="font-weight:600">${cat.icon} ${escHtmlServer(cat.name)}</td>
-        <td>${vendorLink}</td>
-        <td style="font-family:var(--mono);font-size:.8rem;color:var(--accent)">${escHtmlServer(limits)}</td>
-        <td>${riskBadge}</td>
+        <td>${cells.vendorLink}</td>
+        <td style="font-family:var(--mono);font-size:.8rem;color:var(--accent)">${cells.limits}</td>
+        <td>${cells.verdict}</td>
       </tr>`;
   }).join("\n");
 
@@ -16386,12 +16436,12 @@ ${mcpCtaCss()}
 
   <div class="context">
     <p>Everything you need to build and ship a Django app — without spending a dollar. This guide recommends the best free tier for each layer of your Django infrastructure — <strong>10 layers</strong> from hosting to search — with exact limits pulled from our index of ${offers.length.toLocaleString()}+ verified developer tools.</p>
-    <p>Designed for Python developers building SaaS products, AI/ML applications, APIs, and side projects with Django. Each recommendation includes alternatives, a "when you'll outgrow it" guide, "why not X" callouts for popular-but-not-recommended options, and stability notes based on our tracking of ${dealChanges.length} real pricing changes. All limits verified April 2026.</p>
+    <p>Designed for Python developers building SaaS products, AI/ML applications, APIs, and side projects with Django. Each recommendation includes alternatives, a "when you'll outgrow it" guide, "why not X" callouts for popular-but-not-recommended options, and stability notes based on our tracking of ${dealChanges.length} real pricing changes. ${stackFreshnessNote(pageReadings)}</p>
   </div>
 
   <div class="cost-banner">
     <div class="cost-amount">$0<span style="font-size:1rem;color:var(--text-muted)">/month</span></div>
-    <div class="cost-label">Total infrastructure cost for a Django SaaS on free tiers</div>
+    <div class="cost-label">Total infrastructure cost for a Django SaaS on free tiers</div>${stackPickCostCaveat(pageReadings)}
   </div>
 
   <div class="batteries-box">
@@ -16490,10 +16540,8 @@ GitHub → GitHub Actions (CI: pytest + ruff) → Railway (CD: auto-deploy)</div
 
 function buildFreeFastapiStackPage(): string {
   const title = "The Complete Free FastAPI/Python Stack for 2026 — $0/Month Full-Stack Infrastructure";
-  const metaDesc = "Build a complete FastAPI app on free tiers. 10 infrastructure layers — ASGI hosting, async Postgres, Redis, auth, storage, email, monitoring, CI/CD, background tasks, and API docs. Exact limits, growth costs. Updated April 2026.";
+  const metaDesc = "Build a complete FastAPI app on free tiers. 10 infrastructure layers — ASGI hosting, async Postgres, Redis, auth, storage, email, monitoring, CI/CD, background tasks, and API docs. Exact limits, growth costs.";
   const slug = "free-fastapi-stack";
-
-  const riskColors: Record<string, string> = { stable: "#3fb950", caution: "#d29922", risky: "#f85149" };
 
   const stackCategories = [
     {
@@ -16624,36 +16672,17 @@ function buildFreeFastapiStackPage(): string {
     { q: "FastAPI vs Django for free hosting?", a: "FastAPI is lighter weight and async-native — ideal for APIs, microservices, and AI/ML serving. Django is batteries-included with built-in ORM, admin, auth, and forms — better for full web applications. Both host free on Railway ($5 credit) or Render. FastAPI needs you to choose every component (ORM, auth, admin) separately. Django includes them. If you're building a REST/GraphQL API or serving ML models, FastAPI. If you're building a web app with admin panel and user accounts, Django." },
   ]);
 
+  const pageReadings = stackPrimaryReadings(stackCategories);
   const categorySections = stackCategories.map(cat => {
     const rec = resolveVendor(cat.recommended.vendor);
     const altVendors = cat.alternatives.filter(v => v !== cat.recommended.vendor).map(v => resolveVendor(v)).filter(Boolean) as ReturnType<typeof enrichOffers>;
 
-    const recCard = rec ? `
-      <div class="stack-pick">
-        <div class="pick-header">
-          <span class="pick-badge">Recommended</span>
-          <a href="/vendor/${toSlug(rec.vendor)}" class="pick-name">${escHtmlServer(rec.vendor)}</a>
-          <span class="pick-tier">${escHtmlServer(rec.tier)}</span>
-          ${riskBadgeHtml(rec.risk_level, rec.risk_cause, { compact: true, margin: false })}
-        </div>
-        <p class="pick-why">${escHtmlServer(cat.recommended.why)}</p>
-        <p class="pick-limits">${escHtmlServer(publishedTermsOpening(rec, 2))}</p>
-        <div class="pick-links">
-          <a href="/vendor/${toSlug(rec.vendor)}">Full profile</a>
-          <a href="/alternative-to/${toSlug(rec.vendor)}">Alternatives</a>
-          ${offerPricingLink(rec, "Pricing &nearr;")}
-        </div>
-      </div>` : cat.recommended.vendor === "FastAPI Built-in" ? `
-      <div class="stack-pick">
-        <div class="pick-header">
-          <span class="pick-badge">Recommended</span>
-          <span class="pick-name">FastAPI Built-in</span>
-          <span class="pick-tier">Free (included)</span>
-          <span style="display:inline-block;font-size:.65rem;padding:.1rem .4rem;border-radius:10px;background:${riskColors.stable}22;color:${riskColors.stable};font-weight:600">stable</span>
-        </div>
-        <p class="pick-why">${escHtmlServer(cat.recommended.why)}</p>
-        <p class="pick-limits">Automatic Swagger UI + ReDoc from type hints. Zero config, zero cost.</p>
-      </div>` : `
+    const recCard = rec ? stackRecCardHtml(rec, cat.recommended.why) : cat.recommended.vendor === "FastAPI Built-in" ? stackNamedPickHtml(
+      "FastAPI Built-in",
+      cat.recommended.why,
+      "Free (included)",
+      "Automatic Swagger UI + ReDoc from type hints. Zero config, zero cost.",
+    ) : `
       <div class="stack-pick">
         <div class="pick-header">
           <span class="pick-badge">Recommended</span>
@@ -16663,15 +16692,11 @@ function buildFreeFastapiStackPage(): string {
         <p class="pick-why">${escHtmlServer(cat.recommended.why)}</p>
       </div>`;
 
-    const altCards = altVendors.length > 0 ? `
-      <div class="alt-picks">
-        <p class="alt-label">Also consider:</p>
-        ${altVendors.map(a => `<a href="/vendor/${toSlug(a.vendor)}" class="alt-chip">${escHtmlServer(a.vendor)} <span class="chip-tier">${escHtmlServer(a.tier)}</span></a>`).join(" ")}
-      </div>` : "";
+    const altCards = stackAltPicksHtml(altVendors);
 
     const whyNotBox = cat.whyNot ? `
       <div class="whynot-box">
-        <strong>⚠️ ${escHtmlServer(cat.whyNot)}</strong>
+        <strong>⚠️ ${stackProseHtml(cat.whyNot, [cat.recommended.vendor, ...cat.alternatives])}</strong>
       </div>` : "";
 
     const relatedLink = cat.relatedPage ? `<a href="${cat.relatedPage}" class="related-link">Full comparison guide &rarr;</a>` : "";
@@ -16682,7 +16707,7 @@ function buildFreeFastapiStackPage(): string {
       ${recCard}
       ${altCards}
       <div class="outgrow-box">
-        <strong>When you'll outgrow it:</strong> ${escHtmlServer(cat.outgrow)}
+        <strong>When you'll outgrow it:</strong> ${stackProseHtml(cat.outgrow, [cat.recommended.vendor, ...cat.alternatives])}
       </div>
       ${whyNotBox}
       ${relatedLink}
@@ -16709,16 +16734,13 @@ function buildFreeFastapiStackPage(): string {
   <p style="margin-top:1rem;font-size:.85rem"><a href="/changes">View all ${dealChanges.length} pricing changes &rarr;</a></p>` : "";
 
   const tableRows = stackCategories.map(cat => {
-    const rec = resolveVendor(cat.recommended.vendor);
     const vendorName = cat.recommended.vendor;
-    const limits = rec ? publishedTermsOpening(rec, 1, 80) : vendorName === "FastAPI Built-in" ? "Unlimited — built into FastAPI" : "—";
-    const riskBadge = rec ? riskCellHtml(rec.risk_level, rec.risk_cause) : riskCellHtml("stable", null);
-    const vendorLink = rec ? `<a href="/vendor/${toSlug(rec.vendor)}" style="color:var(--text);font-weight:600">${escHtmlServer(vendorName)}</a>` : `<span style="font-weight:600">${escHtmlServer(vendorName)}</span>`;
+    const cells = stackTableCellsHtml(vendorName, vendorName === "FastAPI Built-in" ? "Unlimited — built into FastAPI" : "—");
     return `      <tr>
         <td style="font-weight:600">${cat.icon} ${escHtmlServer(cat.name)}</td>
-        <td>${vendorLink}</td>
-        <td style="font-family:var(--mono);font-size:.8rem;color:var(--accent)">${escHtmlServer(limits)}</td>
-        <td>${riskBadge}</td>
+        <td>${cells.vendorLink}</td>
+        <td style="font-family:var(--mono);font-size:.8rem;color:var(--accent)">${cells.limits}</td>
+        <td>${cells.verdict}</td>
       </tr>`;
   }).join("\n");
 
@@ -16826,12 +16848,12 @@ ${mcpCtaCss()}
 
   <div class="context">
     <p>Everything you need to build and ship a FastAPI app — without spending a dollar. This guide recommends the best free tier for each layer of your FastAPI infrastructure — <strong>10 layers</strong> from ASGI hosting to API documentation — with exact limits pulled from our index of ${offers.length.toLocaleString()}+ verified developer tools.</p>
-    <p>Designed for Python developers building REST APIs, AI/ML serving endpoints, microservices, and async backend services with FastAPI. Each recommendation includes alternatives, a "when you'll outgrow it" guide, "why not X" callouts for popular-but-not-recommended options, and stability notes based on our tracking of ${dealChanges.length} real pricing changes. All limits verified April 2026.</p>
+    <p>Designed for Python developers building REST APIs, AI/ML serving endpoints, microservices, and async backend services with FastAPI. Each recommendation includes alternatives, a "when you'll outgrow it" guide, "why not X" callouts for popular-but-not-recommended options, and stability notes based on our tracking of ${dealChanges.length} real pricing changes. ${stackFreshnessNote(pageReadings)}</p>
   </div>
 
   <div class="cost-banner">
     <div class="cost-amount">$0<span style="font-size:1rem;color:var(--text-muted)">/month</span></div>
-    <div class="cost-label">Total infrastructure cost for a FastAPI service on free tiers</div>
+    <div class="cost-label">Total infrastructure cost for a FastAPI service on free tiers</div>${stackPickCostCaveat(pageReadings)}
   </div>
 
   <div class="choose-box">
@@ -16943,10 +16965,8 @@ GitHub → GitHub Actions (CI: pytest + ruff) → Railway (CD: auto-deploy)</div
 
 function buildFreeGoStackPage(): string {
   const title = "The Complete Free Go/Golang Stack for 2026 — $0/Month Full-Stack Infrastructure";
-  const metaDesc = "Build a complete Go app on free tiers. 10 infrastructure layers — single binary hosting, Postgres via pgx, Redis, auth, storage, email, monitoring, CI/CD, background jobs, and API docs. Exact limits, growth costs. Updated April 2026.";
+  const metaDesc = "Build a complete Go app on free tiers. 10 infrastructure layers — single binary hosting, Postgres via pgx, Redis, auth, storage, email, monitoring, CI/CD, background jobs, and API docs. Exact limits, growth costs.";
   const slug = "free-go-stack";
-
-  const riskColors: Record<string, string> = { stable: "#3fb950", caution: "#d29922", risky: "#f85149" };
 
   const stackCategories = [
     {
@@ -17077,36 +17097,17 @@ function buildFreeGoStackPage(): string {
     { q: "Do I need a framework for Go web apps?", a: "No. Go's net/http standard library is production-ready — it powers many of the world's largest services. Add a router (chi or gorilla/mux) for path parameters and middleware chaining. Frameworks like Gin, Echo, and Fiber add convenience (binding, validation, structured logging) but aren't required. The stdlib-first approach means fewer dependencies, smaller binaries, and no framework lock-in." },
   ]);
 
+  const pageReadings = stackPrimaryReadings(stackCategories);
   const categorySections = stackCategories.map(cat => {
     const rec = resolveVendor(cat.recommended.vendor);
     const altVendors = cat.alternatives.filter(v => v !== cat.recommended.vendor).map(v => resolveVendor(v)).filter(Boolean) as ReturnType<typeof enrichOffers>;
 
-    const recCard = rec ? `
-      <div class="stack-pick">
-        <div class="pick-header">
-          <span class="pick-badge">Recommended</span>
-          <a href="/vendor/${toSlug(rec.vendor)}" class="pick-name">${escHtmlServer(rec.vendor)}</a>
-          <span class="pick-tier">${escHtmlServer(rec.tier)}</span>
-          ${riskBadgeHtml(rec.risk_level, rec.risk_cause, { compact: true, margin: false })}
-        </div>
-        <p class="pick-why">${escHtmlServer(cat.recommended.why)}</p>
-        <p class="pick-limits">${escHtmlServer(publishedTermsOpening(rec, 2))}</p>
-        <div class="pick-links">
-          <a href="/vendor/${toSlug(rec.vendor)}">Full profile</a>
-          <a href="/alternative-to/${toSlug(rec.vendor)}">Alternatives</a>
-          ${offerPricingLink(rec, "Pricing &nearr;")}
-        </div>
-      </div>` : (cat.recommended.vendor === "Go Goroutines" || cat.recommended.vendor === "swaggo/swag") ? `
-      <div class="stack-pick">
-        <div class="pick-header">
-          <span class="pick-badge">Recommended</span>
-          <span class="pick-name">${escHtmlServer(cat.recommended.vendor)}</span>
-          <span class="pick-tier">Free (${cat.recommended.vendor === "Go Goroutines" ? "built into Go" : "open source"})</span>
-          <span style="display:inline-block;font-size:.65rem;padding:.1rem .4rem;border-radius:10px;background:${riskColors.stable}22;color:${riskColors.stable};font-weight:600">stable</span>
-        </div>
-        <p class="pick-why">${escHtmlServer(cat.recommended.why)}</p>
-        <p class="pick-limits">${cat.recommended.vendor === "Go Goroutines" ? "Unlimited — goroutines cost ~2 KB each, millions per process" : "OpenAPI generation from Go comments — Swagger UI included"}</p>
-      </div>` : `
+    const recCard = rec ? stackRecCardHtml(rec, cat.recommended.why) : (cat.recommended.vendor === "Go Goroutines" || cat.recommended.vendor === "swaggo/swag") ? stackNamedPickHtml(
+      cat.recommended.vendor,
+      cat.recommended.why,
+      `Free (${cat.recommended.vendor === "Go Goroutines" ? "built into Go" : "open source"})`,
+      cat.recommended.vendor === "Go Goroutines" ? "Unlimited — goroutines cost ~2 KB each, millions per process" : "OpenAPI generation from Go comments — Swagger UI included",
+    ) : `
       <div class="stack-pick">
         <div class="pick-header">
           <span class="pick-badge">Recommended</span>
@@ -17116,15 +17117,11 @@ function buildFreeGoStackPage(): string {
         <p class="pick-why">${escHtmlServer(cat.recommended.why)}</p>
       </div>`;
 
-    const altCards = altVendors.length > 0 ? `
-      <div class="alt-picks">
-        <p class="alt-label">Also consider:</p>
-        ${altVendors.map(a => `<a href="/vendor/${toSlug(a.vendor)}" class="alt-chip">${escHtmlServer(a.vendor)} <span class="chip-tier">${escHtmlServer(a.tier)}</span></a>`).join(" ")}
-      </div>` : "";
+    const altCards = stackAltPicksHtml(altVendors);
 
     const whyNotBox = cat.whyNot ? `
       <div class="whynot-box">
-        <strong>⚠️ ${escHtmlServer(cat.whyNot)}</strong>
+        <strong>⚠️ ${stackProseHtml(cat.whyNot, [cat.recommended.vendor, ...cat.alternatives])}</strong>
       </div>` : "";
 
     const relatedLink = cat.relatedPage ? `<a href="${cat.relatedPage}" class="related-link">Full comparison guide &rarr;</a>` : "";
@@ -17135,7 +17132,7 @@ function buildFreeGoStackPage(): string {
       ${recCard}
       ${altCards}
       <div class="outgrow-box">
-        <strong>When you'll outgrow it:</strong> ${escHtmlServer(cat.outgrow)}
+        <strong>When you'll outgrow it:</strong> ${stackProseHtml(cat.outgrow, [cat.recommended.vendor, ...cat.alternatives])}
       </div>
       ${whyNotBox}
       ${relatedLink}
@@ -17162,16 +17159,13 @@ function buildFreeGoStackPage(): string {
   <p style="margin-top:1rem;font-size:.85rem"><a href="/changes">View all ${dealChanges.length} pricing changes &rarr;</a></p>` : "";
 
   const tableRows = stackCategories.map(cat => {
-    const rec = resolveVendor(cat.recommended.vendor);
     const vendorName = cat.recommended.vendor;
-    const limits = rec ? publishedTermsOpening(rec, 1, 80) : (vendorName === "Go Goroutines" ? "Unlimited — built into Go runtime" : vendorName === "swaggo/swag" ? "Open source — generates from comments" : "—");
-    const riskBadge = rec ? riskCellHtml(rec.risk_level, rec.risk_cause) : riskCellHtml("stable", null);
-    const vendorLink = rec ? `<a href="/vendor/${toSlug(rec.vendor)}" style="color:var(--text);font-weight:600">${escHtmlServer(vendorName)}</a>` : `<span style="font-weight:600">${escHtmlServer(vendorName)}</span>`;
+    const cells = stackTableCellsHtml(vendorName, (vendorName === "Go Goroutines" ? "Unlimited — built into Go runtime" : vendorName === "swaggo/swag" ? "Open source — generates from comments" : "—"));
     return `      <tr>
         <td style="font-weight:600">${cat.icon} ${escHtmlServer(cat.name)}</td>
-        <td>${vendorLink}</td>
-        <td style="font-family:var(--mono);font-size:.8rem;color:var(--accent)">${escHtmlServer(limits)}</td>
-        <td>${riskBadge}</td>
+        <td>${cells.vendorLink}</td>
+        <td style="font-family:var(--mono);font-size:.8rem;color:var(--accent)">${cells.limits}</td>
+        <td>${cells.verdict}</td>
       </tr>`;
   }).join("\n");
 
@@ -17278,12 +17272,12 @@ ${mcpCtaCss()}
 
   <div class="context">
     <p>Everything you need to build and ship a Go service — without spending a dollar. This guide recommends the best free tier for each layer of your Go infrastructure — <strong>10 layers</strong> from single-binary hosting to API documentation — with exact limits pulled from our index of ${offers.length.toLocaleString()}+ verified developer tools.</p>
-    <p>Designed for developers building REST APIs, CLI tools, microservices, DevOps tooling, and cloud-native infrastructure with Go. Each recommendation includes alternatives, a "when you'll outgrow it" guide, "why not X" callouts for popular-but-not-recommended options, and stability notes based on our tracking of ${dealChanges.length} real pricing changes. All limits verified April 2026.</p>
+    <p>Designed for developers building REST APIs, CLI tools, microservices, DevOps tooling, and cloud-native infrastructure with Go. Each recommendation includes alternatives, a "when you'll outgrow it" guide, "why not X" callouts for popular-but-not-recommended options, and stability notes based on our tracking of ${dealChanges.length} real pricing changes. ${stackFreshnessNote(pageReadings)}</p>
   </div>
 
   <div class="cost-banner">
     <div class="cost-amount">$0<span style="font-size:1rem;color:var(--text-muted)">/month</span></div>
-    <div class="cost-label">Total infrastructure cost for a Go service on free tiers</div>
+    <div class="cost-label">Total infrastructure cost for a Go service on free tiers</div>${stackPickCostCaveat(pageReadings)}
   </div>
 
   <div class="binary-box">
@@ -17387,7 +17381,7 @@ GitHub → GitHub Actions (CI: go test + golangci-lint) → Railway (CD: auto-de
 
 function buildFreeSaasStackPage(): string {
   const title = "The Complete Free SaaS Starter Stack for 2026 — Build and Launch for $0/Month";
-  const metaDesc = "Build a complete SaaS product on free tiers. 12 infrastructure categories — hosting, database, auth, payments, email, storage, monitoring, CI/CD, analytics. Exact limits, growth costs at 1K/10K/100K users. Updated April 2026.";
+  const metaDesc = "Build a complete SaaS product on free tiers. 12 infrastructure categories — hosting, database, auth, payments, email, storage, monitoring, CI/CD, analytics. Exact limits, growth costs at 1K/10K/100K users.";
   const slug = "free-saas-stack";
 
   const riskColors: Record<string, string> = { stable: "#3fb950", caution: "#d29922", risky: "#f85149" };
@@ -17536,6 +17530,7 @@ function buildFreeSaasStackPage(): string {
     { q: "When should I start paying for infrastructure?", a: "Most SaaS products can run entirely on free tiers through their first 1,000-5,000 users. Database storage (Neon 0.5 GiB) is typically the first limit you'll hit, followed by email volume (Resend 3K/month) and hosting compute. The jump from free to first paid tier is $19-25/month. By the time you need to pay, you should have paying customers. Plan your growth path: at 10K users expect ~$150-300/month total infrastructure, at 100K users ~$1,500-3,000/month." },
   ]);
 
+  const pageReadings = stackPrimaryReadings(stackCategories);
   const categorySections = stackCategories.map(cat => {
     if (cat.isFrameworkSection) {
       return `
@@ -17568,32 +17563,12 @@ function buildFreeSaasStackPage(): string {
     const rec = resolveVendor(cat.recommended.vendor);
     const altVendors = cat.alternatives.filter(v => v !== cat.recommended.vendor).map(v => resolveVendor(v)).filter(Boolean) as ReturnType<typeof enrichOffers>;
 
-    const recCard = rec ? `
-      <div class="stack-pick">
-        <div class="pick-header">
-          <span class="pick-badge">Recommended</span>
-          <a href="/vendor/${toSlug(rec.vendor)}" class="pick-name">${escHtmlServer(rec.vendor)}</a>
-          <span class="pick-tier">${escHtmlServer(rec.tier)}</span>
-          ${riskBadgeHtml(rec.risk_level, rec.risk_cause, { compact: true, margin: false })}
-        </div>
-        <p class="pick-why">${escHtmlServer(cat.recommended.why)}</p>
-        <p class="pick-limits">${escHtmlServer(publishedTermsOpening(rec, 2))}</p>
-        <div class="pick-links">
-          <a href="/vendor/${toSlug(rec.vendor)}">Full profile</a>
-          <a href="/alternative-to/${toSlug(rec.vendor)}">Alternatives</a>
-          ${offerPricingLink(rec, "Pricing &nearr;")}
-        </div>
-      </div>` : (cat.recommended.vendor === "Stripe") ? `
-      <div class="stack-pick">
-        <div class="pick-header">
-          <span class="pick-badge">Recommended</span>
-          <span class="pick-name">Stripe</span>
-          <span class="pick-tier">No monthly fee \u2014 2.9% + 30\u00a2/txn</span>
-          <span style="display:inline-block;font-size:.65rem;padding:.1rem .4rem;border-radius:10px;background:${riskColors.stable}22;color:${riskColors.stable};font-weight:600">stable</span>
-        </div>
-        <p class="pick-why">${escHtmlServer(cat.recommended.why)}</p>
-        <p class="pick-limits">No monthly fee. Pay-per-transaction only. Subscriptions, invoicing, tax, customer portal included.</p>
-      </div>` : `
+    const recCard = rec ? stackRecCardHtml(rec, cat.recommended.why) : (cat.recommended.vendor === "Stripe") ? stackNamedPickHtml(
+      "Stripe",
+      cat.recommended.why,
+      "No monthly fee \u2014 2.9% + 30\u00a2/txn",
+      "No monthly fee. Pay-per-transaction only. Subscriptions, invoicing, tax, customer portal included.",
+    ) : `
       <div class="stack-pick">
         <div class="pick-header">
           <span class="pick-badge">Recommended</span>
@@ -17603,15 +17578,11 @@ function buildFreeSaasStackPage(): string {
         <p class="pick-why">${escHtmlServer(cat.recommended.why)}</p>
       </div>`;
 
-    const altCards = altVendors.length > 0 ? `
-      <div class="alt-picks">
-        <p class="alt-label">Also consider:</p>
-        ${altVendors.map(a => `<a href="/vendor/${toSlug(a.vendor)}" class="alt-chip">${escHtmlServer(a.vendor)} <span class="chip-tier">${escHtmlServer(a.tier)}</span></a>`).join(" ")}
-      </div>` : "";
+    const altCards = stackAltPicksHtml(altVendors);
 
     const whyNotBox = cat.whyNot ? `
       <div class="whynot-box">
-        <strong>\u26A0\uFE0F ${escHtmlServer(cat.whyNot)}</strong>
+        <strong>\u26A0\uFE0F ${stackProseHtml(cat.whyNot, [cat.recommended.vendor, ...cat.alternatives])}</strong>
       </div>` : "";
 
     const relatedLink = cat.relatedPage ? `<a href="${cat.relatedPage}" class="related-link">Full comparison guide &rarr;</a>` : "";
@@ -17622,7 +17593,7 @@ function buildFreeSaasStackPage(): string {
       ${recCard}
       ${altCards}
       <div class="outgrow-box">
-        <strong>When you'll outgrow it:</strong> ${escHtmlServer(cat.outgrow)}
+        <strong>When you'll outgrow it:</strong> ${stackProseHtml(cat.outgrow, [cat.recommended.vendor, ...cat.alternatives])}
       </div>
       ${whyNotBox}
       ${relatedLink}
@@ -17649,16 +17620,13 @@ function buildFreeSaasStackPage(): string {
   <p style="margin-top:1rem;font-size:.85rem"><a href="/changes">View all ${dealChanges.length} pricing changes &rarr;</a></p>` : "";
 
   const tableRows = stackCategories.filter(c => !c.isFrameworkSection).map(cat => {
-    const rec = resolveVendor(cat.recommended.vendor);
     const vendorName = cat.recommended.vendor;
-    const limits = rec ? publishedTermsOpening(rec, 1, 80) : (vendorName === "Stripe" ? "No monthly fee \u2014 2.9% + 30\u00a2/txn" : "\u2014");
-    const riskBadge = rec ? riskCellHtml(rec.risk_level, rec.risk_cause) : riskCellHtml("stable", null);
-    const vendorLink = rec ? `<a href="/vendor/${toSlug(rec.vendor)}" style="color:var(--text);font-weight:600">${escHtmlServer(vendorName)}</a>` : `<span style="font-weight:600">${escHtmlServer(vendorName)}</span>`;
+    const cells = stackTableCellsHtml(vendorName, (vendorName === "Stripe" ? "No monthly fee \u2014 2.9% + 30\u00a2/txn" : "\u2014"));
     return `      <tr>
         <td style="font-weight:600">${cat.icon} ${escHtmlServer(cat.name)}</td>
-        <td>${vendorLink}</td>
-        <td style="font-family:var(--mono);font-size:.8rem;color:var(--accent)">${escHtmlServer(limits)}</td>
-        <td>${riskBadge}</td>
+        <td>${cells.vendorLink}</td>
+        <td style="font-family:var(--mono);font-size:.8rem;color:var(--accent)">${cells.limits}</td>
+        <td>${cells.verdict}</td>
       </tr>`;
   }).join("\n");
 
@@ -17844,7 +17812,7 @@ ${mcpCtaCss()}
 
   <div class="context">
     <p>You can build and launch a complete SaaS product without spending a dollar on infrastructure. This guide gives you the <strong>opinionated "just tell me what to use" answer</strong> \u2014 the best free tier for each layer of a SaaS stack, with exact limits pulled from our index of ${offers.length.toLocaleString()}+ verified developer tools.</p>
-    <p>Every recommendation includes alternatives, "when you'll outgrow it" guidance, "why not X" callouts for popular-but-not-recommended options, and stability notes based on our tracking of ${dealChanges.length} real pricing changes. All limits verified April 2026.</p>
+    <p>Every recommendation includes alternatives, "when you'll outgrow it" guidance, "why not X" callouts for popular-but-not-recommended options, and stability notes based on our tracking of ${dealChanges.length} real pricing changes. ${stackFreshnessNote(pageReadings)}</p>
   </div>
 
   <div class="tldr-box">
@@ -17866,7 +17834,7 @@ ${mcpCtaCss()}
 
   <div class="cost-banner">
     <div class="cost-amount">$0<span style="font-size:1rem;color:var(--text-muted)">/month</span></div>
-    <div class="cost-label">Total infrastructure cost at launch (Stripe charges per-transaction only)</div>
+    <div class="cost-label">Total infrastructure cost at launch (Stripe charges per-transaction only)</div>${stackPickCostCaveat(pageReadings)}
     <div class="cost-scale">
       <div class="cost-scale-item"><div class="scale-users">1K users</div><div class="scale-cost" style="color:#d29922">~$40-80</div></div>
       <div class="cost-scale-item"><div class="scale-users">10K users</div><div class="scale-cost" style="color:#d29922">~$150-300</div></div>
@@ -46128,7 +46096,7 @@ const STACK_TEMPLATES: StackTemplate[] = [
   {
     slug: "saas-mvp",
     title: "Best Free Stack for a SaaS MVP — Ship for $0/Month in 2026",
-    metaDesc: "Build and launch a SaaS MVP on free tiers. Supabase, Vercel, Clerk, Sentry, Resend, GitHub Actions — verified limits, cost at scale, stability ratings. Updated April 2026.",
+    metaDesc: "Build and launch a SaaS MVP on free tiers. Supabase, Vercel, Clerk, Sentry, Resend, GitHub Actions — verified limits, cost at scale, stability ratings.",
     heroSubtitle: "Everything you need to build and launch a SaaS product without spending a dollar.",
     description: "The SaaS MVP stack prioritizes developer experience and speed-to-market. Every service here has a generous free tier that covers development through early traction. You can have a production-ready app with auth, database, email, monitoring, and CI/CD — all for $0/month until you have paying customers.",
     services: [
@@ -46156,7 +46124,7 @@ const STACK_TEMPLATES: StackTemplate[] = [
   {
     slug: "side-project",
     title: "Best Free Stack for a Side Project — Zero Cost, Zero Hassle in 2026",
-    metaDesc: "Build side projects on completely free tiers. Turso, Render, Firebase Auth, BetterStack, GitHub Actions — verified limits, cost at scale, stability ratings. Updated April 2026.",
+    metaDesc: "Build side projects on completely free tiers. Turso, Render, Firebase Auth, BetterStack, GitHub Actions — verified limits, cost at scale, stability ratings.",
     heroSubtitle: "Build your side project without worrying about costs. Every service here stays free for hobby use.",
     description: "Side projects need services that stay free forever — not free trials that expire. This stack uses genuinely free tiers with no credit card required. Optimized for solo developers who want to ship fast and keep costs at exactly $0 for as long as possible.",
     services: [
@@ -46184,7 +46152,7 @@ const STACK_TEMPLATES: StackTemplate[] = [
   {
     slug: "ai-startup",
     title: "Best Free Stack for an AI Startup — Build AI Products for $0/Month in 2026",
-    metaDesc: "Build AI products on free tiers. Neon, Railway, Supabase Auth, Grafana Cloud, Postmark, CircleCI — verified limits, cost at scale, stability ratings. Updated April 2026.",
+    metaDesc: "Build AI products on free tiers. Neon, Railway, Supabase Auth, Grafana Cloud, Postmark, CircleCI — verified limits, cost at scale, stability ratings.",
     heroSubtitle: "Infrastructure for AI startups that need fast iteration and reliable observability.",
     description: "AI startups burn through compute budgets fast — save infrastructure costs by using free tiers for everything except your model API. This stack pairs a serverless Postgres database (great for embeddings and vector search via pgvector) with Railway for flexible container hosting and Grafana Cloud for the observability you need when debugging model behavior.",
     services: [
@@ -46212,7 +46180,7 @@ const STACK_TEMPLATES: StackTemplate[] = [
   {
     slug: "open-source",
     title: "Best Free Stack for an Open-Source Project — CI, Hosting, and Community for $0 in 2026",
-    metaDesc: "Run open-source projects on free tiers. CockroachDB, Netlify, GitHub OAuth, BetterStack, GitHub Actions, Codecov — verified limits, cost at scale, stability ratings. Updated April 2026.",
+    metaDesc: "Run open-source projects on free tiers. CockroachDB, Netlify, GitHub OAuth, BetterStack, GitHub Actions, Codecov — verified limits, cost at scale, stability ratings.",
     heroSubtitle: "Free infrastructure for open-source maintainers. Focus on your code, not your cloud bill.",
     description: "Open-source projects get special treatment from most cloud providers — free tiers are more generous and often unlimited for public repos. This stack leverages those OSS advantages with services that have stable, long-standing free tiers and strong community support.",
     services: [
@@ -46239,7 +46207,7 @@ const STACK_TEMPLATES: StackTemplate[] = [
   {
     slug: "api-first",
     title: "Best Free Stack for an API-First Product — Build APIs for $0/Month in 2026",
-    metaDesc: "Build API products on free tiers. Neon, Cloudflare Workers, Auth0, New Relic, Mailgun, GitHub Actions — verified limits, cost at scale, stability ratings. Updated September 2026.",
+    metaDesc: "Build API products on free tiers. Neon, Cloudflare Workers, Auth0, New Relic, Mailgun, GitHub Actions — verified limits, cost at scale, stability ratings.",
     heroSubtitle: "Purpose-built for API products. Low latency, strong auth, and excellent observability.",
     description: "API-first products need low-latency hosting, robust authentication with API keys and OAuth, and deep observability into request patterns. This stack pairs Cloudflare Workers' edge compute with Auth0's enterprise-grade auth and New Relic's generous free APM — giving you production-ready API infrastructure at $0/month. Fly.io held this row until September 2026 and was replaced because it has had no free tier for new accounts since October 2024.",
     services: [
@@ -46273,7 +46241,19 @@ function buildStackTemplatePage(slug: string): string | null {
   const template = stackTemplateMap.get(slug);
   if (!template) return null;
 
-  const stabilityMap = getStabilityMap();
+  const templateReadings = new Map<string, StackPickReading>();
+  for (const s of template.services) {
+    const reading = stackReadingForSlug(s.slug);
+    if (reading) templateReadings.set(s.slug, reading);
+  }
+  const serviceVerdictHtml = (s: StackService) => {
+    const reading = templateReadings.get(s.slug);
+    return reading ? stackVerdictChipHtml(reading) : `<span style="color:var(--text-dim)">&mdash;</span>`;
+  };
+  const serviceLimitHtml = (s: StackService, cap: number) => {
+    const reading = templateReadings.get(s.slug);
+    return reading ? stackKeyLimitHtml(reading, cap) : escHtmlServer(s.freeTier);
+  };
 
   const totals = { free: 0, starter: 0, growth: 0, scale: 0 };
   for (const s of template.services) {
@@ -46284,9 +46264,6 @@ function buildStackTemplatePage(slug: string): string | null {
 
   const estimatorParams = template.services.map(s => `${encodeURIComponent(s.estimatorCategory)}=${encodeURIComponent(s.slug)}`).join("&");
 
-  const stabilityColors: Record<string, string> = { stable: "#3fb950", watch: "#d29922", volatile: "#f85149", improving: "#58a6ff" };
-  const stabilityLabels: Record<string, string> = { stable: "Stable", watch: "Watch", volatile: "Volatile", improving: "Improving" };
-
   const costClass = (amount: number) => amount === 0 ? "cost-free" : amount <= 25 ? "cost-low" : amount <= 100 ? "cost-mid" : "cost-high";
   const formatCost = (amount: number) => amount === 0 ? "$0" : `$${amount.toLocaleString()}`;
 
@@ -46296,13 +46273,10 @@ function buildStackTemplatePage(slug: string): string | null {
       : escHtmlServer(s.vendor);
 
   const tableRows = template.services.map(s => {
-    const stability = stabilityMap.get(s.slug) ?? "stable";
-    const sColor = stabilityColors[stability] ?? stabilityColors.stable;
-    const sLabel = stabilityLabels[stability] ?? "Stable";
     return `<tr>
       <td>${escHtmlServer(s.category)}</td>
-      <td class="vendor-name">${vendorLabel(s)}<span class="free-tier-info">${escHtmlServer(s.freeTier)}</span></td>
-      <td><span class="stability-dot" style="background:${sColor}" title="${sLabel}"></span> ${sLabel}</td>
+      <td class="vendor-name">${vendorLabel(s)}<span class="free-tier-info">${serviceLimitHtml(s, 90)}</span></td>
+      <td>${serviceVerdictHtml(s)}</td>
       <td class="cost-free">$0</td>
       <td class="${costClass(s.starter)}">${formatCost(s.starter)}</td>
       <td class="${costClass(s.growth)}">${formatCost(s.growth)}</td>
@@ -46311,25 +46285,24 @@ function buildStackTemplatePage(slug: string): string | null {
   }).join("\n");
 
   const whyCards = template.services.map(s => {
-    const stability = stabilityMap.get(s.slug) ?? "stable";
-    const sColor = stabilityColors[stability] ?? stabilityColors.stable;
-    const sLabel = stabilityLabels[stability] ?? "Stable";
+    const reading = templateReadings.get(s.slug);
     return `<div class="why-card">
       <div class="why-card-header">
         <strong>${escHtmlServer(s.category)}: ${vendorLabel(s)}</strong>
-        <span class="stability-badge" style="background:${sColor}20;color:${sColor};border:1px solid ${sColor}40">${sLabel}</span>
+        ${serviceVerdictHtml(s)}
       </div>
-      <p>${escHtmlServer(s.whyChosen)}</p>
-      <p class="why-free">${escHtmlServer(s.freeTier)}</p>
+      <p>${escHtmlServer(reading && !reading.recommendable ? reading.why : s.whyChosen)}</p>
+      <p class="why-free">${serviceLimitHtml(s, 150)}</p>
     </div>`;
   }).join("\n");
 
-  const swapsHtml = template.swaps.map(sw =>
-    `<div class="swap-card">
-      <strong>Swap ${escHtmlServer(sw.from)} for <a href="/vendor/${escHtmlServer(sw.toSlug)}">${escHtmlServer(sw.to)}</a></strong>
-      <p>${escHtmlServer(sw.saving)}</p>
-    </div>`
-  ).join("\n");
+  const swapsHtml = template.swaps.map(sw => {
+    const reading = stackReadingForSlug(sw.toSlug);
+    return `<div class="swap-card">
+      <strong>Swap ${escHtmlServer(sw.from)} for <a href="/vendor/${escHtmlServer(sw.toSlug)}">${escHtmlServer(sw.to)}</a></strong> ${reading ? stackVerdictChipHtml(reading) : ""}
+      <p>${escHtmlServer(reading && !reading.recommendable ? reading.why : sw.saving)}</p>
+    </div>`;
+  }).join("\n");
 
   const comparisonLinks = template.relatedComparisons.map(c => `<a href="${c.href}" class="related-link">${escHtmlServer(c.label)}</a>`).join("");
   const guideLinks = template.relatedGuides.map(g => `<a href="${g.href}" class="related-link">${escHtmlServer(g.label)}</a>`).join("");
@@ -46463,7 +46436,7 @@ function buildStackTemplatePage(slug: string): string | null {
       <div class="cost-tier"><span class="tier-label">Starter</span><span class="tier-amount ${costClass(totals.starter)}">${formatCost(totals.starter)}/mo</span><span class="tier-users">~1K MAU</span></div>
       <div class="cost-tier"><span class="tier-label">Growth</span><span class="tier-amount ${costClass(totals.growth)}">${formatCost(totals.growth)}/mo</span><span class="tier-users">~10K MAU</span></div>
       <div class="cost-tier"><span class="tier-label">Scale</span><span class="tier-amount ${costClass(totals.scale)}">${formatCost(totals.scale)}/mo</span><span class="tier-users">~100K MAU</span></div>
-    </div>
+    </div>${stackPickCostCaveat([...templateReadings.values()])}
 
     <a href="/estimate?${estimatorParams}" class="customize-cta">Customize in Cost Estimator &rarr;</a>
 
@@ -46505,7 +46478,7 @@ function buildStackTemplatePage(slug: string): string | null {
     ${buildMcpCta("Use <code>plan_stack</code> to get AI-powered stack recommendations tailored to your specific use case.")}
 
     <div class="footer">
-      <p>All pricing data verified from vendor pages as of April 2026. Stability ratings based on <a href="/stability">tracked pricing changes</a>.</p>
+      <p>${stackFreshnessNote([...templateReadings.values()])} Stability ratings based on <a href="/stability">tracked pricing changes</a>.</p>
       <p style="margin-top:.5rem"><a href="/stacks">All Stack Templates</a> &middot; <a href="/estimate">Cost Estimator</a> &middot; <a href="/guides">Guides</a> &middot; <a href="/privacy">Privacy</a></p>
     </div>
   </div>
@@ -46630,7 +46603,7 @@ function buildStacksIndexPage(): string {
     ${buildMcpCta("Use <code>plan_stack</code> to get AI-powered stack recommendations tailored to your specific use case.")}
 
     <div class="footer">
-      <p>All pricing data verified from vendor pages as of April 2026. Stability ratings based on <a href="/stability">tracked pricing changes</a>.</p>
+      <p>${stackFreshnessNote(stackPrimaryReadings(STACK_TEMPLATES.flatMap(t => t.services.map(s => ({ recommended: { vendor: s.vendor } })))))} Stability ratings based on <a href="/stability">tracked pricing changes</a>.</p>
       <p style="margin-top:.5rem"><a href="/">AgentDeals</a> &middot; <a href="/estimate">Cost Estimator</a> &middot; <a href="/guides">Guides</a> &middot; <a href="/privacy">Privacy</a></p>
     </div>
   </div>
@@ -50658,17 +50631,31 @@ function buildAgentStackPage(): string {
     author: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
   };
 
+  const pageReadings = stackPrimaryReadings(
+    resolvedBundles.flatMap(b => b.resolvedServices.map(s => ({ recommended: { vendor: s.vendorName } }))),
+  );
+
   const bundleHtml = resolvedBundles.map((bundle) => {
-    const serviceRows = bundle.resolvedServices.map((svc) => {
-      const limits = svc.description;
-      const shortLimits = publishedTermsOpening({ vendor: svc.vendorName, description: limits }, 1, 140);
+    const readings = bundle.resolvedServices.map((svc) => ({ svc, reading: stackPickReading(svc.vendorName) }));
+    const recommended = readings.filter(r => r.reading === null || r.reading.recommendable);
+    const ended = readings.flatMap(r => (r.reading !== null && !r.reading.recommendable) ? [r.reading] : []);
+
+    const serviceRows = recommended.map(({ svc, reading }) => {
+      const shortLimits = reading
+        ? stackKeyLimitHtml(reading, 140)
+        : escHtmlServer(publishedTermsOpening({ vendor: svc.vendorName, description: svc.description }, 1, 140));
+      const verdict = reading ? stackVerdictChipHtml(reading) : `<span style="color:var(--text-dim)">&mdash;</span>`;
       return `          <tr>
             <td class="role-cell">${escHtmlServer(svc.role)}</td>
             <td><a href="/vendor/${svc.slug}" class="vendor-link">${escHtmlServer(svc.vendorName)}</a> <span class="tier-badge">${escHtmlServer(svc.tier)}</span></td>
-            <td class="limits-cell">${escHtmlServer(shortLimits)}</td>
+            <td class="limits-cell">${shortLimits}</td>
+            <td class="verdict-cell">${verdict}</td>
             <td class="link-cell">${offerPricingLink(svc, "Pricing →")}</td>
           </tr>`;
     }).join("\n");
+
+    const bundleReadings = recommended.flatMap(r => r.reading ? [r.reading] : []);
+    const endedNote = ended.length === 0 ? "" : `\n        <p class="bundle-ended" style="font-size:.8rem;color:var(--text-muted);margin-top:.5rem">No longer a free-tier pick: ${ended.map(r => `<a href="/vendor/${r.slug}">${escHtmlServer(r.vendor)}</a> \u2014 ${escHtmlServer(r.verdict)}`).join("; ")}.</p>`;
 
     return `      <div class="stack-bundle" id="${bundle.id}">
         <div class="bundle-header">
@@ -50678,13 +50665,13 @@ function buildAgentStackPage(): string {
             <p class="bundle-desc">${escHtmlServer(bundle.description)}</p>
           </div>
         </div>
-        <div class="bundle-cost">Total: <strong>$0/month</strong></div>
+        <div class="bundle-cost">Total: <strong>$0/month</strong></div>${stackPickCostCaveat(bundleReadings)}
         <table>
-          <thead><tr><th>Role</th><th>Service</th><th>Free Tier</th><th></th></tr></thead>
+          <thead><tr><th>Role</th><th>Service</th><th>Free Tier</th><th>Our verdict</th><th></th></tr></thead>
           <tbody>
 ${serviceRows}
           </tbody>
-        </table>
+        </table>${endedNote}
       </div>`;
   }).join("\n\n");
 
@@ -50747,7 +50734,7 @@ ${globalNavCss()}
   ${buildGlobalNav("best")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/best">Best Of</a> &rsaquo; Agent Stack Guide</div>
   <h1>AI Agent Builder\u2019s Free Stack Guide</h1>
-  <p class="page-intro">Curated free-tier infrastructure stacks for common AI agent patterns. Every service below has a real free tier \u2014 start building for $0/month.</p>
+  <p class="page-intro">Curated free-tier infrastructure stacks for common AI agent patterns. Each service carries the same verdict our own vendor page gives it. ${stackFreshnessNote(pageReadings)}</p>
 
 ${bundleHtml}
 

@@ -59,7 +59,9 @@ const EDITORIAL_PAGES = [
   "/openai-assistants-migration", "/openai-assistants-migration-2026",
   "/openai-realtime-migration", "/q1-2026-developer-pricing-report", "/q2-pricing-preview-2026",
   "/railway-vs-render", "/security-free-tier-comparison-2026",
-  "/serverless-free-tier-comparison-2026", "/shutdowns", "/stack-check", "/startup-credits",
+  "/serverless-free-tier-comparison-2026", "/shutdowns", "/stack-check",
+  "/stacks/ai-startup", "/stacks/api-first", "/stacks/open-source", "/stacks/saas-mvp",
+  "/stacks/side-project", "/startup-credits",
   "/state-of-free-tiers", "/storage-comparison-2026", "/supabase-vs-firebase",
   "/tenor-alternatives", "/terraform-cloud-free-tier-removed",
   "/testing-free-tier-comparison-2026", "/vector-database-pricing", "/vercel-vs-netlify",
@@ -81,9 +83,9 @@ function parseArgs(argv) {
   return opts;
 }
 
-function routeFirstServed(route) {
+function firstCommitHolding(literal) {
   try {
-    const log = execFileSync("git", ["log", "--reverse", "-S", `"${route}"`, "--format=%cs", "--", "src/serve.ts"], {
+    const log = execFileSync("git", ["log", "--reverse", "-S", `"${literal}"`, "--format=%cs", "--", "src/serve.ts"], {
       cwd: REPO, encoding: "utf-8", maxBuffer: 8 * 1024 * 1024,
     });
     const first = log.split("\n").find(l => /^\d{4}-\d{2}-\d{2}$/.test(l.trim()));
@@ -91,6 +93,13 @@ function routeFirstServed(route) {
   } catch {
     return null;
   }
+}
+
+function routeFirstServed(route) {
+  const whole = firstCommitHolding(route);
+  if (whole) return whole;
+  const segment = route.slice(route.lastIndexOf("/") + 1);
+  return segment && segment !== route.slice(1) ? firstCommitHolding(segment) : null;
 }
 
 function startServer(env = {}) {
