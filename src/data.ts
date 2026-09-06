@@ -15,6 +15,7 @@ import {
   withheldLevelSentence,
 } from "./source-check.js";
 import { substitutesFor } from "./product-role.js";
+import { supersededTermsRecordFor, type SupersededTermsRecord } from "./superseded-description.js";
 import { isSubSlug, toSlug } from "./slug.js";
 import { DATE_SOURCES, isEventDated, changeDateClause, isoWeekWindow, changesInWindow, discoveryBatchNote, firstReadHeading, type DateWindow } from "./change-dates.js";
 import { PRODUCT_DEPRECATED, deprecationEndsTheListedProduct } from "./product-deprecation.js";
@@ -119,7 +120,7 @@ export function withLinkHealth<T extends Offer>(offer: T): T & { link_unreachabl
 export function getOfferDetails(
   vendorName: string,
   includeAlternatives: boolean = false
-): { offer: OfferWithLinkHealth & { gate: Gate | null; relatedVendors: string[]; alternatives?: Array<OfferWithLinkHealth & { gate: Gate | null }>; tie_break: TieBreak } } | { error: string; suggestions: string[] } {
+): { offer: EnrichedOffer & { relatedVendors: string[]; alternatives?: EnrichedOffer[]; tie_break: TieBreak } } | { error: string; suggestions: string[] } {
   const offers = loadOffers();
   const lowerName = vendorName.toLowerCase();
   const match = offers.find((o) => o.vendor.toLowerCase() === lowerName);
@@ -131,14 +132,13 @@ export function getOfferDetails(
     );
     const sameCategoryOffers = relatedRanking.entries.slice(0, 5).map((e) => e.offer);
     const relatedVendors = sameCategoryOffers.map((o) => o.vendor);
-    const result: OfferWithLinkHealth & { gate: Gate | null; relatedVendors: string[]; alternatives?: Array<OfferWithLinkHealth & { gate: Gate | null }>; tie_break: TieBreak } = {
-      ...withLinkHealth(match),
-      gate: gateForOffer(match),
+    const result: EnrichedOffer & { relatedVendors: string[]; alternatives?: EnrichedOffer[]; tie_break: TieBreak } = {
+      ...enrichOffers([match])[0],
       relatedVendors,
       tie_break: relatedRanking.tie_break,
     };
     if (includeAlternatives) {
-      result.alternatives = sameCategoryOffers.map(o => stripReferrerValue({ ...withLinkHealth(o), gate: gateForOffer(o) }));
+      result.alternatives = enrichOffers(sameCategoryOffers).map(o => stripReferrerValue(o));
     }
     return { offer: stripReferrerValue(result) };
   }
@@ -452,7 +452,9 @@ export function enrichOffers(offers: Offer[]): EnrichedOffer[] {
       (now.getTime() - new Date(offer.verifiedDate).getTime()) / (24 * 60 * 60 * 1000)
     );
 
-    const enriched = { ...offer, recent_change, expires_soon, risk_level, risk_cause, rating_withheld, stability, days_since_verified, link_unreachable, gate: gateFor(offer, servedOn) };
+    const terms_superseded = supersededTermsRecordFor(offer, vendorAllChangesList.get(key) ?? []);
+
+    const enriched = { ...offer, recent_change, expires_soon, risk_level, risk_cause, rating_withheld, stability, days_since_verified, link_unreachable, gate: gateFor(offer, servedOn), terms_superseded };
     return stripReferrerValue(enriched);
   });
 }
@@ -988,7 +990,7 @@ export interface AuditServiceResult {
 
 export interface AuditGap {
   category: string;
-  recommendation: { vendor: string; tier: string; description: string };
+  recommendation: { vendor: string; tier: string; description: string; terms_superseded: SupersededTermsRecord | null };
 }
 
 export interface AuditResult {
@@ -1078,6 +1080,7 @@ export function auditStack(serviceNames: string[]): AuditResult {
             vendor: topFree[0].vendor,
             tier: topFree[0].tier,
             description: topFree[0].description,
+            terms_superseded: supersededTermsRecordFor(topFree[0], loadDealChanges().filter((c) => c.vendor.toLowerCase() === topFree[0].vendor.toLowerCase())),
           },
         });
       }

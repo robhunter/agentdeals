@@ -33,9 +33,22 @@ function isRecord(node: Record<string, unknown>): boolean {
   return RECORD_FIELDS.some((field) => node[field] !== undefined && node[field] !== null);
 }
 
-function isWithheld(node: Record<string, unknown>): boolean {
+function isGated(node: Record<string, unknown>): boolean {
   const gate = node.gate;
   return typeof gate === "object" && gate !== null && typeof (gate as { code?: unknown }).code === "string";
+}
+
+function termsAreWithheld(node: Record<string, unknown>): boolean {
+  return typeof node.terms_superseded === "object" && node.terms_superseded !== null;
+}
+
+function levelIsWithheld(node: Record<string, unknown>): boolean {
+  if (node.rating_withheld !== undefined && node.rating_withheld !== null) return true;
+  return "risk_level" in node && node.risk_level === null;
+}
+
+function isWithheld(node: Record<string, unknown>): boolean {
+  return isGated(node) || termsAreWithheld(node) || levelIsWithheld(node);
 }
 
 export function citedRecords(payload: unknown): CitedRecord[] {
