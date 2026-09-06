@@ -4,12 +4,17 @@ import { spawn, type ChildProcess } from "node:child_process";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import {
+  comparisonVerdictText,
+  freeTierFaqAnswer,
+  freeTierVerdictSentence,
   moreStableSide,
   ratingIsWithheld,
   recordedChangesPhrase,
   stabilityFaqAnswer,
+  stabilitySentences,
   stabilityVerdictClause,
   type ComparisonSide,
+  type FreeTierSide,
 } from "../dist/comparison-verdict.js";
 import { buildComparisonMap } from "../dist/comparison-pairs.js";
 import { enrichOffers, loadDealChanges, loadOffers } from "../dist/data.js";
@@ -30,6 +35,84 @@ function side(over: Partial<ComparisonSide> = {}): ComparisonSide {
     ...over,
   };
 }
+
+const offering = (vendor: string, tier: string): FreeTierSide => ({ vendor, free: { states: "offered", tier } });
+const ended = (vendor: string): FreeTierSide => ({ vendor, free: { states: "ended" } });
+const unconfirmed = (vendor: string, why: string): FreeTierSide => ({ vendor, free: { states: "unconfirmed", why } });
+
+describe("comparison verdict — the free-tier claim carries its own reservation", () => {
+  it("states both free tiers only when both sides are rated", () => {
+    assert.strictEqual(
+      freeTierVerdictSentence(offering("Neon", "Free"), offering("Supabase", "Free")),
+      `Both Neon and Supabase offer free tiers. Neon provides "Free" while Supabase offers "Free".`,
+    );
+    assert.strictEqual(
+      freeTierFaqAnswer(offering("Neon", "Free"), offering("Supabase", "Free")),
+      `Both offer free tiers. Neon provides "Free" and Supabase offers "Free". Compare the specific limits above to determine which fits your usage.`,
+    );
+  });
+
+  it("names the one rated side when the other has ended", () => {
+    assert.strictEqual(
+      freeTierVerdictSentence(offering("Neon", "Free"), ended("Hypertune")),
+      `Neon offers a free tier ("Free") while Hypertune does not currently have a free tier.`,
+    );
+    assert.strictEqual(
+      freeTierVerdictSentence(ended("Hypertune"), offering("Neon", "Free")),
+      `Neon offers a free tier ("Free") while Hypertune does not currently have a free tier.`,
+    );
+    assert.strictEqual(
+      freeTierVerdictSentence(ended("Hypertune"), ended("ETLR")),
+      `Neither Hypertune nor ETLR currently offers a free tier.`,
+    );
+  });
+
+  it("never says a side offers a free tier when the site publishes no verdict for it", () => {
+    const why = "The page we cite for BrowserStack states no terms we can read.";
+    const one = freeTierVerdictSentence(offering("Applitools Eyes", "Free"), unconfirmed("BrowserStack", why));
+    assert.ok(!one.includes("BrowserStack offers a free tier"), one);
+    assert.ok(one.includes("We are not publishing a free-tier verdict for BrowserStack."), one);
+    assert.ok(one.endsWith(why), one);
+
+    const both = freeTierVerdictSentence(
+      unconfirmed("Claude Code", `Tier "Paid" is no free offer at all.`),
+      unconfirmed("OpenAI Codex", `Tier "Freemium" is a paid product.`),
+    );
+    assert.ok(!both.includes("offers a free tier"), both);
+    assert.strictEqual(
+      both,
+      `We are not publishing a free-tier verdict for either Claude Code or OpenAI Codex. Tier "Paid" is no free offer at all. Tier "Freemium" is a paid product.`,
+    );
+  });
+
+  it("states a withheld reason once when the free-tier claim and the stability clause share it", () => {
+    const why = "The page we cite for BrowserStack states no terms we can read.";
+    const stableSide = side({ vendor: "Applitools Eyes", recordedChanges: 1, rating: "stable" });
+    const withheldSide = side({
+      vendor: "BrowserStack",
+      recordedChanges: 0,
+      rating: null,
+      ratingWithheldBecause: "states_no_terms",
+    });
+    const text = comparisonVerdictText(
+      ended("Applitools Eyes"),
+      unconfirmed("BrowserStack", why),
+      stableSide,
+      withheldSide,
+    );
+    assert.strictEqual(text.split(why).length - 1, 1, text);
+    assert.ok(text.endsWith("We are not comparing the two pricing histories."), text);
+  });
+
+  it("keeps the stability clause when nothing in the free-tier claim repeats it", () => {
+    const a = side({ vendor: "Neon", recordedChanges: 1, rating: "stable" });
+    const b = side({ vendor: "Supabase", recordedChanges: 2, rating: "caution" });
+    assert.strictEqual(
+      comparisonVerdictText(offering("Neon", "Free"), offering("Supabase", "Free"), a, b),
+      `Both Neon and Supabase offer free tiers. Neon provides "Free" while Supabase offers "Free". ${stabilityVerdictClause(a, b)}`,
+    );
+  });
+});
 
 describe("comparison verdict — the stability clause is derived from the counts the page prints", () => {
   it("names no winner when both sides have the same recorded-change count", () => {
@@ -314,7 +397,9 @@ describe("comparison verdict — as rendered", () => {
     const verdict = renderedVerdict(html);
     const answer = renderedStabilityAnswer(html, sides);
     if (clause) {
-      assert.ok(verdict.includes(escaped(clause)), `${slug} verdict does not render "${clause}"`);
+      for (const sentence of stabilitySentences(sides[0], sides[1])) {
+        assert.ok(verdict.includes(escaped(sentence)), `${slug} verdict does not render "${sentence}"`);
+      }
       assert.ok(answer.includes(clause), `${slug} structured data does not carry "${clause}"`);
     } else {
       assert.doesNotMatch(verdict, /has a more stable pricing history/, `${slug} verdict names a winner the rule does not`);
@@ -332,7 +417,9 @@ describe("comparison verdict — as rendered", () => {
       const clause = stabilityVerdictClause(sides[0], sides[1]);
       const verdict = renderedVerdict(html);
       const answer = renderedStabilityAnswer(html, sides);
-      if (clause && !verdict.includes(escaped(clause))) wrong.push(`${slug}: the verdict does not render "${clause}"`);
+      for (const sentence of stabilitySentences(sides[0], sides[1])) {
+        if (!verdict.includes(escaped(sentence))) wrong.push(`${slug}: the verdict does not render "${sentence}"`);
+      }
       if (clause && !answer.includes(clause)) wrong.push(`${slug}: the structured data does not carry "${clause}"`);
       if (!clause && /has a more stable pricing history/.test(verdict)) wrong.push(`${slug}: the verdict names a winner the counts do not support`);
       if (!clause && /has a more stable pricing history/.test(answer)) wrong.push(`${slug}: the structured data names a winner the counts do not support`);

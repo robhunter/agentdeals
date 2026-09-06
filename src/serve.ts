@@ -23,8 +23,8 @@ import { amountUnstatedSentence, levelWithheldReason, sourceStatesNoAmount, with
 import { readingIsBehindTheLoop, reverificationIntervalDays } from "./badge-staleness.js";
 import { SUPERSEDED_TERMS_LABEL, supersededTermsAnswer, supersededTermsMetaSentence, supersededTermsNotice, supersededTermsNoticeHtml, supersededTermsVerdictSentence, supersedingChange } from "./superseded-description.js";
 import { buildComparisonMap, comparisonSlug } from "./comparison-pairs.js";
-import { stabilityFaqAnswer, stabilityVerdictClause, type ComparisonSide, type StabilityRating } from "./comparison-verdict.js";
-import { publishedVendorLevel, vendorVerdictSentence, vendorBadge, statesRiskCause, narrowingSentence, changeKindNoun, type BadgeWithholding, type VendorVerdictInput } from "./vendor-verdict.js";
+import { comparisonVerdictText, freeTierFaqAnswer, stabilityFaqAnswer, type ComparisonSide, type FreeTierSide, type SideFreeTier, type StabilityRating } from "./comparison-verdict.js";
+import { publishedVendorLevel, vendorVerdictSentence, vendorBadge, freeTierClaim, statesRiskCause, narrowingSentence, changeKindNoun, type BadgeWithholding, type VendorVerdictInput } from "./vendor-verdict.js";
 import { vendorHistorySentence } from "./vendor-history.js";
 import { HETZNER_APRIL_CHANGES, HETZNER_CLOUD_PLANS, HETZNER_PRICES_READ, HETZNER_PRICE_SOURCE, HETZNER_SINGAPORE_EXAMPLE, cheapestOrderableHetznerPlan, hetznerEntryPriceClause, unorderableHetznerPlans } from "./hetzner-pricing.js";
 import { changeTimelineDate, supersededLineups, supersessionNote } from "./change-lineup.js";
@@ -781,12 +781,20 @@ function getBadgeStatus(vendorSlug: string): BadgeReading {
   return reading;
 }
 
-function readBadgeStatus(vendorSlug: string, servedOn: string): BadgeReading {
-  const vendorName = vendorSlugMap.get(vendorSlug);
-  if (!vendorName) return UNKNOWN_BADGE;
+interface VendorVerdictContext {
+  vendorOffers: Offer[];
+  primary: Offer;
+  enriched: EnrichedOfferRow;
+  vendorChanges: DealChange[];
+  gate: Gate | null;
+  levelWithheld: LevelWithheldReason | null;
+  unconfirmableSince: string;
+  input: VendorVerdictInput;
+}
 
+function vendorVerdictContext(vendorName: string, servedOn: string): VendorVerdictContext | null {
   const vendorOffers = offers.filter(o => o.vendor === vendorName);
-  if (vendorOffers.length === 0) return UNKNOWN_BADGE;
+  if (vendorOffers.length === 0) return null;
 
   const primary = vendorOffers[0];
   const enriched = enrichOffers([primary])[0];
@@ -794,39 +802,74 @@ function readBadgeStatus(vendorSlug: string, servedOn: string): BadgeReading {
     .filter(c => c.vendor.toLowerCase() === vendorName.toLowerCase())
     .sort((a, b) => b.date.localeCompare(a.date));
   const linkUnreachable = enriched.link_unreachable;
+  const levelWithheld = levelWithheldReason(primary, linkUnreachable);
+  const unconfirmableSince = linkUnreachable?.last_reachable ? ` since ${linkUnreachable.last_reachable}` : "";
+  const gate = gateFor(primary, servedOn);
 
-  const verdict = vendorBadge({
-    vendor: vendorName,
-    level: enriched.risk_level ?? null,
-    cause: enriched.risk_cause,
-    changes: vendorChanges,
-    levelWithheld: levelWithheldReason(primary, linkUnreachable),
-    unconfirmableSince: "",
-    ratingWithheld: enriched.rating_withheld,
-    offerEnded: offerEnded(primary),
-    gate: gateFor(primary, servedOn)?.code ?? null,
-    linkUnreachable: Boolean(linkUnreachable),
-  });
+  return {
+    vendorOffers,
+    primary,
+    enriched,
+    vendorChanges,
+    gate,
+    levelWithheld,
+    unconfirmableSince,
+    input: {
+      vendor: vendorName,
+      level: enriched.risk_level ?? null,
+      cause: enriched.risk_cause,
+      changes: vendorChanges,
+      levelWithheld,
+      unconfirmableSince,
+      ratingWithheld: enriched.rating_withheld,
+      offerEnded: offerEnded(primary),
+      gate: gate?.code ?? null,
+      linkUnreachable: Boolean(linkUnreachable),
+    },
+  };
+}
 
-  if (verdict.kind === "none") {
-    return { status: "withheld", label: withheldBadgeLabel(verdict.because), verifiedDate: null };
+function unconfirmedFreeTierSentence(vendor: string, because: BadgeWithholding, context: VendorVerdictContext): string {
+  if (because.reason === "gated") return context.gate?.reason ?? "";
+  if (because.reason === "no_source") return ratingWithheldForNoSourceSentence(vendor);
+  return withheldLevelSentence(because.reason, vendor, context.unconfirmableSince);
+}
+
+function freeTierSideOf(vendor: string, tier: string, context: VendorVerdictContext): FreeTierSide {
+  const claim = freeTierClaim(context.input);
+  const free: SideFreeTier =
+    claim.states === "offered" ? { states: "offered", tier }
+    : claim.states === "ended" ? { states: "ended" }
+    : { states: "unconfirmed", why: unconfirmedFreeTierSentence(vendor, claim.because, context) };
+  return { vendor, free };
+}
+
+function readBadgeStatus(vendorSlug: string, servedOn: string): BadgeReading {
+  const vendorName = vendorSlugMap.get(vendorSlug);
+  if (!vendorName) return UNKNOWN_BADGE;
+
+  const context = vendorVerdictContext(vendorName, servedOn);
+  if (!context) return UNKNOWN_BADGE;
+
+  const { vendorOffers, primary } = context;
+  const claim = freeTierClaim(context.input);
+
+  if (claim.states === "unconfirmed") {
+    return { status: "withheld", label: withheldBadgeLabel(claim.because), verifiedDate: null };
   }
 
   const latestVerified = vendorOffers.reduce((max, o) => o.verifiedDate > max ? o.verifiedDate : max, primary.verifiedDate);
 
-  if (verdict.kind === "ended") {
-    return { status: "retired", label: ENDED_BADGE_LABEL, verifiedDate: latestVerified };
-  }
-
-  if (verdict.word === "risky" && enriched.risk_cause) {
+  if (claim.states === "ended") {
+    if (claim.how === "retired") return { status: "retired", label: ENDED_BADGE_LABEL, verifiedDate: latestVerified };
     return {
       status: "removed",
-      label: enriched.risk_cause.change_type === PRODUCT_DEPRECATED ? "deprecated" : "free tier removed",
-      verifiedDate: enriched.risk_cause.date,
+      label: claim.cause.change_type === PRODUCT_DEPRECATED ? "deprecated" : "free tier removed",
+      verifiedDate: claim.cause.date,
     };
   }
 
-  if (verdict.word === "caution") {
+  if (claim.level === "caution") {
     return { status: "at-risk", label: "at risk", verifiedDate: latestVerified };
   }
 
@@ -2371,10 +2414,22 @@ function buildComparisonPage(slug: string): string | null {
   const title = `${a.vendor} vs ${b.vendor} Free Tier Comparison — AgentDeals`;
   const metaDesc = `Compare ${a.vendor} and ${b.vendor} free tiers side by side. Pricing, limits, change history, and risk assessment for developers.`;
 
-  const riskA = enrichOffers([offers.find(o => o.vendor === a.vendor)!])[0];
-  const riskB = enrichOffers([offers.find(o => o.vendor === b.vendor)!])[0];
+  const servedOn = utcDate();
+  const contextA = vendorVerdictContext(a.vendor, servedOn);
+  const contextB = vendorVerdictContext(b.vendor, servedOn);
+  if (!contextA || !contextB) return null;
+
+  const riskA = contextA.enriched;
+  const riskB = contextB.enriched;
+  const supersededA = supersedingChange(contextA.primary, contextA.vendorChanges);
+  const supersededB = supersedingChange(contextB.primary, contextB.vendorChanges);
 
   const riskBadge = (o: { risk_level: string | null; risk_cause: RiskCause | null }) => riskBadgeHtml(o.risk_level, o.risk_cause, { margin: false });
+
+  const descBlockHtml = (vendor: string, description: string, superseded: typeof supersededA) =>
+    superseded
+      ? `<div class="desc-block terms-superseded-text"><strong>${SUPERSEDED_TERMS_LABEL}:</strong> ${supersededTermsNoticeHtml(vendor, superseded, escHtmlServer)} <a href="#changes">Read what we recorded &darr;</a></div>`
+      : `<div class="desc-block">${escHtmlServer(description)}</div>`;
 
   const changesHtml = (changes: typeof a.deal_changes, vendor: string) => {
     if (changes.length === 0) return `<p style="color:var(--text-dim);font-size:.85rem">No recorded pricing changes for ${escHtmlServer(vendor)}.</p>`;
@@ -2406,10 +2461,8 @@ function buildComparisonPage(slug: string): string | null {
     <a href="/category/${catSlug}">${catOthersCount} other ${escHtmlServer(primaryCategory.toLowerCase())} option${catOthersCount !== 1 ? "s" : ""} &rarr;</a>
   </div>` : "";
 
-  const tierA = a.tier.toLowerCase();
-  const tierB = b.tier.toLowerCase();
-  const hasFreeA = tierA !== "none" && !a.description.toLowerCase().includes("no free tier");
-  const hasFreeB = tierB !== "none" && !b.description.toLowerCase().includes("no free tier");
+  const freeSideA = freeTierSideOf(a.vendor, a.tier, contextA);
+  const freeSideB = freeTierSideOf(b.vendor, b.tier, contextB);
   const comparisonSide = (
     vendor: string,
     risk: typeof riskA,
@@ -2426,19 +2479,8 @@ function buildComparisonPage(slug: string): string | null {
   };
   const sideA = comparisonSide(a.vendor, riskA, a.deal_changes.length);
   const sideB = comparisonSide(b.vendor, riskB, b.deal_changes.length);
-  const stabilityClause = stabilityVerdictClause(sideA, sideB);
 
-  let verdictText = "";
-  if (hasFreeA && hasFreeB) {
-    verdictText = `Both ${a.vendor} and ${b.vendor} offer free tiers. ${a.vendor} provides "${a.tier}" while ${b.vendor} offers "${b.tier}".`;
-  } else if (hasFreeA && !hasFreeB) {
-    verdictText = `${a.vendor} offers a free tier ("${a.tier}") while ${b.vendor} does not currently have a free tier.`;
-  } else if (!hasFreeA && hasFreeB) {
-    verdictText = `${b.vendor} offers a free tier ("${b.tier}") while ${a.vendor} does not currently have a free tier.`;
-  } else {
-    verdictText = `Neither ${a.vendor} nor ${b.vendor} currently offers a free tier.`;
-  }
-  if (stabilityClause) verdictText += ` ${stabilityClause}`;
+  const verdictText = comparisonVerdictText(freeSideA, freeSideB, sideA, sideB);
 
   const verdictHtml = `
   <div class="verdict-section">
@@ -2462,7 +2504,7 @@ function buildComparisonPage(slug: string): string | null {
   </div>`;
 
   const faqItems = [
-    { q: `Which is cheaper, ${a.vendor} or ${b.vendor}?`, a: hasFreeA && hasFreeB ? `Both offer free tiers. ${a.vendor} provides "${a.tier}" and ${b.vendor} offers "${b.tier}". Compare the specific limits above to determine which fits your usage.` : hasFreeA ? `${a.vendor} offers a free tier ("${a.tier}") while ${b.vendor} does not.` : hasFreeB ? `${b.vendor} offers a free tier ("${b.tier}") while ${a.vendor} does not.` : `Neither currently offers a free tier.` },
+    { q: `Which is cheaper, ${a.vendor} or ${b.vendor}?`, a: freeTierFaqAnswer(freeSideA, freeSideB) },
     { q: `Is ${a.vendor} or ${b.vendor} more stable?`, a: stabilityFaqAnswer(sideA, sideB) },
     { q: `Can I use ${a.vendor} and ${b.vendor} together?`, a: sameCategory ? `While both are in the ${primaryCategory} category, some teams use both for different workloads. Check each vendor's free tier limits to see if they complement your stack.` : `Yes — ${a.vendor} (${a.category}) and ${b.vendor} (${b.category}) serve different purposes and can work well together.` },
   ];
@@ -2476,22 +2518,27 @@ function buildComparisonPage(slug: string): string | null {
     mainEntity: {
       "@type": "ItemList",
       numberOfItems: 2,
-      itemListElement: [a, b].map((v, i) => ({
+      itemListElement: [
+        { offer: a, free: freeSideA.free, superseded: supersededA },
+        { offer: b, free: freeSideB.free, superseded: supersededB },
+      ].map(({ offer: v, free, superseded }, i) => ({
         "@type": "ListItem",
         position: i + 1,
         item: {
           "@type": "SoftwareApplication",
           name: v.vendor,
-          description: v.description,
+          description: superseded ? supersededTermsNotice(v.vendor, superseded) : v.description,
           applicationCategory: v.category,
-          offers: { "@type": "Offer", price: "0", priceCurrency: "USD", description: v.tier },
+          ...(free.states === "offered" && !superseded
+            ? { offers: { "@type": "Offer", price: "0", priceCurrency: "USD", description: v.tier } }
+            : {}),
           url: v.url,
         },
       })),
     },
   };
 
-  const faqJsonLd = faqPageJsonLd("/" + slug, faqItems);
+  const faqJsonLd = faqPageJsonLd("/compare/" + slug, faqItems);
 
   const relatedComparisons = Array.from(comparisonMap.entries())
     .filter(([s, [ra, rb]]) => s !== slug && (ra === vendorA || ra === vendorB || rb === vendorA || rb === vendorB))
@@ -2580,7 +2627,7 @@ ${verdictHtml}
       <div class="detail-row"><span class="detail-label">Tier</span><span class="detail-value" style="color:var(--accent)">${escHtmlServer(a.tier)}</span></div>
       <div class="detail-row"><span class="detail-label">Verified</span><span class="detail-value">${escHtmlServer(a.verifiedDate)}</span></div>
       <div class="detail-row"><span class="detail-label">Changes</span><span class="detail-value">${a.deal_changes.length} recorded</span></div>
-      <div class="desc-block">${escHtmlServer(a.description)}</div>
+      ${descBlockHtml(a.vendor, a.description, supersededA)}
       ${a.referral ? `<div style="margin-top:.75rem;padding:.5rem .75rem;border:1px solid #3fb95040;border-left:3px solid #3fb950;border-radius:0 6px 6px 0;background:#3fb95010;font-size:.8rem">\ud83d\udd17 <a href="${escHtmlServer(a.referral.url)}" rel="noopener sponsored" target="_blank">Referral link</a>: ${escHtmlServer(a.referral.referee_value ?? "Save with our referral link")} <a href="/disclosure" style="font-size:.7rem;color:var(--text-dim)">(disclosure)</a></div>` : ""}
     </div>
     <div class="vendor-col">
@@ -2589,13 +2636,13 @@ ${verdictHtml}
       <div class="detail-row"><span class="detail-label">Tier</span><span class="detail-value" style="color:var(--accent)">${escHtmlServer(b.tier)}</span></div>
       <div class="detail-row"><span class="detail-label">Verified</span><span class="detail-value">${escHtmlServer(b.verifiedDate)}</span></div>
       <div class="detail-row"><span class="detail-label">Changes</span><span class="detail-value">${b.deal_changes.length} recorded</span></div>
-      <div class="desc-block">${escHtmlServer(b.description)}</div>
+      ${descBlockHtml(b.vendor, b.description, supersededB)}
       ${b.referral ? `<div style="margin-top:.75rem;padding:.5rem .75rem;border:1px solid #3fb95040;border-left:3px solid #3fb950;border-radius:0 6px 6px 0;background:#3fb95010;font-size:.8rem">\ud83d\udd17 <a href="${escHtmlServer(b.referral.url)}" rel="noopener sponsored" target="_blank">Referral link</a>: ${escHtmlServer(b.referral.referee_value ?? "Save with our referral link")} <a href="/disclosure" style="font-size:.7rem;color:var(--text-dim)">(disclosure)</a></div>` : ""}
     </div>
   </div>
 
   <div class="changes-section">
-    <h2>Pricing Change History</h2>
+    <h2 id="changes">Pricing Change History</h2>
     <div class="changes-cols">
       <div class="changes-col">
         <h3>${escHtmlServer(a.vendor)}</h3>
@@ -3817,17 +3864,13 @@ function buildVendorPage(slug: string): string | null {
   const vendorName = vendorSlugMap.get(slug);
   if (!vendorName) return null;
 
-  const vendorOffers = offers.filter(o => o.vendor === vendorName);
-  if (vendorOffers.length === 0) return null;
+  const servedOn = new Date().toISOString().slice(0, 10);
+  const context = vendorVerdictContext(vendorName, servedOn);
+  if (!context) return null;
 
-  const primary = vendorOffers[0];
-  const enriched = enrichOffers([primary])[0];
+  const { vendorOffers, primary, enriched, vendorChanges, levelWithheld, unconfirmableSince } = context;
+  const verdictInput = context.input;
   const allCategories = [...new Set(vendorOffers.map(o => o.category))];
-
-  const allChanges = loadDealChanges();
-  const vendorChanges = allChanges
-    .filter(c => c.vendor.toLowerCase() === vendorName.toLowerCase())
-    .sort((a, b) => b.date.localeCompare(a.date));
 
   const termsSuperseded = supersedingChange(primary, vendorChanges);
   const publishableTerms = termsSuperseded ? "" : primary.description;
@@ -3837,30 +3880,13 @@ function buildVendorPage(slug: string): string | null {
   const riskLevel = publishedVendorLevel(enriched.risk_level ?? null, riskCause);
   const riskColor = riskColors[riskLevel] ?? "#8b949e";
 
-  const servedOn = new Date().toISOString().slice(0, 10);
   const discontinuedOn = discontinuedOnOrBefore(vendorChanges, servedOn);
 
   const linkUnreachable = enriched.link_unreachable;
   const offerHasEnded = offerEnded(primary);
-  const primaryGate = gateFor(primary, servedOn);
-  const unconfirmableSince = linkUnreachable
-    ? (linkUnreachable.last_reachable ? ` since ${linkUnreachable.last_reachable}` : "")
-    : "";
-  const levelWithheld = levelWithheldReason(primary, linkUnreachable);
+  const primaryGate = context.gate;
   const withheldClause = levelWithheld ? withheldLevelClause(levelWithheld, unconfirmableSince) : "";
   const ratingWithheld = enriched.rating_withheld;
-  const verdictInput: VendorVerdictInput = {
-    vendor: vendorName,
-    level: enriched.risk_level ?? null,
-    cause: riskCause,
-    changes: vendorChanges,
-    levelWithheld,
-    unconfirmableSince,
-    ratingWithheld,
-    offerEnded: offerHasEnded,
-    gate: primaryGate?.code ?? null,
-    linkUnreachable: Boolean(linkUnreachable),
-  };
 
   const riskCauseLine = statesRiskCause(verdictInput) && riskCause
     ? `  <p class="risk-cause-line" style="margin:.4rem 0 .6rem;font-size:.9rem;color:var(--text-muted)"><strong style="color:${riskColor}">Why ${riskLevel}:</strong> <span class="risk-cause-date" style="font-family:var(--mono)">${escHtmlServer(changeDateLabel(riskCause))}</span> &mdash; ${escHtmlServer(riskCause.summary)} <a href="#changes" style="white-space:nowrap">Full history &darr;</a></p>`
@@ -3936,7 +3962,7 @@ function buildVendorPage(slug: string): string | null {
   const alternatives = alternativesRanking.entries.slice(0, 12).map(e => e.offer);
 
   const curatedVendorRanking = (() => {
-    const kept = curatedAlternativesFor(vendorName, allChanges, offers, vendorOffers).kept;
+    const kept = curatedAlternativesFor(vendorName, dealChanges, offers, vendorOffers).kept;
     if (kept.length === 0) return null;
     return rankForListing(kept, {
       queryKey: `curated-alternatives:${vendorName}`,

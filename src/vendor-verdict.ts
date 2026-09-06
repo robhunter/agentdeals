@@ -108,6 +108,20 @@ export function vendorBadge(input: VendorVerdictInput): VendorBadge {
   return { kind: "rating", word: publishedVendorLevel(input.level, input.cause) };
 }
 
+export type FreeTierClaim =
+  | { states: "offered"; level: PublishedRiskLevel }
+  | { states: "ended"; how: "retired" }
+  | { states: "ended"; how: "removed"; cause: RiskCause }
+  | { states: "unconfirmed"; because: BadgeWithholding };
+
+export function freeTierClaim(input: VendorVerdictInput): FreeTierClaim {
+  const badge = vendorBadge(input);
+  if (badge.kind === "ended") return { states: "ended", how: "retired" };
+  if (badge.kind === "none") return { states: "unconfirmed", because: badge.because };
+  if (badge.word === "risky" && input.cause) return { states: "ended", how: "removed", cause: input.cause };
+  return { states: "offered", level: badge.word };
+}
+
 export function statesRiskCause(input: VendorVerdictInput): boolean {
   const word = vendorVerdictWord(input);
   return word !== null && word !== "stable" && input.cause !== null;
