@@ -9,7 +9,7 @@ TESTS=(
   test/gated-vendor-answers.test.ts
 )
 
-SOURCES=(src/superseded-description.ts src/change-citation.ts src/serve.ts)
+SOURCES=(src/superseded-description.ts src/change-citation.ts src/unrendered-text.ts src/serve.ts)
 
 backup() { for f in "${SOURCES[@]}"; do cp "$f" "/tmp/$(basename "$f").m1386"; done; }
 restore() { for f in "${SOURCES[@]}"; do cp "/tmp/$(basename "$f").m1386" "$f"; done; }
@@ -53,12 +53,49 @@ PY
 }
 
 run_mutation "a record that read nothing still publishes a reading" \
-  sub src/superseded-description.ts 'if (terms === "" || !changeCitesASource(change)) return null;' \
-                                    'if (!changeCitesASource(change)) return null;'
+  sub src/superseded-description.ts 'if (terms === "" || carriesAnUnrenderedExpression(terms)) return null;' \
+                                    'if (carriesAnUnrenderedExpression(terms)) return null;'
 
 run_mutation "a record that cites nothing still publishes a reading" \
-  sub src/superseded-description.ts 'if (terms === "" || !changeCitesASource(change)) return null;' \
+  sub src/superseded-description.ts '  if (!changeCitesASource(change)) return null;
+' ''
+
+run_mutation "a reading the vendor's page never rendered is published" \
+  sub src/superseded-description.ts 'if (terms === "" || carriesAnUnrenderedExpression(terms)) return null;' \
                                     'if (terms === "") return null;'
+
+run_mutation "nothing is ever read as unrendered" \
+  sub src/unrendered-text.ts '  const subject = text ?? "";' '  const subject = String(text ?? "").slice(0, 0);'
+
+run_mutation "a client-side template is read as rendered text" \
+  sub src/unrendered-text.ts '  /\{\{[\s\S]*?\}\}|\{\{[^\n]*/,
+' ''
+
+run_mutation "a template whose closer a clip cut off is read as rendered text" \
+  sub src/unrendered-text.ts '/\{\{[\s\S]*?\}\}|\{\{[^\n]*/' '/\{\{[\s\S]*?\}\}/'
+
+run_mutation "a template literal is read as rendered text" \
+  sub src/unrendered-text.ts '  /\$\{[\s\S]*?\}|\$\{[^\n]*/,
+' ''
+
+run_mutation "a server-side template is read as rendered text" \
+  sub src/unrendered-text.ts '  /<%[\s\S]*?%>|<%[^\n]*/,
+' ''
+
+run_mutation "a stringified object is read as rendered text" \
+  sub src/unrendered-text.ts '  /\[object Object\]/,
+' ''
+
+run_mutation "a value that never arrived is read as rendered text" \
+  sub src/unrendered-text.ts '  /\bundefined\b/,
+' ''
+
+run_mutation "a calculation that failed is read as rendered text" \
+  sub src/unrendered-text.ts '  /\bNaN\b/,
+' ''
+
+run_mutation "the refusal cannot name what it refused" \
+  sub src/unrendered-text.ts '    if (found) return found[0];' '    if (found) return pattern.source;'
 
 run_mutation "the reading is dated by the change rather than by the day it was recorded" \
   sub src/superseded-description.ts 'date: (change.recorded_date ?? "").trim() || change.date,' 'date: change.date,'

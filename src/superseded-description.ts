@@ -2,6 +2,7 @@ import { changeCitesASource, citationLabel } from "./change-citation.js";
 import { changeDateClause } from "./change-dates.js";
 import { narrowsTheStoredTerms } from "./change-direction.js";
 import { isNoLongerInForce } from "./change-resolution.js";
+import { carriesAnUnrenderedExpression } from "./unrendered-text.js";
 import type { ChangeResolution, DealChange } from "./types.js";
 
 export interface QuotingChange extends Pick<DealChange, "date" | "date_source" | "change_type"> {
@@ -61,7 +62,8 @@ export function storedTermsAreSuperseded(
 
 export function readingBehindTheChange(change: QuotingChange): SourcedReading | null {
   const terms = (change.current_state ?? "").trim();
-  if (terms === "" || !changeCitesASource(change)) return null;
+  if (terms === "" || carriesAnUnrenderedExpression(terms)) return null;
+  if (!changeCitesASource(change)) return null;
   const url = change.source_url!.trim();
   return {
     date: (change.recorded_date ?? "").trim() || change.date,

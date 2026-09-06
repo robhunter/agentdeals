@@ -21,6 +21,7 @@ const {
   storedTermsAreSuperseded,
 } = await import("../dist/superseded-description.js");
 const { citationLabel } = await import("../dist/change-citation.js");
+const { carriesAnUnrenderedExpression, unrenderedExpressionIn } = await import("../dist/unrendered-text.js");
 const { toSlug } = await import("../dist/slug.js");
 const { qualityBudget } = await import("../dist/page-reviews.js");
 const { supersededCensus } = await import("../dist/superseded-census.js");
@@ -93,6 +94,12 @@ const A_CHANGE_QUOTING_IT = {
   source_url: "https://quotacorp.example/pricing",
   category: "Cloud Hosting",
   alternatives: [],
+};
+
+const A_CHANGE_READING_A_TEMPLATE = {
+  ...A_CHANGE_QUOTING_IT,
+  summary: "The free tier now has a request limit.",
+  current_state: "The free tier allows a maximum of {{ appConfig.MaxRequests }} requests. URLs expire.",
 };
 
 describe("#1103 a change record that quotes our stored terms as the previous ones", () => {
@@ -359,6 +366,15 @@ describe("#1386 the reading the superseding record already holds", () => {
     ["a blank reading", { current_state: "  \n " }],
   ] as const;
 
+  const TERMS_THE_PAGE_NEVER_RENDERED = [
+    ["a client-side template", "The free tier allows a maximum of {{ appConfig.MaxRequests }} requests."],
+    ["a template literal", "Free plan: ${limits.egress} of egress a month"],
+    ["a server-side template", "Free plan: <%= plan.storage %> of storage"],
+    ["a stringified object", "Free plan: [object Object] included"],
+    ["a value that never arrived", "Free plan: undefined GB of egress"],
+    ["a calculation that failed", "Free plan: NaN requests per month"],
+  ] as const;
+
   it("is the current state, dated by the day the record was written, attributed to its source", () => {
     const reading = readingBehindTheChange({ ...A_CHANGE_QUOTING_IT, recorded_date: "2026-08-29" })!;
     assert.strictEqual(reading.terms, A_CHANGE_QUOTING_IT.current_state);
@@ -375,6 +391,40 @@ describe("#1386 the reading the superseding record already holds", () => {
     for (const [why, missing] of NO_READING_TO_PUBLISH) {
       assert.strictEqual(readingBehindTheChange({ ...A_CHANGE_QUOTING_IT, ...missing }), null, why);
     }
+  });
+
+  it("is nothing at all where the terms carry an expression the vendor's page never rendered", () => {
+    for (const [why, current_state] of TERMS_THE_PAGE_NEVER_RENDERED) {
+      assert.strictEqual(readingBehindTheChange({ ...A_CHANGE_QUOTING_IT, current_state }), null, why);
+    }
+  });
+
+  it("names the expression it refused, and finds none in terms a page did render", () => {
+    assert.strictEqual(
+      unrenderedExpressionIn(A_CHANGE_READING_A_TEMPLATE.current_state),
+      "{{ appConfig.MaxRequests }}",
+    );
+    assert.strictEqual(unrenderedExpressionIn("a maximum of {{ appConfig.MaxReq"), "{{ appConfig.MaxReq");
+    for (const rendered of [
+      A_CHANGE_QUOTING_IT.current_state,
+      "Starter: $0 / month — $10 credits + tok rates, 1 GB processed data + $4/GB",
+      "Orders 25, Items 100, Bandwidth 5 GB, API calls 25000, Users Unlimited",
+      "Free for 3 users. Projects 10. Environments 4. Config syncs (5).",
+      "$15 free credits per month (≈ 2,000 Ubuntu x64 2-vCPU minutes)",
+    ]) {
+      assert.strictEqual(carriesAnUnrenderedExpression(rendered), false, rendered);
+    }
+  });
+
+  it("publishes no reading carrying one, on any record in the catalogue population", () => {
+    const carrying = supersededRecords()
+      .map(({ offer, change }) => ({
+        vendor: offer.vendor,
+        found: unrenderedExpressionIn(readingBehindTheChange(change)?.terms),
+      }))
+      .filter(({ found }) => found)
+      .map(({ vendor, found }) => `${vendor} :: ${found}`);
+    assert.deepStrictEqual(carrying.slice(0, 20), []);
   });
 
   it("shortens a URL to what a reader can place, and leaves one it cannot parse alone", () => {
@@ -431,6 +481,22 @@ describe("#1386 the reading the superseding record already holds", () => {
       const notice = supersededTermsNotice(offer.vendor, change);
       const after = notice.indexOf(reading.terms) + reading.terms.length;
       assert.strictEqual(notice.slice(after, after + 2), ". ", `${offer.vendor}: ${notice}`);
+    }
+  });
+
+  it("says why it withholds, and invents no reading, where the record read an expression the page never rendered", () => {
+    const wordings = [
+      supersededTermsNotice(A_RECORD.vendor, A_CHANGE_READING_A_TEMPLATE),
+      supersededTermsAnswer(A_RECORD.vendor, A_CHANGE_READING_A_TEMPLATE),
+      supersededTermsMetaSentence(A_RECORD.vendor, A_CHANGE_READING_A_TEMPLATE),
+      supersededTermsVerdictSentence(A_RECORD.vendor, A_CHANGE_READING_A_TEMPLATE),
+      unescaped(supersededTermsNoticeHtml(A_RECORD.vendor, A_CHANGE_READING_A_TEMPLATE, escapedFor)),
+    ];
+    for (const text of wordings) {
+      assert.ok(text.includes(STORED_TERMS_WITHHELD_PHRASE), text);
+      assert.ok(!text.includes("As of"), text);
+      assert.ok(!text.includes("{{"), text);
+      assert.ok(!text.includes("appConfig"), text);
     }
   });
 
@@ -807,6 +873,19 @@ describe("#1103 every catalogue record whose stored terms are superseded", () =>
       .filter(({ offer }) => withholdingSurfacesOf(bodies.get(`/vendor/${toSlug(offer.vendor)}`)!).length < 4)
       .map(({ offer }) => offer.vendor);
     assert.deepStrictEqual(bare.slice(0, 20), []);
+  });
+
+  it("quotes an expression the vendor's page never rendered on none of them", () => {
+    const leaking: string[] = [];
+    for (const { offer, change } of population) {
+      const html = bodies.get(`/vendor/${toSlug(offer.vendor)}`)!;
+      const withoutWhatTheChangeItselfSays = (text: string) => text.split(change.summary).join(" ");
+      for (const [surface, text] of withholdingSurfacesOf(html)) {
+        const found = unrenderedExpressionIn(withoutWhatTheChangeItselfSays(text));
+        if (found) leaking.push(`${offer.vendor} :: ${surface} :: ${found}`);
+      }
+    }
+    assert.deepStrictEqual(leaking.slice(0, 20), []);
   });
 
   it("opens the meta description on what it read rather than on what it will not say", () => {
