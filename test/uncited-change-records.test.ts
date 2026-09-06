@@ -112,8 +112,8 @@ describe("the verdict engine, given a withheld rating", () => {
     ...over,
   });
 
-  it("draws no badge", () => {
-    assert.deepStrictEqual(vendorBadge(input()), { kind: "none" });
+  it("draws no badge, and says the missing source is why", () => {
+    assert.deepStrictEqual(vendorBadge(input()), { kind: "none", because: { reason: "no_source" } });
   });
 
   it("states no risk cause", () => {

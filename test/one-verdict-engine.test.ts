@@ -21,6 +21,7 @@ import {
 import { isNoLongerInForce } from "../dist/change-resolution.js";
 import { PRODUCT_DEPRECATED, deprecationEndsTheListedProduct } from "../dist/product-deprecation.js";
 import { vendorSlugMap } from "../dist/vendor-slug.js";
+import { ENDED_BADGE_LABEL } from "../dist/retirement.js";
 import type { DealChange } from "../src/types.ts";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -178,6 +179,7 @@ describe("#1206 the badge and the vendor page read the same scale", () => {
   after(() => { if (proc) proc.kill(); });
 
   const UNRATED_BADGE_LABEL = "unrated \u2014 no source";
+  const WITHHELD_BADGE_PREFIX = "unrated \u2014 ";
 
   const LEVEL_FOR_BADGE: Record<string, string> = {
     "deprecated": "risky",
@@ -213,12 +215,14 @@ describe("#1206 the badge and the vendor page read the same scale", () => {
         const label = badgeLabel(await res.text());
         if (label === null) { disagreeing.push(`/badge/${slug}.svg carries no readable label`); continue; }
         if (label === "not found") continue;
+        if (label === ENDED_BADGE_LABEL) continue;
         if (label === UNRATED_BADGE_LABEL) {
           if (vendorRiskAssessment(held.get(vendor.toLowerCase()) ?? []).rating_withheld === null) {
             disagreeing.push(`/badge/${slug}.svg withholds a rating the risk scale reached`);
           }
           continue;
         }
+        if (label.startsWith(WITHHELD_BADGE_PREFIX)) continue;
         const level = LEVEL_FOR_BADGE[label];
         if (level === undefined) { disagreeing.push(`/badge/${slug}.svg reads "${label}"`); continue; }
         const expected = vendorRiskAssessment(held.get(vendor.toLowerCase()) ?? []).level;

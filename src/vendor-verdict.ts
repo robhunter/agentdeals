@@ -4,6 +4,7 @@ import { isNoLongerInForce } from "./change-resolution.js";
 import { changeIsUncited, ratingWithheldForNoSourceSentence } from "./change-citation.js";
 import { changeDateClause } from "./change-dates.js";
 import { withheldLevelClause, type LevelWithheldReason } from "./source-check.js";
+import type { GateCode } from "./ranking.js";
 import { endedVerdictSentence } from "./retirement.js";
 import { vendorHistorySentence, type PublishedRiskLevel } from "./vendor-history.js";
 
@@ -39,14 +40,19 @@ export interface VendorVerdictInput {
   unconfirmableSince: string;
   ratingWithheld?: RatingWithheld | null;
   offerEnded?: boolean;
-  gated?: boolean;
+  gate?: GateCode | null;
   linkUnreachable?: boolean;
 }
+
+export type BadgeWithholding =
+  | { reason: "gated"; gate: GateCode }
+  | { reason: "no_source" }
+  | { reason: LevelWithheldReason };
 
 export type VendorBadge =
   | { kind: "ended" }
   | { kind: "rating"; word: PublishedRiskLevel }
-  | { kind: "none" };
+  | { kind: "none"; because: BadgeWithholding };
 
 export function publishedVendorLevel(
   level: PublishedRiskLevel | null,
@@ -83,14 +89,23 @@ export function vendorVerdictWord(input: VendorVerdictInput): PublishedRiskLevel
   return publishedVendorLevel(input.level, input.cause);
 }
 
+export function badgeWithholding(input: VendorVerdictInput): BadgeWithholding | null {
+  if (withholdingDecides(input)) {
+    return { reason: input.levelWithheld ?? "no_source" };
+  }
+  if (input.gate) return { reason: "gated", gate: input.gate };
+  if (input.level === null) return { reason: input.levelWithheld ?? "no_source" };
+  if (input.linkUnreachable && publishedVendorLevel(input.level, input.cause) === "stable") {
+    return { reason: "link_unreachable" };
+  }
+  return null;
+}
+
 export function vendorBadge(input: VendorVerdictInput): VendorBadge {
   if (input.offerEnded) return { kind: "ended" };
-  if (input.gated) return { kind: "none" };
-  if (ratingWithheldForNoSource(input)) return { kind: "none" };
-  if (input.level === null) return { kind: "none" };
-  const level = publishedVendorLevel(input.level, input.cause);
-  if (input.linkUnreachable && level === "stable") return { kind: "none" };
-  return { kind: "rating", word: level };
+  const withheld = badgeWithholding(input);
+  if (withheld) return { kind: "none", because: withheld };
+  return { kind: "rating", word: publishedVendorLevel(input.level, input.cause) };
 }
 
 export function statesRiskCause(input: VendorVerdictInput): boolean {
@@ -136,7 +151,7 @@ export function vendorVerdictSentence(input: VendorVerdictInput): string {
     return `${clause.charAt(0).toUpperCase()}${clause.slice(1)}, so we cannot confirm these terms today.`;
   }
   const level = publishedVendorLevel(input.level, input.cause);
-  if (input.gated) return vendorHistorySentence(input.vendor, level, input.cause);
+  if (input.gate) return vendorHistorySentence(input.vendor, level, input.cause);
 
   if (level !== "stable" && input.cause) {
     const unconfirmed = input.levelWithheld
