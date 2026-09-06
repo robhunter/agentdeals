@@ -4,6 +4,7 @@ import { readFileSync } from "fs";
 import { resolve, dirname } from "path";
 import { fileURLToPath } from "url";
 import { summaryCallsItsSourceUnreadable } from "../dist/change-citation.js";
+import { CHANGE_IMPACT_LEVELS, isChangeImpactLevel } from "../dist/change-impact.js";
 import {
   CHANGE_REPORT_RULE,
   CHANGE_REPORT_SUBJECTS,
@@ -288,6 +289,19 @@ function validateDealChanges(changes: DealChange[]): ValidationError[] {
         vendor,
         field: "date_source",
         message: `Unknown date_source "${change.date_source}". Valid: ${VALID_DATE_SOURCES.join(", ")}`,
+      });
+    }
+
+    if (change.impact !== undefined && change.impact !== null && !isChangeImpactLevel(change.impact)) {
+      errors.push({
+        file: "data/deal_changes.json",
+        index: i,
+        vendor,
+        field: "impact",
+        message:
+          `Unknown impact "${change.impact}". Valid: ${CHANGE_IMPACT_LEVELS.join(", ")}. ` +
+          `Every surface that colours a change reads impact as a severity grade, and a value outside ` +
+          `this set renders as no grade at all.`,
       });
     }
 

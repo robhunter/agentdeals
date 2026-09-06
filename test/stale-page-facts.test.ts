@@ -336,7 +336,7 @@ describe("#1321 the FAQ counts are budgets too, and they live in the same file",
     const budgets = readQualityBudgets().budgets;
     const { unmeasured, lowered, over } = ratchet(budgets, {
       stale_fact_pages: 57,
-      unsourced_tier_a: 41,
+      unsourced_tier_a: budgets.unsourced_tier_a,
       uncited_change_records: budgets.uncited_change_records,
       source_checks_ok_without_quoted_evidence: budgets.source_checks_ok_without_quoted_evidence,
       records_with_superseded_terms: budgets.records_with_superseded_terms,

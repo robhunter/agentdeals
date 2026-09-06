@@ -28,6 +28,8 @@ import { buildComparisonMap, comparisonSlug } from "./comparison-pairs.js";
 import { comparisonVerdictText, freeTierFaqAnswer, stabilityFaqAnswer, type ComparisonSide, type FreeTierSide, type SideFreeTier, type StabilityRating } from "./comparison-verdict.js";
 import { publishedVendorLevel, vendorVerdictSentence, vendorBadge, freeTierClaim, statesRiskCause, narrowingSentence, changeKindNoun, type BadgeWithholding, type FreeTierClaim, type VendorVerdictInput } from "./vendor-verdict.js";
 import { tierRecordsAFreeTier } from "./free-tier-record.js";
+import { UNGRADED_IMPACT_COLOR, changeImpactColor, changeImpactLabel, changeImpactWord, isChangeImpactLevel } from "./change-impact.js";
+import { COMPARED_SERVICES_PLACEHOLDER, fillComparedServicesCount, markCompiledFigures, recordsSinceCompiled, replaceTimelineRows, timelineRecordsFor, vendorSlugForSubject, vendorSubjectsOnCompiledPage, type CompiledFigureSubject, type CompiledFigureVerdict } from "./compiled-figures.js";
 import { vendorHistorySentence } from "./vendor-history.js";
 import { HETZNER_APRIL_CHANGES, HETZNER_CLOUD_PLANS, HETZNER_PRICES_READ, HETZNER_PRICE_SOURCE, HETZNER_SINGAPORE_EXAMPLE, cheapestOrderableHetznerPlan, hetznerEntryPriceClause, unorderableHetznerPlans } from "./hetzner-pricing.js";
 import { changeTimelineDate, supersededLineups, supersessionNote } from "./change-lineup.js";
@@ -637,7 +639,7 @@ function buildDeadlinesHtml(): string {
     const daysLeft = Math.ceil((deadlineDate.getTime() - todayDate.getTime()) / 86400000);
     const urgentClass = daysLeft <= 14 ? " deadline-urgent" : "";
     const daysLabel = daysLeft === 1 ? "1 day" : `${daysLeft} days`;
-    const impactColor = c.impact === "high" ? "#f85149" : c.impact === "medium" ? "#d29922" : "#8b949e";
+    const impactColor = changeImpactColor(c.impact);
     return `      <div class="deadline-item${urgentClass}">
         <div class="deadline-left">
           <div class="deadline-countdown" style="border-color:${impactColor}"><span class="deadline-days">${daysLeft}</span><span class="deadline-unit">${daysLeft === 1 ? "day" : "days"}</span></div>
@@ -895,6 +897,73 @@ function buildVendorVerdictContext(vendorName: string, servedOn: string): Vendor
 function freeTierClaimFor(vendorName: string, servedOn: string): FreeTierClaim | null {
   const context = vendorVerdictContext(vendorName, servedOn);
   return context ? freeTierClaim(context.input) : null;
+}
+
+function recordsSinceCompiledFor(vendorName: string, compiledOn: string): DealChange[] {
+  return recordsSinceCompiled(changesFor(vendorName), compiledOn, today);
+}
+
+function compiledFigureVerdictFor(
+  subject: CompiledFigureSubject,
+  compiledOn: string,
+): CompiledFigureVerdict | null {
+  const slug = vendorSlugForSubject(subject);
+  if (!slug) return null;
+  const vendor = vendorSlugMap.get(slug);
+  if (!vendor) return null;
+  const claim = freeTierClaimFor(vendor, today);
+  const ending = claim?.states === "ended" && claim.how === "removed" ? claim.cause : null;
+  return {
+    slug,
+    vendor,
+    freeTierEnded: claim?.states === "ended",
+    endedBy: ending
+      ? { date: ending.date, summary: ending.summary, dateClause: changeDateClause(ending) }
+      : null,
+    since: recordsSinceCompiledFor(vendor, compiledOn).map(c => ({
+      date: c.date,
+      summary: c.summary,
+      dateClause: changeDateClause(c),
+    })),
+  };
+}
+
+function changeTimelineRowsHtml(changes: readonly DealChange[]): string {
+  return changes.map(c => {
+    const dateStr = new Date(c.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+    return `<tr>
+      <td style="font-family:var(--mono);font-size:.8rem;white-space:nowrap">${escHtmlServer(dateStr)}</td>
+      <td style="font-weight:600">${escHtmlServer(c.vendor)}</td>
+      <td style="font-size:.85rem">${escHtmlServer(c.summary)}</td>
+      <td><span style="color:${changeImpactColor(c.impact)};font-size:.8rem;font-weight:600">${escHtmlServer(changeImpactLabel(c.impact))}</span></td>
+    </tr>`;
+  }).join("\n        ");
+}
+
+const TIMELINE_ROW_LIMIT = 12;
+
+function shortChangeDate(isoDate: string): string {
+  return new Date(isoDate).toLocaleDateString("en-US", { month: "short", day: "numeric", timeZone: "UTC" });
+}
+
+function comparisonPageWithLiveRecords(
+  html: string,
+  compiledOn: string,
+  declaredScope: readonly DealChange[],
+): string {
+  const marked = markCompiledFigures(html, subject => compiledFigureVerdictFor(subject, compiledOn), {
+    compiledOn,
+    esc: escHtmlServer,
+    shortDate: shortChangeDate,
+  });
+
+  const rows = timelineRecordsFor(
+    declaredScope,
+    vendorSubjectsOnCompiledPage(html),
+    changesFor,
+    TIMELINE_ROW_LIMIT,
+  );
+  return fillComparedServicesCount(replaceTimelineRows(marked, changeTimelineRowsHtml(rows)));
 }
 
 interface FreeTierCensus {
@@ -2737,7 +2806,7 @@ function buildComparisonPage(slug: string): string | null {
         <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.25rem">
           <span style="display:inline-block;padding:.1rem .4rem;border-radius:10px;font-size:.65rem;font-weight:600;background:${badge.color};color:#fff">${badge.label}</span>
           <span style="font-family:var(--mono);font-size:.75rem;color:var(--text-dim)">${changeDateLabel(c)}</span>
-          <span style="font-size:.7rem;color:${c.impact === "high" ? "#f85149" : c.impact === "medium" ? "#d29922" : "#8b949e"}">${c.impact} impact</span>
+          <span style="font-size:.7rem;color:${changeImpactColor(c.impact)}">${c.impact} impact</span>
           ${changeIsUncited(c) ? unsourcedTagHtml() : ""}
         </div>
         <div style="font-size:.85rem;color:var(--text-muted)">${escHtmlServer(c.summary)}</div>
@@ -3248,7 +3317,7 @@ function buildVsPage(slug: string): string | null {
         <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.25rem">
           <span style="display:inline-block;padding:.1rem .4rem;border-radius:10px;font-size:.65rem;font-weight:600;background:${badge.color};color:#fff">${badge.label}</span>
           <span style="font-family:var(--mono);font-size:.75rem;color:var(--text-dim)">${changeDateLabel(c)}</span>
-          <span style="font-size:.7rem;color:${c.impact === "high" ? "#f85149" : c.impact === "medium" ? "#d29922" : "#8b949e"}">${c.impact} impact</span>
+          <span style="font-size:.7rem;color:${changeImpactColor(c.impact)}">${c.impact} impact</span>
           ${changeIsUncited(c) ? unsourcedTagHtml() : ""}
         </div>
         <div style="font-size:.85rem;color:var(--text-muted)">${escHtmlServer(c.summary)}</div>
@@ -3569,13 +3638,13 @@ function buildDigestPage(weekKey: string): string | null {
     <div class="stat-pill"><strong>0</strong> changes</div>${discoveryPill}
   </div>` : "");
 
-  const byImpact: Record<string, typeof changes> = { high: [], medium: [], low: [] };
+  const byImpact: Record<string, typeof changes> = { high: [], medium: [], low: [], ungraded: [] };
   for (const c of changes) {
-    (byImpact[c.impact] ?? byImpact.low).push(c);
+    byImpact[isChangeImpactLevel(c.impact) ? c.impact : "ungraded"].push(c);
   }
 
-  const impactColors = { high: "#f85149", medium: "#d29922", low: "#8b949e" };
-  const impactLabels = { high: "High Impact", medium: "Medium Impact", low: "Low Impact" };
+  const impactColors = { high: "#f85149", medium: "#d29922", low: "#8b949e", ungraded: UNGRADED_IMPACT_COLOR };
+  const impactLabels = { high: "High Impact", medium: "Medium Impact", low: "Low Impact", ungraded: "Impact Not Graded" };
 
   function digestEntry(c: typeof weekRecords[0], borderColor: string): string {
     const badge = changeTypeBadge[c.change_type] ?? { label: c.change_type, color: "#8b949e" };
@@ -3591,7 +3660,7 @@ function buildDigestPage(weekKey: string): string | null {
   }
 
   const changesHtml = changes.length > 0
-    ? (["high", "medium", "low"] as const).filter(level => byImpact[level].length > 0).map(level => `
+    ? (["high", "medium", "low", "ungraded"] as const).filter(level => byImpact[level].length > 0).map(level => `
   <div class="impact-section">
     <h2><span class="impact-dot" style="background:${impactColors[level]}"></span> ${impactLabels[level]} (${byImpact[level].length})</h2>
     ${byImpact[level].sort((a, b) => b.date.localeCompare(a.date)).map(c => digestEntry(c, impactColors[level])).join("\n    ")}
@@ -4383,7 +4452,7 @@ ${enrichedAlts.map(a => {
         <div class="change-head">
           <span class="badge" style="background:${badge.color}">${badge.label}</span>
           <span class="change-date"><a href="/pricing-changes#${anchor}" style="color:var(--text-dim);text-decoration:none">${changeDateLabel(c)}</a></span>
-          <span class="impact impact-${c.impact}">${c.impact} impact</span>
+          <span class="impact impact-${changeImpactWord(c.impact)}">${changeImpactWord(c.impact)} impact</span>
           ${uncited ? unsourcedTagHtml() : ""}
         </div>
         <div class="change-summary">${escHtmlServer(c.summary)}</div>
@@ -4753,7 +4822,7 @@ h1 .risk-badge{font-size:.75rem;font-weight:600;padding:.2rem .6rem;border-radiu
 .change-head{display:flex;align-items:center;gap:.5rem;margin-bottom:.3rem;flex-wrap:wrap}
 .badge{display:inline-block;padding:.1rem .4rem;border-radius:10px;font-size:.65rem;font-weight:600;color:#fff}
 .change-date{font-family:var(--mono);font-size:.75rem;color:var(--text-dim)}
-.impact{font-size:.7rem}.impact-high{color:#f85149}.impact-medium{color:#d29922}.impact-low{color:#8b949e}
+.impact{font-size:.7rem}.impact-high{color:#f85149}.impact-medium{color:#d29922}.impact-low{color:#8b949e}.impact-ungraded{color:#8b949e;font-style:italic}
 .change-summary{font-size:.85rem;color:var(--text-muted)}
 .change-detail{font-size:.8rem;color:var(--text-dim);margin-top:.25rem}
 .state-label{font-family:var(--mono);font-size:.7rem;color:var(--text-dim)}
@@ -4981,7 +5050,7 @@ function buildAlternativesPage(slug: string): string | null {
           <div class="change-head">
             <span class="badge" style="background:${badge.color}">${badge.label}</span>
             <span class="change-date">${changeDateLabel(c)}</span>
-            <span class="impact impact-${c.impact}">${c.impact} impact</span>
+            <span class="impact impact-${changeImpactWord(c.impact)}">${changeImpactWord(c.impact)} impact</span>
           </div>
           <div class="change-summary">${escHtmlServer(c.summary)}</div>
         </div>`;
@@ -5149,7 +5218,7 @@ h3{font-family:var(--serif);font-size:1rem;color:var(--text);margin-bottom:.5rem
 .change-head{display:flex;align-items:center;gap:.5rem;margin-bottom:.2rem;flex-wrap:wrap}
 .badge{display:inline-block;padding:.1rem .4rem;border-radius:10px;font-size:.65rem;font-weight:600;color:#fff}
 .change-date{font-family:var(--mono);font-size:.75rem;color:var(--text-dim)}
-.impact{font-size:.7rem}.impact-high{color:#f85149}.impact-medium{color:#d29922}.impact-low{color:#8b949e}
+.impact{font-size:.7rem}.impact-high{color:#f85149}.impact-medium{color:#d29922}.impact-low{color:#8b949e}.impact-ungraded{color:#8b949e;font-style:italic}
 .change-summary{font-size:.85rem;color:var(--text-muted)}
 .more-link{font-size:.85rem;margin-top:.5rem}
 .section{margin-bottom:2rem;padding-top:1.5rem;border-top:1px solid var(--border)}
@@ -8485,7 +8554,7 @@ function buildEventPage(slug: string): string | null {
           + '<span class="badge" style="background:' + badge.color + '">' + badge.label + '</span>'
           + '<strong>' + escHtmlServer(c.vendor) + '</strong>'
           + '<span class="update-date">' + c.date + '</span>'
-          + '<span class="impact impact-' + c.impact + '">' + c.impact + ' impact</span>'
+          + '<span class="impact impact-' + changeImpactWord(c.impact) + '">' + changeImpactWord(c.impact) + ' impact</span>'
           + '</div>'
           + '<div class="update-summary">' + escHtmlServer(c.summary) + '</div>'
           + '</div>';
@@ -8609,7 +8678,7 @@ function buildEventPage(slug: string): string | null {
     + '.update-summary{font-size:.85rem;color:var(--text-muted)}\n'
     + '.badge{font-size:.65rem;padding:.15rem .4rem;border-radius:3px;color:#fff;font-weight:600;text-transform:uppercase}\n'
     + '.impact{font-size:.7rem;padding:.1rem .3rem;border-radius:3px}\n'
-    + '.impact-high{background:#f8514920;color:#f85149}.impact-medium{background:#d2992220;color:#d29922}.impact-low{background:#3fb95020;color:#3fb950}\n'
+    + '.impact-high{background:#f8514920;color:#f85149}.impact-medium{background:#d2992220;color:#d29922}.impact-low{background:#3fb95020;color:#3fb950}.impact-ungraded{background:#8b949e20;color:#8b949e;font-style:italic}\n'
     + '.comparison-grid{display:flex;flex-wrap:wrap;gap:.5rem}\n'
     + '.comparison-link{font-size:.85rem;padding:.4rem .75rem;border:1px solid var(--border);border-radius:6px;color:var(--text-muted);text-decoration:none;transition:all .15s}\n'
     + '.comparison-link:hover{color:var(--accent);border-color:var(--accent);text-decoration:none}\n'
@@ -22536,6 +22605,58 @@ function buildGeminiApiPricingChangesPage(): string {
     + '</body>\n</html>';
 }
 
+interface RiskEntry {
+  vendor: string;
+  risk: "low" | "medium" | "high" | "dead";
+  category: string;
+  reasoning: string;
+  lastChange?: string;
+  changeType?: string;
+}
+
+const riskEntries: RiskEntry[] = [
+  { vendor: "Cloudflare", risk: "low", category: "Cloud/CDN", reasoning: "Actively expanding free tiers (Workers, Pages, Queues added free Feb 2026). Profitable, no VC subsidy pressure. Free tier is a strategic funnel — core business is paid enterprise CDN.", lastChange: "2026-02-04", changeType: "new_free_tier" },
+  { vendor: "GitHub", risk: "low", category: "Version Control", reasoning: "Microsoft-backed, free tier stable since 2019. Actions self-hosted runner fee was proposed then postponed after backlash (Jan 2026). Track record of expanding, not contracting.", lastChange: "2026-01-01", changeType: "pricing_postponed" },
+  { vendor: "Grafana Cloud", risk: "low", category: "Monitoring", reasoning: "Open-source core (Prometheus, Loki, Tempo). Free tier includes 10K metrics, 50 GB logs, 50 GB traces. Company profitable, recent IPO path. Open-source foundation means community forks prevent lock-in." },
+  { vendor: "CockroachDB", risk: "low", category: "Databases", reasoning: "10 GB free storage, multi-region support. Backed by $633M funding. Free tier is strategic acquisition tool. Serverless model scales naturally." },
+  { vendor: "Auth0", risk: "low", category: "Authentication", reasoning: "Okta-owned (enterprise backing). Limits increased Nov 2025 (25K MAU → expanded). Free tier is developer funnel for enterprise IAM.", lastChange: "2025-11-01", changeType: "limits_increased" },
+  { vendor: "Sentry", risk: "low", category: "Error Tracking", reasoning: "Open-source core. Pricing restructured Aug 2025 but free tier preserved (5K errors/mo). Community edition available as fallback.", lastChange: "2025-08-15", changeType: "pricing_restructured" },
+  { vendor: "Google Cloud (Always Free)", risk: "low", category: "Cloud IaaS", reasoning: "Google Always Free tier unchanged for years — f1-micro VM, 5 GB Cloud Storage, BigQuery 1 TB/mo. Separate from promotional credits. Backed by Alphabet's cloud growth strategy.", lastChange: "2026-01-01", changeType: "limits_increased" },
+  { vendor: "AWS Free Tier", risk: "low", category: "Cloud IaaS", reasoning: "12-month free tier + always-free services (Lambda 1M requests, DynamoDB 25 GB). AWS is the market leader — free tier is a training/onboarding tool, not a cost center. Restructured Jan 2026 but expanded.", lastChange: "2026-01-04", changeType: "pricing_restructured" },
+  { vendor: "GitHub Copilot Free", risk: "low", category: "AI Coding", reasoning: "New free tier launched Dec 2025 (2K completions + 50 chat/mo). Microsoft strategic investment in AI developer tools. Competitive pressure from Cursor/Claude ensures free tier stays.", lastChange: "2025-12-18", changeType: "new_free_tier" },
+  { vendor: "Anthropic", risk: "low", category: "AI/ML APIs", reasoning: "Limits increased Feb 2026 and Mar 2026. Currently in growth mode, well-funded ($7.3B raised). Free API tier is competitive necessity against OpenAI/Google.", lastChange: "2026-03-13", changeType: "limits_increased" },
+
+  { vendor: "Supabase", risk: "medium", category: "Databases/BaaS", reasoning: "Project pause tightened to 1 week inactivity (Feb 2026). Core free tier preserved but signals efficiency pressure. Post-Series C ($80M) — profitable path unclear.", lastChange: "2026-02-01", changeType: "limits_reduced" },
+  { vendor: "Vercel", risk: "medium", category: "Hosting", reasoning: "Restructured to credit-based model (Jan 2026). Free tier still generous for personal projects but commercial use restricted (Hobby plan). Watch for further tightening.", lastChange: "2026-01-01", changeType: "pricing_restructured" },
+  { vendor: "Netlify", risk: "medium", category: "Hosting", reasoning: "Restructured to credit-based pricing (Sep 2025) — sites pause on exhaustion. 300 credits/month is sufficient for small sites but represents a philosophical shift toward metered billing.", lastChange: "2025-09-04", changeType: "pricing_restructured" },
+  { vendor: "Neon", risk: "medium", category: "Databases", reasoning: "Pricing restructured Jan 2026 post-Databricks acquisition. Free tier preserved (0.5 GB/project, 100 projects) but acquisition creates uncertainty about long-term free tier commitment.", lastChange: "2026-01-15", changeType: "pricing_restructured" },
+  { vendor: "Railway", risk: "medium", category: "Hosting/PaaS", reasoning: "Free tier expanded with $100M Series B (Oct 2025). Currently generous ($5 credit, no sleep). But VC-funded PaaS companies have a history of removing free tiers (see: Heroku). Watch burn rate.", lastChange: "2025-10-01", changeType: "limits_increased" },
+  { vendor: "Render", risk: "medium", category: "Hosting/PaaS", reasoning: "Sleep time reduced (Sep 2025) — 15-min spin-down is aggressive. Free PostgreSQL limited to 256 MB with 30-day expiry. Signals tightening, though core free tier intact.", lastChange: "2025-09-01", changeType: "limits_reduced" },
+  { vendor: "Stripe", risk: "medium", category: "Payments", reasoning: "Processing fees restructured Feb 2026 (2.7% + 5¢ domestic card). No free tier per se — pay-per-transaction model. Risk is in rate changes, not tier removal.", lastChange: "2026-02-01", changeType: "pricing_restructured" },
+  { vendor: "Firebase", risk: "medium", category: "BaaS", reasoning: "Multiple changes in 2026: Cloud Storage limits reduced (Feb), Realtime Database EOL announced (Mar), restrictions tightened (Feb). Google consolidating around Firestore. Migration advisable for RTDB users.", lastChange: "2026-03-19", changeType: "product_deprecated" },
+  { vendor: "Docker Hub", risk: "medium", category: "Containers", reasoning: "Rate limits tightened (Dec 2024) — 100 pulls/6h anonymous, 200 authenticated. Docker Desktop commercial license required for large orgs ($5/user/mo+). Free for small teams but trending paid.", lastChange: "2024-12-10", changeType: "pricing_restructured" },
+  { vendor: "Dub.co", risk: "medium", category: "Dev Utilities", reasoning: "Free tier limits reduced sharply (Mar 2026). Link shortener with declining free allowance signals monetization pressure.", lastChange: "2026-03-22", changeType: "limits_reduced" },
+  { vendor: "Google Gemini API", risk: "medium", category: "AI/ML", reasoning: "Free tier rate limits slashed 50-80% (Dec 2025). The flagship Gemini 3.1 Pro is paid-only, though Gemini 2.5 Pro is still free. A Google PM admitted generous limits were only for a promotional weekend. Still has free tier but heavily restricted.", lastChange: "2025-12-15", changeType: "limits_reduced" },
+
+  { vendor: "Heroku", risk: "high", category: "Hosting/PaaS", reasoning: "Free tier removed Nov 2022. Now in 'sustaining mode' under Salesforce — minimal investment, no innovation. The canonical cautionary tale for relying on free tiers.", lastChange: "2022-11-28", changeType: "free_tier_removed" },
+  { vendor: "Fly.io", risk: "high", category: "Hosting", reasoning: "Free tier removed for new accounts in October 2024. New signups get a trial of 2 hours runtime or 7 days, whichever comes first, then pay-as-you-go from the first machine — the smallest is $2.02/month. Only legacy Hobby/Launch/Scale accounts still carry 3 shared-cpu-1x VMs, 3 GB volume storage and 100 GB transfer. Volume snapshots became billable in January 2026.", lastChange: "2024-10-01", changeType: "free_tier_removed" },
+  { vendor: "Postman", risk: "high", category: "API Testing", reasoning: "Team collaboration removed from free tier (Mar 2026). Aggressive monetization of previously-free features. Pattern suggests further restrictions ahead.", lastChange: "2026-03-01", changeType: "restriction" },
+  { vendor: "OpenAI", risk: "high", category: "AI/ML", reasoning: "Multiple free tier reductions: limits cut Jun 2025, further reduced Feb 2026. GPT-4 free access removed. Market leader extracting value — expect continued tightening.", lastChange: "2026-02-09", changeType: "limits_reduced" },
+  { vendor: "HCP Terraform", risk: "high", category: "Infrastructure", reasoning: "Legacy tier EOL March 31, 2026. HashiCorp BSL license change (Aug 2023) already fractured community. IBM acquisition adds enterprise pricing pressure. Migrate to OpenTofu.", lastChange: "2026-03-31", changeType: "pricing_restructured" },
+  { vendor: "LocalStack", risk: "high", category: "Testing", reasoning: "Community Edition shut down March 23, 2026. Complete removal of free/OSS option. Migrate to Moto, aws-sdk-mock, or Testcontainers.", lastChange: "2026-03-23", changeType: "free_tier_removed" },
+  { vendor: "X API (Twitter)", risk: "high", category: "APIs", reasoning: "Free tier removed twice in 2026 (Feb 1 + Feb 9). Pay-per-use only with $10 one-time credit. Unpredictable management. Do not build on this API without paid plan budget.", lastChange: "2026-02-09", changeType: "free_tier_removed" },
+  { vendor: "Brave Search API", risk: "high", category: "Search", reasoning: "Free plan (5K queries/mo) replaced with metered billing Feb 2026. No spending cap — credit cards actively charged. Complete removal of free access.", lastChange: "2026-02-12", changeType: "free_tier_removed" },
+  { vendor: "Spotify API", risk: "high", category: "APIs", reasoning: "Premium subscription now required for dev mode (Feb 2026). Test users cut from 25 to 5. Multiple endpoints deprecated. Hostile to free developers.", lastChange: "2026-02-11", changeType: "limits_reduced" },
+  { vendor: "Amazon SP-API", risk: "high", category: "APIs", reasoning: "Free access ended after 10+ years — now $1,400/year + per-call fees (Apr 2026). Zero warning. Shows even long-stable APIs can go paid overnight.", lastChange: "2026-01-31", changeType: "pricing_restructured" },
+
+  { vendor: "PlanetScale", risk: "dead", category: "Databases", reasoning: "Free tier removed April 2024. Hobby plan eliminated entirely. Migrate to Neon, Turso, or CockroachDB.", lastChange: "2024-04-08", changeType: "free_tier_removed" },
+  { vendor: "Fauna", risk: "dead", category: "Databases", reasoning: "Product deprecated May 2025. Entire service shutting down. Migrate immediately to MongoDB Atlas, CockroachDB, or Supabase.", lastChange: "2025-05-30", changeType: "product_deprecated" },
+  { vendor: "MinIO (OSS)", risk: "dead", category: "Storage", reasoning: "Open-source version killed Feb 2026 (GNU AGPL → proprietary). Self-hosted MinIO is no longer free for production. Use S3-compatible alternatives.", lastChange: "2026-02-12", changeType: "open_source_killed" },
+  { vendor: "SendGrid", risk: "dead", category: "Email", reasoning: "Free tier removed May 2025 under Twilio ownership. Use Resend (3K emails/mo free) or Maileroo (3K/mo); Mailgun and Amazon SES have since dropped their free tiers too.", lastChange: "2025-05-27", changeType: "free_tier_removed" },
+  { vendor: "Logz.io", risk: "dead", category: "Logging", reasoning: "Free tier removed Mar 2026. Use Grafana Cloud (50 GB logs free), Axiom (500 GB/mo), or self-hosted ELK.", lastChange: "2026-03-02", changeType: "free_tier_removed" },
+  { vendor: "Freshping", risk: "dead", category: "Monitoring", reasoning: "Free tier removed Mar 2026. Use BetterStack (10 monitors free), UptimeRobot (50 monitors), or Grafana Cloud synthetics.", lastChange: "2026-03-06", changeType: "free_tier_removed" },
+];
+
 function buildFreeTierRiskPage(): string {
   const title = "Free Tier Risk Index — Predictive Analysis of Which Free Tiers May Disappear Next";
   const metaDesc = "Predictive risk scores for 38 developer tool free tiers — which will disappear next? Category heatmap, pattern analysis from 80 tracked pricing changes, counter-trends, and actionable protection strategies. Updated April 2026.";
@@ -22547,57 +22668,6 @@ function buildFreeTierRiskPage(): string {
   const negativeChanges = dealChanges.filter(c => negativeTypes.includes(c.change_type));
   const positiveChanges = dealChanges.filter(c => positiveTypes.includes(c.change_type));
 
-  interface RiskEntry {
-    vendor: string;
-    risk: "low" | "medium" | "high" | "dead";
-    category: string;
-    reasoning: string;
-    lastChange?: string;
-    changeType?: string;
-  }
-
-  const riskEntries: RiskEntry[] = [
-    { vendor: "Cloudflare", risk: "low", category: "Cloud/CDN", reasoning: "Actively expanding free tiers (Workers, Pages, Queues added free Feb 2026). Profitable, no VC subsidy pressure. Free tier is a strategic funnel — core business is paid enterprise CDN.", lastChange: "2026-02-04", changeType: "new_free_tier" },
-    { vendor: "GitHub", risk: "low", category: "Version Control", reasoning: "Microsoft-backed, free tier stable since 2019. Actions self-hosted runner fee was proposed then postponed after backlash (Jan 2026). Track record of expanding, not contracting.", lastChange: "2026-01-01", changeType: "pricing_postponed" },
-    { vendor: "Grafana Cloud", risk: "low", category: "Monitoring", reasoning: "Open-source core (Prometheus, Loki, Tempo). Free tier includes 10K metrics, 50 GB logs, 50 GB traces. Company profitable, recent IPO path. Open-source foundation means community forks prevent lock-in." },
-    { vendor: "CockroachDB", risk: "low", category: "Databases", reasoning: "10 GB free storage, multi-region support. Backed by $633M funding. Free tier is strategic acquisition tool. Serverless model scales naturally." },
-    { vendor: "Auth0", risk: "low", category: "Authentication", reasoning: "Okta-owned (enterprise backing). Limits increased Nov 2025 (25K MAU → expanded). Free tier is developer funnel for enterprise IAM.", lastChange: "2025-11-01", changeType: "limits_increased" },
-    { vendor: "Sentry", risk: "low", category: "Error Tracking", reasoning: "Open-source core. Pricing restructured Aug 2025 but free tier preserved (5K errors/mo). Community edition available as fallback.", lastChange: "2025-08-15", changeType: "pricing_restructured" },
-    { vendor: "Google Cloud (Always Free)", risk: "low", category: "Cloud IaaS", reasoning: "Google Always Free tier unchanged for years — f1-micro VM, 5 GB Cloud Storage, BigQuery 1 TB/mo. Separate from promotional credits. Backed by Alphabet's cloud growth strategy.", lastChange: "2026-01-01", changeType: "limits_increased" },
-    { vendor: "AWS Free Tier", risk: "low", category: "Cloud IaaS", reasoning: "12-month free tier + always-free services (Lambda 1M requests, DynamoDB 25 GB). AWS is the market leader — free tier is a training/onboarding tool, not a cost center. Restructured Jan 2026 but expanded.", lastChange: "2026-01-04", changeType: "pricing_restructured" },
-    { vendor: "GitHub Copilot Free", risk: "low", category: "AI Coding", reasoning: "New free tier launched Dec 2025 (2K completions + 50 chat/mo). Microsoft strategic investment in AI developer tools. Competitive pressure from Cursor/Claude ensures free tier stays.", lastChange: "2025-12-18", changeType: "new_free_tier" },
-    { vendor: "Anthropic", risk: "low", category: "AI/ML APIs", reasoning: "Limits increased Feb 2026 and Mar 2026. Currently in growth mode, well-funded ($7.3B raised). Free API tier is competitive necessity against OpenAI/Google.", lastChange: "2026-03-13", changeType: "limits_increased" },
-
-    { vendor: "Supabase", risk: "medium", category: "Databases/BaaS", reasoning: "Project pause tightened to 1 week inactivity (Feb 2026). Core free tier preserved but signals efficiency pressure. Post-Series C ($80M) — profitable path unclear.", lastChange: "2026-02-01", changeType: "limits_reduced" },
-    { vendor: "Vercel", risk: "medium", category: "Hosting", reasoning: "Restructured to credit-based model (Jan 2026). Free tier still generous for personal projects but commercial use restricted (Hobby plan). Watch for further tightening.", lastChange: "2026-01-01", changeType: "pricing_restructured" },
-    { vendor: "Netlify", risk: "medium", category: "Hosting", reasoning: "Restructured to credit-based pricing (Sep 2025) — sites pause on exhaustion. 300 credits/month is sufficient for small sites but represents a philosophical shift toward metered billing.", lastChange: "2025-09-04", changeType: "pricing_restructured" },
-    { vendor: "Neon", risk: "medium", category: "Databases", reasoning: "Pricing restructured Jan 2026 post-Databricks acquisition. Free tier preserved (0.5 GB/project, 100 projects) but acquisition creates uncertainty about long-term free tier commitment.", lastChange: "2026-01-15", changeType: "pricing_restructured" },
-    { vendor: "Railway", risk: "medium", category: "Hosting/PaaS", reasoning: "Free tier expanded with $100M Series B (Oct 2025). Currently generous ($5 credit, no sleep). But VC-funded PaaS companies have a history of removing free tiers (see: Heroku). Watch burn rate.", lastChange: "2025-10-01", changeType: "limits_increased" },
-    { vendor: "Render", risk: "medium", category: "Hosting/PaaS", reasoning: "Sleep time reduced (Sep 2025) — 15-min spin-down is aggressive. Free PostgreSQL limited to 256 MB with 30-day expiry. Signals tightening, though core free tier intact.", lastChange: "2025-09-01", changeType: "limits_reduced" },
-    { vendor: "Stripe", risk: "medium", category: "Payments", reasoning: "Processing fees restructured Feb 2026 (2.7% + 5¢ domestic card). No free tier per se — pay-per-transaction model. Risk is in rate changes, not tier removal.", lastChange: "2026-02-01", changeType: "pricing_restructured" },
-    { vendor: "Firebase", risk: "medium", category: "BaaS", reasoning: "Multiple changes in 2026: Cloud Storage limits reduced (Feb), Realtime Database EOL announced (Mar), restrictions tightened (Feb). Google consolidating around Firestore. Migration advisable for RTDB users.", lastChange: "2026-03-19", changeType: "product_deprecated" },
-    { vendor: "Docker Hub", risk: "medium", category: "Containers", reasoning: "Rate limits tightened (Dec 2024) — 100 pulls/6h anonymous, 200 authenticated. Docker Desktop commercial license required for large orgs ($5/user/mo+). Free for small teams but trending paid.", lastChange: "2024-12-10", changeType: "pricing_restructured" },
-    { vendor: "Dub.co", risk: "medium", category: "Dev Utilities", reasoning: "Free tier limits reduced sharply (Mar 2026). Link shortener with declining free allowance signals monetization pressure.", lastChange: "2026-03-22", changeType: "limits_reduced" },
-    { vendor: "Google Gemini API", risk: "medium", category: "AI/ML", reasoning: "Free tier rate limits slashed 50-80% (Dec 2025). The flagship Gemini 3.1 Pro is paid-only, though Gemini 2.5 Pro is still free. A Google PM admitted generous limits were only for a promotional weekend. Still has free tier but heavily restricted.", lastChange: "2025-12-15", changeType: "limits_reduced" },
-
-    { vendor: "Heroku", risk: "high", category: "Hosting/PaaS", reasoning: "Free tier removed Nov 2022. Now in 'sustaining mode' under Salesforce — minimal investment, no innovation. The canonical cautionary tale for relying on free tiers.", lastChange: "2022-11-28", changeType: "free_tier_removed" },
-    { vendor: "Fly.io", risk: "high", category: "Hosting", reasoning: "Free tier removed for new accounts in October 2024. New signups get a trial of 2 hours runtime or 7 days, whichever comes first, then pay-as-you-go from the first machine — the smallest is $2.02/month. Only legacy Hobby/Launch/Scale accounts still carry 3 shared-cpu-1x VMs, 3 GB volume storage and 100 GB transfer. Volume snapshots became billable in January 2026.", lastChange: "2024-10-01", changeType: "free_tier_removed" },
-    { vendor: "Postman", risk: "high", category: "API Testing", reasoning: "Team collaboration removed from free tier (Mar 2026). Aggressive monetization of previously-free features. Pattern suggests further restrictions ahead.", lastChange: "2026-03-01", changeType: "restriction" },
-    { vendor: "OpenAI", risk: "high", category: "AI/ML", reasoning: "Multiple free tier reductions: limits cut Jun 2025, further reduced Feb 2026. GPT-4 free access removed. Market leader extracting value — expect continued tightening.", lastChange: "2026-02-09", changeType: "limits_reduced" },
-    { vendor: "HCP Terraform", risk: "high", category: "Infrastructure", reasoning: "Legacy tier EOL March 31, 2026. HashiCorp BSL license change (Aug 2023) already fractured community. IBM acquisition adds enterprise pricing pressure. Migrate to OpenTofu.", lastChange: "2026-03-31", changeType: "pricing_restructured" },
-    { vendor: "LocalStack", risk: "high", category: "Testing", reasoning: "Community Edition shut down March 23, 2026. Complete removal of free/OSS option. Migrate to Moto, aws-sdk-mock, or Testcontainers.", lastChange: "2026-03-23", changeType: "free_tier_removed" },
-    { vendor: "X API (Twitter)", risk: "high", category: "APIs", reasoning: "Free tier removed twice in 2026 (Feb 1 + Feb 9). Pay-per-use only with $10 one-time credit. Unpredictable management. Do not build on this API without paid plan budget.", lastChange: "2026-02-09", changeType: "free_tier_removed" },
-    { vendor: "Brave Search API", risk: "high", category: "Search", reasoning: "Free plan (5K queries/mo) replaced with metered billing Feb 2026. No spending cap — credit cards actively charged. Complete removal of free access.", lastChange: "2026-02-12", changeType: "free_tier_removed" },
-    { vendor: "Spotify API", risk: "high", category: "APIs", reasoning: "Premium subscription now required for dev mode (Feb 2026). Test users cut from 25 to 5. Multiple endpoints deprecated. Hostile to free developers.", lastChange: "2026-02-11", changeType: "limits_reduced" },
-    { vendor: "Amazon SP-API", risk: "high", category: "APIs", reasoning: "Free access ended after 10+ years — now $1,400/year + per-call fees (Apr 2026). Zero warning. Shows even long-stable APIs can go paid overnight.", lastChange: "2026-01-31", changeType: "pricing_restructured" },
-
-    { vendor: "PlanetScale", risk: "dead", category: "Databases", reasoning: "Free tier removed April 2024. Hobby plan eliminated entirely. Migrate to Neon, Turso, or CockroachDB.", lastChange: "2024-04-08", changeType: "free_tier_removed" },
-    { vendor: "Fauna", risk: "dead", category: "Databases", reasoning: "Product deprecated May 2025. Entire service shutting down. Migrate immediately to MongoDB Atlas, CockroachDB, or Supabase.", lastChange: "2025-05-30", changeType: "product_deprecated" },
-    { vendor: "MinIO (OSS)", risk: "dead", category: "Storage", reasoning: "Open-source version killed Feb 2026 (GNU AGPL → proprietary). Self-hosted MinIO is no longer free for production. Use S3-compatible alternatives.", lastChange: "2026-02-12", changeType: "open_source_killed" },
-    { vendor: "SendGrid", risk: "dead", category: "Email", reasoning: "Free tier removed May 2025 under Twilio ownership. Use Resend (3K emails/mo free) or Maileroo (3K/mo); Mailgun and Amazon SES have since dropped their free tiers too.", lastChange: "2025-05-27", changeType: "free_tier_removed" },
-    { vendor: "Logz.io", risk: "dead", category: "Logging", reasoning: "Free tier removed Mar 2026. Use Grafana Cloud (50 GB logs free), Axiom (500 GB/mo), or self-hosted ELK.", lastChange: "2026-03-02", changeType: "free_tier_removed" },
-    { vendor: "Freshping", risk: "dead", category: "Monitoring", reasoning: "Free tier removed Mar 2026. Use BetterStack (10 monitors free), UptimeRobot (50 monitors), or Grafana Cloud synthetics.", lastChange: "2026-03-06", changeType: "free_tier_removed" },
-  ];
 
   const lowRisk = riskEntries.filter(e => e.risk === "low");
   const medRisk = riskEntries.filter(e => e.risk === "medium");
@@ -23511,11 +23581,11 @@ function buildOpenaiAssistantsAlternativesPage(): string {
 
   const changeTimelineRows = openaiChanges.map(c => {
     const dateStr = new Date(c.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
-    const impactColor = c.impact === "high" ? "#f85149" : c.impact === "medium" ? "#d29922" : "#3fb950";
+    const impactColor = changeImpactColor(c.impact);
     return `<tr>
       <td style="font-family:var(--mono);font-size:.8rem;white-space:nowrap">${escHtmlServer(dateStr)}</td>
       <td style="font-size:.85rem">${escHtmlServer(c.summary)}</td>
-      <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(c.impact?.toUpperCase() ?? "N/A")}</span></td>
+      <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(changeImpactLabel(c.impact))}</span></td>
     </tr>`;
   }).join("\n        ");
 
@@ -24005,11 +24075,11 @@ function buildOpenaiAssistantsMigration2026Page(): string {
 
   const changeTimelineRows = openaiChanges.map(c => {
     const dateStr = new Date(c.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
-    const impactColor = c.impact === "high" ? "#f85149" : c.impact === "medium" ? "#d29922" : "#3fb950";
+    const impactColor = changeImpactColor(c.impact);
     return `<tr>
       <td style="font-family:var(--mono);font-size:.8rem;white-space:nowrap">${escHtmlServer(dateStr)}</td>
       <td style="font-size:.85rem">${escHtmlServer(c.summary)}</td>
-      <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(c.impact?.toUpperCase() ?? "N/A")}</span></td>
+      <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(changeImpactLabel(c.impact))}</span></td>
     </tr>`;
   }).join("\n        ");
 
@@ -24494,11 +24564,11 @@ function buildTenorAlternativesPage(): string {
 
   const changeTimelineRows = tenorChanges.map(c => {
     const dateStr = new Date(c.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
-    const impactColor = c.impact === "high" ? "#f85149" : c.impact === "medium" ? "#d29922" : "#3fb950";
+    const impactColor = changeImpactColor(c.impact);
     return `<tr>
       <td style="font-family:var(--mono);font-size:.8rem;white-space:nowrap">${escHtmlServer(dateStr)}</td>
       <td style="font-size:.85rem">${escHtmlServer(c.summary)}</td>
-      <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(c.impact?.toUpperCase() ?? "N/A")}</span></td>
+      <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(changeImpactLabel(c.impact))}</span></td>
     </tr>`;
   }).join("\n        ");
 
@@ -24954,11 +25024,11 @@ function buildFirebaseStudioShutdownPage(): string {
 
   const changeTimelineRows = firebaseChanges.slice(0, 10).map(c => {
     const dateStr = new Date(c.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
-    const impactColor = c.impact === "high" ? "#f85149" : c.impact === "medium" ? "#d29922" : "#3fb950";
+    const impactColor = changeImpactColor(c.impact);
     return `<tr>
       <td style="font-family:var(--mono);font-size:.8rem;white-space:nowrap">${escHtmlServer(dateStr)}</td>
       <td style="font-size:.85rem">${escHtmlServer(c.summary)}</td>
-      <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(c.impact?.toUpperCase() ?? "N/A")}</span></td>
+      <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(changeImpactLabel(c.impact))}</span></td>
     </tr>`;
   }).join("\n        ");
 
@@ -25519,17 +25589,17 @@ function buildOpenAIAssistantsMigrationPage(): string {
     return '<tr>' +
       '<td style="font-family:var(--mono);font-size:.85rem;white-space:nowrap">' + escHtmlServer(e.date) + '</td>' +
       '<td style="font-size:.9rem">' + escHtmlServer(e.event) + '</td>' +
-      '<td><span style="color:' + impactColor + ';font-size:.8rem;font-weight:600">' + escHtmlServer(e.impact.toUpperCase()) + '</span></td>' +
+      '<td><span style="color:' + impactColor + ';font-size:.8rem;font-weight:600">' + escHtmlServer(changeImpactLabel(e.impact)) + '</span></td>' +
       '</tr>';
   }).join("\n        ");
 
   const changeTimelineRows = openaiChanges.slice(0, 10).map(c => {
     const dateStr = new Date(c.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
-    const impactColor = c.impact === "high" ? "#f85149" : c.impact === "medium" ? "#d29922" : "#3fb950";
+    const impactColor = changeImpactColor(c.impact);
     return '<tr>' +
       '<td style="font-family:var(--mono);font-size:.8rem;white-space:nowrap">' + escHtmlServer(dateStr) + '</td>' +
       '<td style="font-size:.85rem">' + escHtmlServer(c.summary) + '</td>' +
-      '<td><span style="color:' + impactColor + ';font-size:.8rem;font-weight:600">' + escHtmlServer(c.impact?.toUpperCase() ?? "N/A") + '</span></td>' +
+      '<td><span style="color:' + impactColor + ';font-size:.8rem;font-weight:600">' + escHtmlServer(changeImpactLabel(c.impact)) + '</span></td>' +
       '</tr>';
   }).join("\n        ");
 
@@ -26250,12 +26320,12 @@ ${buildGlobalNav("guides")}
     <tbody>
       ${relevantChanges.map(c => {
         const dateStr = new Date(c.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
-        const impactColor = c.impact === "high" ? "#f85149" : c.impact === "medium" ? "#d29922" : "#3fb950";
+        const impactColor = changeImpactColor(c.impact);
         return `<tr>
           <td style="font-family:var(--mono);font-size:.8rem;white-space:nowrap">${escHtmlServer(dateStr)}</td>
           <td><a href="/vendor/${toSlug(c.vendor)}" style="color:var(--text)">${escHtmlServer(c.vendor)}</a></td>
           <td style="font-size:.85rem">${escHtmlServer(c.summary)}</td>
-          <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(c.impact?.toUpperCase() ?? "N/A")}</span></td>
+          <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(changeImpactLabel(c.impact))}</span></td>
         </tr>`;
       }).join("\n      ")}
     </tbody>
@@ -26854,12 +26924,12 @@ function buildStartupCreditsPage(): string {
 
   const changeTimelineRows = startupChanges.map(c => {
     const dateStr = new Date(c.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
-    const impactColor = c.impact === "high" ? "#f85149" : c.impact === "medium" ? "#d29922" : "#3fb950";
+    const impactColor = changeImpactColor(c.impact);
     return '<tr>' +
       '<td style="font-family:var(--mono);font-size:.8rem;white-space:nowrap">' + escHtmlServer(dateStr) + '</td>' +
       '<td style="font-weight:600">' + escHtmlServer(c.vendor) + '</td>' +
       '<td style="font-size:.85rem">' + escHtmlServer(c.summary) + '</td>' +
-      '<td><span style="color:' + impactColor + ';font-size:.8rem;font-weight:600">' + escHtmlServer(c.impact?.toUpperCase() ?? "N/A") + '</span></td>' +
+      '<td><span style="color:' + impactColor + ';font-size:.8rem;font-weight:600">' + escHtmlServer(changeImpactLabel(c.impact)) + '</span></td>' +
       '</tr>';
   }).join("\n        ");
 
@@ -27282,7 +27352,7 @@ function buildAiCodingPricing2026Page(): string {
 
   const changeTimelineRows = aiCodingChanges.map(c => {
     const dateStr = changeTimelineDate(c.date);
-    const impactColor = c.impact === "high" ? "#f85149" : c.impact === "medium" ? "#d29922" : "#3fb950";
+    const impactColor = changeImpactColor(c.impact);
     const newest = supersededAiCodingLineups.get(c);
     const historyNote = newest
       ? `<div class="superseded-note">${escHtmlServer(supersessionNote(newest, changeTimelineDate))}</div>`
@@ -27291,7 +27361,7 @@ function buildAiCodingPricing2026Page(): string {
       <td style="font-family:var(--mono);font-size:.8rem;white-space:nowrap">${escHtmlServer(dateStr)}</td>
       <td style="font-weight:600">${escHtmlServer(c.vendor)}</td>
       <td style="font-size:.85rem">${escHtmlServer(c.summary)}${historyNote}</td>
-      <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(c.impact?.toUpperCase() ?? "N/A")}</span></td>
+      <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(changeImpactLabel(c.impact))}</span></td>
     </tr>`;
   }).join("\n        ");
 
@@ -27897,7 +27967,7 @@ function buildAiCodingToolsPricingPage(): string {
 
   const changeTimelineRows = aiCodingChanges.map((c: any) => {
     const dateStr = changeTimelineDate(c.date);
-    const impactColor = c.impact === "high" ? "#f85149" : c.impact === "medium" ? "#d29922" : "#3fb950";
+    const impactColor = changeImpactColor(c.impact);
     const newest = supersededAiCodingLineups.get(c);
     const historyNote = newest
       ? '<div class="superseded-note">' + escHtmlServer(supersessionNote(newest, changeTimelineDate)) + '</div>'
@@ -27906,7 +27976,7 @@ function buildAiCodingToolsPricingPage(): string {
       '<td style="font-family:var(--mono);font-size:.8rem;white-space:nowrap">' + escHtmlServer(dateStr) + '</td>' +
       '<td style="font-weight:600">' + escHtmlServer(c.vendor) + '</td>' +
       '<td style="font-size:.85rem">' + escHtmlServer(c.summary) + historyNote + '</td>' +
-      '<td><span style="color:' + impactColor + ';font-size:.8rem;font-weight:600">' + escHtmlServer(c.impact?.toUpperCase() ?? "N/A") + '</span></td>' +
+      '<td><span style="color:' + impactColor + ';font-size:.8rem;font-weight:600">' + escHtmlServer(changeImpactLabel(c.impact)) + '</span></td>' +
       '</tr>';
   }).join("\n        ");
 
@@ -28655,12 +28725,12 @@ function buildCiCdPricingPage(): string {
 
   const changeTimelineRows = cicdChanges.map(c => {
     const dateStr = new Date(c.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
-    const impactColor = c.impact === "high" ? "#f85149" : c.impact === "medium" ? "#d29922" : "#3fb950";
+    const impactColor = changeImpactColor(c.impact);
     return '<tr>' +
       '<td style="font-family:var(--mono);font-size:.8rem;white-space:nowrap">' + escHtmlServer(dateStr) + '</td>' +
       '<td style="font-weight:600">' + escHtmlServer(c.vendor) + '</td>' +
       '<td style="font-size:.85rem">' + escHtmlServer(c.summary) + '</td>' +
-      '<td><span style="color:' + impactColor + ';font-size:.8rem;font-weight:600">' + escHtmlServer(c.impact?.toUpperCase() ?? "N/A") + '</span></td>' +
+      '<td><span style="color:' + impactColor + ';font-size:.8rem;font-weight:600">' + escHtmlServer(changeImpactLabel(c.impact)) + '</span></td>' +
       '</tr>';
   }).join("\n        ");
 
@@ -29539,12 +29609,12 @@ function buildDatabasePricingPage(): string {
 
   const changeTimelineRows = dbChanges.map(c => {
     const dateStr = new Date(c.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
-    const impactColor = c.impact === "high" ? "#f85149" : c.impact === "medium" ? "#d29922" : "#3fb950";
+    const impactColor = changeImpactColor(c.impact);
     return '<tr>' +
       '<td style="font-family:var(--mono);font-size:.8rem;white-space:nowrap">' + escHtmlServer(dateStr) + '</td>' +
       '<td style="font-weight:600">' + escHtmlServer(c.vendor) + '</td>' +
       '<td style="font-size:.85rem">' + escHtmlServer(c.summary) + '</td>' +
-      '<td><span style="color:' + impactColor + ';font-size:.8rem;font-weight:600">' + escHtmlServer(c.impact?.toUpperCase() ?? "N/A") + '</span></td>' +
+      '<td><span style="color:' + impactColor + ';font-size:.8rem;font-weight:600">' + escHtmlServer(changeImpactLabel(c.impact)) + '</span></td>' +
       '</tr>';
   }).join("\n        ");
 
@@ -30910,12 +30980,12 @@ function buildHostingPricingPage(): string {
 
   const changeTimelineRows = hostingChanges.map(c => {
     const dateStr = new Date(c.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
-    const impactColor = c.impact === "high" ? "#f85149" : c.impact === "medium" ? "#d29922" : "#3fb950";
+    const impactColor = changeImpactColor(c.impact);
     return '<tr>' +
       '<td style="font-family:var(--mono);font-size:.8rem;white-space:nowrap">' + escHtmlServer(dateStr) + '</td>' +
       '<td style="font-weight:600">' + escHtmlServer(c.vendor) + '</td>' +
       '<td style="font-size:.85rem">' + escHtmlServer(c.summary) + '</td>' +
-      '<td><span style="color:' + impactColor + ';font-size:.8rem;font-weight:600">' + escHtmlServer(c.impact?.toUpperCase() ?? "N/A") + '</span></td>' +
+      '<td><span style="color:' + impactColor + ';font-size:.8rem;font-weight:600">' + escHtmlServer(changeImpactLabel(c.impact)) + '</span></td>' +
       '</tr>';
   }).join("\n        ");
 
@@ -31682,12 +31752,12 @@ function buildLlmApiPricingPage(): string {
 
   const changeTimelineRows = llmChanges.slice(0, 20).map(c => {
     const dateStr = new Date(c.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
-    const impactColor = c.impact === "high" ? "#f85149" : c.impact === "medium" ? "#d29922" : "#3fb950";
+    const impactColor = changeImpactColor(c.impact);
     return '<tr>' +
       '<td style="font-family:var(--mono);font-size:.8rem;white-space:nowrap">' + escHtmlServer(dateStr) + '</td>' +
       '<td style="font-weight:600">' + escHtmlServer(c.vendor) + '</td>' +
       '<td style="font-size:.85rem">' + escHtmlServer(c.summary) + '</td>' +
-      '<td><span style="color:' + impactColor + ';font-size:.8rem;font-weight:600">' + escHtmlServer(c.impact?.toUpperCase() ?? "N/A") + '</span></td>' +
+      '<td><span style="color:' + impactColor + ';font-size:.8rem;font-weight:600">' + escHtmlServer(changeImpactLabel(c.impact)) + '</span></td>' +
       '</tr>';
   }).join("\n        ");
 
@@ -32618,11 +32688,11 @@ function buildDallEShutdownPage(): string {
 
   const changeTimelineRows = dalleChanges.slice(0, 10).map(c => {
     const dateStr = new Date(c.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
-    const impactColor = c.impact === "high" ? "#f85149" : c.impact === "medium" ? "#d29922" : "#3fb950";
+    const impactColor = changeImpactColor(c.impact);
     return `<tr>
       <td style="font-family:var(--mono);font-size:.8rem;white-space:nowrap">${escHtmlServer(dateStr)}</td>
       <td style="font-size:.85rem">${escHtmlServer(c.summary)}</td>
-      <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(c.impact?.toUpperCase() ?? "N/A")}</span></td>
+      <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(changeImpactLabel(c.impact))}</span></td>
     </tr>`;
   }).join("\n        ");
 
@@ -33125,8 +33195,8 @@ function buildOpenAIRealtimeMigrationPage(): string {
 
   const changeTimelineRows = relevantChanges.slice(0, 10).map(c => {
     const dateStr = new Date(c.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
-    const impactColor = c.impact === "high" ? "#f85149" : c.impact === "medium" ? "#d29922" : "#3fb950";
-    return '<tr>\n      <td style="font-family:var(--mono);font-size:.8rem;white-space:nowrap">' + escHtmlServer(dateStr) + '</td>\n      <td style="font-size:.85rem">' + escHtmlServer(c.summary) + '</td>\n      <td><span style="color:' + impactColor + ';font-size:.8rem;font-weight:600">' + escHtmlServer(c.impact?.toUpperCase() ?? "N/A") + "</span></td>\n    </tr>";
+    const impactColor = changeImpactColor(c.impact);
+    return '<tr>\n      <td style="font-family:var(--mono);font-size:.8rem;white-space:nowrap">' + escHtmlServer(dateStr) + '</td>\n      <td style="font-size:.85rem">' + escHtmlServer(c.summary) + '</td>\n      <td><span style="color:' + impactColor + ';font-size:.8rem;font-weight:600">' + escHtmlServer(changeImpactLabel(c.impact)) + "</span></td>\n    </tr>";
   }).join("\n        ");
 
   const relatedPages = ALTERNATIVES_PAGES.filter(p =>
@@ -33247,11 +33317,11 @@ function buildAppRunnerMigrationPage(): string {
 
   const changeTimelineRows = awsChanges.slice(0, 10).map(c => {
     const dateStr = new Date(c.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
-    const impactColor = c.impact === "high" ? "#f85149" : c.impact === "medium" ? "#d29922" : "#3fb950";
+    const impactColor = changeImpactColor(c.impact);
     return `<tr>
       <td style="font-family:var(--mono);font-size:.8rem;white-space:nowrap">${escHtmlServer(dateStr)}</td>
       <td style="font-size:.85rem">${escHtmlServer(c.summary)}</td>
-      <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(c.impact?.toUpperCase() ?? "N/A")}</span></td>
+      <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(changeImpactLabel(c.impact))}</span></td>
     </tr>`;
   }).join("\n        ");
 
@@ -33858,12 +33928,12 @@ function buildAwsFreeTier2026Page(): string {
 
   const changeTimelineRows = awsChanges.slice(0, 10).map((c: any) => {
     const dateStr = new Date(c.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
-    const impactColor = c.impact === "high" ? "#f85149" : c.impact === "medium" ? "#d29922" : "#3fb950";
+    const impactColor = changeImpactColor(c.impact);
     return `<tr>
       <td style="font-family:var(--mono);font-size:.8rem;white-space:nowrap">${escHtmlServer(dateStr)}</td>
       <td style="font-weight:600">${escHtmlServer(c.vendor)}</td>
       <td style="font-size:.85rem">${escHtmlServer(c.summary)}</td>
-      <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(c.impact?.toUpperCase() ?? "N/A")}</span></td>
+      <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(changeImpactLabel(c.impact))}</span></td>
     </tr>`;
   }).join("\n        ");
 
@@ -34296,12 +34366,12 @@ function buildGcpFreeTier2026Page(): string {
 
   const changeTimelineRows = gcpChanges.slice(0, 12).map((c: any) => {
     const dateStr = new Date(c.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
-    const impactColor = c.impact === "high" ? "#f85149" : c.impact === "medium" ? "#d29922" : "#3fb950";
+    const impactColor = changeImpactColor(c.impact);
     return `<tr>
       <td style="font-family:var(--mono);font-size:.8rem;white-space:nowrap">${escHtmlServer(dateStr)}</td>
       <td style="font-weight:600">${escHtmlServer(c.vendor)}</td>
       <td style="font-size:.85rem">${escHtmlServer(c.summary)}</td>
-      <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(c.impact?.toUpperCase() ?? "N/A")}</span></td>
+      <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(changeImpactLabel(c.impact))}</span></td>
     </tr>`;
   }).join("\n        ");
 
@@ -34715,12 +34785,12 @@ function buildAzureFreeTier2026Page(): string {
 
   const changeTimelineRows = azureChanges.slice(0, 10).map((c: any) => {
     const dateStr = new Date(c.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
-    const impactColor = c.impact === "high" ? "#f85149" : c.impact === "medium" ? "#d29922" : "#3fb950";
+    const impactColor = changeImpactColor(c.impact);
     return `<tr>
       <td style="font-family:var(--mono);font-size:.8rem;white-space:nowrap">${escHtmlServer(dateStr)}</td>
       <td style="font-weight:600">${escHtmlServer(c.vendor)}</td>
       <td style="font-size:.85rem">${escHtmlServer(c.summary)}</td>
-      <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(c.impact?.toUpperCase() ?? "N/A")}</span></td>
+      <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(changeImpactLabel(c.impact))}</span></td>
     </tr>`;
   }).join("\n        ");
 
@@ -35160,12 +35230,12 @@ function buildDigitalOceanFreeTier2026Page(): string {
 
   const changeTimelineRows = doChanges.slice(0, 10).map((c: any) => {
     const dateStr = new Date(c.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
-    const impactColor = c.impact === "high" ? "#f85149" : c.impact === "medium" ? "#d29922" : "#3fb950";
+    const impactColor = changeImpactColor(c.impact);
     return `<tr>
       <td style="font-family:var(--mono);font-size:.8rem;white-space:nowrap">${escHtmlServer(dateStr)}</td>
       <td style="font-weight:600">${escHtmlServer(c.vendor)}</td>
       <td style="font-size:.85rem">${escHtmlServer(c.summary)}</td>
-      <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(c.impact?.toUpperCase() ?? "N/A")}</span></td>
+      <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(changeImpactLabel(c.impact))}</span></td>
     </tr>`;
   }).join("\n        ");
 
@@ -35620,12 +35690,12 @@ function buildCloudFreeTierComparison2026Page(): string {
 
   const changeTimelineRows = cloudChanges.slice(0, 12).map((c: any) => {
     const dateStr = new Date(c.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
-    const impactColor = c.impact === "high" ? "#f85149" : c.impact === "medium" ? "#d29922" : "#3fb950";
+    const impactColor = changeImpactColor(c.impact);
     return `<tr>
       <td style="font-family:var(--mono);font-size:.8rem;white-space:nowrap">${escHtmlServer(dateStr)}</td>
       <td style="font-weight:600">${escHtmlServer(c.vendor)}</td>
       <td style="font-size:.85rem">${escHtmlServer(c.summary)}</td>
-      <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(c.impact?.toUpperCase() ?? "N/A")}</span></td>
+      <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(changeImpactLabel(c.impact))}</span></td>
     </tr>`;
   }).join("\n        ");
 
@@ -35645,7 +35715,7 @@ function buildCloudFreeTierComparison2026Page(): string {
     mainEntityOfPage: { "@type": "WebPage", "@id": `${BASE_URL}/${slug}` },
   };
 
-  return `<!DOCTYPE html>
+  return comparisonPageWithLiveRecords(`<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
@@ -36205,7 +36275,7 @@ ${mcpCtaCss()}
 </footer>
 <script>${mcpCtaScript()}</script>
 </body>
-</html>`;
+</html>`, pubDate, cloudChanges);
 }
 
 function buildDatabaseFreeTierComparison2026Page(): string {
@@ -36216,17 +36286,17 @@ function buildDatabaseFreeTierComparison2026Page(): string {
 
   const dbVendorKeywords = ["Supabase", "Neon", "Firebase", "Turso", "PlanetScale", "MongoDB", "CockroachDB", "Upstash", "Cloudflare D1", "Redis", "Appwrite", "Convex", "Weaviate", "Zilliz", "Aiven", "Aurora", "Neo4j", "Hasura"];
   const dbChanges = dealChanges.filter((c: any) =>
-    dbVendorKeywords.some(v => c.vendor === v || c.vendor.startsWith(v + " ") || c.vendor.includes(v))
+    dbVendorKeywords.some(v => c.vendor === v || c.vendor.startsWith(v + " ") || c.vendor.includes(v)) || c.category === "Databases"
   ).sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
   const changeTimelineRows = dbChanges.slice(0, 12).map((c: any) => {
     const dateStr = new Date(c.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
-    const impactColor = c.impact === "high" ? "#f85149" : c.impact === "medium" ? "#d29922" : "#3fb950";
+    const impactColor = changeImpactColor(c.impact);
     return `<tr>
       <td style="font-family:var(--mono);font-size:.8rem;white-space:nowrap">${escHtmlServer(dateStr)}</td>
       <td style="font-weight:600">${escHtmlServer(c.vendor)}</td>
       <td style="font-size:.85rem">${escHtmlServer(c.summary)}</td>
-      <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(c.impact?.toUpperCase() ?? "N/A")}</span></td>
+      <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(changeImpactLabel(c.impact))}</span></td>
     </tr>`;
   }).join("\n        ");
 
@@ -36267,7 +36337,7 @@ function buildDatabaseFreeTierComparison2026Page(): string {
     mainEntityOfPage: { "@type": "WebPage", "@id": `${BASE_URL}/${slug}` },
   };
 
-  return `<!DOCTYPE html>
+  return comparisonPageWithLiveRecords(`<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
@@ -36356,7 +36426,7 @@ ${mcpCtaCss()}
   ${buildGlobalNav("guides")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/category/databases">Databases</a> &rsaquo; Database Free Tier Comparison</div>
   <h1>Database Free Tier Comparison 2026</h1>
-  <p class="pub-date">Published ${pubDate}${pageFreshness("/database-free-tier-comparison-2026")} &middot; ${pageDataProvenance("/database-free-tier-comparison-2026", offers.length)} &middot; 44 database services compared</p>
+  <p class="pub-date">Published ${pubDate}${pageFreshness("/database-free-tier-comparison-2026")} &middot; ${pageDataProvenance("/database-free-tier-comparison-2026", offers.length)} &middot; ${COMPARED_SERVICES_PLACEHOLDER} database services compared</p>
 
   ${buildComparisonCategoryBackLink(slug)}
 
@@ -36613,7 +36683,7 @@ ${mcpCtaCss()}
       <tr>
         <td class="provider-col">Appwrite Cloud</td>
         <td>Document-based</td>
-        <td style="font-family:var(--mono)">2 GB</td>
+        <td style="font-family:var(--mono)">2 GB across 2 projects</td>
         <td class="check">75K MAU</td>
         <td class="check">750K executions/mo</td>
         <td class="check">Yes</td>
@@ -36633,7 +36703,7 @@ ${mcpCtaCss()}
   </div>
 
   <div class="context-box">
-    <strong>Firebase had major free tier changes in early 2026:</strong> Cloud Storage was removed from the Spark (free) plan in February 2026, and Firebase Studio (formerly Project IDX) was discontinued in March. If you're starting new, <strong>Supabase</strong> gives you a similar feature set on standard Postgres with no lock-in. <strong>Appwrite</strong> has the most generous free tier (75K MAU) and is fully open-source. See our <a href="/supabase-vs-firebase">Supabase vs Firebase comparison</a>.
+    <strong>Firebase had major free tier changes in early 2026:</strong> Cloud Storage was removed from the Spark (free) plan in February 2026, and Firebase Studio (formerly Project IDX) was discontinued in March. If you're starting new, <strong>Supabase</strong> gives you a similar feature set on standard Postgres with no lock-in. <strong>Appwrite</strong> has the most generous free tier (75K MAU) and is fully open-source, with two constraints its plan card states and this table does not: the free plan is limited to 2 projects, and a free project is paused after 1 week of inactivity. See our <a href="/supabase-vs-firebase">Supabase vs Firebase comparison</a>.
   </div>
 
   <h2 id="edge">Edge / Embedded Databases</h2>
@@ -36757,9 +36827,9 @@ ${mcpCtaCss()}
     <tbody>
       <tr>
         <td class="provider-col">Weaviate</td>
-        <td>Unlimited (self-hosted)</td>
-        <td>Unlimited (self-hosted)</td>
-        <td>OSS: free. Cloud: 14-day sandbox</td>
+        <td>Unlimited self-hosted. Cloud: 100,000 objects</td>
+        <td>Unlimited self-hosted. Cloud: 1 GB memory, 10 GB disk</td>
+        <td>OSS: free. Cloud: Free Forever, 1 cluster, 1 collection</td>
         <td>Self-hosted vector search</td>
       </tr>
       <tr>
@@ -36778,9 +36848,9 @@ ${mcpCtaCss()}
       </tr>
       <tr>
         <td class="provider-col">Upstash Vector</td>
-        <td style="font-family:var(--mono)">10K vectors</td>
-        <td>1536 dimensions</td>
-        <td>Serverless, no credit card</td>
+        <td style="font-family:var(--mono)">200M vectors &times; dimensions</td>
+        <td>1 GB, up to 1,536 dimensions</td>
+        <td>Serverless, no credit card. 10K queries or updates a day</td>
         <td>Lightweight RAG, serverless apps</td>
       </tr>
     </tbody>
@@ -36788,7 +36858,7 @@ ${mcpCtaCss()}
   </div>
 
   <div class="context-box">
-    <strong>For self-hosted:</strong> Weaviate and LanceDB are both fully open-source with no limits. <strong>For managed:</strong> Zilliz Cloud has the most generous free tier (5 GB storage, 5 collections). Upstash Vector is the simplest to set up (serverless, 10K vectors free) but limited for production workloads. If you're building RAG pipelines, Zilliz or self-hosted Weaviate are the strongest options.
+    <strong>For self-hosted:</strong> Weaviate and LanceDB are both fully open-source with no limits when you run them yourself &mdash; Weaviate Cloud's Free Forever tier is a separate, bounded offer (1 cluster, 100,000 objects, 1 collection). <strong>For managed:</strong> Zilliz Cloud has the most generous free tier (5 GB storage, 5 collections). Upstash Vector is the simplest to set up (serverless, 200M vectors &times; dimensions free) but its 10K daily query and update cap is what limits it for production workloads. If you're building RAG pipelines, Zilliz or self-hosted Weaviate are the strongest options.
   </div>
 
   <h2 id="best-for">Best for Each Use Case</h2>
@@ -36843,7 +36913,7 @@ ${mcpCtaCss()}
   <div class="diff-card" style="border-left-color:#3fb950">
     <h3>Lessons for choosing a database</h3>
     <p class="diff-desc"><strong>1. Prefer standard Postgres.</strong> If you use standard SQL, migration is straightforward. PlanetScale's Vitess-based MySQL with custom branching was harder to migrate from.<br>
-    <strong>2. Check our <a href="/free-tier-risk">Free Tier Risk Index</a></strong> — we score 38 vendors by free tier sustainability risk.<br>
+    <strong>2. Check our <a href="/free-tier-risk">Free Tier Risk Index</a></strong> — we score ${riskEntries.length} vendors by free tier sustainability risk.<br>
     <strong>3. Have a migration plan.</strong> Export your schema and data regularly. Test imports on your backup database provider.<br>
     <strong>4. Watch for signals:</strong> funding changes, pricing restructuring, reduced limits. We track all of these in our <a href="/changes">pricing changes timeline</a>.</p>
   </div>
@@ -36886,7 +36956,7 @@ ${mcpCtaCss()}
 </footer>
 <script>${mcpCtaScript()}</script>
 </body>
-</html>`;
+</html>`, pubDate, dbChanges);
 }
 
 function buildCicdFreeTierComparison2026Page(): string {
@@ -36902,12 +36972,12 @@ function buildCicdFreeTierComparison2026Page(): string {
 
   const changeTimelineRows = cicdChanges.slice(0, 12).map((c: any) => {
     const dateStr = new Date(c.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
-    const impactColor = c.impact === "high" ? "#f85149" : c.impact === "medium" ? "#d29922" : "#3fb950";
+    const impactColor = changeImpactColor(c.impact);
     return `<tr>
       <td style="font-family:var(--mono);font-size:.8rem;white-space:nowrap">${escHtmlServer(dateStr)}</td>
       <td style="font-weight:600">${escHtmlServer(c.vendor)}</td>
       <td style="font-size:.85rem">${escHtmlServer(c.summary)}</td>
-      <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(c.impact?.toUpperCase() ?? "N/A")}</span></td>
+      <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(changeImpactLabel(c.impact))}</span></td>
     </tr>`;
   }).join("\n        ");
 
@@ -36948,7 +37018,7 @@ function buildCicdFreeTierComparison2026Page(): string {
     mainEntityOfPage: { "@type": "WebPage", "@id": `${BASE_URL}/${slug}` },
   };
 
-  return `<!DOCTYPE html>
+  return comparisonPageWithLiveRecords(`<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
@@ -37554,7 +37624,7 @@ ${mcpCtaCss()}
 </footer>
 <script>${mcpCtaScript()}</script>
 </body>
-</html>`;
+</html>`, pubDate, cicdChanges);
 }
 
 function buildServerlessFreeTierComparison2026Page(): string {
@@ -37565,18 +37635,17 @@ function buildServerlessFreeTierComparison2026Page(): string {
 
   const serverlessVendorKeywords = ["Vercel", "Cloudflare Workers", "Cloudflare Durable Objects", "Cloudflare Queues", "Deno Deploy", "Val Town", "Google Cloud", "AWS", "Azure", "Cloud Run", "Lambda", "Cloud Functions", "Azure Functions", "DBOS", "Inngest", "Trigger.dev"];
   const serverlessChanges = dealChanges.filter((c: any) =>
-    serverlessVendorKeywords.some(v => c.vendor === v || c.vendor.startsWith(v + " ") || c.vendor.includes(v)) ||
-    (c.summary && (c.summary.toLowerCase().includes("serverless") || c.summary.toLowerCase().includes("function") || c.summary.toLowerCase().includes("lambda") || c.summary.toLowerCase().includes("worker")))
+    serverlessVendorKeywords.some(v => c.vendor === v || c.vendor.startsWith(v + " ") || c.vendor.includes(v))
   ).sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
   const changeTimelineRows = serverlessChanges.slice(0, 12).map((c: any) => {
     const dateStr = new Date(c.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
-    const impactColor = c.impact === "high" ? "#f85149" : c.impact === "medium" ? "#d29922" : "#3fb950";
+    const impactColor = changeImpactColor(c.impact);
     return `<tr>
       <td style="font-family:var(--mono);font-size:.8rem;white-space:nowrap">${escHtmlServer(dateStr)}</td>
       <td style="font-weight:600">${escHtmlServer(c.vendor)}</td>
       <td style="font-size:.85rem">${escHtmlServer(c.summary)}</td>
-      <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(c.impact?.toUpperCase() ?? "N/A")}</span></td>
+      <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(changeImpactLabel(c.impact))}</span></td>
     </tr>`;
   }).join("\n        ");
 
@@ -37617,7 +37686,7 @@ function buildServerlessFreeTierComparison2026Page(): string {
     mainEntityOfPage: { "@type": "WebPage", "@id": `${BASE_URL}/${slug}` },
   };
 
-  return `<!DOCTYPE html>
+  return comparisonPageWithLiveRecords(`<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
@@ -38200,7 +38269,7 @@ ${mcpCtaCss()}
 </footer>
 <script>${mcpCtaScript()}</script>
 </body>
-</html>`;
+</html>`, pubDate, serverlessChanges);
 }
 
 function buildAuthComparison2026Page(): string {
@@ -38217,12 +38286,12 @@ function buildAuthComparison2026Page(): string {
 
   const changeTimelineRows = authChanges.slice(0, 12).map((c: any) => {
     const dateStr = new Date(c.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
-    const impactColor = c.impact === "high" ? "#f85149" : c.impact === "medium" ? "#d29922" : "#3fb950";
+    const impactColor = changeImpactColor(c.impact);
     return `<tr>
       <td style="font-family:var(--mono);font-size:.8rem;white-space:nowrap">${escHtmlServer(dateStr)}</td>
       <td style="font-weight:600">${escHtmlServer(c.vendor)}</td>
       <td style="font-size:.85rem">${escHtmlServer(c.summary)}</td>
-      <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(c.impact?.toUpperCase() ?? "N/A")}</span></td>
+      <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(changeImpactLabel(c.impact))}</span></td>
     </tr>`;
   }).join("\n        ");
 
@@ -39158,12 +39227,12 @@ function buildEmailComparison2026Page(): string {
 
   const changeTimelineRows = emailChanges.slice(0, 12).map((c: any) => {
     const dateStr = new Date(c.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
-    const impactColor = c.impact === "high" ? "#f85149" : c.impact === "medium" ? "#d29922" : "#3fb950";
+    const impactColor = changeImpactColor(c.impact);
     return `<tr>
       <td style="font-family:var(--mono);font-size:.8rem;white-space:nowrap">${escHtmlServer(dateStr)}</td>
       <td style="font-weight:600">${escHtmlServer(c.vendor)}</td>
       <td style="font-size:.85rem">${escHtmlServer(c.summary)}</td>
-      <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(c.impact?.toUpperCase() ?? "N/A")}</span></td>
+      <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(changeImpactLabel(c.impact))}</span></td>
     </tr>`;
   }).join("\n        ");
 
@@ -40132,12 +40201,12 @@ function buildMonitoringComparison2026Page(): string {
 
   const changeTimelineRows = monitoringChanges.slice(0, 12).map((c: any) => {
     const dateStr = new Date(c.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
-    const impactColor = c.impact === "high" ? "#f85149" : c.impact === "medium" ? "#d29922" : "#3fb950";
+    const impactColor = changeImpactColor(c.impact);
     return `<tr>
       <td style="font-family:var(--mono);font-size:.8rem;white-space:nowrap">${escHtmlServer(dateStr)}</td>
       <td style="font-weight:600">${escHtmlServer(c.vendor)}</td>
       <td style="font-size:.85rem">${escHtmlServer(c.summary)}</td>
-      <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(c.impact?.toUpperCase() ?? "N/A")}</span></td>
+      <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(changeImpactLabel(c.impact))}</span></td>
     </tr>`;
   }).join("\n        ");
 
@@ -41129,12 +41198,12 @@ function buildStorageComparison2026Page(): string {
 
   const changeTimelineRows = storageChanges.slice(0, 12).map((c: any) => {
     const dateStr = new Date(c.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
-    const impactColor = c.impact === "high" ? "#f85149" : c.impact === "medium" ? "#d29922" : "#3fb950";
+    const impactColor = changeImpactColor(c.impact);
     return `<tr>
       <td style="font-family:var(--mono);font-size:.8rem;white-space:nowrap">${escHtmlServer(dateStr)}</td>
       <td style="font-weight:600">${escHtmlServer(c.vendor)}</td>
       <td style="font-size:.85rem">${escHtmlServer(c.summary)}</td>
-      <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(c.impact?.toUpperCase() ?? "N/A")}</span></td>
+      <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(changeImpactLabel(c.impact))}</span></td>
     </tr>`;
   }).join("\n        ");
 
@@ -41927,18 +41996,17 @@ function buildTestingFreeTierComparison2026Page(): string {
 
   const testingVendorKeywords = ["Cypress", "Playwright", "BrowserStack", "Checkly", "Chromatic", "Codecov", "Postman", "LocalStack", "Testcontainers", "Percy", "Katalon", "Selenium", "Sauce Labs", "LambdaTest", "Applitools", "k6", "Grafana k6", "Artillery", "Gatling", "Locust", "BlazeMeter", "Argos", "BugBug", "Bencher"];
   const testingChanges = dealChanges.filter((c: any) =>
-    testingVendorKeywords.some(v => c.vendor === v || c.vendor.startsWith(v + " ") || c.vendor.includes(v)) ||
-    (c.summary && (c.summary.toLowerCase().includes("testing") || c.summary.toLowerCase().includes("test result") || c.summary.toLowerCase().includes("browser automation")))
+    testingVendorKeywords.some(v => c.vendor === v || c.vendor.startsWith(v + " ") || c.vendor.includes(v)) || c.category === "Testing"
   ).sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
   const changeTimelineRows = testingChanges.slice(0, 12).map((c: any) => {
     const dateStr = new Date(c.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
-    const impactColor = c.impact === "high" ? "#f85149" : c.impact === "medium" ? "#d29922" : "#3fb950";
+    const impactColor = changeImpactColor(c.impact);
     return `<tr>
       <td style="font-family:var(--mono);font-size:.8rem;white-space:nowrap">${escHtmlServer(dateStr)}</td>
       <td style="font-weight:600">${escHtmlServer(c.vendor)}</td>
       <td style="font-size:.85rem">${escHtmlServer(c.summary)}</td>
-      <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(c.impact?.toUpperCase() ?? "N/A")}</span></td>
+      <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(changeImpactLabel(c.impact))}</span></td>
     </tr>`;
   }).join("\n        ");
 
@@ -41979,7 +42047,7 @@ function buildTestingFreeTierComparison2026Page(): string {
     mainEntityOfPage: { "@type": "WebPage", "@id": `${BASE_URL}/${slug}` },
   };
 
-  return `<!DOCTYPE html>
+  return comparisonPageWithLiveRecords(`<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
@@ -42585,7 +42653,7 @@ ${mcpCtaCss()}
 </footer>
 <script>${mcpCtaScript()}</script>
 </body>
-</html>`;
+</html>`, pubDate, testingChanges);
 }
 
 function buildAnalyticsFreeTierComparison2026Page(): string {
@@ -42596,18 +42664,17 @@ function buildAnalyticsFreeTierComparison2026Page(): string {
 
   const analyticsVendorKeywords = ["PostHog", "Mixpanel", "Amplitude", "Plausible", "Google Analytics", "Umami", "Matomo", "Heap", "June", "Countly", "Fathom", "Simple Analytics", "Pirsch", "Pendo"];
   const analyticsChanges = dealChanges.filter((c: any) =>
-    analyticsVendorKeywords.some(v => c.vendor === v || c.vendor.startsWith(v + " ") || c.vendor.includes(v)) ||
-    (c.summary && (c.summary.toLowerCase().includes("analytics") || c.summary.toLowerCase().includes("event tracking") || c.summary.toLowerCase().includes("session replay")))
+    analyticsVendorKeywords.some(v => c.vendor === v || c.vendor.startsWith(v + " ") || c.vendor.includes(v)) || c.category === "Analytics"
   ).sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
   const changeTimelineRows = analyticsChanges.slice(0, 12).map((c: any) => {
     const dateStr = new Date(c.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
-    const impactColor = c.impact === "high" ? "#f85149" : c.impact === "medium" ? "#d29922" : "#3fb950";
+    const impactColor = changeImpactColor(c.impact);
     return `<tr>
       <td style="font-family:var(--mono);font-size:.8rem;white-space:nowrap">${escHtmlServer(dateStr)}</td>
       <td style="font-weight:600">${escHtmlServer(c.vendor)}</td>
       <td style="font-size:.85rem">${escHtmlServer(c.summary)}</td>
-      <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(c.impact?.toUpperCase() ?? "N/A")}</span></td>
+      <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(changeImpactLabel(c.impact))}</span></td>
     </tr>`;
   }).join("\n        ");
 
@@ -42648,7 +42715,7 @@ function buildAnalyticsFreeTierComparison2026Page(): string {
     mainEntityOfPage: { "@type": "WebPage", "@id": `${BASE_URL}/${slug}` },
   };
 
-  return `<!DOCTYPE html>
+  return comparisonPageWithLiveRecords(`<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
@@ -43268,7 +43335,7 @@ ${mcpCtaCss()}
 </footer>
 <script>${mcpCtaScript()}</script>
 </body>
-</html>`;
+</html>`, pubDate, analyticsChanges);
 }
 
 function buildApiDevelopmentFreeTierComparison2026Page(): string {
@@ -43279,18 +43346,17 @@ function buildApiDevelopmentFreeTierComparison2026Page(): string {
 
   const apiDevVendorKeywords = ["Postman", "Bruno", "Hoppscotch", "Insomnia", "Thunder Client", "Apidog", "HTTPie", "RapidAPI", "Paw", "Stoplight", "Swagger", "Scalar", "Mockoon", "Yaak"];
   const apiDevChanges = dealChanges.filter((c: any) =>
-    apiDevVendorKeywords.some(v => c.vendor === v || c.vendor.startsWith(v + " ") || c.vendor.includes(v)) ||
-    (c.summary && (c.summary.toLowerCase().includes("api client") || c.summary.toLowerCase().includes("api testing") || c.summary.toLowerCase().includes("postman")))
+    apiDevVendorKeywords.some(v => c.vendor === v || c.vendor.startsWith(v + " ") || c.vendor.includes(v)) || c.category === "API Development"
   ).sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
   const changeTimelineRows = apiDevChanges.slice(0, 12).map((c: any) => {
     const dateStr = new Date(c.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
-    const impactColor = c.impact === "high" ? "#f85149" : c.impact === "medium" ? "#d29922" : "#3fb950";
+    const impactColor = changeImpactColor(c.impact);
     return `<tr>
       <td style="font-family:var(--mono);font-size:.8rem;white-space:nowrap">${escHtmlServer(dateStr)}</td>
       <td style="font-weight:600">${escHtmlServer(c.vendor)}</td>
       <td style="font-size:.85rem">${escHtmlServer(c.summary)}</td>
-      <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(c.impact?.toUpperCase() ?? "N/A")}</span></td>
+      <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(changeImpactLabel(c.impact))}</span></td>
     </tr>`;
   }).join("\n        ");
 
@@ -43331,7 +43397,7 @@ function buildApiDevelopmentFreeTierComparison2026Page(): string {
     mainEntityOfPage: { "@type": "WebPage", "@id": `${BASE_URL}/${slug}` },
   };
 
-  return `<!DOCTYPE html>
+  return comparisonPageWithLiveRecords(`<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
@@ -43865,7 +43931,7 @@ ${mcpCtaCss()}
 </footer>
 <script>${mcpCtaScript()}</script>
 </body>
-</html>`;
+</html>`, pubDate, apiDevChanges);
 }
 
 function buildSecurityFreeTierComparison2026Page(): string {
@@ -43876,18 +43942,17 @@ function buildSecurityFreeTierComparison2026Page(): string {
 
   const secVendorKeywords = ["Snyk", "SonarCloud", "GitGuardian", "Semgrep", "Trivy", "OWASP ZAP", "Nuclei", "CodeQL", "Dependabot", "Renovate", "FOSSA", "Socket", "Tailscale", "Twingate", "1Password", "Checkov", "Grype", "Falco", "StackHawk", "Probely", "Gitleaks", "TruffleHog", "aikido", "SOOS"];
   const secChanges = dealChanges.filter((c: any) =>
-    secVendorKeywords.some(v => c.vendor === v || c.vendor.startsWith(v + " ") || c.vendor.includes(v)) ||
-    (c.summary && (c.summary.toLowerCase().includes("security") || c.summary.toLowerCase().includes("vulnerability") || c.summary.toLowerCase().includes("secret")))
+    secVendorKeywords.some(v => c.vendor === v || c.vendor.startsWith(v + " ") || c.vendor.includes(v)) || c.category === "Security" || c.category === "Code Quality"
   ).sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
   const changeTimelineRows = secChanges.slice(0, 12).map((c: any) => {
     const dateStr = new Date(c.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
-    const impactColor = c.impact === "high" ? "#f85149" : c.impact === "medium" ? "#d29922" : "#3fb950";
+    const impactColor = changeImpactColor(c.impact);
     return `<tr>
       <td style="font-family:var(--mono);font-size:.8rem;white-space:nowrap">${escHtmlServer(dateStr)}</td>
       <td style="font-weight:600">${escHtmlServer(c.vendor)}</td>
       <td style="font-size:.85rem">${escHtmlServer(c.summary)}</td>
-      <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(c.impact?.toUpperCase() ?? "N/A")}</span></td>
+      <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(changeImpactLabel(c.impact))}</span></td>
     </tr>`;
   }).join("\n        ");
 
@@ -43928,7 +43993,7 @@ function buildSecurityFreeTierComparison2026Page(): string {
     mainEntityOfPage: { "@type": "WebPage", "@id": `${BASE_URL}/${slug}` },
   };
 
-  return `<!DOCTYPE html>
+  return comparisonPageWithLiveRecords(`<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
@@ -44583,7 +44648,7 @@ ${mcpCtaCss()}
 </footer>
 <script>${mcpCtaScript()}</script>
 </body>
-</html>`;
+</html>`, pubDate, secChanges);
 }
 
 function buildHostingFreeTierComparison2026Page(): string {
@@ -44594,18 +44659,17 @@ function buildHostingFreeTierComparison2026Page(): string {
 
   const hostingVendorKeywords = ["Vercel", "Netlify", "Render", "Railway", "Fly.io", "Cloudflare Pages", "Cloudflare Workers", "Koyeb", "Deno Deploy", "GitHub Pages", "PythonAnywhere", "Hetzner", "Heroku", "Clever Cloud"];
   const hostingChanges = dealChanges.filter((c: any) =>
-    hostingVendorKeywords.some(v => c.vendor === v || c.vendor.startsWith(v + " ") || c.vendor.includes(v)) ||
-    (c.summary && (c.summary.toLowerCase().includes("hosting") || c.summary.toLowerCase().includes("deploy") || c.summary.toLowerCase().includes("paas")))
+    hostingVendorKeywords.some(v => c.vendor === v || c.vendor.startsWith(v + " ") || c.vendor.includes(v)) || c.category === "Cloud Hosting" || c.category === "Hosting"
   ).sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
   const changeTimelineRows = hostingChanges.slice(0, 15).map((c: any) => {
     const dateStr = new Date(c.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
-    const impactColor = c.impact === "high" ? "#f85149" : c.impact === "medium" ? "#d29922" : "#3fb950";
+    const impactColor = changeImpactColor(c.impact);
     return `<tr>
       <td style="font-family:var(--mono);font-size:.8rem;white-space:nowrap">${escHtmlServer(dateStr)}</td>
       <td style="font-weight:600">${escHtmlServer(c.vendor)}</td>
       <td style="font-size:.85rem">${escHtmlServer(c.summary)}</td>
-      <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(c.impact?.toUpperCase() ?? "N/A")}</span></td>
+      <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(changeImpactLabel(c.impact))}</span></td>
     </tr>`;
   }).join("\n        ");
 
@@ -44646,7 +44710,7 @@ function buildHostingFreeTierComparison2026Page(): string {
     mainEntityOfPage: { "@type": "WebPage", "@id": `${BASE_URL}/${slug}` },
   };
 
-  return `<!DOCTYPE html>
+  return comparisonPageWithLiveRecords(`<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
@@ -45206,7 +45270,7 @@ ${mcpCtaCss()}
 </footer>
 <script>${mcpCtaScript()}</script>
 </body>
-</html>`;
+</html>`, pubDate, hostingChanges);
 }
 
 const STRUCTURALLY_FREE_CARDS = [
@@ -45331,7 +45395,7 @@ function buildStateOfFreeTiersPage(): string {
 
   const squeezeHtml = negativeChanges.slice(0, 15).map(c => {
     const badge = changeTypeBadgeMap[c.change_type] ?? { label: c.change_type, color: "#8b949e" };
-    const impactColor = c.impact === "high" ? "#f85149" : c.impact === "medium" ? "#d29922" : "#8b949e";
+    const impactColor = changeImpactColor(c.impact);
     return `<div style="margin-bottom:.75rem;padding:.75rem 1rem;border-left:3px solid ${badge.color};background:var(--bg-card);border-radius:0 8px 8px 0">
       <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.3rem;flex-wrap:wrap">
         <span style="display:inline-block;padding:.1rem .5rem;border-radius:10px;font-size:.65rem;font-weight:600;background:${badge.color};color:#fff">${badge.label}</span>
@@ -49252,7 +49316,7 @@ function buildPricingChangesPage(): string {
 
   function buildChangeEntry(c: typeof allChanges[0]): string {
     const badge = changeTypeBadge[c.change_type] ?? { label: c.change_type, color: "#8b949e" };
-    const impactColor = c.impact === "high" ? "#f85149" : c.impact === "medium" ? "#d29922" : "#8b949e";
+    const impactColor = changeImpactColor(c.impact);
     const vendorSlug = toSlug(c.vendor);
     const dated = isEventDated(c);
     const isUpcoming = dated && c.date >= today;
@@ -49720,7 +49784,7 @@ function buildChangesPage(): string {
 
   function buildChangeEntry(c: typeof allChanges[0]): string {
     const badge = changeTypeBadge[c.change_type] ?? { label: c.change_type, color: "#8b949e" };
-    const impactColor = c.impact === "high" ? "#f85149" : c.impact === "medium" ? "#d29922" : "#8b949e";
+    const impactColor = changeImpactColor(c.impact);
     const vendorSlug = toSlug(c.vendor);
     const dated = isEventDated(c);
     const isUpcoming = dated && c.date >= today;
@@ -49941,7 +50005,7 @@ function buildExpiringPage(): string {
 
   function buildEntry(c: typeof allChanges[0], showCountdown: boolean): string {
     const badge = changeTypeBadge[c.change_type] ?? { label: c.change_type, color: "#8b949e" };
-    const impactColor = c.impact === "high" ? "#f85149" : c.impact === "medium" ? "#d29922" : "#8b949e";
+    const impactColor = changeImpactColor(c.impact);
     const vendorSlug = toSlug(c.vendor);
     const dated = isEventDated(c);
     const countdown = showCountdown && dated ? countdownLabel(c.date) : null;
@@ -52302,7 +52366,7 @@ h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5
 .timeline-head{display:flex;align-items:center;gap:.5rem;margin-bottom:.25rem;flex-wrap:wrap}
 .timeline-vendor{color:var(--text);font-weight:600;font-size:.85rem}
 .timeline-date{font-family:var(--mono);font-size:.75rem;color:var(--text-dim)}
-.impact{font-size:.7rem}.impact-high{color:#f85149}.impact-medium{color:#d29922}.impact-low{color:#8b949e}
+.impact{font-size:.7rem}.impact-high{color:#f85149}.impact-medium{color:#d29922}.impact-low{color:#8b949e}.impact-ungraded{color:#8b949e;font-style:italic}
 .timeline-summary{font-size:.85rem;color:var(--text-muted)}
 .no-data{color:var(--text-dim);font-size:.9rem;font-style:italic}
 .vendor-list{display:flex;flex-direction:column;gap:.4rem}

@@ -4430,7 +4430,7 @@
       "summary": "Free tier reduced from 1,000 to 100 daily requests. Full access now requires Coding Plan Pro ($50/month).",
       "previous_state": "1,000 requests/day free",
       "current_state": "100 requests/day free, full access $50/month",
-      "impact": "negative",
+      "impact": "high",
       "source_url": "https://tech.yahoo.com/ai/gemini/articles/free-qwen-dead-alibaba-shuts-190159063.html",
       "category": "AI / ML",
       "alternatives": [
@@ -4467,7 +4467,7 @@
       "summary": "SendGrid Accelerate startup program discontinued. sendgrid.com now redirects to twilio.com. Twilio explicitly states they do not offer additional credits to startups at this time.",
       "previous_state": "12 months of product credit, mentoring, and networking for startups",
       "current_state": "Program discontinued — no startup credits available",
-      "impact": "negative",
+      "impact": "high",
       "source_url": "https://www.twilio.com/en-us/startups",
       "category": "Email",
       "alternatives": [
@@ -4485,7 +4485,7 @@
       "summary": "Prospect.io startup deal via JoinSecret removed. joinsecret.com returns 403 errors and Prospect.io's own pricing page 404s.",
       "previous_state": "50% on Starter plan for 6 months + 1000 email credits via JoinSecret",
       "current_state": "Product and deal page both inaccessible — removed from index",
-      "impact": "negative",
+      "impact": "low",
       "source_url": "",
       "category": "Email",
       "alternatives": [
@@ -4503,7 +4503,7 @@
       "summary": "Kluster AI removed from index. Public pricing page shows a code review product ($30/month), not batch LLM inference. The $5 free credits for open-source model inference cannot be verified from any public page.",
       "previous_state": "$5 free credits for open-source model inference (DeepSeek-R1, Llama 3.3/3.1, Gemma 3)",
       "current_state": "Free credits offer unverifiable — removed from index",
-      "impact": "negative",
+      "impact": "low",
       "source_url": "https://kluster.ai/pricing",
       "category": "AI / ML",
       "alternatives": [
@@ -4521,7 +4521,7 @@
       "summary": "Homepage returns HTTP 502. Removed from index.",
       "previous_state": "Free 2 indices and 20 MB storage (hosted Elasticsearch)",
       "current_state": "Site unreachable (HTTP 502), service appears discontinued — removed from index",
-      "impact": "negative",
+      "impact": "low",
       "source_url": "",
       "category": "Search",
       "alternatives": [
