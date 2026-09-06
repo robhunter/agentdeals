@@ -6684,7 +6684,7 @@
       "date_source": "discovered",
       "summary": "The free tier has a request limit.",
       "previous_state": "Verify webhooks, outbound HTTP requests, or emails with a custom URL. A temporary URL and email address are always free.",
-      "current_state": "The free tier allows a maximum of {{ appConfig.MaxRequests }} requests. URLs expire.",
+      "current_state": "The free tier allows a maximum of 50 requests. URLs expire.",
       "impact": "medium",
       "source_url": "https://webhook.site",
       "category": "Testing",
