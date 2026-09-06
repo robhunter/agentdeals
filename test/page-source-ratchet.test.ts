@@ -1,5 +1,6 @@
 import { describe, it } from "node:test";
 import assert from "node:assert";
+import { readFileSync } from "node:fs";
 import {
   CATALOGUE_TEXT_FIELDS, PERTURBATION_SENTINEL, UNSOURCED_TIER_A_BASELINE,
   compiledClause, compiledNotice, dataProvenanceFor, freshnessSegmentFor, pageSourceViolations,
@@ -122,7 +123,11 @@ describe("the number of tier-A pages asserting vendor facts from nowhere only go
   });
 
   it("is the number the shipped register holds", () => {
-    assert.strictEqual(UNSOURCED_TIER_A_BASELINE, 41);
+    const shipped = parsePageReviews(
+      readFileSync(new URL("../data/page-reviews.json", import.meta.url), "utf-8"),
+    ).pages;
+    assert.strictEqual(UNSOURCED_TIER_A_BASELINE, unsourcedTierAPaths(shipped).length);
+    assert.ok(shipped.length > 60, `only ${shipped.length} pages on the register`);
   });
 });
 
