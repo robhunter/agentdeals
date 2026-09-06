@@ -106,8 +106,7 @@ interface DiscoveredSlot extends CompiledFigureSubject {
 }
 
 function removalTheSlotAlreadyCarries(inner: string): Pick<DiscoveredSlot, "alreadyStatesRemoval" | "alreadyStruck"> {
-  const written = inner.replace(RECORD_MARKER, "");
-  return { alreadyStatesRemoval: REMOVED_BADGE.test(written), alreadyStruck: STRUCK_SUBJECT.test(written) };
+  return { alreadyStatesRemoval: REMOVED_BADGE.test(inner), alreadyStruck: STRUCK_SUBJECT.test(inner) };
 }
 
 function discoverSlots(staticHtml: string): DiscoveredSlot[] {

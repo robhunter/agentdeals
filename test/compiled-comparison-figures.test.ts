@@ -351,6 +351,19 @@ describe("marking a compiled figure whose vendor has moved since", () => {
     assert.doesNotMatch(marked, /Seat pricing rearranged/);
   });
 
+  it("adds nothing a second time to a page it has already marked", () => {
+    const ended = () => ({
+      slug: null,
+      vendor: "Acme",
+      freeTierEnded: true,
+      endedBy: { date: "2026-05-01", summary: "Free tier withdrawn" },
+      since: [],
+    });
+    const once = markCompiledFigures(row, ended, markup);
+    assert.match(once, /removed-badge/);
+    assert.strictEqual(markCompiledFigures(once, ended, markup), once);
+  });
+
   it("marks nothing below the timeline heading", () => {
     const below =
       '<h2 id="changes">Pricing Change Timeline</h2>' +
