@@ -28,6 +28,7 @@ import { buildComparisonMap, comparisonSlug } from "./comparison-pairs.js";
 import { comparisonVerdictText, freeTierFaqAnswer, stabilityFaqAnswer, type ComparisonSide, type FreeTierSide, type SideFreeTier, type StabilityRating } from "./comparison-verdict.js";
 import { publishedVendorLevel, vendorVerdictSentence, vendorBadge, freeTierClaim, statesRiskCause, narrowingSentence, changeKindNoun, termsUnconfirmedBySource, unconfirmedTermsMetaSentence, type BadgeWithholding, type FreeTierClaim, type VendorVerdictInput } from "./vendor-verdict.js";
 import { tierRecordsAFreeTier } from "./free-tier-record.js";
+import { PAGE_HEAD_OPEN, withLedeBeforeNav } from "./page-lede.js";
 import { UNGRADED_IMPACT_COLOR, changeImpactColor, changeImpactLabel, changeImpactWord, isChangeImpactLevel } from "./change-impact.js";
 import { COMPARED_SERVICES_PLACEHOLDER, fillComparedServicesCount, markCompiledFigures, recordsSinceCompiled, replaceTimelineRows, timelineRecordsFor, vendorForSubject, vendorSubjectsOnCompiledPage, type CompiledFigureSubject, type CompiledFigureVendor, type CompiledFigureVerdict } from "./compiled-figures.js";
 import { vendorHistorySentence } from "./vendor-history.js";
@@ -1435,7 +1436,7 @@ function globalNavCss(): string {
 @media(max-width:768px){.nav-hamburger{display:block}.nav-items{display:none;position:absolute;top:100%;left:0;right:0;background:var(--bg-elevated);border:1px solid var(--border);border-radius:0 0 8px 8px;padding:.5rem;flex-direction:column;align-items:stretch;gap:0;z-index:99;box-shadow:0 4px 12px rgba(0,0,0,.1)}.nav-items.open{display:flex}.global-nav{flex-wrap:wrap;position:relative}.nav-group{width:100%}.nav-group-toggle{width:100%;justify-content:space-between;padding:.5rem .75rem}.nav-dropdown{position:static;box-shadow:none;border:none;padding:0 0 0 1rem;background:transparent;min-width:auto}.nav-group:hover .nav-dropdown{display:none}.nav-group.open .nav-dropdown{display:block}.nav-link{padding:.4rem .75rem}.nav-link.standalone{padding:.5rem .75rem}}`;
 }
 
-function buildGlobalNav(active: NavSection, pageClaim?: string): string {
+function buildGlobalNav(active: NavSection): string {
   type NavLink = { href: string; label: string; section: NavSection };
   type NavGroup = { label: string; items: NavLink[] };
 
@@ -1496,11 +1497,7 @@ function buildGlobalNav(active: NavSection, pageClaim?: string): string {
     + '<div class="nav-items">' + searchLink + groupsHtml + '</div>'
     + '</nav>';
 
-  const head = pageClaim
-    ? '<div class="page-head"><p class="page-claim">' + escHtmlServer(pageClaim) + '</p>' + nav + '</div>'
-    : nav;
-
-  return head + '<script>' + globalNavJs() + '</script>';
+  return PAGE_HEAD_OPEN + nav + '</div>' + '<script>' + globalNavJs() + '</script>';
 }
 
 function globalNavJs(): string {
@@ -5427,11 +5424,9 @@ ${vendorListHtml}
 
 const MONITORING_COMPARISON_TITLE = "Free Tiers for Error Tracking, Monitoring & Observability 2026 — Datadog vs Grafana Cloud vs New Relic vs Better Stack vs Sentry";
 const MONITORING_COMPARISON_META_DESC = "Which error tracking, application monitoring and observability services still have a genuinely free tier in 2026. 25+ compared — Datadog, Grafana Cloud, New Relic, Better Stack, Sentry, Checkly, SigNoz, HyperDX, Elastic — free data ingest, retention and APM limits, and what monitoring costs at 10/50/100/500 hosts.";
-const MONITORING_COMPARISON_CLAIM = "Free tiers for error tracking, application monitoring and observability: what Datadog, Grafana Cloud, New Relic, Better Stack and Sentry give away, and what monitoring costs once you outgrow it.";
 
 const LLM_API_PRICING_TITLE = "LLM API Free Tiers & Free Credits 2026 — LLM API Pricing Comparison: Token Costs, Rate Limits & Hidden Limits";
 const LLM_API_PRICING_META_DESC = "Which LLM APIs have a genuinely free tier or free credits in 2026, and what tokens cost once you exceed it. OpenAI, Anthropic, Google Gemini, Mistral, Groq, DeepSeek, Cerebras, OpenRouter, Cohere and xAI compared — free tier limits, rate limits, context windows and per-token pricing.";
-const LLM_API_PRICING_CLAIM = "Which LLM APIs have a genuinely free tier or free credits, and which only sell tokens: free limits, rate limits and per-token cost for OpenAI, Anthropic, Google Gemini, Groq, DeepSeek and more.";
 
 interface AlternativesPageConfig {
   slug: string;
@@ -31916,7 +31911,7 @@ function buildLlmApiPricingPage(): string {
     mcpCtaCss() + '\n' +
     '</style>\n</head>\n<body>\n' +
     '<div class="container">\n' +
-    '  ' + buildGlobalNav("changes", LLM_API_PRICING_CLAIM) + '\n' +
+    '  ' + buildGlobalNav("changes") + '\n' +
     '  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/ai-ml-alternatives">AI / ML</a> &rsaquo; LLM API Pricing</div>\n' +
     '  <h1>LLM API Free Tiers and Free Credits &mdash; The 2026 Comparison</h1>\n' +
     '  <p class="pub-date">Published ' + pubDate + pageFreshness("/llm-api-pricing") + ' &middot; ' + providers.length + ' providers compared &middot; ' + pageDataProvenance("/llm-api-pricing", offers.length) + ' &middot; ' + llmChanges.length + ' pricing changes tracked</p>\n' +
@@ -40373,7 +40368,7 @@ ${mcpCtaCss()}
 </head>
 <body>
 <div class="container">
-  ${buildGlobalNav("guides", MONITORING_COMPARISON_CLAIM)}
+  ${buildGlobalNav("guides")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/category/monitoring">Monitoring</a> &rsaquo; Monitoring &amp; Observability Comparison</div>
   <h1>Free Tiers for Error Tracking, Monitoring &amp; Observability 2026</h1>
   <p class="pub-date">Published ${pubDate}${pageFreshness("/monitoring-comparison-2026")} &middot; ${pageDataProvenance("/monitoring-comparison-2026", offers.length)} &middot; 25+ monitoring services compared</p>
@@ -53433,24 +53428,33 @@ const httpServer = createHttpServer(async (req, res) => {
     });
   }
 
+  let servedContentType = "";
   const rawWriteHead = res.writeHead.bind(res);
   res.writeHead = ((status: number, ...rest: unknown[]) => {
+    const headers = rest.find(a => a && typeof a === "object") as Record<string, string> | undefined;
+    servedContentType = String(
+      headers?.["Content-Type"] ?? headers?.["content-type"] ?? res.getHeader("Content-Type") ?? "",
+    );
     if (status >= 200 && status < 300) {
-      const headers = rest.find(a => a && typeof a === "object") as Record<string, string> | undefined;
-      const contentType = String(
-        headers?.["Content-Type"] ?? headers?.["content-type"] ?? res.getHeader("Content-Type") ?? "",
-      );
-      if (/^(text\/html|application\/json)/.test(contentType) && !res.hasHeader(SIGNAL_HEADER_NAME)) {
+      if (/^(text\/html|application\/json)/.test(servedContentType) && !res.hasHeader(SIGNAL_HEADER_NAME)) {
         const slug = singleVendorSlug(url.pathname);
         res.setHeader(SIGNAL_HEADER_NAME, signalHeaderValue(BASE_URL, slug));
       }
-      if (/^text\/html/.test(contentType) && !res.hasHeader("Last-Modified")) {
+      if (/^text\/html/.test(servedContentType) && !res.hasHeader("Last-Modified")) {
         const changed = pageLastmodHeader(url.pathname);
         if (changed) res.setHeader("Last-Modified", changed);
       }
     }
     return rawWriteHead(status as never, ...(rest as never[]));
   }) as typeof res.writeHead;
+
+  const rawEnd = res.end.bind(res);
+  res.end = ((...args: unknown[]) => {
+    if (typeof args[0] === "string" && /^text\/html/.test(servedContentType)) {
+      args[0] = withLedeBeforeNav(args[0]);
+    }
+    return rawEnd(...(args as never[]));
+  }) as typeof res.end;
 
   if (url.pathname === SIGNAL_PATH) {
     if (req.method !== "POST" && !isGetOrHead) {

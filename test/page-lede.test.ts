@@ -5,6 +5,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { extractTextContent } from "../scripts/monitor-pricing.js";
 import { getGuideList } from "../dist/guides.js";
+import { metaDescriptionOf, withLedeBeforeNav } from "../dist/page-lede.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -38,6 +39,8 @@ function startServer(): Promise<ChildProcess> {
 }
 
 const LEDE_WINDOW = 200;
+const SWEPT_PATHS_FLOOR = 300;
+const PAGES_WITH_MENU_FLOOR = 300;
 
 const NAV_LABELS = [
   "Categories", "Best Of", "Alternatives", "Agent Stacks",
@@ -170,20 +173,26 @@ describe("Page lede", () => {
     });
   }
 
-  it("no page renders its claim below the site menu", async () => {
+  it("every page that renders the site menu states its own claim first", async () => {
     const paths = [...await sitemapPaths("/sitemap-pages.xml"), ...await sitemapPaths("/sitemap-misc.xml")];
-    const withClaim: string[] = [];
+    assert.ok(
+      paths.length >= SWEPT_PATHS_FLOOR,
+      `swept ${paths.length} paths, too few to stand as a site-wide check`,
+    );
+
+    const withMenu: string[] = [];
+    const withoutClaim: string[] = [];
 
     for (const pathname of paths) {
       const response = await fetch(base + pathname);
       if (response.status !== 200) continue;
       const html = await response.text();
-      const claimAt = html.indexOf('<p class="page-claim">');
-      if (claimAt === -1) continue;
-      withClaim.push(pathname);
-
       const navAt = html.indexOf('<nav class="global-nav">');
-      assert.ok(navAt !== -1, `${pathname} renders a claim and no site menu`);
+      if (navAt === -1) continue;
+      withMenu.push(pathname);
+
+      const claimAt = html.indexOf('<p class="page-claim">');
+      if (claimAt === -1) { withoutClaim.push(pathname); continue; }
       assert.ok(
         claimAt < navAt,
         `${pathname} renders its claim after the site menu, so extraction still opens with navigation`,
@@ -197,11 +206,71 @@ describe("Page lede", () => {
       );
     }
 
-    for (const page of CLAIM_PAGES) {
-      assert.ok(
-        withClaim.includes(page.path),
-        `${page.path} no longer renders a claim`,
-      );
+    assert.ok(
+      withMenu.length >= PAGES_WITH_MENU_FLOOR,
+      `only ${withMenu.length} of ${paths.length} swept paths render the site menu`,
+    );
+    assert.deepStrictEqual(
+      withoutClaim,
+      [],
+      `${withoutClaim.length} of ${withMenu.length} pages render the site menu with no claim before it`,
+    );
+  });
+
+  it("every claim is the page's own meta description, so no page carries a second copy to keep in step", async () => {
+    const paths = [...await sitemapPaths("/sitemap-pages.xml"), ...await sitemapPaths("/sitemap-misc.xml")];
+    const disagreeing: string[] = [];
+    let checked = 0;
+
+    for (const pathname of paths) {
+      const response = await fetch(base + pathname);
+      if (response.status !== 200) continue;
+      const html = await response.text();
+      const claim = html.match(/<p class="page-claim">([\s\S]*?)<\/p>/)?.[1];
+      if (claim === undefined) continue;
+      checked++;
+      const metaDesc = html.match(/<meta name="description" content="([^"]*)"/i)?.[1] ?? "";
+      if (claim !== metaDesc) disagreeing.push(`${pathname}: claim "${claim}" against description "${metaDesc}"`);
     }
+
+    assert.ok(checked >= PAGES_WITH_MENU_FLOOR, `only ${checked} pages carry a claim`);
+    assert.deepStrictEqual(disagreeing, [], "a page states a claim that is not its meta description");
+  });
+});
+
+describe("Lede derivation", () => {
+  const NAV = '<div class="page-head"><nav class="global-nav"><a href="/">AgentDeals</a></nav></div>';
+  const page = (description: string) =>
+    `<!DOCTYPE html><html><head><meta name="description" content="${description}"></head><body>${NAV}<h1>Untouched</h1></body></html>`;
+
+  it("gives a page nobody edited the description it already publishes", () => {
+    const html = withLedeBeforeNav(page("What this page answers, in the words a reader asks it."));
+    assert.ok(
+      html.includes('<div class="page-head"><p class="page-claim">What this page answers, in the words a reader asks it.</p><nav'),
+      `derived no claim: ${html}`,
+    );
+    assert.ok(extractTextContent(html).startsWith("What this page answers"), "the claim does not open the extracted text");
+  });
+
+  it("reads the description the page serves rather than a second store", () => {
+    assert.strictEqual(metaDescriptionOf(page("A stated claim.")), "A stated claim.");
+    assert.strictEqual(metaDescriptionOf("<html><head></head><body></body></html>"), "");
+  });
+
+  it("adds one claim however many times it runs", () => {
+    const once = withLedeBeforeNav(page("A stated claim."));
+    assert.strictEqual(withLedeBeforeNav(once), once);
+    assert.strictEqual(once.split('<p class="page-claim">').length - 1, 1);
+  });
+
+  it("leaves a page with no description and a page with no menu alone", () => {
+    const noDescription = `<!DOCTYPE html><html><head></head><body>${NAV}</body></html>`;
+    assert.strictEqual(withLedeBeforeNav(noDescription), noDescription);
+
+    const blankDescription = page("   ");
+    assert.strictEqual(withLedeBeforeNav(blankDescription), blankDescription);
+
+    const noMenu = '<!DOCTYPE html><html><head><meta name="description" content="A stated claim."></head><body><h1>Standalone</h1></body></html>';
+    assert.strictEqual(withLedeBeforeNav(noMenu), noMenu);
   });
 });
