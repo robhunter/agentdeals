@@ -116,32 +116,60 @@ describe("the badge beside a vendor's name says what the verdict below it says",
     assert.deepStrictEqual(vendorBadge(input({ level: "caution", cause })), { kind: "rating", word: "caution" });
   });
 
-  it("states no rating on a record the ranker gates", () => {
+  it("states no rating on a record the ranker gates, and names the gate", () => {
     for (const level of ["stable", "caution", "risky"] as const) {
-      const gated = input({ level, cause, gated: true, changes: [change()] });
-      assert.deepStrictEqual(vendorBadge(gated), { kind: "none" }, `a gated record rated ${level}`);
+      const gated = input({ level, cause, gate: "eligibility_restricted", changes: [change()] });
+      assert.deepStrictEqual(
+        vendorBadge(gated),
+        { kind: "none", because: { reason: "gated", gate: "eligibility_restricted" } },
+        `a gated record rated ${level}`,
+      );
     }
   });
 
   it("states the offer has ended rather than rating it, whatever its history says", () => {
-    const ended = input({ level: "caution", cause, gated: true, offerEnded: true, changes: [change(), change()] });
+    const ended = input({ level: "caution", cause, gate: "offer_retired", offerEnded: true, changes: [change(), change()] });
     assert.deepStrictEqual(vendorBadge(ended), { kind: "ended" });
     assert.strictEqual(vendorVerdictSentence(ended), endedVerdictSentence());
     assert.strictEqual(statesRiskCause(ended), false);
   });
 
-  it("withholds the badge on the two grounds it withheld it on before", () => {
-    assert.deepStrictEqual(vendorBadge(input({ level: null })), { kind: "none" });
-    assert.deepStrictEqual(vendorBadge(input({ level: "stable", linkUnreachable: true })), { kind: "none" });
+  it("withholds the badge on the two grounds it withheld it on before, and says which", () => {
+    assert.deepStrictEqual(
+      vendorBadge(input({ level: null, levelWithheld: "states_no_terms" })),
+      { kind: "none", because: { reason: "states_no_terms" } },
+    );
+    assert.deepStrictEqual(
+      vendorBadge(input({ level: "stable", linkUnreachable: true })),
+      { kind: "none", because: { reason: "link_unreachable" } },
+    );
     assert.deepStrictEqual(
       vendorBadge(input({ level: "risky", cause, linkUnreachable: true })),
       { kind: "rating", word: "risky" },
     );
   });
 
+  it("rates nothing on a level it does not hold, even where no reason was recorded with it", () => {
+    assert.deepStrictEqual(
+      vendorBadge(input({ level: null, levelWithheld: null, ratingWithheld: null })),
+      { kind: "none", because: { reason: "no_source" } },
+    );
+  });
+
+  it("names the reason the verdict sentence gives, not the gate, where both apply", () => {
+    const both = input({
+      level: null,
+      levelWithheld: "unreadable",
+      gate: "eligibility_restricted",
+      changes: [change()],
+    });
+    assert.deepStrictEqual(vendorBadge(both), { kind: "none", because: { reason: "unreadable" } });
+    assert.match(vendorVerdictSentence(both), /could not read the page we cite/);
+  });
+
   it("explains a level only where the verdict states one", () => {
     assert.strictEqual(statesRiskCause(input({ level: "caution", cause })), true);
-    assert.strictEqual(statesRiskCause(input({ level: "caution", cause, gated: true })), true);
+    assert.strictEqual(statesRiskCause(input({ level: "caution", cause, gate: "eligibility_restricted" })), true);
     assert.strictEqual(statesRiskCause(input({ level: "stable" })), false);
     assert.strictEqual(statesRiskCause(input({ level: "caution", cause, offerEnded: true })), false);
   });
@@ -311,7 +339,7 @@ function vendorRows(): VendorRow[] {
         unconfirmableSince,
         ratingWithheld: enriched.rating_withheld ?? null,
         offerEnded: ended,
-        gated: gate !== null,
+        gate: gate?.code ?? null,
       }),
       changes: vendorChanges,
       gate,

@@ -19,11 +19,12 @@ import { configureVendorSeries, recordVendorRequest, flushVendorSeries, readVend
 import { openapiSpec } from "./openapi.js";
 import { LINK_GRACE_DAYS, unreachableNoticeForUrl } from "./link-health.js";
 import { offerEnded, offerRetired, recordedTierSentence, endedHeadline, endedHistorySentence, endedReliabilitySentence, endedEmptyChangeHistorySentence, ENDED_BADGE_LABEL, ENDED_SINCE_CHANGES_SENTENCE, type OfferTierAndUrl } from "./retirement.js";
-import { amountUnstatedSentence, levelWithheldReason, sourceStatesNoAmount, withheldLevelClause, withheldLevelSentence } from "./source-check.js";
+import { amountUnstatedSentence, levelWithheldReason, sourceStatesNoAmount, withheldLevelClause, withheldLevelSentence, type LevelWithheldReason } from "./source-check.js";
+import { readingIsBehindTheLoop, reverificationIntervalDays } from "./badge-staleness.js";
 import { SUPERSEDED_TERMS_LABEL, supersededTermsAnswer, supersededTermsMetaSentence, supersededTermsNotice, supersededTermsNoticeHtml, supersededTermsVerdictSentence, supersedingChange } from "./superseded-description.js";
 import { buildComparisonMap, comparisonSlug } from "./comparison-pairs.js";
 import { stabilityFaqAnswer, stabilityVerdictClause, type ComparisonSide, type StabilityRating } from "./comparison-verdict.js";
-import { publishedVendorLevel, vendorVerdictSentence, vendorBadge, statesRiskCause, narrowingSentence, changeKindNoun, type VendorVerdictInput } from "./vendor-verdict.js";
+import { publishedVendorLevel, vendorVerdictSentence, vendorBadge, statesRiskCause, narrowingSentence, changeKindNoun, type BadgeWithholding, type VendorVerdictInput } from "./vendor-verdict.js";
 import { vendorHistorySentence } from "./vendor-history.js";
 import { HETZNER_APRIL_CHANGES, HETZNER_CLOUD_PLANS, HETZNER_PRICES_READ, HETZNER_PRICE_SOURCE, HETZNER_SINGAPORE_EXAMPLE, cheapestOrderableHetznerPlan, hetznerEntryPriceClause, unorderableHetznerPlans } from "./hetzner-pricing.js";
 import { changeTimelineDate, supersededLineups, supersessionNote } from "./change-lineup.js";
@@ -50,7 +51,7 @@ import { faqPageJsonLd, type FaqItem } from "./faq-provenance.js";
 import { SSE_KEEPALIVE_FRAME, keepaliveIntervalMs, sessionRecoveryBody } from "./mcp-stream.js";
 import { ASSISTANTS_API_SHUTDOWN } from "./assistants-shutdown.js";
 import { discontinuedOnOrBefore, PRODUCT_DEPRECATED } from "./product-deprecation.js";
-import { rankOffers, rankForListing, rotateListing, utcDate, gateFor, notAFreeOfferGateFor, descriptionDeniesFreeTier, classifyTier, CRITERIA_PATH, DEMOTE_ONLY_POLICY, DISCLOSURE_RATIONALE, TIE_BREAK_ALGORITHM, GATE_TABLE, DEMERIT_TABLE, NOT_FREE_TIER_RULES, TIME_LIMITED_TIER_RULES, type TieBreak, type Gate } from "./ranking.js";
+import { rankOffers, rankForListing, rotateListing, utcDate, gateFor, notAFreeOfferGateFor, descriptionDeniesFreeTier, classifyTier, CRITERIA_PATH, DEMOTE_ONLY_POLICY, DISCLOSURE_RATIONALE, TIE_BREAK_ALGORITHM, GATE_TABLE, DEMERIT_TABLE, NOT_FREE_TIER_RULES, TIME_LIMITED_TIER_RULES, type TieBreak, type Gate, type GateCode } from "./ranking.js";
 import type { RankedEntry, RankingResult } from "./ranking.js";
 import { eligibilityGateAsPublished, gatedShareDescriptionClause, gatedShareLede, publishableEligibilityConditions } from "./eligibility.js";
 import { gateDisclosureFor } from "./gate-disclosure.js";
@@ -726,38 +727,111 @@ function offerPricingLink(offer: OfferTierAndUrl, label: string): string {
   return `<a href="${escHtmlServer(offer.url)}" target="_blank" rel="noopener">${label}</a>`;
 }
 
-type BadgeStatus = "active" | "at-risk" | "removed" | "unrated" | "unknown";
+type BadgeStatus = "active" | "at-risk" | "stale" | "removed" | "retired" | "withheld" | "unknown";
 
-function getBadgeStatus(vendorSlug: string): { status: BadgeStatus; label: string; verifiedDate: string | null } {
+interface BadgeReading {
+  status: BadgeStatus;
+  label: string;
+  verifiedDate: string | null;
+}
+
+const WITHHELD_BADGE_LABELS: Record<LevelWithheldReason | "no_source", string> = {
+  no_source: "unrated \u2014 no source",
+  link_unreachable: "unrated \u2014 page unreachable",
+  unreadable: "unrated \u2014 page unreadable",
+  states_no_terms: "unrated \u2014 page states no terms",
+  does_not_name_vendor: "unrated \u2014 page omits vendor",
+};
+
+const GATED_BADGE_LABELS: Record<GateCode, string> = {
+  eligibility_restricted: "unrated \u2014 restricted offer",
+  not_a_free_offer: "unrated \u2014 not a free offer",
+  offer_expired: "unrated \u2014 offer expired",
+  offer_retired: "unrated \u2014 offer ended",
+  verification_lapsed: "unrated \u2014 not re-confirmed",
+};
+
+function withheldBadgeLabel(because: BadgeWithholding): string {
+  return because.reason === "gated"
+    ? GATED_BADGE_LABELS[because.gate]
+    : WITHHELD_BADGE_LABELS[because.reason];
+}
+
+let reverificationInterval: { on: string; days: number } | null = null;
+
+function badgeStaleAfterDays(): number {
+  const on = utcDate();
+  if (reverificationInterval?.on !== on) {
+    reverificationInterval = { on, days: reverificationIntervalDays(offers.map(o => o.verifiedDate), Date.now()) };
+  }
+  return reverificationInterval.days;
+}
+
+const UNKNOWN_BADGE: BadgeReading = { status: "unknown", label: "unknown", verifiedDate: null };
+
+const badgeReadings = new Map<string, { on: string; reading: BadgeReading }>();
+
+function getBadgeStatus(vendorSlug: string): BadgeReading {
+  if (!vendorSlugMap.has(vendorSlug)) return UNKNOWN_BADGE;
+  const on = utcDate();
+  const cached = badgeReadings.get(vendorSlug);
+  if (cached && cached.on === on) return cached.reading;
+  const reading = readBadgeStatus(vendorSlug, on);
+  badgeReadings.set(vendorSlug, { on, reading });
+  return reading;
+}
+
+function readBadgeStatus(vendorSlug: string, servedOn: string): BadgeReading {
   const vendorName = vendorSlugMap.get(vendorSlug);
-  if (!vendorName) return { status: "unknown", label: "unknown", verifiedDate: null };
+  if (!vendorName) return UNKNOWN_BADGE;
 
-  const vendorChanges = dealChanges.filter(c => toSlug(c.vendor) === vendorSlug);
-  const assessment = vendorRiskAssessment(vendorChanges);
+  const vendorOffers = offers.filter(o => o.vendor === vendorName);
+  if (vendorOffers.length === 0) return UNKNOWN_BADGE;
 
-  if (assessment.rating_withheld) {
-    return { status: "unrated", label: "unrated \u2014 no source", verifiedDate: null };
+  const primary = vendorOffers[0];
+  const enriched = enrichOffers([primary])[0];
+  const vendorChanges = dealChanges
+    .filter(c => c.vendor.toLowerCase() === vendorName.toLowerCase())
+    .sort((a, b) => b.date.localeCompare(a.date));
+  const linkUnreachable = enriched.link_unreachable;
+
+  const verdict = vendorBadge({
+    vendor: vendorName,
+    level: enriched.risk_level ?? null,
+    cause: enriched.risk_cause,
+    changes: vendorChanges,
+    levelWithheld: levelWithheldReason(primary, linkUnreachable),
+    unconfirmableSince: "",
+    ratingWithheld: enriched.rating_withheld,
+    offerEnded: offerEnded(primary),
+    gate: gateFor(primary, servedOn)?.code ?? null,
+    linkUnreachable: Boolean(linkUnreachable),
+  });
+
+  if (verdict.kind === "none") {
+    return { status: "withheld", label: withheldBadgeLabel(verdict.because), verifiedDate: null };
   }
 
-  if (assessment.level === "risky" && assessment.cause) {
+  const latestVerified = vendorOffers.reduce((max, o) => o.verifiedDate > max ? o.verifiedDate : max, primary.verifiedDate);
+
+  if (verdict.kind === "ended") {
+    return { status: "retired", label: ENDED_BADGE_LABEL, verifiedDate: latestVerified };
+  }
+
+  if (verdict.word === "risky" && enriched.risk_cause) {
     return {
       status: "removed",
-      label: assessment.cause.change_type === PRODUCT_DEPRECATED ? "deprecated" : "free tier removed",
-      verifiedDate: assessment.cause.date,
+      label: enriched.risk_cause.change_type === PRODUCT_DEPRECATED ? "deprecated" : "free tier removed",
+      verifiedDate: enriched.risk_cause.date,
     };
   }
 
-  const vendorOffers = offers.filter(o => toSlug(o.vendor) === vendorSlug);
-  if (vendorOffers.length === 0) return { status: "unknown", label: "unknown", verifiedDate: null };
-
-  const latestVerified = vendorOffers.reduce((max, o) => o.verifiedDate > max ? o.verifiedDate : max, vendorOffers[0].verifiedDate);
-  const daysSince = Math.floor((Date.now() - new Date(latestVerified).getTime()) / (1000 * 60 * 60 * 24));
-
-  if (assessment.level === "caution") {
+  if (verdict.word === "caution") {
     return { status: "at-risk", label: "at risk", verifiedDate: latestVerified };
   }
-  if (daysSince > 30) {
-    return { status: "at-risk", label: "stale", verifiedDate: latestVerified };
+
+  if (readingIsBehindTheLoop(latestVerified, badgeStaleAfterDays(), Date.now())) {
+    return { status: "stale", label: "stale", verifiedDate: latestVerified };
   }
 
   return { status: "active", label: "active", verifiedDate: latestVerified };
@@ -767,7 +841,9 @@ const BADGE_COLORS: Record<BadgeStatus, string> = {
   "active": "#3fb950",
   "at-risk": "#d29922",
   "removed": "#f85149",
-  "unrated": "#8b949e",
+  "retired": "#f85149",
+  "stale": "#58a6ff",
+  "withheld": "#8b949e",
   "unknown": "#8b949e",
 };
 
@@ -832,9 +908,9 @@ function generateStackBadgeSvg(vendorsParam: string, style: "flat" | "flat-squar
   for (const name of vendorNames) {
     const slug = toSlug(name);
     const { status } = getBadgeStatus(slug);
-    if (status === "unknown" || status === "unrated") continue;
+    if (status === "unknown" || status === "withheld") continue;
     totalFound++;
-    if (status === "removed") riskyCount++;
+    if (status === "removed" || status === "retired") riskyCount++;
     else if (status === "at-risk") cautionCount++;
   }
 
@@ -854,7 +930,8 @@ function generateStackBadgeSvg(vendorsParam: string, style: "flat" | "flat-squar
   const gradeColors: Record<string, string> = {
     A: "#3fb950", B: "#58a6ff", C: "#d29922", D: "#f0883e", F: "#f85149",
   };
-  return generateShieldBadge("Stack Health", grade, gradeColors[grade], style);
+  const coverage = totalFound < vendorNames.length ? ` · ${totalFound} of ${vendorNames.length} rated` : "";
+  return generateShieldBadge("Stack Health", `${grade}${coverage}`, gradeColors[grade], style);
 }
 
 function generateShieldBadge(leftText: string, rightText: string, color: string, style: "flat" | "flat-square" = "flat"): string {
@@ -3781,7 +3858,7 @@ function buildVendorPage(slug: string): string | null {
     unconfirmableSince,
     ratingWithheld,
     offerEnded: offerHasEnded,
-    gated: primaryGate !== null,
+    gate: primaryGate?.code ?? null,
     linkUnreachable: Boolean(linkUnreachable),
   };
 
@@ -48140,8 +48217,10 @@ function buildBadgesPage(): string {
     .map(([slug, name]) => ({ slug, name, ...getBadgeStatus(slug) }))
     .sort((a, b) => a.name.localeCompare(b.name));
 
-  const statusCounts = { active: 0, "at-risk": 0, removed: 0, unrated: 0, unknown: 0 };
+  const statusCounts: Record<BadgeStatus, number> = { active: 0, "at-risk": 0, stale: 0, removed: 0, retired: 0, withheld: 0, unknown: 0 };
   for (const v of allVendors) statusCounts[v.status]++;
+  const endedCount = statusCounts.removed + statusCounts.retired;
+  const staleAfter = badgeStaleAfterDays();
 
   return `<!DOCTYPE html>
 <html lang="en">
@@ -48149,7 +48228,7 @@ function buildBadgesPage(): string {
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Free Tier Status Badges — Embeddable SVG Badges for READMEs | AgentDeals</title>
-  <meta name="description" content="Embeddable free tier status badges for GitHub READMEs, docs, and blog posts. Show whether a vendor's free tier is active, at risk, or removed.">
+  <meta name="description" content="Embeddable free tier status badges for GitHub READMEs, docs, and blog posts. Show whether a vendor's free tier is active, at risk or removed — and read unrated where we cannot confirm the terms.">
   <link rel="canonical" href="${BASE_URL}/badges">
   <link rel="alternate" type="application/atom+xml" title="AgentDeals — Pricing Changes" href="${BASE_URL}/feed.xml">
   <meta property="og:title" content="Free Tier Status Badges — AgentDeals">
@@ -48184,11 +48263,16 @@ function buildBadgesPage(): string {
     .stat-num.green{color:#3fb950}
     .stat-num.yellow{color:#d29922}
     .stat-num.red{color:#f85149}
+    .stat-num.blue{color:#58a6ff}
+    .stat-num.grey{color:#8b949e}
+    .legend{list-style:none;padding:0;margin:1rem 0;display:grid;gap:.5rem}
+    .legend li{color:var(--text-muted);font-size:.9rem;display:flex;align-items:baseline;gap:.5rem}
+    .legend strong{color:var(--text)}
     .stat-label{font-size:.75rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em}
     .preview-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1rem;margin:1rem 0}
     .preview-card{background:var(--bg-elevated);border:1px solid var(--border);border-radius:10px;padding:1rem;display:flex;flex-direction:column;gap:.75rem}
-    .preview-badge{display:flex;align-items:center;gap:.5rem}
-    .preview-badge img{height:20px}
+    .preview-badge{display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;min-width:0}
+    .preview-badge img{max-height:20px;max-width:100%;height:auto}
     .embed-code{background:#0d1117;border:1px solid var(--border);border-radius:6px;padding:.5rem .75rem;font-family:"SFMono-Regular",Consolas,monospace;font-size:.75rem;color:#c9d1d9;overflow-x:auto;white-space:nowrap;position:relative;cursor:pointer}
     .embed-code:hover{border-color:var(--accent)}
     .embed-code::after{content:"click to copy";position:absolute;right:.5rem;top:50%;transform:translateY(-50%);font-size:.65rem;color:var(--text-muted);opacity:0;transition:opacity .15s}
@@ -48201,9 +48285,9 @@ function buildBadgesPage(): string {
     .how-to li{margin:.5rem 0}
     .how-to code{background:#0d1117;padding:.15rem .4rem;border-radius:4px;font-size:.8rem;color:#c9d1d9}
     .vendor-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:.5rem;margin:1rem 0}
-    .vendor-badge-link{display:flex;align-items:center;gap:.5rem;padding:.4rem .6rem;background:var(--bg-elevated);border:1px solid var(--border);border-radius:6px;text-decoration:none;font-size:.8rem;color:var(--text-muted);transition:border-color .15s}
+    .vendor-badge-link{display:flex;align-items:center;flex-wrap:wrap;min-width:0;gap:.5rem;padding:.4rem .6rem;background:var(--bg-elevated);border:1px solid var(--border);border-radius:6px;text-decoration:none;font-size:.8rem;color:var(--text-muted);transition:border-color .15s}
     .vendor-badge-link:hover{border-color:var(--accent);text-decoration:none}
-    .vendor-badge-link img{height:20px}
+    .vendor-badge-link img{max-height:20px;max-width:100%;height:auto}
     .status-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
     ${mcpCtaCss()}
     .footer{margin-top:3rem;padding-top:1.5rem;border-top:1px solid var(--border);text-align:center;color:var(--text-muted);font-size:.8rem}
@@ -48215,14 +48299,25 @@ function buildBadgesPage(): string {
     ${buildGlobalNav("badges")}
 
     <h1>Free Tier Status Badges</h1>
-    <p class="subtitle">Embeddable SVG badges for GitHub READMEs, documentation, and blog posts. Show whether a vendor's free tier is active, at risk, or removed — powered by AgentDeals' verified pricing data.</p>
+    <p class="subtitle">Embeddable SVG badges for GitHub READMEs, documentation, and blog posts. Show whether a vendor's free tier is active, at risk or removed — and read <em>unrated</em>, with the reason, wherever the vendor's own page on this site publishes no verdict.</p>
 
     <div class="stats-bar">
       <div class="stat"><div class="stat-num">${allVendors.length}</div><div class="stat-label">Vendors</div></div>
       <div class="stat"><div class="stat-num green">${statusCounts.active}</div><div class="stat-label">Active</div></div>
       <div class="stat"><div class="stat-num yellow">${statusCounts["at-risk"]}</div><div class="stat-label">At Risk</div></div>
-      <div class="stat"><div class="stat-num red">${statusCounts.removed}</div><div class="stat-label">Removed</div></div>
+      <div class="stat"><div class="stat-num red">${endedCount}</div><div class="stat-label">Ended</div></div>
+      <div class="stat"><div class="stat-num blue">${statusCounts.stale}</div><div class="stat-label">Stale</div></div>
+      <div class="stat"><div class="stat-num grey">${statusCounts.withheld}</div><div class="stat-label">Unrated</div></div>
     </div>
+
+    <h2>What each badge says</h2>
+    <ul class="legend">
+      <li><span class="status-dot" style="background:${BADGE_COLORS.active}"></span> <strong>active</strong> — we rate the vendor stable, on a reading we can attribute to the page we cite.</li>
+      <li><span class="status-dot" style="background:${BADGE_COLORS["at-risk"]}"></span> <strong>at risk</strong> — a recorded pricing change narrowed this vendor's terms.</li>
+      <li><span class="status-dot" style="background:${BADGE_COLORS.removed}"></span> <strong>free tier removed</strong>, <strong>deprecated</strong>, <strong>retired</strong> — the offer we listed has ended.</li>
+      <li><span class="status-dot" style="background:${BADGE_COLORS.stale}"></span> <strong>stale</strong> — a statement about us, not the vendor: we have not re-read the page within ${staleAfter} days, one full pass of our re-verification loop.</li>
+      <li><span class="status-dot" style="background:${BADGE_COLORS.withheld}"></span> <strong>unrated</strong> — we publish no verdict, and the badge says why: the page we cite was unreachable, unreadable, stated no terms, or did not name the vendor; or the offer is restricted, expired or not free. ${statusCounts.withheld} of ${allVendors.length} vendors read this way, the same as on their vendor page.</li>
+    </ul>
 
     <h2>Badge Preview</h2>
     <div class="preview-grid">
@@ -48323,6 +48418,20 @@ function embedAttribution(): string {
   return `<div style="margin-top:12px;padding-top:8px;border-top:1px solid var(--border);text-align:right;font-size:11px;color:var(--text-m)">Powered by <a href="${BASE_URL}" target="_blank" rel="noopener">AgentDeals</a></div>`;
 }
 
+const EMBED_STATUS_COLORS: Record<BadgeStatus, string> = {
+  "active": "var(--badge-increased)",
+  "at-risk": "var(--badge-reduced)",
+  "removed": "var(--badge-removed)",
+  "retired": "var(--badge-removed)",
+  "stale": "var(--badge-new)",
+  "withheld": "var(--text-m)",
+  "unknown": "var(--text-m)",
+};
+
+function embedStatusColor(status: BadgeStatus): string {
+  return EMBED_STATUS_COLORS[status];
+}
+
 function buildEmbedVendorWidget(slug: string, theme: "dark" | "light"): string | null {
   const vendorName = vendorSlugMap.get(slug);
   if (!vendorName) return null;
@@ -48335,7 +48444,7 @@ function buildEmbedVendorWidget(slug: string, theme: "dark" | "light"): string |
     .sort((a, b) => b.date.localeCompare(a.date))
     .slice(0, 3);
 
-  const statusColor = status === "removed" ? "var(--badge-removed)" : status === "at-risk" ? "var(--badge-reduced)" : "var(--badge-increased)";
+  const statusColor = embedStatusColor(status);
 
   const offersHtml = vendorOffers.map(o => `<div style="padding:8px 0;border-bottom:1px solid var(--border)">
     <div style="font-weight:600;font-size:13px">${escHtmlServer(o.category)}</div>
@@ -48377,7 +48486,7 @@ function buildEmbedCategoryWidget(slug: string, theme: "dark" | "light"): string
   const rowsHtml = catOffers.map(o => {
     const vSlug = toSlug(o.vendor);
     const { status } = getBadgeStatus(vSlug);
-    const dot = status === "removed" ? "var(--badge-removed)" : status === "at-risk" ? "var(--badge-reduced)" : "var(--badge-increased)";
+    const dot = embedStatusColor(status);
     return `<tr>
       <td style="padding:8px;border-bottom:1px solid var(--border)"><a href="${BASE_URL}/vendor/${vSlug}" target="_blank" rel="noopener" style="font-weight:600;font-size:13px">${escHtmlServer(o.vendor)}</a></td>
       <td style="padding:8px;border-bottom:1px solid var(--border);font-size:12px;color:var(--text-m)">${escHtmlServer(o.tier)}</td>
