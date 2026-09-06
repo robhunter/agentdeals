@@ -24,7 +24,7 @@ export const RETIRED_TIER_NOTE = "an offer the vendor has ended";
 
 export const NOT_FREE_TIER_RULES: { pattern: RegExp; note: string }[] = [
   { pattern: /^paid$/i, note: "no free offer at all" },
-  { pattern: /^freemium$/i, note: "paid product with a trial-shaped entry point, not a stated free tier" },
+  { pattern: /^freemium$/i, note: "a paid product with a trial-shaped entry point, not a stated free tier" },
   { pattern: /^pay[-\s]?as[-\s]?you[-\s]?go$/i, note: "usage-billed from the first request" },
   { pattern: /^pay[-\s]?per[-\s]?use\b/i, note: "usage-billed from the first request" },
   { pattern: /^legacy free$/i, note: "a free tier closed to new accounts" },
