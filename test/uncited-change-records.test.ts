@@ -9,6 +9,7 @@ import {
   citedChanges,
   uncitedChanges,
 } from "../dist/change-citation.js";
+import { uncitedChangesAgainstBudget } from "../dist/change-reporting.js";
 import {
   classifyStability,
   demotionForChange,
@@ -185,10 +186,11 @@ describe("the shipped catalogue", () => {
 
   it("holds no more records citing no source than the budget allows", () => {
     const budget = qualityBudget("uncited_change_records");
-    const measured = uncitedChanges(changes).length;
+    const measured = uncitedChangesAgainstBudget(changes).length;
     assert.ok(
       measured <= budget,
-      `${measured} change records cite no source, over the budget of ${budget} in data/quality_budgets.json`,
+      `${measured} change records report a vendor's offer and cite no source, `
+      + `over the budget of ${budget} in data/quality_budgets.json`,
     );
   });
 
@@ -220,7 +222,7 @@ describe("the shipped catalogue", () => {
 
   it("is listed for triage by scripts/uncited-changes.js, one row per record", () => {
     const rows = uncitedReport(changes, loadOffers());
-    assert.strictEqual(rows.length, uncitedChanges(changes).length);
+    assert.strictEqual(rows.length, uncitedChangesAgainstBudget(changes).length);
     for (const row of rows) {
       const source = changes.find(c => c.vendor === row.vendor && c.date === row.date && c.summary === row.summary);
       assert.ok(source && changeIsUncited(source), `${row.vendor} ${row.date} is not an uncited record`);

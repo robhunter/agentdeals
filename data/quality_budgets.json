@@ -3,7 +3,7 @@
   "budgets": {
     "stale_fact_pages": 57,
     "unsourced_tier_a": 41,
-    "uncited_change_records": 95,
+    "uncited_change_records": 98,
     "source_checks_ok_without_quoted_evidence": 614,
     "faq_answers": 166,
     "faq_answers_stating_a_figure": 77,
@@ -11,5 +11,8 @@
     "records_with_superseded_terms": 175,
     "vendor_pages_withholding_superseded_terms": 174,
     "ungated_pages_withholding_superseded_terms": 165
+  },
+  "raised_because": {
+    "uncited_change_records": "95 to 98 on 2026-09-06. stathat.com, searchly.com and Prospect.io each cited the page their own summary reports as unreadable, and dropping that citation is the honest fix rather than repointing it at a page that would pass a liveness check. The 35 records that report our own index lost a citation in the same change and are outside this count rather than spending slots in it."
   }
 }

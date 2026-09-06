@@ -6,7 +6,7 @@ import {
   qualityBudgetsPath, readQualityBudgets, serializeQualityBudgets, staleFactPages, unsourcedTierAPaths,
 } from "../dist/page-reviews.js";
 import { toSlug } from "../dist/vendor-slug.js";
-import { uncitedChanges } from "../dist/change-citation.js";
+import { uncitedChangesAgainstBudget } from "../dist/change-reporting.js";
 import { passedWithoutQuotingThePage } from "../dist/source-check.js";
 import { supersededCensus } from "../dist/superseded-census.js";
 
@@ -69,7 +69,7 @@ export function measureBudgets(date) {
   return {
     stale_fact_pages: stale.length,
     unsourced_tier_a: unsourcedTierAPaths(index.pages).length,
-    uncited_change_records: uncitedChanges(changes).length,
+    uncited_change_records: uncitedChangesAgainstBudget(changes).length,
     source_checks_ok_without_quoted_evidence: offers.filter(passedWithoutQuotingThePage).length,
     ...supersededCensus(offers, changes, date),
   };
@@ -134,7 +134,10 @@ function main() {
 
   const moved = [...lowered, ...raised];
   if (moved.length > 0 && opts.lower) {
-    writeFileSync(qualityBudgetsPath(), serializeQualityBudgets({ version: file.version, budgets: next }));
+    writeFileSync(
+      qualityBudgetsPath(),
+      serializeQualityBudgets({ version: file.version, budgets: next, raised_because: file.raised_because }),
+    );
     for (const l of lowered) console.log(`Lowered ${l.name} ${l.from} → ${l.to} in ${qualityBudgetsPath()}`);
     for (const r of raised) {
       console.log(

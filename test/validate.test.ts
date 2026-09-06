@@ -1,8 +1,13 @@
 import { describe, it } from "node:test";
 import assert from "node:assert";
+import { readFileSync, readdirSync } from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 const { validateOffers, validateDealChanges } = await import(
   "../scripts/validate-data.ts"
 );
+
+const REPO = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
 
 function makeOffer(overrides: Record<string, unknown> = {}) {
   return {
@@ -29,6 +34,7 @@ function makeChange(overrides: Record<string, unknown> = {}) {
     source_url: "https://example.com/blog",
     category: "Databases",
     alternatives: ["AltVendor"],
+    date_source: "vendor_page",
     ...overrides,
   };
 }
@@ -104,5 +110,66 @@ describe("validate-data", () => {
     assert.ok(
       errors.some((e: { field: string }) => e.field === "summary")
     );
+  });
+
+  it("refuses a record that cites the very page its summary says cannot be read", () => {
+    const errors = validateDealChanges([
+      makeChange({
+        summary: "Removed: source page no longer accessible or deal program discontinued",
+        source_url: "https://example.com/roundup",
+      }),
+    ]);
+    assert.ok(errors.some((e: { message: string }) => e.message.includes("reports as unreadable")));
+  });
+
+  it("accepts the same summary once the record stops offering that page as evidence", () => {
+    const errors = validateDealChanges([
+      makeChange({
+        summary: "Removed: source page no longer accessible or deal program discontinued",
+        source_url: "",
+        reports: "our_index",
+      }),
+    ]);
+    assert.deepStrictEqual(errors, []);
+  });
+
+  it("refuses a record that reports our own index and still cites a vendor page", () => {
+    const errors = validateDealChanges([makeChange({ reports: "our_index" })]);
+    assert.ok(errors.some((e: { message: string }) => e.message.includes("reports our own index")));
+  });
+
+  it("refuses a value for what a record reports that nothing reads", () => {
+    const errors = validateDealChanges([makeChange({ reports: "housekeeping" })]);
+    assert.ok(errors.some((e: { field: string }) => e.field === "reports"));
+  });
+});
+
+describe("a script a test imports", () => {
+  const scriptsUnderTest = (): string[] => {
+    const wanted = new Set<string>();
+    for (const file of readdirSync(path.join(REPO, "test")).filter(f => f.endsWith(".test.ts"))) {
+      const source = readFileSync(path.join(REPO, "test", file), "utf-8");
+      for (const m of source.matchAll(/"\.\.\/(scripts\/[A-Za-z0-9._-]+)"/g)) wanted.add(m[1]);
+    }
+    return [...wanted].sort();
+  };
+
+  it("does its work behind an entry-point check, so importing it cannot end the test run", () => {
+    const running: string[] = [];
+    for (const script of scriptsUnderTest()) {
+      const source = readFileSync(path.join(REPO, script), "utf-8");
+      if (/^main\(\);?\s*$/m.test(source)) running.push(script);
+    }
+    assert.deepStrictEqual(
+      running,
+      [],
+      "a script runs its command as soon as it is imported, and its exit ends the test file before any assertion",
+    );
+  });
+
+  it("is a population, so the check above is not passing on an empty list", () => {
+    const scripts = scriptsUnderTest();
+    assert.ok(scripts.length > 10, `only ${scripts.length} scripts are imported by a test`);
+    assert.ok(scripts.includes("scripts/validate-data.ts"));
   });
 });

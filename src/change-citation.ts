@@ -2,6 +2,10 @@ export interface CitableChange {
   source_url?: string | null;
 }
 
+export interface SummarisedChange extends CitableChange {
+  summary?: string | null;
+}
+
 export function changeCitesASource(change: CitableChange): boolean {
   return typeof change.source_url === "string" && change.source_url.trim() !== "";
 }
@@ -64,4 +68,62 @@ export function ratingWithheldForNoSourceSentence(vendor: string): string {
 
 export function ratingWithheldForNoSourceClause(): string {
   return "the only record that would rate it cites no source";
+}
+
+const DOCUMENT_NOUN =
+  "(?:home\\s?page|web\\s?site|source\\s+page|pricing\\s+page|deal\\s+page|landing\\s+page|blog\\s+post"
+  + "|page|site|domain|url|link|blog)";
+
+const STILL_THE_SAME_SUBJECT =
+  "(?:\\s+(?:is|are|was|were|now|currently|itself|also)|\\s+appears?(?:\\s+to\\s+be)?|\\s+seems?(?:\\s+to\\s+be)?)*";
+
+const CANNOT_BE_READ =
+  "(?:\\s+no\\s+longer\\s+(?:accessible|available|resolves|resolving|reachable|loads|exists|online|live)"
+  + "|\\s+not\\s+(?:accessible|reachable|available|resolving)"
+  + "|\\s+(?:inaccessible|unreachable|dead|gone|down|offline|missing)\\b"
+  + "|\\s+does\\s+not\\s+resolve|\\s+fails\\s+to\\s+resolve|\\s+stopped\\s+resolving"
+  + "|\\s+returns?\\s+(?:HTTP\\s+)?[45]\\d\\d"
+  + "|\\s+[45]\\d\\d(?:s\\b|\\s+errors?\\b|\\b))";
+
+const UNREADABLE_DOCUMENT = new RegExp(DOCUMENT_NOUN + STILL_THE_SAME_SUBJECT + CANNOT_BE_READ, "gi");
+
+const A_DIFFERENT_DOCUMENT = /(?:old|previous|former|legacy|archived|original)\s+$/i;
+
+const HOST_IN_PROSE = /\b(?:[a-z0-9][a-z0-9-]*\.)+[a-z]{2,}\b/gi;
+
+const SENTENCE_BREAK = /(?<=[.!?])\s+/;
+
+function bareHost(host: string): string {
+  return host.replace(/^www\./i, "").toLowerCase();
+}
+
+function citedHost(change: CitableChange): string | null {
+  if (!changeCitesASource(change)) return null;
+  try {
+    return bareHost(new URL(change.source_url!.trim()).hostname);
+  } catch {
+    return null;
+  }
+}
+
+export function summaryCallsItsSourceUnreadable(change: SummarisedChange): string | null {
+  const host = citedHost(change);
+  if (host === null) return null;
+  for (const sentence of (change.summary ?? "").split(SENTENCE_BREAK)) {
+    const hosts = (sentence.match(HOST_IN_PROSE) ?? []).map(bareHost);
+    if (hosts.length > 0 && !hosts.includes(host)) continue;
+    for (const claim of sentence.matchAll(UNREADABLE_DOCUMENT)) {
+      if (A_DIFFERENT_DOCUMENT.test(sentence.slice(Math.max(0, claim.index - 12), claim.index))) continue;
+      return claim[0].trim();
+    }
+  }
+  return null;
+}
+
+export function citesAPageItCallsUnreadable(change: SummarisedChange): boolean {
+  return summaryCallsItsSourceUnreadable(change) !== null;
+}
+
+export function changesCitingAPageTheyCallUnreadable<T extends SummarisedChange>(changes: readonly T[]): T[] {
+  return changes.filter(citesAPageItCallsUnreadable);
 }
