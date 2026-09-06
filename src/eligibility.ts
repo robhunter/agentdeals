@@ -22,14 +22,21 @@ function eligibilityAccountsForEveryOffer(codes: GateCode[], total: number): boo
   return codes.length >= total && codes.every((code) => code === "eligibility_restricted");
 }
 
-export function gatedShareLede(total: number, gates: (Gate | null)[]): string {
+export function endedFreeTierClause(ended: number): string {
+  if (ended <= 0) return "";
+  if (ended === 1) return " We also track one whose free tier has ended.";
+  return ` We also track ${ended} whose free tiers have ended.`;
+}
+
+export function gatedShareLede(total: number, gates: (Gate | null)[], ended = 0): string {
   const counted = `${total} verified free tiers and developer deals`;
   const codes = gatedCodes(gates);
-  if (codes.length === 0) return `${counted}.`;
+  const alsoEnded = endedFreeTierClause(ended);
+  if (codes.length === 0) return `${counted}.${alsoEnded}`;
   if (eligibilityAccountsForEveryOffer(codes, total)) {
-    return `${counted}, none of them generally available — each requires an application or qualification.`;
+    return `${counted}, none of them generally available — each requires an application or qualification.${alsoEnded}`;
   }
-  return `${counted}. ${gateDisclosureSentence("them", total, codes)}`;
+  return `${counted}. ${gateDisclosureSentence("them", total, codes)}${alsoEnded}`;
 }
 
 export function gatedShareDescriptionClause(total: number, gates: (Gate | null)[]): string {

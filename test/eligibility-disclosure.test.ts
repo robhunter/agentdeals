@@ -5,6 +5,8 @@ import { readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
+import { fetchBadgeVerdicts, type SiteFreeTierVerdict } from "./badge-verdicts.ts";
+
 const { eligibilityGate, eligibilityGateAsPublished, publishableEligibilityConditions, CONDITION_RECORDING_AN_UNREAD_PROGRAM } =
   await import("../dist/eligibility.js");
 const { gateFor, notAFreeOfferGateFor, utcDate } = await import("../dist/ranking.js");
@@ -98,8 +100,11 @@ type RenderedPage = { vendor: string; slug: string; html: string; offer: Offer }
 
 let rendered: RenderedPage[] = [];
 
+let verdicts = new Map<string, SiteFreeTierVerdict>();
+
 before(async () => {
   proc = await startServer();
+  verdicts = await fetchBadgeVerdicts(port);
   for (const vendor of vendorsHoldingAGatedRecord) {
     const slug = slugOf(vendor);
     const html = await page(`/vendor/${slug}`);
@@ -235,11 +240,13 @@ describe("the category page a gated offer is sent to states the restriction", ()
 describe("a category page does not count a gated offer as a plain free tier", () => {
   const categoryNames = [...new Set(offers.map(o => o.category))].sort();
   const censusOf = (category: string) => {
-    const inCategory = offers.filter(o => o.category === category);
+    const held = offers.filter(o => o.category === category);
+    const inCategory = held.filter(o => verdicts.get(slugOf(o.vendor)) !== "ended");
     return {
       total: inCategory.length,
       restricted: inCategory.filter(publishesARestriction).length,
       gated: inCategory.filter(o => gateFor(o, utcDate())).length,
+      ended: held.length - inCategory.length,
     };
   };
   const ledeOf = (html: string) => html.match(/<p class="cat-meta">([\s\S]*?)<\/p>/)?.[1] ?? "";
@@ -301,7 +308,8 @@ describe("a category page does not count a gated offer as a plain free tier", ()
       const { total, restricted, gated } = censusOf(category);
       const html = await page(`/category/${slugOf(category)}`);
       const lede = ledeOf(html);
-      assert.strictEqual(restrictedRows(html), restricted, `/category/${slugOf(category)} restricted rows`);
+      const rowsCarryingARestriction = offers.filter(o => o.category === category).filter(publishesARestriction).length;
+      assert.strictEqual(restrictedRows(html), rowsCarryingARestriction, `/category/${slugOf(category)} restricted rows`);
       if (gated > 1 && gated < total) {
         assert.ok(lede.includes(`${gated} of them`), `/category/${slugOf(category)} lede is ${lede}`);
       }
