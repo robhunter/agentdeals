@@ -5,8 +5,11 @@ import { readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
+import { fetchBadgeVerdicts, type SiteFreeTierVerdict } from "./badge-verdicts.ts";
+
 const { gateFor, utcDate } = await import("../dist/ranking.js");
 const { gatedShareLede } = await import("../dist/eligibility.js");
+const { toSlug } = await import("../dist/vendor-slug.js");
 
 type Offer = import("../src/types.ts").Offer;
 type Gate = { code: string; reason: string } | null;
@@ -47,16 +50,23 @@ function eligibilityAccountsForAll(c: { codes: string[]; total: number }): boole
   return c.codes.length >= c.total && c.codes.every((code) => code === "eligibility_restricted");
 }
 
-function expectedLede(total: number, codes: string[]): string {
+function endedClause(ended: number): string {
+  if (ended <= 0) return "";
+  if (ended === 1) return " We also track one whose free tier has ended.";
+  return ` We also track ${ended} whose free tiers have ended.`;
+}
+
+function expectedLede(total: number, codes: string[], ended = 0): string {
   const counted = `${total} verified free tiers and developer deals`;
-  if (codes.length === 0) return `${counted}.`;
+  const alsoEnded = endedClause(ended);
+  if (codes.length === 0) return `${counted}.${alsoEnded}`;
   if (eligibilityAccountsForAll({ codes, total })) {
-    return `${counted}, ${ALL_GATED_ELIGIBILITY_LEDE}`;
+    return `${counted}, ${ALL_GATED_ELIGIBILITY_LEDE}${alsoEnded}`;
   }
   const clauses = clausesFor(codes);
-  if (codes.length >= total && total > 1) return `${counted}. None of them are on our ranked list — ${clauses}.`;
-  if (codes.length === 1) return `${counted}. One of them is not on our ranked list — ${clauses}.`;
-  return `${counted}. ${codes.length} of them are not on our ranked list — ${clauses}.`;
+  if (codes.length >= total && total > 1) return `${counted}. None of them are on our ranked list — ${clauses}.${alsoEnded}`;
+  if (codes.length === 1) return `${counted}. One of them is not on our ranked list — ${clauses}.${alsoEnded}`;
+  return `${counted}. ${codes.length} of them are not on our ranked list — ${clauses}.${alsoEnded}`;
 }
 
 function slugOf(name: string): string {
@@ -71,21 +81,30 @@ interface CategoryCensus {
   codes: string[];
   total: number;
   gated: number;
+  ended: number;
 }
 
-const census: CategoryCensus[] = [...new Set(offers.map((o) => o.category))].sort().map((name) => {
-  const records = offers.filter((o) => o.category === name);
-  const gates: Gate[] = records.map((o) => gateFor(o, TODAY));
-  return {
-    name,
-    slug: slugOf(name),
-    records,
-    gates,
-    codes: gates.filter((g): g is NonNullable<Gate> => g !== null).map((g) => g.code),
-    total: records.length,
-    gated: gates.filter((g) => g !== null).length,
-  };
-});
+const categoryNames = [...new Set(offers.map((o) => o.category))].sort();
+
+let census: CategoryCensus[] = [];
+
+function buildCensus(verdicts: Map<string, SiteFreeTierVerdict>): CategoryCensus[] {
+  return categoryNames.map((name) => {
+    const held = offers.filter((o) => o.category === name);
+    const records = held.filter((o) => verdicts.get(toSlug(o.vendor)) !== "ended");
+    const gates: Gate[] = records.map((o) => gateFor(o, TODAY));
+    return {
+      name,
+      slug: slugOf(name),
+      records,
+      gates,
+      codes: gates.filter((g): g is NonNullable<Gate> => g !== null).map((g) => g.code),
+      total: records.length,
+      gated: gates.filter((g) => g !== null).length,
+      ended: held.length - records.length,
+    };
+  });
+}
 
 let port = 0;
 let proc: ChildProcess | null = null;
@@ -154,9 +173,14 @@ function disclosedCountIn(lede: string, total: number): number | null {
   return named ? parseInt(named[1].replace(/,/g, ""), 10) : null;
 }
 
+before(async () => {
+  proc = await startServer();
+  census = buildCensus(await fetchBadgeVerdicts(port));
+});
+
+after(() => { proc?.kill(); });
+
 describe("a category page discloses every gated record, not eligibility alone", () => {
-  before(async () => { proc = await startServer(); });
-  after(() => { proc?.kill(); });
 
   it("holds the four populations the sentence forms are written for", () => {
     assert.ok(census.some((c) => c.gated === 0), "no category is free of gated records");
@@ -176,7 +200,7 @@ describe("a category page discloses every gated record, not eligibility alone", 
   it("states the sentence its own records compose", async () => {
     for (const c of census) {
       const lede = ledeOf(await page(`/category/${c.slug}`));
-      const expected = expectedLede(c.total, c.codes);
+      const expected = expectedLede(c.total, c.codes, c.ended);
       assert.ok(
         lede.startsWith(expected),
         `/category/${c.slug} (${c.gated} of ${c.total})\n  reads: ${lede}\n  should: ${expected}`,
@@ -286,8 +310,6 @@ describe("a category page discloses every gated record, not eligibility alone", 
 });
 
 describe("the record a category page puts forward is one the ranker lists", () => {
-  before(async () => { proc = proc ?? await startServer(); });
-  after(() => { proc?.kill(); });
 
   it("names no record the ranker gates", async () => {
     let named = 0;
@@ -366,10 +388,10 @@ describe("the record a category page puts forward is one the ranker lists", () =
 
 const GATE_CODES = ["eligibility_restricted", "not_a_free_offer", "offer_expired", "offer_retired", "verification_lapsed"];
 
-function population(total: number, codes: string[]): { total: number; codes: string[]; gates: Gate[] } {
+function population(total: number, codes: string[], ended = 0): { total: number; codes: string[]; gates: Gate[]; ended: number } {
   const gates: Gate[] = codes.map((code) => ({ code, reason: "" }));
   while (gates.length < total) gates.push(null as unknown as Gate);
-  return { total, codes, gates };
+  return { total, codes, gates, ended };
 }
 
 const FORMS = [
@@ -382,32 +404,44 @@ const FORMS = [
   { name: "all gated, no eligibility", ...population(3, ["not_a_free_offer", "offer_expired", "offer_retired"]) },
   { name: "the only record gated", ...population(1, ["offer_retired"]) },
   { name: "every code at once", ...population(9, [...GATE_CODES, ...GATE_CODES.slice(0, 4)]) },
+  { name: "one ended, nothing gated", ...population(12, [], 1) },
+  { name: "four ended, nothing gated", ...population(12, [], 4) },
+  { name: "ended alongside a gate", ...population(12, ["not_a_free_offer"], 3) },
+  { name: "ended alongside every record gated by eligibility", ...population(12, Array(12).fill("eligibility_restricted"), 2) },
+  { name: "ended alongside a mixed clause list", ...population(9, [...GATE_CODES], 5) },
 ];
 
 describe("the sentence forms hold whether or not a category exercises them today", () => {
   it("covers every form the composer can reach", () => {
-    const composed = FORMS.map((f) => gatedShareLede(f.total, f.gates));
-    for (const shape of ["none of them generally available", "None of them are on our ranked list", "One of them is not on our ranked list", "of them are not on our ranked list"]) {
+    const composed = FORMS.map((f) => gatedShareLede(f.total, f.gates, f.ended));
+    for (const shape of ["none of them generally available", "None of them are on our ranked list", "One of them is not on our ranked list", "of them are not on our ranked list", "We also track one whose free tier has ended.", "whose free tiers have ended."]) {
       assert.ok(composed.some((lede) => lede.includes(shape)), `no population above composes "${shape}"`);
     }
     for (const code of GATE_CODES) {
       assert.ok(FORMS.some((f) => f.codes.includes(code)), `no population above holds a ${code} record`);
     }
+    assert.ok(FORMS.some((f) => f.ended === 0), "no population above is free of ended records");
+    assert.ok(FORMS.some((f) => f.ended === 1), "no population above holds exactly one ended record");
+    assert.ok(FORMS.some((f) => f.ended > 1), "no population above holds more than one ended record");
+    assert.ok(
+      composed.filter((lede) => lede.includes("free tier")).length > FORMS.filter((f) => f.ended > 0).length,
+      "the ended clause is the only place the composer names a free tier",
+    );
   });
 
   it("composes the sentence this test asserts on the page", () => {
     for (const form of FORMS) {
       assert.strictEqual(
-        gatedShareLede(form.total, form.gates),
-        expectedLede(form.total, form.codes),
-        `${form.name} (${form.codes.length} of ${form.total})`,
+        gatedShareLede(form.total, form.gates, form.ended),
+        expectedLede(form.total, form.codes, form.ended),
+        `${form.name} (${form.codes.length} of ${form.total}, ${form.ended} ended)`,
       );
     }
   });
 
   it("reads its own count back out of every one of them", () => {
     for (const form of FORMS) {
-      const lede = gatedShareLede(form.total, form.gates);
+      const lede = gatedShareLede(form.total, form.gates, form.ended);
       assert.strictEqual(
         disclosedCountIn(lede, form.total),
         form.codes.length === 0 ? null : form.codes.length,

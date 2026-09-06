@@ -26,7 +26,8 @@ import { NO_CURRENT_FIGURE, costHeadlineCaveat, limitCellText, mayRecommendAsFre
 import { changesByVendor } from "./superseded-census.js";
 import { buildComparisonMap, comparisonSlug } from "./comparison-pairs.js";
 import { comparisonVerdictText, freeTierFaqAnswer, stabilityFaqAnswer, type ComparisonSide, type FreeTierSide, type SideFreeTier, type StabilityRating } from "./comparison-verdict.js";
-import { publishedVendorLevel, vendorVerdictSentence, vendorBadge, freeTierClaim, statesRiskCause, narrowingSentence, changeKindNoun, type BadgeWithholding, type VendorVerdictInput } from "./vendor-verdict.js";
+import { publishedVendorLevel, vendorVerdictSentence, vendorBadge, freeTierClaim, statesRiskCause, narrowingSentence, changeKindNoun, type BadgeWithholding, type FreeTierClaim, type VendorVerdictInput } from "./vendor-verdict.js";
+import { tierRecordsAFreeTier } from "./free-tier-record.js";
 import { vendorHistorySentence } from "./vendor-history.js";
 import { HETZNER_APRIL_CHANGES, HETZNER_CLOUD_PLANS, HETZNER_PRICES_READ, HETZNER_PRICE_SOURCE, HETZNER_SINGAPORE_EXAMPLE, cheapestOrderableHetznerPlan, hetznerEntryPriceClause, unorderableHetznerPlans } from "./hetzner-pricing.js";
 import { changeTimelineDate, supersededLineups, supersessionNote } from "./change-lineup.js";
@@ -846,7 +847,17 @@ interface VendorVerdictContext {
   input: VendorVerdictInput;
 }
 
+const verdictContexts = new Map<string, { on: string; context: VendorVerdictContext | null }>();
+
 function vendorVerdictContext(vendorName: string, servedOn: string): VendorVerdictContext | null {
+  const cached = verdictContexts.get(vendorName);
+  if (cached && cached.on === servedOn) return cached.context;
+  const context = buildVendorVerdictContext(vendorName, servedOn);
+  verdictContexts.set(vendorName, { on: servedOn, context });
+  return context;
+}
+
+function buildVendorVerdictContext(vendorName: string, servedOn: string): VendorVerdictContext | null {
   const vendorOffers = offers.filter(o => o.vendor === vendorName);
   if (vendorOffers.length === 0) return null;
 
@@ -879,6 +890,43 @@ function vendorVerdictContext(vendorName: string, servedOn: string): VendorVerdi
       linkUnreachable: Boolean(linkUnreachable),
     },
   };
+}
+
+function freeTierClaimFor(vendorName: string, servedOn: string): FreeTierClaim | null {
+  const context = vendorVerdictContext(vendorName, servedOn);
+  return context ? freeTierClaim(context.input) : null;
+}
+
+interface FreeTierCensus {
+  total: number;
+  recorded: number;
+  vouched: number;
+  ended: number;
+  unconfirmed: number;
+}
+
+function freeTierCensus(population: readonly Offer[], servedOn: string): FreeTierCensus {
+  const census: FreeTierCensus = { total: population.length, recorded: 0, vouched: 0, ended: 0, unconfirmed: 0 };
+  for (const offer of population) {
+    const claim = freeTierClaimFor(offer.vendor, servedOn);
+    if (claim?.states === "ended") {
+      census.ended++;
+      continue;
+    }
+    if (!tierRecordsAFreeTier(offer.tier)) continue;
+    census.recorded++;
+    if (claim?.states === "offered") census.vouched++;
+    else census.unconfirmed++;
+  }
+  return census;
+}
+
+function sharePct(part: number, whole: number): number {
+  return whole === 0 ? 0 : Math.round((part / whole) * 100);
+}
+
+function endedFreeTiersIn(population: readonly Offer[], servedOn: string): Offer[] {
+  return population.filter(o => freeTierClaimFor(o.vendor, servedOn)?.states === "ended");
 }
 
 function unconfirmedFreeTierSentence(vendor: string, because: BadgeWithholding, context: VendorVerdictContext): string {
@@ -1500,10 +1548,13 @@ function buildCategoryPage(slug: string): string | null {
   const catOffers = offers.filter((o) => o.category === categoryName);
   const catCount = catOffers.length;
   const catServedOn = utcDate();
-  const catGates = catOffers.map((o) => gateFor(o, catServedOn));
-  const catGatedClause = gatedShareDescriptionClause(catCount, catGates);
+  const catEnded = endedFreeTiersIn(catOffers, catServedOn);
+  const catStanding = catOffers.filter((o) => !catEnded.includes(o));
+  const catStandingCount = catStanding.length;
+  const catGates = catStanding.map((o) => gateFor(o, catServedOn));
+  const catGatedClause = gatedShareDescriptionClause(catStandingCount, catGates);
   const title = `Free ${categoryName} Tools & Deals (${catCount} offers) — AgentDeals`;
-  const metaDesc = `Compare ${catCount} free ${categoryName.toLowerCase()} tools, free tiers, and developer deals.${catGatedClause ? ` ${catGatedClause}` : ""} Verified pricing for ${catOffers.slice(0, 5).map(o => o.vendor).join(", ")}${catCount > 5 ? " and more" : ""}.`;
+  const metaDesc = `Compare ${catStandingCount} free ${categoryName.toLowerCase()} tools, free tiers, and developer deals.${catGatedClause ? ` ${catGatedClause}` : ""} Verified pricing for ${catStanding.slice(0, 5).map(o => o.vendor).join(", ")}${catStandingCount > 5 ? " and more" : ""}.`;
 
   const offersHtml = catOffers.map((o) => `        <tr>
           <td style="font-weight:600;color:var(--text);white-space:nowrap"><a href="/vendor/${toSlug(o.vendor)}" style="color:var(--text)">${escHtmlServer(o.vendor)}</a></td>
@@ -1542,12 +1593,12 @@ function buildCategoryPage(slug: string): string | null {
     ? `This category has been relatively stable &mdash; only ${catChangeCount} pricing changes recorded across all vendors.`
     : `This category has seen some movement &mdash; ${catChangeCount} pricing changes recorded across vendors.`;
 
-  const topVendor = catOffers.find((o, i) => catGates[i] === null && !supersedingChangeFor(o));
+  const topVendor = catStanding.find((o, i) => catGates[i] === null && !supersedingChangeFor(o));
   const keyLimitMatch = topVendor?.description.match(/(\d[\d,]*\s*(?:GB|GiB|MB|TB|requests?|calls?|MAU|users?|emails?|messages?|builds?|minutes?|hours?|projects?|repos?|sites?|apps?|databases?|invocations?|events?))/i);
   const keyLimit = keyLimitMatch ? keyLimitMatch[1] : "a generous free tier";
 
   const introHtml = `<div class="cat-intro">
-    <p>We track <strong>${catCount}</strong> ${categoryName.toLowerCase()} services with free tiers.${topVendor ? ` ${escHtmlServer(topVendor.vendor)} leads with ${escHtmlServer(keyLimit)}.` : ""} ${stabilitySummary}</p>
+    <p>We track <strong>${catStandingCount}</strong> ${categoryName.toLowerCase()} services with free tiers.${topVendor ? ` ${escHtmlServer(topVendor.vendor)} leads with ${escHtmlServer(keyLimit)}.` : ""} ${stabilitySummary}</p>
   </div>`;
 
   const analysisCta = catMapping?.comparison
@@ -1610,7 +1661,7 @@ function buildCategoryPage(slug: string): string | null {
     },
     {
       q: `How many free ${categoryName.toLowerCase()} tools are there?`,
-      a: `We track ${catCount} ${categoryName.toLowerCase()} services with free tiers on AgentDeals. These range from generous always-free tiers to limited trial periods. Each listing is verified with the actual pricing page.`,
+      a: `We track ${catStandingCount} ${categoryName.toLowerCase()} services with free tiers on AgentDeals. These range from generous always-free tiers to limited trial periods. Each listing is verified with the actual pricing page.`,
     },
     {
       q: `How stable are ${categoryName.toLowerCase()} free tiers?`,
@@ -1719,7 +1770,7 @@ ${mcpCtaCss()}
   ${buildGlobalNav("categories")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; ${escHtmlServer(categoryName)}</div>
   <h1>Free ${escHtmlServer(categoryName)} Tools</h1>
-  <p class="cat-meta">${gatedShareLede(catCount, catGates)}${dataVerifiedSegment(catOffers)}</p>
+  <p class="cat-meta">${gatedShareLede(catStandingCount, catGates, catEnded.length)}${dataVerifiedSegment(catOffers)}</p>
 
   ${introHtml}
   ${analysisCta}
@@ -45158,16 +45209,33 @@ ${mcpCtaCss()}
 </html>`;
 }
 
+const STRUCTURALLY_FREE_CARDS = [
+  {
+    heading: "Cloud Provider Loss Leaders",
+    blurb: "Free tiers subsidized by the larger platform &mdash; they exist to acquire users into the paid ecosystem.",
+    vendors: ["Cloudflare", "Vercel", "Netlify", "Railway", "AWS", "Google Cloud", "Azure"],
+  },
+  {
+    heading: "Developer-First Companies",
+    blurb: "Companies whose business model depends on developer adoption &mdash; the free tier IS the product.",
+    vendors: ["Supabase", "Neon", "Resend", "PostHog", "Sentry", "Grafana Cloud", "Upstash"],
+  },
+  {
+    heading: "Open Source Safety Net",
+    blurb: "Self-hostable alternatives that can&rsquo;t remove free tiers by definition. Always have an exit strategy.",
+    vendors: ["GitLab", "Gitea", "Plausible", "Umami", "n8n", "Meilisearch", "MinIO"],
+  },
+];
+
 function buildStateOfFreeTiersPage(): string {
   const title = "State of Developer Free Tiers (2026) — Data from " + offers.length.toLocaleString() + "+ Tools | AgentDeals";
   const metaDesc = `${dealChanges.length} pricing changes tracked across ${offers.length.toLocaleString()} developer tools. ${categories.length} categories analyzed. The authoritative data on developer free tier trends, erosion patterns, and which vendors are still expanding.`;
   const now = new Date().toISOString().split("T")[0];
 
-  const freeTierOffers = offers.filter(o => {
-    const t = o.tier.toLowerCase();
-    return t.includes("free") || t === "hobby" || t === "starter" || t === "personal" || t === "developer" || t === "community" || t === "open source";
-  });
-  const freePct = Math.round((freeTierOffers.length / offers.length) * 100);
+  const reportServedOn = utcDate();
+  const freeTiers = freeTierCensus(offers, reportServedOn);
+  const recordedPct = sharePct(freeTiers.recorded, freeTiers.total);
+  const vouchedPct = sharePct(freeTiers.vouched, freeTiers.total);
 
   const eligibilityOffers = offers.filter(o => o.eligibility);
   const startupOffers = offers.filter(o => o.tier.toLowerCase().includes("startup") || (o.eligibility && JSON.stringify(o.eligibility).toLowerCase().includes("startup")));
@@ -45207,30 +45275,45 @@ function buildStateOfFreeTiersPage(): string {
     .sort((a, b) => b[1].negative - a[1].negative)
     .slice(0, 15);
 
-  const catCounts = new Map<string, number>();
-  const catFreeCounts = new Map<string, number>();
-  for (const o of offers) {
-    catCounts.set(o.category, (catCounts.get(o.category) ?? 0) + 1);
-    const t = o.tier.toLowerCase();
-    if (t.includes("free") || t === "hobby" || t === "starter" || t === "personal" || t === "developer" || t === "community" || t === "open source") {
-      catFreeCounts.set(o.category, (catFreeCounts.get(o.category) ?? 0) + 1);
-    }
-  }
-  const sortedCats = [...catCounts.entries()].sort((a, b) => b[1] - a[1]);
-
   const negativeChanges = dealChanges.filter(c => negativeTypes.has(c.change_type)).sort((a, b) => b.date.localeCompare(a.date));
   const positiveChanges = dealChanges.filter(c => positiveTypes.has(c.change_type)).sort((a, b) => b.date.localeCompare(a.date));
 
-  const topFreeCategories = [...catFreeCounts.entries()]
-    .sort((a, b) => b[1] - a[1])
-    .slice(0, 12);
+  const categoryShares = categories.map(c => {
+    const census = freeTierCensus(offers.filter(o => o.category === c.name), reportServedOn);
+    return {
+      category: c.name,
+      census,
+      recordedPct: sharePct(census.recorded, census.total),
+      vouchedPct: sharePct(census.vouched, census.total),
+    };
+  }).sort((a, b) =>
+    b.vouchedPct - a.vouchedPct
+    || b.census.vouched - a.census.vouched
+    || b.census.total - a.census.total
+  );
 
-  const catFreePercentage = sortedCats.map(([cat, total]) => ({
-    category: cat,
-    total,
-    free: catFreeCounts.get(cat) ?? 0,
-    pct: Math.round(((catFreeCounts.get(cat) ?? 0) / total) * 100),
-  })).sort((a, b) => b.pct - a.pct);
+  const rankableShares = categoryShares.filter(c => c.census.total >= 8);
+  const widestGap = rankableShares
+    .slice()
+    .sort((a, b) => (b.recordedPct - b.vouchedPct) - (a.recordedPct - a.vouchedPct) || b.census.total - a.census.total)[0]
+    ?? categoryShares[0];
+
+  const countOnDropped: string[] = [];
+  const countOnCards = STRUCTURALLY_FREE_CARDS.map(card => ({
+    heading: card.heading,
+    blurb: card.blurb,
+    vendors: card.vendors.flatMap(name => {
+      const resolution = resolveVendorSlug(toSlug(name));
+      const slug = resolution.type === "exact" || resolution.type === "redirect" ? resolution.slug : null;
+      const canonical = slug ? vendorSlugMap.get(slug) : undefined;
+      if (!slug || !canonical) return [];
+      if (freeTierClaimFor(canonical, reportServedOn)?.states === "ended") {
+        countOnDropped.push(canonical);
+        return [];
+      }
+      return [{ slug, name: canonical }];
+    }),
+  }));
 
   const changeTypeBadgeMap: Record<string, { label: string; color: string }> = {
     free_tier_removed: { label: "Removed", color: "#f85149" },
@@ -45272,13 +45355,15 @@ function buildStateOfFreeTiersPage(): string {
     </div>`;
   }).join("\n");
 
-  const categoryTableRows = catFreePercentage.slice(0, 20).map(c => {
-    const barWidth = Math.max(c.pct, 2);
+  const categoryTableRows = categoryShares.slice(0, 20).map(c => {
+    const barWidth = Math.max(c.vouchedPct, 2);
     return `<tr>
       <td><a href="/category/${toSlug(c.category)}">${escHtmlServer(c.category)}</a></td>
-      <td style="text-align:right">${c.total}</td>
-      <td style="text-align:right">${c.free}</td>
-      <td style="text-align:right">${c.pct}%</td>
+      <td style="text-align:right">${c.census.total}</td>
+      <td style="text-align:right">${c.census.recorded}</td>
+      <td style="text-align:right">${c.recordedPct}%</td>
+      <td style="text-align:right;color:var(--text)">${c.census.vouched}</td>
+      <td style="text-align:right;color:var(--text);font-weight:600">${c.vouchedPct}%</td>
       <td style="width:120px"><div style="background:var(--accent-glow);border-radius:4px;height:16px;width:100%"><div style="background:var(--accent);border-radius:4px;height:100%;width:${barWidth}%"></div></div></td>
     </tr>`;
   }).join("\n");
@@ -45374,7 +45459,9 @@ ${globalNavCss()}
   <h2>Executive Summary</h2>
   <p class="section-desc">We analyzed ${offers.length.toLocaleString()} developer tool offerings across ${categories.length} categories, tracking ${dealChanges.length} pricing changes over 2024&ndash;2026. Here&rsquo;s what the data shows:</p>
   <ul class="key-takeaways">
-    <li><strong>${freePct}% of tracked services offer free tiers</strong> &mdash; the developer-friendly ecosystem remains strong, but the trend is tightening.</li>
+    <li><strong>${vouchedPct}% of tracked services offer a free tier we can vouch for today</strong> &mdash; we hold a free-tier record for ${recordedPct}% of them, and can confirm ${freeTiers.vouched.toLocaleString()} of those ${freeTiers.recorded.toLocaleString()} against a source we have read.</li>
+    <li><strong>${freeTiers.unconfirmed.toLocaleString()} recorded free tiers we cannot confirm today</strong> &mdash; the record stands, but the page we hold for it states no terms, cannot be read, or does not name the vendor. Unconfirmed is not the same as gone.</li>
+    <li><strong>${freeTiers.ended} free tiers we have recorded as ended</strong> &mdash; excluded from every count above, and from every category total on this site.</li>
     <li><strong>${negativeChanges.length} negative pricing changes vs ${positiveChanges.length} positive</strong> &mdash; free tier removals and restrictions outpace expansions ${Math.round(negativeChanges.length / Math.max(positiveChanges.length, 1))}:1.</li>
     <li><strong>${changeTypeCounts.get("free_tier_removed") ?? 0} free tiers completely removed</strong> &mdash; Heroku, PlanetScale, SendGrid, Brave Search API, X API, and more. Once removed, none have returned.</li>
     <li><strong>Egress and overage are the real costs</strong> &mdash; storage at $0.023/GB vs egress at $0.09/GB. Cloudflare R2&rsquo;s zero-egress model is 60x cheaper than S3 at scale.</li>
@@ -45385,13 +45472,15 @@ ${globalNavCss()}
   <div class="stat-grid">
     <div class="stat-card"><span class="stat-number">${offers.length.toLocaleString()}</span><span class="stat-label">Offers Tracked</span></div>
     <div class="stat-card"><span class="stat-number">${categories.length}</span><span class="stat-label">Categories</span></div>
-    <div class="stat-card"><span class="stat-number">${freeTierOffers.length.toLocaleString()}</span><span class="stat-label">Free Tier Offers</span></div>
-    <div class="stat-card"><span class="stat-number">${freePct}%</span><span class="stat-label">Free Tier Rate</span></div>
+    <div class="stat-card"><span class="stat-number">${freeTiers.recorded.toLocaleString()}</span><span class="stat-label">Free Tiers Recorded &mdash; ${recordedPct}%</span></div>
+    <div class="stat-card"><span class="stat-number">${freeTiers.vouched.toLocaleString()}</span><span class="stat-label">Vouched Today &mdash; ${vouchedPct}%</span></div>
+    <div class="stat-card"><span class="stat-number">${freeTiers.unconfirmed.toLocaleString()}</span><span class="stat-label">Recorded, Unconfirmed</span></div>
+    <div class="stat-card"><span class="stat-number">${freeTiers.ended}</span><span class="stat-label">Recorded as Ended</span></div>
     <div class="stat-card"><span class="stat-number">${dealChanges.length}</span><span class="stat-label">Pricing Changes</span></div>
     <div class="stat-card"><span class="stat-number">${eligibilityOffers.length}</span><span class="stat-label">With Eligibility Rules</span></div>
   </div>
   <div class="callout">
-    <strong>How to read this data:</strong> We track publicly available developer tool free tiers, startup programs, and OSS eligibility across ${categories.length} categories. Every offer is manually verified against pricing pages. &ldquo;Free tier&rdquo; includes perpetual free plans, generous hobby tiers, and always-free offerings &mdash; not limited trials.
+    <strong>How to read this data:</strong> We track publicly available developer tool free tiers, startup programs, and OSS eligibility across ${categories.length} categories. &ldquo;Free tier&rdquo; includes perpetual free plans, generous hobby tiers, and always-free offerings &mdash; not limited trials. Three separate numbers follow from that: <strong>recorded</strong> is what the offer we hold says, <strong>vouched</strong> is what we can still confirm against a source we have read, and <strong>ended</strong> is a free tier our own change log says is gone. ${freeTiers.recorded.toLocaleString()} recorded, ${freeTiers.vouched.toLocaleString()} vouched, ${freeTiers.ended} ended &mdash; and the ${freeTiers.ended} are counted in no free-tier total on this site. Each figure is the answer the vendor&rsquo;s own page and status badge give, not a separate reading taken here.
   </div>
 
   <h2>Monthly Pricing Change Trend</h2>
@@ -45475,23 +45564,13 @@ ${globalNavCss()}
   </div>
 
   <h2>Still Free: Vendors You Can Count On</h2>
-  <p class="section-desc">Not everything is eroding. These vendors have strong structural commitment to free tiers &mdash; through open-source foundations, developer-first business models, or cloud provider loss-leader strategies. They represent the safe bets for long-term architecture decisions.</p>
+  <p class="section-desc">Not everything is eroding. These vendors have strong structural commitment to free tiers &mdash; through open-source foundations, developer-first business models, or cloud provider loss-leader strategies. They represent the safe bets for long-term architecture decisions. A vendor drops out of these lists as soon as our change log records its free tier ending${countOnDropped.length > 0 ? `, which is why ${escHtmlServer(joinWithAnd(countOnDropped))} ${countOnDropped.length === 1 ? "is" : "are"} not here` : ""}.</p>
   <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1rem;margin:1.5rem 0">
-    <div style="padding:1rem;border:1px solid #3fb950;border-radius:8px;background:rgba(63,185,80,0.06)">
-      <h3 style="margin:0 0 .5rem;font-size:.95rem;color:#3fb950">Cloud Provider Loss Leaders</h3>
-      <p style="font-size:.85rem;color:var(--text-muted);margin:0 0 .5rem">Free tiers subsidized by the larger platform &mdash; they exist to acquire users into the paid ecosystem.</p>
-      <div style="display:flex;flex-wrap:wrap;gap:.3rem">${["Cloudflare", "Vercel", "Netlify", "Railway", "AWS", "Google Cloud", "Azure"].map(v => `<a href="/vendor/${toSlug(v)}" style="display:inline-block;padding:.15rem .5rem;border:1px solid var(--border);border-radius:12px;font-size:.75rem;color:var(--text-muted)">${v}</a>`).join("")}</div>
-    </div>
-    <div style="padding:1rem;border:1px solid #3fb950;border-radius:8px;background:rgba(63,185,80,0.06)">
-      <h3 style="margin:0 0 .5rem;font-size:.95rem;color:#3fb950">Developer-First Companies</h3>
-      <p style="font-size:.85rem;color:var(--text-muted);margin:0 0 .5rem">Companies whose business model depends on developer adoption &mdash; the free tier IS the product.</p>
-      <div style="display:flex;flex-wrap:wrap;gap:.3rem">${["Supabase", "Neon", "Resend", "PostHog", "Sentry", "Grafana Cloud", "Upstash"].map(v => `<a href="/vendor/${toSlug(v)}" style="display:inline-block;padding:.15rem .5rem;border:1px solid var(--border);border-radius:12px;font-size:.75rem;color:var(--text-muted)">${v}</a>`).join("")}</div>
-    </div>
-    <div style="padding:1rem;border:1px solid #3fb950;border-radius:8px;background:rgba(63,185,80,0.06)">
-      <h3 style="margin:0 0 .5rem;font-size:.95rem;color:#3fb950">Open Source Safety Net</h3>
-      <p style="font-size:.85rem;color:var(--text-muted);margin:0 0 .5rem">Self-hostable alternatives that can&rsquo;t remove free tiers by definition. Always have an exit strategy.</p>
-      <div style="display:flex;flex-wrap:wrap;gap:.3rem">${["GitLab", "Gitea", "Plausible", "Umami", "n8n", "Meilisearch", "MinIO"].map(v => `<a href="/vendor/${toSlug(v)}" style="display:inline-block;padding:.15rem .5rem;border:1px solid var(--border);border-radius:12px;font-size:.75rem;color:var(--text-muted)">${v}</a>`).join("")}</div>
-    </div>
+    ${countOnCards.map(card => `<div style="padding:1rem;border:1px solid #3fb950;border-radius:8px;background:rgba(63,185,80,0.06)">
+      <h3 style="margin:0 0 .5rem;font-size:.95rem;color:#3fb950">${escHtmlServer(card.heading)}</h3>
+      <p style="font-size:.85rem;color:var(--text-muted);margin:0 0 .5rem">${card.blurb}</p>
+      <div style="display:flex;flex-wrap:wrap;gap:.3rem">${card.vendors.map(v => `<a href="/vendor/${v.slug}" style="display:inline-block;padding:.15rem .5rem;border:1px solid var(--border);border-radius:12px;font-size:.75rem;color:var(--text-muted)">${escHtmlServer(v.name)}</a>`).join("")}</div>
+    </div>`).join("\n    ")}
   </div>
   <div class="callout callout-good">
     <strong>Architecture advice:</strong> For each critical infrastructure component, ensure at least one of your shortlisted vendors is either open-source or a cloud-provider loss leader. When a vendor like PlanetScale or Heroku removes their free tier, you want an exit plan that doesn&rsquo;t require rewriting your stack.
@@ -45516,10 +45595,10 @@ ${globalNavCss()}
   <p style="color:var(--text-dim);font-size:.85rem;margin-top:.5rem">See our full <a href="/startup-credits">startup credits directory</a> for 19 programs across 3 tiers.</p>
 
   <h2>Category Landscape</h2>
-  <p class="section-desc">Which categories have the most free tier options? The table below shows our top 20 categories ranked by free tier density.</p>
+  <p class="section-desc">Which categories have the most free tier options? The table below shows our top 20 categories ranked by the share we can vouch for today. <strong>Recorded</strong> counts the free tiers our offers describe; <strong>Vouched</strong> counts the ones whose vendor page still states a verdict rather than withholding one. ${categoryShares.filter(c => c.recordedPct === 100).length} of ${categoryShares.length} categories record a free tier for every service they list, which is why the recorded share cannot rank them. The two shares diverge most in ${escHtmlServer(widestGap.category)}: ${widestGap.census.recorded} of ${widestGap.census.total} recorded, ${widestGap.census.vouched} vouched.</p>
   <div class="cost-table">
   <table>
-    <thead><tr><th>Category</th><th style="text-align:right">Total</th><th style="text-align:right">Free</th><th style="text-align:right">Free %</th><th>Density</th></tr></thead>
+    <thead><tr><th>Category</th><th style="text-align:right">Total</th><th style="text-align:right">Recorded</th><th style="text-align:right">Recorded %</th><th style="text-align:right">Vouched</th><th style="text-align:right">Vouched %</th><th>Vouched Density</th></tr></thead>
     <tbody>
       ${categoryTableRows}
     </tbody>
@@ -45563,7 +45642,7 @@ ${globalNavCss()}
   <h2>Methodology</h2>
   <p class="section-desc">How we built this dataset:</p>
   <ul style="color:var(--text-muted);font-size:.9rem;padding-left:1.25rem;margin-bottom:1rem">
-    <li style="margin-bottom:.4rem"><strong>Verification:</strong> Every offer is verified against the vendor&rsquo;s public pricing page. We record the verification date and source URL.</li>
+    <li style="margin-bottom:.4rem"><strong>Verification:</strong> Every offer records the date we read the vendor&rsquo;s public pricing page and the URL we read it from. That is not the same as being able to vouch for it today: ${freeTiers.unconfirmed.toLocaleString()} of the ${freeTiers.recorded.toLocaleString()} recorded free tiers have a source that states no terms, cannot be read, or does not name the vendor, and those are the ones counted as unconfirmed above.</li>
     <li style="margin-bottom:.4rem"><strong>Change tracking:</strong> ${dealChanges.length} pricing changes tracked with date, previous state, current state, impact level, and source documentation.</li>
     <li style="margin-bottom:.4rem"><strong>Definition of &ldquo;free tier&rdquo;:</strong> Perpetual free plans, always-free offerings, and generous hobby/starter tiers without time limits. We exclude limited trials (e.g., 14-day, 30-day) and one-time credits.</li>
     <li style="margin-bottom:.4rem"><strong>Update frequency:</strong> Continuous. Our <a href="/freshness">data freshness dashboard</a> shows verification recency by category.</li>
