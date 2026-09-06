@@ -1,17 +1,29 @@
+import { changeCitesASource, citationLabel } from "./change-citation.js";
 import { changeDateClause } from "./change-dates.js";
 import { narrowsTheStoredTerms } from "./change-direction.js";
 import { isNoLongerInForce } from "./change-resolution.js";
+import { carriesAnUnrenderedExpression } from "./unrendered-text.js";
 import type { ChangeResolution, DealChange } from "./types.js";
 
 export interface QuotingChange extends Pick<DealChange, "date" | "date_source" | "change_type"> {
   summary: string;
   previous_state?: string | null;
+  current_state?: string | null;
+  source_url?: string | null;
+  recorded_date?: string | null;
   resolution?: ChangeResolution | null;
 }
 
 export interface StoredTerms {
   vendor: string;
   description: string;
+}
+
+export interface SourcedReading {
+  date: string;
+  url: string;
+  label: string;
+  terms: string;
 }
 
 function comparableTerms(text: string | null | undefined): string {
@@ -48,35 +60,104 @@ export function storedTermsAreSuperseded(
   return supersedingChange(offer, vendorChanges) !== null;
 }
 
+export function readingBehindTheChange(change: QuotingChange): SourcedReading | null {
+  const terms = (change.current_state ?? "").trim();
+  if (terms === "" || carriesAnUnrenderedExpression(terms)) return null;
+  if (!changeCitesASource(change)) return null;
+  const url = change.source_url!.trim();
+  return {
+    date: (change.recorded_date ?? "").trim() || change.date,
+    url,
+    label: citationLabel(url),
+    terms,
+  };
+}
+
+export function openingOfTerms(terms: string, cap: number): string {
+  const text = terms.trim();
+  if (text.length <= cap) return text;
+  let wholeSentences = "";
+  for (const match of text.matchAll(/[.!?](\s|$)/g)) {
+    const candidate = text.slice(0, match.index + 1);
+    if (candidate.length > cap) break;
+    wholeSentences = candidate;
+  }
+  if (wholeSentences !== "") return wholeSentences;
+  const clipped = text.slice(0, cap);
+  const lastSpace = clipped.lastIndexOf(" ");
+  const kept = lastSpace > cap / 2 ? clipped.slice(0, lastSpace) : clipped;
+  return `${kept.replace(/[,;:]$/, "")}…`;
+}
+
+function punctuated(text: string): string {
+  const trimmed = text.trim();
+  return /[.!?…]$/.test(trimmed) ? trimmed : `${trimmed}.`;
+}
+
+function readingSentence(date: string, source: string, terms: string): string {
+  return `As of ${date}, ${source} reads: ${terms}`;
+}
+
 export const SUPERSEDED_TERMS_LABEL = "Superseded";
+
+export const STORED_TERMS_WITHHELD_PHRASE = "names them as the previous ones";
+
+export const STORED_TERMS_WITHHELD_META_PHRASE = "terms are superseded and withheld";
+
+function withheldTail(vendor: string, change: QuotingChange, besideAReading: boolean): string {
+  return (
+    `We are not publishing our stored ${vendor} terms${besideAReading ? " beside it" : ""} — ` +
+    `our own pricing change record, ${changeDateClause(change)}, ${STORED_TERMS_WITHHELD_PHRASE}.`
+  );
+}
+
+function readingWithTail(vendor: string, change: QuotingChange, cap?: number): string | null {
+  const reading = readingBehindTheChange(change);
+  if (!reading) return null;
+  const terms = cap === undefined ? reading.terms : openingOfTerms(reading.terms, cap);
+  return `${readingSentence(reading.date, reading.label, punctuated(terms))} ${withheldTail(vendor, change, true)}`;
+}
 
 export function supersededTermsNotice(vendor: string, change: QuotingChange): string {
   return (
-    `The terms we store for ${vendor} are the ones our own pricing change record, ` +
-    `${changeDateClause(change)}, names as the previous ones. We have not re-read ${vendor}'s ` +
-    `pricing page since that record, so we are not publishing them as current.`
+    readingWithTail(vendor, change) ??
+    `${withheldTail(vendor, change, false)} We have not re-read ${vendor}'s pricing page since that record.`
+  );
+}
+
+export function supersededTermsNoticeHtml(
+  vendor: string,
+  change: QuotingChange,
+  esc: (text: string) => string,
+): string {
+  const reading = readingBehindTheChange(change);
+  if (!reading) return esc(supersededTermsNotice(vendor, change));
+  const link =
+    `<a href="${esc(reading.url)}" target="_blank" rel="noopener" class="change-source">` +
+    `${esc(reading.label)}</a>`;
+  return (
+    `${readingSentence(esc(reading.date), link, esc(punctuated(reading.terms)))} ` +
+    esc(withheldTail(vendor, change, true))
   );
 }
 
 export function supersededTermsAnswer(vendor: string, change: QuotingChange): string {
-  return (
-    `We are not answering that from our stored terms today. Our pricing change record, ` +
-    `${changeDateClause(change)}, names them as the previous terms: ${change.summary} ` +
-    `We have not re-read ${vendor}'s pricing page since, so the recorded change is what we stand behind, ` +
-    `not the figures it replaces.`
-  );
+  const opening =
+    readingWithTail(vendor, change) ??
+    `We are not answering that from our stored terms today. ${withheldTail(vendor, change, false)}`;
+  return `${opening} What our record says changed: ${change.summary}`;
 }
 
 export function supersededTermsMetaSentence(vendor: string, change: QuotingChange): string {
-  return (
-    `Our stored ${vendor} free-tier terms are superseded by a pricing change we recorded on ` +
-    `${change.date} and have not re-read since.`
-  );
+  const withheld = `Our stored ${vendor} ${STORED_TERMS_WITHHELD_META_PHRASE}`;
+  const reading = readingBehindTheChange(change);
+  if (!reading) {
+    return `${withheld}: our own pricing change record, ${changeDateClause(change)}, ${STORED_TERMS_WITHHELD_PHRASE}.`;
+  }
+  const opening = punctuated(openingOfTerms(reading.terms, 90));
+  return `${readingSentence(reading.date, reading.label, opening)} ${withheld}.`;
 }
 
 export function supersededTermsVerdictSentence(vendor: string, change: QuotingChange): string {
-  return (
-    `We are not publishing ${vendor}'s stored free-tier figures — our pricing change record, ` +
-    `${changeDateClause(change)}, names them as the previous ones.`
-  );
+  return readingWithTail(vendor, change, 170) ?? withheldTail(vendor, change, false);
 }
