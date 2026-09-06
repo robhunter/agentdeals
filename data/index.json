@@ -29122,8 +29122,8 @@
     {
       "vendor": "Ninja Outreach",
       "category": "Logging",
-      "description": "20% discount on Blogger plan for lifetime. Access via: Free",
-      "tier": "Startup Program",
+      "description": "There is no free tier: ninjaoutreach.com no longer serves the product. Checked 2026-09-06, the domain resolves to Cloudflare and returned 522 on three consecutive requests, so the origin is unreachable; the Internet Archive's most recent capture of the site is 2025-09-10. The cited source, userlike.com/en/blog/startup-deals, now redirects to connect.lime-technologies.com/en/blog/ after Userlike's rebrand to Lime Technologies, and the destination does not name Ninja Outreach. The former offer was a 20% lifetime discount on the Blogger plan, which was a discount and not a free tier.",
+      "tier": "Retired",
       "url": "https://www.userlike.com/en/blog/startup-deals",
       "tags": [
         "developer-tools",
@@ -29139,9 +29139,9 @@
         "program": "Ninja Outreach Startup Deal"
       },
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-06",
         "outcome": "does_not_name_vendor",
-        "detail": "the page never names Ninja Outreach and is not served from its domain"
+        "detail": "the cited page redirects to connect.lime-technologies.com/en/blog/ and never names Ninja Outreach; it is not served from the vendor's domain"
       }
     },
     {
