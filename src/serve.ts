@@ -5,7 +5,7 @@ import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
 import { createServer, getServerCard } from "./server.js";
-import { oldestVerifiedDateForSlug, vendorRiskAssessment, NEGATIVE_CHANGE_TYPES, POSITIVE_CHANGE_TYPES, SEVERE_CHANGE_TYPES, loadOffers, getCategories, getNewOffers, getNewestDeals, searchOffers, enrichOffers, gateForOffer, loadDealChanges, getDealChanges, changeContext, DEFAULT_CHANGE_WINDOW_DAYS, getOfferDetails, compareServices, checkVendorRisk, auditStack, getExpiringDeals, getWeeklyDigest, getFormattedWeeklyDigest, getFreshnessMetrics, getStabilityMap, getVendorReferral, sanitizeQuery, getChangeLogFreshness, isEventDated, partitionByDateProvenance } from "./data.js";
+import { oldestVerifiedDateForSlug, vendorRiskAssessment, freeTierEndingRecord, NEGATIVE_CHANGE_TYPES, POSITIVE_CHANGE_TYPES, SEVERE_CHANGE_TYPES, loadOffers, getCategories, getNewOffers, getNewestDeals, searchOffers, enrichOffers, gateForOffer, loadDealChanges, getDealChanges, changeContext, DEFAULT_CHANGE_WINDOW_DAYS, getOfferDetails, compareServices, checkVendorRisk, auditStack, getExpiringDeals, getWeeklyDigest, getFormattedWeeklyDigest, getFreshnessMetrics, getStabilityMap, getVendorReferral, sanitizeQuery, getChangeLogFreshness, isEventDated, partitionByDateProvenance } from "./data.js";
 import { getStackRecommendation } from "./stacks.js";
 import { estimateCosts } from "./costs.js";
 import { classifyRequest } from "./client-class.js";
@@ -29,7 +29,7 @@ import { comparisonVerdictText, freeTierFaqAnswer, stabilityFaqAnswer, type Comp
 import { publishedVendorLevel, vendorVerdictSentence, vendorBadge, freeTierClaim, statesRiskCause, narrowingSentence, changeKindNoun, termsUnconfirmedBySource, unconfirmedTermsMetaSentence, type BadgeWithholding, type FreeTierClaim, type VendorVerdictInput } from "./vendor-verdict.js";
 import { tierRecordsAFreeTier } from "./free-tier-record.js";
 import { UNGRADED_IMPACT_COLOR, changeImpactColor, changeImpactLabel, changeImpactWord, isChangeImpactLevel } from "./change-impact.js";
-import { COMPARED_SERVICES_PLACEHOLDER, fillComparedServicesCount, markCompiledFigures, recordsSinceCompiled, replaceTimelineRows, timelineRecordsFor, vendorSlugForSubject, vendorSubjectsOnCompiledPage, type CompiledFigureSubject, type CompiledFigureVerdict } from "./compiled-figures.js";
+import { COMPARED_SERVICES_PLACEHOLDER, fillComparedServicesCount, markCompiledFigures, recordsSinceCompiled, replaceTimelineRows, timelineRecordsFor, vendorForSubject, vendorSubjectsOnCompiledPage, type CompiledFigureSubject, type CompiledFigureVendor, type CompiledFigureVerdict } from "./compiled-figures.js";
 import { vendorHistorySentence } from "./vendor-history.js";
 import { HETZNER_APRIL_CHANGES, HETZNER_CLOUD_PLANS, HETZNER_PRICES_READ, HETZNER_PRICE_SOURCE, HETZNER_SINGAPORE_EXAMPLE, cheapestOrderableHetznerPlan, hetznerEntryPriceClause, unorderableHetznerPlans } from "./hetzner-pricing.js";
 import { changeTimelineDate, supersededLineups, supersessionNote } from "./change-lineup.js";
@@ -49,7 +49,7 @@ import { runHealthCheck, getLastReport, startPeriodicChecks } from "./referral-h
 import { configureDurableBackend, hydrateDurableStores, persistDurableStores, identityStorageReport } from "./durable-store.js";
 import { addFriend, removeFriend, getFriends, getFriendCodesForVendors } from "./friends.js";
 import { subscribe as watchlistSubscribe, getSubscription as getWatchlistSubscription, unsubscribe as watchlistUnsubscribe, listSubscriptions as listWatchlistSubscriptions } from "./watchlist.js";
-import { toSlug, vendorSlugMap, resolveVendorSlug, namedVendorSlug } from "./vendor-slug.js";
+import { changeLogAnchorFor, toSlug, vendorSlugMap, resolveVendorSlug, namedVendorSlug } from "./vendor-slug.js";
 import { offerForSlug, vendorRates, cheapestRate, dearestRate, spanOfRates, formatRate, formatRateSpan, monthlyTokenCost, formatDollars, type ModelRate } from "./model-rates.js";
 import { STALE_FACT_PAGES_BASELINE, factsOutdatedBy, linkifyVerdictBlocks, newestChangeBySlug, overdueReport, pageCompiledClause, pageDataProvenance, pageDateModified, pageFreshness, pageFreshnessSentence, utcToday, verdictsOutdatedBy } from "./page-reviews.js";
 import { faqPageJsonLd, type FaqItem } from "./faq-provenance.js";
@@ -904,24 +904,38 @@ function recordsSinceCompiledFor(vendorName: string, compiledOn: string): DealCh
   return recordsSinceCompiled(changesFor(vendorName), compiledOn, today);
 }
 
+interface SubjectFreeTier {
+  ended: boolean;
+  endedBy: (Pick<DealChange, "date" | "summary"> & { date_source?: ChangeDateSource }) | null;
+}
+
+function freeTierForSubject(named: CompiledFigureVendor): SubjectFreeTier {
+  if (named.slug === null) {
+    const ending = freeTierEndingRecord(changesFor(named.vendor));
+    return { ended: ending !== null, endedBy: ending };
+  }
+  const claim = freeTierClaimFor(named.vendor, today);
+  return {
+    ended: claim?.states === "ended",
+    endedBy: claim?.states === "ended" && claim.how === "removed" ? claim.cause : null,
+  };
+}
+
 function compiledFigureVerdictFor(
   subject: CompiledFigureSubject,
   compiledOn: string,
 ): CompiledFigureVerdict | null {
-  const slug = vendorSlugForSubject(subject);
-  if (!slug) return null;
-  const vendor = vendorSlugMap.get(slug);
-  if (!vendor) return null;
-  const claim = freeTierClaimFor(vendor, today);
-  const ending = claim?.states === "ended" && claim.how === "removed" ? claim.cause : null;
+  const named = vendorForSubject(subject);
+  if (!named) return null;
+  const { ended, endedBy } = freeTierForSubject(named);
   return {
-    slug,
-    vendor,
-    freeTierEnded: claim?.states === "ended",
-    endedBy: ending
-      ? { date: ending.date, summary: ending.summary, dateClause: changeDateClause(ending) }
+    slug: named.slug,
+    vendor: named.vendor,
+    freeTierEnded: ended,
+    endedBy: endedBy
+      ? { date: endedBy.date, summary: endedBy.summary, dateClause: changeDateClause(endedBy) }
       : null,
-    since: recordsSinceCompiledFor(vendor, compiledOn).map(c => ({
+    since: recordsSinceCompiledFor(named.vendor, compiledOn).map(c => ({
       date: c.date,
       summary: c.summary,
       dateClause: changeDateClause(c),
@@ -39279,7 +39293,7 @@ function buildEmailComparison2026Page(): string {
     mainEntityOfPage: { "@type": "WebPage", "@id": `${BASE_URL}/${slug}` },
   };
 
-  return `<!DOCTYPE html>
+  return comparisonPageWithLiveRecords(`<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
@@ -40190,7 +40204,7 @@ ${mcpCtaCss()}
 </footer>
 <script>${mcpCtaScript()}</script>
 </body>
-</html>`;
+</html>`, pubDate, emailChanges);
 }
 
 function buildMonitoringComparison2026Page(): string {
@@ -40253,7 +40267,7 @@ function buildMonitoringComparison2026Page(): string {
     mainEntityOfPage: { "@type": "WebPage", "@id": `${BASE_URL}/${slug}` },
   };
 
-  return `<!DOCTYPE html>
+  return comparisonPageWithLiveRecords(`<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
@@ -41187,7 +41201,7 @@ ${mcpCtaCss()}
 </footer>
 <script>${mcpCtaScript()}</script>
 </body>
-</html>`;
+</html>`, pubDate, monitoringChanges);
 }
 
 function buildStorageComparison2026Page(): string {
@@ -41250,7 +41264,7 @@ function buildStorageComparison2026Page(): string {
     mainEntityOfPage: { "@type": "WebPage", "@id": `${BASE_URL}/${slug}` },
   };
 
-  return `<!DOCTYPE html>
+  return comparisonPageWithLiveRecords(`<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
@@ -41991,7 +42005,7 @@ ${mcpCtaCss()}
 </footer>
 <script>${mcpCtaScript()}</script>
 </body>
-</html>`;
+</html>`, pubDate, storageChanges);
 }
 
 function buildTestingFreeTierComparison2026Page(): string {
@@ -49788,16 +49802,24 @@ function buildChangesPage(): string {
     return `${monthNames[parseInt(m, 10) - 1]} ${y}`;
   }
 
+  const anchorHolder = new Map<string, typeof allChanges[0]>();
+  for (const c of newestFirst) {
+    const anchor = changeLogAnchorFor(c.vendor);
+    if (anchor && !anchorHolder.has(anchor)) anchorHolder.set(anchor, c);
+  }
+
   function buildChangeEntry(c: typeof allChanges[0]): string {
     const badge = changeTypeBadge[c.change_type] ?? { label: c.change_type, color: "#8b949e" };
     const impactColor = changeImpactColor(c.impact);
     const vendorSlug = toSlug(c.vendor);
     const dated = isEventDated(c);
     const isUpcoming = dated && c.date >= today;
+    const anchor = changeLogAnchorFor(c.vendor);
+    const anchorAttr = anchor && anchorHolder.get(anchor) === c ? ` id="${anchor}"` : "";
     const altHtml = c.alternatives && c.alternatives.length > 0
       ? `<div class="chg-alts"><span class="chg-alts-label">Alternatives:</span> ${c.alternatives.map(a => `<a href="/vendor/${toSlug(a)}">${escHtmlServer(a)}</a>`).join(", ")}</div>`
       : "";
-    return `      <div class="chg-entry${isUpcoming ? " chg-upcoming" : ""}${dated ? "" : " chg-undated"}${changeIsUncited(c) ? " chg-unsourced" : ""}">
+    return `      <div${anchorAttr} class="chg-entry${isUpcoming ? " chg-upcoming" : ""}${dated ? "" : " chg-undated"}${changeIsUncited(c) ? " chg-unsourced" : ""}">
         <div class="chg-left">
           <div class="chg-date">${dated ? c.date : `${DISCOVERED_DATE_PREFIX} ${c.date}`}</div>
           ${isUpcoming ? `<div class="chg-upcoming-badge">upcoming</div>` : ""}

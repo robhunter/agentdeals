@@ -10,12 +10,15 @@ const {
   comparedServicesOn,
   compiledFigureSlots,
   markCompiledFigures,
+  recordsHrefFor,
   recordsSinceCompiled,
   staticHalfOf,
   subjectOfCardHeading,
   timelineRecordsFor,
+  vendorForSubject,
   vendorSlugForSubject,
 } = await import("../dist/compiled-figures.js");
+const { freeTierEndingRecord } = await import("../dist/data.js");
 const { CHANGE_IMPACT_LEVELS, changeImpactColor, changeImpactLabel, isChangeImpactLevel } =
   await import("../dist/change-impact.js");
 const { vendorSlugMap } = await import("../dist/vendor-slug.js");
@@ -165,6 +168,66 @@ describe("resolving the vendor a compiled figure is about", () => {
       linkedSlug: null,
     });
     assert.strictEqual(slug, null);
+  });
+
+  it("names a vendor the change log holds and the catalogue does not", () => {
+    const named = vendorForSubject({ kind: "row", label: "Heroku", linkedSlug: null });
+    assert.deepStrictEqual(named, { slug: null, vendor: "Heroku" });
+    assert.ok(!vendorSlugMap.has("heroku"), "Heroku has gained a catalogue entry");
+  });
+
+  it("prefers the name the change log holds over a longer catalogue entry that starts with it", () => {
+    assert.strictEqual(vendorSlugForSubject({ kind: "row", label: "Heroku", linkedSlug: null }), "heroku-for-startups-program");
+    assert.strictEqual(vendorForSubject({ kind: "row", label: "Heroku", linkedSlug: null })!.vendor, "Heroku");
+  });
+
+  it("keeps the catalogue entry for a vendor that has one", () => {
+    assert.deepStrictEqual(
+      vendorForSubject({ kind: "row", label: "Supabase", linkedSlug: null }),
+      { slug: "supabase", vendor: vendorSlugMap.get("supabase") },
+    );
+  });
+
+  it("names nothing for a subject that is not a vendor", () => {
+    assert.strictEqual(vendorForSubject({ kind: "row", label: "Go Goroutines", linkedSlug: null }), null);
+  });
+});
+
+describe("where a marker sends a reader for the record it rests on", () => {
+  it("sends a catalogued vendor to its own page", () => {
+    assert.strictEqual(recordsHrefFor({ slug: "supabase", vendor: "Supabase" }), "/vendor/supabase#changes");
+  });
+
+  it("sends a vendor with no page to its own place in the change log", () => {
+    assert.strictEqual(recordsHrefFor({ slug: null, vendor: "Uploadthing" }), "/changes#vendor-uploadthing");
+  });
+});
+
+describe("reading an ending out of a vendor's records", () => {
+  const removed = { change_type: "free_tier_removed", date: "2026-04-13" };
+
+  it("takes the newest record that ends the free tier", () => {
+    const older = { change_type: "open_source_killed", date: "2025-01-01" };
+    assert.strictEqual(freeTierEndingRecord([older, removed]), removed);
+  });
+
+  it("reads no ending from a record that is no longer in force", () => {
+    const reversed = { ...removed, resolution: { state: "reversed", date: "2026-09-06" } };
+    assert.strictEqual(freeTierEndingRecord([reversed]), null);
+  });
+
+  it("reads no ending once a later record opens a free tier again", () => {
+    const restored = { change_type: "new_free_tier", date: "2026-06-01" };
+    assert.strictEqual(freeTierEndingRecord([removed, restored]), null);
+  });
+
+  it("keeps the ending when the record opening a free tier came first", () => {
+    const earlier = { change_type: "new_free_tier", date: "2026-01-01" };
+    assert.strictEqual(freeTierEndingRecord([removed, earlier]), removed);
+  });
+
+  it("reads no ending from records that only narrow the terms", () => {
+    assert.strictEqual(freeTierEndingRecord([{ change_type: "limits_reduced", date: "2026-05-01" }]), null);
   });
 });
 
@@ -395,8 +458,7 @@ describe("the nine compiled comparison pages against the site's own verdicts", (
       for (const slot of compiledFigureSlots(html)) {
         if (!/CHANGED [A-Z]{3} \d+|FREE REMOVED/.test(slot.markup)) continue;
         named++;
-        const vendorSlug = subjectSlug(slot)!;
-        const vendor = vendorSlugMap.get(vendorSlug)!;
+        const vendor = vendorForSubject(slot)!.vendor;
         const label = slot.label.toLowerCase();
         const name = vendor.toLowerCase();
         if (!label.startsWith(name) && !name.startsWith(label)) {

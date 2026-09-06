@@ -1436,7 +1436,13 @@
         "AWS S3"
       ],
       "recorded_date": "2026-03-22",
-      "date_source": "hand_written"
+      "date_source": "hand_written",
+      "resolution": {
+        "state": "reversed",
+        "date": "2026-09-06",
+        "source_url": "https://uploadthing.com/pricing",
+        "detail": "No longer in force as of 2026-09-06: uploadthing.com/pricing, the page this record cites, opens its plan ladder with \"2GB App - Everything you need to start uploading! - $0 /month\", listing 2GB of storage shared between all apps, 7 days of audit log retention and unlimited uploads and downloads. The $25/month usage-based plan named here is the third rung of that ladder, above a $10/month 100GB App, not the entry point. We hold no evidence either way about the state on 2025-01-15, so this is recorded as no longer in force rather than retracted."
+      }
     },
     {
       "vendor": "Neo4j AuraDB",
