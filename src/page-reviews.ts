@@ -495,7 +495,7 @@ export function overdueReport(today: string, index: PageReviewIndex = loadPageRe
 }
 
 const VERDICT_BLOCK_CLASSES = ["summary-stats", "executive-summary", "verdict-box", "pick-header"];
-const VERDICT_INLINE_CLASSES = ["winner-badge", "pick-badge"];
+const VERDICT_INLINE_CLASSES = ["winner-badge", "pick-badge", "stack-verdict"];
 
 export function verdictBlocks(html: string): string[] {
   const blocks: string[] = [];

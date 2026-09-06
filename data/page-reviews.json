@@ -79,7 +79,7 @@
     {
       "path": "/agent-stack",
       "published": "2026-03-19",
-      "tier": "B",
+      "tier": "A",
       "vendors_asserted": [],
       "vendors_tabulated": [],
       "badge_subjects_unresolved": [],
@@ -749,9 +749,7 @@
         "emailvalidation-io",
         "loops",
         "mailchimp",
-        "mailerlite-com",
         "maileroo",
-        "mailersend-com",
         "mailjet",
         "plunk",
         "postmark",
@@ -785,7 +783,6 @@
       ],
       "vendors_tabulated": [
         "codesandbox",
-        "cursor",
         "github-codespaces",
         "gitpod",
         "lovable",
@@ -945,6 +942,7 @@
         "railway",
         "resend",
         "sentry",
+        "swaggo-swag",
         "upstash"
       ],
       "vendors_tabulated": [],
@@ -998,7 +996,8 @@
         "posthog",
         "railway",
         "resend",
-        "sentry"
+        "sentry",
+        "stripe"
       ],
       "vendors_tabulated": [],
       "badge_subjects_unresolved": [],
@@ -1293,6 +1292,7 @@
         "google-ai-pro-ultra",
         "google-cloud-run",
         "groq",
+        "mistral-ai",
         "openrouter",
         "oracle-cloud",
         "railway",
@@ -1343,7 +1343,6 @@
       "published": "2026-03-25",
       "tier": "A",
       "vendors_asserted": [
-        "digitalocean",
         "ovhcloud"
       ],
       "vendors_tabulated": [
@@ -1616,7 +1615,13 @@
         "openrouter"
       ],
       "vendors_tabulated": [
-        "anthropic-api"
+        "anthropic-api",
+        "deepseek-api",
+        "fireworks-ai",
+        "google-gemini-api",
+        "mistral-ai",
+        "openai",
+        "together-ai"
       ],
       "badge_subjects_unresolved": [],
       "reviewed_at": null,
@@ -1876,6 +1881,96 @@
       "tier": "B",
       "vendors_asserted": [],
       "vendors_tabulated": [],
+      "badge_subjects_unresolved": [],
+      "reviewed_at": null,
+      "reviewer": null,
+      "review_outcome": null,
+      "review_note": null,
+      "reads_index": true,
+      "reads_changes": true,
+      "data_source": "catalogue",
+      "data_source_reason": null
+    },
+    {
+      "path": "/stacks/ai-startup",
+      "published": "2026-04-04",
+      "tier": "A",
+      "vendors_asserted": [],
+      "vendors_tabulated": [
+        "hosting-checker"
+      ],
+      "badge_subjects_unresolved": [],
+      "reviewed_at": null,
+      "reviewer": null,
+      "review_outcome": null,
+      "review_note": null,
+      "reads_index": true,
+      "reads_changes": true,
+      "data_source": "catalogue",
+      "data_source_reason": null
+    },
+    {
+      "path": "/stacks/api-first",
+      "published": "2026-04-04",
+      "tier": "A",
+      "vendors_asserted": [],
+      "vendors_tabulated": [
+        "hosting-checker"
+      ],
+      "badge_subjects_unresolved": [],
+      "reviewed_at": null,
+      "reviewer": null,
+      "review_outcome": null,
+      "review_note": null,
+      "reads_index": true,
+      "reads_changes": true,
+      "data_source": "catalogue",
+      "data_source_reason": null
+    },
+    {
+      "path": "/stacks/open-source",
+      "published": "2026-04-01",
+      "tier": "A",
+      "vendors_asserted": [],
+      "vendors_tabulated": [
+        "hosting-checker"
+      ],
+      "badge_subjects_unresolved": [],
+      "reviewed_at": null,
+      "reviewer": null,
+      "review_outcome": null,
+      "review_note": null,
+      "reads_index": true,
+      "reads_changes": true,
+      "data_source": "catalogue",
+      "data_source_reason": null
+    },
+    {
+      "path": "/stacks/saas-mvp",
+      "published": "2026-04-04",
+      "tier": "A",
+      "vendors_asserted": [],
+      "vendors_tabulated": [
+        "hosting-checker"
+      ],
+      "badge_subjects_unresolved": [],
+      "reviewed_at": null,
+      "reviewer": null,
+      "review_outcome": null,
+      "review_note": null,
+      "reads_index": true,
+      "reads_changes": true,
+      "data_source": "catalogue",
+      "data_source_reason": null
+    },
+    {
+      "path": "/stacks/side-project",
+      "published": "2026-04-04",
+      "tier": "A",
+      "vendors_asserted": [],
+      "vendors_tabulated": [
+        "hosting-checker"
+      ],
       "badge_subjects_unresolved": [],
       "reviewed_at": null,
       "reviewer": null,
