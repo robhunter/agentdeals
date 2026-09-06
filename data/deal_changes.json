@@ -7541,21 +7541,6 @@
       }
     },
     {
-      "vendor": "Dub.co",
-      "change_type": "free_tier_removed",
-      "date": "2026-09-02",
-      "date_source": "discovered",
-      "summary": "The free tier no longer exists. The lowest tier is $90/month.",
-      "previous_state": "Open-source link management — 25 new links/month, 1,000 tracked events/month, 3 custom domains, 1 user, 30-day analytics retention, API with native SDKs. No credit card required",
-      "current_state": "The lowest tier is $90/month and includes 10K new links/month, unlimited tags, 20 folders, custom QR codes, UTM builder + templates, custom link previews, deep links, link cloaking, link expiration, password protection, device targeting, geo targeting, A/B testing, automated global payouts, $2.5K partner payouts/month, 5% payout fees, tax compliance, basic partner rewards, dual-sided incentives, AI landing page generator, 500 partners, 3 partner groups, 10 partner tags, embedded referral dashboard, partner referral rewards, messaging center, email campaigns, social metrics bounties, risk monitoring, advanced analytics, 250K tracked events/month, 3-year retention, conversion tracking, customer insights, real-time events stream, 100 custom domains, SSL certificates, free .link domain, API Access, Native SDKs, 1,200/min rate limit, event webhooks, 10 users, role-based access control, and email support.",
-      "impact": "high",
-      "source_url": "https://dub.co/pricing",
-      "category": "Dev Utilities",
-      "alternatives": [],
-      "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-02"
-    },
-    {
       "vendor": "StatusCake",
       "change_type": "limits_increased",
       "date": "2026-09-02",
