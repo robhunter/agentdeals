@@ -1,4 +1,4 @@
-import { assertedVendorSlugs, isNonVendorSubject, resolveVendorSlug, toSlug, vendorSlugMap } from "./vendor-slug.js";
+import { assertedVendorSlugs, changeLogAnchorFor, changeLogVendorNamed, isNonVendorSubject, resolveVendorSlug, toSlug, vendorSlugMap } from "./vendor-slug.js";
 
 export interface CompiledPageRecord {
   date: string;
@@ -27,11 +27,19 @@ export interface CompiledFigureSubject {
 }
 
 export interface CompiledFigureVerdict {
-  slug: string;
+  slug: string | null;
   vendor: string;
   freeTierEnded: boolean;
   endedBy: CompiledPageRecord | null;
   since: readonly CompiledPageRecord[];
+}
+
+export const CHANGE_LOG_PATH = "/changes";
+
+export function recordsHrefFor(verdict: Pick<CompiledFigureVerdict, "slug" | "vendor">): string {
+  if (verdict.slug) return `/vendor/${verdict.slug}#changes`;
+  const anchor = changeLogAnchorFor(verdict.vendor);
+  return anchor ? `${CHANGE_LOG_PATH}#${anchor}` : CHANGE_LOG_PATH;
 }
 
 export type CompiledFigureLookup = (subject: CompiledFigureSubject) => CompiledFigureVerdict | null;
@@ -50,7 +58,9 @@ const VENDOR_LINK = /href="\/vendor\/([a-z0-9][a-z0-9-]*)"/;
 const DECORATION_SPAN = /<span\b[^>]*class="[^"]*\b(?:winner|caution|removed|pick)-badge\b[^"]*"[^>]*>[\s\S]*?<\/span>/g;
 const ROW_CELL = /<td\b[^>]*>[\s\S]*?<\/td>/g;
 const REMOVED_BADGE = /class="[^"]*\bremoved-badge\b[^"]*"/;
-const RECORD_MARKER = /<a\b[^>]*href="\/vendor\/[a-z0-9-]+#changes"[^>]*>[\s\S]*?<\/a>/g;
+const RECORD_MARKER =
+  /<a\b[^>]*href="(?:\/vendor\/[a-z0-9-]+#changes|\/changes#vendor-[a-z0-9-]+)"[^>]*>[\s\S]*?<\/a>/g;
+const STRUCK_SUBJECT = /<span\b[^>]*style="[^"]*text-decoration:\s*line-through[^"]*"/;
 const TRAILING_QUALIFIER = /^(.+?)\s*\([^()]*\)$/;
 const SUBJECT_TAGLINE = /\s+[—–:]\s+/;
 const TIMELINE_BODY = /(<h2\b[^>]*\bid="changes"(?:(?!<\/table>)[\s\S])*?<tbody>)([\s\S]*?)(<\/tbody>)/;
@@ -92,6 +102,11 @@ interface DiscoveredSlot extends CompiledFigureSubject {
   inner: string;
   innerStart: number;
   alreadyStatesRemoval: boolean;
+  alreadyStruck: boolean;
+}
+
+function removalTheSlotAlreadyCarries(inner: string): Pick<DiscoveredSlot, "alreadyStatesRemoval" | "alreadyStruck"> {
+  return { alreadyStatesRemoval: REMOVED_BADGE.test(inner), alreadyStruck: STRUCK_SUBJECT.test(inner) };
 }
 
 function discoverSlots(staticHtml: string): DiscoveredSlot[] {
@@ -110,7 +125,7 @@ function discoverSlots(staticHtml: string): DiscoveredSlot[] {
       end: cell.index + cell[0].length,
       inner,
       innerStart: cell.index + cell[0].indexOf(inner),
-      alreadyStatesRemoval: REMOVED_BADGE.test(inner.replace(RECORD_MARKER, "")),
+      ...removalTheSlotAlreadyCarries(inner),
     });
   }
 
@@ -127,7 +142,7 @@ function discoverSlots(staticHtml: string): DiscoveredSlot[] {
       end: heading.index + heading[0].length,
       inner,
       innerStart: heading.index + heading[0].indexOf(inner),
-      alreadyStatesRemoval: REMOVED_BADGE.test(inner.replace(RECORD_MARKER, "")),
+      ...removalTheSlotAlreadyCarries(inner),
     });
   }
 
@@ -155,7 +170,7 @@ const FREE_TIER_REMOVED_LABEL = "FREE REMOVED";
 
 function endedBadgeHtml(verdict: CompiledFigureVerdict): string {
   return (
-    ` <a href="/vendor/${verdict.slug}#changes" class="removed-badge"` +
+    ` <a href="${recordsHrefFor(verdict)}" class="removed-badge"` +
     ` title="Our own change log records that the ${verdict.vendor} free tier has ended.">` +
     `${FREE_TIER_REMOVED_LABEL}</a>`
   );
@@ -175,7 +190,7 @@ function recordedSinceBadgeHtml(
     `We recorded ${count === 1 ? "a pricing change" : `${count} pricing changes`} for ${verdict.vendor} ` +
     `after this table was compiled on ${options.compiledOn}. The most recent, ${recordDateClause(latest)}: ${latest.summary}`;
   return (
-    ` <a href="/vendor/${verdict.slug}#changes" style="${RECORDED_SINCE_STYLE}"` +
+    ` <a href="${recordsHrefFor(verdict)}" style="${RECORDED_SINCE_STYLE}"` +
     ` title="${options.esc(title)}">CHANGED ${options.esc(options.shortDate(latest.date).toUpperCase())}</a>`
   );
 }
@@ -184,6 +199,16 @@ const STRUCK_STYLE = "color:var(--text-dim);text-decoration:line-through";
 
 function struck(inner: string): string {
   return `<span style="${STRUCK_STYLE}">${inner}</span>`;
+}
+
+function endedProviderCell(
+  inner: string,
+  slot: Pick<DiscoveredSlot, "alreadyStatesRemoval" | "alreadyStruck">,
+): string {
+  if (slot.alreadyStruck) return inner;
+  const strickenName = struck(inner.replace(DECORATION_SPAN, ""));
+  if (!slot.alreadyStatesRemoval) return strickenName;
+  return strickenName + (inner.match(DECORATION_SPAN) ?? []).join("");
 }
 
 function withEndedRowCells(row: string, providerCellEnd: number): string {
@@ -212,7 +237,7 @@ function endedCardDescriptionHtml(
     : `Our own change log records that the ${options.esc(verdict.vendor)} free tier has ended.`;
   return (
     `<${tag} class="diff-desc"><strong>Free tier:</strong> none. ${recorded} ` +
-    `<a href="/vendor/${verdict.slug}#changes">Read what we recorded &rarr;</a></${tag}>`
+    `<a href="${recordsHrefFor(verdict)}">Read what we recorded &rarr;</a></${tag}>`
   );
 }
 
@@ -230,7 +255,7 @@ export function markCompiledFigures(
     if (!verdict.freeTierEnded && verdict.since.length === 0) continue;
 
     const badge = verdict.freeTierEnded
-      ? endedBadgeHtml(verdict)
+      ? (slot.alreadyStatesRemoval ? "" : endedBadgeHtml(verdict))
       : recordedSinceBadgeHtml(verdict, options);
 
     if (slot.kind === "card") {
@@ -253,7 +278,7 @@ export function markCompiledFigures(
     const cellEndInRow = slot.end - rowStart;
     const inner = slot.inner;
     const markedProvider = verdict.freeTierEnded
-      ? struck(inner.replace(DECORATION_SPAN, "")) + badge
+      ? endedProviderCell(inner, slot) + badge
       : inner + badge;
     const withProvider =
       row.slice(0, slot.innerStart - rowStart) + markedProvider + row.slice(slot.innerStart - rowStart + inner.length);
@@ -296,9 +321,24 @@ function slugNamedByHeading(label: string): string | null {
   return null;
 }
 
-export function vendorNameForSubject(subject: CompiledFigureSubject): string | null {
+export interface CompiledFigureVendor {
+  slug: string | null;
+  vendor: string;
+}
+
+export function vendorForSubject(subject: CompiledFigureSubject): CompiledFigureVendor | null {
+  if (subject.linkedSlug && vendorSlugMap.has(subject.linkedSlug)) {
+    return { slug: subject.linkedSlug, vendor: vendorSlugMap.get(subject.linkedSlug)! };
+  }
+  if (isNonVendorSubject(subject.label)) return null;
   const slug = vendorSlugForSubject(subject);
-  return slug ? vendorSlugMap.get(slug) ?? null : null;
+  if (slug) return { slug, vendor: vendorSlugMap.get(slug)! };
+  const named = changeLogVendorNamed(subject.label);
+  return named ? { slug: null, vendor: named } : null;
+}
+
+export function vendorNameForSubject(subject: CompiledFigureSubject): string | null {
+  return vendorForSubject(subject)?.vendor ?? null;
 }
 
 export function timelineRecordsFor<T extends { date: string }>(

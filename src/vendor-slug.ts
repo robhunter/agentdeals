@@ -1,4 +1,4 @@
-import { loadOffers } from "./data.js";
+import { loadDealChanges, loadOffers } from "./data.js";
 import { isSubSlug, toSlug } from "./slug.js";
 
 export { isSubSlug, toSlug };
@@ -15,6 +15,28 @@ function buildVendorSlugMap(): Map<string, string> {
 }
 
 export const vendorSlugMap: Map<string, string> = buildVendorSlugMap();
+
+function buildChangeLogVendorMap(): Map<string, string> {
+  const map = new Map<string, string>();
+  for (const change of loadDealChanges()) {
+    const slug = toSlug(change.vendor);
+    if (!slug || map.has(slug)) continue;
+    map.set(slug, change.vendor);
+  }
+  return map;
+}
+
+export const changeLogVendorMap: Map<string, string> = buildChangeLogVendorMap();
+
+export function changeLogVendorNamed(phrase: string): string | null {
+  const slug = toSlug(phrase);
+  return slug ? changeLogVendorMap.get(slug) ?? null : null;
+}
+
+export function changeLogAnchorFor(vendor: string): string | null {
+  const slug = toSlug(vendor);
+  return slug ? `vendor-${slug}` : null;
+}
 
 export type VendorSlugResolution =
   | { type: "exact"; slug: string }
