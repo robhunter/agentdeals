@@ -8128,21 +8128,6 @@
       "recorded_date": "2026-09-03"
     },
     {
-      "vendor": "Peacock",
-      "change_type": "free_tier_removed",
-      "date": "2026-09-03",
-      "date_source": "discovered",
-      "summary": "The free tier no longer exists. The lowest tier is now $8.99/month for ad-supported access to TV shows, excluding sports and Peacock Originals.",
-      "previous_state": "Ad-supported access to a limited catalog (subset of full NBCUniversal library). No live sports or full NBC next-day content on free tier. Account required. No offline downloads.",
-      "current_state": "The lowest tier is $8.99/month for ad-supported access to TV shows, excluding sports and Peacock Originals. Higher tiers are available for $12.99/month or $19.99/month with more features.",
-      "impact": "high",
-      "source_url": "https://www.peacocktv.com",
-      "category": "Streaming & Media",
-      "alternatives": [],
-      "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-03"
-    },
-    {
       "vendor": "Microsoft Teams",
       "change_type": "free_tier_removed",
       "date": "2026-09-03",
@@ -8296,21 +8281,6 @@
       "recorded_date": "2026-09-03"
     },
     {
-      "vendor": "Strava",
-      "change_type": "limits_increased",
-      "date": "2026-09-03",
-      "date_source": "discovered",
-      "summary": "The current pricing page states the free tier includes 'Try Routes made for you', 'Save Routes for offline use', 'Draw your own Routes', 'View your training history', 'Analyze workouts', 'Set and track custom Goals', 'Compete on Segment leaderboards', 'Join and create challenges', 'Measure effort', and 'See your Fitness Score'.",
-      "previous_state": "Free GPS activity tracking for running, cycling, swimming, hiking. Route recording with maps. Activity feed. Clubs and challenges. Segment tracking (leaderboard viewing). No route planning, no training plans, no live segments on free.",
-      "current_state": "The free tier includes route saving and creation, training history analysis, goal setting, segment leaderboards, challenges, effort measurement, and fitness score tracking.",
-      "impact": "high",
-      "source_url": "https://www.strava.com/subscribe",
-      "category": "Fitness & Health",
-      "alternatives": [],
-      "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-03"
-    },
-    {
       "vendor": "Storyblok",
       "change_type": "record_corrected",
       "date": "2026-09-05",
@@ -8327,21 +8297,6 @@
       ],
       "recorded_date": "2026-09-05",
       "date_source": "hand_written"
-    },
-    {
-      "vendor": "Instapaper",
-      "change_type": "limits_increased",
-      "date": "2026-09-05",
-      "date_source": "discovered",
-      "summary": "The free tier now includes unlimited notes, full-text search, and PDF reader access, features previously restricted to premium.",
-      "previous_state": "Free article saving and reading. Clean reading view. Offline access on mobile. Speed reading mode. Basic highlights (5/month). Text-to-speech. Folder organization. No unlimited highlights, no full-text search, no notes on free.",
-      "current_state": "The free tier includes unlimited articles, videos, and pages; syncing across devices; folder creation; world-class support; API integration; full-text search; a permanent archive; a PDF reader; unlimited notes; Kindle integration; AI Voices & text-to-speech playlists on mobile; speed reading; and an ad-free website.",
-      "impact": "high",
-      "source_url": "https://www.instapaper.com/premium",
-      "category": "News & Reading",
-      "alternatives": [],
-      "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-05"
     },
     {
       "vendor": "Cloudflare Queues",
@@ -8576,21 +8531,6 @@
       "impact": "medium",
       "source_url": "https://proton.me/mail/pricing",
       "category": "Consumer Email",
-      "alternatives": [],
-      "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-05"
-    },
-    {
-      "vendor": "Robinhood",
-      "change_type": "new_tier",
-      "date": "2026-09-05",
-      "date_source": "discovered",
-      "summary": "Robinhood now offers a Gold subscription for $5/month with benefits like zero management fees on over $100K and access to other premium services. They also offer Agentic Trading, Agentic Credit Card, and various other financial products beyond basic trading.",
-      "previous_state": "Commission-free stock, ETF, options, and crypto trading. No account minimums. Fractional shares. Dividend reinvestment. Basic market data. No advanced charts, no Level II data, no margin on free. FDIC-insured cash sweep.",
-      "current_state": "Robinhood offers a Gold subscription for $5/month. They also offer Agentic Trading, Agentic Credit Card, and various other financial products.",
-      "impact": "medium",
-      "source_url": "https://robinhood.com",
-      "category": "Banking & Finance",
       "alternatives": [],
       "detected_by": "reverify-ai",
       "recorded_date": "2026-09-05"

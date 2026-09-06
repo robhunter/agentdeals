@@ -574,17 +574,6 @@
       "quarantined_since": null
     },
     {
-      "vendor": "Apple Health",
-      "url": "https://www.apple.com/health/",
-      "last_attempt_at": "2026-09-05",
-      "last_outcome": "confirmed",
-      "last_error": null,
-      "failure_category": null,
-      "consecutive_failures": 0,
-      "last_success": "2026-09-05",
-      "quarantined_since": null
-    },
-    {
       "vendor": "Apple Notes",
       "url": "https://www.apple.com/icloud/",
       "last_attempt_at": "2026-09-03",
@@ -604,17 +593,6 @@
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
       "last_success": "2026-08-24",
-      "quarantined_since": null
-    },
-    {
-      "vendor": "Apple Podcasts",
-      "url": "https://www.apple.com/apple-podcasts/",
-      "last_attempt_at": "2026-08-28",
-      "last_outcome": "source_unusable",
-      "last_error": "the page names Apple Podcasts but states no amount, tier or rate we can read",
-      "failure_category": "source_unusable",
-      "consecutive_failures": 1,
-      "last_success": "2026-08-20",
       "quarantined_since": null
     },
     {
@@ -3104,17 +3082,6 @@
       "quarantined_since": null
     },
     {
-      "vendor": "Crunchyroll",
-      "url": "https://www.crunchyroll.com",
-      "last_attempt_at": "2026-08-28",
-      "last_outcome": "fetch_failed",
-      "last_error": "page content too short (likely JS-rendered SPA)",
-      "failure_category": "empty_page",
-      "consecutive_failures": 1,
-      "last_success": "2026-08-18",
-      "quarantined_since": null
-    },
-    {
       "vendor": "crypteron.com",
       "url": "https://www.crypteron.com/",
       "last_attempt_at": "2026-08-28",
@@ -4531,17 +4498,6 @@
       "failure_category": null,
       "consecutive_failures": 0,
       "last_success": "2026-09-01",
-      "quarantined_since": null
-    },
-    {
-      "vendor": "Feedly",
-      "url": "https://feedly.com/i/pro",
-      "last_attempt_at": "2026-08-28",
-      "last_outcome": "source_unusable",
-      "last_error": "the page names Feedly but states no amount, tier or rate we can read",
-      "failure_category": "source_unusable",
-      "consecutive_failures": 1,
-      "last_success": "2026-08-21",
       "quarantined_since": null
     },
     {
@@ -6679,17 +6635,6 @@
       "quarantined_since": null
     },
     {
-      "vendor": "iHeartRadio",
-      "url": "https://www.iheart.com",
-      "last_attempt_at": "2026-08-28",
-      "last_outcome": "source_unusable",
-      "last_error": "the page names iHeartRadio but states no amount, tier or rate we can read",
-      "failure_category": "source_unusable",
-      "consecutive_failures": 1,
-      "last_success": "2026-08-19",
-      "quarantined_since": null
-    },
-    {
       "vendor": "Ilograph",
       "url": "https://www.ilograph.com/",
       "last_attempt_at": "2026-08-28",
@@ -6866,17 +6811,6 @@
       "quarantined_since": null
     },
     {
-      "vendor": "Insight Timer",
-      "url": "https://insighttimer.com",
-      "last_attempt_at": "2026-08-28",
-      "last_outcome": "source_unusable",
-      "last_error": "the page names Insight Timer but states no amount, tier or rate we can read",
-      "failure_category": "source_unusable",
-      "consecutive_failures": 1,
-      "last_success": "2026-08-21",
-      "quarantined_since": null
-    },
-    {
       "vendor": "inspectlet.com",
       "url": "https://www.inspectlet.com/",
       "last_attempt_at": "2026-08-28",
@@ -6924,17 +6858,6 @@
       "vendor": "InstallOnAir",
       "url": "https://www.installonair.com",
       "last_attempt_at": "2026-08-28",
-      "last_outcome": "changed",
-      "last_error": null,
-      "failure_category": null,
-      "consecutive_failures": 0,
-      "last_success": null,
-      "quarantined_since": null
-    },
-    {
-      "vendor": "Instapaper",
-      "url": "https://www.instapaper.com/premium",
-      "last_attempt_at": "2026-09-05",
       "last_outcome": "changed",
       "last_error": null,
       "failure_category": null,
@@ -8736,17 +8659,6 @@
       "quarantined_since": null
     },
     {
-      "vendor": "Mint (Credit Karma)",
-      "url": "https://www.creditkarma.com",
-      "last_attempt_at": "2026-08-28",
-      "last_outcome": "source_unusable",
-      "last_error": "the page names Mint (Credit Karma) but states no amount, tier or rate we can read",
-      "failure_category": "source_unusable",
-      "consecutive_failures": 1,
-      "last_success": "2026-08-23",
-      "quarantined_since": null
-    },
-    {
       "vendor": "Miradore",
       "url": "https://miradore.com",
       "last_attempt_at": "2026-08-28",
@@ -9022,17 +8934,6 @@
       "quarantined_since": null
     },
     {
-      "vendor": "MyFitnessPal",
-      "url": "https://www.myfitnesspal.com/premium",
-      "last_attempt_at": "2026-09-03",
-      "last_outcome": "changed",
-      "last_error": null,
-      "failure_category": null,
-      "consecutive_failures": 0,
-      "last_success": null,
-      "quarantined_since": null
-    },
-    {
       "vendor": "n8n",
       "url": "https://n8n.io/pricing/",
       "last_attempt_at": "2026-09-03",
@@ -9217,17 +9118,6 @@
       "failure_category": null,
       "consecutive_failures": 0,
       "last_success": "2026-08-28",
-      "quarantined_since": null
-    },
-    {
-      "vendor": "Nike Training Club",
-      "url": "https://www.nike.com/ntc-app",
-      "last_attempt_at": "2026-08-28",
-      "last_outcome": "source_unusable",
-      "last_error": "the page names Nike Training Club but states no amount, tier or rate we can read",
-      "failure_category": "source_unusable",
-      "consecutive_failures": 1,
-      "last_success": "2026-08-23",
       "quarantined_since": null
     },
     {
@@ -9924,17 +9814,6 @@
       "quarantined_since": null
     },
     {
-      "vendor": "Pandora",
-      "url": "https://www.pandora.com",
-      "last_attempt_at": "2026-08-28",
-      "last_outcome": "source_unusable",
-      "last_error": "the page names Pandora but states no amount, tier or rate we can read",
-      "failure_category": "source_unusable",
-      "consecutive_failures": 1,
-      "last_success": "2026-08-20",
-      "quarantined_since": null
-    },
-    {
       "vendor": "pantheon.io",
       "url": "https://pantheon.io/",
       "last_attempt_at": "2026-08-28",
@@ -10053,17 +9932,6 @@
       "failure_category": null,
       "consecutive_failures": 0,
       "last_success": "2026-08-28",
-      "quarantined_since": null
-    },
-    {
-      "vendor": "Peacock",
-      "url": "https://www.peacocktv.com",
-      "last_attempt_at": "2026-09-03",
-      "last_outcome": "changed",
-      "last_error": null,
-      "failure_category": null,
-      "consecutive_failures": 0,
-      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -10397,17 +10265,6 @@
       "quarantined_since": null
     },
     {
-      "vendor": "Plex",
-      "url": "https://www.plex.tv",
-      "last_attempt_at": "2026-08-28",
-      "last_outcome": "source_unusable",
-      "last_error": "the page names Plex but states no amount, tier or rate we can read",
-      "failure_category": "source_unusable",
-      "consecutive_failures": 1,
-      "last_success": "2026-08-18",
-      "quarantined_since": null
-    },
-    {
       "vendor": "ploi.io",
       "url": "https://ploi.io/",
       "last_attempt_at": "2026-08-28",
@@ -10441,17 +10298,6 @@
       "quarantined_since": null
     },
     {
-      "vendor": "Pluto TV",
-      "url": "https://pluto.tv",
-      "last_attempt_at": "2026-08-28",
-      "last_outcome": "source_unusable",
-      "last_error": "the page names Pluto TV but states no amount, tier or rate we can read",
-      "failure_category": "source_unusable",
-      "consecutive_failures": 1,
-      "last_success": "2026-08-21",
-      "quarantined_since": null
-    },
-    {
       "vendor": "PNG to WebP Converter",
       "url": "https://pngtowebpconverter.com/",
       "last_attempt_at": "2026-08-28",
@@ -10471,28 +10317,6 @@
       "failure_category": null,
       "consecutive_failures": 0,
       "last_success": "2026-09-01",
-      "quarantined_since": null
-    },
-    {
-      "vendor": "Pocket Casts",
-      "url": "https://pocketcasts.com",
-      "last_attempt_at": "2026-08-28",
-      "last_outcome": "source_unusable",
-      "last_error": "the page names Pocket Casts but states no amount, tier or rate we can read",
-      "failure_category": "source_unusable",
-      "consecutive_failures": 1,
-      "last_success": "2026-08-21",
-      "quarantined_since": null
-    },
-    {
-      "vendor": "Pocket",
-      "url": "https://getpocket.com/premium",
-      "last_attempt_at": "2026-08-28",
-      "last_outcome": "source_unusable",
-      "last_error": "the page names Pocket but states no amount, tier or rate we can read",
-      "failure_category": "source_unusable",
-      "consecutive_failures": 1,
-      "last_success": "2026-08-23",
       "quarantined_since": null
     },
     {
@@ -11475,17 +11299,6 @@
       "quarantined_since": null
     },
     {
-      "vendor": "Robinhood",
-      "url": "https://robinhood.com",
-      "last_attempt_at": "2026-09-05",
-      "last_outcome": "changed",
-      "last_error": null,
-      "failure_category": null,
-      "consecutive_failures": 0,
-      "last_success": null,
-      "quarantined_since": null
-    },
-    {
       "vendor": "Roboflow",
       "url": "https://roboflow.com/pricing",
       "last_attempt_at": "2026-08-28",
@@ -11615,17 +11428,6 @@
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
       "last_success": "2026-07-28",
-      "quarantined_since": null
-    },
-    {
-      "vendor": "Samsung Health",
-      "url": "https://www.samsung.com/us/apps/samsung-health/",
-      "last_attempt_at": "2026-08-28",
-      "last_outcome": "source_unusable",
-      "last_error": "the page names Samsung Health but states no amount, tier or rate we can read",
-      "failure_category": "source_unusable",
-      "consecutive_failures": 1,
-      "last_success": "2026-08-19",
       "quarantined_since": null
     },
     {
@@ -12641,17 +12443,6 @@
       "quarantined_since": "2026-08-28"
     },
     {
-      "vendor": "SoundCloud",
-      "url": "https://soundcloud.com",
-      "last_attempt_at": "2026-08-28",
-      "last_outcome": "source_unusable",
-      "last_error": "the page names SoundCloud but states no amount, tier or rate we can read",
-      "failure_category": "source_unusable",
-      "consecutive_failures": 1,
-      "last_success": "2026-08-22",
-      "quarantined_since": null
-    },
-    {
       "vendor": "SourceForge",
       "url": "https://sourceforge.net/",
       "last_attempt_at": "2026-08-28",
@@ -12682,17 +12473,6 @@
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
       "last_success": "2026-07-26",
-      "quarantined_since": null
-    },
-    {
-      "vendor": "Spotify",
-      "url": "https://www.spotify.com/us/free/",
-      "last_attempt_at": "2026-09-03",
-      "last_outcome": "confirmed",
-      "last_error": null,
-      "failure_category": null,
-      "consecutive_failures": 0,
-      "last_success": "2026-09-03",
       "quarantined_since": null
     },
     {
@@ -12979,17 +12759,6 @@
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
       "last_success": "2026-07-30",
-      "quarantined_since": null
-    },
-    {
-      "vendor": "Strava",
-      "url": "https://www.strava.com/subscribe",
-      "last_attempt_at": "2026-09-03",
-      "last_outcome": "changed",
-      "last_error": null,
-      "failure_category": null,
-      "consecutive_failures": 0,
-      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -14005,17 +13774,6 @@
       "quarantined_since": null
     },
     {
-      "vendor": "Tubi",
-      "url": "https://tubitv.com",
-      "last_attempt_at": "2026-08-28",
-      "last_outcome": "source_unusable",
-      "last_error": "the page names Tubi but states no amount, tier or rate we can read",
-      "failure_category": "source_unusable",
-      "consecutive_failures": 1,
-      "last_success": "2026-08-23",
-      "quarantined_since": null
-    },
-    {
       "vendor": "Tugboat",
       "url": "https://tugboat.qa",
       "last_attempt_at": "2026-08-28",
@@ -14819,17 +14577,6 @@
       "quarantined_since": null
     },
     {
-      "vendor": "Waking Up",
-      "url": "https://www.wakingup.com",
-      "last_attempt_at": "2026-08-28",
-      "last_outcome": "source_unusable",
-      "last_error": "the page names Waking Up but states no amount, tier or rate we can read",
-      "failure_category": "source_unusable",
-      "consecutive_failures": 1,
-      "last_success": "2026-08-21",
-      "quarantined_since": null
-    },
-    {
       "vendor": "Wave Terminal",
       "url": "https://waveterm.dev/",
       "last_attempt_at": "2026-08-28",
@@ -15138,17 +14885,6 @@
       "quarantined_since": "2026-08-28"
     },
     {
-      "vendor": "Wise",
-      "url": "https://wise.com/pricing",
-      "last_attempt_at": "2026-09-05",
-      "last_outcome": "confirmed",
-      "last_error": null,
-      "failure_category": null,
-      "consecutive_failures": 0,
-      "last_success": "2026-09-05",
-      "quarantined_since": null
-    },
-    {
       "vendor": "Wisepops",
       "url": "https://www.joinsecret.com/offers",
       "last_attempt_at": "2026-08-28",
@@ -15399,17 +15135,6 @@
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
       "last_success": "2026-07-26",
-      "quarantined_since": null
-    },
-    {
-      "vendor": "YouTube",
-      "url": "https://www.youtube.com",
-      "last_attempt_at": "2026-08-28",
-      "last_outcome": "source_unusable",
-      "last_error": "the page names YouTube but states no amount, tier or rate we can read",
-      "failure_category": "source_unusable",
-      "consecutive_failures": 1,
-      "last_success": "2026-08-20",
       "quarantined_since": null
     },
     {
