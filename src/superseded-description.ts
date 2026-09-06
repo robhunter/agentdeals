@@ -161,3 +161,29 @@ export function supersededTermsMetaSentence(vendor: string, change: QuotingChang
 export function supersededTermsVerdictSentence(vendor: string, change: QuotingChange): string {
   return readingWithTail(vendor, change, 170) ?? withheldTail(vendor, change, false);
 }
+
+export interface SupersededTermsRecord {
+  change_date: string;
+  change_type: string;
+  summary: string;
+  reading: SourcedReading | null;
+  notice: string;
+}
+
+export function supersededTermsRecord(vendor: string, change: QuotingChange): SupersededTermsRecord {
+  return {
+    change_date: change.date,
+    change_type: change.change_type,
+    summary: change.summary,
+    reading: readingBehindTheChange(change),
+    notice: supersededTermsNotice(vendor, change),
+  };
+}
+
+export function supersededTermsRecordFor(
+  offer: StoredTerms,
+  vendorChanges: readonly QuotingChange[],
+): SupersededTermsRecord | null {
+  const change = supersedingChange(offer, vendorChanges);
+  return change ? supersededTermsRecord(offer.vendor, change) : null;
+}

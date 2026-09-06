@@ -72,7 +72,7 @@
       "review_outcome": null,
       "review_note": null,
       "reads_index": true,
-      "reads_changes": false,
+      "reads_changes": true,
       "data_source": "catalogue",
       "data_source_reason": null
     },
@@ -88,7 +88,7 @@
       "review_outcome": null,
       "review_note": null,
       "reads_index": true,
-      "reads_changes": false,
+      "reads_changes": true,
       "data_source": "catalogue",
       "data_source_reason": null
     },
@@ -674,7 +674,7 @@
       "review_outcome": null,
       "review_note": null,
       "reads_index": true,
-      "reads_changes": false,
+      "reads_changes": true,
       "data_source": "catalogue",
       "data_source_reason": null
     },
@@ -2219,7 +2219,7 @@
       "review_outcome": null,
       "review_note": null,
       "reads_index": true,
-      "reads_changes": false,
+      "reads_changes": true,
       "data_source": "catalogue",
       "data_source_reason": null
     }

@@ -21,7 +21,8 @@ import { LINK_GRACE_DAYS, unreachableNoticeForUrl } from "./link-health.js";
 import { offerEnded, offerRetired, recordedTierSentence, endedHeadline, endedHistorySentence, endedReliabilitySentence, endedEmptyChangeHistorySentence, ENDED_BADGE_LABEL, ENDED_SINCE_CHANGES_SENTENCE, type OfferTierAndUrl } from "./retirement.js";
 import { amountUnstatedSentence, levelWithheldReason, sourceStatesNoAmount, withheldLevelClause, withheldLevelSentence, type LevelWithheldReason } from "./source-check.js";
 import { readingIsBehindTheLoop, reverificationIntervalDays } from "./badge-staleness.js";
-import { SUPERSEDED_TERMS_LABEL, supersededTermsAnswer, supersededTermsMetaSentence, supersededTermsNotice, supersededTermsNoticeHtml, supersededTermsVerdictSentence, supersedingChange } from "./superseded-description.js";
+import { SUPERSEDED_TERMS_LABEL, supersededTermsAnswer, supersededTermsMetaSentence, supersededTermsNotice, supersededTermsNoticeHtml, supersededTermsRecord, supersededTermsVerdictSentence, supersedingChange, type SupersededTermsRecord } from "./superseded-description.js";
+import { changesByVendor } from "./superseded-census.js";
 import { buildComparisonMap, comparisonSlug } from "./comparison-pairs.js";
 import { comparisonVerdictText, freeTierFaqAnswer, stabilityFaqAnswer, type ComparisonSide, type FreeTierSide, type SideFreeTier, type StabilityRating } from "./comparison-verdict.js";
 import { publishedVendorLevel, vendorVerdictSentence, vendorBadge, freeTierClaim, statesRiskCause, narrowingSentence, changeKindNoun, type BadgeWithholding, type VendorVerdictInput } from "./vendor-verdict.js";
@@ -446,6 +447,58 @@ const registrationLimiter = createRegistrationLimiter();
 const offers = loadOffers();
 const categories = getCategories();
 const dealChanges = loadDealChanges();
+
+const changesByVendorName = (() => {
+  const byVendor = changesByVendor(dealChanges);
+  for (const held of byVendor.values()) held.sort((a, b) => b.date.localeCompare(a.date));
+  return byVendor;
+})();
+
+function changesFor(vendorName: string): DealChange[] {
+  return changesByVendorName.get(vendorName.toLowerCase()) ?? [];
+}
+
+type StoredTermsOf = Pick<Offer, "vendor" | "description">;
+
+function supersedingChangeFor(offer: StoredTermsOf): DealChange | null {
+  return supersedingChange(offer, changesFor(offer.vendor));
+}
+
+function publishedTermsText(offer: StoredTermsOf): string {
+  const superseded = supersedingChangeFor(offer);
+  return superseded ? supersededTermsNotice(offer.vendor, superseded) : offer.description;
+}
+
+function supersededTermsListingHtml(vendor: string, change: DealChange): string {
+  return `<strong>${SUPERSEDED_TERMS_LABEL}:</strong> ${supersededTermsNoticeHtml(vendor, change, escHtmlServer)}` +
+    ` <a href="/vendor/${toSlug(vendor)}#changes">Read what we recorded &darr;</a>`;
+}
+
+function publishedTermsHtml(offer: StoredTermsOf): string {
+  const superseded = supersedingChangeFor(offer);
+  return superseded
+    ? supersededTermsListingHtml(offer.vendor, superseded)
+    : escHtmlServer(offer.description);
+}
+
+function publishedTermsSummary(offer: StoredTermsOf, cap: number): string {
+  const superseded = supersedingChangeFor(offer);
+  if (superseded) return supersededTermsMetaSentence(offer.vendor, superseded);
+  return offer.description.length > cap ? `${offer.description.slice(0, cap)}...` : offer.description;
+}
+
+function publishedTermsOpening(offer: StoredTermsOf, sentences: number, cap?: number): string {
+  const superseded = supersedingChangeFor(offer);
+  if (superseded) return supersededTermsMetaSentence(offer.vendor, superseded);
+  const opening = offer.description.split(". ").slice(0, sentences).join(". ");
+  return cap === undefined ? opening : opening.substring(0, cap);
+}
+
+function supersededTermsField(offer: StoredTermsOf): { terms_superseded?: SupersededTermsRecord } {
+  const superseded = supersedingChangeFor(offer);
+  return superseded ? { terms_superseded: supersededTermsRecord(offer.vendor, superseded) } : {};
+}
+
 const stats = {
   offers: offers.length,
   categories: categories.length,
@@ -798,9 +851,7 @@ function vendorVerdictContext(vendorName: string, servedOn: string): VendorVerdi
 
   const primary = vendorOffers[0];
   const enriched = enrichOffers([primary])[0];
-  const vendorChanges = dealChanges
-    .filter(c => c.vendor.toLowerCase() === vendorName.toLowerCase())
-    .sort((a, b) => b.date.localeCompare(a.date));
+  const vendorChanges = changesFor(vendorName);
   const linkUnreachable = enriched.link_unreachable;
   const levelWithheld = levelWithheldReason(primary, linkUnreachable);
   const unconfirmableSince = linkUnreachable?.last_reachable ? ` since ${linkUnreachable.last_reachable}` : "";
@@ -1269,7 +1320,7 @@ function buildCategoryPage(slug: string): string | null {
   const offersHtml = catOffers.map((o) => `        <tr>
           <td style="font-weight:600;color:var(--text);white-space:nowrap"><a href="/vendor/${toSlug(o.vendor)}" style="color:var(--text)">${escHtmlServer(o.vendor)}</a></td>
           <td style="font-family:var(--mono);color:var(--accent);white-space:nowrap">${escHtmlServer(o.tier)}</td>
-          <td style="color:var(--text-muted)">${escHtmlServer(o.description)}${listingEligibilityNoticeHtml(o)}${listingUnreachableNoticeHtml(o)}</td>
+          <td style="color:var(--text-muted)">${publishedTermsHtml(o)}${listingEligibilityNoticeHtml(o)}${listingUnreachableNoticeHtml(o)}</td>
           <td style="font-family:var(--mono);color:var(--text-dim);white-space:nowrap">${escHtmlServer(o.verifiedDate)}</td>
         </tr>`).join("\n");
 
@@ -1303,7 +1354,7 @@ function buildCategoryPage(slug: string): string | null {
     ? `This category has been relatively stable &mdash; only ${catChangeCount} pricing changes recorded across all vendors.`
     : `This category has seen some movement &mdash; ${catChangeCount} pricing changes recorded across vendors.`;
 
-  const topVendor = catOffers.find((_, i) => catGates[i] === null);
+  const topVendor = catOffers.find((o, i) => catGates[i] === null && !supersedingChangeFor(o));
   const keyLimitMatch = topVendor?.description.match(/(\d[\d,]*\s*(?:GB|GiB|MB|TB|requests?|calls?|MAU|users?|emails?|messages?|builds?|minutes?|hours?|projects?|repos?|sites?|apps?|databases?|invocations?|events?))/i);
   const keyLimit = keyLimitMatch ? keyLimitMatch[1] : "a generous free tier";
 
@@ -1403,7 +1454,7 @@ function buildCategoryPage(slug: string): string | null {
       item: {
         "@type": "SoftwareApplication",
         name: o.vendor,
-        description: o.description,
+        description: publishedTermsText(o),
         applicationCategory: categoryName,
         offers: { "@type": "Offer", price: "0", priceCurrency: "USD", description: o.tier },
         ...(offerRetired(o) ? {} : { url: o.url }),
@@ -1636,6 +1687,13 @@ function rankCategory(categoryName: string, date = utcDate()): RankingResult<Enr
 }
 
 function buildBestOfMiniReview(offer: ReturnType<typeof enrichOffers>[number]): string {
+  const caveatFor = (o: ReturnType<typeof enrichOffers>[number]): string =>
+    o.risk_level !== "stable" && o.risk_cause
+      ? ` Note — ${changeDateLabel(o.risk_cause)}: ${escHtmlServer(o.risk_cause.summary)}`
+      : "";
+  const superseded = supersedingChangeFor(offer);
+  if (superseded) return `${supersededTermsListingHtml(offer.vendor, superseded)}${caveatFor(offer)}`;
+
   const bestFor: string[] = [];
   const desc = offer.description.toLowerCase();
   if (desc.includes("hobby") || desc.includes("personal")) bestFor.push("personal projects");
@@ -1644,10 +1702,7 @@ function buildBestOfMiniReview(offer: ReturnType<typeof enrichOffers>[number]): 
   if (desc.includes("student") || desc.includes("education")) bestFor.push("students");
   if (desc.includes("unlimited") || desc.includes("no limit")) bestFor.push("unlimited usage needs");
   const bestForText = bestFor.length > 0 ? ` Best for ${bestFor.join(" and ")}.` : "";
-  const caveat = offer.risk_level !== "stable" && offer.risk_cause
-    ? ` Note — ${changeDateLabel(offer.risk_cause)}: ${escHtmlServer(offer.risk_cause.summary)}`
-    : "";
-  return `${escHtmlServer(offer.description)}${bestForText}${caveat}`;
+  return `${escHtmlServer(offer.description)}${bestForText}${caveatFor(offer)}`;
 }
 
 function renderDisclosures(entry: RankedEntry<EnrichedOfferRow>): string {
@@ -1748,7 +1803,7 @@ function buildBestOfPage(slug: string): string | null {
     return `        <tr>
           <td style="font-weight:600"><a href="/vendor/${toSlug(o.vendor)}" style="color:var(--text)">${escHtmlServer(o.vendor)}</a></td>
           <td style="font-family:var(--mono);color:var(--accent)">${escHtmlServer(o.tier)}</td>
-          <td style="color:var(--text-muted);max-width:300px">${escHtmlServer(o.description.slice(0, 120))}${o.description.length > 120 ? "..." : ""}</td>
+          <td style="color:var(--text-muted);max-width:300px">${escHtmlServer(publishedTermsSummary(o, 120))}</td>
           <td>${riskCellHtml(o.risk_level, o.risk_cause)}</td>
           <td style="font-family:var(--mono);color:var(--text-dim)">${escHtmlServer(o.verifiedDate)}</td>
         </tr>`;
@@ -1766,7 +1821,7 @@ function buildBestOfPage(slug: string): string | null {
       item: {
         "@type": "SoftwareApplication",
         name: e.offer.vendor,
-        description: e.offer.description,
+        description: publishedTermsText(e.offer),
         applicationCategory: categoryName,
         offers: { "@type": "Offer", price: "0", priceCurrency: "USD", description: e.offer.tier },
         ...(offerRetired(e.offer) ? {} : { url: e.offer.url }),
@@ -2998,8 +3053,8 @@ ${editorialVs.map(p => `      <a href="/${p.slug}" class="related-card">${escHtm
 
   const faqItems = [
     { q: `Is ${a.vendor} or ${b.vendor} better for free tier?`, a: config.verdict },
-    { q: `What is ${a.vendor}'s free tier?`, a: `${a.vendor} offers a ${a.tier} plan: ${a.description.substring(0, 200)}${a.description.length > 200 ? "..." : ""}` },
-    { q: `What is ${b.vendor}'s free tier?`, a: `${b.vendor} offers a ${b.tier} plan: ${b.description.substring(0, 200)}${b.description.length > 200 ? "..." : ""}` },
+    { q: `What is ${a.vendor}'s free tier?`, a: `${a.vendor} offers a ${a.tier} plan: ${storedTermsOf(a)}` },
+    { q: `What is ${b.vendor}'s free tier?`, a: `${b.vendor} offers a ${b.tier} plan: ${storedTermsOf(b)}` },
     { q: `Should I choose ${a.vendor} or ${b.vendor}?`, a: config.recommendation.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim() },
   ];
 
@@ -3100,7 +3155,7 @@ ${globalNavCss()}
       <div class="detail-row"><span class="detail-label">Verified</span><span class="detail-value">${escHtmlServer(a.verifiedDate)}</span></div>
       <div class="detail-row"><span class="detail-label">Stability</span><span class="detail-value">${escHtmlServer(riskA.stability ?? "stable")}</span></div>
       <div class="detail-row"><span class="detail-label">Changes</span><span class="detail-value">${a.deal_changes.length} recorded</span></div>
-      <div class="desc-block">${escHtmlServer(a.description)}</div>
+      <div class="desc-block">${publishedTermsHtml(a)}</div>
     </div>
     <div class="vendor-col">
       <h3><a href="/vendor/${toSlug(b.vendor)}">${escHtmlServer(b.vendor)}</a> ${riskBadge(riskB)} ${stabilityBadge(riskB.stability ?? "stable")}</h3>
@@ -3109,7 +3164,7 @@ ${globalNavCss()}
       <div class="detail-row"><span class="detail-label">Verified</span><span class="detail-value">${escHtmlServer(b.verifiedDate)}</span></div>
       <div class="detail-row"><span class="detail-label">Stability</span><span class="detail-value">${escHtmlServer(riskB.stability ?? "stable")}</span></div>
       <div class="detail-row"><span class="detail-label">Changes</span><span class="detail-value">${b.deal_changes.length} recorded</span></div>
-      <div class="desc-block">${escHtmlServer(b.description)}</div>
+      <div class="desc-block">${publishedTermsHtml(b)}</div>
     </div>
   </div>
 
@@ -3856,7 +3911,9 @@ function curatedAltsNote(vendorName: string): string {
   return `These alternatives were identified from ${escHtmlServer(vendorName)}&rsquo;s pricing changes as recommended replacements.`;
 }
 
-function storedTermsOf(offer: Pick<Offer, "description">): string {
+function storedTermsOf(offer: StoredTermsOf): string {
+  const superseded = supersedingChangeFor(offer);
+  if (superseded) return supersededTermsVerdictSentence(offer.vendor, superseded);
   return `${offer.description.slice(0, 200)}${offer.description.length > 200 ? "..." : ""}`;
 }
 
@@ -4759,7 +4816,7 @@ ${renderAuditBlock(altRanking.tie_break)}
       item: {
         "@type": "SoftwareApplication",
         name: a.vendor,
-        description: a.description,
+        description: publishedTermsText(a),
         applicationCategory: a.category,
         url: a.url,
         offers: { "@type": "Offer", price: "0", priceCurrency: "USD", description: a.tier },
@@ -7087,7 +7144,7 @@ function buildTimelyAlternativesPage(slug: string): string | null {
           <span class="alt-card-tier">${escHtmlServer(o.tier)}</span>
           ${riskBadge}
         </div>
-        <p class="alt-card-desc">${escHtmlServer(o.description)}</p>
+        <p class="alt-card-desc">${publishedTermsHtml(o)}</p>
         <div class="alt-card-links">
           <a href="/vendor/${toSlug(o.vendor)}">Full profile</a>
           <a href="/alternative-to/${toSlug(o.vendor)}">More alternatives</a>
@@ -7108,7 +7165,7 @@ function buildTimelyAlternativesPage(slug: string): string | null {
           <span class="alt-card-tier">${escHtmlServer(o.tier)}</span>
           ${riskBadge}
         </div>
-        <p class="alt-card-desc">${escHtmlServer(o.description)}</p>
+        <p class="alt-card-desc">${publishedTermsHtml(o)}</p>
         <div class="alt-card-links">
           <a href="/vendor/${toSlug(o.vendor)}">Full profile</a>
           ${offerPricingLink(o, "Pricing page &nearr;")}
@@ -7121,7 +7178,7 @@ function buildTimelyAlternativesPage(slug: string): string | null {
   const tableRows = allAlts.map((o) => `        <tr>
           <td style="font-weight:600"><a href="/vendor/${toSlug(o.vendor)}" style="color:var(--text)">${escHtmlServer(o.vendor)}</a></td>
           <td style="font-family:var(--mono);color:var(--accent)">${escHtmlServer(o.tier)}</td>
-          <td style="color:var(--text-muted);max-width:300px">${escHtmlServer(o.description.slice(0, 120))}${o.description.length > 120 ? "..." : ""}</td>
+          <td style="color:var(--text-muted);max-width:300px">${escHtmlServer(publishedTermsSummary(o, 120))}</td>
           <td>${riskCellHtml(o.risk_level, o.risk_cause)}</td>
         </tr>`).join("\n");
 
@@ -7137,7 +7194,7 @@ function buildTimelyAlternativesPage(slug: string): string | null {
       item: {
         "@type": "SoftwareApplication",
         name: o.vendor,
-        description: o.description,
+        description: publishedTermsText(o),
         offers: { "@type": "Offer", price: "0", priceCurrency: "USD", description: o.tier },
         ...(offerRetired(o) ? {} : { url: o.url }),
       },
@@ -8204,7 +8261,7 @@ function buildEventPage(slug: string): string | null {
       return '<tr>'
         + '<td><a href="/vendor/' + vendorSlug + '">' + escHtmlServer(o.vendor) + '</a></td>'
         + '<td>' + escHtmlServer(o.tier) + '</td>'
-        + '<td>' + escHtmlServer(o.description.slice(0, 100)) + (o.description.length > 100 ? "..." : "") + '</td>'
+        + '<td>' + escHtmlServer(publishedTermsSummary(o, 100)) + '</td>'
         + '<td>' + riskCellHtml(o.risk_level, o.risk_cause) + '</td>'
         + '<td>' + o.verifiedDate + '</td>'
         + '</tr>';
@@ -8828,7 +8885,7 @@ function buildAiFreeTiersPage(): string {
           <span class="alt-card-tier">${escHtmlServer(o.tier)}</span>
           ${riskBadge}
         </div>
-        <p class="alt-card-desc">${escHtmlServer(o.description)}</p>
+        <p class="alt-card-desc">${publishedTermsHtml(o)}</p>
         <div class="alt-card-links">
           <a href="/vendor/${toSlug(o.vendor)}">Full profile</a>
           <a href="/alternative-to/${toSlug(o.vendor)}">Alternatives</a>
@@ -8863,7 +8920,7 @@ function buildAiFreeTiersPage(): string {
       item: {
         "@type": "SoftwareApplication",
         name: o.vendor,
-        description: o.description,
+        description: publishedTermsText(o),
         offers: { "@type": "Offer", price: "0", priceCurrency: "USD", description: o.tier },
         ...(offerRetired(o) ? {} : { url: o.url }),
       },
@@ -9085,7 +9142,7 @@ function buildHostingAlternativesPage(): string {
           <span class="alt-card-tier">${escHtmlServer(o.tier)}</span>
           ${riskBadge}
         </div>
-        <p class="alt-card-desc">${escHtmlServer(o.description)}</p>
+        <p class="alt-card-desc">${publishedTermsHtml(o)}</p>
         <div class="alt-card-links">
           <a href="/vendor/${toSlug(o.vendor)}">Full profile</a>
           <a href="/alternative-to/${toSlug(o.vendor)}">Alternatives</a>
@@ -9118,7 +9175,7 @@ function buildHostingAlternativesPage(): string {
       item: {
         "@type": "SoftwareApplication",
         name: o.vendor,
-        description: o.description,
+        description: publishedTermsText(o),
         offers: { "@type": "Offer", price: "0", priceCurrency: "USD", description: o.tier },
         ...(offerRetired(o) ? {} : { url: o.url }),
       },
@@ -9423,7 +9480,7 @@ function buildDatabaseAlternativesPage(): string {
           <span class="alt-card-tier">${escHtmlServer(o.tier)}</span>
           ${riskBadge}
         </div>
-        <p class="alt-card-desc">${escHtmlServer(o.description)}</p>
+        <p class="alt-card-desc">${publishedTermsHtml(o)}</p>
         <div class="alt-card-links">
           <a href="/vendor/${toSlug(o.vendor)}">Full profile</a>
           <a href="/alternative-to/${toSlug(o.vendor)}">Alternatives</a>
@@ -9456,7 +9513,7 @@ function buildDatabaseAlternativesPage(): string {
       item: {
         "@type": "SoftwareApplication",
         name: o.vendor,
-        description: o.description,
+        description: publishedTermsText(o),
         offers: { "@type": "Offer", price: "0", priceCurrency: "USD", description: o.tier },
         ...(offerRetired(o) ? {} : { url: o.url }),
       },
@@ -9762,7 +9819,7 @@ function buildMonitoringAlternativesPage(): string {
           <span class="alt-card-tier">${escHtmlServer(o.tier)}</span>
           ${riskBadge}
         </div>
-        <p class="alt-card-desc">${escHtmlServer(o.description)}</p>
+        <p class="alt-card-desc">${publishedTermsHtml(o)}</p>
         <div class="alt-card-links">
           <a href="/vendor/${toSlug(o.vendor)}">Full profile</a>
           <a href="/alternative-to/${toSlug(o.vendor)}">Alternatives</a>
@@ -9795,7 +9852,7 @@ function buildMonitoringAlternativesPage(): string {
       item: {
         "@type": "SoftwareApplication",
         name: o.vendor,
-        description: o.description,
+        description: publishedTermsText(o),
         offers: { "@type": "Offer", price: "0", priceCurrency: "USD", description: o.tier },
         ...(offerRetired(o) ? {} : { url: o.url }),
       },
@@ -10090,7 +10147,7 @@ function buildCiCdAlternativesPage(): string {
           <span class="alt-card-tier">${escHtmlServer(o.tier)}</span>
           ${riskBadge}
         </div>
-        <p class="alt-card-desc">${escHtmlServer(o.description)}</p>
+        <p class="alt-card-desc">${publishedTermsHtml(o)}</p>
         <div class="alt-card-links">
           <a href="/vendor/${toSlug(o.vendor)}">Full profile</a>
           <a href="/alternative-to/${toSlug(o.vendor)}">Alternatives</a>
@@ -10123,7 +10180,7 @@ function buildCiCdAlternativesPage(): string {
       item: {
         "@type": "SoftwareApplication",
         name: o.vendor,
-        description: o.description,
+        description: publishedTermsText(o),
         offers: { "@type": "Offer", price: "0", priceCurrency: "USD", description: o.tier },
         ...(offerRetired(o) ? {} : { url: o.url }),
       },
@@ -10412,7 +10469,7 @@ function buildSecurityAlternativesPage(): string {
           <span class="alt-card-tier">${escHtmlServer(o.tier)}</span>
           ${riskBadge}
         </div>
-        <p class="alt-card-desc">${escHtmlServer(o.description)}</p>
+        <p class="alt-card-desc">${publishedTermsHtml(o)}</p>
         <div class="alt-card-links">
           <a href="/vendor/${toSlug(o.vendor)}">Full profile</a>
           <a href="/alternative-to/${toSlug(o.vendor)}">Alternatives</a>
@@ -10445,7 +10502,7 @@ function buildSecurityAlternativesPage(): string {
       item: {
         "@type": "SoftwareApplication",
         name: o.vendor,
-        description: o.description,
+        description: publishedTermsText(o),
         offers: { "@type": "Offer", price: "0", priceCurrency: "USD", description: o.tier },
         ...(offerRetired(o) ? {} : { url: o.url }),
       },
@@ -10749,7 +10806,7 @@ function buildTestingAlternativesPage(): string {
           <span class="alt-card-tier">${escHtmlServer(o.tier)}</span>
           ${riskBadge}
         </div>
-        <p class="alt-card-desc">${escHtmlServer(o.description)}</p>
+        <p class="alt-card-desc">${publishedTermsHtml(o)}</p>
         <div class="alt-card-links">
           <a href="/vendor/${toSlug(o.vendor)}">Full profile</a>
           <a href="/alternative-to/${toSlug(o.vendor)}">Alternatives</a>
@@ -10782,7 +10839,7 @@ function buildTestingAlternativesPage(): string {
       item: {
         "@type": "SoftwareApplication",
         name: o.vendor,
-        description: o.description,
+        description: publishedTermsText(o),
         offers: { "@type": "Offer", price: "0", priceCurrency: "USD", description: o.tier },
         ...(offerRetired(o) ? {} : { url: o.url }),
       },
@@ -11070,7 +11127,7 @@ function buildStorageAlternativesPage(): string {
           <span class="alt-card-tier">${escHtmlServer(o.tier)}</span>
           ${riskBadge}
         </div>
-        <p class="alt-card-desc">${escHtmlServer(o.description)}</p>
+        <p class="alt-card-desc">${publishedTermsHtml(o)}</p>
         <div class="alt-card-links">
           <a href="/vendor/${toSlug(o.vendor)}">Full profile</a>
           <a href="/alternative-to/${toSlug(o.vendor)}">Alternatives</a>
@@ -11103,7 +11160,7 @@ function buildStorageAlternativesPage(): string {
       item: {
         "@type": "SoftwareApplication",
         name: o.vendor,
-        description: o.description,
+        description: publishedTermsText(o),
         offers: { "@type": "Offer", price: "0", priceCurrency: "USD", description: o.tier },
         ...(offerRetired(o) ? {} : { url: o.url }),
       },
@@ -11382,7 +11439,7 @@ function buildAnalyticsAlternativesPage(): string {
           <span class="alt-card-tier">${escHtmlServer(o.tier)}</span>
           ${riskBadge}
         </div>
-        <p class="alt-card-desc">${escHtmlServer(o.description)}</p>
+        <p class="alt-card-desc">${publishedTermsHtml(o)}</p>
         <div class="alt-card-links">
           <a href="/vendor/${toSlug(o.vendor)}">Full profile</a>
           <a href="/alternative-to/${toSlug(o.vendor)}">Alternatives</a>
@@ -11415,7 +11472,7 @@ function buildAnalyticsAlternativesPage(): string {
       item: {
         "@type": "SoftwareApplication",
         name: o.vendor,
-        description: o.description,
+        description: publishedTermsText(o),
         offers: { "@type": "Offer", price: "0", priceCurrency: "USD", description: o.tier },
         ...(offerRetired(o) ? {} : { url: o.url }),
       },
@@ -11698,7 +11755,7 @@ function buildAiMlAlternativesPage(): string {
           <span class="alt-card-tier">${escHtmlServer(o.tier)}</span>
           ${riskBadge}
         </div>
-        <p class="alt-card-desc">${escHtmlServer(o.description)}</p>
+        <p class="alt-card-desc">${publishedTermsHtml(o)}</p>
         <div class="alt-card-links">
           <a href="/vendor/${toSlug(o.vendor)}">Full profile</a>
           <a href="/alternative-to/${toSlug(o.vendor)}">Alternatives</a>
@@ -11731,7 +11788,7 @@ function buildAiMlAlternativesPage(): string {
       item: {
         "@type": "SoftwareApplication",
         name: o.vendor,
-        description: o.description,
+        description: publishedTermsText(o),
         offers: { "@type": "Offer", price: "0", priceCurrency: "USD", description: o.tier },
         ...(offerRetired(o) ? {} : { url: o.url }),
       },
@@ -12020,7 +12077,7 @@ function buildEmailAlternativesPage(): string {
           <span class="alt-card-tier">${escHtmlServer(o.tier)}</span>
           ${riskBadge}
         </div>
-        <p class="alt-card-desc">${escHtmlServer(o.description)}</p>
+        <p class="alt-card-desc">${publishedTermsHtml(o)}</p>
         <div class="alt-card-links">
           <a href="/vendor/${toSlug(o.vendor)}">Full profile</a>
           <a href="/alternative-to/${toSlug(o.vendor)}">Alternatives</a>
@@ -12053,7 +12110,7 @@ function buildEmailAlternativesPage(): string {
       item: {
         "@type": "SoftwareApplication",
         name: o.vendor,
-        description: o.description,
+        description: publishedTermsText(o),
         offers: { "@type": "Offer", price: "0", priceCurrency: "USD", description: o.tier },
         ...(offerRetired(o) ? {} : { url: o.url }),
       },
@@ -12353,7 +12410,7 @@ function buildDesignAlternativesPage(): string {
           <span class="alt-card-tier">${escHtmlServer(o.tier)}</span>
           ${riskBadge}
         </div>
-        <p class="alt-card-desc">${escHtmlServer(o.description)}</p>
+        <p class="alt-card-desc">${publishedTermsHtml(o)}</p>
         <div class="alt-card-links">
           <a href="/vendor/${toSlug(o.vendor)}">Full profile</a>
           <a href="/alternative-to/${toSlug(o.vendor)}">Alternatives</a>
@@ -12386,7 +12443,7 @@ function buildDesignAlternativesPage(): string {
       item: {
         "@type": "SoftwareApplication",
         name: o.vendor,
-        description: o.description,
+        description: publishedTermsText(o),
         offers: { "@type": "Offer", price: "0", priceCurrency: "USD", description: o.tier },
         ...(offerRetired(o) ? {} : { url: o.url }),
       },
@@ -12690,7 +12747,7 @@ function buildProjectManagementAlternativesPage(): string {
           <span class="alt-card-tier">${escHtmlServer(o.tier)}</span>
           ${riskBadge}
         </div>
-        <p class="alt-card-desc">${escHtmlServer(o.description)}</p>
+        <p class="alt-card-desc">${publishedTermsHtml(o)}</p>
         <div class="alt-card-links">
           <a href="/vendor/${toSlug(o.vendor)}">Full profile</a>
           <a href="/alternative-to/${toSlug(o.vendor)}">Alternatives</a>
@@ -12723,7 +12780,7 @@ function buildProjectManagementAlternativesPage(): string {
       item: {
         "@type": "SoftwareApplication",
         name: o.vendor,
-        description: o.description,
+        description: publishedTermsText(o),
         offers: { "@type": "Offer", price: "0", priceCurrency: "USD", description: o.tier },
         ...(offerRetired(o) ? {} : { url: o.url }),
       },
@@ -13018,7 +13075,7 @@ function buildIdeCodeEditorsAlternativesPage(): string {
           <span class="alt-card-tier">${escHtmlServer(o.tier)}</span>
           ${riskBadge}
         </div>
-        <p class="alt-card-desc">${escHtmlServer(o.description)}</p>
+        <p class="alt-card-desc">${publishedTermsHtml(o)}</p>
         <div class="alt-card-links">
           <a href="/vendor/${toSlug(o.vendor)}">Full profile</a>
           <a href="/alternative-to/${toSlug(o.vendor)}">Alternatives</a>
@@ -13051,7 +13108,7 @@ function buildIdeCodeEditorsAlternativesPage(): string {
       item: {
         "@type": "SoftwareApplication",
         name: o.vendor,
-        description: o.description,
+        description: publishedTermsText(o),
         offers: { "@type": "Offer", price: "0", priceCurrency: "USD", description: o.tier },
         ...(offerRetired(o) ? {} : { url: o.url }),
       },
@@ -13327,7 +13384,7 @@ function buildFreeLlmApisPage(): string {
           <span class="alt-card-tier">${escHtmlServer(o.tier)}</span>
           ${riskBadge}
         </div>
-        <p class="alt-card-desc">${escHtmlServer(o.description)}</p>
+        <p class="alt-card-desc">${publishedTermsHtml(o)}</p>
         <div class="alt-card-links">
           <a href="/vendor/${toSlug(o.vendor)}">Full profile</a>
           <a href="/alternative-to/${toSlug(o.vendor)}">Alternatives</a>
@@ -13360,7 +13417,7 @@ function buildFreeLlmApisPage(): string {
       item: {
         "@type": "SoftwareApplication",
         name: o.vendor,
-        description: o.description,
+        description: publishedTermsText(o),
         offers: { "@type": "Offer", price: "0", priceCurrency: "USD", description: o.tier },
         ...(offerRetired(o) ? {} : { url: o.url }),
       },
@@ -13645,7 +13702,7 @@ function buildApiDevelopmentAlternativesPage(): string {
           <span class="alt-card-tier">${escHtmlServer(o.tier)}</span>
           ${riskBadge}
         </div>
-        <p class="alt-card-desc">${escHtmlServer(o.description)}</p>
+        <p class="alt-card-desc">${publishedTermsHtml(o)}</p>
         <div class="alt-card-links">
           <a href="/vendor/${toSlug(o.vendor)}">Full profile</a>
           <a href="/alternative-to/${toSlug(o.vendor)}">Alternatives</a>
@@ -13678,7 +13735,7 @@ function buildApiDevelopmentAlternativesPage(): string {
       item: {
         "@type": "SoftwareApplication",
         name: o.vendor,
-        description: o.description,
+        description: publishedTermsText(o),
         offers: { "@type": "Offer", price: "0", priceCurrency: "USD", description: o.tier },
         ...(offerRetired(o) ? {} : { url: o.url }),
       },
@@ -13960,7 +14017,7 @@ function buildTeamCollaborationAlternativesPage(): string {
           <span class="alt-card-tier">${escHtmlServer(o.tier)}</span>
           ${riskBadge}
         </div>
-        <p class="alt-card-desc">${escHtmlServer(o.description)}</p>
+        <p class="alt-card-desc">${publishedTermsHtml(o)}</p>
         <div class="alt-card-links">
           <a href="/vendor/${toSlug(o.vendor)}">Full profile</a>
           <a href="/alternative-to/${toSlug(o.vendor)}">Alternatives</a>
@@ -13993,7 +14050,7 @@ function buildTeamCollaborationAlternativesPage(): string {
       item: {
         "@type": "SoftwareApplication",
         name: o.vendor,
-        description: o.description,
+        description: publishedTermsText(o),
         offers: { "@type": "Offer", price: "0", priceCurrency: "USD", description: o.tier },
         ...(offerRetired(o) ? {} : { url: o.url }),
       },
@@ -14364,7 +14421,7 @@ function buildFreeStartupStackPage(): string {
           ${riskBadgeHtml(rec.risk_level, rec.risk_cause, { compact: true, margin: false })}
         </div>
         <p class="pick-why">${escHtmlServer(cat.recommended.why)}</p>
-        <p class="pick-limits">${escHtmlServer(rec.description.split(". ").slice(0, 2).join(". "))}</p>
+        <p class="pick-limits">${escHtmlServer(publishedTermsOpening(rec, 2))}</p>
         <div class="pick-links">
           <a href="/vendor/${toSlug(rec.vendor)}">Full profile</a>
           <a href="/alternative-to/${toSlug(rec.vendor)}">Alternatives</a>
@@ -14413,7 +14470,7 @@ function buildFreeStartupStackPage(): string {
 
   const tableRows = stackCategories.map(cat => {
     const rec = resolveVendor(cat.recommended.vendor);
-    const limits = rec ? rec.description.split(". ")[0].substring(0, 80) : "—";
+    const limits = rec ? publishedTermsOpening(rec, 1, 80) : "—";
     const riskBadge = rec ? riskCellHtml(rec.risk_level, rec.risk_cause) : riskCellHtml("stable", null);
     return `      <tr>
         <td style="font-weight:600">${cat.icon} ${escHtmlServer(cat.name)}</td>
@@ -14677,7 +14734,7 @@ function buildFreeAiStackPage(): string {
           ${riskBadgeHtml(rec.risk_level, rec.risk_cause, { compact: true, margin: false })}
         </div>
         <p class="pick-why">${escHtmlServer(cat.recommended.why)}</p>
-        <p class="pick-limits">${escHtmlServer(rec.description.split(". ").slice(0, 2).join(". "))}</p>
+        <p class="pick-limits">${escHtmlServer(publishedTermsOpening(rec, 2))}</p>
         <div class="pick-links">
           <a href="/vendor/${toSlug(rec.vendor)}">Full profile</a>
           <a href="/alternative-to/${toSlug(rec.vendor)}">Alternatives</a>
@@ -14726,7 +14783,7 @@ function buildFreeAiStackPage(): string {
 
   const tableRows = stackCategories.map(cat => {
     const rec = resolveVendor(cat.recommended.vendor);
-    const limits = rec ? rec.description.split(". ")[0].substring(0, 80) : "—";
+    const limits = rec ? publishedTermsOpening(rec, 1, 80) : "—";
     const riskBadge = rec ? riskCellHtml(rec.risk_level, rec.risk_cause) : riskCellHtml("stable", null);
     return `      <tr>
         <td style="font-weight:600">${cat.icon} ${escHtmlServer(cat.name)}</td>
@@ -15027,7 +15084,7 @@ function buildFreeDevopsStackPage(): string {
           ${riskBadgeHtml(rec.risk_level, rec.risk_cause, { compact: true, margin: false })}
         </div>
         <p class="pick-why">${escHtmlServer(cat.recommended.why)}</p>
-        <p class="pick-limits">${escHtmlServer(rec.description.split(". ").slice(0, 2).join(". "))}</p>
+        <p class="pick-limits">${escHtmlServer(publishedTermsOpening(rec, 2))}</p>
         <div class="pick-links">
           <a href="/vendor/${toSlug(rec.vendor)}">Full profile</a>
           <a href="/alternative-to/${toSlug(rec.vendor)}">Alternatives</a>
@@ -15076,7 +15133,7 @@ function buildFreeDevopsStackPage(): string {
 
   const tableRows = stackCategories.map(cat => {
     const rec = resolveVendor(cat.recommended.vendor);
-    const limits = rec ? rec.description.split(". ")[0].substring(0, 80) : "—";
+    const limits = rec ? publishedTermsOpening(rec, 1, 80) : "—";
     const riskBadge = rec ? riskCellHtml(rec.risk_level, rec.risk_cause) : riskCellHtml("stable", null);
     return `      <tr>
         <td style="font-weight:600">${cat.icon} ${escHtmlServer(cat.name)}</td>
@@ -15378,7 +15435,7 @@ function buildFreeFrontendStackPage(): string {
           ${riskBadgeHtml(rec.risk_level, rec.risk_cause, { compact: true, margin: false })}
         </div>
         <p class="pick-why">${escHtmlServer(cat.recommended.why)}</p>
-        <p class="pick-limits">${escHtmlServer(rec.description.split(". ").slice(0, 2).join(". "))}</p>
+        <p class="pick-limits">${escHtmlServer(publishedTermsOpening(rec, 2))}</p>
         <div class="pick-links">
           <a href="/vendor/${toSlug(rec.vendor)}">Full profile</a>
           <a href="/alternative-to/${toSlug(rec.vendor)}">Alternatives</a>
@@ -15427,7 +15484,7 @@ function buildFreeFrontendStackPage(): string {
 
   const tableRows = stackCategories.map(cat => {
     const rec = resolveVendor(cat.recommended.vendor);
-    const limits = rec ? rec.description.split(". ")[0].substring(0, 80) : "—";
+    const limits = rec ? publishedTermsOpening(rec, 1, 80) : "—";
     const riskBadge = rec ? riskCellHtml(rec.risk_level, rec.risk_cause) : riskCellHtml("stable", null);
     return `      <tr>
         <td style="font-weight:600">${cat.icon} ${escHtmlServer(cat.name)}</td>
@@ -15746,7 +15803,7 @@ function buildFreeNextjsStackPage(): string {
           ${riskBadgeHtml(rec.risk_level, rec.risk_cause, { compact: true, margin: false })}
         </div>
         <p class="pick-why">${escHtmlServer(cat.recommended.why)}</p>
-        <p class="pick-limits">${escHtmlServer(rec.description.split(". ").slice(0, 2).join(". "))}</p>
+        <p class="pick-limits">${escHtmlServer(publishedTermsOpening(rec, 2))}</p>
         <div class="pick-links">
           <a href="/vendor/${toSlug(rec.vendor)}">Full profile</a>
           <a href="/alternative-to/${toSlug(rec.vendor)}">Alternatives</a>
@@ -15801,7 +15858,7 @@ function buildFreeNextjsStackPage(): string {
 
   const tableRows = stackCategories.map(cat => {
     const rec = resolveVendor(cat.recommended.vendor);
-    const limits = rec ? rec.description.split(". ")[0].substring(0, 80) : "—";
+    const limits = rec ? publishedTermsOpening(rec, 1, 80) : "—";
     const riskBadge = rec ? riskCellHtml(rec.risk_level, rec.risk_cause) : riskCellHtml("stable", null);
     return `      <tr>
         <td style="font-weight:600">${cat.icon} ${escHtmlServer(cat.name)}</td>
@@ -16142,7 +16199,7 @@ function buildFreeDjangoStackPage(): string {
           ${riskBadgeHtml(rec.risk_level, rec.risk_cause, { compact: true, margin: false })}
         </div>
         <p class="pick-why">${escHtmlServer(cat.recommended.why)}</p>
-        <p class="pick-limits">${escHtmlServer(rec.description.split(". ").slice(0, 2).join(". "))}</p>
+        <p class="pick-limits">${escHtmlServer(publishedTermsOpening(rec, 2))}</p>
         <div class="pick-links">
           <a href="/vendor/${toSlug(rec.vendor)}">Full profile</a>
           <a href="/alternative-to/${toSlug(rec.vendor)}">Alternatives</a>
@@ -16216,7 +16273,7 @@ function buildFreeDjangoStackPage(): string {
   const tableRows = stackCategories.map(cat => {
     const rec = resolveVendor(cat.recommended.vendor);
     const vendorName = cat.recommended.vendor;
-    const limits = rec ? rec.description.split(". ")[0].substring(0, 80) : vendorName === "Django Built-in Auth" ? "Unlimited — included in Django" : "—";
+    const limits = rec ? publishedTermsOpening(rec, 1, 80) : vendorName === "Django Built-in Auth" ? "Unlimited — included in Django" : "—";
     const riskBadge = rec ? riskCellHtml(rec.risk_level, rec.risk_cause) : riskCellHtml("stable", null);
     const vendorLink = rec ? `<a href="/vendor/${toSlug(rec.vendor)}" style="color:var(--text);font-weight:600">${escHtmlServer(vendorName)}</a>` : `<span style="font-weight:600">${escHtmlServer(vendorName)}</span>`;
     return `      <tr>
@@ -16578,7 +16635,7 @@ function buildFreeFastapiStackPage(): string {
           ${riskBadgeHtml(rec.risk_level, rec.risk_cause, { compact: true, margin: false })}
         </div>
         <p class="pick-why">${escHtmlServer(cat.recommended.why)}</p>
-        <p class="pick-limits">${escHtmlServer(rec.description.split(". ").slice(0, 2).join(". "))}</p>
+        <p class="pick-limits">${escHtmlServer(publishedTermsOpening(rec, 2))}</p>
         <div class="pick-links">
           <a href="/vendor/${toSlug(rec.vendor)}">Full profile</a>
           <a href="/alternative-to/${toSlug(rec.vendor)}">Alternatives</a>
@@ -16652,7 +16709,7 @@ function buildFreeFastapiStackPage(): string {
   const tableRows = stackCategories.map(cat => {
     const rec = resolveVendor(cat.recommended.vendor);
     const vendorName = cat.recommended.vendor;
-    const limits = rec ? rec.description.split(". ")[0].substring(0, 80) : vendorName === "FastAPI Built-in" ? "Unlimited — built into FastAPI" : "—";
+    const limits = rec ? publishedTermsOpening(rec, 1, 80) : vendorName === "FastAPI Built-in" ? "Unlimited — built into FastAPI" : "—";
     const riskBadge = rec ? riskCellHtml(rec.risk_level, rec.risk_cause) : riskCellHtml("stable", null);
     const vendorLink = rec ? `<a href="/vendor/${toSlug(rec.vendor)}" style="color:var(--text);font-weight:600">${escHtmlServer(vendorName)}</a>` : `<span style="font-weight:600">${escHtmlServer(vendorName)}</span>`;
     return `      <tr>
@@ -17031,7 +17088,7 @@ function buildFreeGoStackPage(): string {
           ${riskBadgeHtml(rec.risk_level, rec.risk_cause, { compact: true, margin: false })}
         </div>
         <p class="pick-why">${escHtmlServer(cat.recommended.why)}</p>
-        <p class="pick-limits">${escHtmlServer(rec.description.split(". ").slice(0, 2).join(". "))}</p>
+        <p class="pick-limits">${escHtmlServer(publishedTermsOpening(rec, 2))}</p>
         <div class="pick-links">
           <a href="/vendor/${toSlug(rec.vendor)}">Full profile</a>
           <a href="/alternative-to/${toSlug(rec.vendor)}">Alternatives</a>
@@ -17105,7 +17162,7 @@ function buildFreeGoStackPage(): string {
   const tableRows = stackCategories.map(cat => {
     const rec = resolveVendor(cat.recommended.vendor);
     const vendorName = cat.recommended.vendor;
-    const limits = rec ? rec.description.split(". ")[0].substring(0, 80) : (vendorName === "Go Goroutines" ? "Unlimited — built into Go runtime" : vendorName === "swaggo/swag" ? "Open source — generates from comments" : "—");
+    const limits = rec ? publishedTermsOpening(rec, 1, 80) : (vendorName === "Go Goroutines" ? "Unlimited — built into Go runtime" : vendorName === "swaggo/swag" ? "Open source — generates from comments" : "—");
     const riskBadge = rec ? riskCellHtml(rec.risk_level, rec.risk_cause) : riskCellHtml("stable", null);
     const vendorLink = rec ? `<a href="/vendor/${toSlug(rec.vendor)}" style="color:var(--text);font-weight:600">${escHtmlServer(vendorName)}</a>` : `<span style="font-weight:600">${escHtmlServer(vendorName)}</span>`;
     return `      <tr>
@@ -17518,7 +17575,7 @@ function buildFreeSaasStackPage(): string {
           ${riskBadgeHtml(rec.risk_level, rec.risk_cause, { compact: true, margin: false })}
         </div>
         <p class="pick-why">${escHtmlServer(cat.recommended.why)}</p>
-        <p class="pick-limits">${escHtmlServer(rec.description.split(". ").slice(0, 2).join(". "))}</p>
+        <p class="pick-limits">${escHtmlServer(publishedTermsOpening(rec, 2))}</p>
         <div class="pick-links">
           <a href="/vendor/${toSlug(rec.vendor)}">Full profile</a>
           <a href="/alternative-to/${toSlug(rec.vendor)}">Alternatives</a>
@@ -17592,7 +17649,7 @@ function buildFreeSaasStackPage(): string {
   const tableRows = stackCategories.filter(c => !c.isFrameworkSection).map(cat => {
     const rec = resolveVendor(cat.recommended.vendor);
     const vendorName = cat.recommended.vendor;
-    const limits = rec ? rec.description.split(". ")[0].substring(0, 80) : (vendorName === "Stripe" ? "No monthly fee \u2014 2.9% + 30\u00a2/txn" : "\u2014");
+    const limits = rec ? publishedTermsOpening(rec, 1, 80) : (vendorName === "Stripe" ? "No monthly fee \u2014 2.9% + 30\u00a2/txn" : "\u2014");
     const riskBadge = rec ? riskCellHtml(rec.risk_level, rec.risk_cause) : riskCellHtml("stable", null);
     const vendorLink = rec ? `<a href="/vendor/${toSlug(rec.vendor)}" style="color:var(--text);font-weight:600">${escHtmlServer(vendorName)}</a>` : `<span style="font-weight:600">${escHtmlServer(vendorName)}</span>`;
     return `      <tr>
@@ -19321,7 +19378,7 @@ function buildSupabaseVsFirebasePage(): string {
     return `<tr>
       <td style="font-weight:600"><a href="/vendor/${vendorSlug}" style="color:var(--text)">${escHtmlServer(o.vendor)}</a></td>
       <td style="font-family:var(--mono);color:var(--accent);font-size:.85rem">${escHtmlServer(o.tier)}</td>
-      <td style="color:var(--text-muted);font-size:.85rem">${escHtmlServer(o.description)}</td>
+      <td style="color:var(--text-muted);font-size:.85rem">${publishedTermsHtml(o)}</td>
     </tr>`;
   }).join("\n        ");
 
@@ -19465,8 +19522,8 @@ ${mcpCtaCss()}
       </tbody>
     </table>
   </div>
-  ${supabaseOffer ? `<div class="context-box"><strong>Supabase verified data:</strong> ${escHtmlServer(supabaseOffer.description)} <br>Verified: ${escHtmlServer(supabaseOffer.verifiedDate)} &middot; <a href="/vendor/supabase">Full profile →</a></div>` : ""}
-  ${firebaseOffer ? `<div class="context-box"><strong>Firebase verified data:</strong> ${escHtmlServer(firebaseOffer.description)} <br>Verified: ${escHtmlServer(firebaseOffer.verifiedDate)} &middot; <a href="/vendor/firebase">Full profile →</a></div>` : ""}
+  ${supabaseOffer ? `<div class="context-box"><strong>Supabase verified data:</strong> ${publishedTermsHtml(supabaseOffer)} <br>Verified: ${escHtmlServer(supabaseOffer.verifiedDate)} &middot; <a href="/vendor/supabase">Full profile →</a></div>` : ""}
+  ${firebaseOffer ? `<div class="context-box"><strong>Firebase verified data:</strong> ${publishedTermsHtml(firebaseOffer)} <br>Verified: ${escHtmlServer(firebaseOffer.verifiedDate)} &middot; <a href="/vendor/firebase">Full profile →</a></div>` : ""}
 
   <h2 id="differences">2. Key Differences</h2>
   <p class="section-intro">Beyond the raw numbers, these architectural differences matter for your long-term stack choice.</p>
@@ -19643,7 +19700,7 @@ function buildVercelVsNetlifyPage(): string {
     return `<tr>
       <td style="font-weight:600"><a href="/vendor/${vendorSlug}" style="color:var(--text)">${escHtmlServer(o.vendor)}</a></td>
       <td style="font-family:var(--mono);color:var(--accent);font-size:.85rem">${escHtmlServer(o.tier)}</td>
-      <td style="color:var(--text-muted);font-size:.85rem">${escHtmlServer(o.description)}</td>
+      <td style="color:var(--text-muted);font-size:.85rem">${publishedTermsHtml(o)}</td>
     </tr>`;
   }).join("\n        ");
 
@@ -19787,8 +19844,8 @@ ${mcpCtaCss()}
       </tbody>
     </table>
   </div>
-  ${vercelOffer ? `<div class="context-box"><strong>Vercel verified data:</strong> ${escHtmlServer(vercelOffer.description)} <br>Verified: ${escHtmlServer(vercelOffer.verifiedDate)} &middot; <a href="/vendor/vercel">Full profile &rarr;</a></div>` : ""}
-  ${netlifyOffer ? `<div class="context-box"><strong>Netlify verified data:</strong> ${escHtmlServer(netlifyOffer.description)} <br>Verified: ${escHtmlServer(netlifyOffer.verifiedDate)} &middot; <a href="/vendor/netlify">Full profile &rarr;</a></div>` : ""}
+  ${vercelOffer ? `<div class="context-box"><strong>Vercel verified data:</strong> ${publishedTermsHtml(vercelOffer)} <br>Verified: ${escHtmlServer(vercelOffer.verifiedDate)} &middot; <a href="/vendor/vercel">Full profile &rarr;</a></div>` : ""}
+  ${netlifyOffer ? `<div class="context-box"><strong>Netlify verified data:</strong> ${publishedTermsHtml(netlifyOffer)} <br>Verified: ${escHtmlServer(netlifyOffer.verifiedDate)} &middot; <a href="/vendor/netlify">Full profile &rarr;</a></div>` : ""}
 
   <h2 id="differences">2. Key Differences</h2>
   <p class="section-intro">Beyond the raw numbers, these structural differences matter for your hosting choice.</p>
@@ -19962,7 +20019,7 @@ function buildNeonVsSupabasePage(): string {
     return `<tr>
       <td style="font-weight:600"><a href="/vendor/${vendorSlug}" style="color:var(--text)">${escHtmlServer(o.vendor)}</a></td>
       <td style="font-family:var(--mono);color:var(--accent);font-size:.85rem">${escHtmlServer(o.tier)}</td>
-      <td style="color:var(--text-muted);font-size:.85rem">${escHtmlServer(o.description)}</td>
+      <td style="color:var(--text-muted);font-size:.85rem">${publishedTermsHtml(o)}</td>
     </tr>`;
   }).join("\n        ");
 
@@ -20106,8 +20163,8 @@ ${mcpCtaCss()}
       </tbody>
     </table>
   </div>
-  ${neonOffer ? `<div class="context-box"><strong>Neon verified data:</strong> ${escHtmlServer(neonOffer.description)} <br>Verified: ${escHtmlServer(neonOffer.verifiedDate)} &middot; <a href="/vendor/neon">Full profile &rarr;</a></div>` : ""}
-  ${supabaseOffer ? `<div class="context-box"><strong>Supabase verified data:</strong> ${escHtmlServer(supabaseOffer.description)} <br>Verified: ${escHtmlServer(supabaseOffer.verifiedDate)} &middot; <a href="/vendor/supabase">Full profile &rarr;</a></div>` : ""}
+  ${neonOffer ? `<div class="context-box"><strong>Neon verified data:</strong> ${publishedTermsHtml(neonOffer)} <br>Verified: ${escHtmlServer(neonOffer.verifiedDate)} &middot; <a href="/vendor/neon">Full profile &rarr;</a></div>` : ""}
+  ${supabaseOffer ? `<div class="context-box"><strong>Supabase verified data:</strong> ${publishedTermsHtml(supabaseOffer)} <br>Verified: ${escHtmlServer(supabaseOffer.verifiedDate)} &middot; <a href="/vendor/supabase">Full profile &rarr;</a></div>` : ""}
 
   <h2 id="differences">2. Key Differences</h2>
   <p class="section-intro">Beyond the raw numbers, these architectural differences shape which platform fits your use case.</p>
@@ -20283,7 +20340,7 @@ function buildRailwayVsRenderPage(): string {
     return `<tr>
       <td style="font-weight:600"><a href="/vendor/${vendorSlug}" style="color:var(--text)">${escHtmlServer(o.vendor)}</a></td>
       <td style="font-family:var(--mono);color:var(--accent);font-size:.85rem">${escHtmlServer(o.tier)}</td>
-      <td style="color:var(--text-muted);font-size:.85rem">${escHtmlServer(o.description)}</td>
+      <td style="color:var(--text-muted);font-size:.85rem">${publishedTermsHtml(o)}</td>
     </tr>`;
   }).join("\n        ");
 
@@ -20427,8 +20484,8 @@ ${mcpCtaCss()}
       </tbody>
     </table>
   </div>
-  ${railwayOffer ? `<div class="context-box"><strong>Railway verified data:</strong> ${escHtmlServer(railwayOffer.description)} <br>Verified: ${escHtmlServer(railwayOffer.verifiedDate)} &middot; <a href="/vendor/railway">Full profile &rarr;</a></div>` : ""}
-  ${renderOffer ? `<div class="context-box"><strong>Render verified data:</strong> ${escHtmlServer(renderOffer.description)} <br>Verified: ${escHtmlServer(renderOffer.verifiedDate)} &middot; <a href="/vendor/render">Full profile &rarr;</a></div>` : ""}
+  ${railwayOffer ? `<div class="context-box"><strong>Railway verified data:</strong> ${publishedTermsHtml(railwayOffer)} <br>Verified: ${escHtmlServer(railwayOffer.verifiedDate)} &middot; <a href="/vendor/railway">Full profile &rarr;</a></div>` : ""}
+  ${renderOffer ? `<div class="context-box"><strong>Render verified data:</strong> ${publishedTermsHtml(renderOffer)} <br>Verified: ${escHtmlServer(renderOffer.verifiedDate)} &middot; <a href="/vendor/render">Full profile &rarr;</a></div>` : ""}
 
   <h2 id="differences">2. Key Differences</h2>
   <p class="section-intro">Beyond the raw numbers, these structural differences define the Railway vs Render choice.</p>
@@ -20604,7 +20661,7 @@ function buildDatadogVsNewRelicPage(): string {
     return `<tr>
       <td style="font-weight:600"><a href="/vendor/${vendorSlug}" style="color:var(--text)">${escHtmlServer(o.vendor)}</a></td>
       <td style="font-family:var(--mono);color:var(--accent);font-size:.85rem">${escHtmlServer(o.tier)}</td>
-      <td style="color:var(--text-muted);font-size:.85rem">${escHtmlServer(o.description)}</td>
+      <td style="color:var(--text-muted);font-size:.85rem">${publishedTermsHtml(o)}</td>
     </tr>`;
   }).join("\n        ");
 
@@ -20748,8 +20805,8 @@ ${mcpCtaCss()}
       </tbody>
     </table>
   </div>
-  ${datadogOffer ? `<div class="context-box"><strong>Datadog verified data:</strong> ${escHtmlServer(datadogOffer.description)} <br>Verified: ${escHtmlServer(datadogOffer.verifiedDate)} &middot; <a href="/vendor/datadog">Full profile &rarr;</a></div>` : ""}
-  ${newRelicOffer ? `<div class="context-box"><strong>New Relic verified data:</strong> ${escHtmlServer(newRelicOffer.description)} <br>Verified: ${escHtmlServer(newRelicOffer.verifiedDate)} &middot; <a href="/vendor/new-relic">Full profile &rarr;</a></div>` : ""}
+  ${datadogOffer ? `<div class="context-box"><strong>Datadog verified data:</strong> ${publishedTermsHtml(datadogOffer)} <br>Verified: ${escHtmlServer(datadogOffer.verifiedDate)} &middot; <a href="/vendor/datadog">Full profile &rarr;</a></div>` : ""}
+  ${newRelicOffer ? `<div class="context-box"><strong>New Relic verified data:</strong> ${publishedTermsHtml(newRelicOffer)} <br>Verified: ${escHtmlServer(newRelicOffer.verifiedDate)} &middot; <a href="/vendor/new-relic">Full profile &rarr;</a></div>` : ""}
 
   <h2 id="differences">2. Key Differences</h2>
   <p class="section-intro">Beyond the raw numbers, these structural differences define the Datadog vs New Relic choice.</p>
@@ -32016,7 +32073,7 @@ function buildAgentPaymentsPage(): string {
 
   const serviceRows = allPaymentOffers.map(o => {
     const vendorSlug = toSlug(o.vendor);
-    const shortDesc = o.description.split(". ")[0].substring(0, 120);
+    const shortDesc = publishedTermsOpening(o, 1, 120);
     const badges = (o.payment_protocols ?? []).map(p =>
       `<span class="proto-badge ${p.protocol === "stripe-mpp" ? "stripe-mpp" : "x402"}">${p.protocol === "stripe-mpp" ? "Stripe MPP" : "x402"}</span>`
     ).join(" ");
@@ -32040,7 +32097,7 @@ function buildAgentPaymentsPage(): string {
     const catSlug = toSlug(cat);
     const serviceList = catOffers.map(o => {
       const vendorSlug = toSlug(o.vendor);
-      const shortDesc = o.description.split(". ")[0].substring(0, 100);
+      const shortDesc = publishedTermsOpening(o, 1, 100);
       const badges = (o.payment_protocols ?? []).map(p =>
         `<span class="proto-badge ${p.protocol === "stripe-mpp" ? "stripe-mpp" : "x402"}">${p.protocol === "stripe-mpp" ? "Stripe MPP" : "x402"}</span>`
       ).join(" ");
@@ -32289,7 +32346,7 @@ function buildX402ServicesPage(): string {
 
   const serviceRows = x402Offers.map(o => {
     const vendorSlug = toSlug(o.vendor);
-    const shortDesc = o.description.split(". ")[0].substring(0, 120);
+    const shortDesc = publishedTermsOpening(o, 1, 120);
     const proto = o.payment_protocols?.find(p => p.protocol === "x402");
     const cost = proto?.example_cost || "varies";
     const chain = proto?.chain || "Base";
@@ -32307,7 +32364,7 @@ function buildX402ServicesPage(): string {
     const catSlug = toSlug(cat);
     const serviceList = catOffers.map(o => {
       const vendorSlug = toSlug(o.vendor);
-      const shortDesc = o.description.split(". ")[0].substring(0, 100);
+      const shortDesc = publishedTermsOpening(o, 1, 100);
       const proto = o.payment_protocols?.find(p => p.protocol === "x402");
       const cost = proto?.example_cost || "varies";
       return `<div class="service-card">
@@ -46713,7 +46770,7 @@ function buildStackCheckPage(): string {
     vendorLookup[slug] = {
       vendor: offer.vendor,
       category: offer.category,
-      description: offer.description,
+      description: publishedTermsText(offer),
       tier: offer.tier,
       slug,
       risk_level: assessment.level,
@@ -47083,7 +47140,7 @@ function buildStackCheckPage(): string {
         for (var i = 0; i < data.gaps.length; i++) {
           var g = data.gaps[i];
           gapsHtml += '<div class="gap-item"><span class="gap-cat">' + esc(g.category) + '</span>';
-          gapsHtml += '<span class="gap-rec">Try <a href="/vendor/' + esc(toSlug(g.recommendation.vendor)) + '">' + esc(g.recommendation.vendor) + '</a> — ' + esc(g.recommendation.description) + '</span></div>';
+          gapsHtml += '<span class="gap-rec">Try <a href="/vendor/' + esc(toSlug(g.recommendation.vendor)) + '">' + esc(g.recommendation.vendor) + '</a> — ' + esc(g.recommendation.terms_superseded ? g.recommendation.terms_superseded.notice : g.recommendation.description) + '</span></div>';
         }
         document.getElementById('gaps-list').innerHTML = gapsHtml;
       } else {
@@ -47405,7 +47462,7 @@ ${globalNavCss()}
     var html = '<div class="vendor-card">';
     html += '<h3><a href="/vendor/' + slug + '">' + escHtml(v.vendor) + '</a></h3>';
     html += '<span class="badge badge-category">' + escHtml(v.category) + '</span> ' + riskBadge(risk, riskCause);
-    html += '<div class="vendor-desc">' + escHtml(v.description) + '</div>';
+    html += '<div class="vendor-desc">' + escHtml(v.terms_superseded ? v.terms_superseded.notice : v.description) + '</div>';
     html += '<div class="vendor-meta">Tier: ' + escHtml(v.tier) + ' &middot; Verified: ' + escHtml(v.verifiedDate || v.verified_date || '') + '</div>';
     html += '<div class="vendor-links">';
     html += '<a href="/vendor/' + slug + '">Details</a>';
@@ -47512,7 +47569,7 @@ function buildEstimatePage(): string {
     for (const v of cat.vendors) {
       const offer = allOffers.find(o => toSlug(o.vendor) === v.slug || o.vendor.toLowerCase() === v.name.toLowerCase());
       if (offer) {
-        vendorInfo[v.slug] = { description: offer.description, url: offer.url, category: offer.category };
+        vendorInfo[v.slug] = { description: publishedTermsText(offer), url: offer.url, category: offer.category };
       }
     }
   }
@@ -50591,7 +50648,7 @@ function buildAgentStackPage(): string {
   const bundleHtml = resolvedBundles.map((bundle) => {
     const serviceRows = bundle.resolvedServices.map((svc) => {
       const limits = svc.description;
-      const shortLimits = limits.split(". ")[0].substring(0, 140);
+      const shortLimits = publishedTermsOpening({ vendor: svc.vendorName, description: limits }, 1, 140);
       return `          <tr>
             <td class="role-cell">${escHtmlServer(svc.role)}</td>
             <td><a href="/vendor/${svc.slug}" class="vendor-link">${escHtmlServer(svc.vendorName)}</a> <span class="tier-badge">${escHtmlServer(svc.tier)}</span></td>
@@ -51754,7 +51811,7 @@ function buildSearchPage(query: string, categoryFilter: string, typeFilter: stri
       + '<span class="result-cat">' + escHtmlServer(r.category) + '</span>'
       + '</div>'
       + '<div class="result-tier">' + escHtmlServer(r.tier) + '</div>'
-      + '<div class="result-desc">' + escHtmlServer((r.description ?? "").slice(0, 120)) + (r.description && r.description.length > 120 ? "..." : "") + '</div>'
+      + '<div class="result-desc">' + escHtmlServer(publishedTermsSummary(r, 120)) + '</div>'
       + '<div class="result-meta">Verified ' + r.verifiedDate
       + (r.recent_change ? ' &middot; <span style="color:#d29922">' + escHtmlServer(r.recent_change) + '</span>' : '')
       + (r.expires_soon ? ' &middot; <span style="color:#f85149">' + escHtmlServer(r.expires_soon) + '</span>' : '')
@@ -53874,6 +53931,7 @@ const httpServer = createHttpServer(async (req, res) => {
           category: o.category,
           tier: o.tier,
           description: o.description,
+          ...supersededTermsField(o),
           url: o.url,
           payment_protocols: o.payment_protocols,
           stability: o.stability,
@@ -53896,6 +53954,7 @@ const httpServer = createHttpServer(async (req, res) => {
         category: o.category,
         tier: o.tier,
         description: o.description,
+        ...supersededTermsField(o),
         url: o.url,
         payment_protocols: o.payment_protocols,
         stability: o.stability,
@@ -53994,6 +54053,7 @@ const httpServer = createHttpServer(async (req, res) => {
         vendor: o.vendor,
         category: toolCategory,
         description: o.description,
+        ...supersededTermsField(o),
         tier: o.tier,
         url: o.url,
         tags: o.tags,
@@ -54027,6 +54087,7 @@ const httpServer = createHttpServer(async (req, res) => {
         vendor: o.vendor,
         category: toolCat,
         description: o.description,
+        ...supersededTermsField(o),
         tier: o.tier,
         url: o.url,
         tags: o.tags,
@@ -54061,6 +54122,7 @@ const httpServer = createHttpServer(async (req, res) => {
         vendor: o.vendor,
         category: provCat,
         description: o.description,
+        ...supersededTermsField(o),
         tier: o.tier,
         url: o.url,
         tags: o.tags,
@@ -54097,6 +54159,7 @@ const httpServer = createHttpServer(async (req, res) => {
         vendor: o.vendor,
         category: progCat,
         description: o.description,
+        ...supersededTermsField(o),
         tier: o.tier,
         url: o.url,
         tags: o.tags,
