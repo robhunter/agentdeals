@@ -36,6 +36,7 @@ export function aDataRunMayRaise(name: QualityBudgetName): boolean {
 export interface QualityBudgets {
   version: number;
   budgets: Record<QualityBudgetName, number>;
+  raised_because: Partial<Record<QualityBudgetName, string>>;
 }
 
 export function qualityBudgetsPath(): string {
@@ -53,7 +54,7 @@ export function parseQualityBudgets(text: string, source: string): QualityBudget
     throw new Error(`${source} is not valid JSON: ${(err as Error).message}`);
   }
   if (typeof raw !== "object" || raw === null) throw new Error(`${source} is not an object`);
-  const file = raw as { version?: unknown; budgets?: unknown };
+  const file = raw as { version?: unknown; budgets?: unknown; raised_because?: unknown };
   if (file.version !== 1) throw new Error(`${source} has version ${String(file.version)}, expected 1`);
   if (typeof file.budgets !== "object" || file.budgets === null) {
     throw new Error(`${source} carries no budgets object`);
@@ -72,7 +73,27 @@ export function parseQualityBudgets(text: string, source: string): QualityBudget
     }
     out[name] = value;
   }
-  return { version: 1, budgets: out };
+  return { version: 1, budgets: out, raised_because: parseRaisedBecause(file.raised_because, source, known) };
+}
+
+function parseRaisedBecause(
+  raw: unknown,
+  source: string,
+  known: ReadonlySet<string>,
+): Partial<Record<QualityBudgetName, string>> {
+  if (raw === undefined) return {};
+  if (typeof raw !== "object" || raw === null) throw new Error(`${source} gives raised_because as ${String(raw)}`);
+  const out: Partial<Record<QualityBudgetName, string>> = {};
+  for (const [name, reason] of Object.entries(raw as Record<string, unknown>)) {
+    if (!known.has(name)) {
+      throw new Error(`${source} explains raising ${name}, which no budget in the code reads`);
+    }
+    if (typeof reason !== "string" || reason.trim() === "") {
+      throw new Error(`${source} gives no reason for raising ${name}`);
+    }
+    out[name as QualityBudgetName] = reason;
+  }
+  return out;
 }
 
 export function readQualityBudgets(file: string = qualityBudgetsPath()): QualityBudgets {
@@ -92,7 +113,14 @@ export function qualityBudget(name: QualityBudgetName): number {
 export function serializeQualityBudgets(budgets: QualityBudgets): string {
   const ordered = {} as Record<QualityBudgetName, number>;
   for (const name of QUALITY_BUDGET_NAMES) ordered[name] = budgets.budgets[name];
-  return `${JSON.stringify({ version: budgets.version, budgets: ordered }, null, 2)}\n`;
+  const explained: Partial<Record<QualityBudgetName, string>> = {};
+  for (const name of QUALITY_BUDGET_NAMES) {
+    const reason = budgets.raised_because?.[name];
+    if (reason !== undefined) explained[name] = reason;
+  }
+  const file: Record<string, unknown> = { version: budgets.version, budgets: ordered };
+  if (Object.keys(explained).length > 0) file.raised_because = explained;
+  return `${JSON.stringify(file, null, 2)}\n`;
 }
 
 export type ReviewTier = "A" | "B";

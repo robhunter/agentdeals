@@ -145,6 +145,22 @@ describe("every change we publish reaches the page it was read from", () => {
     assert.deepStrictEqual(uncited, []);
   });
 
+  it("offers no citation to a page the record behind it has stopped citing", () => {
+    const stillCited = new Set(changes.filter(changeCitesASource).map((c) => sourceOf(c)!));
+    const orphaned = new Map<string, string>();
+    for (const p of sweptPaths) {
+      for (const url of citedUrls(pages.get(p) ?? "")) {
+        if (!stillCited.has(url) && !orphaned.has(url)) orphaned.set(url, p);
+      }
+    }
+    assert.deepStrictEqual(
+      [...orphaned].map(([url, p]) => `${p} -> ${url}`),
+      [],
+      "a rendered Source link reaches a page no change record cites, so nothing can retract it",
+    );
+    assert.ok(stillCited.size > 100, `only ${stillCited.size} distinct sources back the citations we render`);
+  });
+
   it("does not depend on the vendor page to do it, so a retirement cannot take the citation away", () => {
     const cited = new Set<string>();
     for (const route of CHANGE_LOG_ROUTES) {

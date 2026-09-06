@@ -3,6 +3,15 @@
 import { readFileSync } from "fs";
 import { resolve, dirname } from "path";
 import { fileURLToPath } from "url";
+import { summaryCallsItsSourceUnreadable } from "../dist/change-citation.js";
+import {
+  CHANGE_REPORT_RULE,
+  CHANGE_REPORT_SUBJECTS,
+  UNCITED_CHANGE_BUDGET_RULE,
+  countsAgainstUncitedBudget,
+  ourIndexChangeMayNotCiteASource,
+  type ChangeReportSubject,
+} from "../dist/change-reporting.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, "..");
@@ -91,6 +100,7 @@ interface Offer {
 interface DealChange {
   vendor: string;
   change_type: string;
+  reports?: string;
   date: string;
   summary: string;
   previous_state: string;
@@ -99,6 +109,7 @@ interface DealChange {
   source_url: string;
   category: string;
   alternatives: string[];
+  date_source?: string;
 }
 
 interface ValidationError {
@@ -279,6 +290,43 @@ function validateDealChanges(changes: DealChange[]): ValidationError[] {
         message: `Unknown date_source "${change.date_source}". Valid: ${VALID_DATE_SOURCES.join(", ")}`,
       });
     }
+
+    if (change.reports && !CHANGE_REPORT_SUBJECTS.includes(change.reports as ChangeReportSubject)) {
+      errors.push({
+        file: "data/deal_changes.json",
+        index: i,
+        vendor,
+        field: "reports",
+        message: `Unknown reports "${change.reports}". Valid: ${CHANGE_REPORT_SUBJECTS.join(", ")}`,
+      });
+    }
+
+    if (ourIndexChangeMayNotCiteASource(change)) {
+      errors.push({
+        file: "data/deal_changes.json",
+        index: i,
+        vendor,
+        field: "source_url",
+        message:
+          `A record that reports our own index cites ${change.source_url}. ` +
+          `${CHANGE_REPORT_RULE.our_index}. Drop the source_url, or set reports to vendor_offer ` +
+          `and cite a page that shows the vendor's own change.`,
+      });
+    }
+
+    const unreadable = summaryCallsItsSourceUnreadable(change);
+    if (unreadable !== null) {
+      errors.push({
+        file: "data/deal_changes.json",
+        index: i,
+        vendor,
+        field: "source_url",
+        message:
+          `This record's summary says "${unreadable}" and it cites ${change.source_url} as its evidence. ` +
+          `A record cannot rest on the document it reports as unreadable: cite a page that can be read, or ` +
+          `drop the source_url so the record renders as unsourced.`,
+      });
+    }
   }
 
   return [...errors, ...uncitedOverBudget(changes)];
@@ -297,7 +345,7 @@ function uncitedChangeBudget(): number {
 function uncitedOverBudget(changes: DealChange[]): ValidationError[] {
   const uncited = changes
     .map((change, index) => ({ change, index }))
-    .filter(({ change }) => typeof change.source_url !== "string" || change.source_url.trim() === "");
+    .filter(({ change }) => countsAgainstUncitedBudget(change));
   const budget = uncitedChangeBudget();
   if (uncited.length <= budget) return [];
   return uncited.slice(budget).map(({ change, index }) => ({
@@ -306,9 +354,10 @@ function uncitedOverBudget(changes: DealChange[]): ValidationError[] {
     vendor: change.vendor || `(index ${index})`,
     field: "source_url",
     message:
-      `${uncited.length} change records cite no source, over the budget of ${budget} in data/quality_budgets.json. ` +
-      `A record with no source_url is withheld from every rating it would set, so a new one may not be written: ` +
-      `cite a source here, or retract an existing uncited record and run npm run ratchet:budgets to free the slot.`,
+      `${uncited.length} change records report a vendor's offer and cite no source, over the budget of ${budget} ` +
+      `in data/quality_budgets.json. A record with no source_url is withheld from every rating it would set, so a ` +
+      `new one may not be written: cite a source here, or retract an existing uncited record and run ` +
+      `npm run ratchet:budgets to free the slot. ${UNCITED_CHANGE_BUDGET_RULE}`,
   }));
 }
 
@@ -351,4 +400,8 @@ export {
   type ValidationError,
 };
 
-main();
+const isMainModule = process.argv[1] && resolve(process.argv[1]) === resolve(fileURLToPath(import.meta.url));
+
+if (isMainModule) {
+  main();
+}

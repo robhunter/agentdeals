@@ -1,5 +1,5 @@
 import { loadDealChanges, loadOffers, demotionWithheldInForce } from "../dist/data.js";
-import { uncitedChanges } from "../dist/change-citation.js";
+import { uncitedChangesAgainstBudget } from "../dist/change-reporting.js";
 
 const HELP = `List the change records that cite no source, so they can be cited or retracted.
 
@@ -7,6 +7,10 @@ A record with an empty source_url sets no risk level, no stability class and no 
 Event — the rating it would have set is withheld instead. This lists what is waiting on a
 citation, and for each one whether our own offer record was verified after the record's date,
 which is the cheapest way to see that a removal is contradicted by newer data of our own.
+
+A record that reports our own index is not waiting on anything — it is required to carry no
+source_url, because no vendor page evidences a change the vendor did not make. Those are left
+out of this list and out of the budget it is triage for.
 
 Usage: node scripts/uncited-changes.js [options]
 
@@ -38,7 +42,7 @@ export function uncitedReport(changes, offers, nowMs = Date.now()) {
     const key = offer.vendor.toLowerCase();
     if (!offerByVendor.has(key)) offerByVendor.set(key, offer);
   }
-  return uncitedChanges(changes).map((change) => {
+  return uncitedChangesAgainstBudget(changes).map((change) => {
     const offer = offerByVendor.get(change.vendor.toLowerCase()) ?? null;
     const withheld = demotionWithheldInForce(change, nowMs);
     return {

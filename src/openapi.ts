@@ -1007,6 +1007,7 @@ export const openapiSpec = {
         properties: {
           vendor: { type: "string" },
           change_type: { type: "string", enum: ["free_tier_removed", "limits_reduced", "restriction", "limits_increased", "new_free_tier", "new_tier", "pricing_restructured", "open_source_killed", "pricing_model_change", "startup_program_expanded", "pricing_postponed", "product_deprecated", "rebranded", "record_corrected"] },
+          reports: { type: "string", enum: ["vendor_offer", "our_index"], description: "What the record is about. 'vendor_offer' — the vendor changed its own offer, and a vendor page is where that can be read. 'our_index' — we changed what we list while the vendor's offer stood still, so no vendor page evidences it and the record carries no source_url. Absent means vendor_offer. Filter these out of any figure you present as vendor market activity." },
           date: { type: "string", format: "date" },
           summary: { type: "string" },
           previous_state: { type: "string" },

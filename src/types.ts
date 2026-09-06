@@ -156,6 +156,7 @@ export type ChangeDateSource = "vendor_page" | "hand_written" | "discovered";
 export interface DealChange {
   vendor: string;
   change_type: "free_tier_removed" | "limits_reduced" | "restriction" | "limits_increased" | "new_free_tier" | "new_tier" | "pricing_restructured" | "open_source_killed" | "pricing_model_change" | "startup_program_expanded" | "pricing_postponed" | "product_deprecated" | "rebranded" | "record_corrected";
+  reports?: import("./change-reporting.js").ChangeReportSubject;
   date: string;
   summary: string;
   previous_state: string;
