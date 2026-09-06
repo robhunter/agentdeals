@@ -8,18 +8,20 @@ const SUITE = [
 
 const MUTANTS = [
   ["subject-is-only-ever-read-from-the-catalogue", "src/compiled-figures.ts",
-    `  const named = vendorWeHoldRecordsFor(subject.label);
-  if (named) {`,
-    `  const named = vendorSlugMap.get(toSlug(subject.label)) ?? null;
-  if (named) {`],
-  ["subject-prefers-a-longer-catalogue-entry-to-the-name-it-reads", "src/compiled-figures.ts",
-    `  const named = vendorWeHoldRecordsFor(subject.label);
-  if (named) {`,
-    `  const named = vendorSlugForSubject(subject) ? null : vendorWeHoldRecordsFor(subject.label);
-  if (named) {`],
+    `  const named = changeLogVendorNamed(subject.label);`,
+    `  const named: string | null = null;`],
+  ["subject-prefers-the-change-log-to-the-vendor-s-own-page", "src/compiled-figures.ts",
+    `  if (slug) return { slug, vendor: vendorSlugMap.get(slug)! };`,
+    `  if (slug && !changeLogVendorNamed(subject.label)) return { slug, vendor: vendorSlugMap.get(slug)! };`],
   ["subject-with-no-page-is-given-one-anyway", "src/compiled-figures.ts",
-    `    return { slug: vendorSlugMap.has(slug) ? slug : null, vendor: named };`,
-    `    return { slug, vendor: named };`],
+    `  return named ? { slug: null, vendor: named } : null;`,
+    `  return named ? { slug: toSlug(named), vendor: named } : null;`],
+  ["subject-records-are-read-under-one-spelling-only", "src/serve.ts",
+    `  const names = new Set([named.vendor, ...(changeLogNamesBySubject.get(named.slug) ?? [])]);`,
+    `  const names = new Set([named.vendor]);`],
+  ["change-log-names-reach-no-subject", "src/serve.ts",
+    `    const subject = vendorSlugMap.has(slug) ? slug : namedVendorSlug(vendor);`,
+    `    const subject = vendorSlugMap.has(slug) ? slug : null;`],
   ["a-subject-that-is-not-a-vendor-is-named-anyway", "src/vendor-slug.ts",
     `  return NON_VENDOR_SUBJECTS.some(s => toSlug(s) === toSlug(phrase));`,
     `  return false;`],
@@ -48,13 +50,13 @@ const MUTANTS = [
     `    .filter(c => SEVERE_CHANGE_TYPES.has(c.change_type))`,
     `    .filter(c => Boolean(c.change_type))`],
   ["subject-with-no-page-is-never-called-ended", "src/serve.ts",
-    `    const ending = freeTierEndingRecord(changesFor(named.vendor));
+    `    const ending = freeTierEndingRecord(changesForSubject(named));
     return { ended: ending !== null, endedBy: ending };`,
     `    return { ended: false, endedBy: null };`],
   ["subject-with-no-page-is-always-called-ended", "src/serve.ts",
-    `    const ending = freeTierEndingRecord(changesFor(named.vendor));
+    `    const ending = freeTierEndingRecord(changesForSubject(named));
     return { ended: ending !== null, endedBy: ending };`,
-    `    const ending = freeTierEndingRecord(changesFor(named.vendor));
+    `    const ending = freeTierEndingRecord(changesForSubject(named));
     return { ended: true, endedBy: ending };`],
   ["change-log-anchors-every-record-it-prints", "src/serve.ts",
     `    const anchorAttr = anchor && anchorHolder.get(anchor) === c ? \` id="\${anchor}"\` : "";`,

@@ -1,4 +1,4 @@
-import { assertedVendorSlugs, changeLogAnchorFor, isNonVendorSubject, resolveVendorSlug, toSlug, vendorSlugMap, vendorWeHoldRecordsFor } from "./vendor-slug.js";
+import { assertedVendorSlugs, changeLogAnchorFor, changeLogVendorNamed, isNonVendorSubject, resolveVendorSlug, toSlug, vendorSlugMap } from "./vendor-slug.js";
 
 export interface CompiledPageRecord {
   date: string;
@@ -331,13 +331,10 @@ export function vendorForSubject(subject: CompiledFigureSubject): CompiledFigure
     return { slug: subject.linkedSlug, vendor: vendorSlugMap.get(subject.linkedSlug)! };
   }
   if (isNonVendorSubject(subject.label)) return null;
-  const named = vendorWeHoldRecordsFor(subject.label);
-  if (named) {
-    const slug = toSlug(named);
-    return { slug: vendorSlugMap.has(slug) ? slug : null, vendor: named };
-  }
   const slug = vendorSlugForSubject(subject);
-  return slug ? { slug, vendor: vendorSlugMap.get(slug)! } : null;
+  if (slug) return { slug, vendor: vendorSlugMap.get(slug)! };
+  const named = changeLogVendorNamed(subject.label);
+  return named ? { slug: null, vendor: named } : null;
 }
 
 export function vendorNameForSubject(subject: CompiledFigureSubject): string | null {

@@ -7,7 +7,7 @@ import { fileURLToPath } from "node:url";
 import { badgeVerdictsFromBadgesPage, type SiteFreeTierVerdict } from "./badge-verdicts.ts";
 
 const { compiledFigureSlots, staticHalfOf } = await import("../dist/compiled-figures.js");
-const { toSlug, vendorSlugMap } = await import("../dist/vendor-slug.js");
+const { namedVendorSlug, toSlug, vendorSlugMap } = await import("../dist/vendor-slug.js");
 
 type DealChange = import("../src/types.ts").DealChange;
 
@@ -20,6 +20,8 @@ const changes: DealChange[] = JSON.parse(
 
 const ENDS_THE_FREE_TIER = new Set(["free_tier_removed", "open_source_killed"]);
 const REMOVAL_MARKER = /class="[^"]*\bremoved-badge\b[^"]*"/;
+const PAGE_OWN_REMOVAL = /<span\b[^>]*class="[^"]*\bremoved-badge\b/;
+const JOIN_MARKER = /<a\b[^>]*href="(?:\/vendor\/[a-z0-9-]+#changes|\/changes#vendor-[a-z0-9-]+)"[^>]*>(?:CHANGED [A-Z]{3} \d+|FREE REMOVED)</;
 
 function recordsByVendorSlug(): Map<string, DealChange[]> {
   const byVendor = new Map<string, DealChange[]>();
@@ -48,7 +50,7 @@ for (const [slug, held] of recordsFor) {
   const ending = endingRecordIn(held);
   if (ending) endedByTheLog.set(slug, ending);
 }
-const outsideTheCatalogue = (slug: string) => !vendorSlugMap.has(slug);
+const outsideTheCatalogue = (label: string) => namedVendorSlug(label) === null;
 
 let proc: ChildProcess | null = null;
 let base = "";
@@ -116,19 +118,37 @@ describe("marking a comparison slot whose vendor has no catalogue entry", () => 
   });
 
   it("holds ended records for vendors the catalogue has no entry for", () => {
-    const orphaned = [...endedByTheLog.keys()].filter(outsideTheCatalogue);
+    const orphaned = [...endedByTheLog.values()].filter(c => outsideTheCatalogue(c.vendor));
     assert.ok(orphaned.length >= 20, `only ${orphaned.length} ended vendors are absent from the catalogue`);
   });
 
   it("marks every slot naming an uncatalogued vendor whose free tier the change log ended", () => {
     const named = everySlotOnEveryPage().filter(
-      slot => outsideTheCatalogue(slot.slug) && endedByTheLog.has(slot.slug),
+      slot => outsideTheCatalogue(slot.label) && endedByTheLog.has(slot.slug),
     );
     const unmarked = named
       .filter(slot => !REMOVAL_MARKER.test(slot.markup))
       .map(slot => `${slot.path}: ${slot.kind} ${slot.label}`);
     assert.deepStrictEqual(unmarked, []);
     assert.ok(named.length >= 3, `only ${named.length} slots name an uncatalogued ended vendor`);
+  });
+
+  it("reaches a vendor's records through the name its own page is filed under", () => {
+    const crossSpelled = everySlotOnEveryPage().filter(slot => {
+      const page = namedVendorSlug(slot.label);
+      if (page === null || page === slot.slug) return false;
+      if (PAGE_OWN_REMOVAL.test(slot.markup)) return false;
+      const heldUnderTheLabel = recordsFor.get(slot.slug) ?? [];
+      return heldUnderTheLabel.length > 0 && (recordsFor.get(page) ?? []).length === 0;
+    });
+    assert.ok(crossSpelled.length >= 2, `only ${crossSpelled.length} slots name a vendor the two stores spell differently`);
+    for (const slot of crossSpelled) {
+      assert.match(
+        slot.markup,
+        new RegExp(`<a [^>]*href="/vendor/${namedVendorSlug(slot.label)}#changes"`),
+        `${slot.path}: ${slot.label} reaches no record through its own page`,
+      );
+    }
   });
 
   it("marks every slot the site's own badge says has lost its free tier", () => {
@@ -160,7 +180,7 @@ describe("marking a comparison slot whose vendor has no catalogue entry", () => 
         landed++;
       }
     }
-    assert.ok(landed >= 3, `only ${landed} markers point at the change log`);
+    assert.ok(landed >= 2, `only ${landed} markers point at the change log`);
   });
 
   it("gives the change log one anchor per vendor and no more", () => {

@@ -28,10 +28,9 @@ function buildChangeLogVendorMap(): Map<string, string> {
 
 export const changeLogVendorMap: Map<string, string> = buildChangeLogVendorMap();
 
-export function vendorWeHoldRecordsFor(phrase: string): string | null {
+export function changeLogVendorNamed(phrase: string): string | null {
   const slug = toSlug(phrase);
-  if (!slug) return null;
-  return vendorSlugMap.get(slug) ?? changeLogVendorMap.get(slug) ?? null;
+  return slug ? changeLogVendorMap.get(slug) ?? null : null;
 }
 
 export function changeLogAnchorFor(vendor: string): string | null {

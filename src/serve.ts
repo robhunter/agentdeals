@@ -49,7 +49,7 @@ import { runHealthCheck, getLastReport, startPeriodicChecks } from "./referral-h
 import { configureDurableBackend, hydrateDurableStores, persistDurableStores, identityStorageReport } from "./durable-store.js";
 import { addFriend, removeFriend, getFriends, getFriendCodesForVendors } from "./friends.js";
 import { subscribe as watchlistSubscribe, getSubscription as getWatchlistSubscription, unsubscribe as watchlistUnsubscribe, listSubscriptions as listWatchlistSubscriptions } from "./watchlist.js";
-import { changeLogAnchorFor, toSlug, vendorSlugMap, resolveVendorSlug, namedVendorSlug } from "./vendor-slug.js";
+import { changeLogAnchorFor, changeLogVendorMap, toSlug, vendorSlugMap, resolveVendorSlug, namedVendorSlug } from "./vendor-slug.js";
 import { offerForSlug, vendorRates, cheapestRate, dearestRate, spanOfRates, formatRate, formatRateSpan, monthlyTokenCost, formatDollars, type ModelRate } from "./model-rates.js";
 import { STALE_FACT_PAGES_BASELINE, factsOutdatedBy, linkifyVerdictBlocks, newestChangeBySlug, overdueReport, pageCompiledClause, pageDataProvenance, pageDateModified, pageFreshness, pageFreshnessSentence, utcToday, verdictsOutdatedBy } from "./page-reviews.js";
 import { faqPageJsonLd, type FaqItem } from "./faq-provenance.js";
@@ -900,8 +900,22 @@ function freeTierClaimFor(vendorName: string, servedOn: string): FreeTierClaim |
   return context ? freeTierClaim(context.input) : null;
 }
 
-function recordsSinceCompiledFor(vendorName: string, compiledOn: string): DealChange[] {
-  return recordsSinceCompiled(changesFor(vendorName), compiledOn, today);
+const changeLogNamesBySubject = (() => {
+  const bySubject = new Map<string, string[]>();
+  for (const [slug, vendor] of changeLogVendorMap) {
+    const subject = vendorSlugMap.has(slug) ? slug : namedVendorSlug(vendor);
+    if (!subject) continue;
+    const held = bySubject.get(subject);
+    if (held) held.push(vendor);
+    else bySubject.set(subject, [vendor]);
+  }
+  return bySubject;
+})();
+
+function changesForSubject(named: CompiledFigureVendor): DealChange[] {
+  if (named.slug === null) return changesFor(named.vendor);
+  const names = new Set([named.vendor, ...(changeLogNamesBySubject.get(named.slug) ?? [])]);
+  return [...names].flatMap(changesFor);
 }
 
 interface SubjectFreeTier {
@@ -911,7 +925,7 @@ interface SubjectFreeTier {
 
 function freeTierForSubject(named: CompiledFigureVendor): SubjectFreeTier {
   if (named.slug === null) {
-    const ending = freeTierEndingRecord(changesFor(named.vendor));
+    const ending = freeTierEndingRecord(changesForSubject(named));
     return { ended: ending !== null, endedBy: ending };
   }
   const claim = freeTierClaimFor(named.vendor, today);
@@ -935,7 +949,7 @@ function compiledFigureVerdictFor(
     endedBy: endedBy
       ? { date: endedBy.date, summary: endedBy.summary, dateClause: changeDateClause(endedBy) }
       : null,
-    since: recordsSinceCompiledFor(named.vendor, compiledOn).map(c => ({
+    since: recordsSinceCompiled(changesForSubject(named), compiledOn, today).map(c => ({
       date: c.date,
       summary: c.summary,
       dateClause: changeDateClause(c),
@@ -49819,7 +49833,7 @@ function buildChangesPage(): string {
     const altHtml = c.alternatives && c.alternatives.length > 0
       ? `<div class="chg-alts"><span class="chg-alts-label">Alternatives:</span> ${c.alternatives.map(a => `<a href="/vendor/${toSlug(a)}">${escHtmlServer(a)}</a>`).join(", ")}</div>`
       : "";
-    return `      <div${anchorAttr} class="chg-entry${isUpcoming ? " chg-upcoming" : ""}${dated ? "" : " chg-undated"}${changeIsUncited(c) ? " chg-unsourced" : ""}">
+    return `      <div class="chg-entry${isUpcoming ? " chg-upcoming" : ""}${dated ? "" : " chg-undated"}${changeIsUncited(c) ? " chg-unsourced" : ""}"${anchorAttr}>
         <div class="chg-left">
           <div class="chg-date">${dated ? c.date : `${DISCOVERED_DATE_PREFIX} ${c.date}`}</div>
           ${isUpcoming ? `<div class="chg-upcoming-badge">upcoming</div>` : ""}

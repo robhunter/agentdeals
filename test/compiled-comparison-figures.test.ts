@@ -171,14 +171,17 @@ describe("resolving the vendor a compiled figure is about", () => {
   });
 
   it("names a vendor the change log holds and the catalogue does not", () => {
-    const named = vendorForSubject({ kind: "row", label: "Heroku", linkedSlug: null });
-    assert.deepStrictEqual(named, { slug: null, vendor: "Heroku" });
-    assert.ok(!vendorSlugMap.has("heroku"), "Heroku has gained a catalogue entry");
+    const named = vendorForSubject({ kind: "row", label: "StackHawk", linkedSlug: null });
+    assert.deepStrictEqual(named, { slug: null, vendor: "StackHawk" });
+    assert.strictEqual(vendorSlugForSubject({ kind: "row", label: "StackHawk", linkedSlug: null }), null);
   });
 
-  it("prefers the name the change log holds over a longer catalogue entry that starts with it", () => {
-    assert.strictEqual(vendorSlugForSubject({ kind: "row", label: "Heroku", linkedSlug: null }), "heroku-for-startups-program");
-    assert.strictEqual(vendorForSubject({ kind: "row", label: "Heroku", linkedSlug: null })!.vendor, "Heroku");
+  it("keeps a vendor's own page when the catalogue holds it under a longer name", () => {
+    assert.ok(!vendorSlugMap.has("katalon"), "Katalon is now catalogued under its bare name");
+    assert.deepStrictEqual(
+      vendorForSubject({ kind: "card", label: "Katalon", linkedSlug: null }),
+      { slug: "katalon-com", vendor: vendorSlugMap.get("katalon-com") },
+    );
   });
 
   it("keeps the catalogue entry for a vendor that has one", () => {
