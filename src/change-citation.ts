@@ -31,6 +31,27 @@ export function citationLabel(url: string): string {
   return `${host}${withinHost}`;
 }
 
+export const CITATION_CLASS = "change-source";
+
+export const CITATION_LINK_HTML = "Source &nearr;";
+
+const CITATION_STYLE = "font-size:.75rem;color:var(--text-dim)";
+
+export function changeSourceLinkHtml(change: CitableChange, esc: (text: string) => string): string {
+  if (!changeCitesASource(change)) return "";
+  const url = change.source_url!.trim();
+  return (
+    `<a href="${esc(url)}" target="_blank" rel="noopener" class="${CITATION_CLASS}"` +
+    ` style="${CITATION_STYLE}" title="${esc(citationLabel(url))}">${CITATION_LINK_HTML}</a>`
+  );
+}
+
+export function changeSourceCitation(change: CitableChange): { "@type": string; url: string; name: string } | null {
+  if (!changeCitesASource(change)) return null;
+  const url = change.source_url!.trim();
+  return { "@type": "WebPage", url, name: citationLabel(url) };
+}
+
 export const UNCITED_CHANGE_LABEL = "Unsourced";
 
 export function uncitedChangeNotice(vendor: string): string {
