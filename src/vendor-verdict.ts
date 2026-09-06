@@ -1,9 +1,15 @@
-import type { DealChange, RatingWithheld, RiskCause } from "./types.js";
+import type { DealChange, RatingWithheld, RiskCause, SourceCheckOutcome } from "./types.js";
 import { CHANGE_DIRECTION, isACorrectionToOurOwnRecord } from "./data.js";
 import { isNoLongerInForce } from "./change-resolution.js";
 import { changeIsUncited, ratingWithheldForNoSourceSentence } from "./change-citation.js";
 import { changeDateClause } from "./change-dates.js";
-import { withheldLevelClause, type LevelWithheldReason } from "./source-check.js";
+import {
+  termsUnconfirmedOutcome,
+  unconfirmedTermsClause,
+  withheldLevelClause,
+  type LevelWithheldReason,
+  type TermsUnconfirmedReason,
+} from "./source-check.js";
 import type { GateCode } from "./ranking.js";
 import { endedVerdictSentence } from "./retirement.js";
 import { vendorHistorySentence, type PublishedRiskLevel } from "./vendor-history.js";
@@ -42,6 +48,7 @@ export interface VendorVerdictInput {
   offerEnded?: boolean;
   gate?: GateCode | null;
   linkUnreachable?: boolean;
+  sourceCheck?: SourceCheckOutcome | null;
 }
 
 export type BadgeWithholding =
@@ -76,6 +83,14 @@ function narrowingChanges(
 
 export function ratingWithheldForNoSource(input: VendorVerdictInput): boolean {
   return Boolean(input.ratingWithheld) && publishedVendorLevel(input.level, input.cause) === "stable";
+}
+
+export function termsUnconfirmedBySource(input: VendorVerdictInput): TermsUnconfirmedReason | null {
+  return termsUnconfirmedOutcome(input.sourceCheck);
+}
+
+export function unconfirmedTermsMetaSentence(reason: TermsUnconfirmedReason): string {
+  return `Not verified — ${unconfirmedTermsClause(reason)}.`;
 }
 
 export function withholdingDecides(input: VendorVerdictInput): boolean {

@@ -46,6 +46,25 @@ export function withheldLevelSentence(
   return WITHHELD_LEVEL_SENTENCES[reason](subject, since);
 }
 
+export type TermsUnconfirmedReason = Exclude<SourceCheckOutcome, "ok">;
+
+const UNCONFIRMED_TERMS_CLAUSES: Record<TermsUnconfirmedReason, string> = {
+  does_not_name_vendor: WITHHELD_LEVEL_CLAUSES.does_not_name_vendor(""),
+  states_no_terms: WITHHELD_LEVEL_CLAUSES.states_no_terms(""),
+  unreadable: WITHHELD_LEVEL_CLAUSES.unreadable(""),
+  states_no_amount: `the page we cite for this offer names a plan but states no amount`,
+};
+
+export function unconfirmedTermsClause(reason: TermsUnconfirmedReason): string {
+  return UNCONFIRMED_TERMS_CLAUSES[reason];
+}
+
+export function termsUnconfirmedOutcome(
+  outcome: SourceCheckOutcome | null | undefined,
+): TermsUnconfirmedReason | null {
+  return outcome && outcome !== "ok" ? outcome : null;
+}
+
 export const NAMING_TOKENS_RECORDED_INSTEAD_OF_EVIDENCE = ["text", "url", "host"];
 
 export const NAMING_TOKENS_TAKEN_FROM_THE_URL_WE_ASKED_FOR = ["url", "host"];

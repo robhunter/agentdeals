@@ -19,14 +19,14 @@ import { configureVendorSeries, recordVendorRequest, flushVendorSeries, readVend
 import { openapiSpec } from "./openapi.js";
 import { LINK_GRACE_DAYS, unreachableNoticeForUrl } from "./link-health.js";
 import { offerEnded, offerRetired, recordedTierSentence, endedHeadline, endedHistorySentence, endedReliabilitySentence, endedEmptyChangeHistorySentence, ENDED_BADGE_LABEL, ENDED_SINCE_CHANGES_SENTENCE, type OfferTierAndUrl } from "./retirement.js";
-import { amountUnstatedSentence, levelWithheldReason, sourceStatesNoAmount, withheldLevelClause, withheldLevelSentence, type LevelWithheldReason } from "./source-check.js";
+import { amountUnstatedSentence, levelWithheldReason, withheldLevelClause, withheldLevelSentence, type LevelWithheldReason } from "./source-check.js";
 import { readingIsBehindTheLoop, reverificationIntervalDays } from "./badge-staleness.js";
 import { SUPERSEDED_TERMS_LABEL, openingOfTerms, readingBehindTheChange, supersededTermsAnswer, supersededTermsMetaSentence, supersededTermsNotice, supersededTermsNoticeHtml, supersededTermsRecord, supersededTermsVerdictSentence, supersedingChange, type SupersededTermsRecord } from "./superseded-description.js";
 import { NO_CURRENT_FIGURE, costHeadlineCaveat, limitCellText, mayRecommendAsFree, proseWithoutNames, readsActive, stackFreshnessStatement } from "./stack-claim.js";
 import { changesByVendor } from "./superseded-census.js";
 import { buildComparisonMap, comparisonSlug } from "./comparison-pairs.js";
 import { comparisonVerdictText, freeTierFaqAnswer, stabilityFaqAnswer, type ComparisonSide, type FreeTierSide, type SideFreeTier, type StabilityRating } from "./comparison-verdict.js";
-import { publishedVendorLevel, vendorVerdictSentence, vendorBadge, freeTierClaim, statesRiskCause, narrowingSentence, changeKindNoun, type BadgeWithholding, type FreeTierClaim, type VendorVerdictInput } from "./vendor-verdict.js";
+import { publishedVendorLevel, vendorVerdictSentence, vendorBadge, freeTierClaim, statesRiskCause, narrowingSentence, changeKindNoun, termsUnconfirmedBySource, unconfirmedTermsMetaSentence, type BadgeWithholding, type FreeTierClaim, type VendorVerdictInput } from "./vendor-verdict.js";
 import { tierRecordsAFreeTier } from "./free-tier-record.js";
 import { UNGRADED_IMPACT_COLOR, changeImpactColor, changeImpactLabel, changeImpactWord, isChangeImpactLevel } from "./change-impact.js";
 import { COMPARED_SERVICES_PLACEHOLDER, fillComparedServicesCount, markCompiledFigures, recordsSinceCompiled, replaceTimelineRows, timelineRecordsFor, vendorSlugForSubject, vendorSubjectsOnCompiledPage, type CompiledFigureSubject, type CompiledFigureVerdict } from "./compiled-figures.js";
@@ -890,6 +890,7 @@ function buildVendorVerdictContext(vendorName: string, servedOn: string): Vendor
       offerEnded: offerEnded(primary),
       gate: gate?.code ?? null,
       linkUnreachable: Boolean(linkUnreachable),
+      sourceCheck: primary.source_check?.outcome ?? null,
     },
   };
 }
@@ -4268,7 +4269,9 @@ function buildVendorPage(slug: string): string | null {
     ? `  <p class="link-unreachable-line" style="margin:.4rem 0 .6rem;font-size:.9rem;color:var(--text-muted)"><strong style="color:#f85149">Link unreachable:</strong> ${escHtmlServer(primary.url)} did not resolve on our check of <span class="link-checked-date" style="font-family:var(--mono)">${escHtmlServer(linkUnreachable.checked)}</span>. ${linkUnreachable.last_reachable ? `Last reachable <span class="link-last-reachable" style="font-family:var(--mono)">${escHtmlServer(linkUnreachable.last_reachable)}</span>.` : "We have no date on which it was reachable."}</p>`
     : "";
 
-  const amountUnstatedLine = !levelWithheld && sourceStatesNoAmount(primary)
+  const termsUnconfirmed = termsUnconfirmedBySource(verdictInput);
+
+  const amountUnstatedLine = !levelWithheld && termsUnconfirmed === "states_no_amount"
     ? `\n  <p class="amount-unstated-line" style="margin:.4rem 0 .6rem;font-size:.9rem;color:var(--text-muted)"><strong style="color:#d29922">Source states no amount:</strong> ${escHtmlServer(amountUnstatedSentence(vendorName))}</p>`
     : "";
 
@@ -4353,12 +4356,15 @@ function buildVendorPage(slug: string): string | null {
   const verifiedSentence = discontinuedOn
     ? ` Discontinued ${discontinuedOn}.`
     : enriched.link_unreachable ? "" : ` Verified ${verifiedMonth}.`;
+  const metaVerifiedSentence = termsUnconfirmed && !discontinuedOn
+    ? ` ${unconfirmedTermsMetaSentence(termsUnconfirmed)}`
+    : verifiedSentence;
   const eligibilityGateSentence = primaryEligibilityGate ? `${primaryEligibilityGate.reason} ` : "";
   const metaDesc = eligibilityGateSentence + (termsSuperseded
     ? `${supersededTermsMetaSentence(vendorName, termsSuperseded)} See the recorded change history${alternatives.length > 0 ? ` and ${alternatives.length} alternatives in ${primary.category}` : ""}.`
     : hasFree
-    ? `${vendorName} free tier includes ${descLimits}.${verifiedSentence}${alternatives.length > 0 ? ` Compare with ${alternatives.length} alternatives in ${primary.category}.` : ""}`
-    : `${vendorName} pricing details${alternatives.length > 0 ? ` and ${alternatives.length} free alternatives in ${primary.category}` : ""}.${verifiedSentence}`);
+    ? `${vendorName} free tier includes ${descLimits}.${metaVerifiedSentence}${alternatives.length > 0 ? ` Compare with ${alternatives.length} alternatives in ${primary.category}.` : ""}`
+    : `${vendorName} pricing details${alternatives.length > 0 ? ` and ${alternatives.length} free alternatives in ${primary.category}` : ""}.${metaVerifiedSentence}`);
 
   const keyLimit = publishableTerms.slice(0, 120).replace(/\.\s.*$/, "");
   const verdictLine2 = vendorVerdictSentence(verdictInput);
