@@ -32920,6 +32920,91 @@
       }
     },
     {
+      "vendor": "Gmail",
+      "category": "Consumer Email",
+      "description": "15 GB storage shared with Google Drive and Photos. Advanced spam filtering. Smart Compose. Search with filters. Labels and categories. Multiple accounts. Ads in Promotions tab. Google Workspace integration.",
+      "tier": "Free",
+      "url": "https://www.google.com/gmail/about/",
+      "tags": [
+        "email",
+        "consumer",
+        "free"
+      ],
+      "verifiedDate": "2026-08-18",
+      "source_check": {
+        "checked": "2026-09-02",
+        "outcome": "states_no_terms",
+        "detail": "the page names Gmail but states no amount, tier or rate we can read"
+      }
+    },
+    {
+      "vendor": "Outlook.com",
+      "category": "Consumer Email",
+      "description": "15 GB email storage. 5 GB OneDrive included. Calendar, contacts, tasks integrated. Focused Inbox. Office for the web access. Custom email aliases. Sweep rules. Ad-supported.",
+      "tier": "Free",
+      "url": "https://outlook.live.com",
+      "tags": [
+        "email",
+        "consumer",
+        "free"
+      ],
+      "verifiedDate": "2026-08-20",
+      "source_check": {
+        "checked": "2026-08-28",
+        "outcome": "unreadable",
+        "detail": "page content too short (likely JS-rendered SPA)"
+      }
+    },
+    {
+      "vendor": "Proton Mail",
+      "category": "Consumer Email",
+      "description": "1 GB storage. 150 messages/day send limit. 1 email address. End-to-end encrypted. Zero-access encryption. No custom domains, no filters, no auto-reply on free. Swiss privacy jurisdiction.",
+      "tier": "Free",
+      "url": "https://proton.me/mail/pricing",
+      "tags": [
+        "email",
+        "encrypted",
+        "privacy",
+        "consumer",
+        "free-tier"
+      ],
+      "verifiedDate": "2026-08-22",
+      "referral_program": {
+        "available": true,
+        "referrer_benefit": "Free months of service",
+        "referee_benefit": "Free months of service",
+        "program_url": "https://proton.me/support/referral-program",
+        "type": "self-service",
+        "commission_type": "credits"
+      },
+      "source_check": {
+        "checked": "2026-09-05",
+        "outcome": "ok",
+        "detail": "the page names Proton Mail as \"proton mail\" and states \"$0.00\""
+      }
+    },
+    {
+      "vendor": "Tutanota",
+      "category": "Consumer Email",
+      "description": "1 GB storage. End-to-end encrypted (email, calendar, contacts). 1 Tuta.com address. No custom domains, no aliases, no auto-reply, no inbox rules on free. German privacy jurisdiction. Open-source.",
+      "tier": "Free",
+      "url": "https://tuta.com/pricing",
+      "tags": [
+        "email",
+        "encrypted",
+        "privacy",
+        "open-source",
+        "consumer",
+        "free-tier"
+      ],
+      "verifiedDate": "2026-09-05",
+      "source_check": {
+        "checked": "2026-09-05",
+        "outcome": "ok",
+        "detail": "the page writes \"tuta\", the domain we cite Tutanota from, and states \"€3\""
+      }
+    },
+    {
       "vendor": "Amazon Kiro",
       "category": "AI Coding",
       "description": "Claude-powered AI IDE by Amazon (GA launch). Free tier: 50 credits/month. Pro $20/month (1,000 credits). Pro+ $40/month (2,000 credits). Power $200/month (10,000 credits). Credits metered to 0.01 increments — different models consume at different rates (Sonnet 4 costs 1.3x more than Auto mode). $0.04 overage per additional credit (disabled by default, must enable in Settings). 500 bonus credits for new users (valid 30 days). Unused monthly credits do NOT roll over. Enterprise tier: custom pricing with SAML/SCIM SSO, usage analytics, organizational management. GovCloud pricing ~20% higher; Free tier unavailable in GovCloud. Built on Claude, focuses on spec-driven development with automated requirements, design docs, and test generation.",

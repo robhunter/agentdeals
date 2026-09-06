@@ -8521,6 +8521,21 @@
       "recorded_date": "2026-09-05"
     },
     {
+      "vendor": "Proton Mail",
+      "change_type": "limits_reduced",
+      "date": "2026-09-05",
+      "date_source": "discovered",
+      "summary": "The free tier now offers 500MB of storage, expandable to 1GB by completing a checklist. Previously 1GB.",
+      "previous_state": "1 GB storage. 150 messages/day send limit. 1 email address. End-to-end encrypted. Zero-access encryption. No custom domains, no filters, no auto-reply on free. Swiss privacy jurisdiction.",
+      "current_state": "Proton Free offers 500 MB storage (expandable to 1 GB), 1 user, and 1 encrypted email address.",
+      "impact": "medium",
+      "source_url": "https://proton.me/mail/pricing",
+      "category": "Consumer Email",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-09-05"
+    },
+    {
       "vendor": "E2B",
       "change_type": "limits_reduced",
       "date": "2026-09-05",

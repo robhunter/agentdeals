@@ -5524,6 +5524,17 @@
       "quarantined_since": null
     },
     {
+      "vendor": "Gmail",
+      "url": "https://www.google.com/gmail/about/",
+      "last_attempt_at": "2026-08-28",
+      "last_outcome": "source_unusable",
+      "last_error": "the page names Gmail but states no amount, tier or rate we can read",
+      "failure_category": "source_unusable",
+      "consecutive_failures": 1,
+      "last_success": "2026-08-18",
+      "quarantined_since": null
+    },
+    {
       "vendor": "GoatCounter",
       "url": "https://www.goatcounter.com/",
       "last_attempt_at": "2026-08-28",
@@ -9638,6 +9649,17 @@
       "quarantined_since": null
     },
     {
+      "vendor": "Outlook.com",
+      "url": "https://outlook.live.com",
+      "last_attempt_at": "2026-08-28",
+      "last_outcome": "fetch_failed",
+      "last_error": "page content too short (likely JS-rendered SPA)",
+      "failure_category": "empty_page",
+      "consecutive_failures": 1,
+      "last_success": "2026-08-20",
+      "quarantined_since": null
+    },
+    {
       "vendor": "outsystems.com",
       "url": "https://www.outsystems.com/",
       "last_attempt_at": "2026-08-28",
@@ -10570,6 +10592,17 @@
       "failure_category": null,
       "consecutive_failures": 0,
       "last_success": "2026-08-28",
+      "quarantined_since": null
+    },
+    {
+      "vendor": "Proton Mail",
+      "url": "https://proton.me/mail/pricing",
+      "last_attempt_at": "2026-09-05",
+      "last_outcome": "changed",
+      "last_error": null,
+      "failure_category": null,
+      "consecutive_failures": 0,
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -13782,6 +13815,17 @@
       "failure_category": null,
       "consecutive_failures": 0,
       "last_success": "2026-08-28",
+      "quarantined_since": null
+    },
+    {
+      "vendor": "Tutanota",
+      "url": "https://tuta.com/pricing",
+      "last_attempt_at": "2026-09-05",
+      "last_outcome": "confirmed",
+      "last_error": null,
+      "failure_category": null,
+      "consecutive_failures": 0,
+      "last_success": "2026-09-05",
       "quarantined_since": null
     },
     {

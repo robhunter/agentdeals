@@ -607,5 +607,9 @@
   "Duolingo": "Education",
   "MIT OpenCourseWare": "Education",
   "Coursera": "Education",
-  "edX": "Education"
+  "edX": "Education",
+  "Gmail": "Consumer Email",
+  "Outlook.com": "Consumer Email",
+  "Proton Mail": "Consumer Email",
+  "Tutanota": "Consumer Email"
 }
