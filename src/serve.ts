@@ -30,7 +30,7 @@ import { vendorHistorySentence } from "./vendor-history.js";
 import { HETZNER_APRIL_CHANGES, HETZNER_CLOUD_PLANS, HETZNER_PRICES_READ, HETZNER_PRICE_SOURCE, HETZNER_SINGAPORE_EXAMPLE, cheapestOrderableHetznerPlan, hetznerEntryPriceClause, unorderableHetznerPlans } from "./hetzner-pricing.js";
 import { changeTimelineDate, supersededLineups, supersessionNote } from "./change-lineup.js";
 import { isNoLongerInForce, eventResolutionFields } from "./change-resolution.js";
-import { changeIsUncited, citedChanges, uncitedChangeNotice, ratingWithheldForNoSourceClause, ratingWithheldForNoSourceSentence, UNCITED_CHANGE_LABEL } from "./change-citation.js";
+import { changeIsUncited, changeSourceCitation, changeSourceLinkHtml, citedChanges, uncitedChangeNotice, ratingWithheldForNoSourceClause, ratingWithheldForNoSourceSentence, UNCITED_CHANGE_LABEL } from "./change-citation.js";
 import { growthLimitPhrases } from "./growth-limits.js";
 import { registerAgent, authenticateRequest, validateVestauthUrl, hashApiKey, updateAgentX402Address, getAgentById } from "./agents.js";
 import { attributeAuthenticatedRequest } from "./referral-attribution.js";
@@ -2502,7 +2502,7 @@ function buildComparisonPage(slug: string): string | null {
           ${changeIsUncited(c) ? unsourcedTagHtml() : ""}
         </div>
         <div style="font-size:.85rem;color:var(--text-muted)">${escHtmlServer(c.summary)}</div>
-        ${changeIsUncited(c) ? unsourcedNoteHtml(vendor) : ""}
+        ${changeIsUncited(c) ? unsourcedNoteHtml(vendor) : changeSourceLinkHtml(c, escHtmlServer)}
       </div>`;
     }).join("\n") + truncationNote;
   };
@@ -3013,7 +3013,7 @@ function buildVsPage(slug: string): string | null {
           ${changeIsUncited(c) ? unsourcedTagHtml() : ""}
         </div>
         <div style="font-size:.85rem;color:var(--text-muted)">${escHtmlServer(c.summary)}</div>
-        ${changeIsUncited(c) ? unsourcedNoteHtml(vendor) : ""}
+        ${changeIsUncited(c) ? unsourcedNoteHtml(vendor) : changeSourceLinkHtml(c, escHtmlServer)}
       </div>`;
     }).join("\n");
   };
@@ -4150,6 +4150,7 @@ ${enrichedAlts.map(a => {
         <div class="change-summary">${escHtmlServer(c.summary)}</div>
         ${uncited ? unsourcedNoteHtml(vendorName) : ""}
         ${c.previous_state && c.current_state ? `<div class="change-detail"><span class="state-label">Before:</span> ${escHtmlServer(c.previous_state)}</div><div class="change-detail"><span class="state-label">After:</span> ${escHtmlServer(c.current_state)}</div>` : ""}
+        ${changeSourceLinkHtml(c, escHtmlServer)}
       </div>`;
   }).join("\n") : offerHasEnded
     ? `<p class="no-changes">${escHtmlServer(endedHistorySentence(vendorName))}</p>`
@@ -4519,6 +4520,7 @@ h1 .risk-badge{font-size:.75rem;font-weight:600;padding:.2rem .6rem;border-radiu
 .state-label{font-family:var(--mono);font-size:.7rem;color:var(--text-dim)}
 .change-resolved{opacity:.6;border-left-style:dashed}
 .change-unsourced{opacity:.75;border-left-style:dotted}
+.change-source:hover{color:var(--accent)}
 .no-changes{color:var(--text-dim);font-size:.9rem;font-style:italic}
 ${auditBlockCss()}
 .alt-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:.5rem}
@@ -18307,7 +18309,7 @@ function buildQ1PricingReportPage(): string {
         "<div class=\"change-before\"><strong>Before:</strong> " + escHtmlServer(c.previous_state) + "</div>" +
         "<div class=\"change-after\"><strong>After:</strong> " + escHtmlServer(c.current_state) + "</div>" +
       "</div>" +
-      "<a href=\"" + escHtmlServer(c.source_url) + "\" target=\"_blank\" rel=\"noopener\" class=\"change-source\">Source &nearr;</a>" +
+      (changeIsUncited(c) ? unsourcedNoteHtml(c.vendor) : changeSourceLinkHtml(c, escHtmlServer)) +
     "</div>";
   };
 
@@ -18715,7 +18717,7 @@ function buildQ2PricingPreview2026Page(): string {
         <div class="change-before"><strong>Before:</strong> ${escHtmlServer(c.previous_state)}</div>
         <div class="change-after"><strong>After:</strong> ${escHtmlServer(c.current_state)}</div>
       </div>
-      <a href="${escHtmlServer(c.source_url)}" target="_blank" rel="noopener" class="change-source">Source &nearr;</a>
+      ${changeIsUncited(c) ? unsourcedNoteHtml(c.vendor) : changeSourceLinkHtml(c, escHtmlServer)}
     </div>`;
   };
 
@@ -49231,6 +49233,7 @@ function buildPricingChangesPage(): string {
           ${changeIsUncited(c) ? unsourcedNoteHtml(c.vendor) : ""}
 ${stateHtml}
 ${altHtml}
+          ${changeSourceLinkHtml(c, escHtmlServer)}
         </div>
       </div>`;
   }
@@ -49462,6 +49465,7 @@ h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5
 .pc-entry{display:flex;gap:1rem;padding:.75rem;margin-bottom:.5rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);transition:border-color .2s,background .2s}
 .pc-resolved{opacity:.6;border-style:dashed}
 .pc-unsourced{opacity:.75}
+.change-source:hover{color:var(--accent)}
 .pc-entry:hover{border-color:var(--accent)}
 .pc-entry:target{border-color:var(--accent);background:var(--accent-glow)}
 .pc-upcoming{border-color:rgba(88,166,255,0.3)}
@@ -49671,7 +49675,7 @@ function buildChangesPage(): string {
     const altHtml = c.alternatives && c.alternatives.length > 0
       ? `<div class="chg-alts"><span class="chg-alts-label">Alternatives:</span> ${c.alternatives.map(a => `<a href="/vendor/${toSlug(a)}">${escHtmlServer(a)}</a>`).join(", ")}</div>`
       : "";
-    return `      <div class="chg-entry${isUpcoming ? " chg-upcoming" : ""}${dated ? "" : " chg-undated"}">
+    return `      <div class="chg-entry${isUpcoming ? " chg-upcoming" : ""}${dated ? "" : " chg-undated"}${changeIsUncited(c) ? " chg-unsourced" : ""}">
         <div class="chg-left">
           <div class="chg-date">${dated ? c.date : `${DISCOVERED_DATE_PREFIX} ${c.date}`}</div>
           ${isUpcoming ? `<div class="chg-upcoming-badge">upcoming</div>` : ""}
@@ -49681,9 +49685,12 @@ function buildChangesPage(): string {
             <span class="badge" style="background:${badge.color}">${badge.label}</span>
             <a href="/vendor/${vendorSlug}" class="chg-vendor">${escHtmlServer(c.vendor)}</a>
             <span class="chg-impact" style="color:${impactColor}">${c.impact}</span>
+            ${changeIsUncited(c) ? unsourcedTagHtml() : ""}
           </div>
           <div class="chg-summary">${escHtmlServer(c.summary)}</div>
+          ${changeIsUncited(c) ? unsourcedNoteHtml(c.vendor) : ""}
 ${altHtml}
+          ${changeSourceLinkHtml(c, escHtmlServer)}
         </div>
       </div>`;
   }
@@ -49715,18 +49722,22 @@ ${undatedSorted.map(c => buildChangeEntry(c)).join("\n")}
     description: metaDesc,
     numberOfItems: allChanges.length,
     url: `${BASE_URL}/changes`,
-    itemListElement: newestFirst.slice(0, 50).map((c, i) => ({
-      "@type": "ListItem",
-      position: i + 1,
-      item: {
-        "@type": "NewsArticle",
-        headline: `${c.vendor}: ${(changeTypeBadge[c.change_type] ?? { label: c.change_type }).label}`,
-        description: c.summary,
-        ...changeDatePublished(c),
-        url: `${BASE_URL}/vendor/${toSlug(c.vendor)}`,
-        publisher: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
-      },
-    })),
+    itemListElement: newestFirst.slice(0, 50).map((c, i) => {
+      const citation = changeSourceCitation(c);
+      return {
+        "@type": "ListItem",
+        position: i + 1,
+        item: {
+          "@type": "NewsArticle",
+          headline: `${c.vendor}: ${(changeTypeBadge[c.change_type] ?? { label: c.change_type }).label}`,
+          description: c.summary,
+          ...changeDatePublished(c),
+          url: `${BASE_URL}/vendor/${toSlug(c.vendor)}`,
+          publisher: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
+          ...(citation ? { citation } : {}),
+        },
+      };
+    }),
   };
 
   return `<!DOCTYPE html>
@@ -49780,6 +49791,8 @@ h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5
 .chg-alts{font-size:.8rem;color:var(--text-dim);margin-top:.35rem}
 .chg-alts-label{font-weight:600;color:var(--text-muted)}
 .chg-alts a{color:var(--accent);font-size:.8rem}
+.chg-unsourced{opacity:.75}
+.change-source:hover{color:var(--accent)}
 .badge{display:inline-block;padding:.1rem .4rem;border-radius:10px;font-size:.65rem;font-weight:600;color:#fff}
 .mcp-cta{margin-top:2.5rem;padding:1.5rem;border:1px solid var(--border);border-radius:12px;background:var(--accent-glow);text-align:center}
 .mcp-cta p{color:var(--text-muted);font-size:.9rem;margin-bottom:.5rem}
