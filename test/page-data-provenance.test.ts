@@ -1,5 +1,6 @@
 import { describe, it, before, after } from "node:test";
 import assert from "node:assert";
+import { assertPopulationFloor } from "./population-floor.ts";
 import { spawn, type ChildProcess } from "node:child_process";
 import { readFileSync, writeFileSync, mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
@@ -87,8 +88,8 @@ describe("a page may only name the source it actually reads", () => {
     const perturbedChanges = path.join(tmp, "deal_changes.json");
     const touchedIndex = perturbStore("index.json", "offers", CATALOGUE_TEXT_FIELDS, perturbedIndex);
     const touchedChanges = perturbStore("deal_changes.json", "changes", CHANGE_LOG_TEXT_FIELDS, perturbedChanges);
-    assert.ok(touchedIndex > 1000, `perturbed only ${touchedIndex} catalogue fields, so the comparison below proves nothing`);
-    assert.ok(touchedChanges > 100, `perturbed only ${touchedChanges} change-log fields, so the comparison below proves nothing`);
+    assertPopulationFloor(touchedIndex, 1001, "catalogue fields perturbed for the comparison below");
+    assertPopulationFloor(touchedChanges, 101, "change-log fields perturbed for the comparison below");
     [real, perturbed, changesBlind] = await Promise.all([
       startServer({}),
       startServer({ AGENTDEALS_INDEX_PATH: perturbedIndex }),
@@ -184,7 +185,7 @@ describe("a page may only name the source it actually reads", () => {
     assert.ok(editorial.length > 0, "no page declares the editorial exemption, so nothing exercises it");
     for (const page of editorial) {
       assert.ok(page.data_source_reason, `${page.path} claims the exemption without saying why`);
-      assert.ok(bodies.get(page.path)!.length > 1000, `${page.path} rendered almost nothing, so its zero fact rows prove nothing`);
+      assertPopulationFloor(bodies.get(page.path)!.length, 1001, `characters of rendered body on ${page.path}`);
     }
     const measuredRows = pages.filter((p) => measured.get(p.path)!.vendor_fact_rows > 0);
     assert.ok(

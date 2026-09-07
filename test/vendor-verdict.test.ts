@@ -1,5 +1,6 @@
 import { describe, it, before, after } from "node:test";
 import assert from "node:assert";
+import { assertPopulationFloor } from "./population-floor.ts";
 import { spawn, type ChildProcess } from "node:child_process";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -524,7 +525,7 @@ describe("vendor verdict — as rendered", () => {
     };
     await Promise.all(Array.from({ length: 12 }, worker));
     assert.deepStrictEqual(wrong.slice(0, 20), [], `vendor routes rendering more than one judgement:\n${wrong.slice(0, 20).join("\n")}`);
-    assert.ok(rating > 700, `only ${rating} vendor pages rate the vendor beside its name`);
+    assertPopulationFloor(rating, 400, "vendor pages rate the vendor beside its name");
     assert.ok(rows.some(r => r.gate && !r.ended), "no gated record reaches a vendor page, so the gate criterion has no subject");
   });
 

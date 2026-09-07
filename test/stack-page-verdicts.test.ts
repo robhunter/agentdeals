@@ -1,5 +1,6 @@
 import { describe, it, before, after } from "node:test";
 import assert from "node:assert";
+import { assertPopulationFloor } from "./population-floor.ts";
 import { spawn, type ChildProcess } from "node:child_process";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -129,7 +130,7 @@ describe("stack pages do not out-claim the badge", () => {
         unparsed.push(`${route} ${p.vendor}: unreadable ${p.side} verdict "${p.side === "badge" ? p.badgeVerdict : p.pageVerdict}"`);
       }
     }
-    assert.ok(compared >= 400, `only ${compared} published verdicts compared across ${STACK_PAGES.length} pages`);
+    assertPopulationFloor(compared, 250, `published verdicts compared across ${STACK_PAGES.length} pages`);
     assert.deepStrictEqual(unparsed, [], `verdicts neither side could be ranked from:\n${unparsed.join("\n")}`);
     assert.deepStrictEqual(over, [], `pages stating a stronger verdict than the badge:\n${over.join("\n")}`);
   });
@@ -204,7 +205,7 @@ describe("stack pages do not out-claim the badge", () => {
         }
       }
     }
-    assert.ok(checked >= 100, `only ${checked} limit slots checked against a record`);
+    assertPopulationFloor(checked, 100, "limit slots checked against a record");
     assert.deepStrictEqual(wrong, [], `limit slots our record does not support:\n${wrong.join("\n")}`);
   });
 

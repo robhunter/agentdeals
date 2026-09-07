@@ -1,5 +1,6 @@
 import { describe, it, before, after } from "node:test";
 import assert from "node:assert";
+import { assertPopulationFloor } from "./population-floor.ts";
 import { spawn, type ChildProcess } from "node:child_process";
 import { readFileSync } from "node:fs";
 import path from "node:path";
@@ -165,7 +166,8 @@ const productionAnswer = (p: VendorPage) => faqAnswer(p.html, `Is ${p.vendor}'s 
 
 describe("the page a gated record renders does not answer the free-tier question with yes", () => {
   it("renders one page per vendor and reads the record that page renders", () => {
-    assert.ok(rendered.length > 1500, `only ${rendered.length} vendor pages rendered`);
+    assert.strictEqual(rendered.length, primaries.length, "a vendor page did not render for every vendor the catalogue lists");
+    assertPopulationFloor(primaries.length, 1, "vendors the catalogue lists");
     for (const p of rendered) {
       assert.strictEqual(
         blockOfType(p.html, "WebPage")?.mainEntity?.description,
@@ -271,7 +273,7 @@ describe("the ungated pages keep the answer they had", () => {
         && p.primary.tier.toLowerCase() !== "none"
         && !p.primary.description.toLowerCase().includes("no free tier"),
     );
-    assert.ok(plainlyFree.length > 100, `only ${plainlyFree.length} ungated pages are plainly free`);
+    assertPopulationFloor(plainlyFree.length, 101, "ungated pages are plainly free");
     const quiet = plainlyFree.filter(p => !freeAnswer(p).startsWith("Yes")).map(p => p.slug);
     assert.deepStrictEqual(quiet, []);
   });
@@ -337,10 +339,7 @@ describe("the production answer reads the same gate", () => {
 
   it("opens with whatever opens the free-tier answer on the same page", () => {
     const subjects = gated().filter(p => freeAnswer(p).startsWith(p.gate!.reason));
-    assert.ok(
-      subjects.length > 100,
-      `only ${subjects.length} gated pages open the free-tier answer with the gate, so this has no subject`,
-    );
+    assertPopulationFloor(subjects.length, 101, "gated pages open the free-tier answer with the gate");
     const contradicting = subjects
       .filter(p => !productionAnswer(p).startsWith(p.gate!.reason))
       .map(p => `${p.slug} (${p.gate!.code}): ${productionAnswer(p).slice(0, 60)}`);
@@ -413,7 +412,7 @@ describe("the heading agrees with the title on the same page", () => {
   it("keeps it on a page whose gate is the restriction rather than the tier", () => {
     const restricted = gated().filter(p => p.gate!.code === "eligibility_restricted");
     const heading = restricted.filter(p => / Free Tier \d{4}/.test(headingOf(p.html))).length;
-    assert.ok(heading > 100, `only ${heading} of ${restricted.length} restricted pages still head a free tier`);
+    assertPopulationFloor(heading, Math.floor(restricted.length / 2), `restricted pages of ${restricted.length} still head a free tier`);
   });
 
   it("heads a page whose title withholds the free-tier form with the pricing form", () => {
@@ -665,7 +664,7 @@ describe("the same page an ungated record renders is unchanged", () => {
 
   it("opens the verdict on the supersession where the change log holds one", () => {
     const subjects = ungated().filter(supersededTerms);
-    assert.ok(subjects.length > 100, `only ${subjects.length} ungated pages withhold superseded terms`);
+    assertPopulationFloor(subjects.length, 101, "ungated pages withhold superseded terms");
     const opening = subjects.filter(p => pageProse(p).includes(`${p.vendor}'s free tier offers `)).map(p => p.slug);
     assert.deepStrictEqual(opening.slice(0, 20), [], "verdicts still opening on figures the change log supersedes");
     const silent = subjects

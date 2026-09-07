@@ -23,7 +23,19 @@ export function badgeVerdictsFromBadgesPage(html: string): Map<string, SiteFreeT
   return verdicts;
 }
 
+export function badgeLinksOnBadgesPage(html: string): string[] {
+  return [...html.matchAll(/<a href="\/vendor\/([a-z0-9-]+)" class="vendor-badge-link"/g)].map(m => m[1]!);
+}
+
+export function badgesWithNoVerdict(html: string): string[] {
+  const verdicts = badgeVerdictsFromBadgesPage(html);
+  return badgeLinksOnBadgesPage(html).filter(slug => !verdicts.has(slug));
+}
+
+export async function fetchBadgesPage(port: number): Promise<string> {
+  return await (await fetch(`http://localhost:${port}/badges`)).text();
+}
+
 export async function fetchBadgeVerdicts(port: number): Promise<Map<string, SiteFreeTierVerdict>> {
-  const html = await (await fetch(`http://localhost:${port}/badges`)).text();
-  return badgeVerdictsFromBadgesPage(html);
+  return badgeVerdictsFromBadgesPage(await fetchBadgesPage(port));
 }

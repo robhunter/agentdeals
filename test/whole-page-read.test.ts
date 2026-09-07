@@ -192,9 +192,10 @@ describe("an unbounded read is refused rather than held", () => {
     });
 
     it("reports the size it stopped at", async () => {
-      const result = await readBodyWithin(new Response("x".repeat(500)), 100);
+      const stopAt = 100;
+      const result = await readBodyWithin(new Response("x".repeat(500)), stopAt);
       assert.strictEqual(result.tooLarge, true);
-      assert.ok(result.bytes > 100);
+      assert.ok(result.bytes > stopAt);
     });
   });
 });

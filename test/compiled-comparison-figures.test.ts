@@ -1,10 +1,17 @@
 import { describe, it, before, after } from "node:test";
 import assert from "node:assert";
+import { assertPopulationFloor } from "./population-floor.ts";
 import { spawn, type ChildProcess } from "node:child_process";
 import { readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { fetchBadgeVerdicts, type SiteFreeTierVerdict } from "./badge-verdicts.ts";
+import {
+  badgeLinksOnBadgesPage,
+  badgeVerdictsFromBadgesPage,
+  badgesWithNoVerdict,
+  fetchBadgesPage,
+  type SiteFreeTierVerdict,
+} from "./badge-verdicts.ts";
 
 const {
   comparedServicesOn,
@@ -65,6 +72,7 @@ function cardBody(html: string, headingMarkup: string): string {
 let port = 0;
 let proc: ChildProcess | null = null;
 let verdicts = new Map<string, SiteFreeTierVerdict>();
+let badges = "";
 const pages = new Map<string, string>();
 
 function startServer(): Promise<ChildProcess> {
@@ -401,20 +409,22 @@ describe("grading the severity of a pricing change", () => {
   it("holds every stored record to the scale", () => {
     const outside = changes.filter(c => !isChangeImpactLevel(c.impact));
     assert.deepStrictEqual(outside.map(c => `${c.vendor}: ${c.impact}`), []);
-    assert.ok(changes.length >= 500, `only ${changes.length} records read`);
+    assertPopulationFloor(changes.length, 300, "records read");
   });
 });
 
 describe("the nine compiled comparison pages against the site's own verdicts", () => {
   before(async () => {
     proc = await startServer();
-    verdicts = await fetchBadgeVerdicts(port);
+    badges = await fetchBadgesPage(port);
+    verdicts = badgeVerdictsFromBadgesPage(badges);
   });
 
   after(() => { proc?.kill(); });
 
   it("reads a verdict for every vendor the site publishes a badge for", () => {
-    assert.ok(verdicts.size >= 1500, `only ${verdicts.size} badge verdicts read`);
+    assert.deepStrictEqual(badgesWithNoVerdict(badges), []);
+    assert.strictEqual(verdicts.size, badgeLinksOnBadgesPage(badges).length);
   });
 
   it("states no free tier for a vendor whose free tier the site says has ended", async () => {

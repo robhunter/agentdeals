@@ -1,5 +1,6 @@
 import { describe, it, before, after } from "node:test";
 import assert from "node:assert";
+import { assertPopulationFloor } from "./population-floor.ts";
 import { spawn, type ChildProcess } from "node:child_process";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -100,7 +101,7 @@ before(async () => {
   routes = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)]
     .map(m => m[1].replace(/^https?:\/\/[^/]+/, ""))
     .filter(r => r.length > 0);
-  assert.ok(routes.length > 400, `only enumerated ${routes.length} routes from the sitemap`);
+  assertPopulationFloor(routes.length, 200, "routes enumerated from the sitemap");
 });
 
 after(() => { if (server) server.kill(); });

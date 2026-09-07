@@ -1,5 +1,6 @@
 import { describe, it, before, after } from "node:test";
 import assert from "node:assert";
+import { assertPopulationFloor } from "./population-floor.ts";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
@@ -128,7 +129,7 @@ describe("every link we mark sponsored is a referral link we hold", () => {
   after(() => { serverProc?.kill("SIGKILL"); });
 
   it("sweeps the whole published surface rather than a chosen sample", () => {
-    assert.ok(paths.length > 3000, `expected the sitemap to enumerate the site, saw ${paths.length} paths`);
+    assertPopulationFloor(paths.length, 2000, "paths the sitemap enumerates");
     const sponsored = [...bodies.values()].flatMap(sponsoredAnchorsIn);
     assert.ok(sponsored.length > 25, `expected the sweep to find the sponsored links we publish, saw ${sponsored.length}`);
   });

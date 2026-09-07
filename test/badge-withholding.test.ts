@@ -1,5 +1,6 @@
 import { describe, it, before, after } from "node:test";
 import assert from "node:assert";
+import { assertPopulationFloor } from "./population-floor.ts";
 import { spawn, type ChildProcess } from "node:child_process";
 import { readFileSync } from "node:fs";
 import path from "node:path";
@@ -137,7 +138,7 @@ before(async () => {
     }];
   });
 
-  assert.ok(subjects.length > 1000, "the catalogue did not load");
+  assertPopulationFloor(subjects.length, 1001, "vendors loaded from the catalogue");
   const started = await startHttpServer();
   proc = started.child;
   serverPort = started.port;
@@ -226,7 +227,7 @@ describe("#1389 the badge withholds wherever the vendor page withholds", () => {
 
   it("carries a risk badge on the pages whose badge publishes a verdict", async () => {
     const publishing = subjects.filter(s => s.kind === "rating");
-    assert.ok(publishing.length > 100, "almost nothing publishes, so this asserts nothing");
+    assertPopulationFloor(publishing.length, 101, "subjects publish a badge rather than withhold one");
     const sample = ["stable", "caution", "risky"].flatMap(word => publishing.filter(s => s.word === word).slice(0, 3));
     assert.strictEqual(new Set(sample.map(s => s.word)).size, 3, "the sample does not cover all three levels");
     const missing: string[] = [];

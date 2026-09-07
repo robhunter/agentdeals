@@ -1,5 +1,6 @@
 import { describe, it, after } from "node:test";
 import assert from "node:assert";
+import { assertPopulationFloor } from "./population-floor.ts";
 import { spawn, type ChildProcess } from "node:child_process";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -291,7 +292,7 @@ describe("search_deals tool", () => {
       const body = JSON.parse(result.result.content[0].text);
 
       assert.strictEqual(body.results.length, 20, "Default limit should be 20");
-      assert.ok(body.total >= 100, "Total should reflect all matching offers");
+      assertPopulationFloor(body.total, 100, "matching offers are counted in the total");
       assert.strictEqual(body.limit, 20);
       assert.strictEqual(body.offset, 0);
     } finally {
@@ -445,11 +446,11 @@ describe("eligibility filtering", () => {
       const result = responses.find((r: any) => r.id === 2) as any;
       const body = JSON.parse(result.result.content[0].text);
 
-      assert.ok(body.total >= 115);
+      assertPopulationFloor(body.total, 115, "offers match the query");
       const withElig = body.results.filter((o: any) => o.eligibility);
       const withoutElig = body.results.filter((o: any) => !o.eligibility);
       assert.ok(withElig.length >= 15);
-      assert.ok(withoutElig.length >= 100);
+      assertPopulationFloor(withoutElig.length, 100, "results carry no eligibility note");
     } finally {
       proc.kill();
     }

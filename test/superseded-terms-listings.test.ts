@@ -1,5 +1,6 @@
 import { describe, it, before, after } from "node:test";
 import assert from "node:assert";
+import { assertPopulationFloor } from "./population-floor.ts";
 import { spawn, type ChildProcess } from "node:child_process";
 import { readFileSync } from "node:fs";
 import path from "node:path";
@@ -161,8 +162,8 @@ describe("#1395 the listing surfaces answer the stored-terms question the way th
   after(() => { server?.proc.kill(); });
 
   it("has records on both sides of the question, so neither direction below is vacuous", () => {
-    assert.ok(superseded.length > 100, `only ${superseded.length} records carry superseded stored terms`);
-    assert.ok(notSuperseded.length > 1000, `only ${notSuperseded.length} records carry current stored terms`);
+    assertPopulationFloor(superseded.length, 101, "records carry superseded stored terms");
+    assertPopulationFloor(notSuperseded.length, 1001, "records carry current stored terms");
     assert.strictEqual(
       pages.size,
       categoryPaths.length + searchPaths.length + alternativePaths.length + STACK_AND_TABLE_PAGES.length + 2,
@@ -201,7 +202,7 @@ describe("#1395 the listing surfaces answer the stored-terms question the way th
         if (slots.some((slot) => publishesStoredTerms(slot, offer))) publishing++;
       }
     }
-    assert.ok(publishing > 300, `only ${publishing} listing slots publish stored terms that are current`);
+    assertPopulationFloor(publishing, 301, "listing slots publish stored terms that are current");
   });
 
   it("names the change that superseded the terms wherever a category row withholds them", () => {

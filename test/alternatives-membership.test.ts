@@ -1,5 +1,6 @@
 import { describe, it, before, after } from "node:test";
 import assert from "node:assert";
+import { assertPopulationFloor } from "./population-floor.ts";
 import { spawn, type ChildProcess } from "node:child_process";
 import { readFileSync } from "node:fs";
 import path from "node:path";
@@ -369,7 +370,7 @@ describe("#1032 a classification must not contradict what we already publish", (
         if (r.gate === "subtype_mismatch" || r.gate === "not_in_taxonomy") dropped.push(`${vendor} -> ${r.offer.vendor}`);
       }
     }
-    assert.ok(pairs > 100, `the change records must resolve to pairs for this test to mean anything, found ${pairs}`);
+    assertPopulationFloor(pairs, 101, "change records resolve to a comparison pair");
     assert.deepStrictEqual(dropped, [], `a curated pair is a stronger claim than a taxonomy match: ${dropped.join(", ")}`);
   });
 

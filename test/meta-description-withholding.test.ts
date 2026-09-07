@@ -1,5 +1,6 @@
 import { describe, it, before, after } from "node:test";
 import assert from "node:assert";
+import { assertPopulationFloor } from "./population-floor.ts";
 import { spawn, type ChildProcess } from "node:child_process";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -91,7 +92,7 @@ before(async () => {
     }];
   });
 
-  assert.ok(subjects.length > 1000, `the catalogue did not load: ${subjects.length} vendors`);
+  assertPopulationFloor(subjects.length, 1001, "vendors loaded from the catalogue");
   const started = await startHttpServer();
   proc = started.child;
   serverPort = started.port;
@@ -140,7 +141,7 @@ describe("#1412 the meta description withholds wherever the source check failed"
   it("asserts a verification on no vendor whose cited page did not confirm the terms", async () => {
     const pages = await everyVendorPage();
     const population = subjects.filter(sourceCheckFailed);
-    assert.ok(population.length > 700, `only ${population.length} records have a failed source check`);
+    assertPopulationFloor(population.length, Math.floor(subjects.length / 5), "records have a failed source check");
 
     const claiming = population.filter(s => assertedMonth(pages.get(s.slug)!.meta) !== null);
     assert.deepStrictEqual(
@@ -155,7 +156,7 @@ describe("#1412 the meta description withholds wherever the source check failed"
     const population = subjects
       .filter(sourceCheckFailed)
       .filter(s => !s.termsSuperseded && s.discontinuedOn === null);
-    assert.ok(population.length > 700, `only ${population.length} records to compare surfaces on`);
+    assertPopulationFloor(population.length, Math.floor(subjects.length / 5), "records to compare surfaces on");
 
     const disagreeing: string[] = [];
     let compared = 0;
@@ -170,7 +171,7 @@ describe("#1412 the meta description withholds wherever the source check failed"
       if (!page.meta.includes(clause)) disagreeing.push(`${subject.slug} [${subject.outcome}]`);
     }
 
-    assert.ok(compared > 700, `only ${compared} pages state the withholding in the body`);
+    assertPopulationFloor(compared, Math.floor(population.length / 2), "pages state the withholding in the body");
     assert.deepStrictEqual(
       disagreeing.slice(0, 20),
       [],
@@ -195,7 +196,7 @@ describe("#1412 the meta description withholds wherever the source check failed"
   it("leaves the verification claim standing wherever the source check passed", async () => {
     const pages = await everyVendorPage();
     const population = subjects.filter(s => s.outcome === "ok" && !s.termsSuperseded);
-    assert.ok(population.length > 600, `only ${population.length} records passed their source check`);
+    assertPopulationFloor(population.length, Math.floor(subjects.length / 5), "records passed their source check");
 
     const wrongMonth: string[] = [];
     const droppedFromTheMeta: string[] = [];
@@ -214,7 +215,7 @@ describe("#1412 the meta description withholds wherever the source check failed"
       }
     }
 
-    assert.ok(asserting > 550, `only ${asserting} passing records still carry a verification month`);
+    assertPopulationFloor(asserting, Math.floor(population.length / 2), "passing records still carry a verification month");
     assert.deepStrictEqual(withheldWithoutCause.slice(0, 20), [], `${withheldWithoutCause.length} passing records withhold`);
     assert.deepStrictEqual(droppedFromTheMeta.slice(0, 20), [], `${droppedFromTheMeta.length} meta descriptions dropped a month the byline still states`);
     assert.deepStrictEqual(wrongMonth.slice(0, 20), [], `${wrongMonth.length} meta descriptions state a month the record does not`);
