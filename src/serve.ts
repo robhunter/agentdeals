@@ -34,6 +34,7 @@ import { UNGRADED_IMPACT_COLOR, changeImpactColor, changeImpactLabel, changeImpa
 import { COMPARED_SERVICES_PLACEHOLDER, fillComparedServicesCount, markCompiledFigures, recordsSinceCompiled, replaceTimelineRows, timelineRecordsFor, vendorForSubject, vendorSubjectsOnCompiledPage, type CompiledFigureSubject, type CompiledFigureVendor, type CompiledFigureVerdict } from "./compiled-figures.js";
 import { vendorHistorySentence } from "./vendor-history.js";
 import { HETZNER_APRIL_CHANGES, HETZNER_CLOUD_PLANS, HETZNER_PRICES_READ, HETZNER_PRICE_SOURCE, HETZNER_SINGAPORE_EXAMPLE, cheapestOrderableHetznerPlan, hetznerEntryPriceClause, unorderableHetznerPlans } from "./hetzner-pricing.js";
+import { HUNDRED_TB_SCENARIO, ONE_TO_ONE_SCENARIO, STORAGE_RATES_READ, STORAGE_SCALE_WORKLOADS, TEN_TO_ONE_SCENARIO, cheapestProviderAt, costliestProviderAt, egressAllowanceSentence, egressBillOnceOverAllowance, egressRatioWhereCostsMatch, fixedMonthlyGrantsSentence, monthlyStorageCost, providersWithScalingEgressAllowance, rateCardFor, scaleCostFor } from "./storage-cost-model.js";
 import { changeTimelineDate, supersededLineups, supersessionNote } from "./change-lineup.js";
 import { isNoLongerInForce, eventResolutionFields } from "./change-resolution.js";
 import { changeIsUncited, changeSourceCitation, changeSourceLinkHtml, citedChanges, uncitedChangeNotice, ratingWithheldForNoSourceClause, ratingWithheldForNoSourceSentence, UNCITED_CHANGE_LABEL } from "./change-citation.js";
@@ -3224,15 +3225,15 @@ const VS_PAGES: VsPageConfig[] = [
   {
     vendorA: "Backblaze B2", vendorB: "Cloudflare R2",
     category: "Storage",
-    verdict: "Cloudflare R2 is the clear winner for most use cases: zero egress fees make it dramatically cheaper at scale. Backblaze B2 offers free egress through Cloudflare CDN but requires extra setup. Both offer 10 GB free storage with S3 compatibility.",
+    verdict: `Which one is cheaper depends on how much you read relative to what you store. Backblaze B2 stores at ${rateCardFor("Backblaze B2").publishedStorageRate} and gives every account free egress up to 3x its average monthly storage, so a workload inside that ratio pays ${scaleCostFor("Backblaze B2", ONE_TO_ONE_SCENARIO)} per TB against Cloudflare R2's ${scaleCostFor("Cloudflare R2", ONE_TO_ONE_SCENARIO)} — no CDN required. Past roughly ${b2CrossoverRatio()}x egress-to-storage, R2's flat zero-egress rate wins and keeps winning. Both offer 10 GB free storage with S3 compatibility.`,
     keyDifferences: `<ul>
-      <li><strong>Egress:</strong> R2 has zero egress fees — always. B2 charges for egress ($0.01/GB) but offers free egress through Cloudflare CDN via the Bandwidth Alliance. R2's zero-egress is simpler and more predictable.</li>
-      <li><strong>Free tier:</strong> Both offer 10 GB free storage. R2 includes 1M writes and 10M reads/month. B2's allowances are similar but structured differently.</li>
-      <li><strong>At scale:</strong> At 1 TB stored + 10 TB egress, R2 costs ~$15/month vs B2 at ~$60/month (without CDN) or ~$15/month (with Cloudflare CDN). R2 is cheaper out of the box.</li>
+      <li><strong>Egress:</strong> R2 has zero egress fees — always, at every ratio. B2's egress is free up to 3x average monthly storage, $0.01/GB above that, and unmetered through a partner CDN (Cloudflare, Fastly, bunny.net and others). R2's model is simpler to predict; B2's is cheaper until reads reach about ${b2CrossoverRatio()}x storage.</li>
+      <li><strong>Free tier:</strong> Both offer 10 GB free storage. R2 includes 1M writes and 10M reads/month. B2 makes Class A, B and C API calls free on pay-as-you-go.</li>
+      <li><strong>At scale:</strong> At 1 TB stored + 1 TB egress, B2 costs ${scaleCostFor("Backblaze B2", ONE_TO_ONE_SCENARIO)}/month against R2's ${scaleCostFor("Cloudflare R2", ONE_TO_ONE_SCENARIO)} — the read is inside B2's allowance and costs nothing to serve. Raise the read to 10 TB against the same 1 TB stored and it flips: B2 is ${scaleCostFor("Backblaze B2", TEN_TO_ONE_SCENARIO)} (3 TB free, 7 TB at $0.01/GB) against R2's unchanged ${scaleCostFor("Cloudflare R2", TEN_TO_ONE_SCENARIO)}.</li>
       <li><strong>Ecosystem:</strong> R2 integrates natively with Cloudflare Workers, Pages, and the broader Cloudflare ecosystem. B2 is a standalone storage service.</li>
     </ul>`,
-    recommendation: `<p><strong>Choose Cloudflare R2 if</strong> you want zero egress fees without any CDN configuration, are already in the Cloudflare ecosystem, or want the simplest S3-compatible storage pricing.</p>
-    <p><strong>Choose Backblaze B2 if</strong> you already use Backblaze for backups, need their B2 lifecycle rules, or prefer a storage-focused provider independent of CDN vendors.</p>`,
+    recommendation: `<p><strong>Choose Cloudflare R2 if</strong> your reads far outrun your storage — streaming, downloads, a viral static asset — or you are already in the Cloudflare ecosystem and want one rate to reason about at any ratio.</p>
+    <p><strong>Choose Backblaze B2 if</strong> your egress stays within a few multiples of what you store, which covers most archives, backups and application storage: it is less than half R2's price there. Also if you already use Backblaze for backups or need their B2 lifecycle rules.</p>`,
   },
   {
     vendorA: "Cloudinary", vendorB: "ImageKit",
@@ -11622,7 +11623,7 @@ ${buildCards(other)}
         <td style="font-weight:600"><a href="/vendor/backblaze-b2" style="color:var(--text)">Backblaze B2</a></td>
         <td>Object Storage</td>
         <td>10 GB</td>
-        <td>1 GB/day free</td>
+        <td>Free to 3x storage</td>
         <td>Affordable S3-compatible storage</td>
       </tr>
       <tr>
@@ -11698,7 +11699,7 @@ ${buildCards(other)}
     </tbody>
   </table>
   </div>
-  <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">Cloudflare R2 leads on value with 10 GB free and zero egress fees \u2014 a game-changer for read-heavy workloads. Backblaze B2 matches on storage but charges for egress beyond 1 GB/day. For media, Cloudinary and ImageKit both offer generous transformation pipelines. MinIO is the go-to for self-hosted S3-compatible storage. All limits verified against live pricing pages, March 2026.</p>
+  <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">Cloudflare R2 leads on value with 10 GB free and zero egress fees \u2014 a game-changer for read-heavy workloads. Backblaze B2 undercuts it on storage and serves up to 3x what you store for nothing, charging $0.01/GB only past that. For media, Cloudinary and ImageKit both offer generous transformation pipelines. MinIO is the go-to for self-hosted S3-compatible storage. All limits verified against live pricing pages, March 2026.</p>
 
   <h2>Which Free Storage Should I Use?</h2>
   <div class="decision-guide">
@@ -11707,7 +11708,7 @@ ${buildCards(other)}
       <dd><a href="/vendor/cloudflare-r2">Cloudflare R2</a> \u2014 10 GB free storage, 1M Class B reads/month, and zero egress fees. The best deal for read-heavy workloads like static assets, backups, or media serving.</dd>
 
       <dt>Want affordable S3-compatible storage?</dt>
-      <dd><a href="/vendor/backblaze-b2">Backblaze B2</a> \u2014 10 GB free, simple pricing at $6/TB beyond that. Pairs well with Cloudflare CDN (Bandwidth Alliance = free egress). <a href="/vendor/tigris">Tigris</a> is a newer S3-compatible option with global distribution.</dd>
+      <dd><a href="/vendor/backblaze-b2">Backblaze B2</a> \u2014 10 GB free, simple pricing at $6.95/TB beyond that, with egress free up to 3x what you store and unmetered through a partner CDN such as Cloudflare. <a href="/vendor/tigris">Tigris</a> is a newer S3-compatible option with global distribution.</dd>
 
       <dt>Building an image-heavy app?</dt>
       <dd><a href="/vendor/cloudinary">Cloudinary</a> for the most mature transformation pipeline (25 credits/month free). <a href="/vendor/imagekit">ImageKit</a> for 20 GB bandwidth/month. Both handle upload, resize, format conversion, and CDN delivery.</dd>
@@ -15953,7 +15954,7 @@ function buildFreeNextjsStackPage(): string {
       icon: "📦",
       recommended: { vendor: "Cloudflare R2", why: "Zero egress fees — the standout differentiator. 10 GB storage, 1 million Class A operations, 10 million Class B operations per month. S3-compatible API means any S3 SDK works. Perfect for Next.js image uploads, user files, and static assets that would cost a fortune on S3 egress." },
       alternatives: ["Backblaze B2", "Tigris", "Supabase"],
-      outgrow: "When you exceed 10 GB storage. At scale, R2 saves dramatically: 1 TB stored + 10 TB egress costs ~$15/month on R2 vs ~$925/month on S3 (the egress tax). Backblaze B2 offers 10 GB free with free egress via Cloudflare CDN. Tigris gives 5 GB with S3 compatibility and global distribution.",
+      outgrow: "When you exceed 10 GB storage. At scale, R2 saves dramatically: 1 TB stored + 10 TB egress costs ~$15/month on R2 vs ~$925/month on S3 (the egress tax). Backblaze B2 offers 10 GB free and free egress up to 3x what you store, no CDN required. Tigris gives 5 GB with S3 compatibility and global distribution.",
       whyNot: "Why not AWS S3: The 5 GB free tier expires after 12 months, then egress costs $0.09/GB. At 100 GB egress/month, that's $9/month just for bandwidth — R2 charges $0.",
       relatedPage: "/storage-comparison-2026",
     },
@@ -16325,7 +16326,7 @@ function buildFreeDjangoStackPage(): string {
       icon: "📦",
       recommended: { vendor: "Cloudflare R2", why: "Zero egress fees — the standout differentiator. 10 GB storage, 1 million Class A operations, 10 million Class B operations per month. S3-compatible API means django-storages works out of the box with the S3Boto3Storage backend. Perfect for Django file uploads (ImageField, FileField), static file hosting (collectstatic), and media storage." },
       alternatives: ["Backblaze B2", "Supabase", "Cloudflare"],
-      outgrow: "When you exceed 10 GB storage. At scale, R2 saves dramatically vs S3: 1 TB stored + 10 TB egress costs ~$15/month on R2 vs ~$925/month on S3. Backblaze B2 offers 10 GB free with free egress via Cloudflare CDN — also works with django-storages. Supabase Storage gives 1 GB free with image transformations.",
+      outgrow: "When you exceed 10 GB storage. At scale, R2 saves dramatically vs S3: 1 TB stored + 10 TB egress costs ~$15/month on R2 vs ~$925/month on S3. Backblaze B2 offers 10 GB free and free egress up to 3x what you store, no CDN required — also works with django-storages. Supabase Storage gives 1 GB free with image transformations.",
       whyNot: "Why not AWS S3: The 5 GB free tier expires after 12 months, then egress costs $0.09/GB. Django apps serving user-uploaded media can rack up egress costs quickly — R2 charges $0.",
       relatedPage: "/storage-comparison-2026",
     },
@@ -16735,7 +16736,7 @@ function buildFreeFastapiStackPage(): string {
       icon: "📦",
       recommended: { vendor: "Cloudflare R2", why: "Zero egress fees — the standout differentiator. 10 GB storage, 1 million Class A operations, 10 million Class B operations per month. S3-compatible API means boto3 and aioboto3 work directly. FastAPI's UploadFile with async streaming to R2 handles file uploads efficiently without buffering entire files in memory." },
       alternatives: ["Backblaze B2", "Supabase"],
-      outgrow: "When you exceed 10 GB storage. At scale, R2 saves dramatically vs S3: 1 TB stored + 10 TB egress costs ~$15/month on R2 vs ~$925/month on S3. Backblaze B2 offers 10 GB free with free egress via Cloudflare CDN. Supabase Storage gives 1 GB free with image transformations.",
+      outgrow: "When you exceed 10 GB storage. At scale, R2 saves dramatically vs S3: 1 TB stored + 10 TB egress costs ~$15/month on R2 vs ~$925/month on S3. Backblaze B2 offers 10 GB free and free egress up to 3x what you store, no CDN required. Supabase Storage gives 1 GB free with image transformations.",
       whyNot: "Why not AWS S3: The 5 GB free tier expires after 12 months, then egress costs $0.09/GB. API services returning pre-signed URLs for large files can rack up egress costs quickly — R2 charges $0.",
       relatedPage: "/storage-comparison-2026",
     },
@@ -17160,7 +17161,7 @@ function buildFreeGoStackPage(): string {
       icon: "📦",
       recommended: { vendor: "Cloudflare R2", why: "Zero egress fees — the standout differentiator. 10 GB storage, 1 million Class A operations, 10 million Class B operations per month. S3-compatible API via aws-sdk-go-v2. Go's io.Reader/io.Writer interfaces make streaming uploads and downloads natural — no buffering entire files in memory. Multipart uploads work out of the box with the AWS SDK." },
       alternatives: ["Backblaze B2", "Supabase"],
-      outgrow: "When you exceed 10 GB storage. At scale, R2 saves dramatically vs S3: 1 TB stored + 10 TB egress costs ~$15/month on R2 vs ~$925/month on S3. Backblaze B2 offers 10 GB free with free egress via Cloudflare CDN. Supabase Storage gives 1 GB free with image transformations.",
+      outgrow: "When you exceed 10 GB storage. At scale, R2 saves dramatically vs S3: 1 TB stored + 10 TB egress costs ~$15/month on R2 vs ~$925/month on S3. Backblaze B2 offers 10 GB free and free egress up to 3x what you store, no CDN required. Supabase Storage gives 1 GB free with image transformations.",
       whyNot: "Why not AWS S3: The 5 GB free tier expires after 12 months, then egress costs $0.09/GB. Go services returning pre-signed URLs for large files can rack up egress costs quickly — R2 charges $0.",
       relatedPage: "/storage-comparison-2026",
     },
@@ -17602,7 +17603,7 @@ function buildFreeSaasStackPage(): string {
       icon: "\u{1F4E6}",
       recommended: { vendor: "Cloudflare R2", why: "10 GB storage with zero egress fees \u2014 the only major storage provider that doesn't charge for bandwidth. S3-compatible API works with every SDK and library. For SaaS, this means user uploads (avatars, documents, images) cost nothing to serve, no matter how many times they're downloaded. No surprise bandwidth bills." },
       alternatives: ["Backblaze B2", "Supabase"],
-      outgrow: "When you exceed 10 GB storage or 1M Class A operations/month. R2's zero-egress model means the constraint is storage volume, not bandwidth \u2014 a SaaS serving 1 TB of user files still pays $0 in egress. At scale: 100 GB costs ~$1.50/mo on R2 vs ~$9/mo on S3 (plus $9/GB egress on S3). Backblaze B2 offers 10 GB free with free egress via Cloudflare CDN.",
+      outgrow: "When you exceed 10 GB storage or 1M Class A operations/month. R2's zero-egress model means the constraint is storage volume, not bandwidth \u2014 a SaaS serving 1 TB of user files still pays $0 in egress. At scale: 100 GB costs ~$1.50/mo on R2 vs ~$9/mo on S3 (plus $9/GB egress on S3). Backblaze B2 offers 10 GB free and free egress up to 3x what you store, no CDN required.",
       whyNot: "Why not AWS S3: The 5 GB free tier expires after 12 months, then egress costs $0.09/GB. A SaaS serving user-uploaded files can accumulate significant egress costs. R2 charges $0 for egress, forever. Why not Vercel Blob: 250 MB free \u2014 too small for most SaaS file storage needs.",
       relatedPage: "/storage-comparison-2026",
       isFrameworkSection: false,
@@ -41214,6 +41215,43 @@ ${mcpCtaCss()}
 </html>`, pubDate, monitoringChanges);
 }
 
+const STORAGE_SCALE_COLUMNS = ["Cloudflare R2", "AWS S3", "Backblaze B2", "Google Cloud Storage"];
+
+function b2CrossoverRatio(): number {
+  const crossover = egressRatioWhereCostsMatch(rateCardFor("Backblaze B2"), rateCardFor("Cloudflare R2"));
+  if (crossover === null) throw new Error("Backblaze B2 and Cloudflare R2 costs do not cross at any egress ratio");
+  return crossover;
+}
+
+function storageScaleTableRows(): string {
+  return STORAGE_SCALE_WORKLOADS.map(workload => {
+    const cheapest = cheapestProviderAt(workload);
+    const costliest = costliestProviderAt(workload);
+    const cells = STORAGE_SCALE_COLUMNS.map(provider => {
+      const emphasis = provider === cheapest ? ' class="cheapest"' : provider === costliest ? ' class="expensive"' : "";
+      return `        <td${emphasis}>${scaleCostFor(provider, workload)}</td>`;
+    }).join("\n");
+    return `      <tr>
+        <td><strong>${workload.label}</strong></td>
+${cells}
+        <td>${workload.selfHostedEstimate}</td>
+      </tr>`;
+  }).join("\n");
+}
+
+function storageScalingAllowanceSentence(): string {
+  const scaling = providersWithScalingEgressAllowance();
+  if (scaling.length === 0) return "No provider here publishes an egress allowance that scales with what you store.";
+  const named = scaling.map(card => egressAllowanceSentence(card)).join(" ");
+  return `${named} No other column has an allowance that scales, so their egress bills at the headline rate from the first byte.`;
+}
+
+function storageScaleSpreadClause(): string {
+  const costliest = monthlyStorageCost(rateCardFor(costliestProviderAt(HUNDRED_TB_SCENARIO)), HUNDRED_TB_SCENARIO);
+  const cheapest = monthlyStorageCost(rateCardFor(cheapestProviderAt(HUNDRED_TB_SCENARIO)), HUNDRED_TB_SCENARIO);
+  return `${Math.round(costliest / cheapest)}x gap`;
+}
+
 function buildStorageComparison2026Page(): string {
   const title = "Storage & CDN Comparison 2026 — S3 vs R2 vs B2 vs Supabase Storage vs Cloudinary";
   const metaDescStorage = "Comprehensive comparison of 15+ storage and CDN free tiers in 2026. AWS S3, Cloudflare R2, Backblaze B2, Tigris, Storj, Supabase Storage, Cloudinary, ImageKit, BunnyCDN, MinIO — storage limits, egress fees, S3 compatibility, CDN, and the S3 egress tax at scale.";
@@ -41381,7 +41419,7 @@ ${mcpCtaCss()}
   </div>
 
   <div class="executive-summary">
-    <p><strong>Quick verdict:</strong> <strong>Cloudflare R2</strong> is the standout choice for most developers &mdash; 10 GB storage with zero egress fees, S3-compatible API, and a permanent free tier. At scale, the savings are staggering: 5 TB stored + 50 TB egress costs $75/month on R2 vs $4,625/month on S3. <strong>Storj</strong> offers the largest starting capacity at 25 GB, but as a 30-day trial rather than a free tier &mdash; a $5 minimum monthly fee applies once it ends. <strong>Backblaze B2</strong> has the cheapest paid storage at $0.006/GB with free egress through Cloudflare CDN. For media: <strong>Cloudinary</strong> (25 credits/month) and <strong>BunnyCDN</strong> ($0.01/GB, 14-day trial) are best-in-class. For self-hosted: <strong>MinIO</strong> is the industry standard.</p>
+    <p><strong>Quick verdict:</strong> <strong>Cloudflare R2</strong> is the standout choice for most developers &mdash; 10 GB storage with zero egress fees, S3-compatible API, and a permanent free tier. At scale, the savings are staggering: 5 TB stored + 50 TB egress costs $75/month on R2 vs $4,625/month on S3. <strong>Storj</strong> offers the largest starting capacity at 25 GB, but as a 30-day trial rather than a free tier &mdash; a $5 minimum monthly fee applies once it ends. <strong>Backblaze B2</strong> has the cheapest paid storage at ${rateCardFor("Backblaze B2").publishedStorageRate} and gives every account free egress up to 3x what it stores, no CDN needed &mdash; which makes it the cheapest column in the scaling table below, not R2&rsquo;s equal. For media: <strong>Cloudinary</strong> (25 credits/month) and <strong>BunnyCDN</strong> ($0.01/GB, 14-day trial) are best-in-class. For self-hosted: <strong>MinIO</strong> is the industry standard.</p>
     <p><strong>The S3 egress tax is legendary.</strong> AWS S3 egress charges are the #1 developer bill shock story. S3 bills across 6 dimensions most developers don&rsquo;t know about: storage, egress, PUT requests, GET requests, lifecycle transitions, and the hidden NAT Gateway charge ($0.045/GB) that appears on your EC2 bill, not your S3 bill. At 1 TB/month egress, S3 costs $92 in bandwidth alone. R2 costs $0. This single difference has disrupted the entire cloud storage market.</p>
   </div>
 
@@ -41446,11 +41484,11 @@ ${mcpCtaCss()}
         <td class="provider-col">Backblaze B2</td>
         <td>Object</td>
         <td>10 GB</td>
-        <td>1 GB/day</td>
+        <td>3x storage</td>
         <td class="check">&#10003;</td>
         <td class="partial">CF partner</td>
         <td class="check">&#10003;</td>
-        <td>Free via CF CDN</td>
+        <td class="cheapest">Free to 3x</td>
       </tr>
       <tr>
         <td class="provider-col">Tigris (Fly.io)</td>
@@ -41620,8 +41658,8 @@ ${mcpCtaCss()}
   </div>
 
   <div class="diff-card">
-    <h3>Backblaze B2 + Cloudflare CDN</h3>
-    <div class="diff-desc"><strong>Free tier:</strong> 10 GB storage, 1 GB/day direct egress, 2,500 API calls/day. S3-compatible API. Key advantage: <strong>free egress through Cloudflare CDN</strong> via the Bandwidth Alliance &mdash; put Cloudflare in front of B2 and egress is free. Without CDN, paid egress is $0.01/GB (9x cheaper than S3). Storage is the cheapest in the industry at $0.006/GB. Long-standing indie company with a stable track record. Best for large file storage where you control the CDN layer.</div>
+    <h3>Backblaze B2</h3>
+    <div class="diff-desc"><strong>Free tier:</strong> 10 GB storage, always free. S3-compatible API. Key advantage: <strong>free egress up to 3x your average monthly storage</strong>, for every account, with no CDN required &mdash; store 10 GB and 30 GB/month leaves free. Egress beyond 3x is $0.01/GB, 9x cheaper than S3, and unmetered through a partner CDN (Cloudflare, Fastly, bunny.net, CacheFly and others). Class A, B and C API calls are free on pay-as-you-go. Storage is ${rateCardFor("Backblaze B2").publishedStorageRate}, the cheapest of the four majors here. Long-standing indie company with a stable track record. Best for large file storage, and cheapest of all when reads stay inside 3x.</div>
   </div>
 
   <div class="diff-card">
@@ -41823,44 +41861,21 @@ ${mcpCtaCss()}
       </tr>
     </thead>
     <tbody>
-      <tr>
-        <td><strong>100 GB + 100 GB egress</strong></td>
-        <td class="cheapest">$1.50</td>
-        <td class="expensive">$11.30</td>
-        <td>$1.50</td>
-        <td>$14.00</td>
-        <td>~$5 (infra)</td>
-      </tr>
-      <tr>
-        <td><strong>1 TB + 1 TB egress</strong></td>
-        <td class="cheapest">$15</td>
-        <td class="expensive">$115</td>
-        <td>$16</td>
-        <td>$140</td>
-        <td>~$20 (infra)</td>
-      </tr>
-      <tr>
-        <td><strong>10 TB + 10 TB egress</strong></td>
-        <td class="cheapest">$150</td>
-        <td class="expensive">$1,130</td>
-        <td>$160</td>
-        <td>$1,400</td>
-        <td>~$80 (infra)</td>
-      </tr>
-      <tr>
-        <td><strong>100 TB + 100 TB egress</strong></td>
-        <td class="cheapest">$1,500</td>
-        <td class="expensive">$11,300</td>
-        <td>$1,600</td>
-        <td>$14,000</td>
-        <td>~$500 (infra)</td>
-      </tr>
+      ${storageScaleTableRows()}
     </tbody>
   </table>
   </div>
 
+  <div class="methodology">
+    <strong>How to read this table:</strong> every column is that provider&rsquo;s published pay-as-you-go rate for the row&rsquo;s workload, read ${STORAGE_RATES_READ}, with each provider&rsquo;s own egress allowance applied. ${storageScalingAllowanceSentence()} Fixed monthly grants are not netted out of any column, so no provider is credited one the others do not get: ${fixedMonthlyGrantsSentence()} At the 100 GB row those grants are most of the bill; by 10 TB they are a rounding error. Volume discounts and committed-use pricing are excluded throughout.
+  </div>
+
   <div class="context-box">
-    <strong>The 60x gap at scale:</strong> At 100 TB stored + 100 TB egress/month, <strong>AWS S3 costs $11,300/month</strong> while <strong>Cloudflare R2 costs $1,500/month</strong>. Google Cloud Storage is even more expensive at $14,000/month due to higher egress rates ($0.12/GB vs S3&rsquo;s $0.09/GB). Backblaze B2 with Cloudflare CDN matches R2 pricing because egress goes through the Bandwidth Alliance at $0. The lesson: <strong>storage pricing is a rounding error; egress pricing is the entire bill.</strong>
+    <strong>The ${storageScaleSpreadClause()} at scale:</strong> at 100 TB stored + 100 TB egress/month the columns run from <strong>Backblaze B2 at ${scaleCostFor("Backblaze B2", HUNDRED_TB_SCENARIO)}/month</strong> to <strong>Google Cloud Storage at ${scaleCostFor("Google Cloud Storage", HUNDRED_TB_SCENARIO)}</strong>, with AWS S3 at ${scaleCostFor("AWS S3", HUNDRED_TB_SCENARIO)} and Cloudflare R2 at ${scaleCostFor("Cloudflare R2", HUNDRED_TB_SCENARIO)}. GCS and S3 are dear for the same reason &mdash; egress at $0.12/GB and $0.09/GB with no allowance against it. B2 is cheapest, and not because of a CDN: every row here egresses 1x what it stores, inside B2&rsquo;s 3x allowance, so it pays nothing to serve that with no partner in front of it. The lesson: <strong>storage pricing is a rounding error; egress pricing is the entire bill.</strong>
+  </div>
+
+  <div class="context-box">
+    <strong>Past 3x, B2 starts billing:</strong> the allowance is a multiple of what you store, so a read-heavy workload can leave it. ${egressBillOnceOverAllowance(rateCardFor("Backblaze B2"), TEN_TO_ONE_SCENARIO)} &mdash; past Cloudflare R2 at ${scaleCostFor("Cloudflare R2", TEN_TO_ONE_SCENARIO)}, which charges nothing for egress at any ratio. The two cross at about ${b2CrossoverRatio()}x egress-to-storage: below it B2 is cheaper, above it R2 is. Egress through Cloudflare, Fastly, bunny.net or another Backblaze partner CDN is unmetered, which removes the 3x ceiling entirely.
   </div>
 
   <div class="context-box">
@@ -41908,13 +41923,13 @@ ${mcpCtaCss()}
     </div>
 
     <div class="verdict-item">
-      <strong>Best for bandwidth-heavy apps &rarr; Cloudflare R2 or Backblaze B2 + Cloudflare CDN</strong>
-      <p>Streaming, downloads, media delivery: these workloads are 90% egress cost. R2 eliminates egress entirely. B2 + Cloudflare CDN achieves the same through the Bandwidth Alliance. At 50 TB/month egress, either saves $4,500+ vs S3.</p>
+      <strong>Best for bandwidth-heavy apps &rarr; Cloudflare R2</strong>
+      <p>Streaming, downloads, media delivery: these workloads are 90% egress cost, and they are the case where egress out-runs storage by a wide multiple. R2 eliminates egress entirely at any ratio, which is why it wins here rather than B2 &mdash; B2&rsquo;s allowance is 3x what you store, so a 100 GB library serving 50 TB/month is billed for 49.7 TB of it. Put a partner CDN in front of B2 and that goes away too, but R2 needs no such arrangement. At 50 TB/month egress, either saves $4,500+ vs S3.</p>
     </div>
 
     <div class="verdict-item">
       <strong>Best S3 drop-in replacement &rarr; Backblaze B2</strong>
-      <p>S3-compatible API, cheapest storage at $0.006/GB, free egress via Cloudflare CDN. Change the endpoint URL and credentials &mdash; your existing S3 code works unchanged. Stable indie company with a track record of not removing free tiers.</p>
+      <p>S3-compatible API, cheapest storage of the four majors at ${rateCardFor("Backblaze B2").publishedStorageRate}, and free egress up to 3x what you store with no CDN in the path. Change the endpoint URL and credentials &mdash; your existing S3 code works unchanged. At every scenario in the table above it is also the cheapest column outright, ${scaleCostFor("Backblaze B2", HUNDRED_TB_SCENARIO)}/month against R2&rsquo;s ${scaleCostFor("Cloudflare R2", HUNDRED_TB_SCENARIO)} at 100 TB. Stable indie company with a track record of not removing free tiers.</p>
     </div>
 
     <div class="verdict-item">
@@ -41961,8 +41976,8 @@ ${mcpCtaCss()}
   </div>
 
   <div class="diff-card">
-    <h3>Backblaze B2: free egress only via CDN partners</h3>
-    <div class="diff-desc">B2&rsquo;s 1 GB/day free direct egress is minimal. The unlimited free egress is specifically through Cloudflare, Fastly, and Bunny CDN via the Bandwidth Alliance. Direct API access beyond 1 GB/day costs $0.01/GB. If your architecture doesn&rsquo;t use a CDN partner, you don&rsquo;t get free egress at scale.</div>
+    <h3>Backblaze B2: free egress is capped at 3x what you store</h3>
+    <div class="diff-desc">The free direct allowance is a multiple of what you store, not a fixed daily cap: every B2 account gets free egress up to 3x its average monthly storage, and $0.01/GB after that. Store 1 TB and 3 TB/month leaves free with no CDN in front. A partner CDN &mdash; Cloudflare, Fastly, bunny.net, CacheFly and others &mdash; makes egress unmetered, which is an extension of that allowance rather than the only route to one. The workload this catches is read-heavy: a 100 GB archive serving 1 TB/month is at 10x and pays for 700 GB of it.</div>
   </div>
 
   <div class="diff-card">
