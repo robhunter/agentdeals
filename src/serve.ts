@@ -68,7 +68,7 @@ import { verificationLedger, QUARANTINE_AFTER_FAILURES } from "./verification-st
 import { partitionAlternatives, partitionSubstitutes, type SubstitutesPartition, productRoleSentence, MEMBERSHIP_GATE_RULES, MEMBERSHIP_GATE_ORDER, MEMBERSHIP_GATE_SYMMETRY, MEMBERSHIP_GATE_SCOPE, MEMBERSHIP_GATE_CORRECTIONS, SUBTYPE_TAXONOMIES, SUBTYPE_MEMBERSHIP_RULE, SUBTYPE_MEMBERSHIP_GROUP_SCOPE, CURATED_SUBTYPE_EXEMPTION, membershipGroupsFor, subtypeDefinition } from "./product-role.js";
 import { resolveCuratedAlternatives, curatedAlternativesFor, addCuratedToPool } from "./curated-alternatives.js";
 import type { Agent, ChangeDateSource, DealChange, RiskCause, RatingWithheld, LinkUnreachable, Offer, StabilityClass } from "./types.js";
-import { changeDateLabel, changeDateClause, changeDatePublished, changeEventStartDate, capListSections, latestEventDate, offerExpiryAfter, feedEntryUpdated, undatedGroupHeading, firstReadHeading, discoveryBatchNote, isoWeekOf, DISCOVERED_DATE_PREFIX, UNDATED_GROUP_NOTE } from "./change-dates.js";
+import { changeDateLabel, changeEntryDateLabel, changeDateClause, changeDatePublished, changeEventStartDate, capListSections, latestEventDate, offerExpiryAfter, feedEntryUpdated, undatedGroupHeading, UNDATED_TILE_LABEL, firstReadHeading, discoveryBatchNote, isoWeekOf, DISCOVERED_DATE_PREFIX, EFFECTIVE_DATE_PREFIX, EVENT_DATED_SOURCES, UNDATED_GROUP_NOTE, UNKNOWN_EFFECTIVE_DATE_MARKER } from "./change-dates.js";
 import { FEED_CORRECTIONS, correctionEntriesXml } from "./feed-corrections.js";
 import { buildDay, emptyPageLastmod, fallbackDay, httpDate, lastmodFor, newestLastmod, readPageLastmod, type PageLastmodLedger } from "./page-lastmod.js";
 import type { AgentBalance } from "./ledger.js";
@@ -627,7 +627,7 @@ function buildChangesHtml(): string {
         <div class="change-header">
           <span class="change-badge" style="background:${badge.color}">${badge.label}</span>
           <span class="change-vendor">${c.vendor}</span>
-          <span class="change-date">${changeDateLabel(c)}</span>
+          <span class="change-date">${changeEntryDateLabel(c)}</span>
         </div>
         <div class="change-summary">${c.summary}</div>
       </div>`;
@@ -652,7 +652,7 @@ function buildDeadlinesHtml(): string {
           <div class="deadline-header">
             <span class="change-badge" style="background:${badge.color}">${badge.label}</span>
             <span class="change-vendor">${c.vendor}</span>
-            <span class="deadline-date">${c.date}</span>
+            <span class="deadline-date">${changeEntryDateLabel(c)}</span>
           </div>
           <div class="change-summary">${c.summary}</div>
         </div>
@@ -704,7 +704,7 @@ function buildRecentChangesSection(): string {
         <div class="rc-head">
           <span class="change-badge" style="background:${badge.color}">${badge.label}</span>
           <a href="/vendor/${vendorSlug}" class="rc-vendor">${c.vendor}</a>
-          <span class="rc-date">${changeDateLabel(c)}</span>
+          <span class="rc-date">${changeEntryDateLabel(c)}</span>
         </div>
         <div class="rc-summary">${c.summary}</div>
       </div>`;
@@ -2061,7 +2061,7 @@ function buildBestOfMiniReview(offer: ReturnType<typeof enrichOffers>[number]): 
 function renderDisclosures(entry: RankedEntry<EnrichedOfferRow>): string {
   if (entry.disclosures.length === 0) return "";
   const items = entry.disclosures.map((d) =>
-    `<li><span style="font-family:var(--mono);color:var(--text-dim)">${escHtmlServer(changeDateLabel(d))}</span> &mdash; <strong>${escHtmlServer(d.code.replace(/_/g, " "))}</strong>: ${escHtmlServer(d.summary)}</li>`
+    `<li><span style="font-family:var(--mono);color:var(--text-dim)">${escHtmlServer(changeEntryDateLabel(d))}</span> &mdash; <strong>${escHtmlServer(d.code.replace(/_/g, " "))}</strong>: ${escHtmlServer(d.summary)}</li>`
   ).join("");
   return `<div class="best-disclosure"><span class="best-disclosure-label">Recorded, but does not affect rank:</span><ul>${items}</ul></div>`;
 }
@@ -2850,7 +2850,7 @@ function buildComparisonPage(slug: string): string | null {
       return `<div style="margin-bottom:.75rem;padding:.6rem .75rem;border-left:3px solid ${badge.color};background:var(--bg-card);border-radius:0 6px 6px 0">
         <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.25rem">
           <span style="display:inline-block;padding:.1rem .4rem;border-radius:10px;font-size:.65rem;font-weight:600;background:${badge.color};color:#fff">${badge.label}</span>
-          <span style="font-family:var(--mono);font-size:.75rem;color:var(--text-dim)">${changeDateLabel(c)}</span>
+          <span style="font-family:var(--mono);font-size:.75rem;color:var(--text-dim)">${changeEntryDateLabel(c)}</span>
           <span style="font-size:.7rem;color:${changeImpactColor(c.impact)}">${c.impact} impact</span>
           ${changeIsUncited(c) ? unsourcedTagHtml() : ""}
         </div>
@@ -3361,7 +3361,7 @@ function buildVsPage(slug: string): string | null {
       return `<div style="margin-bottom:.75rem;padding:.6rem .75rem;border-left:3px solid ${badge.color};background:var(--bg-card);border-radius:0 6px 6px 0">
         <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.25rem">
           <span style="display:inline-block;padding:.1rem .4rem;border-radius:10px;font-size:.65rem;font-weight:600;background:${badge.color};color:#fff">${badge.label}</span>
-          <span style="font-family:var(--mono);font-size:.75rem;color:var(--text-dim)">${changeDateLabel(c)}</span>
+          <span style="font-family:var(--mono);font-size:.75rem;color:var(--text-dim)">${changeEntryDateLabel(c)}</span>
           <span style="font-size:.7rem;color:${changeImpactColor(c.impact)}">${c.impact} impact</span>
           ${changeIsUncited(c) ? unsourcedTagHtml() : ""}
         </div>
@@ -3697,7 +3697,7 @@ function buildDigestPage(weekKey: string): string | null {
       <div class="change-header">
         <span class="change-badge" style="background:${badge.color}">${badge.label}</span>
         <span class="change-vendor">${escHtmlServer(c.vendor)}</span>
-        <span class="change-date">${changeDateLabel(c)}</span>
+        <span class="change-date">${changeEntryDateLabel(c)}</span>
         <span class="change-cat">${escHtmlServer(c.category)}</span>
       </div>
       <div class="change-summary">${escHtmlServer(c.summary)}</div>
@@ -3914,7 +3914,7 @@ function buildThisWeekPage(weeksAgo: number): string {
         <div class="change-header">
           <span class="change-badge" style="background:${badge.color}">${badge.label}</span>
           <a href="/vendor/${toSlug(c.vendor)}" class="change-vendor">${escHtmlServer(c.vendor)}</a>
-          <span class="change-cat" style="font-family:var(--mono)">${changeDateLabel(c)}</span>
+          <span class="change-cat" style="font-family:var(--mono)">${changeEntryDateLabel(c)}</span>
           <span class="change-cat">${escHtmlServer(c.category)}</span>
         </div>
         <div class="change-summary">${escHtmlServer(c.summary)}</div>
@@ -4298,7 +4298,7 @@ function buildVendorPage(slug: string): string | null {
   const ratingWithheld = enriched.rating_withheld;
 
   const riskCauseLine = statesRiskCause(verdictInput) && riskCause
-    ? `  <p class="risk-cause-line" style="margin:.4rem 0 .6rem;font-size:.9rem;color:var(--text-muted)"><strong style="color:${riskColor}">Why ${riskLevel}:</strong> <span class="risk-cause-date" style="font-family:var(--mono)">${escHtmlServer(changeDateLabel(riskCause))}</span> &mdash; ${escHtmlServer(riskCause.summary)} <a href="#changes" style="white-space:nowrap">Full history &darr;</a></p>`
+    ? `  <p class="risk-cause-line" style="margin:.4rem 0 .6rem;font-size:.9rem;color:var(--text-muted)"><strong style="color:${riskColor}">Why ${riskLevel}:</strong> <span class="risk-cause-date" style="font-family:var(--mono)">${escHtmlServer(changeEntryDateLabel(riskCause))}</span> &mdash; ${escHtmlServer(riskCause.summary)} <a href="#changes" style="white-space:nowrap">Full history &darr;</a></p>`
     : "";
 
   const retiredBadgeColor = "#8b949e";
@@ -4500,7 +4500,7 @@ ${enrichedAlts.map(a => {
     return `<div class="change-item${isNoLongerInForce(c) ? " change-resolved" : ""}${uncited ? " change-unsourced" : ""}">
         <div class="change-head">
           <span class="badge" style="background:${badge.color}">${badge.label}</span>
-          <span class="change-date"><a href="/pricing-changes#${anchor}" style="color:var(--text-dim);text-decoration:none">${changeDateLabel(c)}</a></span>
+          <span class="change-date"><a href="/pricing-changes#${anchor}" style="color:var(--text-dim);text-decoration:none">${changeEntryDateLabel(c)}</a></span>
           <span class="impact impact-${changeImpactWord(c.impact)}">${changeImpactWord(c.impact)} impact</span>
           ${uncited ? unsourcedTagHtml() : ""}
         </div>
@@ -4524,7 +4524,7 @@ ${enrichedAlts.map(a => {
     const badge = changeTypeBadge[latestChange.change_type] ?? { label: latestChange.change_type, color: "#8b949e" };
     const anchor = `${toSlug(latestChange.vendor)}-${latestChange.date}`;
     return `<div class="change-notice" style="margin:1rem 0;padding:.75rem 1rem;border:1px solid ${badge.color}40;border-left:3px solid ${badge.color};border-radius:0 8px 8px 0;background:${badge.color}10">
-      <span style="font-size:.85rem">\u26a0\ufe0f <strong>Pricing change:</strong> ${escHtmlServer(latestChange.summary)} (${latestChange.date})</span>
+      <span style="font-size:.85rem">\u26a0\ufe0f <strong>Pricing change:</strong> ${escHtmlServer(latestChange.summary)} (${escHtmlServer(changeEntryDateLabel(latestChange))})</span>
       <a href="/pricing-changes#${anchor}" style="display:block;font-size:.8rem;margin-top:.25rem">View in changelog &rarr;</a>
     </div>`;
   })() : "";
@@ -5085,7 +5085,7 @@ function buildAlternativesPage(slug: string): string | null {
       parts.push(`<div class="risk-row"><span class="risk-label">Why:</span> ${escHtmlServer(altWithheldSentence)} We are not publishing a stability judgement for it until that is fixed.</div>`);
     }
     if (riskLevel !== "stable" && riskCause) {
-      parts.push(`<div class="risk-row"><span class="risk-label">Why:</span> <span class="risk-cause-date" style="font-family:var(--mono)">${escHtmlServer(changeDateLabel(riskCause))}</span> &mdash; ${escHtmlServer(riskCause.summary)}</div>`);
+      parts.push(`<div class="risk-row"><span class="risk-label">Why:</span> <span class="risk-cause-date" style="font-family:var(--mono)">${escHtmlServer(changeEntryDateLabel(riskCause))}</span> &mdash; ${escHtmlServer(riskCause.summary)}</div>`);
     }
     parts.push(`<div class="risk-row"><span class="risk-label">Category:</span> ${vendorCategories.map(c => `<a href="/category/${toSlug(c)}" class="cat-pill">${escHtmlServer(c)}</a>`).join(" ")}</div>`);
     if (!offerRetired(primary)) {
@@ -5098,7 +5098,7 @@ function buildAlternativesPage(slug: string): string | null {
         return `<div class="change-item${isNoLongerInForce(c) ? " change-resolved" : ""}">
           <div class="change-head">
             <span class="badge" style="background:${badge.color}">${badge.label}</span>
-            <span class="change-date">${changeDateLabel(c)}</span>
+            <span class="change-date">${changeEntryDateLabel(c)}</span>
             <span class="impact impact-${changeImpactWord(c.impact)}">${changeImpactWord(c.impact)} impact</span>
           </div>
           <div class="change-summary">${escHtmlServer(c.summary)}</div>
@@ -8600,7 +8600,7 @@ function buildEventPage(slug: string): string | null {
           + '<div class="update-head">'
           + '<span class="badge" style="background:' + badge.color + '">' + badge.label + '</span>'
           + '<strong>' + escHtmlServer(c.vendor) + '</strong>'
-          + '<span class="update-date">' + c.date + '</span>'
+          + '<span class="update-date">' + escHtmlServer(changeEntryDateLabel(c)) + '</span>'
           + '<span class="impact impact-' + changeImpactWord(c.impact) + '">' + changeImpactWord(c.impact) + ' impact</span>'
           + '</div>'
           + '<div class="update-summary">' + escHtmlServer(c.summary) + '</div>'
@@ -18435,7 +18435,7 @@ function buildQ1PricingReportPage(): string {
     return "<div class=\"change-card\" style=\"border-left-color:" + impactColor + "\">" +
       "<div class=\"change-header\">" +
         "<a href=\"/vendor/" + vendorSlug + "\" class=\"change-vendor\">" + escHtmlServer(c.vendor) + "</a>" +
-        "<span class=\"change-date\">" + changeDateLabel(c) + "</span>" +
+        "<span class=\"change-date\">" + changeEntryDateLabel(c) + "</span>" +
         "<span class=\"change-impact\" style=\"color:" + impactColor + "\">" + c.impact + "</span>" +
       "</div>" +
       "<span class=\"change-type-badge\" style=\"background:" + impactColor + "22;color:" + impactColor + "\">" + typeLabel + "</span>" + editorialLink +
@@ -18843,7 +18843,7 @@ function buildQ2PricingPreview2026Page(): string {
     return `<div class="change-card" style="border-left-color:${impactColor}">
       <div class="change-header">
         <a href="/vendor/${vendorSlug}" class="change-vendor">${escHtmlServer(c.vendor)}</a>
-        <span class="change-date">${changeDateLabel(c)}</span>
+        <span class="change-date">${changeEntryDateLabel(c)}</span>
         <span class="change-impact" style="color:${impactColor}">${c.impact}</span>
       </div>
       <span class="change-type-badge" style="background:${impactColor}22;color:${impactColor}">${typeLabel}</span>${editorialLink}
@@ -18986,7 +18986,7 @@ ${mcpCtaCss()}
   ${timelineChanges.map(c => {
     const impactColor = impactColors[c.impact] ?? "#94a3b8";
     return `<div class="timeline-item">
-      <div class="timeline-date">${changeDateLabel(c)}</div>
+      <div class="timeline-date">${changeEntryDateLabel(c)}</div>
       <div class="timeline-content">
         <span class="timeline-vendor"><a href="/vendor/${toSlug(c.vendor)}" style="color:var(--text)">${escHtmlServer(c.vendor)}</a></span>
         <span class="timeline-impact" style="background:${impactColor}22;color:${impactColor}">${c.impact}</span>
@@ -21011,7 +21011,7 @@ ${mcpCtaCss()}
   <p class="section-intro">Pricing context from our deal change tracker. Monitoring is one of the most actively evolving pricing categories.</p>
   <div style="display:grid;gap:.75rem;margin:1rem 0">
     ${relatedChanges.length > 0 ? relatedChanges.map(c => `<div class="diff-card" style="border-left-color:#d29922">
-      <h3>${escHtmlServer(c.vendor)} — ${escHtmlServer(c.date)}</h3>
+      <h3>${escHtmlServer(c.vendor)} — ${escHtmlServer(changeEntryDateLabel(c))}</h3>
       <p class="diff-desc">${escHtmlServer(c.summary)}</p>
       <p style="font-size:.8rem;color:var(--text-dim);margin-top:.5rem">Impact: ${escHtmlServer(c.impact)} &middot; <a href="${escHtmlServer(c.source_url)}" target="_blank" rel="noopener">Source &rarr;</a></p>
     </div>`).join("\n    ") : `<div class="context-box">No recent pricing changes tracked for Datadog or New Relic. Both vendors have maintained stable free tier limits through early 2026. Check our <a href="/changes">full pricing timeline</a> for all vendor changes.</div>`}
@@ -23251,7 +23251,7 @@ function buildStabilityDashboardPage(): string {
       <p class="vendor-summary">${escHtmlServer(latestChange?.summary?.substring(0, 200) ?? "")}</p>
       <div class="vendor-meta">
         <span class="change-type">${escHtmlServer(changeTypeLabel)}</span>
-        <span class="change-date">${escHtmlServer(latestChange ? changeDateLabel(latestChange) : "")}</span>
+        <span class="change-date">${escHtmlServer(latestChange ? changeEntryDateLabel(latestChange) : "")}</span>
         ${entry.changes.length > 1 ? `<span class="change-count">${entry.changes.length} changes tracked</span>` : ""}
         ${editorialLink ? `<a href="/${editorialLink.slug}" class="alt-link">View alternatives &rarr;</a>` : ""}
       </div>
@@ -26656,7 +26656,7 @@ function buildFreeTierTrackerPage(): string {
     return `<tr>
       <td style="font-weight:600;white-space:nowrap"><a href="/vendor/${vendorSlug}" style="color:var(--text)">${escHtmlServer(c.vendor)}</a></td>
       <td style="white-space:nowrap"><span style="color:${color};font-weight:600;font-size:.8rem">${label}</span></td>
-      <td style="font-family:var(--mono);font-size:.8rem;color:var(--text-dim);white-space:nowrap">${escHtmlServer(c.date)}</td>
+      <td style="font-family:var(--mono);font-size:.8rem;color:var(--text-dim);white-space:nowrap">${escHtmlServer(changeEntryDateLabel(c))}</td>
       <td style="color:var(--text-muted);font-size:.8rem">${escHtmlServer(c.summary.length > 120 ? c.summary.slice(0, 117) + "..." : c.summary)}</td>
     </tr>`;
   };
@@ -30321,7 +30321,7 @@ function buildVectorDatabasePricingPage(): string {
 
   const changeTimelineRows = vectorChanges.slice(0, 15).map((c: any) =>
     '<tr>' +
-    '<td style="font-size:.85rem;white-space:nowrap">' + escHtmlServer(c.date) + '</td>' +
+    '<td style="font-size:.85rem;white-space:nowrap">' + escHtmlServer(changeEntryDateLabel(c)) + '</td>' +
     '<td style="font-weight:600;font-size:.85rem"><a href="/vendor/' + escHtmlServer(c.vendor.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/-+$/, "")) + '">' + escHtmlServer(c.vendor) + '</a></td>' +
     '<td style="font-size:.85rem">' + escHtmlServer(c.change_type || "update") + '</td>' +
     '<td style="font-size:.85rem;color:var(--text-muted)">' + escHtmlServer(c.description || c.summary || "") + '</td>' +
@@ -45460,7 +45460,7 @@ function buildStateOfFreeTiersPage(): string {
     return `<div style="margin-bottom:.75rem;padding:.75rem 1rem;border-left:3px solid ${badge.color};background:var(--bg-card);border-radius:0 8px 8px 0">
       <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.3rem;flex-wrap:wrap">
         <span style="display:inline-block;padding:.1rem .5rem;border-radius:10px;font-size:.65rem;font-weight:600;background:${badge.color};color:#fff">${badge.label}</span>
-        <span style="font-family:var(--mono);font-size:.75rem;color:var(--text-dim)">${changeDateLabel(c)}</span>
+        <span style="font-family:var(--mono);font-size:.75rem;color:var(--text-dim)">${changeEntryDateLabel(c)}</span>
         <span style="font-size:.7rem;color:${impactColor};font-weight:600">${c.impact} impact</span>
         <a href="/vendor/${toSlug(c.vendor)}" style="font-size:.8rem;font-weight:600;color:var(--text)">${escHtmlServer(c.vendor)}</a>
       </div>
@@ -45473,7 +45473,7 @@ function buildStateOfFreeTiersPage(): string {
     return `<div style="margin-bottom:.75rem;padding:.75rem 1rem;border-left:3px solid ${badge.color};background:var(--bg-card);border-radius:0 8px 8px 0">
       <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.3rem;flex-wrap:wrap">
         <span style="display:inline-block;padding:.1rem .5rem;border-radius:10px;font-size:.65rem;font-weight:600;background:${badge.color};color:#fff">${badge.label}</span>
-        <span style="font-family:var(--mono);font-size:.75rem;color:var(--text-dim)">${changeDateLabel(c)}</span>
+        <span style="font-family:var(--mono);font-size:.75rem;color:var(--text-dim)">${changeEntryDateLabel(c)}</span>
         <a href="/vendor/${toSlug(c.vendor)}" style="font-size:.8rem;font-weight:600;color:var(--text)">${escHtmlServer(c.vendor)}</a>
       </div>
       <div style="font-size:.85rem;color:var(--text-muted);line-height:1.4">${escHtmlServer(c.summary)}</div>
@@ -46957,7 +46957,7 @@ function buildStackCheckPage(): string {
         ? { date: changeDateLabel(assessment.cause), date_source: assessment.cause.date_source, change_type: assessment.cause.change_type, summary: assessment.cause.summary }
         : null,
       stability,
-      recent_changes: vendorChanges.map(c => ({ date: changeDateLabel(c), change_type: c.change_type, summary: c.summary, impact: c.impact, resolved: isNoLongerInForce(c) })),
+      recent_changes: vendorChanges.map(c => ({ date: changeEntryDateLabel(c), change_type: c.change_type, summary: c.summary, impact: c.impact, resolved: isNoLongerInForce(c) })),
     };
     vendorLookup[offer.vendor.toLowerCase()] = vendorLookup[slug];
   }
@@ -47546,6 +47546,15 @@ ${globalNavCss()}
   var PRESETS = ${JSON.stringify(presetMatchups)};
   var NEG_TYPES = ['free_tier_removed','limits_reduced','restriction','product_deprecated','open_source_killed','pricing_model_change','pricing_restructured'];
   var POS_TYPES = ['new_free_tier','limits_increased','startup_program_expanded','new_tier'];
+  var EVENT_DATED_SOURCES = ${JSON.stringify(EVENT_DATED_SOURCES)};
+  var EFFECTIVE_DATE_PREFIX = ${JSON.stringify(EFFECTIVE_DATE_PREFIX)};
+  var DISCOVERED_DATE_PREFIX = ${JSON.stringify(DISCOVERED_DATE_PREFIX)};
+  var UNKNOWN_EFFECTIVE_DATE_MARKER = ${JSON.stringify(UNKNOWN_EFFECTIVE_DATE_MARKER)};
+
+  function changeEntryDateLabel(c) {
+    if (EVENT_DATED_SOURCES.indexOf(c.date_source) !== -1) return EFFECTIVE_DATE_PREFIX + ' ' + c.date;
+    return DISCOVERED_DATE_PREFIX + ' ' + c.date + ' \u00b7 ' + UNKNOWN_EFFECTIVE_DATE_MARKER;
+  }
 
   function usePreset(a, b) {
     document.getElementById('vendor-a').value = a;
@@ -47650,7 +47659,7 @@ ${globalNavCss()}
     if (changes.length > 0) {
       html += '<div class="changes-timeline"><strong style="font-size:.85rem">Recent Changes</strong>';
       changes.slice(0, 5).forEach(function(c) {
-        html += '<div class="change-item' + (c.resolution ? ' change-resolved' : '') + '"><span class="change-date">' + escHtml(c.date) + '</span> ' + changeTypeBadge(c.change_type) + ' ' + escHtml(c.summary.length > 120 ? c.summary.slice(0, 120) + '...' : c.summary) + '</div>';
+        html += '<div class="change-item' + (c.resolution ? ' change-resolved' : '') + '"><span class="change-date">' + escHtml(changeEntryDateLabel(c)) + '</span> ' + changeTypeBadge(c.change_type) + ' ' + escHtml(c.summary.length > 120 ? c.summary.slice(0, 120) + '...' : c.summary) + '</div>';
       });
       html += '</div>';
     }
@@ -48721,7 +48730,7 @@ function buildEmbedVendorWidget(slug: string, theme: "dark" | "light"): string |
       return `<div style="padding:4px 0;font-size:12px;color:var(--text-m)">
         <span style="display:inline-block;padding:1px 6px;border-radius:3px;font-size:10px;font-weight:600;color:#fff;background:${badge.color}">${badge.label}</span>
         <span style="margin-left:4px">${escHtmlServer(c.summary)}</span>
-        <span style="opacity:.6;margin-left:4px">${c.date}</span>
+        <span style="opacity:.6;margin-left:4px">${escHtmlServer(changeEntryDateLabel(c))}</span>
       </div>`;
     }).join("")}
   </div>` : "";
@@ -48777,7 +48786,7 @@ function buildEmbedChangesWidget(theme: "dark" | "light"): string {
       <div>
         <a href="${BASE_URL}/vendor/${vSlug}" target="_blank" rel="noopener" style="font-weight:600;font-size:13px">${escHtmlServer(c.vendor)}</a>
         <div style="font-size:12px;color:var(--text-m);margin-top:1px">${escHtmlServer(c.summary)}</div>
-        <div style="font-size:11px;color:var(--text-m);opacity:.6;margin-top:1px">${c.date}</div>
+        <div style="font-size:11px;color:var(--text-m);opacity:.6;margin-top:1px">${escHtmlServer(changeEntryDateLabel(c))}</div>
       </div>
     </div>`;
   }).join("");
@@ -49335,6 +49344,14 @@ function buildDeveloperHubPage(): string {
     + "</html>";
 }
 
+function undatedTileHtml(count: number): string {
+  if (count === 0) return "";
+  return `    <div class="stat-card stat-card-undated">
+      <div class="stat-value">${count}</div>
+      <div class="stat-label">${UNDATED_TILE_LABEL}</div>
+    </div>`;
+}
+
 function buildPricingChangesPage(): string {
   const allChanges = loadDealChanges();
   const { dated: eventDated, discovered: undatedChanges } = partitionByDateProvenance(allChanges);
@@ -49395,7 +49412,7 @@ function buildPricingChangesPage(): string {
     const changeYear = dated ? c.date.slice(0, 4) : "";
     return `      <div class="pc-entry${isUpcoming ? " pc-upcoming" : ""}${dated ? "" : " pc-undated"}${isNoLongerInForce(c) ? " pc-resolved" : ""}${changeIsUncited(c) ? " pc-unsourced" : ""}" id="${changeAnchor(c)}" data-type="${escHtmlServer(c.change_type)}" data-impact="${escHtmlServer(c.impact)}" data-category="${category}" data-vendor-cat="${vendorCat}" data-year="${changeYear}">
         <div class="pc-left">
-          <div class="pc-date">${dated ? c.date : `${DISCOVERED_DATE_PREFIX} ${c.date}`}</div>
+          <div class="pc-date${dated ? "" : " pc-date-unknown"}">${changeEntryDateLabel(c)}</div>
           ${isUpcoming ? `<div class="pc-upcoming-badge">upcoming</div>` : ""}
           <a href="#${changeAnchor(c)}" class="pc-anchor" title="Link to this change">#</a>
         </div>
@@ -49649,6 +49666,8 @@ h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5
 .pc-undated{border-style:dashed}
 .pc-left{flex-shrink:0;min-width:100px;text-align:right;position:relative}
 .pc-date{font-family:var(--mono);font-size:.75rem;color:var(--text-muted)}
+.pc-date-unknown{color:#d29922;font-style:italic}
+.stat-card-undated .stat-value{color:#d29922}
 .pc-upcoming-badge{font-family:var(--mono);font-size:.65rem;color:#58a6ff;font-weight:600;text-transform:uppercase;letter-spacing:.05em}
 .pc-anchor{font-family:var(--mono);font-size:.7rem;color:var(--text-dim);opacity:0;transition:opacity .15s}
 .pc-entry:hover .pc-anchor{opacity:1}
@@ -49722,6 +49741,7 @@ ${globalNavCss()}
       <div class="stat-value">${removedCount}</div>
       <div class="stat-label">Removals</div>
     </div>
+${undatedTileHtml(undatedSorted.length)}
   </div>
 
   <div class="trend-summary">
@@ -49862,7 +49882,7 @@ function buildChangesPage(): string {
       : "";
     return `      <div class="chg-entry${isUpcoming ? " chg-upcoming" : ""}${dated ? "" : " chg-undated"}${changeIsUncited(c) ? " chg-unsourced" : ""}"${anchorAttr}>
         <div class="chg-left">
-          <div class="chg-date">${dated ? c.date : `${DISCOVERED_DATE_PREFIX} ${c.date}`}</div>
+          <div class="chg-date${dated ? "" : " chg-date-unknown"}">${changeEntryDateLabel(c)}</div>
           ${isUpcoming ? `<div class="chg-upcoming-badge">upcoming</div>` : ""}
         </div>
         <div class="chg-right">
@@ -49966,6 +49986,8 @@ h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5
 .chg-undated{border-style:dashed}
 .chg-left{flex-shrink:0;min-width:100px;text-align:right}
 .chg-date{font-family:var(--mono);font-size:.75rem;color:var(--text-muted)}
+.chg-date-unknown{color:#d29922;font-style:italic}
+.stat-card-undated .stat-value{color:#d29922}
 .chg-upcoming-badge{font-family:var(--mono);font-size:.65rem;color:#58a6ff;font-weight:600;text-transform:uppercase;letter-spacing:.05em}
 .chg-right{flex:1;min-width:0}
 .chg-head{display:flex;align-items:center;gap:.5rem;margin-bottom:.25rem;flex-wrap:wrap}
@@ -50017,10 +50039,7 @@ ${globalNavCss()}
       <div class="stat-value">${byMonth.size}</div>
       <div class="stat-label">Months Tracked</div>
     </div>
-${undatedSorted.length === 0 ? "" : `    <div class="stat-card">
-      <div class="stat-value">${undatedSorted.length}</div>
-      <div class="stat-label">Effective Date Unknown</div>
-    </div>`}
+${undatedTileHtml(undatedSorted.length)}
   </div>
 
 ${changeLogFreshnessNote()}
@@ -50082,7 +50101,7 @@ function buildExpiringPage(): string {
     return `      <div class="exp-entry${urgentClass}${dated ? "" : " exp-undated"}">
         <div class="exp-left">
           ${countdown ? `<div class="exp-countdown${countdown.urgent ? " exp-countdown-urgent" : ""}">${countdown.text}</div>` : ""}
-          <div class="exp-date">${dated ? c.date : `${DISCOVERED_DATE_PREFIX} ${c.date}`}</div>
+          <div class="exp-date${dated ? "" : " exp-date-unknown"}">${changeEntryDateLabel(c)}</div>
         </div>
         <div class="exp-right">
           <div class="exp-head">
@@ -50190,6 +50209,7 @@ h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5
 .recent-entries{display:none}
 .recent-entries.show{display:block}
 .exp-undated{border-style:dashed}
+.exp-date-unknown{color:#d29922;font-style:italic}
 .no-upcoming{color:var(--text-dim);font-style:italic;padding:2rem;text-align:center;border:1px dashed var(--border);border-radius:8px}
 .mcp-cta{margin-top:2.5rem;padding:1.5rem;border:1px solid var(--border);border-radius:12px;background:var(--accent-glow);text-align:center}
 .mcp-cta p{color:var(--text-muted);font-size:.9rem;margin-bottom:.5rem}
@@ -50568,7 +50588,7 @@ function buildDeadlinesPage(): string {
             <a href="/vendor/${vendorSlug}" class="dl-vendor">${escHtmlServer(c.vendor)}</a>
             <span class="dl-category">${escHtmlServer(c.category)}</span>
           </div>
-          <div class="dl-date">${c.date}</div>
+          <div class="dl-date">${escHtmlServer(changeEntryDateLabel(c))}</div>
           <div class="dl-summary">${escHtmlServer(c.summary)}</div>
 ${altHtml}${guideHtml}
         </div>
@@ -52348,7 +52368,7 @@ function buildTrendsPage(slug: string): string | null {
         <div class="timeline-head">
           <span class="badge" style="background:${badge.color}">${badge.label}</span>
           <a href="/vendor/${toSlug(c.vendor)}" class="timeline-vendor">${escHtmlServer(c.vendor)}</a>
-          <span class="timeline-date">${changeDateLabel(c)}</span>
+          <span class="timeline-date">${changeEntryDateLabel(c)}</span>
           <span class="impact impact-${c.impact}">${c.impact}</span>
         </div>
         <div class="timeline-summary">${escHtmlServer(c.summary)}</div>
