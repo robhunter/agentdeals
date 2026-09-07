@@ -339,7 +339,11 @@ describe("the production answer reads the same gate", () => {
 
   it("opens with whatever opens the free-tier answer on the same page", () => {
     const subjects = gated().filter(p => freeAnswer(p).startsWith(p.gate!.reason));
-    assertPopulationFloor(subjects.length, 101, "gated pages open the free-tier answer with the gate");
+    assertPopulationFloor(
+      subjects.length,
+      Math.floor(gated().length / 3),
+      `gated pages of ${gated().length} open the free-tier answer with the gate`,
+    );
     const contradicting = subjects
       .filter(p => !productionAnswer(p).startsWith(p.gate!.reason))
       .map(p => `${p.slug} (${p.gate!.code}): ${productionAnswer(p).slice(0, 60)}`);
