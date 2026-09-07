@@ -456,7 +456,7 @@ describe("eligibility filtering", () => {
     }
   });
 
-  it("combines eligibility_type with category filter", async () => {
+  it("combines eligibility_type with a category name the catalogue no longer publishes", async () => {
     const proc = startServer();
     try {
       const responses = (await sendMcpMessages(proc, [
@@ -479,7 +479,7 @@ describe("eligibility filtering", () => {
       assert.ok(offers.length >= 3);
       for (const offer of offers) {
         assert.strictEqual(offer.eligibility.type, "accelerator");
-        assert.strictEqual(offer.category, "Startup Programs");
+        assert.strictEqual(offer.category, "Startup Perks");
       }
     } finally {
       proc.kill();

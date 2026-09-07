@@ -6,6 +6,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { fetchBadgeVerdicts, type SiteFreeTierVerdict } from "./badge-verdicts.ts";
+import { assertPopulationFloor } from "./population-floor.ts";
 
 const { gateFor, utcDate } = await import("../dist/ranking.js");
 const { gatedShareLede } = await import("../dist/eligibility.js");
@@ -236,7 +237,7 @@ describe("a category page discloses every gated record, not eligibility alone", 
       disclosing++;
     }
     assert.strictEqual(disclosing, census.filter((c) => c.gated > 0).length);
-    assert.ok(disclosing > 20, `only ${disclosing} categories disclose a gated count`);
+    assertPopulationFloor(disclosing, Math.floor(census.length / 5), "of the categories on the site disclose a gated count");
   });
 
   it("keeps the eligibility wording on every category holding an eligibility record", async () => {
@@ -257,7 +258,8 @@ describe("a category page discloses every gated record, not eligibility alone", 
         : CLAUSE_FORMS.eligibility_restricted(restricted);
       assert.ok(lede.includes(clause), `/category/${c.slug} drops the eligibility clause: ${lede}`);
     }
-    assert.ok(carrying >= 13, `only ${carrying} categories carry the eligibility clause`);
+    assert.strictEqual(carrying, census.filter((c) => c.codes.includes("eligibility_restricted")).length);
+    assertPopulationFloor(carrying, Math.floor(census.length / 20), "of the categories on the site carry the eligibility clause");
   });
 
   it("leaves the pages eligibility gates entirely on the wording they already publish", async () => {

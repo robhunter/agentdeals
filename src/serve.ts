@@ -17,6 +17,7 @@ import { recordApiHit, recordSessionConnect, recordSessionDisconnect, recordLand
 import { buildDailyRollup, readRollups, coverageOf, ROLLUP_DATE_PATTERN } from "./analytics-rollup.js";
 import { configureVendorSeries, recordVendorRequest, flushVendorSeries, readVendorSeries, vendorSeriesGauge, vendorExportAuthorized, isSeriesDate, seriesDateRange, VENDOR_SERIES_PATH, VENDOR_SERIES_RETENTION_DAYS, VENDOR_SERIES_NOTES } from "./vendor-series.js";
 import { openapiSpec } from "./openapi.js";
+import { CATEGORY_ALIASES, EXAMPLE_MEMBERS_BASIS, buildCategoryDirectory, categoryHolds, familySiblings, resolveCategoryName, scopeFor } from "./category-scope.js";
 import { LINK_GRACE_DAYS, unreachableNoticeForUrl } from "./link-health.js";
 import { offerEnded, offerRetired, recordedTierSentence, endedHeadline, endedHistorySentence, endedReliabilitySentence, endedEmptyChangeHistorySentence, ENDED_BADGE_LABEL, ENDED_SINCE_CHANGES_SENTENCE, type OfferTierAndUrl } from "./retirement.js";
 import { amountUnstatedSentence, levelWithheldReason, withheldLevelClause, withheldLevelSentence, type LevelWithheldReason } from "./source-check.js";
@@ -1615,8 +1616,7 @@ const relatedCategoriesMap: Record<string, string[]> = {
   "Tunneling & Networking": ["Cloud Hosting", "Infrastructure", "DNS & Domain Management"],
   "Diagramming": ["Design", "Documentation", "Project Management"],
   "Dev Utilities": ["API Development", "Testing", "IDE & Code Editors"],
-  "Startup Programs": ["Startup Perks", "Cloud Hosting", "Databases"],
-  "Startup Perks": ["Startup Programs", "Cloud Hosting", "AI / ML"],
+  "Startup Perks": ["Cloud IaaS", "Cloud Hosting", "AI / ML"],
   "Background Jobs": ["Workflow Automation", "Cloud Hosting", "CI/CD"],
   "API Gateway": ["API Development", "Cloud Hosting", "Security"],
 };
@@ -1694,7 +1694,19 @@ function buildCategoryPage(slug: string): string | null {
   const keyLimitMatch = topVendor?.description.match(/(\d[\d,]*\s*(?:GB|GiB|MB|TB|requests?|calls?|MAU|users?|emails?|messages?|builds?|minutes?|hours?|projects?|repos?|sites?|apps?|databases?|invocations?|events?))/i);
   const keyLimit = keyLimitMatch ? keyLimitMatch[1] : "a generous free tier";
 
-  const introHtml = `<div class="cat-intro">
+  const catScope = scopeFor(categoryName);
+  const catSiblings = familySiblings(categoryName).filter(s => categorySlugMap.has(toSlug(s)));
+  const siblingsHtml = catSiblings.length > 0 && catScope
+    ? `<p class="cat-scope-siblings">${catSiblings.length === 1 ? "One other name here answers" : `${catSiblings.length} other names here answer`} &ldquo;${escHtmlServer(catScope.answers[0])}&rdquo;, and each holds a different list: ${catSiblings.map(s => `<a href="/category/${toSlug(s)}">${escHtmlServer(s)}</a> (${categories.find(c => c.name === s)?.count ?? 0})`).join(", ")}.</p>`
+    : "";
+  const scopeHtml = catScope
+    ? `<div class="cat-scope">
+    <p><strong>What this name holds:</strong> ${escHtmlServer(catScope.scope)}</p>${siblingsHtml}
+  </div>`
+    : "";
+
+  const introHtml = `${scopeHtml}
+  <div class="cat-intro">
     <p>We track <strong>${catStandingCount}</strong> ${categoryName.toLowerCase()} services with free tiers.${topVendor ? ` ${escHtmlServer(topVendor.vendor)} leads with ${escHtmlServer(keyLimit)}.` : ""} ${stabilitySummary}</p>
   </div>`;
 
@@ -1735,7 +1747,8 @@ function buildCategoryPage(slug: string): string | null {
   </div>`
     : "";
 
-  const related = (relatedCategoriesMap[categoryName] ?? [])
+  const related = [...familySiblings(categoryName), ...(relatedCategoriesMap[categoryName] ?? [])]
+    .filter((rc, i, all) => all.indexOf(rc) === i)
     .filter(rc => categorySlugMap.has(toSlug(rc)));
   const relatedCatsHtml = related.length > 0
     ? `<div class="related-cats">
@@ -1827,6 +1840,10 @@ h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5
 .cat-meta{color:var(--text-muted);margin-bottom:1rem;font-size:.95rem}
 .cat-intro{margin-bottom:1.5rem;padding:1rem 1.25rem;background:var(--bg-card);border:1px solid var(--border);border-radius:8px;font-size:.95rem;color:var(--text-muted);line-height:1.7}
 .cat-intro strong{color:var(--text)}
+.cat-scope{margin-bottom:1rem;padding:.9rem 1.25rem;border-left:3px solid var(--accent);background:var(--bg-card);border-radius:0 8px 8px 0;font-size:.95rem;color:var(--text-muted);line-height:1.7}
+.cat-scope p{margin:0}
+.cat-scope strong{color:var(--text)}
+.cat-scope-siblings{margin-top:.5rem!important;font-size:.9rem;color:var(--text-dim)}
 .analysis-cta{margin-bottom:2rem}
 .analysis-cta a{display:flex;align-items:center;gap:.75rem;padding:1rem 1.25rem;background:linear-gradient(135deg,rgba(59,130,246,0.1),rgba(139,92,246,0.1));border:1px solid rgba(59,130,246,0.3);border-radius:10px;color:var(--text);text-decoration:none;transition:all .2s}
 .analysis-cta a:hover{border-color:var(--accent);background:linear-gradient(135deg,rgba(59,130,246,0.15),rgba(139,92,246,0.15));text-decoration:none}
@@ -4208,7 +4225,6 @@ const categoryComparisonMap: Record<string, { comparison?: string; hub?: string 
   "Tunneling & Networking": { hub: "/hosting-alternatives" },
   "Diagramming": { hub: "/design-alternatives" },
   "Dev Utilities": { hub: "/api-development-alternatives" },
-  "Startup Programs": { hub: "/startup-credits" },
   "Startup Perks": { hub: "/startup-credits" },
   "Background Jobs": { hub: "/hosting-alternatives" },
   "API Gateway": { hub: "/api-development-alternatives" },
@@ -48917,7 +48933,7 @@ function copyCode(btn){var block=btn.parentElement;var text=block.textContent.re
 function buildDeveloperHubPage(): string {
   const endpointTable = [
     { method: "GET", path: "/api/offers", desc: "Search and browse offers", params: "q, category, limit, offset" },
-    { method: "GET", path: "/api/categories", desc: "List all categories with counts", params: "" },
+    { method: "GET", path: "/api/categories", desc: "List all categories with counts, what each name holds, and the other names answering the same question", params: "" },
     { method: "GET", path: "/api/new", desc: "Recently added or updated offers", params: "days" },
     { method: "GET", path: "/api/newest", desc: "Newest deals by verification date", params: "limit" },
     { method: "GET", path: "/api/changes", desc: "Pricing and deal changes", params: "since, type, vendor, vendors, category, categories, limit, offset" },
@@ -54107,10 +54123,10 @@ const httpServer = createHttpServer(async (req, res) => {
     res.end(JSON.stringify(cited(dealsWithCodes)));
   } else if (url.pathname === "/api/categories" && isGetOrHead) {
     recordApiHit("/api/categories");
-    const cats = getCategories();
+    const cats = buildCategoryDirectory(getCategories(), loadOffers(), toSlug);
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/categories", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: cats.length });
     res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
-    res.end(JSON.stringify(cited({ categories: cats }, "/category")));
+    res.end(JSON.stringify(cited({ categories: cats, example_members_basis: EXAMPLE_MEMBERS_BASIS, retired_names: CATEGORY_ALIASES }, "/category")));
   } else if (url.pathname === "/api/agent-payments" && isGetOrHead) {
     recordApiHit("/api/agent-payments");
     const protocolFilter = url.searchParams.get("protocol") || undefined;
@@ -54352,7 +54368,7 @@ const httpServer = createHttpServer(async (req, res) => {
   } else if (url.pathname === "/api/startup-credits" && isGetOrHead) {
     recordApiHit("/api/startup-credits");
     const startupOffers = offers.filter(o =>
-      o.category === "Startup Programs" ||
+      categoryHolds(o.category) === "programmes" ||
       (o.tier && o.tier.toLowerCase().includes("startup"))
     );
     const startupCategoryMap: Record<string, string[]> = {
@@ -54727,7 +54743,7 @@ Parameters:
 ## REST API Endpoints
 
 - GET /api/offers — Search deals (params: q, category, eligibility_type, sort, limit, offset)
-- GET /api/categories — List all categories with counts
+- GET /api/categories — List all categories with counts, what each name holds, and the other names answering the same question
 - GET /api/changes — Pricing changes (params: since, type, vendor, vendors, category, categories, limit, offset)
 - GET /api/new — Recently added offers (params: days)
 - GET /api/newest — Newest deals (params: since, limit, category)
@@ -54950,6 +54966,12 @@ ${catList}
     res.end(buildCategoryIndexPage());
   } else if (url.pathname.startsWith("/category/") && isGetOrHead) {
     const slug = url.pathname.slice("/category/".length).replace(/\/$/, "");
+    const retiredName = Object.keys(CATEGORY_ALIASES).find(name => toSlug(name) === slug);
+    if (retiredName && !categorySlugMap.has(slug)) {
+      res.writeHead(301, { Location: `/category/${toSlug(CATEGORY_ALIASES[retiredName])}` });
+      res.end();
+      return;
+    }
     const html = buildCategoryPage(slug);
     if (html) {
       recordApiHit("/category/:slug");

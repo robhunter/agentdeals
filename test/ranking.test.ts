@@ -466,7 +466,7 @@ describe("the live index, ranked", () => {
     assert.strictEqual(uniqueTop, 0);
   });
 
-  it("Databases: Firebase is demoted on a recorded withdrawal, and the two gated offers stay gated", () => {
+  it("Databases: Firebase is demoted on a recorded withdrawal, and a tier that is not a free offer stays gated", () => {
     const offers = index.offers.filter((o) => o.category === "Databases");
     const r = rankOffers(offers, {
       queryKey: "best-of:Databases",
@@ -481,7 +481,6 @@ describe("the live index, ranked", () => {
     assert.ok(!vendorsOf(r.qualified).includes("Firebase"), "Firebase is demoted and must not also be in the qualified band");
     const gated = new Map(r.excluded.map((e) => [e.offer.vendor, e.gate.code]));
     assert.strictEqual(gated.get("Turbopuffer"), "not_a_free_offer");
-    assert.strictEqual(gated.get("ScaleGrid Startup Program"), "eligibility_restricted");
     assert.strictEqual(r.qualified.length, offers.length - r.demoted.length - r.excluded.length);
   });
 

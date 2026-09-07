@@ -111,18 +111,28 @@ describe("/best/:slug shows the whole qualified band", () => {
 
 describe("/best/:slug is not a mirror of /category/:slug", () => {
   it("the gates remove offers the category page shows", async () => {
-    const best = await get("/best/free-ai-ml");
-    const category = await get("/category/ai-ml");
-    assert.strictEqual(best.status, 200);
-    assert.strictEqual(category.status, 200);
-    const bestVendors = new Set([...best.html.matchAll(/class="best-pick-name">([^<]+)</g)].map((m) => m[1]));
-    assert.ok(bestVendors.size > 0);
     const index = JSON.parse(readFileSync(path.join(__dirname, "..", "data", "index.json"), "utf8"));
-    const gatedOut = index.offers.filter((o: { category: string; eligibility?: unknown }) => o.category === "AI / ML" && o.eligibility);
-    assert.ok(gatedOut.length > 0, "fixture assumption: AI/ML has eligibility-gated offers");
-    for (const o of gatedOut) {
-      assert.ok(!bestVendors.has(o.vendor), `${o.vendor} is eligibility-restricted and must not be on a best-of page`);
+    const restricted = new Map<string, { vendor: string }[]>();
+    for (const o of index.offers as { vendor: string; category: string; eligibility?: unknown }[]) {
+      if (!o.eligibility) continue;
+      const held = restricted.get(o.category);
+      if (held) held.push(o);
+      else restricted.set(o.category, [o]);
     }
+    let checked = 0;
+    for (const [category, gatedOut] of restricted) {
+      const slug = category.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+      const best = await get(`/best/free-${slug}`);
+      if (best.status !== 200) continue;
+      assert.strictEqual((await get(`/category/${slug}`)).status, 200);
+      const bestVendors = new Set([...best.html.matchAll(/class="best-pick-name">([^<]+)</g)].map((m) => m[1]));
+      assert.ok(bestVendors.size > 0, `/best/free-${slug} puts no vendor forward`);
+      for (const o of gatedOut) {
+        assert.ok(!bestVendors.has(o.vendor), `${o.vendor} is eligibility-restricted and must not be on a best-of page`);
+      }
+      checked++;
+    }
+    assert.ok(checked > 0, "no category holds both an eligibility-gated record and a best-of page");
   });
 });
 

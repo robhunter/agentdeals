@@ -433,10 +433,10 @@ describe("comparison verdict — as rendered", () => {
   });
 
   it("no longer calls the vendor with more recorded changes the more stable of the two", async () => {
-    const pair = buildComparisonMap().get("digitalocean-vs-sentry");
-    assert.ok(pair, "digitalocean-vs-sentry is a linked comparison");
-    const sides = sidesFor(pair)!;
-    const html = await assertRendersItsClause("digitalocean-vs-sentry", sides);
+    const found = firstSlugWhere(([a, b]) => a.recordedChanges !== b.recordedChanges && !NAMES_A_WINNER.test(stabilityVerdictClause(a, b)));
+    assert.ok(found, "at least one linked comparison holds a change-count difference it refuses to call a winner");
+    const sides = found.sides;
+    const html = await assertRendersItsClause(found.slug, sides);
     const worse = sides[0].recordedChanges > sides[1].recordedChanges ? sides[0] : sides[1];
     assert.ok(!html.includes(`${worse.vendor} has a more stable pricing history`), `${worse.vendor} has the higher count`);
   });
