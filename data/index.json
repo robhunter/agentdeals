@@ -38,9 +38,9 @@
         "notes": "v0 affiliate program via Dub. Ambassador program also available with credits and swag."
       },
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-07",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names Vercel as \"vercel\" and states \"$0\""
       },
       "product_subtypes": {
         "taxonomy": "Cloud Hosting",
@@ -192,9 +192,9 @@
         "notes": "PartnerStack-powered. Tiers: Ecosystem (education/influence) and Certified (deeper delivery)."
       },
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-07",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names Netlify as \"netlify\" and states \"$0\""
       },
       "product_subtypes": {
         "taxonomy": "Cloud Hosting",
@@ -738,7 +738,7 @@
         "free tier",
         "vector-database"
       ],
-      "verifiedDate": "2026-08-26",
+      "verifiedDate": "2026-09-05",
       "referral_program": {
         "available": true,
         "referrer_benefit": "$100 Amazon gift card per referral",
@@ -749,9 +749,9 @@
         "notes": "Referee must run M10+ cluster for 30+ days. Not valid for existing MongoDB users."
       },
       "source_check": {
-        "checked": "2026-09-03",
+        "checked": "2026-09-07",
         "outcome": "ok",
-        "detail": "text",
+        "detail": "the page names MongoDB Atlas as \"mongodb atlas\" and states \"$0\"",
         "unrendered_prices": [
           "Dedicated Clusters USD 57"
         ]
@@ -894,9 +894,9 @@
       ],
       "verifiedDate": "2026-08-25",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-07",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names Firebase as \"firebase\" and states \"$300\""
       },
       "product_subtypes": {
         "taxonomy": "Databases",
@@ -1142,9 +1142,9 @@
       ],
       "verifiedDate": "2026-08-25",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-07",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names Nhost as \"nhost\" and states \"$0\""
       },
       "product_subtypes": {
         "taxonomy": "Databases",
@@ -2024,11 +2024,11 @@
         "zero-egress",
         "free tier"
       ],
-      "verifiedDate": "2026-08-25",
+      "verifiedDate": "2026-09-07",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-07",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names Tigris as \"tigris\" and states \"$1.90\""
       }
     },
     {
@@ -3035,9 +3035,9 @@
         }
       ],
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-07",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names OpenRouter as \"openrouter\" and states \"$25,000\""
       },
       "product_subtypes": {
         "taxonomy": "AI / ML",
@@ -3155,11 +3155,11 @@
         "retention",
         "free tier"
       ],
-      "verifiedDate": "2026-08-24",
+      "verifiedDate": "2026-09-07",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-07",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names Mixpanel as \"mixpanel\" and states \"$0\""
       }
     },
     {
@@ -3367,9 +3367,9 @@
       },
       "expires_date": "2026-12-31",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-07",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names AWS Activate as \"aws activate\" and states \"$200,000\""
       }
     },
     {
@@ -3677,7 +3677,7 @@
         "accelerator",
         "hetzner-alternative"
       ],
-      "verifiedDate": "2026-08-25",
+      "verifiedDate": "2026-09-06",
       "eligibility": {
         "type": "accelerator",
         "conditions": [
@@ -3688,9 +3688,9 @@
       },
       "expires_date": "2027-03-31",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-07",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names Google Cloud as \"google cloud\" and states \"$350,000\""
       }
     },
     {
@@ -3823,9 +3823,9 @@
       ],
       "verifiedDate": "2026-08-26",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-07",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names Socket.dev as \"socket\" and states \"$0\""
       }
     },
     {
@@ -4157,9 +4157,9 @@
       ],
       "verifiedDate": "2026-08-25",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-07",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names Tinybird as \"tinybird\" and states \"$ 49\""
       }
     },
     {
@@ -4233,9 +4233,9 @@
       ],
       "verifiedDate": "2026-08-26",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-07",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names Mintlify as \"mintlify\" and states \"$ 0\""
       }
     },
     {
@@ -4289,11 +4289,11 @@
         "alerting",
         "freshping-alternative"
       ],
-      "verifiedDate": "2026-08-24",
+      "verifiedDate": "2026-09-06",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-07",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names Pulsetic as \"pulsetic\" and states \"$0\""
       },
       "product_subtypes": {
         "taxonomy": "Monitoring",
@@ -4534,7 +4534,7 @@
         "jira",
         "confluence"
       ],
-      "verifiedDate": "2026-08-26",
+      "verifiedDate": "2026-09-06",
       "eligibility": {
         "type": "accelerator",
         "conditions": [
@@ -4545,9 +4545,9 @@
         "program": "Atlassian for Startups"
       },
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-07",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names Atlassian as \"atlassian\" and states \"$0\""
       }
     },
     {
@@ -5096,11 +5096,11 @@
         "devsecops",
         "pre-commit"
       ],
-      "verifiedDate": "2026-08-24",
+      "verifiedDate": "2026-09-06",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-07",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names GitGuardian as \"gitguardian\" and states \"$0\""
       }
     },
     {
@@ -5460,11 +5460,11 @@
         "dead man switch",
         "alerts"
       ],
-      "verifiedDate": "2026-08-25",
+      "verifiedDate": "2026-09-05",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-07",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names Healthchecks.io as \"healthchecks io\" and states \"$0\""
       },
       "product_subtypes": {
         "taxonomy": "Monitoring",
@@ -5534,9 +5534,9 @@
         "open source",
         "internationalization"
       ],
-      "verifiedDate": "2026-08-26",
+      "verifiedDate": "2026-09-06",
       "source_check": {
-        "checked": "2026-09-03",
+        "checked": "2026-09-07",
         "outcome": "ok",
         "detail": "the page names Crowdin, renders \"Team plan\" and no amount, and its markup states 4 typed prices (Free Plan USD 0.00, Pro USD 50.00, Team USD 150.00, +1 more)",
         "read": "markup",
@@ -5603,9 +5603,9 @@
       ],
       "verifiedDate": "2026-08-13",
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-07",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names Dub.co as \"dub\" and states \"$ 3\""
       }
     },
     {
@@ -6121,9 +6121,9 @@
       ],
       "verifiedDate": "2026-08-26",
       "source_check": {
-        "checked": "2026-08-28",
-        "outcome": "ok",
-        "detail": "text"
+        "checked": "2026-09-07",
+        "outcome": "unreadable",
+        "detail": "HTTP 403"
       }
     },
     {
@@ -6236,11 +6236,11 @@
         "mfa",
         "identity"
       ],
-      "verifiedDate": "2026-08-25",
+      "verifiedDate": "2026-09-05",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-07",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names Descope as \"descope\" and states \"$0\""
       }
     },
     {
@@ -6769,9 +6769,9 @@
         "reviewed": "2026-08-25"
       },
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-07",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names LocalStack as \"localstack\" and states \"$39\""
       }
     },
     {
@@ -7132,9 +7132,9 @@
       ],
       "verifiedDate": "2026-08-25",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-07",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names Twingate as \"twingate\" and states \"$15\""
       }
     },
     {
@@ -7415,11 +7415,11 @@
         "on-call",
         "alerts"
       ],
-      "verifiedDate": "2026-08-24",
+      "verifiedDate": "2026-09-06",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-07",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names PagerDuty as \"pagerduty\" and states \"$0\""
       },
       "product_subtypes": {
         "taxonomy": "Monitoring",
@@ -7447,9 +7447,9 @@
       ],
       "verifiedDate": "2026-08-25",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-07",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names imgix as \"imgix\" and states \"$25\""
       }
     },
     {
@@ -7834,9 +7834,9 @@
       ],
       "verifiedDate": "2026-08-24",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-07",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names ipapi as \"ipapi\" and states \"$ 15\""
       }
     },
     {
@@ -7934,11 +7934,11 @@
         "web-capture",
         "images"
       ],
-      "verifiedDate": "2026-08-26",
+      "verifiedDate": "2026-09-06",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-07",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names Screenshotlayer as \"screenshotlayer\" and states \"$ 0.00\""
       }
     },
     {
@@ -8124,11 +8124,11 @@
         "embeddings",
         "milvus"
       ],
-      "verifiedDate": "2026-08-25",
+      "verifiedDate": "2026-09-06",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-07",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names Zilliz Cloud as \"zilliz cloud\" and states \"$0\""
       },
       "product_subtypes": {
         "taxonomy": "Databases",
@@ -8220,9 +8220,9 @@
       ],
       "verifiedDate": "2026-08-24",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-07",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names Chroma as \"chroma\" and states \"$5\""
       },
       "product_subtypes": {
         "taxonomy": "Databases",
@@ -8707,9 +8707,9 @@
       ],
       "verifiedDate": "2026-08-25",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-07",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names Gel as \"gel\" and states \"$0\""
       }
     },
     {
@@ -9279,11 +9279,11 @@
         "pipelines",
         "automation"
       ],
-      "verifiedDate": "2026-08-24",
+      "verifiedDate": "2026-09-06",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-07",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names Buddy as \"buddy\" and states \"€0\""
       }
     },
     {
@@ -9373,9 +9373,9 @@
       ],
       "verifiedDate": "2026-08-01",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_amount",
-        "detail": "the page names Zoho Docs and says \"starts at\" but states no amount, rate or price we can read"
+        "checked": "2026-09-07",
+        "outcome": "ok",
+        "detail": "the page writes \"zoho\", the domain we cite Zoho Docs from, and states \"₹ 720\""
       }
     },
     {
@@ -9474,9 +9474,9 @@
         "productivity",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-08-26",
+      "verifiedDate": "2026-09-05",
       "source_check": {
-        "checked": "2026-09-03",
+        "checked": "2026-09-07",
         "outcome": "ok",
         "detail": "the page names Zoho Notebook, renders \"free plan\" and no amount, and its markup states 3 typed prices (Notebook Essential INR 0, Notebook Pro INR 83.25, Notebook for Business INR 333.25)",
         "read": "markup",
@@ -9565,11 +9565,11 @@
         "marketing",
         "zoho"
       ],
-      "verifiedDate": "2026-08-25",
+      "verifiedDate": "2026-09-07",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-07",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names Zoho Campaigns as \"zoho campaigns\" and states \"free plan\""
       }
     },
     {
@@ -9965,11 +9965,11 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-08-26",
+      "verifiedDate": "2026-09-06",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-07",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names Arize AI as \"arize ai\" and states \"$50\""
       },
       "product_subtypes": {
         "taxonomy": "AI / ML",
@@ -10294,11 +10294,11 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-08-25",
+      "verifiedDate": "2026-09-07",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-07",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names CustomJS as \"customjs\" and states \"Free tier\""
       }
     },
     {
@@ -10591,11 +10591,11 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-07-06",
+      "verifiedDate": "2026-09-05",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-07",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names Financial Data as \"financial data\" and states \"$ 0\""
       }
     },
     {
@@ -10660,11 +10660,11 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-08-24",
+      "verifiedDate": "2026-09-07",
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-07",
         "outcome": "states_no_amount",
-        "detail": "the page names Geolocated.io and says \"free tier\" but states no amount, rate or price we can read"
+        "detail": "the page names Geolocated.io and says \"free tier\" but states no amount, rate or price we can read, and its markup carries no structured data"
       }
     },
     {
@@ -11409,12 +11409,11 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-08-02",
+      "verifiedDate": "2026-09-06",
       "source_check": {
-        "checked": "2026-09-03",
+        "checked": "2026-09-07",
         "outcome": "ok",
-        "detail": "the page names PrefectCloud, renders \"Hobby tier\" and no amount, and its markup states 3 typed prices (Hobby USD 0, Starter USD 100, Team USD 100)",
-        "read": "markup"
+        "detail": "the page names PrefectCloud as \"prefect cloud\" and states \"$100\""
       }
     },
     {
@@ -12644,9 +12643,9 @@
       ],
       "verifiedDate": "2026-08-25",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-07",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names ruttl.com as \"ruttl\" and states \"$18\""
       }
     },
     {
@@ -12695,9 +12694,9 @@
       ],
       "verifiedDate": "2026-08-24",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-07",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names SiteDots as \"sitedots\" and states \"$ 17\""
       }
     },
     {
@@ -12894,9 +12893,13 @@
       ],
       "verifiedDate": "2026-07-10",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-07",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names transfernow as \"transfernow\" and states \"€ 6\"",
+        "unrendered_prices": [
+          "EUR 96",
+          "EUR 288"
+        ]
       }
     },
     {
@@ -13250,9 +13253,9 @@
       ],
       "verifiedDate": "2026-08-24",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-07",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names Storyblok as \"storyblok\" and states \"$15.00\""
       }
     },
     {
@@ -13782,7 +13785,7 @@
       ],
       "verifiedDate": "2026-04-23",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-07",
         "outcome": "unreadable",
         "detail": "HTTP 429"
       }
@@ -13857,7 +13860,7 @@
       ],
       "verifiedDate": "2026-04-12",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-07",
         "outcome": "unreadable",
         "detail": "fetch failed"
       }
@@ -14059,9 +14062,9 @@
       ],
       "verifiedDate": "2026-07-09",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-07",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names Terrateam as \"terrateam\" and states \"$0\""
       }
     },
     {
@@ -14463,9 +14466,9 @@
       ],
       "verifiedDate": "2026-08-06",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-07",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names Vaadin as \"vaadin\" and states \"$0\""
       }
     },
     {
@@ -14619,7 +14622,7 @@
       ],
       "verifiedDate": "2026-07-10",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-07",
         "outcome": "unreadable",
         "detail": "HTTP 404"
       }
@@ -14823,7 +14826,7 @@
       ],
       "verifiedDate": "2026-05-23",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-07",
         "outcome": "unreadable",
         "detail": "HTTP 410"
       }
@@ -14874,9 +14877,9 @@
       ],
       "verifiedDate": "2026-07-12",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-07",
         "outcome": "unreadable",
-        "detail": "HTTP 502"
+        "detail": "fetch failed"
       }
     },
     {
@@ -15394,7 +15397,7 @@
       ],
       "verifiedDate": "2026-04-13",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-07",
         "outcome": "unreadable",
         "detail": "fetch failed"
       }
@@ -15411,9 +15414,9 @@
       ],
       "verifiedDate": "2026-08-04",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-07",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names ploi.io as \"ploi io\" and states \"€0\""
       }
     },
     {
@@ -15791,7 +15794,7 @@
       ],
       "verifiedDate": "2026-08-25",
       "source_check": {
-        "checked": "2026-09-05",
+        "checked": "2026-09-07",
         "outcome": "ok",
         "detail": "the page writes \"betterstack\", the domain we cite Better Stack Logs from, and states \"$0\""
       }
@@ -15931,9 +15934,17 @@
       ],
       "verifiedDate": "2026-08-05",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-07",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names localazy.com as \"localazy com\" and states \"$89\"",
+        "unrendered_prices": [
+          "Professional - 1,000 keys USD 41",
+          "Professional - 1,500 keys USD 52",
+          "Professional - 2,500 keys USD 73",
+          "Autopilot - 3,500 keys USD 94",
+          "Autopilot - 5,000 keys USD 125",
+          "Autopilot - 7,500 keys USD 167"
+        ]
       }
     },
     {
@@ -16735,11 +16746,11 @@
         "observability",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-07-12",
+      "verifiedDate": "2026-09-06",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-07",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names Simple Observability as \"simple observability\" and states \"$3\""
       },
       "product_subtypes": {
         "taxonomy": "Monitoring",
@@ -17761,9 +17772,9 @@
       ],
       "verifiedDate": "2026-08-25",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-07",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names Mailtrap.io as \"mailtrap io\" and states \"1M emails per month\""
       }
     },
     {
@@ -18547,7 +18558,7 @@
       ],
       "verifiedDate": "2026-06-16",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-07",
         "outcome": "unreadable",
         "detail": "fetch failed"
       },
@@ -18749,7 +18760,7 @@
       ],
       "verifiedDate": "2026-05-07",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-07",
         "outcome": "unreadable",
         "detail": "HTTP 404"
       }
@@ -19106,7 +19117,7 @@
         "notes": "Domains 20%, hosting 35%, SSL 35%. Powered by Impact. Min payout $10."
       },
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-07",
         "outcome": "unreadable",
         "detail": "HTTP 403"
       }
@@ -19725,7 +19736,7 @@
       ],
       "verifiedDate": "2026-07-08",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-07",
         "outcome": "unreadable",
         "detail": "fetch failed"
       }
@@ -19743,7 +19754,7 @@
       ],
       "verifiedDate": "2026-04-24",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-07",
         "outcome": "unreadable",
         "detail": "fetch failed"
       }
@@ -20774,7 +20785,7 @@
         "notes": "Domains 20%, hosting 35%, SSL 35%. Powered by Impact."
       },
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-07",
         "outcome": "unreadable",
         "detail": "HTTP 403"
       }
@@ -20846,7 +20857,7 @@
       ],
       "verifiedDate": "2026-07-12",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-07",
         "outcome": "unreadable",
         "detail": "fetch failed"
       }
@@ -21242,7 +21253,7 @@
       ],
       "verifiedDate": "2026-06-15",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-07",
         "outcome": "unreadable",
         "detail": "fetch failed"
       }
@@ -21464,11 +21475,11 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-08-25",
+      "verifiedDate": "2026-09-05",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-07",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names ZeroTier as \"zerotier\" and states \"$18\""
       }
     },
     {
@@ -22384,9 +22395,9 @@
       ],
       "verifiedDate": "2026-07-17",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-07",
         "outcome": "unreadable",
-        "detail": "HTTP 502"
+        "detail": "fetch failed"
       }
     },
     {
@@ -22658,9 +22669,9 @@
       ],
       "verifiedDate": "2026-07-17",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_amount",
-        "detail": "the page names packagecloud.io and says \"Community Package\" but states no amount, rate or price we can read"
+        "checked": "2026-09-07",
+        "outcome": "ok",
+        "detail": "the page names packagecloud.io as \"packagecloud io\" and states \"$1\""
       }
     },
     {
@@ -22674,7 +22685,7 @@
         "media",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-07-19",
+      "verifiedDate": "2026-09-05",
       "payment_protocols": [
         {
           "protocol": "x402",
@@ -22685,9 +22696,9 @@
         }
       ],
       "source_check": {
-        "checked": "2026-09-05",
+        "checked": "2026-09-07",
         "outcome": "ok",
-        "detail": "the page writes \"pinata\", the domain we cite Pinata IPFS from, and states \"1 Gateway Total 10G Bandwidth Per month\""
+        "detail": "the page writes \"pinata\", the domain we cite Pinata IPFS from, and states \"$0\""
       }
     },
     {
@@ -22721,9 +22732,9 @@
       ],
       "verifiedDate": "2026-08-24",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-07",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names podio.com as \"podio\" and states \"$ 0\""
       }
     },
     {
@@ -24270,9 +24281,9 @@
       ],
       "verifiedDate": "2026-07-19",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-07",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names TeleportHQ as \"teleporthq\" and states \"$ 0\""
       }
     },
     {
@@ -24595,9 +24606,9 @@
       ],
       "verifiedDate": "2026-08-25",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-07",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names Foursquare as \"foursquare\" and states \"$0\""
       }
     },
     {
@@ -24793,9 +24804,9 @@
       ],
       "verifiedDate": "2026-08-11",
       "source_check": {
-        "checked": "2026-09-01",
+        "checked": "2026-09-07",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names positionstack as \"positionstack\" and states \"$0\""
       }
     },
     {
@@ -33408,9 +33419,9 @@
       ],
       "verifiedDate": "2026-08-24",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-07",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names Apple News as \"apple news\" and states \"$12.99\""
       }
     },
     {
@@ -34011,9 +34022,9 @@
         }
       ],
       "source_check": {
-        "checked": "2026-09-03",
+        "checked": "2026-09-07",
         "outcome": "ok",
-        "detail": "text",
+        "detail": "the page names Together AI as \"together ai\" and states \"$0.30\"",
         "unrendered_prices": [
           "USD 6.49",
           "Image generation (per image) USD 0.0006"
@@ -34060,9 +34071,9 @@
         }
       ],
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-07",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names Fireworks AI as \"fireworks ai\" and states \"$1\""
       },
       "product_subtypes": {
         "taxonomy": "AI / ML",

@@ -145,6 +145,18 @@
       "refused_date": "2026-08-28"
     },
     {
+      "vendor": "Apple News",
+      "change_type": "free_tier_removed",
+      "reason": "confirmed_unchanged",
+      "detail": "Stored description explicitly states no Apple News+ premium articles on the free tier, which aligns with the current page stating Apple News+ is a paid subscription.",
+      "summary": "Apple News is no longer fully free. It now has a subscription tier called Apple News+ that costs $12.99/month after a free trial. There are also free trials available with the purchase of a new Apple device or as part of an Apple One bundle.",
+      "previous_state": "Fully free news aggregator on iOS/macOS. Curated top stories, trending topics. Follow channels and topics. Personalized feed. Shared stories. No Apple News+ premium articles on free. No ads on Apple News (curated, not ad-supported).",
+      "current_state": "Apple News+ costs $12.99/month after a free trial. It includes access to hundreds of magazines and newspapers, audio stories, and exclusive puzzles. A free trial is available with a new device purchase or Apple One subscription.",
+      "source_url": "https://www.apple.com/apple-news/",
+      "category": "News & Reading",
+      "refused_date": "2026-09-07"
+    },
+    {
       "vendor": "Apple Notes",
       "change_type": "limits_reduced",
       "reason": "measures_no_change",
@@ -769,6 +781,18 @@
       "refused_date": "2026-09-03"
     },
     {
+      "vendor": "Dub.co",
+      "change_type": "limits_reduced",
+      "reason": "measures_no_change",
+      "detail": "limits_reduced claimed, and every quantity the record compares holds the same value once notation and period are normalised — 25 link/mo against 25 link/mo, 1,000 tracked/mo against 1 tracked/mo, 3 custom against 3 custom",
+      "summary": "The free tier now includes 1K tracked events/mo, 25 new links/mo, and AI assistant, whereas the stored information stated 25 new links/month, 1,000 tracked events/month.",
+      "previous_state": "Open-source link management — 25 new links/month, 1,000 tracked events/month, 3 custom domains, 1 user, 30-day analytics retention, API with native SDKs. No credit card required",
+      "current_state": "Free $0 free forever – the most generous free plan on the market Start for free 1K tracked events/mo Real-time analytics 1 user Basic support 25 new links/mo AI assistant Link tags API access 3 custom domains UTM templates 30-day analytics retention QR codes",
+      "source_url": "https://dub.co/pricing/links",
+      "category": "Dev Utilities",
+      "refused_date": "2026-09-07"
+    },
+    {
       "vendor": "duo.com",
       "change_type": "pricing_restructured",
       "reason": "confirmed_unchanged",
@@ -839,6 +863,30 @@
       "source_url": "https://www.file.io",
       "category": "Storage",
       "refused_date": "2026-08-28"
+    },
+    {
+      "vendor": "Firebase",
+      "change_type": "limits_increased",
+      "reason": "confirmed_unchanged",
+      "detail": "The report restates the stored description, and the differences are simply clarifications of existing limits (e.g., specifying 'Standard edition' for Firestore, adding 'Network egress' for Firestore, and clarifying '2M' for Cloud Functions).",
+      "summary": "Firestore storage limit increased to 5 GB, and reads/writes are now 20K/50K respectively. App Hosting storage is now 10 GB with 360 MB/day data transfer. Cloud Functions invocations are now 2M/month.",
+      "previous_state": "Full BaaS — Auth (50K MAU), Firestore (1 GiB storage, 50K reads/day), Cloud Functions (2M invocations/month), Hosting, Analytics, Crashlytics all free",
+      "current_state": "Cloud Firestore Standard edition: Stored data 1 GiB total, Network egress 10 GiB/month, Documents written 20K writes/day, Documents read 50K reads/day. App Hosting: Storage 10 GB, Data transfer 360 MB/day. Cloud Functions: 2 百万/月までは無料",
+      "source_url": "https://firebase.google.com/pricing",
+      "category": "Databases",
+      "refused_date": "2026-09-07"
+    },
+    {
+      "vendor": "Fireworks AI",
+      "change_type": "pricing_restructured",
+      "reason": "confirmed_unchanged",
+      "detail": "The report simply restates the free credit amount already known.",
+      "summary": "The free tier now offers $1 in free credits for serverless inference.",
+      "previous_state": "Fast inference platform for LLMs and image models. Free tier: $1 free credits. Serverless and on-demand deployment options",
+      "current_state": "Serverless Inference offers $1 in free credits. Beyond that, pricing is per token, and varies by model and tier (Standard, Priority, Fast). Training and on-demand deployments have separate, detailed pricing structures based on GPU usage and model parameters.",
+      "source_url": "https://fireworks.ai/pricing",
+      "category": "AI / ML",
+      "refused_date": "2026-09-07"
     },
     {
       "vendor": "flightcontrol.dev",
@@ -1357,6 +1405,18 @@
       "refused_date": "2026-08-28"
     },
     {
+      "vendor": "Mailtrap.io",
+      "change_type": "limits_reduced",
+      "reason": "unquantified_limit",
+      "detail": "limits_reduced claimed, but the current state names no quantity for anything the stored state measured (4,000 email, 150 cap, 1 domain, 3 log, 50 test, 1 sandbox, 1,500 email, 500 contact, 1 user)",
+      "summary": "The free tier limits for Email API/SMTP have changed. The stored information states 4,000 emails/month, while a user quote on the page states 1,000 emails/month.",
+      "previous_state": "Three separate free products. Email API/SMTP: 4,000 emails/month (150/day cap), 1 domain, 3-day log retention. Email Sandbox (testing): 50 test emails/month, 1 sandbox. Email Marketing: 1,500 emails/month, 500 contacts. 1 user each.",
+      "current_state": "A user quote states they can send 1000 mails/month for free.",
+      "source_url": "https://mailtrap.io/",
+      "category": "Email",
+      "refused_date": "2026-09-07"
+    },
+    {
       "vendor": "MantleDB",
       "change_type": "limits_reduced",
       "reason": "measures_the_opposite",
@@ -1705,6 +1765,18 @@
       "refused_date": "2026-09-03"
     },
     {
+      "vendor": "podio.com",
+      "change_type": "limits_reduced",
+      "reason": "measures_no_change",
+      "detail": "limits_reduced claimed, and every quantity the record compares holds the same value once notation and period are normalised — 100 item against 100 organization, 100 \"previously\" 100",
+      "summary": "The free plan now has a limit of 100 items per organization, whereas previously it had 100 items *across* the organization. The free plan also no longer includes unlimited workspaces and apps, but rather includes unlimited workspaces and apps in the Plus and Premium plans.",
+      "previous_state": "Work management platform owned by Progress Software — free plan: 5 users, 100 items max across organization, 1,000 API calls daily. Task management, apps, workspaces, basic workflow automations.",
+      "current_state": "The free plan includes unlimited workspaces and apps, but limits the total number of items to 100 per organization.",
+      "source_url": "https://www.progress.com/podio/pricing",
+      "category": "Storage",
+      "refused_date": "2026-09-07"
+    },
+    {
       "vendor": "Portkey",
       "change_type": "free_tier_removed",
       "reason": "states_no_terms",
@@ -1871,6 +1943,18 @@
       "source_url": "https://home.robusta.dev/",
       "category": "Monitoring",
       "refused_date": "2026-08-29"
+    },
+    {
+      "vendor": "ruttl.com",
+      "change_type": "pricing_restructured",
+      "reason": "confirmed_unchanged",
+      "detail": "The stored description doesn't mention a cost, and the current page explicitly states it's free. The report highlights this, but it's not a *change* from what was previously understood (free).",
+      "summary": "The free plan now has a monthly cost of $0/month/user, but still includes the same limits: up to 5 users, 1 project, 5 pages, and unlimited guests.",
+      "previous_state": "All-in-one visual feedback tool to collect digital feedback and review websites, PDFs, and images. Free plan: 1 project, 5 pages, 5 users, unlimited guests; integrations with Trello, Slack, Asana, and Jira. Pro begins at $15/user/month.",
+      "current_state": "Basic (Free) /month/user: Upto 5 users, 1 project, 5 Pages, Unlimited Guests, All Project Types",
+      "source_url": "https://ruttl.com/pricing/",
+      "category": "Communication",
+      "refused_date": "2026-09-07"
     },
     {
       "vendor": "Sauce Labs",
@@ -2077,6 +2161,18 @@
       "refused_date": "2026-08-28"
     },
     {
+      "vendor": "Together AI",
+      "change_type": "free_tier_removed",
+      "reason": "states_no_terms",
+      "detail": "every clause of the summary states absence rather than a term the page carries, so it reports the reading rather than a change",
+      "summary": "The $1 free credit offer is not mentioned on the pricing page. The page details pricing per 1M tokens for various models, and offers different compute options (Serverless Inference, Provisioned Throughput, Dedicated Inference, GPU Clusters, etc.) but does not mention a free tier.",
+      "previous_state": "Fast inference API for open-source LLMs (Llama, Mixtral, Code Llama). Free tier: $1 free credits on signup. Pay-per-token after",
+      "current_state": "The pricing page details costs per 1M tokens for various models, and offers different compute options like Serverless Inference, Provisioned Throughput, and Dedicated Inference.",
+      "source_url": "https://www.together.ai/pricing",
+      "category": "AI / ML",
+      "refused_date": "2026-09-07"
+    },
+    {
       "vendor": "Toggled.dev",
       "change_type": "limits_increased",
       "reason": "confirmed_unchanged",
@@ -2185,6 +2281,18 @@
       "refused_date": "2026-08-29"
     },
     {
+      "vendor": "Vaadin",
+      "change_type": "limits_reduced",
+      "reason": "dangling_reference",
+      "detail": "the summary now opens on a reference to a clause that was dropped, so the sentence that travels alone has no subject",
+      "summary": "The stored deal info states 'Unlimited Projects with five years of free maintenance'. The current pricing page states the free tier has 3 months of maintenance and does not mention unlimited projects. It also highlights Pro and Enterprise tiers with longer maintenance periods (up to 15 years).",
+      "previous_state": "Build scalable UIs in Java or TypeScript, and use the integrated tooling, components, and design system to iterate faster, design better, and simplify the development process. Unlimited Projects with five years of free maintenance.",
+      "current_state": "The Free plan includes 3 months of maintenance.",
+      "source_url": "https://vaadin.com/pricing",
+      "category": "Testing",
+      "refused_date": "2026-09-07"
+    },
+    {
       "vendor": "vatcheckapi.com",
       "change_type": "limits_reduced",
       "reason": "unquantified_limit",
@@ -2279,6 +2387,18 @@
       "source_url": "https://zoho.com/checkout",
       "category": "Payments",
       "refused_date": "2026-08-31"
+    },
+    {
+      "vendor": "Zoho Docs",
+      "change_type": "limits_increased",
+      "reason": "confirmed_unchanged",
+      "detail": "The stored description already stated 5GB storage, the report highlights this.",
+      "summary": "The free tier now offers 5 GB of storage, not 1 GB.",
+      "previous_state": "Free for 5 users with 1 GB upload limit & 5GB storage. Zoho Office Suite (Writer, Sheets & Show) comes bundled.",
+      "current_state": "Free Plan - 5 GB Secure cloud storage for individual use.",
+      "source_url": "https://www.zoho.com/workdrive/pricing.html",
+      "category": "Productivity & Notes",
+      "refused_date": "2026-09-07"
     },
     {
       "vendor": "Zoho Meeting",
