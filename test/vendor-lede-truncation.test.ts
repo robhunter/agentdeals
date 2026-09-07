@@ -107,16 +107,19 @@ interface Quotation {
 }
 
 function quotationAgainst(route: string, published: string, candidates: readonly string[]): Quotation | null {
+  const excerpted = published.startsWith(CLIP_MARKER);
+  const body = excerpted ? published.slice(CLIP_MARKER.length) : published;
   let best: Quotation | null = null;
   for (const stored of candidates) {
-    const shared = sharedPrefixLength(published, stored);
-    const opening = published.slice(0, shared);
+    const from = excerpted ? stored.indexOf(body.slice(0, 24)) : 0;
+    const rest = from < 0 ? "" : stored.slice(from);
+    const shared = sharedPrefixLength(body, rest);
     const quotation: Quotation = {
       route,
       stored,
-      opening,
-      marked: published.slice(shared).startsWith(CLIP_MARKER),
-      continues: stored.slice(shared),
+      opening: body.slice(0, shared),
+      marked: body.slice(shared).startsWith(CLIP_MARKER),
+      continues: rest.slice(shared),
     };
     if (best === null || quotation.opening.length > best.opening.length) best = quotation;
   }

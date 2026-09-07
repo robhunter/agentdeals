@@ -26,6 +26,14 @@ const { toSlug } = await import("../dist/slug.js");
 const { qualityBudget } = await import("../dist/page-reviews.js");
 const { supersededCensus } = await import("../dist/superseded-census.js");
 const { utcDate } = await import("../dist/ranking.js");
+const { tierRecordsAFreeTier } = await import("../dist/free-tier-record.js");
+const {
+  describesOnlyATrial,
+  mentionsSomethingFree,
+  namesAFreePlan,
+  openingOfAReading,
+  whereAFreePlanIsNamed,
+} = await import("../dist/superseding-reading.js");
 
 type Offer = import("../src/types.ts").Offer;
 type DealChange = import("../src/types.ts").DealChange;
@@ -354,6 +362,131 @@ describe("#1383 which of the two directions holds a scheduled data commit", () =
       const source = readFileSync(path.join(REPO, "test", file), "utf-8");
       assert.ok(!pinned.test(source), `${file} still pins the population with an equality assertion`);
     }
+  });
+});
+
+describe("#1424 whether a superseding reading prices a plan or describes a trial", () => {
+  const A_TRIAL_AND_NOTHING_ELSE = [
+    ["a trial in place of a free forever plan", "We provide 14 days free trial with unlimited data ingestion."],
+    ["a trial in place of a free plan", "A 7-day trial is available with 5,000 API credits and no credit card required."],
+    [
+      "a trial banner in place of a free plan",
+      "Free 10-day trial No card required Explore all features Give Survicate a test drive with the following features: " +
+        "Collect up to 25 survey responses Research Hub with 100 data points 25+ integrations available",
+    ],
+    ["a trial with no plan beside it", "Offers a 7-day free trial, no credit card required."],
+  ] as const;
+
+  const A_PLAN = [
+    [
+      "a free price beside a paid one",
+      "Send 100 monthly geocode requests for free — in case you ever need more, premium geocoding subscriptions start at just USD $9.99 per month.",
+    ],
+    ["a paid plan and its limits", "Starter plan includes 10 users, 500 test results / month, and 100 prompt execs / month."],
+    ["prices per period", "DBOS Pro is $99/month (2 user seats, 3 apps, 1M checkpoints)."],
+    ["prices per token", "Grok 4.6: Input $2.00 / 1M tokens, Output $6.00 / 1M tokens"],
+  ] as const;
+
+  const NAMES_A_FREE_PLAN = [
+    "The free tier includes unlimited API requests, 50,000 monthly active users, 500 MB database size.",
+    "Always Free services include HeatWave AMD-based Compute and Object Storage.",
+    "Free Forever $0 Free Up to 25 infrastructure units",
+    "The Free plan costs $0 per month and includes 50 AI credits.",
+    "The Community plan is free and includes unlimited users.",
+  ];
+
+  const NAMES_NO_FREE_PLAN = [
+    "The page offers a free trial with up to 1,000 MAU and 6-month message retention.",
+    "Start with a free credit of $40.",
+    "It does not mention a permanently free tier for up to 5 servers.",
+    'It states "Why We are Removing Burner Mail\'s Free Plan Read more".',
+    "Brevo 50% off Starter and Standard Plans Save up to $2,574",
+    "Free plan trial: 14 days, then $19 a month.",
+  ];
+
+  const OFFERS_NOTHING_FREE_OUTRIGHT = [
+    "Start for free with $50 in credit for new signups.",
+    "There is a free 7-day trial, then $10 a month for the Developer plan.",
+    "Brevo 50% off Starter and Standard Plans Save up to $2,574",
+  ];
+
+  const OFFERS_SOMETHING_FREE_OUTRIGHT = [
+    "KIRO FREE $0 per month 50 credits.",
+    "The Free plan costs $0 per month and includes 50 AI credits.",
+    "Leiga is free forever with no credit card required.",
+  ];
+
+  for (const sentence of OFFERS_NOTHING_FREE_OUTRIGHT) {
+    it(`reads nothing as offered free outright in "${sentence.slice(0, 40)}"`, () => {
+      assert.strictEqual(mentionsSomethingFree(sentence), false);
+    });
+  }
+
+  for (const sentence of OFFERS_SOMETHING_FREE_OUTRIGHT) {
+    it(`reads something as offered free outright in "${sentence.slice(0, 40)}"`, () => {
+      assert.strictEqual(mentionsSomethingFree(sentence), true);
+    });
+  }
+
+  for (const [shape, reading] of A_TRIAL_AND_NOTHING_ELSE) {
+    it(`reads ${shape} as no reading of the plan table`, () => {
+      assert.strictEqual(describesOnlyATrial(reading), true, reading);
+    });
+  }
+
+  for (const [shape, reading] of A_PLAN) {
+    it(`reads ${shape} as a reading of the plan table`, () => {
+      assert.strictEqual(describesOnlyATrial(reading), false, reading);
+    });
+  }
+
+  for (const sentence of NAMES_A_FREE_PLAN) {
+    it(`finds the free plan in "${sentence.slice(0, 44)}"`, () => {
+      assert.strictEqual(namesAFreePlan(sentence), true);
+    });
+  }
+
+  for (const sentence of NAMES_NO_FREE_PLAN) {
+    it(`finds no free plan in "${sentence.slice(0, 44)}"`, () => {
+      assert.strictEqual(namesAFreePlan(sentence), false);
+    });
+  }
+
+  it("opens on the sentence that names the free plan when the first one does not", () => {
+    const reading =
+      "Test Manager Premium is $49 /month billed annually. KaneAI Starter is $17 /month billed annually. " +
+      "A free forever plan for Test Manager exists with unlimited projects and 24x7 support.";
+    assert.strictEqual(openingOfTerms(reading, 90), "Test Manager Premium is $49 /month billed annually…");
+    assert.strictEqual(
+      openingOfAReading(reading, 90),
+      "…A free forever plan for Test Manager exists with unlimited projects and 24x7 support.",
+    );
+  });
+
+  it("opens where it always did when the first sentence already says something is free", () => {
+    const reading = "The free tier includes 10K search requests a month and 50K records. Paid plans start at $50.";
+    assert.strictEqual(openingOfAReading(reading, 60), openingOfTerms(reading, 60));
+  });
+
+  it("opens where it always did when no sentence names a free plan", () => {
+    const reading = "Starter plan includes 10 users, 500 test results / month, and 100 prompt execs / month.";
+    assert.strictEqual(openingOfAReading(reading, 40), openingOfTerms(reading, 40));
+  });
+
+  it("marks the opening it moved, so a reader can see it began later than the reading did", () => {
+    const reading = "Pricing starts at $76 a month for 1K sessions. The free tier covers 1,000 sessions a month.";
+    assert.ok(openingOfAReading(reading, 60).startsWith("…"));
+  });
+
+  it("keeps the withholding wherever the record is not a free-tier one", () => {
+    const trialOnly = { ...A_CHANGE_QUOTING_IT, current_state: "Offers a 7-day free trial, no credit card required." };
+    assert.strictEqual(supersedingChange({ ...A_RECORD, tier: "Startup Program" }, [trialOnly]), trialOnly);
+    assert.strictEqual(supersedingChange({ ...A_RECORD, tier: "Free" }, [trialOnly]), null);
+  });
+
+  it("keeps the withholding wherever the reading prices a plan", () => {
+    const priced = { ...A_CHANGE_QUOTING_IT, current_state: "After the trial, plans start at $349 per month." };
+    assert.strictEqual(supersedingChange({ ...A_RECORD, tier: "Free" }, [priced]), priced);
   });
 });
 
@@ -892,9 +1025,48 @@ describe("#1103 every catalogue record whose stored terms are superseded", () =>
     const refusing = withARecordedReading()
       .filter(({ offer, change }) => {
         const meta = unescaped(metaDescriptionOf(bodies.get(`/vendor/${toSlug(offer.vendor)}`)!));
-        return !meta.includes(openingOfTerms(readingBehindTheChange(change)!.terms, 90));
+        return !meta.includes(openingOfAReading(readingBehindTheChange(change)!.terms, 90));
       })
       .map(({ offer }) => offer.vendor);
     assert.deepStrictEqual(refusing.slice(0, 20), []);
+  });
+
+  const readingNamesAFreePlanLaterOn = () =>
+    withARecordedReading().filter(({ change }) => {
+      const terms = readingBehindTheChange(change)!.terms;
+      return whereAFreePlanIsNamed(terms) > 0 && !mentionsSomethingFree(openingOfTerms(terms, 90));
+    });
+
+  it("names the free plan in the meta description wherever the reading names one the opening would miss", () => {
+    const silent = readingNamesAFreePlanLaterOn()
+      .filter(({ offer }) => !mentionsSomethingFree(unescaped(metaDescriptionOf(bodies.get(`/vendor/${toSlug(offer.vendor)}`)!))))
+      .map(({ offer }) => offer.vendor);
+    assert.deepStrictEqual(silent.slice(0, 20), []);
+  });
+
+  it("finds readings that name one, so the assertion above has subjects", () => {
+    assert.ok(readingNamesAFreePlanLaterOn().length >= 4, `${readingNamesAFreePlanLaterOn().length} readings name a free plan the opening would miss`);
+  });
+
+  it("leaves the opening alone wherever it already says something is free", () => {
+    const moved: string[] = [];
+    for (const { offer, change } of withARecordedReading()) {
+      const terms = readingBehindTheChange(change)!.terms;
+      const asBefore = openingOfTerms(terms, 90);
+      if (!mentionsSomethingFree(asBefore)) continue;
+      if (openingOfAReading(terms, 90) !== asBefore) moved.push(offer.vendor);
+    }
+    assert.deepStrictEqual(moved, []);
+  });
+
+  it("withholds our free-tier terms behind no reading that is only a trial", () => {
+    const banners = population
+      .filter(({ offer }) => tierRecordsAFreeTier(offer.tier ?? ""))
+      .filter(({ change }) => {
+        const reading = readingBehindTheChange(change);
+        return reading !== null && describesOnlyATrial(reading.terms);
+      })
+      .map(({ offer }) => offer.vendor);
+    assert.deepStrictEqual(banners.slice(0, 20), []);
   });
 });

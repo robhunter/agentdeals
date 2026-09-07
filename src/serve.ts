@@ -464,7 +464,7 @@ function changesFor(vendorName: string): DealChange[] {
   return changesByVendorName.get(vendorName.toLowerCase()) ?? [];
 }
 
-type StoredTermsOf = Pick<Offer, "vendor" | "description">;
+type StoredTermsOf = Pick<Offer, "vendor" | "description" | "tier">;
 
 function supersedingChangeFor(offer: StoredTermsOf): DealChange | null {
   return supersedingChange(offer, changesFor(offer.vendor));
@@ -50824,7 +50824,7 @@ function buildAgentStackPage(): string {
     const serviceRows = recommended.map(({ svc, reading }) => {
       const shortLimits = reading
         ? stackKeyLimitHtml(reading, 140)
-        : escHtmlServer(publishedTermsOpening({ vendor: svc.vendorName, description: svc.description }, 1, 140));
+        : escHtmlServer(publishedTermsOpening({ vendor: svc.vendorName, description: svc.description, tier: svc.tier }, 1, 140));
       const verdict = reading ? stackVerdictChipHtml(reading) : `<span style="color:var(--text-dim)">&mdash;</span>`;
       return `          <tr>
             <td class="role-cell">${escHtmlServer(svc.role)}</td>

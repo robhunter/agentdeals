@@ -2,7 +2,9 @@ import { changeCitesASource, citationLabel } from "./change-citation.js";
 import { changeDateClause } from "./change-dates.js";
 import { narrowsTheStoredTerms } from "./change-direction.js";
 import { isNoLongerInForce } from "./change-resolution.js";
-import { openingOfTerms, punctuated, punctuatedOpeningOfTerms } from "./terms-opening.js";
+import { tierRecordsAFreeTier } from "./free-tier-record.js";
+import { describesOnlyATrial, openingOfAReading } from "./superseding-reading.js";
+import { punctuated } from "./terms-opening.js";
 import { carriesAnUnrenderedExpression } from "./unrendered-text.js";
 import type { ChangeResolution, DealChange } from "./types.js";
 
@@ -18,6 +20,7 @@ export interface QuotingChange extends Pick<DealChange, "date" | "date_source" |
 export interface StoredTerms {
   vendor: string;
   description: string;
+  tier?: string;
 }
 
 export interface SourcedReading {
@@ -42,20 +45,30 @@ export function supersedesTheStoredTerms(change: QuotingChange, description: str
   return quotesTheStoredTermsAsPrevious(change, description);
 }
 
+export function readingPricesNothingButATrial(
+  change: QuotingChange,
+  offer: Pick<StoredTerms, "tier">,
+): boolean {
+  if (!tierRecordsAFreeTier(offer.tier ?? "")) return false;
+  const reading = readingBehindTheChange(change);
+  return reading !== null && describesOnlyATrial(reading.terms);
+}
+
 export function supersedingChange<T extends QuotingChange>(
-  offer: Pick<StoredTerms, "description">,
+  offer: Pick<StoredTerms, "description" | "tier">,
   vendorChanges: readonly T[],
 ): T | null {
   let newest: T | null = null;
   for (const change of vendorChanges) {
     if (!supersedesTheStoredTerms(change, offer.description)) continue;
+    if (readingPricesNothingButATrial(change, offer)) continue;
     if (!newest || change.date > newest.date) newest = change;
   }
   return newest;
 }
 
 export function storedTermsAreSuperseded(
-  offer: Pick<StoredTerms, "description">,
+  offer: Pick<StoredTerms, "description" | "tier">,
   vendorChanges: readonly QuotingChange[],
 ): boolean {
   return supersedingChange(offer, vendorChanges) !== null;
@@ -94,7 +107,7 @@ function withheldTail(vendor: string, change: QuotingChange, besideAReading: boo
 function readingWithTail(vendor: string, change: QuotingChange, cap?: number): string | null {
   const reading = readingBehindTheChange(change);
   if (!reading) return null;
-  const terms = cap === undefined ? reading.terms : openingOfTerms(reading.terms, cap);
+  const terms = cap === undefined ? reading.terms : openingOfAReading(reading.terms, cap);
   return `${readingSentence(reading.date, reading.label, punctuated(terms))} ${withheldTail(vendor, change, true)}`;
 }
 
@@ -134,7 +147,7 @@ export function supersededTermsMetaSentence(vendor: string, change: QuotingChang
   if (!reading) {
     return `${withheld}: our own pricing change record, ${changeDateClause(change)}, ${STORED_TERMS_WITHHELD_PHRASE}.`;
   }
-  const opening = punctuatedOpeningOfTerms(reading.terms, 90);
+  const opening = punctuated(openingOfAReading(reading.terms, 90));
   return `${readingSentence(reading.date, reading.label, opening)} ${withheld}.`;
 }
 
@@ -161,7 +174,7 @@ export function supersededTermsRecord(vendor: string, change: QuotingChange): Su
 }
 
 export function supersededTermsRecordFor(
-  offer: StoredTerms,
+  offer: Pick<StoredTerms, "vendor" | "description" | "tier">,
   vendorChanges: readonly QuotingChange[],
 ): SupersededTermsRecord | null {
   const change = supersedingChange(offer, vendorChanges);
