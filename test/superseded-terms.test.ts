@@ -229,11 +229,50 @@ describe("#1103 the catalogue population", () => {
 
   it("finds one superseding change per record, so no page has to choose between two", () => {
     for (const offer of offers) {
-      const quoting = changesFor(offer.vendor).filter(
-        (c) => !c.resolution && quotesTheStoredTermsAsPrevious(c, offer.description),
+      const vendorChanges = changesFor(offer.vendor);
+      const chosen = supersedingChange(offer, vendorChanges);
+      if (!chosen) continue;
+      const readTheOtherWay = supersedingChange(offer, [...vendorChanges].reverse());
+      assert.strictEqual(
+        readTheOtherWay,
+        chosen,
+        `${offer.vendor} supersedes its stored terms with a different change when the same records are read in the opposite order, so the page quotes whichever the file happens to list first`,
       );
-      assert.ok(quoting.length <= 1, `${offer.vendor} has ${quoting.length} changes quoting its stored terms`);
     }
+  });
+
+  it("catches two superseding changes that share a date, which is the only way the order can decide it", () => {
+    const sameDay = [
+      { ...A_CHANGE_QUOTING_IT, summary: "Egress on the free plan is now 20 GiB." },
+      { ...A_CHANGE_QUOTING_IT, summary: "Storage on the free plan is now 500 MiB." },
+    ] as DealChange[];
+
+    assert.strictEqual(sameDay[0].date, sameDay[1].date);
+    assert.notStrictEqual(
+      supersedingChange(A_RECORD, sameDay),
+      supersedingChange(A_RECORD, [...sameDay].reverse()),
+    );
+  });
+
+  it("a later superseding change replaces an earlier one rather than competing with it", () => {
+    const earlier = { ...A_CHANGE_QUOTING_IT, date: "2026-08-28" } as DealChange;
+    const later = { ...A_CHANGE_QUOTING_IT, date: "2026-09-07" } as DealChange;
+
+    assert.strictEqual(supersedingChange(A_RECORD, [earlier, later]), later);
+    assert.strictEqual(supersedingChange(A_RECORD, [later, earlier]), later);
+  });
+
+  it("a change that widens the terms does not compete with the one that narrowed them", () => {
+    const narrowed = { ...A_CHANGE_QUOTING_IT, date: "2026-08-28" } as DealChange;
+    const widened = {
+      ...A_CHANGE_QUOTING_IT,
+      change_type: "limits_increased",
+      date: "2026-09-07",
+      summary: "Egress on the free plan is now 200 GB, up from 100 GB.",
+    } as DealChange;
+
+    assert.strictEqual(quotesTheStoredTermsAsPrevious(widened, A_RECORD.description), true);
+    assert.strictEqual(supersedingChange(A_RECORD, [narrowed, widened]), narrowed);
   });
 });
 

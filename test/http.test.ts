@@ -2,11 +2,60 @@ import { describe, it, before, after, afterEach } from "node:test";
 import assert from "node:assert";
 import { assertPopulationFloor } from "./population-floor.ts";
 import { spawn, type ChildProcess } from "node:child_process";
+import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 let serverPort = 0;
+
+const { supersedingChange } = await import("../dist/superseded-description.js");
+const { vendorSlugMap } = await import("../dist/vendor-slug.js");
+
+type StoredRecord = { vendor: string; description: string; tier: string };
+
+const VENDOR_PAGES_TRIED_FOR_AN_OFFER = 12;
+
+const catalogue: StoredRecord[] = JSON.parse(
+  fs.readFileSync(path.join(__dirname, "..", "data", "index.json"), "utf-8"),
+).offers;
+
+const changeLogByVendor = new Map<string, { date: string; change_type: string }[]>();
+for (const change of JSON.parse(
+  fs.readFileSync(path.join(__dirname, "..", "data", "deal_changes.json"), "utf-8"),
+).changes) {
+  const key = change.vendor.toLowerCase();
+  const held = changeLogByVendor.get(key);
+  if (held) held.push(change);
+  else changeLogByVendor.set(key, [change]);
+}
+
+function primaryRecordOf(vendor: string): StoredRecord | undefined {
+  return catalogue.find((o) => o.vendor === vendor);
+}
+
+function slugsWhoseStoredTermsStand(): string[] {
+  const found: string[] = [];
+  for (const [slug, vendor] of vendorSlugMap) {
+    const primary = primaryRecordOf(vendor);
+    if (!primary) continue;
+    if (supersedingChange(primary, changeLogByVendor.get(vendor.toLowerCase()) ?? [])) continue;
+    found.push(slug);
+  }
+  return found;
+}
+
+function jsonLdWebPage(html: string): Record<string, any> | undefined {
+  for (const block of html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)) {
+    try {
+      const parsed = JSON.parse(block[1]);
+      if (parsed["@type"] === "WebPage") return parsed;
+    } catch {
+      continue;
+    }
+  }
+  return undefined;
+}
 
 function startHttpServer(): Promise<ChildProcess> {
   return new Promise((resolve, reject) => {
@@ -1440,9 +1489,31 @@ describe("HTTP transport", () => {
     proc = await startHttpServer();
 
     const response = await fetch(`http://localhost:${serverPort}/vendor/vercel`);
-    const html = await response.text();
-    assert.ok(html.includes("dateModified"), "JSON-LD should include dateModified");
-    assert.ok(html.includes('"@type":"Offer"'), "JSON-LD should include an Offer");
+    const page = jsonLdWebPage(await response.text());
+    assert.ok(page, "JSON-LD should include a WebPage block");
+    assert.match(String(page.dateModified ?? ""), /^\d{4}-\d{2}-\d{2}/, "JSON-LD should include dateModified");
+  });
+
+  it("GET /vendor/:slug prices a record it still publishes as a free Offer", async () => {
+    proc = await startHttpServer();
+
+    const standing = slugsWhoseStoredTermsStand().slice(0, VENDOR_PAGES_TRIED_FOR_AN_OFFER);
+    assert.ok(standing.length > 0, "no record in the catalogue has terms no recorded change has superseded");
+
+    for (const slug of standing) {
+      const response = await fetch(`http://localhost:${serverPort}/vendor/${slug}`);
+      const page = jsonLdWebPage(await response.text());
+      const offer = page?.mainEntity?.offers;
+      if (!offer) continue;
+
+      assert.strictEqual(offer["@type"], "Offer");
+      assert.strictEqual(offer.price, "0");
+      assert.strictEqual(offer.priceCurrency, "USD");
+      assert.strictEqual(offer.description, primaryRecordOf(String(page.mainEntity.name))?.tier);
+      return;
+    }
+
+    assert.fail(`none of the first ${standing.length} vendor pages whose stored terms stand published an Offer`);
   });
 
   it("GET /vendor/:slug includes watchlist CTA", async () => {

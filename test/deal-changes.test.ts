@@ -67,14 +67,25 @@ function startServer() {
   });
 }
 
+function changeLogOnFile(): { vendor: string; date: string }[] {
+  return JSON.parse(
+    fs.readFileSync(path.join(__dirname, "..", "data", "deal_changes.json"), "utf-8")
+  ).changes;
+}
+
+function namedInTheChangeLog(names: string[], since: string): { vendor: string; date: string }[] {
+  const wanted = names.map((n) => n.toLowerCase());
+  return changeLogOnFile().filter(
+    (c) => c.date >= since && wanted.some((n) => c.vendor.toLowerCase().includes(n))
+  );
+}
+
 describe("track_changes tool", () => {
   it("returns all changes when no filters (with broad since)", async () => {
     const { getDealChanges } = await import("../dist/data.js");
     const since = "2024-01-01";
     const body = getDealChanges(since);
-    const onFile = JSON.parse(
-      fs.readFileSync(path.join(__dirname, "..", "data", "deal_changes.json"), "utf-8")
-    ).changes.filter((c: { date: string }) => c.date >= since);
+    const onFile = changeLogOnFile().filter((c) => c.date >= since);
 
     assert.ok(Array.isArray(body.changes));
     assert.strictEqual(body.total, body.changes.length);
@@ -288,13 +299,21 @@ describe("track_changes tool", () => {
 
   it("getDealChanges filters by vendors (comma-separated)", async () => {
     const { getDealChanges } = await import("../dist/data.js");
+    const since = "2024-01-01";
 
-    const single = getDealChanges("2024-01-01", undefined, undefined, "Netlify");
-    assert.strictEqual(single.total, 4);
-    assert.strictEqual(single.changes[0].vendor, "Netlify");
+    const single = getDealChanges(since, undefined, undefined, "Netlify");
+    assert.strictEqual(single.total, namedInTheChangeLog(["Netlify"], since).length);
+    assert.ok(single.total > 0, "the change log names no Netlify record for the filter to return");
+    for (const change of single.changes) {
+      assert.ok(
+        change.vendor.toLowerCase().includes("netlify"),
+        `Unexpected vendor: ${change.vendor}`
+      );
+    }
 
-    const multi = getDealChanges("2024-01-01", undefined, undefined, "Netlify,OpenAI");
-    assert.ok(multi.total >= 2, `Expected at least 2 changes for Netlify+OpenAI, got ${multi.total}`);
+    const multi = getDealChanges(since, undefined, undefined, "Netlify,OpenAI");
+    assert.strictEqual(multi.total, namedInTheChangeLog(["Netlify", "OpenAI"], since).length);
+    assert.ok(multi.total >= single.total, "a second name returned fewer records than the first alone");
     for (const change of multi.changes) {
       const lower = change.vendor.toLowerCase();
       assert.ok(
@@ -303,7 +322,7 @@ describe("track_changes tool", () => {
       );
     }
 
-    const none = getDealChanges("2024-01-01", undefined, undefined, "nonexistent-xyz,also-fake");
+    const none = getDealChanges(since, undefined, undefined, "nonexistent-xyz,also-fake");
     assert.strictEqual(none.total, 0);
     assert.deepStrictEqual(none.changes, []);
 
@@ -315,9 +334,20 @@ describe("track_changes tool", () => {
 
   it("vendors takes precedence over vendor when both provided", async () => {
     const { getDealChanges } = await import("../dist/data.js");
-    const result = getDealChanges("2024-01-01", undefined, "OpenAI", "Netlify");
-    assert.strictEqual(result.total, 4);
-    assert.strictEqual(result.changes[0].vendor, "Netlify");
+    const since = "2024-01-01";
+
+    const both = getDealChanges(since, undefined, "OpenAI", "Netlify");
+    const vendorsAlone = getDealChanges(since, undefined, undefined, "Netlify");
+    const vendorAlone = getDealChanges(since, undefined, "OpenAI");
+
+    assert.ok(vendorAlone.total > 0, "the change log names no OpenAI record for vendor to have selected");
+    assert.deepStrictEqual(both.changes, vendorsAlone.changes);
+    for (const change of both.changes) {
+      assert.ok(
+        !change.vendor.toLowerCase().includes("openai"),
+        `vendor was not overridden: ${change.vendor}`
+      );
+    }
   });
 
   it("getDealChanges filters by categories (comma-separated)", async () => {
