@@ -283,6 +283,7 @@ interface GateRun {
   build?: "fail";
   ratchet?: RatchetMode;
   lastmod?: true;
+  replays?: number;
 }
 
 function runGate(work: string, mode: GateMode | GateRun, ...args: string[]) {
@@ -300,6 +301,7 @@ function runGate(work: string, mode: GateMode | GateRun, ...args: string[]) {
       GATE_FIXTURE_ENV_REPORT: envReport,
       GATE_RATCHET_BUDGETS: opts.ratchet === undefined ? "" : "1",
       GATE_UPDATE_PAGE_LASTMOD: opts.lastmod ? "1" : "",
+      GATE_REPLAYS_ONTO_A_MOVED_MAIN: opts.replays === undefined ? "" : String(opts.replays),
       GITHUB_OUTPUT: outputs,
       AGENTDEALS_NON_BLOCKING_TESTS_PATH: join(work, "allowlist.json"),
       AGENTDEALS_PAGE_LASTMOD_PATH: join(work, "data", "page-lastmod.json"),
@@ -321,6 +323,22 @@ function quarantineRefs(origin: string, prefix: string): string[] {
     .split("\n")
     .filter((r) => r.length > 0)
     .sort();
+}
+
+function commitToMainFromElsewhere(origin: string, file: string, contents: string): void {
+  const elsewhere = mkdtempSync(join(scratch, "sibling-"));
+  git(elsewhere, "clone", origin, ".");
+  git(elsewhere, "config", "user.email", "sibling@example.com");
+  git(elsewhere, "config", "user.name", "sibling");
+  mkdirSync(dirname(join(elsewhere, file)), { recursive: true });
+  writeFileSync(join(elsewhere, file), contents);
+  git(elsewhere, "add", "-A");
+  git(elsewhere, "commit", "-m", "data(auto): a sibling scheduled job");
+  git(elsewhere, "push", "origin", "HEAD:main");
+}
+
+function suiteRuns(stdout: string): number {
+  return stdout.split("\n").filter((line) => /tests 2$/.test(line)).length;
 }
 
 
@@ -539,15 +557,27 @@ describe("#1326 nothing that can fail stands between the day's data and the gate
     assert.strictEqual(declared, relative(REPO, qualityBudgetsPath()).split(sep).join("/"));
   });
 
-  it("tells the refusal issue which of the three things went wrong, not just that something did", () => {
+  it("tells the refusal issue which thing went wrong, not just that something did", () => {
     const gate = readFileSync(GATE, "utf8");
     const reasons = [...gate.matchAll(/^\s*quarantine "([^"]+)"$/gm)].map((m) => m[1]!);
-    assert.deepStrictEqual(
-      reasons.sort(),
-      ["the build does not compile", "the quality budgets could not be measured", "the suite refused it"],
-      "the gate can hold a commit for a reason the issue it opens cannot name",
+    assert.ok(reasons.length >= 3, `the gate states ${reasons.length} reasons for holding a commit`);
+    assert.strictEqual(
+      new Set(reasons).size,
+      reasons.length,
+      `two paths hold a commit under the same reason, so the issue cannot tell them apart: ${reasons.join("; ")}`,
     );
+    for (const reason of reasons) {
+      assert.ok(reason.split(" ").length >= 4, `"${reason}" does not say what went wrong`);
+    }
+    for (const named of ["the build does not compile", "the quality budgets could not be measured", "the suite refused it"]) {
+      assert.ok(reasons.includes(named), `nothing holds a commit for "${named}" any more`);
+    }
     assert.match(gate, /echo "quarantine_reason=\$why"/, "the reason never reaches the step output");
+    assert.match(
+      readFileSync(join(REPO, "scripts", "report-data-push-outcome.sh"), "utf8"),
+      /because \$REASON/,
+      "the issue the gate opens does not carry the reason the gate gave it",
+    );
     for (const file of GATED_WORKFLOWS) {
       assert.match(
         source(file),
@@ -799,5 +829,73 @@ describe("#1321 which failures are allowed not to hold a data commit", () => {
     const excused = new Set(shipped.tests.map((t) => t.file));
     assert.ok(excused.has("test/stale-page-facts.test.ts"), "the cohort this issue is about still holds the commit");
     assert.ok(excused.has("test/page-data-provenance.test.ts"));
+  });
+});
+
+describe("#1337 main moving under a run whose data the suite accepted", () => {
+  before(() => {
+    scratch = mkdtempSync(join(tmpdir(), "gate-moved-main-"));
+  });
+
+  after(() => {
+    if (scratch && existsSync(scratch)) rmSync(scratch, { recursive: true, force: true });
+  });
+
+  it("replays onto the main it moved to, and pushes what the suite read after the replay", () => {
+    const { work, origin } = fixtureRepo();
+    writeFileSync(join(work, "data", "health.json"), '{"checked":5}\n');
+    commitToMainFromElsewhere(origin, "another-job-wrote-this.txt", "landed while the suite ran\n");
+
+    const run = runGate(work, "green", "data-quarantine/fixture", "data(auto): fixture", "data/health.json");
+
+    assert.strictEqual(run.status, 0, `${run.stdout}${run.stderr}`);
+    assert.strictEqual(git(origin, "show", "main:data/health.json"), '{"checked":5}');
+    assert.strictEqual(
+      git(origin, "show", "main:another-job-wrote-this.txt"),
+      "landed while the suite ran",
+      "this run's push took main back over the commit that landed under it",
+    );
+    assert.strictEqual(git(origin, "log", "-1", "--format=%s", "main"), "data(auto): fixture");
+    assert.deepStrictEqual(quarantineRefs(origin, "data-quarantine/fixture"), []);
+    assert.strictEqual(
+      suiteRuns(run.stdout),
+      2,
+      "the suite did not read the tree the replay produced, so what reached main is not what it passed",
+    );
+  });
+
+  it("holds the data on a ref of its own when it cannot be replayed onto that main", () => {
+    const { work, origin } = fixtureRepo();
+    writeFileSync(join(work, "data", "health.json"), '{"checked":6}\n');
+    commitToMainFromElsewhere(origin, "data/health.json", '{"checked":99}\n');
+
+    const run = runGate(work, "green", "data-quarantine/fixture", "data(auto): fixture", "data/health.json");
+
+    assert.strictEqual(run.status, 1, `${run.stdout}${run.stderr}`);
+    assert.strictEqual(git(origin, "show", "main:data/health.json"), '{"checked":99}');
+    const refs = quarantineRefs(origin, "data-quarantine/fixture");
+    assert.strictEqual(refs.length, 1, `this run's data is on no ref at all: ${refs.join(", ")}`);
+    assert.strictEqual(git(origin, "show", `${refs[0]}:data/health.json`), '{"checked":6}');
+    assert.match(run.outputs, /quarantined=true/);
+    assert.match(run.stdout, /does not replay onto it/);
+  });
+
+  it("bounds the replays, so a main that keeps moving quarantines rather than looping", () => {
+    const { work, origin } = fixtureRepo();
+    writeFileSync(join(work, "data", "health.json"), '{"checked":7}\n');
+    commitToMainFromElsewhere(origin, "another-job-wrote-this.txt", "landed while the suite ran\n");
+
+    const run = runGate(
+      work,
+      { mode: "green", replays: 0 },
+      "data-quarantine/fixture",
+      "data(auto): fixture",
+      "data/health.json",
+    );
+
+    assert.strictEqual(run.status, 1, `${run.stdout}${run.stderr}`);
+    assert.strictEqual(suiteRuns(run.stdout), 1);
+    assert.strictEqual(quarantineRefs(origin, "data-quarantine/fixture").length, 1);
+    assert.match(run.stdout, /more often than this run replays onto it/);
   });
 });
