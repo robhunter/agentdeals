@@ -78,6 +78,25 @@ export function isoWeekWindow(date: Date): DateWindow {
   return { start: start.toISOString().slice(0, 10), end: end.toISOString().slice(0, 10) };
 }
 
+const MONTH_NAMES = [
+  "January", "February", "March", "April", "May", "June",
+  "July", "August", "September", "October", "November", "December",
+];
+
+export function weekRangeLabel(weekOf: string, weekEnding: string): string {
+  const start = new Date(weekOf + "T00:00:00Z");
+  const end = new Date(weekEnding + "T00:00:00Z");
+  const startMonth = MONTH_NAMES[start.getUTCMonth()];
+  const endMonth = MONTH_NAMES[end.getUTCMonth()];
+  const startYear = start.getUTCFullYear();
+  const endYear = end.getUTCFullYear();
+  if (startYear !== endYear) {
+    return `${startMonth} ${start.getUTCDate()}, ${startYear}–${endMonth} ${end.getUTCDate()}, ${endYear}`;
+  }
+  const tail = startMonth === endMonth ? `${end.getUTCDate()}` : `${endMonth} ${end.getUTCDate()}`;
+  return `${startMonth} ${start.getUTCDate()}–${tail}, ${startYear}`;
+}
+
 export function isoWeekOf(date: Date): { year: number; week: number } {
   const monday = new Date(isoWeekWindow(date).start + "T00:00:00Z");
   const thursday = new Date(monday.getTime() + 3 * 86400000);
