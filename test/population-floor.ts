@@ -8,8 +8,9 @@ export const REGISTERED_FROM = 100;
 export type BareFloor = { line: number; literal: number; text: string };
 
 const ASSERTION = /assert\.ok\(/g;
-const FLOOR = /(?<![<>=!])(?:>=|>)\s*(\d[\d_]*)\b/g;
-const CEILING = /(?<![-=])(?:<=|<)\s*\d/;
+const FLOOR = /(?<![<>=!])(?:>=|>)\s*([\dA-Za-z_$][\w$]*)\b/g;
+const CEILING = /(?<![-=])(?:<=|<)\s*[\dA-Za-z_$]/;
+const NAMED_NUMBER = /^const\s+([A-Za-z_$][\w$]*)\s*(?::\s*number\s*)?=\s*(\d[\d_]*)\s*;/gm;
 
 function conditionAt(source: string, open: number): string {
   let depth = 0;
@@ -32,13 +33,20 @@ function conditionAt(source: string, open: number): string {
 }
 
 export function bareFloorsIn(source: string): BareFloor[] {
+  const named = new Map<string, number>();
+  for (const declaration of source.matchAll(NAMED_NUMBER)) {
+    named.set(declaration[1]!, Number(declaration[2]!.replace(/_/g, "")));
+  }
+  const valueOf = (operand: string): number | undefined =>
+    /^\d/.test(operand) ? Number(operand.replace(/_/g, "")) : named.get(operand);
+
   const found: BareFloor[] = [];
   for (const assertion of source.matchAll(ASSERTION)) {
     const condition = conditionAt(source, assertion.index + "assert.ok".length);
     if (CEILING.test(condition)) continue;
     for (const floor of condition.matchAll(FLOOR)) {
-      const literal = Number(floor[1]!.replace(/_/g, ""));
-      if (literal < REGISTERED_FROM) continue;
+      const literal = valueOf(floor[1]!);
+      if (literal === undefined || literal < REGISTERED_FROM) continue;
       found.push({
         line: source.slice(0, assertion.index).split("\n").length,
         literal,

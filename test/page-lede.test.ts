@@ -1,5 +1,6 @@
 import { describe, it, before, after } from "node:test";
 import assert from "node:assert";
+import { assertPopulationFloor } from "./population-floor.ts";
 import { spawn, type ChildProcess } from "node:child_process";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -175,10 +176,7 @@ describe("Page lede", () => {
 
   it("every page that renders the site menu states its own claim first", async () => {
     const paths = [...await sitemapPaths("/sitemap-pages.xml"), ...await sitemapPaths("/sitemap-misc.xml")];
-    assert.ok(
-      paths.length >= SWEPT_PATHS_FLOOR,
-      `swept ${paths.length} paths, too few to stand as a site-wide check`,
-    );
+    assertPopulationFloor(paths.length, SWEPT_PATHS_FLOOR, "paths swept for a site-wide check");
 
     const withMenu: string[] = [];
     const withoutClaim: string[] = [];
@@ -206,10 +204,7 @@ describe("Page lede", () => {
       );
     }
 
-    assert.ok(
-      withMenu.length >= PAGES_WITH_MENU_FLOOR,
-      `only ${withMenu.length} of ${paths.length} swept paths render the site menu`,
-    );
+    assertPopulationFloor(withMenu.length, PAGES_WITH_MENU_FLOOR, `swept paths of ${paths.length} render the site menu`);
     assert.deepStrictEqual(
       withoutClaim,
       [],
@@ -233,7 +228,7 @@ describe("Page lede", () => {
       if (claim !== metaDesc) disagreeing.push(`${pathname}: claim "${claim}" against description "${metaDesc}"`);
     }
 
-    assert.ok(checked >= PAGES_WITH_MENU_FLOOR, `only ${checked} pages carry a claim`);
+    assertPopulationFloor(checked, PAGES_WITH_MENU_FLOOR, "pages carry a claim");
     assert.deepStrictEqual(disagreeing, [], "a page states a claim that is not its meta description");
   });
 });
