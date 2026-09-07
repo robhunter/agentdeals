@@ -38,6 +38,7 @@ import { HETZNER_APRIL_CHANGES, HETZNER_CLOUD_PLANS, HETZNER_PRICES_READ, HETZNE
 import { HUNDRED_TB_SCENARIO, ONE_TO_ONE_SCENARIO, STORAGE_RATES_READ, STORAGE_SCALE_WORKLOADS, TEN_TO_ONE_SCENARIO, cheapestProviderAt, costliestProviderAt, egressAllowanceSentence, egressBillOnceOverAllowance, egressRatioWhereCostsMatch, fixedMonthlyGrantsSentence, monthlyStorageCost, providersWithScalingEgressAllowance, rateCardFor, scaleCostFor } from "./storage-cost-model.js";
 import { changeTimelineDate, supersededLineups, supersessionNote } from "./change-lineup.js";
 import { isNoLongerInForce, eventResolutionFields } from "./change-resolution.js";
+import { removalDurability, removalReturnRateSentence, removalDurabilityPattern, lastingRemovalExamplesFor } from "./removal-durability.js";
 import { changeIsUncited, changeSourceCitation, changeSourceLinkHtml, citedChanges, uncitedChangeNotice, ratingWithheldForNoSourceClause, ratingWithheldForNoSourceSentence, UNCITED_CHANGE_LABEL } from "./change-citation.js";
 import { growthLimitPhrases } from "./growth-limits.js";
 import { registerAgent, authenticateRequest, validateVestauthUrl, hashApiKey, updateAgentX402Address, getAgentById } from "./agents.js";
@@ -45427,6 +45428,9 @@ function buildStateOfFreeTiersPage(): string {
   const negativeChanges = dealChanges.filter(c => negativeTypes.has(c.change_type)).sort((a, b) => b.date.localeCompare(a.date));
   const positiveChanges = dealChanges.filter(c => positiveTypes.has(c.change_type)).sort((a, b) => b.date.localeCompare(a.date));
 
+  const durability = removalDurability(dealChanges);
+  const lastingExamples = lastingRemovalExamplesFor("/state-of-free-tiers", dealChanges);
+
   const categoryShares = categories.map(c => {
     const census = freeTierCensus(offers.filter(o => o.category === c.name), reportServedOn);
     return {
@@ -45612,7 +45616,7 @@ ${globalNavCss()}
     <li><strong>${freeTiers.unconfirmed.toLocaleString()} recorded free tiers we cannot confirm today</strong> &mdash; the record stands, but the page we hold for it states no terms, cannot be read, or does not name the vendor. Unconfirmed is not the same as gone.</li>
     <li><strong>${freeTiers.ended} free tiers we have recorded as ended</strong> &mdash; excluded from every count above, and from every category total on this site.</li>
     <li><strong>${negativeChanges.length} negative pricing changes vs ${positiveChanges.length} positive</strong> &mdash; free tier removals and restrictions outpace expansions ${Math.round(negativeChanges.length / Math.max(positiveChanges.length, 1))}:1.</li>
-    <li><strong>${changeTypeCounts.get("free_tier_removed") ?? 0} free tiers completely removed</strong> &mdash; Heroku, PlanetScale, SendGrid, Brave Search API, X API, and more. Once removed, none have returned.</li>
+    <li><strong>${changeTypeCounts.get("free_tier_removed") ?? 0} free tiers completely removed</strong> &mdash; ${escHtmlServer(lastingExamples.map(e => e.vendor).join(", "))}, and more. ${escHtmlServer(removalReturnRateSentence(durability))}</li>
     <li><strong>Egress and overage are the real costs</strong> &mdash; storage at $0.023/GB vs egress at $0.09/GB. Cloudflare R2&rsquo;s zero-egress model is 60x cheaper than S3 at scale.</li>
     <li><strong>Open source is the safety net</strong> &mdash; in security tools, a $0 OSS stack matches $23K&ndash;$73K/yr hosted alternatives on capability.</li>
   </ul>
@@ -45665,7 +45669,7 @@ ${globalNavCss()}
   <h2>The Free Tier Squeeze: Who&rsquo;s Cutting Back</h2>
   <p class="section-desc">Of ${dealChanges.length} tracked pricing changes, ${negativeChanges.length} (${Math.round((negativeChanges.length / dealChanges.length) * 100)}%) are negative for developers &mdash; free tier removals, limit reductions, and new restrictions. The pattern is clear: as companies mature, raise prices, or get acquired, free tiers shrink.</p>
   <div class="callout callout-warn">
-    <strong>Key pattern:</strong> Once a free tier is removed, it never comes back. Heroku (2022), PlanetScale (2024), SendGrid (2025), Brave Search (2026), X API (2026) &mdash; all permanent. Plan your architecture around services with structural commitment to free tiers (open-source alternatives, cloud provider loss leaders, or developer-first companies).
+    <strong>Key pattern:</strong> ${escHtmlServer(removalDurabilityPattern(durability, lastingExamples))} Plan your architecture around services with structural commitment to free tiers (open-source alternatives, cloud provider loss leaders, or developer-first companies).
   </div>
   ${squeezeHtml}
 
