@@ -2092,10 +2092,10 @@
         "pocketbase"
       ],
       "badge_subjects_unresolved": [],
-      "reviewed_at": "2026-09-05",
+      "reviewed_at": "2026-09-07",
       "reviewer": "coder",
       "review_outcome": "pass",
-      "review_note": "Read against appwrite.io/pricing on 2026-09-05, after an Appwrite Cloud record dated 2026-09-05 moved under the 2026-09-04 review. The Free plan reads 5GB bandwidth, 2GB storage, 750K executions, 75K monthly active users, community support, 1 Database / 1 Bucket / 2 Functions per project, 15-minute builds, paused after 1 week of inactivity, and a limit of 2 projects. Every figure the Other BaaS Alternatives row already published holds; the two-project cap and the per-project database, bucket and function caps were absent, and that row renders the catalogue record, so the record was corrected rather than the prose. The Supabase and Firebase claims are unchanged since the 2026-09-04 reading and were not re-fetched.",
+      "review_note": "Read against nhost.io/pricing on 2026-09-07, after an Nhost record dated 2026-09-07 moved under the 2026-09-05 review. The Starter plan reads $0/month, a limit of 1 project, the project paused after 1 week of inactivity, 1 GB database, 1 GB storage and 5 GB egress. The comparison table gave Nhost 5 GB File Storage and the catalogue description said the same; the vendor gives 1 GB, so both were corrected. Database (1 GB) and Bandwidth (5 GB) already matched. The one-project limit and the inactivity pause are stated by neither surface and the table has no column for either. The Appwrite Cloud, Supabase, Firebase, PocketBase and Convex claims are unchanged since the 2026-09-05 reading and were not re-fetched.",
       "reads_index": true,
       "reads_changes": true,
       "data_source": "catalogue",
