@@ -131,6 +131,7 @@ export interface ProvenanceOptions {
   listingPath?: string;
   deference?: boolean;
   dateForSlug?: (slug: string) => string | null;
+  dateOfTheLogConsulted?: string | null;
 }
 
 export function provenanceBlock(
@@ -146,12 +147,12 @@ export function provenanceBlock(
   const ranked = records.filter((r) => !r.withheld);
   const withheld = records.length - ranked.length;
   const dated = ranked.length > 0 ? ranked : records;
-  const date = oldestDate(dated);
+  const date = oldestDate(dated) ?? options.dateOfTheLogConsulted ?? null;
   const derived = options.path ?? narrowestPath(records);
   const path = derived === "/" ? options.listingPath ?? "/" : derived;
 
   const block: Record<string, unknown> = {
-    ...citation(baseUrl, path, date, dated.length === 1),
+    ...citation(baseUrl, path, date, dated.length <= 1),
     ...(date ? { verified: date } : {}),
     verified_records: ranked.length,
     ...(withheld > 0 ? { withheld_records: withheld } : {}),
