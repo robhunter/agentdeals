@@ -9,7 +9,6 @@ import { fileURLToPath } from "node:url";
 const {
   STORED_TERMS_WITHHELD_META_PHRASE,
   STORED_TERMS_WITHHELD_PHRASE,
-  openingOfTerms,
   quotesTheStoredTermsAsPrevious,
   readingBehindTheChange,
   supersededTermsAnswer,
@@ -20,6 +19,7 @@ const {
   supersedingChange,
   storedTermsAreSuperseded,
 } = await import("../dist/superseded-description.js");
+const { openingOfTerms } = await import("../dist/terms-opening.js");
 const { citationLabel } = await import("../dist/change-citation.js");
 const { carriesAnUnrenderedExpression, unrenderedExpressionIn } = await import("../dist/unrendered-text.js");
 const { toSlug } = await import("../dist/slug.js");
@@ -434,11 +434,11 @@ describe("#1386 the reading the superseding record already holds", () => {
     assert.strictEqual(citationLabel("not a url"), "not a url");
   });
 
-  it("takes whole sentences up to the cap rather than cutting mid-figure", () => {
+  it("takes whole sentences up to the cap rather than cutting mid-figure, and marks that it stopped early", () => {
     const terms = "Free plan: 20 GiB egress. Paid plans start at $19/month. Enterprise is quoted.";
     assert.strictEqual(openingOfTerms(terms, 200), terms);
-    assert.strictEqual(openingOfTerms(terms, 60), "Free plan: 20 GiB egress. Paid plans start at $19/month.");
-    assert.strictEqual(openingOfTerms(terms, 30), "Free plan: 20 GiB egress.");
+    assert.strictEqual(openingOfTerms(terms, 60), "Free plan: 20 GiB egress. Paid plans start at $19/month…");
+    assert.strictEqual(openingOfTerms(terms, 30), "Free plan: 20 GiB egress…");
   });
 
   it("clips a single long sentence on a word boundary and marks it as clipped", () => {

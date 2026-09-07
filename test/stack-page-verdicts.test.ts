@@ -389,7 +389,8 @@ describe("the limit cell", () => {
     const railway = "Free $0 per month. Start with a 30-day free trial with $5 credits, then $1 per month.";
     const cell = limitCellText(railway, 60);
     assert.ok(cell.endsWith("…"), `truncated cell reads as a finished claim: ${cell}`);
-    assert.ok(!/^Free \$0 per month\.$/.test(cell));
+    assert.ok(!/^Free \$0 per month[.…]$/.test(cell), `the cell stopped at the first full stop: ${cell}`);
+    assert.ok(cell.includes("30-day free trial"), `the cell left the width it was given unused: ${cell}`);
   });
 
   it("passes terms through whole when they fit", () => {
