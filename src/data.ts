@@ -23,6 +23,7 @@ import { vendorHistorySentence } from "./vendor-history.js";
 import { isNoLongerInForce, withResolutionInSummary } from "./change-resolution.js";
 import { changeCitesASource, changeIsUncited, ratingWithheldForNoSourceSentence, type CitableChange } from "./change-citation.js";
 import { endedVerdictSentence } from "./retirement.js";
+import { resolveCategoryName } from "./category-scope.js";
 
 export function gateForOffer(offer: Offer): Gate | null {
   return gateFor(offer, utcDate());
@@ -203,7 +204,7 @@ export function searchOffers(
   let results = loadOffers();
 
   if (category) {
-    const lowerCategory = category.toLowerCase();
+    const lowerCategory = resolveCategoryName(category).toLowerCase();
     results = results.filter(
       (o) => o.category.toLowerCase() === lowerCategory
     );

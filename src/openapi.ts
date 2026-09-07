@@ -59,10 +59,10 @@ export const openapiSpec = {
     "/api/categories": {
       get: {
         summary: "List all categories",
-        description: "Returns all offer categories with the number of offers in each.",
+        description: "Returns all offer categories with the number of offers in each, the scope statement that says what the name holds, and the other category names that answer the same question. Several names answer one question and hold disjoint sets, so a count alone does not say whether a category is the whole answer: read `also_answering` before deciding a category is empty of what you want. Names in `retired_names` are accepted by `category=` filters and redirect on `/category/`.",
         responses: {
           "200": {
-            description: "List of categories with counts",
+            description: "List of categories with counts, scope statements and the names that answer alongside them",
             content: {
               "application/json": {
                 schema: {
@@ -74,17 +74,43 @@ export const openapiSpec = {
                         type: "object",
                         properties: {
                           name: { type: "string" },
-                          count: { type: "integer" }
+                          slug: { type: "string" },
+                          count: { type: "integer" },
+                          audience: { type: "string", enum: ["developer", "personal"], description: "Who the products under this name are sold to." },
+                          holds: { type: "string", enum: ["products", "programmes"], description: "`programmes` means every member is qualified-access — a startup or accelerator offer, not a free tier anyone can open." },
+                          scope: { type: "string", description: "One line saying what this name holds and what it does not." },
+                          answers: { type: "array", items: { type: "string" }, description: "The question or questions this name answers." },
+                          also_answering: {
+                            type: "array",
+                            description: "Other categories answering one of the same questions. Their sets are disjoint from this one.",
+                            items: { type: "object", properties: { name: { type: "string" }, slug: { type: "string" }, count: { type: "integer" } } }
+                          },
+                          example_members: { type: "array", items: { type: "string" } }
                         }
                       }
-                    }
+                    },
+                    example_members_basis: { type: "string" },
+                    retired_names: { type: "object", additionalProperties: { type: "string" }, description: "Category names no longer published, mapped to the name that replaced them." }
                   }
                 },
                 example: {
                   categories: [
-                    { name: "Cloud Hosting", count: 45 },
-                    { name: "Databases", count: 30 }
-                  ]
+                    {
+                      name: "Cloud Storage",
+                      slug: "cloud-storage",
+                      count: 9,
+                      audience: "personal",
+                      holds: "products",
+                      scope: "Consumer file-sync drives a person keeps documents and photos in — not storage an application writes to.",
+                      answers: ["where do my files live"],
+                      also_answering: [
+                        { name: "CDN", slug: "cdn", count: 19 },
+                        { name: "Storage", slug: "storage", count: 55 }
+                      ],
+                      example_members: ["Google Drive", "Google Photos", "iCloud"]
+                    }
+                  ],
+                  retired_names: { "Startup Programs": "Startup Perks" }
                 }
               }
             }
