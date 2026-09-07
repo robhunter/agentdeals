@@ -9649,7 +9649,7 @@
     {
       "vendor": "DBOS",
       "category": "Workflow Automation",
-      "description": "Open-source durable workflow orchestration library (DBOS Transact) — free forever for TypeScript, Python, Go, Java, Kotlin. Self-host with PostgreSQL backend; community support via Discord. Managed DBOS Cloud is paid-only (Pro from $99/mo: 3 seats, 5 apps, 1M checkpoints/mo).",
+      "description": "Open-source durable workflow orchestration library (DBOS Transact) — free forever for TypeScript, Python, Go, Java, Kotlin. Self-host with PostgreSQL backend; community support via Discord. Managed DBOS Cloud is paid-only (Pro from $99/mo: 2 seats, 3 apps, 1M checkpoints/mo).",
       "tier": "Free (open-source library; managed cloud is paid-only)",
       "url": "https://www.dbos.dev/pricing",
       "tags": [
