@@ -13,7 +13,7 @@ const {
   resetCounters,
   CRAWLER_CLIENT_PATTERNS,
   AGENT_CLIENT_NAMES,
-} = await import("../src/stats.ts");
+} = await import("../dist/stats.js");
 
 describe("classifyMcpClient heuristic", () => {
   it("classifies every documented crawler pattern as 'crawler'", () => {

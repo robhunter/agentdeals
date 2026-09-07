@@ -13,7 +13,7 @@ const {
   getApiHitsByEndpoint,
   getSearchAnalytics,
   resetCounters,
-} = await import("../src/stats.ts");
+} = await import("../dist/stats.js");
 
 describe("per-endpoint API analytics persistence (#965)", () => {
   beforeEach(() => {

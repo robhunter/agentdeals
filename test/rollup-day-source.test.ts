@@ -1,6 +1,6 @@
 import { describe, it } from "node:test";
 import assert from "node:assert";
-import { splitDayPageViews, splitSignalKeys, getRollupDaySource, getRollupDatesAvailable } from "../src/stats.ts";
+import { splitDayPageViews, splitSignalKeys, getRollupDaySource, getRollupDatesAvailable } from "../dist/stats.js";
 
 describe("splitting a stored day into rollup input", () => {
   it("counts served views from the route keys, never from the stored total", () => {

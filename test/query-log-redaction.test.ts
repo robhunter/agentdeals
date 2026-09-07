@@ -9,7 +9,7 @@ const REPO = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
 const {
   toPublicRequestLog,
   PUBLISHED_TEXT_MAX,
-} = await import("../src/stats.ts");
+} = await import("../dist/stats.js");
 
 type RawEntry = Parameters<typeof toPublicRequestLog>[0][number];
 

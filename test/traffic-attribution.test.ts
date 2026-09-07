@@ -21,7 +21,7 @@ const {
   OVERFLOW_PAGE_KEY,
   NOT_FOUND_KEY,
 } = await import("../dist/stats.js");
-const { classifyRequest, CLIENT_CLASSES } = await import("../dist/client-class.js");
+const { classifyRequest, CLIENT_CLASSES, agentFamiliesByTrigger } = await import("../dist/client-class.js");
 
 function recordTraffic(path: string, ua: string | undefined, status?: number): void {
   recordTrafficRaw(classifyRequest(path, ua), path, status);
@@ -418,5 +418,217 @@ describe("window honesty and storage bounds", () => {
 
     const bytes = JSON.stringify(snap).length;
     assert.ok(bytes < 400_000, `worst-case snapshot is ${(bytes / 1024).toFixed(0)}KB`);
+  });
+});
+
+describe("ai_agent hits split by what triggers the fetch (#1449)", () => {
+  beforeEach(async () => {
+    process.env.UPSTASH_REDIS_REST_URL = "https://stub.upstash.invalid";
+    process.env.UPSTASH_REDIS_REST_TOKEN = "stub-token";
+    redis = new FakeUpstash();
+    telemetryFile = join(tmpdir(), `trigger-${randomUUID()}.json`);
+    resetCounters();
+    resetTelemetryBuffers();
+    resetTelemetryHealth();
+    installFetchStub();
+  });
+
+  afterEach(() => {
+    globalThis.fetch = realFetch;
+    delete process.env.UPSTASH_REDIS_REST_URL;
+    delete process.env.UPSTASH_REDIS_REST_TOKEN;
+  });
+
+  const AGENT_UA = {
+    chatgptUser: UA.chatgpt,
+    claudeUser: UA.claude,
+    claudeCode: "Claude-User (claude-code/2.1.260; +https://support.anthropic.com/)",
+    amazonbot: "Mozilla/5.0 (compatible; Amazonbot/0.1; +https://developer.amazon.com/support/amazonbot)",
+    perplexityBot: "Mozilla/5.0 (compatible; PerplexityBot/1.0; +https://perplexity.ai/perplexitybot)",
+    bytespider: "Mozilla/5.0 (compatible; Bytespider; spider-feedback@bytedance.com)",
+    ccbot: "CCBot/2.0 (https://commoncrawl.org/faq/)",
+    duckAssist: "Mozilla/5.0 (compatible; DuckAssistBot/1.0; +https://duckduckgo.com/duckassistbot)",
+  };
+
+  function recordEach(entries: [string, number][]): void {
+    for (const [ua, times] of entries) {
+      for (let i = 0; i < times; i++) recordTraffic("/vendor/neon", ua, 200);
+    }
+  }
+
+  it("separates a fetch a person caused from crawling on the vendor's own schedule", async () => {
+    await boot();
+    recordEach([
+      [AGENT_UA.chatgptUser, 5],
+      [AGENT_UA.claudeUser, 3],
+      [AGENT_UA.amazonbot, 40],
+      [AGENT_UA.perplexityBot, 30],
+      [AGENT_UA.bytespider, 20],
+      [AGENT_UA.ccbot, 10],
+      [AGENT_UA.duckAssist, 2],
+    ]);
+
+    const window = getTrafficReport().today;
+    const split = window.ai_agent_by_trigger;
+    assert.equal(window.by_class.ai_agent, 110);
+    assert.equal(split.total, 110);
+    assert.equal(split.user_initiated, 8);
+    assert.equal(split.automated, 100);
+    assert.equal(split.ambiguous, 2);
+    assert.equal(split.unattributed, 0);
+    assert.deepStrictEqual(split.automated_by_kind, { search_index: 70, training: 30 });
+  });
+
+  it("the four groups sum to the ai_agent class total, so a dropped family is arithmetic", async () => {
+    await boot();
+    recordEach(Object.values(AGENT_UA).map((ua) => [ua, 7] as [string, number]));
+
+    const report = getTrafficReport();
+    for (const key of ["today", "last_7d", "last_30d"] as const) {
+      const window = report[key];
+      const split = window.ai_agent_by_trigger;
+      const total = window.by_class.ai_agent ?? 0;
+      assert.equal(split.total, total, `${key}: the split reports a total the class count disagrees with`);
+      assert.equal(
+        split.user_initiated + split.automated + split.ambiguous + split.unattributed,
+        total,
+        `${key}: the groups do not partition the class total`,
+      );
+      assert.equal(split.automated_by_kind.search_index + split.automated_by_kind.training, split.automated, key);
+      assert.ok(split.unattributed >= 0, `${key}: more family detail than class hits is a recording bug`);
+    }
+    assert.equal(report.web_vs_mcp.today.ai_agent_hits, report.today.ai_agent_by_trigger.total);
+  });
+
+  it("a coding agent is counted apart from the plain user family it shares a token with", async () => {
+    await boot();
+    recordEach([[AGENT_UA.claudeUser, 4], [AGENT_UA.claudeCode, 6]]);
+
+    const window = getTrafficReport().today;
+    assert.equal(window.ai_agent_by_family["Claude-Code"], 6, "the coding-agent family must be reachable in recorded data");
+    assert.equal(window.ai_agent_by_family["Claude-User"], 4);
+    assert.equal(window.by_class.ai_agent, 10);
+    assert.equal(window.ai_agent_by_trigger.user_initiated, 10, "both are user-initiated; the point is they are separable");
+  });
+
+  it("hits older than the family detail window are unattributed, not dropped and not guessed", async () => {
+    const day = (back: number) => new Date(Date.now() - back * 86400000).toISOString().slice(0, 10);
+    redis.values.set(
+      PAGE_VIEWS_KEY,
+      JSON.stringify({
+        days: {},
+        referrers: {},
+        all_time: {},
+        classes: { [day(0)]: { ai_agent: 30 }, [day(20)]: { ai_agent: 500 } },
+        families: { [day(0)]: { "ChatGPT-User": 10, Amazonbot: 20 } },
+        class_routes: {},
+        not_found: {},
+        redirects: {},
+        mcp: {},
+        updated_at: "",
+      }),
+    );
+    await boot();
+
+    const report = getTrafficReport();
+    assert.equal(report.last_7d.by_class.ai_agent, 30);
+    assert.equal(report.last_7d.ai_agent_by_trigger.unattributed, 0, "inside the detail window every hit has a family");
+
+    const long = report.last_30d;
+    assert.equal(long.by_class.ai_agent, 530);
+    assert.equal(long.ai_agent_by_trigger.total, 530);
+    assert.equal(long.ai_agent_by_trigger.user_initiated, 10);
+    assert.equal(long.ai_agent_by_trigger.automated, 20);
+    assert.equal(long.ai_agent_by_trigger.unattributed, 500, "the class-only days are named, not silently absent");
+    assert.ok(
+      long.detail_days < long.days,
+      "this window keeps class history longer than family history — that is what makes the remainder real",
+    );
+  });
+
+  it("a family carrying no rule is unattributed rather than folded into a group", async () => {
+    redis.values.set(
+      PAGE_VIEWS_KEY,
+      JSON.stringify({
+        days: {},
+        referrers: {},
+        all_time: {},
+        classes: { [today()]: { ai_agent: 12 } },
+        families: { [today()]: { "ChatGPT-User": 4, unknown: 8 } },
+        class_routes: {},
+        not_found: {},
+        redirects: {},
+        mcp: {},
+        updated_at: "",
+      }),
+    );
+    await boot();
+
+    const split = getTrafficReport().today.ai_agent_by_trigger;
+    assert.equal(split.user_initiated, 4);
+    assert.equal(split.automated, 0);
+    assert.equal(split.ambiguous, 0, "an overflow bucket is not evidence of an ambiguous trigger");
+    assert.equal(split.unattributed, 8);
+    assert.equal(split.user_initiated + split.automated + split.ambiguous + split.unattributed, split.total);
+  });
+
+  it("publishes which families are in which group, from the table the labels come from", async () => {
+    await boot();
+    const report = getTrafficReport();
+    const groups = report.ai_agent_trigger_families;
+    assert.ok(groups.user_initiated.includes("Claude-Code"));
+    assert.ok(groups.user_initiated.includes("Claude-User"));
+    assert.ok(groups.search_index.includes("Amazonbot") && groups.search_index.includes("PerplexityBot"));
+    assert.ok(groups.training.includes("Bytespider") && groups.training.includes("CCBot"));
+    assert.ok(groups.ambiguous.includes("DuckAssistBot"));
+
+    const flat = Object.values(groups).flat();
+    assert.equal(new Set(flat).size, flat.length, "a family in two groups would double-count");
+    for (const family of Object.keys(report.today.ai_agent_by_family)) {
+      assert.ok(flat.includes(family) || family === "unknown", `${family} was recorded and is in no published group`);
+    }
+  });
+
+  it("publishes the grouping even when the counters are unreadable — it describes the table, not the data", async () => {
+    redis.failWith = "ERR max requests limit exceeded";
+    await loadTelemetry(telemetryFile);
+    redis.reset();
+
+    const report = getTrafficReport();
+    assert.equal(report.available, false, "this is the branch a storage outage serves");
+    assert.deepStrictEqual(report.ai_agent_trigger_families, agentFamiliesByTrigger());
+    assert.ok(report.ai_agent_trigger_families.user_initiated.includes("Claude-Code"));
+    for (const key of ["today", "last_7d", "last_30d"] as const) {
+      const split = report[key].ai_agent_by_trigger;
+      assert.equal(split.total, 0, `${key}: no measurement is zero, not a guess`);
+      assert.equal(split.user_initiated + split.automated + split.ambiguous + split.unattributed, 0);
+    }
+  });
+
+  it("counts nothing differently — the class values and family labels are untouched", async () => {
+    await boot();
+    recordEach([[AGENT_UA.chatgptUser, 5], [AGENT_UA.amazonbot, 3], [UA.chrome, 9], [UA.curl, 2]]);
+
+    const window = getTrafficReport().today;
+    assert.equal(window.hits_total, 19);
+    assert.equal(window.by_class.ai_agent, 8);
+    assert.equal(window.by_class.browser, 9);
+    assert.equal(window.by_class.sdk_client, 2);
+    assert.deepStrictEqual(window.ai_agent_by_family, { "ChatGPT-User": 5, Amazonbot: 3 });
+  });
+
+  it("the notes stop bounding maintainer traffic out of ai_agent_hits and name the tooling families", async () => {
+    await boot();
+    const notes = getTrafficReport().notes;
+    const joined = notes.join("\n");
+    assert.ok(
+      !/never\s+ai_agent_hits/.test(joined),
+      "the endpoint used to promise maintainer traffic could not reach this counter, and coding agents break that promise",
+    );
+    assert.match(joined, /Claude-Code/);
+    assert.match(joined, /agent-scraper/);
+    assert.match(joined, /ai_agent_by_trigger/);
+    assert.match(joined, /unattributed/);
+    for (const note of notes) assert.ok(note.length > 40, `a note this short states nothing: ${note}`);
   });
 });

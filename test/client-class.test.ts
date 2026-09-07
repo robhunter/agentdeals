@@ -5,6 +5,11 @@ const {
   classifyRequest,
   isObservabilityPath,
   CLIENT_CLASSES,
+  AGENT_TRIGGERS,
+  agentFamiliesByTrigger,
+  agentFamilyRuleCount,
+  agentTriggerForFamily,
+  clientRuleTable,
 } = await import("../src/client-class.ts");
 type ClientClass = import("../src/client-class.ts").ClientClass;
 
@@ -40,8 +45,15 @@ const UA = {
   uptime: "Mozilla/5.0+(compatible; UptimeRobot/2.0; http://www.uptimerobot.com/)",
   unknownBot: "Mozilla/5.0 (compatible; SomeNewThingBot/1.0; +http://example.com/bot)",
   internal: "agentdeals-internal/1.0 (verification)",
+  claudeCodeReal: "Claude-User (claude-code/2.1.260; +https://support.anthropic.com/)",
   garbage: "\u0000\u0001 xyzzy",
 } as const;
+
+const REAL_CLAUDE_CODE_UAS = [
+  UA.claudeCodeReal,
+  "Claude-User (claude-code/2.1.255; +https://support.anthropic.com/)",
+  "Claude-User (claude-code/2.1.252; +https://support.anthropic.com/)",
+] as const;
 
 describe("classifyClient — AI agents", () => {
   const cases: [keyof typeof UA, string][] = [
@@ -83,6 +95,20 @@ describe("classifyClient — ordering traps", () => {
   it("Claude-User (agent mid-task) is distinguished from ClaudeBot (training crawler)", () => {
     assert.equal(classifyClient(UA.claudeUser).family, "Claude-User");
     assert.equal(classifyClient(UA.claudeBot).family, "ClaudeBot");
+  });
+
+  it("a coding-agent request carries both tokens and is not filed as the plain one", () => {
+    for (const ua of REAL_CLAUDE_CODE_UAS) {
+      assert.match(ua, /Claude-User/, "the observed strings carry both tokens — that is the whole trap");
+      assert.match(ua, /claude-code/);
+      const seen = classifyClient(ua);
+      assert.equal(seen.family, "Claude-Code", `${ua} must not be pooled into Claude-User`);
+      assert.equal(seen.client_class, "ai_agent");
+    }
+    const plain = classifyClient(UA.claudeUser);
+    assert.equal(plain.family, "Claude-User");
+    assert.equal(plain.client_class, "ai_agent");
+    assert.notEqual(classifyClient(REAL_CLAUDE_CODE_UAS[0]).family, plain.family);
   });
 
   it("OAI-SearchBot is an AI agent, not a search crawler, despite the name", () => {
@@ -205,5 +231,145 @@ describe("classifyRequest — internal attribution", () => {
     assert.equal(isObservabilityPath(""), false);
     assert.equal(isObservabilityPath("/api/pageviews/extra"), false);
     assert.equal(isObservabilityPath(undefined as unknown as string), false);
+  });
+});
+
+function expandBranch(source: string, from: number, stop: string): { candidates: string[]; next: number } {
+  let candidates = [""];
+  const branches: string[][] = [];
+  let i = from;
+  const flush = () => {
+    branches.push(candidates);
+    candidates = [""];
+  };
+  const append = (parts: string[]) => {
+    const out: string[] = [];
+    for (const head of candidates) for (const tail of parts) out.push(head + tail);
+    candidates = out;
+  };
+  while (i < source.length) {
+    const ch = source[i];
+    if (stop && ch === stop) break;
+    if (ch === "|") {
+      flush();
+      i++;
+      continue;
+    }
+    if (ch === "^" || ch === "$") {
+      i++;
+      continue;
+    }
+    if (ch === "\\") {
+      const esc = source[i + 1];
+      i += 2;
+      if (esc === "b" || esc === "B") continue;
+      if (esc === "d") append(["1"]);
+      else if (esc === "s") append([" "]);
+      else if (esc === "w") append(["a"]);
+      else append([esc]);
+      continue;
+    }
+    if (ch === "[") {
+      const close = source.indexOf("]", i + 1);
+      assert.ok(close > i, `unterminated character class in ${source}`);
+      const body = source.slice(i + 1, close);
+      assert.ok(!body.startsWith("^"), `negated character class is not expandable in ${source}`);
+      const first = body.startsWith("\\") ? body.slice(0, 2) : body.slice(0, 1);
+      append([first === "\\d" ? "1" : first === "\\w" ? "a" : first.replace("\\", "")]);
+      i = close + 1;
+      if (source[i] === "?") i++;
+      continue;
+    }
+    if (ch === "(") {
+      let start = i + 1;
+      if (source.startsWith("(?:", i)) start = i + 3;
+      const inner = expandBranch(source, start, ")");
+      assert.equal(source[inner.next], ")", `unterminated group in ${source}`);
+      i = inner.next + 1;
+      const optional = source[i] === "?";
+      if (optional) i++;
+      append(optional ? [...inner.candidates, ""] : inner.candidates);
+      continue;
+    }
+    assert.ok(!"*+{".includes(ch), `unsupported quantifier ${ch} in ${source} — widen the expander rather than skipping the rule`);
+    append([ch]);
+    i++;
+  }
+  flush();
+  return { candidates: branches.flat(), next: i };
+}
+
+function candidatesFor(pattern: RegExp): string[] {
+  const expanded = expandBranch(pattern.source, 0, "");
+  const usable = expanded.candidates.filter((c) => c.length > 0);
+  assert.ok(usable.length > 0, `no candidate string could be built from ${pattern}`);
+  for (const candidate of usable) {
+    assert.match(candidate, pattern, "a candidate that does not match its own rule would make this property vacuous");
+  }
+  return usable;
+}
+
+describe("the client rule table — every family it declares is reachable", () => {
+  const table = clientRuleTable();
+
+  it("builds a matching candidate string for every rule in the table", () => {
+    assert.ok(table.length > 50, `only ${table.length} rules read from the table`);
+    for (const rule of table) assert.ok(candidatesFor(rule.pattern).length > 0);
+  });
+
+  it("no rule is shadowed by an earlier one — a first-match table can strand a family silently", () => {
+    const stranded: string[] = [];
+    for (const rule of table) {
+      const reaches = candidatesFor(rule.pattern).some((candidate) => {
+        const seen = classifyClient(candidate);
+        return seen.family === rule.family && seen.client_class === rule.client_class;
+      });
+      if (!reaches) stranded.push(`${rule.client_class}/${rule.family} via ${rule.pattern}`);
+    }
+    assert.deepStrictEqual(stranded, []);
+  });
+
+  it("a rule inserted above an existing one is caught by that property", () => {
+    const claudeUser = table.find((r) => r.family === "Claude-User");
+    assert.ok(claudeUser, "the table must still declare Claude-User for this control to mean anything");
+    const shadow = /Claude/i;
+    const reaches = candidatesFor(claudeUser.pattern).some((candidate) => !shadow.test(candidate));
+    assert.equal(reaches, false, "a broader rule above this one would swallow every string that reaches it");
+  });
+});
+
+describe("the client rule table — one trigger per AI agent family", () => {
+  it("every ai_agent rule declares a trigger and no other rule does", () => {
+    for (const rule of clientRuleTable()) {
+      if (rule.client_class === "ai_agent") {
+        assert.ok(rule.trigger !== null, `${rule.family} is an AI agent family with no declared trigger`);
+        assert.ok(AGENT_TRIGGERS.includes(rule.trigger), `${rule.family} declares an unknown trigger ${rule.trigger}`);
+      } else {
+        assert.equal(rule.trigger, null, `${rule.family} is ${rule.client_class} and cannot carry an agent trigger`);
+      }
+    }
+  });
+
+  it("the grouping covers every family in the table exactly once", () => {
+    const grouped = agentFamiliesByTrigger();
+    const flat = AGENT_TRIGGERS.flatMap((trigger) => grouped[trigger]);
+    assert.equal(new Set(flat).size, flat.length, "a family in two groups would double-count its hits");
+    assert.equal(flat.length, agentFamilyRuleCount(), "every ai_agent rule contributes exactly one family to the grouping");
+    for (const rule of clientRuleTable()) {
+      if (rule.client_class !== "ai_agent") continue;
+      assert.ok(flat.includes(rule.family), `${rule.family} is in the table and absent from the grouping`);
+      assert.equal(agentTriggerForFamily(rule.family), rule.trigger);
+    }
+  });
+
+  it("a family with no rule has no trigger rather than a guessed one", () => {
+    assert.equal(agentTriggerForFamily("unknown"), null);
+    assert.equal(agentTriggerForFamily("SomeNewThingBot"), null);
+  });
+
+  it("the families that carry this project's own tooling are user_initiated and named as such", () => {
+    assert.equal(agentTriggerForFamily("Claude-Code"), "user_initiated");
+    assert.equal(agentTriggerForFamily("agent-scraper"), "ambiguous");
+    assert.equal(classifyClient(UA.claudeCodeReal).family, "Claude-Code");
   });
 });
