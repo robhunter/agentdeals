@@ -1986,7 +1986,7 @@
     {
       "vendor": "Backblaze B2",
       "category": "Storage",
-      "description": "Object storage — first 10 GB always free, free egress via Cloudflare/CDN partners",
+      "description": "Object storage — first 10 GB always free, free egress up to 3x average monthly storage, unmetered via CDN partners",
       "tier": "Free Allowance",
       "url": "https://www.backblaze.com/cloud-storage/pricing",
       "tags": [
