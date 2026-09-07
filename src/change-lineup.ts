@@ -1,4 +1,5 @@
 import { theEventNeverHappened } from "./change-resolution.js";
+import { longDate } from "./change-dates.js";
 import type { ChangeResolution } from "./types.js";
 
 export interface LineupClaim {
@@ -44,7 +45,7 @@ export function supersededLineups<T extends LineupClaim>(changes: readonly T[]):
 }
 
 export function changeTimelineDate(iso: string): string {
-  return new Date(iso).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+  return longDate(iso);
 }
 
 export function supersessionNote(newest: LineupClaim, formatDate: (iso: string) => string): string {
