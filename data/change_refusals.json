@@ -769,6 +769,18 @@
       "refused_date": "2026-09-03"
     },
     {
+      "vendor": "Dub.co",
+      "change_type": "limits_increased",
+      "reason": "measures_no_change",
+      "detail": "limits_increased claimed, and every quantity the record compares holds the same value once notation and period are normalised — 25 link/mo against 25 link/mo, 1,000 tracked/mo against 1 tracked/mo, 3 custom against 3 custom",
+      "summary": "The free tier now includes 1K tracked events/month and 25 new links/month, whereas the stored information stated 1,000 tracked events/month and 25 new links/month. The free tier also includes AI assistant, Link tags, API access, 3 custom domains, UTM templates, 30-day analytics retention, and QR codes.",
+      "previous_state": "Open-source link management — 25 new links/month, 1,000 tracked events/month, 3 custom domains, 1 user, 30-day analytics retention, API with native SDKs. No credit card required",
+      "current_state": "Free $0 free forever – the most generous free plan on the market Start for free 1K tracked events/mo Real-time analytics 1 user Basic support 25 new links/mo AI assistant Link tags API access 3 custom domains UTM templates 30-day analytics retention QR codes",
+      "source_url": "https://dub.co/pricing/links",
+      "category": "Dev Utilities",
+      "refused_date": "2026-09-07"
+    },
+    {
       "vendor": "duo.com",
       "change_type": "pricing_restructured",
       "reason": "confirmed_unchanged",
@@ -839,6 +851,18 @@
       "source_url": "https://www.file.io",
       "category": "Storage",
       "refused_date": "2026-08-28"
+    },
+    {
+      "vendor": "Fireworks AI",
+      "change_type": "pricing_restructured",
+      "reason": "confirmed_unchanged",
+      "detail": "The report clarifies *where* the $1 credit applies (Serverless Inference), but the amount remains the same. The stored description didn't specify what the credit was for.",
+      "summary": "The free tier still exists. Is now described as providing $1 in free credits for Serverless Inference, rather than simply a $1 credit tier.",
+      "previous_state": "Fast inference platform for LLMs and image models. Free tier: $1 free credits. Serverless and on-demand deployment options",
+      "current_state": "Serverless Inference is available with $1 in free credits. Pay per token pricing is available, with costs varying by model and tier (Standard, Priority, Fast). Training and On-Demand deployments have separate pricing structures based on tokens, GPU hours, and GPU type.",
+      "source_url": "https://fireworks.ai/pricing",
+      "category": "AI / ML",
+      "refused_date": "2026-09-07"
     },
     {
       "vendor": "flightcontrol.dev",
@@ -1357,6 +1381,18 @@
       "refused_date": "2026-08-28"
     },
     {
+      "vendor": "Mailtrap.io",
+      "change_type": "limits_reduced",
+      "reason": "unquantified_limit",
+      "detail": "limits_reduced claimed, but the current state names no quantity for anything the stored state measured (4,000 email, 150 cap, 1 domain, 3 log, 50 test, 1 sandbox, 1,500 email, 500 contact, 1 user)",
+      "summary": "The free tier limits for Email API/SMTP have changed. The stored information states 4,000 emails/month, while a user quote on the page states 1,000 emails/month.",
+      "previous_state": "Three separate free products. Email API/SMTP: 4,000 emails/month (150/day cap), 1 domain, 3-day log retention. Email Sandbox (testing): 50 test emails/month, 1 sandbox. Email Marketing: 1,500 emails/month, 500 contacts. 1 user each.",
+      "current_state": "A user quote states they can send 1000 mails/month for free.",
+      "source_url": "https://mailtrap.io/",
+      "category": "Email",
+      "refused_date": "2026-09-07"
+    },
+    {
       "vendor": "MantleDB",
       "change_type": "limits_reduced",
       "reason": "measures_the_opposite",
@@ -1873,6 +1909,18 @@
       "refused_date": "2026-08-29"
     },
     {
+      "vendor": "ruttl.com",
+      "change_type": "limits_reduced",
+      "reason": "measures_no_change",
+      "detail": "limits_reduced claimed, and every quantity the record compares holds the same value once notation and period are normalised — 1 project against 1 project, 5 pag against 5 pag, 5 user against 5 user",
+      "summary": "The free plan now has a limit of 1 project, 5 pages, and up to 5 users, with unlimited guests. It includes all project types and integrations with Trello, Slack, Asana, and Jira.",
+      "previous_state": "All-in-one visual feedback tool to collect digital feedback and review websites, PDFs, and images. Free plan: 1 project, 5 pages, 5 users, unlimited guests; integrations with Trello, Slack, Asana, and Jira. Pro begins at $15/user/month.",
+      "current_state": "Basic (Free) /month/user: Upto 5 users, 1 project, 5 Pages, Unlimited Guests, All Project Types, Trello, Slack, Asana and Jira",
+      "source_url": "https://ruttl.com/pricing/",
+      "category": "Communication",
+      "refused_date": "2026-09-07"
+    },
+    {
       "vendor": "Sauce Labs",
       "change_type": "free_tier_removed",
       "reason": "dangling_reference",
@@ -2077,6 +2125,18 @@
       "refused_date": "2026-08-28"
     },
     {
+      "vendor": "Together AI",
+      "change_type": "free_tier_removed",
+      "reason": "states_no_terms",
+      "detail": "every clause of the summary states absence rather than a term the page carries, so it reports the reading rather than a change",
+      "summary": "The $1 free credit offer is not mentioned on the pricing page. The page details pricing per 1M tokens for various models, and offers different compute options (Serverless Inference, Provisioned Throughput, Dedicated Inference, etc.) but does not mention a free tier.",
+      "previous_state": "Fast inference API for open-source LLMs (Llama, Mixtral, Code Llama). Free tier: $1 free credits on signup. Pay-per-token after",
+      "current_state": "The pricing page details costs per 1M tokens for various models (MiniMax M3, Kimi K3, DeepSeek V4 Flash, etc.) and offers various compute options like Serverless Inference, Provisioned Throughput, and Dedicated Inference.",
+      "source_url": "https://www.together.ai/pricing",
+      "category": "AI / ML",
+      "refused_date": "2026-09-07"
+    },
+    {
       "vendor": "Toggled.dev",
       "change_type": "limits_increased",
       "reason": "confirmed_unchanged",
@@ -2279,6 +2339,18 @@
       "source_url": "https://zoho.com/checkout",
       "category": "Payments",
       "refused_date": "2026-08-31"
+    },
+    {
+      "vendor": "Zoho Docs",
+      "change_type": "limits_increased",
+      "reason": "confirmed_unchanged",
+      "detail": "Stored description already stated 5GB storage.",
+      "summary": "The free tier now offers 5 GB of storage, not 1 GB.",
+      "previous_state": "Free for 5 users with 1 GB upload limit & 5GB storage. Zoho Office Suite (Writer, Sheets & Show) comes bundled.",
+      "current_state": "Free Plan - 5 GB Secure cloud storage for individual use.",
+      "source_url": "https://www.zoho.com/workdrive/pricing.html",
+      "category": "Productivity & Notes",
+      "refused_date": "2026-09-07"
     },
     {
       "vendor": "Zoho Meeting",
