@@ -227,6 +227,13 @@ describe("the vendor page lede", () => {
     assert.deepStrictEqual(severed, [], "ledes that end on a figure whose unit follows in the record");
   });
 
+  it("leaves no separator hanging in front of the marker", () => {
+    const hanging = clippedStatedTerms()
+      .filter(q => /[\s,;:—–-]$/.test(q.opening))
+      .map(q => `${q.route}: …${q.opening.slice(-40)}`);
+    assert.deepStrictEqual(hanging, [], "ledes whose clip marker follows a separator");
+  });
+
   it("never opens a bracket it does not close", () => {
     const unbalanced = swept
       .filter(p => unclosedBrackets(p.description) > 0)
@@ -303,12 +310,24 @@ describe("the truncation rule", () => {
     assert.ok(termsWereClipped(opening));
   });
 
-  it("does not leave a figure without the unit that follows it", () => {
+  it("does not leave a figure, or the separator after it, without what followed", () => {
     const terms = "Team plan with 25 seats, 100 GB storage, 5000 build minutes and 12 concurrent jobs per account";
     for (let cap = 20; cap <= 90; cap++) {
-      const opening = openingOfTerms(terms, cap);
-      assert.ok(!/\d$/.test(opening.replace(/…\)*$/, "")), `cap ${cap} ended on a figure: ${opening}`);
+      const bare = openingOfTerms(terms, cap).replace(/…\)*$/, "");
+      assert.ok(!/\d$/.test(bare), `cap ${cap} ended on a figure: ${bare}…`);
+      assert.ok(!/[\s,;:—–-]$/.test(bare), `cap ${cap} left a separator in front of the marker: ${bare}…`);
     }
+  });
+
+  it("leaves no separator in front of the marker anywhere in the catalogue", () => {
+    const hanging: string[] = [];
+    for (const offer of offers) {
+      for (const cap of [90, 100, 120, 170]) {
+        const bare = openingOfTerms(offer.description.trim(), cap).replace(/…\)*$/, "");
+        if (/[\s,;:—–-]$/.test(bare)) hanging.push(`${offer.vendor} at ${cap}: …${bare.slice(-40)}`);
+      }
+    }
+    assert.deepStrictEqual(hanging, [], "openings whose clip marker follows a separator");
   });
 
   it("closes a bracket the clip would have left open, without dropping the terms inside it", () => {
