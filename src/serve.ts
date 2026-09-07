@@ -53352,6 +53352,17 @@ function citedAt<T extends object>(payload: T, path: string): T & { _provenance:
   };
 }
 
+function citedAgainstTheChangeLog<T extends object>(payload: T, path: string): T & { _provenance: Record<string, unknown> } {
+  return {
+    ...payload,
+    _provenance: provenanceBlock(BASE_URL, payload, {
+      path,
+      dateForSlug: oldestVerifiedDateForSlug,
+      dateOfTheLogConsulted: getChangeLogFreshness().last_recorded_date,
+    }),
+  };
+}
+
 function withAgentBlock<T extends object>(payload: T, slug?: string | null): T & { _agent: Record<string, unknown>; _provenance: Record<string, unknown> } {
   return {
     ...payload,
@@ -54496,7 +54507,7 @@ const httpServer = createHttpServer(async (req, res) => {
       res.end(digest.digest_html);
     } else {
       res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*", "Cache-Control": "public, max-age=3600" });
-      res.end(JSON.stringify(citedAt(digest, digestWeekPath(digest.week_of))));
+      res.end(JSON.stringify(citedAgainstTheChangeLog(digest, digestWeekPath(digest.week_of))));
     }
   } else if (url.pathname === "/api/digest" && isGetOrHead) {
     recordApiHit("/api/digest");

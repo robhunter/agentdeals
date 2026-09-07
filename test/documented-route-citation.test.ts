@@ -4,6 +4,7 @@ import { spawn, type ChildProcess } from "node:child_process";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { DEFERENCE } from "../dist/signal-copy.js";
+import { getChangeLogFreshness, loadDealChanges } from "../dist/data.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -68,6 +69,18 @@ const SOURCE_POPULATION_PAGES: [string, string, number][] = [
 
 const ALWAYS_PUBLISHED = ["source", "url", "cite_as", "note"];
 const PUBLISHED_WHERE_DATED = ["checked", "verified"];
+
+function lastRecordedDate(): string | null {
+  return getChangeLogFreshness().last_recorded_date;
+}
+
+function weeksBackToBeforeTheFirstRecord(): number {
+  const dates = loadDealChanges().flatMap((c: { date?: string; recorded_date?: string }) => [c.date, c.recorded_date])
+    .filter((d): d is string => typeof d === "string" && d !== "")
+    .sort();
+  const oldest = Date.parse(dates[0] + "T00:00:00Z");
+  return Math.ceil((Date.now() - oldest) / (7 * 86400000)) + 1;
+}
 
 function documentedProvenanceFields(html: string): string[] {
   const section = html.slice(html.indexOf("<h2>Provenance</h2>"), html.indexOf("<h2>Rate Limits</h2>"));
@@ -254,6 +267,20 @@ describe("every product route the developer hub documents carries a citation", (
       const res = await fetch(`${base}${pathname}`, { redirect: "manual" });
       assert.strictEqual(res.status, 200, `${pathname} answers ${res.status}`);
     }
+  });
+
+  it("dates a week it recorded nothing in, so an empty week reads differently from a stopped feed", async () => {
+    const weeksAgo = weeksBackToBeforeTheFirstRecord();
+    const body = await (await fetch(`${base}/api/digest/weekly?weeks_ago=${weeksAgo}`)).text();
+    const json = JSON.parse(body) as { week_of: string; changes_in_week: number; discovered_in_week: number; _provenance: Record<string, unknown> };
+    assert.strictEqual(json.changes_in_week, 0, `the week of ${json.week_of} precedes every record and holds ${json.changes_in_week} changes`);
+    assert.strictEqual(json.discovered_in_week, 0, `the week of ${json.week_of} precedes every record and holds ${json.discovered_in_week} discoveries`);
+    for (const field of PUBLISHED_WHERE_DATED) {
+      assert.ok(field in json._provenance, `a week with no changes publishes no ${field}`);
+    }
+    assert.strictEqual(json._provenance.checked, lastRecordedDate(), "an empty week is dated something other than the day the change log last grew");
+    assert.strictEqual(json._provenance.verified, lastRecordedDate());
+    assert.match(String(json._provenance.cite_as), /, checked \d{4}-\d{2}-\d{2}\)$/);
   });
 
   it("cites the vendor's own page for every referral code it publishes", async () => {
