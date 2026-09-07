@@ -250,7 +250,7 @@ function git(cwd: string, ...args: string[]): string {
   return run.stdout.trim();
 }
 
-function fixtureRepo(): { work: string; origin: string } {
+function fixtureRepo(options: { shallow?: boolean } = {}): { work: string; origin: string } {
   const root = mkdtempSync(join(scratch, "repo-"));
   const origin = join(root, "origin.git");
   const work = join(root, "work");
@@ -271,6 +271,17 @@ function fixtureRepo(): { work: string; origin: string } {
   git(work, "add", "-A");
   git(work, "commit", "-m", "fixture");
   git(work, "push", "origin", "HEAD:main");
+  if (options.shallow) {
+    rmSync(work, { recursive: true, force: true });
+    git(root, "clone", "--depth", "1", `file://${origin}`, work);
+    git(work, "config", "user.email", "fixture@example.com");
+    git(work, "config", "user.name", "fixture");
+    assert.strictEqual(
+      git(work, "rev-parse", "--is-shallow-repository"),
+      "true",
+      "the checkout this test needs to be shallow is not",
+    );
+  }
   return { work, origin };
 }
 
@@ -862,6 +873,19 @@ describe("#1337 main moving under a run whose data the suite accepted", () => {
       2,
       "the suite did not read the tree the replay produced, so what reached main is not what it passed",
     );
+  });
+
+  it("replays onto it from the shallow checkout the workflows actually run in", () => {
+    const { work, origin } = fixtureRepo({ shallow: true });
+    writeFileSync(join(work, "data", "health.json"), '{"checked":8}\n');
+    commitToMainFromElsewhere(origin, "another-job-wrote-this.txt", "landed while the suite ran\n");
+
+    const run = runGate(work, "green", "data-quarantine/fixture", "data(auto): fixture", "data/health.json");
+
+    assert.strictEqual(run.status, 0, `${run.stdout}${run.stderr}`);
+    assert.strictEqual(git(origin, "show", "main:data/health.json"), '{"checked":8}');
+    assert.strictEqual(git(origin, "show", "main:another-job-wrote-this.txt"), "landed while the suite ran");
+    assert.deepStrictEqual(quarantineRefs(origin, "data-quarantine/fixture"), []);
   });
 
   it("holds the data on a ref of its own when it cannot be replayed onto that main", () => {
