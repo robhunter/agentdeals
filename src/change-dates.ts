@@ -87,10 +87,24 @@ export function changeDateLabel(c: DatedChange): string {
   return isEventDated(c) ? c.date : `${DISCOVERED_DATE_PREFIX} ${c.date}`;
 }
 
-export function changeEntryDateLabel(c: DatedChange): string {
+export function changeEntryDateLabelFor(c: Pick<DealChange, "date_source">, rendered: string): string {
   return isEventDated(c)
-    ? `${EFFECTIVE_DATE_PREFIX} ${c.date}`
-    : `${DISCOVERED_DATE_PREFIX} ${c.date} · ${UNKNOWN_EFFECTIVE_DATE_MARKER}`;
+    ? `${EFFECTIVE_DATE_PREFIX} ${rendered}`
+    : `${DISCOVERED_DATE_PREFIX} ${rendered} · ${UNKNOWN_EFFECTIVE_DATE_MARKER}`;
+}
+
+export function changeEntryDateLabel(c: DatedChange): string {
+  return changeEntryDateLabelFor(c, c.date);
+}
+
+export function longDate(date: string): string {
+  return new Date(date)
+    .toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })
+    .replace(/ /g, "\u00a0");
+}
+
+export function changeEntryLongDateLabel(c: DatedChange): string {
+  return changeEntryDateLabelFor(c, longDate(c.date));
 }
 
 export function changeDateClause(c: DatedChange): string {

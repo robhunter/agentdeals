@@ -150,18 +150,34 @@ const NOT_A_CHANGE_RECORD: Array<{ expr: string; why: string }> = [
   { expr: "escHtmlServer(tie.date)", why: "the UTC day the ranking permutation is seeded on" },
   { expr: "escHtmlServer(p.date)", why: "the day a press mention was published" },
   { expr: "escHtmlServer(e.date)", why: "a hand-written editorial timeline, which carries no record" },
+  { expr: "date: r.date", why: "the day an analytics rollup covers" },
 ];
 
 describe("nothing renders a change date without saying which kind of date it is", () => {
   const source = readFileSync(path.join(REPO, "src", "serve.ts"), "utf8").split("\n");
-  const LABELLED = /change(?:Entry)?DateLabel|changeDateClause|feedEntryUpdated|toISOString/;
+  const LABELLED = /change(?:Entry)?DateLabel(?:For|Fn)?|changeEntryLongDateLabel|changeDateClause|feedEntryUpdated|toISOString/;
   const TEXT_NODE = />\s*(?:\$\{([^{}]*(?:\{[^{}]*\}[^{}]*)*)\}|'\s*\+\s*([^+]*?)\s*\+\s*')\s*</g;
+  const REFORMATTED = /new Date\(([A-Za-z_$][\w$.]*\.date)\)\.toLocale\w*\(/g;
+  const COPIED_RAW = /\bdate:\s*([A-Za-z_$][\w$.]*\.date)\b/g;
 
   const dateTextNodes = source.flatMap((line, i) =>
     [...line.matchAll(TEXT_NODE)]
       .map((m) => (m[1] ?? m[2] ?? "").trim())
       .filter((expr) => /\.date\b/.test(expr) && !LABELLED.test(expr))
       .map((expr) => ({ line: i + 1, expr }))
+  );
+
+  const reformatted = source.flatMap((line, i) =>
+    LABELLED.test(line) ? [] : [...line.matchAll(REFORMATTED)].map((m) => ({ line: i + 1, expr: m[0] }))
+  );
+
+  const travelsWithProvenance = (i: number) =>
+    source.slice(Math.max(0, i - 1), i + 3).some((l) => /dateClause|date_source/.test(l));
+
+  const copiedRaw = source.flatMap((line, i) =>
+    travelsWithProvenance(i) || LABELLED.test(line)
+      ? []
+      : [...line.matchAll(COPIED_RAW)].map((m) => ({ line: i + 1, expr: m[0] }))
   );
 
   const unlabelled = (line: string) =>
@@ -174,11 +190,37 @@ describe("nothing renders a change date without saying which kind of date it is"
     assertPopulationFloor(labelled, 20, "lines rendering a change date through a labelling helper");
   });
 
+  it("reformats a change date only through a labelling helper", () => {
+    const offenders = reformatted
+      .filter(({ expr }) => !expr.includes("r.date"))
+      .map(({ line, expr }) => `src/serve.ts:${line}: ${expr}`);
+    assert.deepStrictEqual(offenders, []);
+  });
+
+  it("never copies a change date into another object without its provenance", () => {
+    const offenders = copiedRaw
+      .filter(({ expr }) => !NOT_A_CHANGE_RECORD.some((e) => e.expr === expr))
+      .map(({ line, expr }) => `src/serve.ts:${line}: ${expr}`);
+    assert.deepStrictEqual(offenders, []);
+  });
+
   it("catches a change date put back into a text node unlabelled", () => {
     assert.deepStrictEqual(unlabelled('<span class="d">${c.date}</span>'), ["c.date"]);
     assert.deepStrictEqual(unlabelled("'<td>' + escHtmlServer(c.date) + '</td>'"), ["escHtmlServer(c.date)"]);
     assert.deepStrictEqual(unlabelled('<span class="d">${changeEntryDateLabel(c)}</span>'), []);
     assert.deepStrictEqual(unlabelled('<a href="#${toSlug(c.vendor)}-${c.date}">link</a>'), []);
+  });
+
+  it("catches a change date reformatted or handed to a browser unlabelled", () => {
+    const fires = (re: RegExp, line: string) => (LABELLED.test(line) ? [] : [...line.matchAll(re)].map((m) => m[0]));
+    assert.deepStrictEqual(fires(REFORMATTED, '  const s = new Date(c.date).toLocaleDateString("en-US", {});'), [
+      "new Date(c.date).toLocaleDateString(",
+    ]);
+    assert.deepStrictEqual(fires(REFORMATTED, "  const s = changeEntryLongDateLabel(c);"), []);
+    assert.deepStrictEqual(fires(COPIED_RAW, "    risk_cause: { date: cause.date, summary: cause.summary }"), [
+      "date: cause.date",
+    ]);
+    assert.deepStrictEqual(fires(COPIED_RAW, "    risk_cause: { date: changeEntryDateLabel(cause) }"), []);
   });
 
   it("routes every date a change record carries through a labelling helper", () => {
@@ -189,9 +231,8 @@ describe("nothing renders a change date without saying which kind of date it is"
   });
 
   it("keeps every declared non-record date in use", () => {
-    const unused = NOT_A_CHANGE_RECORD.filter(
-      (e) => !dateTextNodes.some(({ expr }) => expr === e.expr)
-    );
+    const scanned = [...dateTextNodes, ...copiedRaw];
+    const unused = NOT_A_CHANGE_RECORD.filter((e) => !scanned.some(({ expr }) => expr === e.expr));
     assert.deepStrictEqual(unused.map((e) => `${e.expr} — ${e.why}`), []);
   });
 });

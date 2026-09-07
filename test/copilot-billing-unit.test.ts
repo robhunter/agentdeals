@@ -4,6 +4,7 @@ import { spawn, type ChildProcess } from "node:child_process";
 import { readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { DISCOVERED_DATE_PREFIX, EFFECTIVE_DATE_PREFIX } from "../dist/change-dates.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(__dirname, "..");
@@ -32,7 +33,10 @@ function startServer(): Promise<ChildProcess> {
 const get = async (p: string) => (await fetch(`http://localhost:${serverPort}${p}`)).text();
 
 const rowsOf = (body: string) => body.match(/<tr[^>]*>[\s\S]*?<\/tr>/g) ?? [];
-const isChangeRow = (row: string) => /<td[^>]*>[A-Z][a-z]{2} \d{1,2}, \d{4}<\/td>/.test(row);
+const CHANGE_ROW_DATE = new RegExp(
+  `<td[^>]*>(?:${EFFECTIVE_DATE_PREFIX}|${DISCOVERED_DATE_PREFIX})[\\s\\u00a0]+[A-Z][a-z]{2}[\\s\\u00a0]+\\d{1,2},[\\s\\u00a0]+\\d{4}`
+);
+const isChangeRow = (row: string) => CHANGE_ROW_DATE.test(row);
 const withoutChangeRows = (body: string) =>
   rowsOf(body).filter(isChangeRow).reduce((rest, row) => rest.replace(row, ""), body);
 

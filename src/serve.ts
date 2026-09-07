@@ -68,7 +68,7 @@ import { verificationLedger, QUARANTINE_AFTER_FAILURES } from "./verification-st
 import { partitionAlternatives, partitionSubstitutes, type SubstitutesPartition, productRoleSentence, MEMBERSHIP_GATE_RULES, MEMBERSHIP_GATE_ORDER, MEMBERSHIP_GATE_SYMMETRY, MEMBERSHIP_GATE_SCOPE, MEMBERSHIP_GATE_CORRECTIONS, SUBTYPE_TAXONOMIES, SUBTYPE_MEMBERSHIP_RULE, SUBTYPE_MEMBERSHIP_GROUP_SCOPE, CURATED_SUBTYPE_EXEMPTION, membershipGroupsFor, subtypeDefinition } from "./product-role.js";
 import { resolveCuratedAlternatives, curatedAlternativesFor, addCuratedToPool } from "./curated-alternatives.js";
 import type { Agent, ChangeDateSource, DealChange, RiskCause, RatingWithheld, LinkUnreachable, Offer, StabilityClass } from "./types.js";
-import { changeDateLabel, changeEntryDateLabel, changeDateClause, changeDatePublished, changeEventStartDate, capListSections, latestEventDate, offerExpiryAfter, feedEntryUpdated, undatedGroupHeading, UNDATED_TILE_LABEL, firstReadHeading, discoveryBatchNote, isoWeekOf, DISCOVERED_DATE_PREFIX, EFFECTIVE_DATE_PREFIX, EVENT_DATED_SOURCES, UNDATED_GROUP_NOTE, UNKNOWN_EFFECTIVE_DATE_MARKER } from "./change-dates.js";
+import { changeDateLabel, changeEntryDateLabel, changeEntryLongDateLabel, changeDateClause, changeDatePublished, changeEventStartDate, capListSections, latestEventDate, offerExpiryAfter, feedEntryUpdated, undatedGroupHeading, UNDATED_TILE_LABEL, firstReadHeading, discoveryBatchNote, isoWeekOf, DISCOVERED_DATE_PREFIX, EFFECTIVE_DATE_PREFIX, EVENT_DATED_SOURCES, UNDATED_GROUP_NOTE, UNKNOWN_EFFECTIVE_DATE_MARKER } from "./change-dates.js";
 import { FEED_CORRECTIONS, correctionEntriesXml } from "./feed-corrections.js";
 import { buildDay, emptyPageLastmod, fallbackDay, httpDate, lastmodFor, newestLastmod, readPageLastmod, type PageLastmodLedger } from "./page-lastmod.js";
 import type { AgentBalance } from "./ledger.js";
@@ -963,9 +963,9 @@ function compiledFigureVerdictFor(
 
 function changeTimelineRowsHtml(changes: readonly DealChange[]): string {
   return changes.map(c => {
-    const dateStr = new Date(c.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+    const dateStr = changeEntryLongDateLabel(c);
     return `<tr>
-      <td style="font-family:var(--mono);font-size:.8rem;white-space:nowrap">${escHtmlServer(dateStr)}</td>
+      <td style="font-family:var(--mono);font-size:.8rem">${escHtmlServer(dateStr)}</td>
       <td style="font-weight:600">${escHtmlServer(c.vendor)}</td>
       <td style="font-size:.85rem">${escHtmlServer(c.summary)}</td>
       <td><span style="color:${changeImpactColor(c.impact)};font-size:.8rem;font-weight:600">${escHtmlServer(changeImpactLabel(c.impact))}</span></td>
@@ -22608,7 +22608,7 @@ function buildGeminiApiPricingChangesPage(): string {
     + '    </div>\n'
     + '  </div>\n'
     + '\n'
-    + (geminiChanges.length > 0 ? '  <div class="context-box">\n    <strong>From our deal change tracker (' + geminiChanges.length + ' Gemini changes tracked):</strong>\n    <ul>\n' + geminiChanges.slice(0, 5).map(c => '      <li><strong>' + escHtmlServer(new Date(c.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })) + ':</strong> ' + escHtmlServer(c.summary) + '</li>\n').join("") + '    </ul>\n    <p>See the full timeline at <a href="/changes">Pricing Changes</a>.</p>\n  </div>\n' : "")
+    + (geminiChanges.length > 0 ? '  <div class="context-box">\n    <strong>From our deal change tracker (' + geminiChanges.length + ' Gemini changes tracked):</strong>\n    <ul>\n' + geminiChanges.slice(0, 5).map(c => '      <li><strong>' + escHtmlServer(changeEntryLongDateLabel(c)) + ':</strong> ' + escHtmlServer(c.summary) + '</li>\n').join("") + '    </ul>\n    <p>See the full timeline at <a href="/changes">Pricing Changes</a>.</p>\n  </div>\n' : "")
     + '\n'
     + '  <h2 id="faq">8. Frequently Asked Questions</h2>\n'
     + '  <div class="faq-section">\n'
@@ -23627,10 +23627,10 @@ function buildOpenaiAssistantsAlternativesPage(): string {
   });
 
   const changeTimelineRows = openaiChanges.map(c => {
-    const dateStr = new Date(c.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+    const dateStr = changeEntryLongDateLabel(c);
     const impactColor = changeImpactColor(c.impact);
     return `<tr>
-      <td style="font-family:var(--mono);font-size:.8rem;white-space:nowrap">${escHtmlServer(dateStr)}</td>
+      <td style="font-family:var(--mono);font-size:.8rem">${escHtmlServer(dateStr)}</td>
       <td style="font-size:.85rem">${escHtmlServer(c.summary)}</td>
       <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(changeImpactLabel(c.impact))}</span></td>
     </tr>`;
@@ -24121,10 +24121,10 @@ function buildOpenaiAssistantsMigration2026Page(): string {
   }).join("\n        ");
 
   const changeTimelineRows = openaiChanges.map(c => {
-    const dateStr = new Date(c.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+    const dateStr = changeEntryLongDateLabel(c);
     const impactColor = changeImpactColor(c.impact);
     return `<tr>
-      <td style="font-family:var(--mono);font-size:.8rem;white-space:nowrap">${escHtmlServer(dateStr)}</td>
+      <td style="font-family:var(--mono);font-size:.8rem">${escHtmlServer(dateStr)}</td>
       <td style="font-size:.85rem">${escHtmlServer(c.summary)}</td>
       <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(changeImpactLabel(c.impact))}</span></td>
     </tr>`;
@@ -24610,10 +24610,10 @@ function buildTenorAlternativesPage(): string {
   }).join("\n        ");
 
   const changeTimelineRows = tenorChanges.map(c => {
-    const dateStr = new Date(c.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+    const dateStr = changeEntryLongDateLabel(c);
     const impactColor = changeImpactColor(c.impact);
     return `<tr>
-      <td style="font-family:var(--mono);font-size:.8rem;white-space:nowrap">${escHtmlServer(dateStr)}</td>
+      <td style="font-family:var(--mono);font-size:.8rem">${escHtmlServer(dateStr)}</td>
       <td style="font-size:.85rem">${escHtmlServer(c.summary)}</td>
       <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(changeImpactLabel(c.impact))}</span></td>
     </tr>`;
@@ -25070,10 +25070,10 @@ function buildFirebaseStudioShutdownPage(): string {
   }
 
   const changeTimelineRows = firebaseChanges.slice(0, 10).map(c => {
-    const dateStr = new Date(c.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+    const dateStr = changeEntryLongDateLabel(c);
     const impactColor = changeImpactColor(c.impact);
     return `<tr>
-      <td style="font-family:var(--mono);font-size:.8rem;white-space:nowrap">${escHtmlServer(dateStr)}</td>
+      <td style="font-family:var(--mono);font-size:.8rem">${escHtmlServer(dateStr)}</td>
       <td style="font-size:.85rem">${escHtmlServer(c.summary)}</td>
       <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(changeImpactLabel(c.impact))}</span></td>
     </tr>`;
@@ -25641,10 +25641,10 @@ function buildOpenAIAssistantsMigrationPage(): string {
   }).join("\n        ");
 
   const changeTimelineRows = openaiChanges.slice(0, 10).map(c => {
-    const dateStr = new Date(c.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+    const dateStr = changeEntryLongDateLabel(c);
     const impactColor = changeImpactColor(c.impact);
     return '<tr>' +
-      '<td style="font-family:var(--mono);font-size:.8rem;white-space:nowrap">' + escHtmlServer(dateStr) + '</td>' +
+      '<td style="font-family:var(--mono);font-size:.8rem">' + escHtmlServer(dateStr) + '</td>' +
       '<td style="font-size:.85rem">' + escHtmlServer(c.summary) + '</td>' +
       '<td><span style="color:' + impactColor + ';font-size:.8rem;font-weight:600">' + escHtmlServer(changeImpactLabel(c.impact)) + '</span></td>' +
       '</tr>';
@@ -26366,10 +26366,10 @@ ${buildGlobalNav("guides")}
     <thead><tr><th>Date</th><th>Vendor</th><th>Change</th><th>Impact</th></tr></thead>
     <tbody>
       ${relevantChanges.map(c => {
-        const dateStr = new Date(c.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+        const dateStr = changeEntryLongDateLabel(c);
         const impactColor = changeImpactColor(c.impact);
         return `<tr>
-          <td style="font-family:var(--mono);font-size:.8rem;white-space:nowrap">${escHtmlServer(dateStr)}</td>
+          <td style="font-family:var(--mono);font-size:.8rem">${escHtmlServer(dateStr)}</td>
           <td><a href="/vendor/${toSlug(c.vendor)}" style="color:var(--text)">${escHtmlServer(c.vendor)}</a></td>
           <td style="font-size:.85rem">${escHtmlServer(c.summary)}</td>
           <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(changeImpactLabel(c.impact))}</span></td>
@@ -26970,10 +26970,10 @@ function buildStartupCreditsPage(): string {
   ];
 
   const changeTimelineRows = startupChanges.map(c => {
-    const dateStr = new Date(c.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+    const dateStr = changeEntryLongDateLabel(c);
     const impactColor = changeImpactColor(c.impact);
     return '<tr>' +
-      '<td style="font-family:var(--mono);font-size:.8rem;white-space:nowrap">' + escHtmlServer(dateStr) + '</td>' +
+      '<td style="font-family:var(--mono);font-size:.8rem">' + escHtmlServer(dateStr) + '</td>' +
       '<td style="font-weight:600">' + escHtmlServer(c.vendor) + '</td>' +
       '<td style="font-size:.85rem">' + escHtmlServer(c.summary) + '</td>' +
       '<td><span style="color:' + impactColor + ';font-size:.8rem;font-weight:600">' + escHtmlServer(changeImpactLabel(c.impact)) + '</span></td>' +
@@ -27398,14 +27398,14 @@ function buildAiCodingPricing2026Page(): string {
   const supersededAiCodingLineups = supersededLineups(aiCodingChanges);
 
   const changeTimelineRows = aiCodingChanges.map(c => {
-    const dateStr = changeTimelineDate(c.date);
+    const dateStr = changeEntryLongDateLabel(c);
     const impactColor = changeImpactColor(c.impact);
     const newest = supersededAiCodingLineups.get(c);
     const historyNote = newest
       ? `<div class="superseded-note">${escHtmlServer(supersessionNote(newest, changeTimelineDate))}</div>`
       : "";
     return `<tr${newest || isNoLongerInForce(c) ? ` class="superseded-row"` : ""}>
-      <td style="font-family:var(--mono);font-size:.8rem;white-space:nowrap">${escHtmlServer(dateStr)}</td>
+      <td style="font-family:var(--mono);font-size:.8rem">${escHtmlServer(dateStr)}</td>
       <td style="font-weight:600">${escHtmlServer(c.vendor)}</td>
       <td style="font-size:.85rem">${escHtmlServer(c.summary)}${historyNote}</td>
       <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(changeImpactLabel(c.impact))}</span></td>
@@ -28013,14 +28013,14 @@ function buildAiCodingToolsPricingPage(): string {
   const supersededAiCodingLineups = supersededLineups(aiCodingChanges);
 
   const changeTimelineRows = aiCodingChanges.map((c: any) => {
-    const dateStr = changeTimelineDate(c.date);
+    const dateStr = changeEntryLongDateLabel(c);
     const impactColor = changeImpactColor(c.impact);
     const newest = supersededAiCodingLineups.get(c);
     const historyNote = newest
       ? '<div class="superseded-note">' + escHtmlServer(supersessionNote(newest, changeTimelineDate)) + '</div>'
       : "";
     return '<tr' + (newest || isNoLongerInForce(c) ? ' class="superseded-row"' : "") + '>' +
-      '<td style="font-family:var(--mono);font-size:.8rem;white-space:nowrap">' + escHtmlServer(dateStr) + '</td>' +
+      '<td style="font-family:var(--mono);font-size:.8rem">' + escHtmlServer(dateStr) + '</td>' +
       '<td style="font-weight:600">' + escHtmlServer(c.vendor) + '</td>' +
       '<td style="font-size:.85rem">' + escHtmlServer(c.summary) + historyNote + '</td>' +
       '<td><span style="color:' + impactColor + ';font-size:.8rem;font-weight:600">' + escHtmlServer(changeImpactLabel(c.impact)) + '</span></td>' +
@@ -28771,10 +28771,10 @@ function buildCiCdPricingPage(): string {
   }).join("\n        ");
 
   const changeTimelineRows = cicdChanges.map(c => {
-    const dateStr = new Date(c.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+    const dateStr = changeEntryLongDateLabel(c);
     const impactColor = changeImpactColor(c.impact);
     return '<tr>' +
-      '<td style="font-family:var(--mono);font-size:.8rem;white-space:nowrap">' + escHtmlServer(dateStr) + '</td>' +
+      '<td style="font-family:var(--mono);font-size:.8rem">' + escHtmlServer(dateStr) + '</td>' +
       '<td style="font-weight:600">' + escHtmlServer(c.vendor) + '</td>' +
       '<td style="font-size:.85rem">' + escHtmlServer(c.summary) + '</td>' +
       '<td><span style="color:' + impactColor + ';font-size:.8rem;font-weight:600">' + escHtmlServer(changeImpactLabel(c.impact)) + '</span></td>' +
@@ -29655,10 +29655,10 @@ function buildDatabasePricingPage(): string {
   }).join("\n        ");
 
   const changeTimelineRows = dbChanges.map(c => {
-    const dateStr = new Date(c.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+    const dateStr = changeEntryLongDateLabel(c);
     const impactColor = changeImpactColor(c.impact);
     return '<tr>' +
-      '<td style="font-family:var(--mono);font-size:.8rem;white-space:nowrap">' + escHtmlServer(dateStr) + '</td>' +
+      '<td style="font-family:var(--mono);font-size:.8rem">' + escHtmlServer(dateStr) + '</td>' +
       '<td style="font-weight:600">' + escHtmlServer(c.vendor) + '</td>' +
       '<td style="font-size:.85rem">' + escHtmlServer(c.summary) + '</td>' +
       '<td><span style="color:' + impactColor + ';font-size:.8rem;font-weight:600">' + escHtmlServer(changeImpactLabel(c.impact)) + '</span></td>' +
@@ -31026,10 +31026,10 @@ function buildHostingPricingPage(): string {
   }).join("\n        ");
 
   const changeTimelineRows = hostingChanges.map(c => {
-    const dateStr = new Date(c.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+    const dateStr = changeEntryLongDateLabel(c);
     const impactColor = changeImpactColor(c.impact);
     return '<tr>' +
-      '<td style="font-family:var(--mono);font-size:.8rem;white-space:nowrap">' + escHtmlServer(dateStr) + '</td>' +
+      '<td style="font-family:var(--mono);font-size:.8rem">' + escHtmlServer(dateStr) + '</td>' +
       '<td style="font-weight:600">' + escHtmlServer(c.vendor) + '</td>' +
       '<td style="font-size:.85rem">' + escHtmlServer(c.summary) + '</td>' +
       '<td><span style="color:' + impactColor + ';font-size:.8rem;font-weight:600">' + escHtmlServer(changeImpactLabel(c.impact)) + '</span></td>' +
@@ -31798,10 +31798,10 @@ function buildLlmApiPricingPage(): string {
   }).join("\n\n  ");
 
   const changeTimelineRows = llmChanges.slice(0, 20).map(c => {
-    const dateStr = new Date(c.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+    const dateStr = changeEntryLongDateLabel(c);
     const impactColor = changeImpactColor(c.impact);
     return '<tr>' +
-      '<td style="font-family:var(--mono);font-size:.8rem;white-space:nowrap">' + escHtmlServer(dateStr) + '</td>' +
+      '<td style="font-family:var(--mono);font-size:.8rem">' + escHtmlServer(dateStr) + '</td>' +
       '<td style="font-weight:600">' + escHtmlServer(c.vendor) + '</td>' +
       '<td style="font-size:.85rem">' + escHtmlServer(c.summary) + '</td>' +
       '<td><span style="color:' + impactColor + ';font-size:.8rem;font-weight:600">' + escHtmlServer(changeImpactLabel(c.impact)) + '</span></td>' +
@@ -32734,10 +32734,10 @@ function buildDallEShutdownPage(): string {
     </tr>`).join("\n        ");
 
   const changeTimelineRows = dalleChanges.slice(0, 10).map(c => {
-    const dateStr = new Date(c.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+    const dateStr = changeEntryLongDateLabel(c);
     const impactColor = changeImpactColor(c.impact);
     return `<tr>
-      <td style="font-family:var(--mono);font-size:.8rem;white-space:nowrap">${escHtmlServer(dateStr)}</td>
+      <td style="font-family:var(--mono);font-size:.8rem">${escHtmlServer(dateStr)}</td>
       <td style="font-size:.85rem">${escHtmlServer(c.summary)}</td>
       <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(changeImpactLabel(c.impact))}</span></td>
     </tr>`;
@@ -33241,9 +33241,9 @@ function buildOpenAIRealtimeMigrationPage(): string {
   ].map(r => '<tr>\n      <td style="font-weight:600">' + escHtmlServer(r.name) + '</td>\n      <td style="font-family:var(--mono);font-size:.8rem;color:' + r.color + '">' + escHtmlServer(r.free) + '</td>\n      <td style="font-family:var(--mono);font-size:.8rem">' + escHtmlServer(r.cost) + '</td>\n      <td style="font-size:.8rem">' + escHtmlServer(r.features) + "</td>\n    </tr>").join("\n        ");
 
   const changeTimelineRows = relevantChanges.slice(0, 10).map(c => {
-    const dateStr = new Date(c.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+    const dateStr = changeEntryLongDateLabel(c);
     const impactColor = changeImpactColor(c.impact);
-    return '<tr>\n      <td style="font-family:var(--mono);font-size:.8rem;white-space:nowrap">' + escHtmlServer(dateStr) + '</td>\n      <td style="font-size:.85rem">' + escHtmlServer(c.summary) + '</td>\n      <td><span style="color:' + impactColor + ';font-size:.8rem;font-weight:600">' + escHtmlServer(changeImpactLabel(c.impact)) + "</span></td>\n    </tr>";
+    return '<tr>\n      <td style="font-family:var(--mono);font-size:.8rem">' + escHtmlServer(dateStr) + '</td>\n      <td style="font-size:.85rem">' + escHtmlServer(c.summary) + '</td>\n      <td><span style="color:' + impactColor + ';font-size:.8rem;font-weight:600">' + escHtmlServer(changeImpactLabel(c.impact)) + "</span></td>\n    </tr>";
   }).join("\n        ");
 
   const relatedPages = ALTERNATIVES_PAGES.filter(p =>
@@ -33363,10 +33363,10 @@ function buildAppRunnerMigrationPage(): string {
     </tr>`).join("\n        ");
 
   const changeTimelineRows = awsChanges.slice(0, 10).map(c => {
-    const dateStr = new Date(c.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+    const dateStr = changeEntryLongDateLabel(c);
     const impactColor = changeImpactColor(c.impact);
     return `<tr>
-      <td style="font-family:var(--mono);font-size:.8rem;white-space:nowrap">${escHtmlServer(dateStr)}</td>
+      <td style="font-family:var(--mono);font-size:.8rem">${escHtmlServer(dateStr)}</td>
       <td style="font-size:.85rem">${escHtmlServer(c.summary)}</td>
       <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(changeImpactLabel(c.impact))}</span></td>
     </tr>`;
@@ -33974,10 +33974,10 @@ function buildAwsFreeTier2026Page(): string {
     </tr>`).join("\n        ");
 
   const changeTimelineRows = awsChanges.slice(0, 10).map((c: any) => {
-    const dateStr = new Date(c.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+    const dateStr = changeEntryLongDateLabel(c);
     const impactColor = changeImpactColor(c.impact);
     return `<tr>
-      <td style="font-family:var(--mono);font-size:.8rem;white-space:nowrap">${escHtmlServer(dateStr)}</td>
+      <td style="font-family:var(--mono);font-size:.8rem">${escHtmlServer(dateStr)}</td>
       <td style="font-weight:600">${escHtmlServer(c.vendor)}</td>
       <td style="font-size:.85rem">${escHtmlServer(c.summary)}</td>
       <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(changeImpactLabel(c.impact))}</span></td>
@@ -34412,10 +34412,10 @@ function buildGcpFreeTier2026Page(): string {
     </tr>`).join("\n        ");
 
   const changeTimelineRows = gcpChanges.slice(0, 12).map((c: any) => {
-    const dateStr = new Date(c.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+    const dateStr = changeEntryLongDateLabel(c);
     const impactColor = changeImpactColor(c.impact);
     return `<tr>
-      <td style="font-family:var(--mono);font-size:.8rem;white-space:nowrap">${escHtmlServer(dateStr)}</td>
+      <td style="font-family:var(--mono);font-size:.8rem">${escHtmlServer(dateStr)}</td>
       <td style="font-weight:600">${escHtmlServer(c.vendor)}</td>
       <td style="font-size:.85rem">${escHtmlServer(c.summary)}</td>
       <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(changeImpactLabel(c.impact))}</span></td>
@@ -34831,10 +34831,10 @@ function buildAzureFreeTier2026Page(): string {
     </tr>`).join("\n        ");
 
   const changeTimelineRows = azureChanges.slice(0, 10).map((c: any) => {
-    const dateStr = new Date(c.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+    const dateStr = changeEntryLongDateLabel(c);
     const impactColor = changeImpactColor(c.impact);
     return `<tr>
-      <td style="font-family:var(--mono);font-size:.8rem;white-space:nowrap">${escHtmlServer(dateStr)}</td>
+      <td style="font-family:var(--mono);font-size:.8rem">${escHtmlServer(dateStr)}</td>
       <td style="font-weight:600">${escHtmlServer(c.vendor)}</td>
       <td style="font-size:.85rem">${escHtmlServer(c.summary)}</td>
       <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(changeImpactLabel(c.impact))}</span></td>
@@ -35276,10 +35276,10 @@ function buildDigitalOceanFreeTier2026Page(): string {
     </tr>`).join("\n        ");
 
   const changeTimelineRows = doChanges.slice(0, 10).map((c: any) => {
-    const dateStr = new Date(c.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+    const dateStr = changeEntryLongDateLabel(c);
     const impactColor = changeImpactColor(c.impact);
     return `<tr>
-      <td style="font-family:var(--mono);font-size:.8rem;white-space:nowrap">${escHtmlServer(dateStr)}</td>
+      <td style="font-family:var(--mono);font-size:.8rem">${escHtmlServer(dateStr)}</td>
       <td style="font-weight:600">${escHtmlServer(c.vendor)}</td>
       <td style="font-size:.85rem">${escHtmlServer(c.summary)}</td>
       <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(changeImpactLabel(c.impact))}</span></td>
@@ -35736,10 +35736,10 @@ function buildCloudFreeTierComparison2026Page(): string {
   ).sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
   const changeTimelineRows = cloudChanges.slice(0, 12).map((c: any) => {
-    const dateStr = new Date(c.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+    const dateStr = changeEntryLongDateLabel(c);
     const impactColor = changeImpactColor(c.impact);
     return `<tr>
-      <td style="font-family:var(--mono);font-size:.8rem;white-space:nowrap">${escHtmlServer(dateStr)}</td>
+      <td style="font-family:var(--mono);font-size:.8rem">${escHtmlServer(dateStr)}</td>
       <td style="font-weight:600">${escHtmlServer(c.vendor)}</td>
       <td style="font-size:.85rem">${escHtmlServer(c.summary)}</td>
       <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(changeImpactLabel(c.impact))}</span></td>
@@ -36337,10 +36337,10 @@ function buildDatabaseFreeTierComparison2026Page(): string {
   ).sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
   const changeTimelineRows = dbChanges.slice(0, 12).map((c: any) => {
-    const dateStr = new Date(c.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+    const dateStr = changeEntryLongDateLabel(c);
     const impactColor = changeImpactColor(c.impact);
     return `<tr>
-      <td style="font-family:var(--mono);font-size:.8rem;white-space:nowrap">${escHtmlServer(dateStr)}</td>
+      <td style="font-family:var(--mono);font-size:.8rem">${escHtmlServer(dateStr)}</td>
       <td style="font-weight:600">${escHtmlServer(c.vendor)}</td>
       <td style="font-size:.85rem">${escHtmlServer(c.summary)}</td>
       <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(changeImpactLabel(c.impact))}</span></td>
@@ -37018,10 +37018,10 @@ function buildCicdFreeTierComparison2026Page(): string {
   ).sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
   const changeTimelineRows = cicdChanges.slice(0, 12).map((c: any) => {
-    const dateStr = new Date(c.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+    const dateStr = changeEntryLongDateLabel(c);
     const impactColor = changeImpactColor(c.impact);
     return `<tr>
-      <td style="font-family:var(--mono);font-size:.8rem;white-space:nowrap">${escHtmlServer(dateStr)}</td>
+      <td style="font-family:var(--mono);font-size:.8rem">${escHtmlServer(dateStr)}</td>
       <td style="font-weight:600">${escHtmlServer(c.vendor)}</td>
       <td style="font-size:.85rem">${escHtmlServer(c.summary)}</td>
       <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(changeImpactLabel(c.impact))}</span></td>
@@ -37686,10 +37686,10 @@ function buildServerlessFreeTierComparison2026Page(): string {
   ).sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
   const changeTimelineRows = serverlessChanges.slice(0, 12).map((c: any) => {
-    const dateStr = new Date(c.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+    const dateStr = changeEntryLongDateLabel(c);
     const impactColor = changeImpactColor(c.impact);
     return `<tr>
-      <td style="font-family:var(--mono);font-size:.8rem;white-space:nowrap">${escHtmlServer(dateStr)}</td>
+      <td style="font-family:var(--mono);font-size:.8rem">${escHtmlServer(dateStr)}</td>
       <td style="font-weight:600">${escHtmlServer(c.vendor)}</td>
       <td style="font-size:.85rem">${escHtmlServer(c.summary)}</td>
       <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(changeImpactLabel(c.impact))}</span></td>
@@ -38332,10 +38332,10 @@ function buildAuthComparison2026Page(): string {
   ).sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
   const changeTimelineRows = authChanges.slice(0, 12).map((c: any) => {
-    const dateStr = new Date(c.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+    const dateStr = changeEntryLongDateLabel(c);
     const impactColor = changeImpactColor(c.impact);
     return `<tr>
-      <td style="font-family:var(--mono);font-size:.8rem;white-space:nowrap">${escHtmlServer(dateStr)}</td>
+      <td style="font-family:var(--mono);font-size:.8rem">${escHtmlServer(dateStr)}</td>
       <td style="font-weight:600">${escHtmlServer(c.vendor)}</td>
       <td style="font-size:.85rem">${escHtmlServer(c.summary)}</td>
       <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(changeImpactLabel(c.impact))}</span></td>
@@ -39273,10 +39273,10 @@ function buildEmailComparison2026Page(): string {
   ).sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
   const changeTimelineRows = emailChanges.slice(0, 12).map((c: any) => {
-    const dateStr = new Date(c.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+    const dateStr = changeEntryLongDateLabel(c);
     const impactColor = changeImpactColor(c.impact);
     return `<tr>
-      <td style="font-family:var(--mono);font-size:.8rem;white-space:nowrap">${escHtmlServer(dateStr)}</td>
+      <td style="font-family:var(--mono);font-size:.8rem">${escHtmlServer(dateStr)}</td>
       <td style="font-weight:600">${escHtmlServer(c.vendor)}</td>
       <td style="font-size:.85rem">${escHtmlServer(c.summary)}</td>
       <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(changeImpactLabel(c.impact))}</span></td>
@@ -40247,10 +40247,10 @@ function buildMonitoringComparison2026Page(): string {
   ).sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
   const changeTimelineRows = monitoringChanges.slice(0, 12).map((c: any) => {
-    const dateStr = new Date(c.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+    const dateStr = changeEntryLongDateLabel(c);
     const impactColor = changeImpactColor(c.impact);
     return `<tr>
-      <td style="font-family:var(--mono);font-size:.8rem;white-space:nowrap">${escHtmlServer(dateStr)}</td>
+      <td style="font-family:var(--mono);font-size:.8rem">${escHtmlServer(dateStr)}</td>
       <td style="font-weight:600">${escHtmlServer(c.vendor)}</td>
       <td style="font-size:.85rem">${escHtmlServer(c.summary)}</td>
       <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(changeImpactLabel(c.impact))}</span></td>
@@ -41281,10 +41281,10 @@ function buildStorageComparison2026Page(): string {
   ).sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
   const changeTimelineRows = storageChanges.slice(0, 12).map((c: any) => {
-    const dateStr = new Date(c.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+    const dateStr = changeEntryLongDateLabel(c);
     const impactColor = changeImpactColor(c.impact);
     return `<tr>
-      <td style="font-family:var(--mono);font-size:.8rem;white-space:nowrap">${escHtmlServer(dateStr)}</td>
+      <td style="font-family:var(--mono);font-size:.8rem">${escHtmlServer(dateStr)}</td>
       <td style="font-weight:600">${escHtmlServer(c.vendor)}</td>
       <td style="font-size:.85rem">${escHtmlServer(c.summary)}</td>
       <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(changeImpactLabel(c.impact))}</span></td>
@@ -42061,10 +42061,10 @@ function buildTestingFreeTierComparison2026Page(): string {
   ).sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
   const changeTimelineRows = testingChanges.slice(0, 12).map((c: any) => {
-    const dateStr = new Date(c.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+    const dateStr = changeEntryLongDateLabel(c);
     const impactColor = changeImpactColor(c.impact);
     return `<tr>
-      <td style="font-family:var(--mono);font-size:.8rem;white-space:nowrap">${escHtmlServer(dateStr)}</td>
+      <td style="font-family:var(--mono);font-size:.8rem">${escHtmlServer(dateStr)}</td>
       <td style="font-weight:600">${escHtmlServer(c.vendor)}</td>
       <td style="font-size:.85rem">${escHtmlServer(c.summary)}</td>
       <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(changeImpactLabel(c.impact))}</span></td>
@@ -42729,10 +42729,10 @@ function buildAnalyticsFreeTierComparison2026Page(): string {
   ).sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
   const changeTimelineRows = analyticsChanges.slice(0, 12).map((c: any) => {
-    const dateStr = new Date(c.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+    const dateStr = changeEntryLongDateLabel(c);
     const impactColor = changeImpactColor(c.impact);
     return `<tr>
-      <td style="font-family:var(--mono);font-size:.8rem;white-space:nowrap">${escHtmlServer(dateStr)}</td>
+      <td style="font-family:var(--mono);font-size:.8rem">${escHtmlServer(dateStr)}</td>
       <td style="font-weight:600">${escHtmlServer(c.vendor)}</td>
       <td style="font-size:.85rem">${escHtmlServer(c.summary)}</td>
       <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(changeImpactLabel(c.impact))}</span></td>
@@ -43411,10 +43411,10 @@ function buildApiDevelopmentFreeTierComparison2026Page(): string {
   ).sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
   const changeTimelineRows = apiDevChanges.slice(0, 12).map((c: any) => {
-    const dateStr = new Date(c.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+    const dateStr = changeEntryLongDateLabel(c);
     const impactColor = changeImpactColor(c.impact);
     return `<tr>
-      <td style="font-family:var(--mono);font-size:.8rem;white-space:nowrap">${escHtmlServer(dateStr)}</td>
+      <td style="font-family:var(--mono);font-size:.8rem">${escHtmlServer(dateStr)}</td>
       <td style="font-weight:600">${escHtmlServer(c.vendor)}</td>
       <td style="font-size:.85rem">${escHtmlServer(c.summary)}</td>
       <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(changeImpactLabel(c.impact))}</span></td>
@@ -44007,10 +44007,10 @@ function buildSecurityFreeTierComparison2026Page(): string {
   ).sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
   const changeTimelineRows = secChanges.slice(0, 12).map((c: any) => {
-    const dateStr = new Date(c.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+    const dateStr = changeEntryLongDateLabel(c);
     const impactColor = changeImpactColor(c.impact);
     return `<tr>
-      <td style="font-family:var(--mono);font-size:.8rem;white-space:nowrap">${escHtmlServer(dateStr)}</td>
+      <td style="font-family:var(--mono);font-size:.8rem">${escHtmlServer(dateStr)}</td>
       <td style="font-weight:600">${escHtmlServer(c.vendor)}</td>
       <td style="font-size:.85rem">${escHtmlServer(c.summary)}</td>
       <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(changeImpactLabel(c.impact))}</span></td>
@@ -44724,10 +44724,10 @@ function buildHostingFreeTierComparison2026Page(): string {
   ).sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
   const changeTimelineRows = hostingChanges.slice(0, 15).map((c: any) => {
-    const dateStr = new Date(c.date).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+    const dateStr = changeEntryLongDateLabel(c);
     const impactColor = changeImpactColor(c.impact);
     return `<tr>
-      <td style="font-family:var(--mono);font-size:.8rem;white-space:nowrap">${escHtmlServer(dateStr)}</td>
+      <td style="font-family:var(--mono);font-size:.8rem">${escHtmlServer(dateStr)}</td>
       <td style="font-weight:600">${escHtmlServer(c.vendor)}</td>
       <td style="font-size:.85rem">${escHtmlServer(c.summary)}</td>
       <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(changeImpactLabel(c.impact))}</span></td>
@@ -46954,7 +46954,7 @@ function buildStackCheckPage(): string {
       slug,
       risk_level: assessment.level,
       risk_cause: assessment.cause
-        ? { date: changeDateLabel(assessment.cause), date_source: assessment.cause.date_source, change_type: assessment.cause.change_type, summary: assessment.cause.summary }
+        ? { date: changeEntryDateLabel(assessment.cause), date_source: assessment.cause.date_source, change_type: assessment.cause.change_type, summary: assessment.cause.summary }
         : null,
       stability,
       recent_changes: vendorChanges.map(c => ({ date: changeEntryDateLabel(c), change_type: c.change_type, summary: c.summary, impact: c.impact, resolved: isNoLongerInForce(c) })),
@@ -48064,7 +48064,7 @@ function buildBudgetBuilderPage(): string {
       const vendorChanges = allChanges.filter(c => toSlug(c.vendor) === v.slug || c.vendor.toLowerCase() === v.name.toLowerCase());
       const assessment = vendorRiskAssessment(vendorChanges);
       return { slug: v.slug, name: v.name, free: v.free, starter: v.starter, growth: v.growth, scale: v.scale, notes: v.notes, risk_level: assessment.level,
-        risk_cause: assessment.cause ? { date: assessment.cause.date, change_type: assessment.cause.change_type, summary: assessment.cause.summary } : null };
+        risk_cause: assessment.cause ? { date: changeEntryDateLabel(assessment.cause), change_type: assessment.cause.change_type, summary: assessment.cause.summary } : null };
     });
   }
 
