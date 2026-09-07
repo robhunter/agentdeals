@@ -43,10 +43,6 @@ const EXEMPT: Array<{ name: string; allows: (before: string, body: string) => bo
     allows: (before) => /(?:\bid="[a-z0-9-]*|href="[^"]*#[a-z0-9-]*)-$|<id>[^<]*$/.test(before),
   },
   {
-    name: "an Atom timestamp, which records when we last touched the entry",
-    allows: (before) => /<updated>$/.test(before),
-  },
-  {
     name: "a page or dataset modification date",
     allows: (before) => /"dateModified":"$/.test(before),
   },
