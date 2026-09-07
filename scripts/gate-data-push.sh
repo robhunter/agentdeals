@@ -55,8 +55,20 @@ export GATE_FAILING_FILES
 export GITHUB_OUTPUT="$SUBPROCESS_OUTPUT"
 trap 'rm -f "$LOG" "$VERDICT" "$GATE_FAILING_FILES" "$SUBPROCESS_OUTPUT"' EXIT
 
+REPLAYS=0
+REPLAYS_ONTO_A_MOVED_MAIN="${GATE_REPLAYS_ONTO_A_MOVED_MAIN:-2}"
+
 push_to_main() {
   git push origin HEAD:main
+}
+
+replay_onto_main() {
+  git fetch origin main || return 1
+  if ! git rebase FETCH_HEAD; then
+    git rebase --abort || true
+    return 1
+  fi
+  COMMIT="$(git rev-parse --short HEAD)"
 }
 
 quarantine() {
@@ -114,31 +126,53 @@ if [ -n "$UPDATE_PAGE_LASTMOD" ]; then
   fi
 fi
 
-if env -u GATE_RATCHET_BUDGETS -u GATE_UPDATE_PAGE_LASTMOD npm run test:gated >>"$LOG" 2>&1; then
-  summarize
-  push_to_main
-  echo "Suite green — $COMMIT is on main."
-  exit 0
-fi
+while :; do
+  : >"$LOG"
+  : >"$GATE_FAILING_FILES"
 
-summarize
-if grep -q 'failing tests:' "$LOG"; then
-  sed -n '/failing tests:/,$p' "$LOG"
-else
-  tail -n 60 "$LOG"
-fi
+  if env -u GATE_RATCHET_BUDGETS -u GATE_UPDATE_PAGE_LASTMOD npm run test:gated >>"$LOG" 2>&1; then
+    summarize
+    SUITE_WAS_RED=""
+  else
+    summarize
+    if grep -q 'failing tests:' "$LOG"; then
+      sed -n '/failing tests:/,$p' "$LOG"
+    else
+      tail -n 60 "$LOG"
+    fi
+    if ! node "$SCRIPT_DIR/gate-verdict.js" "$GATE_FAILING_FILES" >"$VERDICT" 2>&1; then
+      cat "$VERDICT"
+      quarantine "the suite refused it"
+    fi
+    cat "$VERDICT"
+    SUITE_WAS_RED="1"
+  fi
 
-if node "$SCRIPT_DIR/gate-verdict.js" "$GATE_FAILING_FILES" >"$VERDICT" 2>&1; then
-  cat "$VERDICT"
-  {
-    echo "quarantined=false"
-    echo "pushed_over_failures=true"
-    echo "non_blocking_files=$(tr '\n' ' ' <"$GATE_FAILING_FILES")"
-  } >>"$OUTPUT"
-  push_to_main
-  echo "Suite red — $COMMIT is on main anyway. Every failing file above measures how current our own reading is; none of them says this data is wrong."
-  exit 0
-fi
+  if push_to_main; then
+    if [ -n "$SUITE_WAS_RED" ]; then
+      {
+        echo "quarantined=false"
+        echo "pushed_over_failures=true"
+        echo "non_blocking_files=$(tr '\n' ' ' <"$GATE_FAILING_FILES")"
+      } >>"$OUTPUT"
+      echo "Suite red — $COMMIT is on main anyway. Every failing file above measures how current our own reading is; none of them says this data is wrong."
+    else
+      echo "Suite green — $COMMIT is on main."
+    fi
+    exit 0
+  fi
 
-cat "$VERDICT"
-quarantine "the suite refused it"
+  REPLAYS="$((REPLAYS + 1))"
+  if [ "$REPLAYS" -gt "$REPLAYS_ONTO_A_MOVED_MAIN" ]; then
+    quarantine "main moved while the suite ran, more often than this run replays onto it"
+  fi
+
+  echo "── main moved while the suite ran. Replaying this run's commit onto it and running the suite again, so what reaches main is what the suite read ──"
+  if ! replay_onto_main; then
+    quarantine "main moved while the suite ran and this run's commit does not replay onto it"
+  fi
+  if ! npm run build >>"$LOG" 2>&1; then
+    tail -n 60 "$LOG"
+    quarantine "main moved while the suite ran and the tree it moved to does not compile with this run's commit on top"
+  fi
+done
