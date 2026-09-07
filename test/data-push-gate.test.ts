@@ -904,6 +904,29 @@ describe("#1337 main moving under a run whose data the suite accepted", () => {
     assert.match(run.stdout, /does not replay onto it/);
   });
 
+  it("reports a refusal rather than a shipment when an excused red run cannot reach main", () => {
+    const { work, origin } = fixtureRepo();
+    writeFileSync(join(work, "data", "health.json"), '{"checked":9}\n');
+    commitToMainFromElsewhere(origin, "data/health.json", '{"checked":99}\n');
+
+    const run = runGate(
+      work,
+      { mode: "excused", replays: 0 },
+      "data-quarantine/fixture",
+      "data(auto): fixture",
+      "data/health.json",
+    );
+
+    assert.strictEqual(run.status, 1, `${run.stdout}${run.stderr}`);
+    assert.match(run.outputs, /quarantined=true/);
+    assert.doesNotMatch(
+      run.outputs,
+      /pushed_over_failures=true/,
+      "the workflow would report this run as shipped over failures, and it shipped nothing",
+    );
+    assert.strictEqual(quarantineRefs(origin, "data-quarantine/fixture").length, 1);
+  });
+
   it("bounds the replays, so a main that keeps moving quarantines rather than looping", () => {
     const { work, origin } = fixtureRepo();
     writeFileSync(join(work, "data", "health.json"), '{"checked":7}\n');
