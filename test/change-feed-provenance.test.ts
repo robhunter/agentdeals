@@ -183,6 +183,16 @@ describe("the change feeds date every entry by when we recorded it and say what 
     assert.deepStrictEqual(unlabelled.map((e) => `${e.title} — ${e.summary.slice(0, 60)}`), []);
   });
 
+  it("dates an entry in the same words as the page the entry links to", async () => {
+    const page = await (await fetch(`http://localhost:${port}/pricing-changes`)).text();
+    const rendered = page.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ");
+    const absent = entries.filter((e) => {
+      const record = recordFor(e);
+      return !record || !rendered.includes(changeEntryDateLabel(record as any));
+    });
+    assert.deepStrictEqual(absent.map((e) => `${e.title} — ${e.summary.slice(0, 50)}`), []);
+  });
+
   it("tells an entry read on its own that a discovery date is a reading date", () => {
     const discovered = entries.filter((e) => e.dateSource === "discovered");
     assert.ok(discovered.length > 0, "no discovered entry in the feed to check");
