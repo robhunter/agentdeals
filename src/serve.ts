@@ -21,7 +21,8 @@ import { LINK_GRACE_DAYS, unreachableNoticeForUrl } from "./link-health.js";
 import { offerEnded, offerRetired, recordedTierSentence, endedHeadline, endedHistorySentence, endedReliabilitySentence, endedEmptyChangeHistorySentence, ENDED_BADGE_LABEL, ENDED_SINCE_CHANGES_SENTENCE, type OfferTierAndUrl } from "./retirement.js";
 import { amountUnstatedSentence, levelWithheldReason, withheldLevelClause, withheldLevelSentence, type LevelWithheldReason } from "./source-check.js";
 import { readingIsBehindTheLoop, reverificationIntervalDays } from "./badge-staleness.js";
-import { SUPERSEDED_TERMS_LABEL, openingOfTerms, readingBehindTheChange, supersededTermsAnswer, supersededTermsMetaSentence, supersededTermsNotice, supersededTermsNoticeHtml, supersededTermsRecord, supersededTermsVerdictSentence, supersedingChange, type SupersededTermsRecord } from "./superseded-description.js";
+import { SUPERSEDED_TERMS_LABEL, readingBehindTheChange, supersededTermsAnswer, supersededTermsMetaSentence, supersededTermsNotice, supersededTermsNoticeHtml, supersededTermsRecord, supersededTermsVerdictSentence, supersedingChange, type SupersededTermsRecord } from "./superseded-description.js";
+import { openingOfTerms, punctuated, punctuatedOpeningOfTerms } from "./terms-opening.js";
 import { NO_CURRENT_FIGURE, costHeadlineCaveat, limitCellText, mayRecommendAsFree, proseWithoutNames, readsActive, stackFreshnessStatement } from "./stack-claim.js";
 import { changesByVendor } from "./superseded-census.js";
 import { buildComparisonMap, comparisonSlug } from "./comparison-pairs.js";
@@ -4376,7 +4377,7 @@ function buildVendorPage(slug: string): string | null {
   const title = hasFree
     ? `${freeTierHeadline}: Limits, Pricing & What Changed | AgentDeals`
     : `${pricingHeadline}: Plans, Costs & Free Alternatives | AgentDeals`;
-  const descLimits = publishableTerms.slice(0, 100).replace(/\.\s.*$/, "");
+  const descLimits = punctuatedOpeningOfTerms(publishableTerms, 100);
   const verifiedMonth = (() => { const d = primary.verifiedDate.split("-"); const months = ["January","February","March","April","May","June","July","August","September","October","November","December"]; return `${months[parseInt(d[1],10)-1]} ${d[0]}`; })();
   const verifiedSentence = discontinuedOn
     ? ` Discontinued ${discontinuedOn}.`
@@ -4388,10 +4389,10 @@ function buildVendorPage(slug: string): string | null {
   const metaDesc = eligibilityGateSentence + (termsSuperseded
     ? `${supersededTermsMetaSentence(vendorName, termsSuperseded)} See the recorded change history${alternatives.length > 0 ? ` and ${alternatives.length} alternatives in ${primary.category}` : ""}.`
     : hasFree
-    ? `${vendorName} free tier includes ${descLimits}.${metaVerifiedSentence}${alternatives.length > 0 ? ` Compare with ${alternatives.length} alternatives in ${primary.category}.` : ""}`
+    ? `${vendorName} free tier includes ${descLimits}${metaVerifiedSentence}${alternatives.length > 0 ? ` Compare with ${alternatives.length} alternatives in ${primary.category}.` : ""}`
     : `${vendorName} pricing details${alternatives.length > 0 ? ` and ${alternatives.length} free alternatives in ${primary.category}` : ""}.${metaVerifiedSentence}`);
 
-  const keyLimit = publishableTerms.slice(0, 120).replace(/\.\s.*$/, "");
+  const keyLimit = openingOfTerms(publishableTerms, 120);
   const verdictLine2 = vendorVerdictSentence(verdictInput);
   const verdictLine3 = discontinuedOn
     ? `${vendorName} was discontinued on ${discontinuedOn}, so it is not a current option${alternatives.length > 0 ? ` — the ${alternatives.length} alternatives below are replacements` : ""}.`
@@ -4403,8 +4404,8 @@ function buildVendorPage(slug: string): string | null {
     ? escHtmlServer(supersededTermsVerdictSentence(vendorName, termsSuperseded))
     : "";
   const verdictOpening = verdictSubject
-    ? `${escHtmlServer(verdictSubject)} ${verdictTerms || `${escHtmlServer(keyLimit)}.`}`
-    : verdictTerms || `${escHtmlServer(vendorName)}'s free tier offers ${escHtmlServer(keyLimit)}.`;
+    ? `${escHtmlServer(verdictSubject)} ${verdictTerms || escHtmlServer(punctuated(keyLimit))}`
+    : verdictTerms || `${escHtmlServer(vendorName)}'s free tier offers ${escHtmlServer(punctuated(keyLimit))}`;
   const quickVerdictHtml = `
   <div class="quick-verdict">
     <p>${verdictOpening} ${verdictLine2}${verdictLine3 ? " " + verdictLine3 : ""}</p>
@@ -4751,7 +4752,7 @@ ${allCompareLinks.join("\n")}
     ? `${withheldLevelSentence(levelWithheld, vendorName, unconfirmableSince)} We cannot confirm what this offer provides today, so we are not recommending it for production or for anything else until we can.`
     : hasFree
     ? (riskLevel === "stable"
-      ? `${vendorName}'s free tier can be suitable for small production workloads and side projects. ${primaryGate ? "It" : "We rate it stable and it"} offers ${escHtmlServer(keyLimit)}, so it's a reasonable starting point.${vendorChanges.length > 0 ? ` ${narrowingSentence(vendorChanges)}` : ""} Monitor your usage against the limits and have an upgrade plan ready.`
+      ? `${vendorName}'s free tier can be suitable for small production workloads and side projects. ${primaryGate ? "It" : "We rate it stable and it"} is a reasonable starting point, offering ${escHtmlServer(punctuated(keyLimit))}${vendorChanges.length > 0 ? ` ${narrowingSentence(vendorChanges)}` : ""} Monitor your usage against the limits and have an upgrade plan ready.`
       : primaryGate
       ? `${vendorName}'s free tier is usable for prototyping and development. ${vendorHistorySentence(vendorName, riskLevel, riskCause)}`
       : `${vendorName}'s free tier is usable for prototyping and development, but we rate it ${riskLevel}${riskCause ? ` because of one recorded ${changeKindNoun(riskCause.change_type)}, ${changeDateClause(riskCause)}` : ""}. Consider alternatives with more stable pricing for critical services.`)

@@ -2,6 +2,7 @@ import { changeCitesASource, citationLabel } from "./change-citation.js";
 import { changeDateClause } from "./change-dates.js";
 import { narrowsTheStoredTerms } from "./change-direction.js";
 import { isNoLongerInForce } from "./change-resolution.js";
+import { openingOfTerms, punctuated, punctuatedOpeningOfTerms } from "./terms-opening.js";
 import { carriesAnUnrenderedExpression } from "./unrendered-text.js";
 import type { ChangeResolution, DealChange } from "./types.js";
 
@@ -73,27 +74,6 @@ export function readingBehindTheChange(change: QuotingChange): SourcedReading | 
   };
 }
 
-export function openingOfTerms(terms: string, cap: number): string {
-  const text = terms.trim();
-  if (text.length <= cap) return text;
-  let wholeSentences = "";
-  for (const match of text.matchAll(/[.!?](\s|$)/g)) {
-    const candidate = text.slice(0, match.index + 1);
-    if (candidate.length > cap) break;
-    wholeSentences = candidate;
-  }
-  if (wholeSentences !== "") return wholeSentences;
-  const clipped = text.slice(0, cap);
-  const lastSpace = clipped.lastIndexOf(" ");
-  const kept = lastSpace > cap / 2 ? clipped.slice(0, lastSpace) : clipped;
-  return `${kept.replace(/[,;:]$/, "")}…`;
-}
-
-function punctuated(text: string): string {
-  const trimmed = text.trim();
-  return /[.!?…]$/.test(trimmed) ? trimmed : `${trimmed}.`;
-}
-
 function readingSentence(date: string, source: string, terms: string): string {
   return `As of ${date}, ${source} reads: ${terms}`;
 }
@@ -154,7 +134,7 @@ export function supersededTermsMetaSentence(vendor: string, change: QuotingChang
   if (!reading) {
     return `${withheld}: our own pricing change record, ${changeDateClause(change)}, ${STORED_TERMS_WITHHELD_PHRASE}.`;
   }
-  const opening = punctuated(openingOfTerms(reading.terms, 90));
+  const opening = punctuatedOpeningOfTerms(reading.terms, 90);
   return `${readingSentence(reading.date, reading.label, opening)} ${withheld}.`;
 }
 
