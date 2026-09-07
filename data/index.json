@@ -9366,7 +9366,7 @@
       "category": "Productivity & Notes",
       "description": "Free for 5 users with 1 GB upload limit & 5GB storage. Zoho Office Suite (Writer, Sheets & Show) comes bundled.",
       "tier": "Free",
-      "url": "https://zoho.com/docs",
+      "url": "https://www.zoho.com/workdrive/pricing.html",
       "tags": [
         "productivity",
         "free-for-dev"
@@ -10586,7 +10586,7 @@
       "category": "Dev Utilities",
       "description": "Stock market and financial data API. Free plan allows 300 requests per day.",
       "tier": "Free",
-      "url": "https://financialdata.net/",
+      "url": "https://financialdata.net/pricing",
       "tags": [
         "developer-tools",
         "free-for-dev"
@@ -11404,7 +11404,7 @@
       "category": "Notebooks & Data Science",
       "description": "A complete platform for dataflow automation. Free plan includes 5 deployed workflows and 500 minutes of serverless compute credits per month.",
       "tier": "Free",
-      "url": "https://www.prefect.io/cloud/",
+      "url": "https://www.prefect.io/pricing",
       "tags": [
         "developer-tools",
         "free-for-dev"
@@ -12887,7 +12887,7 @@
       "category": "Storage",
       "description": "simplest, fastest and safest interface to transfer and share files. Send photos, videos and other large files without a manditory subscription.",
       "tier": "Free",
-      "url": "https://www.transfernow.net/",
+      "url": "https://www.transfernow.net/en/prices",
       "tags": [
         "developer-tools",
         "free-for-dev"
@@ -13398,7 +13398,7 @@
     {
       "vendor": "beanstalkapp.com",
       "category": "Source Control",
-      "description": "A complete workflow to write, review, and deploy code), a free account for one user, and one repository with 100 MB of storage",
+      "description": "A complete workflow to write, review, and deploy code, a free account for one user, and one repository with 100 MB of storage",
       "tier": "Free",
       "url": "https://beanstalkapp.com/",
       "tags": [
@@ -14049,7 +14049,7 @@
       "category": "CI/CD",
       "description": "GitOps-first Terraform automation with pull request-driven workflows, project isolation via self-hosted runners, and layered runs for ordered operations. Free for unlimited users with unlimited runs and runners.",
       "tier": "Free",
-      "url": "https://terrateam.io",
+      "url": "https://terrateam.io/pricing",
       "tags": [
         "ci",
         "cd",
@@ -14455,7 +14455,7 @@
       "category": "Testing",
       "description": "Build scalable UIs in Java or TypeScript, and use the integrated tooling, components, and design system to iterate faster, design better, and simplify the development process. Unlimited Projects with five years of free maintenance.",
       "tier": "Free",
-      "url": "https://vaadin.com",
+      "url": "https://vaadin.com/pricing",
       "tags": [
         "testing",
         "qa",
@@ -15404,7 +15404,7 @@
       "category": "Server Management",
       "description": "Server management tool to easily manage and deploy your servers & sites. Free for one server.",
       "tier": "Free",
-      "url": "https://ploi.io/",
+      "url": "https://ploi.io/pricing",
       "tags": [
         "developer-tools",
         "free-for-dev"
@@ -15837,7 +15837,7 @@
       "category": "Logging",
       "description": "Self-hosted Enterprise free up to 50 GB/day ingestion; open-source self-hosted free with no usage limits",
       "tier": "Free",
-      "url": "https://openobserve.ai/",
+      "url": "https://openobserve.ai/pricing",
       "tags": [
         "logging",
         "log-management",
@@ -15924,7 +15924,7 @@
       "category": "Localization",
       "description": "Free for 1000 source language strings, unlimited languages, unlimited contributors, startup and open source deals",
       "tier": "Free",
-      "url": "https://localazy.com",
+      "url": "https://localazy.com/pricing",
       "tags": [
         "developer-tools",
         "free-for-dev"
@@ -16729,7 +16729,7 @@
       "category": "Monitoring",
       "description": "Powerful server monitoring in a unified platform for metrics and logs, with no setup complexity. Free for one server.",
       "tier": "Free",
-      "url": "https://simpleobservability.com",
+      "url": "https://simpleobservability.com/pricing",
       "tags": [
         "monitoring",
         "observability",
@@ -22650,7 +22650,7 @@
       "category": "Storage",
       "description": "Hosted Package Repositories for YUM, APT, RubyGem and PyPI. Limited free plans and open-source plans are available via request",
       "tier": "Free",
-      "url": "https://packagecloud.io/",
+      "url": "https://packagecloud.io/pricing",
       "tags": [
         "storage",
         "media",
@@ -22668,7 +22668,7 @@
       "category": "Storage",
       "description": "Pinata is the simplest way to upload and manage files on IPFS. Our friendly user interface and IPFS API make Pinata the easiest IPFS pinning service for platforms, creators, and collectors. 1 GB storage free, along with access to API.",
       "tier": "Free",
-      "url": "https://pinata.cloud",
+      "url": "https://pinata.cloud/pricing",
       "tags": [
         "storage",
         "media",
@@ -24262,7 +24262,7 @@
       "category": "Design",
       "description": "Low-code Front-end Design & Development Platform. TeleportHQ is the collaborative front-end platform to instantly create and publish headless static websites. Three free projects, unlimited collaborators, and free code export.",
       "tier": "Free",
-      "url": "https://teleporthq.io/",
+      "url": "https://teleporthq.io/pricing",
       "tags": [
         "design",
         "ui",
@@ -24785,7 +24785,7 @@
       "category": "Maps/Geolocation",
       "description": "Free geocoding for global places and coordinates. 25,000 Requests per month for personal use.",
       "tier": "Free",
-      "url": "https://positionstack.com/",
+      "url": "https://positionstack.com/pricing",
       "tags": [
         "maps",
         "geolocation",
@@ -28737,7 +28737,7 @@
     {
       "vendor": "GOOGLE ADS",
       "category": "Startup Perks",
-      "description": "Up to $150 in Google Ads credit.. Access via: Free for Brex customers",
+      "description": "Up to $150 in Google Ads credit. Access via: Free for Brex customers",
       "tier": "Startup Program",
       "url": "https://brex.com/rewards/",
       "tags": [
