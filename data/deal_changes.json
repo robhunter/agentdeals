@@ -4799,7 +4799,13 @@
       "category": "Monitoring",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
+      "recorded_date": "2026-08-28",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-07",
+        "source_url": "https://sematext.com/pricing",
+        "detail": "Retracted 2026-09-07: this record compared two different products on sematext.com/pricing. The stored terms describe the Logs Basic plan, and the page's Logs Basic card still reads \"Retention 7 days\" and \"Daily Volume 500 MB/day\" — both stored figures unchanged. The \"Retention 1 day\" and per-host price this record reports are the Infra Monitoring Basic card, a different product on the same page. The page's FAQ reads \"Each Monitoring App is independent and each App can have a different plan, including the free plan.\""
+      }
     },
     {
       "vendor": "Weaviate",
@@ -4829,7 +4835,13 @@
       "category": "Databases",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
+      "recorded_date": "2026-08-28",
+      "resolution": {
+        "state": "reversed",
+        "date": "2026-09-07",
+        "source_url": "https://www.influxdata.com/influxdb-pricing/",
+        "detail": "No longer in force as of 2026-09-07: influxdata.com/influxdb-pricing/, the page this record cites, answers \"Is InfluxDB free to use?\" with \"InfluxDB Cloud Serverless also has a free tier with limited data ingestion rates and 30-day retention. Paid plans unlock higher rate limits, unlimited data retention, and enterprise features.\" That is the stored 30-day retention, and the same sentence separates the free tier from the paid plans. The page also sells \"InfluxDB 3 Core — Open source. Local dev, exploration, and prototyping. Free Forever\". The $250 credit and usage-based pricing this record reports are the paid Cloud Serverless plan above that free tier, not in place of it. We hold no evidence either way about the state on 2026-08-28, so this is recorded as no longer in force rather than retracted."
+      }
     },
     {
       "vendor": "Middleware.io",
@@ -5510,7 +5522,13 @@
       "category": "Email",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
+      "recorded_date": "2026-08-28",
+      "resolution": {
+        "state": "reversed",
+        "date": "2026-09-07",
+        "source_url": "https://www.mailersend.com",
+        "detail": "No longer in force as of 2026-09-07: mailersend.com, the page this record cites, sells a plan named Free — \"Free — For occasional email testing and sending. Get started for free — includes: 500 emails /month, 10 email verification credits, Email threads support, Drag & Drop email builder\" — which is the stored 500 emails/month figure. The 14-day Professional trial this record reports is a separate hero bullet on the same page: \"14-day free Professional trial • Send 500 emails/month for free\". We hold no evidence either way about the state on 2026-08-28, so this is recorded as no longer in force rather than retracted."
+      }
     },
     {
       "vendor": "mailinator.com",
@@ -6461,7 +6479,13 @@
       "category": "Communication",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
+      "recorded_date": "2026-08-28",
+      "resolution": {
+        "state": "reversed",
+        "date": "2026-09-07",
+        "source_url": "https://sendbird.com/pricing/chat",
+        "detail": "No longer in force as of 2026-09-07: sendbird.com/pricing/chat, the page this record cites, answers \"Is the Sendbird Developer plan free forever?\" with \"Yes, the Developer plan is free and remains active as long as you log into the Sendbird dashboard once a year.\" The column the page now labels Free trial carries the stored Developer figures — \"MAUs Up to 1,000\" and \"Peak concurrent connections Up to 20\" — priced \"Free\", with \"No credit card required\" and \"All pro features\". The page disagrees with itself about the label and agrees with us about the terms, so the label alone is not grounds to withhold them. We hold no evidence either way about the state on 2026-08-28, so this is recorded as no longer in force rather than retracted."
+      }
     },
     {
       "vendor": "Expo",
@@ -6686,7 +6710,13 @@
       "category": "API Development",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
+      "recorded_date": "2026-08-28",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-07",
+        "source_url": "https://www.apollographql.com/pricing",
+        "detail": "Retracted 2026-09-07: this record read two columns of apollographql.com/pricing as one. The page's Free column reads \"Free — For students or hobbyists learning the latest GraphQL tools. Forever Free. Start for free. No credit card required\", with \"Total users (includes consumers) Up to 3\", \"Data retention for checks and insights 1 day\" and a \"Self-hosted GraphOS Router (limited to 60 requests per minute)\" — the stored terms figure for figure. The \"$50 in usage credit when you sign up\" and \"Credit card required\" this record reports are the Developer column and the page hero. The record contradicts itself on the point: its own reading says \"No credit card required\" while its summary says the free tier now requires one."
+      }
     },
     {
       "vendor": "PrefectCloud",
@@ -7906,7 +7936,13 @@
       "category": "Background Jobs",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-03"
+      "recorded_date": "2026-09-03",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-07",
+        "source_url": "https://n8n.io/pricing/",
+        "detail": "Retracted 2026-09-07: this record reports a removal that the terms it supersedes already state. Its previous_state — our stored description — reads \"Cloud free plan removed; all Cloud plans require payment (14-day free trial available)\", and the removal itself is recorded on this vendor at 2026-04-14. Our free tier here is the self-hosted build, which this record's own reading confirms: \"A standard, self-hosted version of n8n is available on GitHub.\" Nothing changed between the stored terms and the reading."
+      }
     },
     {
       "vendor": "Figma",
@@ -8456,9 +8492,9 @@
       "change_type": "limits_reduced",
       "date": "2026-09-05",
       "date_source": "discovered",
-      "summary": "The Starter tier now includes 10 users instead of 50, and 500 test results/month instead of 100 prompt executions/month.",
+      "summary": "The Starter tier, which is free, now includes 10 users instead of 50, and carries a new limit of 100 prompt executions/month. Test results stay at 500/month.",
       "previous_state": "50 users, 500 test results/month, 30-day data retention. Parallelization included. Separate OSS plan available (100K results/mo) via application",
-      "current_state": "Starter plan includes 10 users, 500 test results / month, and 100 prompt execs / month.",
+      "current_state": "Starter is priced Free with no credit card required, and now includes 10 users, 500 test results / month and 100 prompt execs / month. The compare table prices Team at $799 / year and Business at $3,199 / year, and Cypress Cloud remains free to use for non-commercial open-source public projects.",
       "impact": "high",
       "source_url": "https://www.cypress.io/pricing",
       "category": "Testing",
