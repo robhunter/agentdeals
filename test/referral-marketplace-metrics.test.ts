@@ -17,7 +17,7 @@ const {
   loadTelemetry,
   flushTelemetry,
   resetCounters,
-} = await import("../src/stats.ts");
+} = await import("../dist/stats.js");
 
 describe("referral marketplace stats module", () => {
   beforeEach(() => {

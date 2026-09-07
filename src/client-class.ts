@@ -26,37 +26,50 @@ export const CLIENT_CLASSES: readonly ClientClass[] = [
 
 export const UNKNOWN_FAMILY = "unknown";
 
-interface Rule {
+export type AgentTrigger = "user_initiated" | "search_index" | "training" | "ambiguous";
+
+export const AGENT_TRIGGERS: readonly AgentTrigger[] = ["user_initiated", "search_index", "training", "ambiguous"] as const;
+
+interface AgentRule {
   pattern: RegExp;
-  client_class: ClientClass;
+  client_class: "ai_agent";
+  family: string;
+  trigger: AgentTrigger;
+}
+
+interface NonAgentRule {
+  pattern: RegExp;
+  client_class: Exclude<ClientClass, "ai_agent">;
   family: string;
 }
+
+type Rule = AgentRule | NonAgentRule;
 
 const RULES: Rule[] = [
   { pattern: /agentdeals-internal|agentdeals-monitor/i, client_class: "internal", family: "agentdeals-internal" },
 
-  { pattern: /ChatGPT-User/i, client_class: "ai_agent", family: "ChatGPT-User" },
-  { pattern: /OAI-SearchBot/i, client_class: "ai_agent", family: "OAI-SearchBot" },
-  { pattern: /GPTBot/i, client_class: "ai_agent", family: "GPTBot" },
-  { pattern: /Claude-User/i, client_class: "ai_agent", family: "Claude-User" },
-  { pattern: /claude-code/i, client_class: "ai_agent", family: "Claude-Code" },
-  { pattern: /Claude-SearchBot/i, client_class: "ai_agent", family: "Claude-SearchBot" },
-  { pattern: /ClaudeBot|anthropic-ai/i, client_class: "ai_agent", family: "ClaudeBot" },
-  { pattern: /Perplexity-User/i, client_class: "ai_agent", family: "Perplexity-User" },
-  { pattern: /PerplexityBot/i, client_class: "ai_agent", family: "PerplexityBot" },
-  { pattern: /Google-Extended/i, client_class: "ai_agent", family: "Google-Extended" },
-  { pattern: /Gemini|Google-CloudVertexBot/i, client_class: "ai_agent", family: "Gemini" },
-  { pattern: /Applebot-Extended/i, client_class: "ai_agent", family: "Applebot-Extended" },
-  { pattern: /meta-externalagent|meta-externalfetcher/i, client_class: "ai_agent", family: "meta-externalagent" },
-  { pattern: /Bytespider/i, client_class: "ai_agent", family: "Bytespider" },
-  { pattern: /Amazonbot/i, client_class: "ai_agent", family: "Amazonbot" },
-  { pattern: /YouBot/i, client_class: "ai_agent", family: "YouBot" },
-  { pattern: /cohere-ai|cohere-training-data-crawler/i, client_class: "ai_agent", family: "cohere-ai" },
-  { pattern: /CCBot/i, client_class: "ai_agent", family: "CCBot" },
-  { pattern: /MistralAI-User/i, client_class: "ai_agent", family: "MistralAI-User" },
-  { pattern: /DuckAssistBot/i, client_class: "ai_agent", family: "DuckAssistBot" },
-  { pattern: /AI2Bot|Diffbot|Timpibot|ImagesiftBot|Omgilibot|Webzio-Extended|PanguBot|Kangaroo Bot|img2dataset/i, client_class: "ai_agent", family: "other-ai-crawler" },
-  { pattern: /Firecrawl|ScrapingBot|BrowserBase|Browserless/i, client_class: "ai_agent", family: "agent-scraper" },
+  { pattern: /ChatGPT-User/i, client_class: "ai_agent", family: "ChatGPT-User", trigger: "user_initiated" },
+  { pattern: /OAI-SearchBot/i, client_class: "ai_agent", family: "OAI-SearchBot", trigger: "search_index" },
+  { pattern: /GPTBot/i, client_class: "ai_agent", family: "GPTBot", trigger: "training" },
+  { pattern: /claude-code/i, client_class: "ai_agent", family: "Claude-Code", trigger: "user_initiated" },
+  { pattern: /Claude-User/i, client_class: "ai_agent", family: "Claude-User", trigger: "user_initiated" },
+  { pattern: /Claude-SearchBot/i, client_class: "ai_agent", family: "Claude-SearchBot", trigger: "search_index" },
+  { pattern: /ClaudeBot|anthropic-ai/i, client_class: "ai_agent", family: "ClaudeBot", trigger: "training" },
+  { pattern: /Perplexity-User/i, client_class: "ai_agent", family: "Perplexity-User", trigger: "user_initiated" },
+  { pattern: /PerplexityBot/i, client_class: "ai_agent", family: "PerplexityBot", trigger: "search_index" },
+  { pattern: /Google-Extended/i, client_class: "ai_agent", family: "Google-Extended", trigger: "training" },
+  { pattern: /Gemini|Google-CloudVertexBot/i, client_class: "ai_agent", family: "Gemini", trigger: "training" },
+  { pattern: /Applebot-Extended/i, client_class: "ai_agent", family: "Applebot-Extended", trigger: "training" },
+  { pattern: /meta-externalagent|meta-externalfetcher/i, client_class: "ai_agent", family: "meta-externalagent", trigger: "training" },
+  { pattern: /Bytespider/i, client_class: "ai_agent", family: "Bytespider", trigger: "training" },
+  { pattern: /Amazonbot/i, client_class: "ai_agent", family: "Amazonbot", trigger: "search_index" },
+  { pattern: /YouBot/i, client_class: "ai_agent", family: "YouBot", trigger: "search_index" },
+  { pattern: /cohere-ai|cohere-training-data-crawler/i, client_class: "ai_agent", family: "cohere-ai", trigger: "training" },
+  { pattern: /CCBot/i, client_class: "ai_agent", family: "CCBot", trigger: "training" },
+  { pattern: /MistralAI-User/i, client_class: "ai_agent", family: "MistralAI-User", trigger: "user_initiated" },
+  { pattern: /DuckAssistBot/i, client_class: "ai_agent", family: "DuckAssistBot", trigger: "ambiguous" },
+  { pattern: /AI2Bot|Diffbot|Timpibot|ImagesiftBot|Omgilibot|Webzio-Extended|PanguBot|Kangaroo Bot|img2dataset/i, client_class: "ai_agent", family: "other-ai-crawler", trigger: "training" },
+  { pattern: /Firecrawl|ScrapingBot|BrowserBase|Browserless/i, client_class: "ai_agent", family: "agent-scraper", trigger: "ambiguous" },
 
   { pattern: /Googlebot|Storebot-Google|GoogleOther|AdsBot-Google|Mediapartners-Google/i, client_class: "search_crawler", family: "Googlebot" },
   { pattern: /bingbot|adidxbot|BingPreview|msnbot/i, client_class: "search_crawler", family: "bingbot" },
@@ -104,6 +117,45 @@ const RULES: Rule[] = [
 ];
 
 const GENERIC_BOT = /\b(bot|crawler|spider|scraper|crawl)\b|bot\/|\+https?:\/\/[^\s)]*bot/i;
+
+function agentRules(): AgentRule[] {
+  return RULES.filter((rule): rule is AgentRule => rule.client_class === "ai_agent");
+}
+
+const TRIGGER_BY_FAMILY: ReadonlyMap<string, AgentTrigger> = new Map(
+  agentRules().map((rule) => [rule.family, rule.trigger]),
+);
+
+export function agentTriggerForFamily(family: string): AgentTrigger | null {
+  return TRIGGER_BY_FAMILY.get(family) ?? null;
+}
+
+export function agentFamiliesByTrigger(): Record<AgentTrigger, string[]> {
+  const out = Object.fromEntries(AGENT_TRIGGERS.map((t) => [t, [] as string[]])) as Record<AgentTrigger, string[]>;
+  for (const [family, trigger] of TRIGGER_BY_FAMILY) out[trigger].push(family);
+  for (const trigger of AGENT_TRIGGERS) out[trigger].sort();
+  return out;
+}
+
+export function agentFamilyRuleCount(): number {
+  return agentRules().length;
+}
+
+export interface RuleDescriptor {
+  pattern: RegExp;
+  client_class: ClientClass;
+  family: string;
+  trigger: AgentTrigger | null;
+}
+
+export function clientRuleTable(): RuleDescriptor[] {
+  return RULES.map((rule) => ({
+    pattern: rule.pattern,
+    client_class: rule.client_class,
+    family: rule.family,
+    trigger: rule.client_class === "ai_agent" ? rule.trigger : null,
+  }));
+}
 
 export function classifyClient(userAgent: string | undefined | null): ClientClassification {
   const ua = typeof userAgent === "string" ? userAgent.trim() : "";

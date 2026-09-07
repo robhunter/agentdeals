@@ -5,7 +5,7 @@ const {
   recordSearchQuery,
   getSearchAnalytics,
   resetCounters,
-} = await import("../src/stats.ts");
+} = await import("../dist/stats.js");
 
 describe("search analytics", () => {
   beforeEach(() => {

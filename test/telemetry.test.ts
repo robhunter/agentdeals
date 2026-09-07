@@ -14,7 +14,7 @@ const {
   getStats,
   useRedis,
   resetCounters,
-} = await import("../src/stats.ts");
+} = await import("../dist/stats.js");
 
 describe("telemetry persistence", () => {
   const tmpDir = join(tmpdir(), `telemetry-test-${randomUUID()}`);
@@ -91,7 +91,7 @@ describe("telemetry persistence", () => {
     resetCounters();
     await loadTelemetry(filePath);
 
-    const { recordToolCall: rec, getConnectionStats: conn } = await import("../src/stats.ts");
+    const { recordToolCall: rec, getConnectionStats: conn } = await import("../dist/stats.js");
     rec("search_deals", "opencode");
     rec("search_deals", "opencode");
     rec("plan_stack", "cursor");
@@ -135,7 +135,7 @@ describe("telemetry persistence", () => {
     resetCounters();
     await loadTelemetry(filePath);
 
-    const { getConnectionStats: conn } = await import("../src/stats.ts");
+    const { getConnectionStats: conn } = await import("../dist/stats.js");
     const c = conn(0);
     assert.strictEqual(c.toolCallsByClient.unknown, 61);
     const sum = Object.values(c.toolCallsByClient).reduce((a: number, b: number) => a + b, 0);
@@ -152,7 +152,7 @@ describe("telemetry persistence", () => {
     resetCounters();
     await loadTelemetry(filePath);
 
-    const { recordToolCall: rec, getConnectionStats: conn } = await import("../src/stats.ts");
+    const { recordToolCall: rec, getConnectionStats: conn } = await import("../dist/stats.js");
     rec("search_deals", "opencode");
     rec("search_deals", "cursor");
     rec("plan_stack", "opencode");
@@ -198,7 +198,7 @@ describe("telemetry persistence", () => {
     resetCounters();
     await loadTelemetry(filePath);
 
-    const { getConnectionStats: conn } = await import("../src/stats.ts");
+    const { getConnectionStats: conn } = await import("../dist/stats.js");
     const c = conn(0);
     assert.strictEqual(c.toolCallsByName.unknown, 62);
     const sum = Object.values(c.toolCallsByName).reduce((a: number, b: number) => a + b, 0);

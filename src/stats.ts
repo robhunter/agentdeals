@@ -1,5 +1,6 @@
 import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { dirname } from "node:path";
+import { AGENT_TRIGGERS, agentFamiliesByTrigger, agentTriggerForFamily, type AgentTrigger } from "./client-class.js";
 
 const startedAt = Date.now();
 const serverStartedISO = new Date(startedAt).toISOString();
@@ -1880,6 +1881,15 @@ export function getPageViewsToday(): number {
   return pageViewsToday;
 }
 
+export interface AgentTriggerSplit {
+  total: number;
+  user_initiated: number;
+  automated: number;
+  ambiguous: number;
+  unattributed: number;
+  automated_by_kind: { search_index: number; training: number };
+}
+
 export interface TrafficWindow {
   days: number;
   from: string;
@@ -1891,6 +1901,7 @@ export interface TrafficWindow {
   hits_excluding_internal: number;
   by_class: Record<string, number>;
   ai_agent_by_family: Record<string, number>;
+  ai_agent_by_trigger: AgentTriggerSplit;
   top_routes_by_class: Record<string, { route: string; hits: number }[]>;
   not_found_total: number;
   not_found_by_class: Record<string, number>;
@@ -1920,6 +1931,7 @@ export interface TrafficReport {
   since_boot_redirects: number;
   not_found_sample: NotFoundSample[];
   sessions: SessionSeries;
+  ai_agent_trigger_families: Record<AgentTrigger, string[]>;
   notes: string[];
   storage: TelemetryHealth;
 }
@@ -1960,12 +1972,32 @@ function emptyWindow(days: number): TrafficWindow {
     hits_excluding_internal: 0,
     by_class: {},
     ai_agent_by_family: {},
+    ai_agent_by_trigger: splitAgentHitsByTrigger({}, 0),
     top_routes_by_class: {},
     not_found_total: 0,
     not_found_by_class: {},
     redirect_total: 0,
     redirects_by_class: {},
     pre_split_dates: [],
+  };
+}
+
+function splitAgentHitsByTrigger(byFamily: Record<string, number>, agentHits: number): AgentTriggerSplit {
+  const perTrigger = Object.fromEntries(AGENT_TRIGGERS.map((t) => [t, 0])) as Record<AgentTrigger, number>;
+  let attributed = 0;
+  for (const [family, count] of Object.entries(byFamily)) {
+    const trigger = agentTriggerForFamily(family);
+    if (trigger === null) continue;
+    perTrigger[trigger] += count;
+    attributed += count;
+  }
+  return {
+    total: agentHits,
+    user_initiated: perTrigger.user_initiated,
+    automated: perTrigger.search_index + perTrigger.training,
+    ambiguous: perTrigger.ambiguous,
+    unattributed: agentHits - attributed,
+    automated_by_kind: { search_index: perTrigger.search_index, training: perTrigger.training },
   };
 }
 
@@ -2057,6 +2089,7 @@ function buildWindow(view: PageViewSnapshot, days: number): TrafficWindow {
       .sort((a, b) => b.hits - a.hits)
       .slice(0, TOP_ROUTES_PER_CLASS);
   }
+  window.ai_agent_by_trigger = splitAgentHitsByTrigger(window.ai_agent_by_family, window.by_class["ai_agent"] ?? 0);
   return window;
 }
 
@@ -2082,7 +2115,8 @@ function buildWebVsMcp(view: PageViewSnapshot, window: TrafficWindow, days: numb
 
 const TRAFFIC_NOTES = [
   "`internal` covers requests to observability endpoints (/api/pageviews, /api/query-log, /api/traffic, /api/metrics, /health) plus anything carrying an agentdeals-internal user agent. Excluded from hits_excluding_internal and from web_vs_mcp.",
-  "A maintainer running a bare `curl` against a normal page is indistinguishable from any other scripted client and is counted as `sdk_client`, not `internal`. It can therefore inflate web_hits but never ai_agent_hits.",
+  "A maintainer running a bare `curl` against a normal page is indistinguishable from any other scripted client and is counted as `sdk_client`, not `internal`, so it inflates web_hits. Coding agents are not: `Claude-Code` and `agent-scraper` are agent tooling classified `ai_agent`, and the automation that maintains this project uses them, so its own requests are inside ai_agent_hits. Read those two families as an upper bound on outside demand rather than a measure of it.",
+  "ai_agent_by_trigger regroups the same ai_agent hits by what each vendor documents as the trigger for a fetch: user_initiated where a person's request causes it, automated for crawling on the vendor's own schedule, ambiguous where the vendor documents both. automated_by_kind splits automated into search_index and training. unattributed is the remainder — hits older than detail_days carry a class but no family, and a family with no rule cannot be assigned. The four groups sum to total, which is by_class.ai_agent, so a split that drops hits is arithmetically visible.",
   "`sdk_client` is deliberately not folded into `ai_agent`: undici/python-httpx traffic may be an agent or a scraper, and overclaiming it would make the headline number unquotable.",
   "These counters store only the class and a bounded family label from a fixed table: the user agent and the address a request arrived with are read to derive them and are not persisted into these counters. That is a statement about this endpoint, not about the site — /api/query-log persists and publishes the user agent string itself, and /privacy is the document that describes the whole service.",
   "Attribution starts from the deploy that introduced it — windows longer than that are short by however much history predates it, not wrong.",
@@ -2114,6 +2148,7 @@ export function getTrafficReport(): TrafficReport {
     since_boot_redirects: redirectsSinceBoot,
     not_found_sample: [...pendingPageViews.not_found_sample].reverse(),
     sessions: getSessionSeries(),
+    ai_agent_trigger_families: agentFamiliesByTrigger(),
     notes: TRAFFIC_NOTES,
     storage,
   });
@@ -2143,6 +2178,7 @@ export function getTrafficReport(): TrafficReport {
     since_boot_redirects: redirectsSinceBoot,
     not_found_sample: [...view.not_found_sample].reverse(),
     sessions: getSessionSeries(),
+    ai_agent_trigger_families: agentFamiliesByTrigger(),
     notes: TRAFFIC_NOTES,
     storage,
   };

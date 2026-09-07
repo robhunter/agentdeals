@@ -13,7 +13,7 @@ import {
   ROLLUP_EXCLUSIONS,
   ROLLUP_SCHEMA_VERSION,
 } from "../src/analytics-rollup.ts";
-import type { RollupDaySource } from "../src/stats.ts";
+import type { RollupDaySource } from "../dist/stats.js";
 
 function sourceFor(date: string, overrides: Partial<RollupDaySource> = {}): RollupDaySource {
   return {
