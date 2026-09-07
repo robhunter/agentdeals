@@ -1128,7 +1128,7 @@
     {
       "vendor": "Nhost",
       "category": "Databases",
-      "description": "Open-source Firebase alternative with Postgres + Hasura GraphQL — 1 GB database, 5 GB storage, 5 GB bandwidth free",
+      "description": "Open-source Firebase alternative with Postgres + Hasura GraphQL — 1 GB database, 1 GB storage, 5 GB bandwidth free",
       "tier": "Free",
       "url": "https://nhost.io/pricing",
       "tags": [

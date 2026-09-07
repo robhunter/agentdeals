@@ -5863,7 +5863,7 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
       </tr>
       <tr>
         <td style="font-weight:600"><a href="/vendor/nhost" style="color:var(--text)">Nhost</a></td>
-        <td>1 GB Postgres</td><td>5 GB</td><td>Included</td><td>Included</td><td>5 GB</td><td>\u2705 (GraphQL)</td>
+        <td>1 GB Postgres</td><td>1 GB</td><td>Included</td><td>Included</td><td>5 GB</td><td>\u2705 (GraphQL)</td>
         <td>MIT</td>
       </tr>
       <tr>
