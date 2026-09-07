@@ -7,6 +7,10 @@ type ExpiringChange = Pick<DealChange, "date" | "date_source" | "change_type" | 
 
 export const DISCOVERED_DATE_PREFIX = "discovered";
 
+export const EFFECTIVE_DATE_PREFIX = "effective";
+
+export const UNKNOWN_EFFECTIVE_DATE_MARKER = "effective date unknown";
+
 export const DATE_SOURCES: ChangeDateSource[] = ["vendor_page", "hand_written", "discovered"];
 
 export const EVENT_DATED_SOURCES: ChangeDateSource[] = ["vendor_page", "hand_written"];
@@ -73,12 +77,20 @@ export function discoveryBatchNote(count: number, when: string): string {
 export const UNDATED_GROUP_NOTE =
   "The vendor’s page states these terms but not when they took effect, so we can only tell you when we found them. They are listed by discovery date and are excluded from the monthly groups and the Last 30 Days count above, both of which count changes by the date they took effect.";
 
+export const UNDATED_TILE_LABEL = "Effective Date Unknown";
+
 export function undatedGroupHeading(count: number): string {
   return `Effective date unknown (${count} ${count === 1 ? "change" : "changes"})`;
 }
 
 export function changeDateLabel(c: DatedChange): string {
   return isEventDated(c) ? c.date : `${DISCOVERED_DATE_PREFIX} ${c.date}`;
+}
+
+export function changeEntryDateLabel(c: DatedChange): string {
+  return isEventDated(c)
+    ? `${EFFECTIVE_DATE_PREFIX} ${c.date}`
+    : `${DISCOVERED_DATE_PREFIX} ${c.date} · ${UNKNOWN_EFFECTIVE_DATE_MARKER}`;
 }
 
 export function changeDateClause(c: DatedChange): string {
