@@ -68,7 +68,7 @@ import { verificationLedger, QUARANTINE_AFTER_FAILURES } from "./verification-st
 import { partitionAlternatives, partitionSubstitutes, type SubstitutesPartition, productRoleSentence, MEMBERSHIP_GATE_RULES, MEMBERSHIP_GATE_ORDER, MEMBERSHIP_GATE_SYMMETRY, MEMBERSHIP_GATE_SCOPE, MEMBERSHIP_GATE_CORRECTIONS, SUBTYPE_TAXONOMIES, SUBTYPE_MEMBERSHIP_RULE, SUBTYPE_MEMBERSHIP_GROUP_SCOPE, CURATED_SUBTYPE_EXEMPTION, membershipGroupsFor, subtypeDefinition } from "./product-role.js";
 import { resolveCuratedAlternatives, curatedAlternativesFor, addCuratedToPool } from "./curated-alternatives.js";
 import type { Agent, ChangeDateSource, DealChange, RiskCause, RatingWithheld, LinkUnreachable, Offer, StabilityClass } from "./types.js";
-import { changeDateLabel, changeEntryDateLabel, changeEntryLongDateLabel, changeDateClause, changeDatePublished, changeEventStartDate, capListSections, latestEventDate, offerExpiryAfter, feedEntryUpdated, undatedGroupHeading, UNDATED_TILE_LABEL, firstReadHeading, discoveryBatchNote, isoWeekOf, DISCOVERED_DATE_PREFIX, EFFECTIVE_DATE_PREFIX, EVENT_DATED_SOURCES, UNDATED_GROUP_NOTE, UNKNOWN_EFFECTIVE_DATE_MARKER } from "./change-dates.js";
+import { changeDateLabel, changeEntryDateLabel, changeEntryLongDateLabel, changeDateClause, changeDatePublished, changeEventStartDate, capListSections, latestEventDate, offerExpiryAfter, feedEntryUpdated, undatedGroupHeading, UNDATED_TILE_LABEL, firstReadHeading, discoveryBatchNote, isoWeekOf, monthlyChangeSeries, changesInWindow, discoveryMonthSeriesHeading, periodComparisonSentence, DISCOVERED_DATE_PREFIX, EFFECTIVE_DATE_PREFIX, EVENT_DATED_SOURCES, UNDATED_GROUP_NOTE, UNKNOWN_EFFECTIVE_DATE_MARKER, EFFECTIVE_MONTH_SERIES_NOTE, DISCOVERY_MONTH_SERIES_NOTE } from "./change-dates.js";
 import { FEED_CORRECTIONS, correctionEntriesXml } from "./feed-corrections.js";
 import { buildDay, emptyPageLastmod, fallbackDay, httpDate, lastmodFor, newestLastmod, readPageLastmod, type PageLastmodLedger } from "./page-lastmod.js";
 import type { AgentBalance } from "./ledger.js";
@@ -18367,7 +18367,7 @@ ${mcpCtaCss()}
   </div>
 
   <div class="search-cta">
-    <p>This analysis covers Hetzner's April 1 and June 15, 2026 price adjustments and what its cloud plans cost today. For the full quarterly overview covering ${dealChanges.filter(c => c.date >= "2026-01-01" && c.date <= "2026-03-31").length} pricing changes across all developer tools, see the <a href="/q1-2026-developer-pricing-report">Q1 2026 Developer Pricing Report</a>. Browse all ${offers.length.toLocaleString()} developer tools at <a href="/search">/search</a>.</p>
+    <p>This analysis covers Hetzner's April 1 and June 15, 2026 price adjustments and what its cloud plans cost today. For the full quarterly overview covering ${changesInWindow(dealChanges, { start: "2026-01-01", end: "2026-03-31" }).dated.length} pricing changes across all developer tools, see the <a href="/q1-2026-developer-pricing-report">Q1 2026 Developer Pricing Report</a>. Browse all ${offers.length.toLocaleString()} developer tools at <a href="/search">/search</a>.</p>
   </div>
 
   ${buildMoreAlternativesGuides(slug)}
@@ -18386,7 +18386,7 @@ function buildQ1PricingReportPage(): string {
   const slug = "q1-2026-developer-pricing-report";
   const pubDate = "2026-03-24";
 
-  const q1Changes = dealChanges.filter(c => c.date >= "2026-01-01" && c.date <= "2026-03-31");
+  const q1Changes = changesInWindow(dealChanges, { start: "2026-01-01", end: "2026-03-31" }).dated;
 
   const negativeTypes = new Set(["free_tier_removed", "limits_reduced", "restriction", "open_source_killed", "product_deprecated"]);
   const positiveTypes = new Set(["limits_increased", "new_free_tier", "startup_program_expanded", "pricing_postponed"]);
@@ -18474,16 +18474,12 @@ function buildQ1PricingReportPage(): string {
   const sortedCategories = [...catChangeCounts.entries()].sort((a, b) => b[1].total - a[1].total);
   const maxCatTotal = Math.max(...sortedCategories.map(([, v]) => v.total), 1);
 
-  const monthlyData = new Map<string, { total: number; negative: number; positive: number; high: number }>();
-  for (const c of q1Changes) {
-    const month = c.date.slice(0, 7);
-    const entry = monthlyData.get(month) ?? { total: 0, negative: 0, positive: 0, high: 0 };
-    entry.total++;
-    if (negativeTypes.has(c.change_type)) entry.negative++;
-    if (positiveTypes.has(c.change_type)) entry.positive++;
-    if (c.impact === "high") entry.high++;
-    monthlyData.set(month, entry);
-  }
+  const monthlyData = new Map([...monthlyChangeSeries(q1Changes).effective].map(([month, records]) => [month, {
+    total: records.length,
+    negative: records.filter(c => negativeTypes.has(c.change_type)).length,
+    positive: records.filter(c => positiveTypes.has(c.change_type)).length,
+    high: records.filter(c => c.impact === "high").length,
+  }]));
   const monthNames: Record<string, string> = { "2026-01": "January", "2026-02": "February", "2026-03": "March" };
   const sortedMonths = [...monthlyData.entries()].sort((a, b) => a[0].localeCompare(b[0]));
   const maxMonthTotal = Math.max(...sortedMonths.map(([, v]) => v.total), 1);
@@ -18516,7 +18512,7 @@ function buildQ1PricingReportPage(): string {
     const negPct = data.total > 0 ? Math.round((data.negative / data.total) * 100) : 0;
     const posPct = data.total > 0 ? Math.round((data.positive / data.total) * 100) : 0;
     const neutralPct = 100 - negPct - posPct;
-    return "<div style=\"display:flex;align-items:center;gap:.75rem;margin-bottom:.6rem\">" +
+    return "<div class=\"q1-month\" data-series=\"effective\" data-month=\"" + month + "\" data-count=\"" + data.total + "\" style=\"display:flex;align-items:center;gap:.75rem;margin-bottom:.6rem\">" +
       "<span style=\"font-family:var(--mono);font-size:.8rem;color:var(--text-muted);min-width:6rem;text-align:right\">" + (monthNames[month] ?? month) + "</span>" +
       "<div style=\"flex:1;display:flex;height:28px;border-radius:4px;overflow:hidden;background:var(--bg-card);max-width:" + totalWidth + "%;min-width:40px\">" +
         (negPct > 0 ? "<div style=\"width:" + negPct + "%;background:#f85149\" title=\"" + data.negative + " negative\"></div>" : "") +
@@ -22764,16 +22760,17 @@ function buildFreeTierRiskPage(): string {
     .map(([cat, d]) => ({ category: cat, ...d, pctNeg: Math.round((d.negative / d.total) * 100) }))
     .sort((a, b) => b.total - a.total);
 
-  const monthlyChanges = new Map<string, number>();
-  const monthlyNeg = new Map<string, number>();
-  for (const dc of dealChanges) {
-    const month = dc.date.substring(0, 7);
-    monthlyChanges.set(month, (monthlyChanges.get(month) ?? 0) + 1);
-    if (negativeTypes.includes(dc.change_type)) {
-      monthlyNeg.set(month, (monthlyNeg.get(month) ?? 0) + 1);
-    }
-  }
+  const changeMonths = monthlyChangeSeries(dealChanges);
+  const monthlyChanges = new Map([...changeMonths.effective].map(([month, records]) => [month, records.length]));
+  const discoveryMonths = [...changeMonths.discovered].map(([month, records]) => [month, records.length] as const);
+  const discoveredTotal = discoveryMonths.reduce((sum, [, count]) => sum + count, 0);
   const sortedMonths = [...monthlyChanges.keys()].sort();
+  const countInWindow = (start: string, end: string) =>
+    [...changeMonths.effective.values()].flat().filter(c => c.date >= start && c.date <= end).length;
+  const quarterAgainstHalf = periodComparisonSentence(
+    { label: "the second half of 2025", count: countInWindow("2025-07-01", "2025-12-31") },
+    { label: "Q1 2026", count: countInWindow("2026-01-01", "2026-03-31") }
+  );
 
   const vendorChangeCount = new Map<string, number>();
   for (const dc of dealChanges) {
@@ -23054,8 +23051,9 @@ ${mcpCtaCss()}
   </div>
 
   <div class="diff-card" style="border-left-color:#d29922">
-    <h3>\u{1F4C8} Monthly Acceleration</h3>
-    <p class="diff-desc">Pricing changes are accelerating. Monthly change counts: ${sortedMonths.map(m => '<strong>' + m + '</strong>: ' + (monthlyChanges.get(m) ?? 0)).join(', ')}. Q1 2026 saw 50 changes — more than all of 2025 H2. The pace isn't slowing.</p>
+    <h3>\u{1F4C8} Changes by Month</h3>
+    <p class="diff-desc">${EFFECTIVE_MONTH_SERIES_NOTE} Monthly counts: ${sortedMonths.map(m => '<span class="ftr-month" data-series="effective" data-month="' + m + '" data-count="' + (monthlyChanges.get(m) ?? 0) + '"><strong>' + m + '</strong>: ' + (monthlyChanges.get(m) ?? 0) + '</span>').join(', ')}. ${quarterAgainstHalf}</p>
+    ${discoveredTotal > 0 ? `<p class="diff-desc"><strong>${discoveryMonthSeriesHeading(discoveredTotal)}.</strong> ${DISCOVERY_MONTH_SERIES_NOTE} Monthly counts: ${discoveryMonths.map(([m, count]) => '<span class="ftr-month" data-series="discovered" data-month="' + m + '" data-count="' + count + '"><strong>' + m + '</strong>: ' + count + '</span>').join(', ')}.</p>` : ""}
   </div>
 
   <div class="diff-card" style="border-left-color:#8b5cf6">
@@ -26412,7 +26410,7 @@ function buildFreeTierTrackerPage(): string {
 
   const q1Start = "2026-01-01";
   const q1End = "2026-03-31";
-  const q1Changes = dealChanges.filter(c => c.date >= q1Start && c.date <= q1End);
+  const q1Changes = changesInWindow(dealChanges, { start: q1Start, end: q1End }).dated;
 
   const negativeTypes = ["free_tier_removed", "limits_reduced", "restriction", "open_source_killed", "pricing_model_change", "pricing_restructured", "product_deprecated"];
   const positiveTypes = ["limits_increased", "new_free_tier", "startup_program_expanded", "pricing_postponed"];
@@ -45365,19 +45363,42 @@ function buildStateOfFreeTiersPage(): string {
   const eligibilityOffers = offers.filter(o => o.eligibility);
   const startupOffers = offers.filter(o => o.tier.toLowerCase().includes("startup") || (o.eligibility && JSON.stringify(o.eligibility).toLowerCase().includes("startup")));
 
-  const monthlyChanges = new Map<string, { total: number; negative: number; positive: number }>();
   const negativeTypes = new Set(["free_tier_removed", "limits_reduced", "restriction", "open_source_killed", "product_deprecated"]);
   const positiveTypes = new Set(["new_free_tier", "limits_increased", "startup_program_expanded"]);
-  for (const c of dealChanges) {
-    const month = c.date.slice(0, 7);
-    const entry = monthlyChanges.get(month) ?? { total: 0, negative: 0, positive: 0 };
-    entry.total++;
-    if (negativeTypes.has(c.change_type)) entry.negative++;
-    if (positiveTypes.has(c.change_type)) entry.positive++;
-    monthlyChanges.set(month, entry);
+  function tallyMonths(months: Map<string, typeof dealChanges>): Array<[string, { total: number; negative: number; positive: number }]> {
+    return [...months.entries()].map(([month, records]) => [month, {
+      total: records.length,
+      negative: records.filter(c => negativeTypes.has(c.change_type)).length,
+      positive: records.filter(c => positiveTypes.has(c.change_type)).length,
+    }]);
   }
-  const sortedMonths = [...monthlyChanges.entries()].sort((a, b) => a[0].localeCompare(b[0]));
-  const maxMonthTotal = Math.max(...sortedMonths.map(([, v]) => v.total), 1);
+  const changeMonths = monthlyChangeSeries(dealChanges);
+  const sortedMonths = tallyMonths(changeMonths.effective);
+  const discoveryMonths = tallyMonths(changeMonths.discovered);
+  const discoveredTotal = [...changeMonths.discovered.values()].reduce((sum, records) => sum + records.length, 0);
+  const maxMonthTotal = Math.max(...[...sortedMonths, ...discoveryMonths].map(([, v]) => v.total), 1);
+  function monthBarsHtml(series: string, months: typeof sortedMonths): string {
+    return months.map(([month, data]) => {
+      const totalWidth = Math.round((data.total / maxMonthTotal) * 100);
+      const negWidth = data.total > 0 ? Math.round((data.negative / data.total) * 100) : 0;
+      const posWidth = data.total > 0 ? Math.round((data.positive / data.total) * 100) : 0;
+      const neutralWidth = 100 - negWidth - posWidth;
+      return `<div class="sft-month" data-series="${series}" data-month="${month}" data-count="${data.total}" style="display:flex;align-items:center;gap:.75rem;margin-bottom:.4rem">
+        <span style="font-family:var(--mono);font-size:.75rem;color:var(--text-dim);min-width:5rem;text-align:right">${month}</span>
+        <div style="flex:1;display:flex;height:24px;border-radius:4px;overflow:hidden;background:var(--bg-card);max-width:${totalWidth}%;min-width:30px">
+          ${negWidth > 0 ? `<div style="width:${negWidth}%;background:#f85149" title="${data.negative} negative"></div>` : ""}
+          ${neutralWidth > 0 ? `<div style="width:${neutralWidth}%;background:#8b5cf6" title="${data.total - data.negative - data.positive} neutral"></div>` : ""}
+          ${posWidth > 0 ? `<div style="width:${posWidth}%;background:#3fb950" title="${data.positive} positive"></div>` : ""}
+        </div>
+        <span style="font-family:var(--mono);font-size:.75rem;color:var(--text-muted);min-width:1.5rem">${data.total}</span>
+      </div>`;
+    }).join("\n    ");
+  }
+  const changeBarLegendHtml = `<div style="display:flex;gap:1.5rem;margin-top:.75rem;font-size:.75rem;color:var(--text-dim)">
+      <span><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:#f85149;vertical-align:middle;margin-right:.25rem"></span> Negative (removals, reductions)</span>
+      <span><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:#8b5cf6;vertical-align:middle;margin-right:.25rem"></span> Restructured / Other</span>
+      <span><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:#3fb950;vertical-align:middle;margin-right:.25rem"></span> Positive (new tiers, expansions)</span>
+    </div>`;
 
   const changeTypeCounts = new Map<string, number>();
   for (const c of dealChanges) {
@@ -45609,29 +45630,18 @@ ${globalNavCss()}
   </div>
 
   <h2>Monthly Pricing Change Trend</h2>
-  <p class="section-desc">Pricing changes by month, showing the acceleration in 2026. Red bars = negative changes (removals, reductions, restrictions). Green bars = positive changes (new free tiers, expansions).</p>
+  <p class="section-desc">${EFFECTIVE_MONTH_SERIES_NOTE} Red bars = negative changes (removals, reductions, restrictions). Green bars = positive changes (new free tiers, expansions).</p>
   <div style="margin:1.5rem 0;overflow-x:auto">
-    ${sortedMonths.map(([month, data]) => {
-      const totalWidth = Math.round((data.total / maxMonthTotal) * 100);
-      const negWidth = data.total > 0 ? Math.round((data.negative / data.total) * 100) : 0;
-      const posWidth = data.total > 0 ? Math.round((data.positive / data.total) * 100) : 0;
-      const neutralWidth = 100 - negWidth - posWidth;
-      return `<div style="display:flex;align-items:center;gap:.75rem;margin-bottom:.4rem">
-        <span style="font-family:var(--mono);font-size:.75rem;color:var(--text-dim);min-width:5rem;text-align:right">${month}</span>
-        <div style="flex:1;display:flex;height:24px;border-radius:4px;overflow:hidden;background:var(--bg-card);max-width:${totalWidth}%;min-width:30px">
-          ${negWidth > 0 ? `<div style="width:${negWidth}%;background:#f85149" title="${data.negative} negative"></div>` : ""}
-          ${neutralWidth > 0 ? `<div style="width:${neutralWidth}%;background:#8b5cf6" title="${data.total - data.negative - data.positive} neutral"></div>` : ""}
-          ${posWidth > 0 ? `<div style="width:${posWidth}%;background:#3fb950" title="${data.positive} positive"></div>` : ""}
-        </div>
-        <span style="font-family:var(--mono);font-size:.75rem;color:var(--text-muted);min-width:1.5rem">${data.total}</span>
-      </div>`;
-    }).join("\n    ")}
-    <div style="display:flex;gap:1.5rem;margin-top:.75rem;font-size:.75rem;color:var(--text-dim)">
-      <span><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:#f85149;vertical-align:middle;margin-right:.25rem"></span> Negative (removals, reductions)</span>
-      <span><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:#8b5cf6;vertical-align:middle;margin-right:.25rem"></span> Restructured / Other</span>
-      <span><span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:#3fb950;vertical-align:middle;margin-right:.25rem"></span> Positive (new tiers, expansions)</span>
-    </div>
+    ${monthBarsHtml("effective", sortedMonths)}
+    ${changeBarLegendHtml}
   </div>
+
+  ${discoveredTotal > 0 ? `<h3>${discoveryMonthSeriesHeading(discoveredTotal)}</h3>
+  <p class="section-desc">${DISCOVERY_MONTH_SERIES_NOTE} Bars are on the same scale as the trend above.</p>
+  <div style="margin:1.5rem 0;overflow-x:auto">
+    ${monthBarsHtml("discovered", discoveryMonths)}
+    ${changeBarLegendHtml}
+  </div>` : ""}
 
   <h2>Change Type Breakdown</h2>
   <p class="section-desc">What kinds of pricing changes are we seeing? The breakdown by change type reveals the dominant patterns.</p>

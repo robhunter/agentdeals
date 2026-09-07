@@ -28,6 +28,41 @@ export function partitionByDateProvenance<T extends Pick<DealChange, "date_sourc
   return { dated, discovered };
 }
 
+export function groupByMonth<T extends Pick<DealChange, "date">>(changes: T[]): Map<string, T[]> {
+  const byMonth = new Map<string, T[]>();
+  for (const change of changes) {
+    const month = change.date.slice(0, 7);
+    const bucket = byMonth.get(month);
+    if (bucket) bucket.push(change);
+    else byMonth.set(month, [change]);
+  }
+  return new Map([...byMonth.entries()].sort((a, b) => a[0].localeCompare(b[0])));
+}
+
+export function monthlyChangeSeries<T extends Pick<DealChange, "date" | "date_source">>(
+  changes: T[]
+): { effective: Map<string, T[]>; discovered: Map<string, T[]> } {
+  const { dated, discovered } = partitionByDateProvenance(changes);
+  return { effective: groupByMonth(dated), discovered: groupByMonth(discovered) };
+}
+
+export const EFFECTIVE_MONTH_SERIES_NOTE =
+  "Each change is counted in the month its terms took effect. A change read off a page that does not say when it changed is not counted here — those are below, by the month we read the page.";
+
+export function discoveryMonthSeriesHeading(count: number): string {
+  return `Changes Found by Reading a Page (${count})`;
+}
+
+export const DISCOVERY_MONTH_SERIES_NOTE =
+  "These vendors’ pages state terms that differ from what we had stored and do not say when they changed. Each is counted in the month we read the page, so this series measures when we looked, not when the market moved. None of them are in the monthly figures above.";
+
+export function periodComparisonSentence(
+  earlier: { label: string; count: number },
+  later: { label: string; count: number }
+): string {
+  return `${later.label} holds ${later.count} ${later.count === 1 ? "change" : "changes"} whose terms took effect in it, against ${earlier.count} in ${earlier.label}.`;
+}
+
 export interface DateWindow {
   start: string;
   end?: string;
