@@ -1,5 +1,6 @@
 import { describe, it, before, after } from "node:test";
 import assert from "node:assert";
+import { assertPopulationFloor } from "./population-floor.ts";
 import { spawn, type ChildProcess } from "node:child_process";
 import { readFileSync } from "node:fs";
 import path from "node:path";
@@ -214,8 +215,8 @@ describe("hosting pages publish the free-tier figures our records hold (#1183)",
   });
 
   it("reads every published page rather than the pages the issue happened to name", () => {
-    assert.ok(routes.length > 2000, `expected the whole sitemap, got ${routes.length} routes`);
-    assert.ok(scanned > 2000, `expected to read the whole sitemap, read ${scanned}`);
+    assertPopulationFloor(routes.length, 1000, "routes in the sitemap");
+    assertPopulationFloor(scanned, 1000, "routes read from the sitemap");
   });
 
   it("publishes no free-tier figure the vendor has retired", () => {

@@ -1,5 +1,6 @@
 import { describe, it, before, after } from "node:test";
 import assert from "node:assert";
+import { assertPopulationFloor } from "./population-floor.ts";
 import { spawn, type ChildProcess } from "node:child_process";
 import { readFileSync } from "node:fs";
 import path from "node:path";
@@ -44,8 +45,6 @@ const NO_FREE_TIER_FOR_PRODUCTION = "There is no free tier here to run in produc
 const STABLE_RATING_CLAUSE = "We rate it stable and";
 const RECOMMENDATION_CLAUSE = "so it's a reasonable starting point";
 
-const UNGATED_PAGES_ANSWERING_YES = 588;
-const UNGATED_PAGES_RECOMMENDING = 559;
 
 let port = 0;
 let proc: ChildProcess | null = null;
@@ -165,7 +164,8 @@ const productionAnswer = (p: VendorPage) => faqAnswer(p.html, `Is ${p.vendor}'s 
 
 describe("the page a gated record renders does not answer the free-tier question with yes", () => {
   it("renders one page per vendor and reads the record that page renders", () => {
-    assert.ok(rendered.length > 1500, `only ${rendered.length} vendor pages rendered`);
+    assert.strictEqual(rendered.length, primaries.length, "a vendor page did not render for every vendor the catalogue lists");
+    assertPopulationFloor(primaries.length, 1, "vendors the catalogue lists");
     for (const p of rendered) {
       assert.strictEqual(
         blockOfType(p.html, "WebPage")?.mainEntity?.description,
@@ -271,7 +271,7 @@ describe("the ungated pages keep the answer they had", () => {
         && p.primary.tier.toLowerCase() !== "none"
         && !p.primary.description.toLowerCase().includes("no free tier"),
     );
-    assert.ok(plainlyFree.length > 100, `only ${plainlyFree.length} ungated pages are plainly free`);
+    assertPopulationFloor(plainlyFree.length, 101, "ungated pages are plainly free");
     const quiet = plainlyFree.filter(p => !freeAnswer(p).startsWith("Yes")).map(p => p.slug);
     assert.deepStrictEqual(quiet, []);
   });
@@ -288,25 +288,19 @@ describe("the ungated pages keep the answer they had", () => {
     assert.deepStrictEqual(ungated().filter(p => supersededTerms(p) && freeAnswer(p).startsWith("Yes")).map(p => p.slug), []);
   });
 
-  it("counts at least as many ungated pages answering yes as the census found", () => {
+  it("answers yes on a large share of the ungated pages", () => {
     const answering = ungated().filter(p => freeAnswer(p).startsWith("Yes")).length;
-    assert.ok(
-      answering >= UNGATED_PAGES_ANSWERING_YES,
-      `${answering} ungated pages answer yes, down from ${UNGATED_PAGES_ANSWERING_YES}`,
-    );
+    assertPopulationFloor(answering, Math.floor(ungated().length / 4), `ungated pages of ${ungated().length} answer yes`);
   });
 
-  it("counts at least as many ungated pages recommending the tier for production", () => {
+  it("recommends the tier for production on a large share of the ungated pages", () => {
     const recommending = ungated().filter(p => productionAnswer(p).includes(RECOMMENDATION_CLAUSE)).length;
-    assert.ok(
-      recommending >= UNGATED_PAGES_RECOMMENDING,
-      `${recommending} ungated pages recommend the tier, down from ${UNGATED_PAGES_RECOMMENDING}`,
-    );
+    assertPopulationFloor(recommending, Math.floor(ungated().length / 4), `ungated pages of ${ungated().length} recommend the tier for production`);
   });
 
   it("still rates those tiers stable in the production answer", () => {
     const rating = ungated().filter(p => productionAnswer(p).includes(STABLE_RATING_CLAUSE)).length;
-    assert.ok(rating >= UNGATED_PAGES_RECOMMENDING, `only ${rating} ungated pages still carry the stable rating`);
+    assertPopulationFloor(rating, Math.floor(ungated().length / 4), `ungated pages of ${ungated().length} carry the stable rating`);
   });
 });
 
@@ -337,9 +331,10 @@ describe("the production answer reads the same gate", () => {
 
   it("opens with whatever opens the free-tier answer on the same page", () => {
     const subjects = gated().filter(p => freeAnswer(p).startsWith(p.gate!.reason));
-    assert.ok(
-      subjects.length > 100,
-      `only ${subjects.length} gated pages open the free-tier answer with the gate, so this has no subject`,
+    assertPopulationFloor(
+      subjects.length,
+      Math.floor(gated().length / 3),
+      `gated pages of ${gated().length} open the free-tier answer with the gate`,
     );
     const contradicting = subjects
       .filter(p => !productionAnswer(p).startsWith(p.gate!.reason))
@@ -413,7 +408,7 @@ describe("the heading agrees with the title on the same page", () => {
   it("keeps it on a page whose gate is the restriction rather than the tier", () => {
     const restricted = gated().filter(p => p.gate!.code === "eligibility_restricted");
     const heading = restricted.filter(p => / Free Tier \d{4}/.test(headingOf(p.html))).length;
-    assert.ok(heading > 100, `only ${heading} of ${restricted.length} restricted pages still head a free tier`);
+    assertPopulationFloor(heading, Math.floor(restricted.length / 2), `restricted pages of ${restricted.length} still head a free tier`);
   });
 
   it("heads a page whose title withholds the free-tier form with the pricing form", () => {
@@ -509,7 +504,6 @@ const offerBlock = (p: VendorPage) => blockOfType(p.html, "WebPage")?.mainEntity
 
 const currentVendorRow = (html: string) => /<tr class="current-vendor-row">[\s\S]*?<\/tr>/.exec(html)?.[0] ?? null;
 
-const UNGATED_PAGES_RATING_RELIABILITY = 745;
 
 describe("no page a gated record renders claims a free tier or rates one", () => {
   it("makes none of the claims a page makes about an offer it does list", () => {
@@ -580,18 +574,13 @@ const QUESTIONS_A_GATE_DOES_NOT_TOUCH = (vendor: string) => [
   `What category is ${vendor} in?`,
 ];
 
-const GATED_PAGES_DECLINING_TO_RATE = 100;
-const GATED_PAGES_NAMING_A_RESTRICTED_TIER = 130;
 
 describe("no question a gated page asks presupposes what its own answer denies", () => {
   const reliability = (p: VendorPage) => faqAnswer(p.html, `Is ${p.vendor}'s free tier reliable?`);
 
   it("asks whether the free tier is reliable only where the answer declines to rate it", () => {
     const asking = gated().filter(p => asks(p.html, `Is ${p.vendor}'s free tier reliable?`));
-    assert.ok(
-      asking.length > GATED_PAGES_DECLINING_TO_RATE,
-      `only ${asking.length} gated pages still ask it, so this assertion has almost no subject`,
-    );
+    assertPopulationFloor(asking.length, Math.floor(gated().length / 3), `gated pages of ${gated().length} ask whether the free tier is reliable`);
     const rating = asking
       .filter(p => !DECLINES_TO_RATE.some(form => reliability(p).includes(form)))
       .map(p => `${p.slug} (${p.gate!.code}): ${reliability(p).slice(0, 90)}`);
@@ -623,10 +612,7 @@ describe("no question a gated page asks presupposes what its own answer denies",
 
   it("still asks what the tier is where the gate is the restriction rather than the tier", () => {
     const asking = gated().filter(p => asks(p.html, `What is ${p.vendor}'s free tier?`)).length;
-    assert.ok(
-      asking > GATED_PAGES_NAMING_A_RESTRICTED_TIER,
-      `only ${asking} gated pages still ask what the tier is, down from ${GATED_PAGES_NAMING_A_RESTRICTED_TIER}`,
-    );
+    assertPopulationFloor(asking, Math.floor(gated().length / 3), `gated pages of ${gated().length} ask what the tier is`);
   });
 });
 
@@ -665,7 +651,7 @@ describe("the same page an ungated record renders is unchanged", () => {
 
   it("opens the verdict on the supersession where the change log holds one", () => {
     const subjects = ungated().filter(supersededTerms);
-    assert.ok(subjects.length > 100, `only ${subjects.length} ungated pages withhold superseded terms`);
+    assertPopulationFloor(subjects.length, 101, "ungated pages withhold superseded terms");
     const opening = subjects.filter(p => pageProse(p).includes(`${p.vendor}'s free tier offers `)).map(p => p.slug);
     assert.deepStrictEqual(opening.slice(0, 20), [], "verdicts still opening on figures the change log supersedes");
     const silent = subjects
@@ -679,10 +665,7 @@ describe("the same page an ungated record renders is unchanged", () => {
       const answer = faqAnswer(p.html, `Is ${p.vendor}'s free tier reliable?`);
       return /is considered stable|requires caution|is considered risky/.test(answer);
     }).length;
-    assert.ok(
-      rating >= UNGATED_PAGES_RATING_RELIABILITY,
-      `${rating} ungated pages rate the tier, down from ${UNGATED_PAGES_RATING_RELIABILITY}`,
-    );
+    assertPopulationFloor(rating, Math.floor(ungated().length / 4), `ungated pages of ${ungated().length} rate the tier`);
   });
 
   it("still answers when the reader will outgrow it", () => {

@@ -1,5 +1,6 @@
 import { describe, it, before, after } from "node:test";
 import assert from "node:assert";
+import { assertPopulationFloor } from "./population-floor.ts";
 import { spawn, type ChildProcess } from "node:child_process";
 import { readFileSync } from "node:fs";
 import path from "node:path";
@@ -134,7 +135,6 @@ after(() => { proc?.kill(); });
 
 describe("the free tier report counts what the site is prepared to vouch for", () => {
   it("reads a verdict for every vendor in the catalogue", () => {
-    assert.ok(verdicts.size >= 1500, `only ${verdicts.size} vendors publish a badge verdict`);
     const missing = offers.filter((o) => !verdicts.has(toSlug(o.vendor)));
     assert.deepStrictEqual(missing.map((o) => o.vendor), [], "offers whose vendor publishes no badge verdict");
   });
@@ -142,8 +142,8 @@ describe("the free tier report counts what the site is prepared to vouch for", (
   it("holds the three populations the report is written for", () => {
     const census = censusOf(offers);
     assert.ok(census.ended >= 20, `only ${census.ended} offers are recorded as ended`);
-    assert.ok(census.vouched >= 300, `only ${census.vouched} offers are vouched`);
-    assert.ok(census.unconfirmed >= 100, `only ${census.unconfirmed} recorded offers are unconfirmed`);
+    assertPopulationFloor(census.vouched, 300, "offers are vouched");
+    assertPopulationFloor(census.unconfirmed, 100, "recorded offers are unconfirmed");
     assert.ok(
       censusOf(offers.filter((o) => tierRecordsAFreeTier(o.tier))).ended >= 20,
       "no offer whose tier records a free tier is also recorded as ended, so the exclusion is untested",

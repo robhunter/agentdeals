@@ -1,5 +1,6 @@
 import { describe, it, before, after, afterEach } from "node:test";
 import assert from "node:assert";
+import { assertPopulationFloor } from "./population-floor.ts";
 import { spawn, type ChildProcess } from "node:child_process";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -1187,7 +1188,7 @@ describe("HTTP transport", () => {
     const xml = await response.text();
     assert.ok(xml.includes("/compare/netlify-vs-vercel"), "Sitemap should include comparison pages");
     const compareCount = (xml.match(/\/compare\//g) || []).length;
-    assert.ok(compareCount >= 200, `Expected 200+ comparison URLs in sitemap, got ${compareCount}`);
+    assertPopulationFloor(compareCount, 200, "comparison URLs in the sitemap");
   });
 
   it("GET /compare returns comparison index page", async () => {
@@ -1245,7 +1246,7 @@ describe("HTTP transport", () => {
     const countMatch = indexHtml.match(/(\d+) side-by-side/);
     assert.ok(countMatch, "Index should show comparison count");
     const count = parseInt(countMatch![1], 10);
-    assert.ok(count >= 200, `Expected 200+ comparisons from auto-generation, got ${count}`);
+    assertPopulationFloor(count, 200, "comparisons come from auto-generation");
     assert.ok(count <= 500, `Expected at most 500 comparisons, got ${count}`);
   });
 
@@ -1255,7 +1256,7 @@ describe("HTTP transport", () => {
     const response = await fetch(`http://localhost:${serverPort}/sitemap-comparisons.xml`);
     const xml = await response.text();
     const compareCount = (xml.match(/\/compare\//g) || []).length;
-    assert.ok(compareCount >= 200, `Expected 200+ comparison URLs in sitemap, got ${compareCount}`);
+    assertPopulationFloor(compareCount, 200, "comparison URLs in the sitemap");
   });
 
   it("GET /compare/:slug redirects reversed URLs", async () => {
@@ -1407,7 +1408,7 @@ describe("HTTP transport", () => {
     const xml = await response.text();
     assert.ok(xml.includes("/vendor/vercel"), "Sitemap should include vendor pages");
     const vendorCount = (xml.match(/\/vendor\//g) || []).length;
-    assert.ok(vendorCount >= 100, `Expected 100+ vendor URLs in sitemap, got ${vendorCount}`);
+    assertPopulationFloor(vendorCount, 100, "vendor URLs in the sitemap");
   });
 
   it("category page links vendors to profile pages", async () => {
@@ -1666,7 +1667,7 @@ describe("HTTP transport", () => {
     assert.ok(xml.includes("/alternative-to"), "Sitemap should include alternatives index");
     assert.ok(xml.includes("/alternative-to/vercel"), "Sitemap should include vendor alternatives");
     const altCount = (xml.match(/\/alternative-to\//g) || []).length;
-    assert.ok(altCount >= 100, `Expected 100+ alternative-to URLs in sitemap, got ${altCount}`);
+    assertPopulationFloor(altCount, 100, "alternative-to URLs in the sitemap");
   });
 
   it("sitemap-vendors.xml has varying lastmod dates based on content", async () => {
@@ -1675,7 +1676,7 @@ describe("HTTP transport", () => {
     const response = await fetch(`http://localhost:${serverPort}/sitemap-vendors.xml`);
     const xml = await response.text();
     const lastmods = [...xml.matchAll(/<lastmod>([^<]+)<\/lastmod>/g)].map(m => m[1]);
-    assert.ok(lastmods.length > 100, `Expected 100+ lastmod entries, got ${lastmods.length}`);
+    assertPopulationFloor(lastmods.length, 101, "lastmod entries in the sitemap");
     const uniqueDates = new Set(lastmods);
     assert.ok(uniqueDates.size > 1, `Expected varying lastmod dates, got ${uniqueDates.size} unique date(s): ${[...uniqueDates].join(", ")}`);
     for (const d of lastmods) {

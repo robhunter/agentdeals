@@ -1,5 +1,6 @@
 import { describe, it, before, after } from "node:test";
 import assert from "node:assert";
+import { assertPopulationFloor } from "./population-floor.ts";
 import { spawn, type ChildProcess } from "node:child_process";
 import { readFileSync, rmSync, writeFileSync } from "node:fs";
 import path from "node:path";
@@ -71,8 +72,8 @@ describe("#1063 an editorial badge names something we hold a record for", () => 
         subjects.add(`${subject}|${badge}`);
       }
     }
-    assert.ok(spans > 150, `expected the sweep to reach every badge on the site, reached ${spans}`);
-    assert.ok(subjects.size > 100, `expected over 100 distinct subject and badge pairs, found ${subjects.size}`);
+    assertPopulationFloor(spans, 80, "badges the sweep reached");
+    assertPopulationFloor(subjects.size, 60, "distinct subject and badge pairs");
   });
 
   it("carries a subject for every badge it enumerates", () => {

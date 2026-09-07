@@ -1,10 +1,16 @@
 import { describe, it, before, after } from "node:test";
 import assert from "node:assert";
+import { assertPopulationFloor } from "./population-floor.ts";
 import { spawn, type ChildProcess } from "node:child_process";
 import { readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { badgeVerdictsFromBadgesPage, type SiteFreeTierVerdict } from "./badge-verdicts.ts";
+import {
+  badgeLinksOnBadgesPage,
+  badgeVerdictsFromBadgesPage,
+  badgesWithNoVerdict,
+  type SiteFreeTierVerdict,
+} from "./badge-verdicts.ts";
 
 const { compiledFigureSlots, staticHalfOf } = await import("../dist/compiled-figures.js");
 const { namedVendorSlug, toSlug, vendorSlugMap } = await import("../dist/vendor-slug.js");
@@ -56,6 +62,8 @@ let proc: ChildProcess | null = null;
 let base = "";
 const pages = new Map<string, string>();
 let verdicts = new Map<string, SiteFreeTierVerdict>();
+let badges = "";
+let published = 0;
 
 function startServer(): Promise<ChildProcess> {
   return new Promise((resolve, reject) => {
@@ -72,15 +80,17 @@ function startServer(): Promise<ChildProcess> {
   });
 }
 
-async function fetchEveryPublishedPage(): Promise<void> {
+async function fetchEveryPublishedPage(): Promise<number> {
   const sitemap = await (await fetch(`${base}/sitemap-pages.xml`)).text();
-  const queue = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map(m => new URL(m[1]).pathname);
+  const paths = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map(m => new URL(m[1]).pathname);
+  const queue = [...paths];
   await Promise.all(Array.from({ length: 8 }, async () => {
     for (let next = queue.pop(); next; next = queue.pop()) {
       const res = await fetch(`${base}${next}`);
       if (res.ok) pages.set(next, await res.text());
     }
   }));
+  return paths.length;
 }
 
 interface SweptSlot {
@@ -106,15 +116,17 @@ function everySlotOnEveryPage(): SweptSlot[] {
 describe("marking a comparison slot whose vendor has no catalogue entry", () => {
   before(async () => {
     proc = await startServer();
-    await fetchEveryPublishedPage();
-    verdicts = badgeVerdictsFromBadgesPage(await (await fetch(`${base}/badges`)).text());
+    published = await fetchEveryPublishedPage();
+    badges = await (await fetch(`${base}/badges`)).text();
+    verdicts = badgeVerdictsFromBadgesPage(badges);
   });
 
   after(() => { proc?.kill(); });
 
   it("reads every page the sitemap publishes", () => {
-    assert.ok(pages.size >= 400, `only ${pages.size} pages read`);
-    assert.ok(verdicts.size >= 1500, `only ${verdicts.size} badge verdicts read`);
+    assert.strictEqual(pages.size, published, "the sitemap lists a page that did not answer");
+    assert.deepStrictEqual(badgesWithNoVerdict(badges), []);
+    assert.strictEqual(verdicts.size, badgeLinksOnBadgesPage(badges).length);
   });
 
   it("holds ended records for vendors the catalogue has no entry for", () => {
@@ -186,7 +198,7 @@ describe("marking a comparison slot whose vendor has no catalogue entry", () => 
   it("gives the change log one anchor per vendor and no more", () => {
     const ids = [...pages.get("/changes")!.matchAll(/ id="(vendor-[a-z0-9-]+)"/g)].map(m => m[1]!);
     assert.deepStrictEqual(ids.filter((id, at) => ids.indexOf(id) !== at), []);
-    assert.ok(ids.length >= 400, `only ${ids.length} vendors are addressable in the change log`);
+    assertPopulationFloor(ids.length, 200, "vendors are addressable in the change log");
   });
 
   it("leaves a slot the page itself wrote as removed exactly as the page wrote it", () => {

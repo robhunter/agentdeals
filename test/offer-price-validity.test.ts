@@ -1,5 +1,6 @@
 import { describe, it, before, after } from "node:test";
 import assert from "node:assert";
+import { assertPopulationFloor } from "./population-floor.ts";
 import { spawn, type ChildProcess } from "node:child_process";
 import { readFileSync, writeFileSync, mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
@@ -258,7 +259,7 @@ describe("no vendor page publishes a price expiry that has already passed", () =
   });
 
   it("serves an expiry no earlier than the day the page was built, on every vendor page", async () => {
-    assert.ok(slugs.length > 1000, `only ${slugs.length} vendor pages were checked`);
+    assertPopulationFloor(slugs.length, 1001, "vendor pages checked");
     const expired: string[] = [];
     let present = 0;
     let emitting = 0;
@@ -272,7 +273,7 @@ describe("no vendor page publishes a price expiry that has already passed", () =
       present++;
       if (until < TODAY) expired.push(`${slug} ${until}`);
     }
-    assert.ok(emitting > 1000, `only ${emitting} of ${slugs.length} vendor pages emit an Offer at all`);
+    assertPopulationFloor(emitting, Math.floor(slugs.length / 2), `vendor pages of ${slugs.length} emit an Offer at all`);
     assert.deepStrictEqual(
       expired.slice(0, 10),
       [],

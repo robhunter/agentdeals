@@ -1,5 +1,6 @@
 import { describe, it, before, after } from "node:test";
 import assert from "node:assert";
+import { assertPopulationFloor } from "./population-floor.ts";
 import { spawn, type ChildProcess } from "node:child_process";
 import { readFileSync } from "node:fs";
 import path from "node:path";
@@ -195,10 +196,7 @@ describe("the vendor page lede", () => {
 
   it("answers on every vendor page, and states terms a record of that vendor begins with", () => {
     assert.deepStrictEqual(unreachable, [], "vendor pages that published no description");
-    assert.ok(
-      swept.length > SWEPT_PAGES_VACUITY_GUARD,
-      `swept ${swept.length} vendor pages, too few to stand as a site-wide check`,
-    );
+    assertPopulationFloor(swept.length, SWEPT_PAGES_VACUITY_GUARD, "vendor pages swept for a site-wide check");
     const quoted = statedTerms();
     assert.strictEqual(
       quoted.length,

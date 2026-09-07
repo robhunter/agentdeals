@@ -1,5 +1,6 @@
 import { describe, it } from "node:test";
 import assert from "node:assert";
+import { assertPopulationFloor } from "./population-floor.ts";
 import { readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -37,6 +38,9 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(__dirname, "..");
 
 const changes: DealChange[] = loadDealChanges();
+const shippedChanges: DealChange[] = JSON.parse(
+  readFileSync(path.join(REPO, "data", "deal_changes.json"), "utf-8"),
+).changes;
 
 const record = (over: Partial<DealChange> = {}): DealChange => ({
   vendor: "Fixture Vendor",
@@ -105,7 +109,7 @@ describe("a record whose summary says its own source cannot be read", () => {
       c => `${c.vendor} ${c.date} -> ${c.source_url} (${summaryCallsItsSourceUnreadable(c)})`,
     );
     assert.deepStrictEqual(offenders, []);
-    assert.ok(changes.length > 500, `only ${changes.length} records were checked`);
+    assert.strictEqual(changes.length, shippedChanges.length, "the sweep read fewer records than the repository ships");
   });
 
   it("no longer sends anyone to the startup-deals roundup that named none of its eight vendors", () => {
@@ -118,8 +122,7 @@ describe("a record whose summary says its own source cannot be read", () => {
 
 describe("what a change record reports", () => {
   it("is a field, so a reader of the data does not have to parse the summary to tell", () => {
-    const shipped = JSON.parse(readFileSync(path.join(REPO, "data", "deal_changes.json"), "utf-8")).changes;
-    const marked = shipped.filter((c: DealChange) => c.reports === "our_index");
+    const marked = shippedChanges.filter((c: DealChange) => c.reports === "our_index");
     assert.ok(marked.length > 0, "no shipped record says it reports our own index");
     assert.strictEqual(marked.length, ourIndexChanges(changes).length);
     for (const c of marked) {

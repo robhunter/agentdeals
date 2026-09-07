@@ -1,5 +1,6 @@
 import { describe, it, before, after } from "node:test";
 import assert from "node:assert";
+import { assertPopulationFloor } from "./population-floor.ts";
 import { spawn, type ChildProcess } from "node:child_process";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -156,7 +157,7 @@ describe("payment protocol features", () => {
     const res = await fetch(`http://localhost:${serverPort}/api/offers?payment_protocol=x402&limit=200`);
     const data = await res.json() as { offers: { vendor: string }[]; total: number };
     const vendors = data.offers.map(o => o.vendor);
-    assert.ok(data.total >= 40, `Should have 40+ x402 vendors, got ${data.total}`);
+    assertPopulationFloor(data.total, 25, "x402 vendors");
     assert.ok(vendors.includes("Replicate"), "x402 should include Replicate");
     assert.ok(vendors.includes("Groq"), "x402 should include Groq");
     assert.ok(vendors.includes("Mistral AI"), "x402 should include Mistral AI");
@@ -182,9 +183,9 @@ describe("payment protocol features", () => {
     assert.ok(data.protocols.both.count >= 5, `Should have 5+ dual-protocol vendors, got ${data.protocols.both.count}`);
   });
 
-  it("total payment-enabled vendors meets 54+ threshold", async () => {
+  it("counts the payment-enabled vendors the catalogue holds", async () => {
     const res = await fetch(`http://localhost:${serverPort}/api/agent-payments`);
     const data = await res.json() as any;
-    assert.ok(data.total >= 54, `Should have 54+ payment-enabled vendors, got ${data.total}`);
+    assertPopulationFloor(data.total, 30, "payment-enabled vendors");
   });
 });

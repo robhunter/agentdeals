@@ -1,5 +1,6 @@
 import { describe, it, before, after } from "node:test";
 import assert from "node:assert";
+import { assertPopulationFloor } from "./population-floor.ts";
 import { spawn, type ChildProcess } from "node:child_process";
 import { createHash } from "node:crypto";
 import path from "node:path";
@@ -109,7 +110,7 @@ after(() => {
 describe("served script blocks", () => {
   it("parse as JavaScript, on every page template the site publishes", async () => {
     const routes = await everyPageTemplate();
-    assert.ok(routes.length > 1000, `expected the whole catalogue of templates, got ${routes.length}`);
+    assertPopulationFloor(routes.length, 1001, "templates in the catalogue");
     for (const page of INTERACTIVE_PAGES) {
       assert.ok(routes.includes(page), `${page} is outside the swept routes`);
     }

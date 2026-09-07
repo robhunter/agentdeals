@@ -1,5 +1,6 @@
 import { describe, it, before, after } from "node:test";
 import assert from "node:assert";
+import { assertPopulationFloor } from "./population-floor.ts";
 import { spawn, ChildProcess } from "node:child_process";
 import { readFileSync } from "node:fs";
 import path from "node:path";
@@ -111,7 +112,7 @@ describe("search facet space is closed to crawlers", () => {
   it("the search page is absent from the sitemap it asks not to be indexed in", async () => {
     const sitemap = await get("/sitemap-pages.xml");
     const locs = [...sitemap.matchAll(/<loc>(.*?)<\/loc>/g)].map((m) => m[1].replace(/^https?:\/\/[^/]+/, ""));
-    assert.ok(locs.length > 100, `sitemap-pages.xml should still list the site, got ${locs.length} entries`);
+    assertPopulationFloor(locs.length, 101, "entries in sitemap-pages.xml");
     assert.ok(!locs.includes("/search"), "a noindex page should not be submitted for indexing");
   });
 

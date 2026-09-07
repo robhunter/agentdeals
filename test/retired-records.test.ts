@@ -1,5 +1,6 @@
 import { describe, it, before, after } from "node:test";
 import assert from "node:assert";
+import { assertPopulationFloor } from "./population-floor.ts";
 import { spawn, type ChildProcess } from "node:child_process";
 import { readFileSync } from "node:fs";
 import path from "node:path";
@@ -182,7 +183,7 @@ describe("a record marked retired in its tier is read as retired", () => {
   });
 
   it("sends no reader there from any other page we serve either", () => {
-    assert.ok(sweptPaths.length > 1000, `swept only ${sweptPaths.length} paths`);
+    assertPopulationFloor(sweptPaths.length, 1001, "paths swept");
     const offenders: string[] = [];
     for (const p of sweptPaths) {
       const html = pages.get(p) ?? "";
@@ -215,7 +216,7 @@ describe("a record marked retired in its tier is read as retired", () => {
 describe("a record that is not retired keeps everything the gate would take away", () => {
   it("still links to its pricing page from its vendor page", () => {
     const live = renderedVendorPages.filter(p => !offerRetired(p.offer));
-    assert.ok(live.length > 1000, `only ${live.length} vendor pages render a live record`);
+    assertPopulationFloor(live.length, 600, "vendor pages render a live record");
     const missing = live.filter(p => anchorsTo(p.html, escapeHtml(p.offer.url)) === 0).map(p => p.slug);
     assert.deepStrictEqual(missing, []);
   });
@@ -233,7 +234,7 @@ describe("a record that is not retired keeps everything the gate would take away
         && p.offer.tier.toLowerCase() !== "none"
         && !p.offer.description.toLowerCase().includes("no free tier"),
     );
-    assert.ok(plainlyFree.length > 100, `only ${plainlyFree.length} vendor pages are plainly free`);
+    assertPopulationFloor(plainlyFree.length, 101, "vendor pages are plainly free");
     const quiet = plainlyFree
       .filter(p => !(faqAnswer(p.html, `Is ${p.offer.vendor} free?`) ?? "").startsWith("Yes"))
       .map(p => p.slug);

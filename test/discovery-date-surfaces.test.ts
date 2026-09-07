@@ -1,5 +1,6 @@
 import { describe, it, before, after } from "node:test";
 import assert from "node:assert";
+import { assertPopulationFloor } from "./population-floor.ts";
 import { spawn, type ChildProcess } from "node:child_process";
 import { writeFileSync, mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
@@ -192,7 +193,7 @@ describe("no published surface presents a discovery date as the date a vendor ch
   });
 
   it("reaches enough of the site for the sweep below to mean something", () => {
-    assert.ok(routes.length > 1000, `only enumerated ${routes.length} routes from the sitemap`);
+    assertPopulationFloor(routes.length, 1001, "routes enumerated from the sitemap");
     assert.ok(rendered.size > 40, `only ${rendered.size} routes rendered the entry at all`);
   });
 

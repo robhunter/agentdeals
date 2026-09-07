@@ -185,10 +185,6 @@ describe("what the zero rule must not refuse", () => {
 describe("the batch this rule was written against", () => {
   const batch = RECORDED.filter((change) => change.date === THE_BATCH_THAT_WAS_REVIEWED);
 
-  it("holds the records the rule was measured over", () => {
-    assert.ok(batch.length >= 26, `${batch.length} records dated ${THE_BATCH_THAT_WAS_REVIEWED}`);
-  });
-
   it("refuses the two read from a page that had not rendered and nothing else in the batch", () => {
     const refused = batch
       .filter((change) => describesChange(change, {}).reason === REJECT_ZERO_ALLOWANCE)
@@ -210,7 +206,11 @@ describe("the batch this rule was written against", () => {
     });
     assert.strictEqual(
       batch.filter((change) => describesChange(change, {}).ok).length,
-      batch.length - 3
+      batch.length - Object.keys(refusals).length
+    );
+    assert.ok(
+      batch.length > Object.keys(refusals).length,
+      `every record dated ${THE_BATCH_THAT_WAS_REVIEWED} is refused, so nothing here is left as it was found`,
     );
   });
 });

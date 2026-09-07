@@ -1,5 +1,6 @@
 import { describe, it, before, after } from "node:test";
 import assert from "node:assert";
+import { assertPopulationFloor } from "./population-floor.ts";
 import { spawn, type ChildProcess } from "node:child_process";
 import { readFileSync, writeFileSync, mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
@@ -164,7 +165,7 @@ describe("backfilling the entries written before the field existed", () => {
     const published = JSON.parse(readFileSync(path.join(REPO, "data", "deal_changes.json"), "utf-8")).changes;
     const freshness = changeLogFreshness(published, new Date());
     assert.strictEqual(freshness.entries_without_date_source, 0);
-    assert.ok(published.length > 100, `expected the real log, got ${published.length} entries`);
+    assertPopulationFloor(published.length, 101, "entries in the published log");
   });
 
   it("counts entries whose date is only a discovery", () => {

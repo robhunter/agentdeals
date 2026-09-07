@@ -1,5 +1,6 @@
 import { describe, it, before, after } from "node:test";
 import assert from "node:assert";
+import { assertPopulationFloor } from "./population-floor.ts";
 import { spawn, type ChildProcess } from "node:child_process";
 import { readFileSync, writeFileSync, mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
@@ -216,8 +217,8 @@ describe("#1086 every structured answer that states a vendor figure carries the 
     const changes = JSON.parse(readFileSync(path.join(REPO, "data", "deal_changes.json"), "utf-8"));
     const touchedChanges = perturbTextFields(changes.changes, CHANGE_LOG_TEXT_FIELDS);
     writeFileSync(path.join(tmp, "deal_changes.json"), JSON.stringify(changes));
-    assert.ok(touchedIndex > 1000, `perturbed only ${touchedIndex} catalogue fields, so the comparison below proves nothing`);
-    assert.ok(touchedChanges > 100, `perturbed only ${touchedChanges} change-log fields, so the comparison below proves nothing`);
+    assertPopulationFloor(touchedIndex, 1001, "catalogue fields perturbed for the comparison below");
+    assertPopulationFloor(touchedChanges, 101, "change-log fields perturbed for the comparison below");
 
     [real, perturbed] = await Promise.all([
       startServer({}),

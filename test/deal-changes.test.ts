@@ -1,5 +1,6 @@
 import { describe, it } from "node:test";
 import assert from "node:assert";
+import { assertPopulationFloor } from "./population-floor.ts";
 import { spawn } from "node:child_process";
 import path from "node:path";
 import fs from "node:fs";
@@ -78,7 +79,7 @@ describe("track_changes tool", () => {
     assert.ok(Array.isArray(body.changes));
     assert.strictEqual(body.total, body.changes.length);
     assert.strictEqual(body.total, onFile.length);
-    assert.ok(body.total > 200, `expected the whole change log, got ${body.total}`);
+    assertPopulationFloor(body.total, 201, "records in the change log");
     for (const c of body.changes) assert.ok(c.date >= since, `${c.vendor} predates the since date`);
   });
 

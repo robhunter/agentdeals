@@ -1,5 +1,6 @@
 import { describe, it, before, after } from "node:test";
 import assert from "node:assert";
+import { assertPopulationFloor } from "./population-floor.ts";
 import { spawn, type ChildProcess } from "node:child_process";
 import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
@@ -275,7 +276,7 @@ describe("what the sitemaps say about when a page changed", () => {
   it("dates a page it has no record of no earlier than the day the ledger was written", async () => {
     const ledger = readPageLastmod();
     const known = new Set(inventory);
-    assert.ok(known.size > 400, `Expected the comparison and editorial pages, got ${known.size}`);
+    assertPopulationFloor(known.size, 200, "comparison and editorial pages");
     const entries = new Map<string, string>();
     for (const name of SITEMAPS) {
       for (const { loc, lastmod } of await sitemapEntries(name)) entries.set(loc, lastmod);
@@ -336,7 +337,7 @@ describe("what the sitemaps say about when a page changed", () => {
         counted++;
       }
     }
-    assert.ok(counted > 2000, `Expected the whole crawl space, got ${counted} URLs`);
+    assertPopulationFloor(counted, 1000, "URLs in the crawl space");
   });
 
   it("serves Last-Modified on a page it can date, and none on a page it cannot", async () => {

@@ -1,5 +1,6 @@
 import { describe, it, before, after } from "node:test";
 import assert from "node:assert";
+import { assertPopulationFloor } from "./population-floor.ts";
 import { spawn, type ChildProcess } from "node:child_process";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -155,7 +156,7 @@ describe("served html", () => {
 
   it("carries no comments in its style or script blocks", async () => {
     const routes = await sampledRoutes();
-    assert.ok(routes.length > 100, `expected a broad sample, got ${routes.length}`);
+    assertPopulationFloor(routes.length, 101, "routes in the sample");
 
     const offenders: string[] = [];
     for (const route of routes) {

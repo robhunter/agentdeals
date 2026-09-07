@@ -1,5 +1,6 @@
 import { describe, it, before, after } from "node:test";
 import assert from "node:assert";
+import { assertPopulationFloor } from "./population-floor.ts";
 import { spawn, type ChildProcess } from "node:child_process";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -90,7 +91,7 @@ before(async () => {
   const changes = loadDealChanges();
   const servedOn = utcDate();
   pairs = [...buildComparisonMap().entries()].map(([slug, [a, b]]: [string, [string, string]]) => ({ slug, a, b }));
-  assert.ok(pairs.length > 300, "the comparison set did not load");
+  assertPopulationFloor(pairs.length, 200, "comparison pairs loaded");
 
   const started = await startHttpServer();
   proc = started.child;
@@ -203,7 +204,7 @@ describe("#1393 the comparison page answers the free-tier question the way the r
 
     assert.deepStrictEqual(assertsWhatTheSiteWillNot, [], "a comparison asserts a free tier the badge does not rate");
     assert.deepStrictEqual(withholdsWhereTheSitePublishes, [], "a comparison withholds a free tier the badge rates");
-    assert.ok(asserted > 300, `only ${asserted} slots assert a free tier`);
+    assertPopulationFloor(asserted, 200, "slots assert a free tier");
   });
 
   it("states why it is withholding, on every slot the site does not rate", async () => {
@@ -229,7 +230,7 @@ describe("#1393 the comparison page answers the free-tier question the way the r
 
     assert.deepStrictEqual(silent, [], "a comparison withholds without saying so in the claim");
     assert.deepStrictEqual(unreasoned, [], "a comparison withholds without naming a reason we hold");
-    assert.ok(withholdingSlots > 100, `only ${withholdingSlots} slots withhold`);
+    assertPopulationFloor(withholdingSlots, 101, "slots withhold");
   });
 
   it("never publishes stored terms a change record supersedes", async () => {

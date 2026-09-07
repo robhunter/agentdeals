@@ -1,5 +1,6 @@
 import { describe, it, before, after } from "node:test";
 import assert from "node:assert";
+import { assertPopulationFloor } from "./population-floor.ts";
 import { spawn, type ChildProcess } from "node:child_process";
 import { readFileSync, writeFileSync, mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
@@ -122,15 +123,12 @@ describe("every change we publish reaches the page it was read from", () => {
 
   it("has a population on both sides of the question", () => {
     const inForceWithSource = changes.filter((c) => !isNoLongerInForce(c) && changeCitesASource(c));
-    assert.ok(
-      inForceWithSource.length > 100,
-      `only ${inForceWithSource.length} in-force records hold a source, so the citation sweep has almost no subject`,
-    );
+    assertPopulationFloor(inForceWithSource.length, 101, "in-force records hold a source for the citation sweep to read");
     assert.ok(
       changes.some((c) => !changeCitesASource(c)),
       "no record is missing a source, so nothing here exercises the entry that says we hold none",
     );
-    assert.ok(sweptPaths.length > 1000, `swept only ${sweptPaths.length} paths`);
+    assertPopulationFloor(sweptPaths.length, 1001, "paths swept");
   });
 
   it("cites the page behind every in-force record on some page we serve", () => {
@@ -158,7 +156,7 @@ describe("every change we publish reaches the page it was read from", () => {
       [],
       "a rendered Source link reaches a page no change record cites, so nothing can retract it",
     );
-    assert.ok(stillCited.size > 100, `only ${stillCited.size} distinct sources back the citations we render`);
+    assertPopulationFloor(stillCited.size, 101, "distinct sources back the citations we render");
   });
 
   it("does not depend on the vendor page to do it, so a retirement cannot take the citation away", () => {
@@ -211,7 +209,7 @@ describe("every change we publish reaches the page it was read from", () => {
         }
       }
     }
-    assert.ok(checked > 100, `only ${checked} change entries render on a vendor page`);
+    assertPopulationFloor(checked, 101, "change entries render on a vendor page");
     assert.deepStrictEqual([...new Set(offenders)].slice(0, 5), []);
   });
 

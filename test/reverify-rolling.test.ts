@@ -1,5 +1,6 @@
 import { describe, it } from "node:test";
 import assert from "node:assert";
+import { assertPopulationFloor } from "./population-floor.ts";
 
 const {
   pickOldestEntries,
@@ -118,9 +119,9 @@ describe("rolling re-verification", () => {
         const d = staggeredDate(now);
         counts[d] = (counts[d] ?? 0) + 1;
       }
-      assert.ok(counts["2026-04-21"] > 100);
-      assert.ok(counts["2026-04-20"] > 100);
-      assert.ok(counts["2026-04-19"] > 100);
+      assertPopulationFloor(counts["2026-04-21"], 100, "samples land on the first of the three days");
+      assertPopulationFloor(counts["2026-04-20"], 100, "samples land on the second of the three days");
+      assertPopulationFloor(counts["2026-04-19"], 100, "samples land on the third of the three days");
     });
   });
 });

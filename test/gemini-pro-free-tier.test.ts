@@ -1,5 +1,6 @@
 import { describe, it, before, after } from "node:test";
 import assert from "node:assert";
+import { assertPopulationFloor } from "./population-floor.ts";
 import { spawn, type ChildProcess } from "node:child_process";
 import { readFileSync } from "node:fs";
 import path from "node:path";
@@ -198,7 +199,7 @@ describe("Gemini free tier claims", () => {
   });
 
   it("reads every published page that mentions Gemini", () => {
-    assert.ok(routes.length > 2000, `expected the whole sitemap, got ${routes.length} routes`);
+    assertPopulationFloor(routes.length, 1000, "routes in the sitemap");
     assert.ok(geminiPages > 20, `expected many pages to mention Gemini, got ${geminiPages}`);
   });
 

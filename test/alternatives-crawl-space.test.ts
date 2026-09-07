@@ -1,5 +1,6 @@
 import { describe, it, before, after } from "node:test";
 import assert from "node:assert";
+import { assertPopulationFloor } from "./population-floor.ts";
 import { spawn, type ChildProcess } from "node:child_process";
 import { readFileSync } from "node:fs";
 import path from "node:path";
@@ -70,7 +71,7 @@ before(async () => {
   await renderAll(slugs);
   const sitemap = await (await fetch(`http://localhost:${serverPort}/sitemap-pages.xml`)).text();
   submitted = new Set([...sitemap.matchAll(/<loc>[^<]*\/alternative-to\/([^<]+)<\/loc>/g)].map(m => m[1]));
-  assert.ok(pages.size > 1000, `every vendor must have an alternatives page for this test to mean anything, rendered ${pages.size}`);
+  assertPopulationFloor(pages.size, 1001, "alternatives pages rendered");
   assert.ok(withSubstitutes().length > 0, "some page must name a substitute for this test to mean anything");
   assert.ok(withoutSubstitutes().length > 0, "some page must name none for this test to mean anything");
 });
