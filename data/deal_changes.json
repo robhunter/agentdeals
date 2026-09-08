@@ -1847,7 +1847,7 @@
       "previous_state": "App Mesh: fully managed service mesh for ECS and EKS microservice networking",
       "current_state": "App Mesh: end of support September 30, complete service retirement",
       "impact": "medium",
-      "source_url": "https://docs.aws.amazon.com/app-mesh/",
+      "source_url": "https://docs.aws.amazon.com/app-mesh/latest/userguide/what-is-app-mesh.html",
       "category": "Cloud Hosting",
       "alternatives": [
         "Istio",
@@ -1855,7 +1855,12 @@
         "Amazon EKS native service mesh"
       ],
       "recorded_date": "2026-04-10",
-      "date_source": "hand_written"
+      "date_source": "hand_written",
+      "source_check": {
+        "checked": "2026-09-08",
+        "outcome": "ok",
+        "finding": "the page carries an End of support notice reading \"On September 30, 2026, AWS will discontinue support for AWS App Mesh\""
+      }
     },
     {
       "vendor": "AWS",
@@ -1865,7 +1870,7 @@
       "previous_state": "Proton: managed IaC provisioning with developer self-service templates",
       "current_state": "Proton: end of support October 7, complete service retirement",
       "impact": "medium",
-      "source_url": "https://docs.aws.amazon.com/proton/",
+      "source_url": "https://docs.aws.amazon.com/proton/latest/userguide/Welcome.html",
       "category": "DevOps",
       "alternatives": [
         "AWS CDK",
@@ -1873,7 +1878,12 @@
         "Pulumi"
       ],
       "recorded_date": "2026-04-10",
-      "date_source": "hand_written"
+      "date_source": "hand_written",
+      "source_check": {
+        "checked": "2026-09-08",
+        "outcome": "ok",
+        "finding": "the page carries an End of support notice reading \"On October 7, 2026, AWS will end support for AWS Proton\""
+      }
     },
     {
       "vendor": "Vercel",
