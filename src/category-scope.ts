@@ -369,12 +369,64 @@ export const CATEGORY_ALIASES: Record<string, string> = {
   "Startup Programs": "Startup Perks",
 };
 
+export interface CategoryRetirement {
+  retired: string;
+  reason: string;
+}
+
+export const CATEGORY_RETIREMENTS: Record<string, CategoryRetirement> = {
+  "Streaming & Media": {
+    retired: "2026-09-08",
+    reason: "Consumer streaming and listening services are not infrastructure anyone selects while building software. The records were not wrong — the free tiers they described are real — they were out of scope for this index.",
+  },
+  "Banking & Finance": {
+    retired: "2026-09-08",
+    reason: "Personal banking, transfer and investing apps are not infrastructure anyone selects while building software. The records were not wrong — the free tiers they described are real — they were out of scope for this index.",
+  },
+  "News & Reading": {
+    retired: "2026-09-08",
+    reason: "Read-later apps and feed readers are not infrastructure anyone selects while building software. The records were not wrong — the free tiers they described are real — they were out of scope for this index.",
+  },
+  "Fitness & Health": {
+    retired: "2026-09-08",
+    reason: "Activity and health-tracking apps are not infrastructure anyone selects while building software. The records were not wrong — the free tiers they described are real — they were out of scope for this index.",
+  },
+  "Meditation & Wellness": {
+    retired: "2026-09-08",
+    reason: "Meditation and mental-wellbeing apps are not infrastructure anyone selects while building software. The records were not wrong — the free tiers they described are real — they were out of scope for this index.",
+  },
+};
+
+export type CategoryState = "live" | "retired" | "absent";
+
 export function resolveCategoryName(name: string): string {
   return CATEGORY_ALIASES[name] ?? name;
 }
 
+export function categoryState(name: string, liveNames: ReadonlySet<string>): CategoryState {
+  const resolved = resolveCategoryName(name);
+  if (liveNames.has(resolved)) return "live";
+  if (CATEGORY_RETIREMENTS[resolved]) return "retired";
+  return "absent";
+}
+
+export function retirementFor(name: string, liveNames: ReadonlySet<string>): CategoryRetirement | null {
+  const resolved = resolveCategoryName(name);
+  return categoryState(resolved, liveNames) === "retired" ? CATEGORY_RETIREMENTS[resolved] : null;
+}
+
+export function retiredCategoryNames(liveNames: ReadonlySet<string>): string[] {
+  return Object.keys(CATEGORY_RETIREMENTS)
+    .filter((name) => categoryState(name, liveNames) === "retired")
+    .sort();
+}
+
 export function scopeFor(name: string): CategoryScope | null {
   return CATEGORY_SCOPES[resolveCategoryName(name)] ?? null;
+}
+
+export function publishedScopeFor(name: string, liveNames: ReadonlySet<string>): CategoryScope | null {
+  return categoryState(name, liveNames) === "retired" ? null : scopeFor(name);
 }
 
 export function categoryHolds(name: string): CategoryHolds {

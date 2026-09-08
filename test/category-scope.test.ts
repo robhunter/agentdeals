@@ -7,7 +7,9 @@ import {
   PROGRAMME_TIERS,
   buildCategoryDirectory,
   categoryHolds,
+  categoryState,
   familySiblings,
+  publishedScopeFor,
   resolveCategoryName,
   scopeFor,
 } from "../dist/category-scope.js";
@@ -31,8 +33,16 @@ describe("every published category says what it holds", () => {
 
   it("declares no scope for a name no offer is filed under", () => {
     const live = new Set(categories.map((c) => c.name));
-    const orphans = Object.keys(CATEGORY_SCOPES).filter((name) => !live.has(name));
+    const orphans = Object.keys(CATEGORY_SCOPES).filter((name) => categoryState(name, live) === "absent");
     assert.deepStrictEqual(orphans, [], `scope declared for names holding nothing: ${orphans.join(", ")}`);
+  });
+
+  it("publishes no scope statement for a name it has retired", () => {
+    const live = new Set(categories.map((c) => c.name));
+    const speaking = Object.keys(CATEGORY_SCOPES)
+      .filter((name) => categoryState(name, live) === "retired")
+      .filter((name) => publishedScopeFor(name, live) !== null);
+    assert.deepStrictEqual(speaking, [], `retired names still publishing a scope statement: ${speaking.join(", ")}`);
   });
 
   it("names three members for every category holding three unended offers", () => {

@@ -22,7 +22,7 @@ import { getGuideList, getGuideBySlug } from "./guides.js";
 import type { Offer, EnrichedOffer, DealChange } from "./types.js";
 import { substitutesFor } from "./product-role.js";
 import { registerMcpAppsResources, TOOL_UI_META } from "./mcp-apps.js";
-import { MCP_INSTRUCTIONS } from "./mcp-instructions.js";
+import { CATALOGUE_CATEGORY_COUNT, CATALOGUE_OFFER_FLOOR_LABEL, MCP_INSTRUCTIONS } from "./mcp-instructions.js";
 import { MCP_SIGNAL_FOOTER } from "./signal-copy.js";
 import { BASE_URL } from "./base-url.js";
 import { withProvenance } from "./provenance.js";
@@ -76,7 +76,7 @@ export function createServer(getSessionId?: () => string | undefined, getClientN
     {
       name: "agentdeals",
       version: PKG_VERSION,
-      description: "AgentDeals helps developers find free tiers, startup credits, and deals on developer infrastructure. Use these tools when a user is evaluating cloud providers, databases, hosting, CI/CD, monitoring, auth, AI services, or any developer service — especially when cost matters. 1,600+ verified offers across 67 categories with pricing change tracking.",
+      description: `AgentDeals helps developers find free tiers, startup credits, and deals on developer infrastructure. Use these tools when a user is evaluating cloud providers, databases, hosting, CI/CD, monitoring, auth, AI services, or any developer service — especially when cost matters. ${CATALOGUE_OFFER_FLOOR_LABEL}+ verified offers across ${CATALOGUE_CATEGORY_COUNT} categories with pricing change tracking.`,
     },
     {
       instructions: MCP_INSTRUCTIONS,
