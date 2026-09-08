@@ -5,16 +5,14 @@
     "unsourced_tier_a": 22,
     "uncited_change_records": 98,
     "source_checks_ok_without_quoted_evidence": 562,
-    "faq_answers": 167,
+    "faq_answers": 166,
     "faq_answers_stating_a_figure": 77,
-    "faq_answers_with_a_digit_but_no_figure": 42,
-    "records_with_superseded_terms": 171,
-    "vendor_pages_withholding_superseded_terms": 170,
-    "ungated_pages_withholding_superseded_terms": 161
+    "faq_answers_with_a_digit_but_no_figure": 41,
+    "records_with_superseded_terms": 170,
+    "vendor_pages_withholding_superseded_terms": 169,
+    "ungated_pages_withholding_superseded_terms": 160
   },
   "raised_because": {
-    "uncited_change_records": "95 to 98 on 2026-09-06. stathat.com, searchly.com and Prospect.io each cited the page their own summary reports as unreadable, and dropping that citation is the honest fix rather than repointing it at a page that would pass a liveness check. The 35 records that report our own index lost a citation in the same change and are outside this count rather than spending slots in it.",
-    "faq_answers": "166 to 167 on 2026-09-08. /free-tier-risk gained one answer, publishing the hit rate of each risk band against the change log since the day that band was graded.",
-    "faq_answers_with_a_digit_but_no_figure": "40 to 42 on 2026-09-08. Both are on /free-tier-risk and both are grading dates rather than vendor figures: the new hit-rate answer, and the lowest-risk answer, which now dates the grade it names."
+    "uncited_change_records": "95 to 98 on 2026-09-06. stathat.com, searchly.com and Prospect.io each cited the page their own summary reports as unreadable, and dropping that citation is the honest fix rather than repointing it at a page that would pass a liveness check. The 35 records that report our own index lost a citation in the same change and are outside this count rather than spending slots in it."
   }
 }

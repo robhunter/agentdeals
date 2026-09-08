@@ -311,79 +311,60 @@ describe("a category page discloses every gated record, not eligibility alone", 
   });
 });
 
-describe("the record a category page puts forward is one the ranker lists", () => {
+describe("a category page puts no record forward", () => {
 
-  it("names no record the ranker gates", async () => {
-    let named = 0;
+  it("names no leader in the intro", async () => {
+    let checked = 0;
+    const naming: string[] = [];
     for (const c of census) {
-      const leader = leaderNamedIn(introOf(await page(`/category/${c.slug}`)));
-      if (leader === null) continue;
-      named++;
-      const held = c.records.filter((o) => o.vendor === leader);
-      assert.ok(held.length > 0, `/category/${c.slug} names ${leader}, which holds no record in the category`);
-      for (const record of held) {
-        const gate = gateFor(record, TODAY);
-        assert.strictEqual(
-          gate,
-          null,
-          `/category/${c.slug} names ${leader} (${record.tier}) — ${gate?.code}: ${gate?.reason}`,
-        );
-      }
+      const intro = introOf(await page(`/category/${c.slug}`));
+      checked++;
+      const leader = leaderNamedIn(intro);
+      if (leader !== null) naming.push(`/category/${c.slug} leads with ${leader}`);
+      assert.ok(!intro.includes("  "), `/category/${c.slug} intro holds a gap where a claim was`);
     }
-    assert.ok(named > 50, `only ${named} categories put a record forward`);
+    assertPopulationFloor(checked, 45, "category pages whose intro the sweep read");
+    assert.deepStrictEqual(naming, [], `category intros naming a leader: ${naming.length}`);
   });
 
-  it("omits the claim exactly where every record is gated", async () => {
-    for (const c of census) {
-      const leader = leaderNamedIn(introOf(await page(`/category/${c.slug}`)));
-      if (c.gated === c.total) {
-        assert.strictEqual(leader, null, `/category/${c.slug} names ${leader} with every record gated`);
-      } else {
-        assert.notStrictEqual(leader, null, `/category/${c.slug} names no record with ${c.total - c.gated} ungated`);
-      }
-    }
-    assert.ok(census.some((c) => c.gated === c.total), "no category is entirely gated");
-  });
-
-  it("answers the best-service question with the same record", async () => {
-    let claiming = 0;
+  it("answers the best-service question without naming a record from the category", async () => {
+    let answered = 0;
+    const claiming: string[] = [];
     for (const c of census) {
       const html = await page(`/category/${c.slug}`);
       const answer = renderedFaqAnswer(html, `What is the best free ${c.name.toLowerCase()} service?`);
       assert.ok(answer, `/category/${c.slug} stopped answering the best-service question`);
-      const claimed = bestServiceClaimIn(answer);
-      const leader = leaderNamedIn(introOf(html));
-      assert.strictEqual(claimed, leader, `/category/${c.slug} answers about ${claimed} and leads with ${leader}`);
-      if (claimed === null) continue;
-      claiming++;
-      for (const record of c.records.filter((o) => o.vendor === claimed)) {
-        const gate = gateFor(record, TODAY);
-        assert.strictEqual(gate, null, `/category/${c.slug} answers with ${claimed} (${record.tier}) — ${gate?.code}`);
+      answered++;
+      assert.ok(!answer.includes("  "), `/category/${c.slug} answer holds a gap where a claim was: ${answer}`);
+      if (bestServiceClaimIn(answer) !== null) claiming.push(`/category/${c.slug} still shapes a claim`);
+      for (const vendor of new Set(c.records.map((o) => o.vendor))) {
+        if (vendor.length > 2 && answer.includes(vendor)) claiming.push(`/category/${c.slug} names ${vendor}`);
       }
     }
-    assert.ok(claiming > 50, `only ${claiming} categories answer with a record`);
+    assertPopulationFloor(answered, 45, "category pages answering the best-service question");
+    assert.deepStrictEqual(claiming, [], `category answers naming a record: ${claiming.length}`);
   });
 
-  it("closes the answer cleanly on a category that has no record to put forward", async () => {
+  it("keeps answering on a category where every record is gated", async () => {
     const entirely = census.filter((c) => c.gated === c.total);
     assert.ok(entirely.length > 0, "no category is entirely gated");
     for (const c of entirely) {
       const html = await page(`/category/${c.slug}`);
       const answer = renderedFaqAnswer(html, `What is the best free ${c.name.toLowerCase()} service?`);
       assert.ok(answer, `/category/${c.slug} stopped answering the best-service question`);
-      assert.ok(!answer.includes("  "), `/category/${c.slug} answer holds a gap where the claim was: ${answer}`);
       assert.ok(!/ offers .+? on their .+? plan\./.test(answer), `/category/${c.slug} answer is ${answer}`);
-      assert.ok(!introOf(html).includes("  "), `/category/${c.slug} intro holds a gap where the claim was`);
     }
   });
 
-  it("still puts a record forward on a category whose first record is gated", async () => {
+  it("drops the claim on a category whose first record is gated rather than moving it", async () => {
     const displaced = census.filter((c) => c.gates[0] !== null && c.gated < c.total);
     assert.ok(displaced.length > 0, "no category leads with a gated record in the data");
     for (const c of displaced) {
-      const leader = leaderNamedIn(introOf(await page(`/category/${c.slug}`)));
-      assert.notStrictEqual(leader, null, `/category/${c.slug} drops the claim rather than moving it`);
-      assert.notStrictEqual(leader, c.records[0].vendor, `/category/${c.slug} still names ${leader}`);
+      assert.strictEqual(
+        leaderNamedIn(introOf(await page(`/category/${c.slug}`))),
+        null,
+        `/category/${c.slug} still puts a record forward`,
+      );
     }
   });
 });

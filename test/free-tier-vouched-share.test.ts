@@ -8,6 +8,7 @@ import { fileURLToPath } from "node:url";
 import { fetchBadgeVerdicts, type SiteFreeTierVerdict } from "./badge-verdicts.ts";
 
 const { tierRecordsAFreeTier } = await import("../dist/free-tier-record.js");
+const { classifyTier } = await import("../dist/ranking.js");
 const { toSlug } = await import("../dist/vendor-slug.js");
 
 type Offer = import("../src/types.ts").Offer;
@@ -297,11 +298,18 @@ describe("a category lede counts no free tier the site says has ended", () => {
   it("keeps the count out of the intro and the search snippet as well", async () => {
     for (const category of categoryNames) {
       const population = offers.filter((o) => o.category === category);
-      const standing = population.length - censusOf(population).ended;
+      const ended = censusOf(population).ended;
+      const standing = population.length - ended;
+      const notAFreeOffer = population.filter((o) => classifyTier(o.tier).class === "not_free").length;
+      const stating = standing - notAFreeOffer;
+      const withoutOne = population.length - stating;
       const html = await page(`/category/${slugOf(category)}`);
       const intro = textOf(html.match(/<div class="cat-intro">\s*<p>([\s\S]*?)<\/p>/)?.[1] ?? "");
+      const expected = withoutOne > 0
+        ? `We track ${stating} ${category.toLowerCase()} services with a free tier we hold as current and ${withoutOne} without.`
+        : `We track ${stating} ${category.toLowerCase()} services with a free tier we hold as current.`;
       assert.ok(
-        intro.startsWith(`We track ${standing} ${category.toLowerCase()} services with free tiers.`),
+        intro.startsWith(expected),
         `/category/${slugOf(category)} intro is: ${intro}`,
       );
       const description = (html.match(/<meta name="description" content="([^"]*)"/)?.[1] ?? "").replace(/&amp;/g, "&");

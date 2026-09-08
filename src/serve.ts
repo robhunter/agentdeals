@@ -63,6 +63,7 @@ import { changeLogAnchorFor, changeLogVendorMap, toSlug, vendorSlugMap, resolveV
 import { offerForSlug, vendorRates, cheapestRate, dearestRate, spanOfRates, formatRate, formatRateSpan, monthlyTokenCost, formatDollars, type ModelRate } from "./model-rates.js";
 import { STALE_FACT_PAGES_BASELINE, factsOutdatedBy, linkifyVerdictBlocks, newestChangeBySlug, overdueReport, pageCompiledClause, pageDataProvenance, pageDateModified, pageFreshness, pageFreshnessSentence, tabulatedSubjectSlots, tabulatedSubjects, utcToday, verdictsOutdatedBy } from "./page-reviews.js";
 import { faqPageJsonLd, type FaqItem } from "./faq-provenance.js";
+import { statedFreeTierBasis, unrankedBestAnswer, unrankedListingBasis } from "./unranked.js";
 import { SSE_KEEPALIVE_FRAME, keepaliveIntervalMs, sessionRecoveryBody } from "./mcp-stream.js";
 import { ASSISTANTS_API_SHUTDOWN } from "./assistants-shutdown.js";
 import { discontinuedOnOrBefore, PRODUCT_DEPRECATED } from "./product-deprecation.js";
@@ -1793,9 +1794,8 @@ function buildCategoryPage(slug: string): string | null {
     ? `This category has been relatively stable &mdash; only ${catChangeCount} pricing changes recorded across all vendors.`
     : `This category has seen some movement &mdash; ${catChangeCount} pricing changes recorded across vendors.`;
 
-  const topVendor = catStanding.find((o, i) => catGates[i] === null && !supersedingChangeFor(o));
-  const keyLimitMatch = topVendor?.description.match(/(\d[\d,]*\s*(?:GB|GiB|MB|TB|requests?|calls?|MAU|users?|emails?|messages?|builds?|minutes?|hours?|projects?|repos?|sites?|apps?|databases?|invocations?|events?))/i);
-  const keyLimit = keyLimitMatch ? keyLimitMatch[1] : "a generous free tier";
+  const catStatesFreeTier = catStanding.filter(o => classifyTier(o.tier).class !== "not_free").length;
+  const catStatesNoFreeTier = catCount - catStatesFreeTier;
 
   const catScope = publishedScopeFor(categoryName, liveCategoryNames);
   const catSiblings = familySiblings(categoryName).filter(s => categorySlugMap.has(toSlug(s)));
@@ -1810,7 +1810,7 @@ function buildCategoryPage(slug: string): string | null {
 
   const introHtml = `${scopeHtml}
   <div class="cat-intro">
-    <p>We track <strong>${catStandingCount}</strong> ${categoryName.toLowerCase()} services with free tiers.${topVendor ? ` ${escHtmlServer(topVendor.vendor)} leads with ${escHtmlServer(keyLimit)}.` : ""} ${stabilitySummary}</p>
+    <p>We track <strong>${catStatesFreeTier}</strong> ${categoryName.toLowerCase()} services with a free tier we hold as current${catStatesNoFreeTier > 0 ? ` and ${catStatesNoFreeTier} without` : ""}. ${stabilitySummary}</p>
   </div>`;
 
   const analysisCta = catMapping?.comparison
@@ -1865,16 +1865,23 @@ function buildCategoryPage(slug: string): string | null {
   </div>`
     : "";
 
-  const topAlts = catOffers.slice(0, 5).map(o => escHtmlServer(o.vendor)).join(", ");
+  const catNoBest = unrankedBestAnswer({
+    noun: `${categoryName} services in our catalogue`,
+    size: catCount,
+    whereToLook: "listed in the table above with each one's tier, published terms and the date we last verified it",
+    basis: statedFreeTierBasis(catStatesFreeTier, catStatesNoFreeTier),
+  });
 
   const faqItems = [
-    {
+    ...(catNoBest === null ? [] : [{
       q: `What is the best free ${categoryName.toLowerCase()} service?`,
-      a: `Based on our data, the most popular free ${categoryName.toLowerCase()} services include ${topAlts}.${topVendor ? ` ${escHtmlServer(topVendor.vendor)} offers ${escHtmlServer(keyLimit)} on their ${escHtmlServer(topVendor.tier)} plan.` : ""} The best choice depends on your specific requirements.`,
-    },
+      a: catNoBest,
+    }]),
     {
       q: `How many free ${categoryName.toLowerCase()} tools are there?`,
-      a: `We track ${catStandingCount} ${categoryName.toLowerCase()} services with free tiers on AgentDeals. These range from generous always-free tiers to limited trial periods. Each listing is verified with the actual pricing page.`,
+      a: `${catStatesNoFreeTier === 0
+        ? `We track ${catStandingCount} ${categoryName.toLowerCase()} services with free tiers on AgentDeals.`
+        : `We track ${catCount} ${categoryName.toLowerCase()} services on AgentDeals, ${catStatesFreeTier} of which state a free tier we hold as current.`} These range from generous always-free tiers to limited trial periods. Each listing is verified with the actual pricing page.`,
     },
     {
       q: `How stable are ${categoryName.toLowerCase()} free tiers?`,
@@ -3243,7 +3250,7 @@ const VS_PAGES: VsPageConfig[] = [
   {
     vendorA: "CockroachDB", vendorB: "MongoDB",
     category: "Databases",
-    verdict: "CockroachDB offers distributed SQL with PostgreSQL compatibility, while MongoDB is the leading NoSQL document database. Choose CockroachDB for relational data with horizontal scaling; choose MongoDB for flexible schemas and startup credits.",
+    verdict: "CockroachDB offers distributed SQL with PostgreSQL compatibility, while MongoDB is a NoSQL document database. Choose CockroachDB for relational data with horizontal scaling; choose MongoDB for flexible schemas and startup credits.",
     keyDifferences: `<ul>
       <li><strong>Data model:</strong> CockroachDB is relational SQL (PostgreSQL-compatible wire protocol), MongoDB is document-oriented NoSQL (JSON/BSON). This is the fundamental architectural decision.</li>
       <li><strong>Free tier structure:</strong> CockroachDB gives 50M Request Units + 10 GiB storage/month on serverless. MongoDB offers $5K Atlas credits for Brex startups — generous but time-limited.</li>
@@ -3269,7 +3276,7 @@ const VS_PAGES: VsPageConfig[] = [
   {
     vendorA: "Cloudflare Pages", vendorB: "Vercel",
     category: "Cloud Hosting",
-    verdict: "Cloudflare Pages offers unlimited bandwidth with zero egress costs. Vercel has the best Next.js integration but bans commercial use on the free plan. For static sites, Cloudflare Pages wins on cost; for Next.js apps, Vercel wins on DX.",
+    verdict: "Cloudflare Pages offers unlimited bandwidth with zero egress costs. Vercel builds and hosts Next.js first-party but bans commercial use on the free plan. For static sites, Cloudflare Pages wins on cost; for Next.js apps, Vercel wins on DX.",
     keyDifferences: `<ul>
       <li><strong>Bandwidth:</strong> Cloudflare Pages has unlimited bandwidth (truly free). Vercel caps at 100 GB/month on the free plan — and the $20/seat Pro plan is required for commercial use.</li>
       <li><strong>Framework support:</strong> Vercel is the creator of Next.js and has first-class support for ISR, middleware, and edge functions. Cloudflare Pages supports most frameworks but Next.js features may lag.</li>
@@ -3282,7 +3289,7 @@ const VS_PAGES: VsPageConfig[] = [
   {
     vendorA: "Netlify", vendorB: "Render",
     category: "Cloud Hosting",
-    verdict: "Netlify excels at frontend/Jamstack deployments with its credit-based system, while Render is the best free option for backend services with containers, Postgres, and Redis included. Different tools for different layers of the stack.",
+    verdict: "Netlify excels at frontend/Jamstack deployments with its credit-based system, while Render's free tier covers backend services with containers, Postgres, and Redis included. Different tools for different layers of the stack.",
     keyDifferences: `<ul>
       <li><strong>Specialization:</strong> Netlify is frontend-focused (static sites, serverless functions, edge). Render is full-stack (web services, databases, Redis, cron jobs, Docker containers).</li>
       <li><strong>Free tier model:</strong> Netlify uses 300 credits/month (deploys cost 15 credits, bandwidth costs 20 credits/GB). Render offers free web services with 512 MB RAM plus free PostgreSQL and Redis instances.</li>
@@ -3315,7 +3322,7 @@ const VS_PAGES: VsPageConfig[] = [
       <li><strong>Users:</strong> Grafana Cloud allows 3 users on the free plan. Datadog has no explicit user limit on free tier.</li>
       <li><strong>Ease of use:</strong> Datadog has arguably better out-of-the-box dashboards and integrations. Grafana requires more initial configuration but offers more flexibility.</li>
     </ul>`,
-    recommendation: `<p><strong>Choose Grafana Cloud if</strong> you want the most generous free monitoring tier, prefer open standards, or want to avoid vendor lock-in.</p>
+    recommendation: `<p><strong>Choose Grafana Cloud if</strong> you want more free monitoring headroom than Datadog's 5 hosts and 1-day retention, prefer open standards, or want to avoid vendor lock-in.</p>
     <p><strong>Choose Datadog if</strong> you prioritize out-of-the-box integrations and polished UX — but only if you can justify the cost when you outgrow the very limited free tier.</p>`,
   },
   {
@@ -4938,9 +4945,16 @@ ${allCompareLinks.join("\n")}
     : primaryGate
     ? `No, ${vendorName} has had no recorded pricing changes.`
     : `No, ${vendorName} has had no recorded pricing changes. This is a positive stability signal.`;
-  const faqAlternativesAnswer = alternatives.length > 0
-    ? `The top free alternatives to ${vendorName} in ${primary.category} include ${alternatives.slice(0, 5).map(a => `${a.vendor} (${a.tier})`).join(", ")}. See all ${alternatives.length} alternatives above.`
-    : `We don't currently track other vendors in the same category as ${vendorName}.`;
+  const faqAlternativesAnswer = unrankedBestAnswer({
+    noun: `free alternatives to ${vendorName} in ${primary.category}`,
+    size: alternativesRanking.entries.length,
+    whereToLook: `each listed above with its tier and the date we last verified it`,
+    basis: unrankedListingBasis(
+      alternativesRanking.qualified_count,
+      alternativesRanking.demoted_count,
+      alternativesRanking.gated_count,
+    ),
+  });
   const faqOutgrowAnswer = growthBullets.length > 0
     ? `${growthBullets[0].replace(/<[^>]*>/g, "")} When you outgrow the free tier, evaluate paid plans against alternatives — sometimes a competitor's free tier covers what you need.`
     : `When your usage exceeds the free tier limits, you'll need to upgrade or evaluate alternatives in the same category.`;
@@ -4954,7 +4968,7 @@ ${allCompareLinks.join("\n")}
     ...(reliabilityAnswerWouldRateAGatedOffer ? [] : [{ q: `Is ${vendorName}'s free tier reliable?`, a: faqReliableAnswer }]),
     { q: `Is ${vendorName}'s free tier good for production?`, a: faqProductionAnswer },
     { q: `What changed in ${vendorName}'s pricing?`, a: faqChangedAnswer },
-    ...(alternatives.length > 0 ? [{ q: `What are the best free alternatives to ${vendorName}?`, a: faqAlternativesAnswer }] : []),
+    ...(faqAlternativesAnswer === null ? [] : [{ q: `What are the best free alternatives to ${vendorName}?`, a: faqAlternativesAnswer }]),
     ...(primaryGate ? [] : [{ q: `When will I outgrow ${vendorName}'s free tier?`, a: faqOutgrowAnswer }]),
     { q: `What category is ${vendorName} in?`, a: faqCategoryAnswer },
   ];
@@ -5337,10 +5351,12 @@ ${renderAuditBlock(altRanking.tie_break)}
     })),
   };
 
-  const topStableAlts = enrichedAlts.filter(a => a.risk_level === "stable").slice(0, 5);
-  const faqBestAltsAnswer = topStableAlts.length > 0
-    ? `The best free alternatives to ${vendorName} include ${topStableAlts.map(a => `${a.vendor} (${a.tier})`).join(", ")}.`
-    : `There are ${enrichedAlts.length} free alternatives to ${vendorName} available. ${enrichedAlts.slice(0, 3).map(a => a.vendor).join(", ")} are among the options.`;
+  const faqBestAltsAnswer = unrankedBestAnswer({
+    noun: `free alternatives to ${vendorName}`,
+    size: enrichedAlts.length,
+    whereToLook: "each listed below with its tier, category and the date we last verified it",
+    basis: unrankedListingBasis(altRanking.qualified_count, altRanking.demoted_count, altRanking.gated_count),
+  });
   const altNotAFreeOffer = notAFreeOfferGateFor(primary);
   const faqFreeTierAnswer = altNotAFreeOffer
     ? `${altNotAFreeOffer.reason}${altLevelWithheld ? ` ${altWithheldSentence}` : ""} ${storedTermsOf(primary)}`
@@ -5360,7 +5376,7 @@ ${renderAuditBlock(altRanking.tie_break)}
 
   const altFaqItems = publishesSubstitutes
     ? [
-      { q: `What are the best free alternatives to ${vendorName}?`, a: faqBestAltsAnswer },
+      ...(faqBestAltsAnswer === null ? [] : [{ q: `What are the best free alternatives to ${vendorName}?`, a: faqBestAltsAnswer }]),
       { q: `Is ${vendorName}'s free tier still available?`, a: faqFreeTierAnswer },
       { q: `How many free alternatives to ${vendorName} exist?`, a: faqCountAnswer },
       { q: `Has ${vendorName} changed their pricing?`, a: faqChangesAnswer },
@@ -16207,7 +16223,7 @@ function buildFreeNextjsStackPage(): string {
 
   const faqJsonLd = faqPageJsonLd("/free-nextjs-stack", [
     { q: "Is Vercel free for Next.js?", a: "Yes. Vercel's Hobby plan is free with 100 GB bandwidth, 100 hours serverless function execution, and 6,000 build minutes per month. However, it's limited to non-commercial, personal use. For commercial projects, Vercel Pro starts at $20/month per team member. Alternatives like Railway ($5 trial credit for 30 days, then $1/month minimum) and Cloudflare Pages (unlimited bandwidth) allow commercial use on free tiers." },
-    { q: "What's the best free database for Next.js?", a: "Neon (serverless Postgres) is the best fit for Next.js. Its serverless driver works in Vercel Edge Functions, it scales to zero when not in use, and offers 0.5 GiB storage free. Supabase (500 MB, includes auth and realtime) is great if you need a full BaaS. Turso (9 GB, edge SQLite) is ideal for read-heavy apps. PlanetScale removed its free tier in April 2024." },
+    { q: "What's the best free database for Next.js?", a: "Neon (serverless Postgres) has a serverless driver that works in Vercel Edge Functions, it scales to zero when not in use, and offers 0.5 GiB storage free. Supabase (500 MB, includes auth and realtime) is great if you need a full BaaS. Turso (9 GB, edge SQLite) is ideal for read-heavy apps. PlanetScale removed its free tier in April 2024." },
     { q: "Can I build a SaaS for free with Next.js?", a: "Yes — with limits. This guide covers 10 infrastructure layers that cost $0/month total: hosting (Vercel), database (Neon), auth (Clerk 10K MAU), storage (R2), email (Resend 3K/mo), monitoring (Sentry), CI/CD (GitHub Actions), analytics (PostHog 1M events), search (Algolia 10K records), and background jobs (Inngest 25K runs). Most projects can run their entire stack on free tiers until they hit significant traction." },
     { q: "What's the first thing to spend money on when scaling a Next.js app?", a: "Database. Neon's 0.5 GiB free storage is the tightest limit in the stack. The Neon Launch plan at $19/month gets you 10 GiB storage, 300 compute hours, and autoscaling. After that, hosting: Vercel Pro at $20/month unlocks commercial use, 1 TB bandwidth, and faster builds. Everything else (auth, email, monitoring, analytics) scales to meaningful traffic on free tiers." },
   ]);
@@ -16583,7 +16599,7 @@ function buildFreeDjangoStackPage(): string {
     { q: "Can I host Django for free in 2026?", a: "Yes. Railway's Free plan starts with a 30-day trial carrying $5 of credits and then costs $1/month minimum, enough for a small Django app with Gunicorn, auto-deploy from GitHub, and managed Postgres; its Hobby plan is $5/month and includes $5 of usage. Render has a free tier but spins down after 15 minutes of inactivity (30-60 second cold starts). PythonAnywhere offers free WSGI hosting but limits you to one web app with no custom domain. Fly.io has no free tier for new accounts — new signups get a trial of 2 hours runtime or 7 days, whichever comes first." },
     { q: "What's the best free database for Django?", a: "Neon (serverless Postgres) — 0.5 GiB storage, 190+ compute hours/month, scales to zero. Django's ORM is built for Postgres, and django.contrib.postgres adds JSONField, ArrayField, full-text search, and range types. Supabase (500 MB) is a good alternative with built-in auth. CockroachDB offers 10 GiB free with distributed Postgres-compatible SQL." },
     { q: "Does Django need Redis?", a: "Not strictly, but practically yes for production. Redis powers Django's cache framework (fast page/fragment caching), session storage (faster than database sessions), and Celery (the standard Django task queue for background jobs). Upstash offers 10,000 Redis commands/day free. Without Redis, you can use Django's built-in database cache and in-process task runners, but you'll hit performance ceilings sooner." },
-    { q: "PythonAnywhere vs Railway vs Render for Django?", a: "Railway is the best overall — a 30-day $5 trial credit then a $1/month minimum, no sleep timer, managed Postgres, and auto-deploy from GitHub. PythonAnywhere is great for learning (free WSGI hosting, built-in console) but limits you to one web app with no custom domain on free tier. Render has a free tier but your app sleeps after 15 minutes, causing 30-60 second cold starts that hurt user experience. For production Django apps, Railway or Fly.io." },
+    { q: "PythonAnywhere vs Railway vs Render for Django?", a: "Railway gives you a 30-day $5 trial credit then a $1/month minimum, with no sleep timer, managed Postgres, and auto-deploy from GitHub. PythonAnywhere is great for learning (free WSGI hosting, built-in console) but limits you to one web app with no custom domain on free tier. Render has a free tier but your app sleeps after 15 minutes, causing 30-60 second cold starts that hurt user experience. For production Django apps, Railway or Fly.io." },
   ]);
 
   const pageReadings = stackPrimaryReadings(stackCategories);
@@ -22443,7 +22459,7 @@ function buildGeminiApiPricingChangesPage(): string {
     { q: "What are the best free alternatives to Gemini API?", a: "Groq (30 RPM free, ultra-fast), Cerebras (1M tokens/day free), Mistral AI (1B tokens/month free), and OpenRouter (~30 free models) all offer more generous free tiers than post-cut Gemini. For the cheapest paid option, DeepSeek offers frontier-class models at $0.27-$1.10 per million tokens." },
     { q: "How much does Gemini API cost now for 1,000 requests per day?", a: "A developer making 1,000 requests/day now needs a paid plan (approximately $15-30/month). Previously, this usage level was fully covered by the free tier. Alternatives like Groq, Cerebras, and Mistral handle this volume for free." },
     { q: "What is Gemini API spend cap and how does it work?", a: "Spend caps are billing-account-level monthly limits that automatically pause all API requests when reached. Tier 1 caps at $250/mo, Tier 2 at $2,000/mo, Tier 3 at $20K-$100K+. Unlike rate limits, spend caps fully stop API access until the next billing month." },
-    { q: "Should I migrate away from Gemini API?", a: "It depends on your use case. If you need the 1M token context window, Gemini Flash is still the best free option. For general chat/code tasks at higher volumes, Groq and Cerebras offer better free tiers. For production workloads, evaluate DeepSeek (cheapest) or Anthropic/OpenAI (most established)." },
+    { q: "Should I migrate away from Gemini API?", a: "It depends on your use case. If you need the 1M token context window, Gemini Flash still offers one free. For general chat/code tasks at higher volumes, Groq and Cerebras offer better free tiers. For production workloads, evaluate DeepSeek (cheapest) or Anthropic/OpenAI (most established)." },
   ];
 
   const faqJsonLd = faqPageJsonLd("/gemini-api-pricing-changes", faqItems);
@@ -25816,7 +25832,7 @@ function buildOpenAIAssistantsMigrationPage(): string {
 
   const faqEntries = [
     { q: "When does the OpenAI Assistants API shut down?", a: "The Assistants API will be fully shut down on August 26, 2026. After this date, all Assistants API calls will return errors. OpenAI recommends migrating to the Responses API (for prompts and tool use) and Conversations API (for thread/session management)." },
-    { q: "What is the cheapest alternative to the OpenAI Assistants API?", a: "Google Gemini API offers the most generous free tier with 1,500 free requests/day (Flash model). For open-source options, LangChain and CrewAI are free frameworks \u2014 you only pay for the LLM API you choose (or use free local models via Ollama). Anthropic Claude also offers a free tier with rate limits." },
+    { q: "What is the cheapest alternative to the OpenAI Assistants API?", a: "Google Gemini API's free tier is 1,500 requests/day (Flash model). For open-source options, LangChain and CrewAI are free frameworks \u2014 you only pay for the LLM API you choose (or use free local models via Ollama). Anthropic Claude also offers a free tier with rate limits." },
     { q: "Can I keep using the Assistants API on Azure OpenAI?", a: `No. Microsoft retired the Azure OpenAI Assistants API on ${ASSISTANTS_API_SHUTDOWN.date}, the same date OpenAI retired its own. Microsoft's documentation states that the Assistants API is retired and directs Azure workloads to ${ASSISTANTS_API_SHUTDOWN.azureSuccessor}, which is generally available; inference-only workloads can use the ${ASSISTANTS_API_SHUTDOWN.azureInferenceApi} instead. Running on Azure does not extend the deadline.` },
     { q: "What replaces Threads in the new Responses API?", a: "OpenAI's Conversations API replaces the Threads functionality from the Assistants API. It provides session management, message history, and context handling. The migration is not automated \u2014 you need to manually update your code to use the new Conversations API endpoints." },
     { q: "How much will migration cost in developer time?", a: "For a small project (single assistant), expect 1\u20132 days of developer time for the Responses API migration. For complex multi-assistant systems, budget 1\u20132 weeks. Switching to a different provider (Anthropic, Gemini, LangChain) adds additional time for API differences and testing. See our cost comparison table for per-path estimates." },
@@ -28210,7 +28226,7 @@ function buildAiCodingToolsPricingPage(): string {
   };
 
   const faqEntries = [
-    { q: "What is the best free AI coding tool in 2026?", a: "Gemini Code Assist offers the most generous free tier with 6,000 completions/day (180,000/month) and 240 chat messages/day. For open-source alternatives, Cline and Aider are fully free with BYO API keys. Gemini CLI offers 1,000 free requests/day. Amazon Kiro offers 50 free credits/month — limited, but enough to try spec-driven development." },
+    { q: "What is the best free AI coding tool in 2026?", a: "Gemini Code Assist's free tier is 6,000 completions/day (180,000/month) and 240 chat messages/day. For open-source alternatives, Cline and Aider are fully free with BYO API keys. Gemini CLI offers 1,000 free requests/day. Amazon Kiro offers 50 free credits/month — limited, but enough to try spec-driven development." },
     { q: "How much does Cursor cost vs Windsurf?", a: "Both start at $20/month for an individual paid plan and $40/user/month for teams, and both top out at $200/month — Cursor Ultra and Windsurf Max. Cursor's free plan is called Hobby. Between them sits Pro+ at $60/mo with 3x Pro's Agent limits; Ultra is 20x. Windsurf has 4 plans (Free, Pro $20, Teams $40/seat, Max $200) and raised Pro from $15 to $20 in March 2026. Windsurf's SWE-1.5 Fast Agent model optimizes for iteration speed." },
     { q: "Is GitHub Copilot still the cheapest AI coding tool?", a: "Yes \u2014 Copilot Pro at $10/month is the cheapest paid plan among the tools compared here. The free tier gives 2,000 code completions a month plus limited chat and agent use. On paid plans, completions and next edit suggestions are unlimited and consume nothing; agent and chat work is metered in GitHub AI Credits at $0.01 each \u2014 $15 of credits on Pro, $70 on Pro+ ($39/mo), $200 on Max ($100/mo). GitHub's premium-request billing and its $0.04 overage are retired; the docs now label that model legacy." },
     { q: "What are the hidden costs of BYO-key AI coding tools?", a: "Tools like Cline and Aider are free to install but require API keys. Typical costs: $5-50/month for moderate use with Claude Sonnet or GPT-4o. Heavy agentic usage (Cline with Opus) can reach $50-100/month in API costs alone." },
@@ -29848,7 +29864,7 @@ function buildDatabasePricingPage(): string {
   };
 
   const faqEntries = [
-    { q: "Which database has the best free tier in 2026?", a: "Supabase and CockroachDB offer the most generous free tiers. Supabase gives you 500 MB Postgres with Auth, Storage, Edge Functions, and Realtime included. CockroachDB offers 10 GiB storage with 50M Request Units/month. For edge/serverless, Turso (9 GB, 500 databases) and Cloudflare D1 (5 GB) are standouts." },
+    { q: "Which database has the best free tier in 2026?", a: "We publish no ranking of database free tiers. Supabase gives you 500 MB Postgres with Auth, Storage, Edge Functions, and Realtime included. CockroachDB offers 10 GiB storage with 50M Request Units/month. For edge/serverless, Turso (9 GB, 500 databases) and Cloudflare D1 (5 GB) are standouts." },
     { q: "Is Supabase really free?", a: "Yes, but with caveats. Supabase free tier includes 500 MB Postgres, Auth, Storage, Edge Functions, and Realtime. However, free projects now pause after 1 week of inactivity (tightened Feb 2026), you are limited to 2 projects, and egress is capped at 5 GB total across all services. For active projects, it is genuinely free." },
     { q: "What happened to PlanetScale's free tier?", a: "PlanetScale removed its free Hobby plan entirely in April 2024. All free databases were deleted after a 30-day grace period. The minimum plan is now Scaler at $39/month. This was one of the most impactful free tier removals in developer tools. Alternatives: Neon (512 MB free), Turso (9 GB free), CockroachDB (10 GiB free)." },
     { q: "Neon vs Supabase: which is cheaper?", a: "For solo developers: both are free. Neon offers 512 MB storage with serverless autoscaling to zero. Supabase offers 500 MB with more bundled services (Auth, Storage, Functions). For growing teams: Neon starts at $19/mo (Launch) with usage-based scaling. Supabase Pro is $25/project. Neon is cheaper for pure database needs; Supabase is cheaper if you need the full BaaS platform." },
@@ -30496,7 +30512,7 @@ function buildVectorDatabasePricingPage(): string {
   const faqEntries = [
     { q: "What is a vector database and why do I need one?", a: "A vector database stores high-dimensional numerical representations (embeddings) of data like text, images, or audio, and enables fast similarity search. You need one if you're building RAG (Retrieval-Augmented Generation) pipelines, semantic search, recommendation systems, or any AI application that needs to find similar items. Traditional databases can't efficiently search across hundreds of dimensions." },
     { q: "Should I use a dedicated vector database or pgvector?", a: "For prototypes and small-to-medium workloads (under 1M vectors), pgvector in Supabase or Neon is the simplest choice — no extra infrastructure, SQL queries, and your vectors live alongside your relational data. For production RAG at scale (1M+ vectors), dedicated solutions like Pinecone, Qdrant, or Weaviate offer better query performance, more indexing options, and purpose-built features like hybrid search and reranking." },
-    { q: "Which vector database has the best free tier?", a: "For managed cloud: Pinecone (2 GB, ~1M vectors) and Zilliz Cloud (5 GB, ~5M vectors) offer the most generous free tiers. For self-hosted: Qdrant, Chroma, Milvus, and LanceDB are all fully open-source with no limits. For the simplest setup: Supabase pgvector (500 MB, included with Postgres) or Neon pgvector (512 MB) require zero extra infrastructure." },
+    { q: "Which vector database has the best free tier?", a: "For managed cloud: Pinecone offers 2 GB (~1M vectors) free and Zilliz Cloud 5 GB (~5M vectors). For self-hosted: Qdrant, Chroma, Milvus, and LanceDB are all fully open-source with no limits. For the simplest setup: Supabase pgvector (500 MB, included with Postgres) or Neon pgvector (512 MB) require zero extra infrastructure." },
     { q: "What is the cheapest vector database for production RAG?", a: "Self-hosted Qdrant or Milvus on a $5-10/month VPS is the absolute cheapest for small-to-medium scale. For managed services, Turbopuffer's pay-per-use model ($0.30/M vectors/month) is cheapest for workloads under ~10M vectors. Qdrant Cloud ($10/month) and Upstash Vector (150K queries/day free) are also cost-effective. Supabase pgvector is free if your total database is under 500 MB." },
     { q: "How many vectors can I store in 1 GB?", a: "It depends on dimensions. With 1,536 dimensions (OpenAI text-embedding-3-small): ~170K vectors per GB raw, but with indexing overhead expect ~100K-150K. With 768 dimensions (many open-source models): ~340K vectors per GB raw, ~200K-250K with indexes. With 3,072 dimensions (OpenAI text-embedding-3-large): ~85K vectors per GB. Lower-dimension models are more cost-effective for storage." },
   ];
@@ -31206,7 +31222,7 @@ function buildHostingPricingPage(): string {
   );
 
   const faqEntries = [
-    { q: "What is the best free cloud hosting platform in 2026?", a: "Cloudflare Pages offers the most generous free tier: unlimited sites, unlimited bandwidth, and 500 builds/month. For full-stack apps, Vercel's Hobby plan (100 GB bandwidth, 6,000 build minutes) and Deno Deploy (1M requests/month) are strong free options. Railway offers $5 in free credits to get started." },
+    { q: "What is the best free cloud hosting platform in 2026?", a: "Cloudflare Pages offers unlimited sites, unlimited bandwidth, and 500 builds/month. For full-stack apps, Vercel's Hobby plan (100 GB bandwidth, 6,000 build minutes) and Deno Deploy (1M requests/month) are strong free options. Railway offers $5 in free credits to get started." },
     { q: "Is Heroku still worth it without a free tier?", a: "Heroku removed its free tier in November 2022. The cheapest option is now Eco dynos at $5/month (shared compute, sleeps after 30 min). For most use cases, Railway ($5/mo with $5 credit), Render (free tier with spin-down), or Fly.io provide better value." },
     { q: "What are the hidden costs of Vercel?", a: "New Pro projects default to Turbo build machines at $0.126/min — 9x the cost of Standard builds ($0.014/min). The Pro plan moved to a credit-based model ($20/mo credit pool) in January 2026. Image Optimization has separate quotas. The Hobby plan is restricted to personal, non-commercial use." },
     { q: "Which PaaS is best for side projects?", a: "For static sites: Cloudflare Pages (unlimited free bandwidth) or GitHub Pages. For full-stack: Railway ($5 trial credit for 30 days, no card required), Render (free tier with 15-min spin-down), or Vercel Hobby. For serverless APIs: Cloudflare Workers (100K req/day free) or Deno Deploy (1M req/month)." },
@@ -31978,7 +31994,7 @@ function buildLlmApiPricingPage(): string {
   );
 
   const faqEntries = [
-    { q: "Which LLM API has the best free tier in 2026?", a: "Groq offers the most generous free tier: 30 RPM with 100K-500K tokens/day, no credit card required, with fast LPU-accelerated inference. GitHub Models gives free access to 100+ models (GPT-4o, Llama, Mistral) for GitHub users. OpenRouter provides ~30 free open-source models. For frontier models specifically, Mistral's Experiment tier (1B tokens/month, 2 RPM) is the most generous." },
+    { q: "Which LLM API has the best free tier in 2026?", a: "Groq's free tier is 30 RPM with 100K-500K tokens/day, no credit card required, with fast LPU-accelerated inference. GitHub Models gives free access to 100+ models (GPT-4o, Llama, Mistral) for GitHub users. OpenRouter provides ~30 free open-source models. For frontier models specifically, Mistral's Experiment tier gives 1B tokens/month at 2 RPM." },
     { q: "How much does GPT-4o cost per token?", a: "GPT-4o costs $2.50 per million input tokens and $10 per million output tokens. For reference, 1 million tokens is roughly 750,000 words. The batch API offers 50% discount ($1.25/$5 per M tokens). GPT-4o-mini is significantly cheaper at $0.15/$0.60 per M tokens." },
     { q: "How much does Claude cost per token?", a: "Claude Fable 5.1 costs $10/M input and $50/M output tokens. Opus 5 is $5/$25 per M tokens, Sonnet 5 is $2/$10, and Haiku 4.5 is the budget option at $1/$5. The Batch API offers 50% discount on all models." },
     { q: "What is the cheapest LLM API for production use?", a: "For frontier-quality models: xAI Grok 4.1 Fast at $0.20/M input, $0.50/M output. For open-source models: DeepSeek V4 at $0.30/M input, $0.50/M output with cache-hit discounts up to 90%. Groq and Cerebras offer free tiers that can handle moderate production traffic. Google Gemini Flash models are free with rate limits." },
@@ -33545,7 +33561,7 @@ function buildAppRunnerMigrationPage(): string {
     { q: "When does AWS App Runner shut down?", a: "AWS App Runner stops accepting new customers on April 30, 2026. Existing customers can continue using the service, but it has entered maintenance mode with no new features planned. AWS has not announced a final shutdown date for existing services, but recommends migrating to Amazon ECS Express Mode." },
     { q: "What is ECS Express Mode and how does it replace App Runner?", a: "ECS Express Mode is AWS's recommended migration path. It simplifies Amazon ECS by providing a streamlined container deployment experience similar to App Runner — easier configuration, managed networking, and automatic scaling — while giving you access to the full ECS ecosystem. The main difference is that ECS Express Mode only supports container images (no source code deploy), so you'll need to build your container first." },
     { q: "Can I still use App Runner if I'm already a customer?", a: "Yes. Existing App Runner services will continue to run after April 30, 2026. You can update existing services and deploy new versions. However, the service is in maintenance mode — no new features will be added, and AWS strongly recommends planning a migration." },
-    { q: "What are the best free alternatives to App Runner?", a: "Google Cloud Run offers the most generous free tier (2 million requests/month, 360K vCPU-seconds, scale to zero). Fly.io provides 3 free shared VMs. Render has a free tier with 750 hours/month (services sleep after inactivity). Azure Container Apps offers 180K vCPU-seconds/month free. For AWS-native options, Elastic Beanstalk has no management fee — you only pay for underlying resources." },
+    { q: "What are the best free alternatives to App Runner?", a: "Google Cloud Run's free tier is 2 million requests/month, 360K vCPU-seconds, and scale to zero. Fly.io provides 3 free shared VMs. Render has a free tier with 750 hours/month (services sleep after inactivity). Azure Container Apps offers 180K vCPU-seconds/month free. For AWS-native options, Elastic Beanstalk has no management fee — you only pay for underlying resources." },
     { q: "Which alternative supports source code deployment like App Runner?", a: "App Runner's source code deployment (push code, AWS builds the container) is available on: Google Cloud Run (Cloud Build + buildpacks), Railway (GitHub auto-deploy), Render (GitHub auto-deploy), Fly.io (Dockerfiles + buildpacks), DigitalOcean App Platform (GitHub/GitLab auto-deploy), Azure Container Apps (source code via buildpacks), Elastic Beanstalk (source bundles + Dockerfiles), and Northflank (buildpacks + Dockerfiles). ECS Express Mode does NOT support source code deploy — you must provide a container image." },
   ];
 
@@ -35771,41 +35787,48 @@ ${mcpCtaCss()}
 
 interface ComparisonPageMeta {
   slug: string;
-  categoryName: string;
-  categorySlug: string;
+  subject: string;
+  catalogueCategory: string | null;
   shortName: string;
   relatedSlugs: string[];
 }
 
 const comparisonPagesMeta: ComparisonPageMeta[] = [
-  { slug: "cloud-free-tier-comparison-2026", categoryName: "Cloud IaaS", categorySlug: "cloud-hosting", shortName: "Cloud", relatedSlugs: ["hosting-free-tier-comparison-2026", "serverless-free-tier-comparison-2026", "storage-comparison-2026"] },
-  { slug: "database-free-tier-comparison-2026", categoryName: "Databases", categorySlug: "databases", shortName: "Database", relatedSlugs: ["serverless-free-tier-comparison-2026", "storage-comparison-2026", "auth-comparison-2026"] },
-  { slug: "cicd-free-tier-comparison-2026", categoryName: "CI/CD", categorySlug: "ci-cd", shortName: "CI/CD", relatedSlugs: ["testing-free-tier-comparison-2026", "security-free-tier-comparison-2026", "hosting-free-tier-comparison-2026"] },
-  { slug: "serverless-free-tier-comparison-2026", categoryName: "Serverless", categorySlug: "serverless", shortName: "Serverless", relatedSlugs: ["cloud-free-tier-comparison-2026", "hosting-free-tier-comparison-2026", "database-free-tier-comparison-2026"] },
-  { slug: "auth-comparison-2026", categoryName: "Auth", categorySlug: "auth", shortName: "Auth & Identity", relatedSlugs: ["security-free-tier-comparison-2026", "database-free-tier-comparison-2026", "monitoring-comparison-2026"] },
-  { slug: "email-comparison-2026", categoryName: "Email", categorySlug: "email", shortName: "Email", relatedSlugs: ["monitoring-comparison-2026", "analytics-free-tier-comparison-2026", "api-development-free-tier-comparison-2026"] },
-  { slug: "monitoring-comparison-2026", categoryName: "Monitoring", categorySlug: "monitoring", shortName: "Monitoring", relatedSlugs: ["security-free-tier-comparison-2026", "hosting-free-tier-comparison-2026", "analytics-free-tier-comparison-2026"] },
-  { slug: "storage-comparison-2026", categoryName: "Storage", categorySlug: "storage", shortName: "Storage & CDN", relatedSlugs: ["cloud-free-tier-comparison-2026", "hosting-free-tier-comparison-2026", "database-free-tier-comparison-2026"] },
-  { slug: "testing-free-tier-comparison-2026", categoryName: "Testing", categorySlug: "testing", shortName: "Testing", relatedSlugs: ["cicd-free-tier-comparison-2026", "monitoring-comparison-2026", "security-free-tier-comparison-2026"] },
-  { slug: "analytics-free-tier-comparison-2026", categoryName: "Analytics", categorySlug: "analytics", shortName: "Analytics", relatedSlugs: ["monitoring-comparison-2026", "email-comparison-2026", "testing-free-tier-comparison-2026"] },
-  { slug: "api-development-free-tier-comparison-2026", categoryName: "API Development", categorySlug: "api-development", shortName: "API Development", relatedSlugs: ["testing-free-tier-comparison-2026", "monitoring-comparison-2026", "cicd-free-tier-comparison-2026"] },
-  { slug: "security-free-tier-comparison-2026", categoryName: "Security", categorySlug: "security", shortName: "Security", relatedSlugs: ["auth-comparison-2026", "monitoring-comparison-2026", "cicd-free-tier-comparison-2026"] },
-  { slug: "hosting-free-tier-comparison-2026", categoryName: "Cloud Hosting", categorySlug: "cloud-hosting", shortName: "Hosting", relatedSlugs: ["cloud-free-tier-comparison-2026", "serverless-free-tier-comparison-2026", "cicd-free-tier-comparison-2026"] },
+  { slug: "cloud-free-tier-comparison-2026", subject: "Cloud IaaS", catalogueCategory: "Cloud IaaS", shortName: "Cloud", relatedSlugs: ["hosting-free-tier-comparison-2026", "serverless-free-tier-comparison-2026", "storage-comparison-2026"] },
+  { slug: "database-free-tier-comparison-2026", subject: "Databases", catalogueCategory: "Databases", shortName: "Database", relatedSlugs: ["serverless-free-tier-comparison-2026", "storage-comparison-2026", "auth-comparison-2026"] },
+  { slug: "cicd-free-tier-comparison-2026", subject: "CI/CD", catalogueCategory: "CI/CD", shortName: "CI/CD", relatedSlugs: ["testing-free-tier-comparison-2026", "security-free-tier-comparison-2026", "hosting-free-tier-comparison-2026"] },
+  { slug: "serverless-free-tier-comparison-2026", subject: "Serverless", catalogueCategory: null, shortName: "Serverless", relatedSlugs: ["cloud-free-tier-comparison-2026", "hosting-free-tier-comparison-2026", "database-free-tier-comparison-2026"] },
+  { slug: "auth-comparison-2026", subject: "Auth", catalogueCategory: "Auth", shortName: "Auth & Identity", relatedSlugs: ["security-free-tier-comparison-2026", "database-free-tier-comparison-2026", "monitoring-comparison-2026"] },
+  { slug: "email-comparison-2026", subject: "Email", catalogueCategory: "Email", shortName: "Email", relatedSlugs: ["monitoring-comparison-2026", "analytics-free-tier-comparison-2026", "api-development-free-tier-comparison-2026"] },
+  { slug: "monitoring-comparison-2026", subject: "Monitoring", catalogueCategory: "Monitoring", shortName: "Monitoring", relatedSlugs: ["security-free-tier-comparison-2026", "hosting-free-tier-comparison-2026", "analytics-free-tier-comparison-2026"] },
+  { slug: "storage-comparison-2026", subject: "Storage", catalogueCategory: "Storage", shortName: "Storage & CDN", relatedSlugs: ["cloud-free-tier-comparison-2026", "hosting-free-tier-comparison-2026", "database-free-tier-comparison-2026"] },
+  { slug: "testing-free-tier-comparison-2026", subject: "Testing", catalogueCategory: "Testing", shortName: "Testing", relatedSlugs: ["cicd-free-tier-comparison-2026", "monitoring-comparison-2026", "security-free-tier-comparison-2026"] },
+  { slug: "analytics-free-tier-comparison-2026", subject: "Analytics", catalogueCategory: "Analytics", shortName: "Analytics", relatedSlugs: ["monitoring-comparison-2026", "email-comparison-2026", "testing-free-tier-comparison-2026"] },
+  { slug: "api-development-free-tier-comparison-2026", subject: "API Development", catalogueCategory: "API Development", shortName: "API Development", relatedSlugs: ["testing-free-tier-comparison-2026", "monitoring-comparison-2026", "cicd-free-tier-comparison-2026"] },
+  { slug: "security-free-tier-comparison-2026", subject: "Security", catalogueCategory: "Security", shortName: "Security", relatedSlugs: ["auth-comparison-2026", "monitoring-comparison-2026", "cicd-free-tier-comparison-2026"] },
+  { slug: "hosting-free-tier-comparison-2026", subject: "Cloud Hosting", catalogueCategory: "Cloud Hosting", shortName: "Hosting", relatedSlugs: ["cloud-free-tier-comparison-2026", "serverless-free-tier-comparison-2026", "cicd-free-tier-comparison-2026"] },
 ];
 
 const comparisonMetaBySlug = new Map(comparisonPagesMeta.map(m => [m.slug, m]));
 
+export function comparisonCatalogueCategories(): { slug: string; catalogueCategory: string | null }[] {
+  return comparisonPagesMeta.map(m => ({ slug: m.slug, catalogueCategory: m.catalogueCategory }));
+}
+
+function comparisonCatalogueOffers(meta: ComparisonPageMeta): Offer[] {
+  if (meta.catalogueCategory === null) return [];
+  return offers.filter(o => o.category === meta.catalogueCategory);
+}
+
 function buildComparisonCategoryBackLink(slug: string): string {
   const meta = comparisonMetaBySlug.get(slug);
-  if (!meta) return "";
-  const catOffers = offers.filter(o => {
-    const norm = o.category?.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
-    return norm === meta.categorySlug || o.category === meta.categoryName;
-  });
-  const count = catOffers.length;
+  if (!meta || meta.catalogueCategory === null) return "";
+  const count = comparisonCatalogueOffers(meta).length;
+  if (count === 0) return "";
+  const hubSlug = toSlug(meta.catalogueCategory);
   return `<div style="background:linear-gradient(135deg,rgba(59,130,246,0.1),rgba(139,92,246,0.1));border:1px solid var(--accent);border-radius:10px;padding:1rem 1.25rem;margin:1rem 0 1.5rem;display:flex;align-items:center;gap:.75rem;flex-wrap:wrap">
     <span style="font-size:1.3rem">\u{1F4C2}</span>
-    <span style="font-size:.95rem;color:var(--text)">Browse all <strong>${count}</strong> ${escHtmlServer(meta.categoryName)} services with free tiers \u2192 <a href="/category/${escHtmlServer(meta.categorySlug)}" style="font-weight:600">${escHtmlServer(meta.categoryName)} Category Hub</a></span>
+    <span style="font-size:.95rem;color:var(--text)">Browse all <strong>${count}</strong> ${escHtmlServer(meta.catalogueCategory)} services with free tiers \u2192 <a href="/category/${escHtmlServer(hubSlug)}" style="font-weight:600">${escHtmlServer(meta.catalogueCategory)} Category Hub</a></span>
   </div>`;
 }
 
@@ -35828,19 +35851,20 @@ function buildComparisonRelatedComparisons(slug: string): string {
 export function comparisonFaqItems(slug: string): FaqItem[] {
   const meta = comparisonMetaBySlug.get(slug);
   if (!meta) return [];
-  const catName = meta.categoryName;
-  const catOffers = offers.filter(o => {
-    const norm = o.category?.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
-    return norm === meta.categorySlug || o.category === catName;
+  const catName = meta.subject;
+  const catOffers = comparisonCatalogueOffers(meta);
+  const noBest = unrankedBestAnswer({
+    noun: `${meta.catalogueCategory ?? catName} services in our catalogue`,
+    size: catOffers.length,
+    whereToLook: "each with the free tier terms and the date we last verified them",
+    basis: "This page compares them on free tier limits, what each charges past them, and lock-in risk; the table above carries the figures side by side.",
   });
-  const count = catOffers.length;
-  const topVendor = catOffers[0]?.vendor || catName;
 
   return [
-    {
+    ...(noBest === null ? [] : [{
       q: `What is the best free ${catName.toLowerCase()} service in 2026?`,
-      a: `Based on our comparison of ${count} ${catName.toLowerCase()} services, ${topVendor} stands out for its free tier generosity. However, the best choice depends on your specific requirements — this comparison breaks down limits, scaling costs, and lock-in risk for each provider.`,
-    },
+      a: noBest,
+    }]),
     {
       q: `Which ${catName.toLowerCase()} free tier is most generous?`,
       a: `Free tier generosity varies by use case. Some providers offer more storage, others more compute or API calls. Our comparison table above shows exact limits side-by-side so you can evaluate based on what matters most for your workload.`,
@@ -35881,8 +35905,10 @@ function buildComparisonBreadcrumbJsonLd(slug: string, title: string): string {
     "@type": "BreadcrumbList",
     itemListElement: [
       { "@type": "ListItem", position: 1, name: "AgentDeals", item: BASE_URL },
-      { "@type": "ListItem", position: 2, name: meta.categoryName, item: `${BASE_URL}/category/${meta.categorySlug}` },
-      { "@type": "ListItem", position: 3, name: title, item: `${BASE_URL}/${slug}` },
+      ...(meta.catalogueCategory === null
+        ? []
+        : [{ "@type": "ListItem", position: 2, name: meta.catalogueCategory, item: `${BASE_URL}/category/${toSlug(meta.catalogueCategory)}` }]),
+      { "@type": "ListItem", position: meta.catalogueCategory === null ? 2 : 3, name: title, item: `${BASE_URL}/${slug}` },
     ],
   };
   return `<script type="application/ld+json">${JSON.stringify(breadcrumbJsonLd)}</script>`;
@@ -37985,7 +38011,7 @@ ${mcpCtaCss()}
 <body>
 <div class="container">
   ${buildGlobalNav("guides")}
-  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/category/serverless">Serverless</a> &rsaquo; Serverless Free Tier Comparison</div>
+  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; Serverless Free Tier Comparison</div>
   <h1>Serverless Free Tier Comparison 2026</h1>
   <p class="pub-date">Published ${pubDate}${pageFreshness("/serverless-free-tier-comparison-2026")} &middot; ${pageDataProvenance("/serverless-free-tier-comparison-2026", offers.length)} &middot; 10+ serverless platforms compared</p>
 
