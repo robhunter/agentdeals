@@ -243,7 +243,7 @@ describe("an entry lifted out of its section still says what its date is", () =>
   let routes: string[] = [];
   let ENTRY_DATE = "";
   let discoveredPort = 0;
-  const rendered = new Map<string, { discovered: string; dated: string }>();
+  const rendered = new Map<string, { discovered: string; dated: string; withoutTheEntry: string }>();
 
   before(async () => {
     tmp = mkdtempSync(path.join(tmpdir(), "change-entry-provenance-"));
@@ -261,7 +261,8 @@ describe("an entry lifted out of its section still says what its date is", () =>
     const dated = await startServer(
       write("dated.json", [control, change(SUBJECT, ENTRY_DATE, "vendor_page", SUMMARY)])
     );
-    servers.push(discovered.proc, dated.proc);
+    const withoutTheEntry = await startServer(write("without-the-entry.json", [control]));
+    servers.push(discovered.proc, dated.proc, withoutTheEntry.proc);
     discoveredPort = discovered.port;
 
     const index = await (await fetch(`http://localhost:${discovered.port}/sitemap.xml`)).text();
@@ -279,12 +280,17 @@ describe("an entry lifted out of its section still says what its date is", () =>
         const route = queue.shift();
         if (!route) return;
         try {
-          const [a, b] = await Promise.all([
+          const [a, b, c] = await Promise.all([
             fetch(`http://localhost:${discovered.port}${route}`),
             fetch(`http://localhost:${dated.port}${route}`),
+            fetch(`http://localhost:${withoutTheEntry.port}${route}`),
           ]);
           if (a.status !== 200 || b.status !== 200) continue;
-          const bodies = { discovered: await a.text(), dated: await b.text() };
+          const bodies = {
+            discovered: await a.text(),
+            dated: await b.text(),
+            withoutTheEntry: c.status === 200 ? await c.text() : "",
+          };
           if (bodies.discovered.includes(SUMMARY)) rendered.set(route, bodies);
         } catch {
           continue;
@@ -304,15 +310,32 @@ describe("an entry lifted out of its section still says what its date is", () =>
     assert.ok(rendered.size > 8, `only ${rendered.size} routes rendered the entry at all`);
   });
 
+  function fieldsTheEntryPuts(body: string, b: { withoutTheEntry: string }): string[] {
+    const alreadyThere = new Map<string, number>();
+    for (const field of dateFields(b.withoutTheEntry, ENTRY_DATE)) {
+      alreadyThere.set(field, (alreadyThere.get(field) ?? 0) + 1);
+    }
+    const fields: string[] = [];
+    for (const field of dateFields(body, ENTRY_DATE)) {
+      const spare = alreadyThere.get(field) ?? 0;
+      if (spare > 0) {
+        alreadyThere.set(field, spare - 1);
+        continue;
+      }
+      fields.push(field);
+    }
+    return fields;
+  }
+
   it("would fail if a date field printed the date without saying which date it is", () => {
-    const seen = [...rendered].filter(([, b]) => dateFields(b.dated, ENTRY_DATE).length > 0);
+    const seen = [...rendered].filter(([, b]) => fieldsTheEntryPuts(b.dated, b).length > 0);
     assertPopulationFloor(seen.length, 6, "routes putting the entry's date in a field of its own");
   });
 
   it("declares an effective date as one in every field that prints it", () => {
     const offenders: string[] = [];
     for (const [route, b] of rendered) {
-      for (const field of dateFields(b.dated, ENTRY_DATE)) {
+      for (const field of fieldsTheEntryPuts(b.dated, b)) {
         if (field.includes(`${EFFECTIVE_DATE_PREFIX} ${ENTRY_DATE}`)) continue;
         if (EXEMPT.some((e) => e.allows(field))) continue;
         offenders.push(`${route}: ${field}`);
@@ -324,7 +347,7 @@ describe("an entry lifted out of its section still says what its date is", () =>
   it("says the effective date is unknown in every field that prints a discovery date", () => {
     const offenders: string[] = [];
     for (const [route, b] of rendered) {
-      for (const field of dateFields(b.discovered, ENTRY_DATE)) {
+      for (const field of fieldsTheEntryPuts(b.discovered, b)) {
         if (
           field.includes(`${DISCOVERED_DATE_PREFIX} ${ENTRY_DATE}`) &&
           field.includes(UNKNOWN_EFFECTIVE_DATE_MARKER)
