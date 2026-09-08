@@ -49,13 +49,27 @@ describe("/best/:slug shows the whole qualified band", () => {
     assert.ok(cards > 8, `expected the full band, got ${cards} cards`);
   });
 
-  it("states the tie in plain language, above the list", async () => {
-    const { html } = await get("/best/free-databases");
+  it("states the tie in plain language, above the list, where the whole page is one set of alternatives", async () => {
+    const { html } = await get("/best/free-search");
     const tieNote = html.indexOf("offers meet our criteria for this category");
     const firstCard = html.indexOf('class="best-pick"');
     assert.ok(tieNote > -1, "the tie must be stated");
     assert.ok(tieNote < firstCard, "the tie must be stated above the list, not below it");
     assert.match(html, /none is distinguishable from the others under any signal we record/);
+    assert.match(html, /rotates daily/);
+  });
+
+  it("states the split, not the tie, where the page spans several labelled functions", async () => {
+    const { html } = await get("/best/free-databases");
+    const split = html.indexOf("not all alternatives to one another");
+    const firstCard = html.indexOf('class="best-pick"');
+    assert.ok(split > -1, "a page spanning several labelled functions must say so");
+    assert.ok(split < firstCard, "the split must be stated above the list, not below it");
+    assert.ok(
+      !/none is distinguishable from the others under any signal we record/.test(html.slice(0, firstCard)),
+      "a page spanning several labelled functions must not claim its whole membership is one set",
+    );
+    assert.match(html, /None is distinguishable from the others in this group under any signal we record/);
     assert.match(html, /rotates daily/);
   });
 
@@ -91,8 +105,19 @@ describe("/best/:slug shows the whole qualified band", () => {
     assert.strictEqual(queryKey, "best-of:Databases");
     const recomputed = createHash("sha256").update(`${date}|${queryKey}|p0`).digest("hex");
     assert.strictEqual(seed, recomputed, "a third party must be able to recompute the published seed");
-    const cards = (html.match(/class="best-pick"/g) ?? []).length;
-    assert.strictEqual(Number(tieCount), cards, "tie_count must equal the number of qualified entries shown");
+    const qualifiedSection = html.slice(0, html.indexOf("Demoted &mdash; and exactly why"));
+    const shown = new Set([...qualifiedSection.matchAll(/class="best-pick-name">([^<]+)</g)].map(m => m[1]));
+    assert.strictEqual(Number(tieCount), shown.size, "tie_count must equal the number of qualified entries shown");
+  });
+
+  it("publishes the same seed on a page named after a subtype label", async () => {
+    const { html } = await get("/best/free-uptime-check");
+    const date = html.match(/<dt>date<\/dt><dd>(\d{4}-\d{2}-\d{2})<\/dd>/)?.[1];
+    const queryKey = html.match(/<dt>query_key<\/dt><dd>([^<]+)<\/dd>/)?.[1];
+    const seed = html.match(/<dt>seed<\/dt><dd>([0-9a-f]{64})<\/dd>/)?.[1];
+    assert.ok(date && queryKey && seed, "the audit block must publish all four fields");
+    assert.strictEqual(queryKey, "best-of:uptime_check");
+    assert.strictEqual(seed, createHash("sha256").update(`${date}|${queryKey}|p0`).digest("hex"));
   });
 
   it("links the published criteria from the page", async () => {
@@ -101,11 +126,26 @@ describe("/best/:slug shows the whole qualified band", () => {
   });
 
   it("keeps the structured data consistent with what is rendered", async () => {
-    const { html } = await get("/best/free-databases");
+    const { html } = await get("/best/free-search");
     const jsonLd = JSON.parse(html.match(/<script type="application\/ld\+json">(\{"@context":"https:\/\/schema\.org","@type":"ItemList".*?)<\/script>/s)![1]);
     const cards = (html.match(/class="best-pick"/g) ?? []).length;
     assert.strictEqual(jsonLd.numberOfItems, cards);
     assert.strictEqual(jsonLd.itemListElement.length, cards);
+  });
+
+  it("describes a split page as a list of function lists, matching what is rendered", async () => {
+    const { html } = await get("/best/free-databases");
+    const jsonLd = JSON.parse(html.match(/<script type="application\/ld\+json">(\{"@context":"https:\/\/schema\.org","@type":"ItemList".*?)<\/script>/s)![1]);
+    const headings = [...html.matchAll(/<h2 class="function-group-heading"[^>]*>([^<]+)<\/h2>/g)].map(m => m[1]);
+    assert.ok(headings.length > 1, "/best/free-databases must render more than one function section");
+    assert.strictEqual(jsonLd.numberOfItems, headings.length);
+    assert.deepStrictEqual(jsonLd.itemListElement.map((e: { item: { name: string } }) => e.item.name), headings);
+    const nested = jsonLd.itemListElement.reduce((n: number, e: { item: { itemListElement: unknown[] } }) => n + e.item.itemListElement.length, 0);
+    assert.strictEqual(nested, (html.match(/class="best-pick"/g) ?? []).length);
+    for (const element of jsonLd.itemListElement) {
+      assert.strictEqual(element.item["@type"], "ItemList");
+      assert.strictEqual(element.item.numberOfItems, element.item.itemListElement.length);
+    }
   });
 });
 
@@ -162,9 +202,13 @@ describe("/criteria publishes the method", () => {
 
   it("publishes the finding rather than hiding it, and says what it counted", async () => {
     const { html } = await get("/criteria");
-    assert.match(html, /Zero of the \d+ categories with a best-of page have a unique number one/);
-    assert.match(html, /The site publishes \d+ categories in all/);
+    const finding = /(Zero|\d+) of the (\d+) product functions with a best-of page (?:has|have) a unique number one/.exec(html);
+    assert.ok(finding, "the finding must state how many pages it counted");
+    assert.match(html, /the site publishes \d+ categories in all/);
     assert.ok(!/of 57 categories have/.test(html), "57 counts best-of pages, and the site publishes more categories than that");
+    if (finding[1] !== "Zero") {
+      assert.match(html, /have a unique number one \([^)]+\)/, "a page with a unique number one must be named, not just counted");
+    }
   });
 
   it("says what we do not model", async () => {

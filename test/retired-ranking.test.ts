@@ -204,7 +204,14 @@ describe("the best-of pages count what they list", () => {
       const lede = /<div class="tie-note">.*?<strong>(\d+) offers? meets? our criteria/s.exec(html);
       assert.ok(lede, `${p} has no count in its lede`);
       const cards = [...html.matchAll(/<div class="best-pick">/g)].length;
-      assert.strictEqual(Number(lede![1]), cards, `${p} ledes ${lede![1]} and renders ${cards} picks`);
+      const qualifiedSection = html.slice(0, html.indexOf("Demoted &mdash; and exactly why"));
+      const shown = new Set([...qualifiedSection.matchAll(/class="best-pick-name">([^<]+)</g)].map(m => m[1]));
+      if (html.includes('class="function-group-heading"')) {
+        assert.strictEqual(Number(lede![1]), shown.size, `${p} ledes ${lede![1]} and renders ${shown.size} distinct picks`);
+        assert.ok(cards >= shown.size, `${p} renders ${cards} cards for ${shown.size} picks`);
+      } else {
+        assert.strictEqual(Number(lede![1]), cards, `${p} ledes ${lede![1]} and renders ${cards} picks`);
+      }
       checked++;
     }
     assert.ok(checked >= categoriesWithAnEndedRecord.length, `only ${checked} best-of pages were checked`);
