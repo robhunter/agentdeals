@@ -341,12 +341,12 @@ describe("every ranked surface publishes the seed that ordered it", () => {
 
     const { text: criteria } = await get("/criteria");
     const claim = criteria.match(/<div class="callout">([\s\S]*?)<\/div>/)![1];
-    assert.match(claim, new RegExp(`of the ${slugs.length} categories with a best-of page`), "the denominator must be the number of best-of pages");
+    assert.match(claim, new RegExp(`of the ${slugs.length} product functions with a best-of page`), "the denominator must be the number of best-of pages");
     assert.match(claim, new RegExp(`${uniqueTop === 0 ? "Zero" : String(uniqueTop)} of the`), `the page must publish the ${uniqueTop} its own best-of pages add up to`);
     assert.ok(claim.includes(`${meanTie} offers tie at the top`), `the mean must be ${meanTie}, the mean of the published tie counts`);
 
     const { text: llms } = await get("/llms.txt");
-    assert.match(llms, new RegExp(`${uniqueTop} of the ${slugs.length} categories with a best-of page`), "llms.txt must carry the same figure and the same scope");
+    assert.match(llms, new RegExp(`${uniqueTop} of the ${slugs.length} product functions with a best-of page`), "llms.txt must carry the same figure and the same scope");
   });
 
   it("the vendor page says how much of the ranked order it is showing", async () => {

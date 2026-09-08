@@ -76,8 +76,9 @@ import { eligibilityGateAsPublished, gatedShareDescriptionClause, gatedShareLede
 import { gateDisclosureFor } from "./gate-disclosure.js";
 import { verificationLedger, QUARANTINE_AFTER_FAILURES } from "./verification-state.js";
 import { partitionAlternatives, partitionSubstitutes, type SubstitutesPartition, productRoleSentence, MEMBERSHIP_GATE_RULES, MEMBERSHIP_GATE_ORDER, MEMBERSHIP_GATE_SYMMETRY, MEMBERSHIP_GATE_SCOPE, MEMBERSHIP_GATE_CORRECTIONS, SUBTYPE_TAXONOMIES, SUBTYPE_MEMBERSHIP_RULE, SUBTYPE_MEMBERSHIP_GROUP_SCOPE, CURATED_SUBTYPE_EXEMPTION, membershipGroupsFor, subtypeDefinition } from "./product-role.js";
+import { buildProductFunctions, functionMembers, functionDefinitions, admissionFor, splitByFunction, labelsNaming, FUNCTION_RESIDUE_COPY, type ProductFunction, FUNCTION_MEMBERSHIP_RULE, FUNCTION_SPLIT_RULE, FUNCTION_NAMING_RULE } from "./product-function.js";
 import { resolveCuratedAlternatives, curatedAlternativesFor, addCuratedToPool } from "./curated-alternatives.js";
-import type { Agent, ChangeDateSource, DealChange, RiskCause, RatingWithheld, LinkUnreachable, Offer, StabilityClass } from "./types.js";
+import type { Agent, ChangeDateSource, DealChange, RiskCause, RatingWithheld, LinkUnreachable, Offer, StabilityClass, SubtypeLabel } from "./types.js";
 import { changeDateLabel, changeEntryDateLabel, changeEntryLongDateLabel, changeDateClause, changeDatePublished, changeEventStartDate, capListSections, latestEventDate, offerExpiryAfter, feedEntryUpdated, undatedGroupHeading, UNDATED_TILE_LABEL, firstReadHeading, discoveryBatchNote, isoWeekOf, monthlyChangeSeries, changesInWindow, discoveryMonthSeriesHeading, periodComparisonSentence, DISCOVERED_DATE_PREFIX, EFFECTIVE_DATE_PREFIX, EVENT_DATED_SOURCES, UNDATED_GROUP_NOTE, UNKNOWN_EFFECTIVE_DATE_MARKER, EFFECTIVE_MONTH_SERIES_NOTE, DISCOVERY_MONTH_SERIES_NOTE, weekRangeLabel } from "./change-dates.js";
 import { changeFeedEntries, feedEntryFields, feedUpdatedTimestamp, changeFeedProvenanceNote, CHANGE_FEED_ENTRY_LIMIT, CHANGE_FEED_DESCRIPTION, CHANGE_FEED_NAMESPACE, CHANGE_FEED_NAMESPACE_PREFIX, channelUpdatedTimestamp, WEEKLY_FEED_POPULATION_NOTE, feedLinkTag, feedEntrySourceXml, digestSourceXml, PER_CHANGE_FEED, WEEKLY_DIGEST_FEED } from "./change-feed.js";
 import { FEED_CORRECTIONS, correctionEntriesXml } from "./feed-corrections.js";
@@ -2221,19 +2222,25 @@ ${globalNavCss()}
 
 const BEST_OF_MIN_VENDORS = 5;
 
-const bestOfSlugMap = new Map<string, { categoryName: string }>();
-for (const cat of categories) {
-  const catOffers = offers.filter((o) => o.category === cat.name && !o.eligibility);
-  if (catOffers.length < BEST_OF_MIN_VENDORS) continue;
-  bestOfSlugMap.set(`free-${toSlug(cat.name)}`, { categoryName: cat.name });
+const productFunctions = buildProductFunctions(categories.map(c => c.name));
+
+const bestOfSlugMap = new Map<string, ProductFunction>();
+for (const fn of productFunctions) {
+  const generallyAvailable = functionMembers(offers, fn).filter((o) => !o.eligibility);
+  if (generallyAvailable.length < BEST_OF_MIN_VENDORS) continue;
+  bestOfSlugMap.set(`free-${fn.slug}`, fn);
+}
+
+function functionSubject(fn: ProductFunction): string {
+  return fn.categories[0] ?? fn.subtypes[0];
 }
 
 type EnrichedOfferRow = ReturnType<typeof enrichOffers>[number];
 
-function rankCategory(categoryName: string, date = utcDate()): RankingResult<EnrichedOfferRow> {
-  const catOffers = enrichOffers(offers.filter((o) => o.category === categoryName));
-  return rankOffers(catOffers, {
-    queryKey: `best-of:${categoryName}`,
+function rankFunction(fn: ProductFunction, date = utcDate()): RankingResult<EnrichedOfferRow> {
+  const members = enrichOffers(functionMembers(offers, fn));
+  return rankOffers(members, {
+    queryKey: `best-of:${functionSubject(fn)}`,
     changes: dealChanges,
     date,
     verificationLedger: verificationLedger(),
@@ -2298,29 +2305,57 @@ function renderAuditBlock(tie: TieBreak, listed?: { shown: number; total: number
   </div>`;
 }
 
+const FUNCTION_LABEL_DATE_CLASS = "function-label-reviewed";
+
+function functionEvidenceHtml(offer: EnrichedOfferRow, labels: SubtypeLabel[], fn: ProductFunction): string {
+  if (labels.length === 0) return "";
+  const reviewed = offer.product_subtypes?.reviewed;
+  if (!reviewed) return "";
+  const named = labels.map(l => `<code>${escHtmlServer(l.subtype)}</code>`).join(" and ");
+  const lead = fn.categories.includes(offer.category)
+    ? `Labelled ${named}.`
+    : `Listed in <a href="/category/${toSlug(offer.category)}">${escHtmlServer(offer.category)}</a>, and on this page because we labelled it ${named}.`;
+  const read = readClauseHtml(
+    reviewed,
+    [...new Map(labels.map(l => [l.source_url, l])).values()].map(l => ({ url: l.source_url, quote: l.source_quote })),
+    escHtmlServer,
+    { dateClass: FUNCTION_LABEL_DATE_CLASS },
+  );
+  const clause = read === "" ? "" : ` ${read}.`;
+  return `\n          <p class="function-evidence">${lead}${clause} <a href="${CRITERIA_PATH}#subtypes">How we use this</a></p>`;
+}
+
 function buildBestOfPage(slug: string): string | null {
-  const entry = bestOfSlugMap.get(slug);
-  if (!entry) return null;
-  const { categoryName } = entry;
-  const ranking = rankCategory(categoryName);
+  const fn = bestOfSlugMap.get(slug);
+  if (!fn) return null;
+  const categoryName = fn.title;
+  const ranking = rankFunction(fn);
   const qualified = ranking.qualified;
   const demoted = ranking.demoted;
   const tie = ranking.tie_break;
   const year = new Date().getFullYear();
   const pickCount = qualified.length;
+  const groups = splitByFunction(qualified.map(e => e.offer), fn);
+  const definition = fn.categories.length === 0 ? functionDefinitions(fn).join("; or when it ") || null : null;
   const title = `Best Free ${categoryName} Tools (${year}) — AgentDeals`;
-  const metaDesc = `Every free ${categoryName.toLowerCase()} tier that clears our bar in ${year}: ${pickCount} offers meet the criteria and ${demoted.length} are demoted with a named reason. Verified pricing, recorded changes, and a published ranking method.`;
+  const metaDesc = definition
+    ? `Every free ${categoryName.toLowerCase()} tier that clears our bar in ${year}: ${pickCount} offers meet the criteria and ${demoted.length} are demoted with a named reason. We list a product here when it ${definition}.`
+    : `Every free ${categoryName.toLowerCase()} tier that clears our bar in ${year}: ${pickCount} offers meet the criteria and ${demoted.length} are demoted with a named reason. Verified pricing, recorded changes, and a published ranking method.`;
 
   const riskColors: Record<string, string> = { stable: "#3fb950", caution: "#d29922", risky: "#f85149" };
+  const pageScope = fn.categories.length === 1 && fn.subtypes.length === 0 ? "for this category" : "on this page";
 
-  const tiePara = pickCount > 1
-    ? `<strong>${pickCount} offers meet our criteria for this category and none is distinguishable from the others under any signal we record.</strong> They are listed in an order that rotates daily; <a href="${CRITERIA_PATH}">here is how that order is derived</a>. There is no top slot here to sell.`
-    : `<strong>${pickCount} offer meets our criteria for this category.</strong> <a href="${CRITERIA_PATH}">Here is how we decide</a>.`;
+  const tiePara = groups
+    ? `<strong>${pickCount} offers meet our criteria here, and they are not all alternatives to one another &mdash; they carry ${groups.filter(g => g.subtype).length} different labelled functions.</strong> ${escHtmlServer(FUNCTION_SPLIT_RULE)} Both the sections and the offers inside them are listed in an order that rotates daily; <a href="${CRITERIA_PATH}">here is how that order is derived</a>. There is no top slot here to sell.`
+    : pickCount > 1
+      ? `<strong>${pickCount} offers meet our criteria ${pageScope} and none is distinguishable from the others under any signal we record.</strong> They are listed in an order that rotates daily; <a href="${CRITERIA_PATH}">here is how that order is derived</a>. There is no top slot here to sell.`
+      : `<strong>${pickCount} offer meets our criteria ${pageScope}.</strong> <a href="${CRITERIA_PATH}">Here is how we decide</a>.`;
 
-  const renderCard = (e: RankedEntry<EnrichedOfferRow>, i: number, demotedCard: boolean) => {
+  const renderCard = (e: RankedEntry<EnrichedOfferRow>, i: number, demotedCard: boolean, labels?: SubtypeLabel[]) => {
     const o = e.offer;
     const riskBadge = riskBadgeHtml(o.risk_level, o.risk_cause);
     const review = buildBestOfMiniReview(o);
+    const cited = labels ?? admissionFor(o, fn)?.labels ?? [];
     const relatedCompareLinks = Array.from(comparisonMap.entries())
       .filter(([, [a, b]]) => a === o.vendor || b === o.vendor)
       .slice(0, 2)
@@ -2334,7 +2369,7 @@ function buildBestOfPage(slug: string): string | null {
             ${riskBadge}
           </div>
           <div class="best-pick-tier">${escHtmlServer(o.tier)}</div>
-          <p class="best-pick-review">${review}</p>
+          <p class="best-pick-review">${review}</p>${functionEvidenceHtml(o, cited, fn)}
           ${renderDemerits(e)}
           ${renderDisclosures(e)}
           <div class="best-pick-links">
@@ -2347,9 +2382,29 @@ function buildBestOfPage(slug: string): string | null {
       </div>`;
   };
 
-  const reviewsHtml = qualified.map((e, i) => renderCard(e, i, false)).join("\n");
+  const entryFor = new Map<EnrichedOfferRow, RankedEntry<EnrichedOfferRow>>(qualified.map(e => [e.offer, e]));
+  const renderedGroups = groups
+    ? rotateListing(groups.filter(g => g.subtype), tie.query_key, tie.date).concat(groups.filter(g => !g.subtype))
+    : null;
+  const reviewsHtml = renderedGroups
+    ? renderedGroups
+        .map(group => {
+          const cards = group.members
+            .map(o => entryFor.get(o))
+            .filter((e): e is RankedEntry<EnrichedOfferRow> => e !== undefined)
+            .map((e, i) => renderCard(e, i, false, group.subtype ? labelsNaming(e.offer, group.subtype) : []))
+            .join("\n");
+          const scope = group.subtype
+            ? `${group.members.length === 1 ? "1 offer here is" : `${group.members.length} offers here are`} labelled <code>${escHtmlServer(group.subtype)}</code>${group.definition ? ` &mdash; ${escHtmlServer(group.definition)}` : ""}.${group.members.length > 1 ? " None is distinguishable from the others in this group under any signal we record." : ""}`
+            : escHtmlServer(FUNCTION_RESIDUE_COPY[group.residue!].rule);
+          return `  <h2 class="function-group-heading" id="function-${escHtmlServer(toSlug(group.subtype ?? group.residue!))}">${escHtmlServer(group.title)}</h2>
+  <p class="function-group-scope">${scope}</p>
+${cards}`;
+        })
+        .join("\n")
+    : qualified.map((e, i) => renderCard(e, i, false)).join("\n");
   const demotedHtml = demoted.length === 0
-    ? `      <p style="color:var(--text-muted);font-size:.9rem">Nothing in this category is demoted today &mdash; we hold no disqualifying record against any of these offers.</p>`
+    ? `      <p style="color:var(--text-muted);font-size:.9rem">Nothing on this page is demoted today &mdash; we hold no disqualifying record against any of these offers.</p>`
     : demoted.map((e, i) => renderCard(e, i, true)).join("\n");
 
   const tableRows = qualified.map((e) => {
@@ -2363,31 +2418,56 @@ function buildBestOfPage(slug: string): string | null {
         </tr>`;
   }).join("\n");
 
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "ItemList",
-    name: `Best Free ${categoryName} Tools`,
-    description: metaDesc,
-    numberOfItems: pickCount,
-    itemListElement: qualified.map((e, i) => ({
-      "@type": "ListItem",
-      position: i + 1,
-      item: {
-        "@type": "SoftwareApplication",
-        name: e.offer.vendor,
-        description: publishedTermsText(e.offer),
-        applicationCategory: categoryName,
-        offers: { "@type": "Offer", price: "0", priceCurrency: "USD", description: e.offer.tier },
-        ...(offerRetired(e.offer) ? {} : { url: e.offer.url }),
-      },
-    })),
-  };
+  const applicationOf = (offer: EnrichedOfferRow) => ({
+    "@type": "SoftwareApplication",
+    name: offer.vendor,
+    description: publishedTermsText(offer),
+    applicationCategory: offer.category,
+    offers: { "@type": "Offer", price: "0", priceCurrency: "USD", description: offer.tier },
+    ...(offerRetired(offer) ? {} : { url: offer.url }),
+  });
+
+  const listOf = (members: EnrichedOfferRow[]) =>
+    members.map((offer, i) => ({ "@type": "ListItem", position: i + 1, item: applicationOf(offer) }));
+
+  const jsonLd = renderedGroups
+    ? {
+        "@context": "https://schema.org",
+        "@type": "ItemList",
+        name: `Best Free ${categoryName} Tools`,
+        description: metaDesc,
+        numberOfItems: renderedGroups.length,
+        itemListElement: renderedGroups.map((group, i) => ({
+          "@type": "ListItem",
+          position: i + 1,
+          item: {
+            "@type": "ItemList",
+            name: group.title,
+            ...(group.definition ? { description: group.definition } : {}),
+            numberOfItems: group.members.length,
+            itemListElement: listOf(group.members),
+          },
+        })),
+      }
+    : {
+        "@context": "https://schema.org",
+        "@type": "ItemList",
+        name: `Best Free ${categoryName} Tools`,
+        description: metaDesc,
+        numberOfItems: pickCount,
+        itemListElement: listOf(qualified.map(e => e.offer)),
+      };
+
+  const categoryBrowseLinks = [...new Set(functionMembers(offers, fn).map(o => o.category))]
+    .sort()
+    .map(c => `<a href="/category/${toSlug(c)}">See all ${offers.filter(o => o.category === c).length} ${escHtmlServer(c.toLowerCase())} offers &rarr;</a>`)
+    .join(" ");
 
   const otherBestOf = Array.from(bestOfSlugMap.entries())
     .filter(([s]) => s !== slug)
-    .sort((a, b) => offers.filter(o => o.category === b[1].categoryName).length - offers.filter(o => o.category === a[1].categoryName).length)
+    .sort((a, b) => functionMembers(offers, b[1]).length - functionMembers(offers, a[1]).length)
     .slice(0, 10)
-    .map(([s, v]) => `<a href="/best/${s}" style="display:inline-block;padding:.25rem .7rem;border-radius:20px;font-size:.75rem;color:var(--text-muted);border:1px solid var(--border);text-decoration:none;transition:all .2s">${escHtmlServer(v.categoryName)}</a>`)
+    .map(([s, v]) => `<a href="/best/${s}" style="display:inline-block;padding:.25rem .7rem;border-radius:20px;font-size:.75rem;color:var(--text-muted);border:1px solid var(--border);text-decoration:none;transition:all .2s">${escHtmlServer(v.title)}</a>`)
     .join("\n        ");
 
   return `<!DOCTYPE html>
@@ -2448,6 +2528,11 @@ h2{font-family:var(--serif);font-size:1.4rem;color:var(--text);margin:2.5rem 0 1
 .best-disclosure{margin:.5rem 0;font-size:.78rem;color:var(--text-dim)}
 .best-disclosure-label{text-transform:uppercase;letter-spacing:.04em;font-size:.68rem}
 .best-disclosure ul{margin:.25rem 0 0 1rem}
+.function-evidence{margin:.4rem 0 .5rem;font-size:.8rem;color:var(--text-dim);border-left:2px solid var(--border);padding-left:.6rem}
+.function-evidence code{font-family:var(--mono);color:var(--text-muted)}
+.function-group-heading{margin:2.5rem 0 .25rem}
+.function-group-scope{color:var(--text-muted);font-size:.9rem;margin-bottom:1rem}
+.function-group-scope code{font-family:var(--mono);color:var(--text)}
 ${auditBlockCss()}
 footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}
 @media(max-width:768px){h1{font-size:1.5rem}.best-pick{flex-direction:column;gap:.5rem}.best-pick-rank{text-align:left}.compare-table{font-size:.75rem}.compare-table th,.compare-table td{padding:.4rem .5rem}}
@@ -2460,18 +2545,18 @@ ${mcpCtaCss()}
   ${buildGlobalNav("best")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/best">Best Of</a> &rsaquo; ${escHtmlServer(categoryName)}</div>
   <h1>Best Free ${escHtmlServer(categoryName)} Tools</h1>
-  <p class="page-meta">Every free ${escHtmlServer(categoryName.toLowerCase())} tier that clears our bar today. Updated ${tie.date}.</p>
+  <p class="page-meta">Every free ${escHtmlServer(categoryName.toLowerCase())} tier that clears our bar today. Updated ${tie.date}.${definition ? ` We list a product here when it ${escHtmlServer(definition)}.` : ""}</p>
 
   <div class="tie-note">${tiePara}</div>
 
   <div class="trust-note">
-    <strong>Why trust this data?</strong> Every free tier is verified against the vendor's pricing page with dates tracked. We monitor ${trackedChangeCount} pricing changes and flag vendors that have reduced or removed free tiers. ${escHtmlServer(DEMOTE_ONLY_POLICY)} <a href="/category/${toSlug(categoryName)}">See all ${offers.filter(o => o.category === categoryName).length} ${categoryName.toLowerCase()} offers &rarr;</a>
+    <strong>Why trust this data?</strong> Every free tier is verified against the vendor's pricing page with dates tracked. We monitor ${trackedChangeCount} pricing changes and flag vendors that have reduced or removed free tiers. ${escHtmlServer(DEMOTE_ONLY_POLICY)} ${escHtmlServer(FUNCTION_MEMBERSHIP_RULE)} ${categoryBrowseLinks}
   </div>
 
 ${reviewsHtml}
 
   <h2>Demoted &mdash; and exactly why</h2>
-  <p class="page-meta" style="margin-bottom:1rem">These offers are in this category but rank below the list above. Each one names the recorded fact behind it. ${escHtmlServer(DISCLOSURE_RATIONALE)}</p>
+  <p class="page-meta" style="margin-bottom:1rem">These offers reach this page too and rank below the list above. Each one names the recorded fact behind it. ${escHtmlServer(DISCLOSURE_RATIONALE)}</p>
 ${demotedHtml}
 
 ${renderAuditBlock(tie)}
@@ -2509,24 +2594,21 @@ ${tableRows}
 function buildBestOfIndexPage(): string {
   const year = new Date().getFullYear();
   const bestOfCount = bestOfSlugMap.size;
+  const categoryPageCount = [...bestOfSlugMap.values()].filter(fn => fn.categories.length > 0).length;
   const title = `Best Free Developer Tools (${year}) — AgentDeals`;
-  const metaDesc = `Every free tier that clears our bar, across ${bestOfCount} developer tool categories. Offers are never promoted — only demoted, on a named recorded fact. The method is published.`;
+  const metaDesc = `Every free tier that clears our bar, across ${bestOfCount} developer tool functions. Offers are never promoted — only demoted, on a named recorded fact. The method is published.`;
 
   const sortedEntries = Array.from(bestOfSlugMap.entries())
-    .sort((a, b) => {
-      const countA = offers.filter(o => o.category === a[1].categoryName).length;
-      const countB = offers.filter(o => o.category === b[1].categoryName).length;
-      return countB - countA;
-    });
+    .sort((a, b) => functionMembers(offers, b[1]).length - functionMembers(offers, a[1]).length);
 
-  const cardsHtml = sortedEntries.map(([slug, entry]) => {
-    const totalInCat = offers.filter(o => o.category === entry.categoryName).length;
-    const ranking = rankCategory(entry.categoryName);
+  const cardsHtml = sortedEntries.map(([slug, fn]) => {
+    const total = functionMembers(offers, fn).length;
+    const ranking = rankFunction(fn);
     const topVendors = ranking.qualified.slice(0, 3).map(e => e.offer.vendor).join(", ");
     return `
       <a href="/best/${slug}" class="best-index-card">
-        <span class="best-index-name">${escHtmlServer(entry.categoryName)}</span>
-        <span class="best-index-picks">${ranking.qualified.length} qualify of ${totalInCat}</span>
+        <span class="best-index-name">${escHtmlServer(fn.title)}</span>
+        <span class="best-index-picks">${ranking.qualified.length} qualify of ${total}</span>
         <span class="best-index-vendors">${escHtmlServer(topVendors)}</span>
       </a>`;
   }).join("");
@@ -2582,7 +2664,7 @@ ${globalNavCss()}
   ${buildGlobalNav("best")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; Best Of</div>
   <h1>Best Free Developer Tools</h1>
-  <p class="page-meta">${bestOfCount} categories. Every free tier that clears our bar, with the demoted ones listed underneath and the reason named. <a href="${CRITERIA_PATH}">How we rank &rarr;</a></p>
+  <p class="page-meta">${bestOfCount} product functions, ${categoryPageCount} of them named after a category and ${bestOfCount - categoryPageCount} after a subtype label. Every free tier that clears our bar, with the demoted ones listed underneath and the reason named. <a href="${CRITERIA_PATH}">How we rank &rarr;</a></p>
 
   <div class="best-index-grid">${cardsHtml}
   </div>
@@ -2595,6 +2677,7 @@ ${globalNavCss()}
 
 interface BestOfTieSummary {
   bestOfPageCount: number;
+  categoryPageCount: number;
   categoriesWithUniqueTop: string[];
   meanTie: string;
 }
@@ -2603,14 +2686,17 @@ function summariseBestOfTies(date = utcDate()): BestOfTieSummary {
   const categoriesWithUniqueTop: string[] = [];
   let tieSum = 0;
   let bestOfPageCount = 0;
-  for (const [, { categoryName }] of bestOfSlugMap) {
-    const r = rankCategory(categoryName, date);
+  let categoryPageCount = 0;
+  for (const [, fn] of bestOfSlugMap) {
+    const r = rankFunction(fn, date);
     bestOfPageCount++;
+    if (fn.categories.length > 0) categoryPageCount++;
     tieSum += r.tie_break.tie_count;
-    if (r.tie_break.tie_count === 1) categoriesWithUniqueTop.push(categoryName);
+    if (r.tie_break.tie_count === 1) categoriesWithUniqueTop.push(fn.title);
   }
   return {
     bestOfPageCount,
+    categoryPageCount,
     categoriesWithUniqueTop,
     meanTie: bestOfPageCount > 0 ? (tieSum / bestOfPageCount).toFixed(1) : "0",
   };
@@ -2618,7 +2704,7 @@ function summariseBestOfTies(date = utcDate()): BestOfTieSummary {
 
 function uniqueTopClause(s: BestOfTieSummary): string {
   const found = s.categoriesWithUniqueTop;
-  const scope = `of the ${s.bestOfPageCount} categories with a best-of page`;
+  const scope = `of the ${s.bestOfPageCount} product functions with a best-of page`;
   const named = found.length === 0 ? "" : ` (${found.join(", ")})`;
   return `${found.length} ${scope} ${found.length === 1 ? "has" : "have"} a unique number one${named}`;
 }
@@ -2765,8 +2851,9 @@ ${demeritRows}
   <div class="callout">
     <strong>${uniqueTopClause(tieSummary).replace(/^0 /, "Zero ")}.</strong> ${categoriesWithUniqueTop.length === 0
       ? "Under every criterion we currently record, there is no single best free database, no best free AI/ML tool, no best free anything."
-      : "Everywhere else, under every criterion we currently record, there is no single best free tier of anything."} On average ${meanTie} offers tie at the top of those categories. The site publishes ${categories.length} categories in all; the ${categories.length - bestOfPageCount} with fewer than ${BEST_OF_MIN_VENDORS} generally-available offers have no best-of page and are not counted here.
+      : "Everywhere else, under every criterion we currently record, there is no single best free tier of anything."} On average ${meanTie} offers tie at the top of those pages. A best-of page is named after a product function: ${tieSummary.categoryPageCount} of the ${bestOfPageCount} are named after a category and the site publishes ${categories.length} categories in all, so the ${categories.length - tieSummary.categoryPageCount} with fewer than ${BEST_OF_MIN_VENDORS} generally-available offers have no best-of page and are not counted here. The remaining ${bestOfPageCount - tieSummary.categoryPageCount} are named after a subtype label.
   </div>
+  <p id="functions">${escHtmlServer(FUNCTION_NAMING_RULE)} ${escHtmlServer(FUNCTION_MEMBERSHIP_RULE)}</p>
   <p>We think that is the honest answer and a better thing to publish than a manufactured winner. It is also the strongest form of &ldquo;our recommendations are not for sale&rdquo;: there is no top slot, so there is nothing to buy. A vendor cannot improve its position by talking to us &mdash; only by improving its offer, or by us being able to verify it.</p>
 
   <h3>The tie-break</h3>
@@ -54845,8 +54932,12 @@ ${catList}
       xml += '  <url>\n    <loc>' + BASE_URL + '/category/' + toSlug(c.name) + '</loc>\n    <lastmod>' + catLastmod + '</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>\n';
     }
     xml += '  <url>\n    <loc>' + BASE_URL + '/best</loc>\n    <lastmod>' + latestVerified + '</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>\n';
-    for (const [s, { categoryName }] of bestOfSlugMap.entries()) {
-      const bestLastmod = categoryLastmod.get(toSlug(categoryName)) || now;
+    for (const [s, fn] of bestOfSlugMap.entries()) {
+      const memberStamps = [...new Set(functionMembers(offers, fn).map(o => toSlug(o.category)))]
+        .map(c => categoryLastmod.get(c))
+        .filter((v): v is string => Boolean(v))
+        .sort();
+      const bestLastmod = memberStamps.at(-1) || now;
       xml += '  <url>\n    <loc>' + BASE_URL + '/best/' + s + '</loc>\n    <lastmod>' + bestLastmod + '</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>\n';
     }
     xml += '  <url>\n    <loc>' + BASE_URL + '/guides</loc>\n    <lastmod>' + pageLastmod("/guides") + '</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.9</priority>\n  </url>\n';
