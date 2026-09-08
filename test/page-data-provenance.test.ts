@@ -283,8 +283,8 @@ describe("a page may only name the source it actually reads", () => {
 });
 
 describe("a review that found defects reaches the reader", () => {
-  const SUBJECT = "/storage-comparison-2026";
-  const CONTROL = "/monitoring-comparison-2026";
+  const SUBJECT = "/database-pricing";
+  const CONTROL = "/vector-database-pricing";
   const REVIEWED_ON = "2026-08-26";
   let fixture: RegisterFixture;
   let server: { proc: ChildProcess; port: number };

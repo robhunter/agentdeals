@@ -32,7 +32,8 @@ import { publishedVendorLevel, vendorVerdictSentence, vendorBadge, freeTierClaim
 import { tierRecordsAFreeTier } from "./free-tier-record.js";
 import { PAGE_HEAD_OPEN, withLedeBeforeNav } from "./page-lede.js";
 import { UNGRADED_IMPACT_COLOR, changeImpactColor, changeImpactLabel, changeImpactWord, isChangeImpactLevel } from "./change-impact.js";
-import { COMPARED_SERVICES_PLACEHOLDER, fillComparedServicesCount, markCompiledFigures, recordsSinceCompiled, replaceTimelineRows, timelineRecordsFor, vendorForSubject, vendorSubjectsOnCompiledPage, type CompiledFigureSubject, type CompiledFigureVendor, type CompiledFigureVerdict } from "./compiled-figures.js";
+import { COMPARED_SERVICES_PLACEHOLDER, appendToCompiledFigureSlots, fillComparedServicesCount, markCompiledFigures, recordsSinceCompiled, replaceTimelineRows, staticHalfOf, timelineRecordsFor, vendorForSubject, vendorSubjectsOnCompiledPage, type CompiledFigureSubject, type CompiledFigureVendor, type CompiledFigureVerdict } from "./compiled-figures.js";
+import { NO_CATALOGUE_RECORD, citedSourceLinkHtml, citedSourcesListHtml, freeTierSourceOf, readClauseHtml, sourceMarkerHtml, uncitedSourceLinkHtml, withCitedSources, type CitedService, type FreeTierSource } from "./source-citation.js";
 import { vendorHistorySentence } from "./vendor-history.js";
 import { HETZNER_APRIL_CHANGES, HETZNER_CLOUD_PLANS, HETZNER_PRICES_READ, HETZNER_PRICE_SOURCE, HETZNER_SINGAPORE_EXAMPLE, cheapestOrderableHetznerPlan, hetznerEntryPriceClause, unorderableHetznerPlans } from "./hetzner-pricing.js";
 import { HUNDRED_TB_SCENARIO, ONE_TO_ONE_SCENARIO, STORAGE_RATES_READ, STORAGE_SCALE_WORKLOADS, TEN_TO_ONE_SCENARIO, cheapestProviderAt, costliestProviderAt, egressAllowanceSentence, egressBillOnceOverAllowance, egressRatioWhereCostsMatch, fixedMonthlyGrantsSentence, monthlyStorageCost, providersWithScalingEgressAllowance, rateCardFor, scaleCostFor } from "./storage-cost-model.js";
@@ -59,7 +60,7 @@ import { addFriend, removeFriend, getFriends, getFriendCodesForVendors } from ".
 import { subscribe as watchlistSubscribe, getSubscription as getWatchlistSubscription, unsubscribe as watchlistUnsubscribe, listSubscriptions as listWatchlistSubscriptions } from "./watchlist.js";
 import { changeLogAnchorFor, changeLogVendorMap, toSlug, vendorSlugMap, resolveVendorSlug, namedVendorSlug } from "./vendor-slug.js";
 import { offerForSlug, vendorRates, cheapestRate, dearestRate, spanOfRates, formatRate, formatRateSpan, monthlyTokenCost, formatDollars, type ModelRate } from "./model-rates.js";
-import { STALE_FACT_PAGES_BASELINE, factsOutdatedBy, linkifyVerdictBlocks, newestChangeBySlug, overdueReport, pageCompiledClause, pageDataProvenance, pageDateModified, pageFreshness, pageFreshnessSentence, utcToday, verdictsOutdatedBy } from "./page-reviews.js";
+import { STALE_FACT_PAGES_BASELINE, factsOutdatedBy, linkifyVerdictBlocks, newestChangeBySlug, overdueReport, pageCompiledClause, pageDataProvenance, pageDateModified, pageFreshness, pageFreshnessSentence, tabulatedSubjectSlots, tabulatedSubjects, utcToday, verdictsOutdatedBy } from "./page-reviews.js";
 import { faqPageJsonLd, type FaqItem } from "./faq-provenance.js";
 import { SSE_KEEPALIVE_FRAME, keepaliveIntervalMs, sessionRecoveryBody } from "./mcp-stream.js";
 import { ASSISTANTS_API_SHUTDOWN } from "./assistants-shutdown.js";
@@ -1008,6 +1009,82 @@ function comparisonPageWithLiveRecords(
     TIMELINE_ROW_LIMIT,
   );
   return fillComparedServicesCount(replaceTimelineRows(marked, changeTimelineRowsHtml(rows)));
+}
+
+const SOURCE_READ_DATE_CLASS = "cited-source-read";
+
+function freeTierSourceForVendor(vendorName: string, servedOn: string): FreeTierSource {
+  return freeTierSourceOf(vendorVerdictContext(vendorName, servedOn)?.primary);
+}
+
+function vendorNamedBySlug(slug: string): string | undefined {
+  const direct = vendorSlugMap.get(slug);
+  if (direct) return direct;
+  const resolved = resolveVendorSlug(slug);
+  return resolved.type === "redirect" ? vendorSlugMap.get(resolved.slug) : undefined;
+}
+
+function citedServicesOn(html: string, servedOn: string): CitedService[] {
+  const found = new Map<string, CitedService>();
+  const add = (vendor: string, slug: string | null) => {
+    if (!found.has(vendor)) {
+      found.set(vendor, { vendor, slug, source: freeTierSourceForVendor(vendor, servedOn) });
+    }
+  };
+  for (const subject of vendorSubjectsOnCompiledPage(html)) {
+    const named = vendorForSubject(subject);
+    if (named) add(named.vendor, named.slug);
+  }
+  for (const row of tabulatedSubjects(html, namedVendorSlug)) {
+    const vendor = row.slug ? vendorNamedBySlug(row.slug) : undefined;
+    if (vendor) add(vendor, row.slug);
+  }
+  return [...found.values()].sort((a, b) => a.vendor.localeCompare(b.vendor));
+}
+
+function compiledPageCitingSources(html: string, servedOn = utcDate()): string {
+  const services = citedServicesOn(html, servedOn);
+  const byVendor = new Map(services.map(service => [service.vendor, service]));
+  const unresolvedRows = new Set(
+    tabulatedSubjects(html, namedVendorSlug)
+      .filter(row => row.slug === null && row.subject !== "")
+      .map(row => row.subject),
+  );
+
+  const marked = appendToCompiledFigureSlots(html, subject => {
+    const named = vendorForSubject(subject);
+    if (!named) {
+      return subject.kind === "row" && unresolvedRows.has(subject.label)
+        ? sourceMarkerHtml({ cited: false, clause: NO_CATALOGUE_RECORD }, escHtmlServer, UNCITED_CHANGE_LABEL)
+        : "";
+    }
+    const service = byVendor.get(named.vendor);
+    if (!service) return "";
+    return service.source.cited
+      ? citedSourceLinkHtml(service.source, escHtmlServer)
+      : uncitedSourceLinkHtml({ ...service, source: service.source }, escHtmlServer, UNCITED_CHANGE_LABEL);
+  });
+
+  const tabulated = markTabulatedRowSources(marked, byVendor);
+  return withCitedSources(tabulated, citedSourcesListHtml(services, escHtmlServer, SOURCE_READ_DATE_CLASS));
+}
+
+const ALREADY_MARKED = /class="(?:record-source|unsourced-tag)"/;
+
+function markTabulatedRowSources(html: string, byVendor: Map<string, CitedService>): string {
+  const staticHtml = staticHalfOf(html);
+  let out = "";
+  let cursor = 0;
+  for (const slot of tabulatedSubjectSlots(staticHtml, namedVendorSlug)) {
+    if (slot.slug === null || ALREADY_MARKED.test(slot.cell)) continue;
+    const vendor = vendorNamedBySlug(slot.slug);
+    const service = vendor ? byVendor.get(vendor) : undefined;
+    if (!service) continue;
+    if (slot.cellEnd < cursor) continue;
+    out += html.slice(cursor, slot.cellEnd) + sourceMarkerHtml(service.source, escHtmlServer, UNCITED_CHANGE_LABEL);
+    cursor = slot.cellEnd;
+  }
+  return out + html.slice(cursor);
 }
 
 interface FreeTierCensus {
@@ -4360,13 +4437,26 @@ function buildVendorPage(slug: string): string | null {
           .map(l => `<code>${escHtmlServer(l.subtype)}</code> &mdash; ${escHtmlServer(subtypeDefinition(classified.taxonomy, l.subtype) ?? "")}`)
           .join("; ") + ".";
     const sources = [...new Map(classified.labels.map(l => [l.source_url, l])).values()];
-    const provenance = sources
-      .map(l => `<a href="${escHtmlServer(l.source_url)}" rel="nofollow noopener">${escHtmlServer(l.source_url)}</a>, where it says: &ldquo;${escHtmlServer(l.source_quote)}&rdquo;`)
-      .join(" and from ");
-    const read = sources.length > 0
-      ? ` We read that on <span class="product-subtypes-reviewed" style="font-family:var(--mono)">${escHtmlServer(classified.reviewed)}</span> from ${provenance}`
-      : "";
-    return `\n  <p class="product-subtypes-line" style="margin:.4rem 0 .6rem;font-size:.9rem;color:var(--text-muted)"><strong>Subtypes in ${escHtmlServer(classified.taxonomy)}:</strong> ${body}${read} <a href="${CRITERIA_PATH}#subtypes">How we use this</a>.</p>`;
+    const read = readClauseHtml(
+      classified.reviewed,
+      sources.map(l => ({ url: l.source_url, quote: l.source_quote })),
+      escHtmlServer,
+      { dateClass: "product-subtypes-reviewed" },
+    );
+    const clause = read === "" ? "" : ` ${read}`;
+    return `\n  <p class="product-subtypes-line" style="margin:.4rem 0 .6rem;font-size:.9rem;color:var(--text-muted)"><strong>Subtypes in ${escHtmlServer(classified.taxonomy)}:</strong> ${body}${clause} <a href="${CRITERIA_PATH}#subtypes">How we use this</a>.</p>`;
+  })();
+
+  const freeTierSourceLine = (() => {
+    const source = freeTierSourceOf(primary);
+    if (!source.cited) return "";
+    const read = readClauseHtml(
+      source.readOn,
+      [{ url: source.url, quote: source.quote }],
+      escHtmlServer,
+      { dateClass: SOURCE_READ_DATE_CLASS },
+    );
+    return `\n    <p class="free-tier-source-line" style="margin:.5rem 0 0;font-size:.8rem;color:var(--text-dim)">${read}.</p>`;
   })();
 
   const alternativesMembership = partitionSubstitutes(
@@ -4945,7 +5035,7 @@ ${referralCalloutHtml}
     <h2>Free Tier Details</h2>
     ${termsSuperseded
       ? `<p class="terms-superseded-text"><strong>${SUPERSEDED_TERMS_LABEL}:</strong> ${supersededTermsNoticeHtml(vendorName, termsSuperseded, escHtmlServer)} <a href="#changes">Read what we recorded &darr;</a></p>`
-      : `<p class="desc-text">${escHtmlServer(primary.description)}</p>`}
+      : `<p class="desc-text">${escHtmlServer(primary.description)}</p>`}${freeTierSourceLine}
   </div>
 ${compareTableHtml}
 ${growthPathHtml}
@@ -55304,7 +55394,7 @@ ${catList}
     recordApiHit("/ai-coding-pricing-2026");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/ai-coding-pricing-2026", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
-    res.end(withVerdictLinks(buildAiCodingPricing2026Page()));
+    res.end(withVerdictLinks(compiledPageCitingSources(buildAiCodingPricing2026Page())));
   } else if (url.pathname === "/ai-coding-tools-pricing" && isGetOrHead) {
     recordApiHit("/ai-coding-tools-pricing");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/ai-coding-tools-pricing", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
@@ -55364,57 +55454,57 @@ ${catList}
     recordApiHit("/aws-free-tier-2026");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/aws-free-tier-2026", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
-    res.end(withVerdictLinks(buildAwsFreeTier2026Page()));
+    res.end(withVerdictLinks(compiledPageCitingSources(buildAwsFreeTier2026Page())));
   } else if (url.pathname === "/gcp-free-tier-2026" && isGetOrHead) {
     recordApiHit("/gcp-free-tier-2026");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/gcp-free-tier-2026", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
-    res.end(withVerdictLinks(buildGcpFreeTier2026Page()));
+    res.end(withVerdictLinks(compiledPageCitingSources(buildGcpFreeTier2026Page())));
   } else if (url.pathname === "/azure-free-tier-2026" && isGetOrHead) {
     recordApiHit("/azure-free-tier-2026");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/azure-free-tier-2026", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
-    res.end(withVerdictLinks(buildAzureFreeTier2026Page()));
+    res.end(withVerdictLinks(compiledPageCitingSources(buildAzureFreeTier2026Page())));
   } else if (url.pathname === "/digitalocean-free-tier-2026" && isGetOrHead) {
     recordApiHit("/digitalocean-free-tier-2026");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/digitalocean-free-tier-2026", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
-    res.end(withVerdictLinks(buildDigitalOceanFreeTier2026Page()));
+    res.end(withVerdictLinks(compiledPageCitingSources(buildDigitalOceanFreeTier2026Page())));
   } else if (url.pathname === "/cicd-free-tier-comparison-2026" && isGetOrHead) {
     recordApiHit("/cicd-free-tier-comparison-2026");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/cicd-free-tier-comparison-2026", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
-    res.end(withVerdictLinks(buildCicdFreeTierComparison2026Page()));
+    res.end(withVerdictLinks(compiledPageCitingSources(buildCicdFreeTierComparison2026Page())));
   } else if (url.pathname === "/storage-comparison-2026" && isGetOrHead) {
     recordApiHit("/storage-comparison-2026");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/storage-comparison-2026", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
-    res.end(withVerdictLinks(buildStorageComparison2026Page()));
+    res.end(withVerdictLinks(compiledPageCitingSources(buildStorageComparison2026Page())));
   } else if (url.pathname === "/testing-free-tier-comparison-2026" && isGetOrHead) {
     recordApiHit("/testing-free-tier-comparison-2026");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/testing-free-tier-comparison-2026", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
-    res.end(withVerdictLinks(buildTestingFreeTierComparison2026Page()));
+    res.end(withVerdictLinks(compiledPageCitingSources(buildTestingFreeTierComparison2026Page())));
   } else if (url.pathname === "/analytics-free-tier-comparison-2026" && isGetOrHead) {
     recordApiHit("/analytics-free-tier-comparison-2026");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/analytics-free-tier-comparison-2026", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
-    res.end(withVerdictLinks(buildAnalyticsFreeTierComparison2026Page()));
+    res.end(withVerdictLinks(compiledPageCitingSources(buildAnalyticsFreeTierComparison2026Page())));
   } else if (url.pathname === "/api-development-free-tier-comparison-2026" && isGetOrHead) {
     recordApiHit("/api-development-free-tier-comparison-2026");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api-development-free-tier-comparison-2026", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
-    res.end(withVerdictLinks(buildApiDevelopmentFreeTierComparison2026Page()));
+    res.end(withVerdictLinks(compiledPageCitingSources(buildApiDevelopmentFreeTierComparison2026Page())));
   } else if (url.pathname === "/security-free-tier-comparison-2026" && isGetOrHead) {
     recordApiHit("/security-free-tier-comparison-2026");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/security-free-tier-comparison-2026", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
-    res.end(withVerdictLinks(buildSecurityFreeTierComparison2026Page()));
+    res.end(withVerdictLinks(compiledPageCitingSources(buildSecurityFreeTierComparison2026Page())));
   } else if (url.pathname === "/hosting-free-tier-comparison-2026" && isGetOrHead) {
     recordApiHit("/hosting-free-tier-comparison-2026");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/hosting-free-tier-comparison-2026", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
-    res.end(withVerdictLinks(buildHostingFreeTierComparison2026Page()));
+    res.end(withVerdictLinks(compiledPageCitingSources(buildHostingFreeTierComparison2026Page())));
   } else if (url.pathname === "/state-of-free-tiers" && isGetOrHead) {
     recordApiHit("/state-of-free-tiers");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/state-of-free-tiers", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
@@ -55424,32 +55514,32 @@ ${catList}
     recordApiHit("/email-comparison-2026");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/email-comparison-2026", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
-    res.end(withVerdictLinks(buildEmailComparison2026Page()));
+    res.end(withVerdictLinks(compiledPageCitingSources(buildEmailComparison2026Page())));
   } else if (url.pathname === "/monitoring-comparison-2026" && isGetOrHead) {
     recordApiHit("/monitoring-comparison-2026");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/monitoring-comparison-2026", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
-    res.end(withVerdictLinks(buildMonitoringComparison2026Page()));
+    res.end(withVerdictLinks(compiledPageCitingSources(buildMonitoringComparison2026Page())));
   } else if (url.pathname === "/auth-comparison-2026" && isGetOrHead) {
     recordApiHit("/auth-comparison-2026");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/auth-comparison-2026", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
-    res.end(withVerdictLinks(buildAuthComparison2026Page()));
+    res.end(withVerdictLinks(compiledPageCitingSources(buildAuthComparison2026Page())));
   } else if (url.pathname === "/serverless-free-tier-comparison-2026" && isGetOrHead) {
     recordApiHit("/serverless-free-tier-comparison-2026");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/serverless-free-tier-comparison-2026", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
-    res.end(withVerdictLinks(buildServerlessFreeTierComparison2026Page()));
+    res.end(withVerdictLinks(compiledPageCitingSources(buildServerlessFreeTierComparison2026Page())));
   } else if (url.pathname === "/database-free-tier-comparison-2026" && isGetOrHead) {
     recordApiHit("/database-free-tier-comparison-2026");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/database-free-tier-comparison-2026", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
-    res.end(withVerdictLinks(buildDatabaseFreeTierComparison2026Page()));
+    res.end(withVerdictLinks(compiledPageCitingSources(buildDatabaseFreeTierComparison2026Page())));
   } else if (url.pathname === "/cloud-free-tier-comparison-2026" && isGetOrHead) {
     recordApiHit("/cloud-free-tier-comparison-2026");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/cloud-free-tier-comparison-2026", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
-    res.end(withVerdictLinks(buildCloudFreeTierComparison2026Page()));
+    res.end(withVerdictLinks(compiledPageCitingSources(buildCloudFreeTierComparison2026Page())));
   } else if (url.pathname === "/openai-assistants-alternatives" && isGetOrHead) {
     recordApiHit("/openai-assistants-alternatives");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/openai-assistants-alternatives", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });

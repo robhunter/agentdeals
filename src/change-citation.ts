@@ -37,7 +37,16 @@ export function citationLabel(url: string): string {
 
 export const CITATION_CLASS = "change-source";
 
+export const RECORD_SOURCE_CLASS = "record-source";
+
+export const UNCITED_TAG_CLASS = "unsourced-tag";
+
 export const CITATION_LINK_HTML = "Source &nearr;";
+
+export const SOURCE_MARKER_MARKUP = new RegExp(
+  `<(a|span)\\b[^>]*class="[^"]*\\b(?:${RECORD_SOURCE_CLASS}|${UNCITED_TAG_CLASS})\\b[^"]*"[^>]*>[\\s\\S]*?</\\1>`,
+  "g",
+);
 
 const CITATION_STYLE = "font-size:.75rem;color:var(--text-dim)";
 

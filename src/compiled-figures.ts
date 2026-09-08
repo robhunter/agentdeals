@@ -1,4 +1,5 @@
 import { assertedVendorSlugs, changeLogAnchorFor, changeLogVendorNamed, isNonVendorSubject, resolveVendorSlug, toSlug, vendorSlugMap } from "./vendor-slug.js";
+import { SOURCE_MARKER_MARKUP } from "./change-citation.js";
 
 export interface CompiledPageRecord {
   date: string;
@@ -71,7 +72,10 @@ export function staticHalfOf(html: string): string {
 }
 
 function undecorated(fragment: string): string {
-  return fragment.replace(RECORD_MARKER, " ").replace(DECORATION_SPAN, " ");
+  return fragment
+    .replace(new RegExp(SOURCE_MARKER_MARKUP.source, "g"), " ")
+    .replace(RECORD_MARKER, " ")
+    .replace(DECORATION_SPAN, " ");
 }
 
 function plainText(fragment: string): string {
@@ -164,6 +168,23 @@ export function compiledFigureSlots(html: string): CompiledFigureSlot[] {
 
 export function vendorSubjectsOnCompiledPage(html: string): CompiledFigureSubject[] {
   return compiledFigureSlots(html).map(({ kind, label, linkedSlug }) => ({ kind, label, linkedSlug }));
+}
+
+export type CompiledFigureMarkup = (subject: CompiledFigureSubject) => string;
+
+export function appendToCompiledFigureSlots(html: string, markupFor: CompiledFigureMarkup): string {
+  const staticHtml = staticHalfOf(html);
+  let out = "";
+  let cursor = 0;
+  for (const slot of discoverSlots(staticHtml)) {
+    const markup = markupFor({ kind: slot.kind, label: slot.label, linkedSlug: slot.linkedSlug });
+    if (markup === "") continue;
+    const at = slot.innerStart + slot.inner.length;
+    if (at < cursor) continue;
+    out += html.slice(cursor, at) + markup;
+    cursor = at;
+  }
+  return out + html.slice(cursor);
 }
 
 const FREE_TIER_REMOVED_LABEL = "FREE REMOVED";
