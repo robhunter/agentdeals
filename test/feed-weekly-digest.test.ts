@@ -37,7 +37,7 @@ describe("/feed.xml weekly digest feed", () => {
     assert.ok(res.headers.get("content-type")?.includes("application/atom+xml"));
     const xml = await res.text();
     assert.ok(xml.startsWith("<?xml"), "Should start with XML declaration");
-    assert.ok(xml.includes('<feed xmlns="http://www.w3.org/2005/Atom">'), "Should be Atom feed");
+    assert.match(xml, /<feed xmlns="http:\/\/www\.w3\.org\/2005\/Atom"[^>]*>/, "Should be Atom feed");
   });
 
   it("feed has proper channel metadata", async () => {

@@ -1,4 +1,4 @@
-import { changeCitesASource, citationLabel } from "./change-citation.js";
+import { changeCitesASource, changeSummaryText, citationLabel } from "./change-citation.js";
 import { changeDateClause } from "./change-dates.js";
 import { narrowsTheStoredTerms } from "./change-direction.js";
 import { isNoLongerInForce } from "./change-resolution.js";
@@ -138,7 +138,7 @@ export function supersededTermsAnswer(vendor: string, change: QuotingChange): st
   const opening =
     readingWithTail(vendor, change) ??
     `We are not answering that from our stored terms today. ${withheldTail(vendor, change, false)}`;
-  return `${opening} What our record says changed: ${change.summary}`;
+  return `${opening} What our record says changed: ${changeSummaryText({ ...change, vendor })}`;
 }
 
 export function supersededTermsMetaSentence(vendor: string, change: QuotingChange): string {

@@ -115,10 +115,12 @@ export interface ChangeResolution {
 }
 
 export interface RiskCause {
+  vendor: string;
   date: string;
   date_source?: ChangeDateSource;
   change_type: string;
   summary: string;
+  source_url: string | null;
   current_state?: string;
   resolution?: ChangeResolution | null;
 }

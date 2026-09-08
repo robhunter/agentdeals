@@ -1,9 +1,11 @@
 import { assertedVendorSlugs, changeLogAnchorFor, changeLogVendorNamed, isNonVendorSubject, resolveVendorSlug, toSlug, vendorSlugMap } from "./vendor-slug.js";
-import { SOURCE_MARKER_MARKUP } from "./change-citation.js";
+import { SOURCE_MARKER_MARKUP, changeSummaryHtml, changeSummaryText } from "./change-citation.js";
 
 export interface CompiledPageRecord {
+  vendor: string;
   date: string;
   summary: string;
+  source_url: string | null;
   dateClause?: string;
 }
 
@@ -209,7 +211,8 @@ function recordedSinceBadgeHtml(
   const count = verdict.since.length;
   const title =
     `We recorded ${count === 1 ? "a pricing change" : `${count} pricing changes`} for ${verdict.vendor} ` +
-    `after this table was compiled on ${options.compiledOn}. The most recent, ${recordDateClause(latest)}: ${latest.summary}`;
+    `after this table was compiled on ${options.compiledOn}. The most recent, ${recordDateClause(latest)}: ` +
+    changeSummaryText(latest);
   return (
     ` <a href="${recordsHrefFor(verdict)}" style="${RECORDED_SINCE_STYLE}"` +
     ` title="${options.esc(title)}">CHANGED ${options.esc(options.shortDate(latest.date).toUpperCase())}</a>`
@@ -254,7 +257,8 @@ function endedCardDescriptionHtml(
 ): string {
   const ending = verdict.endedBy;
   const recorded = ending
-    ? `Our own pricing change record, ${options.esc(recordDateClause(ending))}, says: ${options.esc(ending.summary)}`
+    ? `Our own pricing change record, ${options.esc(recordDateClause(ending))}, says: ` +
+      changeSummaryHtml(ending, options.esc)
     : `Our own change log records that the ${options.esc(verdict.vendor)} free tier has ended.`;
   return (
     `<${tag} class="diff-desc"><strong>Free tier:</strong> none. ${recorded} ` +

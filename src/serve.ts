@@ -5,7 +5,7 @@ import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
 import { createServer, getServerCard } from "./server.js";
-import { oldestVerifiedDateForSlug, vendorRiskAssessment, freeTierEndingRecord, NEGATIVE_CHANGE_TYPES, POSITIVE_CHANGE_TYPES, SEVERE_CHANGE_TYPES, loadOffers, getCategories, getNewOffers, getNewestDeals, searchOffers, enrichOffers, gateForOffer, loadDealChanges, getDealChanges, changeContext, DEFAULT_CHANGE_WINDOW_DAYS, getOfferDetails, compareServices, checkVendorRisk, auditStack, getExpiringDeals, getWeeklyDigest, getFormattedWeeklyDigest, getFreshnessMetrics, getStabilityMap, getVendorReferral, sanitizeQuery, getChangeLogFreshness, isEventDated, partitionByDateProvenance } from "./data.js";
+import { oldestVerifiedDateForSlug, vendorRiskAssessment, riskCauseOf, freeTierEndingRecord, NEGATIVE_CHANGE_TYPES, POSITIVE_CHANGE_TYPES, SEVERE_CHANGE_TYPES, loadOffers, getCategories, getNewOffers, getNewestDeals, searchOffers, enrichOffers, gateForOffer, loadDealChanges, getDealChanges, changeContext, DEFAULT_CHANGE_WINDOW_DAYS, getOfferDetails, compareServices, checkVendorRisk, auditStack, getExpiringDeals, getWeeklyDigest, getFormattedWeeklyDigest, getFreshnessMetrics, getStabilityMap, getVendorReferral, sanitizeQuery, getChangeLogFreshness, isEventDated, partitionByDateProvenance } from "./data.js";
 import { getStackRecommendation } from "./stacks.js";
 import { estimateCosts } from "./costs.js";
 import { classifyRequest } from "./client-class.js";
@@ -33,7 +33,7 @@ import { publishedVendorLevel, vendorVerdictSentence, vendorBadge, freeTierClaim
 import { tierRecordsAFreeTier } from "./free-tier-record.js";
 import { PAGE_HEAD_OPEN, withLedeBeforeNav } from "./page-lede.js";
 import { UNGRADED_IMPACT_COLOR, changeImpactColor, changeImpactLabel, changeImpactWord, isChangeImpactLevel } from "./change-impact.js";
-import { COMPARED_SERVICES_PLACEHOLDER, appendToCompiledFigureSlots, fillComparedServicesCount, markCompiledFigures, recordsSinceCompiled, replaceTimelineRows, staticHalfOf, timelineRecordsFor, vendorForSubject, vendorSubjectsOnCompiledPage, type CompiledFigureSubject, type CompiledFigureVendor, type CompiledFigureVerdict } from "./compiled-figures.js";
+import { COMPARED_SERVICES_PLACEHOLDER, appendToCompiledFigureSlots, fillComparedServicesCount, markCompiledFigures, recordsSinceCompiled, replaceTimelineRows, staticHalfOf, timelineRecordsFor, vendorForSubject, vendorSubjectsOnCompiledPage, type CompiledFigureSubject, type CompiledFigureVendor, type CompiledFigureVerdict, type CompiledPageRecord } from "./compiled-figures.js";
 import { CHECK_ESTABLISHES, CHECK_SCOPE_CLASS, NO_CATALOGUE_RECORD, citedSourceLinkHtml, citedSourcesListHtml, freeTierSourceOf, pageQuoteHtml, readClauseHtml, sourceMarkerHtml, uncitedSourceLinkHtml, withCitedSources, type CitedService, type FreeTierSource } from "./source-citation.js";
 import { vendorHistorySentence } from "./vendor-history.js";
 import { HETZNER_APRIL_CHANGES, HETZNER_CLOUD_PLANS, HETZNER_PRICES_READ, HETZNER_PRICE_SOURCE, HETZNER_SINGAPORE_EXAMPLE, cheapestOrderableHetznerPlan, hetznerEntryPriceClause, unorderableHetznerPlans } from "./hetzner-pricing.js";
@@ -43,7 +43,7 @@ import { isNoLongerInForce, eventResolutionFields, recordsStillInForce } from ".
 import { FREE_TIER_STANDING_LABELS, GRADE_FACTORS_WITHOUT_PRICING_HISTORY, NOT_EVIDENCE_LABELS, citesAChangeOlderThanTheGrade, freeTierStanding, gradesFirstSet, gradesLastSet, gradingDatesClause, neverTracked, riskEntries, scorecard, splitByFreeTierStanding, trackedSinceGrading, type RiskEntry } from "./risk-scorecard.js";
 import { directionRatioLabel } from "./change-direction.js";
 import { removalDurability, removalReturnRateSentence, removalDurabilityPattern, lastingRemovalExamplesFor } from "./removal-durability.js";
-import { changeIsUncited, changeSourceCitation, changeSourceLinkHtml, citedChanges, uncitedChangeNotice, ratingWithheldForNoSourceClause, ratingWithheldForNoSourceSentence, UNCITED_CHANGE_LABEL } from "./change-citation.js";
+import { changeCitesASource, changeIsUncited, changeSourceCitation, changeSourceLinkHtml, changeCitationHtml, citedClaimHtml, changeSummaryHtml, changeSummaryText, citedChanges, uncitedChangeNotice, uncitedChangeNoticeHtml, ratingWithheldForNoSourceClause, ratingWithheldForNoSourceSentence, UNCITED_CHANGE_LABEL, type CitableChangeRow } from "./change-citation.js";
 import { growthLimitPhrases } from "./growth-limits.js";
 import { registerAgent, authenticateRequest, validateVestauthUrl, hashApiKey, updateAgentX402Address, getAgentById } from "./agents.js";
 import { attributeAuthenticatedRequest } from "./referral-attribution.js";
@@ -75,7 +75,7 @@ import { partitionAlternatives, partitionSubstitutes, type SubstitutesPartition,
 import { resolveCuratedAlternatives, curatedAlternativesFor, addCuratedToPool } from "./curated-alternatives.js";
 import type { Agent, ChangeDateSource, DealChange, RiskCause, RatingWithheld, LinkUnreachable, Offer, StabilityClass } from "./types.js";
 import { changeDateLabel, changeEntryDateLabel, changeEntryLongDateLabel, changeDateClause, changeDatePublished, changeEventStartDate, capListSections, latestEventDate, offerExpiryAfter, feedEntryUpdated, undatedGroupHeading, UNDATED_TILE_LABEL, firstReadHeading, discoveryBatchNote, isoWeekOf, monthlyChangeSeries, changesInWindow, discoveryMonthSeriesHeading, periodComparisonSentence, DISCOVERED_DATE_PREFIX, EFFECTIVE_DATE_PREFIX, EVENT_DATED_SOURCES, UNDATED_GROUP_NOTE, UNKNOWN_EFFECTIVE_DATE_MARKER, EFFECTIVE_MONTH_SERIES_NOTE, DISCOVERY_MONTH_SERIES_NOTE, weekRangeLabel } from "./change-dates.js";
-import { changeFeedEntries, feedEntryFields, feedUpdatedTimestamp, changeFeedProvenanceNote, CHANGE_FEED_ENTRY_LIMIT, CHANGE_FEED_DESCRIPTION, CHANGE_FEED_NAMESPACE, CHANGE_FEED_NAMESPACE_PREFIX, channelUpdatedTimestamp, WEEKLY_FEED_POPULATION_NOTE, feedLinkTag, PER_CHANGE_FEED, WEEKLY_DIGEST_FEED } from "./change-feed.js";
+import { changeFeedEntries, feedEntryFields, feedUpdatedTimestamp, changeFeedProvenanceNote, CHANGE_FEED_ENTRY_LIMIT, CHANGE_FEED_DESCRIPTION, CHANGE_FEED_NAMESPACE, CHANGE_FEED_NAMESPACE_PREFIX, channelUpdatedTimestamp, WEEKLY_FEED_POPULATION_NOTE, feedLinkTag, feedEntrySourceXml, digestSourceXml, PER_CHANGE_FEED, WEEKLY_DIGEST_FEED } from "./change-feed.js";
 import { FEED_CORRECTIONS, correctionEntriesXml } from "./feed-corrections.js";
 import { buildDay, emptyPageLastmod, fallbackDay, httpDate, lastmodFor, newestLastmod, readPageLastmod, type PageLastmodLedger } from "./page-lastmod.js";
 import type { AgentBalance } from "./ledger.js";
@@ -582,7 +582,7 @@ function riskBadgeHtml(
   const margin = opts.margin === false ? "" : "margin-left:.5rem;";
   const badge = `<span style="display:inline-block;${margin}font-size:${size};padding:.15rem .5rem;border-radius:10px;background:${color}22;color:${color};font-weight:600">${level}</span>`;
   if (level === "stable" || !cause) return badge;
-  return `${badge} <span style="font-size:${size};color:var(--text-dim)" title="${escHtmlServer(cause.summary)}">${escHtmlServer(riskCauseLabel(cause))}</span>`;
+  return `${badge} ${citedClaimHtml(cause, escHtmlServer, riskCauseLabel(cause), `font-size:${size};color:var(--text-dim)`)}`;
 }
 
 function unsourcedTagHtml(): string {
@@ -618,7 +618,9 @@ function stabilityCellHtml(
   }
   const published = publishedVendorLevel(level ?? null, cause ?? null);
   const color = RISK_COLORS[published] ?? "#8b949e";
-  const title = published === "stable" || !cause ? "" : ` title="${escHtmlServer(`${changeDateLabel(cause)} — ${cause.summary}`)}"`;
+  const title = published === "stable" || !cause
+    ? ""
+    : ` title="${escHtmlServer(`${changeDateLabel(cause)} — ${changeSummaryText(cause)}`)}"`;
   return `<span class="stability-dot" style="background:${color}"></span> <span${title}>${escHtmlServer(published)}</span>`;
 }
 
@@ -628,7 +630,7 @@ function riskCellHtml(level: string | null | undefined, cause: RiskCause | null 
   if (resolved !== "stable" && !cause) return `<span style="color:var(--text-dim)">&mdash;</span>`;
   const color = RISK_COLORS[resolved] ?? "#8b949e";
   const causeHtml = resolved !== "stable" && cause
-    ? `<br><span style="font-size:.7rem;color:var(--text-dim)" title="${escHtmlServer(cause.summary)}">${escHtmlServer(riskCauseLabel(cause))}</span>`
+    ? `<br>${citedClaimHtml(cause, escHtmlServer, riskCauseLabel(cause), "font-size:.7rem;color:var(--text-dim)")}`
     : "";
   return `<span style="color:${color}">${resolved}</span>${causeHtml}`;
 }
@@ -642,7 +644,7 @@ function buildChangesHtml(): string {
           <span class="change-vendor">${c.vendor}</span>
           <span class="change-date">${changeEntryDateLabel(c)}</span>
         </div>
-        <div class="change-summary">${c.summary}</div>
+        <div class="change-summary">${changeSummaryHtml(c, escHtmlServer)}</div>
       </div>`;
   }).join("\n");
 }
@@ -667,7 +669,7 @@ function buildDeadlinesHtml(): string {
             <span class="change-vendor">${c.vendor}</span>
             <span class="deadline-date">${changeEntryDateLabel(c)}</span>
           </div>
-          <div class="change-summary">${c.summary}</div>
+          <div class="change-summary">${changeSummaryHtml(c, escHtmlServer)}</div>
         </div>
       </div>`;
   }).join("\n");
@@ -690,7 +692,7 @@ function buildChangingSoonSection(): string {
             <a href="/vendor/${vendorSlug}" class="cs-vendor">${c.vendor}</a>
             <span class="cs-rel">${relTime}</span>
           </div>
-          <div class="cs-summary">${c.summary}</div>
+          <div class="cs-summary">${changeSummaryHtml(c, escHtmlServer)}</div>
         </div>
       </div>`;
   }).join("\n");
@@ -719,7 +721,7 @@ function buildRecentChangesSection(): string {
           <a href="/vendor/${vendorSlug}" class="rc-vendor">${c.vendor}</a>
           <span class="rc-date">${changeEntryDateLabel(c)}</span>
         </div>
-        <div class="rc-summary">${c.summary}</div>
+        <div class="rc-summary">${changeSummaryHtml(c, escHtmlServer)}</div>
       </div>`;
   }).join("\n");
   const jsonLd = JSON.stringify({
@@ -944,7 +946,19 @@ function changesForSubject(named: CompiledFigureVendor): DealChange[] {
 
 interface SubjectFreeTier {
   ended: boolean;
-  endedBy: (Pick<DealChange, "date" | "summary"> & { date_source?: ChangeDateSource }) | null;
+  endedBy: (CitableChangeRow & { date: string; date_source?: ChangeDateSource }) | null;
+}
+
+type CitedRiskCause = RiskCause & { citation_html: string };
+
+function compiledPageRecordOf(record: CitableChangeRow & { date: string; date_source?: ChangeDateSource }): CompiledPageRecord {
+  return {
+    vendor: record.vendor,
+    date: record.date,
+    dateClause: changeDateClause(record),
+    summary: record.summary,
+    source_url: record.source_url?.trim() ? record.source_url.trim() : null,
+  };
 }
 
 function freeTierForSubject(named: CompiledFigureVendor): SubjectFreeTier {
@@ -970,14 +984,8 @@ function compiledFigureVerdictFor(
     slug: named.slug,
     vendor: named.vendor,
     freeTierEnded: ended,
-    endedBy: endedBy
-      ? { date: endedBy.date, summary: endedBy.summary, dateClause: changeDateClause(endedBy) }
-      : null,
-    since: recordsSinceCompiled(changesForSubject(named), compiledOn, today).map(c => ({
-      date: c.date,
-      summary: c.summary,
-      dateClause: changeDateClause(c),
-    })),
+    endedBy: endedBy ? compiledPageRecordOf(endedBy) : null,
+    since: recordsSinceCompiled(changesForSubject(named), compiledOn, today).map(compiledPageRecordOf),
   };
 }
 
@@ -987,7 +995,7 @@ function changeTimelineRowsHtml(changes: readonly DealChange[]): string {
     return `<tr>
       <td style="font-family:var(--mono);font-size:.8rem">${escHtmlServer(dateStr)}</td>
       <td style="font-weight:600">${escHtmlServer(c.vendor)}</td>
-      <td style="font-size:.85rem">${escHtmlServer(c.summary)}</td>
+      <td style="font-size:.85rem">${changeSummaryHtml(c, escHtmlServer)}</td>
       <td><span style="color:${changeImpactColor(c.impact)};font-size:.8rem;font-weight:600">${escHtmlServer(changeImpactLabel(c.impact))}</span></td>
     </tr>`;
   }).join("\n        ");
@@ -2192,7 +2200,7 @@ function rankCategory(categoryName: string, date = utcDate()): RankingResult<Enr
 function buildBestOfMiniReview(offer: ReturnType<typeof enrichOffers>[number]): string {
   const caveatFor = (o: ReturnType<typeof enrichOffers>[number]): string =>
     o.risk_level !== "stable" && o.risk_cause
-      ? ` Note — ${changeDateLabel(o.risk_cause)}: ${escHtmlServer(o.risk_cause.summary)}`
+      ? ` Note — ${changeDateLabel(o.risk_cause)}: ${changeSummaryHtml(o.risk_cause, escHtmlServer)}`
       : "";
   const superseded = supersedingChangeFor(offer);
   if (superseded) return `${supersededTermsListingHtml(offer.vendor, superseded)}${caveatFor(offer)}`;
@@ -2211,7 +2219,7 @@ function buildBestOfMiniReview(offer: ReturnType<typeof enrichOffers>[number]): 
 function renderDisclosures(entry: RankedEntry<EnrichedOfferRow>): string {
   if (entry.disclosures.length === 0) return "";
   const items = entry.disclosures.map((d) =>
-    `<li><span style="font-family:var(--mono);color:var(--text-dim)">${escHtmlServer(changeEntryDateLabel(d))}</span> &mdash; <strong>${escHtmlServer(d.code.replace(/_/g, " "))}</strong>: ${escHtmlServer(d.summary)}</li>`
+    `<li><span style="font-family:var(--mono);color:var(--text-dim)">${escHtmlServer(changeEntryDateLabel(d))}</span> &mdash; <strong>${escHtmlServer(d.code.replace(/_/g, " "))}</strong>: ${changeSummaryHtml(d, escHtmlServer)}</li>`
   ).join("");
   return `<div class="best-disclosure"><span class="best-disclosure-label">Recorded, but does not affect rank:</span><ul>${items}</ul></div>`;
 }
@@ -3004,8 +3012,7 @@ function buildComparisonPage(slug: string): string | null {
           <span style="font-size:.7rem;color:${changeImpactColor(c.impact)}">${c.impact} impact</span>
           ${changeIsUncited(c) ? unsourcedTagHtml() : ""}
         </div>
-        <div style="font-size:.85rem;color:var(--text-muted)">${escHtmlServer(c.summary)}</div>
-        ${changeIsUncited(c) ? unsourcedNoteHtml(vendor) : changeSourceLinkHtml(c, escHtmlServer)}
+        <div style="font-size:.85rem;color:var(--text-muted)">${changeSummaryHtml(c, escHtmlServer)}</div>
       </div>`;
     }).join("\n") + truncationNote;
   };
@@ -3515,8 +3522,7 @@ function buildVsPage(slug: string): string | null {
           <span style="font-size:.7rem;color:${changeImpactColor(c.impact)}">${c.impact} impact</span>
           ${changeIsUncited(c) ? unsourcedTagHtml() : ""}
         </div>
-        <div style="font-size:.85rem;color:var(--text-muted)">${escHtmlServer(c.summary)}</div>
-        ${changeIsUncited(c) ? unsourcedNoteHtml(vendor) : changeSourceLinkHtml(c, escHtmlServer)}
+        <div style="font-size:.85rem;color:var(--text-muted)">${changeSummaryHtml(c, escHtmlServer)}</div>
       </div>`;
     }).join("\n");
   };
@@ -3850,7 +3856,7 @@ function buildDigestPage(weekKey: string): string | null {
         <span class="change-date">${changeEntryDateLabel(c)}</span>
         <span class="change-cat">${escHtmlServer(c.category)}</span>
       </div>
-      <div class="change-summary">${escHtmlServer(c.summary)}</div>
+      <div class="change-summary">${changeSummaryHtml(c, escHtmlServer)}</div>
     </div>`;
   }
 
@@ -4034,7 +4040,7 @@ function buildThisWeekPage(weeksAgo: number): string {
           <a href="/vendor/${toSlug(c.vendor)}" class="change-vendor">${escHtmlServer(c.vendor)}</a>
           <span class="change-cat">${escHtmlServer(c.category)}</span>
         </div>
-        <div class="change-summary">${escHtmlServer(c.summary)}</div>
+        <div class="change-summary">${changeSummaryHtml(c, escHtmlServer)}</div>
       </div>`;
     }).join("\n      ");
     return `<section class="tw-section">
@@ -4064,7 +4070,7 @@ function buildThisWeekPage(weeksAgo: number): string {
           <span class="change-cat" style="font-family:var(--mono)">${changeEntryDateLabel(c)}</span>
           <span class="change-cat">${escHtmlServer(c.category)}</span>
         </div>
-        <div class="change-summary">${escHtmlServer(c.summary)}</div>
+        <div class="change-summary">${changeSummaryHtml(c, escHtmlServer)}</div>
       </div>`;
       }).join("\n      ")}
       ${digest.discovered_in_week > digest.discovered_changes.length ? `<p style="font-size:.85rem;color:var(--text-dim);margin-top:.75rem">Showing ${digest.discovered_changes.length} of ${digest.discovered_in_week}. <a href="/changes">See every page we have read</a>.</p>` : ""}
@@ -4445,7 +4451,7 @@ function buildVendorPage(slug: string): string | null {
   const ratingWithheld = enriched.rating_withheld;
 
   const riskCauseLine = statesRiskCause(verdictInput) && riskCause
-    ? `  <p class="risk-cause-line" style="margin:.4rem 0 .6rem;font-size:.9rem;color:var(--text-muted)"><strong style="color:${riskColor}">Why ${riskLevel}:</strong> <span class="risk-cause-date" style="font-family:var(--mono)">${escHtmlServer(changeEntryDateLabel(riskCause))}</span> &mdash; ${escHtmlServer(riskCause.summary)} <a href="#changes" style="white-space:nowrap">Full history &darr;</a></p>`
+    ? `  <p class="risk-cause-line" style="margin:.4rem 0 .6rem;font-size:.9rem;color:var(--text-muted)"><strong style="color:${riskColor}">Why ${riskLevel}:</strong> <span class="risk-cause-date" style="font-family:var(--mono)">${escHtmlServer(changeEntryDateLabel(riskCause))}</span> &mdash; ${changeSummaryHtml(riskCause, escHtmlServer)} <a href="#changes" style="white-space:nowrap">Full history &darr;</a></p>`
     : "";
 
   const retiredBadgeColor = "#8b949e";
@@ -4664,10 +4670,8 @@ ${enrichedAlts.map(a => {
           <span class="impact impact-${changeImpactWord(c.impact)}">${changeImpactWord(c.impact)} impact</span>
           ${uncited ? unsourcedTagHtml() : ""}
         </div>
-        <div class="change-summary">${escHtmlServer(c.summary)}</div>
-        ${uncited ? unsourcedNoteHtml(vendorName) : ""}
+        <div class="change-summary">${changeSummaryHtml(c, escHtmlServer)}</div>
         ${c.previous_state && c.current_state ? `<div class="change-detail"><span class="state-label">Before:</span> ${escHtmlServer(c.previous_state)}</div><div class="change-detail"><span class="state-label">After:</span> ${escHtmlServer(c.current_state)}</div>` : ""}
-        ${changeSourceLinkHtml(c, escHtmlServer)}
       </div>`;
   }).join("\n") : offerHasEnded
     ? `<p class="no-changes">${escHtmlServer(endedHistorySentence(vendorName))}</p>`
@@ -4684,7 +4688,7 @@ ${enrichedAlts.map(a => {
     const badge = changeTypeBadge[latestChange.change_type] ?? { label: latestChange.change_type, color: "#8b949e" };
     const anchor = `${toSlug(latestChange.vendor)}-${latestChange.date}`;
     return `<div class="change-notice" style="margin:1rem 0;padding:.75rem 1rem;border:1px solid ${badge.color}40;border-left:3px solid ${badge.color};border-radius:0 8px 8px 0;background:${badge.color}10">
-      <span style="font-size:.85rem">\u26a0\ufe0f <strong>Pricing change:</strong> ${escHtmlServer(latestChange.summary)} (${escHtmlServer(changeEntryDateLabel(latestChange))})</span>
+      <span style="font-size:.85rem">\u26a0\ufe0f <strong>Pricing change:</strong> ${changeSummaryHtml(latestChange, escHtmlServer)} (${escHtmlServer(changeEntryDateLabel(latestChange))})</span>
       <a href="/pricing-changes#${anchor}" style="display:block;font-size:.8rem;margin-top:.25rem">View in changelog &rarr;</a>
     </div>`;
   })() : "";
@@ -4908,8 +4912,8 @@ ${allCompareLinks.join("\n")}
     : riskLevel === "stable"
     ? `${vendorName}'s free tier is considered stable.${vendorChanges.length > 0 ? ` ${narrowingSentence(vendorChanges)} See the pricing history below.` : ""}`
     : riskLevel === "caution"
-    ? `${vendorName}'s free tier requires caution because of one specific recorded change${riskCause ? `, ${changeDateClause(riskCause)}: ${riskCause.summary}` : "."}`
-    : `${vendorName}'s free tier is considered risky because of one specific recorded change${riskCause ? `, ${changeDateClause(riskCause)}: ${riskCause.summary}` : "."} Consider alternatives.`;
+    ? `${vendorName}'s free tier requires caution because of one specific recorded change${riskCause ? `, ${changeDateClause(riskCause)}: ${changeSummaryText(riskCause)}` : "."}`
+    : `${vendorName}'s free tier is considered risky because of one specific recorded change${riskCause ? `, ${changeDateClause(riskCause)}: ${changeSummaryText(riskCause)}` : "."} Consider alternatives.`;
   const faqCategoryAnswer = `${vendorName} is categorized under ${allCategories.join(", ")} on AgentDeals.${alternatives.length > 0 ? ` Other vendors in ${primary.category} include ${alternatives.slice(0, 5).map(a => a.vendor).join(", ")}.` : ""}`;
 
   const faqProductionAnswer = productionGate
@@ -4926,7 +4930,7 @@ ${allCompareLinks.join("\n")}
       : `${vendorName}'s free tier is usable for prototyping and development, but we rate it ${riskLevel}${riskCause ? ` because of one recorded ${changeKindNoun(riskCause.change_type)}, ${changeDateClause(riskCause)}` : ""}. Consider alternatives with more stable pricing for critical services.`)
     : `${vendorName} does not offer a free tier for production use. Consider free alternatives in ${primary.category}.`);
   const faqChangedAnswer = vendorChanges.length > 0
-    ? `${vendorName} has had ${vendorChanges.length} recorded pricing change${vendorChanges.length > 1 ? "s" : ""}. Most recently: ${vendorChanges[0].summary} (${changeDateLabel(vendorChanges[0])}).${offerHasEnded ? ` ${ENDED_SINCE_CHANGES_SENTENCE}` : ""}`
+    ? `${vendorName} has had ${vendorChanges.length} recorded pricing change${vendorChanges.length > 1 ? "s" : ""}. Most recently: ${changeSummaryText(vendorChanges[0])} (${changeDateLabel(vendorChanges[0])}).${offerHasEnded ? ` ${ENDED_SINCE_CHANGES_SENTENCE}` : ""}`
     : offerHasEnded
     ? endedEmptyChangeHistorySentence(vendorName)
     : levelWithheld
@@ -5235,7 +5239,7 @@ function buildAlternativesPage(slug: string): string | null {
       parts.push(`<div class="risk-row"><span class="risk-label">Why:</span> ${escHtmlServer(altWithheldSentence)} We are not publishing a stability judgement for it until that is fixed.</div>`);
     }
     if (riskLevel !== "stable" && riskCause) {
-      parts.push(`<div class="risk-row"><span class="risk-label">Why:</span> <span class="risk-cause-date" style="font-family:var(--mono)">${escHtmlServer(changeEntryDateLabel(riskCause))}</span> &mdash; ${escHtmlServer(riskCause.summary)}</div>`);
+      parts.push(`<div class="risk-row"><span class="risk-label">Why:</span> <span class="risk-cause-date" style="font-family:var(--mono)">${escHtmlServer(changeEntryDateLabel(riskCause))}</span> &mdash; ${changeSummaryHtml(riskCause, escHtmlServer)}</div>`);
     }
     parts.push(`<div class="risk-row"><span class="risk-label">Category:</span> ${vendorCategories.map(c => `<a href="/category/${toSlug(c)}" class="cat-pill">${escHtmlServer(c)}</a>`).join(" ")}</div>`);
     if (!offerRetired(primary)) {
@@ -5251,7 +5255,7 @@ function buildAlternativesPage(slug: string): string | null {
             <span class="change-date">${changeEntryDateLabel(c)}</span>
             <span class="impact impact-${changeImpactWord(c.impact)}">${changeImpactWord(c.impact)} impact</span>
           </div>
-          <div class="change-summary">${escHtmlServer(c.summary)}</div>
+          <div class="change-summary">${changeSummaryHtml(c, escHtmlServer)}</div>
         </div>`;
       }).join("\n"));
       if (vendorChanges.length > 5) {
@@ -5345,11 +5349,11 @@ ${renderAuditBlock(altRanking.tie_break)}
     : riskLevel === "stable"
     ? `Yes, ${vendorName} currently offers a free tier (${primary.tier}). ${vendorChanges.length === 0 ? "No pricing changes have been recorded." : narrowingSentence(vendorChanges)}`
     : riskLevel === "caution"
-    ? `${vendorName} has a free tier (${primary.tier}), but it's flagged as "caution" because of one specific recorded change${riskCause ? `, ${changeDateClause(riskCause)}: ${riskCause.summary}` : "."}`
-    : `${vendorName}'s free tier (${primary.tier}) is considered risky because of one specific recorded change${riskCause ? `, ${changeDateClause(riskCause)}: ${riskCause.summary}` : "."} Consider migrating to a more stable alternative.`;
+    ? `${vendorName} has a free tier (${primary.tier}), but it's flagged as "caution" because of one specific recorded change${riskCause ? `, ${changeDateClause(riskCause)}: ${changeSummaryText(riskCause)}` : "."}`
+    : `${vendorName}'s free tier (${primary.tier}) is considered risky because of one specific recorded change${riskCause ? `, ${changeDateClause(riskCause)}: ${changeSummaryText(riskCause)}` : "."} Consider migrating to a more stable alternative.`;
   const faqCountAnswer = `There are ${enrichedAlts.length} free alternatives to ${vendorName} tracked on AgentDeals across the ${listedCategories.join(", ")} categor${listedCategories.length > 1 ? "ies" : "y"}.`;
   const faqChangesAnswer = vendorChanges.length > 0
-    ? `${vendorName} has ${vendorChanges.length} recorded pricing change${vendorChanges.length !== 1 ? "s" : ""}. The most recent was ${changeDateClause(vendorChanges[0])}: ${vendorChanges[0].summary}`
+    ? `${vendorName} has ${vendorChanges.length} recorded pricing change${vendorChanges.length !== 1 ? "s" : ""}. The most recent was ${changeDateClause(vendorChanges[0])}: ${changeSummaryText(vendorChanges[0])}`
     : altLevelWithheld
     ? `We hold no recorded pricing changes for ${vendorName}, but ${altWithheldClause}, so that is a statement about our records rather than a positive signal.`
     : `No, ${vendorName} has no recorded pricing changes on AgentDeals. This indicates stable pricing.`;
@@ -7711,7 +7715,7 @@ function buildTimelyAlternativesPage(slug: string): string | null {
   const changeHtml = primaryChange ? `
   <div class="context-box" style="border-left:3px solid ${riskColors.risky}">
     <div style="font-weight:600;color:${riskColors.risky};margin-bottom:.25rem">${escHtmlServer(primaryChange.change_type.replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase()))}</div>
-    <p style="margin:.25rem 0">${escHtmlServer(primaryChange.summary)}</p>
+    <p style="margin:.25rem 0">${changeSummaryHtml(primaryChange, escHtmlServer)}</p>
     <div style="font-size:.8rem;color:var(--text-dim);margin-top:.5rem">
       <strong>Before:</strong> ${escHtmlServer(primaryChange.previous_state)}<br>
       <strong>After:</strong> ${escHtmlServer(primaryChange.current_state)}
@@ -8753,7 +8757,7 @@ function buildEventPage(slug: string): string | null {
           + '<span class="update-date">' + escHtmlServer(changeEntryDateLabel(c)) + '</span>'
           + '<span class="impact impact-' + changeImpactWord(c.impact) + '">' + changeImpactWord(c.impact) + ' impact</span>'
           + '</div>'
-          + '<div class="update-summary">' + escHtmlServer(c.summary) + '</div>'
+          + '<div class="update-summary">' + changeSummaryHtml(c, escHtmlServer) + '</div>'
           + '</div>';
       }).join("\n")
       + '</div>\n</section>'
@@ -9115,7 +9119,7 @@ function buildMonthlyReportPage(yearMonth: string): string | null {
   const losersHtml = biggestLosers.length > 0
     ? '<h2>Biggest Losers</h2><p class="section-desc">Vendors that eliminated or reduced free tiers</p><ul class="vendor-list">'
       + biggestLosers.map(([vendor, count]) => {
-        const details = negative.filter(c => c.vendor === vendor).map(c => escHtmlServer(c.summary)).join("</li><li>");
+        const details = negative.filter(c => c.vendor === vendor).map(c => changeSummaryHtml(c, escHtmlServer)).join("</li><li>");
         return '<li><strong>' + escHtmlServer(vendor) + '</strong> (' + count + ' negative change' + (count > 1 ? "s" : "") + ')<ul><li>' + details + '</li></ul></li>';
       }).join("") + '</ul>'
     : '';
@@ -9123,7 +9127,7 @@ function buildMonthlyReportPage(yearMonth: string): string | null {
   const winnersHtml = biggestWinners.length > 0
     ? '<h2>Biggest Winners</h2><p class="section-desc">Vendors that added or expanded free tiers</p><ul class="vendor-list">'
       + biggestWinners.map(([vendor, count]) => {
-        const details = positive.filter(c => c.vendor === vendor).map(c => escHtmlServer(c.summary)).join("</li><li>");
+        const details = positive.filter(c => c.vendor === vendor).map(c => changeSummaryHtml(c, escHtmlServer)).join("</li><li>");
         return '<li><strong>' + escHtmlServer(vendor) + '</strong> (' + count + ' positive change' + (count > 1 ? "s" : "") + ')<ul><li>' + details + '</li></ul></li>';
       }).join("") + '</ul>'
     : '';
@@ -9407,7 +9411,7 @@ function buildAiFreeTiersPage(): string {
   <div class="context-box" style="border-left:3px solid ${riskColors.caution}">
     <div style="font-weight:600;color:${riskColors.caution};margin-bottom:.5rem">Recent AI Pricing Changes</div>
     <ul style="margin:0;padding-left:1.25rem;font-size:.9rem;color:var(--text-muted);line-height:1.8">
-      ${aiChanges.slice(0, 6).map(c => `<li><strong>${escHtmlServer(c.vendor)}</strong>: ${escHtmlServer(c.summary.length > 120 ? c.summary.substring(0, 117) + "..." : c.summary)}</li>`).join("\n      ")}
+      ${aiChanges.slice(0, 6).map(c => `<li><strong>${escHtmlServer(c.vendor)}</strong>: ${changeSummaryHtml(c, escHtmlServer, 120)}</li>`).join("\n      ")}
     </ul>
     <p style="margin:.75rem 0 0;font-size:.8rem"><a href="/changes">View all ${trackedChangeCount} pricing changes &rarr;</a></p>
   </div>` : "";
@@ -9666,7 +9670,7 @@ function buildHostingAlternativesPage(): string {
   <div class="context-box" style="border-left:3px solid ${riskColors.caution}">
     <div style="font-weight:600;color:${riskColors.caution};margin-bottom:.5rem">Recent Hosting Pricing Changes</div>
     <ul style="margin:0;padding-left:1.25rem;font-size:.9rem;color:var(--text-muted);line-height:1.8">
-      ${hostingChanges.slice(0, 8).map(c => `<li><strong>${escHtmlServer(c.vendor)}</strong>: ${escHtmlServer(c.summary.length > 120 ? c.summary.substring(0, 117) + "..." : c.summary)}</li>`).join("\n      ")}
+      ${hostingChanges.slice(0, 8).map(c => `<li><strong>${escHtmlServer(c.vendor)}</strong>: ${changeSummaryHtml(c, escHtmlServer, 120)}</li>`).join("\n      ")}
     </ul>
     <p style="margin:.75rem 0 0;font-size:.8rem"><a href="/changes">View all ${trackedChangeCount} pricing changes &rarr;</a></p>
   </div>` : "";
@@ -10004,7 +10008,7 @@ function buildDatabaseAlternativesPage(): string {
   <div class="context-box" style="border-left:3px solid ${riskColors.caution}">
     <div style="font-weight:600;color:${riskColors.caution};margin-bottom:.5rem">Recent Database Pricing Changes</div>
     <ul style="margin:0;padding-left:1.25rem;font-size:.9rem;color:var(--text-muted);line-height:1.8">
-      ${dbChanges.slice(0, 6).map(c => `<li><strong>${escHtmlServer(c.vendor)}</strong>: ${escHtmlServer(c.summary.length > 120 ? c.summary.substring(0, 117) + "..." : c.summary)}</li>`).join("\n      ")}
+      ${dbChanges.slice(0, 6).map(c => `<li><strong>${escHtmlServer(c.vendor)}</strong>: ${changeSummaryHtml(c, escHtmlServer, 120)}</li>`).join("\n      ")}
     </ul>
     <p style="margin:.75rem 0 0;font-size:.8rem"><a href="/changes">View all ${trackedChangeCount} pricing changes &rarr;</a></p>
   </div>` : "";
@@ -10343,7 +10347,7 @@ function buildMonitoringAlternativesPage(): string {
   <div class="context-box" style="border-left:3px solid ${riskColors.caution}">
     <div style="font-weight:600;color:${riskColors.caution};margin-bottom:.5rem">Recent Monitoring Pricing Changes</div>
     <ul style="margin:0;padding-left:1.25rem;font-size:.9rem;color:var(--text-muted);line-height:1.8">
-      ${monitoringChanges.slice(0, 8).map(c => `<li><strong>${escHtmlServer(c.vendor)}</strong>: ${escHtmlServer(c.summary.length > 120 ? c.summary.substring(0, 117) + "..." : c.summary)}</li>`).join("\n      ")}
+      ${monitoringChanges.slice(0, 8).map(c => `<li><strong>${escHtmlServer(c.vendor)}</strong>: ${changeSummaryHtml(c, escHtmlServer, 120)}</li>`).join("\n      ")}
     </ul>
     <p style="margin:.75rem 0 0;font-size:.8rem"><a href="/changes">View all ${trackedChangeCount} pricing changes &rarr;</a></p>
   </div>` : "";
@@ -10671,7 +10675,7 @@ function buildCiCdAlternativesPage(): string {
   <div class="context-box" style="border-left:3px solid ${riskColors.caution}">
     <div style="font-weight:600;color:${riskColors.caution};margin-bottom:.5rem">Recent CI/CD Pricing Changes</div>
     <ul style="margin:0;padding-left:1.25rem;font-size:.9rem;color:var(--text-muted);line-height:1.8">
-      ${cicdChanges.slice(0, 8).map(c => `<li><strong>${escHtmlServer(c.vendor)}</strong>: ${escHtmlServer(c.summary.length > 120 ? c.summary.substring(0, 117) + "..." : c.summary)}</li>`).join("\n      ")}
+      ${cicdChanges.slice(0, 8).map(c => `<li><strong>${escHtmlServer(c.vendor)}</strong>: ${changeSummaryHtml(c, escHtmlServer, 120)}</li>`).join("\n      ")}
     </ul>
     <p style="margin:.75rem 0 0;font-size:.8rem"><a href="/changes">View all ${trackedChangeCount} pricing changes &rarr;</a></p>
   </div>` : "";
@@ -10993,7 +10997,7 @@ function buildSecurityAlternativesPage(): string {
   <div class="context-box" style="border-left:3px solid ${riskColors.caution}">
     <div style="font-weight:600;color:${riskColors.caution};margin-bottom:.5rem">Recent Security Tool Pricing Changes</div>
     <ul style="margin:0;padding-left:1.25rem;font-size:.9rem;color:var(--text-muted);line-height:1.8">
-      ${secChanges.slice(0, 8).map(c => `<li><strong>${escHtmlServer(c.vendor)}</strong>: ${escHtmlServer(c.summary.length > 120 ? c.summary.substring(0, 117) + "..." : c.summary)}</li>`).join("\n      ")}
+      ${secChanges.slice(0, 8).map(c => `<li><strong>${escHtmlServer(c.vendor)}</strong>: ${changeSummaryHtml(c, escHtmlServer, 120)}</li>`).join("\n      ")}
     </ul>
     <p style="margin:.75rem 0 0;font-size:.8rem"><a href="/changes">View all ${trackedChangeCount} pricing changes &rarr;</a></p>
   </div>` : "";
@@ -11330,7 +11334,7 @@ function buildTestingAlternativesPage(): string {
   <div class="context-box" style="border-left:3px solid ${riskColors.caution}">
     <div style="font-weight:600;color:${riskColors.caution};margin-bottom:.5rem">Recent Testing Tool Pricing Changes</div>
     <ul style="margin:0;padding-left:1.25rem;font-size:.9rem;color:var(--text-muted);line-height:1.8">
-      ${testingChanges.slice(0, 8).map(c => `<li><strong>${escHtmlServer(c.vendor)}</strong>: ${escHtmlServer(c.summary.length > 120 ? c.summary.substring(0, 117) + "..." : c.summary)}</li>`).join("\n      ")}
+      ${testingChanges.slice(0, 8).map(c => `<li><strong>${escHtmlServer(c.vendor)}</strong>: ${changeSummaryHtml(c, escHtmlServer, 120)}</li>`).join("\n      ")}
     </ul>
     <p style="margin:.75rem 0 0;font-size:.8rem"><a href="/changes">View all ${trackedChangeCount} pricing changes &rarr;</a></p>
   </div>` : "";
@@ -11651,7 +11655,7 @@ function buildStorageAlternativesPage(): string {
   <div class="context-box" style="border-left:3px solid ${riskColors.caution}">
     <div style="font-weight:600;color:${riskColors.caution};margin-bottom:.5rem">Recent Storage Pricing Changes</div>
     <ul style="margin:0;padding-left:1.25rem;font-size:.9rem;color:var(--text-muted);line-height:1.8">
-      ${storageChanges.slice(0, 8).map(c => `<li><strong>${escHtmlServer(c.vendor)}</strong>: ${escHtmlServer(c.summary.length > 120 ? c.summary.substring(0, 117) + "..." : c.summary)}</li>`).join("\n      ")}
+      ${storageChanges.slice(0, 8).map(c => `<li><strong>${escHtmlServer(c.vendor)}</strong>: ${changeSummaryHtml(c, escHtmlServer, 120)}</li>`).join("\n      ")}
     </ul>
     <p style="margin:.75rem 0 0;font-size:.8rem"><a href="/changes">View all ${trackedChangeCount} pricing changes &rarr;</a></p>
   </div>` : "";
@@ -11963,7 +11967,7 @@ function buildAnalyticsAlternativesPage(): string {
   <div class="context-box" style="border-left:3px solid ${riskColors.caution}">
     <div style="font-weight:600;color:${riskColors.caution};margin-bottom:.5rem">Recent Analytics Pricing Changes</div>
     <ul style="margin:0;padding-left:1.25rem;font-size:.9rem;color:var(--text-muted);line-height:1.8">
-      ${analyticsChanges.slice(0, 8).map(c => `<li><strong>${escHtmlServer(c.vendor)}</strong>: ${escHtmlServer(c.summary.length > 120 ? c.summary.substring(0, 117) + "..." : c.summary)}</li>`).join("\n      ")}
+      ${analyticsChanges.slice(0, 8).map(c => `<li><strong>${escHtmlServer(c.vendor)}</strong>: ${changeSummaryHtml(c, escHtmlServer, 120)}</li>`).join("\n      ")}
     </ul>
     <p style="margin:.75rem 0 0;font-size:.8rem"><a href="/changes">View all ${trackedChangeCount} pricing changes &rarr;</a></p>
   </div>` : "";
@@ -12279,7 +12283,7 @@ function buildAiMlAlternativesPage(): string {
   <div class="context-box" style="border-left:3px solid ${riskColors.caution}">
     <div style="font-weight:600;color:${riskColors.caution};margin-bottom:.5rem">Recent AI/ML Pricing Changes</div>
     <ul style="margin:0;padding-left:1.25rem;font-size:.9rem;color:var(--text-muted);line-height:1.8">
-      ${aiChanges.slice(0, 8).map(c => `<li><strong>${escHtmlServer(c.vendor)}</strong>: ${escHtmlServer(c.summary.length > 120 ? c.summary.substring(0, 117) + "..." : c.summary)}</li>`).join("\n      ")}
+      ${aiChanges.slice(0, 8).map(c => `<li><strong>${escHtmlServer(c.vendor)}</strong>: ${changeSummaryHtml(c, escHtmlServer, 120)}</li>`).join("\n      ")}
     </ul>
     <p style="margin:.75rem 0 0;font-size:.8rem"><a href="/changes">View all ${trackedChangeCount} pricing changes &rarr;</a></p>
   </div>` : "";
@@ -12601,7 +12605,7 @@ function buildEmailAlternativesPage(): string {
   <div class="context-box" style="border-left:3px solid ${riskColors.caution}">
     <div style="font-weight:600;color:${riskColors.caution};margin-bottom:.5rem">Recent Email Tool Pricing Changes</div>
     <ul style="margin:0;padding-left:1.25rem;font-size:.9rem;color:var(--text-muted);line-height:1.8">
-      ${emailChanges.slice(0, 8).map(c => `<li><strong>${escHtmlServer(c.vendor)}</strong>: ${escHtmlServer(c.summary.length > 120 ? c.summary.substring(0, 117) + "..." : c.summary)}</li>`).join("\n      ")}
+      ${emailChanges.slice(0, 8).map(c => `<li><strong>${escHtmlServer(c.vendor)}</strong>: ${changeSummaryHtml(c, escHtmlServer, 120)}</li>`).join("\n      ")}
     </ul>
     <p style="margin:.75rem 0 0;font-size:.8rem"><a href="/changes">View all ${trackedChangeCount} pricing changes &rarr;</a></p>
   </div>` : "";
@@ -12934,7 +12938,7 @@ function buildDesignAlternativesPage(): string {
   <div class="context-box" style="border-left:3px solid ${riskColors.caution}">
     <div style="font-weight:600;color:${riskColors.caution};margin-bottom:.5rem">Recent Design Tool Pricing Changes</div>
     <ul style="margin:0;padding-left:1.25rem;font-size:.9rem;color:var(--text-muted);line-height:1.8">
-      ${designChanges.slice(0, 8).map(c => `<li><strong>${escHtmlServer(c.vendor)}</strong>: ${escHtmlServer(c.summary.length > 120 ? c.summary.substring(0, 117) + "..." : c.summary)}</li>`).join("\n      ")}
+      ${designChanges.slice(0, 8).map(c => `<li><strong>${escHtmlServer(c.vendor)}</strong>: ${changeSummaryHtml(c, escHtmlServer, 120)}</li>`).join("\n      ")}
     </ul>
     <p style="margin:.75rem 0 0;font-size:.8rem"><a href="/changes">View all ${trackedChangeCount} pricing changes &rarr;</a></p>
   </div>` : "";
@@ -13271,7 +13275,7 @@ function buildProjectManagementAlternativesPage(): string {
   <div class="context-box" style="border-left:3px solid ${riskColors.caution}">
     <div style="font-weight:600;color:${riskColors.caution};margin-bottom:.5rem">Recent PM Tool Pricing Changes</div>
     <ul style="margin:0;padding-left:1.25rem;font-size:.9rem;color:var(--text-muted);line-height:1.8">
-      ${pmChanges.slice(0, 8).map(c => `<li><strong>${escHtmlServer(c.vendor)}</strong>: ${escHtmlServer(c.summary.length > 120 ? c.summary.substring(0, 117) + "..." : c.summary)}</li>`).join("\n      ")}
+      ${pmChanges.slice(0, 8).map(c => `<li><strong>${escHtmlServer(c.vendor)}</strong>: ${changeSummaryHtml(c, escHtmlServer, 120)}</li>`).join("\n      ")}
     </ul>
     <p style="margin:.75rem 0 0;font-size:.8rem"><a href="/changes">View all ${trackedChangeCount} pricing changes &rarr;</a></p>
   </div>` : "";
@@ -13599,7 +13603,7 @@ function buildIdeCodeEditorsAlternativesPage(): string {
   <div class="context-box" style="border-left:3px solid ${riskColors.caution}">
     <div style="font-weight:600;color:${riskColors.caution};margin-bottom:.5rem">Recent IDE & AI Coding Pricing Changes</div>
     <ul style="margin:0;padding-left:1.25rem;font-size:.9rem;color:var(--text-muted);line-height:1.8">
-      ${ideChanges.slice(0, 8).map(c => `<li><strong>${escHtmlServer(c.vendor)}</strong>: ${escHtmlServer(c.summary.length > 120 ? c.summary.substring(0, 117) + "..." : c.summary)}</li>`).join("\n      ")}
+      ${ideChanges.slice(0, 8).map(c => `<li><strong>${escHtmlServer(c.vendor)}</strong>: ${changeSummaryHtml(c, escHtmlServer, 120)}</li>`).join("\n      ")}
     </ul>
     <p style="margin:.75rem 0 0;font-size:.8rem"><a href="/changes">View all ${trackedChangeCount} pricing changes &rarr;</a></p>
   </div>` : "";
@@ -13908,7 +13912,7 @@ function buildFreeLlmApisPage(): string {
   <div class="context-box" style="border-left:3px solid ${riskColors.caution}">
     <div style="font-weight:600;color:${riskColors.caution};margin-bottom:.5rem">Recent LLM API Pricing Changes</div>
     <ul style="margin:0;padding-left:1.25rem;font-size:.9rem;color:var(--text-muted);line-height:1.8">
-      ${llmChanges.slice(0, 8).map(c => `<li><strong>${escHtmlServer(c.vendor)}</strong>: ${escHtmlServer(c.summary.length > 120 ? c.summary.substring(0, 117) + "..." : c.summary)}</li>`).join("\n      ")}
+      ${llmChanges.slice(0, 8).map(c => `<li><strong>${escHtmlServer(c.vendor)}</strong>: ${changeSummaryHtml(c, escHtmlServer, 120)}</li>`).join("\n      ")}
     </ul>
     <p style="margin:.75rem 0 0;font-size:.8rem"><a href="/changes">View all ${trackedChangeCount} pricing changes &rarr;</a></p>
   </div>` : "";
@@ -14226,7 +14230,7 @@ function buildApiDevelopmentAlternativesPage(): string {
   <div class="context-box" style="border-left:3px solid ${riskColors.caution}">
     <div style="font-weight:600;color:${riskColors.caution};margin-bottom:.5rem">Recent API Tool Pricing Changes</div>
     <ul style="margin:0;padding-left:1.25rem;font-size:.9rem;color:var(--text-muted);line-height:1.8">
-      ${apiChanges.slice(0, 8).map(c => `<li><strong>${escHtmlServer(c.vendor)}</strong>: ${escHtmlServer(c.summary.length > 120 ? c.summary.substring(0, 117) + "..." : c.summary)}</li>`).join("\n      ")}
+      ${apiChanges.slice(0, 8).map(c => `<li><strong>${escHtmlServer(c.vendor)}</strong>: ${changeSummaryHtml(c, escHtmlServer, 120)}</li>`).join("\n      ")}
     </ul>
     <p style="margin:.75rem 0 0;font-size:.8rem"><a href="/changes">View all ${trackedChangeCount} pricing changes &rarr;</a></p>
   </div>` : "";
@@ -14541,7 +14545,7 @@ function buildTeamCollaborationAlternativesPage(): string {
   <div class="context-box" style="border-left:3px solid ${riskColors.caution}">
     <div style="font-weight:600;color:${riskColors.caution};margin-bottom:.5rem">Recent Collaboration Tool Pricing Changes</div>
     <ul style="margin:0;padding-left:1.25rem;font-size:.9rem;color:var(--text-muted);line-height:1.8">
-      ${collabChanges.slice(0, 8).map(c => `<li><strong>${escHtmlServer(c.vendor)}</strong>: ${escHtmlServer(c.summary.length > 120 ? c.summary.substring(0, 117) + "..." : c.summary)}</li>`).join("\n      ")}
+      ${collabChanges.slice(0, 8).map(c => `<li><strong>${escHtmlServer(c.vendor)}</strong>: ${changeSummaryHtml(c, escHtmlServer, 120)}</li>`).join("\n      ")}
     </ul>
     <p style="margin:.75rem 0 0;font-size:.8rem"><a href="/changes">View all ${trackedChangeCount} pricing changes &rarr;</a></p>
   </div>` : "";
@@ -14950,7 +14954,7 @@ function buildFreeStartupStackPage(): string {
       const color = typeColors[c.change_type] ?? "#94a3b8";
       return `<div class="stability-item">
         <span class="stability-badge" style="background:${color}22;color:${color}">${c.change_type.replace(/_/g, " ")}</span>
-        <strong>${escHtmlServer(c.vendor)}</strong>: ${escHtmlServer(c.summary.length > 140 ? c.summary.substring(0, 137) + "..." : c.summary)}
+        <strong>${escHtmlServer(c.vendor)}</strong>: ${changeSummaryHtml(c, escHtmlServer, 140)}
       </div>`;
     }).join("\n    ")}
   </div>
@@ -15241,7 +15245,7 @@ function buildFreeAiStackPage(): string {
       const color = typeColors[c.change_type] ?? "#94a3b8";
       return `<div class="stability-item">
         <span class="stability-badge" style="background:${color}22;color:${color}">${c.change_type.replace(/_/g, " ")}</span>
-        <strong>${escHtmlServer(c.vendor)}</strong>: ${escHtmlServer(c.summary.length > 140 ? c.summary.substring(0, 137) + "..." : c.summary)}
+        <strong>${escHtmlServer(c.vendor)}</strong>: ${changeSummaryHtml(c, escHtmlServer, 140)}
       </div>`;
     }).join("\n    ")}
   </div>
@@ -15569,7 +15573,7 @@ function buildFreeDevopsStackPage(): string {
       const color = typeColors[c.change_type] ?? "#94a3b8";
       return `<div class="stability-item">
         <span class="stability-badge" style="background:${color}22;color:${color}">${c.change_type.replace(/_/g, " ")}</span>
-        <strong>${escHtmlServer(c.vendor)}</strong>: ${escHtmlServer(c.summary.length > 140 ? c.summary.substring(0, 137) + "..." : c.summary)}
+        <strong>${escHtmlServer(c.vendor)}</strong>: ${changeSummaryHtml(c, escHtmlServer, 140)}
       </div>`;
     }).join("\n    ")}
   </div>
@@ -15898,7 +15902,7 @@ function buildFreeFrontendStackPage(): string {
       const color = typeColors[c.change_type] ?? "#94a3b8";
       return `<div class="stability-item">
         <span class="stability-badge" style="background:${color}22;color:${color}">${c.change_type.replace(/_/g, " ")}</span>
-        <strong>${escHtmlServer(c.vendor)}</strong>: ${escHtmlServer(c.summary.length > 140 ? c.summary.substring(0, 137) + "..." : c.summary)}
+        <strong>${escHtmlServer(c.vendor)}</strong>: ${changeSummaryHtml(c, escHtmlServer, 140)}
       </div>`;
     }).join("\n    ")}
   </div>
@@ -16250,7 +16254,7 @@ function buildFreeNextjsStackPage(): string {
       const color = typeColors[c.change_type] ?? "#94a3b8";
       return `<div class="stability-item">
         <span class="stability-badge" style="background:${color}22;color:${color}">${c.change_type.replace(/_/g, " ")}</span>
-        <strong>${escHtmlServer(c.vendor)}</strong>: ${escHtmlServer(c.summary.length > 140 ? c.summary.substring(0, 137) + "..." : c.summary)}
+        <strong>${escHtmlServer(c.vendor)}</strong>: ${changeSummaryHtml(c, escHtmlServer, 140)}
       </div>`;
     }).join("\n    ")}
   </div>
@@ -16637,7 +16641,7 @@ function buildFreeDjangoStackPage(): string {
       const color = typeColors[c.change_type] ?? "#94a3b8";
       return `<div class="stability-item">
         <span class="stability-badge" style="background:${color}22;color:${color}">${c.change_type.replace(/_/g, " ")}</span>
-        <strong>${escHtmlServer(c.vendor)}</strong>: ${escHtmlServer(c.summary.length > 140 ? c.summary.substring(0, 137) + "..." : c.summary)}
+        <strong>${escHtmlServer(c.vendor)}</strong>: ${changeSummaryHtml(c, escHtmlServer, 140)}
       </div>`;
     }).join("\n    ")}
   </div>
@@ -17045,7 +17049,7 @@ function buildFreeFastapiStackPage(): string {
       const color = typeColors[c.change_type] ?? "#94a3b8";
       return `<div class="stability-item">
         <span class="stability-badge" style="background:${color}22;color:${color}">${c.change_type.replace(/_/g, " ")}</span>
-        <strong>${escHtmlServer(c.vendor)}</strong>: ${escHtmlServer(c.summary.length > 140 ? c.summary.substring(0, 137) + "..." : c.summary)}
+        <strong>${escHtmlServer(c.vendor)}</strong>: ${changeSummaryHtml(c, escHtmlServer, 140)}
       </div>`;
     }).join("\n    ")}
   </div>
@@ -17470,7 +17474,7 @@ function buildFreeGoStackPage(): string {
       const color = typeColors[c.change_type] ?? "#94a3b8";
       return `<div class="stability-item">
         <span class="stability-badge" style="background:${color}22;color:${color}">${c.change_type.replace(/_/g, " ")}</span>
-        <strong>${escHtmlServer(c.vendor)}</strong>: ${escHtmlServer(c.summary.length > 140 ? c.summary.substring(0, 137) + "..." : c.summary)}
+        <strong>${escHtmlServer(c.vendor)}</strong>: ${changeSummaryHtml(c, escHtmlServer, 140)}
       </div>`;
     }).join("\n    ")}
   </div>
@@ -17931,7 +17935,7 @@ function buildFreeSaasStackPage(): string {
       const color = typeColors[c.change_type] ?? "#94a3b8";
       return `<div class="stability-item">
         <span class="stability-badge" style="background:${color}22;color:${color}">${c.change_type.replace(/_/g, " ")}</span>
-        <strong>${escHtmlServer(c.vendor)}</strong>: ${escHtmlServer(c.summary.length > 140 ? c.summary.substring(0, 137) + "..." : c.summary)}
+        <strong>${escHtmlServer(c.vendor)}</strong>: ${changeSummaryHtml(c, escHtmlServer, 140)}
       </div>`;
     }).join("\n    ")}
   </div>
@@ -18590,12 +18594,11 @@ function buildQ1PricingReportPage(): string {
         "<span class=\"change-impact\" style=\"color:" + impactColor + "\">" + c.impact + "</span>" +
       "</div>" +
       "<span class=\"change-type-badge\" style=\"background:" + impactColor + "22;color:" + impactColor + "\">" + typeLabel + "</span>" + editorialLink +
-      "<p class=\"change-summary\">" + escHtmlServer(c.summary) + "</p>" +
+      "<p class=\"change-summary\">" + changeSummaryHtml(c, escHtmlServer) + "</p>" +
       "<div class=\"change-states\">" +
         "<div class=\"change-before\"><strong>Before:</strong> " + escHtmlServer(c.previous_state) + "</div>" +
         "<div class=\"change-after\"><strong>After:</strong> " + escHtmlServer(c.current_state) + "</div>" +
       "</div>" +
-      (changeIsUncited(c) ? unsourcedNoteHtml(c.vendor) : changeSourceLinkHtml(c, escHtmlServer)) +
     "</div>";
   };
 
@@ -18994,12 +18997,11 @@ function buildQ2PricingPreview2026Page(): string {
         <span class="change-impact" style="color:${impactColor}">${c.impact}</span>
       </div>
       <span class="change-type-badge" style="background:${impactColor}22;color:${impactColor}">${typeLabel}</span>${editorialLink}
-      <p class="change-summary">${escHtmlServer(c.summary)}</p>
+      <p class="change-summary">${changeSummaryHtml(c, escHtmlServer)}</p>
       <div class="change-states">
         <div class="change-before"><strong>Before:</strong> ${escHtmlServer(c.previous_state)}</div>
         <div class="change-after"><strong>After:</strong> ${escHtmlServer(c.current_state)}</div>
       </div>
-      ${changeIsUncited(c) ? unsourcedNoteHtml(c.vendor) : changeSourceLinkHtml(c, escHtmlServer)}
     </div>`;
   };
 
@@ -19137,7 +19139,7 @@ ${mcpCtaCss()}
       <div class="timeline-content">
         <span class="timeline-vendor"><a href="/vendor/${toSlug(c.vendor)}" style="color:var(--text)">${escHtmlServer(c.vendor)}</a></span>
         <span class="timeline-impact" style="background:${impactColor}22;color:${impactColor}">${c.impact}</span>
-        <div class="timeline-summary">${escHtmlServer(c.summary.length > 180 ? c.summary.substring(0, 177) + "..." : c.summary)}</div>
+        <div class="timeline-summary">${changeSummaryHtml(c, escHtmlServer, 180)}</div>
       </div>
     </div>`;
   }).join("\n  ")}
@@ -19420,7 +19422,7 @@ ${mcpCtaCss()}
       <p class="impact-desc">Google's per-service free tiers (Cloud Run, Firebase Spark, BigQuery, Cloud Build) continue unchanged. The free Google Developer Program (non-Premium) also continues.</p>
     </div>
   </div>
-  ${gdpChange ? `<div class="context-box"><strong>From our change tracker:</strong> ${escHtmlServer(gdpChange.summary)}<br><a href="${escHtmlServer(gdpChange.source_url)}" target="_blank" rel="noopener">Source →</a></div>` : ""}
+  ${gdpChange ? `<div class="context-box"><strong>From our change tracker:</strong> ${changeSummaryHtml(gdpChange, escHtmlServer)}<br><a href="${escHtmlServer(gdpChange.source_url)}" target="_blank" rel="noopener">Source →</a></div>` : ""}
 
   <h2 id="comparison">2. Price Comparison Table</h2>
   <p class="section-intro">Side-by-side comparison of what you're losing and what replaces it.</p>
@@ -19515,7 +19517,7 @@ ${mcpCtaCss()}
       </tbody>
     </table>
   </div>
-  ${geminiChange ? `<div class="context-box"><strong>Context — Gemini API free tier reduction:</strong> ${escHtmlServer(geminiChange.summary)} This means the Gemini API access in AI Pro may not be significantly better than what's available for free via other providers. See our <a href="/free-llm-apis">Free LLM APIs</a> comparison for full details.</div>` : ""}
+  ${geminiChange ? `<div class="context-box"><strong>Context — Gemini API free tier reduction:</strong> ${changeSummaryHtml(geminiChange, escHtmlServer)} This means the Gemini API access in AI Pro may not be significantly better than what's available for free via other providers. See our <a href="/free-llm-apis">Free LLM APIs</a> comparison for full details.</div>` : ""}
 
   <h2 id="firebase-alts">7. Firebase Alternatives</h2>
   <p class="section-intro">Firebase's Spark (free) plan is unchanged by the GDP Premium discontinuation. But if you're re-evaluating your stack, these BaaS alternatives offer competitive free tiers.</p>
@@ -19876,17 +19878,17 @@ ${mcpCtaCss()}
   <div style="display:grid;gap:.75rem;margin:1rem 0">
     ${supabasePause ? `<div class="diff-card" style="border-left-color:#d29922">
       <h3>Supabase — ${escHtmlServer(supabasePause.date)}</h3>
-      <p class="diff-desc">${escHtmlServer(supabasePause.summary)}</p>
+      <p class="diff-desc">${changeSummaryHtml(supabasePause, escHtmlServer)}</p>
       <p style="font-size:.8rem;color:var(--text-dim);margin-top:.5rem">Impact: ${escHtmlServer(supabasePause.impact)} &middot; <a href="${escHtmlServer(supabasePause.source_url)}" target="_blank" rel="noopener">Source →</a></p>
     </div>` : ""}
     ${firebaseStorage ? `<div class="diff-card" style="border-left-color:#f85149">
       <h3>Firebase — ${escHtmlServer(firebaseStorage.date)}</h3>
-      <p class="diff-desc">${escHtmlServer(firebaseStorage.summary)}</p>
+      <p class="diff-desc">${changeSummaryHtml(firebaseStorage, escHtmlServer)}</p>
       <p style="font-size:.8rem;color:var(--text-dim);margin-top:.5rem">Impact: ${escHtmlServer(firebaseStorage.impact)} &middot; <a href="${escHtmlServer(firebaseStorage.source_url)}" target="_blank" rel="noopener">Source →</a></p>
     </div>` : ""}
     ${firebaseStudio ? `<div class="diff-card" style="border-left-color:#d29922">
       <h3>Firebase Studio — ${escHtmlServer(firebaseStudio.date)}</h3>
-      <p class="diff-desc">${escHtmlServer(firebaseStudio.summary)}</p>
+      <p class="diff-desc">${changeSummaryHtml(firebaseStudio, escHtmlServer)}</p>
       <p style="font-size:.8rem;color:var(--text-dim);margin-top:.5rem">Impact: ${escHtmlServer(firebaseStudio.impact)} &middot; <a href="${escHtmlServer(firebaseStudio.source_url)}" target="_blank" rel="noopener">Source →</a></p>
     </div>` : ""}
   </div>
@@ -20198,12 +20200,12 @@ ${mcpCtaCss()}
   <div style="display:grid;gap:.75rem;margin:1rem 0">
     ${vercelChange ? `<div class="diff-card" style="border-left-color:#d29922">
       <h3>Vercel — ${escHtmlServer(vercelChange.date)}</h3>
-      <p class="diff-desc">${escHtmlServer(vercelChange.summary)}</p>
+      <p class="diff-desc">${changeSummaryHtml(vercelChange, escHtmlServer)}</p>
       <p style="font-size:.8rem;color:var(--text-dim);margin-top:.5rem">Impact: ${escHtmlServer(vercelChange.impact)} &middot; <a href="${escHtmlServer(vercelChange.source_url)}" target="_blank" rel="noopener">Source &rarr;</a></p>
     </div>` : ""}
     ${netlifyChange ? `<div class="diff-card" style="border-left-color:#f85149">
       <h3>Netlify — ${escHtmlServer(netlifyChange.date)}</h3>
-      <p class="diff-desc">${escHtmlServer(netlifyChange.summary)}</p>
+      <p class="diff-desc">${changeSummaryHtml(netlifyChange, escHtmlServer)}</p>
       <p style="font-size:.8rem;color:var(--text-dim);margin-top:.5rem">Impact: ${escHtmlServer(netlifyChange.impact)} &middot; <a href="${escHtmlServer(netlifyChange.source_url)}" target="_blank" rel="noopener">Source &rarr;</a></p>
     </div>` : ""}
   </div>
@@ -20517,12 +20519,12 @@ ${mcpCtaCss()}
   <div style="display:grid;gap:.75rem;margin:1rem 0">
     ${neonChange ? `<div class="diff-card" style="border-left-color:#d29922">
       <h3>Neon — ${escHtmlServer(neonChange.date)}</h3>
-      <p class="diff-desc">${escHtmlServer(neonChange.summary)}</p>
+      <p class="diff-desc">${changeSummaryHtml(neonChange, escHtmlServer)}</p>
       <p style="font-size:.8rem;color:var(--text-dim);margin-top:.5rem">Impact: ${escHtmlServer(neonChange.impact)} &middot; <a href="${escHtmlServer(neonChange.source_url)}" target="_blank" rel="noopener">Source &rarr;</a></p>
     </div>` : ""}
     ${supabaseChange ? `<div class="diff-card" style="border-left-color:#f85149">
       <h3>Supabase — ${escHtmlServer(supabaseChange.date)}</h3>
-      <p class="diff-desc">${escHtmlServer(supabaseChange.summary)}</p>
+      <p class="diff-desc">${changeSummaryHtml(supabaseChange, escHtmlServer)}</p>
       <p style="font-size:.8rem;color:var(--text-dim);margin-top:.5rem">Impact: ${escHtmlServer(supabaseChange.impact)} &middot; <a href="${escHtmlServer(supabaseChange.source_url)}" target="_blank" rel="noopener">Source &rarr;</a></p>
     </div>` : ""}
   </div>
@@ -20838,12 +20840,12 @@ ${mcpCtaCss()}
   <div style="display:grid;gap:.75rem;margin:1rem 0">
     ${railwayChange ? `<div class="diff-card" style="border-left-color:#d29922">
       <h3>Railway — ${escHtmlServer(railwayChange.date)}</h3>
-      <p class="diff-desc">${escHtmlServer(railwayChange.summary)}</p>
+      <p class="diff-desc">${changeSummaryHtml(railwayChange, escHtmlServer)}</p>
       <p style="font-size:.8rem;color:var(--text-dim);margin-top:.5rem">Impact: ${escHtmlServer(railwayChange.impact)} &middot; <a href="${escHtmlServer(railwayChange.source_url)}" target="_blank" rel="noopener">Source &rarr;</a></p>
     </div>` : ""}
     ${renderChange ? `<div class="diff-card" style="border-left-color:#f85149">
       <h3>Render — ${escHtmlServer(renderChange.date)}</h3>
-      <p class="diff-desc">${escHtmlServer(renderChange.summary)}</p>
+      <p class="diff-desc">${changeSummaryHtml(renderChange, escHtmlServer)}</p>
       <p style="font-size:.8rem;color:var(--text-dim);margin-top:.5rem">Impact: ${escHtmlServer(renderChange.impact)} &middot; <a href="${escHtmlServer(renderChange.source_url)}" target="_blank" rel="noopener">Source &rarr;</a></p>
     </div>` : ""}
   </div>
@@ -21159,7 +21161,7 @@ ${mcpCtaCss()}
   <div style="display:grid;gap:.75rem;margin:1rem 0">
     ${relatedChanges.length > 0 ? relatedChanges.map(c => `<div class="diff-card" style="border-left-color:#d29922">
       <h3>${escHtmlServer(c.vendor)} — ${escHtmlServer(changeEntryDateLabel(c))}</h3>
-      <p class="diff-desc">${escHtmlServer(c.summary)}</p>
+      <p class="diff-desc">${changeSummaryHtml(c, escHtmlServer)}</p>
       <p style="font-size:.8rem;color:var(--text-dim);margin-top:.5rem">Impact: ${escHtmlServer(c.impact)} &middot; <a href="${escHtmlServer(c.source_url)}" target="_blank" rel="noopener">Source &rarr;</a></p>
     </div>`).join("\n    ") : `<div class="context-box">No recent pricing changes tracked for Datadog or New Relic. Both vendors have maintained stable free tier limits through early 2026. Check our <a href="/changes">full pricing timeline</a> for all vendor changes.</div>`}
   </div>
@@ -21426,7 +21428,7 @@ ${mcpCtaCss()}
   <div class="executive-summary">
     <p><strong>HCP Terraform's legacy free plan ends on March 31, 2026.</strong> All users on the legacy plan will be auto-migrated to an <strong>enhanced free tier</strong> with different limits: <strong>500 managed resources</strong> (previously unlimited for small teams), unlimited users, SSO, and policy as code (Sentinel + OPA).</p>
     <p>If you have fewer than 500 managed resources, you may not need to do anything — the auto-migration preserves your workflows. But if you're approaching the cap, want more concurrent runs, or are concerned about <strong>vendor lock-in under HashiCorp's BSL license</strong>, this guide covers your options.</p>
-    ${hcpChange ? `<p><strong>From our tracker:</strong> ${escHtmlServer(hcpChange.summary)}</p>` : ""}
+    ${hcpChange ? `<p><strong>From our tracker:</strong> ${changeSummaryHtml(hcpChange, escHtmlServer)}</p>` : ""}
   </div>
 
   <div class="toc">
@@ -21560,7 +21562,7 @@ ${mcpCtaCss()}
   </div>
 
   ${terragruntLaunch ? `<div class="context-box">
-    <strong>New entrant:</strong> Terragrunt Scale launched its free tier specifically to capture teams migrating from HCP Terraform. From our tracker: ${escHtmlServer(terragruntLaunch.summary)}
+    <strong>New entrant:</strong> Terragrunt Scale launched its free tier specifically to capture teams migrating from HCP Terraform. From our tracker: ${changeSummaryHtml(terragruntLaunch, escHtmlServer)}
   </div>` : ""}
 
   <h2 id="alternatives">6. Free IaC Alternatives Comparison</h2>
@@ -22165,7 +22167,7 @@ ${mcpCtaCss()}
   <div class="executive-summary">
     <p><strong>Google overhauled Gemini API billing effective April 1, 2026.</strong> Enforced monthly spend caps by tier (Tier 1: $250/mo, Tier 2: $2,000/mo, Tier 3: $20K-$100K+) automatically pause API requests when reached. New users face <strong>prepaid billing</strong> — buy credits before using the API. The latest flagship <strong>Gemini 3.1 Pro is paid-only</strong> with no free tier access.</p>
     <p>For developers who built on Gemini's generous early free tier, the API has fundamentally changed: <strong>Flash went from ~250 to 20-50 requests/day, spend caps add another constraint for paid users, and the newest model requires payment.</strong> Free tier access is preserved for Flash, Flash-Lite and Gemini 2.5 Pro, with restructured rate limits. Below we cover what changed, who's affected, and which alternatives offer better free access. See also our <a href="/gemini-api-pricing-changes">complete pricing overhaul guide</a> with cost analysis by usage tier and migration recommendations.</p>
-    ${rateLimitChange ? `<p><strong>From our tracker:</strong> ${escHtmlServer(rateLimitChange.summary)}</p>` : ""}
+    ${rateLimitChange ? `<p><strong>From our tracker:</strong> ${changeSummaryHtml(rateLimitChange, escHtmlServer)}</p>` : ""}
   </div>
 
   <div class="toc">
@@ -22200,7 +22202,7 @@ ${mcpCtaCss()}
   </table>
 
   ${spendCapChange ? `<div class="context-box">
-    <strong>Spend cap details:</strong> ${escHtmlServer(spendCapChange.summary)} Developers on pay-as-you-go plans should set project-level budget alerts in Google Cloud Console to avoid unexpected pausing.
+    <strong>Spend cap details:</strong> ${changeSummaryHtml(spendCapChange, escHtmlServer)} Developers on pay-as-you-go plans should set project-level budget alerts in Google Cloud Console to avoid unexpected pausing.
   </div>` : ""}
 
   <h2 id="timeline">2. Timeline of Gemini API Changes</h2>
@@ -22210,21 +22212,21 @@ ${mcpCtaCss()}
     <div class="timeline-date">Dec 2025</div>
     <div class="timeline-content">
       <h3 style="color:#f85149">Rate Limits Slashed 50-80%</h3>
-      <p>${rateLimitChange ? escHtmlServer(rateLimitChange.summary) : "Gemini API free tier rate limits reduced dramatically. Flash went from ~250 RPD to 20-50 RPD. Pro model free tier removed entirely."}</p>
+      <p>${rateLimitChange ? changeSummaryHtml(rateLimitChange, escHtmlServer) : "Gemini API free tier rate limits reduced dramatically. Flash went from ~250 RPD to 20-50 RPD. Pro model free tier removed entirely."}</p>
     </div>
   </div>
   <div class="timeline-item">
     <div class="timeline-date">Mar 2026</div>
     <div class="timeline-content">
       <h3 style="color:#d29922">Gemini 2.0 Flash Deprecated</h3>
-      <p>${deprecationChange ? escHtmlServer(deprecationChange.summary) : "Gemini 2.0 Flash and Flash-Lite deprecated. Developers must migrate to 2.5 series models."}</p>
+      <p>${deprecationChange ? changeSummaryHtml(deprecationChange, escHtmlServer) : "Gemini 2.0 Flash and Flash-Lite deprecated. Developers must migrate to 2.5 series models."}</p>
     </div>
   </div>
   <div class="timeline-item">
     <div class="timeline-date">Apr 2026</div>
     <div class="timeline-content">
       <h3 style="color:#f85149">Spend Caps Enforced</h3>
-      <p>${spendCapChange ? escHtmlServer(spendCapChange.summary) : "Billing-account-level spend caps enforced. API requests pause when tier cap is reached until next billing month."}</p>
+      <p>${spendCapChange ? changeSummaryHtml(spendCapChange, escHtmlServer) : "Billing-account-level spend caps enforced. API requests pause when tier cap is reached until next billing month."}</p>
     </div>
   </div>
 
@@ -22755,7 +22757,7 @@ function buildGeminiApiPricingChangesPage(): string {
     + '    </div>\n'
     + '  </div>\n'
     + '\n'
-    + (geminiChanges.length > 0 ? '  <div class="context-box">\n    <strong>From our deal change tracker (' + geminiChanges.length + ' Gemini changes tracked):</strong>\n    <ul>\n' + geminiChanges.slice(0, 5).map(c => '      <li><strong>' + escHtmlServer(changeEntryLongDateLabel(c)) + ':</strong> ' + escHtmlServer(c.summary) + '</li>\n').join("") + '    </ul>\n    <p>See the full timeline at <a href="/changes">Pricing Changes</a>.</p>\n  </div>\n' : "")
+    + (geminiChanges.length > 0 ? '  <div class="context-box">\n    <strong>From our deal change tracker (' + geminiChanges.length + ' Gemini changes tracked):</strong>\n    <ul>\n' + geminiChanges.slice(0, 5).map(c => '      <li><strong>' + escHtmlServer(changeEntryLongDateLabel(c)) + ':</strong> ' + changeSummaryHtml(c, escHtmlServer) + '</li>\n').join("") + '    </ul>\n    <p>See the full timeline at <a href="/changes">Pricing Changes</a>.</p>\n  </div>\n' : "")
     + '\n'
     + '  <h2 id="faq">8. Frequently Asked Questions</h2>\n'
     + '  <div class="faq-section">\n'
@@ -23406,7 +23408,7 @@ function buildStabilityDashboardPage(): string {
         <a href="/vendor/${vendorSlug}" class="vendor-name">${escHtmlServer(entry.vendor)}</a>
         ${category ? `<span class="vendor-cat">${escHtmlServer(category)}</span>` : ""}
       </div>
-      <p class="vendor-summary">${escHtmlServer(latestChange?.summary?.substring(0, 200) ?? "")}</p>
+      <p class="vendor-summary">${latestChange ? changeSummaryHtml(latestChange, escHtmlServer, 200) : ""}</p>
       <div class="vendor-meta">
         <span class="change-type">${escHtmlServer(changeTypeLabel)}</span>
         <span class="change-date">${escHtmlServer(latestChange ? changeEntryDateLabel(latestChange) : "")}</span>
@@ -23789,7 +23791,7 @@ function buildOpenaiAssistantsAlternativesPage(): string {
     const impactColor = changeImpactColor(c.impact);
     return `<tr>
       <td style="font-family:var(--mono);font-size:.8rem">${escHtmlServer(dateStr)}</td>
-      <td style="font-size:.85rem">${escHtmlServer(c.summary)}</td>
+      <td style="font-size:.85rem">${changeSummaryHtml(c, escHtmlServer)}</td>
       <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(changeImpactLabel(c.impact))}</span></td>
     </tr>`;
   }).join("\n        ");
@@ -24283,7 +24285,7 @@ function buildOpenaiAssistantsMigration2026Page(): string {
     const impactColor = changeImpactColor(c.impact);
     return `<tr>
       <td style="font-family:var(--mono);font-size:.8rem">${escHtmlServer(dateStr)}</td>
-      <td style="font-size:.85rem">${escHtmlServer(c.summary)}</td>
+      <td style="font-size:.85rem">${changeSummaryHtml(c, escHtmlServer)}</td>
       <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(changeImpactLabel(c.impact))}</span></td>
     </tr>`;
   }).join("\n        ");
@@ -24772,7 +24774,7 @@ function buildTenorAlternativesPage(): string {
     const impactColor = changeImpactColor(c.impact);
     return `<tr>
       <td style="font-family:var(--mono);font-size:.8rem">${escHtmlServer(dateStr)}</td>
-      <td style="font-size:.85rem">${escHtmlServer(c.summary)}</td>
+      <td style="font-size:.85rem">${changeSummaryHtml(c, escHtmlServer)}</td>
       <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(changeImpactLabel(c.impact))}</span></td>
     </tr>`;
   }).join("\n        ");
@@ -25232,7 +25234,7 @@ function buildFirebaseStudioShutdownPage(): string {
     const impactColor = changeImpactColor(c.impact);
     return `<tr>
       <td style="font-family:var(--mono);font-size:.8rem">${escHtmlServer(dateStr)}</td>
-      <td style="font-size:.85rem">${escHtmlServer(c.summary)}</td>
+      <td style="font-size:.85rem">${changeSummaryHtml(c, escHtmlServer)}</td>
       <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(changeImpactLabel(c.impact))}</span></td>
     </tr>`;
   }).join("\n        ");
@@ -25803,7 +25805,7 @@ function buildOpenAIAssistantsMigrationPage(): string {
     const impactColor = changeImpactColor(c.impact);
     return '<tr>' +
       '<td style="font-family:var(--mono);font-size:.8rem">' + escHtmlServer(dateStr) + '</td>' +
-      '<td style="font-size:.85rem">' + escHtmlServer(c.summary) + '</td>' +
+      '<td style="font-size:.85rem">' + changeSummaryHtml(c, escHtmlServer) + '</td>' +
       '<td><span style="color:' + impactColor + ';font-size:.8rem;font-weight:600">' + escHtmlServer(changeImpactLabel(c.impact)) + '</span></td>' +
       '</tr>';
   }).join("\n        ");
@@ -26529,7 +26531,7 @@ ${buildGlobalNav("guides")}
         return `<tr>
           <td style="font-family:var(--mono);font-size:.8rem">${escHtmlServer(dateStr)}</td>
           <td><a href="/vendor/${toSlug(c.vendor)}" style="color:var(--text)">${escHtmlServer(c.vendor)}</a></td>
-          <td style="font-size:.85rem">${escHtmlServer(c.summary)}</td>
+          <td style="font-size:.85rem">${changeSummaryHtml(c, escHtmlServer)}</td>
           <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(changeImpactLabel(c.impact))}</span></td>
         </tr>`;
       }).join("\n      ")}
@@ -26593,6 +26595,11 @@ function buildFreeTierTrackerPage(): string {
     detail: string;
     alternatives: string[];
   }
+
+  const recordBehindEntryCitation = (e: ErosionEntry): string => {
+    const record = dealChanges.find(c => c.vendor === e.vendor && c.date === e.date);
+    return record ? changeCitationHtml(record, escHtmlServer) : "";
+  };
 
   const featuredRemovals: ErosionEntry[] = [
     {
@@ -26800,7 +26807,7 @@ function buildFreeTierTrackerPage(): string {
         ${e.impact === "high" ? '<span style="font-size:.7rem;padding:.1rem .4rem;border-radius:8px;background:rgba(248,81,73,0.15);color:#f85149;font-weight:600">HIGH IMPACT</span>' : ""}
       </div>
       <p style="color:var(--text);font-size:.95rem;font-weight:500;margin-bottom:.5rem">${escHtmlServer(e.oneLiner)}</p>
-      <p style="color:var(--text-muted);font-size:.85rem;line-height:1.6;margin-bottom:.5rem">${escHtmlServer(e.detail)}</p>
+      <p style="color:var(--text-muted);font-size:.85rem;line-height:1.6;margin-bottom:.5rem">${escHtmlServer(e.detail)} ${recordBehindEntryCitation(e)}</p>
       ${e.alternatives.length ? `<p style="font-size:.8rem;color:var(--text-dim)"><strong style="color:var(--text-muted)">Still free:</strong> ${e.alternatives.map(a => {
         const aSlug = a.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
         return `<a href="/vendor/${aSlug}" style="color:var(--accent)">${escHtmlServer(a)}</a>`;
@@ -26815,7 +26822,7 @@ function buildFreeTierTrackerPage(): string {
       <td style="font-weight:600;white-space:nowrap"><a href="/vendor/${vendorSlug}" style="color:var(--text)">${escHtmlServer(c.vendor)}</a></td>
       <td style="white-space:nowrap"><span style="color:${color};font-weight:600;font-size:.8rem">${label}</span></td>
       <td style="font-family:var(--mono);font-size:.8rem;color:var(--text-dim);white-space:nowrap">${escHtmlServer(changeEntryDateLabel(c))}</td>
-      <td style="color:var(--text-muted);font-size:.8rem">${escHtmlServer(c.summary.length > 120 ? c.summary.slice(0, 117) + "..." : c.summary)}</td>
+      <td style="color:var(--text-muted);font-size:.8rem">${changeSummaryHtml(c, escHtmlServer, 120)}</td>
     </tr>`;
   };
 
@@ -27133,7 +27140,7 @@ function buildStartupCreditsPage(): string {
     return '<tr>' +
       '<td style="font-family:var(--mono);font-size:.8rem">' + escHtmlServer(dateStr) + '</td>' +
       '<td style="font-weight:600">' + escHtmlServer(c.vendor) + '</td>' +
-      '<td style="font-size:.85rem">' + escHtmlServer(c.summary) + '</td>' +
+      '<td style="font-size:.85rem">' + changeSummaryHtml(c, escHtmlServer) + '</td>' +
       '<td><span style="color:' + impactColor + ';font-size:.8rem;font-weight:600">' + escHtmlServer(changeImpactLabel(c.impact)) + '</span></td>' +
       '</tr>';
   }).join("\n        ");
@@ -27565,7 +27572,7 @@ function buildAiCodingPricing2026Page(): string {
     return `<tr${newest || isNoLongerInForce(c) ? ` class="superseded-row"` : ""}>
       <td style="font-family:var(--mono);font-size:.8rem">${escHtmlServer(dateStr)}</td>
       <td style="font-weight:600">${escHtmlServer(c.vendor)}</td>
-      <td style="font-size:.85rem">${escHtmlServer(c.summary)}${historyNote}</td>
+      <td style="font-size:.85rem">${changeSummaryHtml(c, escHtmlServer)}${historyNote}</td>
       <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(changeImpactLabel(c.impact))}</span></td>
     </tr>`;
   }).join("\n        ");
@@ -28180,7 +28187,7 @@ function buildAiCodingToolsPricingPage(): string {
     return '<tr' + (newest || isNoLongerInForce(c) ? ' class="superseded-row"' : "") + '>' +
       '<td style="font-family:var(--mono);font-size:.8rem">' + escHtmlServer(dateStr) + '</td>' +
       '<td style="font-weight:600">' + escHtmlServer(c.vendor) + '</td>' +
-      '<td style="font-size:.85rem">' + escHtmlServer(c.summary) + historyNote + '</td>' +
+      '<td style="font-size:.85rem">' + changeSummaryHtml(c, escHtmlServer) + historyNote + '</td>' +
       '<td><span style="color:' + impactColor + ';font-size:.8rem;font-weight:600">' + escHtmlServer(changeImpactLabel(c.impact)) + '</span></td>' +
       '</tr>';
   }).join("\n        ");
@@ -28934,7 +28941,7 @@ function buildCiCdPricingPage(): string {
     return '<tr>' +
       '<td style="font-family:var(--mono);font-size:.8rem">' + escHtmlServer(dateStr) + '</td>' +
       '<td style="font-weight:600">' + escHtmlServer(c.vendor) + '</td>' +
-      '<td style="font-size:.85rem">' + escHtmlServer(c.summary) + '</td>' +
+      '<td style="font-size:.85rem">' + changeSummaryHtml(c, escHtmlServer) + '</td>' +
       '<td><span style="color:' + impactColor + ';font-size:.8rem;font-weight:600">' + escHtmlServer(changeImpactLabel(c.impact)) + '</span></td>' +
       '</tr>';
   }).join("\n        ");
@@ -29818,7 +29825,7 @@ function buildDatabasePricingPage(): string {
     return '<tr>' +
       '<td style="font-family:var(--mono);font-size:.8rem">' + escHtmlServer(dateStr) + '</td>' +
       '<td style="font-weight:600">' + escHtmlServer(c.vendor) + '</td>' +
-      '<td style="font-size:.85rem">' + escHtmlServer(c.summary) + '</td>' +
+      '<td style="font-size:.85rem">' + changeSummaryHtml(c, escHtmlServer) + '</td>' +
       '<td><span style="color:' + impactColor + ';font-size:.8rem;font-weight:600">' + escHtmlServer(changeImpactLabel(c.impact)) + '</span></td>' +
       '</tr>';
   }).join("\n        ");
@@ -30482,7 +30489,7 @@ function buildVectorDatabasePricingPage(): string {
     '<td style="font-size:.85rem;white-space:nowrap">' + escHtmlServer(changeEntryDateLabel(c)) + '</td>' +
     '<td style="font-weight:600;font-size:.85rem"><a href="/vendor/' + escHtmlServer(c.vendor.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/-+$/, "")) + '">' + escHtmlServer(c.vendor) + '</a></td>' +
     '<td style="font-size:.85rem">' + escHtmlServer(c.change_type || "update") + '</td>' +
-    '<td style="font-size:.85rem;color:var(--text-muted)">' + escHtmlServer(c.description || c.summary || "") + '</td>' +
+    '<td style="font-size:.85rem;color:var(--text-muted)">' + changeSummaryHtml(c, escHtmlServer) + '</td>' +
     '</tr>'
   ).join("\n        ");
 
@@ -31189,7 +31196,7 @@ function buildHostingPricingPage(): string {
     return '<tr>' +
       '<td style="font-family:var(--mono);font-size:.8rem">' + escHtmlServer(dateStr) + '</td>' +
       '<td style="font-weight:600">' + escHtmlServer(c.vendor) + '</td>' +
-      '<td style="font-size:.85rem">' + escHtmlServer(c.summary) + '</td>' +
+      '<td style="font-size:.85rem">' + changeSummaryHtml(c, escHtmlServer) + '</td>' +
       '<td><span style="color:' + impactColor + ';font-size:.8rem;font-weight:600">' + escHtmlServer(changeImpactLabel(c.impact)) + '</span></td>' +
       '</tr>';
   }).join("\n        ");
@@ -31961,7 +31968,7 @@ function buildLlmApiPricingPage(): string {
     return '<tr>' +
       '<td style="font-family:var(--mono);font-size:.8rem">' + escHtmlServer(dateStr) + '</td>' +
       '<td style="font-weight:600">' + escHtmlServer(c.vendor) + '</td>' +
-      '<td style="font-size:.85rem">' + escHtmlServer(c.summary) + '</td>' +
+      '<td style="font-size:.85rem">' + changeSummaryHtml(c, escHtmlServer) + '</td>' +
       '<td><span style="color:' + impactColor + ';font-size:.8rem;font-weight:600">' + escHtmlServer(changeImpactLabel(c.impact)) + '</span></td>' +
       '</tr>';
   }).join("\n        ");
@@ -32896,7 +32903,7 @@ function buildDallEShutdownPage(): string {
     const impactColor = changeImpactColor(c.impact);
     return `<tr>
       <td style="font-family:var(--mono);font-size:.8rem">${escHtmlServer(dateStr)}</td>
-      <td style="font-size:.85rem">${escHtmlServer(c.summary)}</td>
+      <td style="font-size:.85rem">${changeSummaryHtml(c, escHtmlServer)}</td>
       <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(changeImpactLabel(c.impact))}</span></td>
     </tr>`;
   }).join("\n        ");
@@ -33401,7 +33408,7 @@ function buildOpenAIRealtimeMigrationPage(): string {
   const changeTimelineRows = relevantChanges.slice(0, 10).map(c => {
     const dateStr = changeEntryLongDateLabel(c);
     const impactColor = changeImpactColor(c.impact);
-    return '<tr>\n      <td style="font-family:var(--mono);font-size:.8rem">' + escHtmlServer(dateStr) + '</td>\n      <td style="font-size:.85rem">' + escHtmlServer(c.summary) + '</td>\n      <td><span style="color:' + impactColor + ';font-size:.8rem;font-weight:600">' + escHtmlServer(changeImpactLabel(c.impact)) + "</span></td>\n    </tr>";
+    return '<tr>\n      <td style="font-family:var(--mono);font-size:.8rem">' + escHtmlServer(dateStr) + '</td>\n      <td style="font-size:.85rem">' + changeSummaryHtml(c, escHtmlServer) + '</td>\n      <td><span style="color:' + impactColor + ';font-size:.8rem;font-weight:600">' + escHtmlServer(changeImpactLabel(c.impact)) + "</span></td>\n    </tr>";
   }).join("\n        ");
 
   const relatedPages = ALTERNATIVES_PAGES.filter(p =>
@@ -33525,7 +33532,7 @@ function buildAppRunnerMigrationPage(): string {
     const impactColor = changeImpactColor(c.impact);
     return `<tr>
       <td style="font-family:var(--mono);font-size:.8rem">${escHtmlServer(dateStr)}</td>
-      <td style="font-size:.85rem">${escHtmlServer(c.summary)}</td>
+      <td style="font-size:.85rem">${changeSummaryHtml(c, escHtmlServer)}</td>
       <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(changeImpactLabel(c.impact))}</span></td>
     </tr>`;
   }).join("\n        ");
@@ -34137,7 +34144,7 @@ function buildAwsFreeTier2026Page(): string {
     return `<tr>
       <td style="font-family:var(--mono);font-size:.8rem">${escHtmlServer(dateStr)}</td>
       <td style="font-weight:600">${escHtmlServer(c.vendor)}</td>
-      <td style="font-size:.85rem">${escHtmlServer(c.summary)}</td>
+      <td style="font-size:.85rem">${changeSummaryHtml(c, escHtmlServer)}</td>
       <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(changeImpactLabel(c.impact))}</span></td>
     </tr>`;
   }).join("\n        ");
@@ -34575,7 +34582,7 @@ function buildGcpFreeTier2026Page(): string {
     return `<tr>
       <td style="font-family:var(--mono);font-size:.8rem">${escHtmlServer(dateStr)}</td>
       <td style="font-weight:600">${escHtmlServer(c.vendor)}</td>
-      <td style="font-size:.85rem">${escHtmlServer(c.summary)}</td>
+      <td style="font-size:.85rem">${changeSummaryHtml(c, escHtmlServer)}</td>
       <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(changeImpactLabel(c.impact))}</span></td>
     </tr>`;
   }).join("\n        ");
@@ -34994,7 +35001,7 @@ function buildAzureFreeTier2026Page(): string {
     return `<tr>
       <td style="font-family:var(--mono);font-size:.8rem">${escHtmlServer(dateStr)}</td>
       <td style="font-weight:600">${escHtmlServer(c.vendor)}</td>
-      <td style="font-size:.85rem">${escHtmlServer(c.summary)}</td>
+      <td style="font-size:.85rem">${changeSummaryHtml(c, escHtmlServer)}</td>
       <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(changeImpactLabel(c.impact))}</span></td>
     </tr>`;
   }).join("\n        ");
@@ -35439,7 +35446,7 @@ function buildDigitalOceanFreeTier2026Page(): string {
     return `<tr>
       <td style="font-family:var(--mono);font-size:.8rem">${escHtmlServer(dateStr)}</td>
       <td style="font-weight:600">${escHtmlServer(c.vendor)}</td>
-      <td style="font-size:.85rem">${escHtmlServer(c.summary)}</td>
+      <td style="font-size:.85rem">${changeSummaryHtml(c, escHtmlServer)}</td>
       <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(changeImpactLabel(c.impact))}</span></td>
     </tr>`;
   }).join("\n        ");
@@ -35899,7 +35906,7 @@ function buildCloudFreeTierComparison2026Page(): string {
     return `<tr>
       <td style="font-family:var(--mono);font-size:.8rem">${escHtmlServer(dateStr)}</td>
       <td style="font-weight:600">${escHtmlServer(c.vendor)}</td>
-      <td style="font-size:.85rem">${escHtmlServer(c.summary)}</td>
+      <td style="font-size:.85rem">${changeSummaryHtml(c, escHtmlServer)}</td>
       <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(changeImpactLabel(c.impact))}</span></td>
     </tr>`;
   }).join("\n        ");
@@ -36500,7 +36507,7 @@ function buildDatabaseFreeTierComparison2026Page(): string {
     return `<tr>
       <td style="font-family:var(--mono);font-size:.8rem">${escHtmlServer(dateStr)}</td>
       <td style="font-weight:600">${escHtmlServer(c.vendor)}</td>
-      <td style="font-size:.85rem">${escHtmlServer(c.summary)}</td>
+      <td style="font-size:.85rem">${changeSummaryHtml(c, escHtmlServer)}</td>
       <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(changeImpactLabel(c.impact))}</span></td>
     </tr>`;
   }).join("\n        ");
@@ -37181,7 +37188,7 @@ function buildCicdFreeTierComparison2026Page(): string {
     return `<tr>
       <td style="font-family:var(--mono);font-size:.8rem">${escHtmlServer(dateStr)}</td>
       <td style="font-weight:600">${escHtmlServer(c.vendor)}</td>
-      <td style="font-size:.85rem">${escHtmlServer(c.summary)}</td>
+      <td style="font-size:.85rem">${changeSummaryHtml(c, escHtmlServer)}</td>
       <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(changeImpactLabel(c.impact))}</span></td>
     </tr>`;
   }).join("\n        ");
@@ -37849,7 +37856,7 @@ function buildServerlessFreeTierComparison2026Page(): string {
     return `<tr>
       <td style="font-family:var(--mono);font-size:.8rem">${escHtmlServer(dateStr)}</td>
       <td style="font-weight:600">${escHtmlServer(c.vendor)}</td>
-      <td style="font-size:.85rem">${escHtmlServer(c.summary)}</td>
+      <td style="font-size:.85rem">${changeSummaryHtml(c, escHtmlServer)}</td>
       <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(changeImpactLabel(c.impact))}</span></td>
     </tr>`;
   }).join("\n        ");
@@ -38495,7 +38502,7 @@ function buildAuthComparison2026Page(): string {
     return `<tr>
       <td style="font-family:var(--mono);font-size:.8rem">${escHtmlServer(dateStr)}</td>
       <td style="font-weight:600">${escHtmlServer(c.vendor)}</td>
-      <td style="font-size:.85rem">${escHtmlServer(c.summary)}</td>
+      <td style="font-size:.85rem">${changeSummaryHtml(c, escHtmlServer)}</td>
       <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(changeImpactLabel(c.impact))}</span></td>
     </tr>`;
   }).join("\n        ");
@@ -39436,7 +39443,7 @@ function buildEmailComparison2026Page(): string {
     return `<tr>
       <td style="font-family:var(--mono);font-size:.8rem">${escHtmlServer(dateStr)}</td>
       <td style="font-weight:600">${escHtmlServer(c.vendor)}</td>
-      <td style="font-size:.85rem">${escHtmlServer(c.summary)}</td>
+      <td style="font-size:.85rem">${changeSummaryHtml(c, escHtmlServer)}</td>
       <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(changeImpactLabel(c.impact))}</span></td>
     </tr>`;
   }).join("\n        ");
@@ -40410,7 +40417,7 @@ function buildMonitoringComparison2026Page(): string {
     return `<tr>
       <td style="font-family:var(--mono);font-size:.8rem">${escHtmlServer(dateStr)}</td>
       <td style="font-weight:600">${escHtmlServer(c.vendor)}</td>
-      <td style="font-size:.85rem">${escHtmlServer(c.summary)}</td>
+      <td style="font-size:.85rem">${changeSummaryHtml(c, escHtmlServer)}</td>
       <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(changeImpactLabel(c.impact))}</span></td>
     </tr>`;
   }).join("\n        ");
@@ -41444,7 +41451,7 @@ function buildStorageComparison2026Page(): string {
     return `<tr>
       <td style="font-family:var(--mono);font-size:.8rem">${escHtmlServer(dateStr)}</td>
       <td style="font-weight:600">${escHtmlServer(c.vendor)}</td>
-      <td style="font-size:.85rem">${escHtmlServer(c.summary)}</td>
+      <td style="font-size:.85rem">${changeSummaryHtml(c, escHtmlServer)}</td>
       <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(changeImpactLabel(c.impact))}</span></td>
     </tr>`;
   }).join("\n        ");
@@ -42224,7 +42231,7 @@ function buildTestingFreeTierComparison2026Page(): string {
     return `<tr>
       <td style="font-family:var(--mono);font-size:.8rem">${escHtmlServer(dateStr)}</td>
       <td style="font-weight:600">${escHtmlServer(c.vendor)}</td>
-      <td style="font-size:.85rem">${escHtmlServer(c.summary)}</td>
+      <td style="font-size:.85rem">${changeSummaryHtml(c, escHtmlServer)}</td>
       <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(changeImpactLabel(c.impact))}</span></td>
     </tr>`;
   }).join("\n        ");
@@ -42892,7 +42899,7 @@ function buildAnalyticsFreeTierComparison2026Page(): string {
     return `<tr>
       <td style="font-family:var(--mono);font-size:.8rem">${escHtmlServer(dateStr)}</td>
       <td style="font-weight:600">${escHtmlServer(c.vendor)}</td>
-      <td style="font-size:.85rem">${escHtmlServer(c.summary)}</td>
+      <td style="font-size:.85rem">${changeSummaryHtml(c, escHtmlServer)}</td>
       <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(changeImpactLabel(c.impact))}</span></td>
     </tr>`;
   }).join("\n        ");
@@ -43574,7 +43581,7 @@ function buildApiDevelopmentFreeTierComparison2026Page(): string {
     return `<tr>
       <td style="font-family:var(--mono);font-size:.8rem">${escHtmlServer(dateStr)}</td>
       <td style="font-weight:600">${escHtmlServer(c.vendor)}</td>
-      <td style="font-size:.85rem">${escHtmlServer(c.summary)}</td>
+      <td style="font-size:.85rem">${changeSummaryHtml(c, escHtmlServer)}</td>
       <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(changeImpactLabel(c.impact))}</span></td>
     </tr>`;
   }).join("\n        ");
@@ -44170,7 +44177,7 @@ function buildSecurityFreeTierComparison2026Page(): string {
     return `<tr>
       <td style="font-family:var(--mono);font-size:.8rem">${escHtmlServer(dateStr)}</td>
       <td style="font-weight:600">${escHtmlServer(c.vendor)}</td>
-      <td style="font-size:.85rem">${escHtmlServer(c.summary)}</td>
+      <td style="font-size:.85rem">${changeSummaryHtml(c, escHtmlServer)}</td>
       <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(changeImpactLabel(c.impact))}</span></td>
     </tr>`;
   }).join("\n        ");
@@ -44887,7 +44894,7 @@ function buildHostingFreeTierComparison2026Page(): string {
     return `<tr>
       <td style="font-family:var(--mono);font-size:.8rem">${escHtmlServer(dateStr)}</td>
       <td style="font-weight:600">${escHtmlServer(c.vendor)}</td>
-      <td style="font-size:.85rem">${escHtmlServer(c.summary)}</td>
+      <td style="font-size:.85rem">${changeSummaryHtml(c, escHtmlServer)}</td>
       <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(changeImpactLabel(c.impact))}</span></td>
     </tr>`;
   }).join("\n        ");
@@ -45649,7 +45656,7 @@ function buildStateOfFreeTiersPage(): string {
         <span style="font-size:.7rem;color:${impactColor};font-weight:600">${c.impact} impact</span>
         <a href="/vendor/${toSlug(c.vendor)}" style="font-size:.8rem;font-weight:600;color:var(--text)">${escHtmlServer(c.vendor)}</a>
       </div>
-      <div style="font-size:.85rem;color:var(--text-muted);line-height:1.4">${escHtmlServer(c.summary)}</div>
+      <div style="font-size:.85rem;color:var(--text-muted);line-height:1.4">${changeSummaryHtml(c, escHtmlServer)}</div>
     </div>`;
   }).join("\n");
 
@@ -45661,7 +45668,7 @@ function buildStateOfFreeTiersPage(): string {
         <span style="font-family:var(--mono);font-size:.75rem;color:var(--text-dim)">${changeEntryDateLabel(c)}</span>
         <a href="/vendor/${toSlug(c.vendor)}" style="font-size:.8rem;font-weight:600;color:var(--text)">${escHtmlServer(c.vendor)}</a>
       </div>
-      <div style="font-size:.85rem;color:var(--text-muted);line-height:1.4">${escHtmlServer(c.summary)}</div>
+      <div style="font-size:.85rem;color:var(--text-muted);line-height:1.4">${changeSummaryHtml(c, escHtmlServer)}</div>
     </div>`;
   }).join("\n");
 
@@ -47111,7 +47118,7 @@ function buildStackCheckPage(): string {
   const totalOffers = allOffers.length;
   const totalChanges = allChanges.length;
 
-  const vendorLookup: Record<string, { vendor: string; category: string; description: string; tier: string; slug: string; risk_level: string; risk_cause: RiskCause | null; stability: string; recent_changes: Array<{ date: string; change_type: string; summary: string; impact: string; resolved: boolean }> }> = {};
+  const vendorLookup: Record<string, { vendor: string; category: string; description: string; tier: string; slug: string; risk_level: string; risk_cause: CitedRiskCause | null; stability: string; recent_changes: Array<{ vendor: string; date: string; change_type: string; summary: string; source_url: string | null; citation_html: string; impact: string; resolved: boolean }> }> = {};
   for (const offer of allOffers) {
     const slug = toSlug(offer.vendor);
     const allVendorChanges = allChanges
@@ -47128,10 +47135,10 @@ function buildStackCheckPage(): string {
       slug,
       risk_level: assessment.level,
       risk_cause: assessment.cause
-        ? { date: changeEntryDateLabel(assessment.cause), date_source: assessment.cause.date_source, change_type: assessment.cause.change_type, summary: assessment.cause.summary }
+        ? { ...riskCauseOf(assessment.cause)!, date: changeEntryDateLabel(assessment.cause), citation_html: changeCitationHtml(assessment.cause, escHtmlServer) }
         : null,
       stability,
-      recent_changes: vendorChanges.map(c => ({ date: changeEntryDateLabel(c), change_type: c.change_type, summary: c.summary, impact: c.impact, resolved: isNoLongerInForce(c) })),
+      recent_changes: vendorChanges.map(c => ({ vendor: c.vendor, date: changeEntryDateLabel(c), change_type: c.change_type, summary: c.summary, source_url: c.source_url?.trim() ? c.source_url.trim() : null, citation_html: changeCitationHtml(c, escHtmlServer), impact: c.impact, resolved: isNoLongerInForce(c) })),
     };
     vendorLookup[offer.vendor.toLowerCase()] = vendorLookup[slug];
   }
@@ -47803,12 +47810,17 @@ ${globalNavCss()}
       });
   }
 
+  function citedSummary(c, limit) {
+    var text = limit && c.summary.length > limit ? c.summary.slice(0, limit - 3) + '...' : c.summary;
+    return escHtml(text) + ' ' + (c.citation_html || '');
+  }
+
   function riskBadge(level, cause) {
     if (level !== 'stable' && !cause) return '';
     var cls = level === 'stable' ? 'badge-stable' : level === 'caution' ? 'badge-caution' : 'badge-risky';
     var badge = '<span class="badge ' + cls + '">' + level + '</span>';
     if (level === 'stable') return badge;
-    return badge + ' <span class="risk-cause">' + escHtml(cause.date) + ' &mdash; ' + escHtml(cause.summary) + '</span>';
+    return badge + ' <span class="risk-cause">' + escHtml(cause.date) + ' &mdash; ' + citedSummary(cause) + '</span>';
   }
 
   function changeTypeBadge(type) {
@@ -47833,7 +47845,7 @@ ${globalNavCss()}
     if (changes.length > 0) {
       html += '<div class="changes-timeline"><strong style="font-size:.85rem">Recent Changes</strong>';
       changes.slice(0, 5).forEach(function(c) {
-        html += '<div class="change-item' + (isNoLongerInForce(c) ? ' change-resolved' : '') + '"><span class="change-date">' + escHtml(changeEntryDateLabel(c)) + '</span> ' + changeTypeBadge(c.change_type) + ' ' + escHtml(c.summary.length > 120 ? c.summary.slice(0, 120) + '...' : c.summary) + '</div>';
+        html += '<div class="change-item' + (isNoLongerInForce(c) ? ' change-resolved' : '') + '"><span class="change-date">' + escHtml(changeEntryDateLabel(c)) + '</span> ' + changeTypeBadge(c.change_type) + ' ' + citedSummary(c, 120) + '</div>';
       });
       html += '</div>';
     }
@@ -48232,13 +48244,13 @@ function buildBudgetBuilderPage(): string {
   const totalOffers = allOffers.length;
   const totalChanges = allChanges.length;
 
-  const categoryVendors: Record<string, Array<{ slug: string; name: string; free: string; starter: number; growth: number; scale: number; notes: string; risk_level: string; risk_cause: RiskCause | null }>> = {};
+  const categoryVendors: Record<string, Array<{ slug: string; name: string; free: string; starter: number; growth: number; scale: number; notes: string; risk_level: string; risk_cause: CitedRiskCause | null }>> = {};
   for (const cat of estimatorData) {
     categoryVendors[cat.id] = cat.vendors.map(v => {
       const vendorChanges = allChanges.filter(c => toSlug(c.vendor) === v.slug || c.vendor.toLowerCase() === v.name.toLowerCase());
       const assessment = vendorRiskAssessment(vendorChanges);
       return { slug: v.slug, name: v.name, free: v.free, starter: v.starter, growth: v.growth, scale: v.scale, notes: v.notes, risk_level: assessment.level,
-        risk_cause: assessment.cause ? { date: changeEntryDateLabel(assessment.cause), change_type: assessment.cause.change_type, summary: assessment.cause.summary } : null };
+        risk_cause: assessment.cause ? { ...riskCauseOf(assessment.cause)!, date: changeEntryDateLabel(assessment.cause), citation_html: changeCitationHtml(assessment.cause, escHtmlServer) } : null };
     });
   }
 
@@ -48903,7 +48915,7 @@ function buildEmbedVendorWidget(slug: string, theme: "dark" | "light"): string |
       const badge = changeTypeBadge[c.change_type] ?? { label: c.change_type, color: "#8b949e" };
       return `<div style="padding:4px 0;font-size:12px;color:var(--text-m)">
         <span style="display:inline-block;padding:1px 6px;border-radius:3px;font-size:10px;font-weight:600;color:#fff;background:${badge.color}">${badge.label}</span>
-        <span style="margin-left:4px">${escHtmlServer(c.summary)}</span>
+        <span style="margin-left:4px">${changeSummaryHtml(c, escHtmlServer)}</span>
         <span style="opacity:.6;margin-left:4px">${escHtmlServer(changeEntryDateLabel(c))}</span>
       </div>`;
     }).join("")}
@@ -48959,7 +48971,7 @@ function buildEmbedChangesWidget(theme: "dark" | "light"): string {
       <span style="flex-shrink:0;display:inline-block;padding:2px 6px;border-radius:3px;font-size:10px;font-weight:600;color:#fff;background:${badge.color};margin-top:2px">${badge.label}</span>
       <div>
         <a href="${BASE_URL}/vendor/${vSlug}" target="_blank" rel="noopener" style="font-weight:600;font-size:13px">${escHtmlServer(c.vendor)}</a>
-        <div style="font-size:12px;color:var(--text-m);margin-top:1px">${escHtmlServer(c.summary)}</div>
+        <div style="font-size:12px;color:var(--text-m);margin-top:1px">${changeSummaryHtml(c, escHtmlServer)}</div>
         <div style="font-size:11px;color:var(--text-m);opacity:.6;margin-top:1px">${escHtmlServer(changeEntryDateLabel(c))}</div>
       </div>
     </div>`;
@@ -49597,11 +49609,9 @@ function buildPricingChangesPage(): string {
             <span class="pc-impact" style="color:${impactColor}">${c.impact} impact</span>
             ${changeIsUncited(c) ? unsourcedTagHtml() : ""}
           </div>
-          <div class="pc-summary">${escHtmlServer(c.summary)}</div>
-          ${changeIsUncited(c) ? unsourcedNoteHtml(c.vendor) : ""}
+          <div class="pc-summary">${changeSummaryHtml(c, escHtmlServer)}</div>
 ${stateHtml}
 ${altHtml}
-          ${changeSourceLinkHtml(c, escHtmlServer)}
         </div>
       </div>`;
   }
@@ -49983,6 +49993,7 @@ function buildPricingChangesFeed(): string {
     <id>urn:agentdeals:${escXml(id)}</id>
     <updated>${fields.updated}</updated>
     <author><name>AgentDeals</name></author>
+${feedEntrySourceXml(c, escXml, ns)}
     <summary>${escXml(fields.summary)}</summary>
     <category term="${escXml(c.change_type)}" label="${escXml(fields.label)}"/>
     <${ns}:date_source>${escXml(fields.dateSource)}</${ns}:date_source>
@@ -50058,10 +50069,8 @@ function buildChangesPage(): string {
             <span class="chg-impact" style="color:${impactColor}">${c.impact}</span>
             ${changeIsUncited(c) ? unsourcedTagHtml() : ""}
           </div>
-          <div class="chg-summary">${escHtmlServer(c.summary)}</div>
-          ${changeIsUncited(c) ? unsourcedNoteHtml(c.vendor) : ""}
+          <div class="chg-summary">${changeSummaryHtml(c, escHtmlServer)}</div>
 ${altHtml}
-          ${changeSourceLinkHtml(c, escHtmlServer)}
         </div>
       </div>`;
   }
@@ -50276,7 +50285,7 @@ function buildExpiringPage(): string {
             <a href="/vendor/${vendorSlug}" class="exp-vendor">${escHtmlServer(c.vendor)}</a>
             <span class="exp-impact" style="color:${impactColor}">${c.impact}</span>
           </div>
-          <div class="exp-summary">${escHtmlServer(c.summary)}</div>
+          <div class="exp-summary">${changeSummaryHtml(c, escHtmlServer)}</div>
         </div>
       </div>`;
   }
@@ -50756,7 +50765,7 @@ function buildDeadlinesPage(): string {
             <span class="dl-category">${escHtmlServer(c.category)}</span>
           </div>
           <div class="dl-date">${escHtmlServer(changeEntryDateLabel(c))}</div>
-          <div class="dl-summary">${escHtmlServer(c.summary)}</div>
+          <div class="dl-summary">${changeSummaryHtml(c, escHtmlServer)}</div>
 ${altHtml}${guideHtml}
         </div>
       </div>`;
@@ -52326,7 +52335,7 @@ function buildTrendsPage(slug: string): string | null {
           <span class="timeline-date">${changeEntryDateLabel(c)}</span>
           <span class="impact impact-${c.impact}">${c.impact}</span>
         </div>
-        <div class="timeline-summary">${escHtmlServer(c.summary)}</div>
+        <div class="timeline-summary">${changeSummaryHtml(c, escHtmlServer)}</div>
       </div>`;
   }).join("\n") : `<p class="no-data">No pricing changes tracked for ${escHtmlServer(categoryName)}. All vendors in this category have stable pricing.</p>`;
 
@@ -54576,6 +54585,7 @@ const httpServer = createHttpServer(async (req, res) => {
       weekEntries.push(`  <entry>
     <title>${escXml(title)}</title>
     <link href="${escXml(weekUrl)}" rel="alternate"/>
+${digestSourceXml([...digest.top_changes, ...digest.discovered_changes], escXml)}
     <id>urn:agentdeals:weekly-digest:${digest.week_of}</id>
     <updated>${pubDate}</updated>
     <author><name>AgentDeals</name></author>
@@ -54587,7 +54597,7 @@ const httpServer = createHttpServer(async (req, res) => {
     const updatedTs = channelUpdatedTimestamp(entryUpdates);
     const subtitle = `Weekly digest of developer tool pricing changes, free tier removals, and new deals. ${WEEKLY_FEED_POPULATION_NOTE}`;
     const atom = `<?xml version="1.0" encoding="UTF-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom">
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:${CHANGE_FEED_NAMESPACE_PREFIX}="${CHANGE_FEED_NAMESPACE}">
   <title>${escXml(WEEKLY_DIGEST_FEED.title)}</title>
   <subtitle>${escXml(subtitle)}</subtitle>
   <link href="${baseUrl}" rel="alternate"/>

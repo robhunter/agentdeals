@@ -1,3 +1,4 @@
+import { changeSummaryText } from "./change-citation.js";
 import { loadOffers, loadDealChanges, searchOffers } from "./data.js";
 import type { Offer, DealChange } from "./types.js";
 
@@ -66,7 +67,7 @@ function getRecentChanges(vendorName: string): string[] {
         c.vendor.toLowerCase() === vendorName.toLowerCase() &&
         c.date >= sixMonthsAgo
     )
-    .map((c) => `${c.date}: ${c.summary}`);
+    .map((c) => `${c.date}: ${changeSummaryText(c)}`);
 }
 
 function generateWarnings(
