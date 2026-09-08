@@ -1,3 +1,5 @@
+import { riskEntries } from "./risk-scorecard.js";
+
 export interface GuideMetadata {
   slug: string;
   title: string;
@@ -65,7 +67,7 @@ const GUIDE_ENTRIES: Array<{ slug: string; title: string; description: string }>
   { slug: "neon-vs-supabase", title: "Neon vs Supabase", description: "Free tier comparison — storage, compute, branching, auth, scale-to-zero" },
   { slug: "railway-vs-render", title: "Railway vs Render", description: "Free tier comparison — usage-based vs fixed pricing, managed databases, sleep behavior" },
   { slug: "datadog-vs-new-relic", title: "Datadog vs New Relic", description: "Free tier comparison — per-host vs per-GB pricing, APM, logs, synthetics, retention" },
-  { slug: "free-tier-risk", title: "Free Tier Risk Index", description: "Predictive risk scores for 38 developer tools — category heatmap, pattern analysis from 80 pricing changes, counter-trends, FAQ" },
+  { slug: "free-tier-risk", title: "Free Tier Risk Index", description: `Predictive risk scores for ${riskEntries.length} developer tools — every grade dated and scored against what our change log recorded next, category heatmap, pattern analysis, counter-trends, FAQ` },
   { slug: "hcp-terraform-migration", title: "HCP Terraform Migration Guide", description: "5 migration paths, decision matrix, step-by-step process for HCP Terraform EOL" },
   { slug: "terraform-cloud-free-tier-removed", title: "Terraform Cloud Free Tier Removed", description: "HCP Terraform free tier removal guide — cost analysis at 10-500 resources, 8 alternatives compared, migration paths" },
   { slug: "gemini-api-pricing-2026", title: "Gemini API Pricing 2026", description: "Gemini API billing guide — free tier changes, spend caps ($250-$100K+/mo), prepaid billing, 3.1 Pro paid-only, 8-provider comparison" },

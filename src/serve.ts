@@ -38,6 +38,7 @@ import { HETZNER_APRIL_CHANGES, HETZNER_CLOUD_PLANS, HETZNER_PRICES_READ, HETZNE
 import { HUNDRED_TB_SCENARIO, ONE_TO_ONE_SCENARIO, STORAGE_RATES_READ, STORAGE_SCALE_WORKLOADS, TEN_TO_ONE_SCENARIO, cheapestProviderAt, costliestProviderAt, egressAllowanceSentence, egressBillOnceOverAllowance, egressRatioWhereCostsMatch, fixedMonthlyGrantsSentence, monthlyStorageCost, providersWithScalingEgressAllowance, rateCardFor, scaleCostFor } from "./storage-cost-model.js";
 import { changeTimelineDate, supersededLineups, supersessionNote } from "./change-lineup.js";
 import { isNoLongerInForce, eventResolutionFields, recordsStillInForce } from "./change-resolution.js";
+import { FREE_TIER_STANDING_LABELS, GRADE_FACTORS_WITHOUT_PRICING_HISTORY, NOT_EVIDENCE_LABELS, citesAChangeOlderThanTheGrade, freeTierStanding, gradesFirstSet, gradesLastSet, gradingDatesClause, neverTracked, riskEntries, scorecard, splitByFreeTierStanding, trackedSinceGrading, type RiskEntry } from "./risk-scorecard.js";
 import { directionRatioLabel } from "./change-direction.js";
 import { removalDurability, removalReturnRateSentence, removalDurabilityPattern, lastingRemovalExamplesFor } from "./removal-durability.js";
 import { changeIsUncited, changeSourceCitation, changeSourceLinkHtml, citedChanges, uncitedChangeNotice, ratingWithheldForNoSourceClause, ratingWithheldForNoSourceSentence, UNCITED_CHANGE_LABEL } from "./change-citation.js";
@@ -7054,11 +7055,11 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
   {
     slug: "free-tier-risk",
     title: "Free Tier Risk Index — Predictive Analysis of Which Free Tiers May Disappear Next",
-    metaDesc: `Predictive risk scores for 38 developer tool free tiers — which will disappear next? Category heatmap, pattern analysis from ${trackedChangeCount} tracked pricing changes, counter-trends, and actionable protection strategies. Updated April 2026.`,
+    metaDesc: `Predictive risk scores for ${riskEntries.length} developer tool free tiers — which will disappear next? ${gradingDatesClause(riskEntries)}, scored against every change tracked since. Category heatmap, pattern analysis from ${trackedChangeCount} tracked pricing changes, counter-trends.`,
     contextHtml: "",
     tag: "free-tier-risk",
     primaryVendor: "AgentDeals",
-    hubDesc: "Predictive risk analysis for 38 developer free tiers — category heatmap, pattern analysis, counter-trends, protection strategies",
+    hubDesc: `Predictive risk analysis for ${riskEntries.length} developer free tiers — grades dated and scored against what happened next, category heatmap, pattern analysis, counter-trends`,
   },
   {
     slug: "stability",
@@ -22645,61 +22646,13 @@ function buildGeminiApiPricingChangesPage(): string {
     + '</body>\n</html>';
 }
 
-interface RiskEntry {
-  vendor: string;
-  risk: "low" | "medium" | "high" | "dead";
-  category: string;
-  reasoning: string;
-  lastChange?: string;
-  changeType?: string;
-}
-
-const riskEntries: RiskEntry[] = [
-  { vendor: "Cloudflare", risk: "low", category: "Cloud/CDN", reasoning: "Actively expanding free tiers (Workers, Pages, Queues added free Feb 2026). Profitable, no VC subsidy pressure. Free tier is a strategic funnel — core business is paid enterprise CDN.", lastChange: "2026-02-04", changeType: "new_free_tier" },
-  { vendor: "GitHub", risk: "low", category: "Version Control", reasoning: "Microsoft-backed, free tier stable since 2019. Actions self-hosted runner fee was proposed then postponed after backlash (Jan 2026). Track record of expanding, not contracting.", lastChange: "2026-01-01", changeType: "pricing_postponed" },
-  { vendor: "Grafana Cloud", risk: "low", category: "Monitoring", reasoning: "Open-source core (Prometheus, Loki, Tempo). Free tier includes 10K metrics, 50 GB logs, 50 GB traces. Company profitable, recent IPO path. Open-source foundation means community forks prevent lock-in." },
-  { vendor: "CockroachDB", risk: "low", category: "Databases", reasoning: "10 GB free storage, multi-region support. Backed by $633M funding. Free tier is strategic acquisition tool. Serverless model scales naturally." },
-  { vendor: "Auth0", risk: "low", category: "Authentication", reasoning: "Okta-owned (enterprise backing). Limits increased Nov 2025 (25K MAU → expanded). Free tier is developer funnel for enterprise IAM.", lastChange: "2025-11-01", changeType: "limits_increased" },
-  { vendor: "Sentry", risk: "low", category: "Error Tracking", reasoning: "Open-source core. Pricing restructured Aug 2025 but free tier preserved (5K errors/mo). Community edition available as fallback.", lastChange: "2025-08-15", changeType: "pricing_restructured" },
-  { vendor: "Google Cloud (Always Free)", risk: "low", category: "Cloud IaaS", reasoning: "Google Always Free tier unchanged for years — f1-micro VM, 5 GB Cloud Storage, BigQuery 1 TB/mo. Separate from promotional credits. Backed by Alphabet's cloud growth strategy.", lastChange: "2026-01-01", changeType: "limits_increased" },
-  { vendor: "AWS Free Tier", risk: "low", category: "Cloud IaaS", reasoning: "12-month free tier + always-free services (Lambda 1M requests, DynamoDB 25 GB). AWS is the market leader — free tier is a training/onboarding tool, not a cost center. Restructured Jan 2026 but expanded.", lastChange: "2026-01-04", changeType: "pricing_restructured" },
-  { vendor: "GitHub Copilot Free", risk: "low", category: "AI Coding", reasoning: "New free tier launched Dec 2025 (2K completions + 50 chat/mo). Microsoft strategic investment in AI developer tools. Competitive pressure from Cursor/Claude ensures free tier stays.", lastChange: "2025-12-18", changeType: "new_free_tier" },
-  { vendor: "Anthropic", risk: "low", category: "AI/ML APIs", reasoning: "Limits increased Feb 2026 and Mar 2026. Currently in growth mode, well-funded ($7.3B raised). Free API tier is competitive necessity against OpenAI/Google.", lastChange: "2026-03-13", changeType: "limits_increased" },
-
-  { vendor: "Supabase", risk: "medium", category: "Databases/BaaS", reasoning: "Project pause tightened to 1 week inactivity (Feb 2026). Core free tier preserved but signals efficiency pressure. Post-Series C ($80M) — profitable path unclear.", lastChange: "2026-02-01", changeType: "limits_reduced" },
-  { vendor: "Vercel", risk: "medium", category: "Hosting", reasoning: "Restructured to credit-based model (Jan 2026). Free tier still generous for personal projects but commercial use restricted (Hobby plan). Watch for further tightening.", lastChange: "2026-01-01", changeType: "pricing_restructured" },
-  { vendor: "Netlify", risk: "medium", category: "Hosting", reasoning: "Restructured to credit-based pricing (Sep 2025) — sites pause on exhaustion. 300 credits/month is sufficient for small sites but represents a philosophical shift toward metered billing.", lastChange: "2025-09-04", changeType: "pricing_restructured" },
-  { vendor: "Neon", risk: "medium", category: "Databases", reasoning: "Pricing restructured Jan 2026 post-Databricks acquisition. Free tier preserved (0.5 GB/project, 100 projects) but acquisition creates uncertainty about long-term free tier commitment.", lastChange: "2026-01-15", changeType: "pricing_restructured" },
-  { vendor: "Railway", risk: "medium", category: "Hosting/PaaS", reasoning: "Free tier expanded with $100M Series B (Oct 2025). Currently generous ($5 credit, no sleep). But VC-funded PaaS companies have a history of removing free tiers (see: Heroku). Watch burn rate.", lastChange: "2025-10-01", changeType: "limits_increased" },
-  { vendor: "Render", risk: "medium", category: "Hosting/PaaS", reasoning: "Sleep time reduced (Sep 2025) — 15-min spin-down is aggressive. Free PostgreSQL limited to 256 MB with 30-day expiry. Signals tightening, though core free tier intact.", lastChange: "2025-09-01", changeType: "limits_reduced" },
-  { vendor: "Stripe", risk: "medium", category: "Payments", reasoning: "Processing fees restructured Feb 2026 (2.7% + 5¢ domestic card). No free tier per se — pay-per-transaction model. Risk is in rate changes, not tier removal.", lastChange: "2026-02-01", changeType: "pricing_restructured" },
-  { vendor: "Firebase", risk: "medium", category: "BaaS", reasoning: "Multiple changes in 2026: Cloud Storage limits reduced (Feb), Realtime Database EOL announced (Mar), restrictions tightened (Feb). Google consolidating around Firestore. Migration advisable for RTDB users.", lastChange: "2026-03-19", changeType: "product_deprecated" },
-  { vendor: "Docker Hub", risk: "medium", category: "Containers", reasoning: "Rate limits tightened (Dec 2024) — 100 pulls/6h anonymous, 200 authenticated. Docker Desktop commercial license required for large orgs ($5/user/mo+). Free for small teams but trending paid.", lastChange: "2024-12-10", changeType: "pricing_restructured" },
-  { vendor: "Dub.co", risk: "medium", category: "Dev Utilities", reasoning: "Free tier limits reduced sharply (Mar 2026). Link shortener with declining free allowance signals monetization pressure.", lastChange: "2026-03-22", changeType: "limits_reduced" },
-  { vendor: "Google Gemini API", risk: "medium", category: "AI/ML", reasoning: "Free tier rate limits slashed 50-80% (Dec 2025). The flagship Gemini 3.1 Pro is paid-only, though Gemini 2.5 Pro is still free. A Google PM admitted generous limits were only for a promotional weekend. Still has free tier but heavily restricted.", lastChange: "2025-12-15", changeType: "limits_reduced" },
-
-  { vendor: "Heroku", risk: "high", category: "Hosting/PaaS", reasoning: "Free tier removed Nov 2022. Now in 'sustaining mode' under Salesforce — minimal investment, no innovation. The canonical cautionary tale for relying on free tiers.", lastChange: "2022-11-28", changeType: "free_tier_removed" },
-  { vendor: "Fly.io", risk: "high", category: "Hosting", reasoning: "Free tier removed for new accounts in October 2024. New signups get a trial of 2 hours runtime or 7 days, whichever comes first, then pay-as-you-go from the first machine — the smallest is $2.02/month. Only legacy Hobby/Launch/Scale accounts still carry 3 shared-cpu-1x VMs, 3 GB volume storage and 100 GB transfer. Volume snapshots became billable in January 2026.", lastChange: "2024-10-01", changeType: "free_tier_removed" },
-  { vendor: "Postman", risk: "high", category: "API Testing", reasoning: "Team collaboration removed from free tier (Mar 2026). Aggressive monetization of previously-free features. Pattern suggests further restrictions ahead.", lastChange: "2026-03-01", changeType: "restriction" },
-  { vendor: "OpenAI", risk: "high", category: "AI/ML", reasoning: "Multiple free tier reductions: limits cut Jun 2025, further reduced Feb 2026. GPT-4 free access removed. Market leader extracting value — expect continued tightening.", lastChange: "2026-02-09", changeType: "limits_reduced" },
-  { vendor: "HCP Terraform", risk: "high", category: "Infrastructure", reasoning: "Legacy tier EOL March 31, 2026. HashiCorp BSL license change (Aug 2023) already fractured community. IBM acquisition adds enterprise pricing pressure. Migrate to OpenTofu.", lastChange: "2026-03-31", changeType: "pricing_restructured" },
-  { vendor: "LocalStack", risk: "high", category: "Testing", reasoning: "Community Edition shut down March 23, 2026. Complete removal of free/OSS option. Migrate to Moto, aws-sdk-mock, or Testcontainers.", lastChange: "2026-03-23", changeType: "free_tier_removed" },
-  { vendor: "X API (Twitter)", risk: "high", category: "APIs", reasoning: "Free tier removed twice in 2026 (Feb 1 + Feb 9). Pay-per-use only with $10 one-time credit. Unpredictable management. Do not build on this API without paid plan budget.", lastChange: "2026-02-09", changeType: "free_tier_removed" },
-  { vendor: "Brave Search API", risk: "high", category: "Search", reasoning: "Free plan (5K queries/mo) replaced with metered billing Feb 2026. No spending cap — credit cards actively charged. Complete removal of free access.", lastChange: "2026-02-12", changeType: "free_tier_removed" },
-  { vendor: "Spotify API", risk: "high", category: "APIs", reasoning: "Premium subscription now required for dev mode (Feb 2026). Test users cut from 25 to 5. Multiple endpoints deprecated. Hostile to free developers.", lastChange: "2026-02-11", changeType: "limits_reduced" },
-  { vendor: "Amazon SP-API", risk: "high", category: "APIs", reasoning: "Free access ended after 10+ years — now $1,400/year + per-call fees (Apr 2026). Zero warning. Shows even long-stable APIs can go paid overnight.", lastChange: "2026-01-31", changeType: "pricing_restructured" },
-
-  { vendor: "PlanetScale", risk: "dead", category: "Databases", reasoning: "Free tier removed April 2024. Hobby plan eliminated entirely. Migrate to Neon, Turso, or CockroachDB.", lastChange: "2024-04-08", changeType: "free_tier_removed" },
-  { vendor: "Fauna", risk: "dead", category: "Databases", reasoning: "Product deprecated May 2025. Entire service shutting down. Migrate immediately to MongoDB Atlas, CockroachDB, or Supabase.", lastChange: "2025-05-30", changeType: "product_deprecated" },
-  { vendor: "MinIO (OSS)", risk: "dead", category: "Storage", reasoning: "Open-source version killed Feb 2026 (GNU AGPL → proprietary). Self-hosted MinIO is no longer free for production. Use S3-compatible alternatives.", lastChange: "2026-02-12", changeType: "open_source_killed" },
-  { vendor: "SendGrid", risk: "dead", category: "Email", reasoning: "Free tier removed May 2025 under Twilio ownership. Use Resend (3K emails/mo free) or Maileroo (3K/mo); Mailgun and Amazon SES have since dropped their free tiers too.", lastChange: "2025-05-27", changeType: "free_tier_removed" },
-  { vendor: "Logz.io", risk: "dead", category: "Logging", reasoning: "Free tier removed Mar 2026. Use Grafana Cloud (50 GB logs free), Axiom (500 GB/mo), or self-hosted ELK.", lastChange: "2026-03-02", changeType: "free_tier_removed" },
-  { vendor: "Freshping", risk: "dead", category: "Monitoring", reasoning: "Free tier removed Mar 2026. Use BetterStack (10 monitors free), UptimeRobot (50 monitors), or Grafana Cloud synthetics.", lastChange: "2026-03-06", changeType: "free_tier_removed" },
-];
-
 function buildFreeTierRiskPage(): string {
   const title = "Free Tier Risk Index — Predictive Analysis of Which Free Tiers May Disappear Next";
-  const metaDesc = `Predictive risk scores for 38 developer tool free tiers — which will disappear next? Category heatmap, pattern analysis from ${trackedChangeCount} tracked pricing changes, counter-trends, and actionable protection strategies. Updated April 2026.`;
+  const gradedFrom = gradesFirstSet(riskEntries);
+  const gradingDates = gradingDatesClause(riskEntries);
+  const safestPicks = ["Cloudflare", "GitHub", "Grafana Cloud", "AWS Free Tier", "Google Cloud (Always Free)"];
+  const safestPicksGraded = gradesLastSet(riskEntries.filter(e => safestPicks.includes(e.vendor)));
+  const metaDesc = `Predictive risk scores for ${riskEntries.length} developer tool free tiers — which will disappear next? ${gradingDates}, scored against every change tracked since. Category heatmap, pattern analysis from ${trackedChangeCount} tracked pricing changes, counter-trends.`;
   const slug = "free-tier-risk";
   const pubDate = "2026-03-26";
 
@@ -22715,22 +22668,48 @@ function buildFreeTierRiskPage(): string {
   const medRisk = riskEntries.filter(e => e.risk === "medium");
   const highRisk = riskEntries.filter(e => e.risk === "high");
   const deadEntries = riskEntries.filter(e => e.risk === "dead");
+  const highBand = splitByFreeTierStanding(highRisk, offers);
+  const bandScores = scorecard(riskEntries, dealChanges);
+  const gradedWithNoRecordAtAll = riskEntries.filter(e => neverTracked(e, dealChanges));
 
   const riskColors: Record<string, string> = { low: "#3fb950", medium: "#d29922", high: "#f85149", dead: "#8b949e" };
   const riskLabels: Record<string, string> = { low: "Low Risk", medium: "Medium Risk", high: "High Risk", dead: "Already Changed" };
   const riskEmoji: Record<string, string> = { low: "\u{1F7E2}", medium: "\u{1F7E1}", high: "\u{1F534}", dead: "\u26AB" };
 
+  const sinceGradedCell = (e: RiskEntry) => {
+    if (neverTracked(e, dealChanges)) {
+      return `No change has ever been tracked for ${escHtmlServer(e.vendor)}. This grade rests on ${GRADE_FACTORS_WITHOUT_PRICING_HISTORY} — not on our deal change data.`;
+    }
+    const tracked = trackedSinceGrading(e, dealChanges);
+    if (tracked.length === 0) return "Nothing tracked since it was graded.";
+    return tracked.map(t => {
+      const label = t.notEvidence
+        ? ` <span style="color:var(--text-dim)">not counted &mdash; ${escHtmlServer(NOT_EVIDENCE_LABELS[t.notEvidence])}</span>`
+        : t.negative
+          ? ` <span style="color:#f85149">counted against the grade</span>`
+          : ` <span style="color:var(--text-dim)">not a free tier negative</span>`;
+      return `<div style="margin-bottom:.5rem"><span style="font-family:var(--mono);color:var(--text-dim)">${escHtmlServer(changeEntryDateLabel(t.change))}</span><div>${escHtmlServer(t.change.change_type)}${label}</div></div>`;
+    }).join("");
+  };
+
   const buildRiskRow = (e: RiskEntry) => {
     const vendorSlug = e.vendor.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/-+$/, "");
     const color = riskColors[e.risk];
+    const beforeTheGrade = citesAChangeOlderThanTheGrade(e)
+      ? `<div style="color:var(--text-dim);font-family:var(--sans);font-size:.72rem">before the grade</div>`
+      : "";
     return `<tr>
       <td style="font-weight:600"><a href="/vendor/${vendorSlug}" style="color:var(--text)">${escHtmlServer(e.vendor)}</a></td>
-      <td style="color:${color};font-weight:600;font-size:.85rem">${riskEmoji[e.risk]} ${riskLabels[e.risk]}</td>
+      <td style="color:${color};font-weight:600;font-size:.85rem">${riskEmoji[e.risk]} ${riskLabels[e.risk]}<div style="color:var(--text-dim);font-weight:400;font-size:.72rem;font-family:var(--mono);white-space:nowrap">graded ${escHtmlServer(e.graded)}</div></td>
       <td style="color:var(--text-muted);font-size:.85rem">${escHtmlServer(e.category)}</td>
       <td style="color:var(--text-muted);font-size:.8rem">${escHtmlServer(e.reasoning)}</td>
-      <td style="font-family:var(--mono);font-size:.8rem;color:var(--text-dim);white-space:nowrap">${e.lastChange ? escHtmlServer(e.lastChange) : "—"}</td>
+      <td style="font-family:var(--mono);font-size:.8rem;color:var(--text-dim)">${e.lastChange ? `<div style="white-space:nowrap">${escHtmlServer(e.lastChange)}</div>${beforeTheGrade}` : "&mdash;"}</td>
+      <td style="color:var(--text-muted);font-size:.75rem;min-width:200px">${sinceGradedCell(e)}</td>
     </tr>`;
   };
+
+  const riskTableHead = (statusHeader: string, whatHeader: string, dateHeader: string) =>
+    `<tr><th>Vendor</th><th>${statusHeader}</th><th>Category</th><th>${whatHeader}</th><th>${dateHeader}</th><th>Tracked since graded</th></tr>`;
 
   const categoryMap = new Map<string, { total: number; negative: number; positive: number }>();
   const normCat = (c: string) => {
@@ -22780,10 +22759,11 @@ function buildFreeTierRiskPage(): string {
     .sort((a, b) => b[1] - a[1]);
 
   const faqs = [
-    { q: "How often is the Free Tier Risk Index updated?", a: "We update risk scores whenever a new pricing change is tracked. Our dataset currently includes " + changesInForce.length + " changes across " + offers.length.toLocaleString() + " developer tools, and we add new changes within 48 hours of announcement." },
-    { q: "Which free tiers are safest to build on in 2026?", a: "Cloudflare, GitHub, Grafana Cloud, AWS Always Free, and Google Cloud Always Free are our lowest-risk picks. They share three traits: backed by profitable companies, the free tier is a strategic acquisition funnel, and strong competitive pressure prevents removal." },
+    { q: "How often is the Free Tier Risk Index updated?", a: "The grades are editorial and do not move on their own. " + gradingDates + ", and every row on the page carries the date its own grade was set. What is recomputed on every request is the record beneath them — each vendor's tracked changes since the day it was graded, and the scorecard showing how each band has fared. Our change log currently holds " + changesInForce.length + " changes in force across " + offers.length.toLocaleString() + " developer tools, and we add new changes within 48 hours of announcement." },
+    { q: "Which free tiers are safest to build on in 2026?", a: "Cloudflare, GitHub, Grafana Cloud, AWS Always Free, and Google Cloud Always Free are our lowest-risk picks, graded " + safestPicksGraded + ". They share three traits: backed by profitable companies, the free tier is a strategic acquisition funnel, and strong competitive pressure prevents removal. Section 6 of this page publishes what has happened to each band since." },
     { q: "What are the warning signs that a free tier is about to be removed?", a: "Key signals: (1) acquisition or ownership change (HashiCorp/IBM, Neon/Databricks), (2) license change (MinIO AGPL to proprietary), (3) credit-based pricing transition (Vercel, Netlify), (4) two or more negative changes within 6 months, and (5) 'sustaining mode' language in announcements." },
-    { q: "How do you calculate risk scores?", a: "We weight four factors: pricing history (40%) — has the vendor changed before and how recently; financial signals (25%) — profitable vs VC-subsidized, recent acquisitions; competitive pressure (20%) — intense competition keeps free tiers alive; free tier strategic value (15%) — is the free tier a funnel or a cost center." },
+    { q: "How do you calculate risk scores?", a: "We weight four factors: pricing history (40%) — has the vendor changed before and how recently; financial signals (25%) — profitable vs VC-subsidized, recent acquisitions; competitive pressure (20%) — intense competition keeps free tiers alive; free tier strategic value (15%) — is the free tier a funnel or a cost center. " + gradedWithNoRecordAtAll.length + " of the " + riskEntries.length + " graded vendors have no record in our change log at all, so pricing history supplied nothing for them and their grade rests on the other three factors: " + gradedWithNoRecordAtAll.map(e => e.vendor).join(", ") + "." },
+    { q: "How accurate have the risk grades been?", a: gradingDates + ", and scored against every change tracked since: " + bandScores.map(b => riskLabels[b.grade].toLowerCase() + " " + b.vendorsWithANegative + " of " + b.vendors + " (" + b.rate + "%)").join(", ") + ". A vendor counts if our change log holds a record in force since its grading date that removed a free tier, cut limits, added a restriction, killed an open-source edition, or deprecated the graded product itself. Vendors with nothing tracked stay in the denominator rather than being dropped." },
     { q: "What should I do if a tool I depend on is rated high risk?", a: "Start planning your migration now. Use abstractions (ORMs, S3-compatible APIs, OpenTelemetry) to minimize switching cost. Identify 2-3 alternatives and test them in a staging environment. Subscribe to our pricing change feed at /feed.xml for early warning." },
     { q: "Are there any categories where free tiers are expanding?", a: "Yes — AI coding tools (GitHub Copilot Free, Anthropic increases, Windsurf launch) and cloud infrastructure (Cloudflare Queues, Workers expansion, AWS restructuring). Competition for developer mindshare drives expansion. See the Counter-Trends section for details." },
   ];
@@ -22887,7 +22867,7 @@ ${mcpCtaCss()}
   ${buildGlobalNav("changes")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/alternatives">Guides</a> &rsaquo; Free Tier Risk Index</div>
   <h1>Free Tier Risk Index</h1>
-  <p class="pub-date">Published ${pubDate} &middot; Based on ${changesInForce.length} tracked pricing changes across ${offers.length.toLocaleString()} developer tools &middot; ${pageDataProvenance("/free-tier-risk", offers.length)}</p>
+  <p class="pub-date">Published ${pubDate} &middot; ${gradingDates} &middot; Scored against ${changesInForce.length} tracked pricing changes across ${offers.length.toLocaleString()} developer tools &middot; ${pageDataProvenance("/free-tier-risk", offers.length)}</p>
 
   <div class="summary-stats">
     <div class="stat-card"><div class="stat-number" style="color:#3fb950">${lowRisk.length}</div><div class="stat-label">Low Risk (Safe)</div></div>
@@ -22900,6 +22880,7 @@ ${mcpCtaCss()}
     <p><strong>The question developers should ask isn't "what's free?" — it's "what will still be free in a year?"</strong></p>
     <p>We track ${changesInForce.length} pricing changes across the developer tool ecosystem. The data shows a clear pattern: <strong>${negativeChanges.length} negative changes</strong> (free tier removals, limit reductions, restrictions) vs <strong>${positiveChanges.length} positive changes</strong> (expansions, new tiers). Free tier erosion is real, but not universal — some vendors are actively expanding.</p>
     <p>This index scores ${riskEntries.length} major developer tools by free tier sustainability, using our deal change data, company financial signals, and competitive dynamics. <strong>Build on the greens, watch the yellows, plan exits from the reds.</strong></p>
+    <p>The grades are editorial. ${gradingDates}, and each row below carries the date its own grade was set. They do not move on their own, so <a href="#scorecard">section 6 scores them</a> against every change we have tracked since — band by band, with the vendors that took nothing left in the denominator.</p>
   </div>
 
   <div class="toc">
@@ -22908,8 +22889,9 @@ ${mcpCtaCss()}
       <li><a href="#methodology">How We Score Risk</a></li>
       <li><a href="#low">Low Risk — Safe to Build On</a> (${lowRisk.length} vendors)</li>
       <li><a href="#medium">Medium Risk — Use with Caution</a> (${medRisk.length} vendors)</li>
-      <li><a href="#high">High Risk — Plan Your Exit</a> (${highRisk.length} vendors)</li>
-      <li><a href="#dead">Already Changed</a> (${deadEntries.length} vendors)</li>
+      <li><a href="#high">High Risk — Plan Your Exit</a> (${highBand.stillFree.length} vendors)</li>
+      <li><a href="#dead">Already Changed</a> (${deadEntries.length + highBand.alreadyGone.length} vendors)</li>
+      <li><a href="#scorecard">Scorecard — How the Grades Have Held Up</a></li>
       <li><a href="#scoring">Full Scoring Table</a></li>
       <li><a href="#heatmap">Category Risk Heatmap</a></li>
       <li><a href="#patterns">Pattern Analysis</a></li>
@@ -22924,7 +22906,7 @@ ${mcpCtaCss()}
   <div style="display:grid;gap:.75rem;margin:1rem 0">
     <div class="diff-card" style="border-left-color:#3b82f6">
       <h3>Pricing History (40% weight)</h3>
-      <p class="diff-desc">Has this vendor changed pricing before? How recently? What direction? A vendor with 2+ negative changes in 12 months is flagged high risk. Vendors actively expanding get a boost. Data source: our ${changesInForce.length} tracked deal changes.</p>
+      <p class="diff-desc">Has this vendor changed pricing before? How recently? What direction? A vendor with 2+ negative changes in 12 months is flagged high risk. Vendors actively expanding get a boost. Data source: our ${changesInForce.length} tracked deal changes. ${gradedWithNoRecordAtAll.length} of the ${riskEntries.length} graded vendors have no record in that log at all — ${gradedWithNoRecordAtAll.map(e => escHtmlServer(e.vendor)).join(", ")} — so this factor supplied nothing for them and their grade rests on ${GRADE_FACTORS_WITHOUT_PRICING_HISTORY}.</p>
     </div>
     <div class="diff-card" style="border-left-color:#8b5cf6">
       <h3>Financial Signals (25% weight)</h3>
@@ -22945,7 +22927,7 @@ ${mcpCtaCss()}
   <div style="overflow-x:auto">
     <table class="risk-table">
       <thead>
-        <tr><th>Vendor</th><th>Risk</th><th>Category</th><th>Reasoning</th><th>Last Change</th></tr>
+        ${riskTableHead("Risk", "Reasoning", "Last Change")}
       </thead>
       <tbody>
         ${lowRisk.map(buildRiskRow).join("\n        ")}
@@ -22961,7 +22943,7 @@ ${mcpCtaCss()}
   <div style="overflow-x:auto">
     <table class="risk-table">
       <thead>
-        <tr><th>Vendor</th><th>Risk</th><th>Category</th><th>Reasoning</th><th>Last Change</th></tr>
+        ${riskTableHead("Risk", "Reasoning", "Last Change")}
       </thead>
       <tbody>
         ${medRisk.map(buildRiskRow).join("\n        ")}
@@ -22973,40 +22955,66 @@ ${mcpCtaCss()}
   </div>
 
   <h2 id="high">4. \u{1F534} High Risk — Plan Your Exit</h2>
-  <p class="section-intro">Active degradation or removal of free tiers. If you're building on these, migrate soon or budget for paid plans.</p>
+  <p class="section-intro">${highRisk.length} vendors carry the high grade. ${highBand.stillFree.length} of them still have a free tier in our catalogue, so an exit is something you can still plan — those are the ones below. The other ${highBand.alreadyGone.length} have nothing left to exit from and are listed under <a href="#dead">Already Changed</a> instead, because a heading that says <em>plan your exit</em> is an instruction, and an instruction to leave a free tier that is already gone is not one a reader can act on.</p>
   <div style="overflow-x:auto">
     <table class="risk-table">
       <thead>
-        <tr><th>Vendor</th><th>Risk</th><th>Category</th><th>Reasoning</th><th>Last Change</th></tr>
+        ${riskTableHead("Risk", "Reasoning", "Last Change")}
       </thead>
       <tbody>
-        ${highRisk.map(buildRiskRow).join("\n        ")}
+        ${highBand.stillFree.map(buildRiskRow).join("\n        ")}
       </tbody>
     </table>
   </div>
   <div class="context-box">
     <strong>Pattern:</strong> High-risk vendors share traits: multiple negative changes in a short period (OpenAI, X/Twitter), hostile stance toward free users (Spotify, Amazon SP-API), or entering "sustaining mode" with no investment (Heroku). When you see a vendor make 2+ negative changes in 6 months, the third is coming.
   </div>
+  <div class="context-box">
+    <strong>How this band is split:</strong> the grade is editorial and unchanged; only where it renders is derived. A vendor appears above if our catalogue holds a free tier for it today. ${highBand.alreadyGone.length === 0 ? "Every vendor in this band still has one." : highBand.alreadyGone.map(e => `${escHtmlServer(e.vendor)} (${escHtmlServer(FREE_TIER_STANDING_LABELS[freeTierStanding(e, offers)])})`).join(", ")}${highBand.alreadyGone.length === 0 ? "" : " did not, so they moved down a section."}
+  </div>
 
   <h2 id="dead">5. \u26AB Already Changed — Lessons Learned</h2>
-  <p class="section-intro">Free tiers that no longer exist. Each one is a case study in what to watch for.</p>
+  <p class="section-intro">Free tiers that no longer exist. Each one is a case study in what to watch for. The ${highBand.alreadyGone.length} vendors carrying the high grade with no free tier left in our catalogue are listed here too, under their own grade.</p>
   <div style="overflow-x:auto">
     <table class="risk-table">
       <thead>
-        <tr><th>Vendor</th><th>Status</th><th>Category</th><th>What Happened</th><th>Date</th></tr>
+        ${riskTableHead("Status", "What Happened", "Date")}
       </thead>
       <tbody>
-        ${deadEntries.map(buildRiskRow).join("\n        ")}
+        ${[...deadEntries, ...highBand.alreadyGone].map(buildRiskRow).join("\n        ")}
       </tbody>
     </table>
   </div>
 
-  <h2 id="scoring">6. Full Scoring Table</h2>
-  <p class="section-intro">All ${riskEntries.length} vendors ranked by risk level. Sort mentally by color: green is safe, yellow needs watching, red needs action, gray is gone.</p>
+  <h2 id="scorecard">6. Scorecard — How the Grades Have Held Up</h2>
+  <p class="section-intro">A grade nobody scores is not a prediction. Every band below is counted on request against the change log as it stands right now: for the vendors we put in each band, how many have since taken a change that removed a free tier, cut its limits, added a restriction, killed an open-source edition, or deprecated the graded product itself. Vendors that took nothing stay in the denominator.</p>
   <div style="overflow-x:auto">
     <table class="risk-table">
       <thead>
-        <tr><th>Vendor</th><th>Risk</th><th>Category</th><th>Reasoning</th><th>Last Change</th></tr>
+        <tr><th>Band</th><th>Vendors graded</th><th>Took a free tier negative</th><th>Rate</th><th>Negative records</th><th>Nothing tracked since</th></tr>
+      </thead>
+      <tbody>
+        ${bandScores.map(b => `<tr>
+          <td style="font-weight:600;color:${riskColors[b.grade]}">${riskEmoji[b.grade]} ${riskLabels[b.grade]}</td>
+          <td style="font-family:var(--mono)">${b.vendors}</td>
+          <td style="font-family:var(--mono)">${b.vendorsWithANegative}</td>
+          <td style="font-family:var(--mono);font-weight:600">${b.rate}%</td>
+          <td style="font-family:var(--mono)">${b.negativeRecords}</td>
+          <td style="font-family:var(--mono)">${b.vendorsWithNothingTracked}</td>
+        </tr>`).join("\n        ")}
+      </tbody>
+    </table>
+  </div>
+  <div class="context-box">
+    <strong>What the scorecard does not count.</strong> A record is left out if it has since been reversed or retracted, if it came from an index sweep rather than a vendor announcement, or if it deprecates a different product the same vendor sells — an AWS Lambda runtime reaching end of life is not the AWS free tier narrowing. Each vendor's row in the tables above names every record tracked since it was graded and says which of these applied. ${bandScores.reduce((sum, b) => sum + b.vendorsWithNothingTracked, 0)} of the ${riskEntries.length} graded vendors have had nothing tracked at all since grading, which is the honest limit on how much any of these rates can carry.
+  </div>
+
+  <h2 id="scoring">7. Full Scoring Table</h2>
+  <p class="section-intro">All ${riskEntries.length} vendors ranked by risk level, each with the date its grade was set. Sort mentally by color: green is safe, yellow needs watching, red needs action, gray is gone.</p>
+  <div style="overflow-x:auto">
+    <table class="risk-table">
+      <thead>
+        ${riskTableHead("Risk", "Reasoning", "Last Change")}
       </thead>
       <tbody>
         ${riskEntries.map(buildRiskRow).join("\n        ")}
@@ -23014,7 +23022,7 @@ ${mcpCtaCss()}
     </table>
   </div>
 
-  <h2 id="heatmap">7. Category Risk Heatmap</h2>
+  <h2 id="heatmap">8. Category Risk Heatmap</h2>
   <p class="section-intro">Which categories face the most pricing pressure? Darker red = higher percentage of negative changes. Based on ${changesInForce.length} tracked changes across all categories.</p>
   <div style="display:grid;gap:.5rem;margin:1rem 0 2rem">
     ${heatmapData.map(h => {
@@ -23041,7 +23049,7 @@ ${mcpCtaCss()}
     <strong>Reading the heatmap:</strong> Red bars = negative changes (removals, reductions, restrictions). Green bars = positive changes (expansions, new tiers). Gray = neutral restructurings. Categories with 80%+ negative changes (APIs, Testing, Monitoring) are under the most pricing pressure. AI/ML shows a split — some vendors contracting while new entrants expand.
   </div>
 
-  <h2 id="patterns">8. Pattern Analysis — What ${changesInForce.length} Changes Tell Us</h2>
+  <h2 id="patterns">9. Pattern Analysis — What ${changesInForce.length} Changes Tell Us</h2>
   <p class="section-intro">Statistical patterns from our pricing change dataset that predict future free tier removals.</p>
 
   <div class="diff-card" style="border-left-color:#f85149">
@@ -23070,7 +23078,7 @@ ${mcpCtaCss()}
     <p class="diff-desc">Not all changes are negative. ${positiveChanges.length} of ${changesInForce.length} changes were positive (new tiers or expansions). Safe signals: profitable company with developer funnel business model (Cloudflare, GitHub), open-source core with commercial layer (Grafana, Sentry), and competitive market forcing free tier maintenance (AI coding tools, cloud providers).</p>
   </div>
 
-  <h2 id="counter">9. Counter-Trends — Who's Expanding Free Tiers</h2>
+  <h2 id="counter">10. Counter-Trends — Who's Expanding Free Tiers</h2>
   <p class="section-intro">While most pricing changes are negative (${negativeChanges.length} of ${changesInForce.length}), a meaningful minority of vendors are actively expanding. Understanding why reveals what makes a free tier durable.</p>
 
   <div class="verdict-box" style="border-color:#3fb950;background:linear-gradient(135deg,rgba(63,185,80,0.1),rgba(59,130,246,0.1))">
@@ -23104,7 +23112,7 @@ ${mcpCtaCss()}
     </div>
   </div>
 
-  <h2 id="advice">10. How to Protect Your Stack</h2>
+  <h2 id="advice">11. How to Protect Your Stack</h2>
   <div class="verdict-box">
     <h3>Practical Risk Mitigation</h3>
     <div class="verdict-item">
@@ -23129,7 +23137,7 @@ ${mcpCtaCss()}
     </div>
   </div>
 
-  <h2 id="faq">11. Frequently Asked Questions</h2>
+  <h2 id="faq">12. Frequently Asked Questions</h2>
   ${faqs.map(f => '<div class="diff-card" style="border-left-color:var(--accent);cursor:pointer" onclick="const a=this.querySelector(\'.diff-desc\');a.style.display=a.style.display===\'none\'?\'block\':\'none\'">'
     + '<h3 style="margin:0;display:flex;justify-content:space-between;align-items:center">' + escHtmlServer(f.q) + ' <span style="color:var(--text-dim);font-size:.8rem">&#9660;</span></h3>'
     + '<p class="diff-desc" style="margin-top:.5rem">' + escHtmlServer(f.a) + '</p>'
@@ -23157,7 +23165,7 @@ ${mcpCtaCss()}
   </div>
 
   <div class="search-cta">
-    <p>This risk index covers ${riskEntries.length} major developer tools as of April 2026. For full free tier details on any vendor, search all ${offers.length.toLocaleString()} tracked developer tools at <a href="/search">/search</a>. Track changes in real-time via our <a href="/feed.xml">Atom feed</a> or <a href="/setup">MCP server</a>.</p>
+    <p>This risk index covers ${riskEntries.length} major developer tools, graded from ${gradedFrom} and scored above against everything tracked since. For full free tier details on any vendor, search all ${offers.length.toLocaleString()} tracked developer tools at <a href="/search">/search</a>. Track changes in real-time via our <a href="/feed.xml">Atom feed</a> or <a href="/setup">MCP server</a>.</p>
   </div>
 
   ${buildMoreAlternativesGuides(slug)}
@@ -45833,7 +45841,7 @@ ${globalNavCss()}
   <div style="margin:2rem 0 1rem;padding:1.25rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card)">
     <h3 style="margin:0 0 .75rem;font-family:var(--serif);font-size:1rem;color:var(--text)">More Guides</h3>
     <ul style="list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:.5rem">
-      <li><a href="/free-tier-risk">Free Tier Risk Index</a> <span style="color:var(--text-muted);font-size:.85rem">&mdash; sustainability risk scores for 38 vendors</span></li>
+      <li><a href="/free-tier-risk">Free Tier Risk Index</a> <span style="color:var(--text-muted);font-size:.85rem">&mdash; sustainability risk scores for ${riskEntries.length} vendors</span></li>
       <li><a href="/free-tier-tracker">Q1 2026 Free Tier Tracker</a> <span style="color:var(--text-muted);font-size:.85rem">&mdash; removals, expansions, and trends</span></li>
       <li><a href="/startup-credits">Startup Credits Directory</a> <span style="color:var(--text-muted);font-size:.85rem">&mdash; 19 programs, $1M+ combined credits</span></li>
       <li><a href="/free-startup-stack">Free Startup Stack</a> <span style="color:var(--text-muted);font-size:.85rem">&mdash; complete infrastructure on $0/month</span></li>
