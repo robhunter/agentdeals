@@ -49,11 +49,11 @@ import { registerAgent, authenticateRequest, validateVestauthUrl, hashApiKey, up
 import { attributeAuthenticatedRequest } from "./referral-attribution.js";
 import { recordConversion, confirmEligibleEntries, clawbackEntry, getAgentBalance, getAgentLedgerEntries, recordPayout, MAX_COMMISSION_AMOUNT, MINIMUM_PAYOUT_AMOUNT, getLeaderboard } from "./ledger.js";
 import { PLATFORM_CREDENTIAL_REQUIRED, authorizedAsPlatform } from "./platform-auth.js";
-import { createRegistrationLimiter, rateLimitHeaders } from "./rate-limit.js";
 import { validateX402Address, executeTransfer, generateCorrelationId, payoutsAvailable, PAYOUTS_UNAVAILABLE_REASON } from "./x402.js";
 import { submitReferralCode, getCodesByAgent, getCodeById, updateCode, revokeCode, calculateTrustTier, getDailySubmissionCount, getDailyLimit, getRankedCodesForVendor, calculateCodeScore } from "./referral-codes.js";
-import { getBestReferralCode, listAllReferralCodes } from "./platform-codes.js";
+import { getBestReferralCode, listAllReferralCodes, AGENT_SUBMISSION_RETIRED_REASON } from "./platform-codes.js";
 import { DOCUMENTED_GROUPS, HOMEPAGE_GROUPS, endpointHref, endpointPathHref, endpointsInGroups, exampleSubjects, readableRequestLines, type ApiEndpoint, type ExampleSubjects } from "./api-inventory.js";
+import { MCP_TOOLS, MCP_TOOL_COUNT, mcpToolNameList } from "./mcp-tool-inventory.js";
 import { ACCELERATOR_CREDIT_PROGRAM, ACCELERATOR_CREDIT_VENDOR, acceleratorCreditClause, programCeiling } from "./homepage-claims.js";
 import { REFERRAL_CONDITIONS_HEADING, allOurReferralLinks, heldReferralLinkForVendor, ourReferralLinkFor, platformCodeAsVendorReferral, referralLinkCountClause, referrerDisclosureSentence } from "./referral-surfaces.js";
 import type { VendorReferralAnswer } from "./referral-surfaces.js";
@@ -62,6 +62,7 @@ import { configureDurableBackend, hydrateDurableStores, persistDurableStores, id
 import { addFriend, removeFriend, getFriends, getFriendCodesForVendors } from "./friends.js";
 import { subscribe as watchlistSubscribe, getSubscription as getWatchlistSubscription, unsubscribe as watchlistUnsubscribe, listSubscriptions as listWatchlistSubscriptions } from "./watchlist.js";
 import { changeLogAnchorFor, changeLogVendorMap, toSlug, vendorSlugMap, resolveVendorSlug, namedVendorSlug } from "./vendor-slug.js";
+import { createRegistrationLimiter, rateLimitHeaders } from "./rate-limit.js";
 import { offerForSlug, vendorRates, cheapestRate, dearestRate, spanOfRates, formatRate, formatRateSpan, monthlyTokenCost, formatDollars, type ModelRate } from "./model-rates.js";
 import { STALE_FACT_PAGES_BASELINE, factsOutdatedBy, linkifyVerdictBlocks, newestChangeBySlug, overdueReport, pageCompiledClause, pageDataProvenance, pageDateModified, pageFreshness, pageFreshnessSentence, tabulatedSubjectSlots, tabulatedSubjects, utcToday, verdictsOutdatedBy } from "./page-reviews.js";
 import { faqPageJsonLd, type FaqItem } from "./faq-provenance.js";
@@ -460,7 +461,6 @@ const durableHistoryBody = JSON.stringify({
   })),
 });
 
-const registrationLimiter = createRegistrationLimiter();
 
 const offers = loadOffers();
 const categories = getCategories();
@@ -8035,7 +8035,7 @@ const INTEGRATION_GUIDES: IntegrationGuide[] = [
     hubDesc: "Connect AgentDeals to LangChain agents via langchain-mcp-adapters — Python code examples and multi-agent workflows",
     framework: "LangChain",
     intro: `<p><strong>LangChain</strong> is the most popular Python framework for building LLM-powered applications. With <code>langchain-mcp-adapters</code>, you can connect any MCP server — including AgentDeals — as a tool provider for your LangChain agents.</p>
-<p>AgentDeals provides <strong>4 MCP tools</strong> with data on <strong>${offers.length.toLocaleString()}+ developer deals</strong> across <strong>${categories.length} categories</strong>: <code>search_deals</code>, <code>compare_vendors</code>, <code>track_changes</code>, and <code>plan_stack</code>.</p>`,
+<p>AgentDeals provides <strong>${MCP_TOOL_COUNT} MCP tools</strong> with data on <strong>${offers.length.toLocaleString()}+ developer deals</strong> across <strong>${categories.length} categories</strong>: ${mcpToolNameList().replace(/`([a-z_]+)`/g, "<code>$1</code>")}.</p>`,
     setupCode: `pip install langchain-mcp-adapters langchain-openai langgraph
 
 from langchain_mcp_adapters.client import MultiServerMCPClient
@@ -8118,7 +8118,7 @@ print(result["messages"][-1].content)`,
     hubDesc: "Connect AgentDeals to CrewAI agents via native mcps configuration — multi-agent pricing research workflows",
     framework: "CrewAI",
     intro: `<p><strong>CrewAI</strong> is a popular framework for orchestrating multi-agent AI workflows. It has <strong>native MCP support</strong> via the <code>mcps</code> field on agents, making it easy to give your crew access to AgentDeals tools.</p>
-<p>AgentDeals provides <strong>4 MCP tools</strong> with data on <strong>${offers.length.toLocaleString()}+ developer deals</strong> across <strong>${categories.length} categories</strong>: <code>search_deals</code>, <code>compare_vendors</code>, <code>track_changes</code>, and <code>plan_stack</code>.</p>`,
+<p>AgentDeals provides <strong>${MCP_TOOL_COUNT} MCP tools</strong> with data on <strong>${offers.length.toLocaleString()}+ developer deals</strong> across <strong>${categories.length} categories</strong>: ${mcpToolNameList().replace(/`([a-z_]+)`/g, "<code>$1</code>")}.</p>`,
     setupCode: `pip install crewai
 
 from crewai import Agent, Task, Crew
@@ -8233,7 +8233,7 @@ print(result)`,
     hubDesc: "Connect AgentDeals to n8n via MCP Server Trigger node — no-code pricing monitoring and vendor comparison workflows",
     framework: "n8n",
     intro: `<p><strong>n8n</strong> is a popular open-source workflow automation platform. With its <strong>MCP Server Trigger</strong> node, you can connect AgentDeals tools to n8n workflows — combining pricing intelligence with 400+ other integrations (Slack, email, databases, CRMs).</p>
-<p>AgentDeals provides <strong>4 MCP tools</strong> with data on <strong>${offers.length.toLocaleString()}+ developer deals</strong> across <strong>${categories.length} categories</strong>: <code>search_deals</code>, <code>compare_vendors</code>, <code>track_changes</code>, and <code>plan_stack</code>.</p>`,
+<p>AgentDeals provides <strong>${MCP_TOOL_COUNT} MCP tools</strong> with data on <strong>${offers.length.toLocaleString()}+ developer deals</strong> across <strong>${categories.length} categories</strong>: ${mcpToolNameList().replace(/`([a-z_]+)`/g, "<code>$1</code>")}.</p>`,
     setupCode: `1. Open your n8n instance and create a new workflow
 2. Add an "MCP Server Trigger" node
 3. In the node settings, configure the MCP server:
@@ -8316,7 +8316,7 @@ Email node:
     hubDesc: "Connect AgentDeals to Vercel AI SDK via experimental_createMCPClient() — React/Next.js code examples",
     framework: "Vercel AI SDK",
     intro: `<p>The <strong>Vercel AI SDK</strong> is the leading JavaScript/TypeScript framework for building AI-powered applications, especially in the React and Next.js ecosystem. It supports MCP via <code>experimental_createMCPClient()</code>, allowing you to use AgentDeals tools in your AI applications.</p>
-<p>AgentDeals provides <strong>4 MCP tools</strong> with data on <strong>${offers.length.toLocaleString()}+ developer deals</strong> across <strong>${categories.length} categories</strong>: <code>search_deals</code>, <code>compare_vendors</code>, <code>track_changes</code>, and <code>plan_stack</code>.</p>`,
+<p>AgentDeals provides <strong>${MCP_TOOL_COUNT} MCP tools</strong> with data on <strong>${offers.length.toLocaleString()}+ developer deals</strong> across <strong>${categories.length} categories</strong>: ${mcpToolNameList().replace(/`([a-z_]+)`/g, "<code>$1</code>")}.</p>`,
     setupCode: `npm install ai @ai-sdk/openai
 
 import { experimental_createMCPClient as createMCPClient } from "ai";
@@ -8546,12 +8546,9 @@ function buildIntegrationGuidePage(slug: string): string | null {
     '  </div>\n' +
     '\n  <h2>Example Workflows</h2>\n  ' + workflowsHtml + '\n' +
     '\n  <h2>Available Tools</h2>\n' +
-    '  <p>AgentDeals exposes 4 MCP tools. Your ' + escHtmlServer(guide.framework) + ' agent can call any of them:</p>\n' +
+    '  <p>AgentDeals exposes ' + MCP_TOOL_COUNT + ' MCP tools. Your ' + escHtmlServer(guide.framework) + ' agent can call any of them:</p>\n' +
     '  <div class="tools-ref">\n' +
-    '    <div class="tool-card"><code>search_deals</code><p>Search ' + offers.length.toLocaleString() + '+ deals by keyword, category, or vendor</p></div>\n' +
-    '    <div class="tool-card"><code>compare_vendors</code><p>Side-by-side comparison of free tiers, limits, and risk</p></div>\n' +
-    '    <div class="tool-card"><code>track_changes</code><p>Track pricing changes, removals, and new deals</p></div>\n' +
-    '    <div class="tool-card"><code>plan_stack</code><p>Stack recommendations with cost projections at scale</p></div>\n' +
+    MCP_TOOLS.map(function(t){return '    <div class="tool-card"><code>' + t.name + '</code><p>' + escHtmlServer(t.card) + '</p></div>\n'}).join('') +
     '  </div>\n' +
     '  <p style="font-size:.85rem">Full tool documentation: <a href="/api/docs" style="color:var(--accent)">/api/docs</a> &middot; <a href="/setup" style="color:var(--accent)">Setup guide for more clients</a></p>\n' +
     '\n  <h2>Related Guides</h2>\n' +
@@ -46409,7 +46406,7 @@ ${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" hre
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; Setup</div>
 
   <h1>Setup Guide</h1>
-  <p class="page-sub">Add AgentDeals to your AI coding assistant. 4 MCP tools for searching deals, comparing vendors, planning stacks, and tracking changes.</p>
+  <p class="page-sub">Add AgentDeals to your AI coding assistant. ${MCP_TOOL_COUNT} MCP tools for searching deals, comparing vendors, planning stacks, tracking changes, and looking up the referral links we hold.</p>
 
   <div class="one-click">
     <h3>&#x1F4E6; One-Click Install</h3>
@@ -49227,7 +49224,7 @@ function buildDeveloperHubPage(): string {
       "@context": "https://schema.org",
       "@type": "WebAPI",
       "name": "AgentDeals REST API",
-      "description": "Free REST API providing developer tool pricing data — " + offers.length + "+ deals across " + categories.length + " categories, plus a referral code marketplace. No authentication required for read endpoints.",
+      "description": "Free REST API providing developer tool pricing data — " + offers.length + "+ deals across " + categories.length + " categories. No authentication required.",
       "url": BASE_URL + "/developers",
       "documentation": BASE_URL + "/api/docs",
       "provider": { "@type": "Organization", "name": "AgentDeals", "url": BASE_URL },
@@ -49241,7 +49238,7 @@ function buildDeveloperHubPage(): string {
         {
           "@type": "ServiceChannel",
           "serviceUrl": BASE_URL + "/api/referral-codes",
-          "serviceType": "REST API — Referral Code Marketplace"
+          "serviceType": "REST API — Referral Codes We Hold"
         }
       ]
     }) + "</script>\n"
@@ -49402,8 +49399,8 @@ function buildDeveloperHubPage(): string {
     + "    <h3>Paging on <code>/api/changes</code></h3>\n"
     + "    <p><code>/api/changes</code> returns <strong>" + CHANGES_DEFAULT_LIMIT + " records by default</strong>. <code>limit</code> sets the page size, <code>offset</code> skips records, and both are echoed back on the response alongside <code>returned</code> &mdash; the count in this page &mdash; and <code>total</code>, the count matching your query before paging. There is no maximum: <code>?limit=1000</code> returns the whole window in one response. An invalid <code>limit</code> or a negative <code>offset</code> answers <code>400</code> rather than being ignored.</p>\n"
     + "\n"
-    + "    <h2 id=\"referral-marketplace\">Referral Marketplace</h2>\n"
-    + "    <p><strong>Platform codes</strong> (ours) take priority over <strong>agent-submitted codes</strong> (community) in every response. The <a href=\"/disclosure\">affiliate disclosure</a> lists the codes we hold; the endpoints below expose the same data to agents.</p>\n"
+    + "    <h2 id=\"referral-codes\">Referral Codes</h2>\n"
+    + "    <p>Every code these endpoints return is one we hold ourselves and earn a commission on, with the reader benefit and every restriction attached to it. We hold codes for a handful of the vendors we cover; the <a href=\"/disclosure\">affiliate disclosure</a> lists the same set. Agent-submitted codes are retired &mdash; <code>?source=agent</code> answers with an empty list and the reason, and <code>POST /api/referral-codes</code> answers <code>410</code>.</p>\n"
     + "    <div style=\"overflow-x:auto\">\n"
     + "    <table class=\"endpoint-table\">\n"
     + "      <thead><tr><th>Method</th><th>Endpoint</th><th>Description</th><th>Parameters</th></tr></thead>\n"
@@ -49417,9 +49414,7 @@ function buildDeveloperHubPage(): string {
     + "    <h3>List all active codes</h3>\n"
     + "    <div class=\"code-block\"><span class=\"lang-label\">bash</span><button class=\"copy-btn\" onclick=\"copyBlock(this)\">Copy</button>curl \"" + BASE_URL + "/api/referral-codes\"</div>\n"
     + "\n"
-    + "    <h3>Filter by source (platform-owned codes only)</h3>\n"
-    + "    <div class=\"code-block\"><span class=\"lang-label\">bash</span><button class=\"copy-btn\" onclick=\"copyBlock(this)\">Copy</button>curl \"" + BASE_URL + "/api/referral-codes?source=platform\"</div>\n"
-    + "\n"
+
     + "    <h3>Filter by vendor category</h3>\n"
     + "    <div class=\"code-block\"><span class=\"lang-label\">bash</span><button class=\"copy-btn\" onclick=\"copyBlock(this)\">Copy</button>curl \"" + BASE_URL + "/api/referral-codes?category=cloud-hosting\"</div>\n"
     + "\n"
@@ -49464,7 +49459,7 @@ function buildDeveloperHubPage(): string {
     + "    </div>\n"
     + "    <div class=\"use-case\">\n"
     + "      <h4>Referral-Aware Agents</h4>\n"
-    + "      <p>Agents that recommend developer tools can route users through active referral codes. Call <code>/api/referral-codes?source=platform</code> once at session start to prefetch all our codes, or rely on the inline <code>referral_code</code> field on every <code>/api/offers</code> result.</p>\n"
+    + "      <p>Agents that recommend developer tools can route users through active referral codes. Call <code>/api/referral-codes</code> once at session start to prefetch all our codes, or rely on the inline <code>referral_code</code> field on every <code>/api/offers</code> result.</p>\n"
     + "    </div>\n"
     + "    <div class=\"use-case\">\n"
     + "      <h4>AI Coding Tools Research</h4>\n"
@@ -49508,9 +49503,9 @@ function buildDeveloperHubPage(): string {
     + "\n"
     + "    <h2>Rate Limits</h2>\n"
     + "    <p>The read endpoints above have <strong>no rate limits</strong>. We trust developers to be reasonable.</p>\n"
-    + "    <p>Two write paths are limited. <code>POST /api/agents/register</code> allows " + registrationLimiter.limit + " registrations per hour per client and returns <code>X-RateLimit-Limit</code>, <code>X-RateLimit-Remaining</code> and <code>X-RateLimit-Reset</code> on every response. The attribution beacon at <code>" + SIGNAL_PATH + "</code> allows " + RATE_LIMIT_PER_MINUTE + " per minute &mdash; <a href=\"" + SIGNAL_DOC_PATH + "\">its own page</a> covers how that limit is keyed. Over either limit you get a <code>429</code> with <code>Retry-After</code>.</p>\n"
+    + "    <p>One write path is limited. The attribution beacon at <code>" + SIGNAL_PATH + "</code> allows " + RATE_LIMIT_PER_MINUTE + " per minute &mdash; <a href=\"" + SIGNAL_DOC_PATH + "\">its own page</a> covers how that limit is keyed. Over the limit you get a <code>429</code> with <code>Retry-After</code>.</p>\n"
     + "\n"
-    + "    " + buildMcpCta("Prefer AI-native access? AgentDeals is also an MCP server — 4 tools that work in Claude, Cursor, Cline, and any MCP-compatible client.") + "\n"
+    + "    " + buildMcpCta("Prefer AI-native access? AgentDeals is also an MCP server — " + MCP_TOOL_COUNT + " tools that work in Claude, Cursor, Cline, and any MCP-compatible client.") + "\n"
     + "\n"
     + "    <h2>Related Resources</h2>\n"
     + "    <p>\n"
@@ -51713,7 +51708,6 @@ function buildDisclosurePage(): string {
   const vendorsWithOwnProgram = new Set(offers.filter(o => o.referral_program?.available === true).map(o => toSlug(o.vendor)));
   for (const link of ourReferralLinks) vendorsWithOwnProgram.delete(toSlug(link.vendor));
   const countClause = referralLinkCountClause(ourReferralLinks.length);
-  const agentSubmittedCodes = listAllReferralCodes({ source: "agent-submitted" });
 
   return `<!DOCTYPE html>
 <html lang="en">
@@ -51785,16 +51779,7 @@ ${globalNavCss()}
       <li>We track ${offers.length.toLocaleString()} vendor offers &mdash; ${countClause}</li>
     </ul>
   </div>
-${agentSubmittedCodes.length > 0 ? `
-  <div class="section">
-    <h2>Agent-Submitted Referral Codes</h2>
-    <p>${agentSubmittedCodes.length === 1 ? "One referral code on AgentDeals was" : `${agentSubmittedCodes.length} referral codes on AgentDeals were`} submitted by community agents &mdash; autonomous software agents registered in our marketplace. ${agentSubmittedCodes.length === 1 ? "It is" : "They are"}:</p>
-    <ul>
-      <li>Ranked by performance (conversion rate) and trust tier</li>
-      <li>Subject to a trust system: new agents' codes are reviewed before activation; verified and trusted agents get auto-approved codes</li>
-      <li>Labeled with their source so you can see whether a code is curated by AgentDeals or submitted by a community agent</li>
-    </ul>
-  </div>` : ""}
+
   <div class="section">
     <h2>Current Referral Partners</h2>
     ${ourReferralLinks.length > 0 ? `<ul>${ourReferralLinks.map(l => `<li><a href="/vendor/${toSlug(l.vendor)}">${escHtmlServer(l.vendor)}</a>: ${escHtmlServer(l.refereeBenefit)}${l.termsUrl ? ` (<a href="${escHtmlServer(l.termsUrl)}" rel="noopener" target="_blank">program terms</a>)` : ""}${l.restrictions.length > 0 ? `<ul class="referral-conditions">${l.restrictions.map(r => `<li>${escHtmlServer(r)}</li>`).join("")}</ul>` : ""}</li>`).join("")}</ul>` : `<p>No referral partners at this time.</p>`}
@@ -52790,7 +52775,7 @@ ${globalNavCss()}
   <div class="stats-bar">
     <div class="stat-item"><div class="stat-num">${stats.offers.toLocaleString()}</div><div class="stat-label">Deals</div></div>
     <div class="stat-item"><div class="stat-num stat-purple">${stats.categories}</div><div class="stat-label">Categories</div></div>
-    <div class="stat-item"><div class="stat-num stat-cyan">4</div><div class="stat-label">MCP Tools</div></div>
+    <div class="stat-item"><div class="stat-num stat-cyan">${MCP_TOOL_COUNT}</div><div class="stat-label">MCP Tools</div></div>
     <div class="stat-item"><div class="stat-num">${stats.dealChanges}</div><div class="stat-label">Changes Tracked</div></div>
   </div>
 
@@ -53073,12 +53058,9 @@ ${buildRecentChangesSection()}
     </div>
 
     <div class="connect-block" style="margin-top:1.5rem">
-      <h3 style="font-family:var(--serif);font-size:1rem;color:var(--text);margin-bottom:.75rem">4 MCP Tools</h3>
+      <h3 style="font-family:var(--serif);font-size:1rem;color:var(--text);margin-bottom:.75rem">${MCP_TOOL_COUNT} MCP Tools</h3>
       <div style="display:grid;gap:.5rem">
-        <div style="font-size:.85rem"><code style="font-family:var(--mono);color:var(--accent)">search_deals</code> <span style="color:var(--text-muted)">&mdash; Find free tiers, browse categories, get vendor details with alternatives. Filter by category, eligibility, or keyword.</span></div>
-        <div style="font-size:.85rem"><code style="font-family:var(--mono);color:var(--accent)">plan_stack</code> <span style="color:var(--text-muted)">&mdash; Get stack recommendations, cost estimates, or a full infrastructure audit for your project.</span></div>
-        <div style="font-size:.85rem"><code style="font-family:var(--mono);color:var(--accent)">compare_vendors</code> <span style="color:var(--text-muted)">&mdash; Compare 2 vendors side-by-side or check a single vendor's pricing risk.</span></div>
-        <div style="font-size:.85rem"><code style="font-family:var(--mono);color:var(--accent)">track_changes</code> <span style="color:var(--text-muted)">&mdash; Track pricing changes, upcoming expirations, and new deals. Weekly digest with no params.</span></div>
+        ${MCP_TOOLS.map(t => `<div style="font-size:.85rem"><code style="font-family:var(--mono);color:var(--accent)">${t.name}</code> <span style="color:var(--text-muted)">&mdash; ${escHtmlServer(t.card)}</span></div>`).join("\n        ")}
       </div>
     </div>
 
@@ -53324,6 +53306,8 @@ function extractClientInfo(body: unknown): ClientInfo | undefined {
   }
   return undefined;
 }
+
+const registrationLimiter = createRegistrationLimiter();
 
 const canonicalHost = (() => {
   try { return new URL(BASE_URL).hostname; } catch { return undefined; }
@@ -54034,24 +54018,10 @@ const httpServer = createHttpServer(async (req, res) => {
     const results = searchOffers(sanitizedQ || undefined, category, eligibilityType, sort, validStability, validPaymentProtocol);
     const total = results.length;
     const paged = enrichOffers(results.slice(offset, offset + limit));
-    const offersWithCodes = paged.map(offer => {
-      const agentCodes = getRankedCodesForVendor(offer.vendor);
-      const enriched: typeof offer & { referral_code: ReturnType<typeof getBestReferralCode>; agent_referral_codes?: unknown[] } = {
-        ...offer,
-        referral_code: getBestReferralCode(offer.vendor),
-      };
-      if (agentCodes.length > 0) {
-        enriched.agent_referral_codes = agentCodes.map(c => ({
-          code: c.code,
-          referral_url: c.referral_url,
-          description: c.description,
-          source: c.source,
-          submitted_by: c.submitted_by,
-          score: Math.round(calculateCodeScore(c) * 1000) / 1000,
-        }));
-      }
-      return enriched;
-    });
+    const offersWithCodes = paged.map(offer => ({
+      ...offer,
+      referral_code: getBestReferralCode(offer.vendor),
+    }));
     const offersFiltered = Boolean(category || eligibilityType || validStability || validPaymentProtocol);
     recordSearchQuery(q, total, {
       category,
@@ -54639,12 +54609,9 @@ AgentDeals helps developers find free tiers, startup credits, and deals on devel
 Recommendations are not for sale. Every ranked surface resolves through one module in which offers start at zero and can only be demoted, on a specific recorded fact with a date. There is no signal a vendor can acquire, lobby for or buy. Because almost nothing separates one healthy free tier from another, large ties are the normal case — ${uniqueTopClause(summariseBestOfTies())} — and tied offers are ordered by a permutation seeded on the UTC date and the query key alone. Every ranked response publishes that seed so you can recompute the order yourself. We do NOT model technical fit between a product and a role; apply that yourself. Full method: ${BASE_URL}${CRITERIA_PATH}
 
 ${signalLlmsSection(BASE_URL)}
-## MCP Tools (4)
+## MCP Tools (${MCP_TOOL_COUNT})
 
-- **search_deals**: Find free tiers, startup credits, and developer deals. Search by keyword, category, vendor name, or eligibility type. Returns verified deal details with specific limits.
-- **plan_stack**: Plan a technology stack with cost-optimized choices. Per role, returns the set of free-tier offers whose terms we can stand behind today — not a single pick — with the recorded facts behind any demotion. Does not model technical fit; the caller applies that. Also estimates costs at scale and audits existing stacks for risk.
-- **compare_vendors**: Compare developer tools side by side — free tier limits, pricing tiers, risk levels, and recent pricing changes.
-- **track_changes**: Track pricing changes across developer tools — free tier removals, limit reductions, new free tiers, and upcoming expirations.
+${MCP_TOOLS.map(t => `- **${t.name}**: ${t.brief}`).join("\n")}
 
 ## Prompt Templates (6)
 
@@ -56240,6 +56207,15 @@ ${catList}
       return;
     }
 
+    if (sourceFilter === "agent") {
+      recordApiHit("/api/referral-codes");
+      recordReferralListingCall("agent");
+      logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "GET /api/referral-codes", params: { source: "agent" }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 0 });
+      res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+      res.end(JSON.stringify(citedUndated({ codes: [], total: 0, withheld_reason: AGENT_SUBMISSION_RETIRED_REASON }, REFERRAL_CODE_LISTING_PAGE)));
+      return;
+    }
+
     const categorySlug = url.searchParams.get("category");
     let categoryName: string | null = null;
     if (categorySlug) {
@@ -56252,7 +56228,7 @@ ${catList}
       categoryName = resolved;
     }
 
-    const listed = listAllReferralCodes({ source: sourceFilter, vendorToCategory: getVendorCategory });
+    const listed = listAllReferralCodes({ vendorToCategory: getVendorCategory });
     const filtered = categoryName ? listed.filter(c => c.category === categoryName) : listed;
 
     recordApiHit("/api/referral-codes");
@@ -56264,67 +56240,10 @@ ${catList}
     res.end(JSON.stringify(citedUndated({ codes: filtered, total: filtered.length }, codeListingPage)));
 
   } else if (url.pathname === "/api/referral-codes" && req.method === "POST") {
-    const agent = await authenticateRequest(req as any);
-    if (!agent) {
-      res.writeHead(401, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
-      res.end(JSON.stringify({ error: "Authentication required. Include Authorization: Bearer <api-key> header." }));
-      return;
-    }
-
-    let body = "";
-    for await (const chunk of req) {
-      body += chunk;
-    }
-    let parsed: any;
-    try {
-      parsed = JSON.parse(body);
-    } catch {
-      res.writeHead(400, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
-      res.end(JSON.stringify({ error: "Invalid JSON body" }));
-      return;
-    }
-
-    if (!parsed.vendor || typeof parsed.vendor !== "string") {
-      res.writeHead(400, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
-      res.end(JSON.stringify({ error: "vendor is required and must be a string" }));
-      return;
-    }
-    if (!parsed.code || typeof parsed.code !== "string") {
-      res.writeHead(400, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
-      res.end(JSON.stringify({ error: "code is required and must be a string" }));
-      return;
-    }
-    if (!parsed.referral_url || typeof parsed.referral_url !== "string") {
-      res.writeHead(400, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
-      res.end(JSON.stringify({ error: "referral_url is required and must be a string" }));
-      return;
-    }
-
-    try {
-      const ledgerEntries = getAgentLedgerEntries(agent.id);
-      const trustTier = calculateTrustTier(agent.id, ledgerEntries);
-
-      const code = submitReferralCode({
-        vendor: parsed.vendor,
-        code: parsed.code,
-        referral_url: parsed.referral_url,
-        description: parsed.description ?? "",
-        commission_rate: parsed.commission_rate,
-        expiry: parsed.expiry,
-        agent_id: agent.id,
-        trust_tier: trustTier,
-      });
-
-      recordApiHit("/api/referral-codes");
-      logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "POST /api/referral-codes", params: { vendor: parsed.vendor, status: code.status }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
-      if (!(await identityWritePersisted(res))) return;
-      res.writeHead(201, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
-      res.end(JSON.stringify(code));
-    } catch (err: any) {
-      const status = err.message.includes("limit reached") ? 429 : 400;
-      res.writeHead(status, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
-      res.end(JSON.stringify({ error: err.message }));
-    }
+    recordApiHit("/api/referral-codes");
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "POST /api/referral-codes", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 0 });
+    res.writeHead(410, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+    res.end(JSON.stringify({ error: AGENT_SUBMISSION_RETIRED_REASON }));
 
   } else if (url.pathname === "/api/referral-codes/mine" && isGetOrHead) {
     const agent = await authenticateRequest(req as any);

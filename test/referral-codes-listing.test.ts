@@ -66,25 +66,12 @@ describe("listAllReferralCodes() helper", () => {
     resetPlatformCodesCache();
   });
 
-  it("returns both platform and agent-submitted active codes when no source filter", () => {
+  it("returns only the codes we hold, with an active submitted code in the store", () => {
     const codes = listAllReferralCodes();
-    const platform = codes.filter((c: any) => c.source === "platform");
-    const agent = codes.filter((c: any) => c.source === "agent-submitted");
-    assert.ok(platform.length >= 1, "should include platform codes (Railway)");
-    assert.ok(agent.some((c: any) => c.code === "SUPATEST"), "should include active agent-submitted code");
-    assert.ok(!codes.some((c: any) => c.code === "VERCELPENDING"), "pending codes must not appear in listing");
-  });
-
-  it("source=platform filter returns only platform codes", () => {
-    const codes = listAllReferralCodes({ source: "platform" });
-    assert.ok(codes.length >= 1);
-    assert.ok(codes.every((c: any) => c.source === "platform"));
-  });
-
-  it("source=agent filter returns only agent-submitted codes", () => {
-    const codes = listAllReferralCodes({ source: "agent" });
-    assert.ok(codes.every((c: any) => c.source === "agent-submitted"));
-    assert.ok(codes.some((c: any) => c.code === "SUPATEST"));
+    assert.ok(codes.length >= 1, "should include platform codes (Railway)");
+    assert.ok(codes.every((c: any) => c.source === "platform"), "no served code may come from a submission");
+    assert.ok(!codes.some((c: any) => c.code === "SUPATEST"), "the active submitted code must not be listed");
+    assert.ok(!codes.some((c: any) => c.code === "VERCELPENDING"), "nor the pending one");
   });
 
   it("resolves category via vendorToCategory callback", () => {
@@ -230,22 +217,24 @@ describe("/developers page", () => {
     serverProc?.kill();
   });
 
-  it("includes the Referral Marketplace section with the three endpoints", async () => {
+  it("documents the referral endpoints we still serve, and offers no submission", async () => {
     const res = await fetch(`http://localhost:${serverPort}/developers`);
     assert.strictEqual(res.status, 200);
     const html = await res.text();
-    assert.ok(html.includes("Referral Marketplace"), "missing Referral Marketplace heading");
+    assert.ok(html.includes("Referral Codes"), "missing Referral Codes heading");
     assert.ok(html.includes("/api/referral-codes"), "missing /api/referral-codes endpoint");
     assert.ok(html.includes("/api/referral-codes/:vendor") || html.includes("/api/referral-codes/railway"), "missing vendor endpoint");
-    assert.ok(html.includes("source=platform"), "missing source filter example");
     assert.ok(html.includes("category=cloud-hosting"), "missing category filter example");
+    assert.ok(!html.includes("Referral Marketplace"), "the retired marketplace is still described");
+    assert.ok(!html.includes("agent-submitted codes"), "the retired submission path is still described");
   });
 
-  it("WebAPI JSON-LD advertises the referral-codes service URL", async () => {
+  it("WebAPI JSON-LD advertises the referral-codes service URL as ours, not a marketplace", async () => {
     const res = await fetch(`http://localhost:${serverPort}/developers`);
     const html = await res.text();
     assert.ok(html.includes("/api/referral-codes"), "JSON-LD must reference /api/referral-codes");
-    assert.ok(html.includes("Referral Code Marketplace"), "JSON-LD should describe the marketplace channel");
+    assert.ok(html.includes("Referral Codes We Hold"), "JSON-LD should describe the channel we actually serve");
+    assert.ok(!html.includes("Referral Code Marketplace"), "JSON-LD still advertises the retired marketplace");
   });
 });
 

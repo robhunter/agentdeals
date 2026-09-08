@@ -853,10 +853,10 @@ export const openapiSpec = {
     },
     "/api/referral-codes": {
       get: {
-        summary: "List all active referral codes (marketplace)",
-        description: "Returns all active referral codes across vendors — both platform codes (ours) and agent-submitted marketplace codes. No authentication required. Filter by source or vendor category. Individual vendor lookup: GET /api/referral-codes/{vendor}.",
+        summary: "List every referral code we hold",
+        description: "Returns every active referral code AgentDeals holds, with the reader benefit and every restriction on each. No authentication required. Filter by vendor category. Individual vendor lookup: GET /api/referral-codes/{vendor}. Agent-submitted codes are retired: source=agent answers 200 with an empty list and the reason.",
         parameters: [
-          { name: "source", in: "query", description: "Filter by source: platform (our codes) or agent (agent-submitted marketplace codes). Omit to get both.", schema: { type: "string", enum: ["platform", "agent"] } },
+          { name: "source", in: "query", description: "platform returns the codes we hold, which is every code we serve. agent is retired and returns an empty list with the reason.", schema: { type: "string", enum: ["platform", "agent"] } },
           { name: "category", in: "query", description: "Filter by vendor category slug (e.g. cloud-hosting). See /api/categories for valid slugs.", schema: { type: "string" }, example: "cloud-hosting" }
         ],
         responses: {
@@ -891,7 +891,7 @@ export const openapiSpec = {
     "/api/referral-codes/{vendor}": {
       get: {
         summary: "Get best referral code for a vendor",
-        description: "Returns the best available referral code for a vendor. Platform codes (ours) take priority over agent-submitted marketplace codes. Same shape is inlined on /api/offers, /api/compare, /api/details/{vendor}, /api/newest, and MCP tool responses.",
+        description: "Returns the referral code AgentDeals holds for a vendor, or 404 when we hold none. Same shape is inlined on /api/offers, /api/compare, /api/details/{vendor}, /api/newest, and MCP tool responses.",
         parameters: [
           { name: "vendor", in: "path", required: true, description: "Vendor name (case-insensitive)", schema: { type: "string" }, example: "Railway" }
         ],
@@ -1024,7 +1024,7 @@ export const openapiSpec = {
           referral_url: { type: "string", format: "uri", description: "Full referral URL the referee should visit" },
           referee_benefit: { type: "string", description: "What the person using the code gets (e.g. '$20 in credits')" },
           restrictions: { type: "array", items: { type: "string" }, description: "Conditions the referee must meet before the benefit is theirs (e.g. 'A payment method must be linked'). Empty when the record records none. Publish these wherever you publish referee_benefit." },
-          source: { type: "string", enum: ["platform", "agent-submitted"], description: "platform = AgentDeals-owned code, agent-submitted = marketplace-submitted code" }
+          source: { type: "string", enum: ["platform"], description: "Always platform: a code AgentDeals holds and earns on. Agent-submitted codes are retired and none is served." }
         },
         required: ["vendor", "code", "referral_url", "referee_benefit", "restrictions", "source"]
       },

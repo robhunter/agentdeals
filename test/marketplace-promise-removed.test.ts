@@ -109,7 +109,7 @@ describe("no published page offers revenue for a submitted referral code", () =>
     const res = await fetch(`http://localhost:${serverPort}/developers`);
     assert.strictEqual(res.status, 200);
     const html = await res.text();
-    const start = html.indexOf('id="referral-marketplace"');
+    const start = html.indexOf('id="referral-codes"');
     assert.ok(start > 0, "the referral endpoints are still documented");
     const section = html.slice(start, html.indexOf("<h2", start + 1));
     assert.ok(section.includes("/api/referral-codes"), "the endpoint table is still there");

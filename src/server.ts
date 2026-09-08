@@ -7,15 +7,8 @@ import { oldestVerifiedDateForSlug, getCategories, getDealChanges, getPersonaliz
 import { gateDisclosureFor } from "./gate-disclosure.js";
 import { toSlug, vendorSlugMap, resolveVendorSlug } from "./vendor-slug.js";
 import { recordToolCall, logRequest, recordSearchQuery } from "./stats.js";
-import { registerAgent, validateVestauthUrl, getAgentByApiKeyHash, hashApiKey, updateAgentX402Address } from "./agents.js";
-import { attributeByApiKey } from "./referral-attribution.js";
-import { persistDurableStores } from "./durable-store.js";
-import { getAgentBalance, getAgentLedgerEntries, recordPayout, MINIMUM_PAYOUT_AMOUNT, getLeaderboard } from "./ledger.js";
-import { submitReferralCode, getCodesByAgent, calculateTrustTier, getDailySubmissionCount, getDailyLimit, getRankedCodesForVendor, calculateCodeScore } from "./referral-codes.js";
 import { getBestReferralCode } from "./platform-codes.js";
 import { platformCodeAsVendorReferral, type VendorReferralAnswer } from "./referral-surfaces.js";
-import { validateX402Address, executeTransfer, generateCorrelationId, payoutsAvailable, PAYOUTS_UNAVAILABLE_REASON } from "./x402.js";
-import { addFriend, removeFriend, getFriends, getFriendCodesForVendors } from "./friends.js";
 import { getStackRecommendation } from "./stacks.js";
 import { estimateCosts } from "./costs.js";
 import { getGuideList, getGuideBySlug } from "./guides.js";
@@ -23,6 +16,7 @@ import type { Offer, EnrichedOffer, DealChange } from "./types.js";
 import { substitutesFor } from "./product-role.js";
 import { registerMcpAppsResources, TOOL_UI_META } from "./mcp-apps.js";
 import { CATALOGUE_CATEGORY_COUNT, CATALOGUE_OFFER_FLOOR_LABEL, MCP_INSTRUCTIONS } from "./mcp-instructions.js";
+import { MCP_TOOLS, MCP_TOOL_COUNT } from "./mcp-tool-inventory.js";
 import { MCP_SIGNAL_FOOTER } from "./signal-copy.js";
 import { BASE_URL } from "./base-url.js";
 import { withProvenance } from "./provenance.js";
@@ -51,24 +45,6 @@ function toConciseOffer(offer: Offer | EnrichedOffer) {
 
 function toConciseDealChange(change: DealChange) {
   return { vendor: change.vendor, change_type: change.change_type, date: change.date, date_source: change.date_source, summary: change.summary };
-}
-
-interface ToolTextResult {
-  [key: string]: unknown;
-  isError: true;
-  content: { type: "text"; text: string }[];
-}
-
-async function unpersistedWriteResult(): Promise<ToolTextResult | null> {
-  const persisted = await persistDurableStores();
-  if (persisted.ok) return null;
-  return {
-    isError: true,
-    content: [{
-      type: "text" as const,
-      text: `Not saved: durable storage is unavailable, so this change was discarded and nothing was recorded. Retry later.${persisted.error ? ` (${persisted.error})` : ""}`,
-    }],
-  };
 }
 
 export function createServer(getSessionId?: () => string | undefined, getClientName?: () => string | undefined): McpServer {
@@ -204,23 +180,10 @@ export function createServer(getSessionId?: () => string | undefined, getClientN
           };
         }
 
-        const resultsWithCodes = results.map(offer => {
-          const agentCodes = getRankedCodesForVendor(offer.vendor);
-          const enriched: typeof offer & { referral_code: ReturnType<typeof getBestReferralCode>; agent_referral_codes?: unknown[] } = {
-            ...offer,
-            referral_code: getBestReferralCode(offer.vendor),
-          };
-          if (agentCodes.length > 0) {
-            enriched.agent_referral_codes = agentCodes.map(c => ({
-              code: c.code,
-              referral_url: c.referral_url,
-              description: c.description,
-              source: c.source,
-              score: Math.round(calculateCodeScore(c) * 1000) / 1000,
-            }));
-          }
-          return enriched;
-        });
+        const resultsWithCodes = results.map(offer => ({
+          ...offer,
+          referral_code: getBestReferralCode(offer.vendor),
+        }));
         const outputResults = response_format === "concise"
           ? resultsWithCodes.map(r => ({ ...toConciseOffer(r), referral_code: r.referral_code }))
           : resultsWithCodes;
@@ -967,85 +930,18 @@ Suggested monitoring cadence: run this check weekly to catch pricing changes ear
   );
 
   server.registerTool(
-    "register_agent",
-    {
-      description:
-        "Register as an agent with AgentDeals to enable referral attribution and commission tracking. Returns a one-time API key for authenticating future requests. Save the API key — it will not be shown again.",
-      annotations: {
-        readOnlyHint: false,
-        destructiveHint: false,
-      },
-      inputSchema: {
-        name: z.string().describe("A unique name for your agent"),
-        vestauth_public_key_url: z.string().optional().describe("Your .well-known vestauth public key URL for cryptographic identity (alternative to API key auth)"),
-      },
-    },
-    async ({ name, vestauth_public_key_url }) => {
-      try {
-        recordToolCall("register_agent", getClientName?.());
-
-        if (vestauth_public_key_url) {
-          const validation = await validateVestauthUrl(vestauth_public_key_url);
-          if (!validation.valid) {
-            return {
-              isError: true,
-              content: [{ type: "text" as const, text: `Invalid vestauth URL: ${validation.error}` }],
-            };
-          }
-        }
-
-        const result = registerAgent({
-          name,
-          api_key: true,
-          vestauth_public_key_url,
-        });
-
-        const response: any = {
-          id: result.agent.id,
-          name: result.agent.name,
-          status: result.agent.status,
-          registered_at: result.agent.registered_at,
-        };
-        if (result.api_key) {
-          response.api_key = result.api_key;
-          response.note = "Save this API key — it will not be shown again. Include it as Authorization: Bearer <key> in future requests.";
-        }
-        if (result.agent.vestauth_public_key_url) {
-          response.vestauth_public_key_url = result.agent.vestauth_public_key_url;
-        }
-
-        const unpersisted = await unpersistedWriteResult();
-        if (unpersisted) return unpersisted;
-
-        logRequest({ ts: new Date().toISOString(), type: "mcp", endpoint: "register_agent", params: { name }, result_count: 1, session_id: getSessionId?.() });
-
-        return {
-          content: [{ type: "text" as const, text: JSON.stringify(response, null, 2) }],
-        };
-      } catch (err: any) {
-        return {
-          isError: true,
-          content: [{ type: "text" as const, text: err.message }],
-        };
-      }
-    }
-  );
-
-  server.registerTool(
     "get_referral_code",
     {
-      description:
-        "Get the referral code and URL for a specific vendor. If you are an authenticated agent (registered via register_agent), the request is recorded against your agent. Requesting a code does not itself earn a share of any commission: a commission is credited to the agent that submitted the code it was reported against, because showing a code to a user is not an event we can observe. Unauthenticated calls still return the code. The response always states whether the request was recorded and, when it was not, why.",
+      description: MCP_TOOLS.find((t) => t.name === "get_referral_code")!.brief,
       annotations: {
         readOnlyHint: true,
         destructiveHint: false,
       },
       inputSchema: {
         vendor: z.string().describe("Vendor name to get the referral code for (e.g. 'Railway')"),
-        api_key: z.string().optional().describe("Your API key from register_agent, for attribution tracking. Optional — unauthenticated calls still return the code."),
       },
     },
-    async ({ vendor, api_key }) => {
+    async ({ vendor }) => {
       try {
         recordToolCall("get_referral_code", getClientName?.());
 
@@ -1057,9 +953,6 @@ Suggested monitoring cadence: run this check weekly to catch pricing changes ear
           };
         }
 
-        const outcome = await attributeByApiKey(api_key, referralData);
-        const attributed = outcome.status === "attributed";
-
         const response = {
           vendor: referralData.vendor,
           referral_code: referralData.referral.code ?? null,
@@ -1067,12 +960,9 @@ Suggested monitoring cadence: run this check weekly to catch pricing changes ear
           referee_value: referralData.referral.referee_value,
           restrictions: referralData.referral.restrictions ?? [],
           type: referralData.referral.type,
-          attributed,
-          attribution: outcome.status,
-          attribution_note: outcome.note,
         };
 
-        logRequest({ ts: new Date().toISOString(), type: "mcp", endpoint: "get_referral_code", params: { vendor, attributed }, result_count: 1, session_id: getSessionId?.() });
+        logRequest({ ts: new Date().toISOString(), type: "mcp", endpoint: "get_referral_code", params: { vendor }, result_count: 1, session_id: getSessionId?.() });
 
         return {
           content: [{ type: "text" as const, text: JSON.stringify(response, null, 2) }],
@@ -1086,388 +976,6 @@ Suggested monitoring cadence: run this check weekly to catch pricing changes ear
     }
   );
 
-  server.registerTool(
-    "check_balance",
-    {
-      description:
-        "Check your referral credit balance. Requires authentication via API key (from register_agent). Returns pending balance (in the clawback window), confirmed balance, total earned, and total paid out, plus whether payouts are currently available. Confirmed credit is not withdrawable while payouts_available is false.",
-      annotations: {
-        readOnlyHint: true,
-        destructiveHint: false,
-      },
-      inputSchema: {
-        api_key: z.string().describe("Your API key from register_agent."),
-      },
-    },
-    async ({ api_key }) => {
-      try {
-        recordToolCall("check_balance", getClientName?.());
-
-        const hash = hashApiKey(api_key);
-        const agent = getAgentByApiKeyHash(hash);
-        if (!agent) {
-          return {
-            isError: true,
-            content: [{ type: "text" as const, text: "Invalid API key. Register first with register_agent." }],
-          };
-        }
-
-        const balance = getAgentBalance(agent.id);
-        const summary = balance ?? {
-          agent_id: agent.id,
-          pending_balance: 0,
-          confirmed_balance: 0,
-          total_earned: 0,
-          total_paid_out: 0,
-          updated_at: null,
-        };
-
-        const payoutsEnabled = payoutsAvailable();
-        const balanceResponse = {
-          ...summary,
-          payouts_available: payoutsEnabled,
-          payout_note: payoutsEnabled
-            ? "Confirmed balance can be withdrawn with request_payout."
-            : PAYOUTS_UNAVAILABLE_REASON,
-        };
-
-        logRequest({ ts: new Date().toISOString(), type: "mcp", endpoint: "check_balance", params: { agent_id: agent.id }, result_count: 1, session_id: getSessionId?.() });
-
-        return {
-          content: [{ type: "text" as const, text: JSON.stringify(balanceResponse, null, 2) }],
-        };
-      } catch (err: any) {
-        return {
-          isError: true,
-          content: [{ type: "text" as const, text: err.message }],
-        };
-      }
-    }
-  );
-
-  server.registerTool(
-    "request_payout",
-    {
-      description:
-        "Request a payout of your confirmed referral credits. Payouts are not enabled yet — no transfer provider is configured, so this call reports that and moves no funds. When enabled it will require a registered payout address (set via PATCH /api/agents/me) and a confirmed balance of at least $10, and will withdraw the full balance.",
-      annotations: {
-        readOnlyHint: false,
-        destructiveHint: false,
-      },
-      inputSchema: {
-        api_key: z.string().describe("Your API key from register_agent."),
-      },
-    },
-    async ({ api_key }) => {
-      try {
-        recordToolCall("request_payout", getClientName?.());
-
-        if (!payoutsAvailable()) {
-          return {
-            isError: true,
-            content: [{ type: "text" as const, text: PAYOUTS_UNAVAILABLE_REASON }],
-          };
-        }
-
-        const hash = hashApiKey(api_key);
-        const agent = getAgentByApiKeyHash(hash);
-        if (!agent) {
-          return {
-            isError: true,
-            content: [{ type: "text" as const, text: "Invalid API key. Register first with register_agent." }],
-          };
-        }
-
-        if (!agent.x402_address) {
-          return {
-            isError: true,
-            content: [{ type: "text" as const, text: "No x402 address registered. Set your x402_address first via PATCH /api/agents/me with your Ethereum (0x) or Solana address." }],
-          };
-        }
-
-        const balance = getAgentBalance(agent.id);
-        const confirmedBalance = balance ? balance.confirmed_balance : 0;
-        if (confirmedBalance < MINIMUM_PAYOUT_AMOUNT) {
-          return {
-            isError: true,
-            content: [{ type: "text" as const, text: `Insufficient confirmed balance: $${confirmedBalance.toFixed(2)}. Minimum payout is $${MINIMUM_PAYOUT_AMOUNT}. Pending balance must pass the clawback window before it can be withdrawn.` }],
-          };
-        }
-
-        const correlationId = generateCorrelationId();
-        const transferResult = await executeTransfer({
-          to_address: agent.x402_address,
-          amount: confirmedBalance,
-          correlation_id: correlationId,
-        });
-
-        if (!transferResult.success) {
-          logRequest({ ts: new Date().toISOString(), type: "mcp", endpoint: "request_payout", params: { agent_id: agent.id, correlation_id: correlationId, status: "transfer_failed" }, result_count: 0, session_id: getSessionId?.() });
-          return {
-            isError: true,
-            content: [{ type: "text" as const, text: `x402 transfer failed: ${transferResult.error}. Balance unchanged. Correlation ID: ${correlationId}` }],
-          };
-        }
-
-        const entry = recordPayout({
-          agent_id: agent.id,
-          x402_address: agent.x402_address,
-          tx_hash: transferResult.tx_hash,
-          correlation_id: correlationId,
-          metadata: { chain: transferResult.chain, token: transferResult.token },
-        });
-
-        const unpersisted = await unpersistedWriteResult();
-        if (unpersisted) return unpersisted;
-
-        logRequest({ ts: new Date().toISOString(), type: "mcp", endpoint: "request_payout", params: { agent_id: agent.id, correlation_id: correlationId, amount: confirmedBalance, status: "success" }, result_count: 1, session_id: getSessionId?.() });
-
-        return {
-          content: [{ type: "text" as const, text: JSON.stringify({
-            success: true,
-            payout: {
-              ledger_entry_id: entry.id,
-              amount: confirmedBalance,
-              x402_address: agent.x402_address,
-              tx_hash: transferResult.tx_hash ?? null,
-              chain: transferResult.chain ?? null,
-              correlation_id: correlationId,
-            },
-          }, null, 2) }],
-        };
-      } catch (err: any) {
-        return {
-          isError: true,
-          content: [{ type: "text" as const, text: err.message }],
-        };
-      }
-    }
-  );
-
-  server.registerTool(
-    "submit_referral_code",
-    {
-      description:
-        "Submit your own referral code for a vendor in the AgentDeals index. Requires authentication via API key (from register_agent). Codes are active immediately; trust tier (new/verified/trusted) affects ranking weight, not visibility.",
-      annotations: {
-        readOnlyHint: false,
-        destructiveHint: false,
-      },
-      inputSchema: {
-        vendor: z.string().describe("Vendor name (must exist in the AgentDeals index)"),
-        code: z.string().max(100).describe("The referral code (max 100 chars)"),
-        referral_url: z.string().url().describe("The referral URL"),
-        description: z.string().optional().describe("Description of the referral offer"),
-        commission_rate: z.number().min(0).max(1).optional().describe("Commission rate as a decimal (e.g. 0.15 for 15%)"),
-        expiry: z.string().optional().describe("Expiry date in ISO format (optional)"),
-        api_key: z.string().describe("Your API key from register_agent."),
-      },
-    },
-    async ({ vendor, code, referral_url, description, commission_rate, expiry, api_key }) => {
-      try {
-        recordToolCall("submit_referral_code", getClientName?.());
-
-        const hash = hashApiKey(api_key);
-        const agent = getAgentByApiKeyHash(hash);
-        if (!agent) {
-          return {
-            isError: true,
-            content: [{ type: "text" as const, text: "Invalid API key. Register first with register_agent." }],
-          };
-        }
-
-        const ledgerEntries = getAgentLedgerEntries(agent.id);
-        const trustTier = calculateTrustTier(agent.id, ledgerEntries);
-
-        const submitted = submitReferralCode({
-          vendor,
-          code,
-          referral_url,
-          description: description ?? "",
-          commission_rate,
-          expiry,
-          agent_id: agent.id,
-          trust_tier: trustTier,
-        });
-
-        const unpersisted = await unpersistedWriteResult();
-        if (unpersisted) return unpersisted;
-
-        logRequest({ ts: new Date().toISOString(), type: "mcp", endpoint: "submit_referral_code", params: { vendor, status: submitted.status }, result_count: 1, session_id: getSessionId?.() });
-
-        return {
-          content: [{ type: "text" as const, text: JSON.stringify({
-            success: true,
-            code: submitted,
-            trust_tier: trustTier,
-            message: "Code submitted and active. It is now visible in search results.",
-          }, null, 2) }],
-        };
-      } catch (err: any) {
-        return {
-          isError: true,
-          content: [{ type: "text" as const, text: err.message }],
-        };
-      }
-    }
-  );
-
-  server.registerTool(
-    "my_referral_codes",
-    {
-      description:
-        "List your submitted referral codes with performance stats (impressions, clicks, conversions). Requires authentication via API key (from register_agent).",
-      annotations: {
-        readOnlyHint: true,
-        destructiveHint: false,
-      },
-      inputSchema: {
-        api_key: z.string().describe("Your API key from register_agent."),
-      },
-    },
-    async ({ api_key }) => {
-      try {
-        recordToolCall("my_referral_codes", getClientName?.());
-
-        const hash = hashApiKey(api_key);
-        const agent = getAgentByApiKeyHash(hash);
-        if (!agent) {
-          return {
-            isError: true,
-            content: [{ type: "text" as const, text: "Invalid API key. Register first with register_agent." }],
-          };
-        }
-
-        const codes = getCodesByAgent(agent.id);
-        const ledgerEntries = getAgentLedgerEntries(agent.id);
-        const trustTier = calculateTrustTier(agent.id, ledgerEntries);
-        const dailyCount = getDailySubmissionCount(agent.id);
-        const dailyLimit = getDailyLimit(trustTier);
-
-        logRequest({ ts: new Date().toISOString(), type: "mcp", endpoint: "my_referral_codes", params: { agent_id: agent.id, count: codes.length }, result_count: codes.length, session_id: getSessionId?.() });
-
-        return {
-          content: [{ type: "text" as const, text: JSON.stringify({
-            codes,
-            trust_tier: trustTier,
-            daily_submissions: dailyCount,
-            daily_limit: dailyLimit,
-            total_codes: codes.length,
-            active_codes: codes.filter(c => c.status === "active").length,
-            pending_codes: codes.filter(c => c.status === "pending").length,
-          }, null, 2) }],
-        };
-      } catch (err: any) {
-        return {
-          isError: true,
-          content: [{ type: "text" as const, text: err.message }],
-        };
-      }
-    }
-  );
-
-  server.registerTool(
-    "leaderboard",
-    {
-      description:
-        "Get the agent leaderboard showing top-performing agents ranked by total conversions. Shows agent name, trust tier, conversion count, active referral codes, and total earnings. Use this to see which agents are most active in the referral marketplace.",
-      annotations: {
-        readOnlyHint: true,
-        destructiveHint: false,
-      },
-      inputSchema: {
-        limit: z.number().min(1).max(50).optional().describe("Number of entries to return (default 10, max 50)"),
-        offset: z.number().min(0).optional().describe("Offset for pagination (default 0)"),
-      },
-    },
-    async ({ limit, offset }) => {
-      try {
-        recordToolCall("leaderboard", getClientName?.());
-        const result = getLeaderboard({ limit, offset });
-
-        logRequest({ ts: new Date().toISOString(), type: "mcp", endpoint: "leaderboard", params: { limit, offset }, result_count: result.entries.length, session_id: getSessionId?.() });
-
-        return {
-          content: [{ type: "text" as const, text: JSON.stringify({
-            leaderboard: result.entries,
-            total: result.total,
-            limit: limit ?? 10,
-            offset: offset ?? 0,
-          }, null, 2) }],
-        };
-      } catch (err: any) {
-        return {
-          isError: true,
-          content: [{ type: "text" as const, text: err.message }],
-        };
-      }
-    }
-  );
-
-  server.registerTool(
-    "manage_friends",
-    {
-      description:
-        "Manage your agent friendships on AgentDeals. Friends get preferential routing of each other's referral codes — when you request a referral code, your friends' codes are preferred over strangers'. Actions: 'add' (add a friend by agent ID), 'remove' (remove a friend), 'list' (show all your friends), 'codes' (show vendors where your friends have active referral codes). Requires your API key for authentication.",
-      annotations: {
-        readOnlyHint: false,
-        destructiveHint: false,
-      },
-      inputSchema: {
-        api_key: z.string().describe("Your agent API key for authentication"),
-        action: z.enum(["add", "remove", "list", "codes"]).describe("Action to perform: add, remove, list, or codes"),
-        agent_id: z.string().optional().describe("The agent ID of the friend to add or remove (required for add/remove actions)"),
-      },
-    },
-    async ({ api_key, action, agent_id }) => {
-      try {
-        recordToolCall("manage_friends", getClientName?.());
-        const hash = hashApiKey(api_key);
-        const agent = getAgentByApiKeyHash(hash);
-        if (!agent) {
-          return { isError: true, content: [{ type: "text" as const, text: "Invalid API key. Register first with register_agent." }] };
-        }
-
-        let result: unknown;
-
-        if (action === "add") {
-          if (!agent_id) {
-            return { isError: true, content: [{ type: "text" as const, text: "agent_id is required for the add action." }] };
-          }
-          const friendship = addFriend(agent.id, agent_id);
-          result = { action: "added", friendship, message: `Added ${agent_id} as a friend. Their referral codes will now be preferred when you request codes.` };
-        } else if (action === "remove") {
-          if (!agent_id) {
-            return { isError: true, content: [{ type: "text" as const, text: "agent_id is required for the remove action." }] };
-          }
-          removeFriend(agent.id, agent_id);
-          result = { action: "removed", agent_id, message: `Removed ${agent_id} from your friends.` };
-        } else if (action === "list") {
-          const friends = getFriends(agent.id);
-          result = { action: "list", friends, total: friends.length };
-        } else {
-          const codes = getFriendCodesForVendors(agent.id);
-          result = { action: "codes", vendors: codes, total_vendors: codes.length };
-        }
-
-        if (action === "add" || action === "remove") {
-          const unpersisted = await unpersistedWriteResult();
-          if (unpersisted) return unpersisted;
-        }
-
-        logRequest({ ts: new Date().toISOString(), type: "mcp", endpoint: "manage_friends", params: { action, agent_id }, result_count: 1, session_id: getSessionId?.() });
-
-        return {
-          content: [{ type: "text" as const, text: JSON.stringify(result, null, 2) }],
-        };
-      } catch (err: any) {
-        return {
-          isError: true,
-          content: [{ type: "text" as const, text: err.message }],
-        };
-      }
-    }
-  );
 
   registerMcpAppsResources(server);
 
@@ -1486,7 +994,7 @@ export function getServerCard(baseUrl: string) {
       description: "MCP server aggregating 1,589+ free tiers, startup credits, and developer infrastructure deals",
       homepage: "https://agentdeals.dev",
     },
-    description: "Search and compare free tiers, startup credits, and pricing changes across 1,600+ developer tools. 4 intent-based MCP tools for infrastructure decisions, cost estimation, and vendor comparison.",
+    description: `Search and compare free tiers, startup credits, and pricing changes across ${CATALOGUE_OFFER_FLOOR_LABEL}+ developer tools. ${MCP_TOOL_COUNT} intent-based MCP tools for infrastructure decisions, cost estimation, and vendor comparison.`,
     iconUrl: `${baseUrl}/og-image.png`,
     documentationUrl: `${baseUrl}/setup`,
     transport: {
@@ -1577,6 +1085,21 @@ export function getServerCard(baseUrl: string) {
             lookahead_days: { type: "number", description: "Days to look ahead for expirations (default: 30)" },
             response_format: { type: "string", enum: ["concise", "detailed"], description: "Response detail level. 'concise': vendor, change_type, date, summary only. 'detailed': full response (default)." },
           },
+        },
+      },
+      {
+        name: "get_referral_code",
+        description: MCP_TOOLS.find((t) => t.name === "get_referral_code")!.brief,
+        annotations: {
+          readOnlyHint: true,
+          destructiveHint: false,
+        },
+        inputSchema: {
+          type: "object",
+          properties: {
+            vendor: { type: "string", description: "Vendor name to get the referral code for (e.g. 'Railway')" },
+          },
+          required: ["vendor"],
         },
       },
     ],

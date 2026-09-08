@@ -1,0 +1,17 @@
+{
+  "retired_on": "2026-09-08",
+  "reason": "The agent referral marketplace was retired. No commission was ever paid on a submitted code and no submitted code is served. These records are kept so the submissions are not lost with the runtime store that held them.",
+  "captured_from": "https://agentdeals.dev/api/referral-codes?source=agent",
+  "submissions": [
+    {
+      "vendor": "Supabase",
+      "category": "Databases",
+      "code": "supabase-referral-2026",
+      "referral_url": "https://supabase.com/referrals/rhen-checkout-gate",
+      "referee_benefit": "Supabase referral code for rhen-checkout-gate",
+      "restrictions": [],
+      "source": "agent-submitted",
+      "url_status_on_capture": 404
+    }
+  ]
+}

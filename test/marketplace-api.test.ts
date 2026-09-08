@@ -332,64 +332,41 @@ describe("Marketplace API Endpoints", () => {
     assert.strictEqual(withAddress.status, 501, "registering an address must not imply a payout is possible");
   });
 
-  it("POST /api/referral-codes requires auth", async () => {
-    const res = await fetch(`http://localhost:${serverPort}/api/referral-codes`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ vendor: "Railway", code: "TEST", referral_url: "https://railway.app" }),
-    });
-    assert.strictEqual(res.status, 401);
+  it("POST /api/referral-codes is gone, whatever the caller sends", async () => {
+    const bodies = [
+      { vendor: "Railway", code: "TEST", referral_url: "https://railway.app" },
+      { code: "TEST", referral_url: "https://example.com" },
+      { vendor: "Railway", referral_url: "https://example.com" },
+      { vendor: "Railway", code: "TEST" },
+    ];
+    const headerSets = [
+      { "Content-Type": "application/json" },
+      { "Content-Type": "application/json", Authorization: `Bearer ${testApiKey}` },
+    ];
+    for (const headers of headerSets) {
+      for (const body of bodies) {
+        const res = await fetch(`http://localhost:${serverPort}/api/referral-codes`, {
+          method: "POST",
+          headers,
+          body: JSON.stringify(body),
+        });
+        assert.strictEqual(res.status, 410, `submitting ${JSON.stringify(body)} must answer 410`);
+        const parsed = await res.json();
+        assert.match(parsed.error, /retired/i, "the refusal states why the submission path is gone");
+      }
+    }
   });
 
-  it("POST /api/referral-codes creates a code", async () => {
-    const res = await fetch(`http://localhost:${serverPort}/api/referral-codes`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json", Authorization: `Bearer ${testApiKey}` },
-      body: JSON.stringify({
-        vendor: "Railway",
-        code: "APITEST-RAILWAY",
-        referral_url: "https://railway.app?ref=apitest",
-        description: "Test referral code",
-      }),
-    });
-    assert.strictEqual(res.status, 201);
-    const body = await res.json();
-    assert.ok(body.id.startsWith("code_"));
-    assert.strictEqual(body.vendor, "Railway");
-    assert.strictEqual(body.code, "APITEST-RAILWAY");
-  });
+  it("a submitted code cannot reach a served response", async () => {
+    const listed = await (await fetch(`http://localhost:${serverPort}/api/referral-codes`)).json();
+    for (const code of listed.codes) {
+      assert.strictEqual(code.source, "platform", `${code.vendor} is served with source ${code.source}`);
+    }
 
-  it("POST /api/referral-codes rejects missing vendor", async () => {
-    const res = await fetch(`http://localhost:${serverPort}/api/referral-codes`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json", Authorization: `Bearer ${testApiKey}` },
-      body: JSON.stringify({ code: "TEST", referral_url: "https://example.com" }),
-    });
-    assert.strictEqual(res.status, 400);
-    const body = await res.json();
-    assert.ok(body.error.includes("vendor"));
-  });
-
-  it("POST /api/referral-codes rejects missing code", async () => {
-    const res = await fetch(`http://localhost:${serverPort}/api/referral-codes`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json", Authorization: `Bearer ${testApiKey}` },
-      body: JSON.stringify({ vendor: "Railway", referral_url: "https://example.com" }),
-    });
-    assert.strictEqual(res.status, 400);
-    const body = await res.json();
-    assert.ok(body.error.includes("code"));
-  });
-
-  it("POST /api/referral-codes rejects missing referral_url", async () => {
-    const res = await fetch(`http://localhost:${serverPort}/api/referral-codes`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json", Authorization: `Bearer ${testApiKey}` },
-      body: JSON.stringify({ vendor: "Railway", code: "TEST" }),
-    });
-    assert.strictEqual(res.status, 400);
-    const body = await res.json();
-    assert.ok(body.error.includes("referral_url"));
+    const asAgent = await (await fetch(`http://localhost:${serverPort}/api/referral-codes?source=agent`)).json();
+    assert.deepStrictEqual(asAgent.codes, []);
+    assert.strictEqual(asAgent.total, 0);
+    assert.match(asAgent.withheld_reason, /retired/i, "an empty answer states why it is empty");
   });
 
   it("GET /api/referral-codes/mine requires auth", async () => {

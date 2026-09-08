@@ -4,7 +4,7 @@
   "display_name": "AgentDeals",
   "version": "0.3.1",
   "description": "Search 1,600+ developer tool deals, compare vendors, check pricing stability, and estimate costs. Free tiers, startup credits, and promotional offers across 67 categories.",
-  "long_description": "AgentDeals indexes real, verified pricing data from 1,600+ developer infrastructure vendors across 67 categories. Search deals by keyword, category, or eligibility. Compare vendors side-by-side, check pricing stability and risk, estimate infrastructure costs, get full stack recommendations, and monitor pricing changes — all from within Claude Desktop.\n\nData is fetched from a hosted API (no local data needed). Tools cover the full lifecycle: discovery, comparison, risk assessment, cost estimation, and ongoing monitoring.",
+  "long_description": "AgentDeals indexes real, verified pricing data from 1,600+ developer infrastructure vendors across 67 categories. Search deals by keyword, category, or eligibility. Compare vendors side-by-side, check pricing stability and risk, estimate infrastructure costs, get full stack recommendations, and monitor pricing changes \u2014 all from within Claude Desktop.\n\nData is fetched from a hosted API (no local data needed). Tools cover the full lifecycle: discovery, comparison, risk assessment, cost estimation, and ongoing monitoring.",
   "author": {
     "name": "Rob Hunter",
     "url": "https://github.com/robhunter"
@@ -31,11 +31,17 @@
     "entry_point": "dist/index.js",
     "mcp_config": {
       "command": "node",
-      "args": ["${__dirname}/dist/index.js"]
+      "args": [
+        "${__dirname}/dist/index.js"
+      ]
     }
   },
   "compatibility": {
-    "platforms": ["darwin", "win32", "linux"],
+    "platforms": [
+      "darwin",
+      "win32",
+      "linux"
+    ],
     "runtimes": {
       "node": ">=20.0.0"
     }
@@ -43,7 +49,7 @@
   "tools": [
     {
       "name": "search_deals",
-      "description": "Find free tiers, credits, and discounts for 1,600+ developer tools. Search by keyword, browse categories, or get full vendor details with alternatives."
+      "description": "Find free tiers, browse categories, get vendor details with alternatives. Filter by category, eligibility, or keyword."
     },
     {
       "name": "plan_stack",
@@ -51,11 +57,15 @@
     },
     {
       "name": "compare_vendors",
-      "description": "Compare 2 vendors side-by-side or check a single vendor's pricing risk. Returns free tier limits, risk levels, and alternatives."
+      "description": "Compare 2 vendors side-by-side or check a single vendor's pricing risk."
     },
     {
       "name": "track_changes",
-      "description": "Track developer tool pricing changes, upcoming expirations, and new deals. Weekly digest with no params."
+      "description": "Track pricing changes, upcoming expirations, and new deals. Weekly digest with no params."
+    },
+    {
+      "name": "get_referral_code",
+      "description": "Look up the referral link we hold for a vendor, with the conditions attached to it. We hold codes for a handful of vendors."
     }
   ],
   "prompts_generated": true

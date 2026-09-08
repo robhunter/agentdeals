@@ -51,9 +51,8 @@ export const API_ENDPOINTS: readonly ApiEndpoint[] = [
   { method: "GET", path: "/api/watchlist", desc: "List active watchlist subscriptions", params: "webhook_url", group: "product" },
   { method: "GET", path: "/api/watchlist/:id", desc: "Get subscription status", params: "", group: "product", request: "/api/watchlist/{watchlistId}" },
   { method: "DELETE", path: "/api/watchlist/:id", desc: "Unsubscribe from vendor watch", params: "", group: "product" },
-  { method: "GET", path: "/api/referral-codes", desc: "List all active referral codes (platform + marketplace)", params: "source (platform|agent), category", group: "referral" },
-  { method: "GET", path: "/api/referral-codes/:vendor", desc: "Get best referral code for a specific vendor", params: "", group: "referral", request: "/api/referral-codes/{codedVendor}" },
-  { method: "POST", path: "/api/referral-codes", desc: "Submit a marketplace referral code (agents only, auth required)", params: "vendor, code, referral_url (body) — Authorization: Bearer <api-key>", group: "referral" },
+  { method: "GET", path: "/api/referral-codes", desc: "List every referral code we hold, with the reader benefit and restrictions on each", params: "category", group: "referral" },
+  { method: "GET", path: "/api/referral-codes/:vendor", desc: "Get the referral code we hold for a specific vendor", params: "", group: "referral", request: "/api/referral-codes/{codedVendor}" },
 ];
 
 export function endpointsInGroups(groups: readonly ApiGroup[]): ApiEndpoint[] {
