@@ -116,10 +116,11 @@ describe("referral-programs page", () => {
     assert.ok(html.includes("Use our code"), "Should show 'Use our code' badge");
   });
 
-  it("/referral-programs shows 'Submit a code' for vendors without codes", async () => {
+  it("/referral-programs no longer invites a code submission", async () => {
     const res = await fetch(`http://localhost:${serverPort}/referral-programs`);
     const html = await res.text();
-    assert.ok(html.includes("Submit a code"), "Should show 'Submit a code' badge");
+    assert.ok(!html.includes("Submit a code"), "Should not invite a submission");
+    assert.ok(html.includes('class="status-badge status-none"'), "A row with no code of ours should still fill its status cell");
   });
 
   it("/referral-programs includes affiliate disclosure", async () => {
@@ -143,7 +144,7 @@ describe("referral-programs page", () => {
     const html = await res.text();
     assert.ok(html.includes("Referral Program"), "Should show Referral Program section");
     assert.ok(html.includes("$25 credit"), "Should show referrer benefit");
-    assert.ok(html.includes("Submit your referral code"), "Should show submit CTA for vendor without our code");
+    assert.ok(!html.includes("Submit your referral code"), "Should not invite a submission");
   });
 
   it("/vendor/vercel shows referral program section", async () => {
@@ -160,11 +161,14 @@ describe("referral-programs page", () => {
     assert.ok(html.includes('data-category="all"'), "Should have 'All' filter");
   });
 
-  it("/referral-programs has agent registration CTA", async () => {
+  it("/referral-programs offers no revenue for a submitted code", async () => {
     const res = await fetch(`http://localhost:${serverPort}/referral-programs`);
     const html = await res.text();
-    assert.ok(html.includes("Register on the Marketplace"), "Should have marketplace CTA");
-    assert.ok(html.includes("Earn Revenue"), "Should have agent CTA heading");
+    assert.ok(!html.includes("Register on the Marketplace"), "Should not invite a registration");
+    assert.ok(!html.includes("Earn Revenue"), "Should not offer revenue");
+    assert.ok(!html.includes("earn revenue share when your codes convert"), "Should not offer a revenue share");
+    assert.ok(!html.includes("Accepting Submissions"), "Should not count vendors as taking submissions");
+    assert.ok(html.includes("Our Codes Active"), "The stats bar still reports the codes we hold");
   });
 
   it("/referral-programs links to /api/referral-programs", async () => {
