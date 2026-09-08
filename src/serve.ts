@@ -17,7 +17,8 @@ import { recordApiHit, recordSessionConnect, recordSessionDisconnect, recordLand
 import { buildDailyRollup, readRollups, coverageOf, ROLLUP_DATE_PATTERN } from "./analytics-rollup.js";
 import { configureVendorSeries, recordVendorRequest, flushVendorSeries, readVendorSeries, vendorSeriesGauge, vendorExportAuthorized, isSeriesDate, seriesDateRange, VENDOR_SERIES_PATH, VENDOR_SERIES_RETENTION_DAYS, VENDOR_SERIES_NOTES } from "./vendor-series.js";
 import { openapiSpec } from "./openapi.js";
-import { CATEGORY_ALIASES, EXAMPLE_MEMBERS_BASIS, buildCategoryDirectory, categoryHolds, familySiblings, resolveCategoryName, scopeFor } from "./category-scope.js";
+import { CATEGORY_ALIASES, CATEGORY_RETIREMENTS, EXAMPLE_MEMBERS_BASIS, buildCategoryDirectory, categoryHolds, familySiblings, publishedScopeFor, resolveCategoryName, retiredCategoryNames, retirementFor, scopeFor } from "./category-scope.js";
+import { retiredCategoryDescription, retiredCategoryNoticeHtml, retiredCategoryTitle } from "./category-retirement.js";
 import { LINK_GRACE_DAYS, unreachableNoticeForUrl } from "./link-health.js";
 import { offerEnded, offerRetired, recordedTierSentence, endedHeadline, endedHistorySentence, endedReliabilitySentence, endedEmptyChangeHistorySentence, ENDED_BADGE_LABEL, ENDED_SINCE_CHANGES_SENTENCE, type OfferTierAndUrl } from "./retirement.js";
 import { amountUnstatedSentence, levelWithheldReason, withheldLevelClause, withheldLevelSentence, type LevelWithheldReason } from "./source-check.js";
@@ -758,6 +759,13 @@ ${entries}
 const categorySlugMap = new Map<string, string>();
 for (const cat of categories) {
   categorySlugMap.set(toSlug(cat.name), cat.name);
+}
+
+const liveCategoryNames: ReadonlySet<string> = new Set(categories.map((c) => c.name));
+
+const retiredCategorySlugMap = new Map<string, string>();
+for (const name of retiredCategoryNames(liveCategoryNames)) {
+  retiredCategorySlugMap.set(toSlug(name), name);
 }
 
 const vendorLastmod = new Map<string, string>();
@@ -1781,7 +1789,7 @@ function buildCategoryPage(slug: string): string | null {
   const keyLimitMatch = topVendor?.description.match(/(\d[\d,]*\s*(?:GB|GiB|MB|TB|requests?|calls?|MAU|users?|emails?|messages?|builds?|minutes?|hours?|projects?|repos?|sites?|apps?|databases?|invocations?|events?))/i);
   const keyLimit = keyLimitMatch ? keyLimitMatch[1] : "a generous free tier";
 
-  const catScope = scopeFor(categoryName);
+  const catScope = publishedScopeFor(categoryName, liveCategoryNames);
   const catSiblings = familySiblings(categoryName).filter(s => categorySlugMap.has(toSlug(s)));
   const siblingsHtml = catSiblings.length > 0 && catScope
     ? `<p class="cat-scope-siblings">${catSiblings.length === 1 ? "One other name here answers" : `${catSiblings.length} other names here answer`} &ldquo;${escHtmlServer(catScope.answers[0])}&rdquo;, and each holds a different list: ${catSiblings.map(s => `<a href="/category/${toSlug(s)}">${escHtmlServer(s)}</a> (${categories.find(c => c.name === s)?.count ?? 0})`).join(", ")}.</p>`
@@ -2099,6 +2107,61 @@ ${globalNavCss()}
   <div class="cat-index-grid">${catCardsHtml}
   </div>
 
+  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
+</div>
+</body>
+</html>`;
+}
+
+function buildRetiredCategoryPage(slug: string): string | null {
+  const categoryName = retiredCategorySlugMap.get(slug);
+  if (!categoryName) return null;
+  const retirement = retirementFor(categoryName, liveCategoryNames);
+  if (!retirement) return null;
+
+  const title = retiredCategoryTitle(categoryName);
+  const metaDesc = retiredCategoryDescription(categoryName);
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${escHtmlServer(title)}</title>
+<meta name="description" content="${escHtmlServer(metaDesc)}">
+<link rel="canonical" href="${BASE_URL}/category/${slug}">
+<meta property="og:title" content="${escHtmlServer(title)}">
+<meta property="og:description" content="${escHtmlServer(metaDesc)}">
+<meta property="og:type" content="website">
+<meta property="og:url" content="${BASE_URL}/category/${slug}">
+${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--border-hover:#3b82f6;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--accent-glow:rgba(59,130,246,0.15);--serif:'Inter',-apple-system,sans-serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}
+a{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}
+.container{max-width:760px;margin:0 auto;padding:0 1.5rem}
+.breadcrumb{padding:1.5rem 0 0;font-size:.8rem;color:var(--text-dim)}
+.breadcrumb a{color:var(--text-muted)}
+h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5rem;letter-spacing:-.02em}
+.retired-category{border:1px solid var(--border);border-radius:8px;background:var(--bg-card);padding:1.5rem;margin:1.5rem 0}
+.retired-category-badge{display:inline-block;font-family:var(--mono);font-size:.7rem;text-transform:uppercase;letter-spacing:.08em;color:var(--text-dim);border:1px solid var(--border);border-radius:4px;padding:.15rem .5rem;margin-bottom:.9rem}
+.retired-category-headline{font-size:1.2rem;color:var(--text);margin-bottom:.5rem}
+.retired-category-date{font-family:var(--mono);font-size:.85rem;color:var(--text-muted);margin-bottom:.75rem}
+.retired-category-reason{color:var(--text-muted);margin-bottom:.9rem}
+.retired-category-onward{color:var(--text-muted);font-size:.9rem}
+footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}
+@media(max-width:768px){h1{font-size:1.5rem}}
+${globalNavCss()}
+</style>
+</head>
+<body>
+<div class="container">
+  ${buildGlobalNav("categories")}
+  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/category">Categories</a> &rsaquo; ${escHtmlServer(categoryName)}</div>
+  <h1>${escHtmlServer(categoryName)}</h1>
+  ${retiredCategoryNoticeHtml(categoryName, retirement, escHtmlServer)}
   <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
 </div>
 </body>
@@ -54044,7 +54107,13 @@ const httpServer = createHttpServer(async (req, res) => {
     const cats = buildCategoryDirectory(getCategories(), loadOffers(), toSlug);
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/categories", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: cats.length });
     res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
-    res.end(JSON.stringify(cited({ categories: cats, example_members_basis: EXAMPLE_MEMBERS_BASIS, retired_names: CATEGORY_ALIASES }, "/category")));
+    const retiredCategories = retiredCategoryNames(liveCategoryNames).map((name) => ({
+      name,
+      slug: toSlug(name),
+      retired: CATEGORY_RETIREMENTS[name].retired,
+      reason: CATEGORY_RETIREMENTS[name].reason,
+    }));
+    res.end(JSON.stringify(cited({ categories: cats, example_members_basis: EXAMPLE_MEMBERS_BASIS, retired_names: CATEGORY_ALIASES, retired_categories: retiredCategories }, "/category")));
   } else if (url.pathname === "/api/agent-payments" && isGetOrHead) {
     recordApiHit("/api/agent-payments");
     const protocolFilter = url.searchParams.get("protocol") || undefined;
@@ -54887,7 +54956,7 @@ ${catList}
       res.end();
       return;
     }
-    const html = buildCategoryPage(slug);
+    const html = buildCategoryPage(slug) ?? buildRetiredCategoryPage(slug);
     if (html) {
       recordApiHit("/category/:slug");
       logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/category/" + slug, params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });

@@ -1,6 +1,14 @@
+import { getCategories, loadOffers } from "./data.js";
+
+export const CATALOGUE_CATEGORY_COUNT = getCategories().length;
+
+export const CATALOGUE_OFFER_FLOOR = Math.floor(loadOffers().length / 100) * 100;
+
+export const CATALOGUE_OFFER_FLOOR_LABEL = CATALOGUE_OFFER_FLOOR.toLocaleString("en-US");
+
 export const MCP_INSTRUCTIONS = `# AgentDeals — free tiers, credits, and pricing changes for developer tools
 
-AgentDeals is a curated, human-verified directory of 1,500+ free tiers, startup credits, and discounts across 66 developer-tool categories — databases, cloud hosting, CI/CD, monitoring, AI services, auth, observability, payments, email, and more. Every offer is fact-checked against the vendor's pricing page, and pricing changes (free tier removals, limit reductions, new tiers) are tracked over time.
+AgentDeals is a curated, human-verified directory of ${CATALOGUE_OFFER_FLOOR_LABEL}+ free tiers, startup credits, and discounts across ${CATALOGUE_CATEGORY_COUNT} developer-tool categories — databases, cloud hosting, CI/CD, monitoring, AI services, auth, observability, payments, email, and more. Every offer is fact-checked against the vendor's pricing page, and pricing changes (free tier removals, limit reductions, new tiers) are tracked over time.
 
 ## When to use this server
 

@@ -16,7 +16,7 @@ import {
 } from "./api-client.js";
 import { getGuideList, getGuideBySlug } from "./guides.js";
 import { registerMcpAppsResources, TOOL_UI_META } from "./mcp-apps.js";
-import { MCP_INSTRUCTIONS } from "./mcp-instructions.js";
+import { CATALOGUE_CATEGORY_COUNT, CATALOGUE_OFFER_FLOOR_LABEL, MCP_INSTRUCTIONS } from "./mcp-instructions.js";
 import { substitutesFor } from "./product-role.js";
 
 export const TRACK_CHANGES_LIMIT = 1000;
@@ -74,7 +74,7 @@ export function createServer(): McpServer {
     {
       name: "agentdeals",
       version: "0.1.0",
-      description: "Find free tiers, startup credits, and discounts for developer tools — databases, cloud hosting, CI/CD, monitoring, APIs, and more. 1,600+ verified offers across 67 categories with pricing change tracking.",
+      description: `Find free tiers, startup credits, and discounts for developer tools — databases, cloud hosting, CI/CD, monitoring, APIs, and more. ${CATALOGUE_OFFER_FLOOR_LABEL}+ verified offers across ${CATALOGUE_CATEGORY_COUNT} categories with pricing change tracking.`,
     },
     {
       instructions: MCP_INSTRUCTIONS,
