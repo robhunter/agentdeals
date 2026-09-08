@@ -213,6 +213,7 @@ describe("#1086 every structured answer that states a vendor figure carries the 
     const index = JSON.parse(readFileSync(path.join(REPO, "data", "index.json"), "utf-8"));
     const touchedIndex = perturbTextFields(index.offers, CATALOGUE_TEXT_FIELDS);
     for (const offer of index.offers) offer.vendor = `Perturbed ${offer.vendor}`;
+    index.offers.push({ ...index.offers[0], vendor: "Perturbed Extra Record" });
     writeFileSync(path.join(tmp, "index.json"), JSON.stringify(index));
     const changes = JSON.parse(readFileSync(path.join(REPO, "data", "deal_changes.json"), "utf-8"));
     const touchedChanges = perturbTextFields(changes.changes, CHANGE_LOG_TEXT_FIELDS);
