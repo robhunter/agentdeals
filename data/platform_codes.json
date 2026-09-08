@@ -11,6 +11,46 @@
       "source": "platform",
       "active": true,
       "added_at": "2026-04-12"
+    },
+    {
+      "vendor": "Vultr DNS",
+      "code": "9920277-9J",
+      "referral_url": "https://www.vultr.com/?ref=9920277-9J",
+      "referrer_benefit": "$100 cash per verified paid signup",
+      "referrer_compensation": "commission",
+      "referee_benefit": "$300 in credit",
+      "restrictions": [
+        "A valid credit card or PayPal must be linked to claim the credit",
+        "Unused credit expires 30 days after signup",
+        "Vultr states this promotion is available for a limited time"
+      ],
+      "limited_time": true,
+      "terms_verified": "2026-08-29",
+      "payout_qualification": {
+        "active_days": 30,
+        "min_payments_usd": 100
+      },
+      "source": "platform",
+      "active": true,
+      "added_at": "2026-08-29"
+    },
+    {
+      "vendor": "Vultr DNS",
+      "code": "9920276",
+      "referral_url": "https://www.vultr.com/?ref=9920276",
+      "referrer_benefit": "$10 cash per verified paid signup",
+      "referrer_compensation": "commission",
+      "referee_benefit": "",
+      "restrictions": [],
+      "limited_time": false,
+      "terms_verified": "2026-08-29",
+      "payout_qualification": {
+        "active_days": 30,
+        "min_payments_usd": 10
+      },
+      "source": "platform",
+      "active": false,
+      "added_at": "2026-08-29"
     }
   ]
 }

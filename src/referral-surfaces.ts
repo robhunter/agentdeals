@@ -1,7 +1,7 @@
 import { getAllPlatformCodes, getPlatformCodeForVendor, referrerCompensationOf, restrictionsOf } from "./platform-codes.js";
-import type { ReferrerCompensation } from "./platform-codes.js";
+import type { PlatformCode, ReferrerCompensation } from "./platform-codes.js";
 import { toSlug } from "./vendor-slug.js";
-import type { Offer } from "./types.js";
+import type { Offer, Referral } from "./types.js";
 
 export type OurReferralLinkSource = "platform_code" | "offer_referral";
 
@@ -48,6 +48,39 @@ export function ourReferralLinkFor(vendorName: string, offer?: Offer | null): Ou
   }
 
   return null;
+}
+
+export interface VendorReferralAnswer {
+  vendor: string;
+  referral: {
+    code?: string;
+    url: string;
+    referee_value: string;
+    type: Referral["type"];
+    restrictions?: string[];
+  };
+}
+
+export function referralTypeOfPlatformCode(code: PlatformCode): Referral["type"] {
+  const readerIsPaid = code.referee_benefit.trim().length > 0;
+  const weArePaid = referrerCompensationOf(code) !== "none";
+  if (readerIsPaid && weArePaid) return "dual-sided";
+  return readerIsPaid ? "referee-only" : "referrer-only";
+}
+
+export function platformCodeAsVendorReferral(vendorName: string): VendorReferralAnswer | null {
+  const code = getPlatformCodeForVendor(vendorName);
+  if (!code) return null;
+  return {
+    vendor: code.vendor,
+    referral: {
+      code: code.code,
+      url: code.referral_url,
+      referee_value: code.referee_benefit,
+      type: referralTypeOfPlatformCode(code),
+      restrictions: restrictionsOf(code),
+    },
+  };
 }
 
 export function referrerDisclosureSentence(compensation: ReferrerCompensation | null): string {

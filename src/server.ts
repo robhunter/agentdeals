@@ -13,6 +13,7 @@ import { persistDurableStores } from "./durable-store.js";
 import { getAgentBalance, getAgentLedgerEntries, recordPayout, MINIMUM_PAYOUT_AMOUNT, getLeaderboard } from "./ledger.js";
 import { submitReferralCode, getCodesByAgent, calculateTrustTier, getDailySubmissionCount, getDailyLimit, getRankedCodesForVendor, calculateCodeScore } from "./referral-codes.js";
 import { getBestReferralCode } from "./platform-codes.js";
+import { platformCodeAsVendorReferral, type VendorReferralAnswer } from "./referral-surfaces.js";
 import { validateX402Address, executeTransfer, generateCorrelationId, payoutsAvailable, PAYOUTS_UNAVAILABLE_REASON } from "./x402.js";
 import { addFriend, removeFriend, getFriends, getFriendCodesForVendors } from "./friends.js";
 import { getStackRecommendation } from "./stacks.js";
@@ -1048,7 +1049,7 @@ Suggested monitoring cadence: run this check weekly to catch pricing changes ear
       try {
         recordToolCall("get_referral_code", getClientName?.());
 
-        const referralData = getVendorReferral(vendor);
+        const referralData: VendorReferralAnswer | null = getVendorReferral(vendor) ?? platformCodeAsVendorReferral(vendor);
         if (!referralData) {
           return {
             isError: true,
@@ -1064,6 +1065,7 @@ Suggested monitoring cadence: run this check weekly to catch pricing changes ear
           referral_code: referralData.referral.code ?? null,
           referral_url: referralData.referral.url,
           referee_value: referralData.referral.referee_value,
+          restrictions: referralData.referral.restrictions ?? [],
           type: referralData.referral.type,
           attributed,
           attribution: outcome.status,
