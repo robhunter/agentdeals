@@ -5,6 +5,7 @@ import {
   termsUnconfirmedOutcome,
   unconfirmedTermsClause,
 } from "./source-check.js";
+import { ENDED_OFFER_CLAUSE, offerRetired } from "./retirement.js";
 import type { Offer } from "./types.js";
 
 export type Escaper = (text: string) => string;
@@ -59,10 +60,11 @@ export type FreeTierSource = SourceRead | SourceMissing;
 
 export const NO_CATALOGUE_RECORD = FREE_TIER_STANDING_LABELS.not_in_catalogue;
 
-export type SourcedOffer = Pick<Offer, "url" | "source_check" | "verifiedDate">;
+export type SourcedOffer = Pick<Offer, "url" | "tier" | "source_check" | "verifiedDate">;
 
 export function freeTierSourceOf(offer: SourcedOffer | null | undefined): FreeTierSource {
   if (!offer) return { cited: false, clause: NO_CATALOGUE_RECORD };
+  if (offerRetired(offer)) return { cited: false, clause: ENDED_OFFER_CLAUSE };
   const check = offer.source_check;
   const unconfirmed = termsUnconfirmedOutcome(check?.outcome);
   if (unconfirmed) return { cited: false, clause: unconfirmedTermsClause(unconfirmed) };

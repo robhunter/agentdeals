@@ -17,6 +17,7 @@ const {
 } = await import("../dist/source-citation.js");
 const { tabulatedSubjectSlots, vendorFactRows, SOURCE_MARKER_IN_A_CELL } = await import("../dist/page-reviews.js");
 const { SOURCE_MARKER_MARKUP } = await import("../dist/change-citation.js");
+const { ENDED_OFFER_CLAUSE, offerRetired } = await import("../dist/retirement.js");
 const { namedVendorSlug, vendorSlugMap } = await import("../dist/vendor-slug.js");
 const { staticHalfOf } = await import("../dist/compiled-figures.js");
 
@@ -111,6 +112,7 @@ describe("what a record says about its source, without loading the catalogue", (
   it("cites the page it read, the date it read it and what it found there", () => {
     const source = freeTierSourceOf({
       url: "https://example.com/pricing",
+      tier: "Free",
       verifiedDate: "2026-08-01",
       source_check: { checked: "2026-09-05", outcome: "ok", detail: 'the page names Example and states "$0"' },
     });
@@ -125,6 +127,7 @@ describe("what a record says about its source, without loading the catalogue", (
   it("cites the page and the date without a quote when the check recorded no evidence from it", () => {
     const source = freeTierSourceOf({
       url: "https://example.com/pricing",
+      tier: "Free",
       verifiedDate: "2026-08-01",
       source_check: { checked: "2026-09-05", outcome: "ok", detail: "text" },
     });
@@ -147,6 +150,17 @@ describe("what a record says about its source, without loading the catalogue", (
       assert.ok(!source.cited && source.clause.length > 0);
     });
   }
+
+  it("sends nobody to the pricing page of an offer our own tier records as ended", () => {
+    const source = freeTierSourceOf({
+      url: "https://example.com/pricing",
+      tier: "Retired",
+      verifiedDate: "2026-08-01",
+      source_check: { checked: "2026-09-05", outcome: "ok", detail: 'the page names Example and states "$0"' },
+    });
+    assert.strictEqual(source.cited, false);
+    assert.ok(!source.cited && source.clause === ENDED_OFFER_CLAUSE);
+  });
 
   it("says a service we hold no record for has none, rather than citing nothing", () => {
     const source = freeTierSourceOf(undefined);
@@ -265,11 +279,15 @@ describe("every comparison page reaches the pages its figures were read from", (
         const vendor = vendorSlugMap.get(entry[1]!);
         const record = vendor ? primaryFor.get(vendor) : undefined;
         const outcome = record?.source_check?.outcome;
+        const ended = record !== undefined && offerRetired(record);
         const claimsARead = entry[2]!.includes("We read that on");
-        if (outcome === "ok" && !claimsARead) wrong.push(`${page}: ${entry[1]} passed its check and cites nothing`);
+        if (outcome === "ok" && !ended && !claimsARead) {
+          wrong.push(`${page}: ${entry[1]} passed its check and cites nothing`);
+        }
         if (outcome !== undefined && outcome !== "ok" && claimsARead) {
           wrong.push(`${page}: ${entry[1]} is ${outcome} and claims a read`);
         }
+        if (ended && claimsARead) wrong.push(`${page}: ${entry[1]} has ended and claims a read`);
         if (!claimsARead) marked += 1;
       }
     }
@@ -303,6 +321,18 @@ describe("every comparison page reaches the pages its figures were read from", (
         `${page} reads a source marker as part of a service name: ${JSON.stringify(named.slice(0, 3))}`,
       );
     }
+  });
+
+  it("cites no page for an offer our own tier records as ended", () => {
+    const retired = new Set(offers.filter(offerRetired).map(o => o.url));
+    const offenders: string[] = [];
+    for (const page of COMPILED_PAGES) {
+      for (const link of citedSourceLinks(rendered.get(page)!)) {
+        if (retired.has(link.url)) offenders.push(`${page} -> ${link.url}`);
+      }
+    }
+    assert.deepStrictEqual(offenders, []);
+    assertPopulationFloor(retired.size, 12, "records whose tier says the offer has ended");
   });
 
   it("endorses nobody it cites", () => {
