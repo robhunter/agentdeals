@@ -723,7 +723,7 @@ export function deriveTier(html: string): ReviewTier {
 }
 
 export const PERTURBATION_SENTINEL = "PMPERTURB";
-export const CATALOGUE_TEXT_FIELDS = ["description", "tier", "notes", "limits"];
+export const CATALOGUE_TEXT_FIELDS = ["description", "tier", "notes", "limits", "url"];
 export const CHANGE_LOG_TEXT_FIELDS = ["summary", "previous_state", "current_state"];
 
 export function perturbTextFields(records: any[], fields: string[]): number {
@@ -748,8 +748,12 @@ export interface VendorFactRow {
   slug: string;
 }
 
+export const SOURCE_MARKER_IN_A_CELL =
+  /<(a|span)\b[^>]*class="[^"]*\b(?:record-source|unsourced-tag)\b[^"]*"[^>]*>[\s\S]*?<\/\1>/g;
+
 function cellText(fragment: string): string {
   return fragment
+    .replace(new RegExp(SOURCE_MARKER_IN_A_CELL.source, "g"), " ")
     .replace(/<[^>]*>/g, " ")
     .replace(/&amp;/g, "&")
     .replace(/&[a-z]+;/g, " ")
@@ -757,19 +761,45 @@ function cellText(fragment: string): string {
     .trim();
 }
 
-export function vendorFactRows(html: string, slugFor: VendorSlugLookup): VendorFactRow[] {
-  const found: VendorFactRow[] = [];
-  for (const row of html.match(TABLE_ROW) ?? []) {
-    const cells = row.match(ROW_CELL) ?? [];
+export interface TabulatedSubject {
+  subject: string;
+  slug: string | null;
+}
+
+export interface TabulatedSubjectSlot extends TabulatedSubject {
+  cell: string;
+  cellEnd: number;
+}
+
+export function tabulatedSubjectSlots(html: string, slugFor: VendorSlugLookup): TabulatedSubjectSlot[] {
+  const found: TabulatedSubjectSlot[] = [];
+  const rows = new RegExp(TABLE_ROW.source, "g");
+  for (let row = rows.exec(html); row !== null; row = rows.exec(html)) {
+    const cells = row[0].match(ROW_CELL) ?? [];
     const first = cells[0];
     if (first === undefined) continue;
     if (!cells.slice(1).some(cell => /\d/.test(cellText(cell)))) continue;
     const subject = cellText(first);
     const linked = first.match(VENDOR_CELL_LINK);
-    const slug = linked ? linked[1]! : subject ? slugFor(subject) : null;
-    if (slug) found.push({ subject, slug });
+    const cellStart = row.index + row[0].indexOf(first);
+    found.push({
+      subject,
+      slug: linked ? linked[1]! : subject ? slugFor(subject) : null,
+      cell: first,
+      cellEnd: cellStart + first.length - "</td>".length,
+    });
   }
   return found;
+}
+
+export function tabulatedSubjects(html: string, slugFor: VendorSlugLookup): TabulatedSubject[] {
+  return tabulatedSubjectSlots(html, slugFor).map(({ subject, slug }) => ({ subject, slug }));
+}
+
+export function vendorFactRows(html: string, slugFor: VendorSlugLookup): VendorFactRow[] {
+  return tabulatedSubjects(html, slugFor).filter(
+    (row): row is VendorFactRow => row.slug !== null,
+  );
 }
 
 export interface PageSourceMeasurement {

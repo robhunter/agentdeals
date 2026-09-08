@@ -29,6 +29,7 @@ const { freeTierEndingRecord } = await import("../dist/data.js");
 const { CHANGE_IMPACT_LEVELS, changeImpactColor, changeImpactLabel, isChangeImpactLevel } =
   await import("../dist/change-impact.js");
 const { vendorSlugMap } = await import("../dist/vendor-slug.js");
+const { SOURCE_MARKER_MARKUP } = await import("../dist/change-citation.js");
 
 type DealChange = import("../src/types.ts").DealChange;
 
@@ -525,6 +526,7 @@ describe("the nine compiled comparison pages against the site's own verdicts", (
     const inTables = new Set<string>();
     for (const m of staticHalfOf(html).matchAll(/<td class="provider-col">([\s\S]*?)<\/td>/g)) {
       const name = m[1]!
+        .replace(new RegExp(SOURCE_MARKER_MARKUP.source, "g"), "")
         .replace(/<a href="\/vendor\/[a-z0-9-]+#changes"[\s\S]*?<\/a>/g, "")
         .replace(/<span[^>]*class="[^"]*-badge[^"]*"[^>]*>[\s\S]*?<\/span>/g, "")
         .replace(/<[^>]+>/g, "")
