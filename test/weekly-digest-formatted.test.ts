@@ -100,7 +100,8 @@ describe("getFormattedWeeklyDigest logic", () => {
 
   it("total_changes reflects all changes not just this week", async () => {
     const { getFormattedWeeklyDigest, loadDealChanges } = await import("../dist/data.js");
-    const allChanges = loadDealChanges() as unknown[];
+    const { recordsStillInForce } = await import("../dist/change-resolution.js");
+    const allChanges = recordsStillInForce(loadDealChanges() as never[]) as unknown[];
     const digest = getFormattedWeeklyDigest(0, 20);
     assert.strictEqual(digest.total_changes, allChanges.length, "total_changes should equal all-time count");
   });
