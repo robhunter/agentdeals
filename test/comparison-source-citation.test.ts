@@ -13,6 +13,7 @@ const {
   readClauseHtml,
   sourceAnchorId,
   withCitedSources,
+  CHECK_FINDING_LEAD,
   NO_CATALOGUE_RECORD,
 } = await import("../dist/source-citation.js");
 const { tabulatedSubjectSlots, vendorFactRows, SOURCE_MARKER_IN_A_CELL } = await import("../dist/page-reviews.js");
@@ -120,11 +121,11 @@ describe("what a record says about its source, without loading the catalogue", (
       cited: true,
       url: "https://example.com/pricing",
       readOn: "2026-09-05",
-      quote: 'the page names Example and states "$0"',
+      finding: 'the page names Example and states "$0"',
     });
   });
 
-  it("cites the page and the date without a quote when the check recorded no evidence from it", () => {
+  it("cites the page and the date alone where the check recorded which layer matched and no finding", () => {
     const source = freeTierSourceOf({
       url: "https://example.com/pricing",
       tier: "Free",
@@ -135,7 +136,7 @@ describe("what a record says about its source, without loading the catalogue", (
       cited: true,
       url: "https://example.com/pricing",
       readOn: "2026-09-05",
-      quote: null,
+      finding: null,
     });
   });
 
@@ -185,6 +186,15 @@ describe("what a record says about its source, without loading the catalogue", (
     });
     assert.doesNotMatch(html, /where it says/);
     assert.match(html, /<a href="https:\/\/example\.com\/pricing"/);
+  });
+
+  it("attributes a finding to our own check and never to the page", () => {
+    const finding = 'the page names Example as "example" and states "$0"';
+    const html = readClauseHtml("2026-09-05", [{ url: "https://example.com/pricing", finding }], (t: string) => t, {
+      dateClass: "read-on",
+    });
+    assert.doesNotMatch(html, /where it says/);
+    assert.ok(html.includes(`${CHECK_FINDING_LEAD}: ${finding}`), html);
   });
 
   it("puts the list of sources inside the methodology block it belongs to", () => {

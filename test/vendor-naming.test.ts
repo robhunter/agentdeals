@@ -10,7 +10,7 @@ import {
   SOURCE_CHECK_UNREADABLE,
 } from "../scripts/vendor-naming.js";
 import { priceSignals, MIN_PRICE_SIGNALS } from "../scripts/change-gate.js";
-import { passedOnTheUrlWeAskedFor, passedWithoutQuotingThePage } from "../dist/source-check.js";
+import { passedOnTheUrlWeAskedFor, passedWithoutRecordingAFinding } from "../dist/source-check.js";
 import { qualityBudget } from "../dist/page-reviews.js";
 import { loadOffers } from "../dist/data.js";
 import { JOINSECRET_OFFERS_PAGE, BREX_REWARDS_PAGE } from "./vendor-page-fixture.ts";
@@ -221,7 +221,7 @@ describe("what a re-verification learned about the cited page", () => {
   it("says what it read on the page it passed, rather than which layer matched", () => {
     const text = "Vercel Hobby plan, free forever. Pro is $20/month.";
     const result = classifySource({ vendor: "Vercel", url: "https://vercel.com/pricing" }, { ok: true, text }, priceSignals(text));
-    assert.strictEqual(passedWithoutQuotingThePage({ source_check: result }), false, result.detail);
+    assert.strictEqual(passedWithoutRecordingAFinding({ source_check: result }), false, result.detail);
     assert.match(result.detail, /names Vercel/);
     assert.match(result.detail, /\$20/);
   });
@@ -263,7 +263,7 @@ describe("what data/index.json publishes as a passed source check", () => {
 
   it("holds no more passes that quote nothing from the page than the budget allows", () => {
     const budget = qualityBudget("source_checks_ok_without_quoted_evidence");
-    const measured = offers.filter(passedWithoutQuotingThePage).length;
+    const measured = offers.filter(passedWithoutRecordingAFinding).length;
     assert.ok(
       measured <= budget,
       `${measured} offers pass a source check without quoting the page, over the budget of ${budget} in data/quality_budgets.json`,

@@ -34,7 +34,7 @@ import { tierRecordsAFreeTier } from "./free-tier-record.js";
 import { PAGE_HEAD_OPEN, withLedeBeforeNav } from "./page-lede.js";
 import { UNGRADED_IMPACT_COLOR, changeImpactColor, changeImpactLabel, changeImpactWord, isChangeImpactLevel } from "./change-impact.js";
 import { COMPARED_SERVICES_PLACEHOLDER, appendToCompiledFigureSlots, fillComparedServicesCount, markCompiledFigures, recordsSinceCompiled, replaceTimelineRows, staticHalfOf, timelineRecordsFor, vendorForSubject, vendorSubjectsOnCompiledPage, type CompiledFigureSubject, type CompiledFigureVendor, type CompiledFigureVerdict } from "./compiled-figures.js";
-import { NO_CATALOGUE_RECORD, citedSourceLinkHtml, citedSourcesListHtml, freeTierSourceOf, readClauseHtml, sourceMarkerHtml, uncitedSourceLinkHtml, withCitedSources, type CitedService, type FreeTierSource } from "./source-citation.js";
+import { CHECK_ESTABLISHES, CHECK_SCOPE_CLASS, NO_CATALOGUE_RECORD, citedSourceLinkHtml, citedSourcesListHtml, freeTierSourceOf, pageQuoteHtml, readClauseHtml, sourceMarkerHtml, uncitedSourceLinkHtml, withCitedSources, type CitedService, type FreeTierSource } from "./source-citation.js";
 import { vendorHistorySentence } from "./vendor-history.js";
 import { HETZNER_APRIL_CHANGES, HETZNER_CLOUD_PLANS, HETZNER_PRICES_READ, HETZNER_PRICE_SOURCE, HETZNER_SINGAPORE_EXAMPLE, cheapestOrderableHetznerPlan, hetznerEntryPriceClause, unorderableHetznerPlans } from "./hetzner-pricing.js";
 import { HUNDRED_TB_SCENARIO, ONE_TO_ONE_SCENARIO, STORAGE_RATES_READ, STORAGE_SCALE_WORKLOADS, TEN_TO_ONE_SCENARIO, cheapestProviderAt, costliestProviderAt, egressAllowanceSentence, egressBillOnceOverAllowance, egressRatioWhereCostsMatch, fixedMonthlyGrantsSentence, monthlyStorageCost, providersWithScalingEgressAllowance, rateCardFor, scaleCostFor } from "./storage-cost-model.js";
@@ -4488,7 +4488,7 @@ function buildVendorPage(slug: string): string | null {
     const role = primary.product_role;
     const sentence = productRoleSentence(primary);
     if (!role || !sentence) return "";
-    return `  <p class="product-role-line" style="margin:.4rem 0 .6rem;font-size:.9rem;color:var(--text-muted)"><strong>Product role:</strong> ${escHtmlServer(sentence)} We read that from <a href="${escHtmlServer(role.source_url)}" rel="nofollow noopener">${escHtmlServer(role.source_url)}</a> on <span class="product-role-reviewed" style="font-family:var(--mono)">${escHtmlServer(role.reviewed)}</span>, where it says: &ldquo;${escHtmlServer(role.source_quote)}&rdquo; <a href="${CRITERIA_PATH}#membership">How we use this</a>.</p>`;
+    return `  <p class="product-role-line" style="margin:.4rem 0 .6rem;font-size:.9rem;color:var(--text-muted)"><strong>Product role:</strong> ${escHtmlServer(sentence)} We read that from <a href="${escHtmlServer(role.source_url)}" rel="nofollow noopener">${escHtmlServer(role.source_url)}</a> on <span class="product-role-reviewed" style="font-family:var(--mono)">${escHtmlServer(role.reviewed)}</span>, ${pageQuoteHtml(role.source_quote, escHtmlServer)} <a href="${CRITERIA_PATH}#membership">How we use this</a>.</p>`;
   })();
 
   const productSubtypesLine = (() => {
@@ -4515,11 +4515,11 @@ function buildVendorPage(slug: string): string | null {
     if (!source.cited) return "";
     const read = readClauseHtml(
       source.readOn,
-      [{ url: source.url, quote: source.quote }],
+      [{ url: source.url, finding: source.finding }],
       escHtmlServer,
       { dateClass: SOURCE_READ_DATE_CLASS },
     );
-    return `\n    <p class="free-tier-source-line" style="margin:.5rem 0 0;font-size:.8rem;color:var(--text-dim)">${read}.</p>`;
+    return `\n    <p class="free-tier-source-line" style="margin:.5rem 0 0;font-size:.8rem;color:var(--text-dim)">${read}. <span class="${CHECK_SCOPE_CLASS}">${escHtmlServer(CHECK_ESTABLISHES)}</span></p>`;
   })();
 
   const alternativesMembership = partitionSubstitutes(

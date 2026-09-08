@@ -74,8 +74,16 @@ function passedOnDetail(offer: Pick<Offer, "source_check">, tokens: string[]): b
   return check?.outcome === "ok" && tokens.includes(check.detail ?? "");
 }
 
-export function passedWithoutQuotingThePage(offer: Pick<Offer, "source_check">): boolean {
+export function passedWithoutRecordingAFinding(offer: Pick<Offer, "source_check">): boolean {
   return passedOnDetail(offer, NAMING_TOKENS_RECORDED_INSTEAD_OF_EVIDENCE);
+}
+
+export function checkFinding(offer: Pick<Offer, "source_check">): string | null {
+  const check = offer.source_check;
+  if (check?.outcome !== "ok") return null;
+  const detail = (check.detail ?? "").trim();
+  if (detail === "" || NAMING_TOKENS_RECORDED_INSTEAD_OF_EVIDENCE.includes(detail)) return null;
+  return detail;
 }
 
 export function passedOnTheUrlWeAskedFor(offer: Pick<Offer, "source_check">): boolean {

@@ -6,6 +6,7 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { LEVEL_WITHHOLDING_OUTCOMES, levelWithheldReason, withheldLevelClause } from "../dist/source-check.js";
+import { pageQuoteHtml } from "../dist/source-citation.js";
 import type { LevelWithheldReason } from "../src/source-check.ts";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -413,10 +414,8 @@ describe("a page we quote from is not also a page we say we can read nothing on"
 
   it("quotes the page it cites", async () => {
     const { body } = await get("/vendor/longcorp");
-    assert.match(
-      body,
-      /https:\/\/longcorp\.example\/pricing<\/a>, where it says: &ldquo;Standard Events and Metrics Up to 5 hosts&rdquo;/
-    );
+    const quoted = pageQuoteHtml("Standard Events and Metrics Up to 5 hosts", (t: string) => t);
+    assert.ok(body.includes(`https://longcorp.example/pricing</a>, ${quoted}`), quoted);
   });
 
   it("does not also say that page states no terms it can read", async () => {
@@ -426,7 +425,8 @@ describe("a page we quote from is not also a page we say we can read nothing on"
 
   it("keeps saying so where the quote comes from a different page", async () => {
     const { body } = await get("/vendor/prosecorp");
-    assert.match(body, /dealmarket\.example\/offers<\/a>, where it says:/);
+    const quoted = pageQuoteHtml("managed Postgres", (t: string) => t);
+    assert.ok(body.includes(`dealmarket.example/offers</a>, ${quoted}`), quoted);
     assert.match(saidOfTheSubject(body), /states no terms we can read/);
   });
 
