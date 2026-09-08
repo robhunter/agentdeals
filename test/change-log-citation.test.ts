@@ -189,7 +189,15 @@ describe("every change we publish reaches the page it was read from", () => {
       const html = pages.get(route)!;
       const entries = entriesOn(html, route);
       const cited = entries.filter((e) => e.includes(`class="${CITATION_CLASS}"`)).length;
-      assert.strictEqual(citationTags(html).length, cited, `${route} carries citation links outside its entries`);
+      assert.deepStrictEqual(
+        entries.filter((e) => citationTags(e).length > 1).map((e) => e.slice(0, 120)),
+        [],
+        `${route} points one entry at its source twice`,
+      );
+      assert.ok(
+        citationTags(html).length >= cited,
+        `${route} renders ${citationTags(html).length} citation links for ${cited} cited entries`,
+      );
       assert.ok(cited > 0, `${route} cites nothing`);
     });
   }
@@ -342,7 +350,9 @@ describe("a record with no source says so where a record with one is cited", () 
       const html = bodies.get(route)!;
       assert.deepStrictEqual(citedUrls(html), [SOURCE]);
       const tag = citationTags(html)[0];
-      assert.ok(tag.includes('target="_blank"') && tag.includes('rel="noopener"'), tag);
+      assert.ok(tag.includes('target="_blank"'), tag);
+      assert.match(tag, /rel="[^"]*\bnoopener\b[^"]*"/, tag);
+      assert.match(tag, /rel="[^"]*\bnofollow\b[^"]*"/, `citing a vendor is not endorsing one: ${tag}`);
       assert.ok(tag.includes(`title="${citationLabel(SOURCE)}"`), tag);
     });
 

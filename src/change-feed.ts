@@ -1,4 +1,5 @@
 import type { DealChange } from "./types.js";
+import { changeCitesASource, type CitableChange } from "./change-citation.js";
 import {
   DISCOVERED_DATE_PREFIX,
   EFFECTIVE_DATE_PREFIX,
@@ -129,6 +130,36 @@ interface FeedEntryFields {
   recordedDate: string;
   label: string;
   summary: string;
+}
+
+export const VIA_LINK_REL = "via";
+
+export const NO_SOURCE_HELD_ELEMENT = "source_held";
+
+export const NO_SOURCE_HELD_VALUE = "none";
+
+export function feedEntrySourceXml(
+  change: CitableChange,
+  esc: (text: string) => string,
+  ns: string,
+  indent = "    ",
+): string {
+  return changeCitesASource(change)
+    ? `${indent}<link href="${esc(change.source_url!.trim())}" rel="${VIA_LINK_REL}"/>`
+    : `${indent}<${ns}:${NO_SOURCE_HELD_ELEMENT}>${NO_SOURCE_HELD_VALUE}</${ns}:${NO_SOURCE_HELD_ELEMENT}>`;
+}
+
+export function digestSourceXml(
+  changes: readonly CitableChange[],
+  esc: (text: string) => string,
+  ns = CHANGE_FEED_NAMESPACE_PREFIX,
+  indent = "    ",
+): string {
+  const sources = [...new Set(changes.filter(changeCitesASource).map((c) => c.source_url!.trim()))];
+  if (sources.length === 0) {
+    return `${indent}<${ns}:${NO_SOURCE_HELD_ELEMENT}>${NO_SOURCE_HELD_VALUE}</${ns}:${NO_SOURCE_HELD_ELEMENT}>`;
+  }
+  return sources.map((url) => `${indent}<link href="${esc(url)}" rel="${VIA_LINK_REL}"/>`).join("\n");
 }
 
 export function feedEntryFields(change: DealChange, now: Date = new Date()): FeedEntryFields {

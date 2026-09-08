@@ -114,9 +114,15 @@ describe("a record can say its change is no longer in force", () => {
 
 describe("the resolution survives the render sites that cut the summary short", () => {
   const serveSource = readFileSync(path.join(REPO, "src", "serve.ts"), "utf-8");
+  const ELLIPSIS_LENGTH = 3;
   const cuts = [
-    ...serveSource.matchAll(/summary[^\n]{0,60}?\.(?:substring|slice)\(0,\s*(\d+)\)/g),
-  ].map((m) => Number(m[1]));
+    ...[...serveSource.matchAll(/summary[^\n]{0,60}?\.(?:substring|slice)\(0,\s*(\d+)\)/g)].map((m) =>
+      Number(m[1]),
+    ),
+    ...[...serveSource.matchAll(/(?:changeSummaryHtml|citedSummary)\([^()]*,\s*(\d+)\)/g)].map(
+      (m) => Number(m[1]) - ELLIPSIS_LENGTH,
+    ),
+  ];
   const resolvedRecords = stored.filter(isNoLongerInForce);
 
   it("is measuring render sites that exist", () => {

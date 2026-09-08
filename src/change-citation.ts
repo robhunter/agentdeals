@@ -6,6 +6,11 @@ export interface SummarisedChange extends CitableChange {
   summary?: string | null;
 }
 
+export interface CitableChangeRow extends CitableChange {
+  vendor: string;
+  summary: string;
+}
+
 export function changeCitesASource(change: CitableChange): boolean {
   return typeof change.source_url === "string" && change.source_url.trim() !== "";
 }
@@ -50,11 +55,13 @@ export const SOURCE_MARKER_MARKUP = new RegExp(
 
 const CITATION_STYLE = "font-size:.75rem;color:var(--text-dim)";
 
+export const CITATION_REL = "nofollow noopener";
+
 export function changeSourceLinkHtml(change: CitableChange, esc: (text: string) => string): string {
   if (!changeCitesASource(change)) return "";
   const url = change.source_url!.trim();
   return (
-    `<a href="${esc(url)}" target="_blank" rel="noopener" class="${CITATION_CLASS}"` +
+    `<a href="${esc(url)}" target="_blank" rel="${CITATION_REL}" class="${CITATION_CLASS}"` +
     ` style="${CITATION_STYLE}" title="${esc(citationLabel(url))}">${CITATION_LINK_HTML}</a>`
   );
 }
@@ -69,6 +76,59 @@ export const UNCITED_CHANGE_LABEL = "Unsourced";
 
 export function uncitedChangeNotice(vendor: string): string {
   return `We hold no source for this record, so it does not set ${vendor}'s rating.`;
+}
+
+export const UNCITED_NOTE_CLASS = "unsourced-note";
+
+const UNCITED_NOTE_STYLE = "font-size:.75rem;color:var(--text-dim)";
+
+export function uncitedChangeNoticeHtml(vendor: string, esc: (text: string) => string): string {
+  return (
+    `<span class="${UNCITED_NOTE_CLASS}" style="${UNCITED_NOTE_STYLE}">` +
+    `${esc(uncitedChangeNotice(vendor))}</span>`
+  );
+}
+
+export function changeCitationHtml(change: CitableChangeRow, esc: (text: string) => string): string {
+  return changeCitesASource(change)
+    ? changeSourceLinkHtml(change, esc)
+    : uncitedChangeNoticeHtml(change.vendor, esc);
+}
+
+export function changeSummaryHtml(
+  change: CitableChangeRow,
+  esc: (text: string) => string,
+  limit?: number,
+): string {
+  const summary = change.summary ?? "";
+  const shown =
+    limit !== undefined && summary.length > limit ? `${summary.slice(0, limit - 3)}...` : summary;
+  return `${esc(shown)} ${changeCitationHtml(change, esc)}`;
+}
+
+export function citedClaimHtml(
+  change: CitableChangeRow,
+  esc: (text: string) => string,
+  label: string,
+  style: string,
+): string {
+  const tip = esc(changeSummaryText(change));
+  return changeCitesASource(change)
+    ? `<a href="${esc(change.source_url!.trim())}" target="_blank" rel="${CITATION_REL}"` +
+        ` class="${CITATION_CLASS}" style="${style}" title="${tip}">${esc(label)}</a>`
+    : `<span class="${UNCITED_NOTE_CLASS}" style="${style}" title="${tip}">${esc(label)}</span>`;
+}
+
+export function changeSummaryText(change: CitableChangeRow): string {
+  return changeCitesASource(change)
+    ? `${change.summary} Source: ${change.source_url!.trim()}`
+    : `${change.summary} ${uncitedChangeNotice(change.vendor)}`;
+}
+
+export function changeSummaryMarkdown(change: CitableChangeRow): string {
+  return changeCitesASource(change)
+    ? `${change.summary} [Source](${change.source_url!.trim()})`
+    : `${change.summary} ${uncitedChangeNotice(change.vendor)}`;
 }
 
 export function ratingWithheldForNoSourceSentence(vendor: string): string {

@@ -51,6 +51,8 @@ function isWithheld(node: Record<string, unknown>): boolean {
   return isGated(node) || termsAreWithheld(node) || levelIsWithheld(node);
 }
 
+const PROJECTED_ONTO_ITS_OWNER: readonly string[] = ["risk_cause"];
+
 export function citedRecords(payload: unknown): CitedRecord[] {
   const found: CitedRecord[] = [];
   const seen = new Set<unknown>();
@@ -75,7 +77,10 @@ export function citedRecords(payload: unknown): CitedRecord[] {
         });
       }
     }
-    for (const value of Object.values(obj)) visit(value, depth + 1);
+    for (const [key, value] of Object.entries(obj)) {
+      if (PROJECTED_ONTO_ITS_OWNER.includes(key)) continue;
+      visit(value, depth + 1);
+    }
   };
 
   visit(payload, 0);

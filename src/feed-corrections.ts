@@ -1,3 +1,5 @@
+import { VIA_LINK_REL } from "./change-feed.js";
+
 export interface FeedCorrection {
   id: string;
   updated: string;
@@ -27,6 +29,7 @@ export function correctionEntriesXml(baseUrl: string, escXml: (s: string) => str
     <id>${escXml(c.id)}</id>
     <updated>${c.updated}</updated>
     <author><name>AgentDeals</name></author>
+    <link href="${escXml(baseUrl + c.path)}" rel="${VIA_LINK_REL}"/>
     <summary type="html">${escXml(c.summaryHtml)}</summary>
   </entry>`
   );

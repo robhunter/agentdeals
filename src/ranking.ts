@@ -1,4 +1,5 @@
 import { createHash } from "node:crypto";
+import { changeSummaryText } from "./change-citation.js";
 import { LINK_GRACE_DAYS, unreachableNoticeForUrl } from "./link-health.js";
 import { listEndedTiers, offerEnded, recordedTierSentence } from "./retirement.js";
 import { withheldLevelSentence } from "./source-check.js";
@@ -159,9 +160,11 @@ export type DisclosureCode = "limits_reduced" | "pricing_restructured" | "restri
 
 export interface Disclosure {
   code: DisclosureCode;
+  vendor: string;
   date: string;
   date_source?: ChangeDateSource;
   summary: string;
+  source_url: string | null;
 }
 
 const DISCLOSURE_CHANGE_TYPES = new Set<string>([
@@ -391,9 +394,11 @@ export function evaluate<T extends Offer>(
     if (DISCLOSURE_CHANGE_TYPES.has(change.change_type)) {
       disclosures.push({
         code: change.change_type as DisclosureCode,
+        vendor: change.vendor,
         date: change.date,
         date_source: change.date_source,
         summary: change.summary,
+        source_url: change.source_url?.trim() ? change.source_url.trim() : null,
       });
     }
   }
@@ -404,7 +409,7 @@ export function evaluate<T extends Offer>(
       code: "free_tier_withdrawn",
       points: 3,
       date: withdrawal.change.date,
-      reason: `Recorded ${withdrawal.label} on ${withdrawal.change.date}: ${withdrawal.change.summary}`,
+      reason: `Recorded ${withdrawal.label} on ${withdrawal.change.date}: ${changeSummaryText(withdrawal.change)}`,
     });
   }
 

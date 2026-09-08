@@ -21,7 +21,7 @@ import { DATE_SOURCES, isEventDated, changeDateClause, isoWeekWindow, changesInW
 import { PRODUCT_DEPRECATED, deprecationEndsTheListedProduct } from "./product-deprecation.js";
 import { vendorHistorySentence } from "./vendor-history.js";
 import { isNoLongerInForce, recordsStillInForce, withResolutionInSummary } from "./change-resolution.js";
-import { changeCitesASource, changeIsUncited, ratingWithheldForNoSourceSentence, type CitableChange } from "./change-citation.js";
+import { changeCitesASource, changeIsUncited, changeSummaryHtml, changeSummaryMarkdown, changeSummaryText, ratingWithheldForNoSourceSentence, type CitableChange } from "./change-citation.js";
 import { endedVerdictSentence } from "./retirement.js";
 import { resolveCategoryName } from "./category-scope.js";
 
@@ -433,7 +433,7 @@ export function enrichOffers(offers: Offer[]): EnrichedOffer[] {
     let recent_change: string | null = null;
     if (recentChanges && recentChanges.length > 0) {
       const mostRecent = recentChanges.sort((a, b) => b.date.localeCompare(a.date))[0];
-      recent_change = `${mostRecent.date}: ${mostRecent.summary}`;
+      recent_change = `${mostRecent.date}: ${changeSummaryText(mostRecent)}`;
     }
 
     let expires_soon: string | null = null;
@@ -866,10 +866,12 @@ export function vendorRiskAssessment(vendorChanges: DealChange[], nowMs: number 
 export function riskCauseOf(cause: DealChange | null | undefined): RiskCause | null {
   if (!cause) return null;
   return {
+    vendor: cause.vendor,
     date: cause.date,
     date_source: cause.date_source,
     change_type: cause.change_type,
     summary: cause.summary,
+    source_url: cause.source_url?.trim() ? cause.source_url.trim() : null,
     current_state: cause.current_state,
     resolution: cause.resolution ?? null,
   };
@@ -1461,7 +1463,7 @@ export function getFormattedWeeklyDigest(weeksAgo: number = 0, limit: number = 2
   const other = topChanges.filter(c => !negativeTypes.has(c.change_type) && !positiveTypes.has(c.change_type));
 
   function changeToMd(c: DealChange): string {
-    return `- **${c.vendor}** (${c.category}): ${c.summary}`;
+    return `- **${c.vendor}** (${c.category}): ${changeSummaryMarkdown(c)}`;
   }
 
   const mdSections: string[] = [];
@@ -1500,7 +1502,7 @@ export function getFormattedWeeklyDigest(weeksAgo: number = 0, limit: number = 2
   }
 
   function changeToHtml(c: DealChange): string {
-    return `<li><strong>${escHtml(c.vendor)}</strong> (${escHtml(c.category)}): ${escHtml(c.summary)}</li>`;
+    return `<li><strong>${escHtml(c.vendor)}</strong> (${escHtml(c.category)}): ${changeSummaryHtml(c, escHtml)}</li>`;
   }
 
   const htmlSections: string[] = [];
