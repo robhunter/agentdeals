@@ -5,6 +5,7 @@ import { spawn, type ChildProcess } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { MCP_TOOL_COUNT, MCP_TOOL_NAMES } from "../dist/mcp-tool-inventory.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 let serverPort = 0;
@@ -337,7 +338,7 @@ describe("HTTP transport", () => {
     assert.strictEqual(body["$schema"], "https://glama.ai/mcp/schemas/server.json");
     assert.strictEqual(body.name, "agentdeals");
     assert.strictEqual(body.license, "MIT");
-    assert.strictEqual(body.tools, 4);
+    assert.strictEqual(body.tools, MCP_TOOL_COUNT);
     assert.ok(Array.isArray(body.transport));
   });
 
@@ -382,14 +383,11 @@ describe("HTTP transport", () => {
     assert.strictEqual(body.authentication.required, false);
     assert.ok(body.description, "top-level description should be present");
     assert.ok(Array.isArray(body.tools));
-    assert.strictEqual(body.tools.length, 4);
+    assert.strictEqual(body.tools.length, MCP_TOOL_COUNT);
     assert.ok(Array.isArray(body.prompts));
     assert.strictEqual(body.prompts.length, 6);
-    const toolNames = body.tools.map((t: any) => t.name);
-    assert.ok(toolNames.includes("search_deals"));
-    assert.ok(toolNames.includes("plan_stack"));
-    assert.ok(toolNames.includes("compare_vendors"));
-    assert.ok(toolNames.includes("track_changes"));
+    const toolNames = body.tools.map((t: any) => t.name).sort();
+    assert.deepStrictEqual(toolNames, [...MCP_TOOL_NAMES].sort());
     for (const tool of body.tools) {
       assert.strictEqual(tool.annotations.readOnlyHint, true, `${tool.name} should have readOnlyHint: true`);
       assert.strictEqual(tool.annotations.destructiveHint, false, `${tool.name} should have destructiveHint: false`);
@@ -404,7 +402,7 @@ describe("HTTP transport", () => {
     assert.strictEqual(response.headers.get("content-type"), "application/json");
     const body = await response.json() as any;
     assert.strictEqual(body.serverInfo.name, "agentdeals");
-    assert.strictEqual(body.tools.length, 4);
+    assert.strictEqual(body.tools.length, MCP_TOOL_COUNT);
   });
 
   it("serves /.well-known/mcp manifest per SEP-1960", async () => {
@@ -424,7 +422,7 @@ describe("HTTP transport", () => {
     assert.strictEqual(body.transport[0].type, "streamable-http");
     assert.ok(body.transport[0].url.endsWith("/mcp"));
     assert.ok(Array.isArray(body.tools));
-    assert.strictEqual(body.tools.length, 4);
+    assert.strictEqual(body.tools.length, MCP_TOOL_COUNT);
     const toolNames = body.tools.map((t: any) => t.name);
     assert.ok(toolNames.includes("search_deals"));
     assert.ok(toolNames.includes("plan_stack"));
@@ -2025,8 +2023,8 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("/api/digest/weekly"), "Should show weekly digest endpoint in quickstart");
     assert.ok(html.includes("Rate Limits"), "Should have rate limits section");
     assert.ok(html.includes("no rate limits"), "Should state where there are no rate limits");
-    assert.ok(html.includes("X-RateLimit-Limit"), "Should name the headers the limited endpoints return");
-    assert.ok(html.includes("registrations per hour per client"), "Should state the registration limit");
+    assert.ok(!html.includes("X-RateLimit-Limit"), "Should not name headers no served endpoint returns");
+    assert.ok(!html.includes("registrations per hour per client"), "Should not advertise the retired registration endpoint");
     assert.ok(!/no rate limits\.?<\/p>/.test(html), "Should not claim the whole API is unlimited");
     assert.ok(html.includes("/feed.xml"), "Should link to RSS feed");
     assert.ok(!html.includes("${BASE_URL}"), "Should not have unresolved BASE_URL");

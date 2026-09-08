@@ -13,10 +13,12 @@ import {
   fetchExpiringDeals,
   fetchNewestDeals,
   fetchWeeklyDigest,
+  fetchReferralCode,
 } from "./api-client.js";
 import { getGuideList, getGuideBySlug } from "./guides.js";
 import { registerMcpAppsResources, TOOL_UI_META } from "./mcp-apps.js";
 import { CATALOGUE_CATEGORY_COUNT, CATALOGUE_OFFER_FLOOR_LABEL, MCP_INSTRUCTIONS } from "./mcp-instructions.js";
+import { MCP_TOOLS } from "./mcp-tool-inventory.js";
 import { substitutesFor } from "./product-role.js";
 
 export const TRACK_CHANGES_LIMIT = 1000;
@@ -329,6 +331,27 @@ export function createServer(): McpServer {
         return mcpText(result);
       } catch (err) {
         return mcpError(`Error: ${err instanceof Error ? err.message : String(err)}`);
+      }
+    }
+  );
+
+  server.registerTool(
+    "get_referral_code",
+    {
+      description: MCP_TOOLS.find((t) => t.name === "get_referral_code")!.brief,
+      annotations: {
+        readOnlyHint: true,
+        destructiveHint: false,
+      },
+      inputSchema: {
+        vendor: z.string().describe("Vendor name to get the referral code for (e.g. 'Railway')"),
+      },
+    },
+    async ({ vendor }) => {
+      try {
+        return mcpText(await fetchReferralCode(vendor));
+      } catch (err) {
+        return mcpError(`No referral found for vendor "${vendor}"`);
       }
     }
   );

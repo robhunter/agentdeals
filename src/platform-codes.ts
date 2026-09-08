@@ -1,7 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { getRankedCodesForVendor, getAllActiveCodes } from "./referral-codes.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PLATFORM_CODES_PATH = path.join(__dirname, "..", "data", "platform_codes.json");
@@ -80,42 +79,33 @@ export function getAllPlatformCodes(): PlatformCode[] {
   return loadPlatformCodes().filter(c => c.active);
 }
 
+export type ServedReferralSource = "platform";
+
+export const AGENT_SUBMISSION_RETIRED_REASON =
+  "Agent-submitted referral codes are retired. AgentDeals never paid a commission on one and no longer accepts or serves them. Every code we serve is one we hold ourselves and earn on \u2014 see /disclosure.";
+
+
 export interface BestReferralCode {
   vendor: string;
   code: string;
   referral_url: string;
   referee_benefit: string;
   restrictions: string[];
-  source: "platform" | "agent-submitted";
+  source: ServedReferralSource;
 }
 
 export function getBestReferralCode(vendorName: string): BestReferralCode | null {
   const platformCode = getPlatformCodeForVendor(vendorName);
-  if (platformCode) {
-    return {
-      vendor: platformCode.vendor,
-      code: platformCode.code,
-      referral_url: platformCode.referral_url,
-      referee_benefit: platformCode.referee_benefit,
-      restrictions: restrictionsOf(platformCode),
-      source: "platform",
-    };
-  }
+  if (!platformCode) return null;
 
-  const ranked = getRankedCodesForVendor(vendorName);
-  if (ranked.length > 0) {
-    const best = ranked[0];
-    return {
-      vendor: best.vendor,
-      code: best.code,
-      referral_url: best.referral_url,
-      referee_benefit: best.description,
-      restrictions: restrictionsOf(best),
-      source: "agent-submitted",
-    };
-  }
-
-  return null;
+  return {
+    vendor: platformCode.vendor,
+    code: platformCode.code,
+    referral_url: platformCode.referral_url,
+    referee_benefit: platformCode.referee_benefit,
+    restrictions: restrictionsOf(platformCode),
+    source: "platform",
+  };
 }
 
 export interface ListedReferralCode {
@@ -125,46 +115,21 @@ export interface ListedReferralCode {
   referral_url: string;
   referee_benefit: string;
   restrictions: string[];
-  source: "platform" | "agent-submitted";
+  source: ServedReferralSource;
 }
 
 export function listAllReferralCodes(opts: {
-  source?: "platform" | "agent" | "agent-submitted";
   vendorToCategory?: (vendorName: string) => string | null;
 } = {}): ListedReferralCode[] {
   const resolveCategory = opts.vendorToCategory ?? (() => null);
-  const wantPlatform = opts.source === undefined || opts.source === "platform";
-  const wantAgent = opts.source === undefined || opts.source === "agent" || opts.source === "agent-submitted";
 
-  const out: ListedReferralCode[] = [];
-
-  if (wantPlatform) {
-    for (const c of getAllPlatformCodes()) {
-      out.push({
-        vendor: c.vendor,
-        category: resolveCategory(c.vendor),
-        code: c.code,
-        referral_url: c.referral_url,
-        referee_benefit: c.referee_benefit,
-        restrictions: restrictionsOf(c),
-        source: "platform",
-      });
-    }
-  }
-
-  if (wantAgent) {
-    for (const c of getAllActiveCodes()) {
-      out.push({
-        vendor: c.vendor,
-        category: resolveCategory(c.vendor),
-        code: c.code,
-        referral_url: c.referral_url,
-        referee_benefit: c.description,
-        restrictions: restrictionsOf(c),
-        source: "agent-submitted",
-      });
-    }
-  }
-
-  return out;
+  return getAllPlatformCodes().map((c) => ({
+    vendor: c.vendor,
+    category: resolveCategory(c.vendor),
+    code: c.code,
+    referral_url: c.referral_url,
+    referee_benefit: c.referee_benefit,
+    restrictions: restrictionsOf(c),
+    source: "platform" as const,
+  }));
 }

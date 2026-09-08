@@ -139,6 +139,10 @@ export async function fetchExpiringDeals(withinDays?: number): Promise<unknown> 
   return apiFetch("/api/expiring", p);
 }
 
+export async function fetchReferralCode(vendor: string): Promise<unknown> {
+  return apiFetch(`/api/referral-codes/${encodeURIComponent(vendor)}`);
+}
+
 export async function fetchWeeklyDigest(): Promise<unknown> {
   return apiFetch("/api/digest");
 }

@@ -6,7 +6,7 @@ A remote MCP server that aggregates publicly available discounts, free tiers, st
 
 ## Success Criteria
 
-- Working MCP server responding to 4 discovery tools (`search_deals`, `plan_stack`, `compare_vendors`, `track_changes`) and 7 marketplace/referral tools (`register_agent`, `get_referral_code`, `check_balance`, `request_payout`, `submit_referral_code`, `my_referral_codes`, `leaderboard`)
+- Working MCP server responding to 5 tools (`search_deals`, `plan_stack`, `compare_vendors`, `track_changes`, `get_referral_code`). The set is `src/mcp-tool-inventory.ts`; both servers and every surface that publishes a count read it.
 - Index of real vendor offers with verified data
 - Deployed and accessible (ngrok for dev, hosted service for launch)
 - Registered on MCP registries
@@ -78,7 +78,7 @@ Endpoints:
 
 _As of 2026-04-24. Counts come from `data/index.json`, `data/deal_changes.json`, `src/openapi.ts`, and `npm test` — rerun to verify before quoting._
 
-MCP server is functional with stdio and HTTP transports. 11 MCP tools (4 discovery + 7 marketplace/referral) + 6 prompt templates. **1,571 offers** across **66 categories** with eligibility schema (accelerator, oss, fintech, student types). **287 tracked pricing changes**. **20 documented REST endpoints** (see `src/openapi.ts` / `/api/openapi.json` / Swagger UI at `/api/docs`). **1,160 passing tests**. Multi-session HTTP support with idle timeout cleanup and structured connection logging. Deployed on Railway. Listed on Official MCP Registry and Glama. Registry manifests in place (server.json, glama.json, smithery.yaml). MCP server card (SEP-1649) at `/.well-known/mcp.json`; MCP manifest (SEP-1960) at `/.well-known/mcp`. Server-level `instructions` advertised on the `initialize` response (both HTTP and stdio transports).
+MCP server is functional with stdio and HTTP transports. 5 MCP tools + 6 prompt templates. The 7 agent-marketplace tools were withdrawn with the marketplace; `src/mcp-tool-inventory.ts` records each and why. **1,571 offers** across **66 categories** with eligibility schema (accelerator, oss, fintech, student types). **287 tracked pricing changes**. **20 documented REST endpoints** (see `src/openapi.ts` / `/api/openapi.json` / Swagger UI at `/api/docs`). **1,160 passing tests**. Multi-session HTTP support with idle timeout cleanup and structured connection logging. Deployed on Railway. Listed on Official MCP Registry and Glama. Registry manifests in place (server.json, glama.json, smithery.yaml). MCP server card (SEP-1649) at `/.well-known/mcp.json`; MCP manifest (SEP-1960) at `/.well-known/mcp`. Server-level `instructions` advertised on the `initialize` response (both HTTP and stdio transports).
 
 **Major surfaces shipped beyond the core MCP tools:**
 - **Referral codes** — platform codes seeded, `GET /api/referral-codes` listing + per-vendor lookup, inline `referral_code` enrichment on MCP tool responses and REST payloads. No page solicits a code or offers revenue for one; `/marketplace` is retired and redirects to `/disclosure`.

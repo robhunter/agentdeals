@@ -342,12 +342,9 @@ describe("Agent registration is open but rate limited", () => {
     assert.strictEqual(res.status, 429);
   });
 
-  it("publishes the limit it enforces on the developer API page", async () => {
+  it("is not advertised on the developer API page, which the marketplace retirement removed it from", async () => {
     const html = await (await fetch(`http://localhost:${port}/developers`)).text();
-    assert.ok(
-      html.includes("allows 2 registrations per hour per client"),
-      "the API page should state the limit this server is enforcing",
-    );
-    assert.ok(html.includes("X-RateLimit-Limit"), "the API page should name the headers the endpoint returns");
+    assert.ok(!html.includes("/api/agents/register"), "the API page still names the registration endpoint");
+    assert.ok(!html.includes("registrations per hour per client"), "the API page still publishes a registration limit");
   });
 });
