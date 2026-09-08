@@ -16,6 +16,16 @@ export function theEventNeverHappened(change: { resolution?: ChangeResolution | 
   return change.resolution?.state === "retracted";
 }
 
+type Resolvable = { resolution?: ChangeResolution | null };
+
+export function recordsWeStandBehind<T extends Resolvable>(changes: readonly T[]): T[] {
+  return changes.filter((c) => !theEventNeverHappened(c));
+}
+
+export function recordsStillInForce<T extends Resolvable>(changes: readonly T[]): T[] {
+  return changes.filter((c) => !isNoLongerInForce(c));
+}
+
 export const EVENT_CANCELLED = "https://schema.org/EventCancelled";
 
 export function eventResolutionFields(change: {

@@ -37,7 +37,8 @@ import { vendorHistorySentence } from "./vendor-history.js";
 import { HETZNER_APRIL_CHANGES, HETZNER_CLOUD_PLANS, HETZNER_PRICES_READ, HETZNER_PRICE_SOURCE, HETZNER_SINGAPORE_EXAMPLE, cheapestOrderableHetznerPlan, hetznerEntryPriceClause, unorderableHetznerPlans } from "./hetzner-pricing.js";
 import { HUNDRED_TB_SCENARIO, ONE_TO_ONE_SCENARIO, STORAGE_RATES_READ, STORAGE_SCALE_WORKLOADS, TEN_TO_ONE_SCENARIO, cheapestProviderAt, costliestProviderAt, egressAllowanceSentence, egressBillOnceOverAllowance, egressRatioWhereCostsMatch, fixedMonthlyGrantsSentence, monthlyStorageCost, providersWithScalingEgressAllowance, rateCardFor, scaleCostFor } from "./storage-cost-model.js";
 import { changeTimelineDate, supersededLineups, supersessionNote } from "./change-lineup.js";
-import { isNoLongerInForce, eventResolutionFields } from "./change-resolution.js";
+import { isNoLongerInForce, eventResolutionFields, recordsStillInForce } from "./change-resolution.js";
+import { directionRatioLabel } from "./change-direction.js";
 import { removalDurability, removalReturnRateSentence, removalDurabilityPattern, lastingRemovalExamplesFor } from "./removal-durability.js";
 import { changeIsUncited, changeSourceCitation, changeSourceLinkHtml, citedChanges, uncitedChangeNotice, ratingWithheldForNoSourceClause, ratingWithheldForNoSourceSentence, UNCITED_CHANGE_LABEL } from "./change-citation.js";
 import { growthLimitPhrases } from "./growth-limits.js";
@@ -457,6 +458,7 @@ const registrationLimiter = createRegistrationLimiter();
 const offers = loadOffers();
 const categories = getCategories();
 const dealChanges = loadDealChanges();
+const trackedChangeCount = recordsStillInForce(dealChanges).length;
 
 const changesByVendorName = (() => {
   const byVendor = changesByVendor(dealChanges);
@@ -513,7 +515,7 @@ const stats = {
   offers: offers.length,
   categories: categories.length,
   tools: 4,
-  dealChanges: dealChanges.length,
+  dealChanges: recordsStillInForce(dealChanges).length,
 };
 
 export function changeLogFreshnessNote(now: Date = new Date()): string {
@@ -2271,7 +2273,7 @@ ${mcpCtaCss()}
   <div class="tie-note">${tiePara}</div>
 
   <div class="trust-note">
-    <strong>Why trust this data?</strong> Every free tier is verified against the vendor's pricing page with dates tracked. We monitor ${dealChanges.length} pricing changes and flag vendors that have reduced or removed free tiers. ${escHtmlServer(DEMOTE_ONLY_POLICY)} <a href="/category/${toSlug(categoryName)}">See all ${offers.filter(o => o.category === categoryName).length} ${categoryName.toLowerCase()} offers &rarr;</a>
+    <strong>Why trust this data?</strong> Every free tier is verified against the vendor's pricing page with dates tracked. We monitor ${trackedChangeCount} pricing changes and flag vendors that have reduced or removed free tiers. ${escHtmlServer(DEMOTE_ONLY_POLICY)} <a href="/category/${toSlug(categoryName)}">See all ${offers.filter(o => o.category === categoryName).length} ${categoryName.toLowerCase()} offers &rarr;</a>
   </div>
 
 ${reviewsHtml}
@@ -3590,7 +3592,7 @@ function parseWeekKey(key: string): { year: number; week: number } | null {
 
 function getChangesByWeek(): Map<string, typeof dealChanges> {
   const byWeek = new Map<string, typeof dealChanges>();
-  for (const c of dealChanges) {
+  for (const c of recordsStillInForce(dealChanges)) {
     const d = new Date(c.date + "T00:00:00Z");
     const { year, week } = isoWeekOf(d);
     const key = formatWeekKey(year, week);
@@ -4959,7 +4961,7 @@ ${growthPathHtml}
   <div class="section">
     <h2 id="changes">Pricing Change History (${vendorChanges.length} recorded)</h2>
     ${changesHtml}
-    <p style="margin-top:.75rem;font-size:.8rem"><a href="/pricing-changes">View all ${dealChanges.length} pricing changes across all vendors &rarr;</a></p>
+    <p style="margin-top:.75rem;font-size:.8rem"><a href="/pricing-changes">View all ${trackedChangeCount} pricing changes across all vendors &rarr;</a></p>
   </div>
 ${curatedAlternativesHtml}${alternativesHtml}
 ${comparisonsHtml}
@@ -7062,7 +7064,7 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
   {
     slug: "free-tier-risk",
     title: "Free Tier Risk Index — Predictive Analysis of Which Free Tiers May Disappear Next",
-    metaDesc: "Predictive risk scores for 38 developer tool free tiers — which will disappear next? Category heatmap, pattern analysis from 80 tracked pricing changes, counter-trends, and actionable protection strategies. Updated April 2026.",
+    metaDesc: `Predictive risk scores for 38 developer tool free tiers — which will disappear next? Category heatmap, pattern analysis from ${trackedChangeCount} tracked pricing changes, counter-trends, and actionable protection strategies. Updated April 2026.`,
     contextHtml: "",
     tag: "free-tier-risk",
     primaryVendor: "AgentDeals",
@@ -8816,7 +8818,7 @@ function buildReportsIndexPage(): string {
 
   const monthCards = months.map(m => {
     const [y, mo] = m.split("-");
-    const monthChanges = changesEffectiveIn(allChanges, m);
+    const monthChanges = recordsStillInForce(changesEffectiveIn(allChanges, m));
     const negative = monthChanges.filter(c => NEGATIVE_CHANGE_TYPES.has(c.change_type)).length;
     const positive = monthChanges.filter(c => ["new_free_tier","limits_increased","startup_program_expanded","new_tier"].includes(c.change_type)).length;
     const neutral = monthChanges.length - negative - positive;
@@ -8878,7 +8880,7 @@ function buildReportsIndexPage(): string {
     + buildGlobalNav("reports")
     + '<div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; Reports</div>\n'
     + '<h1>Monthly Pricing Intelligence Reports</h1>\n'
-    + '<p class="subtitle">Auto-generated monthly analysis of developer tool pricing trends across ' + allChanges.length + ' tracked changes.</p>\n'
+    + '<p class="subtitle">Auto-generated monthly analysis of developer tool pricing trends across ' + recordsStillInForce(allChanges).length + ' tracked changes.</p>\n'
     + monthCards
     + '\n<footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>\n'
     + '</div>\n</body>\n</html>';
@@ -8886,8 +8888,9 @@ function buildReportsIndexPage(): string {
 
 function buildMonthlyReportPage(yearMonth: string): string | null {
   const allChanges = loadDealChanges();
-  const monthChanges = changesEffectiveIn(allChanges, yearMonth);
-  if (monthChanges.length === 0) return null;
+  const recordedInMonth = changesEffectiveIn(allChanges, yearMonth);
+  if (recordedInMonth.length === 0) return null;
+  const monthChanges = recordsStillInForce(recordedInMonth);
 
   const [yearStr, moStr] = yearMonth.split("-");
   const monthNum = parseInt(moStr);
@@ -8917,7 +8920,7 @@ function buildMonthlyReportPage(yearMonth: string): string | null {
   const sortedCats = [...catCounts.entries()].sort((a, b) => b[1].total - a[1].total);
 
   const prevMonth = monthNum === 1 ? (parseInt(yearStr) - 1) + "-12" : yearStr + "-" + String(monthNum - 1).padStart(2, "0");
-  const prevChanges = changesEffectiveIn(allChanges, prevMonth);
+  const prevChanges = recordsStillInForce(changesEffectiveIn(allChanges, prevMonth));
   const prevNeg = prevChanges.filter(c => negativeTypes.has(c.change_type)).length;
   const prevPos = prevChanges.filter(c => positiveTypes.has(c.change_type)).length;
 
@@ -9262,7 +9265,7 @@ function buildAiFreeTiersPage(): string {
     <ul style="margin:0;padding-left:1.25rem;font-size:.9rem;color:var(--text-muted);line-height:1.8">
       ${aiChanges.slice(0, 6).map(c => `<li><strong>${escHtmlServer(c.vendor)}</strong>: ${escHtmlServer(c.summary.length > 120 ? c.summary.substring(0, 117) + "..." : c.summary)}</li>`).join("\n      ")}
     </ul>
-    <p style="margin:.75rem 0 0;font-size:.8rem"><a href="/changes">View all ${dealChanges.length} pricing changes &rarr;</a></p>
+    <p style="margin:.75rem 0 0;font-size:.8rem"><a href="/changes">View all ${trackedChangeCount} pricing changes &rarr;</a></p>
   </div>` : "";
 
   const topLlms = llmInference.filter(o =>
@@ -9521,7 +9524,7 @@ function buildHostingAlternativesPage(): string {
     <ul style="margin:0;padding-left:1.25rem;font-size:.9rem;color:var(--text-muted);line-height:1.8">
       ${hostingChanges.slice(0, 8).map(c => `<li><strong>${escHtmlServer(c.vendor)}</strong>: ${escHtmlServer(c.summary.length > 120 ? c.summary.substring(0, 117) + "..." : c.summary)}</li>`).join("\n      ")}
     </ul>
-    <p style="margin:.75rem 0 0;font-size:.8rem"><a href="/changes">View all ${dealChanges.length} pricing changes &rarr;</a></p>
+    <p style="margin:.75rem 0 0;font-size:.8rem"><a href="/changes">View all ${trackedChangeCount} pricing changes &rarr;</a></p>
   </div>` : "";
 
   const jsonLd = {
@@ -9859,7 +9862,7 @@ function buildDatabaseAlternativesPage(): string {
     <ul style="margin:0;padding-left:1.25rem;font-size:.9rem;color:var(--text-muted);line-height:1.8">
       ${dbChanges.slice(0, 6).map(c => `<li><strong>${escHtmlServer(c.vendor)}</strong>: ${escHtmlServer(c.summary.length > 120 ? c.summary.substring(0, 117) + "..." : c.summary)}</li>`).join("\n      ")}
     </ul>
-    <p style="margin:.75rem 0 0;font-size:.8rem"><a href="/changes">View all ${dealChanges.length} pricing changes &rarr;</a></p>
+    <p style="margin:.75rem 0 0;font-size:.8rem"><a href="/changes">View all ${trackedChangeCount} pricing changes &rarr;</a></p>
   </div>` : "";
 
   const jsonLd = {
@@ -10198,7 +10201,7 @@ function buildMonitoringAlternativesPage(): string {
     <ul style="margin:0;padding-left:1.25rem;font-size:.9rem;color:var(--text-muted);line-height:1.8">
       ${monitoringChanges.slice(0, 8).map(c => `<li><strong>${escHtmlServer(c.vendor)}</strong>: ${escHtmlServer(c.summary.length > 120 ? c.summary.substring(0, 117) + "..." : c.summary)}</li>`).join("\n      ")}
     </ul>
-    <p style="margin:.75rem 0 0;font-size:.8rem"><a href="/changes">View all ${dealChanges.length} pricing changes &rarr;</a></p>
+    <p style="margin:.75rem 0 0;font-size:.8rem"><a href="/changes">View all ${trackedChangeCount} pricing changes &rarr;</a></p>
   </div>` : "";
 
   const jsonLd = {
@@ -10526,7 +10529,7 @@ function buildCiCdAlternativesPage(): string {
     <ul style="margin:0;padding-left:1.25rem;font-size:.9rem;color:var(--text-muted);line-height:1.8">
       ${cicdChanges.slice(0, 8).map(c => `<li><strong>${escHtmlServer(c.vendor)}</strong>: ${escHtmlServer(c.summary.length > 120 ? c.summary.substring(0, 117) + "..." : c.summary)}</li>`).join("\n      ")}
     </ul>
-    <p style="margin:.75rem 0 0;font-size:.8rem"><a href="/changes">View all ${dealChanges.length} pricing changes &rarr;</a></p>
+    <p style="margin:.75rem 0 0;font-size:.8rem"><a href="/changes">View all ${trackedChangeCount} pricing changes &rarr;</a></p>
   </div>` : "";
 
   const jsonLd = {
@@ -10848,7 +10851,7 @@ function buildSecurityAlternativesPage(): string {
     <ul style="margin:0;padding-left:1.25rem;font-size:.9rem;color:var(--text-muted);line-height:1.8">
       ${secChanges.slice(0, 8).map(c => `<li><strong>${escHtmlServer(c.vendor)}</strong>: ${escHtmlServer(c.summary.length > 120 ? c.summary.substring(0, 117) + "..." : c.summary)}</li>`).join("\n      ")}
     </ul>
-    <p style="margin:.75rem 0 0;font-size:.8rem"><a href="/changes">View all ${dealChanges.length} pricing changes &rarr;</a></p>
+    <p style="margin:.75rem 0 0;font-size:.8rem"><a href="/changes">View all ${trackedChangeCount} pricing changes &rarr;</a></p>
   </div>` : "";
 
   const jsonLd = {
@@ -11185,7 +11188,7 @@ function buildTestingAlternativesPage(): string {
     <ul style="margin:0;padding-left:1.25rem;font-size:.9rem;color:var(--text-muted);line-height:1.8">
       ${testingChanges.slice(0, 8).map(c => `<li><strong>${escHtmlServer(c.vendor)}</strong>: ${escHtmlServer(c.summary.length > 120 ? c.summary.substring(0, 117) + "..." : c.summary)}</li>`).join("\n      ")}
     </ul>
-    <p style="margin:.75rem 0 0;font-size:.8rem"><a href="/changes">View all ${dealChanges.length} pricing changes &rarr;</a></p>
+    <p style="margin:.75rem 0 0;font-size:.8rem"><a href="/changes">View all ${trackedChangeCount} pricing changes &rarr;</a></p>
   </div>` : "";
 
   const jsonLd = {
@@ -11506,7 +11509,7 @@ function buildStorageAlternativesPage(): string {
     <ul style="margin:0;padding-left:1.25rem;font-size:.9rem;color:var(--text-muted);line-height:1.8">
       ${storageChanges.slice(0, 8).map(c => `<li><strong>${escHtmlServer(c.vendor)}</strong>: ${escHtmlServer(c.summary.length > 120 ? c.summary.substring(0, 117) + "..." : c.summary)}</li>`).join("\n      ")}
     </ul>
-    <p style="margin:.75rem 0 0;font-size:.8rem"><a href="/changes">View all ${dealChanges.length} pricing changes &rarr;</a></p>
+    <p style="margin:.75rem 0 0;font-size:.8rem"><a href="/changes">View all ${trackedChangeCount} pricing changes &rarr;</a></p>
   </div>` : "";
 
   const jsonLd = {
@@ -11818,7 +11821,7 @@ function buildAnalyticsAlternativesPage(): string {
     <ul style="margin:0;padding-left:1.25rem;font-size:.9rem;color:var(--text-muted);line-height:1.8">
       ${analyticsChanges.slice(0, 8).map(c => `<li><strong>${escHtmlServer(c.vendor)}</strong>: ${escHtmlServer(c.summary.length > 120 ? c.summary.substring(0, 117) + "..." : c.summary)}</li>`).join("\n      ")}
     </ul>
-    <p style="margin:.75rem 0 0;font-size:.8rem"><a href="/changes">View all ${dealChanges.length} pricing changes &rarr;</a></p>
+    <p style="margin:.75rem 0 0;font-size:.8rem"><a href="/changes">View all ${trackedChangeCount} pricing changes &rarr;</a></p>
   </div>` : "";
 
   const jsonLd = {
@@ -12134,7 +12137,7 @@ function buildAiMlAlternativesPage(): string {
     <ul style="margin:0;padding-left:1.25rem;font-size:.9rem;color:var(--text-muted);line-height:1.8">
       ${aiChanges.slice(0, 8).map(c => `<li><strong>${escHtmlServer(c.vendor)}</strong>: ${escHtmlServer(c.summary.length > 120 ? c.summary.substring(0, 117) + "..." : c.summary)}</li>`).join("\n      ")}
     </ul>
-    <p style="margin:.75rem 0 0;font-size:.8rem"><a href="/changes">View all ${dealChanges.length} pricing changes &rarr;</a></p>
+    <p style="margin:.75rem 0 0;font-size:.8rem"><a href="/changes">View all ${trackedChangeCount} pricing changes &rarr;</a></p>
   </div>` : "";
 
   const jsonLd = {
@@ -12456,7 +12459,7 @@ function buildEmailAlternativesPage(): string {
     <ul style="margin:0;padding-left:1.25rem;font-size:.9rem;color:var(--text-muted);line-height:1.8">
       ${emailChanges.slice(0, 8).map(c => `<li><strong>${escHtmlServer(c.vendor)}</strong>: ${escHtmlServer(c.summary.length > 120 ? c.summary.substring(0, 117) + "..." : c.summary)}</li>`).join("\n      ")}
     </ul>
-    <p style="margin:.75rem 0 0;font-size:.8rem"><a href="/changes">View all ${dealChanges.length} pricing changes &rarr;</a></p>
+    <p style="margin:.75rem 0 0;font-size:.8rem"><a href="/changes">View all ${trackedChangeCount} pricing changes &rarr;</a></p>
   </div>` : "";
 
   const jsonLd = {
@@ -12789,7 +12792,7 @@ function buildDesignAlternativesPage(): string {
     <ul style="margin:0;padding-left:1.25rem;font-size:.9rem;color:var(--text-muted);line-height:1.8">
       ${designChanges.slice(0, 8).map(c => `<li><strong>${escHtmlServer(c.vendor)}</strong>: ${escHtmlServer(c.summary.length > 120 ? c.summary.substring(0, 117) + "..." : c.summary)}</li>`).join("\n      ")}
     </ul>
-    <p style="margin:.75rem 0 0;font-size:.8rem"><a href="/changes">View all ${dealChanges.length} pricing changes &rarr;</a></p>
+    <p style="margin:.75rem 0 0;font-size:.8rem"><a href="/changes">View all ${trackedChangeCount} pricing changes &rarr;</a></p>
   </div>` : "";
 
   const jsonLd = {
@@ -13126,7 +13129,7 @@ function buildProjectManagementAlternativesPage(): string {
     <ul style="margin:0;padding-left:1.25rem;font-size:.9rem;color:var(--text-muted);line-height:1.8">
       ${pmChanges.slice(0, 8).map(c => `<li><strong>${escHtmlServer(c.vendor)}</strong>: ${escHtmlServer(c.summary.length > 120 ? c.summary.substring(0, 117) + "..." : c.summary)}</li>`).join("\n      ")}
     </ul>
-    <p style="margin:.75rem 0 0;font-size:.8rem"><a href="/changes">View all ${dealChanges.length} pricing changes &rarr;</a></p>
+    <p style="margin:.75rem 0 0;font-size:.8rem"><a href="/changes">View all ${trackedChangeCount} pricing changes &rarr;</a></p>
   </div>` : "";
 
   const jsonLd = {
@@ -13454,7 +13457,7 @@ function buildIdeCodeEditorsAlternativesPage(): string {
     <ul style="margin:0;padding-left:1.25rem;font-size:.9rem;color:var(--text-muted);line-height:1.8">
       ${ideChanges.slice(0, 8).map(c => `<li><strong>${escHtmlServer(c.vendor)}</strong>: ${escHtmlServer(c.summary.length > 120 ? c.summary.substring(0, 117) + "..." : c.summary)}</li>`).join("\n      ")}
     </ul>
-    <p style="margin:.75rem 0 0;font-size:.8rem"><a href="/changes">View all ${dealChanges.length} pricing changes &rarr;</a></p>
+    <p style="margin:.75rem 0 0;font-size:.8rem"><a href="/changes">View all ${trackedChangeCount} pricing changes &rarr;</a></p>
   </div>` : "";
 
   const jsonLd = {
@@ -13763,7 +13766,7 @@ function buildFreeLlmApisPage(): string {
     <ul style="margin:0;padding-left:1.25rem;font-size:.9rem;color:var(--text-muted);line-height:1.8">
       ${llmChanges.slice(0, 8).map(c => `<li><strong>${escHtmlServer(c.vendor)}</strong>: ${escHtmlServer(c.summary.length > 120 ? c.summary.substring(0, 117) + "..." : c.summary)}</li>`).join("\n      ")}
     </ul>
-    <p style="margin:.75rem 0 0;font-size:.8rem"><a href="/changes">View all ${dealChanges.length} pricing changes &rarr;</a></p>
+    <p style="margin:.75rem 0 0;font-size:.8rem"><a href="/changes">View all ${trackedChangeCount} pricing changes &rarr;</a></p>
   </div>` : "";
 
   const jsonLd = {
@@ -14081,7 +14084,7 @@ function buildApiDevelopmentAlternativesPage(): string {
     <ul style="margin:0;padding-left:1.25rem;font-size:.9rem;color:var(--text-muted);line-height:1.8">
       ${apiChanges.slice(0, 8).map(c => `<li><strong>${escHtmlServer(c.vendor)}</strong>: ${escHtmlServer(c.summary.length > 120 ? c.summary.substring(0, 117) + "..." : c.summary)}</li>`).join("\n      ")}
     </ul>
-    <p style="margin:.75rem 0 0;font-size:.8rem"><a href="/changes">View all ${dealChanges.length} pricing changes &rarr;</a></p>
+    <p style="margin:.75rem 0 0;font-size:.8rem"><a href="/changes">View all ${trackedChangeCount} pricing changes &rarr;</a></p>
   </div>` : "";
 
   const jsonLd = {
@@ -14396,7 +14399,7 @@ function buildTeamCollaborationAlternativesPage(): string {
     <ul style="margin:0;padding-left:1.25rem;font-size:.9rem;color:var(--text-muted);line-height:1.8">
       ${collabChanges.slice(0, 8).map(c => `<li><strong>${escHtmlServer(c.vendor)}</strong>: ${escHtmlServer(c.summary.length > 120 ? c.summary.substring(0, 117) + "..." : c.summary)}</li>`).join("\n      ")}
     </ul>
-    <p style="margin:.75rem 0 0;font-size:.8rem"><a href="/changes">View all ${dealChanges.length} pricing changes &rarr;</a></p>
+    <p style="margin:.75rem 0 0;font-size:.8rem"><a href="/changes">View all ${trackedChangeCount} pricing changes &rarr;</a></p>
   </div>` : "";
 
   const jsonLd = {
@@ -14792,7 +14795,7 @@ function buildFreeStartupStackPage(): string {
 
   const stabilityNotes = stackChanges.length > 0 ? `
   <h2>Stability Notes</h2>
-  <p style="color:var(--text-muted);margin-bottom:1rem;font-size:.9rem">Recent pricing changes affecting vendors in this stack. Based on our tracking of ${dealChanges.length} deal changes across ${offers.length.toLocaleString()}+ developer tools.</p>
+  <p style="color:var(--text-muted);margin-bottom:1rem;font-size:.9rem">Recent pricing changes affecting vendors in this stack. Based on our tracking of ${trackedChangeCount} deal changes across ${offers.length.toLocaleString()}+ developer tools.</p>
   <div class="stability-list">
     ${stackChanges.slice(0, 12).map(c => {
       const typeColors: Record<string, string> = {
@@ -14807,7 +14810,7 @@ function buildFreeStartupStackPage(): string {
       </div>`;
     }).join("\n    ")}
   </div>
-  <p style="margin-top:1rem;font-size:.85rem"><a href="/changes">View all ${dealChanges.length} pricing changes &rarr;</a></p>` : "";
+  <p style="margin-top:1rem;font-size:.85rem"><a href="/changes">View all ${trackedChangeCount} pricing changes &rarr;</a></p>` : "";
 
   const tableRows = stackCategories.map(cat => {
     const cells = stackTableCellsHtml(cat.recommended.vendor, "—");
@@ -14894,7 +14897,7 @@ ${mcpCtaCss()}
 
   <div class="context">
     <p>You can build and launch a complete SaaS product without spending a dollar on infrastructure. This guide recommends the best free tier for each layer of a typical startup stack — <strong>10 categories</strong> from hosting to analytics — with exact limits pulled from our index of ${offers.length.toLocaleString()}+ verified developer tools.</p>
-    <p>Each recommendation includes alternatives, a "when you'll outgrow it" guide, and stability notes based on our tracking of ${dealChanges.length} real pricing changes. ${stackFreshnessNote(pageReadings)}</p>
+    <p>Each recommendation includes alternatives, a "when you'll outgrow it" guide, and stability notes based on our tracking of ${trackedChangeCount} real pricing changes. ${stackFreshnessNote(pageReadings)}</p>
   </div>
 
   <div class="cost-banner">
@@ -15083,7 +15086,7 @@ function buildFreeAiStackPage(): string {
 
   const stabilityNotes = stackChanges.length > 0 ? `
   <h2>Stability Notes</h2>
-  <p style="color:var(--text-muted);margin-bottom:1rem;font-size:.9rem">Recent pricing changes affecting vendors in this stack. Based on our tracking of ${dealChanges.length} deal changes across ${offers.length.toLocaleString()}+ developer tools.</p>
+  <p style="color:var(--text-muted);margin-bottom:1rem;font-size:.9rem">Recent pricing changes affecting vendors in this stack. Based on our tracking of ${trackedChangeCount} deal changes across ${offers.length.toLocaleString()}+ developer tools.</p>
   <div class="stability-list">
     ${stackChanges.slice(0, 12).map(c => {
       const typeColors: Record<string, string> = {
@@ -15098,7 +15101,7 @@ function buildFreeAiStackPage(): string {
       </div>`;
     }).join("\n    ")}
   </div>
-  <p style="margin-top:1rem;font-size:.85rem"><a href="/changes">View all ${dealChanges.length} pricing changes &rarr;</a></p>` : "";
+  <p style="margin-top:1rem;font-size:.85rem"><a href="/changes">View all ${trackedChangeCount} pricing changes &rarr;</a></p>` : "";
 
   const tableRows = stackCategories.map(cat => {
     const cells = stackTableCellsHtml(cat.recommended.vendor, "—");
@@ -15201,7 +15204,7 @@ ${mcpCtaCss()}
 
   <div class="context">
     <p>Everything you need to build, train, and deploy AI applications — without spending a dollar. This guide recommends the best free tier for each layer of an AI/ML development stack — <strong>10 categories</strong> from LLM APIs to speech AI — with exact limits pulled from our index of ${offers.length.toLocaleString()}+ verified developer tools.</p>
-    <p>Designed for solo AI developers, indie hackers, and startup teams prototyping AI features. Each recommendation includes alternatives, a "when you'll outgrow it" guide, and stability notes based on our tracking of ${dealChanges.length} real pricing changes. ${stackFreshnessNote(pageReadings)}</p>
+    <p>Designed for solo AI developers, indie hackers, and startup teams prototyping AI features. Each recommendation includes alternatives, a "when you'll outgrow it" guide, and stability notes based on our tracking of ${trackedChangeCount} real pricing changes. ${stackFreshnessNote(pageReadings)}</p>
   </div>
 
   <div class="cost-banner">
@@ -15411,7 +15414,7 @@ function buildFreeDevopsStackPage(): string {
 
   const stabilityNotes = stackChanges.length > 0 ? `
   <h2>Stability Notes</h2>
-  <p style="color:var(--text-muted);margin-bottom:1rem;font-size:.9rem">Recent pricing changes affecting vendors in this stack. Based on our tracking of ${dealChanges.length} deal changes across ${offers.length.toLocaleString()}+ developer tools.</p>
+  <p style="color:var(--text-muted);margin-bottom:1rem;font-size:.9rem">Recent pricing changes affecting vendors in this stack. Based on our tracking of ${trackedChangeCount} deal changes across ${offers.length.toLocaleString()}+ developer tools.</p>
   <div class="stability-list">
     ${stackChanges.slice(0, 12).map(c => {
       const typeColors: Record<string, string> = {
@@ -15426,7 +15429,7 @@ function buildFreeDevopsStackPage(): string {
       </div>`;
     }).join("\n    ")}
   </div>
-  <p style="margin-top:1rem;font-size:.85rem"><a href="/changes">View all ${dealChanges.length} pricing changes &rarr;</a></p>` : "";
+  <p style="margin-top:1rem;font-size:.85rem"><a href="/changes">View all ${trackedChangeCount} pricing changes &rarr;</a></p>` : "";
 
   const tableRows = stackCategories.map(cat => {
     const cells = stackTableCellsHtml(cat.recommended.vendor, "—");
@@ -15530,7 +15533,7 @@ ${mcpCtaCss()}
 
   <div class="context">
     <p>Everything you need to build, deploy, and operate software infrastructure — without spending a dollar. This guide recommends the best free tier for each layer of a DevOps stack — <strong>10 categories</strong> from CI/CD pipelines to secrets management — with exact limits pulled from our index of ${offers.length.toLocaleString()}+ verified developer tools.</p>
-    <p>Designed for solo developers, small teams, and startups setting up their first production infrastructure. Each recommendation includes alternatives, a "when you'll outgrow it" guide, and stability notes based on our tracking of ${dealChanges.length} real pricing changes. ${stackFreshnessNote(pageReadings)}</p>
+    <p>Designed for solo developers, small teams, and startups setting up their first production infrastructure. Each recommendation includes alternatives, a "when you'll outgrow it" guide, and stability notes based on our tracking of ${trackedChangeCount} real pricing changes. ${stackFreshnessNote(pageReadings)}</p>
   </div>
 
   <div class="cost-banner">
@@ -15740,7 +15743,7 @@ function buildFreeFrontendStackPage(): string {
 
   const stabilityNotes = stackChanges.length > 0 ? `
   <h2>Stability Notes</h2>
-  <p style="color:var(--text-muted);margin-bottom:1rem;font-size:.9rem">Recent pricing changes affecting vendors in this stack. Based on our tracking of ${dealChanges.length} deal changes across ${offers.length.toLocaleString()}+ developer tools.</p>
+  <p style="color:var(--text-muted);margin-bottom:1rem;font-size:.9rem">Recent pricing changes affecting vendors in this stack. Based on our tracking of ${trackedChangeCount} deal changes across ${offers.length.toLocaleString()}+ developer tools.</p>
   <div class="stability-list">
     ${stackChanges.slice(0, 12).map(c => {
       const typeColors: Record<string, string> = {
@@ -15755,7 +15758,7 @@ function buildFreeFrontendStackPage(): string {
       </div>`;
     }).join("\n    ")}
   </div>
-  <p style="margin-top:1rem;font-size:.85rem"><a href="/changes">View all ${dealChanges.length} pricing changes &rarr;</a></p>` : "";
+  <p style="margin-top:1rem;font-size:.85rem"><a href="/changes">View all ${trackedChangeCount} pricing changes &rarr;</a></p>` : "";
 
   const tableRows = stackCategories.map(cat => {
     const cells = stackTableCellsHtml(cat.recommended.vendor, "—");
@@ -15859,7 +15862,7 @@ ${mcpCtaCss()}
 
   <div class="context">
     <p>Everything you need to build, deploy, and ship frontend projects — without spending a dollar. This guide recommends the best free tier for each layer of a frontend/Jamstack stack — <strong>10 categories</strong> from static hosting to feature flags — with exact limits pulled from our index of ${offers.length.toLocaleString()}+ verified developer tools.</p>
-    <p>Designed for solo developers, freelancers, and small teams building websites, web apps, and Jamstack projects. Each recommendation includes alternatives, a "when you'll outgrow it" guide, and stability notes based on our tracking of ${dealChanges.length} real pricing changes. ${stackFreshnessNote(pageReadings)}</p>
+    <p>Designed for solo developers, freelancers, and small teams building websites, web apps, and Jamstack projects. Each recommendation includes alternatives, a "when you'll outgrow it" guide, and stability notes based on our tracking of ${trackedChangeCount} real pricing changes. ${stackFreshnessNote(pageReadings)}</p>
   </div>
 
   <div class="cost-banner">
@@ -16092,7 +16095,7 @@ function buildFreeNextjsStackPage(): string {
 
   const stabilityNotes = stackChanges.length > 0 ? `
   <h2>Stability Notes</h2>
-  <p style="color:var(--text-muted);margin-bottom:1rem;font-size:.9rem">Recent pricing changes affecting vendors in this stack. Based on our tracking of ${dealChanges.length} deal changes across ${offers.length.toLocaleString()}+ developer tools.</p>
+  <p style="color:var(--text-muted);margin-bottom:1rem;font-size:.9rem">Recent pricing changes affecting vendors in this stack. Based on our tracking of ${trackedChangeCount} deal changes across ${offers.length.toLocaleString()}+ developer tools.</p>
   <div class="stability-list">
     ${stackChanges.slice(0, 12).map(c => {
       const typeColors: Record<string, string> = {
@@ -16107,7 +16110,7 @@ function buildFreeNextjsStackPage(): string {
       </div>`;
     }).join("\n    ")}
   </div>
-  <p style="margin-top:1rem;font-size:.85rem"><a href="/changes">View all ${dealChanges.length} pricing changes &rarr;</a></p>` : "";
+  <p style="margin-top:1rem;font-size:.85rem"><a href="/changes">View all ${trackedChangeCount} pricing changes &rarr;</a></p>` : "";
 
   const tableRows = stackCategories.map(cat => {
     const cells = stackTableCellsHtml(cat.recommended.vendor, "—");
@@ -16215,7 +16218,7 @@ ${mcpCtaCss()}
 
   <div class="context">
     <p>Everything you need to build and ship a Next.js app — without spending a dollar. This guide recommends the best free tier for each layer of your Next.js infrastructure — <strong>10 layers</strong> from hosting to background jobs — with exact limits pulled from our index of ${offers.length.toLocaleString()}+ verified developer tools.</p>
-    <p>Designed for solo developers, indie hackers, and small teams building SaaS products, side projects, or MVPs with Next.js. Each recommendation includes alternatives, a "when you'll outgrow it" guide, "why not X" callouts for popular-but-not-recommended options, and stability notes based on our tracking of ${dealChanges.length} real pricing changes. ${stackFreshnessNote(pageReadings)}</p>
+    <p>Designed for solo developers, indie hackers, and small teams building SaaS products, side projects, or MVPs with Next.js. Each recommendation includes alternatives, a "when you'll outgrow it" guide, "why not X" callouts for popular-but-not-recommended options, and stability notes based on our tracking of ${trackedChangeCount} real pricing changes. ${stackFreshnessNote(pageReadings)}</p>
   </div>
 
   <div class="cost-banner">
@@ -16479,7 +16482,7 @@ function buildFreeDjangoStackPage(): string {
 
   const stabilityNotes = stackChanges.length > 0 ? `
   <h2>Stability Notes</h2>
-  <p style="color:var(--text-muted);margin-bottom:1rem;font-size:.9rem">Recent pricing changes affecting vendors in this stack. Based on our tracking of ${dealChanges.length} deal changes across ${offers.length.toLocaleString()}+ developer tools.</p>
+  <p style="color:var(--text-muted);margin-bottom:1rem;font-size:.9rem">Recent pricing changes affecting vendors in this stack. Based on our tracking of ${trackedChangeCount} deal changes across ${offers.length.toLocaleString()}+ developer tools.</p>
   <div class="stability-list">
     ${stackChanges.slice(0, 12).map(c => {
       const typeColors: Record<string, string> = {
@@ -16494,7 +16497,7 @@ function buildFreeDjangoStackPage(): string {
       </div>`;
     }).join("\n    ")}
   </div>
-  <p style="margin-top:1rem;font-size:.85rem"><a href="/changes">View all ${dealChanges.length} pricing changes &rarr;</a></p>` : "";
+  <p style="margin-top:1rem;font-size:.85rem"><a href="/changes">View all ${trackedChangeCount} pricing changes &rarr;</a></p>` : "";
 
   const tableRows = stackCategories.map(cat => {
     const vendorName = cat.recommended.vendor;
@@ -16607,7 +16610,7 @@ ${mcpCtaCss()}
 
   <div class="context">
     <p>Everything you need to build and ship a Django app — without spending a dollar. This guide recommends the best free tier for each layer of your Django infrastructure — <strong>10 layers</strong> from hosting to search — with exact limits pulled from our index of ${offers.length.toLocaleString()}+ verified developer tools.</p>
-    <p>Designed for Python developers building SaaS products, AI/ML applications, APIs, and side projects with Django. Each recommendation includes alternatives, a "when you'll outgrow it" guide, "why not X" callouts for popular-but-not-recommended options, and stability notes based on our tracking of ${dealChanges.length} real pricing changes. ${stackFreshnessNote(pageReadings)}</p>
+    <p>Designed for Python developers building SaaS products, AI/ML applications, APIs, and side projects with Django. Each recommendation includes alternatives, a "when you'll outgrow it" guide, "why not X" callouts for popular-but-not-recommended options, and stability notes based on our tracking of ${trackedChangeCount} real pricing changes. ${stackFreshnessNote(pageReadings)}</p>
   </div>
 
   <div class="cost-banner">
@@ -16887,7 +16890,7 @@ function buildFreeFastapiStackPage(): string {
 
   const stabilityNotes = stackChanges.length > 0 ? `
   <h2>Stability Notes</h2>
-  <p style="color:var(--text-muted);margin-bottom:1rem;font-size:.9rem">Recent pricing changes affecting vendors in this stack. Based on our tracking of ${dealChanges.length} deal changes across ${offers.length.toLocaleString()}+ developer tools.</p>
+  <p style="color:var(--text-muted);margin-bottom:1rem;font-size:.9rem">Recent pricing changes affecting vendors in this stack. Based on our tracking of ${trackedChangeCount} deal changes across ${offers.length.toLocaleString()}+ developer tools.</p>
   <div class="stability-list">
     ${stackChanges.slice(0, 12).map(c => {
       const typeColors: Record<string, string> = {
@@ -16902,7 +16905,7 @@ function buildFreeFastapiStackPage(): string {
       </div>`;
     }).join("\n    ")}
   </div>
-  <p style="margin-top:1rem;font-size:.85rem"><a href="/changes">View all ${dealChanges.length} pricing changes &rarr;</a></p>` : "";
+  <p style="margin-top:1rem;font-size:.85rem"><a href="/changes">View all ${trackedChangeCount} pricing changes &rarr;</a></p>` : "";
 
   const tableRows = stackCategories.map(cat => {
     const vendorName = cat.recommended.vendor;
@@ -17019,7 +17022,7 @@ ${mcpCtaCss()}
 
   <div class="context">
     <p>Everything you need to build and ship a FastAPI app — without spending a dollar. This guide recommends the best free tier for each layer of your FastAPI infrastructure — <strong>10 layers</strong> from ASGI hosting to API documentation — with exact limits pulled from our index of ${offers.length.toLocaleString()}+ verified developer tools.</p>
-    <p>Designed for Python developers building REST APIs, AI/ML serving endpoints, microservices, and async backend services with FastAPI. Each recommendation includes alternatives, a "when you'll outgrow it" guide, "why not X" callouts for popular-but-not-recommended options, and stability notes based on our tracking of ${dealChanges.length} real pricing changes. ${stackFreshnessNote(pageReadings)}</p>
+    <p>Designed for Python developers building REST APIs, AI/ML serving endpoints, microservices, and async backend services with FastAPI. Each recommendation includes alternatives, a "when you'll outgrow it" guide, "why not X" callouts for popular-but-not-recommended options, and stability notes based on our tracking of ${trackedChangeCount} real pricing changes. ${stackFreshnessNote(pageReadings)}</p>
   </div>
 
   <div class="cost-banner">
@@ -17312,7 +17315,7 @@ function buildFreeGoStackPage(): string {
 
   const stabilityNotes = stackChanges.length > 0 ? `
   <h2>Stability Notes</h2>
-  <p style="color:var(--text-muted);margin-bottom:1rem;font-size:.9rem">Recent pricing changes affecting vendors in this stack. Based on our tracking of ${dealChanges.length} deal changes across ${offers.length.toLocaleString()}+ developer tools.</p>
+  <p style="color:var(--text-muted);margin-bottom:1rem;font-size:.9rem">Recent pricing changes affecting vendors in this stack. Based on our tracking of ${trackedChangeCount} deal changes across ${offers.length.toLocaleString()}+ developer tools.</p>
   <div class="stability-list">
     ${stackChanges.slice(0, 12).map(c => {
       const typeColors: Record<string, string> = {
@@ -17327,7 +17330,7 @@ function buildFreeGoStackPage(): string {
       </div>`;
     }).join("\n    ")}
   </div>
-  <p style="margin-top:1rem;font-size:.85rem"><a href="/changes">View all ${dealChanges.length} pricing changes &rarr;</a></p>` : "";
+  <p style="margin-top:1rem;font-size:.85rem"><a href="/changes">View all ${trackedChangeCount} pricing changes &rarr;</a></p>` : "";
 
   const tableRows = stackCategories.map(cat => {
     const vendorName = cat.recommended.vendor;
@@ -17443,7 +17446,7 @@ ${mcpCtaCss()}
 
   <div class="context">
     <p>Everything you need to build and ship a Go service — without spending a dollar. This guide recommends the best free tier for each layer of your Go infrastructure — <strong>10 layers</strong> from single-binary hosting to API documentation — with exact limits pulled from our index of ${offers.length.toLocaleString()}+ verified developer tools.</p>
-    <p>Designed for developers building REST APIs, CLI tools, microservices, DevOps tooling, and cloud-native infrastructure with Go. Each recommendation includes alternatives, a "when you'll outgrow it" guide, "why not X" callouts for popular-but-not-recommended options, and stability notes based on our tracking of ${dealChanges.length} real pricing changes. ${stackFreshnessNote(pageReadings)}</p>
+    <p>Designed for developers building REST APIs, CLI tools, microservices, DevOps tooling, and cloud-native infrastructure with Go. Each recommendation includes alternatives, a "when you'll outgrow it" guide, "why not X" callouts for popular-but-not-recommended options, and stability notes based on our tracking of ${trackedChangeCount} real pricing changes. ${stackFreshnessNote(pageReadings)}</p>
   </div>
 
   <div class="cost-banner">
@@ -17773,7 +17776,7 @@ function buildFreeSaasStackPage(): string {
 
   const stabilityNotes = stackChanges.length > 0 ? `
   <h2>Stability Notes</h2>
-  <p style="color:var(--text-muted);margin-bottom:1rem;font-size:.9rem">Recent pricing changes affecting vendors in this stack. Based on our tracking of ${dealChanges.length} deal changes across ${offers.length.toLocaleString()}+ developer tools.</p>
+  <p style="color:var(--text-muted);margin-bottom:1rem;font-size:.9rem">Recent pricing changes affecting vendors in this stack. Based on our tracking of ${trackedChangeCount} deal changes across ${offers.length.toLocaleString()}+ developer tools.</p>
   <div class="stability-list">
     ${stackChanges.slice(0, 12).map(c => {
       const typeColors: Record<string, string> = {
@@ -17788,7 +17791,7 @@ function buildFreeSaasStackPage(): string {
       </div>`;
     }).join("\n    ")}
   </div>
-  <p style="margin-top:1rem;font-size:.85rem"><a href="/changes">View all ${dealChanges.length} pricing changes &rarr;</a></p>` : "";
+  <p style="margin-top:1rem;font-size:.85rem"><a href="/changes">View all ${trackedChangeCount} pricing changes &rarr;</a></p>` : "";
 
   const tableRows = stackCategories.filter(c => !c.isFrameworkSection).map(cat => {
     const vendorName = cat.recommended.vendor;
@@ -17983,7 +17986,7 @@ ${mcpCtaCss()}
 
   <div class="context">
     <p>You can build and launch a complete SaaS product without spending a dollar on infrastructure. This guide gives you the <strong>opinionated "just tell me what to use" answer</strong> \u2014 the best free tier for each layer of a SaaS stack, with exact limits pulled from our index of ${offers.length.toLocaleString()}+ verified developer tools.</p>
-    <p>Every recommendation includes alternatives, "when you'll outgrow it" guidance, "why not X" callouts for popular-but-not-recommended options, and stability notes based on our tracking of ${dealChanges.length} real pricing changes. ${stackFreshnessNote(pageReadings)}</p>
+    <p>Every recommendation includes alternatives, "when you'll outgrow it" guidance, "why not X" callouts for popular-but-not-recommended options, and stability notes based on our tracking of ${trackedChangeCount} real pricing changes. ${stackFreshnessNote(pageReadings)}</p>
   </div>
 
   <div class="tldr-box">
@@ -18362,7 +18365,7 @@ ${mcpCtaCss()}
     </a>`).join("\n    ")}
     <a href="/changes" class="related-page-link">
       <div class="link-title">All Pricing Changes Timeline</div>
-      <div class="link-desc">Full timeline of all ${dealChanges.length} tracked developer tool pricing changes</div>
+      <div class="link-desc">Full timeline of all ${trackedChangeCount} tracked developer tool pricing changes</div>
     </a>
   </div>
 
@@ -18371,7 +18374,7 @@ ${mcpCtaCss()}
   </div>
 
   <div class="search-cta">
-    <p>This analysis covers Hetzner's April 1 and June 15, 2026 price adjustments and what its cloud plans cost today. For the full quarterly overview covering ${changesInWindow(dealChanges, { start: "2026-01-01", end: "2026-03-31" }).dated.length} pricing changes across all developer tools, see the <a href="/q1-2026-developer-pricing-report">Q1 2026 Developer Pricing Report</a>. Browse all ${offers.length.toLocaleString()} developer tools at <a href="/search">/search</a>.</p>
+    <p>This analysis covers Hetzner's April 1 and June 15, 2026 price adjustments and what its cloud plans cost today. For the full quarterly overview covering ${recordsStillInForce(changesInWindow(dealChanges, { start: "2026-01-01", end: "2026-03-31" }).dated).length} pricing changes across all developer tools, see the <a href="/q1-2026-developer-pricing-report">Q1 2026 Developer Pricing Report</a>. Browse all ${offers.length.toLocaleString()} developer tools at <a href="/search">/search</a>.</p>
   </div>
 
   ${buildMoreAlternativesGuides(slug)}
@@ -18390,7 +18393,7 @@ function buildQ1PricingReportPage(): string {
   const slug = "q1-2026-developer-pricing-report";
   const pubDate = "2026-03-24";
 
-  const q1Changes = changesInWindow(dealChanges, { start: "2026-01-01", end: "2026-03-31" }).dated;
+  const q1Changes = recordsStillInForce(changesInWindow(dealChanges, { start: "2026-01-01", end: "2026-03-31" }).dated);
 
   const negativeTypes = new Set(["free_tier_removed", "limits_reduced", "restriction", "open_source_killed", "product_deprecated"]);
   const positiveTypes = new Set(["limits_increased", "new_free_tier", "startup_program_expanded", "pricing_postponed"]);
@@ -18488,7 +18491,7 @@ function buildQ1PricingReportPage(): string {
   const sortedMonths = [...monthlyData.entries()].sort((a, b) => a[0].localeCompare(b[0]));
   const maxMonthTotal = Math.max(...sortedMonths.map(([, v]) => v.total), 1);
 
-  const upcomingDeadlines = dealChanges.filter(c => c.date > "2026-03-31").slice(0, 6);
+  const upcomingDeadlines = recordsStillInForce(dealChanges).filter(c => c.date > "2026-03-31").slice(0, 6);
 
   const relatedPages = ALTERNATIVES_PAGES.filter(p =>
     ["localstack-alternatives", "postman-alternatives", "hetzner-alternatives", "hetzner-pricing-2026", "firebase-alternatives", "github-actions-alternatives", "hosting-alternatives", "monitoring-alternatives", "ai-ml-alternatives", "database-alternatives", "terraform-cloud-free-tier-removed", "gemini-api-pricing-changes"].includes(p.slug)
@@ -18640,7 +18643,7 @@ mcpCtaCss() + "\n" +
   "<h2>Executive Summary</h2>\n" +
   "<div class=\"executive-summary\">\n" +
     "<p><strong>Q1 2026 was the worst quarter for developer free tiers in recent memory.</strong> We tracked " + q1Changes.length + " verified pricing changes across " + uniqueVendors + " developer tools. " + removals.length + " free tiers were completely removed, " + restrictions.length + " had limits tightened or restrictions added, and 1 open-source project was killed. " + highImpact + " of " + q1Changes.length + " changes were rated high impact.</p>\n" +
-    "<p><strong>The net trend is unmistakable:</strong> " + negativeQ1.length + " negative changes vs " + positiveQ1.length + " positive &mdash; a " + Math.round(negativeQ1.length / Math.max(positiveQ1.length, 1)) + ":1 ratio. Free tiers are eroding faster than they&rsquo;re expanding, and the pace accelerated through the quarter (" + (monthlyData.get("2026-01")?.total ?? 0) + " changes in January &rarr; " + (monthlyData.get("2026-03")?.total ?? 0) + " in March).</p>\n" +
+    "<p><strong>The net trend is unmistakable:</strong> " + negativeQ1.length + " negative changes vs " + positiveQ1.length + " positive &mdash; a " + directionRatioLabel(negativeQ1.length, positiveQ1.length) + " ratio. Free tiers are eroding faster than they&rsquo;re expanding, and the pace accelerated through the quarter (" + (monthlyData.get("2026-01")?.total ?? 0) + " changes in January &rarr; " + (monthlyData.get("2026-03")?.total ?? 0) + " in March).</p>\n" +
     "<p><strong>One notable counter-trend:</strong> While most vendors contracted, Cloudflare expanded &mdash; adding free Queues, reducing Durable Objects pricing, and launching a $250K startup credit program. They are betting that developer goodwill converts to enterprise revenue.</p>\n" +
   "</div>\n" +
 
@@ -18797,7 +18800,7 @@ mcpCtaCss() + "\n" +
   "</div>\n" +
 
   "<div class=\"search-cta\">\n" +
-    "<p>This report covers Q1 2026 (January&ndash;March). For the full timeline of all " + dealChanges.length + " tracked pricing changes, visit <a href=\"/changes\">/changes</a>. For Q2 outlook, see the <a href=\"/q2-pricing-preview-2026\">Q2 2026 Pricing Preview</a>. Browse all " + offers.length.toLocaleString() + " developer tools at <a href=\"/search\">/search</a>.</p>\n" +
+    "<p>This report covers Q1 2026 (January&ndash;March). For the full timeline of all " + trackedChangeCount + " tracked pricing changes, visit <a href=\"/changes\">/changes</a>. For Q2 outlook, see the <a href=\"/q2-pricing-preview-2026\">Q2 2026 Pricing Preview</a>. Browse all " + offers.length.toLocaleString() + " developer tools at <a href=\"/search\">/search</a>.</p>\n" +
   "</div>\n" +
 
   buildMoreAlternativesGuides(slug) + "\n" +
@@ -19022,7 +19025,7 @@ ${mcpCtaCss()}
   </div>
 
   <div class="search-cta">
-    <p>This preview covers Q2 2026 (April–June). For the Q1 2026 retrospective, see the <a href="/q1-2026-developer-pricing-report">Q1 2026 Developer Pricing Report</a>. For the full timeline of all ${dealChanges.length} tracked changes, visit <a href="/changes">/changes</a>.</p>
+    <p>This preview covers Q2 2026 (April–June). For the Q1 2026 retrospective, see the <a href="/q1-2026-developer-pricing-report">Q1 2026 Developer Pricing Report</a>. For the full timeline of all ${trackedChangeCount} tracked changes, visit <a href="/changes">/changes</a>.</p>
   </div>
 
   ${buildMoreAlternativesGuides(slug)}
@@ -19430,7 +19433,7 @@ ${mcpCtaCss()}
     </a>`).join("\n    ")}
     <a href="/changes" class="related-page-link">
       <div class="link-title">All Pricing Changes Timeline</div>
-      <div class="link-desc">Full timeline of all ${dealChanges.length} tracked developer tool pricing changes</div>
+      <div class="link-desc">Full timeline of all ${trackedChangeCount} tracked developer tool pricing changes</div>
     </a>
   </div>
 
@@ -19753,7 +19756,7 @@ ${mcpCtaCss()}
     </a>`).join("\n    ")}
     <a href="/changes" class="related-page-link">
       <div class="link-title">All Pricing Changes Timeline</div>
-      <div class="link-desc">Full timeline of all ${dealChanges.length} tracked developer tool pricing changes</div>
+      <div class="link-desc">Full timeline of all ${trackedChangeCount} tracked developer tool pricing changes</div>
     </a>
   </div>
 
@@ -20070,7 +20073,7 @@ ${mcpCtaCss()}
     </a>`).join("\n    ")}
     <a href="/changes" class="related-page-link">
       <div class="link-title">All Pricing Changes Timeline</div>
-      <div class="link-desc">Full timeline of all ${dealChanges.length} tracked developer tool pricing changes</div>
+      <div class="link-desc">Full timeline of all ${trackedChangeCount} tracked developer tool pricing changes</div>
     </a>
   </div>
 
@@ -20389,7 +20392,7 @@ ${mcpCtaCss()}
     </a>`).join("\n    ")}
     <a href="/changes" class="related-page-link">
       <div class="link-title">All Pricing Changes Timeline</div>
-      <div class="link-desc">Full timeline of all ${dealChanges.length} tracked developer tool pricing changes</div>
+      <div class="link-desc">Full timeline of all ${trackedChangeCount} tracked developer tool pricing changes</div>
     </a>
   </div>
 
@@ -20710,7 +20713,7 @@ ${mcpCtaCss()}
     </a>`).join("\n    ")}
     <a href="/changes" class="related-page-link">
       <div class="link-title">All Pricing Changes Timeline</div>
-      <div class="link-desc">Full timeline of all ${dealChanges.length} tracked developer tool pricing changes</div>
+      <div class="link-desc">Full timeline of all ${trackedChangeCount} tracked developer tool pricing changes</div>
     </a>
   </div>
 
@@ -21026,7 +21029,7 @@ ${mcpCtaCss()}
     </a>`).join("\n    ")}
     <a href="/changes" class="related-page-link">
       <div class="link-title">All Pricing Changes Timeline</div>
-      <div class="link-desc">Full timeline of all ${dealChanges.length} tracked developer tool pricing changes</div>
+      <div class="link-desc">Full timeline of all ${trackedChangeCount} tracked developer tool pricing changes</div>
     </a>
   </div>
 
@@ -21461,7 +21464,7 @@ ${mcpCtaCss()}
     </a>`).join("\n    ")}
     <a href="/changes" class="related-page-link">
       <div class="link-title">All Pricing Changes Timeline</div>
-      <div class="link-desc">Full timeline of all ${dealChanges.length} tracked developer tool pricing changes</div>
+      <div class="link-desc">Full timeline of all ${trackedChangeCount} tracked developer tool pricing changes</div>
     </a>
   </div>
 
@@ -21856,7 +21859,7 @@ function buildTerraformCloudFreeTierRemovedPage(): string {
     ).join("")
     + '    <a href="/changes" class="related-page-link">\n'
     + '      <div class="link-title">All Pricing Changes Timeline</div>\n'
-    + '      <div class="link-desc">Full timeline of all ' + dealChanges.length + ' tracked developer tool pricing changes</div>\n'
+    + '      <div class="link-desc">Full timeline of all ' + trackedChangeCount + ' tracked developer tool pricing changes</div>\n'
     + '    </a>\n'
     + '  </div>\n'
     + '\n'
@@ -22202,7 +22205,7 @@ ${mcpCtaCss()}
     </a>`).join("\n    ")}
     <a href="/changes" class="related-page-link">
       <div class="link-title">All Pricing Changes Timeline</div>
-      <div class="link-desc">Full timeline of all ${dealChanges.length} tracked developer tool pricing changes</div>
+      <div class="link-desc">Full timeline of all ${trackedChangeCount} tracked developer tool pricing changes</div>
     </a>
   </div>
 
@@ -22631,7 +22634,7 @@ function buildGeminiApiPricingChangesPage(): string {
     ).join("")
     + '    <a href="/changes" class="related-page-link">\n'
     + '      <div class="link-title">All Pricing Changes Timeline</div>\n'
-    + '      <div class="link-desc">Full timeline of all ' + dealChanges.length + ' tracked developer tool pricing changes</div>\n'
+    + '      <div class="link-desc">Full timeline of all ' + trackedChangeCount + ' tracked developer tool pricing changes</div>\n'
     + '    </a>\n'
     + '  </div>\n'
     + '\n'
@@ -22706,14 +22709,16 @@ const riskEntries: RiskEntry[] = [
 
 function buildFreeTierRiskPage(): string {
   const title = "Free Tier Risk Index — Predictive Analysis of Which Free Tiers May Disappear Next";
-  const metaDesc = "Predictive risk scores for 38 developer tool free tiers — which will disappear next? Category heatmap, pattern analysis from 80 tracked pricing changes, counter-trends, and actionable protection strategies. Updated April 2026.";
+  const metaDesc = `Predictive risk scores for 38 developer tool free tiers — which will disappear next? Category heatmap, pattern analysis from ${trackedChangeCount} tracked pricing changes, counter-trends, and actionable protection strategies. Updated April 2026.`;
   const slug = "free-tier-risk";
   const pubDate = "2026-03-26";
 
+  const changesInForce = recordsStillInForce(dealChanges);
+
   const negativeTypes = ["free_tier_removed", "limits_reduced", "restriction", "product_deprecated", "open_source_killed", "pricing_model_change", "pricing_restructured"];
   const positiveTypes = ["limits_increased", "new_free_tier", "startup_program_expanded", "pricing_postponed"];
-  const negativeChanges = dealChanges.filter(c => negativeTypes.includes(c.change_type));
-  const positiveChanges = dealChanges.filter(c => positiveTypes.includes(c.change_type));
+  const negativeChanges = changesInForce.filter(c => negativeTypes.includes(c.change_type));
+  const positiveChanges = changesInForce.filter(c => positiveTypes.includes(c.change_type));
 
 
   const lowRisk = riskEntries.filter(e => e.risk === "low");
@@ -22752,7 +22757,7 @@ function buildFreeTierRiskPage(): string {
     if (cl.includes("container")) return "Containers";
     return c;
   };
-  for (const dc of dealChanges) {
+  for (const dc of changesInForce) {
     const cat = normCat(dc.category);
     const entry = categoryMap.get(cat) ?? { total: 0, negative: 0, positive: 0 };
     entry.total++;
@@ -22764,7 +22769,7 @@ function buildFreeTierRiskPage(): string {
     .map(([cat, d]) => ({ category: cat, ...d, pctNeg: Math.round((d.negative / d.total) * 100) }))
     .sort((a, b) => b.total - a.total);
 
-  const changeMonths = monthlyChangeSeries(dealChanges);
+  const changeMonths = monthlyChangeSeries(changesInForce);
   const monthlyChanges = new Map([...changeMonths.effective].map(([month, records]) => [month, records.length]));
   const discoveryMonths = [...changeMonths.discovered].map(([month, records]) => [month, records.length] as const);
   const discoveredTotal = discoveryMonths.reduce((sum, [, count]) => sum + count, 0);
@@ -22777,7 +22782,7 @@ function buildFreeTierRiskPage(): string {
   );
 
   const vendorChangeCount = new Map<string, number>();
-  for (const dc of dealChanges) {
+  for (const dc of changesInForce) {
     vendorChangeCount.set(dc.vendor, (vendorChangeCount.get(dc.vendor) ?? 0) + 1);
   }
   const repeatVendors = [...vendorChangeCount.entries()]
@@ -22785,7 +22790,7 @@ function buildFreeTierRiskPage(): string {
     .sort((a, b) => b[1] - a[1]);
 
   const faqs = [
-    { q: "How often is the Free Tier Risk Index updated?", a: "We update risk scores whenever a new pricing change is tracked. Our dataset currently includes " + dealChanges.length + " changes across " + offers.length.toLocaleString() + " developer tools, and we add new changes within 48 hours of announcement." },
+    { q: "How often is the Free Tier Risk Index updated?", a: "We update risk scores whenever a new pricing change is tracked. Our dataset currently includes " + changesInForce.length + " changes across " + offers.length.toLocaleString() + " developer tools, and we add new changes within 48 hours of announcement." },
     { q: "Which free tiers are safest to build on in 2026?", a: "Cloudflare, GitHub, Grafana Cloud, AWS Always Free, and Google Cloud Always Free are our lowest-risk picks. They share three traits: backed by profitable companies, the free tier is a strategic acquisition funnel, and strong competitive pressure prevents removal." },
     { q: "What are the warning signs that a free tier is about to be removed?", a: "Key signals: (1) acquisition or ownership change (HashiCorp/IBM, Neon/Databricks), (2) license change (MinIO AGPL to proprietary), (3) credit-based pricing transition (Vercel, Netlify), (4) two or more negative changes within 6 months, and (5) 'sustaining mode' language in announcements." },
     { q: "How do you calculate risk scores?", a: "We weight four factors: pricing history (40%) — has the vendor changed before and how recently; financial signals (25%) — profitable vs VC-subsidized, recent acquisitions; competitive pressure (20%) — intense competition keeps free tiers alive; free tier strategic value (15%) — is the free tier a funnel or a cost center." },
@@ -22892,7 +22897,7 @@ ${mcpCtaCss()}
   ${buildGlobalNav("changes")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/alternatives">Guides</a> &rsaquo; Free Tier Risk Index</div>
   <h1>Free Tier Risk Index</h1>
-  <p class="pub-date">Published ${pubDate} &middot; Based on ${dealChanges.length} tracked pricing changes across ${offers.length.toLocaleString()} developer tools &middot; ${pageDataProvenance("/free-tier-risk", offers.length)}</p>
+  <p class="pub-date">Published ${pubDate} &middot; Based on ${changesInForce.length} tracked pricing changes across ${offers.length.toLocaleString()} developer tools &middot; ${pageDataProvenance("/free-tier-risk", offers.length)}</p>
 
   <div class="summary-stats">
     <div class="stat-card"><div class="stat-number" style="color:#3fb950">${lowRisk.length}</div><div class="stat-label">Low Risk (Safe)</div></div>
@@ -22903,7 +22908,7 @@ ${mcpCtaCss()}
 
   <div class="executive-summary">
     <p><strong>The question developers should ask isn't "what's free?" — it's "what will still be free in a year?"</strong></p>
-    <p>We track ${dealChanges.length} pricing changes across the developer tool ecosystem. The data shows a clear pattern: <strong>${negativeChanges.length} negative changes</strong> (free tier removals, limit reductions, restrictions) vs <strong>${positiveChanges.length} positive changes</strong> (expansions, new tiers). Free tier erosion is real, but not universal — some vendors are actively expanding.</p>
+    <p>We track ${changesInForce.length} pricing changes across the developer tool ecosystem. The data shows a clear pattern: <strong>${negativeChanges.length} negative changes</strong> (free tier removals, limit reductions, restrictions) vs <strong>${positiveChanges.length} positive changes</strong> (expansions, new tiers). Free tier erosion is real, but not universal — some vendors are actively expanding.</p>
     <p>This index scores ${riskEntries.length} major developer tools by free tier sustainability, using our deal change data, company financial signals, and competitive dynamics. <strong>Build on the greens, watch the yellows, plan exits from the reds.</strong></p>
   </div>
 
@@ -22929,7 +22934,7 @@ ${mcpCtaCss()}
   <div style="display:grid;gap:.75rem;margin:1rem 0">
     <div class="diff-card" style="border-left-color:#3b82f6">
       <h3>Pricing History (40% weight)</h3>
-      <p class="diff-desc">Has this vendor changed pricing before? How recently? What direction? A vendor with 2+ negative changes in 12 months is flagged high risk. Vendors actively expanding get a boost. Data source: our ${dealChanges.length} tracked deal changes.</p>
+      <p class="diff-desc">Has this vendor changed pricing before? How recently? What direction? A vendor with 2+ negative changes in 12 months is flagged high risk. Vendors actively expanding get a boost. Data source: our ${changesInForce.length} tracked deal changes.</p>
     </div>
     <div class="diff-card" style="border-left-color:#8b5cf6">
       <h3>Financial Signals (25% weight)</h3>
@@ -23020,7 +23025,7 @@ ${mcpCtaCss()}
   </div>
 
   <h2 id="heatmap">7. Category Risk Heatmap</h2>
-  <p class="section-intro">Which categories face the most pricing pressure? Darker red = higher percentage of negative changes. Based on ${dealChanges.length} tracked changes across all categories.</p>
+  <p class="section-intro">Which categories face the most pricing pressure? Darker red = higher percentage of negative changes. Based on ${changesInForce.length} tracked changes across all categories.</p>
   <div style="display:grid;gap:.5rem;margin:1rem 0 2rem">
     ${heatmapData.map(h => {
       const barWidth = Math.max(h.total * 8, 30);
@@ -23046,7 +23051,7 @@ ${mcpCtaCss()}
     <strong>Reading the heatmap:</strong> Red bars = negative changes (removals, reductions, restrictions). Green bars = positive changes (expansions, new tiers). Gray = neutral restructurings. Categories with 80%+ negative changes (APIs, Testing, Monitoring) are under the most pricing pressure. AI/ML shows a split — some vendors contracting while new entrants expand.
   </div>
 
-  <h2 id="patterns">8. Pattern Analysis — What ${dealChanges.length} Changes Tell Us</h2>
+  <h2 id="patterns">8. Pattern Analysis — What ${changesInForce.length} Changes Tell Us</h2>
   <p class="section-intro">Statistical patterns from our pricing change dataset that predict future free tier removals.</p>
 
   <div class="diff-card" style="border-left-color:#f85149">
@@ -23072,11 +23077,11 @@ ${mcpCtaCss()}
 
   <div class="diff-card" style="border-left-color:#3fb950">
     <h3>\u{1F6E1}\uFE0F The Safety Signals</h3>
-    <p class="diff-desc">Not all changes are negative. ${positiveChanges.length} of ${dealChanges.length} changes were positive (new tiers or expansions). Safe signals: profitable company with developer funnel business model (Cloudflare, GitHub), open-source core with commercial layer (Grafana, Sentry), and competitive market forcing free tier maintenance (AI coding tools, cloud providers).</p>
+    <p class="diff-desc">Not all changes are negative. ${positiveChanges.length} of ${changesInForce.length} changes were positive (new tiers or expansions). Safe signals: profitable company with developer funnel business model (Cloudflare, GitHub), open-source core with commercial layer (Grafana, Sentry), and competitive market forcing free tier maintenance (AI coding tools, cloud providers).</p>
   </div>
 
   <h2 id="counter">9. Counter-Trends — Who's Expanding Free Tiers</h2>
-  <p class="section-intro">While most pricing changes are negative (${negativeChanges.length} of ${dealChanges.length}), a meaningful minority of vendors are actively expanding. Understanding why reveals what makes a free tier durable.</p>
+  <p class="section-intro">While most pricing changes are negative (${negativeChanges.length} of ${changesInForce.length}), a meaningful minority of vendors are actively expanding. Understanding why reveals what makes a free tier durable.</p>
 
   <div class="verdict-box" style="border-color:#3fb950;background:linear-gradient(135deg,rgba(63,185,80,0.1),rgba(59,130,246,0.1))">
     <h3 style="color:#3fb950">The Cloudflare Model</h3>
@@ -23149,7 +23154,7 @@ ${mcpCtaCss()}
     </a>`).join("\n    ")}
     <a href="/changes" class="related-page-link">
       <div class="link-title">All Pricing Changes Timeline</div>
-      <div class="link-desc">Full timeline of all ${dealChanges.length} tracked developer tool pricing changes</div>
+      <div class="link-desc">Full timeline of all ${changesInForce.length} tracked developer tool pricing changes</div>
     </a>
     <a href="/alternatives" class="related-page-link">
       <div class="link-title">Alternatives Guides Hub</div>
@@ -23158,7 +23163,7 @@ ${mcpCtaCss()}
   </div>
 
   <div class="methodology">
-    <strong>Methodology:</strong> Risk scores derived from our dataset of ${dealChanges.length} tracked pricing changes across ${offers.length.toLocaleString()} developer tools. Each vendor scored on pricing history (40%), financial signals (25%), competitive pressure (20%), and free tier strategic value (15%). Pricing history sourced from official vendor announcements and our <a href="/changes">deal change tracker</a>. Financial signals based on public funding data, acquisition history, and profitability indicators. Category heatmap and pattern analysis computed dynamically from our full deal_changes dataset. This index is recomputed from the change record on every request.${dataChangesSegment(dealChanges)}
+    <strong>Methodology:</strong> Risk scores derived from our dataset of ${changesInForce.length} tracked pricing changes across ${offers.length.toLocaleString()} developer tools. Each vendor scored on pricing history (40%), financial signals (25%), competitive pressure (20%), and free tier strategic value (15%). Pricing history sourced from official vendor announcements and our <a href="/changes">deal change tracker</a>. Financial signals based on public funding data, acquisition history, and profitability indicators. Category heatmap and pattern analysis computed dynamically from our full deal_changes dataset. This index is recomputed from the change record on every request.${dataChangesSegment(changesInForce)}
   </div>
 
   <div class="search-cta">
@@ -26384,7 +26389,7 @@ ${buildGlobalNav("guides")}
   <div class="methodology">
     <p><strong>How we track shutdowns:</strong> We monitor official vendor announcements, API changelogs, developer blogs, and community reports for service deprecation and shutdown notices. Each entry was read from the vendor\u2019s official documentation on the day it was added.</p>
     <p><strong>Urgency classification:</strong> <span style="color:#f85149;font-weight:600">Imminent</span> (&lt;30 days) \u2014 take action now. <span style="color:#d29922;font-weight:600">Upcoming</span> (30\u201390 days) \u2014 plan migration. <span style="color:#3fb950;font-weight:600">Later</span> (90+ days) \u2014 start planning when convenient.</p>
-    <p><strong>Stability ratings</strong> are computed from our <a href="/changes">deal changes database</a> of ${dealChanges.length} tracked changes. <a href="/stability">View the full stability dashboard</a>.</p>
+    <p><strong>Stability ratings</strong> are computed from our <a href="/changes">deal changes database</a> of ${trackedChangeCount} tracked changes. <a href="/stability">View the full stability dashboard</a>.</p>
     <p><strong>Updates:</strong> This page is updated as new shutdowns are announced. Subscribe to our <a href="/feed.xml">Atom feed</a> for change notifications, or query via <a href="/setup">MCP server</a>.</p>
   </div>
 
@@ -26414,7 +26419,7 @@ function buildFreeTierTrackerPage(): string {
 
   const q1Start = "2026-01-01";
   const q1End = "2026-03-31";
-  const q1Changes = changesInWindow(dealChanges, { start: q1Start, end: q1End }).dated;
+  const q1Changes = recordsStillInForce(changesInWindow(dealChanges, { start: q1Start, end: q1End }).dated);
 
   const negativeTypes = ["free_tier_removed", "limits_reduced", "restriction", "open_source_killed", "pricing_model_change", "pricing_restructured", "product_deprecated"];
   const positiveTypes = ["limits_increased", "new_free_tier", "startup_program_expanded", "pricing_postponed"];
@@ -26756,7 +26761,7 @@ ${mcpCtaCss()}
   ${buildGlobalNav("changes")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/alternatives">Guides</a> &rsaquo; Free Tier Tracker</div>
   <h1>Free Tier Tracker &mdash; Q1 2026</h1>
-  <p class="pub-date">Published ${pubDate} &middot; Tracking ${dealChanges.length} pricing changes across ${offers.length.toLocaleString()} developer tools &middot; ${pageDataProvenance("/free-tier-tracker", offers.length)}</p>
+  <p class="pub-date">Published ${pubDate} &middot; Tracking ${trackedChangeCount} pricing changes across ${offers.length.toLocaleString()} developer tools &middot; ${pageDataProvenance("/free-tier-tracker", offers.length)}</p>
 
   <div class="summary-stats">
     <div class="stat-card"><div class="stat-number" style="color:#f85149">${removedOrReduced.length}</div><div class="stat-label">Free Tiers Removed</div></div>
@@ -26839,13 +26844,13 @@ ${mcpCtaCss()}
 
   <div id="methodology" class="methodology">
     <p><strong>Data Source &amp; Methodology</strong></p>
-    <p>This tracker is powered by AgentDeals&rsquo; <code>track_changes</code> tool, which monitors ${dealChanges.length} verified pricing changes across ${offers.length.toLocaleString()} developer tools. Each change was read by hand from the vendor&rsquo;s pricing page or official announcement on the day it was recorded. Change types: <em>free_tier_removed</em>, <em>limits_reduced</em>, <em>restriction</em>, <em>open_source_killed</em>, <em>pricing_restructured</em>, <em>new_free_tier</em>, <em>limits_increased</em>, <em>startup_program_expanded</em>.</p>
+    <p>This tracker is powered by AgentDeals&rsquo; <code>track_changes</code> tool, which monitors ${trackedChangeCount} verified pricing changes across ${offers.length.toLocaleString()} developer tools. Each change was read by hand from the vendor&rsquo;s pricing page or official announcement on the day it was recorded. Change types: <em>free_tier_removed</em>, <em>limits_reduced</em>, <em>restriction</em>, <em>open_source_killed</em>, <em>pricing_restructured</em>, <em>new_free_tier</em>, <em>limits_increased</em>, <em>startup_program_expanded</em>.</p>
     <p>Impact is scored as high (affects thousands of developers or eliminates a widely-used free tier), medium (meaningful change to limits or pricing structure), or low (minor adjustments). Sources linked for each entry.</p>
     <p>Missing a change? <a href="https://github.com/robhunter/agentdeals/issues">File an issue</a> and we&rsquo;ll add it.</p>
   </div>
 
   <div class="search-cta">
-    <p>This tracker covers Q1 2026 changes. For real-time tracking of all ${dealChanges.length}+ pricing changes, use our <a href="/changes">Changes Timeline</a> or subscribe to the <a href="/feed.xml">Atom Feed</a>.</p>
+    <p>This tracker covers Q1 2026 changes. For real-time tracking of all ${trackedChangeCount}+ pricing changes, use our <a href="/changes">Changes Timeline</a> or subscribe to the <a href="/feed.xml">Atom Feed</a>.</p>
     <p style="margin-top:.5rem;font-size:.85rem;color:var(--text-dim)">For risk scores on specific vendors, see the <a href="/free-tier-risk">Free Tier Risk Index</a>.</p>
   </div>
 
@@ -27228,7 +27233,7 @@ function buildStartupCreditsPage(): string {
     '\n' +
     '  <h2>Data Source &amp; Methodology</h2>\n' +
     '  <div class="methodology">\n' +
-    '    <strong>Powered by AgentDeals.</strong> All credit values were read by hand from official vendor program pages when this page was compiled on ' + pubDate + '. Changes are tracked via our <a href="/pricing-changes">deal changes timeline</a> (' + dealChanges.length + ' total changes tracked). The pricing changes we track are updated continuously; the tables above are not.<br><br>\n' +
+    '    <strong>Powered by AgentDeals.</strong> All credit values were read by hand from official vendor program pages when this page was compiled on ' + pubDate + '. Changes are tracked via our <a href="/pricing-changes">deal changes timeline</a> (' + trackedChangeCount + ' total changes tracked). The pricing changes we track are updated continuously; the tables above are not.<br><br>\n' +
     '    <strong>Query this data programmatically</strong> via <a href="/api/startup-credits">/api/startup-credits</a> (JSON), our <a href="/setup">MCP tools</a>, or <a href="/developers">REST API</a> \u2014 search for startup programs, compare eligibility, or track changes from your AI coding assistant.\n' +
     '  </div>\n' +
     '\n' +
@@ -27622,7 +27627,7 @@ ${mcpCtaCss()}
 
   <h2 id="data-source">Data Source</h2>
   <div class="methodology">
-    <strong>Powered by AgentDeals.</strong> The tables on this page were compiled by hand from official vendor pricing pages and have not been re-checked since. Pricing changes are tracked via our <a href="/changes">deal changes timeline</a> (${dealChanges.length} total changes tracked). The pricing changes we track are updated continuously; the tables above are not.<br><br>
+    <strong>Powered by AgentDeals.</strong> The tables on this page were compiled by hand from official vendor pricing pages and have not been re-checked since. Pricing changes are tracked via our <a href="/changes">deal changes timeline</a> (${trackedChangeCount} total changes tracked). The pricing changes we track are updated continuously; the tables above are not.<br><br>
     <strong>Query this data programmatically</strong> via our <a href="/setup">MCP tools</a> — search for AI coding tools, compare vendors, or track pricing changes from your AI coding assistant.
   </div>
 
@@ -28369,7 +28374,7 @@ function buildAiCodingToolsPricingPage(): string {
     '\n' +
     '  <h2>Data Source &amp; Methodology</h2>\n' +
     '  <div class="methodology">\n' +
-    '    <strong>Powered by AgentDeals.</strong> The tables on this page were compiled by hand from official vendor pricing pages and have not been re-checked since. Pricing changes are tracked via our <a href="/pricing-changes">deal changes timeline</a> (' + dealChanges.length + ' total changes tracked). The pricing changes we track are updated continuously; the tables above are not.<br><br>\n' +
+    '    <strong>Powered by AgentDeals.</strong> The tables on this page were compiled by hand from official vendor pricing pages and have not been re-checked since. Pricing changes are tracked via our <a href="/pricing-changes">deal changes timeline</a> (' + trackedChangeCount + ' total changes tracked). The pricing changes we track are updated continuously; the tables above are not.<br><br>\n' +
     '    <strong>Query this data programmatically</strong> via <a href="/api/ai-coding-pricing">/api/ai-coding-pricing</a> (JSON), our <a href="/setup">MCP tools</a>, or <a href="/developers">REST API</a> \u2014 search for AI coding tools, compare vendors, or track pricing changes from your AI coding assistant.\n' +
     '  </div>\n' +
     '\n' +
@@ -29120,7 +29125,7 @@ function buildCiCdPricingPage(): string {
     '\n' +
     '  <h2>Data Source &amp; Methodology</h2>\n' +
     '  <div class="methodology">\n' +
-    '    <strong>Powered by AgentDeals.</strong> The tables on this page were compiled by hand from official vendor pricing pages and have not been re-checked since. Pricing changes are tracked via our <a href="/pricing-changes">deal changes timeline</a> (' + dealChanges.length + ' total changes tracked). The pricing changes we track are updated continuously; the tables above are not.<br><br>\n' +
+    '    <strong>Powered by AgentDeals.</strong> The tables on this page were compiled by hand from official vendor pricing pages and have not been re-checked since. Pricing changes are tracked via our <a href="/pricing-changes">deal changes timeline</a> (' + trackedChangeCount + ' total changes tracked). The pricing changes we track are updated continuously; the tables above are not.<br><br>\n' +
     '    <strong>Query this data programmatically</strong> via our <a href="/setup">MCP tools</a> or <a href="/developers">REST API</a> \u2014 search for CI/CD tools, compare vendors, or track pricing changes from your AI coding assistant.\n' +
     '  </div>\n' +
     '\n' +
@@ -30006,7 +30011,7 @@ function buildDatabasePricingPage(): string {
     '\n' +
     '  <h2>Data Source &amp; Methodology</h2>\n' +
     '  <div class="methodology">\n' +
-    '    <strong>Powered by AgentDeals.</strong> The tables on this page were compiled by hand from official vendor pricing pages and have not been re-checked since. Pricing changes are tracked via our <a href="/pricing-changes">deal changes timeline</a> (' + dealChanges.length + ' total changes tracked). The pricing changes we track are updated continuously; the tables above are not.<br><br>\n' +
+    '    <strong>Powered by AgentDeals.</strong> The tables on this page were compiled by hand from official vendor pricing pages and have not been re-checked since. Pricing changes are tracked via our <a href="/pricing-changes">deal changes timeline</a> (' + trackedChangeCount + ' total changes tracked). The pricing changes we track are updated continuously; the tables above are not.<br><br>\n' +
     '    <strong>Query this data programmatically</strong> via our <a href="/setup">MCP tools</a> or <a href="/developers">REST API</a> \u2014 search for database services, compare vendors, or track pricing changes from your AI coding assistant.\n' +
     '  </div>\n' +
     '\n' +
@@ -30655,7 +30660,7 @@ function buildVectorDatabasePricingPage(): string {
     '\n' +
     '  <h2>Data Source &amp; Methodology</h2>\n' +
     '  <div class="methodology">\n' +
-    '    <strong>Powered by AgentDeals.</strong> The tables on this page were compiled by hand from official vendor pricing pages and have not been re-checked since. Pricing changes are tracked via our <a href="/pricing-changes">deal changes timeline</a> (' + dealChanges.length + ' total changes tracked). The pricing changes we track are updated continuously; the tables above are not.<br><br>\n' +
+    '    <strong>Powered by AgentDeals.</strong> The tables on this page were compiled by hand from official vendor pricing pages and have not been re-checked since. Pricing changes are tracked via our <a href="/pricing-changes">deal changes timeline</a> (' + trackedChangeCount + ' total changes tracked). The pricing changes we track are updated continuously; the tables above are not.<br><br>\n' +
     '    <strong>Query this data programmatically</strong> via our <a href="/setup">MCP tools</a> or <a href="/developers">REST API</a> \u2014 search for vector database services, compare vendors, or track pricing changes from your AI coding assistant.\n' +
     '  </div>\n' +
     '\n' +
@@ -31386,7 +31391,7 @@ function buildHostingPricingPage(): string {
     '\n' +
     '  <h2>Data Source &amp; Methodology</h2>\n' +
     '  <div class="methodology">\n' +
-    '    <strong>Powered by AgentDeals.</strong> The tables on this page were compiled by hand from official vendor pricing pages and have not been re-checked since. Pricing changes are tracked via our <a href="/pricing-changes">deal changes timeline</a> (' + dealChanges.length + ' total changes tracked). The pricing changes we track are updated continuously; the tables above are not.<br><br>\n' +
+    '    <strong>Powered by AgentDeals.</strong> The tables on this page were compiled by hand from official vendor pricing pages and have not been re-checked since. Pricing changes are tracked via our <a href="/pricing-changes">deal changes timeline</a> (' + trackedChangeCount + ' total changes tracked). The pricing changes we track are updated continuously; the tables above are not.<br><br>\n' +
     '    <strong>Query this data programmatically</strong> via <a href="/api/hosting-pricing">/api/hosting-pricing</a> (JSON), our <a href="/setup">MCP tools</a>, or <a href="/developers">REST API</a> \u2014 search for hosting platforms, compare vendors, or track pricing changes from your AI coding assistant.\n' +
     '  </div>\n' +
     '\n' +
@@ -32131,7 +32136,7 @@ function buildLlmApiPricingPage(): string {
     '\n' +
     '  <h2>Data Source &amp; Methodology</h2>\n' +
     '  <div class="methodology">\n' +
-    '    <strong>Powered by AgentDeals.</strong> The tables on this page were compiled by hand from official vendor pricing pages and have not been re-checked since. Pricing changes are tracked via our <a href="/pricing-changes">deal changes timeline</a> (' + dealChanges.length + ' total changes tracked). The pricing changes we track are updated continuously; the tables above are not.<br><br>\n' +
+    '    <strong>Powered by AgentDeals.</strong> The tables on this page were compiled by hand from official vendor pricing pages and have not been re-checked since. Pricing changes are tracked via our <a href="/pricing-changes">deal changes timeline</a> (' + trackedChangeCount + ' total changes tracked). The pricing changes we track are updated continuously; the tables above are not.<br><br>\n' +
     '    <strong>Query this data programmatically</strong> via <a href="/api/llm-pricing">/api/llm-pricing</a> (JSON), our <a href="/setup">MCP tools</a>, or <a href="/developers">REST API</a> — search for LLM providers, compare pricing, or track changes from your AI coding assistant.\n' +
     '  </div>\n' +
     '\n' +
@@ -34239,7 +34244,7 @@ ${mcpCtaCss()}
   </div>
 
   <h2 id="changes">Recent AWS Changes</h2>
-  <p class="section-intro">AWS free tier changes we've tracked. See the <a href="/changes">full timeline</a> for all ${dealChanges.length} tracked changes across all providers.</p>
+  <p class="section-intro">AWS free tier changes we've tracked. See the <a href="/changes">full timeline</a> for all ${trackedChangeCount} tracked changes across all providers.</p>
 
   ${awsChanges.length > 0 ? `<div style="overflow-x:auto">
   <table class="pricing-table">
@@ -34657,7 +34662,7 @@ ${mcpCtaCss()}
   </div>
 
   <h2 id="changes">Recent GCP &amp; Google Changes</h2>
-  <p class="section-intro">GCP and Google pricing changes we've tracked. See the <a href="/changes">full timeline</a> for all ${dealChanges.length} tracked changes across all providers.</p>
+  <p class="section-intro">GCP and Google pricing changes we've tracked. See the <a href="/changes">full timeline</a> for all ${trackedChangeCount} tracked changes across all providers.</p>
 
   ${gcpChanges.length > 0 ? `<div style="overflow-x:auto">
   <table class="pricing-table">
@@ -35118,7 +35123,7 @@ ${mcpCtaCss()}
   </div>
 
   <h2 id="changes">Recent Azure Changes</h2>
-  <p class="section-intro">Azure pricing changes we've tracked. See the <a href="/changes">full timeline</a> for all ${dealChanges.length} tracked changes across all providers.</p>
+  <p class="section-intro">Azure pricing changes we've tracked. See the <a href="/changes">full timeline</a> for all ${trackedChangeCount} tracked changes across all providers.</p>
 
   ${azureChanges.length > 0 ? `<div style="overflow-x:auto">
   <table class="pricing-table">
@@ -35558,7 +35563,7 @@ ${mcpCtaCss()}
   </div>
 
   <h2 id="changes">Recent DigitalOcean Changes</h2>
-  <p class="section-intro">DigitalOcean pricing changes we've tracked. See the <a href="/changes">full timeline</a> for all ${dealChanges.length} tracked changes across all providers.</p>
+  <p class="section-intro">DigitalOcean pricing changes we've tracked. See the <a href="/changes">full timeline</a> for all ${trackedChangeCount} tracked changes across all providers.</p>
 
   ${doChanges.length > 0 ? `<div style="overflow-x:auto">
   <table class="pricing-table">
@@ -36270,7 +36275,7 @@ ${mcpCtaCss()}
   </div>
 
   <h2 id="changes">Pricing Change Timeline</h2>
-  <p class="section-intro">Recent pricing changes we've tracked across all 4 cloud providers. See the <a href="/changes">full timeline</a> for all ${dealChanges.length} tracked changes.</p>
+  <p class="section-intro">Recent pricing changes we've tracked across all 4 cloud providers. See the <a href="/changes">full timeline</a> for all ${trackedChangeCount} tracked changes.</p>
 
   ${cloudChanges.length > 0 ? `<div style="overflow-x:auto">
   <table class="pricing-table">
@@ -36968,7 +36973,7 @@ ${mcpCtaCss()}
   </div>
 
   <h2 id="changes">Pricing Change Timeline</h2>
-  <p class="section-intro">Recent database-related pricing changes from our tracker. See the <a href="/changes">full timeline</a> for all ${dealChanges.length} tracked changes.</p>
+  <p class="section-intro">Recent database-related pricing changes from our tracker. See the <a href="/changes">full timeline</a> for all ${trackedChangeCount} tracked changes.</p>
 
   ${changeTimelineHtml}
 
@@ -37636,7 +37641,7 @@ ${mcpCtaCss()}
   </div>
 
   <h2 id="changes">Pricing Change Timeline</h2>
-  <p class="section-intro">Recent CI/CD pricing changes from our tracker. See the <a href="/changes">full timeline</a> for all ${dealChanges.length} tracked changes.</p>
+  <p class="section-intro">Recent CI/CD pricing changes from our tracker. See the <a href="/changes">full timeline</a> for all ${trackedChangeCount} tracked changes.</p>
 
   ${changeTimelineHtml}
 
@@ -38281,7 +38286,7 @@ ${mcpCtaCss()}
   </div>
 
   <h2 id="changes">Pricing Change Timeline</h2>
-  <p class="section-intro">Recent serverless-related pricing changes from our tracker. See the <a href="/changes">full timeline</a> for all ${dealChanges.length} tracked changes.</p>
+  <p class="section-intro">Recent serverless-related pricing changes from our tracker. See the <a href="/changes">full timeline</a> for all ${trackedChangeCount} tracked changes.</p>
 
   ${changeTimelineHtml}
 
@@ -39222,7 +39227,7 @@ ${mcpCtaCss()}
   </div>
 
   <h2 id="changes">Pricing Change Timeline</h2>
-  <p class="section-intro">Recent auth-related pricing changes from our tracker. See the <a href="/changes">full timeline</a> for all ${dealChanges.length} tracked changes.</p>
+  <p class="section-intro">Recent auth-related pricing changes from our tracker. See the <a href="/changes">full timeline</a> for all ${trackedChangeCount} tracked changes.</p>
 
   ${changeTimelineHtml}
 
@@ -45355,8 +45360,9 @@ const STRUCTURALLY_FREE_CARDS = [
 ];
 
 function buildStateOfFreeTiersPage(): string {
+  const changesInForce = recordsStillInForce(dealChanges);
   const title = "State of Developer Free Tiers (2026) — Data from " + offers.length.toLocaleString() + "+ Tools | AgentDeals";
-  const metaDesc = `${dealChanges.length} pricing changes tracked across ${offers.length.toLocaleString()} developer tools. ${categories.length} categories analyzed. The authoritative data on developer free tier trends, erosion patterns, and which vendors are still expanding.`;
+  const metaDesc = `${changesInForce.length} pricing changes tracked across ${offers.length.toLocaleString()} developer tools. ${categories.length} categories analyzed. The authoritative data on developer free tier trends, erosion patterns, and which vendors are still expanding.`;
   const now = new Date().toISOString().split("T")[0];
 
   const reportServedOn = utcDate();
@@ -45376,7 +45382,7 @@ function buildStateOfFreeTiersPage(): string {
       positive: records.filter(c => positiveTypes.has(c.change_type)).length,
     }]);
   }
-  const changeMonths = monthlyChangeSeries(dealChanges);
+  const changeMonths = monthlyChangeSeries(changesInForce);
   const sortedMonths = tallyMonths(changeMonths.effective);
   const discoveryMonths = tallyMonths(changeMonths.discovered);
   const discoveredTotal = [...changeMonths.discovered.values()].reduce((sum, records) => sum + records.length, 0);
@@ -45405,14 +45411,14 @@ function buildStateOfFreeTiersPage(): string {
     </div>`;
 
   const changeTypeCounts = new Map<string, number>();
-  for (const c of dealChanges) {
+  for (const c of changesInForce) {
     changeTypeCounts.set(c.change_type, (changeTypeCounts.get(c.change_type) ?? 0) + 1);
   }
   const sortedChangeTypes = [...changeTypeCounts.entries()].sort((a, b) => b[1] - a[1]);
   const maxChangeTypeCount = Math.max(...sortedChangeTypes.map(([, v]) => v), 1);
 
   const catChangeCounts = new Map<string, { negative: number; positive: number; total: number }>();
-  for (const c of dealChanges) {
+  for (const c of changesInForce) {
     if (c.category) {
       const entry = catChangeCounts.get(c.category) ?? { negative: 0, positive: 0, total: 0 };
       entry.total++;
@@ -45425,8 +45431,8 @@ function buildStateOfFreeTiersPage(): string {
     .sort((a, b) => b[1].negative - a[1].negative)
     .slice(0, 15);
 
-  const negativeChanges = dealChanges.filter(c => negativeTypes.has(c.change_type)).sort((a, b) => b.date.localeCompare(a.date));
-  const positiveChanges = dealChanges.filter(c => positiveTypes.has(c.change_type)).sort((a, b) => b.date.localeCompare(a.date));
+  const negativeChanges = changesInForce.filter(c => negativeTypes.has(c.change_type)).sort((a, b) => b.date.localeCompare(a.date));
+  const positiveChanges = changesInForce.filter(c => positiveTypes.has(c.change_type)).sort((a, b) => b.date.localeCompare(a.date));
 
   const durability = removalDurability(dealChanges);
   const lastingExamples = lastingRemovalExamplesFor("/state-of-free-tiers", dealChanges);
@@ -45607,16 +45613,16 @@ ${globalNavCss()}
   ${buildGlobalNav("report")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/guides">Guides</a> &rsaquo; State of Free Tiers</div>
   <h1>State of Developer Free Tiers (2026)</h1>
-  <p class="page-meta">${dealChanges.length} pricing changes tracked across ${offers.length.toLocaleString()} developer tools. ${negativeChanges.length} negative vs ${positiveChanges.length} positive. The ratio tells the story.${dataChangesSegment(dealChanges)}${pageFreshnessSentence("/state-of-free-tiers")}</p>
+  <p class="page-meta">${changesInForce.length} pricing changes tracked across ${offers.length.toLocaleString()} developer tools. ${negativeChanges.length} negative vs ${positiveChanges.length} positive. The ratio tells the story.${dataChangesSegment(changesInForce)}${pageFreshnessSentence("/state-of-free-tiers")}</p>
 
   <h2>Executive Summary</h2>
-  <p class="section-desc">We analyzed ${offers.length.toLocaleString()} developer tool offerings across ${categories.length} categories, tracking ${dealChanges.length} pricing changes over 2024&ndash;2026. Here&rsquo;s what the data shows:</p>
+  <p class="section-desc">We analyzed ${offers.length.toLocaleString()} developer tool offerings across ${categories.length} categories, tracking ${changesInForce.length} pricing changes over 2024&ndash;2026. Here&rsquo;s what the data shows:</p>
   <ul class="key-takeaways">
     <li><strong>${vouchedPct}% of tracked services offer a free tier we can vouch for today</strong> &mdash; we hold a free-tier record for ${recordedPct}% of them, and can confirm ${freeTiers.vouched.toLocaleString()} of those ${freeTiers.recorded.toLocaleString()} against a source we have read.</li>
     <li><strong>${freeTiers.unconfirmed.toLocaleString()} recorded free tiers we cannot confirm today</strong> &mdash; the record stands, but the page we hold for it states no terms, cannot be read, or does not name the vendor. Unconfirmed is not the same as gone.</li>
     <li><strong>${freeTiers.ended} free tiers we have recorded as ended</strong> &mdash; excluded from every count above, and from every category total on this site.</li>
-    <li><strong>${negativeChanges.length} negative pricing changes vs ${positiveChanges.length} positive</strong> &mdash; free tier removals and restrictions outpace expansions ${Math.round(negativeChanges.length / Math.max(positiveChanges.length, 1))}:1.</li>
-    <li><strong>${changeTypeCounts.get("free_tier_removed") ?? 0} free tiers completely removed</strong> &mdash; ${escHtmlServer(lastingExamples.map(e => e.vendor).join(", "))}, and more. ${escHtmlServer(removalReturnRateSentence(durability))}</li>
+    <li><strong>${negativeChanges.length} negative pricing changes vs ${positiveChanges.length} positive</strong> &mdash; free tier removals and restrictions outpace expansions ${directionRatioLabel(negativeChanges.length, positiveChanges.length)}.</li>
+    <li><strong>${durability.stillInForce.length} free tiers completely removed</strong> &mdash; ${escHtmlServer(lastingExamples.map(e => e.vendor).join(", "))}, and more. ${escHtmlServer(removalReturnRateSentence(durability))}</li>
     <li><strong>Egress and overage are the real costs</strong> &mdash; storage at $0.023/GB vs egress at $0.09/GB. Cloudflare R2&rsquo;s zero-egress model is 60x cheaper than S3 at scale.</li>
     <li><strong>Open source is the safety net</strong> &mdash; in security tools, a $0 OSS stack matches $23K&ndash;$73K/yr hosted alternatives on capability.</li>
   </ul>
@@ -45629,7 +45635,7 @@ ${globalNavCss()}
     <div class="stat-card"><span class="stat-number">${freeTiers.vouched.toLocaleString()}</span><span class="stat-label">Vouched Today &mdash; ${vouchedPct}%</span></div>
     <div class="stat-card"><span class="stat-number">${freeTiers.unconfirmed.toLocaleString()}</span><span class="stat-label">Recorded, Unconfirmed</span></div>
     <div class="stat-card"><span class="stat-number">${freeTiers.ended}</span><span class="stat-label">Recorded as Ended</span></div>
-    <div class="stat-card"><span class="stat-number">${dealChanges.length}</span><span class="stat-label">Pricing Changes</span></div>
+    <div class="stat-card"><span class="stat-number">${changesInForce.length}</span><span class="stat-label">Pricing Changes</span></div>
     <div class="stat-card"><span class="stat-number">${eligibilityOffers.length}</span><span class="stat-label">With Eligibility Rules</span></div>
   </div>
   <div class="callout">
@@ -45667,7 +45673,7 @@ ${globalNavCss()}
   </div>
 
   <h2>The Free Tier Squeeze: Who&rsquo;s Cutting Back</h2>
-  <p class="section-desc">Of ${dealChanges.length} tracked pricing changes, ${negativeChanges.length} (${Math.round((negativeChanges.length / dealChanges.length) * 100)}%) are negative for developers &mdash; free tier removals, limit reductions, and new restrictions. The pattern is clear: as companies mature, raise prices, or get acquired, free tiers shrink.</p>
+  <p class="section-desc">Of ${changesInForce.length} tracked pricing changes, ${negativeChanges.length} (${Math.round((negativeChanges.length / Math.max(changesInForce.length, 1)) * 100)}%) are negative for developers &mdash; free tier removals, limit reductions, and new restrictions. The pattern is clear: as companies mature, raise prices, or get acquired, free tiers shrink.</p>
   <div class="callout callout-warn">
     <strong>Key pattern:</strong> ${escHtmlServer(removalDurabilityPattern(durability, lastingExamples))} Plan your architecture around services with structural commitment to free tiers (open-source alternatives, cloud provider loss leaders, or developer-first companies).
   </div>
@@ -45785,7 +45791,7 @@ ${globalNavCss()}
   <p class="section-desc">How we built this dataset:</p>
   <ul style="color:var(--text-muted);font-size:.9rem;padding-left:1.25rem;margin-bottom:1rem">
     <li style="margin-bottom:.4rem"><strong>Verification:</strong> Every offer records the date we read the vendor&rsquo;s public pricing page and the URL we read it from. That is not the same as being able to vouch for it today: ${freeTiers.unconfirmed.toLocaleString()} of the ${freeTiers.recorded.toLocaleString()} recorded free tiers have a source that states no terms, cannot be read, or does not name the vendor, and those are the ones counted as unconfirmed above.</li>
-    <li style="margin-bottom:.4rem"><strong>Change tracking:</strong> ${dealChanges.length} pricing changes tracked with date, previous state, current state, impact level, and source documentation.</li>
+    <li style="margin-bottom:.4rem"><strong>Change tracking:</strong> ${changesInForce.length} pricing changes tracked with date, previous state, current state, impact level, and source documentation.</li>
     <li style="margin-bottom:.4rem"><strong>Definition of &ldquo;free tier&rdquo;:</strong> Perpetual free plans, always-free offerings, and generous hobby/starter tiers without time limits. We exclude limited trials (e.g., 14-day, 30-day) and one-time credits.</li>
     <li style="margin-bottom:.4rem"><strong>Update frequency:</strong> Continuous. Our <a href="/freshness">data freshness dashboard</a> shows verification recency by category.</li>
     <li style="margin-bottom:.4rem"><strong>Open data:</strong> All data is accessible via our <a href="/developers">REST API</a> and <a href="/setup">MCP server</a>. Query it from your AI coding assistant.</li>
@@ -45797,7 +45803,7 @@ ${globalNavCss()}
     <a href="/pricing-changes" style="display:block;padding:1rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);text-decoration:none;transition:border-color .2s">
       <div style="font-size:1.5rem;margin-bottom:.5rem">&#128200;</div>
       <div style="font-weight:600;color:var(--text);margin-bottom:.25rem">Pricing Changes Timeline</div>
-      <div style="font-size:.8rem;color:var(--text-muted)">Full timeline of all ${dealChanges.length} tracked pricing changes with filters</div>
+      <div style="font-size:.8rem;color:var(--text-muted)">Full timeline of all ${trackedChangeCount} tracked pricing changes with filters</div>
     </a>
     <a href="/feed.xml" style="display:block;padding:1rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);text-decoration:none;transition:border-color .2s">
       <div style="font-size:1.5rem;margin-bottom:.5rem">&#128225;</div>
@@ -47676,7 +47682,7 @@ ${globalNavCss()}
     if (changes.length > 0) {
       html += '<div class="changes-timeline"><strong style="font-size:.85rem">Recent Changes</strong>';
       changes.slice(0, 5).forEach(function(c) {
-        html += '<div class="change-item' + (c.resolution ? ' change-resolved' : '') + '"><span class="change-date">' + escHtml(changeEntryDateLabel(c)) + '</span> ' + changeTypeBadge(c.change_type) + ' ' + escHtml(c.summary.length > 120 ? c.summary.slice(0, 120) + '...' : c.summary) + '</div>';
+        html += '<div class="change-item' + (isNoLongerInForce(c) ? ' change-resolved' : '') + '"><span class="change-date">' + escHtml(changeEntryDateLabel(c)) + '</span> ' + changeTypeBadge(c.change_type) + ' ' + escHtml(c.summary.length > 120 ? c.summary.slice(0, 120) + '...' : c.summary) + '</div>';
       });
       html += '</div>';
     }
@@ -49120,7 +49126,7 @@ function buildDeveloperHubPage(): string {
     + "    <div class=\"highlight-grid\">\n"
     + "      <div class=\"highlight-card\"><div class=\"num\">" + offers.length.toLocaleString() + "+</div><div class=\"label\">Verified Deals</div></div>\n"
     + "      <div class=\"highlight-card\"><div class=\"num\">" + categories.length + "</div><div class=\"label\">Categories</div></div>\n"
-    + "      <div class=\"highlight-card\"><div class=\"num\">" + dealChanges.length + "</div><div class=\"label\">Tracked Price Changes</div></div>\n"
+    + "      <div class=\"highlight-card\"><div class=\"num\">" + trackedChangeCount + "</div><div class=\"label\">Tracked Price Changes</div></div>\n"
     + "      <div class=\"highlight-card\"><div class=\"num\">" + (endpointTable.length + referralEndpointTable.length) + "</div><div class=\"label\">Endpoints</div></div>\n"
     + "    </div>\n"
     + "\n"
@@ -49267,7 +49273,7 @@ function buildDeveloperHubPage(): string {
     + "    </div>\n"
     + "    <div class=\"use-case\">\n"
     + "      <h4>Pricing Change Monitoring</h4>\n"
-    + "      <p>Subscribe to the <a href=\"/feed.xml\">Atom feed</a> or poll <code>/api/changes</code> to monitor free tier removals, restrictions, and expansions across " + dealChanges.length + " tracked changes. Filter by vendor or category for personalized alerts.</p>\n"
+    + "      <p>Subscribe to the <a href=\"/feed.xml\">Atom feed</a> or poll <code>/api/changes</code> to monitor free tier removals, restrictions, and expansions across " + trackedChangeCount + " tracked changes. Filter by vendor or category for personalized alerts.</p>\n"
     + "    </div>\n"
     + "    <div class=\"use-case\">\n"
     + "      <h4>Migration Planning</h4>\n"
@@ -49449,13 +49455,15 @@ ${altHtml}
       </div>`;
   }
 
-  const upcomingCount = sorted.filter(c => c.date >= today).length;
-  const removedCount = sorted.filter(c => c.change_type === "free_tier_removed" || c.change_type === "open_source_killed" || c.change_type === "product_deprecated").length;
+  const inForceAll = recordsStillInForce(allChanges);
+  const countable = recordsStillInForce(sorted);
+  const upcomingCount = countable.filter(c => c.date >= today).length;
+  const removedCount = countable.filter(c => c.change_type === "free_tier_removed" || c.change_type === "open_source_killed" || c.change_type === "product_deprecated").length;
   const thisMonth = today.slice(0, 7);
-  const thisMonthCount = sorted.filter(c => c.date.slice(0, 7) === thisMonth).length;
+  const thisMonthCount = countable.filter(c => c.date.slice(0, 7) === thisMonth).length;
 
   const currentYearStr = String(currentYear);
-  const ytdChanges = sorted.filter(c => c.date.startsWith(currentYearStr) && c.date <= today);
+  const ytdChanges = countable.filter(c => c.date.startsWith(currentYearStr) && c.date <= today);
   const ytdRemovals = ytdChanges.filter(c => c.change_type === "free_tier_removed" || c.change_type === "open_source_killed" || c.change_type === "product_deprecated").length;
   const ytdReductions = ytdChanges.filter(c => c.change_type === "limits_reduced" || c.change_type === "restriction").length;
   const ytdNewFree = ytdChanges.filter(c => c.change_type === "new_free_tier" || c.change_type === "limits_increased" || c.change_type === "startup_program_expanded").length;
@@ -49466,7 +49474,7 @@ ${altHtml}
   const ytdNetLabel = ytdNet > 0 ? "net positive" : ytdNet < 0 ? "net negative" : "neutral";
   const ytdNetColor = ytdNet > 0 ? "#3fb950" : ytdNet < 0 ? "#f85149" : "#8b949e";
 
-  const upcomingChanges = sorted.filter(c => c.date >= today);
+  const upcomingChanges = countable.filter(c => c.date >= today);
 
   const vendorCategories = [...new Set(sorted.map(c => c.category || "").filter(Boolean))].sort();
   const years = [...new Set(sorted.map(c => c.date.slice(0, 4)))].sort().reverse();
@@ -49528,7 +49536,7 @@ ${undatedSorted.map(c => buildChangeEntry(c)).join("\n")}
     </div>`;
 
   const title = "Developer Tool Pricing Changes \u2014 Free Tier Tracker";
-  const metaDesc = `Track ${allChanges.length}+ developer tool pricing changes: free tier removals, limit reductions, price hikes, and new free tiers. Interactive timeline filterable by type, impact, year, and category.`;
+  const metaDesc = `Track ${inForceAll.length}+ developer tool pricing changes: free tier removals, limit reductions, price hikes, and new free tiers. Interactive timeline filterable by type, impact, year, and category.`;
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -49541,7 +49549,7 @@ ${undatedSorted.map(c => buildChangeEntry(c)).join("\n")}
     dateModified: sorted.length > 0 ? sorted[0].date : "2026-04-04",
     temporalCoverage: sorted.length > 0 ? `${sorted[sorted.length - 1].date}/${sorted[0].date}` : undefined,
     variableMeasured: [
-      { "@type": "PropertyValue", name: "Total changes tracked", value: allChanges.length },
+      { "@type": "PropertyValue", name: "Total changes tracked", value: inForceAll.length },
       { "@type": "PropertyValue", name: "Free tiers removed", value: removedCount },
       { "@type": "PropertyValue", name: "Changes in " + currentYear, value: ytdChanges.length },
     ],
@@ -49743,7 +49751,7 @@ ${globalNavCss()}
 
   <div class="stats-bar">
     <div class="stat-card">
-      <div class="stat-value">${allChanges.length}</div>
+      <div class="stat-value">${inForceAll.length}</div>
       <div class="stat-label">Total Changes</div>
     </div>
     <div class="stat-card">
@@ -49847,10 +49855,11 @@ ${entries}
 
 function buildChangesPage(): string {
   const allChanges = loadDealChanges();
+  const countable = recordsStillInForce(allChanges);
   const { dated: eventDated, discovered: undatedChanges } = partitionByDateProvenance(allChanges);
   const today = new Date().toISOString().slice(0, 10);
   const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
-  const last30DaysCount = eventDated.filter(c => c.date >= thirtyDaysAgo).length;
+  const last30DaysCount = recordsStillInForce(eventDated).filter(c => c.date >= thirtyDaysAgo).length;
 
   const sorted = [...eventDated].sort((a, b) => b.date.localeCompare(a.date));
   const undatedSorted = [...undatedChanges].sort((a, b) => b.date.localeCompare(a.date));
@@ -49886,7 +49895,7 @@ function buildChangesPage(): string {
     const altHtml = c.alternatives && c.alternatives.length > 0
       ? `<div class="chg-alts"><span class="chg-alts-label">Alternatives:</span> ${c.alternatives.map(a => `<a href="/vendor/${toSlug(a)}">${escHtmlServer(a)}</a>`).join(", ")}</div>`
       : "";
-    return `      <div class="chg-entry${isUpcoming ? " chg-upcoming" : ""}${dated ? "" : " chg-undated"}${changeIsUncited(c) ? " chg-unsourced" : ""}"${anchorAttr}>
+    return `      <div class="chg-entry${isUpcoming ? " chg-upcoming" : ""}${dated ? "" : " chg-undated"}${isNoLongerInForce(c) ? " chg-resolved" : ""}${changeIsUncited(c) ? " chg-unsourced" : ""}"${anchorAttr}>
         <div class="chg-left">
           <div class="chg-date${dated ? "" : " chg-date-unknown"}">${changeEntryDateLabel(c)}</div>
           ${isUpcoming ? `<div class="chg-upcoming-badge">upcoming</div>` : ""}
@@ -49906,8 +49915,8 @@ ${altHtml}
       </div>`;
   }
 
-  const upcomingCount = sorted.filter(c => c.date >= today).length;
-  const removedCount = allChanges.filter(c => c.change_type === "free_tier_removed" || c.change_type === "open_source_killed" || c.change_type === "product_deprecated").length;
+  const upcomingCount = recordsStillInForce(sorted).filter(c => c.date >= today).length;
+  const removedCount = countable.filter(c => c.change_type === "free_tier_removed" || c.change_type === "open_source_killed" || c.change_type === "product_deprecated").length;
 
   const monthsHtml = Array.from(byMonth.entries()).map(([month, changes]) => {
     const entriesHtml = changes.map(c => buildChangeEntry(c)).join("\n");
@@ -49924,14 +49933,14 @@ ${undatedSorted.map(c => buildChangeEntry(c)).join("\n")}
     </div>`;
 
   const title = "Deal Change Timeline \u2014 AgentDeals";
-  const metaDesc = `${allChanges.length} developer infrastructure pricing changes tracked since launch \u2014 ${last30DaysCount} in the last 30 days. Free tier removals, price increases, product shutdowns, and new deals.`;
+  const metaDesc = `${countable.length} developer infrastructure pricing changes tracked since launch \u2014 ${last30DaysCount} in the last 30 days. Free tier removals, price increases, product shutdowns, and new deals.`;
 
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "ItemList",
     name: title,
     description: metaDesc,
-    numberOfItems: allChanges.length,
+    numberOfItems: countable.length,
     url: `${BASE_URL}/changes`,
     itemListElement: newestFirst.slice(0, 50).map((c, i) => {
       const citation = changeSourceCitation(c);
@@ -49990,6 +49999,7 @@ h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5
 .chg-entry:hover{border-color:var(--accent)}
 .chg-upcoming{border-color:rgba(88,166,255,0.3)}
 .chg-undated{border-style:dashed}
+.chg-resolved{opacity:.6;border-style:dashed}
 .chg-left{flex-shrink:0;min-width:100px;text-align:right}
 .chg-date{font-family:var(--mono);font-size:.75rem;color:var(--text-muted)}
 .chg-date-unknown{color:#d29922;font-style:italic}
@@ -50026,7 +50036,7 @@ ${globalNavCss()}
 
   <div class="stats-bar">
     <div class="stat-card">
-      <div class="stat-value">${allChanges.length}</div>
+      <div class="stat-value">${countable.length}</div>
       <div class="stat-label">Total (All Time)</div>
     </div>
     <div class="stat-card">
@@ -52233,7 +52243,7 @@ const trendEmoji: Record<string, { icon: string; color: string; label: string }>
 };
 
 function buildTrendsIndexPage(): string {
-  const allChanges = loadDealChanges();
+  const allChanges = recordsStillInForce(loadDealChanges());
 
   const byCat = new Map<string, typeof allChanges>();
   for (const c of allChanges) {
@@ -52349,11 +52359,12 @@ function buildTrendsPage(slug: string): string | null {
   const catOffers = offers.filter(o => o.category === categoryName);
   const enriched = enrichOffers(catOffers);
 
-  const direction = getTrendDirection(catChanges);
+  const catInForce = recordsStillInForce(catChanges);
+  const direction = getTrendDirection(catInForce);
   const t = trendEmoji[direction];
 
   const typeBreakdown = new Map<string, number>();
-  for (const c of catChanges) {
+  for (const c of catInForce) {
     typeBreakdown.set(c.change_type, (typeBreakdown.get(c.change_type) ?? 0) + 1);
   }
 
@@ -52362,11 +52373,11 @@ function buildTrendsPage(slug: string): string | null {
 
   const stablePicks = enriched.filter(o => o.risk_level === "stable" && !o.recent_change).slice(0, 12);
 
-  const totalAll = allChanges.length;
-  const categoryPct = totalAll > 0 ? Math.round((catChanges.length / totalAll) * 100) : 0;
+  const totalAll = recordsStillInForce(allChanges).length;
+  const categoryPct = totalAll > 0 ? Math.round((catInForce.length / totalAll) * 100) : 0;
 
   const title = `${categoryName} Pricing Trends — AgentDeals`;
-  const metaDesc = `Pricing trends for ${categoryName}: ${catChanges.length} tracked changes across ${catOffers.length} vendors. Direction: ${t.label.toLowerCase()}.`;
+  const metaDesc = `Pricing trends for ${categoryName}: ${catInForce.length} tracked changes across ${catOffers.length} vendors. Direction: ${t.label.toLowerCase()}.`;
 
   const timelineHtml = catChanges.length > 0 ? catChanges.map(c => {
     const badge = changeTypeBadge[c.change_type] ?? { label: c.change_type, color: "#8b949e" };
@@ -52496,7 +52507,7 @@ ${globalNavCss()}
       <div class="stat-label">Vendors</div>
     </div>
     <div class="stat-card">
-      <div class="stat-value">${catChanges.length}</div>
+      <div class="stat-value">${catInForce.length}</div>
       <div class="stat-label">Changes Tracked</div>
     </div>
     <div class="stat-card">
@@ -52818,7 +52829,7 @@ ${globalNavCss()}
 
   <div style="text-align:center;margin:-1.5rem auto 2.5rem;max-width:640px">
     <a href="/state-of-free-tiers" style="display:inline-flex;align-items:center;gap:.5rem;padding:.6rem 1.25rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);color:var(--text-muted);font-size:.85rem;text-decoration:none;transition:all .2s">
-      <span style="color:#f85149;font-weight:600">${dealChanges.filter(c => NEGATIVE_CHANGE_TYPES.has(c.change_type)).length} negative</span> vs <span style="color:#3fb950;font-weight:600">${dealChanges.filter(c => POSITIVE_CHANGE_TYPES.has(c.change_type)).length} positive</span> changes &mdash; <span style="color:var(--accent)">Read the State of Free Tiers Report &rarr;</span>
+      <span style="color:#f85149;font-weight:600">${recordsStillInForce(dealChanges).filter(c => NEGATIVE_CHANGE_TYPES.has(c.change_type)).length} negative</span> vs <span style="color:#3fb950;font-weight:600">${recordsStillInForce(dealChanges).filter(c => POSITIVE_CHANGE_TYPES.has(c.change_type)).length} positive</span> changes &mdash; <span style="color:var(--accent)">Read the State of Free Tiers Report &rarr;</span>
     </a>
   </div>
 

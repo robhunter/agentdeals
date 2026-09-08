@@ -29,6 +29,7 @@ interface StoredChange {
   impact: string;
   summary: string;
   category?: string;
+  resolution?: { state: string } | null;
 }
 
 function storedChanges(): StoredChange[] {
@@ -92,7 +93,8 @@ function changeLogMonths(body: string): Map<string, number> {
     const heading = group.slice(0, group.indexOf("<"));
     const key = monthKeyFromHeading(heading);
     if (!key) continue;
-    months.set(key, (group.match(/class="chg-vendor"/g) ?? []).length);
+    const entries = [...group.matchAll(/<div class="(chg-entry[^"]*)"/g)];
+    months.set(key, entries.filter(([, classes]) => !classes.includes("chg-resolved")).length);
   }
   return months;
 }
@@ -255,7 +257,7 @@ describe("every surface that bins changes by month", () => {
   });
 
   it("states a period comparison in figures taken from the records", async () => {
-    const eventDated = storedChanges().filter(c => EVENT_DATED.includes(c.date_source));
+    const eventDated = storedChanges().filter(c => EVENT_DATED.includes(c.date_source) && !c.resolution);
     const inWindow = (start: string, end: string) =>
       eventDated.filter(c => c.date >= start && c.date <= end).length;
     const quarter = inWindow("2026-01-01", "2026-03-31");

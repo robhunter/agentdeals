@@ -20,7 +20,7 @@ import { isSubSlug, toSlug } from "./slug.js";
 import { DATE_SOURCES, isEventDated, changeDateClause, isoWeekWindow, changesInWindow, discoveryBatchNote, firstReadHeading, type DateWindow } from "./change-dates.js";
 import { PRODUCT_DEPRECATED, deprecationEndsTheListedProduct } from "./product-deprecation.js";
 import { vendorHistorySentence } from "./vendor-history.js";
-import { isNoLongerInForce, withResolutionInSummary } from "./change-resolution.js";
+import { isNoLongerInForce, recordsStillInForce, withResolutionInSummary } from "./change-resolution.js";
 import { changeCitesASource, changeIsUncited, ratingWithheldForNoSourceSentence, type CitableChange } from "./change-citation.js";
 import { endedVerdictSentence } from "./retirement.js";
 import { resolveCategoryName } from "./category-scope.js";
@@ -1294,7 +1294,7 @@ export function getWeeklyDigest(): {
   const fmt = (d: Date) => d.toISOString().slice(0, 10);
   const today = fmt(now);
 
-  const allDealChanges = loadDealChanges();
+  const allDealChanges = recordsStillInForce(loadDealChanges());
   const weekWindow = isoWeekWindow(now);
   const week = `${weekWindow.start} to ${weekWindow.end}`;
   const inWeek = changesInWindow(allDealChanges, weekWindow);
@@ -1414,7 +1414,7 @@ export interface FormattedWeeklyDigest {
 }
 
 export function getFormattedWeeklyDigest(weeksAgo: number = 0, limit: number = 20): FormattedWeeklyDigest {
-  const allChanges = loadDealChanges();
+  const allChanges = recordsStillInForce(loadDealChanges());
   const now = new Date();
   const targetDate = new Date(now.getTime() - weeksAgo * 7 * 86400000);
 
