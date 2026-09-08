@@ -53,6 +53,8 @@ import { createRegistrationLimiter, rateLimitHeaders } from "./rate-limit.js";
 import { validateX402Address, executeTransfer, generateCorrelationId, payoutsAvailable, PAYOUTS_UNAVAILABLE_REASON } from "./x402.js";
 import { submitReferralCode, getCodesByAgent, getCodeById, updateCode, revokeCode, calculateTrustTier, getDailySubmissionCount, getDailyLimit, getRankedCodesForVendor, calculateCodeScore } from "./referral-codes.js";
 import { getBestReferralCode, listAllReferralCodes } from "./platform-codes.js";
+import { DOCUMENTED_GROUPS, HOMEPAGE_GROUPS, endpointHref, endpointPathHref, endpointsInGroups, exampleSubjects, readableRequestLines, type ApiEndpoint, type ExampleSubjects } from "./api-inventory.js";
+import { ACCELERATOR_CREDIT_PROGRAM, ACCELERATOR_CREDIT_VENDOR, acceleratorCreditClause, programCeiling } from "./homepage-claims.js";
 import { REFERRAL_CONDITIONS_HEADING, allOurReferralLinks, heldReferralLinkForVendor, ourReferralLinkFor, platformCodeAsVendorReferral, referralLinkCountClause, referrerDisclosureSentence } from "./referral-surfaces.js";
 import type { VendorReferralAnswer } from "./referral-surfaces.js";
 import { runHealthCheck, getLastReport, startPeriodicChecks } from "./referral-health.js";
@@ -465,6 +467,40 @@ const categories = getCategories();
 const dealChanges = loadDealChanges();
 const trackedChangeCount = recordsStillInForce(dealChanges).length;
 
+function apiExampleSubjects(): ExampleSubjects {
+  return exampleSubjects(
+    offers.map((o) => o.vendor),
+    listAllReferralCodes({}).map((c) => c.vendor),
+  );
+}
+
+function homepageVendorLink(name: string): string {
+  const slug = namedVendorSlug(name);
+  return slug === null
+    ? escHtmlServer(name)
+    : `<a href="/vendor/${slug}">${escHtmlServer(name)}</a>`;
+}
+
+function acceleratorCreditCeiling(): string | null {
+  return programCeiling(
+    offers.find((o) => o.vendor === ACCELERATOR_CREDIT_VENDOR),
+    ACCELERATOR_CREDIT_PROGRAM,
+  );
+}
+
+function documentedEndpointCount(): number {
+  return endpointsInGroups(DOCUMENTED_GROUPS).length;
+}
+
+let publishedApiRequests: string[] | null = null;
+
+function apiRequestsWePublish(): string[] {
+  if (publishedApiRequests === null) {
+    publishedApiRequests = readableRequestLines(HOMEPAGE_GROUPS, apiExampleSubjects());
+  }
+  return publishedApiRequests;
+}
+
 const changesByVendorName = (() => {
   const byVendor = changesByVendor(dealChanges);
   for (const held of byVendor.values()) held.sort((a, b) => b.date.localeCompare(a.date));
@@ -642,7 +678,7 @@ function buildChangesHtml(): string {
     return `      <div class="change-entry">
         <div class="change-header">
           <span class="change-badge" style="background:${badge.color}">${badge.label}</span>
-          <span class="change-vendor">${c.vendor}</span>
+          <span class="change-vendor">${homepageVendorLink(c.vendor)}</span>
           <span class="change-date">${changeEntryDateLabel(c)}</span>
         </div>
         <div class="change-summary">${changeSummaryHtml(c, escHtmlServer)}</div>
@@ -667,7 +703,7 @@ function buildDeadlinesHtml(): string {
         <div class="deadline-right">
           <div class="deadline-header">
             <span class="change-badge" style="background:${badge.color}">${badge.label}</span>
-            <span class="change-vendor">${c.vendor}</span>
+            <span class="change-vendor">${homepageVendorLink(c.vendor)}</span>
             <span class="deadline-date">${changeEntryDateLabel(c)}</span>
           </div>
           <div class="change-summary">${changeSummaryHtml(c, escHtmlServer)}</div>
@@ -46007,7 +46043,7 @@ ${globalNavCss()}
     <a href="/developers" style="display:block;padding:1rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);text-decoration:none;transition:border-color .2s">
       <div style="font-size:1.5rem;margin-bottom:.5rem">&#128279;</div>
       <div style="font-weight:600;color:var(--text);margin-bottom:.25rem">REST API</div>
-      <div style="font-size:.8rem;color:var(--text-muted)">18 endpoints. Open data. No API key required.</div>
+      <div style="font-size:.8rem;color:var(--text-muted)">${documentedEndpointCount()} endpoints. Open data. No API key required.</div>
     </a>
     <a href="/stability" style="display:block;padding:1rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);text-decoration:none;transition:border-color .2s">
       <div style="font-size:1.5rem;margin-bottom:.5rem">&#128202;</div>
@@ -49152,51 +49188,14 @@ function copyCode(btn){var block=btn.parentElement;var text=block.textContent.re
 }
 
 function buildDeveloperHubPage(): string {
-  const endpointTable = [
-    { method: "GET", path: "/api/offers", desc: "Search and browse offers", params: "q, category, limit, offset" },
-    { method: "GET", path: "/api/categories", desc: "List all categories with counts, what each name holds, and the other names answering the same question", params: "" },
-    { method: "GET", path: "/api/new", desc: "Recently added or updated offers", params: "days" },
-    { method: "GET", path: "/api/newest", desc: "Newest deals by verification date", params: "limit" },
-    { method: "GET", path: "/api/changes", desc: "Pricing and deal changes", params: "since, type, vendor, vendors, category, categories, limit, offset" },
-    { method: "GET", path: "/api/details/:vendor", desc: "Vendor detail with alternatives", params: "" },
-    { method: "GET", path: "/api/compare", desc: "Compare two vendors side by side", params: "a, b" },
-    { method: "GET", path: "/api/audit-stack", desc: "Audit your infrastructure stack", params: "services" },
-    { method: "GET", path: "/api/vendor-risk/:vendor", desc: "Check vendor pricing risk", params: "" },
-    { method: "GET", path: "/api/deadlines", desc: "Future-dated changes with countdown", params: "type" },
-    { method: "GET", path: "/api/ai-coding-pricing", desc: "AI coding tools pricing comparison data", params: "type (ide, cli, cloud-agent, app-builder)" },
-    { method: "GET", path: "/api/hosting-pricing", desc: "Cloud hosting & PaaS pricing comparison data", params: "type (traditional-paas, edge-serverless, full-featured, static-specialized)" },
-    { method: "GET", path: "/api/llm-pricing", desc: "LLM API pricing comparison data", params: "type (frontier, inference, open-source-host, specialized)" },
-    { method: "GET", path: "/api/startup-credits", desc: "Startup credits & programs comparison data", params: "type (cloud-infrastructure, fintech-banking, developer-tools, ai-tools)" },
-    { method: "GET", path: "/api/referral-programs", desc: "Developer tools with referral/affiliate programs", params: "category" },
-    { method: "GET", path: "/api/expiring", desc: "Get expiring deals", params: "days" },
-    { method: "GET", path: "/api/freshness", desc: "Data freshness metrics", params: "" },
-    { method: "GET", path: "/api/digest", desc: "Weekly pricing digest", params: "" },
-    { method: "GET", path: "/api/digest/weekly", desc: "Formatted weekly digest with multiple output formats", params: "format (json|markdown|html), limit, weeks_ago" },
-    { method: "GET", path: "/api/stack", desc: "Free-tier stack recommendation", params: "use_case, requirements" },
-    { method: "GET", path: "/api/costs", desc: "Estimate infrastructure costs", params: "services, scale" },
-    { method: "GET", path: "/api/query-log", desc: "Recent request log", params: "limit" },
-    { method: "GET", path: "/api/pageviews", desc: "Page view analytics", params: "path, period" },
-    { method: "GET", path: "/api/traffic", desc: "Traffic attributed by client class (AI agent / crawler / browser), with web-vs-MCP comparison", params: "" },
-    { method: "GET", path: "/api/stats", desc: "Service statistics", params: "" },
-    { method: "GET", path: "/api/feed", desc: "Atom feed of pricing changes", params: "" },
-    { method: "POST", path: "/api/watchlist", desc: "Subscribe to vendor pricing changes via webhook", params: "vendor, webhook_url (body)" },
-    { method: "GET", path: "/api/watchlist", desc: "List active watchlist subscriptions", params: "webhook_url" },
-    { method: "GET", path: "/api/watchlist/:id", desc: "Get subscription status", params: "" },
-    { method: "DELETE", path: "/api/watchlist/:id", desc: "Unsubscribe from vendor watch", params: "" },
-  ];
+  const subjects = apiExampleSubjects();
+  const endpointTable = endpointsInGroups(["product"]);
+  const referralEndpointTable = endpointsInGroups(["referral"]);
 
-  const referralEndpointTable = [
-    { method: "GET", path: "/api/referral-codes", desc: "List all active referral codes (platform + marketplace)", params: "source (platform|agent), category" },
-    { method: "GET", path: "/api/referral-codes/:vendor", desc: "Get best referral code for a specific vendor", params: "" },
-    { method: "POST", path: "/api/referral-codes", desc: "Submit a marketplace referral code (agents only, auth required)", params: "vendor, code, referral_url (body) — Authorization: Bearer <api-key>" },
-  ];
-
-  const referralEndpointRows = referralEndpointTable.map(function(e) {
-    const sampleHref = e.method === "GET"
-      ? BASE_URL + e.path.replace(/:vendor/, "railway")
-      : BASE_URL + e.path;
-    const cell = e.method === "GET"
-      ? "<a href=\"" + sampleHref + "\">" + escHtmlServer(e.path) + "</a>"
+  const endpointRow = function(e: ApiEndpoint): string {
+    const href = endpointPathHref(e, subjects);
+    const cell = href
+      ? "<a href=\"" + BASE_URL + escHtmlServer(href) + "\">" + escHtmlServer(e.path) + "</a>"
       : "<code>" + escHtmlServer(e.path) + "</code>";
     return "      <tr>"
       + "<td><code>" + e.method + "</code></td>"
@@ -49204,16 +49203,11 @@ function buildDeveloperHubPage(): string {
       + "<td>" + escHtmlServer(e.desc) + "</td>"
       + "<td>" + (e.params ? "<code>" + escHtmlServer(e.params) + "</code>" : "&mdash;") + "</td>"
       + "</tr>";
-  }).join("\n");
+  };
 
-  const endpointRows = endpointTable.map(function(e) {
-    return "      <tr>"
-      + "<td><code>" + e.method + "</code></td>"
-      + "<td><a href=\"" + BASE_URL + e.path.replace(/:vendor/, "supabase") + "\">" + escHtmlServer(e.path) + "</a></td>"
-      + "<td>" + escHtmlServer(e.desc) + "</td>"
-      + "<td>" + (e.params ? "<code>" + escHtmlServer(e.params) + "</code>" : "&mdash;") + "</td>"
-      + "</tr>";
-  }).join("\n");
+  const referralEndpointRows = referralEndpointTable.map(endpointRow).join("\n");
+
+  const endpointRows = endpointTable.map(endpointRow).join("\n");
 
   return "<!DOCTYPE html>\n"
     + "<html lang=\"en\">\n"
@@ -52626,7 +52620,7 @@ a:hover{color:var(--accent-hover);text-decoration:underline}
 .problem-text strong{color:var(--text)}
 
 .how-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin-top:2rem}
-.how-card{background:var(--bg-card);backdrop-filter:blur(12px);border:1px solid var(--border);border-radius:12px;padding:1.5rem;transition:border-color .2s}
+.how-card{background:var(--bg-card);backdrop-filter:blur(12px);border:1px solid var(--border);border-radius:12px;padding:1.5rem;transition:border-color .2s;min-width:0}
 .how-card:hover{border-color:var(--accent)}
 .how-card-icon{font-family:var(--mono);font-size:.75rem;color:var(--accent);background:var(--accent-glow);display:inline-block;padding:.3rem .7rem;border-radius:6px;margin-bottom:.75rem;border:1px solid rgba(59,130,246,0.2)}
 .how-card h3{font-family:var(--sans);font-size:1.1rem;color:var(--text);margin-bottom:.5rem;font-weight:600}
@@ -52855,7 +52849,7 @@ ${buildDeadlinesHtml()}
 ` : ""}
   <div class="section">
     <div class="section-label">The Problem</div>
-    <p class="problem-text">When Claude Code recommends Railway, it doesn't know <strong>Render has a better free tier</strong>. When it suggests Supabase, it doesn't know <strong>your YC batch gets $100K in AWS credits</strong>.</p>
+    <p class="problem-text">When ${homepageVendorLink("Claude Code")} recommends ${homepageVendorLink("Railway")}, it doesn't know what ${homepageVendorLink("Render")} puts in its free tier. When it suggests ${homepageVendorLink("Supabase")}, it doesn't know <strong>${escHtmlServer(acceleratorCreditClause(acceleratorCreditCeiling()))}</strong> &mdash; ${homepageVendorLink(ACCELERATOR_CREDIT_VENDOR)}.</p>
     <p class="problem-text">AgentDeals gives your agent <strong>pricing context</strong> &mdash; free tiers, startup credits, and deal changes across ${stats.categories} categories of developer tools and consumer services.</p>
   </div>
 
@@ -52873,24 +52867,8 @@ ${buildDeadlinesHtml()}
       <div class="how-card">
         <div class="how-card-icon">02</div>
         <h3>REST API</h3>
-        <p>Query deals programmatically. 18 endpoints with search, filtering, risk analysis, and stack recommendations. <a href="/developers" style="color:var(--accent);text-decoration:underline">Developer Hub</a> &middot; <a href="/api/docs" style="color:var(--accent);text-decoration:underline">Swagger Docs</a></p>
-        <pre><code>GET /api/offers?q=database
-GET /api/categories
-GET /api/new?days=7
-GET /api/changes?since=2025-01-01
-GET /api/details/Supabase
-GET /api/stack?use_case=SaaS+app
-GET /api/costs?services=Vercel,Supabase
-GET /api/compare?a=Supabase&amp;b=Neon
-GET /api/vendor-risk/Heroku
-GET /api/audit-stack?services=Vercel,Supabase
-GET /api/expiring?within_days=30
-GET /api/digest
-GET /api/digest/weekly?format=markdown&amp;weeks_ago=1
-GET /api/feed
-GET /api/stats
-GET /api/openapi.json
-GET /api/docs</code></pre>
+        <p>Query deals programmatically. Every one of the ${apiRequestsWePublish().length} read endpoints is listed below, with a request you can issue as printed. <a href="/developers" style="color:var(--accent);text-decoration:underline">Developer Hub</a> &middot; <a href="/api/docs" style="color:var(--accent);text-decoration:underline">Swagger Docs</a></p>
+        <pre><code>${apiRequestsWePublish().map(escHtmlServer).join("\n")}</code></pre>
       </div>
       <div class="how-card">
         <div class="how-card-icon">03</div>

@@ -171,6 +171,13 @@ export interface DealChange {
   recorded_date?: string;
   date_source?: ChangeDateSource;
   resolution?: ChangeResolution | null;
+  source_check?: ChangeSourceCheck | null;
+}
+
+export interface ChangeSourceCheck {
+  checked: string;
+  outcome: string;
+  finding: string;
 }
 
 export interface DealChangesIndex {
