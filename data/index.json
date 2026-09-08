@@ -30672,12 +30672,12 @@
       "verifiedDate": "2026-04-13",
       "referral_program": {
         "available": true,
-        "referrer_benefit": "Up to $100 cash per referral",
-        "referee_benefit": "$100 credit",
+        "referrer_benefit": "$100 cash per verified paid signup",
+        "referee_benefit": "$300 in credit",
         "program_url": "https://www.vultr.com/docs/vultr-referral-program/",
         "type": "self-service",
         "commission_type": "one-time",
-        "notes": "Referred user must be active 30+ days and spend $35+"
+        "notes": "Referred user must be active 30+ days and have paid $100+. Terms read from the referral dashboard on 2026-08-29."
       },
       "source_check": {
         "checked": "2026-08-28",

@@ -10,6 +10,11 @@ export type ReferrerCompensation = "commission" | "credit" | "none";
 
 const REFERRER_COMPENSATIONS: readonly ReferrerCompensation[] = ["commission", "credit", "none"];
 
+export interface PayoutQualification {
+  active_days: number;
+  min_payments_usd: number;
+}
+
 export interface PlatformCode {
   vendor: string;
   code: string;
@@ -18,6 +23,9 @@ export interface PlatformCode {
   referrer_compensation: ReferrerCompensation;
   referee_benefit: string;
   restrictions: string[];
+  limited_time?: boolean;
+  terms_verified?: string;
+  payout_qualification?: PayoutQualification;
   source: "platform";
   active: boolean;
   added_at: string;

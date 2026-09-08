@@ -50,7 +50,8 @@ import { createRegistrationLimiter, rateLimitHeaders } from "./rate-limit.js";
 import { validateX402Address, executeTransfer, generateCorrelationId, payoutsAvailable, PAYOUTS_UNAVAILABLE_REASON } from "./x402.js";
 import { submitReferralCode, getCodesByAgent, getCodeById, updateCode, revokeCode, calculateTrustTier, getDailySubmissionCount, getDailyLimit, getRankedCodesForVendor, calculateCodeScore } from "./referral-codes.js";
 import { getBestReferralCode, listAllReferralCodes } from "./platform-codes.js";
-import { REFERRAL_CONDITIONS_HEADING, allOurReferralLinks, heldReferralLinkForVendor, ourReferralLinkFor, referralLinkCountClause, referrerDisclosureSentence } from "./referral-surfaces.js";
+import { REFERRAL_CONDITIONS_HEADING, allOurReferralLinks, heldReferralLinkForVendor, ourReferralLinkFor, platformCodeAsVendorReferral, referralLinkCountClause, referrerDisclosureSentence } from "./referral-surfaces.js";
+import type { VendorReferralAnswer } from "./referral-surfaces.js";
 import { runHealthCheck, getLastReport, startPeriodicChecks } from "./referral-health.js";
 import { configureDurableBackend, hydrateDurableStores, persistDurableStores, identityStorageReport } from "./durable-store.js";
 import { addFriend, removeFriend, getFriends, getFriendCodesForVendors } from "./friends.js";
@@ -35241,7 +35242,7 @@ function buildDigitalOceanFreeTier2026Page(): string {
     { name: "GCP (Google Cloud)", slug: "google-cloud", freeTier: "Always Free: e2-micro VM, BigQuery 1 TiB, Cloud Run 2M req/mo", strength: "Free persistent VM, generous compute", bestFor: "Side projects needing always-free compute" },
     { name: "Azure", slug: "azure", freeTier: "Always Free: Functions 1M req/mo, Cosmos DB 25 GB, 65+ services", strength: "Best free database (Cosmos DB), enterprise identity", bestFor: ".NET apps, enterprise auth, Cosmos DB" },
     { name: "Hetzner", slug: "hetzner", freeTier: `No free tier — cheapest orderable plan is ${hetznerEntryPriceClause()}`, strength: "Strong price/performance above the entry tier", bestFor: "European hosting, raw compute power" },
-    { name: "Vultr", slug: "vultr", freeTier: "$250 free credit (30 days), cheapest VPS at $2.50/mo", strength: "Global locations, competitive pricing", bestFor: "Low-cost VPS, multiple regions" },
+    { name: "Vultr", slug: "vultr", freeTier: "Free DNS hosting on any account, cheapest VPS at $2.50/mo", strength: "Global locations, competitive pricing", bestFor: "Low-cost VPS, multiple regions" },
     { name: "Railway", slug: "railway", freeTier: "$5 free trial credit, usage-based pricing", strength: "Best DX, instant deploys from Git", bestFor: "Quick prototypes, hobby projects" },
     { name: "Render", slug: "render", freeTier: "Free web services (512 MB RAM), free PostgreSQL (90 days)", strength: "Simple PaaS, free hobby tier", bestFor: "Heroku replacement, small apps" },
     { name: "Cloudflare", slug: "cloudflare", freeTier: "Workers 100K req/day, R2 10 GB, D1 5 GB, Pages unlimited", strength: "Edge-first, zero egress on R2", bestFor: "Edge computing, static sites, storage" },
@@ -50990,7 +50991,7 @@ ${bundleHtml}
 
 function buildReferralProgramsPage(): string {
   const seen = new Set<string>();
-  const programVendors: { vendor: string; category: string; referrer_benefit: string; referee_benefit: string; program_url: string; type: string; commission_type?: string; hasCode: boolean; referralUrl?: string; refereeValue?: string }[] = [];
+  const programVendors: { vendor: string; category: string; referrer_benefit: string; referee_benefit: string; program_url: string; type: string; commission_type?: string; hasCode: boolean; referralUrl?: string; refereeValue?: string; restrictions: string[] }[] = [];
   for (const o of offers) {
     if (o.referral_program?.available && !seen.has(o.vendor)) {
       seen.add(o.vendor);
@@ -51006,6 +51007,7 @@ function buildReferralProgramsPage(): string {
         hasCode: ourLink !== null,
         referralUrl: ourLink?.url,
         refereeValue: ourLink?.refereeBenefit,
+        restrictions: ourLink?.restrictions ?? [],
       });
     }
   }
@@ -51071,10 +51073,13 @@ function buildReferralProgramsPage(): string {
       ? `<a href="${escHtmlServer(v.referralUrl!)}" rel="noopener sponsored" target="_blank" class="status-badge status-active">Use our code</a>`
       : `<span class="status-badge status-none">&mdash;</span>`;
     const linkHtml = `<a href="${escHtmlServer(v.program_url)}" rel="noopener" target="_blank" class="program-link">View</a>`;
+    const conditionsHtml = v.hasCode && v.restrictions.length > 0
+      ? `<div class="referral-conditions"><span class="referral-conditions-heading">${REFERRAL_CONDITIONS_HEADING}</span><ul>${v.restrictions.map(r => `<li>${escHtmlServer(r)}</li>`).join("")}</ul></div>`
+      : "";
     return `      <tr data-category="${escHtmlServer(v.category)}">
         <td><a href="/vendor/${vendorSlug}" class="vendor-link">${escHtmlServer(v.vendor)}</a></td>
         <td class="cat-cell">${escHtmlServer(v.category)}</td>
-        <td class="benefit-cell">${escHtmlServer(v.referee_benefit)}</td>
+        <td class="benefit-cell">${escHtmlServer(v.referee_benefit)}${conditionsHtml}</td>
         <td class="benefit-cell">${escHtmlServer(v.referrer_benefit)}</td>
         <td class="type-cell">${typeLabel(v.type)}</td>
         <td class="status-cell">${statusHtml}</td>
@@ -51136,6 +51141,10 @@ h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5
 .vendor-link{color:var(--text);font-weight:600}.vendor-link:hover{color:var(--accent)}
 .cat-cell{color:var(--text-muted);font-size:.8rem}
 .benefit-cell{font-size:.8rem;color:var(--text-muted)}
+.programs-table td{vertical-align:top}
+.referral-conditions{margin-top:.4rem;padding:.4rem .6rem;border-left:2px solid #d29922;border-radius:0 4px 4px 0;background:rgba(210,153,34,0.08)}
+.referral-conditions-heading{display:block;font-size:.65rem;text-transform:uppercase;letter-spacing:.08em;color:var(--text-dim);font-family:var(--mono);margin-bottom:.25rem}
+.referral-conditions ul{margin:0;padding-left:1rem;font-size:.75rem;color:var(--text);line-height:1.45}
 .type-cell{font-size:.75rem;color:var(--text-dim);font-family:var(--mono)}
 .status-cell{text-align:center}
 .link-cell{text-align:center}
@@ -55707,7 +55716,7 @@ ${catList}
       return;
     }
 
-    const referralData = getVendorReferral(vendor);
+    const referralData: VendorReferralAnswer | null = getVendorReferral(vendor) ?? platformCodeAsVendorReferral(vendor);
     if (!referralData) {
       res.writeHead(404, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
       res.end(JSON.stringify({ error: `No referral found for vendor "${vendor}"` }));
@@ -55725,6 +55734,7 @@ ${catList}
       referral_code: referralData.referral.code ?? null,
       referral_url: referralData.referral.url,
       referee_value: referralData.referral.referee_value,
+      restrictions: referralData.referral.restrictions ?? [],
       type: referralData.referral.type,
       attributed: attribution.status === "attributed",
       attribution: attribution.status,
