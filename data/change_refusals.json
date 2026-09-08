@@ -25,6 +25,18 @@
       "refused_date": "2026-08-28"
     },
     {
+      "vendor": "Ably",
+      "change_type": "limits_reduced",
+      "reason": "measures_the_opposite",
+      "detail": "limits_reduced claimed, and every quantity that moved between the two states moved the other way — 6 messag/mo against 500 messag/sec",
+      "summary": "The free tier now offers 500 messages/second and 6M messages/month, which is a reduction from the stored information of unlimited messages/second.",
+      "previous_state": "Real-time infrastructure — 6M messages/month, 200 concurrent connections, 200 channels, pub/sub + chat + spaces",
+      "current_state": "The Free tier includes 200 concurrent connections, 500 messages / second, 6M messages / month, and community & email support.",
+      "source_url": "https://ably.com/pricing",
+      "category": "Messaging",
+      "refused_date": "2026-09-08"
+    },
+    {
       "vendor": "AbstractAPI",
       "change_type": "limits_reduced",
       "reason": "unquantified_limit",
@@ -107,6 +119,18 @@
       "source_url": "https://aws.amazon.com/q/developer/pricing/",
       "category": "AI Coding",
       "refused_date": "2026-08-28"
+    },
+    {
+      "vendor": "Amazon SES",
+      "change_type": "free_tier_removed",
+      "reason": "no_removal_evidence",
+      "detail": "a free tier was recorded as removed on the evidence that the page did not mention it, and the summary states no price, ending or replacement where the free tier was",
+      "summary": "The free tier information is outdated. The page details three pricing plans: Essentials, Pro, and Enterprise, with tiered pricing based on email volume. There is no mention of a 6-month credit period for new accounts.",
+      "previous_state": "Transactional and bulk email API/SMTP. No perpetual free tier: new AWS accounts get up to $200 in AWS Free Tier credits usable across eligible services, the free plan runs for 6 months after account creation, and credits expire 12 months after account creation. $0.10 per 1,000 outbound emails after that, plus EC2 compute and data transfer if you send from AWS.",
+      "current_state": "Amazon SES offers three pricing plans: Essentials (starting at $0.16/1,000 emails), Pro (starting at $0.22/1,000 emails), and Enterprise (starting at $0.23/1,000 emails). À la carte pricing is $0.10 per 1,000 emails.",
+      "source_url": "https://aws.amazon.com/ses/pricing/",
+      "category": "Email",
+      "refused_date": "2026-09-08"
     },
     {
       "vendor": "Amplitude",
@@ -481,16 +505,28 @@
       "refused_date": "2026-08-28"
     },
     {
+      "vendor": "Cloudcraft",
+      "change_type": "pricing_restructured",
+      "reason": "states_no_terms",
+      "detail": "every clause of the summary states absence or hedge or narration rather than a term the page carries, so it reports the reading rather than a change",
+      "summary": "The free tier now appears to be a 14-day trial of the Pro plan. The original free tier with limitations is no longer explicitly mentioned, though the page states you can use Cloudcraft for free to create diagrams.",
+      "previous_state": "AWS/Azure architecture diagramming — Free plan: single user only, manual diagrams limited to a 12x15 component grid, unlimited private diagrams, PNG/PDF/SVG export, private shared links, basic cost calculations. No live-scan/auto-discovery, team management, infinite canvas, version history, API access, or SSO.",
+      "current_state": "There is a free 14-day trial of Cloudcraft Pro. The free version allows you to draw diagrams. Pro is $40.83/user/month billed annually or $99/user/month billed monthly.",
+      "source_url": "https://www.cloudcraft.co/pricing",
+      "category": "Diagramming",
+      "refused_date": "2026-09-08"
+    },
+    {
       "vendor": "Cloudflare DNS",
       "change_type": "limits_reduced",
       "reason": "states_no_difference",
       "detail": "limits_reduced claimed, summary asserts the page matches what we stored, and the two states carry the same quantities",
-      "summary": "The page confirms a free plan exists, but states a records-per-zone cap of 200 for zones created on or after 2024-09-01, while zones created before that date retain the legacy 1,000-record cap. This aligns with the stored deal info. However, the page also highlights numerous paid add-ons and other plans, suggesting the free plan is a starting point with limited functionality.",
+      "summary": "The page confirms a free plan exists, but details a record limit of 200 for zones created on or after 2024-09-01, while older zones retain a 1,000-record cap. This aligns with the stored information. However, the page does not explicitly state 'unlimited zones and queries' as the stored information suggests.",
       "previous_state": "Free authoritative DNS hosting — unlimited zones and queries, DDoS protection, free SSL/TLS. Records-per-zone cap is 200 for zones created on or after 2024-09-01; zones created before that date retain the legacy 1,000-record cap.",
-      "current_state": "The free plan exists, with a 200 record limit for zones created on or after 2024-09-01, and a 1000 record limit for older zones.",
+      "current_state": "The free plan exists, with a 200 record limit for zones created on or after 2024-09-01, and a 1,000 record limit for zones created before that date.",
       "source_url": "https://www.cloudflare.com/plans/free/",
       "category": "DNS & Domain Management",
-      "refused_date": "2026-08-28"
+      "refused_date": "2026-09-08"
     },
     {
       "vendor": "Cloudflare Pages",
@@ -851,6 +887,18 @@
       "source_url": "https://fabform.io/",
       "category": "Forms",
       "refused_date": "2026-09-01"
+    },
+    {
+      "vendor": "Feathery",
+      "change_type": "limits_reduced",
+      "reason": "measures_no_change",
+      "detail": "limits_reduced claimed, and every quantity the record compares holds the same value once notation and period are normalised — 500 submission/mo against 500 submission/mo, 10 MB file against 10 MB file",
+      "summary": "The free plan now has different limits. The stored information states 500 submissions/mo and 5 live forms, while the current pricing page states 500 submissions/mo and 5 live forms. The free plan also includes unlimited pages, conditions, and seats, while the current page shows unlimited pages and conditions, but does not explicitly mention seats.",
+      "previous_state": "Developer-friendly form builder for signup/login, user onboarding, payment flows, and complex financial applications. Free plan: 500 submissions/mo, 5 active (published) forms, 10 MB file upload limit, standard integrations, forum support. Unlimited fields, pages, conditions, and seats.",
+      "current_state": "Free plan includes 500 monthly submissions, 5 live forms, 10MB file upload size limit, unlimited pages and conditions, standard integrations, and forum support.",
+      "source_url": "https://feathery.io/pricing",
+      "category": "Forms",
+      "refused_date": "2026-09-08"
     },
     {
       "vendor": "file.io",
@@ -1235,6 +1283,30 @@
       "source_url": "https://ipwho.org/",
       "category": "Dev Utilities",
       "refused_date": "2026-08-28"
+    },
+    {
+      "vendor": "IP Geolocation",
+      "change_type": "limits_reduced",
+      "reason": "unquantified_limit",
+      "detail": "limits_reduced claimed, but the current state names no quantity for anything the stored state measured (1,000 request)",
+      "summary": "The free plan exists but has limitations. The free plan provides 1 credit per successful request and includes core modules (location, country metadata, currency, ASN, and time zone). User Agent is not included in the free plan and requires a Developer plan.",
+      "previous_state": "IP Geolocation API - Forever free plan for developers with a 1,000 requests per day limit.",
+      "current_state": "Free Plan: 1 credit per successful request. Core modules: location, country metadata, currency, ASN, and time zone. User Agent is not included in the free plan.",
+      "source_url": "https://ipgeolocation.io/",
+      "category": "Dev Utilities",
+      "refused_date": "2026-09-08"
+    },
+    {
+      "vendor": "IP2Location.io",
+      "change_type": "limits_reduced",
+      "reason": "unquantified_limit",
+      "detail": "limits_reduced claimed, but the current state names no quantity for anything the stored state measured (50 credit, 2 location, 500 whoi)",
+      "summary": "The free plan now offers 500 WHOIS queries and 50 hosted domain lookups per month, down from 500 WHOIS and unlimited hosted domain lookups.",
+      "previous_state": "Freemium, fast, and reliable IP geolocation API. Get data like city, coordinates, ISP, ASN, AS data and more. The free plan includes 50k credits per month. IP2Location.io also offers 500 free WHOIS and hosted domain lookups per month. See domain registration details and find domains hosted on a specific IP. Upgrade to a paid plan for more features.",
+      "current_state": "Domain WHOIS API returns comprehensive WHOIS data. Get up to 500 queries free each month. Hosted Domain API retrieves list of domain names by IP address. Get up to 50 queries free each month.",
+      "source_url": "https://www.ip2location.io/",
+      "category": "Dev Utilities",
+      "refused_date": "2026-09-08"
     },
     {
       "vendor": "IPLocate",
@@ -1837,6 +1909,18 @@
       "refused_date": "2026-08-28"
     },
     {
+      "vendor": "PythonAnywhere",
+      "change_type": "limits_reduced",
+      "reason": "unquantified_limit",
+      "detail": "limits_reduced claimed, but the current state names no quantity for anything the stored state measured (1 web, 512 mb, 100 cpu, 2 consol)",
+      "summary": "The free tier is now called 'Beginner' and has some restrictions. Outbound internet access is now restricted to specific sites via HTTP(S) only, whereas previously it was whitelisted sites.",
+      "previous_state": "Python web hosting — Beginner plan free forever: 1 web app (yourusername.pythonanywhere.com), 512 MB disk, 100 CPU-seconds/day, 2 consoles. Outbound internet access available to whitelisted sites via HTTP(S)",
+      "current_state": "Beginner: $ 0 /month. You'll get one web app at your-username .pythonanywhere.com and two consoles with restricted outbound Internet access.",
+      "source_url": "https://www.pythonanywhere.com/pricing/",
+      "category": "Cloud Hosting",
+      "refused_date": "2026-09-08"
+    },
+    {
       "vendor": "Qdrant",
       "change_type": "limits_reduced",
       "reason": "unquantified_limit",
@@ -2003,6 +2087,18 @@
       "source_url": "https://snappify.com",
       "category": "Dev Utilities",
       "refused_date": "2026-08-29"
+    },
+    {
+      "vendor": "SonarQube Cloud",
+      "change_type": "free_tier_removed",
+      "reason": "no_removal_evidence",
+      "detail": "a free tier was recorded as removed on the evidence that the page did not mention it, and the summary states no price, ending or replacement where the free tier was",
+      "summary": "The pricing page does not explicitly mention a free tier. It highlights features like AI code review and security analysis but directs users to 'View plans' suggesting a paid model. While open-source projects are not explicitly excluded, the absence of a stated free tier for them is a significant change.",
+      "previous_state": "Code quality and security analysis — free and unlimited for open-source projects, 15+ languages, CI/CD integration. Formerly SonarCloud.",
+      "current_state": "The page promotes SonarQube Cloud with features like AI-powered code verification and security analysis, and directs users to view plans for pricing.",
+      "source_url": "https://www.sonarsource.com/products/sonarcloud/",
+      "category": "Security",
+      "refused_date": "2026-09-08"
     },
     {
       "vendor": "StackBy",
