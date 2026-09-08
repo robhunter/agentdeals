@@ -985,7 +985,7 @@ export const openapiSpec = {
               "The last three withhold a favourable risk_level; the first two do not."
             ].join(" ")
           },
-          detail: { type: "string", description: "What the check found, in its own words: for ok, the name the page writes for the vendor and the price evidence quoted from it, or what its markup states when the rendered page states no amount; for states_no_amount, the phrase that was the page's entire price evidence; otherwise why the page cannot confirm the record. Where the page was read for schema.org markup, the detail says whether that markup was absent, present and priceless, or priced." },
+          detail: { type: "string", description: "Our own sentence recording what the check found — never a quotation from the page, and not corroborable against it (#1467). For ok, the form of the vendor's name the check matched and the price signal it found, or what the markup states when the rendered page states no amount; for states_no_amount, the phrase that was the page's entire price evidence; otherwise why the page cannot confirm the record. Where the page was read for schema.org markup, the detail says whether that markup was absent, present and priceless, or priced. The fields carrying text taken from a page are product_role.source_quote and product_subtypes.labels[].source_quote." },
           read: { type: "string", enum: ["markup"], description: "Present when the ok grade rests on typed prices in the page's schema.org markup rather than on a figure the page renders (#1279)." },
           unrendered_prices: {
             type: "array",

@@ -7,7 +7,7 @@ import {
 } from "../dist/page-reviews.js";
 import { toSlug } from "../dist/vendor-slug.js";
 import { uncitedChangesAgainstBudget } from "../dist/change-reporting.js";
-import { passedWithoutQuotingThePage } from "../dist/source-check.js";
+import { passedWithoutRecordingAFinding } from "../dist/source-check.js";
 import { supersededCensus } from "../dist/superseded-census.js";
 
 const REPO = join(dirname(fileURLToPath(import.meta.url)), "..");
@@ -70,7 +70,7 @@ export function measureBudgets(date) {
     stale_fact_pages: stale.length,
     unsourced_tier_a: unsourcedTierAPaths(index.pages).length,
     uncited_change_records: uncitedChangesAgainstBudget(changes).length,
-    source_checks_ok_without_quoted_evidence: offers.filter(passedWithoutQuotingThePage).length,
+    source_checks_ok_without_quoted_evidence: offers.filter(passedWithoutRecordingAFinding).length,
     ...supersededCensus(offers, changes, date),
   };
 }

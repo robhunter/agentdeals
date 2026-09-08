@@ -1,7 +1,7 @@
 import { CITATION_LINK_HTML, RECORD_SOURCE_CLASS, UNCITED_TAG_CLASS, citationLabel } from "./change-citation.js";
 import { FREE_TIER_STANDING_LABELS } from "./risk-scorecard.js";
 import {
-  passedWithoutQuotingThePage,
+  checkFinding,
   termsUnconfirmedOutcome,
   unconfirmedTermsClause,
 } from "./source-check.js";
@@ -10,15 +10,42 @@ import type { Offer } from "./types.js";
 
 export type Escaper = (text: string) => string;
 
+export const PAGE_QUOTE_CLASS = "page-quote";
+
+export const CHECK_FINDING_CLASS = "check-finding";
+
+export const CHECK_FINDING_LEAD = "our check recorded";
+
+export const CHECK_ESTABLISHES =
+  "A source check reads the cited page for the service's name and a price; the limits above are from our own record.";
+
+export const CHECK_ESTABLISHES_ON_A_LIST =
+  "A source check reads each cited page for that service's name and a price; the figures in the tables above are from our own records.";
+
+export function pageQuoteHtml(quote: string, esc: Escaper): string {
+  return `<span class="${PAGE_QUOTE_CLASS}">where it says: &ldquo;${esc(quote)}&rdquo;</span>`;
+}
+
+export function checkFindingHtml(finding: string, esc: Escaper): string {
+  return `<span class="${CHECK_FINDING_CLASS}">${CHECK_FINDING_LEAD}: ${esc(finding)}</span>`;
+}
+
 export interface ReadSource {
   url: string;
   quote?: string | null;
+  finding?: string | null;
 }
 
 export interface ReadClauseOptions {
   dateClass: string;
   rel?: string;
   linkText?: (url: string) => string;
+}
+
+function attributionHtml(source: ReadSource, esc: Escaper): string {
+  if (source.quote) return `, ${pageQuoteHtml(source.quote, esc)}`;
+  if (source.finding) return `, and ${checkFindingHtml(source.finding, esc)}`;
+  return "";
 }
 
 export function readClauseHtml(
@@ -33,9 +60,7 @@ export function readClauseHtml(
   const provenance = sources
     .map(source => {
       const link = `<a href="${esc(source.url)}" rel="${rel}">${esc(linkText(source.url))}</a>`;
-      return source.quote
-        ? `${link}, where it says: &ldquo;${esc(source.quote)}&rdquo;`
-        : link;
+      return `${link}${attributionHtml(source, esc)}`;
     })
     .join(" and from ");
   return (
@@ -48,7 +73,7 @@ export interface SourceRead {
   cited: true;
   url: string;
   readOn: string;
-  quote: string | null;
+  finding: string | null;
 }
 
 export interface SourceMissing {
@@ -74,7 +99,7 @@ export function freeTierSourceOf(offer: SourcedOffer | null | undefined): FreeTi
     cited: true,
     url,
     readOn: check.checked,
-    quote: passedWithoutQuotingThePage(offer) ? null : check.detail,
+    finding: checkFinding(offer),
   };
 }
 
@@ -132,6 +157,8 @@ export function sourceMarkerHtml(
 
 export const CITED_SOURCES_CLASS = "cited-sources";
 
+export const CHECK_SCOPE_CLASS = "check-scope";
+
 export function citedSourcesListHtml(
   services: readonly CitedService[],
   esc: Escaper,
@@ -146,7 +173,7 @@ export function citedSourcesListHtml(
       const body = service.source.cited
         ? readClauseHtml(
             service.source.readOn,
-            [{ url: service.source.url, quote: service.source.quote }],
+            [{ url: service.source.url, finding: service.source.finding }],
             esc,
             { dateClass, linkText: citationLabel },
           )
@@ -155,7 +182,8 @@ export function citedSourcesListHtml(
     })
     .join("\n      ");
   return (
-    `<ul class="${CITED_SOURCES_CLASS}" style="margin:1rem 0 0 1.1rem;padding:0;font-size:.85rem;line-height:1.7">\n` +
+    `<p class="${CHECK_SCOPE_CLASS}" style="margin:1rem 0 0;font-size:.8rem;color:var(--text-dim)">${esc(CHECK_ESTABLISHES_ON_A_LIST)}</p>\n` +
+    `    <ul class="${CITED_SOURCES_CLASS}" style="margin:.5rem 0 0 1.1rem;padding:0;font-size:.85rem;line-height:1.7">\n` +
     `      ${items}\n    </ul>`
   );
 }
