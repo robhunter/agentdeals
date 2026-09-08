@@ -47,7 +47,7 @@ async function everyPublishedPath(base: string): Promise<string[]> {
     const xml = await (await fetch(`${base}${stripHost(m[1])}`)).text();
     for (const loc of xml.matchAll(/<loc>([^<]+)<\/loc>/g)) paths.push(stripHost(loc[1]));
   }
-  for (const extra of ["/", "/hosting-pricing", "/disclosure", "/referral-programs", "/marketplace"]) {
+  for (const extra of ["/", "/hosting-pricing", "/disclosure", "/referral-programs"]) {
     if (!paths.includes(extra)) paths.push(extra);
   }
   for (const p of [...paths]) {

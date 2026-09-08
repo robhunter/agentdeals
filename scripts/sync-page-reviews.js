@@ -54,7 +54,7 @@ const EDITORIAL_PAGES = [
   "/gcp-free-tier-2026", "/gemini-api-pricing-2026", "/gemini-api-pricing-changes",
   "/google-developer-program-2026", "/hcp-terraform-migration", "/hetzner-pricing-2026",
   "/hosting-free-tier-comparison-2026", "/hosting-pricing", "/llm-api-pricing",
-  "/marketplace", "/monitoring-comparison-2026", "/neon-vs-supabase",
+  "/monitoring-comparison-2026", "/neon-vs-supabase",
   "/openai-assistants-alternatives",
   "/openai-assistants-migration", "/openai-assistants-migration-2026",
   "/openai-realtime-migration", "/q1-2026-developer-pricing-report", "/q2-pricing-preview-2026",

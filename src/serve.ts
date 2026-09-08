@@ -44,13 +44,13 @@ import { changeIsUncited, changeSourceCitation, changeSourceLinkHtml, citedChang
 import { growthLimitPhrases } from "./growth-limits.js";
 import { registerAgent, authenticateRequest, validateVestauthUrl, hashApiKey, updateAgentX402Address, getAgentById } from "./agents.js";
 import { attributeAuthenticatedRequest } from "./referral-attribution.js";
-import { recordConversion, confirmEligibleEntries, clawbackEntry, getAgentBalance, getAgentLedgerEntries, recordPayout, MAX_COMMISSION_AMOUNT, MINIMUM_PAYOUT_AMOUNT, SUBMITTER_SHARE_RATE, getLeaderboard } from "./ledger.js";
+import { recordConversion, confirmEligibleEntries, clawbackEntry, getAgentBalance, getAgentLedgerEntries, recordPayout, MAX_COMMISSION_AMOUNT, MINIMUM_PAYOUT_AMOUNT, getLeaderboard } from "./ledger.js";
 import { PLATFORM_CREDENTIAL_REQUIRED, authorizedAsPlatform } from "./platform-auth.js";
 import { createRegistrationLimiter, rateLimitHeaders } from "./rate-limit.js";
 import { validateX402Address, executeTransfer, generateCorrelationId, payoutsAvailable, PAYOUTS_UNAVAILABLE_REASON } from "./x402.js";
 import { submitReferralCode, getCodesByAgent, getCodeById, updateCode, revokeCode, calculateTrustTier, getDailySubmissionCount, getDailyLimit, getRankedCodesForVendor, calculateCodeScore } from "./referral-codes.js";
 import { getBestReferralCode, listAllReferralCodes } from "./platform-codes.js";
-import { REFERRAL_CONDITIONS_HEADING, allOurReferralLinks, hasAnyReferralSurface, heldReferralLinkForVendor, ourReferralLinkFor, referralLinkCountClause, referrerDisclosureSentence } from "./referral-surfaces.js";
+import { REFERRAL_CONDITIONS_HEADING, allOurReferralLinks, heldReferralLinkForVendor, ourReferralLinkFor, referralLinkCountClause, referrerDisclosureSentence } from "./referral-surfaces.js";
 import { runHealthCheck, getLastReport, startPeriodicChecks } from "./referral-health.js";
 import { configureDurableBackend, hydrateDurableStores, persistDurableStores, identityStorageReport } from "./durable-store.js";
 import { addFriend, removeFriend, getFriends, getFriendCodesForVendors } from "./friends.js";
@@ -1482,7 +1482,6 @@ function buildGlobalNav(active: NavSection): string {
     ]},
     { label: "Developers", items: [
       { href: "/developers", label: "API", section: "developers" },
-      { href: "/marketplace", label: "Marketplace", section: "marketplace" },
       { href: "/badges", label: "Badges", section: "badges" },
       { href: "/embed", label: "Embed", section: "embed" },
       { href: "/setup", label: "Setup", section: "setup" },
@@ -4561,7 +4560,7 @@ ${enrichedAlts.map(a => {
         <div><span style="font-size:.7rem;text-transform:uppercase;letter-spacing:.08em;color:var(--text-dim);font-family:var(--mono)">They Get</span><div style="font-size:.9rem;color:var(--text);margin-top:.25rem">${escHtmlServer(primary.referral_program.referee_benefit)}</div></div>
       </div>
       <div style="display:flex;gap:.75rem;flex-wrap:wrap;font-size:.85rem">
-        <a href="${escHtmlServer(primary.referral_program.program_url)}" rel="noopener" target="_blank">View program details &rarr;</a>${!primary.referral ? `<span style="color:var(--text-dim)">&middot;</span><a href="/marketplace">Submit your referral code</a>` : ""}
+        <a href="${escHtmlServer(primary.referral_program.program_url)}" rel="noopener" target="_blank">View program details &rarr;</a>
       </div>
     </div>
   </div>` : "";
@@ -4673,15 +4672,6 @@ ${allCompareLinks.join("\n")}
     <code>${escHtmlServer(watchlistSnippet)}</code>
     <p style="margin-top:.75rem;font-size:.8rem"><a href="/developer-hub">Watchlist API docs &rarr;</a></p>
   </div>`;
-
-  const marketplaceSolicitationHtml = !hasAnyReferralSurface(vendorName, primary) ? `
-  <div class="section marketplace-solicitation">
-    <div style="border:1px dashed var(--border);border-radius:8px;padding:1rem;background:var(--bg-card);opacity:.92">
-      <h3 style="margin:0 0 .5rem;font-size:.95rem;color:var(--text)">Know a referral or partner program for ${escHtmlServer(vendorName)}?</h3>
-      <p style="margin:0 0 .5rem;font-size:.85rem;color:var(--text-muted)">Submit a referral code via the <a href="/marketplace">Agent Marketplace</a> and earn revenue when agents use it (60% commission, paid via x402). Trust tiers and verification protect against abuse.</p>
-      <p style="margin:0;font-size:.75rem;color:var(--text-dim)">See our <a href="/disclosure">affiliate disclosure</a> for commission details.</p>
-    </div>
-  </div>` : "";
 
   const mcpSnippet = `{
   "tool": "search_deals",
@@ -4969,7 +4959,6 @@ ${altPagesHtml}
 ${reportAppearancesHtml}
 ${referralProgramHtml}
 ${watchlistCtaHtml}
-${marketplaceSolicitationHtml}
 ${internalLinksHtml}
   <div class="section mcp-section">
     <h2>Query via MCP</h2>
@@ -49220,7 +49209,7 @@ function buildDeveloperHubPage(): string {
     + "    <p><code>/api/changes</code> returns <strong>" + CHANGES_DEFAULT_LIMIT + " records by default</strong>. <code>limit</code> sets the page size, <code>offset</code> skips records, and both are echoed back on the response alongside <code>returned</code> &mdash; the count in this page &mdash; and <code>total</code>, the count matching your query before paging. There is no maximum: <code>?limit=1000</code> returns the whole window in one response. An invalid <code>limit</code> or a negative <code>offset</code> answers <code>400</code> rather than being ignored.</p>\n"
     + "\n"
     + "    <h2 id=\"referral-marketplace\">Referral Marketplace</h2>\n"
-    + "    <p>AgentDeals operates a referral code marketplace so agents can discover and earn on vendor referrals. <strong>Platform codes</strong> (ours) take priority over <strong>agent-submitted codes</strong> (community) in every response. The <a href=\"/marketplace\">marketplace HTML page</a> has a human-readable overview; the endpoints below expose the same data to agents.</p>\n"
+    + "    <p><strong>Platform codes</strong> (ours) take priority over <strong>agent-submitted codes</strong> (community) in every response. The <a href=\"/disclosure\">affiliate disclosure</a> lists the codes we hold; the endpoints below expose the same data to agents.</p>\n"
     + "    <div style=\"overflow-x:auto\">\n"
     + "    <table class=\"endpoint-table\">\n"
     + "      <thead><tr><th>Method</th><th>Endpoint</th><th>Description</th><th>Parameters</th></tr></thead>\n"
@@ -49281,7 +49270,7 @@ function buildDeveloperHubPage(): string {
     + "    </div>\n"
     + "    <div class=\"use-case\">\n"
     + "      <h4>Referral-Aware Agents</h4>\n"
-    + "      <p>Agents that recommend developer tools can route users through active referral codes. Call <code>/api/referral-codes?source=platform</code> once at session start to prefetch all our codes, or rely on the inline <code>referral_code</code> field on every <code>/api/offers</code> result. See <a href=\"/marketplace\">the marketplace</a> for the revenue model.</p>\n"
+    + "      <p>Agents that recommend developer tools can route users through active referral codes. Call <code>/api/referral-codes?source=platform</code> once at session start to prefetch all our codes, or rely on the inline <code>referral_code</code> field on every <code>/api/offers</code> result.</p>\n"
     + "    </div>\n"
     + "    <div class=\"use-case\">\n"
     + "      <h4>AI Coding Tools Research</h4>\n"
@@ -51069,11 +51058,7 @@ function buildReferralProgramsPage(): string {
     },
     {
       q: "How do I earn money from developer tool referrals?",
-      a: "Sign up for a vendor's referral program, get your referral link, and share it. When someone signs up through your link, you earn the referrer benefit (credits, cash, or commission). You can also submit your referral codes to our marketplace for broader distribution.",
-    },
-    {
-      q: "Can AI agents participate in referral programs?",
-      a: "Yes. Register your AI agent on our marketplace, submit referral codes for vendors with programs, and earn revenue share when your codes convert. Agents are ranked by trust tier and conversion performance.",
+      a: "Sign up for a vendor's referral program, get your referral link, and share it. When someone signs up through your link, you earn the referrer benefit (credits, cash, or commission).",
     },
   ]);
 
@@ -51084,7 +51069,7 @@ function buildReferralProgramsPage(): string {
     const vendorSlug = toSlug(v.vendor);
     const statusHtml = v.hasCode
       ? `<a href="${escHtmlServer(v.referralUrl!)}" rel="noopener sponsored" target="_blank" class="status-badge status-active">Use our code</a>`
-      : `<a href="/marketplace" class="status-badge status-submit">Submit a code</a>`;
+      : `<span class="status-badge status-none">&mdash;</span>`;
     const linkHtml = `<a href="${escHtmlServer(v.program_url)}" rel="noopener" target="_blank" class="program-link">View</a>`;
     return `      <tr data-category="${escHtmlServer(v.category)}">
         <td><a href="/vendor/${vendorSlug}" class="vendor-link">${escHtmlServer(v.vendor)}</a></td>
@@ -51158,17 +51143,11 @@ h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5
 .status-badge{display:inline-block;padding:.2rem .6rem;border-radius:10px;font-size:.7rem;font-weight:600;text-decoration:none}
 .status-active{background:var(--green-glow);color:var(--green);border:1px solid rgba(63,185,80,0.3)}
 .status-active:hover{text-decoration:none;border-color:var(--green)}
-.status-submit{background:var(--accent-glow);color:var(--accent);border:1px solid rgba(59,130,246,0.3)}
-.status-submit:hover{text-decoration:none;border-color:var(--accent)}
+.status-none{color:var(--text-dim)}
 .disclosure{font-size:.8rem;color:var(--text-dim);margin-bottom:2rem;padding:.75rem 1rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card)}
 .section-heading{font-size:1.15rem;color:var(--text);margin:2.5rem 0 .35rem;letter-spacing:-.01em}
 .section-note{color:var(--text-muted);font-size:.85rem;margin-bottom:1rem}
 .disclosure a{color:var(--text-muted)}
-.agent-cta{margin:2rem 0;padding:1.5rem;border:1px solid var(--accent);border-radius:12px;background:var(--accent-glow);text-align:center}
-.agent-cta h2{font-family:var(--serif);font-size:1.3rem;margin-bottom:.5rem}
-.agent-cta p{color:var(--text-muted);font-size:.9rem;margin-bottom:1rem;max-width:600px;margin-left:auto;margin-right:auto}
-.agent-cta a.cta-button{display:inline-block;padding:.6rem 1.5rem;background:var(--accent);color:#fff;border-radius:8px;font-weight:600;font-size:.9rem;text-decoration:none}
-.agent-cta a.cta-button:hover{background:var(--accent-hover);text-decoration:none}
 .faq-section{margin-top:2rem}
 .faq-section h2{font-family:var(--serif);font-size:1.2rem;margin-bottom:1rem}
 .faq-item{margin-bottom:1.25rem}
@@ -51200,10 +51179,6 @@ ${mcpCtaCss()}
       <div class="stat-value">${withCodes}</div>
       <div class="stat-label">Our Codes Active</div>
     </div>
-    <div class="stat-card">
-      <div class="stat-value">${withoutCodes}</div>
-      <div class="stat-label">Accepting Submissions</div>
-    </div>
   </div>
 
   <div class="disclosure"><a href="/disclosure">Affiliate disclosure</a>: Links marked "Use our code" are referral links. We may earn a commission at no cost to you.</div>
@@ -51231,12 +51206,6 @@ ${unpaidRows}
     </tbody>
   </table>
 
-  <div class="agent-cta">
-    <h2>Earn Revenue with Your Referral Codes</h2>
-    <p>Register your AI agent or developer account on the AgentDeals marketplace. Submit referral codes for any vendor with a program, and earn revenue share when your codes convert.</p>
-    <a href="/marketplace" class="cta-button">Register on the Marketplace</a>
-  </div>
-
   <div class="faq-section">
     <h2>Frequently Asked Questions</h2>
     <div class="faq-item">
@@ -51245,15 +51214,7 @@ ${unpaidRows}
     </div>
     <div class="faq-item">
       <h3>How do I earn money from developer tool referrals?</h3>
-      <p>Sign up for a vendor's referral program, get your referral link, and share it. When someone signs up through your link, you earn the referrer benefit (credits, cash, or commission). You can also <a href="/marketplace">submit your referral codes</a> to our marketplace for broader distribution.</p>
-    </div>
-    <div class="faq-item">
-      <h3>Can AI agents participate in referral programs?</h3>
-      <p>Yes. Register your AI agent on our <a href="/marketplace">marketplace</a>, submit referral codes for vendors with programs, and earn revenue share when your codes convert. Agents are ranked by trust tier and conversion performance.</p>
-    </div>
-    <div class="faq-item">
-      <h3>What does "Submit a code" mean?</h3>
-      <p>For vendors where we don't yet have a referral code, you can submit yours through our <a href="/marketplace">agent marketplace</a>. Your code gets ranked by trust tier and conversion performance, and you earn revenue share when it converts.</p>
+      <p>Sign up for a vendor's referral program, get your referral link, and share it. When someone signs up through your link, you earn the referrer benefit (credits, cash, or commission).</p>
     </div>
   </div>
 
@@ -51274,197 +51235,6 @@ document.querySelectorAll('.filter-btn').forEach(btn => {
   });
 });
 </script>
-</body>
-</html>`;
-}
-
-function buildMarketplacePage(): string {
-  const title = "Agent Marketplace — Earn Revenue with Referral Codes | AgentDeals";
-  const metaDesc = "Join the AgentDeals marketplace. Register your AI agent, submit referral codes, earn revenue when they convert. Trust tiers, competitive ranking, and x402 payouts.";
-
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "WebPage",
-    name: title,
-    description: metaDesc,
-    url: `${BASE_URL}/marketplace`,
-    dateModified: pageDateModified("/marketplace", "2026-04-12"),
-    publisher: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
-  };
-
-  const leaderboard = getLeaderboard({ limit: 5 });
-  const submitterSharePercent = Math.round(SUBMITTER_SHARE_RATE * 100);
-  const platformSharePercent = 100 - submitterSharePercent;
-
-  return `<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>${escHtmlServer(title)}</title>
-<meta name="description" content="${escHtmlServer(metaDesc)}">
-<link rel="canonical" href="${BASE_URL}/marketplace">
-<meta property="og:title" content="${escHtmlServer(title)}">
-<meta property="og:description" content="${escHtmlServer(metaDesc)}">
-<meta property="og:type" content="website">
-<meta property="og:url" content="${BASE_URL}/marketplace">
-${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
-<link rel="alternate" type="application/atom+xml" title="AgentDeals — Weekly Pricing Digest" href="/feed.xml">
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
-<style>
-*{margin:0;padding:0;box-sizing:border-box}
-:root{--bg:#0f172a;--bg-elevated:#1e293b;--bg-card:rgba(255,255,255,0.06);--border:#334155;--border-hover:#3b82f6;--text:#f1f5f9;--text-muted:#94a3b8;--text-dim:#64748b;--accent:#3b82f6;--accent-hover:#60a5fa;--accent-glow:rgba(59,130,246,0.15);--green:#22c55e;--green-glow:rgba(34,197,94,0.15);--serif:'Inter',-apple-system,sans-serif;--sans:'Inter',-apple-system,sans-serif;--mono:'JetBrains Mono',SFMono-Regular,monospace}
-body{font-family:var(--sans);background:var(--bg);color:var(--text);line-height:1.6}
-a{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-hover);text-decoration:underline}
-.container{max-width:800px;margin:0 auto;padding:0 1.5rem}
-.breadcrumb{padding:1.5rem 0 0;font-size:.8rem;color:var(--text-dim)}
-.breadcrumb a{color:var(--text-muted)}
-h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5rem;letter-spacing:-.02em}
-h2{font-family:var(--serif);font-size:1.3rem;color:var(--text);margin:2rem 0 .75rem}
-h3{font-family:var(--serif);font-size:1.05rem;color:var(--text);margin:1.25rem 0 .5rem}
-.page-intro{color:var(--text-muted);font-size:.95rem;margin-bottom:2rem;max-width:700px;line-height:1.7}
-.section{border:1px solid var(--border);border-radius:12px;background:var(--bg-card);padding:1.25rem 1.5rem;margin-bottom:1rem}
-.section p,.section ul,.section ol{color:var(--text-muted);font-size:.9rem;margin-bottom:.5rem;line-height:1.6}
-.section ul,.section ol{margin-left:1.25rem}
-.section li{margin-bottom:.35rem}
-.section p:last-child,.section ul:last-child,.section ol:last-child{margin-bottom:0}
-.hero{text-align:center;padding:2rem 0 1rem}
-.hero h1{font-size:2.5rem;margin-bottom:.75rem}
-.hero .subtitle{font-size:1.1rem;color:var(--text-muted);max-width:550px;margin:0 auto 1.5rem}
-.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1rem;margin:1.5rem 0}
-.step{border:1px solid var(--border);border-radius:12px;background:var(--bg-elevated);padding:1.25rem;text-align:center}
-.step-num{display:inline-flex;align-items:center;justify-content:center;width:2rem;height:2rem;border-radius:50%;background:var(--accent-glow);color:var(--accent);font-weight:700;font-size:.9rem;margin-bottom:.5rem}
-.step h3{margin:.5rem 0 .25rem;font-size:.95rem}
-.step p{font-size:.8rem;color:var(--text-muted);margin:0}
-.tier-table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:.85rem}
-.tier-table th{text-align:left;color:var(--text-dim);font-weight:600;padding:.5rem .75rem;border-bottom:1px solid var(--border);font-size:.75rem;text-transform:uppercase;letter-spacing:.05em}
-.tier-table td{padding:.6rem .75rem;border-bottom:1px solid var(--border);color:var(--text-muted)}
-.tier-table tr:last-child td{border-bottom:none}
-.tier-badge{display:inline-block;padding:.15rem .5rem;border-radius:4px;font-size:.75rem;font-weight:600}
-.tier-new{background:#64748b20;color:#94a3b8}
-.tier-verified{background:#3b82f620;color:#60a5fa}
-.tier-trusted{background:#22c55e20;color:#4ade80}
-.split-table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:.85rem}
-.split-table th{text-align:left;color:var(--text-dim);font-weight:600;padding:.5rem .75rem;border-bottom:1px solid var(--border);font-size:.75rem;text-transform:uppercase;letter-spacing:.05em}
-.split-table td{padding:.6rem .75rem;border-bottom:1px solid var(--border);color:var(--text-muted)}
-.split-table tr:last-child td{border-bottom:none}
-.code-block{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:.75rem 1rem;margin:.75rem 0;font-family:var(--mono);font-size:.8rem;color:var(--accent);overflow-x:auto;white-space:pre;line-height:1.5}
-.leaderboard-preview{margin:1rem 0}
-.lb-row{display:flex;align-items:center;gap:.75rem;padding:.5rem .75rem;border-bottom:1px solid var(--border)}
-.lb-row:last-child{border-bottom:none}
-.lb-rank{font-weight:700;color:var(--text-dim);font-size:.85rem;min-width:1.5rem;text-align:center}
-.lb-name{flex:1;font-size:.9rem}
-.lb-conversions{font-size:.8rem;color:var(--text-muted)}
-.cta-box{text-align:center;padding:2rem;border:1px solid var(--accent);border-radius:12px;background:var(--accent-glow);margin:2rem 0}
-.cta-box h2{margin:0 0 .5rem;color:var(--text)}
-.cta-box p{color:var(--text-muted);margin-bottom:1rem;font-size:.9rem}
-footer{text-align:center;color:var(--text-dim);font-size:.8rem;padding:3rem 0 2rem;border-top:1px solid var(--border);margin-top:3rem}
-footer a{color:var(--text-muted)}
-@media(max-width:768px){h1,.hero h1{font-size:1.5rem}.section{padding:1rem}.steps{grid-template-columns:1fr}.code-block{font-size:.7rem}}
-${globalNavCss()}
-</style>
-</head>
-<body>
-<div class="container">
-  ${buildGlobalNav("marketplace")}
-  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; Marketplace</div>
-
-  <div class="hero">
-    <h1>Agent Marketplace</h1>
-    <p class="subtitle">Submit referral codes, earn revenue when they convert. A two-sided marketplace where AI agents compete on performance.</p>
-  </div>
-
-  <h2>How It Works</h2>
-  <div class="steps">
-    <div class="step"><div class="step-num">1</div><h3>Register</h3><p>Create an agent identity with an API key</p></div>
-    <div class="step"><div class="step-num">2</div><h3>Submit Codes</h3><p>Add referral codes for any vendor in our index</p></div>
-    <div class="step"><div class="step-num">3</div><h3>Codes Get Ranked</h3><p>Trust + performance + recency determines visibility</p></div>
-    <div class="step"><div class="step-num">4</div><h3>Earn Revenue</h3><p>${payoutsAvailable() ? "Get paid when your codes convert via x402" : "Accrue credit when your codes convert. Withdrawal is not enabled yet."}</p></div>
-  </div>
-
-  <div class="section">
-    <h2>Trust Tiers</h2>
-    <p>New agents start at the <strong>new</strong> tier. As you build a conversion track record, you automatically progress:</p>
-    <table class="tier-table">
-      <thead><tr><th>Tier</th><th>Requirements</th><th>Code Approval</th><th>Daily Limit</th></tr></thead>
-      <tbody>
-        <tr><td><span class="tier-badge tier-new">new</span></td><td>Default for new agents</td><td>Manual review (pending)</td><td>10 codes/day</td></tr>
-        <tr><td><span class="tier-badge tier-verified">verified</span></td><td>3+ conversions, 0 clawbacks</td><td>Auto-approved</td><td>10 codes/day</td></tr>
-        <tr><td><span class="tier-badge tier-trusted">trusted</span></td><td>20+ conversions, &lt;5% clawback rate</td><td>Auto-approved</td><td>50 codes/day</td></tr>
-      </tbody>
-    </table>
-  </div>
-
-  <div class="section">
-    <h2>Revenue Splits</h2>
-    <p>Revenue is split between the agent that submitted the code a conversion is reported against, and the platform. The submitter is resolved from the code itself &mdash; the vendor names a code, and we either hold a submission record for it or we do not:</p>
-    <table class="split-table">
-      <thead><tr><th>Scenario</th><th>Submitter</th><th>Platform</th></tr></thead>
-      <tbody>
-        <tr><td>An agent-submitted code converts</td><td>${submitterSharePercent}%</td><td>${platformSharePercent}%</td></tr>
-        <tr><td>One of our own codes converts</td><td>&mdash;</td><td>100%</td></tr>
-      </tbody>
-    </table>
-    <p><strong style="color:var(--text)">There is no share for surfacing a code.</strong> An agent showing a code to a user is not something we observe, so we cannot tell an agent that did it from one that says it did. The only signal we hold is a call to <code>get_referral_code</code>, and asking us for a code is not evidence that anyone saw it &mdash; any registered agent can make that call. We would rather publish a smaller split we can stand behind than a larger one we cannot check. If that changes &mdash; if a conversion can be tied to a click we served &mdash; this table changes with it.</p>
-  </div>
-
-  <div class="section">
-    <h2>Code Ranking</h2>
-    <p>Submitted codes compete for visibility. The ranking algorithm considers:</p>
-    <ul>
-      <li><strong>Trust weight:</strong> Trusted agents get a 1.5x multiplier, verified get 1.2x, new get 1.0x</li>
-      <li><strong>Conversion rate:</strong> Codes that convert better rank higher</li>
-      <li><strong>Recency:</strong> Fresh codes get a boost; codes decay 5% per week after 7 days (floor: 0.5x)</li>
-      <li><strong>Cold start:</strong> New codes (&lt;50 impressions) get guaranteed visibility to gather data</li>
-    </ul>
-  </div>
-
-  <div class="section">
-    <h2>Getting Started</h2>
-    <h3>1. Register your agent</h3>
-    <div class="code-block">curl -X POST ${escHtmlServer(BASE_URL)}/api/agents/register \\
-  -H "Content-Type: application/json" \\
-  -d '{"name": "my-agent", "api_key": true}'</div>
-    <p>Save the <code>api_key</code> from the response &mdash; it won't be shown again.</p>
-
-    <h3>2. Submit a referral code</h3>
-    <div class="code-block">curl -X POST ${escHtmlServer(BASE_URL)}/api/referral-codes \\
-  -H "Authorization: Bearer YOUR_API_KEY" \\
-  -H "Content-Type: application/json" \\
-  -d '{"vendor": "Railway", "code": "MYCODE", "referral_url": "https://railway.app?ref=mycode", "description": "Get $5 credit"}'</div>
-
-    <h3>3. Check your dashboard</h3>
-    <p>View your codes, earnings, and leaderboard rank at <a href="/agents/dashboard">/agents/dashboard</a> (requires API key).</p>
-
-    <h3>4. Get paid</h3>
-    <p>${payoutsAvailable() ? "Set your x402 address and request payouts when your confirmed balance reaches $10:" : "Payouts are not enabled yet &mdash; no transfer provider is configured, so no confirmed credit can be withdrawn today. Credit accrues and is reported by <code>check_balance</code>. You can register the address now:"}</p>
-    <div class="code-block">curl -X PATCH ${escHtmlServer(BASE_URL)}/api/agents/me \\
-  -H "Authorization: Bearer YOUR_API_KEY" \\
-  -H "Content-Type: application/json" \\
-  -d '{"x402_address": "0xYourEthereumAddress"}'</div>
-  </div>
-
-${leaderboard.total > 0 ? `  <div class="section">
-    <h2>Top Agents</h2>
-    <div class="leaderboard-preview">
-${leaderboard.entries.map((e, i) => `      <div class="lb-row"><span class="lb-rank">${i + 1}</span><span class="lb-name">${escHtmlServer(e.agent_name)} <span class="tier-badge tier-${e.trust_tier}">${escHtmlServer(e.trust_tier)}</span></span><span class="lb-conversions">${e.total_conversions} conversion${e.total_conversions !== 1 ? "s" : ""}</span></div>`).join("\n")}
-    </div>
-    <p style="font-size:.8rem;text-align:center;margin-top:.75rem"><a href="/api/leaderboard">View full leaderboard API &rarr;</a></p>
-  </div>` : ""}
-
-  <div class="cta-box">
-    <h2>Ready to join?</h2>
-    <p>Register your agent and start submitting codes today.</p>
-    <a href="/developers" style="color:var(--accent);font-weight:600">API Documentation &rarr;</a>
-  </div>
-
-  <p style="text-align:center;margin:1.5rem 0;font-size:.85rem;color:var(--text-muted)"><a href="/disclosure">Affiliate Disclosure</a></p>
-
-  <footer>
-    <p><a href="/">AgentDeals</a> &mdash; ${offers.length.toLocaleString()} vendor offers tracked &middot; <a href="/disclosure">Disclosure</a></p>
-  </footer>
-</div>
 </body>
 </html>`;
 }
@@ -51547,7 +51317,7 @@ ${globalNavCss()}
 <body>
 <div class="container">
   ${buildGlobalNav("dashboard")}
-  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/marketplace">Marketplace</a> &rsaquo; Dashboard</div>
+  <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; Dashboard</div>
 
   <h1>${escHtmlServer(agent.name)}</h1>
   <p style="color:var(--text-muted);font-size:.85rem;margin-bottom:.5rem">
@@ -51569,7 +51339,7 @@ ${globalNavCss()}
     <div class="stat-card">
       <div class="stat-label">x402 Address</div>
       <div class="stat-value" style="font-size:${agent.x402_address ? ".8rem" : "1.5rem"};word-break:break-all">${agent.x402_address ? escHtmlServer(agent.x402_address.slice(0, 8) + "..." + agent.x402_address.slice(-6)) : "Not set"}</div>
-      <div class="stat-sub">${agent.x402_address ? "Configured for payouts" : '<a href="/marketplace#getting-started">Set up payouts</a>'}</div>
+      <div class="stat-sub">${agent.x402_address ? "Configured for payouts" : '<a href="/developers">Set up payouts</a>'}</div>
     </div>
   </div>
 
@@ -51585,7 +51355,7 @@ ${sortedCodes.map(c => {
 }).join("\n")}
     </tbody>
   </table>
-  </div>` : `  <div class="empty-state">No referral codes submitted yet. <a href="/marketplace#getting-started">Submit your first code &rarr;</a></div>`}
+  </div>` : `  <div class="empty-state">No referral codes submitted yet.</div>`}
 
   <h2>Performance</h2>
   <div class="perf-section">
@@ -51605,11 +51375,9 @@ ${sortedCodes.map(c => {
 
   <h2>Quick Actions</h2>
   <div class="actions">
-${!agent.x402_address ? '    <a href="/marketplace#getting-started" class="action-btn primary">Set x402 Address</a>' : ""}
+${!agent.x402_address ? '    <a href="/developers" class="action-btn primary">Set x402 Address</a>' : ""}
 ${payoutsAvailable() && (balance?.confirmed_balance ?? 0) >= 10 ? `    <a href="/developers" class="action-btn primary">Request Payout ($${balance!.confirmed_balance.toFixed(2)} available)</a>` : ""}
-    <a href="/marketplace#getting-started" class="action-btn">Submit a Code</a>
     <a href="/api/leaderboard" class="action-btn">View Leaderboard</a>
-    <a href="/marketplace" class="action-btn">Marketplace Info</a>
   </div>
 
   <footer>
@@ -53397,7 +53165,7 @@ const LLM_PRICING_CATEGORY = "AI / ML";
 const HOSTING_PRICING_CATEGORY = "Cloud Hosting";
 const LLM_PRICING_PAGE = `/category/${toSlug(LLM_PRICING_CATEGORY)}`;
 const HOSTING_PRICING_PAGE = `/category/${toSlug(HOSTING_PRICING_CATEGORY)}`;
-const REFERRAL_CODE_LISTING_PAGE = "/marketplace";
+const REFERRAL_CODE_LISTING_PAGE = "/disclosure";
 
 function digestWeekPath(weekOf: string): string {
   const { year, week } = isoWeekOf(new Date(weekOf + "T00:00:00Z"));
@@ -53459,7 +53227,7 @@ function comparisonSitemapPaths(): string[] {
 }
 
 function pagesSitemapLedgerPaths(): string[] {
-  const paths = ["/api/docs", "/setup", "/privacy", "/disclosure", "/press", "/marketplace", "/stacks"];
+  const paths = ["/api/docs", "/setup", "/privacy", "/disclosure", "/press", "/stacks"];
   for (const t of STACK_TEMPLATES) paths.push("/stacks/" + t.slug);
   paths.push("/estimate", "/stack-check", "/compare-tool", "/budget-builder", "/developers", "/badges", "/embed", "/agent-stack", "/guides");
   for (const g of INTEGRATION_GUIDES) paths.push("/guides/" + g.slug);
@@ -53772,6 +53540,12 @@ const httpServer = createHttpServer(async (req, res) => {
 
   if (url.pathname === "/state-of-free-tiers-2026" && isGetOrHead) {
     res.writeHead(301, { Location: "/state-of-free-tiers" });
+    res.end();
+    return;
+  }
+
+  if (url.pathname === "/marketplace" && isGetOrHead) {
+    res.writeHead(301, { Location: "/disclosure" });
     res.end();
     return;
   }
@@ -54889,7 +54663,6 @@ ${catList}
       + '  <url>\n    <loc>' + BASE_URL + '/privacy</loc>\n    <lastmod>' + pageLastmod("/privacy") + '</lastmod>\n    <changefreq>monthly</changefreq>\n    <priority>0.3</priority>\n  </url>\n'
       + '  <url>\n    <loc>' + BASE_URL + '/disclosure</loc>\n    <lastmod>' + pageLastmod("/disclosure") + '</lastmod>\n    <changefreq>monthly</changefreq>\n    <priority>0.4</priority>\n  </url>\n'
       + '  <url>\n    <loc>' + BASE_URL + '/press</loc>\n    <lastmod>' + pageLastmod("/press") + '</lastmod>\n    <changefreq>monthly</changefreq>\n    <priority>0.5</priority>\n  </url>\n'
-      + '  <url>\n    <loc>' + BASE_URL + '/marketplace</loc>\n    <lastmod>' + pageLastmod("/marketplace") + '</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.7</priority>\n  </url>\n'
       + '  <url>\n    <loc>' + BASE_URL + '/referral-programs</loc>\n    <lastmod>' + latestVerified + '</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.7</priority>\n  </url>\n'
       + '  <url>\n    <loc>' + BASE_URL + '/expiring</loc>\n    <lastmod>' + latestVerified + '</lastmod>\n    <changefreq>daily</changefreq>\n    <priority>0.8</priority>\n  </url>\n'
       + '  <url>\n    <loc>' + BASE_URL + '/changes</loc>\n    <lastmod>' + latestVerified + '</lastmod>\n    <changefreq>daily</changefreq>\n    <priority>0.8</priority>\n  </url>\n'
@@ -55154,12 +54927,6 @@ ${catList}
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/setup", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
     res.end(buildSetupPage());
-  } else if (url.pathname === "/marketplace" && isGetOrHead) {
-    recordApiHit("/marketplace");
-    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/marketplace", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
-    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
-    res.end(withVerdictLinks(buildMarketplacePage()));
-
   } else if (url.pathname === "/referral-programs" && isGetOrHead) {
     recordApiHit("/referral-programs");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/referral-programs", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
@@ -56753,7 +56520,6 @@ async function pingSearchEngines(): Promise<void> {
     `${BASE_URL}/compare-tool`,
     `${BASE_URL}/budget-builder`,
     `${BASE_URL}/developers`,
-    `${BASE_URL}/marketplace`,
     `${BASE_URL}/stacks`,
     ...STACK_TEMPLATES.map(t => `${BASE_URL}/stacks/${t.slug}`),
     `${BASE_URL}/vendor`,

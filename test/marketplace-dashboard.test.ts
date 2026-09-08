@@ -75,7 +75,7 @@ const { registerAgent, resetAgentsCache } = await import("../dist/agents.js");
 const { resetReferralCodesCache, submitReferralCode } = await import("../dist/referral-codes.js");
 const { resetLedgerCache, recordConversion } = await import("../dist/ledger.js");
 
-describe("Marketplace Page", () => {
+describe("Retired marketplace route", () => {
   before(async () => {
     saveOriginals();
     serverProc = await startHttpServer();
@@ -86,97 +86,30 @@ describe("Marketplace Page", () => {
     restoreOriginals();
   });
 
-  it("GET /marketplace returns 200 with HTML", async () => {
-    const res = await fetch(`http://localhost:${serverPort}/marketplace`);
+  it("GET /marketplace redirects to the affiliate disclosure", async () => {
+    const res = await fetch(`http://localhost:${serverPort}/marketplace`, { redirect: "manual" });
+    assert.strictEqual(res.status, 301);
+    assert.strictEqual(res.headers.get("location"), "/disclosure");
+  });
+
+  it("HEAD /marketplace redirects the same way a GET does", async () => {
+    const res = await fetch(`http://localhost:${serverPort}/marketplace`, { method: "HEAD", redirect: "manual" });
+    assert.strictEqual(res.status, 301);
+    assert.strictEqual(res.headers.get("location"), "/disclosure");
+  });
+
+  it("the redirect target answers 200", async () => {
+    const res = await fetch(`http://localhost:${serverPort}/disclosure`);
     assert.strictEqual(res.status, 200);
-    assert.ok(res.headers.get("content-type")?.includes("text/html"));
-    const html = await res.text();
-    assert.ok(html.includes("Agent Marketplace"));
   });
 
-  it("marketplace page has JSON-LD schema", async () => {
-    const res = await fetch(`http://localhost:${serverPort}/marketplace`);
+  it("the global nav offers no marketplace entry", async () => {
+    const res = await fetch(`http://localhost:${serverPort}/disclosure`);
     const html = await res.text();
-    assert.ok(html.includes("application/ld+json"));
-    assert.ok(html.includes('"@type":"WebPage"'));
-  });
-
-  it("marketplace page has canonical URL", async () => {
-    const res = await fetch(`http://localhost:${serverPort}/marketplace`);
-    const html = await res.text();
-    assert.ok(html.includes('rel="canonical"'));
-    assert.ok(html.includes("/marketplace"));
-  });
-
-  it("marketplace page explains trust tiers", async () => {
-    const res = await fetch(`http://localhost:${serverPort}/marketplace`);
-    const html = await res.text();
-    assert.ok(html.includes("Trust Tiers"));
-    assert.ok(html.includes("verified"));
-    assert.ok(html.includes("trusted"));
-  });
-
-  it("marketplace page explains revenue splits", async () => {
-    const res = await fetch(`http://localhost:${serverPort}/marketplace`);
-    const html = await res.text();
-    assert.ok(html.includes("Revenue Splits"));
-    assert.ok(html.includes("40%"));
-    assert.ok(html.includes("60%"));
-  });
-
-  it("marketplace page publishes no share for surfacing a code", async () => {
-    const res = await fetch(`http://localhost:${serverPort}/marketplace`);
-    const html = await res.text();
-    const splits = html.slice(html.indexOf("Revenue Splits"), html.indexOf("Code Ranking"));
-    assert.ok(splits.includes("There is no share for surfacing a code."));
-    assert.ok(!/>\s*Surfer\s*</.test(splits), "the split table names no surfer column");
-    assert.ok(!splits.includes("70%") && !splits.includes("80%"), "no share is published that the ledger cannot pay");
-  });
-
-  it("marketplace page publishes the share the ledger actually pays", async () => {
-    const { SUBMITTER_SHARE_RATE } = await import("../dist/ledger.js");
-    const submitter = Math.round(SUBMITTER_SHARE_RATE * 100);
-    const res = await fetch(`http://localhost:${serverPort}/marketplace`);
-    const html = await res.text();
-    const splits = html.slice(html.indexOf("Revenue Splits"), html.indexOf("Code Ranking"));
-    assert.ok(
-      splits.includes(`<td>${submitter}%</td><td>${100 - submitter}%</td>`),
-      `the published split must be ${submitter}/${100 - submitter}, the rate the ledger accrues at`,
-    );
-  });
-
-  it("marketplace page has registration instructions with curl example", async () => {
-    const res = await fetch(`http://localhost:${serverPort}/marketplace`);
-    const html = await res.text();
-    assert.ok(html.includes("/api/agents/register"));
-    assert.ok(html.includes("curl"));
-  });
-
-  it("marketplace page explains code ranking", async () => {
-    const res = await fetch(`http://localhost:${serverPort}/marketplace`);
-    const html = await res.text();
-    assert.ok(html.includes("Code Ranking"));
-    assert.ok(html.includes("Trust weight"));
-    assert.ok(html.includes("Conversion rate"));
-  });
-
-  it("marketplace page links to disclosure", async () => {
-    const res = await fetch(`http://localhost:${serverPort}/marketplace`);
-    const html = await res.text();
-    assert.ok(html.includes("/disclosure"));
-  });
-
-  it("marketplace page is mobile-responsive", async () => {
-    const res = await fetch(`http://localhost:${serverPort}/marketplace`);
-    const html = await res.text();
-    assert.ok(html.includes("viewport"));
-    assert.ok(html.includes("max-width:768px"));
-  });
-
-  it("marketplace page has global nav with Marketplace active", async () => {
-    const res = await fetch(`http://localhost:${serverPort}/marketplace`);
-    const html = await res.text();
-    assert.ok(html.includes('class="global-nav"'));
+    const nav = html.slice(html.indexOf('class="global-nav"'), html.indexOf("</nav>"));
+    assert.ok(nav.length > 0, "the page renders a global nav");
+    assert.ok(!nav.includes("/marketplace"), "no nav entry points at the retired route");
+    assert.ok(!nav.includes(">Marketplace<"), "no nav entry is labelled Marketplace");
   });
 });
 
@@ -280,7 +213,7 @@ describe("Agent Dashboard", () => {
     const res = await fetch(`http://localhost:${serverPort}/agents/dashboard?key=${testApiKey}`);
     const html = await res.text();
     assert.ok(html.includes("Quick Actions"));
-    assert.ok(html.includes("Submit a Code"));
+    assert.ok(html.includes("View Leaderboard"));
   });
 
   it("dashboard has noindex meta tag (private page)", async () => {
@@ -307,14 +240,15 @@ describe("Agent Dashboard", () => {
     assert.ok(html.includes("Registered"));
   });
 
-  it("dashboard links to marketplace", async () => {
+  it("dashboard sends its actions to the API documentation, not to a retired page", async () => {
     const res = await fetch(`http://localhost:${serverPort}/agents/dashboard?key=${testApiKey}`);
     const html = await res.text();
-    assert.ok(html.includes("/marketplace"));
+    assert.ok(!html.includes("/marketplace"), "no link points at the retired route");
+    assert.ok(html.includes('href="/developers"'), "the documented API is still reachable from the dashboard");
   });
 });
 
-describe("Marketplace in Sitemap", () => {
+describe("Retired marketplace route in the sitemap", () => {
   before(async () => {
     if (!serverProc || serverProc.killed) {
       serverProc = await startHttpServer();
@@ -325,9 +259,10 @@ describe("Marketplace in Sitemap", () => {
     serverProc?.kill();
   });
 
-  it("sitemap includes /marketplace", async () => {
+  it("sitemap-pages.xml lists no marketplace URL", async () => {
     const res = await fetch(`http://localhost:${serverPort}/sitemap-pages.xml`);
     const xml = await res.text();
-    assert.ok(xml.includes("/marketplace"));
+    assert.ok(xml.includes("<urlset"), "the sitemap rendered");
+    assert.ok(!xml.includes("/marketplace"), "a retired route is not advertised for indexing");
   });
 });
