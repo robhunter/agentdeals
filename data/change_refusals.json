@@ -25,6 +25,18 @@
       "refused_date": "2026-08-28"
     },
     {
+      "vendor": "Ably",
+      "change_type": "limits_reduced",
+      "reason": "measures_the_opposite",
+      "detail": "limits_reduced claimed, and every quantity that moved between the two states moved the other way — 6 messag/mo against 500 messag/sec",
+      "summary": "The free tier now has a limit of 500 messages/second, while the stored information states 6M messages/month. The free tier also has a max presence of 200, and max subscribers per channel of unlimited.",
+      "previous_state": "Real-time infrastructure — 6M messages/month, 200 concurrent connections, 200 channels, pub/sub + chat + spaces",
+      "current_state": "The Free tier includes 200 concurrent connections, 500 messages / second, 6M messages / month, and includes community & email support.",
+      "source_url": "https://ably.com/pricing",
+      "category": "Messaging",
+      "refused_date": "2026-09-09"
+    },
+    {
       "vendor": "AbstractAPI",
       "change_type": "limits_reduced",
       "reason": "unquantified_limit",
@@ -107,6 +119,18 @@
       "source_url": "https://aws.amazon.com/q/developer/pricing/",
       "category": "AI Coding",
       "refused_date": "2026-08-28"
+    },
+    {
+      "vendor": "Amazon SES",
+      "change_type": "free_tier_removed",
+      "reason": "confirmed_unchanged",
+      "detail": "The stored description already acknowledges a cost of $0.10 per 1,000 emails *after* the free credit period. The current page simply details pricing plans, including that $0.10 rate, and a new starting price of $0.16/1000 for a different plan. This doesn't invalidate the original description.",
+      "summary": "The free tier information is no longer accurate. The page details three pricing plans (Essentials, Pro, and Enterprise) with tiered pricing based on email volume, starting at $0.16 per 1,000 emails.",
+      "previous_state": "Transactional and bulk email API/SMTP. No perpetual free tier: new AWS accounts get up to $200 in AWS Free Tier credits usable across eligible services, the free plan runs for 6 months after account creation, and credits expire 12 months after account creation. $0.10 per 1,000 outbound emails after that, plus EC2 compute and data transfer if you send from AWS.",
+      "current_state": "Amazon SES offers three pricing plans: Essentials (starting at $0.16/1,000 emails), Pro, and Enterprise, with tiered pricing based on volume. À la carte pricing is also available at $0.10 per 1,000 emails.",
+      "source_url": "https://aws.amazon.com/ses/pricing/",
+      "category": "Email",
+      "refused_date": "2026-09-09"
     },
     {
       "vendor": "Amplitude",
@@ -481,16 +505,28 @@
       "refused_date": "2026-08-28"
     },
     {
+      "vendor": "Cloudcraft",
+      "change_type": "free_tier_removed",
+      "reason": "no_removal_evidence",
+      "detail": "a free tier was recorded as removed on the evidence that the page did not mention it, and the summary states no price, ending or replacement where the free tier was",
+      "summary": "The free tier now appears to be a 14-day trial of the Pro plan. The original free tier with limitations is no longer explicitly mentioned, though the page states you can 'use Cloudcraft for free' and create diagrams, it's unclear if this is a perpetually free tier or refers to the trial.",
+      "previous_state": "AWS/Azure architecture diagramming — Free plan: single user only, manual diagrams limited to a 12x15 component grid, unlimited private diagrams, PNG/PDF/SVG export, private shared links, basic cost calculations. No live-scan/auto-discovery, team management, infinite canvas, version history, API access, or SSO.",
+      "current_state": "There is a free 14-day trial of Cloudcraft Pro. The free version allows you to draw beautiful cloud diagrams as a single user.",
+      "source_url": "https://www.cloudcraft.co/pricing",
+      "category": "Diagramming",
+      "refused_date": "2026-09-09"
+    },
+    {
       "vendor": "Cloudflare DNS",
       "change_type": "limits_reduced",
       "reason": "states_no_difference",
       "detail": "limits_reduced claimed, summary asserts the page matches what we stored, and the two states carry the same quantities",
-      "summary": "The page confirms a free plan exists, but states a records-per-zone cap of 200 for zones created on or after 2024-09-01, while zones created before that date retain the legacy 1,000-record cap. This aligns with the stored deal info. However, the page also highlights numerous paid add-ons and other plans, suggesting the free plan is a starting point with limited functionality.",
+      "summary": "The page confirms a free plan exists, but details a record limit of 200 for zones created on or after 2024-09-01, while older zones retain a 1,000-record cap. This aligns with the stored information. However, the page does not explicitly state 'unlimited zones and queries' as the free plan offers.",
       "previous_state": "Free authoritative DNS hosting — unlimited zones and queries, DDoS protection, free SSL/TLS. Records-per-zone cap is 200 for zones created on or after 2024-09-01; zones created before that date retain the legacy 1,000-record cap.",
-      "current_state": "The free plan exists, with a 200 record limit for zones created on or after 2024-09-01, and a 1000 record limit for older zones.",
+      "current_state": "Records-per-zone cap is 200 for zones created on or after 2024-09-01; zones created before that date retain the legacy 1,000-record cap.",
       "source_url": "https://www.cloudflare.com/plans/free/",
       "category": "DNS & Domain Management",
-      "refused_date": "2026-08-28"
+      "refused_date": "2026-09-09"
     },
     {
       "vendor": "Cloudflare Pages",
@@ -541,6 +577,18 @@
       "refused_date": "2026-08-28"
     },
     {
+      "vendor": "coderabbit.ai",
+      "change_type": "free_tier_removed",
+      "reason": "no_baseline",
+      "detail": "free_tier_removed claimed, and the clause that named the terms the change was measured on was dropped — what is left states no earlier figure and nothing the stored description measured",
+      "summary": "The free tier is now focused on open-source projects only. The previous free tier for unlimited public and private repositories with basic features is no longer available. The 'Pro' tier has been rebranded to 'Essentials' and 'Pro Plus' to 'Team', with corresponding price adjustments.",
+      "previous_state": "AI-powered code review tool for GitHub/GitLab/Bitbucket. Free tier: basic PR summarization and reviews in IDE on unlimited public and private repositories, with a 14-day Pro trial included (no credit card). Paid Pro is $24/user/month billed annually and adds detailed reviews with 5 reviews/hour; Pro Plus adds 10 reviews/hour. Free-for-open-source may still apply but is no longer prominently featured on the pricing page.",
+      "current_state": "There is a free plan for open-source projects using GitHub or GitLab. Essentials (formerly Pro) is $24/developer/month billed annually or $30/month. Team (formerly Pro Plus) is $48/developer/month billed annually or $60/month. Usage-based reviews are available at $0.25 per reviewed file after included limits.",
+      "source_url": "https://www.coderabbit.ai/pricing",
+      "category": "Code Quality",
+      "refused_date": "2026-09-09"
+    },
+    {
       "vendor": "Cohere",
       "change_type": "free_tier_removed",
       "reason": "no_removal_evidence",
@@ -563,6 +611,18 @@
       "source_url": "https://coinmarketcap.com/api/",
       "category": "Payments",
       "refused_date": "2026-09-01"
+    },
+    {
+      "vendor": "ConfigCat",
+      "change_type": "limits_increased",
+      "reason": "measures_no_change",
+      "detail": "limits_increased claimed, and every quantity the record compares holds the same value once notation and period are normalised — 5 config/mo against 5 config/mo, 20 GB network/mo against 20 GB network/mo, 2 segment against 2 segment",
+      "summary": "The Forever Free plan still exists, but the limits have been updated. The page now states 5 million config JSON requests/mo and 20 GB network traffic/mo, which matches the stored information. However, the page also details other tiers (Pro, Smart, Enterprise) and provides more granular details about limits like service connections, MAUs, and segmentation, which were not present in the stored information.",
+      "previous_state": "ConfigCat is a developer-centric feature flag service with unlimited team members (within 1 permission group). Forever Free plan: 10 feature flags, 2 environments, 2 products, 5M config JSON requests/mo, 20 GB network traffic/mo, 2 segments, 4 targeting rules/flag, 1 webhook, 7-day audit log retention.",
+      "current_state": "Forever Free plan: 5 million config JSON requests/mo, 20 GB network traffic/mo, 2 segments, 4 targeting rules / flag, 1 webhook. Unlimited team members.",
+      "source_url": "https://configcat.com",
+      "category": "Feature Flags",
+      "refused_date": "2026-09-09"
     },
     {
       "vendor": "Convex",
@@ -599,6 +659,18 @@
       "source_url": "https://www.coupler.io/",
       "category": "Notebooks & Data Science",
       "refused_date": "2026-08-29"
+    },
+    {
+      "vendor": "CraftMyPDF",
+      "change_type": "limits_reduced",
+      "reason": "unquantified_limit",
+      "detail": "limits_reduced claimed, but the current state names no quantity for anything the stored state measured (50 pdf)",
+      "summary": "The pricing page does not explicitly mention a free tier with 50 PDFs/images per month and three templates. It highlights features and integrations but does not detail specific free plan limits. It does state 'No Credit-card Required!' for starting, suggesting a free option exists, but the details are not provided.",
+      "previous_state": "Auto-Generate PDF documents from reusable templates with a drop-and-drop editor and a simple API. The free plan comes with 50 PDFs/images per month and three templates.",
+      "current_state": "The page promotes a free demo and the ability to start without a credit card, but does not specify the limits of a free plan.",
+      "source_url": "https://craftmypdf.com",
+      "category": "Dev Utilities",
+      "refused_date": "2026-09-09"
     },
     {
       "vendor": "Crisp",
@@ -851,6 +923,18 @@
       "source_url": "https://fabform.io/",
       "category": "Forms",
       "refused_date": "2026-09-01"
+    },
+    {
+      "vendor": "Feathery",
+      "change_type": "limits_reduced",
+      "reason": "confirmed_unchanged",
+      "detail": "The report simply restates the limits already in the stored description.",
+      "summary": "The free plan now has different limits. It offers 500 submissions/mo, 5 live forms, and a 10MB file upload limit.",
+      "previous_state": "Developer-friendly form builder for signup/login, user onboarding, payment flows, and complex financial applications. Free plan: 500 submissions/mo, 5 active (published) forms, 10 MB file upload limit, standard integrations, forum support. Unlimited fields, pages, conditions, and seats.",
+      "current_state": "Free plan includes 500 monthly submissions, 5 live forms, 10MB file upload size limit, unlimited pages & conditions, unlimited styles & components, standard integrations, and forum support.",
+      "source_url": "https://feathery.io/pricing",
+      "category": "Forms",
+      "refused_date": "2026-09-09"
     },
     {
       "vendor": "file.io",
@@ -1235,6 +1319,30 @@
       "source_url": "https://ipwho.org/",
       "category": "Dev Utilities",
       "refused_date": "2026-08-28"
+    },
+    {
+      "vendor": "IP Geolocation",
+      "change_type": "limits_reduced",
+      "reason": "unquantified_limit",
+      "detail": "limits_reduced claimed, but the current state names no quantity for anything the stored state measured (1,000 request)",
+      "summary": "The free plan now provides 1 credit per successful request, and includes core modules (location, country metadata, currency, ASN, and time zone). User Agent is not included in the free plan.",
+      "previous_state": "IP Geolocation API - Forever free plan for developers with a 1,000 requests per day limit.",
+      "current_state": "Free Plan: 1 credit per successful request. Core modules: location, country metadata, currency, ASN, and time zone. User Agent is not included.",
+      "source_url": "https://ipgeolocation.io/",
+      "category": "Dev Utilities",
+      "refused_date": "2026-09-09"
+    },
+    {
+      "vendor": "IP2Location.io",
+      "change_type": "limits_reduced",
+      "reason": "unquantified_limit",
+      "detail": "limits_reduced claimed, but the current state names no quantity for anything the stored state measured (50 credit, 2 location, 500 whoi)",
+      "summary": "The free plan now offers 500 WHOIS queries and 50 hosted domain lookups per month, down from 500 WHOIS and unlimited hosted domain lookups.",
+      "previous_state": "Freemium, fast, and reliable IP geolocation API. Get data like city, coordinates, ISP, ASN, AS data and more. The free plan includes 50k credits per month. IP2Location.io also offers 500 free WHOIS and hosted domain lookups per month. See domain registration details and find domains hosted on a specific IP. Upgrade to a paid plan for more features.",
+      "current_state": "Domain WHOIS API returns comprehensive WHOIS data. Get up to 500 queries free each month. Hosted Domain API retrieves list of domain names by IP address. Get up to 50 queries free each month.",
+      "source_url": "https://www.ip2location.io/",
+      "category": "Dev Utilities",
+      "refused_date": "2026-09-09"
     },
     {
       "vendor": "IPLocate",
@@ -1837,6 +1945,18 @@
       "refused_date": "2026-08-28"
     },
     {
+      "vendor": "PythonAnywhere",
+      "change_type": "limits_reduced",
+      "reason": "unquantified_limit",
+      "detail": "limits_reduced claimed, but the current state names no quantity for anything the stored state measured (1 web, 512 mb, 100 cpu, 2 consol)",
+      "summary": "The free tier is now called 'Beginner' and has some restrictions. Outbound internet access is now restricted to specific sites via HTTP(S) only, whereas previously it was available to whitelisted sites.",
+      "previous_state": "Python web hosting — Beginner plan free forever: 1 web app (yourusername.pythonanywhere.com), 512 MB disk, 100 CPU-seconds/day, 2 consoles. Outbound internet access available to whitelisted sites via HTTP(S)",
+      "current_state": "Beginner: $ 0 /month. One web app at your-username .pythonanywhere.com and two consoles with restricted outbound Internet access.",
+      "source_url": "https://www.pythonanywhere.com/pricing/",
+      "category": "Cloud Hosting",
+      "refused_date": "2026-09-09"
+    },
+    {
       "vendor": "Qdrant",
       "change_type": "limits_reduced",
       "reason": "unquantified_limit",
@@ -1895,6 +2015,18 @@
       "source_url": "https://renamer.ai",
       "category": "Dev Utilities",
       "refused_date": "2026-08-28"
+    },
+    {
+      "vendor": "Rendi",
+      "change_type": "free_tier_removed",
+      "reason": "free_tier_still_offered",
+      "detail": "a free tier was recorded as removed by a summary that reports the page still offering one",
+      "summary": "The page does not explicitly mention a free tier with a monthly processing quota and 4 vCPUs. It states you can 'Get started for free' and 'Use Rendi to create a gif with FFmpeg in 3 clicks for free', but doesn't detail any ongoing free resources. The page focuses on a pay-per-use model based on GB processed.",
+      "previous_state": "FFmpeg API - A REST API for FFmpeg, run FFmpeg online without handling the infrastructure. Free tier with monthly processing quota and 4 vCPUs available.",
+      "current_state": "The page promotes getting started for free and processing a GIF for free, but does not detail a free tier with a monthly quota or vCPU allocation. Pricing is based on GB processed (around $0.15/GB).",
+      "source_url": "https://rendi.dev",
+      "category": "Dev Utilities",
+      "refused_date": "2026-09-09"
     },
     {
       "vendor": "Replicate",
@@ -2003,6 +2135,18 @@
       "source_url": "https://snappify.com",
       "category": "Dev Utilities",
       "refused_date": "2026-08-29"
+    },
+    {
+      "vendor": "SonarQube Cloud",
+      "change_type": "free_tier_removed",
+      "reason": "states_no_terms",
+      "detail": "every clause of the summary states absence or bookkeeping or hedge rather than a term the page carries, so it reports the reading rather than a change",
+      "summary": "The pricing page does not explicitly mention a free tier. It highlights features like AI code review and security analysis but directs users to 'View plans' suggesting a paid model. The original deal specified a free and unlimited tier for open-source projects.",
+      "previous_state": "Code quality and security analysis — free and unlimited for open-source projects, 15+ languages, CI/CD integration. Formerly SonarCloud.",
+      "current_state": "The page promotes SonarQube Cloud with features like AI code verification and security analysis, directing users to view plans for pricing.",
+      "source_url": "https://www.sonarsource.com/products/sonarcloud/",
+      "category": "Security",
+      "refused_date": "2026-09-09"
     },
     {
       "vendor": "StackBy",
