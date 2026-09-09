@@ -4,13 +4,17 @@ on:
   pull_request:
     paths:
       - "data/index.json"
+      - "data/vendor_merges.json"
       - "scripts/lint-duplicates.js"
+      - "scripts/lint-shared-pages.js"
       - ".github/workflows/lint-duplicates.yml"
   push:
     branches: [main]
     paths:
       - "data/index.json"
+      - "data/vendor_merges.json"
       - "scripts/lint-duplicates.js"
+      - "scripts/lint-shared-pages.js"
       - ".github/workflows/lint-duplicates.yml"
 
 permissions:
@@ -30,3 +34,7 @@ jobs:
       - name: Run duplicate detection
         run: |
           node scripts/lint-duplicates.js | tee -a "$GITHUB_STEP_SUMMARY"
+
+      - name: Run shared pricing page detection
+        run: |
+          node scripts/lint-shared-pages.js | tee -a "$GITHUB_STEP_SUMMARY"

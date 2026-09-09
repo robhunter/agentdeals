@@ -44,6 +44,7 @@
     "check:staleness": "node scripts/check-staleness.js",
     "check:liveness": "node scripts/check-liveness.js",
     "lint:duplicates": "node scripts/lint-duplicates.js",
+    "lint:shared-pages": "node scripts/lint-shared-pages.js",
     "check:pricing": "node scripts/check-pricing-changes.js",
     "check:change-log": "node scripts/check-change-log-staleness.js",
     "monitor:pricing": "node scripts/monitor-pricing.js",

@@ -24,6 +24,7 @@ import { isNoLongerInForce, recordsStillInForce, withResolutionInSummary } from 
 import { changeCitesASource, changeIsUncited, changeSummaryHtml, changeSummaryMarkdown, changeSummaryText, ratingWithheldForNoSourceSentence, type CitableChange } from "./change-citation.js";
 import { endedVerdictSentence } from "./retirement.js";
 import { resolveCategoryName } from "./category-scope.js";
+import { survivingVendorName } from "./vendor-merges.js";
 
 export function gateForOffer(offer: Offer): Gate | null {
   return gateFor(offer, utcDate());
@@ -514,7 +515,11 @@ export function loadDealChanges(): DealChange[] {
     return cachedChanges;
   }
 
-  cachedChanges = data.changes.map(withResolutionInSummary);
+  const live = new Set(loadOffers().map((o) => o.vendor.trim().toLowerCase()));
+  cachedChanges = data.changes.map(withResolutionInSummary).map((change) => {
+    const survivor = survivingVendorName(change.vendor, live);
+    return survivor ? { ...change, vendor: survivor } : change;
+  });
   return cachedChanges;
 }
 

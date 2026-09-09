@@ -63,7 +63,7 @@ import { runHealthCheck, getLastReport, startPeriodicChecks } from "./referral-h
 import { configureDurableBackend, hydrateDurableStores, persistDurableStores, identityStorageReport } from "./durable-store.js";
 import { addFriend, removeFriend, getFriends, getFriendCodesForVendors } from "./friends.js";
 import { subscribe as watchlistSubscribe, getSubscription as getWatchlistSubscription, unsubscribe as watchlistUnsubscribe, listSubscriptions as listWatchlistSubscriptions } from "./watchlist.js";
-import { changeLogAnchorFor, changeLogVendorMap, toSlug, vendorSlugMap, resolveVendorSlug, namedVendorSlug } from "./vendor-slug.js";
+import { changeLogAnchorFor, changeLogVendorMap, toSlug, vendorSlugMap, resolveVendorSlug, namedVendorSlug, comparisonOfOneRecord, recordNamedBySlug } from "./vendor-slug.js";
 import { createRegistrationLimiter, rateLimitHeaders } from "./rate-limit.js";
 import { offerForSlug, vendorRates, cheapestRate, dearestRate, spanOfRates, formatRate, formatRateSpan, monthlyTokenCost, formatDollars, type ModelRate } from "./model-rates.js";
 import { STALE_FACT_PAGES_BASELINE, factsOutdatedBy, linkifyVerdictBlocks, newestChangeBySlug, overdueReport, pageCompiledClause, pageDataProvenance, pageDateModified, pageFreshness, pageFreshnessSentence, tabulatedSubjectSlots, tabulatedSubjects, utcToday, verdictsOutdatedBy } from "./page-reviews.js";
@@ -3151,8 +3151,8 @@ function resolveComparisonSlug(slug: string): [string, string] | null {
   for (;;) {
     const at = slug.indexOf("-vs-", from);
     if (at === -1) return null;
-    const a = vendorSlugMap.get(slug.slice(0, at));
-    const b = vendorSlugMap.get(slug.slice(at + 4));
+    const a = recordNamedBySlug(slug.slice(0, at));
+    const b = recordNamedBySlug(slug.slice(at + 4));
     if (a && b && a !== b) return [a, b];
     from = at + 1;
   }
@@ -55133,6 +55133,12 @@ ${catList}
   } else if (url.pathname.startsWith("/compare/") && isGetOrHead) {
     const slug = url.pathname.slice("/compare/".length).replace(/\/$/, "");
     if (!comparisonMap.has(slug) && slug.includes("-vs-")) {
+      const oneRecord = comparisonOfOneRecord(slug);
+      if (oneRecord) {
+        res.writeHead(301, { Location: `/vendor/${oneRecord}` });
+        res.end();
+        return;
+      }
       const parts = slug.split("-vs-");
       if (parts.length === 2) {
         const reversed = `${parts[1]}-vs-${parts[0]}`;
