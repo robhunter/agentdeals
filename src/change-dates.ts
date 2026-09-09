@@ -190,9 +190,10 @@ export function capListSections<T>(sections: T[][], cap: number): T[] {
 }
 
 export function feedEntryUpdated(day: string, now: Date = new Date()): string {
-  const noon = Date.parse(`${day}T12:00:00Z`);
-  if (Number.isNaN(noon)) return now.toISOString();
-  return new Date(Math.min(noon, now.getTime())).toISOString();
+  const served = now.toISOString().slice(0, 10);
+  const stamped = /^\d{4}-\d{2}-\d{2}$/.test(day) && day < served ? day : served;
+  const noon = Date.parse(`${stamped}T12:00:00Z`);
+  return new Date(noon <= now.getTime() ? noon : Date.parse(`${stamped}T00:00:00Z`)).toISOString();
 }
 
 export function endsTheListedOffer(change: ExpiringChange): boolean {

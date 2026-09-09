@@ -50140,12 +50140,12 @@ ${filterScript}
 </html>`;
 }
 
-function buildPricingChangesFeed(): string {
+function buildPricingChangesFeed(servedAt: Date = new Date()): string {
   const selected = changeFeedEntries(loadDealChanges(), CHANGE_FEED_ENTRY_LIMIT);
   const escXml = (s: string) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&apos;");
   const ns = CHANGE_FEED_NAMESPACE_PREFIX;
   const entries = selected.map((c) => {
-    const fields = feedEntryFields(c);
+    const fields = feedEntryFields(c, servedAt);
     const anchor = `${toSlug(c.vendor)}-${c.date}`;
     const id = `agentdeals-${anchor}`;
     const effective = fields.effectiveDate
@@ -50173,7 +50173,7 @@ ${feedEntrySourceXml(c, escXml, ns)}
   <link href="${BASE_URL}/pricing-changes/feed.xml" rel="self" type="application/atom+xml"/>
   <link href="${BASE_URL}${WEEKLY_DIGEST_FEED.path}" rel="related" type="application/atom+xml" title="${escXml(WEEKLY_DIGEST_FEED.title)}"/>
   <id>urn:agentdeals:pricing-changes-feed</id>
-  <updated>${feedUpdatedTimestamp(selected)}</updated>
+  <updated>${feedUpdatedTimestamp(selected, servedAt)}</updated>
   <author><name>AgentDeals</name></author>
 ${entries}
 </feed>`;
@@ -54695,6 +54695,7 @@ const httpServer = createHttpServer(async (req, res) => {
     recordApiHit(feedPath);
     const baseUrl = BASE_URL;
     const escXml = (s: string) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&apos;");
+    const servedAt = new Date();
     const weekEntries: string[] = [];
     const entryUpdates: string[] = [];
     for (let w = 0; w < 4; w++) {
@@ -54702,7 +54703,7 @@ const httpServer = createHttpServer(async (req, res) => {
       if (digest.top_changes.length === 0) continue;
       const weekUrl = w === 0 ? `${baseUrl}/this-week` : `${baseUrl}/this-week?week=${w}`;
       const newestChange = latestChangeDate(digest.top_changes) ?? digest.week_of;
-      const pubDate = feedEntryUpdated(newestChange);
+      const pubDate = feedEntryUpdated(newestChange, servedAt);
       entryUpdates.push(pubDate);
       const title = `Week of ${weekRangeLabel(digest.week_of, digest.week_ending)}: ${digest.headline}`;
       weekEntries.push(`  <entry>
@@ -54717,7 +54718,7 @@ ${digestSourceXml([...digest.top_changes, ...digest.discovered_changes], escXml)
     }
     const corrections = correctionEntriesXml(baseUrl, escXml);
     for (const c of FEED_CORRECTIONS) entryUpdates.push(c.updated);
-    const updatedTs = channelUpdatedTimestamp(entryUpdates);
+    const updatedTs = channelUpdatedTimestamp(entryUpdates, servedAt);
     const subtitle = `Weekly digest of developer tool pricing changes, free tier removals, and new deals. ${WEEKLY_FEED_POPULATION_NOTE}`;
     const atom = `<?xml version="1.0" encoding="UTF-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom" xmlns:${CHANGE_FEED_NAMESPACE_PREFIX}="${CHANGE_FEED_NAMESPACE}">

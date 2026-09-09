@@ -52,6 +52,29 @@ function unescapeXml(s: string): string {
     .replace(/&amp;/g, "&");
 }
 
+function argumentList(source: string, openParen: number): string | null {
+  let depth = 0;
+  for (let i = openParen; i < source.length; i++) {
+    const c = source[i];
+    if (c === "(") depth++;
+    else if (c === ")") {
+      depth--;
+      if (depth === 0) return source.slice(openParen + 1, i);
+    }
+  }
+  return null;
+}
+
+function holdsATopLevelComma(args: string): boolean {
+  let depth = 0;
+  for (const c of args) {
+    if ("([{".includes(c)) depth++;
+    else if (")]}".includes(c)) depth--;
+    else if (c === "," && depth === 0) return true;
+  }
+  return false;
+}
+
 function parseEntries(doc: string): Entry[] {
   return [...doc.matchAll(/<entry>([\s\S]*?)<\/entry>/g)].map((m) => {
     const body = m[1];
@@ -240,6 +263,28 @@ describe("the change feeds date every entry by when we recorded it and say what 
   it("never dates an entry later than the moment the document was served", () => {
     const late = entries.filter((e) => e.updated > startedAt);
     assert.deepStrictEqual(late.map((e) => `${e.title} ${e.updated}`), []);
+  });
+
+  it("dates every stamp in a document from the clock the document was built with", () => {
+    const source = readFileSync(path.join(REPO, "src", "serve.ts"), "utf8");
+    const readsItsOwnClock: string[] = [];
+    for (const call of ["feedEntryFields", "feedEntryUpdated", "feedUpdatedTimestamp", "channelUpdatedTimestamp"]) {
+      for (const m of source.matchAll(new RegExp(`\\b${call}\\(`, "g"))) {
+        const args = argumentList(source, m.index! + m[0].length - 1);
+        if (args !== null && !holdsATopLevelComma(args)) readsItsOwnClock.push(`${call}(${args})`);
+      }
+    }
+    assert.deepStrictEqual(readsItsOwnClock, [], `feed stamps built from a clock of their own: ${readsItsOwnClock.join(", ")}`);
+  });
+
+  it("hands a reader who polls twice the same stamps, so nothing is re-announced", async () => {
+    const stamps = (doc: string) => [...doc.matchAll(/<updated>([^<]+)<\/updated>/g)].map(([, s]) => s);
+    for (const route of [...FEED_ROUTES, WEEKLY_DIGEST_FEED.path]) {
+      const first = stamps(await (await fetch(`http://localhost:${port}${route}`)).text());
+      const second = stamps(await (await fetch(`http://localhost:${port}${route}`)).text());
+      assert.ok(first.length > 0, `${route} carries no <updated>`);
+      assert.deepStrictEqual(second, first, `${route} dates its entries by the moment it was asked`);
+    }
   });
 
   it("orders entries newest recorded first", () => {
