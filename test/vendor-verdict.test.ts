@@ -14,7 +14,7 @@ import {
   vendorVerdictWord,
   type VendorVerdictInput,
 } from "../dist/vendor-verdict.js";
-import { CHANGE_DIRECTION, enrichOffers, loadDealChanges, loadOffers, vendorRiskAssessment, classifyStability } from "../dist/data.js";
+import { CHANGE_DIRECTION, enrichOffers, loadDealChanges, loadOffers, publishedRisk, vendorRiskAssessment, classifyStability } from "../dist/data.js";
 import { vendorSlugMap } from "../dist/vendor-slug.js";
 import { isNoLongerInForce } from "../dist/change-resolution.js";
 import { levelWithheldReason } from "../dist/source-check.js";
@@ -34,6 +34,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(__dirname, "..");
 
 const STABILITY_SCALE_WORDS = /\b(volatile|improving)\b|on our watch list/i;
+const RATES_THE_TIER = /is considered (stable|risky)|requires caution/i;
 const OTHER_SCALE_ON_A_SURFACE_THAT_EMBEDS_SUMMARIES = /\bvolatile\b|on our watch list/i;
 const COUNT_AS_EVIDENCE = /\b\d+ pricing changes? recorded/;
 const CLAIMS_A_NARROWING = /(?:One recorded [^.]*|(?<!None of the )\d+ recorded changes) narrowed the terms/;
@@ -60,7 +61,7 @@ function causeOf(c: DealChange): RiskCause {
 }
 
 function input(over: Partial<VendorVerdictInput> = {}): VendorVerdictInput {
-  return { vendor: "Vendor A", level: "stable", cause: null, changes: [], levelWithheld: null, unconfirmableSince: "", ...over };
+  return { vendor: "Vendor A", level: "stable", historyLevel: "stable", cause: null, changes: [], levelWithheld: null, unconfirmableSince: "", ...over };
 }
 
 describe("vendor verdict — one rating word, and it carries its cause", () => {
@@ -86,9 +87,13 @@ describe("vendor verdict — one rating word, and it carries its cause", () => {
   it("falls back to stable when a level arrives with no record to show for it", () => {
     assert.strictEqual(publishedVendorLevel("caution", null), "stable");
     assert.strictEqual(publishedVendorLevel("risky", null), "stable");
-    assert.strictEqual(publishedVendorLevel(null, null), "stable");
     const c = change();
     assert.strictEqual(publishedVendorLevel("caution", causeOf(c)), "caution");
+  });
+
+  it("substitutes no level where the catalogue publishes none", () => {
+    assert.strictEqual(publishedVendorLevel(null, null), null);
+    assert.strictEqual(publishedVendorLevel(null, causeOf(change())), null);
   });
 
   it("withholds the rating entirely when we cannot read the page we cite", () => {
@@ -294,7 +299,8 @@ describe("vendor verdict — the prose table covers the data", () => {
 interface VendorRow {
   slug: string;
   vendor: string;
-  expected: "stable" | "caution" | "risky";
+  expected: "stable" | "caution" | "risky" | null;
+  historyLevel: "stable" | "caution" | "risky";
   badge: string;
   ended: boolean;
   withheld: ReturnType<typeof levelWithheldReason>;
@@ -327,6 +333,7 @@ function vendorRows(): VendorRow[] {
       slug,
       vendor,
       expected,
+      historyLevel: publishedRisk(primary, vendorChanges).history_level,
       ended,
       badge: ended ? ENDED_BADGE_LABEL : expected,
       withheld,
@@ -334,6 +341,7 @@ function vendorRows(): VendorRow[] {
       sentence: vendorVerdictSentence({
         vendor,
         level: enriched.risk_level ?? null,
+        historyLevel: publishedRisk(primary, vendorChanges).history_level,
         cause: enriched.risk_cause ?? null,
         changes: vendorChanges,
         levelWithheld: withheld,
@@ -365,14 +373,14 @@ describe("vendor verdict — corpus invariant, computed offline", () => {
         }
         continue;
       }
-      if (row.withheld && row.expected === "stable") {
+      if (row.expected === null && row.withheld) {
         if (/\bWe rate it\b/.test(row.sentence)) wrong.push(`${row.slug}: rates a vendor whose level we withhold`);
         continue;
       }
       if (row.gate) {
         if (row.badgeRendered) wrong.push(`${row.slug}: rates a gated record ${row.badge} beside its name`);
-        if (!row.sentence.includes(`${row.vendor} ${GATED_LEVEL_PHRASE[row.expected]}`)) {
-          wrong.push(`${row.slug}: gated verdict says ${row.sentence}, over a history we read as ${row.expected}`);
+        if (!row.sentence.includes(`${row.vendor} ${GATED_LEVEL_PHRASE[row.historyLevel]}`)) {
+          wrong.push(`${row.slug}: gated verdict says ${row.sentence}, over a history we read as ${row.historyLevel}`);
         }
         continue;
       }
@@ -551,11 +559,17 @@ describe("vendor verdict — as rendered", () => {
           wrong.push(`${row.slug}: no longer asks whether its free tier is reliable`);
         }
         if (answers.reliable !== null && !row.withheld && !row.ended) {
-          if (!answers.reliable.includes(row.expected)) {
-            wrong.push(`${row.slug}: the reliability answer does not carry the ${row.expected} rating`);
-          }
-          if (row.expected === "stable" && !answers.reliable.includes(narrowingSentence(row.changes))) {
-            wrong.push(`${row.slug}: the reliability answer does not say what the records it holds did — ${answers.reliable}`);
+          if (row.expected === null) {
+            if (RATES_THE_TIER.test(answers.reliable)) {
+              wrong.push(`${row.slug}: the reliability answer rates a vendor whose level we withhold — ${answers.reliable}`);
+            }
+          } else {
+            if (!answers.reliable.includes(row.expected)) {
+              wrong.push(`${row.slug}: the reliability answer does not carry the ${row.expected} rating`);
+            }
+            if (row.expected === "stable" && !answers.reliable.includes(narrowingSentence(row.changes))) {
+              wrong.push(`${row.slug}: the reliability answer does not say what the records it holds did — ${answers.reliable}`);
+            }
           }
         }
         const productionRating = answers.production.match(/we rate it (stable|caution|risky)\b/)?.[1];

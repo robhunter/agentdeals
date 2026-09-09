@@ -40,6 +40,7 @@ export function changeKindNoun(changeType: string): string {
 export interface VendorVerdictInput {
   vendor: string;
   level: PublishedRiskLevel | null;
+  historyLevel: PublishedRiskLevel;
   cause: RiskCause | null;
   changes: Array<Pick<DealChange, "date" | "date_source" | "change_type"> & { source_url?: string | null } & { resolution?: DealChange["resolution"] }>;
   levelWithheld: LevelWithheldReason | null;
@@ -64,8 +65,9 @@ export type VendorBadge =
 export function publishedVendorLevel(
   level: PublishedRiskLevel | null,
   cause: RiskCause | null,
-): PublishedRiskLevel {
-  return level && (level === "stable" || cause) ? level : "stable";
+): PublishedRiskLevel | null {
+  if (level === null) return null;
+  return level === "stable" || cause ? level : "stable";
 }
 
 function capitalise(text: string): string {
@@ -81,8 +83,13 @@ function narrowingChanges(
     .sort((a, b) => b.date.localeCompare(a.date));
 }
 
+function noAdverseLevelToPublish(input: VendorVerdictInput): boolean {
+  const level = publishedVendorLevel(input.level, input.cause);
+  return level === null || level === "stable";
+}
+
 export function ratingWithheldForNoSource(input: VendorVerdictInput): boolean {
-  return Boolean(input.ratingWithheld) && publishedVendorLevel(input.level, input.cause) === "stable";
+  return Boolean(input.ratingWithheld) && noAdverseLevelToPublish(input);
 }
 
 export function termsUnconfirmedBySource(input: VendorVerdictInput): TermsUnconfirmedReason | null {
@@ -95,7 +102,7 @@ export function unconfirmedTermsMetaSentence(reason: TermsUnconfirmedReason): st
 
 export function withholdingDecides(input: VendorVerdictInput): boolean {
   return (input.levelWithheld !== null || ratingWithheldForNoSource(input))
-    && publishedVendorLevel(input.level, input.cause) === "stable";
+    && noAdverseLevelToPublish(input);
 }
 
 export function vendorVerdictWord(input: VendorVerdictInput): PublishedRiskLevel | null {
@@ -120,7 +127,9 @@ export function vendorBadge(input: VendorVerdictInput): VendorBadge {
   if (input.offerEnded) return { kind: "ended" };
   const withheld = badgeWithholding(input);
   if (withheld) return { kind: "none", because: withheld };
-  return { kind: "rating", word: publishedVendorLevel(input.level, input.cause) };
+  const word = publishedVendorLevel(input.level, input.cause);
+  if (word === null) return { kind: "none", because: { reason: input.levelWithheld ?? "no_source" } };
+  return { kind: "rating", word };
 }
 
 export type FreeTierClaim =
@@ -180,7 +189,7 @@ export function vendorVerdictSentence(input: VendorVerdictInput): string {
     return `${clause.charAt(0).toUpperCase()}${clause.slice(1)}, so we cannot confirm these terms today.`;
   }
   const level = publishedVendorLevel(input.level, input.cause);
-  if (input.gate) return vendorHistorySentence(input.vendor, level, input.cause);
+  if (input.gate || level === null) return vendorHistorySentence(input.vendor, input.historyLevel, input.cause);
 
   if (level !== "stable" && input.cause) {
     const unconfirmed = input.levelWithheld

@@ -355,10 +355,31 @@ const DOCUMENTED_OPERATIONS: Record<string, Record<string, any>> = {
                 type: "object",
                 properties: {
                   services_analyzed: { type: "number" },
-                  risks_found: { type: "number" },
+                  risks_found: { type: "number", description: "Services carrying a published caution or risky level. A service whose level is withheld is not counted here — it is unrated, not safe (#1486)." },
                   savings_opportunities: { type: "number" },
                   gaps: { type: "array", items: { type: "object" } },
-                  services: { type: "array", items: { type: "object" } },
+                  services: {
+                    type: "array",
+                    items: {
+                      type: "object",
+                      properties: {
+                        vendor: { type: "string" },
+                        status: { type: "string", enum: ["found", "not_found"] },
+                        category: { type: "string" },
+                        tier: { type: "string" },
+                        risk_level: { type: "string", enum: ["stable", "caution", "risky"], nullable: true, description: "The same level /api/offers publishes for the record this name resolved to, from the same function (#1486) — null wherever any rule withholds it, and never substituted with a favourable default." },
+                        risk_cause: { type: "object", nullable: true, description: "The single dated record that produced a non-stable risk_level." },
+                        gate: { type: "object", nullable: true, description: "Non-null for an offer we have decided not to list (#1241). The caller named this vendor, so the gate is reported whether or not a level would have been published." },
+                        rating_withheld: { type: "object", nullable: true, description: "Non-null where the only records that would rate this vendor cite no source (#1352)." },
+                        link_unreachable: { type: "object", nullable: true, description: "Non-null where the offer's own link is confirmed unreachable (#1046)." },
+                        source_check: { type: "object", nullable: true, description: "Our last read of the page we cite. An outcome other than ok withholds a favourable level." },
+                        level_withheld_because: { type: "string", nullable: true, description: "The sentence naming the rule that withheld the level, or null where a level is published. A null risk_level always arrives with one." },
+                        recent_changes: { type: "array", items: { type: "object" } },
+                        cheaper_alternative: { type: "object", nullable: true, description: "A same-category free offer we publish a stable level for. Chosen with the same function as risk_level, so a vendor we decline to rate is never offered as the safer swap (#1486)." },
+                        suggestions: { type: "array", items: { type: "string" } }
+                      }
+                    }
+                  },
                   recommendations: { type: "array", items: { type: "string" } }
                 }
               }
@@ -410,7 +431,7 @@ const DOCUMENTED_OPERATIONS: Record<string, Record<string, any>> = {
                         vendor: { type: "string" },
                         category: { type: "string" },
                         tier: { type: "string" },
-                        risk_level: { type: "string", enum: ["stable", "caution", "risky"], nullable: true, description: "Null where this alternative's own link is confirmed unreachable (#1046), and null where its gate is non-null (#1241) — rankForListing demotes a gated record to the tail rather than dropping it, so an alternative can be one we do not list." },
+                        risk_level: { type: "string", enum: ["stable", "caution", "risky"], nullable: true, description: "Null where this alternative's own link is confirmed unreachable (#1046), null where its rating_withheld is non-null (#1352), and null where its gate is non-null (#1241) — rankForListing demotes a gated record to the tail rather than dropping it, so an alternative can be one we do not list. The same function decides this as decides the level on the offer itself (#1486)." },
                         link_unreachable: { type: "object", nullable: true, properties: { last_reachable: { type: "string", format: "date", nullable: true }, checked: { type: "string", format: "date" }, terminal: { type: "boolean" } } },
                         gate: { $ref: "#/components/schemas/Gate" },
                         risk_cause: { type: "object", nullable: true, description: "The single dated record that produced a non-stable risk_level. Never null when risk_level is caution or risky (#1038) — a client that renders the level must be able to render the reason.", properties: { vendor: { type: "string" }, date: { type: "string" }, change_type: { type: "string" }, summary: { type: "string" }, source_url: { type: "string", nullable: true, description: "The page this record was read from, or null where we hold none. Carried on the cause so a client rendering the reason can cite it." }, current_state: { type: "string" }, resolution: { $ref: "#/components/schemas/ChangeResolution" } } },
@@ -666,8 +687,11 @@ const DOCUMENTED_OPERATIONS: Record<string, Record<string, any>> = {
                               description: { type: "string" },
                               url: { type: "string", format: "uri" },
                               verified_date: { type: "string", format: "date" },
-                              risk_level: { type: "string", enum: ["stable", "caution", "risky"], nullable: true, description: "Null where we withhold the level rather than publish a favourable one we cannot stand behind. A null always arrives with the field naming the rule that withheld it." },
+                              risk_level: { type: "string", enum: ["stable", "caution", "risky"], nullable: true, description: "The same level /api/offers publishes for this record, from the same function (#1486). Null where we withhold it rather than publish a favourable one we cannot stand behind. A null always arrives with the field naming the rule that withheld it, and with level_withheld_because." },
                               rating_withheld: { type: "object", nullable: true, description: "Non-null where every record that would have set a non-stable risk_level carries an empty source_url (#1352). The level is withheld rather than reported as stable.", properties: { reason: { type: "string", enum: ["no_source"] }, records: { type: "number" } } },
+                              gate: { type: "object", nullable: true, description: "Non-null for an offer we have decided not to list (#1241). A candidate set is drawn from ungated offers, so this is null in practice and is carried because the level's rules are one set." },
+                              source_check: { type: "object", nullable: true, description: "Our last read of the page we cite. An outcome other than ok withholds a favourable level." },
+                              level_withheld_because: { type: "string", nullable: true, description: "The sentence naming the rule that withheld the level, or null where a level is published." },
                               stability: { type: "string", enum: ["stable", "watch", "volatile", "improving"], nullable: true, description: "Null where a favourable class would rest on records we cannot stand behind. A null always arrives with stability_withheld or link_unreachable set." },
                               stability_withheld: { type: "object", nullable: true, description: "Non-null where a standing narrowing for this vendor cites no source, so a favourable stability class is withheld rather than published.", properties: { reason: { type: "string", enum: ["no_source"] }, records: { type: "number" } } },
                               link_unreachable: { type: "object", nullable: true, description: "Non-null where the offer's own link has not resolved for us (#1046).", properties: { last_reachable: { type: "string", nullable: true }, checked: { type: "string" }, terminal: { type: "boolean" } } },
@@ -1477,6 +1501,7 @@ export const openapiSpec = {
           verifiedDate: { type: "string", format: "date", description: "Date the offer was last verified (YYYY-MM-DD)" },
           eligibility: { $ref: "#/components/schemas/Eligibility" },
           gate: { $ref: "#/components/schemas/Gate" },
+          risk_level: { type: "string", enum: ["stable", "caution", "risky"], nullable: true, description: "Our published pricing-risk verdict, or null where a rule withholds it: gate is non-null (#1241, #1260), rating_withheld is non-null (#1352), or the page we cite could not confirm the record — link_unreachable, or a source_check outcome of does_not_name_vendor, states_no_terms or unreadable (#1046). One function applies all three rules and every surface that publishes a level calls it, so /api/audit-stack, /api/stack, /stack-check and MCP plan_stack answer the same as this field for the same record on the same day (#1486)." },
           source_check: { $ref: "#/components/schemas/SourceCheck" }
         },
         required: ["vendor", "category", "description", "tier", "url", "tags", "verifiedDate"]

@@ -94,13 +94,15 @@ describe("stack recommendation logic", () => {
     assert.ok(result.stack.length > 0);
     for (const role of result.stack) {
       for (const c of role.candidates) {
-        assert.ok("rating_withheld" in c, `${c.vendor} carries no rating_withheld field`);
+        for (const field of ["rating_withheld", "gate", "source_check", "link_unreachable"]) {
+          assert.ok(field in c, `${c.vendor} carries no ${field} field`);
+        }
         assert.ok(
-          ["stable", "caution", "risky"].includes(c.risk_level) || c.rating_withheld !== null,
+          ["stable", "caution", "risky"].includes(c.risk_level) || c.level_withheld_because,
           `${c.vendor} risk_level is ${c.risk_level} and no field says why`
         );
         assert.ok(
-          c.risk_level === null || c.rating_withheld === null,
+          c.risk_level === null || c.level_withheld_because === null,
           `${c.vendor} publishes both a level and a reason it was withheld`
         );
         assert.ok(
@@ -112,10 +114,11 @@ describe("stack recommendation logic", () => {
     }
   });
 
-  it("a candidate's level is withheld on exactly the days its own records are uncited", async () => {
+  it("a candidate publishes the level its own record does, on every day of the rotation", async () => {
     const { getStackRecommendation } = await import("../dist/stacks.js");
-    const { loadDealChanges, vendorRiskAssessment, standingNarrowingsCitingNoSource, classifyStability, withheldStability } = await import("../dist/data.js");
+    const { loadOffers, loadDealChanges, publishedRisk, standingNarrowingsCitingNoSource, classifyStability, withheldStability } = await import("../dist/data.js");
     const { unreachableNoticeForUrl } = await import("../dist/link-health.js");
+    const offers = loadOffers();
     const changesByVendor = new Map<string, unknown[]>();
     for (const c of loadDealChanges()) {
       const key = c.vendor.toLowerCase();
@@ -127,7 +130,9 @@ describe("stack recommendation logic", () => {
       const date = new Date(Date.UTC(2026, 8, 9) + day * 86400000).toISOString().slice(0, 10);
       for (const role of getStackRecommendation("Next.js SaaS app", undefined, date).stack) {
         for (const c of role.candidates) {
-          const expected = vendorRiskAssessment(changesByVendor.get(c.vendor.toLowerCase()) ?? []);
+          const record = offers.find(o => o.vendor === c.vendor && o.url === c.url);
+          assert.ok(record, `${date} ${c.vendor}: the candidate is not a record in the index`);
+          const expected = publishedRisk(record, changesByVendor.get(c.vendor.toLowerCase()) ?? []);
           assert.deepStrictEqual(
             c.rating_withheld,
             expected.rating_withheld,
@@ -135,7 +140,7 @@ describe("stack recommendation logic", () => {
           );
           assert.strictEqual(
             c.risk_level,
-            expected.rating_withheld ? null : expected.level,
+            expected.risk_level,
             `${date} ${c.vendor}: candidate level does not match the catalogue's`
           );
           const vendorChanges = changesByVendor.get(c.vendor.toLowerCase()) ?? [];

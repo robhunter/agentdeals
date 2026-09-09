@@ -5,13 +5,14 @@ import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
 import { createServer, getServerCard } from "./server.js";
-import { oldestVerifiedDateForSlug, vendorRiskAssessment, riskCauseOf, freeTierEndingRecord, NEGATIVE_CHANGE_TYPES, POSITIVE_CHANGE_TYPES, SEVERE_CHANGE_TYPES, loadOffers, getCategories, getNewOffers, getNewestDeals, searchOffers, enrichOffers, gateForOffer, loadDealChanges, getDealChanges, changeContext, DEFAULT_CHANGE_WINDOW_DAYS, getOfferDetails, compareServices, checkVendorRisk, auditStack, getExpiringDeals, getWeeklyDigest, getFormattedWeeklyDigest, getFreshnessMetrics, getStabilityMap, getVendorReferral, sanitizeQuery, getChangeLogFreshness, isEventDated, partitionByDateProvenance } from "./data.js";
+import { oldestVerifiedDateForSlug, vendorRiskAssessment, publishedRisk, levelWithheldStatement, vendorNotIndexedSentence, riskCauseOf, freeTierEndingRecord, NEGATIVE_CHANGE_TYPES, POSITIVE_CHANGE_TYPES, SEVERE_CHANGE_TYPES, loadOffers, getCategories, getNewOffers, getNewestDeals, searchOffers, enrichOffers, gateForOffer, loadDealChanges, getDealChanges, changeContext, DEFAULT_CHANGE_WINDOW_DAYS, getOfferDetails, compareServices, checkVendorRisk, auditStack, getExpiringDeals, getWeeklyDigest, getFormattedWeeklyDigest, getFreshnessMetrics, getStabilityMap, getVendorReferral, sanitizeQuery, getChangeLogFreshness, isEventDated, partitionByDateProvenance } from "./data.js";
 import { getStackRecommendation } from "./stacks.js";
 import { estimateCosts } from "./costs.js";
 import { classifyRequest } from "./client-class.js";
 import { acceptSignal, ackMissing, checkRateLimit, clientAddress, RATE_LIMIT_PER_MINUTE, SIGNAL_ACK_PARAM, SIGNAL_BODY_MAX, SIGNAL_DOC_PATH, SIGNAL_PATH, type SignalInput } from "./signal.js";
 import { agentBlock, DEFERENCE, signalExampleSlug, signalHeaderValue, signalHtmlBlock, signalLlmsSection, SIGNAL_HEADER_NAME } from "./signal-copy.js";
 import { BASE_URL } from "./base-url.js";
+import { RATED_LEVELS, isRated, gradeForStack } from "./stack-grade.js";
 import { provenanceBlock } from "./provenance.js";
 import { recordApiHit, recordSessionConnect, recordSessionDisconnect, recordLandingPageView, getStats, getConnectionStats, loadTelemetry, flushTelemetry, flushPending, FLUSH_INTERVAL_SECONDS, logRequest, getPublicRequestLogResult, getTelemetryHealth, recordPageView, getPageViews, recordReferralListingCall, recordReferralVendorLookup, getReferralMarketplaceStats, getSessionClassification, recordSearchQuery, getSearchAnalytics, getApiHitsByEndpoint, recordTraffic, getTrafficReport, getSignalReport, publicSignalReport, getRollupDaySource, getRollupDatesAvailable, setDurableRollupCoverage, redisJsonGet, redisJsonMget, redisJsonSet, redisJsonSetWithoutExpiry, useRedis } from "./stats.js";
 import { buildDailyRollup, readRollups, coverageOf, ROLLUP_DATE_PATTERN } from "./analytics-rollup.js";
@@ -676,6 +677,7 @@ function stabilityCellHtml(
     return `<span style="color:var(--text-dim)" title="${escHtmlServer(why.charAt(0).toUpperCase() + why.slice(1))}">source unconfirmed</span>`;
   }
   const published = publishedVendorLevel(level ?? null, cause ?? null);
+  if (published === null) return `<span style="color:var(--text-dim)">unrated</span>`;
   const color = RISK_COLORS[published] ?? "#8b949e";
   const title = published === "stable" || !cause
     ? ""
@@ -967,6 +969,7 @@ function buildVendorVerdictContext(vendorName: string, servedOn: string): Vendor
     input: {
       vendor: vendorName,
       level: enriched.risk_level ?? null,
+      historyLevel: publishedRisk(primary, vendorChanges, servedOn).history_level,
       cause: enriched.risk_cause,
       changes: vendorChanges,
       levelWithheld,
@@ -4626,7 +4629,9 @@ function buildVendorPage(slug: string): string | null {
   const riskColors: Record<string, string> = { stable: "#3fb950", caution: "#d29922", risky: "#f85149" };
   const riskCause = enriched.risk_cause;
   const riskLevel = publishedVendorLevel(enriched.risk_level ?? null, riskCause);
-  const riskColor = riskColors[riskLevel] ?? "#8b949e";
+  const historyLevel = verdictInput.historyLevel;
+  const levelWithheldBecause = levelWithheldStatement(vendorName, publishedRisk(primary, vendorChanges, servedOn));
+  const riskColor = (riskLevel ? riskColors[riskLevel] : null) ?? "#8b949e";
 
   const discontinuedOn = discontinuedOnOrBefore(vendorChanges, servedOn);
 
@@ -5095,6 +5100,8 @@ ${allCompareLinks.join("\n")}
     ? endedReliabilitySentence(vendorName)
     : levelWithheld
     ? `We cannot say. ${withheldLevelSentence(levelWithheld, vendorName, unconfirmableSince)} Nothing we have read describes these terms, so we are not publishing a stability judgement for this vendor until that is fixed.`
+    : riskLevel === null
+    ? `${levelWithheldBecause}`
     : riskLevel === "stable"
     ? `${vendorName}'s free tier is considered stable.${vendorChanges.length > 0 ? ` ${narrowingSentence(vendorChanges)} See the pricing history below.` : ""}`
     : riskLevel === "caution"
@@ -5109,10 +5116,10 @@ ${allCompareLinks.join("\n")}
     : eligibilityGateSentence + (levelWithheld
     ? `${withheldLevelSentence(levelWithheld, vendorName, unconfirmableSince)} We cannot confirm what this offer provides today, so we are not recommending it for production or for anything else until we can.`
     : hasFree
-    ? (riskLevel === "stable"
+    ? (riskLevel === "stable" || (primaryGate && historyLevel === "stable")
       ? `${vendorName}'s free tier can be suitable for small production workloads and side projects. ${primaryGate ? "It" : "We rate it stable and it"} offers ${escHtmlServer(keyLimit)}, so it's a reasonable starting point.${vendorChanges.length > 0 ? ` ${narrowingSentence(vendorChanges)}` : ""} Monitor your usage against the limits and have an upgrade plan ready.`
-      : primaryGate
-      ? `${vendorName}'s free tier is usable for prototyping and development. ${vendorHistorySentence(vendorName, riskLevel, riskCause)}`
+      : riskLevel === null
+      ? `${vendorName}'s free tier is usable for prototyping and development. ${primaryGate ? vendorHistorySentence(vendorName, historyLevel, riskCause) : levelWithheldBecause}`
       : `${vendorName}'s free tier is usable for prototyping and development, but we rate it ${riskLevel}${riskCause ? ` because of one recorded ${changeKindNoun(riskCause.change_type)}, ${changeDateClause(riskCause)}` : ""}. Consider alternatives with more stable pricing for critical services.`)
     : `${vendorName} does not offer a free tier for production use. Consider free alternatives in ${primary.category}.`);
   const faqChangedAnswer = vendorChanges.length > 0
@@ -5384,8 +5391,10 @@ function buildAlternativesPage(slug: string): string | null {
   const altWithheldClause = altLevelWithheld
     ? withheldLevelClause(altLevelWithheld, altUnconfirmableSince)
     : "";
-  const riskLevel = enriched.risk_level && (enriched.risk_level === "stable" || riskCause) ? enriched.risk_level : "stable";
-  const riskColor = riskColors[riskLevel] ?? "#8b949e";
+  const altPublished = publishedRisk(primary, vendorChanges);
+  const altWithheldBecause = levelWithheldStatement(vendorName, altPublished) ?? "";
+  const riskLevel = publishedVendorLevel(enriched.risk_level ?? null, riskCause);
+  const riskColor = (riskLevel ? riskColors[riskLevel] : null) ?? "#8b949e";
 
   const substitutes = vendorSubstitutes(vendorName, vendorOffers, allChanges);
   const vendorCategories = substitutes.categories;
@@ -5429,9 +5438,9 @@ function buildAlternativesPage(slug: string): string | null {
         : `<div class="risk-row"><span class="risk-label">Risk Level:</span> <span class="risk-badge-inline" style="background:${riskColor}20;color:${riskColor};border:1px solid ${riskColor}40">${riskLevel}</span></div>`
     );
     if (enriched.risk_level === null) {
-      parts.push(`<div class="risk-row"><span class="risk-label">Why:</span> ${escHtmlServer(altWithheldSentence)} We are not publishing a stability judgement for it until that is fixed.</div>`);
+      parts.push(`<div class="risk-row"><span class="risk-label">Why:</span> ${escHtmlServer(altWithheldBecause)} We are not publishing a stability judgement for it until that is fixed.</div>`);
     }
-    if (riskLevel !== "stable" && riskCause) {
+    if (riskLevel !== null && riskLevel !== "stable" && riskCause) {
       parts.push(`<div class="risk-row"><span class="risk-label">Why:</span> <span class="risk-cause-date" style="font-family:var(--mono)">${escHtmlServer(changeEntryDateLabel(riskCause))}</span> &mdash; ${changeSummaryHtml(riskCause, escHtmlServer)}</div>`);
     }
     parts.push(`<div class="risk-row"><span class="risk-label">Category:</span> ${vendorCategories.map(c => `<a href="/category/${toSlug(c)}" class="cat-pill">${escHtmlServer(c)}</a>`).join(" ")}</div>`);
@@ -5541,6 +5550,8 @@ ${renderAuditBlock(altRanking.tie_break)}
     ? `${altNotAFreeOffer.reason}${altLevelWithheld ? ` ${altWithheldSentence}` : ""} ${storedTermsOf(primary)}`
     : altLevelWithheld
     ? `We cannot confirm that today. ${altWithheldSentence} Our stored record says ${vendorName} offers a free tier (${primary.tier}), but we have not confirmed those terms against the source we cite.`
+    : riskLevel === null
+    ? `${altWithheldBecause} Our stored record says ${vendorName} offers a free tier (${primary.tier}), and we are not publishing a stability judgement over it.`
     : riskLevel === "stable"
     ? `Yes, ${vendorName} currently offers a free tier (${primary.tier}). ${vendorChanges.length === 0 ? "No pricing changes have been recorded." : narrowingSentence(vendorChanges)}`
     : riskLevel === "caution"
@@ -47320,7 +47331,7 @@ function buildStackCheckPage(): string {
   const totalOffers = allOffers.length;
   const totalChanges = allChanges.length;
 
-  const vendorLookup: Record<string, { vendor: string; category: string; description: string; tier: string; slug: string; risk_level: string; risk_cause: CitedRiskCause | null; stability: string; recent_changes: Array<{ vendor: string; date: string; change_type: string; summary: string; source_url: string | null; citation_html: string; impact: string; resolved: boolean }> }> = {};
+  const vendorLookup: Record<string, { vendor: string; category: string; description: string; tier: string; slug: string; risk_level: string | null; level_withheld_because: string | null; risk_cause: CitedRiskCause | null; stability: string; recent_changes: Array<{ vendor: string; date: string; change_type: string; summary: string; source_url: string | null; citation_html: string; impact: string; resolved: boolean }> }> = {};
   for (const offer of allOffers) {
     const slug = toSlug(offer.vendor);
     const allVendorChanges = allChanges
@@ -47328,16 +47339,17 @@ function buildStackCheckPage(): string {
       .sort((a, b) => b.date.localeCompare(a.date));
     const vendorChanges = allVendorChanges.slice(0, 3);
     const stability = stabilityMap.get(slug) || "stable";
-    const assessment = vendorRiskAssessment(allVendorChanges);
+    const published = publishedRisk(offer, allVendorChanges);
     vendorLookup[slug] = {
       vendor: offer.vendor,
       category: offer.category,
       description: publishedTermsText(offer),
       tier: offer.tier,
       slug,
-      risk_level: assessment.level,
-      risk_cause: assessment.cause
-        ? { ...riskCauseOf(assessment.cause)!, date: changeEntryDateLabel(assessment.cause), citation_html: changeCitationHtml(assessment.cause, escHtmlServer) }
+      risk_level: published.risk_level,
+      level_withheld_because: levelWithheldStatement(offer.vendor, published),
+      risk_cause: published.cause
+        ? { ...published.risk_cause!, date: changeEntryDateLabel(published.cause), citation_html: changeCitationHtml(published.cause, escHtmlServer) }
         : null,
       stability,
       recent_changes: vendorChanges.map(c => ({ vendor: c.vendor, date: changeEntryDateLabel(c), change_type: c.change_type, summary: c.summary, source_url: c.source_url?.trim() ? c.source_url.trim() : null, citation_html: changeCitationHtml(c, escHtmlServer), impact: c.impact, resolved: isNoLongerInForce(c) })),
@@ -47435,14 +47447,16 @@ function buildStackCheckPage(): string {
     .grade-F{background:rgba(248,81,73,.15);color:var(--red);border:3px solid var(--red)}
     .grade-label{font-size:1rem;color:var(--text);font-weight:600;margin-bottom:.25rem}
     .grade-desc{font-size:.85rem;color:var(--text-muted)}
+    .grade-denominator{font-size:.85rem;color:var(--text-muted);margin-top:.4rem}
 
-    .risk-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:.75rem;margin:1.5rem 0}
+    .risk-summary{display:grid;grid-template-columns:repeat(4,1fr);gap:.75rem;margin:1.5rem 0}
     .risk-stat{text-align:center;padding:1rem;background:var(--bg-elevated);border:1px solid var(--border);border-radius:10px}
     .risk-stat .count{font-size:1.8rem;font-weight:700}
     .risk-stat .label{font-size:.8rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:.04em}
     .risk-low .count{color:var(--green)}
     .risk-moderate .count{color:var(--yellow)}
     .risk-high .count{color:var(--red)}
+    .risk-unrated .count{color:var(--text-dim)}
 
     .service-cards{display:grid;gap:.75rem;margin:1.5rem 0}
     .service-card{background:var(--bg-elevated);border:1px solid var(--border);border-radius:10px;padding:1.25rem;transition:border-color .15s}
@@ -47457,6 +47471,8 @@ function buildStackCheckPage(): string {
     .risk-badge.caution{background:rgba(210,153,34,.12);color:var(--yellow)}
     .risk-badge.risky{background:rgba(248,81,73,.12);color:var(--red)}
     .risk-badge.not-found{background:rgba(148,163,184,.1);color:var(--text-dim)}
+    .risk-badge.unrated{background:rgba(148,163,184,.14);color:var(--text-dim)}
+    .card-unrated{font-size:.85rem;color:var(--text-muted);margin:.4rem 0;border-left:2px solid var(--border);padding-left:.6rem}
     .card-tier{font-size:.85rem;color:var(--text-muted);margin:.25rem 0}
     .card-changes{margin:.5rem 0}
     .change-item{font-size:.8rem;color:var(--text-dim);padding:.25rem 0;border-top:1px solid var(--border)}
@@ -47581,6 +47597,10 @@ function buildStackCheckPage(): string {
     ${mcpCtaScript()}
     var VENDOR_LOOKUP = ${JSON.stringify(vendorLookup)};
 
+    var RATED_LEVELS = ${JSON.stringify(RATED_LEVELS)};
+    ${isRated.toString()}
+    ${gradeForStack.toString()}
+
     function usePreset(services) {
       document.getElementById('stack-input').value = services;
       checkStack();
@@ -47615,35 +47635,23 @@ function buildStackCheckPage(): string {
       document.getElementById('results').style.display = 'block';
       document.getElementById('check-btn').disabled = false;
 
-      var riskCounts = { stable: 0, caution: 0, risky: 0, not_found: 0 };
+      var riskCounts = { stable: 0, caution: 0, risky: 0, withheld: 0, not_found: 0 };
       var totalFound = 0;
       for (var i = 0; i < data.services.length; i++) {
         var svc = data.services[i];
         if (svc.status === 'not_found') { riskCounts.not_found++; continue; }
         totalFound++;
-        var rl = svc.risk_level || 'stable';
-        if (riskCounts[rl] !== undefined) riskCounts[rl]++;
-        else riskCounts.stable++;
+        if (isRated(svc.risk_level)) riskCounts[svc.risk_level]++;
+        else riskCounts.withheld++;
       }
+      var assessment = gradeForStack(riskCounts, data.services.length);
 
-      var grade, gradeLabel, gradeDesc;
-      if (totalFound === 0) {
-        grade = '?'; gradeLabel = 'Unknown'; gradeDesc = 'None of the entered services were found in our database.';
-      } else {
-        var riskyPct = riskCounts.risky / totalFound;
-        var cautionPct = riskCounts.caution / totalFound;
-        if (riskyPct === 0 && cautionPct === 0) { grade = 'A'; gradeLabel = 'Excellent'; gradeDesc = 'All services are stable with no recent pricing concerns.'; }
-        else if (riskyPct === 0 && cautionPct <= 0.3) { grade = 'B'; gradeLabel = 'Good'; gradeDesc = 'Mostly stable stack with minor items to monitor.'; }
-        else if (riskyPct <= 0.2 && cautionPct <= 0.5) { grade = 'C'; gradeLabel = 'Fair'; gradeDesc = 'Some services at moderate risk — review alternatives for flagged items.'; }
-        else if (riskyPct <= 0.4) { grade = 'D'; gradeLabel = 'Poor'; gradeDesc = 'Multiple high-risk services detected — migration planning recommended.'; }
-        else { grade = 'F'; gradeLabel = 'Critical'; gradeDesc = 'Significant free tier risk across your stack — immediate action recommended.'; }
-      }
-
-      var gradeClass = grade === '?' ? 'C' : grade;
+      var gradeClass = (assessment.grade === '?' || assessment.grade === '—') ? 'C' : assessment.grade;
       document.getElementById('grade-section').innerHTML =
-        '<div class="grade-badge grade-' + gradeClass + '">' + grade + '</div>' +
-        '<div class="grade-label">' + gradeLabel + '</div>' +
-        '<div class="grade-desc">' + gradeDesc + '</div>';
+        '<div class="grade-badge grade-' + gradeClass + '">' + assessment.grade + '</div>' +
+        '<div class="grade-label">' + esc(assessment.label) + '</div>' +
+        '<div class="grade-desc">' + esc(assessment.description) + '</div>' +
+        (assessment.denominator ? '<div class="grade-denominator">' + esc(assessment.denominator) + '</div>' : '');
 
       var shareUrl = window.location.origin + '/stack-check?s=' + encodeURIComponent(inputServices.join(','));
       document.getElementById('share-url').textContent = shareUrl;
@@ -47652,7 +47660,8 @@ function buildStackCheckPage(): string {
       document.getElementById('risk-summary').innerHTML =
         '<div class="risk-stat risk-low"><div class="count">' + riskCounts.stable + '</div><div class="label">Stable</div></div>' +
         '<div class="risk-stat risk-moderate"><div class="count">' + riskCounts.caution + '</div><div class="label">Caution</div></div>' +
-        '<div class="risk-stat risk-high"><div class="count">' + riskCounts.risky + '</div><div class="label">High Risk</div></div>';
+        '<div class="risk-stat risk-high"><div class="count">' + riskCounts.risky + '</div><div class="label">High Risk</div></div>' +
+        '<div class="risk-stat risk-unrated"><div class="count">' + riskCounts.withheld + '</div><div class="label">Unrated</div></div>';
 
       var cardsHtml = '';
       var negTypes = ['free_tier_removed','limits_reduced','restriction','product_deprecated','open_source_killed','pricing_model_change','pricing_restructured'];
@@ -47668,13 +47677,13 @@ function buildStackCheckPage(): string {
           cardsHtml += '</div>';
           continue;
         }
-        var rl = svc.risk_level || 'stable';
+        var rl = svc.risk_level;
         var rc = svc.risk_cause || null;
-        if (rl !== 'stable' && !rc) rl = 'stable';
         var slug = toSlug(svc.vendor);
         cardsHtml += '<div class="service-card"><div class="card-header"><span class="card-vendor"><a href="/vendor/' + esc(slug) + '">' + esc(svc.vendor) + '</a></span>';
-        cardsHtml += '<div style="display:flex;gap:.5rem;align-items:center"><span class="card-category">' + esc(svc.category) + '</span><span class="risk-badge ' + esc(rl) + '">' + esc(rl) + '</span></div></div>';
-        if (rl !== 'stable' && rc) cardsHtml += '<p class="card-risk-cause"><strong>Why ' + esc(rl) + ':</strong> ' + esc(rc.date) + ' &mdash; ' + esc(rc.summary) + '</p>';
+        cardsHtml += '<div style="display:flex;gap:.5rem;align-items:center"><span class="card-category">' + esc(svc.category) + '</span><span class="risk-badge ' + (isRated(rl) ? esc(rl) : 'unrated') + '">' + (isRated(rl) ? esc(rl) : 'Unrated') + '</span></div></div>';
+        if (isRated(rl) && rl !== 'stable' && rc) cardsHtml += '<p class="card-risk-cause"><strong>Why ' + esc(rl) + ':</strong> ' + esc(rc.date) + ' &mdash; ' + esc(rc.summary) + '</p>';
+        if (!isRated(rl)) cardsHtml += '<p class="card-unrated">' + esc(svc.level_withheld_because || '') + '</p>';
         cardsHtml += '<p class="card-tier">' + esc(svc.tier) + '</p>';
 
         if (svc.recent_changes && svc.recent_changes.length > 0) {
@@ -48446,13 +48455,19 @@ function buildBudgetBuilderPage(): string {
   const totalOffers = allOffers.length;
   const totalChanges = allChanges.length;
 
-  const categoryVendors: Record<string, Array<{ slug: string; name: string; free: string; starter: number; growth: number; scale: number; notes: string; risk_level: string; risk_cause: CitedRiskCause | null }>> = {};
+  const categoryVendors: Record<string, Array<{ slug: string; name: string; free: string; starter: number; growth: number; scale: number; notes: string; risk_level: string | null; level_withheld_because: string | null; rank_penalty: number; risk_cause: CitedRiskCause | null }>> = {};
+  const rankPenaltyFor = (level: "stable" | "caution" | "risky", cause: DealChange | null) =>
+    cause ? (level === "risky" ? 100 : level === "caution" ? 30 : 0) : 0;
   for (const cat of estimatorData) {
     categoryVendors[cat.id] = cat.vendors.map(v => {
       const vendorChanges = allChanges.filter(c => toSlug(c.vendor) === v.slug || c.vendor.toLowerCase() === v.name.toLowerCase());
-      const assessment = vendorRiskAssessment(vendorChanges);
-      return { slug: v.slug, name: v.name, free: v.free, starter: v.starter, growth: v.growth, scale: v.scale, notes: v.notes, risk_level: assessment.level,
-        risk_cause: assessment.cause ? { ...riskCauseOf(assessment.cause)!, date: changeEntryDateLabel(assessment.cause), citation_html: changeCitationHtml(assessment.cause, escHtmlServer) } : null };
+      const offer = allOffers.find(o => toSlug(o.vendor) === v.slug || o.vendor.toLowerCase() === v.name.toLowerCase());
+      const published = offer ? publishedRisk(offer, vendorChanges) : null;
+      return { slug: v.slug, name: v.name, free: v.free, starter: v.starter, growth: v.growth, scale: v.scale, notes: v.notes,
+        risk_level: published ? published.risk_level : null,
+        level_withheld_because: published ? levelWithheldStatement(v.name, published) : vendorNotIndexedSentence(v.name),
+        rank_penalty: published ? rankPenaltyFor(published.history_level, published.cause) : 0,
+        risk_cause: published?.cause ? { ...published.risk_cause!, date: changeEntryDateLabel(published.cause), citation_html: changeCitationHtml(published.cause, escHtmlServer) } : null };
     });
   }
 
@@ -48557,6 +48572,7 @@ function buildBudgetBuilderPage(): string {
     + '    .risk-badge.low{background:rgba(63,185,80,.15);color:var(--green)}\n'
     + '    .risk-badge.medium{background:rgba(210,153,34,.15);color:var(--yellow)}\n'
     + '    .risk-badge.high{background:rgba(248,81,73,.15);color:var(--red)}\n'
+    + '    .risk-badge.unrated{background:rgba(148,163,184,.14);color:var(--text-dim)}\n'
     + '    .alternatives{margin-top:.75rem;padding-top:.75rem;border-top:1px solid var(--border)}\n'
     + '    .alternatives-label{font-size:.7rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:.05em;margin-bottom:.5rem}\n'
     + '    .alt-row{display:flex;justify-content:space-between;align-items:center;font-size:.8rem;color:var(--text-muted);padding:.2rem 0}\n'
@@ -48719,6 +48735,13 @@ function buildBudgetBuilderPage(): string {
     + '  buildStack();\n'
     + '}\n'
     + '\n'
+    + 'var RATED_LEVELS = ' + JSON.stringify(RATED_LEVELS) + ';\n'
+    + 'function isRated(level) { return RATED_LEVELS.indexOf(level) >= 0; }\n'
+    + 'function vendorRiskBadge(v) {\n'
+    + '  if (!isRated(v.risk_level)) return v.level_withheld_because ? \'<span class="risk-badge unrated" title="\' + v.level_withheld_because + \'">Unrated</span>\' : "";\n'
+    + '  if (!v.risk_cause) return "";\n'
+    + '  return \'<span class="risk-badge \' + v.risk_level + \'" title="\' + v.risk_cause.date + \': \' + v.risk_cause.summary + \'">\' + v.risk_level + \'</span>\';\n'
+    + '}\n'
     + 'function recommendVendor(catId, budget) {\n'
     + '  var vendors = CATEGORY_VENDORS[catId] || [];\n'
     + '  if (vendors.length === 0) return null;\n'
@@ -48727,8 +48750,7 @@ function buildBudgetBuilderPage(): string {
     + '    if (budget === 0) {\n'
     + '      cost = 0;\n'
     + '    }\n'
-    + '    var riskPenalty = v.risk_cause ? (v.risk_level === "risky" ? 100 : v.risk_level === "caution" ? 30 : 0) : 0;\n'
-    + '    var score = cost + riskPenalty - (v.free !== "" && cost === 0 ? 50 : 0);\n'
+    + '    var score = cost + v.rank_penalty - (v.free !== "" && cost === 0 ? 50 : 0);\n'
     + '    return { vendor: v, cost: cost, score: score };\n'
     + '  });\n'
     + '  scored.sort(function(a, b) { return a.score - b.score; });\n'
@@ -48740,7 +48762,7 @@ function buildBudgetBuilderPage(): string {
     + '  var results = document.getElementById("results");\n'
     + '  results.style.display = "block";\n'
     + '  var totalCost = 0;\n'
-    + '  var riskCounts = { stable: 0, caution: 0, risky: 0 };\n'
+    + '  var riskCounts = { stable: 0, caution: 0, risky: 0, withheld: 0 };\n'
     + '  var stackHtml = "";\n'
     + '  var catKeys = Array.from(selectedCategories);\n'
     + '  var paidEquivalent = 0;\n'
@@ -48750,7 +48772,7 @@ function buildBudgetBuilderPage(): string {
     + '    if (!rec) return;\n'
     + '    var cost = selectedBudget === 0 ? 0 : rec.starter;\n'
     + '    totalCost += cost;\n'
-    + '    if (riskCounts[rec.risk_level] !== undefined) riskCounts[rec.risk_level]++;\n'
+    + '    if (isRated(rec.risk_level)) riskCounts[rec.risk_level]++; else riskCounts.withheld++;\n'
     + '    paidEquivalent += rec.growth > 0 ? rec.growth : rec.starter > 0 ? rec.starter : 25;\n'
     + '\n'
     + '    var vendors = CATEGORY_VENDORS[catId] || [];\n'
@@ -48761,8 +48783,9 @@ function buildBudgetBuilderPage(): string {
     + '    stackHtml += \'<span class="stack-card-category">\' + (CATEGORY_LABELS[catId] || catId) + \'</span>\';\n'
     + '    stackHtml += \'<span class="stack-card-cost">\' + (cost === 0 ? "FREE" : "$" + cost + "/mo") + \'</span>\';\n'
     + '    stackHtml += \'</div>\';\n'
-    + '    stackHtml += \'<div class="stack-card-vendor"><a href="/vendor/\' + rec.slug + \'">\' + rec.name + \'</a>\' + (rec.risk_cause ? \' <span class="risk-badge \' + rec.risk_level + \'">\' + rec.risk_level + \'</span>\' : "") + \'</div>\';\n'
-    + '    if (rec.risk_cause) stackHtml += \'<div class="stack-card-risk-cause">Why \' + rec.risk_level + \': \' + rec.risk_cause.date + \' — \' + rec.risk_cause.summary + \'</div>\';\n'
+    + '    stackHtml += \'<div class="stack-card-vendor"><a href="/vendor/\' + rec.slug + \'">\' + rec.name + \'</a>\' + vendorRiskBadge(rec) + \'</div>\';\n'
+    + '    if (isRated(rec.risk_level) && rec.risk_cause) stackHtml += \'<div class="stack-card-risk-cause">Why \' + rec.risk_level + \': \' + rec.risk_cause.date + \' — \' + rec.risk_cause.summary + \'</div>\';\n'
+    + '    if (!isRated(rec.risk_level)) stackHtml += \'<div class="stack-card-risk-cause">\' + (rec.level_withheld_because || "") + \'</div>\';\n'
     + '    stackHtml += \'<div class="stack-card-free">\' + rec.free + \'</div>\';\n'
     + '    if (rec.notes) stackHtml += \'<div style="color:var(--text-dim);font-size:.8rem">\' + rec.notes + \'</div>\';\n'
     + '\n'
@@ -48772,7 +48795,7 @@ function buildBudgetBuilderPage(): string {
     + '      alts.forEach(function(alt) {\n'
     + '        var altCost = selectedBudget === 0 ? 0 : alt.starter;\n'
     + '        stackHtml += \'<div class="alt-row"><a href="/vendor/\' + alt.slug + \'">\' + alt.name + \'</a>\';\n'
-    + '        stackHtml += \'<span>\' + (altCost === 0 ? "FREE" : "$" + altCost + "/mo") + (alt.risk_cause ? \' · <span class="risk-badge \' + alt.risk_level + \'" title="\' + alt.risk_cause.date + \': \' + alt.risk_cause.summary + \'">\' + alt.risk_level + \'</span>\' : "") + \'</span></div>\';\n'
+    + '        stackHtml += \'<span>\' + (altCost === 0 ? "FREE" : "$" + altCost + "/mo") + (vendorRiskBadge(alt) ? " · " + vendorRiskBadge(alt) : "") + \'</span></div>\';\n'
     + '      });\n'
     + '      stackHtml += \'</div>\';\n'
     + '    }\n'
@@ -48811,14 +48834,15 @@ function buildBudgetBuilderPage(): string {
     + '    document.getElementById("savings-callout").style.display = "none";\n'
     + '  }\n'
     + '\n'
-    + '  var total = riskCounts.stable + riskCounts.caution + riskCounts.risky;\n'
+    + '  var total = riskCounts.stable + riskCounts.caution + riskCounts.risky + riskCounts.withheld;\n'
     + '  var riskHtml = \'<h3>Stack Risk Assessment</h3>\';\n'
     + '  riskHtml += \'<div class="risk-meter">\';\n'
     + '  for (var i = 0; i < riskCounts.stable; i++) riskHtml += \'<div class="risk-meter-segment" style="background:var(--green)"></div>\';\n'
     + '  for (var j = 0; j < riskCounts.caution; j++) riskHtml += \'<div class="risk-meter-segment" style="background:var(--yellow)"></div>\';\n'
     + '  for (var k = 0; k < riskCounts.risky; k++) riskHtml += \'<div class="risk-meter-segment" style="background:var(--red)"></div>\';\n'
+    + '  for (var u = 0; u < riskCounts.withheld; u++) riskHtml += \'<div class="risk-meter-segment" style="background:var(--text-dim)"></div>\';\n'
     + '  riskHtml += \'</div>\';\n'
-    + '  riskHtml += \'<p style="color:var(--text-muted);font-size:.85rem;margin-top:.5rem">\' + riskCounts.stable + \' stable, \' + riskCounts.caution + \' caution, \' + riskCounts.risky + \' risky</p>\';\n'
+    + '  riskHtml += \'<p style="color:var(--text-muted);font-size:.85rem;margin-top:.5rem">\' + riskCounts.stable + \' stable, \' + riskCounts.caution + \' caution, \' + riskCounts.risky + \' risky, \' + riskCounts.withheld + \' unrated</p>\';\n'
     + '  if (riskCounts.risky > 0) riskHtml += \'<p style="color:var(--red);font-size:.85rem;margin-top:.25rem">&#x26a0; \' + riskCounts.risky + \' service(s) have removed a free tier or changed an open-source licence in the last 12 months. Consider alternatives.</p>\';\n'
     + '  document.getElementById("risk-summary").innerHTML = riskHtml;\n'
     + '\n'

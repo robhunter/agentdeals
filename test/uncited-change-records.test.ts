@@ -104,6 +104,7 @@ describe("the verdict engine, given a withheld rating", () => {
   const input = (over: Partial<VendorVerdictInput> = {}): VendorVerdictInput => ({
     vendor: "Fixture Vendor",
     level: null,
+    historyLevel: "caution",
     cause: null,
     changes: [record({ source_url: "" })],
     levelWithheld: null,
