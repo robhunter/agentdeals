@@ -6,6 +6,8 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { MCP_TOOL_COUNT, MCP_TOOL_NAMES } from "../dist/mcp-tool-inventory.js";
+import { API_ENDPOINTS } from "../dist/api-inventory.js";
+import { PATHS_OUTSIDE_THE_ENDPOINT_INVENTORY } from "../dist/openapi.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 let serverPort = 0;
@@ -964,7 +966,7 @@ describe("HTTP transport", () => {
     const body = await response.json() as any;
     assert.strictEqual(body.openapi, "3.0.3");
     assert.strictEqual(body.info.title, "AgentDeals API");
-    assert.ok(body.info.description.includes("No authentication required"));
+    assert.match(body.info.description, /no authentication is required/i);
     assert.ok(body.paths["/api/offers"]);
     assert.ok(body.paths["/api/categories"]);
     assert.ok(body.paths["/api/new"]);
@@ -985,7 +987,9 @@ describe("HTTP transport", () => {
     assert.ok(body.paths["/api/freshness"]);
     assert.ok(body.paths["/api/referral-codes"]);
     assert.ok(body.paths["/api/referral-codes/{vendor}"]);
-    assert.strictEqual(Object.keys(body.paths).length, 20);
+    const servedPaths = new Set(API_ENDPOINTS.map((e) => e.path.replace(/:([A-Za-z_]+)/g, "{$1}")));
+    for (const alias of Object.keys(PATHS_OUTSIDE_THE_ENDPOINT_INVENTORY)) servedPaths.add(alias);
+    assert.deepStrictEqual(Object.keys(body.paths).sort(), [...servedPaths].sort());
     assert.ok(body.components.schemas.Offer);
     assert.ok(body.components.schemas.DealChange);
     assert.ok(body.components.schemas.Eligibility);

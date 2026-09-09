@@ -49293,6 +49293,12 @@ function buildDeveloperHubPage(): string {
 
   const endpointRows = endpointTable.map(endpointRow).join("\n");
 
+  const writeEndpoints = endpointTable.concat(referralEndpointTable).filter(e => e.method !== "GET");
+  const writeMethods = [...new Set(writeEndpoints.map(e => e.method))];
+  const methodSentence = writeEndpoints.length === 0
+    ? "Every endpoint below is read-only (GET)."
+    : "Every endpoint below is read-only (GET) except the " + writeEndpoints.length + " marked " + writeMethods.join(" and ") + " in the Method column.";
+
   return "<!DOCTYPE html>\n"
     + "<html lang=\"en\">\n"
     + "<head>\n"
@@ -49472,7 +49478,7 @@ function buildDeveloperHubPage(): string {
     + "    </div>\n"
     + "\n"
     + "    <h2>Endpoint Reference</h2>\n"
-    + "    <p>All endpoints are read-only (GET). Responses are JSON. For full request/response schemas, see the <a href=\"/api/docs\">interactive Swagger documentation</a>.</p>\n"
+    + "    <p>" + methodSentence + " Responses are JSON. Every one of them is described in our <a href=\"/api/openapi.json\">OpenAPI document</a>, browsable as <a href=\"/api/docs\">interactive Swagger documentation</a>.</p>\n"
     + "    <div style=\"overflow-x:auto\">\n"
     + "    <table class=\"endpoint-table\">\n"
     + "      <thead><tr><th>Method</th><th>Endpoint</th><th>Description</th><th>Parameters</th></tr></thead>\n"
