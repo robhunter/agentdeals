@@ -481,7 +481,7 @@ describe("capping a list built from several sections", () => {
 describe("feed entry updated timestamps", () => {
   it("never stamps an entry later than the moment the feed is built", () => {
     const now = new Date("2026-08-28T01:03:00Z");
-    assert.strictEqual(feedEntryUpdated("2026-08-28", now), "2026-08-28T01:03:00.000Z");
+    assert.strictEqual(feedEntryUpdated("2026-08-28", now), "2026-08-28T00:00:00.000Z");
   });
 
   it("still stamps noon for a day that is already over", () => {
@@ -494,8 +494,21 @@ describe("feed entry updated timestamps", () => {
     assert.strictEqual(feedEntryUpdated("2026-08-28", now), "2026-08-28T12:00:00.000Z");
   });
 
-  it("falls back to now when the day is not a date", () => {
+  it("gives two builds of the same day the same stamp", () => {
+    const early = feedEntryUpdated("2026-08-28", new Date("2026-08-28T01:03:00Z"));
+    const later = feedEntryUpdated("2026-08-28", new Date("2026-08-28T01:03:00.004Z"));
+    assert.strictEqual(early, later);
+  });
+
+  it("stamps a day it cannot have reached yet no later than one it has", () => {
+    const now = new Date("2026-08-28T18:00:00Z");
+    const ahead = feedEntryUpdated("2026-10-07", now);
+    assert.ok(ahead <= now.toISOString(), `stamped ${ahead}, later than ${now.toISOString()}`);
+    assert.ok(ahead >= feedEntryUpdated("2026-08-28", now), "a later record sorts under an earlier one");
+  });
+
+  it("falls back to the day it is built on when the day is not a date", () => {
     const now = new Date("2026-08-28T01:03:00Z");
-    assert.strictEqual(feedEntryUpdated("not-a-date", now), "2026-08-28T01:03:00.000Z");
+    assert.strictEqual(feedEntryUpdated("not-a-date", now), "2026-08-28T00:00:00.000Z");
   });
 });

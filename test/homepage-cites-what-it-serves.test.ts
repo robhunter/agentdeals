@@ -76,6 +76,28 @@ function withoutMarkup(html: string): string {
   return noScript.replace(/<pre[\s\S]*?<\/pre>/g, " ").replace(/<code[\s\S]*?<\/code>/g, " ");
 }
 
+const QUOTED_RECORD_MIN_LENGTH = 30;
+
+function asServed(text: string): string {
+  return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+}
+
+function withoutQuotedRecords(html: string, summaries: string[]): { prose: string; removed: number } {
+  let prose = html;
+  let removed = 0;
+  for (const summary of summaries) {
+    const served = asServed(summary);
+    if (served.length < QUOTED_RECORD_MIN_LENGTH || !prose.includes(served)) continue;
+    prose = prose.split(served).join(" ");
+    removed++;
+  }
+  return { prose, removed };
+}
+
+function publishedSummaries(): string[] {
+  return [...new Set(loadDealChanges().map((c) => c.summary ?? "").filter((s) => s.length > 0))];
+}
+
 function namedOutsideALink(prose: string, name: string): boolean {
   const outside = prose.replace(/<a\b[^>]*>[\s\S]*?<\/a>/g, "   ").replace(/<[^>]*>/g, " ");
   return mentions(outside, name);
@@ -221,13 +243,48 @@ describe("the homepage publishes only what it can serve", () => {
   });
 
   it("reaches a page for every vendor it names in prose", () => {
-    const prose = withoutMarkup(home);
+    const { prose } = withoutQuotedRecords(withoutMarkup(home), publishedSummaries());
     const excused = new Set([...NAMES_A_CLIENT_NOT_A_CLAIM, ...NAMES_AN_EXAMPLE_QUERY]);
     const unreachable = loadOffers()
       .map((o) => o.vendor)
       .filter((vendor) => vendor.length >= 4 && !excused.has(vendor))
       .filter((vendor) => namedOutsideALink(prose, vendor) && !namedInsideALink(prose, vendor));
     assert.deepStrictEqual([...new Set(unreachable)], [], `vendors named on / that reach no page: ${unreachable.join(", ")}`);
+  });
+
+  it("recognises the records it quotes, so that rule is about our own sentences", () => {
+    const { removed } = withoutQuotedRecords(withoutMarkup(home), publishedSummaries());
+    assert.ok(removed > 0, "no summary on / was matched back to the record it is quoted from");
+  });
+});
+
+describe("a vendor named inside a record we quote", () => {
+  const SUMMARY = "The free tier now has unlimited crash reports and access to the Slack community.";
+  const CARD = `<div class="rc-summary">${SUMMARY} <a href="https://example.com/pricing">Source</a></div>`;
+
+  it("is not a name the page owes a link", () => {
+    const { prose } = withoutQuotedRecords(CARD, [SUMMARY]);
+    assert.strictEqual(namedOutsideALink(prose, "Slack"), false);
+  });
+
+  it("is still owed one when we write the name in our own sentence", () => {
+    const ours = `<p>We track the Slack free tier.</p>${CARD}`;
+    const { prose } = withoutQuotedRecords(ours, [SUMMARY]);
+    assert.strictEqual(namedOutsideALink(prose, "Slack"), true);
+  });
+
+  it("is recognised through the escaping the page serves it with", () => {
+    const summary = `The "Pro" tier & the Slack app were merged.`;
+    const card = `<div class="rc-summary">${asServed(summary)}</div>`;
+    const { prose, removed } = withoutQuotedRecords(card, [summary]);
+    assert.strictEqual(removed, 1);
+    assert.strictEqual(namedOutsideALink(prose, "Slack"), false);
+  });
+
+  it("leaves a record too short to be a quotation in place", () => {
+    const short = "Slack changed";
+    const { removed } = withoutQuotedRecords(`<p>${short}</p>`, [short]);
+    assert.strictEqual(removed, 0);
   });
 });
 
