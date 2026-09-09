@@ -146,7 +146,7 @@ describe("MCP risk_level/stability indicators (issue #969)", () => {
     assert.notStrictEqual(row.risk_level, "stable", "Hypertune is shutting down and search_deals calls it stable");
   });
 
-  it("plan_stack recommend mode returns risk_level/stability per component and risk_warnings", async () => {
+  it("plan_stack recommend mode gives every component a level or the reason it is withheld, plus risk_warnings", async () => {
     proc = await startHttpServer();
     const sessionId = await initSession();
     const result = await callTool(sessionId, 2, "plan_stack", {
@@ -158,12 +158,17 @@ describe("MCP risk_level/stability indicators (issue #969)", () => {
       assert.ok(Array.isArray(role.candidates) && role.candidates.length > 0, `${role.role} should have candidates`);
       for (const c of role.candidates) {
         assert.ok(
-          ["stable", "caution", "risky"].includes(c.risk_level),
-          `candidate ${c.vendor} should have risk_level, got ${c.risk_level}`
+          ["stable", "caution", "risky"].includes(c.risk_level) || c.rating_withheld,
+          `candidate ${c.vendor} has risk_level ${c.risk_level} and no field says why`
         );
         assert.ok(
-          ["stable", "watch", "volatile", "improving"].includes(c.stability),
-          `candidate ${c.vendor} should have stability, got ${c.stability}`
+          !(c.risk_level && c.rating_withheld),
+          `candidate ${c.vendor} publishes both a level and a reason it was withheld`
+        );
+        assert.ok(
+          ["stable", "watch", "volatile", "improving"].includes(c.stability) ||
+            c.stability_withheld || c.link_unreachable,
+          `candidate ${c.vendor} has stability ${c.stability} and no field says why`
         );
       }
     }

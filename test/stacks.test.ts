@@ -88,22 +88,79 @@ describe("stack recommendation logic", () => {
     }
   });
 
-  it("candidates include risk_level and stability fields", async () => {
+  it("every candidate carries either a rated level or the reason the level is withheld", async () => {
     const { getStackRecommendation } = await import("../dist/stacks.js");
     const result = getStackRecommendation("Next.js SaaS app");
     assert.ok(result.stack.length > 0);
     for (const role of result.stack) {
       for (const c of role.candidates) {
+        assert.ok("rating_withheld" in c, `${c.vendor} carries no rating_withheld field`);
         assert.ok(
-          ["stable", "caution", "risky"].includes(c.risk_level),
-          `${c.vendor} risk_level should be stable|caution|risky, got ${c.risk_level}`
+          ["stable", "caution", "risky"].includes(c.risk_level) || c.rating_withheld !== null,
+          `${c.vendor} risk_level is ${c.risk_level} and no field says why`
         );
         assert.ok(
-          ["stable", "watch", "volatile", "improving"].includes(c.stability),
-          `${c.vendor} stability should be stable|watch|volatile|improving, got ${c.stability}`
+          c.risk_level === null || c.rating_withheld === null,
+          `${c.vendor} publishes both a level and a reason it was withheld`
+        );
+        assert.ok(
+          ["stable", "watch", "volatile", "improving"].includes(c.stability) ||
+            c.stability_withheld !== null || c.link_unreachable !== null,
+          `${c.vendor} stability is ${c.stability} and no field says why`
         );
       }
     }
+  });
+
+  it("a candidate's level is withheld on exactly the days its own records are uncited", async () => {
+    const { getStackRecommendation } = await import("../dist/stacks.js");
+    const { loadDealChanges, vendorRiskAssessment, standingNarrowingsCitingNoSource, classifyStability, withheldStability } = await import("../dist/data.js");
+    const { unreachableNoticeForUrl } = await import("../dist/link-health.js");
+    const changesByVendor = new Map<string, unknown[]>();
+    for (const c of loadDealChanges()) {
+      const key = c.vendor.toLowerCase();
+      if (!changesByVendor.has(key)) changesByVendor.set(key, []);
+      changesByVendor.get(key)!.push(c);
+    }
+    let checked = 0;
+    for (let day = 0; day < 14; day++) {
+      const date = new Date(Date.UTC(2026, 8, 9) + day * 86400000).toISOString().slice(0, 10);
+      for (const role of getStackRecommendation("Next.js SaaS app", undefined, date).stack) {
+        for (const c of role.candidates) {
+          const expected = vendorRiskAssessment(changesByVendor.get(c.vendor.toLowerCase()) ?? []);
+          assert.deepStrictEqual(
+            c.rating_withheld,
+            expected.rating_withheld,
+            `${date} ${c.vendor}: candidate and catalogue disagree about whether the level is withheld`
+          );
+          assert.strictEqual(
+            c.risk_level,
+            expected.rating_withheld ? null : expected.level,
+            `${date} ${c.vendor}: candidate level does not match the catalogue's`
+          );
+          const vendorChanges = changesByVendor.get(c.vendor.toLowerCase()) ?? [];
+          const uncited = standingNarrowingsCitingNoSource(vendorChanges);
+          assert.strictEqual(
+            c.stability_withheld === null,
+            uncited.length === 0,
+            `${date} ${c.vendor}: candidate and catalogue disagree about whether stability is withheld`
+          );
+          const unreachable = unreachableNoticeForUrl(c.url);
+          assert.deepStrictEqual(
+            c.link_unreachable,
+            unreachable,
+            `${date} ${c.vendor}: candidate and catalogue disagree about whether the offer's link resolves`
+          );
+          assert.strictEqual(
+            c.stability,
+            withheldStability(unreachable, classifyStability(vendorChanges), vendorChanges),
+            `${date} ${c.vendor}: candidate stability does not match the catalogue's`
+          );
+          checked++;
+        }
+      }
+    }
+    assert.ok(checked > 0, "no candidates were checked");
   });
 
   it("stack includes risk_warnings array", async () => {
