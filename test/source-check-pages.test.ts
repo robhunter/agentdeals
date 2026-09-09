@@ -79,6 +79,17 @@ const QUOTED_FROM_THE_PAGE_IT_CITES = {
   source_check: { checked: "2026-09-02", outcome: "ok", detail: "text" },
 };
 
+const SOURCED_FROM_A_PAGE_NAMING_ONLY_THE_PLATFORM = {
+  ...SOURCED_FROM_A_MARKETPLACE,
+  vendor: "Platformcorp",
+  url: "https://platformcorp.example/products/pricing",
+  source_check: {
+    checked: "2026-09-09",
+    outcome: "does_not_name_product",
+    detail: "the page names the platform in the domain we cite Platformcorp Ledger from and never names Ledger",
+  },
+};
+
 const SOURCED_FROM_A_PAGE_NAMING_ONLY_A_PLAN = {
   ...SOURCED_FROM_A_MARKETPLACE,
   vendor: "Plancorp",
@@ -149,6 +160,7 @@ const FIXTURES = [
   SOURCED_FROM_ITS_OWN_PAGE,
   SOURCED_FROM_A_PAGE_WE_COULD_NOT_READ,
   SOURCED_FROM_A_PAGE_STATING_NO_FIGURES,
+  SOURCED_FROM_A_PAGE_NAMING_ONLY_THE_PLATFORM,
   SOURCED_FROM_A_PAGE_NAMING_ONLY_A_PLAN,
   QUOTED_FROM_THE_PAGE_IT_CITES,
 ];

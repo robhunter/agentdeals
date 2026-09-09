@@ -1501,7 +1501,7 @@ export const openapiSpec = {
           verifiedDate: { type: "string", format: "date", description: "Date the offer was last verified (YYYY-MM-DD)" },
           eligibility: { $ref: "#/components/schemas/Eligibility" },
           gate: { $ref: "#/components/schemas/Gate" },
-          risk_level: { type: "string", enum: ["stable", "caution", "risky"], nullable: true, description: "Our published pricing-risk verdict, or null where a rule withholds it: gate is non-null (#1241, #1260), rating_withheld is non-null (#1352), or the page we cite could not confirm the record — link_unreachable, or a source_check outcome of does_not_name_vendor, states_no_terms or unreadable (#1046). One function applies all three rules and every surface that publishes a level calls it, so /api/audit-stack, /api/stack, /stack-check and MCP plan_stack answer the same as this field for the same record on the same day (#1486)." },
+          risk_level: { type: "string", enum: ["stable", "caution", "risky"], nullable: true, description: "Our published pricing-risk verdict, or null where a rule withholds it: gate is non-null (#1241, #1260), rating_withheld is non-null (#1352), or the page we cite could not confirm the record — link_unreachable, or a source_check outcome of does_not_name_vendor, does_not_name_product, states_no_terms or unreadable (#1046, #1500). One function applies all three rules and every surface that publishes a level calls it, so /api/audit-stack, /api/stack, /stack-check and MCP plan_stack answer the same as this field for the same record on the same day (#1486)." },
           source_check: { $ref: "#/components/schemas/SourceCheck" }
         },
         required: ["vendor", "category", "description", "tier", "url", "tags", "verifiedDate"]
@@ -1524,14 +1524,15 @@ export const openapiSpec = {
           checked: { type: "string", format: "date", description: "The day we last read the page." },
           outcome: {
             type: "string",
-            enum: ["ok", "states_no_amount", "does_not_name_vendor", "states_no_terms", "unreadable"],
+            enum: ["ok", "states_no_amount", "does_not_name_vendor", "does_not_name_product", "states_no_terms", "unreadable"],
             description: [
               "ok — the page names the vendor and states at least one amount, rate or price, either in figures the page renders or as a typed price in its schema.org markup (#1279).",
               "states_no_amount — the page names the vendor and names a plan or tier, but every price signal on it is a phrase such as \"Enterprise plan\" or \"Free forever\" and none is a figure (#1268). The quantities in description come from our own entry, not from that page. risk_level is still published and the summary says so, rather than being withheld.",
               "does_not_name_vendor — the page we read never writes the vendor's name. The URL we asked for is not evidence for this check, so a domain that keeps the vendor's name and loses its product reaches this outcome too (#1355).",
+              "does_not_name_product — the page we read writes the platform token the vendor name shares with the host we cite it from, and never writes the rest of the name. For a vendor called <Platform> <Product> this is a live page on the platform's own domain that says nothing about the product, so the record rests on the platform existing rather than on the offer existing (#1500).",
               "states_no_terms — the page names the vendor but carries no price signal of any kind.",
               "unreadable — the fetch produced no body we could read.",
-              "The last three withhold a favourable risk_level; the first two do not."
+              "The last four withhold a favourable risk_level; the first two do not."
             ].join(" ")
           },
           detail: { type: "string", description: "Our own sentence recording what the check found — never a quotation from the page, and not corroborable against it (#1467). For ok, the form of the vendor's name the check matched and the price signal it found, or what the markup states when the rendered page states no amount; for states_no_amount, the phrase that was the page's entire price evidence; otherwise why the page cannot confirm the record. Where the page was read for schema.org markup, the detail says whether that markup was absent, present and priceless, or priced. The fields carrying text taken from a page are product_role.source_quote and product_subtypes.labels[].source_quote." },

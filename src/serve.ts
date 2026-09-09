@@ -885,6 +885,7 @@ const WITHHELD_BADGE_LABELS: Record<LevelWithheldReason | "no_source", string> =
   unreadable: "unrated \u2014 page unreadable",
   states_no_terms: "unrated \u2014 page states no terms",
   does_not_name_vendor: "unrated \u2014 page omits vendor",
+  does_not_name_product: "unrated \u2014 page omits product",
 };
 
 const GATED_BADGE_LABELS: Record<GateCode, string> = {
@@ -8759,7 +8760,6 @@ const EVENTS: EventDef[] = [
       { title: "Gemini 3.1 Pro (Preview)", detail: "1M token context, 2x reasoning improvement. $2/$12 per MTok (\u2264200K context, doubles above)." },
       { title: "Gemini 3.1 Flash-Lite (Preview)", detail: "Cost-efficient, low-latency model tier for high-throughput workloads." },
       { title: "Gemini 3.1 Flash Image", detail: "Dedicated image generation model with improved pricing and lower latency." },
-      { title: "GLM 5 (Experimental)", detail: "New model for complex systems engineering and agentic tasks." },
       { title: "Gemini Embedding 2", detail: "First natively multimodal embedding model \u2014 text, images, video, audio, and docs in a single embedding space." },
       { title: "Vector Search 2.0", detail: "Now GA on Vertex AI. Enhanced vector similarity search for AI/RAG applications." },
       { title: "Vertex AI Agent Engine", detail: "Sessions and memory now GA in Vertex AI Agent Builder." },

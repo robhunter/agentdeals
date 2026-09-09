@@ -7,7 +7,7 @@ import { fileURLToPath } from "node:url";
 
 const { gateFor, utcDate, GATE_TABLE } = await import("../dist/ranking.js");
 const { gateClauseList, gateDisclosureSentence, matchingSubject } = await import("../dist/gate-disclosure.js");
-const { LEVEL_WITHHOLDING_OUTCOMES } = await import("../dist/source-check.js");
+const { LEVEL_WITHHOLDING_OUTCOMES, withheldLevelSentence } = await import("../dist/source-check.js");
 
 type Offer = import("../src/types.ts").Offer;
 type Gate = { code: string; reason: string } | null;
@@ -25,19 +25,22 @@ const NOT_RATED_CLAUSE = "We do not rate an offer we do not list.";
 const ENDED_VERDICT = "This offer has ended — we keep the page for the record and no longer rate it.";
 const STABLE_HISTORY = "has a stable pricing history.";
 
-const UNREAD_CITATION_FORMS = [
-  /^.+'s pricing page has not resolved for us( since \d{4}-\d{2}-\d{2})?\.$/,
-  /^The page we cite for .+ does not name it\.$/,
-  /^The page we cite for .+ states no terms we can read\.$/,
-  /^We could not read the page we cite for .+\.$/,
-];
+const REASONS_A_CITATION_CAN_GO_UNREAD = ["link_unreachable", ...LEVEL_WITHHOLDING_OUTCOMES];
 
-function gateSummaryShape(summary: string, gate: { code: string; reason: string }): string | null {
+function isAnUnreadCitation(rest: string, vendor: string): boolean {
+  const dated = rest.match(/ since (\d{4}-\d{2}-\d{2})\.$/);
+  return REASONS_A_CITATION_CAN_GO_UNREAD.some(reason =>
+    rest === withheldLevelSentence(reason as never, vendor, "")
+    || (dated !== null && rest === withheldLevelSentence(reason as never, vendor, ` since ${dated[1]}`))
+  );
+}
+
+function gateSummaryShape(summary: string, gate: { code: string; reason: string }, vendor: string): string | null {
   const opening = gate.code === "offer_retired" ? ENDED_VERDICT : `${gate.reason} ${NOT_RATED_CLAUSE}`;
   if (summary === opening) return null;
   if (!summary.startsWith(`${opening} `)) return `does not open with the gate's own verdict: ${summary}`;
   const rest = summary.slice(opening.length + 1);
-  if (UNREAD_CITATION_FORMS.some(form => form.test(rest))) return null;
+  if (isAnUnreadCitation(rest, vendor)) return null;
   return `carries prose that is neither the gate's verdict nor a citation we could not read: ${rest}`;
 }
 
@@ -387,7 +390,7 @@ describe("/api/vendor-risk does not rate an offer we do not list (issue #1241 Pa
       reported++;
       if (body.risk_level !== null) rated.push(offer.vendor);
       if (body.summary.includes(STABLE_HISTORY)) reassured.push(offer.vendor);
-      const problem = gateSummaryShape(body.summary, body.gate);
+      const problem = gateSummaryShape(body.summary, body.gate, offer.vendor);
       if (problem) offShape.push(`${offer.vendor} ${problem}`);
     }
     assert.deepStrictEqual(offShape, [], "gated summaries that are not the gate's verdict, alone or followed by an unread citation");

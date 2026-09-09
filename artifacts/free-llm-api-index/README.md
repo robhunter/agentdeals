@@ -1,6 +1,6 @@
 # Free tiers for AI and LLM APIs, with the date we read each one
 
-84 records for AI, LLM and AI-coding vendors, each one carrying the date we last read the vendor's own page and the URL we read it on. There is no single freshness stamp for this file, because a single stamp for a list nobody re-read is worth nothing.
+83 records for AI, LLM and AI-coding vendors, each one carrying the date we last read the vendor's own page and the URL we read it on. There is no single freshness stamp for this file, because a single stamp for a list nobody re-read is worth nothing.
 
 Generated from the free-tier catalogue at https://agentdeals.dev, which is where each row's record lives. It is regenerated whenever those records move, so editing it by hand is pointless — the next run overwrites it.
 
@@ -12,8 +12,8 @@ Rows are ordered alphabetically by vendor. That is not a ranking: we publish no 
 
 | | |
 | --- | --- |
-| Records | 84 |
-| Carrying a rating | 56 |
+| Records | 83 |
+| Carrying a rating | 55 |
 | Recorded as ended | 2 |
 | Publishing a reason instead of a rating | 26 — `states_no_terms` 9, `unreadable` 9, `gate:not_a_free_offer` 4, `link_unreachable` 4 |
 | Showing the terms they replaced | 15 |
@@ -29,7 +29,7 @@ Those counts are generated with the rows. If most of a column carries a caveat, 
 
 - `stable`, `caution` or `risky` — always printed beside the single dated record that produced it;
 - `ended` — a free tier we recorded going away. The row stays for the record;
-- `unrated` — we are publishing no rating, and the next column says why. 26 of 84 rows are unrated. A record whose page we could not read, that names no terms we can read, that is not a free offer, or whose link has stopped resolving gets the reason instead of a verdict. We would rather print why we cannot say than guess.
+- `unrated` — we are publishing no rating, and the next column says why. 26 of 83 rows are unrated. A record whose page we could not read, that names no terms we can read, that is not a free offer, or whose link has stopped resolving gets the reason instead of a verdict. We would rather print why we cannot say than guess.
 
 **Record verified** is the day we last confirmed that record against the page. Where the link has not resolved for 14 days, we withhold that date and print the day the link last worked instead: a recent date over a destination that no longer answers is the most confident-looking thing on a page and the least true.
 
@@ -70,7 +70,7 @@ A change is one dated record about one vendor, carrying the terms before, the te
 
 A rating is decided by the *type* of the most recent narrowing record, never by how many records we hold. A vendor we have never had cause to examine reads the same as one with a long clean history — `stable` is a statement about our records, not a clean bill of health.
 
-## AI / ML — 69 records
+## AI / ML — 68 records
 
 | Vendor | The terms, and where they came from | Rating | What we can say | Record verified |
 | --- | --- | --- | --- | --- |
@@ -98,7 +98,6 @@ A rating is decided by the *type* of the most recent narrowing record, never by 
 | [GitHub Models](https://agentdeals.dev/vendor/github-models)<br>Retired | Our record, read from [docs.github.com/en/github-models/about-github-models](https://docs.github.com/en/github-models/about-github-models) on 2026-08-20: GitHub retired GitHub Models on 2026-07-30, so there is no free tier. GitHub's own documentation states "GitHub Models has been retired." The former offer was free access to 100+ models via GitHub Marketplace at 10-15 RPM and 50-150 requests/day. | `ended` | This offer has ended — we keep the page for the record and no longer rate it. | 2026-08-20 |
 | [Google Gemini API](https://agentdeals.dev/vendor/google-gemini-api)<br>Free (Reduced) | Our record, read from [ai.google.dev/pricing](https://ai.google.dev/pricing) on 2026-08-18: Free tier covers Gemini 2.5 Pro plus the Flash-tier models: Gemini 2.5 Flash (10 RPM), Gemini 2.5 Flash-Lite (15 RPM), Gemini 3.0 Flash Preview, Gemini 3.1 Flash-Lite Preview, Gemini Embedding, and Gemma 4. 3.1 Pro Preview is paid-only. Per-model paid pricing: Gemini 3.1 Pro Preview $2/$12 per MTok (≤200K ctx, doubles above), Gemini 3.0 Flash Preview $0.50/$3, Gemini 3.1 Flash-Lite Preview $0.25/$1.50, Gemini 2.5 Pro $1.25/$10 (≤200K, doubles above), Gemini 2.5 Flash $0.30/$2.50. Gemini 2.0 Flash and 2.0 Flash-Lite deprecated June 1, 2026 — migrate to 2.5 Flash or 3.x Flash. All models support Batch/Flex at 50% discount. Mandatory spend caps enforced since April 1, 2026. | `caution` | We rate it caution — one recorded pricing restructure, discovered 2026-09-03. | 2026-08-18 |
 | [Google Gemini Embedding 2](https://agentdeals.dev/vendor/google-gemini-embedding-2)<br>Pay-as-you-go | Our record, read from [cloud.google.com/vertex-ai/docs/generative-ai/embeddings/get-text-embeddings](https://cloud.google.com/vertex-ai/docs/generative-ai/embeddings/get-text-embeddings) on 2026-08-17: First natively multimodal embedding model — text, images, video, audio, and documents in a single embedding space. Enables cross-modal similarity search and retrieval. Available via Vertex AI and Gemini API. | `unrated` | Tier "Pay-as-you-go" is usage-billed from the first request. We do not rate an offer we do not list. | 2026-08-17 |
-| [Google GLM 5](https://agentdeals.dev/vendor/google-glm-5)<br>Experimental Preview | Our record, read from [cloud.google.com/vertex-ai/docs/generative-ai/model-reference/overview](https://cloud.google.com/vertex-ai/docs/generative-ai/model-reference/overview) on 2026-08-19: Experimental model optimized for complex systems engineering and agentic tasks. Designed for multi-step reasoning, code generation, and autonomous agent workflows. Preview access via Vertex AI. | `stable` | It's stable — zero pricing changes recorded. | 2026-08-19 |
 | [Google Vector Search 2.0](https://agentdeals.dev/vendor/google-vector-search-2-0)<br>Pay-as-you-go | Our record, read from [cloud.google.com/vertex-ai/docs/vector-search/overview](https://cloud.google.com/vertex-ai/docs/vector-search/overview) on 2026-08-15: Vector Search 2.0 now GA on Vertex AI. High-performance approximate nearest neighbor (ANN) vector similarity search for AI/RAG applications. Supports billion-scale indexes. | `unrated` | The page we cite for Google Vector Search 2.0 states no terms we can read. | 2026-08-15 |
 | [Google Vertex AI Agent Engine](https://agentdeals.dev/vendor/google-vertex-ai-agent-engine)<br>Pay-as-you-go | Our record, read from [cloud.google.com/vertex-ai/docs/agent-builder](https://cloud.google.com/vertex-ai/docs/agent-builder) while that link still resolved: Vertex AI Agent Builder with sessions and memory now GA. Build, deploy, and manage AI agents with persistent memory, multi-turn sessions, and tool governance. Part of the Vertex AI platform. | `unrated` | Google Vertex AI Agent Engine's pricing page has not resolved for us since 2026-04-15. | link last resolved 2026-04-15 |
 | [GPU-Bridge](https://agentdeals.dev/vendor/gpu-bridge)<br>Pay-per-use | Our record, read from [gpu-bridge.com](https://gpu-bridge.com) while that link still resolved: Multi-provider GPU inference API — 30+ AI services (LLM, image generation, embeddings, speech) accessible via x402 micropayments. Unified API across providers, no accounts needed. Pay per inference call. | `unrated` | GPU-Bridge's pricing page has not resolved for us since 2026-04-14. | link last resolved 2026-04-14 |

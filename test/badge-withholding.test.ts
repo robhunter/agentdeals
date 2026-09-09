@@ -38,6 +38,7 @@ const WITHHELD_LABELS: Record<string, string> = {
   unreadable: "unrated — page unreadable",
   states_no_terms: "unrated — page states no terms",
   does_not_name_vendor: "unrated — page omits vendor",
+  does_not_name_product: "unrated — page omits product",
   eligibility_restricted: "unrated — restricted offer",
   not_a_free_offer: "unrated — not a free offer",
   offer_expired: "unrated — offer expired",

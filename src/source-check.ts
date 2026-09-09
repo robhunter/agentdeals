@@ -4,6 +4,7 @@ export const SOURCE_CHECK_OUTCOMES: SourceCheckOutcome[] = [
   "ok",
   "states_no_amount",
   "does_not_name_vendor",
+  "does_not_name_product",
   "states_no_terms",
   "unreadable",
 ];
@@ -11,11 +12,13 @@ export const SOURCE_CHECK_OUTCOMES: SourceCheckOutcome[] = [
 export type LevelWithheldReason =
   | "link_unreachable"
   | "does_not_name_vendor"
+  | "does_not_name_product"
   | "states_no_terms"
   | "unreadable";
 
 export const LEVEL_WITHHOLDING_OUTCOMES: SourceCheckOutcome[] = [
   "does_not_name_vendor",
+  "does_not_name_product",
   "states_no_terms",
   "unreadable",
 ];
@@ -23,6 +26,7 @@ export const LEVEL_WITHHOLDING_OUTCOMES: SourceCheckOutcome[] = [
 const WITHHELD_LEVEL_CLAUSES: Record<LevelWithheldReason, (since: string) => string> = {
   link_unreachable: (since) => `its pricing page has not resolved for us${since}`,
   does_not_name_vendor: () => `the page we cite for this offer does not name it`,
+  does_not_name_product: () => `the page we cite for this offer names the platform it runs on and not the offer itself`,
   states_no_terms: () => `the page we cite for this offer states no terms we can read`,
   unreadable: () => `we could not read the page we cite for this offer`,
 };
@@ -30,6 +34,7 @@ const WITHHELD_LEVEL_CLAUSES: Record<LevelWithheldReason, (since: string) => str
 const WITHHELD_LEVEL_SENTENCES: Record<LevelWithheldReason, (subject: string, since: string) => string> = {
   link_unreachable: (subject, since) => `${subject}'s pricing page has not resolved for us${since}.`,
   does_not_name_vendor: (subject) => `The page we cite for ${subject} does not name it.`,
+  does_not_name_product: (subject) => `The page we cite for ${subject} names the platform it runs on and not ${subject} itself.`,
   states_no_terms: (subject) => `The page we cite for ${subject} states no terms we can read.`,
   unreadable: (subject) => `We could not read the page we cite for ${subject}.`,
 };
@@ -50,6 +55,7 @@ export type TermsUnconfirmedReason = Exclude<SourceCheckOutcome, "ok">;
 
 const UNCONFIRMED_TERMS_CLAUSES: Record<TermsUnconfirmedReason, string> = {
   does_not_name_vendor: WITHHELD_LEVEL_CLAUSES.does_not_name_vendor(""),
+  does_not_name_product: WITHHELD_LEVEL_CLAUSES.does_not_name_product(""),
   states_no_terms: WITHHELD_LEVEL_CLAUSES.states_no_terms(""),
   unreadable: WITHHELD_LEVEL_CLAUSES.unreadable(""),
   states_no_amount: `the page we cite for this offer names a plan but states no amount`,

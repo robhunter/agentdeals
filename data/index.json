@@ -6178,9 +6178,9 @@
       ],
       "verifiedDate": "2026-07-29",
       "source_check": {
-        "checked": "2026-09-05",
-        "outcome": "ok",
-        "detail": "the page writes \"amazon\", the domain we cite Amazon ECR Public from, and states \"$200\""
+        "checked": "2026-09-09",
+        "outcome": "does_not_name_product",
+        "detail": "the page names the platform in the domain we cite Amazon ECR Public from and never names ECR Public"
       }
     },
     {
@@ -9372,9 +9372,9 @@
       ],
       "verifiedDate": "2026-08-01",
       "source_check": {
-        "checked": "2026-09-07",
-        "outcome": "ok",
-        "detail": "the page writes \"zoho\", the domain we cite Zoho Docs from, and states \"₹ 720\""
+        "checked": "2026-09-09",
+        "outcome": "does_not_name_product",
+        "detail": "the page names the platform in the domain we cite Zoho Docs from and never names Docs"
       }
     },
     {
@@ -16485,9 +16485,9 @@
       ],
       "verifiedDate": "2026-07-10",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names OntarioNet.ca CN Test but states no amount, tier or rate we can read"
+        "checked": "2026-09-09",
+        "outcome": "does_not_name_product",
+        "detail": "the page names the platform in the domain we cite OntarioNet.ca CN Test from and never names CN Test"
       },
       "product_subtypes": {
         "taxonomy": "Monitoring",
@@ -23721,9 +23721,9 @@
       ],
       "verifiedDate": "2026-07-20",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_amount",
-        "detail": "the page names Mockplus iDoc and says \"free plan\" but states no amount, rate or price we can read"
+        "checked": "2026-09-09",
+        "outcome": "does_not_name_product",
+        "detail": "the page names the platform in the domain we cite Mockplus iDoc from and never names iDoc"
       }
     },
     {
@@ -27385,9 +27385,9 @@
       ],
       "verifiedDate": "2026-09-02",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names Freshworks for Startups but states no amount, tier or rate we can read"
+        "checked": "2026-09-09",
+        "outcome": "does_not_name_product",
+        "detail": "the page names the platform in the domain we cite Freshworks for Startups from and never names for Startups"
       }
     },
     {
@@ -27404,9 +27404,9 @@
       ],
       "verifiedDate": "2026-09-02",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names Startup with IBM but states no amount, tier or rate we can read"
+        "checked": "2026-09-09",
+        "outcome": "does_not_name_product",
+        "detail": "the page names the platform in the domain we cite Startup with IBM from and never names Startup with"
       }
     },
     {
@@ -27788,9 +27788,9 @@
         "program": "Chargebee for Startups"
       },
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "ok",
-        "detail": "text"
+        "checked": "2026-09-09",
+        "outcome": "does_not_name_product",
+        "detail": "the page names the platform in the domain we cite Chargebee Launch Programme from and never names Launch Programme"
       }
     },
     {
@@ -33840,38 +33840,6 @@
             "subtype": "vector_store",
             "source_url": "https://cloud.google.com/vertex-ai/docs/vector-search/overview",
             "source_quote": "Vector Search is a powerful vector search engine built on groundbreaking technology"
-          }
-        ],
-        "reviewed": "2026-09-01"
-      }
-    },
-    {
-      "vendor": "Google GLM 5",
-      "category": "AI / ML",
-      "description": "Experimental model optimized for complex systems engineering and agentic tasks. Designed for multi-step reasoning, code generation, and autonomous agent workflows. Preview access via Vertex AI.",
-      "tier": "Experimental Preview",
-      "url": "https://cloud.google.com/vertex-ai/docs/generative-ai/model-reference/overview",
-      "tags": [
-        "ai",
-        "llm",
-        "google cloud",
-        "vertex-ai",
-        "agentic",
-        "experimental"
-      ],
-      "verifiedDate": "2026-08-19",
-      "source_check": {
-        "checked": "2026-09-05",
-        "outcome": "ok",
-        "detail": "the page writes \"google\", the domain we cite Google GLM 5 from, and states \"10 frames per second\""
-      },
-      "product_subtypes": {
-        "taxonomy": "AI / ML",
-        "labels": [
-          {
-            "subtype": "llm_api",
-            "source_url": "https://cloud.google.com/vertex-ai/docs/generative-ai/model-reference/overview",
-            "source_quote": "Use the Model API for Gemini in Gemini Enterprise Agent Platform to create custom applications"
           }
         ],
         "reviewed": "2026-09-01"
