@@ -25,9 +25,10 @@ const REPO = path.join(__dirname, "..");
 const offers = loadOffers();
 const categories = getCategories();
 const functions = buildProductFunctions(categories.map(c => c.name));
-const MIN_VENDORS = Number(/const BEST_OF_MIN_VENDORS = (\d+);/.exec(fs.readFileSync(path.join(REPO, "src", "serve.ts"), "utf8"))?.[1]);
-
-const published = functions.filter(fn => functionMembers(offers, fn).filter(o => !o.eligibility).length >= MIN_VENDORS);
+const serveSource = fs.readFileSync(path.join(REPO, "src", "serve.ts"), "utf8");
+const MIN_VENDORS = Number(/const BEST_OF_MIN_VENDORS = (\d+);/.exec(serveSource)?.[1]);
+const MIN_PICKS = Number(/const BEST_OF_MIN_PICKS = (\d+);/.exec(serveSource)?.[1]);
+const TODAY = new Date().toISOString().slice(0, 10);
 
 function rankedFor(fn: ProductFunction, date: string) {
   return rankOffers(enrichOffers(functionMembers(offers, fn)), {
@@ -37,6 +38,10 @@ function rankedFor(fn: ProductFunction, date: string) {
     verificationLedger: verificationLedger(),
   });
 }
+
+const reaching = functions.filter(fn => functionMembers(offers, fn).filter(o => !o.eligibility).length >= MIN_VENDORS);
+const published = reaching.filter(fn => rankedFor(fn, TODAY).qualified.length >= MIN_PICKS);
+const withheld = reaching.filter(fn => !published.includes(fn));
 
 function reachesAPage(offer: Offer): boolean {
   return gateForOffer(offer) === null;
@@ -89,9 +94,10 @@ function groupBlocks(html: string): { subtype: string; body: string }[] {
 const escapeForTest = (s: string) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 
 describe("a page named after a product function draws on both encodings of it", () => {
-  it("the threshold this sweep uses is the one the site publishes with", () => {
-    assert.ok(Number.isInteger(MIN_VENDORS) && MIN_VENDORS > 0, "src/serve.ts must state a minimum these sweeps can read");
-    assert.ok(published.length > categories.length - 20, `only ${published.length} functions clear the threshold`);
+  it("the thresholds this sweep uses are the ones the site publishes with", () => {
+    assert.ok(Number.isInteger(MIN_VENDORS) && MIN_VENDORS > 0, "src/serve.ts must state a record minimum these sweeps can read");
+    assert.ok(Number.isInteger(MIN_PICKS) && MIN_PICKS > 1, "src/serve.ts must state a pick minimum above one");
+    assert.ok(published.length > categories.length - 20, `only ${published.length} functions clear both thresholds`);
   });
 
   it("lists Sentry on the error tracking page, quoting the page the label was read from", async () => {
@@ -199,7 +205,7 @@ describe("two names are the same function only when they name the same thing", (
 });
 
 describe("every function with enough vendors to compare has a page", () => {
-  it("publishes one for every subtype that clears the threshold", async () => {
+  it("publishes one for every subtype whose list would hold more than one pick, and no others", async () => {
     const bySubtype = new Map<string, Offer[]>();
     for (const offer of offers) {
       for (const label of offer.product_subtypes?.labels ?? []) {
@@ -209,21 +215,36 @@ describe("every function with enough vendors to compare has a page", () => {
       }
     }
     const owed = [...bySubtype.entries()].filter(([, list]) => list.filter(o => !o.eligibility).length >= MIN_VENDORS);
-    assert.ok(owed.length >= 20, `only ${owed.length} subtypes clear the threshold, so this sweep is not measuring the backlog`);
+    assert.ok(owed.length >= 20, `only ${owed.length} subtypes clear the record threshold, so this sweep is not measuring the backlog`);
+    let served = 0;
+    let withheldHere = 0;
     for (const [subtype] of owed) {
       const fn = functions.find(f => f.subtypes.includes(subtype));
       assert.ok(fn, `${subtype} names no function`);
+      const picks = rankedFor(fn!, TODAY).qualified.length;
       const { status } = await page(`/best/free-${fn!.slug}`);
-      assert.strictEqual(status, 200, `/best/free-${fn!.slug} answers ${status} for a subtype with ${bySubtype.get(subtype)!.length} vendors`);
+      if (picks >= MIN_PICKS) {
+        served++;
+        assert.strictEqual(status, 200, `/best/free-${fn!.slug} answers ${status} for a subtype with ${picks} picks`);
+      } else {
+        withheldHere++;
+        assert.notStrictEqual(status, 200, `/best/free-${fn!.slug} answers 200 while publishing ${picks} pick`);
+      }
     }
+    assert.ok(served >= 15, `only ${served} subtype pages are served, so this sweep is not measuring the namespace`);
+    assert.ok(withheldHere >= 1, "no subtype falls under the pick threshold, so the negative half of this sweep is vacuous");
   });
 
-  it("puts every one of them in the sitemap and on the index", async () => {
+  it("puts every one of them in the sitemap and on the index, and no withheld page in either", async () => {
     const map = await page("/sitemap-pages.xml");
     const index = await page("/best");
     for (const fn of published) {
       assert.ok(map.html.includes(`/best/${`free-${fn.slug}`}<`), `/best/free-${fn.slug} is in no sitemap`);
       assert.ok(index.html.includes(`href="/best/free-${fn.slug}"`), `/best/free-${fn.slug} is unreachable from /best`);
+    }
+    for (const fn of withheld) {
+      assert.ok(!map.html.includes(`/best/${`free-${fn.slug}`}<`), `/best/free-${fn.slug} is withheld and still in the sitemap`);
+      assert.ok(!index.html.includes(`href="/best/free-${fn.slug}"`), `/best/free-${fn.slug} is withheld and still linked from /best`);
     }
   });
 
