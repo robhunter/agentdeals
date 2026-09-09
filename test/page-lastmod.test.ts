@@ -1,7 +1,7 @@
 import { describe, it, before, after } from "node:test";
 import assert from "node:assert";
 import { assertPopulationFloor } from "./population-floor.ts";
-import { spawn, type ChildProcess } from "node:child_process";
+import { spawn, spawnSync, type ChildProcess } from "node:child_process";
 import { mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
@@ -406,6 +406,30 @@ describe("the ledger keeps up with the code that renders the pages", () => {
         `${workflow.file} re-dates the pages only when the re-verification it also runs succeeds`,
       );
     }
+  });
+
+  it("reads the pages in a fixed zone, so the same commit gives the same ledger anywhere", () => {
+    const updater = readFileSync(path.join(REPO, "scripts", "update-page-lastmod.js"), "utf8");
+    assert.match(
+      updater,
+      /env: \{ \.\.\.process\.env, TZ: [A-Z_]+,/,
+      "the updater reads the pages in whatever zone the machine is set to, so a ledger generated west of Greenwich disagrees with one generated in CI",
+    );
+    assert.match(updater, /LEDGER_TIMEZONE = "UTC"/, "the zone the ledger is read in is not UTC");
+
+    const west = spawnSync("node", ["-e", "process.stdout.write(new Date('2026-09-24T00:00:00Z').toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }))"], {
+      encoding: "utf8",
+      env: { ...process.env, TZ: "America/Los_Angeles" },
+    });
+    const utc = spawnSync("node", ["-e", "process.stdout.write(new Date('2026-09-24T00:00:00Z').toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }))"], {
+      encoding: "utf8",
+      env: { ...process.env, TZ: "UTC" },
+    });
+    assert.notEqual(
+      west.stdout,
+      utc.stdout,
+      "this test is pointless if the runtime no longer renders a UTC midnight differently west of Greenwich",
+    );
   });
 
   it("sends the days it read to main through the one gate that runs the suite first", () => {

@@ -20,6 +20,14 @@ const MUTANTS = [
     "            data/page-lastmod.json",
     "            data/link_health.json"],
 
+  ["the-pages-are-read-in-whatever-zone-the-machine-is-set-to", "scripts/update-page-lastmod.js",
+    "      env: { ...process.env, TZ: LEDGER_TIMEZONE, PORT: \"0\"",
+    "      env: { ...process.env, PORT: \"0\""],
+
+  ["the-zone-the-ledger-is-read-in-is-not-utc", "scripts/update-page-lastmod.js",
+    "const LEDGER_TIMEZONE = \"UTC\";",
+    "const LEDGER_TIMEZONE = \"America/Los_Angeles\";"],
+
   ["a-page-whose-output-moved-keeps-the-day-it-had", "src/page-lastmod.ts",
     "    } else if (before.hash === hash) {",
     "    } else if (true) {"],

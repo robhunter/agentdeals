@@ -16,6 +16,10 @@ this ledger. A page whose rendered output is unchanged keeps the day it last cha
 whose output has moved is stamped with today. That is what makes the date an observation
 rather than a constant: freezing it requires the pages to stop changing.
 
+The pages are read with TZ=UTC. Some of them render a date from a timestamp without naming a
+zone, so a machine west of Greenwich renders that date a day earlier and the page hashes
+differently. Pinning the zone is what makes the ledger the same wherever it is generated.
+
 Usage: node scripts/update-page-lastmod.js [options]
 
   --check         Report what would move and exit 1 if anything would, without writing
@@ -25,6 +29,8 @@ Usage: node scripts/update-page-lastmod.js [options]
 `;
 
 const ORIGIN = "http://localhost";
+
+const LEDGER_TIMEZONE = "UTC";
 
 function parseArgs(argv) {
   const opts = { check: false, date: new Date().toISOString().slice(0, 10), json: false };
@@ -46,7 +52,7 @@ function startServer(inventoryOut) {
   return new Promise((resolve, reject) => {
     const proc = spawn("node", [join(REPO, "dist", "serve.js")], {
       stdio: ["pipe", "pipe", "pipe"],
-      env: { ...process.env, PORT: "0", BASE_URL: ORIGIN, AGENTDEALS_PAGE_INVENTORY_OUT: inventoryOut },
+      env: { ...process.env, TZ: LEDGER_TIMEZONE, PORT: "0", BASE_URL: ORIGIN, AGENTDEALS_PAGE_INVENTORY_OUT: inventoryOut },
     });
     const timeout = setTimeout(() => {
       proc.kill();
