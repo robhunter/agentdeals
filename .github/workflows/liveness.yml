@@ -43,13 +43,14 @@ jobs:
       - name: Run the suite, then push to main only if it is green
         id: gate
         env:
+          GATE_REGENERATE_LLM_INDEX: "1"
           UNREACHABLE: ${{ steps.liveness.outputs.unreachable }}
           UNKNOWN: ${{ steps.liveness.outputs.unknown }}
         run: |
           bash scripts/gate-data-push.sh \
             data-quarantine/link-liveness \
             "data(auto): link liveness — ${UNREACHABLE} unreachable, ${UNKNOWN} could not be checked" \
-            data/link_health.json
+            data/link_health.json artifacts/free-llm-api-index/README.md
 
       - name: Say where it can be seen what the gate did with this run's data
         if: always() && (steps.gate.outputs.quarantined == 'true' || steps.gate.outputs.pushed_over_failures == 'true')

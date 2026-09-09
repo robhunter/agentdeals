@@ -1,4 +1,4 @@
-import { readFileSync, writeFileSync } from "node:fs";
+import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -11,7 +11,7 @@ const asJson = args.includes("--json");
 const check = args.includes("--check");
 const onArg = args.find(a => a.startsWith("--on="));
 
-const OUTPUT = path.join(root, "artifacts", "free-llm-api-index", "README.md");
+const OUTPUT = process.env.AGENTDEALS_LLM_INDEX_PATH || path.join(root, "artifacts", "free-llm-api-index", "README.md");
 
 const offers = JSON.parse(readFileSync(path.join(root, "data", "index.json"), "utf8")).offers;
 const changes = JSON.parse(readFileSync(path.join(root, "data", "deal_changes.json"), "utf8")).changes;
@@ -49,6 +49,7 @@ if (check) {
     process.exit(1);
   }
 } else if (changed) {
+  mkdirSync(path.dirname(OUTPUT), { recursive: true });
   writeFileSync(OUTPUT, rendered);
 }
 
