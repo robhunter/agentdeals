@@ -481,16 +481,28 @@
       "refused_date": "2026-08-28"
     },
     {
+      "vendor": "Cloudcraft",
+      "change_type": "pricing_restructured",
+      "reason": "states_no_terms",
+      "detail": "every clause of the summary states absence or hedge or narration rather than a term the page carries, so it reports the reading rather than a change",
+      "summary": "The free tier now appears to be a 14-day trial of the Pro plan. The original free tier with limitations is no longer explicitly mentioned, though the page states you can use Cloudcraft for free to create diagrams.",
+      "previous_state": "AWS/Azure architecture diagramming — Free plan: single user only, manual diagrams limited to a 12x15 component grid, unlimited private diagrams, PNG/PDF/SVG export, private shared links, basic cost calculations. No live-scan/auto-discovery, team management, infinite canvas, version history, API access, or SSO.",
+      "current_state": "There is a free 14-day trial of Cloudcraft Pro. The free version allows you to draw beautiful cloud diagrams as a single user. Pro is $40.83/user/month billed annually or $99/user/month billed monthly.",
+      "source_url": "https://www.cloudcraft.co/pricing",
+      "category": "Diagramming",
+      "refused_date": "2026-09-09"
+    },
+    {
       "vendor": "Cloudflare DNS",
       "change_type": "limits_reduced",
       "reason": "states_no_difference",
       "detail": "limits_reduced claimed, summary asserts the page matches what we stored, and the two states carry the same quantities",
-      "summary": "The page confirms a free plan exists, but states a records-per-zone cap of 200 for zones created on or after 2024-09-01, while zones created before that date retain the legacy 1,000-record cap. This aligns with the stored deal info. However, the page also highlights numerous paid add-ons and other plans, suggesting the free plan is a starting point with limited functionality.",
+      "summary": "The page confirms a free plan exists, but details a record limit of 200 for zones created on or after 2024-09-01, while older zones retain a 1,000-record cap. This aligns with the stored information. However, the page does not explicitly state 'unlimited zones and queries' as the free plan offers.",
       "previous_state": "Free authoritative DNS hosting — unlimited zones and queries, DDoS protection, free SSL/TLS. Records-per-zone cap is 200 for zones created on or after 2024-09-01; zones created before that date retain the legacy 1,000-record cap.",
-      "current_state": "The free plan exists, with a 200 record limit for zones created on or after 2024-09-01, and a 1000 record limit for older zones.",
+      "current_state": "Records-per-zone cap is 200 for zones created on or after 2024-09-01; zones created before that date retain the legacy 1,000-record cap.",
       "source_url": "https://www.cloudflare.com/plans/free/",
       "category": "DNS & Domain Management",
-      "refused_date": "2026-08-28"
+      "refused_date": "2026-09-09"
     },
     {
       "vendor": "Cloudflare Pages",
@@ -565,6 +577,18 @@
       "refused_date": "2026-09-01"
     },
     {
+      "vendor": "ConfigCat",
+      "change_type": "limits_reduced",
+      "reason": "states_no_difference",
+      "detail": "the summary states that the page agrees with what we hold, and names no figure the stored description did not already carry",
+      "summary": "The Forever Free plan still exists, but the limits have been updated. The stored information states 5M config JSON requests/mo and 20 GB network traffic/mo, while the current pricing page states 5 million / mo config JSON downloads and 20 GB / mo network traffic. The number of feature flags remains at 10, environments at 2, and products at 2.",
+      "previous_state": "ConfigCat is a developer-centric feature flag service with unlimited team members (within 1 permission group). Forever Free plan: 10 feature flags, 2 environments, 2 products, 5M config JSON requests/mo, 20 GB network traffic/mo, 2 segments, 4 targeting rules/flag, 1 webhook, 7-day audit log retention.",
+      "current_state": "Forever Free plan includes 10 Feature Flags, 2 Environments, 2 Products, 5 million config.json downloads / mo, and 20 GB network traffic / mo.",
+      "source_url": "https://configcat.com",
+      "category": "Feature Flags",
+      "refused_date": "2026-09-09"
+    },
+    {
       "vendor": "Convex",
       "change_type": "limits_increased",
       "reason": "states_no_difference",
@@ -599,6 +623,18 @@
       "source_url": "https://www.coupler.io/",
       "category": "Notebooks & Data Science",
       "refused_date": "2026-08-29"
+    },
+    {
+      "vendor": "CraftMyPDF",
+      "change_type": "limits_reduced",
+      "reason": "unquantified_limit",
+      "detail": "limits_reduced claimed, but the current state names no quantity for anything the stored state measured (50 pdf)",
+      "summary": "The pricing page does not explicitly mention a free tier with 50 PDFs/images per month and three templates. It highlights features and integrations but does not detail specific free plan limits. It does state 'No Credit-card Required!' and encourages users to 'Start Free', suggesting a free option exists, but the details are not provided.",
+      "previous_state": "Auto-Generate PDF documents from reusable templates with a drop-and-drop editor and a simple API. The free plan comes with 50 PDFs/images per month and three templates.",
+      "current_state": "The page promotes a 'Start Free' option with no explicit mention of monthly PDF/image limits or template count. It focuses on features like drag-and-drop editing, API access, and integrations.",
+      "source_url": "https://craftmypdf.com",
+      "category": "Dev Utilities",
+      "refused_date": "2026-09-09"
     },
     {
       "vendor": "Crisp",
@@ -851,6 +887,18 @@
       "source_url": "https://fabform.io/",
       "category": "Forms",
       "refused_date": "2026-09-01"
+    },
+    {
+      "vendor": "Feathery",
+      "change_type": "limits_reduced",
+      "reason": "measures_no_change",
+      "detail": "limits_reduced claimed, and every quantity the record compares holds the same value once notation and period are normalised — 500 submission/mo against 500 submission/mo, 10 MB file against 10 MB file",
+      "summary": "The free plan now has different limits. It offers unlimited forms, unlimited pages & conditions, and 500 submissions/month, with a 10MB file upload limit. It also includes standard integrations and forum support.",
+      "previous_state": "Developer-friendly form builder for signup/login, user onboarding, payment flows, and complex financial applications. Free plan: 500 submissions/mo, 5 active (published) forms, 10 MB file upload limit, standard integrations, forum support. Unlimited fields, pages, conditions, and seats.",
+      "current_state": "Free: 500 Monthly Submissions, 5 Live Forms, 10MB File Upload Size Limit, Unlimited Pages & Conditions, Standard Integrations, Forum Support",
+      "source_url": "https://feathery.io/pricing",
+      "category": "Forms",
+      "refused_date": "2026-09-09"
     },
     {
       "vendor": "file.io",
@@ -1235,6 +1283,30 @@
       "source_url": "https://ipwho.org/",
       "category": "Dev Utilities",
       "refused_date": "2026-08-28"
+    },
+    {
+      "vendor": "IP Geolocation",
+      "change_type": "limits_reduced",
+      "reason": "unquantified_limit",
+      "detail": "limits_reduced claimed, but the current state names no quantity for anything the stored state measured (1,000 request)",
+      "summary": "The free plan exists but offers 1 credit per successful request, and the User Agent module is not included in the free plan.",
+      "previous_state": "IP Geolocation API - Forever free plan for developers with a 1,000 requests per day limit.",
+      "current_state": "Free Plan: 1 credit per successful request. Core modules: location, country metadata, currency, ASN, and time zone. User Agent cannot be coupled in the main unified IP Geolocation endpoint on free plan.",
+      "source_url": "https://ipgeolocation.io/",
+      "category": "Dev Utilities",
+      "refused_date": "2026-09-09"
+    },
+    {
+      "vendor": "IP2Location.io",
+      "change_type": "limits_reduced",
+      "reason": "unquantified_limit",
+      "detail": "limits_reduced claimed, but the current state names no quantity for anything the stored state measured (50 credit, 2 location, 500 whoi)",
+      "summary": "The free plan now offers 500 WHOIS queries and 50 hosted domain lookups per month, down from 500 WHOIS and unlimited hosted domain lookups.",
+      "previous_state": "Freemium, fast, and reliable IP geolocation API. Get data like city, coordinates, ISP, ASN, AS data and more. The free plan includes 50k credits per month. IP2Location.io also offers 500 free WHOIS and hosted domain lookups per month. See domain registration details and find domains hosted on a specific IP. Upgrade to a paid plan for more features.",
+      "current_state": "Domain WHOIS API returns comprehensive WHOIS data. Get up to 500 queries free each month. Hosted Domain API retrieves list of domain names by IP address. Get up to 50 queries free each month.",
+      "source_url": "https://www.ip2location.io/",
+      "category": "Dev Utilities",
+      "refused_date": "2026-09-09"
     },
     {
       "vendor": "IPLocate",
@@ -2003,6 +2075,18 @@
       "source_url": "https://snappify.com",
       "category": "Dev Utilities",
       "refused_date": "2026-08-29"
+    },
+    {
+      "vendor": "SonarQube Cloud",
+      "change_type": "free_tier_removed",
+      "reason": "states_no_terms",
+      "detail": "every clause of the summary states absence or bookkeeping or hedge rather than a term the page carries, so it reports the reading rather than a change",
+      "summary": "The pricing page does not explicitly mention a free tier. It focuses on features and integrations, and directs users to 'View plans' and 'Try now' suggesting a paid model. While open-source projects are not explicitly excluded, the page does not highlight unlimited free use for them as the stored information states.",
+      "previous_state": "Code quality and security analysis — free and unlimited for open-source projects, 15+ languages, CI/CD integration. Formerly SonarCloud.",
+      "current_state": "The page promotes SonarQube Cloud as a scalable AI code verification tool with features like static analysis, CI/CD integration, and AI-powered code review. It directs users to view plans and try the service, implying a paid model.",
+      "source_url": "https://www.sonarsource.com/products/sonarcloud/",
+      "category": "Security",
+      "refused_date": "2026-09-09"
     },
     {
       "vendor": "StackBy",
