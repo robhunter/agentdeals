@@ -7,7 +7,7 @@ import { fileURLToPath } from "node:url";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const REPO = join(__dirname, "..");
 
-const ROOTS = ["src", "test", "scripts", "docs", join(".github", "workflows")];
+const ROOTS = ["src", "test", "scripts", "docs", "artifacts", join(".github", "workflows")];
 const EXTENSIONS = [".ts", ".js", ".mjs", ".md", ".json", ".sh", ".yml", ".yaml"];
 const SKIP_DIRS = new Set(["node_modules", "dist", ".git", "data", "coverage"]);
 

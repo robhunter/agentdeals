@@ -1,0 +1,69 @@
+name: Regenerate the AI and LLM free-tier index from the catalogue
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  issues: write
+
+concurrency:
+  group: llm-api-readme
+  cancel-in-progress: false
+
+jobs:
+  regenerate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24.20.0"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Read the catalogue and write the index, or fail rather than leave a stale one
+        id: generate
+        run: |
+          set -o pipefail
+          node scripts/generate-llm-api-readme.js --json | tee /tmp/llm-api-readme.json
+          node -e '
+            const outcome = JSON.parse(require("node:fs").readFileSync("/tmp/llm-api-readme.json", "utf-8"));
+            console.log(["rows", "rated", "ended", "withheld", "withPriorTerms", "caveated"].map(k => `${k}=${outcome[k]}`).join("\n"));
+          ' >> "$GITHUB_OUTPUT"
+
+      - name: Run the suite, then push to main only if it is green
+        id: gate
+        env:
+          ROWS: ${{ steps.generate.outputs.rows }}
+          WITHHELD: ${{ steps.generate.outputs.withheld }}
+          PRIOR: ${{ steps.generate.outputs.withPriorTerms }}
+        run: |
+          bash scripts/gate-data-push.sh \
+            data-quarantine/llm-api-readme \
+            "data(auto): AI and LLM free-tier index — ${ROWS} records, ${WITHHELD} unrated, ${PRIOR} showing prior terms" \
+            artifacts/free-llm-api-index/README.md
+
+      - name: Say where it can be seen what the gate did with this run's index
+        if: always() && (steps.gate.outputs.quarantined == 'true' || steps.gate.outputs.pushed_over_failures == 'true')
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          QUARANTINED: ${{ steps.gate.outputs.quarantined }}
+          QUARANTINE_REF: ${{ steps.gate.outputs.quarantine_ref }}
+          QUARANTINE_REASON: ${{ steps.gate.outputs.quarantine_reason }}
+          NON_BLOCKING_FILES: ${{ steps.gate.outputs.non_blocking_files }}
+        run: |
+          if [ "$QUARANTINED" = "true" ]; then
+            bash scripts/report-data-push-outcome.sh "AI and LLM index" refused "$QUARANTINE_REF" "$QUARANTINE_REASON"
+          else
+            bash scripts/report-data-push-outcome.sh "AI and LLM index" shipped-over-failures "$NON_BLOCKING_FILES"
+          fi

@@ -59,7 +59,9 @@
     "queue:curated-alternatives": "node scripts/curated-alternatives-queue.js",
     "mutate:1335": "node scripts/mutate-1335.mjs",
     "mutate:1327": "node scripts/mutate-1327.mjs",
-    "report:budgets": "node scripts/report-quality-budgets.js"
+    "mutate:1497": "node scripts/mutate-1497.mjs",
+    "report:budgets": "node scripts/report-quality-budgets.js",
+    "generate:llm-readme": "node scripts/generate-llm-api-readme.js"
   },
   "dependencies": {
     "@modelcontextprotocol/ext-apps": "^1.5.0",
