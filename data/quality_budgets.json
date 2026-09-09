@@ -1,7 +1,7 @@
 {
   "version": 1,
   "budgets": {
-    "stale_fact_pages": 57,
+    "stale_fact_pages": 58,
     "unsourced_tier_a": 22,
     "uncited_change_records": 98,
     "source_checks_ok_without_quoted_evidence": 508,
@@ -13,6 +13,7 @@
     "ungated_pages_withholding_superseded_terms": 165
   },
   "raised_because": {
+    "stale_fact_pages": "57 to 58 on 2026-09-09. A review that recorded review_outcome: fail used to restart the staleness clock, so finding errors on a page improved this count by more than fixing them would. The clock now starts at the last read that found nothing outstanding, which is the rule dateModifiedFor already applied to the date those pages publish. Six pages moved and /email-comparison-2026 joined the cohort; 338 stale facts became 346. Nothing about the catalogue changed — the measurement did.",
     "uncited_change_records": "95 to 98 on 2026-09-06. stathat.com, searchly.com and Prospect.io each cited the page their own summary reports as unreadable, and dropping that citation is the honest fix rather than repointing it at a page that would pass a liveness check. The 35 records that report our own index lost a citation in the same change and are outside this count rather than spending slots in it."
   }
 }

@@ -85,6 +85,17 @@ jobs:
             bash scripts/report-data-push-outcome.sh "Daily rolling re-verification" shipped-over-failures "$NON_BLOCKING_FILES"
           fi
 
+      - name: Measure the quality budgets against the data that reached main
+        id: budgets
+        run: node scripts/report-quality-budgets.js --body /tmp/quality-budgets.md --github-output
+
+      - name: Say on an issue which budget is over its ceiling
+        if: always() && steps.budgets.outputs.over != ''
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          OVER: ${{ steps.budgets.outputs.over }}
+        run: bash scripts/report-quality-budgets.sh /tmp/quality-budgets.md "$OVER"
+
       - name: Check the change log is still being written to
         id: staleness
         if: always()

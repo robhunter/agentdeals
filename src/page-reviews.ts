@@ -292,8 +292,9 @@ export function getPageReview(pagePath: string): PageReviewRecord | null {
 export function reviewStatus(record: PageReviewRecord, today: string): ReviewStatus {
   const sla = SLA_DAYS[record.tier];
   const reviewedAt = record.reviewed_at !== null && record.reviewed_at <= today ? record.reviewed_at : null;
-  const clockStarts = reviewedAt ?? record.published;
-  const daysSince = Math.max(0, daysBetween(clockStarts, today));
+  const lastRead = reviewedAt ?? record.published;
+  const clockStarts = reviewedAt !== null && record.review_outcome === "fail" ? record.published : lastRead;
+  const daysSince = Math.max(0, daysBetween(lastRead, today));
   const overdue = Math.max(0, daysSince - sla);
   let state: ReviewState;
   if (reviewedAt === null) state = "never_reviewed";
@@ -378,9 +379,7 @@ export function pageCompiledClause(pagePath: string, today = utcToday()): string
 
 export function dateModifiedFor(record: PageReviewRecord | null, fallbackPublished: string, today: string): string {
   if (!record) return fallbackPublished;
-  const status = reviewStatus(record, today);
-  if (status.review_outcome === "fail") return record.published;
-  return status.reviewed_at ?? record.published;
+  return reviewStatus(record, today).clock_starts;
 }
 
 export function pageDateModified(pagePath: string, fallbackPublished: string, today = utcToday()): string {
