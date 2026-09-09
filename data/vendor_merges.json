@@ -1,0 +1,32 @@
+{
+  "merges": [
+    { "retired": "Arize AI", "survivor": "Arize AX" },
+    { "retired": "Colaboratory", "survivor": "Google Colab" },
+    { "retired": "Components.studio", "survivor": "WebComponents.dev" },
+    { "retired": "Hasura Cloud", "survivor": "Hasura" },
+    { "retired": "LemonSqueezy", "survivor": "Lemon Squeezy" },
+    { "retired": "Slack API", "survivor": "Slack" }
+  ],
+  "shared_pricing_pages": [
+    {
+      "vendors": ["Apple Notes", "iCloud"],
+      "reason": "Distinct products listed on one Apple plans page."
+    },
+    {
+      "vendors": ["Google Drive", "Google Photos"],
+      "reason": "Distinct products listed on one Google One plans page."
+    },
+    {
+      "vendors": ["Grafana Cloud", "Grafana k6 Cloud"],
+      "reason": "Distinct products with different limits on one pricing page."
+    },
+    {
+      "vendors": ["Harness CI", "Harness Feature Flags"],
+      "reason": "Distinct products with different limits on one pricing page."
+    },
+    {
+      "vendors": ["Moesif", "Moesif API Monetization"],
+      "reason": "Distinct products with different limits on one pricing page."
+    }
+  ]
+}

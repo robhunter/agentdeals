@@ -1,5 +1,6 @@
 import { loadDealChanges, loadOffers } from "./data.js";
 import { isSubSlug, toSlug } from "./slug.js";
+import { comparisonSlugTargets, retiredSlugTargets, selfComparisonSlug } from "./vendor-merges.js";
 
 export { isSubSlug, toSlug };
 
@@ -15,6 +16,34 @@ function buildVendorSlugMap(): Map<string, string> {
 }
 
 export const vendorSlugMap: Map<string, string> = buildVendorSlugMap();
+
+export const retiredVendorSlugMap: Map<string, string> = retiredSlugTargets(
+  new Set(vendorSlugMap.keys()),
+);
+
+export function canonicalVendorSlug(input: string): string | null {
+  if (!input) return null;
+  if (vendorSlugMap.has(input)) return input;
+  return retiredVendorSlugMap.get(input) ?? null;
+}
+
+export const comparisonSlugMap: Map<string, string> = comparisonSlugTargets(
+  new Set(vendorSlugMap.keys()),
+);
+
+export function recordNamedBySlug(input: string): string | null {
+  const canonical = canonicalVendorSlug(input);
+  return canonical ? vendorSlugMap.get(canonical) ?? null : null;
+}
+
+export function mergedVendorSlug(input: string): string | null {
+  if (!input) return null;
+  return comparisonSlugMap.get(input) ?? null;
+}
+
+export function comparisonOfOneRecord(slug: string): string | null {
+  return selfComparisonSlug(slug, mergedVendorSlug);
+}
 
 function buildChangeLogVendorMap(): Map<string, string> {
   const map = new Map<string, string>();
@@ -53,6 +82,7 @@ export function namedVendorSlug(phrase: string): string | null {
   if (resolution.type === "exact") return resolution.slug;
   if (resolution.type !== "redirect") return null;
   if (NAMES_MORE_THAN_ONE_SUBJECT.test(phrase)) return null;
+  if (retiredVendorSlugMap.get(slug) === resolution.slug) return resolution.slug;
   const resolved = resolution.slug;
   if (resolved.startsWith(slug + "-") || slug.startsWith(resolved + "-")) return resolved;
   return null;
@@ -107,6 +137,8 @@ export function assertedVendorSlugs(phrase: string): string[] {
 export function resolveVendorSlug(input: string): VendorSlugResolution {
   if (!input) return { type: "none" };
   if (vendorSlugMap.has(input)) return { type: "exact", slug: input };
+  const merged = retiredVendorSlugMap.get(input);
+  if (merged) return { type: "redirect", slug: merged };
   if (input.length < 3) return { type: "none" };
 
   const allSlugs = [...vendorSlugMap.keys()];
