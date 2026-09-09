@@ -32,6 +32,7 @@ import { comparisonVerdictText, freeTierFaqAnswer, stabilityFaqAnswer, type Comp
 import { publishedVendorLevel, vendorVerdictSentence, vendorBadge, freeTierClaim, statesRiskCause, narrowingSentence, changeKindNoun, termsUnconfirmedBySource, unconfirmedTermsMetaSentence, type BadgeWithholding, type FreeTierClaim, type VendorVerdictInput } from "./vendor-verdict.js";
 import { tierRecordsAFreeTier } from "./free-tier-record.js";
 import { PAGE_HEAD_OPEN, withLedeBeforeNav } from "./page-lede.js";
+import { freshnessClaimFor, withFreshnessClaim } from "./page-freshness.js";
 import { UNGRADED_IMPACT_COLOR, changeImpactColor, changeImpactLabel, changeImpactWord, isChangeImpactLevel } from "./change-impact.js";
 import { COMPARED_SERVICES_PLACEHOLDER, appendToCompiledFigureSlots, fillComparedServicesCount, markCompiledFigures, recordsSinceCompiled, replaceTimelineRows, staticHalfOf, timelineRecordsFor, vendorForSubject, vendorSubjectsOnCompiledPage, type CompiledFigureSubject, type CompiledFigureVendor, type CompiledFigureVerdict, type CompiledPageRecord } from "./compiled-figures.js";
 import { CHECK_ESTABLISHES, CHECK_SCOPE_CLASS, NO_CATALOGUE_RECORD, citedSourceLinkHtml, citedSourcesListHtml, freeTierSourceOf, pageQuoteHtml, readClauseHtml, sourceMarkerHtml, uncitedSourceLinkHtml, withCitedSources, type CitedService, type FreeTierSource } from "./source-citation.js";
@@ -467,6 +468,26 @@ const offers = loadOffers();
 const categories = getCategories();
 const dealChanges = loadDealChanges();
 const trackedChangeCount = recordsStillInForce(dealChanges).length;
+
+const verifiedDatesBySlug = (() => {
+  const dates = new Map<string, string[]>();
+  for (const offer of offers) {
+    if (!offer.verifiedDate) continue;
+    const slug = toSlug(offer.vendor);
+    const held = dates.get(slug);
+    if (held) held.push(offer.verifiedDate);
+    else dates.set(slug, [offer.verifiedDate]);
+  }
+  return dates;
+})();
+
+function verifiedDatesForSlug(vendorSlug: string): readonly string[] {
+  return verifiedDatesBySlug.get(vendorSlug) ?? [];
+}
+
+function withPageFreshness(html: string, pagePath: string): string {
+  return withFreshnessClaim(html, () => freshnessClaimFor(pagePath, html, verifiedDatesForSlug));
+}
 
 function apiExampleSubjects(): ExampleSubjects {
   return exampleSubjects(
@@ -6968,7 +6989,7 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
   {
     slug: "ai-free-tiers",
     title: "Best Free AI APIs and Coding Tools in 2026",
-    metaDesc: "Compare free AI APIs, LLM inference, and coding tools — exact rate limits and free tier details for Groq, Cerebras, Mistral, OpenAI, Gemini, Cursor, GitHub Copilot, and 50+ more. Updated March 2026.",
+    metaDesc: "Compare free AI APIs, LLM inference, and coding tools — exact rate limits and free tier details for Groq, Cerebras, Mistral, OpenAI, Gemini, Cursor, GitHub Copilot, and 50+ more. [[freshness]]",
     contextHtml: "",
     tag: "ai-free-tier",
     primaryVendor: "OpenAI",
@@ -6977,7 +6998,7 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
   {
     slug: "database-alternatives",
     title: "Best Free Database Hosting for Developers in 2026",
-    metaDesc: "Compare 30+ free database hosting options — Postgres, MongoDB, Redis, SQLite, graph, vector, and time-series. Exact free tier limits for Supabase, Neon, Turso, Upstash, and more. Updated March 2026.",
+    metaDesc: "Compare 30+ free database hosting options — Postgres, MongoDB, Redis, SQLite, graph, vector, and time-series. Exact free tier limits for Supabase, Neon, Turso, Upstash, and more. [[freshness]]",
     contextHtml: "",
     tag: "database-alternative",
     primaryVendor: "Supabase",
@@ -6986,7 +7007,7 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
   {
     slug: "hosting-alternatives",
     title: "Best Free Hosting for Developers in 2026 — PaaS, Static, Serverless, Containers & VPS",
-    metaDesc: "Compare 30+ free hosting options — Railway, Render, Vercel, Netlify, Cloudflare, Fly.io, Oracle Cloud, and more. Exact free tier limits for PaaS, static, serverless, container, and VPS hosting. Updated March 2026.",
+    metaDesc: "Compare 30+ free hosting options — Railway, Render, Vercel, Netlify, Cloudflare, Fly.io, Oracle Cloud, and more. Exact free tier limits for PaaS, static, serverless, container, and VPS hosting. [[freshness]]",
     contextHtml: "",
     tag: "hosting-alternative",
     primaryVendor: "Heroku",
@@ -6995,7 +7016,7 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
   {
     slug: "monitoring-alternatives",
     title: "Best Free Monitoring Tools for Developers in 2026 — APM, Uptime, Logs & Error Tracking",
-    metaDesc: "Compare 70+ free monitoring tools — New Relic, Grafana Cloud, Datadog, Sentry, BetterStack, UptimeRobot, and more. Exact free tier limits by monitoring type. Updated March 2026.",
+    metaDesc: "Compare 70+ free monitoring tools — New Relic, Grafana Cloud, Datadog, Sentry, BetterStack, UptimeRobot, and more. Exact free tier limits by monitoring type. [[freshness]]",
     contextHtml: "",
     tag: "monitoring-alternative",
     primaryVendor: "Datadog",
@@ -7107,7 +7128,7 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
   {
     slug: "ci-cd-alternatives",
     title: "Best Free CI/CD Tools for Developers in 2026 — Build Minutes, Runners & Pipelines Compared",
-    metaDesc: "Compare 35+ free CI/CD tools — GitHub Actions, GitLab CI, CircleCI, Buildkite, Harness CI, Drone CI, and more. Exact free tier limits by CI/CD type. Updated March 2026.",
+    metaDesc: "Compare 35+ free CI/CD tools — GitHub Actions, GitLab CI, CircleCI, Buildkite, Harness CI, Drone CI, and more. Exact free tier limits by CI/CD type. [[freshness]]",
     contextHtml: "",
     tag: "ci-cd-hub",
     primaryVendor: "GitHub Actions",
@@ -7116,7 +7137,7 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
   {
     slug: "security-alternatives",
     title: "Best Free Security Tools for Developers in 2026 — SAST, Secrets, Auth & Container Security",
-    metaDesc: "Compare 100+ free security tools — Snyk, Semgrep, CodeQL, GitGuardian, Trivy, Auth0, Clerk, and more. Exact free tier limits by security domain. Updated March 2026.",
+    metaDesc: "Compare 100+ free security tools — Snyk, Semgrep, CodeQL, GitGuardian, Trivy, Auth0, Clerk, and more. Exact free tier limits by security domain. [[freshness]]",
     contextHtml: "",
     tag: "security-hub",
     primaryVendor: "Snyk",
@@ -7125,7 +7146,7 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
   {
     slug: "storage-alternatives",
     title: "Best Free Cloud Storage for Developers in 2026 — Object Storage, Media CDN & File Hosting Compared",
-    metaDesc: "Compare 55+ free cloud storage tools — Cloudflare R2, Backblaze B2, Tigris, Cloudinary, ImageKit, Google Cloud Storage, and more. Exact free tier limits by storage type. Updated March 2026.",
+    metaDesc: "Compare 55+ free cloud storage tools — Cloudflare R2, Backblaze B2, Tigris, Cloudinary, ImageKit, Google Cloud Storage, and more. Exact free tier limits by storage type. [[freshness]]",
     contextHtml: "",
     tag: "storage-hub",
     primaryVendor: "Cloudflare R2",
@@ -7134,7 +7155,7 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
   {
     slug: "testing-alternatives",
     title: "Best Free Testing Tools for Developers in 2026 — Browser, Visual, Load, E2E & API Testing Compared",
-    metaDesc: "Compare 45+ free testing tools — Cypress, BrowserStack, Playwright, k6, Percy, Chromatic, Postman, Selenium, and more. Exact free tier limits by testing domain. Updated March 2026.",
+    metaDesc: "Compare 45+ free testing tools — Cypress, BrowserStack, Playwright, k6, Percy, Chromatic, Postman, Selenium, and more. Exact free tier limits by testing domain. [[freshness]]",
     contextHtml: "",
     tag: "testing-hub",
     primaryVendor: "Cypress Cloud",
@@ -7143,7 +7164,7 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
   {
     slug: "analytics-alternatives",
     title: "Best Free Analytics Tools for Developers in 2026 — Product, Web, Event & Data Analytics Compared",
-    metaDesc: "Compare 45+ free analytics tools — PostHog, Amplitude, Mixpanel, Plausible, Umami, Tinybird, Segment, and more. Exact free tier limits by analytics domain. Updated March 2026.",
+    metaDesc: "Compare 45+ free analytics tools — PostHog, Amplitude, Mixpanel, Plausible, Umami, Tinybird, Segment, and more. Exact free tier limits by analytics domain. [[freshness]]",
     contextHtml: "",
     tag: "analytics-hub",
     primaryVendor: "PostHog",
@@ -7152,7 +7173,7 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
   {
     slug: "ai-ml-alternatives",
     title: "Best Free AI & ML Tools for Developers in 2026 — LLM APIs, AI Coding, Training & Observability Compared",
-    metaDesc: "Compare 65+ free AI/ML tools — Groq, Cerebras, OpenAI, Hugging Face, GitHub Copilot, Cursor, Langfuse, and more. Exact free tier limits by AI domain. Updated March 2026.",
+    metaDesc: "Compare 65+ free AI/ML tools — Groq, Cerebras, OpenAI, Hugging Face, GitHub Copilot, Cursor, Langfuse, and more. Exact free tier limits by AI domain. [[freshness]]",
     contextHtml: "",
     tag: "ai-ml-hub",
     primaryVendor: "OpenAI",
@@ -7161,7 +7182,7 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
   {
     slug: "design-alternatives",
     title: "Best Free Design Tools for Developers in 2026 — UI Kits, Prototyping, Icons & Assets Compared",
-    metaDesc: "Compare 100+ free design tools — Figma, Penpot, Canva, ShadcnUI, Lucide, Unsplash, Coolors, and more. Exact free tier limits by design domain. Updated March 2026.",
+    metaDesc: "Compare 100+ free design tools — Figma, Penpot, Canva, ShadcnUI, Lucide, Unsplash, Coolors, and more. Exact free tier limits by design domain. [[freshness]]",
     contextHtml: "",
     tag: "design-hub",
     primaryVendor: "Figma",
@@ -7170,7 +7191,7 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
   {
     slug: "email-alternatives",
     title: "Best Free Email Tools for Developers in 2026 — Transactional APIs, Marketing Platforms & Email Infrastructure Compared",
-    metaDesc: "Compare 59+ free email tools — Resend, Brevo, Mailjet, SendGrid, Mailchimp, SimpleLogin, Proton Mail, and more. Exact free tier limits by email domain. Updated March 2026.",
+    metaDesc: "Compare 59+ free email tools — Resend, Brevo, Mailjet, SendGrid, Mailchimp, SimpleLogin, Proton Mail, and more. Exact free tier limits by email domain. [[freshness]]",
     contextHtml: "",
     tag: "email-hub",
     primaryVendor: "Resend",
@@ -7179,7 +7200,7 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
   {
     slug: "project-management-alternatives",
     title: "Best Free Project Management & Collaboration Tools in 2026 — PM, Chat, Scheduling & Productivity Compared",
-    metaDesc: "Compare 93+ free project management tools — Linear, Asana, Trello, ClickUp, Notion, Slack alternatives, Cal.com, and more. Exact free tier limits. Updated March 2026.",
+    metaDesc: "Compare 93+ free project management tools — Linear, Asana, Trello, ClickUp, Notion, Slack alternatives, Cal.com, and more. Exact free tier limits. [[freshness]]",
     contextHtml: "",
     tag: "pm-hub",
     primaryVendor: "Linear",
@@ -7188,7 +7209,7 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
   {
     slug: "ide-code-editors-alternatives",
     title: "Best Free IDEs, Code Editors & AI Coding Tools in 2026 — Desktop, Cloud & AI Assistants Compared",
-    metaDesc: "Compare 59+ free IDEs and coding tools — VS Code, Cursor, GitHub Copilot, Zed, Replit, Windsurf, Devin, and more. Exact free tier limits. Updated March 2026.",
+    metaDesc: "Compare 59+ free IDEs and coding tools — VS Code, Cursor, GitHub Copilot, Zed, Replit, Windsurf, Devin, and more. Exact free tier limits. [[freshness]]",
     contextHtml: "",
     tag: "ide-hub",
     primaryVendor: "Visual Studio Code",
@@ -7197,7 +7218,7 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
   {
     slug: "free-llm-apis",
     title: "Best Free LLM APIs in 2026 — Compare Free Inference Tiers, Rate Limits & Models",
-    metaDesc: "Compare 25+ free LLM API providers — Groq, Cerebras, OpenRouter, Gemini, Mistral, OpenAI, Anthropic, NVIDIA NIM, and more. Exact rate limits and token quotas. Updated March 2026.",
+    metaDesc: "Compare 25+ free LLM API providers — Groq, Cerebras, OpenRouter, Gemini, Mistral, OpenAI, Anthropic, NVIDIA NIM, and more. Exact rate limits and token quotas. [[freshness]]",
     contextHtml: "",
     tag: "llm-api-hub",
     primaryVendor: "OpenAI",
@@ -7206,7 +7227,7 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
   {
     slug: "api-development-alternatives",
     title: "Best Free API Development Tools in 2026 — REST, GraphQL, Mocking & Documentation Compared",
-    metaDesc: "Compare 39+ free API development tools — Postman, Hoppscotch, Insomnia, Bruno, Mintlify, Swagger, RapidAPI, Nango, and more. Exact free tier limits. Updated March 2026.",
+    metaDesc: "Compare 39+ free API development tools — Postman, Hoppscotch, Insomnia, Bruno, Mintlify, Swagger, RapidAPI, Nango, and more. Exact free tier limits. [[freshness]]",
     contextHtml: "",
     tag: "api-dev-hub",
     primaryVendor: "Postman",
@@ -7233,7 +7254,7 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
   {
     slug: "team-collaboration-alternatives",
     title: "Best Free Team Collaboration Tools in 2026 — Chat, Video, Docs & Scheduling Compared",
-    metaDesc: "Compare 60+ free team collaboration tools — Slack, Discord, Zoom, Jitsi, Notion, Cal.com, Rocket.Chat, and more. Exact free tier limits. Updated March 2026.",
+    metaDesc: "Compare 60+ free team collaboration tools — Slack, Discord, Zoom, Jitsi, Notion, Cal.com, Rocket.Chat, and more. Exact free tier limits. [[freshness]]",
     contextHtml: "",
     tag: "collab-hub",
     primaryVendor: "Slack",
@@ -7332,7 +7353,7 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
   {
     slug: "google-developer-program-2026",
     title: "Google Developer Program 2026 — Premium Ending, Migration Guide & Alternatives",
-    metaDesc: "Google Developer Program Premium ($299/year) ends March 30, 2026. Compare GDP Premium vs AI Pro ($19.99/mo) vs AI Ultra ($249.99/mo). Migration steps, free alternatives for Cloud credits, Gemini API, Firebase. Updated March 2026.",
+    metaDesc: "Google Developer Program Premium ($299/year) ends March 30, 2026. Compare GDP Premium vs AI Pro ($19.99/mo) vs AI Ultra ($249.99/mo). Migration steps, free alternatives for Cloud credits, Gemini API, Firebase. [[freshness]]",
     contextHtml: "",
     tag: "gdp-pricing-analysis",
     primaryVendor: "Google",
@@ -7341,7 +7362,7 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
   {
     slug: "supabase-vs-firebase",
     title: "Supabase vs Firebase Free Tier Comparison — 2026 Deep Dive",
-    metaDesc: "Compare Supabase and Firebase free tiers side-by-side. Database, auth, storage, functions, bandwidth — verified data, cost-at-scale analysis, and BaaS alternatives. Updated March 2026.",
+    metaDesc: "Compare Supabase and Firebase free tiers side-by-side. Database, auth, storage, functions, bandwidth — verified data, cost-at-scale analysis, and BaaS alternatives. [[freshness]]",
     contextHtml: "",
     tag: "supabase-vs-firebase",
     primaryVendor: "Supabase",
@@ -7350,7 +7371,7 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
   {
     slug: "vercel-vs-netlify",
     title: "Vercel vs Netlify Free Tier Comparison — 2026 Deep Dive",
-    metaDesc: "Compare Vercel and Netlify free tiers side-by-side. Bandwidth, serverless functions, build minutes, storage — verified data, cost-at-scale analysis, and hosting alternatives. Updated March 2026.",
+    metaDesc: "Compare Vercel and Netlify free tiers side-by-side. Bandwidth, serverless functions, build minutes, storage — verified data, cost-at-scale analysis, and hosting alternatives. [[freshness]]",
     contextHtml: "",
     tag: "vercel-vs-netlify",
     primaryVendor: "Vercel",
@@ -7359,7 +7380,7 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
   {
     slug: "neon-vs-supabase",
     title: "Neon vs Supabase Free Tier Comparison — 2026 Deep Dive",
-    metaDesc: "Compare Neon and Supabase free tiers side-by-side. Storage, compute, branching, auth, edge functions — verified data, cost-at-scale analysis, and database alternatives. Updated March 2026.",
+    metaDesc: "Compare Neon and Supabase free tiers side-by-side. Storage, compute, branching, auth, edge functions — verified data, cost-at-scale analysis, and database alternatives. [[freshness]]",
     contextHtml: "",
     tag: "neon-vs-supabase",
     primaryVendor: "Neon",
@@ -7368,7 +7389,7 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
   {
     slug: "railway-vs-render",
     title: "Railway vs Render Free Tier Comparison — 2026 Deep Dive",
-    metaDesc: "Compare Railway and Render free tiers side-by-side. RAM, CPU, databases, sleep behavior, bandwidth — verified data, cost-at-scale analysis, and PaaS alternatives. Updated March 2026.",
+    metaDesc: "Compare Railway and Render free tiers side-by-side. RAM, CPU, databases, sleep behavior, bandwidth — verified data, cost-at-scale analysis, and PaaS alternatives. [[freshness]]",
     contextHtml: "",
     tag: "railway-vs-render",
     primaryVendor: "Railway",
@@ -7377,7 +7398,7 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
   {
     slug: "datadog-vs-new-relic",
     title: "Datadog vs New Relic Free Tier Comparison — 2026 Deep Dive",
-    metaDesc: "Compare Datadog and New Relic free tiers side-by-side. Hosts, data ingest, APM, logs, retention, synthetics — verified data, cost-at-scale analysis, and monitoring alternatives. Updated March 2026.",
+    metaDesc: "Compare Datadog and New Relic free tiers side-by-side. Hosts, data ingest, APM, logs, retention, synthetics — verified data, cost-at-scale analysis, and monitoring alternatives. [[freshness]]",
     contextHtml: "",
     tag: "datadog-vs-new-relic",
     primaryVendor: "Datadog",
@@ -7449,7 +7470,7 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
   {
     slug: "startup-credits",
     title: "Startup Credits Comparison 2026 — Cloud Credits, Eligibility & Hidden Constraints",
-    metaDesc: "Compare 15+ startup programs: AWS Activate, Google for Startups, Microsoft Founders Hub, Cloudflare, DigitalOcean Hatch, Stripe Atlas, Brex, Mercury, and more. Credit values, eligibility, vesting, and stacking strategies. Updated April 2026.",
+    metaDesc: "Compare 15+ startup programs: AWS Activate, Google for Startups, Microsoft Founders Hub, Cloudflare, DigitalOcean Hatch, Stripe Atlas, Brex, Mercury, and more. Credit values, eligibility, vesting, and stacking strategies. [[freshness]]",
     contextHtml: "",
     tag: "startup-credits",
     primaryVendor: "AWS Activate",
@@ -7458,7 +7479,7 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
   {
     slug: "ai-coding-pricing-2026",
     title: "AI Coding Tools Pricing Guide — 2026 Comparison",
-    metaDesc: "Side-by-side pricing comparison of Cursor, Windsurf, GitHub Copilot, Gemini Code Assist, Amazon Q, Claude Code, Augment Code and more. Free tiers, pro plans, and recent pricing changes. Updated March 2026.",
+    metaDesc: "Side-by-side pricing comparison of Cursor, Windsurf, GitHub Copilot, Gemini Code Assist, Amazon Q, Claude Code, Augment Code and more. Free tiers, pro plans, and recent pricing changes. [[freshness]]",
     contextHtml: "",
     tag: "ai-coding-pricing-2026",
     primaryVendor: "Cursor",
@@ -7467,7 +7488,7 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
   {
     slug: "ai-coding-tools-pricing",
     title: "AI Coding Tools Pricing Comparison 2026 — The Definitive Free Tier Breakdown",
-    metaDesc: "Compare 17 AI coding tools: Cursor, Windsurf, Amazon Kiro, GitHub Copilot, Claude Code, Devin, Bolt.new, Lovable, Codex, Gemini CLI and more. Free tiers, hidden costs, cost analysis for solo devs and teams. Updated April 2026.",
+    metaDesc: "Compare 17 AI coding tools: Cursor, Windsurf, Amazon Kiro, GitHub Copilot, Claude Code, Devin, Bolt.new, Lovable, Codex, Gemini CLI and more. Free tiers, hidden costs, cost analysis for solo devs and teams. [[freshness]]",
     contextHtml: "",
     tag: "ai-coding-tools-pricing",
     primaryVendor: "Cursor",
@@ -7476,7 +7497,7 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
   {
     slug: "ci-cd-pricing",
     title: "CI/CD Tools Pricing Comparison 2026 — Build Minutes, Runners & Costs Compared",
-    metaDesc: "Compare 17+ CI/CD tools: GitHub Actions, GitLab CI, CircleCI, Buildkite, Harness CI, Google Cloud Build, Bitrise and more. Free tiers, build minutes, concurrent jobs, pricing models, and hidden costs. Updated April 2026.",
+    metaDesc: "Compare 17+ CI/CD tools: GitHub Actions, GitLab CI, CircleCI, Buildkite, Harness CI, Google Cloud Build, Bitrise and more. Free tiers, build minutes, concurrent jobs, pricing models, and hidden costs. [[freshness]]",
     contextHtml: "",
     tag: "ci-cd-pricing",
     primaryVendor: "GitHub Actions",
@@ -7485,7 +7506,7 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
   {
     slug: "database-pricing",
     title: "Database Pricing Comparison 2026 — Free Tiers, Storage Limits & Costs Compared",
-    metaDesc: "Compare 25+ database services: Supabase, Neon, PlanetScale, MongoDB Atlas, Firebase, CockroachDB, Turso, Upstash, Redis Cloud, DynamoDB and more. Free tiers, storage limits, connections, pricing models, and hidden costs. Updated April 2026.",
+    metaDesc: "Compare 25+ database services: Supabase, Neon, PlanetScale, MongoDB Atlas, Firebase, CockroachDB, Turso, Upstash, Redis Cloud, DynamoDB and more. Free tiers, storage limits, connections, pricing models, and hidden costs. [[freshness]]",
     contextHtml: "",
     tag: "database-pricing",
     primaryVendor: "Supabase",
@@ -7494,7 +7515,7 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
   {
     slug: "vector-database-pricing",
     title: "Vector Database Pricing Comparison 2026 — Free Tiers, Storage Limits & Costs for RAG/AI",
-    metaDesc: "Compare 11+ vector databases: Pinecone, Qdrant, Weaviate, Chroma, Zilliz Cloud, LanceDB, Upstash Vector, Supabase pgvector, Neon pgvector, MongoDB Atlas Vector Search and more. Free tiers, vector limits, dimensions, pricing models. Updated April 2026.",
+    metaDesc: "Compare 11+ vector databases: Pinecone, Qdrant, Weaviate, Chroma, Zilliz Cloud, LanceDB, Upstash Vector, Supabase pgvector, Neon pgvector, MongoDB Atlas Vector Search and more. Free tiers, vector limits, dimensions, pricing models. [[freshness]]",
     contextHtml: "",
     tag: "vector-database-pricing",
     primaryVendor: "Pinecone",
@@ -7503,7 +7524,7 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
   {
     slug: "hosting-pricing",
     title: "Cloud Hosting & PaaS Pricing Comparison 2026 — Free Tiers, Limits & Hidden Costs",
-    metaDesc: "Compare 15+ cloud hosting and PaaS services: Railway, Vercel, Render, Netlify, Fly.io, Cloudflare Workers/Pages, Deno Deploy, Koyeb, Val Town, Google Cloud Run and more. Free tiers, bandwidth limits, build minutes, and pricing gotchas. Updated April 2026.",
+    metaDesc: "Compare 15+ cloud hosting and PaaS services: Railway, Vercel, Render, Netlify, Fly.io, Cloudflare Workers/Pages, Deno Deploy, Koyeb, Val Town, Google Cloud Run and more. Free tiers, bandwidth limits, build minutes, and pricing gotchas. [[freshness]]",
     contextHtml: "",
     tag: "hosting-pricing",
     primaryVendor: "Railway",
@@ -9537,7 +9558,7 @@ ${mcpCtaCss()}
 
 function buildAiFreeTiersPage(): string {
   const title = "Best Free AI APIs and Coding Tools in 2026";
-  const metaDesc = "Compare free AI APIs, LLM inference, and coding tools — exact rate limits and free tier details for Groq, Cerebras, Mistral, OpenAI, Gemini, Cursor, GitHub Copilot, and 50+ more. Updated March 2026.";
+  const metaDesc = "Compare free AI APIs, LLM inference, and coding tools — exact rate limits and free tier details for Groq, Cerebras, Mistral, OpenAI, Gemini, Cursor, GitHub Copilot, and 50+ more. [[freshness]]";
   const slug = "ai-free-tiers";
 
   const aiMlOffers = offers.filter(o => o.category === "AI / ML");
@@ -9785,7 +9806,7 @@ ${buildCards(enrichedCoding)}
 
 function buildHostingAlternativesPage(): string {
   const title = "Best Free Hosting for Developers in 2026 — PaaS, Static, Serverless, Containers & VPS";
-  const metaDesc = "Compare 30+ free hosting options — Railway, Render, Vercel, Netlify, Cloudflare, Fly.io, Oracle Cloud, and more. Exact free tier limits by hosting type. Updated March 2026.";
+  const metaDesc = "Compare 30+ free hosting options — Railway, Render, Vercel, Netlify, Cloudflare, Fly.io, Oracle Cloud, and more. Exact free tier limits by hosting type. [[freshness]]";
   const slug = "hosting-alternatives";
 
   const hostingOffers = offers.filter(o => o.category === "Cloud Hosting" || o.category === "Cloud IaaS");
@@ -10074,7 +10095,7 @@ ${buildCards(startupCredits)}
     </tbody>
   </table>
   </div>
-  <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">Oracle Cloud's Always Free tier is permanently free (not time-limited) and the most generous VPS offering. Cloudflare Pages and Workers offer unlimited bandwidth on free tier. Railway's Free plan opens with a 30-day $5 trial credit and then costs $1/month minimum. AWS and Azure free tiers are mostly 12-month introductory offers. All limits verified against live pricing pages, March 2026.</p>
+  <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">Oracle Cloud's Always Free tier is permanently free (not time-limited) and the most generous VPS offering. Cloudflare Pages and Workers offer unlimited bandwidth on free tier. Railway's Free plan opens with a 30-day $5 trial credit and then costs $1/month minimum. AWS and Azure free tiers are mostly 12-month introductory offers. [[freshness]]</p>
 
   <div class="context-box" style="border-left:3px solid ${riskColors.risky}">
     <div style="font-weight:600;color:${riskColors.risky};margin-bottom:.5rem">Hetzner raised prices twice in 2026, and its cheapest line is unavailable</div>
@@ -10126,7 +10147,7 @@ ${buildCards(startupCredits)}
 
 function buildDatabaseAlternativesPage(): string {
   const title = "Best Free Database Hosting for Developers in 2026";
-  const metaDesc = "Compare 30+ free database hosting options — Postgres, MongoDB, Redis, SQLite, graph, vector, and time-series. Exact free tier limits for Supabase, Neon, Turso, Upstash, and more. Updated March 2026.";
+  const metaDesc = "Compare 30+ free database hosting options — Postgres, MongoDB, Redis, SQLite, graph, vector, and time-series. Exact free tier limits for Supabase, Neon, Turso, Upstash, and more. [[freshness]]";
   const slug = "database-alternatives";
 
   const dbOffers = offers.filter(o => o.category === "Databases");
@@ -10412,7 +10433,7 @@ ${buildCards(timeSeries)}
     </tbody>
   </table>
   </div>
-  <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">Storage limits are for the free tier only. CockroachDB (10 GiB) offers the most generous managed storage. PocketBase, Weaviate, and Xata (post-April-2026 open-source pivot) are unlimited when self-hosted. All limits verified against live pricing pages, April 2026.</p>
+  <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">Storage limits are for the free tier only. CockroachDB (10 GiB) offers the most generous managed storage. PocketBase, Weaviate, and Xata (post-April-2026 open-source pivot) are unlimited when self-hosted. [[freshness]]</p>
 
   <h2>Which Free Database Should I Use?</h2>
   <div class="decision-guide">
@@ -10459,7 +10480,7 @@ ${buildCards(timeSeries)}
 
 function buildMonitoringAlternativesPage(): string {
   const title = "Best Free Monitoring Tools for Developers in 2026 — APM, Uptime, Logs & Error Tracking";
-  const metaDesc = "Compare 70+ free monitoring tools — New Relic, Grafana Cloud, Datadog, Sentry, BetterStack, UptimeRobot, and more. Exact free tier limits by monitoring type. Updated March 2026.";
+  const metaDesc = "Compare 70+ free monitoring tools — New Relic, Grafana Cloud, Datadog, Sentry, BetterStack, UptimeRobot, and more. Exact free tier limits by monitoring type. [[freshness]]";
   const slug = "monitoring-alternatives";
 
   const monitoringOffers = offers.filter(o => o.category === "Monitoring" || o.category === "Error Tracking");
@@ -10747,7 +10768,7 @@ ${buildCards(startupPrograms)}
     </tbody>
   </table>
   </div>
-  <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">New Relic's 100 GB/month is the most generous APM free tier. Axiom leads on log storage (500 GB ingest). UptimeRobot offers the most free monitors (50). Prometheus and Grafana (self-hosted) have no limits. Datadog's free tier is the most restrictive among major APM vendors. All limits verified against live pricing pages, March 2026.</p>
+  <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">New Relic's 100 GB/month is the most generous APM free tier. Axiom leads on log storage (500 GB ingest). UptimeRobot offers the most free monitors (50). Prometheus and Grafana (self-hosted) have no limits. Datadog's free tier is the most restrictive among major APM vendors. [[freshness]]</p>
 
   <div class="context-box" style="border-left:3px solid ${riskColors.risky}">
     <div style="font-weight:600;color:${riskColors.risky};margin-bottom:.5rem">Freshping Shutdown — March 6, 2026</div>
@@ -10799,7 +10820,7 @@ ${buildCards(startupPrograms)}
 
 function buildCiCdAlternativesPage(): string {
   const title = "Best Free CI/CD Tools for Developers in 2026 — Build Minutes, Runners & Pipelines Compared";
-  const metaDesc = "Compare 35+ free CI/CD tools — GitHub Actions, GitLab CI, CircleCI, Buildkite, Harness CI, Drone CI, and more. Exact free tier limits by CI/CD type. Updated March 2026.";
+  const metaDesc = "Compare 35+ free CI/CD tools — GitHub Actions, GitLab CI, CircleCI, Buildkite, Harness CI, Drone CI, and more. Exact free tier limits by CI/CD type. [[freshness]]";
   const slug = "ci-cd-alternatives";
 
   const cicdOffers = offers.filter(o => o.category === "CI/CD");
@@ -11065,7 +11086,7 @@ ${buildCards(specialized)}
     </tbody>
   </table>
   </div>
-  <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">GitHub Actions dominates with unlimited public repo minutes and the largest marketplace of reusable actions. CircleCI offers the most free credits among hosted platforms. Google Cloud Build has the most generous hosted minutes (2,500/mo). Drone CI and Woodpecker CI are unlimited when self-hosted. All limits verified against live pricing pages, March 2026.</p>
+  <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">GitHub Actions dominates with unlimited public repo minutes and the largest marketplace of reusable actions. CircleCI offers the most free credits among hosted platforms. Google Cloud Build has the most generous hosted minutes (2,500/mo). Drone CI and Woodpecker CI are unlimited when self-hosted. [[freshness]]</p>
 
   <h2>Which Free CI/CD Tool Should I Use?</h2>
   <div class="decision-guide">
@@ -11112,7 +11133,7 @@ ${buildCards(specialized)}
 
 function buildSecurityAlternativesPage(): string {
   const title = "Best Free Security Tools for Developers in 2026 — SAST, Secrets, Auth & Container Security";
-  const metaDesc = "Compare 100+ free security tools — Snyk, Semgrep, CodeQL, GitGuardian, Trivy, Auth0, Clerk, and more. Exact free tier limits by security domain. Updated March 2026.";
+  const metaDesc = "Compare 100+ free security tools — Snyk, Semgrep, CodeQL, GitGuardian, Trivy, Auth0, Clerk, and more. Exact free tier limits by security domain. [[freshness]]";
   const slug = "security-alternatives";
 
   const securityOffers = offers.filter(o => o.category === "Security" || o.category === "Secrets Management" || o.category === "Auth" || o.category === "Error Tracking");
@@ -11401,7 +11422,7 @@ ${buildCards(other)}
     </tbody>
   </table>
   </div>
-  <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">Snyk leads the all-in-one category with code, dependency, container, and IaC scanning in a single tool. For pure SAST, Semgrep and CodeQL are both excellent and free for open-source. GitGuardian is the standard for secret detection. Trivy dominates container scanning. Auth0 has the most generous free auth tier at 25K MAU. All limits verified against live pricing pages, March 2026.</p>
+  <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">Snyk leads the all-in-one category with code, dependency, container, and IaC scanning in a single tool. For pure SAST, Semgrep and CodeQL are both excellent and free for open-source. GitGuardian is the standard for secret detection. Trivy dominates container scanning. Auth0 has the most generous free auth tier at 25K MAU. [[freshness]]</p>
 
   <h2>Which Free Security Tool Should I Use?</h2>
   <div class="decision-guide">
@@ -11448,7 +11469,7 @@ ${buildCards(other)}
 
 function buildTestingAlternativesPage(): string {
   const title = "Best Free Testing Tools for Developers in 2026 — Browser, Visual, Load, E2E & API Testing Compared";
-  const metaDesc = "Compare 45+ free testing tools — Cypress, BrowserStack, Playwright, k6, Percy, Chromatic, Postman, Selenium, and more. Exact free tier limits by testing domain. Updated March 2026.";
+  const metaDesc = "Compare 45+ free testing tools — Cypress, BrowserStack, Playwright, k6, Percy, Chromatic, Postman, Selenium, and more. Exact free tier limits by testing domain. [[freshness]]";
   const slug = "testing-alternatives";
 
   const testingOffers = offers.filter(o => o.category === "Testing");
@@ -11732,7 +11753,7 @@ ${buildCards(other)}
     </tbody>
   </table>
   </div>
-  <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">Cypress Cloud leads for JavaScript E2E with 500 free results/month and a polished dashboard. BrowserStack and Sauce Labs are unbeatable for OSS projects needing cross-browser coverage. For load testing, Grafana k6 Cloud gives 500 VUh/month with the popular k6 scripting framework. Chromatic dominates Storybook visual testing at 5K snapshots/month. All limits verified against live pricing pages, March 2026.</p>
+  <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">Cypress Cloud leads for JavaScript E2E with 500 free results/month and a polished dashboard. BrowserStack and Sauce Labs are unbeatable for OSS projects needing cross-browser coverage. For load testing, Grafana k6 Cloud gives 500 VUh/month with the popular k6 scripting framework. Chromatic dominates Storybook visual testing at 5K snapshots/month. [[freshness]]</p>
 
   <h2>Which Free Testing Tool Should I Use?</h2>
   <div class="decision-guide">
@@ -11779,7 +11800,7 @@ ${buildCards(other)}
 
 function buildStorageAlternativesPage(): string {
   const title = "Best Free Cloud Storage for Developers in 2026 — Object Storage, Media CDN & File Hosting Compared";
-  const metaDesc = "Compare 55+ free cloud storage tools — Cloudflare R2, Backblaze B2, Tigris, Cloudinary, ImageKit, Google Cloud Storage, and more. Exact free tier limits by storage type. Updated March 2026.";
+  const metaDesc = "Compare 55+ free cloud storage tools — Cloudflare R2, Backblaze B2, Tigris, Cloudinary, ImageKit, Google Cloud Storage, and more. Exact free tier limits by storage type. [[freshness]]";
   const slug = "storage-alternatives";
 
   const storageOffers = offers.filter(o => o.category === "Storage" || o.category === "CDN");
@@ -12041,7 +12062,7 @@ ${buildCards(other)}
     </tbody>
   </table>
   </div>
-  <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">Cloudflare R2 leads on value with 10 GB free and zero egress fees \u2014 a game-changer for read-heavy workloads. Backblaze B2 undercuts it on storage and serves up to 3x what you store for nothing, charging $0.01/GB only past that. For media, Cloudinary and ImageKit both offer generous transformation pipelines. MinIO is the go-to for self-hosted S3-compatible storage. All limits verified against live pricing pages, March 2026.</p>
+  <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">Cloudflare R2 leads on value with 10 GB free and zero egress fees \u2014 a game-changer for read-heavy workloads. Backblaze B2 undercuts it on storage and serves up to 3x what you store for nothing, charging $0.01/GB only past that. For media, Cloudinary and ImageKit both offer generous transformation pipelines. MinIO is the go-to for self-hosted S3-compatible storage. [[freshness]]</p>
 
   <h2>Which Free Storage Should I Use?</h2>
   <div class="decision-guide">
@@ -12088,7 +12109,7 @@ ${buildCards(other)}
 
 function buildAnalyticsAlternativesPage(): string {
   const title = "Best Free Analytics Tools for Developers in 2026 — Product, Web, Event & Data Analytics Compared";
-  const metaDesc = "Compare 45+ free analytics tools — PostHog, Amplitude, Mixpanel, Plausible, Umami, Tinybird, Segment, and more. Exact free tier limits by analytics domain. Updated March 2026.";
+  const metaDesc = "Compare 45+ free analytics tools — PostHog, Amplitude, Mixpanel, Plausible, Umami, Tinybird, Segment, and more. Exact free tier limits by analytics domain. [[freshness]]";
   const slug = "analytics-alternatives";
 
   const analyticsOffers = offers.filter(o => o.category === "Analytics");
@@ -12357,7 +12378,7 @@ ${buildCards(other)}
     </tbody>
   </table>
   </div>
-  <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">PostHog leads on value with 1M events/month free including session replays, feature flags, and A/B testing \u2014 the most complete free analytics package. Amplitude matches on event volume (10M) but caps at 10K monthly tracked users. For privacy-first web analytics, Plausible and Umami are both self-hostable with no limits. Microsoft Clarity is uniquely free with no caps on session replay. All limits verified against live pricing pages, March 2026.</p>
+  <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">PostHog leads on value with 1M events/month free including session replays, feature flags, and A/B testing \u2014 the most complete free analytics package. Amplitude matches on event volume (10M) but caps at 10K monthly tracked users. For privacy-first web analytics, Plausible and Umami are both self-hostable with no limits. Microsoft Clarity is uniquely free with no caps on session replay. [[freshness]]</p>
 
   <h2>Which Free Analytics Tool Should I Use?</h2>
   <div class="decision-guide">
@@ -12404,7 +12425,7 @@ ${buildCards(other)}
 
 function buildAiMlAlternativesPage(): string {
   const title = "Best Free AI & ML Tools for Developers in 2026 — LLM APIs, AI Coding, Training & Observability Compared";
-  const metaDesc = "Compare 65+ free AI/ML tools — Groq, Cerebras, OpenAI, Hugging Face, GitHub Copilot, Cursor, Langfuse, and more. Exact free tier limits by AI domain. Updated March 2026.";
+  const metaDesc = "Compare 65+ free AI/ML tools — Groq, Cerebras, OpenAI, Hugging Face, GitHub Copilot, Cursor, Langfuse, and more. Exact free tier limits by AI domain. [[freshness]]";
   const slug = "ai-ml-alternatives";
 
   const aiOffers = offers.filter(o => o.category === "AI / ML" || o.category === "AI Coding");
@@ -12673,7 +12694,7 @@ ${buildCards(other)}
     </tbody>
   </table>
   </div>
-  <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">Groq and Cerebras lead on free LLM inference volume \u2014 Groq for speed (LPU), Cerebras for daily token quota (1M/day). Mistral offers the broadest model access on free tier (all models including Large). For AI coding, GitHub Copilot and Cursor both offer 2,000 free completions/month, while Gemini CLI is completely free and open-source. Langfuse is the standout for LLM observability (open-source, 50K observations free). All limits verified against live pricing pages, March 2026.</p>
+  <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">Groq and Cerebras lead on free LLM inference volume \u2014 Groq for speed (LPU), Cerebras for daily token quota (1M/day). Mistral offers the broadest model access on free tier (all models including Large). For AI coding, GitHub Copilot and Cursor both offer 2,000 free completions/month, while Gemini CLI is completely free and open-source. Langfuse is the standout for LLM observability (open-source, 50K observations free). [[freshness]]</p>
 
   <h2>Which Free AI Tool Should I Use?</h2>
   <div class="decision-guide">
@@ -12720,7 +12741,7 @@ ${buildCards(other)}
 
 function buildEmailAlternativesPage(): string {
   const title = "Best Free Email Tools for Developers in 2026 — Transactional APIs, Marketing Platforms & Email Infrastructure Compared";
-  const metaDesc = "Compare 59+ free email tools — Resend, Brevo, Mailjet, SendGrid, Mailchimp, SimpleLogin, Proton Mail, and more. Exact free tier limits by email domain. Updated March 2026.";
+  const metaDesc = "Compare 59+ free email tools — Resend, Brevo, Mailjet, SendGrid, Mailchimp, SimpleLogin, Proton Mail, and more. Exact free tier limits by email domain. [[freshness]]";
   const slug = "email-alternatives";
 
   const emailOffers = offers.filter(o => o.category === "Email");
@@ -13003,7 +13024,7 @@ ${buildCards(other)}
     </tbody>
   </table>
   </div>
-  <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">Resend leads the modern transactional email space with React Email integration and 3K emails/month free. Brevo offers the most generous marketing free tier with 300 emails/day and unlimited contacts. For privacy, SimpleLogin and AnonAddy are both open source with self-hosting options. All limits verified against live pricing pages, March 2026.</p>
+  <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">Resend leads the modern transactional email space with React Email integration and 3K emails/month free. Brevo offers the most generous marketing free tier with 300 emails/day and unlimited contacts. For privacy, SimpleLogin and AnonAddy are both open source with self-hosting options. [[freshness]]</p>
 
   <h2>Which Free Email Tool Should I Use?</h2>
   <div class="decision-guide">
@@ -13050,7 +13071,7 @@ ${buildCards(other)}
 
 function buildDesignAlternativesPage(): string {
   const title = "Best Free Design Tools for Developers in 2026 — UI Kits, Prototyping, Icons & Assets Compared";
-  const metaDesc = "Compare 100+ free design tools — Figma, Penpot, Canva, ShadcnUI, Lucide, Unsplash, Coolors, and more. Exact free tier limits by design domain. Updated March 2026.";
+  const metaDesc = "Compare 100+ free design tools — Figma, Penpot, Canva, ShadcnUI, Lucide, Unsplash, Coolors, and more. Exact free tier limits by design domain. [[freshness]]";
   const slug = "design-alternatives";
 
   const designOffers = offers.filter(o => o.category === "Design");
@@ -13340,7 +13361,7 @@ ${buildCards(other)}
     </tbody>
   </table>
   </div>
-  <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">Figma remains the industry standard for UI/UX design with a generous free Starter plan. Penpot is the leading open-source alternative with no limits. For developers who prefer code, ShadcnUI and DaisyUI eliminate the need for a design tool entirely. The icon ecosystem is especially strong \u2014 Lucide, Iconoir, and Tabler all offer 1,000+ MIT-licensed icons. All limits verified against live pricing pages, March 2026.</p>
+  <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">Figma remains the industry standard for UI/UX design with a generous free Starter plan. Penpot is the leading open-source alternative with no limits. For developers who prefer code, ShadcnUI and DaisyUI eliminate the need for a design tool entirely. The icon ecosystem is especially strong \u2014 Lucide, Iconoir, and Tabler all offer 1,000+ MIT-licensed icons. [[freshness]]</p>
 
   <h2>Which Free Design Tool Should I Use?</h2>
   <div class="decision-guide">
@@ -13387,7 +13408,7 @@ ${buildCards(other)}
 
 function buildProjectManagementAlternativesPage(): string {
   const title = "Best Free Project Management & Collaboration Tools in 2026 — PM, Chat, Scheduling & Productivity Compared";
-  const metaDesc = "Compare 93+ free project management tools — Linear, Asana, Trello, ClickUp, Notion, Slack alternatives, Cal.com, and more. Exact free tier limits. Updated March 2026.";
+  const metaDesc = "Compare 93+ free project management tools — Linear, Asana, Trello, ClickUp, Notion, Slack alternatives, Cal.com, and more. Exact free tier limits. [[freshness]]";
   const slug = "project-management-alternatives";
 
   const pmOffers = offers.filter(o => o.category === "Project Management" || o.category === "Team Collaboration");
@@ -13677,7 +13698,7 @@ ${buildCards(other)}
     </tbody>
   </table>
   </div>
-  <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">Linear leads modern issue tracking with a fast, keyboard-driven interface and 250 free issues. Plane and Huly offer unlimited open-source PM. For team chat, Pumble provides unlimited message history free — a key advantage over Slack. Cal.com is the leading open-source scheduling tool. All limits verified against live pricing pages, March 2026.</p>
+  <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">Linear leads modern issue tracking with a fast, keyboard-driven interface and 250 free issues. Plane and Huly offer unlimited open-source PM. For team chat, Pumble provides unlimited message history free — a key advantage over Slack. Cal.com is the leading open-source scheduling tool. [[freshness]]</p>
 
   <h2>Which Free PM Tool Should I Use?</h2>
   <div class="decision-guide">
@@ -13724,7 +13745,7 @@ ${buildCards(other)}
 
 function buildIdeCodeEditorsAlternativesPage(): string {
   const title = "Best Free IDEs, Code Editors & AI Coding Tools in 2026 — Desktop, Cloud & AI Assistants Compared";
-  const metaDesc = "Compare 59+ free IDEs and coding tools — VS Code, Cursor, GitHub Copilot, Zed, Replit, Windsurf, Devin, and more. Exact free tier limits. Updated March 2026.";
+  const metaDesc = "Compare 59+ free IDEs and coding tools — VS Code, Cursor, GitHub Copilot, Zed, Replit, Windsurf, Devin, and more. Exact free tier limits. [[freshness]]";
   const slug = "ide-code-editors-alternatives";
 
   const ideOffers = offers.filter(o => o.category === "IDE & Code Editors" || o.category === "AI Coding");
@@ -13993,7 +14014,7 @@ ${buildCards(other)}
     </tbody>
   </table>
   </div>
-  <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">VS Code remains the dominant free editor with the largest extension ecosystem. GitHub Copilot's free tier (2,000 completions/month) makes AI coding accessible to all developers. For open-source alternatives, Cline and Aider let you use any LLM provider. Devin's price drop from $500 to $20/month signals the rapid commoditization of AI coding agents. All limits verified against live pricing pages, March 2026.</p>
+  <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">VS Code remains the dominant free editor with the largest extension ecosystem. GitHub Copilot's free tier (2,000 completions/month) makes AI coding accessible to all developers. For open-source alternatives, Cline and Aider let you use any LLM provider. Devin's price drop from $500 to $20/month signals the rapid commoditization of AI coding agents. [[freshness]]</p>
 
   <h2>Which Free IDE or AI Coding Tool Should I Use?</h2>
   <div class="decision-guide">
@@ -14040,7 +14061,7 @@ ${buildCards(other)}
 
 function buildFreeLlmApisPage(): string {
   const title = "Best Free LLM APIs in 2026 — Compare Free Inference Tiers, Rate Limits & Models";
-  const metaDesc = "Compare 25+ free LLM API providers — Groq, Cerebras, OpenRouter, Gemini, Mistral, OpenAI, Anthropic, NVIDIA NIM, and more. Exact rate limits and token quotas. Updated March 2026.";
+  const metaDesc = "Compare 25+ free LLM API providers — Groq, Cerebras, OpenRouter, Gemini, Mistral, OpenAI, Anthropic, NVIDIA NIM, and more. Exact rate limits and token quotas. [[freshness]]";
   const slug = "free-llm-apis";
 
   const aiOffers = offers.filter(o => o.category === "AI / ML");
@@ -14301,7 +14322,7 @@ ${buildCards(aiGateways)}
     </tbody>
   </table>
   </div>
-  <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">Groq and Cerebras lead on free inference \u2014 Groq for speed (custom LPU silicon), Cerebras for daily token volume (1M/day). Mistral offers the broadest model access on free tier (all models, 1B tokens/month at 2 RPM). OpenRouter is ideal if you want one API key for ~30 free models. GitHub Models has the widest selection (100+ models). For proprietary frontier models, most providers are pay-as-you-go with signup credits rather than ongoing free tiers. All limits verified March 2026.</p>
+  <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">Groq and Cerebras lead on free inference \u2014 Groq for speed (custom LPU silicon), Cerebras for daily token volume (1M/day). Mistral offers the broadest model access on free tier (all models, 1B tokens/month at 2 RPM). OpenRouter is ideal if you want one API key for ~30 free models. GitHub Models has the widest selection (100+ models). For proprietary frontier models, most providers are pay-as-you-go with signup credits rather than ongoing free tiers. [[freshness]]</p>
 
   <h2>Which Free LLM API Should I Use?</h2>
   <div class="decision-guide">
@@ -14348,7 +14369,7 @@ ${buildCards(aiGateways)}
 
 function buildApiDevelopmentAlternativesPage(): string {
   const title = "Best Free API Development Tools in 2026 — REST, GraphQL, Mocking & Documentation Compared";
-  const metaDesc = "Compare 39+ free API development tools — Postman, Hoppscotch, Insomnia, Bruno, Mintlify, Swagger, RapidAPI, Nango, and more. Exact free tier limits. Updated March 2026.";
+  const metaDesc = "Compare 39+ free API development tools — Postman, Hoppscotch, Insomnia, Bruno, Mintlify, Swagger, RapidAPI, Nango, and more. Exact free tier limits. [[freshness]]";
   const slug = "api-development-alternatives";
 
   const apiOffers = offers.filter(o => o.category === "API Development");
@@ -14614,7 +14635,7 @@ ${buildCards(apiIntegration)}
     </tbody>
   </table>
   </div>
-  <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">Hoppscotch and Bruno lead the open-source API client space \u2014 both MIT-licensed with no vendor lock-in. Postman remains the industry standard with the largest ecosystem. For GraphQL, Apollo GraphOS handles federation while Hasura generates instant APIs. Mintlify is the top choice for modern API docs. All limits verified March 2026.</p>
+  <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">Hoppscotch and Bruno lead the open-source API client space \u2014 both MIT-licensed with no vendor lock-in. Postman remains the industry standard with the largest ecosystem. For GraphQL, Apollo GraphOS handles federation while Hasura generates instant APIs. Mintlify is the top choice for modern API docs. [[freshness]]</p>
 
   <h2>Which Free API Tool Should I Use?</h2>
   <div class="decision-guide">
@@ -14661,7 +14682,7 @@ ${buildCards(apiIntegration)}
 
 function buildTeamCollaborationAlternativesPage(): string {
   const title = "Best Free Team Collaboration Tools in 2026 — Chat, Video, Docs & Scheduling Compared";
-  const metaDesc = "Compare 60+ free team collaboration tools — Slack, Discord, Zoom, Jitsi, Notion, Cal.com, Rocket.Chat, and more. Exact free tier limits. Updated March 2026.";
+  const metaDesc = "Compare 60+ free team collaboration tools — Slack, Discord, Zoom, Jitsi, Notion, Cal.com, Rocket.Chat, and more. Exact free tier limits. [[freshness]]";
   const slug = "team-collaboration-alternatives";
 
   const collabOffers = offers.filter(o =>
@@ -14935,7 +14956,7 @@ ${buildCards(other)}
     </tbody>
   </table>
   </div>
-  <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">Pumble leads for free team chat with unlimited message history — a key advantage over Slack's 90-day limit. For video, Jitsi Meet is completely free and open source. Cal.com is the leading open-source scheduling tool. All limits verified against live pricing pages, March 2026.</p>
+  <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">Pumble leads for free team chat with unlimited message history — a key advantage over Slack's 90-day limit. For video, Jitsi Meet is completely free and open source. Cal.com is the leading open-source scheduling tool. [[freshness]]</p>
 
   <h2>Which Free Collaboration Tool Should I Use?</h2>
   <div class="decision-guide">
@@ -19357,7 +19378,7 @@ ${mcpCtaCss()}
 
 function buildGoogleDeveloperProgram2026Page(): string {
   const title = "Google Developer Program 2026 — Premium Ending, Migration Guide & Alternatives";
-  const metaDesc = "Google Developer Program Premium ($299/year) ends March 30, 2026. Compare GDP Premium vs AI Pro ($19.99/mo) vs AI Ultra ($249.99/mo). Migration steps, free alternatives for Cloud credits, Gemini API, Firebase. Updated March 2026.";
+  const metaDesc = "Google Developer Program Premium ($299/year) ends March 30, 2026. Compare GDP Premium vs AI Pro ($19.99/mo) vs AI Ultra ($249.99/mo). Migration steps, free alternatives for Cloud credits, Gemini API, Firebase. [[freshness]]";
   const slug = "google-developer-program-2026";
   const pubDate = "2026-03-26";
 
@@ -19755,7 +19776,7 @@ ${mcpCtaCss()}
   </div>
 
   <div class="methodology">
-    <strong>Methodology:</strong> Pricing data sourced from <a href="https://blog.google/innovation-and-ai/technology/developers-tools/gdp-premium-ai-pro-ultra/" target="_blank" rel="noopener">Google's official blog post</a>, <a href="https://developers.google.com/profile/help/benefits" target="_blank" rel="noopener">Developer Program benefits page</a>, and <a href="https://ai.google.dev/pricing" target="_blank" rel="noopener">Google AI pricing page</a>. Alternative pricing verified against vendor pages as of March 2026. Cloud credit comparisons use official free tier limits read from each provider's pricing page.
+    <strong>Methodology:</strong> Pricing data sourced from <a href="https://blog.google/innovation-and-ai/technology/developers-tools/gdp-premium-ai-pro-ultra/" target="_blank" rel="noopener">Google's official blog post</a>, <a href="https://developers.google.com/profile/help/benefits" target="_blank" rel="noopener">Developer Program benefits page</a>, and <a href="https://ai.google.dev/pricing" target="_blank" rel="noopener">Google AI pricing page</a>. [[freshness]] Cloud credit comparisons use official free tier limits read from each provider's pricing page.
   </div>
 
   <div class="search-cta">
@@ -19774,7 +19795,7 @@ ${mcpCtaCss()}
 
 function buildSupabaseVsFirebasePage(): string {
   const title = "Supabase vs Firebase Free Tier Comparison — 2026 Deep Dive";
-  const metaDesc = "Compare Supabase and Firebase free tiers side-by-side. Database, auth, storage, functions, bandwidth — verified data, cost-at-scale analysis, and BaaS alternatives. Updated March 2026.";
+  const metaDesc = "Compare Supabase and Firebase free tiers side-by-side. Database, auth, storage, functions, bandwidth — verified data, cost-at-scale analysis, and BaaS alternatives. [[freshness]]";
   const slug = "supabase-vs-firebase";
   const pubDate = "2026-03-26";
 
@@ -19968,7 +19989,7 @@ ${mcpCtaCss()}
   </div>
 
   <h2 id="comparison">1. Free Tier Comparison Table</h2>
-  <p class="section-intro">Side-by-side comparison using verified data from our index. <span class="vs-badge vs-supabase">Supabase</span> and <span class="vs-badge vs-firebase">Firebase</span> free tiers as of March 2026.</p>
+  <p class="section-intro">Side-by-side comparison using verified data from our index. <span class="vs-badge vs-supabase">Supabase</span> and <span class="vs-badge vs-firebase">Firebase</span> free tiers. [[freshness]]</p>
   <div style="overflow-x:auto">
     <table class="pricing-table">
       <thead>
@@ -20097,7 +20118,7 @@ ${mcpCtaCss()}
 
 function buildVercelVsNetlifyPage(): string {
   const title = "Vercel vs Netlify Free Tier Comparison — 2026 Deep Dive";
-  const metaDesc = "Compare Vercel and Netlify free tiers side-by-side. Bandwidth, serverless functions, build minutes, storage, commercial use — verified data, cost-at-scale analysis, and hosting alternatives. Updated March 2026.";
+  const metaDesc = "Compare Vercel and Netlify free tiers side-by-side. Bandwidth, serverless functions, build minutes, storage, commercial use — verified data, cost-at-scale analysis, and hosting alternatives. [[freshness]]";
   const slug = "vercel-vs-netlify";
   const pubDate = "2026-03-26";
 
@@ -20290,7 +20311,7 @@ ${mcpCtaCss()}
   </div>
 
   <h2 id="comparison">1. Free Tier Comparison Table</h2>
-  <p class="section-intro">Side-by-side comparison using verified data from our index. <span class="vs-badge vs-vercel">Vercel</span> and <span class="vs-badge vs-netlify">Netlify</span> free tiers as of March 2026.</p>
+  <p class="section-intro">Side-by-side comparison using verified data from our index. <span class="vs-badge vs-vercel">Vercel</span> and <span class="vs-badge vs-netlify">Netlify</span> free tiers. [[freshness]]</p>
   <div style="overflow-x:auto">
     <table class="pricing-table">
       <thead>
@@ -20414,7 +20435,7 @@ ${mcpCtaCss()}
 
 function buildNeonVsSupabasePage(): string {
   const title = "Neon vs Supabase Free Tier Comparison — 2026 Deep Dive";
-  const metaDesc = "Compare Neon and Supabase free tiers side-by-side. Storage, compute, branching, auth, edge functions, realtime — verified data, cost-at-scale analysis, and database alternatives. Updated March 2026.";
+  const metaDesc = "Compare Neon and Supabase free tiers side-by-side. Storage, compute, branching, auth, edge functions, realtime — verified data, cost-at-scale analysis, and database alternatives. [[freshness]]";
   const slug = "neon-vs-supabase";
   const pubDate = "2026-03-26";
 
@@ -20609,7 +20630,7 @@ ${mcpCtaCss()}
   </div>
 
   <h2 id="comparison">1. Free Tier Comparison Table</h2>
-  <p class="section-intro">Side-by-side comparison using verified data from our index. <span class="vs-badge vs-neon">Neon</span> and <span class="vs-badge vs-supabase">Supabase</span> free tiers as of March 2026.</p>
+  <p class="section-intro">Side-by-side comparison using verified data from our index. <span class="vs-badge vs-neon">Neon</span> and <span class="vs-badge vs-supabase">Supabase</span> free tiers. [[freshness]]</p>
   <div style="overflow-x:auto">
     <table class="pricing-table">
       <thead>
@@ -20733,7 +20754,7 @@ ${mcpCtaCss()}
 
 function buildRailwayVsRenderPage(): string {
   const title = "Railway vs Render — Free Tier Comparison (2026)";
-  const metaDesc = "Compare Railway and Render free tiers side-by-side. RAM, CPU, databases, Redis, sleep behavior, bandwidth, custom domains — verified data from 1,600+ developer tools. Usage-based flexibility vs predictable billing.";
+  const metaDesc = "Compare Railway and Render free tiers side-by-side. RAM, CPU, databases, Redis, sleep behavior, bandwidth, custom domains — verified data from 1,600+ developer tools. Usage-based flexibility vs predictable billing. [[freshness]]";
   const slug = "railway-vs-render";
   const pubDate = "2026-03-26";
 
@@ -20930,7 +20951,7 @@ ${mcpCtaCss()}
   </div>
 
   <h2 id="comparison">1. Free Tier Comparison Table</h2>
-  <p class="section-intro">Side-by-side comparison using verified data from our index. <span class="vs-badge vs-railway">Railway</span> and <span class="vs-badge vs-render">Render</span> free tiers as of March 2026.</p>
+  <p class="section-intro">Side-by-side comparison using verified data from our index. <span class="vs-badge vs-railway">Railway</span> and <span class="vs-badge vs-render">Render</span> free tiers. [[freshness]]</p>
   <div style="overflow-x:auto">
     <table class="pricing-table">
       <thead>
@@ -21054,7 +21075,7 @@ ${mcpCtaCss()}
 
 function buildDatadogVsNewRelicPage(): string {
   const title = "Datadog vs New Relic — Free Tier Comparison (2026)";
-  const metaDesc = "Compare Datadog and New Relic free tiers side-by-side. Hosts, data ingest, APM, logs, synthetics, retention, alerting — verified data from 1,600+ developer tools. Per-host pricing vs per-GB pricing.";
+  const metaDesc = "Compare Datadog and New Relic free tiers side-by-side. Hosts, data ingest, APM, logs, synthetics, retention, alerting — verified data from 1,600+ developer tools. Per-host pricing vs per-GB pricing. [[freshness]]";
   const slug = "datadog-vs-new-relic";
   const pubDate = "2026-03-26";
 
@@ -21251,7 +21272,7 @@ ${mcpCtaCss()}
   </div>
 
   <h2 id="comparison">1. Free Tier Comparison Table</h2>
-  <p class="section-intro">Side-by-side comparison using verified data from our index. <span class="vs-badge vs-datadog">Datadog</span> and <span class="vs-badge vs-newrelic">New Relic</span> free tiers as of March 2026.</p>
+  <p class="section-intro">Side-by-side comparison using verified data from our index. <span class="vs-badge vs-datadog">Datadog</span> and <span class="vs-badge vs-newrelic">New Relic</span> free tiers. [[freshness]]</p>
   <div style="overflow-x:auto">
     <table class="pricing-table">
       <thead>
@@ -21786,7 +21807,7 @@ ${mcpCtaCss()}
   </div>
 
   <div class="methodology">
-    <strong>Methodology:</strong> Free tier details sourced from <a href="https://www.hashicorp.com/products/terraform/pricing" target="_blank" rel="noopener">HashiCorp's pricing page</a> and verified against each alternative's pricing page as of March 2026. Migration steps based on official Terraform backend migration documentation. Resource counts and feature comparisons from our index of ${offers.length.toLocaleString()} tracked developer tools.
+    <strong>Methodology:</strong> Free tier details sourced from <a href="https://www.hashicorp.com/products/terraform/pricing" target="_blank" rel="noopener">HashiCorp's pricing page</a>. [[freshness]] Migration steps based on official Terraform backend migration documentation. Resource counts and feature comparisons from our index of ${offers.length.toLocaleString()} tracked developer tools.
   </div>
 
   <div class="search-cta">
@@ -22181,7 +22202,7 @@ function buildTerraformCloudFreeTierRemovedPage(): string {
     + '  </div>\n'
     + '\n'
     + '  <div class="methodology">\n'
-    + '    <strong>Methodology:</strong> Pricing data sourced from <a href="https://www.hashicorp.com/products/terraform/pricing" target="_blank" rel="noopener">HashiCorp\'s pricing page</a> and verified against each alternative\'s pricing page as of April 2026. Cost estimates for self-hosted options assume a small cloud VM ($5-15/month for Atlantis/OpenTofu runners). Resource limits and features were read from each platform\'s free tier documentation on ' + pubDate + '. Stability indicators are computed from our tracked pricing changes. See also our <a href="/hcp-terraform-migration">pre-deadline migration guide</a> for step-by-step instructions.\n'
+    + '    <strong>Methodology:</strong> Pricing data sourced from <a href="https://www.hashicorp.com/products/terraform/pricing" target="_blank" rel="noopener">HashiCorp\'s pricing page</a>. [[freshness]] Cost estimates for self-hosted options assume a small cloud VM ($5-15/month for Atlantis/OpenTofu runners). Resource limits and features were read from each platform\'s free tier documentation on ' + pubDate + '. Stability indicators are computed from our tracked pricing changes. See also our <a href="/hcp-terraform-migration">pre-deadline migration guide</a> for step-by-step instructions.\n'
     + '  </div>\n'
     + '\n'
     + '  <div class="search-cta">\n'
@@ -22527,7 +22548,7 @@ ${mcpCtaCss()}
   </div>
 
   <div class="methodology">
-    <strong>Methodology:</strong> Gemini API pricing details sourced from <a href="https://ai.google.dev/gemini-api/docs/pricing" target="_blank" rel="noopener">Google's Gemini API pricing page</a> and <a href="https://ai.google.dev/gemini-api/docs/billing" target="_blank" rel="noopener">billing documentation</a>. Rate limit reductions verified via our <a href="/changes">deal change tracker</a> (3 Gemini changes tracked since December 2025). Alternative provider limits verified against their pricing pages as of March 2026. Risk assessments are based on pricing history and free tier stability.
+    <strong>Methodology:</strong> Gemini API pricing details sourced from <a href="https://ai.google.dev/gemini-api/docs/pricing" target="_blank" rel="noopener">Google's Gemini API pricing page</a> and <a href="https://ai.google.dev/gemini-api/docs/billing" target="_blank" rel="noopener">billing documentation</a>. Rate limit reductions verified via our <a href="/changes">deal change tracker</a> (3 Gemini changes tracked since December 2025). [[freshness]] Risk assessments are based on pricing history and free tier stability.
   </div>
 
   <div class="search-cta">
@@ -22956,7 +22977,7 @@ function buildGeminiApiPricingChangesPage(): string {
     + '  </div>\n'
     + '\n'
     + '  <div class="methodology">\n'
-    + '    <strong>Methodology:</strong> Pricing data sourced from <a href="https://ai.google.dev/gemini-api/docs/pricing" target="_blank" rel="noopener">Google\'s Gemini API pricing page</a> and <a href="https://ai.google.dev/gemini-api/docs/billing" target="_blank" rel="noopener">billing documentation</a>. Alternative provider limits verified against their respective pricing pages as of April 2026. Cost estimates assume average request sizes (~1K tokens in, ~500 tokens out) and may vary by use case. Risk assessments and stability indicators are computed from our tracked pricing changes. See also our <a href="/gemini-api-pricing-2026">Gemini billing deep-dive</a> for spend cap tier details.\n'
+    + '    <strong>Methodology:</strong> Pricing data sourced from <a href="https://ai.google.dev/gemini-api/docs/pricing" target="_blank" rel="noopener">Google\'s Gemini API pricing page</a> and <a href="https://ai.google.dev/gemini-api/docs/billing" target="_blank" rel="noopener">billing documentation</a>. [[freshness]] Cost estimates assume average request sizes (~1K tokens in, ~500 tokens out) and may vary by use case. Risk assessments and stability indicators are computed from our tracked pricing changes. See also our <a href="/gemini-api-pricing-2026">Gemini billing deep-dive</a> for spend cap tier details.\n'
     + '  </div>\n'
     + '\n'
     + '  <div class="search-cta">\n'
@@ -24868,7 +24889,7 @@ ${mcpCtaCss()}
   <div class="methodology">
     <p><strong>How we track this data:</strong> AgentDeals monitors free tier changes across ${offers.length.toLocaleString()} developer tools in ${categories.length} categories. Stability ratings are computed from our <a href="/changes">deal changes database</a> \u2014 OpenAI is classified as <strong style="color:${stabilityColor}">${openaiStability}</strong> based on ${openaiChanges.length} tracked changes including free tier removal, limit reductions, and API deprecation.</p>
     <p><strong>Migration complexity ratings</strong> are based on the scope of code changes required: Low (API shape change only), Medium (some logic restructuring), High (architectural changes to state management or data flow).</p>
-    <p><strong>Cost data</strong> is from official vendor pricing pages, verified April 2026. Tool-specific costs (file search, web search) are Responses API additions not present in the Assistants API.</p>
+    <p><strong>Cost data</strong> is from official vendor pricing pages. ${pageCompiledClause("/openai-assistants-migration-2026")}. Tool-specific costs (file search, web search) are Responses API additions not present in the Assistants API.</p>
     <p>For real-time data, use our <a href="/stability">stability dashboard</a>, <a href="/feed.xml">Atom feed</a>, or <a href="/setup">MCP server</a>. Full dataset available via <a href="/api/offers">REST API</a>.</p>
   </div>
 
@@ -27198,7 +27219,7 @@ ${mcpCtaCss()}
 
 function buildStartupCreditsPage(): string {
   const title = "Startup Credits Comparison 2026 — Cloud Credits, Eligibility & Hidden Constraints";
-  const metaDesc = "Compare 15+ startup programs: AWS Activate, Google for Startups, Microsoft Founders Hub, Cloudflare, DigitalOcean Hatch, Stripe Atlas, Brex, Mercury, and more. Credit values, eligibility, vesting, and stacking strategies. Updated April 2026.";
+  const metaDesc = "Compare 15+ startup programs: AWS Activate, Google for Startups, Microsoft Founders Hub, Cloudflare, DigitalOcean Hatch, Stripe Atlas, Brex, Mercury, and more. Credit values, eligibility, vesting, and stacking strategies. [[freshness]]";
   const slug = "startup-credits";
   const pubDate = "2026-03-27";
 
@@ -27465,7 +27486,7 @@ function buildStartupCreditsPage(): string {
     '  </div>\n' +
     '\n' +
     '  <h2 id="comparison-table">Comparison Table</h2>\n' +
-    '  <p class="section-intro">All credit values verified as of April 2026. Hover rows to highlight. Programs sorted by category.</p>\n' +
+    '  <p class="section-intro">[[freshness]] Hover rows to highlight. Programs sorted by category.</p>\n' +
     '\n' +
     '  <div style="overflow-x:auto">\n' +
     '  <table class="pricing-table">\n' +
@@ -27595,7 +27616,7 @@ function buildStartupCreditsPage(): string {
 
 function buildAiCodingPricing2026Page(): string {
   const title = "AI Coding Tools Pricing Guide — 2026 Comparison";
-  const metaDesc = "Side-by-side pricing comparison of Cursor, Windsurf, GitHub Copilot, Gemini Code Assist, Amazon Q, Claude Code, Augment Code and more. Free tiers, pro plans, and recent pricing changes. Updated March 2026.";
+  const metaDesc = "Side-by-side pricing comparison of Cursor, Windsurf, GitHub Copilot, Gemini Code Assist, Amazon Q, Claude Code, Augment Code and more. Free tiers, pro plans, and recent pricing changes. [[freshness]]";
   const slug = "ai-coding-pricing-2026";
   const pubDate = "2026-03-27";
 
@@ -27872,7 +27893,7 @@ ${mcpCtaCss()}
   </div>
 
   <h2 id="pricing-table">Pricing Comparison Table</h2>
-  <p class="section-intro">All prices verified as of March 2026. Hover rows to highlight. Click tool names for full vendor profiles with free tier details.</p>
+  <p class="section-intro">[[freshness]] Hover rows to highlight. Click tool names for full vendor profiles with free tier details.</p>
 
   <div style="overflow-x:auto">
   <table class="pricing-table">
@@ -27986,7 +28007,7 @@ ${mcpCtaCss()}
 
 function buildAiCodingToolsPricingPage(): string {
   const title = "AI Coding Tools Pricing Comparison 2026 — The Definitive Free Tier Breakdown";
-  const metaDesc = "Compare 17 AI coding tools: Cursor, Windsurf, Amazon Kiro, GitHub Copilot, Claude Code, Devin, Bolt.new, Lovable, Codex, Gemini CLI and more. Free tiers, hidden costs, cost analysis for solo devs and teams. Updated April 2026.";
+  const metaDesc = "Compare 17 AI coding tools: Cursor, Windsurf, Amazon Kiro, GitHub Copilot, Claude Code, Devin, Bolt.new, Lovable, Codex, Gemini CLI and more. Free tiers, hidden costs, cost analysis for solo devs and teams. [[freshness]]";
   const slug = "ai-coding-tools-pricing";
   const pubDate = "2026-04-08";
 
@@ -28520,7 +28541,7 @@ function buildAiCodingToolsPricingPage(): string {
     '  </div>\n' +
     '\n' +
     '  <h2 id="pricing-table">Pricing Comparison Table</h2>\n' +
-    '  <p class="section-intro">All prices verified as of April 2026. Hover rows to highlight. Click tool names for full vendor profiles with free tier details.</p>\n' +
+    '  <p class="section-intro">[[freshness]] Hover rows to highlight. Click tool names for full vendor profiles with free tier details.</p>\n' +
     '\n' +
     '  <div style="overflow-x:auto">\n' +
     '  <table class="pricing-table">\n' +
@@ -28736,7 +28757,7 @@ function buildAiCodingToolsPricingPage(): string {
 
 function buildCiCdPricingPage(): string {
   const title = "CI/CD Tools Pricing Comparison 2026 — Build Minutes, Runners & Costs Compared";
-  const metaDesc = "Compare 17+ CI/CD tools: GitHub Actions, GitLab CI, CircleCI, Buildkite, Harness CI, Google Cloud Build, Bitrise and more. Free tiers, build minutes, concurrent jobs, pricing models, and hidden costs. Updated April 2026.";
+  const metaDesc = "Compare 17+ CI/CD tools: GitHub Actions, GitLab CI, CircleCI, Buildkite, Harness CI, Google Cloud Build, Bitrise and more. Free tiers, build minutes, concurrent jobs, pricing models, and hidden costs. [[freshness]]";
   const slug = "ci-cd-pricing";
   const pubDate = "2026-04-09";
 
@@ -29271,7 +29292,7 @@ function buildCiCdPricingPage(): string {
     '  </div>\n' +
     '\n' +
     '  <h2 id="pricing-table">Pricing Comparison Table</h2>\n' +
-    '  <p class="section-intro">All prices verified as of April 2026. Hover rows to highlight. Click tool names for full vendor profiles with free tier details.</p>\n' +
+    '  <p class="section-intro">[[freshness]] Hover rows to highlight. Click tool names for full vendor profiles with free tier details.</p>\n' +
     '\n' +
     '  <div style="overflow-x:auto">\n' +
     '  <table class="pricing-table">\n' +
@@ -29487,7 +29508,7 @@ function buildCiCdPricingPage(): string {
 
 function buildDatabasePricingPage(): string {
   const title = "Database Pricing Comparison 2026 — Free Tiers, Storage Limits & Costs Compared";
-  const metaDesc = "Compare 25+ database services: Supabase, Neon, PlanetScale, MongoDB Atlas, Firebase, CockroachDB, Turso, Upstash, Redis Cloud, DynamoDB and more. Free tiers, storage limits, connections, pricing models, and hidden costs. Updated April 2026.";
+  const metaDesc = "Compare 25+ database services: Supabase, Neon, PlanetScale, MongoDB Atlas, Firebase, CockroachDB, Turso, Upstash, Redis Cloud, DynamoDB and more. Free tiers, storage limits, connections, pricing models, and hidden costs. [[freshness]]";
   const slug = "database-pricing";
   const pubDate = "2026-04-09";
 
@@ -30157,7 +30178,7 @@ function buildDatabasePricingPage(): string {
     '  </div>\n' +
     '\n' +
     '  <h2 id="pricing-table">Pricing Comparison Table</h2>\n' +
-    '  <p class="section-intro">All prices verified as of April 2026. Hover rows to highlight. Click service names for full vendor profiles with free tier details.</p>\n' +
+    '  <p class="section-intro">[[freshness]] Hover rows to highlight. Click service names for full vendor profiles with free tier details.</p>\n' +
     '\n' +
     '  <div style="overflow-x:auto">\n' +
     '  <table class="pricing-table">\n' +
@@ -30373,7 +30394,7 @@ function buildDatabasePricingPage(): string {
 
 function buildVectorDatabasePricingPage(): string {
   const title = "Vector Database Pricing Comparison 2026 — Free Tiers, Storage Limits & Costs for RAG/AI";
-  const metaDesc = "Compare 11+ vector databases: Pinecone, Qdrant, Weaviate, Chroma, Zilliz Cloud, LanceDB, Upstash Vector, Supabase pgvector, Neon pgvector, MongoDB Atlas Vector Search and more. Free tiers, vector limits, dimensions, pricing models. Updated April 2026.";
+  const metaDesc = "Compare 11+ vector databases: Pinecone, Qdrant, Weaviate, Chroma, Zilliz Cloud, LanceDB, Upstash Vector, Supabase pgvector, Neon pgvector, MongoDB Atlas Vector Search and more. Free tiers, vector limits, dimensions, pricing models. [[freshness]]";
   const slug = "vector-database-pricing";
   const pubDate = "2026-04-10";
 
@@ -30814,7 +30835,7 @@ function buildVectorDatabasePricingPage(): string {
     '  </div>\n' +
     '\n' +
     '  <h2 id="pricing-table">Free Tier Comparison Table</h2>\n' +
-    '  <p class="section-intro">All prices verified as of April 2026. Hover rows to highlight. Click service names for full vendor profiles with free tier details.</p>\n' +
+    '  <p class="section-intro">[[freshness]] Hover rows to highlight. Click service names for full vendor profiles with free tier details.</p>\n' +
     '\n' +
     '  <div style="overflow-x:auto">\n' +
     '  <table class="pricing-table">\n' +
@@ -31034,7 +31055,7 @@ function buildVectorDatabasePricingPage(): string {
 
 function buildHostingPricingPage(): string {
   const title = "Cloud Hosting & PaaS Pricing Comparison 2026 — Free Tiers, Limits & Hidden Costs";
-  const metaDesc = "Compare 15+ cloud hosting and PaaS services: Railway, Vercel, Render, Netlify, Fly.io, Cloudflare Workers/Pages, Deno Deploy, Koyeb, Val Town, Google Cloud Run and more. Free tiers, bandwidth limits, build minutes, and pricing gotchas. Updated April 2026.";
+  const metaDesc = "Compare 15+ cloud hosting and PaaS services: Railway, Vercel, Render, Netlify, Fly.io, Cloudflare Workers/Pages, Deno Deploy, Koyeb, Val Town, Google Cloud Run and more. Free tiers, bandwidth limits, build minutes, and pricing gotchas. [[freshness]]";
   const slug = "hosting-pricing";
   const pubDate = "2026-04-13";
 
@@ -31545,7 +31566,7 @@ function buildHostingPricingPage(): string {
     '  </div>\n' +
     '\n' +
     '  <h2 id="pricing-table">Pricing Comparison Table</h2>\n' +
-    '  <p class="section-intro">All prices verified as of April 2026. Hover rows to highlight. Click platform names for full vendor profiles with free tier details.</p>\n' +
+    '  <p class="section-intro">[[freshness]] Hover rows to highlight. Click platform names for full vendor profiles with free tier details.</p>\n' +
     '\n' +
     '  <div style="overflow-x:auto">\n' +
     '  <table class="pricing-table">\n' +
@@ -53594,7 +53615,7 @@ const httpServer = createHttpServer(async (req, res) => {
   const rawEnd = res.end.bind(res);
   res.end = ((...args: unknown[]) => {
     if (typeof args[0] === "string" && /^text\/html/.test(servedContentType)) {
-      args[0] = withLedeBeforeNav(args[0]);
+      args[0] = withLedeBeforeNav(withPageFreshness(args[0], url.pathname));
     }
     return rawEnd(...(args as never[]));
   }) as typeof res.end;

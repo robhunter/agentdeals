@@ -32,6 +32,8 @@
     "serve": "node dist/serve.js",
     "dev": "ts-node src/index.ts",
     "test": "node --test --test-concurrency 1 test/**/*.test.ts",
+    "mutate:1479": "node scripts/mutate-1479.mjs",
+    "mutate:1481": "node scripts/mutate-1481.mjs",
     "test:gated": "node --test --test-concurrency 1 --test-reporter=spec --test-reporter-destination=stdout --test-reporter=./scripts/reporters/failing-test-files.js --test-reporter-destination=$GATE_FAILING_FILES test/**/*.test.ts",
     "ratchet:budgets": "node scripts/ratchet-quality-budgets.js --lower",
     "lastmod:pages": "node scripts/update-page-lastmod.js",
