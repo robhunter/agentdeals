@@ -1,9 +1,8 @@
-import { searchOffers, loadDealChanges, vendorRiskAssessment, classifyStability, withheldStability, standingNarrowingsCitingNoSource } from "./data.js";
+import { searchOffers, loadDealChanges, publishedRisk, levelWithheldStatement, classifyStability, withheldStability, standingNarrowingsCitingNoSource } from "./data.js";
 import { rankOffers, utcDate, CRITERIA_PATH, DEMOTE_ONLY_POLICY, NOT_MODELLED_NOTICE } from "./ranking.js";
-import type { Demerit, Disclosure, TieBreak } from "./ranking.js";
-import { unreachableNoticeForUrl } from "./link-health.js";
+import type { Demerit, Disclosure, Gate, TieBreak } from "./ranking.js";
 import { verificationLedger } from "./verification-state.js";
-import type { Offer, StabilityClass, DealChange, RatingWithheld, LinkUnreachable } from "./types.js";
+import type { Offer, StabilityClass, DealChange, RatingWithheld, LinkUnreachable, SourceCheck } from "./types.js";
 import { partitionRoleCandidates, MEMBERSHIP_GATE_RULES } from "./product-role.js";
 
 export interface StackCandidate {
@@ -14,6 +13,9 @@ export interface StackCandidate {
   verified_date: string;
   risk_level: "stable" | "caution" | "risky" | null;
   rating_withheld: RatingWithheld | null;
+  source_check: SourceCheck | null;
+  gate: Gate | null;
+  level_withheld_because: string | null;
   stability: StabilityClass | null;
   stability_withheld: RatingWithheld | null;
   link_unreachable: LinkUnreachable | null;
@@ -218,8 +220,8 @@ function toCandidate(
   disclosures: Disclosure[],
   vendorChanges: DealChange[],
 ): StackCandidate {
-  const assessment = vendorRiskAssessment(vendorChanges);
-  const linkUnreachable = unreachableNoticeForUrl(offer.url);
+  const published = publishedRisk(offer, vendorChanges);
+  const linkUnreachable = published.link_unreachable;
   const uncitedNarrowings = standingNarrowingsCitingNoSource(vendorChanges);
   return {
     vendor: offer.vendor,
@@ -227,8 +229,11 @@ function toCandidate(
     description: offer.description.length > 200 ? offer.description.slice(0, 197) + "..." : offer.description,
     url: offer.url,
     verified_date: offer.verifiedDate,
-    risk_level: assessment.rating_withheld ? null : assessment.level,
-    rating_withheld: assessment.rating_withheld,
+    risk_level: published.risk_level,
+    rating_withheld: published.rating_withheld,
+    source_check: published.source_check,
+    gate: published.gate,
+    level_withheld_because: levelWithheldStatement(offer.vendor, published),
     stability: withheldStability(linkUnreachable, classifyStability(vendorChanges), vendorChanges),
     stability_withheld: uncitedNarrowings.length > 0 ? { reason: "no_source", records: uncitedNarrowings.length } : null,
     link_unreachable: linkUnreachable,

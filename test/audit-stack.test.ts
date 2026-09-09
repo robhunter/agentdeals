@@ -21,7 +21,10 @@ describe("auditStack logic", () => {
     for (const svc of result.services) {
       assert.strictEqual(svc.status, "found");
       assert.ok(svc.category);
-      assert.ok(svc.risk_level);
+      assert.ok(
+        ["stable", "caution", "risky"].includes(svc.risk_level) || svc.level_withheld_because,
+        `${svc.vendor} audits as ${svc.risk_level} and nothing says why`,
+      );
     }
   });
 
@@ -46,18 +49,24 @@ describe("auditStack logic", () => {
   });
 
   it("detects risk from deal changes", async () => {
-    const { auditStack, loadOffers, loadDealChanges, vendorRiskLevel } = await import("../dist/data.js");
+    const { auditStack, loadOffers, loadDealChanges, findVendor, publishedRisk } = await import("../dist/data.js");
     const changes = loadDealChanges();
-    const demoted = [...new Set(loadOffers().map(o => o.vendor))]
-      .filter(v => vendorRiskLevel(changes.filter(c => c.vendor.toLowerCase() === v.toLowerCase())) !== "stable")
+    const offers = loadOffers();
+    const demoted = [...new Set(offers.map(o => o.vendor))]
+      .filter(v => {
+        const match = findVendor(offers, v);
+        if (match.type !== "exact") return false;
+        const level = publishedRisk(match.offer, changes.filter(c => c.vendor.toLowerCase() === v.toLowerCase())).risk_level;
+        return level === "caution" || level === "risky";
+      })
       .slice(0, 2);
-    assert.strictEqual(demoted.length, 2, "the index holds fewer than two vendors the risk scale demotes");
+    assert.strictEqual(demoted.length, 2, "the index holds fewer than two vendors we publish a demoted level for");
     const result = auditStack(demoted);
     assert.ok(result.risks_found >= 2, `Should find at least 2 risks, got ${result.risks_found}`);
     for (const vendor of demoted) {
       const service = result.services.find(s => s.vendor === vendor);
       assert.ok(service, `${vendor} is missing from the audit`);
-      assert.notStrictEqual(service.risk_level, "stable", `${vendor} audits as stable`);
+      assert.ok(["caution", "risky"].includes(service.risk_level), `${vendor} audits as ${service.risk_level}`);
     }
   });
 

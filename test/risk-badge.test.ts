@@ -164,28 +164,38 @@ describe("#1038 — the level is checkable", () => {
   });
 
   it("the vendor page publishes the dated cause beside the badge in the <h1>", async () => {
-    const { enrichOffers, loadOffers } = await import("../dist/data.js");
+    const { enrichOffers, loadOffers, loadDealChanges, vendorRiskAssessment } = await import("../dist/data.js");
     const { gateFor, utcDate } = await import("../dist/ranking.js");
+    const changes = loadDealChanges();
     const seen = new Set<string>();
-    const warned = enrichOffers(loadOffers())
+    const oneRecordEach = enrichOffers(loadOffers())
       .filter((o: { vendor: string }) => {
         if (seen.has(o.vendor)) return false;
         seen.add(o.vendor);
         return true;
-      })
-      .filter((o: { risk_level: string | null }) => o.risk_level && o.risk_level !== "stable");
-    const listed = warned.filter((o: object) => gateFor(o, utcDate()) === null).slice(0, 6);
-    const gated = warned.filter((o: object) => gateFor(o, utcDate()) !== null).slice(0, 6);
+      });
+    const listed = oneRecordEach
+      .filter((o: { risk_level: string | null }) => o.risk_level && o.risk_level !== "stable")
+      .slice(0, 6);
+    const wouldWarn = (o: { vendor: string }) =>
+      vendorRiskAssessment(changes.filter(c => c.vendor.toLowerCase() === o.vendor.toLowerCase())).level !== "stable";
+    const gated = oneRecordEach
+      .filter((o: object) => gateFor(o, utcDate()) !== null)
+      .filter(wouldWarn)
+      .slice(0, 6);
     assert.ok(listed.length > 0, "expected at least one warned vendor the ranker lists");
-    assert.ok(gated.length > 0, "no warned vendor is gated, so the withheld badge is unchecked here");
+    assert.ok(gated.length > 0, "no gated vendor holds records that would warn, so the withheld badge is unchecked here");
 
     for (const offer of gated) {
+      assert.strictEqual(offer.risk_level, null, `${offer.vendor} is gated and /api/offers publishes ${offer.risk_level}`);
       const { text } = await get(`/vendor/${toSlug(offer.vendor)}`);
       const h1 = text.match(/<h1>[\s\S]*?<\/h1>/)?.[0] ?? "";
-      assert.ok(
-        !new RegExp(offer.risk_level!).test(h1),
-        `${offer.vendor}: the <h1> of a ${gateFor(offer, utcDate())!.code} record reads ${offer.risk_level}`,
-      );
+      for (const level of ["stable", "caution", "risky"]) {
+        assert.ok(
+          !new RegExp(level).test(h1),
+          `${offer.vendor}: the <h1> of a ${gateFor(offer, utcDate())!.code} record reads ${level}`,
+        );
+      }
     }
 
     for (const offer of listed) {
@@ -377,7 +387,7 @@ describe("#1038 — risk does not rank", () => {
   it("src/ranking.ts does not read risk_level or stability", () => {
     const src = readFileSync(path.join(REPO, "src", "ranking.ts"), "utf8");
     const executable = src.split("\n").filter((l) => !/^\s*(\*|\/\/|\/\*|\*\/)/.test(l)).join("\n");
-    for (const token of ["risk_level", "vendorRiskLevel", "vendorRiskAssessment", "classifyStability", "stability"]) {
+    for (const token of ["risk_level", "vendorRiskLevel", "publishedRisk", "vendorRiskAssessment", "classifyStability", "stability"]) {
       assert.ok(!executable.includes(token), `src/ranking.ts reads ${token}`);
     }
   });

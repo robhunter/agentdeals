@@ -444,16 +444,12 @@ export function enrichOffers(offers: Offer[]): EnrichedOffer[] {
       }
     }
 
-    const assessment = vendorRiskAssessment(vendorAllChangesList.get(key) ?? []);
-    const link_unreachable = unreachableNoticeForUrl(offer.url, now.getTime());
-    const rating_withheld = assessment.rating_withheld;
-    const risk_level =
-      rating_withheld || (cannotVouchForLevel(offer, link_unreachable) && assessment.level === "stable")
-        ? null
-        : assessment.level;
-    const risk_cause = assessment.cause
-      ? riskCauseOf(assessment.cause)
-      : null;
+    const { risk_level, risk_cause, rating_withheld, link_unreachable, gate } = publishedRisk(
+      offer,
+      vendorAllChangesList.get(key) ?? [],
+      servedOn,
+      now.getTime(),
+    );
 
     const stability = withheldStability(
       link_unreachable,
@@ -467,7 +463,7 @@ export function enrichOffers(offers: Offer[]): EnrichedOffer[] {
 
     const terms_superseded = supersededTermsRecordFor(offer, vendorAllChangesList.get(key) ?? []);
 
-    const enriched = { ...offer, recent_change, expires_soon, risk_level, risk_cause, rating_withheld, stability, days_since_verified, link_unreachable, gate: gateFor(offer, servedOn), terms_superseded };
+    const enriched = { ...offer, recent_change, expires_soon, risk_level, risk_cause, rating_withheld, stability, days_since_verified, link_unreachable, gate, terms_superseded };
     return stripReferrerValue(enriched);
   });
 }
@@ -877,8 +873,54 @@ export function riskCauseOf(cause: DealChange | null | undefined): RiskCause | n
   };
 }
 
-export function vendorRiskLevel(vendorChanges: DealChange[]): "stable" | "caution" | "risky" {
-  return vendorRiskAssessment(vendorChanges).level;
+export interface PublishedRisk {
+  risk_level: "stable" | "caution" | "risky" | null;
+  history_level: "stable" | "caution" | "risky";
+  risk_cause: RiskCause | null;
+  cause: DealChange | null;
+  rating_withheld: RatingWithheld | null;
+  link_unreachable: LinkUnreachable | null;
+  source_check: SourceCheck | null;
+  gate: Gate | null;
+}
+
+export function publishedRisk(
+  offer: Offer,
+  vendorChanges: DealChange[],
+  servedOn: string = utcDate(),
+  nowMs: number = Date.now(),
+): PublishedRisk {
+  const assessment = vendorRiskAssessment(vendorChanges, nowMs);
+  const link_unreachable = unreachableNoticeForUrl(offer.url, nowMs);
+  const gate = gateFor(offer, servedOn);
+  const withheld =
+    gate !== null ||
+    assessment.rating_withheld !== null ||
+    (cannotVouchForLevel(offer, link_unreachable) && assessment.level === "stable");
+  return {
+    risk_level: withheld ? null : assessment.level,
+    history_level: assessment.level,
+    risk_cause: riskCauseOf(assessment.cause),
+    cause: assessment.cause,
+    rating_withheld: assessment.rating_withheld,
+    link_unreachable,
+    source_check: offer.source_check ?? null,
+    gate,
+  };
+}
+
+export function vendorNotIndexedSentence(vendor: string): string {
+  return `${vendor} is not in our index, so we hold no record to rate.`;
+}
+
+export function levelWithheldStatement(vendor: string, risk: PublishedRisk): string | null {
+  if (risk.risk_level !== null) return null;
+  if (risk.gate) return gateRiskSummary(risk.gate);
+  if (risk.rating_withheld) return ratingWithheldForNoSourceSentence(vendor);
+  const reason = levelWithheldReason({ source_check: risk.source_check ?? undefined }, risk.link_unreachable);
+  if (!reason) return null;
+  const since = risk.link_unreachable?.last_reachable ? ` since ${risk.link_unreachable.last_reachable}` : "";
+  return withheldLevelSentence(reason, vendor, since);
 }
 
 export function checkVendorRisk(
@@ -896,14 +938,15 @@ export function checkVendorRisk(
 
   const offer = match.offer;
   const matchNotice = vendorMatchNotice(vendorName, match)!;
-  const gate = gateForOffer(offer);
   const allChanges = loadDealChanges();
   const vendorChanges = allChanges
     .filter((c) => c.vendor.toLowerCase() === offer.vendor.toLowerCase())
     .sort((a, b) => b.date.localeCompare(a.date));
 
+  const published = publishedRisk(offer, vendorChanges);
+  const gate = published.gate;
   const assessment = vendorRiskAssessment(vendorChanges);
-  const linkUnreachable = unreachableNoticeForUrl(offer.url);
+  const linkUnreachable = published.link_unreachable;
   const riskLevel = assessment.level;
 
   const verifiedDate = new Date(offer.verifiedDate);
@@ -925,15 +968,13 @@ export function checkVendorRisk(
     category: e.offer.category,
     tier: e.offer.tier,
     ...(() => {
-      const a = vendorRiskAssessment(allChanges.filter((c) => c.vendor.toLowerCase() === e.offer.vendor.toLowerCase()));
-      const unreachable = unreachableNoticeForUrl(e.offer.url);
-      const altGate = gateForOffer(e.offer);
+      const alt = publishedRisk(e.offer, allChanges.filter((c) => c.vendor.toLowerCase() === e.offer.vendor.toLowerCase()));
       return {
-        risk_level: altGate || a.rating_withheld || (cannotVouchForLevel(e.offer, unreachable) && a.level === "stable") ? null : a.level,
-        risk_cause: riskCauseOf(a.cause),
-        rating_withheld: a.rating_withheld,
-        link_unreachable: unreachable,
-        gate: altGate,
+        risk_level: alt.risk_level,
+        risk_cause: alt.risk_cause,
+        rating_withheld: alt.rating_withheld,
+        link_unreachable: alt.link_unreachable,
+        gate: alt.gate,
       };
     })(),
     demerits: e.demerits.map((d) => ({ code: d.code, points: d.points, reason: d.reason })),
@@ -972,11 +1013,11 @@ export function checkVendorRisk(
       vendor: offer.vendor,
       vendor_match: matchNotice,
       category: offer.category,
-      risk_level: gate || assessment.rating_withheld || (cannotVouchForLevel(offer, linkUnreachable) && riskLevel === "stable") ? null : riskLevel,
+      risk_level: published.risk_level,
       risk_cause: riskCauseOf(cause),
-      rating_withheld: assessment.rating_withheld,
+      rating_withheld: published.rating_withheld,
       link_unreachable: linkUnreachable,
-      source_check: offer.source_check ?? null,
+      source_check: published.source_check,
       gate,
       free_tier_longevity_days: gate && GATES_WITHOUT_A_LONGEVITY_REFERENT.has(gate.code) ? null : longevityDays,
       changes: vendorChanges,
@@ -997,7 +1038,13 @@ export interface AuditServiceResult {
   status: "found" | "not_found";
   category?: string;
   tier?: string;
-  risk_level?: "stable" | "caution" | "risky";
+  risk_level?: "stable" | "caution" | "risky" | null;
+  risk_cause?: RiskCause | null;
+  rating_withheld?: RatingWithheld | null;
+  link_unreachable?: LinkUnreachable | null;
+  source_check?: SourceCheck | null;
+  gate?: Gate | null;
+  level_withheld_because?: string | null;
   recent_changes?: DealChange[];
   cheaper_alternative?: { vendor: string; tier: string; category: string };
   suggestions?: string[];
@@ -1046,19 +1093,19 @@ export function auditStack(serviceNames: string[]): AuditResult {
       .filter((c) => c.vendor.toLowerCase() === offer.vendor.toLowerCase())
       .sort((a, b) => b.date.localeCompare(a.date));
 
-    const riskLevel = vendorRiskLevel(vendorChanges);
-    if (riskLevel !== "stable") risksFound++;
+    const published = publishedRisk(offer, vendorChanges);
+    const riskLevel = published.risk_level;
+    if (riskLevel === "risky" || riskLevel === "caution") risksFound++;
 
     let cheaperAlternative: AuditServiceResult["cheaper_alternative"];
     const sameCat = offers.filter(
       (o) => o.category === offer.category && o.vendor !== offer.vendor && o.tier.toLowerCase().includes("free")
     );
-    if (sameCat.length > 0) {
-      const stableAlt = sameCat.find((o) => {
-        const oChanges = allChanges.filter((c) => c.vendor.toLowerCase() === o.vendor.toLowerCase());
-        return vendorRiskLevel(oChanges) === "stable";
-      });
-      const alt = stableAlt || sameCat[0];
+    const alt = sameCat.find((o) => {
+      const oChanges = allChanges.filter((c) => c.vendor.toLowerCase() === o.vendor.toLowerCase());
+      return publishedRisk(o, oChanges).risk_level === "stable";
+    });
+    if (alt) {
       cheaperAlternative = { vendor: alt.vendor, tier: alt.tier, category: alt.category };
       savingsOpportunities++;
     }
@@ -1069,6 +1116,12 @@ export function auditStack(serviceNames: string[]): AuditResult {
       category: offer.category,
       tier: offer.tier,
       risk_level: riskLevel,
+      risk_cause: published.risk_cause,
+      rating_withheld: published.rating_withheld,
+      link_unreachable: published.link_unreachable,
+      source_check: published.source_check,
+      gate: published.gate,
+      level_withheld_because: levelWithheldStatement(offer.vendor, published),
       ...(vendorChanges.length > 0 ? { recent_changes: vendorChanges } : {}),
       ...(cheaperAlternative ? { cheaper_alternative: cheaperAlternative } : {}),
     };

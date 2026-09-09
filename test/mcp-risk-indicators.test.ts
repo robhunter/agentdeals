@@ -158,11 +158,11 @@ describe("MCP risk_level/stability indicators (issue #969)", () => {
       assert.ok(Array.isArray(role.candidates) && role.candidates.length > 0, `${role.role} should have candidates`);
       for (const c of role.candidates) {
         assert.ok(
-          ["stable", "caution", "risky"].includes(c.risk_level) || c.rating_withheld,
+          ["stable", "caution", "risky"].includes(c.risk_level) || c.level_withheld_because,
           `candidate ${c.vendor} has risk_level ${c.risk_level} and no field says why`
         );
         assert.ok(
-          !(c.risk_level && c.rating_withheld),
+          !(c.risk_level && c.level_withheld_because),
           `candidate ${c.vendor} publishes both a level and a reason it was withheld`
         );
         assert.ok(
