@@ -83,6 +83,7 @@ export type SourceCheckOutcome =
   | "ok"
   | "states_no_amount"
   | "does_not_name_vendor"
+  | "does_not_name_product"
   | "states_no_terms"
   | "unreadable";
 

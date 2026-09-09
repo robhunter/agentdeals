@@ -9399,6 +9399,20 @@
       "alternatives": [],
       "detected_by": "reverify-ai",
       "recorded_date": "2026-09-09"
+    },
+    {
+      "vendor": "Google GLM 5",
+      "change_type": "record_corrected",
+      "date": "2026-09-09",
+      "summary": "Data correction - our own entry for Google GLM 5 was incorrect. Google publishes no model called GLM 5; GLM is Zhipu AI's model family, and the catalogue's separate Zhipu AI record already lists the GLM-4 series. The Vertex AI model reference this record cited never writes GLM: that URL redirects to a live Google page of 73,312 readable characters in which GLM appears zero times, and the terms we published from it - '10 frames per second' - are a video sampling rate from the Gemini API documentation.",
+      "previous_state": "Listed as Google GLM 5, tier Experimental Preview, rated stable with zero pricing changes recorded: experimental model for complex systems engineering and agentic tasks, preview access via Vertex AI",
+      "current_state": "Withdrawn from the catalogue. No Google page we can read names this product. GLM models are published by Zhipu AI, which the catalogue holds under its own record.",
+      "impact": "medium",
+      "source_url": "https://cloud.google.com/vertex-ai/docs/generative-ai/model-reference/overview",
+      "category": "AI / ML",
+      "alternatives": [],
+      "recorded_date": "2026-09-09",
+      "date_source": "hand_written"
     }
   ]
 }

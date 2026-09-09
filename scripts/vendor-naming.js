@@ -16,6 +16,7 @@ const MIN_DISTINCTIVE_WORD = 7;
 export const SOURCE_CHECK_OK = "ok";
 export const SOURCE_CHECK_NO_AMOUNT = "states_no_amount";
 export const SOURCE_CHECK_NOT_NAMED = "does_not_name_vendor";
+export const SOURCE_CHECK_NOT_THE_PRODUCT = "does_not_name_product";
 export const SOURCE_CHECK_NO_TERMS = "states_no_terms";
 export const SOURCE_CHECK_UNREADABLE = "unreadable";
 
@@ -23,12 +24,14 @@ export const SOURCE_CHECK_OUTCOMES = [
   SOURCE_CHECK_OK,
   SOURCE_CHECK_NO_AMOUNT,
   SOURCE_CHECK_NOT_NAMED,
+  SOURCE_CHECK_NOT_THE_PRODUCT,
   SOURCE_CHECK_NO_TERMS,
   SOURCE_CHECK_UNREADABLE,
 ];
 
 const OUTCOMES_THAT_HOLD_THE_VERIFIED_DATE = new Set([
   SOURCE_CHECK_NOT_NAMED,
+  SOURCE_CHECK_NOT_THE_PRODUCT,
   SOURCE_CHECK_NO_TERMS,
   SOURCE_CHECK_UNREADABLE,
 ]);
@@ -131,9 +134,63 @@ export function servedFromTheVendorsDomain(offer, aliases = []) {
     .some((label) => hostLabelMatchesVendor(label, offer?.vendor ?? "", aliases));
 }
 
+const NAME_TLD_SET = new Set(NAME_TLDS);
+
+function nameTokens(vendor) {
+  return normalizeForMatch(vendor).trim().split(" ").filter(Boolean);
+}
+
+function labelRestatesToken(label, token) {
+  if (label.length < MIN_FORM_LENGTH) return false;
+  if (label === token) return true;
+  return label.length >= MIN_HOST_PREFIX && token.startsWith(label);
+}
+
+function distinguishesTheProduct(token) {
+  if (token.length < MIN_FORM_LENGTH) return false;
+  return !NAME_QUALIFIERS.has(token) && !NAME_TLD_SET.has(token) && !/^\d+$/.test(token);
+}
+
+export function nameWords(vendor) {
+  return String(vendor ?? "")
+    .replace(/\([^)]*\)/g, " ")
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean);
+}
+
+const NOTHING_RESTATED = { tokens: [], labels: [], remainder: [] };
+
+export function hostRestatement(vendor, url) {
+  const words = nameWords(vendor);
+  if (words.length < 2) return NOTHING_RESTATED;
+  const tokens = nameTokens(words.join(" "));
+  const restated = new Set();
+  const labels = [];
+  for (const label of hostLabels(url)) {
+    const hits = tokens.filter((token) => labelRestatesToken(label, token));
+    if (hits.length === 0) continue;
+    labels.push(label);
+    for (const hit of hits) restated.add(hit);
+  }
+  const remainder = tokens.filter((token) => !restated.has(token));
+  if (!remainder.some(distinguishesTheProduct)) return NOTHING_RESTATED;
+  return { tokens: [...restated], labels, remainder };
+}
+
+export function productHalf(vendor, restated) {
+  const restating = new Set(restated.tokens);
+  const kept = nameWords(vendor).filter((word) => !nameTokens(word).some((token) => restating.has(token)));
+  return kept.length > 0 ? kept.join(" ") : restated.remainder.join(" ");
+}
+
 export function pageNamesVendor(pageText, vendor, options = {}) {
   const aliases = options.aliases ?? [];
-  const forms = vendorNameForms(vendor, aliases);
+  const url = options.url ?? "";
+  const restated = hostRestatement(vendor, url);
+  const restating = new Set(restated.tokens);
+  const forms = vendorNameForms(vendor, [...aliases, productHalf(vendor, restated)])
+    .filter((form) => !restating.has(form));
   const result = (named, via, form) => ({ named, via, form, forms });
   if (forms.length === 0) return result(false, null, null);
 
@@ -143,7 +200,8 @@ export function pageNamesVendor(pageText, vendor, options = {}) {
   }
 
   const written = haystack.replace(/ /g, "");
-  for (const label of hostLabels(options.url ?? "").slice(0, -1).reverse()) {
+  for (const label of hostLabels(url).slice(0, -1).reverse()) {
+    if (restated.labels.includes(label)) continue;
     if (label.length < MIN_FORM_LENGTH || !written.includes(label)) continue;
     if (hostLabelMatchesVendor(label, vendor, aliases)) {
       return result(true, NAMED_BY_A_HOST_THE_PAGE_WRITES, label);
@@ -151,6 +209,12 @@ export function pageNamesVendor(pageText, vendor, options = {}) {
   }
 
   return result(false, null, null);
+}
+
+export function pageNamesOnlyTheHost(pageText, vendor, url) {
+  const restated = hostRestatement(vendor, url);
+  if (restated.tokens.length === 0) return false;
+  return restated.tokens.some((token) => pageNamesVendor(pageText, token, { url }).named);
 }
 
 export const READ_FROM_MARKUP = "markup";
@@ -172,6 +236,13 @@ export function classifySource(offer, page, signals) {
   }
   const naming = pageNamesVendor(page.text, offer.vendor, { url: offer.url });
   if (!naming.named) {
+    if (pageNamesOnlyTheHost(page.text, offer.vendor, offer.url)) {
+      const restated = hostRestatement(offer.vendor, offer.url);
+      return {
+        outcome: SOURCE_CHECK_NOT_THE_PRODUCT,
+        detail: `the page names the platform in the domain we cite ${offer.vendor} from and never names ${productHalf(offer.vendor, restated)}`,
+      };
+    }
     return {
       outcome: SOURCE_CHECK_NOT_NAMED,
       detail: servedFromTheVendorsDomain(offer)

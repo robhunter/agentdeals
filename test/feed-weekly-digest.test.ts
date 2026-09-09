@@ -58,7 +58,11 @@ describe("/feed.xml weekly digest feed", () => {
     const xml = await res.text();
     const entries = xml.match(/<entry>/g);
     assert.ok(entries && entries.length > 0, "Should have at least one entry");
-    assert.ok(entries!.length <= 4, "Should have at most 4 weeks");
+    const weeks = xml.match(/<id>urn:agentdeals:weekly-digest:[^<]*<\/id>/g) ?? [];
+    assert.ok(weeks.length > 0, "Should have at least one week");
+    assert.ok(weeks.length <= 4, `Should have at most 4 weeks, found ${weeks.length}`);
+    const corrections = xml.match(/<id>urn:agentdeals:correction:[^<]*<\/id>/g) ?? [];
+    assert.strictEqual(entries!.length, weeks.length + corrections.length, "every entry is a week or a correction to one");
   });
 
   it("entries have correct structure", async () => {
