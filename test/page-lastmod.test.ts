@@ -2,7 +2,7 @@ import { describe, it, before, after } from "node:test";
 import assert from "node:assert";
 import { assertPopulationFloor } from "./population-floor.ts";
 import { spawn, type ChildProcess } from "node:child_process";
-import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -352,6 +352,143 @@ describe("what the sitemaps say about when a page changed", () => {
     const vendor = await fetch(`${base}/vendor/supabase`);
     await vendor.text();
     assert.equal(vendor.headers.get("last-modified"), null, "A page with no per-page day should carry no Last-Modified");
+  });
+});
+
+const WORKFLOWS = path.join(REPO, ".github", "workflows");
+
+interface Workflow {
+  file: string;
+  text: string;
+}
+
+function workflows(): Workflow[] {
+  return readdirSync(WORKFLOWS)
+    .filter(f => /\.ya?ml$/.test(f))
+    .sort()
+    .map(file => ({ file, text: readFileSync(path.join(WORKFLOWS, file), "utf8") }));
+}
+
+function readsEveryPageToDateIt(workflow: Workflow): boolean {
+  return /update-page-lastmod\.js/.test(workflow.text)
+    || /npm run lastmod:pages/.test(workflow.text)
+    || /GATE_UPDATE_PAGE_LASTMOD:\s*"?1"?/.test(workflow.text);
+}
+
+function runsOnAPushToMain(workflow: Workflow): boolean {
+  const triggers = workflow.text.split(/^jobs:/m)[0]!;
+  return /\n\s*push:\s*\n\s*branches:\s*\n\s*-\s*main\s*$/m.test(triggers);
+}
+
+describe("the ledger keeps up with the code that renders the pages", () => {
+  it("reads the workflows, so the assertions below have subjects", () => {
+    assert.ok(workflows().length >= 6, `this test needs the workflows to check, found ${workflows().length}`);
+    assert.ok(
+      workflows().some(readsEveryPageToDateIt),
+      "nothing re-reads the pages, so no page's day can move at all",
+    );
+  });
+
+  it("re-dates a page on the push that moved it, not only when a scheduled run pushes data", () => {
+    const readers = workflows().filter(readsEveryPageToDateIt);
+    const onAPush = readers.filter(runsOnAPushToMain);
+    assert.ok(
+      onAPush.length >= 1,
+      `every workflow that re-dates a page waits for a scheduled run (${readers.map(w => w.file).join(", ")}), so a commit that moves a page's rendered body cannot move that page's day`,
+    );
+  });
+
+  it("re-dates without waiting on the re-verification that pushes the catalogue", () => {
+    for (const workflow of workflows().filter(w => readsEveryPageToDateIt(w) && runsOnAPushToMain(w))) {
+      assert.doesNotMatch(
+        workflow.text,
+        /reverify-rolling\.js/,
+        `${workflow.file} re-dates the pages only when the re-verification it also runs succeeds`,
+      );
+    }
+  });
+
+  it("sends the days it read to main through the one gate that runs the suite first", () => {
+    for (const workflow of workflows().filter(w => readsEveryPageToDateIt(w) && runsOnAPushToMain(w))) {
+      assert.match(
+        workflow.text,
+        /bash scripts\/gate-data-push\.sh/,
+        `${workflow.file} reaches main without the gate, so its commit reaches main untested`,
+      );
+      assert.match(
+        workflow.text,
+        /data\/page-lastmod\.json/,
+        `${workflow.file} does not name the ledger among the paths it may commit, so the days it reads stay in its own workspace`,
+      );
+    }
+  });
+});
+
+describe("a page whose rendered body moves is dated the day it moved", () => {
+  let bodyServer: ChildProcess;
+  let bodyBase = "";
+  let bodyDir = "";
+  let read: string[] = [];
+
+  const BEFORE = "2026-01-02";
+  const AFTER = "2026-01-03";
+
+  before(async () => {
+    bodyDir = mkdtempSync(path.join(tmpdir(), "page-lastmod-body-"));
+    bodyServer = await startServer(path.join(bodyDir, "inventory.json"));
+    bodyBase = base;
+    read = JSON.parse(readFileSync(path.join(bodyDir, "inventory.json"), "utf-8"));
+  });
+
+  after(() => {
+    if (bodyServer) bodyServer.kill();
+    if (bodyDir) rmSync(bodyDir, { recursive: true, force: true });
+  });
+
+  async function renderedHashes(paths: string[]): Promise<Map<string, string>> {
+    const hashes = new Map<string, string>();
+    for (const page of paths) {
+      const response = await fetch(bodyBase + page, { redirect: "error" });
+      const body = await response.text();
+      assert.equal(response.status, 200, `${page} answered ${response.status}`);
+      hashes.set(page, hashPageBody(body, bodyBase));
+    }
+    return hashes;
+  }
+
+  function ledgerOf(hashes: Map<string, string>): PageLastmodLedger {
+    return {
+      version: 1,
+      generated: BEFORE,
+      pages: Object.fromEntries([...hashes].map(([page, hash]) => [page, { hash, changed: BEFORE }])),
+    };
+  }
+
+  it("moves the day of the page the test rewrote, and holds the day of every page it left alone", async () => {
+    const sample = read.slice(0, 6);
+    assert.equal(sample.length, 6, "this test needs six pages of the ledger's own inventory to read");
+    const asServed = await renderedHashes(sample);
+    const [rewritten, ...untouched] = sample as [string, ...string[]];
+
+    const body = await (await fetch(bodyBase + rewritten, { redirect: "error" })).text();
+    const asRewritten = new Map(asServed);
+    asRewritten.set(rewritten, hashPageBody(`${body}<p>a sentence this page did not carry</p>`, bodyBase));
+
+    const { ledger, moved, added, dropped } = updatePageLastmod(ledgerOf(asServed), asRewritten, AFTER);
+    assert.deepEqual(moved, [rewritten]);
+    assert.deepEqual([added, dropped], [[], []]);
+    assert.equal(ledger.pages[rewritten]!.changed, AFTER, `${rewritten} was rewritten and kept its old day`);
+    for (const page of untouched) {
+      assert.equal(ledger.pages[page]!.changed, BEFORE, `${page} took a new day and its body did not move`);
+    }
+  });
+
+  it("holds every day when the pages serve exactly what the ledger already recorded", async () => {
+    const sample = read.slice(0, 6);
+    const asServed = await renderedHashes(sample);
+    const { ledger, moved, added, dropped } = updatePageLastmod(ledgerOf(asServed), asServed, AFTER);
+    assert.deepEqual([moved, added, dropped], [[], [], []]);
+    for (const page of sample) assert.equal(ledger.pages[page]!.changed, BEFORE);
   });
 });
 

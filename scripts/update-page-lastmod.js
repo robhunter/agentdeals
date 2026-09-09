@@ -20,7 +20,7 @@ Usage: node scripts/update-page-lastmod.js [options]
 
   --check         Report what would move and exit 1 if anything would, without writing
   --date <date>   Day to stamp changed pages with, YYYY-MM-DD (default: today, UTC)
-  --json          Emit the outcome as JSON
+  --json          Emit the outcome as JSON on stdout, and nothing else there
   --help          This text
 `;
 
@@ -126,7 +126,7 @@ async function main() {
 
     if (opts.check) return moved.length + added.length + dropped.length > 0 ? 1 : 0;
     writeFileSync(file, serializePageLastmod(ledger));
-    console.log(`Wrote ${file}`);
+    (opts.json ? console.error : console.log)(`Wrote ${file}`);
     return 0;
   } finally {
     if (server) server.proc.kill();

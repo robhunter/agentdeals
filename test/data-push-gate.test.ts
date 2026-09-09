@@ -16,7 +16,7 @@ const REPO = join(__dirname, "..");
 const WORKFLOWS = join(REPO, ".github", "workflows");
 const GATE = join(REPO, "scripts", "gate-data-push.sh");
 
-const GATED_WORKFLOWS = ["reverify.yml", "liveness.yml", "analytics-rollup.yml"];
+const GATED_WORKFLOWS = ["reverify.yml", "liveness.yml", "analytics-rollup.yml", "page-lastmod.yml"];
 
 interface WorkflowStep {
   name: string;
