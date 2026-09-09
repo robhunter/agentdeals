@@ -2,15 +2,6 @@
   "generated_at": "2026-09-09",
   "links": [
     {
-      "url": "https://bootify.io/",
-      "checked": "2026-09-09",
-      "outcome": "unknown",
-      "detail": "GET 503",
-      "terminal": false,
-      "last_reachable": "2026-09-02",
-      "consecutive_unreachable": 0
-    },
-    {
       "url": "https://cirrus-ci.org",
       "checked": "2026-09-09",
       "outcome": "unknown",
@@ -26,7 +17,7 @@
       "detail": "GET 404",
       "terminal": false,
       "last_reachable": "2026-04-15",
-      "consecutive_unreachable": 14
+      "consecutive_unreachable": 15
     },
     {
       "url": "https://codepen.io/",
@@ -56,22 +47,13 @@
       "consecutive_unreachable": 0
     },
     {
-      "url": "https://country-state-city.rebuscando.info/",
-      "checked": "2026-09-09",
-      "outcome": "unknown",
-      "detail": "GET 500",
-      "terminal": false,
-      "last_reachable": "2026-07-05",
-      "consecutive_unreachable": 0
-    },
-    {
       "url": "https://cstate.netlify.app",
       "checked": "2026-09-09",
       "outcome": "unreachable",
       "detail": "GET 404",
       "terminal": false,
       "last_reachable": "2026-05-02",
-      "consecutive_unreachable": 15
+      "consecutive_unreachable": 16
     },
     {
       "url": "https://dadroit.com/vweb/",
@@ -98,7 +80,7 @@
       "detail": "GET 404",
       "terminal": false,
       "last_reachable": "2026-04-14",
-      "consecutive_unreachable": 15
+      "consecutive_unreachable": 16
     },
     {
       "url": "https://devin.ai/pricing",
@@ -134,7 +116,7 @@
       "detail": "GET 404",
       "terminal": false,
       "last_reachable": "2026-08-07",
-      "consecutive_unreachable": 10
+      "consecutive_unreachable": 11
     },
     {
       "url": "https://evernote.com/free",
@@ -143,7 +125,7 @@
       "detail": "GET 404",
       "terminal": false,
       "last_reachable": "2026-04-23",
-      "consecutive_unreachable": 15
+      "consecutive_unreachable": 16
     },
     {
       "url": "https://freetools.site/",
@@ -170,7 +152,7 @@
       "detail": "GET 404",
       "terminal": false,
       "last_reachable": "2026-04-14",
-      "consecutive_unreachable": 15
+      "consecutive_unreachable": 16
     },
     {
       "url": "https://gpu-bridge.com",
@@ -179,16 +161,7 @@
       "detail": "GET ENOTFOUND",
       "terminal": false,
       "last_reachable": "2026-04-14",
-      "consecutive_unreachable": 15
-    },
-    {
-      "url": "https://howuku.com",
-      "checked": "2026-09-09",
-      "outcome": "unknown",
-      "detail": "GET TIMEOUT",
-      "terminal": false,
-      "last_reachable": "2026-07-23",
-      "consecutive_unreachable": 0
+      "consecutive_unreachable": 16
     },
     {
       "url": "https://labelbox.com/pricing/",
@@ -197,7 +170,7 @@
       "detail": "GET 404",
       "terminal": false,
       "last_reachable": "2026-06-09",
-      "consecutive_unreachable": 15
+      "consecutive_unreachable": 16
     },
     {
       "url": "https://langtrace.ai",
@@ -206,7 +179,7 @@
       "detail": "GET 404",
       "terminal": false,
       "last_reachable": "2026-05-07",
-      "consecutive_unreachable": 15
+      "consecutive_unreachable": 16
     },
     {
       "url": "https://lottiefiles.com/",
@@ -269,7 +242,7 @@
       "detail": "GET 404",
       "terminal": false,
       "last_reachable": "2026-04-15",
-      "consecutive_unreachable": 15
+      "consecutive_unreachable": 16
     },
     {
       "url": "https://openai.com/api/pricing/",
@@ -299,22 +272,13 @@
       "consecutive_unreachable": 0
     },
     {
-      "url": "https://qrme.sh",
-      "checked": "2026-09-09",
-      "outcome": "unknown",
-      "detail": "GET 520",
-      "terminal": false,
-      "last_reachable": "2026-07-19",
-      "consecutive_unreachable": 0
-    },
-    {
       "url": "https://run.claw.cloud",
       "checked": "2026-09-09",
       "outcome": "unreachable",
       "detail": "GET ENOTFOUND",
       "terminal": false,
       "last_reachable": "2026-04-24",
-      "consecutive_unreachable": 15
+      "consecutive_unreachable": 16
     },
     {
       "url": "https://segment.com/docs/guides/usage-and-billing/discounts-for-startups-npos/",
@@ -341,7 +305,7 @@
       "detail": "GET 410",
       "terminal": true,
       "last_reachable": "2026-05-23",
-      "consecutive_unreachable": 15
+      "consecutive_unreachable": 16
     },
     {
       "url": "https://strale.io",
@@ -350,7 +314,7 @@
       "detail": "GET 404",
       "terminal": false,
       "last_reachable": "2026-04-14",
-      "consecutive_unreachable": 15
+      "consecutive_unreachable": 16
     },
     {
       "url": "https://substack.com",
@@ -386,7 +350,7 @@
       "detail": "GET 404",
       "terminal": false,
       "last_reachable": "2026-04-17",
-      "consecutive_unreachable": 15
+      "consecutive_unreachable": 16
     },
     {
       "url": "https://unsplash.com/",
@@ -413,7 +377,7 @@
       "detail": "GET ENOTFOUND",
       "terminal": false,
       "last_reachable": "2026-07-12",
-      "consecutive_unreachable": 15
+      "consecutive_unreachable": 16
     },
     {
       "url": "https://wdrfree.com/free-svg",
@@ -422,7 +386,7 @@
       "detail": "GET 404",
       "terminal": false,
       "last_reachable": "2026-06-01",
-      "consecutive_unreachable": 15
+      "consecutive_unreachable": 16
     },
     {
       "url": "https://windsurf.com/pricing",
@@ -467,7 +431,7 @@
       "detail": "GET ENOTFOUND",
       "terminal": false,
       "last_reachable": "2026-07-08",
-      "consecutive_unreachable": 15
+      "consecutive_unreachable": 16
     },
     {
       "url": "https://www.browsercat.com",
@@ -539,7 +503,16 @@
       "detail": "GET 404",
       "terminal": false,
       "last_reachable": "2026-07-10",
-      "consecutive_unreachable": 15
+      "consecutive_unreachable": 16
+    },
+    {
+      "url": "https://www.digitalocean.com/pricing",
+      "checked": "2026-09-09",
+      "outcome": "unknown",
+      "detail": "GET 500",
+      "terminal": false,
+      "last_reachable": "2026-08-18",
+      "consecutive_unreachable": 0
     },
     {
       "url": "https://www.hashicorp.com/products/terraform/pricing",
@@ -566,7 +539,7 @@
       "detail": "GET 404",
       "terminal": false,
       "last_reachable": "2026-04-05",
-      "consecutive_unreachable": 14
+      "consecutive_unreachable": 15
     },
     {
       "url": "https://www.icedrive.net/",
@@ -668,33 +641,6 @@
       "consecutive_unreachable": 0
     },
     {
-      "url": "https://www.ovhcloud.com/en/bare-metal/",
-      "checked": "2026-09-09",
-      "outcome": "unknown",
-      "detail": "GET FETCH_FAILED",
-      "terminal": false,
-      "last_reachable": "2026-08-18",
-      "consecutive_unreachable": 0
-    },
-    {
-      "url": "https://www.ovhcloud.com/en/public-cloud/",
-      "checked": "2026-09-09",
-      "outcome": "unknown",
-      "detail": "GET FETCH_FAILED",
-      "terminal": false,
-      "last_reachable": "2026-08-20",
-      "consecutive_unreachable": 0
-    },
-    {
-      "url": "https://www.ovhcloud.com/en/web-hosting/options/ssl/",
-      "checked": "2026-09-09",
-      "outcome": "unknown",
-      "detail": "GET FETCH_FAILED",
-      "terminal": false,
-      "last_reachable": "2026-08-18",
-      "consecutive_unreachable": 0
-    },
-    {
       "url": "https://www.pexels.com/",
       "checked": "2026-09-09",
       "outcome": "unknown",
@@ -710,7 +656,7 @@
       "detail": "GET 404",
       "terminal": false,
       "last_reachable": "2026-04-13",
-      "consecutive_unreachable": 15
+      "consecutive_unreachable": 16
     },
     {
       "url": "https://www.vultr.com/features/advanced-networking/",
