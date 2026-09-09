@@ -685,6 +685,18 @@
       "refused_date": "2026-08-28"
     },
     {
+      "vendor": "Crisp",
+      "change_type": "limits_increased",
+      "reason": "states_no_difference",
+      "detail": "limits_increased claimed, summary asserts the page matches what we stored, and the two states carry the same quantities",
+      "summary": "The free tier still exists, but the description is different. The free tier now includes a limit of 100 customer profiles, whereas the stored information does not mention a customer profile limit. The stored information also does not mention the inclusion of mobile apps, developer APIs, conversation transcripts, and other features now included in the free tier.",
+      "previous_state": "Customer messaging platform — 2 seats, 100 contacts, unlimited conversations. Website chat widget, shared inbox, desktop/mobile apps",
+      "current_state": "Free Forever Use Crisp for free Key features included: Website chat widget, 2 seats included, 100 Customer Profiles.",
+      "source_url": "https://crisp.chat/en/pricing/",
+      "category": "Messaging",
+      "refused_date": "2026-09-09"
+    },
+    {
       "vendor": "Cronhooks",
       "change_type": "limits_increased",
       "reason": "null_comparison",
@@ -1009,6 +1021,18 @@
       "refused_date": "2026-09-03"
     },
     {
+      "vendor": "Formbricks",
+      "change_type": "free_tier_removed",
+      "reason": "dangling_reference",
+      "detail": "the summary now opens on a reference to a clause that was dropped, so the sentence that travels alone has no subject",
+      "summary": "The Community/Open-source tier is no longer explicitly mentioned as a free, unlimited option. Instead, there's a 'Hobby' plan starting free with 250 responses per month. The original deal's unlimited features are no longer available in the free tier.",
+      "previous_state": "Open-source survey platform — Community Edition (self-hosted): unlimited seats, unlimited surveys, unlimited responses, all question types, advanced logic, custom styling, API access, all SDKs and integrations (MPL 2.0)",
+      "current_state": "There is a 'Hobby' plan that starts free with 250 responses per month and includes core survey features like all question types, conditional logic, and API access.",
+      "source_url": "https://formbricks.com/pricing",
+      "category": "Forms",
+      "refused_date": "2026-09-09"
+    },
+    {
       "vendor": "FormKeep.com",
       "change_type": "limits_reduced",
       "reason": "confirmed_unchanged",
@@ -1129,6 +1153,18 @@
       "refused_date": "2026-09-03"
     },
     {
+      "vendor": "Google Maps Platform",
+      "change_type": "pricing_restructured",
+      "reason": "states_no_terms",
+      "detail": "every clause of the summary states absence or narration rather than a term the page carries, so it reports the reading rather than a change",
+      "summary": "The page mentions new pricing subscriptions and doesn't explicitly state the previous free tier limits (10K/5K/1K calls per SKU). It highlights a demo key for starting to build, and mentions pay-as-you-go and subscription options.",
+      "previous_state": "Per-SKU free usage (restructured March 2025): Essentials 10K calls/SKU/month, Pro 5K, Enterprise 1K. Covers Maps, Routes, Places, Environment APIs. Separate from one-time $300 trial credit",
+      "current_state": "The page promotes new pricing subscriptions and a Maps Demo Key with no credit card required. It also mentions pay-as-you-go and subscription options.",
+      "source_url": "https://mapsplatform.google.com/pricing/",
+      "category": "Maps/Geolocation",
+      "refused_date": "2026-09-09"
+    },
+    {
       "vendor": "Google Vector Search 2.0",
       "change_type": "pricing_model_change",
       "reason": "dangling_reference",
@@ -1225,6 +1261,18 @@
       "refused_date": "2026-09-05"
     },
     {
+      "vendor": "Hygraph",
+      "change_type": "limits_reduced",
+      "reason": "unquantified_limit",
+      "detail": "limits_reduced claimed, but the current state names no quantity for anything the stored state measured (1 content, 500 api, 3 seat, 20 model)",
+      "summary": "The asset upload size limit for the Hobby plan is now 50MB, down from the stored value of unlimited.",
+      "previous_state": "GraphQL headless CMS — 1K content entries, 500K API calls/month, 3 seats, 20 models, unlimited asset storage",
+      "current_state": "Hobby $ 0 always ... 50MB per asset upload size (maximum)",
+      "source_url": "https://hygraph.com/pricing",
+      "category": "Headless CMS",
+      "refused_date": "2026-09-09"
+    },
+    {
       "vendor": "Hyperping",
       "change_type": "pricing_restructured",
       "reason": "confirmed_unchanged",
@@ -1297,6 +1345,18 @@
       "refused_date": "2026-08-29"
     },
     {
+      "vendor": "Inngest",
+      "change_type": "limits_reduced",
+      "reason": "unquantified_limit",
+      "detail": "limits_reduced claimed, but the current state names no quantity for anything the stored state measured (50 execution, 500 event, 5 step, 500 mb, 100 queue, 50 realtime)",
+      "summary": "The Hobby tier now includes 10K scores instead of the previously stated 500K. The queue depth is 100k, matching the stored info.",
+      "previous_state": "Serverless workflow orchestration — 50K executions, 500K events ingested, 5 concurrent steps, 500 MB span data ingested, 100K queue depth, 50 realtime connections",
+      "current_state": "Hobby plan includes 10K scores.",
+      "source_url": "https://www.inngest.com/pricing",
+      "category": "Background Jobs",
+      "refused_date": "2026-09-09"
+    },
+    {
       "vendor": "Integrately",
       "change_type": "free_tier_removed",
       "reason": "removal_read_from_root",
@@ -1360,13 +1420,13 @@
       "vendor": "JotForm",
       "change_type": "limits_reduced",
       "reason": "unquantified_limit",
-      "detail": "limits_reduced claimed, but the current state names no quantity for anything the stored state measured (5 form, 100 submission, 100 upload, 1,000 form, 10,000 templat)",
-      "summary": "The free plan (Starter) still exists, but the description of its limits is incomplete. The page states the Starter plan includes 'all standard features, such as form templates, payment integrations, and widgets' and that forms will have Jotform branding. It also mentions limits on forms, submissions, storage, and views, but does not specify the exact numbers (5 forms, 100 submissions, 100 MB, 1000 views) as stated in the stored deal info.",
+      "detail": "limits_reduced claimed, but the current state names no quantity for anything the stored state measured (5 form, 100 submission, 100 mb, 1,000 form, 10,000 templat)",
+      "summary": "The free plan (Starter) still exists, but the description of its limits is incomplete. The page states the Starter plan includes 'all standard features, such as form templates, payment integrations, and widgets' and that forms will have Jotform branding. It also mentions limits on forms, submissions, storage, and views, but does not specify the exact numbers (5 forms, 100 submissions, 100MB, 1000 views) as stated in the stored deal info.",
       "previous_state": "Online form builder. Free plan: 5 forms, 100 monthly submissions, 100 MB upload space, 1,000 form views/month. Drag-and-drop builder with 10,000+ templates",
-      "current_state": "The Starter plan is available and includes standard features, but specific limits are not detailed on the provided text.",
+      "current_state": "The Starter plan includes standard features and has limits on forms, submissions, storage, and views, but specific numbers are not provided. Forms include Jotform branding.",
       "source_url": "https://www.jotform.com/pricing/",
       "category": "Forms",
-      "refused_date": "2026-08-28"
+      "refused_date": "2026-09-09"
     },
     {
       "vendor": "Keywords AI",
@@ -1415,6 +1475,18 @@
       "source_url": "https://leapcell.io/",
       "category": "Cloud Hosting",
       "refused_date": "2026-08-28"
+    },
+    {
+      "vendor": "LemonSqueezy",
+      "change_type": "pricing_model_change",
+      "reason": "confirmed_unchanged",
+      "detail": "The core pricing (5% + $0.50 per transaction) is the same. The addition of email marketing details doesn't change the original terms.",
+      "summary": "The pricing is now 5% + $0.50 per transaction. The page emphasizes a $0/month starting price with no trial or contract. This applies to all features, not a specific tier. Email marketing has a separate pricing structure based on subscribers.",
+      "previous_state": "Merchant of record — no monthly fees, 5% + $0.50 per transaction. Handles sales tax/VAT globally, license keys, fraud protection",
+      "current_state": "Ecommerce features have a 5% + $0.50 per transaction fee with no monthly charges. Email marketing is $0/month for up to 500 subscribers.",
+      "source_url": "https://www.lemonsqueezy.com/pricing",
+      "category": "Payments",
+      "refused_date": "2026-09-09"
     },
     {
       "vendor": "lil'bots",
@@ -1466,15 +1538,15 @@
     },
     {
       "vendor": "Logz.io",
-      "change_type": "free_tier_removed",
+      "change_type": "pricing_restructured",
       "reason": "confirmed_unchanged",
-      "detail": "The current page doesn't specify a trial duration, but the stored description only stated there *wasn't* a permanent free tier, not that the trial was limited to 14 days. The lack of a duration isn't a contradiction.",
-      "summary": "The stored deal info states a 14-day free trial only, with no permanent free tier. The pricing page offers a 'Free Trial' for Log Management, Infrastructure Monitoring, and Distributed Tracing, but does not specify a duration. It primarily focuses on consumption-based pricing starting at $0.92/ingested GB/day for Log Management. The Community plan mentioned in the stored deal info has been removed.",
+      "detail": "The report restates information already present in the stored description (pricing and free trial for Log Management). The addition of Infrastructure Monitoring and Distributed Tracing to the free trial doesn't contradict the stored description, which explicitly stated there was *no permanent free tier* and only a 14-day trial.",
+      "summary": "The pricing page offers a 'Free Trial' for Log Management, Infrastructure Monitoring, and Distributed Tracing. It also details consumption-based pricing starting at $0.92/GB/day for Log Management. Is not referenced on the current page.",
       "previous_state": "ELK-based log management — 14-day free trial only. No permanent free tier. Consumption-based pricing starts at $0.92/ingested GB/day. Community plan removed",
-      "current_state": "Logz.io offers a 'Free Trial' for its services (Log Management, Infrastructure Monitoring, Distributed Tracing) but the duration is not specified. Pricing is primarily consumption-based: Log Management at $0.92 per ingested GB, Infrastructure Monitoring at $0.40 per 1000 time series metrics, and Distributed Tracing at $0.16 per 1 million spans.",
+      "current_state": "Logz.io offers a 'Free Trial' for Log Management, Infrastructure Monitoring, and Distributed Tracing. Log Management is priced at $0.92 per ingested GB per day.",
       "source_url": "https://logz.io/pricing/",
       "category": "Logging",
-      "refused_date": "2026-08-28"
+      "refused_date": "2026-09-09"
     },
     {
       "vendor": "Lokalise",
@@ -1595,6 +1667,18 @@
       "source_url": "https://mergify.com",
       "category": "CI/CD",
       "refused_date": "2026-08-29"
+    },
+    {
+      "vendor": "MinIO",
+      "change_type": "pricing_restructured",
+      "reason": "no_price_signal",
+      "detail": "the page read carries no price signal — no amount, named tier or metered rate in 8941 characters, so it states no terms to have changed",
+      "summary": "The free tier now has more specific limitations. It's a full-featured, single-node deployment with self-service community support. Enterprise Lite and Enterprise tiers have been added, requiring subscriptions for capacity over 400 TiB and offering more features and support.",
+      "previous_state": "S3-compatible object storage — self-hosted free (GNU AGPL v3). High performance, Kubernetes-native. No usage limits when self-hosted. Primary alternative for LocalStack S3 emulation",
+      "current_state": "Free: Full-featured, single-node deployment, self-service community support. Enterprise Lite: Full-featured, horizontally scalable multi-node architecture, Lite SUBNET subscription. Enterprise: Full-featured, horizontally scalable multi-node architecture, dedicated virtual onboarding, Enterprise SUBNET subscription.",
+      "source_url": "https://min.io/pricing",
+      "category": "Storage",
+      "refused_date": "2026-09-09"
     },
     {
       "vendor": "mouseflow.com",
@@ -2213,12 +2297,12 @@
       "change_type": "limits_reduced",
       "reason": "unquantified_limit",
       "detail": "limits_reduced claimed, but the current state names no quantity for anything the stored state measured (5 currency, 100 currency, 5 currency, 9 currency, 50 currency)",
-      "summary": "The specific credit amounts for AWS, Google Cloud, MongoDB, Slack, and Segment are no longer explicitly mentioned. The page highlights 'Discounted partner offers' and 'Benefit from exclusive partner discounts on software and services' but does not detail the specific amounts or partners.",
+      "summary": "The specific credit amounts for AWS, Google Cloud, MongoDB, Slack, and Segment are no longer explicitly mentioned. The page mentions 'Discounted partner offers' and 'Benefit from exclusive partner discounts on software and services' but does not detail the specific amounts or partners.",
       "previous_state": "$5K AWS credits, up to $100K Google Cloud credits (usage-based annual cap), $5K MongoDB credits, $9K off Slack, and $50K Segment credits for SVB startup banking customers. Now a division of First Citizens BancShares",
       "current_state": "SVB technology, life science/healthcare & global business clients can save on software and services such as workforce collaboration, infrastructure, talents and more.",
       "source_url": "https://www.svb.com/startup-banking/",
-      "category": "Startup Programs",
-      "refused_date": "2026-08-28"
+      "category": "Startup Perks",
+      "refused_date": "2026-09-09"
     },
     {
       "vendor": "synadia.com",
@@ -2488,13 +2572,13 @@
       "vendor": "Zapier",
       "change_type": "limits_reduced",
       "reason": "confirmed_unchanged",
-      "detail": "The descriptions are functionally equivalent. Both state 100 tasks/month, unlimited Zaps limited to 2 steps.",
-      "summary": "The free tier now includes unlimited Zaps and Forms, but limits tasks to 100/month and 2-step Zaps. The stored information stated 2-step Zaps were the limit, but the current pricing page indicates multi-step Zaps are available on paid plans.",
+      "detail": "The current page confirms unlimited Zaps and Forms were *always* included, and 2-step Zaps were the limit. The report simply restates the original terms.",
+      "summary": "The free tier now includes unlimited Zaps and Forms. Limits tasks to 100/month and 2-step Zaps.",
       "previous_state": "Workflow automation — 100 tasks/month, unlimited Zaps but limited to 2-step only (one trigger + one action), 2,500 table records, 10 form pages",
       "current_state": "The free tier includes Zap workflows, Tables, and Forms with 100 tasks per month, unlimited Zap workflows, Tables, and Forms, and two-step Zap workflows.",
       "source_url": "https://zapier.com/pricing",
       "category": "Workflow Automation",
-      "refused_date": "2026-08-28"
+      "refused_date": "2026-09-09"
     },
     {
       "vendor": "Zenscrape",

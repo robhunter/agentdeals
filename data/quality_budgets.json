@@ -4,13 +4,13 @@
     "stale_fact_pages": 58,
     "unsourced_tier_a": 22,
     "uncited_change_records": 98,
-    "source_checks_ok_without_quoted_evidence": 508,
+    "source_checks_ok_without_quoted_evidence": 458,
     "faq_answers": 166,
     "faq_answers_stating_a_figure": 77,
     "faq_answers_with_a_digit_but_no_figure": 41,
-    "records_with_superseded_terms": 175,
-    "vendor_pages_withholding_superseded_terms": 174,
-    "ungated_pages_withholding_superseded_terms": 165
+    "records_with_superseded_terms": 179,
+    "vendor_pages_withholding_superseded_terms": 177,
+    "ungated_pages_withholding_superseded_terms": 167
   },
   "raised_because": {
     "stale_fact_pages": "57 to 58 on 2026-09-09. A review that recorded review_outcome: fail used to restart the staleness clock, so finding errors on a page improved this count by more than fixing them would. The clock now starts at the last read that found nothing outstanding, which is the rule dateModifiedFor already applied to the date those pages publish. Six pages moved and /email-comparison-2026 joined the cohort; 338 stale facts became 346. Nothing about the catalogue changed — the measurement did.",
