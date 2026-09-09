@@ -16,7 +16,6 @@ const REPO = join(__dirname, "..");
 const WORKFLOWS = join(REPO, ".github", "workflows");
 const GATE = join(REPO, "scripts", "gate-data-push.sh");
 
-const GATED_WORKFLOWS = ["reverify.yml", "liveness.yml", "analytics-rollup.yml", "page-lastmod.yml"];
 
 interface WorkflowStep {
   name: string;
@@ -47,6 +46,8 @@ function source(file: string): string {
   return readFileSync(join(WORKFLOWS, file), "utf8");
 }
 
+const GATED_WORKFLOWS = workflowFiles().filter((f) => /bash scripts\/gate-data-push\.sh/.test(source(f)));
+
 function nodeVersionsOf(text: string): string[] {
   return [...text.matchAll(/node-version:\s*"?([0-9][0-9.]*)"?/g)].map((m) => m[1]!);
 }
@@ -59,6 +60,10 @@ describe("#1317 the suite sees every commit that reaches main", () => {
   it("reads the workflows, so the assertions below have subjects", () => {
     const files = workflowFiles();
     assert.ok(files.length >= 6, `this test needs the workflows to check, found ${files.length}`);
+    assert.ok(
+      GATED_WORKFLOWS.length >= 5,
+      `every workflow that reaches main goes through the gate, so this list is read from the workflows themselves — it found ${GATED_WORKFLOWS.length}`,
+    );
     for (const file of GATED_WORKFLOWS) {
       assert.ok(files.includes(file), `${file} is not among ${files.join(", ")}`);
     }
@@ -167,7 +172,7 @@ const FAILING_BY_MODE: Record<string, string[]> = {
   crashed: [],
 };
 
-const GATE_CONFIGURATION = ["GATE_RATCHET_BUDGETS", "GATE_UPDATE_PAGE_LASTMOD"];
+const GATE_CONFIGURATION = ["GATE_RATCHET_BUDGETS", "GATE_UPDATE_PAGE_LASTMOD", "GATE_REGENERATE_LLM_INDEX"];
 
 const SUITE = `import { appendFileSync, writeFileSync } from "node:fs";
 const modes = ${JSON.stringify(FAILING_BY_MODE)};
@@ -267,6 +272,8 @@ function fixtureRepo(options: { shallow?: boolean } = {}): { work: string; origi
   writeFileSync(join(work, "data", "health.json"), '{"checked":1}\n');
   writeFileSync(join(work, "data", "quality_budgets.json"), BUDGETS_BEFORE);
   writeFileSync(join(work, "data", "page-lastmod.json"), '{"version":1,"pages":{}}\n');
+  mkdirSync(join(work, "artifacts", "free-llm-api-index"), { recursive: true });
+  writeFileSync(join(work, "artifacts", "free-llm-api-index", "README.md"), "# the index this run has not regenerated yet\n");
   writeFileSync(join(work, "untracked-by-the-gate.txt"), "before\n");
   git(work, "add", "-A");
   git(work, "commit", "-m", "fixture");
@@ -294,6 +301,7 @@ interface GateRun {
   build?: "fail";
   ratchet?: RatchetMode;
   lastmod?: true;
+  llmIndex?: true;
   replays?: number;
 }
 
@@ -312,10 +320,12 @@ function runGate(work: string, mode: GateMode | GateRun, ...args: string[]) {
       GATE_FIXTURE_ENV_REPORT: envReport,
       GATE_RATCHET_BUDGETS: opts.ratchet === undefined ? "" : "1",
       GATE_UPDATE_PAGE_LASTMOD: opts.lastmod ? "1" : "",
+      GATE_REGENERATE_LLM_INDEX: opts.llmIndex ? "1" : "",
       GATE_REPLAYS_ONTO_A_MOVED_MAIN: opts.replays === undefined ? "" : String(opts.replays),
       GITHUB_OUTPUT: outputs,
       AGENTDEALS_NON_BLOCKING_TESTS_PATH: join(work, "allowlist.json"),
       AGENTDEALS_PAGE_LASTMOD_PATH: join(work, "data", "page-lastmod.json"),
+      AGENTDEALS_LLM_INDEX_PATH: join(work, "artifacts", "free-llm-api-index", "README.md"),
     },
   });
   return {
@@ -619,13 +629,14 @@ describe("#1335 the gate's own configuration does not configure the suite it run
     "data/health.json",
     "data/quality_budgets.json",
     "data/page-lastmod.json",
+    "artifacts/free-llm-api-index/README.md",
   ];
 
   it("hands the suite neither variable, so a nested run reads its own arguments", () => {
     const { work } = fixtureRepo();
     writeFileSync(join(work, "data", "health.json"), '{"checked":21}\n');
 
-    const run = runGate(work, { mode: "green", ratchet: "lower", lastmod: true }, ...PATHS);
+    const run = runGate(work, { mode: "green", ratchet: "lower", lastmod: true, llmIndex: true }, ...PATHS);
 
     assert.notStrictEqual(run.suiteSawGateConfig, null, "the suite did not run, so this asserts nothing about what it saw");
     assert.strictEqual(
@@ -639,11 +650,17 @@ describe("#1335 the gate's own configuration does not configure the suite it run
     const { work, origin } = fixtureRepo();
     writeFileSync(join(work, "data", "health.json"), '{"checked":22}\n');
 
-    const run = runGate(work, { mode: "green", ratchet: "lower", lastmod: true }, ...PATHS);
+    const run = runGate(work, { mode: "green", ratchet: "lower", lastmod: true, llmIndex: true }, ...PATHS);
 
     assert.strictEqual(run.status, 0, run.stdout + run.stderr);
     assert.match(run.stdout, /Lowering any quality budget/, "the gate no longer lowers the budget its data earned");
     assert.match(run.stdout, /Reading every page this run renders/, "the gate no longer dates the pages this run moved");
+    assert.match(run.stdout, /Regenerating the AI and LLM free-tier index/, "the gate no longer regenerates the index from the records this run moved");
+    assert.match(
+      readFileSync(join(work, "artifacts", "free-llm-api-index", "README.md"), "utf8"),
+      /free tiers for AI and LLM APIs/i,
+      "the index the gate committed is still the placeholder",
+    );
     assert.notStrictEqual(mainSha(origin), "", "the fixture origin has no main");
   });
 });

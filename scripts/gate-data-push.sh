@@ -16,6 +16,8 @@ RATCHET_BUDGETS="${GATE_RATCHET_BUDGETS:-}"
 BUDGETS_PATH="data/quality_budgets.json"
 UPDATE_PAGE_LASTMOD="${GATE_UPDATE_PAGE_LASTMOD:-}"
 PAGE_LASTMOD_PATH="data/page-lastmod.json"
+REGENERATE_LLM_INDEX="${GATE_REGENERATE_LLM_INDEX:-}"
+LLM_INDEX_PATH="artifacts/free-llm-api-index/README.md"
 
 among_the_committable() {
   local wanted="$1"
@@ -33,6 +35,11 @@ fi
 
 if [ -n "$UPDATE_PAGE_LASTMOD" ] && ! among_the_committable "$PAGE_LASTMOD_PATH" "$@"; then
   echo "usage: GATE_UPDATE_PAGE_LASTMOD is set but $PAGE_LASTMOD_PATH is not among the paths this run may commit ($*), so the days read here would be left behind in the workspace." >&2
+  exit 2
+fi
+
+if [ -n "$REGENERATE_LLM_INDEX" ] && ! among_the_committable "$LLM_INDEX_PATH" "$@"; then
+  echo "usage: GATE_REGENERATE_LLM_INDEX is set but $LLM_INDEX_PATH is not among the paths this run may commit ($*), so the index generated here would be left behind in the workspace." >&2
   exit 2
 fi
 
@@ -126,11 +133,25 @@ if [ -n "$UPDATE_PAGE_LASTMOD" ]; then
   fi
 fi
 
+if [ -n "$REGENERATE_LLM_INDEX" ]; then
+  echo "── Regenerating the AI and LLM free-tier index from the records this run moved ──"
+  if node "$SCRIPT_DIR/generate-llm-api-readme.js"; then
+    if [ -n "$(git status --porcelain -- "$@")" ]; then
+      git add -- "$@"
+      git commit -q --amend --no-edit
+      COMMIT="$(git rev-parse --short HEAD)"
+      echo "The published index reads this run's records, in the same commit as the records it reads."
+    fi
+  else
+    echo "The index could not be generated, so the one already published stands rather than a new stale one. That says nothing about whether this run's data is right, so the data goes on to the suite, and the job that regenerates the index on every push to main fails loudly on its own."
+  fi
+fi
+
 while :; do
   : >"$LOG"
   : >"$GATE_FAILING_FILES"
 
-  if env -u GATE_RATCHET_BUDGETS -u GATE_UPDATE_PAGE_LASTMOD npm run test:gated >>"$LOG" 2>&1; then
+  if env -u GATE_RATCHET_BUDGETS -u GATE_UPDATE_PAGE_LASTMOD -u GATE_REGENERATE_LLM_INDEX npm run test:gated >>"$LOG" 2>&1; then
     summarize
     SUITE_WAS_RED=""
   else
