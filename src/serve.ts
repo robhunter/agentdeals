@@ -75,8 +75,8 @@ import type { RankedEntry, RankingResult } from "./ranking.js";
 import { eligibilityGateAsPublished, gatedShareDescriptionClause, gatedShareLede, publishableEligibilityConditions } from "./eligibility.js";
 import { gateDisclosureFor } from "./gate-disclosure.js";
 import { verificationLedger, QUARANTINE_AFTER_FAILURES } from "./verification-state.js";
-import { partitionAlternatives, partitionSubstitutes, type SubstitutesPartition, productRoleSentence, MEMBERSHIP_GATE_RULES, MEMBERSHIP_GATE_ORDER, MEMBERSHIP_GATE_SYMMETRY, MEMBERSHIP_GATE_SCOPE, MEMBERSHIP_GATE_CORRECTIONS, SUBTYPE_TAXONOMIES, SUBTYPE_MEMBERSHIP_RULE, SUBTYPE_MEMBERSHIP_GROUP_SCOPE, CURATED_SUBTYPE_EXEMPTION, membershipGroupsFor, subtypeDefinition } from "./product-role.js";
-import { buildProductFunctions, functionMembers, functionDefinitions, admissionFor, splitByFunction, labelsNaming, FUNCTION_RESIDUE_COPY, type ProductFunction, FUNCTION_MEMBERSHIP_RULE, FUNCTION_SPLIT_RULE, FUNCTION_NAMING_RULE } from "./product-function.js";
+import { partitionAlternatives, partitionSubstitutes, type SubstitutesPartition, productRoleSentence, MEMBERSHIP_GATE_RULES, MEMBERSHIP_GATE_ORDER, MEMBERSHIP_GATE_SYMMETRY, MEMBERSHIP_GATE_SCOPE, MEMBERSHIP_GATE_CORRECTIONS, SUBTYPE_TAXONOMIES, SUBTYPE_MEMBERSHIP_RULE, SUBTYPE_MEMBERSHIP_GROUP_SCOPE, CURATED_SUBTYPE_EXEMPTION, membershipGroupsFor, subtypeDefinition, CROSS_TAXONOMY_RULE, CROSS_TAXONOMY_RULINGS } from "./product-role.js";
+import { buildProductFunctions, functionMembers, functionDefinitions, functionMeaningSentence, admissionFor, splitByFunction, labelsNaming, FUNCTION_RESIDUE_COPY, type ProductFunction, FUNCTION_MEMBERSHIP_RULE, FUNCTION_SPLIT_RULE, FUNCTION_NAMING_RULE, FUNCTION_TITLE_RULE, FUNCTION_PICK_RULE } from "./product-function.js";
 import { resolveCuratedAlternatives, curatedAlternativesFor, addCuratedToPool } from "./curated-alternatives.js";
 import type { Agent, ChangeDateSource, DealChange, RiskCause, RatingWithheld, LinkUnreachable, Offer, StabilityClass, SubtypeLabel } from "./types.js";
 import { changeDateLabel, changeEntryDateLabel, changeEntryLongDateLabel, changeDateClause, changeDatePublished, changeEventStartDate, capListSections, latestEventDate, offerExpiryAfter, feedEntryUpdated, undatedGroupHeading, UNDATED_TILE_LABEL, firstReadHeading, discoveryBatchNote, isoWeekOf, monthlyChangeSeries, changesInWindow, discoveryMonthSeriesHeading, periodComparisonSentence, DISCOVERED_DATE_PREFIX, EFFECTIVE_DATE_PREFIX, EVENT_DATED_SOURCES, UNDATED_GROUP_NOTE, UNKNOWN_EFFECTIVE_DATE_MARKER, EFFECTIVE_MONTH_SERIES_NOTE, DISCOVERY_MONTH_SERIES_NOTE, weekRangeLabel } from "./change-dates.js";
@@ -2221,6 +2221,11 @@ ${globalNavCss()}
 }
 
 const BEST_OF_MIN_VENDORS = 5;
+const BEST_OF_MIN_PICKS = 2;
+
+function countedNoun(count: number, noun: string): string {
+  return `${count} ${noun}${count === 1 ? "" : "s"}`;
+}
 
 const productFunctions = buildProductFunctions(categories.map(c => c.name));
 
@@ -2245,6 +2250,20 @@ function rankFunction(fn: ProductFunction, date = utcDate()): RankingResult<Enri
     date,
     verificationLedger: verificationLedger(),
   });
+}
+
+const bestOfPublishedByDate = new Map<string, Map<string, ProductFunction>>();
+
+function publishedBestOf(date = utcDate()): Map<string, ProductFunction> {
+  const held = bestOfPublishedByDate.get(date);
+  if (held) return held;
+  const publishing = new Map<string, ProductFunction>();
+  for (const [slug, fn] of bestOfSlugMap) {
+    if (rankFunction(fn, date).qualified.length >= BEST_OF_MIN_PICKS) publishing.set(slug, fn);
+  }
+  bestOfPublishedByDate.clear();
+  bestOfPublishedByDate.set(date, publishing);
+  return publishing;
 }
 
 function buildBestOfMiniReview(offer: ReturnType<typeof enrichOffers>[number]): string {
@@ -2326,21 +2345,24 @@ function functionEvidenceHtml(offer: EnrichedOfferRow, labels: SubtypeLabel[], f
 }
 
 function buildBestOfPage(slug: string): string | null {
-  const fn = bestOfSlugMap.get(slug);
+  const date = utcDate();
+  const fn = publishedBestOf(date).get(slug);
   if (!fn) return null;
   const categoryName = fn.title;
-  const ranking = rankFunction(fn);
+  const ranking = rankFunction(fn, date);
   const qualified = ranking.qualified;
   const demoted = ranking.demoted;
   const tie = ranking.tie_break;
   const year = new Date().getFullYear();
   const pickCount = qualified.length;
   const groups = splitByFunction(qualified.map(e => e.offer), fn);
-  const definition = fn.categories.length === 0 ? functionDefinitions(fn).join("; or when it ") || null : null;
-  const title = `Best Free ${categoryName} Tools (${year}) — AgentDeals`;
-  const metaDesc = definition
-    ? `Every free ${categoryName.toLowerCase()} tier that clears our bar in ${year}: ${pickCount} offers meet the criteria and ${demoted.length} are demoted with a named reason. We list a product here when it ${definition}.`
-    : `Every free ${categoryName.toLowerCase()} tier that clears our bar in ${year}: ${pickCount} offers meet the criteria and ${demoted.length} are demoted with a named reason. Verified pricing, recorded changes, and a published ranking method.`;
+  const meaning = fn.categories.length === 0 ? functionMeaningSentence(functionDefinitions(fn)) : "";
+  const listNoun = fn.listNoun;
+  const title = `Best Free ${listNoun} (${year}) — AgentDeals`;
+  const clearOurBar = `Every free ${categoryName.toLowerCase()} tier that clears our bar in ${year}: ${countedNoun(pickCount, "offer")} ${pickCount === 1 ? "meets" : "meet"} the criteria and ${countedNoun(demoted.length, "offer")} ${demoted.length === 1 ? "is" : "are"} demoted with a named reason.`;
+  const metaDesc = meaning
+    ? `${clearOurBar} ${meaning}`
+    : `${clearOurBar} Verified pricing, recorded changes, and a published ranking method.`;
 
   const riskColors: Record<string, string> = { stable: "#3fb950", caution: "#d29922", risky: "#f85149" };
   const pageScope = fn.categories.length === 1 && fn.subtypes.length === 0 ? "for this category" : "on this page";
@@ -2434,7 +2456,7 @@ ${cards}`;
     ? {
         "@context": "https://schema.org",
         "@type": "ItemList",
-        name: `Best Free ${categoryName} Tools`,
+        name: `Best Free ${listNoun}`,
         description: metaDesc,
         numberOfItems: renderedGroups.length,
         itemListElement: renderedGroups.map((group, i) => ({
@@ -2452,7 +2474,7 @@ ${cards}`;
     : {
         "@context": "https://schema.org",
         "@type": "ItemList",
-        name: `Best Free ${categoryName} Tools`,
+        name: `Best Free ${listNoun}`,
         description: metaDesc,
         numberOfItems: pickCount,
         itemListElement: listOf(qualified.map(e => e.offer)),
@@ -2463,7 +2485,7 @@ ${cards}`;
     .map(c => `<a href="/category/${toSlug(c)}">See all ${offers.filter(o => o.category === c).length} ${escHtmlServer(c.toLowerCase())} offers &rarr;</a>`)
     .join(" ");
 
-  const otherBestOf = Array.from(bestOfSlugMap.entries())
+  const otherBestOf = Array.from(publishedBestOf(date).entries())
     .filter(([s]) => s !== slug)
     .sort((a, b) => functionMembers(offers, b[1]).length - functionMembers(offers, a[1]).length)
     .slice(0, 10)
@@ -2544,8 +2566,8 @@ ${mcpCtaCss()}
 <div class="container">
   ${buildGlobalNav("best")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/best">Best Of</a> &rsaquo; ${escHtmlServer(categoryName)}</div>
-  <h1>Best Free ${escHtmlServer(categoryName)} Tools</h1>
-  <p class="page-meta">Every free ${escHtmlServer(categoryName.toLowerCase())} tier that clears our bar today. Updated ${tie.date}.${definition ? ` We list a product here when it ${escHtmlServer(definition)}.` : ""}</p>
+  <h1>Best Free ${escHtmlServer(listNoun)}</h1>
+  <p class="page-meta">Every free ${escHtmlServer(categoryName.toLowerCase())} tier that clears our bar today. Updated ${tie.date}.${meaning ? ` ${escHtmlServer(meaning)}` : ""}</p>
 
   <div class="tie-note">${tiePara}</div>
 
@@ -2593,12 +2615,13 @@ ${tableRows}
 
 function buildBestOfIndexPage(): string {
   const year = new Date().getFullYear();
-  const bestOfCount = bestOfSlugMap.size;
-  const categoryPageCount = [...bestOfSlugMap.values()].filter(fn => fn.categories.length > 0).length;
+  const publishing = publishedBestOf();
+  const bestOfCount = publishing.size;
+  const categoryPageCount = [...publishing.values()].filter(fn => fn.categories.length > 0).length;
   const title = `Best Free Developer Tools (${year}) — AgentDeals`;
   const metaDesc = `Every free tier that clears our bar, across ${bestOfCount} developer tool functions. Offers are never promoted — only demoted, on a named recorded fact. The method is published.`;
 
-  const sortedEntries = Array.from(bestOfSlugMap.entries())
+  const sortedEntries = Array.from(publishing.entries())
     .sort((a, b) => functionMembers(offers, b[1]).length - functionMembers(offers, a[1]).length);
 
   const cardsHtml = sortedEntries.map(([slug, fn]) => {
@@ -2687,7 +2710,7 @@ function summariseBestOfTies(date = utcDate()): BestOfTieSummary {
   let tieSum = 0;
   let bestOfPageCount = 0;
   let categoryPageCount = 0;
-  for (const [, fn] of bestOfSlugMap) {
+  for (const [, fn] of publishedBestOf(date)) {
     const r = rankFunction(fn, date);
     bestOfPageCount++;
     if (fn.categories.length > 0) categoryPageCount++;
@@ -2714,6 +2737,9 @@ function buildCriteriaPage(): string {
 
   const tieSummary = summariseBestOfTies(date);
   const { bestOfPageCount, categoriesWithUniqueTop, meanTie } = tieSummary;
+  const categoriesWithoutPage = categories.length - tieSummary.categoryPageCount;
+  const categoriesBelowReach = categories.length - [...bestOfSlugMap.values()].filter(fn => fn.categories.length > 0).length;
+  const categoriesBelowPicks = categoriesWithoutPage - categoriesBelowReach;
 
   const title = "How AgentDeals ranks — published criteria — AgentDeals";
   const metaDesc = "Our ranking method in full: the gates, the demerits and their weights, the tie-break seed, and the reason there is no top slot to sell. Recompute any ranked page yourself.";
@@ -2734,6 +2760,9 @@ function buildCriteriaPage(): string {
 ${entries.map(e => `<tr><td><code>${escHtmlServer(e.subtype)}</code></td><td>${escHtmlServer(e.definition)}</td><td style="text-align:center;font-family:var(--mono)">${grouped.has(e.subtype) ? "&#10003;" : "&mdash;"}</td></tr>`).join("\n")}
   </tbody></table>${groupParagraphs}`;
   }).join("\n");
+  const crossTaxonomyRows = CROSS_TAXONOMY_RULINGS.map(r =>
+    `<tr><td><code>${escHtmlServer(r.a.taxonomy)} / ${escHtmlServer(r.a.subtype)}</code><br><code>${escHtmlServer(r.b.taxonomy)} / ${escHtmlServer(r.b.subtype)}</code></td><td style="text-align:center;font-family:var(--mono)">${r.same ? `one function &mdash; <code>${escHtmlServer(r.canonical!.subtype)}</code> governs` : "two functions"}</td><td>${escHtmlServer(r.reason)}</td></tr>`,
+  ).join("\n");
   const subtypeCoverageClause = (() => {
     const parts = Object.keys(SUBTYPE_TAXONOMIES).map(taxonomy => {
       const inTaxonomy = offers.filter(o => o.category === taxonomy);
@@ -2851,9 +2880,10 @@ ${demeritRows}
   <div class="callout">
     <strong>${uniqueTopClause(tieSummary).replace(/^0 /, "Zero ")}.</strong> ${categoriesWithUniqueTop.length === 0
       ? "Under every criterion we currently record, there is no single best free database, no best free AI/ML tool, no best free anything."
-      : "Everywhere else, under every criterion we currently record, there is no single best free tier of anything."} On average ${meanTie} offers tie at the top of those pages. A best-of page is named after a product function: ${tieSummary.categoryPageCount} of the ${bestOfPageCount} are named after a category and the site publishes ${categories.length} categories in all, so the ${categories.length - tieSummary.categoryPageCount} with fewer than ${BEST_OF_MIN_VENDORS} generally-available offers have no best-of page and are not counted here. The remaining ${bestOfPageCount - tieSummary.categoryPageCount} are named after a subtype label.
+      : "Everywhere else, under every criterion we currently record, there is no single best free tier of anything."} On average ${meanTie} offers tie at the top of those pages. A best-of page is named after a product function: ${tieSummary.categoryPageCount} of the ${bestOfPageCount} are named after a category and the site publishes ${categories.length} categories in all, so the ${categoriesWithoutPage} with no page &mdash; ${categoriesBelowReach} reaching fewer than ${BEST_OF_MIN_VENDORS} generally-available offers and ${categoriesBelowPicks} whose list would publish fewer than ${BEST_OF_MIN_PICKS} today &mdash; are not counted here. The remaining ${bestOfPageCount - tieSummary.categoryPageCount} are named after a subtype label.
   </div>
   <p id="functions">${escHtmlServer(FUNCTION_NAMING_RULE)} ${escHtmlServer(FUNCTION_MEMBERSHIP_RULE)}</p>
+  <p>${escHtmlServer(FUNCTION_TITLE_RULE)} ${escHtmlServer(FUNCTION_PICK_RULE)}</p>
   <p>We think that is the honest answer and a better thing to publish than a manufactured winner. It is also the strongest form of &ldquo;our recommendations are not for sale&rdquo;: there is no top slot, so there is nothing to buy. A vendor cannot improve its position by talking to us &mdash; only by improving its offer, or by us being able to verify it.</p>
 
   <h3>The tie-break</h3>
@@ -2877,6 +2907,11 @@ ${membershipGateRows}
   <h3 id="subtypes">Subtypes</h3>
   <p>A category is a coarse property. Where we have published a subtype taxonomy for a category, the same discipline applies one level finer: a subtype is what the vendor's own copy says the product <em>is</em>, it is multi-label, and it decides membership only. ${escHtmlServer(SUBTYPE_MEMBERSHIP_RULE)}</p>
 ${subtypeTaxonomyTables}
+  <h4>Where two parents name one function</h4>
+  <p>${escHtmlServer(CROSS_TAXONOMY_RULE)}</p>
+  <table><thead><tr><th>Pair</th><th>Ruling</th><th>Why</th></tr></thead><tbody>
+${crossTaxonomyRows}
+  </tbody></table>
   <p>${escHtmlServer(SUBTYPE_MEMBERSHIP_GROUP_SCOPE)}</p>
   <p>Subtypes are published on every classified vendor page with the source URL and the sentence they were read from, exactly as the properties above are. ${subtypeCoverageClause}</p>
   <p><strong style="color:var(--text)">Where a taxonomy is published, silence is not a pass.</strong> A record we have not read against it is held out of that category's alternatives lists and named there, rather than offered on the strength of a reading we never did. That is the opposite of how the properties above treat absence, and it is deliberate: those describe a product we looked at, while a missing subtype describes only us.</p>
@@ -54938,7 +54973,7 @@ ${catList}
       xml += '  <url>\n    <loc>' + BASE_URL + '/category/' + toSlug(c.name) + '</loc>\n    <lastmod>' + catLastmod + '</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>\n';
     }
     xml += '  <url>\n    <loc>' + BASE_URL + '/best</loc>\n    <lastmod>' + latestVerified + '</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>\n';
-    for (const [s, fn] of bestOfSlugMap.entries()) {
+    for (const [s, fn] of publishedBestOf().entries()) {
       const memberStamps = [...new Set(functionMembers(offers, fn).map(o => toSlug(o.category)))]
         .map(c => categoryLastmod.get(c))
         .filter((v): v is string => Boolean(v))
@@ -55006,7 +55041,7 @@ ${catList}
     res.end(landingPageHtml);
   } else if ((url.pathname === "/best" || url.pathname === "/best/") && isGetOrHead) {
     recordApiHit("/best");
-    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/best", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: bestOfSlugMap.size });
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/best", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: publishedBestOf().size });
     res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
     res.end(buildBestOfIndexPage());
   } else if (url.pathname.startsWith("/best/") && isGetOrHead) {
@@ -56739,7 +56774,7 @@ async function pingSearchEngines(): Promise<void> {
   for (const c of categories) {
     urlList.push(`${BASE_URL}/category/${toSlug(c.name)}`);
   }
-  for (const s of bestOfSlugMap.keys()) {
+  for (const s of publishedBestOf().keys()) {
     urlList.push(`${BASE_URL}/best/${s}`);
   }
   for (const s of comparisonMap.keys()) {

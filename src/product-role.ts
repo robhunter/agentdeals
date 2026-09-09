@@ -29,11 +29,17 @@ export const MEMBERSHIP_GATE_RULES: Record<MembershipGate, { label: string; rule
   },
 };
 
-export const SUBTYPE_TAXONOMIES: Record<string, Array<{ subtype: string; definition: string }>> = {
+export interface SubtypeTaxonomyEntry {
+  subtype: string;
+  definition: string;
+  name?: string;
+}
+
+export const SUBTYPE_TAXONOMIES: Record<string, SubtypeTaxonomyEntry[]> = {
   Databases: [
-    { subtype: "relational", definition: "tables, rows and joins under SQL — Postgres, MySQL, SQLite family" },
-    { subtype: "document", definition: "schemaless JSON/BSON documents as the stored unit" },
-    { subtype: "vector", definition: "stores embeddings and answers similarity queries as its primary access path" },
+    { subtype: "relational", name: "Relational Databases", definition: "tables, rows and joins under SQL — Postgres, MySQL, SQLite family" },
+    { subtype: "document", name: "Document Databases", definition: "schemaless JSON/BSON documents as the stored unit" },
+    { subtype: "vector", name: "Vector Databases", definition: "stores embeddings and answers similarity queries as its primary access path" },
     { subtype: "kv_cache", definition: "key to value, no query language over the value" },
     { subtype: "graph", definition: "nodes and edges are the primary model, with a traversal query language" },
     { subtype: "timeseries", definition: "rows are time-indexed measurements, retention is a first-class setting" },
@@ -84,6 +90,136 @@ export const SUBTYPE_TAXONOMIES: Record<string, Array<{ subtype: string; definit
     { subtype: "agent_tool_access", definition: "supplies an agent with authenticated connections to third-party applications it can call as tools" },
   ],
 };
+
+export interface TaxonomyEntryRef {
+  taxonomy: string;
+  subtype: string;
+}
+
+export interface CrossTaxonomyRuling {
+  a: TaxonomyEntryRef;
+  b: TaxonomyEntryRef;
+  same: boolean;
+  canonical?: TaxonomyEntryRef;
+  reason: string;
+}
+
+export const CROSS_TAXONOMY_RULE =
+  "The taxonomies are read against each other, not only within a parent. Two entries under different parents are flagged as candidates for one function when their definitions describe the same thing or when one label contains the other, and every flagged pair is ruled on here rather than left to the slug. A pair ruled the same is one function: whichever label a record carries, it reaches the page named after that function, and one definition governs.";
+
+export const CROSS_TAXONOMY_RULINGS: CrossTaxonomyRuling[] = [
+  {
+    a: { taxonomy: "Databases", subtype: "vector" },
+    b: { taxonomy: "AI / ML", subtype: "vector_store" },
+    same: true,
+    canonical: { taxonomy: "Databases", subtype: "vector" },
+    reason: "Similarity search and nearest-neighbour search are one operation under two names, so these two labels are one function. Records carrying either reach the page named after it, whichever parent they are filed under.",
+  },
+  {
+    a: { taxonomy: "Cloud Hosting", subtype: "agent_sandbox" },
+    b: { taxonomy: "AI / ML", subtype: "agent_sandbox" },
+    same: true,
+    canonical: { taxonomy: "Cloud Hosting", subtype: "agent_sandbox" },
+    reason: "One label declared under two parents. The Cloud Hosting wording governs because it does not restrict the workload to code an agent wrote.",
+  },
+  {
+    a: { taxonomy: "Databases", subtype: "document" },
+    b: { taxonomy: "AI / ML", subtype: "document_extraction" },
+    same: false,
+    reason: "A document database stores a document as its unit; document extraction reads one and returns text or fields. They share a word and no function.",
+  },
+];
+
+const CROSS_TAXONOMY_DEFINITION_OVERLAP = 0.5;
+
+const DEFINITION_STOPWORDS = new Set(
+  "a an the and or of to in on for with as its it is are be by that this you your we our from not no there them their than rather so per own one two three what which when where how".split(" "),
+);
+
+function definitionTokens(definition: string): Set<string> {
+  return new Set(
+    definition
+      .toLowerCase()
+      .replace(/[^a-z0-9\s-]/g, " ")
+      .split(/\s+/)
+      .filter(word => word.length > 0 && !DEFINITION_STOPWORDS.has(word))
+      .map(word => word.replace(/ies$/, "y").replace(/es$/, "e").replace(/s$/, "")),
+  );
+}
+
+function definitionOverlap(one: string, other: string): number {
+  const left = definitionTokens(one);
+  const right = definitionTokens(other);
+  const shared = [...left].filter(token => right.has(token)).length;
+  const union = new Set([...left, ...right]).size;
+  return union === 0 ? 0 : shared / union;
+}
+
+function labelContains(one: string, other: string): boolean {
+  return one === other || one.startsWith(`${other}_`) || one.endsWith(`_${other}`);
+}
+
+export type CrossTaxonomySignal = "definition" | "label" | "definition and label";
+
+export interface CrossTaxonomyCandidate {
+  a: TaxonomyEntryRef;
+  b: TaxonomyEntryRef;
+  overlap: number;
+  signal: CrossTaxonomySignal;
+}
+
+export function crossTaxonomyCandidates(taxonomies: Record<string, SubtypeTaxonomyEntry[]> = SUBTYPE_TAXONOMIES): CrossTaxonomyCandidate[] {
+  const flat = Object.entries(taxonomies).flatMap(([taxonomy, entries]) => entries.map(entry => ({ taxonomy, ...entry })));
+  const found: CrossTaxonomyCandidate[] = [];
+  for (let i = 0; i < flat.length; i++) {
+    for (let j = i + 1; j < flat.length; j++) {
+      const one = flat[i];
+      const other = flat[j];
+      if (one.taxonomy === other.taxonomy) continue;
+      const overlap = definitionOverlap(one.definition, other.definition);
+      const byDefinition = overlap >= CROSS_TAXONOMY_DEFINITION_OVERLAP;
+      const byLabel = labelContains(one.subtype, other.subtype) || labelContains(other.subtype, one.subtype);
+      if (!byDefinition && !byLabel) continue;
+      found.push({
+        a: { taxonomy: one.taxonomy, subtype: one.subtype },
+        b: { taxonomy: other.taxonomy, subtype: other.subtype },
+        overlap,
+        signal: byDefinition && byLabel ? "definition and label" : byDefinition ? "definition" : "label",
+      });
+    }
+  }
+  return found;
+}
+
+function sameRef(one: TaxonomyEntryRef, other: TaxonomyEntryRef): boolean {
+  return one.taxonomy === other.taxonomy && one.subtype === other.subtype;
+}
+
+export function crossTaxonomyRulingFor(one: TaxonomyEntryRef, other: TaxonomyEntryRef): CrossTaxonomyRuling | null {
+  return (
+    CROSS_TAXONOMY_RULINGS.find(
+      ruling =>
+        (sameRef(ruling.a, one) && sameRef(ruling.b, other)) || (sameRef(ruling.a, other) && sameRef(ruling.b, one)),
+    ) ?? null
+  );
+}
+
+export function canonicalEntryFor(entry: TaxonomyEntryRef): TaxonomyEntryRef {
+  for (const ruling of CROSS_TAXONOMY_RULINGS) {
+    if (!ruling.same || !ruling.canonical) continue;
+    if (sameRef(ruling.a, entry) || sameRef(ruling.b, entry)) return ruling.canonical;
+  }
+  return entry;
+}
+
+export function subtypeEntry(taxonomy: string, subtype: string): SubtypeTaxonomyEntry | null {
+  return SUBTYPE_TAXONOMIES[taxonomy]?.find(entry => entry.subtype === subtype) ?? null;
+}
+
+export function governingDefinition(taxonomy: string, subtype: string): string | null {
+  const canonical = canonicalEntryFor({ taxonomy, subtype });
+  return subtypeEntry(canonical.taxonomy, canonical.subtype)?.definition ?? null;
+}
 
 export interface SubtypeMembershipGroup {
   subtypes: string[];

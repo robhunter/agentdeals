@@ -1,10 +1,11 @@
-import { SUBTYPE_TAXONOMIES, subtypeDefinition } from "./product-role.js";
+import { SUBTYPE_TAXONOMIES, subtypeDefinition, canonicalEntryFor, governingDefinition, subtypeEntry } from "./product-role.js";
 import { toSlug } from "./slug.js";
 import type { SubtypeLabel } from "./types.js";
 
 export interface ProductFunction {
   slug: string;
   title: string;
+  listNoun: string;
   categories: string[];
   subtypes: string[];
   taxonomies: string[];
@@ -16,7 +17,13 @@ export interface FunctionCarrier {
 }
 
 export const FUNCTION_NAMING_RULE =
-  "A page is named after a product function. A function is named by a category, by a subtype label, or by both — two names are the same function when their slugs match once a trailing plural is dropped, and by nothing weaker. Substring overlap is not a match: container_app is not the container registry category, host_metrics is not cloud hosting, and the document database subtype is not documentation.";
+  "A page is named after a product function. A function is named by a category, by a subtype label, or by both — two names are the same function when their slugs match once a trailing plural is dropped, or when a published ruling says two labels under different parents name one thing, and by nothing weaker. Substring overlap is not a match: container_app is not the container registry category, host_metrics is not cloud hosting, and the document database subtype is not documentation.";
+
+export const FUNCTION_TITLE_RULE =
+  "A page's title names a class of product. A category already names one, so the category name is the title. A subtype names an attribute of the class its parent names, so where the attribute alone would not name a product the title is declared beside the definition instead of derived from the label.";
+
+export const FUNCTION_PICK_RULE =
+  "A page is published when the function reaches enough records to compare and the list it will publish holds more than one of them. A page carrying a single pick is not a comparison, so the threshold counts what the page shows rather than what it could reach.";
 
 export const FUNCTION_MEMBERSHIP_RULE =
   "A record reaches a function page when its category names the function or when it carries a subtype label that names the function. Adding a label to a record publishes it here; removing one withdraws it. No page holds a list of vendors.";
@@ -41,6 +48,13 @@ export function subtypeTitle(subtype: string): string {
     .join(" ");
 }
 
+export function functionNaming(taxonomy: string, subtype: string): { title: string; listNoun: string } {
+  const canonical = canonicalEntryFor({ taxonomy, subtype });
+  const declared = subtypeEntry(canonical.taxonomy, canonical.subtype)?.name;
+  const title = declared ?? subtypeTitle(canonical.subtype);
+  return { title, listNoun: declared ?? `${title} Tools` };
+}
+
 export function buildProductFunctions(categoryNames: readonly string[]): ProductFunction[] {
   const byKey = new Map<string, ProductFunction>();
 
@@ -52,20 +66,31 @@ export function buildProductFunctions(categoryNames: readonly string[]): Product
       if (!held.categories.includes(name)) held.categories.push(name);
       continue;
     }
-    byKey.set(key, { slug, title: name, categories: [name], subtypes: [], taxonomies: [] });
+    byKey.set(key, { slug, title: name, listNoun: `${name} Tools`, categories: [name], subtypes: [], taxonomies: [] });
   }
 
   for (const [taxonomy, entries] of Object.entries(SUBTYPE_TAXONOMIES)) {
     for (const { subtype } of entries) {
-      const key = functionKey(toSlug(subtype));
+      const canonical = canonicalEntryFor({ taxonomy, subtype });
+      const key = functionKey(toSlug(canonical.subtype));
       const held = byKey.get(key);
       if (held) {
         if (!held.subtypes.includes(subtype)) held.subtypes.push(subtype);
         if (!held.taxonomies.includes(taxonomy)) held.taxonomies.push(taxonomy);
         continue;
       }
-      byKey.set(key, { slug: toSlug(subtype), title: subtypeTitle(subtype), categories: [], subtypes: [subtype], taxonomies: [taxonomy] });
+      byKey.set(key, {
+        slug: toSlug(canonical.subtype),
+        ...functionNaming(taxonomy, subtype),
+        categories: [],
+        subtypes: [subtype],
+        taxonomies: [taxonomy],
+      });
     }
+  }
+
+  for (const fn of byKey.values()) {
+    fn.subtypes.sort((a, b) => Number(toSlug(b) === fn.slug) - Number(toSlug(a) === fn.slug));
   }
 
   return [...byKey.values()];
@@ -75,11 +100,16 @@ export function functionDefinitions(fn: ProductFunction): string[] {
   const definitions = new Set<string>();
   for (const taxonomy of fn.taxonomies) {
     for (const subtype of fn.subtypes) {
-      const definition = subtypeDefinition(taxonomy, subtype);
-      if (definition) definitions.add(definition);
+      if (!subtypeDefinition(taxonomy, subtype)) continue;
+      const governing = governingDefinition(taxonomy, subtype);
+      if (governing) definitions.add(governing);
     }
   }
   return [...definitions];
+}
+
+export function functionMeaningSentence(definitions: readonly string[]): string {
+  return definitions.length === 0 ? "" : `Our membership test: ${definitions.join("; or ")}.`;
 }
 
 export interface FunctionAdmission {
