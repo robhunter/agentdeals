@@ -1,0 +1,69 @@
+name: Date every page from when its own output moved
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  issues: write
+
+concurrency:
+  group: page-lastmod
+  cancel-in-progress: false
+
+jobs:
+  redate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24.20.0"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Read every page this commit renders, to date the ones whose output moved
+        id: lastmod
+        run: |
+          set -o pipefail
+          node scripts/update-page-lastmod.js --json | tee /tmp/page-lastmod.json
+          node -e '
+            const outcome = JSON.parse(require("node:fs").readFileSync("/tmp/page-lastmod.json", "utf-8"));
+            console.log(["moved", "added", "dropped"].map(k => `${k}=${outcome[k].length}`).join("\n"));
+          ' >> "$GITHUB_OUTPUT"
+
+      - name: Run the suite, then push to main only if it is green
+        id: gate
+        env:
+          MOVED: ${{ steps.lastmod.outputs.moved }}
+          ADDED: ${{ steps.lastmod.outputs.added }}
+          DROPPED: ${{ steps.lastmod.outputs.dropped }}
+        run: |
+          bash scripts/gate-data-push.sh \
+            data-quarantine/page-lastmod \
+            "data(auto): page dates — ${MOVED} pages whose output moved, ${ADDED} new, ${DROPPED} gone" \
+            data/page-lastmod.json
+
+      - name: Say where it can be seen what the gate did with this run's dates
+        if: always() && (steps.gate.outputs.quarantined == 'true' || steps.gate.outputs.pushed_over_failures == 'true')
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          QUARANTINED: ${{ steps.gate.outputs.quarantined }}
+          QUARANTINE_REF: ${{ steps.gate.outputs.quarantine_ref }}
+          QUARANTINE_REASON: ${{ steps.gate.outputs.quarantine_reason }}
+          NON_BLOCKING_FILES: ${{ steps.gate.outputs.non_blocking_files }}
+        run: |
+          if [ "$QUARANTINED" = "true" ]; then
+            bash scripts/report-data-push-outcome.sh "Page dates" refused "$QUARANTINE_REF" "$QUARANTINE_REASON"
+          else
+            bash scripts/report-data-push-outcome.sh "Page dates" shipped-over-failures "$NON_BLOCKING_FILES"
+          fi
