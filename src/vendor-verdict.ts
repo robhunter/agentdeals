@@ -1,6 +1,6 @@
 import type { DealChange, RatingWithheld, RiskCause, SourceCheckOutcome } from "./types.js";
 import { CHANGE_DIRECTION, isACorrectionToOurOwnRecord } from "./data.js";
-import { isNoLongerInForce } from "./change-resolution.js";
+import { isNoLongerInForce, theEventNeverHappened } from "./change-resolution.js";
 import { changeIsUncited, ratingWithheldForNoSourceSentence } from "./change-citation.js";
 import { changeDateClause } from "./change-dates.js";
 import {
@@ -158,13 +158,28 @@ export function uncitedOnlySentence(records: number): string {
     : `All ${records} records we hold cite no source, so none of them sets a rating.`;
 }
 
+export function withdrawnOnlySentence(records: number): string {
+  if (records === 0) return "";
+  return records === 1
+    ? `The one record we hold was our own error and has been withdrawn.`
+    : `All ${records} records we hold were our own errors and have been withdrawn.`;
+}
+
+export function isOurOwnBookkeeping(
+  change: Pick<DealChange, "change_type"> & { resolution?: DealChange["resolution"] },
+): boolean {
+  return isACorrectionToOurOwnRecord(change) || theEventNeverHappened(change);
+}
+
 export function narrowingSentence(changes: VendorVerdictInput["changes"]): string {
   const cited = changes.filter(c => !changeIsUncited(c));
-  const corrections = cited.filter(isACorrectionToOurOwnRecord);
-  const byTheVendor = cited.filter(c => !isACorrectionToOurOwnRecord(c));
+  const withdrawn = cited.filter(theEventNeverHappened);
+  const corrections = cited.filter(c => isACorrectionToOurOwnRecord(c) && !theEventNeverHappened(c));
+  const byTheVendor = cited.filter(c => !isOurOwnBookkeeping(c));
   const total = byTheVendor.length;
   if (total === 0) {
-    if (corrections.length === 0) return uncitedOnlySentence(changes.length);
+    if (corrections.length === 0 && withdrawn.length === 0) return uncitedOnlySentence(changes.length);
+    if (corrections.length === 0) return withdrawnOnlySentence(withdrawn.length);
     return corrections.length === 1
       ? `The one record we hold corrects our own earlier entry rather than reporting a change the vendor made.`
       : `All ${corrections.length} records we hold correct our own earlier entries rather than reporting changes the vendor made.`;

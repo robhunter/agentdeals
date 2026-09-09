@@ -13,7 +13,7 @@ export const A_TRIAL = /\btrials?\b|\bfree\s+for\s+\d+\s+(?:days?|weeks?|months?
 export const A_PLAN_PRICE = /[$€£]\s?[\d,]+(?:\.\d+)?|\b[\d,]+(?:\.\d+)?\s*(?:USD|EUR|GBP)\b/i;
 
 export const DENIES_A_FREE_PLAN =
-  /\b(?:does\s+not|doesn['’]t|do\s+not|no\s+longer|not\s+available|only\s+available|is\s+not|are\s+not|remov(?:e|es|ed|ing|al)|sunset(?:s|ting|ted)?|shutting\s+down|shut\s+down|deprecat(?:e|ed|ing|ion)|discontinu(?:e|ed|ing))\b/i;
+  /\b(?:does\s+not|doesn['’]t|do\s+not|no\s+longer|not\s+available|only\s+available|is\s+not|are\s+not|remov(?:e|es|ed|ing|al)|sunset(?:s|ting|ted)?|shutting\s+down|shut\s+down|deprecat(?:e|ed|ing|ion)|discontinu(?:e|ed|ing)|retir(?:e|es|ed|ing|ement)|phas(?:e|es|ed|ing)\s+out|wind(?:s|ing)?\s+down|winding\s+down)\b/i;
 
 const CLAUSE_BREAK = /[;:|]|,(?=\s)|\s+[-–—]\s+/g;
 
@@ -51,10 +51,14 @@ function whereItIsOfferedOutrightIn(text: string, pattern: RegExp): number {
   return -1;
 }
 
-export function namesAFreePlan(sentence: string): boolean {
-  const at = whereItIsOfferedOutrightIn(sentence, A_FREE_PLAN);
+export function offeredOutrightAndNotDenied(sentence: string, pattern: RegExp): boolean {
+  const at = whereItIsOfferedOutrightIn(sentence, pattern);
   if (at < 0) return false;
   return !DENIES_A_FREE_PLAN.test(clauseAround(sentence, at).text);
+}
+
+export function namesAFreePlan(sentence: string): boolean {
+  return offeredOutrightAndNotDenied(sentence, A_FREE_PLAN);
 }
 
 export function mentionsSomethingFree(text: string): boolean {

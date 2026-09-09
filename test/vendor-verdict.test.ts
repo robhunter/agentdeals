@@ -237,7 +237,7 @@ describe("vendor verdict — a stable rating reports direction, not volume", () 
     assert.match(narrowingSentence([standing]), /One recorded free tier removal narrowed the terms/);
 
     assert.strictEqual(establishesANarrowing(withdrawn), false);
-    assert.strictEqual(narrowingSentence([withdrawn]), "The one change we have recorded did not narrow the terms.");
+    assert.strictEqual(narrowingSentence([withdrawn]), "The one record we hold was our own error and has been withdrawn.");
     assert.doesNotMatch(
       vendorVerdictSentence(input({ level: "stable", changes: [withdrawn] })),
       /narrowed the terms/,
