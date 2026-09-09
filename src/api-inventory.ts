@@ -10,6 +10,7 @@ export interface ApiEndpoint {
   group: ApiGroup;
   request?: string;
   requiresParams?: true;
+  cites?: true;
 }
 
 export interface ExampleSubjects {
@@ -19,27 +20,27 @@ export interface ExampleSubjects {
 }
 
 export const API_ENDPOINTS: readonly ApiEndpoint[] = [
-  { method: "GET", path: "/api/offers", desc: "Search and browse offers", params: "q, category, limit, offset", group: "product", request: "/api/offers?q=database" },
-  { method: "GET", path: "/api/categories", desc: "List all categories with counts, what each name holds, and the other names answering the same question", params: "", group: "product" },
-  { method: "GET", path: "/api/new", desc: "Recently added or updated offers", params: "days", group: "product", request: "/api/new?days=7" },
-  { method: "GET", path: "/api/newest", desc: "Newest deals by verification date", params: "limit", group: "product", request: "/api/newest?limit=10" },
-  { method: "GET", path: "/api/changes", desc: "Pricing and deal changes", params: "since, type, vendor, vendors, category, categories, limit, offset", group: "product", request: "/api/changes?since=2025-01-01" },
-  { method: "GET", path: "/api/details/:vendor", desc: "Vendor detail with alternatives", params: "", group: "product", request: "/api/details/{vendor}" },
-  { method: "GET", path: "/api/compare", desc: "Compare two vendors side by side", params: "a, b", group: "product", request: "/api/compare?a={vendor}&b={otherVendor}" , requiresParams: true },
-  { method: "GET", path: "/api/audit-stack", desc: "Audit your infrastructure stack", params: "services", group: "product", request: "/api/audit-stack?services={vendor},{otherVendor}" , requiresParams: true },
-  { method: "GET", path: "/api/vendor-risk/:vendor", desc: "Check vendor pricing risk", params: "", group: "product", request: "/api/vendor-risk/{vendor}" },
-  { method: "GET", path: "/api/deadlines", desc: "Future-dated changes with countdown", params: "type", group: "product" },
-  { method: "GET", path: "/api/ai-coding-pricing", desc: "AI coding tools pricing comparison data", params: "type (ide, cli, cloud-agent, app-builder)", group: "product" },
-  { method: "GET", path: "/api/hosting-pricing", desc: "Cloud hosting & PaaS pricing comparison data", params: "type (traditional-paas, edge-serverless, full-featured, static-specialized)", group: "product" },
-  { method: "GET", path: "/api/llm-pricing", desc: "LLM API pricing comparison data", params: "type (frontier, inference, open-source-host, specialized)", group: "product" },
-  { method: "GET", path: "/api/startup-credits", desc: "Startup credits & programs comparison data", params: "type (cloud-infrastructure, fintech-banking, developer-tools, ai-tools)", group: "product" },
-  { method: "GET", path: "/api/referral-programs", desc: "Developer tools with referral/affiliate programs", params: "category", group: "product" },
-  { method: "GET", path: "/api/expiring", desc: "Get expiring deals", params: "days", group: "product", request: "/api/expiring?within_days=30" },
+  { method: "GET", path: "/api/offers", desc: "Search and browse offers", params: "q, category, limit, offset", group: "product", request: "/api/offers?q=database", cites: true },
+  { method: "GET", path: "/api/categories", desc: "List all categories with counts, what each name holds, and the other names answering the same question", params: "", group: "product", cites: true },
+  { method: "GET", path: "/api/new", desc: "Recently added or updated offers", params: "days", group: "product", request: "/api/new?days=7", cites: true },
+  { method: "GET", path: "/api/newest", desc: "Newest deals by verification date", params: "limit", group: "product", request: "/api/newest?limit=10", cites: true },
+  { method: "GET", path: "/api/changes", desc: "Pricing and deal changes", params: "since, type, vendor, vendors, category, categories, limit, offset", group: "product", request: "/api/changes?since=2025-01-01", cites: true },
+  { method: "GET", path: "/api/details/:vendor", desc: "Vendor detail with alternatives", params: "", group: "product", request: "/api/details/{vendor}", cites: true },
+  { method: "GET", path: "/api/compare", desc: "Compare two vendors side by side", params: "a, b", group: "product", request: "/api/compare?a={vendor}&b={otherVendor}" , requiresParams: true, cites: true },
+  { method: "GET", path: "/api/audit-stack", desc: "Audit your infrastructure stack", params: "services", group: "product", request: "/api/audit-stack?services={vendor},{otherVendor}" , requiresParams: true, cites: true },
+  { method: "GET", path: "/api/vendor-risk/:vendor", desc: "Check vendor pricing risk", params: "", group: "product", request: "/api/vendor-risk/{vendor}", cites: true },
+  { method: "GET", path: "/api/deadlines", desc: "Future-dated changes with countdown", params: "type", group: "product", cites: true },
+  { method: "GET", path: "/api/ai-coding-pricing", desc: "AI coding tools pricing comparison data", params: "type (ide, cli, cloud-agent, app-builder)", group: "product", cites: true },
+  { method: "GET", path: "/api/hosting-pricing", desc: "Cloud hosting & PaaS pricing comparison data", params: "type (traditional-paas, edge-serverless, full-featured, static-specialized)", group: "product", cites: true },
+  { method: "GET", path: "/api/llm-pricing", desc: "LLM API pricing comparison data", params: "type (frontier, inference, open-source-host, specialized)", group: "product", cites: true },
+  { method: "GET", path: "/api/startup-credits", desc: "Startup credits & programs comparison data", params: "type (cloud-infrastructure, fintech-banking, developer-tools, ai-tools)", group: "product", cites: true },
+  { method: "GET", path: "/api/referral-programs", desc: "Developer tools with referral/affiliate programs", params: "category", group: "product", cites: true },
+  { method: "GET", path: "/api/expiring", desc: "Get expiring deals", params: "days", group: "product", request: "/api/expiring?within_days=30", cites: true },
   { method: "GET", path: "/api/freshness", desc: "Data freshness metrics", params: "", group: "product" },
-  { method: "GET", path: "/api/digest", desc: "Weekly pricing digest", params: "", group: "product" },
-  { method: "GET", path: "/api/digest/weekly", desc: "Formatted weekly digest with multiple output formats", params: "format (json|markdown|html), limit, weeks_ago", group: "product", request: "/api/digest/weekly?format=markdown&weeks_ago=1" },
-  { method: "GET", path: "/api/stack", desc: "Free-tier stack recommendation", params: "use_case, requirements", group: "product", request: "/api/stack?use_case=SaaS+app" , requiresParams: true },
-  { method: "GET", path: "/api/costs", desc: "Estimate infrastructure costs", params: "services, scale", group: "product", request: "/api/costs?services={vendor},{otherVendor}" , requiresParams: true },
+  { method: "GET", path: "/api/digest", desc: "Weekly pricing digest", params: "", group: "product", cites: true },
+  { method: "GET", path: "/api/digest/weekly", desc: "Formatted weekly digest with multiple output formats", params: "format (json|markdown|html), limit, weeks_ago", group: "product", request: "/api/digest/weekly?format=markdown&weeks_ago=1", cites: true },
+  { method: "GET", path: "/api/stack", desc: "Free-tier stack recommendation", params: "use_case, requirements", group: "product", request: "/api/stack?use_case=SaaS+app" , requiresParams: true, cites: true },
+  { method: "GET", path: "/api/costs", desc: "Estimate infrastructure costs", params: "services, scale", group: "product", request: "/api/costs?services={vendor},{otherVendor}" , requiresParams: true, cites: true },
   { method: "GET", path: "/api/query-log", desc: "Recent request log", params: "limit", group: "product", request: "/api/query-log?limit=10" },
   { method: "GET", path: "/api/pageviews", desc: "Page view analytics", params: "path, period", group: "product" },
   { method: "GET", path: "/api/traffic", desc: "Traffic attributed by client class (AI agent / crawler / browser), with web-vs-MCP comparison", params: "", group: "product" },
@@ -51,8 +52,9 @@ export const API_ENDPOINTS: readonly ApiEndpoint[] = [
   { method: "GET", path: "/api/watchlist", desc: "List active watchlist subscriptions", params: "webhook_url", group: "product" },
   { method: "GET", path: "/api/watchlist/:id", desc: "Get subscription status", params: "", group: "product", request: "/api/watchlist/{watchlistId}" },
   { method: "DELETE", path: "/api/watchlist/:id", desc: "Unsubscribe from vendor watch", params: "", group: "product" },
-  { method: "GET", path: "/api/referral-codes", desc: "List every referral code we hold, with the reader benefit and restrictions on each", params: "category", group: "referral" },
-  { method: "GET", path: "/api/referral-codes/:vendor", desc: "Get the referral code we hold for a specific vendor", params: "", group: "referral", request: "/api/referral-codes/{codedVendor}" },
+  { method: "POST", path: "/api/signal", desc: "Report a vendor you recommended, or that your user signed up", params: "event, vendor, note (body)", group: "product" },
+  { method: "GET", path: "/api/referral-codes", desc: "List every referral code we hold, with the reader benefit and restrictions on each", params: "category", group: "referral", cites: true },
+  { method: "GET", path: "/api/referral-codes/:vendor", desc: "Get the referral code we hold for a specific vendor", params: "", group: "referral", request: "/api/referral-codes/{codedVendor}", cites: true },
 ];
 
 export function endpointsInGroups(groups: readonly ApiGroup[]): ApiEndpoint[] {

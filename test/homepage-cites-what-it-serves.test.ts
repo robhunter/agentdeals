@@ -7,6 +7,9 @@ import { fileURLToPath } from "node:url";
 import { API_ENDPOINTS, DOCUMENTED_GROUPS, HOMEPAGE_GROUPS, endpointHref, endpointsInGroups, exampleSubjects, readableEndpoints } from "../dist/api-inventory.js";
 import { ACCELERATOR_CREDIT_PROGRAM, ACCELERATOR_CREDIT_VENDOR, figureIsHeldBy, figuresIn, normaliseFigure, programCeiling } from "../dist/homepage-claims.js";
 import { loadDealChanges, loadOffers } from "../dist/data.js";
+import { SIGNAL_DOC_PATH, SIGNAL_PATH } from "../dist/signal.js";
+import { CRITERIA_PATH } from "../dist/ranking.js";
+import { VENDOR_SERIES_PATH } from "../dist/vendor-series.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -18,6 +21,7 @@ const ROUTES_WE_DO_NOT_PUBLISH = new Map<string, string>([
   ["/api/page-reviews", "our editorial review register"],
   ["/api/analytics/history", "our own analytics"],
   ["/api/analytics/daily", "our own analytics"],
+  ["/api/analytics/vendors", "our own analytics — the per-vendor daily series, whose state /api/traffic publishes"],
   ["/api/agent-payments", "the retired marketplace ledger"],
   ["/api/agents/register", "agent registration, not a read endpoint"],
   ["/api/agents/me", "one caller's own registration"],
@@ -41,11 +45,21 @@ const NAMES_A_CLIENT_NOT_A_CLAIM = ["Cursor", "Cline", "Windsurf", "Claude Deskt
 
 const NAMES_AN_EXAMPLE_QUERY = ["Firebase"];
 
+const ROUTES_NAMED_BY_A_CONSTANT: Record<string, string> = { SIGNAL_PATH, SIGNAL_DOC_PATH, CRITERIA_PATH, VENDOR_SERIES_PATH };
+
+function constantsRoutingAPath(): string[] {
+  const source = readFileSync(SERVE_SOURCE, "utf8");
+  return [...new Set([...source.matchAll(/url\.pathname === ([A-Z][A-Z0-9_]*)\b/g)].map(([, name]) => name))].sort();
+}
+
 function servedApiRoutes(): string[] {
   const source = readFileSync(SERVE_SOURCE, "utf8");
   const exact = [...source.matchAll(/url\.pathname === "(\/api\/[^"]+)"/g)].map(([, route]) => route);
   const prefixed = [...source.matchAll(/url\.pathname\.startsWith\("(\/api\/[^"]+)"\)/g)].map(([, route]) => route);
-  return [...new Set([...exact, ...prefixed])].sort();
+  const named = constantsRoutingAPath()
+    .map((name) => ROUTES_NAMED_BY_A_CONSTANT[name])
+    .filter((route): route is string => typeof route === "string" && route.startsWith("/api/"));
+  return [...new Set([...exact, ...prefixed, ...named])].sort();
 }
 
 function requestsPrintedOnHome(html: string): string[] {
@@ -135,6 +149,11 @@ describe("the homepage publishes only what it can serve", () => {
     const known = new Set(API_ENDPOINTS.map((e) => e.path.replace(/:[a-z]+$/i, "")));
     const stray = servedApiRoutes().filter((route) => !known.has(route) && !ROUTES_WE_DO_NOT_PUBLISH.has(route));
     assert.deepStrictEqual(stray, [], `served /api routes in neither the inventory nor the unpublished register: ${stray.join(", ")}`);
+  });
+
+  it("resolves every constant the router matches a path against, so none can hide from that scan", () => {
+    const unresolved = constantsRoutingAPath().filter((name) => ROUTES_NAMED_BY_A_CONSTANT[name] === undefined);
+    assert.deepStrictEqual(unresolved, [], `constants the router keys on that this scan cannot resolve to a path: ${unresolved.join(", ")}`);
   });
 
   it("issues every API link the developer hub offers and gets an answer", async () => {
