@@ -1,9 +1,9 @@
-import { searchOffers, loadDealChanges, vendorRiskAssessment, classifyStability, withheldStability } from "./data.js";
+import { searchOffers, loadDealChanges, vendorRiskAssessment, classifyStability, withheldStability, standingNarrowingsCitingNoSource } from "./data.js";
 import { rankOffers, utcDate, CRITERIA_PATH, DEMOTE_ONLY_POLICY, NOT_MODELLED_NOTICE } from "./ranking.js";
 import type { Demerit, Disclosure, TieBreak } from "./ranking.js";
 import { unreachableNoticeForUrl } from "./link-health.js";
 import { verificationLedger } from "./verification-state.js";
-import type { Offer, StabilityClass, DealChange } from "./types.js";
+import type { Offer, StabilityClass, DealChange, RatingWithheld, LinkUnreachable } from "./types.js";
 import { partitionRoleCandidates, MEMBERSHIP_GATE_RULES } from "./product-role.js";
 
 export interface StackCandidate {
@@ -13,7 +13,10 @@ export interface StackCandidate {
   url: string;
   verified_date: string;
   risk_level: "stable" | "caution" | "risky" | null;
+  rating_withheld: RatingWithheld | null;
   stability: StabilityClass | null;
+  stability_withheld: RatingWithheld | null;
+  link_unreachable: LinkUnreachable | null;
   demerits: Demerit[];
   disclosures: Disclosure[];
 }
@@ -216,6 +219,8 @@ function toCandidate(
   vendorChanges: DealChange[],
 ): StackCandidate {
   const assessment = vendorRiskAssessment(vendorChanges);
+  const linkUnreachable = unreachableNoticeForUrl(offer.url);
+  const uncitedNarrowings = standingNarrowingsCitingNoSource(vendorChanges);
   return {
     vendor: offer.vendor,
     tier: offer.tier,
@@ -223,11 +228,10 @@ function toCandidate(
     url: offer.url,
     verified_date: offer.verifiedDate,
     risk_level: assessment.rating_withheld ? null : assessment.level,
-    stability: withheldStability(
-      unreachableNoticeForUrl(offer.url),
-      classifyStability(vendorChanges),
-      vendorChanges,
-    ),
+    rating_withheld: assessment.rating_withheld,
+    stability: withheldStability(linkUnreachable, classifyStability(vendorChanges), vendorChanges),
+    stability_withheld: uncitedNarrowings.length > 0 ? { reason: "no_source", records: uncitedNarrowings.length } : null,
+    link_unreachable: linkUnreachable,
     demerits,
     disclosures,
   };
