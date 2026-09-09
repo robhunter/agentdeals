@@ -7,7 +7,7 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import {
-  CATALOGUE_TEXT_FIELDS, CHANGE_LOG_TEXT_FIELDS, PAGE_DATA_SOURCES, UNSOURCED_TIER_A_BASELINE,
+  CATALOGUE_TEXT_FIELDS, CHANGE_LOG_TEXT_FIELDS, PAGE_DATA_SOURCES,
   pageSourceViolations, parsePageReviews, perturbTextFields, unsourcedTierAPaths, vendorFactRows,
   type PageReviewRecord, type PageSourceMeasurement,
 } from "../src/page-reviews.ts";
@@ -146,12 +146,15 @@ describe("a page may only name the source it actually reads", () => {
       pages.filter((p) => !PAGE_DATA_SOURCES.includes(p.data_source)).map((p) => p.path),
       []
     );
-    assert.deepStrictEqual(pageSourceViolations(pages, measured).map((v) => `${v.path} ${v.problem}`), []);
+    assert.deepStrictEqual(
+      pageSourceViolations(pages, measured, unsourcedTierAPaths(pages).length).map((v) => `${v.path} ${v.problem}`),
+      []
+    );
   });
 
-  it("holds the number of tier-A pages that assert vendor facts and read no catalogue record, and cannot admit another", () => {
+  it("cannot admit one more tier-A page that asserts vendor facts and reads no catalogue record", () => {
     const unsourced = unsourcedTierAPaths(pages);
-    assert.strictEqual(unsourced.length, UNSOURCED_TIER_A_BASELINE);
+    assert.ok(unsourced.length > 0, "no page on the register is unsourced, so nothing here is exercised");
     const admitted = [...pages, {
       ...pages.find((p) => p.tier === "A")!,
       path: "/a-page-that-does-not-exist",
@@ -162,8 +165,8 @@ describe("a page may only name the source it actually reads", () => {
     const withOneMore = new Map(measured);
     withOneMore.set("/a-page-that-does-not-exist", { reads_index: false, reads_changes: false, vendor_fact_rows: 0 });
     assert.ok(
-      pageSourceViolations(admitted, withOneMore).length > 0,
-      "a forty-fourth unsourced tier-A page passed, so the ratchet allows the number to grow"
+      pageSourceViolations(admitted, withOneMore, unsourced.length).length > 0,
+      `a ${unsourced.length + 1}th unsourced tier-A page passed, so the ratchet allows the number to grow`
     );
   });
 
@@ -173,7 +176,7 @@ describe("a page may only name the source it actually reads", () => {
         ? { ...p, data_source: "editorial" as const, data_source_reason: "no vendor facts here" }
         : p
     );
-    const problems = pageSourceViolations(withFalseExemption, measured, UNSOURCED_TIER_A_BASELINE - 1);
+    const problems = pageSourceViolations(withFalseExemption, measured, unsourcedTierAPaths(pages).length - 1);
     assert.ok(
       problems.some((v) => v.path === "/storage-comparison-2026" && v.problem.includes("table rows")),
       `the exemption was accepted on a comparison page: ${JSON.stringify(problems)}`

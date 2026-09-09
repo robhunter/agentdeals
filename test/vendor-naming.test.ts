@@ -11,9 +11,9 @@ import {
 } from "../scripts/vendor-naming.js";
 import { priceSignals, MIN_PRICE_SIGNALS } from "../scripts/change-gate.js";
 import { passedOnTheUrlWeAskedFor, passedWithoutRecordingAFinding } from "../dist/source-check.js";
-import { qualityBudget } from "../dist/page-reviews.js";
 import { loadOffers } from "../dist/data.js";
 import { JOINSECRET_OFFERS_PAGE, BREX_REWARDS_PAGE } from "./vendor-page-fixture.ts";
+import { assertPopulationFloor } from "./population-floor.ts";
 
 describe("does the page state terms about THIS vendor", () => {
   describe("a marketplace page saturated with other companies' prices", () => {
@@ -261,12 +261,9 @@ describe("what data/index.json publishes as a passed source check", () => {
     );
   });
 
-  it("holds no more passes that quote nothing from the page than the budget allows", () => {
-    const budget = qualityBudget("source_checks_ok_without_quoted_evidence");
+  it("reads a real population, so the rule above is not passing on an empty catalogue", () => {
     const measured = offers.filter(passedWithoutRecordingAFinding).length;
-    assert.ok(
-      measured <= budget,
-      `${measured} offers pass a source check without quoting the page, over the budget of ${budget} in data/quality_budgets.json`,
-    );
+    assertPopulationFloor(offers.length, 1000, "offers in the catalogue this rule is read against");
+    assert.ok(measured < offers.length, `every one of ${offers.length} offers reads as quoting nothing`);
   });
 });

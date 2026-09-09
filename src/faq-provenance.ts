@@ -71,6 +71,46 @@ export function answerWithProvenance(answer: string, clause: string): string {
   return `${text} ${clause}`;
 }
 
+export interface ServedFaqAnswer {
+  path: string;
+  question: string;
+  text: string;
+}
+
+const JSON_LD_BLOCK = /<script type="application\/ld\+json">([\s\S]*?)<\/script>/g;
+
+export function faqAnswersIn(pagePath: string, html: string): ServedFaqAnswer[] {
+  const out: ServedFaqAnswer[] = [];
+  for (const block of html.matchAll(JSON_LD_BLOCK)) {
+    let parsed: unknown;
+    try {
+      parsed = JSON.parse(block[1]!);
+    } catch {
+      continue;
+    }
+    for (const entry of (Array.isArray(parsed) ? parsed : [parsed]) as any[]) {
+      if (!entry || entry["@type"] !== "FAQPage" || !Array.isArray(entry.mainEntity)) continue;
+      for (const question of entry.mainEntity) {
+        const text = question?.acceptedAnswer?.text;
+        if (typeof text === "string") out.push({ path: pagePath, question: question.name, text });
+      }
+    }
+  }
+  return out;
+}
+
+export function namesADigitButNoFigure(answer: string): boolean {
+  return !statesVendorFigure(answer) && /\d/.test(answer);
+}
+
+export function faqAnswerCounts(answers: readonly ServedFaqAnswer[]): Record<string, number> {
+  return {
+    faq_answers: answers.length,
+    faq_answers_stating_a_figure: answers.filter(a => statesVendorFigure(a.text)).length,
+    faq_answers_with_a_digit_but_no_figure: answers.filter(a => namesADigitButNoFigure(a.text)).length,
+  };
+}
+
 export function faqPageJsonLd(pagePath: string, items: FaqItem[], today = utcToday()): Record<string, unknown> {
   const clause = pageFaqProvenanceClause(pagePath, today);
   return {

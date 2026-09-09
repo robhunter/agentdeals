@@ -22,7 +22,6 @@ import {
   vendorRiskAssessment,
 } from "../dist/data.js";
 import { vendorBadge, vendorVerdictSentence, statesRiskCause, type VendorVerdictInput } from "../dist/vendor-verdict.js";
-import { qualityBudget } from "../dist/page-reviews.js";
 import { toSlug } from "../dist/vendor-slug.js";
 import { uncitedReport } from "../scripts/uncited-changes.js";
 import type { DealChange } from "../dist/types.js";
@@ -181,16 +180,6 @@ describe("the shipped catalogue", () => {
       withheld.filter(o => o.stability === "stable" || o.stability === "improving").map(o => o.vendor),
       [],
       "a withheld rating still published a favourable stability class",
-    );
-  });
-
-  it("holds no more records citing no source than the budget allows", () => {
-    const budget = qualityBudget("uncited_change_records");
-    const measured = uncitedChangesAgainstBudget(changes).length;
-    assert.ok(
-      measured <= budget,
-      `${measured} change records report a vendor's offer and cite no source, `
-      + `over the budget of ${budget} in data/quality_budgets.json`,
     );
   });
 

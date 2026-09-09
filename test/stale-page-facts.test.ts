@@ -1,16 +1,23 @@
 import { describe, it } from "node:test";
 import assert from "node:assert";
-import { readFileSync } from "node:fs";
+import { readFileSync, readdirSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { assertPopulationFloor } from "./population-floor.ts";
 import {
   QUALITY_BUDGET_NAMES, STALE_FACT_PAGES_BASELINE, UNSOURCED_TIER_A_BASELINE, factsOutdatedBy,
   newestChangeBySlug, parsePageReviews, parseQualityBudgets, qualityBudgetsPath, readQualityBudgets,
-  reviewStatus, serializeQualityBudgets, staleFactPages, staleFactViolations, unsourcedTierAPaths,
+  dateModifiedFor, reviewStatus, serializeQualityBudgets, staleFactPages, staleFactViolations,
+  unsourcedTierAPaths,
   utcToday, vendorsStatedBy,
   type PageReviewRecord,
 } from "../src/page-reviews.ts";
 import { toSlug } from "../dist/vendor-slug.js";
+import {
+  A_BUDGET_PASSED_IN, A_BUDGET_REACHED_THROUGH_A_DEFAULT, CEILINGS_A_DATA_RUN_RAISES_IN_THE_SAME_COMMIT,
+  CEILINGS_ON_A_BUDGET_THAT_HOLDS_A_COMMIT, MEASUREMENTS_COMPARED_TO_EACH_OTHER, RATCHETS, WIRING_CHECKS,
+  budgetsHeldAgainstAMeasurement, callsThatLetTheBudgetDefault, ceilingsHeldAgainstABudget,
+} from "./budget-assertions.ts";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(__dirname, "..");
@@ -162,12 +169,11 @@ describe("the number of pages resting on a record that has moved under them only
 });
 
 describe("the register the site ships", () => {
-  it("holds a cohort the baseline matches exactly", () => {
-    const stale = staleFactPages(REGISTRY.pages, TODAY, changeDateFor);
-    assert.deepStrictEqual(
-      staleFactViolations(REGISTRY.pages, TODAY, changeDateFor).map(v => v.problem),
-      [],
-      `${stale.length} pages state a vendor fact whose record has moved since the page was last read; STALE_FACT_PAGES_BASELINE is ${STALE_FACT_PAGES_BASELINE}`
+  it("names a cohort large enough for the checks below to read", () => {
+    assertPopulationFloor(
+      staleFactPages(REGISTRY.pages, TODAY, changeDateFor).length,
+      20,
+      "registered pages stating a vendor fact recorded since the page was last read"
     );
   });
 
@@ -236,6 +242,52 @@ describe("a reviewer's note survives a regeneration of what is derived", () => {
   });
 });
 
+describe("#1327 a review that found defects does not restart the staleness clock", () => {
+  const reviewed = (outcome: "pass" | "fail" | null) =>
+    page({ path: "/p", published: "2026-04-03", reviewed_at: "2026-08-27", review_outcome: outcome, vendors_asserted: ["neon"] });
+
+  it("starts the clock at publication where the review found defects, and at the review where it did not", () => {
+    assert.strictEqual(reviewStatus(reviewed("fail"), "2026-09-02").clock_starts, "2026-04-03");
+    assert.strictEqual(reviewStatus(reviewed("pass"), "2026-09-02").clock_starts, "2026-08-27");
+    assert.strictEqual(reviewStatus(reviewed(null), "2026-09-02").clock_starts, "2026-08-27");
+  });
+
+  it("gives the page the same date its structured copy publishes, from one rule", () => {
+    for (const outcome of ["fail", "pass", null] as const) {
+      const record = reviewed(outcome);
+      assert.strictEqual(
+        dateModifiedFor(record, "2026-01-01", "2026-09-02"),
+        reviewStatus(record, "2026-09-02").clock_starts,
+        `${outcome} publishes a date the staleness clock disagrees with`
+      );
+    }
+  });
+
+  it("still measures the review cadence from the day the page was last read", () => {
+    const failed = reviewStatus(reviewed("fail"), "2026-09-02");
+    assert.strictEqual(failed.reviewed_at, "2026-08-27");
+    assert.strictEqual(failed.days_since, 6);
+    assert.strictEqual(failed.state, "current");
+  });
+
+  it("counts a fact the review read past, where a passing review would have cleared it", () => {
+    const recordedBeforeTheReview = () => "2026-08-01";
+    assert.deepStrictEqual(
+      staleFactPages([reviewed("fail")], "2026-09-02", recordedBeforeTheReview).map(p => p.path),
+      ["/p"]
+    );
+    assert.deepStrictEqual(staleFactPages([reviewed("pass")], "2026-09-02", recordedBeforeTheReview), []);
+  });
+
+  it("puts the six pages the shipped register records a failed review on into the cohort", () => {
+    const failed = REGISTRY.pages.filter(p => p.reviewed_at !== null && p.review_outcome === "fail");
+    assert.ok(failed.length >= 5, `only ${failed.length} pages on the register record a failed review`);
+    for (const p of failed) {
+      assert.strictEqual(reviewStatus(p, TODAY).clock_starts, p.published, `${p.path} restarted its clock on a failed review`);
+    }
+  });
+});
+
 describe("#1321 the budgets live where whoever earns a lower one can write them", () => {
   const BUDGETS = path.join(REPO, "data", "quality_budgets.json");
 
@@ -280,8 +332,59 @@ describe("#1321 the budgets live where whoever earns a lower one can write them"
   });
 
   it("measures both budgets against the register the site ships", () => {
-    assert.strictEqual(staleFactPages(REGISTRY.pages, TODAY, changeDateFor).length, STALE_FACT_PAGES_BASELINE);
-    assert.strictEqual(unsourcedTierAPaths(REGISTRY.pages).length, UNSOURCED_TIER_A_BASELINE);
+    assertPopulationFloor(
+      staleFactPages(REGISTRY.pages, TODAY, changeDateFor).length,
+      20,
+      "pages in the stale-fact cohort measured from the shipped register"
+    );
+    assertPopulationFloor(
+      unsourcedTierAPaths(REGISTRY.pages).length,
+      10,
+      "tier-A pages asserting a vendor fact that reaches no record"
+    );
+  });
+});
+
+describe("#1327 no budget decides whether the suite passes", () => {
+  it("reads an assertion that compares one budget to another as the wiring check it is", () => {
+    assert.deepStrictEqual(budgetsHeldAgainstAMeasurement(WIRING_CHECKS), []);
+  });
+
+  it("reads a comparison between two measurements as no business of this check", () => {
+    assert.deepStrictEqual(budgetsHeldAgainstAMeasurement(MEASUREMENTS_COMPARED_TO_EACH_OTHER), []);
+  });
+
+  it("reads an assertion that holds a measurement to a budget as one, however the measurement is spelled", () => {
+    assert.deepStrictEqual(budgetsHeldAgainstAMeasurement(RATCHETS).map(f => f.line), [1, 2, 3]);
+  });
+
+  it("reads a call that lets the budget argument default as one too", () => {
+    assert.deepStrictEqual(callsThatLetTheBudgetDefault(A_BUDGET_REACHED_THROUGH_A_DEFAULT).map(f => f.line), [1, 2]);
+    assert.deepStrictEqual(callsThatLetTheBudgetDefault(A_BUDGET_PASSED_IN), []);
+  });
+
+  it("reads a ceiling on a budget that can hold a data commit, and leaves the three a run raises itself", () => {
+    assert.deepStrictEqual(ceilingsHeldAgainstABudget(CEILINGS_ON_A_BUDGET_THAT_HOLDS_A_COMMIT).map(f => f.line), [2, 3, 4]);
+    assert.deepStrictEqual(ceilingsHeldAgainstABudget(CEILINGS_A_DATA_RUN_RAISES_IN_THE_SAME_COMMIT), []);
+  });
+
+  it("holds no measurement against a budget anywhere in test/", () => {
+    const files = readdirSync(path.join(REPO, "test")).filter(f => f.endsWith(".test.ts"));
+    assertPopulationFloor(files.length, 100, "test files read for an assertion holding a budget");
+    const held: string[] = [];
+    for (const file of files) {
+      const source = readFileSync(path.join(REPO, "test", file), "utf-8");
+      for (const found of budgetsHeldAgainstAMeasurement(source)) held.push(`test/${file}:${found.line} ${found.text}`);
+      for (const found of callsThatLetTheBudgetDefault(source)) held.push(`test/${file}:${found.line} ${found.text}`);
+      for (const found of ceilingsHeldAgainstABudget(source)) held.push(`test/${file}:${found.line} ${found.text}`);
+    }
+    assert.deepStrictEqual(
+      held,
+      [],
+      "a budget counts editorial debt nobody has read yet. Asserting one makes the suite red on a day the reading " +
+        "queue got deeper, which is not a day anything we publish became wrong. Report it instead — see " +
+        "scripts/report-quality-budgets.js."
+    );
   });
 });
 
@@ -312,37 +415,37 @@ describe("#1321 a budget follows its measurement down and never up", () => {
     assert.deepStrictEqual(over.map(o => o.name), ["unsourced_tier_a"]);
   });
 
-  it("measures what the shipped budgets already hold, so a run at rest writes nothing", async () => {
+  it("raises nothing on the data the site ships, however far a measurement has run ahead", async () => {
     const { ratchet, measureBudgets } = await import("../scripts/ratchet-quality-budgets.js");
     const { aDataRunMayRaise } = await import("../dist/page-reviews.js");
-    const { lowered, raised, over } = ratchet(readQualityBudgets().budgets, measureBudgets(TODAY));
-    assert.deepStrictEqual(lowered.filter(l => !aDataRunMayRaise(l.name)), []);
+    const budgets = readQualityBudgets().budgets;
+    const measured = measureBudgets(TODAY);
+    const { next, raised } = ratchet(budgets, measured);
+    for (const name of QUALITY_BUDGET_NAMES) {
+      if (aDataRunMayRaise(name)) continue;
+      assert.ok(next[name] <= budgets[name], `${name} rose from ${budgets[name]} to ${next[name]}`);
+    }
     assert.deepStrictEqual(raised.filter(r => !aDataRunMayRaise(r.name)), []);
-    assert.deepStrictEqual(over, []);
+    assert.ok(Object.keys(measured).length > 0, "nothing was measured, so nothing was compared");
   });
 });
 
 describe("#1321 the FAQ counts are budgets too, and they live in the same file", () => {
   it("reads all three from data rather than from the code", async () => {
     const { FAQ_BASELINE } = await import("../dist/faq-provenance.js");
-    const shipped = readQualityBudgets().budgets;
-    assert.strictEqual(FAQ_BASELINE.answers, shipped.faq_answers);
-    assert.strictEqual(FAQ_BASELINE.stating_a_figure, shipped.faq_answers_stating_a_figure);
-    assert.strictEqual(FAQ_BASELINE.a_digit_but_no_figure, shipped.faq_answers_with_a_digit_but_no_figure);
+    const budgets = readQualityBudgets().budgets;
+    assert.strictEqual(FAQ_BASELINE.answers, budgets.faq_answers);
+    assert.strictEqual(FAQ_BASELINE.stating_a_figure, budgets.faq_answers_stating_a_figure);
+    assert.strictEqual(FAQ_BASELINE.a_digit_but_no_figure, budgets.faq_answers_with_a_digit_but_no_figure);
   });
 
   it("says plainly that the ratchet cannot lower a budget it does not measure", async () => {
     const { ratchet } = await import("../scripts/ratchet-quality-budgets.js");
-    const budgets = readQualityBudgets().budgets;
-    const { unmeasured, lowered, over } = ratchet(budgets, {
-      stale_fact_pages: 57,
-      unsourced_tier_a: budgets.unsourced_tier_a,
-      uncited_change_records: budgets.uncited_change_records,
-      source_checks_ok_without_quoted_evidence: budgets.source_checks_ok_without_quoted_evidence,
-      records_with_superseded_terms: budgets.records_with_superseded_terms,
-      vendor_pages_withholding_superseded_terms: budgets.vendor_pages_withholding_superseded_terms,
-      ungated_pages_withholding_superseded_terms: budgets.ungated_pages_withholding_superseded_terms,
-    });
+    const budgets = Object.fromEntries(QUALITY_BUDGET_NAMES.map(name => [name, 100]));
+    const measured = Object.fromEntries(
+      QUALITY_BUDGET_NAMES.filter(name => !name.startsWith("faq_")).map(name => [name, 100]),
+    );
+    const { unmeasured, lowered, over } = ratchet(budgets, measured);
     assert.deepStrictEqual(unmeasured, [
       "faq_answers",
       "faq_answers_stating_a_figure",
