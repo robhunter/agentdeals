@@ -1,6 +1,6 @@
 import { describe, it, before, after } from "node:test";
 import assert from "node:assert";
-import { assertPopulationFloor } from "./population-floor.ts";
+import { assertPopulationFloor, vendorsInTheCatalogue } from "./population-floor.ts";
 import { spawn, type ChildProcess } from "node:child_process";
 import { readFileSync } from "node:fs";
 import path from "node:path";
@@ -153,7 +153,7 @@ describe("no served FAQ answer crowns a vendor we hold no ranking for", () => {
   after(() => proc?.kill());
 
   it("reads every FAQ answer the site serves", () => {
-    assertPopulationFloor(sweptPaths.length, 1900, "paths served for the sweep");
+    assertPopulationFloor(sweptPaths.length, vendorsInTheCatalogue(), "paths served for the sweep");
     assertPopulationFloor(blocksByPath.size, 1500, "served pages publishing an FAQPage block");
     assertPopulationFloor(answers.length, 9000, "FAQ answers parsed out of FAQPage markup");
     assertPopulationFloor(vendorNames.length, 900, "catalogue vendor names the sweep matches against");
