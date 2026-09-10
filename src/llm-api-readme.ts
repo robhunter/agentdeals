@@ -36,7 +36,11 @@ export const README_TAXONOMY = "AI / ML";
 
 export const README_SUBTYPES = ["llm_api", "model_gateway", "model_hosting", "embeddings_api"] as const;
 
-export const CATALOGUE_ISSUES_URL = "https://github.com/robhunter/agentdeals/issues";
+export const CATALOGUE_REPO_URL = "https://github.com/robhunter/agentdeals";
+
+export const CATALOGUE_ISSUES_URL = `${CATALOGUE_REPO_URL}/issues`;
+
+export const README_GENERATOR_URL = `${CATALOGUE_REPO_URL}/blob/main/src/llm-api-readme.ts`;
 
 export const README_TITLE = "Free tiers for AI and LLM APIs, with the date we read each one";
 
@@ -73,6 +77,10 @@ export const README_ORDER_RULE =
 
 export const README_EDIT_WARNING =
   "It is regenerated whenever those records move, so editing it by hand is pointless — the next run overwrites it.";
+
+export const README_GENERATOR_SENTENCE =
+  `The code that writes it is ${README_GENERATOR_URL}, so every rule this file states can be read against the rule `
+  + "it applies.";
 
 export interface PublishedTerms {
   text: string;
@@ -570,7 +578,7 @@ export function renderReadme(rows: ReadmeRow[], meta: ReadmeMeta): string {
     + "single stamp for a list nobody re-read is worth nothing.",
     "",
     `Generated from the free-tier catalogue at ${BASE_URL}, which is where each row's record lives. `
-    + README_EDIT_WARNING,
+    + `${README_EDIT_WARNING} ${README_GENERATOR_SENTENCE}`,
     "",
     "What this file has that a hand-kept list does not: **the terms a vendor replaced, next to the terms it replaced "
     + `them with, with the date.** ${census.withPriorTerms} rows carry that today.`,

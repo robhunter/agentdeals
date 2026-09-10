@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - main
+  schedule:
+    - cron: "0 8 * * *"
   workflow_dispatch:
 
 permissions:
@@ -52,6 +54,14 @@ jobs:
             data-quarantine/llm-api-readme \
             "data(auto): AI and LLM free-tier index — ${ROWS} records, ${WITHHELD} unrated, ${PRIOR} showing prior terms" \
             artifacts/free-llm-api-index/README.md
+
+      - name: Publish the index main now holds as the root README of the standalone repository
+        id: publish
+        env:
+          AGENTDEALS_LLM_INDEX_REPO: ${{ vars.LLM_INDEX_REPO }}
+          AGENTDEALS_LLM_INDEX_BRANCH: ${{ vars.LLM_INDEX_BRANCH }}
+          AGENTDEALS_LLM_INDEX_TOKEN: ${{ secrets.LLM_INDEX_PUBLISH_TOKEN }}
+        run: node scripts/publish-llm-api-index.js
 
       - name: Say where it can be seen what the gate did with this run's index
         if: always() && (steps.gate.outputs.quarantined == 'true' || steps.gate.outputs.pushed_over_failures == 'true')
