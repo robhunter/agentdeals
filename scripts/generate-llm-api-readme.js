@@ -3,7 +3,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const { generateReadme, readmeCensus, readmeRows } = await import(`${root}/dist/llm-api-readme.js`);
+const { excludedByReason, readmeCensus, readmeSelection, renderReadme } = await import(`${root}/dist/llm-api-readme.js`);
 const { reverificationIntervalDays } = await import(`${root}/dist/badge-staleness.js`);
 
 const args = process.argv.slice(2);
@@ -25,15 +25,16 @@ if (!Number.isFinite(nowMs)) {
 
 const staleAfterDays = reverificationIntervalDays(offers.map(o => o.verifiedDate), nowMs);
 const context = { servedOn, nowMs, staleAfterDays };
-const rows = readmeRows(offers, changes, context);
+const { rows, excluded } = readmeSelection(offers, changes, context);
 const census = readmeCensus(rows);
+const leftOut = excludedByReason(excluded);
 
 if (rows.length === 0) {
-  console.error("Refusing to publish: the catalogue produced no rows for the published categories.");
+  console.error("Refusing to publish: no catalogue record carries a subtype label this file selects on.");
   process.exit(1);
 }
 
-const rendered = generateReadme(offers, changes, context);
+const rendered = renderReadme(rows, { staleAfterDays, excluded });
 const held = (() => {
   try {
     return readFileSync(OUTPUT, "utf8");
@@ -53,7 +54,7 @@ if (check) {
   writeFileSync(OUTPUT, rendered);
 }
 
-const outcome = { ...census, changed, staleAfterDays, on: servedOn };
+const outcome = { ...census, excluded: excluded.length, excludedByReason: leftOut, changed, staleAfterDays, on: servedOn };
 if (asJson) {
   console.log(JSON.stringify(outcome));
 } else {
@@ -71,5 +72,9 @@ if (asJson) {
   );
   for (const [reason, count] of Object.entries(census.withheldByReason).sort((a, b) => b[1] - a[1])) {
     console.log(`  withheld ${reason}: ${count}`);
+  }
+  console.log(`left out ${excluded.length}`);
+  for (const [reason, count] of Object.entries(leftOut).sort((a, b) => b[1] - a[1])) {
+    console.log(`  left out ${reason}: ${count}`);
   }
 }

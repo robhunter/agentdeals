@@ -5,6 +5,8 @@ export const A_FREE_PLAN =
 
 export const A_FREE_PRICE = /\bfree\b|[$€£]\s?0\b/i;
 
+export const A_PRICE_OF_NOTHING = /\bfree\b|[$€£]\s?0(?:[.,]0+)?(?![\d.,])/i;
+
 export const A_TRIAL_A_CREDIT_OR_A_DISCOUNT =
   /\btrials?\b|[$€£]\s?[\d,.]+\s*[km]?\s*(?:in\s+)?(?:free\s+)?credits?\b|\bcredits?\s+(?:of|worth|for\s+new)\b|\bfree\s+credits?\b|\bcoupons?\b|\bdiscounts?\b|\b\d+\s*%\s*off\b|\bvouchers?\b/i;
 
@@ -63,6 +65,10 @@ export function namesAFreePlan(sentence: string): boolean {
 
 export function mentionsSomethingFree(text: string): boolean {
   return whereItIsOfferedOutrightIn(text, A_FREE_PRICE) >= 0;
+}
+
+export function namesAPriceOfNothing(reading: string): boolean {
+  return A_PRICE_OF_NOTHING.test(reading);
 }
 
 export function sentencesOf(text: string): { at: number; text: string }[] {

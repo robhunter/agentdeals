@@ -17,6 +17,8 @@ import {
   type LevelWithheldReason,
 } from "./source-check.js";
 import { toSlug } from "./slug.js";
+import { namesAPriceOfNothing } from "./superseding-reading.js";
+import { subtypeDefinition } from "./product-role.js";
 import { readingBehindTheChange, supersedingChange } from "./superseded-description.js";
 import type { DealChange, LinkUnreachable, Offer } from "./types.js";
 import {
@@ -30,9 +32,40 @@ import {
 
 export const README_CATEGORIES = ["AI / ML", "AI Coding"] as const;
 
+export const README_TAXONOMY = "AI / ML";
+
+export const README_SUBTYPES = ["llm_api", "model_gateway", "model_hosting", "embeddings_api"] as const;
+
 export const CATALOGUE_ISSUES_URL = "https://github.com/robhunter/agentdeals/issues";
 
 export const README_TITLE = "Free tiers for AI and LLM APIs, with the date we read each one";
+
+export const README_INCLUSION_RULE =
+  "A record is published here when it carries one of four subtype labels, and by nothing else. A label is a "
+  + "reading of the vendor's own page, stored on the record with the sentence it was read from, so what this file "
+  + "holds is decided by the catalogue and not by a list kept here.";
+
+export type ExclusionReason =
+  | "not_read_against_subtypes"
+  | "no_subtype_applies"
+  | "another_function";
+
+export const EXCLUSION_RULES: Record<ExclusionReason, string> = {
+  not_read_against_subtypes:
+    "We have not read this record against any subtype taxonomy, so we hold no basis for saying it serves models. "
+    + "That states what we have not done rather than a finding about the product, and it stops applying the day the "
+    + "record is classified.",
+  no_subtype_applies:
+    "We have read this record against the taxonomy and none of its subtypes applies, so it is not one of the kinds "
+    + "of product those labels describe.",
+  another_function:
+    "The record is labelled, and every label it carries names a different function — observability, evaluation, "
+    + "labelling, generation and the rest are not the serving of a model behind an API.",
+};
+
+export const NO_FREE_PRICE_REASON = "reading_names_no_price_of_nothing";
+
+export const REMOVAL_CHANGE_TYPE = "free_tier_removed";
 
 export const README_ORDER_RULE =
   "Rows are ordered alphabetically by vendor. That is not a ranking: we publish no best free LLM API, "
@@ -124,6 +157,34 @@ function changesFor(vendor: string, changes: DealChange[]): DealChange[] {
   return changes.filter(c => c.vendor.toLowerCase() === key).sort((a, b) => b.date.localeCompare(a.date));
 }
 
+export function recordedRemoval(changes: DealChange[]): DealChange | null {
+  return changes.find(c => c.change_type === REMOVAL_CHANGE_TYPE) ?? null;
+}
+
+export function endedByRemovalSentence(vendor: string, removal: DealChange): string {
+  return `We recorded ${vendor}'s ${CHANGE_KIND_NOUN[removal.change_type]} on ${removal.date}, and the terms this row `
+    + "publishes name no price of nothing either. A removal we recorded and terms that name nothing free are the same "
+    + "finding twice, so this row says the offer ended rather than that we cannot say.";
+}
+
+export function noFreePriceSentence(vendor: string): string {
+  return "The terms this row publishes name no price of nothing — no free plan, no zero price, nothing stated as "
+    + `costing nothing. A tier field saying otherwise is older than the terms beside it. We hold no record of ${vendor} `
+    + "removing a free tier, so we do not say one ended — we publish no rating and leave the terms to be read.";
+}
+
+function ratingOnTermsThatPriceNothingAtNothing(
+  vendor: string,
+  terms: PublishedTerms,
+  vendorChanges: DealChange[],
+): RowVerdict | null {
+  if (namesAPriceOfNothing(terms.text)) return null;
+  const removal = recordedRemoval(vendorChanges);
+  return removal
+    ? { kind: "ended", sentence: endedByRemovalSentence(vendor, removal) }
+    : { kind: "withheld", reason: NO_FREE_PRICE_REASON, sentence: noFreePriceSentence(vendor) };
+}
+
 export function readmeRow(offer: Offer, allChanges: DealChange[], context: RowContext): ReadmeRow {
   const vendorChanges = changesFor(offer.vendor, allChanges);
   const risk = publishedRisk(offer, vendorChanges, context.servedOn, context.nowMs);
@@ -144,18 +205,6 @@ export function readmeRow(offer: Offer, allChanges: DealChange[], context: RowCo
     sourceCheck: offer.source_check?.outcome ?? null,
   };
 
-  const badge = vendorBadge(input);
-  const verdict: RowVerdict =
-    badge.kind === "rating"
-      ? { kind: "rating", word: badge.word, sentence: vendorVerdictSentence(input) }
-      : badge.kind === "ended"
-        ? { kind: "ended", sentence: endedVerdictSentence() }
-        : {
-            kind: "withheld",
-            reason: withheldReasonCode(badge.because),
-            sentence: withheldSentence(offer.vendor, badge.because, risk.gate, since),
-          };
-
   const superseding = supersedingChange(offer, vendorChanges);
   const reading = superseding ? readingBehindTheChange(superseding) : null;
   const terms: PublishedTerms = reading
@@ -171,6 +220,19 @@ export function readmeRow(offer: Offer, allChanges: DealChange[], context: RowCo
     superseding && reading && (superseding.previous_state ?? "").trim() !== ""
       ? { text: superseding.previous_state!.trim(), until: superseding.date }
       : null;
+
+  const badge = vendorBadge(input);
+  const verdict: RowVerdict =
+    badge.kind === "rating"
+      ? ratingOnTermsThatPriceNothingAtNothing(offer.vendor, terms, vendorChanges)
+        ?? { kind: "rating", word: badge.word, sentence: vendorVerdictSentence(input) }
+      : badge.kind === "ended"
+        ? { kind: "ended", sentence: endedVerdictSentence() }
+        : {
+            kind: "withheld",
+            reason: withheldReasonCode(badge.because),
+            sentence: withheldSentence(offer.vendor, badge.because, risk.gate, since),
+          };
 
   const caveats: RowCaveat[] = [];
   const linkStatedInVerdict = verdict.kind === "withheld" && verdict.reason === "link_unreachable";
@@ -199,12 +261,58 @@ export function readmeRow(offer: Offer, allChanges: DealChange[], context: RowCo
   };
 }
 
-export function readmeRows(offers: Offer[], changes: DealChange[], context: RowContext): ReadmeRow[] {
-  const categories = new Set<string>(README_CATEGORIES);
-  return offers
-    .filter(o => categories.has(o.category))
+export interface ExcludedRecord {
+  vendor: string;
+  tier: string;
+  reason: ExclusionReason;
+}
+
+export interface ReadmeSelection {
+  rows: ReadmeRow[];
+  excluded: ExcludedRecord[];
+}
+
+function labelsOf(offer: Offer): string[] | null {
+  return offer.product_subtypes ? offer.product_subtypes.labels.map(l => l.subtype) : null;
+}
+
+function whyNotServing(labels: string[] | null): ExclusionReason {
+  if (labels === null) return "not_read_against_subtypes";
+  return labels.length === 0 ? "no_subtype_applies" : "another_function";
+}
+
+export function readmeSelection(offers: Offer[], changes: DealChange[], context: RowContext): ReadmeSelection {
+  const drawnFrom = new Set<string>(README_CATEGORIES);
+  const serving = new Set<string>(README_SUBTYPES);
+  const excluded: ExcludedRecord[] = [];
+  const selected: Offer[] = [];
+
+  for (const offer of offers) {
+    const labels = labelsOf(offer);
+    if (labels?.some(l => serving.has(l))) {
+      selected.push(offer);
+      continue;
+    }
+    if (!drawnFrom.has(offer.category)) continue;
+    excluded.push({ vendor: offer.vendor, tier: offer.tier, reason: whyNotServing(labels) });
+  }
+
+  const rows = selected
     .sort((a, b) => a.vendor.localeCompare(b.vendor, "en") || a.tier.localeCompare(b.tier, "en"))
-    .map(o => readmeRow(o, changes, context));
+    .map(offer => readmeRow(offer, changes, context));
+
+  return { rows, excluded };
+}
+
+export function readmeRows(offers: Offer[], changes: DealChange[], context: RowContext): ReadmeRow[] {
+  return readmeSelection(offers, changes, context).rows;
+}
+
+export function excludedByReason(excluded: ExcludedRecord[]): Record<ExclusionReason, number> {
+  const counts = {} as Record<ExclusionReason, number>;
+  for (const reason of Object.keys(EXCLUSION_RULES) as ExclusionReason[]) counts[reason] = 0;
+  for (const record of excluded) counts[record.reason] += 1;
+  return counts;
 }
 
 export interface ReadmeCensus {
@@ -288,13 +396,44 @@ const TABLE_HEAD = [
   "| --- | --- | --- | --- | --- |",
 ].join("\n");
 
-function categoryTable(rows: ReadmeRow[], category: string): string {
-  const inCategory = rows.filter(r => r.category === category);
+function recordTable(rows: ReadmeRow[]): string {
   return [
-    `## ${category} — ${inCategory.length} records`,
+    `## The records — ${rows.length}`,
     "",
     TABLE_HEAD,
-    ...inCategory.map(renderRow),
+    ...rows.map(renderRow),
+  ].join("\n");
+}
+
+function inclusionSection(rows: ReadmeRow[], excluded: ExcludedRecord[]): string {
+  const counts = excludedByReason(excluded);
+  const definitions = README_SUBTYPES.map(
+    subtype => `- \`${subtype}\` — ${subtypeDefinition(README_TAXONOMY, subtype)}`,
+  ).join("\n");
+  const reasons = (Object.keys(EXCLUSION_RULES) as ExclusionReason[])
+    .map(reason => `| \`${reason}\` | ${counts[reason]} | ${EXCLUSION_RULES[reason]} |`)
+    .join("\n");
+  return [
+    "## What is in this file, and what is left out",
+    "",
+    README_INCLUSION_RULE,
+    "",
+    definitions,
+    "",
+    `${rows.length} records carry one of those. The catalogue holds them under `
+    + `${README_CATEGORIES.map(c => `**${c}**`).join(" and ")}, and ${excluded.length} records there are left out. `
+    + "Each is left out for a stated reason, counted here so the size of each reason is visible:",
+    "",
+    "| | Records | Why |",
+    "| --- | --- | --- |",
+    reasons,
+    "",
+    "A record left out is not a record we are hiding: every one of them is published in full at "
+    + `${BASE_URL}, and \`not_read_against_subtypes\` in particular measures our own reading rather than the `
+    + "product.",
+    "",
+    "Nothing else keeps a record out. A record whose terms name no free price is still published here, with the "
+    + "terms we read and no rating — leaving it out would hide the one reading a reader most needs to see.",
   ].join("\n");
 }
 
@@ -303,6 +442,18 @@ function endedClause(ended: number): string {
   const noun = ended === 1 ? "One record is" : `${ended} records are`;
   return `${noun} recorded as ended (\`${classifyTier("Retired").note}\`); they stay in the file because a free tier `
     + "that has gone is the thing hardest to find out elsewhere.";
+}
+
+function termsOverTierRule(census: ReadmeCensus): string {
+  const unrated = census.withheldByReason[NO_FREE_PRICE_REASON] ?? 0;
+  const count = unrated === 1 ? "One row is" : `${unrated} rows are`;
+  return "A tier name is not the last word, because a tier field is older than the terms printed beside it. Where "
+    + "the terms a row publishes name no price of nothing — no free plan, no zero price, nothing stated as costing "
+    + `nothing — that row carries no rating, whatever its tier says. ${count} unrated for that reason today, and where we also hold `
+    + "a dated record of the free tier being removed the row reads `ended` instead, because then we have the removal "
+    + "and not only its shadow.\n\n"
+    + "That test runs on the terms **every** row publishes. It is not restricted to the rows carrying a newer "
+    + "reading, because a row we have never re-read is the one whose tier field is oldest.";
 }
 
 function freeTierRule(census: ReadmeCensus): string {
@@ -324,6 +475,8 @@ function freeTierRule(census: ReadmeCensus): string {
     timeLimited,
     "",
     `Anything else is an ongoing free tier. ${endedClause(census.ended)}`,
+    "",
+    termsOverTierRule(census),
   ].join("\n");
 }
 
@@ -367,8 +520,8 @@ function howToReadARow(census: ReadmeCensus, staleAfterDays: number): string {
     "- `ended` — a free tier we recorded going away. The row stays for the record;",
     `- \`unrated\` — we are publishing no rating, and the next column says why. ${census.withheld} of ${census.rows} `
     + "rows are unrated. A record whose page we could not read, that names no terms we can read, that is not a free "
-    + "offer, or whose link has stopped resolving gets the reason instead of a verdict. We would rather print why we "
-    + "cannot say than guess.",
+    + "offer, whose terms name no free price, or whose link has stopped resolving gets the reason instead of a "
+    + "verdict. We would rather print why we cannot say than guess.",
     "",
     `**Record verified** is the day we last confirmed that record against the page. Where the link has not resolved `
     + `for ${LINK_GRACE_DAYS} days, we withhold that date and print the day the link last worked instead: a recent `
@@ -386,7 +539,7 @@ function countsSection(census: ReadmeCensus): string {
     .map(([reason, count]) => `\`${reason}\` ${count}`)
     .join(", ");
   return [
-    "## What is in this file",
+    "## What the rows publish",
     "",
     `| | |`,
     `| --- | --- |`,
@@ -404,6 +557,7 @@ function countsSection(census: ReadmeCensus): string {
 
 export interface ReadmeMeta {
   staleAfterDays: number;
+  excluded: ExcludedRecord[];
 }
 
 export function renderReadme(rows: ReadmeRow[], meta: ReadmeMeta): string {
@@ -411,9 +565,9 @@ export function renderReadme(rows: ReadmeRow[], meta: ReadmeMeta): string {
   const sections = [
     `# ${README_TITLE}`,
     "",
-    `${census.rows} records for AI, LLM and AI-coding vendors, each one carrying the date we last read the vendor's `
-    + "own page and the URL we read it on. There is no single freshness stamp for this file, because a single stamp "
-    + "for a list nobody re-read is worth nothing.",
+    `${census.rows} records for vendors that serve models behind an API, each one carrying the date we last read the `
+    + "vendor's own page and the URL we read it on. There is no single freshness stamp for this file, because a "
+    + "single stamp for a list nobody re-read is worth nothing.",
     "",
     `Generated from the free-tier catalogue at ${BASE_URL}, which is where each row's record lives. `
     + README_EDIT_WARNING,
@@ -423,6 +577,8 @@ export function renderReadme(rows: ReadmeRow[], meta: ReadmeMeta): string {
     "",
     README_ORDER_RULE,
     "",
+    inclusionSection(rows, meta.excluded),
+    "",
     countsSection(census),
     "",
     howToReadARow(census, meta.staleAfterDays),
@@ -431,7 +587,7 @@ export function renderReadme(rows: ReadmeRow[], meta: ReadmeMeta): string {
     "",
     changeRule(),
     "",
-    ...README_CATEGORIES.map(category => `${categoryTable(rows, category)}\n`),
+    `${recordTable(rows)}\n`,
     "## Corrections",
     "",
     `Every row links to the vendor's page on ${BASE_URL}, which carries the full record, every change we have `
@@ -446,5 +602,6 @@ export function renderReadme(rows: ReadmeRow[], meta: ReadmeMeta): string {
 }
 
 export function generateReadme(offers: Offer[], changes: DealChange[], context: RowContext): string {
-  return renderReadme(readmeRows(offers, changes, context), { staleAfterDays: context.staleAfterDays });
+  const { rows, excluded } = readmeSelection(offers, changes, context);
+  return renderReadme(rows, { staleAfterDays: context.staleAfterDays, excluded });
 }

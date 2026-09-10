@@ -31330,6 +31330,17 @@
         "checked": "2026-09-02",
         "outcome": "states_no_terms",
         "detail": "the page names GitHub Models but states no amount, tier or rate we can read"
+      },
+      "product_subtypes": {
+        "taxonomy": "AI / ML",
+        "labels": [
+          {
+            "subtype": "llm_api",
+            "source_url": "https://docs.github.com/en/github-models/about-github-models",
+            "source_quote": "The playground, model catalog, inference API, and bring your own key (BYOK) are no longer available to any customer."
+          }
+        ],
+        "reviewed": "2026-09-10"
       }
     },
     {

@@ -23,15 +23,23 @@ writeFileSync(linkHealthPath, JSON.stringify(linkHealth));
 process.env.AGENTDEALS_LINK_HEALTH_PATH = linkHealthPath;
 
 const {
+  EXCLUSION_RULES,
+  NO_FREE_PRICE_REASON,
   README_CATEGORIES,
+  README_SUBTYPES,
+  README_TAXONOMY,
+  excludedByReason,
   generateReadme,
   ratingWord,
   readmeCensus,
   readmeRows,
+  readmeSelection,
   renderRow,
 } = await import("../dist/llm-api-readme.js");
+const { namesAPriceOfNothing } = await import("../dist/superseding-reading.js");
 const { CHANGE_KIND_NOUN } = await import("../dist/vendor-verdict.js");
 const { NOT_FREE_TIER_RULES, TIME_LIMITED_TIER_RULES } = await import("../dist/ranking.js");
+const { SUBTYPE_TAXONOMIES } = await import("../dist/product-role.js");
 const { supersedingChange } = await import("../dist/superseded-description.js");
 import type { DealChange, Offer } from "../src/types.ts";
 
@@ -43,9 +51,21 @@ const catalogueChanges: DealChange[] = JSON.parse(
 const ON = "2026-09-09";
 const CONTEXT = { servedOn: ON, nowMs: Date.parse(`${ON}T00:00:00Z`), staleAfterDays: 70 };
 
-const publishedRecords = catalogue.filter(o => (README_CATEGORIES as readonly string[]).includes(o.category));
-const rows = readmeRows(catalogue, catalogueChanges, CONTEXT);
+const serving = new Set<string>(README_SUBTYPES);
+const drawnFrom = new Set<string>(README_CATEGORIES);
+const labelsOf = (o: Offer) => (o.product_subtypes ? o.product_subtypes.labels.map(l => l.subtype) : null);
+const publishedRecords = catalogue.filter(o => labelsOf(o)?.some(l => serving.has(l)));
+const selection = readmeSelection(catalogue, catalogueChanges, CONTEXT);
+const rows = selection.rows;
 const rendered = generateReadme(catalogue, catalogueChanges, CONTEXT);
+
+function labelled(subtype: string) {
+  return {
+    taxonomy: README_TAXONOMY,
+    labels: [{ subtype, source_url: "https://example.com/docs", source_quote: "serves models behind an API" }],
+    reviewed: "2026-09-01",
+  };
+}
 
 function offer(overrides: Partial<Offer>): Offer {
   return {
@@ -56,6 +76,7 @@ function offer(overrides: Partial<Offer>): Offer {
     url: "https://example.com/pricing",
     tags: ["ai"],
     verifiedDate: "2026-09-01",
+    product_subtypes: labelled("llm_api"),
     ...overrides,
   } as Offer;
 }
@@ -79,12 +100,37 @@ function rowFor(offers: Offer[], changes: DealChange[], vendor: string) {
 }
 
 describe("the generated index publishes one row per catalogue record", () => {
-  it("publishes every record in the published categories and nothing else", () => {
-    assert.equal(rows.length, publishedRecords.length);
-    assert.deepEqual(
-      rows.map(r => `${r.vendor}|${r.tier}`).sort(),
-      publishedRecords.map(o => `${o.vendor}|${o.tier}`).sort(),
+  it("publishes a record labelled with a serving subtype, and no record without one", () => {
+    const published = new Set(rows.map(r => `${r.vendor}|${r.tier}`));
+    const eligible = publishedRecords.map(o => `${o.vendor}|${o.tier}`);
+    const leftOut = new Set(selection.excluded.map(e => `${e.vendor}|${e.tier}`));
+    assert.ok(eligible.length > 0, "the catalogue holds records carrying a serving subtype");
+    for (const key of eligible) {
+      assert.ok(published.has(key) || leftOut.has(key), `${key} is neither published nor accounted for`);
+    }
+    for (const row of rows) {
+      const record = catalogue.find(o => o.vendor === row.vendor && o.tier === row.tier);
+      assert.ok(labelsOf(record!)?.some(l => serving.has(l)), `${row.vendor} is published carrying no serving label`);
+    }
+  });
+
+  it("accounts for every record it drew from and did not publish", () => {
+    const candidates = catalogue.filter(
+      o => drawnFrom.has(o.category) || labelsOf(o)?.some(l => serving.has(l)),
     );
+    assert.equal(rows.length + selection.excluded.length, candidates.length);
+    const published = new Set(rows.map(r => `${r.vendor}|${r.tier}`));
+    for (const left of selection.excluded) {
+      assert.ok(!published.has(`${left.vendor}|${left.tier}`), `${left.vendor} is both published and left out`);
+    }
+  });
+
+  it("selects on subtypes its own taxonomy defines", () => {
+    const known = new Set((SUBTYPE_TAXONOMIES[README_TAXONOMY] ?? []).map((e: { subtype: string }) => e.subtype));
+    assert.ok(known.size > 0, `${README_TAXONOMY} publishes no taxonomy to select on`);
+    for (const subtype of README_SUBTYPES) {
+      assert.ok(known.has(subtype), `${subtype} is not a subtype ${README_TAXONOMY} defines`);
+    }
   });
 
   it("drops no record for having no rating to publish", () => {
@@ -111,11 +157,190 @@ describe("the generated index publishes one row per catalogue record", () => {
     assert.ok(line.includes("Free: 10 GB \\| Pro: 1 TB \\| Business: 20 TB"), line);
   });
 
-  it("names each category with the number of records under it", () => {
-    for (const category of README_CATEGORIES) {
-      const inCategory = rows.filter(r => r.category === category).length;
-      assert.match(rendered, new RegExp(`## ${category.replace("/", "\\/")} — ${inCategory} records`));
+  it("heads the table with the number of records under it", () => {
+    assert.match(rendered, new RegExp(`## The records — ${rows.length}\\n`));
+  });
+});
+
+describe("the file states the rule that decided what is in it", () => {
+  it("publishes the definition of every subtype it selects on", () => {
+    for (const subtype of README_SUBTYPES) {
+      const entry = (SUBTYPE_TAXONOMIES[README_TAXONOMY] ?? []).find(
+        (e: { subtype: string }) => e.subtype === subtype,
+      );
+      assert.ok(rendered.includes(`\`${subtype}\` — ${entry.definition}`), subtype);
     }
+  });
+
+  it("publishes a count and a reason for every record it left out", () => {
+    const counts = excludedByReason(selection.excluded);
+    for (const [reason, rule] of Object.entries(EXCLUSION_RULES)) {
+      assert.ok(rendered.includes(`| \`${reason}\` | ${counts[reason]} | ${rule} |`), reason);
+    }
+    const total = Object.values(counts).reduce((a, b) => a + b, 0);
+    assert.equal(total, selection.excluded.length, "every excluded record is counted under exactly one reason");
+    assert.ok(rendered.includes(`${selection.excluded.length} records there are left out`));
+  });
+
+  it("leaves a record out for what its labels say, never for what its terms say", () => {
+    for (const record of selection.excluded) {
+      assert.ok(record.reason in EXCLUSION_RULES, `${record.vendor} left out under ${record.reason}`);
+    }
+    const priced = offer({ vendor: "Priced Vendor", description: "Input $2.00 / 1M tokens, Output $6.00 / 1M tokens" });
+    const { rows: built, excluded } = readmeSelection([priced], [], CONTEXT);
+    assert.deepEqual(built.map(r => r.vendor), ["Priced Vendor"]);
+    assert.deepEqual(excluded, []);
+  });
+
+  it("leaves a labelled record out for its label rather than for its category", () => {
+    const observability = offer({ vendor: "Watcher", product_subtypes: labelled("llm_observability") });
+    const { rows: built, excluded } = readmeSelection([observability], [], CONTEXT);
+    assert.deepEqual(built.map(r => r.vendor), []);
+    assert.deepEqual(excluded, [{ vendor: "Watcher", tier: "Free", reason: "another_function" }]);
+  });
+
+  it("separates a record read against the taxonomy from one nobody has read", () => {
+    const unread = offer({ vendor: "Unread", product_subtypes: undefined });
+    const readAndUnmatched = offer({
+      vendor: "Unmatched",
+      product_subtypes: { taxonomy: README_TAXONOMY, labels: [], reviewed: "2026-09-01" },
+    });
+    const { excluded } = readmeSelection([unread, readAndUnmatched], [], CONTEXT);
+    assert.deepEqual(
+      excluded.map(e => `${e.vendor}:${e.reason}`),
+      ["Unread:not_read_against_subtypes", "Unmatched:no_subtype_applies"],
+    );
+  });
+
+  it("publishes a serving record whose category is not one it draws from", () => {
+    const elsewhere = offer({ vendor: "Off-Category", category: "Cloud Hosting" });
+    const { rows: built, excluded } = readmeSelection([elsewhere], [], CONTEXT);
+    assert.deepEqual(built.map(r => r.vendor), ["Off-Category"]);
+    assert.deepEqual(excluded, []);
+  });
+
+  it("counts no record it never drew from", () => {
+    const unrelated = offer({ vendor: "Unrelated", category: "Cloud Hosting", product_subtypes: undefined });
+    const { rows: built, excluded } = readmeSelection([unrelated], [], CONTEXT);
+    assert.deepEqual(built, []);
+    assert.deepEqual(excluded, []);
+  });
+});
+
+describe("a row whose published terms name no price of nothing carries no rating", () => {
+  const priced = offer({ vendor: "Priced Vendor", tier: "Free Credits" });
+  const priceSheet = change({
+    vendor: "Priced Vendor",
+    change_type: "terms_superseded",
+    date: "2026-08-20",
+    summary: "The free tier was replaced by a per-token price sheet",
+    current_state: "Input $2.00 / 1M tokens, Output $6.00 / 1M tokens",
+    previous_state: priced.description,
+    source_url: "https://example.com/pricing",
+  });
+
+  it("holds on every published row, whether or not a newer reading superseded the record", () => {
+    for (const row of rows) {
+      if (namesAPriceOfNothing(row.terms.text)) continue;
+      assert.notEqual(row.verdict.kind, "rating", `${row.vendor} is rated on terms naming no price of nothing`);
+      assert.ok(!/`(stable|caution|risky)`/.test(renderRow(row)), row.vendor);
+    }
+  });
+
+  it("tests the terms a row publishes rather than only a superseding reading", () => {
+    const ourOwnPriceSheet = offer({
+      vendor: "Unre-read Vendor",
+      tier: "Starter",
+      description: "Vector database — 2 GB storage, 2M write units/month, 5 indexes",
+    });
+    const row = rowFor([ourOwnPriceSheet], [], "Unre-read Vendor");
+    assert.equal(row.terms.quoted, false);
+    assert.equal(ratingWord(row), "unrated");
+    assert.equal((row.verdict as { reason: string }).reason, NO_FREE_PRICE_REASON);
+  });
+
+  it("publishes the row, with its terms, rather than leaving it out", () => {
+    const { rows: built, excluded } = readmeSelection([priced], [priceSheet], CONTEXT);
+    assert.deepEqual(built.map(r => r.vendor), ["Priced Vendor"]);
+    assert.deepEqual(excluded, []);
+    assert.match(renderRow(built[0]), /Input \$2\.00 \/ 1M tokens/);
+  });
+
+  it("says no free price rather than saying the offer ended, where no removal is recorded", () => {
+    const row = rowFor([priced], [priceSheet], "Priced Vendor");
+    assert.equal(ratingWord(row), "unrated");
+    assert.match(row.verdict.sentence, /name no price of nothing/);
+    assert.match(row.verdict.sentence, /We hold no record of Priced Vendor removing a free tier/);
+  });
+
+  it("says the offer ended where a removal is recorded and the reading agrees", () => {
+    const removal = change({
+      vendor: "Priced Vendor",
+      change_type: "free_tier_removed",
+      date: "2026-04-13",
+      summary: "$25/month free API credits no longer offered",
+    });
+    const row = rowFor([priced], [priceSheet, removal], "Priced Vendor");
+    assert.equal(ratingWord(row), "ended");
+    assert.match(row.verdict.sentence, /free tier removal on 2026-04-13/);
+  });
+
+  it("rates a row whose recorded removal is contradicted by a reading naming a price of nothing", () => {
+    const backAgain = { ...priceSheet, current_state: "Free plan: 1,000 requests/month, then $2.00 / 1M tokens" };
+    const removal = change({ vendor: "Priced Vendor", change_type: "free_tier_removed", date: "2026-04-13" });
+    const row = rowFor([priced], [backAgain, removal], "Priced Vendor");
+    assert.notEqual(ratingWord(row), "ended");
+  });
+
+  it("leaves a rating already withheld for another reason under that reason", () => {
+    const metered = offer({ vendor: "Metered Vendor", tier: "Pay-as-you-go", description: "Input $2.00 / 1M tokens" });
+    const row = rowFor([metered], [], "Metered Vendor");
+    assert.equal(ratingWord(row), "unrated");
+    assert.equal((row.verdict as { reason: string }).reason, "gate:not_a_free_offer");
+  });
+
+  it("keeps a rating where the published terms state a price of nothing", () => {
+    const stillFree = { ...priceSheet, current_state: "Free plan: 1,000 requests/month, then $2.00 / 1M tokens" };
+    const row = rowFor([priced], [stillFree], "Priced Vendor");
+    assert.equal(row.verdict.kind, "rating");
+  });
+
+  it("reads a recurring credit as a price of nothing rather than as a price sheet", () => {
+    const credits = { ...priceSheet, current_state: "Starter Free $20 credits on sign-up with $10 credits every month" };
+    const row = rowFor([priced], [credits], "Priced Vendor");
+    assert.equal(row.verdict.kind, "rating");
+  });
+
+  it("reads a fraction of a cent as a price rather than as nothing", () => {
+    const fractions = { ...priceSheet, current_state: "input token prices range from $0.007 to $0.44 per 1M tokens" };
+    const row = rowFor([priced], [fractions], "Priced Vendor");
+    assert.equal(ratingWord(row), "unrated");
+  });
+
+  it("keeps a rating where our own record names a price of nothing", () => {
+    const ours = offer({ vendor: "Our Record", description: "Free: 1,000 requests/month and one seat" });
+    const { rows: built, excluded } = readmeSelection([ours], [], CONTEXT);
+    assert.deepEqual(built.map(r => r.vendor), ["Our Record"]);
+    assert.deepEqual(excluded, []);
+    assert.equal(built[0].verdict.kind, "rating");
+  });
+
+  it("states the rule in the file, with the count it produced", () => {
+    const unrated = rows.filter(
+      r => r.verdict.kind === "withheld" && r.verdict.reason === NO_FREE_PRICE_REASON,
+    ).length;
+    const clause = unrated === 1 ? "One row is unrated for that reason today" : `${unrated} rows are unrated for that reason today`;
+    assert.ok(rendered.includes(clause), clause);
+    assert.ok(rendered.includes("That test runs on the terms **every** row publishes."), "the file states the scope of the rule");
+  });
+
+  it("takes that count from the rows it published rather than from the catalogue it usually reads", () => {
+    const free = offer({ vendor: "Free Vendor", description: "Free: 1,000 requests/month" });
+    const one = offer({ vendor: "Lone Priced Vendor", description: "Input $2.00 / 1M tokens" });
+    assert.ok(generateReadme([free, one], [], CONTEXT).includes("One row is unrated for that reason today"));
+
+    const another = offer({ vendor: "Second Priced Vendor", description: "Output $6.00 / 1M tokens" });
+    assert.ok(generateReadme([free, one, another], [], CONTEXT).includes("2 rows are unrated for that reason today"));
   });
 });
 
@@ -231,12 +456,29 @@ describe("a row we cannot vouch for says so in the row", () => {
     assert.match(rendered, new RegExp(`\\| Carrying a caveat about our own reading \\| ${census.caveated} \\|`));
     assert.match(rendered, new RegExp(`${census.withheld} of ${census.rows} `));
   });
+
+  it("counts a row that both withholds a rating and carries a caveat under each", () => {
+    const both = offer({
+      vendor: "Both Vendor",
+      tier: "Pay-as-you-go",
+      verifiedDate: "2026-05-01",
+      source_check: { checked: "2026-09-05", outcome: "unreadable", detail: "HTTP 403" },
+    });
+    const built = readmeRows([both], [], CONTEXT);
+    assert.deepEqual(built[0].caveats.map(c => c.kind), ["not_re_read"]);
+    const census = readmeCensus(built);
+    assert.equal(census.withheld, 1, "a caveated row still counts as withholding a rating");
+    assert.equal(census.caveated, 1);
+    assert.match(generateReadme([both], [], CONTEXT), /1 of 1 /);
+  });
 });
 
 describe("a record whose terms were superseded shows what they replaced", () => {
   it("shows the prior terms and the date they stopped being current", () => {
     const superseded = rows.filter(r => r.prior !== null);
+    const behindARow = new Set(rows.map(r => `${r.vendor}|${r.tier}`));
     const expected = publishedRecords.filter(o => {
+      if (!behindARow.has(`${o.vendor}|${o.tier}`)) return false;
       const forVendor = catalogueChanges.filter(c => c.vendor.toLowerCase() === o.vendor.toLowerCase());
       const superseding = supersedingChange(o, forVendor);
       return Boolean(superseding && (superseding.previous_state ?? "").trim());
