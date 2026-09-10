@@ -1,10 +1,10 @@
 {
   "version": 1,
-  "generated": "2026-09-09",
+  "generated": "2026-09-10",
   "pages": {
     "/agent-payments": {
-      "hash": "0a07251fc158fd85",
-      "changed": "2026-09-09"
+      "hash": "977da0db30a74e76",
+      "changed": "2026-09-10"
     },
     "/agent-stack": {
       "hash": "aa6711de03acacfc",
@@ -19,12 +19,12 @@
       "changed": "2026-09-09"
     },
     "/ai-free-tiers": {
-      "hash": "cfcac67a8b3ee58b",
-      "changed": "2026-09-09"
+      "hash": "1cc4fc76c3a7a4d1",
+      "changed": "2026-09-10"
     },
     "/ai-ml-alternatives": {
-      "hash": "87db8660cd9d1484",
-      "changed": "2026-09-09"
+      "hash": "fa173add2ae2d056",
+      "changed": "2026-09-10"
     },
     "/alternatives": {
       "hash": "e44e480d96b65d46",
@@ -91,8 +91,8 @@
       "changed": "2026-09-09"
     },
     "/badges": {
-      "hash": "7ab7a3bf76709cb5",
-      "changed": "2026-09-09"
+      "hash": "ce0babc577757754",
+      "changed": "2026-09-10"
     },
     "/brevo-vs-resend": {
       "hash": "3cad9e9ec2d599ca",
@@ -1539,8 +1539,8 @@
       "changed": "2026-09-09"
     },
     "/dall-e-shutdown": {
-      "hash": "8ba6911b8d2466ed",
-      "changed": "2026-09-09"
+      "hash": "e0d9c73280a7ecb5",
+      "changed": "2026-09-10"
     },
     "/database-alternatives": {
       "hash": "a36b7e2d3c350d7e",
@@ -1627,8 +1627,8 @@
       "changed": "2026-09-09"
     },
     "/firebase-studio-shutdown": {
-      "hash": "86df7d1e1dda97ec",
-      "changed": "2026-09-09"
+      "hash": "eb6160dd93c40580",
+      "changed": "2026-09-10"
     },
     "/free-ai-stack": {
       "hash": "b4a367dc2db9fb3d",
@@ -1655,8 +1655,8 @@
       "changed": "2026-09-09"
     },
     "/free-llm-apis": {
-      "hash": "3afebbd665c5e6ca",
-      "changed": "2026-09-09"
+      "hash": "ad6b628494afff82",
+      "changed": "2026-09-10"
     },
     "/free-nextjs-stack": {
       "hash": "3c53f8938a592815",
@@ -1671,8 +1671,8 @@
       "changed": "2026-09-09"
     },
     "/free-tier-risk": {
-      "hash": "4060c820afdd7bd7",
-      "changed": "2026-09-09"
+      "hash": "76c11351e3f0b289",
+      "changed": "2026-09-10"
     },
     "/free-tier-tracker": {
       "hash": "15fdfa289a728d2f",
@@ -1691,8 +1691,8 @@
       "changed": "2026-09-09"
     },
     "/gemini-api-pricing-changes": {
-      "hash": "19970fe42ff05e67",
-      "changed": "2026-09-09"
+      "hash": "c48f0edd00074e6a",
+      "changed": "2026-09-10"
     },
     "/github-actions-alternatives": {
       "hash": "8019ec61c4057acb",
@@ -1799,20 +1799,20 @@
       "changed": "2026-09-09"
     },
     "/openai-assistants-alternatives": {
-      "hash": "369c12253bcc1d14",
-      "changed": "2026-09-09"
+      "hash": "afc4f3437be3c8e9",
+      "changed": "2026-09-10"
     },
     "/openai-assistants-migration": {
       "hash": "1dcb99d0b1a9eb9b",
       "changed": "2026-09-09"
     },
     "/openai-assistants-migration-2026": {
-      "hash": "acb53cbe0c626400",
-      "changed": "2026-09-09"
+      "hash": "7dd970f23ac83471",
+      "changed": "2026-09-10"
     },
     "/openai-realtime-migration": {
-      "hash": "47b6c73385968753",
-      "changed": "2026-09-09"
+      "hash": "e7e3bda518209de8",
+      "changed": "2026-09-10"
     },
     "/postman-alternatives": {
       "hash": "812cf3087f3d2674",
@@ -1839,8 +1839,8 @@
       "changed": "2026-09-09"
     },
     "/q2-pricing-preview-2026": {
-      "hash": "be96d0fc11ebc2e5",
-      "changed": "2026-09-09"
+      "hash": "7783663574c905d9",
+      "changed": "2026-09-10"
     },
     "/railway-vs-render": {
       "hash": "56784160be665767",
@@ -1867,16 +1867,16 @@
       "changed": "2026-09-09"
     },
     "/shutdowns": {
-      "hash": "ab0b86846eba558d",
-      "changed": "2026-09-09"
+      "hash": "d8d94d14489731f1",
+      "changed": "2026-09-10"
     },
     "/stability": {
-      "hash": "95cc30942919cf99",
-      "changed": "2026-09-09"
+      "hash": "28e432670a1c26c8",
+      "changed": "2026-09-10"
     },
     "/stack-check": {
-      "hash": "4f19392b12bf2fd5",
-      "changed": "2026-09-09"
+      "hash": "81f3a0ec2c1a6e5a",
+      "changed": "2026-09-10"
     },
     "/stacks": {
       "hash": "fcdf03d011eea0de",
@@ -1907,8 +1907,8 @@
       "changed": "2026-09-09"
     },
     "/state-of-free-tiers": {
-      "hash": "b973015a426ee9e5",
-      "changed": "2026-09-09"
+      "hash": "7ecbad3d3bd7b560",
+      "changed": "2026-09-10"
     },
     "/storage-alternatives": {
       "hash": "dd3791b59ad9e805",
@@ -1959,8 +1959,8 @@
       "changed": "2026-09-09"
     },
     "/x402-services": {
-      "hash": "b376524e9d591ae6",
-      "changed": "2026-09-09"
+      "hash": "d7873b9acaeeaf13",
+      "changed": "2026-09-10"
     }
   }
 }
