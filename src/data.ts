@@ -4,6 +4,7 @@ import { fileURLToPath } from "node:url";
 import type { Offer, EnrichedOffer, OfferIndex, DealChange, DealChangesIndex, ChangeDateSource, StabilityClass, Referral, RiskCause, RatingWithheld, LinkUnreachable, SourceCheck } from "./types.js";
 import { isUrlSuspended } from "./referral-health.js";
 import { CHANGE_DIRECTION, type ChangeDirection } from "./change-direction.js";
+import { changeGradesTheListedTier } from "./change-tier.js";
 import { rankForListing, gateFor, utcDate, type TieBreak, type Gate, type GateCode } from "./ranking.js";
 import { unreachableNoticeForUrl, resetLinkHealthCache } from "./link-health.js";
 import { quarantineSummary, resetVerificationStateCache, type QuarantineSummary } from "./verification-state.js";
@@ -384,10 +385,10 @@ export function withheldStability(
 export function publishedStabilityFor(vendorName: string): StabilityClass | null {
   const key = vendorName.toLowerCase();
   const vendorChanges = loadDealChanges().filter((c) => c.vendor.toLowerCase() === key);
-  const stability = classifyStability(vendorChanges);
   const offer = loadOffers().find((o) => o.vendor.toLowerCase() === key);
-  if (!offer) return stability;
-  return withheldStability(unreachableNoticeForUrl(offer.url), stability, vendorChanges);
+  if (!offer) return classifyStability(vendorChanges);
+  const grading = changesGradingTheListedTier(offer, vendorChanges);
+  return withheldStability(unreachableNoticeForUrl(offer.url), classifyStability(grading), grading);
 }
 
 export function getStabilityMap(): Map<string, StabilityClass> {
@@ -399,9 +400,16 @@ export function getStabilityMap(): Map<string, StabilityClass> {
     vendorChangesMap.get(key)!.push(c);
   }
 
+  const listed = new Map<string, Offer>();
+  for (const offer of loadOffers()) {
+    const key = offer.vendor.toLowerCase();
+    if (!listed.has(key)) listed.set(key, offer);
+  }
+
   const result = new Map<string, StabilityClass>();
   for (const [vendor, vendorChanges] of vendorChangesMap) {
-    result.set(vendor, classifyStability(vendorChanges));
+    const offer = listed.get(vendor);
+    result.set(vendor, classifyStability(offer ? changesGradingTheListedTier(offer, vendorChanges) : vendorChanges));
   }
   return result;
 }
@@ -454,10 +462,12 @@ export function enrichOffers(offers: Offer[]): EnrichedOffer[] {
       now.getTime(),
     );
 
+    const grading = changesGradingTheListedTier(offer, vendorAllChangesList.get(key) ?? []);
+
     const stability = withheldStability(
       link_unreachable,
-      classifyStability(vendorAllChangesList.get(key) ?? []),
-      vendorAllChangesList.get(key) ?? [],
+      classifyStability(grading),
+      grading,
     );
 
     const days_since_verified = Math.floor(
@@ -891,13 +901,20 @@ export interface PublishedRisk {
   gate: Gate | null;
 }
 
+export function changesGradingTheListedTier(
+  offer: Pick<Offer, "vendor" | "tier">,
+  vendorChanges: DealChange[],
+): DealChange[] {
+  return vendorChanges.filter((change) => changeGradesTheListedTier(change, offer));
+}
+
 export function publishedRisk(
   offer: Offer,
   vendorChanges: DealChange[],
   servedOn: string = utcDate(),
   nowMs: number = Date.now(),
 ): PublishedRisk {
-  const assessment = vendorRiskAssessment(vendorChanges, nowMs);
+  const assessment = vendorRiskAssessment(changesGradingTheListedTier(offer, vendorChanges), nowMs);
   const link_unreachable = unreachableNoticeForUrl(offer.url, nowMs);
   const gate = gateFor(offer, servedOn);
   const withheld =
@@ -952,7 +969,7 @@ export function checkVendorRisk(
 
   const published = publishedRisk(offer, vendorChanges);
   const gate = published.gate;
-  const assessment = vendorRiskAssessment(vendorChanges);
+  const assessment = vendorRiskAssessment(changesGradingTheListedTier(offer, vendorChanges));
   const linkUnreachable = published.link_unreachable;
   const riskLevel = assessment.level;
 

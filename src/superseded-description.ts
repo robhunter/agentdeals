@@ -2,6 +2,7 @@ import { changeCitesASource, changeSummaryText, citationLabel } from "./change-c
 import { changeDateClause } from "./change-dates.js";
 import { narrowsTheStoredTerms } from "./change-direction.js";
 import { isNoLongerInForce } from "./change-resolution.js";
+import { changeGradesTheListedTier, comparableTerms } from "./change-tier.js";
 import { tierRecordsAFreeTier } from "./free-tier-record.js";
 import { describesOnlyATrial, openingOfAReading } from "./superseding-reading.js";
 import { punctuated } from "./terms-opening.js";
@@ -10,6 +11,7 @@ import type { ChangeResolution, DealChange } from "./types.js";
 
 export interface QuotingChange extends Pick<DealChange, "date" | "date_source" | "change_type"> {
   summary: string;
+  tier?: string | null;
   previous_state?: string | null;
   current_state?: string | null;
   source_url?: string | null;
@@ -30,19 +32,19 @@ export interface SourcedReading {
   terms: string;
 }
 
-function comparableTerms(text: string | null | undefined): string {
-  return (text ?? "").replace(/\s+/g, " ").trim().toLowerCase();
-}
-
 export function quotesTheStoredTermsAsPrevious(change: QuotingChange, description: string): boolean {
   const quoted = comparableTerms(change.previous_state);
   return quoted !== "" && quoted === comparableTerms(description);
 }
 
-export function supersedesTheStoredTerms(change: QuotingChange, description: string): boolean {
+export function supersedesTheStoredTerms(
+  change: QuotingChange,
+  offer: Pick<StoredTerms, "vendor" | "description" | "tier">,
+): boolean {
   if (isNoLongerInForce(change)) return false;
   if (!narrowsTheStoredTerms(change.change_type)) return false;
-  return quotesTheStoredTermsAsPrevious(change, description);
+  if (!changeGradesTheListedTier(change, offer)) return false;
+  return quotesTheStoredTermsAsPrevious(change, offer.description);
 }
 
 export function readingPricesNothingButATrial(
@@ -55,12 +57,12 @@ export function readingPricesNothingButATrial(
 }
 
 export function supersedingChange<T extends QuotingChange>(
-  offer: Pick<StoredTerms, "description" | "tier">,
+  offer: Pick<StoredTerms, "vendor" | "description" | "tier">,
   vendorChanges: readonly T[],
 ): T | null {
   let newest: T | null = null;
   for (const change of vendorChanges) {
-    if (!supersedesTheStoredTerms(change, offer.description)) continue;
+    if (!supersedesTheStoredTerms(change, offer)) continue;
     if (readingPricesNothingButATrial(change, offer)) continue;
     if (!newest || change.date > newest.date) newest = change;
   }
@@ -68,7 +70,7 @@ export function supersedingChange<T extends QuotingChange>(
 }
 
 export function storedTermsAreSuperseded(
-  offer: Pick<StoredTerms, "description" | "tier">,
+  offer: Pick<StoredTerms, "vendor" | "description" | "tier">,
   vendorChanges: readonly QuotingChange[],
 ): boolean {
   return supersedingChange(offer, vendorChanges) !== null;

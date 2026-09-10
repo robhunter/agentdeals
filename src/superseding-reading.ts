@@ -1,4 +1,17 @@
+import { escapeRegExp } from "./page-reviews.js";
 import { CLIPPED_TERMS_MARKER, openingOfTerms } from "./terms-opening.js";
+
+export const A_HOSTED_EDITION = "(?:Cloud|Hosted|SaaS)";
+
+export function namesTheVendorsHostedEdition(reading: string, vendor: string): boolean {
+  const name = vendor.trim();
+  if (name === "") return false;
+  const named = new RegExp(
+    `(?:^|[^A-Za-z0-9])${escapeRegExp(name)}\\s+${A_HOSTED_EDITION}(?:[^A-Za-z0-9]|$)`,
+    "i",
+  );
+  return named.test(reading);
+}
 
 export const A_FREE_PLAN =
   /\b(?:always\s+free|free\s+forever|forever\s+free)\b|\bfree[\s'"’-]{0,3}(?:plans?|tiers?|editions?|versions?|accounts?|keys?|api)\b|\b(?:plans?|tiers?|editions?|versions?|accounts?)\b[^.!?]{0,24}?\bis\s+free\b|\bfree\s+for(?:ever)?\b(?!\s+(?:\d|a\s+(?:limited|month|year)|the\s+first))|[$€£]\s?0(?:\.00)?\s*(?:\/\s*|per\s+)(?:mo|month|user|seat|year|yr)\b|\bfree\b\s*[:=]\s*[$€£]\s?0\b/i;

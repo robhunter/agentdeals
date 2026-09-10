@@ -116,6 +116,8 @@ export function buildChangeEntry(offer, result, options = {}) {
 
   const impact = IMPACTS.includes(result.impact) ? result.impact : DEFAULT_IMPACT;
 
+  const tierRead = typeof result.tier === "string" ? result.tier.trim() : "";
+
   return {
     entry: {
       vendor: offer.vendor,
@@ -123,6 +125,7 @@ export function buildChangeEntry(offer, result, options = {}) {
       date: statedDate ?? recordedDate,
       date_source: statedDate ? DATE_SOURCE_VENDOR_PAGE : DATE_SOURCE_DISCOVERED,
       summary,
+      ...(tierRead ? { tier: tierRead } : {}),
       previous_state: offer.description,
       current_state: currentState,
       impact,

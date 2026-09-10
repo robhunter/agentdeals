@@ -162,6 +162,7 @@ export interface DealChange {
   reports?: import("./change-reporting.js").ChangeReportSubject;
   date: string;
   summary: string;
+  tier?: string | null;
   previous_state: string;
   current_state: string;
   impact: "high" | "medium" | "low";
