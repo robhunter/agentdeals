@@ -89,7 +89,8 @@ export interface Population {
 
 function catalogueOffers(): Array<{ vendor: string; category: string }> {
   const REPO = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
-  return JSON.parse(readFileSync(path.join(REPO, "data", "index.json"), "utf-8")).offers;
+  const at = process.env.AGENTDEALS_INDEX_PATH || path.join(REPO, "data", "index.json");
+  return JSON.parse(readFileSync(at, "utf-8")).offers;
 }
 
 export function vendorsInTheCatalogue(): Population {
@@ -102,19 +103,26 @@ export function categoriesInTheCatalogue(): Population {
   return { size: categories.size, read: "categories the catalogue holds an offer under" };
 }
 
+export function recordsInTheCatalogue(): Population {
+  return { size: catalogueOffers().length, read: "records the catalogue holds" };
+}
+
 const POPULATION_READER = /^[A-Za-z_$][\w$]*\(\s*\)$/;
+
+export const POPULATION_ASSERTIONS = ["assertCoversPopulation", "assertSharesPopulation"] as const;
 
 export type PassedPopulation = { line: number; argument: string };
 
 export function passedPopulationsIn(source: string): PassedPopulation[] {
   const found: PassedPopulation[] = [];
-  for (const call of source.matchAll(/(?<!function )assertCoversPopulation\(/g)) {
-    const open = call.index + "assertCoversPopulation".length;
-    const argument = (argumentsAt(source, open)[1] ?? "").trim();
-    if (POPULATION_READER.test(argument)) continue;
-    found.push({ line: source.slice(0, call.index).split("\n").length, argument });
+  for (const name of POPULATION_ASSERTIONS) {
+    for (const call of source.matchAll(new RegExp(`(?<!function )${name}\\(`, "g"))) {
+      const argument = (argumentsAt(source, call.index + name.length)[1] ?? "").trim();
+      if (POPULATION_READER.test(argument)) continue;
+      found.push({ line: source.slice(0, call.index).split("\n").length, argument });
+    }
   }
-  return found;
+  return found.sort((a, b) => a.line - b.line);
 }
 
 export function assertPopulationFloor(observed: number, floor: number, subject: string): void {
@@ -138,5 +146,40 @@ export function assertCoversPopulation(observed: number, population: Population,
   assert.ok(
     observed >= population.size,
     `${observed} ${subject}, against ${population.size} ${population.read} — the sweep does not cover the population it is read against`,
+  );
+}
+
+export function asShare(fraction: number): string {
+  return `${(fraction * 100).toFixed(1)}%`;
+}
+
+export function shareClearsHeadroom(share: number, observed: number, population: number): boolean {
+  return share * 4 <= (observed / population) * 3;
+}
+
+export function assertSharesPopulation(
+  observed: number,
+  population: Population,
+  share: number,
+  subject: string,
+): void {
+  const log = process.env.POPULATION_FLOOR_LOG;
+  if (log) {
+    appendFileSync(
+      log,
+      `${JSON.stringify({ site: callSite(), subject, filteredFrom: population.read, population: population.size, share, observed })}\n`,
+    );
+  }
+  assert.ok(
+    population.size > 0,
+    `there are no ${population.read}, so no share of them says anything about ${subject}`,
+  );
+  assert.ok(
+    observed >= population.size * share,
+    `${observed} ${subject}, which is ${asShare(observed / population.size)} of the ${population.size} ${population.read} it was filtered from, under a floor of ${asShare(share)}`,
+  );
+  assert.ok(
+    shareClearsHeadroom(share, observed, population.size),
+    `a share of ${asShare(share)} leaves under ${Math.round(HEADROOM * 100)}% headroom over the ${asShare(observed / population.size)} it measured — ${subject}. A share does not drift as the data grows or shrinks, so one set this close to what it measures is a tripwire on the filter rather than a guard against it returning nothing.`,
   );
 }

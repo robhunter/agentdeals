@@ -23,6 +23,7 @@ import {
 } from "../dist/product-function.js";
 import { rankOffers } from "../dist/ranking.js";
 import { verificationLedger } from "../dist/verification-state.js";
+import { assertSharesPopulation, categoriesInTheCatalogue } from "./population-floor.ts";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(__dirname, "..");
@@ -303,7 +304,7 @@ describe("a page's title names a class of product", () => {
 
   it("leaves every category-named page titled after its category", async () => {
     const named = published.filter(fn => fn.categories.length > 0);
-    assert.strictEqual(named.length, 58);
+    assertSharesPopulation(named.length, categoriesInTheCatalogue(), 0.6, "categories publishing a page titled after them");
     for (const fn of named) {
       assert.strictEqual(fn.title, fn.categories[0]);
       assert.strictEqual(fn.listNoun, `${fn.categories[0]} Tools`);
