@@ -47,6 +47,7 @@ const {
 
 const { runAiMode, summaryLines } = await import("../scripts/reverify-rolling.js");
 const { fetchPageText, MAX_PAGE_TEXT_LENGTH, MIN_PAGE_TEXT_LENGTH } = await import("../scripts/verify-freshness.js");
+const { withoutARenderingClient } = await import("../scripts/rendered-page.js");
 const { CHANGE_TYPES } = await import("../scripts/change-log.js");
 
 const NOW = new Date("2026-08-28T09:00:00Z");
@@ -570,7 +571,7 @@ describe("a recorded change must describe a change", () => {
       const original = globalThis.fetch;
       globalThis.fetch = (async () => new Response(body, { status: 200 })) as typeof fetch;
       try {
-        return await fetchPageText("https://example.test/pricing");
+        return await fetchPageText("https://example.test/pricing", { render: withoutARenderingClient });
       } finally {
         globalThis.fetch = original;
       }

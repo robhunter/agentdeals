@@ -18,6 +18,7 @@ const {
   VERIFIER_MODEL,
   VERIFIER_BASE_URL,
 } = await import("../scripts/verify-freshness.js");
+const { withoutARenderingClient } = await import("../scripts/rendered-page.js");
 const { priceSignals } = await import("../scripts/change-gate.js");
 const { classifySource, pageNamesVendor } = await import("../scripts/vendor-naming.js");
 
@@ -38,7 +39,7 @@ async function readWith(body: string, init: ResponseInit = {}, options = {}) {
   const original = globalThis.fetch;
   globalThis.fetch = (async () => new Response(body, { status: 200, ...init })) as typeof fetch;
   try {
-    return await fetchPageText("https://example.test/pricing", options);
+    return await fetchPageText("https://example.test/pricing", { render: withoutARenderingClient, ...options });
   } finally {
     globalThis.fetch = original;
   }

@@ -32,6 +32,9 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Name the rendering client a page that comes back too short is read with
+        run: node -e "import('./scripts/rendered-page.js').then((m) => console.log(m.findRenderer() ?? 'none found on this runner'))"
+
       - name: Run rolling re-verification
         id: reverify
         env:

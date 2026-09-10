@@ -1,3 +1,4 @@
+import { READ_BY_RENDERING } from "./rendered-page.js";
 import { priceLabel, structuredDetail, unrenderedPrices } from "./structured-prices.js";
 
 const NAME_QUALIFIERS = new Set([
@@ -290,6 +291,7 @@ export function sourceCheckRecord(offer, page, signals, checked) {
   const { outcome, detail, read } = classifySource(offer, page, signals);
   const record = { checked, outcome, detail };
   if (read) record.read = read;
+  if (page?.read === READ_BY_RENDERING) record.rendered = true;
   const unrendered = page?.ok ? unrenderedPrices(page.structured, page.text) : [];
   if (unrendered.length > 0) {
     record.unrendered_prices = unrendered.slice(0, MAX_UNRENDERED_PRICES_RECORDED).map(priceLabel);

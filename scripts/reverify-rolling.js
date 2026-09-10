@@ -25,7 +25,9 @@ import {
   READ_FROM_MARKUP,
   SOURCE_CHECK_OK,
   SOURCE_CHECK_OUTCOMES,
+  SOURCE_CHECK_UNREADABLE,
 } from "./vendor-naming.js";
+import { findRenderer } from "./rendered-page.js";
 import { isoDay } from "./change-log.js";
 import { recordRefusals, readRefusals, refusalHolds, offerKey } from "./change-refusals.js";
 import {
@@ -146,6 +148,12 @@ function applySourceCheck(offer, index, page, data, dryRun, now, counters) {
     counters.set(READ_FROM_MARKUP, (counters.get(READ_FROM_MARKUP) ?? 0) + 1);
     console.log(`  ⌗ ${offer.vendor} — ${check.detail} (${offer.url})`);
   }
+  if (check.rendered) {
+    counters.set(RENDERED, (counters.get(RENDERED) ?? 0) + 1);
+    if (check.outcome !== SOURCE_CHECK_UNREADABLE) {
+      counters.set(RENDERED_AND_READ, (counters.get(RENDERED_AND_READ) ?? 0) + 1);
+    }
+  }
   if (check.unrendered_prices) {
     counters.set(UNRENDERED, (counters.get(UNRENDERED) ?? 0) + 1);
     console.log(
@@ -160,9 +168,15 @@ function applySourceCheck(offer, index, page, data, dryRun, now, counters) {
 }
 
 const UNRENDERED = "unrendered_prices";
+const RENDERED = "rendered";
+const RENDERED_AND_READ = "rendered_and_read";
 
 function emptySourceCounters() {
-  return new Map([...SOURCE_CHECK_OUTCOMES, READ_FROM_MARKUP, UNRENDERED].map((key) => [key, 0]));
+  return new Map(
+    [...SOURCE_CHECK_OUTCOMES, READ_FROM_MARKUP, UNRENDERED, RENDERED, RENDERED_AND_READ].map(
+      (key) => [key, 0]
+    )
+  );
 }
 
 function attemptRecorder() {
@@ -430,6 +444,8 @@ export function summaryLines(result, { useAi, checked, oldestRemaining, total, q
     const label = holdsVerifiedDate(outcome) ? "Held back" : "Verified on weaker evidence";
     lines.push(`${label} (source ${outcome}): ${sourceChecks.get(outcome) ?? 0}`);
   }
+  lines.push(`Read again with a rendering client after coming back too short: ${sourceChecks.get(RENDERED) ?? 0}`);
+  lines.push(`Of those, a reading came back: ${sourceChecks.get(RENDERED_AND_READ) ?? 0}`);
   lines.push(`Graded on a price the page states in its markup, not its text: ${sourceChecks.get(READ_FROM_MARKUP) ?? 0}`);
   lines.push(`Publishing a price in markup the page never renders: ${sourceChecks.get(UNRENDERED) ?? 0}`);
   lines.push(`Flagged (URL/AI failure): ${result.flagged}`);
@@ -494,6 +510,12 @@ async function main() {
   const selection = { refusalHolds: holds, verificationState: state };
   const { picked, oldestRemaining, retriedFromQuarantine, pickedAfterAFailedRead } = pickOldestEntries(offers, limit, now, selection);
 
+  const renderer = findRenderer();
+  console.log(
+    renderer
+      ? `A page that comes back too short is read again with ${renderer}`
+      : "No rendering client is installed — a page that comes back too short stays unread"
+  );
   console.log(
     `Rolling re-verification — ${picked.length} oldest entries` +
       (retriedFromQuarantine > 0 ? `, ${retriedFromQuarantine} retried from quarantine` : "") +
