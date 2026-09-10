@@ -6129,7 +6129,13 @@
       "category": "Feature Flags",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
+      "recorded_date": "2026-08-28",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-10",
+        "detail": "Retracted 2026-09-10: \"Minimum 20 Developer licenses must be purchased for IDP\" is a licensing floor on the Internal Developer Portal, a different Harness module from the offer this record narrows. Our terms are Feature Flags — 2 developers, 25K client MAU — and an IDP minimum does not reduce them. \"IDP\", \"minimum\" and \"Developer licenses\" each appear zero times on harness.io/pricing today.",
+        "source_url": "https://www.harness.io/pricing"
+      }
     },
     {
       "vendor": "Inngest",
@@ -6159,7 +6165,13 @@
       "category": "Secrets Management",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
+      "recorded_date": "2026-08-28",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-10",
+        "detail": "Retracted 2026-09-10: the record claims secret syncs fell from \"100+\" to 10, but the description it measured against states \"10 integrations\" — we never held 100+, so nothing was reduced. infisical.com/pricing states the Free plan as \"5 identities, unlimited projects, 100+ integrations\" today. Its other claim, 3 projects to unlimited, is an increase. The 2026-09-09 limits_increased record on the same page reads the plan correctly.",
+        "source_url": "https://infisical.com/pricing"
+      }
     },
     {
       "vendor": "Zuplo",
@@ -6234,7 +6246,13 @@
       "category": "Startup Programs",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
+      "recorded_date": "2026-08-28",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-10",
+        "detail": "Retracted 2026-09-10: amplitude.com/startups states \"Up to 100M events a month\" and answers \"What are the limits?\" with \"200K monthly tracked users or 100M events/month\" — the allowance we already hold. \"1.2 billion events\" appears nowhere on the page; it is the same 100M/month restated over the twelve months of the free year. Nothing moved, so there is no increase.",
+        "source_url": "https://amplitude.com/startups"
+      }
     },
     {
       "vendor": "Mercury",
@@ -6354,7 +6372,13 @@
       "category": "API Gateway",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
+      "recorded_date": "2026-08-28",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-10",
+        "detail": "Retracted 2026-09-10: \"The Plus tier starts free and then is charged per gateway per month\" reads the \"Start for Free\" button above the Plus column as a term. konghq.com/pricing states \"Plus / Charged per Gateway per month, bill monthly\". The free thing on the page is a 30-day Konnect trial, which this record already describes separately, so the tier it announces does not exist.",
+        "source_url": "https://konghq.com/pricing"
+      }
     },
     {
       "vendor": "Directus",
@@ -6510,7 +6534,13 @@
       "category": "Messaging",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
+      "recorded_date": "2026-08-28",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-10",
+        "detail": "Retracted 2026-09-10: the record's own summary reads \"The free tier now has a limit of 200 messages/second instead of 50\", which is an increase, and it is typed limits_reduced. svix.com/pricing/ states the Free plan at \"200 messages / second\" today, against the 50 msg/sec we hold. The 2026-09-09 limits_increased record on the same page carries the same reading with the correct type.",
+        "source_url": "https://www.svix.com/pricing/"
+      }
     },
     {
       "vendor": "Sendbird",
@@ -9218,7 +9248,13 @@
       "category": "Feature Flags",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-09"
+      "recorded_date": "2026-09-09",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-10",
+        "detail": "Retracted 2026-09-10: \"up to 500 users, up to 5 custom dashboards, unlimited templates and custom roles\" is the Essentials column of the \"Essentials vs. Enterprise\" comparison table on harness.io/pricing, not the Free Plan. The Free Plan card on that page lists exactly three items: Harness Open Source, Litmus Chaos, Community support. \"Feature Flag\" appears zero times on the page, so it states nothing about the offer this record is attached to.",
+        "source_url": "https://www.harness.io/pricing"
+      }
     },
     {
       "vendor": "Segment",
@@ -9233,7 +9269,13 @@
       "category": "Startup Perks",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-09"
+      "recorded_date": "2026-09-09",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-10",
+        "detail": "Retracted 2026-09-10: the record's own summary reads \"The Startup Program with $50,000 in credits is no longer listed\", which is a removal, and it is typed startup_program_expanded. The cited URL now redirects to twilio.com/docs/segment/guides/usage-and-billing/discounts-for-startups-npos, where \"startup\" and \"$50,000\" each appear zero times and the only offer is a $120/month non-profit discount. The 2026-08-28 free_tier_removed record on the same page states the same facts with the correct type.",
+        "source_url": "https://segment.com/docs/guides/usage-and-billing/discounts-for-startups-npos/"
+      }
     },
     {
       "vendor": "Amplitude",
@@ -9308,7 +9350,13 @@
       "category": "API Gateway",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-09"
+      "recorded_date": "2026-09-09",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-10",
+        "detail": "Retracted 2026-09-10: accurate about Kong Konnect and attached to the wrong product. Our Kong offer's terms are \"Open source API gateway (Apache 2.0). Self-hosted with no request or usage limits.\" konghq.com/pricing prices Konnect and Insomnia; \"Apache\" appears zero times on it and the open-source gateway appears only as a navigation link to /community. Konnect's Plus gateway limits say nothing about whether the Apache-2.0 gateway is still free.",
+        "source_url": "https://konghq.com/pricing"
+      }
     },
     {
       "vendor": "Svix",
