@@ -105,6 +105,28 @@ describe("change log writer", () => {
       assert.strictEqual(entry.date, "2026-08-27");
     });
 
+    it("records which plan on the page the reading was about", () => {
+      const { entry } = buildChangeEntry(OFFER, { ...DETECTION, tier: " Examplebase Cloud Pro " }, { now: NOW });
+      assert.strictEqual(entry.tier, "Examplebase Cloud Pro");
+    });
+
+    it("names no plan where the reading named none, so the verdict falls where it did", () => {
+      for (const named of [undefined, null, "", "   ", 7]) {
+        const { entry } = buildChangeEntry(OFFER, { ...DETECTION, tier: named }, { now: NOW });
+        assert.ok(!("tier" in entry), `tier ${JSON.stringify(named)} must leave no field behind`);
+      }
+    });
+
+    it("asks the page reader which plan moved, and says the stored one is only one of them", () => {
+      const source = readFileSync(path.join(REPO, "scripts", "verify-freshness.js"), "utf-8");
+      const from = source.indexOf("export async function verifyOfferAgainstPage");
+      const to = source.indexOf("return parseVerifierResponse", from);
+      assert.ok(from !== -1 && to > from);
+      const prompt = source.slice(from, to);
+      assert.match(prompt, /"tier":"<[^"]*plan or edition[^"]*>"/);
+      assert.match(prompt, /- tier must name the plan or edition whose terms moved/);
+    });
+
     it("writes no entry when the change type is not one we publish", () => {
       const { entry, missing } = buildChangeEntry(OFFER, { ...DETECTION, change_type: "got_worse" }, { now: NOW });
       assert.strictEqual(entry, null);

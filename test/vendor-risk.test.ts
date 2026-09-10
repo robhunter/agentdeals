@@ -39,18 +39,20 @@ describe("checkVendorRisk logic", () => {
   });
 
   it("reports the level the risk engine reached for every vendor it demotes", async () => {
-    const { checkVendorRisk, loadOffers, loadDealChanges, vendorRiskAssessment } = await import("../dist/data.js");
+    const { checkVendorRisk, loadOffers, loadDealChanges, publishedRisk } = await import("../dist/data.js");
     const changes = loadDealChanges();
+    const offers = loadOffers();
     const forVendor = (v: string) => changes.filter(c => c.vendor.toLowerCase() === v.toLowerCase());
-    const demoted = [...new Set(loadOffers().map(o => o.vendor))]
-      .filter(v => vendorRiskAssessment(forVendor(v)).level !== "stable");
+    const listedAs = (v: string) => offers.find(o => o.vendor === v)!;
+    const levelFor = (v: string) => publishedRisk(listedAs(v), forVendor(v)).history_level;
+    const demoted = [...new Set(offers.map(o => o.vendor))].filter(v => levelFor(v) !== "stable");
     assert.ok(demoted.length > 0, "the index holds no vendor the risk scale demotes");
     let published = 0;
     for (const vendor of demoted) {
       const result = checkVendorRisk(vendor);
       if ("error" in result || result.result.risk_level === null) continue;
       published++;
-      assert.strictEqual(result.result.risk_level, vendorRiskAssessment(forVendor(vendor)).level, vendor);
+      assert.strictEqual(result.result.risk_level, levelFor(vendor), vendor);
       assert.ok(result.result.changes.length > 0, `${vendor} carries a level with no record behind it`);
     }
     assert.ok(published > 0, "no demoted vendor published a level");

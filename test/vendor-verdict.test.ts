@@ -306,6 +306,7 @@ interface VendorRow {
   withheld: ReturnType<typeof levelWithheldReason>;
   badgeRendered: boolean;
   sentence: string;
+  tier: string;
   changes: DealChange[];
   gate: Gate | null;
   cause: RiskCause | null;
@@ -338,6 +339,7 @@ function vendorRows(): VendorRow[] {
       badgeRendered: ended || !(gate || enriched.risk_level === null || (enriched.link_unreachable && expected === "stable")),
       sentence: vendorVerdictSentence({
         vendor,
+        tier: primary.tier,
         level: enriched.risk_level ?? null,
         historyLevel: publishedRisk(primary, vendorChanges).history_level,
         cause: enriched.risk_cause ?? null,
@@ -348,6 +350,7 @@ function vendorRows(): VendorRow[] {
         offerEnded: ended,
         gate: gate?.code ?? null,
       }),
+      tier: primary.tier,
       changes: vendorChanges,
       gate,
       cause: enriched.risk_cause ?? null,
@@ -565,7 +568,7 @@ describe("vendor verdict — as rendered", () => {
             if (!answers.reliable.includes(row.expected)) {
               wrong.push(`${row.slug}: the reliability answer does not carry the ${row.expected} rating`);
             }
-            if (row.expected === "stable" && !answers.reliable.includes(narrowingSentence(row.changes))) {
+            if (row.expected === "stable" && !answers.reliable.includes(narrowingSentence(row.changes, row))) {
               wrong.push(`${row.slug}: the reliability answer does not say what the records it holds did — ${answers.reliable}`);
             }
           }
@@ -613,7 +616,7 @@ describe("vendor verdict — as rendered", () => {
       digitalocean.gate,
       "/vendor/digitalocean renders an ungated record again, so assert this on the page rather than on the composer",
     );
-    const composed = narrowingSentence(digitalocean.changes);
+    const composed = narrowingSentence(digitalocean.changes, digitalocean);
     assert.match(composed, /One recorded restriction/);
     assert.doesNotMatch(composed, /2 recorded changes narrowed the terms/);
     assert.doesNotMatch(composed, /corrects our own earlier entry/);

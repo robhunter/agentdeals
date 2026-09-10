@@ -1,5 +1,6 @@
 import type { DealChange, RatingWithheld, RiskCause, SourceCheckOutcome } from "./types.js";
 import { CHANGE_DIRECTION, isACorrectionToOurOwnRecord } from "./data.js";
+import { changeGradesTheListedTier, type GradedOffer } from "./change-tier.js";
 import { isNoLongerInForce, theEventNeverHappened } from "./change-resolution.js";
 import { changeIsUncited, ratingWithheldForNoSourceSentence } from "./change-citation.js";
 import { changeDateClause } from "./change-dates.js";
@@ -39,10 +40,11 @@ export function changeKindNoun(changeType: string): string {
 
 export interface VendorVerdictInput {
   vendor: string;
+  tier?: string;
   level: PublishedRiskLevel | null;
   historyLevel: PublishedRiskLevel;
   cause: RiskCause | null;
-  changes: Array<Pick<DealChange, "date" | "date_source" | "change_type"> & { source_url?: string | null } & { resolution?: DealChange["resolution"] }>;
+  changes: Array<Pick<DealChange, "date" | "date_source" | "change_type"> & { source_url?: string | null } & { tier?: string | null; current_state?: string | null } & { resolution?: DealChange["resolution"] }>;
   levelWithheld: LevelWithheldReason | null;
   unconfirmableSince: string;
   ratingWithheld?: RatingWithheld | null;
@@ -76,9 +78,11 @@ function capitalise(text: string): string {
 
 function narrowingChanges(
   changes: VendorVerdictInput["changes"],
+  offer: GradedOffer | null,
 ): VendorVerdictInput["changes"] {
   return changes
     .filter(c => CHANGE_DIRECTION[c.change_type] === "negative" && !isNoLongerInForce(c))
+    .filter(c => offer === null || changeGradesTheListedTier(c, offer))
     .slice()
     .sort((a, b) => b.date.localeCompare(a.date));
 }
@@ -171,7 +175,10 @@ export function isOurOwnBookkeeping(
   return isACorrectionToOurOwnRecord(change) || theEventNeverHappened(change);
 }
 
-export function narrowingSentence(changes: VendorVerdictInput["changes"]): string {
+export function narrowingSentence(
+  changes: VendorVerdictInput["changes"],
+  offer: GradedOffer | null = null,
+): string {
   const cited = changes.filter(c => !changeIsUncited(c));
   const withdrawn = cited.filter(theEventNeverHappened);
   const corrections = cited.filter(c => isACorrectionToOurOwnRecord(c) && !theEventNeverHappened(c));
@@ -184,7 +191,7 @@ export function narrowingSentence(changes: VendorVerdictInput["changes"]): strin
       ? `The one record we hold corrects our own earlier entry rather than reporting a change the vendor made.`
       : `All ${corrections.length} records we hold correct our own earlier entries rather than reporting changes the vendor made.`;
   }
-  const narrowing = narrowingChanges(byTheVendor);
+  const narrowing = narrowingChanges(byTheVendor, offer);
   if (narrowing.length === 0) {
     return total === 1
       ? `The one change we have recorded did not narrow the terms.`
@@ -214,5 +221,5 @@ export function vendorVerdictSentence(input: VendorVerdictInput): string {
   }
 
   if (input.changes.length === 0) return `It's stable — zero pricing changes recorded.`;
-  return `We rate it stable. ${narrowingSentence(input.changes)}`;
+  return `We rate it stable. ${narrowingSentence(input.changes, { vendor: input.vendor, tier: input.tier })}`;
 }

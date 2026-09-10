@@ -14,3 +14,9 @@ export function tierRecordsAFreeTier(tier: string): boolean {
   const label = tier.toLowerCase();
   return label.includes("free") || RECORDED_FREE_TIER_LABELS.has(label);
 }
+
+export const A_SELF_HOSTED_EDITION = /\boss\b|\bopen[\s-]?source\b|\bself[\s-]?hosted\b/i;
+
+export function tierRecordsASelfHostedEdition(tier: string): boolean {
+  return A_SELF_HOSTED_EDITION.test(tier);
+}

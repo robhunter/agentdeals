@@ -267,10 +267,11 @@ Compare the stored deal info against the pricing page text. Focus on:
 Respond with EXACTLY one of these JSON objects (no other text):
 - If the deal info is still accurate: {"status":"confirmed"}
 - If the page doesn't contain enough info to verify: {"status":"unclear","summary":"<reason>"}
-- If you found a discrepancy: {"status":"changed","summary":"<what changed>","change_type":"<one of: ${CHANGE_TYPE_VALUES}>","current_state":"<what the page says the terms are now>","impact":"<high|medium|low>","effective_date":"<YYYY-MM-DD, only if the page states when this took effect>"}
+- If you found a discrepancy: {"status":"changed","summary":"<what changed>","change_type":"<one of: ${CHANGE_TYPE_VALUES}>","tier":"<the plan or edition on the page whose terms moved>","current_state":"<what the page says the terms are now>","impact":"<high|medium|low>","effective_date":"<YYYY-MM-DD, only if the page states when this took effect>"}
 
 Rules for a "changed" response:
 - current_state must describe only what the page text above says. Do not restate the stored deal info and do not infer terms the page does not state.
+- tier must name the plan or edition whose terms moved, as the page names it. This page documents several plans and the stored tier above is only one of them: where what moved is a different plan, a paid plan, or a separately priced hosted service, name that one rather than the stored tier.
 - Omit effective_date entirely unless the page gives a date.
 - If you cannot pick a change_type from that list, or cannot state current_state from the page, answer "unclear" instead.`;
 

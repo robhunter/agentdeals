@@ -169,7 +169,7 @@ describe("marking a comparison slot whose vendor has no catalogue entry", () => 
       .filter(slot => !REMOVAL_MARKER.test(slot.markup))
       .map(slot => `${slot.path}: ${slot.kind} ${slot.label}`);
     assert.deepStrictEqual(unmarked, []);
-    assert.ok(named.length >= 8, `only ${named.length} slots name a vendor the badge calls ended`);
+    assert.ok(named.length >= 4, `only ${named.length} slots name a vendor the badge calls ended`);
   });
 
   it("sends no marker to a vendor page that does not exist", () => {

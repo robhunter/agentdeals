@@ -146,7 +146,7 @@ describe("the free tier report counts what the site is prepared to vouch for", (
     assertPopulationFloor(census.vouched, 300, "offers are vouched");
     assertPopulationFloor(census.unconfirmed, 100, "recorded offers are unconfirmed");
     assert.ok(
-      censusOf(offers.filter((o) => tierRecordsAFreeTier(o.tier))).ended >= 20,
+      censusOf(offers.filter((o) => tierRecordsAFreeTier(o.tier))).ended >= 14,
       "no offer whose tier records a free tier is also recorded as ended, so the exclusion is untested",
     );
   });

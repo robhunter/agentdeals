@@ -15,6 +15,7 @@ import {
   demotionInForce,
   loadDealChanges,
   loadOffers,
+  publishedRisk,
   vendorRiskAssessment,
   verdictHasLapsed,
 } from "../dist/data.js";
@@ -204,6 +205,14 @@ describe("#1206 the badge and the vendor page read the same scale", () => {
       if (!held.has(key)) held.set(key, []);
       held.get(key)!.push(c);
     }
+    const offers = loadOffers();
+    const scaleFor = (vendor: string) => {
+      const listed = offers.find(o => o.vendor === vendor);
+      const records = held.get(vendor.toLowerCase()) ?? [];
+      if (!listed) return vendorRiskAssessment(records);
+      const risk = publishedRisk(listed, records);
+      return { level: risk.history_level, rating_withheld: risk.rating_withheld };
+    };
     const slugs = [...vendorSlugMap.entries()];
     const disagreeing: string[] = [];
     let queue = 0;
@@ -217,7 +226,7 @@ describe("#1206 the badge and the vendor page read the same scale", () => {
         if (label === "not found") continue;
         if (label === ENDED_BADGE_LABEL) continue;
         if (label === UNRATED_BADGE_LABEL) {
-          if (vendorRiskAssessment(held.get(vendor.toLowerCase()) ?? []).rating_withheld === null) {
+          if (scaleFor(vendor).rating_withheld === null) {
             disagreeing.push(`/badge/${slug}.svg withholds a rating the risk scale reached`);
           }
           continue;
@@ -225,7 +234,7 @@ describe("#1206 the badge and the vendor page read the same scale", () => {
         if (label.startsWith(WITHHELD_BADGE_PREFIX)) continue;
         const level = LEVEL_FOR_BADGE[label];
         if (level === undefined) { disagreeing.push(`/badge/${slug}.svg reads "${label}"`); continue; }
-        const expected = vendorRiskAssessment(held.get(vendor.toLowerCase()) ?? []).level;
+        const expected = scaleFor(vendor).level;
         if (level !== expected) disagreeing.push(`/badge/${slug}.svg reads ${level}, the risk scale reads ${expected}`);
       }
     };
