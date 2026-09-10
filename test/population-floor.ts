@@ -14,8 +14,10 @@ const FLOOR = /(?<![<>=!])(?:>=|>)\s*([\dA-Za-z_$][\w$]*)\b/g;
 const CEILING = /(?<![-=])(?:<=|<)\s*[\dA-Za-z_$]/;
 const NAMED_NUMBER = /^const\s+([A-Za-z_$][\w$]*)\s*(?::\s*number\s*)?=\s*(\d[\d_]*)\s*;/gm;
 
-function conditionAt(source: string, open: number): string {
+function argumentsAt(source: string, open: number): string[] {
+  const found: string[] = [];
   let depth = 0;
+  let from = open + 1;
   let quote: string | null = null;
   for (let at = open; at < source.length; at++) {
     const char = source[at]!;
@@ -28,10 +30,20 @@ function conditionAt(source: string, open: number): string {
     else if (char === "(" || char === "[" || char === "{") depth++;
     else if (char === ")" || char === "]" || char === "}") {
       depth--;
-      if (depth === 0) return source.slice(open + 1, at);
-    } else if (char === "," && depth === 1) return source.slice(open + 1, at);
+      if (depth === 0) {
+        found.push(source.slice(from, at));
+        return found;
+      }
+    } else if (char === "," && depth === 1) {
+      found.push(source.slice(from, at));
+      from = at + 1;
+    }
   }
-  return "";
+  return found;
+}
+
+function conditionAt(source: string, open: number): string {
+  return argumentsAt(source, open)[0] ?? "";
 }
 
 export function bareFloorsIn(source: string): BareFloor[] {
@@ -70,12 +82,39 @@ const callSite = (): string => {
   return `${at[1].replace("file://", "").replace(`${process.cwd()}/`, "")}:${at[2]}`;
 };
 
-export function vendorsInTheCatalogue(): number {
+export interface Population {
+  size: number;
+  read: string;
+}
+
+function catalogueOffers(): Array<{ vendor: string; category: string }> {
   const REPO = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
-  const offers: Array<{ vendor: string }> = JSON.parse(
-    readFileSync(path.join(REPO, "data", "index.json"), "utf-8"),
-  ).offers;
-  return new Set(offers.map((offer) => offer.vendor.trim().toLowerCase())).size;
+  return JSON.parse(readFileSync(path.join(REPO, "data", "index.json"), "utf-8")).offers;
+}
+
+export function vendorsInTheCatalogue(): Population {
+  const vendors = new Set(catalogueOffers().map((offer) => offer.vendor.trim().toLowerCase()));
+  return { size: vendors.size, read: "vendors the catalogue holds" };
+}
+
+export function categoriesInTheCatalogue(): Population {
+  const categories = new Set(catalogueOffers().map((offer) => offer.category.trim()));
+  return { size: categories.size, read: "categories the catalogue holds an offer under" };
+}
+
+const POPULATION_READER = /^[A-Za-z_$][\w$]*\(\s*\)$/;
+
+export type PassedPopulation = { line: number; argument: string };
+
+export function passedPopulationsIn(source: string): PassedPopulation[] {
+  const found: PassedPopulation[] = [];
+  for (const call of source.matchAll(/(?<!function )assertCoversPopulation\(/g)) {
+    const open = call.index + "assertCoversPopulation".length;
+    const argument = (argumentsAt(source, open)[1] ?? "").trim();
+    if (POPULATION_READER.test(argument)) continue;
+    found.push({ line: source.slice(0, call.index).split("\n").length, argument });
+  }
+  return found;
 }
 
 export function assertPopulationFloor(observed: number, floor: number, subject: string): void {
@@ -84,6 +123,20 @@ export function assertPopulationFloor(observed: number, floor: number, subject: 
   assert.ok(observed >= floor, `only ${observed} ${subject}, under a floor of ${floor}`);
   assert.ok(
     floorClearsHeadroom(floor, observed),
-    `a floor of ${floor} leaves under ${Math.round(HEADROOM * 100)}% headroom over the ${observed} it measured — ${subject}. It goes red when this data shrinks and stays green when this data is wrong. Lower it, or state the property relative to the population it reads.`,
+    `a floor of ${floor} leaves under ${Math.round(HEADROOM * 100)}% headroom over the ${observed} it measured — ${subject}. It goes red when this data shrinks and stays green when this data is wrong. Lower it, or state the property relative to the population it reads with assertCoversPopulation.`,
+  );
+}
+
+export function assertCoversPopulation(observed: number, population: Population, subject: string): void {
+  const log = process.env.POPULATION_FLOOR_LOG;
+  if (log) {
+    appendFileSync(
+      log,
+      `${JSON.stringify({ site: callSite(), subject, covers: population.read, population: population.size, observed })}\n`,
+    );
+  }
+  assert.ok(
+    observed >= population.size,
+    `${observed} ${subject}, against ${population.size} ${population.read} — the sweep does not cover the population it is read against`,
   );
 }

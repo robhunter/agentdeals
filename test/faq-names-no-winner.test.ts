@@ -1,6 +1,6 @@
 import { describe, it, before, after } from "node:test";
 import assert from "node:assert";
-import { assertPopulationFloor, vendorsInTheCatalogue } from "./population-floor.ts";
+import { assertCoversPopulation, assertPopulationFloor, categoriesInTheCatalogue, vendorsInTheCatalogue } from "./population-floor.ts";
 import { spawn, type ChildProcess } from "node:child_process";
 import { readFileSync } from "node:fs";
 import path from "node:path";
@@ -153,7 +153,7 @@ describe("no served FAQ answer crowns a vendor we hold no ranking for", () => {
   after(() => proc?.kill());
 
   it("reads every FAQ answer the site serves", () => {
-    assertPopulationFloor(sweptPaths.length, vendorsInTheCatalogue(), "paths served for the sweep");
+    assertCoversPopulation(sweptPaths.length, vendorsInTheCatalogue(), "paths served for the sweep");
     assertPopulationFloor(blocksByPath.size, 1500, "served pages publishing an FAQPage block");
     assertPopulationFloor(answers.length, 9000, "FAQ answers parsed out of FAQPage markup");
     assertPopulationFloor(vendorNames.length, 900, "catalogue vendor names the sweep matches against");
@@ -214,17 +214,17 @@ describe("no served FAQ answer crowns a vendor we hold no ranking for", () => {
   it("counts one named catalogue category behind every denominator it publishes", () => {
     const held = /We hold (\d+) (.+?) services in our catalogue/g;
     const wrong: string[] = [];
-    let checked = 0;
+    const named = new Set<string>();
     for (const answer of answers) {
       for (const match of answer.a.matchAll(held)) {
         const stated = parseInt(match[1], 10);
         const category = match[2];
         const actual = offers.filter(o => o.category === category).length;
-        checked++;
+        named.add(category);
         if (actual !== stated || actual === 0) wrong.push(`${answer.path} :: ${category} stated ${stated}, catalogue holds ${actual}`);
       }
     }
-    assertPopulationFloor(checked, 55, "answers publishing a catalogue denominator");
+    assertCoversPopulation(named.size, categoriesInTheCatalogue(), "categories publishing a denominator in an answer");
     assert.deepStrictEqual(wrong, [], `denominators that name no single catalogue category: ${wrong.length}`);
   });
 

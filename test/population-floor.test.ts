@@ -4,16 +4,22 @@ import { readdirSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import {
+  assertCoversPopulation,
   assertPopulationFloor,
   bareFloorsIn,
+  categoriesInTheCatalogue,
   floorClearsHeadroom,
+  passedPopulationsIn,
   REGISTERED_FROM,
+  vendorsInTheCatalogue,
 } from "./population-floor.ts";
 
 const TEST_DIR = path.dirname(fileURLToPath(import.meta.url));
 
 const asWritten = (expression: string, comparison: string, literal: number) =>
   `assert.ok(${expression} ${comparison} ${literal}, "the message it carries");`;
+
+const COVERAGE = "assertCoversPopulation";
 
 describe("a floor over a live population states headroom it has measured", () => {
   it("passes a floor the population clears by more than a quarter", () => {
@@ -48,6 +54,60 @@ describe("a floor over a live population states headroom it has measured", () =>
     assert.strictEqual(floorClearsHeadroom(300, 552), true);
     assert.strictEqual(floorClearsHeadroom(500, 552), false);
     assert.strictEqual(floorClearsHeadroom(1500, 1572), false);
+  });
+});
+
+describe("a sweep read against the population it covers states coverage, not headroom", () => {
+  it("passes where the sweep reaches every member of the population it was read against", () => {
+    assertCoversPopulation(2528, vendorsInTheCatalogue(), "paths served for the sweep");
+    assertCoversPopulation(77, categoriesInTheCatalogue(), "categories publishing a denominator in an answer");
+  });
+
+  it("passes where the sweep covers the population exactly, which a floor would refuse for headroom", () => {
+    const measured = categoriesInTheCatalogue().size;
+    assert.strictEqual(floorClearsHeadroom(measured, measured), false);
+    assertCoversPopulation(measured, categoriesInTheCatalogue(), "categories publishing a denominator in an answer");
+  });
+
+  it("fails where the sweep misses a member, naming both sides", () => {
+    const measured = vendorsInTheCatalogue().size;
+    assert.throws(
+      () => assertCoversPopulation(measured - 1, vendorsInTheCatalogue(), "paths served for the sweep"),
+      new RegExp(`${measured - 1} paths served for the sweep, against ${measured} vendors the catalogue holds`),
+    );
+  });
+
+  it("shrinks with the data it reads rather than going red when a curation empties a category", () => {
+    const catalogue = vendorsInTheCatalogue();
+    const categories = categoriesInTheCatalogue();
+    assert.ok(catalogue.size > categories.size, "the catalogue holds more vendors than categories");
+    assert.notStrictEqual(catalogue.read, categories.read);
+  });
+
+  it("refuses a population handed over as a number rather than read from the data", () => {
+    const asCalled = (population: string) => `${COVERAGE}(checked, ${population}, "a subject");`;
+    assert.deepStrictEqual(passedPopulationsIn(asCalled("60")).map(p => p.argument), ["60"]);
+    assert.deepStrictEqual(
+      passedPopulationsIn(asCalled('{ size: 60, read: "made up" }')).map(p => p.argument),
+      ['{ size: 60, read: "made up" }'],
+    );
+    assert.deepStrictEqual(passedPopulationsIn(asCalled("liveCategories(60)")).map(p => p.argument), ["liveCategories(60)"]);
+    assert.deepStrictEqual(passedPopulationsIn(asCalled("() => 60")).map(p => p.argument), ["() => 60"]);
+    assert.deepStrictEqual(passedPopulationsIn(asCalled("categoriesInTheCatalogue()")), []);
+  });
+
+  it("holds every file in the suite to it", () => {
+    const passed: string[] = [];
+    for (const file of readdirSync(TEST_DIR).filter(name => name.endsWith(".ts"))) {
+      for (const site of passedPopulationsIn(readFileSync(path.join(TEST_DIR, file), "utf-8"))) {
+        passed.push(`${file}:${site.line} ${site.argument}`);
+      }
+    }
+    assert.deepStrictEqual(
+      passed,
+      [],
+      "a population has to be read by a no-argument reader in population-floor.ts, because a caller that computes the number has put the literal back one indirection later",
+    );
   });
 });
 
