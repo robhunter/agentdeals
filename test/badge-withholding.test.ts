@@ -36,7 +36,7 @@ const WITHHELD_LABELS: Record<string, string> = {
   no_source: "unrated — no source",
   link_unreachable: "unrated — page unreachable",
   unreadable: "unrated — page unreadable",
-  states_no_terms: "unrated — page states no terms",
+  states_no_terms: "unrated — page states no price",
   does_not_name_vendor: "unrated — page omits vendor",
   does_not_name_product: "unrated — page omits product",
   eligibility_restricted: "unrated — restricted offer",

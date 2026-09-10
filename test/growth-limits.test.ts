@@ -278,11 +278,11 @@ describe("the outgrow block on a vendor page", () => {
     assert.match(outgrowAnswer(body), /^At 3 requests\/min, you'll need to upgrade\./);
   });
 
-  it("does not state a threshold read off a page that states no terms", async () => {
+  it("does not state a threshold read off a page that states no price", async () => {
     const { body } = await get("/vendor/prosecorp");
     const block = growthBlock(body);
     assert.doesNotMatch(block, /At 100 requests\/day, you'll need to upgrade/);
-    assert.match(block, /states no terms we can read/);
+    assert.match(block, /states no amount, tier or rate we can read/);
     assert.match(block, /we cannot confirm that threshold today/);
   });
 

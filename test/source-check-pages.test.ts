@@ -275,7 +275,7 @@ describe("the two withheld reasons read differently to somebody deciding whether
   });
 });
 
-describe("a vendor page whose cited source names it but states no terms we can read", () => {
+describe("a vendor page whose cited source names it but states no price we can read", () => {
   it("publishes no stability judgement", async () => {
     const { body } = await get("/vendor/prosecorp");
     assert.doesNotMatch(body, /This is a good sign — stable pricing/);
@@ -293,9 +293,9 @@ describe("a vendor page whose cited source names it but states no terms we can r
     assert.strictEqual(offer.source_check.outcome, "states_no_terms");
   });
 
-  it("says the page states no terms rather than that we could not read it", async () => {
+  it("says the page states no price rather than that we could not read it", async () => {
     const own = aboutThisVendor(await get("/vendor/prosecorp"));
-    assert.match(own, /states no terms we can read/);
+    assert.match(own, /states no amount, tier or rate we can read/);
     assert.doesNotMatch(own, /could not read the page we cite/);
     assert.doesNotMatch(own, /does not name it/);
   });
@@ -320,7 +320,7 @@ describe("a vendor page whose cited source names a plan but states no amount", (
 
   it("does not borrow the sentence written for a page that states nothing", async () => {
     const own = aboutThisVendor(await get("/vendor/plancorp"));
-    assert.doesNotMatch(own, /states no terms we can read/);
+    assert.doesNotMatch(own, /states no amount, tier or rate we can read/);
     assert.doesNotMatch(own, /could not read the page we cite/);
     assert.doesNotMatch(own, /does not name it/);
   });
@@ -369,7 +369,7 @@ describe("the question an answer engine quotes first", () => {
   for (const [slug, vendor, reason] of [
     ["fixturecorp", "Fixturecorp", /does not name it/],
     ["shellcorp", "Shellcorp", /could not read the page we cite/],
-    ["prosecorp", "Prosecorp", /states no terms we can read/],
+    ["prosecorp", "Prosecorp", /states no amount, tier or rate we can read/],
   ] as const) {
     it(`does not answer Yes for ${vendor}, and carries the reason in the answer itself`, async () => {
       const { body } = await get(`/vendor/${slug}`);
@@ -397,7 +397,7 @@ describe("an alternatives page for a vendor whose source we cannot vouch for", (
   for (const [slug, vendor, reason] of [
     ["fixturecorp", "Fixturecorp", /does not name it/],
     ["shellcorp", "Shellcorp", /could not read the page we cite/],
-    ["prosecorp", "Prosecorp", /states no terms we can read/],
+    ["prosecorp", "Prosecorp", /states no amount, tier or rate we can read/],
   ] as const) {
     it(`does not re-assert a stable risk level for ${vendor}`, async () => {
       const { body } = await get(`/alternative-to/${slug}`);
@@ -430,16 +430,16 @@ describe("a page we quote from is not also a page we say we can read nothing on"
     assert.ok(body.includes(`https://longcorp.example/pricing</a>, ${quoted}`), quoted);
   });
 
-  it("does not also say that page states no terms it can read", async () => {
+  it("does not also say that page states no price it can read", async () => {
     const { body } = await get("/vendor/longcorp");
-    assert.doesNotMatch(saidOfTheSubject(body), /states no terms we can read/);
+    assert.doesNotMatch(saidOfTheSubject(body), /states no amount, tier or rate we can read/);
   });
 
   it("keeps saying so where the quote comes from a different page", async () => {
     const { body } = await get("/vendor/prosecorp");
     const quoted = pageQuoteHtml("managed Postgres", (t: string) => t);
     assert.ok(body.includes(`dealmarket.example/offers</a>, ${quoted}`), quoted);
-    assert.match(saidOfTheSubject(body), /states no terms we can read/);
+    assert.match(saidOfTheSubject(body), /states no amount, tier or rate we can read/);
   });
 
   for (const subject of FIXTURES) {
