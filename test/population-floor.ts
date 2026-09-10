@@ -1,5 +1,7 @@
 import assert from "node:assert";
-import { appendFileSync } from "node:fs";
+import { appendFileSync, readFileSync } from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 
 export const HEADROOM = 0.25;
 
@@ -67,6 +69,14 @@ const callSite = (): string => {
   if (!at) return "unknown";
   return `${at[1].replace("file://", "").replace(`${process.cwd()}/`, "")}:${at[2]}`;
 };
+
+export function vendorsInTheCatalogue(): number {
+  const REPO = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
+  const offers: Array<{ vendor: string }> = JSON.parse(
+    readFileSync(path.join(REPO, "data", "index.json"), "utf-8"),
+  ).offers;
+  return new Set(offers.map((offer) => offer.vendor.trim().toLowerCase())).size;
+}
 
 export function assertPopulationFloor(observed: number, floor: number, subject: string): void {
   const log = process.env.POPULATION_FLOOR_LOG;

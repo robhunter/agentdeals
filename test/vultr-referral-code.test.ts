@@ -4,7 +4,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { spawn, type ChildProcess } from "node:child_process";
 import { fileURLToPath } from "node:url";
-import { assertPopulationFloor } from "./population-floor.ts";
+import { assertPopulationFloor, vendorsInTheCatalogue } from "./population-floor.ts";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PLATFORM_CODES_PATH = path.join(__dirname, "..", "data", "platform_codes.json");
@@ -271,7 +271,7 @@ describe("every surface that offers the code also states its conditions", () => 
 
   it("publishes no Vultr credit figure that contradicts the record", async () => {
     const paths = await sitemapPaths();
-    assertPopulationFloor(paths.length, 1900, "routes in the sitemap the sweep read");
+    assertPopulationFloor(paths.length, vendorsInTheCatalogue(), "routes in the sitemap the sweep read");
 
     const offenders: string[] = [];
     let readerCreditMentions = 0;

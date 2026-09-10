@@ -3,7 +3,7 @@ import assert from "node:assert";
 import { spawn, type ChildProcess } from "node:child_process";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { assertPopulationFloor } from "./population-floor.ts";
+import { assertPopulationFloor, vendorsInTheCatalogue } from "./population-floor.ts";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -70,7 +70,7 @@ describe("no published page offers revenue for a submitted referral code", () =>
 
   it("every route in the sitemap is clean", async () => {
     const paths = await allSitemapPaths();
-    assertPopulationFloor(paths.length, 1900, "routes in the sitemap the sweep read");
+    assertPopulationFloor(paths.length, vendorsInTheCatalogue(), "routes in the sitemap the sweep read");
 
     const offenders: string[] = [];
     for (const p of paths) {

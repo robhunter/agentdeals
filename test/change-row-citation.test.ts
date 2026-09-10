@@ -1,6 +1,6 @@
 import { describe, it, before, after } from "node:test";
 import assert from "node:assert";
-import { assertPopulationFloor } from "./population-floor.ts";
+import { assertPopulationFloor, vendorsInTheCatalogue } from "./population-floor.ts";
 import { spawn, type ChildProcess } from "node:child_process";
 import { readFileSync, readdirSync } from "node:fs";
 import path from "node:path";
@@ -211,7 +211,7 @@ describe("every published change row carries the page it was read from", () => {
   after(() => proc?.kill());
 
   it("reads a population on both sides of the question", () => {
-    assertPopulationFloor(sweptPaths.length, 1900, "paths served for the sweep");
+    assertPopulationFloor(sweptPaths.length, vendorsInTheCatalogue(), "paths served for the sweep");
     assertPopulationFloor(pagesWithARow, 800, "served pages render at least one change row");
     assertPopulationFloor(rowsChecked, 7000, "change rows rendered across the site");
     assertPopulationFloor(rows.length, 390, "distinct summaries the store can put on a page");
