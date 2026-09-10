@@ -10,6 +10,7 @@ import {
   gateVerdict, parseNonBlockingTests, readNonBlockingTests,
 } from "../src/data-push-gate.ts";
 import { qualityBudgetsPath } from "../src/page-reviews.ts";
+import { VENDOR_KEYED_DATA } from "../src/data-push-holdback.ts";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const REPO = join(__dirname, "..");
@@ -132,10 +133,41 @@ describe("#1317 the suite sees every commit that reaches main", () => {
     }
   });
 
-  it("gives the two outcomes different markers, so neither buries the other", () => {
+  it("gives every outcome a marker of its own, so none of them buries another", () => {
     const reporter = readFileSync(join(REPO, "scripts", "report-data-push-outcome.sh"), "utf8");
     const markers = [...reporter.matchAll(/MARKER="([a-z-]+)"/g)].map((m) => m[1]!);
-    assert.deepStrictEqual(markers, ["data-push-refused", "data-push-over-failures"]);
+    assert.deepStrictEqual(markers, ["data-push-refused", "data-push-over-failures", "data-push-vendorholdback"]);
+    for (const marker of markers) {
+      const others = markers.filter((m) => m !== marker);
+      const words = new Set(marker.split("-"));
+      for (const other of others) {
+        assert.ok(
+          !other.split("-").every((word) => words.has(word)),
+          `an open ${marker} issue would answer a search for ${other}, because every word of ${other} is a word of ${marker}`,
+        );
+      }
+    }
+  });
+
+  it("says on an issue when the gate reached main by holding a vendor back, wherever that can happen", () => {
+    for (const file of GATED_WORKFLOWS) {
+      const text = source(file);
+      const committable = gateStepOf(file).body;
+      const carriesVendorRows = VENDOR_KEYED_DATA.some((f) => committable.includes(f.path));
+      assert.strictEqual(
+        /report-data-push-outcome\.sh "[^"]+" held-back-a-vendor/.test(text),
+        carriesVendorRows,
+        carriesVendorRows
+          ? `${file} commits a file a vendor's rows live in and can hold one back without saying so`
+          : `${file} reports a holdback it can never make`,
+      );
+      if (!carriesVendorRows) continue;
+      assert.match(
+        text,
+        /steps\.gate\.outputs\.held_back_vendors != ''/,
+        `${file} reports a holdback in a step that a holdback alone does not reach`,
+      );
+    }
   });
 
   it("routes every scheduled data writer through the gate, each with its own quarantine branch", () => {
@@ -170,14 +202,24 @@ const FAILING_BY_MODE: Record<string, string[]> = {
   excused: ["test/how-current-our-reading-is.test.ts"],
   mixed: ["test/how-current-our-reading-is.test.ts", "test/the-data-this-run-wrote-is-wrong.test.ts"],
   crashed: [],
+  vendor: [],
+  "vendor-one-at-a-time": [],
 };
 
 const GATE_CONFIGURATION = ["GATE_RATCHET_BUDGETS", "GATE_UPDATE_PAGE_LASTMOD", "GATE_REGENERATE_LLM_INDEX"];
 
-const SUITE = `import { appendFileSync, writeFileSync } from "node:fs";
+const SUITE = `import { appendFileSync, readFileSync, writeFileSync } from "node:fs";
 const modes = ${JSON.stringify(FAILING_BY_MODE)};
 const mode = process.env.GATE_FIXTURE_TESTS || "green";
-const failing = modes[mode];
+let failing = modes[mode];
+let blamed = [];
+if (mode.startsWith("vendor")) {
+  const rows = JSON.parse(readFileSync("data/deal_changes.json", "utf8")).changes;
+  blamed = rows.filter((r) => r.reading === "wrong").map((r) => r.vendor);
+  if (mode === "vendor-one-at-a-time") blamed = blamed.slice(0, 1);
+  failing = blamed.length > 0 ? ["test/the-data-this-run-wrote-is-wrong.test.ts"] : [];
+}
+const red = mode === "crashed" || failing.length > 0;
 writeFileSync(process.env.GATE_FAILING_FILES, failing.map((f) => f + "\\n").join(""));
 writeFileSync(
   process.env.GATE_FIXTURE_ENV_REPORT,
@@ -185,11 +227,12 @@ writeFileSync(
 );
 appendFileSync(process.env.GITHUB_OUTPUT, "a_test_spawned_a_script_that_wrote_this=yes\\n");
 console.log("\\u2139 tests 2");
-console.log("\\u2139 pass " + (mode === "green" ? 2 : 1));
-console.log("\\u2139 fail " + (mode === "green" ? 0 : 1));
-if (mode !== "green") {
+console.log("\\u2139 pass " + (red ? 1 : 2));
+console.log("\\u2139 fail " + (red ? 1 : 0));
+if (red) {
   console.log("\\u2716 failing tests:");
   for (const f of failing) console.log("the fixture assertion in " + f);
+  for (const v of blamed) console.log("  the reading this run wrote for " + v + " is wrong");
   if (mode === "crashed") console.log("the suite died before it named a file");
   process.exit(1);
 }
@@ -247,6 +290,28 @@ const PACKAGE = JSON.stringify(
   2,
 );
 
+interface FixtureChange {
+  vendor: string;
+  summary: string;
+  reading?: string;
+}
+
+function changesFile(changes: FixtureChange[]): string {
+  return `${JSON.stringify({ changes }, null, 2)}\n`;
+}
+
+const AS_MAIN_HAS_IT = "the reading main already carries";
+
+const CHANGES_ON_MAIN = changesFile([
+  { vendor: "Steadyvendor", summary: AS_MAIN_HAS_IT },
+  { vendor: "Blamedvendor", summary: AS_MAIN_HAS_IT },
+  { vendor: "Secondblamedvendor", summary: AS_MAIN_HAS_IT },
+]);
+
+function changesOn(origin: string, ref: string): FixtureChange[] {
+  return JSON.parse(git(origin, "show", `${ref}:data/deal_changes.json`)).changes;
+}
+
 let scratch: string;
 
 function git(cwd: string, ...args: string[]): string {
@@ -270,6 +335,7 @@ function fixtureRepo(options: { shallow?: boolean } = {}): { work: string; origi
   writeFileSync(join(work, "ratchet.js"), RATCHET);
   writeFileSync(join(work, "allowlist.json"), ALLOWLIST);
   writeFileSync(join(work, "data", "health.json"), '{"checked":1}\n');
+  writeFileSync(join(work, "data", "deal_changes.json"), CHANGES_ON_MAIN);
   writeFileSync(join(work, "data", "quality_budgets.json"), BUDGETS_BEFORE);
   writeFileSync(join(work, "data", "page-lastmod.json"), '{"version":1,"pages":{}}\n');
   mkdirSync(join(work, "artifacts", "free-llm-api-index"), { recursive: true });
@@ -437,6 +503,119 @@ describe("#1317 the gate, run against a repository", () => {
     const run = runGate(work, "green", "data-quarantine/fixture", "data(auto): fixture");
     assert.strictEqual(run.status, 2);
     assert.match(run.stderr, /usage: gate-data-push\.sh/);
+  });
+});
+
+describe("#1337 one refused reading costs one vendor, not the batch it arrived in", () => {
+  before(() => {
+    scratch = mkdtempSync(join(tmpdir(), "gate-holdback-"));
+  });
+
+  after(() => {
+    if (scratch && existsSync(scratch)) rmSync(scratch, { recursive: true, force: true });
+  });
+
+  it("puts the rest of the run on main and leaves the blamed vendor as main already had it", () => {
+    const { work, origin } = fixtureRepo();
+    writeFileSync(
+      join(work, "data", "deal_changes.json"),
+      changesFile([
+        { vendor: "Steadyvendor", summary: "a reading this run stands behind" },
+        { vendor: "Blamedvendor", summary: "a reading the suite refuses", reading: "wrong" },
+        { vendor: "Secondblamedvendor", summary: "another reading this run stands behind" },
+      ]),
+    );
+
+    const run = runGate(work, "vendor", "data-quarantine/fixture", "data(auto): fixture", "data/deal_changes.json");
+
+    assert.strictEqual(run.status, 0, `the gate refused the whole batch: ${run.stdout}${run.stderr}`);
+    assert.deepStrictEqual(changesOn(origin, "main"), [
+      { vendor: "Steadyvendor", summary: "a reading this run stands behind" },
+      { vendor: "Blamedvendor", summary: AS_MAIN_HAS_IT },
+      { vendor: "Secondblamedvendor", summary: "another reading this run stands behind" },
+    ]);
+    assert.deepStrictEqual(quarantineRefs(origin, "data-quarantine/fixture"), [], "a run that reached main quarantined something too");
+    assert.match(run.outputs, /held_back_vendors=Blamedvendor/);
+    assert.match(run.stdout, /Held back and left for the next run to read again: Blamedvendor/);
+    assert.strictEqual(suiteRuns(run.stdout), 2, "what reached main was not read by the suite after the holdback");
+  });
+
+  it("refuses the batch when every vendor it moved is blamed, so nothing is left to push", () => {
+    const { work, origin } = fixtureRepo();
+    const before = mainSha(origin);
+    writeFileSync(
+      join(work, "data", "deal_changes.json"),
+      changesFile([
+        { vendor: "Steadyvendor", summary: AS_MAIN_HAS_IT },
+        { vendor: "Blamedvendor", summary: "a reading the suite refuses", reading: "wrong" },
+        { vendor: "Secondblamedvendor", summary: AS_MAIN_HAS_IT },
+      ]),
+    );
+
+    const run = runGate(work, "vendor", "data-quarantine/fixture", "data(auto): fixture", "data/deal_changes.json");
+
+    assert.strictEqual(run.status, 1, `the gate pushed a batch with nothing left in it: ${run.stdout}`);
+    assert.strictEqual(mainSha(origin), before, "main moved on a batch that was entirely refused");
+    assert.match(run.stdout, /holding them back would leave nothing to push/);
+    assert.strictEqual(suiteRuns(run.stdout), 1, "the suite was run again on a batch nothing had been taken out of");
+    assert.strictEqual(quarantineRefs(origin, "data-quarantine/fixture").length, 1);
+  });
+
+  it("refuses the batch when the failing test names no vendor this run moved", () => {
+    const { work, origin } = fixtureRepo();
+    const before = mainSha(origin);
+    writeFileSync(
+      join(work, "data", "deal_changes.json"),
+      changesFile([
+        { vendor: "Steadyvendor", summary: "a reading this run stands behind" },
+        { vendor: "Blamedvendor", summary: AS_MAIN_HAS_IT },
+        { vendor: "Secondblamedvendor", summary: AS_MAIN_HAS_IT },
+      ]),
+    );
+
+    const run = runGate(work, "red", "data-quarantine/fixture", "data(auto): fixture", "data/deal_changes.json");
+
+    assert.strictEqual(run.status, 1, `the gate pushed data it could not attribute a refusal to: ${run.stdout}`);
+    assert.strictEqual(mainSha(origin), before);
+    assert.match(run.stdout, /nothing to attribute the refusal to/);
+    assert.strictEqual(suiteRuns(run.stdout), 1, "the suite was run again on a batch nothing had been taken out of");
+  });
+
+  it("holds one set of vendors back and no more, and quarantines the batch as the run wrote it", () => {
+    const { work, origin } = fixtureRepo();
+    const before = mainSha(origin);
+    const asTheRunWroteIt: FixtureChange[] = [
+      { vendor: "Steadyvendor", summary: "a reading this run stands behind" },
+      { vendor: "Blamedvendor", summary: "a reading the suite refuses", reading: "wrong" },
+      { vendor: "Secondblamedvendor", summary: "a second reading the suite refuses", reading: "wrong" },
+    ];
+    writeFileSync(join(work, "data", "deal_changes.json"), changesFile(asTheRunWroteIt));
+
+    const run = runGate(work, "vendor-one-at-a-time", "data-quarantine/fixture", "data(auto): fixture", "data/deal_changes.json");
+
+    assert.strictEqual(run.status, 1, `the gate pushed a batch the suite never passed: ${run.stdout}`);
+    assert.strictEqual(mainSha(origin), before);
+    assert.strictEqual(suiteRuns(run.stdout), 2, "the gate held back more than one set of vendors");
+    assert.match(run.stdout, /the batch stands or falls as one/);
+    const refs = quarantineRefs(origin, "data-quarantine/fixture");
+    assert.strictEqual(refs.length, 1);
+    assert.deepStrictEqual(
+      changesOn(origin, refs[0]!),
+      asTheRunWroteIt,
+      "the quarantine ref carries the reduced batch rather than the one the run wrote",
+    );
+  });
+
+  it("holds nothing back for a run whose committable paths carry no vendor's rows", () => {
+    const { work, origin } = fixtureRepo();
+    writeFileSync(join(work, "data", "health.json"), '{"checked":9}\n');
+
+    const run = runGate(work, "red", "data-quarantine/fixture", "data(auto): fixture", "data/health.json");
+
+    assert.strictEqual(run.status, 1);
+    assert.match(run.stdout, /None of the files a vendor's rows live in is among the paths this run may commit/);
+    assert.strictEqual(suiteRuns(run.stdout), 1);
+    assert.strictEqual(quarantineRefs(origin, "data-quarantine/fixture").length, 1);
   });
 });
 
