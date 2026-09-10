@@ -19,6 +19,7 @@ const {
   changeLogFreshness,
   changeKey,
   baselineKey,
+  baselineHolder,
   CHANGE_TYPES,
   DETECTED_BY_AI,
   SUPPRESSED_SAME_TRANSITION_REGRADED,
@@ -300,22 +301,82 @@ describe("change log writer", () => {
       assert.strictEqual(suppressed[0].collidedWith, changeKey(monday));
     });
 
-    it("keeps a record we have withdrawn as evidence about the page it cites", () => {
-      const withdrawn = {
-        ...candidate(),
-        date: "2026-08-28",
-        recorded_date: "2026-08-28",
-        resolution: { state: "retracted", date: "2026-09-09", detail: "the page still states the terms" },
-      };
-      const reRead = {
-        ...candidate(),
-        change_type: "limits_increased",
-        date: "2026-09-10",
-        recorded_date: "2026-09-10",
-      };
-      const { fresh, suppressed } = selectNewChanges([withdrawn], [reRead], { windowDays: 21 });
+    const withdrawn = (over: Record<string, unknown> = {}) => ({
+      ...candidate(),
+      date: "2026-08-28",
+      recorded_date: "2026-08-28",
+      resolution: { state: "retracted", date: "2026-09-09", detail: "the page still states the terms" },
+      ...over,
+    });
+
+    const reReadAs = (change_type: string) => ({
+      ...candidate(),
+      change_type,
+      date: "2026-09-10",
+      recorded_date: "2026-09-10",
+    });
+
+    it("keeps a record we have withdrawn as evidence against the reading we withdrew", () => {
+      const first = withdrawn();
+      const { fresh, suppressed } = selectNewChanges([first], [reReadAs(first.change_type)], { windowDays: 21 });
       assert.strictEqual(fresh.length, 0);
       assert.strictEqual(suppressed[0].reason, SUPPRESSED_SAME_TRANSITION_REGRADED);
+      assert.strictEqual(suppressed[0].collidedWith, changeKey(first));
+      assert.strictEqual(suppressed[0].collidedWithWithdrawn, true);
+    });
+
+    it("writes the correction to a page whose only record we have withdrawn", () => {
+      const first = withdrawn();
+      const corrected = reReadAs("limits_increased");
+      assert.notStrictEqual(corrected.change_type, first.change_type);
+      assert.strictEqual(baselineKey(first), baselineKey(corrected));
+      const { fresh, suppressed } = selectNewChanges([first], [corrected], { windowDays: 21 });
+      assert.strictEqual(fresh.length, 1);
+      assert.strictEqual(suppressed.length, 0);
+    });
+
+    it("holds the baseline against every reading once the correction is in", () => {
+      const first = withdrawn();
+      const { fresh } = selectNewChanges(
+        [first],
+        [reReadAs("limits_increased"), reReadAs("new_free_tier")],
+        { windowDays: 21 }
+      );
+      assert.deepStrictEqual(fresh.map((c: { change_type: string }) => c.change_type), ["limits_increased"]);
+    });
+
+    it("keeps a reversed record holding its baseline, because that change did happen", () => {
+      const reversed = withdrawn({
+        resolution: { state: "reversed", date: "2026-09-09", detail: "the vendor put the tier back" },
+      });
+      const { fresh, suppressed } = selectNewChanges([reversed], [reReadAs("limits_increased")], { windowDays: 21 });
+      assert.strictEqual(fresh.length, 0);
+      assert.strictEqual(suppressed[0].reason, SUPPRESSED_SAME_TRANSITION_REGRADED);
+      assert.strictEqual(suppressed[0].collidedWithWithdrawn, false);
+    });
+
+    it("keeps a baseline held while one record on it stands, whatever we withdrew beside it", () => {
+      const first = withdrawn();
+      const stands = { ...candidate(), change_type: "restriction", date: "2026-09-01", recorded_date: "2026-09-01" };
+      assert.strictEqual(baselineKey(first), baselineKey(stands));
+      const { fresh, suppressed } = selectNewChanges([first, stands], [reReadAs("limits_increased")], {
+        windowDays: 21,
+      });
+      assert.strictEqual(fresh.length, 0);
+      assert.strictEqual(suppressed[0].collidedWith, changeKey(stands));
+      assert.strictEqual(suppressed[0].collidedWithWithdrawn, false);
+    });
+
+    it("names the withdrawn record it graded the same way in the refusal log", () => {
+      const first = withdrawn();
+      const { suppressed } = selectNewChanges([first], [reReadAs(first.change_type)], { windowDays: 21 });
+      const refusals = regradeRefusals(suppressed);
+      assert.strictEqual(refusals[0].collidedWithWithdrawn, true);
+      assert.match(refusals[0].detail, /a record we withdrew/);
+      assert.ok(
+        regradedVendorLines(suppressed)[0].includes("a record we withdrew"),
+        regradedVendorLines(suppressed)[0]
+      );
     });
 
     it("hears the same page again about terms the catalogue has moved on from", () => {
@@ -421,38 +482,64 @@ describe("change log writer", () => {
       assert.deepStrictEqual(lost, []);
     });
 
-    it("reads a page we have withdrawn a record about without writing another, however it grades it", () => {
+    const withdrawnRecordsStillDescribingPublishedTerms = () => {
       const offers = JSON.parse(
         readFileSync(path.join(REPO, "data", "index.json"), "utf-8")
       ).offers as Array<Record<string, string>>;
-      const stillCited = stored
+      return stored
         .filter(change => (change as any).resolution?.state === "retracted")
-        .map(change =>
-          offers.find(
+        .map(change => ({
+          change,
+          offer: offers.find(
             offer =>
               offer.vendor === change.vendor &&
               offer.url === change.source_url &&
               offer.description === change.previous_state
-          )
-        )
-        .filter(Boolean) as Array<Record<string, string>>;
-      assert.ok(stillCited.length > 0, "no withdrawn record still describes terms the catalogue publishes");
+          ),
+        }))
+        .filter((pair): pair is { change: Record<string, string>; offer: Record<string, string> } =>
+          Boolean(pair.offer)
+        );
+    };
 
-      for (const changeType of ["free_tier_removed", "limits_increased", "limits_reduced"]) {
-        const readAgain = stillCited.map(
-          offer =>
-            buildChangeEntry(
-              offer,
-              { ...DETECTION, change_type: changeType, effective_date: null },
-              { now: new Date("2026-09-10T13:46:00Z") }
-            ).entry
+    const readAgainAs = (offer: Record<string, string>, changeType: string) =>
+      buildChangeEntry(
+        offer,
+        { ...DETECTION, change_type: changeType, effective_date: null },
+        { now: new Date("2026-09-10T13:46:00Z") }
+      ).entry;
+
+    it("reads a page we have withdrawn a record about and refuses the reading we withdrew", () => {
+      const withdrawn = withdrawnRecordsStillDescribingPublishedTerms();
+      assert.ok(withdrawn.length > 0, "no withdrawn record still describes terms the catalogue publishes");
+
+      const readAgain = withdrawn.map(({ change, offer }) => readAgainAs(offer, change.change_type));
+      const { fresh, suppressed } = selectNewChanges(stored, readAgain, { windowDays: 0 });
+      assert.deepStrictEqual(fresh.map(c => c.vendor), []);
+      assert.deepStrictEqual(
+        [...new Set(suppressed.map((s: any) => s.reason))],
+        [SUPPRESSED_SAME_TRANSITION_REGRADED]
+      );
+    });
+
+    it("writes the correction when that page is read again and graded another way", () => {
+      const heldOnlyByWithdrawnRecords = withdrawnRecordsStillDescribingPublishedTerms().filter(({ change }) =>
+        stored
+          .filter(other => baselineKey(other) === baselineKey(change))
+          .every(other => (other as any).resolution?.state === "retracted")
+      );
+      assert.ok(
+        heldOnlyByWithdrawnRecords.length > 0,
+        "every page we have withdrawn a record about also holds one we stand behind"
+      );
+
+      for (const { change, offer } of heldOnlyByWithdrawnRecords) {
+        const held = new Set(
+          stored.filter(other => baselineKey(other) === baselineKey(change)).map(other => other.change_type)
         );
-        const { fresh, suppressed } = selectNewChanges(stored, readAgain, { windowDays: 0 });
-        assert.deepStrictEqual(fresh.map(c => c.vendor), [], `${changeType} was written again`);
-        assert.deepStrictEqual(
-          [...new Set(suppressed.map((s: any) => s.reason))],
-          [SUPPRESSED_SAME_TRANSITION_REGRADED]
-        );
+        const unheld = CHANGE_TYPES.find((type: string) => !held.has(type))!;
+        const { fresh } = selectNewChanges(stored, [readAgainAs(offer, unheld)], { windowDays: 0 });
+        assert.strictEqual(fresh.length, 1, `${change.vendor} cannot be corrected by the pipeline`);
       }
     });
 
@@ -488,6 +575,25 @@ describe("change log writer", () => {
     it("is not vacuous — most of the log carries a baseline the rule can read", () => {
       const withBaseline = stored.filter(c => baselineKey(c) !== null);
       assert.ok(withBaseline.length > stored.length / 2, `records carrying a baseline: ${withBaseline.length}`);
+    });
+
+    it("calls the same records withdrawn as the pages that publish them do", async () => {
+      const { recordsWeStandBehind } = await import("../dist/change-resolution.js");
+      const standing = new Set(recordsWeStandBehind(stored));
+      const withdrawnByTheWriter = stored.filter(c => baselineHolder(c).withdrawn);
+      assert.ok(withdrawnByTheWriter.length > 0, "the log holds no withdrawn record, so this checks nothing");
+      assert.deepStrictEqual(
+        withdrawnByTheWriter.map(changeKey).sort(),
+        stored.filter(c => !standing.has(c)).map(changeKey).sort()
+      );
+    });
+
+    it("reads that decision off the site's own module rather than keeping a copy", () => {
+      const writer = readFileSync(path.join(REPO, "scripts", "change-log.js"), "utf-8");
+      assert.match(writer, /import \{ theEventNeverHappened \} from "\.\.\/src\/change-resolution\.ts"/);
+      const state = ["retr", "acted"].join("");
+      assert.ok(!writer.includes(state), `${path.join("scripts", "change-log.js")} names the state itself`);
+      assert.doesNotMatch(writer, /\.resolution\b/);
     });
   });
 
