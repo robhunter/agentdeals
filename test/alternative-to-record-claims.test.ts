@@ -3,7 +3,8 @@ import assert from "node:assert";
 import { spawn, type ChildProcess } from "node:child_process";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { CHANGE_DIRECTION, loadDealChanges } from "../dist/data.js";
+import { CHANGE_DIRECTION, loadDealChanges, loadOffers } from "../dist/data.js";
+import { changeGradesTheListedTier } from "../dist/change-tier.js";
 import { CHANGE_KIND_NOUN, narrowingSentence } from "../dist/vendor-verdict.js";
 import { isNoLongerInForce } from "../dist/change-resolution.js";
 import { vendorSlugMap } from "../dist/vendor-slug.js";
@@ -18,6 +19,14 @@ const SENTENCE_BREAK = /(?<=[.!?])\s+/;
 
 function heldBy(vendor: string, changes: DealChange[]): DealChange[] {
   return changes.filter(c => c.vendor.toLowerCase() === vendor.toLowerCase());
+}
+
+const listed = loadOffers();
+
+function gradingTheListedTier(vendor: string, changes: DealChange[]): DealChange[] {
+  const held = heldBy(vendor, changes);
+  const offer = listed.find(o => o.vendor.toLowerCase() === vendor.toLowerCase());
+  return offer ? held.filter(c => changeGradesTheListedTier(c, offer)) : held;
 }
 
 function negativeKinds(records: DealChange[]): string[] {
@@ -101,7 +110,7 @@ describe("#1297 the answer about our records reads the records", () => {
     for (const [slug, vendor] of holders) {
       const answer = answers.get(slug);
       if (answer === undefined) continue;
-      const kinds = negativeKinds(heldBy(vendor, changes));
+      const kinds = negativeKinds(gradingTheListedTier(vendor, changes));
       if (kinds.length === 0) continue;
       checked++;
       const absent = kindsCalledAbsent(answer, kinds);
@@ -117,7 +126,7 @@ describe("#1297 the answer about our records reads the records", () => {
     for (const [slug, vendor] of holders) {
       const answer = answers.get(slug);
       if (answer === undefined || !answer.startsWith("Yes, ")) continue;
-      if (negativeKinds(heldBy(vendor, changes)).length > 0) continue;
+      if (negativeKinds(gradingTheListedTier(vendor, changes)).length > 0) continue;
       checked++;
       const beyondTheTier = answer.split(SENTENCE_BREAK).slice(1).join(" ").trim();
       if (beyondTheTier === "") silent.push(`/alternative-to/${slug}`);
@@ -133,7 +142,7 @@ describe("#1297 the answer about our records reads the records", () => {
     for (const [slug, vendor] of holders) {
       const answer = answers.get(slug);
       if (answer === undefined || !answer.startsWith("Yes, ")) continue;
-      const narrowing = stillNarrowing(heldBy(vendor, changes));
+      const narrowing = stillNarrowing(gradingTheListedTier(vendor, changes));
       if (narrowing.length === 0) continue;
       if (narrowing.length === 1) {
         named++;
