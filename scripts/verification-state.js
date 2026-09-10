@@ -6,7 +6,13 @@ import { fileURLToPath } from "node:url";
 import { isoDay } from "./change-log.js";
 import { offerKey } from "./change-refusals.js";
 import {
+  checkRecordedAFinding,
   holdsVerifiedDate,
+  SOURCE_CHECK_NO_AMOUNT,
+  SOURCE_CHECK_NO_TERMS,
+  SOURCE_CHECK_NOT_NAMED,
+  SOURCE_CHECK_NOT_THE_PRODUCT,
+  SOURCE_CHECK_OK,
   SOURCE_CHECK_UNREADABLE,
 } from "./vendor-naming.js";
 
@@ -22,11 +28,13 @@ export const ATTEMPT_SOURCE_UNUSABLE = "source_unusable";
 export const ATTEMPT_UNCLEAR = "unclear";
 export const ATTEMPT_FETCH_FAILED = "fetch_failed";
 export const ATTEMPT_AI_ERROR = "ai_error";
+export const ATTEMPT_STATES_NO_PRICE = "states_no_price";
 
 export const ATTEMPT_OUTCOMES = [
   ATTEMPT_CONFIRMED,
   ATTEMPT_CHANGED,
   ATTEMPT_LINK_OK,
+  ATTEMPT_STATES_NO_PRICE,
   ATTEMPT_SOURCE_UNUSABLE,
   ATTEMPT_UNCLEAR,
   ATTEMPT_FETCH_FAILED,
@@ -37,7 +45,25 @@ export const ANSWERED_OUTCOMES = new Set([
   ATTEMPT_CONFIRMED,
   ATTEMPT_CHANGED,
   ATTEMPT_LINK_OK,
+  ATTEMPT_STATES_NO_PRICE,
 ]);
+
+const ATTEMPT_FOR_SOURCE_CHECK = new Map([
+  [SOURCE_CHECK_OK, ATTEMPT_LINK_OK],
+  [SOURCE_CHECK_NO_TERMS, ATTEMPT_STATES_NO_PRICE],
+  [SOURCE_CHECK_NO_AMOUNT, ATTEMPT_STATES_NO_PRICE],
+  [SOURCE_CHECK_NOT_NAMED, ATTEMPT_SOURCE_UNUSABLE],
+  [SOURCE_CHECK_NOT_THE_PRODUCT, ATTEMPT_SOURCE_UNUSABLE],
+  [SOURCE_CHECK_UNREADABLE, ATTEMPT_FETCH_FAILED],
+]);
+
+export function attemptForSourceCheck(outcome) {
+  return ATTEMPT_FOR_SOURCE_CHECK.get(outcome) ?? null;
+}
+
+export function pageStatesNoPrice(outcome) {
+  return attemptForSourceCheck(outcome) === ATTEMPT_STATES_NO_PRICE;
+}
 
 export const FAILURE_BOT_BLOCK = "bot_block";
 export const FAILURE_UNREACHABLE = "unreachable";
@@ -124,6 +150,53 @@ export function applyAttempt(previous, attempt) {
 
 export function lastReadFailed(record) {
   return Boolean(record) && !ANSWERED_OUTCOMES.has(record.last_outcome);
+}
+
+export function readingSinceTheAttempt(record, offer) {
+  const check = offer?.source_check;
+  if (!check?.checked || !checkRecordedAFinding(check)) return null;
+  if (record?.last_attempt_at && check.checked <= record.last_attempt_at) return null;
+  const outcome = attemptForSourceCheck(check.outcome);
+  return outcome ? { date: check.checked, outcome, detail: check.detail } : null;
+}
+
+export function clearFailuresALaterReadingAnswered(state, offers) {
+  const cleared = [];
+  const left = [];
+  for (const offer of offers) {
+    const key = offerKey(offer?.vendor, offer?.url);
+    const record = state.get(key);
+    if (!record || !lastReadFailed(record)) continue;
+    const reading = readingSinceTheAttempt(record, offer);
+    if (!reading || !ANSWERED_OUTCOMES.has(reading.outcome)) continue;
+    const next = applyAttempt(record, {
+      vendor: record.vendor,
+      url: record.url,
+      outcome: reading.outcome,
+      date: reading.date,
+    });
+    state.set(key, next);
+    cleared.push(next);
+    if (isQuarantined(record)) left.push(next);
+  }
+  return { cleared, left };
+}
+
+export function failedReadingCensus(state, offers) {
+  let failed = 0;
+  let readAgainWouldFail = 0;
+  let quarantined = 0;
+  let total = 0;
+  for (const offer of offers) {
+    const record = state.get(offerKey(offer?.vendor, offer?.url));
+    if (!record) continue;
+    total++;
+    if (isQuarantined(record)) quarantined++;
+    if (lastReadFailed(record)) failed++;
+    const latest = attemptForSourceCheck(offer?.source_check?.outcome) ?? record.last_outcome;
+    if (!ANSWERED_OUTCOMES.has(latest)) readAgainWouldFail++;
+  }
+  return { failed, readAgainWouldFail, quarantined, total };
 }
 
 export function isQuarantined(record) {

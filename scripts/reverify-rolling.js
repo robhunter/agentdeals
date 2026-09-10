@@ -35,6 +35,7 @@ import {
   ATTEMPT_FETCH_FAILED,
   ATTEMPT_LINK_OK,
   ATTEMPT_SOURCE_UNUSABLE,
+  ATTEMPT_STATES_NO_PRICE,
   ATTEMPT_UNCLEAR,
   FAILURE_AI_EXTRACTION,
   FAILURE_AI_UNDECIDED,
@@ -44,9 +45,12 @@ import {
   QUARANTINE_RETRY_DAYS,
   backfillVerificationState,
   classifyFetchError,
+  clearFailuresALaterReadingAnswered,
+  failedReadingCensus,
   failureCategoryCounts,
   isQuarantined,
   lastReadFailed,
+  pageStatesNoPrice,
   pruneToOffers,
   quarantineRetryDue,
   quarantinedRecords,
@@ -186,14 +190,17 @@ export async function runUrlMode(picked, data, dryRun, now, options = {}) {
       const offer = byIndex.get(v.index);
       const page = await fetchFn(offer.url);
       const check = applySourceCheck(offer, v.index, page, data, dryRun, now, sourceChecks);
+      const statesNoPrice = pageStatesNoPrice(check.outcome);
       if (holdsVerifiedDate(check.outcome)) {
-        recorder.note(offer, ATTEMPT_SOURCE_UNUSABLE, check.detail, FAILURE_SOURCE_UNUSABLE);
+        if (statesNoPrice) recorder.note(offer, ATTEMPT_STATES_NO_PRICE, check.detail);
+        else recorder.note(offer, ATTEMPT_SOURCE_UNUSABLE, check.detail, FAILURE_SOURCE_UNUSABLE);
         continue;
       }
       if (!dryRun) {
         data.offers[v.index].verifiedDate = staggeredDate(now);
       }
-      recorder.note(offer, ATTEMPT_LINK_OK);
+      if (statesNoPrice) recorder.note(offer, ATTEMPT_STATES_NO_PRICE, check.detail);
+      else recorder.note(offer, ATTEMPT_LINK_OK);
       verified++;
     }
     for (const f of results.flagged) {
@@ -250,12 +257,16 @@ export async function runAiMode(picked, data, dryRun, now, options = {}) {
       await sleep(rateLimitMs);
       continue;
     }
-    if (!sourceOk) {
+    const statesNoPrice = pageStatesNoPrice(check.outcome);
+    const readAPageAboutThisOffer = sourceOk || statesNoPrice;
+    if (!readAPageAboutThisOffer) {
       recorder.note(offer, ATTEMPT_SOURCE_UNUSABLE, check.detail, FAILURE_SOURCE_UNUSABLE);
     } else if (result.status === "confirmed") {
       recorder.note(offer, ATTEMPT_CONFIRMED);
     } else if (result.status === "changed") {
       recorder.note(offer, ATTEMPT_CHANGED);
+    } else if (statesNoPrice) {
+      recorder.note(offer, ATTEMPT_STATES_NO_PRICE, check.detail);
     } else {
       recorder.note(offer, ATTEMPT_UNCLEAR, result.summary ?? null, FAILURE_AI_UNDECIDED);
     }
@@ -372,7 +383,17 @@ export function quarantineLines(quarantine) {
   return lines;
 }
 
-export function summaryLines(result, { useAi, checked, oldestRemaining, total, quarantine, repicked, pickedAfterAFailedRead }) {
+export function failedReadingLines(census) {
+  if (!census) return [];
+  return [
+    `Records whose last reading did not answer: ${census.failed} of ${census.total}`,
+    `Records whose reading would not answer if we repeated it today, so bound for quarantine ` +
+      `within ${QUARANTINE_AFTER_FAILURES} passes: ${census.readAgainWouldFail}`,
+    `In quarantine now: ${census.quarantined}`,
+  ];
+}
+
+export function summaryLines(result, { useAi, checked, oldestRemaining, total, quarantine, repicked, pickedAfterAFailedRead, failedReadings }) {
   const lines = ["", "── Summary ──", `Checked: ${checked}`];
   if (pickedAfterAFailedRead !== undefined) {
     lines.push(`Drawn after a read that failed: ${pickedAfterAFailedRead} of ${checked}`);
@@ -413,6 +434,7 @@ export function summaryLines(result, { useAi, checked, oldestRemaining, total, q
   lines.push(`Publishing a price in markup the page never renders: ${sourceChecks.get(UNRENDERED) ?? 0}`);
   lines.push(`Flagged (URL/AI failure): ${result.flagged}`);
   for (const line of quarantineLines(quarantine)) lines.push(line);
+  for (const line of failedReadingLines(failedReadings)) lines.push(line);
   if (repicked !== undefined) {
     lines.push(`Checked again on the next run: ${repicked} of ${checked}`);
   }
@@ -451,6 +473,13 @@ async function main() {
   const seeded = backfillVerificationState(state, offers, { linkHealth: readLinkHealth() });
   if (seeded.length > 0) {
     console.log(`Seeded verification state for ${seeded.length} offer(s) from their recorded source check.`);
+  }
+  const answeredSince = clearFailuresALaterReadingAnswered(state, offers);
+  if (answeredSince.cleared.length > 0) {
+    console.log(
+      `Cleared a stale failure on ${answeredSince.cleared.length} offer(s) whose page has been read since, ` +
+        `${answeredSince.left.length} of them out of quarantine.`
+    );
   }
   if (args.includes("--seed-state")) {
     const written = writeVerificationState(state, { dryRun, now });
@@ -519,6 +548,7 @@ async function main() {
     quarantine,
     repicked,
     pickedAfterAFailedRead,
+    failedReadings: failedReadingCensus(state, offers),
   })) {
     console.log(line);
   }
