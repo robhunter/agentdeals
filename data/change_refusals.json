@@ -149,12 +149,25 @@
       "change_type": "limits_increased",
       "reason": "unquantified_limit",
       "detail": "limits_increased claimed, but the current state names no quantity for anything the stored state measured (120 api, 50 api)",
-      "summary": "The free tier now offers 100 free calls per month instead of 50 API Tokens.",
+      "summary": "The free tier now offers 200 free credits per month instead of 50 API Tokens.",
       "previous_state": "Get instant access to over 120+ APIs for free, built with quality, consistency, and reliability in mind. The free plan covers up to 50 API Tokens per month. (Possibly taken down, 2025-06-25)",
-      "current_state": "Sign up free — 100 credits a month, no card required.",
+      "current_state": "200 credits a month, no card required.",
       "source_url": "https://apiverve.com",
       "category": "API Development",
-      "refused_date": "2026-08-28"
+      "refused_date": "2026-09-10"
+    },
+    {
+      "vendor": "Apollo GraphOS",
+      "change_type": "pricing_model_change",
+      "reason": "same_transition_graded_differently",
+      "detail": "graded as Apollo GraphOS|pricing_model_change|2026-08-28|https://www.apollographql.com/pricing, a record we withdrew",
+      "summary": "The free tier now includes $50 in credit and requires a credit card. The rate limit remains at 60 requests per minute, but the description now explicitly mentions a self-hosted router. Data retention is 1 day for checks and insights.",
+      "previous_state": "GraphQL federation and supergraph platform — forever free: up to 3 users, 1-day data retention, self-hosted router (60 req/min rate limit), community support. No credit card required",
+      "current_state": "Start for free with $50 in credit for new signups. No credit card required. What's included: GraphOS - Apollo's complete API management platform, Self-hosted GraphOS Router (limited to 60 requests per minute), Schema Proposals, 1 day Data retention for checks and insights, Community Support.",
+      "source_url": "https://www.apollographql.com/pricing",
+      "category": "API Development",
+      "refused_date": "2026-09-10",
+      "collided_with": "Apollo GraphOS|pricing_model_change|2026-08-28|https://www.apollographql.com/pricing"
     },
     {
       "vendor": "AppFit",
@@ -281,12 +294,25 @@
       "change_type": "limits_reduced",
       "reason": "unquantified_limit",
       "detail": "limits_reduced claimed, but the current state names no quantity for anything the stored state measured (30 currency, 0 currency)",
-      "summary": "The $30 free credit offer is no longer explicitly mentioned. The page states new accounts come with credits, but doesn't specify an amount.",
+      "summary": "The $30 free credit offer is no longer explicitly mentioned. The page states new accounts come with credits, but does not specify the amount.",
       "previous_state": "ML model deployment platform — $30 in free credits for new accounts. Basic plan is $0/month with pay-as-you-go billing after credits. Per-minute GPU/CPU billing for custom deployments, per-token for Model APIs",
       "current_state": "New Baseten accounts come with credits to experiment with deployments for free.",
       "source_url": "https://www.baseten.co/pricing/",
       "category": "AI / ML",
-      "refused_date": "2026-08-28"
+      "refused_date": "2026-09-10"
+    },
+    {
+      "vendor": "Bitrise",
+      "change_type": "pricing_model_change",
+      "reason": "same_transition_graded_differently",
+      "detail": "same vendor, source_url and previous_state as Bitrise|limits_increased|2026-08-28|https://bitrise.io/pricing",
+      "summary": "The Hobby plan is now a paid tier with a monthly cost. The current pricing page shows the Hobby plan costs $0/month and includes access to macOS Medium M2 Pro Medium and Linux Medium build machines. It also includes 2GB of dependency cache storage.",
+      "previous_state": "Mobile CI/CD platform — free Hobby plan: 300 credits/month, 1 private app (unlimited public apps), 1 user, 5 concurrent builds, 90-minute build timeout. Supports iOS, Android, Flutter, React Native",
+      "current_state": "Hobby plan is $0/month and includes access to macOS Medium M2 Pro Medium and Linux Medium build machines, 2GB dependency cache storage.",
+      "source_url": "https://bitrise.io/pricing",
+      "category": "CI/CD",
+      "refused_date": "2026-09-10",
+      "collided_with": "Bitrise|limits_increased|2026-08-28|https://bitrise.io/pricing"
     },
     {
       "vendor": "Bitwarden",
@@ -373,6 +399,19 @@
       "refused_date": "2026-08-28"
     },
     {
+      "vendor": "BugBug",
+      "change_type": "limits_reduced",
+      "reason": "same_transition_graded_differently",
+      "detail": "same vendor, source_url and previous_state as BugBug|limits_reduced|2026-08-28|https://bugbug.io/",
+      "summary": "The free plan now has limits of 15 tests and 4 test suites, and only 1 user and 1 project.",
+      "previous_state": "Lightweight test automation tool for web applications. It is easy to learn and doesn't require coding. You can run unlimited tests on your own computer for free. You also get cloud monitoring and CI/CD integration for an additional monthly fee.",
+      "current_state": "The Free Plan includes: Unlimited local test runs, 15 tests, 4 test suites, 1 user, 1 project, AI Test recorder, Components, Edit & rewind, Screenshots, 7 days of tests history.",
+      "source_url": "https://bugbug.io/",
+      "category": "Testing",
+      "refused_date": "2026-09-10",
+      "collided_with": "BugBug|limits_reduced|2026-08-28|https://bugbug.io/"
+    },
+    {
       "vendor": "Bugsink",
       "change_type": "limits_reduced",
       "reason": "unquantified_limit",
@@ -413,12 +452,12 @@
       "change_type": "limits_increased",
       "reason": "unquantified_limit",
       "detail": "limits_increased claimed, but the current state names no quantity for anything the stored state measured (1 calendar)",
-      "summary": "The free plan is still offered, but the description is significantly expanded. The current page highlights features like Callie (AI assistant), Notetaker, and Payments, which were not mentioned in the original description. The free plan now appears to be a fully featured product with add-ons available, rather than a limited version as previously described.",
+      "summary": "The free plan is still offered, but the description is significantly expanded. The free plan now includes features like AI assistant (Callie Beta), Notetaker, and Payments, which were not mentioned in the stored deal info. The page highlights features like automated email/text workflows, website embeds, and integrations, which were also not originally mentioned.",
       "previous_state": "Calendly is the tool for connecting and scheduling meetings. The free plan provides 1 Calendar connection per user and Unlimited sessions. Desktop and Mobile apps are also offered.",
-      "current_state": "Calendly offers a free plan with features including scheduling, AI assistant (Callie), meeting recaps (Notetaker), and payment options. Users can connect calendars, set availability, and use mobile/browser apps.",
+      "current_state": "The free plan includes scheduling, AI assistant (Callie Beta), Notetaker, Payments, and integrations.",
       "source_url": "https://calendly.com",
       "category": "Team Collaboration",
-      "refused_date": "2026-08-28"
+      "refused_date": "2026-09-10"
     },
     {
       "vendor": "Cerebras",
@@ -479,6 +518,18 @@
       "source_url": "https://cirun.io",
       "category": "CI/CD",
       "refused_date": "2026-08-28"
+    },
+    {
+      "vendor": "cirun.io",
+      "change_type": "restriction",
+      "reason": "no_terms_to_narrow",
+      "detail": "a restriction was measured against \"Free for public GitHub repositories\", a stored description that states no price, named tier or allowance, so there is nothing for the terms to have narrowed from",
+      "summary": "The free tier is now specifically for open source projects. It includes unlimited public repositories, unlimited runners, ARM-based runners, and GPU runners. Previously, the stored information stated it was simply 'Free for public GitHub repositories'.",
+      "previous_state": "Free for public GitHub repositories",
+      "current_state": "Cirun.io is free for Open source projects. Open Source $0 forever Install cirun on unlimited public repositories Unlimited runners ARM-based runners GPU runners All supported cloud providers",
+      "source_url": "https://cirun.io",
+      "category": "CI/CD",
+      "refused_date": "2026-09-10"
     },
     {
       "vendor": "ClickUp",
@@ -793,6 +844,19 @@
       "refused_date": "2026-08-28"
     },
     {
+      "vendor": "DB-IP",
+      "change_type": "limits_reduced",
+      "reason": "same_transition_graded_differently",
+      "detail": "same vendor, source_url and previous_state as DB-IP|limits_reduced|2026-08-28|https://db-ip.com/api/free",
+      "summary": "The free tier is limited to 500 daily requests, down from 1k request per IP per day.",
+      "previous_state": "Free IP geolocation API with 1k request per IP per day.lite database under the CC-BY 4.0 License is free too.",
+      "current_state": "The Free API is limited to 500 daily requests.",
+      "source_url": "https://db-ip.com/api/free",
+      "category": "Dev Utilities",
+      "refused_date": "2026-09-10",
+      "collided_with": "DB-IP|limits_reduced|2026-08-28|https://db-ip.com/api/free"
+    },
+    {
       "vendor": "debugmail.io",
       "change_type": "restriction",
       "reason": "no_terms_to_narrow",
@@ -917,13 +981,13 @@
       "vendor": "duo.com",
       "change_type": "pricing_restructured",
       "reason": "confirmed_unchanged",
-      "detail": "Both descriptions limit free use to 10 users/teams.",
-      "summary": "The free tier now appears to be limited to teams of 10 or less. Previously, the stored information indicated a free tier for ten users with all authentication methods, unlimited integrations, and hardware tokens.",
+      "detail": "Both descriptions limit the free tier to 10 users/teams.",
+      "summary": "The free tier is now limited to teams of 10 or less.",
       "previous_state": "Two-factor authentication (2FA) for website or app. Free for ten users, all authentication methods, unlimited, integrations, hardware tokens.",
       "current_state": "Duo Free for teams of 10 or less",
       "source_url": "https://duo.com/",
       "category": "Auth",
-      "refused_date": "2026-08-28"
+      "refused_date": "2026-09-10"
     },
     {
       "vendor": "Duolingo",
@@ -948,6 +1012,19 @@
       "source_url": "https://dwh.dev",
       "category": "Analytics",
       "refused_date": "2026-08-29"
+    },
+    {
+      "vendor": "DynamicDocs",
+      "change_type": "free_tier_removed",
+      "reason": "same_transition_graded_differently",
+      "detail": "graded as DynamicDocs|free_tier_removed|2026-08-28|https://advicement.io, a record we withdrew",
+      "summary": "The page states that PDFs can be created from $0.062 per PDF.",
+      "previous_state": "Generate PDF documents with JSON to PDF API based on LaTeX templates. The free plan allows 50 API calls per month and access to a library of templates.",
+      "current_state": "Create documents from $0.062 per PDF.",
+      "source_url": "https://advicement.io",
+      "category": "Dev Utilities",
+      "refused_date": "2026-09-10",
+      "collided_with": "DynamicDocs|free_tier_removed|2026-08-28|https://advicement.io"
     },
     {
       "vendor": "EmailOctopus",
@@ -1106,6 +1183,19 @@
       "refused_date": "2026-08-28"
     },
     {
+      "vendor": "FreeIPAPI",
+      "change_type": "limits_reduced",
+      "reason": "same_transition_graded_differently",
+      "detail": "same vendor, source_url and previous_state as FreeIPAPI|limits_reduced|2026-08-28|https://freeipapi.com",
+      "summary": "The free tier now has a rate limit of 60 requests per minute. Additional features like Countries & Phone Codes APIs, Timezones & Distance APIs, Languages API, IP & Domain White Listing, API Keys, and Bulk IP Lookups are no longer included in the free tier.",
+      "previous_state": "Free, Fast and Reliable IP Geolocation API for commercial and non-commercial users available in JSON",
+      "current_state": "Included: 60 Requests per minute. Not included: Countries & Phone Codes APIs. Not included: Timezones & Distance APIs. Not included: Languages API. Not included: IP & Domain White Listing. Not included: API Keys. Not included: Bulk IP Lookups",
+      "source_url": "https://freeipapi.com",
+      "category": "Dev Utilities",
+      "refused_date": "2026-09-10",
+      "collided_with": "FreeIPAPI|limits_reduced|2026-08-28|https://freeipapi.com"
+    },
+    {
       "vendor": "Gatling",
       "change_type": "limits_reduced",
       "reason": "unquantified_limit",
@@ -1158,12 +1248,12 @@
       "change_type": "limits_reduced",
       "reason": "unquantified_limit",
       "detail": "limits_reduced claimed, but the current state names no quantity for anything the stored state measured (3 alert)",
-      "summary": "The free tier now has limits of 50 PRs/month and 2 repos, instead of unlimited users, 3 repos, and 3 alert configs.",
+      "summary": "The free tier now has limits of 50 PRs/month and 2 repos, with 7 days of history, while the stored information stated unlimited users, 3 repos, and 3 alert configs.",
       "previous_state": "Daily reports of your team's Commit and Pull Request activity on GitHub. Includes Push visualizer, peer recognition system, and custom alert builder. The free tier has unlimited users, three repos, and 3 alert configs.",
-      "current_state": "Community $0 / month Free 50 PRs / month Unlimited users 2 repos 7 days history Daily digests PR metrics DORA · partial Shared alerts (2 rules)",
+      "current_state": "$0 / month. 50 PRs / month. Unlimited users. 2 repos. 7 days history. Daily digests. PR metrics. DORA · partial. Shared alerts (2 rules).",
       "source_url": "https://gitdailies.com",
       "category": "Team Collaboration",
-      "refused_date": "2026-08-28"
+      "refused_date": "2026-09-10"
     },
     {
       "vendor": "Gitea",
@@ -1327,12 +1417,12 @@
       "change_type": "restriction",
       "reason": "no_terms_to_narrow",
       "detail": "a restriction was measured against \"Comments on GitHub commits about code quality, free for Open Source\", a stored description that states no price, named tier or allowance, so there is nothing for the terms to have narrowed from",
-      "summary": "The free tier is now limited to public repositories. Private repositories require a paid plan.",
+      "summary": "The free tier is now limited to public repositories. Private repositories require a paid plan starting at $29/month.",
       "previous_state": "Comments on GitHub commits about code quality, free for Open Source",
-      "current_state": "Hound is free for public repos! Private repository plans start at $29/month for up to 50 reviews.",
+      "current_state": "Hound is free for public repos!",
       "source_url": "https://houndci.com/",
       "category": "Code Quality",
-      "refused_date": "2026-08-28"
+      "refused_date": "2026-09-10"
     },
     {
       "vendor": "Hugging Face",
@@ -1374,13 +1464,13 @@
       "vendor": "Hyperping",
       "change_type": "pricing_restructured",
       "reason": "confirmed_unchanged",
-      "detail": "The report confirms the free tier still offers the same features as previously stored, and the addition of other tiers doesn't affect the free tier's offering.",
-      "summary": "The free tier now includes 20 monitors, 5-minute checks, 1 basic status page, 1 server agent, and 1 seat. The pricing page also lists Essentials, Pro, and Business tiers which were not in the stored deal info. The free tier is still available, but the page shows a $29/month Essentials plan and higher tiers.",
+      "detail": "The report describes features already present in the stored description, and the $0/forever pricing was implied by 'free plan'.",
+      "summary": "The free plan now includes a 14-day free trial, and the pricing is now $0/forever with the listed features.",
       "previous_state": "Uptime and status page monitoring — free plan: 20 monitors (HTTP, port, ping, keyword), 5-minute check interval, 1 basic status page with real-time updates and subscriber notifications, 1 seat, 1 server monitoring agent, email and webhook alerts",
-      "current_state": "Free: 20 monitors, 5 min check interval, 1 basic status page, 1 server monitoring agent, 1 seat included. Essentials: $29/month, 50 monitors, 30-second checks, 5 server agents, 2 seats included. Pro: $89/month, 100 monitors, 20 server agents, 3 status pages, 5 seats included. Business: $299/month, 1000 monitors, 100 server agents, 15 seats included.",
+      "current_state": "$0 /forever Includes: 1 seat included 20 monitors 5 min check interval 1 server monitoring agent 1 basic status page HTTP, port, ping & keyword monitoring",
       "source_url": "https://hyperping.com/pricing",
       "category": "Monitoring",
-      "refused_date": "2026-08-28"
+      "refused_date": "2026-09-10"
     },
     {
       "vendor": "iCloud",
@@ -1455,6 +1545,19 @@
       "refused_date": "2026-09-09"
     },
     {
+      "vendor": "InstallOnAir",
+      "change_type": "free_tier_removed",
+      "reason": "same_transition_graded_differently",
+      "detail": "same vendor, source_url and previous_state as InstallOnAir|limits_reduced|2026-08-28|https://www.installonair.com",
+      "summary": "The page offers a free trial of 8 days, and then requires payment to extend the expiry date.",
+      "previous_state": "Distribute iOS & Android apps over the air. Free plan: unlimited uploads, private links, 2-day expiration for guests, 60 days for registered users.",
+      "current_state": "Signup and get access to build for 8 days. Expiry Date can be extended for 1 Month - $1, 6 Months - $4.99, or 1 Year - $9.99.",
+      "source_url": "https://www.installonair.com",
+      "category": "Mobile Development",
+      "refused_date": "2026-09-10",
+      "collided_with": "InstallOnAir|limits_reduced|2026-08-28|https://www.installonair.com"
+    },
+    {
       "vendor": "Integrately",
       "change_type": "free_tier_removed",
       "reason": "removal_read_from_root",
@@ -1465,6 +1568,19 @@
       "source_url": "https://integrately.com",
       "category": "Cloud Hosting",
       "refused_date": "2026-08-29"
+    },
+    {
+      "vendor": "IP Geolocation API by ipwho.org",
+      "change_type": "limits_reduced",
+      "reason": "same_transition_graded_differently",
+      "detail": "same vendor, source_url and previous_state as IP Geolocation API by ipwho.org|pricing_restructured|2026-08-28|https://ipwho.org/",
+      "summary": "The free tier now has a limit of 5,000 requests/day, and a paid tier of $2.50/month is required for commercial use.",
+      "previous_state": "2,000 free requests per day. Fast, enterprise grade API at non-enterprise prices. Trusted by developers, corporate, government and education clients. Servers in 12+ regions.",
+      "current_state": "Free forever for side projects, learning and non-profits. No card, no catch. $2.50/mo lifts the cap and clears you for business use. 5,000 requests/day for side projects and early builds.",
+      "source_url": "https://ipwho.org/",
+      "category": "Dev Utilities",
+      "refused_date": "2026-09-10",
+      "collided_with": "IP Geolocation API by ipwho.org|pricing_restructured|2026-08-28|https://ipwho.org/"
     },
     {
       "vendor": "IP Geolocation API by ipwho.org",
@@ -1696,6 +1812,19 @@
       "refused_date": "2026-08-29"
     },
     {
+      "vendor": "lost-pixel.com",
+      "change_type": "product_deprecated",
+      "reason": "same_transition_graded_differently",
+      "detail": "same vendor, source_url and previous_state as lost-pixel.com|product_deprecated|2026-08-28|https://lost-pixel.com",
+      "summary": "Lost Pixel is being sunset as they are joining Figma. While a 'Hobby' free tier with 7,000 snapshots/month is listed, the overall context indicates the product is being discontinued.",
+      "previous_state": "holistic visual regression testing for your Storybook, Ladle, Histoire stories and Web Apps. Unlimited team members, totally free for open-source, 7,000 snapshots/month.",
+      "current_state": "The 'Hobby' plan is free and includes 7,000 shots per month. However, the site states they are sunsetting the product and building what's next with Figma.",
+      "source_url": "https://lost-pixel.com",
+      "category": "Testing",
+      "refused_date": "2026-09-10",
+      "collided_with": "lost-pixel.com|product_deprecated|2026-08-28|https://lost-pixel.com"
+    },
+    {
       "vendor": "Mailchimp",
       "change_type": "limits_reduced",
       "reason": "measures_no_change",
@@ -1759,13 +1888,13 @@
       "vendor": "Market Data API",
       "change_type": "limits_reduced",
       "reason": "confirmed_unchanged",
-      "detail": "The report details features already implied by 'financial data' and 'historical data' and restates the 100 daily API request limit as '100 Daily API Credits'.",
+      "detail": "The report details features already implied by 'financial data' and 'API requests' in the stored description.",
       "summary": "The free tier now has limits of 100 Sheets Formulas and 100 Daily API Credits, and includes 1 Year Historical Data, 24h Delayed Stock Data, and 24h Delayed Options Data.",
       "previous_state": "Provides real-time and historical financial data for stocks, options, mutual funds, and more. The Free Forever API tier allows for 100 daily API requests at no charge.",
-      "current_state": "Free Forever: $0 Forever, 100 Sheets Formulas, 100 Daily API Credits, Standard API Endpoints, 1 Year Historical Data, 24h Delayed Stock Data, 24h Delayed Options Data",
+      "current_state": "$0 Forever 100 Sheets Formulas 100 Daily API Credits Standard API Endpoints 1 Year Historical Data 24h Delayed Stock Data 24h Delayed Options Data",
       "source_url": "https://www.marketdata.app",
       "category": "Dev Utilities",
-      "refused_date": "2026-08-28"
+      "refused_date": "2026-09-10"
     },
     {
       "vendor": "MDBootstrap",
@@ -1816,6 +1945,19 @@
       "refused_date": "2026-08-29"
     },
     {
+      "vendor": "microlink.io",
+      "change_type": "limits_reduced",
+      "reason": "same_transition_graded_differently",
+      "detail": "same vendor, source_url and previous_state as microlink.io|limits_reduced|2026-08-28|https://microlink.io/",
+      "summary": "The free tier now offers 25 requests per day, down from 50.",
+      "previous_state": "It turns any website into data such as metatags normalization, beauty link previews, scraping capabilities, or screenshots as a service. 50 requests per day, every day free.",
+      "current_state": "25 requests / day",
+      "source_url": "https://microlink.io/",
+      "category": "Web Scraping",
+      "refused_date": "2026-09-10",
+      "collided_with": "microlink.io|limits_reduced|2026-08-28|https://microlink.io/"
+    },
+    {
       "vendor": "MinIO",
       "change_type": "pricing_restructured",
       "reason": "no_price_signal",
@@ -1826,6 +1968,19 @@
       "source_url": "https://min.io/pricing",
       "category": "Storage",
       "refused_date": "2026-09-09"
+    },
+    {
+      "vendor": "Mockerito",
+      "change_type": "pricing_model_change",
+      "reason": "same_transition_graded_differently",
+      "detail": "same vendor, source_url and previous_state as Mockerito|pricing_model_change|2026-08-28|https://mockerito.com/",
+      "summary": "The free tier now requires a 7-day trial and then costs $10/month. The current page states a free tier exists with 200+ endpoints. Also promotes a 'Developer' plan with 50,000 API calls/month for $10/month after a 7-day trial.",
+      "previous_state": "Free mock REST API service providing realistic data across 9 domains (e-commerce, finance, healthcare, education, recruitment, social media, stock markets, weather, and aviation). No mandatory signup, no API keys, unlimited requests. Perfect for frontend prototyping, API testing, learning and teaching web development.",
+      "current_state": "Start for free 7-day free trial, then $10/month. Cancel anytime.",
+      "source_url": "https://mockerito.com/",
+      "category": "API Development",
+      "refused_date": "2026-09-10",
+      "collided_with": "Mockerito|pricing_model_change|2026-08-28|https://mockerito.com/"
     },
     {
       "vendor": "mouseflow.com",
@@ -2071,13 +2226,13 @@
       "vendor": "PDF-API.io",
       "change_type": "limits_reduced",
       "reason": "confirmed_unchanged",
-      "detail": "The addition of '1 User' is a detail not present in the stored description.",
-      "summary": "The free plan now exists, but has a limit of 100 PDFs/month, as stated in the stored deal info. However, the pricing page explicitly lists the free plan with 1 User, 1 Template, and 100 PDFs per month.",
+      "detail": "The report highlights '1 User' which wasn't mentioned in the stored description, but doesn't indicate a functional difference for a developer relying on the stored terms (template count and PDF limit are the same).",
+      "summary": "The free plan now has limits of 1 User and 100 PDFs per month, but it exists.",
       "previous_state": "PDF Automation API, visual template editor or HTML to PDF, dynamic data integration, and PDF rendering with an API. The free plan comes with one template, 100 PDFs/month.",
-      "current_state": "The free plan includes 1 User, 1 Template, and 100 PDFs per month.",
+      "current_state": "Free No credit card required 1 User 1 Template 100 PDF per month API / Zapier integration",
       "source_url": "https://pdf-api.io",
       "category": "Dev Utilities",
-      "refused_date": "2026-08-28"
+      "refused_date": "2026-09-10"
     },
     {
       "vendor": "PDFBolt",
@@ -2201,6 +2356,19 @@
       "refused_date": "2026-08-28"
     },
     {
+      "vendor": "Pullflow",
+      "change_type": "limits_reduced",
+      "reason": "same_transition_graded_differently",
+      "detail": "same vendor, source_url and previous_state as Pullflow|limits_reduced|2026-08-28|https://pullflow.com",
+      "summary": "The free tier now has limits on private repositories (5) and is specifically for open source projects and small dev teams.",
+      "previous_state": "Pullflow offers an AI-enhanced platform for code review collaboration across GitHub, Slack, and VS Code.",
+      "current_state": "Always free for OSS and up to 5 users. Unlimited public repos Public users unlimited Unlimited private repo 5 private-repo users",
+      "source_url": "https://pullflow.com",
+      "category": "Code Quality",
+      "refused_date": "2026-09-10",
+      "collided_with": "Pullflow|limits_reduced|2026-08-28|https://pullflow.com"
+    },
+    {
       "vendor": "Pulumi",
       "change_type": "limits_reduced",
       "reason": "confirmed_unchanged",
@@ -2312,13 +2480,13 @@
       "vendor": "RepoForge",
       "change_type": "restriction",
       "reason": "confirmed_unchanged",
-      "detail": "The report restates information already in the stored description; both state 100MB storage and non-commercial use only.",
-      "summary": "The free tier now has restrictions on commercial use and a storage limit of 100MB. It's explicitly for open source projects.",
+      "detail": "Terms are equivalent; 'non-commercial use only' is the same as 'Not for commercial use'.",
+      "summary": "The free plan now has restrictions on commercial use and is limited to 100MB of storage.",
       "previous_state": "Private cloud-hosted repository for Python, Debian, NPM packages and Docker registries. Free plan: 100MB storage, unlimited public packages, non-commercial use only.",
-      "current_state": "The free tier costs £0 / user / mo, includes 100 MB storage, unlimited public packages, and is not for commercial use.",
+      "current_state": "Free for open source projects. 100 MB storage. Unlimited public packages. Not for commercial use.",
       "source_url": "https://repoforge.io",
       "category": "CI/CD",
-      "refused_date": "2026-08-28"
+      "refused_date": "2026-09-10"
     },
     {
       "vendor": "ReportGPT",
@@ -2355,6 +2523,19 @@
       "source_url": "https://reviewable.io/",
       "category": "Code Quality",
       "refused_date": "2026-09-10"
+    },
+    {
+      "vendor": "RightFeature",
+      "change_type": "limits_reduced",
+      "reason": "same_transition_graded_differently",
+      "detail": "same vendor, source_url and previous_state as RightFeature|limits_reduced|2026-08-28|https://rightfeature.com/",
+      "summary": "The free tier now has limits: 1 product, 1 product board, 1 team member. There are also paid tiers available now.",
+      "previous_state": "Easily collect feedback from your customers, turn customer feedback into your product roadmap. Collect, prioritize, and ship features that actually matter to your users.",
+      "current_state": "1 Product, 1 Product board, 1 Team member",
+      "source_url": "https://rightfeature.com/",
+      "category": "Project Management",
+      "refused_date": "2026-09-10",
+      "collided_with": "RightFeature|limits_reduced|2026-08-28|https://rightfeature.com/"
     },
     {
       "vendor": "Roboflow",
@@ -2468,6 +2649,31 @@
       "refused_date": "2026-09-01"
     },
     {
+      "vendor": "serveravatar.com",
+      "change_type": "limits_increased",
+      "reason": "same_transition_graded_differently",
+      "detail": "same vendor, source_url and previous_state as serveravatar.com|limits_increased|2026-08-28|https://serveravatar.com",
+      "summary": "The free tier now allows for unlimited websites and applications, and no longer limits to one server. It's called 'ServerAvatar Lite'.",
+      "previous_state": "Manage and monitor PHP-based web servers with automated configurations. Free for one server.",
+      "current_state": "ServerAvatar Lite is a free cloud server management platform designed to help developers and businesses deploy, manage, and scale unlimited websites and applications with ease.",
+      "source_url": "https://serveravatar.com",
+      "category": "Server Management",
+      "refused_date": "2026-09-10",
+      "collided_with": "serveravatar.com|limits_increased|2026-08-28|https://serveravatar.com"
+    },
+    {
+      "vendor": "SmartParse",
+      "change_type": "limits_reduced",
+      "reason": "measures_no_change",
+      "detail": "limits_reduced claimed, and every quantity the record compares holds the same value once notation and period are normalised — 300 processing/mo against 300 processing",
+      "summary": "The free tier now has a limit of 300 processing units, browser uploads only, data quarantining, circuit breakers, and notifications.",
+      "previous_state": "SmartParse is a data migration and CSV to API platform that offers time- and cost-saving developer tools. The Free tier includes 300 Processing Units per month, Browser uploads, Data quarantining, Circuit breakers, and Job Alerts.",
+      "current_state": "Up to 300 processing units available. Browser uploads only. Data quarantining. Circuit breakers. Notifications.",
+      "source_url": "https://smartparse.io",
+      "category": "Dev Utilities",
+      "refused_date": "2026-09-10"
+    },
+    {
       "vendor": "snappify",
       "change_type": "limits_reduced",
       "reason": "measures_no_change",
@@ -2490,6 +2696,19 @@
       "source_url": "https://www.sonarsource.com/products/sonarcloud/",
       "category": "Security",
       "refused_date": "2026-09-09"
+    },
+    {
+      "vendor": "Squash Labs",
+      "change_type": "pricing_model_change",
+      "reason": "same_transition_graded_differently",
+      "detail": "same vendor, source_url and previous_state as Squash Labs|pricing_model_change|2026-08-28|https://www.squash.io/",
+      "summary": "The free tier now offers a $40 credit.",
+      "previous_state": "Creates a VM for each branch and makes your app available from a unique URL. Free tier: 2 concurrent environments, 30 hours/month (15 hours at 2GB or 30 hours at 1GB VM), 1GB assets storage, 30GB cache.",
+      "current_state": "Start with a free credit of $40",
+      "source_url": "https://www.squash.io/",
+      "category": "CI/CD",
+      "refused_date": "2026-09-10",
+      "collided_with": "Squash Labs|pricing_model_change|2026-08-28|https://www.squash.io/"
     },
     {
       "vendor": "StackBy",
@@ -2516,6 +2735,19 @@
       "refused_date": "2026-09-03"
     },
     {
+      "vendor": "Stoplight",
+      "change_type": "free_tier_removed",
+      "reason": "same_transition_graded_differently",
+      "detail": "same vendor, source_url and previous_state as Stoplight|limits_increased|2026-08-28|https://stoplight.io/pricing",
+      "summary": "The free tier no longer exists as described. The lowest tier is 'Basic' which costs $44/month or $56/month and includes the first 3 users free.",
+      "previous_state": "API design and documentation platform — free tier: 1 user, 1 project. Includes OpenAPI visual designer, API editor, interactive docs, API console, code generation, Git sync, automatic SSL",
+      "current_state": "The lowest tier is 'Basic' at $44/month (annual) or $56/month (monthly) with the first 3 users included.",
+      "source_url": "https://stoplight.io/pricing",
+      "category": "API Development",
+      "refused_date": "2026-09-10",
+      "collided_with": "Stoplight|limits_increased|2026-08-28|https://stoplight.io/pricing"
+    },
+    {
       "vendor": "Stream",
       "change_type": "limits_reduced",
       "reason": "no_baseline",
@@ -2526,6 +2758,19 @@
       "source_url": "https://getstream.io/maker-account/",
       "category": "Communication",
       "refused_date": "2026-08-29"
+    },
+    {
+      "vendor": "Supermaven",
+      "change_type": "limits_reduced",
+      "reason": "same_transition_graded_differently",
+      "detail": "same vendor, source_url and previous_state as Supermaven|limits_reduced|2026-08-28|https://www.supermaven.com/",
+      "summary": "The free tier now has a 7-day data retention limit. It also no longer includes adapting to your coding style or a 1 million token context window, which are now Pro features.",
+      "previous_state": "A high-speed AI code completion plugin for VS Code, JetBrains, and Neovim. The free tier provides unlimited inline completions with a focus on ultra-low latency.",
+      "current_state": "The fastest copilot, completely free. Fast, high-quality code suggestions Works with large codebases 7-day data retention limit ( details )",
+      "source_url": "https://www.supermaven.com/",
+      "category": "IDE & Code Editors",
+      "refused_date": "2026-09-10",
+      "collided_with": "Supermaven|limits_reduced|2026-08-28|https://www.supermaven.com/"
     },
     {
       "vendor": "SuprSend",
@@ -2645,7 +2890,20 @@
       "current_state": "Free for Public Repositories 🎉 No login required. $3/month for Private Repositories 💵 3 day free trial.",
       "source_url": "https://www.tickgit.com/",
       "category": "Code Quality",
-      "refused_date": "2026-08-28"
+      "refused_date": "2026-09-10"
+    },
+    {
+      "vendor": "TinyMCE",
+      "change_type": "limits_reduced",
+      "reason": "same_transition_graded_differently",
+      "detail": "same vendor, source_url and previous_state as TinyMCE|limits_reduced|2026-08-28|https://www.tiny.cloud",
+      "summary": "The free plan now has a limit of 1,000 editor loads per month and a 14-day free trial of 21+ advanced features. The core editing features are still free.",
+      "previous_state": "rich text editing API. Core features are free for unlimited usage.",
+      "current_state": "The Free Plan includes 1,000 editor loads per month and core editing features. It also includes a 14-day free trial of 21+ advanced features.",
+      "source_url": "https://www.tiny.cloud",
+      "category": "API Development",
+      "refused_date": "2026-09-10",
+      "collided_with": "TinyMCE|limits_reduced|2026-08-28|https://www.tiny.cloud"
     },
     {
       "vendor": "Together AI",
@@ -2672,6 +2930,18 @@
       "refused_date": "2026-08-28"
     },
     {
+      "vendor": "Tomorrow.io Weather API",
+      "change_type": "limits_reduced",
+      "reason": "confirmed_unchanged",
+      "detail": "The report details features *included* in the free plan, which aligns with the stored description stating a free plan *offers* weather API with forecasting, data, and monitoring. The current page simply provides more detail on what's offered.",
+      "summary": "The free plan now includes 5-Day Forecast, Weather Timelines and Trendlines, Core Weather Data Layers, Industry-Based Insights Templates, 24 hours Historical Weather Data, and 1 Automatically monitored Location.",
+      "previous_state": "Offers free plan of weather API. Provides accurate and up-to-date weather forecasting with global coverage, historical data and weather monitoring solutions.",
+      "current_state": "The free plan includes 5-Day Forecast, Weather Timelines and Trendlines, Weather API Access, Core Weather Data Layers, Industry-Based Insights Templates, 24 hours Historical Weather Data, and 1 Automatically monitored Location.",
+      "source_url": "https://www.tomorrow.io/weather-api/",
+      "category": "Dev Utilities",
+      "refused_date": "2026-09-10"
+    },
+    {
       "vendor": "ToolJet",
       "change_type": "free_tier_removed",
       "reason": "free_tier_still_offered",
@@ -2682,6 +2952,18 @@
       "source_url": "https://www.tooljet.com/",
       "category": "Low-Code Platforms",
       "refused_date": "2026-09-01"
+    },
+    {
+      "vendor": "Tyk",
+      "change_type": "pricing_restructured",
+      "reason": "confirmed_unchanged",
+      "detail": "The stored description already stated a 48-hour free trial for Tyk Cloud.",
+      "summary": "The free trial is now 48 hours for Tyk Cloud. The open-source offering is still available.",
+      "previous_state": "Open-source API gateway — self-hosted: free forever under MPL-2.0, includes rate limiting, auth, analytics. Cloud: 48-hour free trial only, paid plans usage-based. Dashboard and developer portal included",
+      "current_state": "Tyk provides a free version of its open source API gateway via GitHub. A fully featured, free, 48-hour trial of Tyk Cloud is also available.",
+      "source_url": "https://tyk.io/pricing/",
+      "category": "API Gateway",
+      "refused_date": "2026-09-10"
     },
     {
       "vendor": "Typeform.com",
@@ -2718,6 +3000,18 @@
       "source_url": "https://unirateapi.com",
       "category": "Dev Utilities",
       "refused_date": "2026-08-28"
+    },
+    {
+      "vendor": "UniRateAPI",
+      "change_type": "limits_reduced",
+      "reason": "states_no_terms",
+      "detail": "every clause of the summary states bookkeeping rather than a term the page carries, so it reports the reading rather than a change",
+      "summary": "The free tier now has a limit of 30 requests/minute and 200 requests/day, down from the stored value of 200 requests/day.",
+      "previous_state": "Real-time exchange rates for 590+ currencies and crypto. 200 requests/day API calls on the free plan, perfect for developers and finance apps.",
+      "current_state": "Free tier includes 30 requests per minute.",
+      "source_url": "https://unirateapi.com",
+      "category": "Dev Utilities",
+      "refused_date": "2026-09-10"
     },
     {
       "vendor": "Upstash",
@@ -2796,12 +3090,12 @@
       "change_type": "limits_reduced",
       "reason": "unquantified_limit",
       "detail": "limits_reduced claimed, but the current state names no quantity for anything the stored state measured (150 validation)",
-      "summary": "The free tier now offers 100 free requests per month, down from 150.",
+      "summary": "The free tier now offers 100 free requests per month, down from the previously stated 150.",
       "previous_state": "Simple and free VAT number validation API. 150 free validations per month.",
-      "current_state": "Free for hobby projects & enough to get your professional project up and running. 100 Free Requests / Month",
+      "current_state": "100 Free Requests / Month Free for hobby projects & enough to get your professional project up and running.",
       "source_url": "https://vatcheckapi.com",
       "category": "Dev Utilities",
-      "refused_date": "2026-08-28"
+      "refused_date": "2026-09-10"
     },
     {
       "vendor": "vatlayer",
@@ -2816,6 +3110,19 @@
       "refused_date": "2026-09-02"
     },
     {
+      "vendor": "Virgil Security",
+      "change_type": "pricing_model_change",
+      "reason": "same_transition_graded_differently",
+      "detail": "same vendor, source_url and previous_state as Virgil Security|pricing_restructured|2026-08-28|https://virgilsecurity.com/",
+      "summary": "The free tier is still offered, but the pricing beyond the free tier is $0.02/month per user beyond 250 users.",
+      "previous_state": "Tools and services for implementing end-to-end encryption, database protection, IoT security, and more in your digital solution. Free for applications with up to 250 users.",
+      "current_state": "Start free , pay $0.02/month per user beyond 250 users.",
+      "source_url": "https://virgilsecurity.com/",
+      "category": "Security",
+      "refused_date": "2026-09-10",
+      "collided_with": "Virgil Security|pricing_restructured|2026-08-28|https://virgilsecurity.com/"
+    },
+    {
       "vendor": "Visual Studio Community",
       "change_type": "restriction",
       "reason": "no_terms_to_narrow",
@@ -2828,6 +3135,32 @@
       "refused_date": "2026-09-01"
     },
     {
+      "vendor": "webhook.site",
+      "change_type": "limits_reduced",
+      "reason": "same_transition_graded_differently",
+      "detail": "same vendor, source_url and previous_state as webhook.site|limits_reduced|2026-08-28|https://webhook.site",
+      "summary": "The free tier has a request limit of {{ appConfig.MaxRequests }} requests.",
+      "previous_state": "Verify webhooks, outbound HTTP requests, or emails with a custom URL. A temporary URL and email address are always free.",
+      "current_state": "The URL is not associated with an account, accepts a maximum of {{ appConfig.MaxRequests }} requests, and expires. Upgrading is required for endless requests.",
+      "source_url": "https://webhook.site",
+      "category": "Testing",
+      "refused_date": "2026-09-10",
+      "collided_with": "webhook.site|limits_reduced|2026-08-28|https://webhook.site"
+    },
+    {
+      "vendor": "Webvizio",
+      "change_type": "free_tier_removed",
+      "reason": "same_transition_graded_differently",
+      "detail": "same vendor, source_url and previous_state as Webvizio|free_tier_removed|2026-08-28|https://webvizio.com",
+      "summary": "The free tier is now a 7-day free trial.",
+      "previous_state": "Website feedback tool, website review software, and bug reporting tool for streamlining web development collaboration on tasks directly on live websites and web apps, images, PDFs, and design files.",
+      "current_state": "Start Free Log In 7-day free trial Cancel anytime",
+      "source_url": "https://webvizio.com",
+      "category": "Communication",
+      "refused_date": "2026-09-10",
+      "collided_with": "Webvizio|free_tier_removed|2026-08-28|https://webvizio.com"
+    },
+    {
       "vendor": "Xata",
       "change_type": "pricing_model_change",
       "reason": "confirmed_unchanged",
@@ -2838,6 +3171,18 @@
       "source_url": "https://xata.io/pricing",
       "category": "Databases",
       "refused_date": "2026-09-05"
+    },
+    {
+      "vendor": "xcloud.host",
+      "change_type": "free_tier_removed",
+      "reason": "removal_read_from_root",
+      "detail": "a free tier was recorded as removed from https://xcloud.host, a domain root that states no price, ending or replacement where the free tier was — a homepage's silence is not evidence that one ended",
+      "summary": "The free tier for one server is no longer explicitly mentioned. The page focuses on connecting existing servers or using paid managed hosting. There's a 'Self-Managed Hosting' option that includes 'Free: 1 server and 10 sites included', but this appears to be for connecting your own server, not a standalone free tier for xCloud-hosted servers.",
+      "previous_state": "Server management and deployment platform with a user-friendly interface. Free tier available for one server.",
+      "current_state": "The page details various hosting options, including fully managed xCloud hosting, self-managed hosting (with 1 free server and 10 sites when connecting your own server), and reseller hosting. There is no mention of a standalone free tier for one server hosted by xCloud.",
+      "source_url": "https://xcloud.host",
+      "category": "Server Management",
+      "refused_date": "2026-09-10"
     },
     {
       "vendor": "Zapier",
@@ -2862,6 +3207,19 @@
       "source_url": "https://zenscrape.com/web-scraping-api",
       "category": "Web Scraping",
       "refused_date": "2026-08-29"
+    },
+    {
+      "vendor": "Zipcodestack",
+      "change_type": "limits_reduced",
+      "reason": "same_transition_graded_differently",
+      "detail": "same vendor, source_url and previous_state as Zipcodestack|limits_reduced|2026-08-28|https://zipcodestack.com",
+      "summary": "The free tier now offers 300 requests per month, up from 10,000. The free tier also has a daily limit of 100 requests and a rate limit of 10 requests per minute.",
+      "previous_state": "Free Zip Code API and Postal Code Validation. Ten thousand free requests/month.",
+      "current_state": "The free tier includes 300 requests / month. Free accounts have 100 requests per day with a maximum of 10 requests per minute.",
+      "source_url": "https://zipcodestack.com",
+      "category": "Dev Utilities",
+      "refused_date": "2026-09-10",
+      "collided_with": "Zipcodestack|limits_reduced|2026-08-28|https://zipcodestack.com"
     },
     {
       "vendor": "Zoho Bookings",

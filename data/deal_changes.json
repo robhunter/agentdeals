@@ -9491,6 +9491,38 @@
       "alternatives": [],
       "detected_by": "reverify-ai",
       "recorded_date": "2026-09-10"
+    },
+    {
+      "vendor": "Thunder Client",
+      "change_type": "limits_reduced",
+      "date": "2026-09-10",
+      "date_source": "discovered",
+      "summary": "The free plan now includes unlimited collection runs, and previously 1 local collection run per month is removed. The Starter plan is now billed annually.",
+      "tier": "Free",
+      "previous_state": "Lightweight REST API client for VS Code and JetBrains. Free plan is $0 per user/month with local storage and 1 local collection run per month. Paid plans are billed annually from Starter at $3 per user/month, which adds JetBrains, team features, CLI and CI/CD, WebSocket/SSE/gRPC and 250 collection runs; Business is $7 and Enterprise $16.",
+      "current_state": "$0 Per user/month Billed monthly Includes: Extension VS Code",
+      "impact": "medium",
+      "source_url": "https://www.thunderclient.com/pricing",
+      "category": "API Development",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-09-10"
+    },
+    {
+      "vendor": "Authress",
+      "change_type": "pricing_model_change",
+      "date": "2026-09-10",
+      "date_source": "discovered",
+      "summary": "The first 1000 billable calls are free, and after that, pricing is 0.0012 USD per call.",
+      "tier": "Free",
+      "previous_state": "Authentication login and access control, unlimited identity providers for any project. Facebook, Google, Twitter and more. The first 1000 API calls are free.",
+      "current_state": "First 1000 billable calls are free. 0.0012 USD per call, billed monthly.",
+      "impact": "medium",
+      "source_url": "https://authress.io/",
+      "category": "Auth",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-09-10"
     }
   ]
 }
