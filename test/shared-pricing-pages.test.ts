@@ -39,6 +39,12 @@ function withoutMerge(retired: string) {
   };
 }
 
+function catalogueHolding(vendors: string[]): Offer[] {
+  return vendors.map(
+    (vendor) => ({ vendor, category: "Databases", tier: "Free", url: "https://one-product.example/pricing" }) as Offer,
+  );
+}
+
 describe("normalizePricingUrl", () => {
   it("reads one page through the spellings a record can use for it", () => {
     const forms = [
@@ -146,17 +152,6 @@ describe("the catalogue as it stands", () => {
     }
   });
 
-  it("reports the group behind every registered merge when that merge is unregistered", () => {
-    for (const merge of registry.merges) {
-      const groups = advisoryGroups(offers, withoutMerge(merge.retired));
-      assert.deepStrictEqual(
-        groups.map((g: { vendors: string[] }) => named(g.vendors)),
-        [named([merge.retired, merge.survivor])],
-        `unregistering the ${merge.retired} merge does not report it`,
-      );
-    }
-  });
-
   it("holds one registered shared page that the blocking rule needs, and it is the two Google One products", () => {
     const loadBearing = registry.sharedPricingPages.filter(
       (entry: { vendors: string[] }) => blockingGroups(offers, withoutAllowlistEntry(entry.vendors)).length > 0,
@@ -164,6 +159,32 @@ describe("the catalogue as it stands", () => {
     assert.deepStrictEqual(
       loadBearing.map((entry: { vendors: string[] }) => named(entry.vendors)),
       ["Google Drive, Google Photos"],
+    );
+  });
+});
+
+describe("a catalogue holding both records of a registered merge", () => {
+  it("is silent while the merge is registered and reports the pair when it is not", () => {
+    for (const merge of registry.merges) {
+      const catalogue = catalogueHolding([merge.retired, merge.survivor]);
+      assert.deepStrictEqual(
+        advisoryGroups(catalogue, registry).map((g: { vendors: string[] }) => named(g.vendors)),
+        [],
+        `the registered ${merge.retired} merge does not silence its own pair`,
+      );
+      assert.deepStrictEqual(
+        advisoryGroups(catalogue, withoutMerge(merge.retired)).map((g: { vendors: string[] }) => named(g.vendors)),
+        [named([merge.retired, merge.survivor])],
+        `unregistering the ${merge.retired} merge does not report it`,
+      );
+    }
+  });
+
+  it("reports a pair no merge and no shared page names", () => {
+    const catalogue = catalogueHolding(["Kept One", "Kept Two"]);
+    assert.deepStrictEqual(
+      advisoryGroups(catalogue, registry).map((g: { vendors: string[] }) => named(g.vendors)),
+      ["Kept One, Kept Two"],
     );
   });
 });

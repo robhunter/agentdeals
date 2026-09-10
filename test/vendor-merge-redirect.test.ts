@@ -28,6 +28,14 @@ const merges = vendorMerges();
 const retiringNames = new Set(merges.map((m) => m.retired.trim().toLowerCase()));
 const liveNames = new Set(offers.map((o) => o.vendor.trim().toLowerCase()));
 const stillListed = merges.filter((m) => liveNames.has(m.retired.trim().toLowerCase()));
+const alreadyMade = merges.filter(
+  (m) => !liveNames.has(m.retired.trim().toLowerCase()) && liveNames.has(m.survivor.trim().toLowerCase()),
+);
+
+const key = (name: string) => name.trim().toLowerCase();
+const listing = (...names: string[]) => new Set([...liveNames, ...names.map(key)]);
+const unlisting = (absent: string, ...present: string[]) =>
+  new Set([...listing(...present)].filter((n) => n !== key(absent)));
 
 function startServer(env: NodeJS.ProcessEnv = {}): Promise<{ child: ChildProcess; port: number }> {
   return new Promise((resolve, reject) => {
@@ -56,8 +64,9 @@ describe("the registry a merge is declared in", () => {
   });
 
   it("redirects no slug while the record it names is still listed", () => {
-    const targets = retiredSlugTargets(new Set(offers.map((o) => toSlug(o.vendor))), merges);
-    for (const merge of stillListed) {
+    const live = new Set(offers.map((o) => toSlug(o.vendor)));
+    for (const merge of merges) {
+      const targets = retiredSlugTargets(new Set([...live, toSlug(merge.retired), toSlug(merge.survivor)]), merges);
       assert.ok(!targets.has(toSlug(merge.retired)), `/vendor/${toSlug(merge.retired)} redirects while its record is still listed`);
     }
   });
@@ -77,9 +86,8 @@ describe("the registry a merge is declared in", () => {
 
   it("moves a change record to the survivor only once the name it holds is unlisted", () => {
     for (const merge of merges) {
-      assert.strictEqual(survivingVendorName(merge.retired, liveNames, merges), null);
-      const without = new Set([...liveNames].filter((n) => n !== merge.retired.trim().toLowerCase()));
-      assert.strictEqual(survivingVendorName(merge.retired, without, merges), merge.survivor);
+      assert.strictEqual(survivingVendorName(merge.retired, listing(merge.retired, merge.survivor), merges), null);
+      assert.strictEqual(survivingVendorName(merge.retired, unlisting(merge.retired, merge.survivor), merges), merge.survivor);
     }
   });
 
@@ -151,14 +159,26 @@ describe("the catalogue as it stands", () => {
   before(async () => { ({ child: server, port } = await startServer()); });
   after(() => { server?.kill(); });
 
-  it("has records under merge, so the redirects here are under test", () => {
-    assert.ok(stillListed.length > 0, "every registered merge has already been made, so nothing here is under test");
+  it("holds every registered merge in one of the two states the redirect reads", () => {
+    const neither = merges.filter((m) => !stillListed.includes(m) && !alreadyMade.includes(m));
+    assert.deepStrictEqual(
+      neither.map((m) => `${m.retired} -> ${m.survivor}`),
+      [],
+      "a merge whose record has gone and whose survivor is unlisted sends a reader to a page the catalogue does not answer",
+    );
   });
 
-  it("keeps answering a page for a record it still lists", async () => {
-    for (const merge of stillListed) {
+  it("answers a retired path with its own page until the record goes, and with the survivor after", async () => {
+    for (const merge of merges) {
       const res = await fetch(`http://localhost:${port}/vendor/${toSlug(merge.retired)}`, { redirect: "manual" });
-      assert.strictEqual(res.status, 200, `/vendor/${toSlug(merge.retired)} answers ${res.status} while its record is still listed`);
+      if (stillListed.includes(merge)) {
+        assert.strictEqual(res.status, 200, `/vendor/${toSlug(merge.retired)} answers ${res.status} while its record is still listed`);
+        continue;
+      }
+      assert.strictEqual(res.status, 301, `/vendor/${toSlug(merge.retired)} answers ${res.status} once its record is gone`);
+      assert.strictEqual(res.headers.get("location"), `/vendor/${toSlug(merge.survivor)}`);
+      const followed = await fetch(`http://localhost:${port}${res.headers.get("location")}`, { redirect: "manual" });
+      assert.strictEqual(followed.status, 200, `${merge.retired} redirects to a path that answers ${followed.status}`);
     }
   });
 
@@ -173,16 +193,17 @@ describe("the catalogue as it stands", () => {
     }
   });
 
-  it("leaves the history of a record it still lists on that record's own page", async () => {
-    for (const merge of stillListed) {
+  it("leaves the history of a retiring name on its own page until the record goes, and on the survivor after", async () => {
+    for (const merge of merges) {
       const carried = changes.filter((c) => c.vendor.trim().toLowerCase() === merge.retired.trim().toLowerCase());
       if (carried.length === 0) continue;
-      const res = await fetch(`http://localhost:${port}/api/changes?vendor=${encodeURIComponent(merge.retired)}&since=2000-01-01&limit=1000`);
+      const holder = stillListed.includes(merge) ? merge.retired : merge.survivor;
+      const res = await fetch(`http://localhost:${port}/api/changes?vendor=${encodeURIComponent(holder)}&since=2000-01-01&limit=1000`);
       const published: DealChange[] = (await res.json()).changes;
       for (const change of carried) {
         assert.ok(
-          published.some((p) => p.vendor === merge.retired && p.date === change.date),
-          `the ${change.change_type} recorded for ${merge.retired} on ${change.date} moved before its record did`,
+          published.some((p) => p.date === change.date && p.change_type === change.change_type),
+          `the ${change.change_type} recorded for ${merge.retired} on ${change.date} is published on no page`,
         );
       }
     }
