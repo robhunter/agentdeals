@@ -9,6 +9,7 @@ fi
 QUARANTINE_PREFIX="$1"
 MESSAGE="$2"
 shift 2
+COMMITTABLE=("$@")
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 OUTPUT="${GITHUB_OUTPUT:-/dev/null}"
@@ -58,12 +59,16 @@ LOG="$(mktemp)"
 VERDICT="$(mktemp)"
 GATE_FAILING_FILES="$(mktemp)"
 SUBPROCESS_OUTPUT="$(mktemp)"
+HELD_BACK_LIST="$(mktemp)"
 export GATE_FAILING_FILES
 export GITHUB_OUTPUT="$SUBPROCESS_OUTPUT"
-trap 'rm -f "$LOG" "$VERDICT" "$GATE_FAILING_FILES" "$SUBPROCESS_OUTPUT"' EXIT
+trap 'rm -f "$LOG" "$VERDICT" "$GATE_FAILING_FILES" "$SUBPROCESS_OUTPUT" "$HELD_BACK_LIST"' EXIT
 
 REPLAYS=0
 REPLAYS_ONTO_A_MOVED_MAIN="${GATE_REPLAYS_ONTO_A_MOVED_MAIN:-2}"
+HELD_BACK_VENDORS=""
+BATCH_AS_THE_RUN_WROTE_IT=""
+BATCH_COMMIT_AS_THE_RUN_WROTE_IT=""
 
 push_to_main() {
   git push origin HEAD:main
@@ -80,19 +85,81 @@ replay_onto_main() {
 
 quarantine() {
   local why="$1"
-  local ref="${QUARANTINE_PREFIX}-$(date -u +%Y%m%dT%H%M%SZ)-${COMMIT}"
+  local refused="${BATCH_AS_THE_RUN_WROTE_IT:-$(git rev-parse HEAD)}"
+  local shown="${BATCH_COMMIT_AS_THE_RUN_WROTE_IT:-$COMMIT}"
+  local ref="${QUARANTINE_PREFIX}-$(date -u +%Y%m%dT%H%M%SZ)-${shown}"
   {
     echo "quarantined=true"
     echo "quarantine_ref=$ref"
-    echo "quarantined_commit=$COMMIT"
+    echo "quarantined_commit=$shown"
     echo "quarantine_reason=$why"
   } >>"$OUTPUT"
-  if git push origin "HEAD:refs/heads/$ref"; then
-    echo "Held back because $why — $COMMIT is on $ref and main is unchanged."
+  if git push origin "$refused:refs/heads/$ref"; then
+    echo "Held back because $why — $shown is on $ref and main is unchanged."
   else
-    echo "Held back because $why — $COMMIT could not be pushed to $ref and main is unchanged. This run's data exists only in its own workspace."
+    echo "Held back because $why — $shown could not be pushed to $ref and main is unchanged. This run's data exists only in its own workspace."
   fi
   exit 1
+}
+
+amend_with_what_the_derivation_moved() {
+  if [ -n "$(git status --porcelain -- "${COMMITTABLE[@]}")" ]; then
+    git add -- "${COMMITTABLE[@]}"
+    git commit -q --amend --no-edit --allow-empty
+    COMMIT="$(git rev-parse --short HEAD)"
+    echo "$1"
+  fi
+}
+
+derive_from_the_data() {
+  if [ -n "$RATCHET_BUDGETS" ]; then
+    echo "── Lowering any quality budget this run's data has earned ──"
+    if ! npm run ratchet:budgets; then
+      echo "The budgets could not be measured. That decides nothing about whether this run's data is right, so the data is held rather than discarded."
+      quarantine "the quality budgets could not be measured"
+    fi
+    amend_with_what_the_derivation_moved "A budget fell to what this run's data measures, in the same commit as the data that earned it."
+  fi
+
+  if [ -n "$UPDATE_PAGE_LASTMOD" ]; then
+    echo "── Reading every page this run renders, to date the ones whose output moved ──"
+    if node "$SCRIPT_DIR/update-page-lastmod.js"; then
+      amend_with_what_the_derivation_moved "The pages whose output this run moved are dated today, in the same commit as the data that moved them."
+    else
+      echo "The pages could not be read, so each one keeps the day it last changed. That says nothing about whether this run's data is right, so the data goes on to the suite."
+    fi
+  fi
+
+  if [ -n "$REGENERATE_LLM_INDEX" ]; then
+    echo "── Regenerating the AI and LLM free-tier index from the records this run moved ──"
+    if node "$SCRIPT_DIR/generate-llm-api-readme.js"; then
+      amend_with_what_the_derivation_moved "The published index reads this run's records, in the same commit as the records it reads."
+    else
+      echo "The index could not be generated, so the one already published stands rather than a new stale one. That says nothing about whether this run's data is right, so the data goes on to the suite, and the job that regenerates the index on every push to main fails loudly on its own."
+    fi
+  fi
+}
+
+hold_back_the_vendors_a_failing_test_named() {
+  if [ -n "$HELD_BACK_VENDORS" ]; then
+    echo "── A set of vendors has already been held back on this run and the suite is still red, so the batch stands or falls as one ──"
+    return 1
+  fi
+  local baseline named
+  baseline="$(git rev-parse HEAD^)" || return 1
+  : >"$HELD_BACK_LIST"
+  node "$SCRIPT_DIR/gate-hold-back-vendors.js" \
+    --baseline "$baseline" --failures "$LOG" --vendors-to "$HELD_BACK_LIST" -- "${COMMITTABLE[@]}" || return 1
+  named="$(tr '\n' ' ' <"$HELD_BACK_LIST" | sed 's/ *$//')"
+  [ -n "$named" ] || return 1
+
+  BATCH_AS_THE_RUN_WROTE_IT="$(git rev-parse HEAD)"
+  BATCH_COMMIT_AS_THE_RUN_WROTE_IT="$COMMIT"
+  HELD_BACK_VENDORS="$named"
+  echo "── Held back: $HELD_BACK_VENDORS. What is left is derived again and read by the suite again, and only that reaches main ──"
+  amend_with_what_the_derivation_moved "The vendors a failing test named read as main already has them, in this run's commit."
+  derive_from_the_data
+  return 0
 }
 
 summarize() {
@@ -105,47 +172,7 @@ if ! npm run build >"$LOG" 2>&1; then
   quarantine "the build does not compile"
 fi
 
-if [ -n "$RATCHET_BUDGETS" ]; then
-  echo "── Lowering any quality budget this run's data has earned ──"
-  if ! npm run ratchet:budgets; then
-    echo "The budgets could not be measured. That decides nothing about whether this run's data is right, so the data is held rather than discarded."
-    quarantine "the quality budgets could not be measured"
-  fi
-  if [ -n "$(git status --porcelain -- "$@")" ]; then
-    git add -- "$@"
-    git commit -q --amend --no-edit
-    COMMIT="$(git rev-parse --short HEAD)"
-    echo "A budget fell to what this run's data measures, in the same commit as the data that earned it."
-  fi
-fi
-
-if [ -n "$UPDATE_PAGE_LASTMOD" ]; then
-  echo "── Reading every page this run renders, to date the ones whose output moved ──"
-  if node "$SCRIPT_DIR/update-page-lastmod.js"; then
-    if [ -n "$(git status --porcelain -- "$@")" ]; then
-      git add -- "$@"
-      git commit -q --amend --no-edit
-      COMMIT="$(git rev-parse --short HEAD)"
-      echo "The pages whose output this run moved are dated today, in the same commit as the data that moved them."
-    fi
-  else
-    echo "The pages could not be read, so each one keeps the day it last changed. That says nothing about whether this run's data is right, so the data goes on to the suite."
-  fi
-fi
-
-if [ -n "$REGENERATE_LLM_INDEX" ]; then
-  echo "── Regenerating the AI and LLM free-tier index from the records this run moved ──"
-  if node "$SCRIPT_DIR/generate-llm-api-readme.js"; then
-    if [ -n "$(git status --porcelain -- "$@")" ]; then
-      git add -- "$@"
-      git commit -q --amend --no-edit
-      COMMIT="$(git rev-parse --short HEAD)"
-      echo "The published index reads this run's records, in the same commit as the records it reads."
-    fi
-  else
-    echo "The index could not be generated, so the one already published stands rather than a new stale one. That says nothing about whether this run's data is right, so the data goes on to the suite, and the job that regenerates the index on every push to main fails loudly on its own."
-  fi
-fi
+derive_from_the_data
 
 while :; do
   : >"$LOG"
@@ -163,6 +190,7 @@ while :; do
     fi
     if ! node "$SCRIPT_DIR/gate-verdict.js" "$GATE_FAILING_FILES" >"$VERDICT" 2>&1; then
       cat "$VERDICT"
+      if hold_back_the_vendors_a_failing_test_named; then continue; fi
       quarantine "the suite refused it"
     fi
     cat "$VERDICT"
@@ -170,6 +198,10 @@ while :; do
   fi
 
   if push_to_main; then
+    if [ -n "$HELD_BACK_VENDORS" ]; then
+      echo "held_back_vendors=$HELD_BACK_VENDORS" >>"$OUTPUT"
+      echo "Held back and left for the next run to read again: $HELD_BACK_VENDORS. Every other vendor this run read is on main."
+    fi
     if [ -n "$SUITE_WAS_RED" ]; then
       {
         echo "quarantined=false"

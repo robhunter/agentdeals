@@ -75,17 +75,24 @@ jobs:
             data/index.json data/deal_changes.json data/change_refusals.json data/verification_state.json data/quality_budgets.json data/page-lastmod.json artifacts/free-llm-api-index/README.md
 
       - name: Say where it can be seen what the gate did with this run's data
-        if: always() && (steps.gate.outputs.quarantined == 'true' || steps.gate.outputs.pushed_over_failures == 'true')
+        if: always() && (steps.gate.outputs.quarantined == 'true' || steps.gate.outputs.pushed_over_failures == 'true' || steps.gate.outputs.held_back_vendors != '')
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           QUARANTINED: ${{ steps.gate.outputs.quarantined }}
           QUARANTINE_REF: ${{ steps.gate.outputs.quarantine_ref }}
           QUARANTINE_REASON: ${{ steps.gate.outputs.quarantine_reason }}
+          PUSHED_OVER_FAILURES: ${{ steps.gate.outputs.pushed_over_failures }}
           NON_BLOCKING_FILES: ${{ steps.gate.outputs.non_blocking_files }}
+          HELD_BACK_VENDORS: ${{ steps.gate.outputs.held_back_vendors }}
         run: |
           if [ "$QUARANTINED" = "true" ]; then
             bash scripts/report-data-push-outcome.sh "Daily rolling re-verification" refused "$QUARANTINE_REF" "$QUARANTINE_REASON"
-          else
+            exit 0
+          fi
+          if [ -n "$HELD_BACK_VENDORS" ]; then
+            bash scripts/report-data-push-outcome.sh "Daily rolling re-verification" held-back-a-vendor "$HELD_BACK_VENDORS"
+          fi
+          if [ "$PUSHED_OVER_FAILURES" = "true" ]; then
             bash scripts/report-data-push-outcome.sh "Daily rolling re-verification" shipped-over-failures "$NON_BLOCKING_FILES"
           fi
 

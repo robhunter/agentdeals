@@ -2,7 +2,7 @@
 set -euo pipefail
 
 if [ "$#" -lt 2 ]; then
-  echo "usage: report-data-push-outcome.sh <job-name> refused|shipped-over-failures [detail] [reason]" >&2
+  echo "usage: report-data-push-outcome.sh <job-name> refused|shipped-over-failures|held-back-a-vendor [detail] [reason]" >&2
   exit 2
 fi
 
@@ -54,6 +54,21 @@ case "$OUTCOME" in
       echo "\`main\` is red until somebody clears these. Nothing is blocked, which is why this needs saying out loud: a scheduled push carries no \`tests.yml\` run behind it, so this is the only place the redness shows."
       echo
       echo "What to do: clear the entries that put the measurement over its budget, then \`npm run ratchet:budgets\`."
+    } >"$BODY"
+    ;;
+  held-back-a-vendor)
+    MARKER="data-push-vendorholdback"
+    TITLE="A scheduled run keeps reading a vendor the suite will not publish"
+    LABEL="priority/medium"
+    COMMENT_EVERY_TIME="yes"
+    {
+      echo "\`$JOB\` produced data the suite would not pass, and the failing tests named \`${DETAIL:-nobody}\`. Those vendors are on \`main\` the way it already had them, and everything else the run read is on \`main\` too. The catalogue advanced."
+      echo
+      echo "This is the good outcome of a bad reading: one vendor costs one vendor rather than the batch it arrived in. It still says that a reading we take every time that vendor is drawn is one the suite will not publish, so the same holdback repeats until either the reading or the rule behind it changes."
+      echo
+      echo "The run: $RUN_URL"
+      echo
+      echo "What to do: read the run for what went red on \`${DETAIL:-that vendor}\`, and decide which of the two is wrong."
     } >"$BODY"
     ;;
   *)
