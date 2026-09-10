@@ -883,7 +883,7 @@ const WITHHELD_BADGE_LABELS: Record<LevelWithheldReason | "no_source", string> =
   no_source: "unrated \u2014 no source",
   link_unreachable: "unrated \u2014 page unreachable",
   unreadable: "unrated \u2014 page unreadable",
-  states_no_terms: "unrated \u2014 page states no terms",
+  states_no_terms: "unrated \u2014 page states no price",
   does_not_name_vendor: "unrated \u2014 page omits vendor",
   does_not_name_product: "unrated \u2014 page omits product",
 };
@@ -45990,7 +45990,7 @@ ${globalNavCss()}
   <p class="section-desc">We analyzed ${offers.length.toLocaleString()} developer tool offerings across ${categories.length} categories, tracking ${changesInForce.length} pricing changes over 2024&ndash;2026. Here&rsquo;s what the data shows:</p>
   <ul class="key-takeaways">
     <li><strong>${vouchedPct}% of tracked services offer a free tier we can vouch for today</strong> &mdash; we hold a free-tier record for ${recordedPct}% of them, and can confirm ${freeTiers.vouched.toLocaleString()} of those ${freeTiers.recorded.toLocaleString()} against a source we have read.</li>
-    <li><strong>${freeTiers.unconfirmed.toLocaleString()} recorded free tiers we cannot confirm today</strong> &mdash; the record stands, but the page we hold for it states no terms, cannot be read, or does not name the vendor. Unconfirmed is not the same as gone.</li>
+    <li><strong>${freeTiers.unconfirmed.toLocaleString()} recorded free tiers we cannot confirm today</strong> &mdash; the record stands, but the page we hold for it states no price we can read, cannot be read at all, or does not name the vendor. Unconfirmed is not the same as gone.</li>
     <li><strong>${freeTiers.ended} free tiers we have recorded as ended</strong> &mdash; excluded from every count above, and from every category total on this site.</li>
     <li><strong>${negativeChanges.length} negative pricing changes vs ${positiveChanges.length} positive</strong> &mdash; free tier removals and restrictions outpace expansions ${directionRatioLabel(negativeChanges.length, positiveChanges.length)}.</li>
     <li><strong>${durability.stillInForce.length} free tiers completely removed</strong> &mdash; ${escHtmlServer(lastingExamples.map(e => e.vendor).join(", "))}, and more. ${escHtmlServer(removalReturnRateSentence(durability))}</li>
@@ -46161,7 +46161,7 @@ ${globalNavCss()}
   <h2>Methodology</h2>
   <p class="section-desc">How we built this dataset:</p>
   <ul style="color:var(--text-muted);font-size:.9rem;padding-left:1.25rem;margin-bottom:1rem">
-    <li style="margin-bottom:.4rem"><strong>Verification:</strong> Every offer records the date we read the vendor&rsquo;s public pricing page and the URL we read it from. That is not the same as being able to vouch for it today: ${freeTiers.unconfirmed.toLocaleString()} of the ${freeTiers.recorded.toLocaleString()} recorded free tiers have a source that states no terms, cannot be read, or does not name the vendor, and those are the ones counted as unconfirmed above.</li>
+    <li style="margin-bottom:.4rem"><strong>Verification:</strong> Every offer records the date we read the vendor&rsquo;s public pricing page and the URL we read it from. That is not the same as being able to vouch for it today: ${freeTiers.unconfirmed.toLocaleString()} of the ${freeTiers.recorded.toLocaleString()} recorded free tiers have a source that states no price we can read, cannot be read at all, or does not name the vendor, and those are the ones counted as unconfirmed above.</li>
     <li style="margin-bottom:.4rem"><strong>Change tracking:</strong> ${changesInForce.length} pricing changes tracked with date, previous state, current state, impact level, and source documentation.</li>
     <li style="margin-bottom:.4rem"><strong>Definition of &ldquo;free tier&rdquo;:</strong> Perpetual free plans, always-free offerings, and generous hobby/starter tiers without time limits. We exclude limited trials (e.g., 14-day, 30-day) and one-time credits.</li>
     <li style="margin-bottom:.4rem"><strong>Update frequency:</strong> Continuous. Our <a href="/freshness">data freshness dashboard</a> shows verification recency by category.</li>
@@ -50691,7 +50691,7 @@ function buildFreshnessPage(): string {
     empty_page: "the page rendered nothing we could read",
     ai_extraction: "our reader failed",
     ai_undecided: "our reader could not decide",
-    source_unusable: "the page we cite states no terms",
+    source_unusable: "the page we cite is not about this offer",
   };
   const quarantineReason = (code: string | null) =>
     (code && QUARANTINE_REASON_PROSE[code]) ?? "not recorded";

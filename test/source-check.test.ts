@@ -46,7 +46,7 @@ describe("an offer whose cited page cannot verify it", () => {
     assert.strictEqual(cannotVouchForLevel({ source_check: CITED_PAGE_COULD_NOT_BE_READ }, null), true);
   });
 
-  it("withholds a favourable risk level where the cited page states no terms we can read", () => {
+  it("withholds a favourable risk level where the cited page states no price we can read", () => {
     assert.strictEqual(sourceDoesNotNameVendor({ source_check: CITED_PAGE_STATES_NO_TERMS }), false);
     assert.strictEqual(cannotVouchForLevel({ source_check: CITED_PAGE_STATES_NO_TERMS }, null), true);
     assert.ok(sourceCheckNotice({ source_check: CITED_PAGE_STATES_NO_TERMS }));
@@ -190,7 +190,7 @@ describe("what the enriched record publishes for a source we could not read", ()
   });
 });
 
-describe("what the tool tells an agent about a source that states no terms we can read", () => {
+describe("what the tool tells an agent about a source that states no price we can read", () => {
   const vendorsSourcedOnlyFromPagesStatingNoTerms = (): string[] => {
     const byVendor = new Map<string, any[]>();
     for (const offer of loadOffers() as any[]) {
@@ -208,12 +208,12 @@ describe("what the tool tells an agent about a source that states no terms we ca
     const statingNoTerms = enriched.filter(
       (o) => o.source_check?.outcome === "states_no_terms" && !o.link_unreachable
     );
-    assert.ok(statingNoTerms.length > 0, "no record in the index cites a page that states no terms");
+    assert.ok(statingNoTerms.length > 0, "no record in the index cites a page that states no price we can read");
     for (const offer of statingNoTerms) {
       assert.notStrictEqual(
         offer.risk_level,
         "stable",
-        `${offer.vendor} is badged stable from a page that states no terms we can read`
+        `${offer.vendor} is badged stable from a page that states no price we can read`
       );
     }
   });
@@ -226,7 +226,7 @@ describe("what the tool tells an agent about a source that states no terms we ca
       assert.doesNotMatch(
         result.summary,
         /has a stable pricing history/,
-        `${vendor} is told it has a stable pricing history from a page that states no terms`
+        `${vendor} is told it has a stable pricing history from a page that states no price we can read`
       );
       if (++checked === 20) break;
     }
@@ -240,12 +240,12 @@ describe("what the tool tells an agent about a source that states no terms we ca
       if (result.risk_level !== null) continue;
       assert.match(
         result.summary,
-        /states no terms we can read/,
+        /states no amount, tier or rate we can read/,
         `${vendor} withholds a level without saying why`
       );
       if (++said === 20) break;
     }
-    assert.ok(said > 0, "no vendor tells a caller its cited page states no terms we can read");
+    assert.ok(said > 0, "no vendor tells a caller its cited page states no price we can read");
   });
 });
 

@@ -101,7 +101,7 @@ describe("vendor verdict — one rating word, and it carries its cause", () => {
     assert.strictEqual(vendorVerdictWord(withheld), null);
     assert.strictEqual(
       vendorVerdictSentence(withheld),
-      "The page we cite for this offer states no terms we can read, so we cannot confirm these terms today.",
+      "The page we cite for this offer states no amount, tier or rate we can read, so we cannot confirm these terms today.",
     );
   });
 

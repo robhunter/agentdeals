@@ -68,7 +68,7 @@ describe("comparison verdict — the free-tier claim carries its own reservation
   });
 
   it("never says a side offers a free tier when the site publishes no verdict for it", () => {
-    const why = "The page we cite for BrowserStack states no terms we can read.";
+    const why = "The page we cite for BrowserStack states no amount, tier or rate we can read.";
     const one = freeTierVerdictSentence(offering("Applitools Eyes", "Free"), unconfirmed("BrowserStack", why));
     assert.ok(!one.includes("BrowserStack offers a free tier"), one);
     assert.ok(one.includes("We are not publishing a free-tier verdict for BrowserStack."), one);
@@ -86,7 +86,7 @@ describe("comparison verdict — the free-tier claim carries its own reservation
   });
 
   it("states a withheld reason once when the free-tier claim and the stability clause share it", () => {
-    const why = "The page we cite for BrowserStack states no terms we can read.";
+    const why = "The page we cite for BrowserStack states no amount, tier or rate we can read.";
     const stableSide = side({ vendor: "Applitools Eyes", recordedChanges: 1, rating: "stable" });
     const withheldSide = side({
       vendor: "BrowserStack",
@@ -212,7 +212,7 @@ describe("comparison verdict — a withheld rating is stated, never resolved", (
       withheld("Cline", "states_no_terms"),
       withheld("Aider", "does_not_name_vendor"),
     );
-    assert.match(clause, /The page we cite for Cline states no terms we can read\./);
+    assert.match(clause, /The page we cite for Cline states no amount, tier or rate we can read\./);
     assert.match(clause, /The page we cite for Aider does not name it\./);
     assert.match(clause, /We are not comparing the two pricing histories\.$/);
   });
