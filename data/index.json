@@ -1199,35 +1199,6 @@
       }
     },
     {
-      "vendor": "Hasura Cloud",
-      "category": "Databases",
-      "description": "Hasura DDN Free plan — unlimited API requests, unlimited concurrent users, unlimited models at any scale. Includes full GraphQL API (filtering, pagination, sorting, aggregations), database/code/API connectors, and CI/CD tools. Limits: 1 supergraph developer, 15-minute observability retention.",
-      "tier": "Free",
-      "url": "https://hasura.io/pricing",
-      "tags": [
-        "database",
-        "graphql",
-        "api",
-        "serverless",
-        "free tier",
-        "firebase-alternative"
-      ],
-      "verifiedDate": "2026-08-22",
-      "product_role": {
-        "deployment_model": "hosted",
-        "is_addon": true,
-        "augments": "a database you already run",
-        "source_url": "https://hasura.io/docs/3.0/connectors/overview/",
-        "source_quote": "We use native data connectors to make your data accessible through a GraphQL API.",
-        "reviewed": "2026-08-25"
-      },
-      "source_check": {
-        "checked": "2026-09-05",
-        "outcome": "ok",
-        "detail": "the page names Hasura Cloud as \"hasura cloud\" and states \"$0\""
-      }
-    },
-    {
       "vendor": "GitHub Actions",
       "category": "CI/CD",
       "description": "Free CI/CD for public repos (unlimited minutes). Private repos: 2,000 min/mo GitHub-hosted runners, 500 MB artifact storage, 10 GB cache/repo. Self-hosted runners remain free — planned $0.002/min charge was postponed indefinitely after community backlash (March 2026). Hosted runner prices reduced 39% (Jan 2026)",
@@ -2734,26 +2705,6 @@
         "checked": "2026-09-05",
         "outcome": "ok",
         "detail": "the page names Stripe as \"stripe\" and states \"$5.00\""
-      }
-    },
-    {
-      "vendor": "LemonSqueezy",
-      "category": "Payments",
-      "description": "Merchant of record — no monthly fees, 5% + $0.50 per transaction. Handles sales tax/VAT globally, license keys, fraud protection",
-      "tier": "Pay-as-you-go",
-      "url": "https://www.lemonsqueezy.com/pricing",
-      "tags": [
-        "payments",
-        "merchant of record",
-        "billing",
-        "tax",
-        "free tier"
-      ],
-      "verifiedDate": "2026-08-26",
-      "source_check": {
-        "checked": "2026-09-09",
-        "outcome": "ok",
-        "detail": "the page names LemonSqueezy as \"lemonsqueezy\" and states \"$0\""
       }
     },
     {
@@ -4748,26 +4699,6 @@
         "detail": "the page names Discord API as \"discord api\" and states \"50 requests per second\""
       },
       "free_tier_is_the_product": true
-    },
-    {
-      "vendor": "Slack API",
-      "category": "Communication",
-      "description": "Free workspace (90-day message history, 10 app integrations, 5 GB storage) + free API access with same rate limits as paid plans. Non-Marketplace apps created after May 2025 have stricter API rate limits",
-      "tier": "Free",
-      "url": "https://slack.com/pricing",
-      "tags": [
-        "communication",
-        "api",
-        "chat",
-        "integrations",
-        "free tier"
-      ],
-      "verifiedDate": "2026-09-07",
-      "source_check": {
-        "checked": "2026-09-09",
-        "outcome": "ok",
-        "detail": "the page writes \"slack\", the domain we cite Slack API from, and states \"$0\""
-      }
     },
     {
       "vendor": "Bugsnag",
@@ -7455,13 +7386,17 @@
       "vendor": "Lemon Squeezy",
       "category": "Payments",
       "description": "Merchant of record for digital products — $0/month, all features included (payments, subscriptions, tax compliance, fraud protection). Revenue: 5% + 50c/transaction. Email marketing: 500 subscribers free",
-      "tier": "Free",
+      "tier": "Pay-as-you-go",
       "url": "https://www.lemonsqueezy.com/pricing",
       "tags": [
         "payments",
         "merchant-of-record",
         "ecommerce",
-        "subscriptions"
+        "subscriptions",
+        "merchant of record",
+        "billing",
+        "tax",
+        "free tier"
       ],
       "verifiedDate": "2026-08-27",
       "source_check": {
@@ -8832,7 +8767,7 @@
     },
     {
       "vendor": "Hasura",
-      "category": "API Development",
+      "category": "Databases",
       "description": "Instant GraphQL API engine over any database — Hasura DDN Free plan: unlimited API requests and unlimited concurrent users, unlimited models at any scale. 1 supergraph developer, 15-minute observability retention. Auto-generates GraphQL APIs from Postgres, SQL Server, BigQuery via database/code/API connectors",
       "tier": "Cloud Free",
       "url": "https://hasura.io/pricing",
@@ -8841,13 +8776,24 @@
         "api",
         "database",
         "backend",
-        "developer-tools"
+        "developer-tools",
+        "serverless",
+        "free tier",
+        "firebase-alternative"
       ],
-      "verifiedDate": "2026-08-18",
+      "verifiedDate": "2026-08-22",
       "source_check": {
         "checked": "2026-09-03",
         "outcome": "ok",
         "detail": "text"
+      },
+      "product_role": {
+        "deployment_model": "hosted",
+        "is_addon": true,
+        "augments": "a database you already run",
+        "source_url": "https://hasura.io/docs/3.0/connectors/overview/",
+        "source_quote": "We use native data connectors to make your data accessible through a GraphQL API.",
+        "reviewed": "2026-08-25"
       }
     },
     {
@@ -9317,7 +9263,8 @@
       "tags": [
         "data-science",
         "notebooks",
-        "free-for-dev"
+        "free-for-dev",
+        "developer-tools"
       ],
       "verifiedDate": "2026-08-13",
       "source_check": {
@@ -9955,39 +9902,6 @@
       }
     },
     {
-      "vendor": "Arize AI",
-      "category": "AI / ML",
-      "description": "ML observability platform (now Arize AX). AX Free plan: 25K trace spans/month, 1 GB ingestion/month, 15 days data retention. Includes online evals, product observability, and community support.",
-      "tier": "Free",
-      "url": "https://arize.com/pricing",
-      "tags": [
-        "developer-tools",
-        "free-for-dev"
-      ],
-      "verifiedDate": "2026-09-06",
-      "source_check": {
-        "checked": "2026-09-07",
-        "outcome": "ok",
-        "detail": "the page names Arize AI as \"arize ai\" and states \"$50\""
-      },
-      "product_subtypes": {
-        "taxonomy": "AI / ML",
-        "labels": [
-          {
-            "subtype": "llm_observability",
-            "source_url": "https://arize.com/pricing",
-            "source_quote": "trace, evaluate, and iterate on your LLM applications"
-          },
-          {
-            "subtype": "llm_evaluation",
-            "source_url": "https://arize.com/pricing",
-            "source_quote": "Trace, evaluate, and improve your agents"
-          }
-        ],
-        "reviewed": "2026-09-01"
-      }
-    },
-    {
       "vendor": "Beeceptor",
       "category": "API Development",
       "description": "No-code, cloud-based platform for mocking and debugging multi-protocol APIs (REST, SOAP, gRPC & GraphQL), providing instant servers with rules-based logic, CRUD & stateful mocking, proxying, and CORS management for faster integration and testing. The free plan includes 50 requests per day and provides a public dashboard/endpoint where anyone with the dashboard URL can view submitted requests and responses.",
@@ -10108,23 +10022,6 @@
         "checked": "2026-09-09",
         "outcome": "ok",
         "detail": "the page names Cloudmersive as \"cloudmersive\" and states \"$540,000\""
-      }
-    },
-    {
-      "vendor": "Colaboratory",
-      "category": "Notebooks & Data Science",
-      "description": "Free web-based Python notebook environment with Nvidia Tesla K80 GPU.",
-      "tier": "Free",
-      "url": "https://colab.research.google.com",
-      "tags": [
-        "developer-tools",
-        "free-for-dev"
-      ],
-      "verifiedDate": "2026-08-03",
-      "source_check": {
-        "checked": "2026-08-28",
-        "outcome": "unreadable",
-        "detail": "page content too short (likely JS-rendered SPA)"
       }
     },
     {
@@ -18518,9 +18415,10 @@
         "ai",
         "ml",
         "generative-ai",
-        "free-for-dev"
+        "free-for-dev",
+        "developer-tools"
       ],
-      "verifiedDate": "2026-09-02",
+      "verifiedDate": "2026-09-06",
       "source_check": {
         "checked": "2026-09-03",
         "outcome": "ok",
@@ -25115,23 +25013,6 @@
         "checked": "2026-09-09",
         "outcome": "unreadable",
         "detail": "HTTP 403"
-      }
-    },
-    {
-      "vendor": "Components.studio",
-      "category": "IDE & Code Editors",
-      "description": "Code components in isolation, visualize them in stories, test them, and publish them on npm.",
-      "tier": "Free",
-      "url": "https://webcomponents.dev/",
-      "tags": [
-        "developer-tools",
-        "free-for-dev"
-      ],
-      "verifiedDate": "2026-08-10",
-      "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names Components.studio but states no amount, tier or rate we can read"
       }
     },
     {
@@ -32581,16 +32462,21 @@
     {
       "vendor": "Slack",
       "category": "Communication & Messaging",
-      "description": "90-day message history. 1-to-1 huddles. 10 app integrations. 5 GB total file storage for workspace. No group huddles, no screen sharing in huddles, no Slack Connect, no guest accounts on free.",
+      "description": "90-day message history. 1-to-1 huddles. 10 app integrations. 5 GB total file storage for workspace. No group huddles, no screen sharing in huddles, no Slack Connect, no guest accounts on free. Free API access with the same rate limits as paid plans; non-Marketplace apps created after May 2025 have stricter API rate limits.",
       "tier": "Free",
       "url": "https://slack.com/pricing",
       "tags": [
         "messaging",
         "team-chat",
         "consumer",
-        "free-tier"
+        "free-tier",
+        "communication",
+        "api",
+        "chat",
+        "integrations",
+        "free tier"
       ],
-      "verifiedDate": "2026-08-18",
+      "verifiedDate": "2026-09-07",
       "source_check": {
         "checked": "2026-09-05",
         "outcome": "ok",
