@@ -24,6 +24,7 @@ process.env.AGENTDEALS_LINK_HEALTH_PATH = linkHealthPath;
 
 const {
   EXCLUSION_RULES,
+  NO_FREE_PRICE_REASON,
   README_CATEGORIES,
   README_SUBTYPES,
   README_TAXONOMY,
@@ -35,6 +36,7 @@ const {
   readmeSelection,
   renderRow,
 } = await import("../dist/llm-api-readme.js");
+const { namesAPriceOfNothing } = await import("../dist/superseding-reading.js");
 const { CHANGE_KIND_NOUN } = await import("../dist/vendor-verdict.js");
 const { NOT_FREE_TIER_RULES, TIME_LIMITED_TIER_RULES } = await import("../dist/ranking.js");
 const { SUBTYPE_TAXONOMIES } = await import("../dist/product-role.js");
@@ -180,12 +182,14 @@ describe("the file states the rule that decided what is in it", () => {
     assert.ok(rendered.includes(`${selection.excluded.length} records there are left out`));
   });
 
-  it("names the records it left out for what their own reading says", () => {
-    const named = selection.excluded.filter(e => e.reason === "reading_names_no_price_of_nothing");
-    assert.ok(named.length > 0, "the catalogue holds a row whose current reading names no price of nothing");
-    for (const record of named) {
-      assert.ok(rendered.includes(`**${record.vendor}** (tier \`${record.tier}\`)`), record.vendor);
+  it("leaves a record out for what its labels say, never for what its terms say", () => {
+    for (const record of selection.excluded) {
+      assert.ok(record.reason in EXCLUSION_RULES, `${record.vendor} left out under ${record.reason}`);
     }
+    const priced = offer({ vendor: "Priced Vendor", description: "Input $2.00 / 1M tokens, Output $6.00 / 1M tokens" });
+    const { rows: built, excluded } = readmeSelection([priced], [], CONTEXT);
+    assert.deepEqual(built.map(r => r.vendor), ["Priced Vendor"]);
+    assert.deepEqual(excluded, []);
   });
 
   it("leaves a labelled record out for its label rather than for its category", () => {
@@ -223,7 +227,7 @@ describe("the file states the rule that decided what is in it", () => {
   });
 });
 
-describe("a row whose current reading names no price of nothing is not published under a free-tier title", () => {
+describe("a row whose published terms name no price of nothing carries no rating", () => {
   const priced = offer({ vendor: "Priced Vendor", tier: "Free Credits" });
   const priceSheet = change({
     vendor: "Priced Vendor",
@@ -235,38 +239,108 @@ describe("a row whose current reading names no price of nothing is not published
     source_url: "https://example.com/pricing",
   });
 
-  it("leaves out a row whose newest reading is a price sheet", () => {
-    const { rows: built, excluded } = readmeSelection([priced], [priceSheet], CONTEXT);
-    assert.deepEqual(built, []);
-    assert.deepEqual(excluded, [
-      { vendor: "Priced Vendor", tier: "Free Credits", reason: "reading_names_no_price_of_nothing" },
-    ]);
+  it("holds on every published row, whether or not a newer reading superseded the record", () => {
+    for (const row of rows) {
+      if (namesAPriceOfNothing(row.terms.text)) continue;
+      assert.notEqual(row.verdict.kind, "rating", `${row.vendor} is rated on terms naming no price of nothing`);
+      assert.ok(!/`(stable|caution|risky)`/.test(renderRow(row)), row.vendor);
+    }
   });
 
-  it("keeps a row whose newest reading states a price of nothing", () => {
-    const stillFree = { ...priceSheet, current_state: "Free plan: 1,000 requests/month, then $2.00 / 1M tokens" };
-    const { rows: built, excluded } = readmeSelection([priced], [stillFree], CONTEXT);
+  it("tests the terms a row publishes rather than only a superseding reading", () => {
+    const ourOwnPriceSheet = offer({
+      vendor: "Unre-read Vendor",
+      tier: "Starter",
+      description: "Vector database — 2 GB storage, 2M write units/month, 5 indexes",
+    });
+    const row = rowFor([ourOwnPriceSheet], [], "Unre-read Vendor");
+    assert.equal(row.terms.quoted, false);
+    assert.equal(ratingWord(row), "unrated");
+    assert.equal((row.verdict as { reason: string }).reason, NO_FREE_PRICE_REASON);
+  });
+
+  it("publishes the row, with its terms, rather than leaving it out", () => {
+    const { rows: built, excluded } = readmeSelection([priced], [priceSheet], CONTEXT);
     assert.deepEqual(built.map(r => r.vendor), ["Priced Vendor"]);
     assert.deepEqual(excluded, []);
+    assert.match(renderRow(built[0]), /Input \$2\.00 \/ 1M tokens/);
+  });
+
+  it("says no free price rather than saying the offer ended, where no removal is recorded", () => {
+    const row = rowFor([priced], [priceSheet], "Priced Vendor");
+    assert.equal(ratingWord(row), "unrated");
+    assert.match(row.verdict.sentence, /name no price of nothing/);
+    assert.match(row.verdict.sentence, /We hold no record of Priced Vendor removing a free tier/);
+  });
+
+  it("says the offer ended where a removal is recorded and the reading agrees", () => {
+    const removal = change({
+      vendor: "Priced Vendor",
+      change_type: "free_tier_removed",
+      date: "2026-04-13",
+      summary: "$25/month free API credits no longer offered",
+    });
+    const row = rowFor([priced], [priceSheet, removal], "Priced Vendor");
+    assert.equal(ratingWord(row), "ended");
+    assert.match(row.verdict.sentence, /free tier removal on 2026-04-13/);
+  });
+
+  it("rates a row whose recorded removal is contradicted by a reading naming a price of nothing", () => {
+    const backAgain = { ...priceSheet, current_state: "Free plan: 1,000 requests/month, then $2.00 / 1M tokens" };
+    const removal = change({ vendor: "Priced Vendor", change_type: "free_tier_removed", date: "2026-04-13" });
+    const row = rowFor([priced], [backAgain, removal], "Priced Vendor");
+    assert.notEqual(ratingWord(row), "ended");
+  });
+
+  it("leaves a rating already withheld for another reason under that reason", () => {
+    const metered = offer({ vendor: "Metered Vendor", tier: "Pay-as-you-go", description: "Input $2.00 / 1M tokens" });
+    const row = rowFor([metered], [], "Metered Vendor");
+    assert.equal(ratingWord(row), "unrated");
+    assert.equal((row.verdict as { reason: string }).reason, "gate:not_a_free_offer");
+  });
+
+  it("keeps a rating where the published terms state a price of nothing", () => {
+    const stillFree = { ...priceSheet, current_state: "Free plan: 1,000 requests/month, then $2.00 / 1M tokens" };
+    const row = rowFor([priced], [stillFree], "Priced Vendor");
+    assert.equal(row.verdict.kind, "rating");
   });
 
   it("reads a recurring credit as a price of nothing rather than as a price sheet", () => {
     const credits = { ...priceSheet, current_state: "Starter Free $20 credits on sign-up with $10 credits every month" };
-    const { rows: built } = readmeSelection([priced], [credits], CONTEXT);
-    assert.deepEqual(built.map(r => r.vendor), ["Priced Vendor"]);
+    const row = rowFor([priced], [credits], "Priced Vendor");
+    assert.equal(row.verdict.kind, "rating");
   });
 
   it("reads a fraction of a cent as a price rather than as nothing", () => {
     const fractions = { ...priceSheet, current_state: "input token prices range from $0.007 to $0.44 per 1M tokens" };
-    const { rows: built } = readmeSelection([priced], [fractions], CONTEXT);
-    assert.deepEqual(built, []);
+    const row = rowFor([priced], [fractions], "Priced Vendor");
+    assert.equal(ratingWord(row), "unrated");
   });
 
-  it("keeps a row whose terms are our own record rather than a newer reading", () => {
-    const ours = offer({ vendor: "Our Record", description: "1,000 requests/month and one seat" });
+  it("keeps a rating where our own record names a price of nothing", () => {
+    const ours = offer({ vendor: "Our Record", description: "Free: 1,000 requests/month and one seat" });
     const { rows: built, excluded } = readmeSelection([ours], [], CONTEXT);
     assert.deepEqual(built.map(r => r.vendor), ["Our Record"]);
     assert.deepEqual(excluded, []);
+    assert.equal(built[0].verdict.kind, "rating");
+  });
+
+  it("states the rule in the file, with the count it produced", () => {
+    const unrated = rows.filter(
+      r => r.verdict.kind === "withheld" && r.verdict.reason === NO_FREE_PRICE_REASON,
+    ).length;
+    const clause = unrated === 1 ? "One row is unrated for that reason today" : `${unrated} rows are unrated for that reason today`;
+    assert.ok(rendered.includes(clause), clause);
+    assert.ok(rendered.includes("That test runs on the terms **every** row publishes."), "the file states the scope of the rule");
+  });
+
+  it("takes that count from the rows it published rather than from the catalogue it usually reads", () => {
+    const free = offer({ vendor: "Free Vendor", description: "Free: 1,000 requests/month" });
+    const one = offer({ vendor: "Lone Priced Vendor", description: "Input $2.00 / 1M tokens" });
+    assert.ok(generateReadme([free, one], [], CONTEXT).includes("One row is unrated for that reason today"));
+
+    const another = offer({ vendor: "Second Priced Vendor", description: "Output $6.00 / 1M tokens" });
+    assert.ok(generateReadme([free, one, another], [], CONTEXT).includes("2 rows are unrated for that reason today"));
   });
 });
 
@@ -381,6 +455,21 @@ describe("a row we cannot vouch for says so in the row", () => {
     const census = readmeCensus(rows);
     assert.match(rendered, new RegExp(`\\| Carrying a caveat about our own reading \\| ${census.caveated} \\|`));
     assert.match(rendered, new RegExp(`${census.withheld} of ${census.rows} `));
+  });
+
+  it("counts a row that both withholds a rating and carries a caveat under each", () => {
+    const both = offer({
+      vendor: "Both Vendor",
+      tier: "Pay-as-you-go",
+      verifiedDate: "2026-05-01",
+      source_check: { checked: "2026-09-05", outcome: "unreadable", detail: "HTTP 403" },
+    });
+    const built = readmeRows([both], [], CONTEXT);
+    assert.deepEqual(built[0].caveats.map(c => c.kind), ["not_re_read"]);
+    const census = readmeCensus(built);
+    assert.equal(census.withheld, 1, "a caveated row still counts as withholding a rating");
+    assert.equal(census.caveated, 1);
+    assert.match(generateReadme([both], [], CONTEXT), /1 of 1 /);
   });
 });
 

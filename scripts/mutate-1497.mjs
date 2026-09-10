@@ -5,9 +5,33 @@ const SUITE = ["test/llm-api-readme.test.ts"];
 const FILE = "src/llm-api-readme.ts";
 
 const MUTANTS = [
-  ["a-withheld-record-is-dropped-from-the-file", FILE,
-    "    .filter(o => categories.has(o.category))",
-    "    .filter(o => categories.has(o.category) && o.tier.toLowerCase().includes(\"free\"))"],
+  ["the-free-price-test-never-runs", FILE,
+    "  if (namesAPriceOfNothing(terms.text)) return null;",
+    "  if (terms.text) return null;"],
+
+  ["the-free-price-test-runs-only-on-a-superseding-reading", FILE,
+    "  if (namesAPriceOfNothing(terms.text)) return null;",
+    "  if (!terms.quoted || namesAPriceOfNothing(terms.text)) return null;"],
+
+  ["a-row-naming-no-free-price-is-left-out-rather-than-published", FILE,
+    "    .map(offer => readmeRow(offer, changes, context));",
+    "    .map(offer => readmeRow(offer, changes, context))\n    .filter(row => namesAPriceOfNothing(row.terms.text));"],
+
+  ["a-recorded-removal-is-ignored", FILE,
+    "  return changes.find(c => c.change_type === REMOVAL_CHANGE_TYPE) ?? null;",
+    "  return null;"],
+
+  ["any-recorded-change-counts-as-a-removal", FILE,
+    "  return changes.find(c => c.change_type === REMOVAL_CHANGE_TYPE) ?? null;",
+    "  return changes[0] ?? null;"],
+
+  ["the-free-price-test-overrides-a-reason-already-published", FILE,
+    "      : badge.kind === \"ended\"\n        ? { kind: \"ended\", sentence: endedVerdictSentence() }\n        : {\n            kind: \"withheld\",\n            reason: withheldReasonCode(badge.because),\n            sentence: withheldSentence(offer.vendor, badge.because, risk.gate, since),\n          };",
+    "      : ratingOnTermsThatPriceNothingAtNothing(offer.vendor, terms, vendorChanges) ?? (badge.kind === \"ended\"\n        ? { kind: \"ended\", sentence: endedVerdictSentence() }\n        : {\n            kind: \"withheld\",\n            reason: withheldReasonCode(badge.because),\n            sentence: withheldSentence(offer.vendor, badge.because, risk.gate, since),\n          });"],
+
+  ["the-file-states-a-count-it-did-not-take-from-the-rows", FILE,
+    "  const unrated = census.withheldByReason[NO_FREE_PRICE_REASON] ?? 0;",
+    "  const unrated: number = 3;"],
 
   ["a-withheld-record-publishes-its-history-level", FILE,
     "  return row.verdict.kind === \"ended\" ? RATING_LABELS.ended : RATING_LABELS.unrated;",

@@ -750,17 +750,6 @@
       "quarantined_since": null
     },
     {
-      "vendor": "Arize AI",
-      "url": "https://arize.com/pricing",
-      "last_attempt_at": "2026-09-07",
-      "last_outcome": "confirmed",
-      "last_error": null,
-      "failure_category": null,
-      "consecutive_failures": 0,
-      "last_success": "2026-09-07",
-      "quarantined_since": null
-    },
-    {
       "vendor": "Arize AX",
       "url": "https://arize.com/pricing",
       "last_attempt_at": "2026-09-03",
@@ -2961,17 +2950,6 @@
       "quarantined_since": null
     },
     {
-      "vendor": "Colaboratory",
-      "url": "https://colab.research.google.com",
-      "last_attempt_at": "2026-08-28",
-      "last_outcome": "fetch_failed",
-      "last_error": "page content too short (likely JS-rendered SPA)",
-      "failure_category": "empty_page",
-      "consecutive_failures": 1,
-      "last_success": "2026-08-03",
-      "quarantined_since": null
-    },
-    {
       "vendor": "ColdCRM",
       "url": "https://www.joinsecret.com/offers",
       "last_attempt_at": "2026-08-28",
@@ -3002,17 +2980,6 @@
       "failure_category": null,
       "consecutive_failures": 0,
       "last_success": null,
-      "quarantined_since": null
-    },
-    {
-      "vendor": "Components.studio",
-      "url": "https://webcomponents.dev/",
-      "last_attempt_at": "2026-08-28",
-      "last_outcome": "source_unusable",
-      "last_error": "the page names Components.studio but states no amount, tier or rate we can read",
-      "failure_category": "source_unusable",
-      "consecutive_failures": 1,
-      "last_success": "2026-08-10",
       "quarantined_since": null
     },
     {
@@ -6635,17 +6602,6 @@
       "quarantined_since": "2026-08-28"
     },
     {
-      "vendor": "Hasura Cloud",
-      "url": "https://hasura.io/pricing",
-      "last_attempt_at": "2026-09-05",
-      "last_outcome": "changed",
-      "last_error": null,
-      "failure_category": null,
-      "consecutive_failures": 0,
-      "last_success": null,
-      "quarantined_since": null
-    },
-    {
       "vendor": "Hasura",
       "url": "https://hasura.io/pricing",
       "last_attempt_at": "2026-09-03",
@@ -8256,17 +8212,6 @@
       "url": "https://www.lemonsqueezy.com/pricing",
       "last_attempt_at": "2026-08-28",
       "last_outcome": "confirmed",
-      "last_error": null,
-      "failure_category": null,
-      "consecutive_failures": 0,
-      "last_success": "2026-08-28",
-      "quarantined_since": null
-    },
-    {
-      "vendor": "LemonSqueezy",
-      "url": "https://www.lemonsqueezy.com/pricing",
-      "last_attempt_at": "2026-09-09",
-      "last_outcome": "changed",
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
@@ -13221,17 +13166,6 @@
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
       "last_success": "2026-08-06",
-      "quarantined_since": null
-    },
-    {
-      "vendor": "Slack API",
-      "url": "https://slack.com/pricing",
-      "last_attempt_at": "2026-09-09",
-      "last_outcome": "confirmed",
-      "last_error": null,
-      "failure_category": null,
-      "consecutive_failures": 0,
-      "last_success": "2026-09-09",
       "quarantined_since": null
     },
     {

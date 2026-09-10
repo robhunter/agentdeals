@@ -48,8 +48,7 @@ export const README_INCLUSION_RULE =
 export type ExclusionReason =
   | "not_read_against_subtypes"
   | "no_subtype_applies"
-  | "another_function"
-  | "reading_names_no_price_of_nothing";
+  | "another_function";
 
 export const EXCLUSION_RULES: Record<ExclusionReason, string> = {
   not_read_against_subtypes:
@@ -62,11 +61,11 @@ export const EXCLUSION_RULES: Record<ExclusionReason, string> = {
   another_function:
     "The record is labelled, and every label it carries names a different function — observability, evaluation, "
     + "labelling, generation and the rest are not the serving of a model behind an API.",
-  reading_names_no_price_of_nothing:
-    "The reading this row would publish as current names no price of nothing: no free plan, no zero price, only a "
-    + "price sheet. A tier field saying otherwise is older than that reading, so the reading wins and the row is not "
-    + "published under a title offering free tiers.",
 };
+
+export const NO_FREE_PRICE_REASON = "reading_names_no_price_of_nothing";
+
+export const REMOVAL_CHANGE_TYPE = "free_tier_removed";
 
 export const README_ORDER_RULE =
   "Rows are ordered alphabetically by vendor. That is not a ranking: we publish no best free LLM API, "
@@ -158,6 +157,34 @@ function changesFor(vendor: string, changes: DealChange[]): DealChange[] {
   return changes.filter(c => c.vendor.toLowerCase() === key).sort((a, b) => b.date.localeCompare(a.date));
 }
 
+export function recordedRemoval(changes: DealChange[]): DealChange | null {
+  return changes.find(c => c.change_type === REMOVAL_CHANGE_TYPE) ?? null;
+}
+
+export function endedByRemovalSentence(vendor: string, removal: DealChange): string {
+  return `We recorded ${vendor}'s ${CHANGE_KIND_NOUN[removal.change_type]} on ${removal.date}, and the terms this row `
+    + "publishes name no price of nothing either. A removal we recorded and terms that name nothing free are the same "
+    + "finding twice, so this row says the offer ended rather than that we cannot say.";
+}
+
+export function noFreePriceSentence(vendor: string): string {
+  return "The terms this row publishes name no price of nothing — no free plan, no zero price, nothing stated as "
+    + `costing nothing. A tier field saying otherwise is older than the terms beside it. We hold no record of ${vendor} `
+    + "removing a free tier, so we do not say one ended — we publish no rating and leave the terms to be read.";
+}
+
+function ratingOnTermsThatPriceNothingAtNothing(
+  vendor: string,
+  terms: PublishedTerms,
+  vendorChanges: DealChange[],
+): RowVerdict | null {
+  if (namesAPriceOfNothing(terms.text)) return null;
+  const removal = recordedRemoval(vendorChanges);
+  return removal
+    ? { kind: "ended", sentence: endedByRemovalSentence(vendor, removal) }
+    : { kind: "withheld", reason: NO_FREE_PRICE_REASON, sentence: noFreePriceSentence(vendor) };
+}
+
 export function readmeRow(offer: Offer, allChanges: DealChange[], context: RowContext): ReadmeRow {
   const vendorChanges = changesFor(offer.vendor, allChanges);
   const risk = publishedRisk(offer, vendorChanges, context.servedOn, context.nowMs);
@@ -178,18 +205,6 @@ export function readmeRow(offer: Offer, allChanges: DealChange[], context: RowCo
     sourceCheck: offer.source_check?.outcome ?? null,
   };
 
-  const badge = vendorBadge(input);
-  const verdict: RowVerdict =
-    badge.kind === "rating"
-      ? { kind: "rating", word: badge.word, sentence: vendorVerdictSentence(input) }
-      : badge.kind === "ended"
-        ? { kind: "ended", sentence: endedVerdictSentence() }
-        : {
-            kind: "withheld",
-            reason: withheldReasonCode(badge.because),
-            sentence: withheldSentence(offer.vendor, badge.because, risk.gate, since),
-          };
-
   const superseding = supersedingChange(offer, vendorChanges);
   const reading = superseding ? readingBehindTheChange(superseding) : null;
   const terms: PublishedTerms = reading
@@ -205,6 +220,19 @@ export function readmeRow(offer: Offer, allChanges: DealChange[], context: RowCo
     superseding && reading && (superseding.previous_state ?? "").trim() !== ""
       ? { text: superseding.previous_state!.trim(), until: superseding.date }
       : null;
+
+  const badge = vendorBadge(input);
+  const verdict: RowVerdict =
+    badge.kind === "rating"
+      ? ratingOnTermsThatPriceNothingAtNothing(offer.vendor, terms, vendorChanges)
+        ?? { kind: "rating", word: badge.word, sentence: vendorVerdictSentence(input) }
+      : badge.kind === "ended"
+        ? { kind: "ended", sentence: endedVerdictSentence() }
+        : {
+            kind: "withheld",
+            reason: withheldReasonCode(badge.because),
+            sentence: withheldSentence(offer.vendor, badge.because, risk.gate, since),
+          };
 
   const caveats: RowCaveat[] = [];
   const linkStatedInVerdict = verdict.kind === "withheld" && verdict.reason === "link_unreachable";
@@ -269,17 +297,9 @@ export function readmeSelection(offers: Offer[], changes: DealChange[], context:
     excluded.push({ vendor: offer.vendor, tier: offer.tier, reason: whyNotServing(labels) });
   }
 
-  const rows: ReadmeRow[] = [];
-  for (const offer of selected.sort(
-    (a, b) => a.vendor.localeCompare(b.vendor, "en") || a.tier.localeCompare(b.tier, "en"),
-  )) {
-    const row = readmeRow(offer, changes, context);
-    if (row.terms.quoted && !namesAPriceOfNothing(row.terms.text)) {
-      excluded.push({ vendor: row.vendor, tier: row.tier, reason: "reading_names_no_price_of_nothing" });
-      continue;
-    }
-    rows.push(row);
-  }
+  const rows = selected
+    .sort((a, b) => a.vendor.localeCompare(b.vendor, "en") || a.tier.localeCompare(b.tier, "en"))
+    .map(offer => readmeRow(offer, changes, context));
 
   return { rows, excluded };
 }
@@ -385,20 +405,6 @@ function recordTable(rows: ReadmeRow[]): string {
   ].join("\n");
 }
 
-export const NAMED_EXCLUSION: ExclusionReason = "reading_names_no_price_of_nothing";
-
-function namedExclusions(excluded: ExcludedRecord[]): string[] {
-  const named = excluded.filter(e => e.reason === NAMED_EXCLUSION);
-  if (named.length === 0) return [];
-  const list = named.map(e => `**${e.vendor}** (tier \`${e.tier}\`)`).join(", ");
-  return [
-    "",
-    `The other reasons state what we have or have not read and are counted; this one is a claim about a particular `
-    + `record, which a reader can check against the same page we read, so it names them. Left out under `
-    + `\`${NAMED_EXCLUSION}\`: ${list}. Each is published at ${BASE_URL} with the reading that excluded it.`,
-  ];
-}
-
 function inclusionSection(rows: ReadmeRow[], excluded: ExcludedRecord[]): string {
   const counts = excludedByReason(excluded);
   const definitions = README_SUBTYPES.map(
@@ -425,7 +431,9 @@ function inclusionSection(rows: ReadmeRow[], excluded: ExcludedRecord[]): string
     "A record left out is not a record we are hiding: every one of them is published in full at "
     + `${BASE_URL}, and \`not_read_against_subtypes\` in particular measures our own reading rather than the `
     + "product.",
-    ...namedExclusions(excluded),
+    "",
+    "Nothing else keeps a record out. A record whose terms name no free price is still published here, with the "
+    + "terms we read and no rating — leaving it out would hide the one reading a reader most needs to see.",
   ].join("\n");
 }
 
@@ -434,6 +442,18 @@ function endedClause(ended: number): string {
   const noun = ended === 1 ? "One record is" : `${ended} records are`;
   return `${noun} recorded as ended (\`${classifyTier("Retired").note}\`); they stay in the file because a free tier `
     + "that has gone is the thing hardest to find out elsewhere.";
+}
+
+function termsOverTierRule(census: ReadmeCensus): string {
+  const unrated = census.withheldByReason[NO_FREE_PRICE_REASON] ?? 0;
+  const count = unrated === 1 ? "One row is" : `${unrated} rows are`;
+  return "A tier name is not the last word, because a tier field is older than the terms printed beside it. Where "
+    + "the terms a row publishes name no price of nothing — no free plan, no zero price, nothing stated as costing "
+    + `nothing — that row carries no rating, whatever its tier says. ${count} unrated for that reason today, and where we also hold `
+    + "a dated record of the free tier being removed the row reads `ended` instead, because then we have the removal "
+    + "and not only its shadow.\n\n"
+    + "That test runs on the terms **every** row publishes. It is not restricted to the rows carrying a newer "
+    + "reading, because a row we have never re-read is the one whose tier field is oldest.";
 }
 
 function freeTierRule(census: ReadmeCensus): string {
@@ -455,6 +475,8 @@ function freeTierRule(census: ReadmeCensus): string {
     timeLimited,
     "",
     `Anything else is an ongoing free tier. ${endedClause(census.ended)}`,
+    "",
+    termsOverTierRule(census),
   ].join("\n");
 }
 
@@ -498,8 +520,8 @@ function howToReadARow(census: ReadmeCensus, staleAfterDays: number): string {
     "- `ended` — a free tier we recorded going away. The row stays for the record;",
     `- \`unrated\` — we are publishing no rating, and the next column says why. ${census.withheld} of ${census.rows} `
     + "rows are unrated. A record whose page we could not read, that names no terms we can read, that is not a free "
-    + "offer, or whose link has stopped resolving gets the reason instead of a verdict. We would rather print why we "
-    + "cannot say than guess.",
+    + "offer, whose terms name no free price, or whose link has stopped resolving gets the reason instead of a "
+    + "verdict. We would rather print why we cannot say than guess.",
     "",
     `**Record verified** is the day we last confirmed that record against the page. Where the link has not resolved `
     + `for ${LINK_GRACE_DAYS} days, we withhold that date and print the day the link last worked instead: a recent `
