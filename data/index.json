@@ -5872,9 +5872,9 @@
       ],
       "verifiedDate": "2026-07-27",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-10",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names LocationIQ as \"locationiq\" and states \"$25\""
       }
     },
     {
@@ -5934,9 +5934,9 @@
       ],
       "verifiedDate": "2026-07-29",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-10",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names ScraperAPI as \"scraperapi\" and states \"$49\""
       }
     },
     {
@@ -6405,11 +6405,11 @@
         "nodejs",
         "open source"
       ],
-      "verifiedDate": "2026-08-26",
+      "verifiedDate": "2026-09-09",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-10",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names BullMQ as \"bullmq\" and states \"$1,395\""
       }
     },
     {
@@ -6571,9 +6571,9 @@
       ],
       "verifiedDate": "2026-07-07",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-10",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names Plausible Analytics as \"plausible analytics\" and states \"$9\""
       }
     },
     {
@@ -6590,9 +6590,10 @@
       ],
       "verifiedDate": "2026-08-23",
       "source_check": {
-        "checked": "2026-08-28",
-        "outcome": "unreadable",
-        "detail": "page content too short (likely JS-rendered SPA)"
+        "checked": "2026-09-10",
+        "outcome": "states_no_terms",
+        "detail": "the page names Umami but states no amount, tier or rate we can read, and the 1 structured-data block in its markup states no price",
+        "rendered": true
       }
     },
     {
@@ -6652,9 +6653,9 @@
       ],
       "verifiedDate": "2026-07-28",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-10",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names Gitea as \"gitea\" and states \"$9.5\""
       }
     },
     {
@@ -6669,11 +6670,11 @@
         "admin panel",
         "open source"
       ],
-      "verifiedDate": "2026-08-26",
+      "verifiedDate": "2026-09-10",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-10",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names Appsmith as \"appsmith\" and states \"$1,200\""
       }
     },
     {
@@ -7021,9 +7022,9 @@
       ],
       "verifiedDate": "2026-07-31",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-10",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names Grafana k6 Cloud as \"grafana\" and states \"$0\""
       }
     },
     {
@@ -7222,9 +7223,9 @@
         }
       ],
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-10",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names Pinecone as \"pinecone\" and states \"$20\""
       },
       "product_subtypes": {
         "taxonomy": "AI / ML",
@@ -7267,9 +7268,9 @@
         }
       ],
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-10",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names Qdrant as \"qdrant\" and states \"Free Tier\""
       },
       "product_subtypes": {
         "taxonomy": "AI / ML",
@@ -7398,11 +7399,11 @@
         "tax",
         "free tier"
       ],
-      "verifiedDate": "2026-08-27",
+      "verifiedDate": "2026-09-09",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-10",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names Lemon Squeezy as \"lemon squeezy\" and states \"$0\""
       }
     },
     {
@@ -7429,9 +7430,9 @@
         }
       ],
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-10",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names Deepgram as \"deepgram\" and states \"$200\""
       },
       "product_subtypes": {
         "taxonomy": "AI / ML",
@@ -7480,9 +7481,9 @@
       ],
       "verifiedDate": "2026-07-05",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-10",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names Semgrep as \"semgrep\" and states \"$0\""
       }
     },
     {
@@ -7548,9 +7549,9 @@
       ],
       "verifiedDate": "2026-07-05",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-10",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names Semaphore CI as \"semaphore ci\" and states \"$0.003\""
       }
     },
     {
@@ -7597,7 +7598,7 @@
       ],
       "verifiedDate": "2026-08-18",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-10",
         "outcome": "unreadable",
         "detail": "timeout"
       }
@@ -7616,11 +7617,11 @@
         "real-time",
         "cloud"
       ],
-      "verifiedDate": "2026-08-27",
+      "verifiedDate": "2026-09-09",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-10",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names SurrealDB Cloud as \"surrealdb cloud\" and states \"$0\""
       },
       "product_subtypes": {
         "taxonomy": "Databases",
@@ -7806,11 +7807,11 @@
         "location",
         "api"
       ],
-      "verifiedDate": "2026-07-28",
+      "verifiedDate": "2026-09-09",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-10",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names Geocodio as \"geocodio\" and states \"$325\""
       }
     },
     {
@@ -7929,11 +7930,12 @@
         "competitions",
         "datasets"
       ],
-      "verifiedDate": "2026-08-24",
+      "verifiedDate": "2026-09-09",
       "source_check": {
-        "checked": "2026-08-28",
-        "outcome": "unreadable",
-        "detail": "page content too short (likely JS-rendered SPA)"
+        "checked": "2026-09-10",
+        "outcome": "ok",
+        "detail": "the page names Kaggle as \"kaggle\" and states \"$850,000\"",
+        "rendered": true
       },
       "product_subtypes": {
         "taxonomy": "AI / ML",
@@ -8092,9 +8094,9 @@
       ],
       "verifiedDate": "2026-07-05",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-10",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names LanceDB as \"lancedb\" and states \"$779\""
       },
       "product_subtypes": {
         "taxonomy": "Databases",
@@ -8559,9 +8561,10 @@
       ],
       "verifiedDate": "2026-07-30",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-10",
         "outcome": "unreadable",
-        "detail": "page content too short (likely JS-rendered SPA)"
+        "detail": "page content too short (likely JS-rendered SPA); the rendering client failed: the rendering client did not finish in time",
+        "rendered": true
       }
     },
     {
@@ -8580,9 +8583,10 @@
       ],
       "verifiedDate": "2026-07-31",
       "source_check": {
-        "checked": "2026-08-28",
-        "outcome": "unreadable",
-        "detail": "page content too short (likely JS-rendered SPA)"
+        "checked": "2026-09-10",
+        "outcome": "ok",
+        "detail": "the page names Apidog as \"apidog\" and states \"$ 0\"",
+        "rendered": true
       }
     },
     {
@@ -9268,9 +9272,10 @@
       ],
       "verifiedDate": "2026-08-13",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-10",
         "outcome": "unreadable",
-        "detail": "page content too short (likely JS-rendered SPA)"
+        "detail": "page content too short (likely JS-rendered SPA); a rendering client read 32 characters",
+        "rendered": true
       }
     },
     {
@@ -9743,9 +9748,10 @@
       ],
       "verifiedDate": "2026-08-02",
       "source_check": {
-        "checked": "2026-08-28",
-        "outcome": "unreadable",
-        "detail": "page content too short (likely JS-rendered SPA)"
+        "checked": "2026-09-10",
+        "outcome": "does_not_name_vendor",
+        "detail": "the page never names framagit.org, on a domain that carries its name",
+        "rendered": true
       }
     },
     {
@@ -10141,9 +10147,9 @@
       ],
       "verifiedDate": "2026-08-03",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-10",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names Cube as \"cube\" and states \"$1.42\""
       }
     },
     {
@@ -10158,9 +10164,10 @@
       ],
       "verifiedDate": "2026-08-01",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-10",
         "outcome": "unreadable",
-        "detail": "page content too short (likely JS-rendered SPA)"
+        "detail": "page content too short (likely JS-rendered SPA); a rendering client read 476 characters",
+        "rendered": true
       }
     },
     {
@@ -10715,9 +10722,10 @@
       ],
       "verifiedDate": "2026-07-09",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-10",
         "outcome": "unreadable",
-        "detail": "page content too short (likely JS-rendered SPA)"
+        "detail": "page content too short (likely JS-rendered SPA); a rendering client read 14 characters",
+        "rendered": true
       }
     },
     {
@@ -10783,9 +10791,9 @@
       ],
       "verifiedDate": "2026-07-08",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-10",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names IPTrace as \"iptrace\" and states \"$10\""
       }
     },
     {
@@ -11016,9 +11024,10 @@
       ],
       "verifiedDate": "2026-08-01",
       "source_check": {
-        "checked": "2026-08-28",
-        "outcome": "unreadable",
-        "detail": "page content too short (likely JS-rendered SPA)"
+        "checked": "2026-09-10",
+        "outcome": "ok",
+        "detail": "the page names MockAPI as \"mockapi\" and states \"$5\"",
+        "rendered": true
       }
     },
     {
@@ -11415,9 +11424,10 @@
       ],
       "verifiedDate": "2026-07-31",
       "source_check": {
-        "checked": "2026-08-28",
-        "outcome": "unreadable",
-        "detail": "page content too short (likely JS-rendered SPA)"
+        "checked": "2026-09-10",
+        "outcome": "states_no_terms",
+        "detail": "the page names RequestBin.com but states no amount, tier or rate we can read, and its markup carries no structured data",
+        "rendered": true
       }
     },
     {
@@ -11449,9 +11459,10 @@
       ],
       "verifiedDate": "2026-07-29",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-10",
         "outcome": "unreadable",
-        "detail": "page content too short (likely JS-rendered SPA)"
+        "detail": "page content too short (likely JS-rendered SPA); the rendering client failed: the rendering client did not finish in time",
+        "rendered": true
       }
     },
     {
@@ -11961,9 +11972,10 @@
       ],
       "verifiedDate": "2026-07-07",
       "source_check": {
-        "checked": "2026-08-28",
-        "outcome": "unreadable",
-        "detail": "page content too short (likely JS-rendered SPA)"
+        "checked": "2026-09-10",
+        "outcome": "states_no_terms",
+        "detail": "the page names repsy.io but states no amount, tier or rate we can read, and its markup carries no structured data",
+        "rendered": true
       }
     },
     {
@@ -12879,9 +12891,9 @@
       ],
       "verifiedDate": "2026-08-02",
       "source_check": {
-        "checked": "2026-08-28",
-        "outcome": "unreadable",
-        "detail": "HTTP 403"
+        "checked": "2026-09-10",
+        "outcome": "states_no_amount",
+        "detail": "the page names Webex and says \"start at\" but states no amount, rate or price we can read, and the 2 structured-data blocks in its markup state no price"
       }
     },
     {
@@ -13461,9 +13473,10 @@
       ],
       "verifiedDate": "2026-08-03",
       "source_check": {
-        "checked": "2026-08-28",
-        "outcome": "unreadable",
-        "detail": "page content too short (likely JS-rendered SPA)"
+        "checked": "2026-09-10",
+        "outcome": "states_no_terms",
+        "detail": "the page names DiffText but states no amount, tier or rate we can read, and its markup carries no structured data",
+        "rendered": true
       }
     },
     {
@@ -13563,9 +13576,10 @@
       ],
       "verifiedDate": "2026-08-04",
       "source_check": {
-        "checked": "2026-08-28",
-        "outcome": "unreadable",
-        "detail": "page content too short (likely JS-rendered SPA)"
+        "checked": "2026-09-10",
+        "outcome": "states_no_terms",
+        "detail": "the page names reviewable.io but states no amount, tier or rate we can read, and its markup carries no structured data",
+        "rendered": true
       }
     },
     {
@@ -13648,9 +13662,10 @@
       ],
       "verifiedDate": "2026-07-11",
       "source_check": {
-        "checked": "2026-08-28",
-        "outcome": "unreadable",
-        "detail": "page content too short (likely JS-rendered SPA)"
+        "checked": "2026-09-10",
+        "outcome": "states_no_terms",
+        "detail": "the page names CodeKeep but states no amount, tier or rate we can read, and the 1 structured-data block in its markup states no price",
+        "rendered": true
       }
     },
     {
@@ -14092,9 +14107,10 @@
       ],
       "verifiedDate": "2026-08-24",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-10",
         "outcome": "unreadable",
-        "detail": "HTTP 403"
+        "detail": "page content too short (likely JS-rendered SPA); the rendering client failed: the rendering client did not finish in time",
+        "rendered": true
       }
     },
     {
@@ -14237,9 +14253,10 @@
       ],
       "verifiedDate": "2026-08-05",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-10",
         "outcome": "unreadable",
-        "detail": "HTTP 403"
+        "detail": "page content too short (likely JS-rendered SPA); the rendering client failed: the rendering client did not finish in time",
+        "rendered": true
       }
     },
     {
@@ -14255,9 +14272,10 @@
       ],
       "verifiedDate": "2026-08-06",
       "source_check": {
-        "checked": "2026-08-28",
-        "outcome": "unreadable",
-        "detail": "page content too short (likely JS-rendered SPA)"
+        "checked": "2026-09-10",
+        "outcome": "does_not_name_vendor",
+        "detail": "the page never names snippets.uilicious.com, on a domain that carries its name",
+        "rendered": true
       }
     },
     {
@@ -15155,11 +15173,12 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-08-03",
+      "verifiedDate": "2026-09-10",
       "source_check": {
-        "checked": "2026-08-28",
-        "outcome": "unreadable",
-        "detail": "page content too short (likely JS-rendered SPA)"
+        "checked": "2026-09-10",
+        "outcome": "ok",
+        "detail": "the page names Appho.st as \"appho st\" and states \"$2.99\"",
+        "rendered": true
       }
     },
     {
@@ -15416,9 +15435,9 @@
       ],
       "verifiedDate": "2026-08-08",
       "source_check": {
-        "checked": "2026-08-28",
-        "outcome": "states_no_terms",
-        "detail": "the page names Engage but states no amount, tier or rate we can read"
+        "checked": "2026-09-10",
+        "outcome": "unreadable",
+        "detail": "timeout"
       }
     },
     {
@@ -15761,11 +15780,12 @@
         "log-management",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-08-07",
+      "verifiedDate": "2026-09-10",
       "source_check": {
-        "checked": "2026-08-28",
-        "outcome": "unreadable",
-        "detail": "page content too short (likely JS-rendered SPA)"
+        "checked": "2026-09-10",
+        "outcome": "ok",
+        "detail": "the page names Smart Grow Logs as \"smart grow logs\" and states \"$ 0.00\"",
+        "rendered": true
       }
     },
     {
@@ -17362,9 +17382,9 @@
       ],
       "verifiedDate": "2026-07-13",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-10",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names EmailOctopus as \"emailoctopus\" and states \"$ 480\""
       }
     },
     {
@@ -17482,9 +17502,10 @@
       ],
       "verifiedDate": "2026-07-12",
       "source_check": {
-        "checked": "2026-08-28",
-        "outcome": "unreadable",
-        "detail": "page content too short (likely JS-rendered SPA)"
+        "checked": "2026-09-10",
+        "outcome": "ok",
+        "detail": "the page names inboxkitten.com as \"inboxkitten com\" and states \"$0\"",
+        "rendered": true
       }
     },
     {
@@ -17516,9 +17537,9 @@
       ],
       "verifiedDate": "2026-07-10",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-10",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names Maileroo as \"maileroo\" and states \"3,000 emails per month\""
       }
     },
     {
@@ -18934,9 +18955,10 @@
       ],
       "verifiedDate": "2026-08-09",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-10",
         "outcome": "unreadable",
-        "detail": "page content too short (likely JS-rendered SPA)"
+        "detail": "page content too short (likely JS-rendered SPA); a rendering client read 373 characters",
+        "rendered": true
       }
     },
     {
@@ -19505,9 +19527,9 @@
       ],
       "verifiedDate": "2026-07-16",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-10",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names Northflank as \"northflank\" and states \"$24\""
       },
       "product_subtypes": {
         "taxonomy": "Cloud Hosting",
@@ -20425,9 +20447,9 @@
       ],
       "verifiedDate": "2026-04-12",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-10",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names SourceForge as \"sourceforge\" and states \"$300\""
       }
     },
     {
@@ -20548,9 +20570,10 @@
       ],
       "verifiedDate": "2026-08-09",
       "source_check": {
-        "checked": "2026-08-28",
-        "outcome": "unreadable",
-        "detail": "page content too short (likely JS-rendered SPA)"
+        "checked": "2026-09-10",
+        "outcome": "ok",
+        "detail": "the page names dnspod.com as \"dnspod\" and states \"$10.08\"",
+        "rendered": true
       }
     },
     {
@@ -21105,9 +21128,9 @@
       ],
       "verifiedDate": "2026-07-14",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-10",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names skyvia.com as \"skyvia com\" and states \"30 billion records processed per month\""
       },
       "product_subtypes": {
         "taxonomy": "Databases",
@@ -21168,9 +21191,10 @@
       ],
       "verifiedDate": "2026-08-08",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-10",
         "outcome": "unreadable",
-        "detail": "page content too short (likely JS-rendered SPA)"
+        "detail": "page content too short (likely JS-rendered SPA); a rendering client read 318 characters",
+        "rendered": true
       }
     },
     {
@@ -21875,9 +21899,10 @@
       ],
       "verifiedDate": "2026-07-16",
       "source_check": {
-        "checked": "2026-08-28",
-        "outcome": "unreadable",
-        "detail": "page content too short (likely JS-rendered SPA)"
+        "checked": "2026-09-10",
+        "outcome": "states_no_terms",
+        "detail": "the page names point.poker but states no amount, tier or rate we can read, and its markup carries no structured data",
+        "rendered": true
       }
     },
     {
@@ -22311,9 +22336,10 @@
       ],
       "verifiedDate": "2026-07-16",
       "source_check": {
-        "checked": "2026-08-28",
-        "outcome": "unreadable",
-        "detail": "page content too short (likely JS-rendered SPA)"
+        "checked": "2026-09-10",
+        "outcome": "does_not_name_vendor",
+        "detail": "the page never names getpantry.cloud, on a domain that carries its name",
+        "rendered": true
       }
     },
     {
@@ -22405,9 +22431,10 @@
       ],
       "verifiedDate": "2026-08-24",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-10",
         "outcome": "unreadable",
-        "detail": "HTTP 403"
+        "detail": "page content too short (likely JS-rendered SPA); the rendering client failed: the rendering client did not finish in time",
+        "rendered": true
       }
     },
     {
@@ -22513,9 +22540,10 @@
       ],
       "verifiedDate": "2026-07-17",
       "source_check": {
-        "checked": "2026-08-28",
-        "outcome": "unreadable",
-        "detail": "page content too short (likely JS-rendered SPA)"
+        "checked": "2026-09-10",
+        "outcome": "ok",
+        "detail": "the page names npoint.io as \"npoint io\" and states \"2,000 requests/minute\"",
+        "rendered": true
       }
     },
     {
@@ -22754,9 +22782,9 @@
       ],
       "verifiedDate": "2026-07-17",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-10",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names sirv.com as \"sirv com\" and states \"6 times per year\""
       }
     },
     {
@@ -22770,11 +22798,13 @@
         "media",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-07-18",
+      "verifiedDate": "2026-09-10",
       "source_check": {
-        "checked": "2026-08-28",
-        "outcome": "unreadable",
-        "detail": "page content too short (likely JS-rendered SPA)"
+        "checked": "2026-09-10",
+        "outcome": "ok",
+        "detail": "the page names SlingSite, renders no terms we can read, and its markup states 1 typed price (0)",
+        "read": "markup",
+        "rendered": true
       }
     },
     {
@@ -23134,9 +23164,10 @@
       ],
       "verifiedDate": "2026-07-20",
       "source_check": {
-        "checked": "2026-08-28",
-        "outcome": "unreadable",
-        "detail": "page content too short (likely JS-rendered SPA)"
+        "checked": "2026-09-10",
+        "outcome": "states_no_terms",
+        "detail": "the page names css.glass but states no amount, tier or rate we can read, and its markup carries no structured data",
+        "rendered": true
       }
     },
     {
@@ -23945,9 +23976,10 @@
       ],
       "verifiedDate": "2026-07-18",
       "source_check": {
-        "checked": "2026-08-28",
-        "outcome": "unreadable",
-        "detail": "page content too short (likely JS-rendered SPA)"
+        "checked": "2026-09-10",
+        "outcome": "states_no_terms",
+        "detail": "the page names Scrollbar.app but states no amount, tier or rate we can read, and its markup carries no structured data",
+        "rendered": true
       }
     },
     {
@@ -23981,9 +24013,9 @@
       ],
       "verifiedDate": "2026-07-19",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-10",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names ShadcnUI as \"shadcn ui\" and states \"$420,000\""
       }
     },
     {
@@ -23999,9 +24031,9 @@
       ],
       "verifiedDate": "2026-04-05",
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-10",
         "outcome": "unreadable",
-        "detail": "page content too short (likely JS-rendered SPA)"
+        "detail": "HTTP 403"
       }
     },
     {
@@ -24306,9 +24338,10 @@
       ],
       "verifiedDate": "2026-07-22",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-10",
         "outcome": "unreadable",
-        "detail": "page content too short (likely JS-rendered SPA)"
+        "detail": "page content too short (likely JS-rendered SPA); the rendering client failed: the rendering client did not finish in time",
+        "rendered": true
       }
     },
     {
@@ -24857,9 +24890,10 @@
       ],
       "verifiedDate": "2026-08-07",
       "source_check": {
-        "checked": "2026-08-28",
-        "outcome": "unreadable",
-        "detail": "page content too short (likely JS-rendered SPA)"
+        "checked": "2026-09-10",
+        "outcome": "states_no_terms",
+        "detail": "the page names Binder but states no amount, tier or rate we can read, and its markup carries no structured data",
+        "rendered": true
       }
     },
     {
@@ -24943,9 +24977,10 @@
       ],
       "verifiedDate": "2026-08-15",
       "source_check": {
-        "checked": "2026-08-28",
-        "outcome": "unreadable",
-        "detail": "page content too short (likely JS-rendered SPA)"
+        "checked": "2026-09-10",
+        "outcome": "states_no_terms",
+        "detail": "the page names cocalc.com but states no amount, tier or rate we can read, and its markup carries no structured data",
+        "rendered": true
       }
     },
     {
@@ -25612,9 +25647,10 @@
       ],
       "verifiedDate": "2026-07-22",
       "source_check": {
-        "checked": "2026-08-28",
-        "outcome": "unreadable",
-        "detail": "page content too short (likely JS-rendered SPA)"
+        "checked": "2026-09-10",
+        "outcome": "states_no_terms",
+        "detail": "the page names Google Analytics but states no amount, tier or rate we can read, and its markup carries no structured data",
+        "rendered": true
       }
     },
     {
@@ -25902,7 +25938,7 @@
       ],
       "verifiedDate": "2026-07-23",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-10",
         "outcome": "unreadable",
         "detail": "timeout"
       }
@@ -25920,9 +25956,9 @@
       ],
       "verifiedDate": "2026-07-20",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-10",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names inspectlet.com as \"inspectlet com\" and states \"$34\""
       }
     },
     {
@@ -26153,9 +26189,10 @@
       ],
       "verifiedDate": "2026-08-14",
       "source_check": {
-        "checked": "2026-08-28",
-        "outcome": "unreadable",
-        "detail": "page content too short (likely JS-rendered SPA)"
+        "checked": "2026-09-10",
+        "outcome": "states_no_terms",
+        "detail": "the page names FxRatesAPI but states no amount, tier or rate we can read, and its markup carries no structured data",
+        "rendered": true
       }
     },
     {
@@ -31782,9 +31819,9 @@
       ],
       "verifiedDate": "2026-08-18",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-10",
         "outcome": "unreadable",
-        "detail": "page content too short (likely JS-rendered SPA)"
+        "detail": "HTTP 403"
       }
     },
     {
@@ -32147,9 +32184,10 @@
       ],
       "verifiedDate": "2026-08-21",
       "source_check": {
-        "checked": "2026-08-28",
-        "outcome": "unreadable",
-        "detail": "page content too short (likely JS-rendered SPA)"
+        "checked": "2026-09-10",
+        "outcome": "does_not_name_vendor",
+        "detail": "the page never names Coda, on a domain that carries its name",
+        "rendered": true
       }
     },
     {
@@ -32735,9 +32773,10 @@
       ],
       "verifiedDate": "2026-08-19",
       "source_check": {
-        "checked": "2026-08-28",
-        "outcome": "unreadable",
-        "detail": "page content too short (likely JS-rendered SPA)"
+        "checked": "2026-09-10",
+        "outcome": "states_no_terms",
+        "detail": "the page names Krita but states no amount, tier or rate we can read, and the 1 structured-data block in its markup states no price",
+        "rendered": true
       }
     },
     {
@@ -33074,9 +33113,10 @@
       ],
       "verifiedDate": "2026-08-21",
       "source_check": {
-        "checked": "2026-08-28",
-        "outcome": "unreadable",
-        "detail": "page content too short (likely JS-rendered SPA)"
+        "checked": "2026-09-10",
+        "outcome": "ok",
+        "detail": "the page names Khan Academy as \"khan academy\" and states \"$1\"",
+        "rendered": true
       }
     },
     {
@@ -33094,9 +33134,10 @@
       ],
       "verifiedDate": "2026-08-20",
       "source_check": {
-        "checked": "2026-08-28",
-        "outcome": "unreadable",
-        "detail": "page content too short (likely JS-rendered SPA)"
+        "checked": "2026-09-10",
+        "outcome": "states_no_terms",
+        "detail": "the page names Duolingo but states no amount, tier or rate we can read, and the 1 structured-data block in its markup states no price",
+        "rendered": true
       }
     },
     {
@@ -33190,9 +33231,10 @@
       ],
       "verifiedDate": "2026-08-20",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-10",
         "outcome": "unreadable",
-        "detail": "page content too short (likely JS-rendered SPA)"
+        "detail": "page content too short (likely JS-rendered SPA); a rendering client read 0 characters",
+        "rendered": true
       }
     },
     {
@@ -33562,9 +33604,10 @@
         }
       ],
       "source_check": {
-        "checked": "2026-08-28",
-        "outcome": "unreadable",
-        "detail": "page content too short (likely JS-rendered SPA)"
+        "checked": "2026-09-10",
+        "outcome": "ok",
+        "detail": "the page names Hyperbrowser as \"hyperbrowser\" and states \"$299\"",
+        "rendered": true
       }
     },
     {
@@ -33813,9 +33856,10 @@
       ],
       "verifiedDate": "2026-08-18",
       "source_check": {
-        "checked": "2026-08-28",
-        "outcome": "unreadable",
-        "detail": "page content too short (likely JS-rendered SPA)"
+        "checked": "2026-09-10",
+        "outcome": "states_no_terms",
+        "detail": "the page names Alibaba Cloud Qwen Code but states no amount, tier or rate we can read, and its markup carries no structured data",
+        "rendered": true
       },
       "product_subtypes": {
         "taxonomy": "AI / ML",
