@@ -23,6 +23,12 @@ const {
   QUARANTINE_RETRY_DAYS,
   recordAttempts,
 } = await import("../scripts/verification-state.js");
+const {
+  SOURCE_CHECK_OK,
+  SOURCE_CHECK_NO_TERMS,
+  SOURCE_CHECK_UNREADABLE,
+  SOURCE_CHECK_OUTCOMES,
+} = await import("../scripts/vendor-naming.js");
 
 describe("rolling re-verification", () => {
   describe("pickOldestEntries", () => {
@@ -367,5 +373,105 @@ describe("the run summary says whether the queue moved", () => {
   it("says nothing about quarantine when the run reported none", () => {
     const lines = summaryLines(result, base);
     assert.ok(!lines.some((l: string) => l.includes("quarantine")), lines.join("\n"));
+  });
+});
+
+describe("a read that failed buys the record no reprieve", () => {
+  const NOW = new Date("2026-09-02T10:00:00Z");
+  const CONFIRMED_ON = "2026-07-05";
+  const READ_ON = "2026-09-02";
+
+  function offer(vendor: string, outcome: string | null, verifiedDate = CONFIRMED_ON) {
+    const url = `https://${vendor.toLowerCase()}.example/pricing`;
+    const base: any = { vendor, url, verifiedDate, description: `${vendor} free tier` };
+    if (outcome) base.source_check = { outcome, checked: READ_ON, detail: `${vendor} read` };
+    return base;
+  }
+
+  function stateOf(rows: Array<{ vendor: string; outcome: string }>, at = NOW) {
+    const state = new Map();
+    for (const row of rows) {
+      recordAttempts(state, [{ vendor: row.vendor, url: `https://${row.vendor.toLowerCase()}.example/pricing`, outcome: row.outcome }], at);
+    }
+    return state;
+  }
+
+  it("counts the day we read the page whatever the read found", () => {
+    for (const outcome of SOURCE_CHECK_OUTCOMES) {
+      assert.strictEqual(
+        lastAttemptedDate(offer("Read", outcome)),
+        READ_ON,
+        `a check that returned ${outcome} is a day we looked at the page`,
+      );
+    }
+  });
+
+  it("gives the same queue date to a page we could not read as to one we could", () => {
+    const unreadable = lastAttemptedDate(offer("Unreadable", SOURCE_CHECK_UNREADABLE));
+    const read = lastAttemptedDate(offer("Read", SOURCE_CHECK_OK));
+    assert.strictEqual(unreadable, read);
+  });
+
+  it("lets the check's outcome decide nothing about which of two same-day reads goes first", () => {
+    const unreadable = offer("Unreadable", SOURCE_CHECK_UNREADABLE);
+    const read = offer("Read", SOURCE_CHECK_OK);
+    for (const pair of [[unreadable, read], [read, unreadable]]) {
+      const { picked } = pickOldestEntries(pair, 1, NOW);
+      assert.strictEqual(picked[0].offer.vendor, pair[0].vendor);
+    }
+  });
+
+  it("places no record whose last read failed behind one of the same age whose read answered", () => {
+    const rows = [];
+    for (let i = 0; i < 24; i++) {
+      rows.push({ vendor: `Vendor${i}`, answered: i % 2 === 0 });
+    }
+    const offers = rows.map((row) => offer(row.vendor, SOURCE_CHECK_OK));
+    const state = stateOf(rows.map((row) => ({
+      vendor: row.vendor,
+      outcome: row.answered ? ATTEMPT_CONFIRMED : ATTEMPT_SOURCE_UNUSABLE,
+    })));
+    const { picked } = pickOldestEntries(offers, offers.length, NOW, { verificationState: state });
+    const answeredBy = new Map(rows.map((row) => [row.vendor, row.answered]));
+    const order = picked.map((entry: any) => entry.offer.vendor);
+    const failedPlaces = order.map((v: string, i: number) => (answeredBy.get(v) ? -1 : i)).filter((i: number) => i >= 0);
+    const answeredPlaces = order.map((v: string, i: number) => (answeredBy.get(v) ? i : -1)).filter((i: number) => i >= 0);
+    assert.strictEqual(failedPlaces.length + answeredPlaces.length, rows.length);
+    assert.ok(
+      Math.max(...failedPlaces) < Math.min(...answeredPlaces),
+      `a record read on ${READ_ON} without an answer sits behind one that answered: ${order.join(", ")}`,
+    );
+  });
+
+  it("still puts an older record ahead of a newer one whose read failed", () => {
+    const older = offer("Older", SOURCE_CHECK_OK, "2026-06-01");
+    delete older.source_check;
+    const newer = offer("Newer", SOURCE_CHECK_NO_TERMS);
+    const state = stateOf([{ vendor: "Newer", outcome: ATTEMPT_SOURCE_UNUSABLE }]);
+    const { picked } = pickOldestEntries([newer, older], 1, NOW, { verificationState: state });
+    assert.strictEqual(picked[0].offer.vendor, "Older");
+  });
+
+  it("does not read a record nobody has attempted yet as one whose read failed", () => {
+    const answered = offer("Answered", SOURCE_CHECK_OK);
+    const unattempted = offer("Unattempted", SOURCE_CHECK_OK);
+    const state = stateOf([{ vendor: "Answered", outcome: ATTEMPT_CONFIRMED }]);
+    for (const pair of [[answered, unattempted], [unattempted, answered]]) {
+      const { picked, pickedAfterAFailedRead } = pickOldestEntries(pair, 2, NOW, { verificationState: state });
+      assert.strictEqual(pickedAfterAFailedRead, 0);
+      assert.strictEqual(picked[0].offer.vendor, pair[0].vendor);
+    }
+  });
+
+  it("counts how much of the batch it drew after a read that failed", () => {
+    const rows = [
+      { vendor: "Answered", outcome: ATTEMPT_CONFIRMED },
+      { vendor: "Unusable", outcome: ATTEMPT_SOURCE_UNUSABLE },
+      { vendor: "Unfetched", outcome: ATTEMPT_FETCH_FAILED },
+    ];
+    const offers = rows.map((row) => offer(row.vendor, SOURCE_CHECK_OK));
+    const { picked, pickedAfterAFailedRead } = pickOldestEntries(offers, 3, NOW, { verificationState: stateOf(rows) });
+    assert.strictEqual(picked.length, 3);
+    assert.strictEqual(pickedAfterAFailedRead, 2);
   });
 });

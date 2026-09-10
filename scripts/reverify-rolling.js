@@ -46,6 +46,7 @@ import {
   classifyFetchError,
   failureCategoryCounts,
   isQuarantined,
+  lastReadFailed,
   pruneToOffers,
   quarantineRetryDue,
   quarantinedRecords,
@@ -65,9 +66,12 @@ const STAGGER_WINDOW_DAYS = 3;
 const QUARANTINE_RETRY_SHARE = 0.2;
 
 export function lastAttemptedDate(offer, refusedOn = null, verificationRecord = null) {
-  const check = offer?.source_check;
-  const held = check && holdsVerifiedDate(check.outcome) ? check.checked : null;
-  const dates = [offer?.verifiedDate, held, refusedOn, verificationRecord?.last_attempt_at].filter(Boolean);
+  const dates = [
+    offer?.verifiedDate,
+    offer?.source_check?.checked,
+    refusedOn,
+    verificationRecord?.last_attempt_at,
+  ].filter(Boolean);
   return dates.length > 0 ? dates.sort().pop() : null;
 }
 
@@ -84,9 +88,9 @@ export function pickOldestEntries(offers, limit, now = new Date(), options = {})
     const record = state.get(key) ?? null;
     const attempted = lastAttemptedDate(offer, holds.get(key), record);
     const ts = attempted ? new Date(attempted).getTime() : 0;
-    return { index, offer, record, ts };
+    return { index, offer, record, ts, readFailed: lastReadFailed(record) };
   });
-  const byAge = (a, b) => a.ts - b.ts;
+  const byAge = (a, b) => a.ts - b.ts || Number(b.readFailed) - Number(a.readFailed);
   const active = entries.filter((entry) => !isQuarantined(entry.record)).sort(byAge);
   const dueRetries = entries
     .filter((entry) => isQuarantined(entry.record) && quarantineRetryDue(entry.record, today))
@@ -97,15 +101,15 @@ export function pickOldestEntries(offers, limit, now = new Date(), options = {})
   const spare = limit - retries.length - fromActive.length;
   const extraRetries = spare > 0 ? dueRetries.slice(retries.length, retries.length + spare) : [];
 
-  const picked = [...retries, ...extraRetries, ...fromActive]
-    .sort(byAge)
-    .map(({ index, offer }) => ({ index, offer }));
+  const drawn = [...retries, ...extraRetries, ...fromActive].sort(byAge);
+  const picked = drawn.map(({ index, offer }) => ({ index, offer }));
   const remaining = active.slice(fromActive.length);
   const oldestRemaining = remaining.length > 0
     ? (remaining[0].offer.verifiedDate || null)
     : null;
   return {
     picked,
+    pickedAfterAFailedRead: drawn.filter((entry) => entry.readFailed).length,
     oldestRemaining,
     retriedFromQuarantine: retries.length + extraRetries.length,
     quarantineDue: dueRetries.length,
@@ -368,8 +372,12 @@ export function quarantineLines(quarantine) {
   return lines;
 }
 
-export function summaryLines(result, { useAi, checked, oldestRemaining, total, quarantine, repicked }) {
-  const lines = ["", "── Summary ──", `Checked: ${checked}`, `Verified (date bumped): ${result.verified}`];
+export function summaryLines(result, { useAi, checked, oldestRemaining, total, quarantine, repicked, pickedAfterAFailedRead }) {
+  const lines = ["", "── Summary ──", `Checked: ${checked}`];
+  if (pickedAfterAFailedRead !== undefined) {
+    lines.push(`Drawn after a read that failed: ${pickedAfterAFailedRead} of ${checked}`);
+  }
+  lines.push(`Verified (date bumped): ${result.verified}`);
   if (useAi) {
     lines.push(`Changed (PM review needed): ${result.changed}`);
     const refusals = rejectionCounts(result.rejected ?? []);
@@ -455,7 +463,7 @@ async function main() {
   }
 
   const selection = { refusalHolds: holds, verificationState: state };
-  const { picked, oldestRemaining, retriedFromQuarantine } = pickOldestEntries(offers, limit, now, selection);
+  const { picked, oldestRemaining, retriedFromQuarantine, pickedAfterAFailedRead } = pickOldestEntries(offers, limit, now, selection);
 
   console.log(
     `Rolling re-verification — ${picked.length} oldest entries` +
@@ -510,6 +518,7 @@ async function main() {
     total: offers.length,
     quarantine,
     repicked,
+    pickedAfterAFailedRead,
   })) {
     console.log(line);
   }

@@ -122,6 +122,10 @@ export function applyAttempt(previous, attempt) {
   };
 }
 
+export function lastReadFailed(record) {
+  return Boolean(record) && !ANSWERED_OUTCOMES.has(record.last_outcome);
+}
+
 export function isQuarantined(record) {
   return Boolean(record?.quarantined_since);
 }
