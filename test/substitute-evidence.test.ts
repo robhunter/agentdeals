@@ -4,7 +4,7 @@ import { spawn, type ChildProcess } from "node:child_process";
 import { readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { partitionSubstitutes, subtypeGateBinds, substitutesFor, MEMBERSHIP_GATE_ORDER, MEMBERSHIP_GATE_RULES } from "../dist/product-role.js";
+import { partitionSubstitutes, roleMembershipGate, subtypeGateBinds, substitutesFor, MEMBERSHIP_GATE_ORDER, MEMBERSHIP_GATE_RULES } from "../dist/product-role.js";
 import { toSlug, vendorSlugMap } from "../dist/vendor-slug.js";
 import { curatedAlternativeNames } from "../dist/curated-alternatives.js";
 import type { DealChange, Offer } from "../src/types.ts";
@@ -305,10 +305,28 @@ describe("what a classified page leaves out, and why it says it left it out", ()
   it("still turns a product-role finding away under its own reason", () => {
     const neon = offers.filter(o => o.vendor === "Neon");
     assert.ok(neon.length > 0, "Neon must be in the index");
-    const gates = new Map(pagePartition("Neon").removed.map(r => [r.offer.vendor, r.gate]));
-    assert.strictEqual(gates.get("Hasura Cloud"), "addon");
-    assert.strictEqual(gates.get("Prisma Accelerate"), "addon");
-    assert.strictEqual(gates.get("DynamoDB Local"), "local_dev_only");
+    const partition = pagePartition("Neon");
+
+    assert.deepStrictEqual(
+      partition.kept.filter(o => roleMembershipGate(o)).map(o => o.vendor),
+      [],
+      "offered as a substitute for Neon over the product role we read off its own site"
+    );
+
+    const byRole = partition.removed.filter(r => roleMembershipGate(r.offer));
+    for (const { offer, gate } of byRole) {
+      assert.strictEqual(
+        gate,
+        roleMembershipGate(offer),
+        `${offer.vendor} is turned away as ${gate} rather than for the role we read`
+      );
+    }
+    for (const gate of ["addon", "local_dev_only"] as const) {
+      assert.ok(
+        byRole.some(r => r.gate === gate),
+        `no record in Neon's pool is turned away as ${gate}, so that reason is not under test here`
+      );
+    }
   });
 
   it("does not blame a record that does say what kind of product it is", async () => {
