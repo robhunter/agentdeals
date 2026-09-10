@@ -618,7 +618,7 @@
     },
     {
       "vendor": "OpenAI",
-      "change_type": "free_tier_removed",
+      "change_type": "product_deprecated",
       "date": "2026-08-26",
       "summary": "Assistants API deprecated, full shutdown August 26, 2026. Developers must migrate to Responses API + Conversations API",
       "previous_state": "Assistants API available with code interpreter, file search, function calling, and Threads for conversation management",
@@ -1709,7 +1709,7 @@
     },
     {
       "vendor": "OpenAI",
-      "change_type": "free_tier_removed",
+      "change_type": "product_deprecated",
       "date": "2026-05-12",
       "summary": "DALL-E 2 and DALL-E 3 API access discontinued. Developers must migrate to gpt-image-1 (different pricing model, quality tiers changed from standard/hd to low/medium/high) or switch to free alternatives like Pollinations.AI or Lumenfall.ai",
       "previous_state": "DALL-E 3 API: $0.040-$0.120/image (1024x1024), paid via API credits",

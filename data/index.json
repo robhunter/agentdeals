@@ -7007,9 +7007,9 @@
     {
       "vendor": "OpenAI",
       "category": "AI / ML",
-      "description": "AI API platform — free tier limited to GPT-3.5 Turbo model only, 3 requests/minute rate limit. No free trial credits for new accounts (discontinued mid-2025). Paid tiers use token-based pricing: GPT-4o from $2.50/1M input tokens. Batch processing at 50% discount available",
+      "description": "AI API platform. One model is priced Free in OpenAI's own table — the moderation model omni-moderation-latest. Everything else is per-token: embeddings from $0.02/1M, chat-latest $5.00/1M input and $30.00/1M output. Three further free amounts are sub-quotas inside paid tools: 1 GB per day of File search storage, 1 GB per account per month of ChatKit upload storage, and web-search content tokens on non-reasoning models. No free token allowance for the flagship models; trial credits for new accounts were discontinued in mid-2025.",
       "tier": "Free",
-      "url": "https://openai.com/api/pricing/",
+      "url": "https://developers.openai.com/api/docs/pricing",
       "tags": [
         "ai",
         "ml",
@@ -7019,7 +7019,7 @@
         "nlp",
         "generative-ai"
       ],
-      "verifiedDate": "2026-06-30",
+      "verifiedDate": "2026-09-10",
       "payment_protocols": [
         {
           "protocol": "x402",
@@ -7038,17 +7038,17 @@
         "notes": "No public affiliate/referral program. Referral features reportedly in development but not launched."
       },
       "source_check": {
-        "checked": "2026-09-05",
-        "outcome": "unreadable",
-        "detail": "HTTP 403"
+        "checked": "2026-09-10",
+        "outcome": "ok",
+        "detail": "the page names OpenAI as \"openai\" and states \"$10.00\""
       },
       "product_subtypes": {
         "taxonomy": "AI / ML",
         "labels": [
           {
             "subtype": "llm_api",
-            "source_url": "https://openai.com/api/pricing/",
-            "source_quote": "Our industry-leading models deliver advanced intelligence and multimodal capabilities."
+            "source_url": "https://developers.openai.com/api/docs/guides/rate-limits",
+            "source_quote": "Rate limits vary by the model being used."
           }
         ],
         "reviewed": "2026-09-01"
