@@ -368,9 +368,16 @@ export function regradeRefusals(suppressed) {
     .map(({ candidate, reason, collidedWith }) => ({
       candidate,
       reason,
-      detail: `same vendor, date, source_url and previous_state as ${collidedWith}`,
+      detail: `same vendor, source_url and previous_state as ${collidedWith}`,
       collidedWith,
     }));
+}
+
+export function regradedVendorLines(suppressed) {
+  return regradeRefusals(suppressed).map(
+    ({ candidate, collidedWith }) =>
+      `  ${candidate?.vendor ?? "(unnamed)"} (${candidate?.change_type ?? "unclassified"}) reads the same terms we already recorded as ${collidedWith}`
+  );
 }
 
 export function refusedVendorLines(rejected) {
@@ -434,6 +441,7 @@ export function summaryLines(result, { useAi, checked, oldestRemaining, total, q
     const regraded = regradeRefusals(result.suppressed).length;
     lines.push(`Already recorded, not written again: ${result.suppressed.length - regraded}`);
     lines.push(`Same transition re-read and graded differently, not written again: ${regraded}`);
+    for (const line of regradedVendorLines(result.suppressed)) lines.push(line);
     lines.push(`Detected but not recordable: ${result.unclassified.length}`);
   } else {
     lines.push("Change detection: not run. URL mode compares nothing and cannot report a change.");
