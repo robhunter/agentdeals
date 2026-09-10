@@ -9443,6 +9443,66 @@
       "alternatives": [],
       "detected_by": "reverify-ai",
       "recorded_date": "2026-09-10"
+    },
+    {
+      "vendor": "Thunder Client",
+      "change_type": "limits_increased",
+      "date": "2026-09-10",
+      "date_source": "discovered",
+      "summary": "The free plan now includes unlimited collection runs, and the description of the free plan has been updated to only include the extension and VS Code. Previously 1 local collection run per month.",
+      "previous_state": "Lightweight REST API client for VS Code and JetBrains. Free plan is $0 per user/month with local storage and 1 local collection run per month. Paid plans are billed annually from Starter at $3 per user/month, which adds JetBrains, team features, CLI and CI/CD, WebSocket/SSE/gRPC and 250 collection runs; Business is $7 and Enterprise $16.",
+      "current_state": "Free $0 Per user/month Billed monthly Includes: Extension VS Code",
+      "impact": "medium",
+      "source_url": "https://www.thunderclient.com/pricing",
+      "category": "API Development",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-09-10"
+    },
+    {
+      "vendor": "Hyperping",
+      "change_type": "limits_reduced",
+      "date": "2026-09-10",
+      "date_source": "discovered",
+      "summary": "The free plan now includes 20 monitors, 5-minute checks, 1 basic status page, 1 server agent, and 1 seat. The pricing page lists the free plan as $0/forever, and also shows a 14-day free trial for the Essentials plan. The page also shows the free plan as having '∞ unlimited' monitors. Contradicts the 20 monitor limit.",
+      "previous_state": "Uptime and status page monitoring — free plan: 20 monitors (HTTP, port, ping, keyword), 5-minute check interval, 1 basic status page with real-time updates and subscriber notifications, 1 seat, 1 server monitoring agent, email and webhook alerts",
+      "current_state": "The free plan includes 20 monitors, 5-minute checks, 1 basic status page, 1 server agent, and 1 seat. It is listed as $0/forever, and also shows '∞ unlimited' monitors.",
+      "impact": "medium",
+      "source_url": "https://hyperping.com/pricing",
+      "category": "Monitoring",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-09-10"
+    },
+    {
+      "vendor": "RepoForge",
+      "change_type": "pricing_restructured",
+      "date": "2026-09-10",
+      "date_source": "discovered",
+      "summary": "The free tier now has restrictions on commercial use. The pricing page explicitly states a free tier for open source projects at £0/user/month with 100MB storage and unlimited public packages. There are also paid tiers available.",
+      "previous_state": "Private cloud-hosted repository for Python, Debian, NPM packages and Docker registries. Free plan: 100MB storage, unlimited public packages, non-commercial use only.",
+      "current_state": "A free tier is available for open source projects at £0 / user / mo with 100 MB storage and unlimited public packages. Paid tiers start at £12 / user / mo.",
+      "impact": "medium",
+      "source_url": "https://repoforge.io",
+      "category": "CI/CD",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-09-10"
+    },
+    {
+      "vendor": "Authress",
+      "change_type": "limits_reduced",
+      "date": "2026-09-10",
+      "date_source": "discovered",
+      "summary": "The pricing is now 0.0012 USD per call after the first 1000 billable calls are free.",
+      "previous_state": "Authentication login and access control, unlimited identity providers for any project. Facebook, Google, Twitter and more. The first 1000 API calls are free.",
+      "current_state": "First 1000 billable calls are free. 0.0012 USD per call, billed monthly.",
+      "impact": "medium",
+      "source_url": "https://authress.io/",
+      "category": "Auth",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-09-10"
     }
   ]
 }
