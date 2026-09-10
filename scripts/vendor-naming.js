@@ -120,6 +120,14 @@ const MIN_HOST_PREFIX = 4;
 export const NAMED_IN_PAGE_TEXT = "text";
 export const NAMED_BY_A_HOST_THE_PAGE_WRITES = "host_in_text";
 
+export const NAMING_LAYERS_RECORDED_INSTEAD_OF_A_FINDING = [NAMED_IN_PAGE_TEXT, "url", "host"];
+
+export function checkRecordedAFinding(check) {
+  const detail = (check?.detail ?? "").trim();
+  if (detail === "") return false;
+  return !NAMING_LAYERS_RECORDED_INSTEAD_OF_A_FINDING.includes(detail);
+}
+
 function hostLabelMatchesVendor(label, vendor, aliases) {
   for (const form of shortNameForms(vendor, aliases)) {
     if (label === form) return true;
