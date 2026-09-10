@@ -24,7 +24,7 @@ const {
   SUPPRESSED_SAME_TRANSITION_REGRADED,
 } = await import("../scripts/change-log.js");
 
-const { runUrlMode, runAiMode, summaryLines, repickWindowDays, regradeRefusals } = await import("../scripts/reverify-rolling.js");
+const { runUrlMode, runAiMode, summaryLines, repickWindowDays, regradeRefusals, regradedVendorLines } = await import("../scripts/reverify-rolling.js");
 const { firstSeenDates } = await import("../scripts/backfill-change-recorded-dates.js");
 const { report, DEFAULT_THRESHOLD_DAYS, detectorSchedule, flagTokens, DETECTOR_CLI_OPTIONS, WORKFLOW_PATH, changeLogAtRef } = await import("../scripts/check-change-log-staleness.js");
 const { VERIFIER_API_KEY_ENV, VERIFIER_MODEL } = await import("../scripts/verify-freshness.js");
@@ -164,14 +164,41 @@ describe("change log writer", () => {
       const today = { ...candidate(), recorded_date: "2026-08-27", date: "2026-08-27" };
       const { fresh, suppressed } = selectNewChanges([yesterday], [today], { windowDays: 21 });
       assert.strictEqual(fresh.length, 0);
+      assert.strictEqual(suppressed[0].reason, SUPPRESSED_SAME_TRANSITION_REGRADED);
+    });
+
+    it("holds a second change of the same kind back until the catalogue comes round again", () => {
+      const yesterday = { ...candidate(), recorded_date: "2026-08-26", date: "2026-08-26" };
+      const today = {
+        ...candidate(),
+        recorded_date: "2026-08-27",
+        date: "2026-08-27",
+        previous_state: yesterday.current_state,
+      };
+      const { fresh, suppressed } = selectNewChanges([yesterday], [today], { windowDays: 21 });
+      assert.strictEqual(fresh.length, 0);
       assert.strictEqual(suppressed[0].reason, "recorded_within_repick_window");
     });
 
-    it("records a later change of the same kind once the window has passed", () => {
+    it("records a later change of the same kind once the window has passed and the catalogue holds the terms the first one left", () => {
       const old = { ...candidate(), recorded_date: "2026-06-01", date: "2026-06-01" };
-      const now = { ...candidate(), recorded_date: "2026-08-27", date: "2026-08-27" };
+      const now = {
+        ...candidate(),
+        recorded_date: "2026-08-27",
+        date: "2026-08-27",
+        previous_state: old.current_state,
+      };
       const { fresh } = selectNewChanges([old], [now], { windowDays: 21 });
       assert.strictEqual(fresh.length, 1);
+    });
+
+    it("refuses a later change read from terms the log already has a record about", () => {
+      const old = { ...candidate(), recorded_date: "2026-06-01", date: "2026-06-01" };
+      const now = { ...candidate(), recorded_date: "2026-08-27", date: "2026-08-27" };
+      const { fresh, suppressed } = selectNewChanges([old], [now], { windowDays: 21 });
+      assert.strictEqual(fresh.length, 0);
+      assert.strictEqual(suppressed[0].reason, SUPPRESSED_SAME_TRANSITION_REGRADED);
+      assert.strictEqual(suppressed[0].collidedWith, changeKey(old));
     });
 
     it("suppresses a repeat against a hand-written entry that carries no recorded date", () => {
@@ -179,7 +206,7 @@ describe("change log writer", () => {
       delete handWritten.recorded_date;
       delete handWritten.detected_by;
       const { fresh, suppressed } = selectNewChanges([handWritten], [
-        { ...candidate(), date: "2026-08-27", recorded_date: "2026-08-27" },
+        { ...candidate(), date: "2026-08-27", recorded_date: "2026-08-27", previous_state: handWritten.current_state },
       ], { windowDays: 21 });
       assert.strictEqual(fresh.length, 0);
       assert.strictEqual(suppressed[0].reason, "recorded_within_repick_window");
@@ -258,6 +285,76 @@ describe("change log writer", () => {
       assert.strictEqual(suppressed.length, 0);
     });
 
+    it("reads one transition the same way whichever day the page was read", () => {
+      const monday = { ...candidate(), date: "2026-08-28", recorded_date: "2026-08-28" };
+      const fortnightLater = {
+        ...candidate(),
+        change_type: "limits_increased",
+        date: "2026-09-10",
+        recorded_date: "2026-09-10",
+      };
+      assert.strictEqual(baselineKey(monday), baselineKey(fortnightLater));
+      const { fresh, suppressed } = selectNewChanges([monday], [fortnightLater], { windowDays: 21 });
+      assert.strictEqual(fresh.length, 0);
+      assert.strictEqual(suppressed[0].reason, SUPPRESSED_SAME_TRANSITION_REGRADED);
+      assert.strictEqual(suppressed[0].collidedWith, changeKey(monday));
+    });
+
+    it("keeps a record we have withdrawn as evidence about the page it cites", () => {
+      const withdrawn = {
+        ...candidate(),
+        date: "2026-08-28",
+        recorded_date: "2026-08-28",
+        resolution: { state: "retracted", date: "2026-09-09", detail: "the page still states the terms" },
+      };
+      const reRead = {
+        ...candidate(),
+        change_type: "limits_increased",
+        date: "2026-09-10",
+        recorded_date: "2026-09-10",
+      };
+      const { fresh, suppressed } = selectNewChanges([withdrawn], [reRead], { windowDays: 21 });
+      assert.strictEqual(fresh.length, 0);
+      assert.strictEqual(suppressed[0].reason, SUPPRESSED_SAME_TRANSITION_REGRADED);
+    });
+
+    it("hears the same page again about terms the catalogue has moved on from", () => {
+      const withdrawn = {
+        ...candidate(),
+        date: "2026-08-28",
+        recorded_date: "2026-08-28",
+        resolution: { state: "retracted", date: "2026-09-09", detail: "the page still states the terms" },
+      };
+      const laterTerms = {
+        ...candidate(),
+        change_type: "limits_reduced",
+        date: "2026-09-10",
+        recorded_date: "2026-09-10",
+        previous_state: "500 MB storage and 2 GB egress per month, free for 14 days",
+      };
+      const { fresh, suppressed } = selectNewChanges([withdrawn], [laterTerms], { windowDays: 21 });
+      assert.strictEqual(fresh.length, 1);
+      assert.strictEqual(suppressed.length, 0);
+    });
+
+    it("hears a second page about the same terms", () => {
+      const homepage = { ...candidate(), source_url: "https://examplebase.dev/", date: "2026-08-28", recorded_date: "2026-08-28" };
+      const pricingPage = { ...candidate(), change_type: "limits_reduced", date: "2026-09-10", recorded_date: "2026-09-10" };
+      assert.notStrictEqual(homepage.source_url, pricingPage.source_url);
+      const { fresh, suppressed } = selectNewChanges([homepage], [pricingPage], { windowDays: 21 });
+      assert.strictEqual(fresh.length, 1);
+      assert.strictEqual(suppressed.length, 0);
+    });
+
+    it("reads no baseline off a record that names no page", () => {
+      const pageless = { ...candidate(), source_url: "" };
+      assert.strictEqual(baselineKey(pageless), null);
+      const { fresh } = selectNewChanges([pageless], [{ ...candidate(), change_type: "limits_increased" }], {
+        windowDays: 0,
+      });
+      assert.strictEqual(fresh.length, 1);
+    });
+
     it("hands the collided key to the refusal log", () => {
       const first = candidate();
       const { suppressed } = selectNewChanges([first], [{ ...candidate(), change_type: "limits_increased" }], {
@@ -282,18 +379,102 @@ describe("change log writer", () => {
       readFileSync(path.join(REPO, "data", "deal_changes.json"), "utf-8")
     ).changes as Array<Record<string, string>>;
 
-    it("stores no two records for one vendor, date, page and baseline", () => {
-      const groups = new Map<string, Array<Record<string, string>>>();
-      for (const change of stored) {
+    const ONE_RECORD_PER_BASELINE_SINCE = "2026-09-10";
+
+    const recordedOn = (change: Record<string, string>) => change.recorded_date || change.date;
+    const inRecordedOrder = () =>
+      [...stored].sort((a, b) => recordedOn(a).localeCompare(recordedOn(b)));
+
+    const replay = () => {
+      const admitted: Array<Record<string, string>> = [];
+      const regraded: Array<Record<string, string>> = [];
+      for (const change of inRecordedOrder()) {
+        const { fresh, suppressed } = selectNewChanges(admitted, [change], { windowDays: 0 });
+        if (fresh.length === 1) admitted.push(change);
+        else if (suppressed[0].reason === SUPPRESSED_SAME_TRANSITION_REGRADED) regraded.push(change);
+      }
+      return { admitted, regraded };
+    };
+
+    it("stores no record written since one page held one record about one set of terms", () => {
+      const written = replay()
+        .regraded.filter(change => recordedOn(change) >= ONE_RECORD_PER_BASELINE_SINCE)
+        .map(change => `${change.vendor} ${recordedOn(change)}: ${change.change_type}`);
+      assert.deepStrictEqual(written, []);
+    });
+
+    it("stores every later record read from terms the catalogue had moved on to", () => {
+      const earlierOnThePage = new Map<string, Set<string>>();
+      const movedOn: Array<Record<string, string>> = [];
+      for (const change of inRecordedOrder()) {
         const key = baselineKey(change);
         if (!key) continue;
-        if (!groups.has(key)) groups.set(key, []);
-        groups.get(key)!.push(change);
+        const page = `${change.vendor}|${change.source_url}`;
+        const seen = earlierOnThePage.get(page);
+        if (seen && !seen.has(key)) movedOn.push(change);
+        if (!seen) earlierOnThePage.set(page, new Set([key]));
+        else seen.add(key);
       }
-      const collisions = [...groups.values()]
-        .filter(group => group.length > 1)
-        .map(group => `${group[0].vendor} ${group[0].date}: ${group.map(c => c.change_type).join(" + ")}`);
-      assert.deepStrictEqual(collisions, []);
+      assert.ok(movedOn.length > 0, "no page in the log holds a second record read from later terms");
+      const regraded = new Set(replay().regraded);
+      const lost = movedOn.filter(change => regraded.has(change)).map(change => `${change.vendor} ${recordedOn(change)}`);
+      assert.deepStrictEqual(lost, []);
+    });
+
+    it("reads a page we have withdrawn a record about without writing another, however it grades it", () => {
+      const offers = JSON.parse(
+        readFileSync(path.join(REPO, "data", "index.json"), "utf-8")
+      ).offers as Array<Record<string, string>>;
+      const stillCited = stored
+        .filter(change => (change as any).resolution?.state === "retracted")
+        .map(change =>
+          offers.find(
+            offer =>
+              offer.vendor === change.vendor &&
+              offer.url === change.source_url &&
+              offer.description === change.previous_state
+          )
+        )
+        .filter(Boolean) as Array<Record<string, string>>;
+      assert.ok(stillCited.length > 0, "no withdrawn record still describes terms the catalogue publishes");
+
+      for (const changeType of ["free_tier_removed", "limits_increased", "limits_reduced"]) {
+        const readAgain = stillCited.map(
+          offer =>
+            buildChangeEntry(
+              offer,
+              { ...DETECTION, change_type: changeType, effective_date: null },
+              { now: new Date("2026-09-10T13:46:00Z") }
+            ).entry
+        );
+        const { fresh, suppressed } = selectNewChanges(stored, readAgain, { windowDays: 0 });
+        assert.deepStrictEqual(fresh.map(c => c.vendor), [], `${changeType} was written again`);
+        assert.deepStrictEqual(
+          [...new Set(suppressed.map((s: any) => s.reason))],
+          [SUPPRESSED_SAME_TRANSITION_REGRADED]
+        );
+      }
+    });
+
+    it("keeps every record we wrote about a vendor after withdrawing an earlier one", () => {
+      const withdrawnFrom = new Map<string, string>();
+      for (const change of stored) {
+        if ((change as any).resolution?.state !== "retracted") continue;
+        const first = withdrawnFrom.get(change.vendor);
+        if (!first || recordedOn(change) < first) withdrawnFrom.set(change.vendor, recordedOn(change));
+      }
+      const written = stored.filter(
+        change =>
+          !(change as any).resolution &&
+          withdrawnFrom.has(change.vendor) &&
+          recordedOn(change) > withdrawnFrom.get(change.vendor)!
+      );
+      assert.ok(written.length > 0, "we have withdrawn a record and written nothing about that vendor since");
+      const regraded = new Set(replay().regraded);
+      const lost = written
+        .filter(change => regraded.has(change))
+        .map(change => `${change.vendor} ${recordedOn(change)}: ${change.change_type}`);
+      assert.deepStrictEqual(lost, []);
     });
 
     it("keeps both records where one page moved two products on one day", () => {
@@ -337,6 +518,30 @@ describe("change log writer", () => {
       const lines = summaryLines({ ...aiResult, suppressed }, { ...context, useAi: true });
       assert.ok(lines.includes("Already recorded, not written again: 2"));
       assert.ok(lines.includes("Same transition re-read and graded differently, not written again: 1"));
+    });
+
+    it("names the vendor and the record a re-grading was refused against", () => {
+      const suppressed = [
+        { candidate: {}, reason: "already_recorded" },
+        {
+          candidate: { vendor: "Examplebase", change_type: "limits_increased" },
+          reason: SUPPRESSED_SAME_TRANSITION_REGRADED,
+          collidedWith: "Examplebase|free_tier_removed|2026-08-28|https://examplebase.dev/pricing",
+        },
+      ];
+      const lines = summaryLines({ ...aiResult, suppressed }, { ...context, useAi: true });
+      const named = lines.filter((line: string) => /Examplebase \(limits_increased\)/.test(line));
+      assert.strictEqual(named.length, 1);
+      assert.match(named[0], /Examplebase\|free_tier_removed\|2026-08-28/);
+      assert.strictEqual(
+        lines.indexOf(named[0]),
+        lines.indexOf("Same transition re-read and graded differently, not written again: 1") + 1
+      );
+    });
+
+    it("names nothing where the re-reads agreed with what we hold", () => {
+      assert.deepStrictEqual(regradedVendorLines([{ candidate: {}, reason: "already_recorded" }]), []);
+      assert.deepStrictEqual(regradedVendorLines(undefined), []);
     });
 
     it("derives the re-pick window from how long the catalogue takes to come round", () => {

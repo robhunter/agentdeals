@@ -57,8 +57,9 @@ export function changeKey(change) {
 
 export function baselineKey(change) {
   const previous = typeof change?.previous_state === "string" ? change.previous_state.trim() : "";
-  if (!previous) return null;
-  return [change.vendor, change.date, change.source_url, previous].join("|");
+  const page = typeof change?.source_url === "string" ? change.source_url.trim() : "";
+  if (!previous || !page) return null;
+  return [change.vendor, page, previous].join("|");
 }
 
 export function isoDay(now) {
