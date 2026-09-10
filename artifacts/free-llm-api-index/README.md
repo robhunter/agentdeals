@@ -1,6 +1,6 @@
 # Free tiers for AI and LLM APIs, with the date we read each one
 
-83 records for AI, LLM and AI-coding vendors, each one carrying the date we last read the vendor's own page and the URL we read it on. There is no single freshness stamp for this file, because a single stamp for a list nobody re-read is worth nothing.
+82 records for AI, LLM and AI-coding vendors, each one carrying the date we last read the vendor's own page and the URL we read it on. There is no single freshness stamp for this file, because a single stamp for a list nobody re-read is worth nothing.
 
 Generated from the free-tier catalogue at https://agentdeals.dev, which is where each row's record lives. It is regenerated whenever those records move, so editing it by hand is pointless — the next run overwrites it.
 
@@ -12,8 +12,8 @@ Rows are ordered alphabetically by vendor. That is not a ranking: we publish no 
 
 | | |
 | --- | --- |
-| Records | 83 |
-| Carrying a rating | 55 |
+| Records | 82 |
+| Carrying a rating | 54 |
 | Recorded as ended | 2 |
 | Publishing a reason instead of a rating | 26 — `states_no_terms` 9, `unreadable` 9, `gate:not_a_free_offer` 4, `link_unreachable` 4 |
 | Showing the terms they replaced | 15 |
@@ -29,7 +29,7 @@ Those counts are generated with the rows. If most of a column carries a caveat, 
 
 - `stable`, `caution` or `risky` — always printed beside the single dated record that produced it;
 - `ended` — a free tier we recorded going away. The row stays for the record;
-- `unrated` — we are publishing no rating, and the next column says why. 26 of 83 rows are unrated. A record whose page we could not read, that names no terms we can read, that is not a free offer, or whose link has stopped resolving gets the reason instead of a verdict. We would rather print why we cannot say than guess.
+- `unrated` — we are publishing no rating, and the next column says why. 26 of 82 rows are unrated. A record whose page we could not read, that names no terms we can read, that is not a free offer, or whose link has stopped resolving gets the reason instead of a verdict. We would rather print why we cannot say than guess.
 
 **Record verified** is the day we last confirmed that record against the page. Where the link has not resolved for 14 days, we withhold that date and print the day the link last worked instead: a recent date over a destination that no longer answers is the most confident-looking thing on a page and the least true.
 
@@ -70,14 +70,13 @@ A change is one dated record about one vendor, carrying the terms before, the te
 
 A rating is decided by the *type* of the most recent narrowing record, never by how many records we hold. A vendor we have never had cause to examine reads the same as one with a long clean history — `stable` is a statement about our records, not a clean bill of health.
 
-## AI / ML — 68 records
+## AI / ML — 67 records
 
 | Vendor | The terms, and where they came from | Rating | What we can say | Record verified |
 | --- | --- | --- | --- | --- |
 | [Alibaba Cloud Qwen Code](https://agentdeals.dev/vendor/alibaba-cloud-qwen-code)<br>Free (Reduced) | Our record, read from [qwen.ai](https://qwen.ai) on 2026-08-18: Qwen Code free tier reduced to 100 requests/day (from 1,000). Full access requires Coding Plan Pro ($50/month). AI coding assistant based on Qwen LLM family. | `caution` | We rate it caution — one recorded limit reduction, on 2026-04-15. We could not read the page we cite for this offer, so we cannot confirm the terms above. | 2026-08-18 |
 | [Anthropic API](https://agentdeals.dev/vendor/anthropic-api)<br>Pay-as-you-go | Our record, read from [docs.anthropic.com/en/docs/about-claude/models](https://docs.anthropic.com/en/docs/about-claude/models) on 2026-08-15: Claude API access with usage-based pricing. Fable 5.1: $10/$50 per MTok (input/output). Opus 5: $5/$25 per MTok. Sonnet 5: $2/$10 per MTok. Haiku 4.5: $1/$5 per MTok. Batch API at 50% discount. Free tier: limited access via console with rate limits. | `unrated` | Tier "Pay-as-you-go" is usage-billed from the first request. We do not rate an offer we do not list. | 2026-08-15 |
-| [Arize AI](https://agentdeals.dev/vendor/arize-ai)<br>Free | Our record, read from [arize.com/pricing](https://arize.com/pricing) on 2026-09-06: ML observability platform (now Arize AX). AX Free plan: 25K trace spans/month, 1 GB ingestion/month, 15 days data retention. Includes online evals, product observability, and community support. | `stable` | It's stable — zero pricing changes recorded. | 2026-09-06 |
-| [Arize AX](https://agentdeals.dev/vendor/arize-ax)<br>Free | Our record, read from [arize.com/pricing](https://arize.com/pricing) on 2026-09-02: AI engineering platform for evaluating and observing AI applications and agents. AX Free plan: 25K trace spans/month, 1 GB ingestion/month, 15 days data retention. Includes online evals, product observability, built-in Alyx agent, and community support. | `stable` | It's stable — zero pricing changes recorded. | 2026-09-02 |
+| [Arize AX](https://agentdeals.dev/vendor/arize-ax)<br>Free | Our record, read from [arize.com/pricing](https://arize.com/pricing) on 2026-09-06: AI engineering platform for evaluating and observing AI applications and agents. AX Free plan: 25K trace spans/month, 1 GB ingestion/month, 15 days data retention. Includes online evals, product observability, built-in Alyx agent, and community support. | `stable` | It's stable — zero pricing changes recorded. | 2026-09-06 |
 | [AssemblyAI](https://agentdeals.dev/vendor/assemblyai)<br>Free | Our record, read from [assemblyai.com/pricing](https://www.assemblyai.com/pricing) on 2026-07-30: Speech-to-text and audio intelligence API — free: $50 in credits (~185 hours pre-recorded transcription). Up to 5 concurrent streams. Core STT and Audio Intelligence models. Pay-as-you-go at $0.15/hr after | `stable` | It's stable — zero pricing changes recorded. | 2026-07-30 |
 | [Audio Enhancer](https://agentdeals.dev/vendor/audio-enhancer)<br>Free | Our record, read from [voice-clone.org/tools/audio-enhancer](https://voice-clone.org/tools/audio-enhancer) on 2026-06-16: AI-powered audio enhancer SaaS that removes noise and echo while preserving natural vocal clarity. totally Free: unlimited one-click enhancements, no login required, supports MP3/WAV/FLAC | `unrated` | We could not read the page we cite for Audio Enhancer.<br><br>We have not re-read this page since 2026-06-16, which is longer than our 72-day re-read interval. That is a statement about us, not about the vendor. | 2026-06-16 |
 | [Baseten](https://agentdeals.dev/vendor/baseten)<br>Basic (Free Credits) | Our record, read from [baseten.co/pricing](https://www.baseten.co/pricing/) on 2026-08-01: ML model deployment platform — $30 in free credits for new accounts. Basic plan is $0/month with pay-as-you-go billing after credits. Per-minute GPU/CPU billing for custom deployments, per-token for Model APIs | `stable` | It's stable — zero pricing changes recorded. | 2026-08-01 |
