@@ -5,6 +5,7 @@ import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { CHANGE_TYPES } from "./change-log.js";
 import { readStructuredPrices } from "./structured-prices.js";
+import { NO_RENDERING_CLIENT, READ_BY_RENDERING, renderPageHtml } from "./rendered-page.js";
 
 const CHANGE_TYPE_VALUES = CHANGE_TYPES.join(", ");
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -74,6 +75,37 @@ export function withMinimumLength(page, floor = MIN_PAGE_TEXT_LENGTH) {
   return page;
 }
 
+export function tooShortToRead(page) {
+  return page?.ok === false && page.error === PAGE_TOO_SHORT_ERROR;
+}
+
+export function tooShortForARenderingClientToo(chars) {
+  return `${PAGE_TOO_SHORT_ERROR}; a rendering client read ${chars} characters`;
+}
+
+export function renderingClientCouldNotReadIt(reason) {
+  return `${PAGE_TOO_SHORT_ERROR}; the rendering client failed: ${reason}`;
+}
+
+export function pageOnlyARenderingClientCanRead(short, rendered, options = {}) {
+  if (rendered.error === NO_RENDERING_CLIENT) return short;
+  const unread = (error, chars) => ({ ...short, error, chars, read: READ_BY_RENDERING });
+  if (!rendered.ok) return unread(renderingClientCouldNotReadIt(rendered.error), short.chars);
+  const text = stripHtml(rendered.html);
+  if (text.length < (options.minLength ?? MIN_PAGE_TEXT_LENGTH)) {
+    return unread(tooShortForARenderingClientToo(text.length), text.length);
+  }
+  return {
+    ok: true,
+    text,
+    structured: readStructuredPrices(rendered.html),
+    truncated: false,
+    finalUrl: options.finalUrl,
+    chars_before_rendering: short.chars,
+    read: READ_BY_RENDERING,
+  };
+}
+
 async function cancelBody(res) {
   try {
     await res.body?.cancel();
@@ -127,14 +159,21 @@ export async function fetchPageText(url, options = {}) {
     if (body.tooLarge) {
       return { ok: false, error: pageTooLargeError(body.bytes) };
     }
-    const text = stripHtml(body.html);
-    return withMinimumLength({
-      ok: true,
-      text,
-      structured: readStructuredPrices(body.html),
-      truncated: false,
-      finalUrl: res.url || url,
-    });
+    const finalUrl = res.url || url;
+    const floor = options.minLength ?? MIN_PAGE_TEXT_LENGTH;
+    const read = withMinimumLength(
+      {
+        ok: true,
+        text: stripHtml(body.html),
+        structured: readStructuredPrices(body.html),
+        truncated: false,
+        finalUrl,
+      },
+      floor
+    );
+    if (!tooShortToRead(read)) return read;
+    const render = options.render ?? renderPageHtml;
+    return pageOnlyARenderingClientCanRead(read, await render(url), { minLength: floor, finalUrl });
   } catch (err) {
     const reason = err.name === "AbortError" ? "timeout" : err.message;
     return { ok: false, error: reason };

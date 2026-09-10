@@ -7918,7 +7918,7 @@
     {
       "vendor": "Kaggle",
       "category": "AI / ML",
-      "description": "Data science platform (Google) — entirely free: 30 hrs/week GPU compute (Tesla T4, 16 GB VRAM), 20 hrs/week TPU, 20 GB working disk per session. Unlimited public notebooks, datasets, and competitions",
+      "description": "Data science platform (Google) — entirely free: 30 hrs/week GPU compute (NVIDIA Tesla P100), 20 hrs/week TPU with a 9-hour cap per session, 20 GB working disk per session. Unlimited public notebooks, datasets, and competitions",
       "tier": "Free",
       "url": "https://www.kaggle.com",
       "tags": [
@@ -10963,16 +10963,17 @@
       "category": "AI / ML",
       "description": "Simulate, evaluate, and observe your AI agents. Maxim is an end-to-end evaluation and observability platform, helping teams ship their AI agents reliably and >5x faster. Free forever for indie developers and small teams (3 seats).",
       "tier": "Free",
-      "url": "https://getmaxim.ai/",
+      "url": "https://getmaxim.ai/pricing",
       "tags": [
         "developer-tools",
         "free-for-dev"
       ],
       "verifiedDate": "2026-07-30",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names Maxim AI but states no amount, tier or rate we can read"
+        "checked": "2026-09-10",
+        "outcome": "ok",
+        "detail": "the page names Maxim AI, renders \"Free Forever\" and no amount, and its markup states 1 typed price (Bifrost OSS USD 0)",
+        "read": "markup"
       },
       "product_subtypes": {
         "taxonomy": "AI / ML",

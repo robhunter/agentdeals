@@ -13,6 +13,7 @@ const {
   MIN_PAGE_TEXT_LENGTH,
   PAGE_TOO_SHORT_ERROR,
 } = await import("../scripts/verify-freshness.js");
+const { withoutARenderingClient } = await import("../scripts/rendered-page.js");
 const { priceSignals } = await import("../scripts/change-gate.js");
 const { classifySource } = await import("../scripts/vendor-naming.js");
 const { classifyFetchError, FAILURE_EMPTY_PAGE } = await import("../scripts/verification-state.js");
@@ -53,7 +54,7 @@ async function readWith(body: string) {
   const original = globalThis.fetch;
   globalThis.fetch = (async () => new Response(body, { status: 200 })) as typeof fetch;
   try {
-    return await fetchPageText(OFFER.url);
+    return await fetchPageText(OFFER.url, { render: withoutARenderingClient });
   } finally {
     globalThis.fetch = original;
   }

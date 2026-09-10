@@ -16,6 +16,7 @@ const {
   NO_STRUCTURED_DATA,
 } = await import("../scripts/structured-prices.js");
 const { fetchPageText } = await import("../scripts/verify-freshness.js");
+const { withoutARenderingClient } = await import("../scripts/rendered-page.js");
 const { classifySource, sourceCheckRecord, READ_FROM_MARKUP } = await import("../scripts/vendor-naming.js");
 const { priceSignals } = await import("../scripts/change-gate.js");
 const { runUrlMode, summaryLines } = await import("../scripts/reverify-rolling.js");
@@ -61,7 +62,7 @@ async function readWith(body: string) {
   const original = globalThis.fetch;
   globalThis.fetch = (async () => new Response(body, { status: 200 })) as typeof fetch;
   try {
-    return await fetchPageText(OFFER.url);
+    return await fetchPageText(OFFER.url, { render: withoutARenderingClient });
   } finally {
     globalThis.fetch = original;
   }
