@@ -9413,6 +9413,51 @@
       "alternatives": [],
       "recorded_date": "2026-09-09",
       "date_source": "hand_written"
+    },
+    {
+      "vendor": "ScraperAPI",
+      "change_type": "limits_increased",
+      "date": "2026-09-10",
+      "date_source": "discovered",
+      "summary": "The free tier now offers 5,000 API credits and a 7-day trial instead of 1,000 credits/month.",
+      "previous_state": "Web scraping API with proxy rotation and CAPTCHA handling. Free plan: 1,000 API credits/month, 5 concurrent connections. No credit card required",
+      "current_state": "Start collecting data with our 7-day trial and 5,000 API credits. No credit card required.",
+      "impact": "medium",
+      "source_url": "https://www.scraperapi.com/pricing/",
+      "category": "Web Scraping",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-09-10"
+    },
+    {
+      "vendor": "Pinecone",
+      "change_type": "pricing_restructured",
+      "date": "2026-09-10",
+      "date_source": "discovered",
+      "summary": "The Starter plan is still available as a free tier. The details have been expanded. The page now lists specific example workloads and their estimated usage on the Starter plan. It also details pricing for exceeding the free tier limits for various components like storage, write units, read units, egress, and assistant features.",
+      "previous_state": "Vector database — 2 GB storage, 2M write units/month, 1M read units/month, 5 indexes, 5M embedding tokens/month. Pinecone Assistant: 100 docs / 1 GB",
+      "current_state": "The Starter plan is free and includes up to 2 GB storage, 2M write units/month, 1M read units/month, 5 indexes, 1GB Assistant storage, 500k input tokens, 300k output tokens, and 500k context processed tokens. It also includes access to various embedding and reranking models with token/request limits.",
+      "impact": "medium",
+      "source_url": "https://pinecone.io/pricing",
+      "category": "AI / ML",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-09-10"
+    },
+    {
+      "vendor": "Qdrant",
+      "change_type": "limits_reduced",
+      "date": "2026-09-10",
+      "date_source": "discovered",
+      "summary": "The free tier now offers 1GB RAM and 4GB disk, down from 1GB cluster (which likely meant storage).",
+      "previous_state": "Vector database — 1 GB free forever cluster, fully managed on AWS/GCP/Azure. Unlimited users, backups included. No credit card required",
+      "current_state": "Free Tier: For testing, and prototypes Single Node Cluster 0.5 vCPU / 1GB RAM/ 4 GB Disk.",
+      "impact": "medium",
+      "source_url": "https://qdrant.tech/pricing/",
+      "category": "AI / ML",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-09-10"
     }
   ]
 }

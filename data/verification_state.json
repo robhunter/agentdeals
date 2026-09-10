@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-09",
+  "generated_at": "2026-09-10",
   "records": [
     {
       "vendor": "10minutemail",
@@ -246,11 +246,11 @@
     {
       "vendor": "Alibaba Cloud Qwen Code",
       "url": "https://qwen.ai",
-      "last_attempt_at": "2026-08-28",
+      "last_attempt_at": "2026-09-10",
       "last_outcome": "fetch_failed",
       "last_error": "page content too short (likely JS-rendered SPA)",
       "failure_category": "empty_page",
-      "consecutive_failures": 1,
+      "consecutive_failures": 2,
       "last_success": "2026-08-18",
       "quarantined_since": null
     },
@@ -488,11 +488,11 @@
     {
       "vendor": "Apidog",
       "url": "https://apidog.com/pricing/",
-      "last_attempt_at": "2026-08-28",
+      "last_attempt_at": "2026-09-10",
       "last_outcome": "fetch_failed",
       "last_error": "page content too short (likely JS-rendered SPA)",
       "failure_category": "empty_page",
-      "consecutive_failures": 1,
+      "consecutive_failures": 2,
       "last_success": "2026-07-31",
       "quarantined_since": null
     },
@@ -576,11 +576,11 @@
     {
       "vendor": "Appho.st",
       "url": "https://appho.st",
-      "last_attempt_at": "2026-08-28",
+      "last_attempt_at": "2026-09-10",
       "last_outcome": "fetch_failed",
       "last_error": "page content too short (likely JS-rendered SPA)",
       "failure_category": "empty_page",
-      "consecutive_failures": 1,
+      "consecutive_failures": 2,
       "last_success": "2026-08-03",
       "quarantined_since": null
     },
@@ -686,12 +686,12 @@
     {
       "vendor": "Appsmith",
       "url": "https://www.appsmith.com/",
-      "last_attempt_at": "2026-08-28",
+      "last_attempt_at": "2026-09-10",
       "last_outcome": "confirmed",
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-28",
+      "last_success": "2026-09-10",
       "quarantined_since": null
     },
     {
@@ -1269,11 +1269,11 @@
     {
       "vendor": "Binder",
       "url": "https://mybinder.org/",
-      "last_attempt_at": "2026-08-28",
+      "last_attempt_at": "2026-09-10",
       "last_outcome": "fetch_failed",
       "last_error": "page content too short (likely JS-rendered SPA)",
       "failure_category": "empty_page",
-      "consecutive_failures": 1,
+      "consecutive_failures": 2,
       "last_success": "2026-08-07",
       "quarantined_since": null
     },
@@ -1775,12 +1775,12 @@
     {
       "vendor": "BullMQ",
       "url": "https://bullmq.io/",
-      "last_attempt_at": "2026-08-28",
+      "last_attempt_at": "2026-09-10",
       "last_outcome": "confirmed",
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-28",
+      "last_success": "2026-09-10",
       "quarantined_since": null
     },
     {
@@ -1830,11 +1830,11 @@
     {
       "vendor": "CacheFly",
       "url": "https://portal.cachefly.com/signup/free2023",
-      "last_attempt_at": "2026-08-28",
+      "last_attempt_at": "2026-09-10",
       "last_outcome": "fetch_failed",
       "last_error": "page content too short (likely JS-rendered SPA)",
       "failure_category": "empty_page",
-      "consecutive_failures": 1,
+      "consecutive_failures": 2,
       "last_success": "2026-08-09",
       "quarantined_since": null
     },
@@ -2067,6 +2067,17 @@
       "failure_category": null,
       "consecutive_failures": 0,
       "last_success": null,
+      "quarantined_since": null
+    },
+    {
+      "vendor": "Chargebee Launch Programme",
+      "url": "https://www.chargebee.com/startups/",
+      "last_attempt_at": "2026-09-09",
+      "last_outcome": "source_unusable",
+      "last_error": "the page names the platform in the domain we cite Chargebee Launch Programme from and never names Launch Programme",
+      "failure_category": "source_unusable",
+      "consecutive_failures": 1,
+      "last_success": "2026-09-02",
       "quarantined_since": null
     },
     {
@@ -2644,22 +2655,22 @@
     {
       "vendor": "cname.dev",
       "url": "https://cname.dev/",
-      "last_attempt_at": "2026-08-28",
+      "last_attempt_at": "2026-09-10",
       "last_outcome": "fetch_failed",
       "last_error": "page content too short (likely JS-rendered SPA)",
       "failure_category": "empty_page",
-      "consecutive_failures": 1,
+      "consecutive_failures": 2,
       "last_success": "2026-08-08",
       "quarantined_since": null
     },
     {
       "vendor": "cocalc.com",
       "url": "https://cocalc.com/",
-      "last_attempt_at": "2026-08-28",
+      "last_attempt_at": "2026-09-10",
       "last_outcome": "fetch_failed",
       "last_error": "page content too short (likely JS-rendered SPA)",
       "failure_category": "empty_page",
-      "consecutive_failures": 1,
+      "consecutive_failures": 2,
       "last_success": "2026-08-15",
       "quarantined_since": null
     },
@@ -2677,11 +2688,11 @@
     {
       "vendor": "Coda",
       "url": "https://coda.io/pricing",
-      "last_attempt_at": "2026-08-28",
+      "last_attempt_at": "2026-09-10",
       "last_outcome": "fetch_failed",
       "last_error": "page content too short (likely JS-rendered SPA)",
       "failure_category": "empty_page",
-      "consecutive_failures": 1,
+      "consecutive_failures": 2,
       "last_success": "2026-08-21",
       "quarantined_since": null
     },
@@ -2809,11 +2820,11 @@
     {
       "vendor": "CodeKeep",
       "url": "https://codekeep.io",
-      "last_attempt_at": "2026-08-28",
+      "last_attempt_at": "2026-09-10",
       "last_outcome": "fetch_failed",
       "last_error": "page content too short (likely JS-rendered SPA)",
       "failure_category": "empty_page",
-      "consecutive_failures": 1,
+      "consecutive_failures": 2,
       "last_success": "2026-07-11",
       "quarantined_since": null
     },
@@ -3150,11 +3161,11 @@
     {
       "vendor": "Couchbase Capella",
       "url": "https://www.couchbase.com/products/capella/",
-      "last_attempt_at": "2026-08-28",
+      "last_attempt_at": "2026-09-10",
       "last_outcome": "source_unusable",
-      "last_error": "the page names Couchbase Capella but states no amount, tier or rate we can read (liveness: GET 403)",
+      "last_error": "the page names Couchbase Capella but states no amount, tier or rate we can read, and the 2 structured-data blocks in its markup state no price",
       "failure_category": "source_unusable",
-      "consecutive_failures": 3,
+      "consecutive_failures": 4,
       "last_success": "2026-07-15",
       "quarantined_since": "2026-08-28"
     },
@@ -3337,11 +3348,11 @@
     {
       "vendor": "Crunchyroll",
       "url": "https://www.crunchyroll.com",
-      "last_attempt_at": "2026-08-28",
+      "last_attempt_at": "2026-09-10",
       "last_outcome": "fetch_failed",
-      "last_error": "page content too short (likely JS-rendered SPA)",
-      "failure_category": "empty_page",
-      "consecutive_failures": 1,
+      "last_error": "HTTP 403",
+      "failure_category": "bot_block",
+      "consecutive_failures": 2,
       "last_success": "2026-08-18",
       "quarantined_since": null
     },
@@ -3381,11 +3392,11 @@
     {
       "vendor": "css.glass",
       "url": "https://css.glass/",
-      "last_attempt_at": "2026-08-28",
+      "last_attempt_at": "2026-09-10",
       "last_outcome": "fetch_failed",
       "last_error": "page content too short (likely JS-rendered SPA)",
       "failure_category": "empty_page",
-      "consecutive_failures": 1,
+      "consecutive_failures": 2,
       "last_success": "2026-07-20",
       "quarantined_since": null
     },
@@ -3403,22 +3414,22 @@
     {
       "vendor": "Cube",
       "url": "https://cube.dev/",
-      "last_attempt_at": "2026-08-28",
+      "last_attempt_at": "2026-09-10",
       "last_outcome": "unclear",
-      "last_error": "The pricing page does not explicitly mention a free tier or any query limits. It focuses on features and capabilities of the platform but lacks specific pricing details. Therefore, it's impossible to confirm or deny the existence and terms of the free tier based on the provided text.",
+      "last_error": "The pricing page does not explicitly mention a free tier or any query limits. It focuses on features and integrations but lacks specific pricing details. Therefore, it's impossible to confirm or deny the existence of the free tier and its limits based on the provided text.",
       "failure_category": "ai_undecided",
-      "consecutive_failures": 1,
+      "consecutive_failures": 2,
       "last_success": null,
       "quarantined_since": null
     },
     {
       "vendor": "CurlHub",
       "url": "https://curlhub.io",
-      "last_attempt_at": "2026-08-28",
+      "last_attempt_at": "2026-09-10",
       "last_outcome": "fetch_failed",
       "last_error": "page content too short (likely JS-rendered SPA)",
       "failure_category": "empty_page",
-      "consecutive_failures": 1,
+      "consecutive_failures": 2,
       "last_success": "2026-08-01",
       "quarantined_since": null
     },
@@ -3766,7 +3777,7 @@
     {
       "vendor": "Deepgram",
       "url": "https://deepgram.com/pricing",
-      "last_attempt_at": "2026-08-28",
+      "last_attempt_at": "2026-09-10",
       "last_outcome": "changed",
       "last_error": null,
       "failure_category": null,
@@ -3975,11 +3986,11 @@
     {
       "vendor": "DiffText",
       "url": "https://difftext.com",
-      "last_attempt_at": "2026-08-28",
+      "last_attempt_at": "2026-09-10",
       "last_outcome": "fetch_failed",
       "last_error": "page content too short (likely JS-rendered SPA)",
       "failure_category": "empty_page",
-      "consecutive_failures": 1,
+      "consecutive_failures": 2,
       "last_success": "2026-08-03",
       "quarantined_since": null
     },
@@ -4019,11 +4030,11 @@
     {
       "vendor": "DigitalPlat",
       "url": "https://domain.digitalplat.org",
-      "last_attempt_at": "2026-08-28",
+      "last_attempt_at": "2026-09-10",
       "last_outcome": "source_unusable",
-      "last_error": "the page names DigitalPlat but states no amount, tier or rate we can read (liveness: GET 403)",
+      "last_error": "the page names DigitalPlat but states no amount, tier or rate we can read, and its markup carries no structured data",
       "failure_category": "source_unusable",
-      "consecutive_failures": 3,
+      "consecutive_failures": 4,
       "last_success": "2026-08-26",
       "quarantined_since": "2026-08-28"
     },
@@ -4107,11 +4118,11 @@
     {
       "vendor": "dnspod.com",
       "url": "https://www.dnspod.com/",
-      "last_attempt_at": "2026-08-28",
+      "last_attempt_at": "2026-09-10",
       "last_outcome": "fetch_failed",
       "last_error": "page content too short (likely JS-rendered SPA)",
       "failure_category": "empty_page",
-      "consecutive_failures": 1,
+      "consecutive_failures": 2,
       "last_success": "2026-08-09",
       "quarantined_since": null
     },
@@ -4305,11 +4316,11 @@
     {
       "vendor": "Duolingo",
       "url": "https://www.duolingo.com",
-      "last_attempt_at": "2026-08-28",
+      "last_attempt_at": "2026-09-10",
       "last_outcome": "fetch_failed",
       "last_error": "page content too short (likely JS-rendered SPA)",
       "failure_category": "empty_page",
-      "consecutive_failures": 1,
+      "consecutive_failures": 2,
       "last_success": "2026-08-20",
       "quarantined_since": null
     },
@@ -4492,11 +4503,11 @@
     {
       "vendor": "EmailOctopus",
       "url": "https://emailoctopus.com",
-      "last_attempt_at": "2026-08-28",
-      "last_outcome": "unclear",
-      "last_error": "The pricing page does not explicitly state the limits of the free tier (subscribers and emails per month). It only mentions 'Start for Free' with no credit card required and highlights customer testimonials about using the free service, but doesn't quantify it.",
-      "failure_category": "ai_undecided",
-      "consecutive_failures": 1,
+      "last_attempt_at": "2026-09-10",
+      "last_outcome": "changed",
+      "last_error": null,
+      "failure_category": null,
+      "consecutive_failures": 0,
       "last_success": null,
       "quarantined_since": null
     },
@@ -4558,11 +4569,11 @@
     {
       "vendor": "Engage",
       "url": "https://engage.so/",
-      "last_attempt_at": "2026-08-28",
-      "last_outcome": "source_unusable",
-      "last_error": "the page names Engage but states no amount, tier or rate we can read",
-      "failure_category": "source_unusable",
-      "consecutive_failures": 1,
+      "last_attempt_at": "2026-09-10",
+      "last_outcome": "fetch_failed",
+      "last_error": "timeout",
+      "failure_category": "timeout",
+      "consecutive_failures": 2,
       "last_success": "2026-08-08",
       "quarantined_since": null
     },
@@ -4635,11 +4646,11 @@
     {
       "vendor": "everystep-automation.com",
       "url": "https://www.everystep-automation.com/",
-      "last_attempt_at": "2026-08-28",
+      "last_attempt_at": "2026-09-10",
       "last_outcome": "fetch_failed",
-      "last_error": "HTTP 403",
-      "failure_category": "bot_block",
-      "consecutive_failures": 1,
+      "last_error": "page content too short (likely JS-rendered SPA)",
+      "failure_category": "empty_page",
+      "consecutive_failures": 2,
       "last_success": "2026-08-24",
       "quarantined_since": null
     },
@@ -5317,11 +5328,11 @@
     {
       "vendor": "framagit.org",
       "url": "https://framagit.org/",
-      "last_attempt_at": "2026-08-28",
+      "last_attempt_at": "2026-09-10",
       "last_outcome": "fetch_failed",
       "last_error": "page content too short (likely JS-rendered SPA)",
       "failure_category": "empty_page",
-      "consecutive_failures": 1,
+      "consecutive_failures": 2,
       "last_success": "2026-08-02",
       "quarantined_since": null
     },
@@ -5515,11 +5526,11 @@
     {
       "vendor": "FxRatesAPI",
       "url": "https://fxratesapi.com",
-      "last_attempt_at": "2026-08-28",
+      "last_attempt_at": "2026-09-10",
       "last_outcome": "fetch_failed",
       "last_error": "page content too short (likely JS-rendered SPA)",
       "failure_category": "empty_page",
-      "consecutive_failures": 1,
+      "consecutive_failures": 2,
       "last_success": "2026-08-14",
       "quarantined_since": null
     },
@@ -5680,11 +5691,11 @@
     {
       "vendor": "getpantry.cloud",
       "url": "https://getpantry.cloud/",
-      "last_attempt_at": "2026-08-28",
+      "last_attempt_at": "2026-09-10",
       "last_outcome": "fetch_failed",
       "last_error": "page content too short (likely JS-rendered SPA)",
       "failure_category": "empty_page",
-      "consecutive_failures": 1,
+      "consecutive_failures": 2,
       "last_success": "2026-07-16",
       "quarantined_since": null
     },
@@ -5768,7 +5779,7 @@
     {
       "vendor": "Gitea",
       "url": "https://about.gitea.com/",
-      "last_attempt_at": "2026-08-28",
+      "last_attempt_at": "2026-09-10",
       "last_outcome": "changed",
       "last_error": null,
       "failure_category": null,
@@ -6032,11 +6043,11 @@
     {
       "vendor": "Google Analytics",
       "url": "https://analytics.google.com/",
-      "last_attempt_at": "2026-08-28",
+      "last_attempt_at": "2026-09-10",
       "last_outcome": "fetch_failed",
       "last_error": "page content too short (likely JS-rendered SPA)",
       "failure_category": "empty_page",
-      "consecutive_failures": 1,
+      "consecutive_failures": 2,
       "last_success": "2026-07-22",
       "quarantined_since": null
     },
@@ -6164,11 +6175,11 @@
     {
       "vendor": "Google Colab",
       "url": "https://colab.research.google.com/",
-      "last_attempt_at": "2026-08-28",
+      "last_attempt_at": "2026-09-10",
       "last_outcome": "fetch_failed",
       "last_error": "page content too short (likely JS-rendered SPA)",
       "failure_category": "empty_page",
-      "consecutive_failures": 1,
+      "consecutive_failures": 2,
       "last_success": "2026-08-13",
       "quarantined_since": null
     },
@@ -6236,17 +6247,6 @@
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
       "last_success": "2026-08-17",
-      "quarantined_since": null
-    },
-    {
-      "vendor": "Google GLM 5",
-      "url": "https://cloud.google.com/vertex-ai/docs/generative-ai/model-reference/overview",
-      "last_attempt_at": "2026-08-28",
-      "last_outcome": "source_unusable",
-      "last_error": "the page names Google GLM 5 but states no amount, tier or rate we can read",
-      "failure_category": "source_unusable",
-      "consecutive_failures": 1,
-      "last_success": "2026-08-19",
       "quarantined_since": null
     },
     {
@@ -6384,7 +6384,7 @@
     {
       "vendor": "Grafana k6 Cloud",
       "url": "https://grafana.com/pricing/",
-      "last_attempt_at": "2026-08-28",
+      "last_attempt_at": "2026-09-10",
       "last_outcome": "changed",
       "last_error": null,
       "failure_category": null,
@@ -6879,11 +6879,11 @@
     {
       "vendor": "howuku.com",
       "url": "https://howuku.com",
-      "last_attempt_at": "2026-08-28",
+      "last_attempt_at": "2026-09-10",
       "last_outcome": "fetch_failed",
       "last_error": "timeout",
       "failure_category": "timeout",
-      "consecutive_failures": 1,
+      "consecutive_failures": 2,
       "last_success": "2026-07-23",
       "quarantined_since": null
     },
@@ -6978,11 +6978,11 @@
     {
       "vendor": "Hyperbrowser",
       "url": "https://hyperbrowser.ai",
-      "last_attempt_at": "2026-08-28",
+      "last_attempt_at": "2026-09-10",
       "last_outcome": "fetch_failed",
       "last_error": "page content too short (likely JS-rendered SPA)",
       "failure_category": "empty_page",
-      "consecutive_failures": 1,
+      "consecutive_failures": 2,
       "last_success": "2026-08-17",
       "quarantined_since": null
     },
@@ -7143,11 +7143,11 @@
     {
       "vendor": "ImageEngine",
       "url": "https://imageengine.io/",
-      "last_attempt_at": "2026-08-28",
+      "last_attempt_at": "2026-09-10",
       "last_outcome": "fetch_failed",
-      "last_error": "HTTP 403",
-      "failure_category": "bot_block",
-      "consecutive_failures": 1,
+      "last_error": "page content too short (likely JS-rendered SPA)",
+      "failure_category": "empty_page",
+      "consecutive_failures": 2,
       "last_success": "2026-08-24",
       "quarantined_since": null
     },
@@ -7231,11 +7231,11 @@
     {
       "vendor": "inboxkitten.com",
       "url": "https://inboxkitten.com/",
-      "last_attempt_at": "2026-08-28",
+      "last_attempt_at": "2026-09-10",
       "last_outcome": "fetch_failed",
       "last_error": "page content too short (likely JS-rendered SPA)",
       "failure_category": "empty_page",
-      "consecutive_failures": 1,
+      "consecutive_failures": 2,
       "last_success": "2026-07-12",
       "quarantined_since": null
     },
@@ -7330,11 +7330,11 @@
     {
       "vendor": "inspectlet.com",
       "url": "https://www.inspectlet.com/",
-      "last_attempt_at": "2026-08-28",
-      "last_outcome": "unclear",
-      "last_error": "The pricing page does not explicitly mention a free tier or any specific limits on usage. It highlights features like Session Replay, Heatmaps, and AI Insights but does not detail any free allowances like the stored information suggests (2,500 sessions/month). The page focuses on features and provides a 'Get Started' call to action without specifying pricing details upfront.",
-      "failure_category": "ai_undecided",
-      "consecutive_failures": 1,
+      "last_attempt_at": "2026-09-10",
+      "last_outcome": "changed",
+      "last_error": null,
+      "failure_category": null,
+      "consecutive_failures": 0,
       "last_success": null,
       "quarantined_since": null
     },
@@ -7517,11 +7517,11 @@
     {
       "vendor": "ipaddress.sh",
       "url": "https://ipaddress.sh",
-      "last_attempt_at": "2026-08-28",
+      "last_attempt_at": "2026-09-10",
       "last_outcome": "fetch_failed",
       "last_error": "page content too short (likely JS-rendered SPA)",
       "failure_category": "empty_page",
-      "consecutive_failures": 1,
+      "consecutive_failures": 2,
       "last_success": "2026-07-09",
       "quarantined_since": null
     },
@@ -7583,11 +7583,11 @@
     {
       "vendor": "IPTrace",
       "url": "https://iptrace.io",
-      "last_attempt_at": "2026-08-28",
-      "last_outcome": "ai_error",
-      "last_error": "google/gemma-3-27b-it request failed: HTTP 504 — {\"error\":{\"message\":\"The operation was aborted\",\"code\":504,\"metadata\":{\"provider_name\":\"Nebius\",\"previous_errors\":[{\"code\":429,\"message\":\"Provider returned error\",\"provider_name\":\"Novita\",\"raw\":\"googl",
-      "failure_category": "ai_extraction",
-      "consecutive_failures": 1,
+      "last_attempt_at": "2026-09-10",
+      "last_outcome": "changed",
+      "last_error": null,
+      "failure_category": null,
+      "consecutive_failures": 0,
       "last_success": null,
       "quarantined_since": null
     },
@@ -7770,11 +7770,11 @@
     {
       "vendor": "Kaggle",
       "url": "https://www.kaggle.com",
-      "last_attempt_at": "2026-08-28",
+      "last_attempt_at": "2026-09-10",
       "last_outcome": "fetch_failed",
       "last_error": "page content too short (likely JS-rendered SPA)",
       "failure_category": "empty_page",
-      "consecutive_failures": 1,
+      "consecutive_failures": 2,
       "last_success": "2026-08-24",
       "quarantined_since": null
     },
@@ -7902,11 +7902,11 @@
     {
       "vendor": "Khan Academy",
       "url": "https://www.khanacademy.org",
-      "last_attempt_at": "2026-08-28",
+      "last_attempt_at": "2026-09-10",
       "last_outcome": "fetch_failed",
       "last_error": "page content too short (likely JS-rendered SPA)",
       "failure_category": "empty_page",
-      "consecutive_failures": 1,
+      "consecutive_failures": 2,
       "last_success": "2026-08-21",
       "quarantined_since": null
     },
@@ -8034,11 +8034,11 @@
     {
       "vendor": "Krita",
       "url": "https://krita.org",
-      "last_attempt_at": "2026-08-28",
+      "last_attempt_at": "2026-09-10",
       "last_outcome": "fetch_failed",
       "last_error": "page content too short (likely JS-rendered SPA)",
       "failure_category": "empty_page",
-      "consecutive_failures": 1,
+      "consecutive_failures": 2,
       "last_success": "2026-08-19",
       "quarantined_since": null
     },
@@ -8100,11 +8100,11 @@
     {
       "vendor": "LanceDB",
       "url": "https://lancedb.com/pricing/",
-      "last_attempt_at": "2026-08-28",
-      "last_outcome": "ai_error",
-      "last_error": "google/gemma-3-27b-it returned no message content",
-      "failure_category": "ai_extraction",
-      "consecutive_failures": 1,
+      "last_attempt_at": "2026-09-10",
+      "last_outcome": "unclear",
+      "last_error": "The provided text is primarily blog posts and privacy/cookie information. It does not contain any pricing or deal information to verify the stored details about LanceDB's open-source and cloud offerings.",
+      "failure_category": "ai_undecided",
+      "consecutive_failures": 2,
       "last_success": null,
       "quarantined_since": null
     },
@@ -8210,12 +8210,12 @@
     {
       "vendor": "Lemon Squeezy",
       "url": "https://www.lemonsqueezy.com/pricing",
-      "last_attempt_at": "2026-08-28",
+      "last_attempt_at": "2026-09-10",
       "last_outcome": "confirmed",
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-28",
+      "last_success": "2026-09-10",
       "quarantined_since": null
     },
     {
@@ -8463,7 +8463,7 @@
     {
       "vendor": "LocationIQ",
       "url": "https://locationiq.com/pricing",
-      "last_attempt_at": "2026-08-28",
+      "last_attempt_at": "2026-09-10",
       "last_outcome": "changed",
       "last_error": null,
       "failure_category": null,
@@ -8815,11 +8815,11 @@
     {
       "vendor": "Maileroo",
       "url": "https://maileroo.com",
-      "last_attempt_at": "2026-08-28",
-      "last_outcome": "unclear",
-      "last_error": "The pricing page does not explicitly mention a free tier with 3,000 emails per month. It broadly advertises features like SMTP relay and API, and mentions a free sender domain, but doesn't detail a specific free tier with usage limits. It focuses on features and benefits without outlining specific free tier limitations.",
-      "failure_category": "ai_undecided",
-      "consecutive_failures": 1,
+      "last_attempt_at": "2026-09-10",
+      "last_outcome": "changed",
+      "last_error": null,
+      "failure_category": null,
+      "consecutive_failures": 0,
       "last_success": null,
       "quarantined_since": null
     },
@@ -9376,11 +9376,11 @@
     {
       "vendor": "MockAPI",
       "url": "https://www.mockapi.io/",
-      "last_attempt_at": "2026-08-28",
+      "last_attempt_at": "2026-09-10",
       "last_outcome": "fetch_failed",
       "last_error": "page content too short (likely JS-rendered SPA)",
       "failure_category": "empty_page",
-      "consecutive_failures": 1,
+      "consecutive_failures": 2,
       "last_success": "2026-08-01",
       "quarantined_since": null
     },
@@ -9959,11 +9959,11 @@
     {
       "vendor": "Northflank",
       "url": "https://northflank.com",
-      "last_attempt_at": "2026-08-28",
+      "last_attempt_at": "2026-09-10",
       "last_outcome": "unclear",
-      "last_error": "The pricing page does not explicitly mention a free tier or its limits (two services, two cron jobs, and 1 database). It broadly advertises getting started for free and mentions features like containers, databases, and jobs, but doesn't detail a specific free tier offering. It's unclear if the free tier still exists with the same limits.",
+      "last_error": "The pricing page does not explicitly mention a free tier or its limits. It broadly describes the platform's capabilities but lacks specific details about a free offering with 'two services, two cron jobs and 1 database'. While it says 'Get started for free' and 'Book a demo', it doesn't detail what 'free' entails.",
       "failure_category": "ai_undecided",
-      "consecutive_failures": 1,
+      "consecutive_failures": 2,
       "last_success": null,
       "quarantined_since": null
     },
@@ -9992,11 +9992,11 @@
     {
       "vendor": "npoint.io",
       "url": "https://www.npoint.io/",
-      "last_attempt_at": "2026-08-28",
+      "last_attempt_at": "2026-09-10",
       "last_outcome": "fetch_failed",
       "last_error": "page content too short (likely JS-rendered SPA)",
       "failure_category": "empty_page",
-      "consecutive_failures": 1,
+      "consecutive_failures": 2,
       "last_success": "2026-07-17",
       "quarantined_since": null
     },
@@ -10265,17 +10265,6 @@
       "quarantined_since": null
     },
     {
-      "vendor": "OpenAI",
-      "url": "https://openai.com/api/pricing/",
-      "last_attempt_at": "2026-09-05",
-      "last_outcome": "fetch_failed",
-      "last_error": "HTTP 403",
-      "failure_category": "bot_block",
-      "consecutive_failures": 4,
-      "last_success": "2026-06-30",
-      "quarantined_since": "2026-08-28"
-    },
-    {
       "vendor": "OpenAPI3 Designer",
       "url": "https://openapidesigner.com/",
       "last_attempt_at": "2026-08-28",
@@ -10410,11 +10399,11 @@
     {
       "vendor": "Outlook.com",
       "url": "https://outlook.live.com",
-      "last_attempt_at": "2026-08-28",
+      "last_attempt_at": "2026-09-10",
       "last_outcome": "fetch_failed",
       "last_error": "page content too short (likely JS-rendered SPA)",
       "failure_category": "empty_page",
-      "consecutive_failures": 1,
+      "consecutive_failures": 2,
       "last_success": "2026-08-20",
       "quarantined_since": null
     },
@@ -10872,7 +10861,7 @@
     {
       "vendor": "Pinecone",
       "url": "https://pinecone.io/pricing",
-      "last_attempt_at": "2026-08-28",
+      "last_attempt_at": "2026-09-10",
       "last_outcome": "changed",
       "last_error": null,
       "failure_category": null,
@@ -11026,11 +11015,11 @@
     {
       "vendor": "Plausible Analytics",
       "url": "https://plausible.io/",
-      "last_attempt_at": "2026-08-28",
-      "last_outcome": "ai_error",
-      "last_error": "google/gemma-3-27b-it request failed: HTTP 504 — {\"error\":{\"message\":\"The operation was aborted\",\"code\":504,\"metadata\":{\"provider_name\":\"Nebius\",\"previous_errors\":[{\"code\":429,\"message\":\"Provider returned error\",\"provider_name\":\"Novita\",\"raw\":\"googl",
-      "failure_category": "ai_extraction",
-      "consecutive_failures": 1,
+      "last_attempt_at": "2026-09-10",
+      "last_outcome": "changed",
+      "last_error": null,
+      "failure_category": null,
+      "consecutive_failures": 0,
       "last_success": null,
       "quarantined_since": null
     },
@@ -11191,11 +11180,11 @@
     {
       "vendor": "point.poker",
       "url": "https://www.point.poker/",
-      "last_attempt_at": "2026-08-28",
+      "last_attempt_at": "2026-09-10",
       "last_outcome": "fetch_failed",
       "last_error": "page content too short (likely JS-rendered SPA)",
       "failure_category": "empty_page",
-      "consecutive_failures": 1,
+      "consecutive_failures": 2,
       "last_success": "2026-07-16",
       "quarantined_since": null
     },
@@ -11620,7 +11609,7 @@
     {
       "vendor": "Qdrant",
       "url": "https://qdrant.tech/pricing/",
-      "last_attempt_at": "2026-08-28",
+      "last_attempt_at": "2026-09-10",
       "last_outcome": "changed",
       "last_error": null,
       "failure_category": null,
@@ -11829,11 +11818,11 @@
     {
       "vendor": "RapidAPI",
       "url": "https://rapidapi.com/pricing/",
-      "last_attempt_at": "2026-08-28",
+      "last_attempt_at": "2026-09-10",
       "last_outcome": "fetch_failed",
       "last_error": "page content too short (likely JS-rendered SPA)",
       "failure_category": "empty_page",
-      "consecutive_failures": 1,
+      "consecutive_failures": 2,
       "last_success": "2026-07-30",
       "quarantined_since": null
     },
@@ -12049,11 +12038,11 @@
     {
       "vendor": "repsy.io",
       "url": "https://repsy.io",
-      "last_attempt_at": "2026-08-28",
+      "last_attempt_at": "2026-09-10",
       "last_outcome": "fetch_failed",
       "last_error": "page content too short (likely JS-rendered SPA)",
       "failure_category": "empty_page",
-      "consecutive_failures": 1,
+      "consecutive_failures": 2,
       "last_success": "2026-07-07",
       "quarantined_since": null
     },
@@ -12071,11 +12060,11 @@
     {
       "vendor": "RequestBin.com",
       "url": "https://requestbin.com",
-      "last_attempt_at": "2026-08-28",
+      "last_attempt_at": "2026-09-10",
       "last_outcome": "fetch_failed",
       "last_error": "page content too short (likely JS-rendered SPA)",
       "failure_category": "empty_page",
-      "consecutive_failures": 1,
+      "consecutive_failures": 2,
       "last_success": "2026-07-31",
       "quarantined_since": null
     },
@@ -12104,11 +12093,11 @@
     {
       "vendor": "resmush.it",
       "url": "https://resmush.it",
-      "last_attempt_at": "2026-08-28",
+      "last_attempt_at": "2026-09-10",
       "last_outcome": "source_unusable",
-      "last_error": "the page names resmush.it but states no amount, tier or rate we can read (liveness: GET FETCH_FAILED)",
+      "last_error": "the page names resmush.it but states no amount, tier or rate we can read, and the 1 structured-data block in its markup states no price",
       "failure_category": "source_unusable",
-      "consecutive_failures": 3,
+      "consecutive_failures": 4,
       "last_success": "2026-07-17",
       "quarantined_since": "2026-08-28"
     },
@@ -12159,11 +12148,11 @@
     {
       "vendor": "reviewable.io",
       "url": "https://reviewable.io/",
-      "last_attempt_at": "2026-08-28",
+      "last_attempt_at": "2026-09-10",
       "last_outcome": "fetch_failed",
       "last_error": "page content too short (likely JS-rendered SPA)",
       "failure_category": "empty_page",
-      "consecutive_failures": 1,
+      "consecutive_failures": 2,
       "last_success": "2026-08-04",
       "quarantined_since": null
     },
@@ -12478,18 +12467,18 @@
     {
       "vendor": "Scraper's Proxy",
       "url": "https://scrapersproxy.com",
-      "last_attempt_at": "2026-08-28",
+      "last_attempt_at": "2026-09-10",
       "last_outcome": "fetch_failed",
       "last_error": "page content too short (likely JS-rendered SPA)",
       "failure_category": "empty_page",
-      "consecutive_failures": 1,
+      "consecutive_failures": 2,
       "last_success": "2026-07-29",
       "quarantined_since": null
     },
     {
       "vendor": "ScraperAPI",
       "url": "https://www.scraperapi.com/pricing/",
-      "last_attempt_at": "2026-08-28",
+      "last_attempt_at": "2026-09-10",
       "last_outcome": "changed",
       "last_error": null,
       "failure_category": null,
@@ -12577,11 +12566,11 @@
     {
       "vendor": "Scrollbar.app",
       "url": "https://scrollbar.app",
-      "last_attempt_at": "2026-08-28",
+      "last_attempt_at": "2026-09-10",
       "last_outcome": "fetch_failed",
       "last_error": "page content too short (likely JS-rendered SPA)",
       "failure_category": "empty_page",
-      "consecutive_failures": 1,
+      "consecutive_failures": 2,
       "last_success": "2026-07-18",
       "quarantined_since": null
     },
@@ -12808,11 +12797,11 @@
     {
       "vendor": "seotest.me",
       "url": "https://seotest.me/",
-      "last_attempt_at": "2026-08-28",
+      "last_attempt_at": "2026-09-10",
       "last_outcome": "fetch_failed",
-      "last_error": "HTTP 403",
-      "failure_category": "bot_block",
-      "consecutive_failures": 1,
+      "last_error": "page content too short (likely JS-rendered SPA)",
+      "failure_category": "empty_page",
+      "consecutive_failures": 2,
       "last_success": "2026-08-05",
       "quarantined_since": null
     },
@@ -12896,11 +12885,11 @@
     {
       "vendor": "ShadcnUI",
       "url": "https://ui.shadcn.com/",
-      "last_attempt_at": "2026-08-28",
+      "last_attempt_at": "2026-09-10",
       "last_outcome": "unclear",
-      "last_error": "The provided text does not contain pricing information or confirm the existence of a free tier. It describes components that can be customized and extended, and mentions being open source, but does not detail any pricing or access model. The page appears to be related to a financial portfolio and account management system, and mentions 'Built by shadcn at Vercel', suggesting shadcn/ui is a technology used in its construction, but doesn't describe shadcn/ui's own pricing.",
+      "last_error": "The provided text does not contain information about pricing or a free tier. It appears to be a dashboard or account page for a financial product built *using* shadcn/ui, not a pricing page *for* shadcn/ui itself. Therefore, it's impossible to verify the deal information.",
       "failure_category": "ai_undecided",
-      "consecutive_failures": 1,
+      "consecutive_failures": 2,
       "last_success": null,
       "quarantined_since": null
     },
@@ -13094,11 +13083,11 @@
     {
       "vendor": "sirv.com",
       "url": "https://sirv.com/",
-      "last_attempt_at": "2026-08-28",
+      "last_attempt_at": "2026-09-10",
       "last_outcome": "unclear",
-      "last_error": "The pricing page does not explicitly state the limits of the free tier (storage and bandwidth). It only mentions 'Get started for free' multiple times without specifying any details about the free tier's features or limitations.",
+      "last_error": "The pricing page does not explicitly state the details of a free tier. It repeatedly mentions 'Get started for free' but does not specify storage or bandwidth limits. It's unclear if the 500MB storage and 2GB bandwidth limits still apply.",
       "failure_category": "ai_undecided",
-      "consecutive_failures": 1,
+      "consecutive_failures": 2,
       "last_success": null,
       "quarantined_since": null
     },
@@ -13149,11 +13138,11 @@
     {
       "vendor": "skyvia.com",
       "url": "https://skyvia.com/",
-      "last_attempt_at": "2026-08-28",
+      "last_attempt_at": "2026-09-10",
       "last_outcome": "unclear",
-      "last_error": "The pricing page does not explicitly mention the free tier details (10K records/month for data integration, 1 GB backup storage, 5 queries/day for Query product). It broadly mentions 'Get started for free' and highlights features like data integration, backup, and query, but lacks specific limits for the free tier. It's unclear if the original free tier still exists with the same limits.",
+      "last_error": "The pricing page does not explicitly state the free tier limits (10K records/month for data integration, 1 GB backup storage, 5 queries/day for Query product). It mentions a 'Get started for free' option and highlights features like data integration, backup, and query, but doesn't provide specific usage limits for the free tier. It also doesn't mention multiple cloud connectors included in the free tier.",
       "failure_category": "ai_undecided",
-      "consecutive_failures": 1,
+      "consecutive_failures": 2,
       "last_success": null,
       "quarantined_since": null
     },
@@ -13182,11 +13171,11 @@
     {
       "vendor": "SlingSite",
       "url": "https://slingsite.github.io",
-      "last_attempt_at": "2026-08-28",
+      "last_attempt_at": "2026-09-10",
       "last_outcome": "fetch_failed",
       "last_error": "page content too short (likely JS-rendered SPA)",
       "failure_category": "empty_page",
-      "consecutive_failures": 1,
+      "consecutive_failures": 2,
       "last_success": "2026-07-18",
       "quarantined_since": null
     },
@@ -13204,11 +13193,11 @@
     {
       "vendor": "Smart Grow Logs",
       "url": "https://logs.smart-grow.app/",
-      "last_attempt_at": "2026-08-28",
+      "last_attempt_at": "2026-09-10",
       "last_outcome": "fetch_failed",
       "last_error": "page content too short (likely JS-rendered SPA)",
       "failure_category": "empty_page",
-      "consecutive_failures": 1,
+      "consecutive_failures": 2,
       "last_success": "2026-08-07",
       "quarantined_since": null
     },
@@ -13259,11 +13248,11 @@
     {
       "vendor": "smartmockups.com",
       "url": "https://smartmockups.com/",
-      "last_attempt_at": "2026-08-28",
-      "last_outcome": "source_unusable",
-      "last_error": "the page names smartmockups.com but states no amount, tier or rate we can read (liveness: GET 403)",
-      "failure_category": "source_unusable",
-      "consecutive_failures": 3,
+      "last_attempt_at": "2026-09-10",
+      "last_outcome": "fetch_failed",
+      "last_error": "HTTP 403",
+      "failure_category": "bot_block",
+      "consecutive_failures": 4,
       "last_success": "2026-04-05",
       "quarantined_since": "2026-08-28"
     },
@@ -13325,11 +13314,11 @@
     {
       "vendor": "snippets.uilicious.com",
       "url": "https://snippets.uilicious.com",
-      "last_attempt_at": "2026-08-28",
+      "last_attempt_at": "2026-09-10",
       "last_outcome": "fetch_failed",
       "last_error": "page content too short (likely JS-rendered SPA)",
       "failure_category": "empty_page",
-      "consecutive_failures": 1,
+      "consecutive_failures": 2,
       "last_success": "2026-08-06",
       "quarantined_since": null
     },
@@ -13457,11 +13446,11 @@
     {
       "vendor": "SourceForge",
       "url": "https://sourceforge.net/",
-      "last_attempt_at": "2026-08-28",
+      "last_attempt_at": "2026-09-10",
       "last_outcome": "unclear",
-      "last_error": "The page does not explicitly mention a free tier for SourceForge itself. It highlights free credits and free usage for Google Cloud Platform, but does not confirm or deny a free tier for SourceForge's core services (hosting open source projects).",
+      "last_error": "The page does not explicitly state a free tier for SourceForge itself. It mentions free credits and products for Google Cloud Platform, but doesn't confirm a free tier for SourceForge's core services (finding, creating, and publishing open source software).",
       "failure_category": "ai_undecided",
-      "consecutive_failures": 1,
+      "consecutive_failures": 2,
       "last_success": null,
       "quarantined_since": null
     },
@@ -13897,11 +13886,11 @@
     {
       "vendor": "Substack",
       "url": "https://substack.com",
-      "last_attempt_at": "2026-08-28",
-      "last_outcome": "source_unusable",
-      "last_error": "the page names Substack but states no amount, tier or rate we can read (liveness: GET 403)",
-      "failure_category": "source_unusable",
-      "consecutive_failures": 3,
+      "last_attempt_at": "2026-09-10",
+      "last_outcome": "fetch_failed",
+      "last_error": "HTTP 403",
+      "failure_category": "bot_block",
+      "consecutive_failures": 4,
       "last_success": "2026-04-14",
       "quarantined_since": "2026-08-28"
     },
@@ -15107,11 +15096,11 @@
     {
       "vendor": "Umami",
       "url": "https://umami.is/",
-      "last_attempt_at": "2026-08-28",
+      "last_attempt_at": "2026-09-10",
       "last_outcome": "fetch_failed",
       "last_error": "page content too short (likely JS-rendered SPA)",
       "failure_category": "empty_page",
-      "consecutive_failures": 1,
+      "consecutive_failures": 2,
       "last_success": "2026-08-23",
       "quarantined_since": null
     },
@@ -15162,11 +15151,11 @@
     {
       "vendor": "Unity DevOps",
       "url": "https://unity.com/products/unity-devops",
-      "last_attempt_at": "2026-08-28",
+      "last_attempt_at": "2026-09-10",
       "last_outcome": "fetch_failed",
       "last_error": "timeout",
       "failure_category": "timeout",
-      "consecutive_failures": 1,
+      "consecutive_failures": 2,
       "last_success": "2026-08-18",
       "quarantined_since": null
     },
@@ -15206,11 +15195,11 @@
     {
       "vendor": "Updrafts.app",
       "url": "https://updrafts.app",
-      "last_attempt_at": "2026-08-28",
+      "last_attempt_at": "2026-09-10",
       "last_outcome": "fetch_failed",
       "last_error": "page content too short (likely JS-rendered SPA)",
       "failure_category": "empty_page",
-      "consecutive_failures": 1,
+      "consecutive_failures": 2,
       "last_success": "2026-07-22",
       "quarantined_since": null
     },
@@ -15844,11 +15833,11 @@
     {
       "vendor": "Webex",
       "url": "https://www.webex.com/",
-      "last_attempt_at": "2026-08-28",
+      "last_attempt_at": "2026-09-10",
       "last_outcome": "fetch_failed",
       "last_error": "HTTP 403",
       "failure_category": "bot_block",
-      "consecutive_failures": 1,
+      "consecutive_failures": 2,
       "last_success": null,
       "quarantined_since": null
     },

@@ -817,6 +817,18 @@
       "refused_date": "2026-09-03"
     },
     {
+      "vendor": "DigitalPlat",
+      "change_type": "record_corrected",
+      "reason": "no_price_signal",
+      "detail": "the page read carries no price signal — no amount, named tier or metered rate in 2677 characters, so it states no terms to have changed",
+      "summary": "The us.kg subdomain offering is still listed as available, despite the stored information stating it was suspended due to abuse.",
+      "previous_state": "Free subdomains via nonprofit foundation. dpdns.org is the primary service. The us.kg subdomain offering has been suspended due to abuse and is no longer accepting registrations. qzz.io and xx.kg may also be available.",
+      "current_state": "Available DNS *.us.kg",
+      "source_url": "https://domain.digitalplat.org",
+      "category": "DNS & Domain Management",
+      "refused_date": "2026-09-10"
+    },
+    {
       "vendor": "Docker Hub",
       "change_type": "limits_reduced",
       "reason": "confirmed_unchanged",
@@ -899,6 +911,18 @@
       "source_url": "https://dwh.dev",
       "category": "Analytics",
       "refused_date": "2026-08-29"
+    },
+    {
+      "vendor": "EmailOctopus",
+      "change_type": "limits_reduced",
+      "reason": "unquantified_limit",
+      "detail": "limits_reduced claimed, but the current state names no quantity for anything the stored state measured (2,500 subscriber, 10,000 email)",
+      "summary": "The free tier is still offered, but the stored information about limits (2,500 subscribers and 10,000 emails per month) is not explicitly stated on the provided page. The page does not mention any specific limits for the free tier. Multiple testimonials mention users utilizing the free service, and one specifically states they are using it because they don't have enough subscribers to warrant a paid plan.",
+      "previous_state": "Up to 2,500 subscribers and 10,000 emails per month free",
+      "current_state": "The page offers a 'GET STARTED FOR FREE' option with no credit card required, but does not specify subscriber or email limits.",
+      "source_url": "https://emailoctopus.com",
+      "category": "Email",
+      "refused_date": "2026-09-10"
     },
     {
       "vendor": "Emailvalidation.io",
@@ -1084,13 +1108,13 @@
       "vendor": "Gitea",
       "change_type": "new_tier",
       "reason": "confirmed_unchanged",
-      "detail": "The addition of paid tiers doesn't change the free tier's existence or terms.",
-      "summary": "The free OSS tier still exists, but the page now highlights Gitea Cloud and Gitea Enterprise as paid options with 30-day free trials. The original deal info didn't mention these.",
+      "detail": "The report details additional offerings (paid tier, trial) that the stored description didn't preclude. The core free offering remains as described.",
+      "summary": "The free tier is still offered as open source. Gitea now also offers a paid 'Gitea Enterprise' tier and a 30-day free trial of 'Gitea Cloud'.",
       "previous_state": "Free OSS (MIT). Lightweight self-hosted Git service. Repository hosting, issue tracking, pull requests, CI/CD (Gitea Actions), packages registry. Low resource usage",
-      "current_state": "Gitea offers a free, self-hosted Git service under the MIT license with unlimited users and repositories. Gitea Cloud and Gitea Enterprise are available as paid options with 30-day free trials.",
+      "current_state": "There is a free, self-hosted open source version with unlimited users and repositories. There is also a Gitea Enterprise tier at $9.5/$19 per user/month with additional features like SAML SSO, audit logs, and Kubernetes AutoScaling. A 30-day free trial is available for Gitea Cloud.",
       "source_url": "https://about.gitea.com/",
       "category": "Source Control",
-      "refused_date": "2026-08-28"
+      "refused_date": "2026-09-10"
     },
     {
       "vendor": "GitHub",
@@ -1357,6 +1381,18 @@
       "refused_date": "2026-09-09"
     },
     {
+      "vendor": "inspectlet.com",
+      "change_type": "free_tier_removed",
+      "reason": "states_no_terms",
+      "detail": "every clause of the summary states absence rather than a term the page carries, so it reports the reading rather than a change",
+      "summary": "The free tier information is no longer explicitly stated. The page focuses on features and offers a 'Get Started' option without detailing a free tier with 2,500 sessions/month. The page mentions a demo and doesn't specify any limits for a free plan.",
+      "previous_state": "2,500 sessions/month free for one website",
+      "current_state": "The pricing is not detailed on the page. It encourages users to 'Get Started' or 'Watch Demo' without specifying a free tier or limits.",
+      "source_url": "https://www.inspectlet.com/",
+      "category": "Analytics",
+      "refused_date": "2026-09-10"
+    },
+    {
       "vendor": "Integrately",
       "change_type": "free_tier_removed",
       "reason": "removal_read_from_root",
@@ -1537,6 +1573,18 @@
       "refused_date": "2026-08-28"
     },
     {
+      "vendor": "LocationIQ",
+      "change_type": "limits_reduced",
+      "reason": "measures_the_opposite",
+      "detail": "limits_reduced claimed, and every quantity that moved between the two states moved the other way — 5,000 request/day against 2 request/sec, 5,000 request/day against 60 request/min",
+      "summary": "The free tier now has a limit of 5000 requests/day and 60 requests per minute, and requires attribution with a link to LocationIQ.com.",
+      "previous_state": "Geocoding, reverse geocoding, and routing API. Free plan: 5,000 requests/day, commercial use allowed with attribution",
+      "current_state": "Free $25 value $0 €0 R$0 ₹0 Free sign up 5000 requests /day 2 requests /second Geocoding APIs Routing APIs Street & Static Maps 60 requests per minute Limited Commercial Use You can use our free plan in commercial projects if you spread the love by adding a prominent link back to us on your website or app in this format: <a href=&#x27;https://locationiq.com&#x27;>Search by LocationIQ.com</a> 1 Access Token IP and HTTP Restrictions Best-effort Email Support US & EU Datacenters",
+      "source_url": "https://locationiq.com/pricing",
+      "category": "Maps/Geolocation",
+      "refused_date": "2026-09-10"
+    },
+    {
       "vendor": "Logz.io",
       "change_type": "pricing_restructured",
       "reason": "confirmed_unchanged",
@@ -1571,6 +1619,18 @@
       "source_url": "https://mailchimp.com/pricing/",
       "category": "Email",
       "refused_date": "2026-09-03"
+    },
+    {
+      "vendor": "Maileroo",
+      "change_type": "pricing_restructured",
+      "reason": "confirmed_unchanged",
+      "detail": "The free tier terms (3,000 emails/month) are consistent, just located in the FAQ now instead of being prominently displayed.",
+      "summary": "The free tier now offers 3,000 emails per month, as stated in the FAQ section.",
+      "previous_state": "SMTP relay and email API for developers. 3,000 emails per month, unlimited domains, webhooks free",
+      "current_state": "The page does not list specific pricing tiers or a free tier upfront, but the FAQ states a free plan with 3,000 emails per month is available.",
+      "source_url": "https://maileroo.com",
+      "category": "Email",
+      "refused_date": "2026-09-10"
     },
     {
       "vendor": "mailsac.com",
@@ -2147,6 +2207,18 @@
       "source_url": "https://ReportGPT.app",
       "category": "AI / ML",
       "refused_date": "2026-09-01"
+    },
+    {
+      "vendor": "resmush.it",
+      "change_type": "restriction",
+      "reason": "no_price_signal",
+      "detail": "the page read carries no price signal — no amount, named tier or metered rate in 1813 characters, so it states no terms to have changed",
+      "summary": "While reSmush.it is still offered as a free service, the page highlights ShortPixel as a superior alternative and mentions reSmush.it does not support WebP/AVIF conversion.",
+      "previous_state": "reSmush.it is a FREE API that provides image optimization. reSmush.it has been implemented on the most common CMS such as WordPress, Drupal, or Magento. reSmush.it is the most used image optimization API with more than seven billion images already treated, and it is still Free of charge.",
+      "current_state": "reSmush.it is a free image compressor and API that reduces image size by an average of 50% for JPEG, PNG, and GIF files. It does not currently support WebP/AVIF conversion.",
+      "source_url": "https://resmush.it",
+      "category": "Storage",
+      "refused_date": "2026-09-10"
     },
     {
       "vendor": "robusta.dev",
