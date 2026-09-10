@@ -365,18 +365,23 @@ export function repickWindowDays(total, batchSize) {
 export function regradeRefusals(suppressed) {
   return (suppressed ?? [])
     .filter((entry) => entry.reason === SUPPRESSED_SAME_TRANSITION_REGRADED)
-    .map(({ candidate, reason, collidedWith }) => ({
+    .map(({ candidate, reason, collidedWith, collidedWithWithdrawn }) => ({
       candidate,
       reason,
-      detail: `same vendor, source_url and previous_state as ${collidedWith}`,
+      detail: collidedWithWithdrawn
+        ? `graded as ${collidedWith}, a record we withdrew`
+        : `same vendor, source_url and previous_state as ${collidedWith}`,
       collidedWith,
+      collidedWithWithdrawn: Boolean(collidedWithWithdrawn),
     }));
 }
 
 export function regradedVendorLines(suppressed) {
   return regradeRefusals(suppressed).map(
-    ({ candidate, collidedWith }) =>
-      `  ${candidate?.vendor ?? "(unnamed)"} (${candidate?.change_type ?? "unclassified"}) reads the same terms we already recorded as ${collidedWith}`
+    ({ candidate, collidedWith, collidedWithWithdrawn }) =>
+      collidedWithWithdrawn
+        ? `  ${candidate?.vendor ?? "(unnamed)"} (${candidate?.change_type ?? "unclassified"}) grades those terms as ${collidedWith}, a record we withdrew`
+        : `  ${candidate?.vendor ?? "(unnamed)"} (${candidate?.change_type ?? "unclassified"}) reads the same terms we already recorded as ${collidedWith}`
   );
 }
 

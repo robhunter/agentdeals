@@ -1,9 +1,10 @@
 import { describe, it, afterEach } from "node:test";
 import assert from "node:assert";
-import { spawn, type ChildProcess } from "node:child_process";
-import { readFileSync } from "node:fs";
+import { spawn, spawnSync, type ChildProcess } from "node:child_process";
+import { readFileSync, writeFileSync, mkdtempSync, rmSync } from "node:fs";
+import { tmpdir } from "node:os";
 import path from "node:path";
-import { fileURLToPath } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 import {
   isoWeekWindow,
   withinWindow,
@@ -13,13 +14,20 @@ import {
   partitionByDateProvenance,
 } from "../dist/change-dates.js";
 import { FEED_CORRECTIONS } from "../dist/feed-corrections.js";
+import { recordsStillInForce } from "../dist/change-resolution.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(__dirname, "..");
 
 const publishedChanges = JSON.parse(
   readFileSync(path.join(REPO, "data", "deal_changes.json"), "utf-8")
-).changes as Array<{ date: string; date_source: string; change_type: string; vendor: string }>;
+).changes as Array<{
+  date: string;
+  date_source: string;
+  change_type: string;
+  vendor: string;
+  resolution?: { state: string; date: string } | null;
+}>;
 
 function eventDated(c: { date_source?: string }): boolean {
   return c.date_source === "vendor_page" || c.date_source === "hand_written";
@@ -41,6 +49,20 @@ async function mostRecentWeekWithADiscoveryBatch() {
   throw new Error(
     `no week in the last ${WEEKS_OF_ARCHIVE} carries a page read for the first time, so the split between the two counts cannot be checked`
   );
+}
+
+function digestOver(changesPath: string) {
+  const dataModule = pathToFileURL(path.join(REPO, "dist", "data.js")).href;
+  const run = spawnSync(
+    "node",
+    [
+      "-e",
+      `import(${JSON.stringify(dataModule)}).then((m) => process.stdout.write(JSON.stringify(m.getFormattedWeeklyDigest(0, 200))))`,
+    ],
+    { env: { ...process.env, AGENTDEALS_CHANGES_PATH: changesPath, TZ: "UTC" }, encoding: "utf-8" }
+  );
+  assert.strictEqual(run.status, 0, run.stderr);
+  return JSON.parse(run.stdout);
 }
 
 async function digestForWeekStarting(weekStart: string) {
@@ -151,8 +173,9 @@ describe("a weekly digest counts only changes with an effective date", () => {
     const { getFormattedWeeklyDigest } = await import("../dist/data.js");
     const digest = getFormattedWeeklyDigest(0, 200);
     const window = { start: digest.week_of, end: digest.week_ending };
-    const expectedDated = publishedChanges.filter((c) => eventDated(c) && withinWindow(c.date, window));
-    const expectedDiscovered = publishedChanges.filter((c) => !eventDated(c) && withinWindow(c.date, window));
+    const countable = recordsStillInForce(publishedChanges);
+    const expectedDated = countable.filter((c) => eventDated(c) && withinWindow(c.date, window));
+    const expectedDiscovered = countable.filter((c) => !eventDated(c) && withinWindow(c.date, window));
 
     assert.strictEqual(digest.changes_in_week, expectedDated.length);
     assert.strictEqual(digest.discovered_in_week, expectedDiscovered.length);
@@ -164,7 +187,9 @@ describe("a weekly digest counts only changes with an effective date", () => {
     const { getFormattedWeeklyDigest } = await import("../dist/data.js");
     const digest = getFormattedWeeklyDigest(0, 200);
     const window = { start: digest.week_of, end: digest.week_ending };
-    const inWeek = publishedChanges.filter((c) => eventDated(c) && withinWindow(c.date, window));
+    const inWeek = recordsStillInForce(publishedChanges).filter(
+      (c) => eventDated(c) && withinWindow(c.date, window)
+    );
     const count = (t: string) => inWeek.filter((c) => c.change_type === t).length;
     assert.strictEqual(digest.summary.free_tiers_removed, count("free_tier_removed"));
     assert.strictEqual(digest.summary.limits_reduced, count("limits_reduced"));
@@ -172,6 +197,47 @@ describe("a weekly digest counts only changes with an effective date", () => {
     assert.strictEqual(digest.summary.limits_increased, count("limits_increased"));
     assert.strictEqual(digest.summary.products_deprecated, count("product_deprecated"));
     assert.strictEqual(digest.summary.pricing_restructured, count("pricing_restructured"));
+  });
+
+  it("leaves a record we have withdrawn out of the week its date falls in", () => {
+    const week = isoWeekWindow(new Date());
+    const template = publishedChanges.find((c) => !eventDated(c))!;
+    const standingRecord = { ...template, vendor: "Weekly Window Control", date: week.start, resolution: null };
+    const withdrawnRecord = {
+      ...template,
+      vendor: "Weekly Window Withdrawal",
+      date: week.start,
+      resolution: { state: "retracted", date: week.start },
+    };
+
+    const file = JSON.parse(readFileSync(path.join(REPO, "data", "deal_changes.json"), "utf-8"));
+    file.changes.push(standingRecord, withdrawnRecord);
+    const dir = mkdtempSync(path.join(tmpdir(), "weekly-window-"));
+    const changesPath = path.join(dir, "deal_changes.json");
+    writeFileSync(changesPath, JSON.stringify(file));
+
+    try {
+      const digest = digestOver(changesPath);
+      const discoveredInWeek = (records: typeof file.changes) =>
+        records.filter((c: { date: string }) => !eventDated(c) && withinWindow(c.date, week)).length;
+
+      const vendorsCounted = digest.discovered_changes.map((c: { vendor: string }) => c.vendor);
+      assert.strictEqual(digest.week_of, week.start);
+      assert.strictEqual(
+        vendorsCounted.length,
+        digest.discovered_in_week,
+        "the week holds more records than the digest lists, so the two names below prove nothing"
+      );
+      assert.strictEqual(digest.discovered_in_week, discoveredInWeek(recordsStillInForce(file.changes)));
+      assert.ok(
+        digest.discovered_in_week < discoveredInWeek(file.changes),
+        "counting the raw file and counting what is in force agree, so this proves nothing"
+      );
+      assert.ok(vendorsCounted.includes(standingRecord.vendor), vendorsCounted.join(", "));
+      assert.ok(!vendorsCounted.includes(withdrawnRecord.vendor), vendorsCounted.join(", "));
+    } finally {
+      rmSync(dir, { recursive: true, force: true });
+    }
   });
 
   it("never states the combined total as a number of changes", async () => {
