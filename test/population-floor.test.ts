@@ -4,12 +4,16 @@ import { readdirSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import {
+  asShare,
   assertCoversPopulation,
   assertPopulationFloor,
+  assertSharesPopulation,
   bareFloorsIn,
   categoriesInTheCatalogue,
   floorClearsHeadroom,
   passedPopulationsIn,
+  recordsInTheCatalogue,
+  shareClearsHeadroom,
   REGISTERED_FROM,
   vendorsInTheCatalogue,
 } from "./population-floor.ts";
@@ -20,6 +24,8 @@ const asWritten = (expression: string, comparison: string, literal: number) =>
   `assert.ok(${expression} ${comparison} ${literal}, "the message it carries");`;
 
 const COVERAGE = "assertCoversPopulation";
+
+const SHARE = "assertSharesPopulation";
 
 describe("a floor over a live population states headroom it has measured", () => {
   it("passes a floor the population clears by more than a quarter", () => {
@@ -86,6 +92,8 @@ describe("a sweep read against the population it covers states coverage, not hea
 
   it("refuses a population handed over as a number rather than read from the data", () => {
     const asCalled = (population: string) => `${COVERAGE}(checked, ${population}, "a subject");`;
+    assert.deepStrictEqual(passedPopulationsIn(`${SHARE}(checked, 1573, 0.05, "a subject");`).map(p => p.argument), ["1573"]);
+    assert.deepStrictEqual(passedPopulationsIn(`${SHARE}(checked, recordsInTheCatalogue(), 0.05, "a subject");`), []);
     assert.deepStrictEqual(passedPopulationsIn(asCalled("60")).map(p => p.argument), ["60"]);
     assert.deepStrictEqual(
       passedPopulationsIn(asCalled('{ size: 60, read: "made up" }')).map(p => p.argument),
@@ -108,6 +116,64 @@ describe("a sweep read against the population it covers states coverage, not hea
       [],
       "a population has to be read by a no-argument reader in population-floor.ts, because a caller that computes the number has put the literal back one indirection later",
     );
+  });
+});
+
+describe("a filtered subset states a share of the population it filtered, not a count", () => {
+  const asRead = (size: number) => () => ({ size, read: "records the catalogue holds" });
+  const wholeCatalogue = asRead(1573);
+  const curatedCatalogue = asRead(1547);
+  const halfTheCatalogue = asRead(900);
+  const aSliverOfIt = asRead(160);
+  const noCatalogueAtAll = asRead(0);
+
+  it("passes where the subset is a comfortable share of what it was filtered from", () => {
+    assertSharesPopulation(137, wholeCatalogue(), 0.05, "records restating their host");
+  });
+
+  it("holds where the population shrinks and the subset shrinks with it", () => {
+    const measured: [number, () => { size: number; read: string }][] = [
+      [137, wholeCatalogue],
+      [132, curatedCatalogue],
+      [80, halfTheCatalogue],
+      [14, aSliverOfIt],
+    ];
+    for (const [subset, population] of measured) {
+      assertSharesPopulation(subset, population(), 0.05, "records restating their host");
+    }
+  });
+
+  it("fails where the filter collapses while the population stands still", () => {
+    assert.throws(
+      () => assertSharesPopulation(40, wholeCatalogue(), 0.05, "records restating their host"),
+      /40 records restating their host, which is 2.5% of the 1573 records the catalogue holds it was filtered from, under a floor of 5.0%/,
+    );
+  });
+
+  it("refuses a share set close enough to what it measured to be a tripwire on the filter", () => {
+    assert.strictEqual(shareClearsHeadroom(0.05, 137, 1573), true);
+    assert.strictEqual(shareClearsHeadroom(0.08, 137, 1573), false);
+    assert.throws(
+      () => assertSharesPopulation(137, wholeCatalogue(), 0.08, "records restating their host"),
+      /a share of 8.0% leaves under 25% headroom over the 8.7% it measured/,
+    );
+  });
+
+  it("says nothing rather than passing vacuously when the population it filtered is empty", () => {
+    assert.throws(
+      () => assertSharesPopulation(0, noCatalogueAtAll(), 0.05, "records restating their host"),
+      /there are no records the catalogue holds, so no share of them says anything/,
+    );
+  });
+
+  it("reads a share the way a reader would", () => {
+    assert.strictEqual(asShare(0.05), "5.0%");
+    assert.strictEqual(asShare(137 / 1573), "8.7%");
+  });
+
+  it("reads its own populations off the catalogue, both of them non-empty", () => {
+    assert.ok(recordsInTheCatalogue().size > categoriesInTheCatalogue().size);
+    assert.notStrictEqual(recordsInTheCatalogue().read, categoriesInTheCatalogue().read);
   });
 });
 

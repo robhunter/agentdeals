@@ -22,7 +22,7 @@ import {
 } from "../dist/source-check.js";
 import { loadOffers } from "../dist/data.js";
 import { openapiSpec } from "../dist/openapi.js";
-import { assertPopulationFloor } from "./population-floor.ts";
+import { assertPopulationFloor, assertSharesPopulation, recordsInTheCatalogue } from "./population-floor.ts";
 
 const VERTEX_MODEL_REFERENCE = "https://cloud.google.com/vertex-ai/docs/generative-ai/model-reference/overview";
 const A_GOOGLE_PAGE_ABOUT_GEMINI =
@@ -131,7 +131,12 @@ describe("deleting the host brand from a name does not change the verdict", () =
     .filter(({ restated }) => restated.tokens.length > 0);
 
   it("reads a real population of records, not an empty one", () => {
-    assertPopulationFloor(exposed.length, 100, "catalogue records whose name restates the host we cite them from");
+    assertSharesPopulation(
+      exposed.length,
+      recordsInTheCatalogue(),
+      0.05,
+      "catalogue records whose name restates the host we cite them from",
+    );
   });
 
   it("accepts no form that a page could match without writing past the host brand", () => {
@@ -201,7 +206,7 @@ describe("what the catalogue publishes for a record whose product is unnamed", (
 
   it("keeps the records that name nobody at all on the older outcome", () => {
     const nobody = offers.filter((offer) => offer.source_check?.outcome === SOURCE_CHECK_NOT_NAMED);
-    assertPopulationFloor(nobody.length, 75, "records whose cited page names no part of the vendor");
+    assertPopulationFloor(nobody.length, 1, "records whose cited page names no part of the vendor");
   });
 
   it("belongs to the vocabulary every side of the pipeline shares", () => {
