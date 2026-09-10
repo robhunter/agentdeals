@@ -2,7 +2,7 @@
 
 31 records for vendors that serve models behind an API, each one carrying the date we last read the vendor's own page and the URL we read it on. There is no single freshness stamp for this file, because a single stamp for a list nobody re-read is worth nothing.
 
-Generated from the free-tier catalogue at https://agentdeals.dev, which is where each row's record lives. It is regenerated whenever those records move, so editing it by hand is pointless — the next run overwrites it.
+Generated from the free-tier catalogue at https://agentdeals.dev, which is where each row's record lives. It is regenerated whenever those records move, so editing it by hand is pointless — the next run overwrites it. The code that writes it is https://github.com/robhunter/agentdeals/blob/main/src/llm-api-readme.ts, so every rule this file states can be read against the rule it applies.
 
 What this file has that a hand-kept list does not: **the terms a vendor replaced, next to the terms it replaced them with, with the date.** 7 rows carry that today.
 
