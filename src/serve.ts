@@ -22,7 +22,7 @@ import { CATEGORY_ALIASES, CATEGORY_RETIREMENTS, EXAMPLE_MEMBERS_BASIS, buildCat
 import { retiredCategoryDescription, retiredCategoryNoticeHtml, retiredCategoryTitle } from "./category-retirement.js";
 import { LINK_GRACE_DAYS, unreachableNoticeForUrl } from "./link-health.js";
 import { offerEnded, offerRetired, recordedTierSentence, endedHeadline, endedHistorySentence, endedReliabilitySentence, endedEmptyChangeHistorySentence, ENDED_BADGE_LABEL, ENDED_SINCE_CHANGES_SENTENCE, type OfferTierAndUrl } from "./retirement.js";
-import { amountUnstatedSentence, levelWithheldReason, withheldLevelClause, withheldLevelSentence, type LevelWithheldReason } from "./source-check.js";
+import { amountUnstatedSentence, LAST_RESOLVED, levelWithheldReason, levelWithheldSince, withheldLevelClause, withheldLevelSentence, type LevelWithheldReason } from "./source-check.js";
 import { readingIsBehindTheLoop, reverificationIntervalDays } from "./badge-staleness.js";
 import { SUPERSEDED_TERMS_LABEL, readingBehindTheChange, supersededTermsAnswer, supersededTermsMetaSentence, supersededTermsNotice, supersededTermsNoticeHtml, supersededTermsRecord, supersededTermsVerdictSentence, supersedingChange, type SupersededTermsRecord } from "./superseded-description.js";
 import { openingOfTerms, punctuated, punctuatedOpeningOfTerms } from "./terms-opening.js";
@@ -668,7 +668,7 @@ function stabilityCellHtml(
     return `<span class="stability-unsourced" style="color:var(--text-dim)" title="${escHtmlServer(ratingWithheldForNoSourceClause())}">unrated &mdash; no source</span>`;
   }
   if (linkUnreachable) {
-    const since = linkUnreachable.last_reachable ? ` since ${linkUnreachable.last_reachable}` : "";
+    const since = linkUnreachable.last_reachable ? LAST_RESOLVED(linkUnreachable.last_reachable) : "";
     return `<span style="color:var(--text-dim)" title="Link has not resolved${escHtmlServer(since)}">link unreachable</span>`;
   }
   const withheld = offer ? levelWithheldReason(offer, null) : null;
@@ -956,7 +956,7 @@ function buildVendorVerdictContext(vendorName: string, servedOn: string): Vendor
   const vendorChanges = changesFor(vendorName);
   const linkUnreachable = enriched.link_unreachable;
   const levelWithheld = levelWithheldReason(primary, linkUnreachable);
-  const unconfirmableSince = linkUnreachable?.last_reachable ? ` since ${linkUnreachable.last_reachable}` : "";
+  const unconfirmableSince = levelWithheldSince(primary, linkUnreachable);
   const gate = gateFor(primary, servedOn);
 
   return {
@@ -1790,7 +1790,7 @@ const relatedCategoriesMap: Record<string, string[]> = {
 function listingUnreachableNoticeHtml(offer: Offer): string {
   const unreachable = unreachableNoticeForUrl(offer.url);
   if (!unreachable) return "";
-  const since = unreachable.last_reachable ? ` since ${unreachable.last_reachable}` : "";
+  const since = unreachable.last_reachable ? LAST_RESOLVED(unreachable.last_reachable) : "";
   return `<span class="listing-link-unreachable" style="display:block;margin-top:.3rem;color:#f85149">${escHtmlServer(withheldLevelSentence("link_unreachable", offer.vendor, since))}</span>`;
 }
 
@@ -3229,7 +3229,7 @@ function buildComparisonPage(slug: string): string | null {
       recordedChanges,
       rating: rated as StabilityRating | null,
       ratingWithheldBecause: levelWithheldReason(risk, risk.link_unreachable),
-      unconfirmableSince: risk.link_unreachable?.last_reachable ? ` since ${risk.link_unreachable.last_reachable}` : "",
+      unconfirmableSince: levelWithheldSince(risk, risk.link_unreachable),
     };
   };
   const sideA = comparisonSide(a.vendor, riskA, a.deal_changes.length);
@@ -5383,9 +5383,7 @@ function buildAlternativesPage(slug: string): string | null {
   const riskColors: Record<string, string> = { stable: "#3fb950", caution: "#d29922", risky: "#f85149" };
   const riskCause = enriched.risk_cause;
   const altLevelWithheld = levelWithheldReason(primary, enriched.link_unreachable);
-  const altUnconfirmableSince = enriched.link_unreachable?.last_reachable
-    ? ` since ${enriched.link_unreachable.last_reachable}`
-    : "";
+  const altUnconfirmableSince = levelWithheldSince(primary, enriched.link_unreachable);
   const altWithheldSentence = altLevelWithheld
     ? withheldLevelSentence(altLevelWithheld, vendorName, altUnconfirmableSince)
     : "";

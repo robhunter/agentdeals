@@ -13,6 +13,7 @@ import {
 import { endedVerdictSentence, offerEnded } from "./retirement.js";
 import {
   levelWithheldReason,
+  levelWithheldSince,
   withheldLevelSentence,
   type LevelWithheldReason,
 } from "./source-check.js";
@@ -145,10 +146,6 @@ function withheldSentence(
   return withheldLevelSentence(because.reason, vendor, since);
 }
 
-function unreachableSince(linkUnreachable: LinkUnreachable | null): string {
-  return linkUnreachable?.last_reachable ? ` since ${linkUnreachable.last_reachable}` : "";
-}
-
 function linkCaveat(vendor: string, linkUnreachable: LinkUnreachable): string {
   return linkUnreachable.last_reachable
     ? `${vendor}'s own link last resolved for us on ${linkUnreachable.last_reachable}, and has not since.`
@@ -197,7 +194,7 @@ export function readmeRow(offer: Offer, allChanges: DealChange[], context: RowCo
   const vendorChanges = changesFor(offer.vendor, allChanges);
   const risk = publishedRisk(offer, vendorChanges, context.servedOn, context.nowMs);
   const withheld = levelWithheldReason(offer, risk.link_unreachable);
-  const since = unreachableSince(risk.link_unreachable);
+  const since = levelWithheldSince(offer, risk.link_unreachable);
   const input: VendorVerdictInput = {
     vendor: offer.vendor,
     level: risk.risk_level,

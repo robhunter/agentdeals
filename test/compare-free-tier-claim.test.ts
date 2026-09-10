@@ -84,7 +84,7 @@ before(async () => {
   const { toSlug } = await import("../dist/vendor-slug.js");
   const { supersedingChange } = await import("../dist/superseded-description.js");
   const { gateFor, utcDate } = await import("../dist/ranking.js");
-  const { levelWithheldReason, withheldLevelSentence } = await import("../dist/source-check.js");
+  const { levelWithheldReason, levelWithheldSince, withheldLevelSentence } = await import("../dist/source-check.js");
   const { ratingWithheldForNoSourceSentence } = await import("../dist/change-citation.js");
 
   const offers = loadOffers();
@@ -111,7 +111,7 @@ before(async () => {
     const enriched = enrichOffers([primary])[0];
     const unreachable = enriched.link_unreachable;
     const withheld = levelWithheldReason(primary, unreachable);
-    const since = unreachable?.last_reachable ? ` since ${unreachable.last_reachable}` : "";
+    const since = levelWithheldSince(primary, unreachable);
     const reasonsItCouldGive = [
       gateFor(primary, servedOn)?.reason,
       withheld ? withheldLevelSentence(withheld, vendor, since) : null,

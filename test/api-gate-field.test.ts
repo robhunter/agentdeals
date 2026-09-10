@@ -7,7 +7,7 @@ import { fileURLToPath } from "node:url";
 
 const { gateFor, utcDate, GATE_TABLE } = await import("../dist/ranking.js");
 const { gateClauseList, gateDisclosureSentence, matchingSubject } = await import("../dist/gate-disclosure.js");
-const { LEVEL_WITHHOLDING_OUTCOMES, withheldLevelSentence } = await import("../dist/source-check.js");
+const { LAST_RESOLVED, LEVEL_WITHHOLDING_OUTCOMES, WHEN_WE_LOOKED, withheldLevelSentence } = await import("../dist/source-check.js");
 
 type Offer = import("../src/types.ts").Offer;
 type Gate = { code: string; reason: string } | null;
@@ -28,10 +28,10 @@ const STABLE_HISTORY = "has a stable pricing history.";
 const REASONS_A_CITATION_CAN_GO_UNREAD = ["link_unreachable", ...LEVEL_WITHHOLDING_OUTCOMES];
 
 function isAnUnreadCitation(rest: string, vendor: string): boolean {
-  const dated = rest.match(/ since (\d{4}-\d{2}-\d{2})\.$/);
+  const dated = rest.match(/(\d{4}-\d{2}-\d{2})\.$/);
+  const clauses = dated === null ? [""] : ["", LAST_RESOLVED(dated[1]), WHEN_WE_LOOKED(dated[1])];
   return REASONS_A_CITATION_CAN_GO_UNREAD.some(reason =>
-    rest === withheldLevelSentence(reason as never, vendor, "")
-    || (dated !== null && rest === withheldLevelSentence(reason as never, vendor, ` since ${dated[1]}`))
+    clauses.some(since => rest === withheldLevelSentence(reason as never, vendor, since))
   );
 }
 

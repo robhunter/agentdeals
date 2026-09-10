@@ -451,6 +451,40 @@ describe("a row we cannot vouch for says so in the row", () => {
     assert.match(generateReadme([paid, unread], [], CONTEXT), /`gate:not_a_free_offer` 1/);
   });
 
+  it("dates the attempt that withheld a rating, so a row whose terms are older reads as a sequence", () => {
+    const readInAugust = offer({
+      vendor: "Read In August Vendor",
+      verifiedDate: "2026-08-15",
+      source_check: { checked: "2026-09-02", outcome: "states_no_terms", detail: "no price signals" },
+    });
+    const line = renderRow(rowFor([readInAugust], [], "Read In August Vendor"));
+    assert.match(line, /Our record, read from \[example\.com\/pricing\]\([^)]+\) on 2026-08-15/);
+    assert.match(line, /states no amount, tier or rate we can read when we last looked, on 2026-09-02\./);
+    assert.ok(
+      line.indexOf("2026-08-15") < line.indexOf("2026-09-02"),
+      "the row prints the later attempt before the earlier reading"
+    );
+  });
+
+  it("dates every reason that describes an attempt on a page, and no other", () => {
+    const dated = ["unreadable", "states_no_terms", "does_not_name_vendor", "does_not_name_product"] as const;
+    for (const outcome of dated) {
+      const vendor = `Attempt ${outcome} Vendor`;
+      const built = rowFor(
+        [offer({ vendor, source_check: { checked: "2026-09-02", outcome, detail: "measured" } })],
+        [],
+        vendor
+      );
+      assert.match(
+        built.verdict.sentence,
+        /when we last looked, on 2026-09-02\.$/,
+        `${outcome} states no date for the attempt`
+      );
+    }
+    const metered = rowFor([offer({ vendor: "Metered Date Vendor", tier: "Pay-as-you-go" })], [], "Metered Date Vendor");
+    assert.doesNotMatch(metered.verdict.sentence, /when we last looked/);
+  });
+
   it("counts the caveats it published in the file itself", () => {
     const census = readmeCensus(rows);
     assert.match(rendered, new RegExp(`\\| Carrying a caveat about our own reading \\| ${census.caveated} \\|`));
