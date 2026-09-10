@@ -1,6 +1,7 @@
 import { readFileSync, writeFileSync } from "node:fs";
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
+import { theEventNeverHappened } from "../src/change-resolution.ts";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -62,6 +63,32 @@ export function baselineKey(change) {
   return [change.vendor, page, previous].join("|");
 }
 
+export function baselineHolder(change) {
+  return {
+    key: changeKey(change),
+    changeType: change.change_type,
+    withdrawn: theEventNeverHappened(change),
+  };
+}
+
+export function baselineHolders(changes) {
+  const held = new Map();
+  for (const change of changes) {
+    const baseline = baselineKey(change);
+    if (!baseline) continue;
+    const holders = held.get(baseline);
+    if (holders) holders.push(baselineHolder(change));
+    else held.set(baseline, [baselineHolder(change)]);
+  }
+  return held;
+}
+
+export function holderRefusing(holders, candidate) {
+  const stoodBehind = (holders ?? []).find((holder) => !holder.withdrawn);
+  if (stoodBehind) return stoodBehind;
+  return (holders ?? []).find((holder) => holder.changeType === candidate.change_type) ?? null;
+}
+
 export function isoDay(now) {
   return new Date(now).toISOString().slice(0, 10);
 }
@@ -112,15 +139,13 @@ export function buildChangeEntry(offer, result, options = {}) {
 export function selectNewChanges(existing, candidates, options = {}) {
   const windowDays = options.windowDays ?? DEFAULT_REPICK_WINDOW_DAYS;
   const keys = new Set(existing.map(changeKey));
-  const baselines = new Map();
+  const baselines = baselineHolders(existing);
   const recent = new Map();
   for (const change of existing) {
     const stamp = change.recorded_date || change.date;
     const pair = `${change.vendor}|${change.change_type}`;
     const previous = recent.get(pair);
     if (!previous || stamp > previous) recent.set(pair, stamp);
-    const baseline = baselineKey(change);
-    if (baseline && !baselines.has(baseline)) baselines.set(baseline, changeKey(change));
   }
 
   const fresh = [];
@@ -132,11 +157,13 @@ export function selectNewChanges(existing, candidates, options = {}) {
       continue;
     }
     const baseline = baselineKey(candidate);
-    if (baseline && baselines.has(baseline)) {
+    const holder = baseline ? holderRefusing(baselines.get(baseline), candidate) : null;
+    if (holder) {
       suppressed.push({
         candidate,
         reason: SUPPRESSED_SAME_TRANSITION_REGRADED,
-        collidedWith: baselines.get(baseline),
+        collidedWith: holder.key,
+        collidedWithWithdrawn: holder.withdrawn,
       });
       continue;
     }
@@ -148,7 +175,11 @@ export function selectNewChanges(existing, candidates, options = {}) {
     }
     fresh.push(candidate);
     keys.add(key);
-    if (baseline) baselines.set(baseline, key);
+    if (baseline) {
+      const holders = baselines.get(baseline);
+      if (holders) holders.push(baselineHolder(candidate));
+      else baselines.set(baseline, [baselineHolder(candidate)]);
+    }
     recent.set(pair, candidate.recorded_date);
   }
   return { fresh, suppressed };
