@@ -10,7 +10,9 @@ import { quarantineSummary, resetVerificationStateCache, type QuarantineSummary 
 import {
   amountUnstatedSentence,
   cannotVouchForLevel,
+  LAST_RESOLVED,
   levelWithheldReason,
+  levelWithheldSince,
   sourceStatesNoAmount,
   withheldLevelSentence,
 } from "./source-check.js";
@@ -924,7 +926,7 @@ export function levelWithheldStatement(vendor: string, risk: PublishedRisk): str
   if (risk.rating_withheld) return ratingWithheldForNoSourceSentence(vendor);
   const reason = levelWithheldReason({ source_check: risk.source_check ?? undefined }, risk.link_unreachable);
   if (!reason) return null;
-  const since = risk.link_unreachable?.last_reachable ? ` since ${risk.link_unreachable.last_reachable}` : "";
+  const since = levelWithheldSince({ source_check: risk.source_check ?? undefined }, risk.link_unreachable);
   return withheldLevelSentence(reason, vendor, since);
 }
 
@@ -987,14 +989,15 @@ export function checkVendorRisk(
 
   let summary: string;
   const cause = assessment.cause;
-  const unreachableSince = linkUnreachable?.last_reachable ? ` since ${linkUnreachable.last_reachable}` : "";
+  const unreachableSince = linkUnreachable?.last_reachable ? LAST_RESOLVED(linkUnreachable.last_reachable) : "";
   const withheldReason = levelWithheldReason(offer, linkUnreachable);
+  const withheldSince = levelWithheldSince(offer, linkUnreachable);
   const unreachableClause = linkUnreachable
     ? ` Its pricing page has not resolved for us${unreachableSince}, so we cannot confirm its current terms.`
     : "";
   if (gate) {
     const unreadCitation = withheldReason
-      ? ` ${withheldLevelSentence(withheldReason, offer.vendor, unreachableSince)}`
+      ? ` ${withheldLevelSentence(withheldReason, offer.vendor, withheldSince)}`
       : "";
     summary = `${gateRiskSummary(gate)}${unreadCitation}`;
   } else if ((riskLevel === "risky" || riskLevel === "caution") && cause) {
@@ -1002,7 +1005,7 @@ export function checkVendorRisk(
   } else if (assessment.rating_withheld) {
     summary = `${ratingWithheldForNoSourceSentence(offer.vendor)}${unreachableClause}`;
   } else if (withheldReason) {
-    summary = `${withheldLevelSentence(withheldReason, offer.vendor, unreachableSince)} Nothing we have read describes this offer. Treat that as a statement about our records, not as a stable pricing history.`;
+    summary = `${withheldLevelSentence(withheldReason, offer.vendor, withheldSince)} Nothing we have read describes this offer. Treat that as a statement about our records, not as a stable pricing history.`;
   } else {
     summary = `${vendorHistorySentence(offer.vendor, "stable", cause)} Free tier verified for ${longevityDays} days.`;
   }

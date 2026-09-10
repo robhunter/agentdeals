@@ -17,7 +17,7 @@ import {
 import { CHANGE_DIRECTION, enrichOffers, loadDealChanges, loadOffers, publishedRisk, vendorRiskAssessment, classifyStability } from "../dist/data.js";
 import { vendorSlugMap } from "../dist/vendor-slug.js";
 import { isNoLongerInForce } from "../dist/change-resolution.js";
-import { levelWithheldReason } from "../dist/source-check.js";
+import { levelWithheldReason, levelWithheldSince } from "../dist/source-check.js";
 import { offerEnded, endedVerdictSentence, ENDED_BADGE_LABEL } from "../dist/retirement.js";
 import { gateFor, utcDate } from "../dist/ranking.js";
 import type { DealChange, RiskCause } from "../dist/types.js";
@@ -325,9 +325,7 @@ function vendorRows(): VendorRow[] {
     const withheld = levelWithheldReason(primary, enriched.link_unreachable);
     const expected = publishedVendorLevel(enriched.risk_level ?? null, enriched.risk_cause ?? null);
     const ended = offerEnded(primary);
-    const unconfirmableSince = enriched.link_unreachable?.last_reachable
-      ? ` since ${enriched.link_unreachable.last_reachable}`
-      : "";
+    const unconfirmableSince = levelWithheldSince(primary, enriched.link_unreachable);
     const gate = gateFor(primary, utcDate());
     rows.push({
       slug,

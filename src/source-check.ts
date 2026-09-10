@@ -27,19 +27,38 @@ export const NO_PRICE_SIGNAL_PHRASE = "states no amount, tier or rate we can rea
 
 const WITHHELD_LEVEL_CLAUSES: Record<LevelWithheldReason, (since: string) => string> = {
   link_unreachable: (since) => `its pricing page has not resolved for us${since}`,
-  does_not_name_vendor: () => `the page we cite for this offer does not name it`,
-  does_not_name_product: () => `the page we cite for this offer names the platform it runs on and not the offer itself`,
-  states_no_terms: () => `the page we cite for this offer ${NO_PRICE_SIGNAL_PHRASE}`,
-  unreadable: () => `we could not read the page we cite for this offer`,
+  does_not_name_vendor: (since) => `the page we cite for this offer does not name it${since}`,
+  does_not_name_product: (since) =>
+    `the page we cite for this offer names the platform it runs on and not the offer itself${since}`,
+  states_no_terms: (since) => `the page we cite for this offer ${NO_PRICE_SIGNAL_PHRASE}${since}`,
+  unreadable: (since) => `we could not read the page we cite for this offer${since}`,
 };
 
 const WITHHELD_LEVEL_SENTENCES: Record<LevelWithheldReason, (subject: string, since: string) => string> = {
   link_unreachable: (subject, since) => `${subject}'s pricing page has not resolved for us${since}.`,
-  does_not_name_vendor: (subject) => `The page we cite for ${subject} does not name it.`,
-  does_not_name_product: (subject) => `The page we cite for ${subject} names the platform it runs on and not ${subject} itself.`,
-  states_no_terms: (subject) => `The page we cite for ${subject} ${NO_PRICE_SIGNAL_PHRASE}.`,
-  unreadable: (subject) => `We could not read the page we cite for ${subject}.`,
+  does_not_name_vendor: (subject, since) => `The page we cite for ${subject} does not name it${since}.`,
+  does_not_name_product: (subject, since) =>
+    `The page we cite for ${subject} names the platform it runs on and not ${subject} itself${since}.`,
+  states_no_terms: (subject, since) => `The page we cite for ${subject} ${NO_PRICE_SIGNAL_PHRASE}${since}.`,
+  unreadable: (subject, since) => `We could not read the page we cite for ${subject}${since}.`,
 };
+
+export const WHEN_WE_LOOKED = (checked: string): string => ` when we last looked, on ${checked}`;
+
+export const LAST_RESOLVED = (lastReachable: string): string => ` since ${lastReachable}`;
+
+export function levelWithheldSince(
+  offer: Pick<Offer, "source_check">,
+  linkUnreachable: { last_reachable?: string | null } | null | undefined,
+): string {
+  const reason = levelWithheldReason(offer, linkUnreachable);
+  if (!reason) return "";
+  if (reason === "link_unreachable") {
+    return linkUnreachable?.last_reachable ? LAST_RESOLVED(linkUnreachable.last_reachable) : "";
+  }
+  const checked = offer.source_check?.checked;
+  return checked ? WHEN_WE_LOOKED(checked) : "";
+}
 
 export function withheldLevelClause(reason: LevelWithheldReason, since = ""): string {
   return WITHHELD_LEVEL_CLAUSES[reason](since);

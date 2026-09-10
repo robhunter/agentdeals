@@ -2,7 +2,7 @@ import { createHash } from "node:crypto";
 import { changeSummaryText } from "./change-citation.js";
 import { LINK_GRACE_DAYS, unreachableNoticeForUrl } from "./link-health.js";
 import { listEndedTiers, offerEnded, recordedTierSentence } from "./retirement.js";
-import { withheldLevelSentence } from "./source-check.js";
+import { LAST_RESOLVED, withheldLevelSentence } from "./source-check.js";
 import type { ChangeDateSource, DealChange, LinkUnreachable, Offer } from "./types.js";
 
 export const CRITERIA_PATH = "/criteria";
@@ -358,7 +358,7 @@ export function unreachableLinkDemerit(
   unreachable: LinkUnreachable | null,
 ): Demerit | null {
   if (!unreachable) return null;
-  const since = unreachable.last_reachable ? ` since ${unreachable.last_reachable}` : "";
+  const since = unreachable.last_reachable ? LAST_RESOLVED(unreachable.last_reachable) : "";
   return {
     code: unreachable.terminal ? "link_gone" : "link_unreachable",
     points: unreachable.terminal ? 3 : 2,

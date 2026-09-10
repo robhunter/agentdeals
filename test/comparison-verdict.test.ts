@@ -18,7 +18,7 @@ import {
 } from "../dist/comparison-verdict.js";
 import { buildComparisonMap } from "../dist/comparison-pairs.js";
 import { enrichOffers, loadDealChanges, loadOffers } from "../dist/data.js";
-import { levelWithheldReason, type LevelWithheldReason } from "../dist/source-check.js";
+import { levelWithheldReason, levelWithheldSince, type LevelWithheldReason } from "../dist/source-check.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(__dirname, "..");
@@ -275,7 +275,7 @@ function sideFor(vendor: string): ComparisonSide | null {
     recordedChanges: countFor(vendor),
     rating: (e.risk_cause || e.risk_level === "stable" ? e.risk_level : null) as ComparisonSide["rating"],
     ratingWithheldBecause: levelWithheldReason(e, e.link_unreachable),
-    unconfirmableSince: e.link_unreachable?.last_reachable ? ` since ${e.link_unreachable.last_reachable}` : "",
+    unconfirmableSince: levelWithheldSince(e, e.link_unreachable),
   };
 }
 
