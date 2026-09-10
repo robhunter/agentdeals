@@ -565,6 +565,30 @@
       "refused_date": "2026-08-29"
     },
     {
+      "vendor": "cocalc.com",
+      "change_type": "pricing_restructured",
+      "reason": "no_price_signal",
+      "detail": "the page read carries no price signal — no amount, named tier or metered rate in 6328 characters, so it states no terms to have changed",
+      "summary": "The free tier is now called 'Local CoCalc Plus' and is a local runtime for evaluation. The original free tier offering of '1 project, 1 GB disk, shared CPU' is no longer directly available on the hosted CoCalc.ai platform.",
+      "previous_state": "Collaborative computation platform (formerly SageMathCloud) — browser-based Ubuntu with Python, LaTeX, Jupyter, SageMath, R, and Julia pre-installed. 1 project, 1 GB disk, shared CPU",
+      "current_state": "CoCalc offers several operating models: Hosted CoCalc.ai, Local CoCalc Plus (free local runtime), CoCalc Star (one shared VM), Private CoCalc Launchpad, and Enterprise CoCalc Rocket.",
+      "source_url": "https://cocalc.com/",
+      "category": "Notebooks & Data Science",
+      "refused_date": "2026-09-10"
+    },
+    {
+      "vendor": "Coda",
+      "change_type": "limits_reduced",
+      "reason": "page_does_not_name_vendor",
+      "detail": "the page read never names Coda and is not served from its domain, so any terms on it belong to somebody else",
+      "summary": "Coda is now Superhuman Docs and the free tier has significantly reduced functionality. The free tier now has limited trials for Docs AI and MCP, and limits on shared docs. The original deal info stated unlimited docs with size limits and up to 1,000 rows for native tables.",
+      "previous_state": "Unlimited docs with size limits. Up to 1,000 rows for native tables, 50 rows for Packs tables. Unlimited editors/viewers. 7-day version history. Cross-doc limited on free tier.",
+      "current_state": "Free plan includes collaborative docs, limited trials for Docs AI and MCP, 1Gb attachments per doc, limited cross-doc tables, and 7-day version history. Pro plan is $12/month per Doc Maker (billed annually) and includes unlimited doc size, 30-day version history, and unlimited automations. Business plan is $33/month per Doc Maker (billed annually) and includes unlimited automations and unlimited version history.",
+      "source_url": "https://coda.io/pricing",
+      "category": "Productivity & Notes",
+      "refused_date": "2026-09-10"
+    },
+    {
       "vendor": "Codefresh",
       "change_type": "limits_reduced",
       "reason": "unquantified_limit",
@@ -781,6 +805,19 @@
       "refused_date": "2026-08-28"
     },
     {
+      "vendor": "Deepgram",
+      "change_type": "pricing_restructured",
+      "reason": "same_transition_graded_differently",
+      "detail": "same vendor, source_url and previous_state as Deepgram|new_free_tier|2026-08-28|https://deepgram.com/pricing",
+      "summary": "The $200 free credit is still offered. Text-to-Speech has a free tier until September 12, 2026. Voice Agent API also has a free tier until September 12, 2026.",
+      "previous_state": "Speech-to-text and text-to-speech API — $200 free credits on signup (no credit card required), ~43K minutes transcription with Nova model, credits never expire. Access to all model endpoints",
+      "current_state": "A $200 credit is available. Text-to-Speech is free until 9/12/2026 with up to 45 concurrent streaming connections globally (5 in EU/AU). Voice Agent API is free through September 12, 2026.",
+      "source_url": "https://deepgram.com/pricing",
+      "category": "AI / ML",
+      "refused_date": "2026-09-10",
+      "collided_with": "Deepgram|new_free_tier|2026-08-28|https://deepgram.com/pricing"
+    },
+    {
       "vendor": "deployhq.com",
       "change_type": "limits_reduced",
       "reason": "measures_no_change",
@@ -889,6 +926,18 @@
       "refused_date": "2026-08-28"
     },
     {
+      "vendor": "Duolingo",
+      "change_type": "new_tier",
+      "reason": "no_price_signal",
+      "detail": "the page read carries no price signal — no amount, named tier or metered rate in 2393 characters, so it states no terms to have changed",
+      "summary": "The page mentions a 'Super Duolingo' and a 'Duolingo Max' which are not mentioned in the stored deal info, suggesting paid tiers now exist. It also mentions a 1 week free trial for the 'Duolingo English Test'.",
+      "previous_state": "Free language learning (40+ languages). Gamified lessons (5 lives system). Daily streak tracking. Leaderboards. Basic stories. No unlimited hearts, no offline lessons, no advanced progress quizzes on free. Ad-supported.",
+      "current_state": "Duolingo offers a free tier with language learning, and also offers 'Super Duolingo' and 'Duolingo Max'. A 1 week free trial is available for the 'Duolingo English Test'.",
+      "source_url": "https://www.duolingo.com",
+      "category": "Education",
+      "refused_date": "2026-09-10"
+    },
+    {
       "vendor": "Dwh.dev",
       "change_type": "limits_reduced",
       "reason": "dangling_reference",
@@ -899,6 +948,18 @@
       "source_url": "https://dwh.dev",
       "category": "Analytics",
       "refused_date": "2026-08-29"
+    },
+    {
+      "vendor": "EmailOctopus",
+      "change_type": "limits_reduced",
+      "reason": "unquantified_limit",
+      "detail": "limits_reduced claimed, but the current state names no quantity for anything the stored state measured (2,500 subscriber, 10,000 email)",
+      "summary": "The free tier is still offered, but the stored information about limits is not found on the page. The page does not explicitly state the subscriber or email limits for the free tier. Multiple customer testimonials mention using the free service, and one mentions migrating *to* EmailOctopus from Mailchimp due to restrictions on Mailchimp's free tier.",
+      "previous_state": "Up to 2,500 subscribers and 10,000 emails per month free",
+      "current_state": "The page offers a 'GET STARTED FOR FREE' option with no credit card required. It does not specify subscriber or email limits for the free tier.",
+      "source_url": "https://emailoctopus.com",
+      "category": "Email",
+      "refused_date": "2026-09-10"
     },
     {
       "vendor": "Emailvalidation.io",
@@ -1069,6 +1130,30 @@
       "refused_date": "2026-08-28"
     },
     {
+      "vendor": "Geocodio",
+      "change_type": "limits_reduced",
+      "reason": "states_no_difference",
+      "detail": "limits_reduced claimed, summary asserts the page matches what we stored, and the two states carry the same quantities",
+      "summary": "The free tier still exists, but the description is more detailed. The page states the first 2,500 credits are free *daily*, and that these credits do not roll over. The stored info did not mention the daily limit or that credits are 'use it or lose it'.",
+      "previous_state": "Geocoding and reverse geocoding API for US and Canada — free tier: 2,500 lookups/day. Includes address parsing, congressional districts, timezone, and census data fields",
+      "current_state": "Pay-as-you-go and Flex accounts get the first 2,500 credits per day for free. Free credits are \"use it or lose it\" and do not roll over.",
+      "source_url": "https://www.geocod.io/pricing/",
+      "category": "Maps/Geolocation",
+      "refused_date": "2026-09-10"
+    },
+    {
+      "vendor": "getpantry.cloud",
+      "change_type": "limits_increased",
+      "reason": "page_does_not_name_vendor",
+      "detail": "the page read never names getpantry.cloud and is not served from its domain, so any terms on it belong to somebody else",
+      "summary": "The storage limit is now 100 baskets, each with a max size of 1.44mb, totaling approximately 144mb, not 100mb as previously stated.",
+      "previous_state": "A simple JSON data storage API perfect for personal projects, hackathons, and mobile apps!",
+      "current_state": "Your Pantry can have 100 baskets (JSON objects), each with a max size of 1.44mb.",
+      "source_url": "https://getpantry.cloud/",
+      "category": "Storage",
+      "refused_date": "2026-09-10"
+    },
+    {
       "vendor": "GitDailies",
       "change_type": "limits_reduced",
       "reason": "unquantified_limit",
@@ -1084,13 +1169,13 @@
       "vendor": "Gitea",
       "change_type": "new_tier",
       "reason": "confirmed_unchanged",
-      "detail": "The addition of paid tiers doesn't change the free tier's existence or terms.",
-      "summary": "The free OSS tier still exists, but the page now highlights Gitea Cloud and Gitea Enterprise as paid options with 30-day free trials. The original deal info didn't mention these.",
+      "detail": "The report details offerings not present in the stored description, but doesn't indicate a *change* to the free tier as originally described.",
+      "summary": "The free tier is still offered as open source. Gitea now also offers a paid 'Gitea Enterprise' tier and a 30-day free trial of 'Gitea Cloud'.",
       "previous_state": "Free OSS (MIT). Lightweight self-hosted Git service. Repository hosting, issue tracking, pull requests, CI/CD (Gitea Actions), packages registry. Low resource usage",
-      "current_state": "Gitea offers a free, self-hosted Git service under the MIT license with unlimited users and repositories. Gitea Cloud and Gitea Enterprise are available as paid options with 30-day free trials.",
+      "current_state": "There is a free, self-hosted, open source option under the MIT license with unlimited users and repositories. There is also a Gitea Enterprise tier at $9.5/$19 per user/month with additional features like SAML SSO, audit logs, and Kubernetes AutoScaling. A 30-day free trial is available for Gitea Cloud.",
       "source_url": "https://about.gitea.com/",
       "category": "Source Control",
-      "refused_date": "2026-08-28"
+      "refused_date": "2026-09-10"
     },
     {
       "vendor": "GitHub",
@@ -1175,6 +1260,19 @@
       "source_url": "https://cloud.google.com/vertex-ai/docs/vector-search/overview",
       "category": "AI / ML",
       "refused_date": "2026-09-02"
+    },
+    {
+      "vendor": "Grafana k6 Cloud",
+      "change_type": "limits_reduced",
+      "reason": "same_transition_graded_differently",
+      "detail": "same vendor, source_url and previous_state as Grafana k6 Cloud|limits_reduced|2026-08-28|https://grafana.com/pricing/",
+      "summary": "The free tier no longer offers 500 VUh. It now offers limited usage of all Grafana Cloud services, with limits of 10k active series per month for metrics, 50 GB ingested per month for logs, traces, and profiles, and 14 days retention.",
+      "previous_state": "Cloud load testing with 500 virtual user hours (VUh) per month free. 14-day test result retention. Integrates with Grafana Cloud dashboards. No credit card required",
+      "current_state": "Free Always free Always $0. Limited to 10k active series per month, 50 GB ingested per month for logs, traces, and profiles, and 14 day retention. Community support.",
+      "source_url": "https://grafana.com/pricing/",
+      "category": "Testing",
+      "refused_date": "2026-09-10",
+      "collided_with": "Grafana k6 Cloud|limits_reduced|2026-08-28|https://grafana.com/pricing/"
     },
     {
       "vendor": "Harness CI",
@@ -1417,6 +1515,19 @@
       "refused_date": "2026-08-29"
     },
     {
+      "vendor": "IPTrace",
+      "change_type": "free_tier_removed",
+      "reason": "same_transition_graded_differently",
+      "detail": "same vendor, source_url and previous_state as IPTrace|free_tier_removed|2026-08-28|https://iptrace.io",
+      "summary": "The free tier is being discontinued and users are directed to switch to ipstack.",
+      "previous_state": "An embarrassingly simple API that provides your business with reliable and helpful IP geolocation data with 50,000 free lookups per month.",
+      "current_state": "The page encourages users to switch to ipstack to continue using the API and offers paid plans starting at $10 for 200k requests per month. A free API key is mentioned but only in the context of switching to ipstack.",
+      "source_url": "https://iptrace.io",
+      "category": "Dev Utilities",
+      "refused_date": "2026-09-10",
+      "collided_with": "IPTrace|free_tier_removed|2026-08-28|https://iptrace.io"
+    },
+    {
       "vendor": "JotForm",
       "change_type": "limits_reduced",
       "reason": "unquantified_limit",
@@ -1439,6 +1550,18 @@
       "source_url": "https://keywordsai.co",
       "category": "AI / ML",
       "refused_date": "2026-09-02"
+    },
+    {
+      "vendor": "Khan Academy",
+      "change_type": "pricing_model_change",
+      "reason": "dangling_reference",
+      "detail": "the summary now opens on a reference to a clause that was dropped, so the sentence that travels alone has no subject",
+      "summary": "While core access remains free, the page heavily emphasizes donations and implies a need for financial support to continue providing the service. They state \"$1 = 100 minutes of learning\" and ask for monthly donations. They also offer district partnerships with additional tools and support for a price per student.",
+      "previous_state": "Fully free education platform. Math, science, computing, humanities, test prep (SAT, LSAT, MCAT). Video lessons, exercises, progress tracking. Personalized learning dashboard. Teacher tools. No ads. Nonprofit.",
+      "current_state": "Khan Academy is free for students, teachers, and families. District partnerships are available for an affordable price per student. Donations are encouraged, with $1 equating to 100 minutes of learning.",
+      "source_url": "https://www.khanacademy.org",
+      "category": "Education",
+      "refused_date": "2026-09-10"
     },
     {
       "vendor": "Koyeb",
@@ -1537,6 +1660,18 @@
       "refused_date": "2026-08-28"
     },
     {
+      "vendor": "LocationIQ",
+      "change_type": "limits_reduced",
+      "reason": "measures_the_opposite",
+      "detail": "limits_reduced claimed, and every quantity that moved between the two states moved the other way — 5,000 request/day against 2 request/sec, 5,000 request/day against 60 request/min",
+      "summary": "The free tier now has a limit of 5000 requests/day and 60 requests per minute, and requires attribution with a link to LocationIQ.com.",
+      "previous_state": "Geocoding, reverse geocoding, and routing API. Free plan: 5,000 requests/day, commercial use allowed with attribution",
+      "current_state": "Free $25 value $0 €0 R$0 ₹0 Free sign up 5000 requests /day 2 requests /second Geocoding APIs Routing APIs Street & Static Maps 60 requests per minute Limited Commercial Use You can use our free plan in commercial projects if you spread the love by adding a prominent link back to us on your website or app in this format: <a href=&#x27;https://locationiq.com&#x27;>Search by LocationIQ.com</a> 1 Access Token IP and HTTP Restrictions Best-effort Email Support US & EU Datacenters",
+      "source_url": "https://locationiq.com/pricing",
+      "category": "Maps/Geolocation",
+      "refused_date": "2026-09-10"
+    },
+    {
       "vendor": "Logz.io",
       "change_type": "pricing_restructured",
       "reason": "confirmed_unchanged",
@@ -1571,6 +1706,18 @@
       "source_url": "https://mailchimp.com/pricing/",
       "category": "Email",
       "refused_date": "2026-09-03"
+    },
+    {
+      "vendor": "Maileroo",
+      "change_type": "pricing_restructured",
+      "reason": "confirmed_unchanged",
+      "detail": "The report confirms the 3,000 email/month limit still exists, just in a different location (FAQ).",
+      "summary": "The free tier now offers 3,000 emails per month, as stated in the FAQ section.",
+      "previous_state": "SMTP relay and email API for developers. 3,000 emails per month, unlimited domains, webhooks free",
+      "current_state": "The page does not list specific pricing tiers or limits upfront, but the FAQ states a free plan with 3,000 emails per month.",
+      "source_url": "https://maileroo.com",
+      "category": "Email",
+      "refused_date": "2026-09-10"
     },
     {
       "vendor": "mailsac.com",
@@ -1765,6 +1912,18 @@
       "refused_date": "2026-08-28"
     },
     {
+      "vendor": "npoint.io",
+      "change_type": "limits_reduced",
+      "reason": "states_no_terms",
+      "detail": "every clause of the summary states bookkeeping rather than a term the page carries, so it reports the reading rather than a change",
+      "summary": "While a free tier isn't explicitly removed, the service now has rate limits that weren't mentioned in the stored deal info.",
+      "previous_state": "JSON store with collaborative schema editing",
+      "current_state": "The service has rate limits of 100 requests/min per IP address and 600 requests/min per JSON bin.",
+      "source_url": "https://www.npoint.io/",
+      "category": "Storage",
+      "refused_date": "2026-09-10"
+    },
+    {
       "vendor": "NS1 Connect",
       "change_type": "free_tier_removed",
       "reason": "no_removal_evidence",
@@ -1847,6 +2006,18 @@
       "source_url": "https://www.ory.sh/pricing/",
       "category": "Auth",
       "refused_date": "2026-09-02"
+    },
+    {
+      "vendor": "Outlook.com",
+      "change_type": "limits_reduced",
+      "reason": "confirmed_unchanged",
+      "detail": "The current page only confirms the 15GB email storage, which was already stated in the stored description. The report highlights a Microsoft 365 Personal subscription, which wasn't part of the stored free tier description.",
+      "summary": "The free tier still exists. The storage limits have changed. Previously 15 GB email storage and 5 GB OneDrive. The current pricing page states 15 GB of mailbox storage for the free tier. A Microsoft 365 Personal subscription offers 100 GB of mailbox storage and 100 GB of OneDrive storage.",
+      "previous_state": "15 GB email storage. 5 GB OneDrive included. Calendar, contacts, tasks integrated. Focused Inbox. Office for the web access. Custom email aliases. Sweep rules. Ad-supported.",
+      "current_state": "The free tier includes 15 GB of mailbox storage.",
+      "source_url": "https://outlook.live.com",
+      "category": "Consumer Email",
+      "refused_date": "2026-09-10"
     },
     {
       "vendor": "Paddle",
@@ -1955,6 +2126,19 @@
       "source_url": "https://pixlr.com",
       "category": "Design",
       "refused_date": "2026-09-03"
+    },
+    {
+      "vendor": "Plausible Analytics",
+      "change_type": "free_tier_removed",
+      "reason": "same_transition_graded_differently",
+      "detail": "same vendor, source_url and previous_state as Plausible Analytics|free_tier_removed|2026-08-28|https://plausible.io/",
+      "summary": "The page highlights open-source nature and privacy features, it primarily focuses on paid plans starting at $9/month. There is a 30-day free trial available.",
+      "previous_state": "Free OSS (AGPLv3). Privacy-friendly web analytics. No cookies, GDPR/CCPA compliant, lightweight script (<1KB). Self-hosted with no limits. Cloud plans start at $9/mo",
+      "current_state": "Plausible offers paid plans starting at $9/month for up to 10k monthly pageviews. A 30-day free trial is available with no credit card required.",
+      "source_url": "https://plausible.io/",
+      "category": "Analytics",
+      "refused_date": "2026-09-10",
+      "collided_with": "Plausible Analytics|free_tier_removed|2026-08-28|https://plausible.io/"
     },
     {
       "vendor": "podio.com",
@@ -2149,6 +2333,43 @@
       "refused_date": "2026-09-01"
     },
     {
+      "vendor": "repsy.io",
+      "change_type": "limits_increased",
+      "reason": "no_price_signal",
+      "detail": "the page read carries no price signal — no amount, named tier or metered rate in 3166 characters, so it states no terms to have changed",
+      "summary": "The free tier now offers 20 GB of storage, an increase from the previously stated 1 GB.",
+      "previous_state": "1 GB Free private/public Maven Repository.",
+      "current_state": "Start with 20 GB free storage, support for docker, maven, npm, and python, golang, cargo, nuget, helm, ruby and seamless team collaboration.",
+      "source_url": "https://repsy.io",
+      "category": "CI/CD",
+      "refused_date": "2026-09-10"
+    },
+    {
+      "vendor": "reviewable.io",
+      "change_type": "free_tier_removed",
+      "reason": "no_price_signal",
+      "detail": "the page read carries no price signal — no amount, named tier or metered rate in 2450 characters, so it states no terms to have changed",
+      "summary": "The page mentions a 30-day free trial, but does not mention a permanently free tier for public or personal repos.",
+      "previous_state": "Code review for GitHub repositories, free for public or personal repos.",
+      "current_state": "You can use a free 30-day trial any time you want, no credit card required.",
+      "source_url": "https://reviewable.io/",
+      "category": "Code Quality",
+      "refused_date": "2026-09-10"
+    },
+    {
+      "vendor": "Roboflow",
+      "change_type": "limits_reduced",
+      "reason": "same_transition_graded_differently",
+      "detail": "same vendor, source_url and previous_state as Roboflow|limits_reduced|2026-08-28|https://roboflow.com/pricing",
+      "summary": "The free Public plan now offers 15 credits/month instead of 250,000 images, 10 projects, 2 users, and $60/month free inference credits.",
+      "previous_state": "Computer vision platform — Public plan: 250,000 images, 10 projects, 2 users, $60/month free inference credits. Includes AI-assisted labeling, model training, cloud deployment. All data publicly shared",
+      "current_state": "Public plan is free, requires no credit card, and includes 15 credits / month and 2 users. Data and models are open source on Roboflow Universe.",
+      "source_url": "https://roboflow.com/pricing",
+      "category": "AI / ML",
+      "refused_date": "2026-09-10",
+      "collided_with": "Roboflow|limits_reduced|2026-08-28|https://roboflow.com/pricing"
+    },
+    {
       "vendor": "robusta.dev",
       "change_type": "free_tier_removed",
       "reason": "states_no_terms",
@@ -2185,6 +2406,19 @@
       "refused_date": "2026-09-03"
     },
     {
+      "vendor": "ScraperAPI",
+      "change_type": "limits_increased",
+      "reason": "same_transition_graded_differently",
+      "detail": "same vendor, source_url and previous_state as ScraperAPI|free_tier_removed|2026-08-28|https://www.scraperapi.com/pricing/",
+      "summary": "The free tier now offers 5,000 API credits and a 7-day trial instead of 1,000 credits/month.",
+      "previous_state": "Web scraping API with proxy rotation and CAPTCHA handling. Free plan: 1,000 API credits/month, 5 concurrent connections. No credit card required",
+      "current_state": "Start collecting data with our 7-day trial and 5,000 API credits. No credit card required.",
+      "source_url": "https://www.scraperapi.com/pricing/",
+      "category": "Web Scraping",
+      "refused_date": "2026-09-10",
+      "collided_with": "ScraperAPI|free_tier_removed|2026-08-28|https://www.scraperapi.com/pricing/"
+    },
+    {
       "vendor": "Semaphore CI",
       "change_type": "pricing_restructured",
       "reason": "confirmed_unchanged",
@@ -2195,6 +2429,31 @@
       "source_url": "https://semaphore.io/pricing",
       "category": "CI/CD",
       "refused_date": "2026-08-28"
+    },
+    {
+      "vendor": "Semaphore CI",
+      "change_type": "pricing_restructured",
+      "reason": "same_transition_graded_differently",
+      "detail": "same vendor, source_url and previous_state as Semaphore CI|pricing_restructured|2026-08-28|https://semaphore.io/pricing",
+      "summary": "The pricing has been restructured. While a free tier with $15 credits (~2,000 Ubuntu x64 2-vCPU minutes) and 20 concurrent jobs still exists, the pricing for paid plans has changed significantly, with different rates for different CPU configurations.",
+      "previous_state": "CI/CD platform — free cloud plan: $15 credits/month (~2,000 Ubuntu build minutes), 20 concurrent jobs, YAML pipelines, secrets management. Self-hosted available at $0.0025/min. Cloud starts at $0.0075/min for Ubuntu",
+      "current_state": "Ubuntu ARM $0.003 /min, 2vCPU $0.006 /min, 4vCPU $0.012 /min, 8vCPU Ubuntu x64 $0.0075 /min, 2vCPU $0.015 /min, 4vCPU MacOS $0.09 /min 4vCPU. Self-Hosted $0.0025 /min any machine. Free credits get $15 free credits per month (≈ 2,000 Ubuntu x64 2-vCPU minutes). Concurrency includes 20 concurrent jobs by default.",
+      "source_url": "https://semaphore.io/pricing",
+      "category": "CI/CD",
+      "refused_date": "2026-09-10",
+      "collided_with": "Semaphore CI|pricing_restructured|2026-08-28|https://semaphore.io/pricing"
+    },
+    {
+      "vendor": "Semgrep",
+      "change_type": "limits_reduced",
+      "reason": "confirmed_unchanged",
+      "detail": "The current page states 10 repositories and 10 contributors, which aligns with the stored description of 10 contributors and effectively limits repos to 10 (though worded differently). The AI credits are a new addition, but the report focuses on repos/contributors which are consistent.",
+      "summary": "The free tier now includes 60 AI credits and allows up to 10 repositories and 10 contributors. The description previously 50 private repos (unlimited public).",
+      "previous_state": "Static analysis (SAST) and software composition analysis (SCA) — free tier: 10 contributors, 50 private repos (unlimited public), cross-file analysis with Pro rules, AI-powered triage and remediation, one-click CI/CD deployment",
+      "current_state": "Free Edition: Cross-file analysis with Pro rules, AI-powered detection, triage, and remediation, 60 AI credits included, Fast CI/CD deploy via Semgrep infrastructure, Scan up to 10 repositories, Maximum 10 contributors, Authentication via GitHub/GitLab.",
+      "source_url": "https://semgrep.dev/pricing",
+      "category": "Security",
+      "refused_date": "2026-09-10"
     },
     {
       "vendor": "Sentry",
@@ -2435,6 +2694,18 @@
       "source_url": "https://www.typeform.com/",
       "category": "Forms",
       "refused_date": "2026-08-28"
+    },
+    {
+      "vendor": "Umami",
+      "change_type": "free_tier_removed",
+      "reason": "no_price_signal",
+      "detail": "the page read carries no price signal — no amount, named tier or metered rate in 4062 characters, so it states no terms to have changed",
+      "summary": "The page does not explicitly mention a free OSS tier. It states you can 'Get started for free' and highlights self-hosting as an option, but details about limits or the open-source nature are not immediately apparent on this pricing page excerpt.",
+      "previous_state": "Free OSS (MIT). Simple, privacy-focused web analytics. No cookies, GDPR compliant, real-time dashboard, event tracking. Self-hosted with no limits",
+      "current_state": "The page promotes getting started for free and offers self-hosting or Umami Cloud. It does not detail a specific 'Free OSS' tier.",
+      "source_url": "https://umami.is/",
+      "category": "Analytics",
+      "refused_date": "2026-09-10"
     },
     {
       "vendor": "UniRateAPI",

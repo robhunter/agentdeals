@@ -4,7 +4,7 @@
 
 Generated from the free-tier catalogue at https://agentdeals.dev, which is where each row's record lives. It is regenerated whenever those records move, so editing it by hand is pointless — the next run overwrites it. The code that writes it is https://github.com/robhunter/agentdeals/blob/main/src/llm-api-readme.ts, so every rule this file states can be read against the rule it applies.
 
-What this file has that a hand-kept list does not: **the terms a vendor replaced, next to the terms it replaced them with, with the date.** 7 rows carry that today.
+What this file has that a hand-kept list does not: **the terms a vendor replaced, next to the terms it replaced them with, with the date.** 8 rows carry that today.
 
 Rows are ordered alphabetically by vendor. That is not a ranking: we publish no best free LLM API, and no position in this file is a recommendation.
 
@@ -34,23 +34,23 @@ Nothing else keeps a record out. A record whose terms name no free price is stil
 | | |
 | --- | --- |
 | Records | 31 |
-| Carrying a rating | 20 |
+| Carrying a rating | 21 |
 | Recorded as ended | 2 |
-| Publishing a reason instead of a rating | 9 — `gate:not_a_free_offer` 3, `reading_names_no_price_of_nothing` 3, `unreadable` 2, `states_no_terms` 1 |
-| Showing the terms they replaced | 7 |
+| Publishing a reason instead of a rating | 8 — `gate:not_a_free_offer` 3, `reading_names_no_price_of_nothing` 2, `unreadable` 2, `states_no_terms` 1 |
+| Showing the terms they replaced | 8 |
 | Carrying a caveat about our own reading | 0 |
 
 Those counts are generated with the rows. If most of a column carries a caveat, that is a fact about this catalogue and it belongs in the open.
 
 ## How to read a row
 
-**The terms** are either a sentence quoted from the vendor's own page on the day we read it, or our own record of that page, and the row says which. Where a change record supersedes what we stored, the row shows the quoted reading first and the terms it replaced underneath, with the date they stopped being current. 7 rows carry that second line, and it is the whole point of this file.
+**The terms** are either a sentence quoted from the vendor's own page on the day we read it, or our own record of that page, and the row says which. Where a change record supersedes what we stored, the row shows the quoted reading first and the terms it replaced underneath, with the date they stopped being current. 8 rows carry that second line, and it is the whole point of this file.
 
 **Rating** is one of four values:
 
 - `stable`, `caution` or `risky` — always printed beside the single dated record that produced it;
 - `ended` — a free tier we recorded going away. The row stays for the record;
-- `unrated` — we are publishing no rating, and the next column says why. 9 of 31 rows are unrated. A record whose page we could not read, that names no terms we can read, that is not a free offer, whose terms name no free price, or whose link has stopped resolving gets the reason instead of a verdict. We would rather print why we cannot say than guess.
+- `unrated` — we are publishing no rating, and the next column says why. 8 of 31 rows are unrated. A record whose page we could not read, that names no terms we can read, that is not a free offer, whose terms name no free price, or whose link has stopped resolving gets the reason instead of a verdict. We would rather print why we cannot say than guess.
 
 **Record verified** is the day we last confirmed that record against the page. Where the link has not resolved for 14 days, we withhold that date and print the day the link last worked instead: a recent date over a destination that no longer answers is the most confident-looking thing on a page and the least true.
 
@@ -79,7 +79,7 @@ These are free but **time-limited** — the free part runs out:
 
 Anything else is an ongoing free tier. 2 records are recorded as ended (`an offer the vendor has ended`); they stay in the file because a free tier that has gone is the thing hardest to find out elsewhere.
 
-A tier name is not the last word, because a tier field is older than the terms printed beside it. Where the terms a row publishes name no price of nothing — no free plan, no zero price, nothing stated as costing nothing — that row carries no rating, whatever its tier says. 3 rows are unrated for that reason today, and where we also hold a dated record of the free tier being removed the row reads `ended` instead, because then we have the removal and not only its shadow.
+A tier name is not the last word, because a tier field is older than the terms printed beside it. Where the terms a row publishes name no price of nothing — no free plan, no zero price, nothing stated as costing nothing — that row carries no rating, whatever its tier says. 2 rows are unrated for that reason today, and where we also hold a dated record of the free tier being removed the row reads `ended` instead, because then we have the removal and not only its shadow.
 
 That test runs on the terms **every** row publishes. It is not restricted to the rows carrying a newer reading, because a row we have never re-read is the one whose tier field is oldest.
 
@@ -122,7 +122,7 @@ A rating is decided by the *type* of the most recent narrowing record, never by 
 | [OpenAI](https://agentdeals.dev/vendor/openai)<br>Free | Our record, read from [developers.openai.com/api/docs/pricing](https://developers.openai.com/api/docs/pricing) on 2026-09-10: AI API platform. One model is priced Free in OpenAI's own table — the moderation model omni-moderation-latest. Everything else is per-token: embeddings from $0.02/1M, chat-latest $5.00/1M input and $30.00/1M output. Three further free amounts are sub-quotas inside paid tools: 1 GB per day of File search storage, 1 GB per account per month of ChatKit upload storage, and web-search content tokens on non-reasoning models. No free token allowance for the flagship models; trial credits for new accounts were discontinued in mid-2025. | `stable` | We rate it stable. 5 recorded changes narrowed the terms, the most recent on 2026-08-26. | 2026-09-10 |
 | [OpenRouter](https://agentdeals.dev/vendor/openrouter)<br>Free | As of 2026-09-07, [openrouter.ai/pricing](https://openrouter.ai/pricing) reads: Free tier includes 25+ free models, 4 free providers, 50 reqs/day rate limit, $25,000 of list price inference / month with no fees, 5% fee after that.<br><br>**Until 2026-09-07, our record read:** AI model router — ~30 free models (DeepSeek R1, Llama 3.3, Qwen3, Gemma 3), OpenAI-compatible API, ~20 RPM per model | `caution` | We rate it caution — one recorded limit reduction, discovered 2026-09-07. | 2026-08-25 |
 | [paperspace](https://agentdeals.dev/vendor/paperspace)<br>Free | As of 2026-09-05, [paperspace.com/pricing](https://www.paperspace.com/pricing) reads: There is a 'Free' tier offering public projects, 5GB storage, and basic instances (billed per hour). Other tiers include 'Pro' ($12/month), 'Growth' ($39/month), and various team plans (T0, T1, T2) with different storage and instance limits, all with utilization costs on paid instances.<br><br>**Until 2026-09-05, our record read:** ML platform (now part of DigitalOcean). Free Gradient plan: public projects and 5 GB storage only. No free compute — all GPU and CPU instances are billed hourly. Paid plans from $8/month. | `caution` | We rate it caution — one recorded pricing restructure, discovered 2026-09-05. | 2026-08-22 |
-| [Pinecone](https://agentdeals.dev/vendor/pinecone)<br>Starter | Our record, read from [pinecone.io/pricing](https://pinecone.io/pricing) on 2026-07-31: Vector database — 2 GB storage, 2M write units/month, 1M read units/month, 5 indexes, 5M embedding tokens/month. Pinecone Assistant: 100 docs / 1 GB | `unrated` | The terms this row publishes name no price of nothing — no free plan, no zero price, nothing stated as costing nothing. A tier field saying otherwise is older than the terms beside it. We hold no record of Pinecone removing a free tier, so we do not say one ended — we publish no rating and leave the terms to be read. | 2026-07-31 |
+| [Pinecone](https://agentdeals.dev/vendor/pinecone)<br>Starter | As of 2026-09-10, [pinecone.io/pricing](https://pinecone.io/pricing) reads: The Starter plan is free and includes up to 2 GB storage, 2M write units/month, 1M read units/month, 5 indexes, 1GB Assistant storage, 500k input tokens, 300k output tokens, and 500k context processed tokens. It also includes access to various embedding and reranking models with token/request limits.<br><br>**Until 2026-09-10, our record read:** Vector database — 2 GB storage, 2M write units/month, 1M read units/month, 5 indexes, 5M embedding tokens/month. Pinecone Assistant: 100 docs / 1 GB | `caution` | We rate it caution — one recorded pricing restructure, discovered 2026-09-10. | 2026-07-31 |
 | [Portkey](https://agentdeals.dev/vendor/portkey)<br>Free | Our record, read from [portkey.ai](https://portkey.ai/) on 2026-08-12: Control panel for Gen AI apps featuring an observability suite & an AI gateway. Send & log up to 10,000 requests for free every month. | `stable` | It's stable — zero pricing changes recorded. | 2026-08-12 |
 | [Replicate](https://agentdeals.dev/vendor/replicate)<br>Free | Our record, read from [replicate.com/pricing](https://replicate.com/pricing) on 2026-08-15: ML model hosting and inference platform — free runs on curated model collection without billing. Pay-per-second billing by hardware type (CPU/GPU) after free allowance. No credit card required to start | `stable` | It's stable — zero pricing changes recorded. | 2026-08-15 |
 | [Roboflow](https://agentdeals.dev/vendor/roboflow)<br>Public (Free) | As of 2026-08-28, [roboflow.com/pricing](https://roboflow.com/pricing) reads: Public plan is free, requires no credit card, and includes 15 credits / month, 2 users, and Community Support. Data and models are open source on Roboflow Universe.<br><br>**Until 2026-08-28, our record read:** Computer vision platform — Public plan: 250,000 images, 10 projects, 2 users, $60/month free inference credits. Includes AI-assisted labeling, model training, cloud deployment. All data publicly shared | `caution` | We rate it caution — one recorded limit reduction, discovered 2026-08-28. | 2026-07-28 |
