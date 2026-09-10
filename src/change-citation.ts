@@ -46,6 +46,8 @@ export const RECORD_SOURCE_CLASS = "record-source";
 
 export const UNCITED_TAG_CLASS = "unsourced-tag";
 
+export const CITATION_CLASSES = [CITATION_CLASS, RECORD_SOURCE_CLASS] as const;
+
 export const CITATION_LINK_HTML = "Source &nearr;";
 
 export const SOURCE_MARKER_MARKUP = new RegExp(

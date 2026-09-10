@@ -17,7 +17,7 @@ const {
   NO_CATALOGUE_RECORD,
 } = await import("../dist/source-citation.js");
 const { tabulatedSubjectSlots, vendorFactRows, SOURCE_MARKER_IN_A_CELL } = await import("../dist/page-reviews.js");
-const { SOURCE_MARKER_MARKUP } = await import("../dist/change-citation.js");
+const { RECORD_SOURCE_CLASS, SOURCE_MARKER_MARKUP } = await import("../dist/change-citation.js");
 const { ENDED_OFFER_CLAUSE, offerRetired } = await import("../dist/retirement.js");
 const { namedVendorSlug, vendorSlugMap } = await import("../dist/vendor-slug.js");
 const { staticHalfOf } = await import("../dist/compiled-figures.js");
@@ -176,7 +176,7 @@ describe("what a record says about its source, without loading the catalogue", (
       { dateClass: "read-on" },
     );
     assert.match(html, /We read that on <span class="read-on"[^>]*>2026-09-05<\/span> from /);
-    assert.match(html, /<a href="https:\/\/example\.com\/pricing" rel="nofollow noopener">/);
+    assert.match(html, new RegExp(`<a href="https://example\\.com/pricing" rel="nofollow noopener" class="${RECORD_SOURCE_CLASS}">`));
     assert.match(html, /where it says: &ldquo;free forever&rdquo;/);
   });
 
@@ -371,7 +371,12 @@ describe("every comparison page reaches the pages its figures were read from", (
     const record = primaryFor.get("Upstash")!;
     const block = html.slice(html.indexOf("Free Tier Details"));
     const line = block.slice(0, block.indexOf("</div>"));
-    assert.match(line, new RegExp(`<a href="${record.url.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}" rel="nofollow noopener">`));
+    assert.match(
+      line,
+      new RegExp(
+        `<a href="${record.url.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}" rel="nofollow noopener" class="${RECORD_SOURCE_CLASS}">`,
+      ),
+    );
     assert.ok(line.includes(record.source_check!.checked), `the free tier line omits ${record.source_check!.checked}`);
   });
 });

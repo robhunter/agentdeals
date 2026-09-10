@@ -23,15 +23,21 @@ writeFileSync(linkHealthPath, JSON.stringify(linkHealth));
 process.env.AGENTDEALS_LINK_HEALTH_PATH = linkHealthPath;
 
 const {
+  EXCLUSION_RULES,
   README_CATEGORIES,
+  README_SUBTYPES,
+  README_TAXONOMY,
+  excludedByReason,
   generateReadme,
   ratingWord,
   readmeCensus,
   readmeRows,
+  readmeSelection,
   renderRow,
 } = await import("../dist/llm-api-readme.js");
 const { CHANGE_KIND_NOUN } = await import("../dist/vendor-verdict.js");
 const { NOT_FREE_TIER_RULES, TIME_LIMITED_TIER_RULES } = await import("../dist/ranking.js");
+const { SUBTYPE_TAXONOMIES } = await import("../dist/product-role.js");
 const { supersedingChange } = await import("../dist/superseded-description.js");
 import type { DealChange, Offer } from "../src/types.ts";
 
@@ -43,9 +49,21 @@ const catalogueChanges: DealChange[] = JSON.parse(
 const ON = "2026-09-09";
 const CONTEXT = { servedOn: ON, nowMs: Date.parse(`${ON}T00:00:00Z`), staleAfterDays: 70 };
 
-const publishedRecords = catalogue.filter(o => (README_CATEGORIES as readonly string[]).includes(o.category));
-const rows = readmeRows(catalogue, catalogueChanges, CONTEXT);
+const serving = new Set<string>(README_SUBTYPES);
+const drawnFrom = new Set<string>(README_CATEGORIES);
+const labelsOf = (o: Offer) => (o.product_subtypes ? o.product_subtypes.labels.map(l => l.subtype) : null);
+const publishedRecords = catalogue.filter(o => labelsOf(o)?.some(l => serving.has(l)));
+const selection = readmeSelection(catalogue, catalogueChanges, CONTEXT);
+const rows = selection.rows;
 const rendered = generateReadme(catalogue, catalogueChanges, CONTEXT);
+
+function labelled(subtype: string) {
+  return {
+    taxonomy: README_TAXONOMY,
+    labels: [{ subtype, source_url: "https://example.com/docs", source_quote: "serves models behind an API" }],
+    reviewed: "2026-09-01",
+  };
+}
 
 function offer(overrides: Partial<Offer>): Offer {
   return {
@@ -56,6 +74,7 @@ function offer(overrides: Partial<Offer>): Offer {
     url: "https://example.com/pricing",
     tags: ["ai"],
     verifiedDate: "2026-09-01",
+    product_subtypes: labelled("llm_api"),
     ...overrides,
   } as Offer;
 }
@@ -79,12 +98,37 @@ function rowFor(offers: Offer[], changes: DealChange[], vendor: string) {
 }
 
 describe("the generated index publishes one row per catalogue record", () => {
-  it("publishes every record in the published categories and nothing else", () => {
-    assert.equal(rows.length, publishedRecords.length);
-    assert.deepEqual(
-      rows.map(r => `${r.vendor}|${r.tier}`).sort(),
-      publishedRecords.map(o => `${o.vendor}|${o.tier}`).sort(),
+  it("publishes a record labelled with a serving subtype, and no record without one", () => {
+    const published = new Set(rows.map(r => `${r.vendor}|${r.tier}`));
+    const eligible = publishedRecords.map(o => `${o.vendor}|${o.tier}`);
+    const leftOut = new Set(selection.excluded.map(e => `${e.vendor}|${e.tier}`));
+    assert.ok(eligible.length > 0, "the catalogue holds records carrying a serving subtype");
+    for (const key of eligible) {
+      assert.ok(published.has(key) || leftOut.has(key), `${key} is neither published nor accounted for`);
+    }
+    for (const row of rows) {
+      const record = catalogue.find(o => o.vendor === row.vendor && o.tier === row.tier);
+      assert.ok(labelsOf(record!)?.some(l => serving.has(l)), `${row.vendor} is published carrying no serving label`);
+    }
+  });
+
+  it("accounts for every record it drew from and did not publish", () => {
+    const candidates = catalogue.filter(
+      o => drawnFrom.has(o.category) || labelsOf(o)?.some(l => serving.has(l)),
     );
+    assert.equal(rows.length + selection.excluded.length, candidates.length);
+    const published = new Set(rows.map(r => `${r.vendor}|${r.tier}`));
+    for (const left of selection.excluded) {
+      assert.ok(!published.has(`${left.vendor}|${left.tier}`), `${left.vendor} is both published and left out`);
+    }
+  });
+
+  it("selects on subtypes its own taxonomy defines", () => {
+    const known = new Set((SUBTYPE_TAXONOMIES[README_TAXONOMY] ?? []).map((e: { subtype: string }) => e.subtype));
+    assert.ok(known.size > 0, `${README_TAXONOMY} publishes no taxonomy to select on`);
+    for (const subtype of README_SUBTYPES) {
+      assert.ok(known.has(subtype), `${subtype} is not a subtype ${README_TAXONOMY} defines`);
+    }
   });
 
   it("drops no record for having no rating to publish", () => {
@@ -111,11 +155,118 @@ describe("the generated index publishes one row per catalogue record", () => {
     assert.ok(line.includes("Free: 10 GB \\| Pro: 1 TB \\| Business: 20 TB"), line);
   });
 
-  it("names each category with the number of records under it", () => {
-    for (const category of README_CATEGORIES) {
-      const inCategory = rows.filter(r => r.category === category).length;
-      assert.match(rendered, new RegExp(`## ${category.replace("/", "\\/")} — ${inCategory} records`));
+  it("heads the table with the number of records under it", () => {
+    assert.match(rendered, new RegExp(`## The records — ${rows.length}\\n`));
+  });
+});
+
+describe("the file states the rule that decided what is in it", () => {
+  it("publishes the definition of every subtype it selects on", () => {
+    for (const subtype of README_SUBTYPES) {
+      const entry = (SUBTYPE_TAXONOMIES[README_TAXONOMY] ?? []).find(
+        (e: { subtype: string }) => e.subtype === subtype,
+      );
+      assert.ok(rendered.includes(`\`${subtype}\` — ${entry.definition}`), subtype);
     }
+  });
+
+  it("publishes a count and a reason for every record it left out", () => {
+    const counts = excludedByReason(selection.excluded);
+    for (const [reason, rule] of Object.entries(EXCLUSION_RULES)) {
+      assert.ok(rendered.includes(`| \`${reason}\` | ${counts[reason]} | ${rule} |`), reason);
+    }
+    const total = Object.values(counts).reduce((a, b) => a + b, 0);
+    assert.equal(total, selection.excluded.length, "every excluded record is counted under exactly one reason");
+    assert.ok(rendered.includes(`${selection.excluded.length} records there are left out`));
+  });
+
+  it("names the records it left out for what their own reading says", () => {
+    const named = selection.excluded.filter(e => e.reason === "reading_names_no_price_of_nothing");
+    assert.ok(named.length > 0, "the catalogue holds a row whose current reading names no price of nothing");
+    for (const record of named) {
+      assert.ok(rendered.includes(`**${record.vendor}** (tier \`${record.tier}\`)`), record.vendor);
+    }
+  });
+
+  it("leaves a labelled record out for its label rather than for its category", () => {
+    const observability = offer({ vendor: "Watcher", product_subtypes: labelled("llm_observability") });
+    const { rows: built, excluded } = readmeSelection([observability], [], CONTEXT);
+    assert.deepEqual(built.map(r => r.vendor), []);
+    assert.deepEqual(excluded, [{ vendor: "Watcher", tier: "Free", reason: "another_function" }]);
+  });
+
+  it("separates a record read against the taxonomy from one nobody has read", () => {
+    const unread = offer({ vendor: "Unread", product_subtypes: undefined });
+    const readAndUnmatched = offer({
+      vendor: "Unmatched",
+      product_subtypes: { taxonomy: README_TAXONOMY, labels: [], reviewed: "2026-09-01" },
+    });
+    const { excluded } = readmeSelection([unread, readAndUnmatched], [], CONTEXT);
+    assert.deepEqual(
+      excluded.map(e => `${e.vendor}:${e.reason}`),
+      ["Unread:not_read_against_subtypes", "Unmatched:no_subtype_applies"],
+    );
+  });
+
+  it("publishes a serving record whose category is not one it draws from", () => {
+    const elsewhere = offer({ vendor: "Off-Category", category: "Cloud Hosting" });
+    const { rows: built, excluded } = readmeSelection([elsewhere], [], CONTEXT);
+    assert.deepEqual(built.map(r => r.vendor), ["Off-Category"]);
+    assert.deepEqual(excluded, []);
+  });
+
+  it("counts no record it never drew from", () => {
+    const unrelated = offer({ vendor: "Unrelated", category: "Cloud Hosting", product_subtypes: undefined });
+    const { rows: built, excluded } = readmeSelection([unrelated], [], CONTEXT);
+    assert.deepEqual(built, []);
+    assert.deepEqual(excluded, []);
+  });
+});
+
+describe("a row whose current reading names no price of nothing is not published under a free-tier title", () => {
+  const priced = offer({ vendor: "Priced Vendor", tier: "Free Credits" });
+  const priceSheet = change({
+    vendor: "Priced Vendor",
+    change_type: "terms_superseded",
+    date: "2026-08-20",
+    summary: "The free tier was replaced by a per-token price sheet",
+    current_state: "Input $2.00 / 1M tokens, Output $6.00 / 1M tokens",
+    previous_state: priced.description,
+    source_url: "https://example.com/pricing",
+  });
+
+  it("leaves out a row whose newest reading is a price sheet", () => {
+    const { rows: built, excluded } = readmeSelection([priced], [priceSheet], CONTEXT);
+    assert.deepEqual(built, []);
+    assert.deepEqual(excluded, [
+      { vendor: "Priced Vendor", tier: "Free Credits", reason: "reading_names_no_price_of_nothing" },
+    ]);
+  });
+
+  it("keeps a row whose newest reading states a price of nothing", () => {
+    const stillFree = { ...priceSheet, current_state: "Free plan: 1,000 requests/month, then $2.00 / 1M tokens" };
+    const { rows: built, excluded } = readmeSelection([priced], [stillFree], CONTEXT);
+    assert.deepEqual(built.map(r => r.vendor), ["Priced Vendor"]);
+    assert.deepEqual(excluded, []);
+  });
+
+  it("reads a recurring credit as a price of nothing rather than as a price sheet", () => {
+    const credits = { ...priceSheet, current_state: "Starter Free $20 credits on sign-up with $10 credits every month" };
+    const { rows: built } = readmeSelection([priced], [credits], CONTEXT);
+    assert.deepEqual(built.map(r => r.vendor), ["Priced Vendor"]);
+  });
+
+  it("reads a fraction of a cent as a price rather than as nothing", () => {
+    const fractions = { ...priceSheet, current_state: "input token prices range from $0.007 to $0.44 per 1M tokens" };
+    const { rows: built } = readmeSelection([priced], [fractions], CONTEXT);
+    assert.deepEqual(built, []);
+  });
+
+  it("keeps a row whose terms are our own record rather than a newer reading", () => {
+    const ours = offer({ vendor: "Our Record", description: "1,000 requests/month and one seat" });
+    const { rows: built, excluded } = readmeSelection([ours], [], CONTEXT);
+    assert.deepEqual(built.map(r => r.vendor), ["Our Record"]);
+    assert.deepEqual(excluded, []);
   });
 });
 
@@ -236,7 +387,9 @@ describe("a row we cannot vouch for says so in the row", () => {
 describe("a record whose terms were superseded shows what they replaced", () => {
   it("shows the prior terms and the date they stopped being current", () => {
     const superseded = rows.filter(r => r.prior !== null);
+    const behindARow = new Set(rows.map(r => `${r.vendor}|${r.tier}`));
     const expected = publishedRecords.filter(o => {
+      if (!behindARow.has(`${o.vendor}|${o.tier}`)) return false;
       const forVendor = catalogueChanges.filter(c => c.vendor.toLowerCase() === o.vendor.toLowerCase());
       const superseding = supersedingChange(o, forVendor);
       return Boolean(superseding && (superseding.previous_state ?? "").trim());

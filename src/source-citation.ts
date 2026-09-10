@@ -59,7 +59,7 @@ export function readClauseHtml(
   const linkText = options.linkText ?? ((url: string) => url);
   const provenance = sources
     .map(source => {
-      const link = `<a href="${esc(source.url)}" rel="${rel}">${esc(linkText(source.url))}</a>`;
+      const link = `<a href="${esc(source.url)}" rel="${rel}" class="${RECORD_SOURCE_CLASS}">${esc(linkText(source.url))}</a>`;
       return `${link}${attributionHtml(source, esc)}`;
     })
     .join(" and from ");

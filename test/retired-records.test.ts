@@ -8,6 +8,7 @@ import { fileURLToPath } from "node:url";
 
 const { offerRetired, recordedTierSentence } = await import("../dist/retirement.js");
 const { gateFor, utcDate } = await import("../dist/ranking.js");
+const { CITATION_CLASSES } = await import("../dist/change-citation.js");
 
 type Offer = import("../src/types.ts").Offer;
 
@@ -89,19 +90,21 @@ function renderedOffer(html: string): Offer | undefined {
   return offers.find(o => o.vendor === vendor && o.tier === tier);
 }
 
-const CITATION_CLASS = "change-source";
-
 function openingTagsFor(html: string, url: string): string[] {
   const pattern = new RegExp(`<a [^>]*href="${url.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}"[^>]*>`, "g");
   return [...html.matchAll(pattern)].map(m => m[0]);
 }
 
+function marksACitation(tag: string): boolean {
+  return CITATION_CLASSES.some((name: string) => tag.includes(`class="${name}"`));
+}
+
 function anchorsTo(html: string, url: string): number {
-  return openingTagsFor(html, url).filter(tag => !tag.includes(`class="${CITATION_CLASS}"`)).length;
+  return openingTagsFor(html, url).filter(tag => !marksACitation(tag)).length;
 }
 
 function citationsTo(html: string, url: string): number {
-  return openingTagsFor(html, url).filter(tag => tag.includes(`class="${CITATION_CLASS}"`)).length;
+  return openingTagsFor(html, url).filter(marksACitation).length;
 }
 
 const changes: Array<{ source_url?: string }> = JSON.parse(readFileSync(path.join(REPO, "data", "deal_changes.json"), "utf-8")).changes;
