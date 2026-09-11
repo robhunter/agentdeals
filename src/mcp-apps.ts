@@ -305,6 +305,7 @@ function render(args, data) {
     ["Free Tier", vendorA.description || vendorA.free_tier, vendorB.description || vendorB.free_tier],
     ["Stability", vendorA.stability, vendorB.stability],
     ["Verified", vendorA.verifiedDate || vendorA.verified_date, vendorB.verifiedDate || vendorB.verified_date],
+    ["Last read", vendorA.last_read_date, vendorB.last_read_date],
   ].filter(f => f[1] || f[2]);
 
   const slug = (n) => (n || "").toLowerCase().replace(/[^a-z0-9]+/g, "-");

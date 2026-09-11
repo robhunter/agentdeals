@@ -24,6 +24,7 @@ import { LINK_GRACE_DAYS, unreachableNoticeForUrl } from "./link-health.js";
 import { offerEnded, offerRetired, recordedTierSentence, endedHeadline, endedHistorySentence, endedReliabilitySentence, endedEmptyChangeHistorySentence, ENDED_BADGE_LABEL, ENDED_SINCE_CHANGES_SENTENCE, type OfferTierAndUrl } from "./retirement.js";
 import { amountUnstatedSentence, LAST_RESOLVED, levelWithheldReason, levelWithheldSince, withheldLevelClause, withheldLevelSentence, type LevelWithheldReason } from "./source-check.js";
 import { readingIsBehindTheLoop, reverificationIntervalDays } from "./badge-staleness.js";
+import { LAST_READ_LABEL, VERIFICATION_DATES_HEADING, lastReadDate, lastReadNote, verificationDatesCell, verificationDatesSentence } from "./read-date.js";
 import { SUPERSEDED_TERMS_LABEL, readingBehindTheChange, supersededTermsAnswer, supersededTermsMetaSentence, supersededTermsNotice, supersededTermsNoticeHtml, supersededTermsRecord, supersededTermsVerdictSentence, supersedingChange, type SupersededTermsRecord } from "./superseded-description.js";
 import { openingOfTerms, punctuated, punctuatedOpeningOfTerms } from "./terms-opening.js";
 import { NO_CURRENT_FIGURE, costHeadlineCaveat, limitCellText, mayRecommendAsFree, proseWithoutNames, readsActive, stackFreshnessStatement } from "./stack-claim.js";
@@ -1816,7 +1817,7 @@ function buildCategoryPage(slug: string): string | null {
           <td style="font-weight:600;color:var(--text);white-space:nowrap"><a href="/vendor/${toSlug(o.vendor)}" style="color:var(--text)">${escHtmlServer(o.vendor)}</a></td>
           <td style="font-family:var(--mono);color:var(--accent);white-space:nowrap">${escHtmlServer(o.tier)}</td>
           <td style="color:var(--text-muted)">${publishedTermsHtml(o)}${listingEligibilityNoticeHtml(o)}${listingUnreachableNoticeHtml(o)}</td>
-          <td style="font-family:var(--mono);color:var(--text-dim);white-space:nowrap">${escHtmlServer(o.verifiedDate)}</td>
+          <td style="font-family:var(--mono);color:var(--text-dim);white-space:nowrap">${escHtmlServer(verificationDatesCell(o))}</td>
         </tr>`).join("\n");
 
   const sortedCats = categories.map(c => c.name).sort();
@@ -2060,7 +2061,7 @@ ${mcpCtaCss()}
         <th>Vendor</th>
         <th>Tier</th>
         <th>Description</th>
-        <th>Verified</th>
+        <th>${VERIFICATION_DATES_HEADING}</th>
       </tr>
     </thead>
     <tbody>
@@ -2454,7 +2455,7 @@ ${cards}`;
           <td style="font-family:var(--mono);color:var(--accent)">${escHtmlServer(o.tier)}</td>
           <td style="color:var(--text-muted);max-width:300px">${escHtmlServer(publishedTermsSummary(o, 120))}</td>
           <td>${riskCellHtml(o.risk_level, o.risk_cause)}</td>
-          <td style="font-family:var(--mono);color:var(--text-dim)">${escHtmlServer(o.verifiedDate)}</td>
+          <td style="font-family:var(--mono);color:var(--text-dim)">${escHtmlServer(verificationDatesCell(o))}</td>
         </tr>`;
   }).join("\n");
 
@@ -2609,7 +2610,7 @@ ${renderAuditBlock(tie)}
         <th>Free Tier</th>
         <th>Key Limits</th>
         <th>Stability</th>
-        <th>Verified</th>
+        <th>${VERIFICATION_DATES_HEADING}</th>
       </tr>
     </thead>
     <tbody>
@@ -3380,6 +3381,7 @@ ${verdictHtml}
       <div class="detail-row"><span class="detail-label">Category</span><span class="detail-value">${escHtmlServer(a.category)}</span></div>
       <div class="detail-row"><span class="detail-label">Tier</span><span class="detail-value" style="color:var(--accent)">${escHtmlServer(a.tier)}</span></div>
       <div class="detail-row"><span class="detail-label">Verified</span><span class="detail-value">${escHtmlServer(a.verifiedDate)}</span></div>
+      <div class="detail-row"><span class="detail-label">${LAST_READ_LABEL}</span><span class="detail-value">${escHtmlServer(lastReadDate(a))}</span></div>
       <div class="detail-row"><span class="detail-label">Changes</span><span class="detail-value">${a.deal_changes.length} recorded</span></div>
       ${descBlockHtml(a.vendor, a.description, supersededA)}
       ${a.referral ? `<div style="margin-top:.75rem;padding:.5rem .75rem;border:1px solid #3fb95040;border-left:3px solid #3fb950;border-radius:0 6px 6px 0;background:#3fb95010;font-size:.8rem">\ud83d\udd17 <a href="${escHtmlServer(a.referral.url)}" rel="noopener sponsored" target="_blank">Referral link</a>: ${escHtmlServer(a.referral.referee_value ?? "Save with our referral link")} <a href="/disclosure" style="font-size:.7rem;color:var(--text-dim)">(disclosure)</a></div>` : ""}
@@ -3389,6 +3391,7 @@ ${verdictHtml}
       <div class="detail-row"><span class="detail-label">Category</span><span class="detail-value">${escHtmlServer(b.category)}</span></div>
       <div class="detail-row"><span class="detail-label">Tier</span><span class="detail-value" style="color:var(--accent)">${escHtmlServer(b.tier)}</span></div>
       <div class="detail-row"><span class="detail-label">Verified</span><span class="detail-value">${escHtmlServer(b.verifiedDate)}</span></div>
+      <div class="detail-row"><span class="detail-label">${LAST_READ_LABEL}</span><span class="detail-value">${escHtmlServer(lastReadDate(b))}</span></div>
       <div class="detail-row"><span class="detail-label">Changes</span><span class="detail-value">${b.deal_changes.length} recorded</span></div>
       ${descBlockHtml(b.vendor, b.description, supersededB)}
       ${b.referral ? `<div style="margin-top:.75rem;padding:.5rem .75rem;border:1px solid #3fb95040;border-left:3px solid #3fb950;border-radius:0 6px 6px 0;background:#3fb95010;font-size:.8rem">\ud83d\udd17 <a href="${escHtmlServer(b.referral.url)}" rel="noopener sponsored" target="_blank">Referral link</a>: ${escHtmlServer(b.referral.referee_value ?? "Save with our referral link")} <a href="/disclosure" style="font-size:.7rem;color:var(--text-dim)">(disclosure)</a></div>` : ""}
@@ -3851,6 +3854,7 @@ ${globalNavCss()}
       <div class="detail-row"><span class="detail-label">Category</span><span class="detail-value">${escHtmlServer(a.category)}</span></div>
       <div class="detail-row"><span class="detail-label">Tier</span><span class="detail-value" style="color:var(--accent)">${escHtmlServer(a.tier)}</span></div>
       <div class="detail-row"><span class="detail-label">Verified</span><span class="detail-value">${escHtmlServer(a.verifiedDate)}</span></div>
+      <div class="detail-row"><span class="detail-label">${LAST_READ_LABEL}</span><span class="detail-value">${escHtmlServer(lastReadDate(a))}</span></div>
       <div class="detail-row"><span class="detail-label">Stability</span><span class="detail-value">${escHtmlServer(riskA.stability ?? "stable")}</span></div>
       <div class="detail-row"><span class="detail-label">Changes</span><span class="detail-value">${a.deal_changes.length} recorded</span></div>
       <div class="desc-block">${publishedTermsHtml(a)}</div>
@@ -3860,6 +3864,7 @@ ${globalNavCss()}
       <div class="detail-row"><span class="detail-label">Category</span><span class="detail-value">${escHtmlServer(b.category)}</span></div>
       <div class="detail-row"><span class="detail-label">Tier</span><span class="detail-value" style="color:var(--accent)">${escHtmlServer(b.tier)}</span></div>
       <div class="detail-row"><span class="detail-label">Verified</span><span class="detail-value">${escHtmlServer(b.verifiedDate)}</span></div>
+      <div class="detail-row"><span class="detail-label">${LAST_READ_LABEL}</span><span class="detail-value">${escHtmlServer(lastReadDate(b))}</span></div>
       <div class="detail-row"><span class="detail-label">Stability</span><span class="detail-value">${escHtmlServer(riskB.stability ?? "stable")}</span></div>
       <div class="detail-row"><span class="detail-label">Changes</span><span class="detail-value">${b.deal_changes.length} recorded</span></div>
       <div class="desc-block">${publishedTermsHtml(b)}</div>
@@ -4996,7 +5001,8 @@ ${allCompareLinks.join("\n")}
   </div>` : "";
 
   const lastPricingChange = latestEventDate(vendorChanges);
-  const lastUpdated = lastPricingChange && lastPricingChange > primary.verifiedDate ? lastPricingChange : primary.verifiedDate;
+  const primaryLastRead = lastReadDate(primary);
+  const lastUpdated = lastPricingChange && lastPricingChange > primaryLastRead ? lastPricingChange : primaryLastRead;
   const offerExpiry = offerExpiryAfter(vendorChanges, servedOn);
 
   const watchlistSnippet = `curl -X POST ${BASE_URL}/api/watchlist \\
@@ -5196,6 +5202,7 @@ h1 .risk-badge{font-size:.75rem;font-weight:600;padding:.2rem .6rem;border-radiu
 .detail-card{border:1px solid var(--border);border-radius:12px;padding:1rem 1.25rem;background:var(--bg-card);backdrop-filter:blur(10px)}
 .detail-label{font-family:var(--mono);font-size:.7rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:.1em;margin-bottom:.25rem}
 .detail-value{font-size:.95rem;color:var(--text)}
+.detail-note{font-size:.75rem;color:var(--text-dim);margin-top:.35rem;line-height:1.4}
 .desc-block{margin-bottom:2rem;padding:1rem 1.25rem;background:var(--bg-elevated);border-radius:12px;border-left:3px solid var(--accent)}
 .desc-block h2{font-family:var(--serif);font-size:1.15rem;margin-bottom:.5rem}
 .desc-text{font-size:.9rem;color:var(--text-muted);line-height:1.7}
@@ -5285,6 +5292,11 @@ ${referralCalloutHtml}
     `}<div class="detail-card">
       <div class="detail-label">${discontinuedOn ? "Discontinued" : linkUnreachable ? "Link last reachable" : "Verified"}</div>
       <div class="detail-value" style="font-family:var(--mono)">${escHtmlServer(discontinuedOn ?? (linkUnreachable ? (linkUnreachable.last_reachable ?? "no reachable date on record") : primary.verifiedDate))}</div>
+    </div>
+    <div class="detail-card">
+      <div class="detail-label">${LAST_READ_LABEL}</div>
+      <div class="detail-value" style="font-family:var(--mono)">${escHtmlServer(primaryLastRead)}</div>
+      <div class="detail-note">${escHtmlServer(lastReadNote(primary))}</div>
     </div>
   </div>
 
@@ -5468,7 +5480,7 @@ function buildAlternativesPage(slug: string): string | null {
         <div class="alt-tier">${escHtmlServer(a.tier)}</div>
         <div class="alt-meta">
           <span class="alt-category">${escHtmlServer(a.category)}</span>
-          <span class="alt-date">${a.link_unreachable ? `Link unreachable${a.link_unreachable.last_reachable ? ` since ${escHtmlServer(a.link_unreachable.last_reachable)}` : ""}` : `Verified ${a.verifiedDate}`}</span>
+          <span class="alt-date">${a.link_unreachable ? `Link unreachable${a.link_unreachable.last_reachable ? ` since ${escHtmlServer(a.link_unreachable.last_reachable)}` : ""}` : escHtmlServer(verificationDatesSentence(a))}</span>
         </div>
         <div class="alt-actions">
           <a href="/vendor/${aSlug}" class="action-link">Profile</a>
@@ -8962,12 +8974,12 @@ function buildEventPage(slug: string): string | null {
         + '<td>' + escHtmlServer(o.tier) + '</td>'
         + '<td>' + escHtmlServer(publishedTermsSummary(o, 100)) + '</td>'
         + '<td>' + riskCellHtml(o.risk_level, o.risk_cause) + '</td>'
-        + '<td>' + o.verifiedDate + '</td>'
+        + '<td>' + escHtmlServer(verificationDatesCell(o)) + '</td>'
         + '</tr>';
     }).join("\n");
     return '<div class="cat-group">'
       + '<h3><a href="/category/' + toSlug(cat) + '">' + escHtmlServer(cat) + '</a> <span class="cat-count">(' + catOffers.length + ')</span></h3>'
-      + '<table class="offers-table"><thead><tr><th>Vendor</th><th>Tier</th><th>Description</th><th>Status</th><th>Verified</th></tr></thead><tbody>'
+      + '<table class="offers-table"><thead><tr><th>Vendor</th><th>Tier</th><th>Description</th><th>Status</th><th>' + VERIFICATION_DATES_HEADING + '</th></tr></thead><tbody>'
       + rows
       + '</tbody></table></div>';
   }).join("\n");
@@ -21758,7 +21770,7 @@ ${mcpCtaCss()}
 
   <table class="pricing-table">
     <thead>
-      <tr><th>Platform</th><th>Free Tier</th><th>Category</th><th>Verified</th></tr>
+      <tr><th>Platform</th><th>Free Tier</th><th>Category</th><th>${VERIFICATION_DATES_HEADING}</th></tr>
     </thead>
     <tbody>
       ${altOffers.map(o => {
@@ -21767,7 +21779,7 @@ ${mcpCtaCss()}
         <td style="font-weight:600"><a href="/vendor/${vendorSlug}" style="color:var(--text)">${escHtmlServer(o.vendor)}</a></td>
         <td style="font-family:var(--mono);color:var(--accent);font-size:.85rem">${escHtmlServer(o.tier)}</td>
         <td style="color:var(--text-muted);font-size:.85rem">${escHtmlServer(o.category)}</td>
-        <td style="color:var(--text-dim);font-size:.8rem">${escHtmlServer(o.verifiedDate ?? "—")}</td>
+        <td style="color:var(--text-dim);font-size:.8rem">${escHtmlServer(verificationDatesCell(o))}</td>
       </tr>`;
       }).join("\n      ")}
     </tbody>
@@ -48033,7 +48045,7 @@ ${globalNavCss()}
     html += '<h3><a href="/vendor/' + slug + '">' + escHtml(v.vendor) + '</a></h3>';
     html += '<span class="badge badge-category">' + escHtml(v.category) + '</span> ' + riskBadge(risk, riskCause);
     html += '<div class="vendor-desc">' + escHtml(v.terms_superseded ? v.terms_superseded.notice : v.description) + '</div>';
-    html += '<div class="vendor-meta">Tier: ' + escHtml(v.tier) + ' &middot; Verified: ' + escHtml(v.verifiedDate || v.verified_date || '') + '</div>';
+    html += '<div class="vendor-meta">Tier: ' + escHtml(v.tier) + ' &middot; Read: ' + escHtml(v.last_read_date || '') + ' &middot; Verified: ' + escHtml(v.verifiedDate || v.verified_date || '') + '</div>';
     html += '<div class="vendor-links">';
     html += '<a href="/vendor/' + slug + '">Details</a>';
     html += '<a href="/alternative-to/' + slug + '">Alternatives</a>';
@@ -50664,6 +50676,8 @@ function buildFreshnessPage(): string {
           <td>${escHtmlServer(e.category)}</td>
           <td class="stale-date">${e.verifiedDate}</td>
           <td class="stale-days">${e.days_since_verified}d ago</td>
+          <td class="stale-date">${e.last_read_date}</td>
+          <td class="stale-days">${e.days_since_read}d ago</td>
         </tr>`
   ).join("\n");
 
@@ -50712,6 +50726,8 @@ ${quarantineRows}
           <td>${escHtmlServer(e.category)}</td>
           <td>${e.verifiedDate}</td>
           <td>${e.days_since_verified}d ago</td>
+          <td>${e.last_read_date}</td>
+          <td>${e.days_since_read}d ago</td>
         </tr>`
   ).join("\n");
 
@@ -50822,7 +50838,7 @@ ${categoryRows}
   <h2>Stalest Entries</h2>
   <p class="section-desc">Top 20 entries most in need of re-verification.</p>
   <table>
-    <thead><tr><th>Vendor</th><th>Category</th><th>Verified</th><th>Age</th></tr></thead>
+    <thead><tr><th>Vendor</th><th>Category</th><th>Verified</th><th>Age</th><th>Last read</th><th>Since read</th></tr></thead>
     <tbody>
 ${stalestRows}
     </tbody>
@@ -50833,7 +50849,7 @@ ${quarantineSection}  <h2>Recently Verified</h2>
   <button class="toggle-btn" onclick="document.getElementById('freshest-table').classList.toggle('show');this.textContent=this.textContent==='Show recently verified'?'Hide recently verified':'Show recently verified'">Show recently verified</button>
   <div id="freshest-table" class="hidden-section">
     <table>
-      <thead><tr><th>Vendor</th><th>Category</th><th>Verified</th><th>Age</th></tr></thead>
+      <thead><tr><th>Vendor</th><th>Category</th><th>Verified</th><th>Age</th><th>Last read</th><th>Since read</th></tr></thead>
       <tbody>
 ${freshestRows}
       </tbody>
@@ -52170,7 +52186,7 @@ function buildSearchPage(query: string, categoryFilter: string, typeFilter: stri
       + '</div>'
       + '<div class="result-tier">' + escHtmlServer(r.tier) + '</div>'
       + '<div class="result-desc">' + escHtmlServer(publishedTermsSummary(r, 120)) + '</div>'
-      + '<div class="result-meta">Verified ' + r.verifiedDate
+      + '<div class="result-meta">' + escHtmlServer(verificationDatesSentence(r))
       + (r.recent_change ? ' &middot; <span style="color:#d29922">' + escHtmlServer(r.recent_change) + '</span>' : '')
       + (r.expires_soon ? ' &middot; <span style="color:#f85149">' + escHtmlServer(r.expires_soon) + '</span>' : '')
       + '</div></a>';
@@ -54502,6 +54518,7 @@ const httpServer = createHttpServer(async (req, res) => {
         url: o.url,
         tags: o.tags,
         verifiedDate: o.verifiedDate,
+        last_read_date: lastReadDate(o),
         vendor_page: "/vendor/" + o.vendor.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/-+$/, ""),
       };
     }).filter(t => !categoryFilter || !validCategories.includes(categoryFilter) || t.category === categoryFilter);
@@ -54536,6 +54553,7 @@ const httpServer = createHttpServer(async (req, res) => {
         url: o.url,
         tags: o.tags,
         verifiedDate: o.verifiedDate,
+        last_read_date: lastReadDate(o),
         vendor_page: "/vendor/" + o.vendor.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/-+$/, ""),
         has_referral: !!(o.referral_program?.available),
       };
@@ -54571,6 +54589,7 @@ const httpServer = createHttpServer(async (req, res) => {
         url: o.url,
         tags: o.tags,
         verifiedDate: o.verifiedDate,
+        last_read_date: lastReadDate(o),
         vendor_page: "/vendor/" + o.vendor.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/-+$/, ""),
       };
     }).filter(t => !llmTypeFilter || !validLlmTypes.includes(llmTypeFilter) || t.category === llmTypeFilter);
@@ -54608,6 +54627,7 @@ const httpServer = createHttpServer(async (req, res) => {
         url: o.url,
         tags: o.tags,
         verifiedDate: o.verifiedDate,
+        last_read_date: lastReadDate(o),
         vendor_page: "/vendor/" + o.vendor.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/-+$/, ""),
       };
     }).filter(t => !startupTypeFilter || !validStartupTypes.includes(startupTypeFilter) || t.category === startupTypeFilter);

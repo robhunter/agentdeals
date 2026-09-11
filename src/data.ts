@@ -9,6 +9,7 @@ import { applyReviewedDirections } from "./change-direction-review.js";
 import { rankForListing, gateFor, utcDate, type TieBreak, type Gate, type GateCode } from "./ranking.js";
 import { unreachableNoticeForUrl, resetLinkHealthCache } from "./link-health.js";
 import { quarantineSummary, resetVerificationStateCache, type QuarantineSummary } from "./verification-state.js";
+import { daysSince, lastReadDate } from "./read-date.js";
 import {
   amountUnstatedSentence,
   cannotVouchForLevel,
@@ -475,9 +476,12 @@ export function enrichOffers(offers: Offer[]): EnrichedOffer[] {
       (now.getTime() - new Date(offer.verifiedDate).getTime()) / (24 * 60 * 60 * 1000)
     );
 
+    const last_read_date = lastReadDate(offer);
+    const days_since_read = daysSince(last_read_date, now);
+
     const terms_superseded = supersededTermsRecordFor(offer, vendorAllChangesList.get(key) ?? []);
 
-    const enriched = { ...offer, recent_change, expires_soon, risk_level, risk_cause, rating_withheld, stability, days_since_verified, link_unreachable, gate, terms_superseded };
+    const enriched = { ...offer, recent_change, expires_soon, risk_level, risk_cause, rating_withheld, stability, days_since_verified, last_read_date, days_since_read, link_unreachable, gate, terms_superseded };
     return stripReferrerValue(enriched);
   });
 }
@@ -754,6 +758,8 @@ export interface VendorRiskResult {
   vendor: string;
   vendor_match: VendorMatchNotice;
   category: string;
+  verified_date: string;
+  last_read_date: string;
   risk_level: "stable" | "caution" | "risky" | null;
   risk_cause: RiskCause | null;
   rating_withheld: RatingWithheld | null;
@@ -1039,6 +1045,8 @@ export function checkVendorRisk(
       vendor: offer.vendor,
       vendor_match: matchNotice,
       category: offer.category,
+      verified_date: offer.verifiedDate,
+      last_read_date: lastReadDate(offer),
       risk_level: published.risk_level,
       risk_cause: riskCauseOf(cause),
       rating_withheld: published.rating_withheld,
@@ -1228,8 +1236,8 @@ export function compareServices(
 
   return {
     comparison: {
-      vendor_a: stripReferrerValue({ ...offerA, deal_changes: changesA }),
-      vendor_b: stripReferrerValue({ ...offerB, deal_changes: changesB }),
+      vendor_a: stripReferrerValue({ ...offerA, last_read_date: lastReadDate(offerA), deal_changes: changesA }),
+      vendor_b: stripReferrerValue({ ...offerB, last_read_date: lastReadDate(offerB), deal_changes: changesB }),
       vendor_a_match: vendorMatchNotice(vendorA, matchA)!,
       vendor_b_match: vendorMatchNotice(vendorB, matchB)!,
       shared_categories: sharedCategories,
@@ -1290,6 +1298,16 @@ export function getExpiringDeals(withinDays: number = 30): { deals: Array<Offer 
   return { deals: expiring, total: expiring.length };
 }
 
+export interface FreshnessEntry {
+  vendor: string;
+  category: string;
+  verifiedDate: string;
+  last_read_date: string;
+  url: string;
+  days_since_verified: number;
+  days_since_read: number;
+}
+
 export interface FreshnessMetrics {
   total_offers: number;
   verified_within_7_days: number;
@@ -1297,8 +1315,8 @@ export interface FreshnessMetrics {
   verified_within_90_days: number;
   verified_within_180_days: number;
   freshness_score: number;
-  stalest_entries: Array<{ vendor: string; category: string; verifiedDate: string; url: string; days_since_verified: number }>;
-  freshest_entries: Array<{ vendor: string; category: string; verifiedDate: string; url: string; days_since_verified: number }>;
+  stalest_entries: FreshnessEntry[];
+  freshest_entries: FreshnessEntry[];
   by_category: Array<{ category: string; count: number; avg_days_since_verified: number; freshness_score: number }>;
   quarantine: QuarantineSummary;
 }
@@ -1323,12 +1341,15 @@ export function getFreshnessMetrics(): FreshnessMetrics {
   const freshnessScore = total > 0 ? Math.round((within90 / total) * 100) : 0;
 
   const sorted = [...withAge].sort((a, b) => b.days_since_verified - a.days_since_verified);
-  const stalest = sorted.slice(0, 20).map((o) => ({
-    vendor: o.vendor, category: o.category, verifiedDate: o.verifiedDate, url: o.url, days_since_verified: o.days_since_verified,
-  }));
-  const freshest = sorted.slice(-20).reverse().map((o) => ({
-    vendor: o.vendor, category: o.category, verifiedDate: o.verifiedDate, url: o.url, days_since_verified: o.days_since_verified,
-  }));
+  const entryOf = (o: (typeof withAge)[number]): FreshnessEntry => {
+    const last_read_date = lastReadDate(o);
+    return {
+      vendor: o.vendor, category: o.category, verifiedDate: o.verifiedDate, last_read_date, url: o.url,
+      days_since_verified: o.days_since_verified, days_since_read: daysSince(last_read_date, now),
+    };
+  };
+  const stalest = sorted.slice(0, 20).map(entryOf);
+  const freshest = sorted.slice(-20).reverse().map(entryOf);
 
   const catMap = new Map<string, { count: number; totalDays: number; within90: number }>();
   for (const o of withAge) {

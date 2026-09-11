@@ -126,6 +126,7 @@ export function emptyRecord(vendor, url) {
     failure_category: null,
     consecutive_failures: 0,
     last_success: null,
+    last_read_at: null,
     quarantined_since: null,
   };
 }
@@ -144,6 +145,7 @@ export function applyAttempt(previous, attempt) {
     failure_category: answered ? null : (attempt.category ?? null),
     consecutive_failures: failures,
     last_success: attempt.outcome === ATTEMPT_CONFIRMED ? attempt.date : (base.last_success ?? null),
+    last_read_at: answered ? attempt.date : (base.last_read_at ?? null),
     quarantined_since: quarantined ? (base.quarantined_since ?? attempt.date) : null,
   };
 }
@@ -326,6 +328,7 @@ export function backfillVerificationState(state, offers, options = {}) {
       failure_category: backfillCategory(offer, link),
       consecutive_failures: failures,
       last_success: offer.verifiedDate ?? null,
+      last_read_at: offer.verifiedDate ?? null,
       quarantined_since: failures >= QUARANTINE_AFTER_FAILURES ? (check.checked ?? null) : null,
     };
     state.set(key, record);

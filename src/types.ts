@@ -145,6 +145,8 @@ export interface EnrichedOffer extends Offer {
   rating_withheld: RatingWithheld | null;
   stability: StabilityClass | null;
   days_since_verified: number;
+  last_read_date: string;
+  days_since_read: number;
   link_unreachable: LinkUnreachable | null;
   gate: import("./ranking.js").Gate | null;
   terms_superseded: import("./superseded-description.js").SupersededTermsRecord | null;

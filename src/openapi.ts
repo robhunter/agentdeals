@@ -528,8 +528,10 @@ const DOCUMENTED_OPERATIONS: Record<string, Record<string, any>> = {
                         vendor: { type: "string" },
                         category: { type: "string" },
                         verifiedDate: { type: "string", format: "date" },
+                        last_read_date: { type: "string", format: "date" },
                         url: { type: "string", format: "uri" },
-                        days_since_verified: { type: "integer" }
+                        days_since_verified: { type: "integer" },
+                        days_since_read: { type: "integer" }
                       }
                     }
                   },
@@ -541,8 +543,10 @@ const DOCUMENTED_OPERATIONS: Record<string, Record<string, any>> = {
                         vendor: { type: "string" },
                         category: { type: "string" },
                         verifiedDate: { type: "string", format: "date" },
+                        last_read_date: { type: "string", format: "date" },
                         url: { type: "string", format: "uri" },
-                        days_since_verified: { type: "integer" }
+                        days_since_verified: { type: "integer" },
+                        days_since_read: { type: "integer" }
                       }
                     }
                   },
@@ -687,6 +691,7 @@ const DOCUMENTED_OPERATIONS: Record<string, Record<string, any>> = {
                               description: { type: "string" },
                               url: { type: "string", format: "uri" },
                               verified_date: { type: "string", format: "date" },
+                              last_read_date: { type: "string", format: "date", description: "The day we last read this vendor's page, whatever that read concluded. verified_date is the day we last confirmed the terms we publish, so this is the later of the two whenever a read found something we had not recorded." },
                               risk_level: { type: "string", enum: ["stable", "caution", "risky"], nullable: true, description: "The same level /api/offers publishes for this record, from the same function (#1486). Null where we withhold it rather than publish a favourable one we cannot stand behind. A null always arrives with the field naming the rule that withheld it, and with level_withheld_because." },
                               rating_withheld: { type: "object", nullable: true, description: "Non-null where every record that would have set a non-stable risk_level carries an empty source_url (#1352). The level is withheld rather than reported as stable.", properties: { reason: { type: "string", enum: ["no_source"] }, records: { type: "number" } } },
                               gate: { type: "object", nullable: true, description: "Non-null for an offer we have decided not to list (#1241). A candidate set is drawn from ungated offers, so this is null in practice and is carried because the level's rules are one set." },
@@ -1498,7 +1503,8 @@ export const openapiSpec = {
           tier: { type: "string", description: "Tier name (e.g. Free, Free Credits, Open Source)" },
           url: { type: "string", format: "uri", description: "Pricing/offer page URL" },
           tags: { type: "array", items: { type: "string" }, description: "Searchable tags" },
-          verifiedDate: { type: "string", format: "date", description: "Date the offer was last verified (YYYY-MM-DD)" },
+          verifiedDate: { type: "string", format: "date", description: "The day we last read the page and confirmed the terms this record publishes (YYYY-MM-DD). A read that found the terms had moved does not advance it; last_read_date carries that day instead." },
+          last_read_date: { type: "string", format: "date", description: "The day we last read the vendor's page, whatever the read concluded (YYYY-MM-DD). Never earlier than verifiedDate, and later than it wherever a read has succeeded since the last confirmation. A read that failed — the page did not resolve, or did not name the vendor or product — does not advance it." },
           eligibility: { $ref: "#/components/schemas/Eligibility" },
           gate: { $ref: "#/components/schemas/Gate" },
           risk_level: { type: "string", enum: ["stable", "caution", "risky"], nullable: true, description: "Our published pricing-risk verdict, or null where a rule withholds it: gate is non-null (#1241, #1260), rating_withheld is non-null (#1352), or the page we cite could not confirm the record — link_unreachable, or a source_check outcome of does_not_name_vendor, does_not_name_product, states_no_terms or unreadable (#1046, #1500). One function applies all three rules and every surface that publishes a level calls it, so /api/audit-stack, /api/stack, /stack-check and MCP plan_stack answer the same as this field for the same record on the same day (#1486)." },
