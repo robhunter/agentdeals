@@ -99,12 +99,28 @@
       "finding": "\"1/4 compute unit (0.5 GiB RAM)\" -> \"1/4 compute unit (1/2 GiB RAM, 1/16 vCPU)\""
     },
     {
+      "vendor": "geocodify.com",
+      "change_type": "pricing_restructured",
+      "date": "2026-09-01",
+      "source_url": "https://geocodify.com/",
+      "tier_direction": "widened",
+      "finding": "the reading says \"30,000 Calls/month\" against the stored 10k free queries/month, and the summary's own words are \"The free tier now has 30,000 calls/month\""
+    },
+    {
       "vendor": "GitHub Actions",
       "change_type": "pricing_restructured",
       "date": "2026-09-02",
       "source_url": "https://docs.github.com/en/billing/managing-billing-for-github-actions/about-billing-for-github-actions",
       "tier_direction": "unchanged",
       "finding": "restates the standing 2,000 minutes, 500 MB and 10 GB limits"
+    },
+    {
+      "vendor": "Grafana Cloud",
+      "change_type": "pricing_restructured",
+      "date": "2026-09-02",
+      "source_url": "https://grafana.com/pricing/",
+      "tier_direction": "unchanged",
+      "finding": "every figure the stored terms state is repeated in the reading — \"10k metric series, 50 GB logs, and 50 GB traces are included\", 14-day retention; the $19/month platform fee it adds buys 30-day retention, which the free tier never had"
     },
     {
       "vendor": "Grapedrop",
@@ -145,6 +161,14 @@
       "source_url": "https://www.testmuai.com/pricing/",
       "tier_direction": "unchanged",
       "finding": "Test Manager Premium at $49/month and KaneAI Starter at $17/month; the free tier is not mentioned"
+    },
+    {
+      "vendor": "LastPass",
+      "change_type": "pricing_restructured",
+      "date": "2026-09-03",
+      "source_url": "https://www.lastpass.com/pricing",
+      "tier_direction": "widened",
+      "finding": "the device limit is the same one device type; the stored terms end \"no dark web monitoring on free\" and the reading lists dark web monitoring as included"
     },
     {
       "vendor": "leiga.com",
@@ -219,6 +243,22 @@
       "finding": "100 emails/day -> 10,000 emails/month"
     },
     {
+      "vendor": "Oracle Cloud",
+      "change_type": "pricing_restructured",
+      "date": "2026-09-02",
+      "source_url": "https://www.oracle.com/cloud/free/",
+      "tier_direction": "unchanged",
+      "finding": "the reading lists service names and no quantities, so it states no reduction of the stored 2 AMD VMs, 4 Arm VMs, 200 GB block and 20 GB object; the summary is \"The tier still exists, the specific VM details are different\""
+    },
+    {
+      "vendor": "paperspace",
+      "change_type": "pricing_restructured",
+      "date": "2026-09-05",
+      "source_url": "https://www.paperspace.com/pricing",
+      "tier_direction": "unchanged",
+      "finding": "the free tier reads the same public projects and 5 GB storage; the prices that moved are paid ones, from \"$8/month\" to Pro $12 and Growth $39"
+    },
+    {
       "vendor": "Pinecone",
       "change_type": "pricing_restructured",
       "date": "2026-09-10",
@@ -257,6 +297,14 @@
       "source_url": "https://railway.com/pricing",
       "tier_direction": "unchanged",
       "finding": "\"$1/month minimum after the trial\" and \"1 project\" are both already in our stored terms; the third claim, \"2 replicas instead of 1\", is an increase"
+    },
+    {
+      "vendor": "readthedocs.org",
+      "change_type": "pricing_restructured",
+      "date": "2026-08-28",
+      "source_url": "https://readthedocs.org/",
+      "tier_direction": "unchanged",
+      "finding": "the free Community plan still hosts public documentation for open source; the private repositories and SSO the summary calls paid are not in the stored terms, which state versioning and PDF generation"
     },
     {
       "vendor": "Replit",
@@ -321,6 +369,14 @@
       "source_url": "https://vercel.com/pricing",
       "tier_direction": "unchanged",
       "finding": "both states carry the same seven figures - 1M edge requests, 100 GB transfer, 1 GB blob, 5K image transformations, 1M invocations, 4 hrs active CPU, 360 GB-hrs memory"
+    },
+    {
+      "vendor": "veriphone",
+      "change_type": "pricing_restructured",
+      "date": "2026-08-28",
+      "source_url": "https://veriphone.io/",
+      "tier_direction": "unchanged",
+      "finding": "1,000 a month either way — the summary states the change as \"1,000 free validations per month, instead of 1,000 requests\", which renames the unit; what is new is the paid packs"
     },
     {
       "vendor": "Virgil Security",

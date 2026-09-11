@@ -306,6 +306,18 @@ describe("#1528 the vendor pages the census named", () => {
     }
   });
 
+  it("publishes the terms of the seven whose own two states state no narrowing", () => {
+    for (const vendor of [
+      "Grafana Cloud", "geocodify.com", "LastPass", "veriphone",
+      "paperspace", "readthedocs.org", "Oracle Cloud",
+    ]) {
+      assert.ok(publishesItsStoredTerms(vendor), `${vendor} still withholds its stored terms`);
+      const risk = ratedBy(vendor);
+      assert.notStrictEqual(risk.risk_level, "caution", `${vendor} still reads caution`);
+      assert.notStrictEqual(risk.risk_level, "risky", `${vendor} still reads risky`);
+    }
+  });
+
   it("leaves a genuine narrowing withholding and rated", () => {
     const offer = offerFor("Netlify");
     assert.strictEqual(storedTermsAreSuperseded(offer, changesFor("Netlify")), true);
