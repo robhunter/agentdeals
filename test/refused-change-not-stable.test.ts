@@ -425,8 +425,10 @@ describe("a page states the reason we withheld, not a reason its own refusal con
     const narrow: string[] = [];
     for (const route of ["/state-of-free-tiers", "/criteria"]) {
       const page = await (await fetch(`http://localhost:${serverPort}${route}`)).text();
-      if (COULD_NOT_RECONCILE.test(page)) narrow.push(`${route} names only the reads we could not reconcile`);
-      if (NAMED_NO_FIGURE_THAT_MOVED.test(page)) narrow.push(`${route} names only the equality findings`);
+      if (/could not reconcile with the terms we publish/.test(page)) {
+        narrow.push(`${route} names only the reads we could not reconcile`);
+      }
+      if (/named no figure that had moved/.test(page)) narrow.push(`${route} names only the equality findings`);
     }
     assert.deepStrictEqual(narrow, [], `a page counting every refusal describes one kind of them:\n${narrow.join("\n")}`);
   });
