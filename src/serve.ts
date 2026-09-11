@@ -151,9 +151,13 @@ function categoryPageDay(slug: string, fallback: string): string {
   return categoryLastmod.get(slug) || fallback;
 }
 
+function renderedBodyDay(pagePath: string): string | null {
+  return pageLastmodLedger.pages[pagePath]?.changed ?? null;
+}
+
 function sitemapDayFor(pagePath: string): string | null {
-  const recorded = pageLastmodLedger.pages[pagePath];
-  if (recorded) return recorded.changed;
+  const read = renderedBodyDay(pagePath);
+  if (read) return read;
   if (pagePath.startsWith("/vendor/")) {
     const slug = pagePath.slice("/vendor/".length);
     return vendorSlugMap.has(slug) ? vendorPageDay(slug, utcToday()) : null;
@@ -169,6 +173,13 @@ function pageLastmodHeader(pathname: string, search: string): string | null {
   const dated = datedUrl(pathname, search);
   if (!dated) return null;
   const day = sitemapDayFor(dated);
+  return day ? httpDate(day) : null;
+}
+
+function revalidationDayHeader(pathname: string, search: string): string | null {
+  const dated = datedUrl(pathname, search);
+  if (!dated) return null;
+  const day = renderedBodyDay(dated);
   return day ? httpDate(day) : null;
 }
 
@@ -53668,7 +53679,7 @@ const httpServer = createHttpServer(async (req, res) => {
         if (changed) res.setHeader("Last-Modified", changed);
       }
     }
-    if (status === 200 && isNotModified(revalidation, res.getHeader("Last-Modified") as string | undefined)) {
+    if (status === 200 && isNotModified(revalidation, revalidationDayHeader(url.pathname, url.search))) {
       answeredNotModified = true;
       return rawWriteHead(304 as never, revalidationHeaders(headers) as never);
     }

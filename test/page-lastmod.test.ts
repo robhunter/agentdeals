@@ -450,16 +450,15 @@ describe("what the sitemaps say about when a page changed", () => {
     assert.match(response.headers.get("cache-control") ?? "", /max-age=\d+/, "the homepage tells no cache how long to hold it");
   });
 
-  it("answers a revalidation of the day it advertises, on every class of page that carries one", async () => {
-    const dated: string[] = ["/", "/vendor/supabase", RETITLED[0]!];
-    const categories = (await sitemapEntries("pages")).filter(e => e.loc.startsWith("/category/"));
-    assert.ok(categories.length > 0, "no category page is published, so this test checks nothing");
-    dated.push(categories[0]!.loc);
-    for (const page of dated) {
+  it("answers a revalidation on every page whose day was read from its own rendered body", async () => {
+    const ledger = readPageLastmod();
+    const read = ["/", ...RETITLED, REPRICED].filter(page => ledger.pages[page]);
+    assert.ok(read.length >= 4, `only ${read.length} of the pages named here are in the ledger`);
+    for (const page of read) {
       const first = await fetch(base + page);
       await first.text();
       const advertised = first.headers.get("last-modified");
-      assert.ok(advertised, `${page} carries no day to revalidate against`);
+      assert.equal(advertised, httpDate(ledger.pages[page]!.changed), `${page} advertises a day the ledger does not hold`);
       const revalidated = await fetch(base + page, { headers: { "If-Modified-Since": advertised! } });
       const body = await revalidated.text();
       assert.equal(revalidated.status, 304, `${page} re-sent its body to a client already holding ${advertised}`);
@@ -469,6 +468,42 @@ describe("what the sitemaps say about when a page changed", () => {
       assert.equal(older.status, 200, `${page} withheld its body from a client holding a copy from 2024`);
       assert.ok(full.includes("</html>"), `${page} answered 200 without a page`);
     }
+  });
+
+  it("sends the whole page where the day comes from a record rather than from the body", async () => {
+    const ledger = readPageLastmod();
+    const categories = (await sitemapEntries("pages")).filter(e => e.loc.startsWith("/category/"));
+    assert.ok(categories.length > 0, "no category page is published, so this test checks nothing");
+    for (const page of ["/vendor/supabase", categories[0]!.loc]) {
+      assert.ok(!ledger.pages[page], `${page} is in the ledger now, so its body is dated and it may revalidate`);
+      const first = await fetch(base + page);
+      await first.text();
+      const advertised = first.headers.get("last-modified");
+      assert.ok(advertised, `${page} carries no day at all`);
+      const revalidated = await fetch(base + page, { headers: { "If-Modified-Since": advertised! } });
+      const body = await revalidated.text();
+      assert.equal(revalidated.status, 200, `${page} answered 304 against a day nothing read off its body`);
+      assert.ok(body.includes("</html>"), `${page} answered 200 without a page`);
+    }
+  });
+
+  it("publishes content dated after the day a vendor page advertises, which is why that day validates nothing", async () => {
+    const listed = (await sitemapEntries("vendors")).filter(e => e.loc.startsWith("/vendor/"));
+    const stride = Math.max(1, Math.ceil(listed.length / 24));
+    const sampled = listed.filter((_, at) => at % stride === 0);
+    assert.ok(sampled.length >= 8, `read ${sampled.length} vendor pages, too few to say anything`);
+    const today = new Date().toISOString().slice(0, 10);
+    let ahead = 0;
+    for (const { loc, lastmod } of sampled) {
+      const body = (await (await fetch(base + loc)).text()).replace(/<dl>[\s\S]*?<\/dl>/g, "");
+      const printed = [...body.matchAll(/\b(20\d\d-\d\d-\d\d)\b/g)].map(m => m[1]).filter(day => day <= today).sort();
+      const newest = printed.at(-1);
+      if (newest && newest > lastmod) ahead++;
+    }
+    assert.ok(
+      ahead > sampled.length / 2,
+      `${ahead} of ${sampled.length} vendor pages print content newer than the day they advertise; if that is now a minority the day may be worth revalidating against`,
+    );
   });
 });
 

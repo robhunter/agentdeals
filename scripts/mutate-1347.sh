@@ -37,8 +37,18 @@ PY
 T="test/conditional-request.test.ts test/page-lastmod.test.ts test/not-found-accounting.test.ts test/vendor-series.test.ts"
 
 run_mutation "the handler ignores the conditional request" src/serve.ts \
-    'if (status === 200 && isNotModified(revalidation, res.getHeader("Last-Modified") as string | undefined)) {' \
-    'if (false && isNotModified(revalidation, res.getHeader("Last-Modified") as string | undefined)) {' "$T"
+    'if (status === 200 && isNotModified(revalidation, revalidationDayHeader(url.pathname, url.search))) {' \
+    'if (false && isNotModified(revalidation, revalidationDayHeader(url.pathname, url.search))) {' "$T"
+
+run_mutation "a day taken from a record validates a revalidation too" src/serve.ts \
+    'function revalidationDayHeader(pathname: string, search: string): string | null {
+  const dated = datedUrl(pathname, search);
+  if (!dated) return null;
+  const day = renderedBodyDay(dated);' \
+    'function revalidationDayHeader(pathname: string, search: string): string | null {
+  const dated = datedUrl(pathname, search);
+  if (!dated) return null;
+  const day = sitemapDayFor(dated);' "$T"
 
 run_mutation "a copy taken on the page's own day is treated as out of date" src/conditional-request.ts \
     'return served <= asked;' \
