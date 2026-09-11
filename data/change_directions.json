@@ -1,5 +1,5 @@
 {
-  "reviewed": "2026-09-10",
+  "reviewed": "2026-09-11",
   "review": "docs/change-direction-census.md",
   "directions": [
     {
@@ -353,6 +353,14 @@
       "source_url": "https://terrateam.io",
       "tier_direction": "unchanged",
       "finding": "the entire summary is \"Doesn't confirm the original unlimited usage claim.\""
+    },
+    {
+      "vendor": "Thunder Client",
+      "change_type": "limits_reduced",
+      "date": "2026-09-10",
+      "source_url": "https://www.thunderclient.com/pricing",
+      "tier_direction": "widened",
+      "finding": "our terms say \"1 local collection run per month\"; the reading says the free plan \"now includes unlimited collection runs\" and that the 1/month limit \"is removed\""
     },
     {
       "vendor": "UniRateAPI",
