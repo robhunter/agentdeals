@@ -50,6 +50,11 @@ export function verificationDatesCell(offer: DatedRecord | null | undefined): st
   return readAfterVerified ? `${read} / ${verified}` : read;
 }
 
+export function verificationDatesClause(read: string, verified: string): string {
+  if (!read) return "";
+  return read > verified ? `read ${read}, verified ${verified}` : `read and verified ${read}`;
+}
+
 export function verificationDatesSentence(offer: DatedRecord | null | undefined): string {
   const { read, verified, readAfterVerified } = verificationDates(offer);
   if (!read) return "";

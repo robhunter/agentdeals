@@ -18,6 +18,7 @@ import { registerMcpAppsResources, TOOL_UI_META } from "./mcp-apps.js";
 import { CATALOGUE_CATEGORY_COUNT, CATALOGUE_OFFER_FLOOR_LABEL, MCP_INSTRUCTIONS } from "./mcp-instructions.js";
 import { MCP_TOOLS, MCP_TOOL_COUNT } from "./mcp-tool-inventory.js";
 import { MCP_SIGNAL_FOOTER } from "./signal-copy.js";
+import { lastReadDate, verificationDatesClause } from "./read-date.js";
 import { BASE_URL } from "./base-url.js";
 import { withProvenance } from "./provenance.js";
 
@@ -729,7 +730,7 @@ Suggested monitoring cadence: run this check weekly to catch pricing changes ear
         return { contents: [{ uri: `agentdeals://category/${slug}`, text: `No category found matching "${slug}".`, mimeType: "text/plain" }] };
       }
       const categoryName = match[0].category;
-      const lines = match.map(o => `- **${o.vendor}** — ${o.tier}: ${o.description} (verified ${o.verifiedDate})`);
+      const lines = match.map(o => `- **${o.vendor}** — ${o.tier}: ${o.description} (${verificationDatesClause(lastReadDate(o), o.verifiedDate)})`);
       const text = `# ${categoryName}\n\n${match.length} offers.\n\n${lines.join("\n")}`;
       return { contents: [{ uri: `agentdeals://category/${slug}`, text, mimeType: "text/plain" }] };
     }
@@ -797,6 +798,7 @@ Suggested monitoring cadence: run this check weekly to catch pricing changes ear
       text += `**Description:** ${match.description}\n`;
       text += `**Pricing Page:** ${match.url}\n`;
       text += `**Verified:** ${match.verifiedDate}\n`;
+      text += `**Last read:** ${lastReadDate(match)}\n`;
       if (match.eligibility) {
         text += `**Eligibility:** ${match.eligibility.type} — ${match.eligibility.conditions.join(", ")}\n`;
       }

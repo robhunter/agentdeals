@@ -54,6 +54,60 @@ const get = async (p: string) => {
   return { status: res.status, body: await res.text() };
 };
 
+function readResourceOverStdio(uri: string): Promise<string> {
+  const child = spawn("node", [path.join(REPO, "dist", "index.js")], {
+    stdio: ["pipe", "pipe", "pipe"],
+    env: { ...process.env, AGENTDEALS_API_URL: `http://localhost:${serverPort}` },
+  });
+  const messages = [
+    { jsonrpc: "2.0", id: 1, method: "initialize", params: { protocolVersion: "2024-11-05", capabilities: {}, clientInfo: { name: "test-client", version: "1.0.0" } } },
+    { jsonrpc: "2.0", method: "notifications/initialized" },
+    { jsonrpc: "2.0", id: 2, method: "resources/read", params: { uri } },
+  ];
+  return new Promise((resolve, reject) => {
+    const timeout = setTimeout(() => { child.kill(); reject(new Error("stdio MCP timeout")); }, 20000);
+    let buffer = "";
+    child.stdout!.on("data", (chunk: Buffer) => {
+      buffer += chunk.toString();
+      const lines = buffer.split("\n");
+      buffer = lines.pop() ?? "";
+      for (const line of lines) {
+        if (!line.trim()) continue;
+        let payload: { id?: number; result?: { contents?: Array<{ text?: string }> } };
+        try { payload = JSON.parse(line.trim()); } catch { continue; }
+        if (payload.id !== 2) continue;
+        clearTimeout(timeout);
+        child.kill();
+        resolve(payload.result?.contents?.[0]?.text ?? "");
+      }
+    });
+    child.on("error", (err) => { clearTimeout(timeout); reject(err); });
+    for (const message of messages) child.stdin!.write(`${JSON.stringify(message)}\n`);
+  });
+}
+
+async function readResourceOverHttp(uri: string): Promise<string> {
+  const base = `http://localhost:${serverPort}/mcp`;
+  const accept = "application/json, text/event-stream";
+  const init = await fetch(base, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", Accept: accept },
+    body: JSON.stringify({ jsonrpc: "2.0", id: 1, method: "initialize", params: { protocolVersion: "2025-06-18", capabilities: {}, clientInfo: { name: "test", version: "1.0.0" } } }),
+  });
+  const session = init.headers.get("mcp-session-id") ?? "";
+  const headers = { "Content-Type": "application/json", Accept: accept, "Mcp-Session-Id": session };
+  await fetch(base, { method: "POST", headers, body: JSON.stringify({ jsonrpc: "2.0", method: "notifications/initialized" }) });
+  const res = await fetch(base, {
+    method: "POST",
+    headers,
+    body: JSON.stringify({ jsonrpc: "2.0", id: 2, method: "resources/read", params: { uri } }),
+  });
+  const text = await res.text();
+  const line = text.split("\n").find((l) => l.startsWith("data: ")) ?? text;
+  const payload = JSON.parse(line.replace(/^data: /, "")) as { result?: { contents?: Array<{ text?: string }> } };
+  return payload.result?.contents?.[0]?.text ?? "";
+}
+
 describe("every record publishes the day we last read its page", () => {
   before(async () => { proc = await startServer(); });
   after(() => { proc?.kill(); });
@@ -113,6 +167,16 @@ describe("every record publishes the day we last read its page", () => {
       body.includes("and the day we last confirmed"),
       `the page for ${together.vendor} does not say the one date it publishes is both`,
     );
+  });
+
+  it("answers the same two dates over stdio MCP as over HTTP MCP", async () => {
+    const uri = `agentdeals://vendor/${slugOf(widestGap.offer.vendor)}`;
+    const overStdio = await readResourceOverStdio(uri);
+    const overHttp = await readResourceOverHttp(uri);
+    for (const [transport, text] of [["stdio", overStdio], ["http", overHttp]] as const) {
+      assert.match(text, new RegExp(`\\*\\*Verified:\\*\\* ${widestGap.offer.verifiedDate}`), `${transport} dropped the verification date`);
+      assert.match(text, new RegExp(`\\*\\*Last read:\\*\\* ${widestGap.read}`), `${transport} does not publish the day we read the page`);
+    }
   });
 
   it("heads every category table with both dates and fills every row", async () => {

@@ -70,6 +70,18 @@ const MUTANTS = [
   ["the-api-answers-with-the-verification-date-as-the-read-date", DATA,
     `    const last_read_date = lastReadDate(offer);`,
     `    const last_read_date = offer.verifiedDate;`],
+
+  ["the-stdio-mcp-resource-drops-the-read-date", "src/server-remote.ts",
+    `      text += \`**Last read:** \${match.last_read_date}\\n\`;`,
+    ``],
+
+  ["the-http-mcp-resource-drops-the-read-date", "src/server.ts",
+    `      text += \`**Last read:** \${lastReadDate(match)}\\n\`;`,
+    ``],
+
+  ["the-stdio-mcp-resource-reads-the-verification-date", "src/server-remote.ts",
+    `      text += \`**Last read:** \${match.last_read_date}\\n\`;`,
+    `      text += \`**Last read:** \${match.verifiedDate}\\n\`;`],
 ];
 
 function run(cmd, args) {
