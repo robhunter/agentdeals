@@ -45,6 +45,7 @@ const WITHHELD_LABELS: Record<string, string> = {
   offer_retired: "unrated — offer ended",
   verification_lapsed: "unrated — not re-confirmed",
   read_not_reconciled: "unrated — change not reconciled",
+  change_measured_no_difference: "unrated — change refused",
 };
 
 const WITHHELD_LABEL_SET = new Set(Object.values(WITHHELD_LABELS));

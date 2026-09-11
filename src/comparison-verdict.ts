@@ -1,5 +1,5 @@
 import { withheldLevelSentence, type LevelWithheldReason } from "./source-check.js";
-import { unreconciledReadSentence, type RefusedRead } from "./change-refusal.js";
+import { refusedReadSentence, type RefusedRead } from "./change-refusal.js";
 
 export type StabilityRating = "stable" | "caution" | "risky";
 
@@ -33,7 +33,7 @@ function whyWithheld(side: ComparisonSide): string {
   if (side.ratingWithheldBecause) {
     return withheldLevelSentence(side.ratingWithheldBecause, side.vendor, side.unconfirmableSince);
   }
-  if (side.refusedRead) return unreconciledReadSentence(side.vendor, side.refusedRead.refused_date);
+  if (side.refusedRead) return refusedReadSentence(side.vendor, side.refusedRead);
   return `We are not publishing a stability rating for ${side.vendor}.`;
 }
 
