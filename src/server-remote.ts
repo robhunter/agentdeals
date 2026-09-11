@@ -20,6 +20,7 @@ import { registerMcpAppsResources, TOOL_UI_META } from "./mcp-apps.js";
 import { CATALOGUE_CATEGORY_COUNT, CATALOGUE_OFFER_FLOOR_LABEL, MCP_INSTRUCTIONS } from "./mcp-instructions.js";
 import { MCP_TOOLS } from "./mcp-tool-inventory.js";
 import { substitutesFor } from "./product-role.js";
+import { verificationDatesClause } from "./read-date.js";
 
 export const TRACK_CHANGES_LIMIT = 1000;
 import type { ProductRole, ProductSubtypes } from "./types.js";
@@ -600,12 +601,12 @@ Suggested monitoring cadence: run this check weekly to catch pricing changes ear
       mimeType: "text/plain",
     },
     async (_uri, { slug }) => {
-      const data = (await fetchOffers({ category: slug as string, limit: 200 })) as { offers: Array<{ vendor: string; tier: string; description: string; verifiedDate: string; category: string }>; total: number };
+      const data = (await fetchOffers({ category: slug as string, limit: 200 })) as { offers: Array<{ vendor: string; tier: string; description: string; verifiedDate: string; last_read_date: string; category: string }>; total: number };
       if (!data.offers || data.offers.length === 0) {
         return { contents: [{ uri: `agentdeals://category/${slug}`, text: `No category found matching "${slug}".`, mimeType: "text/plain" }] };
       }
       const categoryName = data.offers[0].category;
-      const lines = data.offers.map(o => `- **${o.vendor}** — ${o.tier}: ${o.description} (verified ${o.verifiedDate})`);
+      const lines = data.offers.map(o => `- **${o.vendor}** — ${o.tier}: ${o.description} (${verificationDatesClause(o.last_read_date, o.verifiedDate)})`);
       const text = `# ${categoryName}\n\n${data.total} offers.\n\n${lines.join("\n")}`;
       return { contents: [{ uri: `agentdeals://category/${slug}`, text, mimeType: "text/plain" }] };
     }
@@ -653,7 +654,7 @@ Suggested monitoring cadence: run this check weekly to catch pricing changes ear
       mimeType: "text/plain",
     },
     async (_uri, { slug }) => {
-      const data = (await fetchOffers({ limit: 2000 })) as { offers: Array<{ vendor: string; category: string; tier: string; description: string; url: string; verifiedDate: string; tags: string[]; eligibility?: { type: string; conditions: string[] }; expires_date?: string; product_role?: ProductRole; product_subtypes?: ProductSubtypes }>; total: number };
+      const data = (await fetchOffers({ limit: 2000 })) as { offers: Array<{ vendor: string; category: string; tier: string; description: string; url: string; verifiedDate: string; last_read_date: string; tags: string[]; eligibility?: { type: string; conditions: string[] }; expires_date?: string; product_role?: ProductRole; product_subtypes?: ProductSubtypes }>; total: number };
       const match = data.offers.find(o => toSlug(o.vendor) === slug);
       if (!match) {
         return { contents: [{ uri: `agentdeals://vendor/${slug}`, text: `No vendor found matching "${slug}".`, mimeType: "text/plain" }] };
@@ -668,6 +669,7 @@ Suggested monitoring cadence: run this check weekly to catch pricing changes ear
       text += `**Description:** ${match.description}\n`;
       text += `**Pricing Page:** ${match.url}\n`;
       text += `**Verified:** ${match.verifiedDate}\n`;
+      text += `**Last read:** ${match.last_read_date}\n`;
       if (match.eligibility) {
         text += `**Eligibility:** ${match.eligibility.type} — ${match.eligibility.conditions.join(", ")}\n`;
       }

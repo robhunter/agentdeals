@@ -24,6 +24,7 @@ export interface VerificationStateRecord {
   failure_category: string | null;
   consecutive_failures: number;
   last_success: string | null;
+  last_read_at?: string | null;
   quarantined_since: string | null;
 }
 

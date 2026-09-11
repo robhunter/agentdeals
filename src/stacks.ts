@@ -2,6 +2,7 @@ import { searchOffers, loadDealChanges, publishedRisk, levelWithheldStatement, c
 import { rankOffers, utcDate, CRITERIA_PATH, DEMOTE_ONLY_POLICY, NOT_MODELLED_NOTICE } from "./ranking.js";
 import type { Demerit, Disclosure, Gate, TieBreak } from "./ranking.js";
 import { verificationLedger } from "./verification-state.js";
+import { lastReadDate } from "./read-date.js";
 import type { Offer, StabilityClass, DealChange, RatingWithheld, LinkUnreachable, SourceCheck } from "./types.js";
 import { partitionRoleCandidates, MEMBERSHIP_GATE_RULES } from "./product-role.js";
 
@@ -11,6 +12,7 @@ export interface StackCandidate {
   description: string;
   url: string;
   verified_date: string;
+  last_read_date: string;
   risk_level: "stable" | "caution" | "risky" | null;
   rating_withheld: RatingWithheld | null;
   source_check: SourceCheck | null;
@@ -229,6 +231,7 @@ function toCandidate(
     description: offer.description.length > 200 ? offer.description.slice(0, 197) + "..." : offer.description,
     url: offer.url,
     verified_date: offer.verifiedDate,
+    last_read_date: lastReadDate(offer),
     risk_level: published.risk_level,
     rating_withheld: published.rating_withheld,
     source_check: published.source_check,
