@@ -1,3 +1,5 @@
+import { createHash } from "node:crypto";
+
 const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
 const IMF_FIXDATE = /^(?:Mon|Tue|Wed|Thu|Fri|Sat|Sun), \d{2} (?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) \d{4} \d{2}:\d{2}:\d{2} GMT$/;
@@ -29,6 +31,28 @@ export function isRevalidation(request: ConditionalRequest): boolean {
   if (request.method !== "GET" && request.method !== "HEAD") return false;
   if (request.ifNoneMatch !== undefined) return false;
   return parseHttpDate(request.ifModifiedSince) !== null;
+}
+
+export function entityTag(body: string): string {
+  return `"${createHash("sha256").update(body).digest("hex").slice(0, 16)}"`;
+}
+
+function withoutWeakness(tag: string): string {
+  return tag.startsWith("W/") ? tag.slice(2) : tag;
+}
+
+export function parseEntityTags(value: HeaderValue): string[] {
+  if (typeof value !== "string") return [];
+  return value.split(",").map(tag => tag.trim()).filter(tag => tag.length > 0);
+}
+
+export function matchesEntityTag(request: ConditionalRequest, served: string | null): boolean {
+  if (request.method !== "GET" && request.method !== "HEAD") return false;
+  if (!served) return false;
+  const asked = parseEntityTags(request.ifNoneMatch);
+  if (asked.length === 0) return false;
+  if (asked.includes("*")) return true;
+  return asked.some(tag => withoutWeakness(tag) === withoutWeakness(served));
 }
 
 export function isNotModified(request: ConditionalRequest, lastModified: HeaderValue): boolean {
