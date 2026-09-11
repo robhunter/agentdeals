@@ -7,7 +7,7 @@ import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/
 import { createServer, getServerCard } from "./server.js";
 import { oldestVerifiedDateForSlug, vendorRiskAssessment, publishedRisk, levelWithheldStatement, vendorNotIndexedSentence, riskCauseOf, freeTierEndingRecord, NEGATIVE_CHANGE_TYPES, POSITIVE_CHANGE_TYPES, SEVERE_CHANGE_TYPES, loadOffers, getCategories, getNewOffers, getNewestDeals, searchOffers, enrichOffers, gateForOffer, loadDealChanges, getDealChanges, changeContext, DEFAULT_CHANGE_WINDOW_DAYS, getOfferDetails, compareServices, checkVendorRisk, auditStack, getExpiringDeals, getWeeklyDigest, getFormattedWeeklyDigest, getFreshnessMetrics, getStabilityMap, getVendorReferral, sanitizeQuery, getChangeLogFreshness, isEventDated, partitionByDateProvenance } from "./data.js";
 import { loadChangeRefusals } from "./data.js";
-import { confirmingRead, confirmingReadSentence, refusalsByVendor, refusedReadSentence, MEASURED_NO_DIFFERENCE_BADGE_LABEL, UNRECONCILED_READ_BADGE_LABEL, type ChangeRefusal } from "./change-refusal.js";
+import { confirmingRead, confirmingReadSentence, refusalsByVendor, refusedReadSentence, supersededRefusalSentence, MEASURED_NO_DIFFERENCE_BADGE_LABEL, UNRECONCILED_READ_BADGE_LABEL, type ChangeRefusal } from "./change-refusal.js";
 import { getStackRecommendation } from "./stacks.js";
 import { estimateCosts } from "./costs.js";
 import { classifyRequest } from "./client-class.js";
@@ -33,7 +33,7 @@ import { NO_CURRENT_FIGURE, costHeadlineCaveat, limitCellText, mayRecommendAsFre
 import { changesByVendor } from "./superseded-census.js";
 import { buildComparisonMap, comparisonSlug } from "./comparison-pairs.js";
 import { comparisonVerdictText, freeTierFaqAnswer, stabilityFaqAnswer, type ComparisonSide, type FreeTierSide, type SideFreeTier, type StabilityRating } from "./comparison-verdict.js";
-import { publishedVendorLevel, vendorVerdictSentence, vendorBadge, freeTierClaim, statesRiskCause, narrowingSentence, changeKindNoun, refusedReadWeHold, refusedReadWithholdingSentence, withheldForARefusedRead, refusalWithholdsStability, termsUnconfirmedBySource, unconfirmedTermsMetaSentence, type BadgeWithholding, type FreeTierClaim, type VendorVerdictInput } from "./vendor-verdict.js";
+import { publishedVendorLevel, vendorVerdictSentence, vendorBadge, freeTierClaim, statesRiskCause, narrowingSentence, changeKindNoun, refusedReadOurConfirmationSupersedes, refusedReadWeHold, refusedReadWithholdingSentence, withheldForARefusedRead, refusalWithholdsStability, termsUnconfirmedBySource, unconfirmedTermsMetaSentence, type BadgeWithholding, type FreeTierClaim, type VendorVerdictInput } from "./vendor-verdict.js";
 import { tierRecordsAFreeTier } from "./free-tier-record.js";
 import { PAGE_HEAD_OPEN, withLedeBeforeNav } from "./page-lede.js";
 import { freshnessClaimFor, withFreshnessClaim } from "./page-freshness.js";
@@ -979,6 +979,7 @@ function buildVendorVerdictContext(vendorName: string, servedOn: string): Vendor
       gate: gate?.code ?? null,
       linkUnreachable: Boolean(linkUnreachable),
       sourceCheck: primary.source_check?.outcome ?? null,
+      termsConfirmedOn: primary.verifiedDate,
       refusedReads: refusalsFor(vendorName),
     },
   };
@@ -2899,7 +2900,7 @@ ${demeritRows}
   <h3>The risk label is not a rank, and it is never a count</h3>
   <p>Vendor pages carry a <code>stable</code> / <code>caution</code> / <code>risky</code> label. <strong style="color:var(--text)">It moves no order on this site</strong> &mdash; the ranking module cannot read it, and flipping every label leaves every listing we publish in the same order.</p>
   <p>It is decided by the <em>type</em> of a recorded change, never by how many records we hold. A vendor that expanded its free tier, postponed a fee, added a tier or changed its name cannot be labelled <code>caution</code> for any of those. <strong style="color:var(--text)">A <code>caution</code> or <code>risky</code> label always renders together with the single dated record that produced it, on the same page and next to the label. Where we cannot show the reason, we do not show the label.</strong></p>
-  <p>The honest limit: <code>stable</code> means we hold no record of a free tier removal, a limit reduction or a pricing restructure for that vendor, and that no read of its pricing page since has turned up a change we refused to record. A change we read and then refused to record is not evidence that nothing moved, so it takes the label off rather than leaving it on. Each vendor page states the reason we refused the change we hold for it. It is a statement about our records, not a clean bill of health &mdash; a vendor we have never had cause to examine reads the same as one with a long clean history. Until August 2026 the label was derived from a count of records of any type, which inverted that: the vendors we watched most closely were the ones it flagged, and several were flagged for good news. That is fixed, and this paragraph is here so the next version of it is checkable.</p>
+  <p>The honest limit: <code>stable</code> means we hold no record of a free tier removal, a limit reduction or a pricing restructure for that vendor, and that no read of its pricing page since has turned up a change we refused to record without our having read the page again and confirmed the terms afterwards. A change we read and then refused to record is not evidence that nothing moved, so it takes the label off rather than leaving it on, and only a later read that confirms the terms puts it back. Each vendor page states the reason we refused the change we hold for it, or the day we confirmed the terms over it. It is a statement about our records, not a clean bill of health &mdash; a vendor we have never had cause to examine reads the same as one with a long clean history. Until August 2026 the label was derived from a count of records of any type, which inverted that: the vendors we watched most closely were the ones it flagged, and several were flagged for good news. That is fixed, and this paragraph is here so the next version of it is checkable.</p>
 
   <h3>What we publish when the link itself stops resolving</h3>
   <p>Verification asks whether an offer's terms are still right. A separate daily check asks the cheaper question of whether its link still resolves at all, and it runs over every record regardless of how recently that record was verified.</p>
@@ -4647,7 +4648,10 @@ function buildVendorPage(slug: string): string | null {
   const riskCause = enriched.risk_cause;
   const refusedRead = refusedReadWeHold(verdictInput);
   const unreconciled = refusalWithholdsStability(verdictInput);
-  const confirmedByRefusal = refusedRead || vendorChanges.length > 0
+  const supersededRefusal = refusedRead || vendorChanges.length > 0
+    ? null
+    : refusedReadOurConfirmationSupersedes(verdictInput);
+  const confirmedByRefusal = refusedRead || supersededRefusal || vendorChanges.length > 0
     ? null
     : confirmingRead(verdictInput.refusedReads ?? []);
   const riskLevel = publishedVendorLevel(enriched.risk_level ?? null, riskCause);
@@ -5143,6 +5147,8 @@ ${allCompareLinks.join("\n")}
     ? `${refusedReadSentence(vendorName, refusedRead)} We publish no change we refused to record, so we cannot tell you that nothing changed.`
     : levelWithheld
     ? `We hold no recorded pricing changes for ${vendorName}, but ${withheldClause}, so that is a statement about our records rather than a positive signal.`
+    : supersededRefusal
+    ? supersededRefusalSentence(vendorName, supersededRefusal.refused_date, primary.verifiedDate)
     : confirmedByRefusal
     ? confirmingReadSentence(vendorName, confirmedByRefusal)
     : primaryGate

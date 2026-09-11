@@ -20,7 +20,9 @@ import {
   measuredNoDifferenceSentence,
   refusalMeasuredNoDifference,
   refusedReadClause,
+  refusedReadTheConfirmationSupersedes,
   refusedReadWithholdingStability,
+  supersededRefusalClause,
   unreconciledReadSentence,
   type RefusedRead,
 } from "./change-refusal.js";
@@ -62,6 +64,7 @@ export interface VendorVerdictInput {
   gate?: GateCode | null;
   linkUnreachable?: boolean;
   sourceCheck?: SourceCheckOutcome | null;
+  termsConfirmedOn: string;
   refusedReads?: readonly RefusedRead[];
 }
 
@@ -157,8 +160,13 @@ export function refusedReadWeHold(input: VendorVerdictInput): RefusedRead | null
   return refusedReadWithholdingStability({
     historyLevel: input.historyLevel,
     publishedChanges: input.changes.length,
+    termsConfirmedOn: input.termsConfirmedOn,
     refusals: input.refusedReads ?? [],
   });
+}
+
+export function refusedReadOurConfirmationSupersedes(input: VendorVerdictInput): RefusedRead | null {
+  return refusedReadTheConfirmationSupersedes(input.refusedReads ?? [], input.termsConfirmedOn);
 }
 
 export function refusalWithholdsStability(input: VendorVerdictInput): RefusedRead | null {
@@ -282,6 +290,10 @@ export function vendorVerdictSentence(input: VendorVerdictInput): string {
   }
 
   if (input.changes.length === 0) {
+    const superseded = refusedReadOurConfirmationSupersedes(input);
+    if (superseded) {
+      return `It's stable — ${supersededRefusalClause(superseded.refused_date, input.termsConfirmedOn)}.`;
+    }
     const confirmed = confirmingRead(input.refusedReads ?? []);
     return confirmed
       ? `It's stable — ${confirmingReadClause(confirmed)}.`

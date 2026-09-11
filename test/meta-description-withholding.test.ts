@@ -224,7 +224,7 @@ describe("#1412 the meta description withholds wherever the source check failed"
 
 describe("#1412 the withholding predicate is the one the badge and the body read", () => {
   it("answers only for the outcomes that leave the terms unconfirmed", () => {
-    const base = { vendor: "Example", level: null, cause: null, changes: [], levelWithheld: null, unconfirmableSince: "" };
+    const base = { vendor: "Example", level: null, cause: null, changes: [], levelWithheld: null, unconfirmableSince: "", termsConfirmedOn: "" };
     assert.strictEqual(termsUnconfirmedBySource({ ...base, sourceCheck: "ok" }), null);
     assert.strictEqual(termsUnconfirmedBySource({ ...base, sourceCheck: null }), null);
     assert.strictEqual(termsUnconfirmedBySource(base), null);
