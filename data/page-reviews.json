@@ -674,7 +674,7 @@
       "review_outcome": null,
       "review_note": null,
       "reads_index": true,
-      "reads_changes": true,
+      "reads_changes": false,
       "data_source": "catalogue",
       "data_source_reason": null
     },

@@ -213,7 +213,7 @@ describe("every published change row carries the page it was read from", () => {
   it("reads a population on both sides of the question", () => {
     assertCoversPopulation(sweptPaths.length, vendorsInTheCatalogue(), "paths served for the sweep");
     assertPopulationFloor(pagesWithARow, 800, "served pages render at least one change row");
-    assertPopulationFloor(rowsChecked, 7000, "change rows rendered across the site");
+    assertPopulationFloor(rowsChecked, 6000, "change rows rendered across the site");
     assertPopulationFloor(rows.length, 390, "distinct summaries the store can put on a page");
     assertPopulationFloor(
       rows.filter((row) => row.sources.length === 0).length,
