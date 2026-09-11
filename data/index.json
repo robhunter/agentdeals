@@ -15545,9 +15545,9 @@
       ],
       "verifiedDate": "2026-08-05",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-11",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names pubnub.com as \"pubnub\" and states \"212m requests/min\""
       }
     },
     {
@@ -15561,11 +15561,11 @@
         "streaming",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-08-28",
+      "verifiedDate": "2026-09-11",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-11",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names scaledrone.com as \"scaledrone com\" and states \"100,000 daily e\""
       }
     },
     {
@@ -15670,11 +15670,11 @@
         "log-management",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-08-28",
+      "verifiedDate": "2026-09-11",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-11",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names log.dog as \"logdog\" and states \"free plan\""
       }
     },
     {
@@ -15796,11 +15796,11 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-08-27",
+      "verifiedDate": "2026-09-11",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-11",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names AutoLocalise.com as \"autolocalise\" and states \"$0\""
       }
     },
     {
@@ -16282,9 +16282,9 @@
       ],
       "verifiedDate": "2026-07-12",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-11",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names linkok.com as \"linkok com\" and states \"$5\""
       },
       "product_subtypes": {
         "taxonomy": "Monitoring",
@@ -16456,9 +16456,9 @@
       ],
       "verifiedDate": "2026-07-12",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-11",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names pagertree.com as \"pagertree\" and states \"$0\""
       },
       "product_subtypes": {
         "taxonomy": "Monitoring",
@@ -16548,9 +16548,9 @@
       ],
       "verifiedDate": "2026-07-12",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-11",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names Pingmeter.com as \"pingmeter\" and states \"$4.99\""
       },
       "product_subtypes": {
         "taxonomy": "Monitoring",
@@ -16789,9 +16789,9 @@
       ],
       "verifiedDate": "2026-07-12",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-11",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names SweetUptime as \"sweetuptime\" and states \"$0\""
       },
       "product_subtypes": {
         "taxonomy": "Monitoring",
@@ -16950,9 +16950,9 @@
       ],
       "verifiedDate": "2026-07-13",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-11",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names Xitoring.com as \"xitoring com\" and states \"$0\""
       },
       "product_subtypes": {
         "taxonomy": "Monitoring",
@@ -17206,11 +17206,11 @@
         "email",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-07-12",
+      "verifiedDate": "2026-09-11",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-11",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names addy.io as \"addy io\" and states \"$ 0\""
       }
     },
     {
@@ -17223,11 +17223,11 @@
         "email",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-08-27",
+      "verifiedDate": "2026-09-11",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-11",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names Antideo as \"antideo\" and states \"Free API\""
       }
     },
     {
@@ -17240,11 +17240,11 @@
         "email",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-08-28",
+      "verifiedDate": "2026-09-11",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-11",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names Alias.email as \"alias email\" and states \"$0\""
       }
     },
     {
@@ -17294,9 +17294,9 @@
       ],
       "verifiedDate": "2026-07-12",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-11",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names debugmail.io as \"debugmail io\" and states \"$0\""
       }
     },
     {
@@ -17328,9 +17328,9 @@
       ],
       "verifiedDate": "2026-07-12",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-11",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names DNSExit as \"dnsexit\" and states \"$9.99\""
       }
     },
     {
@@ -17397,9 +17397,9 @@
       ],
       "verifiedDate": "2026-07-12",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-11",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names Emailvalidation.io as \"emailvalidation io\" and states \"$9\""
       }
     },
     {
@@ -17432,9 +17432,9 @@
       ],
       "verifiedDate": "2026-07-16",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-11",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names forwardemail.net as \"forwardemail net\" and states \"$3\""
       }
     },
     {
@@ -17586,9 +17586,9 @@
       ],
       "verifiedDate": "2026-07-13",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-11",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names UserCheck as \"usercheck\" and states \"$0\""
       }
     },
     {
@@ -17601,11 +17601,11 @@
         "email",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-08-27",
+      "verifiedDate": "2026-09-11",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-11",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names Maildroppa as \"maildroppa\" and states \"$0\""
       }
     },
     {
@@ -17637,9 +17637,9 @@
       ],
       "verifiedDate": "2026-07-13",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-11",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names MailerSend.com as \"mailersend com\" and states \"$1\""
       }
     },
     {
@@ -17654,9 +17654,9 @@
       ],
       "verifiedDate": "2026-07-13",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-11",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names mailinator.com as \"mailinator com\" and states \"$ 0\""
       }
     },
     {
@@ -17720,11 +17720,11 @@
         "email",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-08-26",
+      "verifiedDate": "2026-09-11",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-11",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names Plunk as \"plunk\" and states \"$0.001\""
       }
     },
     {
@@ -17737,11 +17737,11 @@
         "email",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-08-27",
+      "verifiedDate": "2026-09-11",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-11",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names Sendpulse as \"sendpulse\" and states \"free plan\""
       }
     },
     {
@@ -17754,11 +17754,11 @@
         "email",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-08-26",
+      "verifiedDate": "2026-09-11",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-11",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names SendStreak as \"sendstreak\" and states \"free plan\""
       }
     },
     {
@@ -17805,11 +17805,11 @@
         "email",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-08-27",
+      "verifiedDate": "2026-09-11",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-11",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names Sweego as \"sweego\" and states \"free plan\""
       }
     },
     {
@@ -17840,11 +17840,11 @@
         "email",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-08-26",
+      "verifiedDate": "2026-09-11",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-11",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names TempMailDetector.com as \"tempmaildetector com\" and states \"$0.005\""
       }
     },
     {
@@ -17859,9 +17859,9 @@
       ],
       "verifiedDate": "2026-07-13",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-11",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names Aionda Mail as \"aionda mail\" and states \"€18.49\""
       }
     },
     {
@@ -17891,11 +17891,11 @@
         "email",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-08-26",
+      "verifiedDate": "2026-09-11",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-11",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names Verifalia as \"verifalia\" and states \"$49\""
       }
     },
     {
@@ -17908,11 +17908,11 @@
         "email",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-08-26",
+      "verifiedDate": "2026-09-11",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-11",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names verimail.io as \"verimail io\" and states \"Free forever\""
       }
     },
     {
@@ -17925,11 +17925,11 @@
         "email",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-08-26",
+      "verifiedDate": "2026-09-11",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-11",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names Waitlio as \"waitlio\" and states \"€0\""
       }
     },
     {
@@ -17944,9 +17944,9 @@
       ],
       "verifiedDate": "2026-07-12",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-11",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names Wraps as \"wraps\" and states \"$0.10\""
       }
     },
     {
@@ -17962,9 +17962,9 @@
       ],
       "verifiedDate": "2026-07-04",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-11",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names Abby as \"abby\" and states \"$12\""
       }
     },
     {
@@ -17998,9 +17998,9 @@
       ],
       "verifiedDate": "2026-07-05",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-11",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names Hypertune as \"hypertune\" and states \"$0\""
       }
     },
     {
@@ -18016,9 +18016,9 @@
       ],
       "verifiedDate": "2026-07-07",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-11",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names Toggled.dev as \"toggled dev\" and states \"$49\""
       }
     },
     {
@@ -18140,9 +18140,9 @@
       ],
       "verifiedDate": "2026-08-05",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-11",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names FormKeep.com as \"formkeep\" and states \"$0\""
       }
     },
     {
@@ -18352,9 +18352,9 @@
       ],
       "verifiedDate": "2026-07-05",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-11",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names Typeform.com as \"typeform com\" and states \"$3.67\""
       }
     },
     {
@@ -19237,11 +19237,11 @@
         "paas",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-08-28",
+      "verifiedDate": "2026-09-11",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-11",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names Apply.build as \"apply build\" and states \"Free tier\""
       },
       "product_subtypes": {
         "taxonomy": "Cloud Hosting",
@@ -19496,9 +19496,9 @@
       ],
       "verifiedDate": "2026-07-16",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-11",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names leapcell as \"leapcell\" and states \"$0.00000000\""
       },
       "product_subtypes": {
         "taxonomy": "Cloud Hosting",
@@ -20062,9 +20062,9 @@
       ],
       "verifiedDate": "2026-07-13",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-11",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names Awardspace.com as \"awardspace com\" and states \"$2.99\""
       },
       "product_subtypes": {
         "taxonomy": "Cloud Hosting",
@@ -20289,9 +20289,9 @@
       ],
       "verifiedDate": "2026-07-15",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-11",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names PandaStack as \"pandastack\" and states \"$0\""
       },
       "product_subtypes": {
         "taxonomy": "Cloud Hosting",
@@ -20386,9 +20386,9 @@
       ],
       "verifiedDate": "2026-07-16",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-11",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names readthedocs.org as \"readthedocs org\" and states \"$50\""
       },
       "product_subtypes": {
         "taxonomy": "Cloud Hosting",
@@ -20413,11 +20413,11 @@
         "paas",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-08-26",
+      "verifiedDate": "2026-09-11",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-11",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names Serv00.com as \"serv00 com\" and states \"€4\""
       },
       "product_subtypes": {
         "taxonomy": "Cloud Hosting",
@@ -20982,9 +20982,9 @@
       ],
       "verifiedDate": "2026-07-15",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-11",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names codehooks.io as \"codehooks io\" and states \"$19\""
       },
       "product_subtypes": {
         "taxonomy": "Databases",
@@ -21038,11 +21038,11 @@
         "data",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-08-28",
+      "verifiedDate": "2026-09-11",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-11",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names filess.io as \"filess io\" and states \"€0\""
       },
       "product_subtypes": {
         "taxonomy": "Databases",
@@ -21465,9 +21465,9 @@
       ],
       "verifiedDate": "2026-07-16",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-11",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names Basecamp as \"basecamp\" and states \"$25\""
       }
     },
     {
@@ -21480,11 +21480,11 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-08-28",
+      "verifiedDate": "2026-09-11",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-11",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names bitrix24.com as \"bitrix24\" and states \"$ 10\""
       }
     },
     {
@@ -21633,11 +21633,11 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-08-27",
+      "verifiedDate": "2026-09-11",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-11",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names GForge as \"gforge\" and states \"$6\""
       }
     },
     {
@@ -21932,9 +21932,9 @@
       ],
       "verifiedDate": "2026-07-19",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-11",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names ScrumFast as \"scrumfast\" and states \"$4\""
       }
     },
     {
@@ -22023,11 +22023,11 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-08-28",
+      "verifiedDate": "2026-09-11",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-11",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names Teaminal as \"teaminal\" and states \"$ 0\""
       }
     },
     {
@@ -22200,11 +22200,11 @@
         "media",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-08-27",
+      "verifiedDate": "2026-09-11",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-11",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names borgbase.com as \"borgbase com\" and states \"$2\""
       }
     },
     {
@@ -22218,11 +22218,11 @@
         "media",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-08-28",
+      "verifiedDate": "2026-09-11",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-11",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names degoo.com as \"degoo com\" and states \"$2.99\""
       }
     },
     {
@@ -22411,9 +22411,9 @@
       ],
       "verifiedDate": "2026-07-15",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-11",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names image-charts.com as \"image charts com\" and states \"$99\""
       }
     },
     {
@@ -22447,9 +22447,9 @@
       ],
       "verifiedDate": "2026-07-16",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-11",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names ImgBB as \"imgbb\" and states \"$ 3.99\""
       }
     },
     {
@@ -22481,11 +22481,11 @@
         "media",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-08-28",
+      "verifiedDate": "2026-09-11",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-11",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names kraken.io as \"kraken io\" and states \"$ 5\""
       }
     },
     {
@@ -22998,9 +22998,9 @@
       ],
       "verifiedDate": "2026-07-18",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-11",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names Circum Icons as \"circum icons\" and states \"$9\""
       }
     },
     {
@@ -23196,11 +23196,11 @@
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-08-28",
+      "verifiedDate": "2026-09-11",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-11",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names Float UI as \"float ui\" and states \"$29\""
       }
     },
     {
@@ -23216,9 +23216,9 @@
       ],
       "verifiedDate": "2026-07-16",
       "source_check": {
-        "checked": "2026-08-28",
-        "outcome": "ok",
-        "detail": "text"
+        "checked": "2026-09-11",
+        "outcome": "unreadable",
+        "detail": "HTTP 403"
       }
     },
     {
@@ -23232,11 +23232,11 @@
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-08-27",
+      "verifiedDate": "2026-09-11",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-11",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names Flyon UI as \"flyonui\" and states \"$24,895\""
       }
     },
     {
@@ -23306,9 +23306,9 @@
       ],
       "verifiedDate": "2026-07-18",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-11",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names Grapedrop as \"grapedrop\" and states \"$ 4.90\""
       }
     },
     {
@@ -23378,9 +23378,9 @@
       ],
       "verifiedDate": "2026-07-18",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-11",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names Icon Horse as \"icon horse\" and states \"$79\""
       }
     },
     {
@@ -23412,11 +23412,11 @@
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-08-28",
+      "verifiedDate": "2026-09-11",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-11",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names Iconoir as \"iconoir\" and states \"441K downloads/month\""
       }
     },
     {
@@ -23450,9 +23450,9 @@
       ],
       "verifiedDate": "2026-07-19",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-11",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names Umso as \"umso\" and states \"$0\""
       }
     },
     {
@@ -23612,9 +23612,9 @@
       ],
       "verifiedDate": "2026-07-19",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-11",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names MDBootstrap as \"mdbootstrap\" and states \"$119\""
       }
     },
     {
@@ -23720,9 +23720,9 @@
       ],
       "verifiedDate": "2026-07-17",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-11",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names HeroUI as \"heroui\" and states \"$250.00\""
       }
     },
     {
@@ -23992,9 +23992,9 @@
       ],
       "verifiedDate": "2026-07-21",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-11",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names Shadcn Studio as \"shadcn studio\" and states \"$13.4\""
       }
     },
     {
@@ -24098,11 +24098,11 @@
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-08-27",
+      "verifiedDate": "2026-09-11",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-11",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names Superdesigner as \"superdesigner\" and states \"$0\""
       }
     },
     {
@@ -24134,11 +24134,11 @@
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-07-20",
+      "verifiedDate": "2026-09-11",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-11",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names tabler-icons.io as \"tabler icons\" and states \"$ 9\""
       }
     },
     {
@@ -24260,11 +24260,11 @@
         "ui",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-08-27",
+      "verifiedDate": "2026-09-11",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-11",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names UI Avatars as \"ui avatars\" and states \"4,482,273,694 requests a month\""
       }
     },
     {
@@ -25421,9 +25421,9 @@
       ],
       "verifiedDate": "2026-07-04",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-11",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names AppFit as \"appfit\" and states \"$ 0\""
       }
     },
     {
@@ -25437,11 +25437,11 @@
         "statistics",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-08-26",
+      "verifiedDate": "2026-09-11",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-11",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names Aptabase as \"aptabase\" and states \"$10\""
       }
     },
     {
@@ -25473,11 +25473,11 @@
         "statistics",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-08-27",
+      "verifiedDate": "2026-09-11",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-11",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names Beampipe.io as \"beampipe io\" and states \"$0\""
       }
     },
     {
@@ -25606,11 +25606,11 @@
         "statistics",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-08-28",
+      "verifiedDate": "2026-09-11",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-11",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names getinsights.io as \"getinsights io\" and states \"$12\""
       }
     },
     {
@@ -25699,9 +25699,9 @@
       ],
       "verifiedDate": "2026-07-21",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-11",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names Hotjar as \"hotjar\" and states \"Free plan\""
       }
     },
     {
@@ -25807,9 +25807,9 @@
       ],
       "verifiedDate": "2026-07-22",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-11",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names Rybbit as \"rybbit\" and states \"$0\""
       }
     },
     {

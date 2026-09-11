@@ -5,12 +5,12 @@
       "change_type": "limits_reduced",
       "reason": "null_comparison",
       "detail": "summary states \"instead of\" between two values of 1 and no stored quantity is absent from the current state",
-      "summary": "The free tier now has 1 A/B test instead of 1, and the pricing is now explicitly stated as $12/month per project for the Starter tier (previously just 'scale at a fair price').",
+      "summary": "The free tier now includes 1 A/B test instead of the previously stated 1 A/B test.",
       "previous_state": "Open-Source feature flags & A/B testing. Configuration as Code & Fully Typed Typescript SDKs. Strong integration with Frameworks such as Next.js & React. Free plan: 1,000 events/month, 3 feature flags/remote configs, 1 A/B test, 5 environments.",
-      "current_state": "Free: 1,000 Events / month, 1 A/B Test, 3 Feature Flags / Remote Configs, 5 Environments. Starter: 1,000 Events / month, 1 A/B Test, 3 Feature Flags / Remote Configs, 5 Environments $12 /mo per Project",
+      "current_state": "1,000 Events / month 1 A/B Test 3 Feature Flags / Remote Configs 5 Environments",
       "source_url": "https://www.tryabby.com",
       "category": "Feature Flags",
-      "refused_date": "2026-08-28"
+      "refused_date": "2026-09-11"
     },
     {
       "vendor": "Ably",
@@ -71,6 +71,19 @@
       "source_url": "https://www.aikido.dev",
       "category": "Security",
       "refused_date": "2026-08-29"
+    },
+    {
+      "vendor": "Aionda Mail",
+      "change_type": "limits_reduced",
+      "reason": "same_transition_graded_differently",
+      "detail": "same vendor, source_url and previous_state as Aionda Mail|limits_reduced|2026-08-28|https://mail.aionda.com/",
+      "summary": "The free tier now has limits (up to 25 disposable addresses) and includes an encrypted mailbox and calendar/contacts. There is also a paid 'Plus' tier available.",
+      "previous_state": "Free disposable email addresses with forwarding and automatic address expiration. Now at mail.aionda.com.",
+      "current_state": "The free tier includes up to 25 disposable addresses, an encrypted mailbox, and calendar & contacts.",
+      "source_url": "https://mail.aionda.com/",
+      "category": "Email",
+      "refused_date": "2026-09-11",
+      "collided_with": "Aionda Mail|limits_reduced|2026-08-28|https://mail.aionda.com/"
     },
     {
       "vendor": "Aircall",
@@ -182,6 +195,19 @@
       "refused_date": "2026-08-28"
     },
     {
+      "vendor": "AppFit",
+      "change_type": "limits_reduced",
+      "reason": "same_transition_graded_differently",
+      "detail": "same vendor, source_url and previous_state as AppFit|limits_reduced|2026-08-28|https://appfit.io/product/pricing",
+      "summary": "The free plan now has limitations: 1 Company, 1 Project. Is still true for the free plan. The page now explicitly limits the number of companies and projects.",
+      "previous_state": "Cross-platform product analytics and release management tool. Free plan is manual-entry only — no automated event tracking — with product journal, weekly email insights, and unlimited team members. Automated event tracking (200K events, 12-week history) begins at Starter $9/month.",
+      "current_state": "The Free plan is $0/month for 1 Company and 1 Project. Features include Manual Data Entry, Product Journal, Email Insights, and Unlimited Team Members.",
+      "source_url": "https://appfit.io/product/pricing",
+      "category": "Analytics",
+      "refused_date": "2026-09-11",
+      "collided_with": "AppFit|limits_reduced|2026-08-28|https://appfit.io/product/pricing"
+    },
+    {
       "vendor": "Apple News",
       "change_type": "free_tier_removed",
       "reason": "confirmed_unchanged",
@@ -278,6 +304,19 @@
       "refused_date": "2026-08-28"
     },
     {
+      "vendor": "Awardspace.com",
+      "change_type": "limits_reduced",
+      "reason": "same_transition_graded_differently",
+      "detail": "same vendor, source_url and previous_state as Awardspace.com|limits_increased|2026-08-28|https://www.awardspace.com",
+      "summary": "The free tier still exists. The description is less comprehensive. The page highlights a free hosting option with 5GB Bandwidth, 1000MB Disk Space, and 100% ad-free access, along with a CMS auto installer, website builder, 99.9% Uptime, and full PHP & MySQL database support. A free domain is offered with paid plans.",
+      "previous_state": "Free web hosting + a free short domain, PHP, MySQL, App Installer, Email Sending & No Ads.",
+      "current_state": "Truly Free Web Hosting with PHP & MySQL. Create your first website for free, and tell your story to the world. The Free Web Hosting Service is suitable for small blog websites, news media, and idea launching. Approximate monthly visits: ~5000/month. Includes 5GB Bandwidth, 1000MB Disk Space, 100% ad-free, CMS auto installer, Free website builder, 99.9% Uptime and 24/7 support, Full PHP & MySQL database support.",
+      "source_url": "https://www.awardspace.com",
+      "category": "Cloud Hosting",
+      "refused_date": "2026-09-11",
+      "collided_with": "Awardspace.com|limits_increased|2026-08-28|https://www.awardspace.com"
+    },
+    {
       "vendor": "AWS",
       "change_type": "limits_increased",
       "reason": "confirmed_unchanged",
@@ -288,6 +327,19 @@
       "source_url": "https://aws.amazon.com/free/",
       "category": "Cloud IaaS",
       "refused_date": "2026-09-05"
+    },
+    {
+      "vendor": "Basecamp",
+      "change_type": "limits_reduced",
+      "reason": "same_transition_graded_differently",
+      "detail": "same vendor, source_url and previous_state as Basecamp|limits_reduced|2026-08-28|https://basecamp.com/personal",
+      "summary": "The free plan now allows only one project. Previously up to 3 projects.",
+      "previous_state": "To-do lists, milestone management, forum-like messaging, file sharing, and time tracking. Up to 3 projects, 20 users, and 1GB of storage space.",
+      "current_state": "Free One free project for personal use. Sign up free 1 project ? The free plan is limited to one project.",
+      "source_url": "https://basecamp.com/personal",
+      "category": "Project Management",
+      "refused_date": "2026-09-11",
+      "collided_with": "Basecamp|limits_reduced|2026-08-28|https://basecamp.com/personal"
     },
     {
       "vendor": "Baseten",
@@ -508,6 +560,19 @@
       "refused_date": "2026-08-28"
     },
     {
+      "vendor": "Circum Icons",
+      "change_type": "free_tier_removed",
+      "reason": "same_transition_graded_differently",
+      "detail": "same vendor, source_url and previous_state as Circum Icons|free_tier_removed|2026-08-28|https://circumicons.com",
+      "summary": "The vendor no longer offers a free tier. They now charge $9 for access to 1600+ icons.",
+      "previous_state": "Consistent open-source icons such as SVG for React, Vue, and Svelte.",
+      "current_state": "Access 1600+ Unique Icons for Just $9",
+      "source_url": "https://circumicons.com",
+      "category": "Design",
+      "refused_date": "2026-09-11",
+      "collided_with": "Circum Icons|free_tier_removed|2026-08-28|https://circumicons.com"
+    },
+    {
       "vendor": "cirun.io",
       "change_type": "restriction",
       "reason": "confirmed_unchanged",
@@ -650,6 +715,18 @@
       "source_url": "https://codefresh.io/pricing/",
       "category": "CI/CD",
       "refused_date": "2026-08-28"
+    },
+    {
+      "vendor": "codehooks.io",
+      "change_type": "limits_reduced",
+      "reason": "unquantified_limit",
+      "detail": "limits_reduced claimed, but the current state names no quantity for anything the stored state measured (150 mb, 1 gb, 60 api, 1 developer)",
+      "summary": "The free plan now has significantly reduced API call limits (1/sec, 500/day) compared to the stored information (60/minute).",
+      "previous_state": "Easy to use JavaScript serverless API/backend and NoSQL database service with functions, MongoDB-ish queries, key/value lookups, a job system, realtime messages, worker queues, a powerful CLI and a web-based data manager. Free plan has 150 MB database storage and 1 GB file storage, 60 API calls per minute, 1 developer. No credit-card required.",
+      "current_state": "API/Functions: 1/sec, 500/day",
+      "source_url": "https://codehooks.io/",
+      "category": "Databases",
+      "refused_date": "2026-09-11"
     },
     {
       "vendor": "coderabbit.ai",
@@ -861,12 +938,12 @@
       "change_type": "restriction",
       "reason": "no_terms_to_narrow",
       "detail": "a restriction was measured against \"Easy to use testing mail server for developers\", a stored description that states no price, named tier or allowance, so there is nothing for the terms to have narrowed from",
-      "summary": "The free tier is now limited to OSS projects. A Silver plan is available for free for OSS projects, but other users have a 2 week trial then $2 per user per month.",
+      "summary": "The free tier is now the 'Silver' plan and is only free for Open Source projects. There is a paid plan available.",
       "previous_state": "Easy to use testing mail server for developers",
-      "current_state": "We provide a free Silver plan for OSS projects. Contact us here to connect. Plans and pricing We provide a free Silver plan for OSS projects. Contact us here to connect. Free Silver Gold Projects 1 10 Unlimited Team Members 2 20 Unlimited Test Emails per Day Unlimited Unlimited Unlimited Forwarding Emails per Day 1 100 Unlimited Mailbox Storage Limit 10MB per team 1GB per team 5GB per team Forwarding Rules – 1 per project 20 per project IMAP – Soon Soon REST API – Spam Rating – – Soon Mail Client Viewer – – Soon Pricing $0 2 weeks trial period then $2 per user per month $5 per user per month",
+      "current_state": "We provide a free Silver plan for OSS projects. Contact us here to connect.",
       "source_url": "https://debugmail.io/",
       "category": "Email",
-      "refused_date": "2026-08-28"
+      "refused_date": "2026-09-11"
     },
     {
       "vendor": "Deepgram",
@@ -916,6 +993,19 @@
       "source_url": "https://www.digitalocean.com/pricing",
       "category": "Cloud IaaS",
       "refused_date": "2026-09-03"
+    },
+    {
+      "vendor": "DNSExit",
+      "change_type": "pricing_restructured",
+      "reason": "same_transition_graded_differently",
+      "detail": "same vendor, source_url and previous_state as DNSExit|pricing_restructured|2026-08-28|https://dnsexit.com/",
+      "summary": "The free tier for email now offers unlimited email addresses.",
+      "previous_state": "Up to 2 Email addresses under your domain for free with 100MB of storage space. IMAP, POP3, SMTP, SPF/DKIM support.",
+      "current_state": "Unlimited email addresses. Access mail through Webmail, POP, or IMAP.",
+      "source_url": "https://dnsexit.com/",
+      "category": "Email",
+      "refused_date": "2026-09-11",
+      "collided_with": "DNSExit|pricing_restructured|2026-08-28|https://dnsexit.com/"
     },
     {
       "vendor": "Docker Hub",
@@ -1043,12 +1133,12 @@
       "change_type": "limits_increased",
       "reason": "unquantified_limit",
       "detail": "limits_increased claimed, but the current state names no quantity for anything the stored state measured (100 email)",
-      "summary": "The free tier now offers 150 monthly credits instead of a one-time 100 verifications.",
+      "summary": "The free tier now offers 150 monthly credits instead of a one-time 100 credits.",
       "previous_state": "100 free email verifications total (one-time, not monthly)",
-      "current_state": "The free plan includes 150 requests - premium plans start at $9/mo",
+      "current_state": "Get started for free with 150 free monthly credits. No payment details needed.",
       "source_url": "https://emailvalidation.io",
       "category": "Email",
-      "refused_date": "2026-08-28"
+      "refused_date": "2026-09-11"
     },
     {
       "vendor": "Expensify",
@@ -1181,6 +1271,31 @@
       "source_url": "https://www.formkeep.com/",
       "category": "Forms",
       "refused_date": "2026-08-28"
+    },
+    {
+      "vendor": "FormKeep.com",
+      "change_type": "limits_reduced",
+      "reason": "measures_no_change",
+      "detail": "limits_reduced claimed, and every quantity the record compares holds the same value once notation and period are normalised — 50 submission/mo against 50 submission/mo",
+      "summary": "The free tier now has a limit of 50 submissions per month, spam protection, a form designer, a branded thanks page, and daily notifications.",
+      "previous_state": "Unlimited forms with 50 monthly submissions, spam protection, email notification, and a drag-and-drop designer that can export HTML. Additional features include custom field rules, teams, and integrations to Google Sheets, Slack, ActiveCampaign, and Zapier.",
+      "current_state": "Free $0 / month Spam Protection 50 Submissions / month Form Designer Branded Thanks Page Daily Notifications 1 Month Retention Unlimited forms",
+      "source_url": "https://www.formkeep.com/",
+      "category": "Forms",
+      "refused_date": "2026-09-11"
+    },
+    {
+      "vendor": "forwardemail.net",
+      "change_type": "limits_reduced",
+      "reason": "same_transition_graded_differently",
+      "detail": "same vendor, source_url and previous_state as forwardemail.net|limits_reduced|2026-08-28|https://forwardemail.net",
+      "summary": "The free plan only supports email forwarding, and does not include sending capabilities or storage. Paid plans start at $3/month for enhanced features like sending, 10GB storage, and API access.",
+      "previous_state": "Free email forwarding for custom domains. Create and forward an unlimited amount of email addresses with your domain name (**note**: You must pay if you use .casa, .cf, .click, .email, .fit, .ga, .gdn, .gq, .lat, .loan, .london, .men, .ml, .pl, .rest, .ru, .tk, .top, .work TLDs due to spam)",
+      "current_state": "Free Only supports email forwarding $0 /month for unlimited domains Forward your domain's mail Unlimited inbound email Spam protection 50 MB attachment limit Send Mail As with Gmail Catch-all email addresses Multiple recipients per alias Send emails to webhooks Regular expression filtering Limitations : Email forwarding only, which means you cannot send mail",
+      "source_url": "https://forwardemail.net",
+      "category": "Email",
+      "refused_date": "2026-09-11",
+      "collided_with": "forwardemail.net|limits_reduced|2026-08-28|https://forwardemail.net"
     },
     {
       "vendor": "FreeIPAPI",
@@ -1365,6 +1480,19 @@
       "collided_with": "Grafana k6 Cloud|limits_reduced|2026-08-28|https://grafana.com/pricing/"
     },
     {
+      "vendor": "Grapedrop",
+      "change_type": "limits_reduced",
+      "reason": "same_transition_graded_differently",
+      "detail": "same vendor, source_url and previous_state as Grapedrop|limits_reduced|2026-08-28|https://grapedrop.com/",
+      "summary": "The free plan is now limited to 5 Pages/Sites and 100 Form Submissions.",
+      "previous_state": "Responsive, powerful, SEO-optimized web page builder based on GrapesJS Framework. Free for the first five pages, unlimited custom domains, all features, and simple usage.",
+      "current_state": "Starter Free / forever --> 5 Pages/Sites 100 Form Submissions 100 Custom blocks Unlimited Custom Domains Full Feature Editor Google Fonts",
+      "source_url": "https://grapedrop.com/",
+      "category": "Design",
+      "refused_date": "2026-09-11",
+      "collided_with": "Grapedrop|limits_reduced|2026-08-28|https://grapedrop.com/"
+    },
+    {
       "vendor": "Harness CI",
       "change_type": "limits_reduced",
       "reason": "unquantified_limit",
@@ -1411,6 +1539,32 @@
       "source_url": "https://heap.io",
       "category": "Analytics",
       "refused_date": "2026-08-29"
+    },
+    {
+      "vendor": "HeroUI",
+      "change_type": "limits_reduced",
+      "reason": "same_transition_graded_differently",
+      "detail": "same vendor, source_url and previous_state as HeroUI|new_tier|2026-08-28|https://heroui.com/",
+      "summary": "The page mentions a free 7-day trial, but also indicates a paid plan is required for more than 2 credits. Components like 'Dashboard', 'Mail', 'Chat', and 'Finances' are 'Available in Pro'.",
+      "previous_state": "Free. Beautiful, fast, and modern React & Next.js UI library. Rebranded from NextUI to HeroUI.",
+      "current_state": "Users have 2 credits and can start a free 7-day trial. Access to components like Dashboard, Mail, Chat, and Finances requires a Pro plan.",
+      "source_url": "https://heroui.com/",
+      "category": "Design",
+      "refused_date": "2026-09-11",
+      "collided_with": "HeroUI|new_tier|2026-08-28|https://heroui.com/"
+    },
+    {
+      "vendor": "Hotjar",
+      "change_type": "limits_increased",
+      "reason": "same_transition_graded_differently",
+      "detail": "same vendor, source_url and previous_state as Hotjar|limits_increased|2026-08-28|https://hotjar.com",
+      "summary": "Hotjar's own page now redirects to contentsquare.com. The free plan now offers 200k sessions per month, a significant increase from 20,000 sessions. It also includes features like error monitoring, funnels, and 10+ integrations. Hotjar is now part of Contentsquare.",
+      "previous_state": "Website Analytics and Reports. Now part of Contentsquare. Free Plan allows 20,000 sessions. Heatmaps, recordings, surveys.",
+      "current_state": "The Contentsquare Free plan includes 200k sessions per month, heatmaps, session replay, surveys, error monitoring, funnels, and 10+ integrations. It also includes a 15-day trial of the Growth plan.",
+      "source_url": "https://hotjar.com",
+      "category": "Analytics",
+      "refused_date": "2026-09-11",
+      "collided_with": "Hotjar|limits_increased|2026-08-28|https://hotjar.com"
     },
     {
       "vendor": "houndci.com",
@@ -1473,6 +1627,18 @@
       "refused_date": "2026-09-10"
     },
     {
+      "vendor": "Hypertune",
+      "change_type": "product_deprecated",
+      "reason": "confirmed_unchanged",
+      "detail": "The report describes a shutdown date and limited availability, which is not reflected in either description. The descriptions themselves largely restate the same free tier terms with minor wording differences.",
+      "summary": "Hypertune is shutting down on August 10, 2026, and is no longer accepting new signups. While a free plan is still listed, it's for testing/evaluation only and the service will eventually be unavailable.",
+      "previous_state": "Type-safe feature flags, A/B testing, analytics and app configuration, with Git-style version control and synchronous, in-memory, local flag evaluation. Free plan: up to 3 team members, 1M CDN requests/mo, 1M analytics events/mo, unlimited feature flags, A/B tests, projects, environments, and MAUs/MTUs.",
+      "current_state": "$0 / month, 1m CDN requests, 1m analytics events, Up to 3 team members, Unlimited CDN bandwidth and service connections, Unlimited MAUs / MTUs, Unlimited environments and projects, Unlimited feature flags and experiments.",
+      "source_url": "https://www.hypertune.com/pricing",
+      "category": "Feature Flags",
+      "refused_date": "2026-09-11"
+    },
+    {
       "vendor": "iCloud",
       "change_type": "restriction",
       "reason": "confirmed_unchanged",
@@ -1485,6 +1651,19 @@
       "refused_date": "2026-09-03"
     },
     {
+      "vendor": "Icon Horse",
+      "change_type": "limits_reduced",
+      "reason": "same_transition_graded_differently",
+      "detail": "same vendor, source_url and previous_state as Icon Horse|limits_reduced|2026-08-28|https://icon.horse",
+      "summary": "The free tier now has a limit of 1,000 icons/month and uses generic fallbacks.",
+      "previous_state": "Get the highest resolution favicon for any website from our simple API.",
+      "current_state": "Up to 1,000 icons/month. Generic fallbacks for sites with no icons. No account needed.",
+      "source_url": "https://icon.horse",
+      "category": "Design",
+      "refused_date": "2026-09-11",
+      "collided_with": "Icon Horse|limits_reduced|2026-08-28|https://icon.horse"
+    },
+    {
       "vendor": "image-charts.com",
       "change_type": "limits_reduced",
       "reason": "confirmed_unchanged",
@@ -1494,7 +1673,20 @@
       "current_state": "A small \"image-charts.com\" text watermark will appear at the top right hand corner.",
       "source_url": "https://www.image-charts.com/",
       "category": "Storage",
-      "refused_date": "2026-08-28"
+      "refused_date": "2026-09-11"
+    },
+    {
+      "vendor": "ImgBB",
+      "change_type": "new_tier",
+      "reason": "same_transition_graded_differently",
+      "detail": "same vendor, source_url and previous_state as ImgBB|limits_increased|2026-08-28|https://imgbb.com/",
+      "summary": "While a free tier still exists, ImgBB now offers paid plans (Pro) with increased limits and features like unlimited space and a 64MB file size limit per image. The free tier still has a 32MB limit.",
+      "previous_state": "ImgBB is an unlimited image hosting servce. Drag and drop your image anywhere on the screen. 32 MB / image limit. Receive Direct image links, BBCode and HTML thumbnails after uploading image. Login to see the upload history.",
+      "current_state": "ImgBB is a free image hosting service. Upgrade to unlock all the features. 3 Year Pro $ 3.99 Billed $143.64 UPGRADE No Ads Direct Linking Unlimited space Replace image feature 64 MB file size per image API Access 69% OFF Annual Plan $ 7.99 Billed $95.88 UPGRADE No Ads Direct Linking Unlimited space Replace image feature 64 MB file size per image API Access 38% OFF Monthly Plan $ 12.99 UPGRADE No Ads Direct Linking Unlimited space Replace image feature 64 MB file size per image API Access",
+      "source_url": "https://imgbb.com/",
+      "category": "Storage",
+      "refused_date": "2026-09-11",
+      "collided_with": "ImgBB|limits_increased|2026-08-28|https://imgbb.com/"
     },
     {
       "vendor": "Imitate Email",
@@ -1708,12 +1900,12 @@
       "change_type": "limits_reduced",
       "reason": "unquantified_limit",
       "detail": "limits_reduced claimed, but the current state names no quantity for anything the stored state measured (100 service, 10 async, 100 redi)",
-      "summary": "The free tier now allows for deploying up to 20 projects, but the previous limits of 100k service invocations, 10k async tasks and 100k Redis commands are no longer mentioned.",
+      "summary": "The free tier now allows for deploying up to 20 projects, but the limits on service invocations, async tasks, and Redis commands are no longer mentioned.",
       "previous_state": "Leapcell is a reliable distributed applications platform, providing everything you need to seamlessly support your rapid growth. The free plan includes 100k service invocations, 10k async tasks and 100k Redis commands.",
-      "current_state": "Leapcell lets you deploy up to 20 projects for free.",
+      "current_state": "Deploy up to 20 projects for free.",
       "source_url": "https://leapcell.io/",
       "category": "Cloud Hosting",
-      "refused_date": "2026-08-28"
+      "refused_date": "2026-09-11"
     },
     {
       "vendor": "LemonSqueezy",
@@ -1738,6 +1930,19 @@
       "source_url": "https://www.lilbots.io/",
       "category": "Low-Code Platforms",
       "refused_date": "2026-09-01"
+    },
+    {
+      "vendor": "linkok.com",
+      "change_type": "pricing_restructured",
+      "reason": "same_transition_graded_differently",
+      "detail": "same vendor, source_url and previous_state as linkok.com|pricing_restructured|2026-08-28|https://linkok.com",
+      "summary": "The free tier now has multiple options: a monthly scan with public reports, or weekly/daily scans with private reports, all for up to 100 pages.",
+      "previous_state": "Online broken link checker, free for small websites up to 100 pages, completely free for open-source projects.",
+      "current_state": "Free forever for small sites. No credit card required. Monthly scans with public reports are free. Weekly scans with private reports are $4/month billed annually at $50 + local taxes. Daily scans with private reports are $8/month billed annually at $100 + local taxes.",
+      "source_url": "https://linkok.com",
+      "category": "Monitoring",
+      "refused_date": "2026-09-11",
+      "collided_with": "linkok.com|pricing_restructured|2026-08-28|https://linkok.com"
     },
     {
       "vendor": "LiveKit",
@@ -1849,6 +2054,31 @@
       "refused_date": "2026-09-10"
     },
     {
+      "vendor": "MailerSend.com",
+      "change_type": "new_free_tier",
+      "reason": "same_transition_graded_differently",
+      "detail": "same vendor, source_url and previous_state as MailerSend.com|pricing_restructured|2026-08-28|https://www.mailersend.com",
+      "summary": "The free tier now includes a 14-day professional trial with 500 emails/month, 24/7 support, and 99.5% uptime guarantee.",
+      "previous_state": "Email API, SMTP, 500 emails/month free for transactional emails",
+      "current_state": "Send 500 emails/month for free during a 14-day Professional trial. Includes 24/7 Support and 99.5% guaranteed uptime.",
+      "source_url": "https://www.mailersend.com",
+      "category": "Email",
+      "refused_date": "2026-09-11",
+      "collided_with": "MailerSend.com|pricing_restructured|2026-08-28|https://www.mailersend.com"
+    },
+    {
+      "vendor": "mailinator.com",
+      "change_type": "new_free_tier",
+      "reason": "states_no_terms",
+      "detail": "every clause of the summary states absence or hedge rather than a term the page carries, so it reports the reading rather than a change",
+      "summary": "While Mailinator still offers a free disposable email address, the free tier now appears to be 'Verified Pro' which includes a private domain and API access. The original description stated a completely free, public email system with no mention of these features.",
+      "previous_state": "Free, public email system where you can use any inbox you want",
+      "current_state": "Mailinator offers a 100% free, public temporary or disposable email address. Additionally, the 'Verified Pro' plan is free and includes a private domain and access to our API.",
+      "source_url": "https://www.mailinator.com/",
+      "category": "Email",
+      "refused_date": "2026-09-11"
+    },
+    {
       "vendor": "mailsac.com",
       "change_type": "limits_reduced",
       "reason": "unquantified_limit",
@@ -1895,6 +2125,18 @@
       "source_url": "https://www.marketdata.app",
       "category": "Dev Utilities",
       "refused_date": "2026-09-10"
+    },
+    {
+      "vendor": "MDBootstrap",
+      "change_type": "pricing_restructured",
+      "reason": "states_no_difference",
+      "detail": "the summary states that the page agrees with what we hold, and names no figure the stored description did not already carry",
+      "summary": "While MDB still offers components for free under the MIT License, the page heavily promotes 'MDB Pro' and other paid options. The free tier appears to be more focused on the core components, and the description of extensive tutorials and a colossal community is not explicitly highlighted as part of the free offering. They also offer a free hosting tool, MDB GO, which wasn't mentioned in the original description.",
+      "previous_state": "Free for personal & commercial use Bootstrap, Angular, React, and Vue UI Kits with over 700 components, stunning templates, 1-min installation, extensive tutorials & colossal community.",
+      "current_state": "MDB offers a collection of components for free under the MIT License. They also offer MDB Pro with advanced components and support, and MDB GO for free hosting and deployment.",
+      "source_url": "https://mdbootstrap.com/",
+      "category": "Design",
+      "refused_date": "2026-09-11"
     },
     {
       "vendor": "MDBootstrap",
@@ -2211,6 +2453,31 @@
       "refused_date": "2026-08-28"
     },
     {
+      "vendor": "pagertree.com",
+      "change_type": "limits_reduced",
+      "reason": "measures_no_change",
+      "detail": "limits_reduced claimed, and every quantity the record compares holds the same value once notation and period are normalised — 5 user against 5 user",
+      "summary": "The free tier now has a limit of 5 users and is called 'Basic'.",
+      "previous_state": "Simple interface for alerting and on-call management. Free up to 5 users.",
+      "current_state": "$0 / user/mo $0 /user/yr Up to 5 Users OnCall Schedules Push, Email, & Slack Notifications",
+      "source_url": "https://pagertree.com/",
+      "category": "Monitoring",
+      "refused_date": "2026-09-11"
+    },
+    {
+      "vendor": "PandaStack",
+      "change_type": "pricing_model_change",
+      "reason": "same_transition_graded_differently",
+      "detail": "same vendor, source_url and previous_state as PandaStack|pricing_model_change|2026-08-28|https://www.pandastack.io/",
+      "summary": "PandaStack's own page now redirects to pandastack.ai. The free tier now offers a $5.40/mo usage credit instead of a fixed amount of bandwidth and build minutes.",
+      "previous_state": "An eco-system for developers includes web hosting in different formats (static web hosting, container based web hosting, wordpress and so many other managed apps available in couple of clicks ). One free web hosting (static or containered) and one free database with 100GB Bandwidth and 300 Build mins/month.",
+      "current_state": "Free tier with $5.40/mo usage credit. No card.",
+      "source_url": "https://www.pandastack.io/",
+      "category": "Cloud Hosting",
+      "refused_date": "2026-09-11",
+      "collided_with": "PandaStack|pricing_model_change|2026-08-28|https://www.pandastack.io/"
+    },
+    {
       "vendor": "pantheon.io",
       "change_type": "free_tier_removed",
       "reason": "states_no_terms",
@@ -2269,6 +2536,19 @@
       "source_url": "https://pinggy.io",
       "category": "Tunneling & Networking",
       "refused_date": "2026-09-01"
+    },
+    {
+      "vendor": "Pingmeter.com",
+      "change_type": "restriction",
+      "reason": "same_transition_graded_differently",
+      "detail": "same vendor, source_url and previous_state as Pingmeter.com|restriction|2026-08-28|https://pingmeter.com/",
+      "summary": "The free tier now has restrictions: it's limited to accounts with 1 category and less than 5 uptime monitors. SMS/voice notification, scheduling and recovery actions are excluded from the free tier.",
+      "previous_state": "5 uptime monitors with 10-minute interval. Monitor SSH, HTTP, HTTPS, and any custom TCP ports.",
+      "current_state": "Free account is limited to accounts with 1 category and less than 5 uptime monitors. It exclude pro features such as sms/voice notification, scheduling and recovery actions.",
+      "source_url": "https://pingmeter.com/",
+      "category": "Monitoring",
+      "refused_date": "2026-09-11",
+      "collided_with": "Pingmeter.com|restriction|2026-08-28|https://pingmeter.com/"
     },
     {
       "vendor": "Pixlr",
@@ -2350,10 +2630,10 @@
       "detail": "limits_reduced claimed, but the current state names no quantity for anything the stored state measured (1 million)",
       "summary": "The free tier now offers up to 200 Monthly Active Users (MAUs) instead of 1 million transactions.",
       "previous_state": "Swift, Kotlin, and React messaging at 1 million transactions each month. Transactions may contain multiple messages.",
-      "current_state": "Always free for up to 200 MAUs. No Credit Card Required.",
+      "current_state": "Always free for up to 200 MAUs No Credit Card Required Every PubNub SDK available Complete Feature Access to 100+ Integrations",
       "source_url": "https://www.pubnub.com/",
       "category": "Messaging",
-      "refused_date": "2026-08-28"
+      "refused_date": "2026-09-11"
     },
     {
       "vendor": "Pullflow",
@@ -2415,6 +2695,19 @@
       "source_url": "https://qoddi.com",
       "category": "Cloud Hosting",
       "refused_date": "2026-08-28"
+    },
+    {
+      "vendor": "readthedocs.org",
+      "change_type": "limits_reduced",
+      "reason": "same_transition_graded_differently",
+      "detail": "same vendor, source_url and previous_state as readthedocs.org|pricing_restructured|2026-08-28|https://readthedocs.org/",
+      "summary": "readthedocs.org's own page now redirects to about.readthedocs.com. Read the Docs now offers two main plans: a free 'Community' plan for open-source projects and a paid 'Business' plan for commercial projects. The free plan is still available for open-source software. Private repository support and SSO are now paid features.",
+      "previous_state": "Free documentation hosting with versioning, PDF generation, and more",
+      "current_state": "Free for open-source software. Clone public repositories Public documentation Ads supported hosting. Private repository support is a paid plan feature.",
+      "source_url": "https://readthedocs.org/",
+      "category": "Cloud Hosting",
+      "refused_date": "2026-09-11",
+      "collided_with": "readthedocs.org|pricing_restructured|2026-08-28|https://readthedocs.org/"
     },
     {
       "vendor": "Reducto",
@@ -2575,6 +2868,19 @@
       "refused_date": "2026-09-07"
     },
     {
+      "vendor": "Rybbit",
+      "change_type": "free_tier_removed",
+      "reason": "same_transition_graded_differently",
+      "detail": "same vendor, source_url and previous_state as Rybbit|free_tier_removed|2026-08-28|https://rybbit.com/",
+      "summary": "The free tier no longer exists as described. The page offers a 7-day free trial. Then transitions to paid plans starting at $13/month. Previously a free plan with 3,000 monthly events.",
+      "previous_state": "Open-source and cookieless alternative to Google Analytics that is 10x more intuitive. Free plans has 3,000 monthly events.",
+      "current_state": "The page offers a 7-day free trial, then paid plans starting at $13/month billed annually. The Standard plan includes up to 5 websites and 3 team members.",
+      "source_url": "https://rybbit.com/",
+      "category": "Analytics",
+      "refused_date": "2026-09-11",
+      "collided_with": "Rybbit|free_tier_removed|2026-08-28|https://rybbit.com/"
+    },
+    {
       "vendor": "Sauce Labs",
       "change_type": "free_tier_removed",
       "reason": "dangling_reference",
@@ -2598,6 +2904,19 @@
       "category": "Web Scraping",
       "refused_date": "2026-09-10",
       "collided_with": "ScraperAPI|free_tier_removed|2026-08-28|https://www.scraperapi.com/pricing/"
+    },
+    {
+      "vendor": "ScrumFast",
+      "change_type": "limits_increased",
+      "reason": "same_transition_graded_differently",
+      "detail": "same vendor, source_url and previous_state as ScrumFast|limits_increased|2026-08-28|https://www.scrumfast.com",
+      "summary": "The user limit has increased from 5 to 15.",
+      "previous_state": "Scrum board with a very intuitive interface, free up to 5 users.",
+      "current_state": "Up to 15 Users Free. No paid options.",
+      "source_url": "https://www.scrumfast.com",
+      "category": "Project Management",
+      "refused_date": "2026-09-11",
+      "collided_with": "ScrumFast|limits_increased|2026-08-28|https://www.scrumfast.com"
     },
     {
       "vendor": "Semaphore CI",
@@ -2660,6 +2979,19 @@
       "category": "Server Management",
       "refused_date": "2026-09-10",
       "collided_with": "serveravatar.com|limits_increased|2026-08-28|https://serveravatar.com"
+    },
+    {
+      "vendor": "Shadcn Studio",
+      "change_type": "pricing_model_change",
+      "reason": "same_transition_graded_differently",
+      "detail": "same vendor, source_url and previous_state as Shadcn Studio|pricing_model_change|2026-08-28|https://shadcnstudio.com/theme-editor",
+      "summary": "The page details a variety of features and plans, including paid options like Branding ($60), Marketing ($120), etc. Are not free.",
+      "previous_state": "Preview your theme changes across different components and layouts.",
+      "current_state": "Shadcn Studio offers a range of features, including a theme generator with both free and paid components. Pro features require a paid plan.",
+      "source_url": "https://shadcnstudio.com/theme-editor",
+      "category": "Design",
+      "refused_date": "2026-09-11",
+      "collided_with": "Shadcn Studio|pricing_model_change|2026-08-28|https://shadcnstudio.com/theme-editor"
     },
     {
       "vendor": "SmartParse",
@@ -2809,6 +3141,19 @@
       "refused_date": "2026-09-09"
     },
     {
+      "vendor": "SweetUptime",
+      "change_type": "limits_increased",
+      "reason": "same_transition_graded_differently",
+      "detail": "same vendor, source_url and previous_state as SweetUptime|limits_increased|2026-08-28|https://dicloud.net/sweetuptime-server-uptime-monitoring/",
+      "summary": "The free plan now offers 20 uptime monitors, 20 domain & SSL checks, and 10 servers. Previously 10 server, 10 uptime, and 10 domain for free.",
+      "previous_state": "Server monitoring, uptime monitoring, DNS & domain monitoring. Monitor 10 server, 10 uptime, and 10 domain for free.",
+      "current_state": "The FREE plan is $0 and includes 20 uptime monitor, 20 domain & SSL, 10 servers, and 5 status pages with a 1 min monitor interval and downtime alerts.",
+      "source_url": "https://dicloud.net/sweetuptime-server-uptime-monitoring/",
+      "category": "Monitoring",
+      "refused_date": "2026-09-11",
+      "collided_with": "SweetUptime|limits_increased|2026-08-28|https://dicloud.net/sweetuptime-server-uptime-monitoring/"
+    },
+    {
       "vendor": "synadia.com",
       "change_type": "limits_reduced",
       "reason": "states_no_terms",
@@ -2930,6 +3275,19 @@
       "refused_date": "2026-08-28"
     },
     {
+      "vendor": "Toggled.dev",
+      "change_type": "limits_increased",
+      "reason": "same_transition_graded_differently",
+      "detail": "same vendor, source_url and previous_state as Toggled.dev|limits_increased|2026-08-28|https://www.toggled.dev/pricing",
+      "summary": "The free plan now includes many more features than previously, such as Role Based Access Control, Google & GitHub SSO, 2F authentication, and data residency.",
+      "previous_state": "Enterprise-ready, scalable multi-regional feature toggles management platform. Free plan: 1 project, up to 10 toggles/project, 2 environments/project, 2 seats, unlimited MAU/clients. SDK, analytics dashboard, release calendar, and Slack notifications included.",
+      "current_state": "FREE plan includes: Single project, Unlimited Clients, Up to 10 feature toggles per project, Up to 2 environments per project, 2 seats included, Data residency, Users segmentation, Session stickiness, Realtime notifications, Unlimited MAU, Role Based Access Control, Embedded analytics, Release Calendar (beta), Compatible with many client SDKs, Integrations with Slack & MS Teams, generic webhook and admin API, Amazing activation strategies!, Google & GitHub SSO, 2F authentication, Helpdesk",
+      "source_url": "https://www.toggled.dev/pricing",
+      "category": "Feature Flags",
+      "refused_date": "2026-09-11",
+      "collided_with": "Toggled.dev|limits_increased|2026-08-28|https://www.toggled.dev/pricing"
+    },
+    {
       "vendor": "Tomorrow.io Weather API",
       "change_type": "limits_reduced",
       "reason": "confirmed_unchanged",
@@ -2970,12 +3328,12 @@
       "change_type": "limits_reduced",
       "reason": "unquantified_limit",
       "detail": "limits_reduced claimed, but the current state names no quantity for anything the stored state measured (100 respons)",
-      "summary": "The free plan now appears to be focused on getting started and does not explicitly state a limit of 100 monthly responses. The page highlights AI-powered features and multiple paid plans (Core, Growth, Research Flow, Talent, Enterprise).",
+      "summary": "The free plan is still offered, but the description of its limits is no longer present on the pricing page. The page highlights new paid plans (Core, Growth, Research, Talent, Enterprise) and focuses on AI-powered features.",
       "previous_state": "Include beautifully designed forms on websites. The free plan allows unlimited questions per form and 100 monthly responses.",
-      "current_state": "The page states you can 'Get started—it’s free' and build forms with AI automation, but does not specify response limits for the free tier.",
+      "current_state": "The page states you can 'Get started—it’s free' but does not specify any limits on questions or monthly responses.",
       "source_url": "https://www.typeform.com/",
       "category": "Forms",
-      "refused_date": "2026-08-28"
+      "refused_date": "2026-09-11"
     },
     {
       "vendor": "Umami",
@@ -2988,6 +3346,19 @@
       "source_url": "https://umami.is/",
       "category": "Analytics",
       "refused_date": "2026-09-10"
+    },
+    {
+      "vendor": "Umso",
+      "change_type": "limits_reduced",
+      "reason": "same_transition_graded_differently",
+      "detail": "same vendor, source_url and previous_state as Umso|limits_reduced|2026-08-28|https://www.umso.com/",
+      "summary": "The free tier now has limitations on pages (Homepage Only), includes Umso Branding, and offers a free subdomain. It also includes basic analytics and chat/email support.",
+      "previous_state": "AI website builder. Generate, edit, and publish beautiful websites and landing pages for your startup. One website for free. Formerly Landen.",
+      "current_state": "The Free plan is $0 / Site / Month and includes a Homepage Only, Blog, Umso Branding, Free Subdomain, Basic Analytics, and Chat & Email Support.",
+      "source_url": "https://www.umso.com/",
+      "category": "Design",
+      "refused_date": "2026-09-11",
+      "collided_with": "Umso|limits_reduced|2026-08-28|https://www.umso.com/"
     },
     {
       "vendor": "UniRateAPI",
@@ -3060,6 +3431,19 @@
       "source_url": "https://www.uptimia.com/pricing",
       "category": "Monitoring",
       "refused_date": "2026-09-05"
+    },
+    {
+      "vendor": "UserCheck",
+      "change_type": "limits_increased",
+      "reason": "same_transition_graded_differently",
+      "detail": "same vendor, source_url and previous_state as UserCheck|limits_increased|2026-08-28|https://www.usercheck.com/",
+      "summary": "The free tier now offers 1,000 credits per month (equivalent to 1 request per second) instead of 120 requests/hour.",
+      "previous_state": "Prevent users from signing up with temporary email addresses, 120 requests/hour. Rebranded to UserCheck.",
+      "current_state": "Start on our forever free plan. $0 /month. Use for free 1,000 credits per month. 1 request per second. Limited request log. Unlimited user seats. Multiple API Keys.",
+      "source_url": "https://www.usercheck.com/",
+      "category": "Email",
+      "refused_date": "2026-09-11",
+      "collided_with": "UserCheck|limits_increased|2026-08-28|https://www.usercheck.com/"
     },
     {
       "vendor": "userforge.com",
@@ -3161,6 +3545,19 @@
       "collided_with": "Webvizio|free_tier_removed|2026-08-28|https://webvizio.com"
     },
     {
+      "vendor": "Wraps",
+      "change_type": "limits_reduced",
+      "reason": "same_transition_graded_differently",
+      "detail": "same vendor, source_url and previous_state as Wraps|new_free_tier|2026-08-28|https://wraps.dev",
+      "summary": "The free tier now has limits of 5,000 custom events/mo and 30-day history.",
+      "previous_state": "email automation workflows, 5k tracked events and unlimited contacts free.",
+      "current_state": "Free forever. Unlimited sends, domains & contacts. 5,000 custom events/mo. 30-day history.",
+      "source_url": "https://wraps.dev",
+      "category": "Email",
+      "refused_date": "2026-09-11",
+      "collided_with": "Wraps|new_free_tier|2026-08-28|https://wraps.dev"
+    },
+    {
       "vendor": "Xata",
       "change_type": "pricing_model_change",
       "reason": "confirmed_unchanged",
@@ -3183,6 +3580,18 @@
       "source_url": "https://xcloud.host",
       "category": "Server Management",
       "refused_date": "2026-09-10"
+    },
+    {
+      "vendor": "Xitoring.com",
+      "change_type": "free_tier_removed",
+      "reason": "free_tier_still_offered",
+      "detail": "a free tier was recorded as removed by a summary that reports the page still offering one",
+      "summary": "The free tier is no longer explicitly described. The page offers a 14-day free trial, and then paid plans starting at $4.99/month. While the page mentions 'Start free', it leads to a free trial requiring a credit card, not the permanently free tier described in the stored information.",
+      "previous_state": "Uptime monitoring: 20 free, Linux and Windows Server monitoring: 5 free, Status page: 1 free - Mobile app, multiple notification channel, and much more!",
+      "current_state": "The page offers a 14-day free trial, after which paid plans begin at $4.99/month.",
+      "source_url": "https://xitoring.com/",
+      "category": "Monitoring",
+      "refused_date": "2026-09-11"
     },
     {
       "vendor": "Zapier",
