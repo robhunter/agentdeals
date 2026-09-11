@@ -241,9 +241,11 @@ export function costHeadlineCaveat(picks: readonly CostHeadlinePick[]): string {
   const total = picks.length;
   if (total === 0) return "";
   const unconfirmed = picks.filter(p => !p.readsActive);
-  if (unconfirmed.length === 0) return "";
-  const named = unconfirmed.map(p => `${p.vendor} (${p.verdict})`).join(", ");
   const confirmed = total - unconfirmed.length;
   const noun = total === 1 ? "pick" : "picks";
+  if (unconfirmed.length === 0) {
+    return `$0 covers all ${total} ${noun}: our own badge reads every one of their free tiers as active.`;
+  }
+  const named = unconfirmed.map(p => `${p.vendor} (${p.verdict})`).join(", ");
   return `$0 covers the ${confirmed} of ${total} ${noun} whose free tier our own badge still reads as active. It does not cover ${named}.`;
 }
