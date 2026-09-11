@@ -986,9 +986,12 @@ const DAY_TOTAL_KEY = "total";
 
 export type RequestOutcome = "served" | "redirect" | "not_found";
 
+export const NOT_MODIFIED = 304;
+
 export function requestOutcome(statusCode?: number): RequestOutcome {
   if (statusCode === undefined) return "served";
   if (statusCode >= 400) return "not_found";
+  if (statusCode === NOT_MODIFIED) return "served";
   if (statusCode >= 300) return "redirect";
   return "served";
 }

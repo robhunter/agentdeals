@@ -24,7 +24,7 @@ const {
   VENDOR_SERIES_NOTES,
   VENDOR_SERIES_PATH,
   vendorExportAuthorized,
-} = await import("../src/vendor-series.ts");
+} = await import("../dist/vendor-series.js");
 
 type StoreCall = { key: string; value: any; ttl: number };
 
@@ -110,6 +110,11 @@ describe("vendor series recording", () => {
     hit({ status: 301, address: "1.1.1.2" });
     hit({ status: 500, address: "1.1.1.3" });
     assert.strictEqual(takeVendorWrites().length, 0);
+  });
+
+  it("counts a client we told the page had not changed, so the series does not fall away as caches revalidate", () => {
+    hit({ status: 304, address: "1.1.1.4" });
+    assert.deepStrictEqual(takeVendorWrites()[0].delta.counts, { neon: 1 });
   });
 
   it("folds a slug we do not publish into one overflow key", () => {

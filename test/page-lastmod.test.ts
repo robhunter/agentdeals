@@ -245,6 +245,68 @@ describe("a page keeps the day it changed, whenever that was", () => {
       assert.ok(day! > FIXTURE.generated && day! <= today, `${loc} fell back to ${day}`);
     }
   });
+
+  it("answers a request that already holds the page's own day with 304 and no body", async () => {
+    const response = await fetch(`${fixtureBase}/privacy`, {
+      headers: { "If-Modified-Since": "Tue, 03 Feb 2026 00:00:00 GMT" },
+    });
+    const body = await response.text();
+    assert.equal(response.status, 304);
+    assert.equal(body, "");
+    assert.equal(response.headers.get("last-modified"), "Tue, 03 Feb 2026 00:00:00 GMT");
+    assert.equal(response.headers.get("content-type"), null);
+  });
+
+  it("answers a request holding a day older than the page's with the whole page", async () => {
+    const response = await fetch(`${fixtureBase}/privacy`, {
+      headers: { "If-Modified-Since": "Mon, 02 Feb 2026 00:00:00 GMT" },
+    });
+    const body = await response.text();
+    assert.equal(response.status, 200);
+    assert.ok(body.includes("</html>"), "the body was withheld from a client whose copy is older than the page");
+  });
+
+  it("sends the whole page to a client whose copy is newer than the day it holds, once that page moves", async () => {
+    const stale = await fetch(`${fixtureBase}/compare/netlify-vs-vercel`, {
+      headers: { "If-Modified-Since": "Tue, 18 Aug 2026 00:00:00 GMT" },
+    });
+    await stale.text();
+    assert.equal(stale.status, 200, "a copy taken the day before the page moved is out of date");
+    const current = await fetch(`${fixtureBase}/compare/netlify-vs-vercel`, {
+      headers: { "If-Modified-Since": "Wed, 19 Aug 2026 00:00:00 GMT" },
+    });
+    await current.text();
+    assert.equal(current.status, 304);
+  });
+
+  it("sends the whole page when the date it was asked about is not one it can read", async () => {
+    for (const asked of ["2026-02-03", "yesterday", "Tue, 03 Feb 2026"]) {
+      const response = await fetch(`${fixtureBase}/privacy`, { headers: { "If-Modified-Since": asked } });
+      await response.text();
+      assert.equal(response.status, 200, `${JSON.stringify(asked)} was read as a date`);
+    }
+  });
+
+  it("dates the URL it hashed, so a query string carries no day and revalidates nothing", async () => {
+    const plain = await fetch(`${fixtureBase}/privacy`);
+    await plain.text();
+    assert.equal(plain.headers.get("last-modified"), "Tue, 03 Feb 2026 00:00:00 GMT");
+    const queried = await fetch(`${fixtureBase}/privacy?utm_source=elsewhere`, {
+      headers: { "If-Modified-Since": "Tue, 03 Feb 2026 00:00:00 GMT" },
+    });
+    const body = await queried.text();
+    assert.equal(queried.headers.get("last-modified"), null);
+    assert.equal(queried.status, 200);
+    assert.ok(body.includes("</html>"));
+  });
+
+  it("leaves the decision to the entity tag when the client sends one", async () => {
+    const response = await fetch(`${fixtureBase}/privacy`, {
+      headers: { "If-Modified-Since": "Tue, 03 Feb 2026 00:00:00 GMT", "If-None-Match": '"a-tag-we-never-issued"' },
+    });
+    await response.text();
+    assert.equal(response.status, 200);
+  });
 });
 
 describe("what the sitemaps say about when a page changed", () => {
@@ -349,11 +411,103 @@ describe("what the sitemaps say about when a page changed", () => {
       await response.text();
       assert.equal(response.headers.get("last-modified"), httpDate(lastmod!), `${page} header disagrees with its sitemap entry`);
     }
+    const vendors = new Map((await sitemapEntries("vendors")).map(e => [e.loc, e.lastmod]));
+    const supabase = vendors.get("/vendor/supabase");
+    assert.ok(supabase, "/vendor/supabase is missing from the vendors sitemap");
     const vendor = await fetch(`${base}/vendor/supabase`);
     await vendor.text();
-    assert.equal(vendor.headers.get("last-modified"), null, "A page with no per-page day should carry no Last-Modified");
+    assert.equal(vendor.headers.get("last-modified"), httpDate(supabase!), "a vendor page's header disagrees with its sitemap entry");
+  });
+
+  it("serves the sitemap's own day on the vendor and category pages, read from end to end of both lists", async () => {
+    const sampled: Array<{ loc: string; lastmod: string }> = [];
+    for (const [sitemap, prefix] of [["vendors", "/vendor/"], ["pages", "/category/"]] as const) {
+      const listed = (await sitemapEntries(sitemap)).filter(e => e.loc.startsWith(prefix));
+      assert.ok(listed.length > 0, `${prefix} publishes nothing, so this test checks nothing`);
+      const stride = Math.max(1, Math.ceil(listed.length / 12));
+      for (let at = 0; at < listed.length; at += stride) sampled.push(listed[at]!);
+      sampled.push(listed[listed.length - 1]!);
+    }
+    assert.ok(sampled.length >= 8, `read ${sampled.length} pages, too few to cover two lists`);
+    const days = new Set<string>();
+    for (const { loc, lastmod } of sampled) {
+      const response = await fetch(base + loc);
+      await response.text();
+      assert.equal(response.status, 200, `${loc} answered ${response.status}`);
+      assert.equal(response.headers.get("last-modified"), httpDate(lastmod), `${loc} header disagrees with its sitemap entry`);
+      days.add(lastmod);
+    }
+    assert.ok(days.size > 1, "every page read carries the same day, so a header taken from anywhere would pass");
+  });
+
+  it("dates the homepage and tells a cache how long to hold it", async () => {
+    const listed = new Map((await sitemapEntries("pages")).map(e => [e.loc, e.lastmod]));
+    const advertised = listed.get("/");
+    assert.ok(advertised, "/ is missing from the pages sitemap");
+    const response = await fetch(base + "/");
+    await response.text();
+    assert.equal(response.headers.get("last-modified"), httpDate(advertised!), "the homepage header disagrees with its sitemap entry");
+    assert.match(response.headers.get("cache-control") ?? "", /max-age=\d+/, "the homepage tells no cache how long to hold it");
+  });
+
+  it("answers a revalidation on every page whose day was read from its own rendered body", async () => {
+    const ledger = readPageLastmod();
+    const read = ["/", ...RETITLED, REPRICED].filter(page => ledger.pages[page]);
+    assert.ok(read.length >= 4, `only ${read.length} of the pages named here are in the ledger`);
+    for (const page of read) {
+      const first = await fetch(base + page);
+      await first.text();
+      const advertised = first.headers.get("last-modified");
+      assert.equal(advertised, httpDate(ledger.pages[page]!.changed), `${page} advertises a day the ledger does not hold`);
+      const revalidated = await fetch(base + page, { headers: { "If-Modified-Since": advertised! } });
+      const body = await revalidated.text();
+      assert.equal(revalidated.status, 304, `${page} re-sent its body to a client already holding ${advertised}`);
+      assert.equal(body, "", `${page} answered 304 with a body`);
+      const older = await fetch(base + page, { headers: { "If-Modified-Since": "Mon, 01 Jan 2024 00:00:00 GMT" } });
+      const full = await older.text();
+      assert.equal(older.status, 200, `${page} withheld its body from a client holding a copy from 2024`);
+      assert.ok(full.includes("</html>"), `${page} answered 200 without a page`);
+    }
+  });
+
+  it("sends the whole page where the day comes from a record rather than from the body", async () => {
+    const ledger = readPageLastmod();
+    const categories = (await sitemapEntries("pages")).filter(e => e.loc.startsWith("/category/"));
+    assert.ok(categories.length > 0, "no category page is published, so this test checks nothing");
+    for (const page of ["/vendor/supabase", categories[0]!.loc]) {
+      assert.ok(!ledger.pages[page], `${page} is in the ledger now, so its body is dated and it may revalidate`);
+      const first = await fetch(base + page);
+      await first.text();
+      const advertised = first.headers.get("last-modified");
+      assert.ok(advertised, `${page} carries no day at all`);
+      const revalidated = await fetch(base + page, { headers: { "If-Modified-Since": advertised! } });
+      const body = await revalidated.text();
+      assert.equal(revalidated.status, 200, `${page} answered 304 against a day nothing read off its body`);
+      assert.ok(body.includes("</html>"), `${page} answered 200 without a page`);
+    }
+  });
+
+  it("publishes content dated after the day a vendor page advertises, which is why that day validates nothing", async () => {
+    const listed = (await sitemapEntries("vendors")).filter(e => e.loc.startsWith("/vendor/"));
+    const stride = Math.max(1, Math.ceil(listed.length / 24));
+    const sampled = listed.filter((_, at) => at % stride === 0);
+    assert.ok(sampled.length >= 8, `read ${sampled.length} vendor pages, too few to say anything`);
+    const today = new Date().toISOString().slice(0, 10);
+    let ahead = 0;
+    for (const { loc, lastmod } of sampled) {
+      const body = (await (await fetch(base + loc)).text()).replace(/<dl>[\s\S]*?<\/dl>/g, "");
+      const printed = [...body.matchAll(/\b(20\d\d-\d\d-\d\d)\b/g)].map(m => m[1]).filter(day => day <= today).sort();
+      const newest = printed.at(-1);
+      if (newest && newest > lastmod) ahead++;
+    }
+    assert.ok(
+      ahead > sampled.length / 2,
+      `${ahead} of ${sampled.length} vendor pages print content newer than the day they advertise; if that is now a minority the day may be worth revalidating against`,
+    );
   });
 });
+
+
 
 const WORKFLOWS = path.join(REPO, ".github", "workflows");
 
