@@ -270,6 +270,23 @@ describe("a refused change is not a signal that nothing changed", () => {
     assert.deepStrictEqual(silent.slice(0, 10), [], `the risk summary still reads as a stable history:\n${silent.slice(0, 10).join("\n")}`);
   });
 
+  it("publishes the day of a refused read and none of its prose", async () => {
+    const payload = await (await fetch(`http://localhost:${serverPort}/api/offers?limit=2000`)).json() as {
+      offers: Array<{ vendor: string; refused_read: Record<string, unknown> | null }>;
+      _provenance: { verified_records: number; withheld_records?: number };
+    };
+    const published = payload.offers.filter(row => row.refused_read);
+    assert.ok(published.length > 0, "no row carries a refused read, so the field is untested");
+    const fields = new Set(published.flatMap(row => Object.keys(row.refused_read!)));
+    assert.deepStrictEqual(
+      [...fields].sort(),
+      ["reason", "refused_date"],
+      "the refusal record reaches the API beyond the day it was refused and the rule that refused it",
+    );
+    const counted = payload._provenance.verified_records + (payload._provenance.withheld_records ?? 0);
+    assert.strictEqual(counted, payload.offers.length, "the provenance block counts a record the response does not return");
+  });
+
   it("publishes none of the records it refused", () => {
     const published = new Set(
       loadDealChanges().map(c => `${c.vendor.toLowerCase()}|${c.change_type}|${(c.summary ?? "").trim()}`),

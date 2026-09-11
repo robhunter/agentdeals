@@ -37,12 +37,12 @@ export function refusalConfirmsTheStoredTerms(refusal: Pick<ChangeRefusal, "reas
   return CONFIRMING_REASONS.has(refusal.reason);
 }
 
-function mostRecent<T extends RefusedRead>(refusals: readonly T[]): T | null {
-  let held: T | null = null;
+function mostRecent(refusals: readonly RefusedRead[]): RefusedRead | null {
+  let held: RefusedRead | null = null;
   for (const refusal of refusals) {
     if (held === null || refusal.refused_date > held.refused_date) held = refusal;
   }
-  return held;
+  return held === null ? null : { reason: held.reason, refused_date: held.refused_date };
 }
 
 export function unreconciledRead(refusals: readonly RefusedRead[]): RefusedRead | null {
