@@ -19,9 +19,9 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(__dirname, "..");
 
 const offers: Offer[] = JSON.parse(readFileSync(path.join(REPO, "data", "index.json"), "utf-8")).offers;
-const dealChanges: DealChange[] = JSON.parse(
-  readFileSync(path.join(REPO, "data", "deal_changes.json"), "utf-8"),
-).changes;
+const { loadDealChanges } = await import("../dist/data.js");
+
+const dealChanges: DealChange[] = loadDealChanges();
 
 function publishedDescriptionOf(offer: Offer): string {
   const superseding = supersedingChange(

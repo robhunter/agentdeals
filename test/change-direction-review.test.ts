@@ -100,14 +100,17 @@ describe("#1528 a record's stored direction is read before its change_type", () 
   });
 
   it("can only withdraw a verdict, never raise one", () => {
-    const increase = {
-      ...A_RECORD_TYPED_AS_A_REDUCTION,
-      change_type: "limits_increased",
-      tier_direction: "narrowed",
-    } as DealChange;
     assert.strictEqual(narrowsTheStoredTerms("limits_increased"), false);
-    assert.strictEqual(readingDescribesNoNarrowing(increase), false);
-    assert.strictEqual(storedTermsAreSuperseded(AN_OFFER, [increase]), false);
+    for (const direction of ["narrowed", "unchanged", "widened"]) {
+      const increase = {
+        ...A_RECORD_TYPED_AS_A_REDUCTION,
+        change_type: "limits_increased",
+        tier_direction: direction,
+      } as DealChange;
+      assert.strictEqual(readingDescribesNoNarrowing(increase), false, direction);
+      assert.strictEqual(changeRatesTheListedTier(increase, AN_OFFER), true, direction);
+      assert.strictEqual(storedTermsAreSuperseded(AN_OFFER, [increase]), false, direction);
+    }
   });
 
   it("reads no direction out of a value outside the vocabulary", () => {
@@ -213,6 +216,22 @@ describe("#1528 the review of the records already written", () => {
       [{ ...A_RECORD_TYPED_AS_A_REDUCTION, tier_direction: "widened", finding: "" } as never],
     );
     assert.strictEqual(applied[0]!.tier_direction, "narrowed");
+  });
+
+  it("carries no judgement across to another record of the same vendor", () => {
+    const entry = { ...A_RECORD_TYPED_AS_A_REDUCTION, tier_direction: "widened", finding: "" };
+    const anotherDate = { ...A_RECORD_TYPED_AS_A_REDUCTION, date: "2026-09-08" } as DealChange;
+    const anotherSource = {
+      ...A_RECORD_TYPED_AS_A_REDUCTION,
+      source_url: "https://dashcorp.example/plans",
+    } as DealChange;
+    const applied = applyReviewedDirections(
+      [A_RECORD_TYPED_AS_A_REDUCTION, anotherDate, anotherSource],
+      [entry as never],
+    );
+    assert.strictEqual(applied[0]!.tier_direction, "widened");
+    assert.strictEqual(applied[1]!.tier_direction ?? null, null);
+    assert.strictEqual(applied[2]!.tier_direction ?? null, null);
   });
 
   it("reads nothing out of a file that is absent or malformed", () => {
