@@ -349,10 +349,23 @@ describe("every ranked surface publishes the seed that ordered it", () => {
     assert.match(llms, new RegExp(`${uniqueTop} of the ${slugs.length} product functions with a best-of page`), "llms.txt must carry the same figure and the same scope");
   });
 
-  it("the vendor page says how much of the ranked order it is showing", async () => {
-    const { text: truncated } = await get("/vendor/supabase");
-    assert.match(truncated, /The list above is the first \d+ of \d+ entries in that order\./);
-    const { text: whole } = await get("/vendor/doppler");
-    assert.ok(!/The list above is the first/.test(whole), "a list that shows every entry must not claim to be a prefix");
+  it("the vendor page says the ranked order it shows is the whole of it", async () => {
+    for (const slug of ["supabase", "vercel"]) {
+      const { text } = await get(`/vendor/${slug}`);
+      const at = text.indexOf('<h2 id="alternatives">');
+      assert.notEqual(at, -1, `/vendor/${slug} publishes no alternatives, so it cannot say how many it shows`);
+      const section = text.slice(at);
+      const claim = section.match(/The list above is every one of the (\d+) entries in that order, not a prefix of it\./);
+      assert.ok(claim, `/vendor/${slug} does not say how much of the ranked order it is showing`);
+      const listed = [...section.matchAll(/<td><a href="\/vendor\/[a-z0-9-]+">/g)].length;
+      assert.equal(listed, Number(claim[1]), `/vendor/${slug} lists ${listed} alternatives under a claim of ${claim[1]}`);
+      assert.ok(!/The list above is the first/.test(text), "a list that shows every entry must not claim to be a prefix");
+    }
+  });
+
+  it("a vendor page with no alternatives claims nothing about a list it does not publish", async () => {
+    const { text } = await get("/vendor/doppler");
+    assert.equal(text.indexOf('<h2 id="alternatives">'), -1, "this test needs a page that publishes no alternatives");
+    assert.ok(!/The list above is/.test(text), "a page with no ranked list published a claim about one");
   });
 });

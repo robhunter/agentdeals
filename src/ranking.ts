@@ -13,6 +13,12 @@ export const DEMOTE_ONLY_POLICY =
 export const NOT_MODELLED_NOTICE =
   "We rank on offer terms, verification recency and recorded adverse changes. We do NOT model technical fit between a product and a role — the caller must apply that.";
 
+export const NAMED_SUBSET_RULE =
+  "A surface with room for every member of a tied set may rotate their order. A surface with room for only some of them names none of them, because which ones it named would be the claim, and a claim seeded on the date is not the one we serve tomorrow.";
+
+export const NAMED_SUBSET_FIELD_RULE =
+  "No field picks a few members out of a tied set, because being tied is the absence of one. verifiedDate is the nearest candidate, and every date we hold is like it: they record when we last looked at a record rather than anything about the vendor, so ordering a list by one publishes our own re-read queue as though it were a recommendation. It would also still move — that queue confirms about a hundred records a day, so the three names would be different ones next week for a reason no reader of the claim can see. A record's name, slug, id and position in our file are inputs the tie-break promises never to use, and we hold no date for when we first indexed one.";
+
 const DAY_MS = 24 * 60 * 60 * 1000;
 const STALE_VERIFICATION_DAYS = 90;
 const VERIFICATION_LAPSED_DAYS = 180;

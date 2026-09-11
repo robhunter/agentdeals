@@ -72,7 +72,7 @@ import { statedFreeTierBasis, unrankedBestAnswer, unrankedListingBasis } from ".
 import { SSE_KEEPALIVE_FRAME, keepaliveIntervalMs, sessionRecoveryBody } from "./mcp-stream.js";
 import { ASSISTANTS_API_SHUTDOWN } from "./assistants-shutdown.js";
 import { discontinuedOnOrBefore, PRODUCT_DEPRECATED } from "./product-deprecation.js";
-import { rankOffers, rankForListing, rotateListing, utcDate, gateFor, notAFreeOfferGateFor, descriptionDeniesFreeTier, classifyTier, CRITERIA_PATH, DEMOTE_ONLY_POLICY, DISCLOSURE_RATIONALE, TIE_BREAK_ALGORITHM, GATE_TABLE, DEMERIT_TABLE, NOT_FREE_TIER_RULES, TIME_LIMITED_TIER_RULES, type TieBreak, type Gate, type GateCode } from "./ranking.js";
+import { rankOffers, rankForListing, rotateListing, utcDate, gateFor, notAFreeOfferGateFor, descriptionDeniesFreeTier, classifyTier, CRITERIA_PATH, DEMOTE_ONLY_POLICY, DISCLOSURE_RATIONALE, TIE_BREAK_ALGORITHM, NAMED_SUBSET_RULE, NAMED_SUBSET_FIELD_RULE, GATE_TABLE, DEMERIT_TABLE, NOT_FREE_TIER_RULES, TIME_LIMITED_TIER_RULES, type TieBreak, type Gate, type GateCode } from "./ranking.js";
 import type { RankedEntry, RankingResult } from "./ranking.js";
 import { eligibilityGateAsPublished, gatedShareDescriptionClause, gatedShareLede, publishableEligibilityConditions } from "./eligibility.js";
 import { gateDisclosureFor } from "./gate-disclosure.js";
@@ -2327,9 +2327,9 @@ function auditBlockCss(): string {
 @media(max-width:768px){.audit-block dl{grid-template-columns:1fr}}`;
 }
 
-function renderAuditBlock(tie: TieBreak, listed?: { shown: number; total: number }): string {
-  const truncationNote = listed && listed.shown < listed.total
-    ? ` The list above is the first ${listed.shown} of ${listed.total} entries in that order.`
+function renderAuditBlock(tie: TieBreak, listed?: { total: number }): string {
+  const truncationNote = listed
+    ? ` The list above is every one of the ${listed.total} entries in that order, not a prefix of it.`
     : "";
   return `  <div class="audit-block">
     <strong style="color:var(--text)">Recompute today's order yourself.</strong> The order above is a permutation seeded only on the UTC date and the query key &mdash; no vendor name, slug, id or offer field is an input.${truncationNote} <a href="${CRITERIA_PATH}">The algorithm is published</a>, so anyone can reproduce this page's order without asking us.
@@ -2908,6 +2908,12 @@ ${demeritRows}
   <p>Tied offers are ordered by a permutation seeded on the UTC date and the query key, and nothing else. No vendor name, slug, id, index or offer field is an input, so an offer's position is uniform regardless of what it is called or where it sits in our file. The order rotates daily; the membership of the list does not.</p>
   <pre>${escHtmlServer(TIE_BREAK_ALGORITHM)}</pre>
   <p>Every ranked page publishes the <code>date</code>, <code>query_key</code>, <code>seed</code> and <code>tie_count</code> it used, and the JSON APIs return the same block. <strong style="color:var(--text)">You can recompute today's order yourself and check it against what we served, without asking us.</strong> That is the point: not for sale should be auditable, not merely asserted.</p>
+
+  <h3 id="subsets">Surfaces with room for only a few of them</h3>
+  <p><strong style="color:var(--text)">${escHtmlServer(NAMED_SUBSET_RULE)}</strong></p>
+  <p>Rotating a complete list costs a reader nothing: every member is on the page whichever day you read it, and the order is recomputable from the seed above. Rotating a <em>truncated</em> list is a different thing, because a vendor is either named or it is not, and being named is what a reader and an extractor take away. A search snippet that named three of forty alternatives would name three others tomorrow, so anyone quoting it would be quoting a sentence we are no longer serving &mdash; and the whole point of publishing the date we read every record and the page we read it from is that a claim about us can be checked.</p>
+  <p>So a page that can carry the whole tied set carries it: a vendor page lists every alternative we hold for it, not a sample. Where there is no room &mdash; a <code>&lt;meta&gt;</code> description, a one-line answer &mdash; we describe the set and name none of it.</p>
+  <p>The obvious alternative would be to pick a few by some field and say which. ${escHtmlServer(NAMED_SUBSET_FIELD_RULE)} Any of those would manufacture the permanent top slot that section 3 exists to deny, so there is none to manufacture.</p>
 
   <h2>4. What we do not model</h2>
   <p>We rank on offer terms, verification recency and recorded adverse changes. <strong style="color:var(--text)">We do not model technical fit</strong> &mdash; whether a particular product suits a particular role in your architecture. A vector database and a relational database sit in the same category here. If you are asking us which of two products fits your app, we are the wrong source; if you are asking whose free tier we could confirm this week and whose was withdrawn in March, that is exactly what this is for.</p>
@@ -4721,7 +4727,7 @@ function buildVendorPage(slug: string): string | null {
     alternativesMembership.kept,
     { queryKey: `alternatives:${primary.category}:${vendorName}`, changes: dealChanges },
   );
-  const alternatives = alternativesRanking.entries.slice(0, 12).map(e => e.offer);
+  const alternatives = alternativesRanking.entries.map(e => e.offer);
 
   const curatedVendorRanking = (() => {
     const kept = curatedAlternativesFor(vendorName, dealChanges, offers, vendorOffers).kept;
@@ -4801,8 +4807,7 @@ function buildVendorPage(slug: string): string | null {
     growthBullets.push(`When your usage exceeds the free tier limits, you'll need to upgrade.`);
   }
   if (alternatives.length > 2 && !termsSuperseded) {
-    const topAlt = alternatives[0];
-    growthBullets.push(`At that point, consider <a href="/vendor/${toSlug(topAlt.vendor)}">${escHtmlServer(topAlt.vendor)}</a> which offers ${escHtmlServer(topAlt.tier)} in the same category.`);
+    growthBullets.push(`At that point, the <a href="#alternatives">${alternatives.length} alternatives in ${escHtmlServer(primary.category)}</a> are each listed with the free tier they offer, so you can compare what they give you against what you have outgrown.`);
   }
   const growthPathHtml = growthBullets.length > 0 && !discontinuedOn && !primaryGate ? `
   <div class="section growth-section">
@@ -4812,37 +4817,7 @@ function buildVendorPage(slug: string): string | null {
     </ul>
   </div>` : "";
 
-  const enrichedAlts = enrichOffers(alternatives.slice(0, 3));
-  const compareTableHtml = enrichedAlts.length > 0 ? `
-  <div class="section compare-table-section">
-    <h2>How ${escHtmlServer(vendorName)} Compares</h2>
-    <div class="mini-compare-table-wrap">
-      <table class="mini-compare-table">
-        <thead>
-          <tr>
-            <th>Service</th>
-            <th>Free Tier</th>
-            <th>Stability</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr class="current-vendor-row">
-            <td><strong>${escHtmlServer(vendorName)}</strong></td>
-            <td>${escHtmlServer(primary.tier)}</td>
-            <td>${stabilityCellHtml(enriched.risk_level, riskCause, linkUnreachable, primary, primaryGate, enriched.rating_withheld)}</td>
-          </tr>
-${enrichedAlts.map(a => {
-  return `          <tr>
-            <td><a href="/vendor/${toSlug(a.vendor)}">${escHtmlServer(a.vendor)}</a></td>
-            <td>${escHtmlServer(a.tier)}</td>
-            <td>${stabilityCellHtml(a.risk_level, a.risk_cause, a.link_unreachable, a, null, a.rating_withheld)}</td>
-          </tr>`;
-}).join("\n")}
-        </tbody>
-      </table>
-    </div>
-    ${catMapping?.comparison ? `<p class="compare-more"><a href="${catMapping.comparison}">See full comparison &rarr;</a></p>` : catMapping?.hub ? `<p class="compare-more"><a href="${catMapping.hub}">See all ${escHtmlServer(primary.category)} options &rarr;</a></p>` : ""}
-  </div>` : "";
+  const enrichedAlts = enrichOffers(alternatives);
 
   const changesHtml = vendorChanges.length > 0 ? vendorChanges.map(c => {
     const badge = changeTypeBadge[c.change_type] ?? { label: c.change_type, color: "#8b949e" };
@@ -4921,18 +4896,39 @@ ${curatedVendorAlts.map(a => `      <a href="/vendor/${toSlug(a.vendor)}" class=
         <span class="alt-tier">${escHtmlServer(a.tier)}</span>
       </a>`).join("\n")}
     </div>
-${renderAuditBlock(curatedVendorRanking.tie_break, { shown: curatedVendorAlts.length, total: curatedVendorRanking.entries.length })}
+${renderAuditBlock(curatedVendorRanking.tie_break, { total: curatedVendorRanking.entries.length })}
   </div>` : "";
-  const alternativesHtml = alternatives.length > 0 ? `
-  <div class="section">
-    <h2>Alternatives in ${escHtmlServer(primary.category)}</h2>
-    <div class="alt-grid">
-${alternatives.map(a => `      <a href="/vendor/${toSlug(a.vendor)}" class="alt-card">
-        <span class="alt-name">${escHtmlServer(a.vendor)}</span>
-        <span class="alt-tier">${escHtmlServer(a.tier)}</span>
-      </a>`).join("\n")}
+  const alternativesHtml = enrichedAlts.length > 0 ? `
+  <div class="section compare-table-section">
+    <h2 id="alternatives">Alternatives in ${escHtmlServer(primary.category)}</h2>
+    <p class="section-note" style="margin:0 0 1rem;font-size:.85rem;color:var(--text-muted)">How ${escHtmlServer(vendorName)} compares against every one of the ${enrichedAlts.length} we list, not against a selection of them. ${escHtmlServer(NAMED_SUBSET_RULE)} <a href="${CRITERIA_PATH}#subsets">How we decide this</a>.</p>
+    <div class="mini-compare-table-wrap">
+      <table class="mini-compare-table">
+        <thead>
+          <tr>
+            <th>Service</th>
+            <th>Free Tier</th>
+            <th>Stability</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="current-vendor-row">
+            <td><strong>${escHtmlServer(vendorName)}</strong></td>
+            <td>${escHtmlServer(primary.tier)}</td>
+            <td>${stabilityCellHtml(enriched.risk_level, riskCause, linkUnreachable, primary, primaryGate, enriched.rating_withheld)}</td>
+          </tr>
+${enrichedAlts.map(a => {
+  return `          <tr>
+            <td><a href="/vendor/${toSlug(a.vendor)}">${escHtmlServer(a.vendor)}</a></td>
+            <td>${escHtmlServer(a.tier)}</td>
+            <td>${stabilityCellHtml(a.risk_level, a.risk_cause, a.link_unreachable, a, null, a.rating_withheld)}</td>
+          </tr>`;
+}).join("\n")}
+        </tbody>
+      </table>
     </div>${membershipExclusionsHtml}
-${renderAuditBlock(alternativesRanking.tie_break, { shown: alternatives.length, total: alternativesRanking.entries.length })}
+    ${catMapping?.comparison ? `<p class="compare-more"><a href="${catMapping.comparison}">See full comparison &rarr;</a></p>` : catMapping?.hub ? `<p class="compare-more"><a href="${catMapping.hub}">See all ${escHtmlServer(primary.category)} options &rarr;</a></p>` : ""}
+${renderAuditBlock(alternativesRanking.tie_break, { total: alternativesRanking.entries.length })}
   </div>` : "";
 
   const vendorVsPages = vsPageByVendor.get(vendorName.toLowerCase()) ?? [];
@@ -5101,7 +5097,7 @@ ${allCompareLinks.join("\n")}
     : riskLevel === "caution"
     ? `${vendorName}'s free tier requires caution because of one specific recorded change${riskCause ? `, ${changeDateClause(riskCause)}: ${changeSummaryText(riskCause)}` : "."}`
     : `${vendorName}'s free tier is considered risky because of one specific recorded change${riskCause ? `, ${changeDateClause(riskCause)}: ${changeSummaryText(riskCause)}` : "."} Consider alternatives.`;
-  const faqCategoryAnswer = `${vendorName} is categorized under ${allCategories.join(", ")} on AgentDeals.${alternatives.length > 0 ? ` Other vendors in ${primary.category} include ${alternatives.slice(0, 5).map(a => a.vendor).join(", ")}.` : ""}`;
+  const faqCategoryAnswer = `${vendorName} is categorized under ${allCategories.join(", ")} on AgentDeals.${alternatives.length > 0 ? ` We list ${alternatives.length} other ${primary.category} services alongside it, every one of them on this page with its free tier and the stability we publish for it.` : ""}`;
 
   const faqProductionAnswer = productionGate
     ? `${productionGate.reason} ${NO_FREE_TIER_FOR_PRODUCTION}`
@@ -5298,7 +5294,6 @@ ${referralCalloutHtml}
       ? `<p class="terms-superseded-text"><strong>${SUPERSEDED_TERMS_LABEL}:</strong> ${supersededTermsNoticeHtml(vendorName, termsSuperseded, escHtmlServer)} <a href="#changes">Read what we recorded &darr;</a></p>`
       : `<p class="desc-text">${escHtmlServer(primary.description)}</p>`}${freeTierSourceLine}
   </div>
-${compareTableHtml}
 ${growthPathHtml}
 
   <div class="section">
@@ -5401,7 +5396,7 @@ function buildAlternativesPage(slug: string): string | null {
 
   const curatedAlts = enrichedAlts.filter(a => curatedAltNames.has(a.vendor));
   const listedCategories = [...vendorCategories];
-  for (const a of enrichedAlts) {
+  for (const a of [...enrichedAlts].sort((x, y) => x.category.localeCompare(y.category))) {
     if (!listedCategories.includes(a.category)) listedCategories.push(a.category);
   }
 
@@ -5412,9 +5407,8 @@ function buildAlternativesPage(slug: string): string | null {
   const title = publishesSubstitutes
     ? `Best ${vendorName} Alternatives with Free Tiers (${currentYear}) | AgentDeals`
     : `${heading} — none listed yet | AgentDeals`;
-  const topAlts = enrichedAlts.slice(0, 3).map(a => a.vendor).join(", ");
   const metaDesc = publishesSubstitutes
-    ? `Compare ${enrichedAlts.length} free alternatives to ${vendorName} for ${homeCategory}. ${topAlts ? `Side-by-side free tier limits for ${topAlts}.` : "Find stable, verified free-tier tools."}`
+    ? `Compare ${enrichedAlts.length} free alternatives to ${vendorName} for ${homeCategory}. Every one of their free tier limits side by side, each with the date we last verified it.`
     : `We publish no substitute list for ${vendorName} yet. See the ${homeCategory} category for every offer we track alongside it.`;
   const subjectSaysWhatItIs = vendorOffers.some(o => (o.product_subtypes?.labels.length ?? 0) > 0);
   const noSubstitutesReason = subjectSaysWhatItIs
