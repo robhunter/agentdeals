@@ -1,6 +1,6 @@
 import type { DealChange, RatingWithheld, RiskCause, SourceCheckOutcome } from "./types.js";
 import { CHANGE_DIRECTION, isACorrectionToOurOwnRecord } from "./data.js";
-import { changeGradesTheListedTier, type GradedOffer } from "./change-tier.js";
+import { changeRatesTheListedTier, type GradedOffer } from "./change-tier.js";
 import { isNoLongerInForce, theEventNeverHappened } from "./change-resolution.js";
 import { changeIsUncited, ratingWithheldForNoSourceSentence } from "./change-citation.js";
 import { changeDateClause } from "./change-dates.js";
@@ -82,7 +82,7 @@ function narrowingChanges(
 ): VendorVerdictInput["changes"] {
   return changes
     .filter(c => CHANGE_DIRECTION[c.change_type] === "negative" && !isNoLongerInForce(c))
-    .filter(c => offer === null || changeGradesTheListedTier(c, offer))
+    .filter(c => offer === null || changeRatesTheListedTier(c, offer))
     .slice()
     .sort((a, b) => b.date.localeCompare(a.date));
 }

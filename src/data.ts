@@ -4,7 +4,8 @@ import { fileURLToPath } from "node:url";
 import type { Offer, EnrichedOffer, OfferIndex, DealChange, DealChangesIndex, ChangeDateSource, StabilityClass, Referral, RiskCause, RatingWithheld, LinkUnreachable, SourceCheck } from "./types.js";
 import { isUrlSuspended } from "./referral-health.js";
 import { CHANGE_DIRECTION, type ChangeDirection } from "./change-direction.js";
-import { changeGradesTheListedTier } from "./change-tier.js";
+import { changeRatesTheListedTier } from "./change-tier.js";
+import { applyReviewedDirections } from "./change-direction-review.js";
 import { rankForListing, gateFor, utcDate, type TieBreak, type Gate, type GateCode } from "./ranking.js";
 import { unreachableNoticeForUrl, resetLinkHealthCache } from "./link-health.js";
 import { quarantineSummary, resetVerificationStateCache, type QuarantineSummary } from "./verification-state.js";
@@ -387,7 +388,7 @@ export function publishedStabilityFor(vendorName: string): StabilityClass | null
   const vendorChanges = loadDealChanges().filter((c) => c.vendor.toLowerCase() === key);
   const offer = loadOffers().find((o) => o.vendor.toLowerCase() === key);
   if (!offer) return classifyStability(vendorChanges);
-  const grading = changesGradingTheListedTier(offer, vendorChanges);
+  const grading = changesRatingTheListedTier(offer, vendorChanges);
   return withheldStability(unreachableNoticeForUrl(offer.url), classifyStability(grading), grading);
 }
 
@@ -409,7 +410,7 @@ export function getStabilityMap(): Map<string, StabilityClass> {
   const result = new Map<string, StabilityClass>();
   for (const [vendor, vendorChanges] of vendorChangesMap) {
     const offer = listed.get(vendor);
-    result.set(vendor, classifyStability(offer ? changesGradingTheListedTier(offer, vendorChanges) : vendorChanges));
+    result.set(vendor, classifyStability(offer ? changesRatingTheListedTier(offer, vendorChanges) : vendorChanges));
   }
   return result;
 }
@@ -462,7 +463,7 @@ export function enrichOffers(offers: Offer[]): EnrichedOffer[] {
       now.getTime(),
     );
 
-    const grading = changesGradingTheListedTier(offer, vendorAllChangesList.get(key) ?? []);
+    const grading = changesRatingTheListedTier(offer, vendorAllChangesList.get(key) ?? []);
 
     const stability = withheldStability(
       link_unreachable,
@@ -528,7 +529,7 @@ export function loadDealChanges(): DealChange[] {
   }
 
   const live = new Set(loadOffers().map((o) => o.vendor.trim().toLowerCase()));
-  cachedChanges = data.changes.map(withResolutionInSummary).map((change) => {
+  cachedChanges = applyReviewedDirections(data.changes.map(withResolutionInSummary)).map((change) => {
     const survivor = survivingVendorName(change.vendor, live);
     return survivor ? { ...change, vendor: survivor } : change;
   });
@@ -901,11 +902,11 @@ export interface PublishedRisk {
   gate: Gate | null;
 }
 
-export function changesGradingTheListedTier(
+export function changesRatingTheListedTier(
   offer: Pick<Offer, "vendor" | "tier">,
   vendorChanges: DealChange[],
 ): DealChange[] {
-  return vendorChanges.filter((change) => changeGradesTheListedTier(change, offer));
+  return vendorChanges.filter((change) => changeRatesTheListedTier(change, offer));
 }
 
 export function publishedRisk(
@@ -914,7 +915,7 @@ export function publishedRisk(
   servedOn: string = utcDate(),
   nowMs: number = Date.now(),
 ): PublishedRisk {
-  const assessment = vendorRiskAssessment(changesGradingTheListedTier(offer, vendorChanges), nowMs);
+  const assessment = vendorRiskAssessment(changesRatingTheListedTier(offer, vendorChanges), nowMs);
   const link_unreachable = unreachableNoticeForUrl(offer.url, nowMs);
   const gate = gateFor(offer, servedOn);
   const withheld =
@@ -969,7 +970,7 @@ export function checkVendorRisk(
 
   const published = publishedRisk(offer, vendorChanges);
   const gate = published.gate;
-  const assessment = vendorRiskAssessment(changesGradingTheListedTier(offer, vendorChanges));
+  const assessment = vendorRiskAssessment(changesRatingTheListedTier(offer, vendorChanges));
   const linkUnreachable = published.link_unreachable;
   const riskLevel = assessment.level;
 

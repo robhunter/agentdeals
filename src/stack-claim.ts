@@ -100,7 +100,13 @@ export interface PublishedVerdict {
 
 const VENDOR_LINK_OR_VERDICT = /href="\/vendor\/([a-z0-9][a-z0-9-]*)"|<span[^>]*class="[^"]*\bstack-verdict\b[^"]*"[^>]*>([^<]*)<\/span>|class="stability-dot"[^>]*><\/span>\s*(?:<span[^>]*>)?([A-Za-z][A-Za-z ]*)/g;
 
-export function verdictsPublishedOn(html: string): PublishedVerdict[] {
+const RATES_AN_ALTERNATIVE = /\bstack-verdict-alt\b/;
+
+export interface VerdictScan {
+  ratingTheStackOnly?: boolean;
+}
+
+export function verdictsPublishedOn(html: string, scope: VerdictScan = {}): PublishedVerdict[] {
   const published: PublishedVerdict[] = [];
   const scan = new RegExp(VENDOR_LINK_OR_VERDICT.source, "g");
   let subject: string | null = null;
@@ -111,6 +117,7 @@ export function verdictsPublishedOn(html: string): PublishedVerdict[] {
       continue;
     }
     if (subject === null) continue;
+    if (scope.ratingTheStackOnly && RATES_AN_ALTERNATIVE.test(m[0])) continue;
     const verdict = (m[2] ?? m[3] ?? "").replace(/&mdash;/g, "—").trim();
     if (verdict !== "") published.push({ slug: subject, verdict });
   }
@@ -234,9 +241,11 @@ export function costHeadlineCaveat(picks: readonly CostHeadlinePick[]): string {
   const total = picks.length;
   if (total === 0) return "";
   const unconfirmed = picks.filter(p => !p.readsActive);
-  if (unconfirmed.length === 0) return "";
-  const named = unconfirmed.map(p => `${p.vendor} (${p.verdict})`).join(", ");
   const confirmed = total - unconfirmed.length;
   const noun = total === 1 ? "pick" : "picks";
+  if (unconfirmed.length === 0) {
+    return `$0 covers all ${total} ${noun}: our own badge reads every one of their free tiers as active.`;
+  }
+  const named = unconfirmed.map(p => `${p.vendor} (${p.verdict})`).join(", ");
   return `$0 covers the ${confirmed} of ${total} ${noun} whose free tier our own badge still reads as active. It does not cover ${named}.`;
 }

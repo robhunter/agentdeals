@@ -1,0 +1,422 @@
+{
+  "reviewed": "2026-09-10",
+  "review": "docs/change-direction-census.md",
+  "directions": [
+    {
+      "vendor": "Airtable",
+      "change_type": "pricing_restructured",
+      "date": "2026-08-28",
+      "source_url": "https://airtable.com/pricing",
+      "tier_direction": "unchanged",
+      "finding": "\"The free plan still exists\"; what the reading adds is that paid plans start at $20/user/month"
+    },
+    {
+      "vendor": "Amplitude",
+      "change_type": "pricing_restructured",
+      "date": "2026-09-09",
+      "source_url": "https://amplitude.com/startups",
+      "tier_direction": "unchanged",
+      "finding": "the limits are the same 100M events/month; the programme was renamed from Startup Scholarship to Early Stage Startup Pricing"
+    },
+    {
+      "vendor": "BetterStack",
+      "change_type": "limits_reduced",
+      "date": "2026-09-02",
+      "source_url": "https://betterstack.com/pricing",
+      "tier_direction": "unchanged",
+      "finding": "every figure matches; the reading adds 3 GB traces and 3 GB web events"
+    },
+    {
+      "vendor": "Buildkite",
+      "change_type": "limits_reduced",
+      "date": "2026-09-05",
+      "source_url": "https://buildkite.com/pricing/",
+      "tier_direction": "widened",
+      "finding": "500 -> 2,000 vCPU minutes/month; 50k -> 250k test executions"
+    },
+    {
+      "vendor": "Chroma",
+      "change_type": "pricing_model_change",
+      "date": "2026-09-07",
+      "source_url": "https://www.trychroma.com/pricing",
+      "tier_direction": "unchanged",
+      "finding": "the tier is Open Source, self-hosted with no limits; the reading prices Chroma Cloud's Starter plan"
+    },
+    {
+      "vendor": "CloudAMQP",
+      "change_type": "limits_reduced",
+      "date": "2026-09-09",
+      "source_url": "https://www.cloudamqp.com/plans.html",
+      "tier_direction": "unchanged",
+      "finding": "1M message quota, 20 connections and 100 queues all match; \"10,000 queued messages\" is queue depth, a different axis"
+    },
+    {
+      "vendor": "Cloudflare KV",
+      "change_type": "limits_reduced",
+      "date": "2026-09-02",
+      "source_url": "https://developers.cloudflare.com/kv/platform/pricing/",
+      "tier_direction": "unchanged",
+      "finding": "100K reads/day, 1K writes/day and 1 GB all match; our stored terms already say /day"
+    },
+    {
+      "vendor": "Cloudflare Queues",
+      "change_type": "pricing_model_change",
+      "date": "2026-09-05",
+      "source_url": "https://developers.cloudflare.com/queues/platform/pricing/",
+      "tier_direction": "unchanged",
+      "finding": "10K operations/day free, 24-hour non-configurable retention and 1M/month on paid are all already ours"
+    },
+    {
+      "vendor": "Codecov",
+      "change_type": "pricing_restructured",
+      "date": "2026-09-02",
+      "source_url": "https://about.codecov.io/pricing/",
+      "tier_direction": "unchanged",
+      "finding": "\"The Team plan is now $5 per user/month, down from $12\" - a price cut on a paid plan"
+    },
+    {
+      "vendor": "Figma",
+      "change_type": "limits_reduced",
+      "date": "2026-09-03",
+      "source_url": "https://www.figma.com/pricing/",
+      "tier_direction": "unchanged",
+      "finding": "every figure matches; the claim is that the page no longer states the team-project limit"
+    },
+    {
+      "vendor": "formlets.com",
+      "change_type": "pricing_restructured",
+      "date": "2026-09-01",
+      "source_url": "https://formlets.com/",
+      "tier_direction": "widened",
+      "finding": "100 submissions per month -> unlimited"
+    },
+    {
+      "vendor": "Gel",
+      "change_type": "limits_reduced",
+      "date": "2026-09-07",
+      "source_url": "https://www.geldata.com/pricing",
+      "tier_direction": "unchanged",
+      "finding": "\"1/4 compute unit (0.5 GiB RAM)\" -> \"1/4 compute unit (1/2 GiB RAM, 1/16 vCPU)\""
+    },
+    {
+      "vendor": "geocodify.com",
+      "change_type": "pricing_restructured",
+      "date": "2026-09-01",
+      "source_url": "https://geocodify.com/",
+      "tier_direction": "widened",
+      "finding": "the reading says \"30,000 Calls/month\" against the stored 10k free queries/month, and the summary's own words are \"The free tier now has 30,000 calls/month\""
+    },
+    {
+      "vendor": "GitHub Actions",
+      "change_type": "pricing_restructured",
+      "date": "2026-09-02",
+      "source_url": "https://docs.github.com/en/billing/managing-billing-for-github-actions/about-billing-for-github-actions",
+      "tier_direction": "unchanged",
+      "finding": "restates the standing 2,000 minutes, 500 MB and 10 GB limits"
+    },
+    {
+      "vendor": "Grafana Cloud",
+      "change_type": "pricing_restructured",
+      "date": "2026-09-02",
+      "source_url": "https://grafana.com/pricing/",
+      "tier_direction": "unchanged",
+      "finding": "every figure the stored terms state is repeated in the reading — \"10k metric series, 50 GB logs, and 50 GB traces are included\", 14-day retention; the $19/month platform fee it adds buys 30-day retention, which the free tier never had"
+    },
+    {
+      "vendor": "Grapedrop",
+      "change_type": "limits_reduced",
+      "date": "2026-08-28",
+      "source_url": "https://grapedrop.com/",
+      "tier_direction": "unchanged",
+      "finding": "5 pages and unlimited custom domains are both already ours; only 100 form submissions is new"
+    },
+    {
+      "vendor": "Hex",
+      "change_type": "limits_reduced",
+      "date": "2026-09-05",
+      "source_url": "https://hex.tech/pricing",
+      "tier_direction": "widened",
+      "finding": "Small compute 2 GB / 0.25 CPU -> 4 GB / 0.5 CPU"
+    },
+    {
+      "vendor": "imgix",
+      "change_type": "pricing_model_change",
+      "date": "2026-09-07",
+      "source_url": "https://www.imgix.com/pricing",
+      "tier_direction": "unchanged",
+      "finding": "our description opens \"no permanent free tier. 30-day free trial with 100 credits\"; the summary's finding is the same sentence"
+    },
+    {
+      "vendor": "Invantive Cloud",
+      "change_type": "pricing_restructured",
+      "date": "2026-08-28",
+      "source_url": "https://cloud.invantive.com/",
+      "tier_direction": "unchanged",
+      "finding": "\"Use for free. No further obligations. No user limit. No entrance or setup fees.\""
+    },
+    {
+      "vendor": "LambdaTest",
+      "change_type": "pricing_restructured",
+      "date": "2026-09-03",
+      "source_url": "https://www.testmuai.com/pricing/",
+      "tier_direction": "unchanged",
+      "finding": "Test Manager Premium at $49/month and KaneAI Starter at $17/month; the free tier is not mentioned"
+    },
+    {
+      "vendor": "LastPass",
+      "change_type": "pricing_restructured",
+      "date": "2026-09-03",
+      "source_url": "https://www.lastpass.com/pricing",
+      "tier_direction": "widened",
+      "finding": "the device limit is the same one device type; the stored terms end \"no dark web monitoring on free\" and the reading lists dark web monitoring as included"
+    },
+    {
+      "vendor": "leiga.com",
+      "change_type": "pricing_restructured",
+      "date": "2026-08-28",
+      "source_url": "https://www.leiga.com/",
+      "tier_direction": "unchanged",
+      "finding": "the whole summary is \"The pricing page states Leiga is 'Free forever. No credit card required.'\""
+    },
+    {
+      "vendor": "Liveblocks",
+      "change_type": "limits_reduced",
+      "date": "2026-09-01",
+      "source_url": "https://liveblocks.io/pricing",
+      "tier_direction": "widened",
+      "finding": "500 monthly active rooms -> unlimited; 256 MB realtime data -> 1 GB"
+    },
+    {
+      "vendor": "LiveKit",
+      "change_type": "limits_reduced",
+      "date": "2026-09-09",
+      "source_url": "https://livekit.io/pricing",
+      "tier_direction": "unchanged",
+      "finding": "the summary restates our five stored figures verbatim"
+    },
+    {
+      "vendor": "LocalStack",
+      "change_type": "pricing_restructured",
+      "date": "2026-09-07",
+      "source_url": "https://www.localstack.cloud/pricing",
+      "tier_direction": "unchanged",
+      "finding": "\"The Hobby plan is still available and free ... the number of emulated services is still 30+\""
+    },
+    {
+      "vendor": "Microsoft Founders Hub",
+      "change_type": "limits_reduced",
+      "date": "2026-08-28",
+      "source_url": "https://www.microsoft.com/en-us/startups",
+      "tier_direction": "unchanged",
+      "finding": "\"up to $150,000 in credits\" is our own upper figure"
+    },
+    {
+      "vendor": "MockAPI",
+      "change_type": "pricing_restructured",
+      "date": "2026-09-10",
+      "source_url": "https://www.mockapi.io/",
+      "tier_direction": "unchanged",
+      "finding": "the page now lists paid tiers at $5/month and $35/year"
+    },
+    {
+      "vendor": "Mockerito",
+      "change_type": "pricing_model_change",
+      "date": "2026-08-28",
+      "source_url": "https://mockerito.com/",
+      "tier_direction": "unchanged",
+      "finding": "current_state states a free tier exists in the same record whose summary says the free tier now costs $10/month"
+    },
+    {
+      "vendor": "OCR.Space",
+      "change_type": "pricing_restructured",
+      "date": "2026-08-28",
+      "source_url": "https://ocr.space/",
+      "tier_direction": "widened",
+      "finding": "free-tier file size limit 1 MB -> 5 MB"
+    },
+    {
+      "vendor": "OneSignal",
+      "change_type": "limits_reduced",
+      "date": "2026-08-28",
+      "source_url": "https://onesignal.com/pricing",
+      "tier_direction": "widened",
+      "finding": "100 emails/day -> 10,000 emails/month"
+    },
+    {
+      "vendor": "Oracle Cloud",
+      "change_type": "pricing_restructured",
+      "date": "2026-09-02",
+      "source_url": "https://www.oracle.com/cloud/free/",
+      "tier_direction": "unchanged",
+      "finding": "the reading lists service names and no quantities, so it states no reduction of the stored 2 AMD VMs, 4 Arm VMs, 200 GB block and 20 GB object; the summary is \"The tier still exists, the specific VM details are different\""
+    },
+    {
+      "vendor": "paperspace",
+      "change_type": "pricing_restructured",
+      "date": "2026-09-05",
+      "source_url": "https://www.paperspace.com/pricing",
+      "tier_direction": "unchanged",
+      "finding": "the free tier reads the same public projects and 5 GB storage; the prices that moved are paid ones, from \"$8/month\" to Pro $12 and Growth $39"
+    },
+    {
+      "vendor": "Pinecone",
+      "change_type": "pricing_restructured",
+      "date": "2026-09-10",
+      "source_url": "https://pinecone.io/pricing",
+      "tier_direction": "unchanged",
+      "finding": "\"The Starter plan is still available as a free tier. The details have been expanded.\""
+    },
+    {
+      "vendor": "Plausible Analytics",
+      "change_type": "free_tier_removed",
+      "date": "2026-08-28",
+      "source_url": "https://plausible.io/",
+      "tier_direction": "unchanged",
+      "finding": "the tier is Free OSS under AGPLv3; the reading is \"paid plans starting at $9/month\", which our own description already carries"
+    },
+    {
+      "vendor": "PromoProxy",
+      "change_type": "limits_reduced",
+      "date": "2026-09-01",
+      "source_url": "https://promoproxy.net/",
+      "tier_direction": "widened",
+      "finding": "1 GB -> 3 GB of data per day; the summary's \"down from\" contradicts its own figures"
+    },
+    {
+      "vendor": "Qdrant",
+      "change_type": "limits_reduced",
+      "date": "2026-09-10",
+      "source_url": "https://qdrant.tech/pricing/",
+      "tier_direction": "unchanged",
+      "finding": "\"down from 1GB cluster (which likely meant storage)\" - the record hedges its own comparison"
+    },
+    {
+      "vendor": "Railway",
+      "change_type": "limits_reduced",
+      "date": "2026-09-03",
+      "source_url": "https://railway.com/pricing",
+      "tier_direction": "unchanged",
+      "finding": "\"$1/month minimum after the trial\" and \"1 project\" are both already in our stored terms; the third claim, \"2 replicas instead of 1\", is an increase"
+    },
+    {
+      "vendor": "readthedocs.org",
+      "change_type": "pricing_restructured",
+      "date": "2026-08-28",
+      "source_url": "https://readthedocs.org/",
+      "tier_direction": "unchanged",
+      "finding": "the free Community plan still hosts public documentation for open source; the private repositories and SSO the summary calls paid are not in the stored terms, which state versioning and PDF generation"
+    },
+    {
+      "vendor": "Replit",
+      "change_type": "pricing_restructured",
+      "date": "2026-09-01",
+      "source_url": "https://replit.com/pricing",
+      "tier_direction": "widened",
+      "finding": "the free tier now includes daily agent credits and allows publishing 1 live project"
+    },
+    {
+      "vendor": "Shadcn Studio",
+      "change_type": "pricing_model_change",
+      "date": "2026-08-28",
+      "source_url": "https://shadcnstudio.com/theme-editor",
+      "tier_direction": "unchanged",
+      "finding": "the summary ends \"features ... that are likely part of paid plans\""
+    },
+    {
+      "vendor": "staticforms.xyz",
+      "change_type": "limits_reduced",
+      "date": "2026-09-01",
+      "source_url": "https://www.staticforms.xyz/",
+      "tier_direction": "widened",
+      "finding": "250 -> 500 submissions per month"
+    },
+    {
+      "vendor": "SuperTokens",
+      "change_type": "pricing_restructured",
+      "date": "2026-09-05",
+      "source_url": "https://supertokens.com/pricing",
+      "tier_direction": "widened",
+      "finding": "the self-hosted free tier is now unlimited where it was limited to the core features"
+    },
+    {
+      "vendor": "TeleportHQ",
+      "change_type": "limits_reduced",
+      "date": "2026-08-28",
+      "source_url": "https://teleporthq.io/",
+      "tier_direction": "unchanged",
+      "finding": "\"no longer explicitly mentions a limit of 'three free projects'\" - an absence, not a reduction"
+    },
+    {
+      "vendor": "Terrateam",
+      "change_type": "limits_reduced",
+      "date": "2026-08-28",
+      "source_url": "https://terrateam.io",
+      "tier_direction": "unchanged",
+      "finding": "the entire summary is \"Doesn't confirm the original unlimited usage claim.\""
+    },
+    {
+      "vendor": "UniRateAPI",
+      "change_type": "limits_reduced",
+      "date": "2026-08-28",
+      "source_url": "https://unirateapi.com",
+      "tier_direction": "widened",
+      "finding": "200 requests/day unchanged; currencies 590+ -> 870+"
+    },
+    {
+      "vendor": "Vercel",
+      "change_type": "limits_reduced",
+      "date": "2026-09-07",
+      "source_url": "https://vercel.com/pricing",
+      "tier_direction": "unchanged",
+      "finding": "both states carry the same seven figures - 1M edge requests, 100 GB transfer, 1 GB blob, 5K image transformations, 1M invocations, 4 hrs active CPU, 360 GB-hrs memory"
+    },
+    {
+      "vendor": "veriphone",
+      "change_type": "pricing_restructured",
+      "date": "2026-08-28",
+      "source_url": "https://veriphone.io/",
+      "tier_direction": "unchanged",
+      "finding": "1,000 a month either way — the summary states the change as \"1,000 free validations per month, instead of 1,000 requests\", which renames the unit; what is new is the paid packs"
+    },
+    {
+      "vendor": "Virgil Security",
+      "change_type": "pricing_restructured",
+      "date": "2026-08-28",
+      "source_url": "https://virgilsecurity.com/",
+      "tier_direction": "unchanged",
+      "finding": "\"The free tier is still offered\"; what moved is the price beyond 250 users"
+    },
+    {
+      "vendor": "WorkOS",
+      "change_type": "pricing_restructured",
+      "date": "2026-09-05",
+      "source_url": "https://workos.com/pricing",
+      "tier_direction": "unchanged",
+      "finding": "\"User Management is free for up to 1 million users\"; the prices quoted are for Single Sign-On, Directory Sync and Audit Logs"
+    },
+    {
+      "vendor": "xAI",
+      "change_type": "pricing_model_change",
+      "date": "2026-09-02",
+      "source_url": "https://docs.x.ai/developers/models",
+      "tier_direction": "unchanged",
+      "finding": "we list Free Credits ($25 on sign-up, $150/month via data sharing); the reading is Grok 4.6 token prices and says nothing about the credits"
+    },
+    {
+      "vendor": "zilore.com",
+      "change_type": "limits_reduced",
+      "date": "2026-09-01",
+      "source_url": "https://zilore.com/en/dns",
+      "tier_direction": "unchanged",
+      "finding": "5 domains unchanged; records-per-domain and the query cap are new detail"
+    },
+    {
+      "vendor": "Zoho Docs",
+      "change_type": "limits_reduced",
+      "date": "2026-08-31",
+      "source_url": "https://zoho.com/docs",
+      "tier_direction": "unchanged",
+      "finding": "5 GB storage unchanged; \"previously 1GB upload limit\" is a different axis"
+    }
+  ]
+}

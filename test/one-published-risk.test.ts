@@ -7,6 +7,7 @@ import { fileURLToPath } from "node:url";
 import { assertPopulationFloor } from "./population-floor.ts";
 import {
   auditStack,
+  changesRatingTheListedTier,
   checkVendorRisk,
   enrichOffers,
   findVendor,
@@ -73,7 +74,7 @@ describe("one function decides a published risk level", () => {
       const risk = publishedRisk(offer, vendorChanges);
       if (risk.gate || risk.rating_withheld) continue;
       if (!cannotVouchForLevel(offer, risk.link_unreachable)) continue;
-      const recorded = vendorRiskAssessment(vendorChanges).level;
+      const recorded = vendorRiskAssessment(changesRatingTheListedTier(offer, vendorChanges)).level;
       if (recorded === "stable") {
         assert.strictEqual(risk.risk_level, null, `${offer.vendor} publishes stable over a page we could not read`);
         continue;

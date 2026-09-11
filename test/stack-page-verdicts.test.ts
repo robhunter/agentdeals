@@ -19,6 +19,7 @@ import {
   verdictsPublishedOn,
   type PublishedPick,
 } from "../dist/stack-claim.js";
+import { toSlug } from "../dist/vendor-slug.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(__dirname, "..");
@@ -91,6 +92,28 @@ async function offerRecord(slug: string): Promise<StoredOffer | null> {
   const offer = res.status === 200 ? ((await res.json()) as { offer?: StoredOffer }).offer ?? null : null;
   records.set(slug, offer);
   return offer;
+}
+
+function costCaveatsOn(html: string): string[] {
+  return [...html.matchAll(/<div class="cost-caveat"[^>]*>([\s\S]*?)<\/div>/g)].map(found =>
+    found[1]
+      .replace(/&quot;/g, '"')
+      .replace(/&#39;/g, "'")
+      .replace(/&lt;/g, "<")
+      .replace(/&gt;/g, ">")
+      .replace(/&amp;/g, "&")
+      .trim(),
+  );
+}
+
+function picksExcludedIn(caveats: readonly string[]): Set<string> {
+  const excluded = new Set<string>();
+  for (const caveat of caveats) {
+    const tail = caveat.split("It does not cover ")[1];
+    if (tail === undefined) continue;
+    for (const named of tail.matchAll(/([^,(]+)\(/g)) excluded.add(toSlug(named[1].trim()));
+  }
+  return excluded;
 }
 
 const pages = new Map<string, string>();
@@ -243,16 +266,26 @@ describe("stack pages do not out-claim the badge", () => {
 
   it("qualifies a $0 headline it cannot stand behind", async () => {
     const unqualified: string[] = [];
+    const priced: string[] = [];
     for (const route of STACK_PAGES) {
       const html = pages.get(route)!;
       if (!/\$0<span[^>]*>\/month|tier-amount cost-free">\$0\/mo|Total: <strong>\$0\/month/.test(html)) continue;
-      const weak: string[] = [];
-      for (const { slug, verdict } of verdictsPublishedOn(html)) {
-        if (verdictConfidence(verdict) !== 3) weak.push(slug);
+      const inTheStack = verdictsPublishedOn(html, { ratingTheStackOnly: true });
+      assert.ok(inTheStack.length > 0, `${route} totals $0 and publishes no verdict for anything in the stack`);
+      priced.push(route);
+      const caveats = costCaveatsOn(html);
+      if (caveats.length === 0) {
+        unqualified.push(`${route}: a $0 headline that states nothing about what it covers`);
+        continue;
       }
-      if (weak.length > 0 && !html.includes("class=\"cost-caveat\"")) unqualified.push(`${route}: ${[...new Set(weak)].join(", ")}`);
+      const excluded = picksExcludedIn(caveats);
+      for (const { slug, verdict } of inTheStack) {
+        if (verdictConfidence(verdict) === 3 || excluded.has(slug)) continue;
+        unqualified.push(`${route}: ${slug} reads "${verdict}" and the $0 does not exclude it`);
+      }
     }
-    assert.deepStrictEqual(unqualified, [], `unqualified $0 headlines:\n${unqualified.join("\n")}`);
+    assert.deepStrictEqual([...new Set(unqualified)], [], `unqualified $0 headlines:\n${unqualified.join("\n")}`);
+    assert.ok(priced.length > 0, "no stack page totals $0, so nothing above was checked");
   });
 });
 
@@ -308,6 +341,21 @@ describe("the verdict comparison itself", () => {
     assert.deepStrictEqual(verdictsPublishedOn(html), [
       { slug: "vercel", verdict: "active" },
       { slug: "railway", verdict: "at risk" },
+    ]);
+  });
+
+  it("leaves out a verdict that rates an alternative when asked for the stack only", () => {
+    const html =
+      `<td><a href="/vendor/railway">Railway</a> <span class="stack-verdict">active</span></td>` +
+      `<a href="/vendor/render" class="alt-chip">Render <span class="stack-verdict stack-verdict-alt">at risk</span></a>` +
+      `<div class="swap-card"><a href="/vendor/grafana-cloud">Grafana Cloud</a> <span class="stack-verdict stack-verdict-alt">at risk</span></div>`;
+    assert.deepStrictEqual(verdictsPublishedOn(html), [
+      { slug: "railway", verdict: "active" },
+      { slug: "render", verdict: "at risk" },
+      { slug: "grafana-cloud", verdict: "at risk" },
+    ]);
+    assert.deepStrictEqual(verdictsPublishedOn(html, { ratingTheStackOnly: true }), [
+      { slug: "railway", verdict: "active" },
     ]);
   });
 
@@ -380,8 +428,22 @@ describe("the $0 caveat", () => {
     );
   });
 
-  it("says nothing when every pick reads active", () => {
-    assert.strictEqual(costHeadlineCaveat([{ vendor: "Neon", verdict: "active", readsActive: true }]), "");
+  it("still says what the headline rests on when every pick reads active", () => {
+    assert.strictEqual(
+      costHeadlineCaveat([{ vendor: "Neon", verdict: "active", readsActive: true }]),
+      "$0 covers all 1 pick: our own badge reads every one of their free tiers as active.",
+    );
+    assert.strictEqual(
+      costHeadlineCaveat([
+        { vendor: "Neon", verdict: "active", readsActive: true },
+        { vendor: "Railway", verdict: "active", readsActive: true },
+      ]),
+      "$0 covers all 2 picks: our own badge reads every one of their free tiers as active.",
+    );
+  });
+
+  it("qualifies nothing where there is no pick to qualify", () => {
+    assert.strictEqual(costHeadlineCaveat([]), "");
   });
 });
 

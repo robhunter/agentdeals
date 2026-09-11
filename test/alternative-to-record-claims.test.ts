@@ -4,7 +4,7 @@ import { spawn, type ChildProcess } from "node:child_process";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { CHANGE_DIRECTION, loadDealChanges, loadOffers } from "../dist/data.js";
-import { changeGradesTheListedTier } from "../dist/change-tier.js";
+import { changeRatesTheListedTier } from "../dist/change-tier.js";
 import { CHANGE_KIND_NOUN, narrowingSentence } from "../dist/vendor-verdict.js";
 import { isNoLongerInForce } from "../dist/change-resolution.js";
 import { vendorSlugMap } from "../dist/vendor-slug.js";
@@ -26,7 +26,7 @@ const listed = loadOffers();
 function gradingTheListedTier(vendor: string, changes: DealChange[]): DealChange[] {
   const held = heldBy(vendor, changes);
   const offer = listed.find(o => o.vendor.toLowerCase() === vendor.toLowerCase());
-  return offer ? held.filter(c => changeGradesTheListedTier(c, offer)) : held;
+  return offer ? held.filter(c => changeRatesTheListedTier(c, offer)) : held;
 }
 
 function negativeKinds(records: DealChange[]): string[] {

@@ -12,6 +12,7 @@ import {
   VERDICT_WINDOW_DAYS,
   VOLATILE_TYPES,
   changeTypesThatCanDemote,
+  changesRatingTheListedTier,
   demotionInForce,
   loadDealChanges,
   loadOffers,
@@ -261,9 +262,14 @@ describe("#1206 the badge and the vendor page read the same scale", () => {
 
   it("gives the vendor risk endpoint the level the risk scale reached", async () => {
     const changes = loadDealChanges();
-    const vendors = [...new Set(loadOffers().map(o => o.vendor))];
-    const demoted = vendors.filter(v =>
-      vendorRiskAssessment(changes.filter(c => c.vendor.toLowerCase() === v.toLowerCase())).level !== "stable");
+    const offers = loadOffers();
+    const rating = (vendor: string) => {
+      const offer = offers.find(o => o.vendor.toLowerCase() === vendor.toLowerCase());
+      const held = changes.filter(c => c.vendor.toLowerCase() === vendor.toLowerCase());
+      return offer ? changesRatingTheListedTier(offer, held) : held;
+    };
+    const vendors = [...new Set(offers.map(o => o.vendor))];
+    const demoted = vendors.filter(v => vendorRiskAssessment(rating(v)).level !== "stable");
     const sample = [...demoted.slice(0, 15), ...vendors.filter(v => !demoted.includes(v)).slice(0, 15)];
     assert.ok(demoted.length > 0, "the index holds no vendor the risk scale demotes");
     const wrong: string[] = [];
@@ -272,7 +278,7 @@ describe("#1206 the badge and the vendor page read the same scale", () => {
       if (res.status !== 200) continue;
       const body = await res.json() as { risk_level: string | null };
       if (body.risk_level === null) continue;
-      const expected = vendorRiskAssessment(changes.filter(c => c.vendor.toLowerCase() === vendor.toLowerCase())).level;
+      const expected = vendorRiskAssessment(rating(vendor)).level;
       if (body.risk_level !== expected) wrong.push(`${vendor}: endpoint ${body.risk_level}, risk scale ${expected}`);
     }
     assert.deepStrictEqual(wrong, [], "the vendor risk endpoint disagrees with the risk scale");

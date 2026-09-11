@@ -1588,6 +1588,7 @@ export const openapiSpec = {
           summary: { type: "string" },
           previous_state: { type: "string" },
           current_state: { type: "string" },
+          tier_direction: { type: "string", enum: ["narrowed", "unchanged", "widened"], description: "Whether the tier we list is worse, the same, or better under current_state than it was under previous_state, judged with both in hand rather than read off change_type. Where it says the tier did not get worse we publish the record and take no risk verdict from it. Absent means we have not judged this record." },
           impact: { type: "string", enum: ["high", "medium", "low"] },
           source_url: { type: "string", format: "uri" },
           category: { type: "string" },
