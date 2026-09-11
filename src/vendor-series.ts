@@ -1,4 +1,5 @@
 import { createHash, randomBytes, timingSafeEqual } from "node:crypto";
+import { requestOutcome } from "./stats.js";
 
 export const VENDOR_SERIES_PATH = "/api/analytics/vendors";
 export const MIN_EXPORT_TOKEN_LENGTH = 16;
@@ -159,7 +160,7 @@ export interface VendorRequest {
 
 export function recordVendorRequest(input: VendorRequest): void {
   if (input.client_class === "internal") return;
-  if (!(input.status >= 200 && input.status < 300)) return;
+  if (requestOutcome(input.status) !== "served") return;
 
   if (!recording || recording.date !== input.date) {
     if (recording && hasPendingVendorCounts()) carry({ date: recording.date, delta: recording.delta });

@@ -85,6 +85,7 @@ import { changeDateLabel, changeEntryDateLabel, changeEntryLongDateLabel, change
 import { changeFeedEntries, feedEntryFields, feedUpdatedTimestamp, changeFeedProvenanceNote, CHANGE_FEED_ENTRY_LIMIT, CHANGE_FEED_DESCRIPTION, CHANGE_FEED_NAMESPACE, CHANGE_FEED_NAMESPACE_PREFIX, channelUpdatedTimestamp, WEEKLY_FEED_POPULATION_NOTE, feedLinkTag, feedEntrySourceXml, digestSourceXml, PER_CHANGE_FEED, WEEKLY_DIGEST_FEED } from "./change-feed.js";
 import { FEED_CORRECTIONS, correctionEntriesXml } from "./feed-corrections.js";
 import { buildDay, emptyPageLastmod, fallbackDay, httpDate, lastmodFor, newestLastmod, readPageLastmod, type PageLastmodLedger } from "./page-lastmod.js";
+import { datedUrl, isNotModified, revalidationHeaders } from "./conditional-request.js";
 import type { AgentBalance } from "./ledger.js";
 import type { SubmittedReferralCode } from "./referral-codes.js";
 
@@ -142,9 +143,33 @@ function pageLastmod(pagePath: string): string {
   return lastmodFor(pageLastmodLedger, pagePath, UNREAD_PAGE_DAY);
 }
 
-function pageLastmodHeader(pagePath: string): string | null {
+function vendorPageDay(slug: string, fallback: string): string {
+  return vendorLastmod.get(slug) || fallback;
+}
+
+function categoryPageDay(slug: string, fallback: string): string {
+  return categoryLastmod.get(slug) || fallback;
+}
+
+function sitemapDayFor(pagePath: string): string | null {
   const recorded = pageLastmodLedger.pages[pagePath];
-  return recorded ? httpDate(recorded.changed) : null;
+  if (recorded) return recorded.changed;
+  if (pagePath.startsWith("/vendor/")) {
+    const slug = pagePath.slice("/vendor/".length);
+    return vendorSlugMap.has(slug) ? vendorPageDay(slug, utcToday()) : null;
+  }
+  if (pagePath.startsWith("/category/")) {
+    const slug = pagePath.slice("/category/".length);
+    return categorySlugMap.has(slug) ? categoryPageDay(slug, utcToday()) : null;
+  }
+  return null;
+}
+
+function pageLastmodHeader(pathname: string, search: string): string | null {
+  const dated = datedUrl(pathname, search);
+  if (!dated) return null;
+  const day = sitemapDayFor(dated);
+  return day ? httpDate(day) : null;
 }
 
 const INDEXNOW_KEY = process.env.INDEXNOW_KEY ?? "";
@@ -53570,7 +53595,7 @@ function comparisonSitemapPaths(): string[] {
 }
 
 function pagesSitemapLedgerPaths(): string[] {
-  const paths = ["/api/docs", "/setup", "/privacy", "/disclosure", "/press", "/stacks"];
+  const paths = ["/", "/api/docs", "/setup", "/privacy", "/disclosure", "/press", "/stacks"];
   for (const t of STACK_TEMPLATES) paths.push("/stacks/" + t.slug);
   paths.push("/estimate", "/stack-check", "/compare-tool", "/budget-builder", "/developers", "/badges", "/embed", "/agent-stack", "/guides");
   for (const g of INTEGRATION_GUIDES) paths.push("/guides/" + g.slug);
@@ -53619,7 +53644,14 @@ const httpServer = createHttpServer(async (req, res) => {
     });
   }
 
+  const revalidation = {
+    method: req.method,
+    ifModifiedSince: req.headers["if-modified-since"],
+    ifNoneMatch: req.headers["if-none-match"],
+  };
+
   let servedContentType = "";
+  let answeredNotModified = false;
   const rawWriteHead = res.writeHead.bind(res);
   res.writeHead = ((status: number, ...rest: unknown[]) => {
     const headers = rest.find(a => a && typeof a === "object") as Record<string, string> | undefined;
@@ -53632,15 +53664,20 @@ const httpServer = createHttpServer(async (req, res) => {
         res.setHeader(SIGNAL_HEADER_NAME, signalHeaderValue(BASE_URL, slug));
       }
       if (/^text\/html/.test(servedContentType) && !res.hasHeader("Last-Modified")) {
-        const changed = pageLastmodHeader(url.pathname);
+        const changed = pageLastmodHeader(url.pathname, url.search);
         if (changed) res.setHeader("Last-Modified", changed);
       }
+    }
+    if (status === 200 && isNotModified(revalidation, res.getHeader("Last-Modified") as string | undefined)) {
+      answeredNotModified = true;
+      return rawWriteHead(304 as never, revalidationHeaders(headers) as never);
     }
     return rawWriteHead(status as never, ...(rest as never[]));
   }) as typeof res.writeHead;
 
   const rawEnd = res.end.bind(res);
   res.end = ((...args: unknown[]) => {
+    if (answeredNotModified) return rawEnd();
     if (typeof args[0] === "string" && /^text\/html/.test(servedContentType)) {
       args[0] = withLedeBeforeNav(withPageFreshness(args[0], url.pathname));
     }
@@ -54966,7 +55003,7 @@ ${catList}
       + '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
       + '  <url>\n    <loc>' + BASE_URL + '/vendor</loc>\n    <lastmod>' + latestVerified + '</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>\n';
     for (const s of vendorSlugMap.keys()) {
-      const vLastmod = vendorLastmod.get(s) || now;
+      const vLastmod = vendorPageDay(s, now);
       xml += '  <url>\n    <loc>' + BASE_URL + '/vendor/' + s + '</loc>\n    <lastmod>' + vLastmod + '</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.6</priority>\n  </url>\n';
     }
     xml += '</urlset>';
@@ -54990,7 +55027,7 @@ ${catList}
     const latestVerified = offers.reduce((max, o) => o.verifiedDate > max ? o.verifiedDate : max, offers[0]?.verifiedDate || now);
     let xml = '<?xml version="1.0" encoding="UTF-8"?>\n'
       + '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
-      + '  <url>\n    <loc>' + BASE_URL + '/</loc>\n    <lastmod>' + latestVerified + '</lastmod>\n    <changefreq>daily</changefreq>\n    <priority>1.0</priority>\n  </url>\n'
+      + '  <url>\n    <loc>' + BASE_URL + '/</loc>\n    <lastmod>' + pageLastmod("/") + '</lastmod>\n    <changefreq>daily</changefreq>\n    <priority>1.0</priority>\n  </url>\n'
       + '  <url>\n    <loc>' + BASE_URL + '/feed.xml</loc>\n    <lastmod>' + latestVerified + '</lastmod>\n    <changefreq>daily</changefreq>\n    <priority>0.5</priority>\n  </url>\n'
       + '  <url>\n    <loc>' + BASE_URL + '/api/docs</loc>\n    <lastmod>' + pageLastmod("/api/docs") + '</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.7</priority>\n  </url>\n'
       + '  <url>\n    <loc>' + BASE_URL + '/setup</loc>\n    <lastmod>' + pageLastmod("/setup") + '</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>\n'
@@ -55018,7 +55055,7 @@ ${catList}
       + '  <url>\n    <loc>' + BASE_URL + '/agent-stack</loc>\n    <lastmod>' + pageLastmod("/agent-stack") + '</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.9</priority>\n  </url>\n'
       + '  <url>\n    <loc>' + BASE_URL + '/category</loc>\n    <lastmod>' + latestVerified + '</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>\n';
     for (const c of categories) {
-      const catLastmod = categoryLastmod.get(toSlug(c.name)) || now;
+      const catLastmod = categoryPageDay(toSlug(c.name), now);
       xml += '  <url>\n    <loc>' + BASE_URL + '/category/' + toSlug(c.name) + '</loc>\n    <lastmod>' + catLastmod + '</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>\n';
     }
     xml += '  <url>\n    <loc>' + BASE_URL + '/best</loc>\n    <lastmod>' + latestVerified + '</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>0.8</priority>\n  </url>\n';
@@ -55086,7 +55123,7 @@ ${catList}
     res.end(xml);
   } else if (url.pathname === "/") {
     recordLandingPageView();
-    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8" });
+    res.writeHead(200, { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "public, max-age=3600" });
     res.end(landingPageHtml);
   } else if ((url.pathname === "/best" || url.pathname === "/best/") && isGetOrHead) {
     recordApiHit("/best");

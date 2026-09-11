@@ -144,11 +144,16 @@ describe("404s are not page views (#1029)", () => {
       assert.equal(requestOutcome(299), "served");
       assert.equal(requestOutcome(301), "redirect");
       assert.equal(requestOutcome(302), "redirect");
-      assert.equal(requestOutcome(304), "redirect");
+      assert.equal(requestOutcome(303), "redirect");
+      assert.equal(requestOutcome(307), "redirect");
       assert.equal(requestOutcome(404), "not_found");
       assert.equal(requestOutcome(410), "not_found");
       assert.equal(requestOutcome(500), "not_found");
       assert.equal(requestOutcome(undefined), "served");
+    });
+
+    it("counts a page we answered as unchanged among the pages we served, not among the redirects", () => {
+      assert.equal(requestOutcome(304), "served");
     });
   });
 

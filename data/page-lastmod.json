@@ -2,6 +2,10 @@
   "version": 1,
   "generated": "2026-09-11",
   "pages": {
+    "/": {
+      "hash": "77e79ad498fcce1b",
+      "changed": "2026-09-11"
+    },
     "/agent-payments": {
       "hash": "7928b54e81d481b9",
       "changed": "2026-09-11"
