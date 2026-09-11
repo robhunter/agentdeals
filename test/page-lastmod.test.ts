@@ -351,7 +351,7 @@ describe("a page keeps the day it changed, whenever that was", () => {
     const tag = first.headers.get("etag")!;
     const advertised = first.headers.get("last-modified");
     assert.ok(advertised, "/vendor/supabase stopped advertising a day");
-    assert.ok(body.length > 1000, "/vendor/supabase served no page to compare against");
+    assert.ok(body.includes("</html>"), "/vendor/supabase served no whole page to compare against");
 
     const byTag = await fetch(`${fixtureBase}/vendor/supabase`, { headers: { "If-None-Match": tag } });
     assert.equal(await byTag.text(), "");
