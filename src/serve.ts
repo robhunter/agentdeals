@@ -6,6 +6,8 @@ import { dirname, join } from "node:path";
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
 import { createServer, getServerCard } from "./server.js";
 import { oldestVerifiedDateForSlug, vendorRiskAssessment, publishedRisk, levelWithheldStatement, vendorNotIndexedSentence, riskCauseOf, freeTierEndingRecord, NEGATIVE_CHANGE_TYPES, POSITIVE_CHANGE_TYPES, SEVERE_CHANGE_TYPES, loadOffers, getCategories, getNewOffers, getNewestDeals, searchOffers, enrichOffers, gateForOffer, loadDealChanges, getDealChanges, changeContext, DEFAULT_CHANGE_WINDOW_DAYS, getOfferDetails, compareServices, checkVendorRisk, auditStack, getExpiringDeals, getWeeklyDigest, getFormattedWeeklyDigest, getFreshnessMetrics, getStabilityMap, getVendorReferral, sanitizeQuery, getChangeLogFreshness, isEventDated, partitionByDateProvenance } from "./data.js";
+import { loadChangeRefusals } from "./data.js";
+import { confirmingRead, confirmingReadSentence, readsWeCouldNotReconcile, unreconciledReadSentence, UNRECONCILED_READ_BADGE_LABEL, type ChangeRefusal } from "./change-refusal.js";
 import { getStackRecommendation } from "./stacks.js";
 import { estimateCosts } from "./costs.js";
 import { classifyRequest } from "./client-class.js";
@@ -31,7 +33,7 @@ import { NO_CURRENT_FIGURE, costHeadlineCaveat, limitCellText, mayRecommendAsFre
 import { changesByVendor } from "./superseded-census.js";
 import { buildComparisonMap, comparisonSlug } from "./comparison-pairs.js";
 import { comparisonVerdictText, freeTierFaqAnswer, stabilityFaqAnswer, type ComparisonSide, type FreeTierSide, type SideFreeTier, type StabilityRating } from "./comparison-verdict.js";
-import { publishedVendorLevel, vendorVerdictSentence, vendorBadge, freeTierClaim, statesRiskCause, narrowingSentence, changeKindNoun, termsUnconfirmedBySource, unconfirmedTermsMetaSentence, type BadgeWithholding, type FreeTierClaim, type VendorVerdictInput } from "./vendor-verdict.js";
+import { publishedVendorLevel, vendorVerdictSentence, vendorBadge, freeTierClaim, statesRiskCause, narrowingSentence, changeKindNoun, readWeCouldNotReconcile, refusalWithholdsStability, termsUnconfirmedBySource, unconfirmedTermsMetaSentence, type BadgeWithholding, type FreeTierClaim, type VendorVerdictInput } from "./vendor-verdict.js";
 import { tierRecordsAFreeTier } from "./free-tier-record.js";
 import { PAGE_HEAD_OPEN, withLedeBeforeNav } from "./page-lede.js";
 import { freshnessClaimFor, withFreshnessClaim } from "./page-freshness.js";
@@ -542,6 +544,12 @@ function changesFor(vendorName: string): DealChange[] {
   return changesByVendorName.get(vendorName.toLowerCase()) ?? [];
 }
 
+const refusalsByVendorName = readsWeCouldNotReconcile(loadChangeRefusals());
+
+function refusalsFor(vendorName: string): ChangeRefusal[] {
+  return refusalsByVendorName.get(vendorName.toLowerCase()) ?? [];
+}
+
 type StoredTermsOf = Pick<Offer, "vendor" | "description" | "tier">;
 
 function supersedingChangeFor(offer: StoredTermsOf): DealChange | null {
@@ -886,9 +894,9 @@ const GATED_BADGE_LABELS: Record<GateCode, string> = {
 };
 
 function withheldBadgeLabel(because: BadgeWithholding): string {
-  return because.reason === "gated"
-    ? GATED_BADGE_LABELS[because.gate]
-    : WITHHELD_BADGE_LABELS[because.reason];
+  if (because.reason === "gated") return GATED_BADGE_LABELS[because.gate];
+  if (because.reason === "read_not_reconciled") return UNRECONCILED_READ_BADGE_LABEL;
+  return WITHHELD_BADGE_LABELS[because.reason];
 }
 
 let reverificationInterval: { on: string; days: number } | null = null;
@@ -970,6 +978,7 @@ function buildVendorVerdictContext(vendorName: string, servedOn: string): Vendor
       gate: gate?.code ?? null,
       linkUnreachable: Boolean(linkUnreachable),
       sourceCheck: primary.source_check?.outcome ?? null,
+      refusedReads: refusalsFor(vendorName),
     },
   };
 }
@@ -1191,6 +1200,7 @@ function endedFreeTiersIn(population: readonly Offer[], servedOn: string): Offer
 function unconfirmedFreeTierSentence(vendor: string, because: BadgeWithholding, context: VendorVerdictContext): string {
   if (because.reason === "gated") return context.gate?.reason ?? "";
   if (because.reason === "no_source") return ratingWithheldForNoSourceSentence(vendor);
+  if (because.reason === "read_not_reconciled") return unreconciledReadSentence(vendor, because.refusedOn);
   return withheldLevelSentence(because.reason, vendor, context.unconfirmableSince);
 }
 
@@ -2888,7 +2898,7 @@ ${demeritRows}
   <h3>The risk label is not a rank, and it is never a count</h3>
   <p>Vendor pages carry a <code>stable</code> / <code>caution</code> / <code>risky</code> label. <strong style="color:var(--text)">It moves no order on this site</strong> &mdash; the ranking module cannot read it, and flipping every label leaves every listing we publish in the same order.</p>
   <p>It is decided by the <em>type</em> of a recorded change, never by how many records we hold. A vendor that expanded its free tier, postponed a fee, added a tier or changed its name cannot be labelled <code>caution</code> for any of those. <strong style="color:var(--text)">A <code>caution</code> or <code>risky</code> label always renders together with the single dated record that produced it, on the same page and next to the label. Where we cannot show the reason, we do not show the label.</strong></p>
-  <p>The honest limit: <code>stable</code> means we hold no record of a free tier removal, a limit reduction or a pricing restructure for that vendor. It is a statement about our records, not a clean bill of health &mdash; a vendor we have never had cause to examine reads the same as one with a long clean history. Until August 2026 the label was derived from a count of records of any type, which inverted that: the vendors we watched most closely were the ones it flagged, and several were flagged for good news. That is fixed, and this paragraph is here so the next version of it is checkable.</p>
+  <p>The honest limit: <code>stable</code> means we hold no record of a free tier removal, a limit reduction or a pricing restructure for that vendor, and that no read of its pricing page since has turned up a change we could not reconcile with the terms we publish. A change we read and then refused to record is not evidence that nothing moved, so it takes the label off rather than leaving it on. It is a statement about our records, not a clean bill of health &mdash; a vendor we have never had cause to examine reads the same as one with a long clean history. Until August 2026 the label was derived from a count of records of any type, which inverted that: the vendors we watched most closely were the ones it flagged, and several were flagged for good news. That is fixed, and this paragraph is here so the next version of it is checkable.</p>
 
   <h3>What we publish when the link itself stops resolving</h3>
   <p>Verification asks whether an offer's terms are still right. A separate daily check asks the cheaper question of whether its link still resolves at all, and it runs over every record regardless of how recently that record was verified.</p>
@@ -3229,6 +3239,7 @@ function buildComparisonPage(slug: string): string | null {
       recordedChanges,
       rating: rated as StabilityRating | null,
       ratingWithheldBecause: levelWithheldReason(risk, risk.link_unreachable),
+      refusedRead: risk.refused_read,
       unconfirmableSince: levelWithheldSince(risk, risk.link_unreachable),
     };
   };
@@ -4633,6 +4644,11 @@ function buildVendorPage(slug: string): string | null {
 
   const riskColors: Record<string, string> = { stable: "#3fb950", caution: "#d29922", risky: "#f85149" };
   const riskCause = enriched.risk_cause;
+  const refusedRead = readWeCouldNotReconcile(verdictInput);
+  const unreconciled = refusalWithholdsStability(verdictInput);
+  const confirmedByRefusal = refusedRead || vendorChanges.length > 0
+    ? null
+    : confirmingRead(verdictInput.refusedReads ?? []);
   const riskLevel = publishedVendorLevel(enriched.risk_level ?? null, riskCause);
   const historyLevel = verdictInput.historyLevel;
   const levelWithheldBecause = levelWithheldStatement(vendorName, publishedRisk(primary, vendorChanges, servedOn));
@@ -5122,8 +5138,12 @@ ${allCompareLinks.join("\n")}
     ? `${vendorName} has had ${vendorChanges.length} recorded pricing change${vendorChanges.length > 1 ? "s" : ""}. Most recently: ${changeSummaryText(vendorChanges[0])} (${changeDateLabel(vendorChanges[0])}).${offerHasEnded ? ` ${ENDED_SINCE_CHANGES_SENTENCE}` : ""}`
     : offerHasEnded
     ? endedEmptyChangeHistorySentence(vendorName)
+    : refusedRead
+    ? `${unreconciledReadSentence(vendorName, refusedRead.refused_date)} We publish no change we could not reconcile, so we cannot tell you that nothing changed.`
     : levelWithheld
     ? `We hold no recorded pricing changes for ${vendorName}, but ${withheldClause}, so that is a statement about our records rather than a positive signal.`
+    : confirmedByRefusal
+    ? confirmingReadSentence(vendorName, confirmedByRefusal)
     : primaryGate
     ? `No, ${vendorName} has had no recorded pricing changes.`
     : `No, ${vendorName} has had no recorded pricing changes. This is a positive stability signal.`;
@@ -45987,7 +46007,7 @@ ${globalNavCss()}
   <p class="section-desc">We analyzed ${offers.length.toLocaleString()} developer tool offerings across ${categories.length} categories, tracking ${changesInForce.length} pricing changes over 2024&ndash;2026. Here&rsquo;s what the data shows:</p>
   <ul class="key-takeaways">
     <li><strong>${vouchedPct}% of tracked services offer a free tier we can vouch for today</strong> &mdash; we hold a free-tier record for ${recordedPct}% of them, and can confirm ${freeTiers.vouched.toLocaleString()} of those ${freeTiers.recorded.toLocaleString()} against a source we have read.</li>
-    <li><strong>${freeTiers.unconfirmed.toLocaleString()} recorded free tiers we cannot confirm today</strong> &mdash; the record stands, but the page we hold for it states no price we can read, cannot be read at all, or does not name the vendor. Unconfirmed is not the same as gone.</li>
+    <li><strong>${freeTiers.unconfirmed.toLocaleString()} recorded free tiers we cannot confirm today</strong> &mdash; the record stands, but the page we hold for it states no price we can read, cannot be read at all, does not name the vendor, or carried a change on our last read that we could not reconcile with the terms we publish. Unconfirmed is not the same as gone.</li>
     <li><strong>${freeTiers.ended} free tiers we have recorded as ended</strong> &mdash; excluded from every count above, and from every category total on this site.</li>
     <li><strong>${negativeChanges.length} negative pricing changes vs ${positiveChanges.length} positive</strong> &mdash; free tier removals and restrictions outpace expansions ${directionRatioLabel(negativeChanges.length, positiveChanges.length)}.</li>
     <li><strong>${durability.stillInForce.length} free tiers completely removed</strong> &mdash; ${escHtmlServer(lastingExamples.map(e => e.vendor).join(", "))}, and more. ${escHtmlServer(removalReturnRateSentence(durability))}</li>
@@ -46158,7 +46178,7 @@ ${globalNavCss()}
   <h2>Methodology</h2>
   <p class="section-desc">How we built this dataset:</p>
   <ul style="color:var(--text-muted);font-size:.9rem;padding-left:1.25rem;margin-bottom:1rem">
-    <li style="margin-bottom:.4rem"><strong>Verification:</strong> Every offer records the date we read the vendor&rsquo;s public pricing page and the URL we read it from. That is not the same as being able to vouch for it today: ${freeTiers.unconfirmed.toLocaleString()} of the ${freeTiers.recorded.toLocaleString()} recorded free tiers have a source that states no price we can read, cannot be read at all, or does not name the vendor, and those are the ones counted as unconfirmed above.</li>
+    <li style="margin-bottom:.4rem"><strong>Verification:</strong> Every offer records the date we read the vendor&rsquo;s public pricing page and the URL we read it from. That is not the same as being able to vouch for it today: ${freeTiers.unconfirmed.toLocaleString()} of the ${freeTiers.recorded.toLocaleString()} recorded free tiers have a source that states no price we can read, cannot be read at all, does not name the vendor, or carried a change on our last read that we could not reconcile with the terms we publish, and those are the ones counted as unconfirmed above.</li>
     <li style="margin-bottom:.4rem"><strong>Change tracking:</strong> ${changesInForce.length} pricing changes tracked with date, previous state, current state, impact level, and source documentation.</li>
     <li style="margin-bottom:.4rem"><strong>Definition of &ldquo;free tier&rdquo;:</strong> Perpetual free plans, always-free offerings, and generous hobby/starter tiers without time limits. We exclude limited trials (e.g., 14-day, 30-day) and one-time credits.</li>
     <li style="margin-bottom:.4rem"><strong>Update frequency:</strong> Continuous. Our <a href="/freshness">data freshness dashboard</a> shows verification recency by category.</li>

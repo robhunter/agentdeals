@@ -86,6 +86,7 @@ before(async () => {
   const { gateFor, utcDate } = await import("../dist/ranking.js");
   const { levelWithheldReason, levelWithheldSince, withheldLevelSentence } = await import("../dist/source-check.js");
   const { ratingWithheldForNoSourceSentence } = await import("../dist/change-citation.js");
+  const { unreconciledReadSentence } = await import("../dist/change-refusal.js");
 
   const offers = loadOffers();
   const changes = loadDealChanges();
@@ -112,9 +113,11 @@ before(async () => {
     const unreachable = enriched.link_unreachable;
     const withheld = levelWithheldReason(primary, unreachable);
     const since = levelWithheldSince(primary, unreachable);
+    const refusedRead = enriched.refused_read;
     const reasonsItCouldGive = [
       gateFor(primary, servedOn)?.reason,
       withheld ? withheldLevelSentence(withheld, vendor, since) : null,
+      refusedRead ? unreconciledReadSentence(vendor, refusedRead.refused_date) : null,
       ratingWithheldForNoSourceSentence(vendor),
     ].filter((r): r is string => typeof r === "string" && r !== "");
 
