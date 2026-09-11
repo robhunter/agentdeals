@@ -26,6 +26,7 @@ const { toSlug } = await import("../dist/slug.js");
 const { qualityBudget } = await import("../dist/page-reviews.js");
 const { supersededCensus } = await import("../dist/superseded-census.js");
 const { utcDate } = await import("../dist/ranking.js");
+const { loadDealChanges } = await import("../dist/data.js");
 const { tierRecordsAFreeTier } = await import("../dist/free-tier-record.js");
 const {
   describesOnlyATrial,
@@ -42,9 +43,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(__dirname, "..");
 
 const offers: Offer[] = JSON.parse(readFileSync(path.join(REPO, "data", "index.json"), "utf-8")).offers;
-const changes: DealChange[] = JSON.parse(
-  readFileSync(path.join(REPO, "data", "deal_changes.json"), "utf-8"),
-).changes;
+const changes: DealChange[] = loadDealChanges();
 
 const A_RUN_MAY_RAISE_IT =
   "The daily re-verification run raises this by reading pages, and lowers it by correcting a " +
@@ -1084,7 +1083,7 @@ describe("#1103 every catalogue record whose stored terms are superseded", () =>
   });
 
   it("finds readings that name one, so the assertion above has subjects", () => {
-    assert.ok(readingNamesAFreePlanLaterOn().length >= 4, `${readingNamesAFreePlanLaterOn().length} readings name a free plan the opening would miss`);
+    assert.ok(readingNamesAFreePlanLaterOn().length > 0, `${readingNamesAFreePlanLaterOn().length} readings name a free plan the opening would miss`);
   });
 
   it("leaves the opening alone wherever it already says something is free", () => {

@@ -1314,10 +1314,14 @@ function stackKeyLimitHtml(reading: StackPickReading, cap: number): string {
     ` <a href="/vendor/${reading.slug}#changes" class="stack-limit-source" style="font-size:.7rem;color:var(--text-dim)">read ${escHtmlServer(source.date)}</a>`;
 }
 
-function stackVerdictChipHtml(reading: StackPickReading, opts: { compact?: boolean } = {}): string {
+function stackVerdictChipHtml(
+  reading: StackPickReading,
+  opts: { compact?: boolean; alternative?: boolean } = {},
+): string {
   const color = BADGE_COLORS[reading.status];
   const size = opts.compact ? ".65rem" : ".7rem";
-  return `<span class="stack-verdict" style="display:inline-block;font-size:${size};padding:.15rem .5rem;border-radius:10px;background:${color}22;color:${color};font-weight:600" title="${escHtmlServer(reading.why)}">${escHtmlServer(reading.verdict)}</span>`;
+  const kind = opts.alternative ? "stack-verdict stack-verdict-alt" : "stack-verdict";
+  return `<span class="${kind}" style="display:inline-block;font-size:${size};padding:.15rem .5rem;border-radius:10px;background:${color}22;color:${color};font-weight:600" title="${escHtmlServer(reading.why)}">${escHtmlServer(reading.verdict)}</span>`;
 }
 
 function stackPickCostCaveat(readings: readonly StackPickReading[]): string {
@@ -1438,7 +1442,7 @@ function stackAltPicksHtml(altVendors: readonly EnrichedOfferRow[]): string {
   const chips = kept.length === 0 ? "" : `
       <div class="alt-picks">
         <p class="alt-label">Also consider:</p>
-        ${kept.map(({ offer, reading }) => `<a href="/vendor/${toSlug(offer.vendor)}" class="alt-chip">${escHtmlServer(offer.vendor)} <span class="chip-tier">${escHtmlServer(offer.tier)}</span>${reading ? ` ${stackVerdictChipHtml(reading, { compact: true })}` : ""}</a>`).join(" ")}
+        ${kept.map(({ offer, reading }) => `<a href="/vendor/${toSlug(offer.vendor)}" class="alt-chip">${escHtmlServer(offer.vendor)} <span class="chip-tier">${escHtmlServer(offer.tier)}</span>${reading ? ` ${stackVerdictChipHtml(reading, { compact: true, alternative: true })}` : ""}</a>`).join(" ")}
       </div>`;
 
   const dropped = ended.length === 0 ? "" : `
@@ -46896,7 +46900,7 @@ function buildStackTemplatePage(slug: string): string | null {
   const swapsHtml = template.swaps.map(sw => {
     const reading = stackReadingForSlug(sw.toSlug);
     return `<div class="swap-card">
-      <strong>Swap ${escHtmlServer(sw.from)} for <a href="/vendor/${escHtmlServer(sw.toSlug)}">${escHtmlServer(sw.to)}</a></strong> ${reading ? stackVerdictChipHtml(reading) : ""}
+      <strong>Swap ${escHtmlServer(sw.from)} for <a href="/vendor/${escHtmlServer(sw.toSlug)}">${escHtmlServer(sw.to)}</a></strong> ${reading ? stackVerdictChipHtml(reading, { alternative: true }) : ""}
       <p>${escHtmlServer(reading && !reading.recommendable ? reading.why : sw.saving)}</p>
     </div>`;
   }).join("\n");

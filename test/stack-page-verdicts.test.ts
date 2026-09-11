@@ -243,16 +243,18 @@ describe("stack pages do not out-claim the badge", () => {
 
   it("qualifies a $0 headline it cannot stand behind", async () => {
     const unqualified: string[] = [];
+    const priced: string[] = [];
     for (const route of STACK_PAGES) {
       const html = pages.get(route)!;
       if (!/\$0<span[^>]*>\/month|tier-amount cost-free">\$0\/mo|Total: <strong>\$0\/month/.test(html)) continue;
-      const weak: string[] = [];
-      for (const { slug, verdict } of verdictsPublishedOn(html)) {
-        if (verdictConfidence(verdict) !== 3) weak.push(slug);
-      }
+      const inTheStack = verdictsPublishedOn(html, { ratingTheStackOnly: true });
+      assert.ok(inTheStack.length > 0, `${route} totals $0 and publishes no verdict for anything in the stack`);
+      priced.push(route);
+      const weak = inTheStack.filter(({ verdict }) => verdictConfidence(verdict) !== 3).map(({ slug }) => slug);
       if (weak.length > 0 && !html.includes("class=\"cost-caveat\"")) unqualified.push(`${route}: ${[...new Set(weak)].join(", ")}`);
     }
     assert.deepStrictEqual(unqualified, [], `unqualified $0 headlines:\n${unqualified.join("\n")}`);
+    assert.ok(priced.length > 0, "no stack page totals $0, so nothing above was checked");
   });
 });
 
@@ -308,6 +310,21 @@ describe("the verdict comparison itself", () => {
     assert.deepStrictEqual(verdictsPublishedOn(html), [
       { slug: "vercel", verdict: "active" },
       { slug: "railway", verdict: "at risk" },
+    ]);
+  });
+
+  it("leaves out a verdict that rates an alternative when asked for the stack only", () => {
+    const html =
+      `<td><a href="/vendor/railway">Railway</a> <span class="stack-verdict">active</span></td>` +
+      `<a href="/vendor/render" class="alt-chip">Render <span class="stack-verdict stack-verdict-alt">at risk</span></a>` +
+      `<div class="swap-card"><a href="/vendor/grafana-cloud">Grafana Cloud</a> <span class="stack-verdict stack-verdict-alt">at risk</span></div>`;
+    assert.deepStrictEqual(verdictsPublishedOn(html), [
+      { slug: "railway", verdict: "active" },
+      { slug: "render", verdict: "at risk" },
+      { slug: "grafana-cloud", verdict: "at risk" },
+    ]);
+    assert.deepStrictEqual(verdictsPublishedOn(html, { ratingTheStackOnly: true }), [
+      { slug: "railway", verdict: "active" },
     ]);
   });
 

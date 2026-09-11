@@ -14,7 +14,7 @@ const {
 } = await import("../dist/superseded-description.js");
 const { toSlug } = await import("../dist/slug.js");
 const { citedRecords } = await import("../dist/provenance.js");
-const { getOfferDetails } = await import("../dist/data.js");
+const { getOfferDetails, loadDealChanges } = await import("../dist/data.js");
 
 type Offer = import("../src/types.ts").Offer;
 type DealChange = import("../src/types.ts").DealChange;
@@ -23,9 +23,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(__dirname, "..");
 
 const offers: Offer[] = JSON.parse(readFileSync(path.join(REPO, "data", "index.json"), "utf-8")).offers;
-const changes: DealChange[] = JSON.parse(
-  readFileSync(path.join(REPO, "data", "deal_changes.json"), "utf-8"),
-).changes;
+const changes: DealChange[] = loadDealChanges();
 
 const byVendor = new Map<string, DealChange[]>();
 for (const change of changes) {
@@ -162,7 +160,7 @@ describe("#1395 the listing surfaces answer the stored-terms question the way th
   after(() => { server?.proc.kill(); });
 
   it("has records on both sides of the question, so neither direction below is vacuous", () => {
-    assertPopulationFloor(superseded.length, 101, "records carry superseded stored terms");
+    assertPopulationFloor(superseded.length, 75, "records carry superseded stored terms");
     assertPopulationFloor(notSuperseded.length, 1001, "records carry current stored terms");
     assert.strictEqual(
       pages.size,

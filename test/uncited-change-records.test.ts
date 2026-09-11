@@ -11,6 +11,7 @@ import {
 } from "../dist/change-citation.js";
 import { uncitedChangesAgainstBudget } from "../dist/change-reporting.js";
 import {
+  changesRatingTheListedTier,
   classifyStability,
   demotionForChange,
   demotionInForce,
@@ -143,6 +144,12 @@ describe("the shipped catalogue", () => {
   const changes = loadDealChanges();
   const enriched = enrichOffers(loadOffers());
 
+  const recordsRating = (offer: { vendor: string; tier: string }) =>
+    changesRatingTheListedTier(
+      offer,
+      changes.filter(c => c.vendor.toLowerCase() === offer.vendor.toLowerCase()),
+    );
+
   const recordBehind = (vendor: string, cause: { date: string; change_type: string; summary: string }) =>
     changes.find(c =>
       c.vendor.toLowerCase() === vendor.toLowerCase()
@@ -162,10 +169,7 @@ describe("the shipped catalogue", () => {
   it("publishes no risk level a record citing no source would have set", () => {
     const rated = enriched
       .filter(o => o.risk_level !== null && o.risk_level !== "stable")
-      .filter((o) => {
-        const vendorChanges = changes.filter(c => c.vendor.toLowerCase() === o.vendor.toLowerCase());
-        return vendorChanges.filter(changeCitesASource).every(c => demotionInForce(c) === null);
-      })
+      .filter((o) => recordsRating(o).filter(changeCitesASource).every(c => demotionInForce(c) === null))
       .map(o => `${o.vendor}: ${o.risk_level}`);
     assert.deepStrictEqual(rated, [], "a non-stable level rests on no record that cites a source");
   });
@@ -188,9 +192,9 @@ describe("the shipped catalogue", () => {
     const expected = [...new Set(
       loadOffers()
         .filter((offer) => {
-          const vendorChanges = changes.filter(c => c.vendor.toLowerCase() === offer.vendor.toLowerCase());
-          return vendorChanges.some(c => demotionWithheldInForce(c) !== null)
-            && vendorChanges.every(c => demotionInForce(c) === null);
+          const rating = recordsRating(offer);
+          return rating.some(c => demotionWithheldInForce(c) !== null)
+            && rating.every(c => demotionInForce(c) === null);
         })
         .map(o => o.vendor),
     )].sort();
@@ -203,8 +207,7 @@ describe("the shipped catalogue", () => {
 
   it("counts the withheld records for the vendor whose rating is withheld", () => {
     for (const offer of enriched.filter(o => o.rating_withheld !== null)) {
-      const vendorChanges = changes.filter(c => c.vendor.toLowerCase() === offer.vendor.toLowerCase());
-      const expected = vendorChanges.filter(c => demotionWithheldInForce(c) !== null).length;
+      const expected = recordsRating(offer).filter(c => demotionWithheldInForce(c) !== null).length;
       assert.strictEqual(offer.rating_withheld!.records, expected, offer.vendor);
       assert.ok(expected > 0, `${offer.vendor} withholds a rating on no record`);
     }
