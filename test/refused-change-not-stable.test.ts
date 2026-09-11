@@ -5,7 +5,7 @@ import { readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { assertCoversPopulation, assertPopulationFloor, vendorsInTheCatalogue } from "./population-floor.ts";
-import { GATE_REASONS } from "../scripts/change-gate.js";
+import { GATE_REASONS, REJECT_MEASURES_NO_CHANGE, REJECT_NULL_COMPARISON, REJECT_STATES_NO_DIFFERENCE } from "../scripts/change-gate.js";
 import { SUPPRESSED_SAME_TRANSITION_REGRADED } from "../scripts/change-log.js";
 import { refusedReadWithholdingStability, REFUSAL_REASONS_THAT_CONFIRM_THE_STORED_TERMS, REFUSAL_REASONS_THAT_MEASURED_NO_DIFFERENCE, MEASURED_NO_DIFFERENCE_BADGE_LABEL, UNRECONCILED_READ_BADGE_LABEL } from "../dist/change-refusal.js";
 import { checkVendorRisk, enrichOffers, loadChangeRefusals, loadDealChanges, loadOffers } from "../dist/data.js";
@@ -435,6 +435,42 @@ describe("a page states the reason we withheld, not a reason its own refusal con
       r => !subjects.some(s => s.reasons.includes(r)),
     );
     assert.deepStrictEqual(unseen, [], `no vendor holds a refusal under these reasons, so they are untested: ${unseen.join(", ")}`);
+  });
+
+  it("reads an equality finding on every rule the gate refuses an equality under", () => {
+    const refusedOnAnEquality = [
+      REJECT_MEASURES_NO_CHANGE,
+      REJECT_STATES_NO_DIFFERENCE,
+      REJECT_NULL_COMPARISON,
+    ];
+    assert.deepStrictEqual(
+      [...REFUSAL_REASONS_THAT_MEASURED_NO_DIFFERENCE].sort(),
+      [...refusedOnAnEquality].sort(),
+      "the pages read a different set of equality findings from the set the gate refuses under",
+    );
+
+    const misread: string[] = [];
+    const exercised: string[] = [];
+    for (const rule of refusedOnAnEquality) {
+      const held = subjects.filter(
+        s => s.unreconciled && s.reasons.filter(r => !CONFIRMING.has(r)).every(r => r === rule),
+      );
+      if (held.length > 0) exercised.push(rule);
+      for (const subject of held) {
+        const page = pages.get(subject.slug) ?? "";
+        if (COULD_NOT_RECONCILE.test(page)) misread.push(`/vendor/${subject.slug} (${rule})`);
+        if (!NAMED_NO_FIGURE_THAT_MOVED.test(page)) misread.push(`/vendor/${subject.slug} names no equality finding (${rule})`);
+      }
+    }
+    assert.deepStrictEqual(
+      misread.slice(0, 20),
+      [],
+      `an equality the gate measured reaches a reader as a change we could not reconcile:\n${misread.slice(0, 20).join("\n")}`,
+    );
+    assert.ok(
+      exercised.length > 0,
+      `no vendor holds any of ${refusedOnAnEquality.join(", ")} as its only reason, so no page exercises this reading`,
+    );
   });
 });
 
