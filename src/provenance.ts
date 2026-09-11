@@ -153,8 +153,8 @@ export function provenanceBlock(
   const withheld = records.length - ranked.length;
   const dated = ranked.length > 0 ? ranked : records;
   const date = oldestDate(dated) ?? options.dateOfTheLogConsulted ?? null;
-  const derived = options.path ?? narrowestPath(records);
-  const path = derived === "/" ? options.listingPath ?? "/" : derived;
+  const derived = narrowestPath(records);
+  const path = options.path ?? (derived === "/" ? options.listingPath ?? "/" : derived);
 
   const block: Record<string, unknown> = {
     ...citation(baseUrl, path, date, dated.length <= 1),

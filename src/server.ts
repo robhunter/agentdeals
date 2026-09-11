@@ -23,9 +23,19 @@ import { withProvenance } from "./provenance.js";
 
 const SIGNAL_FOOTER_CONTENT = { type: "text" as const, text: MCP_SIGNAL_FOOTER };
 
+const THE_WHOLE_INDEX = "/";
+
 function citedJson<T extends object>(payload: T, listingPath?: string): string {
   return JSON.stringify(
     withProvenance(BASE_URL, payload, { dateForSlug: oldestVerifiedDateForSlug, ...(listingPath ? { listingPath } : {}) }),
+    null,
+    2,
+  );
+}
+
+function citedJsonAcrossTheWholeIndex<T extends object>(payload: T): string {
+  return JSON.stringify(
+    withProvenance(BASE_URL, payload, { dateForSlug: oldestVerifiedDateForSlug, path: THE_WHOLE_INDEX }),
     null,
     2,
   );
@@ -145,7 +155,7 @@ export function createServer(getSessionId?: () => string | undefined, getClientN
             ...gateDisclosureFor("deal", result.deals.map(o => o.gate)),
           };
           return {
-            content: [{ type: "text" as const, text: citedJson(enrichedResult) }, SIGNAL_FOOTER_CONTENT],
+            content: [{ type: "text" as const, text: citedJsonAcrossTheWholeIndex(enrichedResult) }, SIGNAL_FOOTER_CONTENT],
           };
         }
 
@@ -233,7 +243,7 @@ export function createServer(getSessionId?: () => string | undefined, getClientN
           const result = getStackRecommendation(use_case, requirements);
           logRequest({ ts: new Date().toISOString(), type: "mcp", endpoint: "plan_stack", params: { mode, use_case, requirements }, result_count: result.stack.length, session_id: getSessionId?.() });
           return {
-            content: [{ type: "text" as const, text: citedJson(result) }, SIGNAL_FOOTER_CONTENT],
+            content: [{ type: "text" as const, text: citedJsonAcrossTheWholeIndex(result) }, SIGNAL_FOOTER_CONTENT],
           };
         }
 
@@ -247,7 +257,7 @@ export function createServer(getSessionId?: () => string | undefined, getClientN
           const result = estimateCosts(services, scale ?? "hobby");
           logRequest({ ts: new Date().toISOString(), type: "mcp", endpoint: "plan_stack", params: { mode, services, scale: scale ?? "hobby" }, result_count: result.services.length, session_id: getSessionId?.() });
           return {
-            content: [{ type: "text" as const, text: citedJson(result) }, SIGNAL_FOOTER_CONTENT],
+            content: [{ type: "text" as const, text: citedJsonAcrossTheWholeIndex(result) }, SIGNAL_FOOTER_CONTENT],
           };
         }
 
@@ -261,7 +271,7 @@ export function createServer(getSessionId?: () => string | undefined, getClientN
           const result = auditStack(services);
           logRequest({ ts: new Date().toISOString(), type: "mcp", endpoint: "plan_stack", params: { mode, services }, result_count: result.services_analyzed, session_id: getSessionId?.() });
           return {
-            content: [{ type: "text" as const, text: citedJson(result) }, SIGNAL_FOOTER_CONTENT],
+            content: [{ type: "text" as const, text: citedJsonAcrossTheWholeIndex(result) }, SIGNAL_FOOTER_CONTENT],
           };
         }
 
