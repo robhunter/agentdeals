@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated": "2026-09-10",
+  "generated": "2026-09-11",
   "pages": {
     "/agent-payments": {
       "hash": "b5bb58e7b95bd9ca",
@@ -91,8 +91,8 @@
       "changed": "2026-09-09"
     },
     "/badges": {
-      "hash": "be46174742dca590",
-      "changed": "2026-09-10"
+      "hash": "679c6010536affff",
+      "changed": "2026-09-11"
     },
     "/brevo-vs-resend": {
       "hash": "3cad9e9ec2d599ca",
@@ -1555,8 +1555,8 @@
       "changed": "2026-09-10"
     },
     "/firebase-studio-shutdown": {
-      "hash": "c1cb518268e7ba7f",
-      "changed": "2026-09-10"
+      "hash": "b00839a2d67578fd",
+      "changed": "2026-09-11"
     },
     "/free-ai-stack": {
       "hash": "d5cd181436489dff",
@@ -1795,8 +1795,8 @@
       "changed": "2026-09-09"
     },
     "/shutdowns": {
-      "hash": "e2a5b77db92db8fc",
-      "changed": "2026-09-10"
+      "hash": "b682420b3b8e409f",
+      "changed": "2026-09-11"
     },
     "/stability": {
       "hash": "e80bbd92b1af18ff",
