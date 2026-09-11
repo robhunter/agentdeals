@@ -53491,6 +53491,7 @@ const HOSTING_PRICING_CATEGORY = "Cloud Hosting";
 const LLM_PRICING_PAGE = `/category/${toSlug(LLM_PRICING_CATEGORY)}`;
 const HOSTING_PRICING_PAGE = `/category/${toSlug(HOSTING_PRICING_CATEGORY)}`;
 const REFERRAL_CODE_LISTING_PAGE = "/disclosure";
+const THE_WHOLE_INDEX = "/";
 
 function digestWeekPath(weekOf: string): string {
   const { year, week } = isoWeekOf(new Date(weekOf + "T00:00:00Z"));
@@ -53513,6 +53514,10 @@ function citedAt<T extends object>(payload: T, path: string): T & { _provenance:
   };
 }
 
+function citedAcrossTheWholeIndex<T extends object>(payload: T): T & { _provenance: Record<string, unknown> } {
+  return citedAt(payload, THE_WHOLE_INDEX);
+}
+
 function citedAgainstTheChangeLog<T extends object>(payload: T, path: string): T & { _provenance: Record<string, unknown> } {
   return {
     ...payload,
@@ -53524,10 +53529,14 @@ function citedAgainstTheChangeLog<T extends object>(payload: T, path: string): T
   };
 }
 
-function withAgentBlock<T extends object>(payload: T, slug?: string | null): T & { _agent: Record<string, unknown>; _provenance: Record<string, unknown> } {
+function withAgentBlock<T extends object>(payload: T, slug?: string | null, citePath?: string): T & { _agent: Record<string, unknown>; _provenance: Record<string, unknown> } {
   return {
     ...payload,
-    _provenance: provenanceBlock(BASE_URL, payload, { deference: false, dateForSlug: oldestVerifiedDateForSlug }),
+    _provenance: provenanceBlock(BASE_URL, payload, {
+      deference: false,
+      dateForSlug: oldestVerifiedDateForSlug,
+      ...(citePath ? { path: citePath } : {}),
+    }),
     _agent: agentBlock(BASE_URL, slug ?? null),
   };
 }
@@ -54185,7 +54194,7 @@ const httpServer = createHttpServer(async (req, res) => {
     const result = getStackRecommendation(useCase, requirements);
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/stack", params: { use_case: useCase, requirements }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: result.stack.length });
     res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
-    res.end(JSON.stringify(withAgentBlock(result)));
+    res.end(JSON.stringify(withAgentBlock(result, null, THE_WHOLE_INDEX)));
   } else if (url.pathname === "/api/costs" && isGetOrHead) {
     recordApiHit("/api/costs");
     const servicesParam = url.searchParams.get("services");
@@ -54204,7 +54213,7 @@ const httpServer = createHttpServer(async (req, res) => {
     const result = estimateCosts(services, scale);
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/costs", params: { services, scale }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: result.services.length });
     res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
-    res.end(JSON.stringify(cited(result)));
+    res.end(JSON.stringify(citedAcrossTheWholeIndex(result)));
   } else if (url.pathname === "/api/query-log" && isGetOrHead) {
     const limit = Math.min(Math.max(parseInt(url.searchParams.get("limit") ?? "50", 10) || 50, 1), 200);
     const log = await getPublicRequestLogResult(limit);
@@ -54299,7 +54308,7 @@ const httpServer = createHttpServer(async (req, res) => {
     const result = getNewOffers(days);
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/new", params: { days }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: result.offers.length });
     res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
-    res.end(JSON.stringify(cited(result)));
+    res.end(JSON.stringify(citedAcrossTheWholeIndex(result)));
   } else if (url.pathname === "/api/newest" && isGetOrHead) {
     recordApiHit("/api/newest");
     const since = url.searchParams.get("since") || undefined;
@@ -54317,7 +54326,7 @@ const httpServer = createHttpServer(async (req, res) => {
       deals: result.deals.map(o => ({ ...o, referral_code: getBestReferralCode(o.vendor) })),
     };
     res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
-    res.end(JSON.stringify(cited(dealsWithCodes)));
+    res.end(JSON.stringify(citedAcrossTheWholeIndex(dealsWithCodes)));
   } else if (url.pathname === "/api/categories" && isGetOrHead) {
     recordApiHit("/api/categories");
     const cats = buildCategoryDirectory(getCategories(), loadOffers(), toSlug);
@@ -54653,7 +54662,7 @@ const httpServer = createHttpServer(async (req, res) => {
     const auditResult = auditStack(servicesList);
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/audit-stack", params: { services: servicesList }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: auditResult.services_analyzed });
     res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
-    res.end(JSON.stringify(cited(auditResult)));
+    res.end(JSON.stringify(citedAcrossTheWholeIndex(auditResult)));
   } else if (url.pathname.startsWith("/api/vendor-risk/") && isGetOrHead) {
     recordApiHit("/api/vendor-risk");
     const vendorParam = decodeURIComponent(url.pathname.slice("/api/vendor-risk/".length));

@@ -112,6 +112,53 @@ describe("the cited page is the narrowest one holding the whole response", () =>
   });
 });
 
+describe("a response whose population is stated does not take a page from its records", () => {
+  const oneVendor = { results: [{ vendor: "Neon", category: "Databases", verifiedDate: "2026-08-17" }] };
+  const oneCategory = {
+    results: [
+      { vendor: "Neon", category: "Databases", verifiedDate: "2026-08-17" },
+      { vendor: "Supabase", category: "Databases", verifiedDate: "2026-08-17" },
+    ],
+  };
+  const spanningCategories = {
+    results: [
+      { vendor: "Neon", category: "Databases", verifiedDate: "2026-08-17" },
+      { vendor: "Vercel", category: "Cloud Hosting", verifiedDate: "2026-08-17" },
+    ],
+  };
+
+  it("derives the narrowest page when no page is stated", () => {
+    assert.strictEqual(provenanceBlock(BASE, oneVendor).url, "https://agentdeals.dev/vendor/neon");
+    assert.strictEqual(provenanceBlock(BASE, oneCategory).url, "https://agentdeals.dev/category/databases");
+  });
+
+  it("keeps the stated page over the vendor page its records would have derived", () => {
+    assert.strictEqual(provenanceBlock(BASE, oneVendor, { path: "/" }).url, "https://agentdeals.dev");
+  });
+
+  it("keeps the stated page over the category page its records would have derived", () => {
+    assert.strictEqual(provenanceBlock(BASE, oneCategory, { path: "/" }).url, "https://agentdeals.dev");
+  });
+
+  it("keeps the stated page over the listing page an empty derivation falls back to", () => {
+    assert.strictEqual(
+      provenanceBlock(BASE, spanningCategories, { listingPath: "/changes" }).url,
+      "https://agentdeals.dev/changes",
+    );
+    assert.strictEqual(
+      provenanceBlock(BASE, spanningCategories, { path: "/", listingPath: "/changes" }).url,
+      "https://agentdeals.dev",
+    );
+  });
+
+  it("counts and dates the records it answered with whatever page it states", () => {
+    const block = provenanceBlock(BASE, oneCategory, { path: "/" });
+    assert.strictEqual(block.verified_records, 2);
+    assert.strictEqual(block.verified, "2026-08-17");
+    assert.strictEqual(citedUrl(block.cite_as), block.url);
+  });
+});
+
 describe("the citation names us, a page and a date", () => {
   it("composes the check date for a single record", () => {
     assert.strictEqual(
