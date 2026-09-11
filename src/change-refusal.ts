@@ -49,13 +49,13 @@ export function unreconciledRead(refusals: readonly RefusedRead[]): RefusedRead 
   return mostRecent(refusals.filter(r => !refusalConfirmsTheStoredTerms(r)));
 }
 
-export interface StabilityWithheldByARefusal {
+export interface StabilityEvidence {
   historyLevel: string | null;
   publishedChanges: number;
   refusals: readonly RefusedRead[];
 }
 
-export function readNotReconciled(state: StabilityWithheldByARefusal): RefusedRead | null {
+export function readNotReconciled(state: StabilityEvidence): RefusedRead | null {
   if (state.historyLevel !== "stable") return null;
   if (state.publishedChanges > 0) return null;
   return unreconciledRead(state.refusals);
@@ -92,7 +92,7 @@ export function unreconciledReadSentence(subject: string, refusedOn: string): st
     + ` we found a change we could not reconcile with the terms we publish for it.`;
 }
 
-export function readsWeCouldNotReconcile(
+export function refusalsByVendor(
   refusals: readonly ChangeRefusal[],
 ): Map<string, ChangeRefusal[]> {
   const byVendor = new Map<string, ChangeRefusal[]>();

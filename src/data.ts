@@ -32,7 +32,7 @@ import { resolveCategoryName } from "./category-scope.js";
 import { survivingVendorName } from "./vendor-merges.js";
 import {
   readNotReconciled,
-  readsWeCouldNotReconcile,
+  refusalsByVendor as groupRefusalsByVendor,
   unreconciledReadSentence,
   type ChangeRefusal,
   type ChangeRefusalIndex,
@@ -103,7 +103,7 @@ export function resetCache(): void {
   cachedOffers = null;
   cachedChanges = null;
   cachedRefusals = null;
-  refusalsByVendor = null;
+  refusalIndex = null;
   publishedChangesByVendor = null;
   resetLinkHealthCache();
   resetVerificationStateCache();
@@ -602,11 +602,11 @@ export function loadChangeRefusals(): ChangeRefusal[] {
   return cachedRefusals;
 }
 
-let refusalsByVendor: Map<string, ChangeRefusal[]> | null = null;
+let refusalIndex: Map<string, ChangeRefusal[]> | null = null;
 
 export function refusalsForVendor(vendor: string): ChangeRefusal[] {
-  if (!refusalsByVendor) refusalsByVendor = readsWeCouldNotReconcile(loadChangeRefusals());
-  return refusalsByVendor.get(vendor.trim().toLowerCase()) ?? [];
+  if (!refusalIndex) refusalIndex = groupRefusalsByVendor(loadChangeRefusals());
+  return refusalIndex.get(vendor.trim().toLowerCase()) ?? [];
 }
 
 let publishedChangesByVendor: Map<string, number> | null = null;

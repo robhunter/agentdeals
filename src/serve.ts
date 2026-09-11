@@ -7,7 +7,7 @@ import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/
 import { createServer, getServerCard } from "./server.js";
 import { oldestVerifiedDateForSlug, vendorRiskAssessment, publishedRisk, levelWithheldStatement, vendorNotIndexedSentence, riskCauseOf, freeTierEndingRecord, NEGATIVE_CHANGE_TYPES, POSITIVE_CHANGE_TYPES, SEVERE_CHANGE_TYPES, loadOffers, getCategories, getNewOffers, getNewestDeals, searchOffers, enrichOffers, gateForOffer, loadDealChanges, getDealChanges, changeContext, DEFAULT_CHANGE_WINDOW_DAYS, getOfferDetails, compareServices, checkVendorRisk, auditStack, getExpiringDeals, getWeeklyDigest, getFormattedWeeklyDigest, getFreshnessMetrics, getStabilityMap, getVendorReferral, sanitizeQuery, getChangeLogFreshness, isEventDated, partitionByDateProvenance } from "./data.js";
 import { loadChangeRefusals } from "./data.js";
-import { confirmingRead, confirmingReadSentence, readsWeCouldNotReconcile, unreconciledReadSentence, UNRECONCILED_READ_BADGE_LABEL, type ChangeRefusal } from "./change-refusal.js";
+import { confirmingRead, confirmingReadSentence, refusalsByVendor, unreconciledReadSentence, UNRECONCILED_READ_BADGE_LABEL, type ChangeRefusal } from "./change-refusal.js";
 import { getStackRecommendation } from "./stacks.js";
 import { estimateCosts } from "./costs.js";
 import { classifyRequest } from "./client-class.js";
@@ -544,10 +544,10 @@ function changesFor(vendorName: string): DealChange[] {
   return changesByVendorName.get(vendorName.toLowerCase()) ?? [];
 }
 
-const refusalsByVendorName = readsWeCouldNotReconcile(loadChangeRefusals());
+const refusalsHeldByVendor = refusalsByVendor(loadChangeRefusals());
 
 function refusalsFor(vendorName: string): ChangeRefusal[] {
-  return refusalsByVendorName.get(vendorName.toLowerCase()) ?? [];
+  return refusalsHeldByVendor.get(vendorName.toLowerCase()) ?? [];
 }
 
 type StoredTermsOf = Pick<Offer, "vendor" | "description" | "tier">;
