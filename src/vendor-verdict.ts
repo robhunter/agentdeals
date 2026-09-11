@@ -17,8 +17,11 @@ import { vendorHistorySentence, type PublishedRiskLevel } from "./vendor-history
 import {
   confirmingRead,
   confirmingReadClause,
-  readNotReconciled,
-  unreconciledReadClause,
+  measuredNoDifferenceSentence,
+  refusalMeasuredNoDifference,
+  refusedReadClause,
+  refusedReadWithholdingStability,
+  unreconciledReadSentence,
   type RefusedRead,
 } from "./change-refusal.js";
 
@@ -66,7 +69,32 @@ export type BadgeWithholding =
   | { reason: "gated"; gate: GateCode }
   | { reason: "no_source" }
   | { reason: "read_not_reconciled"; refusedOn: string }
+  | { reason: "change_measured_no_difference"; refusedOn: string }
   | { reason: LevelWithheldReason };
+
+export type RefusedReadWithholding = Extract<
+  BadgeWithholding,
+  { reason: "read_not_reconciled" | "change_measured_no_difference" }
+>;
+
+export function withheldForARefusedRead(because: BadgeWithholding): because is RefusedReadWithholding {
+  return because.reason === "read_not_reconciled" || because.reason === "change_measured_no_difference";
+}
+
+export function refusedReadWithholdingSentence(
+  subject: string,
+  because: RefusedReadWithholding,
+): string {
+  return because.reason === "change_measured_no_difference"
+    ? measuredNoDifferenceSentence(subject, because.refusedOn)
+    : unreconciledReadSentence(subject, because.refusedOn);
+}
+
+export function refusedReadWithholding(refusal: RefusedRead): BadgeWithholding {
+  return refusalMeasuredNoDifference(refusal)
+    ? { reason: "change_measured_no_difference", refusedOn: refusal.refused_date }
+    : { reason: "read_not_reconciled", refusedOn: refusal.refused_date };
+}
 
 export type VendorBadge =
   | { kind: "ended" }
@@ -125,8 +153,8 @@ export function vendorVerdictWord(input: VendorVerdictInput): PublishedRiskLevel
   return publishedVendorLevel(input.level, input.cause);
 }
 
-export function readWeCouldNotReconcile(input: VendorVerdictInput): RefusedRead | null {
-  return readNotReconciled({
+export function refusedReadWeHold(input: VendorVerdictInput): RefusedRead | null {
+  return refusedReadWithholdingStability({
     historyLevel: input.historyLevel,
     publishedChanges: input.changes.length,
     refusals: input.refusedReads ?? [],
@@ -138,7 +166,7 @@ export function refusalWithholdsStability(input: VendorVerdictInput): RefusedRea
   if (input.gate) return null;
   if (withholdingDecides(input)) return null;
   if (input.linkUnreachable) return null;
-  return readWeCouldNotReconcile(input);
+  return refusedReadWeHold(input);
 }
 
 export function badgeWithholding(input: VendorVerdictInput): BadgeWithholding | null {
@@ -146,8 +174,8 @@ export function badgeWithholding(input: VendorVerdictInput): BadgeWithholding | 
     return { reason: input.levelWithheld ?? "no_source" };
   }
   if (input.gate) return { reason: "gated", gate: input.gate };
-  const unreconciled = refusalWithholdsStability(input);
-  if (unreconciled) return { reason: "read_not_reconciled", refusedOn: unreconciled.refused_date };
+  const refused = refusalWithholdsStability(input);
+  if (refused) return refusedReadWithholding(refused);
   if (input.level === null) return { reason: input.levelWithheld ?? "no_source" };
   if (input.linkUnreachable && publishedVendorLevel(input.level, input.cause) === "stable") {
     return { reason: "link_unreachable" };
@@ -238,9 +266,9 @@ export function vendorVerdictSentence(input: VendorVerdictInput): string {
     const clause = withheldLevelClause(input.levelWithheld, input.unconfirmableSince);
     return `${clause.charAt(0).toUpperCase()}${clause.slice(1)}, so we cannot confirm these terms today.`;
   }
-  const unreconciled = refusalWithholdsStability(input);
-  if (unreconciled) {
-    return `${capitalise(unreconciledReadClause(unreconciled.refused_date))}, so we are not rating this offer today.`;
+  const refused = refusalWithholdsStability(input);
+  if (refused) {
+    return `${capitalise(refusedReadClause(refused))}, so we are not rating this offer today.`;
   }
 
   const level = publishedVendorLevel(input.level, input.cause);

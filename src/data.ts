@@ -31,9 +31,9 @@ import { endedVerdictSentence } from "./retirement.js";
 import { resolveCategoryName } from "./category-scope.js";
 import { survivingVendorName } from "./vendor-merges.js";
 import {
-  readNotReconciled,
+  refusedReadSentence,
+  refusedReadWithholdingStability,
   refusalsByVendor as groupRefusalsByVendor,
-  unreconciledReadSentence,
   type ChangeRefusal,
   type ChangeRefusalIndex,
   type RefusedRead,
@@ -418,7 +418,7 @@ export function stabilityWithheldSentence(vendorName: string): string {
   if (!offer) return vendorNotIndexedSentence(vendorName);
   const vendorChanges = loadDealChanges().filter((c) => c.vendor.toLowerCase() === vendorName.toLowerCase());
   const risk = publishedRisk(offer, vendorChanges);
-  if (risk.refused_read) return unreconciledReadSentence(vendorName, risk.refused_read.refused_date);
+  if (risk.refused_read) return refusedReadSentence(vendorName, risk.refused_read);
   if (risk.link_unreachable) return withheldLevelSentence("link_unreachable", vendorName, risk.link_unreachable.last_reachable ? LAST_RESOLVED(risk.link_unreachable.last_reachable) : "");
   return ratingWithheldForNoSourceSentence(vendorName);
 }
@@ -1007,7 +1007,7 @@ export function publishedRisk(
   const assessment = vendorRiskAssessment(changesRatingTheListedTier(offer, vendorChanges), nowMs);
   const link_unreachable = unreachableNoticeForUrl(offer.url, nowMs);
   const gate = gateFor(offer, servedOn);
-  const refused_read = readNotReconciled({
+  const refused_read = refusedReadWithholdingStability({
     historyLevel: assessment.level,
     publishedChanges: publishedChangeCount(offer.vendor),
     refusals: refusalsForVendor(offer.vendor),
@@ -1040,7 +1040,7 @@ export function levelWithheldStatement(vendor: string, risk: PublishedRisk): str
   if (risk.rating_withheld) return ratingWithheldForNoSourceSentence(vendor);
   const reason = levelWithheldReason({ source_check: risk.source_check ?? undefined }, risk.link_unreachable);
   if (!reason) {
-    return risk.refused_read ? unreconciledReadSentence(vendor, risk.refused_read.refused_date) : null;
+    return risk.refused_read ? refusedReadSentence(vendor, risk.refused_read) : null;
   }
   const since = levelWithheldSince({ source_check: risk.source_check ?? undefined }, risk.link_unreachable);
   return withheldLevelSentence(reason, vendor, since);
@@ -1123,7 +1123,7 @@ export function checkVendorRisk(
   } else if (withheldReason) {
     summary = `${withheldLevelSentence(withheldReason, offer.vendor, withheldSince)} Nothing we have read describes this offer. Treat that as a statement about our records, not as a stable pricing history.`;
   } else if (published.refused_read) {
-    summary = `${unreconciledReadSentence(offer.vendor, published.refused_read.refused_date)} We publish no change we could not reconcile, so we are not calling this a stable pricing history.`;
+    summary = `${refusedReadSentence(offer.vendor, published.refused_read)} We publish no change we refused to record, so we are not calling this a stable pricing history.`;
   } else {
     summary = `${vendorHistorySentence(offer.vendor, "stable", cause)} Free tier verified for ${longevityDays} days.`;
   }

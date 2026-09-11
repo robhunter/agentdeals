@@ -31,10 +31,24 @@ const CONFIRMING_REASON_CLAUSES: Record<ConfirmingRefusalReason, string> = {
     "the change we last considered recording proposed removing a free tier the page still offers",
 };
 
+export const REFUSAL_REASONS_THAT_MEASURED_NO_DIFFERENCE = [
+  "measures_no_change",
+  "states_no_difference",
+  "null_comparison",
+] as const;
+
+const MEASURED_NO_DIFFERENCE_REASONS = new Set<string>(
+  REFUSAL_REASONS_THAT_MEASURED_NO_DIFFERENCE,
+);
+
 export type RefusedRead = Pick<ChangeRefusal, "reason" | "refused_date">;
 
 export function refusalConfirmsTheStoredTerms(refusal: Pick<ChangeRefusal, "reason">): boolean {
   return CONFIRMING_REASONS.has(refusal.reason);
+}
+
+export function refusalMeasuredNoDifference(refusal: Pick<ChangeRefusal, "reason">): boolean {
+  return MEASURED_NO_DIFFERENCE_REASONS.has(refusal.reason);
 }
 
 function mostRecent(refusals: readonly RefusedRead[]): RefusedRead | null {
@@ -45,8 +59,10 @@ function mostRecent(refusals: readonly RefusedRead[]): RefusedRead | null {
   return held === null ? null : { reason: held.reason, refused_date: held.refused_date };
 }
 
-export function unreconciledRead(refusals: readonly RefusedRead[]): RefusedRead | null {
-  return mostRecent(refusals.filter(r => !refusalConfirmsTheStoredTerms(r)));
+export function refusedReadThatWithholds(refusals: readonly RefusedRead[]): RefusedRead | null {
+  const withholding = refusals.filter(r => !refusalConfirmsTheStoredTerms(r));
+  const unreconciled = withholding.filter(r => !refusalMeasuredNoDifference(r));
+  return mostRecent(unreconciled.length > 0 ? unreconciled : withholding);
 }
 
 export interface StabilityEvidence {
@@ -55,10 +71,10 @@ export interface StabilityEvidence {
   refusals: readonly RefusedRead[];
 }
 
-export function readNotReconciled(state: StabilityEvidence): RefusedRead | null {
+export function refusedReadWithholdingStability(state: StabilityEvidence): RefusedRead | null {
   if (state.historyLevel !== "stable") return null;
   if (state.publishedChanges > 0) return null;
-  return unreconciledRead(state.refusals);
+  return refusedReadThatWithholds(state.refusals);
 }
 
 export function confirmingRead(refusals: readonly RefusedRead[]): RefusedRead | null {
@@ -81,6 +97,7 @@ export function confirmingReadSentence(subject: string, refusal: RefusedRead): s
 }
 
 export const UNRECONCILED_READ_BADGE_LABEL = "unrated — change not reconciled";
+export const MEASURED_NO_DIFFERENCE_BADGE_LABEL = "unrated — change refused";
 
 export function unreconciledReadClause(refusedOn: string): string {
   return `when we last read the page we cite for this offer, on ${refusedOn},`
@@ -90,6 +107,30 @@ export function unreconciledReadClause(refusedOn: string): string {
 export function unreconciledReadSentence(subject: string, refusedOn: string): string {
   return `When we last read the page we cite for ${subject}, on ${refusedOn},`
     + ` we found a change we could not reconcile with the terms we publish for it.`;
+}
+
+export function measuredNoDifferenceClause(refusedOn: string): string {
+  return `when we last read the page we cite for this offer, on ${refusedOn},`
+    + ` we refused the change we considered recording because it named no figure that had moved,`
+    + ` and refusing a change is not a confirmation of the terms above`;
+}
+
+export function measuredNoDifferenceSentence(subject: string, refusedOn: string): string {
+  return `When we last read the page we cite for ${subject}, on ${refusedOn},`
+    + ` we refused the change we considered recording because it named no figure that had moved,`
+    + ` and refusing a change is not a confirmation of the terms we publish for it.`;
+}
+
+export function refusedReadClause(refusal: RefusedRead): string {
+  return refusalMeasuredNoDifference(refusal)
+    ? measuredNoDifferenceClause(refusal.refused_date)
+    : unreconciledReadClause(refusal.refused_date);
+}
+
+export function refusedReadSentence(subject: string, refusal: RefusedRead): string {
+  return refusalMeasuredNoDifference(refusal)
+    ? measuredNoDifferenceSentence(subject, refusal.refused_date)
+    : unreconciledReadSentence(subject, refusal.refused_date);
 }
 
 export function refusalsByVendor(

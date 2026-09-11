@@ -5,9 +5,9 @@ import { readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { assertCoversPopulation, assertPopulationFloor, vendorsInTheCatalogue } from "./population-floor.ts";
-import { GATE_REASONS } from "../scripts/change-gate.js";
+import { GATE_REASONS, REJECT_MEASURES_NO_CHANGE, REJECT_NULL_COMPARISON, REJECT_STATES_NO_DIFFERENCE } from "../scripts/change-gate.js";
 import { SUPPRESSED_SAME_TRANSITION_REGRADED } from "../scripts/change-log.js";
-import { readNotReconciled, REFUSAL_REASONS_THAT_CONFIRM_THE_STORED_TERMS, UNRECONCILED_READ_BADGE_LABEL } from "../dist/change-refusal.js";
+import { refusedReadWithholdingStability, REFUSAL_REASONS_THAT_CONFIRM_THE_STORED_TERMS, REFUSAL_REASONS_THAT_MEASURED_NO_DIFFERENCE, MEASURED_NO_DIFFERENCE_BADGE_LABEL, UNRECONCILED_READ_BADGE_LABEL } from "../dist/change-refusal.js";
 import { checkVendorRisk, enrichOffers, loadChangeRefusals, loadDealChanges, loadOffers } from "../dist/data.js";
 import { vendorSlugMap } from "../dist/vendor-slug.js";
 
@@ -34,18 +34,32 @@ const badgeLabelOf = (svg: string): string => {
 };
 
 const CONFIRMING = new Set<string>(REFUSAL_REASONS_THAT_CONFIRM_THE_STORED_TERMS);
+const MEASURED_NO_DIFFERENCE = new Set<string>(REFUSAL_REASONS_THAT_MEASURED_NO_DIFFERENCE);
 
-const WITHHELD_FOR_A_REFUSAL = /we found a change we could not reconcile with the terms we publish/;
+const COULD_NOT_RECONCILE = /we found a change we could not reconcile with the terms we publish/;
+const NAMED_NO_FIGURE_THAT_MOVED =
+  /we refused the change we considered recording because it named no figure that had moved/;
+const WITHHELD_FOR_A_REFUSAL = new RegExp(`${COULD_NOT_RECONCILE.source}|${NAMED_NO_FIGURE_THAT_MOVED.source}`);
 
 interface Subject {
   slug: string;
   vendor: string;
   reasons: string[];
   unreconciled: boolean;
+  measuredNoDifference: boolean;
   onlyTheRefusal: boolean;
   confirmingOnly: boolean;
   published: number;
 }
+
+const reasonWePublish = (subject: Subject): RegExp =>
+  subject.measuredNoDifference ? NAMED_NO_FIGURE_THAT_MOVED : COULD_NOT_RECONCILE;
+
+const reasonWeMustNotPublish = (subject: Subject): RegExp =>
+  subject.measuredNoDifference ? COULD_NOT_RECONCILE : NAMED_NO_FIGURE_THAT_MOVED;
+
+const badgeWeExpect = (subject: Subject): string =>
+  subject.measuredNoDifference ? MEASURED_NO_DIFFERENCE_BADGE_LABEL : UNRECONCILED_READ_BADGE_LABEL;
 
 let subjects: Subject[] = [];
 let serverPort = 0;
@@ -89,7 +103,8 @@ before(async () => {
   subjects = [...vendorSlugMap.entries()].map(([slug, vendor]) => {
     const reasons = held.get(vendor.toLowerCase()) ?? [];
     const count = published.get(vendor.toLowerCase()) ?? 0;
-    const unreconciled = count === 0 && reasons.some(r => !CONFIRMING.has(r));
+    const triggering = reasons.filter(r => !CONFIRMING.has(r));
+    const unreconciled = count === 0 && triggering.length > 0;
     const row = rowFor.get(vendor);
     const otherwiseWithheld = Boolean(
       row?.gate || row?.rating_withheld || row?.link_unreachable
@@ -101,6 +116,7 @@ before(async () => {
       reasons,
       published: count,
       unreconciled,
+      measuredNoDifference: unreconciled && triggering.every(r => MEASURED_NO_DIFFERENCE.has(r)),
       onlyTheRefusal: unreconciled && !otherwiseWithheld,
       confirmingOnly: count === 0 && reasons.length > 0 && reasons.every(r => CONFIRMING.has(r)),
     };
@@ -218,7 +234,7 @@ describe("a refused change is not a signal that nothing changed", () => {
     for (const subject of subjects.filter(s => s.onlyTheRefusal)) {
       const verdict = verdictParagraphOf(pages.get(subject.slug) ?? "");
       if (verdict === "") { silent.push(`/vendor/${subject.slug} renders no verdict paragraph`); continue; }
-      if (!WITHHELD_FOR_A_REFUSAL.test(verdict)) silent.push(`/vendor/${subject.slug}: ${verdict.slice(0, 120)}`);
+      if (!reasonWePublish(subject).test(verdict)) silent.push(`/vendor/${subject.slug}: ${verdict.slice(0, 120)}`);
     }
     assert.deepStrictEqual(silent.slice(0, 20), [], `verdicts withheld with nothing saying why:\n${silent.slice(0, 20).join("\n")}`);
   });
@@ -229,11 +245,13 @@ describe("a refused change is not a signal that nothing changed", () => {
     let queue = 0;
     const worker = async () => {
       while (queue < withheld.length) {
-        const { slug } = withheld[queue++];
+        const subject = withheld[queue++];
+        const { slug } = subject;
         const res = await fetch(`http://localhost:${serverPort}/badge/${slug}.svg`);
         if (res.status !== 200) { wrong.push(`/badge/${slug}.svg returned ${res.status}`); continue; }
         const label = badgeLabelOf(await res.text());
-        if (label !== UNRECONCILED_READ_BADGE_LABEL) wrong.push(`/badge/${slug}.svg reads "${label}"`);
+        const expected = badgeWeExpect(subject);
+        if (label !== expected) wrong.push(`/badge/${slug}.svg reads "${label}", not "${expected}"`);
       }
     };
     await Promise.all(Array.from({ length: 12 }, worker));
@@ -248,7 +266,7 @@ describe("a refused change is not a signal that nothing changed", () => {
       const line = stabilityLineOf(await readResourceOverHttp(`agentdeals://vendor/${subject.slug}`));
       assert.ok(line !== "", `agentdeals://vendor/${subject.slug} publishes no stability line at all`);
       assert.doesNotMatch(line, /\*\*Stability:\*\* stable/, `agentdeals://vendor/${subject.slug} calls it stable`);
-      assert.match(line, WITHHELD_FOR_A_REFUSAL, `agentdeals://vendor/${subject.slug} withholds without saying why`);
+      assert.match(line, reasonWePublish(subject), `agentdeals://vendor/${subject.slug} withholds without saying why`);
     }
     for (const subject of subjects.filter(s => s.confirmingOnly).slice(0, 3)) {
       const line = stabilityLineOf(await readResourceOverHttp(`agentdeals://vendor/${subject.slug}`));
@@ -265,7 +283,10 @@ describe("a refused change is not a signal that nothing changed", () => {
       if (result.risk_level !== null) silent.push(`${subject.vendor} answers ${result.risk_level}`);
       if (!subject.onlyTheRefusal) continue;
       if (A_STABLE_HISTORY.test(result.summary)) silent.push(`${subject.vendor}: ${result.summary}`);
-      if (!WITHHELD_FOR_A_REFUSAL.test(result.summary)) silent.push(`${subject.vendor} summarises without saying why`);
+      if (!reasonWePublish(subject).test(result.summary)) silent.push(`${subject.vendor} summarises without saying why`);
+      if (!/We publish no change we refused to record/.test(result.summary)) {
+        silent.push(`${subject.vendor} leaves an agent to read a missing record as nothing having changed`);
+      }
     }
     assert.deepStrictEqual(silent.slice(0, 10), [], `the risk summary still reads as a stable history:\n${silent.slice(0, 10).join("\n")}`);
   });
@@ -323,6 +344,154 @@ describe("a refused change is not a signal that nothing changed", () => {
   });
 });
 
+describe("a page states the reason we withheld, not a reason its own refusal contradicts", () => {
+  it("says no change was unreconcilable wherever every refusal we hold measured the two states as equal", () => {
+    const contradicting: string[] = [];
+    for (const subject of subjects.filter(s => s.measuredNoDifference)) {
+      const page = pages.get(subject.slug) ?? "";
+      if (COULD_NOT_RECONCILE.test(page)) {
+        contradicting.push(`/vendor/${subject.slug} (${subject.reasons.join(", ")})`);
+      }
+    }
+    assert.deepStrictEqual(
+      contradicting.slice(0, 20),
+      [],
+      `pages reporting an equality finding as a change we could not reconcile:\n${contradicting.slice(0, 20).join("\n")}`,
+    );
+    assertPopulationFloor(
+      subjects.filter(s => s.measuredNoDifference).length,
+      20,
+      "vendors hold only refusals that measured the two states as equal",
+    );
+    assertCoversPopulation(subjects.length, vendorsInTheCatalogue(), "vendor pages read for the reason they withhold");
+  });
+
+  it("keeps the reason a page gives out of the family it does not belong to", () => {
+    const crossed: string[] = [];
+    for (const subject of subjects.filter(s => s.onlyTheRefusal)) {
+      const page = pages.get(subject.slug) ?? "";
+      if (reasonWeMustNotPublish(subject).test(page)) crossed.push(`/vendor/${subject.slug}`);
+      if (!reasonWePublish(subject).test(page)) crossed.push(`/vendor/${subject.slug} states neither reason`);
+    }
+    assert.deepStrictEqual(crossed.slice(0, 20), [], `pages naming the wrong family of refusal:\n${crossed.slice(0, 20).join("\n")}`);
+    assert.ok(
+      subjects.some(s => s.onlyTheRefusal && s.measuredNoDifference)
+      && subjects.some(s => s.onlyTheRefusal && !s.measuredNoDifference),
+      "one of the two families is empty, so this control compares nothing",
+    );
+  });
+
+  it("takes no rating back for a vendor whose refusal only measured the quantities it compared", () => {
+    for (const slug of ["pagertree-com", "cloudflare-workers", "aiven", "uptimerobot"]) {
+      const subject = subjects.find(s => s.slug === slug);
+      assert.ok(subject?.measuredNoDifference, `/vendor/${slug} no longer holds only equality refusals`);
+      const page = pages.get(slug) ?? "";
+      assert.doesNotMatch(page, COULD_NOT_RECONCILE, `/vendor/${slug} still reports the equality finding as unreconcilable`);
+      assert.match(page, NAMED_NO_FIGURE_THAT_MOVED, `/vendor/${slug} states no reason for withholding`);
+      assert.deepStrictEqual(claimsOn(slug), [], `/vendor/${slug} publishes a stability claim over a refusal`);
+    }
+  });
+
+  it("leaves the vendors #1139 was filed on withheld and unrated", () => {
+    for (const slug of ["pubnub-com", "typeform-com", "lokalise"]) {
+      const subject = subjects.find(s => s.slug === slug);
+      assert.ok(subject?.unreconciled, `/vendor/${slug} no longer holds a refusal and no published change`);
+      assert.ok(!subject.measuredNoDifference, `/vendor/${slug} is no longer a read we could not reconcile`);
+      const page = pages.get(slug) ?? "";
+      assert.match(page, COULD_NOT_RECONCILE, `/vendor/${slug} lost the sentence #1139 put on it`);
+      assert.deepStrictEqual(claimsOn(slug), [], `/vendor/${slug} regained a stability claim`);
+    }
+  });
+
+  it("leaves a vendor holding both an equality refusal and a published change on the verdict its records give it", () => {
+    const both = subjects.filter(
+      s => s.published > 0 && s.reasons.some(r => MEASURED_NO_DIFFERENCE.has(r)),
+    );
+    assert.ok(both.length > 0, "no vendor holds both an equality refusal and a published change, so the control is empty");
+    const moved: string[] = [];
+    for (const subject of both) {
+      const page = pages.get(subject.slug) ?? "";
+      if (WITHHELD_FOR_A_REFUSAL.test(page)) moved.push(`/vendor/${subject.slug} withholds for a refusal`);
+      const verdict = verdictParagraphOf(page);
+      if (!/We rate it /.test(verdict)) moved.push(`/vendor/${subject.slug}: ${verdict.slice(0, 120)}`);
+    }
+    assert.deepStrictEqual(moved, [], `a published change stopped setting the verdict:\n${moved.join("\n")}`);
+  });
+
+  it("names no single family of refusal on a page that counts both", async () => {
+    const bothFamilies = subjects.some(s => s.onlyTheRefusal && s.measuredNoDifference)
+      && subjects.some(s => s.onlyTheRefusal && !s.measuredNoDifference);
+    assert.ok(bothFamilies, "the withheld population holds one family only, so a page naming it is not yet wrong");
+    const narrow: string[] = [];
+    for (const route of ["/state-of-free-tiers", "/criteria"]) {
+      const page = await (await fetch(`http://localhost:${serverPort}${route}`)).text();
+      if (/could not reconcile with the terms we publish/.test(page)) {
+        narrow.push(`${route} names only the reads we could not reconcile`);
+      }
+      if (/named no figure that had moved/.test(page)) narrow.push(`${route} names only the equality findings`);
+    }
+    assert.deepStrictEqual(narrow, [], `a page counting every refusal describes one kind of them:\n${narrow.join("\n")}`);
+  });
+
+  it("gives an agent the same reason on either transport", async () => {
+    const oneOfEach = [
+      subjects.find(s => s.onlyTheRefusal && s.measuredNoDifference),
+      subjects.find(s => s.onlyTheRefusal && !s.measuredNoDifference),
+    ];
+    for (const subject of oneOfEach) {
+      assert.ok(subject, "a family of refused read has no vendor to read over MCP");
+      const line = stabilityLineOf(await readResourceOverHttp(`agentdeals://vendor/${subject.slug}`));
+      assert.match(line, reasonWePublish(subject), `agentdeals://vendor/${subject.slug} names the wrong reason`);
+      assert.doesNotMatch(line, reasonWeMustNotPublish(subject), `agentdeals://vendor/${subject.slug} names the other family`);
+    }
+  });
+
+  it("draws both families of refusal from the vocabulary the gate writes", () => {
+    const overlap = REFUSAL_REASONS_THAT_MEASURED_NO_DIFFERENCE.filter(r => CONFIRMING.has(r));
+    assert.deepStrictEqual(overlap, [], `a reason is both a confirmation and an equality finding: ${overlap.join(", ")}`);
+    const unseen = REFUSAL_REASONS_THAT_MEASURED_NO_DIFFERENCE.filter(
+      r => !subjects.some(s => s.reasons.includes(r)),
+    );
+    assert.deepStrictEqual(unseen, [], `no vendor holds a refusal under these reasons, so they are untested: ${unseen.join(", ")}`);
+  });
+
+  it("reads an equality finding on every rule the gate refuses an equality under", () => {
+    const refusedOnAnEquality = [
+      REJECT_MEASURES_NO_CHANGE,
+      REJECT_STATES_NO_DIFFERENCE,
+      REJECT_NULL_COMPARISON,
+    ];
+    assert.deepStrictEqual(
+      [...REFUSAL_REASONS_THAT_MEASURED_NO_DIFFERENCE].sort(),
+      [...refusedOnAnEquality].sort(),
+      "the pages read a different set of equality findings from the set the gate refuses under",
+    );
+
+    const misread: string[] = [];
+    const exercised: string[] = [];
+    for (const rule of refusedOnAnEquality) {
+      const held = subjects.filter(
+        s => s.unreconciled && s.reasons.filter(r => !CONFIRMING.has(r)).every(r => r === rule),
+      );
+      if (held.length > 0) exercised.push(rule);
+      for (const subject of held) {
+        const page = pages.get(subject.slug) ?? "";
+        if (COULD_NOT_RECONCILE.test(page)) misread.push(`/vendor/${subject.slug} (${rule})`);
+        if (!NAMED_NO_FIGURE_THAT_MOVED.test(page)) misread.push(`/vendor/${subject.slug} names no equality finding (${rule})`);
+      }
+    }
+    assert.deepStrictEqual(
+      misread.slice(0, 20),
+      [],
+      `an equality the gate measured reaches a reader as a change we could not reconcile:\n${misread.slice(0, 20).join("\n")}`,
+    );
+    assert.ok(
+      exercised.length > 0,
+      `no vendor holds any of ${refusedOnAnEquality.join(", ")} as its only reason, so no page exercises this reading`,
+    );
+  });
+});
+
 describe("the refusal log and the rules that write it read the same vocabulary", () => {
   const refusalLog = () =>
     JSON.parse(readFileSync(process.env.AGENTDEALS_REFUSALS_PATH || path.join(REPO, "data", "change_refusals.json"), "utf-8")).refusals as Array<{ reason: string }>;
@@ -341,16 +510,36 @@ describe("the refusal log and the rules that write it read the same vocabulary",
     assert.deepStrictEqual(stray, [], `reasons kept as confirmations that no gate rule writes: ${stray.join(", ")}`);
   });
 
+  it("draws every reason it treats as an equality finding from that same vocabulary", () => {
+    const known = REASONS_A_RULE_CAN_WRITE;
+    const stray = REFUSAL_REASONS_THAT_MEASURED_NO_DIFFERENCE.filter(r => !known.has(r));
+    assert.deepStrictEqual(stray, [], `reasons kept as equality findings that no gate rule writes: ${stray.join(", ")}`);
+  });
+
+  it("publishes the reason of the refusal it could not reconcile wherever it holds one of each", () => {
+    const refusals = [
+      { reason: "measures_no_change", refused_date: "2026-09-11" },
+      { reason: "unquantified_limit", refused_date: "2026-08-01" },
+    ];
+    const published = refusedReadWithholdingStability({ historyLevel: "stable", publishedChanges: 0, refusals });
+    assert.strictEqual(
+      published?.reason,
+      "unquantified_limit",
+      "a later equality finding published its own reason over a refusal we could not reconcile",
+    );
+    assert.strictEqual(published?.refused_date, "2026-08-01", "the day published is not the day of the reason published");
+  });
+
   it("leaves a rating the records themselves earned alone", () => {
     const refusals = [{ reason: "unquantified_limit", refused_date: "2026-09-11" }];
     assert.notStrictEqual(
-      readNotReconciled({ historyLevel: "stable", publishedChanges: 0, refusals }),
+      refusedReadWithholdingStability({ historyLevel: "stable", publishedChanges: 0, refusals }),
       null,
       "a refused read over an otherwise stable history does not withhold",
     );
     for (const historyLevel of ["caution", "risky"]) {
       assert.strictEqual(
-        readNotReconciled({ historyLevel, publishedChanges: 0, refusals }),
+        refusedReadWithholdingStability({ historyLevel, publishedChanges: 0, refusals }),
         null,
         `a refused read takes over a ${historyLevel} the records earned`,
       );
