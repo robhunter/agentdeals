@@ -275,6 +275,7 @@ function sideFor(vendor: string): ComparisonSide | null {
     recordedChanges: countFor(vendor),
     rating: (e.risk_cause || e.risk_level === "stable" ? e.risk_level : null) as ComparisonSide["rating"],
     ratingWithheldBecause: levelWithheldReason(e, e.link_unreachable),
+    refusedRead: e.refused_read,
     unconfirmableSince: levelWithheldSince(e, e.link_unreachable),
   };
 }

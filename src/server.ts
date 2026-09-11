@@ -3,7 +3,7 @@ import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { McpServer, ResourceTemplate } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import { oldestVerifiedDateForSlug, getCategories, getDealChanges, getPersonalizedChanges, getNewOffers, getNewestDeals, getOfferDetails, searchOffers, enrichOffers, gateForOffer, compareServices, checkVendorRisk, auditStack, getExpiringDeals, getWeeklyDigest, loadOffers, loadDealChanges, classifyStability, publishedStabilityFor, getVendorReferral, sanitizeQuery } from "./data.js";
+import { oldestVerifiedDateForSlug, getCategories, getDealChanges, getPersonalizedChanges, getNewOffers, getNewestDeals, getOfferDetails, searchOffers, enrichOffers, gateForOffer, compareServices, checkVendorRisk, auditStack, getExpiringDeals, getWeeklyDigest, loadOffers, loadDealChanges, classifyStability, publishedStabilityFor, stabilityWithheldSentence, getVendorReferral, sanitizeQuery } from "./data.js";
 import { gateDisclosureFor } from "./gate-disclosure.js";
 import { toSlug, vendorSlugMap, resolveVendorSlug } from "./vendor-slug.js";
 import { recordToolCall, logRequest, recordSearchQuery } from "./stats.js";
@@ -788,13 +788,15 @@ Suggested monitoring cadence: run this check weekly to catch pricing changes ear
         return { contents: [{ uri: `agentdeals://vendor/${slug}`, text: `No vendor found matching "${slug}".`, mimeType: "text/plain" }] };
       }
       const changes = loadDealChanges().filter(c => c.vendor.toLowerCase() === match.vendor.toLowerCase());
-      const stability = classifyStability(changes);
+      const stability = publishedStabilityFor(match.vendor);
       const alternatives = substitutesFor(offers, match).slice(0, 5);
 
       let text = `# ${match.vendor}\n\n`;
       text += `**Category:** ${match.category}\n`;
       text += `**Tier:** ${match.tier}\n`;
-      text += `**Stability:** ${stability}\n`;
+      text += stability
+        ? `**Stability:** ${stability}\n`
+        : `**Stability:** not published — ${stabilityWithheldSentence(match.vendor)}\n`;
       text += `**Description:** ${match.description}\n`;
       text += `**Pricing Page:** ${match.url}\n`;
       text += `**Verified:** ${match.verifiedDate}\n`;

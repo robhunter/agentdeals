@@ -14,6 +14,13 @@ import {
 import type { GateCode } from "./ranking.js";
 import { endedVerdictSentence } from "./retirement.js";
 import { vendorHistorySentence, type PublishedRiskLevel } from "./vendor-history.js";
+import {
+  confirmingRead,
+  confirmingReadClause,
+  readNotReconciled,
+  unreconciledReadClause,
+  type RefusedRead,
+} from "./change-refusal.js";
 
 export type { PublishedRiskLevel };
 
@@ -52,11 +59,13 @@ export interface VendorVerdictInput {
   gate?: GateCode | null;
   linkUnreachable?: boolean;
   sourceCheck?: SourceCheckOutcome | null;
+  refusedReads?: readonly RefusedRead[];
 }
 
 export type BadgeWithholding =
   | { reason: "gated"; gate: GateCode }
   | { reason: "no_source" }
+  | { reason: "read_not_reconciled"; refusedOn: string }
   | { reason: LevelWithheldReason };
 
 export type VendorBadge =
@@ -112,7 +121,24 @@ export function withholdingDecides(input: VendorVerdictInput): boolean {
 export function vendorVerdictWord(input: VendorVerdictInput): PublishedRiskLevel | null {
   if (input.offerEnded) return null;
   if (withholdingDecides(input)) return null;
+  if (refusalWithholdsStability(input)) return null;
   return publishedVendorLevel(input.level, input.cause);
+}
+
+export function readWeCouldNotReconcile(input: VendorVerdictInput): RefusedRead | null {
+  return readNotReconciled({
+    historyLevel: input.historyLevel,
+    publishedChanges: input.changes.length,
+    refusals: input.refusedReads ?? [],
+  });
+}
+
+export function refusalWithholdsStability(input: VendorVerdictInput): RefusedRead | null {
+  if (input.offerEnded) return null;
+  if (input.gate) return null;
+  if (withholdingDecides(input)) return null;
+  if (input.linkUnreachable) return null;
+  return readWeCouldNotReconcile(input);
 }
 
 export function badgeWithholding(input: VendorVerdictInput): BadgeWithholding | null {
@@ -120,6 +146,8 @@ export function badgeWithholding(input: VendorVerdictInput): BadgeWithholding | 
     return { reason: input.levelWithheld ?? "no_source" };
   }
   if (input.gate) return { reason: "gated", gate: input.gate };
+  const unreconciled = refusalWithholdsStability(input);
+  if (unreconciled) return { reason: "read_not_reconciled", refusedOn: unreconciled.refused_date };
   if (input.level === null) return { reason: input.levelWithheld ?? "no_source" };
   if (input.linkUnreachable && publishedVendorLevel(input.level, input.cause) === "stable") {
     return { reason: "link_unreachable" };
@@ -210,6 +238,11 @@ export function vendorVerdictSentence(input: VendorVerdictInput): string {
     const clause = withheldLevelClause(input.levelWithheld, input.unconfirmableSince);
     return `${clause.charAt(0).toUpperCase()}${clause.slice(1)}, so we cannot confirm these terms today.`;
   }
+  const unreconciled = refusalWithholdsStability(input);
+  if (unreconciled) {
+    return `${capitalise(unreconciledReadClause(unreconciled.refused_date))}, so we are not rating this offer today.`;
+  }
+
   const level = publishedVendorLevel(input.level, input.cause);
   if (input.gate || level === null) return vendorHistorySentence(input.vendor, input.historyLevel, input.cause);
 
@@ -220,6 +253,11 @@ export function vendorVerdictSentence(input: VendorVerdictInput): string {
     return `We rate it ${level} — one recorded ${changeKindNoun(input.cause.change_type)}, ${changeDateClause(input.cause)}.${unconfirmed}`;
   }
 
-  if (input.changes.length === 0) return `It's stable — zero pricing changes recorded.`;
+  if (input.changes.length === 0) {
+    const confirmed = confirmingRead(input.refusedReads ?? []);
+    return confirmed
+      ? `It's stable — ${confirmingReadClause(confirmed)}.`
+      : `It's stable — zero pricing changes recorded.`;
+  }
   return `We rate it stable. ${narrowingSentence(input.changes, { vendor: input.vendor, tier: input.tier })}`;
 }

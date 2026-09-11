@@ -14,7 +14,7 @@ import {
   vendorVerdictWord,
   type VendorVerdictInput,
 } from "../dist/vendor-verdict.js";
-import { CHANGE_DIRECTION, enrichOffers, loadDealChanges, loadOffers, publishedRisk, vendorRiskAssessment, classifyStability } from "../dist/data.js";
+import { CHANGE_DIRECTION, enrichOffers, loadDealChanges, loadOffers, publishedRisk, refusalsForVendor, vendorRiskAssessment, classifyStability } from "../dist/data.js";
 import { vendorSlugMap } from "../dist/vendor-slug.js";
 import { isNoLongerInForce } from "../dist/change-resolution.js";
 import { levelWithheldReason, levelWithheldSince } from "../dist/source-check.js";
@@ -349,6 +349,7 @@ function vendorRows(): VendorRow[] {
         ratingWithheld: enriched.rating_withheld ?? null,
         offerEnded: ended,
         gate: gate?.code ?? null,
+        refusedReads: refusalsForVendor(vendor),
       }),
       tier: primary.tier,
       changes: vendorChanges,

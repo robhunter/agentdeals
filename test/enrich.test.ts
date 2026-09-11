@@ -36,12 +36,15 @@ describe("enrichOffers", () => {
     const { enrichOffers, loadOffers } = await import("../dist/data.js");
     const offers = loadOffers();
 
-    const { loadDealChanges } = await import("../dist/data.js");
+    const { loadChangeRefusals, loadDealChanges } = await import("../dist/data.js");
     const changes = loadDealChanges();
     const changedVendors = new Set(changes.map((c: { vendor: string }) => c.vendor.toLowerCase()));
+    const refusedVendors = new Set(loadChangeRefusals().map((r: { vendor: string }) => r.vendor.toLowerCase()));
 
-    const stableOffer = offers.find((o: { vendor: string }) => !changedVendors.has(o.vendor.toLowerCase()));
-    assert.ok(stableOffer, "Should find at least one vendor with no changes");
+    const stableOffer = offers.find(
+      (o: { vendor: string }) => !changedVendors.has(o.vendor.toLowerCase()) && !refusedVendors.has(o.vendor.toLowerCase()),
+    );
+    assert.ok(stableOffer, "Should find at least one vendor with no changes and no refused read");
 
     const enriched = enrichOffers([stableOffer]);
     assert.strictEqual(enriched[0].risk_level, "stable");
@@ -118,8 +121,8 @@ describe("enrichOffers", () => {
     const { levelWithheldReason } = await import("../dist/source-check.js");
     const withheld = enrichOffers(loadOffers()).filter((o: { risk_level: string | null }) => o.risk_level === null);
     const unexplained = withheld.filter(
-      (o: { link_unreachable: unknown; rating_withheld: unknown; gate: unknown }) =>
-        !levelWithheldReason(o as never, o.link_unreachable) && !o.rating_withheld && !o.gate
+      (o: { link_unreachable: unknown; rating_withheld: unknown; gate: unknown; refused_read: unknown }) =>
+        !levelWithheldReason(o as never, o.link_unreachable) && !o.rating_withheld && !o.gate && !o.refused_read
     );
     assert.strictEqual(unexplained.length, 0, `${unexplained.length} offers publish no level and no reason for withholding it`);
   });

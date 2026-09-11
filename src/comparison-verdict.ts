@@ -1,4 +1,5 @@
 import { withheldLevelSentence, type LevelWithheldReason } from "./source-check.js";
+import { unreconciledReadSentence, type RefusedRead } from "./change-refusal.js";
 
 export type StabilityRating = "stable" | "caution" | "risky";
 
@@ -7,6 +8,7 @@ export interface ComparisonSide {
   recordedChanges: number;
   rating: StabilityRating | null;
   ratingWithheldBecause: LevelWithheldReason | null;
+  refusedRead?: RefusedRead | null;
   unconfirmableSince: string;
 }
 
@@ -28,9 +30,11 @@ export function moreStableSide(a: ComparisonSide, b: ComparisonSide): Comparison
 }
 
 function whyWithheld(side: ComparisonSide): string {
-  return side.ratingWithheldBecause
-    ? withheldLevelSentence(side.ratingWithheldBecause, side.vendor, side.unconfirmableSince)
-    : `We are not publishing a stability rating for ${side.vendor}.`;
+  if (side.ratingWithheldBecause) {
+    return withheldLevelSentence(side.ratingWithheldBecause, side.vendor, side.unconfirmableSince);
+  }
+  if (side.refusedRead) return unreconciledReadSentence(side.vendor, side.refusedRead.refused_date);
+  return `We are not publishing a stability rating for ${side.vendor}.`;
 }
 
 export function stabilitySentences(a: ComparisonSide, b: ComparisonSide): string[] {

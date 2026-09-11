@@ -1,6 +1,7 @@
 import { BASE_URL } from "./base-url.js";
 import { readingIsBehindTheLoop } from "./badge-staleness.js";
 import { citationLabel, ratingWithheldForNoSourceSentence } from "./change-citation.js";
+import { unreconciledReadSentence } from "./change-refusal.js";
 import { CHANGE_DIRECTION } from "./change-direction.js";
 import { gateRiskSummary, publishedRisk } from "./data.js";
 import { LINK_GRACE_DAYS } from "./link-health.js";
@@ -143,6 +144,7 @@ function withheldSentence(
 ): string {
   if (because.reason === "gated") return gate ? gateRiskSummary(gate) : `We do not rate an offer we do not list.`;
   if (because.reason === "no_source") return ratingWithheldForNoSourceSentence(vendor);
+  if (because.reason === "read_not_reconciled") return unreconciledReadSentence(vendor, because.refusedOn);
   return withheldLevelSentence(because.reason, vendor, since);
 }
 

@@ -149,6 +149,7 @@ export interface EnrichedOffer extends Offer {
   days_since_read: number;
   link_unreachable: LinkUnreachable | null;
   gate: import("./ranking.js").Gate | null;
+  refused_read: import("./change-refusal.js").RefusedRead | null;
   terms_superseded: import("./superseded-description.js").SupersededTermsRecord | null;
 }
 

@@ -44,6 +44,7 @@ const WITHHELD_LABELS: Record<string, string> = {
   offer_expired: "unrated — offer expired",
   offer_retired: "unrated — offer ended",
   verification_lapsed: "unrated — not re-confirmed",
+  read_not_reconciled: "unrated — change not reconciled",
 };
 
 const WITHHELD_LABEL_SET = new Set(Object.values(WITHHELD_LABELS));
@@ -84,7 +85,7 @@ function badgeColor(svg: string): string {
 }
 
 before(async () => {
-  const { loadOffers, loadDealChanges, enrichOffers } = await import("../dist/data.js");
+  const { loadOffers, loadDealChanges, enrichOffers, publishedRisk, refusalsForVendor } = await import("../dist/data.js");
   const { vendorSlugMap } = await import("../dist/vendor-slug.js");
   const { levelWithheldReason } = await import("../dist/source-check.js");
   const { vendorBadge } = await import("../dist/vendor-verdict.js");
@@ -109,11 +110,14 @@ before(async () => {
       risk_level: string | null; risk_cause: never; rating_withheld: never; link_unreachable: unknown;
     };
     const levelWithheld = levelWithheldReason(primary, e.link_unreachable);
+    const vendorChanges = changes.filter((c: { vendor: string }) => c.vendor.toLowerCase() === vendor.toLowerCase());
     const badge = vendorBadge({
       vendor,
       level: e.risk_level as never,
+      historyLevel: publishedRisk(primary, vendorChanges, servedOn, nowMs).history_level,
       cause: e.risk_cause,
-      changes: changes.filter((c: { vendor: string }) => c.vendor.toLowerCase() === vendor.toLowerCase()),
+      changes: vendorChanges,
+      refusedReads: refusalsForVendor(vendor),
       levelWithheld,
       unconfirmableSince: "",
       ratingWithheld: e.rating_withheld,

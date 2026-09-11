@@ -30,6 +30,14 @@ import { changeCitesASource, changeIsUncited, changeSummaryHtml, changeSummaryMa
 import { endedVerdictSentence } from "./retirement.js";
 import { resolveCategoryName } from "./category-scope.js";
 import { survivingVendorName } from "./vendor-merges.js";
+import {
+  readNotReconciled,
+  refusalsByVendor as groupRefusalsByVendor,
+  unreconciledReadSentence,
+  type ChangeRefusal,
+  type ChangeRefusalIndex,
+  type RefusedRead,
+} from "./change-refusal.js";
 
 export function gateForOffer(offer: Offer): Gate | null {
   return gateFor(offer, utcDate());
@@ -47,9 +55,12 @@ const INDEX_PATH =
   process.env.AGENTDEALS_INDEX_PATH || path.join(__dirname, "..", "data", "index.json");
 const CHANGES_PATH =
   process.env.AGENTDEALS_CHANGES_PATH || path.join(__dirname, "..", "data", "deal_changes.json");
+const REFUSALS_PATH =
+  process.env.AGENTDEALS_REFUSALS_PATH || path.join(__dirname, "..", "data", "change_refusals.json");
 
 let cachedOffers: Offer[] | null = null;
 let cachedChanges: DealChange[] | null = null;
+let cachedRefusals: ChangeRefusal[] | null = null;
 
 export function loadOffers(): Offer[] {
   if (cachedOffers) return cachedOffers;
@@ -91,6 +102,9 @@ export function loadOffers(): Offer[] {
 export function resetCache(): void {
   cachedOffers = null;
   cachedChanges = null;
+  cachedRefusals = null;
+  refusalIndex = null;
+  publishedChangesByVendor = null;
   resetLinkHealthCache();
   resetVerificationStateCache();
 }
@@ -379,8 +393,9 @@ export function withheldStability(
   linkUnreachable: LinkUnreachable | null,
   stability: StabilityClass,
   vendorChanges: readonly DealChange[] = [],
+  refusedRead: RefusedRead | null = null,
 ): StabilityClass | null {
-  if (!linkUnreachable && standingNarrowingsCitingNoSource(vendorChanges).length === 0) return stability;
+  if (!linkUnreachable && !refusedRead && standingNarrowingsCitingNoSource(vendorChanges).length === 0) return stability;
   return FAVOURABLE_STABILITY_CLASSES.has(stability) ? null : stability;
 }
 
@@ -390,7 +405,22 @@ export function publishedStabilityFor(vendorName: string): StabilityClass | null
   const offer = loadOffers().find((o) => o.vendor.toLowerCase() === key);
   if (!offer) return classifyStability(vendorChanges);
   const grading = changesRatingTheListedTier(offer, vendorChanges);
-  return withheldStability(unreachableNoticeForUrl(offer.url), classifyStability(grading), grading);
+  return withheldStability(
+    unreachableNoticeForUrl(offer.url),
+    classifyStability(grading),
+    grading,
+    publishedRisk(offer, vendorChanges).refused_read,
+  );
+}
+
+export function stabilityWithheldSentence(vendorName: string): string {
+  const offer = loadOffers().find((o) => o.vendor.toLowerCase() === vendorName.toLowerCase());
+  if (!offer) return vendorNotIndexedSentence(vendorName);
+  const vendorChanges = loadDealChanges().filter((c) => c.vendor.toLowerCase() === vendorName.toLowerCase());
+  const risk = publishedRisk(offer, vendorChanges);
+  if (risk.refused_read) return unreconciledReadSentence(vendorName, risk.refused_read.refused_date);
+  if (risk.link_unreachable) return withheldLevelSentence("link_unreachable", vendorName, risk.link_unreachable.last_reachable ? LAST_RESOLVED(risk.link_unreachable.last_reachable) : "");
+  return ratingWithheldForNoSourceSentence(vendorName);
 }
 
 export function getStabilityMap(): Map<string, StabilityClass> {
@@ -457,7 +487,7 @@ export function enrichOffers(offers: Offer[]): EnrichedOffer[] {
       }
     }
 
-    const { risk_level, risk_cause, rating_withheld, link_unreachable, gate } = publishedRisk(
+    const { risk_level, risk_cause, rating_withheld, link_unreachable, gate, refused_read } = publishedRisk(
       offer,
       vendorAllChangesList.get(key) ?? [],
       servedOn,
@@ -470,6 +500,7 @@ export function enrichOffers(offers: Offer[]): EnrichedOffer[] {
       link_unreachable,
       classifyStability(grading),
       grading,
+      refused_read,
     );
 
     const days_since_verified = Math.floor(
@@ -481,7 +512,7 @@ export function enrichOffers(offers: Offer[]): EnrichedOffer[] {
 
     const terms_superseded = supersededTermsRecordFor(offer, vendorAllChangesList.get(key) ?? []);
 
-    const enriched = { ...offer, recent_change, expires_soon, risk_level, risk_cause, rating_withheld, stability, days_since_verified, last_read_date, days_since_read, link_unreachable, gate, terms_superseded };
+    const enriched = { ...offer, recent_change, expires_soon, risk_level, risk_cause, rating_withheld, stability, days_since_verified, last_read_date, days_since_read, link_unreachable, gate, refused_read, terms_superseded };
     return stripReferrerValue(enriched);
   });
 }
@@ -538,6 +569,57 @@ export function loadDealChanges(): DealChange[] {
     return survivor ? { ...change, vendor: survivor } : change;
   });
   return cachedChanges;
+}
+
+export function loadChangeRefusals(): ChangeRefusal[] {
+  if (cachedRefusals) return cachedRefusals;
+
+  if (!fs.existsSync(REFUSALS_PATH)) {
+    cachedRefusals = [];
+    return cachedRefusals;
+  }
+
+  let data: ChangeRefusalIndex;
+  try {
+    data = JSON.parse(fs.readFileSync(REFUSALS_PATH, "utf-8"));
+  } catch (err) {
+    console.error(`Change refusals could not be read: ${err}`);
+    cachedRefusals = [];
+    return cachedRefusals;
+  }
+
+  if (!data || !Array.isArray(data.refusals)) {
+    console.error("Change refusals is missing 'refusals' array, using empty list");
+    cachedRefusals = [];
+    return cachedRefusals;
+  }
+
+  const live = new Set(loadOffers().map((o) => o.vendor.trim().toLowerCase()));
+  cachedRefusals = data.refusals.map((refusal) => {
+    const survivor = survivingVendorName(refusal.vendor, live);
+    return survivor ? { ...refusal, vendor: survivor } : refusal;
+  });
+  return cachedRefusals;
+}
+
+let refusalIndex: Map<string, ChangeRefusal[]> | null = null;
+
+export function refusalsForVendor(vendor: string): ChangeRefusal[] {
+  if (!refusalIndex) refusalIndex = groupRefusalsByVendor(loadChangeRefusals());
+  return refusalIndex.get(vendor.trim().toLowerCase()) ?? [];
+}
+
+let publishedChangesByVendor: Map<string, number> | null = null;
+
+export function publishedChangeCount(vendor: string): number {
+  if (!publishedChangesByVendor) {
+    publishedChangesByVendor = new Map();
+    for (const change of loadDealChanges()) {
+      const key = change.vendor.trim().toLowerCase();
+      publishedChangesByVendor.set(key, (publishedChangesByVendor.get(key) ?? 0) + 1);
+    }
+  }
+  return publishedChangesByVendor.get(vendor.trim().toLowerCase()) ?? 0;
 }
 
 export { EVENT_DATED_SOURCES, partitionByDateProvenance } from "./change-dates.js";
@@ -906,6 +988,7 @@ export interface PublishedRisk {
   link_unreachable: LinkUnreachable | null;
   source_check: SourceCheck | null;
   gate: Gate | null;
+  refused_read: RefusedRead | null;
 }
 
 export function changesRatingTheListedTier(
@@ -924,9 +1007,15 @@ export function publishedRisk(
   const assessment = vendorRiskAssessment(changesRatingTheListedTier(offer, vendorChanges), nowMs);
   const link_unreachable = unreachableNoticeForUrl(offer.url, nowMs);
   const gate = gateFor(offer, servedOn);
+  const refused_read = readNotReconciled({
+    historyLevel: assessment.level,
+    publishedChanges: publishedChangeCount(offer.vendor),
+    refusals: refusalsForVendor(offer.vendor),
+  });
   const withheld =
     gate !== null ||
     assessment.rating_withheld !== null ||
+    refused_read !== null ||
     (cannotVouchForLevel(offer, link_unreachable) && assessment.level === "stable");
   return {
     risk_level: withheld ? null : assessment.level,
@@ -937,6 +1026,7 @@ export function publishedRisk(
     link_unreachable,
     source_check: offer.source_check ?? null,
     gate,
+    refused_read,
   };
 }
 
@@ -949,7 +1039,9 @@ export function levelWithheldStatement(vendor: string, risk: PublishedRisk): str
   if (risk.gate) return gateRiskSummary(risk.gate);
   if (risk.rating_withheld) return ratingWithheldForNoSourceSentence(vendor);
   const reason = levelWithheldReason({ source_check: risk.source_check ?? undefined }, risk.link_unreachable);
-  if (!reason) return null;
+  if (!reason) {
+    return risk.refused_read ? unreconciledReadSentence(vendor, risk.refused_read.refused_date) : null;
+  }
   const since = levelWithheldSince({ source_check: risk.source_check ?? undefined }, risk.link_unreachable);
   return withheldLevelSentence(reason, vendor, since);
 }
@@ -1030,6 +1122,8 @@ export function checkVendorRisk(
     summary = `${ratingWithheldForNoSourceSentence(offer.vendor)}${unreachableClause}`;
   } else if (withheldReason) {
     summary = `${withheldLevelSentence(withheldReason, offer.vendor, withheldSince)} Nothing we have read describes this offer. Treat that as a statement about our records, not as a stable pricing history.`;
+  } else if (published.refused_read) {
+    summary = `${unreconciledReadSentence(offer.vendor, published.refused_read.refused_date)} We publish no change we could not reconcile, so we are not calling this a stable pricing history.`;
   } else {
     summary = `${vendorHistorySentence(offer.vendor, "stable", cause)} Free tier verified for ${longevityDays} days.`;
   }
