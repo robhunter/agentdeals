@@ -926,3 +926,87 @@ describe("a page whose body is a function of the UTC day is dated from the day i
     );
   });
 });
+
+describe("a rotating page follows the clock, not the run that read it", () => {
+  const A_DAY_IN_MS = 86400000;
+  const FIXTURE = {
+    version: 1,
+    generated: "2026-08-20",
+    pages: {
+      "/privacy": { hash: "unchanged-since-february", changed: "2026-02-03" },
+      "/best": { daily: true },
+    },
+  };
+  let aheadServer: ChildProcess;
+  let aheadBase = "";
+  let aheadDir = "";
+
+  before(async () => {
+    aheadDir = mkdtempSync(path.join(tmpdir(), "page-lastmod-ahead-"));
+    const ledgerPath = path.join(aheadDir, "page-lastmod.json");
+    writeFileSync(ledgerPath, JSON.stringify(FIXTURE, null, 2));
+    aheadServer = await new Promise<ChildProcess>((resolve, reject) => {
+      const proc = spawn("node", ["--import", path.join(REPO, "scripts", "shifted-clock.mjs"), path.join(REPO, "dist", "serve.js")], {
+        stdio: ["pipe", "pipe", "pipe"],
+        env: {
+          ...process.env,
+          PORT: "0",
+          BASE_URL: "http://localhost",
+          AGENTDEALS_PAGE_LASTMOD_PATH: ledgerPath,
+          AGENTDEALS_CLOCK_SHIFT_MS: String(A_DAY_IN_MS),
+        },
+      });
+      const timeout = setTimeout(() => {
+        proc.kill();
+        reject(new Error("Server startup timeout"));
+      }, 30000);
+      proc.stderr!.on("data", (data: Buffer) => {
+        const match = data.toString().match(/running on http:\/\/localhost:(\d+)/);
+        if (match) {
+          aheadBase = `http://localhost:${match[1]}`;
+          clearTimeout(timeout);
+          resolve(proc);
+        }
+      });
+      proc.on("error", err => {
+        clearTimeout(timeout);
+        reject(err);
+      });
+    });
+  });
+
+  after(() => {
+    if (aheadServer) aheadServer.kill();
+    if (aheadDir) rmSync(aheadDir, { recursive: true, force: true });
+  });
+
+  it("advertises the day it is serving on, days after the run that recorded it", async () => {
+    const tomorrow = new Date(Date.now() + A_DAY_IN_MS).toISOString().slice(0, 10);
+    assert.ok(tomorrow > FIXTURE.generated, "this test needs the clock to be ahead of the ledger it reads");
+    const response = await fetch(`${aheadBase}/best`);
+    await response.text();
+    assert.equal(response.headers.get("last-modified"), httpDate(tomorrow), "a rotating page is dated from the run that read it rather than from the day it is served");
+    const xml = await (await fetch(`${aheadBase}/sitemap-pages.xml`)).text();
+    const advertised = new Map([...xml.matchAll(/<loc>([^<]+)<\/loc>\s*<lastmod>([^<]+)<\/lastmod>/g)]
+      .map(m => [m[1]!.replace("http://localhost", ""), m[2]!]));
+    assert.equal(advertised.get("/best"), tomorrow);
+    assert.equal(advertised.get("/privacy"), "2026-02-03", "a page with a stored day moved with the clock");
+
+    const bestOf = [...advertised].filter(([loc]) => loc.startsWith("/best/"));
+    assert.ok(bestOf.length > 0, "no best-of page is published, so this checks nothing");
+    const datedFromTheRequest = bestOf.filter(([, day]) => day === tomorrow).map(([loc]) => loc);
+    assert.deepEqual(datedFromTheRequest, [], "a best-of page the ledger does not date takes the day of the request instead of the ledger's own");
+  });
+
+  it("re-sends a rotating page to a client holding yesterday's copy, and holds back a page that has not moved", async () => {
+    const yesterday = httpDate(new Date().toISOString().slice(0, 10))!;
+    const rotated = await fetch(`${aheadBase}/best`, { headers: { "If-Modified-Since": yesterday } });
+    const body = await rotated.text();
+    assert.equal(rotated.status, 200, "a page whose order rotates every day told a client from yesterday that nothing changed");
+    assert.ok(body.includes("</html>"), "the rotating page answered 200 without a page");
+
+    const settled = await fetch(`${aheadBase}/privacy`, { headers: { "If-Modified-Since": yesterday } });
+    assert.equal(await settled.text(), "");
+    assert.equal(settled.status, 304, "a page that has not moved since February re-sent its body");
+  });
+});

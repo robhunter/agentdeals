@@ -53604,13 +53604,23 @@ function miscSitemapLedgerPaths(): string[] {
   return paths;
 }
 
+const sitemapPathsRead = new Map<string, string[]>();
+
+function sitemapPaths(name: string, read: () => string[]): string[] {
+  const held = sitemapPathsRead.get(name);
+  if (held) return held;
+  const paths = read();
+  sitemapPathsRead.set(name, paths);
+  return paths;
+}
+
 function ledgerPagePaths(): string[] {
   return [
-    ...vendorSitemapPaths(),
-    ...comparisonSitemapPaths(),
-    ...pagesSitemapLedgerPaths(),
-    ...reportsSitemapPaths(),
-    ...miscSitemapLedgerPaths(),
+    ...sitemapPaths("vendors", vendorSitemapPaths),
+    ...sitemapPaths("comparisons", comparisonSitemapPaths),
+    ...sitemapPaths("pages", pagesSitemapLedgerPaths),
+    ...sitemapPaths("reports", reportsSitemapPaths),
+    ...sitemapPaths("misc", miscSitemapLedgerPaths),
   ];
 }
 
@@ -54983,11 +54993,11 @@ ${catList}
   } else if (url.pathname === "/sitemap.xml" && isGetOrHead) {
     const now = new Date().toISOString().split("T")[0];
     const latestVerified = offers.reduce((max, o) => o.verifiedDate > max ? o.verifiedDate : max, offers[0]?.verifiedDate || now);
-    const vendorsDate = newestLastmod(pageLastmodLedger, vendorSitemapPaths(), UNREAD_PAGE_DAY, now);
-    const comparisonDate = newestLastmod(pageLastmodLedger, comparisonSitemapPaths(), UNREAD_PAGE_DAY, now);
-    const pagesDate = newestLastmod(pageLastmodLedger, pagesSitemapLedgerPaths(), UNREAD_PAGE_DAY, now);
-    const miscDate = newestLastmod(pageLastmodLedger, miscSitemapLedgerPaths(), UNREAD_PAGE_DAY, now);
-    const latestReport = newestLastmod(pageLastmodLedger, reportsSitemapPaths(), UNREAD_PAGE_DAY, now);
+    const vendorsDate = newestLastmod(pageLastmodLedger, sitemapPaths("vendors", vendorSitemapPaths), UNREAD_PAGE_DAY, now);
+    const comparisonDate = newestLastmod(pageLastmodLedger, sitemapPaths("comparisons", comparisonSitemapPaths), UNREAD_PAGE_DAY, now);
+    const pagesDate = newestLastmod(pageLastmodLedger, sitemapPaths("pages", pagesSitemapLedgerPaths), UNREAD_PAGE_DAY, now);
+    const miscDate = newestLastmod(pageLastmodLedger, sitemapPaths("misc", miscSitemapLedgerPaths), UNREAD_PAGE_DAY, now);
+    const latestReport = newestLastmod(pageLastmodLedger, sitemapPaths("reports", reportsSitemapPaths), UNREAD_PAGE_DAY, now);
     const sitemapIndex = '<?xml version="1.0" encoding="UTF-8"?>\n'
       + '<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
       + '  <sitemap>\n'
