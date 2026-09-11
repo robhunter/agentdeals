@@ -85,7 +85,7 @@ import { changeDateLabel, changeEntryDateLabel, changeEntryLongDateLabel, change
 import { changeFeedEntries, feedEntryFields, feedUpdatedTimestamp, changeFeedProvenanceNote, CHANGE_FEED_ENTRY_LIMIT, CHANGE_FEED_DESCRIPTION, CHANGE_FEED_NAMESPACE, CHANGE_FEED_NAMESPACE_PREFIX, channelUpdatedTimestamp, WEEKLY_FEED_POPULATION_NOTE, feedLinkTag, feedEntrySourceXml, digestSourceXml, PER_CHANGE_FEED, WEEKLY_DIGEST_FEED } from "./change-feed.js";
 import { FEED_CORRECTIONS, correctionEntriesXml } from "./feed-corrections.js";
 import { buildDay, emptyPageLastmod, fallbackDay, httpDate, lastmodFor, newestLastmod, readPageLastmod, type PageLastmodLedger } from "./page-lastmod.js";
-import { datedUrl, isNotModified, revalidationHeaders } from "./conditional-request.js";
+import { datedUrl, entityTag, isNotModified, matchesEntityTag, revalidationHeaders } from "./conditional-request.js";
 import type { AgentBalance } from "./ledger.js";
 import type { SubmittedReferralCode } from "./referral-codes.js";
 
@@ -53663,6 +53663,7 @@ const httpServer = createHttpServer(async (req, res) => {
 
   let servedContentType = "";
   let answeredNotModified = false;
+  let headOfServedBody: { status: number; rest: unknown[]; headers?: Record<string, string> } | null = null;
   const rawWriteHead = res.writeHead.bind(res);
   res.writeHead = ((status: number, ...rest: unknown[]) => {
     const headers = rest.find(a => a && typeof a === "object") as Record<string, string> | undefined;
@@ -53683,6 +53684,10 @@ const httpServer = createHttpServer(async (req, res) => {
       answeredNotModified = true;
       return rawWriteHead(304 as never, revalidationHeaders(headers) as never);
     }
+    if (status === 200 && !headOfServedBody && /^text\/html/.test(servedContentType)) {
+      headOfServedBody = { status, rest, headers };
+      return res;
+    }
     return rawWriteHead(status as never, ...(rest as never[]));
   }) as typeof res.writeHead;
 
@@ -53691,6 +53696,18 @@ const httpServer = createHttpServer(async (req, res) => {
     if (answeredNotModified) return rawEnd();
     if (typeof args[0] === "string" && /^text\/html/.test(servedContentType)) {
       args[0] = withLedeBeforeNav(withPageFreshness(args[0], url.pathname));
+    }
+    if (headOfServedBody) {
+      const head = headOfServedBody;
+      headOfServedBody = null;
+      const tag = typeof args[0] === "string" ? entityTag(args[0]) : null;
+      if (tag && matchesEntityTag(revalidation, tag)) {
+        answeredNotModified = true;
+        rawWriteHead(304 as never, { ...revalidationHeaders(head.headers), ETag: tag } as never);
+        return rawEnd();
+      }
+      if (tag) res.setHeader("ETag", tag);
+      rawWriteHead(head.status as never, ...(head.rest as never[]));
     }
     return rawEnd(...(args as never[]));
   }) as typeof res.end;

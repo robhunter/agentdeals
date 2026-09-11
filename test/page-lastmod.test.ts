@@ -10,6 +10,7 @@ import {
   daysBetween, emptyPageLastmod, fallbackDay, hashPageBody, httpDate, lastmodFor, newestLastmod, parsePageLastmod,
   readPageLastmod, serializePageLastmod, updatePageLastmod, type PageLastmodLedger,
 } from "../dist/page-lastmod.js";
+import { entityTag } from "../dist/conditional-request.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(__dirname, "..");
@@ -306,6 +307,107 @@ describe("a page keeps the day it changed, whenever that was", () => {
     });
     await response.text();
     assert.equal(response.status, 200);
+  });
+
+  it("tags every page with a fingerprint of the bytes it just sent", async () => {
+    for (const page of ["/privacy", "/vendor/supabase", "/"]) {
+      const response = await fetch(`${fixtureBase}${page}`);
+      const body = await response.text();
+      const tag = response.headers.get("etag");
+      assert.ok(tag, `${page} served no entity tag`);
+      assert.equal(tag, entityTag(body), `${page} tagged something other than the body it sent`);
+    }
+  });
+
+  it("gives two pages different tags, and the same page the same tag twice", async () => {
+    const readTag = async (page: string) => {
+      const response = await fetch(`${fixtureBase}${page}`);
+      await response.text();
+      return response.headers.get("etag");
+    };
+    const privacy = await readTag("/privacy");
+    const comparison = await readTag("/compare/netlify-vs-vercel");
+    const privacyAgain = await readTag("/privacy");
+    assert.ok(privacy && comparison);
+    assert.notEqual(privacy, comparison, "two different pages share an entity tag");
+    assert.equal(privacy, privacyAgain, "one unchanged page changed its entity tag between two reads");
+  });
+
+  it("answers a client holding our own tag with 304 and no body", async () => {
+    const first = await fetch(`${fixtureBase}/privacy`);
+    await first.text();
+    const tag = first.headers.get("etag")!;
+    const second = await fetch(`${fixtureBase}/privacy`, { headers: { "If-None-Match": tag } });
+    const body = await second.text();
+    assert.equal(second.status, 304);
+    assert.equal(body, "");
+    assert.equal(second.headers.get("etag"), tag, "the 304 dropped the validator the client must keep");
+    assert.equal(second.headers.get("content-type"), null);
+  });
+
+  it("revalidates a vendor page, which carries a day it must not be revalidated against", async () => {
+    const first = await fetch(`${fixtureBase}/vendor/supabase`);
+    const body = await first.text();
+    const tag = first.headers.get("etag")!;
+    const advertised = first.headers.get("last-modified");
+    assert.ok(advertised, "/vendor/supabase stopped advertising a day");
+    assert.ok(body.length > 1000, "/vendor/supabase served no page to compare against");
+
+    const byTag = await fetch(`${fixtureBase}/vendor/supabase`, { headers: { "If-None-Match": tag } });
+    assert.equal(await byTag.text(), "");
+    assert.equal(byTag.status, 304, "a vendor page re-sent a body the client already holds");
+
+    const byDay = await fetch(`${fixtureBase}/vendor/supabase`, { headers: { "If-Modified-Since": advertised! } });
+    await byDay.text();
+    assert.equal(byDay.status, 200, "a vendor page answered 304 against a day nothing read off its body");
+  });
+
+  it("sends the whole page to a client holding a tag that is not ours", async () => {
+    for (const asked of ['"0000000000000000"', 'W/"0000000000000000"', '"0000000000000000", "1111111111111111"']) {
+      const response = await fetch(`${fixtureBase}/privacy`, { headers: { "If-None-Match": asked } });
+      const body = await response.text();
+      assert.equal(response.status, 200, `${asked} was read as our own tag`);
+      assert.ok(body.includes("</html>"), `the body was withheld from a client holding ${asked}`);
+    }
+  });
+
+  it("compares weakly, so a cache that weakened our tag still revalidates", async () => {
+    const first = await fetch(`${fixtureBase}/privacy`);
+    await first.text();
+    const tag = first.headers.get("etag")!;
+    const response = await fetch(`${fixtureBase}/privacy`, { headers: { "If-None-Match": `W/${tag}` } });
+    await response.text();
+    assert.equal(response.status, 304);
+  });
+
+  it("tags a URL carrying a query string, which carries no day to revalidate against", async () => {
+    const first = await fetch(`${fixtureBase}/privacy?utm_source=elsewhere`);
+    await first.text();
+    const tag = first.headers.get("etag");
+    assert.ok(tag, "a query-string URL served no entity tag");
+    assert.equal(first.headers.get("last-modified"), null);
+    const second = await fetch(`${fixtureBase}/privacy?utm_source=elsewhere`, { headers: { "If-None-Match": tag! } });
+    await second.text();
+    assert.equal(second.status, 304);
+  });
+
+  it("tags an answer to HEAD, which is how a crawler asks what it would get", async () => {
+    const head = await fetch(`${fixtureBase}/vendor/supabase`, { method: "HEAD" });
+    await head.text();
+    const get = await fetch(`${fixtureBase}/vendor/supabase`);
+    await get.text();
+    assert.ok(head.headers.get("etag"), "HEAD served no entity tag");
+    assert.equal(head.headers.get("etag"), get.headers.get("etag"));
+  });
+
+  it("leaves a response that is not a page untagged, so nothing revalidates against a guess", async () => {
+    const json = await fetch(`${fixtureBase}/api/offers`);
+    await json.text();
+    assert.equal(json.headers.get("etag"), null, "a JSON response carried an entity tag");
+    const missing = await fetch(`${fixtureBase}/vendor/a-vendor-we-do-not-list`);
+    await missing.text();
+    assert.equal(missing.status, 404);
+    assert.equal(missing.headers.get("etag"), null, "a 404 carried an entity tag");
   });
 });
 

@@ -1,6 +1,7 @@
 import { describe, it } from "node:test";
 import assert from "node:assert";
-import { datedUrl, isNotModified, isRevalidation, parseHttpDate, revalidationHeaders } from "../dist/conditional-request.js";
+import { createHash } from "node:crypto";
+import { datedUrl, entityTag, isNotModified, isRevalidation, matchesEntityTag, parseEntityTags, parseHttpDate, revalidationHeaders } from "../dist/conditional-request.js";
 
 const GET = { method: "GET" };
 
@@ -88,6 +89,90 @@ describe("the response that answers a revalidation", () => {
 
   it("survives a response that named no headers at all", () => {
     assert.deepEqual(revalidationHeaders(undefined), {});
+  });
+});
+
+describe("the entity tag a response carries", () => {
+  const body = "<!doctype html><title>Supabase</title>";
+
+  it("is a quoted fingerprint of the bytes being sent, and of nothing else", () => {
+    const expected = createHash("sha256").update(body).digest("hex").slice(0, 16);
+    assert.equal(entityTag(body), `"${expected}"`);
+    assert.match(entityTag(body), /^"[0-9a-f]{16}"$/);
+  });
+
+  it("moves when a single byte of the body moves", () => {
+    assert.notEqual(entityTag(body), entityTag(body + " "));
+    assert.notEqual(entityTag(body), entityTag(body.replace("Supabase", "Supabasf")));
+  });
+
+  it("is the same tag for the same bytes, so a page that did not change keeps its tag", () => {
+    assert.equal(entityTag(body), entityTag(`${body}`));
+  });
+
+  it("is unaffected by the day, the route or anything outside the body", () => {
+    assert.equal(entityTag(""), entityTag(""));
+  });
+});
+
+describe("reading the tags a client says it already holds", () => {
+  it("reads one tag, a list of them, and the wildcard", () => {
+    assert.deepEqual(parseEntityTags('"abc"'), ['"abc"']);
+    assert.deepEqual(parseEntityTags('"abc", "def"'), ['"abc"', '"def"']);
+    assert.deepEqual(parseEntityTags('W/"abc","def"'), ['W/"abc"', '"def"']);
+    assert.deepEqual(parseEntityTags("*"), ["*"]);
+  });
+
+  it("reads nothing from a header that was not sent or was sent twice", () => {
+    assert.deepEqual(parseEntityTags(undefined), []);
+    assert.deepEqual(parseEntityTags(""), []);
+    assert.deepEqual(parseEntityTags(['"abc"', '"def"']), []);
+  });
+});
+
+describe("deciding whether the client already holds the bytes we would send", () => {
+  const served = '"4951f239b9145e03"';
+  const GET_TAG = (ifNoneMatch: string) => ({ method: "GET", ifNoneMatch });
+
+  it("answers not-modified when the client names the tag we would serve", () => {
+    assert.equal(matchesEntityTag(GET_TAG(served), served), true);
+    assert.equal(matchesEntityTag({ method: "HEAD", ifNoneMatch: served }, served), true);
+  });
+
+  it("compares weakly, so W/ in front of our own tag still matches", () => {
+    assert.equal(matchesEntityTag(GET_TAG(`W/${served}`), served), true);
+    assert.equal(matchesEntityTag(GET_TAG(served), `W/${served}`), true);
+  });
+
+  it("answers not-modified for the wildcard, which asks whether anything is there", () => {
+    assert.equal(matchesEntityTag(GET_TAG("*"), served), true);
+  });
+
+  it("finds our tag anywhere in a list the client offers", () => {
+    assert.equal(matchesEntityTag(GET_TAG(`"0000000000000000", ${served}`), served), true);
+    assert.equal(matchesEntityTag(GET_TAG(`"0000000000000000", "1111111111111111"`), served), false);
+  });
+
+  it("answers modified for a tag that is not ours, however close", () => {
+    assert.equal(matchesEntityTag(GET_TAG('"4951f239b9145e04"'), served), false);
+    assert.equal(matchesEntityTag(GET_TAG('"4951f239b9145e0"'), served), false);
+    assert.equal(matchesEntityTag(GET_TAG("4951f239b9145e03"), served), false);
+  });
+
+  it("answers modified when we have no tag to compare, whatever the client asks", () => {
+    assert.equal(matchesEntityTag(GET_TAG(served), null), false);
+    assert.equal(matchesEntityTag(GET_TAG("*"), null), false);
+  });
+
+  it("answers modified when nothing was asked", () => {
+    assert.equal(matchesEntityTag({ method: "GET" }, served), false);
+    assert.equal(matchesEntityTag(GET_TAG(""), served), false);
+  });
+
+  it("treats a method that is not a read as no revalidation at all", () => {
+    for (const method of ["POST", "PUT", "DELETE", "OPTIONS", undefined]) {
+      assert.equal(matchesEntityTag({ method, ifNoneMatch: served }, served), false, `${method} revalidated`);
+    }
   });
 });
 
