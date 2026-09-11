@@ -201,15 +201,64 @@ const A_RATE_FROM_A_PAGE_STATING_NO_TERMS = {
   source_check: { checked: "2026-08-28", outcome: "states_no_terms", detail: "no amount, tier or rate" },
 };
 
+const A_RATE_ON_A_PAGE_WE_READ_AND_REFUSED = {
+  ...A_RATE_WE_CONFIRMED,
+  vendor: "Refusedcorp",
+  url: "https://refusedcorp.example/pricing",
+  description: "Free tier with 250 GB bandwidth",
+};
+
+const A_RATE_ON_A_PAGE_WHOSE_READ_MOVED_NOTHING = {
+  ...A_RATE_WE_CONFIRMED,
+  vendor: "Equalcorp",
+  url: "https://equalcorp.example/pricing",
+  description: "Free tier with 40 projects",
+};
+
+const refusalOf = (vendor: string, reason: string, refused_date: string) => ({
+  vendor,
+  change_type: "limits_reduced",
+  reason,
+  detail: "the page states a limit we could not quantify",
+  summary: `${vendor} may have narrowed its free tier`,
+  previous_state: null,
+  current_state: null,
+  source_url: `https://${vendor.toLowerCase()}.example/pricing`,
+  category: "Databases",
+  refused_date,
+});
+
+const READS_WE_REFUSED = {
+  refusals: [
+    refusalOf("Refusedcorp", "unquantified_limit", "2026-08-29"),
+    refusalOf("Equalcorp", "measures_no_change", "2026-08-30"),
+  ],
+};
+
+const A_READ_WE_COULD_NOT_RECONCILE =
+  "when we last read the page we cite for this offer, on 2026-08-29,"
+  + " we found a change we could not reconcile with the terms we publish";
+
+const A_READ_THAT_MOVED_NO_FIGURE =
+  "when we last read the page we cite for this offer, on 2026-08-30,"
+  + " we refused the change we considered recording because it named no figure that had moved,"
+  + " and refusing a change is not a confirmation of the terms above";
+
 let fixtureDir = "";
 let serverPort = 0;
 let proc: ChildProcess | null = null;
 
-function startServer(indexPath: string): Promise<ChildProcess> {
+function startServer(indexPath: string, refusalsPath: string): Promise<ChildProcess> {
   return new Promise((resolve, reject) => {
     const child = spawn("node", [path.join(REPO, "dist", "serve.js")], {
       stdio: ["pipe", "pipe", "pipe"],
-      env: { ...process.env, PORT: "0", BASE_URL: "http://localhost", AGENTDEALS_INDEX_PATH: indexPath },
+      env: {
+        ...process.env,
+        PORT: "0",
+        BASE_URL: "http://localhost",
+        AGENTDEALS_INDEX_PATH: indexPath,
+        AGENTDEALS_REFUSALS_PATH: refusalsPath,
+      },
     });
     const timeout = setTimeout(() => { child.kill(); reject(new Error("Server startup timeout")); }, 20000);
     child.stderr!.on("data", (data: Buffer) => {
@@ -244,13 +293,21 @@ function outgrowAnswer(body: string): string {
 before(async () => {
   fixtureDir = mkdtempSync(path.join(tmpdir(), "growth-limits-"));
   const indexPath = path.join(fixtureDir, "index.json");
+  const refusalsPath = path.join(fixtureDir, "change_refusals.json");
   writeFileSync(
     indexPath,
     JSON.stringify({
-      offers: [A_RATE_WE_CONFIRMED, A_PER_MINUTE_RATE_WE_CONFIRMED, A_RATE_FROM_A_PAGE_STATING_NO_TERMS],
+      offers: [
+        A_RATE_WE_CONFIRMED,
+        A_PER_MINUTE_RATE_WE_CONFIRMED,
+        A_RATE_FROM_A_PAGE_STATING_NO_TERMS,
+        A_RATE_ON_A_PAGE_WE_READ_AND_REFUSED,
+        A_RATE_ON_A_PAGE_WHOSE_READ_MOVED_NOTHING,
+      ],
     }, null, 2)
   );
-  proc = await startServer(indexPath);
+  writeFileSync(refusalsPath, JSON.stringify(READS_WE_REFUSED, null, 2));
+  proc = await startServer(indexPath, refusalsPath);
 });
 
 after(() => {
@@ -296,5 +353,88 @@ describe("the outgrow block on a vendor page", () => {
     const answer = outgrowAnswer(body);
     assert.doesNotMatch(answer, /^At 100 requests\/day/);
     assert.match(answer, /we cannot confirm that threshold today/);
+  });
+});
+
+function emptyHistoryParagraph(body: string): string {
+  const paragraph = body.match(/<p class="no-changes">([\s\S]*?)<\/p>/)?.[1];
+  assert.ok(paragraph, "the page must carry an empty-history paragraph for the assertion to mean anything");
+  return paragraph;
+}
+
+describe("a page whose last read we refused states neither a threshold nor an empty history as fact", () => {
+  it("renders both pages, so the assertions below are about real pages", async () => {
+    for (const slug of ["refusedcorp", "equalcorp"]) {
+      const res = await get(`/vendor/${slug}`);
+      assert.equal(res.status, 200);
+      assert.match(res.body, /we are not rating this offer today/);
+    }
+  });
+
+  it("states no threshold as fact on a read it could not reconcile", async () => {
+    const { body } = await get("/vendor/refusedcorp");
+    const block = growthBlock(body);
+    assert.doesNotMatch(block, /At 250 GB bandwidth, you'll need to upgrade/);
+    assert.equal(
+      block.match(/<li>([^<]*)<\/li>/)?.[1],
+      `We record 250 GB bandwidth as the limit, but ${A_READ_WE_COULD_NOT_RECONCILE},`
+      + ` so we cannot confirm that threshold today.`,
+    );
+  });
+
+  it("states no threshold as fact on a read that moved no figure", async () => {
+    const { body } = await get("/vendor/equalcorp");
+    assert.equal(
+      growthBlock(body).match(/<li>([^<]*)<\/li>/)?.[1],
+      `We record 40 projects as the limit, but ${A_READ_THAT_MOVED_NO_FIGURE},`
+      + ` so we cannot confirm that threshold today.`,
+    );
+  });
+
+  it("withholds the same threshold in structured data as on the page", async () => {
+    const { body } = await get("/vendor/refusedcorp");
+    const answer = outgrowAnswer(body);
+    assert.doesNotMatch(answer, /^At 250 GB bandwidth/);
+    assert.match(answer, /we cannot confirm that threshold today/);
+  });
+
+  it("calls an empty history a statement about our records on a read it could not reconcile", async () => {
+    const { body } = await get("/vendor/refusedcorp");
+    assert.equal(
+      emptyHistoryParagraph(body),
+      `No recorded pricing changes for Refusedcorp — but ${A_READ_WE_COULD_NOT_RECONCILE},`
+      + ` so we cannot tell you that nothing changed.`
+      + ` Treat the empty history as a statement about our records, not about this vendor's pricing.`,
+    );
+  });
+
+  it("calls an empty history a statement about our records on a read that moved no figure", async () => {
+    const { body } = await get("/vendor/equalcorp");
+    assert.equal(
+      emptyHistoryParagraph(body),
+      `No recorded pricing changes for Equalcorp — but ${A_READ_THAT_MOVED_NO_FIGURE},`
+      + ` so we cannot tell you that nothing changed.`
+      + ` Treat the empty history as a statement about our records, not about this vendor's pricing.`,
+    );
+  });
+
+  it("leaves both sentences on a vendor whose page we read and confirmed", async () => {
+    const { body } = await get("/vendor/controlcorp");
+    assert.match(growthBlock(body), /At 100K requests\/day, you'll need to upgrade\./);
+    assert.equal(
+      emptyHistoryParagraph(body),
+      "No recorded pricing changes for Controlcorp. This is a good sign — stable pricing.",
+    );
+  });
+
+  it("leaves the source-check sentence the way the source check writes it", async () => {
+    const { body } = await get("/vendor/prosecorp");
+    assert.equal(
+      emptyHistoryParagraph(body),
+      "No recorded pricing changes for Prosecorp — but the page we cite for this offer states no amount,"
+      + " tier or rate we can read when we last looked, on 2026-08-28, so nothing we have read describes"
+      + " these terms. Treat the empty history as a statement about our records, not about this vendor's"
+      + " pricing.",
+    );
   });
 });

@@ -9,6 +9,8 @@ import { GATE_REASONS, REJECT_MEASURES_NO_CHANGE, REJECT_NULL_COMPARISON, REJECT
 import { SUPPRESSED_SAME_TRANSITION_REGRADED } from "../scripts/change-log.js";
 import { refusalsByVendor, refusedReadTheConfirmationSupersedes, refusedReadWithholdingStability, supersededRefusalSentence, REFUSAL_REASONS_THAT_CONFIRM_THE_STORED_TERMS, REFUSAL_REASONS_THAT_MEASURED_NO_DIFFERENCE, MEASURED_NO_DIFFERENCE_BADGE_LABEL, UNRECONCILED_READ_BADGE_LABEL } from "../dist/change-refusal.js";
 import { checkVendorRisk, enrichOffers, loadChangeRefusals, loadDealChanges, loadOffers, publishedChangeCount } from "../dist/data.js";
+import { LEVEL_WITHHOLDING_OUTCOMES } from "../dist/source-check.js";
+import { offerEnded } from "../dist/retirement.js";
 import { vendorSlugMap } from "../dist/vendor-slug.js";
 import { vendorVerdictSentence } from "../dist/vendor-verdict.js";
 
@@ -22,9 +24,21 @@ const STABILITY_CLAIMS: Array<{ name: string; pattern: RegExp }> = [
   { name: "rated stable", pattern: /We rate it stable/ },
   { name: "considered stable", pattern: /is considered stable/ },
   { name: "stable badge", pattern: /class="risk-badge"[^>]*>stable</ },
+  { name: "empty history is a good sign", pattern: /This is a good sign — stable pricing/ },
 ];
 
 const A_STABLE_HISTORY = /has a stable pricing history/;
+
+const A_BARE_THRESHOLD = /<li>At [^<]*?, you'll need to upgrade\.<\/li>/;
+const A_THRESHOLD_WE_CANNOT_CONFIRM = /we cannot confirm that threshold today/;
+const AN_EMPTY_HISTORY_ABOUT_OUR_RECORDS =
+  /Treat the empty history as a statement about our records, not about this vendor's pricing/;
+
+const growthBlockOf = (html: string): string =>
+  html.match(/<div class="section growth-section">[\s\S]*?<\/div>/)?.[0] ?? "";
+
+const emptyHistoryParagraphOf = (html: string): string =>
+  html.match(/<p class="no-changes">([\s\S]*?)<\/p>/)?.[1] ?? "";
 
 const verdictParagraphOf = (html: string): string =>
   html.match(/<div class="quick-verdict">\s*<p>([\s\S]*?)<\/p>/)?.[1] ?? "";
@@ -64,6 +78,9 @@ interface Subject {
   measuredNoDifference: boolean;
   onlyTheRefusal: boolean;
   confirmingOnly: boolean;
+  rated: string | null;
+  ended: boolean;
+  withheldBySourceCheck: boolean;
   published: number;
 }
 
@@ -144,6 +161,12 @@ before(async () => {
       measuredNoDifference: refusedRead !== null && MEASURED_NO_DIFFERENCE.has(refusedRead.reason),
       onlyTheRefusal: unreconciled && !otherwiseWithheld,
       confirmingOnly: count === 0 && reasons.length > 0 && reasons.every(r => CONFIRMING.has(r)),
+      rated: row?.risk_level ?? null,
+      ended: offerEnded(row),
+      withheldBySourceCheck: Boolean(
+        row?.link_unreachable
+        || (row?.source_check && LEVEL_WITHHOLDING_OUTCOMES.includes(row.source_check.outcome)),
+      ),
     };
   });
 
@@ -406,6 +429,118 @@ describe("a refused change is not a signal that nothing changed", () => {
       }
     }
     assert.deepStrictEqual(ended, [], `a free tier the page still offers is published as removed:\n${ended.join("\n")}`);
+  });
+});
+
+describe("an empty history and a recorded threshold are claims a refused read withholds too", () => {
+  it("states no threshold as fact on a page whose last read we refused", () => {
+    const stating: string[] = [];
+    for (const subject of subjects.filter(s => s.unreconciled)) {
+      const block = growthBlockOf(pages.get(subject.slug) ?? "");
+      if (A_BARE_THRESHOLD.test(block)) stating.push(`/vendor/${subject.slug}: ${block.match(A_BARE_THRESHOLD)?.[0]}`);
+    }
+    assert.deepStrictEqual(stating.slice(0, 20), [], `thresholds stated as fact over a read we refused:\n${stating.slice(0, 20).join("\n")}`);
+
+    const withheld = subjects.filter(
+      s => s.unreconciled && A_THRESHOLD_WE_CANNOT_CONFIRM.test(growthBlockOf(pages.get(s.slug) ?? "")),
+    );
+    assertPopulationFloor(withheld.length, 25, "vendor pages hold a recorded threshold behind a refused read");
+  });
+
+  it("ships the withheld threshold to an agent as well as to a reader", () => {
+    const stating: string[] = [];
+    for (const subject of subjects.filter(s => s.unreconciled)) {
+      const page = pages.get(subject.slug) ?? "";
+      if (!A_THRESHOLD_WE_CANNOT_CONFIRM.test(growthBlockOf(page))) continue;
+      const answer = page.match(/"name":"When will I outgrow[^"]*","acceptedAnswer":\{"@type":"Answer","text":"((?:[^"\\]|\\.)*)"/)?.[1] ?? "";
+      if (!A_THRESHOLD_WE_CANNOT_CONFIRM.test(answer)) stating.push(`/vendor/${subject.slug}: ${answer.slice(0, 80)}`);
+    }
+    assert.deepStrictEqual(stating.slice(0, 20), [], `structured data states a threshold the page withholds:\n${stating.slice(0, 20).join("\n")}`);
+  });
+
+  it("names the refusal and its date where an empty history is all we hold", () => {
+    const silent: string[] = [];
+    let named = 0;
+    for (const subject of subjects.filter(s => s.onlyTheRefusal && s.published === 0)) {
+      const paragraph = emptyHistoryParagraphOf(pages.get(subject.slug) ?? "");
+      if (paragraph === "") continue;
+      named++;
+      if (!AN_EMPTY_HISTORY_ABOUT_OUR_RECORDS.test(paragraph)) silent.push(`/vendor/${subject.slug}: no statement about our records`);
+      else if (!reasonWePublish(subject).test(paragraph)) silent.push(`/vendor/${subject.slug}: ${paragraph.slice(0, 120)}`);
+      else if (!paragraph.includes(subject.refusedRead?.refused_date ?? "")) silent.push(`/vendor/${subject.slug}: names no date`);
+    }
+    assert.deepStrictEqual(silent.slice(0, 20), [], `empty histories that do not say why we cannot read them:\n${silent.slice(0, 20).join("\n")}`);
+    assertPopulationFloor(named, 80, "vendor pages hold an empty history and a refused read as the only reason");
+  });
+
+  it("leaves the empty history of a gated page exactly as the gate leaves it", () => {
+    const moved: string[] = [];
+    let bare = 0;
+    for (const subject of subjects.filter(s => s.gated && !s.withheldBySourceCheck && !s.ended)) {
+      const paragraph = emptyHistoryParagraphOf(pages.get(subject.slug) ?? "");
+      if (paragraph === "") continue;
+      if (WITHHELD_FOR_A_REFUSAL.test(paragraph) || /good sign/.test(paragraph)) {
+        moved.push(`/vendor/${subject.slug}: ${paragraph.slice(0, 140)}`);
+        continue;
+      }
+      if (/^No recorded pricing changes for .*\.$/.test(paragraph)) bare++;
+    }
+    assert.deepStrictEqual(moved.slice(0, 20), [], `a gate's empty history no longer reads as the gate leaves it:\n${moved.slice(0, 20).join("\n")}`);
+    assertPopulationFloor(bare, 10, "gated vendor pages publish the bare empty-history sentence");
+    assert.ok(
+      subjects.some(s => s.gated && s.unreconciled && !s.withheldBySourceCheck),
+      "no gated page holds a refused read, so the gate is not what is keeping the refusal off it",
+    );
+  });
+
+  it("leaves the source check's sentence on a gated page the source check also withholds", () => {
+    const moved: string[] = [];
+    let read = 0;
+    for (const subject of subjects.filter(s => s.gated && s.withheldBySourceCheck && !s.ended)) {
+      const paragraph = emptyHistoryParagraphOf(pages.get(subject.slug) ?? "");
+      if (paragraph === "" || subject.published > 0) continue;
+      read++;
+      if (!/so nothing we have read describes these terms/.test(paragraph)) {
+        moved.push(`/vendor/${subject.slug}: ${paragraph.slice(0, 140)}`);
+      }
+    }
+    assert.deepStrictEqual(moved.slice(0, 20), [], `a gated page no longer says why nothing we read describes its terms:\n${moved.slice(0, 20).join("\n")}`);
+    assertPopulationFloor(read, 60, "gated vendor pages are withheld by the source check as well");
+  });
+
+  it("leaves the empty history the source check writes exactly as the source check writes it", () => {
+    const moved: string[] = [];
+    let read = 0;
+    for (const subject of subjects.filter(s => s.withheldBySourceCheck && !s.ended)) {
+      const paragraph = emptyHistoryParagraphOf(pages.get(subject.slug) ?? "");
+      if (paragraph === "" || !AN_EMPTY_HISTORY_ABOUT_OUR_RECORDS.test(paragraph)) continue;
+      read++;
+      if (!/so nothing we have read describes these terms/.test(paragraph)) {
+        moved.push(`/vendor/${subject.slug}: ${paragraph.slice(0, 140)}`);
+      }
+    }
+    assert.deepStrictEqual(moved.slice(0, 20), [], `the source check's empty-history sentence has changed:\n${moved.slice(0, 20).join("\n")}`);
+    assertPopulationFloor(read, 400, "vendor pages carry the empty-history sentence the source check writes");
+  });
+
+  it("keeps both sentences on a vendor we rate", () => {
+    const lost: string[] = [];
+    let claiming = 0;
+    for (const subject of subjects.filter(s => s.rated === "stable" && s.published === 0)) {
+      const paragraph = emptyHistoryParagraphOf(pages.get(subject.slug) ?? "");
+      if (paragraph === "") continue;
+      claiming++;
+      if (!/This is a good sign — stable pricing/.test(paragraph)) lost.push(`/vendor/${subject.slug}: ${paragraph.slice(0, 120)}`);
+    }
+    assert.deepStrictEqual(lost.slice(0, 20), [], `a rated vendor lost the sentence its empty history earns:\n${lost.slice(0, 20).join("\n")}`);
+    assertPopulationFloor(claiming, 250, "rated vendor pages call an empty history a good sign");
+
+    for (const slug of ["ahasend", "appsmith", "browserless"]) {
+      const subject = subjects.find(s => s.slug === slug);
+      assert.ok(subject?.rated === "stable", `/vendor/${slug} is no longer the rated control this was written against`);
+      assert.match(pages.get(slug) ?? "", /This is a good sign — stable pricing/);
+    }
+    assert.match(growthBlockOf(pages.get("ahasend") ?? ""), A_BARE_THRESHOLD);
   });
 });
 

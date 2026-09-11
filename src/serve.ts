@@ -33,7 +33,7 @@ import { NO_CURRENT_FIGURE, costHeadlineCaveat, limitCellText, mayRecommendAsFre
 import { changesByVendor } from "./superseded-census.js";
 import { buildComparisonMap, comparisonSlug } from "./comparison-pairs.js";
 import { comparisonVerdictText, freeTierFaqAnswer, stabilityFaqAnswer, type ComparisonSide, type FreeTierSide, type SideFreeTier, type StabilityRating } from "./comparison-verdict.js";
-import { publishedVendorLevel, vendorVerdictSentence, vendorBadge, freeTierClaim, statesRiskCause, narrowingSentence, changeKindNoun, refusedReadOurConfirmationSupersedes, refusedReadWeHold, refusedReadWithholdingSentence, withheldForARefusedRead, refusalWithholdsStability, termsUnconfirmedBySource, unconfirmedTermsMetaSentence, type BadgeWithholding, type FreeTierClaim, type VendorVerdictInput } from "./vendor-verdict.js";
+import { publishedVendorLevel, vendorVerdictSentence, vendorBadge, freeTierClaim, statesRiskCause, narrowingSentence, changeKindNoun, emptyHistoryCaveatSentence, refusedReadOurConfirmationSupersedes, refusedReadWeHold, refusedReadWithholdingSentence, unconfirmedThresholdSentence, whyWeCannotConfirmTheseTerms, withheldForARefusedRead, refusalWithholdsStability, termsUnconfirmedBySource, unconfirmedTermsMetaSentence, type BadgeWithholding, type FreeTierClaim, type VendorVerdictInput } from "./vendor-verdict.js";
 import { tierRecordsAFreeTier } from "./free-tier-record.js";
 import { PAGE_HEAD_OPEN, withLedeBeforeNav } from "./page-lede.js";
 import { freshnessClaimFor, withFreshnessClaim } from "./page-freshness.js";
@@ -4665,6 +4665,7 @@ function buildVendorPage(slug: string): string | null {
   const offerHasEnded = offerEnded(primary);
   const primaryGate = context.gate;
   const withheldClause = levelWithheld ? withheldLevelClause(levelWithheld, unconfirmableSince) : "";
+  const termsWeCannotConfirm = whyWeCannotConfirmTheseTerms(verdictInput);
   const ratingWithheld = enriched.rating_withheld;
 
   const riskCauseLine = statesRiskCause(verdictInput) && riskCause
@@ -4825,8 +4826,8 @@ function buildVendorPage(slug: string): string | null {
 
   const growthBullets: string[] = [];
   for (const phrase of growthLimitPhrases(publishableTerms)) {
-    growthBullets.push(levelWithheld
-      ? `We record ${phrase} as the limit, but ${withheldClause}, so we cannot confirm that threshold today.`
+    growthBullets.push(termsWeCannotConfirm
+      ? unconfirmedThresholdSentence(phrase, termsWeCannotConfirm)
       : `At ${phrase}, you'll need to upgrade.`);
   }
   if (growthBullets.length === 0 && hasFree && !termsSuperseded) {
@@ -4861,8 +4862,8 @@ function buildVendorPage(slug: string): string | null {
       </div>`;
   }).join("\n") : offerHasEnded
     ? `<p class="no-changes">${escHtmlServer(endedHistorySentence(vendorName))}</p>`
-    : levelWithheld
-    ? `<p class="no-changes">No recorded pricing changes for ${escHtmlServer(vendorName)} — but ${escHtmlServer(withheldClause)}, so nothing we have read describes these terms. Treat the empty history as a statement about our records, not about this vendor's pricing.</p>`
+    : termsWeCannotConfirm
+    ? `<p class="no-changes">${escHtmlServer(emptyHistoryCaveatSentence(vendorName, termsWeCannotConfirm))}</p>`
     : primaryGate
     ? `<p class="no-changes">No recorded pricing changes for ${escHtmlServer(vendorName)}.</p>`
     : `<p class="no-changes">No recorded pricing changes for ${escHtmlServer(vendorName)}. This is a good sign — stable pricing.</p>`;
