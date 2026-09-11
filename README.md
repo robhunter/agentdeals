@@ -5,9 +5,11 @@
 
 An MCP server that aggregates free tiers, startup credits, and developer tool deals — so your AI agent (or you) can find the best infrastructure offers without leaving the workflow.
 
-AgentDeals indexes real, verified pricing data from 1,500+ developer infrastructure vendors across 54 categories. Available on [npm](https://www.npmjs.com/package/agentdeals) for local use or as a hosted remote server. Connect any MCP-compatible client and search deals by keyword, category, or eligibility.
+AgentDeals indexes real, verified pricing data from 1,500+ developer infrastructure vendors across 60 categories. Available on [npm](https://www.npmjs.com/package/agentdeals) for local use or as a hosted remote server. Connect any MCP-compatible client and search deals by keyword, category, or eligibility.
 
 **Live:** [agentdeals.dev](https://agentdeals.dev)
+
+**Free tiers for AI and LLM APIs:** [a dated, sourced list of 31 vendors](artifacts/free-llm-api-index/README.md), regenerated from the catalogue whenever a record moves. Every row carries the date we last read that vendor's own page and the URL we read it on, and the rows whose terms changed carry the terms they replaced.
 
 ## Install
 
