@@ -177,6 +177,37 @@ export function refusalWithholdsStability(input: VendorVerdictInput): RefusedRea
   return refusedReadWeHold(input);
 }
 
+export type UnconfirmedTerms =
+  | { because: "level_withheld"; clause: string }
+  | { because: "refused_read"; clause: string };
+
+export function whyWeCannotConfirmTheseTerms(input: VendorVerdictInput): UnconfirmedTerms | null {
+  if (input.levelWithheld) {
+    return {
+      because: "level_withheld",
+      clause: withheldLevelClause(input.levelWithheld, input.unconfirmableSince),
+    };
+  }
+  const refused = refusalWithholdsStability(input);
+  return refused ? { because: "refused_read", clause: refusedReadClause(refused) } : null;
+}
+
+const EMPTY_HISTORY_TAIL: Record<UnconfirmedTerms["because"], string> = {
+  level_withheld: "so nothing we have read describes these terms",
+  refused_read: "so we cannot tell you that nothing changed",
+};
+
+export function emptyHistoryCaveatSentence(subject: string, unconfirmed: UnconfirmedTerms): string {
+  return `No recorded pricing changes for ${subject} — but ${unconfirmed.clause},`
+    + ` ${EMPTY_HISTORY_TAIL[unconfirmed.because]}.`
+    + ` Treat the empty history as a statement about our records, not about this vendor's pricing.`;
+}
+
+export function unconfirmedThresholdSentence(phrase: string, unconfirmed: UnconfirmedTerms): string {
+  return `We record ${phrase} as the limit, but ${unconfirmed.clause},`
+    + ` so we cannot confirm that threshold today.`;
+}
+
 export function badgeWithholding(input: VendorVerdictInput): BadgeWithholding | null {
   if (withholdingDecides(input)) {
     return { reason: input.levelWithheld ?? "no_source" };
