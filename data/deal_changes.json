@@ -9523,6 +9523,23 @@
       "alternatives": [],
       "detected_by": "reverify-ai",
       "recorded_date": "2026-09-10"
+    },
+    {
+      "vendor": "MDBootstrap",
+      "change_type": "pricing_restructured",
+      "date": "2026-09-11",
+      "date_source": "discovered",
+      "summary": "A free tier still exists, the page details MDB Standard (with a MIT License and a collection of components) as free. Also heavily promotes MDB Pro as an upgrade with advanced components. The current page emphasizes the limitations of the free tier and pushes users towards the paid 'MDB Pro' version. Additionally, MDB GO, a free hosting and deployment tool, is introduced.",
+      "tier": "MDB Standard",
+      "tier_direction": "narrowed",
+      "previous_state": "Free for personal & commercial use Bootstrap, Angular, React, and Vue UI Kits with over 700 components, stunning templates, 1-min installation, extensive tutorials & colossal community.",
+      "current_state": "MDB Standard is available with a MIT License and a collection of components for free. MDB Pro offers advanced components and features for a fee.",
+      "impact": "high",
+      "source_url": "https://mdbootstrap.com/",
+      "category": "Design",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-09-11"
     }
   ]
 }
