@@ -11,10 +11,15 @@ const REPO = join(dirname(fileURLToPath(import.meta.url)), "..");
 
 const HELP = `Keep data/page-lastmod.json in step with what each page renders.
 
-Every sitemap lastmod for a comparison, guide, alternatives or standing page is read from
-this ledger. A page whose rendered output is unchanged keeps the day it last changed; a page
-whose output has moved is stamped with today. That is what makes the date an observation
-rather than a constant: freezing it requires the pages to stop changing.
+Every sitemap lastmod, and every Last-Modified header, is read from this ledger. A page whose
+rendered output is unchanged keeps the day it last changed; a page whose output has moved is
+stamped with today. That is what makes the date an observation rather than a constant:
+freezing it requires the pages to stop changing.
+
+Every page is read twice, the second time against a server whose clock is a day ahead. A page
+whose body differs between the two is a function of the UTC day — the tie-break order on a
+listing page rotates daily, and the page says so. Those are recorded as daily and dated from
+the day they are served, because that is when they last changed.
 
 The pages are read with TZ=UTC. Some of them render a date from a timestamp without naming a
 zone, so a machine west of Greenwich renders that date a day earlier and the page hashes
@@ -32,6 +37,8 @@ const ORIGIN = "http://localhost";
 
 const LEDGER_TIMEZONE = "UTC";
 
+const A_DAY_IN_MS = 86400000;
+
 function parseArgs(argv) {
   const opts = { check: false, date: new Date().toISOString().slice(0, 10), json: false };
   for (let i = 0; i < argv.length; i++) {
@@ -48,11 +55,19 @@ function parseArgs(argv) {
   return opts;
 }
 
-function startServer(inventoryOut) {
+function startServer(inventoryOut, clockShiftMs = 0) {
   return new Promise((resolve, reject) => {
-    const proc = spawn("node", [join(REPO, "dist", "serve.js")], {
+    const args = clockShiftMs ? ["--import", join(REPO, "scripts", "shifted-clock.mjs")] : [];
+    const proc = spawn("node", [...args, join(REPO, "dist", "serve.js")], {
       stdio: ["pipe", "pipe", "pipe"],
-      env: { ...process.env, TZ: LEDGER_TIMEZONE, PORT: "0", BASE_URL: ORIGIN, AGENTDEALS_PAGE_INVENTORY_OUT: inventoryOut },
+      env: {
+        ...process.env,
+        TZ: LEDGER_TIMEZONE,
+        PORT: "0",
+        BASE_URL: ORIGIN,
+        AGENTDEALS_PAGE_INVENTORY_OUT: inventoryOut,
+        AGENTDEALS_CLOCK_SHIFT_MS: String(clockShiftMs),
+      },
     });
     const timeout = setTimeout(() => {
       proc.kill();
@@ -112,21 +127,34 @@ async function main() {
   const scratch = mkdtempSync(join(tmpdir(), "page-lastmod-"));
   const inventoryOut = join(scratch, "inventory.json");
   let server;
+  let tomorrow;
   try {
+    const startedAt = Date.now();
     server = await startServer(inventoryOut);
     const paths = JSON.parse(readFileSync(inventoryOut, "utf-8"));
     const hashes = await hashEveryPage(server.base, paths);
+    server.proc.kill();
+    server = null;
+
+    tomorrow = await startServer(join(scratch, "inventory-tomorrow.json"), A_DAY_IN_MS);
+    const tomorrowHashes = await hashEveryPage(tomorrow.base, paths);
+    tomorrow.proc.kill();
+    tomorrow = null;
+    const dailyPaths = paths.filter(p => hashes.get(p) !== tomorrowHashes.get(p));
+    const readSeconds = ((Date.now() - startedAt) / 1000).toFixed(1);
+
     const file = pageLastmodPath();
     const previous = readLedger(file, opts.date);
-    const { ledger, moved, added, dropped } = updatePageLastmod(previous, hashes, opts.date);
+    const { ledger, moved, added, dropped, daily } = updatePageLastmod(previous, hashes, opts.date, dailyPaths);
 
     if (opts.json) {
-      console.log(JSON.stringify({ pages: paths.length, moved, added, dropped, generated: ledger.generated }, null, 2));
+      console.log(JSON.stringify({ pages: paths.length, moved, added, dropped, daily, seconds: Number(readSeconds), generated: ledger.generated }, null, 2));
     } else {
-      console.log(`Read ${paths.length} pages: ${moved.length} whose output moved, ${added.length} new, ${dropped.length} gone.`);
+      console.log(`Read ${paths.length} pages twice in ${readSeconds}s: ${moved.length} whose output moved, ${added.length} new, ${dropped.length} gone, ${daily.length} dated from the day they are served.`);
       for (const pagePath of moved.slice(0, 20)) console.log(`  moved  ${pagePath}`);
       if (moved.length > 20) console.log(`  ... and ${moved.length - 20} more`);
       for (const pagePath of added.slice(0, 20)) console.log(`  new    ${pagePath}`);
+      if (added.length > 20) console.log(`  ... and ${added.length - 20} more`);
       for (const pagePath of dropped.slice(0, 20)) console.log(`  gone   ${pagePath}`);
     }
 
@@ -136,6 +164,7 @@ async function main() {
     return 0;
   } finally {
     if (server) server.proc.kill();
+    if (tomorrow) tomorrow.proc.kill();
     rmSync(scratch, { recursive: true, force: true });
   }
 }

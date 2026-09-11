@@ -8,6 +8,7 @@ import { fileURLToPath } from "node:url";
 import { MCP_TOOL_COUNT, MCP_TOOL_NAMES } from "../dist/mcp-tool-inventory.js";
 import { API_ENDPOINTS } from "../dist/api-inventory.js";
 import { PATHS_OUTSIDE_THE_ENDPOINT_INVENTORY } from "../dist/openapi.js";
+import { entryDay, readPageLastmod } from "../dist/page-lastmod.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 let serverPort = 0;
@@ -1743,25 +1744,24 @@ describe("HTTP transport", () => {
     assertPopulationFloor(altCount, 100, "alternative-to URLs in the sitemap");
   });
 
-  it("sitemap-vendors.xml has varying lastmod dates based on content", async () => {
+  it("dates every vendor URL in the sitemap from the ledger rather than from one constant", async () => {
     proc = await startHttpServer();
 
     const response = await fetch(`http://localhost:${serverPort}/sitemap-vendors.xml`);
     const xml = await response.text();
-    const lastmods = [...xml.matchAll(/<lastmod>([^<]+)<\/lastmod>/g)].map(m => m[1]);
-    assertPopulationFloor(lastmods.length, 101, "lastmod entries in the sitemap");
-    const uniqueDates = new Set(lastmods);
-    assert.ok(uniqueDates.size > 1, `Expected varying lastmod dates, got ${uniqueDates.size} unique date(s): ${[...uniqueDates].join(", ")}`);
-    for (const d of lastmods) {
-      assert.match(d, /^\d{4}-\d{2}-\d{2}$/, `Invalid lastmod date format: ${d}`);
-    }
+    const entries = [...xml.matchAll(/<loc>([^<]+)<\/loc>\s*<lastmod>([^<]+)<\/lastmod>/g)]
+      .map(m => ({ page: new URL(m[1]!).pathname, lastmod: m[2]! }));
+    assertPopulationFloor(entries.length, 101, "lastmod entries in the sitemap");
+    const ledger = readPageLastmod();
     const today = new Date().toISOString().split("T")[0];
-    for (const d of lastmods) {
-      assert.ok(d <= today, `Lastmod date ${d} is in the future`);
+    for (const { page, lastmod } of entries) {
+      assert.match(lastmod, /^\d{4}-\d{2}-\d{2}$/, `Invalid lastmod date format: ${lastmod}`);
+      assert.ok(lastmod <= today, `Lastmod date ${lastmod} is in the future`);
+      assert.equal(lastmod, entryDay(ledger.pages[page], today), `${page} advertises a day the ledger does not hold for it`);
     }
-    const vercelEntry = xml.match(/<url>\s*<loc>[^<]*\/vendor\/vercel<\/loc>\s*<lastmod>([^<]+)<\/lastmod>/);
-    assert.ok(vercelEntry, "Should have vercel vendor entry");
-    assert.match(vercelEntry![1], /^\d{4}-\d{2}-\d{2}$/, "Vercel lastmod should be valid date");
+    const held = new Set(Object.values(ledger.pages).map(entry => entryDay(entry, today)));
+    assert.ok(held.size > 1, `the ledger holds one day for every page it dates, so a constant would pass this: ${[...held].join(", ")}`);
+    assert.ok(entries.some(e => e.page === "/vendor/vercel"), "Should have vercel vendor entry");
   });
 
   it("GET /expiring renders expiring deals timeline page", async () => {
