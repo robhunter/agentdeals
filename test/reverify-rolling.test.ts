@@ -1,10 +1,8 @@
 import { describe, it } from "node:test";
 import assert from "node:assert";
-import { assertPopulationFloor } from "./population-floor.ts";
 
 const {
   pickOldestEntries,
-  staggeredDate,
   lastAttemptedDate,
   repickedNextRun,
   quarantineRetryBudget,
@@ -90,44 +88,81 @@ describe("rolling re-verification", () => {
     });
   });
 
-  describe("staggeredDate", () => {
-    const now = new Date("2026-04-21T12:00:00Z");
+  describe("the date a read publishes is the day the read happened", () => {
+    const NOW = new Date("2026-04-21T00:30:00Z");
+    const THE_DAY_WE_READ = "2026-04-21";
+    const A_WHOLE_BATCH = 24;
 
-    it("returns today's date when rand picks offset 0", () => {
-      const stamp = staggeredDate(now, () => 0);
-      assert.strictEqual(stamp, "2026-04-21");
+    const readable = Array.from({ length: A_WHOLE_BATCH }, (_, i) => {
+      const name = `Vendor${"abcdefghijklmnopqrstuvwx"[i]}`;
+      return {
+        vendor: name,
+        url: `https://${name.toLowerCase()}.example/pricing`,
+        description: "Free tier: 10 GB",
+        category: "Storage",
+        verifiedDate: "2026-01-01",
+      };
+    });
+    const picked = readable.map((offer, index) => ({ index, offer }));
+
+    const pageNaming = async (url: string) => {
+      const vendor = url.split("//")[1].split(".")[0];
+      return { ok: true, text: `${vendor} pricing. Free tier: 10 GB per month for $0.`, truncated: false };
+    };
+    const everyOneReachable = async (batch: any[]) => ({
+      verified: batch.map((b) => ({ index: b.index, vendor: b.offer.vendor })),
+      flagged: [],
     });
 
-    it("returns yesterday when rand picks offset 1", () => {
-      const stamp = staggeredDate(now, () => 0.4);
-      assert.strictEqual(stamp, "2026-04-20");
+    it("stamps the day of the read on every record a URL-mode run confirms", async () => {
+      const data = { offers: readable.map((o) => ({ ...o })) };
+      const result = await runUrlMode(picked, data, false, NOW, {
+        batchFn: everyOneReachable,
+        fetchFn: pageNaming,
+      });
+      assert.strictEqual(result.verified, A_WHOLE_BATCH);
+      assert.deepStrictEqual([...new Set(data.offers.map((o: any) => o.verifiedDate))], [THE_DAY_WE_READ]);
     });
 
-    it("returns day-before when rand picks offset 2", () => {
-      const stamp = staggeredDate(now, () => 0.8);
-      assert.strictEqual(stamp, "2026-04-19");
+    it("stamps the day of the read on every record an AI-mode run confirms", async () => {
+      const data = { offers: readable.map((o) => ({ ...o })) };
+      const result = await runAiMode(picked, data, false, NOW, {
+        fetchFn: pageNaming,
+        verifyFn: async () => ({ status: "confirmed" }),
+        confirmFn: async () => ({ describes_change: true }),
+        rateLimitMs: 0,
+      });
+      assert.strictEqual(result.verified, A_WHOLE_BATCH);
+      assert.deepStrictEqual([...new Set(data.offers.map((o: any) => o.verifiedDate))], [THE_DAY_WE_READ]);
     });
 
-    it("never produces dates outside the 3-day window", () => {
-      const dates = new Set<string>();
-      for (let i = 0; i < 200; i++) {
-        dates.add(staggeredDate(now));
-      }
-      const allowed = new Set(["2026-04-21", "2026-04-20", "2026-04-19"]);
-      for (const d of dates) {
-        assert.ok(allowed.has(d), `unexpected stamped date ${d}`);
-      }
+    it("publishes the same day the state file records the confirmation on", async () => {
+      const data = { offers: readable.map((o) => ({ ...o })) };
+      const result = await runAiMode(picked, data, false, NOW, {
+        fetchFn: pageNaming,
+        verifyFn: async () => ({ status: "confirmed" }),
+        confirmFn: async () => ({ describes_change: true }),
+        rateLimitMs: 0,
+      });
+      const state = new Map();
+      recordAttempts(state, result.attempts, NOW);
+      const confirmed = [...state.values()].filter((r: any) => r.last_outcome === ATTEMPT_CONFIRMED);
+      assert.strictEqual(confirmed.length, A_WHOLE_BATCH);
+      const published = new Map(data.offers.map((o: any) => [o.vendor, o.verifiedDate]));
+      const disagreeing = confirmed.filter((r: any) => published.get(r.vendor) !== r.last_success);
+      assert.deepStrictEqual(disagreeing, []);
     });
 
-    it("distributes across all three days over many samples", () => {
-      const counts: Record<string, number> = {};
-      for (let i = 0; i < 600; i++) {
-        const d = staggeredDate(now);
-        counts[d] = (counts[d] ?? 0) + 1;
-      }
-      assertPopulationFloor(counts["2026-04-21"], 100, "samples land on the first of the three days");
-      assertPopulationFloor(counts["2026-04-20"], 100, "samples land on the second of the three days");
-      assertPopulationFloor(counts["2026-04-19"], 100, "samples land on the third of the three days");
+    it("holds the published date where the source check could not read terms", async () => {
+      const data = { offers: readable.map((o) => ({ ...o })) };
+      const result = await runAiMode(picked, data, false, NOW, {
+        fetchFn: async () => ({ ok: true, text: "An about page naming nobody and pricing nothing.", truncated: false }),
+        verifyFn: async () => ({ status: "confirmed" }),
+        confirmFn: async () => ({ describes_change: true }),
+        rateLimitMs: 0,
+      });
+      assert.strictEqual(result.verified, 0);
+      assert.deepStrictEqual([...new Set(data.offers.map((o: any) => o.verifiedDate))], ["2026-01-01"]);
     });
   });
 });

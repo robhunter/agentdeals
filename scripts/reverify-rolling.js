@@ -68,7 +68,6 @@ const INDEX_PATH =
 const DEFAULT_LIMIT = 100;
 const URL_CONCURRENCY = 10;
 const AI_RATE_LIMIT_MS = 500;
-const STAGGER_WINDOW_DAYS = 3;
 const QUARANTINE_RETRY_SHARE = 0.2;
 
 export function lastAttemptedDate(offer, refusedOn = null, verificationRecord = null) {
@@ -128,12 +127,6 @@ export function repickedNextRun(picked, offers, limit, now, options = {}) {
   const { picked: next } = pickOldestEntries(offers, limit, tomorrow, options);
   const checked = new Set(picked.map(({ offer }) => offerKey(offer?.vendor, offer?.url)));
   return next.filter(({ offer }) => checked.has(offerKey(offer?.vendor, offer?.url))).length;
-}
-
-export function staggeredDate(now, rand = Math.random) {
-  const offsetDays = Math.floor(rand() * STAGGER_WINDOW_DAYS);
-  const d = new Date(now.getTime() - offsetDays * 24 * 60 * 60 * 1000);
-  return d.toISOString().split("T")[0];
 }
 
 function sleep(ms) {
@@ -211,7 +204,7 @@ export async function runUrlMode(picked, data, dryRun, now, options = {}) {
         continue;
       }
       if (!dryRun) {
-        data.offers[v.index].verifiedDate = staggeredDate(now);
+        data.offers[v.index].verifiedDate = isoDay(now);
       }
       if (statesNoPrice) recorder.note(offer, ATTEMPT_STATES_NO_PRICE, check.detail);
       else recorder.note(offer, ATTEMPT_LINK_OK);
@@ -290,7 +283,7 @@ export async function runAiMode(picked, data, dryRun, now, options = {}) {
         continue;
       }
       if (!dryRun) {
-        data.offers[index].verifiedDate = staggeredDate(now);
+        data.offers[index].verifiedDate = isoDay(now);
       }
       verified++;
     } else if (result.status === "changed") {

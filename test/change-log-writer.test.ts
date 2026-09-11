@@ -758,10 +758,11 @@ describe("change log writer", () => {
       assert.deepStrictEqual(result.changes, []);
     });
 
-    it("stamps a fresh verifiedDate on a page that answered and named the vendor", async () => {
+    it("stamps the day of the read on a page that answered and named the vendor", async () => {
       const data = { offers: picked.map((p) => ({ ...p.offer })) };
       await runUrlMode(picked, data, false, NOW, { batchFn: reachable, fetchFn: namesEveryone });
-      assert.notStrictEqual(data.offers[0].verifiedDate, "2026-01-01");
+      assert.strictEqual(data.offers[0].verifiedDate, "2026-08-27");
+      assert.strictEqual(data.offers[0].source_check.checked, "2026-08-27");
       assert.strictEqual(data.offers[0].source_check.outcome, "ok");
     });
 
