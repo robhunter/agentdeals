@@ -164,6 +164,13 @@ describe("enrichOffers includes stability", () => {
     const enriched = enrichOffers(results.slice(0, 5));
     for (const offer of enriched) {
       assert.ok("stability" in offer, "Should have stability field");
+      if (offer.stability === null) {
+        assert.ok(
+          offer.link_unreachable || offer.rating_withheld || offer.refused_read,
+          `${offer.vendor} publishes no stability class and nothing says why`
+        );
+        continue;
+      }
       assert.ok(
         ["stable", "watch", "volatile", "improving"].includes(offer.stability),
         `stability should be valid, got: ${offer.stability}`
