@@ -7,10 +7,11 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import {
-  daysBetween, emptyPageLastmod, fallbackDay, hashPageBody, httpDate, lastmodFor, newestLastmod, parsePageLastmod,
-  readPageLastmod, serializePageLastmod, updatePageLastmod, type PageLastmodLedger,
+  daysBetween, emptyPageLastmod, entryDay, fallbackDay, hashPageBody, httpDate, isDailyEntry, lastmodFor, newestLastmod,
+  parsePageLastmod, readPageLastmod, serializePageLastmod, updatePageLastmod, type PageLastmodLedger,
 } from "../dist/page-lastmod.js";
 import { entityTag } from "../dist/conditional-request.js";
+import { toSlug } from "../dist/slug.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(__dirname, "..");
@@ -65,7 +66,7 @@ describe("page lastmod ledger", () => {
       pages: { "/guides/a": { hash: "aaaa", changed: "2026-05-02" } },
     };
     const { ledger, moved, added, dropped } = updatePageLastmod(previous, new Map([["/guides/a", "aaaa"]]), "2026-09-05");
-    assert.equal(ledger.pages["/guides/a"].changed, "2026-05-02");
+    assert.deepEqual(ledger.pages["/guides/a"], { hash: "aaaa", changed: "2026-05-02" });
     assert.deepEqual([moved, added, dropped], [[], [], []]);
     assert.equal(ledger.generated, "2026-09-05");
   });
@@ -84,8 +85,8 @@ describe("page lastmod ledger", () => {
       new Map([["/guides/a", "aaaa"], ["/guides/b", "cccc"]]),
       "2026-09-05",
     );
-    assert.equal(ledger.pages["/guides/b"].changed, "2026-09-05");
-    assert.equal(ledger.pages["/guides/a"].changed, "2026-05-02");
+    assert.deepEqual(ledger.pages["/guides/b"], { hash: "cccc", changed: "2026-09-05" });
+    assert.deepEqual(ledger.pages["/guides/a"], { hash: "aaaa", changed: "2026-05-02" });
     assert.deepEqual(moved, ["/guides/b"]);
   });
 
@@ -93,7 +94,7 @@ describe("page lastmod ledger", () => {
     const previous = emptyPageLastmod("2026-08-01");
     previous.pages["/gone"] = { hash: "zzzz", changed: "2026-06-01" };
     const { ledger, added, dropped } = updatePageLastmod(previous, new Map([["/new", "nnnn"]]), "2026-09-05");
-    assert.equal(ledger.pages["/new"].changed, "2026-09-05");
+    assert.deepEqual(ledger.pages["/new"], { hash: "nnnn", changed: "2026-09-05" });
     assert.equal(ledger.pages["/gone"], undefined);
     assert.deepEqual([added, dropped], [["/new"], ["/gone"]]);
   });
@@ -134,8 +135,8 @@ describe("page lastmod ledger", () => {
 
   it("answers with the fallback for a page it has never read", () => {
     const ledger = emptyPageLastmod("2026-09-05");
-    assert.equal(lastmodFor(ledger, "/unread", "2026-09-01"), "2026-09-01");
-    assert.equal(newestLastmod(ledger, [], "2026-09-01"), "2026-09-01");
+    assert.equal(lastmodFor(ledger, "/unread", "2026-09-01", "2026-09-05"), "2026-09-01");
+    assert.equal(newestLastmod(ledger, [], "2026-09-01", "2026-09-05"), "2026-09-01");
   });
 
   it("reports the newest day across a set of pages", () => {
@@ -144,7 +145,7 @@ describe("page lastmod ledger", () => {
       generated: "2026-09-05",
       pages: { "/a": { hash: "a", changed: "2026-07-01" }, "/b": { hash: "b", changed: "2026-08-09" } },
     };
-    assert.equal(newestLastmod(ledger, ["/a", "/b"], "2026-01-01"), "2026-08-09");
+    assert.equal(newestLastmod(ledger, ["/a", "/b"], "2026-01-01", "2026-09-05"), "2026-08-09");
   });
 
   it("formats a day as an HTTP date and refuses anything else", () => {
@@ -345,21 +346,20 @@ describe("a page keeps the day it changed, whenever that was", () => {
     assert.equal(second.headers.get("content-type"), null);
   });
 
-  it("revalidates a vendor page, which carries a day it must not be revalidated against", async () => {
+  it("revalidates a page the ledger does not hold by its tag, and advertises no day for it", async () => {
     const first = await fetch(`${fixtureBase}/vendor/supabase`);
     const body = await first.text();
     const tag = first.headers.get("etag")!;
-    const advertised = first.headers.get("last-modified");
-    assert.ok(advertised, "/vendor/supabase stopped advertising a day");
+    assert.equal(first.headers.get("last-modified"), null, "a page nothing has read advertises a day anyway");
     assert.ok(body.includes("</html>"), "/vendor/supabase served no whole page to compare against");
 
     const byTag = await fetch(`${fixtureBase}/vendor/supabase`, { headers: { "If-None-Match": tag } });
     assert.equal(await byTag.text(), "");
     assert.equal(byTag.status, 304, "a vendor page re-sent a body the client already holds");
 
-    const byDay = await fetch(`${fixtureBase}/vendor/supabase`, { headers: { "If-Modified-Since": advertised! } });
+    const byDay = await fetch(`${fixtureBase}/vendor/supabase`, { headers: { "If-Modified-Since": httpDate("2026-01-01")! } });
     await byDay.text();
-    assert.equal(byDay.status, 200, "a vendor page answered 304 against a day nothing read off its body");
+    assert.equal(byDay.status, 200, "a page with no recorded day answered 304 against a day it never published");
   });
 
   it("sends the whole page to a client holding a tag that is not ours", async () => {
@@ -425,22 +425,40 @@ describe("what the sitemaps say about when a page changed", () => {
 
   it("takes every lastmod from the ledger for the pages the ledger covers", async () => {
     const ledger = readPageLastmod();
+    const today = new Date().toISOString().slice(0, 10);
     const seen = new Set<string>();
     for (const name of SITEMAPS) {
       for (const { loc, lastmod } of await sitemapEntries(name)) {
         const recorded = ledger.pages[loc];
         if (!recorded) continue;
         seen.add(loc);
-        assert.equal(lastmod, recorded.changed, `${loc} advertises ${lastmod} where the ledger holds ${recorded.changed}`);
+        const held = entryDay(recorded, today);
+        assert.equal(lastmod, held, `${loc} advertises ${lastmod} where the ledger holds ${held}`);
       }
     }
     assert.equal(seen.size, Object.keys(ledger.pages).length);
   });
 
+  it("publishes no URL the ledger does not date", async () => {
+    const ledger = readPageLastmod();
+    const published = new Set<string>();
+    const undated: string[] = [];
+    for (const name of SITEMAPS) {
+      for (const { loc } of await sitemapEntries(name)) {
+        published.add(loc);
+        if (!ledger.pages[loc]) undated.push(loc);
+      }
+    }
+    assert.ok(published.size > 0, "the sitemaps published nothing, so this test read no crawl space");
+    assert.deepEqual(undated, [], `${undated.length} published URLs are dated from something other than their own rendered body`);
+    assert.equal(published.size, Object.keys(ledger.pages).length, "the ledger and the sitemaps do not cover the same URLs");
+  });
+
   it("dates a page it has no record of no earlier than the day the ledger was written", async () => {
     const ledger = readPageLastmod();
+    const today = new Date().toISOString().slice(0, 10);
     const known = new Set(inventory);
-    assertPopulationFloor(known.size, 200, "comparison and editorial pages");
+    assertPopulationFloor(known.size, 1500, "URLs the ledger is asked to date");
     const entries = new Map<string, string>();
     for (const name of SITEMAPS) {
       for (const { loc, lastmod } of await sitemapEntries(name)) entries.set(loc, lastmod);
@@ -449,9 +467,16 @@ describe("what the sitemaps say about when a page changed", () => {
       const lastmod = entries.get(page);
       assert.ok(lastmod, `${page} is missing from the sitemaps`);
       const recorded = ledger.pages[page];
-      if (recorded) assert.equal(lastmod, recorded.changed);
+      if (recorded) assert.equal(lastmod, entryDay(recorded, today));
       else assert.ok(lastmod! >= ledger.generated, `${page} has no record and advertises ${lastmod}, older than the ledger itself`);
     }
+  });
+
+  it("dates no page from before the generation that first read it", () => {
+    const ledger = readPageLastmod();
+    const early = Object.entries(ledger.pages)
+      .filter(([, entry]) => !isDailyEntry(entry) && entry.changed > ledger.generated);
+    assert.deepEqual(early.map(([page]) => page), [], "a page is dated after the run that read it, which no run could have observed");
   });
 
   it("holds no page that no sitemap publishes", async () => {
@@ -539,7 +564,10 @@ describe("what the sitemaps say about when a page changed", () => {
       assert.equal(response.headers.get("last-modified"), httpDate(lastmod), `${loc} header disagrees with its sitemap entry`);
       days.add(lastmod);
     }
-    assert.ok(days.size > 1, "every page read carries the same day, so a header taken from anywhere would pass");
+    assert.ok(days.size > 0, "no page was read, so nothing was compared");
+    const undated = await fetch(`${base}${sampled[0]!.loc}?ref=x`);
+    await undated.text();
+    assert.equal(undated.headers.get("last-modified"), null, "a day is served on a URL the ledger does not date, so the header is not read off the URL at all");
   });
 
   it("dates the homepage and tells a cache how long to hold it", async () => {
@@ -554,13 +582,14 @@ describe("what the sitemaps say about when a page changed", () => {
 
   it("answers a revalidation on every page whose day was read from its own rendered body", async () => {
     const ledger = readPageLastmod();
+    const today = new Date().toISOString().slice(0, 10);
     const read = ["/", ...RETITLED, REPRICED].filter(page => ledger.pages[page]);
     assert.ok(read.length >= 4, `only ${read.length} of the pages named here are in the ledger`);
     for (const page of read) {
       const first = await fetch(base + page);
       await first.text();
       const advertised = first.headers.get("last-modified");
-      assert.equal(advertised, httpDate(ledger.pages[page]!.changed), `${page} advertises a day the ledger does not hold`);
+      assert.equal(advertised, httpDate(entryDay(ledger.pages[page], today)!), `${page} advertises a day the ledger does not hold`);
       const revalidated = await fetch(base + page, { headers: { "If-Modified-Since": advertised! } });
       const body = await revalidated.text();
       assert.equal(revalidated.status, 304, `${page} re-sent its body to a client already holding ${advertised}`);
@@ -572,39 +601,47 @@ describe("what the sitemaps say about when a page changed", () => {
     }
   });
 
-  it("sends the whole page where the day comes from a record rather than from the body", async () => {
-    const ledger = readPageLastmod();
+  it("revalidates a vendor and a category page against the day it advertises, which no record could date", async () => {
     const categories = (await sitemapEntries("pages")).filter(e => e.loc.startsWith("/category/"));
     assert.ok(categories.length > 0, "no category page is published, so this test checks nothing");
     for (const page of ["/vendor/supabase", categories[0]!.loc]) {
-      assert.ok(!ledger.pages[page], `${page} is in the ledger now, so its body is dated and it may revalidate`);
       const first = await fetch(base + page);
-      await first.text();
+      const served = await first.text();
       const advertised = first.headers.get("last-modified");
       assert.ok(advertised, `${page} carries no day at all`);
       const revalidated = await fetch(base + page, { headers: { "If-Modified-Since": advertised! } });
-      const body = await revalidated.text();
-      assert.equal(revalidated.status, 200, `${page} answered 304 against a day nothing read off its body`);
-      assert.ok(body.includes("</html>"), `${page} answered 200 without a page`);
+      const empty = await revalidated.text();
+      assert.equal(revalidated.status, 304, `${page} re-sent all ${served.length} bytes to a client already holding ${advertised}`);
+      assert.equal(empty, "", `${page} answered 304 with a body`);
+      const older = await fetch(base + page, { headers: { "If-Modified-Since": "Mon, 01 Jan 2024 00:00:00 GMT" } });
+      const full = await older.text();
+      assert.equal(older.status, 200, `${page} withheld its body from a client holding a copy from 2024`);
+      assert.ok(full.includes("</html>"), `${page} answered 200 without a page`);
     }
   });
 
-  it("publishes content dated after the day a vendor page advertises, which is why that day validates nothing", async () => {
+  it("dates a vendor page from the ledger rather than from the record it renders", async () => {
+    const ledger = readPageLastmod();
+    const today = new Date().toISOString().slice(0, 10);
+    const offers = JSON.parse(readFileSync(path.join(REPO, "data", "index.json"), "utf-8")).offers as Array<{ vendor: string; verifiedDate?: string }>;
     const listed = (await sitemapEntries("vendors")).filter(e => e.loc.startsWith("/vendor/"));
     const stride = Math.max(1, Math.ceil(listed.length / 24));
     const sampled = listed.filter((_, at) => at % stride === 0);
     assert.ok(sampled.length >= 8, `read ${sampled.length} vendor pages, too few to say anything`);
-    const today = new Date().toISOString().slice(0, 10);
-    let ahead = 0;
+    let awayFromTheRecord = 0;
     for (const { loc, lastmod } of sampled) {
-      const body = (await (await fetch(base + loc)).text()).replace(/<dl>[\s\S]*?<\/dl>/g, "");
-      const printed = [...body.matchAll(/\b(20\d\d-\d\d-\d\d)\b/g)].map(m => m[1]).filter(day => day <= today).sort();
-      const newest = printed.at(-1);
-      if (newest && newest > lastmod) ahead++;
+      const held = entryDay(ledger.pages[loc], today);
+      assert.equal(lastmod, held, `${loc} advertises ${lastmod} where the ledger holds ${held}`);
+      const served = await fetch(base + loc);
+      await served.text();
+      assert.equal(served.headers.get("last-modified"), httpDate(held!), `${loc} serves a day its own sitemap entry does not give`);
+      const slug = loc.slice("/vendor/".length);
+      const confirmed = offers.filter(o => toSlug(o.vendor) === slug).map(o => o.verifiedDate ?? "").sort().at(-1);
+      if (confirmed && confirmed !== held) awayFromTheRecord++;
     }
     assert.ok(
-      ahead > sampled.length / 2,
-      `${ahead} of ${sampled.length} vendor pages print content newer than the day they advertise; if that is now a minority the day may be worth revalidating against`,
+      awayFromTheRecord > 0,
+      `all ${sampled.length} vendor pages advertise the day their record was last confirmed, which is what dating them from their own body was meant to stop`,
     );
   });
 });
@@ -668,7 +705,7 @@ describe("the ledger keeps up with the code that renders the pages", () => {
     const updater = readFileSync(path.join(REPO, "scripts", "update-page-lastmod.js"), "utf8");
     assert.match(
       updater,
-      /env: \{ \.\.\.process\.env, TZ: [A-Z_]+,/,
+      /TZ: [A-Z_]+,/,
       "the updater reads the pages in whatever zone the machine is set to, so a ledger generated west of Greenwich disagrees with one generated in CI",
     );
     assert.match(updater, /LEDGER_TIMEZONE = "UTC"/, "the zone the ledger is read in is not UTC");
@@ -757,9 +794,9 @@ describe("a page whose rendered body moves is dated the day it moved", () => {
     const { ledger, moved, added, dropped } = updatePageLastmod(ledgerOf(asServed), asRewritten, AFTER);
     assert.deepEqual(moved, [rewritten]);
     assert.deepEqual([added, dropped], [[], []]);
-    assert.equal(ledger.pages[rewritten]!.changed, AFTER, `${rewritten} was rewritten and kept its old day`);
+    assert.equal(entryDay(ledger.pages[rewritten], AFTER), AFTER, `${rewritten} was rewritten and kept its old day`);
     for (const page of untouched) {
-      assert.equal(ledger.pages[page]!.changed, BEFORE, `${page} took a new day and its body did not move`);
+      assert.equal(entryDay(ledger.pages[page], AFTER), BEFORE, `${page} took a new day and its body did not move`);
     }
   });
 
@@ -768,7 +805,7 @@ describe("a page whose rendered body moves is dated the day it moved", () => {
     const asServed = await renderedHashes(sample);
     const { ledger, moved, added, dropped } = updatePageLastmod(ledgerOf(asServed), asServed, AFTER);
     assert.deepEqual([moved, added, dropped], [[], [], []]);
-    for (const page of sample) assert.equal(ledger.pages[page]!.changed, BEFORE);
+    for (const page of sample) assert.equal(entryDay(ledger.pages[page], AFTER), BEFORE);
   });
 });
 
@@ -784,6 +821,79 @@ describe("the ledger keeps up with the data the pages render", () => {
     assert.ok(
       behind <= 7,
       `The newest record we publish is dated ${newest} and the ledger was last regenerated on ${ledger.generated}, ${behind} days earlier — every page it covers is advertising a day that stopped moving`,
+    );
+  });
+});
+
+describe("a page whose body is a function of the UTC day is dated from the day it is served", () => {
+  const A_DAY = "2026-04-01";
+  const THE_NEXT_DAY = "2026-04-02";
+
+  it("reads an entry that stores no hash", () => {
+    const ledger = parsePageLastmod(
+      JSON.stringify({ version: 1, generated: A_DAY, pages: { "/best": { daily: true } } }),
+      "a ledger",
+    );
+    assert.ok(isDailyEntry(ledger.pages["/best"]!));
+  });
+
+  it("refuses an entry that claims both a stored hash and the day it is served", () => {
+    assert.throws(
+      () => parsePageLastmod(
+        JSON.stringify({ version: 1, generated: A_DAY, pages: { "/best": { daily: true, hash: "abc", changed: A_DAY } } }),
+        "a ledger",
+      ),
+      /both a daily flag and a stored hash/,
+    );
+  });
+
+  it("refuses a daily flag that is not true", () => {
+    assert.throws(
+      () => parsePageLastmod(
+        JSON.stringify({ version: 1, generated: A_DAY, pages: { "/best": { daily: false } } }),
+        "a ledger",
+      ),
+      /expected true or no flag at all/,
+    );
+  });
+
+  it("answers with the day it is asked about, not the day it was written", () => {
+    assert.equal(entryDay({ daily: true }, THE_NEXT_DAY), THE_NEXT_DAY);
+    assert.equal(entryDay({ hash: "abc", changed: A_DAY }, THE_NEXT_DAY), A_DAY);
+    assert.equal(entryDay(undefined, THE_NEXT_DAY), null);
+  });
+
+  it("serves that day through lastmodFor and newestLastmod, over any stored day", () => {
+    const ledger = parsePageLastmod(
+      JSON.stringify({ version: 1, generated: A_DAY, pages: { "/best": { daily: true }, "/press": { hash: "abc", changed: A_DAY } } }),
+      "a ledger",
+    );
+    assert.equal(lastmodFor(ledger, "/best", A_DAY, THE_NEXT_DAY), THE_NEXT_DAY);
+    assert.equal(lastmodFor(ledger, "/press", A_DAY, THE_NEXT_DAY), A_DAY);
+    assert.equal(newestLastmod(ledger, ["/press", "/best"], A_DAY, THE_NEXT_DAY), THE_NEXT_DAY);
+  });
+
+  it("stays still across runs, where a stored hash would move every day", () => {
+    const first = updatePageLastmod(emptyPageLastmod(A_DAY), new Map([["/best", "monday"]]), A_DAY, ["/best"]);
+    assert.deepEqual(first.added, ["/best"]);
+    assert.deepEqual(first.daily, ["/best"]);
+
+    const second = updatePageLastmod(first.ledger, new Map([["/best", "tuesday"]]), THE_NEXT_DAY, ["/best"]);
+    assert.deepEqual(second.moved, [], "a page dated from the day it is served moved because its rotating body rotated");
+    assert.deepEqual(second.ledger.pages["/best"], { daily: true });
+  });
+
+  it("moves a page that stops rotating back onto its own stored hash", () => {
+    const rotating = updatePageLastmod(emptyPageLastmod(A_DAY), new Map([["/best", "monday"]]), A_DAY, ["/best"]);
+    const settled = updatePageLastmod(rotating.ledger, new Map([["/best", "monday"]]), THE_NEXT_DAY, []);
+    assert.deepEqual(settled.moved, ["/best"]);
+    assert.deepEqual(settled.ledger.pages["/best"], { hash: "monday", changed: THE_NEXT_DAY });
+  });
+
+  it("refuses to record a page as rotating when the run never read it", () => {
+    assert.throws(
+      () => updatePageLastmod(emptyPageLastmod(A_DAY), new Map([["/press", "monday"]]), A_DAY, ["/best"]),
+      /was not read this run/,
     );
   });
 });

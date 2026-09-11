@@ -7,10 +7,16 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const DAY_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
 
-export interface PageLastmodEntry {
+export interface PageLastmodHash {
   hash: string;
   changed: string;
 }
+
+export interface PageLastmodDaily {
+  daily: true;
+}
+
+export type PageLastmodEntry = PageLastmodHash | PageLastmodDaily;
 
 export interface PageLastmodLedger {
   version: 1;
@@ -23,6 +29,16 @@ export interface PageLastmodUpdate {
   moved: string[];
   added: string[];
   dropped: string[];
+  daily: string[];
+}
+
+export function isDailyEntry(entry: PageLastmodEntry): entry is PageLastmodDaily {
+  return (entry as PageLastmodDaily).daily === true;
+}
+
+export function entryDay(entry: PageLastmodEntry | undefined, today: string): string | null {
+  if (!entry) return null;
+  return isDailyEntry(entry) ? today : entry.changed;
 }
 
 export function pageLastmodPath(): string {
@@ -54,7 +70,17 @@ export function parsePageLastmod(text: string, source: string): PageLastmodLedge
   for (const [pagePath, value] of Object.entries(file.pages as Record<string, unknown>)) {
     if (!pagePath.startsWith("/")) throw new Error(`${source} keys a page as ${JSON.stringify(pagePath)}, expected a path beginning with /`);
     if (typeof value !== "object" || value === null) throw new Error(`${source} gives ${pagePath} as ${JSON.stringify(value)}, expected an object`);
-    const entry = value as { hash?: unknown; changed?: unknown };
+    const entry = value as { hash?: unknown; changed?: unknown; daily?: unknown };
+    if (entry.daily !== undefined) {
+      if (entry.daily !== true) {
+        throw new Error(`${source} gives ${pagePath} a daily flag of ${JSON.stringify(entry.daily)}, expected true or no flag at all`);
+      }
+      if (entry.hash !== undefined || entry.changed !== undefined) {
+        throw new Error(`${source} gives ${pagePath} both a daily flag and a stored hash, and a page dated from the day it is served stores neither`);
+      }
+      pages[pagePath] = { daily: true };
+      continue;
+    }
     if (typeof entry.hash !== "string" || entry.hash.length === 0) {
       throw new Error(`${source} gives ${pagePath} a hash of ${JSON.stringify(entry.hash)}, expected a non-empty string`);
     }
@@ -92,20 +118,28 @@ export function updatePageLastmod(
   previous: PageLastmodLedger,
   hashes: Map<string, string>,
   today: string,
+  datedFromTheDay: Iterable<string> = [],
 ): PageLastmodUpdate {
   if (!DAY_PATTERN.test(today)) throw new Error(`updatePageLastmod needs a YYYY-MM-DD day, got ${JSON.stringify(today)}`);
+  const daily = new Set(datedFromTheDay);
+  for (const pagePath of daily) {
+    if (!hashes.has(pagePath)) throw new Error(`${pagePath} is dated from the day it is served but was not read this run`);
+  }
   const pages: Record<string, PageLastmodEntry> = {};
   const moved: string[] = [];
   const added: string[] = [];
   for (const [pagePath, hash] of hashes) {
     const before = previous.pages[pagePath];
+    const next: PageLastmodEntry = daily.has(pagePath) ? { daily: true } : { hash, changed: today };
     if (!before) {
-      pages[pagePath] = { hash, changed: today };
+      pages[pagePath] = next;
       added.push(pagePath);
-    } else if (before.hash === hash) {
+    } else if (isDailyEntry(before) && isDailyEntry(next)) {
+      pages[pagePath] = before;
+    } else if (!isDailyEntry(before) && !isDailyEntry(next) && before.hash === hash) {
       pages[pagePath] = before;
     } else {
-      pages[pagePath] = { hash, changed: today };
+      pages[pagePath] = next;
       moved.push(pagePath);
     }
   }
@@ -115,17 +149,18 @@ export function updatePageLastmod(
     moved: moved.sort(),
     added: added.sort(),
     dropped: dropped.sort(),
+    daily: [...daily].sort(),
   };
 }
 
-export function lastmodFor(ledger: PageLastmodLedger, pagePath: string, fallback: string): string {
-  return ledger.pages[pagePath]?.changed ?? fallback;
+export function lastmodFor(ledger: PageLastmodLedger, pagePath: string, fallback: string, today: string): string {
+  return entryDay(ledger.pages[pagePath], today) ?? fallback;
 }
 
-export function newestLastmod(ledger: PageLastmodLedger, paths: Iterable<string>, fallback: string): string {
+export function newestLastmod(ledger: PageLastmodLedger, paths: Iterable<string>, fallback: string, today: string): string {
   let newest = "";
   for (const pagePath of paths) {
-    const day = lastmodFor(ledger, pagePath, fallback);
+    const day = lastmodFor(ledger, pagePath, fallback, today);
     if (day > newest) newest = day;
   }
   return newest || fallback;
