@@ -273,6 +273,7 @@ describe("the retirement branch is decided before the withholding branch", () =>
     changes: [],
     levelWithheld: "states_no_terms" as const,
     unconfirmableSince: "",
+    termsConfirmedOn: "",
     offerEnded: true,
   };
 

@@ -121,6 +121,7 @@ before(async () => {
       refusedReads: refusalsForVendor(vendor),
       levelWithheld,
       unconfirmableSince: "",
+      termsConfirmedOn: primary.verifiedDate,
       ratingWithheld: e.rating_withheld,
       offerEnded: offerEnded(primary),
       gate: gateFor(primary, servedOn)?.code ?? null,

@@ -61,7 +61,7 @@ function causeOf(c: DealChange): RiskCause {
 }
 
 function input(over: Partial<VendorVerdictInput> = {}): VendorVerdictInput {
-  return { vendor: "Vendor A", level: "stable", historyLevel: "stable", cause: null, changes: [], levelWithheld: null, unconfirmableSince: "", ...over };
+  return { vendor: "Vendor A", level: "stable", historyLevel: "stable", cause: null, changes: [], levelWithheld: null, unconfirmableSince: "", termsConfirmedOn: "", ...over };
 }
 
 describe("vendor verdict — one rating word, and it carries its cause", () => {
@@ -346,6 +346,7 @@ function vendorRows(): VendorRow[] {
         changes: vendorChanges,
         levelWithheld: withheld,
         unconfirmableSince,
+        termsConfirmedOn: primary.verifiedDate,
         ratingWithheld: enriched.rating_withheld ?? null,
         offerEnded: ended,
         gate: gate?.code ?? null,

@@ -212,6 +212,7 @@ export function readmeRow(offer: Offer, allChanges: DealChange[], context: RowCo
     gate: risk.gate?.code ?? null,
     linkUnreachable: Boolean(risk.link_unreachable),
     sourceCheck: offer.source_check?.outcome ?? null,
+    termsConfirmedOn: offer.verifiedDate,
   };
 
   const superseding = supersedingChange(offer, vendorChanges);

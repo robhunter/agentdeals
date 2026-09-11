@@ -59,22 +59,64 @@ function mostRecent(refusals: readonly RefusedRead[]): RefusedRead | null {
   return held === null ? null : { reason: held.reason, refused_date: held.refused_date };
 }
 
-export function refusedReadThatWithholds(refusals: readonly RefusedRead[]): RefusedRead | null {
-  const withholding = refusals.filter(r => !refusalConfirmsTheStoredTerms(r));
-  const unreconciled = withholding.filter(r => !refusalMeasuredNoDifference(r));
-  return mostRecent(unreconciled.length > 0 ? unreconciled : withholding);
+export function refusalPredatesConfirmation(
+  refusal: RefusedRead,
+  termsConfirmedOn: string,
+): boolean {
+  return refusal.refused_date < termsConfirmedOn;
+}
+
+function latestRead(refusals: readonly RefusedRead[]): RefusedRead | null {
+  let held: RefusedRead | null = null;
+  for (const refusal of refusals) {
+    if (held === null || refusal.refused_date > held.refused_date) {
+      held = refusal;
+      continue;
+    }
+    if (
+      refusal.refused_date === held.refused_date
+      && refusalMeasuredNoDifference(held)
+      && !refusalMeasuredNoDifference(refusal)
+    ) {
+      held = refusal;
+    }
+  }
+  return held === null ? null : { reason: held.reason, refused_date: held.refused_date };
+}
+
+export function refusedReadThatWithholds(
+  refusals: readonly RefusedRead[],
+  termsConfirmedOn: string,
+): RefusedRead | null {
+  return latestRead(
+    refusals.filter(
+      r => !refusalConfirmsTheStoredTerms(r) && !refusalPredatesConfirmation(r, termsConfirmedOn),
+    ),
+  );
 }
 
 export interface StabilityEvidence {
   historyLevel: string | null;
   publishedChanges: number;
+  termsConfirmedOn: string;
   refusals: readonly RefusedRead[];
 }
 
 export function refusedReadWithholdingStability(state: StabilityEvidence): RefusedRead | null {
   if (state.historyLevel !== "stable") return null;
   if (state.publishedChanges > 0) return null;
-  return refusedReadThatWithholds(state.refusals);
+  return refusedReadThatWithholds(state.refusals, state.termsConfirmedOn);
+}
+
+export function refusedReadTheConfirmationSupersedes(
+  refusals: readonly RefusedRead[],
+  termsConfirmedOn: string,
+): RefusedRead | null {
+  return latestRead(
+    refusals.filter(
+      r => !refusalConfirmsTheStoredTerms(r) && refusalPredatesConfirmation(r, termsConfirmedOn),
+    ),
+  );
 }
 
 export function confirmingRead(refusals: readonly RefusedRead[]): RefusedRead | null {
@@ -94,6 +136,20 @@ export function confirmingReadClause(refusal: RefusedRead): string {
 
 export function confirmingReadSentence(subject: string, refusal: RefusedRead): string {
   return CONFIRMING_REASON_SENTENCES[refusal.reason as ConfirmingRefusalReason](subject);
+}
+
+export function supersededRefusalClause(refusedOn: string, confirmedOn: string): string {
+  return `the change we last considered recording was refused on ${refusedOn},`
+    + ` and we read the page again on ${confirmedOn} and confirmed the terms above`;
+}
+
+export function supersededRefusalSentence(
+  subject: string,
+  refusedOn: string,
+  confirmedOn: string,
+): string {
+  return `We refused the change we last considered recording for ${subject} on ${refusedOn},`
+    + ` then read the page again on ${confirmedOn} and confirmed the terms we publish for it.`;
 }
 
 export const UNRECONCILED_READ_BADGE_LABEL = "unrated — change not reconciled";

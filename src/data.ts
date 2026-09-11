@@ -32,7 +32,9 @@ import { resolveCategoryName } from "./category-scope.js";
 import { survivingVendorName } from "./vendor-merges.js";
 import {
   refusedReadSentence,
+  refusedReadTheConfirmationSupersedes,
   refusedReadWithholdingStability,
+  supersededRefusalSentence,
   refusalsByVendor as groupRefusalsByVendor,
   type ChangeRefusal,
   type ChangeRefusalIndex,
@@ -1010,6 +1012,7 @@ export function publishedRisk(
   const refused_read = refusedReadWithholdingStability({
     historyLevel: assessment.level,
     publishedChanges: publishedChangeCount(offer.vendor),
+    termsConfirmedOn: offer.verifiedDate,
     refusals: refusalsForVendor(offer.vendor),
   });
   const withheld =
@@ -1067,6 +1070,10 @@ export function checkVendorRisk(
     .sort((a, b) => b.date.localeCompare(a.date));
 
   const published = publishedRisk(offer, vendorChanges);
+  const supersededRefusal = refusedReadTheConfirmationSupersedes(
+    refusalsForVendor(offer.vendor),
+    offer.verifiedDate,
+  );
   const gate = published.gate;
   const assessment = vendorRiskAssessment(changesRatingTheListedTier(offer, vendorChanges));
   const linkUnreachable = published.link_unreachable;
@@ -1124,6 +1131,8 @@ export function checkVendorRisk(
     summary = `${withheldLevelSentence(withheldReason, offer.vendor, withheldSince)} Nothing we have read describes this offer. Treat that as a statement about our records, not as a stable pricing history.`;
   } else if (published.refused_read) {
     summary = `${refusedReadSentence(offer.vendor, published.refused_read)} We publish no change we refused to record, so we are not calling this a stable pricing history.`;
+  } else if (supersededRefusal && vendorChanges.length === 0) {
+    summary = supersededRefusalSentence(offer.vendor, supersededRefusal.refused_date, offer.verifiedDate);
   } else {
     summary = `${vendorHistorySentence(offer.vendor, "stable", cause)} Free tier verified for ${longevityDays} days.`;
   }

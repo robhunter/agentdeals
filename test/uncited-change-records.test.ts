@@ -110,6 +110,7 @@ describe("the verdict engine, given a withheld rating", () => {
     changes: [record({ source_url: "" })],
     levelWithheld: null,
     unconfirmableSince: "",
+    termsConfirmedOn: "",
     ratingWithheld: { reason: "no_source", records: 1 },
     ...over,
   });
