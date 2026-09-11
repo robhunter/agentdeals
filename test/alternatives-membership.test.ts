@@ -109,8 +109,8 @@ describe("#1032 the vendor page the issue was filed about", () => {
   it("still offers alternatives, so the gates did not empty the list", async () => {
     const { body } = await get(`/vendor/${slugOf(SUBJECT)}`);
     const grid = sectionAfter(body, "Alternatives in");
-    const cards = grid.match(/class="alt-name"/g) ?? [];
-    assert.ok(cards.length >= 5, `the alternatives grid must still carry a useful list, found ${cards.length}`);
+    const listed = grid.match(/<td><a href="\/vendor\/[a-z0-9-]+">/g) ?? [];
+    assert.ok(listed.length >= 5, `the alternatives list must still carry a useful list, found ${listed.length}`);
   });
 
   it("does not list a connection pool or a downloadable emulator among them", async () => {
@@ -387,16 +387,16 @@ describe("#1032 a classification must not contradict what we already publish", (
         `${name} must be subtype-gated against ${subject} for this test to mean anything`
       );
     }
-    const cardName: Record<string, string> = {
-      "/vendor/pythonanywhere": "alt-name",
-      "/alternative-to/pythonanywhere": "alt-vendor-name",
+    const namedBy: Record<string, RegExp[]> = {
+      "/vendor/pythonanywhere": [/class="alt-name">([^<]+)</g, /<td><a href="\/vendor\/[a-z0-9-]+">([^<]+)<\/a><\/td>/g],
+      "/alternative-to/pythonanywhere": [/class="alt-vendor-name">([^<]+)</g],
     };
-    for (const [url, cls] of Object.entries(cardName)) {
+    for (const [url, patterns] of Object.entries(namedBy)) {
       const { body } = await get(url);
-      const listed = [...body.matchAll(new RegExp(`class="${cls}">([^<]+)<`, "g"))].map(m => m[1]);
-      assert.ok(listed.length > 3, `${url} rendered no alternatives cards, so this test proves nothing`);
+      const listed = patterns.flatMap(pattern => [...body.matchAll(pattern)].map(m => m[1]));
+      assert.ok(listed.length > 3, `${url} named no alternatives, so this test proves nothing`);
       for (const name of crossing) {
-        assert.ok(listed.includes(name), `${url} drops the curated name ${name} from its cards`);
+        assert.ok(listed.includes(name), `${url} drops the curated name ${name} from the alternatives it names`);
       }
     }
   });
