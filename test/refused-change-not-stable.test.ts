@@ -284,6 +284,9 @@ describe("a refused change is not a signal that nothing changed", () => {
       if (!subject.onlyTheRefusal) continue;
       if (A_STABLE_HISTORY.test(result.summary)) silent.push(`${subject.vendor}: ${result.summary}`);
       if (!reasonWePublish(subject).test(result.summary)) silent.push(`${subject.vendor} summarises without saying why`);
+      if (!/We publish no change we refused to record/.test(result.summary)) {
+        silent.push(`${subject.vendor} leaves an agent to read a missing record as nothing having changed`);
+      }
     }
     assert.deepStrictEqual(silent.slice(0, 10), [], `the risk summary still reads as a stable history:\n${silent.slice(0, 10).join("\n")}`);
   });
@@ -413,6 +416,19 @@ describe("a page states the reason we withheld, not a reason its own refusal con
       if (!/We rate it /.test(verdict)) moved.push(`/vendor/${subject.slug}: ${verdict.slice(0, 120)}`);
     }
     assert.deepStrictEqual(moved, [], `a published change stopped setting the verdict:\n${moved.join("\n")}`);
+  });
+
+  it("names no single family of refusal on a page that counts both", async () => {
+    const bothFamilies = subjects.some(s => s.onlyTheRefusal && s.measuredNoDifference)
+      && subjects.some(s => s.onlyTheRefusal && !s.measuredNoDifference);
+    assert.ok(bothFamilies, "the withheld population holds one family only, so a page naming it is not yet wrong");
+    const narrow: string[] = [];
+    for (const route of ["/state-of-free-tiers", "/criteria"]) {
+      const page = await (await fetch(`http://localhost:${serverPort}${route}`)).text();
+      if (COULD_NOT_RECONCILE.test(page)) narrow.push(`${route} names only the reads we could not reconcile`);
+      if (NAMED_NO_FIGURE_THAT_MOVED.test(page)) narrow.push(`${route} names only the equality findings`);
+    }
+    assert.deepStrictEqual(narrow, [], `a page counting every refusal describes one kind of them:\n${narrow.join("\n")}`);
   });
 
   it("gives an agent the same reason on either transport", async () => {
