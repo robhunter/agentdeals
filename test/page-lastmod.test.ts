@@ -472,6 +472,35 @@ describe("what the sitemaps say about when a page changed", () => {
     }
   });
 
+  it("reads every URL it publishes, so nothing is published that no run will ever date", async () => {
+    const published = new Set<string>();
+    for (const name of SITEMAPS) {
+      for (const { loc } of await sitemapEntries(name)) published.add(loc);
+    }
+    const read = new Set(inventory);
+    const unread = [...published].filter(loc => !read.has(loc));
+    assert.deepEqual(unread, [], `${unread.length} published URLs are outside the inventory the ledger is generated from`);
+    assert.equal(read.size, published.size, "the inventory and the sitemaps do not cover the same URLs");
+  });
+
+  it("serves the day it advertises, on every URL in every sitemap", async () => {
+    const entries: Array<{ loc: string; lastmod: string }> = [];
+    for (const name of SITEMAPS) entries.push(...await sitemapEntries(name));
+    assert.ok(entries.length > 0, "the sitemaps published nothing, so this test read no crawl space");
+    const disagreeing: string[] = [];
+    const queue = [...entries];
+    const workers = Array.from({ length: 8 }, async () => {
+      for (let next = queue.pop(); next !== undefined; next = queue.pop()) {
+        const response = await fetch(base + next.loc);
+        await response.text();
+        const served = response.headers.get("last-modified");
+        if (served !== httpDate(next.lastmod)) disagreeing.push(`${next.loc} advertises ${next.lastmod} and serves ${served}`);
+      }
+    });
+    await Promise.all(workers);
+    assert.deepEqual(disagreeing.slice(0, 10), [], `${disagreeing.length} of ${entries.length} URLs serve a day their own sitemap entry does not give`);
+  });
+
   it("dates no page from before the generation that first read it", () => {
     const ledger = readPageLastmod();
     const early = Object.entries(ledger.pages)
