@@ -2,7 +2,7 @@ import { changeCitesASource, changeSummaryText, citationLabel } from "./change-c
 import { changeDateClause } from "./change-dates.js";
 import { narrowsTheStoredTerms } from "./change-direction.js";
 import { isNoLongerInForce } from "./change-resolution.js";
-import { changeGradesTheListedTier, comparableTerms } from "./change-tier.js";
+import { changeRatesTheListedTier, comparableTerms } from "./change-tier.js";
 import { tierRecordsAFreeTier } from "./free-tier-record.js";
 import { describesOnlyATrial, openingOfAReading } from "./superseding-reading.js";
 import { punctuated } from "./terms-opening.js";
@@ -12,6 +12,7 @@ import type { ChangeResolution, DealChange } from "./types.js";
 export interface QuotingChange extends Pick<DealChange, "date" | "date_source" | "change_type"> {
   summary: string;
   tier?: string | null;
+  tier_direction?: DealChange["tier_direction"];
   previous_state?: string | null;
   current_state?: string | null;
   source_url?: string | null;
@@ -43,7 +44,7 @@ export function supersedesTheStoredTerms(
 ): boolean {
   if (isNoLongerInForce(change)) return false;
   if (!narrowsTheStoredTerms(change.change_type)) return false;
-  if (!changeGradesTheListedTier(change, offer)) return false;
+  if (!changeRatesTheListedTier(change, offer)) return false;
   return quotesTheStoredTermsAsPrevious(change, offer.description);
 }
 

@@ -14,7 +14,7 @@ const {
 const { namesTheVendorsHostedEdition } = await import("../dist/superseding-reading.js");
 const { tierRecordsASelfHostedEdition } = await import("../dist/free-tier-record.js");
 const { supersedingChange } = await import("../dist/superseded-description.js");
-const { changesGradingTheListedTier, publishedRisk } = await import("../dist/data.js");
+const { changesRatingTheListedTier, publishedRisk } = await import("../dist/data.js");
 const { narrowingSentence } = await import("../dist/vendor-verdict.js");
 
 type Offer = import("../src/types.ts").Offer;
@@ -186,7 +186,7 @@ describe("#1526 the withholding and the rating read the same record the same way
 
   it("rates the self-hosted edition off the same record the withholding refused", () => {
     assert.deepStrictEqual(
-      changesGradingTheListedTier(A_SELF_HOSTED_OFFER, [A_READING_OF_THE_HOSTED_PRODUCT as DealChange]),
+      changesRatingTheListedTier(A_SELF_HOSTED_OFFER, [A_READING_OF_THE_HOSTED_PRODUCT as DealChange]),
       [],
     );
     const held = publishedRisk(

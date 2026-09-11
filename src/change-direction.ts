@@ -28,6 +28,16 @@ export function narrowsTheStoredTerms(changeType: string): boolean {
   return direction === null || direction === "negative";
 }
 
+export interface DirectedChange extends Pick<DealChange, "change_type"> {
+  tier_direction?: DealChange["tier_direction"];
+}
+
+export function readingDescribesNoNarrowing(change: DirectedChange): boolean {
+  const direction = change.tier_direction;
+  if (direction !== "unchanged" && direction !== "widened") return false;
+  return narrowsTheStoredTerms(change.change_type);
+}
+
 export const RATIO_ROUNDING_TOLERANCE = 0.25;
 
 export function directionRatioLabel(negative: number, positive: number): string {

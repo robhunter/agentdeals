@@ -27,6 +27,8 @@ export const CHANGE_TYPES = [
   "record_corrected",
 ];
 
+export const TIER_DIRECTIONS = ["narrowed", "unchanged", "widened"];
+
 const IMPACTS = ["high", "medium", "low"];
 const DEFAULT_IMPACT = "medium";
 const ISO_DATE = /^\d{4}-\d{2}-\d{2}$/;
@@ -118,6 +120,8 @@ export function buildChangeEntry(offer, result, options = {}) {
 
   const tierRead = typeof result.tier === "string" ? result.tier.trim() : "";
 
+  const directionRead = TIER_DIRECTIONS.includes(result.tier_direction) ? result.tier_direction : null;
+
   return {
     entry: {
       vendor: offer.vendor,
@@ -126,6 +130,7 @@ export function buildChangeEntry(offer, result, options = {}) {
       date_source: statedDate ? DATE_SOURCE_VENDOR_PAGE : DATE_SOURCE_DISCOVERED,
       summary,
       ...(tierRead ? { tier: tierRead } : {}),
+      ...(directionRead ? { tier_direction: directionRead } : {}),
       previous_state: offer.description,
       current_state: currentState,
       impact,
