@@ -6,6 +6,7 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import ts from "typescript";
+import { assertPopulationFloor } from "./population-floor.ts";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(__dirname, "..");
@@ -202,7 +203,7 @@ describe("#1576 a file the image happens to carry is not what keeps a route from
 describe("#1576 every route answers, including its trailing-slash and empty-segment forms", () => {
   it("reads the route literals out of the dispatch rather than a hand-written list", () => {
     const literals = routeLiteralsOfTheDispatch();
-    assert.ok(literals.length > 150, `expected the dispatch to yield its route literals, got ${literals.length}`);
+    assertPopulationFloor(literals.length, 150, "route literals read out of the dispatch");
     for (const expected of ["/health", "/mcp", "/api/docs/", "/.well-known/glama.json", "/AGENTS.md"]) {
       assert.ok(literals.includes(expected), `${expected} is served but was not read out of the dispatch`);
     }
