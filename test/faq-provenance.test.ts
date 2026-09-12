@@ -8,7 +8,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import {
   CATALOGUE_TEXT_FIELDS, CHANGE_LOG_TEXT_FIELDS, compiledNotice, dateModifiedFor, parsePageReviews,
-  perturbTextFields, type PageReviewRecord,
+  perturbTextFields, utcToday, type PageReviewRecord,
 } from "../src/page-reviews.ts";
 import {
   answerWithProvenance, faqAnswersIn, faqPageJsonLd, faqProvenanceClause, statesVendorFigure,
@@ -19,6 +19,8 @@ import { NEVER_REVIEWED, registerWith, reviewFailedOn, type RegisterFixture } fr
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(__dirname, "..");
 const TODAY = "2026-08-27";
+
+const THE_DAY_THE_SERVER_RENDERS = utcToday();
 
 const PROVENANCE = /Figures compiled (\d{4}-\d{2}-\d{2}), (?:not re-checked since|last checked (\d{4}-\d{2}-\d{2}))/;
 
@@ -249,7 +251,7 @@ describe("#1086 every structured answer that states a vendor figure carries the 
       const found = PROVENANCE.exec(answer.text);
       if (!found) continue;
       const page = pages.find((p) => p.path === answer.path)!;
-      const expected = faqProvenanceClause(page, TODAY);
+      const expected = faqProvenanceClause(page, THE_DAY_THE_SERVER_RENDERS);
       if (!answer.text.endsWith(expected)) wrong.push(`${answer.path} :: ${found[0]} vs ${expected}`);
     }
     assert.deepStrictEqual(wrong, []);
