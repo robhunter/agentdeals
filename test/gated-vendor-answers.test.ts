@@ -20,7 +20,9 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(__dirname, "..");
 
 const offers: Offer[] = JSON.parse(readFileSync(path.join(REPO, "data", "index.json"), "utf-8")).offers;
-const { loadDealChanges } = await import("../dist/data.js");
+const { loadDealChanges, refusalsForVendor } = await import("../dist/data.js");
+const { badgeWithholding, withholdsTheTerms } = await import("../dist/vendor-verdict.js");
+const { vendorVerdictContextFrom } = await import("../dist/vendor-verdict-input.js");
 
 const dealChanges: DealChange[] = loadDealChanges();
 const TODAY = utcDate();
@@ -134,13 +136,26 @@ function gateLineOf(html: string): string | null {
   return m ? textOf(m[0]) : null;
 }
 
-type VendorPage = { slug: string; vendor: string; primary: Offer; gate: Gate | null; html: string };
+type VendorPage = { slug: string; vendor: string; primary: Offer; gate: Gate | null; termsWithheld: boolean; html: string };
 
-const primaries: { slug: string; vendor: string; primary: Offer }[] = [];
+const primaries: { slug: string; vendor: string; primary: Offer; termsWithheld: boolean }[] = [];
 for (const [slug, vendor] of vendorSlugMap.entries()) {
   const vendorOffers = offers.filter(o => o.vendor === vendor);
   if (vendorOffers.length === 0) continue;
-  primaries.push({ slug, vendor, primary: vendorOffers[0] });
+  const context = vendorVerdictContextFrom({
+    vendor,
+    vendorOffers,
+    vendorChanges: dealChanges.filter(c => c.vendor.toLowerCase() === vendor.toLowerCase()),
+    refusedReads: refusalsForVendor(vendor),
+    servedOn: TODAY,
+  });
+  const because = context ? badgeWithholding(context.input) : null;
+  primaries.push({
+    slug,
+    vendor,
+    primary: vendorOffers[0],
+    termsWithheld: because !== null && withholdsTheTerms(because),
+  });
 }
 
 const rendered: VendorPage[] = [];
@@ -268,6 +283,7 @@ describe("the ungated pages keep the answer they had", () => {
   it("answers yes on every ungated record nothing else withholds", () => {
     const plainlyFree = publishingItsTerms().filter(
       p => p.primary.source_check?.outcome === "ok"
+        && !p.termsWithheld
         && p.primary.tier.toLowerCase() !== "none"
         && !p.primary.description.toLowerCase().includes("no free tier"),
     );

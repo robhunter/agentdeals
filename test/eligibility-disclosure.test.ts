@@ -39,6 +39,22 @@ const vendorsHoldingAGatedRecord = [...new Set(offers.filter(o => o.eligibility)
 
 const TODAY = utcDate();
 
+const { refusalsForVendor } = await import("../dist/data.js");
+const { badgeWithholding, withholdsTheTerms } = await import("../dist/vendor-verdict.js");
+const { vendorVerdictContextFrom } = await import("../dist/vendor-verdict-input.js");
+
+function termsWithheldFor(vendor: string): boolean {
+  const context = vendorVerdictContextFrom({
+    vendor,
+    vendorOffers: offers.filter(o => o.vendor === vendor),
+    vendorChanges: dealChanges.filter(c => c.vendor.toLowerCase() === vendor.toLowerCase()),
+    refusedReads: refusalsForVendor(vendor),
+    servedOn: TODAY,
+  });
+  const because = context ? badgeWithholding(context.input) : null;
+  return because !== null && withholdsTheTerms(because);
+}
+
 const publishesARestriction = (offer: Offer) => gateFor(offer, TODAY)?.code === "eligibility_restricted";
 
 let port = 0;
@@ -144,7 +160,9 @@ describe("a vendor page whose record is gated on eligibility says so", () => {
   });
 
   it("still answers yes where the page renders an ungated record for a vendor that also holds a gated one", () => {
-    const controls = rendered.filter(p => !p.offer.eligibility && !gateFor(p.offer, utcDate()));
+    const controls = rendered.filter(
+      p => !p.offer.eligibility && !gateFor(p.offer, utcDate()) && !termsWithheldFor(p.vendor),
+    );
     assert.ok(
       controls.length > 0,
       "every vendor holding a gated record now renders it, so the over-fire control has no subject",

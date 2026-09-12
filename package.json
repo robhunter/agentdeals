@@ -63,7 +63,8 @@
     "mutate:1327": "node scripts/mutate-1327.mjs",
     "mutate:1497": "node scripts/mutate-1497.mjs",
     "report:budgets": "node scripts/report-quality-budgets.js",
-    "generate:llm-readme": "node scripts/generate-llm-api-readme.js"
+    "generate:llm-readme": "node scripts/generate-llm-api-readme.js",
+    "mutate:1560": "node scripts/mutate-1560.mjs"
   },
   "dependencies": {
     "@modelcontextprotocol/ext-apps": "^1.5.0",

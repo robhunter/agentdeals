@@ -8,6 +8,7 @@ import {
   termsUnconfirmedOutcome,
   unconfirmedTermsClause,
   withheldLevelClause,
+  withheldLevelSentence,
   type LevelWithheldReason,
   type TermsUnconfirmedReason,
 } from "./source-check.js";
@@ -17,13 +18,19 @@ import { vendorHistorySentence, type PublishedRiskLevel } from "./vendor-history
 import {
   confirmingRead,
   confirmingReadClause,
+  measuredNoDifferenceClause,
+  measuredNoDifferenceMetaClause,
   measuredNoDifferenceSentence,
   refusalMeasuredNoDifference,
   refusedReadClause,
   refusedReadTheConfirmationSupersedes,
   refusedReadWithholdingStability,
   supersededRefusalClause,
+  unreconciledReadClause,
+  unreconciledReadMetaClause,
   unreconciledReadSentence,
+  MEASURED_NO_DIFFERENCE_BADGE_LABEL,
+  UNRECONCILED_READ_BADGE_LABEL,
   type RefusedRead,
 } from "./change-refusal.js";
 
@@ -84,6 +91,60 @@ export function withheldForARefusedRead(because: BadgeWithholding): because is R
   return because.reason === "read_not_reconciled" || because.reason === "change_measured_no_difference";
 }
 
+export type WithholdingTag = Exclude<BadgeWithholding["reason"], "gated"> | GateCode;
+
+export function withholdingTag(because: BadgeWithholding): WithholdingTag {
+  return because.reason === "gated" ? because.gate : because.reason;
+}
+
+export type WithholdingScope = "the_terms" | "the_rating";
+
+export const WITHHOLDING_SCOPE = {
+  link_unreachable: "the_terms",
+  unreadable: "the_terms",
+  states_no_terms: "the_terms",
+  does_not_name_vendor: "the_terms",
+  does_not_name_product: "the_terms",
+  read_not_reconciled: "the_terms",
+  change_measured_no_difference: "the_terms",
+  no_source: "the_rating",
+  eligibility_restricted: "the_rating",
+  not_a_free_offer: "the_rating",
+  offer_expired: "the_rating",
+  offer_retired: "the_rating",
+  verification_lapsed: "the_rating",
+} as const satisfies Record<WithholdingTag, WithholdingScope>;
+
+export type TermsWithholdingTag = {
+  [K in WithholdingTag]: (typeof WITHHOLDING_SCOPE)[K] extends "the_terms" ? K : never;
+}[WithholdingTag];
+
+export type TermsWithholding = Extract<BadgeWithholding, { reason: TermsWithholdingTag }>;
+
+export function withholdsTheTerms(because: BadgeWithholding): because is TermsWithholding {
+  return WITHHOLDING_SCOPE[withholdingTag(because)] === "the_terms";
+}
+
+export const WITHHOLDING_BADGE_LABELS: Record<WithholdingTag, string> = {
+  no_source: "unrated — no source",
+  link_unreachable: "unrated — page unreachable",
+  unreadable: "unrated — page unreadable",
+  states_no_terms: "unrated — page states no price",
+  does_not_name_vendor: "unrated — page omits vendor",
+  does_not_name_product: "unrated — page omits product",
+  read_not_reconciled: UNRECONCILED_READ_BADGE_LABEL,
+  change_measured_no_difference: MEASURED_NO_DIFFERENCE_BADGE_LABEL,
+  eligibility_restricted: "unrated — restricted offer",
+  not_a_free_offer: "unrated — not a free offer",
+  offer_expired: "unrated — offer expired",
+  offer_retired: "unrated — offer ended",
+  verification_lapsed: "unrated — not re-confirmed",
+};
+
+export function withheldBadgeLabel(because: BadgeWithholding): string {
+  return WITHHOLDING_BADGE_LABELS[withholdingTag(because)];
+}
+
 export function refusedReadWithholdingSentence(
   subject: string,
   because: RefusedReadWithholding,
@@ -93,7 +154,19 @@ export function refusedReadWithholdingSentence(
     : unreconciledReadSentence(subject, because.refusedOn);
 }
 
-export function refusedReadWithholding(refusal: RefusedRead): BadgeWithholding {
+export function refusedReadWithholdingClause(because: RefusedReadWithholding): string {
+  return because.reason === "change_measured_no_difference"
+    ? measuredNoDifferenceClause(because.refusedOn)
+    : unreconciledReadClause(because.refusedOn);
+}
+
+export function refusedReadWithholdingMetaClause(because: RefusedReadWithholding): string {
+  return because.reason === "change_measured_no_difference"
+    ? measuredNoDifferenceMetaClause(because.refusedOn)
+    : unreconciledReadMetaClause(because.refusedOn);
+}
+
+export function refusedReadWithholding(refusal: RefusedRead): RefusedReadWithholding {
   return refusalMeasuredNoDifference(refusal)
     ? { reason: "change_measured_no_difference", refusedOn: refusal.refused_date }
     : { reason: "read_not_reconciled", refusedOn: refusal.refused_date };
@@ -141,7 +214,7 @@ export function termsUnconfirmedBySource(input: VendorVerdictInput): TermsUnconf
 }
 
 export function unconfirmedTermsMetaSentence(reason: TermsUnconfirmedReason): string {
-  return `Not verified — ${unconfirmedTermsClause(reason)}.`;
+  return NOT_VERIFIED(unconfirmedTermsClause(reason));
 }
 
 export function withholdingDecides(input: VendorVerdictInput): boolean {
@@ -177,30 +250,61 @@ export function refusalWithholdsStability(input: VendorVerdictInput): RefusedRea
   return refusedReadWeHold(input);
 }
 
-export type UnconfirmedTerms =
-  | { because: "level_withheld"; clause: string }
-  | { because: "refused_read"; clause: string };
-
-export function whyWeCannotConfirmTheseTerms(input: VendorVerdictInput): UnconfirmedTerms | null {
-  if (input.levelWithheld) {
-    return {
-      because: "level_withheld",
-      clause: withheldLevelClause(input.levelWithheld, input.unconfirmableSince),
-    };
-  }
-  const refused = refusalWithholdsStability(input);
-  return refused ? { because: "refused_read", clause: refusedReadClause(refused) } : null;
+export interface UnconfirmedTerms {
+  because: TermsWithholding;
+  clause: string;
+  sentence: string;
 }
 
-const EMPTY_HISTORY_TAIL: Record<UnconfirmedTerms["because"], string> = {
-  level_withheld: "so nothing we have read describes these terms",
-  refused_read: "so we cannot tell you that nothing changed",
+function termsWithholding(input: VendorVerdictInput): TermsWithholding | null {
+  if (input.levelWithheld) return { reason: input.levelWithheld };
+  const refused = refusalWithholdsStability(input);
+  return refused ? refusedReadWithholding(refused) : null;
+}
+
+export function whyWeCannotConfirmTheseTerms(input: VendorVerdictInput): UnconfirmedTerms | null {
+  const because = termsWithholding(input);
+  if (!because) return null;
+  if (withheldForARefusedRead(because)) {
+    return {
+      because,
+      clause: refusedReadWithholdingClause(because),
+      sentence: refusedReadWithholdingSentence(input.vendor, because),
+    };
+  }
+  return {
+    because,
+    clause: withheldLevelClause(because.reason, input.unconfirmableSince),
+    sentence: withheldLevelSentence(because.reason, input.vendor, input.unconfirmableSince),
+  };
+}
+
+const EMPTY_HISTORY_TAIL: Record<TermsWithholdingTag, string> = {
+  link_unreachable: "so nothing we have read describes these terms",
+  unreadable: "so nothing we have read describes these terms",
+  states_no_terms: "so nothing we have read describes these terms",
+  does_not_name_vendor: "so nothing we have read describes these terms",
+  does_not_name_product: "so nothing we have read describes these terms",
+  read_not_reconciled: "so we cannot tell you that nothing changed",
+  change_measured_no_difference: "so we cannot tell you that nothing changed",
 };
 
 export function emptyHistoryCaveatSentence(subject: string, unconfirmed: UnconfirmedTerms): string {
   return `No recorded pricing changes for ${subject} — but ${unconfirmed.clause},`
-    + ` ${EMPTY_HISTORY_TAIL[unconfirmed.because]}.`
+    + ` ${EMPTY_HISTORY_TAIL[unconfirmed.because.reason]}.`
     + ` Treat the empty history as a statement about our records, not about this vendor's pricing.`;
+}
+
+export const NOT_VERIFIED = (clause: string): string => `Not verified — ${clause}.`;
+
+export function termsNotVerifiedMetaSentence(input: VendorVerdictInput): string | null {
+  const bySource = termsUnconfirmedBySource(input);
+  if (bySource) return NOT_VERIFIED(unconfirmedTermsClause(bySource));
+  const unconfirmed = whyWeCannotConfirmTheseTerms(input);
+  if (!unconfirmed) return null;
+  const because = unconfirmed.because;
+  if (withheldForARefusedRead(because)) return NOT_VERIFIED(refusedReadWithholdingMetaClause(because));
+  return because.reason === "link_unreachable" ? null : NOT_VERIFIED(unconfirmed.clause);
 }
 
 export function unconfirmedThresholdSentence(phrase: string, unconfirmed: UnconfirmedTerms): string {

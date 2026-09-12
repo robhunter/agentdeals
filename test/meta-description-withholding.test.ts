@@ -8,13 +8,21 @@ import { fileURLToPath } from "node:url";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(__dirname, "..");
 
-const { loadOffers, loadDealChanges } = await import("../dist/data.js");
+const { loadOffers, loadDealChanges, refusalsForVendor } = await import("../dist/data.js");
 const { vendorSlugMap } = await import("../dist/vendor-slug.js");
 const { supersedingChange } = await import("../dist/superseded-description.js");
 const { discontinuedOnOrBefore } = await import("../dist/product-deprecation.js");
 const { utcDate } = await import("../dist/ranking.js");
 const { unconfirmedTermsClause, withheldLevelClause } = await import("../dist/source-check.js");
-const { termsUnconfirmedBySource, unconfirmedTermsMetaSentence } = await import("../dist/vendor-verdict.js");
+const {
+  badgeWithholding,
+  refusedReadWithholding,
+  termsNotVerifiedMetaSentence,
+  termsUnconfirmedBySource,
+  unconfirmedTermsMetaSentence,
+  withholdsTheTerms,
+} = await import("../dist/vendor-verdict.js");
+const { vendorVerdictContextFrom } = await import("../dist/vendor-verdict-input.js");
 
 type Outcome = "ok" | "states_no_amount" | "does_not_name_vendor" | "states_no_terms" | "unreadable";
 
@@ -25,6 +33,7 @@ interface Subject {
   verifiedMonth: string;
   termsSuperseded: boolean;
   discontinuedOn: string | null;
+  termsWithheld: boolean;
 }
 
 const MONTHS = [
@@ -82,6 +91,14 @@ before(async () => {
     const primary = offers.find((o: { vendor: string }) => o.vendor === vendor);
     if (!primary) return [];
     const vendorChanges = changesByVendor.get(vendor.toLowerCase()) ?? [];
+    const context = vendorVerdictContextFrom({
+      vendor,
+      vendorOffers: offers.filter((o: { vendor: string }) => o.vendor === vendor),
+      vendorChanges,
+      refusedReads: refusalsForVendor(vendor),
+      servedOn,
+    });
+    const because = context ? badgeWithholding(context.input) : null;
     return [{
       slug,
       vendor,
@@ -89,6 +106,7 @@ before(async () => {
       verifiedMonth: monthLabel(primary.verifiedDate),
       termsSuperseded: supersedingChange(primary, vendorChanges) !== null,
       discontinuedOn: discontinuedOnOrBefore(vendorChanges, servedOn),
+      termsWithheld: because !== null && withholdsTheTerms(because),
     }];
   });
 
@@ -193,9 +211,26 @@ describe("#1412 the meta description withholds wherever the source check failed"
     assert.deepStrictEqual(wrong.slice(0, 20), [], `${wrong.length} of ${population.length} discontinued records`);
   });
 
+  it("withholds the verification claim on a page whose source check passed over a read we refused", async () => {
+    const pages = await everyVendorPage();
+    const population = subjects.filter(s => s.outcome === "ok" && !s.termsSuperseded && s.termsWithheld);
+    assertPopulationFloor(population.length, 40, "records whose terms are withheld over a source check that passed");
+
+    const asserting: string[] = [];
+    for (const subject of population) {
+      const meta = pages.get(subject.slug)!.meta;
+      if (!meta.includes("Not verified")) asserting.push(`${subject.slug}: ${meta.slice(0, 120)}`);
+    }
+    assert.deepStrictEqual(
+      asserting.slice(0, 20),
+      [],
+      `${asserting.length} of ${population.length} meta descriptions state a verification the page withholds`,
+    );
+  });
+
   it("leaves the verification claim standing wherever the source check passed", async () => {
     const pages = await everyVendorPage();
-    const population = subjects.filter(s => s.outcome === "ok" && !s.termsSuperseded);
+    const population = subjects.filter(s => s.outcome === "ok" && !s.termsSuperseded && !s.termsWithheld);
     assertPopulationFloor(population.length, Math.floor(subjects.length / 5), "records passed their source check");
 
     const wrongMonth: string[] = [];
@@ -241,8 +276,25 @@ describe("#1412 the withholding predicate is the one the badge and the body read
 
   it("gives each outcome a sentence a reader can tell apart from the others", () => {
     const outcomes = ["states_no_amount", "does_not_name_vendor", "states_no_terms", "unreadable"] as const;
-    const sentences = outcomes.map(o => unconfirmedTermsMetaSentence(o));
-    assert.strictEqual(new Set(sentences).size, outcomes.length);
+    const refusals = ["measures_no_change", "unquantified_limit"] as const;
+    const withheldForARefusal = refusals.map(reason => termsNotVerifiedMetaSentence({
+      vendor: "Example",
+      level: "stable",
+      historyLevel: "stable",
+      cause: null,
+      changes: [],
+      levelWithheld: null,
+      unconfirmableSince: "",
+      termsConfirmedOn: "2026-08-01",
+      refusedReads: [{ reason, refused_date: "2026-09-01" }],
+    })!);
+    const sentences = [...outcomes.map(o => unconfirmedTermsMetaSentence(o)), ...withheldForARefusal];
+    assert.strictEqual(
+      new Set(refusals.map(reason => refusedReadWithholding({ reason, refused_date: "2026-09-01" }).reason)).size,
+      refusals.length,
+      "both refusal families reduce to one withholding, so one meta sentence covers both",
+    );
+    assert.strictEqual(new Set(sentences).size, outcomes.length + refusals.length);
     for (const sentence of sentences) {
       assert.ok(sentence.startsWith("Not verified"), sentence);
       assert.ok(sentence.endsWith("."), sentence);
