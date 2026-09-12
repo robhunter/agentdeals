@@ -77,6 +77,19 @@ describe("the class we publish and the level we publish are withheld by the same
     }
   });
 
+  it("withholds a favourable class from a vendor whose only narrowing cites no source", async () => {
+    const { withheldStability } = await import("../dist/data.js");
+    const nothingWithheld = { link_unreachable: null, refused_read: null, rating_withheld: null, source_check: null, gate: null };
+    const uncitedNarrowing = [{
+      vendor: "V", change_type: "limits_reduced", date: "2026-06-01",
+      summary: "The free plan's limit came down.", source_url: "",
+      previous_state: "100GB", current_state: "10GB", impact: "medium", category: "Storage", alternatives: [],
+    }];
+    assert.strictEqual(withheldStability(nothingWithheld as never, "stable", uncitedNarrowing as never), null);
+    assert.strictEqual(withheldStability(nothingWithheld as never, "improving", uncitedNarrowing as never), null);
+    assert.strictEqual(withheldStability(nothingWithheld as never, "volatile", uncitedNarrowing as never), "volatile");
+  });
+
   it("says why, on every record whose class is withheld", async () => {
     const { loadOffers, loadDealChanges, publishedRisk } = await import("../dist/data.js");
     const byVendor = new Map<string, ReturnType<typeof loadDealChanges>>();
