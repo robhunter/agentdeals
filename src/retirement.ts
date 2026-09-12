@@ -16,6 +16,15 @@ export function offerEnded(offer: Pick<Offer, "tier"> | null | undefined): boole
   return ENDED_TIER_SET.has((offer?.tier ?? "").trim().toLowerCase());
 }
 
+export type OfferTierAndDescription = Pick<Offer, "tier" | "description">;
+
+export function detailForEndedOffer(
+  record: OfferTierAndDescription | null | undefined,
+  writtenForALiveOffer: string,
+): string {
+  return record && offerRetired(record) ? record.description : writtenForALiveOffer;
+}
+
 export function listEndedTiers(): string {
   const all = [...ENDED_TIERS];
   const last = all.pop()!;
