@@ -53,14 +53,36 @@ const decodeEntities = (text: string): string =>
     .replace(/&amp;/g, "&");
 const withoutTags = (markup: string): string => decodeEntities(squash(markup.replace(/<[^>]*>/g, " ")));
 
-const headOf = (offer: Offer): string => squash(offer.description).slice(0, HEAD);
+const storedTermsOf = new Map<Offer, string>(offers.map((offer) => [offer, squash(offer.description)]));
+
+function headTellingItFromEveryOtherRecord(offer: Offer): string {
+  const stored = storedTermsOf.get(offer)!;
+  let length = Math.min(HEAD, stored.length);
+  while (
+    length < stored.length &&
+    offers.some(
+      (other) => other !== offer && storedTermsOf.get(other)!.startsWith(stored.slice(0, length)),
+    )
+  ) {
+    length++;
+  }
+  return stored.slice(0, length);
+}
+
+const headOfRecord = new Map<Offer, string>(
+  offers.map((offer) => [offer, headTellingItFromEveryOtherRecord(offer)]),
+);
+
+const headOf = (offer: Offer): string =>
+  headOfRecord.get(offer) ?? squash(offer.description).slice(0, HEAD);
 
 function publishesStoredTerms(slot: string, offer: Offer): boolean {
   const shown = squash(slot).replace(/(\.\.\.|…)$/, "");
-  const stored = squash(offer.description);
+  const stored = storedTermsOf.get(offer) ?? squash(offer.description);
+  const head = headOf(offer);
   if (shown.length < 25) return false;
-  if (stored.startsWith(shown.slice(0, HEAD))) return true;
-  return stored.length >= HEAD && shown.includes(stored.slice(0, HEAD));
+  if (shown.length >= head.length && stored.startsWith(shown.slice(0, head.length))) return true;
+  return stored.length >= head.length && shown.includes(head);
 }
 
 const STACK_AND_TABLE_PAGES = [
@@ -166,6 +188,52 @@ describe("#1395 the listing surfaces answer the stored-terms question the way th
       pages.size,
       categoryPaths.length + searchPaths.length + alternativePaths.length + STACK_AND_TABLE_PAGES.length + 2,
     );
+  });
+
+  it("reads no other record's published terms as this record's own", () => {
+    const sharingAnOpening = offers.filter((offer) =>
+      offers.some(
+        (other) =>
+          other !== offer &&
+          storedTermsOf.get(other)!.slice(0, HEAD) === storedTermsOf.get(offer)!.slice(0, HEAD),
+      ),
+    );
+    assertPopulationFloor(
+      sharingAnOpening.length,
+      14,
+      `records open with the same ${HEAD} characters as another record`,
+    );
+
+    let told = 0;
+    let inseparable = 0;
+    for (const offer of sharingAnOpening) {
+      const stored = storedTermsOf.get(offer)!;
+      assert.strictEqual(
+        publishesStoredTerms(stored, offer),
+        true,
+        `${offer.vendor} no longer recognises its own terms`,
+      );
+      for (const other of sharingAnOpening) {
+        if (other === offer) continue;
+        const theirs = storedTermsOf.get(other)!;
+        if (theirs.startsWith(stored) || stored.startsWith(theirs)) {
+          inseparable++;
+          continue;
+        }
+        told++;
+        assert.strictEqual(
+          publishesStoredTerms(theirs, offer),
+          false,
+          `${other.vendor}'s stored terms read as ${offer.vendor}'s`,
+        );
+      }
+    }
+    assert.strictEqual(
+      told + inseparable,
+      sharingAnOpening.length * (sharingAnOpening.length - 1),
+      "the sweep does not reach every pair of records that open alike",
+    );
+    assertPopulationFloor(told, 200, "pairs open alike and say different things further in");
   });
 
   it("publishes no superseded stored terms in a visible listing slot", () => {
