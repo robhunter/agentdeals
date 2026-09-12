@@ -2,6 +2,7 @@ import assert from "node:assert";
 import { appendFileSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { hardcodedRowsCarryingASlug } from "./hardcoded-vendor-rows.ts";
 
 export const HEADROOM = 0.25;
 
@@ -132,6 +133,13 @@ export function pagesOnTheReviewRegister(): Population {
   const REPO = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
   const at = process.env.AGENTDEALS_PAGE_REVIEWS_PATH || path.join(REPO, "data", "page-reviews.json");
   return { size: JSON.parse(readFileSync(at, "utf-8")).pages.length, read: "pages the review register holds" };
+}
+
+export function rowsCarryingAVendorSlug(): Population {
+  return {
+    size: hardcodedRowsCarryingASlug().length,
+    read: "hardcoded comparison rows in the page source carrying a vendor slug",
+  };
 }
 
 const POPULATION_READER = /^[A-Za-z_$][\w$]*\(\s*\)$/;
