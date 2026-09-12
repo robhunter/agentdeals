@@ -647,9 +647,9 @@
       "reviewer": null,
       "review_outcome": null,
       "review_note": null,
-      "reads_index": false,
+      "reads_index": true,
       "reads_changes": true,
-      "data_source": "unsourced",
+      "data_source": "catalogue",
       "data_source_reason": null
     },
     {
@@ -1495,9 +1495,9 @@
       "reviewer": "pm",
       "review_outcome": "fail",
       "review_note": null,
-      "reads_index": false,
+      "reads_index": true,
       "reads_changes": true,
-      "data_source": "unsourced",
+      "data_source": "catalogue",
       "data_source_reason": null
     },
     {

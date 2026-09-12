@@ -23,7 +23,7 @@ import { openapiSpec } from "./openapi.js";
 import { CATEGORY_ALIASES, CATEGORY_RETIREMENTS, EXAMPLE_MEMBERS_BASIS, buildCategoryDirectory, categoryHolds, familySiblings, publishedScopeFor, resolveCategoryName, retiredCategoryNames, retirementFor, scopeFor } from "./category-scope.js";
 import { retiredCategoryDescription, retiredCategoryNoticeHtml, retiredCategoryTitle } from "./category-retirement.js";
 import { LINK_GRACE_DAYS, unreachableNoticeForUrl } from "./link-health.js";
-import { offerEnded, offerRetired, recordedTierSentence, endedHeadline, endedHistorySentence, endedReliabilitySentence, endedEmptyChangeHistorySentence, ENDED_BADGE_LABEL, ENDED_SINCE_CHANGES_SENTENCE, type OfferTierAndUrl } from "./retirement.js";
+import { offerEnded, offerRetired, recordedTierSentence, endedHeadline, endedHistorySentence, endedReliabilitySentence, endedEmptyChangeHistorySentence, detailForEndedOffer, ENDED_BADGE_LABEL, ENDED_SINCE_CHANGES_SENTENCE, type OfferTierAndUrl } from "./retirement.js";
 import { amountUnstatedSentence, LAST_RESOLVED, levelWithheldReason, levelWithheldSince, withheldLevelClause, withheldLevelSentence, type LevelWithheldReason } from "./source-check.js";
 import { vendorVerdictContextFrom, type VendorVerdictContext } from "./vendor-verdict-input.js";
 import { readingIsBehindTheLoop, reverificationIntervalDays } from "./badge-staleness.js";
@@ -23914,7 +23914,7 @@ function buildOpenaiAssistantsAlternativesPage(): string {
     { name: "OpenAI (Responses API)", slug: "openai", toolUse: "Native (function calling)", codeExec: "Code interpreter tool", fileHandling: "File search tool", bestFor: "Direct migration — least code changes" },
     { name: "Anthropic Claude API", slug: "anthropic-api", toolUse: "Native (tool use)", codeExec: "Computer use, code execution", fileHandling: "PDF + document processing", bestFor: "Best reasoning, long context" },
     { name: "Google Gemini API", slug: "google-gemini-api", toolUse: "Native (function calling)", codeExec: "Code execution tool", fileHandling: "Multimodal (images, audio, video)", bestFor: "Free tier available, multimodal input" },
-    { name: "GitHub Models", slug: "github-models", toolUse: "Via hosted models", codeExec: "No built-in", fileHandling: "Model-dependent", bestFor: "Free access to multiple models" },
+    { name: "GitHub Models", slug: "github-models", toolUse: "Via hosted models", codeExec: "No built-in", fileHandling: "Model-dependent", bestFor: "Retired — no longer available to any customer" },
     { name: "OpenRouter", slug: "openrouter", toolUse: "Model-dependent", codeExec: "Model-dependent", fileHandling: "Model-dependent", bestFor: "Multi-provider abstraction, price comparison" },
     { name: "Cohere", slug: "cohere", toolUse: "Native (tool use)", codeExec: "No built-in", fileHandling: "Document parsing", bestFor: "RAG and enterprise search" },
     { name: "Groq", slug: "groq", toolUse: "Native (function calling)", codeExec: "No built-in", fileHandling: "No built-in", bestFor: "Fastest inference, open-source models" },
@@ -29911,14 +29911,14 @@ function buildDatabasePricingPage(): string {
       dbType: "Cache + Topics (Serverless)",
       freeStorage: "N/A (cache)",
       freeConnections: "N/A (HTTP)",
-      freeCompute: "5 GiB transfer/mo",
+      freeCompute: "None free",
       paidFrom: "$0.50/GiB transfer",
       pricingModel: "Per-transfer",
-      freeDetails: "5 GiB data transfer/month free. Serverless caching (Cache) and pub/sub messaging (Topics). No connections to manage — HTTP-based. Compatible with Redis and Memcached protocols. Instant provisioning, no clusters to configure.",
-      freeType: "limited",
-      monthlyCostSmall: "$0",
-      monthlyCostTeam: "$0\u201310+",
-      hiddenCosts: "5 GiB transfer can be consumed quickly with chatty applications. Per-transfer pricing differs from Redis per-operation model. Limited ecosystem compared to Redis. Topics is newer and less battle-tested.",
+      freeDetails: "No free tier. The offer was retired.",
+      freeType: "removed",
+      monthlyCostSmall: "Paid only",
+      monthlyCostTeam: "Paid only",
+      hiddenCosts: "Every plan on the vendor's pricing page is priced. Per-transfer pricing differs from the Redis per-operation model. Limited ecosystem compared to Redis. Topics is newer and less battle-tested.",
     },
     {
       name: "Hasura Cloud",
@@ -29993,7 +29993,7 @@ function buildDatabasePricingPage(): string {
       return '<div class="diff-card" style="border-left-color:' + borderColor + '">' +
         '<h3><a href="/vendor/' + escHtmlServer(s.slug) + '" style="color:var(--text)">' + escHtmlServer(s.name) + '</a> ' +
         '<span style="font-size:.75rem;color:var(--text-dim);font-weight:400">' + escHtmlServer(s.dbType) + ' \u00b7 ' + escHtmlServer(freeTypeLabels[s.freeType]) + '</span></h3>' +
-        '<p class="diff-desc">' + escHtmlServer(s.freeDetails) + '</p>' +
+        '<p class="diff-desc">' + escHtmlServer(detailForEndedOffer(offerForSlug(s.slug), s.freeDetails)) + '</p>' +
         '</div>';
     }).join("\n    ");
     return '<h3 id="cat-' + cat + '">' + escHtmlServer(categoryLabels[cat]) + '</h3>' +
@@ -32040,15 +32040,15 @@ function buildLlmApiPricingPage(): string {
       name: "GitHub Models",
       slug: "github-models",
       category: "specialized",
-      freeTier: "50-150 req/day",
+      freeTier: "Retired",
       flagshipModel: "GPT-4o, Llama, Mistral",
-      inputPrice: "Free (rate-limited)",
-      outputPrice: "Free (rate-limited)",
+      inputPrice: "Unavailable",
+      outputPrice: "Unavailable",
       contextWindow: "Varies",
-      rateLimit: "10-15 RPM, 50-150 req/day",
-      freeDetails: "10-15 RPM, 50-150 requests/day depending on model tier. OpenAI-compatible API endpoint. 100+ models including GPT-4o, Llama, Mistral, Phi. Free for GitHub users.",
-      freeType: "generous",
-      differentiator: "Free access to 100+ models for GitHub users; OpenAI-compatible; great for prototyping",
+      rateLimit: "None — the offer was retired",
+      freeDetails: "No free tier — the offer was retired.",
+      freeType: "none",
+      differentiator: "Retired — the playground, model catalog, inference API and bring-your-own-key access are no longer available to any customer",
     },
     {
       name: "LLM7.io",
@@ -32115,6 +32115,33 @@ function buildLlmApiPricingPage(): string {
   const generousCount = providers.filter(p => p.freeType === "generous").length;
   const creditsCount = providers.filter(p => p.freeType === "credits" || p.freeType === "limited" || p.freeType === "trial").length;
 
+  const stillOffered = (slugs: string[]): LlmProvider[] =>
+    slugs
+      .map(slug => providers.find(p => p.slug === slug))
+      .filter((p): p is LlmProvider => p !== undefined && !offerRetired(offerForSlug(p.slug)));
+
+  const namedWithTheirFreeTier = (slugs: string[]): string =>
+    stillOffered(slugs)
+      .map(p => escHtmlServer(p.name) + " &mdash; " + escHtmlServer(p.freeTier))
+      .join(" &middot; ");
+
+  const namedPlainly = (slugs: string[]): string =>
+    stillOffered(slugs).map(p => escHtmlServer(p.name)).join(", ");
+
+  const detailOf = (p: LlmProvider): string => detailForEndedOffer(offerForSlug(p.slug), p.freeDetails);
+
+  const freeTiersThisPageStandsBehind = "The other free tiers on this page are "
+    + stillOffered(["openrouter", "cerebras", "cloudflare-workers-ai", "llm7-io"])
+      .map(p => p.name + " (" + p.freeTier + ")")
+      .join(", ")
+    + ".";
+
+  const thirdChoiceForPrototyping = stillOffered(["cerebras", "cloudflare-workers-ai", "llm7-io"])[0] ?? null;
+  const thirdForPrototyping = thirdChoiceForPrototyping === null
+    ? ""
+    : ' <a href="/vendor/' + escHtmlServer(thirdChoiceForPrototyping.slug) + '">' + escHtmlServer(thirdChoiceForPrototyping.name)
+      + '</a> for ' + escHtmlServer(thirdChoiceForPrototyping.freeTier) + ' without a credit card.';
+
   const frontierReads = providers.filter(p => p.readOn && p.readFrom);
   const frontierReadOn = frontierReads.map(p => p.readOn as string).sort()[0] ?? null;
   const rowsWithNoReadDate = providers.length - frontierReads.length;
@@ -32144,7 +32171,7 @@ function buildLlmApiPricingPage(): string {
       return '<div class="diff-card" style="border-left-color:' + borderColor + '">' +
         '<h3><a href="/vendor/' + escHtmlServer(p.slug) + '" style="color:var(--text)">' + escHtmlServer(p.name) + '</a> ' +
         '<span style="font-size:.75rem;color:var(--text-dim);font-weight:400">' + escHtmlServer(freeTypeLabels[p.freeType]) + '</span></h3>' +
-        '<p class="diff-desc">' + escHtmlServer(p.freeDetails) + '</p>' +
+        '<p class="diff-desc">' + escHtmlServer(detailOf(p)) + '</p>' +
         '<p class="diff-desc" style="margin-top:.5rem"><strong style="color:var(--text)">Key differentiator:</strong> ' + escHtmlServer(p.differentiator) + '</p>' +
         '</div>';
     }).join("\n    ");
@@ -32169,7 +32196,7 @@ function buildLlmApiPricingPage(): string {
   );
 
   const faqEntries = [
-    { q: "Which LLM API has the best free tier in 2026?", a: "Groq's free tier is 30 RPM with 100K-500K tokens/day, no credit card required, with fast LPU-accelerated inference. GitHub Models gives free access to 100+ models (GPT-4o, Llama, Mistral) for GitHub users. OpenRouter provides ~30 free open-source models. For frontier models specifically, Mistral's Experiment tier gives 1B tokens/month at 2 RPM." },
+    { q: "Which LLM API has the best free tier in 2026?", a: "Groq's free tier is 30 RPM with 100K-500K tokens/day, no credit card required, with fast LPU-accelerated inference. " + freeTiersThisPageStandsBehind + " For frontier models specifically, Mistral's Experiment tier gives 1B tokens/month at 2 RPM." },
     { q: "How much does GPT-4o cost per token?", a: "GPT-4o costs $2.50 per million input tokens and $10 per million output tokens. For reference, 1 million tokens is roughly 750,000 words. The batch API offers 50% discount ($1.25/$5 per M tokens). GPT-4o-mini is significantly cheaper at $0.15/$0.60 per M tokens." },
     { q: "How much does Claude cost per token?", a: "Claude Fable 5.1 costs $10/M input and $50/M output tokens. Opus 5 is $5/$25 per M tokens, Sonnet 5 is $2/$10, and Haiku 4.5 is the budget option at $1/$5. The Batch API offers 50% discount on all models." },
     { q: "What is the cheapest LLM API for production use?", a: "For frontier-quality models: xAI Grok 4.1 Fast at $0.20/M input, $0.50/M output. For open-source models: DeepSeek V4 at $0.30/M input, $0.50/M output with cache-hit discounts up to 90%. Groq and Cerebras offer free tiers that can handle moderate production traffic. Google Gemini Flash models are free with rate limits." },
@@ -32310,7 +32337,7 @@ function buildLlmApiPricingPage(): string {
     '\n' +
     '  <div class="highlight-box">\n' +
     '    <h3>Best Free Tiers</h3>\n' +
-    '    <p><strong>Most generous:</strong> Groq (30 RPM, 500K tok/day) &middot; GitHub Models (100+ models free) &middot; Mistral (1B tok/month) &middot; <strong>Best for prototyping:</strong> OpenRouter (~30 free models) &middot; Cerebras (1M tok/day) &middot; <strong>Completely free:</strong> LLM7.io (donor-supported) &middot; Ollama (self-hosted)</p>\n' +
+    '    <p><strong>Most generous:</strong> ' + namedWithTheirFreeTier(["groq", "mistral-ai", "cerebras"]) + ' &middot; <strong>Best for prototyping:</strong> ' + namedWithTheirFreeTier(["openrouter", "cloudflare-workers-ai"]) + ' &middot; <strong>Completely free:</strong> ' + namedWithTheirFreeTier(["llm7-io", "ollama"]) + '</p>\n' +
     '  </div>\n' +
     '\n' +
     '  <div class="toc">\n' +
@@ -32357,7 +32384,7 @@ function buildLlmApiPricingPage(): string {
     '  ' + categorySections + '\n' +
     '\n' +
     '  <h2 id="free-tiers">What You Actually Get for Free</h2>\n' +
-    '  <p class="section-intro">Free tiers range from genuinely production-viable (Groq, GitHub Models) to token giveaways that run out in hours. Here\'s the honest breakdown.</p>\n' +
+    '  <p class="section-intro">Free tiers range from genuinely production-viable (' + namedPlainly(["groq", "cerebras"]) + ') to token giveaways that run out in hours. Here\'s the honest breakdown.</p>\n' +
     '\n' +
     '  <div style="overflow-x:auto">\n' +
     '  <table class="pricing-table">\n' +
@@ -32446,7 +32473,7 @@ function buildLlmApiPricingPage(): string {
     '\n' +
     '    <div class="verdict-item">\n' +
     '      <strong>Best for prototyping</strong>\n' +
-    '      <p><a href="/vendor/groq">Groq</a> (free, fast, no credit card) or <a href="/vendor/openrouter">OpenRouter</a> (~30 free models, try different providers). <a href="/vendor/github-models">GitHub Models</a> for accessing GPT-4o free with a GitHub account.</p>\n' +
+    '      <p><a href="/vendor/groq">Groq</a> (free, fast, no credit card) or <a href="/vendor/openrouter">OpenRouter</a> (~30 free models, try different providers).' + thirdForPrototyping + '</p>\n' +
     '    </div>\n' +
     '\n' +
     '    <div class="verdict-item">\n' +
