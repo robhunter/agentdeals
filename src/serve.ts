@@ -1,5 +1,5 @@
 import { createServer as createHttpServer } from "node:http";
-import { readFileSync, existsSync, writeFileSync } from "node:fs";
+import { readFileSync, existsSync, statSync, writeFileSync } from "node:fs";
 import { randomUUID } from "node:crypto";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
@@ -310,6 +310,14 @@ const SWAGGER_MIME_TYPES: Record<string, string> = {
   ".png": "image/png",
   ".map": "application/json",
 };
+
+function readSwaggerAsset(filePath: string): Buffer | null {
+  try {
+    return statSync(filePath).isFile() ? readFileSync(filePath) : null;
+  } catch {
+    return null;
+  }
+}
 const SESSION_IDLE_TIMEOUT_MS = 15 * 60 * 1000;
 const CLEANUP_INTERVAL_MS = 60 * 1000;
 
@@ -54776,15 +54784,14 @@ const httpServer = createHttpServer(async (req, res) => {
       res.end(JSON.stringify({ error: "Invalid path" }));
       return;
     }
-    const filePath = join(swaggerUiDistPath, filename);
-    if (!existsSync(filePath)) {
+    const content = readSwaggerAsset(join(swaggerUiDistPath, filename));
+    if (content === null) {
       res.writeHead(404, { "Content-Type": "application/json" });
       res.end(JSON.stringify({ error: "Not found" }));
       return;
     }
     const ext = filename.substring(filename.lastIndexOf("."));
     const contentType = SWAGGER_MIME_TYPES[ext] || "application/octet-stream";
-    const content = readFileSync(filePath);
     res.writeHead(200, { "Content-Type": contentType, "Cache-Control": "public, max-age=86400" });
     res.end(content);
   } else if ((url.pathname === "/feed.xml" || url.pathname === "/api/feed") && isGetOrHead) {
