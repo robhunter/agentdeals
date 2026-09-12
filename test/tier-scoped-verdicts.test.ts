@@ -72,6 +72,32 @@ const A_READING_OF_THE_SELF_HOSTED_EDITION = {
 
 const THE_SAME_PAGE_LISTED_AS_A_HOSTED_TIER = { ...A_SELF_HOSTED_OFFER, tier: "Free" };
 
+const A_FREE_LISTING = {
+  vendor: "Dashcorp",
+  category: "Monitoring",
+  description: "2 team members, 5 monitors, a private status page.",
+  tier: "Free",
+  url: "https://dashcorp.example/pricing",
+  tags: ["monitoring"],
+  verifiedDate: "2026-09-01",
+};
+
+const A_STARTUP_PROGRAMME_LISTING = { ...A_FREE_LISTING, tier: "Startup Program" };
+
+const A_READING_OF_A_PLAN = {
+  vendor: "Dashcorp",
+  change_type: "limits_reduced",
+  date: "2026-09-12",
+  date_source: "discovered",
+  summary: "The plan moved.",
+  previous_state: A_FREE_LISTING.description,
+  current_state: "The plan moved.",
+  impact: "medium",
+  source_url: A_FREE_LISTING.url,
+  category: "Monitoring",
+  alternatives: [],
+};
+
 describe("#1526 a record names the tier it read, and only that tier's verdict follows from it", () => {
   it("decides nothing when the record names no tier", () => {
     for (const named of [undefined, null, "", "   "]) {
@@ -100,15 +126,92 @@ describe("#1526 a record names the tier it read, and only that tier's verdict fo
     assert.strictEqual(namesADifferentTier(named, "Dashcorp Cloud Free"), false);
   });
 
-  it("leaves every record stored today deciding exactly what it decided before", () => {
+  it("reads the vendor's own name for the plan we list as free as the plan we list", () => {
+    for (const [named, summary, current_state] of [
+      ["Hobby", "The free tier (Hobby) now only includes up to 2 users.", "Up to 2 users, 3 minute checks, limited status page."],
+      ["Basic", "The plan came down to 5 monitors and 3-minute checks.", "Basic $0 per month. 5 monitors, 3 minute checks."],
+      ["Dashcorp", "The pricing and limits for the free tier have been clarified.", "50 agentic requests, 1,000 lines of code a month."],
+    ] as const) {
+      const change = { ...A_READING_OF_A_PLAN, tier: named, summary, current_state };
+      assert.strictEqual(namesADifferentTier(change, "Free"), false, named);
+      assert.strictEqual(changeGradesTheListedTier(change, A_FREE_LISTING), true, named);
+    }
+  });
+
+  it("holds a reading that names a benefit of its own off a tier that is not a free plan", () => {
+    const credits = {
+      ...A_READING_OF_A_PLAN,
+      tier: "Dashcorp Activate Credits",
+      summary: "The programme now offers up to $200,000 in Activate Credits, not a year of Pro+.",
+      current_state: "Apply to receive up to $200,000 in Activate Credits against infrastructure.",
+      tier_direction: "unchanged",
+    };
+    assert.strictEqual(namesADifferentTier(credits, "Startup Program"), true);
+    assert.strictEqual(changeGradesTheListedTier(credits, A_STARTUP_PROGRAMME_LISTING), false);
+  });
+
+  it("holds a reading of the free plan off a tier we do not list as a free plan", () => {
+    const freePlan = {
+      ...A_READING_OF_A_PLAN,
+      tier: "Free",
+      summary: "The free tier now has limits of 5 monitors and 3-minute checks.",
+      current_state: "Free: 5 monitors, 3 minute checks.",
+      tier_direction: "unchanged",
+    };
+    assert.strictEqual(namesADifferentTier(freePlan, "Startup Program"), true);
+    assert.strictEqual(changeGradesTheListedTier(freePlan, A_STARTUP_PROGRAMME_LISTING), false);
+    assert.strictEqual(namesADifferentTier({ ...freePlan, tier: "Hobby" }, "Free"), false);
+  });
+
+  it("keeps a paid plan's reading off the free tier it does not describe", () => {
+    const paid = {
+      ...A_READING_OF_A_PLAN,
+      tier: "Pro",
+      summary: "The Pro plan now costs $29 per month, up from $19.",
+      current_state: "Pro: $29 per month per seat.",
+    };
+    assert.strictEqual(namesADifferentTier(paid, "Free"), true);
+    assert.strictEqual(changeGradesTheListedTier(paid, A_FREE_LISTING), false);
+  });
+
+  it("lets a reading that says our tier narrowed grade it, whatever plan it named", () => {
+    const paid = {
+      ...A_READING_OF_A_PLAN,
+      tier: "Pro",
+      summary: "The Pro plan now costs $29 per month, up from $19.",
+      current_state: "Pro: $29 per month per seat.",
+    };
+    assert.strictEqual(namesADifferentTier({ ...paid, tier_direction: "narrowed" }, "Free"), false);
+    for (const direction of [undefined, "unchanged", "widened"]) {
+      assert.strictEqual(
+        namesADifferentTier({ ...paid, tier_direction: direction }, "Free"),
+        true,
+        String(direction),
+      );
+    }
+  });
+
+  it("leaves an edition's name carrying its own identity", () => {
+    const named = {
+      ...A_READING_OF_THE_HOSTED_PRODUCT,
+      tier: "Dashcorp Cloud Free",
+      summary: "The Dashcorp Cloud free tier now includes 10k metrics.",
+    };
+    assert.strictEqual(namesADifferentTier(named, "Free OSS"), true);
+    assert.strictEqual(namesADifferentTier(named, "Open Source"), true);
+    assert.strictEqual(namesADifferentTier(named, "Free"), false);
+  });
+
+  it("suppresses no record whose own reading says the tier we list narrowed", () => {
     let pairs = 0;
     for (const offer of offers) {
       for (const change of changesFor(offer.vendor)) {
         pairs++;
+        if (change.tier_direction !== "narrowed") continue;
         assert.strictEqual(
           namesADifferentTier(change, offer.tier),
           false,
-          `${change.vendor} ${change.change_type} ${change.date} would stop grading ${offer.tier}`,
+          `${change.vendor} ${change.change_type} ${change.date} says ${offer.tier} narrowed and would stop grading it`,
         );
       }
     }

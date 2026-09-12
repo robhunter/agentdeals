@@ -276,23 +276,38 @@ describe("#1528 the review of the records already written", () => {
     }
   });
 
-  it("leaves every record it does not review carrying no direction", () => {
+  it("states a direction on no record its review does not name", () => {
     const reviewed = new Set(review.directions.map((entry) => reviewKey(entry)));
-    let unreviewed = 0;
-    for (const change of liveChanges) {
-      if (reviewed.has(reviewKey(change))) continue;
-      unreviewed++;
-      assert.strictEqual(
-        change.tier_direction ?? null,
-        null,
-        `${change.vendor} ${change.date} carries a direction from nowhere`,
+    const overlaid = applyReviewedDirections(stored);
+    assert.strictEqual(overlaid.length, stored.length, "the overlay changed the size of the log");
+    let stated = 0;
+    for (const [at, change] of overlaid.entries()) {
+      const before = stored[at]!.tier_direction ?? null;
+      const after = change.tier_direction ?? null;
+      if (after === before) continue;
+      stated++;
+      assert.ok(
+        reviewed.has(reviewKey(change)),
+        `${change.vendor} ${change.date} is given ${after} by a review that does not name it`,
       );
     }
     assert.strictEqual(
-      unreviewed + review.directions.length,
-      liveChanges.length,
-      "the sweep does not cover every record the catalogue loaded",
+      stated,
+      review.directions.length,
+      "the overlay does not reach every record its review names",
     );
+  });
+
+  it("keeps a direction the record was written with, which no review names", () => {
+    const fromTheDetector = { ...A_RECORD_TYPED_AS_A_REDUCTION, tier_direction: "widened" } as DealChange;
+    assert.strictEqual(applyReviewedDirections([fromTheDetector], [])[0]!.tier_direction, "widened");
+
+    const overlaid = applyReviewedDirections(stored);
+    for (const [at, change] of overlaid.entries()) {
+      const written = stored[at]!.tier_direction ?? null;
+      if (written === null) continue;
+      assert.strictEqual(change.tier_direction, written, `${change.vendor} ${change.date}`);
+    }
   });
 });
 
