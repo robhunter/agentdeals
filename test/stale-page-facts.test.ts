@@ -5,7 +5,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { assertPopulationFloor } from "./population-floor.ts";
 import {
-  QUALITY_BUDGET_NAMES, STALE_FACT_PAGES_BASELINE, UNSOURCED_TIER_A_BASELINE, factsOutdatedBy,
+  QUALITY_BUDGET_NAMES, STALE_FACT_PAGES_BASELINE, UNSOURCED_TIER_A_BASELINE, daysBetween, factsOutdatedBy,
   newestChangeBySlug, parsePageReviews, parseQualityBudgets, qualityBudgetsPath, readQualityBudgets,
   dateModifiedFor, reviewStatus, serializeQualityBudgets, staleFactPages, staleFactViolations,
   unsourcedTierAPaths,
@@ -263,11 +263,17 @@ describe("#1327 a review that found defects does not restart the staleness clock
     }
   });
 
-  it("still measures the review cadence from the day the page was last read", () => {
+  it("measures the review cadence off that same clock, so recording defects cannot mark a page reviewed", () => {
     const failed = reviewStatus(reviewed("fail"), "2026-09-02");
     assert.strictEqual(failed.reviewed_at, "2026-08-27");
-    assert.strictEqual(failed.days_since, 6);
-    assert.strictEqual(failed.state, "current");
+    assert.strictEqual(failed.clock_starts, "2026-04-03");
+    assert.strictEqual(failed.days_since, daysBetween("2026-04-03", "2026-09-02"));
+    assert.strictEqual(failed.state, "expired");
+
+    const passed = reviewStatus(reviewed("pass"), "2026-09-02");
+    assert.strictEqual(passed.clock_starts, "2026-08-27");
+    assert.strictEqual(passed.days_since, daysBetween("2026-08-27", "2026-09-02"));
+    assert.strictEqual(passed.state, "current");
   });
 
   it("counts a fact the review read past, where a passing review would have cleared it", () => {

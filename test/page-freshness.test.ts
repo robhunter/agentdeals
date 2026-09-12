@@ -7,8 +7,9 @@ import { fileURLToPath } from "node:url";
 import {
   compiledNotice, dataProvenanceFor, daysBetween, deriveTier, freshnessSegmentFor, indexCitation,
   linkifyVerdictBlocks, overdueReport,
-  parsePageReviews, reviewStatus, verdictBlocks, vendorsAssertedIn, verdictsOutdatedBy,
-  SLA_DAYS, EXPIRY_MULTIPLE, type PageReviewRecord,
+  parsePageReviews, restartsTheClock, reviewStatus, verdictBlocks, vendorsAssertedIn, verdictsOutdatedBy,
+  OUTCOME_RESTARTS_THE_CLOCK, REVIEW_OUTCOMES, SLA_DAYS, EXPIRY_MULTIPLE,
+  type PageReviewRecord, type ReviewOutcome,
 } from "../src/page-reviews.ts";
 import { namedVendorSlug } from "../dist/vendor-slug.js";
 
@@ -84,6 +85,84 @@ describe("#1061 review state is derived from a stored date, never from the clock
     assert.strictEqual(SLA_DAYS.B, SLA_DAYS.A * 3);
     assert.strictEqual(reviewStatus(record({ tier: "B", reviewed_at: "2026-01-01" }), addDays("2026-01-01", 89)).state, "current");
     assert.strictEqual(reviewStatus(record({ tier: "A", reviewed_at: "2026-01-01" }), addDays("2026-01-01", 89)).state, "expired");
+  });
+});
+
+describe("#1571 the state is read off the same clock the register publishes", () => {
+  it("holds a decision for every outcome a review can record, not only the ones written so far", () => {
+    assert.deepStrictEqual(Object.keys(OUTCOME_RESTARTS_THE_CLOCK).sort(), [...REVIEW_OUTCOMES].sort());
+    for (const outcome of REVIEW_OUTCOMES) {
+      assert.strictEqual(typeof restartsTheClock(outcome), "boolean", `${outcome} has no decision about the clock`);
+    }
+  });
+
+  it("counts days from clock_starts whatever outcome the review recorded", () => {
+    const today = "2026-09-12";
+    const outcomes: Array<ReviewOutcome | null> = [...REVIEW_OUTCOMES, null];
+    for (const outcome of outcomes) {
+      const status = reviewStatus(
+        record({ published: "2026-04-08", reviewed_at: "2026-08-27", review_outcome: outcome }),
+        today,
+      );
+      assert.strictEqual(
+        status.days_since,
+        daysBetween(status.clock_starts, today),
+        `an outcome of ${String(outcome)} publishes a clock starting ${status.clock_starts} and counts ${status.days_since} days from somewhere else`,
+      );
+    }
+  });
+
+  it("leaves a page whose review found defects as far past its SLA as the register already said it was", () => {
+    const status = reviewStatus(
+      record({ tier: "A", published: "2026-04-08", reviewed_at: "2026-08-27", review_outcome: "fail" }),
+      "2026-09-12",
+    );
+    assert.strictEqual(status.clock_starts, "2026-04-08");
+    assert.strictEqual(status.days_since, 157);
+    assert.strictEqual(status.days_overdue, 157 - SLA_DAYS.A);
+    assert.strictEqual(status.state, "expired");
+  });
+
+  it("restarts the clock for a review that found nothing wrong, however long ago the page was published", () => {
+    const status = reviewStatus(
+      record({ tier: "A", published: "2026-03-26", reviewed_at: "2026-09-07", review_outcome: "pass" }),
+      "2026-09-12",
+    );
+    assert.strictEqual(status.clock_starts, "2026-09-07");
+    assert.strictEqual(status.days_since, 5);
+    assert.strictEqual(status.days_overdue, 0);
+    assert.strictEqual(status.state, "current");
+  });
+
+  it("still runs a never-reviewed page's clock from publication", () => {
+    const status = reviewStatus(record({ tier: "A", published: "2026-03-31" }), "2026-08-26");
+    assert.strictEqual(status.state, "never_reviewed");
+    assert.strictEqual(status.clock_starts, "2026-03-31");
+    assert.strictEqual(status.days_since, 148);
+    assert.strictEqual(status.days_overdue, 148 - SLA_DAYS.A);
+  });
+
+  it("calls no registered page current once its own clock_starts puts it past its SLA", async () => {
+    const report = await (await fetch(`http://localhost:${serverPort}/api/page-reviews`)).json() as any;
+    for (const page of report.pages) {
+      const elapsed = daysBetween(page.clock_starts, report.generated_for);
+      assert.strictEqual(
+        page.days_since,
+        elapsed,
+        `${page.path} publishes clock_starts ${page.clock_starts} and days_since ${page.days_since}`,
+      );
+      assert.strictEqual(
+        page.days_overdue,
+        Math.max(0, elapsed - page.sla_days),
+        `${page.path} is ${elapsed} days into a ${page.sla_days}-day SLA and reports ${page.days_overdue} overdue`,
+      );
+      if (page.state === "current") {
+        assert.ok(
+          elapsed <= page.sla_days,
+          `${page.path} is called current ${elapsed} days after its clock started on ${page.clock_starts}`,
+        );
+      }
+    }
   });
 });
 
