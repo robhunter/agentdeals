@@ -8,6 +8,7 @@ import {
   CATALOGUE_TEXT_FIELDS, CHANGE_LOG_TEXT_FIELDS, deriveTier, parsePageReviews, pageReviewsPath,
   perturbTextFields, unresolvedBadgeSubjects, vendorFactRows, vendorsAssertedIn,
 } from "../dist/page-reviews.js";
+import { unresolvedStatCardSubjects } from "../dist/superlative-claims.js";
 import { assertedVendorSlugs, isNonVendorSubject, namedVendorSlug, vendorSlugMap } from "../dist/vendor-slug.js";
 
 const REPO = join(dirname(fileURLToPath(import.meta.url)), "..");
@@ -175,6 +176,7 @@ async function main() {
         vendors_asserted: vendorsAssertedIn(html, lookup),
         vendors_tabulated: [...new Set(vendorFactRows(html, namedVendorSlug).map(r => r.slug))].sort(),
         badge_subjects_unresolved: unresolvedBadgeSubjects(html, resolver).map(b => b.subject),
+        stat_card_subjects_unresolved: unresolvedStatCardSubjects(html, resolver),
         reviewed_at: prior?.reviewed_at ?? null,
         reviewer: prior?.reviewer ?? null,
         review_outcome: prior?.review_outcome ?? null,
@@ -196,6 +198,8 @@ async function main() {
         if (tabulatedBefore !== tabulatedAfter) changes.push(`~ ${route} tabulated vendors ${prior.vendors_tabulated.length} -> ${record.vendors_tabulated.length}`);
         const unresolvedBefore = prior.badge_subjects_unresolved.join(","), unresolvedAfter = record.badge_subjects_unresolved.join(",");
         if (unresolvedBefore !== unresolvedAfter) changes.push(`~ ${route} unresolved badge subjects [${unresolvedBefore}] -> [${unresolvedAfter}]`);
+        const cardsBefore = (prior.stat_card_subjects_unresolved ?? []).join(","), cardsAfter = record.stat_card_subjects_unresolved.join(",");
+        if (cardsBefore !== cardsAfter) changes.push(`~ ${route} unresolved stat card subjects [${cardsBefore}] -> [${cardsAfter}]`);
       }
       pages.push(record);
     }

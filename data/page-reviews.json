@@ -67,6 +67,7 @@
         "zuplo"
       ],
       "badge_subjects_unresolved": [],
+      "stat_card_subjects_unresolved": [],
       "reviewed_at": null,
       "reviewer": null,
       "review_outcome": null,
@@ -83,6 +84,7 @@
       "vendors_asserted": [],
       "vendors_tabulated": [],
       "badge_subjects_unresolved": [],
+      "stat_card_subjects_unresolved": [],
       "reviewed_at": null,
       "reviewer": null,
       "review_outcome": null,
@@ -115,6 +117,7 @@
         "windsurf"
       ],
       "badge_subjects_unresolved": [],
+      "stat_card_subjects_unresolved": [],
       "reviewed_at": null,
       "reviewer": null,
       "review_outcome": null,
@@ -162,6 +165,7 @@
         "windsurf"
       ],
       "badge_subjects_unresolved": [],
+      "stat_card_subjects_unresolved": [],
       "reviewed_at": "2026-08-27",
       "reviewer": "pm",
       "review_outcome": "fail",
@@ -191,6 +195,7 @@
         "umami"
       ],
       "badge_subjects_unresolved": [],
+      "stat_card_subjects_unresolved": [],
       "reviewed_at": null,
       "reviewer": null,
       "review_outcome": null,
@@ -222,6 +227,7 @@
         "stoplight"
       ],
       "badge_subjects_unresolved": [],
+      "stat_card_subjects_unresolved": [],
       "reviewed_at": null,
       "reviewer": null,
       "review_outcome": null,
@@ -272,6 +278,7 @@
         "workos"
       ],
       "badge_subjects_unresolved": [],
+      "stat_card_subjects_unresolved": [],
       "reviewed_at": "2026-09-12",
       "reviewer": "pm",
       "review_outcome": "fail",
@@ -305,6 +312,7 @@
         "render"
       ],
       "badge_subjects_unresolved": [],
+      "stat_card_subjects_unresolved": [],
       "reviewed_at": null,
       "reviewer": null,
       "review_outcome": null,
@@ -340,6 +348,7 @@
         "vercel"
       ],
       "badge_subjects_unresolved": [],
+      "stat_card_subjects_unresolved": [],
       "reviewed_at": null,
       "reviewer": null,
       "review_outcome": null,
@@ -369,6 +378,7 @@
         "vercel"
       ],
       "badge_subjects_unresolved": [],
+      "stat_card_subjects_unresolved": [],
       "reviewed_at": null,
       "reviewer": null,
       "review_outcome": null,
@@ -385,6 +395,7 @@
       "vendors_asserted": [],
       "vendors_tabulated": [],
       "badge_subjects_unresolved": [],
+      "stat_card_subjects_unresolved": [],
       "reviewed_at": null,
       "reviewer": null,
       "review_outcome": null,
@@ -436,6 +447,7 @@
         "woodpecker-ci"
       ],
       "badge_subjects_unresolved": [],
+      "stat_card_subjects_unresolved": [],
       "reviewed_at": null,
       "reviewer": null,
       "review_outcome": null,
@@ -475,6 +487,7 @@
         "woodpecker-ci"
       ],
       "badge_subjects_unresolved": [],
+      "stat_card_subjects_unresolved": [],
       "reviewed_at": null,
       "reviewer": null,
       "review_outcome": null,
@@ -500,6 +513,7 @@
         "digitalocean"
       ],
       "badge_subjects_unresolved": [],
+      "stat_card_subjects_unresolved": [],
       "reviewed_at": "2026-09-12",
       "reviewer": "pm",
       "review_outcome": "fail",
@@ -516,6 +530,7 @@
       "vendors_asserted": [],
       "vendors_tabulated": [],
       "badge_subjects_unresolved": [],
+      "stat_card_subjects_unresolved": [],
       "reviewed_at": null,
       "reviewer": null,
       "review_outcome": null,
@@ -545,6 +560,7 @@
         "stability-ai"
       ],
       "badge_subjects_unresolved": [],
+      "stat_card_subjects_unresolved": [],
       "reviewed_at": null,
       "reviewer": null,
       "review_outcome": null,
@@ -588,6 +604,7 @@
         "zilliz-cloud"
       ],
       "badge_subjects_unresolved": [],
+      "stat_card_subjects_unresolved": [],
       "reviewed_at": null,
       "reviewer": null,
       "review_outcome": null,
@@ -643,6 +660,7 @@
         "zilliz-cloud"
       ],
       "badge_subjects_unresolved": [],
+      "stat_card_subjects_unresolved": [],
       "reviewed_at": null,
       "reviewer": null,
       "review_outcome": null,
@@ -669,6 +687,7 @@
         "sentry"
       ],
       "badge_subjects_unresolved": [],
+      "stat_card_subjects_unresolved": [],
       "reviewed_at": null,
       "reviewer": null,
       "review_outcome": null,
@@ -700,6 +719,7 @@
         "vultr"
       ],
       "badge_subjects_unresolved": [],
+      "stat_card_subjects_unresolved": [],
       "reviewed_at": null,
       "reviewer": null,
       "review_outcome": null,
@@ -716,6 +736,7 @@
       "vendors_asserted": [],
       "vendors_tabulated": [],
       "badge_subjects_unresolved": [],
+      "stat_card_subjects_unresolved": [],
       "reviewed_at": null,
       "reviewer": null,
       "review_outcome": null,
@@ -760,6 +781,7 @@
         "verifalia"
       ],
       "badge_subjects_unresolved": [],
+      "stat_card_subjects_unresolved": [],
       "reviewed_at": "2026-09-05",
       "reviewer": "coder",
       "review_outcome": "fail",
@@ -790,6 +812,7 @@
         "v0"
       ],
       "badge_subjects_unresolved": [],
+      "stat_card_subjects_unresolved": [],
       "reviewed_at": null,
       "reviewer": null,
       "review_outcome": null,
@@ -817,6 +840,7 @@
       ],
       "vendors_tabulated": [],
       "badge_subjects_unresolved": [],
+      "stat_card_subjects_unresolved": [],
       "reviewed_at": null,
       "reviewer": null,
       "review_outcome": null,
@@ -844,6 +868,7 @@
       ],
       "vendors_tabulated": [],
       "badge_subjects_unresolved": [],
+      "stat_card_subjects_unresolved": [],
       "reviewed_at": null,
       "reviewer": null,
       "review_outcome": null,
@@ -870,6 +895,7 @@
       ],
       "vendors_tabulated": [],
       "badge_subjects_unresolved": [],
+      "stat_card_subjects_unresolved": [],
       "reviewed_at": null,
       "reviewer": null,
       "review_outcome": null,
@@ -895,6 +921,7 @@
       ],
       "vendors_tabulated": [],
       "badge_subjects_unresolved": [],
+      "stat_card_subjects_unresolved": [],
       "reviewed_at": null,
       "reviewer": null,
       "review_outcome": null,
@@ -921,6 +948,7 @@
       ],
       "vendors_tabulated": [],
       "badge_subjects_unresolved": [],
+      "stat_card_subjects_unresolved": [],
       "reviewed_at": null,
       "reviewer": null,
       "review_outcome": null,
@@ -947,6 +975,7 @@
       ],
       "vendors_tabulated": [],
       "badge_subjects_unresolved": [],
+      "stat_card_subjects_unresolved": [],
       "reviewed_at": null,
       "reviewer": null,
       "review_outcome": null,
@@ -974,6 +1003,7 @@
       ],
       "vendors_tabulated": [],
       "badge_subjects_unresolved": [],
+      "stat_card_subjects_unresolved": [],
       "reviewed_at": null,
       "reviewer": null,
       "review_outcome": null,
@@ -1001,6 +1031,7 @@
       ],
       "vendors_tabulated": [],
       "badge_subjects_unresolved": [],
+      "stat_card_subjects_unresolved": [],
       "reviewed_at": null,
       "reviewer": null,
       "review_outcome": null,
@@ -1028,6 +1059,7 @@
       ],
       "vendors_tabulated": [],
       "badge_subjects_unresolved": [],
+      "stat_card_subjects_unresolved": [],
       "reviewed_at": null,
       "reviewer": null,
       "review_outcome": null,
@@ -1092,6 +1124,7 @@
         "x-api-twitter"
       ],
       "badge_subjects_unresolved": [],
+      "stat_card_subjects_unresolved": [],
       "reviewed_at": "2026-09-12",
       "reviewer": "pm",
       "review_outcome": "fail",
@@ -1169,6 +1202,7 @@
         "xero-developer-api"
       ],
       "badge_subjects_unresolved": [],
+      "stat_card_subjects_unresolved": [],
       "reviewed_at": "2026-09-12",
       "reviewer": "pm",
       "review_outcome": "fail",
@@ -1200,6 +1234,7 @@
         "vercel"
       ],
       "badge_subjects_unresolved": [],
+      "stat_card_subjects_unresolved": [],
       "reviewed_at": null,
       "reviewer": null,
       "review_outcome": null,
@@ -1229,6 +1264,7 @@
         "openrouter"
       ],
       "badge_subjects_unresolved": [],
+      "stat_card_subjects_unresolved": [],
       "reviewed_at": "2026-04-02",
       "reviewer": "content revision",
       "review_outcome": null,
@@ -1259,6 +1295,7 @@
         "together-ai"
       ],
       "badge_subjects_unresolved": [],
+      "stat_card_subjects_unresolved": [],
       "reviewed_at": "2026-09-11",
       "reviewer": "pm",
       "review_outcome": "fail",
@@ -1299,6 +1336,7 @@
         "supabase"
       ],
       "badge_subjects_unresolved": [],
+      "stat_card_subjects_unresolved": [],
       "reviewed_at": null,
       "reviewer": null,
       "review_outcome": null,
@@ -1329,6 +1367,7 @@
         "terrateam"
       ],
       "badge_subjects_unresolved": [],
+      "stat_card_subjects_unresolved": [],
       "reviewed_at": null,
       "reviewer": null,
       "review_outcome": null,
@@ -1358,6 +1397,10 @@
         "vultr"
       ],
       "badge_subjects_unresolved": [],
+      "stat_card_subjects_unresolved": [
+        "CPX12",
+        "CX23, unavailable"
+      ],
       "reviewed_at": null,
       "reviewer": null,
       "review_outcome": null,
@@ -1398,6 +1441,7 @@
         "vercel"
       ],
       "badge_subjects_unresolved": [],
+      "stat_card_subjects_unresolved": [],
       "reviewed_at": null,
       "reviewer": null,
       "review_outcome": null,
@@ -1442,6 +1486,7 @@
         "vercel"
       ],
       "badge_subjects_unresolved": [],
+      "stat_card_subjects_unresolved": [],
       "reviewed_at": null,
       "reviewer": null,
       "review_outcome": null,
@@ -1491,6 +1536,7 @@
         "xai"
       ],
       "badge_subjects_unresolved": [],
+      "stat_card_subjects_unresolved": [],
       "reviewed_at": "2026-09-12",
       "reviewer": "pm",
       "review_outcome": "fail",
@@ -1548,6 +1594,7 @@
         "uptimerobot"
       ],
       "badge_subjects_unresolved": [],
+      "stat_card_subjects_unresolved": [],
       "reviewed_at": "2026-09-12",
       "reviewer": "pm",
       "review_outcome": "fail",
@@ -1575,6 +1622,7 @@
         "turso"
       ],
       "badge_subjects_unresolved": [],
+      "stat_card_subjects_unresolved": [],
       "reviewed_at": null,
       "reviewer": null,
       "review_outcome": null,
@@ -1608,6 +1656,7 @@
         "together-ai"
       ],
       "badge_subjects_unresolved": [],
+      "stat_card_subjects_unresolved": [],
       "reviewed_at": null,
       "reviewer": null,
       "review_outcome": null,
@@ -1632,6 +1681,7 @@
         "openai"
       ],
       "badge_subjects_unresolved": [],
+      "stat_card_subjects_unresolved": [],
       "reviewed_at": "2026-08-27",
       "reviewer": "pm",
       "review_outcome": "fail",
@@ -1658,6 +1708,7 @@
         "vercel"
       ],
       "badge_subjects_unresolved": [],
+      "stat_card_subjects_unresolved": [],
       "reviewed_at": null,
       "reviewer": null,
       "review_outcome": null,
@@ -1687,6 +1738,7 @@
         "openai"
       ],
       "badge_subjects_unresolved": [],
+      "stat_card_subjects_unresolved": [],
       "reviewed_at": null,
       "reviewer": null,
       "review_outcome": null,
@@ -1705,6 +1757,7 @@
       ],
       "vendors_tabulated": [],
       "badge_subjects_unresolved": [],
+      "stat_card_subjects_unresolved": [],
       "reviewed_at": null,
       "reviewer": null,
       "review_outcome": null,
@@ -1727,6 +1780,7 @@
       ],
       "vendors_tabulated": [],
       "badge_subjects_unresolved": [],
+      "stat_card_subjects_unresolved": [],
       "reviewed_at": null,
       "reviewer": null,
       "review_outcome": null,
@@ -1751,6 +1805,7 @@
         "vercel"
       ],
       "badge_subjects_unresolved": [],
+      "stat_card_subjects_unresolved": [],
       "reviewed_at": null,
       "reviewer": null,
       "review_outcome": null,
@@ -1795,6 +1850,7 @@
         "twingate"
       ],
       "badge_subjects_unresolved": [],
+      "stat_card_subjects_unresolved": [],
       "reviewed_at": null,
       "reviewer": null,
       "review_outcome": null,
@@ -1834,6 +1890,7 @@
         "vercel"
       ],
       "badge_subjects_unresolved": [],
+      "stat_card_subjects_unresolved": [],
       "reviewed_at": "2026-09-12",
       "reviewer": "pm",
       "review_outcome": "fail",
@@ -1850,6 +1907,7 @@
       "vendors_asserted": [],
       "vendors_tabulated": [],
       "badge_subjects_unresolved": [],
+      "stat_card_subjects_unresolved": [],
       "reviewed_at": null,
       "reviewer": null,
       "review_outcome": null,
@@ -1866,6 +1924,7 @@
       "vendors_asserted": [],
       "vendors_tabulated": [],
       "badge_subjects_unresolved": [],
+      "stat_card_subjects_unresolved": [],
       "reviewed_at": null,
       "reviewer": null,
       "review_outcome": null,
@@ -1884,6 +1943,7 @@
         "hosting-checker"
       ],
       "badge_subjects_unresolved": [],
+      "stat_card_subjects_unresolved": [],
       "reviewed_at": null,
       "reviewer": null,
       "review_outcome": null,
@@ -1902,6 +1962,7 @@
         "hosting-checker"
       ],
       "badge_subjects_unresolved": [],
+      "stat_card_subjects_unresolved": [],
       "reviewed_at": null,
       "reviewer": null,
       "review_outcome": null,
@@ -1920,6 +1981,7 @@
         "hosting-checker"
       ],
       "badge_subjects_unresolved": [],
+      "stat_card_subjects_unresolved": [],
       "reviewed_at": null,
       "reviewer": null,
       "review_outcome": null,
@@ -1938,6 +2000,7 @@
         "hosting-checker"
       ],
       "badge_subjects_unresolved": [],
+      "stat_card_subjects_unresolved": [],
       "reviewed_at": null,
       "reviewer": null,
       "review_outcome": null,
@@ -1956,6 +2019,7 @@
         "hosting-checker"
       ],
       "badge_subjects_unresolved": [],
+      "stat_card_subjects_unresolved": [],
       "reviewed_at": null,
       "reviewer": null,
       "review_outcome": null,
@@ -1987,6 +2051,7 @@
         "svb-silicon-valley-bank"
       ],
       "badge_subjects_unresolved": [],
+      "stat_card_subjects_unresolved": [],
       "reviewed_at": "2026-04-13",
       "reviewer": "content revision",
       "review_outcome": null,
@@ -2010,6 +2075,7 @@
         "railway"
       ],
       "badge_subjects_unresolved": [],
+      "stat_card_subjects_unresolved": [],
       "reviewed_at": null,
       "reviewer": null,
       "review_outcome": null,
@@ -2050,6 +2116,7 @@
         "vercel"
       ],
       "badge_subjects_unresolved": [],
+      "stat_card_subjects_unresolved": [],
       "reviewed_at": "2026-08-27",
       "reviewer": "pm",
       "review_outcome": "fail",
@@ -2076,6 +2143,7 @@
         "pocketbase"
       ],
       "badge_subjects_unresolved": [],
+      "stat_card_subjects_unresolved": [],
       "reviewed_at": "2026-09-07",
       "reviewer": "coder",
       "review_outcome": "pass",
@@ -2092,6 +2160,7 @@
       "vendors_asserted": [],
       "vendors_tabulated": [],
       "badge_subjects_unresolved": [],
+      "stat_card_subjects_unresolved": [],
       "reviewed_at": null,
       "reviewer": null,
       "review_outcome": null,
@@ -2119,6 +2188,7 @@
         "terramate"
       ],
       "badge_subjects_unresolved": [],
+      "stat_card_subjects_unresolved": [],
       "reviewed_at": null,
       "reviewer": null,
       "review_outcome": null,
@@ -2157,6 +2227,7 @@
         "testcontainers"
       ],
       "badge_subjects_unresolved": [],
+      "stat_card_subjects_unresolved": [],
       "reviewed_at": null,
       "reviewer": null,
       "review_outcome": null,
@@ -2197,6 +2268,7 @@
         "zilliz-cloud"
       ],
       "badge_subjects_unresolved": [],
+      "stat_card_subjects_unresolved": [],
       "reviewed_at": null,
       "reviewer": null,
       "review_outcome": null,
@@ -2225,6 +2297,7 @@
         "render"
       ],
       "badge_subjects_unresolved": [],
+      "stat_card_subjects_unresolved": [],
       "reviewed_at": null,
       "reviewer": null,
       "review_outcome": null,
@@ -2293,6 +2366,7 @@
         "zuplo"
       ],
       "badge_subjects_unresolved": [],
+      "stat_card_subjects_unresolved": [],
       "reviewed_at": null,
       "reviewer": null,
       "review_outcome": null,
