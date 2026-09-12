@@ -138,7 +138,12 @@ describe("a guard that has drifted says so in a form the data push gate can act 
         {
           cwd: path.join(TEST_DIR, ".."),
           encoding: "utf8",
-          env: { ...process.env, NODE_TEST_CONTEXT: undefined, NODE_OPTIONS: undefined } as NodeJS.ProcessEnv,
+          env: {
+            ...process.env,
+            NODE_TEST_CONTEXT: undefined,
+            NODE_OPTIONS: undefined,
+            POPULATION_FLOOR_LOG: undefined,
+          } as NodeJS.ProcessEnv,
         },
       );
       assert.notStrictEqual(run.status, 0, "the fixture suite passed, so there is nothing to classify");
