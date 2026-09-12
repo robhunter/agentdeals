@@ -1169,9 +1169,9 @@
         "xero-developer-api"
       ],
       "badge_subjects_unresolved": [],
-      "reviewed_at": null,
-      "reviewer": null,
-      "review_outcome": null,
+      "reviewed_at": "2026-09-12",
+      "reviewer": "pm",
+      "review_outcome": "fail",
       "review_note": null,
       "reads_index": false,
       "reads_changes": true,
