@@ -74,6 +74,26 @@ export function withheldLevelSentence(
 
 export type TermsUnconfirmedReason = Exclude<SourceCheckOutcome, "ok">;
 
+export type TermsOnlyOutcome = Exclude<TermsUnconfirmedReason, LevelWithheldReason>;
+
+function withholdsTheLevel(outcome: SourceCheckOutcome): outcome is SourceCheckOutcome & LevelWithheldReason {
+  return LEVEL_WITHHOLDING_OUTCOMES.includes(outcome);
+}
+
+export function termsOnlyOutcome(
+  outcome: SourceCheckOutcome | null | undefined,
+): TermsOnlyOutcome | null {
+  const reason = termsUnconfirmedOutcome(outcome);
+  if (!reason) return null;
+  return withholdsTheLevel(reason) ? null : reason;
+}
+
+export const TERMS_ONLY_OUTCOMES: TermsOnlyOutcome[] = SOURCE_CHECK_OUTCOMES
+  .flatMap(outcome => {
+    const termsOnly = termsOnlyOutcome(outcome);
+    return termsOnly ? [termsOnly] : [];
+  });
+
 const UNCONFIRMED_TERMS_CLAUSES: Record<TermsUnconfirmedReason, string> = {
   does_not_name_vendor: WITHHELD_LEVEL_CLAUSES.does_not_name_vendor(""),
   does_not_name_product: WITHHELD_LEVEL_CLAUSES.does_not_name_product(""),
@@ -141,7 +161,7 @@ export function levelWithheldReason(
 ): LevelWithheldReason | null {
   if (linkUnreachable) return "link_unreachable";
   const outcome = offer.source_check?.outcome;
-  if (outcome && LEVEL_WITHHOLDING_OUTCOMES.includes(outcome)) return outcome as LevelWithheldReason;
+  if (outcome && withholdsTheLevel(outcome)) return outcome;
   return null;
 }
 

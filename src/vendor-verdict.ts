@@ -5,11 +5,14 @@ import { isNoLongerInForce, theEventNeverHappened } from "./change-resolution.js
 import { changeIsUncited, ratingWithheldForNoSourceSentence } from "./change-citation.js";
 import { changeDateClause } from "./change-dates.js";
 import {
+  amountUnstatedSentence,
+  termsOnlyOutcome,
   termsUnconfirmedOutcome,
   unconfirmedTermsClause,
   withheldLevelClause,
   withheldLevelSentence,
   type LevelWithheldReason,
+  type TermsOnlyOutcome,
   type TermsUnconfirmedReason,
 } from "./source-check.js";
 import type { GateCode } from "./ranking.js";
@@ -82,18 +85,24 @@ export type BadgeWithholding =
   | { reason: "change_measured_no_difference"; refusedOn: string }
   | { reason: LevelWithheldReason };
 
+export type Withholding = BadgeWithholding | { reason: TermsOnlyOutcome };
+
 export type RefusedReadWithholding = Extract<
   BadgeWithholding,
   { reason: "read_not_reconciled" | "change_measured_no_difference" }
 >;
 
-export function withheldForARefusedRead(because: BadgeWithholding): because is RefusedReadWithholding {
+export function withheldForARefusedRead(because: Withholding): because is RefusedReadWithholding {
   return because.reason === "read_not_reconciled" || because.reason === "change_measured_no_difference";
 }
 
-export type WithholdingTag = Exclude<BadgeWithholding["reason"], "gated"> | GateCode;
+export type BadgeWithholdingTag = Exclude<BadgeWithholding["reason"], "gated"> | GateCode;
 
-export function withholdingTag(because: BadgeWithholding): WithholdingTag {
+export type WithholdingTag = Exclude<Withholding["reason"], "gated"> | GateCode;
+
+export function withholdingTag(because: BadgeWithholding): BadgeWithholdingTag;
+export function withholdingTag(because: Withholding): WithholdingTag;
+export function withholdingTag(because: Withholding): WithholdingTag {
   return because.reason === "gated" ? because.gate : because.reason;
 }
 
@@ -105,6 +114,7 @@ export const WITHHOLDING_SCOPE = {
   states_no_terms: "the_terms",
   does_not_name_vendor: "the_terms",
   does_not_name_product: "the_terms",
+  states_no_amount: "the_terms",
   read_not_reconciled: "the_terms",
   change_measured_no_difference: "the_terms",
   no_source: "the_rating",
@@ -119,13 +129,13 @@ export type TermsWithholdingTag = {
   [K in WithholdingTag]: (typeof WITHHOLDING_SCOPE)[K] extends "the_terms" ? K : never;
 }[WithholdingTag];
 
-export type TermsWithholding = Extract<BadgeWithholding, { reason: TermsWithholdingTag }>;
+export type TermsWithholding = Extract<Withholding, { reason: TermsWithholdingTag }>;
 
-export function withholdsTheTerms(because: BadgeWithholding): because is TermsWithholding {
+export function withholdsTheTerms(because: Withholding): because is TermsWithholding {
   return WITHHOLDING_SCOPE[withholdingTag(because)] === "the_terms";
 }
 
-export const WITHHOLDING_BADGE_LABELS: Record<WithholdingTag, string> = {
+export const WITHHOLDING_BADGE_LABELS: Record<BadgeWithholdingTag, string> = {
   no_source: "unrated — no source",
   link_unreachable: "unrated — page unreachable",
   unreadable: "unrated — page unreadable",
@@ -254,32 +264,95 @@ export interface UnconfirmedTerms {
   because: TermsWithholding;
   clause: string;
   sentence: string;
+  theReadFoundAFreePlan: boolean;
+}
+
+export type WhatTheReadLeftStanding = "nothing" | "the_free_plan";
+
+export const WHAT_THE_READ_LEFT_STANDING = {
+  link_unreachable: "nothing",
+  unreadable: "nothing",
+  states_no_terms: "nothing",
+  does_not_name_vendor: "nothing",
+  does_not_name_product: "nothing",
+  states_no_amount: "the_free_plan",
+  read_not_reconciled: "nothing",
+  change_measured_no_difference: "nothing",
+} as const satisfies Record<TermsWithholdingTag, WhatTheReadLeftStanding>;
+
+type ReadNothingTag = {
+  [K in TermsWithholdingTag]: (typeof WHAT_THE_READ_LEFT_STANDING)[K] extends "nothing" ? K : never;
+}[TermsWithholdingTag];
+
+export interface TermsNoReadDescribes extends UnconfirmedTerms {
+  because: Extract<TermsWithholding, { reason: ReadNothingTag }>;
+}
+
+export function nothingWeReadDescribesTheTerms(
+  unconfirmed: UnconfirmedTerms,
+): unconfirmed is TermsNoReadDescribes {
+  return !unconfirmed.theReadFoundAFreePlan;
+}
+
+const TERMS_ONLY_SENTENCES: Record<TermsOnlyOutcome, (subject: string) => string> = {
+  states_no_amount: amountUnstatedSentence,
+};
+
+type TermsOnlyWithholding = Extract<TermsWithholding, { reason: TermsOnlyOutcome }>;
+
+function withheldOnAReadWeCouldNotQuantify(because: TermsWithholding): because is TermsOnlyWithholding {
+  return Object.prototype.hasOwnProperty.call(TERMS_ONLY_SENTENCES, because.reason);
 }
 
 function termsWithholding(input: VendorVerdictInput): TermsWithholding | null {
   if (input.levelWithheld) return { reason: input.levelWithheld };
   const refused = refusalWithholdsStability(input);
-  return refused ? refusedReadWithholding(refused) : null;
+  if (refused) return refusedReadWithholding(refused);
+  const termsOnly = termsOnlyOutcome(input.sourceCheck);
+  return termsOnly ? { reason: termsOnly } : null;
 }
 
 export function whyWeCannotConfirmTheseTerms(input: VendorVerdictInput): UnconfirmedTerms | null {
   const because = termsWithholding(input);
   if (!because) return null;
+  const theReadFoundAFreePlan = WHAT_THE_READ_LEFT_STANDING[because.reason] === "the_free_plan";
   if (withheldForARefusedRead(because)) {
     return {
       because,
+      theReadFoundAFreePlan,
       clause: refusedReadWithholdingClause(because),
       sentence: refusedReadWithholdingSentence(input.vendor, because),
     };
   }
+  if (withheldOnAReadWeCouldNotQuantify(because)) {
+    return {
+      because,
+      theReadFoundAFreePlan,
+      clause: unconfirmedTermsClause(because.reason),
+      sentence: TERMS_ONLY_SENTENCES[because.reason](input.vendor),
+    };
+  }
   return {
     because,
+    theReadFoundAFreePlan,
     clause: withheldLevelClause(because.reason, input.unconfirmableSince),
     sentence: withheldLevelSentence(because.reason, input.vendor, input.unconfirmableSince),
   };
 }
 
-const EMPTY_HISTORY_TAIL: Record<TermsWithholdingTag, string> = {
+export const UNVERIFIED_TERMS_CAVEAT =
+  "We have not confirmed these terms against the source we cite, so treat them as unverified.";
+
+export function unconfirmedTermsOpening(unconfirmed: UnconfirmedTerms): string {
+  return unconfirmed.theReadFoundAFreePlan ? "" : `We cannot confirm that today. ${unconfirmed.sentence} `;
+}
+
+export function withUnconfirmedTerms(terms: string, unconfirmed: UnconfirmedTerms): string {
+  const closed = /[.!?…]$/.test(terms.trim()) ? terms : `${terms}.`;
+  return `${closed} ${unconfirmed.theReadFoundAFreePlan ? unconfirmed.sentence : UNVERIFIED_TERMS_CAVEAT}`;
+}
+
+const EMPTY_HISTORY_TAIL: Record<ReadNothingTag, string> = {
   link_unreachable: "so nothing we have read describes these terms",
   unreadable: "so nothing we have read describes these terms",
   states_no_terms: "so nothing we have read describes these terms",
@@ -289,7 +362,7 @@ const EMPTY_HISTORY_TAIL: Record<TermsWithholdingTag, string> = {
   change_measured_no_difference: "so we cannot tell you that nothing changed",
 };
 
-export function emptyHistoryCaveatSentence(subject: string, unconfirmed: UnconfirmedTerms): string {
+export function emptyHistoryCaveatSentence(subject: string, unconfirmed: TermsNoReadDescribes): string {
   return `No recorded pricing changes for ${subject} — but ${unconfirmed.clause},`
     + ` ${EMPTY_HISTORY_TAIL[unconfirmed.because.reason]}.`
     + ` Treat the empty history as a statement about our records, not about this vendor's pricing.`;
