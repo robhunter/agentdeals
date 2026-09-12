@@ -7,7 +7,7 @@ import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/
 import { createServer, getServerCard } from "./server.js";
 import { oldestVerifiedDateForSlug, vendorRiskAssessment, publishedRisk, levelWithheldStatement, vendorNotIndexedSentence, riskCauseOf, freeTierEndingRecord, NEGATIVE_CHANGE_TYPES, POSITIVE_CHANGE_TYPES, SEVERE_CHANGE_TYPES, loadOffers, getCategories, getNewOffers, getNewestDeals, searchOffers, enrichOffers, gateForOffer, loadDealChanges, getDealChanges, changeContext, DEFAULT_CHANGE_WINDOW_DAYS, getOfferDetails, compareServices, checkVendorRisk, auditStack, getExpiringDeals, getWeeklyDigest, getFormattedWeeklyDigest, getFreshnessMetrics, publishedStabilityIndex, stabilityWithheldDisclosure, UNRATED_STABILITY, type StabilityIndex, type PublishedStabilityClass, getVendorReferral, sanitizeQuery, getChangeLogFreshness, isEventDated, partitionByDateProvenance } from "./data.js";
 import { loadChangeRefusals } from "./data.js";
-import { confirmingRead, confirmingReadSentence, refusalsByVendor, refusedReadSentence, supersededRefusalSentence, MEASURED_NO_DIFFERENCE_BADGE_LABEL, UNRECONCILED_READ_BADGE_LABEL, type ChangeRefusal } from "./change-refusal.js";
+import { confirmingRead, confirmingReadSentence, refusalsByVendor, refusedReadSentence, supersededRefusalSentence, type ChangeRefusal } from "./change-refusal.js";
 import { getStackRecommendation } from "./stacks.js";
 import { estimateCosts } from "./costs.js";
 import { classifyRequest } from "./client-class.js";
@@ -25,6 +25,7 @@ import { retiredCategoryDescription, retiredCategoryNoticeHtml, retiredCategoryT
 import { LINK_GRACE_DAYS, unreachableNoticeForUrl } from "./link-health.js";
 import { offerEnded, offerRetired, recordedTierSentence, endedHeadline, endedHistorySentence, endedReliabilitySentence, endedEmptyChangeHistorySentence, ENDED_BADGE_LABEL, ENDED_SINCE_CHANGES_SENTENCE, type OfferTierAndUrl } from "./retirement.js";
 import { amountUnstatedSentence, LAST_RESOLVED, levelWithheldReason, levelWithheldSince, withheldLevelClause, withheldLevelSentence, type LevelWithheldReason } from "./source-check.js";
+import { vendorVerdictContextFrom, type VendorVerdictContext } from "./vendor-verdict-input.js";
 import { readingIsBehindTheLoop, reverificationIntervalDays } from "./badge-staleness.js";
 import { LAST_READ_LABEL, VERIFICATION_DATES_HEADING, lastReadDate, lastReadNote, verificationDatesCell, verificationDatesSentence } from "./read-date.js";
 import { SUPERSEDED_TERMS_LABEL, readingBehindTheChange, supersededTermsAnswer, supersededTermsMetaSentence, supersededTermsNotice, supersededTermsNoticeHtml, supersededTermsRecord, supersededTermsVerdictSentence, supersedingChange, type SupersededTermsRecord } from "./superseded-description.js";
@@ -33,7 +34,7 @@ import { NO_CURRENT_FIGURE, costHeadlineCaveat, limitCellText, mayRecommendAsFre
 import { changesByVendor } from "./superseded-census.js";
 import { buildComparisonMap, comparisonSlug } from "./comparison-pairs.js";
 import { comparisonVerdictText, freeTierFaqAnswer, stabilityFaqAnswer, type ComparisonSide, type FreeTierSide, type SideFreeTier, type StabilityRating } from "./comparison-verdict.js";
-import { publishedVendorLevel, vendorVerdictSentence, vendorBadge, freeTierClaim, statesRiskCause, narrowingSentence, changeKindNoun, emptyHistoryCaveatSentence, refusedReadOurConfirmationSupersedes, refusedReadWeHold, refusedReadWithholdingSentence, unconfirmedThresholdSentence, whyWeCannotConfirmTheseTerms, withheldForARefusedRead, refusalWithholdsStability, termsUnconfirmedBySource, unconfirmedTermsMetaSentence, type BadgeWithholding, type FreeTierClaim, type VendorVerdictInput } from "./vendor-verdict.js";
+import { publishedVendorLevel, vendorVerdictSentence, vendorBadge, freeTierClaim, statesRiskCause, narrowingSentence, changeKindNoun, emptyHistoryCaveatSentence, refusedReadOurConfirmationSupersedes, refusedReadWeHold, refusedReadWithholdingSentence, unconfirmedThresholdSentence, whyWeCannotConfirmTheseTerms, withheldForARefusedRead, refusalWithholdsStability, termsUnconfirmedBySource, termsNotVerifiedMetaSentence, withheldBadgeLabel, type BadgeWithholding, type FreeTierClaim, type VendorVerdictInput } from "./vendor-verdict.js";
 import { tierRecordsAFreeTier } from "./free-tier-record.js";
 import { PAGE_HEAD_OPEN, withLedeBeforeNav } from "./page-lede.js";
 import { freshnessClaimFor, withFreshnessClaim } from "./page-freshness.js";
@@ -75,7 +76,7 @@ import { statedFreeTierBasis, unrankedBestAnswer, unrankedListingBasis } from ".
 import { SSE_KEEPALIVE_FRAME, keepaliveIntervalMs, sessionRecoveryBody } from "./mcp-stream.js";
 import { ASSISTANTS_API_SHUTDOWN } from "./assistants-shutdown.js";
 import { discontinuedOnOrBefore, PRODUCT_DEPRECATED } from "./product-deprecation.js";
-import { rankOffers, rankForListing, rotateListing, utcDate, gateFor, notAFreeOfferGateFor, descriptionDeniesFreeTier, classifyTier, CRITERIA_PATH, DEMOTE_ONLY_POLICY, DISCLOSURE_RATIONALE, TIE_BREAK_ALGORITHM, NAMED_SUBSET_RULE, NAMED_SUBSET_FIELD_RULE, GATE_TABLE, DEMERIT_TABLE, NOT_FREE_TIER_RULES, TIME_LIMITED_TIER_RULES, type TieBreak, type Gate, type GateCode } from "./ranking.js";
+import { rankOffers, rankForListing, rotateListing, utcDate, gateFor, notAFreeOfferGateFor, descriptionDeniesFreeTier, classifyTier, CRITERIA_PATH, DEMOTE_ONLY_POLICY, DISCLOSURE_RATIONALE, TIE_BREAK_ALGORITHM, NAMED_SUBSET_RULE, NAMED_SUBSET_FIELD_RULE, GATE_TABLE, DEMERIT_TABLE, NOT_FREE_TIER_RULES, TIME_LIMITED_TIER_RULES, type TieBreak, type Gate } from "./ranking.js";
 import type { RankedEntry, RankingResult } from "./ranking.js";
 import { eligibilityGateAsPublished, gatedShareDescriptionClause, gatedShareLede, publishableEligibilityConditions } from "./eligibility.js";
 import { gateDisclosureFor } from "./gate-disclosure.js";
@@ -876,30 +877,6 @@ interface BadgeReading {
   verifiedDate: string | null;
 }
 
-const WITHHELD_BADGE_LABELS: Record<LevelWithheldReason | "no_source", string> = {
-  no_source: "unrated \u2014 no source",
-  link_unreachable: "unrated \u2014 page unreachable",
-  unreadable: "unrated \u2014 page unreadable",
-  states_no_terms: "unrated \u2014 page states no price",
-  does_not_name_vendor: "unrated \u2014 page omits vendor",
-  does_not_name_product: "unrated \u2014 page omits product",
-};
-
-const GATED_BADGE_LABELS: Record<GateCode, string> = {
-  eligibility_restricted: "unrated \u2014 restricted offer",
-  not_a_free_offer: "unrated \u2014 not a free offer",
-  offer_expired: "unrated \u2014 offer expired",
-  offer_retired: "unrated \u2014 offer ended",
-  verification_lapsed: "unrated \u2014 not re-confirmed",
-};
-
-function withheldBadgeLabel(because: BadgeWithholding): string {
-  if (because.reason === "gated") return GATED_BADGE_LABELS[because.gate];
-  if (because.reason === "read_not_reconciled") return UNRECONCILED_READ_BADGE_LABEL;
-  if (because.reason === "change_measured_no_difference") return MEASURED_NO_DIFFERENCE_BADGE_LABEL;
-  return WITHHELD_BADGE_LABELS[because.reason];
-}
-
 let reverificationInterval: { on: string; days: number } | null = null;
 
 function badgeStaleAfterDays(): number {
@@ -924,17 +901,6 @@ function getBadgeStatus(vendorSlug: string): BadgeReading {
   return reading;
 }
 
-interface VendorVerdictContext {
-  vendorOffers: Offer[];
-  primary: Offer;
-  enriched: EnrichedOfferRow;
-  vendorChanges: DealChange[];
-  gate: Gate | null;
-  levelWithheld: LevelWithheldReason | null;
-  unconfirmableSince: string;
-  input: VendorVerdictInput;
-}
-
 const verdictContexts = new Map<string, { on: string; context: VendorVerdictContext | null }>();
 
 function vendorVerdictContext(vendorName: string, servedOn: string): VendorVerdictContext | null {
@@ -946,43 +912,13 @@ function vendorVerdictContext(vendorName: string, servedOn: string): VendorVerdi
 }
 
 function buildVendorVerdictContext(vendorName: string, servedOn: string): VendorVerdictContext | null {
-  const vendorOffers = offers.filter(o => o.vendor === vendorName);
-  if (vendorOffers.length === 0) return null;
-
-  const primary = vendorOffers[0];
-  const enriched = enrichOffers([primary])[0];
-  const vendorChanges = changesFor(vendorName);
-  const linkUnreachable = enriched.link_unreachable;
-  const levelWithheld = levelWithheldReason(primary, linkUnreachable);
-  const unconfirmableSince = levelWithheldSince(primary, linkUnreachable);
-  const gate = gateFor(primary, servedOn);
-
-  return {
-    vendorOffers,
-    primary,
-    enriched,
-    vendorChanges,
-    gate,
-    levelWithheld,
-    unconfirmableSince,
-    input: {
-      vendor: vendorName,
-      tier: primary.tier,
-      level: enriched.risk_level ?? null,
-      historyLevel: publishedRisk(primary, vendorChanges, servedOn).history_level,
-      cause: enriched.risk_cause,
-      changes: vendorChanges,
-      levelWithheld,
-      unconfirmableSince,
-      ratingWithheld: enriched.rating_withheld,
-      offerEnded: offerEnded(primary),
-      gate: gate?.code ?? null,
-      linkUnreachable: Boolean(linkUnreachable),
-      sourceCheck: primary.source_check?.outcome ?? null,
-      termsConfirmedOn: primary.verifiedDate,
-      refusedReads: refusalsFor(vendorName),
-    },
-  };
+  return vendorVerdictContextFrom({
+    vendor: vendorName,
+    vendorOffers: offers.filter(o => o.vendor === vendorName),
+    vendorChanges: changesFor(vendorName),
+    refusedReads: refusalsFor(vendorName),
+    servedOn,
+  });
 }
 
 function freeTierClaimFor(vendorName: string, servedOn: string): FreeTierClaim | null {
@@ -4783,8 +4719,9 @@ function buildVendorPage(slug: string): string | null {
   const verifiedSentence = discontinuedOn
     ? ` Discontinued ${discontinuedOn}.`
     : enriched.link_unreachable ? "" : ` Verified ${verifiedMonth}.`;
-  const metaVerifiedSentence = termsUnconfirmed && !discontinuedOn
-    ? ` ${unconfirmedTermsMetaSentence(termsUnconfirmed)}`
+  const termsNotVerified = termsNotVerifiedMetaSentence(verdictInput);
+  const metaVerifiedSentence = termsNotVerified && !discontinuedOn
+    ? ` ${termsNotVerified}`
     : verifiedSentence;
   const eligibilityGateSentence = primaryEligibilityGate ? `${primaryEligibilityGate.reason} ` : "";
   const metaDesc = eligibilityGateSentence + (termsSuperseded
@@ -4797,7 +4734,7 @@ function buildVendorPage(slug: string): string | null {
   const verdictLine2 = vendorVerdictSentence(verdictInput);
   const verdictLine3 = discontinuedOn
     ? `${vendorName} was discontinued on ${discontinuedOn}, so it is not a current option${alternatives.length > 0 ? ` — the ${alternatives.length} alternatives below are replacements` : ""}.`
-    : alternatives.length > 0 && !levelWithheld && !primaryGate
+    : alternatives.length > 0 && !termsWeCannotConfirm && !primaryGate
     ? `Best for ${primary.category.toLowerCase()} workloads${alternatives.length >= 5 ? ` — ${alternatives.length} alternatives available` : ""}.`
     : "";
   const verdictSubject = primaryGate ? primaryGate.reason : retiredSentence;
@@ -5087,8 +5024,8 @@ ${allCompareLinks.join("\n")}
   }
 
   const storedTerms = storedTermsOf(primary);
-  const unconfirmedTermsPreamble = levelWithheld
-    ? `We cannot confirm that today. ${withheldLevelSentence(levelWithheld, vendorName, unconfirmableSince)} `
+  const unconfirmedTermsPreamble = termsWeCannotConfirm
+    ? `We cannot confirm that today. ${termsWeCannotConfirm.sentence} `
     : "";
   const withUnconfirmedTermsCaveat = (terms: string) =>
     `${terms}${/[.!?…]$/.test(terms.trim()) ? "" : "."} We have not confirmed these terms against the source we cite, so treat them as unverified.`;
@@ -5101,8 +5038,8 @@ ${allCompareLinks.join("\n")}
     : retiredSentence
     ? `${retiredSentence} ${storedTerms}`
     : primaryGateBeyondEligibility
-    ? `${eligibilityGateSentence}${primaryGateBeyondEligibility.reason} ${levelWithheld ? `${unconfirmedTermsPreamble}${withUnconfirmedTermsCaveat(storedTerms)}` : storedTerms}${eligibilityConditionsSentence}`
-    : levelWithheld
+    ? `${eligibilityGateSentence}${primaryGateBeyondEligibility.reason} ${termsWeCannotConfirm ? `${unconfirmedTermsPreamble}${withUnconfirmedTermsCaveat(storedTerms)}` : storedTerms}${eligibilityConditionsSentence}`
+    : termsWeCannotConfirm
     ? `${eligibilityGateSentence}${unconfirmedTermsPreamble}Our stored record says ${vendorName} offers a free tier: ${primary.tier}. ${withUnconfirmedTermsCaveat(storedTerms)}${eligibilityConditionsSentence}`
     : primaryEligibilityGate
     ? `${eligibilityGateSentence}${vendorName} offers a free tier: ${primary.tier}. ${storedTerms}${eligibilityConditionsSentence}`
@@ -5111,7 +5048,7 @@ ${allCompareLinks.join("\n")}
     ? `${eligibilityGateSentence}${vendorName}'s free tier is called "${primary.tier}". ${supersededTermsNotice(vendorName, termsSuperseded)}`
     : retiredSentence
     ? `${retiredSentence} ${primary.description}`
-    : eligibilityGateSentence + (levelWithheld
+    : eligibilityGateSentence + (termsWeCannotConfirm
     ? `${unconfirmedTermsPreamble}Our stored record calls ${vendorName}'s free tier "${primary.tier}". ${withUnconfirmedTermsCaveat(primary.description)}`
     : `${vendorName}'s free tier is called "${primary.tier}". ${primary.description}`);
   const faqReliableAnswer = offerHasEnded

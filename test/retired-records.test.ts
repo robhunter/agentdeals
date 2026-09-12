@@ -9,6 +9,9 @@ import { fileURLToPath } from "node:url";
 const { offerRetired, recordedTierSentence } = await import("../dist/retirement.js");
 const { gateFor, utcDate } = await import("../dist/ranking.js");
 const { CITATION_CLASSES } = await import("../dist/change-citation.js");
+const { loadDealChanges, refusalsForVendor } = await import("../dist/data.js");
+const { badgeWithholding, withholdsTheTerms } = await import("../dist/vendor-verdict.js");
+const { vendorVerdictContextFrom } = await import("../dist/vendor-verdict-input.js");
 
 type Offer = import("../src/types.ts").Offer;
 
@@ -16,6 +19,20 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(__dirname, "..");
 
 const offers: Offer[] = JSON.parse(readFileSync(path.join(REPO, "data", "index.json"), "utf-8")).offers;
+
+const dealChanges = loadDealChanges();
+
+function termsWithheldFor(vendor: string): boolean {
+  const context = vendorVerdictContextFrom({
+    vendor,
+    vendorOffers: offers.filter(o => o.vendor === vendor),
+    vendorChanges: dealChanges.filter((c: { vendor: string }) => c.vendor.toLowerCase() === vendor.toLowerCase()),
+    refusedReads: refusalsForVendor(vendor),
+    servedOn: utcDate(),
+  });
+  const because = context ? badgeWithholding(context.input) : null;
+  return because !== null && withholdsTheTerms(because);
+}
 
 function slugOf(vendor: string): string {
   return vendor.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
@@ -234,6 +251,7 @@ describe("a record that is not retired keeps everything the gate would take away
     const plainlyFree = renderedVendorPages.filter(
       p => !offerRetired(p.offer) && !p.offer.eligibility && p.offer.source_check?.outcome === "ok"
         && !gateFor(p.offer, utcDate())
+        && !termsWithheldFor(p.offer.vendor)
         && p.offer.tier.toLowerCase() !== "none"
         && !p.offer.description.toLowerCase().includes("no free tier"),
     );

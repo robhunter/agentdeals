@@ -177,6 +177,14 @@ export function measuredNoDifferenceSentence(subject: string, refusedOn: string)
     + ` and refusing a change is not a confirmation of the terms we publish for it.`;
 }
 
+export function unreconciledReadMetaClause(refusedOn: string): string {
+  return `our last read, on ${refusedOn}, found a change we could not reconcile`;
+}
+
+export function measuredNoDifferenceMetaClause(refusedOn: string): string {
+  return `we refused the change we last considered recording, on ${refusedOn}`;
+}
+
 export function refusedReadClause(refusal: RefusedRead): string {
   return refusalMeasuredNoDifference(refusal)
     ? measuredNoDifferenceClause(refusal.refused_date)
