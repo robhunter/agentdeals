@@ -1,5 +1,5 @@
-import { createServer as createHttpServer } from "node:http";
-import { readFileSync, existsSync, statSync, writeFileSync } from "node:fs";
+import { createServer as createHttpServer, ServerResponse, type IncomingMessage } from "node:http";
+import { readFileSync, existsSync, statSync, writeFileSync, writeSync } from "node:fs";
 import { randomUUID } from "node:crypto";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
@@ -315,6 +315,14 @@ const SWAGGER_MIME_TYPES: Record<string, string> = {
 function readSwaggerAsset(filePath: string): Buffer | null {
   try {
     return statSync(filePath).isFile() ? readFileSync(filePath) : null;
+  } catch {
+    return null;
+  }
+}
+
+function readRepoTextFile(filePath: string): string | null {
+  try {
+    return statSync(filePath).isFile() ? readFileSync(filePath, "utf-8") : null;
   } catch {
     return null;
   }
@@ -53670,12 +53678,48 @@ if (PAGE_INVENTORY_OUT) {
   }
 }
 
-const httpServer = createHttpServer(async (req, res) => {
+const unwrappedWriteHead = ServerResponse.prototype.writeHead;
+const unwrappedEnd = ServerResponse.prototype.end;
+
+function requestedRoute(req: IncomingMessage): string {
+  return (req.url ?? "/").split("?")[0];
+}
+
+function describeFailure(err: unknown): string {
+  if (err instanceof Error) return err.stack ?? `${err.name}: ${err.message}`;
+  return String(err);
+}
+
+function recordAfterResponse(res: ServerResponse, label: string, record: () => void): void {
+  res.on("finish", () => {
+    try {
+      record();
+    } catch (err) {
+      console.error(`[${label}] not recorded — ${describeFailure(err)}`);
+    }
+  });
+}
+
+function answerInternalError(req: IncomingMessage, res: ServerResponse, err: unknown): void {
+  console.error(`[dispatch] 500 ${req.method ?? "GET"} ${requestedRoute(req)} — ${describeFailure(err)}`);
+  try {
+    if (res.writableEnded) return;
+    if (!res.headersSent) {
+      unwrappedWriteHead.call(res, 500, { "Content-Type": "application/json" });
+    }
+    unwrappedEnd.call(res, JSON.stringify({ error: "Internal server error" }), "utf-8");
+  } catch (whileAnswering) {
+    console.error(`[dispatch] could not answer 500 for ${requestedRoute(req)} — ${describeFailure(whileAnswering)}`);
+    res.destroy();
+  }
+}
+
+const dispatchRequest = async (req: IncomingMessage, res: ServerResponse) => {
   const url = new URL(req.url ?? "/", `http://localhost:${PORT}`);
   const isGetOrHead = req.method === "GET" || req.method === "HEAD";
 
   if (isCountableTraffic(url.pathname)) {
-    res.on("finish", () => {
+    recordAfterResponse(res, "traffic", () => {
       const classification = classifyRequest(url.pathname, req.headers["user-agent"]);
       recordTraffic(classification, url.pathname, res.statusCode);
       if (SINGLE_VENDOR_PREFIXES.some(prefix => url.pathname.startsWith(prefix))) {
@@ -54012,7 +54056,7 @@ const httpServer = createHttpServer(async (req, res) => {
     !url.pathname.startsWith("/.well-known/") &&
     url.pathname !== "/feed.xml";
   if (isPagePath) {
-    res.on("finish", () => {
+    recordAfterResponse(res, "page-view", () => {
       recordPageView(url.pathname, req.headers["user-agent"] ?? "", req.headers["referer"], res.statusCode);
     });
   }
@@ -54170,8 +54214,14 @@ const httpServer = createHttpServer(async (req, res) => {
       change_log_freshness: getChangeLogFreshness(),
     }));
   } else if (url.pathname === "/.well-known/glama.json") {
-    res.writeHead(200, { "Content-Type": "application/json" });
-    res.end(readFileSync(join(__dirname, "..", "glama.json"), "utf-8"));
+    const glamaCard = readRepoTextFile(join(__dirname, "..", "glama.json"));
+    if (glamaCard === null) {
+      res.writeHead(404, { "Content-Type": "application/json" });
+      res.end(JSON.stringify({ error: "Not found" }));
+    } else {
+      res.writeHead(200, { "Content-Type": "application/json" });
+      res.end(glamaCard);
+    }
   } else if (url.pathname === "/.well-known/mcp.json" || url.pathname === "/.well-known/mcp/server-card.json") {
     const card = getServerCard(BASE_URL);
     const body = JSON.stringify(card, null, 2);
@@ -55025,13 +55075,13 @@ ${catList}
     res.writeHead(200, { "Content-Type": "text/plain; charset=utf-8", "Cache-Control": "public, max-age=3600" });
     res.end(llmsFullTxt);
   } else if (url.pathname === "/AGENTS.md" && isGetOrHead) {
-    try {
-      const agentsMd = readFileSync(join(__dirname, "..", "AGENTS.md"), "utf-8");
-      res.writeHead(200, { "Content-Type": "text/markdown; charset=utf-8", "Cache-Control": "public, max-age=3600" });
-      res.end(agentsMd);
-    } catch {
+    const agentsMd = readRepoTextFile(join(__dirname, "..", "AGENTS.md"));
+    if (agentsMd === null) {
       res.writeHead(404, { "Content-Type": "text/plain" });
       res.end("Not found");
+    } else {
+      res.writeHead(200, { "Content-Type": "text/markdown; charset=utf-8", "Cache-Control": "public, max-age=3600" });
+      res.end(agentsMd);
     }
   } else if (url.pathname === "/sitemap.xml" && isGetOrHead) {
     const now = new Date().toISOString().split("T")[0];
@@ -56877,6 +56927,10 @@ ${catList}
     res.writeHead(404, { "Content-Type": "application/json" });
     res.end(JSON.stringify({ error: "Not found" }));
   }
+};
+
+const httpServer = createHttpServer((req, res) => {
+  dispatchRequest(req, res).catch(err => answerInternalError(req, res, err));
 });
 
 httpServer.listen(PORT, () => {
@@ -57021,3 +57075,10 @@ async function onShutdown() {
 }
 process.on("SIGTERM", () => onShutdown());
 process.on("SIGINT", () => onShutdown());
+
+function exitOnUnknownState(label: string, err: unknown): never {
+  writeSync(2, `[fatal] ${label} — ${describeFailure(err)}\n`);
+  process.exit(1);
+}
+process.on("uncaughtException", (err) => exitOnUnknownState("uncaught exception", err));
+process.on("unhandledRejection", (reason) => exitOnUnknownState("unhandled rejection", reason));
