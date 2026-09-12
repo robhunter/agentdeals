@@ -140,6 +140,20 @@ export type ReviewOutcome = "pass" | "fail";
 
 export const REVIEW_OUTCOMES: ReviewOutcome[] = ["pass", "fail"];
 
+export const OUTCOME_RESTARTS_THE_CLOCK = {
+  pass: true,
+  fail: false,
+} as const satisfies Record<ReviewOutcome, boolean>;
+
+export const A_REVIEW_WHOSE_OUTCOME_WENT_UNRECORDED_RESTARTS_THE_CLOCK = true;
+
+export function restartsTheClock(outcome: ReviewOutcome | null): boolean {
+  if (outcome === null || !REVIEW_OUTCOMES.includes(outcome)) {
+    return A_REVIEW_WHOSE_OUTCOME_WENT_UNRECORDED_RESTARTS_THE_CLOCK;
+  }
+  return OUTCOME_RESTARTS_THE_CLOCK[outcome];
+}
+
 export type PageDataSource = "catalogue" | "editorial" | "unsourced";
 
 export const PAGE_DATA_SOURCES: PageDataSource[] = ["catalogue", "editorial", "unsourced"];
@@ -293,8 +307,8 @@ export function reviewStatus(record: PageReviewRecord, today: string): ReviewSta
   const sla = SLA_DAYS[record.tier];
   const reviewedAt = record.reviewed_at !== null && record.reviewed_at <= today ? record.reviewed_at : null;
   const lastRead = reviewedAt ?? record.published;
-  const clockStarts = reviewedAt !== null && record.review_outcome === "fail" ? record.published : lastRead;
-  const daysSince = Math.max(0, daysBetween(lastRead, today));
+  const clockStarts = reviewedAt !== null && restartsTheClock(record.review_outcome) ? lastRead : record.published;
+  const daysSince = Math.max(0, daysBetween(clockStarts, today));
   const overdue = Math.max(0, daysSince - sla);
   let state: ReviewState;
   if (reviewedAt === null) state = "never_reviewed";
