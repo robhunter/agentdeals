@@ -741,7 +741,7 @@
       "changed": "2026-09-05"
     },
     "/auth-comparison-2026": {
-      "hash": "19144bf024501822",
+      "hash": "b35fb53bb9c056a5",
       "changed": "2026-09-12"
     },
     "/auth0-alternatives": {
@@ -1278,7 +1278,7 @@
       "changed": "2026-09-12"
     },
     "/cloud-free-tier-comparison-2026": {
-      "hash": "075b68c2d03f56bb",
+      "hash": "24a1d525625145d9",
       "changed": "2026-09-12"
     },
     "/cloudflare-pages-vs-vercel": {
@@ -2873,11 +2873,11 @@
       "changed": "2026-09-12"
     },
     "/email-comparison-2026": {
-      "hash": "b9352ba85c29155c",
+      "hash": "108915ec71d8a9f5",
       "changed": "2026-09-12"
     },
     "/email-service-alternatives": {
-      "hash": "2a73f7066e42757c",
+      "hash": "a1d72ac154704a6a",
       "changed": "2026-09-12"
     },
     "/embed": {
@@ -2959,7 +2959,7 @@
       "changed": "2026-09-12"
     },
     "/free-tier-risk": {
-      "hash": "f1604e75c19da3ab",
+      "hash": "9588c9b8008edc75",
       "changed": "2026-09-12"
     },
     "/free-tier-tracker": {
@@ -3074,7 +3074,7 @@
       "changed": "2026-09-12"
     },
     "/monitoring-comparison-2026": {
-      "hash": "b14e686692a0f7b5",
+      "hash": "6ad5cc47899cc2a3",
       "changed": "2026-09-12"
     },
     "/neon-vs-supabase": {
@@ -3258,7 +3258,7 @@
       "changed": "2026-09-12"
     },
     "/serverless-free-tier-comparison-2026": {
-      "hash": "c0ba319cf5288060",
+      "hash": "23f6619aa9e0db51",
       "changed": "2026-09-12"
     },
     "/setup": {
