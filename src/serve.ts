@@ -74,6 +74,7 @@ import { offerForSlug, vendorRates, cheapestRate, dearestRate, spanOfRates, form
 import { STALE_FACT_PAGES_BASELINE, factsOutdatedBy, linkifyVerdictBlocks, newestChangeBySlug, overdueReport, pageCompiledClause, pageDataProvenance, pageDateModified, tabulatedSubjectSlots, tabulatedSubjects, utcToday, verdictsOutdatedBy } from "./page-reviews.js";
 import { faqPageJsonLd, type FaqItem } from "./faq-provenance.js";
 import { statedFreeTierBasis, unrankedBestAnswer, unrankedListingBasis } from "./unranked.js";
+import { bandedListOrder, listOrderOf, listOrderProse, listOrderSentence } from "./list-order.js";
 import { SSE_KEEPALIVE_FRAME, keepaliveIntervalMs, sessionRecoveryBody } from "./mcp-stream.js";
 import { ASSISTANTS_API_SHUTDOWN } from "./assistants-shutdown.js";
 import { discontinuedOnOrBefore, PRODUCT_DEPRECATED } from "./product-deprecation.js";
@@ -822,6 +823,7 @@ function buildRecentChangesSection(): string {
   const jsonLd = JSON.stringify({
     "@context": "https://schema.org",
     "@type": "ItemList",
+    itemListOrder: listOrderOf("newest-first"),
     name: "Recent Pricing Changes",
     description: "Latest developer tool pricing changes tracked by AgentDeals",
     numberOfItems: recentChanges.length,
@@ -845,7 +847,7 @@ function buildRecentChangesSection(): string {
     <script type="application/ld+json">${jsonLd}</script>
     <div class="section-label">Fresh Intel</div>
     <h2>Recent pricing changes</h2>
-    <p>The latest shifts in developer tool pricing \u2014 tracked automatically.</p>
+    <p>The latest shifts in developer tool pricing \u2014 tracked automatically. ${listOrderSentence("newest-first")}</p>
     <div class="rc-list">
 ${entries}
     </div>
@@ -1926,6 +1928,7 @@ function buildCategoryPage(slug: string): string | null {
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "ItemList",
+    itemListOrder: listOrderOf("as-catalogued"),
     name: `Free ${categoryName} Tools`,
     description: metaDesc,
     numberOfItems: catCount,
@@ -2353,9 +2356,9 @@ function buildBestOfPage(slug: string): string | null {
   const pageScope = fn.categories.length === 1 && fn.subtypes.length === 0 ? "for this category" : "on this page";
 
   const tiePara = groups
-    ? `<strong>${pickCount} offers meet our criteria here, and they are not all alternatives to one another &mdash; they carry ${groups.filter(g => g.subtype).length} different labelled functions.</strong> ${escHtmlServer(FUNCTION_SPLIT_RULE)} Both the sections and the offers inside them are listed in an order that rotates daily; <a href="${CRITERIA_PATH}">here is how that order is derived</a>. There is no top slot here to sell.`
+    ? `<strong>${pickCount} offers meet our criteria here, and they are not all alternatives to one another &mdash; they carry ${groups.filter(g => g.subtype).length} different labelled functions.</strong> ${escHtmlServer(FUNCTION_SPLIT_RULE)} Both the sections and the offers inside them are listed ${listOrderProse("rotates-daily")}; <a href="${CRITERIA_PATH}">here is how that order is derived</a>. There is no top slot here to sell.`
     : pickCount > 1
-      ? `<strong>${pickCount} offers meet our criteria ${pageScope} and none is distinguishable from the others under any signal we record.</strong> They are listed in an order that rotates daily; <a href="${CRITERIA_PATH}">here is how that order is derived</a>. There is no top slot here to sell.`
+      ? `<strong>${pickCount} offers meet our criteria ${pageScope} and none is distinguishable from the others under any signal we record.</strong> They are listed ${listOrderProse("rotates-daily")}; <a href="${CRITERIA_PATH}">here is how that order is derived</a>. There is no top slot here to sell.`
       : `<strong>${pickCount} offer meets our criteria ${pageScope}.</strong> <a href="${CRITERIA_PATH}">Here is how we decide</a>.`;
 
   const renderCard = (e: RankedEntry<EnrichedOfferRow>, i: number, demotedCard: boolean, labels?: SubtypeLabel[]) => {
@@ -2441,7 +2444,8 @@ ${cards}`;
     ? {
         "@context": "https://schema.org",
         "@type": "ItemList",
-        name: `Best Free ${listNoun}`,
+        itemListOrder: listOrderOf("rotates-daily"),
+        name: `Best Free ${listNoun} by labelled function`,
         description: metaDesc,
         numberOfItems: renderedGroups.length,
         itemListElement: renderedGroups.map((group, i) => ({
@@ -2449,6 +2453,7 @@ ${cards}`;
           position: i + 1,
           item: {
             "@type": "ItemList",
+            itemListOrder: listOrderOf("rotates-daily"),
             name: group.title,
             ...(group.definition ? { description: group.definition } : {}),
             numberOfItems: group.members.length,
@@ -2459,6 +2464,7 @@ ${cards}`;
     : {
         "@context": "https://schema.org",
         "@type": "ItemList",
+        itemListOrder: listOrderOf("rotates-daily"),
         name: `Best Free ${listNoun}`,
         description: metaDesc,
         numberOfItems: pickCount,
@@ -3239,6 +3245,7 @@ function buildComparisonPage(slug: string): string | null {
     url: `${BASE_URL}/compare/${slug}`,
     mainEntity: {
       "@type": "ItemList",
+      itemListOrder: listOrderOf("as-curated"),
       numberOfItems: 2,
       itemListElement: [
         { offer: a, free: freeSideA.free, superseded: supersededA },
@@ -5506,6 +5513,7 @@ ${renderAuditBlock(altRanking.tie_break)}
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "ItemList",
+    itemListOrder: bandedListOrder(altRanking.entries.slice(0, 50).map(e => e.demerit_total)),
     name: title,
     description: metaDesc,
     url: `${BASE_URL}/alternative-to/${slug}`,
@@ -7887,6 +7895,7 @@ function buildTimelyAlternativesPage(slug: string): string | null {
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "ItemList",
+    itemListOrder: listOrderOf("as-catalogued"),
     name: config.title,
     description: config.metaDesc,
     numberOfItems: allAlts.length,
@@ -8034,6 +8043,7 @@ function buildAlternativesHubPage(): string {
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "ItemList",
+    itemListOrder: listOrderOf("as-curated"),
     name: title,
     description: metaDesc,
     numberOfItems: ALTERNATIVES_PAGES.length,
@@ -8813,6 +8823,7 @@ function buildEventsIndexPage(): string {
     description: metaDesc,
     mainEntity: {
       "@type": "ItemList",
+      itemListOrder: listOrderOf("as-curated"),
       numberOfItems: EVENTS.length,
       itemListElement: EVENTS.map((e, i) => ({
         "@type": "ListItem",
@@ -9139,6 +9150,7 @@ function buildReportsIndexPage(): string {
     description: metaDesc,
     mainEntity: {
       "@type": "ItemList",
+      itemListOrder: listOrderOf("newest-first"),
       numberOfItems: months.length,
       itemListElement: months.map((m, i) => {
         const [y, mo] = m.split("-");
@@ -9215,7 +9227,7 @@ function buildReportsIndexPage(): string {
     + buildGlobalNav("reports")
     + '<div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; Reports</div>\n'
     + '<h1>Monthly Pricing Intelligence Reports</h1>\n'
-    + '<p class="subtitle">Auto-generated monthly analysis of developer tool pricing trends across ' + recordsStillInForce(allChanges).length + ' tracked changes.</p>\n'
+    + '<p class="subtitle">Auto-generated monthly analysis of developer tool pricing trends across ' + recordsStillInForce(allChanges).length + ' tracked changes. ' + listOrderSentence("newest-first") + '</p>\n'
     + monthCards
     + '\n<footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>\n'
     + '</div>\n</body>\n</html>';
@@ -9451,6 +9463,7 @@ function buildGuidesPage(): string {
     description: metaDesc,
     mainEntity: {
       "@type": "ItemList",
+      itemListOrder: listOrderOf("as-curated"),
       numberOfItems: totalGuides,
       itemListElement: allItems,
     },
@@ -9610,6 +9623,7 @@ function buildAiFreeTiersPage(): string {
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "ItemList",
+    itemListOrder: listOrderOf("as-catalogued"),
     name: title,
     description: metaDesc,
     numberOfItems: allAiOffers.length,
@@ -9865,6 +9879,7 @@ function buildHostingAlternativesPage(): string {
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "ItemList",
+    itemListOrder: listOrderOf("as-catalogued"),
     name: title,
     description: metaDesc,
     numberOfItems: hostingOffers.length,
@@ -10203,6 +10218,7 @@ function buildDatabaseAlternativesPage(): string {
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "ItemList",
+    itemListOrder: listOrderOf("as-catalogued"),
     name: title,
     description: metaDesc,
     numberOfItems: dbOffers.length,
@@ -10542,6 +10558,7 @@ function buildMonitoringAlternativesPage(): string {
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "ItemList",
+    itemListOrder: listOrderOf("as-catalogued"),
     name: title,
     description: metaDesc,
     numberOfItems: monitoringOffers.length,
@@ -10870,6 +10887,7 @@ function buildCiCdAlternativesPage(): string {
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "ItemList",
+    itemListOrder: listOrderOf("as-catalogued"),
     name: title,
     description: metaDesc,
     numberOfItems: cicdOffers.length,
@@ -11192,6 +11210,7 @@ function buildSecurityAlternativesPage(): string {
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "ItemList",
+    itemListOrder: listOrderOf("as-catalogued"),
     name: title,
     description: metaDesc,
     numberOfItems: securityOffers.length,
@@ -11529,6 +11548,7 @@ function buildTestingAlternativesPage(): string {
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "ItemList",
+    itemListOrder: listOrderOf("as-catalogued"),
     name: title,
     description: metaDesc,
     numberOfItems: testingOffers.length,
@@ -11850,6 +11870,7 @@ function buildStorageAlternativesPage(): string {
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "ItemList",
+    itemListOrder: listOrderOf("as-catalogued"),
     name: title,
     description: metaDesc,
     numberOfItems: storageOffers.length,
@@ -12162,6 +12183,7 @@ function buildAnalyticsAlternativesPage(): string {
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "ItemList",
+    itemListOrder: listOrderOf("as-catalogued"),
     name: title,
     description: metaDesc,
     numberOfItems: analyticsOffers.length,
@@ -12478,6 +12500,7 @@ function buildAiMlAlternativesPage(): string {
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "ItemList",
+    itemListOrder: listOrderOf("as-catalogued"),
     name: title,
     description: metaDesc,
     numberOfItems: aiOffers.length,
@@ -12800,6 +12823,7 @@ function buildEmailAlternativesPage(): string {
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "ItemList",
+    itemListOrder: listOrderOf("as-catalogued"),
     name: title,
     description: metaDesc,
     numberOfItems: emailOffers.length,
@@ -13133,6 +13157,7 @@ function buildDesignAlternativesPage(): string {
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "ItemList",
+    itemListOrder: listOrderOf("as-catalogued"),
     name: title,
     description: metaDesc,
     numberOfItems: designOffers.length,
@@ -13470,6 +13495,7 @@ function buildProjectManagementAlternativesPage(): string {
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "ItemList",
+    itemListOrder: listOrderOf("as-catalogued"),
     name: title,
     description: metaDesc,
     numberOfItems: pmOffers.length,
@@ -13798,6 +13824,7 @@ function buildIdeCodeEditorsAlternativesPage(): string {
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "ItemList",
+    itemListOrder: listOrderOf("as-catalogued"),
     name: title,
     description: metaDesc,
     numberOfItems: ideOffers.length,
@@ -14107,6 +14134,7 @@ function buildFreeLlmApisPage(): string {
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "ItemList",
+    itemListOrder: listOrderOf("as-catalogued"),
     name: title,
     description: metaDesc,
     numberOfItems: allLlmOffers.length,
@@ -14425,6 +14453,7 @@ function buildApiDevelopmentAlternativesPage(): string {
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "ItemList",
+    itemListOrder: listOrderOf("as-catalogued"),
     name: title,
     description: metaDesc,
     numberOfItems: allApiOffers.length,
@@ -14740,6 +14769,7 @@ function buildTeamCollaborationAlternativesPage(): string {
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "ItemList",
+    itemListOrder: listOrderOf("as-catalogued"),
     name: title,
     description: metaDesc,
     numberOfItems: allCollabOffers.length,
@@ -26598,6 +26628,7 @@ function buildShutdownTrackerPage(): string {
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "ItemList",
+    itemListOrder: listOrderOf("as-curated"),
     name: title,
     description: metaDesc,
     numberOfItems: activeCount,
@@ -32851,6 +32882,7 @@ function buildX402ServicesPage(): string {
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "ItemList",
+    itemListOrder: listOrderOf("as-catalogued"),
     name: title,
     description: metaDesc,
     url: `${BASE_URL}/${slug}`,
@@ -46935,6 +46967,7 @@ function buildStackTemplatePage(slug: string): string | null {
     "publisher": { "@type": "Organization", "name": "AgentDeals", "url": BASE_URL },
     "mainEntity": {
       "@type": "ItemList",
+      "itemListOrder": listOrderOf("as-curated"),
       "numberOfItems": template.services.length,
       "itemListElement": template.services.map((s, i) => ({
         "@type": "ListItem",
@@ -47139,6 +47172,7 @@ function buildStacksIndexPage(): string {
     "url": `${BASE_URL}/stacks`,
     "mainEntity": {
       "@type": "ItemList",
+      "itemListOrder": listOrderOf("as-curated"),
       "numberOfItems": STACK_TEMPLATES.length,
       "itemListElement": STACK_TEMPLATES.map((t, i) => ({
         "@type": "ListItem",
@@ -50307,6 +50341,7 @@ ${undatedSorted.map(c => buildChangeEntry(c)).join("\n")}
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "ItemList",
+    itemListOrder: listOrderOf("newest-first"),
     name: title,
     description: metaDesc,
     numberOfItems: countable.length,
@@ -50399,7 +50434,7 @@ ${globalNavCss()}
   ${buildGlobalNav("changes")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; Changes</div>
   <h1>Deal Change Timeline</h1>
-  <p class="page-intro">Every pricing change we\u2019ve tracked \u2014 free tier removals, price increases, restructures, and new deals. Subscribe to stay ahead.</p>
+  <p class="page-intro">Every pricing change we\u2019ve tracked \u2014 free tier removals, price increases, restructures, and new deals. ${listOrderSentence("newest-first")} Subscribe to stay ahead.</p>
   <a href="/feed.xml" class="rss-link">\u{1F4E1} Subscribe to deal changes</a>
   <a href="/deadlines" class="rss-link" style="margin-left:.5rem">\u{1F6A8} See upcoming deadlines &rarr;</a>
 
@@ -50521,6 +50556,7 @@ ${entriesHtml}
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "ItemList",
+    itemListOrder: listOrderOf("sectioned"),
     name: title,
     description: metaDesc,
     numberOfItems: totalUpcoming + recent.length + recentlyDiscovered.length,
@@ -50997,6 +51033,7 @@ ${altHtml}${guideHtml}
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "ItemList",
+    itemListOrder: listOrderOf("soonest-first"),
     name: title,
     description: metaDesc,
     numberOfItems: deadlines.length,
@@ -51092,7 +51129,7 @@ ${globalNavCss()}
   ${buildGlobalNav("deadlines")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; Deadlines</div>
   <h1>Developer Tool Deadline Tracker</h1>
-  <p class="page-intro">${deadlines.length} upcoming deadlines across developer infrastructure \u2014 API shutdowns, free tier removals, and price changes sorted by urgency.</p>
+  <p class="page-intro">${deadlines.length} upcoming deadlines across developer infrastructure \u2014 API shutdowns, free tier removals, and price changes. ${listOrderSentence("soonest-first")}</p>
   <a href="/feed.xml" class="rss-link">\u{1F4E1} Subscribe to changes</a>
 
   <div class="stats-bar">
@@ -51420,6 +51457,7 @@ function buildReferralProgramsPage(): string {
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "ItemList",
+    itemListOrder: listOrderOf("as-catalogued"),
     name: title,
     description: metaDesc,
     numberOfItems: programVendors.length,
@@ -51797,6 +51835,7 @@ function buildPressPage(): string {
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "ItemList",
+    itemListOrder: listOrderOf("newest-first"),
     name: title,
     description: metaDesc,
     numberOfItems: sortedItems.length,
@@ -51878,7 +51917,7 @@ ${globalNavCss()}
   ${buildGlobalNav("home")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; Press</div>
   <h1>In the Press</h1>
-  <p class="page-intro">External coverage and community discussions of AgentDeals and the developer tool pricing changes we track. Articles, posts, podcasts, and mentions \u2014 newest first.</p>
+  <p class="page-intro">External coverage and community discussions of AgentDeals and the developer tool pricing changes we track. Articles, posts, podcasts, and mentions. ${listOrderSentence("newest-first")}</p>
 
 ${entriesHtml}
 
@@ -52728,9 +52767,10 @@ ${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png"
     },
     {
       "@type": "ItemList",
-      "name": "Free Tier Deals",
-      "description": "Free tiers, credits, and discounts from developer tools and consumer services",
-      "numberOfItems": ${stats.offers},
+      "name": "Free Tier Deal Categories",
+      "description": "Free tiers, credits, and discounts from developer tools and consumer services, by category, ${listOrderProse("largest-first")}",
+      "numberOfItems": ${stats.categories},
+      "itemListOrder": "${listOrderOf("largest-first")}",
       "itemListElement": ${JSON.stringify([...categories].sort((a, b) => b.count - a.count).slice(0, 10).map((c, i) => ({
         "@type": "ListItem",
         "position": i + 1,
