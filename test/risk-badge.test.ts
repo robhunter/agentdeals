@@ -343,7 +343,8 @@ describe("#1147 — a shutdown of the product we list demotes the vendor", () =>
       ).length;
       if (narrowing === 0) continue;
       checked++;
-      const published = withheldStability(null, classifyStability(changes as never), changes as never);
+      const noWithholding = { link_unreachable: null, refused_read: null, rating_withheld: null, source_check: null, gate: null };
+      const published = withheldStability(noWithholding as never, classifyStability(changes as never), changes as never);
       if (published === "stable") {
         wrong.push(`${vendor} holds ${narrowing} standing narrowing record(s) and reads stable`);
       }

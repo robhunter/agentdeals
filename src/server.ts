@@ -3,7 +3,7 @@ import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { McpServer, ResourceTemplate } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import { oldestVerifiedDateForSlug, getCategories, getDealChanges, getPersonalizedChanges, getNewOffers, getNewestDeals, getOfferDetails, searchOffers, enrichOffers, gateForOffer, compareServices, checkVendorRisk, auditStack, getExpiringDeals, getWeeklyDigest, loadOffers, loadDealChanges, classifyStability, publishedStabilityFor, stabilityWithheldSentence, getVendorReferral, sanitizeQuery } from "./data.js";
+import { oldestVerifiedDateForSlug, getCategories, getDealChanges, getPersonalizedChanges, getNewOffers, getNewestDeals, getOfferDetails, searchOffers, stabilityWithheldDisclosure, enrichOffers, gateForOffer, compareServices, checkVendorRisk, auditStack, getExpiringDeals, getWeeklyDigest, loadOffers, loadDealChanges, classifyStability, publishedStabilityFor, stabilityWithheldSentence, getVendorReferral, sanitizeQuery } from "./data.js";
 import { gateDisclosureFor } from "./gate-disclosure.js";
 import { toSlug, vendorSlugMap, resolveVendorSlug } from "./vendor-slug.js";
 import { recordToolCall, logRequest, recordSearchQuery } from "./stats.js";
@@ -86,7 +86,7 @@ export function createServer(getSessionId?: () => string | undefined, getClientN
         vendor: z.string().optional().describe("Get full details for a specific vendor (fuzzy match). Returns alternatives in the same category."),
         eligibility: z.enum(["public", "accelerator", "oss", "student", "fintech", "geographic", "enterprise"]).optional().describe("Filter by eligibility type"),
         sort: z.enum(["vendor", "category", "newest"]).optional().describe("Sort: vendor (A-Z), category, newest (recently verified first)"),
-        stability: z.enum(["stable", "watch", "volatile", "improving"]).optional().describe("Filter by free tier stability class. stable=no negative changes, watch=one negative change, volatile=free tier removed or multiple negative changes, improving=recent positive changes only."),
+        stability: z.enum(["stable", "watch", "volatile", "improving"]).optional().describe("Filter by the stability class we publish for the offer. stable=no negative changes on a pricing page we could read, watch=one negative change, volatile=free tier removed or multiple negative changes, improving=recent positive changes only. Offers whose class we withhold \u2014 pricing page unreachable or unreadable, last read refused, or the listing gated \u2014 match no value; the response reports how many were held back."),
         payment_protocol: z.enum(["x402", "stripe-mpp"]).optional().describe("Filter by agent payment protocol. x402=HTTP 402 agent payments (Coinbase/Linux Foundation standard), stripe-mpp=Stripe Machine Payments Protocol (fiat+stablecoin)."),
         since: z.string().optional().describe("ISO date (YYYY-MM-DD). Only return deals verified/added after this date."),
         limit: z.number().optional().describe("Max results (default: 20)"),
@@ -199,8 +199,11 @@ export function createServer(getSessionId?: () => string | undefined, getClientN
           ? resultsWithCodes.map(r => ({ ...toConciseOffer(r), referral_code: r.referral_code }))
           : resultsWithCodes;
         const disclosure = gateDisclosureFor("result", filtered.map(o => gateForOffer(o)));
+        const stabilityDisclosure = stability
+          ? stabilityWithheldDisclosure(searchOffers(sanitizedQuery || undefined, category, eligibility, sort, undefined, payment_protocol))
+          : {};
         return {
-          content: [{ type: "text" as const, text: citedJson({ results: outputResults, total: finalTotal, limit: effectiveLimit, offset: effectiveOffset, ...disclosure }) }, SIGNAL_FOOTER_CONTENT],
+          content: [{ type: "text" as const, text: citedJson({ results: outputResults, total: finalTotal, limit: effectiveLimit, offset: effectiveOffset, ...disclosure, ...stabilityDisclosure }) }, SIGNAL_FOOTER_CONTENT],
         };
       } catch (err) {
         console.error("search_deals error:", err);

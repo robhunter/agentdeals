@@ -177,20 +177,36 @@ describe("a record whose pricing page does not resolve", () => {
   });
 });
 
+const nothingWithheld = { link_unreachable: null, refused_read: null, rating_withheld: null, source_check: null, gate: null };
+const deadLink = { ...nothingWithheld, link_unreachable: notice() };
+
 describe("stability is withheld the way the risk level already is", () => {
   it("withholds a favourable class when the pricing page does not resolve", () => {
-    assert.strictEqual(withheldStability(notice(), "stable"), null);
-    assert.strictEqual(withheldStability(notice(), "improving"), null);
+    assert.strictEqual(withheldStability(deadLink, "stable"), null);
+    assert.strictEqual(withheldStability(deadLink, "improving"), null);
   });
 
   it("publishes an adverse class, which the dead link does not soften", () => {
-    assert.strictEqual(withheldStability(notice(), "watch"), "watch");
-    assert.strictEqual(withheldStability(notice(), "volatile"), "volatile");
+    assert.strictEqual(withheldStability(deadLink, "watch"), "watch");
+    assert.strictEqual(withheldStability(deadLink, "volatile"), "volatile");
   });
 
   it("leaves a reachable record alone", () => {
-    assert.strictEqual(withheldStability(null, "stable"), "stable");
-    assert.strictEqual(withheldStability(null, "improving"), "improving");
+    assert.strictEqual(withheldStability(nothingWithheld, "stable"), "stable");
+    assert.strictEqual(withheldStability(nothingWithheld, "improving"), "improving");
+  });
+
+  it("withholds a favourable class on every reason the risk level is withheld for", () => {
+    const reasons = [
+      { ...nothingWithheld, refused_read: { reason: "states_no_difference", refused_date: "2026-09-01" } },
+      { ...nothingWithheld, rating_withheld: { reason: "no_source", records: 1 } },
+      { ...nothingWithheld, source_check: { outcome: "states_no_terms", checked: TODAY, detail: "" } },
+      { ...nothingWithheld, gate: { code: "offer_retired", reason: "ended" } },
+    ];
+    for (const withholding of reasons) {
+      assert.strictEqual(withheldStability(withholding as never, "stable"), null);
+      assert.strictEqual(withheldStability(withholding as never, "volatile"), "volatile");
+    }
   });
 });
 

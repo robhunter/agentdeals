@@ -1,5 +1,6 @@
 import { describe, it } from "node:test";
 import assert from "node:assert";
+import { assertCoversPopulation, vendorsInTheCatalogue } from "./population-floor.ts";
 
 describe("classifyStability", () => {
   it("returns stable for vendor with no changes", async () => {
@@ -138,20 +139,56 @@ describe("classifyStability", () => {
   });
 });
 
-describe("getStabilityMap", () => {
-  it("returns a Map with stability classes for vendors with changes", async () => {
-    const { getStabilityMap } = await import("../dist/data.js");
-    const map = getStabilityMap();
-    assert.ok(map instanceof Map, "Should return a Map");
-    assert.ok(map.size > 0, "Should have entries for vendors with changes");
+describe("publishedStabilityIndex", () => {
+  it("classifies every vendor we hold a change history for", async () => {
+    const { publishedStabilityIndex } = await import("../dist/data.js");
+    const index = publishedStabilityIndex();
+    assert.ok(index.vendorsWithChanges.length > 0, "Should have entries for vendors with changes");
 
-    for (const [vendor, stability] of map) {
-      assert.ok(typeof vendor === "string", "Keys should be strings");
+    for (const { vendor, stability } of index.vendorsWithChanges) {
+      assert.ok(typeof vendor === "string", "Vendor names should be strings");
       assert.ok(
-        ["stable", "watch", "volatile", "improving"].includes(stability),
+        ["stable", "watch", "volatile", "improving", "unrated"].includes(stability),
         `Stability should be valid class, got: ${stability} for ${vendor}`
       );
     }
+  });
+
+  it("answers a lookup for a vendor it has never heard of without inventing a class", async () => {
+    const { publishedStabilityIndex } = await import("../dist/data.js");
+    assert.strictEqual(publishedStabilityIndex().of("a-vendor-we-do-not-list"), "unrated");
+  });
+
+  it("answers by slug as well as by vendor name, for every listed offer", async () => {
+    const { publishedStabilityIndex, loadOffers, loadDealChanges, publishedRisk } = await import("../dist/data.js");
+    const { toSlug } = await import("../dist/slug.js");
+    const index = publishedStabilityIndex();
+    const byVendor = new Map<string, unknown[]>();
+    for (const c of loadDealChanges()) {
+      const key = c.vendor.toLowerCase();
+      if (!byVendor.has(key)) byVendor.set(key, []);
+      byVendor.get(key)!.push(c);
+    }
+    const seen = new Set<string>();
+    const disagree: string[] = [];
+    for (const offer of loadOffers()) {
+      const key = offer.vendor.toLowerCase();
+      if (seen.has(key)) continue;
+      seen.add(key);
+      const expected = publishedRisk(offer, (byVendor.get(key) ?? []) as never).stability ?? "unrated";
+      for (const lookup of [offer.vendor, toSlug(offer.vendor)]) {
+        if (index.of(lookup) !== expected) disagree.push(`${lookup}: index says ${index.of(lookup)}, the record publishes ${expected}`);
+      }
+    }
+    assert.deepStrictEqual(disagree.slice(0, 10), []);
+    assertCoversPopulation(seen.size, vendorsInTheCatalogue(), "vendors swept for a lookup by name and by slug");
+  });
+
+  it("counts published offers by class, and the counts add up to the catalogue", async () => {
+    const { publishedStabilityIndex, loadOffers } = await import("../dist/data.js");
+    const byClass = publishedStabilityIndex().offersByClass;
+    const total = Object.values(byClass).reduce((sum, n) => sum + n, 0);
+    assert.strictEqual(total, loadOffers().length);
   });
 });
 
@@ -161,13 +198,14 @@ describe("enrichOffers includes stability", () => {
     const results = searchOffers("database");
     assert.ok(results.length > 0);
 
-    const enriched = enrichOffers(results.slice(0, 5));
+    const enriched = enrichOffers(results);
     for (const offer of enriched) {
       assert.ok("stability" in offer, "Should have stability field");
       if (offer.stability === null) {
         assert.ok(
-          offer.link_unreachable || offer.rating_withheld || offer.refused_read,
-          `${offer.vendor} publishes no stability class and nothing says why`
+          offer.link_unreachable || offer.rating_withheld || offer.refused_read || offer.gate ||
+            (offer.source_check && offer.source_check.outcome !== "ok"),
+          `${offer.vendor} publishes no stability class and nothing on the row says why`
         );
         continue;
       }
@@ -180,16 +218,16 @@ describe("enrichOffers includes stability", () => {
 });
 
 describe("searchOffers stability filter", () => {
-  it("filters results by stability class", async () => {
-    const { searchOffers, enrichOffers, getStabilityMap } = await import("../dist/data.js");
+  it("returns only records whose own row publishes the class that was asked for", async () => {
+    const { searchOffers, enrichOffers } = await import("../dist/data.js");
 
-    const stableResults = searchOffers(undefined, undefined, undefined, undefined, "stable");
-    assert.ok(stableResults.length > 0, "Should find stable vendors");
-
-    const stabilityMap = getStabilityMap();
-    for (const offer of stableResults) {
-      const stability = stabilityMap.get(offer.vendor.toLowerCase()) ?? "stable";
-      assert.strictEqual(stability, "stable", `${offer.vendor} should be stable`);
+    for (const asked of ["stable", "watch", "volatile", "improving"] as const) {
+      const results = searchOffers(undefined, undefined, undefined, undefined, asked);
+      assert.ok(results.length > 0, `no record matches ${asked}, so this asserts nothing`);
+      const contradicts = enrichOffers(results)
+        .filter((o) => o.stability !== asked)
+        .map((o) => `${o.vendor}: matched ${asked}, publishes ${o.stability}`);
+      assert.deepStrictEqual(contradicts.slice(0, 10), []);
     }
   });
 });

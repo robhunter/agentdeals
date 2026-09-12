@@ -22,6 +22,7 @@ import {
 import { substitutesFor } from "./product-role.js";
 import { supersededTermsRecordFor, type SupersededTermsRecord } from "./superseded-description.js";
 import { isSubSlug, toSlug } from "./slug.js";
+import { matchingSubject } from "./gate-disclosure.js";
 import { DATE_SOURCES, isEventDated, changeDateClause, isoWeekWindow, changesInWindow, discoveryBatchNote, firstReadHeading, type DateWindow } from "./change-dates.js";
 import { PRODUCT_DEPRECATED, deprecationEndsTheListedProduct } from "./product-deprecation.js";
 import { vendorHistorySentence } from "./vendor-history.js";
@@ -240,9 +241,9 @@ export function searchOffers(
   }
 
   if (stability) {
-    const stabilityMap = getStabilityMap();
+    const vendorChanges = changesByVendor();
     results = results.filter(
-      (o) => (stabilityMap.get(o.vendor.toLowerCase()) ?? "stable") === stability
+      (o) => publishedRisk(o, vendorChanges.get(o.vendor.toLowerCase()) ?? []).stability === stability,
     );
   }
 
@@ -391,13 +392,34 @@ export function standingNarrowingsCitingNoSource(vendorChanges: readonly DealCha
   );
 }
 
+export interface StabilityWithholding {
+  link_unreachable: LinkUnreachable | null;
+  refused_read: RefusedRead | null;
+  rating_withheld: RatingWithheld | null;
+  source_check: SourceCheck | null;
+  gate: Gate | null;
+}
+
+export function stabilityWithholdingReason(
+  withholding: StabilityWithholding,
+  vendorChanges: readonly DealChange[] = [],
+): string | null {
+  if (withholding.link_unreachable) return "link_unreachable";
+  if (withholding.refused_read) return "refused_read";
+  const sourceCheck = levelWithheldReason({ source_check: withholding.source_check ?? undefined }, null);
+  if (sourceCheck) return sourceCheck;
+  if (withholding.rating_withheld) return "no_source";
+  if (standingNarrowingsCitingNoSource(vendorChanges).length > 0) return "no_source";
+  if (withholding.gate) return withholding.gate.code;
+  return null;
+}
+
 export function withheldStability(
-  linkUnreachable: LinkUnreachable | null,
+  withholding: StabilityWithholding,
   stability: StabilityClass,
   vendorChanges: readonly DealChange[] = [],
-  refusedRead: RefusedRead | null = null,
 ): StabilityClass | null {
-  if (!linkUnreachable && !refusedRead && standingNarrowingsCitingNoSource(vendorChanges).length === 0) return stability;
+  if (stabilityWithholdingReason(withholding, vendorChanges) === null) return stability;
   return FAVOURABLE_STABILITY_CLASSES.has(stability) ? null : stability;
 }
 
@@ -406,13 +428,7 @@ export function publishedStabilityFor(vendorName: string): StabilityClass | null
   const vendorChanges = loadDealChanges().filter((c) => c.vendor.toLowerCase() === key);
   const offer = loadOffers().find((o) => o.vendor.toLowerCase() === key);
   if (!offer) return classifyStability(vendorChanges);
-  const grading = changesRatingTheListedTier(offer, vendorChanges);
-  return withheldStability(
-    unreachableNoticeForUrl(offer.url),
-    classifyStability(grading),
-    grading,
-    publishedRisk(offer, vendorChanges).refused_read,
-  );
+  return publishedRisk(offer, vendorChanges).stability;
 }
 
 export function stabilityWithheldSentence(vendorName: string): string {
@@ -425,14 +441,28 @@ export function stabilityWithheldSentence(vendorName: string): string {
   return ratingWithheldForNoSourceSentence(vendorName);
 }
 
-export function getStabilityMap(): Map<string, StabilityClass> {
-  const changes = loadDealChanges();
-  const vendorChangesMap = new Map<string, DealChange[]>();
-  for (const c of changes) {
+export const UNRATED_STABILITY = "unrated";
+
+export type PublishedStabilityClass = StabilityClass | typeof UNRATED_STABILITY;
+
+export interface StabilityIndex {
+  of(vendorOrSlug: string): PublishedStabilityClass;
+  vendorsWithChanges: ReadonlyArray<{ vendor: string; key: string; stability: PublishedStabilityClass }>;
+  offersByClass: Readonly<Record<PublishedStabilityClass, number>>;
+}
+
+export function changesByVendor(): Map<string, DealChange[]> {
+  const byVendor = new Map<string, DealChange[]>();
+  for (const c of loadDealChanges()) {
     const key = c.vendor.toLowerCase();
-    if (!vendorChangesMap.has(key)) vendorChangesMap.set(key, []);
-    vendorChangesMap.get(key)!.push(c);
+    if (!byVendor.has(key)) byVendor.set(key, []);
+    byVendor.get(key)!.push(c);
   }
+  return byVendor;
+}
+
+export function publishedStabilityIndex(): StabilityIndex {
+  const vendorChangesMap = changesByVendor();
 
   const listed = new Map<string, Offer>();
   for (const offer of loadOffers()) {
@@ -440,12 +470,56 @@ export function getStabilityMap(): Map<string, StabilityClass> {
     if (!listed.has(key)) listed.set(key, offer);
   }
 
-  const result = new Map<string, StabilityClass>();
-  for (const [vendor, vendorChanges] of vendorChangesMap) {
-    const offer = listed.get(vendor);
-    result.set(vendor, classifyStability(offer ? changesRatingTheListedTier(offer, vendorChanges) : vendorChanges));
+  const byKey = new Map<string, PublishedStabilityClass>();
+  const offersByClass: Record<PublishedStabilityClass, number> = { stable: 0, watch: 0, volatile: 0, improving: 0, unrated: 0 };
+  const addKeys = (vendor: string, stability: PublishedStabilityClass) => {
+    for (const key of [vendor.toLowerCase(), toSlug(vendor)]) {
+      if (!byKey.has(key)) byKey.set(key, stability);
+    }
+  };
+
+  for (const offer of loadOffers()) {
+    const key = offer.vendor.toLowerCase();
+    const stability = publishedRisk(offer, vendorChangesMap.get(key) ?? []).stability ?? UNRATED_STABILITY;
+    offersByClass[stability] += 1;
+    if (listed.get(key) === offer) addKeys(offer.vendor, stability);
   }
-  return result;
+
+  const vendorsWithChanges: { vendor: string; key: string; stability: PublishedStabilityClass }[] = [];
+  for (const [key, vendorChanges] of vendorChangesMap) {
+    const offer = listed.get(key);
+    const stability = offer
+      ? byKey.get(key) ?? UNRATED_STABILITY
+      : classifyStability(vendorChanges);
+    if (!offer) addKeys(vendorChanges[0]?.vendor ?? key, stability);
+    vendorsWithChanges.push({ vendor: offer?.vendor ?? vendorChanges[0]?.vendor ?? key, key, stability });
+  }
+
+  return {
+    of: (vendorOrSlug: string) => byKey.get(vendorOrSlug.toLowerCase()) ?? UNRATED_STABILITY,
+    vendorsWithChanges,
+    offersByClass,
+  };
+}
+
+export interface StabilityWithheldDisclosure {
+  stability_withheld: number;
+  stability_withheld_summary?: string;
+}
+
+export function stabilityWithheldDisclosure(candidates: Offer[]): StabilityWithheldDisclosure {
+  const vendorChanges = changesByVendor();
+  const withheld = candidates.filter(
+    (o) => publishedRisk(o, vendorChanges.get(o.vendor.toLowerCase()) ?? []).stability === null,
+  ).length;
+  if (withheld === 0 || candidates.length === 0) return { stability_withheld: 0 };
+  const subject = matchingSubject("offer", candidates.length);
+  return {
+    stability_withheld: withheld,
+    stability_withheld_summary:
+      `${withheld} of ${subject} publish no stability class, so no value of this filter returns them. ` +
+      "We withhold the class where the pricing page is unreachable or states no terms we can read, where we refused the last read, or where the listing is gated.",
+  };
 }
 
 export function enrichOffers(offers: Offer[]): EnrichedOffer[] {
@@ -489,20 +563,11 @@ export function enrichOffers(offers: Offer[]): EnrichedOffer[] {
       }
     }
 
-    const { risk_level, risk_cause, rating_withheld, link_unreachable, gate, refused_read } = publishedRisk(
+    const { risk_level, risk_cause, rating_withheld, link_unreachable, gate, refused_read, stability } = publishedRisk(
       offer,
       vendorAllChangesList.get(key) ?? [],
       servedOn,
       now.getTime(),
-    );
-
-    const grading = changesRatingTheListedTier(offer, vendorAllChangesList.get(key) ?? []);
-
-    const stability = withheldStability(
-      link_unreachable,
-      classifyStability(grading),
-      grading,
-      refused_read,
     );
 
     const days_since_verified = Math.floor(
@@ -991,6 +1056,8 @@ export interface PublishedRisk {
   source_check: SourceCheck | null;
   gate: Gate | null;
   refused_read: RefusedRead | null;
+  stability: StabilityClass | null;
+  stability_withheld_because: string | null;
 }
 
 export function changesRatingTheListedTier(
@@ -1006,7 +1073,8 @@ export function publishedRisk(
   servedOn: string = utcDate(),
   nowMs: number = Date.now(),
 ): PublishedRisk {
-  const assessment = vendorRiskAssessment(changesRatingTheListedTier(offer, vendorChanges), nowMs);
+  const grading = changesRatingTheListedTier(offer, vendorChanges);
+  const assessment = vendorRiskAssessment(grading, nowMs);
   const link_unreachable = unreachableNoticeForUrl(offer.url, nowMs);
   const gate = gateFor(offer, servedOn);
   const refused_read = refusedReadWithholdingStability({
@@ -1020,6 +1088,15 @@ export function publishedRisk(
     assessment.rating_withheld !== null ||
     refused_read !== null ||
     (cannotVouchForLevel(offer, link_unreachable) && assessment.level === "stable");
+  const withholding: StabilityWithholding = {
+    link_unreachable,
+    refused_read,
+    rating_withheld: assessment.rating_withheld,
+    source_check: offer.source_check ?? null,
+    gate,
+  };
+  const classified = classifyStability(grading, nowMs);
+  const stability = withheldStability(withholding, classified, grading);
   return {
     risk_level: withheld ? null : assessment.level,
     history_level: assessment.level,
@@ -1030,6 +1107,8 @@ export function publishedRisk(
     source_check: offer.source_check ?? null,
     gate,
     refused_read,
+    stability,
+    stability_withheld_because: stability === null ? stabilityWithholdingReason(withholding, grading) : null,
   };
 }
 
