@@ -213,14 +213,23 @@ const QUANTITY = new RegExp(
 );
 const NORMALISED_PARENTHETICAL = /\(\s*~\s*([^)]*?)\s*\)/;
 const PER_MONTH = /\/\s*(?:mo\b|month|30 days)|per month|\bmonthly\b/i;
+const A_SPAN_RATHER_THAN_A_RATE = /^\s*\d[\d,]*\s*(?:days?|months?|years?)\s*$/i;
 const PER_DAY = /\/\s*day\b|per day|\bdaily\b/i;
 const PER_YEAR = /\/\s*(?:yr\b|year)|per year|\bannually\b/i;
 
 function periodMultiplier(text: string): number | null {
+  if (A_SPAN_RATHER_THAN_A_RATE.test(text)) return null;
   if (PER_MONTH.test(text)) return 1;
   if (PER_DAY.test(text)) return 30;
   if (PER_YEAR.test(text)) return 1 / 12;
   return null;
+}
+
+function withoutThePeriod(text: string): string {
+  return text
+    .replace(new RegExp(PER_MONTH.source, "gi"), " ")
+    .replace(new RegExp(PER_DAY.source, "gi"), " ")
+    .replace(new RegExp(PER_YEAR.source, "gi"), " ");
 }
 
 export function parseQuantity(raw: string): Quantity | null {
@@ -236,7 +245,8 @@ export function parseQuantity(raw: string): Quantity | null {
   const scan = new RegExp(QUANTITY.source, "gi");
   const readings: Quantity[] = [];
   const period = periodMultiplier(text);
-  for (let found = scan.exec(text); found !== null; found = scan.exec(text)) {
+  const stated = period === null ? text : withoutThePeriod(text);
+  for (let found = scan.exec(stated); found !== null; found = scan.exec(stated)) {
     const currency = found[1];
     const digits = Number(found[2]!.replace(/,/g, ""));
     if (!Number.isFinite(digits)) continue;

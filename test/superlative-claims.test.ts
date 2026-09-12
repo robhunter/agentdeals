@@ -297,6 +297,12 @@ describe("#1073 a quantity is compared only against one it shares a denomination
     assert.strictEqual(parseQuantity("Unlimited")!.amount, Number.POSITIVE_INFINITY);
   });
 
+  it("reads a rate stated over a span, and a span as the quantity it is", () => {
+    assert.deepStrictEqual(parseQuantity("4,000/30 days"), { amount: 4000, unit: "count", monthly: true, unbounded: false });
+    assert.deepStrictEqual(parseQuantity("30 days"), { amount: 30, unit: "count", monthly: false, unbounded: false });
+    assert.strictEqual(parseQuantity("$66,000/yr")!.amount, 5500);
+  });
+
   it("refuses a cell stating more than one quantity, or an allowance beside an unbounded one", () => {
     assert.strictEqual(parseQuantity("2,000 min/mo (private) Unlimited (public)"), null);
     assert.strictEqual(parseQuantity("None — $200 credits, 6 mo"), null);
