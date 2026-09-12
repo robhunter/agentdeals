@@ -1095,6 +1095,17 @@ describe("#1321 which failures are allowed not to hold a data commit", () => {
     assert.deepStrictEqual(verdict.blocking, []);
   });
 
+  it("names every file that went red, whether or not it held the commit", () => {
+    const verdict = gateVerdict(
+      [
+        { file: "test/somewhere-else.test.ts", name: "a test" },
+        { file: shipped.tests[0]!.file, name: "a test" },
+      ],
+      shipped,
+    );
+    assert.deepStrictEqual(verdict.files, [shipped.tests[0]!.file, "test/somewhere-else.test.ts"].sort());
+  });
+
   it("holds the commit when the suite failed and named nothing", () => {
     const verdict = gateVerdict([], shipped);
     assert.strictEqual(verdict.decision, "quarantine");

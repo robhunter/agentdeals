@@ -37,6 +37,7 @@ if (excusedTo) writeFileSync(excusedTo, verdict.excused.map((t) => `${t.file}\n`
 const driftTo = optionAfter("--drift-to");
 if (driftTo && verdict.drifted.length > 0) writeFileSync(driftTo, `${driftedGuardsMarkdown(verdict.drifted)}\n`);
 
+console.log(`Red: ${verdict.files.join(", ") || "no file the reporter could name"}`);
 for (const t of verdict.excused) console.log(`Not held by ${t.file} — ${t.reason}`);
 for (const d of verdict.drifted) {
   console.log(
