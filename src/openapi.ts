@@ -35,7 +35,9 @@ const DOCUMENTED_OPERATIONS: Record<string, Record<string, any>> = {
                   offers: { type: "array", items: { $ref: "#/components/schemas/Offer" } },
                   total: { type: "integer", description: "Total matching offers (before pagination)" },
                   gated: { type: "integer", description: "How many of the `total` matching offers carry a non-null `gate` — counted over the whole match, not the returned page (#1241)." },
-                  gate_summary: { type: "string", description: "One line stating how many of the matching offers are not on our ranked list and why. Absent when `gated` is 0." }
+                  gate_summary: { type: "string", description: "One line stating how many of the matching offers are not on our ranked list and why. Absent when `gated` is 0." },
+                  stability_withheld: { type: "integer", description: "How many offers the query matched before the `stability` filter publish no stability class, so no value of that filter can return them (#1561). Present only when `stability` is supplied." },
+                  stability_withheld_summary: { type: "string", description: "One line stating how many were held back and on what grounds. Absent when `stability_withheld` is 0." }
                 }
               },
               example: {
@@ -697,8 +699,9 @@ const DOCUMENTED_OPERATIONS: Record<string, Record<string, any>> = {
                               gate: { type: "object", nullable: true, description: "Non-null for an offer we have decided not to list (#1241). A candidate set is drawn from ungated offers, so this is null in practice and is carried because the level's rules are one set." },
                               source_check: { type: "object", nullable: true, description: "Our last read of the page we cite. An outcome other than ok withholds a favourable level." },
                               level_withheld_because: { type: "string", nullable: true, description: "The sentence naming the rule that withheld the level, or null where a level is published." },
-                              stability: { type: "string", enum: ["stable", "watch", "volatile", "improving"], nullable: true, description: "Null where a favourable class would rest on records we cannot stand behind. A null always arrives with stability_withheld or link_unreachable set." },
+                              stability: { type: "string", enum: ["stable", "watch", "volatile", "improving"], nullable: true, description: "Null where a favourable class would rest on records we cannot stand behind (#1561). Withheld by every reason that withholds risk_level: an unreachable pricing page, a page stating no amount, tier or rate we can read, a refused read, a narrowing citing no source, or a gated listing. A null always arrives with stability_withheld_because." },
                               stability_withheld: { type: "object", nullable: true, description: "Non-null where a standing narrowing for this vendor cites no source, so a favourable stability class is withheld rather than published.", properties: { reason: { type: "string", enum: ["no_source"] }, records: { type: "number" } } },
+                              stability_withheld_because: { type: "string", nullable: true, description: "The code naming the rule that withheld the stability class, or null where a class is published." },
                               link_unreachable: { type: "object", nullable: true, description: "Non-null where the offer's own link has not resolved for us (#1046).", properties: { last_reachable: { type: "string", nullable: true }, checked: { type: "string" }, terminal: { type: "boolean" } } },
                               demerits: { type: "array", description: "Empty when we hold nothing against the offer.", items: { type: "object", properties: { code: { type: "string" }, points: { type: "integer" }, reason: { type: "string" }, date: { type: "string" }, about_us: { type: "boolean", description: "True when the demerit describes a limit of ours rather than a fact about the vendor." } } } },
                               disclosures: { type: "array", description: "Recorded changes shown but never ranked on.", items: { type: "object", properties: { code: { type: "string" }, date: { type: "string" }, summary: { type: "string" } } } }

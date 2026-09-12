@@ -100,7 +100,7 @@ export function createServer(): McpServer {
         vendor: z.string().optional().describe("Get full details for a specific vendor (fuzzy match). Returns alternatives in the same category."),
         eligibility: z.enum(["public", "accelerator", "oss", "student", "fintech", "geographic", "enterprise"]).optional().describe("Filter by eligibility type"),
         sort: z.enum(["vendor", "category", "newest"]).optional().describe("Sort: vendor (A-Z), category, newest (recently verified first)"),
-        stability: z.enum(["stable", "watch", "volatile", "improving"]).optional().describe("Filter by free tier stability class. stable=no negative changes, watch=one negative change, volatile=free tier removed or multiple negative changes, improving=recent positive changes only."),
+        stability: z.enum(["stable", "watch", "volatile", "improving"]).optional().describe("Filter by the stability class we publish for the offer. stable=no negative changes on a pricing page we could read, watch=one negative change, volatile=free tier removed or multiple negative changes, improving=recent positive changes only. Offers whose class we withhold \u2014 pricing page unreachable or unreadable, last read refused, or the listing gated \u2014 match no value; the response reports how many were held back."),
         payment_protocol: z.enum(["x402", "stripe-mpp"]).optional().describe("Filter by agent payment protocol. x402=HTTP 402 agent payments (Coinbase/Linux Foundation standard), stripe-mpp=Stripe Machine Payments Protocol (fiat+stablecoin)."),
         since: z.string().optional().describe("ISO date (YYYY-MM-DD). Only return deals verified/added after this date."),
         limit: z.number().optional().describe("Max results (default: 20)"),

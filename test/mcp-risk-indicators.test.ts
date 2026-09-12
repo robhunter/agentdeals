@@ -167,7 +167,7 @@ describe("MCP risk_level/stability indicators (issue #969)", () => {
         );
         assert.ok(
           ["stable", "watch", "volatile", "improving"].includes(c.stability) ||
-            c.stability_withheld || c.link_unreachable,
+            c.stability_withheld_because,
           `candidate ${c.vendor} has stability ${c.stability} and no field says why`
         );
       }

@@ -5,7 +5,7 @@ import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
 import { createServer, getServerCard } from "./server.js";
-import { oldestVerifiedDateForSlug, vendorRiskAssessment, publishedRisk, levelWithheldStatement, vendorNotIndexedSentence, riskCauseOf, freeTierEndingRecord, NEGATIVE_CHANGE_TYPES, POSITIVE_CHANGE_TYPES, SEVERE_CHANGE_TYPES, loadOffers, getCategories, getNewOffers, getNewestDeals, searchOffers, enrichOffers, gateForOffer, loadDealChanges, getDealChanges, changeContext, DEFAULT_CHANGE_WINDOW_DAYS, getOfferDetails, compareServices, checkVendorRisk, auditStack, getExpiringDeals, getWeeklyDigest, getFormattedWeeklyDigest, getFreshnessMetrics, getStabilityMap, getVendorReferral, sanitizeQuery, getChangeLogFreshness, isEventDated, partitionByDateProvenance } from "./data.js";
+import { oldestVerifiedDateForSlug, vendorRiskAssessment, publishedRisk, levelWithheldStatement, vendorNotIndexedSentence, riskCauseOf, freeTierEndingRecord, NEGATIVE_CHANGE_TYPES, POSITIVE_CHANGE_TYPES, SEVERE_CHANGE_TYPES, loadOffers, getCategories, getNewOffers, getNewestDeals, searchOffers, enrichOffers, gateForOffer, loadDealChanges, getDealChanges, changeContext, DEFAULT_CHANGE_WINDOW_DAYS, getOfferDetails, compareServices, checkVendorRisk, auditStack, getExpiringDeals, getWeeklyDigest, getFormattedWeeklyDigest, getFreshnessMetrics, publishedStabilityIndex, stabilityWithheldDisclosure, UNRATED_STABILITY, type StabilityIndex, type PublishedStabilityClass, getVendorReferral, sanitizeQuery, getChangeLogFreshness, isEventDated, partitionByDateProvenance } from "./data.js";
 import { loadChangeRefusals } from "./data.js";
 import { confirmingRead, confirmingReadSentence, refusalsByVendor, refusedReadSentence, supersededRefusalSentence, MEASURED_NO_DIFFERENCE_BADGE_LABEL, UNRECONCILED_READ_BADGE_LABEL, type ChangeRefusal } from "./change-refusal.js";
 import { getStackRecommendation } from "./stacks.js";
@@ -21866,7 +21866,7 @@ function buildTerraformCloudFreeTierRemovedPage(): string {
   const slug = "terraform-cloud-free-tier-removed";
   const pubDate = "2026-04-08";
 
-  const stabilityMap = getStabilityMap();
+  const stabilityMap = publishedStabilityIndex();
 
   const tfChanges = dealChanges.filter(c =>
     c.vendor?.toLowerCase().includes("terraform") || c.vendor?.toLowerCase().includes("opentofu") || c.vendor?.toLowerCase().includes("terragrunt")
@@ -22138,9 +22138,9 @@ function buildTerraformCloudFreeTierRemovedPage(): string {
     + '    </thead>\n'
     + '    <tbody>\n'
     + alternatives.map(a => {
-      const stability = stabilityMap.get(a.slug) ?? "stable";
-      const stabilityColor = stability === "volatile" ? "#f85149" : stability === "watch" ? "#d29922" : stability === "improving" ? "#3fb950" : "#3fb950";
-      const stabilityLabel = stability === "volatile" ? "Volatile" : stability === "watch" ? "Watch" : stability === "improving" ? "Improving" : "Stable";
+      const stability = stabilityMap.of(a.slug);
+      const stabilityColor = stability === "volatile" ? "#f85149" : stability === "watch" ? "#d29922" : stability === "improving" ? "#3fb950" : stability === "stable" ? "#3fb950" : "var(--text-dim)";
+      const stabilityLabel = stability === "volatile" ? "Volatile" : stability === "watch" ? "Watch" : stability === "improving" ? "Improving" : stability === "stable" ? "Stable" : "Unrated";
       const altHref = a.slug === "terraform-ce" || a.slug === "atlantis" || a.slug === "env0" || a.slug === "opentofu"
         ? searchQueryHref("q=" + encodeURIComponent(a.name))
         : "/vendor/" + a.slug;
@@ -22607,7 +22607,7 @@ function buildGeminiApiPricingChangesPage(): string {
   const slug = "gemini-api-pricing-changes";
   const pubDate = "2026-04-08";
 
-  const stabilityMap = getStabilityMap();
+  const stabilityMap = publishedStabilityIndex();
 
   const geminiChanges = dealChanges.filter(c =>
     c.vendor?.toLowerCase().includes("gemini") || (c.vendor?.toLowerCase().includes("google") && c.summary?.toLowerCase().includes("gemini"))
@@ -22875,7 +22875,7 @@ function buildGeminiApiPricingChangesPage(): string {
     + '    </thead>\n'
     + '    <tbody>\n'
     + alternatives.map(a => {
-      const stability = stabilityMap.get(a.slug) ?? "stable";
+      const stability = stabilityMap.of(a.slug);
       const stabColor = stability === "volatile" ? "#f85149" : stability === "watch" ? "#d29922" : stability === "improving" ? "#3fb950" : "var(--text-dim)";
       return '      <tr>'
         + '<td style="font-weight:600"><a href="/vendor/' + a.slug + '" style="color:var(--text)">' + escHtmlServer(a.name) + '</a></td>'
@@ -23566,7 +23566,7 @@ function buildStabilityDashboardPage(): string {
   const metaDesc = "Real-time stability ratings for developer free tiers based on tracked pricing changes. See which tools are stable, which need watching, and which are deteriorating.";
   const slug = "stability";
 
-  const stabilityMap = getStabilityMap();
+  const stabilityMap = publishedStabilityIndex();
   const allChanges = loadDealChanges();
 
   const vendorChangesMap = new Map<string, typeof allChanges>();
@@ -23580,17 +23580,21 @@ function buildStabilityDashboardPage(): string {
   const watchVendors: { vendor: string; stability: string; changes: typeof allChanges }[] = [];
   const improvingVendors: { vendor: string; stability: string; changes: typeof allChanges }[] = [];
   const stableVendorsWithChanges: { vendor: string; stability: string; changes: typeof allChanges }[] = [];
+  const unratedVendors: { vendor: string; stability: string; changes: typeof allChanges }[] = [];
 
-  for (const [vendorKey, stability] of stabilityMap) {
-    const changes = vendorChangesMap.get(vendorKey) ?? [];
-    const entry = { vendor: changes[0]?.vendor ?? vendorKey, stability, changes };
+  for (const { vendor, key, stability } of stabilityMap.vendorsWithChanges) {
+    const changes = vendorChangesMap.get(key) ?? [];
+    const entry = { vendor, stability, changes };
     if (stability === "volatile") volatileVendors.push(entry);
     else if (stability === "watch") watchVendors.push(entry);
     else if (stability === "improving") improvingVendors.push(entry);
+    else if (stability === UNRATED_STABILITY) unratedVendors.push(entry);
     else stableVendorsWithChanges.push(entry);
   }
 
-  const totalStable = offers.length - volatileVendors.length - watchVendors.length - improvingVendors.length;
+  const publishedOffers = stabilityMap.offersByClass;
+  const totalStable = publishedOffers.stable;
+  const vendorsClassified = stabilityMap.vendorsWithChanges.length;
 
   const sortByRecent = (a: { changes: typeof allChanges }, b: { changes: typeof allChanges }) => {
     const aDate = a.changes.length > 0 ? a.changes.reduce((latest, c) => c.date > latest ? c.date : latest, "") : "";
@@ -23617,8 +23621,8 @@ function buildStabilityDashboardPage(): string {
 
   const getCategory = (vendor: string) => vendorCategory.get(vendor.toLowerCase()) ?? allChanges.find(c => c.vendor.toLowerCase() === vendor.toLowerCase())?.category ?? "";
 
-  const stabilityColors: Record<string, string> = { volatile: "#f85149", watch: "#d29922", improving: "#3fb950", stable: "#3b82f6" };
-  const stabilityEmoji: Record<string, string> = { volatile: "\u{1F534}", watch: "\u{1F7E1}", improving: "\u{1F7E2}", stable: "\u{1F535}" };
+  const stabilityColors: Record<string, string> = { volatile: "#f85149", watch: "#d29922", improving: "#3fb950", stable: "#3b82f6", unrated: "#94a3b8" };
+  const stabilityEmoji: Record<string, string> = { volatile: "\u{1F534}", watch: "\u{1F7E1}", improving: "\u{1F7E2}", stable: "\u{1F535}", unrated: "\u{26AA}" };
 
   const buildVendorCard = (entry: { vendor: string; changes: typeof allChanges }, color: string) => {
     const vendorSlug = toVendorSlug(entry.vendor);
@@ -23649,7 +23653,7 @@ function buildStabilityDashboardPage(): string {
   const stableCategoryCounts = new Map<string, number>();
   for (const o of offers) {
     const vKey = o.vendor.toLowerCase();
-    const stability = stabilityMap.get(vKey) ?? "stable";
+    const stability = stabilityMap.of(vKey);
     if (stability === "stable") {
       stableCategoryCounts.set(o.category, (stableCategoryCounts.get(o.category) ?? 0) + 1);
     }
@@ -23674,10 +23678,11 @@ function buildStabilityDashboardPage(): string {
     dateModified: latestChangeDate(allChanges) ?? "2026-04-02",
     url: `${BASE_URL}/${slug}`,
     variableMeasured: [
-      { "@type": "PropertyValue", name: "Volatile Vendors", value: volatileVendors.length },
-      { "@type": "PropertyValue", name: "Watch Vendors", value: watchVendors.length },
-      { "@type": "PropertyValue", name: "Improving Vendors", value: improvingVendors.length },
-      { "@type": "PropertyValue", name: "Stable Vendors", value: totalStable },
+      { "@type": "PropertyValue", name: "Volatile Offers", value: publishedOffers.volatile },
+      { "@type": "PropertyValue", name: "Watch Offers", value: publishedOffers.watch },
+      { "@type": "PropertyValue", name: "Improving Offers", value: publishedOffers.improving },
+      { "@type": "PropertyValue", name: "Stable Offers", value: totalStable },
+      { "@type": "PropertyValue", name: "Unrated Offers", value: publishedOffers.unrated },
     ],
   };
 
@@ -23762,30 +23767,36 @@ ${mcpCtaCss()}
   ${buildGlobalNav("changes")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/alternatives">Guides</a> &rsaquo; Stability Dashboard</div>
   <h1>${escHtmlServer(title)}</h1>
-  <p class="subtitle">Real-time risk ratings based on <strong>${allChanges.length}</strong> tracked pricing changes across <strong>${stabilityMap.size}</strong> vendors.${dataChangesSegment(allChanges)}</p>
+  <p class="subtitle">Real-time risk ratings based on <strong>${allChanges.length}</strong> tracked pricing changes across <strong>${vendorsClassified}</strong> vendors.${dataChangesSegment(allChanges)}</p>
 
   <div class="summary-stats">
     <div class="stat-card">
-      <div class="stat-number" style="color:${stabilityColors.volatile}">${volatileVendors.length}</div>
+      <div class="stat-number" style="color:${stabilityColors.volatile}">${publishedOffers.volatile}</div>
       <div class="stat-label">${stabilityEmoji.volatile} Volatile</div>
-      <div class="stat-bar"><div class="stat-bar-fill" style="width:${Math.round(volatileVendors.length / stabilityMap.size * 100)}%;background:${stabilityColors.volatile}"></div></div>
+      <div class="stat-bar"><div class="stat-bar-fill" style="width:${Math.round(publishedOffers.volatile / offers.length * 100)}%;background:${stabilityColors.volatile}"></div></div>
     </div>
     <div class="stat-card">
-      <div class="stat-number" style="color:${stabilityColors.watch}">${watchVendors.length}</div>
+      <div class="stat-number" style="color:${stabilityColors.watch}">${publishedOffers.watch}</div>
       <div class="stat-label">${stabilityEmoji.watch} Watch</div>
-      <div class="stat-bar"><div class="stat-bar-fill" style="width:${Math.round(watchVendors.length / stabilityMap.size * 100)}%;background:${stabilityColors.watch}"></div></div>
+      <div class="stat-bar"><div class="stat-bar-fill" style="width:${Math.round(publishedOffers.watch / offers.length * 100)}%;background:${stabilityColors.watch}"></div></div>
     </div>
     <div class="stat-card">
-      <div class="stat-number" style="color:${stabilityColors.improving}">${improvingVendors.length}</div>
+      <div class="stat-number" style="color:${stabilityColors.improving}">${publishedOffers.improving}</div>
       <div class="stat-label">${stabilityEmoji.improving} Improving</div>
-      <div class="stat-bar"><div class="stat-bar-fill" style="width:${Math.round(improvingVendors.length / stabilityMap.size * 100)}%;background:${stabilityColors.improving}"></div></div>
+      <div class="stat-bar"><div class="stat-bar-fill" style="width:${Math.round(publishedOffers.improving / offers.length * 100)}%;background:${stabilityColors.improving}"></div></div>
     </div>
     <div class="stat-card">
       <div class="stat-number" style="color:${stabilityColors.stable}">${totalStable.toLocaleString()}</div>
       <div class="stat-label">${stabilityEmoji.stable} Stable</div>
-      <div class="stat-bar"><div class="stat-bar-fill" style="width:100%;background:${stabilityColors.stable}"></div></div>
+      <div class="stat-bar"><div class="stat-bar-fill" style="width:${Math.round(totalStable / offers.length * 100)}%;background:${stabilityColors.stable}"></div></div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-number" style="color:${stabilityColors.unrated}">${publishedOffers.unrated.toLocaleString()}</div>
+      <div class="stat-label">${stabilityEmoji.unrated} Unrated</div>
+      <div class="stat-bar"><div class="stat-bar-fill" style="width:${Math.round(publishedOffers.unrated / offers.length * 100)}%;background:${stabilityColors.unrated}"></div></div>
     </div>
   </div>
+  <p class="section-intro">Every count above is a count of listed offers, out of ${offers.length.toLocaleString()}. An offer is unrated where we withhold its stability class &mdash; a pricing page we could not reach or could not read, a read we refused, or a gated listing. ${unratedVendors.length} of the ${vendorsClassified} vendors we hold a change history for are unrated on that basis, so their records below carry no class.</p>
 
   <h2>${stabilityEmoji.volatile} Volatile — High Risk</h2>
   <p class="section-intro">These vendor free tiers have been removed, severely cut, or show multiple negative changes. If you depend on these, plan a migration.</p>
@@ -23809,7 +23820,7 @@ ${mcpCtaCss()}
   </div>
 
   <h2>${stabilityEmoji.stable} Stable — Safe to Build On</h2>
-  <p class="section-intro"><strong>${totalStable.toLocaleString()} of ${offers.length.toLocaleString()}</strong> vendors in our index have stable free tiers &mdash; no negative pricing changes tracked. Here are the top categories by stable vendor count:</p>
+  <p class="section-intro"><strong>${totalStable.toLocaleString()} of ${offers.length.toLocaleString()}</strong> listed offers carry a stable rating &mdash; no negative pricing changes tracked, on a pricing page our latest read could read. We publish no stability class at all for <strong>${publishedOffers.unrated.toLocaleString()}</strong> more, so they are not in this count and not in the categories below. Here are the top categories by stable offer count:</p>
   <div class="stable-grid">
     ${topStableCategories.map(([cat, count]) => {
       const catSlug = cat.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/-+$/g, "");
@@ -23820,7 +23831,7 @@ ${mcpCtaCss()}
     }).join("\n    ")}
   </div>
   <div class="context-box">
-    <strong>Why &ldquo;stable&rdquo; is the default:</strong> Vendors with no tracked negative pricing changes are classified as stable. Absence of bad news is a positive signal &mdash; most developer tools maintain their free tiers over time. Our tracking covers ${allChanges.length} pricing changes since 2022, so &ldquo;stable&rdquo; means no negative movement in our observation window.
+    <strong>What &ldquo;stable&rdquo; rests on:</strong> An offer is rated stable when we have tracked no negative pricing change for it and nothing is withholding our reading of its pricing page. Absence of bad news is only a signal where we could look &mdash; so an offer whose page we cannot reach or cannot read, whose last read we refused, or whose listing is gated is unrated rather than stable. Our tracking covers ${allChanges.length} pricing changes since 2022, so &ldquo;stable&rdquo; means no negative movement in our observation window.
   </div>
 
   <h2>Methodology</h2>
@@ -23844,7 +23855,8 @@ ${mcpCtaCss()}
     &bull; <strong style="color:${stabilityColors.volatile}">Volatile:</strong> Free tier removed, OSS killed, product deprecated, or 2+ negative changes<br>
     &bull; <strong style="color:${stabilityColors.watch}">Watch:</strong> Exactly one negative change<br>
     &bull; <strong style="color:${stabilityColors.improving}">Improving:</strong> Only positive changes (no negative)<br>
-    &bull; <strong style="color:${stabilityColors.stable}">Stable:</strong> No negative changes (default for vendors not in change history)<br><br>
+    &bull; <strong style="color:${stabilityColors.stable}">Stable:</strong> No negative changes, on a listing nothing is withholding<br>
+    &bull; <strong style="color:${stabilityColors.unrated}">Unrated:</strong> We withhold the class &mdash; pricing page unreachable or unreadable, read refused, or the listing is gated<br><br>
     <strong>Data freshness:</strong> Classifications update automatically as new pricing changes are tracked. Source data: <code>deal_changes.json</code> with ${allChanges.length} entries covering changes from 2022 to present.
   </div>
 
@@ -23898,12 +23910,12 @@ interface ProviderRecordCells {
   retired: boolean;
 }
 
-function providerRecordCells(slug: string, stabilityMap: Map<string, StabilityClass>): ProviderRecordCells {
+function providerRecordCells(slug: string, stabilityMap: StabilityIndex): ProviderRecordCells {
   const record = offerForSlug(slug);
   const retired = offerRetired(record);
   const rates = vendorRates(slug);
   const span = formatRateSpan(rates);
-  const stability = stabilityMap.get(slug) ?? "stable";
+  const stability = stabilityMap.of(slug);
   const pricingLink = record && !retired
     ? `&mdash; <a href="${escHtmlServer(record.url)}" target="_blank" rel="noopener nofollow">vendor pricing</a>`
     : "&mdash;";
@@ -23926,7 +23938,7 @@ function buildOpenaiAssistantsAlternativesPage(): string {
   const slug = "openai-assistants-alternatives";
   const pubDate = "2026-04-02";
 
-  const stabilityMap = getStabilityMap();
+  const stabilityMap = publishedStabilityIndex();
 
   const aiProviderSlugs = ["openai", "anthropic-api", "google-gemini-api", "github-models", "openrouter", "cohere", "groq", "fireworks-ai", "together-ai", "mistral-ai", "deepseek-api", "cerebras"];
   const aiOffers = offers.filter(o =>
@@ -23962,7 +23974,7 @@ function buildOpenaiAssistantsAlternativesPage(): string {
     { name: "Cerebras", slug: "cerebras", toolUse: "Via Llama models", codeExec: "No built-in", fileHandling: "No built-in", bestFor: "Ultra-fast inference (custom silicon)" },
   ];
 
-  const openaiStability = stabilityMap.get("openai") ?? "stable";
+  const openaiStability = stabilityMap.of("openai");
   const stabilityColor = openaiStability === "volatile" ? "#f85149" : openaiStability === "watch" ? "#d29922" : openaiStability === "improving" ? "#3fb950" : "var(--text-muted)";
 
   const shutdownDate = new Date("2026-08-26");
@@ -24356,7 +24368,7 @@ function buildOpenaiAssistantsMigration2026Page(): string {
   const slug = "openai-assistants-migration-2026";
   const pubDate = "2026-04-03";
 
-  const stabilityMap = getStabilityMap();
+  const stabilityMap = publishedStabilityIndex();
 
   const openaiChanges = dealChanges.filter(c =>
     c.vendor === "OpenAI"
@@ -24366,7 +24378,7 @@ function buildOpenaiAssistantsMigration2026Page(): string {
   const today = new Date();
   const daysLeft = Math.max(0, Math.ceil((shutdownDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24)));
 
-  const openaiStability = stabilityMap.get("openai") ?? "stable";
+  const openaiStability = stabilityMap.of("openai");
   const stabilityColor = openaiStability === "volatile" ? "#f85149" : openaiStability === "watch" ? "#d29922" : openaiStability === "improving" ? "#3fb950" : "var(--text-muted)";
 
   interface FeatureMapping {
@@ -24953,7 +24965,7 @@ function buildTenorAlternativesPage(): string {
   const slug = "tenor-alternatives";
   const pubDate = "2026-04-02";
 
-  const stabilityMap = getStabilityMap();
+  const stabilityMap = publishedStabilityIndex();
 
   const tenorChanges = dealChanges.filter(c =>
     c.vendor === "Google Tenor API"
@@ -24978,7 +24990,7 @@ function buildTenorAlternativesPage(): string {
     { name: "Self-hosted (Meilisearch + media)", slug: "meilisearch", freeTier: "Free (open source)", library: "Your own curated library", apiStyle: "Custom API", migrationEffort: "High — build from scratch", bestFor: "Full control, no vendor dependency" },
   ];
 
-  const tenorStability = stabilityMap.get("google-tenor-api") ?? "volatile";
+  const tenorStability = stabilityMap.of("google-tenor-api");
   const stabilityColor = tenorStability === "volatile" ? "#f85149" : tenorStability === "watch" ? "#d29922" : tenorStability === "improving" ? "#3fb950" : "var(--text-muted)";
 
   const shutdownDate = new Date("2026-06-30");
@@ -25392,13 +25404,13 @@ function buildFirebaseStudioShutdownPage(): string {
   const slug = "firebase-studio-shutdown";
   const pubDate = "2026-04-02";
 
-  const stabilityMap = getStabilityMap();
+  const stabilityMap = publishedStabilityIndex();
 
   const firebaseChanges = dealChanges.filter(c =>
     c.vendor === "Firebase" || c.vendor === "Google"
   ).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
-  const firebaseStability = stabilityMap.get("firebase") ?? "volatile";
+  const firebaseStability = stabilityMap.of("firebase");
   const stabilityColor = firebaseStability === "volatile" ? "#f85149" : firebaseStability === "watch" ? "#d29922" : firebaseStability === "improving" ? "#3fb950" : "var(--text-muted)";
 
   const workspaceFreeze = new Date("2026-06-22");
@@ -25443,7 +25455,7 @@ function buildFirebaseStudioShutdownPage(): string {
 
   function buildTableRows(items: CloudIDE[]): string {
     return items.map(a => {
-      const stability = a.slug ? (stabilityMap.get(a.slug) ?? "stable") : "stable";
+      const stability = a.slug ? stabilityMap.of(a.slug) : UNRATED_STABILITY;
       const stabColor = stability === "volatile" ? "#f85149" : stability === "watch" ? "#d29922" : stability === "improving" ? "#3fb950" : "var(--text-dim)";
       const vendorLink = a.slug ? `<a href="/vendor/${a.slug}" style="color:var(--text)">${escHtmlServer(a.name)}</a>` : escHtmlServer(a.name);
       return `<tr>
@@ -26323,7 +26335,7 @@ function buildShutdownTrackerPage(): string {
   const slug = "shutdowns";
   const pubDate = "2026-04-02";
 
-  const stabilityMap = getStabilityMap();
+  const stabilityMap = publishedStabilityIndex();
 
   interface ShutdownEntry {
     service: string;
@@ -26572,7 +26584,7 @@ function buildShutdownTrackerPage(): string {
 
   function buildShutdownCard(s: ShutdownEntry): string {
     const dateStr = new Date(s.deadline).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" });
-    const stability = stabilityMap.get(s.vendorSlug) ?? "stable";
+    const stability = stabilityMap.of(s.vendorSlug);
     const stabColor = stability === "volatile" ? "#f85149" : stability === "watch" ? "#d29922" : stability === "improving" ? "#3fb950" : "var(--text-dim)";
     const color = urgencyColor(s.deadline);
     const vendorOffer = offers.find(o => toSlug(o.vendor) === s.vendorSlug);
@@ -33061,7 +33073,7 @@ function buildDallEShutdownPage(): string {
   const slug = "dall-e-shutdown";
   const pubDate = "2026-04-10";
 
-  const stabilityMap = getStabilityMap();
+  const stabilityMap = publishedStabilityIndex();
 
   const dalleChanges = dealChanges.filter(c =>
     c.vendor === "OpenAI" || c.vendor === "DALL-E"
@@ -33088,7 +33100,7 @@ function buildDallEShutdownPage(): string {
     { name: "Hugging Face", slug: "hugging-face", freeTier: "Free inference API", costPerImage: "Free (inference API)", imageQuality: "Varies by model", apiStyle: "REST API", migrationEffort: "Moderate \u2014 model selection", bestFor: "Open-source models" },
   ];
 
-  const openaiStability = stabilityMap.get("openai") ?? "watch";
+  const openaiStability = stabilityMap.of("openai");
   const stabilityColor = openaiStability === "volatile" ? "#f85149" : openaiStability === "watch" ? "#d29922" : openaiStability === "improving" ? "#3fb950" : "var(--text-muted)";
 
   const shutdownDate = new Date("2026-05-12");
@@ -33577,7 +33589,7 @@ function buildOpenAIRealtimeMigrationPage(): string {
   const slug = "openai-realtime-migration";
   const pubDate = "2026-04-10";
 
-  const stabilityMap = getStabilityMap();
+  const stabilityMap = publishedStabilityIndex();
 
   const openaiChanges = dealChanges.filter(c =>
     c.vendor === "OpenAI" && (c.summary.toLowerCase().includes("realtime") || c.summary.toLowerCase().includes("real-time") || c.summary.toLowerCase().includes("real time"))
@@ -33607,7 +33619,7 @@ function buildOpenAIRealtimeMigrationPage(): string {
     { name: "Google Cloud Speech-to-Text", slug: "google-cloud", freeTier: "60 min/month free", pricing: "$0.006/15s (~$0.024/min)", capability: "Real-time speech-to-text", latency: "Low (~200ms)", migrationEffort: "Moderate \u2014 different SDK", bestFor: "Multi-language support" },
   ];
 
-  const openaiStability = stabilityMap.get("openai") ?? "watch";
+  const openaiStability = stabilityMap.of("openai");
   const stabilityColor = openaiStability === "volatile" ? "#f85149" : openaiStability === "watch" ? "#d29922" : openaiStability === "improving" ? "#3fb950" : "var(--text-muted)";
 
   const shutdownDate = new Date("2026-05-07");
@@ -33685,7 +33697,7 @@ function buildAppRunnerMigrationPage(): string {
   const slug = "aws-app-runner-migration";
   const pubDate = "2026-04-10";
 
-  const stabilityMap = getStabilityMap();
+  const stabilityMap = publishedStabilityIndex();
 
   const awsChanges = dealChanges.filter(c =>
     c.vendor === "AWS" || c.vendor === "Amazon AWS" || c.summary.toLowerCase().includes("app runner")
@@ -33716,7 +33728,7 @@ function buildAppRunnerMigrationPage(): string {
     { name: "Northflank", slug: "northflank", freeTier: "Free tier (2 services, 0.2 vCPU, 512MB RAM)", startingPrice: "$10/mo (Developer)", pricingModel: "Per-service + resource usage", sourceCodeDeploy: "Yes — buildpacks + Dockerfiles", autoScaling: "Yes", migrationEffort: "Low — designed as PaaS, similar concepts", bestFor: "Full PaaS with CI/CD built-in" },
   ];
 
-  const awsStability = stabilityMap.get("aws") ?? "stable";
+  const awsStability = stabilityMap.of("aws");
   const stabilityColor = awsStability === "volatile" ? "#f85149" : awsStability === "watch" ? "#d29922" : awsStability === "improving" ? "#3fb950" : "var(--text-muted)";
 
   const deadlineDate = new Date("2026-04-30");
@@ -47113,7 +47125,7 @@ function buildStacksIndexPage(): string {
   const title = "Curated Stack Templates — Best Free Developer Stacks for 2026";
   const metaDesc = `${STACK_TEMPLATES.length} curated technology stacks for common developer scenarios. Pick a use case, get a complete free-tier stack with verified limits, stability ratings, and cost projections at scale.`;
 
-  const stabilityMap = getStabilityMap();
+  const stabilityMap = publishedStabilityIndex();
   const stabilityColors: Record<string, string> = { stable: "#3fb950", watch: "#d29922", volatile: "#f85149", improving: "#58a6ff" };
 
   const costClass = (amount: number) => amount === 0 ? "cost-free" : amount <= 25 ? "cost-low" : amount <= 100 ? "cost-mid" : "cost-high";
@@ -47352,7 +47364,7 @@ function buildEstimatorData(): EstimatorCategory[] {
 function buildStackCheckPage(): string {
   const allOffers = loadOffers();
   const allChanges = loadDealChanges();
-  const stabilityMap = getStabilityMap();
+  const stabilityMap = publishedStabilityIndex();
   const totalOffers = allOffers.length;
   const totalChanges = allChanges.length;
 
@@ -47363,8 +47375,8 @@ function buildStackCheckPage(): string {
       .filter(c => c.vendor.toLowerCase() === offer.vendor.toLowerCase())
       .sort((a, b) => b.date.localeCompare(a.date));
     const vendorChanges = allVendorChanges.slice(0, 3);
-    const stability = stabilityMap.get(slug) || "stable";
     const published = publishedRisk(offer, allVendorChanges);
+    const stability = published.stability ?? UNRATED_STABILITY;
     vendorLookup[slug] = {
       vendor: offer.vendor,
       category: offer.category,
@@ -48476,7 +48488,7 @@ function buildBudgetBuilderPage(): string {
   const estimatorData = buildEstimatorData();
   const allOffers = loadOffers();
   const allChanges = loadDealChanges();
-  const stabilityMap = getStabilityMap();
+  const stabilityMap = publishedStabilityIndex();
   const totalOffers = allOffers.length;
   const totalChanges = allChanges.length;
 
@@ -54318,8 +54330,11 @@ const httpServer = createHttpServer(async (req, res) => {
     });
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/offers", params: { q, category, limit, offset }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: paged.length });
     const offersDisclosure = gateDisclosureFor("offer", results.map(o => gateForOffer(o)));
+    const stabilityDisclosure = validStability
+      ? stabilityWithheldDisclosure(searchOffers(sanitizedQ || undefined, category, eligibilityType, sort, undefined, validPaymentProtocol))
+      : {};
     res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
-    res.end(JSON.stringify(withAgentBlock({ offers: offersWithCodes, total, ...offersDisclosure })));
+    res.end(JSON.stringify(withAgentBlock({ offers: offersWithCodes, total, ...offersDisclosure, ...stabilityDisclosure })));
   } else if (url.pathname === "/api/compare" && isGetOrHead) {
     recordApiHit("/api/compare");
     const a = url.searchParams.get("a") || "";

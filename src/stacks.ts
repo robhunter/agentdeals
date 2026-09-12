@@ -20,6 +20,7 @@ export interface StackCandidate {
   level_withheld_because: string | null;
   stability: StabilityClass | null;
   stability_withheld: RatingWithheld | null;
+  stability_withheld_because: string | null;
   link_unreachable: LinkUnreachable | null;
   demerits: Demerit[];
   disclosures: Disclosure[];
@@ -237,8 +238,9 @@ function toCandidate(
     source_check: published.source_check,
     gate: published.gate,
     level_withheld_because: levelWithheldStatement(offer.vendor, published),
-    stability: withheldStability(linkUnreachable, classifyStability(vendorChanges), vendorChanges),
+    stability: published.stability,
     stability_withheld: uncitedNarrowings.length > 0 ? { reason: "no_source", records: uncitedNarrowings.length } : null,
+    stability_withheld_because: published.stability_withheld_because,
     link_unreachable: linkUnreachable,
     demerits,
     disclosures,

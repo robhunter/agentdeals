@@ -107,7 +107,7 @@ describe("stack recommendation logic", () => {
         );
         assert.ok(
           ["stable", "watch", "volatile", "improving"].includes(c.stability) ||
-            c.stability_withheld !== null || c.link_unreachable !== null,
+            c.stability_withheld_because !== null,
           `${c.vendor} stability is ${c.stability} and no field says why`
         );
       }
@@ -158,8 +158,13 @@ describe("stack recommendation logic", () => {
           );
           assert.strictEqual(
             c.stability,
-            withheldStability(unreachable, classifyStability(vendorChanges), vendorChanges),
+            expected.stability,
             `${date} ${c.vendor}: candidate stability does not match the catalogue's`
+          );
+          assert.strictEqual(
+            c.stability_withheld_because,
+            expected.stability_withheld_because,
+            `${date} ${c.vendor}: candidate and catalogue disagree about why stability is withheld`
           );
           checked++;
         }
