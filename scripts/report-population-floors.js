@@ -52,11 +52,18 @@ const records = readFileSync(LOG, "utf-8")
   .filter((line) => line.trim().length > 0)
   .map((line) => JSON.parse(line));
 
+const THE_HELPER_S_OWN_TESTS = "test/population-floor.test.ts";
+
 const asShare = (fraction) => `${(fraction * 100).toFixed(1)}%`;
 
 const guards = [];
 const coverage = [];
+let itsOwnTests = 0;
 for (const r of records) {
+  if (typeof r.site === "string" && r.site.startsWith(`${THE_HELPER_S_OWN_TESTS}:`)) {
+    itsOwnTests++;
+    continue;
+  }
   if (typeof r.floor === "number") {
     guards.push({
       site: r.site,
@@ -92,7 +99,8 @@ const table = [
 ].join("\n");
 
 const headline =
-  `${guards.length} population floors read, ${coverage.length} coverage assertions read. ` +
+  `${guards.length} population floors read, ${coverage.length} coverage assertions read` +
+  `${itsOwnTests > 0 ? `, ${itsOwnTests} left out because they are ${THE_HELPER_S_OWN_TESTS} exercising the helper on figures of its own` : ""}. ` +
   `${narrow.length} floors are within ${WITHIN} records of going red, ${byMargin.filter((g) => g.margin <= 0).length} of them on the next record that leaves.`;
 
 console.log(headline);
