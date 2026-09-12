@@ -25,11 +25,16 @@ The pages are read with TZ=UTC. Some of them render a date from a timestamp with
 zone, so a machine west of Greenwich renders that date a day earlier and the page hashes
 differently. Pinning the zone is what makes the ledger the same wherever it is generated.
 
+The outcome is written to a path rather than to stdout. Node's stdout is asynchronous when it
+is a pipe, so a payload larger than the 64 KiB pipe buffer arrives truncated at exactly that
+byte; a path is written whole. It is written after the ledger, so an outcome file that exists
+is a run that wrote.
+
 Usage: node scripts/update-page-lastmod.js [options]
 
   --check         Report what would move and exit 1 if anything would, without writing
   --date <date>   Day to stamp changed pages with, YYYY-MM-DD (default: today, UTC)
-  --json          Emit the outcome as JSON on stdout, and nothing else there
+  --json <path>   Write the outcome as JSON to <path>
   --help          This text
 `;
 
@@ -40,12 +45,12 @@ const LEDGER_TIMEZONE = "UTC";
 const A_DAY_IN_MS = 86400000;
 
 function parseArgs(argv) {
-  const opts = { check: false, date: new Date().toISOString().slice(0, 10), json: false };
+  const opts = { check: false, date: new Date().toISOString().slice(0, 10), json: null };
   for (let i = 0; i < argv.length; i++) {
     const arg = argv[i];
     if (arg === "--help" || arg === "-h") return { help: true };
     else if (arg === "--check") opts.check = true;
-    else if (arg === "--json") opts.json = true;
+    else if (arg === "--json") opts.json = argv[++i];
     else if (arg === "--date") opts.date = argv[++i];
     else {
       console.error(`Unknown argument: ${arg}`);
@@ -104,6 +109,12 @@ async function hashEveryPage(base, paths) {
   return hashes;
 }
 
+function writeOutcome(target, outcome) {
+  if (target === null) return;
+  writeFileSync(target, JSON.stringify(outcome, null, 2) + "\n");
+  console.log(`Wrote ${target}`);
+}
+
 function readLedger(file, date) {
   try {
     return parsePageLastmod(readFileSync(file, "utf-8"), file);
@@ -121,6 +132,10 @@ async function main() {
   }
   if (!/^\d{4}-\d{2}-\d{2}$/.test(opts.date)) {
     console.error(`--date needs a YYYY-MM-DD day, got ${opts.date}`);
+    return 2;
+  }
+  if (opts.json !== null && (typeof opts.json !== "string" || opts.json.length === 0 || opts.json.startsWith("-"))) {
+    console.error(`--json needs a path to write the outcome to, got ${String(opts.json)}`);
     return 2;
   }
 
@@ -147,20 +162,23 @@ async function main() {
     const previous = readLedger(file, opts.date);
     const { ledger, moved, added, dropped, daily } = updatePageLastmod(previous, hashes, opts.date, dailyPaths);
 
-    if (opts.json) {
-      console.log(JSON.stringify({ pages: paths.length, moved, added, dropped, daily, seconds: Number(readSeconds), generated: ledger.generated }, null, 2));
-    } else {
-      console.log(`Read ${paths.length} pages twice in ${readSeconds}s: ${moved.length} whose output moved, ${added.length} new, ${dropped.length} gone, ${daily.length} dated from the day they are served.`);
-      for (const pagePath of moved.slice(0, 20)) console.log(`  moved  ${pagePath}`);
-      if (moved.length > 20) console.log(`  ... and ${moved.length - 20} more`);
-      for (const pagePath of added.slice(0, 20)) console.log(`  new    ${pagePath}`);
-      if (added.length > 20) console.log(`  ... and ${added.length - 20} more`);
-      for (const pagePath of dropped.slice(0, 20)) console.log(`  gone   ${pagePath}`);
-    }
+    console.log(`Read ${paths.length} pages twice in ${readSeconds}s: ${moved.length} whose output moved, ${added.length} new, ${dropped.length} gone, ${daily.length} dated from the day they are served.`);
+    for (const pagePath of moved.slice(0, 20)) console.log(`  moved  ${pagePath}`);
+    if (moved.length > 20) console.log(`  ... and ${moved.length - 20} more`);
+    for (const pagePath of added.slice(0, 20)) console.log(`  new    ${pagePath}`);
+    if (added.length > 20) console.log(`  ... and ${added.length - 20} more`);
+    for (const pagePath of dropped.slice(0, 20)) console.log(`  gone   ${pagePath}`);
 
-    if (opts.check) return moved.length + added.length + dropped.length > 0 ? 1 : 0;
+    const outcome = { pages: paths.length, moved, added, dropped, daily, seconds: Number(readSeconds), generated: ledger.generated, wrote: null };
+
+    if (opts.check) {
+      writeOutcome(opts.json, outcome);
+      return moved.length + added.length + dropped.length > 0 ? 1 : 0;
+    }
     writeFileSync(file, serializePageLastmod(ledger));
-    (opts.json ? console.error : console.log)(`Wrote ${file}`);
+    console.log(`Wrote ${file}`);
+    outcome.wrote = file;
+    writeOutcome(opts.json, outcome);
     return 0;
   } finally {
     if (server) server.proc.kill();
@@ -170,9 +188,11 @@ async function main() {
 }
 
 main().then(
-  code => process.exit(code),
+  code => {
+    process.exitCode = code;
+  },
   err => {
     console.error(err.message);
-    process.exit(1);
+    process.exitCode = 1;
   },
 );

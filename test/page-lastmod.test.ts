@@ -54,6 +54,12 @@ async function sitemapEntries(name: string): Promise<Array<{ loc: string; lastmo
     .map(m => ({ loc: m[1].replace("http://localhost", ""), lastmod: m[2] }));
 }
 
+const PIPE_BUFFER_BYTES = 65536;
+
+const UPDATER = ["scripts", "update-page-lastmod.js"];
+
+const REPORTER = ["scripts", "report-page-lastmod.js"];
+
 const RETITLED = ["/monitoring-comparison-2026", "/llm-api-pricing"];
 const REPRICED = "/vercel-vs-netlify";
 const THE_DAY_THOSE_PAGES_CHANGED = "2026-09-04";
@@ -754,6 +760,77 @@ describe("the ledger keeps up with the code that renders the pages", () => {
     );
   });
 
+  it("reads the run's outcome from a path the generator wrote, never from its stdout", () => {
+    for (const workflow of workflows().filter(w => readsEveryPageToDateIt(w) && runsOnAPushToMain(w))) {
+      for (const line of workflow.text.split("\n").filter(l => /update-page-lastmod\.js/.test(l))) {
+        assert.doesNotMatch(
+          line,
+          /\|/,
+          `${workflow.file} sends the generator's stdout through a pipe: ${line.trim()}. Node's stdout is asynchronous on a pipe, so a payload past ${PIPE_BUFFER_BYTES} bytes arrives cut off at exactly that byte and the step reports the next command's parse error instead.`,
+        );
+      }
+      assert.match(
+        workflow.text,
+        /update-page-lastmod\.js --json "\$RUNNER_TEMP\/[^"]+"/,
+        `${workflow.file} gives the generator no path to write its outcome to`,
+      );
+      assert.match(
+        workflow.text,
+        /report-page-lastmod\.js "\$RUNNER_TEMP\/[^"]+" data\/page-lastmod\.json/,
+        `${workflow.file} counts the run's outcome without checking that the run wrote a ledger, so a run that wrote nothing reports a push's counts`,
+      );
+      assert.match(
+        workflow.text,
+        /set -euo pipefail/,
+        `${workflow.file} runs the generator in a shell that carries on past a failing command`,
+      );
+    }
+  });
+
+  it("leaves its own stdout to drain rather than exiting out from under it", () => {
+    const updater = readFileSync(path.join(REPO, "scripts", "update-page-lastmod.js"), "utf8");
+    assert.doesNotMatch(
+      updater,
+      /process\.exit\(/,
+      "the generator exits before node has drained what it wrote, which discards everything past the pipe buffer",
+    );
+    assert.match(updater, /process\.exitCode = /, "the generator reports no status at all");
+
+    const piped = spawnSync("sh", ["-c", `node -e 'console.log("x".repeat(200000)); process.exit(0)' | wc -c`], { encoding: "utf8" });
+    assert.equal(piped.status, 0, `this control could not be run: ${piped.stderr}`);
+    assert.equal(
+      piped.stdout.trim(),
+      String(PIPE_BUFFER_BYTES),
+      "this test is pointless if node no longer discards a pending stdout write when a process exits on a pipe",
+    );
+  });
+
+  it("reads every page a second time before the days it read go anywhere", () => {
+    for (const workflow of workflows().filter(w => readsEveryPageToDateIt(w) && runsOnAPushToMain(w))) {
+      const wrote = workflow.text.indexOf("update-page-lastmod.js --json");
+      const settled = workflow.text.indexOf("update-page-lastmod.js --check");
+      assert.notEqual(
+        settled,
+        -1,
+        `${workflow.file} writes a ledger it never reads back, so a build whose pages hash differently on two readings stamps today on every one of them`,
+      );
+      assert.ok(
+        wrote < settled,
+        `${workflow.file} reads the pages a second time before it has a ledger to read them against`,
+      );
+      const reported = workflow.text.indexOf("report-page-lastmod.js");
+      assert.ok(
+        settled < reported,
+        `${workflow.file} reports what this run read before it knows the reading reproduces`,
+      );
+      assert.equal(
+        workflow.text.slice(wrote, reported).includes("- name:"),
+        false,
+        `${workflow.file} reads the pages again in a step of its own, and #1326 holds that nothing which can fail stands between a run's data and the gate`,
+      );
+    }
+  });
+
   it("sends the days it read to main through the one gate that runs the suite first", () => {
     for (const workflow of workflows().filter(w => readsEveryPageToDateIt(w) && runsOnAPushToMain(w))) {
       assert.match(
@@ -766,6 +843,163 @@ describe("the ledger keeps up with the code that renders the pages", () => {
         /data\/page-lastmod\.json/,
         `${workflow.file} does not name the ledger among the paths it may commit, so the days it reads stay in its own workspace`,
       );
+    }
+  });
+});
+
+describe("what a run reports about the days it wrote", () => {
+  let reported = "";
+  let named = 0;
+
+  const GENERATED = "2026-09-12";
+
+  before(() => {
+    reported = mkdtempSync(path.join(tmpdir(), "page-lastmod-report-"));
+  });
+
+  after(() => {
+    if (reported) rmSync(reported, { recursive: true, force: true });
+  });
+
+  function fileHolding(body: string): string {
+    const file = path.join(reported, `run-${named++}.json`);
+    writeFileSync(file, body);
+    return file;
+  }
+
+  function ledgerGeneratedOn(day: string): string {
+    return fileHolding(serializePageLastmod({
+      version: 1,
+      generated: day,
+      pages: { "/privacy": { hash: "6cf1a3b0d4e5f012", changed: "2026-09-09" } },
+    }));
+  }
+
+  function outcomeOf(fields: Record<string, unknown>): string {
+    return fileHolding(JSON.stringify({
+      pages: 2519, moved: ["/stability"], added: [], dropped: [], daily: [], seconds: 26, generated: GENERATED, ...fields,
+    }, null, 2));
+  }
+
+  function report(outcome: string, ledger: string) {
+    return spawnSync("node", [path.join(REPO, ...REPORTER), outcome, ledger], { encoding: "utf8" });
+  }
+
+  it("prints the counts the step reports, from the outcome the run wrote", () => {
+    const ledger = ledgerGeneratedOn(GENERATED);
+    const outcome = outcomeOf({ wrote: ledger, moved: ["/stability", "/privacy"], added: ["/best/free-new"], dropped: [] });
+    const run = report(outcome, ledger);
+    assert.equal(run.status, 0, `${run.stdout}${run.stderr}`);
+    assert.equal(run.stdout, "moved=2\nadded=1\ndropped=0\n");
+  });
+
+  it("refuses an outcome cut off at the pipe buffer, and names the command that left it there", () => {
+    const ledger = ledgerGeneratedOn(GENERATED);
+    const whole = readFileSync(outcomeOf({ wrote: ledger, moved: Array.from({ length: 4000 }, (_, n) => `/vendor/v${n}`) }), "utf-8");
+    assert.ok(PIPE_BUFFER_BYTES < whole.length, "this fixture is not long enough for a pipe to have cut it");
+    const run = report(fileHolding(whole.slice(0, PIPE_BUFFER_BYTES)), ledger);
+    assert.equal(run.status, 1);
+    assert.match(run.stderr, /update-page-lastmod\.js/, "the step blames its own reading rather than the command whose output it could not use");
+    assert.match(run.stderr, new RegExp(`${PIPE_BUFFER_BYTES} bytes`), "the count that names the mechanism is not in the message");
+  });
+
+  it("refuses a run that left no outcome at all", () => {
+    const run = report(path.join(reported, "no-such-run.json"), ledgerGeneratedOn(GENERATED));
+    assert.equal(run.status, 1);
+    assert.match(run.stderr, /update-page-lastmod\.js/);
+    assert.match(run.stderr, /nothing there to read/);
+  });
+
+  it("refuses a run that wrote no ledger, so a reading that only reports cannot report a push's counts", () => {
+    const ledger = ledgerGeneratedOn(GENERATED);
+    const run = report(outcomeOf({ wrote: null }), ledger);
+    assert.equal(run.status, 1);
+    assert.match(run.stderr, /wrote no ledger/);
+    assert.match(run.stderr, /must not report success/);
+  });
+
+  it("refuses a ledger on disk that is not the one the run read", () => {
+    const ledger = ledgerGeneratedOn("2026-09-01");
+    const run = report(outcomeOf({ wrote: ledger }), ledger);
+    assert.equal(run.status, 1);
+    assert.match(run.stderr, /generated 2026-09-12 and .* says 2026-09-01/);
+  });
+
+  it("reads the ledger the run wrote where the step names it relative to the checkout", () => {
+    const ledger = ledgerGeneratedOn(GENERATED);
+    const run = spawnSync("node", [path.join(REPO, ...REPORTER), outcomeOf({ wrote: ledger }), path.relative(reported, ledger)], {
+      encoding: "utf8",
+      cwd: reported,
+    });
+    assert.equal(run.status, 0, `${run.stdout}${run.stderr}`);
+  });
+
+  it("refuses an outcome that wrote some ledger other than the one the step reads", () => {
+    const run = report(outcomeOf({ wrote: ledgerGeneratedOn(GENERATED) }), ledgerGeneratedOn(GENERATED));
+    assert.equal(run.status, 1);
+    assert.match(run.stderr, /and this step reads/);
+  });
+
+  it("refuses an outcome holding no list to count", () => {
+    const ledger = ledgerGeneratedOn(GENERATED);
+    const run = report(outcomeOf({ wrote: ledger, dropped: 0 }), ledger);
+    assert.equal(run.status, 1);
+    assert.match(run.stderr, /reports dropped as 0, expected a list of paths/);
+  });
+});
+
+describe("the generator is told where to put what it read", () => {
+  function run(...args: string[]) {
+    return spawnSync("node", [path.join(REPO, ...UPDATER), ...args], { encoding: "utf8" });
+  }
+
+  it("refuses --json with no path, rather than reading every page and dropping the outcome", () => {
+    const missing = run("--json");
+    assert.equal(missing.status, 2, `${missing.stdout}${missing.stderr}`);
+    assert.match(missing.stderr, /--json needs a path/);
+  });
+
+  it("refuses a flag where a path should be, which is how a path goes missing", () => {
+    const swallowed = run("--json", "--check");
+    assert.equal(swallowed.status, 2, `${swallowed.stdout}${swallowed.stderr}`);
+    assert.match(swallowed.stderr, /--json needs a path to write the outcome to, got --check/);
+  });
+
+  it("says in its own help that the outcome goes to a path", () => {
+    const help = run("--help");
+    assert.equal(help.status, 0);
+    assert.match(help.stdout, /--json <path>/);
+  });
+});
+
+describe("one unchanged build read twice gives the same days twice", () => {
+  it("moves nothing on the second reading, and writes an outcome no pipe would have carried whole", () => {
+    const twice = mkdtempSync(path.join(tmpdir(), "page-lastmod-twice-"));
+    try {
+      const env = { ...process.env, AGENTDEALS_PAGE_LASTMOD_PATH: path.join(twice, "page-lastmod.json") };
+      const opening = path.join(twice, "opening.json");
+      const again = path.join(twice, "again.json");
+
+      const first = spawnSync("node", [path.join(REPO, ...UPDATER), "--json", opening], { encoding: "utf8", env, timeout: 600000 });
+      assert.equal(first.status, 0, `the first reading failed: ${first.stdout}${first.stderr}`);
+      const wrote = readFileSync(opening, "utf-8");
+      assert.ok(
+        PIPE_BUFFER_BYTES < wrote.length,
+        `this run's outcome is ${wrote.length} bytes, which a pipe would have carried whole, so it no longer stands over the truncation it was written to catch`,
+      );
+      assert.equal(JSON.parse(wrote).wrote, env.AGENTDEALS_PAGE_LASTMOD_PATH);
+
+      const second = spawnSync("node", [path.join(REPO, ...UPDATER), "--check", "--json", again], { encoding: "utf8", env, timeout: 600000 });
+      const settled = JSON.parse(readFileSync(again, "utf-8"));
+      assert.deepEqual(
+        { moved: settled.moved.length, added: settled.added.length, dropped: settled.dropped.length },
+        { moved: 0, added: 0, dropped: 0 },
+        `reading one unchanged build twice moved ${settled.moved.length} pages, beginning ${settled.moved.slice(0, 5).join(", ")}. Every page that hashes differently on two readings takes today's date on every push, which is the ledger measuring the deploy rather than the page.`,
+      );
+      assert.equal(second.status, 0, `${second.stdout}${second.stderr}`);
+      assert.equal(settled.wrote, null, "a reading that only reports says it wrote a ledger");
+    } finally {
+      rmSync(twice, { recursive: true, force: true });
     }
   });
 });
