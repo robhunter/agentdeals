@@ -34,12 +34,14 @@ jobs:
       - name: Read every page this commit renders, to date the ones whose output moved
         id: lastmod
         run: |
-          set -o pipefail
-          node scripts/update-page-lastmod.js --json | tee /tmp/page-lastmod.json
-          node -e '
-            const outcome = JSON.parse(require("node:fs").readFileSync("/tmp/page-lastmod.json", "utf-8"));
-            console.log(["moved", "added", "dropped"].map(k => `${k}=${outcome[k].length}`).join("\n"));
-          ' >> "$GITHUB_OUTPUT"
+          set -euo pipefail
+          rm -f "$RUNNER_TEMP/page-lastmod.json" "$RUNNER_TEMP/page-lastmod-settled.json"
+          node scripts/update-page-lastmod.js --json "$RUNNER_TEMP/page-lastmod.json"
+          if ! node scripts/update-page-lastmod.js --check --json "$RUNNER_TEMP/page-lastmod-settled.json"; then
+            echo "::error title=The days this run read were not sent to main::The pages listed above hash differently on two readings of one unchanged build, so dating them from their own output stamps today on pages nothing moved. The ledger stays in this run's workspace and the next push reads every page again."
+            exit 1
+          fi
+          node scripts/report-page-lastmod.js "$RUNNER_TEMP/page-lastmod.json" data/page-lastmod.json >> "$GITHUB_OUTPUT"
 
       - name: Run the suite, then push to main only if it is green
         id: gate
