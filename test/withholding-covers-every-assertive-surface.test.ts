@@ -317,5 +317,14 @@ describe("a withholding we publish reaches every surface that states the terms",
       [],
       `${silent.length} pages withhold the terms and offer no reason the surfaces can publish`,
     );
+    const exempted = pages
+      .filter(page => page.unconfirmed !== null && page.tag !== null)
+      .filter(page => !TAGS_THAT_WITHHOLD_THE_TERMS.includes(page.tag as never))
+      .map(page => `${page.slug} (${page.tag})`);
+    assert.deepStrictEqual(
+      exempted.slice(0, 20),
+      [],
+      `${exempted.length} pages publish a reason they cannot confirm the terms under a withholding this sweep exempts`,
+    );
   });
 });

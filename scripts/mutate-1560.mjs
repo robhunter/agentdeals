@@ -5,6 +5,7 @@ const SUITE = [
   "test/withholding-covers-every-assertive-surface.test.ts",
   "test/meta-description-withholding.test.ts",
   "test/gated-vendor-answers.test.ts",
+  "test/growth-limits.test.ts",
 ];
 
 const MUTANTS = [
@@ -84,6 +85,10 @@ const MUTANTS = [
     "  return because.reason === \"gated\" ? because.gate : because.reason;",
     "  return because.reason as WithholdingTag;"],
 
+  ["the-refusal-is-exempted-from-the-scope-at-runtime", "src/vendor-verdict.ts",
+    "  return WITHHOLDING_SCOPE[withholdingTag(because)] === \"the_terms\";\n}",
+    "  return WITHHOLDING_SCOPE[withholdingTag(because)] === \"the_terms\" && !withheldForARefusedRead(because);\n}"],
+
   ["the-empty-history-caveat-reads-the-refusal-as-a-reading-failure", "src/vendor-verdict.ts",
     "  read_not_reconciled: \"so we cannot tell you that nothing changed\",\n  change_measured_no_difference: \"so we cannot tell you that nothing changed\",",
     "  read_not_reconciled: \"so nothing we have read describes these terms\",\n  change_measured_no_difference: \"so nothing we have read describes these terms\","],
@@ -98,10 +103,12 @@ function run(cmd, args) {
   }
 }
 
+const only = process.argv[2] ?? "";
 const survivors = [];
 const uncompiled = [];
 const skipped = [];
 for (const [name, file, from, to] of MUTANTS) {
+  if (only && !name.includes(only)) continue;
   const original = readFileSync(file, "utf-8");
   if (!original.includes(from)) {
     console.log(`SKIP  ${name} — the line it mutates is not in ${file}`);
@@ -117,8 +124,9 @@ for (const [name, file, from, to] of MUTANTS) {
   if (green) survivors.push(name);
 }
 run("npm", ["run", "build"]);
-const killed = MUTANTS.length - survivors.length - uncompiled.length - skipped.length;
-console.log(`\n${killed}/${MUTANTS.length} killed`);
+const ran = MUTANTS.filter(([name]) => !only || name.includes(only)).length;
+const killed = ran - survivors.length - uncompiled.length - skipped.length;
+console.log(`\n${killed}/${ran} killed`);
 if (survivors.length > 0) console.log("survivors:", survivors.join(", "));
 if (uncompiled.length > 0) console.log("did not compile:", uncompiled.join(", "));
 if (skipped.length > 0) console.log("skipped — target string moved, so these scored nothing:", skipped.join(", "));
