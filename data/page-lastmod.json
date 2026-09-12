@@ -741,7 +741,7 @@
       "changed": "2026-09-05"
     },
     "/auth-comparison-2026": {
-      "hash": "a48918358f1e3ab6",
+      "hash": "26f2aaab2a97aad9",
       "changed": "2026-09-12"
     },
     "/auth0-alternatives": {
@@ -1278,7 +1278,7 @@
       "changed": "2026-09-12"
     },
     "/cloud-free-tier-comparison-2026": {
-      "hash": "56b8880b8a483cc4",
+      "hash": "186ae28761332c91",
       "changed": "2026-09-12"
     },
     "/cloudflare-pages-vs-vercel": {
@@ -3258,7 +3258,7 @@
       "changed": "2026-09-12"
     },
     "/serverless-free-tier-comparison-2026": {
-      "hash": "e79d612d39cc8e7e",
+      "hash": "c55180776d841d52",
       "changed": "2026-09-12"
     },
     "/setup": {
