@@ -17,7 +17,8 @@ Usage: node scripts/report-population-floors.js [log] [--within N] [--summary <p
   --within   name the floors whose margin is at or under N records (default 10)
   --summary  append the table to a file as markdown, for a job summary
 
-Exit status is always 0: a narrow margin is a statement about a test, not about the data.
+Exit status is 0 whatever the margins are, because a narrow margin is a statement about a
+test rather than about the data, and 2 where there is no log to read.
 `;
 
 const argv = process.argv.slice(2);
