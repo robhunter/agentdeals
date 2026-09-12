@@ -32,4 +32,15 @@ jobs:
         run: npm run build
 
       - name: Test
+        env:
+          POPULATION_FLOOR_LOG: /tmp/population-floors.jsonl
         run: npm test
+
+      - name: Say how close every population floor is to going red
+        if: always()
+        run: |
+          if [ -s /tmp/population-floors.jsonl ]; then
+            node scripts/report-population-floors.js /tmp/population-floors.jsonl --summary "$GITHUB_STEP_SUMMARY"
+          else
+            echo "The suite wrote no floor log, so no margin can be read off this run."
+          fi

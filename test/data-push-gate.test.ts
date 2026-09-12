@@ -7,7 +7,8 @@ import { dirname, join, relative, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import {
-  gateVerdict, parseNonBlockingTests, readNonBlockingTests,
+  driftedGuardOf, gateVerdict, parseFailures, parseNonBlockingTests, readNonBlockingTests,
+  type TestFailure,
 } from "../src/data-push-gate.ts";
 import { qualityBudgetsPath } from "../src/page-reviews.ts";
 import { VENDOR_KEYED_DATA } from "../src/data-push-holdback.ts";
@@ -100,8 +101,8 @@ describe("#1317 the suite sees every commit that reaches main", () => {
     );
     assert.match(
       scripts["test:gated"],
-      /--test-reporter=\.\/scripts\/reporters\/failing-test-files\.js/,
-      "the gate's suite does not record which files failed, so it cannot tell what held the commit",
+      /--test-reporter=\.\/scripts\/reporters\/failing-tests\.js/,
+      "the gate's suite does not record which tests failed, so it cannot tell what held the commit",
     );
   });
 
@@ -129,6 +130,16 @@ describe("#1317 the suite sees every commit that reaches main", () => {
         /steps\.gate\.outputs\.quarantined == 'true' \|\| steps\.gate\.outputs\.pushed_over_failures == 'true'/,
         `${file} does not report on both of the outcomes the gate can reach`,
       );
+      assert.match(
+        text,
+        /bash scripts\/report-data-push-outcome\.sh "[^"]+" drifted-a-guard/,
+        `${file} ships data over a guard that has drifted and says so nowhere`,
+      );
+      assert.match(
+        text,
+        /steps\.gate\.outputs\.drifted_guards != ''/,
+        `${file} reports nothing on a run whose only red assertion was a drifted guard`,
+      );
       assert.match(text, /issues: write/, `${file} cannot open the issue it is told to open`);
     }
   });
@@ -136,7 +147,12 @@ describe("#1317 the suite sees every commit that reaches main", () => {
   it("gives every outcome a marker of its own, so none of them buries another", () => {
     const reporter = readFileSync(join(REPO, "scripts", "report-data-push-outcome.sh"), "utf8");
     const markers = [...reporter.matchAll(/MARKER="([a-z-]+)"/g)].map((m) => m[1]!);
-    assert.deepStrictEqual(markers, ["data-push-refused", "data-push-over-failures", "data-push-vendorholdback"]);
+    assert.deepStrictEqual(markers, [
+      "data-push-refused",
+      "data-push-over-failures",
+      "data-push-vendorholdback",
+      "data-push-drifted-guard",
+    ]);
     for (const marker of markers) {
       const others = markers.filter((m) => m !== marker);
       const words = new Set(marker.split("-"));
@@ -196,11 +212,31 @@ describe("#1317 the suite sees every commit that reaches main", () => {
   });
 });
 
-const FAILING_BY_MODE: Record<string, string[]> = {
+const A_GUARD_THAT_DRIFTED = {
+  site: "test/a-guard-that-measures-what-this-run-shrinks.test.ts:12",
+  subject: "vendors have the refused read as the only reason we withhold",
+  stated: "a floor of 80",
+  measured: "102",
+  clearsAt: "76",
+};
+
+const FAILING_BY_MODE: Record<string, Array<{ file: string; drifted?: typeof A_GUARD_THAT_DRIFTED }>> = {
   green: [],
-  red: ["test/the-data-this-run-wrote-is-wrong.test.ts"],
-  excused: ["test/how-current-our-reading-is.test.ts"],
-  mixed: ["test/how-current-our-reading-is.test.ts", "test/the-data-this-run-wrote-is-wrong.test.ts"],
+  red: [{ file: "test/the-data-this-run-wrote-is-wrong.test.ts" }],
+  excused: [{ file: "test/how-current-our-reading-is.test.ts" }],
+  mixed: [
+    { file: "test/how-current-our-reading-is.test.ts" },
+    { file: "test/the-data-this-run-wrote-is-wrong.test.ts" },
+  ],
+  drifted: [{ file: "test/a-guard-that-measures-what-this-run-shrinks.test.ts", drifted: A_GUARD_THAT_DRIFTED }],
+  "drifted-and-wrong": [
+    { file: "test/a-guard-that-measures-what-this-run-shrinks.test.ts", drifted: A_GUARD_THAT_DRIFTED },
+    { file: "test/the-data-this-run-wrote-is-wrong.test.ts" },
+  ],
+  "drifted-in-a-file-that-also-broke": [
+    { file: "test/a-guard-that-measures-what-this-run-shrinks.test.ts", drifted: A_GUARD_THAT_DRIFTED },
+    { file: "test/a-guard-that-measures-what-this-run-shrinks.test.ts" },
+  ],
   crashed: [],
   vendor: [],
   "vendor-one-at-a-time": [],
@@ -217,10 +253,13 @@ if (mode.startsWith("vendor")) {
   const rows = JSON.parse(readFileSync("data/deal_changes.json", "utf8")).changes;
   blamed = rows.filter((r) => r.reading === "wrong").map((r) => r.vendor);
   if (mode === "vendor-one-at-a-time") blamed = blamed.slice(0, 1);
-  failing = blamed.length > 0 ? ["test/the-data-this-run-wrote-is-wrong.test.ts"] : [];
+  failing = blamed.length > 0 ? [{ file: "test/the-data-this-run-wrote-is-wrong.test.ts" }] : [];
 }
 const red = mode === "crashed" || failing.length > 0;
-writeFileSync(process.env.GATE_FAILING_FILES, failing.map((f) => f + "\\n").join(""));
+writeFileSync(
+  process.env.GATE_FAILING_TESTS,
+  failing.map((f) => JSON.stringify({ file: f.file, name: "the fixture assertion", ...(f.drifted ? { drifted: f.drifted } : {}) }) + "\\n").join(""),
+);
 writeFileSync(
   process.env.GATE_FIXTURE_ENV_REPORT,
   ${JSON.stringify(GATE_CONFIGURATION)}.filter((name) => process.env[name]).join(","),
@@ -231,7 +270,7 @@ console.log("\\u2139 pass " + (red ? 1 : 2));
 console.log("\\u2139 fail " + (red ? 1 : 0));
 if (red) {
   console.log("\\u2716 failing tests:");
-  for (const f of failing) console.log("the fixture assertion in " + f);
+  for (const f of failing) console.log("the fixture assertion in " + f.file);
   for (const v of blamed) console.log("  the reading this run wrote for " + v + " is wrong");
   if (mode === "crashed") console.log("the suite died before it named a file");
   process.exit(1);
@@ -364,6 +403,7 @@ type RatchetMode = "lower" | "throw";
 
 interface GateRun {
   mode: GateMode;
+  driftTo?: string;
   build?: "fail";
   ratchet?: RatchetMode;
   lastmod?: true;
@@ -388,6 +428,7 @@ function runGate(work: string, mode: GateMode | GateRun, ...args: string[]) {
       GATE_UPDATE_PAGE_LASTMOD: opts.lastmod ? "1" : "",
       GATE_REGENERATE_LLM_INDEX: opts.llmIndex ? "1" : "",
       GATE_REPLAYS_ONTO_A_MOVED_MAIN: opts.replays === undefined ? "" : String(opts.replays),
+      GATE_DRIFTED_GUARDS: opts.driftTo ?? join(work, "drifted-guards.md"),
       GITHUB_OUTPUT: outputs,
       AGENTDEALS_NON_BLOCKING_TESTS_PATH: join(work, "allowlist.json"),
       AGENTDEALS_PAGE_LASTMOD_PATH: join(work, "data", "page-lastmod.json"),
@@ -640,7 +681,7 @@ describe("#1321 a measurement of our own reading does not stop the catalogue adv
     assert.strictEqual(git(origin, "show", "main:data/health.json"), '{"checked":5}');
     assert.deepStrictEqual(quarantineRefs(origin, "data-quarantine/fixture"), []);
     assert.match(run.stdout, /how-current-our-reading-is/, "the failure that did not hold the commit is not named");
-    assert.match(run.stdout, /none of them says this data is wrong/);
+    assert.match(run.stdout, /Nothing that went red says this data is wrong/);
     assert.match(run.outputs, /pushed_over_failures=true/);
   });
 
@@ -666,6 +707,48 @@ describe("#1321 a measurement of our own reading does not stop the catalogue adv
     assert.strictEqual(run.status, 1, "an excused failure carried a real one onto main with it");
     assert.strictEqual(mainSha(origin), before);
     assert.match(run.stdout, /the-data-this-run-wrote-is-wrong/);
+  });
+
+  it("puts the data on main when the only red assertion says a guard has drifted into its own headroom", () => {
+    const { work, origin } = fixtureRepo();
+    const before = mainSha(origin);
+    const drift = join(work, "drifted-guards.md");
+    writeFileSync(join(work, "data", "health.json"), '{"checked":11}\n');
+
+    const run = runGate(work, { mode: "drifted", driftTo: drift }, "data-quarantine/fixture", "data(auto): fixture", "data/health.json");
+
+    assert.strictEqual(run.status, 0, `a drifted guard held the data back: ${run.stdout}${run.stderr}`);
+    assert.notStrictEqual(mainSha(origin), before, "the data did not reach main");
+    assert.strictEqual(git(origin, "show", "main:data/health.json"), '{"checked":11}');
+    assert.deepStrictEqual(quarantineRefs(origin, "data-quarantine/fixture"), []);
+    assert.match(run.stdout, /name no record and no vendor/, "the gate does not say why the drift did not hold the commit");
+    assert.match(run.outputs, /drifted_guards=1/);
+    assert.match(run.outputs, new RegExp(`drifted_guards_body=${drift}`));
+    assert.match(readFileSync(drift, "utf8"), /a floor of 80 \| 102 \| 76/, "the table the issue would carry names no figures");
+  });
+
+  it("still holds the data back when a drifted guard arrives beside a test that says the data is wrong", () => {
+    const { work, origin } = fixtureRepo();
+    const before = mainSha(origin);
+    writeFileSync(join(work, "data", "health.json"), '{"checked":12}\n');
+
+    const run = runGate(work, "drifted-and-wrong", "data-quarantine/fixture", "data(auto): fixture", "data/health.json");
+
+    assert.strictEqual(run.status, 1, "a drifted guard carried a real failure onto main with it");
+    assert.strictEqual(mainSha(origin), before);
+    assert.match(run.stdout, /the-data-this-run-wrote-is-wrong/);
+  });
+
+  it("holds the data back when a drifted guard's own file also failed on something else", () => {
+    const { work, origin } = fixtureRepo();
+    const before = mainSha(origin);
+    writeFileSync(join(work, "data", "health.json"), '{"checked":13}\n');
+
+    const run = runGate(work, "drifted-in-a-file-that-also-broke", "data-quarantine/fixture", "data(auto): fixture", "data/health.json");
+
+    assert.strictEqual(run.status, 1, "a file excused one assertion at a time excused the whole file");
+    assert.strictEqual(mainSha(origin), before);
+    assert.match(run.stdout, /a-guard-that-measures-what-this-run-shrinks/);
   });
 
   it("holds the data back when the suite is red and names no file", () => {
@@ -1001,15 +1084,26 @@ describe("#1321 which failures are allowed not to hold a data commit", () => {
   });
 
   it("holds the commit for a file nobody excused", () => {
-    const verdict = gateVerdict(["test/somewhere-else.test.ts"], shipped);
+    const verdict = gateVerdict([{ file: "test/somewhere-else.test.ts", name: "a test" }], shipped);
     assert.strictEqual(verdict.decision, "quarantine");
     assert.deepStrictEqual(verdict.blocking, ["test/somewhere-else.test.ts"]);
   });
 
   it("lets the commit through when every failing file is excused", () => {
-    const verdict = gateVerdict(shipped.tests.map((t) => t.file), shipped);
+    const verdict = gateVerdict(shipped.tests.map((t) => ({ file: t.file, name: "a test" })), shipped);
     assert.strictEqual(verdict.decision, "push");
     assert.deepStrictEqual(verdict.blocking, []);
+  });
+
+  it("names every file that went red, whether or not it held the commit", () => {
+    const verdict = gateVerdict(
+      [
+        { file: "test/somewhere-else.test.ts", name: "a test" },
+        { file: shipped.tests[0]!.file, name: "a test" },
+      ],
+      shipped,
+    );
+    assert.deepStrictEqual(verdict.files, [shipped.tests[0]!.file, "test/somewhere-else.test.ts"].sort());
   });
 
   it("holds the commit when the suite failed and named nothing", () => {

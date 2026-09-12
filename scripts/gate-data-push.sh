@@ -57,12 +57,15 @@ COMMIT="$(git rev-parse --short HEAD)"
 
 LOG="$(mktemp)"
 VERDICT="$(mktemp)"
-GATE_FAILING_FILES="$(mktemp)"
+GATE_FAILING_TESTS="$(mktemp)"
+EXCUSED_FILES="$(mktemp)"
 SUBPROCESS_OUTPUT="$(mktemp)"
 HELD_BACK_LIST="$(mktemp)"
-export GATE_FAILING_FILES
+DRIFTED_GUARDS="${GATE_DRIFTED_GUARDS:-/tmp/gate-drifted-guards.md}"
+export GATE_FAILING_TESTS
 export GITHUB_OUTPUT="$SUBPROCESS_OUTPUT"
-trap 'rm -f "$LOG" "$VERDICT" "$GATE_FAILING_FILES" "$SUBPROCESS_OUTPUT" "$HELD_BACK_LIST"' EXIT
+trap 'rm -f "$LOG" "$VERDICT" "$GATE_FAILING_TESTS" "$EXCUSED_FILES" "$SUBPROCESS_OUTPUT" "$HELD_BACK_LIST"' EXIT
+rm -f "$DRIFTED_GUARDS"
 
 REPLAYS=0
 REPLAYS_ONTO_A_MOVED_MAIN="${GATE_REPLAYS_ONTO_A_MOVED_MAIN:-2}"
@@ -176,7 +179,8 @@ derive_from_the_data
 
 while :; do
   : >"$LOG"
-  : >"$GATE_FAILING_FILES"
+  : >"$GATE_FAILING_TESTS"
+  : >"$EXCUSED_FILES"
 
   if env -u GATE_RATCHET_BUDGETS -u GATE_UPDATE_PAGE_LASTMOD -u GATE_REGENERATE_LLM_INDEX npm run test:gated >>"$LOG" 2>&1; then
     summarize
@@ -188,7 +192,8 @@ while :; do
     else
       tail -n 60 "$LOG"
     fi
-    if ! node "$SCRIPT_DIR/gate-verdict.js" "$GATE_FAILING_FILES" >"$VERDICT" 2>&1; then
+    if ! node "$SCRIPT_DIR/gate-verdict.js" "$GATE_FAILING_TESTS" \
+      --excused-to "$EXCUSED_FILES" --drift-to "$DRIFTED_GUARDS" >"$VERDICT" 2>&1; then
       cat "$VERDICT"
       if hold_back_the_vendors_a_failing_test_named; then continue; fi
       quarantine "the suite refused it"
@@ -203,12 +208,20 @@ while :; do
       echo "Held back and left for the next run to read again: $HELD_BACK_VENDORS. Every other vendor this run read is on main."
     fi
     if [ -n "$SUITE_WAS_RED" ]; then
-      {
-        echo "quarantined=false"
-        echo "pushed_over_failures=true"
-        echo "non_blocking_files=$(tr '\n' ' ' <"$GATE_FAILING_FILES")"
-      } >>"$OUTPUT"
-      echo "Suite red — $COMMIT is on main anyway. Every failing file above measures how current our own reading is; none of them says this data is wrong."
+      echo "quarantined=false" >>"$OUTPUT"
+      if [ -s "$EXCUSED_FILES" ]; then
+        {
+          echo "pushed_over_failures=true"
+          echo "non_blocking_files=$(tr '\n' ' ' <"$EXCUSED_FILES")"
+        } >>"$OUTPUT"
+      fi
+      if [ -s "$DRIFTED_GUARDS" ]; then
+        {
+          echo "drifted_guards=$(awk 'NR > 2 && NF > 0' "$DRIFTED_GUARDS" | wc -l | tr -d ' ')"
+          echo "drifted_guards_body=$DRIFTED_GUARDS"
+        } >>"$OUTPUT"
+      fi
+      echo "Suite red — $COMMIT is on main anyway. Nothing that went red says this data is wrong: each failure either measures how current our own reading is, or states that a guard has drifted into its own headroom."
     else
       echo "Suite green — $COMMIT is on main."
     fi

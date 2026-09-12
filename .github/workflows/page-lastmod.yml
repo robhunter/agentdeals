@@ -56,16 +56,20 @@ jobs:
             data/page-lastmod.json
 
       - name: Say where it can be seen what the gate did with this run's dates
-        if: always() && (steps.gate.outputs.quarantined == 'true' || steps.gate.outputs.pushed_over_failures == 'true')
+        if: always() && (steps.gate.outputs.quarantined == 'true' || steps.gate.outputs.pushed_over_failures == 'true' || steps.gate.outputs.drifted_guards != '')
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           QUARANTINED: ${{ steps.gate.outputs.quarantined }}
           QUARANTINE_REF: ${{ steps.gate.outputs.quarantine_ref }}
           QUARANTINE_REASON: ${{ steps.gate.outputs.quarantine_reason }}
           NON_BLOCKING_FILES: ${{ steps.gate.outputs.non_blocking_files }}
+          DRIFTED_GUARDS_BODY: ${{ steps.gate.outputs.drifted_guards_body }}
         run: |
           if [ "$QUARANTINED" = "true" ]; then
             bash scripts/report-data-push-outcome.sh "Page dates" refused "$QUARANTINE_REF" "$QUARANTINE_REASON"
-          else
-            bash scripts/report-data-push-outcome.sh "Page dates" shipped-over-failures "$NON_BLOCKING_FILES"
+            exit 0
           fi
+          if [ -n "$DRIFTED_GUARDS_BODY" ] && [ -s "$DRIFTED_GUARDS_BODY" ]; then
+            bash scripts/report-data-push-outcome.sh "Page dates" drifted-a-guard "$(cat "$DRIFTED_GUARDS_BODY")"
+          fi
+          bash scripts/report-data-push-outcome.sh "Page dates" shipped-over-failures "$NON_BLOCKING_FILES"

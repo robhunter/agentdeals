@@ -4,7 +4,7 @@ import { spawn, type ChildProcess } from "node:child_process";
 import { readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { assertCoversPopulation, assertPopulationFloor, recordsInTheCatalogue, vendorsInTheCatalogue } from "./population-floor.ts";
+import { assertCoversPopulation, assertSharesPopulation, recordsInTheCatalogue, vendorsInTheCatalogue, type Population } from "./population-floor.ts";
 import { GATE_REASONS, REJECT_MEASURES_NO_CHANGE, REJECT_NULL_COMPARISON, REJECT_STATES_NO_DIFFERENCE } from "../scripts/change-gate.js";
 import { SUPPRESSED_SAME_TRANSITION_REGRADED } from "../scripts/change-log.js";
 import { refusalsByVendor, refusedReadTheConfirmationSupersedes, refusedReadWithholdingStability, supersededRefusalSentence, REFUSAL_REASONS_THAT_CONFIRM_THE_STORED_TERMS, REFUSAL_REASONS_THAT_MEASURED_NO_DIFFERENCE, MEASURED_NO_DIFFERENCE_BADGE_LABEL, UNRECONCILED_READ_BADGE_LABEL } from "../dist/change-refusal.js";
@@ -94,6 +94,42 @@ const badgeWeExpect = (subject: Subject): string =>
   subject.measuredNoDifference ? MEASURED_NO_DIFFERENCE_BADGE_LABEL : UNRECONCILED_READ_BADGE_LABEL;
 
 let subjects: Subject[] = [];
+
+const vendorsHoldingARefusedRead = (): Population => ({
+  size: subjects.filter(s => s.unreconciled).length,
+  read: "vendors hold a refused read and no published change",
+});
+
+const vendorsWithheldForTheRefusedReadAlone = (): Population => ({
+  size: subjects.filter(s => s.onlyTheRefusal).length,
+  read: "vendors have the refused read as the only reason we withhold",
+});
+
+const gatedVendorsTheSourceCheckLeavesAlone = (): Population => ({
+  size: subjects.filter(s => s.gated && !s.withheldBySourceCheck && !s.ended).length,
+  read: "gated vendors the source check does not also withhold",
+});
+
+const gatedVendorsTheSourceCheckWithholdsToo = (): Population => ({
+  size: subjects.filter(s => s.gated && s.withheldBySourceCheck && !s.ended).length,
+  read: "gated vendors the source check withholds too",
+});
+
+const vendorsTheSourceCheckWithholds = (): Population => ({
+  size: subjects.filter(s => s.withheldBySourceCheck && !s.ended).length,
+  read: "vendors the source check withholds",
+});
+
+const vendorsRatedStableWithNothingPublished = (): Population => ({
+  size: subjects.filter(s => s.rated === "stable" && s.published === 0).length,
+  read: "vendors we rate stable and hold no published change for",
+});
+
+const refusalsTheLogHolds = (): Population => ({
+  size: loadChangeRefusals().length,
+  read: "refusals the log holds",
+});
+
 let serverPort = 0;
 let proc: ChildProcess | null = null;
 const pages = new Map<string, string>();
@@ -228,13 +264,13 @@ describe("a refused change is not a signal that nothing changed", () => {
     }
     assert.deepStrictEqual(claiming.slice(0, 20), [], `stability claimed over a read we refused:\n${claiming.slice(0, 20).join("\n")}`);
     assertCoversPopulation(swept, vendorsInTheCatalogue(), "vendor pages read for a stability claim");
-    assertPopulationFloor(subjects.filter(s => s.unreconciled).length, 100, "vendors hold a refused read and no published change");
+    assertSharesPopulation(subjects.filter(s => s.unreconciled).length, vendorsInTheCatalogue(), 0.02, "vendors hold a refused read and no published change");
 
     const history = subjects
       .filter(s => s.onlyTheRefusal && A_STABLE_HISTORY.test(pages.get(s.slug) ?? ""))
       .map(s => `/vendor/${s.slug}`);
     assert.deepStrictEqual(history.slice(0, 20), [], `pages calling it a stable pricing history:\n${history.slice(0, 20).join("\n")}`);
-    assertPopulationFloor(subjects.filter(s => s.onlyTheRefusal).length, 80, "vendors have the refused read as the only reason we withhold");
+    assertSharesPopulation(subjects.filter(s => s.onlyTheRefusal).length, vendorsHoldingARefusedRead(), 0.4, "vendors have the refused read as the only reason we withhold");
   });
 
   it("keeps the rating where the refusal is itself a finding that the terms held", () => {
@@ -291,12 +327,14 @@ describe("a refused change is not a signal that nothing changed", () => {
     const wrong: string[] = [];
     const withheld = subjects.filter(s => s.onlyTheRefusal);
     let queue = 0;
+    let answered = 0;
     const worker = async () => {
       while (queue < withheld.length) {
         const subject = withheld[queue++];
         const { slug } = subject;
         const res = await fetch(`http://localhost:${serverPort}/badge/${slug}.svg`);
         if (res.status !== 200) { wrong.push(`/badge/${slug}.svg returned ${res.status}`); continue; }
+        answered++;
         const label = badgeLabelOf(await res.text());
         const expected = badgeWeExpect(subject);
         if (label !== expected) wrong.push(`/badge/${slug}.svg reads "${label}", not "${expected}"`);
@@ -304,7 +342,8 @@ describe("a refused change is not a signal that nothing changed", () => {
     };
     await Promise.all(Array.from({ length: 12 }, worker));
     assert.deepStrictEqual(wrong.slice(0, 20), [], `badges naming the wrong reason:\n${wrong.slice(0, 20).join("\n")}`);
-    assertPopulationFloor(withheld.length, 80, "badges were read for the reason they withhold");
+    assertSharesPopulation(withheld.length, vendorsHoldingARefusedRead(), 0.4, "vendors withhold on the refused read alone and were read for their badge");
+    assertCoversPopulation(answered, vendorsWithheldForTheRefusedReadAlone(), "badges were read for the reason they withhold");
   });
 
   it("answers an agent the way it answers a reader, on either scale", async () => {
@@ -369,7 +408,7 @@ describe("a refused change is not a signal that nothing changed", () => {
       `records naming two different days as the day we last read the page:\n${contradicting.slice(0, 20).join("\n")}`,
     );
     assertCoversPopulation(payload.offers.length, recordsInTheCatalogue(), "records read for the day their verdict dates itself to");
-    assertPopulationFloor(payload.offers.filter(row => row.refused_read).length, 100, "records publish a refused read");
+    assertSharesPopulation(payload.offers.filter(row => row.refused_read).length, recordsInTheCatalogue(), 0.03, "records publish a refused read");
   });
 
   it("holds the withholding wherever nothing has confirmed the terms since", async () => {
@@ -386,7 +425,7 @@ describe("a refused change is not a signal that nothing changed", () => {
       .filter(row => row.risk_level !== null)
       .map(row => `${row.vendor} (${row.tier}) rates ${row.risk_level} over a refusal we have not confirmed past`);
     assert.deepStrictEqual(released.slice(0, 20), [], `ratings restored over a live refusal:\n${released.slice(0, 20).join("\n")}`);
-    assertPopulationFloor(stillUnconfirmed.length, 100, "records hold a refusal no later confirmation supersedes");
+    assertSharesPopulation(stillUnconfirmed.length, recordsInTheCatalogue(), 0.03, "records hold a refusal no later confirmation supersedes");
 
     for (const vendor of ["pubnub.com", "Typeform.com", "Lokalise"]) {
       const row = payload.offers.find(o => o.vendor === vendor);
@@ -405,7 +444,7 @@ describe("a refused change is not a signal that nothing changed", () => {
       .filter(r => published.has(`${r.vendor.toLowerCase()}|${r.change_type}|${(r.summary ?? "").trim()}`))
       .map(r => `${r.vendor} (${r.reason})`);
     assert.deepStrictEqual(admitted, [], `a refused record reached the published log:\n${admitted.join("\n")}`);
-    assertPopulationFloor(refusals.length, 180, "records were refused and checked against the published log");
+    assertSharesPopulation(refusals.length, refusalsTheLogHolds(), 0.5, "records were refused and checked against the published log");
     for (const vendor of ["Tavily AI", "Reducto"]) {
       assert.ok(
         refusals.some(r => r.vendor === vendor && r.reason === "removal_read_from_root"),
@@ -444,7 +483,7 @@ describe("an empty history and a recorded threshold are claims a refused read wi
     const withheld = subjects.filter(
       s => s.unreconciled && A_THRESHOLD_WE_CANNOT_CONFIRM.test(growthBlockOf(pages.get(s.slug) ?? "")),
     );
-    assertPopulationFloor(withheld.length, 25, "vendor pages hold a recorded threshold behind a refused read");
+    assertSharesPopulation(withheld.length, vendorsHoldingARefusedRead(), 0.1, "vendor pages hold a recorded threshold behind a refused read");
   });
 
   it("ships the withheld threshold to an agent as well as to a reader", () => {
@@ -470,7 +509,7 @@ describe("an empty history and a recorded threshold are claims a refused read wi
       else if (!paragraph.includes(subject.refusedRead?.refused_date ?? "")) silent.push(`/vendor/${subject.slug}: names no date`);
     }
     assert.deepStrictEqual(silent.slice(0, 20), [], `empty histories that do not say why we cannot read them:\n${silent.slice(0, 20).join("\n")}`);
-    assertPopulationFloor(named, 80, "vendor pages hold an empty history and a refused read as the only reason");
+    assertSharesPopulation(named, vendorsWithheldForTheRefusedReadAlone(), 0.5, "vendor pages hold an empty history and a refused read as the only reason");
   });
 
   it("leaves the empty history of a gated page exactly as the gate leaves it", () => {
@@ -486,7 +525,7 @@ describe("an empty history and a recorded threshold are claims a refused read wi
       if (/^No recorded pricing changes for .*\.$/.test(paragraph)) bare++;
     }
     assert.deepStrictEqual(moved.slice(0, 20), [], `a gate's empty history no longer reads as the gate leaves it:\n${moved.slice(0, 20).join("\n")}`);
-    assertPopulationFloor(bare, 10, "gated vendor pages publish the bare empty-history sentence");
+    assertSharesPopulation(bare, gatedVendorsTheSourceCheckLeavesAlone(), 0.12, "gated vendor pages publish the bare empty-history sentence");
     assert.ok(
       subjects.some(s => s.gated && s.unreconciled && !s.withheldBySourceCheck),
       "no gated page holds a refused read, so the gate is not what is keeping the refusal off it",
@@ -505,7 +544,7 @@ describe("an empty history and a recorded threshold are claims a refused read wi
       }
     }
     assert.deepStrictEqual(moved.slice(0, 20), [], `a gated page no longer says why nothing we read describes its terms:\n${moved.slice(0, 20).join("\n")}`);
-    assertPopulationFloor(read, 60, "gated vendor pages are withheld by the source check as well");
+    assertSharesPopulation(read, gatedVendorsTheSourceCheckWithholdsToo(), 0.4, "gated vendor pages are withheld by the source check as well");
   });
 
   it("leaves the empty history the source check writes exactly as the source check writes it", () => {
@@ -520,7 +559,7 @@ describe("an empty history and a recorded threshold are claims a refused read wi
       }
     }
     assert.deepStrictEqual(moved.slice(0, 20), [], `the source check's empty-history sentence has changed:\n${moved.slice(0, 20).join("\n")}`);
-    assertPopulationFloor(read, 400, "vendor pages carry the empty-history sentence the source check writes");
+    assertSharesPopulation(read, vendorsTheSourceCheckWithholds(), 0.4, "vendor pages carry the empty-history sentence the source check writes");
   });
 
   it("keeps both sentences on a vendor we rate", () => {
@@ -533,7 +572,7 @@ describe("an empty history and a recorded threshold are claims a refused read wi
       if (!/This is a good sign — stable pricing/.test(paragraph)) lost.push(`/vendor/${subject.slug}: ${paragraph.slice(0, 120)}`);
     }
     assert.deepStrictEqual(lost.slice(0, 20), [], `a rated vendor lost the sentence its empty history earns:\n${lost.slice(0, 20).join("\n")}`);
-    assertPopulationFloor(claiming, 250, "rated vendor pages call an empty history a good sign");
+    assertSharesPopulation(claiming, vendorsRatedStableWithNothingPublished(), 0.4, "rated vendor pages call an empty history a good sign");
 
     for (const slug of ["ahasend", "appsmith", "browserless"]) {
       const subject = subjects.find(s => s.slug === slug);
@@ -558,9 +597,10 @@ describe("a page states the reason we withheld, not a reason its own refusal con
       [],
       `pages reporting an equality finding as a change we could not reconcile:\n${contradicting.slice(0, 20).join("\n")}`,
     );
-    assertPopulationFloor(
+    assertSharesPopulation(
       subjects.filter(s => s.measuredNoDifference).length,
-      20,
+      vendorsHoldingARefusedRead(),
+      0.08,
       "vendors hold only refusals that measured the two states as equal",
     );
     assertCoversPopulation(subjects.length, vendorsInTheCatalogue(), "vendor pages read for the reason they withhold");

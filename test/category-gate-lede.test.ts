@@ -6,7 +6,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { fetchBadgeVerdicts, type SiteFreeTierVerdict } from "./badge-verdicts.ts";
-import { assertPopulationFloor } from "./population-floor.ts";
+import { assertCoversPopulation, assertPopulationFloor, categoriesInTheCatalogue } from "./population-floor.ts";
 
 const { gateFor, utcDate } = await import("../dist/ranking.js");
 const { gatedShareLede } = await import("../dist/eligibility.js");
@@ -323,7 +323,7 @@ describe("a category page puts no record forward", () => {
       if (leader !== null) naming.push(`/category/${c.slug} leads with ${leader}`);
       assert.ok(!intro.includes("  "), `/category/${c.slug} intro holds a gap where a claim was`);
     }
-    assertPopulationFloor(checked, 45, "category pages whose intro the sweep read");
+    assertCoversPopulation(checked, categoriesInTheCatalogue(), "category pages whose intro the sweep read");
     assert.deepStrictEqual(naming, [], `category intros naming a leader: ${naming.length}`);
   });
 
@@ -341,7 +341,7 @@ describe("a category page puts no record forward", () => {
         if (vendor.length > 2 && answer.includes(vendor)) claiming.push(`/category/${c.slug} names ${vendor}`);
       }
     }
-    assertPopulationFloor(answered, 45, "category pages answering the best-service question");
+    assertCoversPopulation(answered, categoriesInTheCatalogue(), "category pages answering the best-service question");
     assert.deepStrictEqual(claiming, [], `category answers naming a record: ${claiming.length}`);
   });
 
