@@ -35,7 +35,9 @@ const DOCUMENTED_OPERATIONS: Record<string, Record<string, any>> = {
                   offers: { type: "array", items: { $ref: "#/components/schemas/Offer" } },
                   total: { type: "integer", description: "Total matching offers (before pagination)" },
                   gated: { type: "integer", description: "How many of the `total` matching offers carry a non-null `gate` — counted over the whole match, not the returned page (#1241)." },
-                  gate_summary: { type: "string", description: "One line stating how many of the matching offers are not on our ranked list and why. Absent when `gated` is 0." }
+                  gate_summary: { type: "string", description: "One line stating how many of the matching offers are not on our ranked list and why. Absent when `gated` is 0." },
+                  stability_withheld: { type: "integer", description: "How many offers the query matched before the `stability` filter publish no stability class, so no value of that filter can return them (#1561). Present only when `stability` is supplied." },
+                  stability_withheld_summary: { type: "string", description: "One line stating how many were held back and on what grounds. Absent when `stability_withheld` is 0." }
                 }
               },
               example: {
