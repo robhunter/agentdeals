@@ -107,6 +107,12 @@ export function recordsInTheCatalogue(): Population {
   return { size: catalogueOffers().length, read: "records the catalogue holds" };
 }
 
+export function pagesOnTheReviewRegister(): Population {
+  const REPO = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
+  const at = process.env.AGENTDEALS_PAGE_REVIEWS_PATH || path.join(REPO, "data", "page-reviews.json");
+  return { size: JSON.parse(readFileSync(at, "utf-8")).pages.length, read: "pages the review register holds" };
+}
+
 const POPULATION_READER = /^[A-Za-z_$][\w$]*\(\s*\)$/;
 
 export const POPULATION_ASSERTIONS = ["assertCoversPopulation", "assertSharesPopulation"] as const;

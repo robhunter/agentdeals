@@ -1,6 +1,6 @@
 import { describe, it, before, after } from "node:test";
 import assert from "node:assert";
-import { assertPopulationFloor } from "./population-floor.ts";
+import { assertCoversPopulation, assertPopulationFloor, pagesOnTheReviewRegister } from "./population-floor.ts";
 import { spawn, type ChildProcess } from "node:child_process";
 import { readFileSync, writeFileSync, mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
@@ -289,18 +289,21 @@ describe("a review that found defects reaches the reader", () => {
   const SUBJECT = "/database-pricing";
   const CONTROL = "/vector-database-pricing";
   const REVIEWED_ON = "2026-08-26";
+  const FAILED = new RegExp(`Reviewed ${REVIEWED_ON}, corrections outstanding`);
+  const EVERY_FAILED = new RegExp(FAILED.source, "g");
+  const pages = registeredPages();
   let fixture: RegisterFixture;
   let server: { proc: ChildProcess; port: number };
   const rendered = new Map<string, string>();
 
   before(async () => {
     fixture = registerWith(REPO, "failed-review-", {
-      [SUBJECT]: reviewFailedOn(REVIEWED_ON),
+      ...Object.fromEntries(pages.map((p) => [p.path, reviewFailedOn(REVIEWED_ON)])),
       [CONTROL]: NEVER_REVIEWED,
     });
     server = await startServer({ AGENTDEALS_PAGE_REVIEWS_PATH: fixture.file });
-    for (const route of [SUBJECT, CONTROL]) {
-      rendered.set(route, await fetch(`http://localhost:${server.port}${route}`).then((r) => r.text()));
+    for (const page of pages) {
+      rendered.set(page.path, await fetch(`http://localhost:${server.port}${page.path}`).then((r) => r.text()));
     }
   });
 
@@ -311,6 +314,25 @@ describe("a review that found defects reaches the reader", () => {
 
   it("says so on the page whose review failed", () => {
     assert.match(rendered.get(SUBJECT)!, new RegExp(`Reviewed ${REVIEWED_ON}, corrections outstanding`));
+  });
+
+  it("reaches every path the register holds, so a page joining the register cannot skip the byline", () => {
+    const failed = pages.filter((p) => p.path !== CONTROL);
+    const silent = failed.filter((p) => !FAILED.test(visibleBody(rendered.get(p.path)!))).map((p) => p.path);
+    assert.deepStrictEqual(silent, []);
+    assertCoversPopulation(
+      failed.length + 1,
+      pagesOnTheReviewRegister(),
+      "registered paths that carried the review the fixture recorded",
+    );
+  });
+
+  it("says it once per page, so a page served through two passes does not repeat itself", () => {
+    const repeated = pages
+      .filter((p) => p.path !== CONTROL)
+      .map((p) => ({ path: p.path, times: visibleBody(rendered.get(p.path)!).match(EVERY_FAILED)?.length ?? 0 }))
+      .filter((p) => p.times !== 1);
+    assert.deepStrictEqual(repeated, []);
   });
 
   it("names the date the figures were last checked, rather than claiming none has happened", () => {
