@@ -34,7 +34,7 @@ import { NO_CURRENT_FIGURE, costHeadlineCaveat, limitCellText, mayRecommendAsFre
 import { changesByVendor } from "./superseded-census.js";
 import { buildComparisonMap, comparisonSlug } from "./comparison-pairs.js";
 import { comparisonVerdictText, freeTierFaqAnswer, stabilityFaqAnswer, type ComparisonSide, type FreeTierSide, type SideFreeTier, type StabilityRating } from "./comparison-verdict.js";
-import { publishedVendorLevel, vendorVerdictSentence, vendorBadge, freeTierClaim, statesRiskCause, narrowingSentence, changeKindNoun, emptyHistoryCaveatSentence, refusedReadOurConfirmationSupersedes, refusedReadWeHold, refusedReadWithholdingSentence, unconfirmedThresholdSentence, whyWeCannotConfirmTheseTerms, withheldForARefusedRead, refusalWithholdsStability, termsUnconfirmedBySource, termsNotVerifiedMetaSentence, withheldBadgeLabel, type BadgeWithholding, type FreeTierClaim, type VendorVerdictInput } from "./vendor-verdict.js";
+import { publishedVendorLevel, vendorVerdictSentence, vendorBadge, freeTierClaim, statesRiskCause, narrowingSentence, changeKindNoun, emptyHistoryCaveatSentence, refusedReadOurConfirmationSupersedes, refusedReadWeHold, refusedReadWithholdingSentence, nothingWeReadDescribesTheTerms, unconfirmedThresholdSentence, unconfirmedTermsOpening, whyWeCannotConfirmTheseTerms, withheldForARefusedRead, withUnconfirmedTerms, refusalWithholdsStability, termsUnconfirmedBySource, termsNotVerifiedMetaSentence, withheldBadgeLabel, type BadgeWithholding, type FreeTierClaim, type VendorVerdictInput } from "./vendor-verdict.js";
 import { tierRecordsAFreeTier } from "./free-tier-record.js";
 import { PAGE_HEAD_OPEN, withLedeBeforeNav } from "./page-lede.js";
 import { freshnessClaimFor, withFreshnessClaim } from "./page-freshness.js";
@@ -4799,7 +4799,7 @@ function buildVendorPage(slug: string): string | null {
       </div>`;
   }).join("\n") : offerHasEnded
     ? `<p class="no-changes">${escHtmlServer(endedHistorySentence(vendorName))}</p>`
-    : termsWeCannotConfirm
+    : termsWeCannotConfirm && nothingWeReadDescribesTheTerms(termsWeCannotConfirm)
     ? `<p class="no-changes">${escHtmlServer(emptyHistoryCaveatSentence(vendorName, termsWeCannotConfirm))}</p>`
     : primaryGate
     ? `<p class="no-changes">No recorded pricing changes for ${escHtmlServer(vendorName)}.</p>`
@@ -5025,14 +5025,18 @@ ${allCompareLinks.join("\n")}
 
   const storedTerms = storedTermsOf(primary);
   const unconfirmedTermsPreamble = termsWeCannotConfirm
-    ? `We cannot confirm that today. ${termsWeCannotConfirm.sentence} `
+    ? unconfirmedTermsOpening(termsWeCannotConfirm)
     : "";
   const withUnconfirmedTermsCaveat = (terms: string) =>
-    `${terms}${/[.!?…]$/.test(terms.trim()) ? "" : "."} We have not confirmed these terms against the source we cite, so treat them as unverified.`;
+    termsWeCannotConfirm ? withUnconfirmedTerms(terms, termsWeCannotConfirm) : terms;
   const eligibilityConditionsSentence = primaryEligibilityConditions.length > 0
     ? ` Eligibility: ${primaryEligibilityConditions.join("; ")}.`
     : "";
   const gateSentencesBeforeTheTerms = `${eligibilityGateSentence}${primaryGateBeyondEligibility ? `${primaryGateBeyondEligibility.reason} ` : ""}`;
+  const weCanStillSayTheFreeTierExists = !termsWeCannotConfirm || termsWeCannotConfirm.theReadFoundAFreePlan;
+  const freeTierAnswerLead = weCanStillSayTheFreeTierExists
+    ? `${primaryEligibilityGate ? "" : "Yes, "}${vendorName} offers a free tier: ${primary.tier}.`
+    : `Our stored record says ${vendorName} offers a free tier: ${primary.tier}.`;
   const faqFreeAnswer = termsSuperseded
     ? `${gateSentencesBeforeTheTerms}${supersededTermsAnswer(vendorName, termsSuperseded)}`
     : retiredSentence
@@ -5040,10 +5044,10 @@ ${allCompareLinks.join("\n")}
     : primaryGateBeyondEligibility
     ? `${eligibilityGateSentence}${primaryGateBeyondEligibility.reason} ${termsWeCannotConfirm ? `${unconfirmedTermsPreamble}${withUnconfirmedTermsCaveat(storedTerms)}` : storedTerms}${eligibilityConditionsSentence}`
     : termsWeCannotConfirm
-    ? `${eligibilityGateSentence}${unconfirmedTermsPreamble}Our stored record says ${vendorName} offers a free tier: ${primary.tier}. ${withUnconfirmedTermsCaveat(storedTerms)}${eligibilityConditionsSentence}`
+    ? `${eligibilityGateSentence}${unconfirmedTermsPreamble}${freeTierAnswerLead} ${withUnconfirmedTermsCaveat(storedTerms)}${eligibilityConditionsSentence}`
     : primaryEligibilityGate
-    ? `${eligibilityGateSentence}${vendorName} offers a free tier: ${primary.tier}. ${storedTerms}${eligibilityConditionsSentence}`
-    : `Yes, ${vendorName} offers a free tier: ${primary.tier}. ${storedTerms}`;
+    ? `${eligibilityGateSentence}${freeTierAnswerLead} ${storedTerms}${eligibilityConditionsSentence}`
+    : `${freeTierAnswerLead} ${storedTerms}`;
   const faqTierAnswer = termsSuperseded
     ? `${eligibilityGateSentence}${vendorName}'s free tier is called "${primary.tier}". ${supersededTermsNotice(vendorName, termsSuperseded)}`
     : retiredSentence

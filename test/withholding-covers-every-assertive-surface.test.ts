@@ -9,6 +9,12 @@ import { vendorSlugMap } from "../dist/vendor-slug.js";
 import { utcDate } from "../dist/ranking.js";
 import { vendorVerdictContextFrom } from "../dist/vendor-verdict-input.js";
 import {
+  levelWithheldReason,
+  SOURCE_CHECK_OUTCOMES,
+  TERMS_ONLY_OUTCOMES,
+} from "../dist/source-check.js";
+import { supersededTermsNotice, supersedingChange } from "../dist/superseded-description.js";
+import {
   badgeWithholding,
   termsNotVerifiedMetaSentence,
   whyWeCannotConfirmTheseTerms,
@@ -24,6 +30,7 @@ const REPO = path.join(__dirname, "..");
 
 const WITHHOLDING_TAGS = Object.keys(WITHHOLDING_SCOPE) as Array<keyof typeof WITHHOLDING_SCOPE>;
 const TAGS_THAT_WITHHOLD_THE_TERMS = WITHHOLDING_TAGS.filter(tag => WITHHOLDING_SCOPE[tag] === "the_terms");
+const OUTCOMES_THAT_LEAVE_THE_TERMS_UNCONFIRMED = SOURCE_CHECK_OUTCOMES.filter(outcome => outcome !== "ok");
 
 interface AssertiveSurface {
   name: string;
@@ -34,29 +41,48 @@ interface Page {
   slug: string;
   vendor: string;
   category: string;
+  outcome: string | null;
   html: string;
   faq: Map<string, string>;
+  visibleFaq: Map<string, string>;
   meta: string;
-  tag: string | null;
-  unconfirmed: { sentence: string } | null;
+  badgeTag: string | null;
+  termsTag: string | null;
+  caveats: string[];
+  unconfirmed: { sentence: string; theReadFoundAFreePlan: boolean } | null;
 }
 
 const A_MONTH = "(?:January|February|March|April|May|June|July|August|September|October|November|December)";
 const A_BARE_VERIFICATION = new RegExp(`(?<!Not )Verified ${A_MONTH} \\d{4}\\.`);
 
+function statedFlat(page: Page, answer: string, states: (answer: string) => boolean): boolean {
+  return states(answer) && page.caveats.every(caveat => !answer.includes(caveat));
+}
+
 const SURFACES: AssertiveSurface[] = [
   {
     name: "the structured-data answer to whether the vendor is free states the terms flat",
-    asserts: (page) => (page.faq.get(`Is ${page.vendor} free?`) ?? "").startsWith("Yes, "),
+    asserts: (page) => statedFlat(
+      page,
+      page.faq.get(`Is ${page.vendor} free?`) ?? "",
+      answer => answer.startsWith("Yes, "),
+    ),
   },
   {
     name: "the structured-data answer naming the free tier states it flat",
-    asserts: (page) => (page.faq.get(`What is ${page.vendor}'s free tier?`) ?? "")
-      .includes(`${page.vendor}'s free tier is called "`),
+    asserts: (page) => statedFlat(
+      page,
+      page.faq.get(`What is ${page.vendor}'s free tier?`) ?? "",
+      answer => answer.includes(`${page.vendor}'s free tier is called "`),
+    ),
   },
   {
     name: "the visible question-and-answer block states the terms flat",
-    asserts: (page) => page.html.includes(`Yes, ${page.vendor} offers a free tier`),
+    asserts: (page) => statedFlat(
+      page,
+      page.visibleFaq.get(`Is ${page.vendor} free?`) ?? "",
+      answer => answer.includes(`Yes, ${page.vendor} offers a free tier`),
+    ),
   },
   {
     name: "the meta description states the terms as verified",
@@ -100,6 +126,21 @@ function faqAnswersIn(html: string): Map<string, string> {
     for (const entry of parsed.mainEntity ?? []) {
       if (entry.name) answers.set(entry.name, entry.acceptedAnswer?.text ?? "");
     }
+  }
+  return answers;
+}
+
+const unescaped = (text: string): string => text
+  .replace(/&quot;/g, '"')
+  .replace(/&gt;/g, ">")
+  .replace(/&lt;/g, "<")
+  .replace(/&amp;/g, "&");
+
+function visibleFaqAnswersIn(html: string): Map<string, string> {
+  const answers = new Map<string, string>();
+  const item = /<summary class="faq-q">([\s\S]*?)<\/summary>\s*<div class="faq-a">([\s\S]*?)<\/div>/g;
+  for (const block of html.matchAll(item)) {
+    answers.set(unescaped(block[1]), unescaped(block[2]));
   }
   return answers;
 }
@@ -151,12 +192,20 @@ before(async () => {
     });
     if (!context) return [];
     const because = badgeWithholding(context.input);
+    const unconfirmed = whyWeCannotConfirmTheseTerms(context.input);
+    const superseded = supersedingChange(context.primary, context.vendorChanges);
     return [{
       slug,
       vendor,
       category: context.primary.category,
-      tag: because ? withholdingTag(because) : null,
-      unconfirmed: whyWeCannotConfirmTheseTerms(context.input),
+      outcome: context.primary.source_check?.outcome ?? null,
+      badgeTag: because ? withholdingTag(because) : null,
+      termsTag: unconfirmed ? withholdingTag(unconfirmed.because) : null,
+      caveats: [
+        ...(unconfirmed ? [unconfirmed.sentence] : []),
+        ...(superseded ? [supersededTermsNotice(vendor, superseded)] : []),
+      ],
+      unconfirmed,
     }];
   });
 
@@ -172,7 +221,13 @@ before(async () => {
       const res = await fetch(`http://localhost:${serverPort}/vendor/${subject.slug}`);
       assert.strictEqual(res.status, 200, `/vendor/${subject.slug} returned ${res.status}`);
       const html = await res.text();
-      read.push({ ...subject, html, faq: faqAnswersIn(html), meta: metaDescriptionIn(html) });
+      read.push({
+        ...subject,
+        html,
+        faq: faqAnswersIn(html),
+        visibleFaq: visibleFaqAnswersIn(html),
+        meta: metaDescriptionIn(html),
+      });
     }
   };
   await Promise.all(Array.from({ length: 12 }, worker));
@@ -186,7 +241,7 @@ describe("a withholding we publish reaches every surface that states the terms",
     const asserting: string[] = [];
     const cells: Record<string, number> = {};
     for (const tag of TAGS_THAT_WITHHOLD_THE_TERMS) {
-      const population = pages.filter(page => page.tag === tag);
+      const population = pages.filter(page => page.termsTag === tag);
       cells[tag] = population.length;
       for (const surface of SURFACES) {
         for (const page of population.filter(page => surface.asserts(page))) {
@@ -203,14 +258,14 @@ describe("a withholding we publish reaches every surface that states the terms",
   });
 
   it("reads a live population under every withholding it covers", () => {
-    const covered = pages.filter(page => page.tag !== null && TAGS_THAT_WITHHOLD_THE_TERMS.includes(page.tag as never));
+    const covered = pages.filter(page => page.termsTag !== null);
     assertSharesPopulation(
       covered.length,
       vendorsInTheCatalogue(),
       0.2,
       "vendor pages whose withholding says we could not read the terms",
     );
-    const empty = TAGS_THAT_WITHHOLD_THE_TERMS.filter(tag => !pages.some(page => page.tag === tag));
+    const empty = TAGS_THAT_WITHHOLD_THE_TERMS.filter(tag => !pages.some(page => page.termsTag === tag));
     assert.ok(
       empty.length < TAGS_THAT_WITHHOLD_THE_TERMS.length,
       `no page carries any of the withholdings this sweep covers: ${empty.join(", ")}`,
@@ -218,13 +273,58 @@ describe("a withholding we publish reaches every surface that states the terms",
   });
 
   it("still states the terms on a page carrying no withholding at all", () => {
-    const stating = pages.filter(page => page.tag === null && SURFACES.some(surface => surface.asserts(page)));
+    const stating = pages.filter(page => page.termsTag === null && page.badgeTag === null
+      && SURFACES.some(surface => surface.asserts(page)));
     assertSharesPopulation(
       stating.length,
       vendorsInTheCatalogue(),
       0.2,
       "vendor pages that state the terms with nothing withheld",
     );
+  });
+
+  it("takes a withholding from every source-check outcome that is not a clean read", () => {
+    const unclassified = OUTCOMES_THAT_LEAVE_THE_TERMS_UNCONFIRMED.filter(outcome => {
+      const input = inputWith({
+        sourceCheck: outcome,
+        levelWithheld: levelWithheldReason({ source_check: { outcome, checked: "2026-09-01", detail: "" } }, null),
+      });
+      const unconfirmed = whyWeCannotConfirmTheseTerms(input);
+      return unconfirmed === null || !withholdsTheTerms(unconfirmed.because);
+    });
+    assert.deepStrictEqual(
+      unclassified,
+      [],
+      `a source-check outcome states no reason the surfaces can publish: ${unclassified.join(", ")}`,
+    );
+    assert.ok(
+      OUTCOMES_THAT_LEAVE_THE_TERMS_UNCONFIRMED.length < SOURCE_CHECK_OUTCOMES.length,
+      "every source-check outcome leaves the terms unconfirmed, so the outcome decides nothing",
+    );
+
+    const silent = pages
+      .filter(page => page.outcome !== null && page.outcome !== "ok" && page.unconfirmed === null)
+      .map(page => `${page.slug} (${page.outcome})`);
+    assert.deepStrictEqual(
+      silent.slice(0, 20),
+      [],
+      `${silent.length} live pages carry a source check that is not a clean read and publish no reason for it`,
+    );
+    const read = pages.filter(page => page.outcome !== null && page.outcome !== "ok").length;
+    assertSharesPopulation(read, vendorsInTheCatalogue(), 0.2, "vendor pages whose source check is not a clean read");
+  });
+
+  it("leaves the rating standing where the read found the plan and not the amount", () => {
+    const ratedOnAReadWeCouldNotQuantify = TERMS_ONLY_OUTCOMES.filter(outcome => {
+      const input = inputWith({ sourceCheck: outcome });
+      return badgeWithholding(input) === null && whyWeCannotConfirmTheseTerms(input) !== null;
+    });
+    assert.deepStrictEqual(
+      ratedOnAReadWeCouldNotQuantify,
+      TERMS_ONLY_OUTCOMES,
+      "an outcome that withholds only the terms is withholding the rating as well",
+    );
+    assert.ok(TERMS_ONLY_OUTCOMES.length > 0, "no source-check outcome withholds the terms alone");
   });
 
   it("opens the answer with the reason the page gives for withholding", () => {
@@ -240,8 +340,8 @@ describe("a withholding we publish reaches every surface that states the terms",
       0.3,
       "vendor pages opening the free-tier answer with the reason they withhold",
     );
-    const refused = pages.filter(page => page.unconfirmed && page.tag !== null
-      && ["read_not_reconciled", "change_measured_no_difference"].includes(page.tag));
+    const refused = pages.filter(page => page.unconfirmed && page.termsTag !== null
+      && ["read_not_reconciled", "change_measured_no_difference"].includes(page.termsTag));
     const silent = refused.filter(page => !(page.faq.get(`Is ${page.vendor} free?`) ?? "")
       .includes(page.unconfirmed!.sentence)).map(page => page.slug);
     assert.deepStrictEqual(
@@ -249,6 +349,53 @@ describe("a withholding we publish reaches every surface that states the terms",
       [],
       `${silent.length} of ${refused.length} answers name no day for the read they withhold on`,
     );
+  });
+
+  it("still answers yes where the read found the free plan and could not read the amount", () => {
+    const affirming = pages.filter(page => page.unconfirmed?.theReadFoundAFreePlan);
+    const answersOf = (page: Page) => [
+      page.faq.get(`Is ${page.vendor} free?`) ?? "",
+      page.visibleFaq.get(`Is ${page.vendor} free?`) ?? "",
+    ];
+    const denying = affirming
+      .filter(page => answersOf(page).some(answer => answer.includes("We cannot confirm that today.")))
+      .map(page => page.slug);
+    assert.deepStrictEqual(
+      denying.slice(0, 20),
+      [],
+      `${denying.length} pages say they cannot confirm a free tier their own read found`,
+    );
+    const uncaveated = affirming
+      .filter(page => answersOf(page)
+        .some(answer => answer !== "" && page.caveats.every(caveat => !answer.includes(caveat))))
+      .map(page => page.slug);
+    assert.deepStrictEqual(
+      uncaveated.slice(0, 20),
+      [],
+      `${uncaveated.length} pages state the limits without saying the page we cite does not carry them`,
+    );
+    assertSharesPopulation(
+      affirming.length,
+      vendorsInTheCatalogue(),
+      0.03,
+      "vendor pages whose read found the free plan and not the amount",
+    );
+    assertSharesPopulation(
+      affirming.filter(page => answersOf(page).every(answer => answer.startsWith(`Yes, ${page.vendor} offers`))).length,
+      vendorsInTheCatalogue(),
+      0.025,
+      "vendor pages answering yes over a read that found the plan and not the amount",
+    );
+
+    const control = pages.find(page => page.slug === "jsdelivr");
+    assert.strictEqual(control?.outcome, "states_no_amount", "/vendor/jsdelivr is no longer the control this was written against");
+    for (const answer of answersOf(control)) {
+      assert.ok(answer.startsWith("Yes, jsDelivr offers a free tier: Free."), answer.slice(0, 120));
+      assert.ok(
+        answer.includes("The page we cite for jsDelivr names a plan but states no amount, so these limits come from our own record rather than from that page."),
+        answer.slice(0, 400),
+      );
+    }
   });
 
   it("names the day of the refused read wherever it withholds the terms", () => {
@@ -297,11 +444,11 @@ describe("a withholding we publish reaches every surface that states the terms",
 
   it("names a scope for every withholding a page can carry", () => {
     assert.deepStrictEqual(
-      Object.keys(WITHHOLDING_BADGE_LABELS).sort(),
-      WITHHOLDING_TAGS.slice().sort(),
+      WITHHOLDING_TAGS.filter(tag => !(tag in WITHHOLDING_BADGE_LABELS)).sort(),
+      TERMS_ONLY_OUTCOMES.slice().sort(),
       "a withholding the badge can name is missing from the scope this sweep reads",
     );
-    const unscoped = [...new Set(pages.map(page => page.tag))]
+    const unscoped = [...new Set(pages.flatMap(page => [page.badgeTag, page.termsTag]))]
       .filter(tag => tag !== null && !WITHHOLDING_TAGS.includes(tag as never));
     assert.deepStrictEqual(unscoped, [], `a page carries a withholding no scope covers: ${unscoped.join(", ")}`);
     assert.ok(
@@ -309,18 +456,18 @@ describe("a withholding we publish reaches every surface that states the terms",
       "every withholding was given the same scope, so the scope decides nothing",
     );
     const silent = pages
-      .filter(page => page.tag !== null && TAGS_THAT_WITHHOLD_THE_TERMS.includes(page.tag as never))
+      .filter(page => page.badgeTag !== null && TAGS_THAT_WITHHOLD_THE_TERMS.includes(page.badgeTag as never))
       .filter(page => page.unconfirmed === null)
-      .map(page => `${page.slug} (${page.tag})`);
+      .map(page => `${page.slug} (${page.badgeTag})`);
     assert.deepStrictEqual(
       silent.slice(0, 20),
       [],
       `${silent.length} pages withhold the terms and offer no reason the surfaces can publish`,
     );
     const exempted = pages
-      .filter(page => page.unconfirmed !== null && page.tag !== null)
-      .filter(page => !TAGS_THAT_WITHHOLD_THE_TERMS.includes(page.tag as never))
-      .map(page => `${page.slug} (${page.tag})`);
+      .filter(page => page.termsTag !== null)
+      .filter(page => !TAGS_THAT_WITHHOLD_THE_TERMS.includes(page.termsTag as never))
+      .map(page => `${page.slug} (${page.termsTag})`);
     assert.deepStrictEqual(
       exempted.slice(0, 20),
       [],
