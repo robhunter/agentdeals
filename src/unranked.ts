@@ -1,4 +1,5 @@
 import { CRITERIA_PATH } from "./ranking.js";
+import { listOrderProse } from "./list-order.js";
 
 export const NO_RANKING_HELD =
   "We publish no ranking of these. Nothing we record measures popularity or generosity, so naming a best or a top few would be our preference rather than our data.";
@@ -20,7 +21,7 @@ export function unrankedListingBasis(qualified: number, demoted: number, gated: 
   const clauses: string[] = [];
   if (qualified === 1) clauses.push("1 carries no recorded demerit");
   if (qualified > 1) {
-    clauses.push(`${qualified} carry no recorded demerit and are indistinguishable under every signal we hold, so their order rotates daily`);
+    clauses.push(`${qualified} carry no recorded demerit and are indistinguishable under every signal we hold, so they are listed ${listOrderProse("rotates-daily")}`);
   }
   if (demoted > 0) clauses.push(`${demoted} ${demoted === 1 ? "is" : "are"} demoted with the reason named`);
   if (gated > 0) clauses.push(`${gated} ${gated === 1 ? "is" : "are"} listed last behind a stated gate`);
