@@ -7066,7 +7066,7 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
         <td>Unlimited</td>
         <td>Both</td>
         <td>\u2705 / \u2705</td>
-        <td>Highest free volume — built-in email editor</td>
+        <td>6K/mo on a 200/day cap — built-in email editor</td>
       </tr>
       <tr>
         <td style="font-weight:600"><a href="/vendor/brevo" style="color:var(--text)">Brevo</a></td>
@@ -23214,8 +23214,8 @@ ${mcpCtaCss()}
   <div class="summary-stats">
     <div class="stat-card"><div class="stat-number" style="color:#3fb950">${lowRisk.length}</div><div class="stat-label">Low Risk (Safe)</div></div>
     <div class="stat-card"><div class="stat-number" style="color:#d29922">${medRisk.length}</div><div class="stat-label">Medium Risk</div></div>
-    <div class="stat-card"><div class="stat-number" style="color:#f85149">${highRisk.length}</div><div class="stat-label">High Risk</div></div>
-    <div class="stat-card"><div class="stat-number" style="color:#8b949e">${deadEntries.length}</div><div class="stat-label">Already Changed</div></div>
+    <div class="stat-card"><div class="stat-number" style="color:#f85149">${highBand.stillFree.length}</div><div class="stat-label">High Risk</div></div>
+    <div class="stat-card"><div class="stat-number" style="color:#8b949e">${deadEntries.length + highBand.alreadyGone.length}</div><div class="stat-label">Already Changed</div></div>
   </div>
 
   <div class="executive-summary">
@@ -36257,7 +36257,7 @@ ${mcpCtaCss()}
     <div class="stat-card"><div class="stat-number">4</div><div class="stat-label">Clouds Compared</div></div>
     <div class="stat-card"><div class="stat-number green">GCP</div><div class="stat-label">Most Free Services</div></div>
     <div class="stat-card"><div class="stat-number amber">$200&ndash;300</div><div class="stat-label">Trial Credits Range</div></div>
-    <div class="stat-card"><div class="stat-number">$550K+</div><div class="stat-label">Max Startup Credits</div></div>
+    <div class="stat-card"><div class="stat-number">$100K&ndash;200K</div><div class="stat-label">Startup Program Credits</div></div>
   </div>
 
   <div class="executive-summary">
@@ -38230,12 +38230,11 @@ ${mcpCtaCss()}
   <div class="summary-stats">
     <div class="stat-card"><div class="stat-number">10+</div><div class="stat-label">Serverless Platforms</div></div>
     <div class="stat-card"><div class="stat-number green">Workers</div><div class="stat-label">Best Edge / Low Latency</div></div>
-    <div class="stat-card"><div class="stat-number green">Lambda</div><div class="stat-label">Most Invocations Free</div></div>
     <div class="stat-card"><div class="stat-number green">Cloud Run</div><div class="stat-label">Most Generous Overall</div></div>
   </div>
 
   <div class="executive-summary">
-    <p><strong>Quick verdict:</strong> <strong>AWS Lambda</strong> leads on raw invocation count (1M/month free) and has the largest ecosystem. <strong>Google Cloud Run</strong> is the most generous overall with 2M requests, 360K GB-seconds, and 1 GB free egress. <strong>Cloudflare Workers</strong> dominates edge computing with 100K requests/day, sub-5ms cold starts, and the unique advantage of <strong>CPU-time billing</strong> (you don&rsquo;t pay for I/O waits). <strong>Azure Functions</strong> matches Lambda at 1M requests/month with a consumption-based model.</p>
+    <p><strong>Quick verdict:</strong> <strong>AWS Lambda</strong> gives 1M invocations/month free and has the largest ecosystem. <strong>Google Cloud Run</strong> is the most generous overall with 2M requests, 360K GB-seconds, and 1 GB free egress. <strong>Cloudflare Workers</strong> dominates edge computing with 100K requests/day, sub-5ms cold starts, and the unique advantage of <strong>CPU-time billing</strong> (you don&rsquo;t pay for I/O waits). <strong>Azure Functions</strong> matches Lambda at 1M requests/month with a consumption-based model.</p>
     <p><strong>The critical distinction most developers miss:</strong> Cloudflare Workers bills by <strong>CPU time</strong> while AWS Lambda, Google Cloud Functions, and Azure Functions bill by <strong>wall-clock time</strong> (including time spent waiting for network I/O, database queries, and external API calls). For I/O-heavy workloads, this can mean 10-50x cheaper effective compute on Workers. This single billing model difference matters more than headline invocation counts.</p>
   </div>
 
@@ -38274,7 +38273,7 @@ ${mcpCtaCss()}
     </thead>
     <tbody>
       <tr style="background:rgba(63,185,80,0.08)">
-        <td class="provider-col"><a href="/vendor/aws" style="color:var(--text)">AWS Lambda</a> <span class="winner-badge">MOST INVOCATIONS</span></td>
+        <td class="provider-col"><a href="/vendor/aws" style="color:var(--text)">AWS Lambda</a></td>
         <td style="font-family:var(--mono)">1M / month</td>
         <td style="font-family:var(--mono)">400K GB-sec/mo</td>
         <td>128 MB &ndash; 10 GB</td>
@@ -38881,7 +38880,7 @@ ${mcpCtaCss()}
 
   <div class="summary-stats">
     <div class="stat-card"><div class="stat-number">20+</div><div class="stat-label">Auth Services Compared</div></div>
-    <div class="stat-card"><div class="stat-number green">1M</div><div class="stat-label">Highest Free (WorkOS)</div></div>
+    <div class="stat-card"><div class="stat-number green">1M</div><div class="stat-label">WorkOS Free MAU</div></div>
     <div class="stat-card"><div class="stat-number green">Auth0</div><div class="stat-label">Best Enterprise Free Tier</div></div>
     <div class="stat-card"><div class="stat-number green">Clerk</div><div class="stat-label">Best Developer Experience</div></div>
   </div>
@@ -39822,7 +39821,6 @@ ${mcpCtaCss()}
 
   <div class="summary-stats">
     <div class="stat-card"><div class="stat-number">20+</div><div class="stat-label">Email Services Compared</div></div>
-    <div class="stat-card"><div class="stat-number green">62K</div><div class="stat-label">Highest Free Volume (SES from EC2)</div></div>
     <div class="stat-card"><div class="stat-number green">Resend</div><div class="stat-label">Best Developer Experience</div></div>
     <div class="stat-card"><div class="stat-number red">SendGrid</div><div class="stat-label">Free Tier Removed (May 2025)</div></div>
     <div class="stat-card"><div class="stat-number amber">3</div><div class="stat-label">Major Free Tiers Removed (2023-2025)</div></div>
@@ -40796,13 +40794,13 @@ ${mcpCtaCss()}
 
   <div class="summary-stats">
     <div class="stat-card"><div class="stat-number">25+</div><div class="stat-label">Monitoring Services Compared</div></div>
-    <div class="stat-card"><div class="stat-number green">500GB</div><div class="stat-label">Highest Free Ingest (Axiom)</div></div>
+    <div class="stat-card"><div class="stat-number green">500GB</div><div class="stat-label">Axiom Free Ingest</div></div>
     <div class="stat-card"><div class="stat-number green">Grafana Cloud</div><div class="stat-label">Best Overall Free Tier</div></div>
     <div class="stat-card"><div class="stat-number red">$66K/yr</div><div class="stat-label">Datadog at 100 Hosts</div></div>
   </div>
 
   <div class="executive-summary">
-    <p><strong>Quick verdict:</strong> <strong>Grafana Cloud</strong> offers the best overall free tier for monitoring &mdash; 10,000 metrics series, 50GB logs, 50GB traces, and 14-day retention with full dashboarding and alerting. <strong>New Relic</strong> has the most generous unified platform ingest at 100GB/month with full APM, but limits you to 1 full platform user. <strong>Axiom</strong> leads on raw ingest volume at 500GB/month free. <strong>Better Stack</strong> is the best combined uptime + logging starter. For self-hosted: <strong>SigNoz</strong> is the modern all-in-one alternative; <strong>Prometheus + Grafana</strong> is the most battle-tested.</p>
+    <p><strong>Quick verdict:</strong> <strong>Grafana Cloud</strong> offers the best overall free tier for monitoring &mdash; 10,000 metrics series, 50GB logs, 50GB traces, and 14-day retention with full dashboarding and alerting. <strong>New Relic</strong> has the most generous unified platform ingest at 100GB/month with full APM, but limits you to 1 full platform user. <strong>Axiom</strong> offers 500GB/month raw ingest free. <strong>Better Stack</strong> is the best combined uptime + logging starter. For self-hosted: <strong>SigNoz</strong> is the modern all-in-one alternative; <strong>Prometheus + Grafana</strong> is the most battle-tested.</p>
     <p><strong>The observability cost trap:</strong> Monitoring is the #1 developer spending complaint. Datadog bills can go from $0 to $10,000+/month because pricing compounds across per-host fees, separate product charges (APM, logs, synthetics are each billed independently), and cardinality penalties. At 100 hosts with APM and logs, Datadog costs ~$5,500/mo while Grafana Cloud Pro runs ~$300-800/mo. The worst trap: <strong>Datadog&rsquo;s free tier retains metrics for only 1 day</strong> &mdash; you literally cannot investigate yesterday&rsquo;s incident.</p>
   </div>
 
@@ -40872,7 +40870,7 @@ ${mcpCtaCss()}
         <td><span style="color:#3fb950">Low</span></td>
       </tr>
       <tr>
-        <td class="provider-col">New Relic<span class="winner-badge">MOST DATA</span></td>
+        <td class="provider-col">New Relic</td>
         <td>100GB/mo</td>
         <td>8 days (NRDB)</td>
         <td>30 days</td>
@@ -41175,7 +41173,7 @@ ${mcpCtaCss()}
   </div>
 
   <div class="diff-card">
-    <h3>New Relic <span class="winner-badge">MOST DATA</span></h3>
+    <h3>New Relic</h3>
     <div class="diff-desc"><strong>Free tier:</strong> 100GB/month data ingest across all telemetry types, 1 full platform user + unlimited basic users (read-only dashboards). 8-day metric retention in NRDB, 30-day log retention. Full APM, infrastructure, and browser monitoring included. The catch: the 1 full user limit means only one person can create dashboards, set up alerts, or query data &mdash; a bottleneck for any team larger than one.</div>
   </div>
 
@@ -53885,6 +53883,7 @@ const dispatchRequest = async (req: IncomingMessage, res: ServerResponse) => {
         pages_with_records_changed_since_read: pages.filter(p => p.records_changed_since_read.length > 0).length,
         records_changed_since_read: pages.reduce((n, p) => n + p.records_changed_since_read.length, 0),
         unresolved_badge_subjects: [...new Set(pages.flatMap(p => p.badge_subjects_unresolved))].sort(),
+        unresolved_stat_card_subjects: [...new Set(pages.flatMap(p => p.stat_card_subjects_unresolved))].sort(),
       },
       pages,
     }, null, 2));

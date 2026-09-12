@@ -182,6 +182,7 @@ export interface PageReviewRecord {
   vendors_asserted: string[];
   vendors_tabulated: string[];
   badge_subjects_unresolved: string[];
+  stat_card_subjects_unresolved: string[];
   reviewed_at: string | null;
   reviewer: string | null;
   review_outcome: ReviewOutcome | null;
@@ -213,6 +214,7 @@ export interface ReviewStatus {
   vendors_asserted: string[];
   vendors_tabulated: string[];
   badge_subjects_unresolved: string[];
+  stat_card_subjects_unresolved: string[];
   reads_index: boolean;
   reads_changes: boolean;
   data_source: PageDataSource;
@@ -246,6 +248,7 @@ function normalizeRecord(raw: any): PageReviewRecord | null {
     vendors_asserted: Array.isArray(raw.vendors_asserted) ? raw.vendors_asserted.filter((s: unknown) => typeof s === "string") : [],
     vendors_tabulated: Array.isArray(raw.vendors_tabulated) ? raw.vendors_tabulated.filter((s: unknown) => typeof s === "string") : [],
     badge_subjects_unresolved: Array.isArray(raw.badge_subjects_unresolved) ? raw.badge_subjects_unresolved.filter((s: unknown) => typeof s === "string") : [],
+    stat_card_subjects_unresolved: Array.isArray(raw.stat_card_subjects_unresolved) ? raw.stat_card_subjects_unresolved.filter((s: unknown) => typeof s === "string") : [],
     reviewed_at: reviewedAt,
     reviewer: typeof raw.reviewer === "string" && raw.reviewer ? raw.reviewer : null,
     review_outcome: reviewedAt !== null && REVIEW_OUTCOMES.includes(raw.review_outcome) ? raw.review_outcome : null,
@@ -330,6 +333,7 @@ export function reviewStatus(record: PageReviewRecord, today: string): ReviewSta
     vendors_asserted: record.vendors_asserted,
     vendors_tabulated: record.vendors_tabulated,
     badge_subjects_unresolved: record.badge_subjects_unresolved,
+    stat_card_subjects_unresolved: record.stat_card_subjects_unresolved,
     reads_index: record.reads_index,
     reads_changes: record.reads_changes,
     data_source: record.data_source,
