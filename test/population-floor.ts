@@ -75,6 +75,27 @@ export function floorClearsHeadroom(floor: number, observed: number): boolean {
   return floor <= 1 || floor * 4 <= observed * 3;
 }
 
+export const DRIFTED_GUARD = "driftedGuard";
+
+export interface DriftedGuard {
+  site: string;
+  subject: string;
+  stated: string;
+  measured: string;
+  clearsAt: string;
+}
+
+function refuseADriftedGuard(guard: DriftedGuard, message: string): never {
+  const error = new assert.AssertionError({
+    message,
+    actual: guard.measured,
+    expected: guard.stated,
+    operator: "clears the headroom it states",
+  });
+  Object.defineProperty(error, DRIFTED_GUARD, { value: guard, enumerable: true });
+  throw error;
+}
+
 const callSite = (): string => {
   const frame = new Error().stack?.split("\n")[3] ?? "";
   const at = frame.match(/([^()\s]+\.ts):(\d+):\d+/);
@@ -135,8 +156,15 @@ export function assertPopulationFloor(observed: number, floor: number, subject: 
   const log = process.env.POPULATION_FLOOR_LOG;
   if (log) appendFileSync(log, `${JSON.stringify({ site: callSite(), subject, floor, observed })}\n`);
   assert.ok(observed >= floor, `only ${observed} ${subject}, under a floor of ${floor}`);
-  assert.ok(
-    floorClearsHeadroom(floor, observed),
+  if (floorClearsHeadroom(floor, observed)) return;
+  refuseADriftedGuard(
+    {
+      site: callSite(),
+      subject,
+      stated: `a floor of ${floor}`,
+      measured: `${observed}`,
+      clearsAt: `${Math.floor((observed * 3) / 4)}`,
+    },
     `a floor of ${floor} leaves under ${Math.round(HEADROOM * 100)}% headroom over the ${observed} it measured — ${subject}. It goes red when this data shrinks and stays green when this data is wrong. Lower it, or state the property relative to the population it reads with assertCoversPopulation.`,
   );
 }
@@ -184,8 +212,15 @@ export function assertSharesPopulation(
     observed >= population.size * share,
     `${observed} ${subject}, which is ${asShare(observed / population.size)} of the ${population.size} ${population.read} it was filtered from, under a floor of ${asShare(share)}`,
   );
-  assert.ok(
-    shareClearsHeadroom(share, observed, population.size),
+  if (shareClearsHeadroom(share, observed, population.size)) return;
+  refuseADriftedGuard(
+    {
+      site: callSite(),
+      subject,
+      stated: `a share of ${asShare(share)}`,
+      measured: `${asShare(observed / population.size)} — ${observed} of ${population.size} ${population.read}`,
+      clearsAt: asShare(((observed / population.size) * 3) / 4),
+    },
     `a share of ${asShare(share)} leaves under ${Math.round(HEADROOM * 100)}% headroom over the ${asShare(observed / population.size)} it measured — ${subject}. A share does not drift as the data grows or shrinks, so one set this close to what it measures is a tripwire on the filter rather than a guard against it returning nothing.`,
   );
 }

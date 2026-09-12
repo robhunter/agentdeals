@@ -1,6 +1,6 @@
 import { describe, it, before, after } from "node:test";
 import assert from "node:assert";
-import { assertCoversPopulation, assertPopulationFloor, vendorsInTheCatalogue } from "./population-floor.ts";
+import { assertCoversPopulation, assertPopulationFloor, vendorsInTheCatalogue, type Population } from "./population-floor.ts";
 import { spawn, type ChildProcess } from "node:child_process";
 import { readFileSync, readdirSync } from "node:fs";
 import path from "node:path";
@@ -9,7 +9,7 @@ import { fileURLToPath } from "node:url";
 const { changeCitesASource, uncitedChangeNotice, CITATION_CLASS, UNCITED_NOTE_CLASS } = await import(
   "../dist/change-citation.js"
 );
-const { feedEntrySourceXml, digestSourceXml, VIA_LINK_REL, NO_SOURCE_HELD_ELEMENT, CHANGE_FEED_NAMESPACE_PREFIX } =
+const { feedEntrySourceXml, digestSourceXml, VIA_LINK_REL, NO_SOURCE_HELD_ELEMENT, CHANGE_FEED_NAMESPACE_PREFIX, CHANGE_FEED_ENTRY_LIMIT } =
   await import("../dist/change-feed.js");
 
 type DealChange = import("../src/types.ts").DealChange;
@@ -20,6 +20,11 @@ const REPO = path.join(__dirname, "..");
 const changes: DealChange[] = JSON.parse(
   readFileSync(path.join(REPO, "data", "deal_changes.json"), "utf-8"),
 ).changes;
+
+const entriesThePerChangeFeedCanPublish = (): Population => ({
+  size: Math.min(changes.length, CHANGE_FEED_ENTRY_LIMIT),
+  read: "entries the per-change feed can hold, of the changes the log holds",
+});
 
 const PER_CHANGE_FEED = "/pricing-changes/feed.xml";
 const WEEKLY_FEED = "/feed.xml";
@@ -250,7 +255,7 @@ describe("every published change row carries the page it was read from", () => {
   it("gives every entry in the per-change feed the page it was read from", () => {
     const feed = bodies.get(PER_CHANGE_FEED)!;
     const entries = feed.split("<entry>").slice(1);
-    assertPopulationFloor(entries.length, 37, "entries in the per-change feed");
+    assertCoversPopulation(entries.length, entriesThePerChangeFeedCanPublish(), "entries in the per-change feed");
     const silent = entries.filter(
       (entry) => !entry.includes(`rel="${VIA_LINK_REL}"`) && !entry.includes(NO_SOURCE_HELD_ELEMENT),
     );

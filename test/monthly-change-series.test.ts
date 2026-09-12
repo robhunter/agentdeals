@@ -13,6 +13,8 @@ const REPO = path.join(__dirname, "..");
 
 const EVENT_DATED = ["vendor_page", "hand_written"];
 
+const MONTHS_IN_A_QUARTER = 3;
+
 const INJECTED_MONTH = "2026-02";
 const INJECTED_DATE = `${INJECTED_MONTH}-15`;
 const INJECTED_COUNT = 40;
@@ -212,7 +214,10 @@ describe("every surface that bins changes by month", () => {
   it("counts into a quarter report only the changes whose terms took effect in it", async () => {
     const expected = changeLogMonths(await body(live, "/changes"));
     const quarter = new Map([...expected].filter(([m]) => m >= "2026-01" && m <= "2026-03"));
-    assertPopulationFloor(quarter.size, 2, "months in the quarter the report covers");
+    assert.ok(
+      quarter.size >= 2 && quarter.size <= MONTHS_IN_A_QUARTER,
+      `the quarter the report covers holds changes in ${quarter.size} months, of the ${MONTHS_IN_A_QUARTER} a quarter has`,
+    );
 
     const rendered = renderedSeries(await body(live, "/q1-2026-developer-pricing-report"), "effective");
     assert.deepStrictEqual(Object.fromEntries([...rendered].sort()), Object.fromEntries([...quarter].sort()));
@@ -220,13 +225,17 @@ describe("every surface that bins changes by month", () => {
 
   it("does not move a month when a batch of pages is read and none of them says when it changed", async () => {
     const routes = [...SURFACES.map(s => s.route), "/q1-2026-developer-pricing-report", "/changes"];
+    const everyMonth = changeLogMonths(await body(live, "/changes")).size;
     for (const route of routes) {
       const control = await body(live, route);
       const after = await body(injected, route);
       const [before, later] = route === "/changes"
         ? [changeLogMonths(control), changeLogMonths(after)]
         : [renderedSeries(control, "effective"), renderedSeries(after, "effective")];
-      assertPopulationFloor(before.size, 2, `months ${route} bins changes into`);
+      assert.ok(
+        before.size >= 2 && before.size <= everyMonth,
+        `${route} bins changes into ${before.size} months, of the ${everyMonth} the change log holds`,
+      );
       assert.deepStrictEqual(
         Object.fromEntries([...later].sort()),
         Object.fromEntries([...before].sort()),

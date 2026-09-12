@@ -4,7 +4,7 @@ import { mkdtempSync, readFileSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { assertPopulationFloor } from "./population-floor.ts";
+import { assertCoversPopulation, assertPopulationFloor, type Population } from "./population-floor.ts";
 
 const { readingDescribesNoNarrowing, narrowsTheStoredTerms } = await import("../dist/change-direction.js");
 const { changeGradesTheListedTier, changeRatesTheListedTier } = await import("../dist/change-tier.js");
@@ -69,6 +69,16 @@ const A_RECORD_TYPED_AS_A_REDUCTION = {
   category: "Monitoring",
   alternatives: [],
 } as unknown as DealChange;
+
+const DISCOVER_A_LIMIT = [
+  "addy.io", "AppFit", "BugBug", "FreeIPAPI", "GitBook", "Nango",
+  "Permit.io", "Postman", "Pullflow", "transfernow", "Whitespace",
+];
+
+const recordsTheDiscoveryRuleWasWrittenAgainst = (): Population => ({
+  size: DISCOVER_A_LIMIT.length,
+  read: "records the discovery rule was written against",
+});
 
 describe("#1528 a record's stored direction is read before its change_type", () => {
   it("leaves a record carrying no direction deciding exactly what it decided before", () => {
@@ -325,10 +335,7 @@ describe("#1528 the vendor pages the census named", () => {
   });
 
   it("leaves the records that discover a limit exactly where they were", () => {
-    const discovered = [
-      "addy.io", "AppFit", "BugBug", "FreeIPAPI", "GitBook", "Nango",
-      "Permit.io", "Postman", "Pullflow", "transfernow", "Whitespace",
-    ];
+    const discovered = DISCOVER_A_LIMIT;
     let checked = 0;
     for (const vendor of discovered) {
       const offer = offers.find((o) => o.vendor.toLowerCase() === vendor.toLowerCase());
@@ -340,6 +347,6 @@ describe("#1528 the vendor pages the census named", () => {
         `${vendor} stopped withholding, which this rule was not meant to reach`,
       );
     }
-    assertPopulationFloor(checked, 8, "records that discover a limit, replayed");
+    assertCoversPopulation(checked, recordsTheDiscoveryRuleWasWrittenAgainst(), "records that discover a limit, replayed");
   });
 });

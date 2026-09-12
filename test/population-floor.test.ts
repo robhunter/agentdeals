@@ -1,8 +1,11 @@
 import { describe, it } from "node:test";
 import assert from "node:assert";
-import { readdirSync, readFileSync } from "node:fs";
+import { spawnSync } from "node:child_process";
+import { mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { driftedGuardOf, gateVerdict, parseFailures } from "../dist/data-push-gate.js";
 import {
   asShare,
   assertCoversPopulation,
@@ -60,6 +63,110 @@ describe("a floor over a live population states headroom it has measured", () =>
     assert.strictEqual(floorClearsHeadroom(300, 552), true);
     assert.strictEqual(floorClearsHeadroom(500, 552), false);
     assert.strictEqual(floorClearsHeadroom(1500, 1572), false);
+  });
+});
+
+const aHundredRecords = () => ({ size: 100, read: "records the catalogue holds" });
+
+const threw = (run: () => void): unknown => {
+  try {
+    run();
+  } catch (err) {
+    return err;
+  }
+  return null;
+};
+
+describe("a guard that has drifted says so in a form the data push gate can act on", () => {
+  it("marks the headroom refusal as a statement about the guard, not about the data", () => {
+    const guard = driftedGuardOf(threw(() => assertPopulationFloor(102, 80, "vendors withhold on a refused read")));
+    assert.ok(guard, "a drifted floor throws nothing the gate can recognise");
+    assert.strictEqual(guard.stated, "a floor of 80");
+    assert.strictEqual(guard.measured, "102");
+    assert.strictEqual(guard.clearsAt, "76");
+    assert.match(guard.site, /population-floor\.test\.ts:\d+$/);
+    assert.strictEqual(guard.subject, "vendors withhold on a refused read");
+  });
+
+  it("marks a drifted share the same way, and says what share would clear it", () => {
+    const guard = driftedGuardOf(
+      threw(() => assertSharesPopulation(51, aHundredRecords(), 0.5, "records were refused")),
+    );
+    assert.ok(guard, "a drifted share throws nothing the gate can recognise");
+    assert.strictEqual(guard.stated, "a share of 50.0%");
+    assert.strictEqual(guard.clearsAt, "38.3%");
+  });
+
+  it("leaves a population that fell under its floor unmarked, because that is a statement about the data", () => {
+    const breached = threw(() => assertPopulationFloor(70, 80, "vendors withhold on a refused read"));
+    assert.match((breached as Error).message, /only 70 vendors withhold on a refused read, under a floor of 80/);
+    assert.strictEqual(driftedGuardOf(breached), undefined, "a breached floor is excused as a drifted guard");
+  });
+
+  it("leaves a share that fell under its floor unmarked too", () => {
+    const breached = threw(() =>
+      assertSharesPopulation(10, aHundredRecords(), 0.5, "records were refused"),
+    );
+    assert.match((breached as Error).message, /under a floor of 50\.0%/);
+    assert.strictEqual(driftedGuardOf(breached), undefined, "a breached share is excused as a drifted guard");
+  });
+
+  it("carries the mark through a real test run, so the gate reads what the suite threw", () => {
+    const scratch = mkdtempSync(path.join(tmpdir(), "drifted-guard-"));
+    try {
+      const fixture = path.join(scratch, "a-guard.test.ts");
+      writeFileSync(
+        fixture,
+        [
+          'import { it } from "node:test";',
+          `import { assertPopulationFloor } from ${JSON.stringify(path.join(TEST_DIR, "population-floor.ts"))};`,
+          'it("drifts", () => { assertPopulationFloor(102, 80, "vendors withhold on a refused read"); });',
+          'it("falls under its floor", () => { assertPopulationFloor(70, 80, "vendors withhold on a refused read"); });',
+          'it("passes", () => { assertPopulationFloor(1572, 300, "vendors publish a badge verdict"); });',
+          "",
+        ].join("\n"),
+      );
+      const failures = path.join(scratch, "failures.jsonl");
+      const run = spawnSync(
+        process.execPath,
+        [
+          "--test",
+          "--test-reporter=./scripts/reporters/failing-tests.js",
+          `--test-reporter-destination=${failures}`,
+          fixture,
+        ],
+        {
+          cwd: path.join(TEST_DIR, ".."),
+          encoding: "utf8",
+          env: { ...process.env, NODE_TEST_CONTEXT: undefined, NODE_OPTIONS: undefined } as NodeJS.ProcessEnv,
+        },
+      );
+      assert.notStrictEqual(run.status, 0, "the fixture suite passed, so there is nothing to classify");
+
+      const read = parseFailures(readFileSync(failures, "utf8"), failures);
+      assert.strictEqual(read.length, 2, `the reporter recorded ${read.length} failures, not the two the fixture throws`);
+      const drifted = read.filter((f) => f.drifted !== undefined);
+      assert.deepStrictEqual(
+        drifted.map((f) => f.name),
+        ["drifts"],
+        "the reporter marked something other than the drifted guard, or missed it",
+      );
+      assert.strictEqual(drifted[0]!.drifted!.clearsAt, "76");
+
+      const allowed = { version: 1 as const, rule: "the fixture excuses no file", tests: [] };
+      assert.strictEqual(
+        gateVerdict(read, allowed).decision,
+        "quarantine",
+        "a population under its floor stopped holding the commit",
+      );
+      assert.strictEqual(
+        gateVerdict(drifted, allowed).decision,
+        "push",
+        "a guard that has only drifted still holds a commit of vendor data",
+      );
+    } finally {
+      rmSync(scratch, { recursive: true, force: true });
+    }
   });
 });
 

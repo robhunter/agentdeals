@@ -2,7 +2,7 @@
 set -euo pipefail
 
 if [ "$#" -lt 2 ]; then
-  echo "usage: report-data-push-outcome.sh <job-name> refused|shipped-over-failures|held-back-a-vendor [detail] [reason]" >&2
+  echo "usage: report-data-push-outcome.sh <job-name> refused|shipped-over-failures|held-back-a-vendor|drifted-a-guard [detail] [reason]" >&2
   exit 2
 fi
 
@@ -69,6 +69,23 @@ case "$OUTCOME" in
       echo "The run: $RUN_URL"
       echo
       echo "What to do: read the run for what went red on \`${DETAIL:-that vendor}\`, and decide which of the two is wrong."
+    } >"$BODY"
+    ;;
+  drifted-a-guard)
+    MARKER="data-push-drifted-guard"
+    TITLE="A population floor has drifted into its own headroom — the data shipped and the guard needs recalibrating"
+    LABEL="priority/medium"
+    COMMENT_EVERY_TIME="yes"
+    {
+      echo "\`$JOB\` met a red suite whose failures name no record and no vendor. Each one states that a floor sits inside the quarter below the population it measures, which is a statement about how a test is calibrated rather than about the catalogue. The data is on \`main\`."
+      echo
+      echo "${DETAIL:-No table reached this issue, which is itself worth reading the run for.}"
+      echo
+      echo "The run: $RUN_URL"
+      echo
+      echo "A floor this close to its population goes red when the data shrinks and stays green when the data is wrong, so it guards nothing and holds everything. Some of these populations are ones the re-verification run exists to shrink, which is why they drift on a run that did its job."
+      echo
+      echo "What to do: lower each floor to at most the value in the \`clears at\` column, or state the property as a share of the population it was filtered from with \`assertSharesPopulation\`. \`npm run floors\` prints every floor's margin from a run with \`POPULATION_FLOOR_LOG\` set."
     } >"$BODY"
     ;;
   *)
