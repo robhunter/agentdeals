@@ -2926,32 +2926,32 @@
       "changed": "2026-09-12"
     },
     "/free-django-stack": {
-      "hash": "4251c75cd55618d0",
-      "changed": "2026-09-12"
+      "hash": "76f2f307aaa9c90b",
+      "changed": "2026-09-13"
     },
     "/free-fastapi-stack": {
-      "hash": "0eda31cdf5e258b0",
-      "changed": "2026-09-12"
+      "hash": "2e15f2a684282abf",
+      "changed": "2026-09-13"
     },
     "/free-frontend-stack": {
       "hash": "1c1bfdb0780d1c2a",
       "changed": "2026-09-12"
     },
     "/free-go-stack": {
-      "hash": "6e47819400ab8219",
-      "changed": "2026-09-12"
+      "hash": "febf28673be7b023",
+      "changed": "2026-09-13"
     },
     "/free-llm-apis": {
       "hash": "cb009aee00e3c34c",
       "changed": "2026-09-13"
     },
     "/free-nextjs-stack": {
-      "hash": "fd788dd6c9a5eb48",
-      "changed": "2026-09-12"
+      "hash": "8c2cbb2de904e6fe",
+      "changed": "2026-09-13"
     },
     "/free-saas-stack": {
-      "hash": "bbaa19cca3296ec7",
-      "changed": "2026-09-12"
+      "hash": "dc9749eeb509fcb7",
+      "changed": "2026-09-13"
     },
     "/free-startup-stack": {
       "hash": "ebfd728f69586c11",
@@ -3041,7 +3041,7 @@
       "changed": "2026-09-13"
     },
     "/hosting-alternatives": {
-      "hash": "8f4097b77f6fc775",
+      "hash": "13b99237bf350500",
       "changed": "2026-09-13"
     },
     "/hosting-free-tier-comparison-2026": {
@@ -3257,7 +3257,7 @@
       "changed": "2026-09-13"
     },
     "/serverless-free-tier-comparison-2026": {
-      "hash": "a1ae6a27ac177ef4",
+      "hash": "dd5a65fed080034b",
       "changed": "2026-09-13"
     },
     "/setup": {
@@ -3312,7 +3312,7 @@
       "changed": "2026-09-13"
     },
     "/storage-comparison-2026": {
-      "hash": "8644dc8e8986ecca",
+      "hash": "9ac45026da6c11f8",
       "changed": "2026-09-13"
     },
     "/supabase-vs-firebase": {
