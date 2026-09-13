@@ -210,10 +210,13 @@
       "published": "2026-04-01",
       "tier": "A",
       "vendors_asserted": [
+        "apidog",
         "bruno",
         "hoppscotch",
+        "insomnia",
         "mockoon",
         "postman",
+        "rapidapi",
         "thunder-client"
       ],
       "vendors_tabulated": [
@@ -327,6 +330,8 @@
       "published": "2026-03-27",
       "tier": "A",
       "vendors_asserted": [
+        "amazon-q-developer",
+        "aws",
         "azure",
         "cloudflare",
         "dynamodb-local",
@@ -465,10 +470,13 @@
         "bitrise",
         "buildkite",
         "circleci",
+        "codefresh",
         "codemagic",
         "drone-ci",
         "github-actions",
-        "gitlab-ci"
+        "gitlab-ci",
+        "nx-cloud",
+        "woodpecker-ci"
       ],
       "vendors_tabulated": [
         "appcircle",
@@ -581,7 +589,10 @@
         "neon",
         "supabase",
         "turso",
-        "upstash"
+        "upstash",
+        "upstash-vector",
+        "weaviate",
+        "zilliz-cloud"
       ],
       "vendors_tabulated": [
         "appwrite-cloud",
@@ -642,6 +653,7 @@
         "dynamodb-local",
         "firebase",
         "google-cloud-bigquery",
+        "hasura",
         "hasura-cloud",
         "influxdb-cloud",
         "momento",
@@ -753,12 +765,18 @@
       "vendors_asserted": [
         "amazon-ses",
         "brevo",
+        "buttondown",
         "emailoctopus",
+        "loops",
+        "mailchimp",
         "maileroo",
         "mailtrap-io",
         "postal",
+        "postmark",
         "resend",
-        "sendgrid"
+        "sendgrid",
+        "simplelogin",
+        "substack"
       ],
       "vendors_tabulated": [
         "ahasend",
@@ -1185,7 +1203,6 @@
         "minio",
         "neo4j-auradb",
         "neon",
-        "netlify",
         "odrive",
         "openai",
         "postman",
@@ -1219,7 +1236,9 @@
       "vendors_asserted": [
         "aws",
         "azure",
-        "cloudflare"
+        "cloudflare",
+        "firebase",
+        "google-colab"
       ],
       "vendors_tabulated": [
         "aws",
@@ -1506,7 +1525,6 @@
         "cerebras",
         "cloudflare-workers-ai",
         "deepseek-api",
-        "github-models",
         "google-gemini-api",
         "groq",
         "ollama",
@@ -1554,11 +1572,15 @@
         "axiom",
         "better-stack-logs",
         "checkly",
+        "datadog",
         "elastic",
         "grafana",
         "grafana-cloud",
         "healthchecks-io",
+        "incident-io",
+        "jaeger",
         "new-relic",
+        "pagerduty",
         "prometheus",
         "sentry",
         "signoz",
@@ -1820,11 +1842,18 @@
       "published": "2026-04-01",
       "tier": "A",
       "vendors_asserted": [
+        "checkov",
         "codeql",
+        "dependabot",
+        "gitguardian",
         "gitleaks",
+        "nuclei",
         "owasp-zap",
+        "renovate",
         "semgrep",
-        "trivy"
+        "snyk",
+        "trivy",
+        "trufflehog"
       ],
       "vendors_tabulated": [
         "aikido-dev",
@@ -1867,11 +1896,14 @@
       "vendors_asserted": [
         "aws",
         "azure",
+        "cloudflare-durable-objects",
         "cloudflare-workers",
         "dbos",
         "deno-deploy",
         "google-cloud",
         "google-cloud-run",
+        "inngest",
+        "trigger-dev",
         "val-town",
         "vercel"
       ],
@@ -2090,6 +2122,7 @@
       "published": "2026-04-03",
       "tier": "A",
       "vendors_asserted": [
+        "aws",
         "backblaze-b2",
         "cloudflare-r2",
         "cloudinary",
@@ -2203,11 +2236,21 @@
       "published": "2026-04-01",
       "tier": "A",
       "vendors_asserted": [
+        "argos",
+        "artillery",
+        "browserstack",
         "checkly",
         "chromatic",
+        "cypress-cloud",
+        "gatling",
         "grafana-k6-cloud",
+        "localstack",
+        "locust",
+        "moto",
         "playwright",
-        "postman"
+        "postman",
+        "sauce-labs",
+        "testcontainers"
       ],
       "vendors_tabulated": [
         "argos",
