@@ -69,7 +69,7 @@ import { runHealthCheck, getLastReport, startPeriodicChecks } from "./referral-h
 import { configureDurableBackend, hydrateDurableStores, persistDurableStores, identityStorageReport } from "./durable-store.js";
 import { addFriend, removeFriend, getFriends, getFriendCodesForVendors } from "./friends.js";
 import { subscribe as watchlistSubscribe, getSubscription as getWatchlistSubscription, unsubscribe as watchlistUnsubscribe, listSubscriptions as listWatchlistSubscriptions } from "./watchlist.js";
-import { changeLogAnchorFor, changeLogVendorMap, toSlug, vendorSlugMap, resolveVendorSlug, namedVendorSlug, comparisonOfOneRecord, recordNamedBySlug } from "./vendor-slug.js";
+import { changeLogAnchorFor, changeLogVendorMap, toSlug, vendorSlugMap, resolveVendorSlug, namedVendorSlug, comparisonOfOneRecord, recordNamedBySlug, servedVendorSlugForName } from "./vendor-slug.js";
 import { createRegistrationLimiter, rateLimitHeaders } from "./rate-limit.js";
 import { offerForSlug, vendorRates, cheapestRate, dearestRate, spanOfRates, formatRate, formatRateSpan, monthlyTokenCost, formatDollars, type ModelRate } from "./model-rates.js";
 import { STALE_FACT_PAGES_BASELINE, factsOutdatedBy, linkifyVerdictBlocks, newestChangeBySlug, overdueReport, pageCompiledClause, pageDataProvenance, pageDateModified, tabulatedSubjectSlots, tabulatedSubjects, utcToday, verdictsOutdatedBy } from "./page-reviews.js";
@@ -552,6 +552,22 @@ function homepageVendorLink(name: string): string {
     : `<a href="/vendor/${slug}">${escHtmlServer(name)}</a>`;
 }
 
+function vendorLinkHtml(slug: string | null, name: string, attrs = ""): string {
+  const label = escHtmlServer(name);
+  return slug === null
+    ? `<span${attrs}>${label}</span>`
+    : `<a href="/vendor/${slug}"${attrs}>${label}</a>`;
+}
+
+function changeVendorLinkHtml(name: string, attrs = ""): string {
+  return vendorLinkHtml(servedVendorSlugForName(name), name, attrs);
+}
+
+function changeVendorUrlField(name: string): { url?: string } {
+  const slug = servedVendorSlugForName(name);
+  return slug === null ? {} : { url: `${BASE_URL}/vendor/${slug}` };
+}
+
 function acceleratorCreditCeiling(): string | null {
   return programCeiling(
     offers.find((o) => o.vendor === ACCELERATOR_CREDIT_VENDOR),
@@ -893,7 +909,6 @@ function buildChangingSoonSection(): string {
   if (upcomingDeadlines.length === 0) return "";
   const entries = upcomingDeadlines.slice(0, 5).map((c) => {
     const badge = changeTypeBadge[c.change_type] ?? { label: c.change_type, color: "#8b949e" };
-    const vendorSlug = toSlug(c.vendor);
     const deadlineDate = new Date(c.date + "T00:00:00Z");
     const todayDate = new Date(today + "T00:00:00Z");
     const daysLeft = Math.ceil((deadlineDate.getTime() - todayDate.getTime()) / 86400000);
@@ -903,7 +918,7 @@ function buildChangingSoonSection(): string {
         <div class="cs-detail">
           <div class="cs-head">
             <span class="change-badge" style="background:${badge.color}">${badge.label}</span>
-            <a href="/vendor/${vendorSlug}" class="cs-vendor">${c.vendor}</a>
+            ${changeVendorLinkHtml(c.vendor, ' class="cs-vendor"')}
             <span class="cs-rel">${relTime}</span>
           </div>
           <div class="cs-summary">${changeSummaryHtml(c, escHtmlServer)}</div>
@@ -928,11 +943,10 @@ function buildRecentChangesSection(): string {
   if (recentChanges.length === 0) return "";
   const entries = recentChanges.map((c) => {
     const badge = changeTypeBadge[c.change_type] ?? { label: c.change_type, color: "#8b949e" };
-    const vendorSlug = c.vendor.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
     return `      <div class="rc-entry">
         <div class="rc-head">
           <span class="change-badge" style="background:${badge.color}">${badge.label}</span>
-          <a href="/vendor/${vendorSlug}" class="rc-vendor">${c.vendor}</a>
+          ${changeVendorLinkHtml(c.vendor, ' class="rc-vendor"')}
           <span class="rc-date">${changeEntryDateLabel(c)}</span>
         </div>
         <div class="rc-summary">${changeSummaryHtml(c, escHtmlServer)}</div>
@@ -954,7 +968,7 @@ function buildRecentChangesSection(): string {
         headline: `${c.vendor}: ${(changeTypeBadge[c.change_type] ?? { label: c.change_type }).label}`,
         description: c.summary,
         ...changeDatePublished(c),
-        url: `${BASE_URL}/vendor/${c.vendor.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")}`,
+        ...changeVendorUrlField(c.vendor),
       },
     })),
   });
@@ -4379,7 +4393,7 @@ function buildThisWeekPage(weeksAgo: number): string {
       return `<div class="tw-change" style="border-left-color:${sectionColor}">
         <div class="change-header">
           <span class="change-badge" style="background:${badge.color}">${badge.label}</span>
-          <a href="/vendor/${toSlug(c.vendor)}" class="change-vendor">${escHtmlServer(c.vendor)}</a>
+          ${changeVendorLinkHtml(c.vendor, ' class="change-vendor"')}
           <span class="change-cat">${escHtmlServer(c.category)}</span>
         </div>
         <div class="change-summary">${changeSummaryHtml(c, escHtmlServer)}</div>
@@ -4408,7 +4422,7 @@ function buildThisWeekPage(weeksAgo: number): string {
         return `<div class="tw-change" style="border-left-color:#8b949e">
         <div class="change-header">
           <span class="change-badge" style="background:${badge.color}">${badge.label}</span>
-          <a href="/vendor/${toSlug(c.vendor)}" class="change-vendor">${escHtmlServer(c.vendor)}</a>
+          ${changeVendorLinkHtml(c.vendor, ' class="change-vendor"')}
           <span class="change-cat" style="font-family:var(--mono)">${changeEntryDateLabel(c)}</span>
           <span class="change-cat">${escHtmlServer(c.category)}</span>
         </div>
@@ -18975,12 +18989,11 @@ function buildQ1PricingReportPage(): string {
   const buildChangeCard = (c: typeof dealChanges[0]) => {
     const impactColor = impactColors[c.impact] ?? "#94a3b8";
     const typeLabel = changeTypeLabels[c.change_type] ?? c.change_type.replace(/_/g, " ");
-    const vendorSlug = toSlug(c.vendor);
     const hasEditorial = editorialByVendor.has(c.vendor.toLowerCase());
     const editorialLink = hasEditorial ? " <a href=\"/" + editorialByVendor.get(c.vendor.toLowerCase())!.slug + "\" style=\"font-size:.75rem;color:var(--accent)\">[alternatives guide]</a>" : "";
     return "<div class=\"change-card\" style=\"border-left-color:" + impactColor + "\">" +
       "<div class=\"change-header\">" +
-        "<a href=\"/vendor/" + vendorSlug + "\" class=\"change-vendor\">" + escHtmlServer(c.vendor) + "</a>" +
+        changeVendorLinkHtml(c.vendor, " class=\"change-vendor\"") +
         "<span class=\"change-date\">" + changeEntryDateLabel(c) + "</span>" +
         "<span class=\"change-impact\" style=\"color:" + impactColor + "\">" + c.impact + "</span>" +
       "</div>" +
@@ -19255,7 +19268,6 @@ mcpCtaCss() + "\n" +
     "<h3>Spotify API Lockdown</h3>\n" +
     "<span class=\"story-impact\" style=\"background:#d2992222;color:#d29922\">Limits Reduced &middot; High Impact</span>\n" +
     "<p>Spotify dramatically reduced API rate limits and restricted access to several endpoints in February. Third-party music apps, playlist tools, and analytics dashboards that relied on the API were effectively locked out. This continues Spotify&rsquo;s multi-year pattern of restricting developer access to protect its platform ecosystem.</p>\n" +
-    "<p><a href=\"/vendor/spotify-api\">View vendor profile</a></p>\n" +
   "</div>\n" +
 
   "<div class=\"story-card\">\n" +
@@ -19378,12 +19390,11 @@ function buildQ2PricingPreview2026Page(): string {
   const buildChangeCard = (c: typeof dealChanges[0]) => {
     const impactColor = impactColors[c.impact] ?? "#94a3b8";
     const typeLabel = changeTypeLabels[c.change_type] ?? c.change_type.replace(/_/g, " ");
-    const vendorSlug = toSlug(c.vendor);
     const hasEditorial = editorialByVendor.has(c.vendor.toLowerCase());
     const editorialLink = hasEditorial ? ` <a href="/${editorialByVendor.get(c.vendor.toLowerCase())!.slug}" style="font-size:.75rem;color:var(--accent)">[alternatives guide]</a>` : "";
     return `<div class="change-card" style="border-left-color:${impactColor}">
       <div class="change-header">
-        <a href="/vendor/${vendorSlug}" class="change-vendor">${escHtmlServer(c.vendor)}</a>
+        ${changeVendorLinkHtml(c.vendor, ' class="change-vendor"')}
         <span class="change-date">${changeEntryDateLabel(c)}</span>
         <span class="change-impact" style="color:${impactColor}">${c.impact}</span>
       </div>
@@ -19528,7 +19539,7 @@ ${mcpCtaCss()}
     return `<div class="timeline-item">
       <div class="timeline-date">${changeEntryDateLabel(c)}</div>
       <div class="timeline-content">
-        <span class="timeline-vendor"><a href="/vendor/${toSlug(c.vendor)}" style="color:var(--text)">${escHtmlServer(c.vendor)}</a></span>
+        <span class="timeline-vendor">${changeVendorLinkHtml(c.vendor, ' style="color:var(--text)"')}</span>
         <span class="timeline-impact" style="background:${impactColor}22;color:${impactColor}">${c.impact}</span>
         <div class="timeline-summary">${changeSummaryHtml(c, escHtmlServer, 180)}</div>
       </div>
@@ -23239,13 +23250,12 @@ function buildFreeTierRiskPage(): string {
   };
 
   const buildRiskRow = (e: RiskEntry) => {
-    const vendorSlug = e.vendor.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/-+$/, "");
     const color = riskColors[e.risk];
     const beforeTheGrade = citesAChangeOlderThanTheGrade(e)
       ? `<div style="color:var(--text-dim);font-family:var(--sans);font-size:.72rem">before the grade</div>`
       : "";
     return `<tr>
-      <td style="font-weight:600"><a href="/vendor/${vendorSlug}" style="color:var(--text)">${escHtmlServer(e.vendor)}</a></td>
+      <td style="font-weight:600">${changeVendorLinkHtml(e.vendor, ' style="color:var(--text)"')}</td>
       <td style="color:${color};font-weight:600;font-size:.85rem">${riskEmoji[e.risk]} ${riskLabels[e.risk]}<div style="color:var(--text-dim);font-weight:400;font-size:.72rem;font-family:var(--mono);white-space:nowrap">graded ${escHtmlServer(e.graded)}</div></td>
       <td style="color:var(--text-muted);font-size:.85rem">${escHtmlServer(e.category)}</td>
       <td style="color:var(--text-muted);font-size:.8rem">${escHtmlServer(e.reasoning)}</td>
@@ -23788,7 +23798,6 @@ function buildStabilityDashboardPage(): string {
   const stabilityEmoji: Record<string, string> = { volatile: "\u{1F534}", watch: "\u{1F7E1}", improving: "\u{1F7E2}", stable: "\u{1F535}", unrated: "\u{26AA}" };
 
   const buildVendorCard = (entry: { vendor: string; changes: typeof allChanges }, color: string) => {
-    const vendorSlug = toVendorSlug(entry.vendor);
     const category = getCategory(entry.vendor);
     const latestChange = entry.changes.reduce((latest, c) => c.date > (latest?.date ?? "") ? c : latest, entry.changes[0]);
     const changeTypeLabel = latestChange?.change_type.replace(/_/g, " ") ?? "";
@@ -23800,7 +23809,7 @@ function buildStabilityDashboardPage(): string {
 
     return `<div class="vendor-card" style="border-left-color:${color}">
       <div class="vendor-header">
-        <a href="/vendor/${vendorSlug}" class="vendor-name">${escHtmlServer(entry.vendor)}</a>
+        ${changeVendorLinkHtml(entry.vendor, ' class="vendor-name"')}
         ${category ? `<span class="vendor-cat">${escHtmlServer(category)}</span>` : ""}
       </div>
       <p class="vendor-summary">${latestChange ? changeSummaryHtml(latestChange, escHtmlServer, 200) : ""}</p>
@@ -26934,7 +26943,7 @@ ${buildGlobalNav("guides")}
         const impactColor = changeImpactColor(c.impact);
         return `<tr>
           <td style="font-family:var(--mono);font-size:.8rem">${escHtmlServer(dateStr)}</td>
-          <td><a href="/vendor/${toSlug(c.vendor)}" style="color:var(--text)">${escHtmlServer(c.vendor)}</a></td>
+          <td>${changeVendorLinkHtml(c.vendor, ' style="color:var(--text)"')}</td>
           <td style="font-size:.85rem">${changeSummaryHtml(c, escHtmlServer)}</td>
           <td><span style="color:${impactColor};font-size:.8rem;font-weight:600">${escHtmlServer(changeImpactLabel(c.impact))}</span></td>
         </tr>`;
@@ -27205,25 +27214,21 @@ function buildFreeTierTrackerPage(): string {
   const buildEntryCard = (e: ErosionEntry, borderColor: string) => `
     <div style="padding:1.25rem;border:1px solid var(--border);border-left:3px solid ${borderColor};border-radius:8px;background:var(--bg-card);margin-bottom:.75rem">
       <div style="display:flex;align-items:center;flex-wrap:wrap;gap:.5rem;margin-bottom:.5rem">
-        <a href="/vendor/${e.slug}" style="font-size:1.1rem;font-weight:600;color:var(--text);text-decoration:none">${escHtmlServer(e.vendor)}</a>
+        ${vendorLinkHtml(servedVendorSlugForName(e.slug), e.vendor, ' style="font-size:1.1rem;font-weight:600;color:var(--text);text-decoration:none"')}
         <span style="font-family:var(--mono);font-size:.75rem;padding:.15rem .5rem;border-radius:10px;background:${borderColor}22;color:${borderColor};font-weight:600">${changeTypeLabels[e.changeType] ?? e.changeType}</span>
         <span style="font-family:var(--mono);font-size:.75rem;color:var(--text-dim)">${escHtmlServer(e.date)}</span>
         ${e.impact === "high" ? '<span style="font-size:.7rem;padding:.1rem .4rem;border-radius:8px;background:rgba(248,81,73,0.15);color:#f85149;font-weight:600">HIGH IMPACT</span>' : ""}
       </div>
       <p style="color:var(--text);font-size:.95rem;font-weight:500;margin-bottom:.5rem">${escHtmlServer(e.oneLiner)}</p>
       <p style="color:var(--text-muted);font-size:.85rem;line-height:1.6;margin-bottom:.5rem">${escHtmlServer(e.detail)} ${recordBehindEntryCitation(e)}</p>
-      ${e.alternatives.length ? `<p style="font-size:.8rem;color:var(--text-dim)"><strong style="color:var(--text-muted)">Still free:</strong> ${e.alternatives.map(a => {
-        const aSlug = a.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
-        return `<a href="/vendor/${aSlug}" style="color:var(--accent)">${escHtmlServer(a)}</a>`;
-      }).join(", ")}</p>` : ""}
+      ${e.alternatives.length ? `<p style="font-size:.8rem;color:var(--text-dim)"><strong style="color:var(--text-muted)">Still free:</strong> ${e.alternatives.map(a => changeVendorLinkHtml(a, ' style="color:var(--accent)"')).join(", ")}</p>` : ""}
     </div>`;
 
   const buildChangeRow = (c: typeof dealChanges[0]) => {
     const color = changeTypeColors[c.change_type] ?? "var(--text-dim)";
     const label = changeTypeLabels[c.change_type] ?? c.change_type;
-    const vendorSlug = c.vendor.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
     return `<tr>
-      <td style="font-weight:600;white-space:nowrap"><a href="/vendor/${vendorSlug}" style="color:var(--text)">${escHtmlServer(c.vendor)}</a></td>
+      <td style="font-weight:600;white-space:nowrap">${changeVendorLinkHtml(c.vendor, ' style="color:var(--text)"')}</td>
       <td style="white-space:nowrap"><span style="color:${color};font-weight:600;font-size:.8rem">${label}</span></td>
       <td style="font-family:var(--mono);font-size:.8rem;color:var(--text-dim);white-space:nowrap">${escHtmlServer(changeEntryDateLabel(c))}</td>
       <td style="color:var(--text-muted);font-size:.8rem">${changeSummaryHtml(c, escHtmlServer, 120)}</td>
@@ -30891,7 +30896,7 @@ function buildVectorDatabasePricingPage(): string {
   const changeTimelineRows = vectorChanges.slice(0, 15).map((c: any) =>
     '<tr>' +
     '<td style="font-size:.85rem;white-space:nowrap">' + escHtmlServer(changeEntryDateLabel(c)) + '</td>' +
-    '<td style="font-weight:600;font-size:.85rem"><a href="/vendor/' + escHtmlServer(c.vendor.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/-+$/, "")) + '">' + escHtmlServer(c.vendor) + '</a></td>' +
+    '<td style="font-weight:600;font-size:.85rem">' + changeVendorLinkHtml(c.vendor) + '</td>' +
     '<td style="font-size:.85rem">' + escHtmlServer(c.change_type || "update") + '</td>' +
     '<td style="font-size:.85rem;color:var(--text-muted)">' + changeSummaryHtml(c, escHtmlServer) + '</td>' +
     '</tr>'
@@ -46097,7 +46102,7 @@ function buildStateOfFreeTiersPage(): string {
         <span style="display:inline-block;padding:.1rem .5rem;border-radius:10px;font-size:.65rem;font-weight:600;background:${badge.color};color:#fff">${badge.label}</span>
         <span style="font-family:var(--mono);font-size:.75rem;color:var(--text-dim)">${changeEntryDateLabel(c)}</span>
         <span style="font-size:.7rem;color:${impactColor};font-weight:600">${c.impact} impact</span>
-        <a href="/vendor/${toSlug(c.vendor)}" style="font-size:.8rem;font-weight:600;color:var(--text)">${escHtmlServer(c.vendor)}</a>
+        ${changeVendorLinkHtml(c.vendor, ' style="font-size:.8rem;font-weight:600;color:var(--text)"')}
       </div>
       <div style="font-size:.85rem;color:var(--text-muted);line-height:1.4">${changeSummaryHtml(c, escHtmlServer)}</div>
     </div>`;
@@ -46109,7 +46114,7 @@ function buildStateOfFreeTiersPage(): string {
       <div style="display:flex;align-items:center;gap:.5rem;margin-bottom:.3rem;flex-wrap:wrap">
         <span style="display:inline-block;padding:.1rem .5rem;border-radius:10px;font-size:.65rem;font-weight:600;background:${badge.color};color:#fff">${badge.label}</span>
         <span style="font-family:var(--mono);font-size:.75rem;color:var(--text-dim)">${changeEntryDateLabel(c)}</span>
-        <a href="/vendor/${toSlug(c.vendor)}" style="font-size:.8rem;font-weight:600;color:var(--text)">${escHtmlServer(c.vendor)}</a>
+        ${changeVendorLinkHtml(c.vendor, ' style="font-size:.8rem;font-weight:600;color:var(--text)"')}
       </div>
       <div style="font-size:.85rem;color:var(--text-muted);line-height:1.4">${changeSummaryHtml(c, escHtmlServer)}</div>
     </div>`;
@@ -49997,12 +50002,11 @@ function buildPricingChangesPage(): string {
   function buildChangeEntry(c: typeof allChanges[0]): string {
     const badge = changeTypeBadge[c.change_type] ?? { label: c.change_type, color: "#8b949e" };
     const impactColor = changeImpactColor(c.impact);
-    const vendorSlug = toSlug(c.vendor);
     const dated = isEventDated(c);
     const isUpcoming = dated && c.date >= today;
     const category = filterCategory[c.change_type] ?? "neutral";
     const altHtml = c.alternatives && c.alternatives.length > 0
-      ? `<div class="pc-alts"><span class="pc-alts-label">Alternatives:</span> ${c.alternatives.map(a => `<a href="/vendor/${toSlug(a)}">${escHtmlServer(a)}</a>`).join(", ")}</div>`
+      ? `<div class="pc-alts"><span class="pc-alts-label">Alternatives:</span> ${c.alternatives.map(a => changeVendorLinkHtml(a)).join(", ")}</div>`
       : "";
     const stateHtml = c.previous_state && c.current_state
       ? `<div class="pc-states">
@@ -50021,7 +50025,7 @@ function buildPricingChangesPage(): string {
         <div class="pc-right">
           <div class="pc-head">
             <span class="badge" style="background:${badge.color}">${badge.label}</span>
-            <a href="/vendor/${vendorSlug}" class="pc-vendor">${escHtmlServer(c.vendor)}</a>
+            ${changeVendorLinkHtml(c.vendor, ' class="pc-vendor"')}
             <span class="pc-impact" style="color:${impactColor}">${c.impact} impact</span>
             ${changeIsUncited(c) ? unsourcedTagHtml() : ""}
           </div>
@@ -50465,13 +50469,12 @@ function buildChangesPage(): string {
   function buildChangeEntry(c: typeof allChanges[0]): string {
     const badge = changeTypeBadge[c.change_type] ?? { label: c.change_type, color: "#8b949e" };
     const impactColor = changeImpactColor(c.impact);
-    const vendorSlug = toSlug(c.vendor);
     const dated = isEventDated(c);
     const isUpcoming = dated && c.date >= today;
     const anchor = changeLogAnchorFor(c.vendor);
     const anchorAttr = anchor && anchorHolder.get(anchor) === c ? ` id="${anchor}"` : "";
     const altHtml = c.alternatives && c.alternatives.length > 0
-      ? `<div class="chg-alts"><span class="chg-alts-label">Alternatives:</span> ${c.alternatives.map(a => `<a href="/vendor/${toSlug(a)}">${escHtmlServer(a)}</a>`).join(", ")}</div>`
+      ? `<div class="chg-alts"><span class="chg-alts-label">Alternatives:</span> ${c.alternatives.map(a => changeVendorLinkHtml(a)).join(", ")}</div>`
       : "";
     return `      <div class="chg-entry${isUpcoming ? " chg-upcoming" : ""}${dated ? "" : " chg-undated"}${isNoLongerInForce(c) ? " chg-resolved" : ""}${changeIsUncited(c) ? " chg-unsourced" : ""}"${anchorAttr}>
         <div class="chg-left">
@@ -50481,7 +50484,7 @@ function buildChangesPage(): string {
         <div class="chg-right">
           <div class="chg-head">
             <span class="badge" style="background:${badge.color}">${badge.label}</span>
-            <a href="/vendor/${vendorSlug}" class="chg-vendor">${escHtmlServer(c.vendor)}</a>
+            ${changeVendorLinkHtml(c.vendor, ' class="chg-vendor"')}
             <span class="chg-impact" style="color:${impactColor}">${c.impact}</span>
             ${changeIsUncited(c) ? unsourcedTagHtml() : ""}
           </div>
@@ -50529,7 +50532,7 @@ ${undatedSorted.map(c => buildChangeEntry(c)).join("\n")}
           headline: `${c.vendor}: ${(changeTypeBadge[c.change_type] ?? { label: c.change_type }).label}`,
           description: c.summary,
           ...changeDatePublished(c),
-          url: `${BASE_URL}/vendor/${toSlug(c.vendor)}`,
+          ...changeVendorUrlField(c.vendor),
           publisher: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
           ...(citation ? { citation } : {}),
         },
@@ -50687,7 +50690,6 @@ function buildExpiringPage(): string {
   function buildEntry(c: typeof allChanges[0], showCountdown: boolean): string {
     const badge = changeTypeBadge[c.change_type] ?? { label: c.change_type, color: "#8b949e" };
     const impactColor = changeImpactColor(c.impact);
-    const vendorSlug = toSlug(c.vendor);
     const dated = isEventDated(c);
     const countdown = showCountdown && dated ? countdownLabel(c.date) : null;
     const urgentClass = countdown?.urgent ? " entry-urgent" : "";
@@ -50699,7 +50701,7 @@ function buildExpiringPage(): string {
         <div class="exp-right">
           <div class="exp-head">
             <span class="badge" style="background:${badge.color}">${badge.label}</span>
-            <a href="/vendor/${vendorSlug}" class="exp-vendor">${escHtmlServer(c.vendor)}</a>
+            ${changeVendorLinkHtml(c.vendor, ' class="exp-vendor"')}
             <span class="exp-impact" style="color:${impactColor}">${c.impact}</span>
           </div>
           <div class="exp-summary">${changeSummaryHtml(c, escHtmlServer)}</div>
@@ -50742,7 +50744,7 @@ ${entriesHtml}
         headline: `${c.vendor}: ${(changeTypeBadge[c.change_type] ?? { label: c.change_type }).label}`,
         description: c.summary,
         ...changeDatePublished(c),
-        url: `${BASE_URL}/vendor/${toSlug(c.vendor)}`,
+        ...changeVendorUrlField(c.vendor),
         publisher: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
       },
     })),
@@ -51166,10 +51168,9 @@ function buildDeadlinesPage(): string {
     const badge = changeTypeBadge[c.change_type] ?? { label: c.change_type, color: "#8b949e" };
     const urgency = urgencyBadge(c.date);
     const countdown = countdownText(c.date);
-    const vendorSlug = toSlug(c.vendor);
     const guide = findMigrationGuide(c.vendor, c.summary);
     const altHtml = c.alternatives && c.alternatives.length > 0
-      ? `<div class="dl-alts"><span class="dl-alts-label">Alternatives:</span> ${c.alternatives.map(a => `<a href="/vendor/${toSlug(a)}">${escHtmlServer(a)}</a>`).join(", ")}</div>`
+      ? `<div class="dl-alts"><span class="dl-alts-label">Alternatives:</span> ${c.alternatives.map(a => changeVendorLinkHtml(a)).join(", ")}</div>`
       : "";
     const guideHtml = guide
       ? `<a href="${guide}" class="dl-guide">Migration guide &rarr;</a>`
@@ -51183,7 +51184,7 @@ function buildDeadlinesPage(): string {
         <div class="dl-body">
           <div class="dl-meta">
             <span class="badge" style="background:${badge.color}">${badge.label}</span>
-            <a href="/vendor/${vendorSlug}" class="dl-vendor">${escHtmlServer(c.vendor)}</a>
+            ${changeVendorLinkHtml(c.vendor, ' class="dl-vendor"')}
             <span class="dl-category">${escHtmlServer(c.category)}</span>
           </div>
           <div class="dl-date">${escHtmlServer(changeEntryDateLabel(c))}</div>
@@ -51219,7 +51220,7 @@ ${altHtml}${guideHtml}
         headline: `${c.vendor}: ${(changeTypeBadge[c.change_type] ?? { label: c.change_type }).label}`,
         description: c.summary,
         datePublished: c.date,
-        url: `${BASE_URL}/vendor/${toSlug(c.vendor)}`,
+        ...changeVendorUrlField(c.vendor),
         publisher: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
       },
     })),
@@ -52746,7 +52747,7 @@ function buildTrendsPage(slug: string): string | null {
     return `      <div class="timeline-item" style="border-left-color:${badge.color}">
         <div class="timeline-head">
           <span class="badge" style="background:${badge.color}">${badge.label}</span>
-          <a href="/vendor/${toSlug(c.vendor)}" class="timeline-vendor">${escHtmlServer(c.vendor)}</a>
+          ${changeVendorLinkHtml(c.vendor, ' class="timeline-vendor"')}
           <span class="timeline-date">${changeEntryDateLabel(c)}</span>
           <span class="impact impact-${c.impact}">${c.impact}</span>
         </div>
