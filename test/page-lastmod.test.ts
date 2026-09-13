@@ -800,16 +800,13 @@ describe("the ledger keeps up with the code that renders the pages", () => {
     const piped = spawnSync("sh", ["-c", `node -e 'console.log("x".repeat(${written})); process.exit(0)' | wc -c`], { encoding: "utf8" });
     assert.equal(piped.status, 0, `this control could not be run: ${piped.stderr}`);
     const arrived = Number(piped.stdout.trim());
-    assert.ok(
-      arrived < written,
-      "this test is pointless if node no longer discards a pending stdout write when a process exits on a pipe:"
-        + ` all ${arrived} bytes of it arrived`,
-    );
-    assert.ok(
-      arrived >= PIPE_BUFFER_BYTES,
-      `a pipe took ${arrived} bytes before the writer exited, fewer than the ${PIPE_BUFFER_BYTES} one buffer holds,`
-        + " so this control is measuring something other than the mechanism it names",
-    );
+    const whatItMeasured =
+      arrived >= written
+        ? `all ${arrived} bytes arrived, so node no longer discards a pending stdout write when a process exits`
+          + " on a pipe and this control has nothing left to prove"
+        : `a pipe took ${arrived} bytes before the writer exited, fewer than the ${PIPE_BUFFER_BYTES} one buffer`
+          + " holds, so this control is measuring something other than the mechanism it names";
+    assert.ok(arrived >= PIPE_BUFFER_BYTES && arrived < written, whatItMeasured);
   });
 
   it("reads every page a second time before the days it read go anywhere", () => {
