@@ -23,11 +23,15 @@ const { loadDealChanges } = await import("../dist/data.js");
 
 const dealChanges: DealChange[] = loadDealChanges();
 
-function publishedDescriptionOf(offer: Offer): string {
-  const superseding = supersedingChange(
+function changeSuperseding(offer: Offer) {
+  return supersedingChange(
     offer,
     dealChanges.filter(c => c.vendor.toLowerCase() === offer.vendor.toLowerCase()),
   );
+}
+
+function publishedDescriptionOf(offer: Offer): string {
+  const superseding = changeSuperseding(offer);
   return superseding ? supersededTermsNotice(offer.vendor, superseding) : offer.description;
 }
 
@@ -161,7 +165,10 @@ describe("a vendor page whose record is gated on eligibility says so", () => {
 
   it("still answers yes where the page renders an ungated record for a vendor that also holds a gated one", () => {
     const controls = rendered.filter(
-      p => !p.offer.eligibility && !gateFor(p.offer, utcDate()) && !termsWithheldFor(p.vendor),
+      p => !p.offer.eligibility
+        && !gateFor(p.offer, utcDate())
+        && !termsWithheldFor(p.vendor)
+        && !changeSuperseding(p.offer),
     );
     assert.ok(
       controls.length > 0,

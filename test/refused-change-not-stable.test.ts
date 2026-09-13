@@ -77,6 +77,7 @@ interface Subject {
   unreconciled: boolean;
   measuredNoDifference: boolean;
   onlyTheRefusal: boolean;
+  otherwiseWithheld: boolean;
   confirmingOnly: boolean;
   rated: string | null;
   ended: boolean;
@@ -196,6 +197,7 @@ before(async () => {
       unreconciled,
       measuredNoDifference: refusedRead !== null && MEASURED_NO_DIFFERENCE.has(refusedRead.reason),
       onlyTheRefusal: unreconciled && !otherwiseWithheld,
+      otherwiseWithheld,
       confirmingOnly: count === 0 && reasons.length > 0 && reasons.every(r => CONFIRMING.has(r)),
       rated: row?.risk_level ?? null,
       ended: offerEnded(row),
@@ -279,11 +281,20 @@ describe("a refused change is not a signal that nothing changed", () => {
       if (WITHHELD_FOR_A_REFUSAL.test(pages.get(subject.slug) ?? "")) taken.push(`/vendor/${subject.slug}`);
     }
     assert.deepStrictEqual(taken, [], `a refusal that confirms our terms took the rating with it:\n${taken.join("\n")}`);
-    for (const slug of ["activepieces", "assemblyai"]) {
-      const subject = subjects.find(s => s.slug === slug);
-      assert.ok(subject?.confirmingOnly, `/vendor/${slug} no longer holds only refusals that confirm our terms`);
-      assert.ok(claimsOn(slug).length > 0, `/vendor/${slug} publishes no rating, and its refusal is a finding that the terms held`);
-    }
+
+    const confirmingAndNothingElse = subjects.filter(s => s.confirmingOnly && !s.otherwiseWithheld);
+    assert.ok(
+      confirmingAndNothingElse.length > 0,
+      "no vendor holds a confirming refusal as the only thing standing between it and a rating, so the control is empty",
+    );
+    const unrated = confirmingAndNothingElse
+      .filter(s => claimsOn(s.slug).length === 0)
+      .map(s => `/vendor/${s.slug} (${s.reasons.join(", ")})`);
+    assert.deepStrictEqual(
+      unrated.slice(0, 20),
+      [],
+      `pages publishing no rating over a refusal that is itself a finding that the terms held:\n${unrated.slice(0, 20).join("\n")}`,
+    );
     assert.ok(
       subjects.some(s => s.confirmingOnly && s.reasons.includes("free_tier_still_offered")),
       "no vendor's free tier was found still on the page, so that half of the exception is untested",
@@ -305,12 +316,20 @@ describe("a refused change is not a signal that nothing changed", () => {
   });
 
   it("leaves a vendor with a published change and no refusal exactly as it was", () => {
-    const unaffected = subjects.filter(s => s.reasons.length === 0 && s.published > 0);
+    const unaffected = subjects.filter(s => s.reasons.length === 0 && s.published > 0 && !s.otherwiseWithheld);
     assert.ok(unaffected.length > 0, "no vendor carries a published change and no refusal, so the control is empty");
-    const dub = subjects.find(s => s.slug === "dub-co");
-    assert.ok(dub, "the catalogue no longer holds the record this control was written against");
-    assert.ok(dub.published > 0, "dub-co no longer carries a published change");
-    assert.match(pages.get("dub-co") ?? "", /We rate it caution/);
+    const moved: string[] = [];
+    for (const subject of unaffected) {
+      const page = pages.get(subject.slug) ?? "";
+      if (WITHHELD_FOR_A_REFUSAL.test(page)) moved.push(`/vendor/${subject.slug} withholds for a refusal it does not hold`);
+      const verdict = verdictParagraphOf(page);
+      if (!/We rate it /.test(verdict)) moved.push(`/vendor/${subject.slug}: ${verdict.slice(0, 120)}`);
+    }
+    assert.deepStrictEqual(
+      moved.slice(0, 20),
+      [],
+      `the refusal machinery reached a vendor holding no refusal:\n${moved.slice(0, 20).join("\n")}`,
+    );
   });
 
   it("names the reason on every rating it withholds for a refused read", () => {
@@ -427,12 +446,11 @@ describe("a refused change is not a signal that nothing changed", () => {
     assert.deepStrictEqual(released.slice(0, 20), [], `ratings restored over a live refusal:\n${released.slice(0, 20).join("\n")}`);
     assertSharesPopulation(stillUnconfirmed.length, recordsInTheCatalogue(), 0.03, "records hold a refusal no later confirmation supersedes");
 
-    for (const vendor of ["pubnub.com", "Typeform.com", "Lokalise"]) {
-      const row = payload.offers.find(o => o.vendor === vendor);
-      assert.ok(row, `${vendor} has left the catalogue this control was written against`);
-      assert.ok(row.refused_read, `${vendor} stopped publishing the refused read it was holding`);
-      assert.strictEqual(row.risk_level, null, `${vendor} recovered a rating over a refusal nothing has confirmed past`);
-    }
+    assert.ok(stillUnconfirmed.length > 0, "no record holds a refusal nothing has confirmed past, so the withholding is untested");
+    const silent = stillUnconfirmed
+      .filter(row => !row.refused_read)
+      .map(row => `${row.vendor} (${row.tier}) holds a refusal nothing has confirmed past and publishes no refused read`);
+    assert.deepStrictEqual(silent.slice(0, 20), [], `refusals held back from the record that holds them:\n${silent.slice(0, 20).join("\n")}`);
   });
 
   it("publishes none of the records it refused", () => {
@@ -445,29 +463,31 @@ describe("a refused change is not a signal that nothing changed", () => {
       .map(r => `${r.vendor} (${r.reason})`);
     assert.deepStrictEqual(admitted, [], `a refused record reached the published log:\n${admitted.join("\n")}`);
     assertSharesPopulation(refusals.length, refusalsTheLogHolds(), 0.5, "records were refused and checked against the published log");
-    for (const vendor of ["Tavily AI", "Reducto"]) {
-      assert.ok(
-        refusals.some(r => r.vendor === vendor && r.reason === "removal_read_from_root"),
-        `${vendor} no longer holds the refusal this control was written against`,
-      );
-    }
+    assert.ok(
+      refusals.some(r => r.reason === "removal_read_from_root"),
+      "no refusal reads a removal off the root of the page, so that family is not among the records checked",
+    );
   });
 
   it("goes on offering the free tier of a vendor whose removal the absence rule refused", () => {
     const offers = loadOffers();
+    const publishedRemovals = new Set(
+      loadDealChanges().filter(c => c.change_type === "free_tier_removed").map(c => c.vendor.toLowerCase()),
+    );
+    const refusedRemovals = [
+      ...new Set(loadChangeRefusals().filter(r => r.change_type === "free_tier_removed").map(r => r.vendor)),
+    ].filter(vendor => !publishedRemovals.has(vendor.toLowerCase()) && offers.some(o => o.vendor === vendor));
+    assert.ok(
+      refusedRemovals.length > 0,
+      "no vendor holds a refused removal and no published one, so the control is empty",
+    );
     const ended: string[] = [];
-    for (const vendor of ["Activepieces", "Integrately", "Mergify"]) {
-      const own = offers.filter(o => o.vendor === vendor);
-      assert.ok(own.length > 0, `${vendor} is no longer in the catalogue this control was written against`);
-      assert.ok(
-        loadChangeRefusals().some(r => r.vendor === vendor),
-        `${vendor} no longer holds the refusal this control was written against`,
-      );
-      for (const row of enrichOffers(own)) {
-        if (row.risk_cause?.change_type === "free_tier_removed") ended.push(vendor);
+    for (const vendor of refusedRemovals) {
+      for (const row of enrichOffers(offers.filter(o => o.vendor === vendor))) {
+        if (row.risk_cause?.change_type === "free_tier_removed") ended.push(`${vendor} (${row.tier})`);
       }
     }
-    assert.deepStrictEqual(ended, [], `a free tier the page still offers is published as removed:\n${ended.join("\n")}`);
+    assert.deepStrictEqual(ended.slice(0, 20), [], `a free tier the page still offers is published as removed:\n${ended.slice(0, 20).join("\n")}`);
   });
 });
 
@@ -574,12 +594,13 @@ describe("an empty history and a recorded threshold are claims a refused read wi
     assert.deepStrictEqual(lost.slice(0, 20), [], `a rated vendor lost the sentence its empty history earns:\n${lost.slice(0, 20).join("\n")}`);
     assertSharesPopulation(claiming, vendorsRatedStableWithNothingPublished(), 0.4, "rated vendor pages call an empty history a good sign");
 
-    for (const slug of ["ahasend", "appsmith", "browserless"]) {
-      const subject = subjects.find(s => s.slug === slug);
-      assert.ok(subject?.rated === "stable", `/vendor/${slug} is no longer the rated control this was written against`);
-      assert.match(pages.get(slug) ?? "", /This is a good sign — stable pricing/);
-    }
-    assert.match(growthBlockOf(pages.get("ahasend") ?? ""), A_BARE_THRESHOLD);
+    const statingAThreshold = subjects.filter(
+      s => s.rated === "stable" && !s.unreconciled && A_BARE_THRESHOLD.test(growthBlockOf(pages.get(s.slug) ?? "")),
+    );
+    assert.ok(
+      statingAThreshold.length > 0,
+      "no rated page states a recorded threshold as fact, so the withholding this file asserts has nothing to contrast with",
+    );
   });
 });
 
@@ -622,14 +643,24 @@ describe("a page states the reason we withheld, not a reason its own refusal con
   });
 
   it("takes no rating back for a vendor whose refusal only measured the quantities it compared", () => {
-    for (const slug of ["pagertree-com", "cloudflare-workers", "aiven", "uptimerobot"]) {
-      const subject = subjects.find(s => s.slug === slug);
-      assert.ok(subject?.measuredNoDifference, `/vendor/${slug} no longer holds only equality refusals`);
-      const page = pages.get(slug) ?? "";
-      assert.doesNotMatch(page, COULD_NOT_RECONCILE, `/vendor/${slug} still reports the equality finding as unreconcilable`);
-      assert.match(page, NAMED_NO_FIGURE_THAT_MOVED, `/vendor/${slug} states no reason for withholding`);
-      assert.deepStrictEqual(claimsOn(slug), [], `/vendor/${slug} publishes a stability claim over a refusal`);
+    const measuredEqual = subjects.filter(s => s.onlyTheRefusal && s.measuredNoDifference);
+    assert.ok(
+      measuredEqual.length > 0,
+      "no vendor withholds on an equality refusal alone, so the reading this asserts is untested",
+    );
+    const wrong: string[] = [];
+    for (const subject of measuredEqual) {
+      const page = pages.get(subject.slug) ?? "";
+      if (COULD_NOT_RECONCILE.test(page)) wrong.push(`/vendor/${subject.slug} reports the equality finding as unreconcilable`);
+      if (!NAMED_NO_FIGURE_THAT_MOVED.test(page)) wrong.push(`/vendor/${subject.slug} states no reason for withholding`);
+      const claims = claimsOn(subject.slug);
+      if (claims.length > 0) wrong.push(`/vendor/${subject.slug} publishes a stability claim over a refusal: ${claims.join(", ")}`);
     }
+    assert.deepStrictEqual(
+      wrong.slice(0, 20),
+      [],
+      `pages whose equality refusal is not the reason they give:\n${wrong.slice(0, 20).join("\n")}`,
+    );
   });
 
   it("says on every surface why a rating came back, wherever a confirmation cleared a refusal", () => {
@@ -653,21 +684,26 @@ describe("a page states the reason we withheld, not a reason its own refusal con
       }
     }
     assert.deepStrictEqual(silent.slice(0, 20), [], `a rating came back with nothing saying why:\n${silent.slice(0, 20).join("\n")}`);
-    for (const slug of ["doczilla", "tavily-ai"]) {
-      const subject = subjects.find(s => s.slug === slug);
-      assert.ok(subject?.supersededRefusal, `/vendor/${slug} no longer holds a refusal its own confirmation supersedes`);
-    }
   });
 
-  it("leaves the vendors #1139 was filed on withheld and unrated", () => {
-    for (const slug of ["pubnub-com", "typeform-com", "lokalise"]) {
-      const subject = subjects.find(s => s.slug === slug);
-      assert.ok(subject?.unreconciled, `/vendor/${slug} no longer holds a refusal and no published change`);
-      assert.ok(!subject.measuredNoDifference, `/vendor/${slug} is no longer a read we could not reconcile`);
-      const page = pages.get(slug) ?? "";
-      assert.match(page, COULD_NOT_RECONCILE, `/vendor/${slug} lost the sentence #1139 put on it`);
-      assert.deepStrictEqual(claimsOn(slug), [], `/vendor/${slug} regained a stability claim`);
+  it("leaves a vendor whose refused read we could not reconcile withheld and unrated", () => {
+    const unreconciled = subjects.filter(s => s.onlyTheRefusal && !s.measuredNoDifference);
+    assert.ok(
+      unreconciled.length > 0,
+      "no vendor withholds on a read we could not reconcile alone, so the reading this asserts is untested",
+    );
+    const wrong: string[] = [];
+    for (const subject of unreconciled) {
+      const page = pages.get(subject.slug) ?? "";
+      if (!COULD_NOT_RECONCILE.test(page)) wrong.push(`/vendor/${subject.slug} states no reason for withholding`);
+      const claims = claimsOn(subject.slug);
+      if (claims.length > 0) wrong.push(`/vendor/${subject.slug} regained a stability claim: ${claims.join(", ")}`);
     }
+    assert.deepStrictEqual(
+      wrong.slice(0, 20),
+      [],
+      `pages whose unreconcilable read is not the reason they give:\n${wrong.slice(0, 20).join("\n")}`,
+    );
   });
 
   it("leaves a vendor holding both an equality refusal and a published change on the verdict its records give it", () => {
