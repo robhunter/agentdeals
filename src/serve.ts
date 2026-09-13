@@ -607,11 +607,15 @@ function unconfirmedTermsFor(offer: Offer): UnconfirmedTerms | null {
   return unconfirmed;
 }
 
+function unconfirmedTermsSpanHtml(unconfirmed: UnconfirmedTerms): string {
+  return `<span class="listing-terms-unconfirmed" style="display:block;margin-top:.3rem;color:#d29922">`
+    + `${escHtmlServer(unconfirmedTermsSentence(unconfirmed))}</span>`;
+}
+
 function termsUnconfirmedNoticeHtml(offer: Offer): string {
   const unconfirmed = unconfirmedTermsFor(offer);
   if (!unconfirmed || unconfirmed.because.reason === "link_unreachable") return "";
-  return `<span class="listing-terms-unconfirmed" style="display:block;margin-top:.3rem;color:#d29922">`
-    + `${escHtmlServer(unconfirmedTermsSentence(unconfirmed))}</span>`;
+  return unconfirmedTermsSpanHtml(unconfirmed);
 }
 
 type StoredTermsOf = Pick<Offer, "vendor" | "description" | "tier">;
@@ -645,11 +649,19 @@ function supersededTermsListingHtml(vendor: string, change: DealChange): string 
     ` <a href="/vendor/${toSlug(vendor)}#changes">Read what we recorded &darr;</a>`;
 }
 
-function publishedTermsHtml(offer: StoredTermsOf): string {
+function storedTermsHtml(offer: StoredTermsOf): string {
   const superseded = supersedingChangeFor(offer);
   return superseded
     ? supersededTermsListingHtml(offer.vendor, superseded)
     : escHtmlServer(offer.description);
+}
+
+function publishedTermsHtml(offer: Offer): string {
+  const stored = storedTermsHtml(offer);
+  if (supersedingChangeFor(offer)) return stored;
+  const unconfirmed = unconfirmedTermsFor(offer);
+  if (!unconfirmed) return stored;
+  return stored + unconfirmedTermsSpanHtml(unconfirmed);
 }
 
 function publishedTermsSummary(offer: StoredTermsOf, cap: number): string {
@@ -1894,7 +1906,7 @@ function buildCategoryPage(slug: string): string | null {
   const offersHtml = catOffers.map((o) => `        <tr>
           <td style="font-weight:600;color:var(--text);white-space:nowrap"><a href="/vendor/${toSlug(o.vendor)}" style="color:var(--text)">${escHtmlServer(o.vendor)}</a></td>
           <td style="font-family:var(--mono);color:var(--accent);white-space:nowrap">${escHtmlServer(o.tier)}</td>
-          <td style="color:var(--text-muted)">${publishedTermsHtml(o)}${listingEligibilityNoticeHtml(o)}${listingUnreachableNoticeHtml(o)}${termsUnconfirmedNoticeHtml(o)}</td>
+          <td style="color:var(--text-muted)">${storedTermsHtml(o)}${listingEligibilityNoticeHtml(o)}${listingUnreachableNoticeHtml(o)}${termsUnconfirmedNoticeHtml(o)}</td>
           <td style="font-family:var(--mono);color:var(--text-dim);white-space:nowrap">${escHtmlServer(verificationDatesCell(o))}</td>
         </tr>`).join("\n");
 
