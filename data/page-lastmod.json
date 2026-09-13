@@ -761,8 +761,8 @@
       "changed": "2026-09-12"
     },
     "/aws-free-tier-2026": {
-      "hash": "5c5e00daede04be9",
-      "changed": "2026-09-12"
+      "hash": "8cd086ff54d1b4d6",
+      "changed": "2026-09-13"
     },
     "/azure-free-tier-2026": {
       "hash": "10205d8aafa8e24d",
@@ -2973,8 +2973,8 @@
       "changed": "2026-09-12"
     },
     "/gcp-free-tier-2026": {
-      "hash": "03375e88dd8e5396",
-      "changed": "2026-09-12"
+      "hash": "488a60ed012873a3",
+      "changed": "2026-09-13"
     },
     "/gemini-api-pricing-2026": {
       "hash": "dce239c1b32c96e0",
