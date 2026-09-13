@@ -35,7 +35,7 @@ import { NO_CURRENT_FIGURE, costHeadlineCaveat, limitCellText, mayRecommendAsFre
 import { changesByVendor } from "./superseded-census.js";
 import { buildComparisonMap, comparisonSlug } from "./comparison-pairs.js";
 import { comparisonVerdictText, freeTierFaqAnswer, stabilityFaqAnswer, type ComparisonSide, type FreeTierSide, type SideFreeTier, type StabilityRating } from "./comparison-verdict.js";
-import { publishedVendorLevel, vendorVerdictSentence, vendorBadge, freeTierClaim, statesRiskCause, narrowingSentence, changeKindNoun, emptyHistoryCaveatSentence, refusedReadOurConfirmationSupersedes, refusedReadWeHold, refusedReadWithholdingSentence, nothingWeReadDescribesTheTerms, unconfirmedThresholdSentence, unconfirmedTermsOpening, whyWeCannotConfirmTheseTerms, withheldForARefusedRead, withUnconfirmedTerms, refusalWithholdsStability, termsUnconfirmedBySource, closingTerms, termsNotVerifiedMetaSentence, termsWithheldLabel, unconfirmedTermsSentence, withheldBadgeLabel, type BadgeWithholding, type UnconfirmedTerms, type FreeTierClaim, type VendorVerdictInput } from "./vendor-verdict.js";
+import { publishedVendorLevel, vendorVerdictSentence, vendorBadge, freeTierClaim, statesRiskCause, narrowingSentence, changeKindNoun, emptyHistoryCaveatSentence, refusedReadOurConfirmationSupersedes, refusedReadWeHold, refusedReadWithholdingSentence, nothingWeReadDescribesTheTerms, unconfirmedThresholdSentence, unconfirmedTermsOpening, whyWeCannotConfirmTheseTerms, withheldForARefusedRead, withUnconfirmedTerms, refusalWithholdsStability, termsUnconfirmedBySource, closingTerms, termsWithTheReasonWeCannotConfirmThem, termsNotVerifiedMetaSentence, termsWithheldLabel, unconfirmedTermsSentence, withheldBadgeLabel, type BadgeWithholding, type UnconfirmedTerms, type FreeTierClaim, type VendorVerdictInput } from "./vendor-verdict.js";
 import { tierRecordsAFreeTier } from "./free-tier-record.js";
 import { PAGE_HEAD_OPEN, withLedeBeforeNav } from "./page-lede.js";
 import { withReviewByline } from "./page-byline.js";
@@ -620,9 +620,24 @@ function supersedingChangeFor(offer: StoredTermsOf): DealChange | null {
   return supersedingChange(offer, changesFor(offer.vendor));
 }
 
-function publishedTermsText(offer: StoredTermsOf): string {
+function publishedTermsText(offer: Offer): string {
   const superseded = supersedingChangeFor(offer);
-  return superseded ? supersededTermsNotice(offer.vendor, superseded) : offer.description;
+  if (superseded) return supersededTermsNotice(offer.vendor, superseded);
+  const unconfirmed = unconfirmedTermsFor(offer);
+  return unconfirmed ? termsWithTheReasonWeCannotConfirmThem(offer.description, unconfirmed) : offer.description;
+}
+
+function statesTermsWeCannotConfirm(offer: Offer): boolean {
+  return supersedingChangeFor(offer) === null && unconfirmedTermsFor(offer) !== null;
+}
+
+function termsWePublishAsVerified(offer: Offer): boolean {
+  return supersedingChangeFor(offer) === null && unconfirmedTermsFor(offer) === null;
+}
+
+function termsWeCannotConfirmMetaClause(listed: readonly Offer[]): string {
+  const count = listed.filter(statesTermsWeCannotConfirm).length;
+  return count === 0 ? "" : ` We could not confirm today's terms for ${count} of them, and each says which and why.`;
 }
 
 function supersededTermsListingHtml(vendor: string, change: DealChange): string {
@@ -1870,7 +1885,11 @@ function buildCategoryPage(slug: string): string | null {
   const catGates = catStanding.map((o) => gateFor(o, catServedOn));
   const catGatedClause = gatedShareDescriptionClause(catStandingCount, catGates);
   const title = `Free ${categoryName} Tools & Deals (${catCount} offers) — AgentDeals`;
-  const metaDesc = `Compare ${catStandingCount} free ${categoryName.toLowerCase()} tools, free tiers, and developer deals.${catGatedClause ? ` ${catGatedClause}` : ""} Verified pricing for ${catStanding.slice(0, 5).map(o => o.vendor).join(", ")}${catStandingCount > 5 ? " and more" : ""}.`;
+  const catVerified = catStanding.filter(termsWePublishAsVerified);
+  const catVerifiedSentence = catVerified.length === 0
+    ? ""
+    : ` Verified pricing for ${catVerified.slice(0, 5).map(o => o.vendor).join(", ")}${catVerified.length > 5 ? " and more" : ""}.`;
+  const metaDesc = `Compare ${catStandingCount} free ${categoryName.toLowerCase()} tools, free tiers, and developer deals.${catGatedClause ? ` ${catGatedClause}` : ""}${catVerifiedSentence}${termsWeCannotConfirmMetaClause(catStanding)}`;
 
   const offersHtml = catOffers.map((o) => `        <tr>
           <td style="font-weight:600;color:var(--text);white-space:nowrap"><a href="/vendor/${toSlug(o.vendor)}" style="color:var(--text)">${escHtmlServer(o.vendor)}</a></td>
@@ -2443,9 +2462,14 @@ function buildBestOfPage(slug: string): string | null {
   const listNoun = fn.listNoun;
   const title = `Best Free ${listNoun} (${year}) — AgentDeals`;
   const clearOurBar = `Every free ${categoryName.toLowerCase()} tier that clears our bar in ${year}: ${countedNoun(pickCount, "offer")} ${pickCount === 1 ? "meets" : "meet"} the criteria and ${countedNoun(demoted.length, "offer")} ${demoted.length === 1 ? "is" : "are"} demoted with a named reason.`;
+  const listedOffers = [...qualified, ...demoted].map(e => e.offer);
+  const listedUnconfirmed = termsWeCannotConfirmMetaClause(listedOffers);
+  const methodSentence = listedUnconfirmed
+    ? "Recorded changes and a published ranking method."
+    : "Verified pricing, recorded changes, and a published ranking method.";
   const metaDesc = meaning
-    ? `${clearOurBar} ${meaning}`
-    : `${clearOurBar} Verified pricing, recorded changes, and a published ranking method.`;
+    ? `${clearOurBar} ${meaning}${listedUnconfirmed}`
+    : `${clearOurBar} ${methodSentence}${listedUnconfirmed}`;
 
   const riskColors: Record<string, string> = { stable: "#3fb950", caution: "#d29922", risky: "#f85149" };
   const pageScope = fn.categories.length === 1 && fn.subtypes.length === 0 ? "for this category" : "on this page";

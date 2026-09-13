@@ -115,6 +115,49 @@ function demeritsInOrder(body: string): string[] {
   return [...body.matchAll(/<span class="demerit-code">([\s\S]*?)<\/span>/g)].map((m) => m[1].trim());
 }
 
+interface ApplicationNode {
+  name: string;
+  description: string;
+}
+
+function unescapeServed(text: string): string {
+  return text.replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&amp;/g, "&");
+}
+
+function collectApplications(node: unknown, found: ApplicationNode[]): ApplicationNode[] {
+  if (Array.isArray(node)) {
+    for (const item of node) collectApplications(item, found);
+    return found;
+  }
+  if (!node || typeof node !== "object") return found;
+  const record = node as Record<string, unknown>;
+  if (record["@type"] === "SoftwareApplication" && typeof record.description === "string" && typeof record.name === "string") {
+    found.push({ name: record.name, description: record.description });
+  }
+  for (const value of Object.values(record)) collectApplications(value, found);
+  return found;
+}
+
+function applicationsIn(body: string): ApplicationNode[] {
+  const blocks = [...body.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)].map((m) => m[1]);
+  return blocks.flatMap((block) => collectApplications(JSON.parse(block), []));
+}
+
+function caveatSentencesIn(body: string): string[] {
+  return [...body.matchAll(/class="listing-terms-unconfirmed"[^>]*>([\s\S]*?)<\/span>/g)]
+    .map((m) => unescapeServed(m[1].replace(/<[^>]*>/g, "").trim()))
+    .filter((sentence) => sentence.length > 0);
+}
+
+function metaDescriptionOf(body: string): string {
+  const m = body.match(/<meta name="description" content="([^"]*)">/);
+  return m ? unescapeServed(m[1]) : "";
+}
+
+function applicationsFor(body: string, vendor: string): ApplicationNode[] {
+  return applicationsIn(body).filter((node) => node.name === vendor);
+}
+
 let fixtureDir = "";
 let unconfirmed: Served | null = null;
 let allRead: Served | null = null;
@@ -274,6 +317,117 @@ describe("the same corpus with every read confirming the terms", () => {
         controlPageOf.get(route)!,
         /listing-terms-unconfirmed|durability-withheld-because/,
         `${route} caveats an offer whose read confirmed the terms`,
+      );
+    }
+  });
+});
+
+describe("the structured data beside those cards", () => {
+  it("publishes a node for every offer whose read did not confirm the terms", () => {
+    for (const offer of OFFERS) {
+      const nodes = rankedPaths.flatMap((route) => applicationsFor(pageOf.get(route)!, offer.vendor));
+      assert.ok(nodes.length > 0, `${offer.vendor} (${offer.source_check.outcome}) has no structured node on any ranked page`);
+    }
+  });
+
+  it("closes every node that states terms we cannot confirm with the sentence the card prints", () => {
+    let closed = 0;
+    for (const route of rankedPaths) {
+      const body = pageOf.get(route)!;
+      const spoken = caveatSentencesIn(body);
+      for (const offer of OFFERS) {
+        for (const node of applicationsFor(body, offer.vendor)) {
+          assert.ok(
+            node.description.startsWith(`${offer.description}.`),
+            `${route} publishes a description for ${offer.vendor} that does not open with the terms: "${node.description}"`,
+          );
+          const tail = node.description.slice(`${offer.description}.`.length).trim();
+          assert.ok(
+            spoken.includes(tail),
+            `${route} closes ${offer.vendor}'s description with a sentence the page never prints: "${tail}"`,
+          );
+          closed++;
+        }
+      }
+    }
+    assert.ok(closed >= NOT_OK_OUTCOMES.length, `only ${closed} structured descriptions were checked`);
+  });
+
+  it("leaves the description alone when the read confirmed the terms", () => {
+    for (const route of rankedPaths) {
+      for (const clean of CLEAN_READS) {
+        for (const node of applicationsFor(pageOf.get(route)!, clean.vendor)) {
+          assert.strictEqual(
+            node.description,
+            clean.description,
+            `${route} caveats ${clean.vendor} in structured data over a read that confirmed the terms`,
+          );
+        }
+      }
+    }
+  });
+
+  it("does not carry the caveat in prose and withhold it from the node on the same page", () => {
+    for (const route of rankedPaths) {
+      const body = pageOf.get(route)!;
+      const spoken = caveatSentencesIn(body);
+      if (spoken.length === 0) continue;
+      const silent = OFFERS
+        .flatMap((offer) => applicationsFor(body, offer.vendor).map((node) => ({ offer, node })))
+        .filter(({ node }) => !spoken.some((sentence) => node.description.endsWith(sentence)))
+        .map(({ offer }) => offer.vendor);
+      assert.deepStrictEqual(silent, [], `${route} says it in prose and not in the structured data for: ${silent.join(", ")}`);
+    }
+  });
+
+  it("says on every page how many of the offers it lists we could not confirm", () => {
+    for (const route of rankedPaths) {
+      const body = pageOf.get(route)!;
+      const named = new Set(vendorsNamedInOrder(body));
+      const owing = OFFERS.filter((offer) => named.has(slugOf(offer.vendor))).length;
+      const meta = metaDescriptionOf(body);
+      if (owing === 0) {
+        assert.doesNotMatch(meta, /could not confirm today's terms/, `${route} discloses a count it does not owe: "${meta}"`);
+        continue;
+      }
+      const stated = meta.match(/We could not confirm today's terms for (\d+) of them/);
+      assert.ok(stated, `${route} lists ${owing} offers we cannot confirm and its description says so nowhere: "${meta}"`);
+      assert.strictEqual(Number(stated![1]), owing, `${route} states ${stated![1]} unconfirmed offers against ${owing} named on the page`);
+    }
+  });
+
+  it("names no vendor as verified while the same page caveats it", () => {
+    for (const route of rankedPaths) {
+      const body = pageOf.get(route)!;
+      const named = new Set(vendorsNamedInOrder(body));
+      const meta = metaDescriptionOf(body);
+      const verified = meta.match(/Verified pricing for ([^.]*)\./);
+      if (!verified) continue;
+      const asVerified = verified[1].replace(/ and more$/, "").split(", ").map((v) => v.trim());
+      const withheld = asVerified.filter((vendor) => OFFERS.some((offer) => offer.vendor === vendor && named.has(slugOf(vendor))));
+      assert.deepStrictEqual(withheld, [], `${route} calls ${withheld.join(", ")} verified and caveats the same offer below`);
+    }
+  });
+});
+
+describe("the same corpus with every read confirming the terms, in the structured data", () => {
+  it("publishes the stored terms and nothing after them", () => {
+    for (const route of rankedPaths) {
+      for (const node of applicationsIn(controlPageOf.get(route)!)) {
+        assert.ok(
+          [...OFFERS, ...CLEAN_READS].some((offer) => offer.description === node.description),
+          `${route} publishes a structured description that is not the stored terms: "${node.description}"`,
+        );
+      }
+    }
+  });
+
+  it("states no unconfirmed count in its description", () => {
+    for (const route of rankedPaths) {
+      assert.doesNotMatch(
+        metaDescriptionOf(controlPageOf.get(route)!),
+        /could not confirm today's terms/,
+        `${route} discloses an unconfirmed count over a corpus whose reads all confirmed`,
       );
     }
   });
