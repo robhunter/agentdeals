@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated": "2026-09-12",
+  "generated": "2026-09-13",
   "pages": {
     "/": {
       "daily": true
@@ -1266,8 +1266,8 @@
       "changed": "2026-09-12"
     },
     "/ci-cd-pricing": {
-      "hash": "bc541dff703b0e27",
-      "changed": "2026-09-12"
+      "hash": "757f9bf9f79d70a2",
+      "changed": "2026-09-13"
     },
     "/cicd-free-tier-comparison-2026": {
       "hash": "d2a5082c39cdac7a",
@@ -2908,8 +2908,7 @@
       "daily": true
     },
     "/feed.xml": {
-      "hash": "821a687f805dd7c3",
-      "changed": "2026-09-12"
+      "daily": true
     },
     "/firebase-alternatives": {
       "hash": "a3b7ea52edc2f938",
@@ -3026,8 +3025,8 @@
       "changed": "2026-09-12"
     },
     "/hcp-terraform-migration": {
-      "hash": "3d0dc2bbbe89ed0a",
-      "changed": "2026-09-12"
+      "hash": "54d9a4363e3dd1f1",
+      "changed": "2026-09-13"
     },
     "/heroku-alternatives": {
       "hash": "8a82c73adae03a15",
@@ -3333,8 +3332,8 @@
       "changed": "2026-09-12"
     },
     "/terraform-cloud-free-tier-removed": {
-      "hash": "9a828ec11b9994dd",
-      "changed": "2026-09-12"
+      "hash": "05d7856687887076",
+      "changed": "2026-09-13"
     },
     "/testing-alternatives": {
       "hash": "cb54f6cf57e8df61",
@@ -3345,8 +3344,7 @@
       "changed": "2026-09-12"
     },
     "/this-week": {
-      "hash": "49b74f87b4d87c35",
-      "changed": "2026-09-12"
+      "daily": true
     },
     "/trends": {
       "hash": "8a0903d245094c06",
@@ -3593,8 +3591,8 @@
       "changed": "2026-09-12"
     },
     "/vector-database-pricing": {
-      "hash": "336389d229943ebb",
-      "changed": "2026-09-12"
+      "hash": "26a582f992ccd577",
+      "changed": "2026-09-13"
     },
     "/vendor": {
       "hash": "572cce806d1b1eb4",
