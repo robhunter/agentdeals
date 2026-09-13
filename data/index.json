@@ -12675,7 +12675,7 @@
       "category": "Dev Utilities",
       "description": "Free HD virtual backgrounds for video calls and team meetings. Professional backgrounds for Zoom, Teams, and Google Meet. No signup required, free for personal use.",
       "tier": "Free",
-      "url": "https://streambackdrops.com",
+      "url": "https://meetbackdrops.com/",
       "tags": [
         "developer-tools",
         "free-for-dev"
@@ -19155,7 +19155,7 @@
       "category": "CDN",
       "description": "An image cache & resize service. Manipulate images on the fly with a worldwide cache.",
       "tier": "Free",
-      "url": "https://images.weserv.nl/",
+      "url": "https://wsrv.nl/",
       "tags": [
         "cdn",
         "protection",
