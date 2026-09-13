@@ -163,8 +163,12 @@ const PERIOD_SCAN_WORDS = 4;
 const PERIOD_SCAN_ENDS = /[,;()]/;
 const A_WORD = /[A-Za-z][\w-]*/g;
 const A_FIGURE = /\d/;
+const A_LETTER = /[A-Za-z]/;
 const CLAUSE_ENDS = /[,;.()✓•|]/;
 const A_SCOPE = /\sper\s/i;
+const A_CLAUSE_BOUNDARY = /[;:()]|[.,](?!\d)/g;
+const ALLOWANCE_SCAN = 80;
+const TIME_UNIT_RATE = /^\s?(hours?|hrs?|minutes?|mins?|seconds?|secs?|days?|months?|years?)\s?\//i;
 
 function periodAfter(window) {
   const ends = window.search(PERIOD_SCAN_ENDS);
@@ -230,11 +234,34 @@ function wordsIn(trailing) {
   return words;
 }
 
+export function namesAProduct(text, at) {
+  return A_LETTER.test(text.charAt(at - 1));
+}
+
+function timeUnitRateIn(trailing) {
+  const match = trailing.match(TIME_UNIT_RATE);
+  return match ? [singular(match[1].toLowerCase())] : [];
+}
+
+export function allowanceNamedBefore(text, at) {
+  const window = text.slice(Math.max(0, at - ALLOWANCE_SCAN), at);
+  const boundaries = [...window.matchAll(A_CLAUSE_BOUNDARY)];
+  const last = boundaries.at(-1);
+  const clause = last ? window.slice(last.index + last[0].length) : window;
+  const words = clause.toLowerCase().match(A_WORD) ?? [];
+  for (const word of words.reverse()) {
+    const stem = singular(word);
+    if (ALLOWANCE_NOUNS.has(stem)) return [stem];
+  }
+  return [];
+}
+
 export function readQuantities(text) {
   if (typeof text !== "string") return [];
   const read = [];
   let readThrough = 0;
   for (const match of text.matchAll(NUMBER)) {
+    if (namesAProduct(text, match.index)) continue;
     const start = match.index + match[0].length;
     const trailing = text.slice(start, start + ATTRIBUTE_WINDOW);
     const rate = periodAfter(trailing);
@@ -250,6 +277,8 @@ export function readQuantities(text) {
     if (/[$€£¥₹]\s?$/.test(text.slice(0, match.index))) words.push(PRICE_ATTRIBUTE);
     const named = wordsIn(beside.slice(0, describes));
     words.push(...(named.length > 0 || rate ? named : wordsIn(trailing)));
+    if (words.length === 0) words.push(...timeUnitRateIn(trailing));
+    if (words.length === 0 && rate) words.push(...allowanceNamedBefore(text, match.index));
     const unitMatch = trailing.match(UNIT_AFTER_NUMBER);
     const unit = unitMatch ? unitMatch[1].toLowerCase() : null;
     const magnitudeMatch = unit === null ? trailing.match(MAGNITUDE_AFTER_NUMBER) : null;
