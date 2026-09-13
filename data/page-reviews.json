@@ -1401,9 +1401,9 @@
         "CPX12",
         "CX23, unavailable"
       ],
-      "reviewed_at": null,
-      "reviewer": null,
-      "review_outcome": null,
+      "reviewed_at": "2026-09-13",
+      "reviewer": "pm",
+      "review_outcome": "fail",
       "review_note": null,
       "reads_index": false,
       "reads_changes": false,
