@@ -374,10 +374,19 @@ export interface UngradedClaim {
   reason: string;
 }
 
+export interface UpheldClaim {
+  claim: SuperlativeClaim;
+  column: ResolvedColumn;
+  held: string;
+  subject: string;
+  comparands: number;
+}
+
 export interface GradedPage {
   refuted: RefutedClaim[];
   unattained: RefutedClaim[];
   ungraded: UngradedClaim[];
+  upheld: UpheldClaim[];
   graded: number;
 }
 
@@ -386,6 +395,7 @@ export function gradeSuperlatives(html: string): GradedPage {
   const refuted: RefutedClaim[] = [];
   const unattained: RefutedClaim[] = [];
   const ungraded: UngradedClaim[] = [];
+  const upheld: UpheldClaim[] = [];
   let graded = 0;
   for (const claim of superlativeClaims(html)) {
     if (claim.direction === null) {
@@ -436,9 +446,37 @@ export function gradeSuperlatives(html: string): GradedPage {
     }
     if (!row && !attained) {
       unattained.push({ claim, column, held: heldText, beatenBy: "", beatingCell: "" });
+      continue;
+    }
+    upheld.push({ claim, column, held: heldText, subject: row ? row.subject : claim.subject, comparands });
+  }
+  return { refuted, unattained, ungraded, upheld, graded };
+}
+
+export function outrankedElsewhere(upheld: UpheldClaim, tables: PageTable[]): boolean {
+  const held = parseQuantity(upheld.held);
+  if (!held) return true;
+  const wanted = upheld.column.header.trim().toLowerCase();
+  for (const [tableIndex, table] of tables.entries()) {
+    for (const [columnIndex, header] of table.headers.entries()) {
+      if (header.trim().toLowerCase() !== wanted) continue;
+      const denomination = denominatedBy(upheld.claim, table, columnIndex);
+      for (const row of table.rows) {
+        if (tableIndex === upheld.column.tableIndex && row.subject === upheld.subject) continue;
+        const cell = row.cells[columnIndex];
+        if (cell === undefined) continue;
+        if (denomination && !contentWords(cell).includes(denomination)) continue;
+        const other = parseQuantity(cell);
+        if (other && outranks(other, held, "max")) return true;
+      }
     }
   }
-  return { refuted, unattained, ungraded, graded };
+  return false;
+}
+
+export function measuresTheFreeTier(upheld: UpheldClaim, tables: PageTable[]): boolean {
+  const table = tables[upheld.column.tableIndex];
+  return /\bfree\b/i.test(upheld.column.header) || /\bfree\b/i.test(table?.heading ?? "");
 }
 
 export interface ContradictorySuperlative {

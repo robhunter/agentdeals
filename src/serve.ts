@@ -6,7 +6,7 @@ import { dirname, join } from "node:path";
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
 import { createServer, getServerCard } from "./server.js";
 import { oldestVerifiedDateForSlug, vendorRiskAssessment, publishedRisk, levelWithheldStatement, vendorNotIndexedSentence, riskCauseOf, freeTierEndingRecord, NEGATIVE_CHANGE_TYPES, POSITIVE_CHANGE_TYPES, SEVERE_CHANGE_TYPES, loadOffers, getCategories, getNewOffers, getNewestDeals, searchOffers, enrichOffers, gateForOffer, loadDealChanges, getDealChanges, changeContext, DEFAULT_CHANGE_WINDOW_DAYS, getOfferDetails, compareServices, checkVendorRisk, auditStack, getExpiringDeals, getWeeklyDigest, getFormattedWeeklyDigest, getFreshnessMetrics, publishedStabilityIndex, stabilityWithheldDisclosure, UNRATED_STABILITY, type StabilityIndex, type PublishedStabilityClass, getVendorReferral, sanitizeQuery, getChangeLogFreshness, isEventDated, partitionByDateProvenance } from "./data.js";
-import { loadChangeRefusals } from "./data.js";
+import { loadChangeRefusals, changesRatingTheListedTier, stabilityDeciders } from "./data.js";
 import { confirmingRead, confirmingReadSentence, refusalsByVendor, refusedReadSentence, supersededRefusalSentence, type ChangeRefusal } from "./change-refusal.js";
 import { getStackRecommendation } from "./stacks.js";
 import { estimateCosts } from "./costs.js";
@@ -73,8 +73,22 @@ import { createRegistrationLimiter, rateLimitHeaders } from "./rate-limit.js";
 import { offerForSlug, vendorRates, cheapestRate, dearestRate, spanOfRates, formatRate, formatRateSpan, monthlyTokenCost, formatDollars, type ModelRate } from "./model-rates.js";
 import { STALE_FACT_PAGES_BASELINE, factsOutdatedBy, linkifyVerdictBlocks, newestChangeBySlug, overdueReport, pageCompiledClause, pageDataProvenance, pageDateModified, tabulatedSubjectSlots, tabulatedSubjects, utcToday, verdictsOutdatedBy } from "./page-reviews.js";
 import { faqPageJsonLd, type FaqItem } from "./faq-provenance.js";
+import {
+  GENEROSITY_JSON_TOKEN,
+  GENEROSITY_PROSE_TOKEN,
+  generosityAnswer,
+  withGenerosityAnswer,
+} from "./generosity-answer.js";
 import { statedFreeTierBasis, unrankedBestAnswer, unrankedListingBasis } from "./unranked.js";
 import { bandedListOrder, listOrderOf, listOrderProse, listOrderSentence } from "./list-order.js";
+import {
+  durabilityBriefHtml,
+  durabilitySplit,
+  durabilityVerdictHtml,
+  durabilityVerdictText,
+  type DurabilityScope,
+} from "./durability-verdict.js";
+import { changeAnchor, changeRecordHref } from "./change-anchor.js";
 import { SSE_KEEPALIVE_FRAME, keepaliveIntervalMs, sessionRecoveryBody } from "./mcp-stream.js";
 import { ASSISTANTS_API_SHUTDOWN } from "./assistants-shutdown.js";
 import { discontinuedOnOrBefore, PRODUCT_DEPRECATED } from "./product-deprecation.js";
@@ -519,6 +533,10 @@ function withPageFreshness(html: string, pagePath: string): string {
   return withFreshnessClaim(html, () => freshnessClaimFor(pagePath, html, verifiedDatesForSlug));
 }
 
+function withPageGenerosityAnswer(html: string): string {
+  return withGenerosityAnswer(html, generosityAnswer, escHtmlServer);
+}
+
 function apiExampleSubjects(): ExampleSubjects {
   return exampleSubjects(
     offers.map((o) => o.vendor),
@@ -718,6 +736,30 @@ function stabilityCellHtml(
     ? ""
     : ` title="${escHtmlServer(`${changeDateLabel(cause)} — ${changeSummaryText(cause)}`)}"`;
   return `<span class="stability-dot" style="background:${color}"></span> <span${title}>${escHtmlServer(published)}</span>`;
+}
+
+const DURABILITY_COLUMN_HEADING = "Durability";
+const QUICK_COMPARISON_ID = "quick-comparison";
+
+const DURABILITY_COLORS: Record<string, string> = {
+  stable: "#3fb950",
+  improving: "#3fb950",
+  watch: "#d29922",
+  volatile: "#f85149",
+};
+
+function durabilityCellHtml(offer: EnrichedOfferRow): string {
+  const stability = offer.stability;
+  if (!stability) return `<span style="color:var(--text-dim)">&mdash;</span>`;
+  const color = DURABILITY_COLORS[stability] ?? "#8b949e";
+  const deciders = stabilityDeciders(
+    changesRatingTheListedTier(offer, changesByVendorName.get(offer.vendor.toLowerCase()) ?? []),
+  );
+  const newest = deciders.slice().sort((a, b) => b.date.localeCompare(a.date))[0];
+  const record = newest
+    ? `<br><a href="${changeRecordHref(newest)}" style="font-size:.7rem;color:var(--text-dim)">${escHtmlServer(changeEntryDateLabel(newest))}</a>`
+    : "";
+  return `<span style="color:${color}">${escHtmlServer(stability)}</span>${record}`;
 }
 
 function riskCellHtml(level: string | null | undefined, cause: RiskCause | null | undefined): string {
@@ -2355,11 +2397,21 @@ function buildBestOfPage(slug: string): string | null {
   const riskColors: Record<string, string> = { stable: "#3fb950", caution: "#d29922", risky: "#f85149" };
   const pageScope = fn.categories.length === 1 && fn.subtypes.length === 0 ? "for this category" : "on this page";
 
+  const verdictScope: DurabilityScope = {
+    where: groups ? "here" : pageScope,
+    columnName: DURABILITY_COLUMN_HEADING,
+    columnHref: `#${QUICK_COMPARISON_ID}`,
+  };
+  const pageSplit = durabilitySplit(qualified.map(e => e.offer.stability));
+  const pageVerdictHtml = durabilityVerdictHtml(pageSplit, verdictScope, escHtmlServer);
+  const rotationProse = groups
+    ? `The sections carrying a labelled function, and the offers inside every section, are listed ${listOrderProse("rotates-daily")}; a section holding offers we have not labelled is pinned last.`
+    : `They are listed ${listOrderProse("rotates-daily")}.`;
+  const orderProse = `${rotationProse} <a href="${CRITERIA_PATH}">Here is how that order is derived</a>. There is no top slot here to sell.`;
+
   const tiePara = groups
-    ? `<strong>${pickCount} offers meet our criteria here, and they are not all alternatives to one another &mdash; they carry ${groups.filter(g => g.subtype).length} different labelled functions.</strong> ${escHtmlServer(FUNCTION_SPLIT_RULE)} Both the sections and the offers inside them are listed ${listOrderProse("rotates-daily")}; <a href="${CRITERIA_PATH}">here is how that order is derived</a>. There is no top slot here to sell.`
-    : pickCount > 1
-      ? `<strong>${pickCount} offers meet our criteria ${pageScope} and none is distinguishable from the others under any signal we record.</strong> They are listed ${listOrderProse("rotates-daily")}; <a href="${CRITERIA_PATH}">here is how that order is derived</a>. There is no top slot here to sell.`
-      : `<strong>${pickCount} offer meets our criteria ${pageScope}.</strong> <a href="${CRITERIA_PATH}">Here is how we decide</a>.`;
+    ? `<strong>The offers here are not all alternatives to one another &mdash; they carry ${groups.filter(g => g.subtype).length} different labelled functions.</strong> ${escHtmlServer(FUNCTION_SPLIT_RULE)} ${pageVerdictHtml} ${orderProse}`
+    : `${pageVerdictHtml} ${orderProse}`;
 
   const renderCard = (e: RankedEntry<EnrichedOfferRow>, i: number, demotedCard: boolean, labels?: SubtypeLabel[]) => {
     const o = e.offer;
@@ -2404,9 +2456,15 @@ function buildBestOfPage(slug: string): string | null {
             .filter((e): e is RankedEntry<EnrichedOfferRow> => e !== undefined)
             .map((e, i) => renderCard(e, i, false, group.subtype ? labelsNaming(e.offer, group.subtype) : []))
             .join("\n");
+          const groupSplit = durabilitySplit(group.members.map(o => o.stability));
+          const groupVerdict = durabilityBriefHtml(
+            groupSplit,
+            { ...verdictScope, where: "in this group" },
+            escHtmlServer,
+          );
           const scope = group.subtype
-            ? `${group.members.length === 1 ? "1 offer here is" : `${group.members.length} offers here are`} labelled <code>${escHtmlServer(group.subtype)}</code>${group.definition ? ` &mdash; ${escHtmlServer(group.definition)}` : ""}.${group.members.length > 1 ? " None is distinguishable from the others in this group under any signal we record." : ""}`
-            : escHtmlServer(FUNCTION_RESIDUE_COPY[group.residue!].rule);
+            ? `Labelled <code>${escHtmlServer(group.subtype)}</code>${group.definition ? ` &mdash; ${escHtmlServer(group.definition)}` : ""}. ${groupVerdict}`
+            : `${escHtmlServer(FUNCTION_RESIDUE_COPY[group.residue!].rule)} ${groupVerdict}`;
           return `  <h2 class="function-group-heading" id="function-${escHtmlServer(toSlug(group.subtype ?? group.residue!))}">${escHtmlServer(group.title)}</h2>
   <p class="function-group-scope">${scope}</p>
 ${cards}`;
@@ -2423,10 +2481,34 @@ ${cards}`;
           <td style="font-weight:600"><a href="/vendor/${toSlug(o.vendor)}" style="color:var(--text)">${escHtmlServer(o.vendor)}</a></td>
           <td style="font-family:var(--mono);color:var(--accent)">${escHtmlServer(o.tier)}</td>
           <td style="color:var(--text-muted);max-width:300px">${escHtmlServer(publishedTermsSummary(o, 120))}</td>
-          <td>${riskCellHtml(o.risk_level, o.risk_cause)}</td>
+          <td>${durabilityCellHtml(o)}</td>
           <td style="font-family:var(--mono);color:var(--text-dim)">${escHtmlServer(verificationDatesCell(o))}</td>
         </tr>`;
   }).join("\n");
+
+  const bestOfNoBest = unrankedBestAnswer({
+    noun: `free ${categoryName.toLowerCase()} offers that clear our bar`,
+    size: pickCount,
+    whereToLook: "each listed with the terms we publish and the date we last read them",
+  });
+  const bestOfFaqItems: FaqItem[] = [
+    ...(bestOfNoBest === null ? [] : [{
+      q: `What is the best free ${categoryName.toLowerCase()} tool in ${year}?`,
+      a: bestOfNoBest,
+    }]),
+    {
+      q: `Which of these free ${categoryName.toLowerCase()} tiers have held their terms?`,
+      a: durabilityVerdictText(pageSplit, verdictScope),
+    },
+  ];
+  const bestOfFaqJsonLd = faqPageJsonLd(`/best/${slug}`, bestOfFaqItems);
+  const bestOfFaqHtml = `  <h2 id="faq">Frequently Asked Questions</h2>
+  <div style="margin:1rem 0 2rem">
+    ${bestOfFaqItems.map(item => `<div style="margin-bottom:1.25rem;padding-bottom:1.25rem;border-bottom:1px solid var(--border)">
+      <h3 style="margin:0 0 .5rem;font-size:1rem;color:var(--text)">${escHtmlServer(item.q)}</h3>
+      <p style="margin:0;color:var(--text-muted);font-size:.9rem;line-height:1.7">${escHtmlServer(item.a)}</p>
+    </div>`).join("\n    ")}
+  </div>`;
 
   const applicationOf = (offer: EnrichedOfferRow) => ({
     "@type": "SoftwareApplication",
@@ -2499,6 +2581,7 @@ ${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" hre
 <link rel="alternate" type="application/atom+xml" title="AgentDeals — Weekly Pricing Digest" href="/feed.xml">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script type="application/ld+json">${JSON.stringify(jsonLd)}</script>
+<script type="application/ld+json">${JSON.stringify(bestOfFaqJsonLd)}</script>
 ${buildBreadcrumbJsonLd([{ name: "Home", url: BASE_URL + "/" }, { name: "Best Of", url: BASE_URL + "/best" }, { name: categoryName, url: BASE_URL + "/best/" + slug }])}
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -2574,14 +2657,14 @@ ${demotedHtml}
 
 ${renderAuditBlock(tie)}
 
-  <h2>Quick Comparison</h2>
+  <h2 id="${QUICK_COMPARISON_ID}">Quick Comparison</h2>
   <table class="compare-table">
     <thead>
       <tr>
         <th>Vendor</th>
         <th>Free Tier</th>
         <th>Key Limits</th>
-        <th>Stability</th>
+        <th>${DURABILITY_COLUMN_HEADING}</th>
         <th>${VERIFICATION_DATES_HEADING}</th>
       </tr>
     </thead>
@@ -2589,6 +2672,8 @@ ${renderAuditBlock(tie)}
 ${tableRows}
     </tbody>
   </table>
+
+${bestOfFaqHtml}
 
   <h2>More Best-Of Lists</h2>
   <div class="other-best">
@@ -36030,25 +36115,26 @@ ${mcpCtaCss()}
 interface ComparisonPageMeta {
   slug: string;
   subject: string;
+  questionNoun: string;
   catalogueCategory: string | null;
   shortName: string;
   relatedSlugs: string[];
 }
 
 const comparisonPagesMeta: ComparisonPageMeta[] = [
-  { slug: "cloud-free-tier-comparison-2026", subject: "Cloud IaaS", catalogueCategory: "Cloud IaaS", shortName: "Cloud", relatedSlugs: ["hosting-free-tier-comparison-2026", "serverless-free-tier-comparison-2026", "storage-comparison-2026"] },
-  { slug: "database-free-tier-comparison-2026", subject: "Databases", catalogueCategory: "Databases", shortName: "Database", relatedSlugs: ["serverless-free-tier-comparison-2026", "storage-comparison-2026", "auth-comparison-2026"] },
-  { slug: "cicd-free-tier-comparison-2026", subject: "CI/CD", catalogueCategory: "CI/CD", shortName: "CI/CD", relatedSlugs: ["testing-free-tier-comparison-2026", "security-free-tier-comparison-2026", "hosting-free-tier-comparison-2026"] },
-  { slug: "serverless-free-tier-comparison-2026", subject: "Serverless", catalogueCategory: null, shortName: "Serverless", relatedSlugs: ["cloud-free-tier-comparison-2026", "hosting-free-tier-comparison-2026", "database-free-tier-comparison-2026"] },
-  { slug: "auth-comparison-2026", subject: "Auth", catalogueCategory: "Auth", shortName: "Auth & Identity", relatedSlugs: ["security-free-tier-comparison-2026", "database-free-tier-comparison-2026", "monitoring-comparison-2026"] },
-  { slug: "email-comparison-2026", subject: "Email", catalogueCategory: "Email", shortName: "Email", relatedSlugs: ["monitoring-comparison-2026", "analytics-free-tier-comparison-2026", "api-development-free-tier-comparison-2026"] },
-  { slug: "monitoring-comparison-2026", subject: "Monitoring", catalogueCategory: "Monitoring", shortName: "Monitoring", relatedSlugs: ["security-free-tier-comparison-2026", "hosting-free-tier-comparison-2026", "analytics-free-tier-comparison-2026"] },
-  { slug: "storage-comparison-2026", subject: "Storage", catalogueCategory: "Storage", shortName: "Storage & CDN", relatedSlugs: ["cloud-free-tier-comparison-2026", "hosting-free-tier-comparison-2026", "database-free-tier-comparison-2026"] },
-  { slug: "testing-free-tier-comparison-2026", subject: "Testing", catalogueCategory: "Testing", shortName: "Testing", relatedSlugs: ["cicd-free-tier-comparison-2026", "monitoring-comparison-2026", "security-free-tier-comparison-2026"] },
-  { slug: "analytics-free-tier-comparison-2026", subject: "Analytics", catalogueCategory: "Analytics", shortName: "Analytics", relatedSlugs: ["monitoring-comparison-2026", "email-comparison-2026", "testing-free-tier-comparison-2026"] },
-  { slug: "api-development-free-tier-comparison-2026", subject: "API Development", catalogueCategory: "API Development", shortName: "API Development", relatedSlugs: ["testing-free-tier-comparison-2026", "monitoring-comparison-2026", "cicd-free-tier-comparison-2026"] },
-  { slug: "security-free-tier-comparison-2026", subject: "Security", catalogueCategory: "Security", shortName: "Security", relatedSlugs: ["auth-comparison-2026", "monitoring-comparison-2026", "cicd-free-tier-comparison-2026"] },
-  { slug: "hosting-free-tier-comparison-2026", subject: "Cloud Hosting", catalogueCategory: "Cloud Hosting", shortName: "Hosting", relatedSlugs: ["cloud-free-tier-comparison-2026", "serverless-free-tier-comparison-2026", "cicd-free-tier-comparison-2026"] },
+  { slug: "cloud-free-tier-comparison-2026", subject: "Cloud IaaS", questionNoun: "cloud IaaS", catalogueCategory: "Cloud IaaS", shortName: "Cloud", relatedSlugs: ["hosting-free-tier-comparison-2026", "serverless-free-tier-comparison-2026", "storage-comparison-2026"] },
+  { slug: "database-free-tier-comparison-2026", subject: "Databases", questionNoun: "database", catalogueCategory: "Databases", shortName: "Database", relatedSlugs: ["serverless-free-tier-comparison-2026", "storage-comparison-2026", "auth-comparison-2026"] },
+  { slug: "cicd-free-tier-comparison-2026", subject: "CI/CD", questionNoun: "CI/CD", catalogueCategory: "CI/CD", shortName: "CI/CD", relatedSlugs: ["testing-free-tier-comparison-2026", "security-free-tier-comparison-2026", "hosting-free-tier-comparison-2026"] },
+  { slug: "serverless-free-tier-comparison-2026", subject: "Serverless", questionNoun: "serverless", catalogueCategory: null, shortName: "Serverless", relatedSlugs: ["cloud-free-tier-comparison-2026", "hosting-free-tier-comparison-2026", "database-free-tier-comparison-2026"] },
+  { slug: "auth-comparison-2026", subject: "Auth", questionNoun: "auth", catalogueCategory: "Auth", shortName: "Auth & Identity", relatedSlugs: ["security-free-tier-comparison-2026", "database-free-tier-comparison-2026", "monitoring-comparison-2026"] },
+  { slug: "email-comparison-2026", subject: "Email", questionNoun: "email", catalogueCategory: "Email", shortName: "Email", relatedSlugs: ["monitoring-comparison-2026", "analytics-free-tier-comparison-2026", "api-development-free-tier-comparison-2026"] },
+  { slug: "monitoring-comparison-2026", subject: "Monitoring", questionNoun: "monitoring", catalogueCategory: "Monitoring", shortName: "Monitoring", relatedSlugs: ["security-free-tier-comparison-2026", "hosting-free-tier-comparison-2026", "analytics-free-tier-comparison-2026"] },
+  { slug: "storage-comparison-2026", subject: "Storage", questionNoun: "storage", catalogueCategory: "Storage", shortName: "Storage & CDN", relatedSlugs: ["cloud-free-tier-comparison-2026", "hosting-free-tier-comparison-2026", "database-free-tier-comparison-2026"] },
+  { slug: "testing-free-tier-comparison-2026", subject: "Testing", questionNoun: "testing", catalogueCategory: "Testing", shortName: "Testing", relatedSlugs: ["cicd-free-tier-comparison-2026", "monitoring-comparison-2026", "security-free-tier-comparison-2026"] },
+  { slug: "analytics-free-tier-comparison-2026", subject: "Analytics", questionNoun: "analytics", catalogueCategory: "Analytics", shortName: "Analytics", relatedSlugs: ["monitoring-comparison-2026", "email-comparison-2026", "testing-free-tier-comparison-2026"] },
+  { slug: "api-development-free-tier-comparison-2026", subject: "API Development", questionNoun: "API development", catalogueCategory: "API Development", shortName: "API Development", relatedSlugs: ["testing-free-tier-comparison-2026", "monitoring-comparison-2026", "cicd-free-tier-comparison-2026"] },
+  { slug: "security-free-tier-comparison-2026", subject: "Security", questionNoun: "security", catalogueCategory: "Security", shortName: "Security", relatedSlugs: ["auth-comparison-2026", "monitoring-comparison-2026", "cicd-free-tier-comparison-2026"] },
+  { slug: "hosting-free-tier-comparison-2026", subject: "Cloud Hosting", questionNoun: "cloud hosting", catalogueCategory: "Cloud Hosting", shortName: "Hosting", relatedSlugs: ["cloud-free-tier-comparison-2026", "serverless-free-tier-comparison-2026", "cicd-free-tier-comparison-2026"] },
 ];
 
 const comparisonMetaBySlug = new Map(comparisonPagesMeta.map(m => [m.slug, m]));
@@ -36090,7 +36176,7 @@ function buildComparisonRelatedComparisons(slug: string): string {
   </div>`;
 }
 
-export function comparisonFaqItems(slug: string): FaqItem[] {
+export function comparisonFaqItems(slug: string, forJsonLd = false): FaqItem[] {
   const meta = comparisonMetaBySlug.get(slug);
   if (!meta) return [];
   const catName = meta.subject;
@@ -36102,17 +36188,18 @@ export function comparisonFaqItems(slug: string): FaqItem[] {
     basis: "This page compares them on free tier limits, what each charges past them, and lock-in risk; the table above carries the figures side by side.",
   });
 
+  const noun = meta.questionNoun;
   return [
     ...(noBest === null ? [] : [{
-      q: `What is the best free ${catName.toLowerCase()} service in 2026?`,
+      q: `What is the best free ${noun} service in 2026?`,
       a: noBest,
     }]),
     {
-      q: `Which ${catName.toLowerCase()} free tier is most generous?`,
-      a: `Free tier generosity varies by use case. Some providers offer more storage, others more compute or API calls. Our comparison table above shows exact limits side-by-side so you can evaluate based on what matters most for your workload.`,
+      q: `Which ${noun} free tier is most generous?`,
+      a: forJsonLd ? GENEROSITY_JSON_TOKEN : GENEROSITY_PROSE_TOKEN,
     },
     {
-      q: `How do ${catName.toLowerCase()} free tiers compare on limits?`,
+      q: `How do ${noun} free tiers compare on limits?`,
       a: `Each provider structures free tier limits differently — some cap storage, others cap requests or compute hours. Our comparison table provides exact numbers for each provider. Check the growth cost analysis section to understand what you'll pay when you exceed free tier limits.`,
     },
   ];
@@ -36134,7 +36221,7 @@ function buildComparisonFaq(slug: string, title: string): string {
 }
 
 function buildComparisonFaqJsonLd(slug: string): string {
-  const faqs = comparisonFaqItems(slug);
+  const faqs = comparisonFaqItems(slug, true);
   if (faqs.length === 0) return "";
   return `<script type="application/ld+json">${JSON.stringify(faqPageJsonLd("/" + slug, faqs))}</script>`;
 }
@@ -49803,10 +49890,6 @@ function buildPricingChangesPage(): string {
     return `${monthNames[parseInt(m, 10) - 1]} ${y}`;
   }
 
-  function changeAnchor(c: typeof allChanges[0]): string {
-    return `${toSlug(c.vendor)}-${c.date}`;
-  }
-
   const filterCategory: Record<string, string> = {
     free_tier_removed: "negative",
     limits_reduced: "negative",
@@ -53812,7 +53895,9 @@ const dispatchRequest = async (req: IncomingMessage, res: ServerResponse) => {
   res.end = ((...args: unknown[]) => {
     if (answeredNotModified) return rawEnd();
     if (typeof args[0] === "string" && /^text\/html/.test(servedContentType)) {
-      args[0] = withLedeBeforeNav(withPageFreshness(withReviewByline(args[0], url.pathname), url.pathname));
+      args[0] = withLedeBeforeNav(
+        withPageGenerosityAnswer(withPageFreshness(withReviewByline(args[0], url.pathname), url.pathname)),
+      );
     }
     if (headOfServedBody) {
       const head = headOfServedBody;

@@ -273,7 +273,7 @@ describe("a page whose members span several functions separates them", () => {
     const tieNote = /<div class="tie-note">([\s\S]*?)<\/div>/.exec(html)?.[1] ?? "";
     assert.ok(tieNote.length > 0, "/best/free-monitoring states no scope at all");
     assert.ok(
-      !/none is distinguishable from the others under any signal we record/.test(tieNote),
+      !/distinguishable/i.test(tieNote),
       "/best/free-monitoring still asserts its whole membership is indistinguishable",
     );
     assert.match(tieNote, /not all alternatives to one another/);
@@ -307,18 +307,22 @@ describe("a page whose members span several functions separates them", () => {
     assert.ok(split >= 4, `only ${split} pages span more than one labelled function, so this sweep is not measuring the split`);
   });
 
-  it("makes the equivalence claim inside a group rather than over the page", async () => {
+  it("counts the durability split inside a group rather than over the page", async () => {
     const { html } = await page("/best/free-monitoring");
+    let checked = 0;
     for (const block of groupBlocks(html)) {
       const scope = /<p class="function-group-scope">([\s\S]*?)<\/p>/.exec(block.body)?.[1] ?? "";
       const cards = vendorsListed(block.body).length;
-      if (cards > 1 && /labelled <code>/.test(scope)) {
-        assert.match(scope, /None is distinguishable from the others in this group/, `the ${block.subtype} group makes no scoped equivalence claim`);
-      }
-      if (cards === 1) {
-        assert.ok(!/None is distinguishable/.test(scope), `the ${block.subtype} group claims an equivalence over one offer`);
-      }
+      const stated = /(\d+) offers? meets? our criteria in this group/.exec(scope);
+      assert.ok(stated, `the ${block.subtype} group states no durability denominator`);
+      assert.strictEqual(
+        Number(stated[1]),
+        cards,
+        `the ${block.subtype} group counts ${stated[1]} offers and lists ${cards}`,
+      );
+      checked++;
     }
+    assert.ok(checked > 1, `only ${checked} groups were checked, so this is not measuring the split`);
   });
 
   it("lists a record that carries no label rather than dropping it", async () => {

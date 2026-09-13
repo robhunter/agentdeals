@@ -366,6 +366,15 @@ export function freeTierEndingRecord<T extends EndingCandidate>(vendorChanges: r
 const NEGATIVE_STABILITY_TYPES = NEGATIVE_CHANGE_TYPES;
 const POSITIVE_STABILITY_TYPES = POSITIVE_CHANGE_TYPES;
 
+export function stabilityDeciders(vendorChanges: readonly DealChange[]): DealChange[] {
+  return vendorChanges.filter(
+    (c) =>
+      !isNoLongerInForce(c) &&
+      changeCitesASource(c) &&
+      (NEGATIVE_STABILITY_TYPES.has(c.change_type) || POSITIVE_STABILITY_TYPES.has(c.change_type)),
+  );
+}
+
 export function classifyStability(vendorChanges: DealChange[], nowMs: number = Date.now()): StabilityClass {
   if (vendorChanges.length === 0) return "stable";
 

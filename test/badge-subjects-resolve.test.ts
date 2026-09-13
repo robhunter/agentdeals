@@ -270,6 +270,16 @@ function offerCard(html: string, subject: string): string {
 const PRESENT_TENSE_ALLOWANCE = (subject: string) =>
   new RegExp(`${subject}(?:'s)?\\s+(?:offers?|gives?|provides?|has|includes?)\\s+(?!no\\b|not\\b|never\\b)[^.]*\\bfree\\b`, "i");
 
+function sentencesNaming(html: string, subject: string): string[] {
+  return html
+    .replace(/<script[\s\S]*?<\/script>/g, " ")
+    .replace(/<style[\s\S]*?<\/style>/g, " ")
+    .replace(/<[^>]*>/g, " ")
+    .replace(/\s+/g, " ")
+    .split(/(?<=[.!?])\s+/)
+    .filter(sentence => new RegExp(`\\b${subject}\\b`, "i").test(sentence));
+}
+
 describe("#1063 the two verdicts checked against the vendor's own pricing page", () => {
   it("states no free sending allowance for Amazon SES", () => {
     const html = rendered.get("/email-comparison-2026")!;
@@ -290,7 +300,11 @@ describe("#1063 the two verdicts checked against the vendor's own pricing page",
     const card = offerCard(html, "Storj");
     assert.match(card, /<strong>Free trial:<\/strong>/, "the offer card should present a trial rather than a free tier");
     assert.match(card, /no permanent free tier/i, "the card should say the free tier is not permanent");
-    assert.doesNotMatch(html, /most generous free tier/i, "Storj is still called the most generous free tier");
+    assert.deepStrictEqual(
+      sentencesNaming(html, "Storj").filter(s => /most generous/i.test(s)),
+      [],
+      "Storj is still called the most generous free tier",
+    );
     assert.doesNotMatch(html, /this much capacity at zero cost/i, "the zero-cost claim survives");
     assert.match(cells[6], /^\s*$|✗|&#10007;|\u2717/, `the permanent-free cell reads "${cells[6]}" for an offer that expires`);
     assert.deepStrictEqual(badgedSubjects(html).filter(b => b.subject === "Storj"), [], "Storj still carries a badge");

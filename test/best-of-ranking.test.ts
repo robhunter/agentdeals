@@ -49,27 +49,31 @@ describe("/best/:slug shows the whole qualified band", () => {
     assert.ok(cards > 8, `expected the full band, got ${cards} cards`);
   });
 
-  it("states the tie in plain language, above the list, where the whole page is one set of alternatives", async () => {
+  it("states the durability verdict in plain language, above the list, where the whole page is one set of alternatives", async () => {
     const { html } = await get("/best/free-search");
-    const tieNote = html.indexOf("offers meet our criteria for this category");
+    const denominator = html.indexOf("offers meet our criteria for this category");
     const firstCard = html.indexOf('class="best-pick"');
-    assert.ok(tieNote > -1, "the tie must be stated");
-    assert.ok(tieNote < firstCard, "the tie must be stated above the list, not below it");
-    assert.match(html, /none is distinguishable from the others under any signal we record/);
+    assert.ok(denominator > -1, "the denominator must be stated");
+    assert.ok(denominator < firstCard, "the verdict must be stated above the list, not below it");
+    assert.ok(
+      !/distinguishable/i.test(html),
+      "the page must not claim that nothing we record distinguishes its offers",
+    );
+    assert.match(html, /no recorded change to the terms we publish|no durability signal/);
     assert.match(html, /rotates daily/);
   });
 
-  it("states the split, not the tie, where the page spans several labelled functions", async () => {
+  it("states the split, and a durability verdict scoped to each group, where the page spans several labelled functions", async () => {
     const { html } = await get("/best/free-databases");
     const split = html.indexOf("not all alternatives to one another");
     const firstCard = html.indexOf('class="best-pick"');
     assert.ok(split > -1, "a page spanning several labelled functions must say so");
     assert.ok(split < firstCard, "the split must be stated above the list, not below it");
     assert.ok(
-      !/none is distinguishable from the others under any signal we record/.test(html.slice(0, firstCard)),
+      !/distinguishable/i.test(html),
       "a page spanning several labelled functions must not claim its whole membership is one set",
     );
-    assert.match(html, /None is distinguishable from the others in this group under any signal we record/);
+    assert.match(html, /meet our criteria in this group/);
     assert.match(html, /rotates daily/);
   });
 
