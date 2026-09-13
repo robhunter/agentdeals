@@ -5,7 +5,7 @@ import { readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { assertCoversPopulation, assertSharesPopulation, recordsInTheCatalogue, vendorsInTheCatalogue, type Population } from "./population-floor.ts";
-import { GATE_REASONS, REJECT_MEASURES_NO_CHANGE, REJECT_NULL_COMPARISON, REJECT_STATES_NO_DIFFERENCE } from "../scripts/change-gate.js";
+import { GATE_REASONS, REJECT_MEASURES_NO_CHANGE, REJECT_NULL_COMPARISON, REJECT_RESTATES_STORED_QUANTITIES, REJECT_STATES_NO_DIFFERENCE } from "../scripts/change-gate.js";
 import { SUPPRESSED_SAME_TRANSITION_REGRADED } from "../scripts/change-log.js";
 import { refusalsByVendor, refusedReadTheConfirmationSupersedes, refusedReadWithholdingStability, supersededRefusalSentence, REFUSAL_REASONS_THAT_CONFIRM_THE_STORED_TERMS, REFUSAL_REASONS_THAT_MEASURED_NO_DIFFERENCE, MEASURED_NO_DIFFERENCE_BADGE_LABEL, UNRECONCILED_READ_BADGE_LABEL } from "../dist/change-refusal.js";
 import { checkVendorRisk, enrichOffers, loadChangeRefusals, loadDealChanges, loadOffers, publishedChangeCount } from "../dist/data.js";
@@ -50,6 +50,8 @@ const badgeLabelOf = (svg: string): string => {
 
 const CONFIRMING = new Set<string>(REFUSAL_REASONS_THAT_CONFIRM_THE_STORED_TERMS);
 const MEASURED_NO_DIFFERENCE = new Set<string>(REFUSAL_REASONS_THAT_MEASURED_NO_DIFFERENCE);
+
+const NO_RUN_HAS_WRITTEN_YET: string[] = [REJECT_RESTATES_STORED_QUANTITIES];
 
 const COULD_NOT_RECONCILE = /we found a change we could not reconcile with the terms we publish/;
 const NAMED_NO_FIGURE_THAT_MOVED =
@@ -730,7 +732,18 @@ describe("a page states the reason we withheld, not a reason its own refusal con
     const unseen = REFUSAL_REASONS_THAT_MEASURED_NO_DIFFERENCE.filter(
       r => !subjects.some(s => s.reasons.includes(r)),
     );
-    assert.deepStrictEqual(unseen, [], `no vendor holds a refusal under these reasons, so they are untested: ${unseen.join(", ")}`);
+    const stillToBeWritten = unseen.filter(r => !NO_RUN_HAS_WRITTEN_YET.includes(r));
+    assert.deepStrictEqual(
+      stillToBeWritten,
+      [],
+      `no vendor holds a refusal under these reasons, so they are untested: ${stillToBeWritten.join(", ")}`,
+    );
+    for (const reason of NO_RUN_HAS_WRITTEN_YET) {
+      assert.ok(
+        GATE_REASONS.includes(reason),
+        `${reason} is exempt from the coverage rule and the gate cannot write it either`,
+      );
+    }
   });
 
   it("reads an equality finding on every rule the gate refuses an equality under", () => {
@@ -738,6 +751,7 @@ describe("a page states the reason we withheld, not a reason its own refusal con
       REJECT_MEASURES_NO_CHANGE,
       REJECT_STATES_NO_DIFFERENCE,
       REJECT_NULL_COMPARISON,
+      REJECT_RESTATES_STORED_QUANTITIES,
     ];
     assert.deepStrictEqual(
       [...REFUSAL_REASONS_THAT_MEASURED_NO_DIFFERENCE].sort(),
