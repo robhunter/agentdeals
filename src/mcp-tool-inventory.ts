@@ -1,3 +1,5 @@
+export const MCP_PROTOCOL_VERSION = "2025-06-18";
+
 export interface McpToolEntry {
   name: string;
   card: string;
