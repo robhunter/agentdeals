@@ -163,11 +163,11 @@ describe("AWS's monthly internet egress allowance is published as the standing g
   it("flags a block that hangs an expiry on the allowance, and clears one that does not", () => {
     assert.ok(
       timeLimitsTheGrant(`AWS S3 free egress: ${GRANT_GB} GB/mo (12 mo)`),
-      "the guard passes a cell that time-limits the allowance",
+      "the guard misses a cell that time-limits the allowance",
     );
     assert.ok(
       timeLimitsTheGrant(`Why not AWS S3: the free tier expires after 12 months, then egress costs $0.09/GB. At ${GRANT_GB} GB egress/month that is $9/month just for bandwidth.`),
-      "the guard passes prose that time-limits the allowance",
+      "the guard misses prose that time-limits the allowance",
     );
     assert.ok(
       !timeLimitsTheGrant(`S3 storage is free for 12 months. ${monthlyEgressGrantSentence(S3)}.`),
