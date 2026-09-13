@@ -13,6 +13,7 @@ import {
   urlsDeclaredBy,
 } from "../dist/agent-card.js";
 import { loadOffers, loadDealChanges, getCategories } from "../dist/data.js";
+import { recordsStillInForce } from "../dist/change-resolution.js";
 import { MCP_TOOLS } from "../dist/mcp-tool-inventory.js";
 import { openapiSpec } from "../dist/openapi.js";
 
@@ -185,17 +186,32 @@ describe("the service description answers the paths agent directories ask for", 
         offers: card.catalogue.offers,
         categories: card.catalogue.categories,
         vendors: card.catalogue.vendors,
-        changes_recorded: card.catalogue.changes_recorded,
+        changes_tracked: card.catalogue.changes_tracked,
       },
       {
         offers: offers.length,
         categories: getCategories().length,
         vendors: new Set(offers.map((o: { vendor: string }) => o.vendor)).size,
-        changes_recorded: loadDealChanges().length,
+        changes_tracked: recordsStillInForce(loadDealChanges()).length,
       },
     );
     assert.match(card.catalogue.verified_through, /^\d{4}-\d{2}-\d{2}$/);
     assert.ok(card.description.includes(String(card.catalogue.offers)), "the description states a different figure from the catalogue block");
+  });
+
+  it("states the same catalogue the home page states", async () => {
+    const home = await (await fetch(`${base}/`, { redirect: "manual" })).text();
+    const stat = (label: string): string | null =>
+      home.match(new RegExp(`<div class="stat-num[^"]*">([\\d,]+)</div><div class="stat-label">${label}</div>`))?.[1] ?? null;
+    const disagreeing: string[] = [];
+    for (const [label, published] of [["Deals", card.catalogue.offers], ["Categories", card.catalogue.categories], ["Changes Tracked", card.catalogue.changes_tracked]] as const) {
+      const onTheHomePage = stat(label);
+      assert.ok(onTheHomePage !== null, `the home page publishes no ${label} figure for this to agree with`);
+      if (parseInt(onTheHomePage.replace(/,/g, ""), 10) !== published) {
+        disagreeing.push(`${label}: the card says ${published}, the home page says ${onTheHomePage}`);
+      }
+    }
+    assert.deepStrictEqual(disagreeing, [], disagreeing.join("; "));
   });
 
   it("moves every figure when the index moves", () => {
@@ -204,7 +220,7 @@ describe("the service description answers the paths agent directories ask for", 
       version: "9.9.9",
       license: { name: "MIT", url: "https://opensource.org/licenses/MIT" },
       repositoryUrl: "https://github.com/robhunter/agentdeals",
-      catalogue: { offers: 3, categories: 2, vendors: 3, changes_recorded: 1, verified_through: "2020-01-01" },
+      catalogue: { offers: 3, categories: 2, vendors: 3, changes_tracked: 1, verified_through: "2020-01-01" },
       tools: [{ name: "search_deals", brief: "brief" }],
     });
     assert.strictEqual(smaller.catalogue.offers, 3);

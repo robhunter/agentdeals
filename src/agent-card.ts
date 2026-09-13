@@ -1,5 +1,6 @@
 import { PACKAGE_MANIFEST, PKG_VERSION, REPOSITORY_URL } from "./package-version.js";
 import { loadOffers, loadDealChanges, getCategories } from "./data.js";
+import { recordsStillInForce } from "./change-resolution.js";
 import { MCP_TOOLS, MCP_PROTOCOL_VERSION } from "./mcp-tool-inventory.js";
 import { CRITERIA_PATH } from "./ranking.js";
 import { openapiSpec } from "./openapi.js";
@@ -28,7 +29,7 @@ export interface CatalogueFigures {
   offers: number;
   categories: number;
   vendors: number;
-  changes_recorded: number;
+  changes_tracked: number;
   verified_through: string;
 }
 
@@ -39,7 +40,7 @@ export function catalogueFigures(): CatalogueFigures {
     offers: offers.length,
     categories: getCategories().length,
     vendors: new Set(offers.map((o) => o.vendor)).size,
-    changes_recorded: loadDealChanges().length,
+    changes_tracked: recordsStillInForce(loadDealChanges()).length,
     verified_through: dates[dates.length - 1] ?? "",
   };
 }
