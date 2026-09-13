@@ -27,6 +27,7 @@ const {
   storedDimensionsAbsentFromPage,
   measuredDifferences,
   measuredValue,
+  measuredWord,
   comparedQuantity,
   measuredAgainstItsClaim,
   rejectionCounts,
@@ -908,6 +909,95 @@ describe("a recorded change must describe a change", () => {
         "the raw summary states 90, which is in no comparison"
       );
       assert.strictEqual(describesChange(baselineInADroppedClause).reason, REJECT_MEASURES_NO_CHANGE);
+    });
+  });
+
+  describe("#1642 what the reader can and cannot see in a state", () => {
+    const measured = (text: string) =>
+      quantifiedAttributes(text).map((a: any) => `${measuredValue(a)} ${measuredWord(a) ?? "?"}`);
+
+    it("does not read a number glued to a letter as a quantity", () => {
+      assert.deepStrictEqual(quantifiedAttributes("Covers Workers, R2, Workers AI, Stream"), []);
+      assert.deepStrictEqual(quantifiedAttributes("spawn new Workers at runtime via V8 isolates"), []);
+      assert.deepStrictEqual(
+        measured("discounted H100 at ~$1.90/hr"),
+        ["1.9 currency"],
+        "the hourly price is a quantity and the GPU model name is not"
+      );
+    });
+
+    it("reads a plan code as a plan code and the price beside it as money", () => {
+      assert.deepStrictEqual(measured("CX23 €3.99/mo, CX33 €6.49, CAX11 €4.49"), [
+        "3.99 currency",
+        "6.49 currency",
+        "4.49 currency",
+      ]);
+    });
+
+    it("reads the noun a rate measures when it is stated before the number", () => {
+      assert.deepStrictEqual(measured("Requests are limited to 100,000 per day"), ["100000 request"]);
+      assert.deepStrictEqual(measured("Emails changed from unlimited to 2,500/month"), ["2500 email"]);
+      assert.deepStrictEqual(
+        measured("Free tier operations increased from 60,000 to 100,000/month"),
+        ["100000 operation"]
+      );
+    });
+
+    it("reads a rate the same whether its noun is before or after the number", () => {
+      const [before] = quantifiedAttributes("Requests are limited to 100,000 per day");
+      const [after] = quantifiedAttributes("100K requests/day");
+      assert.strictEqual(measuredWord(before), measuredWord(after));
+      assert.strictEqual(measuredValue(before), measuredValue(after));
+      assert.strictEqual(before.period.unit, after.period.unit);
+    });
+
+    it("does not reach back past the clause the number sits in", () => {
+      assert.deepStrictEqual(measured("Free tier restructured: Essentials 10K/month, Pro 5K/month"), []);
+      assert.deepStrictEqual(measured("Gemini 2.0 Flash retiring March 2026"), ["2 flash"]);
+    });
+
+    it("does not let a backward read overwrite what follows the number", () => {
+      assert.deepStrictEqual(measured("Max 10,000 subscribers per send"), ["10000 subscriber"]);
+      assert.deepStrictEqual(measured("10 per 6 hours of build time"), ["10 build"]);
+    });
+
+    it("reads a rate whose unit is itself a period", () => {
+      const [dyno] = quantifiedAttributes("Free dyno: 550 hours/month");
+      assert.strictEqual(measuredWord(dyno), "hour");
+      assert.strictEqual(dyno.period.unit, "mo");
+      const [pro, team] = quantifiedAttributes("Docker Pro gets 100 min/month, Team 500 min/month");
+      assert.strictEqual(measuredWord(pro), "min");
+      assert.strictEqual(measuredWord(team), "min");
+      assert.ok(measuredValue(team) > measuredValue(pro));
+      assert.deepStrictEqual(
+        measured("10 milliseconds of CPU time per invocation"),
+        ["10 millisecond"],
+        "a duration with no period written against it reads as it did before"
+      );
+      const [sleep] = quantifiedAttributes("Free web services sleep after 15 minutes of inactivity");
+      assert.strictEqual(sleep.value, "15");
+      assert.strictEqual(sleep.period, null);
+    });
+
+    it("reads every figure the Cloudflare Workers free plan restated on 2026-09-13", () => {
+      const stored =
+        "Edge compute with 100K requests/day, 10ms CPU time per invocation. KV: 1 GB storage, " +
+        "100K reads/day, 1K writes/day. D1: 5 GB storage, 5M rows read/day. R2: 10 GB-month storage.";
+      const read =
+        "The Workers Free plan includes limited usage of Workers, Pages Functions and Workers KV. " +
+        "Requests are limited to 100,000 per day with 10ms CPU time per invocation. KV: 1 GB storage. " +
+        "D1: 5 GB storage, 5M rows read/day. R2: 10 GB-month storage.";
+      const key = (a: any) =>
+        `${measuredWord(a)}|${a.unit ?? ""}|${a.period ? a.period.unit : "flat"}|${measuredValue(a)}`;
+      const held = quantifiedAttributes(stored).map(key);
+      const restated = quantifiedAttributes(read).map(key);
+      assert.ok(restated.length > 0);
+      assert.deepStrictEqual(
+        restated.filter((k: string) => !held.includes(k)),
+        [],
+        "every figure the second read states was already in the first"
+      );
+      assert.ok(held.includes("request||day|100000") && restated.includes("request||day|100000"));
     });
   });
 
