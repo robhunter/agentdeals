@@ -10,6 +10,7 @@ import { loadDealChanges, loadOffers } from "../dist/data.js";
 import { SIGNAL_DOC_PATH, SIGNAL_PATH } from "../dist/signal.js";
 import { CRITERIA_PATH } from "../dist/ranking.js";
 import { VENDOR_SERIES_PATH } from "../dist/vendor-series.js";
+import { AGENT_CARD_PATHS, OPENAPI_ALIAS_PATHS, OPENAPI_YAML_PATH } from "../dist/agent-card.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -45,11 +46,27 @@ const NAMES_A_CLIENT_NOT_A_CLAIM = ["Cursor", "Cline", "Windsurf", "Claude Deskt
 
 const NAMES_AN_EXAMPLE_QUERY = ["Firebase"];
 
-const ROUTES_NAMED_BY_A_CONSTANT: Record<string, string> = { SIGNAL_PATH, SIGNAL_DOC_PATH, CRITERIA_PATH, VENDOR_SERIES_PATH };
+const ROUTES_NAMED_BY_A_CONSTANT: Record<string, string | readonly string[]> = {
+  SIGNAL_PATH,
+  SIGNAL_DOC_PATH,
+  CRITERIA_PATH,
+  VENDOR_SERIES_PATH,
+  OPENAPI_YAML_PATH,
+  AGENT_CARD_PATHS,
+  OPENAPI_ALIAS_PATHS,
+};
+
+function pathsNamedBy(name: string): string[] {
+  const named = ROUTES_NAMED_BY_A_CONSTANT[name];
+  if (named === undefined) return [];
+  return typeof named === "string" ? [named] : [...named];
+}
 
 function constantsRoutingAPath(): string[] {
   const source = readFileSync(SERVE_SOURCE, "utf8");
-  return [...new Set([...source.matchAll(/url\.pathname === ([A-Z][A-Z0-9_]*)\b/g)].map(([, name]) => name))].sort();
+  const compared = [...source.matchAll(/url\.pathname === ([A-Z][A-Z0-9_]*)\b/g)].map(([, name]) => name);
+  const members = [...source.matchAll(/\(?([A-Z][A-Z0-9_]*)(?: as readonly string\[\])?\)?\.includes\(url\.pathname\)/g)].map(([, name]) => name);
+  return [...new Set([...compared, ...members])].sort();
 }
 
 function servedApiRoutes(): string[] {
@@ -57,8 +74,8 @@ function servedApiRoutes(): string[] {
   const exact = [...source.matchAll(/url\.pathname === "(\/api\/[^"]+)"/g)].map(([, route]) => route);
   const prefixed = [...source.matchAll(/url\.pathname\.startsWith\("(\/api\/[^"]+)"\)/g)].map(([, route]) => route);
   const named = constantsRoutingAPath()
-    .map((name) => ROUTES_NAMED_BY_A_CONSTANT[name])
-    .filter((route): route is string => typeof route === "string" && route.startsWith("/api/"));
+    .flatMap((name) => pathsNamedBy(name))
+    .filter((route) => route.startsWith("/api/"));
   return [...new Set([...exact, ...prefixed, ...named])].sort();
 }
 
