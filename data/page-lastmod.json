@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated": "2026-09-12",
+  "generated": "2026-09-13",
   "pages": {
     "/": {
       "daily": true
@@ -2908,8 +2908,7 @@
       "daily": true
     },
     "/feed.xml": {
-      "hash": "821a687f805dd7c3",
-      "changed": "2026-09-12"
+      "daily": true
     },
     "/firebase-alternatives": {
       "hash": "a3b7ea52edc2f938",
@@ -3026,8 +3025,8 @@
       "changed": "2026-09-12"
     },
     "/hcp-terraform-migration": {
-      "hash": "3d0dc2bbbe89ed0a",
-      "changed": "2026-09-12"
+      "hash": "54d9a4363e3dd1f1",
+      "changed": "2026-09-13"
     },
     "/heroku-alternatives": {
       "hash": "8a82c73adae03a15",
@@ -3333,8 +3332,8 @@
       "changed": "2026-09-12"
     },
     "/terraform-cloud-free-tier-removed": {
-      "hash": "9a828ec11b9994dd",
-      "changed": "2026-09-12"
+      "hash": "05d7856687887076",
+      "changed": "2026-09-13"
     },
     "/testing-alternatives": {
       "hash": "cb54f6cf57e8df61",
@@ -3345,8 +3344,7 @@
       "changed": "2026-09-12"
     },
     "/this-week": {
-      "hash": "49b74f87b4d87c35",
-      "changed": "2026-09-12"
+      "daily": true
     },
     "/trends": {
       "hash": "8a0903d245094c06",
