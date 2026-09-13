@@ -68,6 +68,7 @@ export const STORAGE_SCALE_WORKLOADS: readonly StorageWorkload[] = [
   { label: "100 TB + 100 TB egress", storageGb: 100_000, egressGb: 100_000, selfHostedEstimate: "~$500 (infra)" },
 ];
 
+export const HUNDRED_GB_SCENARIO = { storageGb: 100, egressGb: 100 };
 export const HUNDRED_TB_SCENARIO = { storageGb: 100_000, egressGb: 100_000 };
 export const ONE_TO_ONE_SCENARIO = { storageGb: 1_000, egressGb: 1_000 };
 export const TEN_TO_ONE_SCENARIO = { storageGb: 1_000, egressGb: 10_000 };
@@ -88,6 +89,18 @@ export function billableEgressGb(card: StorageRateCard, workload: Pick<StorageWo
 
 export function monthlyStorageCost(card: StorageRateCard, workload: Pick<StorageWorkload, "storageGb" | "egressGb">): number {
   return workload.storageGb * card.storagePerGbMonth + billableEgressGb(card, workload) * card.egressPerGb;
+}
+
+export function billableEgressGbAfterMonthlyGrant(card: StorageRateCard, workload: Pick<StorageWorkload, "storageGb" | "egressGb">): number {
+  return Math.max(0, billableEgressGb(card, workload) - card.freeEgressGbPerMonth);
+}
+
+export function egressBillAfterMonthlyGrant(card: StorageRateCard, workload: Pick<StorageWorkload, "storageGb" | "egressGb">): number {
+  return billableEgressGbAfterMonthlyGrant(card, workload) * card.egressPerGb;
+}
+
+export function monthlyStorageCostAfterMonthlyEgressGrant(card: StorageRateCard, workload: Pick<StorageWorkload, "storageGb" | "egressGb">): number {
+  return workload.storageGb * card.storagePerGbMonth + egressBillAfterMonthlyGrant(card, workload);
 }
 
 export function formatMonthlyStorageCost(amount: number): string {
@@ -144,6 +157,27 @@ export function fixedMonthlyGrantClause(card: StorageRateCard): string | null {
 export function fixedMonthlyGrantsSentence(): string {
   const clauses = STORAGE_RATE_CARDS.map(fixedMonthlyGrantClause).filter((c): c is string => c !== null);
   return `${clauses.join("; ")}.`;
+}
+
+export function monthlyEgressGrantGb(provider: string): number {
+  return rateCardFor(provider).freeEgressGbPerMonth;
+}
+
+export function costAfterMonthlyEgressGrantFor(provider: string, workload: Pick<StorageWorkload, "storageGb" | "egressGb">): string {
+  return formatMonthlyStorageCost(monthlyStorageCostAfterMonthlyEgressGrant(rateCardFor(provider), workload));
+}
+
+export function egressBillAfterMonthlyGrantFor(provider: string, workload: Pick<StorageWorkload, "storageGb" | "egressGb">): string {
+  return formatMonthlyStorageCost(egressBillAfterMonthlyGrant(rateCardFor(provider), workload));
+}
+
+export function grantCarriesNoAccountAgeCondition(card: StorageRateCard): boolean {
+  return card.freeEgressGbPerMonth > 0;
+}
+
+export function monthlyEgressGrantSentence(card: StorageRateCard): string | null {
+  if (!grantCarriesNoAccountAgeCondition(card)) return null;
+  return `${card.provider} gives every account its first ${card.freeEgressGbPerMonth} GB of internet egress each month free, on an account of any age`;
 }
 
 export function egressAllowanceSentence(card: StorageRateCard): string {
