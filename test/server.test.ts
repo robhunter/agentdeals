@@ -1,10 +1,13 @@
 import { describe, it } from "node:test";
 import assert from "node:assert";
 import { spawn } from "node:child_process";
+import { readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+const MANIFEST_VERSION = JSON.parse(readFileSync(path.join(__dirname, "..", "package.json"), "utf-8")).version;
 
 function sendMcpRequest(
   serverProcess: ReturnType<typeof spawn>,
@@ -59,7 +62,7 @@ describe("MCP Server", () => {
       assert.strictEqual(response.id, 1);
       assert.ok(response.result);
       assert.strictEqual(response.result.serverInfo.name, "agentdeals");
-      assert.strictEqual(response.result.serverInfo.version, "0.1.0");
+      assert.strictEqual(response.result.serverInfo.version, MANIFEST_VERSION);
       assert.strictEqual(response.result.protocolVersion, "2024-11-05");
     } finally {
       proc.kill();
