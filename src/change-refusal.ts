@@ -35,6 +35,7 @@ export const REFUSAL_REASONS_THAT_MEASURED_NO_DIFFERENCE = [
   "measures_no_change",
   "states_no_difference",
   "null_comparison",
+  "restates_stored_quantities",
 ] as const;
 
 const MEASURED_NO_DIFFERENCE_REASONS = new Set<string>(

@@ -15,6 +15,7 @@ const {
   gateCandidates,
   GATE_REASONS,
   REJECT_ZERO_ALLOWANCE,
+  REJECT_RESTATES_STORED_QUANTITIES,
 } = await import("../scripts/change-gate.js");
 
 const { buildRefusalEntry } = await import("../scripts/change-refusals.js");
@@ -202,6 +203,7 @@ describe("the batch this rule was written against", () => {
     assert.deepStrictEqual(refusals, {
       MEGA: "states_no_terms",
       "Proton Pass": REJECT_ZERO_ALLOWANCE,
+      Scalr: REJECT_RESTATES_STORED_QUANTITIES,
       Windscribe: REJECT_ZERO_ALLOWANCE,
     });
     assert.strictEqual(

@@ -3,6 +3,7 @@ import assert from "node:assert";
 import { readFileSync, writeFileSync, mkdtempSync, rmSync, existsSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
+import { fileURLToPath } from "node:url";
 import {
   THUNDER_CLIENT_LANDING_PAGE,
   DOCZILLA_LANDING_PAGE,
@@ -44,7 +45,15 @@ const {
   REJECT_CONFIRMED_UNCHANGED,
   REJECT_MEASURES_NO_CHANGE,
   REJECT_MEASURES_THE_OPPOSITE,
+  REJECT_RESTATES_STORED_QUANTITIES,
+  GATE_REASONS,
+  claimsNarrowing,
+  restatedStoredQuantities,
 } = await import("../scripts/change-gate.js");
+
+const { REFUSAL_REASONS_THAT_MEASURED_NO_DIFFERENCE } = await import("../dist/change-refusal.js");
+
+const REPO_ROOT = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
 
 const { runAiMode, summaryLines } = await import("../scripts/reverify-rolling.js");
 const { fetchPageText, MAX_PAGE_TEXT_LENGTH, MIN_PAGE_TEXT_LENGTH } = await import("../scripts/verify-freshness.js");
@@ -998,6 +1007,130 @@ describe("a recorded change must describe a change", () => {
         "every figure the second read states was already in the first"
       );
       assert.ok(held.includes("request||day|100000") && restated.includes("request||day|100000"));
+    });
+  });
+
+  describe("#1634 the current state restates every figure we already held", () => {
+    const THE_WORKERS_FREE_PLAN_READ_TWICE = {
+      vendor: "Cloudflare Workers",
+      change_type: "limits_reduced",
+      date: "2026-09-13",
+      summary:
+        "The free plan now has limits on requests, CPU time, and storage for KV, D1, and R2. " +
+        "The current pricing page details a 'Workers Free plan' with limits and a 'Workers Paid plan' starting at $5/month.",
+      previous_state:
+        "Edge compute with 100K requests/day, 10ms CPU time per invocation. KV: 1 GB storage, " +
+        "100K reads/day, 1K writes/day. D1: 5 GB storage, 5M rows read/day, 100K rows written/day. " +
+        "R2: 10 GB-month storage, 1M Class A ops/month, 10M Class B ops/month. " +
+        "Durable Objects: 100K requests/day. Queues: 10K operations/day.",
+      current_state:
+        "The Workers Free plan includes limited usage of Workers, Pages Functions, Workers KV and Hyperdrive. " +
+        "Requests are limited to 100,000 per day with 10ms CPU time per invocation. KV: 1 GB storage. " +
+        "D1: 5 GB storage, 5M rows read/day, 100K rows written/day. " +
+        "R2: 10 GB-month storage, 1M Class A ops/month, 10M Class B ops/month.",
+      impact: "high",
+      source_url: "https://developers.cloudflare.com/workers/platform/pricing/",
+    };
+
+    const storedRecords = JSON.parse(
+      readFileSync(path.join(REPO_ROOT, "data", "deal_changes.json"), "utf-8")
+    ).changes;
+    const storedRefusals = JSON.parse(
+      readFileSync(path.join(REPO_ROOT, "data", "change_refusals.json"), "utf-8")
+    ).refusals;
+
+    const storedRecord = (vendor: string, date: string) => {
+      const held = storedRecords.find((r: any) => r.vendor === vendor && r.date === date);
+      assert.ok(held, `no record we hold for ${vendor} on ${date}`);
+      return held;
+    };
+    const storedRefusal = (vendor: string, refusedOn: string) => {
+      const held = storedRefusals.find(
+        (r: any) => r.vendor === vendor && r.refused_date === refusedOn
+      );
+      assert.ok(held, `no refusal we hold for ${vendor} on ${refusedOn}`);
+      return held;
+    };
+
+    it("refuses a read whose every figure the stored description already carried", () => {
+      const verdict = describesChange(THE_WORKERS_FREE_PLAN_READ_TWICE);
+      assert.strictEqual(verdict.ok, false);
+      assert.strictEqual(verdict.reason, REJECT_RESTATES_STORED_QUANTITIES);
+      assert.match(verdict.detail, /100,000 request\/day/);
+    });
+
+    it("refuses it on the figures rather than on the vendor it names", () => {
+      const anotherVendorEntirely = {
+        ...THE_WORKERS_FREE_PLAN_READ_TWICE,
+        vendor: "Somebody Else",
+        source_url: "https://example.com/pricing",
+      };
+      assert.strictEqual(
+        describesChange(anotherVendorEntirely).reason,
+        REJECT_RESTATES_STORED_QUANTITIES
+      );
+    });
+
+    it("names the reason in the family that says no figure moved", () => {
+      assert.ok(GATE_REASONS.includes(REJECT_RESTATES_STORED_QUANTITIES));
+      assert.ok(
+        REFUSAL_REASONS_THAT_MEASURED_NO_DIFFERENCE.includes(REJECT_RESTATES_STORED_QUANTITIES),
+        "a page holding only this refusal would otherwise read as unreconciled"
+      );
+    });
+
+    it("keeps a reduction whose new value appears in the old text against another unit", () => {
+      const servervana = storedRecord("Servervana", "2026-04-12");
+      assert.strictEqual(describesChange(servervana).ok, true);
+      assert.strictEqual(restatedStoredQuantities(servervana), null);
+    });
+
+    it("keeps the refusal that fires when the current state names no quantity at all", () => {
+      const pages = storedRefusal("Cloudflare Pages", "2026-09-02");
+      assert.strictEqual(describesChange(pages).reason, REJECT_UNQUANTIFIED_LIMIT);
+    });
+
+    it("keeps the refusal that fires on what the summary says about itself", () => {
+      const workers = storedRefusal("Cloudflare Workers", "2026-09-01");
+      assert.strictEqual(describesChange(workers).reason, REJECT_STATES_NO_DIFFERENCE);
+    });
+
+    it("fires only on a record that claims narrowing", () => {
+      const asAnIncrease = { ...THE_WORKERS_FREE_PLAN_READ_TWICE, change_type: "limits_increased" };
+      assert.ok(!claimsNarrowing(asAnIncrease));
+      assert.notStrictEqual(describesChange(asAnIncrease).reason, REJECT_RESTATES_STORED_QUANTITIES);
+      const byDirection = { ...asAnIncrease, tier_direction: "narrowed" };
+      assert.ok(claimsNarrowing(byDirection));
+      assert.strictEqual(describesChange(byDirection).reason, REJECT_RESTATES_STORED_QUANTITIES);
+    });
+
+    it("does not fire on a current state that names no quantity", () => {
+      const nothingRead = { ...THE_WORKERS_FREE_PLAN_READ_TWICE, current_state: "The free plan continues." };
+      assert.strictEqual(restatedStoredQuantities(nothingRead), null);
+    });
+
+    it("reports every record already published that it would have refused", () => {
+      const reached = storedRecords.filter(
+        (record: any) => claimsNarrowing(record) && restatedStoredQuantities(record) !== null
+      );
+      const named = reached.map((r: any) => `${r.vendor} ${r.date}`).sort();
+      assert.deepStrictEqual(
+        named,
+        [
+          "Microsoft Founders Hub 2026-08-28",
+          "Scalr 2026-09-05",
+          "Thunder Client 2026-09-10",
+          "Turso 2026-09-01",
+        ],
+        `${reached.length} of ${storedRecords.length} published records restate every figure we held`
+      );
+    });
+
+    it("refuses the record this issue opens with, still published today", () => {
+      const scalr = storedRecord("Scalr", "2026-09-05");
+      const verdict = describesChange(scalr);
+      assert.strictEqual(verdict.reason, REJECT_RESTATES_STORED_QUANTITIES);
+      assert.match(verdict.detail, /50 run\/mo/);
     });
   });
 
