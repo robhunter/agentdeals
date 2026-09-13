@@ -221,7 +221,7 @@ while :; do
           echo "drifted_guards_body=$DRIFTED_GUARDS"
         } >>"$OUTPUT"
       fi
-      echo "Suite red — $COMMIT is on main anyway. Nothing that went red says this data is wrong: each failure either measures how current our own reading is, or states that a guard has drifted into its own headroom."
+      echo "Suite red — $COMMIT is on main anyway. Nothing that went red says this data is wrong: no file that failed is named in scripts/gate-blocking-tests.json, or the only assertions of one that did state that a guard has drifted into its own headroom."
     else
       echo "Suite green — $COMMIT is on main."
     fi
