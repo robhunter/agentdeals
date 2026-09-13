@@ -311,7 +311,7 @@ describe("#1528 the review of the records already written", () => {
   });
 });
 
-describe("#1528 the vendor pages the census named", () => {
+describe("#1528 a record typed as a reduction whose own review reads no narrowing", () => {
   const publishesItsStoredTerms = (vendor: string) => {
     const offer = offerFor(vendor);
     return !storedTermsAreSuperseded(offer, changesFor(vendor));
@@ -322,25 +322,40 @@ describe("#1528 the vendor pages the census named", () => {
     return publishedRisk(offer, changesFor(vendor), "2026-09-11", Date.parse("2026-09-11T12:00:00Z"));
   };
 
-  it("publishes the terms of the five the issue names, and rates none of them from these records", () => {
-    for (const vendor of ["Buildkite", "PromoProxy", "Vercel", "Railway", "Figma"]) {
-      assert.ok(publishesItsStoredTerms(vendor), `${vendor} still withholds its stored terms`);
-      const risk = ratedBy(vendor);
-      assert.notStrictEqual(risk.risk_level, "caution", `${vendor} still reads caution`);
-      assert.notStrictEqual(risk.risk_level, "risky", `${vendor} still reads risky`);
-    }
-  });
+  const vendorsWhoseOwnTwoStatesStateNoNarrowing = (): string[] => {
+    const named = [...new Set(liveChanges.filter(readingDescribesNoNarrowing).map(c => c.vendor))];
+    return named.filter((vendor) => {
+      const own = changesFor(vendor);
+      const anotherRecordNarrows = own.some(
+        (c) => narrowsTheStoredTerms(c.change_type) && !readingDescribesNoNarrowing(c),
+      );
+      return !anotherRecordNarrows && offers.some((o) => o.vendor.toLowerCase() === vendor.toLowerCase());
+    });
+  };
 
-  it("publishes the terms of the seven whose own two states state no narrowing", () => {
-    for (const vendor of [
-      "Grafana Cloud", "geocodify.com", "LastPass", "veriphone",
-      "paperspace", "readthedocs.org", "Oracle Cloud",
-    ]) {
-      assert.ok(publishesItsStoredTerms(vendor), `${vendor} still withholds its stored terms`);
+  it("publishes the terms of every vendor whose own two states state no narrowing, and rates none of them from these records", () => {
+    const subjects = vendorsWhoseOwnTwoStatesStateNoNarrowing();
+    assert.ok(
+      subjects.length > 0,
+      "no catalogued vendor holds a record typed as a reduction whose review reads no narrowing, so this has no subject",
+    );
+    const withholding: string[] = [];
+    const rated: string[] = [];
+    for (const vendor of subjects) {
+      if (!publishesItsStoredTerms(vendor)) withholding.push(vendor);
       const risk = ratedBy(vendor);
-      assert.notStrictEqual(risk.risk_level, "caution", `${vendor} still reads caution`);
-      assert.notStrictEqual(risk.risk_level, "risky", `${vendor} still reads risky`);
+      if (risk.risk_level === "caution" || risk.risk_level === "risky") rated.push(`${vendor} reads ${risk.risk_level}`);
     }
+    assert.deepStrictEqual(
+      withholding.slice(0, 20),
+      [],
+      `vendors withholding stored terms over a record their own review reads as no narrowing:\n${withholding.slice(0, 20).join("\n")}`,
+    );
+    assert.deepStrictEqual(
+      rated.slice(0, 20),
+      [],
+      `vendors rated down by a record their own review reads as no narrowing:\n${rated.slice(0, 20).join("\n")}`,
+    );
   });
 
   it("leaves a genuine narrowing withholding and rated", () => {
