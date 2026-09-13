@@ -1418,26 +1418,28 @@ describe("the run does not write a change the gate refused", () => {
         rateLimitMs: 0,
         changesPath: changes,
         refusalsPath: refusals,
+        corroborationPath: path.join(path.dirname(changes), "change_corroboration.json"),
       });
       rmSync(path.dirname(changes), { recursive: true, force: true });
       return result;
     }
 
-    it("records the restructure when it read the page in full", async () => {
+    it("grades it a restructure when it read the page in full", async () => {
       const result = await runReading(false);
       assert.strictEqual(result.rejected.length, 0, JSON.stringify(result.rejected));
-      assert.strictEqual(result.recorded.length, 1);
-      assert.strictEqual(result.recorded[0].change_type, "pricing_restructured");
+      const taken = [...result.recorded, ...result.held];
+      assert.strictEqual(taken.length, 1);
+      assert.strictEqual(taken[0].change_type, "pricing_restructured");
     });
 
     it("refuses the same reading when the page was cut at the fetch limit", async () => {
       const result = await runReading(true);
-      assert.strictEqual(result.recorded.length, 0);
+      assert.deepStrictEqual([...result.recorded, ...result.held], []);
       assert.strictEqual(result.rejected[0].reason, REJECT_UNQUANTIFIED_LIMIT);
     });
   });
 
-  it("still writes a change that describes one", async () => {
+  it("still takes a change that describes one", async () => {
     const movedOffer = {
       ...offer,
       vendor: "Deno Deploy",
@@ -1457,8 +1459,9 @@ describe("the run does not write a change the gate refused", () => {
       }),
       rateLimitMs: 0,
       changesPath: file,
+      corroborationPath: path.join(path.dirname(file), "change_corroboration.json"),
     });
-    assert.strictEqual(result.recorded.length, 1);
+    assert.strictEqual([...result.recorded, ...result.held].length, 1);
     assert.strictEqual(result.rejected.length, 0);
     rmSync(path.dirname(file), { recursive: true, force: true });
   });
@@ -1491,7 +1494,7 @@ describe("the run does not write a change the gate refused", () => {
     rmSync(path.dirname(file), { recursive: true, force: true });
   });
 
-  it("records the same report when the page it read does state terms", async () => {
+  it("takes the same report when the page it read does state terms", async () => {
     const pricedOffer = {
       ...offer,
       vendor: "FreeIPAPI",
@@ -1511,8 +1514,9 @@ describe("the run does not write a change the gate refused", () => {
       }),
       rateLimitMs: 0,
       changesPath: file,
+      corroborationPath: path.join(path.dirname(file), "change_corroboration.json"),
     });
-    assert.strictEqual(result.recorded.length, 1);
+    assert.strictEqual([...result.recorded, ...result.held].length, 1);
     assert.strictEqual(result.rejected.length, 0);
     rmSync(path.dirname(file), { recursive: true, force: true });
   });
