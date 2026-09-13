@@ -22,6 +22,7 @@ export const REJECT_MEASURES_THE_OPPOSITE = "measures_the_opposite";
 export const REJECT_STATES_NO_NARROWING = "states_no_narrowing";
 export const REJECT_NO_TERMS_TO_NARROW = "no_terms_to_narrow";
 export const REJECT_ZERO_ALLOWANCE = "zero_allowance";
+export const REJECT_RESTATES_STORED_QUANTITIES = "restates_stored_quantities";
 
 export const GATE_REASONS = [
   REJECT_NULL_COMPARISON,
@@ -44,6 +45,7 @@ export const GATE_REASONS = [
   REJECT_STATES_NO_NARROWING,
   REJECT_NO_TERMS_TO_NARROW,
   REJECT_ZERO_ALLOWANCE,
+  REJECT_RESTATES_STORED_QUANTITIES,
 ];
 
 export const FREE_TIER_REMOVED = "free_tier_removed";
@@ -466,6 +468,33 @@ export function storedDimensionsAbsentFromPage(entry, pageText) {
     if (!present) absent.push({ value: attribute.value, measured: word });
   }
   return absent;
+}
+
+const NARROWED = "narrowed";
+
+export function claimsNarrowing(entry) {
+  return entry?.change_type === "limits_reduced" || entry?.tier_direction === NARROWED;
+}
+
+export function quantityKey(attribute) {
+  const word = measuredWord(attribute);
+  const scope = attribute?.period ? attribute.period.unit : "flat";
+  return `${word ?? ""}|${attribute?.unit ?? ""}|${scope}|${measuredValue(attribute)}`;
+}
+
+export function restatedStoredQuantities(entry) {
+  const previous = quantifiedAttributes(entry?.previous_state);
+  const current = quantifiedAttributes(entry?.current_state);
+  if (current.length === 0) return null;
+  const pool = previous.map(quantityKey);
+  const restated = [];
+  for (const attribute of current) {
+    const at = pool.indexOf(quantityKey(attribute));
+    if (at === -1) return null;
+    pool.splice(at, 1);
+    restated.push(attribute);
+  }
+  return { restated, dropped: pool.length };
 }
 
 export function unquantifiedInCurrentState(entry) {
@@ -1088,6 +1117,21 @@ export function describesChange(entry, context = {}) {
   }
 
   if (refusedByAudit) return refusedByAudit;
+
+  if (claimsNarrowing(entry)) {
+    const restated = restatedStoredQuantities(entry);
+    if (restated) {
+      const figures = restated.restated.map(renderedQuantity).join(", ");
+      const alsoDropped = restated.dropped > 0
+        ? `, and drops ${restated.dropped} the stored description carried`
+        : "";
+      return {
+        ok: false,
+        reason: REJECT_RESTATES_STORED_QUANTITIES,
+        detail: `narrowing claimed, and every quantity the current state names is one the stored description already held at the same value (${figures})${alsoDropped}`,
+      };
+    }
+  }
 
   if (DEMOTING_QUANTITY_TYPES.includes(entry?.change_type)) {
     const zeroed = zeroedAllowances(entry?.current_state);
