@@ -4,21 +4,26 @@ import { fileURLToPath } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-export interface NonBlockingTest {
+export interface DataGatingTest {
   file: string;
   reason: string;
 }
 
-export interface NonBlockingTests {
+export interface DataGatingTests {
   version: number;
   rule: string;
-  tests: NonBlockingTest[];
+  tests: DataGatingTest[];
 }
 
-export function nonBlockingTestsPath(): string {
+export interface ReportedFailure {
+  file: string;
+  reason: string;
+}
+
+export function dataGatingTestsPath(): string {
   return (
-    process.env.AGENTDEALS_NON_BLOCKING_TESTS_PATH ||
-    path.join(__dirname, "..", "scripts", "gate-non-blocking-tests.json")
+    process.env.AGENTDEALS_DATA_GATING_TESTS_PATH ||
+    path.join(__dirname, "..", "scripts", "gate-blocking-tests.json")
   );
 }
 
@@ -26,7 +31,7 @@ export function normalizeTestPath(file: string): string {
   return file.trim().replace(/^\.\//, "").replace(/\\/g, "/");
 }
 
-export function parseNonBlockingTests(text: string, source: string): NonBlockingTests {
+export function parseDataGatingTests(text: string, source: string): DataGatingTests {
   let raw: unknown;
   try {
     raw = JSON.parse(text);
@@ -39,7 +44,7 @@ export function parseNonBlockingTests(text: string, source: string): NonBlocking
     throw new Error(`${source} states no rule for what may be listed in it`);
   }
   if (!Array.isArray(file.tests)) throw new Error(`${source} has no tests array`);
-  const tests: NonBlockingTest[] = [];
+  const tests: DataGatingTest[] = [];
   for (const entry of file.tests) {
     const e = entry as { file?: unknown; reason?: unknown };
     if (typeof e.file !== "string" || !e.file.startsWith("test/")) {
@@ -58,8 +63,8 @@ export function parseNonBlockingTests(text: string, source: string): NonBlocking
   return { version: 1, rule: file.rule, tests };
 }
 
-export function readNonBlockingTests(file: string = nonBlockingTestsPath()): NonBlockingTests {
-  return parseNonBlockingTests(fs.readFileSync(file, "utf-8"), file);
+export function readDataGatingTests(file: string = dataGatingTestsPath()): DataGatingTests {
+  return parseDataGatingTests(fs.readFileSync(file, "utf-8"), file);
 }
 
 export type GateDecision = "push" | "quarantine";
@@ -99,13 +104,25 @@ export function driftedGuardOf(error: unknown): DriftedGuard | undefined {
 export interface GateVerdict {
   decision: GateDecision;
   blocking: string[];
-  excused: NonBlockingTest[];
+  reported: ReportedFailure[];
   drifted: DriftedGuard[];
   files: string[];
   reason: string;
 }
 
-export function gateVerdict(failures: TestFailure[], allowed: NonBlockingTests): GateVerdict {
+export function reasonNotHeldBy(file: string, gating: DataGatingTests, source: string): string {
+  const declared = gating.tests.find(t => t.file === file);
+  if (!declared) {
+    return `${source} does not name it, so its failure is not a statement that the data this run produced is wrong`;
+  }
+  return `${source} names it, and every assertion of its that failed states only that a floor has drifted into the headroom it declares`;
+}
+
+export function gateVerdict(
+  failures: TestFailure[],
+  gating: DataGatingTests,
+  source: string = dataGatingTestsPath(),
+): GateVerdict {
   const failing = failures
     .map(failure => ({ ...failure, file: normalizeTestPath(failure.file) }))
     .filter(failure => failure.file.length > 0);
@@ -115,39 +132,37 @@ export function gateVerdict(failures: TestFailure[], allowed: NonBlockingTests):
     return {
       decision: "quarantine",
       blocking: [],
-      excused: [],
+      reported: [],
       drifted,
       files,
       reason: "the suite is red and named no test file, so what failed is unknown",
     };
   }
-  const byFile = new Map(allowed.tests.map(t => [t.file, t]));
-  const held = failing.filter(f => !byFile.has(f.file) && f.drifted === undefined);
+  const gatingFiles = new Set(gating.tests.map(t => t.file));
+  const held = failing.filter(f => gatingFiles.has(f.file) && f.drifted === undefined);
   const blocking = [...new Set(held.map(f => f.file))].sort();
-  const excused = files.filter(f => byFile.has(f)).map(f => byFile.get(f)!);
+  const reported = files
+    .filter(f => !blocking.includes(f))
+    .map(f => ({ file: f, reason: reasonNotHeldBy(f, gating, source) }));
   if (blocking.length > 0) {
     return {
       decision: "quarantine",
       blocking,
-      excused,
+      reported,
       drifted,
       files,
       reason: `${blocking.length} failing test file(s) hold the commit: ${blocking.join(", ")}`,
     };
   }
   const why = [
-    excused.length > 0
-      ? `every failing test file reports on how current our own reading is, not on whether the data is right: ${excused
-          .map(t => t.file)
-          .join(", ")}`
-      : "",
+    `no failing test file is named in ${source}, so nothing that went red says the data this run produced is wrong: ${files.join(", ")}`,
     drifted.length > 0
       ? `${drifted.length} failing assertion(s) name no record and no vendor, and state only that a guard has drifted into the headroom it declares: ${drifted
           .map(d => d.site)
           .join(", ")}`
       : "",
   ].filter(part => part.length > 0);
-  return { decision: "push", blocking, excused, drifted, files, reason: why.join("; ") };
+  return { decision: "push", blocking, reported, drifted, files, reason: why.join("; ") };
 }
 
 export function parseFailures(text: string, source: string): TestFailure[] {

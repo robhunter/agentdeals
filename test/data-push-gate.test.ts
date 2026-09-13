@@ -7,7 +7,7 @@ import { dirname, join, relative, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import {
-  driftedGuardOf, gateVerdict, parseFailures, parseNonBlockingTests, readNonBlockingTests,
+  driftedGuardOf, gateVerdict, parseFailures, parseDataGatingTests, readDataGatingTests,
   type TestFailure,
 } from "../src/data-push-gate.ts";
 import { qualityBudgetsPath } from "../src/page-reviews.ts";
@@ -233,9 +233,12 @@ const FAILING_BY_MODE: Record<string, Array<{ file: string; drifted?: typeof A_G
     { file: "test/a-guard-that-measures-what-this-run-shrinks.test.ts", drifted: A_GUARD_THAT_DRIFTED },
     { file: "test/the-data-this-run-wrote-is-wrong.test.ts" },
   ],
+  "drifted-in-a-gating-file": [
+    { file: "test/the-data-this-run-wrote-is-wrong.test.ts", drifted: A_GUARD_THAT_DRIFTED },
+  ],
   "drifted-in-a-file-that-also-broke": [
-    { file: "test/a-guard-that-measures-what-this-run-shrinks.test.ts", drifted: A_GUARD_THAT_DRIFTED },
-    { file: "test/a-guard-that-measures-what-this-run-shrinks.test.ts" },
+    { file: "test/the-data-this-run-wrote-is-wrong.test.ts", drifted: A_GUARD_THAT_DRIFTED },
+    { file: "test/the-data-this-run-wrote-is-wrong.test.ts" },
   ],
   crashed: [],
   vendor: [],
@@ -298,14 +301,14 @@ if (mode === "lower") {
 }
 `;
 
-const ALLOWLIST = JSON.stringify(
+const GATING_TESTS = JSON.stringify(
   {
     version: 1,
     rule: "the fixture stands in for the shipped list, so the behaviour under test does not move when that list does",
     tests: [
       {
-        file: "test/how-current-our-reading-is.test.ts",
-        reason: "everything it fires on is unread rather than incorrect",
+        file: "test/the-data-this-run-wrote-is-wrong.test.ts",
+        reason: "everything it fires on names a record this run wrote and says that record is wrong",
       },
     ],
   },
@@ -372,7 +375,7 @@ function fixtureRepo(options: { shallow?: boolean } = {}): { work: string; origi
   writeFileSync(join(work, "suite.js"), SUITE);
   writeFileSync(join(work, "build.js"), BUILD);
   writeFileSync(join(work, "ratchet.js"), RATCHET);
-  writeFileSync(join(work, "allowlist.json"), ALLOWLIST);
+  writeFileSync(join(work, "gating-tests.json"), GATING_TESTS);
   writeFileSync(join(work, "data", "health.json"), '{"checked":1}\n');
   writeFileSync(join(work, "data", "deal_changes.json"), CHANGES_ON_MAIN);
   writeFileSync(join(work, "data", "quality_budgets.json"), BUDGETS_BEFORE);
@@ -430,7 +433,7 @@ function runGate(work: string, mode: GateMode | GateRun, ...args: string[]) {
       GATE_REPLAYS_ONTO_A_MOVED_MAIN: opts.replays === undefined ? "" : String(opts.replays),
       GATE_DRIFTED_GUARDS: opts.driftTo ?? join(work, "drifted-guards.md"),
       GITHUB_OUTPUT: outputs,
-      AGENTDEALS_NON_BLOCKING_TESTS_PATH: join(work, "allowlist.json"),
+      AGENTDEALS_DATA_GATING_TESTS_PATH: join(work, "gating-tests.json"),
       AGENTDEALS_PAGE_LASTMOD_PATH: join(work, "data", "page-lastmod.json"),
       AGENTDEALS_LLM_INDEX_PATH: join(work, "artifacts", "free-llm-api-index", "README.md"),
     },
@@ -669,7 +672,7 @@ describe("#1321 a measurement of our own reading does not stop the catalogue adv
     if (scratch && existsSync(scratch)) rmSync(scratch, { recursive: true, force: true });
   });
 
-  it("puts the data on main when the only red test measures how current our reading is", () => {
+  it("puts the data on main when no red test is one that gates the data", () => {
     const { work, origin } = fixtureRepo();
     const before = mainSha(origin);
     writeFileSync(join(work, "data", "health.json"), '{"checked":5}\n');
@@ -697,7 +700,7 @@ describe("#1321 a measurement of our own reading does not stop the catalogue adv
     assert.match(run.stdout, /hold the commit/);
   });
 
-  it("holds the data back when one excused failure arrives beside one that is not", () => {
+  it("holds the data back when a failure in a file that gates arrives beside one in a file that does not", () => {
     const { work, origin } = fixtureRepo();
     const before = mainSha(origin);
     writeFileSync(join(work, "data", "health.json"), '{"checked":7}\n');
@@ -739,7 +742,7 @@ describe("#1321 a measurement of our own reading does not stop the catalogue adv
     assert.match(run.stdout, /the-data-this-run-wrote-is-wrong/);
   });
 
-  it("holds the data back when a drifted guard's own file also failed on something else", () => {
+  it("holds the data back when a drifted guard's own file gates the data and also failed on something else", () => {
     const { work, origin } = fixtureRepo();
     const before = mainSha(origin);
     writeFileSync(join(work, "data", "health.json"), '{"checked":13}\n');
@@ -748,7 +751,21 @@ describe("#1321 a measurement of our own reading does not stop the catalogue adv
 
     assert.strictEqual(run.status, 1, "a file excused one assertion at a time excused the whole file");
     assert.strictEqual(mainSha(origin), before);
-    assert.match(run.stdout, /a-guard-that-measures-what-this-run-shrinks/);
+    assert.match(run.stdout, /the-data-this-run-wrote-is-wrong/);
+  });
+
+  it("puts the data on main when a file that gates it went red on a drifted guard and nothing else", () => {
+    const { work, origin } = fixtureRepo();
+    const before = mainSha(origin);
+    writeFileSync(join(work, "data", "health.json"), '{"checked":14}\n');
+
+    const run = runGate(work, "drifted-in-a-gating-file", "data-quarantine/fixture", "data(auto): fixture", "data/health.json");
+
+    assert.strictEqual(run.status, 0, `a drifted floor in a gating file held the data back: ${run.stdout}${run.stderr}`);
+    assert.notStrictEqual(mainSha(origin), before, "the data did not reach main");
+    assert.deepStrictEqual(quarantineRefs(origin, "data-quarantine/fixture"), []);
+    assert.match(run.stdout, /name no record and no vendor/);
+    assert.match(run.outputs, /drifted_guards=1/);
   });
 
   it("holds the data back when the suite is red and names no file", () => {
@@ -763,7 +780,7 @@ describe("#1321 a measurement of our own reading does not stop the catalogue adv
     assert.match(run.stdout, /named no test file/);
   });
 
-  it("holds the data back when the build does not compile, whatever the allowlist says", () => {
+  it("holds the data back when the build does not compile, even with no failing test that gates the data", () => {
     const { work, origin } = fixtureRepo();
     const before = mainSha(origin);
     writeFileSync(join(work, "data", "health.json"), '{"checked":9}\n');
@@ -1058,39 +1075,79 @@ describe("#1326 the gate, asked to lower a budget", () => {
   });
 });
 
-describe("#1321 which failures are allowed not to hold a data commit", () => {
-  const shipped = readNonBlockingTests();
+const REFUSALS_THAT_NAMED_NO_RECORD: Array<[string, string]> = [
+  ["test/ranking.test.ts", "2026-09-04, Databases: Firebase is the only demotion, on a named recorded fact — a second demotion arrived and the control named one"],
+  ["test/data-push-gate.test.ts", "2026-09-05, stops a data change the suite refuses — the job's own configuration reached the suite it runs"],
+  ["test/deal-changes.test.ts", "2026-09-07, getDealChanges filters by vendors (comma-separated) — 5 records where the test types 4"],
+  ["test/http.test.ts", "2026-09-07, GET /vendor/:slug includes enriched JSON-LD with dateModified — JSON-LD should include an Offer"],
+  ["test/change-feed-provenance.test.ts", "2026-09-08 and 2026-09-09, never stamps a feed as generated later than it was generated — by 5ms and by 3ms"],
+  ["test/homepage-cites-what-it-serves.test.ts", "2026-09-09, reaches a page for every vendor it names in prose — a vendor the homepage names outside a link"],
+  ["test/documented-route-citation.test.ts", "2026-09-11, /api/newest cites a page narrower than the site root — the citation resolved to a loopback address"],
+];
 
-  it("names test files that exist, so a rename cannot silently widen the gate", () => {
+const REFUSALS_THAT_NAMED_A_RECORD: Array<[string, string]> = [
+  ["test/superseded-terms.test.ts", "2026-09-07, a vendor holding two changes that quote its stored terms as the previous ones"],
+  ["test/removal-record-refuted-by-its-page.test.ts", "2026-09-10, does not call a withdrawn record a change the vendor made — the one change recorded did not narrow the terms"],
+  ["test/change-direction-review.test.ts", "2026-09-11 and 2026-09-12, leaves every record it does not review carrying no direction — two records carried one from nowhere"],
+  ["test/refused-change-not-stable.test.ts", "2026-09-13, publishes none of the records it refused — a refused record reached the published log"],
+];
+
+describe("#1645 which failures may hold a data commit, and nothing else may", () => {
+  const shipped = readDataGatingTests();
+  const gating = new Set(shipped.tests.map((t) => t.file));
+
+  it("names test files that exist, so a rename cannot silently empty the gate", () => {
     for (const t of shipped.tests) {
-      assert.ok(existsSync(join(REPO, t.file)), `${t.file} is excused from holding a data commit and does not exist`);
+      assert.ok(existsSync(join(REPO, t.file)), `${t.file} may hold a data commit and does not exist`);
     }
   });
 
   it("keeps the list short enough to read, and gives a reason for every entry", () => {
-    assert.ok(shipped.tests.length > 0, "nothing is excused, so the split has no subject");
-    assert.ok(shipped.tests.length <= 5, `${shipped.tests.length} files are excused; the list is meant to be read`);
+    assert.ok(shipped.tests.length > 0, "nothing gates the data, so the gate has no subject");
+    assert.ok(shipped.tests.length <= 12, `${shipped.tests.length} files gate the data; the list is meant to be read`);
     for (const t of shipped.tests) {
-      assert.ok(t.reason.length > 40, `${t.file} is excused with ${t.reason.length} characters of reason`);
+      assert.ok(t.reason.length > 40, `${t.file} gates a data commit with ${t.reason.length} characters of reason`);
+    }
+  });
+
+  it("names only files that read the catalogue a scheduled run rewrites", () => {
+    const reachesTheCatalogue =
+      /data", "(index|deal_changes|change_refusals|verification_state)\.json"|loadOffers|loadDealChanges|loadChangeRefusals|recordsInTheCatalogue/;
+    for (const t of shipped.tests) {
+      assert.match(
+        readFileSync(join(REPO, t.file), "utf8"),
+        reachesTheCatalogue,
+        `${t.file} may hold a data commit and reads none of the files a run commits, so nothing it fires on can be this run's data`,
+      );
     }
   });
 
   it("lives where no scheduled job can write it, so widening the gate takes a pull request", () => {
-    assert.match(readFileSync(join(REPO, "src", "data-push-gate.ts"), "utf8"), /"scripts", "gate-non-blocking-tests\.json"/);
+    assert.match(readFileSync(join(REPO, "src", "data-push-gate.ts"), "utf8"), /"scripts", "gate-blocking-tests\.json"/);
     for (const file of GATED_WORKFLOWS) {
       const gated = source(file).match(/gate-data-push\.sh[\s\S]*?\n\n/)?.[0] ?? "";
       assert.doesNotMatch(gated, /\bscripts\//, `${file} hands the gate a path under scripts/, which it could then commit`);
     }
   });
 
-  it("holds the commit for a file nobody excused", () => {
+  it("lets the commit through for a file nobody named", () => {
     const verdict = gateVerdict([{ file: "test/somewhere-else.test.ts", name: "a test" }], shipped);
-    assert.strictEqual(verdict.decision, "quarantine");
-    assert.deepStrictEqual(verdict.blocking, ["test/somewhere-else.test.ts"]);
+    assert.strictEqual(verdict.decision, "push");
+    assert.deepStrictEqual(verdict.blocking, []);
+    assert.deepStrictEqual(verdict.reported.map((t) => t.file), ["test/somewhere-else.test.ts"]);
   });
 
-  it("lets the commit through when every failing file is excused", () => {
+  it("holds the commit when a failing file is one that gates the data", () => {
     const verdict = gateVerdict(shipped.tests.map((t) => ({ file: t.file, name: "a test" })), shipped);
+    assert.strictEqual(verdict.decision, "quarantine");
+    assert.deepStrictEqual(verdict.blocking, shipped.tests.map((t) => t.file).sort());
+  });
+
+  it("lets a drifted floor through even in a file that gates the data", () => {
+    const verdict = gateVerdict(
+      [{ file: shipped.tests[0]!.file, name: "a test", drifted: A_GUARD_THAT_DRIFTED }],
+      shipped,
+    );
     assert.strictEqual(verdict.decision, "push");
     assert.deepStrictEqual(verdict.blocking, []);
   });
@@ -1104,6 +1161,12 @@ describe("#1321 which failures are allowed not to hold a data commit", () => {
       shipped,
     );
     assert.deepStrictEqual(verdict.files, [shipped.tests[0]!.file, "test/somewhere-else.test.ts"].sort());
+    assert.deepStrictEqual(verdict.reported.map((t) => t.file), ["test/somewhere-else.test.ts"]);
+  });
+
+  it("says of every file that did not hold the commit why it did not", () => {
+    const verdict = gateVerdict([{ file: "test/somewhere-else.test.ts", name: "a test" }], shipped, "the list");
+    assert.match(verdict.reported[0]!.reason, /the list does not name it/);
   });
 
   it("holds the commit when the suite failed and named nothing", () => {
@@ -1112,24 +1175,30 @@ describe("#1321 which failures are allowed not to hold a data commit", () => {
     assert.match(verdict.reason, /named no test file/);
   });
 
-  it("refuses a list that excuses something outside test/", () => {
+  it("refuses a list that names something outside test/", () => {
     assert.throws(
-      () => parseNonBlockingTests(JSON.stringify({ version: 1, rule: "r", tests: [{ file: "src/serve.ts", reason: "x" }] }), "fixture"),
+      () => parseDataGatingTests(JSON.stringify({ version: 1, rule: "r", tests: [{ file: "src/serve.ts", reason: "x" }] }), "fixture"),
       /not a path under test\//,
     );
   });
 
-  it("refuses a list that excuses a file with no reason", () => {
+  it("refuses a list that names a file with no reason", () => {
     assert.throws(
-      () => parseNonBlockingTests(JSON.stringify({ version: 1, rule: "r", tests: [{ file: "test/a.test.ts" }] }), "fixture"),
+      () => parseDataGatingTests(JSON.stringify({ version: 1, rule: "r", tests: [{ file: "test/a.test.ts" }] }), "fixture"),
       /with no reason/,
     );
   });
 
-  it("counts the two ratchets the scheduled jobs can trip among the excused files", () => {
-    const excused = new Set(shipped.tests.map((t) => t.file));
-    assert.ok(excused.has("test/stale-page-facts.test.ts"), "the cohort this issue is about still holds the commit");
-    assert.ok(excused.has("test/page-data-provenance.test.ts"));
+  it("leaves outside the gate every scheduled refusal whose assertion named no record", () => {
+    for (const [file, assertion] of REFUSALS_THAT_NAMED_NO_RECORD) {
+      assert.ok(!gating.has(file), `${file} still holds a data commit, and it refused one on ${assertion}`);
+    }
+  });
+
+  it("keeps inside the gate every scheduled refusal whose assertion named a record", () => {
+    for (const [file, assertion] of REFUSALS_THAT_NAMED_A_RECORD) {
+      assert.ok(gating.has(file), `${file} no longer holds a data commit, and it refused one on ${assertion}`);
+    }
   });
 });
 

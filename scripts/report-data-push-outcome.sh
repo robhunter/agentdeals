@@ -41,19 +41,19 @@ case "$OUTCOME" in
     ;;
   shipped-over-failures)
     MARKER="data-push-over-failures"
-    TITLE="main is red on a test that measures our own reading, and the data shipped anyway"
+    TITLE="main is red on a test that does not gate the data, and the data shipped anyway"
     LABEL="priority/medium"
-    COMMENT_EVERY_TIME="no"
+    COMMENT_EVERY_TIME="yes"
     {
-      echo "\`$JOB\` met a red suite, and every failing file was one whose failures do not hold a data commit — they measure how current our own editorial reading is, not whether the catalogue is right. The data is on \`main\`."
+      echo "\`$JOB\` met a red suite, and no failing file is named in \`scripts/gate-blocking-tests.json\`. None of them says a record this run produced is wrong, so none of them held the commit. The data is on \`main\`."
       echo
       echo "The files that were red: \`${DETAIL:-none recorded}\`"
       echo
       echo "The run: $RUN_URL"
       echo
-      echo "\`main\` is red until somebody clears these. Nothing is blocked, which is why this needs saying out loud: a scheduled push carries no \`tests.yml\` run behind it, so this is the only place the redness shows."
+      echo "\`main\` is red until somebody clears these. Nothing is blocked, which is why this needs saying out loud: a scheduled push carries no \`tests.yml\` run behind it, so this is the only place the redness shows. Every run that ships over a red suite comments here, so a day with no comment is a day this did not happen."
       echo
-      echo "What to do: clear the entries that put the measurement over its budget, then \`npm run ratchet:budgets\`."
+      echo "What to do: read the run, and decide for each file which it is. A test that is red because the catalogue moved and it named a fixed subject is the test to fix. A test that is red because a record is wrong belongs in \`scripts/gate-blocking-tests.json\`, and adding it there is what makes it hold the next push."
     } >"$BODY"
     ;;
   held-back-a-vendor)

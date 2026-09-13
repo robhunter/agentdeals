@@ -1,0 +1,34 @@
+{
+  "version": 1,
+  "rule": "A test file belongs here only when its failures mean a record the run produced is wrong: the assertion reads the catalogue the run rewrote, the message names the record or the vendor it is about, and the remedy is to change that record rather than the code, the clock or the environment. The default is out. A test file that is not named here is reported and does not hold the push, and a test file added later holds nothing until somebody adds it here in a pull request. A failure that carries a drifted population floor never holds the push, in a file named here or not: a floor that has drifted into its own headroom states how a guard is calibrated, not that the data is wrong. This file is under scripts/, so no path a scheduled job may commit reaches it.",
+  "tests": [
+    {
+      "file": "test/change-direction-review.test.ts",
+      "reason": "reviews the direction every stored record claims against the terms on both sides of it, and fails naming the vendor and the day of a record that claims a movement no review measured."
+    },
+    {
+      "file": "test/change-gate.test.ts",
+      "reason": "reads data/deal_changes.json and data/change_refusals.json and holds the gate's verdicts over them, so a failure names a record the gate should have refused and the run published anyway."
+    },
+    {
+      "file": "test/refused-change-not-stable.test.ts",
+      "reason": "asserts that no refused record reaches the published log, that no two records name different days as the day we last read a page, and that a vendor holding a refusal is not published as stable. Every failure names the record."
+    },
+    {
+      "file": "test/superseded-terms.test.ts",
+      "reason": "reads the change log for records that quote terms a later reading has superseded, and fails naming the vendor whose stored terms its own change log has already replaced."
+    },
+    {
+      "file": "test/removal-record-refuted-by-its-page.test.ts",
+      "reason": "reads each withdrawal record against the pricing page it cites, and fails naming a vendor whose own page still sells the plan the record says was taken away."
+    },
+    {
+      "file": "test/uncited-change-records.test.ts",
+      "reason": "asserts every change record in the shipped catalogue cites a source a reader can open, and fails naming the record that cites nothing."
+    },
+    {
+      "file": "test/zero-allowance-gate.test.ts",
+      "reason": "reads data/deal_changes.json for a demoting record that grants zero of a resource, which is what an unrendered page reads as, and fails naming the record and the resource it zeroed."
+    }
+  ]
+}
