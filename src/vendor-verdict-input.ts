@@ -1,12 +1,12 @@
 import type { DealChange, Offer } from "./types.js";
-import { enrichOffers, publishedRisk } from "./data.js";
+import { changesByVendor, enrichOffers, publishedRisk, refusalsForVendor } from "./data.js";
 
 type EnrichedOfferRow = ReturnType<typeof enrichOffers>[number];
-import { gateFor, type Gate } from "./ranking.js";
+import { gateFor, utcDate, type Gate } from "./ranking.js";
 import { offerEnded } from "./retirement.js";
 import { levelWithheldReason, levelWithheldSince, type LevelWithheldReason } from "./source-check.js";
 import type { RefusedRead } from "./change-refusal.js";
-import type { VendorVerdictInput } from "./vendor-verdict.js";
+import { whyWeCannotConfirmTheseTerms, type UnconfirmedTerms, type VendorVerdictInput } from "./vendor-verdict.js";
 
 export interface VendorVerdictContext {
   vendorOffers: Offer[];
@@ -60,8 +60,27 @@ export function vendorVerdictContextFrom(evidence: VendorVerdictEvidence): Vendo
       gate: gate?.code ?? null,
       linkUnreachable: Boolean(linkUnreachable),
       sourceCheck: primary.source_check?.outcome ?? null,
+      sourceChecked: primary.source_check?.checked ?? null,
+      lastReachable: linkUnreachable?.last_reachable ?? null,
       termsConfirmedOn: primary.verifiedDate,
       refusedReads,
     },
   };
+}
+
+export function offerVerdictInput(
+  evidence: Omit<VendorVerdictEvidence, "vendorOffers"> & { offer: Offer },
+): VendorVerdictInput | null {
+  return vendorVerdictContextFrom({ ...evidence, vendorOffers: [evidence.offer] })?.input ?? null;
+}
+
+export function unconfirmedTermsForOffer(offer: Offer, servedOn: string = utcDate()): UnconfirmedTerms | null {
+  const input = offerVerdictInput({
+    vendor: offer.vendor,
+    offer,
+    vendorChanges: changesByVendor().get(offer.vendor.toLowerCase()) ?? [],
+    refusedReads: refusalsForVendor(offer.vendor),
+    servedOn,
+  });
+  return input ? whyWeCannotConfirmTheseTerms(input) : null;
 }

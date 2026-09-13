@@ -25,7 +25,7 @@ import { retiredCategoryDescription, retiredCategoryNoticeHtml, retiredCategoryT
 import { LINK_GRACE_DAYS, unreachableNoticeForUrl } from "./link-health.js";
 import { offerEnded, offerRetired, recordedTierSentence, endedHeadline, endedHistorySentence, endedReliabilitySentence, endedEmptyChangeHistorySentence, detailForEndedOffer, ENDED_BADGE_LABEL, ENDED_SINCE_CHANGES_SENTENCE, type OfferTierAndUrl } from "./retirement.js";
 import { amountUnstatedSentence, LAST_RESOLVED, levelWithheldReason, levelWithheldSince, withheldLevelClause, withheldLevelSentence, type LevelWithheldReason } from "./source-check.js";
-import { vendorVerdictContextFrom, type VendorVerdictContext } from "./vendor-verdict-input.js";
+import { offerVerdictInput, vendorVerdictContextFrom, type VendorVerdictContext } from "./vendor-verdict-input.js";
 import { readingIsBehindTheLoop, reverificationIntervalDays } from "./badge-staleness.js";
 import { LAST_READ_LABEL, VERIFICATION_DATES_HEADING, lastReadDate, lastReadNote, verificationDatesCell, verificationDatesSentence } from "./read-date.js";
 import { SUPERSEDED_TERMS_LABEL, readingBehindTheChange, supersededTermsAnswer, supersededTermsMetaSentence, supersededTermsNotice, supersededTermsNoticeHtml, supersededTermsRecord, supersededTermsVerdictSentence, supersedingChange, type SupersededTermsRecord } from "./superseded-description.js";
@@ -34,7 +34,7 @@ import { NO_CURRENT_FIGURE, costHeadlineCaveat, limitCellText, mayRecommendAsFre
 import { changesByVendor } from "./superseded-census.js";
 import { buildComparisonMap, comparisonSlug } from "./comparison-pairs.js";
 import { comparisonVerdictText, freeTierFaqAnswer, stabilityFaqAnswer, type ComparisonSide, type FreeTierSide, type SideFreeTier, type StabilityRating } from "./comparison-verdict.js";
-import { publishedVendorLevel, vendorVerdictSentence, vendorBadge, freeTierClaim, statesRiskCause, narrowingSentence, changeKindNoun, emptyHistoryCaveatSentence, refusedReadOurConfirmationSupersedes, refusedReadWeHold, refusedReadWithholdingSentence, nothingWeReadDescribesTheTerms, unconfirmedThresholdSentence, unconfirmedTermsOpening, whyWeCannotConfirmTheseTerms, withheldForARefusedRead, withUnconfirmedTerms, refusalWithholdsStability, termsUnconfirmedBySource, termsNotVerifiedMetaSentence, withheldBadgeLabel, type BadgeWithholding, type FreeTierClaim, type VendorVerdictInput } from "./vendor-verdict.js";
+import { publishedVendorLevel, vendorVerdictSentence, vendorBadge, freeTierClaim, statesRiskCause, narrowingSentence, changeKindNoun, emptyHistoryCaveatSentence, refusedReadOurConfirmationSupersedes, refusedReadWeHold, refusedReadWithholdingSentence, nothingWeReadDescribesTheTerms, unconfirmedThresholdSentence, unconfirmedTermsOpening, whyWeCannotConfirmTheseTerms, withheldForARefusedRead, withUnconfirmedTerms, refusalWithholdsStability, termsUnconfirmedBySource, closingTerms, termsNotVerifiedMetaSentence, termsWithheldLabel, unconfirmedTermsSentence, withheldBadgeLabel, type BadgeWithholding, type UnconfirmedTerms, type FreeTierClaim, type VendorVerdictInput } from "./vendor-verdict.js";
 import { tierRecordsAFreeTier } from "./free-tier-record.js";
 import { PAGE_HEAD_OPEN, withLedeBeforeNav } from "./page-lede.js";
 import { withReviewByline } from "./page-byline.js";
@@ -587,6 +587,32 @@ function refusalsFor(vendorName: string): ChangeRefusal[] {
   return refusalsHeldByVendor.get(vendorName.toLowerCase()) ?? [];
 }
 
+const unconfirmedTermsByOffer = new Map<string, { on: string; unconfirmed: UnconfirmedTerms | null }>();
+
+function unconfirmedTermsFor(offer: Offer): UnconfirmedTerms | null {
+  const servedOn = utcDate();
+  const key = `${offer.vendor}|${offer.url}|${offer.tier}`;
+  const cached = unconfirmedTermsByOffer.get(key);
+  if (cached && cached.on === servedOn) return cached.unconfirmed;
+  const input = offerVerdictInput({
+    vendor: offer.vendor,
+    offer,
+    vendorChanges: changesFor(offer.vendor),
+    refusedReads: refusalsFor(offer.vendor),
+    servedOn,
+  });
+  const unconfirmed = input ? whyWeCannotConfirmTheseTerms(input) : null;
+  unconfirmedTermsByOffer.set(key, { on: servedOn, unconfirmed });
+  return unconfirmed;
+}
+
+function termsUnconfirmedNoticeHtml(offer: Offer): string {
+  const unconfirmed = unconfirmedTermsFor(offer);
+  if (!unconfirmed) return "";
+  return `<span class="listing-terms-unconfirmed" style="display:block;margin-top:.3rem;color:#d29922">`
+    + `${escHtmlServer(unconfirmedTermsSentence(unconfirmed))}</span>`;
+}
+
 type StoredTermsOf = Pick<Offer, "vendor" | "description" | "tier">;
 
 function supersedingChangeFor(offer: StoredTermsOf): DealChange | null {
@@ -739,6 +765,7 @@ function stabilityCellHtml(
 }
 
 const DURABILITY_COLUMN_HEADING = "Durability";
+const DURABILITY_NOT_PUBLISHED = "not published";
 const QUICK_COMPARISON_ID = "quick-comparison";
 
 const DURABILITY_COLORS: Record<string, string> = {
@@ -750,7 +777,14 @@ const DURABILITY_COLORS: Record<string, string> = {
 
 function durabilityCellHtml(offer: EnrichedOfferRow): string {
   const stability = offer.stability;
-  if (!stability) return `<span style="color:var(--text-dim)">&mdash;</span>`;
+  if (!stability) {
+    const unconfirmed = unconfirmedTermsFor(offer);
+    if (!unconfirmed) return `<span style="color:var(--text-dim)">&mdash;</span>`;
+    const on = unconfirmed.on ? ` &middot; ${escHtmlServer(unconfirmed.on)}` : "";
+    return `<span style="color:var(--text-dim)">${escHtmlServer(DURABILITY_NOT_PUBLISHED)}</span>`
+      + `<br><span class="durability-withheld-because" title="${escHtmlServer(unconfirmedTermsSentence(unconfirmed))}"`
+      + ` style="font-size:.7rem;color:var(--text-dim)">${escHtmlServer(termsWithheldLabel(unconfirmed))}${on}</span>`;
+  }
   const color = DURABILITY_COLORS[stability] ?? "#8b949e";
   const deciders = stabilityDeciders(
     changesRatingTheListedTier(offer, changesByVendorName.get(offer.vendor.toLowerCase()) ?? []),
@@ -760,6 +794,15 @@ function durabilityCellHtml(offer: EnrichedOfferRow): string {
     ? `<br><a href="${changeRecordHref(newest)}" style="font-size:.7rem;color:var(--text-dim)">${escHtmlServer(changeEntryDateLabel(newest))}</a>`
     : "";
   return `<span style="color:${color}">${escHtmlServer(stability)}</span>${record}`;
+}
+
+function quickComparisonTermsCellHtml(offer: EnrichedOfferRow): string {
+  const terms = escHtmlServer(publishedTermsSummary(offer, 120));
+  const unconfirmed = unconfirmedTermsFor(offer);
+  if (!unconfirmed || !offer.stability) return terms;
+  const on = unconfirmed.on ? ` &middot; ${escHtmlServer(unconfirmed.on)}` : "";
+  return `${terms} <span class="listing-terms-unconfirmed" title="${escHtmlServer(unconfirmedTermsSentence(unconfirmed))}"`
+    + ` style="font-size:.7rem;color:#d29922;white-space:nowrap">not confirmed &middot; ${escHtmlServer(termsWithheldLabel(unconfirmed))}${on}</span>`;
 }
 
 function riskCellHtml(level: string | null | undefined, cause: RiskCause | null | undefined): string {
@@ -1826,7 +1869,7 @@ function buildCategoryPage(slug: string): string | null {
   const offersHtml = catOffers.map((o) => `        <tr>
           <td style="font-weight:600;color:var(--text);white-space:nowrap"><a href="/vendor/${toSlug(o.vendor)}" style="color:var(--text)">${escHtmlServer(o.vendor)}</a></td>
           <td style="font-family:var(--mono);color:var(--accent);white-space:nowrap">${escHtmlServer(o.tier)}</td>
-          <td style="color:var(--text-muted)">${publishedTermsHtml(o)}${listingEligibilityNoticeHtml(o)}${listingUnreachableNoticeHtml(o)}</td>
+          <td style="color:var(--text-muted)">${publishedTermsHtml(o)}${listingEligibilityNoticeHtml(o)}${termsUnconfirmedNoticeHtml(o)}</td>
           <td style="font-family:var(--mono);color:var(--text-dim);white-space:nowrap">${escHtmlServer(verificationDatesCell(o))}</td>
         </tr>`).join("\n");
 
@@ -2312,7 +2355,11 @@ function buildBestOfMiniReview(offer: ReturnType<typeof enrichOffers>[number]): 
   if (desc.includes("student") || desc.includes("education")) bestFor.push("students");
   if (desc.includes("unlimited") || desc.includes("no limit")) bestFor.push("unlimited usage needs");
   const bestForText = bestFor.length > 0 ? ` Best for ${bestFor.join(" and ")}.` : "";
-  return `${escHtmlServer(offer.description)}${bestForText}${caveatFor(offer)}`;
+  const stated = `${escHtmlServer(offer.description)}${bestForText}`;
+  const unconfirmed = unconfirmedTermsFor(offer);
+  if (!unconfirmed) return `${stated}${caveatFor(offer)}`;
+  return `${closingTerms(stated)} <span class="listing-terms-unconfirmed" style="color:#d29922">`
+    + `${escHtmlServer(unconfirmedTermsSentence(unconfirmed))}</span>${caveatFor(offer)}`;
 }
 
 function renderDisclosures(entry: RankedEntry<EnrichedOfferRow>): string {
@@ -2480,7 +2527,7 @@ ${cards}`;
     return `        <tr>
           <td style="font-weight:600"><a href="/vendor/${toSlug(o.vendor)}" style="color:var(--text)">${escHtmlServer(o.vendor)}</a></td>
           <td style="font-family:var(--mono);color:var(--accent)">${escHtmlServer(o.tier)}</td>
-          <td style="color:var(--text-muted);max-width:300px">${escHtmlServer(publishedTermsSummary(o, 120))}</td>
+          <td style="color:var(--text-muted);max-width:300px">${quickComparisonTermsCellHtml(o)}</td>
           <td>${durabilityCellHtml(o)}</td>
           <td style="font-family:var(--mono);color:var(--text-dim)">${escHtmlServer(verificationDatesCell(o))}</td>
         </tr>`;

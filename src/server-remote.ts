@@ -23,7 +23,9 @@ import { substitutesFor } from "./product-role.js";
 import { verificationDatesClause } from "./read-date.js";
 
 export const TRACK_CHANGES_LIMIT = 1000;
-import type { ProductRole, ProductSubtypes } from "./types.js";
+import type { LinkUnreachable, ProductRole, ProductSubtypes, SourceCheck } from "./types.js";
+import type { RefusedRead } from "./change-refusal.js";
+import { NOT_VERIFIED, publishedTermsEvidence, termsWithTheReasonWeCannotConfirmThem, unconfirmedTermsFrom } from "./vendor-verdict.js";
 
 function mcpError(msg: string) {
   return {
@@ -654,7 +656,7 @@ Suggested monitoring cadence: run this check weekly to catch pricing changes ear
       mimeType: "text/plain",
     },
     async (_uri, { slug }) => {
-      const data = (await fetchOffers({ limit: 2000 })) as { offers: Array<{ vendor: string; category: string; tier: string; description: string; url: string; verifiedDate: string; last_read_date: string; tags: string[]; eligibility?: { type: string; conditions: string[] }; expires_date?: string; product_role?: ProductRole; product_subtypes?: ProductSubtypes }>; total: number };
+      const data = (await fetchOffers({ limit: 2000 })) as { offers: Array<{ vendor: string; category: string; tier: string; description: string; url: string; verifiedDate: string; last_read_date: string; tags: string[]; eligibility?: { type: string; conditions: string[] }; expires_date?: string; product_role?: ProductRole; product_subtypes?: ProductSubtypes; source_check?: SourceCheck | null; link_unreachable?: LinkUnreachable | null; refused_read?: RefusedRead | null }>; total: number };
       const match = data.offers.find(o => toSlug(o.vendor) === slug);
       if (!match) {
         return { contents: [{ uri: `agentdeals://vendor/${slug}`, text: `No vendor found matching "${slug}".`, mimeType: "text/plain" }] };
@@ -662,13 +664,16 @@ Suggested monitoring cadence: run this check weekly to catch pricing changes ear
 
       const changesData = (await fetchDealChanges({ vendor: match.vendor, since: "2020-01-01" })) as { changes: Array<{ date: string; change_type: string; summary: string; previous_state: string; current_state: string }> };
       const alternatives = substitutesFor(data.offers, match).slice(0, 5);
+      const unconfirmed = unconfirmedTermsFrom(publishedTermsEvidence(match));
 
       let text = `# ${match.vendor}\n\n`;
       text += `**Category:** ${match.category}\n`;
       text += `**Tier:** ${match.tier}\n`;
-      text += `**Description:** ${match.description}\n`;
+      text += `**Description:** ${unconfirmed ? termsWithTheReasonWeCannotConfirmThem(match.description, unconfirmed) : match.description}\n`;
       text += `**Pricing Page:** ${match.url}\n`;
-      text += `**Verified:** ${match.verifiedDate}\n`;
+      text += unconfirmed
+        ? `**Verification:** ${NOT_VERIFIED(unconfirmed.clause)} Our stored terms were last confirmed on ${match.verifiedDate}.\n`
+        : `**Verified:** ${match.verifiedDate}\n`;
       text += `**Last read:** ${match.last_read_date}\n`;
       if (match.eligibility) {
         text += `**Eligibility:** ${match.eligibility.type} — ${match.eligibility.conditions.join(", ")}\n`;

@@ -19,6 +19,8 @@ import { CATALOGUE_CATEGORY_COUNT, CATALOGUE_OFFER_FLOOR_LABEL, MCP_INSTRUCTIONS
 import { MCP_TOOLS, MCP_TOOL_COUNT } from "./mcp-tool-inventory.js";
 import { MCP_SIGNAL_FOOTER } from "./signal-copy.js";
 import { lastReadDate, verificationDatesClause } from "./read-date.js";
+import { unconfirmedTermsForOffer } from "./vendor-verdict-input.js";
+import { NOT_VERIFIED, termsWithTheReasonWeCannotConfirmThem } from "./vendor-verdict.js";
 import { BASE_URL } from "./base-url.js";
 import { withProvenance } from "./provenance.js";
 
@@ -800,9 +802,12 @@ Suggested monitoring cadence: run this check weekly to catch pricing changes ear
       text += stability
         ? `**Stability:** ${stability}\n`
         : `**Stability:** not published — ${stabilityWithheldSentence(match.vendor)}\n`;
-      text += `**Description:** ${match.description}\n`;
+      const unconfirmed = unconfirmedTermsForOffer(match);
+      text += `**Description:** ${unconfirmed ? termsWithTheReasonWeCannotConfirmThem(match.description, unconfirmed) : match.description}\n`;
       text += `**Pricing Page:** ${match.url}\n`;
-      text += `**Verified:** ${match.verifiedDate}\n`;
+      text += unconfirmed
+        ? `**Verification:** ${NOT_VERIFIED(unconfirmed.clause)} Our stored terms were last confirmed on ${match.verifiedDate}.\n`
+        : `**Verified:** ${match.verifiedDate}\n`;
       text += `**Last read:** ${lastReadDate(match)}\n`;
       if (match.eligibility) {
         text += `**Eligibility:** ${match.eligibility.type} — ${match.eligibility.conditions.join(", ")}\n`;
