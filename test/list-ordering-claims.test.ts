@@ -12,6 +12,7 @@ const {
   listOrderProse, listOrderSentence, orderedClaim, rulesClaiming,
 } = await import("../dist/list-order.js");
 const { unrankedListingBasis } = await import("../dist/unranked.js");
+const { DURABILITY_NOT_A_SIZE_RANKING } = await import("../dist/durability-verdict.js");
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(__dirname, "..");
@@ -262,7 +263,8 @@ describe("#1491 the served list says the same thing to a reader and to a machine
     const contradictions: string[] = [];
     for (const [routePath, html] of rendered) {
       const text = visibleText(html);
-      const rotating = text.includes("carry no recorded demerit") || text.includes("none is distinguishable");
+      const rotating =
+        text.includes("carry no recorded demerit") || text.includes(DURABILITY_NOT_A_SIZE_RANKING);
       if (!rotating) continue;
       for (const list of listsOf(routePath, html)) {
         if (list.itemListOrder !== ITEM_LIST_UNORDERED) continue;
