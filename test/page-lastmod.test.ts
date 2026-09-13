@@ -766,7 +766,7 @@ describe("the ledger keeps up with the code that renders the pages", () => {
         assert.doesNotMatch(
           line,
           /\|/,
-          `${workflow.file} sends the generator's stdout through a pipe: ${line.trim()}. Node's stdout is asynchronous on a pipe, so a payload past ${PIPE_BUFFER_BYTES} bytes arrives cut off at exactly that byte and the step reports the next command's parse error instead.`,
+          `${workflow.file} sends the generator's stdout through a pipe: ${line.trim()}. Node's stdout is asynchronous on a pipe, so a payload past ${PIPE_BUFFER_BYTES} bytes arrives cut off at whatever the reader had taken when the writer exited, and the step reports the next command's parse error instead.`,
         );
       }
       assert.match(
@@ -796,12 +796,19 @@ describe("the ledger keeps up with the code that renders the pages", () => {
     );
     assert.match(updater, /process\.exitCode = /, "the generator reports no status at all");
 
-    const piped = spawnSync("sh", ["-c", `node -e 'console.log("x".repeat(200000)); process.exit(0)' | wc -c`], { encoding: "utf8" });
+    const written = 200000;
+    const piped = spawnSync("sh", ["-c", `node -e 'console.log("x".repeat(${written})); process.exit(0)' | wc -c`], { encoding: "utf8" });
     assert.equal(piped.status, 0, `this control could not be run: ${piped.stderr}`);
-    assert.equal(
-      piped.stdout.trim(),
-      String(PIPE_BUFFER_BYTES),
-      "this test is pointless if node no longer discards a pending stdout write when a process exits on a pipe",
+    const arrived = Number(piped.stdout.trim());
+    assert.ok(
+      arrived < written,
+      "this test is pointless if node no longer discards a pending stdout write when a process exits on a pipe:"
+        + ` all ${arrived} bytes of it arrived`,
+    );
+    assert.ok(
+      arrived >= PIPE_BUFFER_BYTES,
+      `a pipe took ${arrived} bytes before the writer exited, fewer than the ${PIPE_BUFFER_BYTES} one buffer holds,`
+        + " so this control is measuring something other than the mechanism it names",
     );
   });
 
