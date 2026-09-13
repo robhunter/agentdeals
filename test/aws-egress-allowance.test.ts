@@ -35,7 +35,7 @@ const EXPIRY = /12[- ]months?\b|12[- ]mo\b|first year|expires?\b|expired\b|intro
 const NO_ACCOUNT_AGE_CONDITION = /account of any age|whatever its age|no expiry|does not expire|never expires|no account-age/i;
 
 const GRANT_NEAR_EGRESS = new RegExp(
-  `${GRANT_GB}\\s?GB[^.]{0,90}(?:${EGRESS.source})|(?:${EGRESS.source})[^.]{0,90}${GRANT_GB}\\s?GB`,
+  `${GRANT_GB}\\s?GB[\\s\\S]{0,120}(?:${EGRESS.source})|(?:${EGRESS.source})[\\s\\S]{0,120}${GRANT_GB}\\s?GB`,
   "i",
 );
 
@@ -69,6 +69,24 @@ function flatten(chunk: string): string {
 
 function blocksOf(html: string): string[] {
   return readable(html).replace(BLOCK_END, BLOCK_MARK).split(BLOCK_MARK).map(flatten).filter(Boolean);
+}
+
+type EgressCell = { header: string; provider: string; cell: string };
+
+function egressCellsNamingAws(html: string): EgressCell[] {
+  const found: EgressCell[] = [];
+  for (const table of readable(html).matchAll(/<table[^>]*>([\s\S]*?)<\/table>/g)) {
+    const headers = [...table[1].matchAll(/<th[^>]*>([\s\S]*?)<\/th>/g)].map(header => flatten(header[1]));
+    const egressColumns = headers.map((header, at) => (EGRESS.test(header) ? at : -1)).filter(at => at >= 0);
+    if (egressColumns.length === 0) continue;
+    for (const row of table[1].matchAll(/<tr[^>]*>([\s\S]*?)<\/tr>/g)) {
+      const cells = [...row[1].matchAll(/<td[^>]*>([\s\S]*?)<\/td>/g)].map(cell => flatten(cell[1]));
+      if (cells.length !== headers.length) continue;
+      if (!NAMES_AWS.test(cells[0]!)) continue;
+      for (const column of egressColumns) found.push({ header: headers[column]!, provider: cells[0]!, cell: cells[column]! });
+    }
+  }
+  return found;
 }
 
 function markupEmbeddedInAFeed(body: string): string {
@@ -111,6 +129,7 @@ describe("AWS's monthly internet egress allowance is published as the standing g
   let proc: ChildProcess;
   let served: string[] = [];
   const blocks = new Map<string, string[]>();
+  const markup = new Map<string, string>();
   const refused: string[] = [];
 
   before(async () => {
@@ -126,7 +145,9 @@ describe("AWS's monthly internet egress allowance is published as the standing g
       }
       const body = await response.text();
       const servedAsHtml = (response.headers.get("content-type") ?? "").includes("text/html");
-      blocks.set(pagePath, blocksOf(servedAsHtml ? body : markupEmbeddedInAFeed(body)));
+      const html = servedAsHtml ? body : markupEmbeddedInAFeed(body);
+      markup.set(pagePath, html);
+      blocks.set(pagePath, blocksOf(html));
     }
   });
 
@@ -189,6 +210,25 @@ describe("AWS's monthly internet egress allowance is published as the standing g
     for (const named of ["/storage-comparison-2026", "/hosting-alternatives", "/free-saas-stack", "/free-nextjs-stack", "/free-django-stack", "/free-fastapi-stack", "/free-go-stack", "/serverless-free-tier-comparison-2026"]) {
       assert.ok(publishing.includes(named), `${named} no longer publishes the allowance at all`);
     }
+  });
+
+  it("hangs no expiry on an AWS row in any egress column, in a table or out of one", () => {
+    const control = egressCellsNamingAws(
+      `<table><thead><tr><th>Service</th><th>Free Egress</th></tr></thead><tbody><tr><td>AWS S3</td><td>${GRANT_GB} GB/mo (12 mo)</td></tr></tbody></table>`,
+    );
+    assert.strictEqual(control.length, 1, "the table reader does not find an AWS row under an egress header");
+    assert.ok(EXPIRY.test(control[0]!.cell), "the table reader does not read the qualifier in the cell");
+
+    const offenders: string[] = [];
+    const read: string[] = [];
+    for (const [pagePath, html] of markup) {
+      for (const { header, provider, cell } of egressCellsNamingAws(html)) {
+        read.push(`${pagePath} ${header}`);
+        if (EXPIRY.test(cell) && !NO_ACCOUNT_AGE_CONDITION.test(cell)) offenders.push(`${pagePath} ${provider} ${header}: ${cell}`);
+      }
+    }
+    assert.ok(read.length > 0, "no page states an AWS egress allowance in a table at all");
+    assert.deepStrictEqual(offenders, []);
   });
 
   it("prices no AWS bandwidth bill at the allowance and bills every byte past it", () => {
