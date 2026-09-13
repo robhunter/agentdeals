@@ -158,14 +158,21 @@ describe("a guard that has drifted says so in a form the data push gate can act 
       );
       assert.strictEqual(drifted[0]!.drifted!.clearsAt, "76");
 
-      const allowed = { version: 1 as const, rule: "the fixture excuses no file", tests: [] };
+      const gating = {
+        version: 1 as const,
+        rule: "the fixture names the file it wrote, so what the two verdicts below turn on is the assertion and not the file",
+        tests: [...new Set(read.map((f) => f.file))].map((file) => ({
+          file,
+          reason: "the file the fixture wrote, named here so that it is the mark on the assertion being read",
+        })),
+      };
       assert.strictEqual(
-        gateVerdict(read, allowed).decision,
+        gateVerdict(read, gating).decision,
         "quarantine",
         "a population under its floor stopped holding the commit",
       );
       assert.strictEqual(
-        gateVerdict(drifted, allowed).decision,
+        gateVerdict(drifted, gating).decision,
         "push",
         "a guard that has only drifted still holds a commit of vendor data",
       );
