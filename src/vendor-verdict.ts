@@ -1,4 +1,4 @@
-import type { DealChange, RatingWithheld, RiskCause, SourceCheckOutcome } from "./types.js";
+import type { DealChange, RatingWithheld, RiskCause, SourceCheck, SourceCheckOutcome } from "./types.js";
 import { CHANGE_DIRECTION, isACorrectionToOurOwnRecord } from "./data.js";
 import { changeRatesTheListedTier, type GradedOffer } from "./change-tier.js";
 import { isNoLongerInForce, theEventNeverHappened } from "./change-resolution.js";
@@ -6,6 +6,8 @@ import { changeIsUncited, ratingWithheldForNoSourceSentence } from "./change-cit
 import { changeDateClause } from "./change-dates.js";
 import {
   amountUnstatedSentence,
+  levelWithheldReason,
+  levelWithheldSince,
   termsOnlyOutcome,
   termsUnconfirmedOutcome,
   unconfirmedTermsClause,
@@ -74,6 +76,8 @@ export interface VendorVerdictInput {
   gate?: GateCode | null;
   linkUnreachable?: boolean;
   sourceCheck?: SourceCheckOutcome | null;
+  sourceChecked?: string | null;
+  linkCheckedOn?: string | null;
   termsConfirmedOn: string;
   refusedReads?: readonly RefusedRead[];
 }
@@ -265,6 +269,7 @@ export interface UnconfirmedTerms {
   clause: string;
   sentence: string;
   theReadFoundAFreePlan: boolean;
+  on: string | null;
 }
 
 export type WhatTheReadLeftStanding = "nothing" | "the_free_plan";
@@ -304,22 +309,103 @@ function withheldOnAReadWeCouldNotQuantify(because: TermsWithholding): because i
   return Object.prototype.hasOwnProperty.call(TERMS_ONLY_SENTENCES, because.reason);
 }
 
-function termsWithholding(input: VendorVerdictInput): TermsWithholding | null {
-  if (input.levelWithheld) return { reason: input.levelWithheld };
-  const refused = refusalWithholdsStability(input);
-  if (refused) return refusedReadWithholding(refused);
-  const termsOnly = termsOnlyOutcome(input.sourceCheck);
+export interface TermsEvidence {
+  vendor: string;
+  levelWithheld: LevelWithheldReason | null;
+  unconfirmableSince: string;
+  refusedRead: RefusedRead | null;
+  sourceCheck: SourceCheckOutcome | null;
+  sourceChecked?: string | null;
+  linkCheckedOn?: string | null;
+}
+
+export const TERMS_WITHHELD_LABELS: Record<TermsWithholdingTag, string> = {
+  link_unreachable: "page did not resolve",
+  unreadable: "page unreadable",
+  states_no_terms: "page states no amount",
+  does_not_name_vendor: "page omits the vendor",
+  does_not_name_product: "page omits the product",
+  states_no_amount: "page names a plan, no amount",
+  read_not_reconciled: "read not reconciled",
+  change_measured_no_difference: "no difference measured",
+};
+
+export function termsWithheldLabel(unconfirmed: UnconfirmedTerms): string {
+  return TERMS_WITHHELD_LABELS[unconfirmed.because.reason];
+}
+
+function termsWithholding(evidence: TermsEvidence): TermsWithholding | null {
+  if (evidence.levelWithheld) return { reason: evidence.levelWithheld };
+  if (evidence.refusedRead) return refusedReadWithholding(evidence.refusedRead);
+  const termsOnly = termsOnlyOutcome(evidence.sourceCheck);
   return termsOnly ? { reason: termsOnly } : null;
 }
 
+export interface PublishedTermsRow {
+  vendor: string;
+  source_check?: Pick<SourceCheck, "outcome" | "checked"> | null;
+  link_unreachable?: { last_reachable?: string | null; checked?: string | null } | null;
+  refused_read?: RefusedRead | null;
+  rating_withheld?: RatingWithheld | null;
+  gate?: unknown;
+  risk_level?: PublishedRiskLevel | null;
+  risk_cause?: RiskCause | null;
+  offer_ended?: boolean;
+}
+
+export function publishedTermsEvidence(row: PublishedTermsRow): TermsEvidence {
+  const source = { source_check: (row.source_check ?? undefined) as SourceCheck | undefined };
+  const link = row.link_unreachable ?? null;
+  const levelWithheld = levelWithheldReason(source, link);
+  const level = publishedVendorLevel(row.risk_level ?? null, row.risk_cause ?? null);
+  const noAdverseLevel = level === null || level === "stable";
+  const withholdingDecided =
+    (levelWithheld !== null || (Boolean(row.rating_withheld) && noAdverseLevel)) && noAdverseLevel;
+  const refusedRead =
+    row.offer_ended || row.gate || withholdingDecided || link ? null : row.refused_read ?? null;
+  return {
+    vendor: row.vendor,
+    levelWithheld,
+    unconfirmableSince: levelWithheldSince(source, link),
+    refusedRead,
+    sourceCheck: row.source_check?.outcome ?? null,
+    sourceChecked: row.source_check?.checked ?? null,
+    linkCheckedOn: link?.checked ?? null,
+  };
+}
+
+export function termsEvidenceOf(input: VendorVerdictInput): TermsEvidence {
+  return {
+    vendor: input.vendor,
+    levelWithheld: input.levelWithheld,
+    unconfirmableSince: input.unconfirmableSince,
+    refusedRead: refusalWithholdsStability(input),
+    sourceCheck: input.sourceCheck ?? null,
+    sourceChecked: input.sourceChecked ?? null,
+    linkCheckedOn: input.linkCheckedOn ?? null,
+  };
+}
+
+function whenWeCouldNotConfirm(evidence: TermsEvidence, because: TermsWithholding): string | null {
+  if (withheldForARefusedRead(because)) return because.refusedOn;
+  if (because.reason === "link_unreachable") return evidence.linkCheckedOn ?? null;
+  return evidence.sourceChecked ?? null;
+}
+
 export function whyWeCannotConfirmTheseTerms(input: VendorVerdictInput): UnconfirmedTerms | null {
+  return unconfirmedTermsFrom(termsEvidenceOf(input));
+}
+
+export function unconfirmedTermsFrom(input: TermsEvidence): UnconfirmedTerms | null {
   const because = termsWithholding(input);
   if (!because) return null;
   const theReadFoundAFreePlan = WHAT_THE_READ_LEFT_STANDING[because.reason] === "the_free_plan";
+  const on = whenWeCouldNotConfirm(input, because);
   if (withheldForARefusedRead(because)) {
     return {
       because,
       theReadFoundAFreePlan,
+      on,
       clause: refusedReadWithholdingClause(because),
       sentence: refusedReadWithholdingSentence(input.vendor, because),
     };
@@ -328,6 +414,7 @@ export function whyWeCannotConfirmTheseTerms(input: VendorVerdictInput): Unconfi
     return {
       because,
       theReadFoundAFreePlan,
+      on,
       clause: unconfirmedTermsClause(because.reason),
       sentence: TERMS_ONLY_SENTENCES[because.reason](input.vendor),
     };
@@ -335,9 +422,16 @@ export function whyWeCannotConfirmTheseTerms(input: VendorVerdictInput): Unconfi
   return {
     because,
     theReadFoundAFreePlan,
+    on,
     clause: withheldLevelClause(because.reason, input.unconfirmableSince),
     sentence: withheldLevelSentence(because.reason, input.vendor, input.unconfirmableSince),
   };
+}
+
+export function unconfirmedTermsSentence(unconfirmed: UnconfirmedTerms): string {
+  return unconfirmed.theReadFoundAFreePlan
+    ? unconfirmed.sentence
+    : `${capitalise(unconfirmed.clause)}, so we cannot confirm these terms today.`;
 }
 
 export const UNVERIFIED_TERMS_CAVEAT =
@@ -347,9 +441,16 @@ export function unconfirmedTermsOpening(unconfirmed: UnconfirmedTerms): string {
   return unconfirmed.theReadFoundAFreePlan ? "" : `We cannot confirm that today. ${unconfirmed.sentence} `;
 }
 
+export function closingTerms(terms: string): string {
+  return /[.!?…]$/.test(terms.trim()) ? terms : `${terms}.`;
+}
+
 export function withUnconfirmedTerms(terms: string, unconfirmed: UnconfirmedTerms): string {
-  const closed = /[.!?…]$/.test(terms.trim()) ? terms : `${terms}.`;
-  return `${closed} ${unconfirmed.theReadFoundAFreePlan ? unconfirmed.sentence : UNVERIFIED_TERMS_CAVEAT}`;
+  return `${closingTerms(terms)} ${unconfirmed.theReadFoundAFreePlan ? unconfirmed.sentence : UNVERIFIED_TERMS_CAVEAT}`;
+}
+
+export function termsWithTheReasonWeCannotConfirmThem(terms: string, unconfirmed: UnconfirmedTerms): string {
+  return `${closingTerms(terms)} ${unconfirmedTermsSentence(unconfirmed)}`;
 }
 
 const EMPTY_HISTORY_TAIL: Record<ReadNothingTag, string> = {
@@ -479,6 +580,8 @@ export function vendorVerdictSentence(input: VendorVerdictInput): string {
   if (input.offerEnded) return endedVerdictSentence();
   if (withholdingDecides(input)) {
     if (input.levelWithheld === null) return ratingWithheldForNoSourceSentence(input.vendor);
+    const unconfirmed = whyWeCannotConfirmTheseTerms(input);
+    if (unconfirmed) return unconfirmedTermsSentence(unconfirmed);
     const clause = withheldLevelClause(input.levelWithheld, input.unconfirmableSince);
     return `${clause.charAt(0).toUpperCase()}${clause.slice(1)}, so we cannot confirm these terms today.`;
   }
