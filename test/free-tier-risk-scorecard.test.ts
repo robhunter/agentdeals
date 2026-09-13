@@ -148,6 +148,10 @@ describe("no surface claims the grades refresh on their own", () => {
   });
 });
 
+function namesVendor(section: string, vendor: string): boolean {
+  return section.includes(`>${vendor}</a>`) || section.includes(`>${vendor}</span>`);
+}
+
 describe("the band that gives a forward instruction holds only free tiers that still exist", () => {
   it("keeps a vendor out of Plan Your Exit unless our catalogue holds a free tier for it", () => {
     const high = riskEntries.filter(e => e.risk === "high");
@@ -155,12 +159,12 @@ describe("the band that gives a forward instruction holds only free tiers that s
     assert.ok(split.alreadyGone.length > 0, "no high-grade vendor has lost its free tier, so the split proves nothing");
     const section = sectionBetween(riskHtml, "high", "dead");
     for (const entry of split.stillFree) {
-      assert.ok(section.includes(`>${entry.vendor}</a>`), `${entry.vendor} still has a free tier and is not listed under Plan Your Exit`);
+      assert.ok(namesVendor(section, entry.vendor), `${entry.vendor} still has a free tier and is not listed under Plan Your Exit`);
       assert.strictEqual(freeTierStanding(entry, offers), "still_listed");
     }
     for (const entry of split.alreadyGone) {
       assert.ok(
-        !section.includes(`>${entry.vendor}</a>`),
+        !namesVendor(section, entry.vendor),
         `${entry.vendor} has no free tier left and is listed under a heading telling readers to plan an exit from it`,
       );
     }
@@ -171,7 +175,7 @@ describe("the band that gives a forward instruction holds only free tiers that s
     const split = splitByFreeTierStanding(high, offers);
     const section = sectionBetween(riskHtml, "dead", "scorecard");
     for (const entry of split.alreadyGone) {
-      assert.ok(section.includes(`>${entry.vendor}</a>`), `${entry.vendor} was moved out of the forward band and lands nowhere`);
+      assert.ok(namesVendor(section, entry.vendor), `${entry.vendor} was moved out of the forward band and lands nowhere`);
     }
     assert.ok(section.includes("High Risk"), "the moved vendors no longer show the grade they were given");
   });

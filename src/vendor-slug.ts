@@ -134,6 +134,18 @@ export function assertedVendorSlugs(phrase: string): string[] {
   return [];
 }
 
+export function servedVendorSlug(input: string): string | null {
+  if (!input) return null;
+  const resolution = resolveVendorSlug(input);
+  if (resolution.type === "exact" || resolution.type === "redirect") return resolution.slug;
+  if (resolution.type === "disambiguate") return input;
+  return null;
+}
+
+export function servedVendorSlugForName(name: string): string | null {
+  return servedVendorSlug(toSlug(name));
+}
+
 export function resolveVendorSlug(input: string): VendorSlugResolution {
   if (!input) return { type: "none" };
   if (vendorSlugMap.has(input)) return { type: "exact", slug: input };
