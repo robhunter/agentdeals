@@ -26706,9 +26706,9 @@
     {
       "vendor": "Code Time",
       "category": "IDE & Code Editors",
-      "description": "an extension for time-tracking and coding metrics in VS Code, Atom, IntelliJ, Sublime Text, and more.",
+      "description": "Now published only on the Visual Studio Marketplace. software.com/code-time returns 404 via antenna.dev, whose own pricing starts at $15/month per Git user and offers a trial rather than a free tier. Read 2026-09-13, the marketplace listing states Free — an open source plugin for automatic programming metrics and time tracking in Visual Studio Code.",
       "tier": "Free",
-      "url": "https://www.software.com/code-time",
+      "url": "https://marketplace.visualstudio.com/items?itemName=softwaredotcom.swdc-vscode",
       "tags": [
         "developer-tools",
         "free-for-dev"
@@ -31924,9 +31924,9 @@
     {
       "vendor": "Coda",
       "category": "Productivity & Notes",
-      "description": "Unlimited docs with size limits. Up to 1,000 rows for native tables, 50 rows for Packs tables. Unlimited editors/viewers. 7-day version history. Cross-doc limited on free tier.",
+      "description": "Now sold as Superhuman Docs: coda.io/pricing redirects to superhuman.com/plans/docs. Read 2026-09-13, the Free plan is $0 and includes collaborative docs, Docs AI, connected tables, views and forms, and formulas and automations. Unlimited doc size, AI writing and editing, and 30-day version history are Pro at $12/month per Doc Maker billed annually.",
       "tier": "Free",
-      "url": "https://coda.io/pricing",
+      "url": "https://superhuman.com/plans/docs",
       "tags": [
         "docs",
         "productivity",
