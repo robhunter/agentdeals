@@ -49,7 +49,7 @@ const index = await get("/best");
 const bestPaths = [...new Set([...index.body.matchAll(/href="(\/best\/[a-z0-9-]+)"/g)].map(m => m[1]))].sort();
 out(`/best/* paths: ${bestPaths.length}`);
 
-const TIE_SENTENCE = /none is distinguishable from the others under any signal we record/;
+const TIE_SENTENCE = /distinguishable/i;
 const CARD_VENDOR = /<a href="\/vendor\/([a-z0-9][a-z0-9-]*)" class="best-pick-name">/g;
 const DEMOTED_BLOCK = /<div class="best-pick best-pick-demoted"/;
 
@@ -73,6 +73,8 @@ for (const p of bestPaths) {
     saysGroupTie: /None is distinguishable from the others in this group/.test(body),
     hasFaq: faqPages(body).length > 0,
     isHub: /class="function-group-heading"/.test(body),
+    statesSplit: /offers? meets? our criteria/.test(body) && /no recorded change to the terms we publish|no durability signal/.test(body),
+    linkedRecords: [...body.matchAll(/href="\/pricing-changes#/g)].length,
   });
 }
 
@@ -83,9 +85,11 @@ out(`leaf pages whose stability splits into 2+ groups: ${leaves.filter(r => r.di
 out(`  ...of which the prose says nothing distinguishes them: ${leaves.filter(r => r.distinct > 1 && r.saysTie).length}`);
 out(`leaf pages where stability does not split: ${leaves.filter(r => r.distinct <= 1).length}`);
 out(`  ...listing them: ${leaves.filter(r => r.distinct <= 1).map(r => `${r.path} (${JSON.stringify(r.tally)})`).join(", ")}`);
-out(`pages saying the tie sentence at all: ${rows.filter(r => r.saysTie).length}`);
+out(`pages saying anything is indistinguishable: ${rows.filter(r => r.saysTie).length}`);
 out(`hub pages saying the per-group tie sentence: ${hubs.filter(r => r.saysGroupTie).length}`);
 out(`pages carrying a FAQPage: ${rows.filter(r => r.hasFaq).length} of ${rows.length}`);
+out(`pages stating a durability split: ${rows.filter(r => r.statesSplit).length} of ${rows.length}`);
+out(`dated change records linked from the family: ${rows.reduce((n, r) => n + r.linkedRecords, 0)}`);
 
 const classTotals = {};
 for (const r of rows) for (const [k, v] of Object.entries(r.tally)) classTotals[k] = (classTotals[k] ?? 0) + v;
@@ -125,25 +129,30 @@ for (const p of [...allPaths].sort()) {
   if (generosity.length === 0) continue;
   const graded = gradeSuperlatives(body);
   const claims = superlativeClaims(body);
+  const answer = generosity[0].acceptedAnswer?.text ?? "";
   generosityPages.push({
     path: p,
     question: generosity[0].name,
-    answer: (generosity[0].acceptedAnswer?.text ?? "").slice(0, 90),
+    names: !/^We name no most generous/.test(answer),
+    answer: answer.slice(0, 150),
     claims: claims.length,
     ranking: claims.filter(c => c.direction !== null).length,
     graded: graded.graded,
     refuted: graded.refuted.length,
-    unattained: graded.unattained.length,
-    ungraded: graded.ungraded.length,
+    upheld: graded.upheld?.length ?? 0,
     tables: pageTables(body).length,
   });
 }
 out(`paths carrying a FAQPage: ${faqPathCount.length}`);
 out(`...of which ask the generosity question: ${generosityPages.length}`);
+out(`...naming a graded leader: ${generosityPages.filter(g => g.names).length}`);
+out(`...keeping the refusal: ${generosityPages.filter(g => !g.names).length}`);
+out(`questions built from a pluralised or lowercased category name: ${generosityPages.filter(g => /\b(databases|api development|ci\/cd|cloud iaas) free tier/.test(g.question)).length}`);
 for (const g of generosityPages) {
   out(`  ${g.path}`);
   out(`      q: ${g.question}`);
-  out(`      claims ${g.claims} (ranking ${g.ranking}) graded ${g.graded} refuted ${g.refuted} unattained ${g.unattained} ungraded ${g.ungraded} tables ${g.tables}`);
+  out(`      claims ${g.claims} (ranking ${g.ranking}) graded ${g.graded} upheld ${g.upheld} refuted ${g.refuted} tables ${g.tables}`);
+  out(`      a: ${g.answer}`);
 }
 
 child.kill();

@@ -71,7 +71,7 @@ import { subscribe as watchlistSubscribe, getSubscription as getWatchlistSubscri
 import { changeLogAnchorFor, changeLogVendorMap, toSlug, vendorSlugMap, resolveVendorSlug, namedVendorSlug, comparisonOfOneRecord, recordNamedBySlug } from "./vendor-slug.js";
 import { createRegistrationLimiter, rateLimitHeaders } from "./rate-limit.js";
 import { offerForSlug, vendorRates, cheapestRate, dearestRate, spanOfRates, formatRate, formatRateSpan, monthlyTokenCost, formatDollars, type ModelRate } from "./model-rates.js";
-import { STALE_FACT_PAGES_BASELINE, factsOutdatedBy, linkifyVerdictBlocks, newestChangeBySlug, overdueReport, pageCompiledClause, pageDataProvenance, pageDateModified, tabulatedSubjectSlots, tabulatedSubjects, utcToday, verdictsOutdatedBy } from "./page-reviews.js";
+import { STALE_FACT_PAGES_BASELINE, factsOutdatedBy, getPageReview, linkifyVerdictBlocks, newestChangeBySlug, overdueReport, pageCompiledClause, pageDataProvenance, pageDateModified, tabulatedSubjectSlots, tabulatedSubjects, utcToday, verdictsOutdatedBy } from "./page-reviews.js";
 import { answerWithProvenance, faqPageJsonLd, pageFaqProvenanceClause, type FaqItem } from "./faq-provenance.js";
 import {
   GENEROSITY_JSON_TOKEN,
@@ -533,10 +533,14 @@ function withPageFreshness(html: string, pagePath: string): string {
   return withFreshnessClaim(html, () => freshnessClaimFor(pagePath, html, verifiedDatesForSlug));
 }
 
+function tableProvenanceClause(pagePath: string): string {
+  return getPageReview(pagePath)?.reads_index ? "" : pageFaqProvenanceClause(pagePath);
+}
+
 function withPageGenerosityAnswer(html: string, pagePath: string): string {
   return withGenerosityAnswer(
     html,
-    page => answerWithProvenance(generosityAnswer(page), pageFaqProvenanceClause(pagePath)),
+    page => answerWithProvenance(generosityAnswer(page), tableProvenanceClause(pagePath)),
     escHtmlServer,
   );
 }
@@ -761,7 +765,7 @@ function durabilityCellHtml(offer: EnrichedOfferRow): string {
   );
   const newest = deciders.slice().sort((a, b) => b.date.localeCompare(a.date))[0];
   const record = newest
-    ? `<br><a href="${changeRecordHref(newest)}" style="font-size:.7rem;color:var(--text-dim)">${escHtmlServer(changeDateLabel(newest))}</a>`
+    ? `<br><a href="${changeRecordHref(newest)}" style="font-size:.7rem;color:var(--text-dim)">${escHtmlServer(changeEntryDateLabel(newest))}</a>`
     : "";
   return `<span style="color:${color}">${escHtmlServer(stability)}</span>${record}`;
 }

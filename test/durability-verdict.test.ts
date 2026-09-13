@@ -202,12 +202,25 @@ describe("#1492 a best-of page states what its own signal says about its offers"
     assert.deepStrictEqual(ranking, [], `size rankings on the best-of family:\n${ranking.join("\n")}`);
   });
 
-  it("keeps the refusal to name a best, on this family and on the category hubs", () => {
+  it("keeps the refusal to name a best on every page of this family", () => {
     const missing: string[] = [];
     for (const [routePath, html] of served) {
       if (!visibleText(html).includes(NO_RANKING_HELD)) missing.push(routePath);
     }
     assert.deepStrictEqual(missing, [], `pages that dropped the refusal:\n${missing.join("\n")}`);
+  });
+
+  it("leaves the category hubs refusing in the same words", async () => {
+    const missing: string[] = [];
+    let checked = 0;
+    for (const hub of ["/category/databases", "/category/monitoring", "/category/security", "/category/storage"]) {
+      const html = await get(hub);
+      if (!visibleText(html).includes(NO_RANKING_HELD)) missing.push(hub);
+      if (/distinguishable/i.test(html)) missing.push(`${hub} claims an indistinguishable set`);
+      checked++;
+    }
+    assert.deepStrictEqual(missing, [], `category hubs that changed their refusal:\n${missing.join("\n")}`);
+    assert.strictEqual(checked, 4);
   });
 });
 
