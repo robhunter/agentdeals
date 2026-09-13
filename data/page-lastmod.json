@@ -1051,8 +1051,8 @@
       "changed": "2026-09-12"
     },
     "/category/cdn": {
-      "hash": "a9a7a5eb5fdec535",
-      "changed": "2026-09-12"
+      "hash": "0ab8cbbd0d0b3097",
+      "changed": "2026-09-13"
     },
     "/category/ci-cd": {
       "hash": "f43d52fa52497bd2",
@@ -1103,8 +1103,8 @@
       "changed": "2026-09-12"
     },
     "/category/dev-utilities": {
-      "hash": "0ecb69e145972895",
-      "changed": "2026-09-12"
+      "hash": "02f7cbb39653871a",
+      "changed": "2026-09-13"
     },
     "/category/diagramming": {
       "hash": "98ed491e0baa6872",
@@ -1430,8 +1430,8 @@
       "changed": "2026-09-12"
     },
     "/compare/bootstrapcdn-com-vs-weserv": {
-      "hash": "7642344a0c93e982",
-      "changed": "2026-09-12"
+      "hash": "764a81042fa8bd78",
+      "changed": "2026-09-13"
     },
     "/compare/braid-vs-element-io": {
       "hash": "e9e35fb6451a3f8f",
@@ -1902,8 +1902,8 @@
       "changed": "2026-09-12"
     },
     "/compare/fastly-vs-weserv": {
-      "hash": "18d55a24b03ba3e1",
-      "changed": "2026-09-12"
+      "hash": "8a7cec9525343bdf",
+      "changed": "2026-09-13"
     },
     "/compare/firebase-vs-supabase": {
       "hash": "52a5dce60fcb938a",
@@ -2278,8 +2278,8 @@
       "changed": "2026-09-12"
     },
     "/compare/microsoft-ajax-vs-weserv": {
-      "hash": "ad2ef833f289ded0",
-      "changed": "2026-09-12"
+      "hash": "572f5cf9cd45169f",
+      "changed": "2026-09-13"
     },
     "/compare/mintlify-vs-apiary-io": {
       "hash": "14f85cc9b1d049b9",
@@ -3308,8 +3308,8 @@
       "changed": "2026-09-12"
     },
     "/storage-alternatives": {
-      "hash": "de8fa189bc231fc1",
-      "changed": "2026-09-12"
+      "hash": "ffbf9dbb9039155b",
+      "changed": "2026-09-13"
     },
     "/storage-comparison-2026": {
       "hash": "72031bb5dfe44156",
@@ -8481,8 +8481,8 @@
       "changed": "2026-09-12"
     },
     "/vendor/streambackdrops": {
-      "hash": "b3ef4a12d20df69a",
-      "changed": "2026-09-12"
+      "hash": "871326cbbe2f69c9",
+      "changed": "2026-09-13"
     },
     "/vendor/stripe": {
       "daily": true
@@ -9244,8 +9244,8 @@
       "daily": true
     },
     "/vendor/weserv": {
-      "hash": "c0f085e7b11aa6c1",
-      "changed": "2026-09-12"
+      "hash": "c071ce71f562bfde",
+      "changed": "2026-09-13"
     },
     "/vendor/wework": {
       "hash": "2c2e930835882803",
