@@ -4047,7 +4047,7 @@
       "changed": "2026-09-13"
     },
     "/vendor/bismuth-cloud": {
-      "hash": "b6d402aac4cec0a2",
+      "hash": "88d7be7454271f73",
       "changed": "2026-09-13"
     },
     "/vendor/bitbucket-pipelines": {
@@ -4396,7 +4396,7 @@
       "daily": true
     },
     "/vendor/claw-cloud": {
-      "hash": "875dd3622881cb9f",
+      "hash": "c54b73fdd852d36d",
       "changed": "2026-09-13"
     },
     "/vendor/clear-channel-outdoor": {
@@ -4803,7 +4803,7 @@
       "changed": "2026-09-12"
     },
     "/vendor/cstate": {
-      "hash": "63deafac038a24b5",
+      "hash": "9f601eda5e05d527",
       "changed": "2026-09-13"
     },
     "/vendor/cube": {
@@ -4903,7 +4903,7 @@
       "changed": "2026-09-12"
     },
     "/vendor/datree": {
-      "hash": "57fe84e4bd7e98e3",
+      "hash": "2641dbf8e6ffd24a",
       "changed": "2026-09-13"
     },
     "/vendor/davinci-resolve": {
@@ -5223,7 +5223,7 @@
       "changed": "2026-09-13"
     },
     "/vendor/engagespot-co": {
-      "hash": "f8122b62b689b379",
+      "hash": "c903049c6804c62b",
       "changed": "2026-09-13"
     },
     "/vendor/ente": {
@@ -5247,7 +5247,7 @@
       "changed": "2026-09-12"
     },
     "/vendor/evernote": {
-      "hash": "e34a8939c18b3cca",
+      "hash": "998537bbef9a03f2",
       "changed": "2026-09-13"
     },
     "/vendor/everystep-automation-com": {
@@ -5741,7 +5741,7 @@
       "changed": "2026-09-13"
     },
     "/vendor/google-ai-pro-ultra": {
-      "hash": "1494170afec5d4e1",
+      "hash": "79398b40868e8c74",
       "changed": "2026-09-13"
     },
     "/vendor/google-analytics": {
@@ -5838,7 +5838,7 @@
       "daily": true
     },
     "/vendor/google-vertex-ai-agent-engine": {
-      "hash": "9fded9fc3956ff6a",
+      "hash": "a3ec4a1af81087e3",
       "changed": "2026-09-13"
     },
     "/vendor/goreportcard-com": {
@@ -5850,7 +5850,7 @@
       "changed": "2026-09-13"
     },
     "/vendor/gpu-bridge": {
-      "hash": "64bc5bdcad173c7f",
+      "hash": "8fb9f0aa224b611f",
       "changed": "2026-09-13"
     },
     "/vendor/gradientos": {
@@ -6098,7 +6098,7 @@
       "changed": "2026-09-12"
     },
     "/vendor/ibm-cloud": {
-      "hash": "113d0d67f8355c20",
+      "hash": "9e763953025e3f30",
       "changed": "2026-09-13"
     },
     "/vendor/icedrive-net": {
@@ -6490,7 +6490,7 @@
       "daily": true
     },
     "/vendor/langtrace": {
-      "hash": "aeada862eafb4d0e",
+      "hash": "f3308f298935d4b1",
       "changed": "2026-09-13"
     },
     "/vendor/langwatch": {
@@ -6913,7 +6913,7 @@
       "changed": "2026-09-12"
     },
     "/vendor/microsoft-to-do": {
-      "hash": "777071ae870c522c",
+      "hash": "b2ffc55923e53196",
       "changed": "2026-09-13"
     },
     "/vendor/middleware-io": {
@@ -8350,7 +8350,7 @@
       "daily": true
     },
     "/vendor/soos": {
-      "hash": "96c353829e4f27f0",
+      "hash": "e30f375db3e90ec3",
       "changed": "2026-09-13"
     },
     "/vendor/sourceforge": {
@@ -8469,7 +8469,7 @@
       "changed": "2026-09-12"
     },
     "/vendor/strale": {
-      "hash": "07c686f759fa3101",
+      "hash": "9f64d5e7e4971407",
       "changed": "2026-09-13"
     },
     "/vendor/strapi": {
@@ -8803,7 +8803,7 @@
       "changed": "2026-09-12"
     },
     "/vendor/tollbooth": {
-      "hash": "0ab1fe667b521157",
+      "hash": "c75524b173ce275a",
       "changed": "2026-09-13"
     },
     "/vendor/tomorrow-io-weather-api": {
@@ -9135,7 +9135,7 @@
       "changed": "2026-09-12"
     },
     "/vendor/volaryddns": {
-      "hash": "ce05f76325d5eb78",
+      "hash": "9c834e99c598cc85",
       "changed": "2026-09-13"
     },
     "/vendor/volume": {
@@ -9174,7 +9174,7 @@
       "changed": "2026-09-12"
     },
     "/vendor/wdrfree-svg": {
-      "hash": "9dfd098ca1b95df5",
+      "hash": "8599a6ce8faea3a2",
       "changed": "2026-09-13"
     },
     "/vendor/we-team": {
