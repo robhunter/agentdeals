@@ -45,7 +45,7 @@ import { COMPARED_SERVICES_PLACEHOLDER, appendToCompiledFigureSlots, fillCompare
 import { CHECK_ESTABLISHES, CHECK_SCOPE_CLASS, NO_CATALOGUE_RECORD, citedSourceLinkHtml, citedSourcesListHtml, freeTierSourceOf, pageQuoteHtml, readClauseHtml, sourceMarkerHtml, uncitedSourceLinkHtml, withCitedSources, type CitedService, type FreeTierSource } from "./source-citation.js";
 import { vendorHistorySentence } from "./vendor-history.js";
 import { HETZNER_APRIL_CHANGES, HETZNER_CLOUD_PLANS, HETZNER_PRICES_READ, HETZNER_PRICE_SOURCE, HETZNER_SINGAPORE_EXAMPLE, cheapestOrderableHetznerPlan, hetznerEntryPriceClause, unorderableHetznerPlans } from "./hetzner-pricing.js";
-import { HUNDRED_TB_SCENARIO, ONE_TO_ONE_SCENARIO, STORAGE_RATES_READ, STORAGE_SCALE_WORKLOADS, TEN_TO_ONE_SCENARIO, cheapestProviderAt, costliestProviderAt, egressAllowanceSentence, egressBillOnceOverAllowance, egressRatioWhereCostsMatch, fixedMonthlyGrantsSentence, monthlyStorageCost, providersWithScalingEgressAllowance, rateCardFor, scaleCostFor } from "./storage-cost-model.js";
+import { HUNDRED_GB_SCENARIO, HUNDRED_TB_SCENARIO, ONE_TO_ONE_SCENARIO, STORAGE_RATES_READ, STORAGE_SCALE_WORKLOADS, TEN_TO_ONE_SCENARIO, cheapestProviderAt, costAfterMonthlyEgressGrantFor, costliestProviderAt, egressAllowanceSentence, egressBillAfterMonthlyGrantFor, egressBillOnceOverAllowance, egressRatioWhereCostsMatch, fixedMonthlyGrantsSentence, monthlyEgressGrantGb, monthlyEgressGrantSentence, monthlyStorageCost, providersWithScalingEgressAllowance, rateCardFor, scaleCostFor } from "./storage-cost-model.js";
 import { changeTimelineDate, supersededLineups, supersessionNote } from "./change-lineup.js";
 import { isNoLongerInForce, eventResolutionFields, recordsStillInForce } from "./change-resolution.js";
 import { FREE_TIER_STANDING_LABELS, GRADE_FACTORS_WITHOUT_PRICING_HISTORY, NOT_EVIDENCE_LABELS, citesAChangeOlderThanTheGrade, freeTierStanding, gradesFirstSet, gradesLastSet, gradingDatesClause, neverTracked, riskEntries, scorecard, splitByFreeTierStanding, trackedSinceGrading, type RiskEntry } from "./risk-scorecard.js";
@@ -10273,13 +10273,13 @@ ${buildCards(startupCredits)}
         <td style="font-weight:600"><a href="/vendor/aws" style="color:var(--text)">AWS</a></td>
         <td>IaaS</td>
         <td>750 hrs t2.micro/mo (12 mo)</td>
-        <td>100 GB/mo (12 mo)</td>
+        <td>${monthlyEgressGrantGb("AWS S3")} GB/mo, no expiry</td>
         <td>Full cloud platform, 12-month free tier</td>
       </tr>
     </tbody>
   </table>
   </div>
-  <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">Oracle Cloud's Always Free tier is permanently free (not time-limited) and the most generous VPS offering. Cloudflare Pages and Workers offer unlimited bandwidth on free tier. Railway's Free plan opens with a 30-day $5 trial credit and then costs $1/month minimum. AWS and Azure free tiers are mostly 12-month introductory offers. [[freshness]]</p>
+  <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">Oracle Cloud's Always Free tier is permanently free (not time-limited) and the most generous VPS offering. Cloudflare Pages and Workers offer unlimited bandwidth on free tier. Railway's Free plan opens with a 30-day $5 trial credit and then costs $1/month minimum. AWS and Azure free tiers are mostly 12-month introductory offers, with one exception that matters in the Bandwidth column: AWS's first ${monthlyEgressGrantGb("AWS S3")} GB of internet egress each month is free on an account of any age, aggregated across all AWS services and regions. [[freshness]]</p>
 
   <div class="context-box" style="border-left:3px solid ${riskColors.risky}">
     <div style="font-weight:600;color:${riskColors.risky};margin-bottom:.5rem">Hetzner raised prices twice in 2026, and its cheapest line is unavailable</div>
@@ -16517,7 +16517,7 @@ function buildFreeNextjsStackPage(): string {
       recommended: { vendor: "Cloudflare R2", why: "Zero egress fees — the standout differentiator. 10 GB storage, 1 million Class A operations, 10 million Class B operations per month. S3-compatible API means any S3 SDK works. Perfect for Next.js image uploads, user files, and static assets that would cost a fortune on S3 egress." },
       alternatives: ["Backblaze B2", "Tigris", "Supabase"],
       outgrow: "When you exceed 10 GB storage. At scale, R2 saves dramatically: 1 TB stored + 10 TB egress costs ~$15/month on R2 vs ~$925/month on S3 (the egress tax). Backblaze B2 offers 10 GB free and free egress up to 3x what you store, no CDN required. Tigris gives 5 GB with S3 compatibility and global distribution.",
-      whyNot: "Why not AWS S3: The 5 GB free tier expires after 12 months, then egress costs $0.09/GB. At 100 GB egress/month, that's $9/month just for bandwidth — R2 charges $0.",
+      whyNot: `Why not AWS S3: the 5 GB storage free tier expires after 12 months, then storage costs ${rateCardFor("AWS S3").publishedStorageRate}. Bandwidth is the part that does not expire — ${monthlyEgressGrantSentence(rateCardFor("AWS S3"))} — so at ${monthlyEgressGrantGb("AWS S3")} GB egress/month S3 bills ${egressBillAfterMonthlyGrantFor("AWS S3", HUNDRED_GB_SCENARIO)} for bandwidth, the same as R2. Past that S3 charges $0.09/GB and R2 still charges $0.`,
       relatedPage: "/storage-comparison-2026",
     },
     {
@@ -16889,7 +16889,7 @@ function buildFreeDjangoStackPage(): string {
       recommended: { vendor: "Cloudflare R2", why: "Zero egress fees — the standout differentiator. 10 GB storage, 1 million Class A operations, 10 million Class B operations per month. S3-compatible API means django-storages works out of the box with the S3Boto3Storage backend. Perfect for Django file uploads (ImageField, FileField), static file hosting (collectstatic), and media storage." },
       alternatives: ["Backblaze B2", "Supabase", "Cloudflare"],
       outgrow: "When you exceed 10 GB storage. At scale, R2 saves dramatically vs S3: 1 TB stored + 10 TB egress costs ~$15/month on R2 vs ~$925/month on S3. Backblaze B2 offers 10 GB free and free egress up to 3x what you store, no CDN required — also works with django-storages. Supabase Storage gives 1 GB free with image transformations.",
-      whyNot: "Why not AWS S3: The 5 GB free tier expires after 12 months, then egress costs $0.09/GB. Django apps serving user-uploaded media can rack up egress costs quickly — R2 charges $0.",
+      whyNot: `Why not AWS S3: the 5 GB storage free tier expires after 12 months, then storage costs ${rateCardFor("AWS S3").publishedStorageRate}. Bandwidth is the part that does not expire — ${monthlyEgressGrantSentence(rateCardFor("AWS S3"))} — so a Django app serving under ${monthlyEgressGrantGb("AWS S3")} GB of media a month pays nothing for egress on S3 either. Past that S3 charges $0.09/GB and R2 still charges $0.`,
       relatedPage: "/storage-comparison-2026",
     },
     {
@@ -17299,7 +17299,7 @@ function buildFreeFastapiStackPage(): string {
       recommended: { vendor: "Cloudflare R2", why: "Zero egress fees — the standout differentiator. 10 GB storage, 1 million Class A operations, 10 million Class B operations per month. S3-compatible API means boto3 and aioboto3 work directly. FastAPI's UploadFile with async streaming to R2 handles file uploads efficiently without buffering entire files in memory." },
       alternatives: ["Backblaze B2", "Supabase"],
       outgrow: "When you exceed 10 GB storage. At scale, R2 saves dramatically vs S3: 1 TB stored + 10 TB egress costs ~$15/month on R2 vs ~$925/month on S3. Backblaze B2 offers 10 GB free and free egress up to 3x what you store, no CDN required. Supabase Storage gives 1 GB free with image transformations.",
-      whyNot: "Why not AWS S3: The 5 GB free tier expires after 12 months, then egress costs $0.09/GB. API services returning pre-signed URLs for large files can rack up egress costs quickly — R2 charges $0.",
+      whyNot: `Why not AWS S3: the 5 GB storage free tier expires after 12 months, then storage costs ${rateCardFor("AWS S3").publishedStorageRate}. Bandwidth is the part that does not expire — ${monthlyEgressGrantSentence(rateCardFor("AWS S3"))} — so an API serving under ${monthlyEgressGrantGb("AWS S3")} GB of pre-signed downloads a month pays nothing for egress on S3 either. Past that S3 charges $0.09/GB and R2 still charges $0.`,
       relatedPage: "/storage-comparison-2026",
     },
     {
@@ -17724,7 +17724,7 @@ function buildFreeGoStackPage(): string {
       recommended: { vendor: "Cloudflare R2", why: "Zero egress fees — the standout differentiator. 10 GB storage, 1 million Class A operations, 10 million Class B operations per month. S3-compatible API via aws-sdk-go-v2. Go's io.Reader/io.Writer interfaces make streaming uploads and downloads natural — no buffering entire files in memory. Multipart uploads work out of the box with the AWS SDK." },
       alternatives: ["Backblaze B2", "Supabase"],
       outgrow: "When you exceed 10 GB storage. At scale, R2 saves dramatically vs S3: 1 TB stored + 10 TB egress costs ~$15/month on R2 vs ~$925/month on S3. Backblaze B2 offers 10 GB free and free egress up to 3x what you store, no CDN required. Supabase Storage gives 1 GB free with image transformations.",
-      whyNot: "Why not AWS S3: The 5 GB free tier expires after 12 months, then egress costs $0.09/GB. Go services returning pre-signed URLs for large files can rack up egress costs quickly — R2 charges $0.",
+      whyNot: `Why not AWS S3: the 5 GB storage free tier expires after 12 months, then storage costs ${rateCardFor("AWS S3").publishedStorageRate}. Bandwidth is the part that does not expire — ${monthlyEgressGrantSentence(rateCardFor("AWS S3"))} — so a Go service serving under ${monthlyEgressGrantGb("AWS S3")} GB of pre-signed downloads a month pays nothing for egress on S3 either. Past that S3 charges $0.09/GB and R2 still charges $0.`,
       relatedPage: "/storage-comparison-2026",
     },
     {
@@ -18165,8 +18165,8 @@ function buildFreeSaasStackPage(): string {
       icon: "\u{1F4E6}",
       recommended: { vendor: "Cloudflare R2", why: "10 GB storage with zero egress fees \u2014 the only major storage provider that doesn't charge for bandwidth. S3-compatible API works with every SDK and library. For SaaS, this means user uploads (avatars, documents, images) cost nothing to serve, no matter how many times they're downloaded. No surprise bandwidth bills." },
       alternatives: ["Backblaze B2", "Supabase"],
-      outgrow: "When you exceed 10 GB storage or 1M Class A operations/month. R2's zero-egress model means the constraint is storage volume, not bandwidth \u2014 a SaaS serving 1 TB of user files still pays $0 in egress. At scale: 100 GB costs ~$1.50/mo on R2 vs ~$9/mo on S3 (plus $9/GB egress on S3). Backblaze B2 offers 10 GB free and free egress up to 3x what you store, no CDN required.",
-      whyNot: "Why not AWS S3: The 5 GB free tier expires after 12 months, then egress costs $0.09/GB. A SaaS serving user-uploaded files can accumulate significant egress costs. R2 charges $0 for egress, forever. Why not Vercel Blob: 250 MB free \u2014 too small for most SaaS file storage needs.",
+      outgrow: `When you exceed 10 GB storage or 1M Class A operations/month. R2's zero-egress model means the constraint is storage volume, not bandwidth — a SaaS serving 1 TB of user files still pays $0 in egress. At scale: ${HUNDRED_GB_SCENARIO.storageGb} GB stored and ${HUNDRED_GB_SCENARIO.egressGb} GB served costs ${costAfterMonthlyEgressGrantFor("Cloudflare R2", HUNDRED_GB_SCENARIO)}/mo on R2 and ${costAfterMonthlyEgressGrantFor("AWS S3", HUNDRED_GB_SCENARIO)}/mo on S3, because S3's first ${monthlyEgressGrantGb("AWS S3")} GB of egress each month is free on any account and that is the whole of this workload; past it S3 charges $${rateCardFor("AWS S3").egressPerGb.toFixed(2)}/GB. Backblaze B2 offers 10 GB free and free egress up to 3x what you store, no CDN required.`,
+      whyNot: `Why not AWS S3: the 5 GB storage free tier expires after 12 months, then storage costs ${rateCardFor("AWS S3").publishedStorageRate}. Bandwidth is the part that does not expire — ${monthlyEgressGrantSentence(rateCardFor("AWS S3"))} — so a SaaS serving under ${monthlyEgressGrantGb("AWS S3")} GB of user files a month pays nothing for egress on S3 either. Past that S3 charges $0.09/GB and R2 charges $0, forever. Why not Vercel Blob: 250 MB free — too small for most SaaS file storage needs.`,
       relatedPage: "/storage-comparison-2026",
       isFrameworkSection: false,
     },
@@ -38868,7 +38868,7 @@ ${mcpCtaCss()}
 
   <div class="diff-card" style="border-left-color:#d29922">
     <h3>Egress charges</h3>
-    <p class="diff-desc">Most serverless platforms charge for outbound data transfer beyond free tiers. <strong>AWS:</strong> 100 GB free (first 12 months), then $0.09/GB. <strong>GCP:</strong> 1 GB/month free (North America). <strong>Azure:</strong> 100 GB/month free. <strong>Cloudflare Workers:</strong> Unlimited egress (no bandwidth charges). <strong>Deno Deploy:</strong> 20 GiB/month free. For bandwidth-heavy workloads, Workers&rsquo; unlimited egress is a major differentiator.</p>
+    <p class="diff-desc">Most serverless platforms charge for outbound data transfer beyond free tiers. <strong>AWS:</strong> ${monthlyEgressGrantGb("AWS S3")} GB/month free on an account of any age, aggregated across all AWS services, then $${rateCardFor("AWS S3").egressPerGb.toFixed(2)}/GB. <strong>GCP:</strong> 1 GB/month free (North America). <strong>Azure:</strong> 100 GB/month free. <strong>Cloudflare Workers:</strong> Unlimited egress (no bandwidth charges). <strong>Deno Deploy:</strong> 20 GiB/month free. For bandwidth-heavy workloads, Workers&rsquo; unlimited egress is a major differentiator.</p>
   </div>
 
   <div class="diff-card" style="border-left-color:#d29922">
@@ -42043,7 +42043,7 @@ ${mcpCtaCss()}
 
   <div class="executive-summary">
     <p><strong>Quick verdict:</strong> <strong>Cloudflare R2</strong> is the standout choice for most developers &mdash; 10 GB storage with zero egress fees, S3-compatible API, and a permanent free tier. At scale, the savings are staggering: 5 TB stored + 50 TB egress costs $75/month on R2 vs $4,625/month on S3. <strong>Storj</strong> offers the largest starting capacity at 25 GB, but as a 30-day trial rather than a free tier &mdash; a $5 minimum monthly fee applies once it ends. <strong>Backblaze B2</strong> has the cheapest paid storage at ${rateCardFor("Backblaze B2").publishedStorageRate} and gives every account free egress up to 3x what it stores, no CDN needed &mdash; which makes it the cheapest column in the scaling table below, not R2&rsquo;s equal. For media: <strong>Cloudinary</strong> (25 credits/month) and <strong>BunnyCDN</strong> ($0.01/GB, 14-day trial) are best-in-class. For self-hosted: <strong>MinIO</strong> is the industry standard.</p>
-    <p><strong>The S3 egress tax is legendary.</strong> AWS S3 egress charges are the #1 developer bill shock story. S3 bills across 6 dimensions most developers don&rsquo;t know about: storage, egress, PUT requests, GET requests, lifecycle transitions, and the hidden NAT Gateway charge ($0.045/GB) that appears on your EC2 bill, not your S3 bill. At 1 TB/month egress, S3 costs $92 in bandwidth alone. R2 costs $0. This single difference has disrupted the entire cloud storage market.</p>
+    <p><strong>The S3 egress tax is legendary.</strong> AWS S3 egress charges are the #1 developer bill shock story. S3 bills across 6 dimensions most developers don&rsquo;t know about: storage, egress, PUT requests, GET requests, lifecycle transitions, and the hidden NAT Gateway charge ($0.045/GB) that appears on your EC2 bill, not your S3 bill. At 1 TB/month egress, S3 costs ${egressBillAfterMonthlyGrantFor("AWS S3", ONE_TO_ONE_SCENARIO)} in bandwidth alone &mdash; 1 TB less the ${monthlyEgressGrantGb("AWS S3")} GB every account gets free each month, billed at $${rateCardFor("AWS S3").egressPerGb.toFixed(2)}/GB. R2 costs $0. This single difference has disrupted the entire cloud storage market.</p>
   </div>
 
   <div class="toc">
@@ -42127,7 +42127,7 @@ ${mcpCtaCss()}
         <td class="provider-col">AWS S3<span class="caution-badge">12-MO ONLY</span></td>
         <td>Object</td>
         <td>5 GB</td>
-        <td>100 GB/mo (12 mo)</td>
+        <td>${monthlyEgressGrantGb("AWS S3")} GB/mo, no expiry</td>
         <td class="check">&#10003; (native)</td>
         <td class="partial">CloudFront sep.</td>
         <td class="cross">&#10007;</td>
@@ -42266,6 +42266,7 @@ ${mcpCtaCss()}
     </tbody>
   </table>
   </div>
+  <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem"><strong>Permanent Free</strong> is about the <strong>Free Storage</strong> column only: a tick means that storage allowance has no expiry date, a cross means it runs for a fixed term and then stops. It says nothing about the <strong>Free Egress</strong> column, which each row states for itself. AWS S3 is a cross because its 5 GB of storage is part of the 12-month AWS Free Tier &mdash; but ${monthlyEgressGrantSentence(rateCardFor("AWS S3"))}, aggregated across all AWS services and regions, so the ${monthlyEgressGrantGb("AWS S3")} GB in its Free Egress cell does not expire with it.</p>
 
   <h2 id="zero-egress">Zero-Egress Object Storage</h2>
   <p class="section-intro">The most impactful category. Zero-egress providers eliminate bandwidth charges entirely &mdash; the single largest cost driver in cloud storage.</p>
@@ -42300,7 +42301,7 @@ ${mcpCtaCss()}
 
   <div class="diff-card">
     <h3>AWS S3 <span class="caution-badge">12-MONTH FREE ONLY</span></h3>
-    <div class="diff-desc"><strong>Free tier:</strong> 5 GB storage, 20,000 GET requests, 2,000 PUT requests per month &mdash; for 12 months only. After the trial, you pay from the first byte: $0.023/GB storage, $0.09/GB egress, $0.005/1K PUT, $0.0004/1K GET. S3 is the industry standard with the broadest SDK ecosystem, but has the <strong>most expensive egress and the least generous free tier</strong>. Plus the hidden NAT Gateway charge ($0.045/GB) on EC2 instances. Best for teams already committed to AWS who need deep ecosystem integration.</div>
+    <div class="diff-desc"><strong>Free tier:</strong> 5 GB storage, 20,000 GET requests, 2,000 PUT requests per month &mdash; for 12 months only. After the trial you pay for storage from the first byte: $0.023/GB storage, $0.005/1K PUT, $0.0004/1K GET. Egress is the exception &mdash; ${monthlyEgressGrantSentence(rateCardFor("AWS S3"))}, so the $0.09/GB rate starts at the ${monthlyEgressGrantGb("AWS S3")} GB mark and not at the first byte. S3 is the industry standard with the broadest SDK ecosystem, but has the <strong>most expensive egress and the least generous free tier</strong>. Plus the hidden NAT Gateway charge ($0.045/GB) on EC2 instances. Best for teams already committed to AWS who need deep ecosystem integration.</div>
   </div>
 
   <div class="diff-card">
@@ -42511,7 +42512,7 @@ ${mcpCtaCss()}
   <div class="context-box">
     <strong>6 billing dimensions most developers don&rsquo;t know about:</strong><br>
     <strong>1. Storage:</strong> $0.023/GB/month (Standard). Varies by storage class (IA, Glacier, Deep Archive).<br>
-    <strong>2. Egress:</strong> $0.09/GB for data leaving AWS. The big one. First 100 GB/month free (for 12 months only).<br>
+    <strong>2. Egress:</strong> $0.09/GB for data leaving AWS. The big one, once you are past the allowance &mdash; ${monthlyEgressGrantSentence(rateCardFor("AWS S3"))}, aggregated across all AWS services and regions.<br>
     <strong>3. PUT/POST requests:</strong> $0.005 per 1,000 requests. Uploads, copies, multipart initiations.<br>
     <strong>4. GET/HEAD requests:</strong> $0.0004 per 1,000. Every file download, every HEAD check.<br>
     <strong>5. Lifecycle transitions:</strong> Moving objects between storage classes (Standard &rarr; IA, IA &rarr; Glacier) incurs per-object transition fees.<br>
@@ -42585,12 +42586,12 @@ ${mcpCtaCss()}
 
   <div class="diff-card">
     <h3>AWS S3: NAT Gateway charges appear on your EC2 bill</h3>
-    <div class="diff-desc">EC2 instances in private subnets accessing S3 through a NAT Gateway pay $0.045/GB for data processing. This charge is billed under EC2, not S3, making it invisible in S3 cost breakdowns. Fix: use an S3 VPC Gateway Endpoint (free). This single misconfiguration generates more surprise AWS bills than any other S3 issue. At 1 TB/month through NAT: $45 in hidden charges on top of the $90 egress fee.</div>
+    <div class="diff-desc">EC2 instances in private subnets accessing S3 through a NAT Gateway pay $0.045/GB for data processing. This charge is billed under EC2, not S3, making it invisible in S3 cost breakdowns. Fix: use an S3 VPC Gateway Endpoint (free). This single misconfiguration generates more surprise AWS bills than any other S3 issue. At 1 TB/month through NAT: $45 in hidden charges on top of ${egressBillAfterMonthlyGrantFor("AWS S3", ONE_TO_ONE_SCENARIO)} in egress, which is 1 TB less the ${monthlyEgressGrantGb("AWS S3")} GB every account gets free each month.</div>
   </div>
 
   <div class="diff-card">
-    <h3>AWS S3: free tier expires after 12 months</h3>
-    <div class="diff-desc">S3&rsquo;s 5 GB free tier is part of the 12-month AWS Free Tier, not Always Free. After 12 months, you pay from the first byte. This catches developers who set up a project during the trial and forget about it. Azure Blob Storage has the same 12-month trap. GCS and Oracle are Always Free.</div>
+    <h3>AWS S3: the storage free tier expires after 12 months, the egress allowance does not</h3>
+    <div class="diff-desc">S3&rsquo;s 5 GB free tier is part of the 12-month AWS Free Tier, not Always Free. After 12 months you pay for stored bytes from the first one. What does not expire is the egress allowance: ${monthlyEgressGrantSentence(rateCardFor("AWS S3"))}, aggregated across all AWS services and regions, so a project serving under ${monthlyEgressGrantGb("AWS S3")} GB a month pays nothing for bandwidth however old the account is. The 12-month trap is the storage, and it catches developers who set up a project during the trial and forget about it. Azure Blob Storage&rsquo;s 5 GB of storage has the same 12-month limit. GCS and Oracle are Always Free.</div>
   </div>
 
   <div class="diff-card">
