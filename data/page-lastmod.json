@@ -1143,7 +1143,7 @@
       "changed": "2026-09-13"
     },
     "/category/ide-code-editors": {
-      "hash": "84279378f9d8e63c",
+      "hash": "73739d259e594ba5",
       "changed": "2026-09-13"
     },
     "/category/infrastructure": {
@@ -1191,7 +1191,7 @@
       "changed": "2026-09-13"
     },
     "/category/productivity-notes": {
-      "hash": "cb883c492f1b0cc5",
+      "hash": "67a80ef13821dca2",
       "changed": "2026-09-13"
     },
     "/category/project-management": {
@@ -3053,8 +3053,8 @@
       "changed": "2026-09-12"
     },
     "/ide-code-editors-alternatives": {
-      "hash": "e0cb3f4b07569f55",
-      "changed": "2026-09-12"
+      "hash": "846a09b511a0010c",
+      "changed": "2026-09-13"
     },
     "/llm-api-pricing": {
       "hash": "5c18e07dd35598b1",
@@ -3272,8 +3272,8 @@
       "changed": "2026-09-12"
     },
     "/stack-check": {
-      "hash": "6b4bb73a40816d26",
-      "changed": "2026-09-12"
+      "hash": "0509f611a707cfa2",
+      "changed": "2026-09-13"
     },
     "/stacks": {
       "hash": "8aa63d37290a2ab3",
@@ -4554,7 +4554,7 @@
       "daily": true
     },
     "/vendor/coda": {
-      "hash": "0925a629728e5fe7",
+      "hash": "41e735f360d721b7",
       "changed": "2026-09-13"
     },
     "/vendor/codacy-com": {
@@ -4570,7 +4570,7 @@
       "changed": "2026-09-12"
     },
     "/vendor/code-time": {
-      "hash": "d0cb70000f3a1242",
+      "hash": "ec2dcdf5dfc640b6",
       "changed": "2026-09-13"
     },
     "/vendor/codeac-io": {
