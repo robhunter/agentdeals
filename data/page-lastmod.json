@@ -30,8 +30,8 @@
       "changed": "2026-09-13"
     },
     "/alternative-to": {
-      "hash": "92bec7a0227b3170",
-      "changed": "2026-09-12"
+      "hash": "b227d794b78d7bc8",
+      "changed": "2026-09-13"
     },
     "/alternative-to/360-monitoring": {
       "daily": true
@@ -2837,8 +2837,8 @@
       "changed": "2026-09-12"
     },
     "/digest/2026-w35": {
-      "hash": "203ba8f19c43b3e6",
-      "changed": "2026-09-12"
+      "hash": "17a0c8be122644cc",
+      "changed": "2026-09-13"
     },
     "/digest/2026-w36": {
       "hash": "9210078e8da1a513",
@@ -3117,8 +3117,8 @@
       "changed": "2026-09-12"
     },
     "/pricing-changes": {
-      "hash": "07081e1d083ed0bb",
-      "changed": "2026-09-12"
+      "hash": "6d5d54ddd9ab2ad9",
+      "changed": "2026-09-13"
     },
     "/privacy": {
       "hash": "a45ec77d1237ce8c",
@@ -3268,11 +3268,11 @@
       "daily": true
     },
     "/stability": {
-      "hash": "bd05c3a5fc8df072",
-      "changed": "2026-09-12"
+      "hash": "abed600596d47843",
+      "changed": "2026-09-13"
     },
     "/stack-check": {
-      "hash": "c9b874dd59f7688f",
+      "hash": "e9c5efa3becbd03f",
       "changed": "2026-09-13"
     },
     "/stacks": {
@@ -3435,8 +3435,8 @@
       "changed": "2026-09-12"
     },
     "/trends/dev-utilities": {
-      "hash": "56226eb0c4894f40",
-      "changed": "2026-09-12"
+      "hash": "73fa4d016ac661a2",
+      "changed": "2026-09-13"
     },
     "/trends/diagramming": {
       "hash": "9999376133b332c0",
@@ -9422,8 +9422,8 @@
       "changed": "2026-09-12"
     },
     "/vendor/zipcodestack": {
-      "hash": "8f1b462074c08c9c",
-      "changed": "2026-09-12"
+      "hash": "f21012bceeaf0637",
+      "changed": "2026-09-13"
     },
     "/vendor/zitadel-cloud": {
       "hash": "590cf5c8d5d2c43e",
