@@ -25,6 +25,8 @@ import { isSubSlug, toSlug } from "./slug.js";
 import { matchingSubject } from "./gate-disclosure.js";
 import { DATE_SOURCES, isEventDated, changeDateClause, isoWeekWindow, changesInWindow, discoveryBatchNote, firstReadHeading, type DateWindow } from "./change-dates.js";
 import { PRODUCT_DEPRECATED, deprecationEndsTheListedProduct } from "./product-deprecation.js";
+import { RISK_DEMOTION } from "./change-demotion.js";
+export { RISK_DEMOTION, SEVERE_TYPES_WITHOUT_FLAT_DEMOTION, changeTypeCanDemote } from "./change-demotion.js";
 import { vendorHistorySentence } from "./vendor-history.js";
 import { isNoLongerInForce, recordsStillInForce, withResolutionInSummary } from "./change-resolution.js";
 import { changeCitesASource, changeIsUncited, changeSummaryHtml, changeSummaryMarkdown, changeSummaryText, ratingWithheldForNoSourceSentence, type CitableChange } from "./change-citation.js";
@@ -311,13 +313,6 @@ export const VOLATILE_TYPES = new Set([
   "open_source_killed",
   "product_deprecated",
 ]);
-
-export const SEVERE_TYPES_WITHOUT_FLAT_DEMOTION: Record<string, string> = {
-  product_deprecated:
-    "Whether a deprecation is severe is a property of the record, not of the type: it demotes when " +
-    "the record says the product we list is the thing going away, and does not when a vendor retires " +
-    "one of its other services. demotionForChange decides per record.",
-};
 
 function demotionTheRecordCarries(
   change: Pick<DealChange, "change_type" | "vendor" | "summary"> & { resolution?: DealChange["resolution"] },
@@ -930,23 +925,6 @@ export interface VendorRiskResult {
   tie_break: TieBreak;
   summary: string;
 }
-
-export const RISK_DEMOTION: Record<DealChange["change_type"], "risky" | "caution" | null> = {
-  free_tier_removed: "risky",
-  open_source_killed: "risky",
-  limits_reduced: "caution",
-  pricing_restructured: "caution",
-  restriction: "caution",
-  pricing_model_change: "caution",
-  limits_increased: null,
-  new_free_tier: null,
-  new_tier: null,
-  startup_program_expanded: null,
-  pricing_postponed: null,
-  rebranded: null,
-  record_corrected: null,
-  product_deprecated: null,
-};
 
 export const VERDICT_WINDOW_DAYS = 180;
 

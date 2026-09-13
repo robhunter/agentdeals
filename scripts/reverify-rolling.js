@@ -31,6 +31,17 @@ import { findRenderer } from "./rendered-page.js";
 import { isoDay } from "./change-log.js";
 import { recordRefusals, readRefusals, refusalHolds, offerKey } from "./change-refusals.js";
 import {
+  CORROBORATION_EXPIRY_DAYS,
+  heldReadingLines,
+  mergeHeld,
+  pagesAwaitingCorroboration,
+  partitionAccepted,
+  readHeldReadings,
+  resolutionLines,
+  resolveHeldReadings,
+  writeHeldReadings,
+} from "./change-corroboration.js";
+import {
   ATTEMPT_AI_ERROR,
   ATTEMPT_CHANGED,
   ATTEMPT_CONFIRMED,
@@ -87,15 +98,26 @@ export function quarantineRetryBudget(limit) {
 export function pickOldestEntries(offers, limit, now = new Date(), options = {}) {
   const holds = options.refusalHolds ?? new Map();
   const state = options.verificationState ?? new Map();
+  const awaiting = options.awaitingCorroboration ?? new Set();
   const today = isoDay(now);
   const entries = offers.map((offer, index) => {
     const key = offerKey(offer?.vendor, offer?.url);
     const record = state.get(key) ?? null;
     const attempted = lastAttemptedDate(offer, holds.get(key), record);
     const ts = attempted ? new Date(attempted).getTime() : 0;
-    return { index, offer, record, ts, readFailed: lastReadFailed(record) };
+    return {
+      index,
+      offer,
+      record,
+      ts,
+      readFailed: lastReadFailed(record),
+      awaitingCorroboration: awaiting.has(key),
+    };
   });
-  const byAge = (a, b) => a.ts - b.ts || Number(b.readFailed) - Number(a.readFailed);
+  const byAge = (a, b) =>
+    Number(b.awaitingCorroboration) - Number(a.awaitingCorroboration) ||
+    a.ts - b.ts ||
+    Number(b.readFailed) - Number(a.readFailed);
   const active = entries.filter((entry) => !isQuarantined(entry.record)).sort(byAge);
   const dueRetries = entries
     .filter((entry) => isQuarantined(entry.record) && quarantineRetryDue(entry.record, today))
@@ -115,6 +137,7 @@ export function pickOldestEntries(offers, limit, now = new Date(), options = {})
   return {
     picked,
     pickedAfterAFailedRead: drawn.filter((entry) => entry.readFailed).length,
+    pickedForASecondReading: drawn.filter((entry) => entry.awaitingCorroboration).length,
     oldestRemaining,
     retriedFromQuarantine: retries.length + extraRetries.length,
     quarantineDue: dueRetries.length,
@@ -241,6 +264,7 @@ export async function runAiMode(picked, data, dryRun, now, options = {}) {
   const finalUrls = new Map();
   const sourceChecks = emptySourceCounters();
   const recorder = attemptRecorder();
+  const confirmedThisRun = new Set();
 
   for (const entry of picked) {
     const { offer, index } = entry;
@@ -285,6 +309,7 @@ export async function runAiMode(picked, data, dryRun, now, options = {}) {
       if (!dryRun) {
         data.offers[index].verifiedDate = isoDay(now);
       }
+      confirmedThisRun.add(offerKey(offer.vendor, offer.url));
       verified++;
     } else if (result.status === "changed") {
       changed++;
@@ -331,7 +356,28 @@ export async function runAiMode(picked, data, dryRun, now, options = {}) {
     console.log(`  ? ${candidate.vendor} (${candidate.change_type}) recorded without a second opinion: ${error}`);
   }
 
-  const { appended, suppressed } = appendFn(accepted, {
+  const store = (options.readHeldFn ?? readHeldReadings)(options.corroborationPath);
+  const storedTerms = new Map(
+    (data.offers ?? []).map((offer) => [offerKey(offer.vendor, offer.url), offer.description])
+  );
+  const { published, stillHeld, resolutions, answered } = resolveHeldReadings(
+    store.held,
+    { accepted, refused: rejected, confirmed: confirmedThisRun },
+    { now, storedTerms }
+  );
+  const { publishNow, toHold } = partitionAccepted(accepted, answered, { now });
+  for (const line of heldReadingLines(toHold)) console.log(line);
+  for (const line of resolutionLines(resolutions)) console.log(line);
+  const corroboration = writeHeldReadings(
+    mergeHeld(stillHeld, toHold),
+    [...store.resolved, ...resolutions],
+    { dryRun, now, path: options.corroborationPath }
+  );
+  console.log(
+    `  → ${corroboration.document.held.length} reading(s) awaiting a second reading in ${corroboration.path}`
+  );
+
+  const { appended, suppressed } = appendFn([...publishNow, ...published], {
     dryRun,
     windowDays: options.windowDays,
     path: options.changesPath,
@@ -347,7 +393,26 @@ export async function runAiMode(picked, data, dryRun, now, options = {}) {
   );
   console.log(`  → ${refusals.written.length} refusal(s) written to ${refusals.path}`);
 
-  return { verified, flagged, changed, changes, recorded: appended, suppressed, unclassified, rejected, unchecked, reclassified, rewritten, overruled, sourceChecks, attempts: recorder.attempts };
+  return {
+    verified,
+    flagged,
+    changed,
+    changes,
+    recorded: appended,
+    suppressed,
+    unclassified,
+    rejected,
+    unchecked,
+    reclassified,
+    rewritten,
+    overruled,
+    sourceChecks,
+    attempts: recorder.attempts,
+    held: toHold,
+    corroborated: published,
+    resolutions,
+    awaitingCorroboration: corroboration.document.held,
+  };
 }
 
 export function repickWindowDays(total, batchSize) {
@@ -412,10 +477,13 @@ export function failedReadingLines(census) {
   ];
 }
 
-export function summaryLines(result, { useAi, checked, oldestRemaining, total, quarantine, repicked, pickedAfterAFailedRead, failedReadings }) {
+export function summaryLines(result, { useAi, checked, oldestRemaining, total, quarantine, repicked, pickedAfterAFailedRead, pickedForASecondReading, failedReadings }) {
   const lines = ["", "── Summary ──", `Checked: ${checked}`];
   if (pickedAfterAFailedRead !== undefined) {
     lines.push(`Drawn after a read that failed: ${pickedAfterAFailedRead} of ${checked}`);
+  }
+  if (pickedForASecondReading !== undefined) {
+    lines.push(`Drawn to give a held demoting verdict its second reading: ${pickedForASecondReading} of ${checked}`);
   }
   lines.push(`Verified (date bumped): ${result.verified}`);
   if (useAi) {
@@ -435,6 +503,15 @@ export function summaryLines(result, { useAi, checked, oldestRemaining, total, q
       lines.push(`  ${candidate.vendor}: ${difference.attribute} ${difference.previous} → ${difference.current}`);
     }
     lines.push(`Recorded without a second opinion: ${(result.unchecked ?? []).length}`);
+    lines.push(`Held for a second reading (a demoting verdict this run read once): ${(result.held ?? []).length}`);
+    for (const line of heldReadingLines(result.held ?? [])) lines.push(line);
+    lines.push(`Held readings a reading this run answered: ${(result.resolutions ?? []).length}`);
+    for (const line of resolutionLines(result.resolutions ?? [])) lines.push(line);
+    lines.push(`Published because a second reading agreed: ${(result.corroborated ?? []).length}`);
+    lines.push(
+      `Awaiting a second reading, given up on after ${CORROBORATION_EXPIRY_DAYS} days: ` +
+        `${(result.awaitingCorroboration ?? []).length}`
+    );
     lines.push(`Recorded to data/deal_changes.json: ${result.recorded.length}`);
     const regraded = regradeRefusals(result.suppressed).length;
     lines.push(`Already recorded, not written again: ${result.suppressed.length - regraded}`);
@@ -513,8 +590,10 @@ async function main() {
     process.exit(0);
   }
 
-  const selection = { refusalHolds: holds, verificationState: state };
-  const { picked, oldestRemaining, retriedFromQuarantine, pickedAfterAFailedRead } = pickOldestEntries(offers, limit, now, selection);
+  const awaitingCorroboration = pagesAwaitingCorroboration(readHeldReadings().held);
+  const selection = { refusalHolds: holds, verificationState: state, awaitingCorroboration };
+  const { picked, oldestRemaining, retriedFromQuarantine, pickedAfterAFailedRead, pickedForASecondReading } =
+    pickOldestEntries(offers, limit, now, selection);
 
   const renderer = findRenderer();
   console.log(
@@ -576,6 +655,7 @@ async function main() {
     quarantine,
     repicked,
     pickedAfterAFailedRead,
+    pickedForASecondReading,
     failedReadings: failedReadingCensus(state, offers),
   })) {
     console.log(line);

@@ -806,17 +806,26 @@ describe("change log writer", () => {
     const picked = [{ index: 0, offer: { ...OFFER, verifiedDate: "2026-01-01" } }];
     const fetchFn = async () => ({ ok: true, text: "Examplebase pricing — 500 MB for 14 days, then $19/month" });
 
-    it("writes the detected change to the log", async () => {
+    it("writes the detected change to the log once a second reading agrees", async () => {
       const file = tempLog([]);
+      const corroborationPath = path.join(path.dirname(file), "change_corroboration.json");
       const data = { offers: [{ ...OFFER, verifiedDate: "2026-01-01" }] };
-      const result = await runAiMode(picked, data, false, NOW, {
-        fetchFn,
-        verifyFn: async () => DETECTION,
-        rateLimitMs: 0,
-        changesPath: file,
-      });
-      assert.strictEqual(result.changed, 1);
-      assert.strictEqual(result.recorded.length, 1);
+      const readIt = () =>
+        runAiMode(picked, data, false, NOW, {
+          fetchFn,
+          verifyFn: async () => DETECTION,
+          rateLimitMs: 0,
+          changesPath: file,
+          corroborationPath,
+        });
+
+      const first = await readIt();
+      assert.strictEqual(first.changed, 1);
+      assert.strictEqual(first.recorded.length, 0, "a demoting change published on one reading");
+      assert.strictEqual(JSON.parse(readFileSync(file, "utf-8")).changes.length, 0);
+
+      const second = await readIt();
+      assert.strictEqual(second.recorded.length, 1);
       const written = JSON.parse(readFileSync(file, "utf-8"));
       assert.strictEqual(written.changes.length, 1);
       rmSync(path.dirname(file), { recursive: true, force: true });
@@ -830,6 +839,7 @@ describe("change log writer", () => {
         verifyFn: async () => DETECTION,
         rateLimitMs: 0,
         changesPath: file,
+        corroborationPath: path.join(path.dirname(file), "change_corroboration.json"),
       });
       assert.strictEqual(data.offers[0].verifiedDate, "2026-01-01");
       rmSync(path.dirname(file), { recursive: true, force: true });

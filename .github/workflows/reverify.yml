@@ -49,6 +49,8 @@ jobs:
           QUARANTINED=$(grep -oE '^In quarantine, retried every [0-9]+ days: [0-9]+' /tmp/reverify.log | grep -oE '[0-9]+$' || echo 0)
           RETRIED=$(grep -oE '^Retried from quarantine: [0-9]+' /tmp/reverify.log | grep -oE '[0-9]+$' || echo 0)
           REPICKED=$(grep -oE '^Checked again on the next run: [0-9]+' /tmp/reverify.log | grep -oE '[0-9]+$' || echo 0)
+          HELD=$(grep -oE '^Awaiting a second reading, given up on after [0-9]+ days: [0-9]+' /tmp/reverify.log | grep -oE '[0-9]+$' || echo 0)
+          echo "held=$HELD" >> "$GITHUB_OUTPUT"
           echo "verified=$VERIFIED" >> "$GITHUB_OUTPUT"
           echo "flagged=$FLAGGED" >> "$GITHUB_OUTPUT"
           echo "recorded=$RECORDED" >> "$GITHUB_OUTPUT"
@@ -68,11 +70,12 @@ jobs:
           QUARANTINED: ${{ steps.reverify.outputs.quarantined }}
           RETRIED: ${{ steps.reverify.outputs.retried }}
           REPICKED: ${{ steps.reverify.outputs.repicked }}
+          HELD: ${{ steps.reverify.outputs.held }}
         run: |
           bash scripts/gate-data-push.sh \
             data-quarantine/rolling-reverification \
-            "data(auto): rolling re-verification — ${VERIFIED} verified, ${FLAGGED} flagged, ${RECORDED} changes recorded, ${RETRIED} retried from quarantine, ${QUARANTINED} in quarantine, ${REPICKED} to be checked again" \
-            data/index.json data/deal_changes.json data/change_refusals.json data/verification_state.json data/quality_budgets.json data/page-lastmod.json artifacts/free-llm-api-index/README.md
+            "data(auto): rolling re-verification — ${VERIFIED} verified, ${FLAGGED} flagged, ${RECORDED} changes recorded, ${HELD} awaiting a second reading, ${RETRIED} retried from quarantine, ${QUARANTINED} in quarantine, ${REPICKED} to be checked again" \
+            data/index.json data/deal_changes.json data/change_refusals.json data/change_corroboration.json data/verification_state.json data/quality_budgets.json data/page-lastmod.json artifacts/free-llm-api-index/README.md
 
       - name: Say where it can be seen what the gate did with this run's data
         if: always() && (steps.gate.outputs.quarantined == 'true' || steps.gate.outputs.pushed_over_failures == 'true' || steps.gate.outputs.drifted_guards != '' || steps.gate.outputs.held_back_vendors != '')
