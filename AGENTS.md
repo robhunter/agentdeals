@@ -1,6 +1,6 @@
 # AgentDeals
 
-AgentDeals is an MCP server and REST API that aggregates free tiers, startup credits, and developer tool deals. It indexes 1,525 verified offers across 54 categories with pricing change tracking.
+AgentDeals is an MCP server and REST API that aggregates free tiers, startup credits, and developer tool deals. It indexes {{OFFER_COUNT}} verified offers across {{CATEGORY_COUNT}} categories with pricing change tracking.
 
 ## When to Use AgentDeals
 

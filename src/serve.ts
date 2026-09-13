@@ -20,6 +20,7 @@ import { recordApiHit, recordSessionConnect, recordSessionDisconnect, recordLand
 import { buildDailyRollup, readRollups, coverageOf, ROLLUP_DATE_PATTERN } from "./analytics-rollup.js";
 import { configureVendorSeries, recordVendorRequest, flushVendorSeries, readVendorSeries, vendorSeriesGauge, vendorExportAuthorized, isSeriesDate, seriesDateRange, VENDOR_SERIES_PATH, VENDOR_SERIES_RETENTION_DAYS, VENDOR_SERIES_NOTES } from "./vendor-series.js";
 import { openapiSpec } from "./openapi.js";
+import { AGENT_CARD_PATHS, OPENAPI_ALIAS_PATHS, OPENAPI_CANONICAL_PATH, OPENAPI_YAML_PATH, serviceDescription } from "./agent-card.js";
 import { CATEGORY_ALIASES, CATEGORY_RETIREMENTS, EXAMPLE_MEMBERS_BASIS, buildCategoryDirectory, categoryHolds, familySiblings, publishedScopeFor, resolveCategoryName, retiredCategoryNames, retirementFor, scopeFor } from "./category-scope.js";
 import { retiredCategoryDescription, retiredCategoryNoticeHtml, retiredCategoryTitle } from "./category-retirement.js";
 import { LINK_GRACE_DAYS, unreachableNoticeForUrl } from "./link-health.js";
@@ -657,9 +658,14 @@ function supersededTermsField(offer: StoredTermsOf): { terms_superseded?: Supers
 const stats = {
   offers: offers.length,
   categories: categories.length,
-  tools: 4,
   dealChanges: recordsStillInForce(dealChanges).length,
 };
+
+function withCatalogueFigures(markdown: string): string {
+  return markdown
+    .replaceAll("{{OFFER_COUNT}}", stats.offers.toLocaleString("en-US"))
+    .replaceAll("{{CATEGORY_COUNT}}", String(stats.categories));
+}
 
 export function changeLogFreshnessNote(now: Date = new Date()): string {
   const freshness = getChangeLogFreshness(now);
@@ -54225,6 +54231,9 @@ const dispatchRequest = async (req: IncomingMessage, res: ServerResponse) => {
     url.pathname !== "/og-image.png" && url.pathname !== "/robots.txt" &&
     url.pathname !== "/sitemap.xml" && !url.pathname.startsWith("/sitemap-") &&
     !url.pathname.startsWith("/.well-known/") &&
+    !(AGENT_CARD_PATHS as readonly string[]).includes(url.pathname) &&
+    !(OPENAPI_ALIAS_PATHS as readonly string[]).includes(url.pathname) &&
+    url.pathname !== OPENAPI_YAML_PATH &&
     url.pathname !== "/feed.xml";
   if (isPagePath) {
     recordAfterResponse(res, "page-view", () => {
@@ -54436,6 +54445,21 @@ const dispatchRequest = async (req: IncomingMessage, res: ServerResponse) => {
       "X-Content-Type-Options": "nosniff",
     });
     res.end(JSON.stringify(manifest, null, 2));
+  } else if ((AGENT_CARD_PATHS as readonly string[]).includes(url.pathname) && isGetOrHead) {
+    recordApiHit(url.pathname);
+    res.writeHead(200, {
+      "Content-Type": "application/json",
+      "Cache-Control": "public, max-age=3600",
+      "Access-Control-Allow-Origin": "*",
+      "X-Content-Type-Options": "nosniff",
+    });
+    res.end(JSON.stringify(serviceDescription(BASE_URL), null, 2));
+  } else if (((OPENAPI_ALIAS_PATHS as readonly string[]).includes(url.pathname) || url.pathname === OPENAPI_YAML_PATH) && isGetOrHead) {
+    recordApiHit(OPENAPI_CANONICAL_PATH);
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: OPENAPI_CANONICAL_PATH, params: { alias: url.pathname }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+    const asYaml = url.pathname === OPENAPI_YAML_PATH;
+    res.writeHead(200, { "Content-Type": asYaml ? "application/yaml; charset=utf-8" : "application/json", "Access-Control-Allow-Origin": "*" });
+    res.end(JSON.stringify(openapiSpec));
   } else if (url.pathname === "/api/stack" && isGetOrHead) {
     recordApiHit("/api/stack");
     const useCase = url.searchParams.get("use_case") || url.searchParams.get("q") || "";
@@ -55252,7 +55276,7 @@ ${catList}
       res.end("Not found");
     } else {
       res.writeHead(200, { "Content-Type": "text/markdown; charset=utf-8", "Cache-Control": "public, max-age=3600" });
-      res.end(agentsMd);
+      res.end(withCatalogueFigures(agentsMd));
     }
   } else if (url.pathname === "/sitemap.xml" && isGetOrHead) {
     const now = new Date().toISOString().split("T")[0];

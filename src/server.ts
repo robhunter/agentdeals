@@ -1,6 +1,3 @@
-import { readFileSync } from "node:fs";
-import { join, dirname } from "node:path";
-import { fileURLToPath } from "node:url";
 import { McpServer, ResourceTemplate } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { oldestVerifiedDateForSlug, getCategories, getDealChanges, getPersonalizedChanges, getNewOffers, getNewestDeals, getOfferDetails, searchOffers, stabilityWithheldDisclosure, enrichOffers, gateForOffer, compareServices, checkVendorRisk, auditStack, getExpiringDeals, getWeeklyDigest, loadOffers, loadDealChanges, classifyStability, publishedStabilityFor, stabilityWithheldSentence, getVendorReferral, sanitizeQuery } from "./data.js";
@@ -16,13 +13,14 @@ import type { Offer, EnrichedOffer, DealChange } from "./types.js";
 import { substitutesFor } from "./product-role.js";
 import { registerMcpAppsResources, TOOL_UI_META } from "./mcp-apps.js";
 import { CATALOGUE_CATEGORY_COUNT, CATALOGUE_OFFER_FLOOR_LABEL, MCP_INSTRUCTIONS } from "./mcp-instructions.js";
-import { MCP_TOOLS, MCP_TOOL_COUNT } from "./mcp-tool-inventory.js";
+import { MCP_TOOLS, MCP_TOOL_COUNT, MCP_PROTOCOL_VERSION } from "./mcp-tool-inventory.js";
 import { MCP_SIGNAL_FOOTER } from "./signal-copy.js";
 import { lastReadDate, verificationDatesClause } from "./read-date.js";
 import { unconfirmedTermsForOffer } from "./vendor-verdict-input.js";
 import { NOT_VERIFIED, termsWithTheReasonWeCannotConfirmThem } from "./vendor-verdict.js";
 import { BASE_URL } from "./base-url.js";
 import { withProvenance } from "./provenance.js";
+import { PKG_VERSION } from "./package-version.js";
 
 const SIGNAL_FOOTER_CONTENT = { type: "text" as const, text: MCP_SIGNAL_FOOTER };
 
@@ -44,8 +42,6 @@ function citedJsonAcrossTheWholeIndex<T extends object>(payload: T): string {
   );
 }
 
-const __dirname_server = dirname(fileURLToPath(import.meta.url));
-const PKG_VERSION = JSON.parse(readFileSync(join(__dirname_server, "..", "package.json"), "utf-8")).version;
 
 function toConciseOffer(offer: Offer | EnrichedOffer) {
   const base = { vendor: offer.vendor, tier: offer.tier, description: offer.description, url: offer.url, gate: gateForOffer(offer), ...(offer.payment_protocols?.length ? { payment_protocols: offer.payment_protocols.map(p => p.protocol) } : {}) };
@@ -1008,12 +1004,12 @@ export function getServerCard(baseUrl: string) {
   return {
     "$schema": "https://static.modelcontextprotocol.io/schemas/mcp-server-card/v1.json",
     version: "1.0",
-    protocolVersion: "2025-06-18",
+    protocolVersion: MCP_PROTOCOL_VERSION,
     serverInfo: {
       name: "agentdeals",
       title: "AgentDeals",
       version: PKG_VERSION,
-      description: "MCP server aggregating 1,589+ free tiers, startup credits, and developer infrastructure deals",
+      description: `MCP server aggregating ${CATALOGUE_OFFER_FLOOR_LABEL}+ free tiers, startup credits, and developer infrastructure deals across ${CATALOGUE_CATEGORY_COUNT} categories`,
       homepage: "https://agentdeals.dev",
     },
     description: `Search and compare free tiers, startup credits, and pricing changes across ${CATALOGUE_OFFER_FLOOR_LABEL}+ developer tools. ${MCP_TOOL_COUNT} intent-based MCP tools for infrastructure decisions, cost estimation, and vendor comparison.`,
