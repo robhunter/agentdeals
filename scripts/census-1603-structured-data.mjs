@@ -55,11 +55,14 @@ const offers = loadOffers();
 const changes = changesByVendor();
 
 const owedSentence = new Map();
+const noFreePlanRead = new Set();
 for (const offer of offers) {
   const superseded = supersedingChange(offer, changes.get(offer.vendor.toLowerCase()) ?? []);
   if (superseded) continue;
   const unconfirmed = unconfirmedTermsForOffer(offer);
-  if (unconfirmed) owedSentence.set(offer, unconfirmedTermsSentence(unconfirmed));
+  if (!unconfirmed) continue;
+  owedSentence.set(offer, unconfirmedTermsSentence(unconfirmed));
+  if (!unconfirmed.theReadFoundAFreePlan) noFreePlanRead.add(offer);
 }
 
 const offerKey = (vendor, category, tier) => `${String(vendor).toLowerCase()}|${category}|${tier}`;
@@ -99,12 +102,14 @@ try {
     let owed = 0;
     let carried = 0;
     let unmatched = 0;
+    let zeroPricedNoFreePlan = 0;
     const missing = [];
     const owedVendors = new Set();
     const carriedVendors = new Set();
     for (const node of nodes) {
       const offer = offerByKey.get(offerKey(node.name, node.applicationCategory, node.offers?.description));
       if (!offer) { unmatched++; continue; }
+      if (noFreePlanRead.has(offer) && node.offers?.price === "0") zeroPricedNoFreePlan++;
       const sentence = owedSentence.get(offer);
       if (!sentence) continue;
       owed++;
@@ -132,6 +137,7 @@ try {
       status: 200,
       nodes: nodes.length,
       unmatched,
+      zeroPricedNoFreePlan,
       owed,
       carried,
       proseVendors: proseVendors.size,
@@ -166,6 +172,7 @@ try {
   lines.push(`pages where a vendor carries the clause in prose and not in the structured data: ${proseAhead.length}`);
   lines.push(`pages naming a vendor as verified while the page owes a caveat for it: ${metaExposed.length}`);
   lines.push(`pages owing a caveat whose meta description does not disclose one: ${metaOwing.length}`);
+  lines.push(`nodes pricing an offer at 0 over a read that found no free plan: ${served.reduce((n, r) => n + r.zeroPricedNoFreePlan, 0)}`);
   lines.push("");
   lines.push("| page | nodes | owed | carried | prose vendors | structured vendors | meta discloses |");
   lines.push("|---|---:|---:|---:|---:|---:|---|");
