@@ -608,7 +608,7 @@ function unconfirmedTermsFor(offer: Offer): UnconfirmedTerms | null {
 
 function termsUnconfirmedNoticeHtml(offer: Offer): string {
   const unconfirmed = unconfirmedTermsFor(offer);
-  if (!unconfirmed) return "";
+  if (!unconfirmed || unconfirmed.because.reason === "link_unreachable") return "";
   return `<span class="listing-terms-unconfirmed" style="display:block;margin-top:.3rem;color:#d29922">`
     + `${escHtmlServer(unconfirmedTermsSentence(unconfirmed))}</span>`;
 }
@@ -1869,7 +1869,7 @@ function buildCategoryPage(slug: string): string | null {
   const offersHtml = catOffers.map((o) => `        <tr>
           <td style="font-weight:600;color:var(--text);white-space:nowrap"><a href="/vendor/${toSlug(o.vendor)}" style="color:var(--text)">${escHtmlServer(o.vendor)}</a></td>
           <td style="font-family:var(--mono);color:var(--accent);white-space:nowrap">${escHtmlServer(o.tier)}</td>
-          <td style="color:var(--text-muted)">${publishedTermsHtml(o)}${listingEligibilityNoticeHtml(o)}${termsUnconfirmedNoticeHtml(o)}</td>
+          <td style="color:var(--text-muted)">${publishedTermsHtml(o)}${listingEligibilityNoticeHtml(o)}${listingUnreachableNoticeHtml(o)}${termsUnconfirmedNoticeHtml(o)}</td>
           <td style="font-family:var(--mono);color:var(--text-dim);white-space:nowrap">${escHtmlServer(verificationDatesCell(o))}</td>
         </tr>`).join("\n");
 

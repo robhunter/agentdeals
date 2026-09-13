@@ -13,7 +13,7 @@ const REPO = path.join(__dirname, "..");
 
 const { ANSWERED_OUTCOMES, applyAttempt, ATTEMPT_CHANGED, ATTEMPT_CONFIRMED, ATTEMPT_FETCH_FAILED, ATTEMPT_SOURCE_UNUSABLE, ATTEMPT_UNCLEAR } =
   await import("../scripts/verification-state.js");
-const { OUTCOMES_THAT_READ_THE_PAGE, lastReadDate, lastReadNote, verificationDates, verificationDatesCell, verificationDatesSentence } =
+const { OUTCOMES_THAT_READ_THE_PAGE, attemptThatDidNotRead, lastReadDate, lastReadNote, verificationDates, verificationDatesCell, verificationDatesSentence } =
   await import("../dist/read-date.js");
 const { resetVerificationStateCache } = await import("../dist/verification-state.js");
 
@@ -111,6 +111,36 @@ describe("the day we last read the page", () => {
     assert.equal(verificationDatesCell(offer), "2026-09-09 / 2026-04-12");
     assert.equal(verificationDatesSentence(offer), "Read 2026-09-09 · verified 2026-04-12");
     assert.match(lastReadNote(offer), /last confirmed on 2026-04-12/);
+  });
+
+  it("publishes the attempt that did not read the page, marked as one", () => {
+    withState([record({ last_attempt_at: "2026-09-09", last_outcome: ATTEMPT_FETCH_FAILED, last_success: "2026-04-12" })]);
+    assert.equal(attemptThatDidNotRead(offer), "2026-09-09");
+    assert.equal(verificationDatesCell(offer), "2026-04-12 · tried 2026-09-09, no read");
+    assert.equal(
+      verificationDatesSentence(offer),
+      "Read and verified 2026-04-12 · tried again 2026-09-09 and did not read the page",
+    );
+    assert.match(lastReadNote(offer), /that attempt confirmed nothing/);
+  });
+
+  it("publishes the attempt after a read that answered on an earlier day", () => {
+    withState([
+      record({ last_attempt_at: "2026-09-10", last_outcome: ATTEMPT_UNCLEAR, last_success: "2026-04-12", last_read_at: "2026-09-09" }),
+    ]);
+    assert.equal(verificationDatesCell(offer), "2026-09-09 / 2026-04-12 · tried 2026-09-10, no read");
+  });
+
+  it("publishes no attempt where the last one read the page", () => {
+    withState([record({ last_attempt_at: "2026-09-09", last_outcome: ATTEMPT_CHANGED, last_success: "2026-04-12" })]);
+    assert.equal(attemptThatDidNotRead(offer), null);
+    assert.doesNotMatch(verificationDatesCell(offer), /tried/);
+  });
+
+  it("publishes no attempt for a record the state file has never held", () => {
+    withState([]);
+    assert.equal(attemptThatDidNotRead(offer), null);
+    assert.equal(verificationDatesCell(offer), "2026-04-12");
   });
 });
 

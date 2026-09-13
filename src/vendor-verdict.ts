@@ -77,7 +77,7 @@ export interface VendorVerdictInput {
   linkUnreachable?: boolean;
   sourceCheck?: SourceCheckOutcome | null;
   sourceChecked?: string | null;
-  lastReachable?: string | null;
+  linkCheckedOn?: string | null;
   termsConfirmedOn: string;
   refusedReads?: readonly RefusedRead[];
 }
@@ -316,7 +316,7 @@ export interface TermsEvidence {
   refusedRead: RefusedRead | null;
   sourceCheck: SourceCheckOutcome | null;
   sourceChecked?: string | null;
-  lastReachable?: string | null;
+  linkCheckedOn?: string | null;
 }
 
 export const TERMS_WITHHELD_LABELS: Record<TermsWithholdingTag, string> = {
@@ -344,7 +344,7 @@ function termsWithholding(evidence: TermsEvidence): TermsWithholding | null {
 export interface PublishedTermsRow {
   vendor: string;
   source_check?: Pick<SourceCheck, "outcome" | "checked"> | null;
-  link_unreachable?: { last_reachable?: string | null } | null;
+  link_unreachable?: { last_reachable?: string | null; checked?: string | null } | null;
   refused_read?: RefusedRead | null;
   rating_withheld?: RatingWithheld | null;
   gate?: unknown;
@@ -370,7 +370,7 @@ export function publishedTermsEvidence(row: PublishedTermsRow): TermsEvidence {
     refusedRead,
     sourceCheck: row.source_check?.outcome ?? null,
     sourceChecked: row.source_check?.checked ?? null,
-    lastReachable: link?.last_reachable ?? null,
+    linkCheckedOn: link?.checked ?? null,
   };
 }
 
@@ -382,13 +382,13 @@ export function termsEvidenceOf(input: VendorVerdictInput): TermsEvidence {
     refusedRead: refusalWithholdsStability(input),
     sourceCheck: input.sourceCheck ?? null,
     sourceChecked: input.sourceChecked ?? null,
-    lastReachable: input.lastReachable ?? null,
+    linkCheckedOn: input.linkCheckedOn ?? null,
   };
 }
 
 function whenWeCouldNotConfirm(evidence: TermsEvidence, because: TermsWithholding): string | null {
   if (withheldForARefusedRead(because)) return because.refusedOn;
-  if (because.reason === "link_unreachable") return evidence.lastReachable ?? null;
+  if (because.reason === "link_unreachable") return evidence.linkCheckedOn ?? null;
   return evidence.sourceChecked ?? null;
 }
 

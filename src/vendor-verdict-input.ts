@@ -61,7 +61,7 @@ export function vendorVerdictContextFrom(evidence: VendorVerdictEvidence): Vendo
       linkUnreachable: Boolean(linkUnreachable),
       sourceCheck: primary.source_check?.outcome ?? null,
       sourceChecked: primary.source_check?.checked ?? null,
-      lastReachable: linkUnreachable?.last_reachable ?? null,
+      linkCheckedOn: linkUnreachable?.checked ?? null,
       termsConfirmedOn: primary.verifiedDate,
       refusedReads,
     },

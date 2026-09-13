@@ -195,11 +195,13 @@ describe("a ranked page that publishes terms we could not confirm", () => {
   });
 
   it("dates the caveat with the day of the read that did not confirm", () => {
-    for (const route of rankedPaths) {
+    const bestOf = rankedPaths.filter((p) => p.startsWith("/best/"));
+    let reasoned = 0;
+    for (const route of bestOf) {
       const body = pageOf.get(route)!;
-      if (!body.includes("durability-withheld-because")) continue;
       const cells = [...body.matchAll(/class="durability-withheld-because"[^>]*>([\s\S]*?)<\/span>/g)].map((m) => m[1]);
-      assert.ok(cells.length > 0, `${route} marks a withheld class and names no reason`);
+      assert.ok(cells.length > 0, `${route} withholds a durability class and names no reason for any row`);
+      reasoned += cells.length;
       for (const cell of cells) {
         assert.ok(
           Object.values(TERMS_WITHHELD_LABELS).some((label) => cell.includes(label)),
@@ -208,6 +210,10 @@ describe("a ranked page that publishes terms we could not confirm", () => {
         assert.match(cell, /\d{4}-\d{2}-\d{2}/, `${route} names a reason with no date: "${cell}"`);
       }
     }
+    assert.ok(
+      reasoned >= NOT_OK_OUTCOMES.length,
+      `${reasoned} rows name a reason across ${bestOf.length} best-of pages, fewer than the ${NOT_OK_OUTCOMES.length} outcomes in the corpus`,
+    );
   });
 
   it("shows the read that did not answer beside the date it last confirmed", () => {

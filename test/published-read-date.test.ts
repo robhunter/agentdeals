@@ -174,7 +174,11 @@ describe("every record publishes the day we last read its page", () => {
     const overStdio = await readResourceOverStdio(uri);
     const overHttp = await readResourceOverHttp(uri);
     for (const [transport, text] of [["stdio", overStdio], ["http", overHttp]] as const) {
-      assert.match(text, new RegExp(`\\*\\*Verified:\\*\\* ${widestGap.offer.verifiedDate}`), `${transport} dropped the verification date`);
+      assert.match(
+        text,
+        new RegExp(`\\*\\*Verified:\\*\\* ${widestGap.offer.verifiedDate}|last confirmed on ${widestGap.offer.verifiedDate}`),
+        `${transport} dropped the date we last confirmed the terms`,
+      );
       assert.match(text, new RegExp(`\\*\\*Last read:\\*\\* ${widestGap.read}`), `${transport} does not publish the day we read the page`);
     }
   });
