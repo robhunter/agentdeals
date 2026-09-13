@@ -30,11 +30,11 @@ function byColumn(claims: UpheldClaim[]): UpheldClaim[] {
 }
 
 function leadClause(claim: UpheldClaim): string {
-  return `${claim.subject} leads it with ${claim.held}`;
+  return `${claim.subject} leads it`;
 }
 
 function namedLeadClause(claim: UpheldClaim): string {
-  return `${claim.subject} leads on ${claim.column.header} with ${claim.held}`;
+  return `${claim.subject} leads on ${claim.column.header}`;
 }
 
 export function generosityReason(ungraded: UngradedClaim[]): string {
@@ -56,7 +56,8 @@ export function generosityAnswer(html: string): string {
   if (sorted.length === 1) {
     const only = sorted[0]!;
     return (
-      `The one column on this page we can rank is ${only.column.header}, and ${leadClause(only)}. ` +
+      `The one column on this page we can rank is ${only.column.header}, and ${leadClause(only)} — ` +
+      `the figure is in that column, on the row this page prints for it. ` +
       `Generosity is not one quantity, so that settles ${only.column.header} and not the free tier as a whole.`
     );
   }
@@ -64,7 +65,7 @@ export function generosityAnswer(html: string): string {
   const joined = `${clauses.slice(0, -1).join("; ")}; and ${clauses[clauses.length - 1]}`;
   return (
     `These free tiers rank differently by column, so there is no single most generous one. ` +
-    `${joined}. Each figure is read from a table on this page, and a tier that leads one column trails another.`
+    `${joined}. Each figure is in the column named beside it, and a tier that leads one column trails another.`
   );
 }
 

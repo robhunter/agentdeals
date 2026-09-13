@@ -71,8 +71,8 @@ import { subscribe as watchlistSubscribe, getSubscription as getWatchlistSubscri
 import { changeLogAnchorFor, changeLogVendorMap, toSlug, vendorSlugMap, resolveVendorSlug, namedVendorSlug, comparisonOfOneRecord, recordNamedBySlug } from "./vendor-slug.js";
 import { createRegistrationLimiter, rateLimitHeaders } from "./rate-limit.js";
 import { offerForSlug, vendorRates, cheapestRate, dearestRate, spanOfRates, formatRate, formatRateSpan, monthlyTokenCost, formatDollars, type ModelRate } from "./model-rates.js";
-import { STALE_FACT_PAGES_BASELINE, factsOutdatedBy, getPageReview, linkifyVerdictBlocks, newestChangeBySlug, overdueReport, pageCompiledClause, pageDataProvenance, pageDateModified, tabulatedSubjectSlots, tabulatedSubjects, utcToday, verdictsOutdatedBy } from "./page-reviews.js";
-import { answerWithProvenance, faqPageJsonLd, pageFaqProvenanceClause, type FaqItem } from "./faq-provenance.js";
+import { STALE_FACT_PAGES_BASELINE, factsOutdatedBy, linkifyVerdictBlocks, newestChangeBySlug, overdueReport, pageCompiledClause, pageDataProvenance, pageDateModified, tabulatedSubjectSlots, tabulatedSubjects, utcToday, verdictsOutdatedBy } from "./page-reviews.js";
+import { faqPageJsonLd, type FaqItem } from "./faq-provenance.js";
 import {
   GENEROSITY_JSON_TOKEN,
   GENEROSITY_PROSE_TOKEN,
@@ -533,16 +533,8 @@ function withPageFreshness(html: string, pagePath: string): string {
   return withFreshnessClaim(html, () => freshnessClaimFor(pagePath, html, verifiedDatesForSlug));
 }
 
-function tableProvenanceClause(pagePath: string): string {
-  return getPageReview(pagePath)?.reads_index ? "" : pageFaqProvenanceClause(pagePath);
-}
-
-function withPageGenerosityAnswer(html: string, pagePath: string): string {
-  return withGenerosityAnswer(
-    html,
-    page => answerWithProvenance(generosityAnswer(page), tableProvenanceClause(pagePath)),
-    escHtmlServer,
-  );
+function withPageGenerosityAnswer(html: string): string {
+  return withGenerosityAnswer(html, generosityAnswer, escHtmlServer);
 }
 
 function apiExampleSubjects(): ExampleSubjects {
@@ -53904,7 +53896,7 @@ const dispatchRequest = async (req: IncomingMessage, res: ServerResponse) => {
     if (answeredNotModified) return rawEnd();
     if (typeof args[0] === "string" && /^text\/html/.test(servedContentType)) {
       args[0] = withLedeBeforeNav(
-        withPageGenerosityAnswer(withPageFreshness(withReviewByline(args[0], url.pathname), url.pathname), url.pathname),
+        withPageGenerosityAnswer(withPageFreshness(withReviewByline(args[0], url.pathname), url.pathname)),
       );
     }
     if (headOfServedBody) {

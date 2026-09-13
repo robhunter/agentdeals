@@ -9,6 +9,7 @@ const { gradeSuperlatives, measuresTheFreeTier, outrankedElsewhere, pageTables }
 const { NO_COLUMN_SETTLES_GENEROSITY, GENEROSITY_JSON_TOKEN, GENEROSITY_PROSE_TOKEN } =
   await import("../dist/generosity-answer.js");
 const { NO_RANKING_HELD } = await import("../dist/unranked.js");
+const { statesVendorFigure } = await import("../dist/faq-provenance.js");
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 let serverPort = 0;
@@ -188,6 +189,15 @@ describe("#1492 the generosity answer resolves from the page it is printed on", 
       }
     }
     assert.deepStrictEqual(disagreeing, [], `two surfaces answering differently:\n${disagreeing.join("\n")}`);
+  });
+
+  it("leaves the figure in the column it names rather than restating it", () => {
+    const restating: string[] = [];
+    for (const [slug, html] of served) {
+      const answer = [...faqAnswers(html)].find(([q]) => GENEROSITY_QUESTION.test(q))![1];
+      if (statesVendorFigure(answer)) restating.push(`/${slug} :: ${answer}`);
+    }
+    assert.deepStrictEqual(restating, [], `answers stating a figure they cannot date:\n${restating.join("\n")}`);
   });
 
   it("leaves no substitution marker on a served page", () => {
