@@ -101,8 +101,14 @@ export function loadOffers(): Offer[] {
     return cachedOffers;
   }
 
-  cachedOffers = data.offers;
+  cachedOffers = data.offers.map(withoutGateInput);
   return cachedOffers;
+}
+
+export function withoutGateInput(offer: Offer): Offer {
+  if (!("free_grounds" in offer)) return offer;
+  const { free_grounds: _decidesWhatThePipelineMayRecord, ...rest } = offer;
+  return rest;
 }
 
 export function resetCache(): void {

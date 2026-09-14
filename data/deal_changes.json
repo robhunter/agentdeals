@@ -4998,7 +4998,13 @@
       "category": "Analytics",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
+      "recorded_date": "2026-08-28",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-14",
+        "detail": "Retracted 2026-09-14: plausible/analytics is AGPL-3.0 and was pushed to on 2026-09-12, so the self-hosted edition this offer describes is free to run today. The page this record cites, plausible.io, is the marketing homepage: it advertises the hosted plans from $9/mo and states nothing about the licence in either direction. This record's own previous_state reads \"Free OSS (AGPLv3) ... Self-hosted with no limits. Cloud plans start at $9/mo\", so the paid hosting it reports as new was already what we held. A page that sells hosting cannot say a licence ended.",
+        "source_url": "https://github.com/plausible/analytics"
+      }
     },
     {
       "vendor": "DynamicDocs",
@@ -5793,7 +5799,13 @@
       "category": "Design",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
+      "recorded_date": "2026-08-28",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-14",
+        "detail": "Retracted 2026-09-14: Klarr-Agency/Circum-Icons is MPL-2.0, which grants free use of the icon set and has not been changed. circumicons.com, the page this record cites, prices a $9 bundle of 1600+ icons; a price for a bundle is not the withdrawal of a licence. The repository was last pushed on 2024-04-20, so the project is unmaintained — that is a different thing to report and a different record, not this one.",
+        "source_url": "https://github.com/Klarr-Agency/Circum-Icons"
+      }
     },
     {
       "vendor": "Grapedrop",
@@ -6033,7 +6045,13 @@
       "category": "Analytics",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
+      "recorded_date": "2026-08-28",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-14",
+        "detail": "Retracted 2026-09-14: rybbit-io/rybbit is AGPL-3.0 and was pushed to on 2026-09-14, so the self-hosted edition is free to run today and this record's claim that \"the free tier no longer exists\" is wrong as written. rybbit.com states what the hosted plans cost, which is evidence about a plan and not about a licence. Whether the hosted 3,000-events-a-month plan named in our stored description has gone is a separate question this record does not settle, and a record that answers it must say it is the hosted plan that ended.",
+        "source_url": "https://github.com/rybbit-io/rybbit"
+      }
     },
     {
       "vendor": "FeedBear",
