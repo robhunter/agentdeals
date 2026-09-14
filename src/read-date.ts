@@ -11,6 +11,8 @@ const READ_THE_PAGE = new Set<string>(OUTCOMES_THAT_READ_THE_PAGE);
 
 export const VERIFICATION_DATES_HEADING = "Read / verified";
 export const LAST_READ_LABEL = "Last read";
+export const CONFIRMED_DATE_LABEL = "Verified";
+export const UNCONFIRMED_DATE_LABEL = "Terms dated";
 
 export interface DatedRecord {
   vendor: string;
@@ -35,6 +37,10 @@ export function lastReadDate(offer: DatedRecord | null | undefined): string {
 export function confirmationDate(offer: DatedRecord | null | undefined): string | null {
   if (!offer?.vendor || !offer?.url) return null;
   return loadVerificationState().get(`${offer.vendor}|${offer.url}`)?.last_success ?? null;
+}
+
+export function publishedDateLabel(offer: DatedRecord | null | undefined): string {
+  return confirmationDate(offer) ? CONFIRMED_DATE_LABEL : UNCONFIRMED_DATE_LABEL;
 }
 
 export interface VerificationDates {
