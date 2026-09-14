@@ -48,6 +48,14 @@ export function publishedDateLabel(offer: DatedRecord | null | undefined): strin
   return confirmationDate(offer) ? CONFIRMED_DATE_LABEL : UNCONFIRMED_DATE_LABEL;
 }
 
+export function publishedDateValue(offer: DatedRecord | null | undefined): string {
+  return confirmationDate(offer) ?? offer?.verifiedDate ?? "";
+}
+
+export function publishedDateLine(offer: DatedRecord | null | undefined): string {
+  return `**${publishedDateLabel(offer)}:** ${publishedDateValue(offer)}`;
+}
+
 export interface VerificationDates {
   read: string;
   verified: string;

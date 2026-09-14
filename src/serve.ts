@@ -28,7 +28,7 @@ import { offerEnded, offerRetired, recordedTierSentence, endedHeadline, endedHis
 import { amountUnstatedSentence, LAST_RESOLVED, levelWithheldReason, levelWithheldSince, withheldLevelClause, withheldLevelSentence, type LevelWithheldReason } from "./source-check.js";
 import { offerVerdictInput, vendorVerdictContextFrom, type VendorVerdictContext } from "./vendor-verdict-input.js";
 import { readingIsBehindTheLoop, reverificationIntervalDays } from "./badge-staleness.js";
-import { LAST_READ_LABEL, UNCONFIRMED_DATE_LABEL, VERIFICATION_DATES_HEADING, confirmationDate, lastReadDate, lastReadNote, publishedDateLabel, verificationDatesCell, verificationDatesSentence } from "./read-date.js";
+import { LAST_READ_LABEL, UNCONFIRMED_DATE_LABEL, VERIFICATION_DATES_HEADING, lastReadDate, lastReadNote, publishedDateLabel, publishedDateValue, verificationDatesCell, verificationDatesSentence } from "./read-date.js";
 import { SUPERSEDED_TERMS_LABEL, readingBehindTheChange, supersededTermsAnswer, supersededTermsMetaSentence, supersededTermsNotice, supersededTermsNoticeHtml, supersededTermsRecord, supersededTermsVerdictSentence, supersedingChange, type SupersededTermsRecord } from "./superseded-description.js";
 import { openingOfTerms, punctuated, punctuatedOpeningOfTerms } from "./terms-opening.js";
 import { NO_CURRENT_FIGURE, costHeadlineCaveat, limitCellText, mayRecommendAsFree, proseWithoutNames, readsActive, stackFreshnessStatement } from "./stack-claim.js";
@@ -5474,7 +5474,7 @@ ${referralCalloutHtml}
     </div>
     `}<div class="detail-card">
       <div class="detail-label">${discontinuedOn ? "Discontinued" : linkUnreachable ? "Link last reachable" : publishedDateLabel(primary)}</div>
-      <div class="detail-value" style="font-family:var(--mono)">${escHtmlServer(discontinuedOn ?? (linkUnreachable ? (linkUnreachable.last_reachable ?? "no reachable date on record") : (confirmationDate(primary) ?? primary.verifiedDate)))}</div>
+      <div class="detail-value" style="font-family:var(--mono)">${escHtmlServer(discontinuedOn ?? (linkUnreachable ? (linkUnreachable.last_reachable ?? "no reachable date on record") : publishedDateValue(primary)))}</div>
     </div>
     <div class="detail-card">
       <div class="detail-label">${LAST_READ_LABEL}</div>
@@ -50889,7 +50889,7 @@ function buildFreshnessPage(): string {
   const m = getFreshnessMetrics();
 
   const title = "Data Freshness Dashboard \u2014 AgentDeals";
-  const metaDesc = `${m.total_offers} offers tracked. We can source ${m.offers_holding_a_confirmation} to a read that confirmed the terms; ${m.stamped_within_90_days} carry a catalogue date within 90 days, which is not the same claim.`;
+  const metaDesc = `${m.total_offers.toLocaleString()} offers tracked. We can source ${m.confirmed_within_90_days.toLocaleString()} of them to a read that confirmed the terms we publish; ${m.stamped_within_90_days.toLocaleString()} carry a catalogue date within 90 days, which is not the same claim.`;
   const attemptedClause = m.attempted_within_90_days > 0
     ? ` We attempted ${m.attempted_within_90_days.toLocaleString()} of them over the same 90 days, so this is the share our reading confirms rather than a queue we have not reached.`
     : "";
@@ -51045,7 +51045,7 @@ ${globalNavCss()}
   ${buildGlobalNav("freshness")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; Freshness</div>
   <h1>Data Freshness Dashboard</h1>
-  <p class="page-intro">Transparent data quality metrics. We track ${m.total_offers.toLocaleString()} offers \u2014 here\u2019s how fresh they are.</p>
+  <p class="page-intro">Transparent data quality metrics. We track ${m.total_offers.toLocaleString()} offers \u2014 here\u2019s what we can and cannot source for them.</p>
 
   <div class="grade-hero">
     <div class="grade-circle" style="background:var(--accent-glow);color:var(--accent);border:3px solid var(--accent);font-size:2.1rem">${m.freshness_score}%</div>

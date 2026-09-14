@@ -15,7 +15,7 @@ import { registerMcpAppsResources, TOOL_UI_META } from "./mcp-apps.js";
 import { CATALOGUE_CATEGORY_COUNT, CATALOGUE_OFFER_FLOOR_LABEL, MCP_INSTRUCTIONS } from "./mcp-instructions.js";
 import { MCP_TOOLS, MCP_TOOL_COUNT, MCP_PROTOCOL_VERSION } from "./mcp-tool-inventory.js";
 import { MCP_SIGNAL_FOOTER } from "./signal-copy.js";
-import { lastReadDate, storedConfirmationClause, verificationDatesClause } from "./read-date.js";
+import { lastReadDate, publishedDateLine, storedConfirmationClause, verificationDatesClause } from "./read-date.js";
 import { unconfirmedTermsForOffer } from "./vendor-verdict-input.js";
 import { NOT_VERIFIED, termsWithTheReasonWeCannotConfirmThem } from "./vendor-verdict.js";
 import { BASE_URL } from "./base-url.js";
@@ -803,7 +803,7 @@ Suggested monitoring cadence: run this check weekly to catch pricing changes ear
       text += `**Pricing Page:** ${match.url}\n`;
       text += unconfirmed
         ? `**Verification:** ${NOT_VERIFIED(unconfirmed.clause)} ${storedConfirmationClause(match)}\n`
-        : `**Verified:** ${match.verifiedDate}\n`;
+        : `${publishedDateLine(match)}\n`;
       text += `**Last read:** ${lastReadDate(match)}\n`;
       if (match.eligibility) {
         text += `**Eligibility:** ${match.eligibility.type} — ${match.eligibility.conditions.join(", ")}\n`;

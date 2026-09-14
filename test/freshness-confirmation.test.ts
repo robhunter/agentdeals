@@ -1,9 +1,19 @@
 import { describe, it } from "node:test";
 import assert from "node:assert";
+import { readFileSync } from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 
 const { getFreshnessMetrics, loadOffers } = await import("../dist/data.js");
-const { CONFIRMED_DATE_LABEL, UNCONFIRMED_DATE_LABEL, confirmationDate, lastAttemptDate, publishedDateLabel } =
-  await import("../dist/read-date.js");
+const {
+  CONFIRMED_DATE_LABEL,
+  UNCONFIRMED_DATE_LABEL,
+  confirmationDate,
+  lastAttemptDate,
+  publishedDateLabel,
+  publishedDateLine,
+  publishedDateValue,
+} = await import("../dist/read-date.js");
 const { loadVerificationState } = await import("../dist/verification-state.js");
 
 interface CountedOffer {
@@ -156,7 +166,41 @@ describe("a date the store cannot source is not labelled as a confirmation", () 
     assert.ok(unconfirmed.length > 0, "this assertion is vacuous unless some entry lacks a confirmation");
     for (const o of unconfirmed) {
       assert.strictEqual(publishedDateLabel(o), UNCONFIRMED_DATE_LABEL, `${o.vendor}|${o.url}`);
-      assert.ok(o.verifiedDate, `${o.vendor}|${o.url} must keep its catalogue date`);
+      assert.strictEqual(publishedDateValue(o), o.verifiedDate, `${o.vendor}|${o.url} must keep its catalogue date`);
+    }
+  });
+
+  it("publishes the confirmation itself wherever the label says Verified", () => {
+    const confirmed = offers.filter((o) => confirmationDate(o) !== null);
+    assert.ok(confirmed.length > 0, "this assertion is vacuous unless some entry holds a confirmation");
+    for (const o of confirmed) {
+      assert.strictEqual(publishedDateLabel(o), CONFIRMED_DATE_LABEL, `${o.vendor}|${o.url}`);
+      assert.strictEqual(publishedDateValue(o), confirmationDate(o), `${o.vendor}|${o.url}`);
+    }
+  });
+
+  it("renders one line for both MCP surfaces, and it never says Verified over a date the store cannot source", () => {
+    const saysVerified = offers.filter((o) => publishedDateLine(o).startsWith(`**${CONFIRMED_DATE_LABEL}:**`));
+    const unsourced = saysVerified.filter((o) => confirmationDate(o) === null);
+    assert.deepStrictEqual(unsourced.map((o) => `${o.vendor}|${o.url}`), []);
+    const sample = offers.find((o) => confirmationDate(o) === null);
+    assert.ok(sample, "this assertion is vacuous unless some entry lacks a confirmation");
+    assert.strictEqual(
+      publishedDateLine(sample),
+      `**${UNCONFIRMED_DATE_LABEL}:** ${sample.verifiedDate}`,
+      `${sample.vendor}|${sample.url}`,
+    );
+  });
+
+  it("has both MCP surfaces render that one line rather than each spelling it out", () => {
+    const repo = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
+    for (const file of ["src/server.ts", "src/server-remote.ts"]) {
+      const source = readFileSync(path.join(repo, file), "utf8");
+      assert.match(source, /publishedDateLine\(/, `${file} must render the line through the shared helper`);
+      assert.ok(
+        !source.includes(`**${CONFIRMED_DATE_LABEL}:**`),
+        `${file} must not spell the confirmed label out beside a date the store may not hold`,
+      );
     }
   });
 });
