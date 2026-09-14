@@ -9,6 +9,11 @@ import { fileURLToPath } from "node:url";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(__dirname, "..");
 
+const { CONFIRMED_DATE_LABEL, UNCONFIRMED_DATE_LABEL, confirmationDate } = await import("../dist/read-date.js");
+
+const MONTH_NAMES = "January|February|March|April|May|June|July|August|September|October|November|December";
+const DATED_LINE = new RegExp(`(${CONFIRMED_DATE_LABEL}|${UNCONFIRMED_DATE_LABEL}) (?:${MONTH_NAMES}) \\d{4}`);
+
 type Offer = { vendor: string; url: string; verifiedDate: string };
 
 function slugOf(vendor: string): string {
@@ -161,7 +166,13 @@ describe("#1046 a vendor page we never checked", () => {
     assert.equal(status, 200);
     const h1 = body.match(/<h1>[\s\S]*?<\/h1>/)![0];
     assert.match(h1, /risk-badge[^>]*>stable</);
-    assert.match(body, /Verified (January|February|March|April|May|June|July|August|September|October|November|December) \d{4}/);
+    const dated = body.match(DATED_LINE);
+    assert.ok(dated, "the page states no dated line at all");
+    assert.equal(
+      dated[1],
+      confirmationDate(controlVendor) ? CONFIRMED_DATE_LABEL : UNCONFIRMED_DATE_LABEL,
+      `the page labels its date ${dated[1]} while the store ${confirmationDate(controlVendor) ? "holds" : "holds no"} confirmation for it`,
+    );
     assert.doesNotMatch(body, /class="link-unreachable-line"/);
   });
 });

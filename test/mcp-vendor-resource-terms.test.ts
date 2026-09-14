@@ -6,6 +6,7 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { SOURCE_CHECK_OUTCOMES } from "../dist/source-check.js";
+import { CONFIRMED_DATE_LABEL, UNCONFIRMED_DATE_LABEL, confirmationDate, publishedDateLabel } from "../dist/read-date.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(__dirname, "..");
@@ -174,17 +175,28 @@ for (const [how, resources] of bothBuilders) {
       assert.ok(text.includes(offer.description));
     });
 
-    it("leaves a resource whose read confirmed the terms saying what it said before", () => {
+    it("leaves a resource whose read confirmed the terms publishing its date, under the label the store justifies", () => {
       for (const offer of CONFIRMED) {
         const text = resources().get(`agentdeals://vendor/${slugOf(offer.vendor)}`) ?? "";
-        assert.match(text, new RegExp(`\\*\\*Verified:\\*\\* ${CONFIRMED_ON}`), `${offer.vendor} lost its verification date`);
+        assert.match(
+          text,
+          new RegExp(`\\*\\*${publishedDateLabel(offer)}:\\*\\* ${CONFIRMED_ON}`),
+          `${offer.vendor} lost the date it publishes`,
+        );
+        if (confirmationDate(offer) === null) {
+          assert.doesNotMatch(
+            text,
+            new RegExp(`\\*\\*${CONFIRMED_DATE_LABEL}:\\*\\*`),
+            `${offer.vendor} is stamped ${CONFIRMED_DATE_LABEL} over a date the store cannot source`,
+          );
+        }
         assert.doesNotMatch(text, /Not verified/, `${offer.vendor} carries a caveat over a read that confirmed`);
       }
     });
   });
 }
 
-const TERMS_LINES = /^\*\*(?:Description|Verified|Verification):\*\*/;
+const TERMS_LINES = new RegExp(`^\\*\\*(?:Description|${CONFIRMED_DATE_LABEL}|${UNCONFIRMED_DATE_LABEL}|Verification):\\*\\*`);
 
 const statedTerms = (text: string) => text.split("\n").filter((line) => TERMS_LINES.test(line));
 

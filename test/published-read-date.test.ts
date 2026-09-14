@@ -9,7 +9,7 @@ import { assertCoversPopulation, assertSharesPopulation, recordsInTheCatalogue }
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(__dirname, "..");
 
-const { confirmationDate, lastReadDate, verificationDatesCell, LAST_READ_LABEL, NO_CONFIRMATION_HELD, VERIFICATION_DATES_HEADING } =
+const { confirmationDate, lastReadDate, verificationDatesCell, CONFIRMED_DATE_LABEL, LAST_READ_LABEL, NO_CONFIRMATION_HELD, UNCONFIRMED_DATE_LABEL, VERIFICATION_DATES_HEADING } =
   await import("../dist/read-date.js");
 const { ANSWERED_OUTCOMES } = await import("../scripts/verification-state.js");
 
@@ -37,8 +37,14 @@ const byGap = (from: CatalogueOffer[]) =>
     .map((o) => ({ offer: o, read: lastReadDate(o), gap: daysBetween(o.verifiedDate, lastReadDate(o)) }))
     .sort((a, b) => b.gap - a.gap)[0]!;
 
-const verifiedCardOn = (body: string): string | null =>
-  body.match(/>Verified<\/div>\s*<div class="detail-value"[^>]*>([^<]+)</)?.[1] ?? null;
+const PUBLISHED_DATE_CARD = new RegExp(
+  `>(${CONFIRMED_DATE_LABEL}|${UNCONFIRMED_DATE_LABEL})</div>\\s*<div class="detail-value"[^>]*>([^<]+)<`,
+);
+
+const publishedDateCardOn = (body: string): { label: string; date: string } | null => {
+  const m = body.match(PUBLISHED_DATE_CARD);
+  return m ? { label: m[1]!, date: m[2]! } : null;
+};
 
 const widestGap = byGap(offers);
 const widestConfirmedGap = byGap(offers.filter((o) => confirmationDate(o) !== null && confirmationDate(o)! < lastReadDate(o)));
@@ -169,9 +175,9 @@ describe("every record publishes the day we last read its page", () => {
       body.includes(`last confirmed on ${held}`),
       `the page for ${widestConfirmedGap.offer.vendor} publishes two dates without saying which is which`,
     );
-    assert.equal(
-      verifiedCardOn(body),
-      held,
+    assert.deepStrictEqual(
+      publishedDateCardOn(body),
+      { label: CONFIRMED_DATE_LABEL, date: held },
       `the page for ${widestConfirmedGap.offer.vendor} heads its verification with a date the store did not confirm on`,
     );
   });
@@ -183,10 +189,10 @@ describe("every record publishes the day we last read its page", () => {
     assert.equal(status, 200, `/vendor/${slugOf(offer.vendor)} must exist for this test to mean anything`);
     assert.ok(body.includes(widestUnconfirmedGap.read), `the page for ${offer.vendor} does not publish ${widestUnconfirmedGap.read}`);
     assert.ok(body.includes(offer.verifiedDate), `the page for ${offer.vendor} dropped the date it holds`);
-    assert.equal(
-      verifiedCardOn(body),
-      offer.verifiedDate,
-      `the page for ${offer.vendor} dropped the date it holds from the card that heads its verification`,
+    assert.deepStrictEqual(
+      publishedDateCardOn(body),
+      { label: UNCONFIRMED_DATE_LABEL, date: offer.verifiedDate },
+      `the page for ${offer.vendor} either dropped the date it holds or calls it ${CONFIRMED_DATE_LABEL} with nothing in the store behind it`,
     );
     assert.ok(body.includes(NO_CONFIRMATION_HELD), `the page for ${offer.vendor} does not say the store holds no confirmation for it`);
     assert.ok(
@@ -221,14 +227,22 @@ describe("every record publishes the day we last read its page", () => {
     const uri = `agentdeals://vendor/${slugOf(widestGap.offer.vendor)}`;
     const overStdio = await readResourceOverStdio(uri);
     const overHttp = await readResourceOverHttp(uri);
+    const publishedLineIn = (text: string) =>
+      text.split("\n").find((l) => l.startsWith(`**${CONFIRMED_DATE_LABEL}:**`) || l.startsWith(`**${UNCONFIRMED_DATE_LABEL}:**`)) ?? null;
+    const expectedLabel = confirmationDate(widestGap.offer) ? CONFIRMED_DATE_LABEL : UNCONFIRMED_DATE_LABEL;
     for (const [transport, text] of [["stdio", overStdio], ["http", overHttp]] as const) {
       assert.match(
         text,
-        new RegExp(`\\*\\*Verified:\\*\\* ${widestGap.offer.verifiedDate}|last confirmed on ${widestGap.offer.verifiedDate}`),
-        `${transport} dropped the date we last confirmed the terms`,
+        new RegExp(`\\*\\*${expectedLabel}:\\*\\* ${widestGap.offer.verifiedDate}|last confirmed on ${widestGap.offer.verifiedDate}`),
+        `${transport} dropped the date the record holds, or labelled it something other than ${expectedLabel}`,
       );
       assert.match(text, new RegExp(`\\*\\*Last read:\\*\\* ${widestGap.read}`), `${transport} does not publish the day we read the page`);
     }
+    assert.strictEqual(
+      publishedLineIn(overStdio),
+      publishedLineIn(overHttp),
+      "the two MCP surfaces publish different dated lines for the same record",
+    );
   });
 
   it("heads every category table with both dates and fills every row", async () => {

@@ -9,7 +9,7 @@ import { applyReviewedDirections } from "./change-direction-review.js";
 import { rankForListing, gateFor, utcDate, type TieBreak, type Gate, type GateCode } from "./ranking.js";
 import { unreachableNoticeForUrl, resetLinkHealthCache } from "./link-health.js";
 import { quarantineSummary, resetVerificationStateCache, type QuarantineSummary } from "./verification-state.js";
-import { daysSince, lastReadDate } from "./read-date.js";
+import { confirmationDate, daysSince, lastAttemptDate, lastReadDate } from "./read-date.js";
 import {
   amountUnstatedSentence,
   cannotVouchForLevel,
@@ -1482,6 +1482,7 @@ export interface FreshnessEntry {
   category: string;
   verifiedDate: string;
   last_read_date: string;
+  confirmed_on: string | null;
   url: string;
   days_since_verified: number;
   days_since_read: number;
@@ -1489,14 +1490,30 @@ export interface FreshnessEntry {
 
 export interface FreshnessMetrics {
   total_offers: number;
-  verified_within_7_days: number;
-  verified_within_30_days: number;
-  verified_within_90_days: number;
-  verified_within_180_days: number;
+  stamped_within_7_days: number;
+  stamped_within_30_days: number;
+  stamped_within_90_days: number;
+  stamped_within_180_days: number;
+  confirmed_within_7_days: number;
+  confirmed_within_30_days: number;
+  confirmed_within_90_days: number;
+  confirmed_within_180_days: number;
+  offers_holding_a_confirmation: number;
+  oldest_confirmation_held: string | null;
+  attempted_within_90_days: number;
   freshness_score: number;
+  stamp_score: number;
   stalest_entries: FreshnessEntry[];
   freshest_entries: FreshnessEntry[];
-  by_category: Array<{ category: string; count: number; avg_days_since_verified: number; freshness_score: number }>;
+  by_category: Array<{
+    category: string;
+    count: number;
+    avg_days_since_verified: number;
+    freshness_score: number;
+    stamp_score: number;
+    confirmed_within_90_days: number;
+    stamped_within_90_days: number;
+  }>;
   quarantine: QuarantineSummary;
 }
 
@@ -1506,36 +1523,51 @@ export function getFreshnessMetrics(): FreshnessMetrics {
   const nowMs = now.getTime();
   const dayMs = 24 * 60 * 60 * 1000;
 
-  const withAge = offers.map((o) => ({
-    ...o,
-    days_since_verified: Math.floor((nowMs - new Date(o.verifiedDate).getTime()) / dayMs),
-  }));
+  const ageOf = (date: string) => Math.floor((nowMs - new Date(date).getTime()) / dayMs);
+
+  const withAge = offers.map((o) => {
+    const confirmed_on = confirmationDate(o);
+    const attempted_on = lastAttemptDate(o);
+    return {
+      ...o,
+      days_since_verified: ageOf(o.verifiedDate),
+      confirmed_on,
+      days_since_confirmed: confirmed_on ? ageOf(confirmed_on) : null,
+      days_since_attempted: attempted_on ? ageOf(attempted_on) : null,
+    };
+  });
 
   const total = withAge.length;
-  const within7 = withAge.filter((o) => o.days_since_verified <= 7).length;
-  const within30 = withAge.filter((o) => o.days_since_verified <= 30).length;
-  const within90 = withAge.filter((o) => o.days_since_verified <= 90).length;
-  const within180 = withAge.filter((o) => o.days_since_verified <= 180).length;
+  const rate = (part: number, whole: number) => (whole > 0 ? Math.round((part / whole) * 100) : 0);
+  const stampedWithin = (days: number) => withAge.filter((o) => o.days_since_verified <= days).length;
+  const confirmedWithin = (days: number) =>
+    withAge.filter((o) => o.days_since_confirmed !== null && o.days_since_confirmed <= days).length;
+  const attemptedWithin = (days: number) =>
+    withAge.filter((o) => o.days_since_attempted !== null && o.days_since_attempted <= days).length;
 
-  const freshnessScore = total > 0 ? Math.round((within90 / total) * 100) : 0;
+  const confirmations = withAge.map((o) => o.confirmed_on).filter((d): d is string => Boolean(d)).sort();
+  const stampedWithin90 = stampedWithin(90);
+  const confirmedWithin90 = confirmedWithin(90);
 
   const sorted = [...withAge].sort((a, b) => b.days_since_verified - a.days_since_verified);
   const entryOf = (o: (typeof withAge)[number]): FreshnessEntry => {
     const last_read_date = lastReadDate(o);
     return {
       vendor: o.vendor, category: o.category, verifiedDate: o.verifiedDate, last_read_date, url: o.url,
+      confirmed_on: o.confirmed_on,
       days_since_verified: o.days_since_verified, days_since_read: daysSince(last_read_date, now),
     };
   };
   const stalest = sorted.slice(0, 20).map(entryOf);
   const freshest = sorted.slice(-20).reverse().map(entryOf);
 
-  const catMap = new Map<string, { count: number; totalDays: number; within90: number }>();
+  const catMap = new Map<string, { count: number; totalDays: number; stamped90: number; confirmed90: number }>();
   for (const o of withAge) {
-    const entry = catMap.get(o.category) ?? { count: 0, totalDays: 0, within90: 0 };
+    const entry = catMap.get(o.category) ?? { count: 0, totalDays: 0, stamped90: 0, confirmed90: 0 };
     entry.count++;
     entry.totalDays += o.days_since_verified;
-    if (o.days_since_verified <= 90) entry.within90++;
+    if (o.days_since_verified <= 90) entry.stamped90++;
+    if (o.days_since_confirmed !== null && o.days_since_confirmed <= 90) entry.confirmed90++;
     catMap.set(o.category, entry);
   }
   const byCategory = Array.from(catMap.entries())
@@ -1543,17 +1575,28 @@ export function getFreshnessMetrics(): FreshnessMetrics {
       category,
       count: stats.count,
       avg_days_since_verified: Math.round(stats.totalDays / stats.count),
-      freshness_score: Math.round((stats.within90 / stats.count) * 100),
+      freshness_score: rate(stats.confirmed90, stats.count),
+      stamp_score: rate(stats.stamped90, stats.count),
+      confirmed_within_90_days: stats.confirmed90,
+      stamped_within_90_days: stats.stamped90,
     }))
     .sort((a, b) => b.freshness_score - a.freshness_score);
 
   return {
     total_offers: total,
-    verified_within_7_days: within7,
-    verified_within_30_days: within30,
-    verified_within_90_days: within90,
-    verified_within_180_days: within180,
-    freshness_score: freshnessScore,
+    stamped_within_7_days: stampedWithin(7),
+    stamped_within_30_days: stampedWithin(30),
+    stamped_within_90_days: stampedWithin90,
+    stamped_within_180_days: stampedWithin(180),
+    confirmed_within_7_days: confirmedWithin(7),
+    confirmed_within_30_days: confirmedWithin(30),
+    confirmed_within_90_days: confirmedWithin90,
+    confirmed_within_180_days: confirmedWithin(180),
+    offers_holding_a_confirmation: confirmations.length,
+    oldest_confirmation_held: confirmations[0] ?? null,
+    attempted_within_90_days: attemptedWithin(90),
+    freshness_score: rate(confirmedWithin90, total),
+    stamp_score: rate(stampedWithin90, total),
     stalest_entries: stalest,
     freshest_entries: freshest,
     by_category: byCategory,
