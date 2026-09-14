@@ -3751,7 +3751,7 @@
       "changed": "2026-09-14"
     },
     "/vendor/ant-design-landing-page": {
-      "hash": "f8d23efdce4ef5b6",
+      "hash": "acf335a8e9d6d4c5",
       "changed": "2026-09-14"
     },
     "/vendor/anthropic-api": {
@@ -4041,7 +4041,7 @@
       "changed": "2026-09-14"
     },
     "/vendor/binder": {
-      "hash": "63c5338655a76700",
+      "hash": "94b6784b158e758a",
       "changed": "2026-09-14"
     },
     "/vendor/binshare-net": {
@@ -4603,7 +4603,7 @@
       "daily": true
     },
     "/vendor/codekeep": {
-      "hash": "bd3cf70f2ecbb940",
+      "hash": "cd192c69a939a412",
       "changed": "2026-09-14"
     },
     "/vendor/codemagic": {
@@ -4797,7 +4797,7 @@
       "changed": "2026-09-14"
     },
     "/vendor/css-glass": {
-      "hash": "8483d20b3ea697e9",
+      "hash": "1c07f11eeeb1d875",
       "changed": "2026-09-14"
     },
     "/vendor/css-gradient-com": {
@@ -4976,7 +4976,7 @@
       "changed": "2026-09-14"
     },
     "/vendor/desec": {
-      "hash": "50877b28c14f217f",
+      "hash": "a5ae61589f2c8e34",
       "changed": "2026-09-14"
     },
     "/vendor/developers-google-com": {
@@ -5008,7 +5008,7 @@
       "changed": "2026-09-14"
     },
     "/vendor/difftext": {
-      "hash": "89a63fd551c43ce2",
+      "hash": "a8893139bff514f2",
       "changed": "2026-09-14"
     },
     "/vendor/digitalocean": {
@@ -5628,7 +5628,7 @@
       "changed": "2026-09-14"
     },
     "/vendor/getupdraft": {
-      "hash": "6f4fe83c04bc0b64",
+      "hash": "977b1b58c4b0ed1d",
       "changed": "2026-09-14"
     },
     "/vendor/getvm": {
@@ -6006,7 +6006,7 @@
       "changed": "2026-09-14"
     },
     "/vendor/hivemq": {
-      "hash": "b2fe160e124a9c06",
+      "hash": "08c27f1c16a0c9e7",
       "changed": "2026-09-14"
     },
     "/vendor/holistic-dev": {
@@ -6030,7 +6030,7 @@
       "changed": "2026-09-14"
     },
     "/vendor/hoppscotch": {
-      "hash": "394bfb5241f2b5bd",
+      "hash": "fbdd50e15a5dfb84",
       "changed": "2026-09-14"
     },
     "/vendor/hosting-checker": {
@@ -6077,7 +6077,7 @@
       "changed": "2026-09-14"
     },
     "/vendor/hygraph": {
-      "hash": "69fa7eda273591c8",
+      "hash": "3124560b4fd9cb80",
       "changed": "2026-09-14"
     },
     "/vendor/hyperbrowser": {
@@ -6288,7 +6288,7 @@
       "changed": "2026-09-14"
     },
     "/vendor/iplocate": {
-      "hash": "88697b2b10173cd8",
+      "hash": "29808572950ea0ac",
       "changed": "2026-09-14"
     },
     "/vendor/ipstack": {
@@ -6460,7 +6460,7 @@
       "changed": "2026-09-14"
     },
     "/vendor/krita": {
-      "hash": "ce1e35f2bfd55ddd",
+      "hash": "4887024285c95375",
       "changed": "2026-09-14"
     },
     "/vendor/kumu-io": {
@@ -6817,7 +6817,7 @@
       "changed": "2026-09-14"
     },
     "/vendor/mastershot": {
-      "hash": "5f679ed61a261af3",
+      "hash": "4bae13f72eec2d8a",
       "changed": "2026-09-14"
     },
     "/vendor/matlab-and-simulink-for-startups": {
@@ -7003,7 +7003,7 @@
       "changed": "2026-09-14"
     },
     "/vendor/mojoauth": {
-      "hash": "dc17ffefdd08bd05",
+      "hash": "0f31edf3fdcb4a07",
       "changed": "2026-09-14"
     },
     "/vendor/momento": {
@@ -7559,7 +7559,7 @@
       "changed": "2026-09-14"
     },
     "/vendor/point-poker": {
-      "hash": "62a653b61698f2ab",
+      "hash": "ed3aba1a173b93b2",
       "changed": "2026-09-14"
     },
     "/vendor/polar": {
@@ -7620,7 +7620,7 @@
       "changed": "2026-09-14"
     },
     "/vendor/probely": {
-      "hash": "efc43e81866ac9cc",
+      "hash": "0d6cd6efe5394b36",
       "changed": "2026-09-14"
     },
     "/vendor/prometheus": {
@@ -7834,7 +7834,7 @@
       "changed": "2026-09-14"
     },
     "/vendor/renovate": {
-      "hash": "5e47509078cdf104",
+      "hash": "d3f907976ff2830f",
       "changed": "2026-09-14"
     },
     "/vendor/replicate": {
@@ -7868,7 +7868,7 @@
       "changed": "2026-09-14"
     },
     "/vendor/requestbin-com": {
-      "hash": "e0095379cfc08c22",
+      "hash": "248a8b1edb4d5138",
       "changed": "2026-09-14"
     },
     "/vendor/resend": {
@@ -7942,7 +7942,7 @@
       "changed": "2026-09-14"
     },
     "/vendor/runcloud-io": {
-      "hash": "a5dc3d8cc6c36590",
+      "hash": "15c6b8a3b1ba0989",
       "changed": "2026-09-14"
     },
     "/vendor/runmyjob": {
@@ -8341,7 +8341,7 @@
       "changed": "2026-09-14"
     },
     "/vendor/solo": {
-      "hash": "a58cb8f0301ad643",
+      "hash": "1b1b2289aa658eb6",
       "changed": "2026-09-14"
     },
     "/vendor/sololearn": {
@@ -8384,7 +8384,7 @@
       "changed": "2026-09-14"
     },
     "/vendor/sslip-io": {
-      "hash": "d9a1b04ad7ff2fd3",
+      "hash": "123c53c18e880097",
       "changed": "2026-09-14"
     },
     "/vendor/ssllabs-com": {
@@ -9145,7 +9145,7 @@
       "changed": "2026-09-14"
     },
     "/vendor/volume-shader-bm": {
-      "hash": "52db508957e48a57",
+      "hash": "16a0ac27c3c03367",
       "changed": "2026-09-14"
     },
     "/vendor/vscodium": {
@@ -9358,7 +9358,7 @@
       "daily": true
     },
     "/vendor/xkit": {
-      "hash": "18c2f2a9d60950d4",
+      "hash": "b8c88f16696429bd",
       "changed": "2026-09-14"
     },
     "/vendor/yepcode": {
