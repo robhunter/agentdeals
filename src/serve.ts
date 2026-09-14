@@ -50895,7 +50895,6 @@ function freshnessGrade(score: number): { grade: string; color: string } {
 
 function buildFreshnessPage(): string {
   const m = getFreshnessMetrics();
-  const { grade, color: gradeColor } = freshnessGrade(m.freshness_score);
 
   const title = "Data Freshness Dashboard \u2014 AgentDeals";
   const metaDesc = `${m.total_offers} offers tracked. We can source a confirmation for ${m.offers_holding_a_confirmation} of them; ${m.stamped_within_90_days} carry a catalogue date within 90 days, which is not the same claim. Transparent data quality metrics for developer deal intelligence.`;
@@ -51055,7 +51054,7 @@ ${globalNavCss()}
   <p class="page-intro">Transparent data quality metrics. We track ${m.total_offers.toLocaleString()} offers \u2014 here\u2019s how fresh they are.</p>
 
   <div class="grade-hero">
-    <div class="grade-circle" style="background:${gradeColor}20;color:${gradeColor};border:3px solid ${gradeColor}">${grade}</div>
+    <div class="grade-circle" style="background:var(--accent)20;color:var(--accent);border:3px solid var(--accent);font-size:2.1rem">${m.freshness_score}%</div>
     <div class="grade-details">
       <div class="grade-score">${m.freshness_score}% confirmation coverage</div>
       <div class="grade-explanation">We can source ${m.offers_holding_a_confirmation.toLocaleString()} of ${m.total_offers.toLocaleString()} entries to a read that confirmed the terms we publish${storeAgeClause}. A further ${(m.stamped_within_90_days - m.confirmed_within_90_days).toLocaleString()} carry a catalogue date within the last 90 days and no confirmation behind it — that date records when the entry was last stamped, not that we checked it.</div>
