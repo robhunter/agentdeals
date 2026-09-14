@@ -3,6 +3,7 @@ import { CHANGE_DIRECTION } from "./change-direction.js";
 import { MCP_TOOL_NAMES } from "./mcp-tool-inventory.js";
 import { RATE_LIMIT_PER_MINUTE, SIGNAL_BODY_MAX } from "./signal.js";
 import { SIGNAL_EVENTS } from "./stats.js";
+import { SINCE_ACCEPTS } from "./since-parameter.js";
 
 export const CHANGE_TYPES: readonly string[] = Object.keys(CHANGE_DIRECTION);
 
@@ -144,7 +145,7 @@ const DOCUMENTED_OPERATIONS: Record<string, Record<string, any>> = {
       summary: "Newest deals",
       description: "Returns deals sorted by verified date (newest first) with days_since_update. Use for periodic 'what's new' checks.",
       parameters: [
-        { name: "since", in: "query", description: "ISO date (YYYY-MM-DD). Only return deals verified after this date. Default: 30 days ago", schema: { type: "string", format: "date" } },
+        { name: "since", in: "query", description: `Only return deals verified on or after this date. ${SINCE_ACCEPTS} Default: 30 days ago`, schema: { type: "string", format: "date" } },
         { name: "limit", in: "query", description: "Max results (default: 20, max: 50)", schema: { type: "integer", default: 20 } },
         { name: "category", in: "query", description: "Filter by category name", schema: { type: "string" } }
       ],
@@ -171,7 +172,7 @@ const DOCUMENTED_OPERATIONS: Record<string, Record<string, any>> = {
       summary: "Deal and pricing changes",
       description: "Returns tracked pricing and tier changes across vendors. Filter by date, change type, vendor, or category.",
       parameters: [
-        { name: "since", in: "query", description: "Filter changes after this date (YYYY-MM-DD)", schema: { type: "string", format: "date" }, example: "2025-01-01" },
+        { name: "since", in: "query", description: `Only return changes dated on or after this date. ${SINCE_ACCEPTS}`, schema: { type: "string", format: "date" }, example: "2025-01-01" },
         { name: "type", in: "query", description: "Filter by change type. Every type a record can carry is accepted; the same list types the `change_type` field on the records that come back.", schema: { type: "string", enum: [...CHANGE_TYPES] } },
         { name: "vendor", in: "query", description: "Filter by vendor name", schema: { type: "string" } },
         { name: "vendors", in: "query", description: "Comma-separated vendor names to filter by (e.g. 'Vercel,Supabase,Clerk')", schema: { type: "string" }, example: "Vercel,Supabase" },

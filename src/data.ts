@@ -26,6 +26,7 @@ import { matchingSubject } from "./gate-disclosure.js";
 import { DATE_SOURCES, isEventDated, changeDateClause, isoWeekWindow, changesInWindow, discoveryBatchNote, firstReadHeading, type DateWindow } from "./change-dates.js";
 import { PRODUCT_DEPRECATED, deprecationEndsTheListedProduct } from "./product-deprecation.js";
 import { RISK_DEMOTION } from "./change-demotion.js";
+import { sinceFilterDay } from "./since-parameter.js";
 export { RISK_DEMOTION, SEVERE_TYPES_WITHOUT_FLAT_DEMOTION, changeTypeCanDemote } from "./change-demotion.js";
 import { vendorHistorySentence } from "./vendor-history.js";
 import { isNoLongerInForce, recordsStillInForce, withResolutionInSummary } from "./change-resolution.js";
@@ -754,8 +755,10 @@ export function getDealChanges(
 ): { changes: DealChange[]; total: number } {
   let results = loadDealChanges();
 
-  if (since) {
-    results = results.filter((c) => c.date >= since);
+  const sinceDay = sinceFilterDay(since);
+
+  if (sinceDay) {
+    results = results.filter((c) => c.date >= sinceDay);
   } else {
     const windowStart = new Date(Date.now() - DEFAULT_CHANGE_WINDOW_DAYS * 24 * 60 * 60 * 1000)
       .toISOString()
@@ -830,7 +833,8 @@ export function changeContext(
     (c) => c.impact === "high"
   ).length;
 
-  const sinceDate = since ? new Date(since) : new Date(Date.now() - DEFAULT_CHANGE_WINDOW_DAYS * 24 * 60 * 60 * 1000);
+  const sinceDay = sinceFilterDay(since);
+  const sinceDate = sinceDay ? new Date(sinceDay) : new Date(Date.now() - DEFAULT_CHANGE_WINDOW_DAYS * 24 * 60 * 60 * 1000);
   const periodDays = Math.max(1, Math.ceil((Date.now() - sinceDate.getTime()) / (24 * 60 * 60 * 1000)));
 
   return {
@@ -1424,7 +1428,7 @@ export function getNewestDeals(params: {
   const defaultSince = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000)
     .toISOString()
     .slice(0, 10);
-  const sinceDate = params.since || defaultSince;
+  const sinceDate = sinceFilterDay(params.since) || defaultSince;
   const limit = Math.min(Math.max(params.limit ?? 20, 1), 50);
 
   let results = loadOffers().filter((o) => o.verifiedDate >= sinceDate);
