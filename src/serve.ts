@@ -107,6 +107,7 @@ import { changeFeedEntries, feedEntryFields, feedUpdatedTimestamp, changeFeedPro
 import { FEED_CORRECTIONS, correctionEntriesXml } from "./feed-corrections.js";
 import { buildDay, emptyPageLastmod, entryDay, fallbackDay, httpDate, lastmodFor, newestLastmod, readPageLastmod, type PageLastmodLedger } from "./page-lastmod.js";
 import { datedUrl, entityTag, isNotModified, matchesEntityTag, revalidationHeaders } from "./conditional-request.js";
+import { dayNamedBySince, SINCE_REJECTED } from "./since-parameter.js";
 import type { AgentBalance } from "./ledger.js";
 import type { SubmittedReferralCode } from "./referral-codes.js";
 
@@ -173,6 +174,13 @@ function pageLastmodHeader(pathname: string, search: string): string | null {
   if (!dated) return null;
   const day = renderedBodyDay(dated);
   return day ? httpDate(day) : null;
+}
+
+const POLLED_JSON_ROUTES = new Set(["/api/changes", "/api/newest", "/api/offers", "/api/categories"]);
+
+function bodyCarriesAnEntityTag(pathname: string, contentType: string): boolean {
+  if (/^text\/html/.test(contentType)) return true;
+  return /^application\/json/.test(contentType) && POLLED_JSON_ROUTES.has(pathname);
 }
 
 const INDEXNOW_KEY = process.env.INDEXNOW_KEY ?? "";
@@ -53975,7 +53983,7 @@ const dispatchRequest = async (req: IncomingMessage, res: ServerResponse) => {
       answeredNotModified = true;
       return rawWriteHead(304 as never, revalidationHeaders(headers) as never);
     }
-    if (status === 200 && !headOfServedBody && /^text\/html/.test(servedContentType)) {
+    if (status === 200 && !headOfServedBody && bodyCarriesAnEntityTag(url.pathname, servedContentType)) {
       headOfServedBody = { status, rest, headers };
       return res;
     }
@@ -54631,12 +54639,13 @@ const dispatchRequest = async (req: IncomingMessage, res: ServerResponse) => {
     res.end(JSON.stringify(citedAcrossTheWholeIndex(result)));
   } else if (url.pathname === "/api/newest" && isGetOrHead) {
     recordApiHit("/api/newest");
-    const since = url.searchParams.get("since") || undefined;
+    const askedSince = url.searchParams.get("since") || undefined;
     const limit = parseInt(url.searchParams.get("limit") ?? "20", 10) || 20;
     const category = url.searchParams.get("category") || undefined;
-    if (since && !/^\d{4}-\d{2}-\d{2}/.test(since)) {
+    const since = askedSince === undefined ? undefined : dayNamedBySince(askedSince) ?? undefined;
+    if (askedSince !== undefined && since === undefined) {
       res.writeHead(400, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
-      res.end(JSON.stringify({ error: "Invalid 'since' parameter. Expected ISO date string (YYYY-MM-DD)." }));
+      res.end(JSON.stringify({ error: SINCE_REJECTED }));
       return;
     }
     const result = getNewestDeals({ since, limit, category });
@@ -54726,14 +54735,15 @@ const dispatchRequest = async (req: IncomingMessage, res: ServerResponse) => {
     }));
   } else if (url.pathname === "/api/changes" && isGetOrHead) {
     recordApiHit("/api/changes");
-    const since = url.searchParams.get("since") || undefined;
+    const askedSince = url.searchParams.get("since") || undefined;
     const type = url.searchParams.get("type") || undefined;
     const vendorFilter = url.searchParams.get("vendor") || undefined;
     const vendorsFilter = url.searchParams.get("vendors") || undefined;
     const categoriesFilter = url.searchParams.get("categories") || url.searchParams.get("category") || undefined;
-    if (since && !/^\d{4}-\d{2}-\d{2}/.test(since)) {
+    const since = askedSince === undefined ? undefined : dayNamedBySince(askedSince) ?? undefined;
+    if (askedSince !== undefined && since === undefined) {
       res.writeHead(400, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
-      res.end(JSON.stringify({ error: "Invalid 'since' parameter. Expected ISO date string (YYYY-MM-DD)." }));
+      res.end(JSON.stringify({ error: SINCE_REJECTED }));
       return;
     }
     const limitParam = url.searchParams.get("limit");

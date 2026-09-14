@@ -406,14 +406,26 @@ describe("a page keeps the day it changed, whenever that was", () => {
     assert.equal(head.headers.get("etag"), get.headers.get("etag"));
   });
 
-  it("leaves a response that is not a page untagged, so nothing revalidates against a guess", async () => {
-    const json = await fetch(`${fixtureBase}/api/offers`);
-    await json.text();
-    assert.equal(json.headers.get("etag"), null, "a JSON response carried an entity tag");
+  it("leaves untagged a response nothing revalidates, so nothing revalidates against a guess", async () => {
+    const unpolled = await fetch(`${fixtureBase}/api/freshness`);
+    await unpolled.text();
+    assert.equal(unpolled.headers.get("etag"), null, "a JSON route nothing polls carried an entity tag");
     const missing = await fetch(`${fixtureBase}/vendor/a-vendor-we-do-not-list`);
     await missing.text();
     assert.equal(missing.status, 404);
     assert.equal(missing.headers.get("etag"), null, "a 404 carried an entity tag");
+  });
+
+  it("tags a polled JSON route from its own body, so the tag describes what was served", async () => {
+    const first = await fetch(`${fixtureBase}/api/offers`);
+    const body = await first.text();
+    const tag = first.headers.get("etag");
+    assert.ok(tag, "a JSON route a client polls served no entity tag");
+    assert.equal(tag, entityTag(body), "the tag does not describe the body it was served with");
+    assert.equal(first.headers.get("last-modified"), null, "a route that varies by query published a day to revalidate against");
+    const again = await fetch(`${fixtureBase}/api/offers`, { headers: { "If-None-Match": tag! } });
+    assert.equal(await again.text(), "");
+    assert.equal(again.status, 304, "a JSON route re-sent a body the client already holds");
   });
 });
 
