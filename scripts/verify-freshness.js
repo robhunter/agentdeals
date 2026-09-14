@@ -126,9 +126,14 @@ async function readChallengedPageAgain(url, status, options = {}) {
   if (ledger.has(url)) return refused;
   ledger.add(url);
   const render = options.render ?? renderPageHtml;
-  const rendered = await render(url);
+  let rendered;
+  try {
+    rendered = await render(url);
+  } catch {
+    return refused;
+  }
   if (rendered?.error === NO_RENDERING_CLIENT) ledger.delete(url);
-  return pageBehindAChallenge(status, rendered, { minLength: options.minLength, finalUrl: url });
+  return pageBehindAChallenge(status, rendered, { minLength: options.minLength });
 }
 
 export function pageOnlyARenderingClientCanRead(short, rendered, options = {}) {

@@ -4,6 +4,7 @@ import assert from "node:assert";
 const {
   CHALLENGE_STATUSES,
   MIN_PAGE_TEXT_LENGTH,
+  aChallengeARenderingClientCouldAnswer,
   challengeRendersThisRun,
   fetchPageText,
   forgetChallengeRenders,
@@ -33,7 +34,13 @@ const OFFER = {
   url: "https://widgetson.example/pricing",
 };
 
-const INTERSTITIAL = `<html><head><title>Just a moment...</title></head><body>Checking your browser</body></html>`;
+const CHALLENGE_PROSE = (
+  "Performing security verification. This website uses a security service to protect against " +
+  "malicious bots. The action you just performed triggered it. Enable JavaScript and cookies to " +
+  "continue. Ray ID: 0000000000000000. Performance and security by a third party. "
+).repeat(3);
+
+const INTERSTITIAL = `<html><head><title>Just a moment...</title></head><body><p>${CHALLENGE_PROSE}</p></body></html>`;
 
 function pageOfAtLeastTheFloor(sentence: string) {
   const filler = " Paid plans add retention, alerting and single sign-on.";
@@ -111,7 +118,17 @@ describe("a page behind a challenge is read again by the rendering client", () =
   it("claims no landing place the rendering client never reported", async () => {
     const spy = renderSpy({ ok: true, html: RENDERED_WITH_TERMS });
     const page = await readWhenTheSiteAnswers(429, { render: spy.render });
-    assert.strictEqual(page.finalUrl, OFFER.url);
+    assert.strictEqual(page.finalUrl, undefined);
+  });
+
+  it("escalates exactly the statuses a browser could answer", () => {
+    assert.deepStrictEqual(CHALLENGE_STATUSES, [401, 403, 429]);
+    for (const status of CHALLENGE_STATUSES) {
+      assert.strictEqual(aChallengeARenderingClientCouldAnswer(status), true);
+    }
+    for (const status of [200, 301, 404, 410, 418, 500, 503]) {
+      assert.strictEqual(aChallengeARenderingClientCouldAnswer(status), false);
+    }
   });
 
   it("grades the recovered reading like any other", async () => {
@@ -138,6 +155,15 @@ describe("a challenge the rendering client cannot answer is recorded as it was b
   it("says HTTP 429 when the rendered page is still under the floor", async () => {
     const spy = renderSpy({ ok: true, html: `<html><body><p>Widgetson</p></body></html>` });
     unchanged(await readWhenTheSiteAnswers(429, { render: spy.render }), 429);
+  });
+
+  it("says HTTP 403 when the rendering client throws", async () => {
+    const page = await readWhenTheSiteAnswers(403, {
+      render: async () => {
+        throw new Error("spawn failed");
+      },
+    });
+    unchanged(page, 403);
   });
 
   it("says HTTP 401 when no rendering client is installed", async () => {
