@@ -2,6 +2,7 @@ import type { Offer, SourceCheck, SourceCheckOutcome } from "./types.js";
 
 export const SOURCE_CHECK_OUTCOMES: SourceCheckOutcome[] = [
   "ok",
+  "states_a_free_price",
   "states_no_amount",
   "does_not_name_vendor",
   "does_not_name_product",
@@ -100,6 +101,7 @@ const UNCONFIRMED_TERMS_CLAUSES: Record<TermsUnconfirmedReason, string> = {
   states_no_terms: WITHHELD_LEVEL_CLAUSES.states_no_terms(""),
   unreadable: WITHHELD_LEVEL_CLAUSES.unreadable(""),
   states_no_amount: `the page we cite for this offer names a plan but states no amount`,
+  states_a_free_price: `the page we cite for this offer states that it is free, in words, and states no allowance we can read`,
 };
 
 export function unconfirmedTermsClause(reason: TermsUnconfirmedReason): string {
@@ -147,6 +149,31 @@ export function sourceStatesNoAmount(offer: Pick<Offer, "source_check">): boolea
 
 export function amountUnstatedSentence(subject: string): string {
   return `The page we cite for ${subject} names a plan but states no amount, so these limits come from our own record rather than from that page.`;
+}
+
+export function outcomeConfirmsThePrice(outcome: string | null | undefined): boolean {
+  return outcome === "states_a_free_price";
+}
+
+export function sourceStatesAFreePrice(offer: Pick<Offer, "source_check">): boolean {
+  return outcomeConfirmsThePrice(offer.source_check?.outcome);
+}
+
+export const OUTCOMES_THAT_REFUSE_THE_TERMS: SourceCheckOutcome[] =
+  SOURCE_CHECK_OUTCOMES.filter(outcome => outcome !== "ok" && !outcomeConfirmsThePrice(outcome));
+
+const A_QUANTITY = /\d/;
+
+export function recordPublishesAQuantity(description: string | null | undefined): boolean {
+  return typeof description === "string" && A_QUANTITY.test(description);
+}
+
+export function freePriceConfirmedSentence(subject: string): string {
+  return `The page we cite for ${subject} states in words that it is free, which confirms the price — the limits stated here come from our own record rather than from that page.`;
+}
+
+export function freePriceOnlySentence(subject: string): string {
+  return `The page we cite for ${subject} states in words that it is free, which confirms the price.`;
 }
 
 export function sourceCheckNotice(offer: Pick<Offer, "source_check">): SourceCheck | null {

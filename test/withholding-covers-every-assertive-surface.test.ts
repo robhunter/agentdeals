@@ -12,6 +12,7 @@ import {
   levelWithheldReason,
   SOURCE_CHECK_OUTCOMES,
   TERMS_ONLY_OUTCOMES,
+  outcomeConfirmsThePrice,
 } from "../dist/source-check.js";
 import { supersededTermsNotice, supersedingChange } from "../dist/superseded-description.js";
 import {
@@ -30,7 +31,10 @@ const REPO = path.join(__dirname, "..");
 
 const WITHHOLDING_TAGS = Object.keys(WITHHOLDING_SCOPE) as Array<keyof typeof WITHHOLDING_SCOPE>;
 const TAGS_THAT_WITHHOLD_THE_TERMS = WITHHOLDING_TAGS.filter(tag => WITHHOLDING_SCOPE[tag] === "the_terms");
-const OUTCOMES_THAT_LEAVE_THE_TERMS_UNCONFIRMED = SOURCE_CHECK_OUTCOMES.filter(outcome => outcome !== "ok");
+const TAGS_THAT_COULD_NOT_READ_THE_TERMS = TAGS_THAT_WITHHOLD_THE_TERMS
+  .filter(tag => !outcomeConfirmsThePrice(tag));
+const OUTCOMES_THAT_LEAVE_THE_TERMS_UNCONFIRMED = SOURCE_CHECK_OUTCOMES
+  .filter(outcome => outcome !== "ok" && !outcomeConfirmsThePrice(outcome));
 
 interface AssertiveSurface {
   name: string;
@@ -240,7 +244,7 @@ describe("a withholding we publish reaches every surface that states the terms",
   it("states the terms nowhere on a page whose withholding says we could not read them", () => {
     const asserting: string[] = [];
     const cells: Record<string, number> = {};
-    for (const tag of TAGS_THAT_WITHHOLD_THE_TERMS) {
+    for (const tag of TAGS_THAT_COULD_NOT_READ_THE_TERMS) {
       const population = pages.filter(page => page.termsTag === tag);
       cells[tag] = population.length;
       for (const surface of SURFACES) {
@@ -303,7 +307,8 @@ describe("a withholding we publish reaches every surface that states the terms",
     );
 
     const silent = pages
-      .filter(page => page.outcome !== null && page.outcome !== "ok" && page.unconfirmed === null)
+      .filter(page => page.outcome !== null && page.outcome !== "ok" && page.unconfirmed === null
+        && !outcomeConfirmsThePrice(page.outcome))
       .map(page => `${page.slug} (${page.outcome})`);
     assert.deepStrictEqual(
       silent.slice(0, 20),
@@ -377,24 +382,32 @@ describe("a withholding we publish reaches every surface that states the terms",
     assertSharesPopulation(
       affirming.length,
       vendorsInTheCatalogue(),
-      0.03,
+      0.02,
       "vendor pages whose read found the free plan and not the amount",
     );
     assertSharesPopulation(
       affirming.filter(page => answersOf(page).every(answer => answer.startsWith(`Yes, ${page.vendor} offers`))).length,
       vendorsInTheCatalogue(),
-      0.025,
+      0.02,
       "vendor pages answering yes over a read that found the plan and not the amount",
     );
 
-    const control = pages.find(page => page.slug === "jsdelivr");
-    assert.strictEqual(control?.outcome, "states_no_amount", "/vendor/jsdelivr is no longer the control this was written against");
-    for (const answer of answersOf(control)) {
-      assert.ok(answer.startsWith("Yes, jsDelivr offers a free tier: Free."), answer.slice(0, 120));
-      assert.ok(
-        answer.includes("The page we cite for jsDelivr names a plan but states no amount, so these limits come from our own record rather than from that page."),
-        answer.slice(0, 400),
-      );
+    const controls = pages.filter(page => page.outcome === "states_no_amount" && page.unconfirmed);
+    assert.ok(
+      controls.length > 0,
+      "no vendor page carries a read that named a plan and withheld its price, so this control has no subject",
+    );
+    const answeringYes = controls.filter(control =>
+      answersOf(control).every(answer => answer.startsWith(`Yes, ${control.vendor} offers a free tier: `)));
+    assert.ok(
+      answeringYes.length > 0,
+      `none of ${controls.length} pages whose read named a plan and withheld its price still answers yes`,
+    );
+    for (const control of answeringYes) {
+      for (const answer of answersOf(control)) {
+        assert.ok(answer.includes(control.unconfirmed!.sentence), `${control.slug}: ${answer.slice(0, 400)}`);
+        assert.ok(answer.includes("names a plan but states no amount"), `${control.slug}: ${answer.slice(0, 400)}`);
+      }
     }
   });
 

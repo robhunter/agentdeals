@@ -36,7 +36,7 @@ function pageSaying(claim: string) {
   return { ok: true, text: `${nav} ${OFFER.vendor} pricing. ${claim} Talk to our team about what you need.` };
 }
 
-const ONLY_A_PLAN_BY_NAME = pageSaying("Free forever.");
+const ONLY_A_PLAN_BY_NAME = pageSaying("Enterprise plan.");
 const THE_QUANTITY_WE_PUBLISH = pageSaying(`${OFFER.description} free.`);
 const THE_QUANTITY_AS_A_RATE = pageSaying(`${OFFER.description} per month free.`);
 const NOTHING_PRICE_SHAPED = pageSaying("We help teams ship software they can operate.");
@@ -74,7 +74,7 @@ describe("a page that names a plan and a page that states an amount are differen
 
   it("names the phrase that was the page's whole price evidence", () => {
     const graded = classifySource(OFFER, ONLY_A_PLAN_BY_NAME, priceSignals(ONLY_A_PLAN_BY_NAME.text));
-    assert.match(graded.detail, /Free forever/);
+    assert.match(graded.detail, /Enterprise plan/);
     assert.match(graded.detail, /Widgetson/);
   });
 

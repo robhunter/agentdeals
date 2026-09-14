@@ -2591,8 +2591,8 @@
       "verifiedDate": "2026-09-02",
       "source_check": {
         "checked": "2026-09-03",
-        "outcome": "states_no_amount",
-        "detail": "the page names jsDelivr and says \"free API\" but states no amount, rate or price we can read, and the 1 structured-data block in its markup states no price"
+        "outcome": "states_a_free_price",
+        "detail": "the page names jsDelivr and states its price in words as \"free API\", and the 1 structured-data block in its markup states no price"
       }
     },
     {
@@ -5165,8 +5165,8 @@
       "verifiedDate": "2026-09-08",
       "source_check": {
         "checked": "2026-09-09",
-        "outcome": "states_no_amount",
-        "detail": "the page names Instatus and says \"Free forever\" but states no amount, rate or price we can read, and its markup carries no structured data"
+        "outcome": "states_a_free_price",
+        "detail": "the page names Instatus and states its price in words as \"Free forever\", and its markup carries no structured data"
       }
     },
     {
@@ -5529,8 +5529,8 @@
       "verifiedDate": "2026-07-07",
       "source_check": {
         "checked": "2026-09-09",
-        "outcome": "states_no_amount",
-        "detail": "the page names Permit.io and says \"Free Forever\" but states no amount, rate or price we can read, and the 2 structured-data blocks in its markup state no price"
+        "outcome": "states_a_free_price",
+        "detail": "the page names Permit.io and states its price in words as \"Free Forever\", and the 2 structured-data blocks in its markup state no price"
       }
     },
     {
@@ -5719,8 +5719,8 @@
       "verifiedDate": "2026-09-07",
       "source_check": {
         "checked": "2026-09-09",
-        "outcome": "states_no_amount",
-        "detail": "the page names Cachet and says \"Free forever\" but states no amount, rate or price we can read, and the 1 structured-data block in its markup states no price"
+        "outcome": "states_a_free_price",
+        "detail": "the page names Cachet and states its price in words as \"Free forever\", and the 1 structured-data block in its markup states no price"
       },
       "free_grounds": [
         "licence"
@@ -6426,8 +6426,8 @@
       "verifiedDate": "2026-08-28",
       "source_check": {
         "checked": "2026-09-02",
-        "outcome": "states_no_amount",
-        "detail": "the page names Coolify and says \"free forever\" but states no amount, rate or price we can read"
+        "outcome": "states_a_free_price",
+        "detail": "the page names Coolify and states its price in words as \"free forever\""
       },
       "free_grounds": [
         "licence"
@@ -6659,8 +6659,8 @@
       "verifiedDate": "2026-07-27",
       "source_check": {
         "checked": "2026-09-02",
-        "outcome": "states_no_amount",
-        "detail": "the page names Grafana Loki and says \"free tier\" but states no amount, rate or price we can read"
+        "outcome": "states_a_free_price",
+        "detail": "the page names Grafana Loki and states its price in words as \"free tier\""
       },
       "free_grounds": [
         "licence"
@@ -7057,8 +7057,8 @@
       },
       "source_check": {
         "checked": "2026-09-02",
-        "outcome": "states_no_amount",
-        "detail": "the page names Floci and says \"Free forever\" but states no amount, rate or price we can read"
+        "outcome": "states_a_free_price",
+        "detail": "the page names Floci and states its price in words as \"Free forever\""
       },
       "free_grounds": [
         "licence"
@@ -7864,8 +7864,8 @@
       "verifiedDate": "2026-07-30",
       "source_check": {
         "checked": "2026-09-02",
-        "outcome": "states_no_amount",
-        "detail": "the page names AbstractAPI and says \"Free API\" but states no amount, rate or price we can read"
+        "outcome": "states_a_free_price",
+        "detail": "the page names AbstractAPI and states its price in words as \"Free API\""
       }
     },
     {
@@ -7884,8 +7884,8 @@
       "verifiedDate": "2026-08-28",
       "source_check": {
         "checked": "2026-09-02",
-        "outcome": "states_no_amount",
-        "detail": "the page names APILayer and says \"free plans\" but states no amount, rate or price we can read"
+        "outcome": "states_a_free_price",
+        "detail": "the page names APILayer and states its price in words as \"free plans\""
       }
     },
     {
@@ -9517,8 +9517,8 @@
       "verifiedDate": "2026-07-31",
       "source_check": {
         "checked": "2026-09-02",
-        "outcome": "states_no_amount",
-        "detail": "the page names Zoho Projects and says \"free version\" but states no amount, rate or price we can read"
+        "outcome": "states_a_free_price",
+        "detail": "the page names Zoho Projects and states its price in words as \"free version\""
       }
     },
     {
@@ -9712,8 +9712,8 @@
       "verifiedDate": "2026-08-01",
       "source_check": {
         "checked": "2026-09-02",
-        "outcome": "states_no_amount",
-        "detail": "the page names Zoho Forms and says \"free plan\" but states no amount, rate or price we can read"
+        "outcome": "states_a_free_price",
+        "detail": "the page names Zoho Forms and states its price in words as \"free plan\""
       }
     },
     {
@@ -10276,8 +10276,8 @@
       "verifiedDate": "2026-07-05",
       "source_check": {
         "checked": "2026-09-02",
-        "outcome": "states_no_amount",
-        "detail": "the page names Country-State-City Microservice API and says \"Free tier\" but states no amount, rate or price we can read"
+        "outcome": "states_a_free_price",
+        "detail": "the page names Country-State-City Microservice API and states its price in words as \"Free tier\""
       }
     },
     {
@@ -10467,8 +10467,8 @@
       "verifiedDate": "2026-07-07",
       "source_check": {
         "checked": "2026-09-02",
-        "outcome": "states_no_amount",
-        "detail": "the page names DB Designer and says \"free plan\" but states no amount, rate or price we can read"
+        "outcome": "states_a_free_price",
+        "detail": "the page names DB Designer and states its price in words as \"free plan\""
       }
     },
     {
@@ -10748,8 +10748,8 @@
       "verifiedDate": "2026-09-07",
       "source_check": {
         "checked": "2026-09-07",
-        "outcome": "states_no_amount",
-        "detail": "the page names Geolocated.io and says \"free tier\" but states no amount, rate or price we can read, and its markup carries no structured data"
+        "outcome": "states_a_free_price",
+        "detail": "the page names Geolocated.io and states its price in words as \"free tier\", and its markup carries no structured data"
       }
     },
     {
@@ -10803,8 +10803,8 @@
       "verifiedDate": "2026-09-08",
       "source_check": {
         "checked": "2026-09-09",
-        "outcome": "states_no_amount",
-        "detail": "the page names Insomnia and says \"free tier\" but states no amount, rate or price we can read, and its markup carries no structured data"
+        "outcome": "states_a_free_price",
+        "detail": "the page names Insomnia and states its price in words as \"free tier\", and its markup carries no structured data"
       }
     },
     {
@@ -10854,8 +10854,8 @@
       "verifiedDate": "2026-08-27",
       "source_check": {
         "checked": "2026-09-09",
-        "outcome": "states_no_amount",
-        "detail": "the page names IP Geolocation and says \"Free API\" but states no amount, rate or price we can read, and its markup carries no structured data"
+        "outcome": "states_a_free_price",
+        "detail": "the page names IP Geolocation and states its price in words as \"Free API\", and its markup carries no structured data"
       }
     },
     {
@@ -10957,8 +10957,8 @@
       "verifiedDate": "2026-08-27",
       "source_check": {
         "checked": "2026-09-02",
-        "outcome": "states_no_amount",
-        "detail": "the page names IPLocate and says \"free tier\" but states no amount, rate or price we can read"
+        "outcome": "states_a_free_price",
+        "detail": "the page names IPLocate and states its price in words as \"free tier\""
       }
     },
     {
@@ -11360,8 +11360,8 @@
       "verifiedDate": "2026-08-01",
       "source_check": {
         "checked": "2026-09-02",
-        "outcome": "states_no_amount",
-        "detail": "the page names OCR.Space and says \"free tier\" but states no amount, rate or price we can read"
+        "outcome": "states_a_free_price",
+        "detail": "the page names OCR.Space and states its price in words as \"free tier\""
       },
       "product_subtypes": {
         "taxonomy": "AI / ML",
@@ -12176,8 +12176,8 @@
       "verifiedDate": "2026-09-14",
       "source_check": {
         "checked": "2026-09-14",
-        "outcome": "states_no_amount",
-        "detail": "the page names 3Cols and says \"free forever\" but states no amount, rate or price we can read, and its markup carries no structured data",
+        "outcome": "states_a_free_price",
+        "detail": "the page names 3Cols and states its price in words as \"free forever\", and its markup carries no structured data",
         "rendered": true
       }
     },
@@ -12211,8 +12211,8 @@
       "verifiedDate": "2026-08-02",
       "source_check": {
         "checked": "2026-09-02",
-        "outcome": "states_no_amount",
-        "detail": "the page names Braid and says \"Free Forever\" but states no amount, rate or price we can read"
+        "outcome": "states_a_free_price",
+        "detail": "the page names Braid and states its price in words as \"Free Forever\""
       }
     },
     {
@@ -13067,8 +13067,8 @@
       "verifiedDate": "2026-09-08",
       "source_check": {
         "checked": "2026-09-09",
-        "outcome": "states_no_amount",
-        "detail": "the page names Visual Debug and says \"free plan\" but states no amount, rate or price we can read, and its markup carries no structured data"
+        "outcome": "states_a_free_price",
+        "detail": "the page names Visual Debug and states its price in words as \"free plan\", and its markup carries no structured data"
       }
     },
     {
@@ -13428,8 +13428,8 @@
       "verifiedDate": "2026-08-04",
       "source_check": {
         "checked": "2026-09-02",
-        "outcome": "states_no_amount",
-        "detail": "the page names DhiWise and says \"free plans\" but states no amount, rate or price we can read"
+        "outcome": "states_a_free_price",
+        "detail": "the page names DhiWise and states its price in words as \"free plans\""
       }
     },
     {
@@ -14504,8 +14504,8 @@
       "verifiedDate": "2026-08-04",
       "source_check": {
         "checked": "2026-09-02",
-        "outcome": "states_no_amount",
-        "detail": "the page names testingbot.com and says \"free plan\" but states no amount, rate or price we can read"
+        "outcome": "states_a_free_price",
+        "detail": "the page names testingbot.com and states its price in words as \"free plan\""
       }
     },
     {
@@ -14540,8 +14540,8 @@
       "verifiedDate": "2026-08-27",
       "source_check": {
         "checked": "2026-09-02",
-        "outcome": "states_no_amount",
-        "detail": "the page names tesults.com and says \"free plan\" but states no amount, rate or price we can read"
+        "outcome": "states_a_free_price",
+        "detail": "the page names tesults.com and states its price in words as \"free plan\""
       }
     },
     {
@@ -14920,8 +14920,8 @@
       "verifiedDate": "2026-09-14",
       "source_check": {
         "checked": "2026-09-14",
-        "outcome": "states_no_amount",
-        "detail": "the page names Smart Grow Vault and says \"Free Plan\" but states no amount, rate or price we can read, and its markup carries no structured data",
+        "outcome": "states_a_free_price",
+        "detail": "the page names Smart Grow Vault and states its price in words as \"Free Plan\", and its markup carries no structured data",
         "rendered": true
       }
     },
@@ -15064,8 +15064,8 @@
       "verifiedDate": "2026-07-11",
       "source_check": {
         "checked": "2026-09-02",
-        "outcome": "states_no_amount",
-        "detail": "the page names asgardeo.io and says \"free tier\" but states no amount, rate or price we can read"
+        "outcome": "states_a_free_price",
+        "detail": "the page names asgardeo.io and states its price in words as \"free tier\""
       }
     },
     {
@@ -15261,8 +15261,8 @@
       "verifiedDate": "2026-07-10",
       "source_check": {
         "checked": "2026-09-02",
-        "outcome": "states_no_amount",
-        "detail": "the page names Okta and says \"Free Plan\" but states no amount, rate or price we can read"
+        "outcome": "states_a_free_price",
+        "detail": "the page names Okta and states its price in words as \"Free Plan\""
       }
     },
     {
@@ -16100,8 +16100,8 @@
       "verifiedDate": "2026-08-31",
       "source_check": {
         "checked": "2026-09-02",
-        "outcome": "states_no_amount",
-        "detail": "the page names localizely.com and says \"Free forever\" but states no amount, rate or price we can read"
+        "outcome": "states_a_free_price",
+        "detail": "the page names localizely.com and states its price in words as \"Free forever\""
       }
     },
     {
@@ -16172,8 +16172,8 @@
       "verifiedDate": "2026-08-06",
       "source_check": {
         "checked": "2026-09-02",
-        "outcome": "states_no_amount",
-        "detail": "the page names Texterify and says \"free plan\" but states no amount, rate or price we can read"
+        "outcome": "states_a_free_price",
+        "detail": "the page names Texterify and states its price in words as \"free plan\""
       }
     },
     {
@@ -16694,8 +16694,8 @@
       "verifiedDate": "2026-07-13",
       "source_check": {
         "checked": "2026-09-02",
-        "outcome": "states_no_amount",
-        "detail": "the page names phare.io and says \"free plan\" but states no amount, rate or price we can read"
+        "outcome": "states_a_free_price",
+        "detail": "the page names phare.io and states its price in words as \"free plan\""
       },
       "product_subtypes": {
         "taxonomy": "Monitoring",
@@ -17329,8 +17329,8 @@
       "verifiedDate": "2026-08-30",
       "source_check": {
         "checked": "2026-09-02",
-        "outcome": "states_no_amount",
-        "detail": "the page names Semaphr and says \"Free forever\" but states no amount, rate or price we can read"
+        "outcome": "states_a_free_price",
+        "detail": "the page names Semaphr and states its price in words as \"Free forever\""
       }
     },
     {
@@ -17468,8 +17468,8 @@
       "verifiedDate": "2026-07-15",
       "source_check": {
         "checked": "2026-09-02",
-        "outcome": "states_no_amount",
-        "detail": "the page names Burnermail and says \"Free Plan\" but states no amount, rate or price we can read"
+        "outcome": "states_a_free_price",
+        "detail": "the page names Burnermail and states its price in words as \"Free Plan\""
       }
     },
     {
@@ -17675,8 +17675,8 @@
       "verifiedDate": "2026-08-26",
       "source_check": {
         "checked": "2026-09-02",
-        "outcome": "states_no_amount",
-        "detail": "the page names ImprovMX and says \"free tier\" but states no amount, rate or price we can read"
+        "outcome": "states_a_free_price",
+        "detail": "the page names ImprovMX and states its price in words as \"free tier\""
       }
     },
     {
@@ -17915,8 +17915,8 @@
       "verifiedDate": "2026-08-27",
       "source_check": {
         "checked": "2026-09-02",
-        "outcome": "states_no_amount",
-        "detail": "the page names Mutant Mail and says \"free forever\" but states no amount, rate or price we can read"
+        "outcome": "states_a_free_price",
+        "detail": "the page names Mutant Mail and states its price in words as \"free forever\""
       }
     },
     {
@@ -17983,8 +17983,8 @@
       "verifiedDate": "2026-09-02",
       "source_check": {
         "checked": "2026-09-03",
-        "outcome": "states_no_amount",
-        "detail": "the page names SimpleLogin and says \"free forever\" but states no amount, rate or price we can read, and the 3 structured-data blocks in its markup state no price"
+        "outcome": "states_a_free_price",
+        "detail": "the page names SimpleLogin and states its price in words as \"free forever\", and the 3 structured-data blocks in its markup state no price"
       }
     },
     {
@@ -18086,8 +18086,8 @@
       "verifiedDate": "2026-08-26",
       "source_check": {
         "checked": "2026-09-02",
-        "outcome": "states_no_amount",
-        "detail": "the page names Tuta and says \"free version\" but states no amount, rate or price we can read"
+        "outcome": "states_a_free_price",
+        "detail": "the page names Tuta and states its price in words as \"free version\""
       }
     },
     {
@@ -18367,8 +18367,8 @@
       "verifiedDate": "2026-08-06",
       "source_check": {
         "checked": "2026-09-02",
-        "outcome": "states_no_amount",
-        "detail": "the page names formlets.com and says \"Free Forever\" but states no amount, rate or price we can read"
+        "outcome": "states_a_free_price",
+        "detail": "the page names formlets.com and states its price in words as \"Free Forever\""
       }
     },
     {
@@ -18630,8 +18630,8 @@
       "verifiedDate": "2026-08-11",
       "source_check": {
         "checked": "2026-09-02",
-        "outcome": "states_no_amount",
-        "detail": "the page names Wufoo and says \"free plan\" but states no amount, rate or price we can read"
+        "outcome": "states_a_free_price",
+        "detail": "the page names Wufoo and states its price in words as \"free plan\""
       }
     },
     {
@@ -19591,8 +19591,8 @@
       "verifiedDate": "2026-08-26",
       "source_check": {
         "checked": "2026-09-02",
-        "outcome": "states_no_amount",
-        "detail": "the page names domcloud.co and says \"Free Forever\" but states no amount, rate or price we can read"
+        "outcome": "states_a_free_price",
+        "detail": "the page names domcloud.co and states its price in words as \"Free Forever\""
       },
       "product_subtypes": {
         "taxonomy": "Cloud Hosting",
@@ -20122,8 +20122,8 @@
       "verifiedDate": "2026-08-30",
       "source_check": {
         "checked": "2026-09-02",
-        "outcome": "states_no_amount",
-        "detail": "the page names Clappia and says \"Free Plan\" but states no amount, rate or price we can read"
+        "outcome": "states_a_free_price",
+        "detail": "the page names Clappia and states its price in words as \"Free Plan\""
       }
     },
     {
@@ -21082,8 +21082,8 @@
       "verifiedDate": "2026-09-01",
       "source_check": {
         "checked": "2026-09-02",
-        "outcome": "states_no_amount",
-        "detail": "the page names isroot.in and says \"Free Forever\" but states no amount, rate or price we can read"
+        "outcome": "states_a_free_price",
+        "detail": "the page names isroot.in and states its price in words as \"Free Forever\""
       }
     },
     {
@@ -21290,8 +21290,8 @@
       "verifiedDate": "2026-08-27",
       "source_check": {
         "checked": "2026-09-02",
-        "outcome": "states_no_amount",
-        "detail": "the page names restdb.io and says \"Free plan\" but states no amount, rate or price we can read"
+        "outcome": "states_a_free_price",
+        "detail": "the page names restdb.io and states its price in words as \"Free plan\""
       },
       "product_subtypes": {
         "taxonomy": "Databases",
@@ -21528,8 +21528,8 @@
       "verifiedDate": "2026-08-08",
       "source_check": {
         "checked": "2026-09-02",
-        "outcome": "states_no_amount",
-        "detail": "the page names Pinggy and says \"Free plan\" but states no amount, rate or price we can read"
+        "outcome": "states_a_free_price",
+        "detail": "the page names Pinggy and states its price in words as \"Free plan\""
       }
     },
     {
@@ -21938,8 +21938,8 @@
       "verifiedDate": "2026-08-27",
       "source_check": {
         "checked": "2026-09-02",
-        "outcome": "states_no_amount",
-        "detail": "the page names kan.bn and says \"free plan\" but states no amount, rate or price we can read"
+        "outcome": "states_a_free_price",
+        "detail": "the page names kan.bn and states its price in words as \"free plan\""
       }
     },
     {
@@ -22006,8 +22006,8 @@
       "verifiedDate": "2026-07-14",
       "source_check": {
         "checked": "2026-09-02",
-        "outcome": "states_no_amount",
-        "detail": "the page names leiga.com and says \"Free forever\" but states no amount, rate or price we can read"
+        "outcome": "states_a_free_price",
+        "detail": "the page names leiga.com and states its price in words as \"Free forever\""
       }
     },
     {
@@ -22522,8 +22522,8 @@
       "verifiedDate": "2026-07-15",
       "source_check": {
         "checked": "2026-09-02",
-        "outcome": "states_no_amount",
-        "detail": "the page names file.io and says \"free plan\" but states no amount, rate or price we can read"
+        "outcome": "states_a_free_price",
+        "detail": "the page names file.io and states its price in words as \"free plan\""
       }
     },
     {
@@ -22690,8 +22690,8 @@
       "verifiedDate": "2026-08-26",
       "source_check": {
         "checked": "2026-09-02",
-        "outcome": "states_no_amount",
-        "detail": "the page names imgen and says \"Free forever\" but states no amount, rate or price we can read"
+        "outcome": "states_a_free_price",
+        "detail": "the page names imgen and states its price in words as \"Free forever\""
       }
     },
     {
@@ -22950,8 +22950,8 @@
       "verifiedDate": "2026-08-27",
       "source_check": {
         "checked": "2026-09-02",
-        "outcome": "states_no_amount",
-        "detail": "the page names QRtracer and says \"Free forever\" but states no amount, rate or price we can read"
+        "outcome": "states_a_free_price",
+        "detail": "the page names QRtracer and states its price in words as \"Free forever\""
       }
     },
     {
@@ -24061,8 +24061,8 @@
       "verifiedDate": "2026-08-26",
       "source_check": {
         "checked": "2026-09-02",
-        "outcome": "states_no_amount",
-        "detail": "the page names Plasmic and says \"free plan\" but states no amount, rate or price we can read"
+        "outcome": "states_a_free_price",
+        "detail": "the page names Plasmic and states its price in words as \"free plan\""
       }
     },
     {
@@ -24298,8 +24298,8 @@
       "verifiedDate": "2026-08-26",
       "source_check": {
         "checked": "2026-09-02",
-        "outcome": "states_no_amount",
-        "detail": "the page names Tailwindadmin and says \"Free Version\" but states no amount, rate or price we can read"
+        "outcome": "states_a_free_price",
+        "detail": "the page names Tailwindadmin and states its price in words as \"Free Version\""
       }
     },
     {
@@ -24788,8 +24788,8 @@
       "verifiedDate": "2026-08-31",
       "source_check": {
         "checked": "2026-09-02",
-        "outcome": "states_no_amount",
-        "detail": "the page names geoapify.com and says \"free API\" but states no amount, rate or price we can read"
+        "outcome": "states_a_free_price",
+        "detail": "the page names geoapify.com and states its price in words as \"free API\""
       }
     },
     {
@@ -24842,8 +24842,8 @@
       "verifiedDate": "2026-08-30",
       "source_check": {
         "checked": "2026-09-02",
-        "outcome": "states_no_amount",
-        "detail": "the page names Geokeo api and says \"free api\" but states no amount, rate or price we can read"
+        "outcome": "states_a_free_price",
+        "detail": "the page names Geokeo api and states its price in words as \"free api\""
       }
     },
     {
@@ -24860,8 +24860,8 @@
       "verifiedDate": "2026-09-01",
       "source_check": {
         "checked": "2026-09-02",
-        "outcome": "states_no_amount",
-        "detail": "the page names ipstack and says \"Free API\" but states no amount, rate or price we can read"
+        "outcome": "states_a_free_price",
+        "detail": "the page names ipstack and states its price in words as \"Free API\""
       }
     },
     {
@@ -25158,8 +25158,8 @@
       "verifiedDate": "2026-09-02",
       "source_check": {
         "checked": "2026-09-02",
-        "outcome": "states_no_amount",
-        "detail": "the page names Bootify.io and says \"Free plan\" but states no amount, rate or price we can read"
+        "outcome": "states_a_free_price",
+        "detail": "the page names Bootify.io and states its price in words as \"Free plan\""
       }
     },
     {
@@ -26211,8 +26211,8 @@
       "verifiedDate": "2026-08-26",
       "source_check": {
         "checked": "2026-09-02",
-        "outcome": "states_no_amount",
-        "detail": "the page names Microsoft Clarity and says \"Free forever\" but states no amount, rate or price we can read"
+        "outcome": "states_a_free_price",
+        "detail": "the page names Microsoft Clarity and states its price in words as \"Free forever\""
       }
     },
     {
@@ -26229,8 +26229,8 @@
       "verifiedDate": "2026-07-22",
       "source_check": {
         "checked": "2026-09-02",
-        "outcome": "states_no_amount",
-        "detail": "the page names mouseflow.com and says \"Free forever\" but states no amount, rate or price we can read"
+        "outcome": "states_a_free_price",
+        "detail": "the page names mouseflow.com and states its price in words as \"Free forever\""
       }
     },
     {
@@ -26266,8 +26266,8 @@
       "verifiedDate": "2026-07-21",
       "source_check": {
         "checked": "2026-09-02",
-        "outcome": "states_no_amount",
-        "detail": "the page names smartlook.com and says \"Free plan\" but states no amount, rate or price we can read"
+        "outcome": "states_a_free_price",
+        "detail": "the page names smartlook.com and states its price in words as \"Free plan\""
       }
     },
     {
@@ -26284,8 +26284,8 @@
       "verifiedDate": "2026-07-21",
       "source_check": {
         "checked": "2026-09-02",
-        "outcome": "states_no_amount",
-        "detail": "the page names UXtweak.com and says \"Free plan\" but states no amount, rate or price we can read"
+        "outcome": "states_a_free_price",
+        "detail": "the page names UXtweak.com and states its price in words as \"Free plan\""
       }
     },
     {
@@ -26571,8 +26571,8 @@
       "verifiedDate": "2026-09-01",
       "source_check": {
         "checked": "2026-09-02",
-        "outcome": "states_no_amount",
-        "detail": "the page names ttl.sh and says \"Free forever\" but states no amount, rate or price we can read"
+        "outcome": "states_a_free_price",
+        "detail": "the page names ttl.sh and states its price in words as \"Free forever\""
       }
     },
     {
@@ -27350,8 +27350,8 @@
       "verifiedDate": "2026-08-28",
       "source_check": {
         "checked": "2026-09-02",
-        "outcome": "states_no_amount",
-        "detail": "the page names Sunrise and Sunset and says \"Free forever\" but states no amount, rate or price we can read"
+        "outcome": "states_a_free_price",
+        "detail": "the page names Sunrise and Sunset and states its price in words as \"Free forever\""
       }
     },
     {
@@ -31024,8 +31024,8 @@
       "verifiedDate": "2026-08-17",
       "source_check": {
         "checked": "2026-09-03",
-        "outcome": "states_no_amount",
-        "detail": "the page names Lovable and says \"free plan\" but states no amount, rate or price we can read, and the 2 structured-data blocks in its markup state no price"
+        "outcome": "states_a_free_price",
+        "detail": "the page names Lovable and states its price in words as \"free plan\", and the 2 structured-data blocks in its markup state no price"
       }
     },
     {
@@ -32395,8 +32395,8 @@
       "verifiedDate": "2026-08-19",
       "source_check": {
         "checked": "2026-09-03",
-        "outcome": "states_no_amount",
-        "detail": "the page names pCloud and says \"free plan\" but states no amount, rate or price we can read, and its markup carries no structured data"
+        "outcome": "states_a_free_price",
+        "detail": "the page names pCloud and states its price in words as \"free plan\", and its markup carries no structured data"
       }
     },
     {
@@ -32863,8 +32863,8 @@
       },
       "source_check": {
         "checked": "2026-09-05",
-        "outcome": "states_no_amount",
-        "detail": "the page names Proton VPN and says \"free forever\" but states no amount, rate or price we can read, and the 1 structured-data block in its markup states no price"
+        "outcome": "states_a_free_price",
+        "detail": "the page names Proton VPN and states its price in words as \"free forever\", and the 1 structured-data block in its markup states no price"
       }
     },
     {
@@ -33912,8 +33912,8 @@
       "verifiedDate": "2026-08-27",
       "source_check": {
         "checked": "2026-09-02",
-        "outcome": "states_no_amount",
-        "detail": "the page names Elastic and says \"free tier\" but states no amount, rate or price we can read"
+        "outcome": "states_a_free_price",
+        "detail": "the page names Elastic and states its price in words as \"free tier\""
       },
       "product_subtypes": {
         "taxonomy": "Monitoring",
@@ -33952,8 +33952,8 @@
       "verifiedDate": "2026-08-27",
       "source_check": {
         "checked": "2026-09-09",
-        "outcome": "states_no_amount",
-        "detail": "the page names Grafana and says \"free tier\" but states no amount, rate or price we can read, and its markup carries no structured data"
+        "outcome": "states_a_free_price",
+        "detail": "the page names Grafana and states its price in words as \"free tier\", and its markup carries no structured data"
       },
       "product_subtypes": {
         "taxonomy": "Monitoring",

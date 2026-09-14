@@ -4,7 +4,7 @@ import { changesByVendor, enrichOffers, publishedRisk, refusalsForVendor } from 
 type EnrichedOfferRow = ReturnType<typeof enrichOffers>[number];
 import { gateFor, utcDate, type Gate } from "./ranking.js";
 import { offerEnded } from "./retirement.js";
-import { levelWithheldReason, levelWithheldSince, type LevelWithheldReason } from "./source-check.js";
+import { levelWithheldReason, levelWithheldSince, recordPublishesAQuantity, type LevelWithheldReason } from "./source-check.js";
 import type { RefusedRead } from "./change-refusal.js";
 import { whyWeCannotConfirmTheseTerms, type UnconfirmedTerms, type VendorVerdictInput } from "./vendor-verdict.js";
 
@@ -64,6 +64,7 @@ export function vendorVerdictContextFrom(evidence: VendorVerdictEvidence): Vendo
       linkCheckedOn: linkUnreachable?.checked ?? null,
       termsConfirmedOn: primary.verifiedDate,
       refusedReads,
+      publishesAQuantity: recordPublishesAQuantity(primary.description),
     },
   };
 }

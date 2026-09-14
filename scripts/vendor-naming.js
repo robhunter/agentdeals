@@ -15,6 +15,7 @@ const MIN_FORM_LENGTH = 3;
 const MIN_DISTINCTIVE_WORD = 7;
 
 export const SOURCE_CHECK_OK = "ok";
+export const SOURCE_CHECK_FREE_PRICE = "states_a_free_price";
 export const SOURCE_CHECK_NO_AMOUNT = "states_no_amount";
 export const SOURCE_CHECK_NOT_NAMED = "does_not_name_vendor";
 export const SOURCE_CHECK_NOT_THE_PRODUCT = "does_not_name_product";
@@ -23,6 +24,7 @@ export const SOURCE_CHECK_UNREADABLE = "unreadable";
 
 export const SOURCE_CHECK_OUTCOMES = [
   SOURCE_CHECK_OK,
+  SOURCE_CHECK_FREE_PRICE,
   SOURCE_CHECK_NO_AMOUNT,
   SOURCE_CHECK_NOT_NAMED,
   SOURCE_CHECK_NOT_THE_PRODUCT,
@@ -45,6 +47,12 @@ const A_FIGURE = /\d/;
 
 export function statesAnAmount(signal) {
   return typeof signal === "string" && A_FIGURE.test(signal);
+}
+
+const A_TIER_NAMED_FREE = /^free\s+(?:plans?|tiers?|package|api|forever|version)\b/i;
+
+export function statesAPriceOfZero(signal) {
+  return typeof signal === "string" && !statesAnAmount(signal) && A_TIER_NAMED_FREE.test(signal.trim());
 }
 
 export function normalizeForMatch(text) {
@@ -277,6 +285,13 @@ export function classifySource(offer, page, signals) {
     };
   }
   if (!rendersAnAmount) {
+    const statedFree = found.find(statesAPriceOfZero);
+    if (statedFree) {
+      return {
+        outcome: SOURCE_CHECK_FREE_PRICE,
+        detail: `the page names ${offer.vendor} and states its price in words as "${statedFree}"${markupClause(structured)}`,
+      };
+    }
     return {
       outcome: SOURCE_CHECK_NO_AMOUNT,
       detail: `the page names ${offer.vendor} and says "${found[0]}" but states no amount, rate or price we can read${markupClause(structured)}`,

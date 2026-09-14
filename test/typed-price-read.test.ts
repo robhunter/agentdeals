@@ -193,9 +193,17 @@ describe("reading a page whose prices are only in its markup", () => {
   });
 
   it("lifts a page whose only rendered signal names a plan without an amount", async () => {
-    const read = await readWith(page(`<p>${PROSE} Free forever for small teams.</p>`) + ldBlock(LADDER));
+    const read = await readWith(page(`<p>${PROSE} The Enterprise plan is for larger teams.</p>`) + ldBlock(LADDER));
     assert.ok(priceSignals(read.text).length > 0);
     assert.strictEqual(gradeOf({ ...read, structured: null }).outcome, "states_no_amount");
+    const grade = gradeOf(read);
+    assert.strictEqual(grade.outcome, "ok");
+    assert.strictEqual(grade.read, READ_FROM_MARKUP);
+  });
+
+  it("lifts a page whose only rendered signal states a free price, and reads the figures over the words", async () => {
+    const read = await readWith(page(`<p>${PROSE} Free forever for small teams.</p>`) + ldBlock(LADDER));
+    assert.strictEqual(gradeOf({ ...read, structured: null }).outcome, "states_a_free_price");
     const grade = gradeOf(read);
     assert.strictEqual(grade.outcome, "ok");
     assert.strictEqual(grade.read, READ_FROM_MARKUP);
