@@ -4,7 +4,13 @@ import { readFileSync, writeFileSync } from "node:fs";
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { reverifyBatch } from "./reverify.js";
-import { fetchPageText, verifyOfferAgainstPage, createVerifierClient, VERIFIER_MODEL } from "./verify-freshness.js";
+import {
+  fetchPageText,
+  verifyOfferAgainstPage,
+  createVerifierClient,
+  challengeRendersThisRun,
+  VERIFIER_MODEL,
+} from "./verify-freshness.js";
 import {
   buildChangeEntry,
   appendChangeEntries,
@@ -242,7 +248,7 @@ export async function runUrlMode(picked, data, dryRun, now, options = {}) {
       flagged++;
     }
   }
-  return { verified, flagged, changed: 0, changes: [], recorded: [], suppressed: [], unclassified: [], rejected: [], unchecked: [], reclassified: [], overruled: [], sourceChecks, attempts: recorder.attempts };
+  return { verified, flagged, changed: 0, changes: [], recorded: [], suppressed: [], unclassified: [], rejected: [], unchecked: [], reclassified: [], overruled: [], sourceChecks, challengeRenders: challengeRendersThisRun(), attempts: recorder.attempts };
 }
 
 export async function runAiMode(picked, data, dryRun, now, options = {}) {
@@ -410,6 +416,7 @@ export async function runAiMode(picked, data, dryRun, now, options = {}) {
     rewritten,
     overruled,
     sourceChecks,
+    challengeRenders: challengeRendersThisRun(),
     attempts: recorder.attempts,
     held: toHold,
     corroborated: published,
@@ -533,6 +540,7 @@ export function summaryLines(result, { useAi, checked, drawnFromQueue, oldestRem
     const label = holdsVerifiedDate(outcome) ? "Held back" : "Verified on weaker evidence";
     lines.push(`${label} (source ${outcome}): ${sourceChecks.get(outcome) ?? 0}`);
   }
+  lines.push(`Handed to the rendering client after a 401, 403 or 429: ${result.challengeRenders ?? 0}`);
   lines.push(`Read again with a rendering client after the fetcher could not read it: ${sourceChecks.get(RENDERED) ?? 0}`);
   lines.push(`Of those, a reading came back: ${sourceChecks.get(RENDERED_AND_READ) ?? 0}`);
   lines.push(`Graded on a price the page states in its markup, not its text: ${sourceChecks.get(READ_FROM_MARKUP) ?? 0}`);
