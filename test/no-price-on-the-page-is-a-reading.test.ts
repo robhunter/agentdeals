@@ -35,6 +35,7 @@ const {
   SOURCE_CHECK_UNREADABLE,
   checkRecordedAFinding,
   classifySource,
+  holdsVerifiedDate,
 } = await import("../scripts/vendor-naming.js");
 const { priceSignals } = await import("../scripts/change-gate.js");
 const { NAMING_TOKENS_RECORDED_INSTEAD_OF_EVIDENCE } = await import("../dist/source-check.js");
@@ -114,17 +115,18 @@ describe("a page stating no price and a page stating a free one are different re
     );
   });
 
-  for (const status of ["confirmed", "changed"]) {
-    it(`records the same attempt outcome on both pages when the model says ${status}`, async () => {
-      const silent = await attemptOutcomeInAiMode(SILENT, status);
-      const alsoFree = await attemptOutcomeInAiMode(SILENT_AND_FREE, status);
-      assert.strictEqual(silent.outcome, alsoFree.outcome);
-    });
-  }
+  it("records the same attempt outcome on both pages where the model found a change", async () => {
+    const silent = await attemptOutcomeInAiMode(SILENT, "changed");
+    const alsoFree = await attemptOutcomeInAiMode(SILENT_AND_FREE, "changed");
+    assert.strictEqual(silent.outcome, alsoFree.outcome);
+    assert.strictEqual(silent.outcome, ATTEMPT_CHANGED);
+  });
 
-  it("records the model's verdict where it gave one", async () => {
-    assert.strictEqual((await attemptOutcomeInAiMode(SILENT, "confirmed")).outcome, ATTEMPT_CONFIRMED);
-    assert.strictEqual((await attemptOutcomeInAiMode(SILENT, "changed")).outcome, ATTEMPT_CHANGED);
+  it("records the model's confirmation only where the source check leaves the published date to advance", async () => {
+    assert.strictEqual(holdsVerifiedDate(SOURCE_CHECK_NO_TERMS), true, "a page stating no terms stopped holding the published date");
+    assert.strictEqual(holdsVerifiedDate(SOURCE_CHECK_FREE_PRICE), false, "a page stating a free price started holding the published date");
+    assert.strictEqual((await attemptOutcomeInAiMode(SILENT_AND_FREE, "confirmed")).outcome, ATTEMPT_CONFIRMED);
+    assert.strictEqual((await attemptOutcomeInAiMode(SILENT, "confirmed")).outcome, ATTEMPT_STATES_NO_PRICE);
   });
 
   it("records that the page states no price where the model could not answer either", async () => {
