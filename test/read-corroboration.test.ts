@@ -66,7 +66,8 @@ function runSummary() {
     },
     {
       useAi: true,
-      checked: 75,
+      checked: 97,
+      drawnFromQueue: 75,
       oldestRemaining: "2026-07-05",
       total: 1580,
       pickedAfterAFailedRead: 3,
@@ -384,6 +385,124 @@ describe("#1640 — the second reading is scheduled, not hoped for", () => {
       ["Oldest", "Older"],
     );
     assert.strictEqual(pickedForASecondReading, 0);
+  });
+});
+
+describe("#1650 — a second reading is added to the run, not taken out of it", () => {
+  const RUN = new Date("2026-09-14T06:00:00Z");
+  const LIMIT = 75;
+
+  const page = (n: number) => ({
+    vendor: `Vendor${String(n).padStart(4, "0")}`,
+    url: `https://vendor${n}.example/pricing`,
+    verifiedDate: new Date(Date.UTC(2026, 0, 1) + n * 86_400_000).toISOString().slice(0, 10),
+  });
+  const keyOf = (offer: any) => `${offer.vendor}|${offer.url}`;
+  const catalogue = (n: number) => Array.from({ length: n }, (_, i) => page(i));
+  const freshest = (offers: any[], n: number) => new Set(offers.slice(offers.length - n).map(keyOf));
+
+  const drawnFor = (offers: any[], held: Set<string>) =>
+    pickOldestEntries(offers, LIMIT, RUN, { awaitingCorroboration: held });
+
+  it("draws the limit from the queue and the held pages on top of it", () => {
+    const offers = catalogue(200);
+    const { picked, pickedForASecondReading, drawnFromQueue } = drawnFor(offers, freshest(offers, 8));
+
+    assert.strictEqual(drawnFromQueue, LIMIT);
+    assert.strictEqual(pickedForASecondReading, 8);
+    assert.strictEqual(picked.length, LIMIT + 8);
+  });
+
+  it("advances the same queue pages whatever is waiting on a second reading", () => {
+    const offers = catalogue(200);
+    const queueDraw = (size: number) => {
+      const held = freshest(offers, size);
+      return drawnFor(offers, held)
+        .picked.map(({ offer }: any) => keyOf(offer))
+        .filter((key: string) => !held.has(key));
+    };
+
+    const baseline = queueDraw(0);
+    assert.strictEqual(baseline.length, LIMIT);
+    for (const size of [4, 8, 24]) {
+      assert.deepStrictEqual(
+        queueDraw(size),
+        baseline,
+        `${size} held readings displaced a page the run would otherwise have advanced`,
+      );
+    }
+  });
+
+  it("reads at most twice the limit however far the held store has grown", () => {
+    const offers = catalogue(300);
+    const { picked, pickedForASecondReading, drawnFromQueue } = drawnFor(offers, freshest(offers, 200));
+
+    assert.strictEqual(pickedForASecondReading, LIMIT);
+    assert.strictEqual(drawnFromQueue, LIMIT);
+    assert.strictEqual(picked.length, 2 * LIMIT);
+  });
+
+  it("reports the queue draw and the second readings as two numbers", () => {
+    const offers = catalogue(200);
+    const { picked, pickedForASecondReading, drawnFromQueue } = drawnFor(offers, freshest(offers, 8));
+    const printed = summaryLines(
+      {
+        verified: 3,
+        flagged: 0,
+        changed: 0,
+        recorded: [],
+        suppressed: [],
+        unclassified: [],
+        sourceChecks: new Map(),
+      },
+      {
+        useAi: false,
+        checked: picked.length,
+        drawnFromQueue,
+        pickedForASecondReading,
+        oldestRemaining: "2026-07-20",
+        total: offers.length,
+        quarantine: { retried: 0, entered: 0, left: 0, total: 0, byCategory: new Map() },
+      },
+    ).join("\n");
+
+    assert.match(printed, /^Checked: 83$/m);
+    assert.match(printed, /^Drawn from the queue, so pages this run advances: 75$/m);
+    assert.match(printed, /^Drawn to give a held demoting verdict its second reading: 8 of 83$/m);
+  });
+});
+
+describe("#1650 — the commit message says how far the catalogue got", () => {
+  const workflow = () => readFileSync(path.join(REPO, ".github", "workflows", "reverify.yml"), "utf-8");
+  const gateStep = (source: string) =>
+    source.slice(source.indexOf("id: gate"), source.indexOf("- name: Say where"));
+  const commitMessage = (source: string) => /"data\(auto\)[^"]*"/.exec(gateStep(source))?.[0] ?? "";
+
+  it("counts the queue draw and the second readings separately", () => {
+    const message = commitMessage(workflow());
+    assert.ok(message, "the gate step no longer passes a commit message this test can read");
+    assert.match(message, /\$\{DRAWN\}/, "a run that read 83 pages reports as if the catalogue advanced 83");
+    assert.match(message, /\$\{SECOND\}/, "the second readings are folded into a number that reads as fresh coverage");
+  });
+
+  it("declares every count the message interpolates, or it ships as an empty number", () => {
+    const source = workflow();
+    const gate = gateStep(source);
+    const used = [...new Set([...commitMessage(source).matchAll(/\$\{([A-Z_]+)\}/g)].map((m) => m[1]!))].sort();
+    const declared = [...gate.matchAll(/^\s+([A-Z_]+): \$\{\{ steps\.reverify\.outputs\.([a-z_]+) \}\}$/gm)];
+    const produced = [...source.matchAll(/echo "([a-z_]+)=\$[A-Z_]+" >> "\$GITHUB_OUTPUT"/g)].map((m) => m[1]!);
+
+    assert.ok(used.length >= 8, `the commit message states ${used.length} counts`);
+    assert.deepStrictEqual(
+      used.filter((name) => !declared.some(([, env]) => env === name)),
+      [],
+      "the commit message reads an environment variable the gate step never sets",
+    );
+    assert.deepStrictEqual(
+      declared.filter(([, env, output]) => used.includes(env!) && !produced.includes(output!)).map((m) => m[2]),
+      [],
+      "the gate step reads a step output the run never writes",
+    );
   });
 });
 
