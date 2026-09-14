@@ -303,7 +303,22 @@ describe("verification state", () => {
       assert.strictEqual(record.consecutive_failures, 1);
       assert.strictEqual(isQuarantined(record), false);
       assert.strictEqual(record.failure_category, FAILURE_SOURCE_UNUSABLE);
-      assert.strictEqual(record.last_success, "2026-07-05");
+    });
+
+    it("claims neither a confirmation nor a read for a record it seeds from a failed one", () => {
+      const state = new Map();
+      const seeded = backfillVerificationState(state, offers);
+      assert.ok(seeded.length > 0, "the backfill seeded nothing, so this assertion proves nothing");
+      const published = offers.map((o) => o.verifiedDate);
+      for (const record of seeded) {
+        assert.strictEqual(record.last_success, null, `${record.vendor} was seeded with a confirmation no read produced`);
+        assert.strictEqual(record.last_read_at, null, `${record.vendor} was seeded with a read date no read produced`);
+        assert.strictEqual(
+          published.includes(record.last_success),
+          false,
+          `${record.vendor} holds the date it publishes as though a read had confirmed it`,
+        );
+      }
     });
 
     it("quarantines a URL the liveness job has watched fail for days", () => {
