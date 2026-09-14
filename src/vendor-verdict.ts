@@ -1,4 +1,5 @@
 import type { DealChange, RatingWithheld, RiskCause, SourceCheck, SourceCheckOutcome } from "./types.js";
+import type { TermsWeCannotConfirm } from "./read-date.js";
 import { CHANGE_DIRECTION, isACorrectionToOurOwnRecord } from "./data.js";
 import { changeRatesTheListedTier, type GradedOffer } from "./change-tier.js";
 import { isNoLongerInForce, theEventNeverHappened } from "./change-resolution.js";
@@ -493,6 +494,13 @@ export const NOT_VERIFIED = (clause: string): string => `Not verified — ${clau
 
 export function theReadConfirmedThePrice(unconfirmed: UnconfirmedTerms | null | undefined): boolean {
   return outcomeConfirmsThePrice(unconfirmed?.because.reason);
+}
+
+export function termsTheVerdictWithholds(
+  unconfirmed: UnconfirmedTerms | null | undefined,
+): TermsWeCannotConfirm | null {
+  if (!unconfirmed || theReadConfirmedThePrice(unconfirmed)) return null;
+  return { clause: unconfirmed.clause, on: unconfirmed.on };
 }
 
 export function termsNotVerifiedMetaSentence(input: VendorVerdictInput): string | null {

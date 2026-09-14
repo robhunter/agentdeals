@@ -67,6 +67,10 @@ export function pageStatesNoPrice(outcome) {
   return attemptForSourceCheck(outcome) === ATTEMPT_STATES_NO_PRICE;
 }
 
+export function stampsAConfirmation(verdictStatus, sourceCheckOutcome) {
+  return verdictStatus === "confirmed" && !holdsVerifiedDate(sourceCheckOutcome);
+}
+
 export const FAILURE_BOT_BLOCK = "bot_block";
 export const FAILURE_UNREACHABLE = "unreachable";
 export const FAILURE_HTTP_ERROR = "http_error";

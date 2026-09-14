@@ -134,20 +134,50 @@ export function noConfirmationNote(read: string, verified: string, outcome: stri
   return `The day we last read the vendor's page.${reading} ${NO_CONFIRMATION_HELD}${beside}.`;
 }
 
-export function lastReadNote(offer: DatedRecord | null | undefined): string {
+export interface TermsWeCannotConfirm {
+  clause: string;
+  on: string | null;
+}
+
+function theSameReadDisagreedWithItself(confirmed: string, withheld: TermsWeCannotConfirm): boolean {
+  return withheld.on === null || withheld.on <= confirmed;
+}
+
+export function unreconciledConfirmationNote(confirmed: string, withheld: TermsWeCannotConfirm): string {
+  return theSameReadDisagreedWithItself(confirmed, withheld)
+    ? `That read matched the terms we publish, and the same read found that ${withheld.clause}`
+      + ` — we cannot reconcile the two, so treat these terms as unconfirmed.`
+    : `Our records hold a confirmation of these terms from ${confirmed}, and we have read the page`
+      + ` since without confirming them: ${withheld.clause}.`;
+}
+
+export function lastReadNote(
+  offer: DatedRecord | null | undefined,
+  withheld: TermsWeCannotConfirm | null = null,
+): string {
   const { read, verified, confirmed, attempted } = verificationDates(offer);
   const tail = attempted
     ? ` We tried again on ${attempted} and did not read the page, so that attempt confirmed nothing.`
     : "";
   if (!confirmed) return noConfirmationNote(read, verified, lastReadOutcome(offer)) + tail;
+  if (withheld) {
+    return `The day we last read the vendor's page. ${unreconciledConfirmationNote(confirmed, withheld)}` + tail;
+  }
   return (confirmed < read
     ? `The day we last read the vendor's page. The terms we publish were last confirmed on ${confirmed}.`
     : "The day we last read the vendor's page, and the day we last confirmed the terms we publish.") + tail;
 }
 
-export function storedConfirmationClause(offer: DatedRecord | null | undefined): string {
+export function storedConfirmationClause(
+  offer: DatedRecord | null | undefined,
+  withheld: TermsWeCannotConfirm | null = null,
+): string {
   const confirmed = confirmationDate(offer);
-  return confirmed ? `Our stored terms were last confirmed on ${confirmed}.` : `${NO_CONFIRMATION_HELD}.`;
+  if (!confirmed) return `${NO_CONFIRMATION_HELD}.`;
+  if (!withheld) return `Our stored terms were last confirmed on ${confirmed}.`;
+  return theSameReadDisagreedWithItself(confirmed, withheld)
+    ? `We matched our stored terms against that same read on ${confirmed} and cannot reconcile the two.`
+    : `Our records hold a confirmation of these terms from ${confirmed}, and we have read the page since without confirming them.`;
 }
 
 export function daysSince(date: string, now: Date = new Date()): number {

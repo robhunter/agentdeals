@@ -76,6 +76,7 @@ import {
   readLinkHealth,
   readVerificationState,
   recordAttempts,
+  stampsAConfirmation,
   writeVerificationState,
 } from "./verification-state.js";
 
@@ -299,9 +300,10 @@ export async function runAiMode(picked, data, dryRun, now, options = {}) {
     }
     const statesNoPrice = pageStatesNoPrice(check.outcome);
     const readAPageAboutThisOffer = sourceOk || statesNoPrice;
+    const confirms = stampsAConfirmation(result.status, check.outcome);
     if (!readAPageAboutThisOffer) {
       recorder.note(offer, ATTEMPT_SOURCE_UNUSABLE, check.detail, FAILURE_SOURCE_UNUSABLE);
-    } else if (result.status === "confirmed") {
+    } else if (confirms) {
       recorder.note(offer, ATTEMPT_CONFIRMED);
     } else if (result.status === "changed") {
       recorder.note(offer, ATTEMPT_CHANGED);
@@ -310,16 +312,15 @@ export async function runAiMode(picked, data, dryRun, now, options = {}) {
     } else {
       recorder.note(offer, ATTEMPT_UNCLEAR, result.summary ?? null, FAILURE_AI_UNDECIDED);
     }
-    if (result.status === "confirmed") {
-      if (!sourceOk) {
-        await sleep(rateLimitMs);
-        continue;
-      }
+    if (confirms) {
       if (!dryRun) {
         data.offers[index].verifiedDate = isoDay(now);
       }
       confirmedThisRun.add(offerKey(offer.vendor, offer.url));
       verified++;
+    } else if (result.status === "confirmed") {
+      await sleep(rateLimitMs);
+      continue;
     } else if (result.status === "changed") {
       changed++;
       const { entry: change, missing } = buildChangeEntry(offer, result, { now });

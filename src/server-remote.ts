@@ -26,7 +26,7 @@ import { publishedDateLine, storedConfirmationClause, verificationDatesClause } 
 export const TRACK_CHANGES_LIMIT = 1000;
 import type { LinkUnreachable, ProductRole, ProductSubtypes, SourceCheck } from "./types.js";
 import type { RefusedRead } from "./change-refusal.js";
-import { NOT_VERIFIED, theReadConfirmedThePrice, publishedTermsEvidence, termsWithTheReasonWeCannotConfirmThem, unconfirmedTermsFrom } from "./vendor-verdict.js";
+import { NOT_VERIFIED, theReadConfirmedThePrice, publishedTermsEvidence, termsTheVerdictWithholds, termsWithTheReasonWeCannotConfirmThem, unconfirmedTermsFrom } from "./vendor-verdict.js";
 
 function mcpError(msg: string) {
   return {
@@ -673,7 +673,7 @@ Suggested monitoring cadence: run this check weekly to catch pricing changes ear
       text += `**Description:** ${unconfirmed ? termsWithTheReasonWeCannotConfirmThem(match.description, unconfirmed) : match.description}\n`;
       text += `**Pricing Page:** ${match.url}\n`;
       text += unconfirmed && !theReadConfirmedThePrice(unconfirmed)
-        ? `**Verification:** ${NOT_VERIFIED(unconfirmed.clause)} ${storedConfirmationClause(match)}\n`
+        ? `**Verification:** ${NOT_VERIFIED(unconfirmed.clause)} ${storedConfirmationClause(match, termsTheVerdictWithholds(unconfirmed))}\n`
         : `${publishedDateLine(match)}\n`;
       text += `**Last read:** ${match.last_read_date}\n`;
       if (match.eligibility) {
