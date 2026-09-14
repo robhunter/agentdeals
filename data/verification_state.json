@@ -9,7 +9,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-12",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -20,7 +20,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-09",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -31,7 +31,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-23",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -53,7 +53,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-11",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -88,7 +88,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-15",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -132,7 +132,7 @@
       "last_error": "the page never names Achieved and is not served from its domain",
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
-      "last_success": "2026-07-23",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -155,7 +155,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-13",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -199,7 +199,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-27",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -233,7 +233,7 @@
       "last_error": "the page never names Aircall and is not served from its domain",
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
-      "last_success": "2026-07-25",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -290,7 +290,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-18",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -301,7 +301,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-15",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -312,7 +312,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-15",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -334,7 +334,7 @@
       "last_error": "the page never names Amazon AWS and is not served from its domain",
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
-      "last_success": "2026-07-24",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -402,7 +402,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-23",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -435,7 +435,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-13",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -446,7 +446,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-09",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -457,7 +457,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-09",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -502,7 +502,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-10",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -513,7 +513,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-11",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -524,7 +524,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-14",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -535,7 +535,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-31",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -580,7 +580,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-26",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -624,7 +624,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-05",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -657,7 +657,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-01",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -679,7 +679,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-24",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -734,7 +734,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-16",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -767,7 +767,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-30",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -823,7 +823,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-12",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -857,7 +857,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-12",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -890,7 +890,7 @@
       "last_error": "fetch failed",
       "failure_category": "network_error",
       "consecutive_failures": 5,
-      "last_success": "2026-06-16",
+      "last_success": null,
       "last_read_at": null,
       "quarantined_since": "2026-08-28"
     },
@@ -936,7 +936,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-13",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -958,7 +958,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-07",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -969,7 +969,7 @@
       "last_error": "HTTP 403",
       "failure_category": "bot_block",
       "consecutive_failures": 4,
-      "last_success": "2026-07-04",
+      "last_success": null,
       "quarantined_since": "2026-08-28"
     },
     {
@@ -991,7 +991,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-31",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -1002,7 +1002,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-21",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -1035,7 +1035,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-13",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -1069,7 +1069,7 @@
       "last_error": "the page never names Axonaut and is not served from its domain",
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
-      "last_success": "2026-07-22",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -1080,7 +1080,7 @@
       "last_error": "the page never names Azameo and is not served from its domain",
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
-      "last_success": "2026-07-23",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -1146,7 +1146,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-15",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -1157,7 +1157,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-22",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -1179,7 +1179,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-24",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -1201,7 +1201,7 @@
       "last_error": "the page never names Batch and is not served from its domain",
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
-      "last_success": "2026-07-22",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -1212,7 +1212,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-10",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -1234,7 +1234,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-02",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -1245,7 +1245,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-19",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -1256,7 +1256,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-04",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -1279,7 +1279,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-24",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -1334,7 +1334,7 @@
       "last_error": "the page names BinShare.net but states no amount, tier or rate we can read",
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
-      "last_success": "2026-07-21",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -1345,7 +1345,7 @@
       "last_error": "fetch failed",
       "failure_category": "network_error",
       "consecutive_failures": 5,
-      "last_success": "2026-07-08",
+      "last_success": null,
       "last_read_at": null,
       "quarantined_since": "2026-08-28"
     },
@@ -1423,7 +1423,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-11",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -1434,7 +1434,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-23",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -1445,7 +1445,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-12",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -1456,7 +1456,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-21",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -1489,7 +1489,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-04",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -1511,7 +1511,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-07",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -1533,7 +1533,7 @@
       "last_error": "the page never names Botnation and is not served from its domain",
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
-      "last_success": "2026-07-24",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -1544,7 +1544,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-10",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -1566,7 +1566,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-01",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -1622,7 +1622,7 @@
       "last_error": "the page names Bricks Note Calculator but states no amount, tier or rate we can read",
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
-      "last_success": "2026-07-24",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -1644,7 +1644,7 @@
       "last_error": "the page names Browse AI but states no amount, tier or rate we can read",
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
-      "last_success": "2026-07-30",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -1666,7 +1666,7 @@
       "last_error": "HTTP 402",
       "failure_category": "http_error",
       "consecutive_failures": 5,
-      "last_success": "2026-06-10",
+      "last_success": null,
       "last_read_at": null,
       "quarantined_since": "2026-08-28"
     },
@@ -1689,7 +1689,7 @@
       "last_error": "page content too short (likely JS-rendered SPA); the rendering client failed: the rendering client did not finish in time",
       "failure_category": "empty_page",
       "consecutive_failures": 2,
-      "last_success": "2026-07-23",
+      "last_success": null,
       "last_read_at": null,
       "quarantined_since": null
     },
@@ -1701,7 +1701,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-16",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -1724,7 +1724,7 @@
       "last_error": "fetch failed",
       "failure_category": "network_error",
       "consecutive_failures": 5,
-      "last_success": "2026-06-15",
+      "last_success": null,
       "last_read_at": null,
       "quarantined_since": "2026-08-28"
     },
@@ -1736,7 +1736,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-12",
+      "last_success": null,
       "last_read_at": "2026-09-14",
       "quarantined_since": null
     },
@@ -1794,7 +1794,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-07",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -1829,7 +1829,7 @@
       "last_error": "the page names build.opensuse.org but states no amount, tier or rate we can read",
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
-      "last_success": "2026-07-20",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -1873,7 +1873,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-13",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -1884,7 +1884,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-10",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -1895,7 +1895,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-07",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -1906,7 +1906,7 @@
       "last_error": "page content too short (likely JS-rendered SPA); a rendering client read 373 characters",
       "failure_category": "empty_page",
       "consecutive_failures": 2,
-      "last_success": "2026-08-09",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -1917,7 +1917,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-08",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -1962,7 +1962,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-17",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -1995,7 +1995,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-01",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -2017,7 +2017,7 @@
       "last_error": "HTTP 403",
       "failure_category": "bot_block",
       "consecutive_failures": 4,
-      "last_success": "2026-04-23",
+      "last_success": null,
       "quarantined_since": "2026-08-28"
     },
     {
@@ -2028,7 +2028,7 @@
       "last_error": "the page never names CaptainData and is not served from its domain",
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
-      "last_success": "2026-07-25",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -2050,7 +2050,7 @@
       "last_error": "the page names Carbon.now.sh but states no amount, tier or rate we can read",
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
-      "last_success": "2026-07-24",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -2061,7 +2061,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-17",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -2072,7 +2072,7 @@
       "last_error": "the page never names Carta and is not served from its domain",
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
-      "last_success": "2026-07-22",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -2095,7 +2095,7 @@
       "last_error": "the page never names Caviar and is not served from its domain",
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
-      "last_success": "2026-07-22",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -2129,7 +2129,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-13",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -2151,7 +2151,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-10",
+      "last_success": null,
       "last_read_at": "2026-09-14",
       "quarantined_since": null
     },
@@ -2174,7 +2174,7 @@
       "last_error": "the page names the platform in the domain we cite Chargebee Launch Programme from and never names Launch Programme",
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
-      "last_success": "2026-09-02",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -2208,7 +2208,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-29",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -2219,7 +2219,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-17",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -2274,7 +2274,7 @@
       "last_error": "fetch failed",
       "failure_category": "network_error",
       "consecutive_failures": 5,
-      "last_success": "2026-04-12",
+      "last_success": null,
       "last_read_at": null,
       "quarantined_since": "2026-08-28"
     },
@@ -2297,7 +2297,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-10",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -2319,7 +2319,7 @@
       "last_error": "fetch failed",
       "failure_category": "network_error",
       "consecutive_failures": 5,
-      "last_success": "2026-07-15",
+      "last_success": null,
       "last_read_at": null,
       "quarantined_since": "2026-08-28"
     },
@@ -2331,7 +2331,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-17",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -2342,7 +2342,7 @@
       "last_error": "fetch failed",
       "failure_category": "network_error",
       "consecutive_failures": 5,
-      "last_success": "2026-04-24",
+      "last_success": null,
       "last_read_at": null,
       "quarantined_since": "2026-08-28"
     },
@@ -2354,7 +2354,7 @@
       "last_error": "the page never names Clear Channel Outdoor and is not served from its domain",
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
-      "last_success": "2026-07-22",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -2376,7 +2376,7 @@
       "last_error": "the page never names clevebrush.com and is not served from its domain",
       "failure_category": "source_unusable",
       "consecutive_failures": 2,
-      "last_success": "2026-07-16",
+      "last_success": null,
       "last_read_at": null,
       "quarantined_since": null
     },
@@ -2388,7 +2388,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-15",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -2421,7 +2421,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-23",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -2432,7 +2432,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-29",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -2454,7 +2454,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-13",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -2465,7 +2465,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-31",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -2476,7 +2476,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-07",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -2498,7 +2498,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-05",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -2520,7 +2520,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-15",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -2565,7 +2565,7 @@
       "last_error": "HTTP 404",
       "failure_category": "unreachable",
       "consecutive_failures": 4,
-      "last_success": "2026-04-14",
+      "last_success": null,
       "quarantined_since": "2026-08-28"
     },
     {
@@ -2587,7 +2587,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-16",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -2631,7 +2631,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-19",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -2642,7 +2642,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-17",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -2699,7 +2699,7 @@
       "last_error": "the page never names CloudImage and is not served from its domain",
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
-      "last_success": "2026-08-17",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -2743,7 +2743,7 @@
       "last_error": "the page never names Cloudtalk and is not served from its domain",
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
-      "last_success": "2026-08-16",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -2754,7 +2754,7 @@
       "last_error": "the page never names Cloudways and is not served from its domain",
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
-      "last_success": "2026-08-11",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -2765,7 +2765,7 @@
       "last_error": "fetch failed",
       "failure_category": "network_error",
       "consecutive_failures": 4,
-      "last_success": "2026-04-27",
+      "last_success": null,
       "quarantined_since": "2026-08-28"
     },
     {
@@ -2776,7 +2776,7 @@
       "last_error": "page content too short (likely JS-rendered SPA); a rendering client read 318 characters",
       "failure_category": "empty_page",
       "consecutive_failures": 2,
-      "last_success": "2026-08-08",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -2787,7 +2787,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-15",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -2809,8 +2809,8 @@
       "last_error": "the page never names Coda, on a domain that carries its name",
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
-      "last_success": "2026-08-21",
-      "last_read_at": "2026-08-21",
+      "last_success": null,
+      "last_read_at": null,
       "quarantined_since": null
     },
     {
@@ -2821,7 +2821,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-13",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -2832,8 +2832,8 @@
       "last_error": "HTTP 404",
       "failure_category": "unreachable",
       "consecutive_failures": 1,
-      "last_success": "2026-04-13",
-      "last_read_at": "2026-04-13",
+      "last_success": null,
+      "last_read_at": null,
       "quarantined_since": null
     },
     {
@@ -2844,7 +2844,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-10",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -2855,7 +2855,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-08",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -2866,7 +2866,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-02",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -2877,7 +2877,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-26",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -2910,7 +2910,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-05",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -2921,7 +2921,7 @@
       "last_error": "the page never names Codefresh, on a domain that carries its name",
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
-      "last_success": "2026-07-08",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -2965,7 +2965,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-15",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -2976,7 +2976,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-15",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -2987,7 +2987,7 @@
       "last_error": "HTTP 403",
       "failure_category": "bot_block",
       "consecutive_failures": 4,
-      "last_success": "2026-08-18",
+      "last_success": null,
       "quarantined_since": "2026-08-28"
     },
     {
@@ -2998,7 +2998,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-20",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -3009,7 +3009,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-25",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -3031,7 +3031,7 @@
       "last_error": "HTTP 403",
       "failure_category": "bot_block",
       "consecutive_failures": 4,
-      "last_success": "2026-04-20",
+      "last_success": null,
       "quarantined_since": "2026-08-28"
     },
     {
@@ -3042,7 +3042,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-20",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -3053,7 +3053,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-07",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -3087,7 +3087,7 @@
       "last_error": "the page never names ColdCRM and is not served from its domain",
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
-      "last_success": "2026-08-14",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -3098,7 +3098,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-19",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -3142,7 +3142,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-15",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -3153,7 +3153,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-16",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -3164,7 +3164,7 @@
       "last_error": "HTTP 429",
       "failure_category": "bot_block",
       "consecutive_failures": 5,
-      "last_success": "2026-07-25",
+      "last_success": null,
       "last_read_at": null,
       "quarantined_since": "2026-08-28"
     },
@@ -3176,7 +3176,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-25",
+      "last_success": null,
       "last_read_at": "2026-09-14",
       "quarantined_since": null
     },
@@ -3199,7 +3199,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-11",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -3221,7 +3221,7 @@
       "last_error": "HTTP 403",
       "failure_category": "bot_block",
       "consecutive_failures": 4,
-      "last_success": "2026-04-12",
+      "last_success": null,
       "quarantined_since": "2026-08-28"
     },
     {
@@ -3232,7 +3232,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-22",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -3243,7 +3243,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-08",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -3265,7 +3265,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-05",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -3287,7 +3287,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-15",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -3298,7 +3298,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-20",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -3309,7 +3309,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-05",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -3332,7 +3332,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-18",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -3354,7 +3354,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-13",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -3443,7 +3443,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-14",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -3454,7 +3454,7 @@
       "last_error": "the page never names Crowdfire and is not served from its domain",
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
-      "last_success": "2026-07-21",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -3476,7 +3476,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-12",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -3498,7 +3498,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-19",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -3520,7 +3520,7 @@
       "last_error": "HTTP 404",
       "failure_category": "unreachable",
       "consecutive_failures": 5,
-      "last_success": "2026-05-02",
+      "last_success": null,
       "last_read_at": null,
       "quarantined_since": "2026-08-28"
     },
@@ -3543,7 +3543,7 @@
       "last_error": "page content too short (likely JS-rendered SPA); a rendering client read 476 characters",
       "failure_category": "empty_page",
       "consecutive_failures": 2,
-      "last_success": "2026-08-01",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -3587,7 +3587,7 @@
       "last_error": "the page never names CurrencyScoop and is not served from its domain",
       "failure_category": "source_unusable",
       "consecutive_failures": 2,
-      "last_success": "2026-08-26",
+      "last_success": null,
       "last_read_at": null,
       "quarantined_since": null
     },
@@ -3621,7 +3621,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-11",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -3643,7 +3643,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-25",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -3654,7 +3654,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-16",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -3676,7 +3676,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-21",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -3687,7 +3687,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-16",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -3698,7 +3698,7 @@
       "last_error": "the page never names Dareboost and is not served from its domain",
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
-      "last_success": "2026-07-25",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -3709,7 +3709,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-03",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -3720,7 +3720,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-03",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -3731,7 +3731,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-12",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -3742,7 +3742,7 @@
       "last_error": "The pricing page does not explicitly mention a free tier with specific limits like 'up to 5 hosts with 1-day metric retention'. It broadly mentions 'Free Trial' and lists various products, but doesn't detail a persistent free tier. It also indicates some products are unavailable on the US-FED site.",
       "failure_category": "ai_undecided",
       "consecutive_failures": 2,
-      "last_success": "2026-08-12",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -3753,7 +3753,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-22",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -3764,7 +3764,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-02",
+      "last_success": null,
       "last_read_at": "2026-09-14",
       "quarantined_since": null
     },
@@ -3776,7 +3776,7 @@
       "last_error": "the page never names Datananas and is not served from its domain",
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
-      "last_success": "2026-07-26",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -3787,7 +3787,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-21",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -3809,7 +3809,7 @@
       "last_error": "HTTP 404",
       "failure_category": "unreachable",
       "consecutive_failures": 5,
-      "last_success": "2026-07-10",
+      "last_success": null,
       "last_read_at": null,
       "quarantined_since": "2026-08-28"
     },
@@ -3865,7 +3865,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-09",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -3887,7 +3887,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-31",
+      "last_success": null,
       "last_read_at": "2026-09-14",
       "quarantined_since": null
     },
@@ -3921,7 +3921,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-02",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -3943,7 +3943,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-04",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -3976,7 +3976,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-24",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -3998,7 +3998,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-02",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -4032,7 +4032,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-07",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -4043,7 +4043,7 @@
       "last_error": "HTTP 429",
       "failure_category": "bot_block",
       "consecutive_failures": 4,
-      "last_success": "2026-07-25",
+      "last_success": null,
       "quarantined_since": "2026-08-28"
     },
     {
@@ -4054,7 +4054,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-11",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -4076,7 +4076,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-10",
+      "last_success": null,
       "last_read_at": "2026-09-14",
       "quarantined_since": null
     },
@@ -4088,7 +4088,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-04",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -4099,7 +4099,7 @@
       "last_error": "the page never names DiffJSON and is not served from its domain",
       "failure_category": "source_unusable",
       "consecutive_failures": 2,
-      "last_success": "2026-08-28",
+      "last_success": null,
       "last_read_at": null,
       "quarantined_since": null
     },
@@ -4122,7 +4122,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-16",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -4155,7 +4155,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-26",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -4199,7 +4199,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-25",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -4210,7 +4210,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-06",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -4221,7 +4221,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-10",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -4243,7 +4243,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-09",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -4277,7 +4277,7 @@
       "last_error": "the page never names Docsend and is not served from its domain",
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
-      "last_success": "2026-07-23",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -4288,7 +4288,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-29",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -4355,7 +4355,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-11",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -4366,7 +4366,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-09",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -4377,7 +4377,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-02",
+      "last_success": null,
       "last_read_at": "2026-09-14",
       "quarantined_since": null
     },
@@ -4389,7 +4389,7 @@
       "last_error": "the page names Drift for Early Stage Startups but states no amount, tier or rate we can read",
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
-      "last_success": "2026-09-02",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -4400,7 +4400,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-06",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -4422,7 +4422,7 @@
       "last_error": "page content too short (likely JS-rendered SPA); a rendering client read 470 characters",
       "failure_category": "empty_page",
       "consecutive_failures": 2,
-      "last_success": "2026-07-16",
+      "last_success": null,
       "last_read_at": null,
       "quarantined_since": null
     },
@@ -4445,7 +4445,7 @@
       "last_error": "page content too short (likely JS-rendered SPA); a rendering client read 255 characters",
       "failure_category": "empty_page",
       "consecutive_failures": 2,
-      "last_success": "2026-08-09",
+      "last_success": null,
       "last_read_at": null,
       "quarantined_since": null
     },
@@ -4457,7 +4457,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-02",
+      "last_success": null,
       "last_read_at": "2026-09-12",
       "quarantined_since": null
     },
@@ -4480,7 +4480,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-20",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -4514,7 +4514,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-15",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -4525,7 +4525,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-09",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -4536,7 +4536,7 @@
       "last_error": "the page never names E-Goi and is not served from its domain",
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
-      "last_success": "2026-07-25",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -4558,7 +4558,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-14",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -4569,7 +4569,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-10",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -4580,7 +4580,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-12",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -4591,7 +4591,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-22",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -4602,7 +4602,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-27",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -4613,7 +4613,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-14",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -4624,7 +4624,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-03",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -4635,7 +4635,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-04",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -4657,7 +4657,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-14",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -4690,7 +4690,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-17",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -4701,7 +4701,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-05",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -4735,7 +4735,7 @@
       "last_error": "timeout",
       "failure_category": "timeout",
       "consecutive_failures": 2,
-      "last_success": "2026-08-08",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -4769,7 +4769,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-29",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -4780,7 +4780,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-12",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -4791,7 +4791,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-15",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -4802,7 +4802,7 @@
       "last_error": "HTTP 404",
       "failure_category": "unreachable",
       "consecutive_failures": 4,
-      "last_success": "2026-04-23",
+      "last_success": null,
       "quarantined_since": "2026-08-28"
     },
     {
@@ -4813,7 +4813,7 @@
       "last_error": "HTTP 403",
       "failure_category": "bot_block",
       "consecutive_failures": 2,
-      "last_success": "2026-08-24",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -4835,7 +4835,7 @@
       "last_error": "page content too short (likely JS-rendered SPA); a rendering client read 285 characters",
       "failure_category": "empty_page",
       "consecutive_failures": 2,
-      "last_success": "2026-08-23",
+      "last_success": null,
       "last_read_at": null,
       "quarantined_since": null
     },
@@ -4847,7 +4847,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-29",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -4870,7 +4870,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-21",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -4892,7 +4892,7 @@
       "last_error": "the page never names Experian and is not served from its domain",
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
-      "last_success": "2026-07-23",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -4937,7 +4937,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-02",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -4971,7 +4971,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-20",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -5005,7 +5005,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-12",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -5016,7 +5016,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-09",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -5083,7 +5083,7 @@
       "last_error": "the page never names findmassleads and is not served from its domain",
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
-      "last_success": "2026-07-26",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -5161,7 +5161,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-07",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -5183,7 +5183,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-05",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -5194,7 +5194,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-19",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -5238,7 +5238,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-01",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -5260,7 +5260,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-11",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -5271,7 +5271,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-11",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -5304,7 +5304,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-09",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -5315,7 +5315,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-06",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -5326,7 +5326,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-21",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -5337,7 +5337,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-08",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -5404,7 +5404,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-06",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -5415,7 +5415,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-28",
+      "last_success": null,
       "last_read_at": "2026-09-13",
       "quarantined_since": null
     },
@@ -5427,7 +5427,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-06",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -5438,7 +5438,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-07",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -5449,7 +5449,7 @@
       "last_error": "the page never names Forter and is not served from its domain",
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
-      "last_success": "2026-07-23",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -5493,7 +5493,7 @@
       "last_error": "the page never names framagit.org, on a domain that carries its name",
       "failure_category": "source_unusable",
       "consecutive_failures": 2,
-      "last_success": "2026-08-02",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -5504,7 +5504,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-18",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -5515,7 +5515,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-06",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -5526,7 +5526,7 @@
       "last_error": "page content too short (likely JS-rendered SPA); a rendering client read 264 characters",
       "failure_category": "empty_page",
       "consecutive_failures": 2,
-      "last_success": "2026-08-08",
+      "last_success": null,
       "last_read_at": null,
       "quarantined_since": null
     },
@@ -5538,7 +5538,7 @@
       "last_error": "the page never names Freebe and is not served from its domain",
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
-      "last_success": "2026-07-28",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -5549,7 +5549,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-17",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -5572,7 +5572,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-16",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -5594,7 +5594,7 @@
       "last_error": "fetch failed",
       "failure_category": "network_error",
       "consecutive_failures": 5,
-      "last_success": "2026-07-17",
+      "last_success": null,
       "last_read_at": null,
       "quarantined_since": "2026-08-28"
     },
@@ -5606,7 +5606,7 @@
       "last_error": "the page never names Freshchat and is not served from its domain",
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
-      "last_success": "2026-07-26",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -5617,7 +5617,7 @@
       "last_error": "the page never names Freshdesk and is not served from its domain",
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
-      "last_success": "2026-07-25",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -5628,7 +5628,7 @@
       "last_error": "the page never names Freshmarketer and is not served from its domain",
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
-      "last_success": "2026-07-25",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -5639,7 +5639,7 @@
       "last_error": "the page never names Freshsales and is not served from its domain",
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
-      "last_success": "2026-07-24",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -5650,7 +5650,7 @@
       "last_error": "the page names Freshworks for Startups but states no amount, tier or rate we can read",
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
-      "last_success": "2026-09-02",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -5661,7 +5661,7 @@
       "last_error": "the page never names Front and is not served from its domain",
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
-      "last_success": "2026-07-30",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -5672,7 +5672,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-21",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -5695,7 +5695,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-14",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -5750,7 +5750,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-09",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -5840,7 +5840,7 @@
       "last_error": "page content too short (likely JS-rendered SPA); a rendering client read 138 characters",
       "failure_category": "empty_page",
       "consecutive_failures": 2,
-      "last_success": "2026-08-05",
+      "last_success": null,
       "last_read_at": null,
       "quarantined_since": null
     },
@@ -5863,7 +5863,7 @@
       "last_error": "the page never names getpantry.cloud, on a domain that carries its name",
       "failure_category": "source_unusable",
       "consecutive_failures": 2,
-      "last_success": "2026-07-16",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -5885,7 +5885,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-08",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -5918,7 +5918,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-23",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -5973,7 +5973,7 @@
       "last_error": "HTTP 403",
       "failure_category": "bot_block",
       "consecutive_failures": 5,
-      "last_success": "2026-06-12",
+      "last_success": null,
       "last_read_at": null,
       "quarantined_since": "2026-08-28"
     },
@@ -6007,7 +6007,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-26",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -6030,7 +6030,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-20",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -6041,7 +6041,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-25",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -6074,7 +6074,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-30",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -6085,7 +6085,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-04",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -6108,7 +6108,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-13",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -6130,7 +6130,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-16",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -6141,7 +6141,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-18",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -6152,7 +6152,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-20",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -6163,7 +6163,7 @@
       "last_error": "the page never names GoCardLess and is not served from its domain",
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
-      "last_success": "2026-07-25",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -6174,7 +6174,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-17",
+      "last_success": null,
       "last_read_at": "2026-09-14",
       "quarantined_since": null
     },
@@ -6186,7 +6186,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-06",
+      "last_success": null,
       "last_read_at": "2026-09-14",
       "quarantined_since": null
     },
@@ -6198,7 +6198,7 @@
       "last_error": "the page never names GOOGLE ADS and is not served from its domain",
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
-      "last_success": "2026-07-21",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -6209,7 +6209,7 @@
       "last_error": "HTTP 404",
       "failure_category": "unreachable",
       "consecutive_failures": 4,
-      "last_success": "2026-04-15",
+      "last_success": null,
       "quarantined_since": "2026-08-28"
     },
     {
@@ -6220,7 +6220,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-22",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -6231,7 +6231,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-27",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -6319,7 +6319,7 @@
       "last_error": "the page names Google Cloud Shell but states no amount, tier or rate we can read",
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
-      "last_success": "2026-08-19",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -6352,7 +6352,7 @@
       "last_error": "page content too short (likely JS-rendered SPA); a rendering client read 32 characters",
       "failure_category": "empty_page",
       "consecutive_failures": 2,
-      "last_success": "2026-08-13",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -6363,7 +6363,7 @@
       "last_error": "the page names Google Compute Engine but states no amount, tier or rate we can read",
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
-      "last_success": "2026-08-18",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -6374,7 +6374,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-18",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -6407,7 +6407,7 @@
       "last_error": "the page names Google Gemini Code Assist but states no amount, tier or rate we can read",
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
-      "last_success": "2026-08-27",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -6418,7 +6418,7 @@
       "last_error": "the page names Google Gemini Embedding 2 but states no amount, tier or rate we can read",
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
-      "last_success": "2026-08-17",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -6429,7 +6429,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-19",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -6440,7 +6440,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-15",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -6495,7 +6495,7 @@
       "last_error": "HTTP 404",
       "failure_category": "unreachable",
       "consecutive_failures": 4,
-      "last_success": "2026-04-15",
+      "last_success": null,
       "quarantined_since": "2026-08-28"
     },
     {
@@ -6506,7 +6506,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-02",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -6517,7 +6517,7 @@
       "last_error": "the page never names Gorgias and is not served from its domain",
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
-      "last_success": "2026-07-22",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -6528,7 +6528,7 @@
       "last_error": "fetch failed",
       "failure_category": "network_error",
       "consecutive_failures": 4,
-      "last_success": "2026-04-14",
+      "last_success": null,
       "quarantined_since": "2026-08-28"
     },
     {
@@ -6539,7 +6539,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-17",
+      "last_success": null,
       "last_read_at": "2026-09-14",
       "quarantined_since": null
     },
@@ -6606,7 +6606,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-11",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -6617,7 +6617,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-05",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -6651,7 +6651,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-25",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -6662,7 +6662,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-17",
+      "last_success": null,
       "last_read_at": "2026-09-14",
       "quarantined_since": null
     },
@@ -6674,7 +6674,7 @@
       "last_error": "the page never names Guideline 401(k) and is not served from its domain",
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
-      "last_success": "2026-07-26",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -6685,7 +6685,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-15",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -6696,7 +6696,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-02",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -6707,7 +6707,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-18",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -6740,7 +6740,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-29",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -6762,7 +6762,7 @@
       "last_error": "the page never names Harvestr and is not served from its domain",
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
-      "last_success": "2026-07-25",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -6773,7 +6773,7 @@
       "last_error": "HTTP 429",
       "failure_category": "bot_block",
       "consecutive_failures": 5,
-      "last_success": "2026-04-05",
+      "last_success": null,
       "last_read_at": null,
       "quarantined_since": "2026-08-28"
     },
@@ -6796,7 +6796,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-09",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -6807,7 +6807,7 @@
       "last_error": "HTTP 429",
       "failure_category": "bot_block",
       "consecutive_failures": 5,
-      "last_success": "2026-04-19",
+      "last_success": null,
       "last_read_at": null,
       "quarantined_since": "2026-08-28"
     },
@@ -6853,7 +6853,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-03",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -6864,7 +6864,7 @@
       "last_error": "the page names Heroku for Startups Program but states no amount, tier or rate we can read",
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
-      "last_success": "2026-09-02",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -6898,7 +6898,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-17",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -6909,7 +6909,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-15",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -6931,7 +6931,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-09-02",
+      "last_success": null,
       "last_read_at": "2026-09-13",
       "quarantined_since": null
     },
@@ -6943,7 +6943,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-22",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -6966,7 +6966,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-04",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -6988,7 +6988,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-23",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -7066,7 +7066,7 @@
       "last_error": "timeout",
       "failure_category": "timeout",
       "consecutive_failures": 2,
-      "last_success": "2026-07-23",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -7077,7 +7077,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-08",
+      "last_success": null,
       "last_read_at": "2026-09-14",
       "quarantined_since": null
     },
@@ -7089,7 +7089,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-22",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -7134,7 +7134,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-23",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -7145,7 +7145,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-16",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -7167,7 +7167,7 @@
       "last_error": "The pricing page text is almost entirely visual noise and does not contain any pricing or tier information to verify the stored deal details.",
       "failure_category": "ai_undecided",
       "consecutive_failures": 2,
-      "last_success": "2026-08-17",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -7178,7 +7178,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-18",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -7211,7 +7211,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-20",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -7222,7 +7222,7 @@
       "last_error": "HTTP 404",
       "failure_category": "unreachable",
       "consecutive_failures": 5,
-      "last_success": "2026-04-05",
+      "last_success": null,
       "last_read_at": null,
       "quarantined_since": "2026-08-28"
     },
@@ -7234,7 +7234,7 @@
       "last_error": "HTTP 403",
       "failure_category": "bot_block",
       "consecutive_failures": 4,
-      "last_success": "2026-07-15",
+      "last_success": null,
       "quarantined_since": "2026-08-28"
     },
     {
@@ -7267,7 +7267,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-20",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -7289,7 +7289,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-17",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -7300,7 +7300,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-08",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -7311,7 +7311,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-18",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -7333,7 +7333,7 @@
       "last_error": "HTTP 403",
       "failure_category": "bot_block",
       "consecutive_failures": 2,
-      "last_success": "2026-08-24",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -7411,7 +7411,7 @@
       "last_error": "page content too short (likely JS-rendered SPA); a rendering client read 174 characters",
       "failure_category": "empty_page",
       "consecutive_failures": 2,
-      "last_success": "2026-07-12",
+      "last_success": null,
       "last_read_at": null,
       "quarantined_since": null
     },
@@ -7423,7 +7423,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-12",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -7480,7 +7480,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-27",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -7524,7 +7524,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-11",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -7535,7 +7535,7 @@
       "last_error": "the page never names Instabug for Startups and is not served from its domain",
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
-      "last_success": "2026-09-02",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -7546,7 +7546,7 @@
       "last_error": "the page never names Instacart and is not served from its domain",
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
-      "last_success": "2026-07-25",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -7591,7 +7591,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-13",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -7602,7 +7602,7 @@
       "last_error": "the page never names Intercom and is not served from its domain",
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
-      "last_success": "2026-07-24",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -7613,7 +7613,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-11",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -7646,7 +7646,7 @@
       "last_error": "the page never names InVision and is not served from its domain",
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
-      "last_success": "2026-07-28",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -7679,7 +7679,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-08",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -7701,7 +7701,7 @@
       "last_error": "page content too short (likely JS-rendered SPA); a rendering client read 12 characters",
       "failure_category": "empty_page",
       "consecutive_failures": 2,
-      "last_success": "2026-07-09",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -7812,7 +7812,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-26",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -7823,7 +7823,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-10",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -7834,7 +7834,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-05",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -7845,7 +7845,7 @@
       "last_error": "the page names JDoodle but states no amount, tier or rate we can read",
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
-      "last_success": "2026-08-12",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -7856,7 +7856,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-26",
+      "last_success": null,
       "last_read_at": "2026-09-13",
       "quarantined_since": null
     },
@@ -7868,7 +7868,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-07",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -7934,7 +7934,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-06",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -7945,7 +7945,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-02",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -7989,7 +7989,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-15",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -8000,7 +8000,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-16",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -8011,7 +8011,7 @@
       "last_error": "fetch failed",
       "failure_category": "network_error",
       "consecutive_failures": 5,
-      "last_success": "2026-08-04",
+      "last_success": null,
       "last_read_at": null,
       "quarantined_since": "2026-08-28"
     },
@@ -8023,7 +8023,7 @@
       "last_error": "the page never names Kaspr and is not served from its domain",
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
-      "last_success": "2026-07-25",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -8034,7 +8034,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-02",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -8045,7 +8045,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-21",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -8056,7 +8056,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-04",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -8079,7 +8079,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-31",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -8090,7 +8090,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-22",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -8101,7 +8101,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-21",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -8135,7 +8135,7 @@
       "last_error": "the page never names Klaviyo and is not served from its domain",
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
-      "last_success": "2026-07-25",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -8157,7 +8157,7 @@
       "last_error": "the page never names Knotel and is not served from its domain",
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
-      "last_success": "2026-07-25",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -8168,7 +8168,7 @@
       "last_error": "fetch failed",
       "failure_category": "network_error",
       "consecutive_failures": 4,
-      "last_success": "2026-05-09",
+      "last_success": null,
       "quarantined_since": "2026-08-28"
     },
     {
@@ -8179,7 +8179,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-04",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -8245,7 +8245,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-09",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -8256,7 +8256,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-06",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -8267,7 +8267,7 @@
       "last_error": "the page never names La Fabrique Juridique and is not served from its domain",
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
-      "last_success": "2026-07-23",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -8278,7 +8278,7 @@
       "last_error": "HTTP 404",
       "failure_category": "unreachable",
       "consecutive_failures": 5,
-      "last_success": "2026-06-09",
+      "last_success": null,
       "last_read_at": null,
       "quarantined_since": "2026-08-28"
     },
@@ -8336,7 +8336,7 @@
       "last_error": "HTTP 404",
       "failure_category": "unreachable",
       "consecutive_failures": 5,
-      "last_success": "2026-05-07",
+      "last_success": null,
       "last_read_at": null,
       "quarantined_since": "2026-08-28"
     },
@@ -8348,7 +8348,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-10",
+      "last_success": null,
       "last_read_at": "2026-09-14",
       "quarantined_since": null
     },
@@ -8383,7 +8383,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-15",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -8405,7 +8405,7 @@
       "last_error": "the page never names Legalstart and is not served from its domain",
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
-      "last_success": "2026-07-27",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -8438,7 +8438,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-19",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -8460,7 +8460,7 @@
       "last_error": "the page never names Libeo and is not served from its domain",
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
-      "last_success": "2026-07-23",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -8471,7 +8471,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-08",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -8505,7 +8505,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-08",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -8561,7 +8561,7 @@
       "last_error": "the page names LLM7.io but states no amount, tier or rate we can read",
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
-      "last_success": "2026-08-17",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -8572,7 +8572,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-09",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -8594,7 +8594,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-05",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -8616,7 +8616,7 @@
       "last_error": "HTTP 403",
       "failure_category": "bot_block",
       "consecutive_failures": 2,
-      "last_success": "2026-08-09",
+      "last_success": null,
       "last_read_at": null,
       "quarantined_since": null
     },
@@ -8640,7 +8640,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-06",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -8673,7 +8673,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-11",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -8695,7 +8695,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-02",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -8717,7 +8717,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-15",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -8762,7 +8762,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-11",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -8773,7 +8773,7 @@
       "last_error": "HTTP 429",
       "failure_category": "bot_block",
       "consecutive_failures": 4,
-      "last_success": "2026-07-20",
+      "last_success": null,
       "quarantined_since": "2026-08-28"
     },
     {
@@ -8795,7 +8795,7 @@
       "last_error": "the page names LogSpot but states no amount, tier or rate we can read",
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
-      "last_success": "2026-07-22",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -8828,7 +8828,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-06",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -8862,7 +8862,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-17",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -8884,7 +8884,7 @@
       "last_error": "HTTP 403",
       "failure_category": "bot_block",
       "consecutive_failures": 4,
-      "last_success": "2026-08-19",
+      "last_success": null,
       "quarantined_since": "2026-08-28"
     },
     {
@@ -8906,7 +8906,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-09",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -8917,7 +8917,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-11",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -8928,7 +8928,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-19",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -8962,7 +8962,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-20",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -8973,7 +8973,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-16",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -8984,7 +8984,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-12",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -9006,7 +9006,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-15",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -9017,7 +9017,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-20",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -9050,7 +9050,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-13",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -9127,7 +9127,7 @@
       "last_error": "HTTP 403",
       "failure_category": "bot_block",
       "consecutive_failures": 5,
-      "last_success": "2026-04-19",
+      "last_success": null,
       "last_read_at": null,
       "quarantined_since": "2026-08-28"
     },
@@ -9139,7 +9139,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-05",
+      "last_success": null,
       "last_read_at": "2026-09-14",
       "quarantined_since": null
     },
@@ -9163,7 +9163,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-05",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -9185,7 +9185,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-09",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -9196,7 +9196,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-12",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -9218,7 +9218,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-16",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -9229,7 +9229,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-19",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -9252,7 +9252,7 @@
       "last_error": "HTTP 403",
       "failure_category": "bot_block",
       "consecutive_failures": 4,
-      "last_success": "2026-07-24",
+      "last_success": null,
       "quarantined_since": "2026-08-28"
     },
     {
@@ -9263,7 +9263,7 @@
       "last_error": "The page does not explicitly state the limits of a free tier. It details supported file formats and conversion options but does not mention any usage limits like the '15 files per 24h, up to 100 MB each, processed in batches of eight' described in the stored deal info.",
       "failure_category": "ai_undecided",
       "consecutive_failures": 2,
-      "last_success": "2026-07-13",
+      "last_success": null,
       "last_read_at": null,
       "quarantined_since": null
     },
@@ -9275,7 +9275,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-17",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -9308,7 +9308,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-04",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -9330,7 +9330,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-26",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -9341,7 +9341,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-14",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -9352,7 +9352,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-07",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -9363,7 +9363,7 @@
       "last_error": "the page never names Mention and is not served from its domain",
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
-      "last_success": "2026-07-23",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -9397,7 +9397,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-03",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -9408,7 +9408,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-06",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -9419,7 +9419,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-26",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -9441,7 +9441,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-08",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -9496,7 +9496,7 @@
       "last_error": "HTTP 404",
       "failure_category": "unreachable",
       "consecutive_failures": 4,
-      "last_success": "2026-04-17",
+      "last_success": null,
       "quarantined_since": "2026-08-28"
     },
     {
@@ -9518,7 +9518,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-18",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -9541,7 +9541,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-24",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -9563,7 +9563,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-05",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -9574,7 +9574,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-12",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -9596,7 +9596,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-21",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -9618,7 +9618,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-01",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -9675,7 +9675,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-01",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -9708,7 +9708,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-21",
+      "last_success": null,
       "last_read_at": "2026-09-14",
       "quarantined_since": null
     },
@@ -9731,7 +9731,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-13",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -9742,7 +9742,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-21",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -9786,7 +9786,7 @@
       "last_error": "the page never names MongoDB and is not served from its domain",
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
-      "last_success": "2026-07-25",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -9808,7 +9808,7 @@
       "last_error": "fetch failed",
       "failure_category": "network_error",
       "consecutive_failures": 5,
-      "last_success": "2026-04-13",
+      "last_success": null,
       "last_read_at": null,
       "quarantined_since": "2026-08-28"
     },
@@ -9820,7 +9820,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-19",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -9831,7 +9831,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-23",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -9853,7 +9853,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-10",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -9864,7 +9864,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-02",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -9909,7 +9909,7 @@
       "last_error": "HTTP 429",
       "failure_category": "bot_block",
       "consecutive_failures": 5,
-      "last_success": "2026-04-23",
+      "last_success": null,
       "last_read_at": null,
       "quarantined_since": "2026-08-28"
     },
@@ -9921,7 +9921,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-05-20",
+      "last_success": null,
       "last_read_at": "2026-09-14",
       "quarantined_since": null
     },
@@ -9956,7 +9956,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-19",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -9978,7 +9978,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-14",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -10001,7 +10001,7 @@
       "last_error": "fetch failed",
       "failure_category": "network_error",
       "consecutive_failures": 5,
-      "last_success": "2026-05-13",
+      "last_success": null,
       "last_read_at": null,
       "quarantined_since": "2026-08-28"
     },
@@ -10013,7 +10013,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-08",
+      "last_success": null,
       "last_read_at": "2026-09-14",
       "quarantined_since": null
     },
@@ -10047,7 +10047,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-23",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -10058,7 +10058,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-26",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -10069,7 +10069,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-12",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -10080,7 +10080,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-27",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -10124,7 +10124,7 @@
       "last_error": "the page never names Ninja Outreach and is not served from its domain",
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
-      "last_success": "2026-08-14",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -10135,7 +10135,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-17",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -10146,7 +10146,7 @@
       "last_error": "the page never names noCRM and is not served from its domain",
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
-      "last_success": "2026-08-11",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -10225,7 +10225,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-17",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -10247,7 +10247,7 @@
       "last_error": "fetch failed",
       "failure_category": "network_error",
       "consecutive_failures": 4,
-      "last_success": "2026-05-31",
+      "last_success": null,
       "quarantined_since": "2026-08-28"
     },
     {
@@ -10258,7 +10258,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-13",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -10269,7 +10269,7 @@
       "last_error": "the page names Nuclei but states no amount, tier or rate we can read",
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
-      "last_success": "2026-07-30",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -10280,7 +10280,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-03",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -10314,7 +10314,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-15",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -10370,7 +10370,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-17",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -10381,7 +10381,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-19",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -10392,7 +10392,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-21",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -10403,7 +10403,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-20",
+      "last_success": null,
       "last_read_at": "2026-09-14",
       "quarantined_since": null
     },
@@ -10437,7 +10437,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-09",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -10470,7 +10470,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-21",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -10481,7 +10481,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-04",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -10504,7 +10504,7 @@
       "last_error": "the page names OntarioNet.ca CN Test but states no amount, tier or rate we can read",
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
-      "last_success": "2026-07-10",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -10515,7 +10515,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-30",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -10538,7 +10538,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-21",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -10571,7 +10571,7 @@
       "last_error": "fetch failed",
       "failure_category": "network_error",
       "consecutive_failures": 4,
-      "last_success": "2026-04-14",
+      "last_success": null,
       "quarantined_since": "2026-08-28"
     },
     {
@@ -10582,7 +10582,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-31",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -10604,7 +10604,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-19",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -10626,7 +10626,7 @@
       "last_error": "the page names osmnames but states no amount, tier or rate we can read",
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
-      "last_success": "2026-08-09",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -10637,7 +10637,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-09",
+      "last_success": null,
       "last_read_at": "2026-09-14",
       "quarantined_since": null
     },
@@ -10649,7 +10649,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-20",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -10660,7 +10660,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-12",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -10671,7 +10671,7 @@
       "last_error": "the page names OVHcloud but states no amount, tier or rate we can read",
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
-      "last_success": "2026-08-18",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -10682,7 +10682,7 @@
       "last_error": "the page names OVHcloud but states no amount, tier or rate we can read",
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
-      "last_success": "2026-08-20",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -10693,7 +10693,7 @@
       "last_error": "The provided text does not contain specific information about a free CDN tier with DDoS protection and a free SSL certificate. It broadly mentions security features like DDoS protection and SSL certificates, but doesn't detail a free tier or its associated features. It's impossible to verify the stored deal information based on this text.",
       "failure_category": "ai_undecided",
       "consecutive_failures": 2,
-      "last_success": "2026-08-18",
+      "last_success": null,
       "last_read_at": null,
       "quarantined_since": null
     },
@@ -10705,7 +10705,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-25",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -10762,7 +10762,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-05",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -10795,7 +10795,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-01",
+      "last_success": null,
       "last_read_at": "2026-09-14",
       "quarantined_since": null
     },
@@ -10862,7 +10862,7 @@
       "last_error": "the page names ParityVend but states no amount, tier or rate we can read",
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
-      "last_success": "2026-08-12",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -10884,7 +10884,7 @@
       "last_error": "the page never names PayFit and is not served from its domain",
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
-      "last_success": "2026-07-27",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -10895,7 +10895,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-25",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -10940,7 +10940,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-06",
+      "last_success": null,
       "last_read_at": "2026-09-14",
       "quarantined_since": null
     },
@@ -10964,7 +10964,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-08",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -10997,7 +10997,7 @@
       "last_error": "HTTP 403",
       "failure_category": "bot_block",
       "consecutive_failures": 4,
-      "last_success": "2026-04-05",
+      "last_success": null,
       "quarantined_since": "2026-08-28"
     },
     {
@@ -11008,7 +11008,7 @@
       "last_error": "the page never names Phantom Buster and is not served from its domain",
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
-      "last_success": "2026-07-25",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -11053,7 +11053,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-20",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -11064,7 +11064,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-09",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -11075,7 +11075,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-02",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -11120,7 +11120,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-12",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -11153,7 +11153,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-14",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -11175,7 +11175,7 @@
       "last_error": "page content too short (likely JS-rendered SPA)",
       "failure_category": "empty_page",
       "consecutive_failures": 2,
-      "last_success": "2026-07-30",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -11186,7 +11186,7 @@
       "last_error": "the page never names Pipedrive and is not served from its domain",
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
-      "last_success": "2026-07-24",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -11197,7 +11197,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-08",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -11208,7 +11208,7 @@
       "last_error": "the page never names PixelMe and is not served from its domain",
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
-      "last_success": "2026-07-23",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -11230,7 +11230,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-17",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -11241,7 +11241,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-15",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -11274,7 +11274,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-22",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -11285,7 +11285,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-29",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -11307,7 +11307,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-19",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -11329,7 +11329,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-18",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -11351,7 +11351,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-11",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -11373,7 +11373,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-06",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -11406,7 +11406,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-07",
+      "last_success": null,
       "last_read_at": "2026-09-14",
       "quarantined_since": null
     },
@@ -11440,7 +11440,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-27",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -11451,7 +11451,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-09-12",
+      "last_success": null,
       "last_read_at": "2026-09-12",
       "quarantined_since": null
     },
@@ -11485,7 +11485,7 @@
       "last_error": "the page never names Postscript and is not served from its domain",
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
-      "last_success": "2026-07-27",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -11496,7 +11496,7 @@
       "last_error": "the page never names pp.ua and is not served from its domain",
       "failure_category": "source_unusable",
       "consecutive_failures": 2,
-      "last_success": "2026-08-09",
+      "last_success": null,
       "last_read_at": null,
       "quarantined_since": null
     },
@@ -11508,7 +11508,7 @@
       "last_error": "page content too short (likely JS-rendered SPA); a rendering client read 475 characters",
       "failure_category": "empty_page",
       "consecutive_failures": 2,
-      "last_success": "2026-08-25",
+      "last_success": null,
       "last_read_at": null,
       "quarantined_since": null
     },
@@ -11531,7 +11531,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-04",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -11553,7 +11553,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-02",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -11576,7 +11576,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-22",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -11599,7 +11599,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-11",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -11610,7 +11610,7 @@
       "last_error": "the page never names ProspectIn and is not served from its domain",
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
-      "last_success": "2026-07-26",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -11621,7 +11621,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-17",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -11687,7 +11687,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-11",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -11698,7 +11698,7 @@
       "last_error": "the page never names Publist and is not served from its domain",
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
-      "last_success": "2026-07-27",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -11731,7 +11731,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-17",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -11775,7 +11775,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-28",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -11808,7 +11808,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-03",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -11841,7 +11841,7 @@
       "last_error": "the page never names Qonto and is not served from its domain",
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
-      "last_success": "2026-07-22",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -11863,7 +11863,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-19",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -11896,7 +11896,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-08",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -11907,7 +11907,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-20",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -11918,7 +11918,7 @@
       "last_error": "the page never names Quartzy and is not served from its domain",
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
-      "last_success": "2026-07-24",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -11929,7 +11929,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-27",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -11940,7 +11940,7 @@
       "last_error": "the page never names Quickbooks and is not served from its domain",
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
-      "last_success": "2026-07-26",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -11951,7 +11951,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-16",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -11962,7 +11962,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-16",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -11973,7 +11973,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-09",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -12006,7 +12006,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-05",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -12028,7 +12028,7 @@
       "last_error": "page content too short (likely JS-rendered SPA); the rendering client failed: the rendering client did not finish in time",
       "failure_category": "empty_page",
       "consecutive_failures": 2,
-      "last_success": "2026-07-30",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -12039,7 +12039,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-07",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -12050,7 +12050,7 @@
       "last_error": "the page names ray.so but states no amount, tier or rate we can read",
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
-      "last_success": "2026-07-27",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -12083,7 +12083,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-24",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -12094,7 +12094,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-20",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -12217,7 +12217,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-08",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -12239,7 +12239,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-21",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -12262,7 +12262,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-07",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -12306,7 +12306,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-19",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -12317,7 +12317,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-17",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -12328,7 +12328,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-18",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -12372,7 +12372,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-04",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -12383,7 +12383,7 @@
       "last_error": "the page never names Revolt.chat and is not served from its domain",
       "failure_category": "source_unusable",
       "consecutive_failures": 2,
-      "last_success": "2026-08-03",
+      "last_success": null,
       "last_read_at": null,
       "quarantined_since": null
     },
@@ -12406,7 +12406,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-19",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -12428,7 +12428,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-10",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -12451,7 +12451,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-02",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -12462,7 +12462,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-01",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -12484,7 +12484,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-20",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -12507,7 +12507,7 @@
       "last_error": "the page never names RunMyJob and is not served from its domain",
       "failure_category": "source_unusable",
       "consecutive_failures": 2,
-      "last_success": "2026-08-28",
+      "last_success": null,
       "last_read_at": null,
       "quarantined_since": null
     },
@@ -12541,7 +12541,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-16",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -12552,7 +12552,7 @@
       "last_error": "the page never names Salesforce and is not served from its domain",
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
-      "last_success": "2026-07-28",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -12585,7 +12585,7 @@
       "last_error": "the page names savannah.gnu.org but states no amount, tier or rate we can read, and its markup carries no structured data",
       "failure_category": "source_unusable",
       "consecutive_failures": 4,
-      "last_success": "2026-08-02",
+      "last_success": null,
       "quarantined_since": "2026-08-28"
     },
     {
@@ -12596,7 +12596,7 @@
       "last_error": "the page names savannah.nongnu.org but states no amount, tier or rate we can read, and its markup carries no structured data",
       "failure_category": "source_unusable",
       "consecutive_failures": 4,
-      "last_success": "2026-07-31",
+      "last_success": null,
       "quarantined_since": "2026-08-28"
     },
     {
@@ -12607,7 +12607,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-31",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -12629,7 +12629,7 @@
       "last_error": "the page never names Scalingo and is not served from its domain",
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
-      "last_success": "2026-07-27",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -12662,7 +12662,7 @@
       "last_error": "the page never names Science Exchange and is not served from its domain",
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
-      "last_success": "2026-07-25",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -12673,7 +12673,7 @@
       "last_error": "page content too short (likely JS-rendered SPA); the rendering client failed: the rendering client did not finish in time",
       "failure_category": "empty_page",
       "consecutive_failures": 2,
-      "last_success": "2026-07-29",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -12706,7 +12706,7 @@
       "last_error": "the page never names Scrapingbee and is not served from its domain",
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
-      "last_success": "2026-07-27",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -12717,7 +12717,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-05",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -12761,7 +12761,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-12",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -12772,7 +12772,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-18",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -12794,7 +12794,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-05",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -12805,7 +12805,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-08",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -12816,7 +12816,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-12",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -12827,7 +12827,7 @@
       "last_error": "the page never names Seeqle and is not served from its domain",
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
-      "last_success": "2026-07-26",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -12849,7 +12849,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-16",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -12860,7 +12860,7 @@
       "last_error": "the page never names Sellsy and is not served from its domain",
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
-      "last_success": "2026-07-23",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -12871,7 +12871,7 @@
       "last_error": "page content too short (likely JS-rendered SPA); a rendering client read 449 characters",
       "failure_category": "empty_page",
       "consecutive_failures": 2,
-      "last_success": "2026-08-06",
+      "last_success": null,
       "last_read_at": null,
       "quarantined_since": null
     },
@@ -12938,7 +12938,7 @@
       "last_error": "the page never names SendGrid and is not served from its domain",
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
-      "last_success": "2026-07-27",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -12983,7 +12983,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-13",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -13005,7 +13005,7 @@
       "last_error": "HTTP 403",
       "failure_category": "bot_block",
       "consecutive_failures": 2,
-      "last_success": "2026-08-05",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -13060,7 +13060,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-15",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -13082,7 +13082,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-17",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -13126,7 +13126,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-10",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -13137,7 +13137,7 @@
       "last_error": "the page never names Shine and is not served from its domain",
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
-      "last_success": "2026-07-26",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -13148,7 +13148,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-10",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -13159,7 +13159,7 @@
       "last_error": "the page never names Shippo and is not served from its domain",
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
-      "last_success": "2026-07-23",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -13181,7 +13181,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-13",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -13192,7 +13192,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-22",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -13214,7 +13214,7 @@
       "last_error": "the page names SiliconFlow but states no amount, tier or rate we can read",
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
-      "last_success": "2026-08-20",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -13225,7 +13225,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-14",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -13269,7 +13269,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-18",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -13291,7 +13291,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-02",
+      "last_success": null,
       "last_read_at": "2026-09-14",
       "quarantined_since": null
     },
@@ -13325,7 +13325,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-10",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -13336,7 +13336,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-13",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -13347,7 +13347,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-28",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -13369,7 +13369,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-06",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -13402,7 +13402,7 @@
       "last_error": "the page never names Slite and is not served from its domain",
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
-      "last_success": "2026-07-25",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -13436,7 +13436,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-21",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -13447,7 +13447,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-06",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -13469,7 +13469,7 @@
       "last_error": "HTTP 403",
       "failure_category": "bot_block",
       "consecutive_failures": 4,
-      "last_success": "2026-04-05",
+      "last_success": null,
       "quarantined_since": "2026-08-28"
     },
     {
@@ -13491,7 +13491,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-08",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -13502,7 +13502,7 @@
       "last_error": "the page never names Snap and is not served from its domain",
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
-      "last_success": "2026-07-25",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -13524,7 +13524,7 @@
       "last_error": "the page never names Snapcall and is not served from its domain",
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
-      "last_success": "2026-07-24",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -13547,7 +13547,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-06",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -13569,7 +13569,7 @@
       "last_error": "the page never names Social Champ and is not served from its domain",
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
-      "last_success": "2026-07-28",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -13580,7 +13580,7 @@
       "last_error": "the page never names SocialBee and is not served from its domain",
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
-      "last_success": "2026-07-30",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -13613,7 +13613,7 @@
       "last_error": "the page never names Solium and is not served from its domain",
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
-      "last_success": "2026-07-28",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -13635,7 +13635,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-11",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -13646,7 +13646,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-23",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -13657,7 +13657,7 @@
       "last_error": "HTTP 410",
       "failure_category": "unreachable",
       "consecutive_failures": 5,
-      "last_success": "2026-05-23",
+      "last_success": null,
       "last_read_at": null,
       "quarantined_since": "2026-08-28"
     },
@@ -13691,7 +13691,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-26",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -13702,7 +13702,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-06",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -13713,7 +13713,7 @@
       "last_error": "the page never names Squarespace and is not served from its domain",
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
-      "last_success": "2026-07-25",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -13735,7 +13735,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-02",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -13758,7 +13758,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-13",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -13769,7 +13769,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-12",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -13780,7 +13780,7 @@
       "last_error": "the page never names Stack Auth and is not served from its domain",
       "failure_category": "source_unusable",
       "consecutive_failures": 2,
-      "last_success": "2026-07-09",
+      "last_success": null,
       "last_read_at": null,
       "quarantined_since": null
     },
@@ -13792,7 +13792,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-14",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -13814,7 +13814,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-08",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -13836,7 +13836,7 @@
       "last_error": "the page names Startup with IBM but states no amount, tier or rate we can read",
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
-      "last_success": "2026-09-02",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -13847,7 +13847,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-21",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -13858,7 +13858,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-24",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -13902,7 +13902,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-10",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -13936,7 +13936,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-02",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -13947,7 +13947,7 @@
       "last_error": "the page never names Stitch Labs and is not served from its domain",
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
-      "last_success": "2026-07-26",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -13991,7 +13991,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-22",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -14002,7 +14002,7 @@
       "last_error": "HTTP 404",
       "failure_category": "unreachable",
       "consecutive_failures": 4,
-      "last_success": "2026-04-14",
+      "last_success": null,
       "quarantined_since": "2026-08-28"
     },
     {
@@ -14013,7 +14013,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-30",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -14036,8 +14036,8 @@
       "last_error": "the page never names StreamBackdrops, on a domain that carries its name",
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
-      "last_success": "2026-07-08",
-      "last_read_at": "2026-07-08",
+      "last_success": null,
+      "last_read_at": null,
       "quarantined_since": null
     },
     {
@@ -14081,7 +14081,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-12",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -14092,7 +14092,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-04-14",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -14103,7 +14103,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-09",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -14147,7 +14147,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-22",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -14203,7 +14203,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-15",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -14259,7 +14259,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-21",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -14292,7 +14292,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-27",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -14348,7 +14348,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-18",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -14370,7 +14370,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-21",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -14381,7 +14381,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-19",
+      "last_success": null,
       "last_read_at": "2026-09-14",
       "quarantined_since": null
     },
@@ -14393,7 +14393,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-23",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -14404,7 +14404,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-23",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -14437,7 +14437,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-31",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -14515,7 +14515,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-07",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -14526,7 +14526,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-14",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -14537,7 +14537,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-22",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -14570,7 +14570,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-12",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -14603,7 +14603,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-17",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -14625,7 +14625,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-11",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -14669,7 +14669,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-03",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -14680,7 +14680,7 @@
       "last_error": "fetch failed",
       "failure_category": "network_error",
       "consecutive_failures": 5,
-      "last_success": "2026-07-12",
+      "last_success": null,
       "last_read_at": null,
       "quarantined_since": "2026-08-28"
     },
@@ -14714,7 +14714,7 @@
       "last_error": "the page never names The GoSquared Early Stage Plan and is not served from its domain",
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
-      "last_success": "2026-09-02",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -14736,7 +14736,7 @@
       "last_error": "the page never names Themecloud and is not served from its domain",
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
-      "last_success": "2026-08-12",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -14747,7 +14747,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-11",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -14802,7 +14802,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-14",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -14813,7 +14813,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-09",
+      "last_success": null,
       "last_read_at": "2026-09-14",
       "quarantined_since": null
     },
@@ -14825,7 +14825,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-06",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -14858,7 +14858,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-20",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -14869,7 +14869,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-16",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -14880,7 +14880,7 @@
       "last_error": "page content too short (likely JS-rendered SPA); a rendering client read 205 characters",
       "failure_category": "empty_page",
       "consecutive_failures": 2,
-      "last_success": "2026-08-05",
+      "last_success": null,
       "last_read_at": null,
       "quarantined_since": null
     },
@@ -14892,7 +14892,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-14",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -14936,7 +14936,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-08",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -14947,7 +14947,7 @@
       "last_error": "HTTP 404",
       "failure_category": "unreachable",
       "consecutive_failures": 4,
-      "last_success": "2026-04-14",
+      "last_success": null,
       "quarantined_since": "2026-08-28"
     },
     {
@@ -14981,7 +14981,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-08",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -15004,7 +15004,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-21",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -15027,7 +15027,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-29",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -15049,7 +15049,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-07",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -15060,7 +15060,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-14",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -15071,7 +15071,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-04",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -15105,7 +15105,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-01",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -15116,7 +15116,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-30",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -15138,7 +15138,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-09",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -15193,7 +15193,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-18",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -15204,7 +15204,7 @@
       "last_error": "the page names tweakcn but states no amount, tier or rate we can read",
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
-      "last_success": "2026-07-20",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -15227,7 +15227,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-18",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -15238,7 +15238,7 @@
       "last_error": "the page names Twilio Startups Program but states no amount, tier or rate we can read",
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
-      "last_success": "2026-09-02",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -15249,7 +15249,7 @@
       "last_error": "the page never names Twilio and is not served from its domain",
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
-      "last_success": "2026-07-24",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -15271,7 +15271,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-02",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -15304,7 +15304,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-28",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -15326,7 +15326,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-07",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -15337,7 +15337,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-23",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -15359,7 +15359,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-19",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -15370,7 +15370,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-19",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -15392,7 +15392,7 @@
       "last_error": "timeout",
       "failure_category": "timeout",
       "consecutive_failures": 2,
-      "last_success": "2026-08-18",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -15414,7 +15414,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-30",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -15425,7 +15425,7 @@
       "last_error": "HTTP 401",
       "failure_category": "bot_block",
       "consecutive_failures": 4,
-      "last_success": "2026-04-12",
+      "last_success": null,
       "quarantined_since": "2026-08-28"
     },
     {
@@ -15436,7 +15436,7 @@
       "last_error": "page content too short (likely JS-rendered SPA); the rendering client failed: the rendering client did not finish in time",
       "failure_category": "empty_page",
       "consecutive_failures": 2,
-      "last_success": "2026-07-22",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -15458,7 +15458,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-27",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -15491,7 +15491,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-11",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -15570,7 +15570,7 @@
       "last_error": "the page never names Userguiding and is not served from its domain",
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
-      "last_success": "2026-07-27",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -15581,7 +15581,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-05",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -15592,7 +15592,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-11",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -15603,7 +15603,7 @@
       "last_error": "the page names UUID Generator but states no amount, tier or rate we can read",
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
-      "last_success": "2026-07-21",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -15625,7 +15625,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-05",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -15658,7 +15658,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-17",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -15702,7 +15702,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-24",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -15713,7 +15713,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-21",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -15724,7 +15724,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-14",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -15792,7 +15792,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-13",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -15803,7 +15803,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-18",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -15814,7 +15814,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-21",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -15825,7 +15825,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-09",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -15847,7 +15847,7 @@
       "last_error": "page content too short (likely JS-rendered SPA); a rendering client read 64 characters",
       "failure_category": "empty_page",
       "consecutive_failures": 2,
-      "last_success": "2026-08-25",
+      "last_success": null,
       "last_read_at": null,
       "quarantined_since": null
     },
@@ -15870,7 +15870,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-10",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -15893,7 +15893,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-28",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -15904,7 +15904,7 @@
       "last_error": "fetch failed",
       "failure_category": "network_error",
       "consecutive_failures": 5,
-      "last_success": "2026-07-12",
+      "last_success": null,
       "last_read_at": null,
       "quarantined_since": "2026-08-28"
     },
@@ -15927,7 +15927,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-22",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -15938,7 +15938,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-13",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -15949,7 +15949,7 @@
       "last_error": "HTTP 403",
       "failure_category": "bot_block",
       "consecutive_failures": 4,
-      "last_success": "2026-04-13",
+      "last_success": null,
       "quarantined_since": "2026-08-28"
     },
     {
@@ -15960,7 +15960,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-11",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -15993,7 +15993,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-16",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -16004,7 +16004,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-11",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -16015,7 +16015,7 @@
       "last_error": "HTTP 404",
       "failure_category": "unreachable",
       "consecutive_failures": 4,
-      "last_success": "2026-06-01",
+      "last_success": null,
       "quarantined_since": "2026-08-28"
     },
     {
@@ -16026,7 +16026,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-17",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -16037,7 +16037,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-09",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -16071,7 +16071,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-25",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -16082,7 +16082,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-10",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -16138,7 +16138,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-07",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -16160,7 +16160,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-04",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -16171,7 +16171,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-22",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -16193,7 +16193,7 @@
       "last_error": "the page never names Weglot and is not served from its domain",
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
-      "last_success": "2026-07-27",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -16215,8 +16215,8 @@
       "last_error": "the page never names weserv, on a domain that carries its name",
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
-      "last_success": "2026-08-31",
-      "last_read_at": "2026-08-31",
+      "last_success": null,
+      "last_read_at": null,
       "quarantined_since": null
     },
     {
@@ -16227,7 +16227,7 @@
       "last_error": "the page never names WEWORK and is not served from its domain",
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
-      "last_success": "2026-07-27",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -16238,7 +16238,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-31",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -16249,7 +16249,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-21",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -16271,7 +16271,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-22",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -16294,7 +16294,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-04",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -16316,7 +16316,7 @@
       "last_error": "HTTP 429",
       "failure_category": "bot_block",
       "consecutive_failures": 4,
-      "last_success": "2026-06-25",
+      "last_success": null,
       "quarantined_since": "2026-08-28"
     },
     {
@@ -16327,7 +16327,7 @@
       "last_error": "the page never names Wisepops and is not served from its domain",
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
-      "last_success": "2026-07-26",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -16338,7 +16338,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-03",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -16349,7 +16349,7 @@
       "last_error": "the page never names Wizishop and is not served from its domain",
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
-      "last_success": "2026-07-28",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -16360,7 +16360,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-21",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -16382,7 +16382,7 @@
       "last_error": "page content too short (likely JS-rendered SPA); a rendering client read 171 characters",
       "failure_category": "empty_page",
       "consecutive_failures": 2,
-      "last_success": "2026-07-12",
+      "last_success": null,
       "last_read_at": null,
       "quarantined_since": null
     },
@@ -16394,7 +16394,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-23",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -16405,7 +16405,7 @@
       "last_error": "the page never names WP Engine and is not served from its domain",
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
-      "last_success": "2026-07-25",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -16427,7 +16427,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-02",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -16460,7 +16460,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-12",
+      "last_success": null,
       "last_read_at": "2026-09-14",
       "quarantined_since": null
     },
@@ -16472,7 +16472,7 @@
       "last_error": "HTTP 403",
       "failure_category": "bot_block",
       "consecutive_failures": 2,
-      "last_success": "2026-07-07",
+      "last_success": null,
       "last_read_at": null,
       "quarantined_since": null
     },
@@ -16517,7 +16517,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-17",
+      "last_success": null,
       "last_read_at": "2026-09-14",
       "quarantined_since": null
     },
@@ -16551,7 +16551,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-15",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -16562,7 +16562,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-16",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -16573,7 +16573,7 @@
       "last_error": "the page never names Yousign and is not served from its domain",
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
-      "last_success": "2026-07-26",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -16595,7 +16595,7 @@
       "last_error": "the page names Zed but states no amount, tier or rate we can read",
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
-      "last_success": "2026-08-12",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -16618,7 +16618,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-18",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -16640,7 +16640,7 @@
       "last_error": "the page never names Zentail and is not served from its domain",
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
-      "last_success": "2026-07-26",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -16651,7 +16651,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-18",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -16673,7 +16673,7 @@
       "last_error": "the page never names Zhipu AI and is not served from its domain",
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
-      "last_success": "2026-08-20",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -16729,7 +16729,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-13",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -16740,7 +16740,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-29",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -16785,7 +16785,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-30",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -16796,7 +16796,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-01",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -16807,7 +16807,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-31",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -16829,7 +16829,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-01",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -16873,7 +16873,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-31",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -16917,7 +16917,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-27",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -16928,7 +16928,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-14",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -16963,7 +16963,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-02",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -16974,7 +16974,7 @@
       "last_error": "the page never names Zoom and is not served from its domain",
       "failure_category": "source_unusable",
       "consecutive_failures": 1,
-      "last_success": "2026-07-30",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -16985,7 +16985,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-23",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -16996,7 +16996,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-16",
+      "last_success": null,
       "quarantined_since": null
     },
     {
@@ -17007,7 +17007,7 @@
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-07-31",
+      "last_success": null,
       "quarantined_since": null
     },
     {
