@@ -11,8 +11,8 @@ const SOLICITATION_BLOCK = '  <div class="section marketplace-solicitation"><p>S
 
 const MUTANTS = [
   ["the-vendor-pages-solicit-a-code-again", "src/serve.ts",
-    "${watchlistCtaHtml}\n${internalLinksHtml}",
-    "${watchlistCtaHtml}\n" + SOLICITATION_BLOCK + "${internalLinksHtml}"],
+    "${watchCtaHtml}\n${internalLinksHtml}",
+    "${watchCtaHtml}\n" + SOLICITATION_BLOCK + "${internalLinksHtml}"],
   ["the-vendor-referral-program-section-invites-a-submission-again", "src/serve.ts",
     '<a href="${escHtmlServer(primary.referral_program.program_url)}" rel="noopener" target="_blank">View program details &rarr;</a>\n',
     '<a href="${escHtmlServer(primary.referral_program.program_url)}" rel="noopener" target="_blank">View program details &rarr;</a><a href="/marketplace">Submit your referral code</a>\n'],

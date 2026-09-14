@@ -1232,110 +1232,6 @@ const DOCUMENTED_OPERATIONS: Record<string, Record<string, any>> = {
       }
     }
   },
-  "/api/watchlist": {
-    post: {
-      summary: "Subscribe to a vendor's pricing changes",
-      description: "Registers a webhook to be called when a change is recorded against a vendor. The response carries a secret used to sign the deliveries; it is returned once and not readable afterwards. Subscribing twice for the same vendor and URL is a conflict, not a second subscription.",
-      requestBody: {
-        required: true,
-        content: {
-          "application/json": {
-            schema: {
-              type: "object",
-              properties: {
-                vendor: { type: "string", description: "Vendor name, as /api/offers returns it." },
-                webhook_url: { type: "string", format: "uri", description: "Absolute URL we POST to." }
-              },
-              required: ["vendor", "webhook_url"]
-            },
-            example: { vendor: "Supabase", webhook_url: "https://example.com/hooks/agentdeals" }
-          }
-        }
-      },
-      responses: {
-        "201": {
-          description: "Subscription created",
-          content: {
-            "application/json": {
-              schema: {
-                type: "object",
-                properties: {
-                  id: { type: "string" },
-                  vendor: { type: "string" },
-                  webhook_url: { type: "string", format: "uri" },
-                  secret: { type: "string", description: "Signs the delivery. Returned only here." },
-                  created_at: { type: "string", format: "date-time" }
-                }
-              }
-            }
-          }
-        },
-        "400": { description: "Body is not JSON, or vendor or webhook_url is missing or not a URL", content: { "application/json": { schema: { type: "object", properties: { error: { type: "string" } } } } } },
-        "409": { description: "The subscription was refused: this vendor and URL are already subscribed, or this URL has reached the cap on vendors it may watch. The error says which.", content: { "application/json": { schema: { type: "object", properties: { error: { type: "string" } } } } } },
-        "503": { description: "The subscription could not be persisted, so it was not created", content: { "application/json": { schema: { type: "object", properties: { error: { type: "string" } } } } } }
-      }
-    },
-    get: {
-      summary: "List watchlist subscriptions",
-      description: "Subscriptions we hold, without their secrets. Pass the webhook URL to see only the subscriptions pointing at it.",
-      parameters: [
-        { name: "webhook_url", in: "query", description: "Return only subscriptions delivering to this URL.", schema: { type: "string", format: "uri" } }
-      ],
-      responses: {
-        "200": {
-          description: "Subscriptions and their count",
-          content: {
-            "application/json": {
-              schema: {
-                type: "object",
-                properties: {
-                  subscriptions: { type: "array", items: { $ref: "#/components/schemas/WatchlistSubscription" } },
-                  total: { type: "integer" }
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  },
-  "/api/watchlist/{id}": {
-    get: {
-      summary: "Read one subscription",
-      description: "The subscription's state, including the last change delivered against it. The secret is not returned.",
-      parameters: [
-        { name: "id", in: "path", required: true, description: "Subscription id, as returned when it was created.", schema: { type: "string" } }
-      ],
-      responses: {
-        "200": {
-          description: "The subscription",
-          content: {
-            "application/json": {
-              schema: {
-                allOf: [
-                  { $ref: "#/components/schemas/WatchlistSubscription" },
-                  { type: "object", properties: { last_notified_change: { type: "string", nullable: true, description: "The last change we delivered on this subscription, or null if none has been." } } }
-                ]
-              }
-            }
-          }
-        },
-        "404": { description: "No subscription with this id", content: { "application/json": { schema: { type: "object", properties: { error: { type: "string" } } } } } }
-      }
-    },
-    delete: {
-      summary: "Unsubscribe",
-      description: "Removes the subscription. Deleting one that is already gone is a 404, not a success.",
-      parameters: [
-        { name: "id", in: "path", required: true, description: "Subscription id.", schema: { type: "string" } }
-      ],
-      responses: {
-        "200": { description: "Removed", content: { "application/json": { schema: { type: "object", properties: { ok: { type: "boolean" } } } } } },
-        "404": { description: "No subscription with this id", content: { "application/json": { schema: { type: "object", properties: { error: { type: "string" } } } } } },
-        "503": { description: "The removal could not be persisted, so it did not take effect", content: { "application/json": { schema: { type: "object", properties: { error: { type: "string" } } } } } }
-      }
-    }
-  },
   "/api/signal": {
     post: {
       summary: "Report a vendor you recommended",
@@ -1486,17 +1382,6 @@ export const openapiSpec = {
           ai_agent_by_family: { type: "object", additionalProperties: { type: "integer" } },
           ai_agent_by_trigger: { type: "object", additionalProperties: { type: "integer" }, description: "AI-agent hits split by whether a person asked for them." }
         }
-      },
-      WatchlistSubscription: {
-        type: "object",
-        description: "A registered webhook. The signing secret is returned once, when the subscription is created, and never again.",
-        properties: {
-          id: { type: "string" },
-          vendor: { type: "string" },
-          webhook_url: { type: "string", format: "uri" },
-          created_at: { type: "string", format: "date-time" }
-        },
-        required: ["id", "vendor", "webhook_url", "created_at"]
       },
       Offer: {
         type: "object",

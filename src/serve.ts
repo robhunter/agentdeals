@@ -60,7 +60,7 @@ import { PLATFORM_CREDENTIAL_REQUIRED, authorizedAsPlatform } from "./platform-a
 import { validateX402Address, executeTransfer, generateCorrelationId, payoutsAvailable, PAYOUTS_UNAVAILABLE_REASON } from "./x402.js";
 import { submitReferralCode, getCodesByAgent, getCodeById, updateCode, revokeCode, calculateTrustTier, getDailySubmissionCount, getDailyLimit, getRankedCodesForVendor, calculateCodeScore } from "./referral-codes.js";
 import { getBestReferralCode, listAllReferralCodes, AGENT_SUBMISSION_RETIRED_REASON } from "./platform-codes.js";
-import { DOCUMENTED_GROUPS, HOMEPAGE_GROUPS, endpointHref, endpointPathHref, endpointsInGroups, exampleSubjects, readableRequestLines, type ApiEndpoint, type ExampleSubjects } from "./api-inventory.js";
+import { DOCUMENTED_GROUPS, HOMEPAGE_GROUPS, endpointHref, endpointPathHref, endpointsInGroups, exampleSubjects, readableRequestLines, withdrawalReasonFor, type ApiEndpoint, type ExampleSubjects } from "./api-inventory.js";
 import { MCP_TOOLS, MCP_TOOL_COUNT, mcpToolNameList } from "./mcp-tool-inventory.js";
 import { ACCELERATOR_CREDIT_PROGRAM, ACCELERATOR_CREDIT_VENDOR, acceleratorCreditClause, programCeiling } from "./homepage-claims.js";
 import { REFERRAL_CONDITIONS_HEADING, allOurReferralLinks, heldReferralLinkForVendor, ourReferralLinkFor, platformCodeAsVendorReferral, referralLinkCountClause, referrerDisclosureSentence } from "./referral-surfaces.js";
@@ -68,8 +68,8 @@ import type { VendorReferralAnswer } from "./referral-surfaces.js";
 import { runHealthCheck, getLastReport, startPeriodicChecks } from "./referral-health.js";
 import { configureDurableBackend, hydrateDurableStores, persistDurableStores, identityStorageReport } from "./durable-store.js";
 import { addFriend, removeFriend, getFriends, getFriendCodesForVendors } from "./friends.js";
-import { subscribe as watchlistSubscribe, getSubscription as getWatchlistSubscription, unsubscribe as watchlistUnsubscribe, listSubscriptions as listWatchlistSubscriptions } from "./watchlist.js";
 import { changeLogAnchorFor, changeLogVendorMap, toSlug, vendorSlugMap, resolveVendorSlug, namedVendorSlug, comparisonOfOneRecord, recordNamedBySlug, servedVendorSlugForName } from "./vendor-slug.js";
+import { NO_PUSH_NOTICE, watchCommandBlock, watchRequestsFor } from "./change-watching.js";
 import { createRegistrationLimiter, rateLimitHeaders } from "./rate-limit.js";
 import { offerForSlug, vendorRates, cheapestRate, dearestRate, spanOfRates, formatRate, formatRateSpan, monthlyTokenCost, formatDollars, type ModelRate } from "./model-rates.js";
 import { STALE_FACT_PAGES_BASELINE, factsOutdatedBy, linkifyVerdictBlocks, newestChangeBySlug, overdueReport, pageCompiledClause, pageDataProvenance, pageDateModified, tabulatedSubjectSlots, tabulatedSubjects, utcToday, verdictsOutdatedBy } from "./page-reviews.js";
@@ -3416,15 +3416,13 @@ function buildComparisonPage(slug: string): string | null {
     </div>
   </div>`;
 
-  const watchlistSnippet = `curl -X POST ${BASE_URL}/api/watchlist \\
-  -H "Content-Type: application/json" \\
-  -d '{"vendor": "${a.vendor.replace(/'/g, "\\'")}", "webhook_url": "https://your-server.com/webhook"}'`;
-  const watchlistCtaHtml = `
-  <div class="watchlist-cta">
+  const watchCommands = watchCommandBlock([a.vendor, b.vendor], BASE_URL);
+  const watchCtaHtml = `
+  <div class="change-watch-cta">
     <h2>Watch Both Vendors for Pricing Changes</h2>
-    <p style="color:var(--text-muted);font-size:.9rem;margin-bottom:.75rem">Get notified via webhook when ${escHtmlServer(a.vendor)} or ${escHtmlServer(b.vendor)}'s free tier changes.</p>
-    <code>${escHtmlServer(watchlistSnippet)}</code>
-    <p style="margin-top:.75rem;font-size:.8rem"><a href="/developer-hub">Watchlist API docs &rarr;</a></p>
+    <p style="color:var(--text-muted);font-size:.9rem;margin-bottom:.75rem">${escHtmlServer(NO_PUSH_NOTICE)}</p>
+    <code>${escHtmlServer(watchCommands)}</code>
+    <p style="margin-top:.75rem;font-size:.8rem"><a href="/developers">API docs &rarr;</a></p>
   </div>`;
 
   const faqItems = [
@@ -3523,9 +3521,9 @@ h1{font-family:var(--serif);font-size:2rem;color:var(--text);margin:1rem 0 .5rem
 .changes-section h2{font-family:var(--serif);font-size:1.15rem;color:var(--text);margin-bottom:1rem}
 .changes-cols{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem}
 .changes-col h3{font-size:.85rem;color:var(--accent);font-family:var(--mono);margin-bottom:.75rem;text-transform:uppercase;letter-spacing:.05em}
-.watchlist-cta{margin-top:2rem;padding:1.25rem;border:1px solid var(--border);border-radius:12px;background:var(--bg-card)}
-.watchlist-cta h2{font-family:var(--serif);font-size:1.15rem;margin-bottom:.5rem}
-.watchlist-cta code{display:block;padding:1rem;background:var(--bg-elevated);border-radius:8px;font-family:var(--mono);font-size:.8rem;color:var(--text-muted);white-space:pre;overflow-x:auto;border:1px solid var(--border)}
+.change-watch-cta{margin-top:2rem;padding:1.25rem;border:1px solid var(--border);border-radius:12px;background:var(--bg-card)}
+.change-watch-cta h2{font-family:var(--serif);font-size:1.15rem;margin-bottom:.5rem}
+.change-watch-cta code{display:block;padding:1rem;background:var(--bg-elevated);border-radius:8px;font-family:var(--mono);font-size:.8rem;color:var(--text-muted);white-space:pre;overflow-x:auto;border:1px solid var(--border)}
 .related{margin-top:2rem;padding-top:2rem;border-top:1px solid var(--border)}
 .related h2{font-family:var(--serif);font-size:1.15rem;color:var(--text);margin-bottom:.75rem}
 .related-grid{display:flex;flex-wrap:wrap;gap:.5rem}
@@ -3581,7 +3579,7 @@ ${verdictHtml}
       </div>
     </div>
   </div>
-${watchlistCtaHtml}
+${watchCtaHtml}
 ${relatedHtml}
   ${signalHtmlBlock(BASE_URL, null, toSlug(a.vendor))}
   ${buildMcpCta("Compare any two vendors from your AI coding assistant. Search 1,600+ deals, compare free tiers, and track pricing changes — directly in your editor.")}
@@ -5185,18 +5183,13 @@ ${allCompareLinks.join("\n")}
   const lastUpdated = lastPricingChange && lastPricingChange > primaryLastRead ? lastPricingChange : primaryLastRead;
   const offerExpiry = offerExpiryAfter(vendorChanges, servedOn);
 
-  const watchlistSnippet = `curl -X POST ${BASE_URL}/api/watchlist \\
-  -H "Content-Type: application/json" \\
-  -d '{
-    "vendor": "${vendorName.replace(/'/g, "\\'")}",
-    "webhook_url": "https://your-server.com/webhook"
-  }'`;
-  const watchlistCtaHtml = `
-  <div class="section watchlist-cta-section">
+  const watchCommands = watchCommandBlock([vendorName], BASE_URL);
+  const watchCtaHtml = `
+  <div class="section change-watch-cta-section">
     <h2>Watch ${escHtmlServer(vendorName)} for Pricing Changes</h2>
-    <p style="color:var(--text-muted);font-size:.9rem;margin-bottom:.75rem">Get notified via webhook when ${escHtmlServer(vendorName)}'s free tier changes. We'll send a signed POST to your endpoint with the change details.</p>
-    <code>${escHtmlServer(watchlistSnippet)}</code>
-    <p style="margin-top:.75rem;font-size:.8rem"><a href="/developer-hub">Watchlist API docs &rarr;</a></p>
+    <p style="color:var(--text-muted);font-size:.9rem;margin-bottom:.75rem">${escHtmlServer(NO_PUSH_NOTICE)}</p>
+    <code>${escHtmlServer(watchCommands)}</code>
+    <p style="margin-top:.75rem;font-size:.8rem"><a href="/developers">API docs &rarr;</a></p>
   </div>`;
 
   const mcpSnippet = `{
@@ -5435,7 +5428,7 @@ ${auditBlockCss()}
 .guide-pill a{display:inline-block;padding:.35rem .75rem;border:1px solid var(--border);border-radius:8px;font-size:.8rem;color:var(--text-muted);transition:all .2s;text-decoration:none}
 .guide-pill a:hover{border-color:var(--accent);color:var(--text);background:var(--accent-glow);text-decoration:none}
 .mcp-section code{display:block;padding:1rem;background:var(--bg-elevated);border-radius:8px;font-family:var(--mono);font-size:.8rem;color:var(--text-muted);white-space:pre;overflow-x:auto;border:1px solid var(--border)}
-.watchlist-cta-section code{display:block;padding:1rem;background:var(--bg-elevated);border-radius:8px;font-family:var(--mono);font-size:.8rem;color:var(--text-muted);white-space:pre;overflow-x:auto;border:1px solid var(--border)}
+.change-watch-cta-section code{display:block;padding:1rem;background:var(--bg-elevated);border-radius:8px;font-family:var(--mono);font-size:.8rem;color:var(--text-muted);white-space:pre;overflow-x:auto;border:1px solid var(--border)}
 .cat-pills{display:flex;flex-wrap:wrap;gap:.3rem;margin-top:.25rem}
 .cat-pill{display:inline-block;padding:.15rem .5rem;border-radius:12px;font-size:.7rem;font-weight:500;background:var(--accent-glow);color:var(--accent);border:1px solid rgba(59,130,246,0.2)}
 .faq-item{border:1px solid var(--border);border-radius:8px;margin-bottom:.5rem;overflow:hidden}
@@ -5508,7 +5501,7 @@ ${comparisonsHtml}
 ${altPagesHtml}
 ${reportAppearancesHtml}
 ${referralProgramHtml}
-${watchlistCtaHtml}
+${watchCtaHtml}
 ${internalLinksHtml}
   <div class="section mcp-section">
     <h2>Query via MCP</h2>
@@ -9219,8 +9212,8 @@ function buildEventPage(slug: string): string | null {
       + '</ul>\n</section>'
     : "";
 
-  const watchlistHtml = '<section class="event-section">\n<h2>Watch These Vendors</h2>\n'
-    + '<p class="section-desc">Get notified when any of these vendors change their pricing. <a href="/developers#watchlist">Set up watchlist alerts via API</a>.</p>\n'
+  const watchHtml = '<section class="event-section">\n<h2>Watch These Vendors</h2>\n'
+    + '<p class="section-desc">' + escHtmlServer(NO_PUSH_NOTICE) + ' <a href="/developers">Read the changes API</a>.</p>\n'
     + '<div class="vendor-pills">'
     + vendorNames.sort().map(v => '<a href="/vendor/' + toSlug(v) + '" class="vendor-pill">' + escHtmlServer(v) + '</a>').join("\n")
     + '</div>\n</section>';
@@ -9313,7 +9306,7 @@ function buildEventPage(slug: string): string | null {
     + '<p class="section-desc">' + eventOffers.length + ' offerings across ' + eventCategories.length + ' categories from ' + vendorNames.length + ' tracked services.</p>\n'
     + categoryGroups + '\n</section>\n'
     + comparisonsHtml + '\n'
-    + watchlistHtml + '\n'
+    + watchHtml + '\n'
     + '<footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>\n'
     + '</div>\n</body>\n</html>';
 }
@@ -49916,7 +49909,7 @@ function buildDeveloperHubPage(): string {
     + "      <tr><td><code>note</code></td><td>Our request that you cite the source if you use a figure from the response.</td></tr>\n"
     + "      </tbody>\n"
     + "    </table>\n"
-    + "    <p>Operational endpoints &mdash; <code>/api/stats</code>, <code>/api/traffic</code>, <code>/api/query-log</code>, <code>/api/pageviews</code>, <code>/api/freshness</code> and <code>/api/watchlist</code> &mdash; carry no provenance block. They report on this service rather than on the index.</p>\n"
+    + "    <p>Operational endpoints &mdash; <code>/api/stats</code>, <code>/api/traffic</code>, <code>/api/query-log</code>, <code>/api/pageviews</code> and <code>/api/freshness</code> &mdash; carry no provenance block. They report on this service rather than on the index.</p>\n"
     + "    <p>If you use a figure, cite <code>url</code> and <code>checked</code>. The index is free and we keep it current; attribution is how the people who need it find their way here.</p>\n"
     + "\n"
     + "    <h2>Rate Limits</h2>\n"
@@ -50404,8 +50397,12 @@ ${filterScript}
 </html>`;
 }
 
-function buildPricingChangesFeed(servedAt: Date = new Date()): string {
-  const selected = changeFeedEntries(loadDealChanges(), CHANGE_FEED_ENTRY_LIMIT);
+function buildPricingChangesFeed(servedAt: Date = new Date(), vendorName: string | null = null): string {
+  const held = loadDealChanges();
+  const forVendor = vendorName === null
+    ? held
+    : held.filter((c) => c.vendor.toLowerCase() === vendorName.toLowerCase());
+  const selected = changeFeedEntries(forVendor, CHANGE_FEED_ENTRY_LIMIT);
   const escXml = (s: string) => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&apos;");
   const ns = CHANGE_FEED_NAMESPACE_PREFIX;
   const entries = selected.map((c) => {
@@ -50428,15 +50425,25 @@ ${feedEntrySourceXml(c, escXml, ns)}
     <${ns}:recorded_date>${fields.recordedDate}</${ns}:recorded_date>${effective}
   </entry>`;
   }).join("\n");
-  const subtitle = `${CHANGE_FEED_DESCRIPTION} ${changeFeedProvenanceNote(selected, `${BASE_URL}/feed.xml`)}`;
+  const scope = vendorName === null
+    ? CHANGE_FEED_DESCRIPTION
+    : `Every pricing change we hold for ${vendorName}. ${selected.length === 0 ? "We hold none today; this feed stays empty until we record one." : ""}`.trim();
+  const subtitle = `${scope} ${changeFeedProvenanceNote(selected, `${BASE_URL}/feed.xml`)}`;
+  const title = vendorName === null ? PER_CHANGE_FEED.title : `${vendorName} — Developer Tool Pricing Changes`;
+  const selfHref = vendorName === null
+    ? `${BASE_URL}${PER_CHANGE_FEED.path}`
+    : `${BASE_URL}${PER_CHANGE_FEED.path}?vendor=${encodeURIComponent(vendorName)}`;
+  const feedId = vendorName === null
+    ? "urn:agentdeals:pricing-changes-feed"
+    : `urn:agentdeals:pricing-changes-feed:${toSlug(vendorName)}`;
   return `<?xml version="1.0" encoding="UTF-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom" xmlns:${ns}="${CHANGE_FEED_NAMESPACE}">
-  <title>${escXml(PER_CHANGE_FEED.title)}</title>
+  <title>${escXml(title)}</title>
   <subtitle>${escXml(subtitle)}</subtitle>
   <link href="${BASE_URL}/pricing-changes" rel="alternate"/>
-  <link href="${BASE_URL}/pricing-changes/feed.xml" rel="self" type="application/atom+xml"/>
+  <link href="${escXml(selfHref)}" rel="self" type="application/atom+xml"/>
   <link href="${BASE_URL}${WEEKLY_DIGEST_FEED.path}" rel="related" type="application/atom+xml" title="${escXml(WEEKLY_DIGEST_FEED.title)}"/>
-  <id>urn:agentdeals:pricing-changes-feed</id>
+  <id>${escXml(feedId)}</id>
   <updated>${feedUpdatedTimestamp(selected, servedAt)}</updated>
   <author><name>AgentDeals</name></author>
 ${entries}
@@ -55615,9 +55622,17 @@ ${catList}
     res.end(buildPricingChangesPage());
   } else if (url.pathname === "/pricing-changes/feed.xml" && isGetOrHead) {
     recordApiHit("/pricing-changes/feed.xml");
-    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/pricing-changes/feed.xml", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+    const askedVendor = url.searchParams.get("vendor");
+    const vendorSlug = askedVendor === null ? null : namedVendorSlug(askedVendor);
+    const feedVendor = vendorSlug === null ? null : vendorSlugMap.get(vendorSlug) ?? null;
+    if (askedVendor !== null && feedVendor === null) {
+      res.writeHead(404, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+      res.end(JSON.stringify({ error: `We hold no vendor named '${askedVendor}'. Drop the parameter for every vendor, or search /api/offers?q= for the name we hold.` }));
+      return;
+    }
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/pricing-changes/feed.xml", params: feedVendor === null ? {} : { vendor: feedVendor }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
     res.writeHead(200, { "Content-Type": "application/atom+xml; charset=utf-8", "Cache-Control": "public, max-age=3600", "Access-Control-Allow-Origin": "*" });
-    res.end(buildPricingChangesFeed());
+    res.end(buildPricingChangesFeed(new Date(), feedVendor));
   } else if (url.pathname === "/changes" && isGetOrHead) {
     recordApiHit("/changes");
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/changes", params: {}, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
@@ -57066,69 +57081,15 @@ ${catList}
       res.end(JSON.stringify(report));
     }
 
-  } else if (url.pathname === "/api/watchlist" && req.method === "POST") {
-    let body = "";
-    for await (const chunk of req) { body += chunk; }
-    let parsed: any;
-    try { parsed = JSON.parse(body); } catch {
-      res.writeHead(400, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
-      res.end(JSON.stringify({ error: "Invalid JSON body" }));
-      return;
-    }
-    if (!parsed.vendor || typeof parsed.vendor !== "string" || !parsed.webhook_url || typeof parsed.webhook_url !== "string") {
-      res.writeHead(400, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
-      res.end(JSON.stringify({ error: "vendor and webhook_url are required strings" }));
-      return;
-    }
-    try {
-      new URL(parsed.webhook_url);
-    } catch {
-      res.writeHead(400, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
-      res.end(JSON.stringify({ error: "webhook_url must be a valid URL" }));
-      return;
-    }
-    try {
-      const sub = watchlistSubscribe(parsed.vendor, parsed.webhook_url);
-      recordApiHit("/api/watchlist");
-      if (!(await identityWritePersisted(res))) return;
-      res.writeHead(201, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
-      res.end(JSON.stringify({ id: sub.id, vendor: sub.vendor, webhook_url: sub.webhook_url, secret: sub.secret, created_at: sub.created_at }));
-    } catch (err: any) {
-      res.writeHead(409, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
-      res.end(JSON.stringify({ error: err.message }));
-    }
-
-  } else if (url.pathname === "/api/watchlist" && isGetOrHead) {
-    const webhookUrl = url.searchParams.get("webhook_url") ?? undefined;
-    const subs = listWatchlistSubscriptions(webhookUrl);
+  } else if (withdrawalReasonFor(url.pathname) !== null) {
+    const reason = withdrawalReasonFor(url.pathname)!;
     recordApiHit("/api/watchlist");
-    res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
-    res.end(JSON.stringify({ subscriptions: subs.map(s => ({ id: s.id, vendor: s.vendor, webhook_url: s.webhook_url, created_at: s.created_at })), total: subs.length }));
-
-  } else if (url.pathname.startsWith("/api/watchlist/") && isGetOrHead) {
-    const id = url.pathname.slice("/api/watchlist/".length);
-    const sub = getWatchlistSubscription(id);
-    if (!sub) {
-      res.writeHead(404, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
-      res.end(JSON.stringify({ error: "Subscription not found" }));
-    } else {
-      recordApiHit("/api/watchlist/:id");
-      res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
-      res.end(JSON.stringify({ id: sub.id, vendor: sub.vendor, webhook_url: sub.webhook_url, created_at: sub.created_at, last_notified_change: sub.last_notified_change ?? null }));
-    }
-
-  } else if (url.pathname.startsWith("/api/watchlist/") && req.method === "DELETE") {
-    const id = url.pathname.slice("/api/watchlist/".length);
-    const removed = watchlistUnsubscribe(id);
-    if (!removed) {
-      res.writeHead(404, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
-      res.end(JSON.stringify({ error: "Subscription not found" }));
-    } else {
-      recordApiHit("/api/watchlist/:id");
-      if (!(await identityWritePersisted(res))) return;
-      res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
-      res.end(JSON.stringify({ ok: true }));
-    }
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: url.pathname, params: { method: req.method ?? "GET" }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 0 });
+    res.writeHead(410, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+    res.end(JSON.stringify({
+      error: reason,
+      instead: watchRequestsFor([apiExampleSubjects().vendor], BASE_URL),
+    }));
 
   } else if (url.pathname === "/events" && isGetOrHead) {
     recordApiHit("/events");

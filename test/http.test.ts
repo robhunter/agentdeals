@@ -1275,7 +1275,7 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("Tier"), "Should show tier detail");
     assert.ok(html.includes("Verdict"), "Should have verdict section");
     assert.ok(html.includes("FAQPage"), "Should have FAQPage JSON-LD");
-    assert.ok(html.includes("Watch Both Vendors"), "Should have watchlist CTA");
+    assert.ok(html.includes("Watch Both Vendors"), "Should offer a way to watch both vendors");
     assert.ok(html.includes("og:title"), "Should have OG meta tags");
     assert.ok(html.includes("/vendor/netlify"), "Should link to vendor A profile");
     assert.ok(html.includes("/vendor/vercel"), "Should link to vendor B profile");
@@ -1519,15 +1519,15 @@ describe("HTTP transport", () => {
     assert.fail(`none of the first ${standing.length} vendor pages whose stored terms stand published an Offer`);
   });
 
-  it("GET /vendor/:slug includes watchlist CTA", async () => {
+  it("GET /vendor/:slug offers a way to watch the vendor", async () => {
     proc = await startHttpServer();
 
     const response = await fetch(`http://localhost:${serverPort}/vendor/vercel`);
     const html = await response.text();
-    assert.ok(html.includes("Watch Vercel for Pricing Changes"), "Should show watchlist CTA heading");
-    assert.ok(html.includes("/api/watchlist"), "Should show watchlist API example");
-    assert.ok(html.includes("webhook"), "Should mention webhook");
-    assert.ok(html.includes("developer-hub"), "Should link to developer hub docs");
+    assert.ok(html.includes("Watch Vercel for Pricing Changes"), "Should show the watch heading");
+    assert.ok(html.includes("/api/changes?vendor=Vercel"), "Should show a request that returns this vendor's changes");
+    assert.ok(html.includes("/pricing-changes/feed.xml?vendor=Vercel"), "Should show this vendor's feed");
+    assert.ok(html.includes('href="/developers"'), "Should link to the API documentation");
   });
 
   it("GET /vendor index page has search input", async () => {
