@@ -514,6 +514,18 @@
       "refused_date": "2026-08-29"
     },
     {
+      "vendor": "Bubble",
+      "change_type": "free_tier_removed",
+      "reason": "free_tier_still_offered",
+      "detail": "a free tier was recorded as removed by a summary that reports the page still offering one",
+      "summary": "The page does not explicitly mention a free tier with Bubble branding. It states you can 'Get started for free' and build apps, but doesn't detail the limitations or branding associated with a free plan. The focus is on AI features and building scalable apps.",
+      "previous_state": "Visual no-code web app builder — free with Bubble branding. Includes responsive design, basic workflows, REST API connector, core plugins, SEO settings, and community support. Hosted on bubbleapps.io subdomain",
+      "current_state": "The page states you can 'Get started for free' and build apps, but does not detail the specifics of a free tier, such as branding or limitations.",
+      "source_url": "https://bubble.io/",
+      "category": "Cloud Hosting",
+      "refused_date": "2026-09-14"
+    },
+    {
       "vendor": "BuddyNS",
       "change_type": "limits_increased",
       "reason": "unquantified_limit",
@@ -682,6 +694,18 @@
       "source_url": "https://cirun.io",
       "category": "CI/CD",
       "refused_date": "2026-09-10"
+    },
+    {
+      "vendor": "clevebrush.com",
+      "change_type": "free_tier_removed",
+      "reason": "page_does_not_name_vendor",
+      "detail": "the page read never names clevebrush.com and is not served from its domain, so any terms on it belong to somebody else",
+      "summary": "The page focuses on integration and licensing options, and does not mention a free standalone app. It highlights a vector editor and collage tool that can be integrated into other platforms, with licensing options available.",
+      "previous_state": "Free Graphics Design / Photo Collage App. Also, they offer paid integration of it as a component.",
+      "current_state": "The page details a vector editor software with integration options and licensing (SaaS or On-Premise). It does not mention a free standalone app.",
+      "source_url": "https://www.cleverbrush.com/",
+      "category": "Design",
+      "refused_date": "2026-09-14"
     },
     {
       "vendor": "ClickUp",
@@ -1144,6 +1168,18 @@
       "refused_date": "2026-08-29"
     },
     {
+      "vendor": "drawDB",
+      "change_type": "new_tier",
+      "reason": "no_price_signal",
+      "detail": "the page read carries no price signal — no amount, named tier or metered rate in 5543 characters, so it states no terms to have changed",
+      "summary": "drawDB offers a Pro tier with cloud storage, teams, and real-time collaboration on top of the free tier. The free tier stores diagrams locally in the browser and requires backups.",
+      "previous_state": "Free and open-source online database diagram editor with no signup required.",
+      "current_state": "The free editor runs in your browser with no account required. Pro adds cloud storage, teams, and real-time collaboration on top.",
+      "source_url": "https://drawdb.app/",
+      "category": "Diagramming",
+      "refused_date": "2026-09-14"
+    },
+    {
       "vendor": "Dropbox",
       "change_type": "limits_reduced",
       "reason": "confirmed_unchanged",
@@ -1571,6 +1607,30 @@
       "collided_with": "Glauca|pricing_restructured|2026-09-01|https://docs.glauca.digital/hexdns/"
     },
     {
+      "vendor": "GoFile.io",
+      "change_type": "limits_reduced",
+      "reason": "confirmed_unchanged",
+      "detail": "Both descriptions state files are temporary and deleted after a period of inactivity.",
+      "summary": "The free tier now has a limitation of temporary file storage. Files are kept 'temporarily, perfect for quick shares'. Files were deleted after 10 days of inactivity.",
+      "previous_state": "Free file sharing and storage platform can be used via web-based UI & also API. unlimited file size, bandwidth, download count, etc. But it will be deleted when a file becomes inactive (no download for more than ten days).",
+      "current_state": "Gofile is free to use — upload and share files instantly, no account required. Files are kept temporarily, perfect for quick shares.",
+      "source_url": "https://gofile.io/",
+      "category": "Storage",
+      "refused_date": "2026-09-14"
+    },
+    {
+      "vendor": "gokanban.io",
+      "change_type": "limits_reduced",
+      "reason": "no_price_signal",
+      "detail": "the page read carries no price signal — no amount, named tier or metered rate in 1065 characters, so it states no terms to have changed",
+      "summary": "The page mentions an 'Advanced Kanban' option, implying the free tier has limited features and users can upgrade for more.",
+      "previous_state": "Syntax-based, no registration Kanban Board for fast use. Free with no limitations.",
+      "current_state": "Users can click 'advanced kanban' to convert their board into a full Kanban System.",
+      "source_url": "https://gokanban.io",
+      "category": "Project Management",
+      "refused_date": "2026-09-14"
+    },
+    {
       "vendor": "Google Cloud BigQuery",
       "change_type": "limits_reduced",
       "reason": "confirmed_unchanged",
@@ -1667,6 +1727,18 @@
       "category": "Design",
       "refused_date": "2026-09-11",
       "collided_with": "Grapedrop|limits_reduced|2026-08-28|https://grapedrop.com/"
+    },
+    {
+      "vendor": "gtmetrix.com",
+      "change_type": "limits_reduced",
+      "reason": "no_price_signal",
+      "detail": "the page read carries no price signal — no amount, named tier or metered rate in 3733 characters, so it states no terms to have changed",
+      "summary": "The free plan now includes 5 tests per month for 3 months, instead of unlimited tests with limitations on test locations.",
+      "previous_state": "Website performance testing — Lighthouse-based reports with Core Web Vitals, waterfall charts, and optimization recommendations. Free account: testing from Seattle and London, dashboard with filters and tags, daily/weekly/monthly monitoring, e-mail alerts, and 1-month CrUX history. GTmetrix states no on-demand test or monitored-slot quantity for the free account; the cheapest paid plan (Lite, $5.99/mo) lists 50 monthly on-demand tests and 1 monitored slot.",
+      "current_state": "Get 5 tests every month for 3 months - start today!",
+      "source_url": "https://gtmetrix.com/free-plan-features.html",
+      "category": "Code Quality",
+      "refused_date": "2026-09-14"
     },
     {
       "vendor": "Harness CI",
@@ -1778,6 +1850,18 @@
       "source_url": "https://houndci.com/",
       "category": "Code Quality",
       "refused_date": "2026-09-10"
+    },
+    {
+      "vendor": "httpSMS",
+      "change_type": "limits_increased",
+      "reason": "unquantified_limit",
+      "detail": "limits_increased claimed, but the current state names no quantity for anything the stored state measured (200 messag)",
+      "summary": "The free tier now allows up to 5,000 SMS/month, and includes offline notifications and webhook forwarding. The original deal stated a limit of 200 SMS/month.",
+      "previous_state": "Send and receive text messages using your Android phone as an SMS Gateway. Free to send and receive up to 200 messages per month.",
+      "current_state": "Free to use. Send or receive up to 200 SMS/month. Offline notifications for your phone. Forward received messages via webhook. Basic email support.",
+      "source_url": "https://httpsms.com",
+      "category": "Messaging",
+      "refused_date": "2026-09-14"
     },
     {
       "vendor": "Hugging Face",
@@ -2159,6 +2243,18 @@
       "collided_with": "LangSmith|pricing_model_change|2026-09-01|https://www.langchain.com/pricing"
     },
     {
+      "vendor": "LangWatch",
+      "change_type": "limits_increased",
+      "reason": "unquantified_limit",
+      "detail": "limits_increased claimed, but the current state names no quantity for anything the stored state measured (1 trac, 1 workflow)",
+      "summary": "The free tier now includes 50k events/month and 14-day data access, instead of 1k traces/month as previously stated. The free tier is now called 'Developer' and includes more features than previously described.",
+      "previous_state": "A LLMOps platform helping AI teams measure, monitor, and optimize LLM applications for reliability, cost-efficiency, and performance. With a powerful DSPy component, we enable seamless collaboration between engineers and non-technical teams to fine-tune and productionize GenAI products. Free plan includes all platform features, 1k traces/month and 1 workflow DSPy optimizers. [#opensource](https://github.com/langwatch/langwatch)",
+      "current_state": "The Developer plan is free forever and includes 50k events / month, 14-day data access, 2 users, 3 scenarios, 3 simulations, 3 custom evals, and Community support (GitHub & Discord).",
+      "source_url": "https://langwatch.ai/pricing",
+      "category": "AI / ML",
+      "refused_date": "2026-09-14"
+    },
+    {
       "vendor": "LaunchDarkly",
       "change_type": "limits_reduced",
       "reason": "no_baseline",
@@ -2416,6 +2512,18 @@
       "refused_date": "2026-09-07"
     },
     {
+      "vendor": "ManageEngine Log360 Cloud",
+      "change_type": "free_tier_removed",
+      "reason": "no_removal_evidence",
+      "detail": "a free tier was recorded as removed on the evidence that the page did not mention it, and the summary states no price, ending or replacement where the free tier was",
+      "summary": "The free tier is no longer explicitly mentioned. The page highlights a 30-day free trial and then directs users to Standard or MSSP editions.",
+      "previous_state": "Log Management service powered by Manage Engine. Free Plan offers 50 GB storage with 15 days Storage Retention and 7 days search.",
+      "current_state": "Users can start a 30 day free trial. After that, they can choose between Standard and MSSP editions.",
+      "source_url": "https://www.manageengine.com/cloud-siem/",
+      "category": "Logging",
+      "refused_date": "2026-09-14"
+    },
+    {
       "vendor": "MantleDB",
       "change_type": "limits_reduced",
       "reason": "measures_the_opposite",
@@ -2564,6 +2672,18 @@
       "collided_with": "Mocklets|limits_reduced|2026-09-01|https://mocklets.com"
     },
     {
+      "vendor": "mockupmark.com",
+      "change_type": "limits_reduced",
+      "reason": "no_price_signal",
+      "detail": "the page read carries no price signal — no amount, named tier or metered rate in 1454 characters, so it states no terms to have changed",
+      "summary": "The number of free mockups has decreased from 40 to 30+.",
+      "previous_state": "Create realistic t-shirt and clothing mockups for social media and E-commerce, 40 free mockups.",
+      "current_state": "Start today with one of our 30+ free apparel mockups!",
+      "source_url": "https://mockupmark.com/create/free",
+      "category": "Design",
+      "refused_date": "2026-09-14"
+    },
+    {
       "vendor": "mouseflow.com",
       "change_type": "limits_reduced",
       "reason": "unquantified_limit",
@@ -2598,6 +2718,18 @@
       "source_url": "https://www.myfitnesspal.com/premium",
       "category": "Fitness & Health",
       "refused_date": "2026-09-03"
+    },
+    {
+      "vendor": "Namecheap Supersonic",
+      "change_type": "restriction",
+      "reason": "no_terms_to_narrow",
+      "detail": "a restriction was measured against \"Free CDN with basic DDoS protection for Namecheap-hosted domains\", a stored description that states no price, named tier or allowance, so there is nothing for the terms to have narrowed from",
+      "summary": "The free tier is now a 'Get Free' plan with a 50GB/mo traffic limit and basic DDoS protection, renewing at $0.00/mo. It's only available for EasyWP Subscriptions with Namecheap domains, 3rd Party domains using FreeDNS, and domains using Namecheap Shared Hosting nameservers. EasyWP customers using free domains are not eligible.",
+      "previous_state": "Free CDN with basic DDoS protection for Namecheap-hosted domains",
+      "current_state": "Get Free - FOREVER. Renews at $0.00/mo. Basic DDoS protection. Traffic Limit: 50GB/mo. Only available for EasyWP Subscriptions with Namecheap domains, 3rd Party domains using FreeDNS, and domains using Namecheap Shared Hosting nameservers. EasyWP customers using free domains are not eligible for CDN early access at this time.",
+      "source_url": "https://www.namecheap.com/supersonic-cdn/#free-plan",
+      "category": "CDN",
+      "refused_date": "2026-09-14"
     },
     {
       "vendor": "Neo4j AuraDB",
@@ -2879,6 +3011,18 @@
       "refused_date": "2026-08-29"
     },
     {
+      "vendor": "pdfEndpoint.com",
+      "change_type": "pricing_restructured",
+      "reason": "confirmed_unchanged",
+      "detail": "The stored description already implied a cost for conversions beyond the free tier, and the current page simply clarifies that cost.",
+      "summary": "The free tier now has a limit of 100 conversions per month. Additional conversions are now priced at $0.04 each.",
+      "previous_state": "Effortlessly convert HTML or URLs to PDF with a simple API. One hundred conversions per month for free.",
+      "current_state": "100 conversions per month are free. Additional conversions cost $0.04 each.",
+      "source_url": "https://pdfendpoint.com",
+      "category": "Dev Utilities",
+      "refused_date": "2026-09-14"
+    },
+    {
       "vendor": "Phase Two",
       "change_type": "free_tier_removed",
       "reason": "removal_read_from_root",
@@ -2963,6 +3107,18 @@
       "source_url": "https://www.progress.com/podio/pricing",
       "category": "Storage",
       "refused_date": "2026-09-07"
+    },
+    {
+      "vendor": "Pollinations.AI",
+      "change_type": "pricing_model_change",
+      "reason": "no_price_signal",
+      "detail": "the page read carries no price signal — no amount, named tier or metered rate in 3141 characters, so it states no terms to have changed",
+      "summary": "While the site still offers a way to get started for free via 'Pollen Quests', the core offering now revolves around a 'pay-as-you-go' model where users spend across apps and earn rewards. The original description of a completely free API with no signups is no longer accurate. Users now need to register and can earn 'Pollen' to use the API, or spend from their own wallet.",
+      "previous_state": "easy-to-use, free image generation AI with free API available. No signups or API keys required, and several option for integrating into a website or workflow. [#opensource](https://github.com/pollinations/pollinations)",
+      "current_state": "Users spend across apps. Earn rewards. Users sign in and spend from their own wallet. Set spending caps, revoke access any time. Add Pollen to your app. One API. Free Pollen from Quests to start, and earnings when your app gets used.",
+      "source_url": "https://pollinations.ai/",
+      "category": "AI / ML",
+      "refused_date": "2026-09-14"
     },
     {
       "vendor": "Portkey",
@@ -3422,6 +3578,18 @@
       "collided_with": "Shadcn Studio|pricing_model_change|2026-08-28|https://shadcnstudio.com/theme-editor"
     },
     {
+      "vendor": "Simplescraper",
+      "change_type": "pricing_restructured",
+      "reason": "confirmed_unchanged",
+      "detail": "The stored description mentions 'cloud scrape credits' while the current page mentions 'starter credits for automated scraping'. These are likely the same, and the additional features listed on the current page (browser scraping, recipes, export, API access) are *additional* benefits not claimed to be absent in the original description.",
+      "summary": "The free tier now offers 100 cloud credits. The free tier is described as including browser scraping, 3 saved recipes, and CSV/JSON export.",
+      "previous_state": "Trigger your webhook after each operation. The free plan includes 100 cloud scrape credits.",
+      "current_state": "Free to use in the browser, plus 100 free starter credits for automated scraping. Includes browser scraping, 3 saved recipes, CSV/JSON export, and scrape via API.",
+      "source_url": "https://simplescraper.io",
+      "category": "Web Scraping",
+      "refused_date": "2026-09-14"
+    },
+    {
       "vendor": "SmartParse",
       "change_type": "limits_reduced",
       "reason": "measures_no_change",
@@ -3607,6 +3775,18 @@
       "refused_date": "2026-09-01"
     },
     {
+      "vendor": "Tailark",
+      "change_type": "free_tier_removed",
+      "reason": "no_price_signal",
+      "detail": "the page read carries no price signal — no amount, named tier or metered rate in 528 characters, so it states no terms to have changed",
+      "summary": "The page does not mention a free tier. It focuses on 'Get full access' which implies a paid plan. It describes a collection of blocks, pages, and illustrations for building marketing websites, but doesn't specify a free option.",
+      "previous_state": "A collection of modern, responsive, pre-built UI blocks designed for marketing websites.",
+      "current_state": "Get full access to Dashboard Shadcn Registry for building marketing websites. Explore August 31: Libre About & Brand Pages Crafted with attention to detail. Beautifully crafted shadcn blocks, pages, and illustrations—designed to help you build modern marketing websites faster. Multiple styles. Built on Shadcn and Next.js. Compatible with Radix UI and Base UI.",
+      "source_url": "https://tailark.com/",
+      "category": "Design",
+      "refused_date": "2026-09-14"
+    },
+    {
       "vendor": "taskade.com",
       "change_type": "limits_reduced",
       "reason": "unquantified_limit",
@@ -3677,6 +3857,18 @@
       "source_url": "https://www.tickgit.com/",
       "category": "Code Quality",
       "refused_date": "2026-09-10"
+    },
+    {
+      "vendor": "TimeCamp",
+      "change_type": "free_tier_removed",
+      "reason": "states_no_terms",
+      "detail": "every clause of the summary states absence or narration rather than a term the page carries, so it reports the reading rather than a change",
+      "summary": "The page does not explicitly mention a free tier with unlimited users. It highlights a 'Start for free' option and AI-powered features, but details about user limits or long-term free access are not provided. The page focuses on features and integrations, and pushes users towards booking a demo or signing up.",
+      "previous_state": "Free time tracking software for unlimited users. Easily integrates with PM tools like Jira, Trello, Asana, etc.",
+      "current_state": "The page offers a 'Start for free' option but does not specify limits on users or features within the free tier. It emphasizes features like AI time tracking, integrations, and workforce analytics, and encourages users to book a demo or sign up.",
+      "source_url": "https://www.timecamp.com/",
+      "category": "Project Management",
+      "refused_date": "2026-09-14"
     },
     {
       "vendor": "TinyMCE",
@@ -4059,6 +4251,18 @@
       "source_url": "https://xcloud.host",
       "category": "Server Management",
       "refused_date": "2026-09-10"
+    },
+    {
+      "vendor": "Xirsys",
+      "change_type": "limits_reduced",
+      "reason": "confirmed_unchanged",
+      "detail": "The current page clarifies the terms (30-day trial, channels, WebSocket connections) but doesn't fundamentally alter the core offering of unlimited STUN and 500MB TURN bandwidth in a single region, which was already implied in the stored description.",
+      "summary": "The free tier now has a 30-day trial with full production features, then reverts to one region, 2 channels, 25 concurrent WebSocket connections, and 500 MB/mo TURN.",
+      "previous_state": "Unlimited STUN usage + 500 MB monthly TURN bandwidth, capped bandwidth, single geographic region.",
+      "current_state": "Free accounts include up to 2 channels for separate usage reports. After day 30, your account stays active for free forever with one region, 2 channels, 25 concurrent WebSocket connections, unlimited STUN, and 500 MB/mo TURN.",
+      "source_url": "https://www.xirsys.com/pricing/",
+      "category": "Tunneling & Networking",
+      "refused_date": "2026-09-14"
     },
     {
       "vendor": "Xitoring.com",

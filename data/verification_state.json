@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-13",
+  "generated_at": "2026-09-14",
   "records": [
     {
       "vendor": "10minutemail",
@@ -59,12 +59,13 @@
     {
       "vendor": "3Cols",
       "url": "https://3cols.com/",
-      "last_attempt_at": "2026-08-28",
-      "last_outcome": "source_unusable",
-      "last_error": "the page names 3Cols but states no amount, tier or rate we can read",
-      "failure_category": "source_unusable",
-      "consecutive_failures": 1,
-      "last_success": "2026-08-01",
+      "last_attempt_at": "2026-09-14",
+      "last_outcome": "confirmed",
+      "last_error": null,
+      "failure_category": null,
+      "consecutive_failures": 0,
+      "last_success": "2026-09-14",
+      "last_read_at": "2026-09-14",
       "quarantined_since": null
     },
     {
@@ -462,12 +463,13 @@
     {
       "vendor": "Ant Design Landing Page",
       "url": "https://landing.ant.design/",
-      "last_attempt_at": "2026-08-28",
-      "last_outcome": "source_unusable",
-      "last_error": "the page names Ant Design Landing Page but states no amount, tier or rate we can read",
-      "failure_category": "source_unusable",
-      "consecutive_failures": 1,
-      "last_success": "2026-07-17",
+      "last_attempt_at": "2026-09-14",
+      "last_outcome": "confirmed",
+      "last_error": null,
+      "failure_category": null,
+      "consecutive_failures": 0,
+      "last_success": "2026-09-14",
+      "last_read_at": "2026-09-14",
       "quarantined_since": null
     },
     {
@@ -883,12 +885,13 @@
     {
       "vendor": "Audio Enhancer",
       "url": "https://voice-clone.org/tools/audio-enhancer",
-      "last_attempt_at": "2026-09-07",
+      "last_attempt_at": "2026-09-14",
       "last_outcome": "fetch_failed",
       "last_error": "fetch failed",
       "failure_category": "network_error",
-      "consecutive_failures": 4,
+      "consecutive_failures": 5,
       "last_success": "2026-06-16",
+      "last_read_at": null,
       "quarantined_since": "2026-08-28"
     },
     {
@@ -1337,12 +1340,13 @@
     {
       "vendor": "bismuth.cloud",
       "url": "https://www.bismuth.cloud/",
-      "last_attempt_at": "2026-09-07",
+      "last_attempt_at": "2026-09-14",
       "last_outcome": "fetch_failed",
       "last_error": "fetch failed",
       "failure_category": "network_error",
-      "consecutive_failures": 4,
+      "consecutive_failures": 5,
       "last_success": "2026-07-08",
+      "last_read_at": null,
       "quarantined_since": "2026-08-28"
     },
     {
@@ -1715,23 +1719,25 @@
     {
       "vendor": "btunnel",
       "url": "https://www.btunnel.in/",
-      "last_attempt_at": "2026-09-07",
+      "last_attempt_at": "2026-09-14",
       "last_outcome": "fetch_failed",
       "last_error": "fetch failed",
       "failure_category": "network_error",
-      "consecutive_failures": 4,
+      "consecutive_failures": 5,
       "last_success": "2026-06-15",
+      "last_read_at": null,
       "quarantined_since": "2026-08-28"
     },
     {
       "vendor": "Bubble",
       "url": "https://bubble.io/",
-      "last_attempt_at": "2026-08-28",
-      "last_outcome": "source_unusable",
-      "last_error": "the page names Bubble but states no amount, tier or rate we can read",
-      "failure_category": "source_unusable",
-      "consecutive_failures": 1,
+      "last_attempt_at": "2026-09-14",
+      "last_outcome": "changed",
+      "last_error": null,
+      "failure_category": null,
+      "consecutive_failures": 0,
       "last_success": "2026-08-12",
+      "last_read_at": "2026-09-14",
       "quarantined_since": null
     },
     {
@@ -2072,12 +2078,13 @@
     {
       "vendor": "CatchJS.com",
       "url": "https://catchjs.com/",
-      "last_attempt_at": "2026-09-01",
+      "last_attempt_at": "2026-09-14",
       "last_outcome": "changed",
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
       "last_success": null,
+      "last_read_at": "2026-09-14",
       "quarantined_since": null
     },
     {
@@ -2139,12 +2146,13 @@
     {
       "vendor": "CertKit",
       "url": "https://www.certkit.io/certificate-management",
-      "last_attempt_at": "2026-08-28",
-      "last_outcome": "source_unusable",
-      "last_error": "the page names CertKit but states no amount, tier or rate we can read",
-      "failure_category": "source_unusable",
-      "consecutive_failures": 1,
+      "last_attempt_at": "2026-09-14",
+      "last_outcome": "changed",
+      "last_error": null,
+      "failure_category": null,
+      "consecutive_failures": 0,
       "last_success": "2026-07-10",
+      "last_read_at": "2026-09-14",
       "quarantined_since": null
     },
     {
@@ -2261,12 +2269,13 @@
     {
       "vendor": "cirrus-ci.org",
       "url": "https://cirrus-ci.org",
-      "last_attempt_at": "2026-09-07",
+      "last_attempt_at": "2026-09-14",
       "last_outcome": "fetch_failed",
       "last_error": "fetch failed",
       "failure_category": "network_error",
-      "consecutive_failures": 4,
+      "consecutive_failures": 5,
       "last_success": "2026-04-12",
+      "last_read_at": null,
       "quarantined_since": "2026-08-28"
     },
     {
@@ -2328,12 +2337,13 @@
     {
       "vendor": "Claw.cloud",
       "url": "https://run.claw.cloud",
-      "last_attempt_at": "2026-09-07",
+      "last_attempt_at": "2026-09-14",
       "last_outcome": "fetch_failed",
       "last_error": "fetch failed",
       "failure_category": "network_error",
-      "consecutive_failures": 4,
+      "consecutive_failures": 5,
       "last_success": "2026-04-24",
+      "last_read_at": null,
       "quarantined_since": "2026-08-28"
     },
     {
@@ -2361,12 +2371,13 @@
     {
       "vendor": "clevebrush.com",
       "url": "https://www.cleverbrush.com/",
-      "last_attempt_at": "2026-08-28",
+      "last_attempt_at": "2026-09-14",
       "last_outcome": "source_unusable",
       "last_error": "the page never names clevebrush.com and is not served from its domain",
       "failure_category": "source_unusable",
-      "consecutive_failures": 1,
+      "consecutive_failures": 2,
       "last_success": "2026-07-16",
+      "last_read_at": null,
       "quarantined_since": null
     },
     {
@@ -3160,12 +3171,13 @@
     {
       "vendor": "Conversion Tools",
       "url": "https://conversiontools.io/",
-      "last_attempt_at": "2026-08-28",
-      "last_outcome": "source_unusable",
-      "last_error": "the page names Conversion Tools but states no amount, tier or rate we can read",
-      "failure_category": "source_unusable",
-      "consecutive_failures": 1,
+      "last_attempt_at": "2026-09-14",
+      "last_outcome": "changed",
+      "last_error": null,
+      "failure_category": null,
+      "consecutive_failures": 0,
       "last_success": "2026-08-25",
+      "last_read_at": "2026-09-14",
       "quarantined_since": null
     },
     {
@@ -3570,12 +3582,13 @@
     {
       "vendor": "CurrencyScoop",
       "url": "https://currencybeacon.com/",
-      "last_attempt_at": "2026-08-28",
+      "last_attempt_at": "2026-09-14",
       "last_outcome": "source_unusable",
       "last_error": "the page never names CurrencyScoop and is not served from its domain",
       "failure_category": "source_unusable",
-      "consecutive_failures": 1,
+      "consecutive_failures": 2,
       "last_success": "2026-08-26",
+      "last_read_at": null,
       "quarantined_since": null
     },
     {
@@ -3746,12 +3759,13 @@
     {
       "vendor": "Datalore",
       "url": "https://datalore.jetbrains.com",
-      "last_attempt_at": "2026-08-28",
-      "last_outcome": "source_unusable",
-      "last_error": "the page names Datalore but states no amount, tier or rate we can read",
-      "failure_category": "source_unusable",
-      "consecutive_failures": 1,
+      "last_attempt_at": "2026-09-14",
+      "last_outcome": "states_no_price",
+      "last_error": null,
+      "failure_category": null,
+      "consecutive_failures": 0,
       "last_success": "2026-08-02",
+      "last_read_at": "2026-09-14",
       "quarantined_since": null
     },
     {
@@ -3790,12 +3804,13 @@
     {
       "vendor": "Datree",
       "url": "https://www.datree.io/",
-      "last_attempt_at": "2026-09-07",
+      "last_attempt_at": "2026-09-14",
       "last_outcome": "fetch_failed",
       "last_error": "HTTP 404",
       "failure_category": "unreachable",
-      "consecutive_failures": 4,
+      "consecutive_failures": 5,
       "last_success": "2026-07-10",
+      "last_read_at": null,
       "quarantined_since": "2026-08-28"
     },
     {
@@ -3867,12 +3882,13 @@
     {
       "vendor": "DeepAR",
       "url": "https://developer.deepar.ai",
-      "last_attempt_at": "2026-08-28",
-      "last_outcome": "source_unusable",
-      "last_error": "the page names DeepAR but states no amount, tier or rate we can read",
-      "failure_category": "source_unusable",
-      "consecutive_failures": 1,
+      "last_attempt_at": "2026-09-14",
+      "last_outcome": "states_no_price",
+      "last_error": null,
+      "failure_category": null,
+      "consecutive_failures": 0,
       "last_success": "2026-07-31",
+      "last_read_at": "2026-09-14",
       "quarantined_since": null
     },
     {
@@ -4055,12 +4071,13 @@
     {
       "vendor": "diagrams.net",
       "url": "https://app.diagrams.net/",
-      "last_attempt_at": "2026-08-28",
-      "last_outcome": "source_unusable",
-      "last_error": "the page names diagrams.net but states no amount, tier or rate we can read",
-      "failure_category": "source_unusable",
-      "consecutive_failures": 1,
+      "last_attempt_at": "2026-09-14",
+      "last_outcome": "states_no_price",
+      "last_error": null,
+      "failure_category": null,
+      "consecutive_failures": 0,
       "last_success": "2026-08-10",
+      "last_read_at": "2026-09-14",
       "quarantined_since": null
     },
     {
@@ -4077,12 +4094,13 @@
     {
       "vendor": "DiffJSON",
       "url": "https://comparejson.com/",
-      "last_attempt_at": "2026-08-28",
+      "last_attempt_at": "2026-09-14",
       "last_outcome": "source_unusable",
       "last_error": "the page never names DiffJSON and is not served from its domain",
       "failure_category": "source_unusable",
-      "consecutive_failures": 1,
+      "consecutive_failures": 2,
       "last_success": "2026-08-28",
+      "last_read_at": null,
       "quarantined_since": null
     },
     {
@@ -4354,12 +4372,13 @@
     {
       "vendor": "drawDB",
       "url": "https://drawdb.app/",
-      "last_attempt_at": "2026-08-28",
-      "last_outcome": "source_unusable",
-      "last_error": "the page names drawDB but states no amount, tier or rate we can read",
-      "failure_category": "source_unusable",
-      "consecutive_failures": 1,
+      "last_attempt_at": "2026-09-14",
+      "last_outcome": "changed",
+      "last_error": null,
+      "failure_category": null,
+      "consecutive_failures": 0,
       "last_success": "2026-08-02",
+      "last_read_at": "2026-09-14",
       "quarantined_since": null
     },
     {
@@ -4398,12 +4417,13 @@
     {
       "vendor": "Dropshare",
       "url": "https://dropsha.re",
-      "last_attempt_at": "2026-08-28",
-      "last_outcome": "source_unusable",
-      "last_error": "the page names Dropshare but states no amount, tier or rate we can read",
-      "failure_category": "source_unusable",
-      "consecutive_failures": 1,
+      "last_attempt_at": "2026-09-14",
+      "last_outcome": "fetch_failed",
+      "last_error": "page content too short (likely JS-rendered SPA); a rendering client read 470 characters",
+      "failure_category": "empty_page",
+      "consecutive_failures": 2,
       "last_success": "2026-07-16",
+      "last_read_at": null,
       "quarantined_since": null
     },
     {
@@ -4420,12 +4440,13 @@
     {
       "vendor": "duckdns.org",
       "url": "https://www.duckdns.org/",
-      "last_attempt_at": "2026-08-28",
-      "last_outcome": "source_unusable",
-      "last_error": "the page names duckdns.org but states no amount, tier or rate we can read",
-      "failure_category": "source_unusable",
-      "consecutive_failures": 1,
+      "last_attempt_at": "2026-09-14",
+      "last_outcome": "fetch_failed",
+      "last_error": "page content too short (likely JS-rendered SPA); a rendering client read 255 characters",
+      "failure_category": "empty_page",
+      "consecutive_failures": 2,
       "last_success": "2026-08-09",
+      "last_read_at": null,
       "quarantined_since": null
     },
     {
@@ -4697,12 +4718,13 @@
     {
       "vendor": "encore.dev",
       "url": "https://encore.dev/",
-      "last_attempt_at": "2026-09-02",
+      "last_attempt_at": "2026-09-14",
       "last_outcome": "unclear",
-      "last_error": "The pricing page does not explicitly mention a free tier or its limits. It focuses on features and benefits but lacks specific details about a free offering. While it mentions starting with one service, team, or project, it doesn't confirm a 'free' tier with 'up to 2 environments'. It appears the service is focused on automated infrastructure and may require a paid plan for full functionality.",
+      "last_error": "The pricing page does not explicitly mention a free tier with the described features (up to 2 environments, built-in monitoring and tracing). It focuses on the core product's capabilities and offers a 'Get started' option, but doesn't detail a free plan's limitations or confirm its continued existence. The page highlights features like automated infrastructure and AI-powered development, but lacks specific free tier details.",
       "failure_category": "ai_undecided",
-      "consecutive_failures": 1,
+      "consecutive_failures": 2,
       "last_success": null,
+      "last_read_at": null,
       "quarantined_since": null
     },
     {
@@ -5499,12 +5521,13 @@
     {
       "vendor": "Free PO editor",
       "url": "https://pofile.net/free-po-editor",
-      "last_attempt_at": "2026-08-28",
-      "last_outcome": "source_unusable",
-      "last_error": "the page names Free PO editor but states no amount, tier or rate we can read",
-      "failure_category": "source_unusable",
-      "consecutive_failures": 1,
+      "last_attempt_at": "2026-09-14",
+      "last_outcome": "fetch_failed",
+      "last_error": "page content too short (likely JS-rendered SPA); a rendering client read 264 characters",
+      "failure_category": "empty_page",
+      "consecutive_failures": 2,
       "last_success": "2026-08-08",
+      "last_read_at": null,
       "quarantined_since": null
     },
     {
@@ -5566,12 +5589,13 @@
     {
       "vendor": "freetools.site",
       "url": "https://freetools.site/",
-      "last_attempt_at": "2026-09-07",
+      "last_attempt_at": "2026-09-14",
       "last_outcome": "fetch_failed",
       "last_error": "fetch failed",
       "failure_category": "network_error",
-      "consecutive_failures": 4,
+      "consecutive_failures": 5,
       "last_success": "2026-07-17",
+      "last_read_at": null,
       "quarantined_since": "2026-08-28"
     },
     {
@@ -5811,12 +5835,13 @@
     {
       "vendor": "gerrithub.io",
       "url": "https://review.gerrithub.io/",
-      "last_attempt_at": "2026-08-28",
-      "last_outcome": "source_unusable",
-      "last_error": "the page names gerrithub.io but states no amount, tier or rate we can read",
-      "failure_category": "source_unusable",
-      "consecutive_failures": 1,
+      "last_attempt_at": "2026-09-14",
+      "last_outcome": "fetch_failed",
+      "last_error": "page content too short (likely JS-rendered SPA); a rendering client read 138 characters",
+      "failure_category": "empty_page",
+      "consecutive_failures": 2,
       "last_success": "2026-08-05",
+      "last_read_at": null,
       "quarantined_since": null
     },
     {
@@ -6144,23 +6169,25 @@
     {
       "vendor": "GoFile.io",
       "url": "https://gofile.io/",
-      "last_attempt_at": "2026-08-28",
-      "last_outcome": "source_unusable",
-      "last_error": "the page names GoFile.io but states no amount, tier or rate we can read",
-      "failure_category": "source_unusable",
-      "consecutive_failures": 1,
+      "last_attempt_at": "2026-09-14",
+      "last_outcome": "changed",
+      "last_error": null,
+      "failure_category": null,
+      "consecutive_failures": 0,
       "last_success": "2026-07-17",
+      "last_read_at": "2026-09-14",
       "quarantined_since": null
     },
     {
       "vendor": "gokanban.io",
       "url": "https://gokanban.io",
-      "last_attempt_at": "2026-08-28",
-      "last_outcome": "source_unusable",
-      "last_error": "the page names gokanban.io but states no amount, tier or rate we can read",
-      "failure_category": "source_unusable",
-      "consecutive_failures": 1,
+      "last_attempt_at": "2026-09-14",
+      "last_outcome": "changed",
+      "last_error": null,
+      "failure_category": null,
+      "consecutive_failures": 0,
       "last_success": "2026-07-06",
+      "last_read_at": "2026-09-14",
       "quarantined_since": null
     },
     {
@@ -6507,12 +6534,13 @@
     {
       "vendor": "Gradientos",
       "url": "https://www.gradientos.app",
-      "last_attempt_at": "2026-08-28",
-      "last_outcome": "source_unusable",
-      "last_error": "the page names Gradientos but states no amount, tier or rate we can read",
-      "failure_category": "source_unusable",
-      "consecutive_failures": 1,
+      "last_attempt_at": "2026-09-14",
+      "last_outcome": "states_no_price",
+      "last_error": null,
+      "failure_category": null,
+      "consecutive_failures": 0,
       "last_success": "2026-07-17",
+      "last_read_at": "2026-09-14",
       "quarantined_since": null
     },
     {
@@ -6629,12 +6657,13 @@
     {
       "vendor": "gtmetrix.com",
       "url": "https://gtmetrix.com/free-plan-features.html",
-      "last_attempt_at": "2026-09-02",
-      "last_outcome": "source_unusable",
-      "last_error": "the page names gtmetrix.com but states no amount, tier or rate we can read",
-      "failure_category": "source_unusable",
-      "consecutive_failures": 1,
+      "last_attempt_at": "2026-09-14",
+      "last_outcome": "changed",
+      "last_error": null,
+      "failure_category": null,
+      "consecutive_failures": 0,
       "last_success": "2026-08-17",
+      "last_read_at": "2026-09-14",
       "quarantined_since": null
     },
     {
@@ -7043,12 +7072,13 @@
     {
       "vendor": "httpSMS",
       "url": "https://httpsms.com",
-      "last_attempt_at": "2026-08-28",
-      "last_outcome": "source_unusable",
-      "last_error": "the page names httpSMS but states no amount, tier or rate we can read",
-      "failure_category": "source_unusable",
-      "consecutive_failures": 1,
+      "last_attempt_at": "2026-09-14",
+      "last_outcome": "changed",
+      "last_error": null,
+      "failure_category": null,
+      "consecutive_failures": 0,
       "last_success": "2026-08-08",
+      "last_read_at": "2026-09-14",
       "quarantined_since": null
     },
     {
@@ -7376,12 +7406,13 @@
     {
       "vendor": "Inboxes App",
       "url": "https://inboxesapp.com",
-      "last_attempt_at": "2026-08-28",
-      "last_outcome": "source_unusable",
-      "last_error": "the page names Inboxes App but states no amount, tier or rate we can read",
-      "failure_category": "source_unusable",
-      "consecutive_failures": 1,
+      "last_attempt_at": "2026-09-14",
+      "last_outcome": "fetch_failed",
+      "last_error": "page content too short (likely JS-rendered SPA); a rendering client read 174 characters",
+      "failure_category": "empty_page",
+      "consecutive_failures": 2,
       "last_success": "2026-07-12",
+      "last_read_at": null,
       "quarantined_since": null
     },
     {
@@ -8076,12 +8107,13 @@
     {
       "vendor": "KillBait API",
       "url": "https://killbait.com/api/doc",
-      "last_attempt_at": "2026-08-28",
-      "last_outcome": "source_unusable",
-      "last_error": "the page names KillBait API but states no amount, tier or rate we can read",
-      "failure_category": "source_unusable",
-      "consecutive_failures": 1,
-      "last_success": "2026-07-09",
+      "last_attempt_at": "2026-09-14",
+      "last_outcome": "confirmed",
+      "last_error": null,
+      "failure_category": null,
+      "consecutive_failures": 0,
+      "last_success": "2026-09-14",
+      "last_read_at": "2026-09-14",
       "quarantined_since": null
     },
     {
@@ -8299,23 +8331,25 @@
     {
       "vendor": "Langtrace",
       "url": "https://langtrace.ai",
-      "last_attempt_at": "2026-09-07",
+      "last_attempt_at": "2026-09-14",
       "last_outcome": "fetch_failed",
       "last_error": "HTTP 404",
       "failure_category": "unreachable",
-      "consecutive_failures": 4,
+      "consecutive_failures": 5,
       "last_success": "2026-05-07",
+      "last_read_at": null,
       "quarantined_since": "2026-08-28"
     },
     {
       "vendor": "LangWatch",
       "url": "https://langwatch.ai/pricing",
-      "last_attempt_at": "2026-08-28",
-      "last_outcome": "source_unusable",
-      "last_error": "the page names LangWatch but states no amount, tier or rate we can read",
-      "failure_category": "source_unusable",
-      "consecutive_failures": 1,
+      "last_attempt_at": "2026-09-14",
+      "last_outcome": "changed",
+      "last_error": null,
+      "failure_category": null,
+      "consecutive_failures": 0,
       "last_success": "2026-08-10",
+      "last_read_at": "2026-09-14",
       "quarantined_since": null
     },
     {
@@ -8577,12 +8611,13 @@
     {
       "vendor": "LocalCert",
       "url": "https://localcert.net",
-      "last_attempt_at": "2026-08-28",
-      "last_outcome": "source_unusable",
-      "last_error": "the page names LocalCert but states no amount, tier or rate we can read",
-      "failure_category": "source_unusable",
-      "consecutive_failures": 1,
+      "last_attempt_at": "2026-09-14",
+      "last_outcome": "fetch_failed",
+      "last_error": "HTTP 403",
+      "failure_category": "bot_block",
+      "consecutive_failures": 2,
       "last_success": "2026-08-09",
+      "last_read_at": null,
       "quarantined_since": null
     },
     {
@@ -9099,12 +9134,13 @@
     {
       "vendor": "ManageEngine Log360 Cloud",
       "url": "https://www.manageengine.com/cloud-siem/",
-      "last_attempt_at": "2026-08-28",
-      "last_outcome": "source_unusable",
-      "last_error": "the page names ManageEngine Log360 Cloud but states no amount, tier or rate we can read",
-      "failure_category": "source_unusable",
-      "consecutive_failures": 1,
+      "last_attempt_at": "2026-09-14",
+      "last_outcome": "changed",
+      "last_error": null,
+      "failure_category": null,
+      "consecutive_failures": 0,
       "last_success": "2026-08-05",
+      "last_read_at": "2026-09-14",
       "quarantined_since": null
     },
     {
@@ -9199,12 +9235,13 @@
     {
       "vendor": "Mastershot",
       "url": "https://mastershot.app",
-      "last_attempt_at": "2026-08-28",
-      "last_outcome": "source_unusable",
-      "last_error": "the page names Mastershot but states no amount, tier or rate we can read",
-      "failure_category": "source_unusable",
-      "consecutive_failures": 1,
-      "last_success": "2026-07-20",
+      "last_attempt_at": "2026-09-14",
+      "last_outcome": "confirmed",
+      "last_error": null,
+      "failure_category": null,
+      "consecutive_failures": 0,
+      "last_success": "2026-09-14",
+      "last_read_at": "2026-09-14",
       "quarantined_since": null
     },
     {
@@ -9221,12 +9258,13 @@
     {
       "vendor": "MConverter",
       "url": "https://mconverter.eu/",
-      "last_attempt_at": "2026-08-28",
-      "last_outcome": "source_unusable",
-      "last_error": "the page names MConverter but states no amount, tier or rate we can read",
-      "failure_category": "source_unusable",
-      "consecutive_failures": 1,
+      "last_attempt_at": "2026-09-14",
+      "last_outcome": "unclear",
+      "last_error": "The page does not explicitly state the limits of a free tier. It details supported file formats and conversion options but does not mention any usage limits like the '15 files per 24h, up to 100 MB each, processed in batches of eight' described in the stored deal info.",
+      "failure_category": "ai_undecided",
+      "consecutive_failures": 2,
       "last_success": "2026-07-13",
+      "last_read_at": null,
       "quarantined_since": null
     },
     {
@@ -9665,12 +9703,13 @@
     {
       "vendor": "mockupmark.com",
       "url": "https://mockupmark.com/create/free",
-      "last_attempt_at": "2026-08-28",
-      "last_outcome": "source_unusable",
-      "last_error": "the page names mockupmark.com but states no amount, tier or rate we can read",
-      "failure_category": "source_unusable",
-      "consecutive_failures": 1,
+      "last_attempt_at": "2026-09-14",
+      "last_outcome": "changed",
+      "last_error": null,
+      "failure_category": null,
+      "consecutive_failures": 0,
       "last_success": "2026-07-21",
+      "last_read_at": "2026-09-14",
       "quarantined_since": null
     },
     {
@@ -9764,12 +9803,13 @@
     {
       "vendor": "moss.sh",
       "url": "https://moss.sh",
-      "last_attempt_at": "2026-09-07",
+      "last_attempt_at": "2026-09-14",
       "last_outcome": "fetch_failed",
       "last_error": "fetch failed",
       "failure_category": "network_error",
-      "consecutive_failures": 4,
+      "consecutive_failures": 5,
       "last_success": "2026-04-13",
+      "last_read_at": null,
       "quarantined_since": "2026-08-28"
     },
     {
@@ -9864,35 +9904,38 @@
     {
       "vendor": "Namae",
       "url": "https://namae.dev/",
-      "last_attempt_at": "2026-09-07",
+      "last_attempt_at": "2026-09-14",
       "last_outcome": "fetch_failed",
       "last_error": "HTTP 429",
       "failure_category": "bot_block",
-      "consecutive_failures": 4,
+      "consecutive_failures": 5,
       "last_success": "2026-04-23",
+      "last_read_at": null,
       "quarantined_since": "2026-08-28"
     },
     {
       "vendor": "Namecheap Supersonic",
       "url": "https://www.namecheap.com/supersonic-cdn/#free-plan",
-      "last_attempt_at": "2026-09-07",
-      "last_outcome": "fetch_failed",
-      "last_error": "HTTP 403",
-      "failure_category": "bot_block",
-      "consecutive_failures": 4,
+      "last_attempt_at": "2026-09-14",
+      "last_outcome": "changed",
+      "last_error": null,
+      "failure_category": null,
+      "consecutive_failures": 0,
       "last_success": "2026-05-20",
-      "quarantined_since": "2026-08-28"
+      "last_read_at": "2026-09-14",
+      "quarantined_since": null
     },
     {
       "vendor": "namecheap.com",
       "url": "https://www.namecheap.com/domains/freedns/",
-      "last_attempt_at": "2026-09-07",
-      "last_outcome": "fetch_failed",
-      "last_error": "HTTP 403",
-      "failure_category": "bot_block",
-      "consecutive_failures": 4,
-      "last_success": "2026-07-29",
-      "quarantined_since": "2026-08-28"
+      "last_attempt_at": "2026-09-14",
+      "last_outcome": "confirmed",
+      "last_error": null,
+      "failure_category": null,
+      "consecutive_failures": 0,
+      "last_success": "2026-09-14",
+      "last_read_at": "2026-09-14",
+      "quarantined_since": null
     },
     {
       "vendor": "Nango",
@@ -9965,12 +10008,13 @@
     {
       "vendor": "netdata.cloud",
       "url": "https://www.netdata.cloud/",
-      "last_attempt_at": "2026-08-28",
-      "last_outcome": "source_unusable",
-      "last_error": "the page names netdata.cloud but states no amount, tier or rate we can read",
-      "failure_category": "source_unusable",
-      "consecutive_failures": 1,
+      "last_attempt_at": "2026-09-14",
+      "last_outcome": "changed",
+      "last_error": null,
+      "failure_category": null,
+      "consecutive_failures": 0,
       "last_success": "2026-07-08",
+      "last_read_at": "2026-09-14",
       "quarantined_since": null
     },
     {
@@ -10276,12 +10320,13 @@
     {
       "vendor": "Nx Cloud",
       "url": "https://nx.dev/ci",
-      "last_attempt_at": "2026-08-28",
-      "last_outcome": "source_unusable",
-      "last_error": "the page names Nx Cloud but states no amount, tier or rate we can read",
-      "failure_category": "source_unusable",
-      "consecutive_failures": 1,
-      "last_success": "2026-07-10",
+      "last_attempt_at": "2026-09-14",
+      "last_outcome": "confirmed",
+      "last_error": null,
+      "failure_category": null,
+      "consecutive_failures": 0,
+      "last_success": "2026-09-14",
+      "last_read_at": "2026-09-14",
       "quarantined_since": null
     },
     {
@@ -10353,12 +10398,13 @@
     {
       "vendor": "okso.app",
       "url": "https://okso.app",
-      "last_attempt_at": "2026-08-28",
-      "last_outcome": "source_unusable",
-      "last_error": "the page names okso.app but states no amount, tier or rate we can read",
-      "failure_category": "source_unusable",
-      "consecutive_failures": 1,
+      "last_attempt_at": "2026-09-14",
+      "last_outcome": "states_no_price",
+      "last_error": null,
+      "failure_category": null,
+      "consecutive_failures": 0,
       "last_success": "2026-07-20",
+      "last_read_at": "2026-09-14",
       "quarantined_since": null
     },
     {
@@ -10586,12 +10632,13 @@
     {
       "vendor": "Othor AI",
       "url": "https://othor.ai/pricing",
-      "last_attempt_at": "2026-08-28",
-      "last_outcome": "source_unusable",
-      "last_error": "the page names Othor AI but states no amount, tier or rate we can read",
-      "failure_category": "source_unusable",
-      "consecutive_failures": 1,
+      "last_attempt_at": "2026-09-14",
+      "last_outcome": "changed",
+      "last_error": null,
+      "failure_category": null,
+      "consecutive_failures": 0,
       "last_success": "2026-08-09",
+      "last_read_at": "2026-09-14",
       "quarantined_since": null
     },
     {
@@ -10641,12 +10688,13 @@
     {
       "vendor": "OVHcloud",
       "url": "https://www.ovhcloud.com/en/web-hosting/options/ssl/",
-      "last_attempt_at": "2026-08-28",
-      "last_outcome": "source_unusable",
-      "last_error": "the page names OVHcloud but states no amount, tier or rate we can read",
-      "failure_category": "source_unusable",
-      "consecutive_failures": 1,
+      "last_attempt_at": "2026-09-14",
+      "last_outcome": "unclear",
+      "last_error": "The provided text does not contain specific information about a free CDN tier with DDoS protection and a free SSL certificate. It broadly mentions security features like DDoS protection and SSL certificates, but doesn't detail a free tier or its associated features. It's impossible to verify the stored deal information based on this text.",
+      "failure_category": "ai_undecided",
+      "consecutive_failures": 2,
       "last_success": "2026-08-18",
+      "last_read_at": null,
       "quarantined_since": null
     },
     {
@@ -10742,12 +10790,13 @@
     {
       "vendor": "Pagure.io",
       "url": "https://pagure.io",
-      "last_attempt_at": "2026-08-28",
-      "last_outcome": "source_unusable",
-      "last_error": "the page names Pagure.io but states no amount, tier or rate we can read",
-      "failure_category": "source_unusable",
-      "consecutive_failures": 1,
+      "last_attempt_at": "2026-09-14",
+      "last_outcome": "changed",
+      "last_error": null,
+      "failure_category": null,
+      "consecutive_failures": 0,
       "last_success": "2026-08-01",
+      "last_read_at": "2026-09-14",
       "quarantined_since": null
     },
     {
@@ -10886,12 +10935,13 @@
     {
       "vendor": "pdfEndpoint.com",
       "url": "https://pdfendpoint.com",
-      "last_attempt_at": "2026-08-28",
-      "last_outcome": "source_unusable",
-      "last_error": "the page names pdfEndpoint.com but states no amount, tier or rate we can read",
-      "failure_category": "source_unusable",
-      "consecutive_failures": 1,
+      "last_attempt_at": "2026-09-14",
+      "last_outcome": "changed",
+      "last_error": null,
+      "failure_category": null,
+      "consecutive_failures": 0,
       "last_success": "2026-07-06",
+      "last_read_at": "2026-09-14",
       "quarantined_since": null
     },
     {
@@ -11351,12 +11401,13 @@
     {
       "vendor": "Pollinations.AI",
       "url": "https://pollinations.ai/",
-      "last_attempt_at": "2026-08-28",
-      "last_outcome": "source_unusable",
-      "last_error": "the page names Pollinations.AI but states no amount, tier or rate we can read",
-      "failure_category": "source_unusable",
-      "consecutive_failures": 1,
+      "last_attempt_at": "2026-09-14",
+      "last_outcome": "changed",
+      "last_error": null,
+      "failure_category": null,
+      "consecutive_failures": 0,
       "last_success": "2026-08-07",
+      "last_read_at": "2026-09-14",
       "quarantined_since": null
     },
     {
@@ -11440,23 +11491,25 @@
     {
       "vendor": "pp.ua",
       "url": "https://nic.ua/",
-      "last_attempt_at": "2026-08-28",
+      "last_attempt_at": "2026-09-14",
       "last_outcome": "source_unusable",
       "last_error": "the page never names pp.ua and is not served from its domain",
       "failure_category": "source_unusable",
-      "consecutive_failures": 1,
+      "consecutive_failures": 2,
       "last_success": "2026-08-09",
+      "last_read_at": null,
       "quarantined_since": null
     },
     {
       "vendor": "Pravatar",
       "url": "https://pravatar.cc/",
-      "last_attempt_at": "2026-08-28",
-      "last_outcome": "source_unusable",
-      "last_error": "the page names Pravatar but states no amount, tier or rate we can read",
-      "failure_category": "source_unusable",
-      "consecutive_failures": 1,
+      "last_attempt_at": "2026-09-14",
+      "last_outcome": "fetch_failed",
+      "last_error": "page content too short (likely JS-rendered SPA); a rendering client read 475 characters",
+      "failure_category": "empty_page",
+      "consecutive_failures": 2,
       "last_success": "2026-08-25",
+      "last_read_at": null,
       "quarantined_since": null
     },
     {
@@ -12325,12 +12378,13 @@
     {
       "vendor": "Revolt.chat",
       "url": "https://stoat.chat/",
-      "last_attempt_at": "2026-09-02",
+      "last_attempt_at": "2026-09-14",
       "last_outcome": "source_unusable",
-      "last_error": "the page names Revolt.chat but states no amount, tier or rate we can read",
+      "last_error": "the page never names Revolt.chat and is not served from its domain",
       "failure_category": "source_unusable",
-      "consecutive_failures": 1,
+      "consecutive_failures": 2,
       "last_success": "2026-08-03",
+      "last_read_at": null,
       "quarantined_since": null
     },
     {
@@ -12436,23 +12490,25 @@
     {
       "vendor": "runcloud.io",
       "url": "https://runcloud.io/",
-      "last_attempt_at": "2026-08-28",
-      "last_outcome": "source_unusable",
-      "last_error": "the page names runcloud.io but states no amount, tier or rate we can read",
-      "failure_category": "source_unusable",
-      "consecutive_failures": 1,
-      "last_success": "2026-08-03",
+      "last_attempt_at": "2026-09-14",
+      "last_outcome": "confirmed",
+      "last_error": null,
+      "failure_category": null,
+      "consecutive_failures": 0,
+      "last_success": "2026-09-14",
+      "last_read_at": "2026-09-14",
       "quarantined_since": null
     },
     {
       "vendor": "RunMyJob",
       "url": "https://runjob.eu/",
-      "last_attempt_at": "2026-09-02",
+      "last_attempt_at": "2026-09-14",
       "last_outcome": "source_unusable",
       "last_error": "the page never names RunMyJob and is not served from its domain",
       "failure_category": "source_unusable",
-      "consecutive_failures": 1,
+      "consecutive_failures": 2,
       "last_success": "2026-08-28",
+      "last_read_at": null,
       "quarantined_since": null
     },
     {
@@ -12810,12 +12866,13 @@
     {
       "vendor": "semanticdiff.com",
       "url": "https://app.semanticdiff.com/",
-      "last_attempt_at": "2026-08-28",
-      "last_outcome": "source_unusable",
-      "last_error": "the page names semanticdiff.com but states no amount, tier or rate we can read",
-      "failure_category": "source_unusable",
-      "consecutive_failures": 1,
+      "last_attempt_at": "2026-09-14",
+      "last_outcome": "fetch_failed",
+      "last_error": "page content too short (likely JS-rendered SPA); a rendering client read 449 characters",
+      "failure_category": "empty_page",
+      "consecutive_failures": 2,
       "last_success": "2026-08-06",
+      "last_read_at": null,
       "quarantined_since": null
     },
     {
@@ -13229,12 +13286,13 @@
     {
       "vendor": "Simplescraper",
       "url": "https://simplescraper.io",
-      "last_attempt_at": "2026-08-28",
-      "last_outcome": "source_unusable",
-      "last_error": "the page names Simplescraper but states no amount, tier or rate we can read",
-      "failure_category": "source_unusable",
-      "consecutive_failures": 1,
+      "last_attempt_at": "2026-09-14",
+      "last_outcome": "changed",
+      "last_error": null,
+      "failure_category": null,
+      "consecutive_failures": 0,
       "last_success": "2026-08-02",
+      "last_read_at": "2026-09-14",
       "quarantined_since": null
     },
     {
@@ -13361,12 +13419,13 @@
     {
       "vendor": "Smart Grow Vault",
       "url": "https://vault.smart-grow.app/",
-      "last_attempt_at": "2026-08-28",
-      "last_outcome": "source_unusable",
-      "last_error": "the page names Smart Grow Vault but states no amount, tier or rate we can read",
-      "failure_category": "source_unusable",
-      "consecutive_failures": 1,
-      "last_success": "2026-07-10",
+      "last_attempt_at": "2026-09-14",
+      "last_outcome": "confirmed",
+      "last_error": null,
+      "failure_category": null,
+      "consecutive_failures": 0,
+      "last_success": "2026-09-14",
+      "last_read_at": "2026-09-14",
       "quarantined_since": null
     },
     {
@@ -13593,12 +13652,13 @@
     {
       "vendor": "SOOS",
       "url": "https://soos.io",
-      "last_attempt_at": "2026-09-07",
+      "last_attempt_at": "2026-09-14",
       "last_outcome": "fetch_failed",
       "last_error": "HTTP 410",
       "failure_category": "unreachable",
-      "consecutive_failures": 4,
+      "consecutive_failures": 5,
       "last_success": "2026-05-23",
+      "last_read_at": null,
       "quarantined_since": "2026-08-28"
     },
     {
@@ -13681,12 +13741,13 @@
     {
       "vendor": "sslip.io",
       "url": "https://nip.io/",
-      "last_attempt_at": "2026-09-02",
-      "last_outcome": "source_unusable",
-      "last_error": "the page names sslip.io but states no amount, tier or rate we can read",
-      "failure_category": "source_unusable",
-      "consecutive_failures": 1,
-      "last_success": "2026-08-05",
+      "last_attempt_at": "2026-09-14",
+      "last_outcome": "confirmed",
+      "last_error": null,
+      "failure_category": null,
+      "consecutive_failures": 0,
+      "last_success": "2026-09-14",
+      "last_read_at": "2026-09-14",
       "quarantined_since": null
     },
     {
@@ -13714,12 +13775,13 @@
     {
       "vendor": "Stack Auth",
       "url": "https://www.hexclave.com/pricing",
-      "last_attempt_at": "2026-09-02",
+      "last_attempt_at": "2026-09-14",
       "last_outcome": "source_unusable",
       "last_error": "the page never names Stack Auth and is not served from its domain",
       "failure_category": "source_unusable",
-      "consecutive_failures": 1,
+      "consecutive_failures": 2,
       "last_success": "2026-07-09",
+      "last_read_at": null,
       "quarantined_since": null
     },
     {
@@ -13846,12 +13908,13 @@
     {
       "vendor": "StatusPile",
       "url": "https://www.statuspile.com/",
-      "last_attempt_at": "2026-08-28",
-      "last_outcome": "source_unusable",
-      "last_error": "the page names StatusPile but states no amount, tier or rate we can read",
-      "failure_category": "source_unusable",
-      "consecutive_failures": 1,
-      "last_success": "2026-07-07",
+      "last_attempt_at": "2026-09-14",
+      "last_outcome": "confirmed",
+      "last_error": null,
+      "failure_category": null,
+      "consecutive_failures": 0,
+      "last_success": "2026-09-14",
+      "last_read_at": "2026-09-14",
       "quarantined_since": null
     },
     {
@@ -14313,12 +14376,13 @@
     {
       "vendor": "Tailark",
       "url": "https://tailark.com/",
-      "last_attempt_at": "2026-08-28",
-      "last_outcome": "source_unusable",
-      "last_error": "the page names Tailark but states no amount, tier or rate we can read",
-      "failure_category": "source_unusable",
-      "consecutive_failures": 1,
+      "last_attempt_at": "2026-09-14",
+      "last_outcome": "changed",
+      "last_error": null,
+      "failure_category": null,
+      "consecutive_failures": 0,
       "last_success": "2026-07-19",
+      "last_read_at": "2026-09-14",
       "quarantined_since": null
     },
     {
@@ -14611,12 +14675,13 @@
     {
       "vendor": "TestTLS.com",
       "url": "https://testtls.com",
-      "last_attempt_at": "2026-09-07",
+      "last_attempt_at": "2026-09-14",
       "last_outcome": "fetch_failed",
       "last_error": "fetch failed",
       "failure_category": "network_error",
-      "consecutive_failures": 4,
+      "consecutive_failures": 5,
       "last_success": "2026-07-12",
+      "last_read_at": null,
       "quarantined_since": "2026-08-28"
     },
     {
@@ -14743,12 +14808,13 @@
     {
       "vendor": "TimeCamp",
       "url": "https://www.timecamp.com/",
-      "last_attempt_at": "2026-08-28",
-      "last_outcome": "source_unusable",
-      "last_error": "the page names TimeCamp but states no amount, tier or rate we can read",
-      "failure_category": "source_unusable",
-      "consecutive_failures": 1,
+      "last_attempt_at": "2026-09-14",
+      "last_outcome": "changed",
+      "last_error": null,
+      "failure_category": null,
+      "consecutive_failures": 0,
       "last_success": "2026-07-09",
+      "last_read_at": "2026-09-14",
       "quarantined_since": null
     },
     {
@@ -14809,12 +14875,13 @@
     {
       "vendor": "tldraw.com",
       "url": "https://tldraw.com",
-      "last_attempt_at": "2026-08-28",
-      "last_outcome": "source_unusable",
-      "last_error": "the page names tldraw.com but states no amount, tier or rate we can read",
-      "failure_category": "source_unusable",
-      "consecutive_failures": 1,
+      "last_attempt_at": "2026-09-14",
+      "last_outcome": "fetch_failed",
+      "last_error": "page content too short (likely JS-rendered SPA); a rendering client read 205 characters",
+      "failure_category": "empty_page",
+      "consecutive_failures": 2,
       "last_success": "2026-08-05",
+      "last_read_at": null,
       "quarantined_since": null
     },
     {
@@ -15143,12 +15210,13 @@
     {
       "vendor": "Tweek",
       "url": "https://tweek.so/",
-      "last_attempt_at": "2026-08-28",
-      "last_outcome": "source_unusable",
-      "last_error": "the page names Tweek but states no amount, tier or rate we can read",
-      "failure_category": "source_unusable",
-      "consecutive_failures": 1,
-      "last_success": "2026-07-16",
+      "last_attempt_at": "2026-09-14",
+      "last_outcome": "confirmed",
+      "last_error": null,
+      "failure_category": null,
+      "consecutive_failures": 0,
+      "last_success": "2026-09-14",
+      "last_read_at": "2026-09-14",
       "quarantined_since": null
     },
     {
@@ -15831,12 +15899,13 @@
     {
       "vendor": "VolaryDDNS",
       "url": "https://volaryddns.net",
-      "last_attempt_at": "2026-09-07",
+      "last_attempt_at": "2026-09-14",
       "last_outcome": "fetch_failed",
       "last_error": "fetch failed",
       "failure_category": "network_error",
-      "consecutive_failures": 4,
+      "consecutive_failures": 5,
       "last_success": "2026-07-12",
+      "last_read_at": null,
       "quarantined_since": "2026-08-28"
     },
     {
@@ -16308,12 +16377,13 @@
     {
       "vendor": "wormhol.org",
       "url": "https://www.wormhol.org/",
-      "last_attempt_at": "2026-08-28",
-      "last_outcome": "source_unusable",
-      "last_error": "the page names wormhol.org but states no amount, tier or rate we can read",
-      "failure_category": "source_unusable",
-      "consecutive_failures": 1,
+      "last_attempt_at": "2026-09-14",
+      "last_outcome": "fetch_failed",
+      "last_error": "page content too short (likely JS-rendered SPA); a rendering client read 171 characters",
+      "failure_category": "empty_page",
+      "consecutive_failures": 2,
       "last_success": "2026-07-12",
+      "last_read_at": null,
       "quarantined_since": null
     },
     {
@@ -16385,12 +16455,13 @@
     {
       "vendor": "WunderGraph",
       "url": "https://cloud.wundergraph.com",
-      "last_attempt_at": "2026-08-28",
-      "last_outcome": "source_unusable",
-      "last_error": "the page names WunderGraph but states no amount, tier or rate we can read",
-      "failure_category": "source_unusable",
-      "consecutive_failures": 1,
+      "last_attempt_at": "2026-09-14",
+      "last_outcome": "states_no_price",
+      "last_error": null,
+      "failure_category": null,
+      "consecutive_failures": 0,
       "last_success": "2026-07-12",
+      "last_read_at": "2026-09-14",
       "quarantined_since": null
     },
     {
@@ -16441,12 +16512,13 @@
     {
       "vendor": "Xirsys",
       "url": "https://www.xirsys.com/pricing/",
-      "last_attempt_at": "2026-08-28",
-      "last_outcome": "source_unusable",
-      "last_error": "the page names Xirsys but states no amount, tier or rate we can read",
-      "failure_category": "source_unusable",
-      "consecutive_failures": 1,
+      "last_attempt_at": "2026-09-14",
+      "last_outcome": "changed",
+      "last_error": null,
+      "failure_category": null,
+      "consecutive_failures": 0,
       "last_success": "2026-08-17",
+      "last_read_at": "2026-09-14",
       "quarantined_since": null
     },
     {
