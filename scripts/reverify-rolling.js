@@ -533,7 +533,7 @@ export function summaryLines(result, { useAi, checked, drawnFromQueue, oldestRem
     const label = holdsVerifiedDate(outcome) ? "Held back" : "Verified on weaker evidence";
     lines.push(`${label} (source ${outcome}): ${sourceChecks.get(outcome) ?? 0}`);
   }
-  lines.push(`Read again with a rendering client after coming back too short: ${sourceChecks.get(RENDERED) ?? 0}`);
+  lines.push(`Read again with a rendering client after the fetcher could not read it: ${sourceChecks.get(RENDERED) ?? 0}`);
   lines.push(`Of those, a reading came back: ${sourceChecks.get(RENDERED_AND_READ) ?? 0}`);
   lines.push(`Graded on a price the page states in its markup, not its text: ${sourceChecks.get(READ_FROM_MARKUP) ?? 0}`);
   lines.push(`Publishing a price in markup the page never renders: ${sourceChecks.get(UNRENDERED) ?? 0}`);
@@ -604,8 +604,8 @@ async function main() {
   const renderer = findRenderer();
   console.log(
     renderer
-      ? `A page that comes back too short is read again with ${renderer}`
-      : "No rendering client is installed — a page that comes back too short stays unread"
+      ? `A page that comes back too short, or behind a 401, 403 or 429, is read again with ${renderer}`
+      : "No rendering client is installed — a page the fetcher cannot read stays unread"
   );
   console.log(
     `Rolling re-verification — ${drawnFromQueue} oldest entries` +
