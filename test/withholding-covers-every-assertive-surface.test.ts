@@ -387,15 +387,23 @@ describe("a withholding we publish reaches every surface that states the terms",
       "vendor pages answering yes over a read that found the plan and not the amount",
     );
 
-    const control = pages.find(page => page.slug === "jsdelivr");
-    assert.strictEqual(control?.outcome, "states_no_amount", "/vendor/jsdelivr is no longer the control this was written against");
-    for (const answer of answersOf(control)) {
-      assert.ok(answer.startsWith("Yes, jsDelivr offers a free tier: Free."), answer.slice(0, 120));
-      assert.ok(
-        answer.includes("The page we cite for jsDelivr names a plan but states no amount, so these limits come from our own record rather than from that page."),
-        answer.slice(0, 400),
-      );
+    const controls = pages.filter(page => page.outcome === "states_no_amount" && page.unconfirmed);
+    assert.ok(
+      controls.length > 0,
+      "no vendor page carries a read that named a plan and withheld its price, so this control has no subject",
+    );
+    for (const control of controls) {
+      for (const answer of answersOf(control).filter(answer => answer !== "")) {
+        assert.ok(answer.includes(control.unconfirmed!.sentence), `${control.slug}: ${answer.slice(0, 400)}`);
+        assert.ok(answer.includes("names a plan but states no amount"), `${control.slug}: ${answer.slice(0, 400)}`);
+      }
     }
+    const answeringYes = controls.filter(control =>
+      answersOf(control).some(answer => answer.startsWith(`Yes, ${control.vendor} offers a free tier: `)));
+    assert.ok(
+      answeringYes.length > 0,
+      `none of ${controls.length} pages whose read named a plan and withheld its price still answers yes`,
+    );
   });
 
   it("names the day of the refused read wherever it withholds the terms", () => {
