@@ -13,7 +13,7 @@ const { vendorSlugMap } = await import("../dist/vendor-slug.js");
 const { supersedingChange } = await import("../dist/superseded-description.js");
 const { discontinuedOnOrBefore } = await import("../dist/product-deprecation.js");
 const { utcDate } = await import("../dist/ranking.js");
-const { unconfirmedTermsClause, withheldLevelClause } = await import("../dist/source-check.js");
+const { unconfirmedTermsClause, withheldLevelClause, outcomeConfirmsThePrice } = await import("../dist/source-check.js");
 const {
   badgeWithholding,
   refusedReadWithholding,
@@ -163,7 +163,8 @@ async function everyVendorPage(): Promise<Map<string, Rendered>> {
   return pages;
 }
 
-const sourceCheckFailed = (s: Subject) => s.outcome !== null && s.outcome !== "ok";
+const sourceCheckFailed = (s: Subject) =>
+  s.outcome !== null && s.outcome !== "ok" && !outcomeConfirmsThePrice(s.outcome);
 
 describe("#1412 the meta description withholds wherever the source check failed", () => {
   it("asserts a verification on no vendor whose cited page did not confirm the terms", async () => {

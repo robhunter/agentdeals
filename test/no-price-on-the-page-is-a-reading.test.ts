@@ -26,6 +26,7 @@ const {
 const { runAiMode, runUrlMode, summaryLines } = await import("../scripts/reverify-rolling.js");
 const {
   NAMING_LAYERS_RECORDED_INSTEAD_OF_A_FINDING,
+  SOURCE_CHECK_FREE_PRICE,
   SOURCE_CHECK_NO_AMOUNT,
   SOURCE_CHECK_NO_TERMS,
   SOURCE_CHECK_NOT_NAMED,
@@ -103,17 +104,17 @@ function stateOf(records: Record<string, unknown>[]) {
   return new Map(records.map((r) => [`${r.vendor}|${r.url}`, r]));
 }
 
-describe("a page our reader finds no price on reads the same whether or not it says the word free", () => {
+describe("a page stating no price and a page stating a free one are different readings", () => {
   it("grades the two pages differently as source checks, which is the split this rule sits above", () => {
     const offer = offerFor("Acme");
     assert.strictEqual(classifySource(offer, pageOf(SILENT), priceSignals(SILENT)).outcome, SOURCE_CHECK_NO_TERMS);
     assert.strictEqual(
       classifySource(offer, pageOf(SILENT_AND_FREE), priceSignals(SILENT_AND_FREE)).outcome,
-      SOURCE_CHECK_NO_AMOUNT,
+      SOURCE_CHECK_FREE_PRICE,
     );
   });
 
-  for (const status of ["confirmed", "changed", "unclear"]) {
+  for (const status of ["confirmed", "changed"]) {
     it(`records the same attempt outcome on both pages when the model says ${status}`, async () => {
       const silent = await attemptOutcomeInAiMode(SILENT, status);
       const alsoFree = await attemptOutcomeInAiMode(SILENT_AND_FREE, status);
@@ -132,11 +133,18 @@ describe("a page our reader finds no price on reads the same whether or not it s
     assert.notStrictEqual(attempt.outcome, ATTEMPT_UNCLEAR);
   });
 
-  it("records the same attempt outcome on both pages in URL mode, where there is no model", async () => {
+  it("says nothing about a price it could not read where the page stated one in words", async () => {
+    const attempt = await attemptOutcomeInAiMode(SILENT_AND_FREE, "unclear");
+    assert.strictEqual(attempt.outcome, ATTEMPT_UNCLEAR);
+    assert.notStrictEqual(attempt.outcome, ATTEMPT_STATES_NO_PRICE);
+  });
+
+  it("records an answered attempt on both pages in URL mode, where there is no model", async () => {
     const silent = await attemptOutcomeInUrlMode(SILENT);
     const alsoFree = await attemptOutcomeInUrlMode(SILENT_AND_FREE);
     assert.strictEqual(silent.outcome, ATTEMPT_STATES_NO_PRICE);
-    assert.strictEqual(alsoFree.outcome, ATTEMPT_STATES_NO_PRICE);
+    assert.strictEqual(alsoFree.outcome, ATTEMPT_LINK_OK);
+    assert.ok(ANSWERED_OUTCOMES.has(silent.outcome) && ANSWERED_OUTCOMES.has(alsoFree.outcome));
   });
 
   it("still refuses a page that never names the offer, which is a different finding", async () => {

@@ -151,9 +151,16 @@ export function amountUnstatedSentence(subject: string): string {
   return `The page we cite for ${subject} names a plan but states no amount, so these limits come from our own record rather than from that page.`;
 }
 
-export function sourceStatesAFreePrice(offer: Pick<Offer, "source_check">): boolean {
-  return offer.source_check?.outcome === "states_a_free_price";
+export function outcomeConfirmsThePrice(outcome: string | null | undefined): boolean {
+  return outcome === "states_a_free_price";
 }
+
+export function sourceStatesAFreePrice(offer: Pick<Offer, "source_check">): boolean {
+  return outcomeConfirmsThePrice(offer.source_check?.outcome);
+}
+
+export const OUTCOMES_THAT_REFUSE_THE_TERMS: SourceCheckOutcome[] =
+  SOURCE_CHECK_OUTCOMES.filter(outcome => outcome !== "ok" && !outcomeConfirmsThePrice(outcome));
 
 const A_QUANTITY = /\d/;
 

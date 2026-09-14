@@ -7,10 +7,11 @@ import { changeDateClause } from "./change-dates.js";
 import {
   amountUnstatedSentence,
   freePriceConfirmedSentence,
-  recordPublishesAQuantity,
   freePriceOnlySentence,
   levelWithheldReason,
   levelWithheldSince,
+  outcomeConfirmsThePrice,
+  recordPublishesAQuantity,
   termsOnlyOutcome,
   termsUnconfirmedOutcome,
   unconfirmedTermsClause,
@@ -349,7 +350,7 @@ function termsWithholding(evidence: TermsEvidence): TermsWithholding | null {
   if (evidence.refusedRead) return refusedReadWithholding(evidence.refusedRead);
   const termsOnly = termsOnlyOutcome(evidence.sourceCheck);
   if (!termsOnly) return null;
-  if (termsOnly === "states_a_free_price" && !publishesAQuantity(evidence)) return null;
+  if (outcomeConfirmsThePrice(termsOnly) && !publishesAQuantity(evidence)) return null;
   return { reason: termsOnly };
 }
 
@@ -491,12 +492,12 @@ export function emptyHistoryCaveatSentence(subject: string, unconfirmed: TermsNo
 export const NOT_VERIFIED = (clause: string): string => `Not verified — ${clause}.`;
 
 export function theReadConfirmedThePrice(unconfirmed: UnconfirmedTerms | null | undefined): boolean {
-  return unconfirmed?.because.reason === "states_a_free_price";
+  return outcomeConfirmsThePrice(unconfirmed?.because.reason);
 }
 
 export function termsNotVerifiedMetaSentence(input: VendorVerdictInput): string | null {
   const bySource = termsUnconfirmedBySource(input);
-  if (bySource && bySource !== "states_a_free_price") return NOT_VERIFIED(unconfirmedTermsClause(bySource));
+  if (bySource && !outcomeConfirmsThePrice(bySource)) return NOT_VERIFIED(unconfirmedTermsClause(bySource));
   const unconfirmed = whyWeCannotConfirmTheseTerms(input);
   if (!unconfirmed) return null;
   const because = unconfirmed.because;

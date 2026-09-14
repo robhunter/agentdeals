@@ -5,7 +5,7 @@ import { writeFileSync, mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { SOURCE_CHECK_OUTCOMES } from "../dist/source-check.js";
+import { SOURCE_CHECK_OUTCOMES, outcomeConfirmsThePrice } from "../dist/source-check.js";
 import { CONFIRMED_DATE_LABEL, UNCONFIRMED_DATE_LABEL, confirmationDate, publishedDateLabel } from "../dist/read-date.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -16,7 +16,9 @@ const dayOffset = (days: number) => new Date(Date.now() + days * DAY_MS).toISOSt
 const CONFIRMED_ON = dayOffset(-10);
 const CHECKED_ON = dayOffset(-2);
 
-const NOT_OK_OUTCOMES = SOURCE_CHECK_OUTCOMES.filter((outcome: string) => outcome !== "ok");
+const NOT_OK_OUTCOMES = SOURCE_CHECK_OUTCOMES.filter(
+  (outcome: string) => outcome !== "ok" && !outcomeConfirmsThePrice(outcome),
+);
 
 function offerFor(vendor: string, outcome: string) {
   const host = `${vendor.toLowerCase()}.example`;
