@@ -25,7 +25,7 @@ import { CATEGORY_ALIASES, CATEGORY_RETIREMENTS, EXAMPLE_MEMBERS_BASIS, buildCat
 import { retiredCategoryDescription, retiredCategoryNoticeHtml, retiredCategoryTitle } from "./category-retirement.js";
 import { LINK_GRACE_DAYS, unreachableNoticeForUrl } from "./link-health.js";
 import { offerEnded, offerRetired, recordedTierSentence, endedHeadline, endedHistorySentence, endedReliabilitySentence, endedEmptyChangeHistorySentence, detailForEndedOffer, ENDED_BADGE_LABEL, ENDED_SINCE_CHANGES_SENTENCE, type OfferTierAndUrl } from "./retirement.js";
-import { amountUnstatedSentence, LAST_RESOLVED, levelWithheldReason, levelWithheldSince, withheldLevelClause, withheldLevelSentence, type LevelWithheldReason } from "./source-check.js";
+import { amountUnstatedSentence, freePriceConfirmedSentence, freePriceOnlySentence, LAST_RESOLVED, levelWithheldReason, levelWithheldSince, recordPublishesAQuantity, withheldLevelClause, withheldLevelSentence, type LevelWithheldReason } from "./source-check.js";
 import { offerVerdictInput, vendorVerdictContextFrom, type VendorVerdictContext } from "./vendor-verdict-input.js";
 import { readingIsBehindTheLoop, reverificationIntervalDays } from "./badge-staleness.js";
 import { LAST_READ_LABEL, UNCONFIRMED_DATE_LABEL, VERIFICATION_DATES_HEADING, lastReadDate, lastReadNote, publishedDateLabel, publishedDateValue, verificationDatesCell, verificationDatesSentence } from "./read-date.js";
@@ -4844,6 +4844,10 @@ function buildVendorPage(slug: string): string | null {
     ? `\n  <p class="amount-unstated-line" style="margin:.4rem 0 .6rem;font-size:.9rem;color:var(--text-muted)"><strong style="color:#d29922">Source states no amount:</strong> ${escHtmlServer(amountUnstatedSentence(vendorName))}</p>`
     : "";
 
+  const freePriceLine = !levelWithheld && termsUnconfirmed === "states_a_free_price"
+    ? `\n  <p class="free-price-line" style="margin:.4rem 0 .6rem;font-size:.9rem;color:var(--text-muted)"><strong style="color:#3fb950">Source states a free price:</strong> ${escHtmlServer(recordPublishesAQuantity(primary.description) ? freePriceConfirmedSentence(vendorName) : freePriceOnlySentence(vendorName))}</p>`
+    : "";
+
   const ratingWithheldLine = ratingWithheld && !offerHasEnded && !primaryGate
     ? `\n  <p class="rating-withheld-line" style="margin:.4rem 0 .6rem;font-size:.9rem;color:var(--text-muted)"><strong style="color:#8b949e">No rating:</strong> ${escHtmlServer(ratingWithheldForNoSourceSentence(vendorName))} ${ratingWithheld.records === 1 ? "It is" : `All ${ratingWithheld.records} are`} listed below, marked. <a href="#changes" style="white-space:nowrap">Full history &darr;</a></p>`
     : "";
@@ -5449,7 +5453,7 @@ ${mcpCtaCss()}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/vendor">Vendors</a> &rsaquo; ${escHtmlServer(vendorName)}</div>
   <h1>${escHtmlServer(headline)}${h1RiskBadge}</h1>${gateLine}
 ${riskCauseLine}${ratingWithheldLine}
-${linkUnreachableLine}${amountUnstatedLine}
+${linkUnreachableLine}${amountUnstatedLine}${freePriceLine}
 ${productRoleLine}${productSubtypesLine}
   <p class="page-meta">Limits, pricing history${alternatives.length > 0 ? `, and ${alternatives.length} alternatives` : ""}.${verifiedSentence} Last updated ${escHtmlServer(lastUpdated)}.</p>
 ${quickVerdictHtml}

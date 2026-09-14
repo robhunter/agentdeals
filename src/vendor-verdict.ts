@@ -6,6 +6,8 @@ import { changeIsUncited, ratingWithheldForNoSourceSentence } from "./change-cit
 import { changeDateClause } from "./change-dates.js";
 import {
   amountUnstatedSentence,
+  freePriceConfirmedSentence,
+  freePriceOnlySentence,
   levelWithheldReason,
   levelWithheldSince,
   termsOnlyOutcome,
@@ -80,6 +82,7 @@ export interface VendorVerdictInput {
   linkCheckedOn?: string | null;
   termsConfirmedOn: string;
   refusedReads?: readonly RefusedRead[];
+  publishesAQuantity?: boolean;
 }
 
 export type BadgeWithholding =
@@ -119,6 +122,7 @@ export const WITHHOLDING_SCOPE = {
   does_not_name_vendor: "the_terms",
   does_not_name_product: "the_terms",
   states_no_amount: "the_terms",
+  states_a_free_price: "the_terms",
   read_not_reconciled: "the_terms",
   change_measured_no_difference: "the_terms",
   no_source: "the_rating",
@@ -281,6 +285,7 @@ export const WHAT_THE_READ_LEFT_STANDING = {
   does_not_name_vendor: "nothing",
   does_not_name_product: "nothing",
   states_no_amount: "the_free_plan",
+  states_a_free_price: "the_free_plan",
   read_not_reconciled: "nothing",
   change_measured_no_difference: "nothing",
 } as const satisfies Record<TermsWithholdingTag, WhatTheReadLeftStanding>;
@@ -299,8 +304,10 @@ export function nothingWeReadDescribesTheTerms(
   return !unconfirmed.theReadFoundAFreePlan;
 }
 
-const TERMS_ONLY_SENTENCES: Record<TermsOnlyOutcome, (subject: string) => string> = {
+const TERMS_ONLY_SENTENCES: Record<TermsOnlyOutcome, (subject: string, publishesAQuantity: boolean) => string> = {
   states_no_amount: amountUnstatedSentence,
+  states_a_free_price: (subject, publishesAQuantity) =>
+    publishesAQuantity ? freePriceConfirmedSentence(subject) : freePriceOnlySentence(subject),
 };
 
 type TermsOnlyWithholding = Extract<TermsWithholding, { reason: TermsOnlyOutcome }>;
@@ -317,6 +324,7 @@ export interface TermsEvidence {
   sourceCheck: SourceCheckOutcome | null;
   sourceChecked?: string | null;
   linkCheckedOn?: string | null;
+  publishesAQuantity?: boolean;
 }
 
 export const TERMS_WITHHELD_LABELS: Record<TermsWithholdingTag, string> = {
@@ -326,6 +334,7 @@ export const TERMS_WITHHELD_LABELS: Record<TermsWithholdingTag, string> = {
   does_not_name_vendor: "page omits the vendor",
   does_not_name_product: "page omits the product",
   states_no_amount: "page names a plan, no amount",
+  states_a_free_price: "page states a free price",
   read_not_reconciled: "read not reconciled",
   change_measured_no_difference: "no difference measured",
 };
@@ -338,7 +347,13 @@ function termsWithholding(evidence: TermsEvidence): TermsWithholding | null {
   if (evidence.levelWithheld) return { reason: evidence.levelWithheld };
   if (evidence.refusedRead) return refusedReadWithholding(evidence.refusedRead);
   const termsOnly = termsOnlyOutcome(evidence.sourceCheck);
-  return termsOnly ? { reason: termsOnly } : null;
+  if (!termsOnly) return null;
+  if (termsOnly === "states_a_free_price" && !publishesAQuantity(evidence)) return null;
+  return { reason: termsOnly };
+}
+
+function publishesAQuantity(evidence: TermsEvidence): boolean {
+  return evidence.publishesAQuantity ?? true;
 }
 
 export interface PublishedTermsRow {
@@ -383,6 +398,7 @@ export function termsEvidenceOf(input: VendorVerdictInput): TermsEvidence {
     sourceCheck: input.sourceCheck ?? null,
     sourceChecked: input.sourceChecked ?? null,
     linkCheckedOn: input.linkCheckedOn ?? null,
+    publishesAQuantity: input.publishesAQuantity,
   };
 }
 
@@ -416,7 +432,7 @@ export function unconfirmedTermsFrom(input: TermsEvidence): UnconfirmedTerms | n
       theReadFoundAFreePlan,
       on,
       clause: unconfirmedTermsClause(because.reason),
-      sentence: TERMS_ONLY_SENTENCES[because.reason](input.vendor),
+      sentence: TERMS_ONLY_SENTENCES[because.reason](input.vendor, publishesAQuantity(input)),
     };
   }
   return {
@@ -473,11 +489,12 @@ export const NOT_VERIFIED = (clause: string): string => `Not verified — ${clau
 
 export function termsNotVerifiedMetaSentence(input: VendorVerdictInput): string | null {
   const bySource = termsUnconfirmedBySource(input);
-  if (bySource) return NOT_VERIFIED(unconfirmedTermsClause(bySource));
+  if (bySource && bySource !== "states_a_free_price") return NOT_VERIFIED(unconfirmedTermsClause(bySource));
   const unconfirmed = whyWeCannotConfirmTheseTerms(input);
   if (!unconfirmed) return null;
   const because = unconfirmed.because;
   if (withheldForARefusedRead(because)) return NOT_VERIFIED(refusedReadWithholdingMetaClause(because));
+  if (because.reason === "states_a_free_price") return null;
   return because.reason === "link_unreachable" ? null : NOT_VERIFIED(unconfirmed.clause);
 }
 
