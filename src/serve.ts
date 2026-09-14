@@ -28,7 +28,7 @@ import { offerEnded, offerRetired, recordedTierSentence, endedHeadline, endedHis
 import { amountUnstatedSentence, LAST_RESOLVED, levelWithheldReason, levelWithheldSince, withheldLevelClause, withheldLevelSentence, type LevelWithheldReason } from "./source-check.js";
 import { offerVerdictInput, vendorVerdictContextFrom, type VendorVerdictContext } from "./vendor-verdict-input.js";
 import { readingIsBehindTheLoop, reverificationIntervalDays } from "./badge-staleness.js";
-import { LAST_READ_LABEL, VERIFICATION_DATES_HEADING, confirmationDate, daysSince, lastReadDate, lastReadNote, publishedDateLabel, verificationDatesCell, verificationDatesSentence } from "./read-date.js";
+import { LAST_READ_LABEL, UNCONFIRMED_DATE_LABEL, VERIFICATION_DATES_HEADING, confirmationDate, lastReadDate, lastReadNote, publishedDateLabel, verificationDatesCell, verificationDatesSentence } from "./read-date.js";
 import { SUPERSEDED_TERMS_LABEL, readingBehindTheChange, supersededTermsAnswer, supersededTermsMetaSentence, supersededTermsNotice, supersededTermsNoticeHtml, supersededTermsRecord, supersededTermsVerdictSentence, supersedingChange, type SupersededTermsRecord } from "./superseded-description.js";
 import { openingOfTerms, punctuated, punctuatedOpeningOfTerms } from "./terms-opening.js";
 import { NO_CURRENT_FIGURE, costHeadlineCaveat, limitCellText, mayRecommendAsFree, proseWithoutNames, readsActive, stackFreshnessStatement } from "./stack-claim.js";
@@ -50885,21 +50885,16 @@ ${recentlyDiscovered.map(c => buildEntry(c, false)).join("\n")}
 </html>`;
 }
 
-function freshnessGrade(score: number): { grade: string; color: string } {
-  if (score >= 90) return { grade: "A", color: "#3fb950" };
-  if (score >= 75) return { grade: "B", color: "#3b82f6" };
-  if (score >= 60) return { grade: "C", color: "#d29922" };
-  if (score >= 40) return { grade: "D", color: "#f85149" };
-  return { grade: "F", color: "#f85149" };
-}
-
 function buildFreshnessPage(): string {
   const m = getFreshnessMetrics();
 
   const title = "Data Freshness Dashboard \u2014 AgentDeals";
-  const metaDesc = `${m.total_offers} offers tracked. We can source a confirmation for ${m.offers_holding_a_confirmation} of them; ${m.stamped_within_90_days} carry a catalogue date within 90 days, which is not the same claim. Transparent data quality metrics for developer deal intelligence.`;
-  const storeAgeClause = m.confirmation_store_opened_on
-    ? `, in the ${daysSince(m.confirmation_store_opened_on)} days since we began recording confirmations on ${m.confirmation_store_opened_on}`
+  const metaDesc = `${m.total_offers} offers tracked. We can source ${m.offers_holding_a_confirmation} to a read that confirmed the terms; ${m.stamped_within_90_days} carry a catalogue date within 90 days, which is not the same claim.`;
+  const attemptedClause = m.attempted_within_90_days > 0
+    ? ` We attempted ${m.attempted_within_90_days.toLocaleString()} of them over the same 90 days, so this is the share our reading confirms rather than a queue we have not reached.`
+    : "";
+  const oldestConfirmationClause = m.oldest_confirmation_held
+    ? ` The oldest confirmation we still hold was recorded on ${m.oldest_confirmation_held}.`
     : "";
   const statPct = (n: number) => (m.total_offers > 0 ? Math.round((n / m.total_offers) * 100) : 0);
 
@@ -50913,17 +50908,15 @@ function buildFreshnessPage(): string {
     creator: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
   };
 
-  const categoryRows = m.by_category.map((c) => {
-    const { grade: catGrade, color: catColor } = freshnessGrade(c.freshness_score);
-    return `        <tr>
+  const categoryRows = m.by_category.map((c) =>
+    `        <tr>
           <td><a href="/category/${toSlug(c.category)}">${escHtmlServer(c.category)}</a></td>
           <td>${c.count}</td>
-          <td>${c.avg_days_since_verified}d</td>
-          <td><span style="color:${catColor};font-weight:600">${catGrade}</span> ${c.freshness_score}%</td>
-          <td>${c.confirmed_within_90_days}</td>
+          <td>${c.confirmed_within_90_days} (${c.freshness_score}%)</td>
           <td>${c.stamped_within_90_days} (${c.stamp_score}%)</td>
-        </tr>`;
-  }).join("\n");
+          <td>${c.avg_days_since_verified}d</td>
+        </tr>`
+  ).join("\n");
 
   const stalestRows = m.stalest_entries.map((e) =>
     `        <tr>
@@ -50950,12 +50943,13 @@ function buildFreshnessPage(): string {
   };
   const quarantineReason = (code: string | null) =>
     (code && QUARANTINE_REASON_PROSE[code]) ?? "not recorded";
+  const QUARANTINE_NEVER_CONFIRMED = "never";
   const quarantineRows = m.quarantine.entries.map((e) =>
     `        <tr>
           <td><a href="/vendor/${toSlug(e.vendor)}">${escHtmlServer(e.vendor)}</a></td>
           <td>${escHtmlServer(quarantineReason(e.failure_category))}</td>
           <td>${e.consecutive_failures}</td>
-          <td>${escHtmlServer(e.last_success ?? "never")}</td>
+          <td>${escHtmlServer(e.last_success ?? QUARANTINE_NEVER_CONFIRMED)}</td>
           <td>${escHtmlServer(e.next_retry ?? "unscheduled")}</td>
         </tr>`
   ).join("\n");
@@ -50966,7 +50960,7 @@ function buildFreshnessPage(): string {
   const quarantineSection = m.quarantine.count === 0
     ? ""
     : `  <h2>Records we cannot currently check</h2>
-  <p class="section-desc">${m.quarantine.count} record${m.quarantine.count === 1 ? " has" : "s have"} failed ${QUARANTINE_AFTER_FAILURES} re-checks in a row, so ${m.quarantine.count === 1 ? "it is" : "they are"} retried every ${m.quarantine.retry_after_days} days instead of every day. ${quarantineReasons}. A failure here is usually our checker being refused or reading the wrong page &mdash; it is not evidence that the vendor changed anything.</p>
+  <p class="section-desc">${m.quarantine.count} record${m.quarantine.count === 1 ? " has" : "s have"} failed ${QUARANTINE_AFTER_FAILURES} re-checks in a row, so ${m.quarantine.count === 1 ? "it is" : "they are"} retried every ${m.quarantine.retry_after_days} days instead of every day. ${quarantineReasons}. A failure here is usually our checker being refused or reading the wrong page &mdash; it is not evidence that the vendor changed anything. Last confirmed reads the same store as the coverage figure above, so a row saying ${QUARANTINE_NEVER_CONFIRMED} is a record counted outside that figure.</p>
   <table>
     <thead><tr><th>Vendor</th><th>What failed</th><th>Failures</th><th>Last confirmed</th><th>Next retry</th></tr></thead>
     <tbody>
@@ -51054,10 +51048,10 @@ ${globalNavCss()}
   <p class="page-intro">Transparent data quality metrics. We track ${m.total_offers.toLocaleString()} offers \u2014 here\u2019s how fresh they are.</p>
 
   <div class="grade-hero">
-    <div class="grade-circle" style="background:var(--accent)20;color:var(--accent);border:3px solid var(--accent);font-size:2.1rem">${m.freshness_score}%</div>
+    <div class="grade-circle" style="background:var(--accent-glow);color:var(--accent);border:3px solid var(--accent);font-size:2.1rem">${m.freshness_score}%</div>
     <div class="grade-details">
       <div class="grade-score">${m.freshness_score}% confirmation coverage</div>
-      <div class="grade-explanation">We can source ${m.offers_holding_a_confirmation.toLocaleString()} of ${m.total_offers.toLocaleString()} entries to a read that confirmed the terms we publish${storeAgeClause}. A further ${(m.stamped_within_90_days - m.confirmed_within_90_days).toLocaleString()} carry a catalogue date within the last 90 days and no confirmation behind it — that date records when the entry was last stamped, not that we checked it.</div>
+      <div class="grade-explanation">We can source ${m.confirmed_within_90_days.toLocaleString()} of ${m.total_offers.toLocaleString()} entries to a read that confirmed the terms we publish, within the last 90 days.${attemptedClause} A further ${(m.stamped_within_90_days - m.confirmed_within_90_days).toLocaleString()} carry a catalogue date inside that window with no confirmation behind it &mdash; that date, shown as &ldquo;${UNCONFIRMED_DATE_LABEL}&rdquo; on a vendor page, records when the entry was last written and is not a confirmation.${oldestConfirmationClause}</div>
     </div>
   </div>
 
@@ -51066,33 +51060,33 @@ ${globalNavCss()}
       <div class="stat-value">${m.confirmed_within_7_days.toLocaleString()}</div>
       <div class="stat-label">Confirmed, last 7 days</div>
       <div class="stat-pct">${statPct(m.confirmed_within_7_days)}%</div>
-      <div class="stat-sub">${m.stamped_within_7_days.toLocaleString()} stamped (${statPct(m.stamped_within_7_days)}%)</div>
+      <div class="stat-sub">${m.stamped_within_7_days.toLocaleString()} carry a catalogue date (${statPct(m.stamped_within_7_days)}%)</div>
     </div>
     <div class="stat-card">
       <div class="stat-value">${m.confirmed_within_30_days.toLocaleString()}</div>
       <div class="stat-label">Confirmed, last 30 days</div>
       <div class="stat-pct">${statPct(m.confirmed_within_30_days)}%</div>
-      <div class="stat-sub">${m.stamped_within_30_days.toLocaleString()} stamped (${statPct(m.stamped_within_30_days)}%)</div>
+      <div class="stat-sub">${m.stamped_within_30_days.toLocaleString()} carry a catalogue date (${statPct(m.stamped_within_30_days)}%)</div>
     </div>
     <div class="stat-card">
       <div class="stat-value">${m.confirmed_within_90_days.toLocaleString()}</div>
       <div class="stat-label">Confirmed, last 90 days</div>
       <div class="stat-pct">${m.freshness_score}%</div>
-      <div class="stat-sub">${m.stamped_within_90_days.toLocaleString()} stamped (${m.stamp_score}%)</div>
+      <div class="stat-sub">${m.stamped_within_90_days.toLocaleString()} carry a catalogue date (${m.stamp_score}%)</div>
     </div>
     <div class="stat-card">
       <div class="stat-value">${m.confirmed_within_180_days.toLocaleString()}</div>
       <div class="stat-label">Confirmed, last 180 days</div>
       <div class="stat-pct">${statPct(m.confirmed_within_180_days)}%</div>
-      <div class="stat-sub">${m.stamped_within_180_days.toLocaleString()} stamped (${statPct(m.stamped_within_180_days)}%)</div>
+      <div class="stat-sub">${m.stamped_within_180_days.toLocaleString()} carry a catalogue date (${statPct(m.stamped_within_180_days)}%)</div>
     </div>
   </div>
-  <p class="section-desc">Confirmed counts the entries whose terms we can source to a read that confirmed them. Stamped counts the catalogue date beside the entry, which records when it was last written and is not a confirmation.</p>
+  <p class="section-desc">Confirmed counts the entries whose terms we can source to a read that confirmed them. ${UNCONFIRMED_DATE_LABEL} counts the catalogue date beside the entry, which records when it was last written and is not a confirmation.</p>
 
-  <h2>Freshness by Category</h2>
-  <p class="section-desc">${m.by_category.length} categories ranked by confirmation coverage &mdash; the share of a category&rsquo;s entries whose terms we can source to a read that confirmed them within 90 days. The stamped column is the catalogue date over the same window, which is not a confirmation.</p>
+  <h2>Confirmation Coverage by Category</h2>
+  <p class="section-desc">${m.by_category.length} categories ranked by confirmation coverage &mdash; the share of a category&rsquo;s entries whose terms we can source to a read that confirmed them within 90 days. The second column is the catalogue date over the same window, which is not a confirmation, and the two are far apart.</p>
   <table>
-    <thead><tr><th>Category</th><th>Offers</th><th>Avg Age</th><th>Coverage</th><th>Confirmed (90d)</th><th>Stamped (90d)</th></tr></thead>
+    <thead><tr><th>Category</th><th>Offers</th><th>Confirmed (90d)</th><th>${UNCONFIRMED_DATE_LABEL} (90d)</th><th>Avg age of that date</th></tr></thead>
     <tbody>
 ${categoryRows}
     </tbody>
@@ -51101,18 +51095,18 @@ ${categoryRows}
   <h2>Stalest Entries</h2>
   <p class="section-desc">Top 20 entries most in need of re-verification, ordered by the age of the catalogue date.</p>
   <table>
-    <thead><tr><th>Vendor</th><th>Category</th><th>Terms dated</th><th>Age</th><th>Last read</th><th>Since read</th><th>Confirmed</th></tr></thead>
+    <thead><tr><th>Vendor</th><th>Category</th><th>${UNCONFIRMED_DATE_LABEL}</th><th>Age</th><th>Last read</th><th>Since read</th><th>Confirmed</th></tr></thead>
     <tbody>
 ${stalestRows}
     </tbody>
   </table>
 
-${quarantineSection}  <h2>Most Recently Stamped</h2>
+${quarantineSection}  <h2>Newest Catalogue Dates</h2>
   <p class="section-desc">Top 20 entries by the age of the catalogue date. A recent date here says the entry was written recently, not that we confirmed it &mdash; the Confirmed column says that.</p>
-  <button class="toggle-btn" onclick="document.getElementById('freshest-table').classList.toggle('show');this.textContent=this.textContent==='Show recently stamped'?'Hide recently stamped':'Show recently stamped'">Show recently stamped</button>
+  <button class="toggle-btn" onclick="document.getElementById('freshest-table').classList.toggle('show');this.textContent=this.textContent==='Show newest catalogue dates'?'Hide newest catalogue dates':'Show newest catalogue dates'">Show newest catalogue dates</button>
   <div id="freshest-table" class="hidden-section">
     <table>
-      <thead><tr><th>Vendor</th><th>Category</th><th>Terms dated</th><th>Age</th><th>Last read</th><th>Since read</th><th>Confirmed</th></tr></thead>
+      <thead><tr><th>Vendor</th><th>Category</th><th>${UNCONFIRMED_DATE_LABEL}</th><th>Age</th><th>Last read</th><th>Since read</th><th>Confirmed</th></tr></thead>
       <tbody>
 ${freshestRows}
       </tbody>

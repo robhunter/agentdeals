@@ -507,7 +507,7 @@ const DOCUMENTED_OPERATIONS: Record<string, Record<string, any>> = {
   "/api/freshness": {
     get: {
       summary: "Get data freshness metrics",
-      description: "Returns data quality metrics. Two counts are reported side by side and they are not interchangeable: confirmed_* counts offers whose published terms the verification store can source to a read that confirmed them, and stamped_* counts offers by the catalogue date beside the entry, which records when it was written. freshness_score is computed from the confirmed count.",
+      description: "Returns data quality metrics. Two counts are reported side by side and they are not interchangeable: confirmed_* counts offers whose published terms the verification store can source to a read that confirmed them, and stamped_* counts offers by the catalogue date beside the entry, which records when it was last written and is not a confirmation. freshness_score is computed from the confirmed count; the catalogue-date share is published separately as stamp_score.",
       parameters: [],
       responses: {
         "200": {
@@ -527,7 +527,8 @@ const DOCUMENTED_OPERATIONS: Record<string, Record<string, any>> = {
                   confirmed_within_90_days: { type: "integer", description: "Offers confirmed by a read within 90 days. freshness_score is computed from this." },
                   confirmed_within_180_days: { type: "integer", description: "Offers confirmed by a read within 180 days." },
                   offers_holding_a_confirmation: { type: "integer", description: "Offers for which the verification store holds any confirmation at all." },
-                  confirmation_store_opened_on: { type: "string", format: "date", nullable: true, description: "The earliest confirmation the store holds. Coverage cannot exceed what the store has had time to read since this date." },
+                  oldest_confirmation_held: { type: "string", format: "date", nullable: true, description: "The oldest confirmation still held for any offer. This is not the date the store opened — a confirmation superseded by a later read is no longer held." },
+                  attempted_within_90_days: { type: "integer", description: "Offers the verification store attempted to re-read within 90 days, whether or not the read confirmed anything. Read against confirmed_within_90_days this separates offers we have not reached from offers we reached without confirming." },
                   freshness_score: { type: "integer", description: "confirmed_within_90_days as a percentage of total_offers — the share of the catalogue whose published terms we can source to a read that confirmed them. This field reported the catalogue-date share until 2026-09-14; that share is now published as stamp_score." },
                   stamp_score: { type: "integer", description: "stamped_within_90_days as a percentage of total_offers." },
                   stalest_entries: {
@@ -569,7 +570,7 @@ const DOCUMENTED_OPERATIONS: Record<string, Record<string, any>> = {
                       properties: {
                         category: { type: "string" },
                         count: { type: "integer" },
-                        avg_days_since_verified: { type: "integer" },
+                        avg_days_since_verified: { type: "integer", description: "Mean age in days of the category's catalogue dates. Not a confirmation age." },
                         freshness_score: { type: "integer", description: "confirmed_within_90_days as a percentage of the category's count." },
                         stamp_score: { type: "integer", description: "stamped_within_90_days as a percentage of the category's count." },
                         confirmed_within_90_days: { type: "integer" },

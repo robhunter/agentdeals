@@ -9,7 +9,7 @@ import { applyReviewedDirections } from "./change-direction-review.js";
 import { rankForListing, gateFor, utcDate, type TieBreak, type Gate, type GateCode } from "./ranking.js";
 import { unreachableNoticeForUrl, resetLinkHealthCache } from "./link-health.js";
 import { quarantineSummary, resetVerificationStateCache, type QuarantineSummary } from "./verification-state.js";
-import { confirmationDate, daysSince, lastReadDate } from "./read-date.js";
+import { confirmationDate, daysSince, lastAttemptDate, lastReadDate } from "./read-date.js";
 import {
   amountUnstatedSentence,
   cannotVouchForLevel,
@@ -1499,7 +1499,8 @@ export interface FreshnessMetrics {
   confirmed_within_90_days: number;
   confirmed_within_180_days: number;
   offers_holding_a_confirmation: number;
-  confirmation_store_opened_on: string | null;
+  oldest_confirmation_held: string | null;
+  attempted_within_90_days: number;
   freshness_score: number;
   stamp_score: number;
   stalest_entries: FreshnessEntry[];
@@ -1526,11 +1527,13 @@ export function getFreshnessMetrics(): FreshnessMetrics {
 
   const withAge = offers.map((o) => {
     const confirmed_on = confirmationDate(o);
+    const attempted_on = lastAttemptDate(o);
     return {
       ...o,
       days_since_verified: ageOf(o.verifiedDate),
       confirmed_on,
       days_since_confirmed: confirmed_on ? ageOf(confirmed_on) : null,
+      days_since_attempted: attempted_on ? ageOf(attempted_on) : null,
     };
   });
 
@@ -1539,8 +1542,10 @@ export function getFreshnessMetrics(): FreshnessMetrics {
   const stampedWithin = (days: number) => withAge.filter((o) => o.days_since_verified <= days).length;
   const confirmedWithin = (days: number) =>
     withAge.filter((o) => o.days_since_confirmed !== null && o.days_since_confirmed <= days).length;
+  const attemptedWithin = (days: number) =>
+    withAge.filter((o) => o.days_since_attempted !== null && o.days_since_attempted <= days).length;
 
-  const confirmations = withAge.map((o) => o.confirmed_on).filter((d): d is string => Boolean(d));
+  const confirmations = withAge.map((o) => o.confirmed_on).filter((d): d is string => Boolean(d)).sort();
   const stampedWithin90 = stampedWithin(90);
   const confirmedWithin90 = confirmedWithin(90);
 
@@ -1588,7 +1593,8 @@ export function getFreshnessMetrics(): FreshnessMetrics {
     confirmed_within_90_days: confirmedWithin90,
     confirmed_within_180_days: confirmedWithin(180),
     offers_holding_a_confirmation: confirmations.length,
-    confirmation_store_opened_on: confirmations.sort()[0] ?? null,
+    oldest_confirmation_held: confirmations[0] ?? null,
+    attempted_within_90_days: attemptedWithin(90),
     freshness_score: rate(confirmedWithin90, total),
     stamp_score: rate(stampedWithin90, total),
     stalest_entries: stalest,
