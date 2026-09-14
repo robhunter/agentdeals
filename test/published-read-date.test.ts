@@ -37,6 +37,9 @@ const byGap = (from: CatalogueOffer[]) =>
     .map((o) => ({ offer: o, read: lastReadDate(o), gap: daysBetween(o.verifiedDate, lastReadDate(o)) }))
     .sort((a, b) => b.gap - a.gap)[0]!;
 
+const verifiedCardOn = (body: string): string | null =>
+  body.match(/>Verified<\/div>\s*<div class="detail-value"[^>]*>([^<]+)</)?.[1] ?? null;
+
 const widestGap = byGap(offers);
 const widestConfirmedGap = byGap(offers.filter((o) => confirmationDate(o) !== null && confirmationDate(o)! < lastReadDate(o)));
 const widestUnconfirmedGap = byGap(offers.filter((o) => confirmationDate(o) === null));
@@ -166,6 +169,11 @@ describe("every record publishes the day we last read its page", () => {
       body.includes(`last confirmed on ${held}`),
       `the page for ${widestConfirmedGap.offer.vendor} publishes two dates without saying which is which`,
     );
+    assert.equal(
+      verifiedCardOn(body),
+      held,
+      `the page for ${widestConfirmedGap.offer.vendor} heads its verification with a date the store did not confirm on`,
+    );
   });
 
   it("states no confirmation it cannot source on the record with the widest unconfirmed gap", async () => {
@@ -175,6 +183,11 @@ describe("every record publishes the day we last read its page", () => {
     assert.equal(status, 200, `/vendor/${slugOf(offer.vendor)} must exist for this test to mean anything`);
     assert.ok(body.includes(widestUnconfirmedGap.read), `the page for ${offer.vendor} does not publish ${widestUnconfirmedGap.read}`);
     assert.ok(body.includes(offer.verifiedDate), `the page for ${offer.vendor} dropped the date it holds`);
+    assert.equal(
+      verifiedCardOn(body),
+      offer.verifiedDate,
+      `the page for ${offer.vendor} dropped the date it holds from the card that heads its verification`,
+    );
     assert.ok(body.includes(NO_CONFIRMATION_HELD), `the page for ${offer.vendor} does not say the store holds no confirmation for it`);
     assert.ok(
       !body.includes(`last confirmed on ${offer.verifiedDate}`),
