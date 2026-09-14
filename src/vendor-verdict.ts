@@ -7,6 +7,7 @@ import { changeDateClause } from "./change-dates.js";
 import {
   amountUnstatedSentence,
   freePriceConfirmedSentence,
+  recordPublishesAQuantity,
   freePriceOnlySentence,
   levelWithheldReason,
   levelWithheldSince,
@@ -358,6 +359,7 @@ function publishesAQuantity(evidence: TermsEvidence): boolean {
 
 export interface PublishedTermsRow {
   vendor: string;
+  description?: string | null;
   source_check?: Pick<SourceCheck, "outcome" | "checked"> | null;
   link_unreachable?: { last_reachable?: string | null; checked?: string | null } | null;
   refused_read?: RefusedRead | null;
@@ -386,6 +388,7 @@ export function publishedTermsEvidence(row: PublishedTermsRow): TermsEvidence {
     sourceCheck: row.source_check?.outcome ?? null,
     sourceChecked: row.source_check?.checked ?? null,
     linkCheckedOn: link?.checked ?? null,
+    publishesAQuantity: recordPublishesAQuantity(row.description),
   };
 }
 
