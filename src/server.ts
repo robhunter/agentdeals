@@ -17,7 +17,7 @@ import { MCP_TOOLS, MCP_TOOL_COUNT, MCP_PROTOCOL_VERSION } from "./mcp-tool-inve
 import { MCP_SIGNAL_FOOTER } from "./signal-copy.js";
 import { lastReadDate, publishedDateLine, storedConfirmationClause, verificationDatesClause } from "./read-date.js";
 import { unconfirmedTermsForOffer } from "./vendor-verdict-input.js";
-import { NOT_VERIFIED, termsWithTheReasonWeCannotConfirmThem } from "./vendor-verdict.js";
+import { NOT_VERIFIED, theReadConfirmedThePrice, termsWithTheReasonWeCannotConfirmThem } from "./vendor-verdict.js";
 import { BASE_URL } from "./base-url.js";
 import { withProvenance } from "./provenance.js";
 import { PKG_VERSION } from "./package-version.js";
@@ -801,7 +801,7 @@ Suggested monitoring cadence: run this check weekly to catch pricing changes ear
       const unconfirmed = unconfirmedTermsForOffer(match);
       text += `**Description:** ${unconfirmed ? termsWithTheReasonWeCannotConfirmThem(match.description, unconfirmed) : match.description}\n`;
       text += `**Pricing Page:** ${match.url}\n`;
-      text += unconfirmed
+      text += unconfirmed && !theReadConfirmedThePrice(unconfirmed)
         ? `**Verification:** ${NOT_VERIFIED(unconfirmed.clause)} ${storedConfirmationClause(match)}\n`
         : `${publishedDateLine(match)}\n`;
       text += `**Last read:** ${lastReadDate(match)}\n`;

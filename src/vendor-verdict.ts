@@ -487,6 +487,10 @@ export function emptyHistoryCaveatSentence(subject: string, unconfirmed: TermsNo
 
 export const NOT_VERIFIED = (clause: string): string => `Not verified — ${clause}.`;
 
+export function theReadConfirmedThePrice(unconfirmed: UnconfirmedTerms | null | undefined): boolean {
+  return unconfirmed?.because.reason === "states_a_free_price";
+}
+
 export function termsNotVerifiedMetaSentence(input: VendorVerdictInput): string | null {
   const bySource = termsUnconfirmedBySource(input);
   if (bySource && bySource !== "states_a_free_price") return NOT_VERIFIED(unconfirmedTermsClause(bySource));
@@ -494,7 +498,7 @@ export function termsNotVerifiedMetaSentence(input: VendorVerdictInput): string 
   if (!unconfirmed) return null;
   const because = unconfirmed.because;
   if (withheldForARefusedRead(because)) return NOT_VERIFIED(refusedReadWithholdingMetaClause(because));
-  if (because.reason === "states_a_free_price") return null;
+  if (theReadConfirmedThePrice(unconfirmed)) return null;
   return because.reason === "link_unreachable" ? null : NOT_VERIFIED(unconfirmed.clause);
 }
 
