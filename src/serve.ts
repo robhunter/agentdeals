@@ -4934,10 +4934,10 @@ function buildVendorPage(slug: string): string | null {
     ? `${freeTierHeadline}: Limits, Pricing & What Changed | AgentDeals`
     : `${pricingHeadline}: Plans, Costs & Free Alternatives | AgentDeals`;
   const descLimits = punctuatedOpeningOfTerms(publishableTerms, 100);
-  const verifiedMonth = (() => { const d = primary.verifiedDate.split("-"); const months = ["January","February","March","April","May","June","July","August","September","October","November","December"]; return `${months[parseInt(d[1],10)-1]} ${d[0]}`; })();
+  const publishedMonth = (() => { const d = publishedDateValue(primary).split("-"); const months = ["January","February","March","April","May","June","July","August","September","October","November","December"]; return `${months[parseInt(d[1],10)-1]} ${d[0]}`; })();
   const verifiedSentence = discontinuedOn
     ? ` Discontinued ${discontinuedOn}.`
-    : enriched.link_unreachable ? "" : ` Verified ${verifiedMonth}.`;
+    : enriched.link_unreachable ? "" : ` ${publishedDateLabel(primary)} ${publishedMonth}.`;
   const termsNotVerified = termsNotVerifiedMetaSentence(verdictInput);
   const metaVerifiedSentence = termsNotVerified && !discontinuedOn
     ? ` ${termsNotVerified}`
