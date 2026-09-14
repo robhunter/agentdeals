@@ -119,6 +119,11 @@ export function lastReadNote(offer: DatedRecord | null | undefined): string {
     : "The day we last read the vendor's page, and the day we last confirmed the terms we publish.") + tail;
 }
 
+export function storedConfirmationClause(offer: DatedRecord | null | undefined): string {
+  const confirmed = confirmationDate(offer);
+  return confirmed ? `Our stored terms were last confirmed on ${confirmed}.` : `${NO_CONFIRMATION_HELD}.`;
+}
+
 export function daysSince(date: string, now: Date = new Date()): number {
   return Math.floor((now.getTime() - new Date(date).getTime()) / (24 * 60 * 60 * 1000));
 }

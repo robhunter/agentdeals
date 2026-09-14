@@ -21,7 +21,7 @@ import { CATALOGUE_CATEGORY_COUNT, CATALOGUE_OFFER_FLOOR_LABEL, MCP_INSTRUCTIONS
 import { MCP_TOOLS } from "./mcp-tool-inventory.js";
 import { PKG_VERSION } from "./package-version.js";
 import { substitutesFor } from "./product-role.js";
-import { verificationDatesClause } from "./read-date.js";
+import { storedConfirmationClause, verificationDatesClause } from "./read-date.js";
 
 export const TRACK_CHANGES_LIMIT = 1000;
 import type { LinkUnreachable, ProductRole, ProductSubtypes, SourceCheck } from "./types.js";
@@ -673,7 +673,7 @@ Suggested monitoring cadence: run this check weekly to catch pricing changes ear
       text += `**Description:** ${unconfirmed ? termsWithTheReasonWeCannotConfirmThem(match.description, unconfirmed) : match.description}\n`;
       text += `**Pricing Page:** ${match.url}\n`;
       text += unconfirmed
-        ? `**Verification:** ${NOT_VERIFIED(unconfirmed.clause)} Our stored terms were last confirmed on ${match.verifiedDate}.\n`
+        ? `**Verification:** ${NOT_VERIFIED(unconfirmed.clause)} ${storedConfirmationClause(match)}\n`
         : `**Verified:** ${match.verifiedDate}\n`;
       text += `**Last read:** ${match.last_read_date}\n`;
       if (match.eligibility) {
