@@ -76,8 +76,11 @@ export interface SourceRead {
   finding: string | null;
 }
 
+export type MissingSourceKind = "ended" | "unconfirmed" | "no_record";
+
 export interface SourceMissing {
   cited: false;
+  kind: MissingSourceKind;
   clause: string;
 }
 
@@ -85,16 +88,34 @@ export type FreeTierSource = SourceRead | SourceMissing;
 
 export const NO_CATALOGUE_RECORD = FREE_TIER_STANDING_LABELS.not_in_catalogue;
 
+export const MISSING_SOURCE_LABELS: Record<MissingSourceKind, string> = {
+  ended: "Ended",
+  unconfirmed: "Unconfirmed",
+  no_record: "No record",
+};
+
+export function missingSourceLabel(missing: SourceMissing): string {
+  return MISSING_SOURCE_LABELS[missing.kind];
+}
+
+export const NO_CATALOGUE_RECORD_SOURCE: SourceMissing = {
+  cited: false,
+  kind: "no_record",
+  clause: NO_CATALOGUE_RECORD,
+};
+
 export type SourcedOffer = Pick<Offer, "url" | "tier" | "source_check" | "verifiedDate">;
 
 export function freeTierSourceOf(offer: SourcedOffer | null | undefined): FreeTierSource {
-  if (!offer) return { cited: false, clause: NO_CATALOGUE_RECORD };
-  if (offerRetired(offer)) return { cited: false, clause: ENDED_OFFER_CLAUSE };
+  if (!offer) return NO_CATALOGUE_RECORD_SOURCE;
+  if (offerRetired(offer)) return { cited: false, kind: "ended", clause: ENDED_OFFER_CLAUSE };
   const check = offer.source_check;
   const unconfirmed = termsUnconfirmedOutcome(check?.outcome);
-  if (unconfirmed) return { cited: false, clause: unconfirmedTermsClause(unconfirmed) };
+  if (unconfirmed) {
+    return { cited: false, kind: "unconfirmed", clause: unconfirmedTermsClause(unconfirmed) };
+  }
   const url = (offer.url ?? "").trim();
-  if (!check || !url) return { cited: false, clause: NO_CATALOGUE_RECORD };
+  if (!check || !url) return NO_CATALOGUE_RECORD_SOURCE;
   return {
     cited: true,
     url,
@@ -127,32 +148,27 @@ const UNCITED_TAG_STYLE =
   "display:inline-block;margin-left:.35rem;padding:.1rem .4rem;border-radius:10px;" +
   "font-size:.65rem;font-weight:600;background:#8b949e22;color:#8b949e";
 
-export function uncitedSourceTagHtml(missing: SourceMissing, esc: Escaper, label: string): string {
+export function uncitedSourceTagHtml(missing: SourceMissing, esc: Escaper): string {
   return (
     ` <span class="${UNCITED_TAG_CLASS}" style="${UNCITED_TAG_STYLE}"` +
-    ` title="${esc(missing.clause)}">${esc(label)}</span>`
+    ` title="${esc(missing.clause)}">${esc(missingSourceLabel(missing))}</span>`
   );
 }
 
 export function uncitedSourceLinkHtml(
   service: CitedService & { source: SourceMissing },
   esc: Escaper,
-  label: string,
 ): string {
   return (
     ` <a href="#${esc(sourceAnchorId(service))}" class="${UNCITED_TAG_CLASS}" style="${UNCITED_TAG_STYLE}"` +
-    ` title="${esc(service.source.clause)}">${esc(label)}</a>`
+    ` title="${esc(service.source.clause)}">${esc(missingSourceLabel(service.source))}</a>`
   );
 }
 
-export function sourceMarkerHtml(
-  source: FreeTierSource,
-  esc: Escaper,
-  uncitedLabel: string,
-): string {
-  return source.cited
-    ? citedSourceLinkHtml(source, esc)
-    : uncitedSourceTagHtml(source, esc, uncitedLabel);
+export function serviceSourceMarkerHtml(service: CitedService, esc: Escaper): string {
+  return service.source.cited
+    ? citedSourceLinkHtml(service.source, esc)
+    : uncitedSourceLinkHtml({ ...service, source: service.source }, esc);
 }
 
 export const CITED_SOURCES_CLASS = "cited-sources";

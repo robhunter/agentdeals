@@ -42,7 +42,7 @@ import { withReviewByline } from "./page-byline.js";
 import { freshnessClaimFor, withFreshnessClaim } from "./page-freshness.js";
 import { UNGRADED_IMPACT_COLOR, changeImpactColor, changeImpactLabel, changeImpactWord, isChangeImpactLevel } from "./change-impact.js";
 import { COMPARED_SERVICES_PLACEHOLDER, appendToCompiledFigureSlots, fillComparedServicesCount, markCompiledFigures, recordsSinceCompiled, replaceTimelineRows, staticHalfOf, timelineRecordsFor, vendorForSubject, vendorSubjectsOnCompiledPage, type CompiledFigureSubject, type CompiledFigureVendor, type CompiledFigureVerdict, type CompiledPageRecord } from "./compiled-figures.js";
-import { CHECK_ESTABLISHES, CHECK_SCOPE_CLASS, NO_CATALOGUE_RECORD, citedSourceLinkHtml, citedSourcesListHtml, freeTierSourceOf, pageQuoteHtml, readClauseHtml, sourceMarkerHtml, uncitedSourceLinkHtml, withCitedSources, type CitedService, type FreeTierSource } from "./source-citation.js";
+import { CHECK_ESTABLISHES, CHECK_SCOPE_CLASS, NO_CATALOGUE_RECORD_SOURCE, citedSourcesListHtml, freeTierSourceOf, pageQuoteHtml, readClauseHtml, serviceSourceMarkerHtml, uncitedSourceTagHtml, withCitedSources, type CitedService, type FreeTierSource } from "./source-citation.js";
 import { vendorHistorySentence } from "./vendor-history.js";
 import { HETZNER_APRIL_CHANGES, HETZNER_CLOUD_PLANS, HETZNER_PRICES_READ, HETZNER_PRICE_SOURCE, HETZNER_SINGAPORE_EXAMPLE, cheapestOrderableHetznerPlan, hetznerEntryPriceClause, unorderableHetznerPlans } from "./hetzner-pricing.js";
 import { HUNDRED_GB_SCENARIO, HUNDRED_TB_SCENARIO, ONE_TO_ONE_SCENARIO, STORAGE_RATES_READ, STORAGE_SCALE_WORKLOADS, TEN_TO_ONE_SCENARIO, cheapestProviderAt, costAfterMonthlyEgressGrantFor, costliestProviderAt, egressAllowanceSentence, egressBillAfterMonthlyGrantFor, egressBillOnceOverAllowance, egressRatioWhereCostsMatch, fixedMonthlyGrantsSentence, monthlyEgressGrantGb, monthlyEgressGrantSentence, monthlyStorageCost, providersWithScalingEgressAllowance, rateCardFor, scaleCostFor } from "./storage-cost-model.js";
@@ -72,7 +72,7 @@ import { changeLogAnchorFor, changeLogVendorMap, toSlug, vendorSlugMap, resolveV
 import { NO_PUSH_NOTICE, watchCommandBlock, watchRequestsFor } from "./change-watching.js";
 import { createRegistrationLimiter, rateLimitHeaders } from "./rate-limit.js";
 import { offerForSlug, vendorRates, cheapestRate, dearestRate, spanOfRates, formatRate, formatRateSpan, monthlyTokenCost, formatDollars, type ModelRate } from "./model-rates.js";
-import { STALE_FACT_PAGES_BASELINE, factsOutdatedBy, linkifyVerdictBlocks, newestChangeBySlug, overdueReport, pageCompiledClause, pageDataProvenance, pageDateModified, tabulatedSubjectSlots, tabulatedSubjects, utcToday, verdictsOutdatedBy } from "./page-reviews.js";
+import { STALE_FACT_PAGES_BASELINE, factsOutdatedBy, linkifyVerdictBlocks, newestChangeBySlug, overdueReport, pageCompiledClause, pageDataProvenance, pageDateModified, tabulatedVendorSlots, tabulatedVendors, utcToday, verdictsOutdatedBy } from "./page-reviews.js";
 import { faqPageJsonLd, type FaqItem } from "./faq-provenance.js";
 import {
   GENEROSITY_JSON_TOKEN,
@@ -1210,7 +1210,7 @@ function citedServicesOn(html: string, servedOn: string): CitedService[] {
     const named = vendorForSubject(subject);
     if (named) add(named.vendor, named.slug);
   }
-  for (const row of tabulatedSubjects(html, namedVendorSlug)) {
+  for (const row of tabulatedVendors(html, namedVendorSlug)) {
     const vendor = row.slug ? vendorNamedBySlug(row.slug) : undefined;
     if (vendor) add(vendor, row.slug);
   }
@@ -1221,7 +1221,7 @@ function compiledPageCitingSources(html: string, servedOn = utcDate()): string {
   const services = citedServicesOn(html, servedOn);
   const byVendor = new Map(services.map(service => [service.vendor, service]));
   const unresolvedRows = new Set(
-    tabulatedSubjects(html, namedVendorSlug)
+    tabulatedVendors(html, namedVendorSlug)
       .filter(row => row.slug === null && row.subject !== "")
       .map(row => row.subject),
   );
@@ -1230,14 +1230,12 @@ function compiledPageCitingSources(html: string, servedOn = utcDate()): string {
     const named = vendorForSubject(subject);
     if (!named) {
       return subject.kind === "row" && unresolvedRows.has(subject.label)
-        ? sourceMarkerHtml({ cited: false, clause: NO_CATALOGUE_RECORD }, escHtmlServer, UNCITED_CHANGE_LABEL)
+        ? uncitedSourceTagHtml(NO_CATALOGUE_RECORD_SOURCE, escHtmlServer)
         : "";
     }
     const service = byVendor.get(named.vendor);
     if (!service) return "";
-    return service.source.cited
-      ? citedSourceLinkHtml(service.source, escHtmlServer)
-      : uncitedSourceLinkHtml({ ...service, source: service.source }, escHtmlServer, UNCITED_CHANGE_LABEL);
+    return serviceSourceMarkerHtml(service, escHtmlServer);
   });
 
   const tabulated = markTabulatedRowSources(marked, byVendor);
@@ -1250,13 +1248,13 @@ function markTabulatedRowSources(html: string, byVendor: Map<string, CitedServic
   const staticHtml = staticHalfOf(html);
   let out = "";
   let cursor = 0;
-  for (const slot of tabulatedSubjectSlots(staticHtml, namedVendorSlug)) {
+  for (const slot of tabulatedVendorSlots(staticHtml, namedVendorSlug)) {
     if (slot.slug === null || ALREADY_MARKED.test(slot.cell)) continue;
     const vendor = vendorNamedBySlug(slot.slug);
     const service = vendor ? byVendor.get(vendor) : undefined;
     if (!service) continue;
     if (slot.cellEnd < cursor) continue;
-    out += html.slice(cursor, slot.cellEnd) + sourceMarkerHtml(service.source, escHtmlServer, UNCITED_CHANGE_LABEL);
+    out += html.slice(cursor, slot.cellEnd) + serviceSourceMarkerHtml(service, escHtmlServer);
     cursor = slot.cellEnd;
   }
   return out + html.slice(cursor);
