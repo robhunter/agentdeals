@@ -327,8 +327,8 @@ export function backfillVerificationState(state, offers, options = {}) {
       last_error: link?.detail ? `${check.detail} (liveness: ${link.detail})` : (check.detail ?? null),
       failure_category: backfillCategory(offer, link),
       consecutive_failures: failures,
-      last_success: offer.verifiedDate ?? null,
-      last_read_at: offer.verifiedDate ?? null,
+      last_success: null,
+      last_read_at: null,
       quarantined_since: failures >= QUARANTINE_AFTER_FAILURES ? (check.checked ?? null) : null,
     };
     state.set(key, record);

@@ -28,7 +28,7 @@ import { offerEnded, offerRetired, recordedTierSentence, endedHeadline, endedHis
 import { amountUnstatedSentence, LAST_RESOLVED, levelWithheldReason, levelWithheldSince, withheldLevelClause, withheldLevelSentence, type LevelWithheldReason } from "./source-check.js";
 import { offerVerdictInput, vendorVerdictContextFrom, type VendorVerdictContext } from "./vendor-verdict-input.js";
 import { readingIsBehindTheLoop, reverificationIntervalDays } from "./badge-staleness.js";
-import { LAST_READ_LABEL, VERIFICATION_DATES_HEADING, lastReadDate, lastReadNote, verificationDatesCell, verificationDatesSentence } from "./read-date.js";
+import { LAST_READ_LABEL, VERIFICATION_DATES_HEADING, confirmationDate, lastReadDate, lastReadNote, verificationDatesCell, verificationDatesSentence } from "./read-date.js";
 import { SUPERSEDED_TERMS_LABEL, readingBehindTheChange, supersededTermsAnswer, supersededTermsMetaSentence, supersededTermsNotice, supersededTermsNoticeHtml, supersededTermsRecord, supersededTermsVerdictSentence, supersedingChange, type SupersededTermsRecord } from "./superseded-description.js";
 import { openingOfTerms, punctuated, punctuatedOpeningOfTerms } from "./terms-opening.js";
 import { NO_CURRENT_FIGURE, costHeadlineCaveat, limitCellText, mayRecommendAsFree, proseWithoutNames, readsActive, stackFreshnessStatement } from "./stack-claim.js";
@@ -5474,7 +5474,7 @@ ${referralCalloutHtml}
     </div>
     `}<div class="detail-card">
       <div class="detail-label">${discontinuedOn ? "Discontinued" : linkUnreachable ? "Link last reachable" : "Verified"}</div>
-      <div class="detail-value" style="font-family:var(--mono)">${escHtmlServer(discontinuedOn ?? (linkUnreachable ? (linkUnreachable.last_reachable ?? "no reachable date on record") : primary.verifiedDate))}</div>
+      <div class="detail-value" style="font-family:var(--mono)">${escHtmlServer(discontinuedOn ?? (linkUnreachable ? (linkUnreachable.last_reachable ?? "no reachable date on record") : (confirmationDate(primary) ?? primary.verifiedDate)))}</div>
     </div>
     <div class="detail-card">
       <div class="detail-label">${LAST_READ_LABEL}</div>

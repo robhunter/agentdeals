@@ -9,8 +9,9 @@ import { assertCoversPopulation, assertSharesPopulation, recordsInTheCatalogue }
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(__dirname, "..");
 
-const { lastReadDate, verificationDatesCell, LAST_READ_LABEL, VERIFICATION_DATES_HEADING } =
+const { confirmationDate, lastReadDate, verificationDatesCell, LAST_READ_LABEL, NO_CONFIRMATION_HELD, VERIFICATION_DATES_HEADING } =
   await import("../dist/read-date.js");
+const { ANSWERED_OUTCOMES } = await import("../scripts/verification-state.js");
 
 interface CatalogueOffer {
   vendor: string;
@@ -27,9 +28,21 @@ const slugOf = (vendor: string) => vendor.toLowerCase().replace(/[^a-z0-9]+/g, "
 const daysBetween = (from: string, to: string) =>
   Math.round((Date.parse(`${to}T00:00:00Z`) - Date.parse(`${from}T00:00:00Z`)) / 86_400_000);
 
-const widestGap = offers
-  .map((o) => ({ offer: o, read: lastReadDate(o), gap: daysBetween(o.verifiedDate, lastReadDate(o)) }))
-  .sort((a, b) => b.gap - a.gap)[0]!;
+const heldState: Array<{ vendor: string; url: string; last_attempt_at: string | null; last_outcome: string | null }> =
+  JSON.parse(readFileSync(path.join(REPO, "data", "verification_state.json"), "utf-8")).records;
+const stateByKey = new Map(heldState.map((r) => [`${r.vendor}|${r.url}`, r]));
+
+const byGap = (from: CatalogueOffer[]) =>
+  from
+    .map((o) => ({ offer: o, read: lastReadDate(o), gap: daysBetween(o.verifiedDate, lastReadDate(o)) }))
+    .sort((a, b) => b.gap - a.gap)[0]!;
+
+const verifiedCardOn = (body: string): string | null =>
+  body.match(/>Verified<\/div>\s*<div class="detail-value"[^>]*>([^<]+)</)?.[1] ?? null;
+
+const widestGap = byGap(offers);
+const widestConfirmedGap = byGap(offers.filter((o) => confirmationDate(o) !== null && confirmationDate(o)! < lastReadDate(o)));
+const widestUnconfirmedGap = byGap(offers.filter((o) => confirmationDate(o) === null));
 
 let serverPort = 0;
 let proc: ChildProcess | null = null;
@@ -115,16 +128,27 @@ describe("every record publishes the day we last read its page", () => {
   it("names a read date on every record the catalogue API returns", async () => {
     const { status, body } = await get("/api/offers?limit=5000");
     assert.equal(status, 200);
-    const returned = JSON.parse(body).offers as Array<{ vendor: string; verifiedDate: string; last_read_date?: string; days_since_read?: number }>;
+    const returned = JSON.parse(body).offers as Array<{ vendor: string; url: string; verifiedDate: string; last_read_date?: string; days_since_read?: number }>;
     const dated = returned.filter((o) => /^\d{4}-\d{2}-\d{2}$/.test(o.last_read_date ?? ""));
     assertCoversPopulation(dated.length, recordsInTheCatalogue(), "records the API answers with a day we read the page");
+    const byRecord = new Map(returned.map((o) => [`${o.vendor}|${o.url}`, o]));
+    let fromTheStore = 0;
     for (const o of returned) {
-      assert.ok(
-        (o.last_read_date ?? "") >= o.verifiedDate,
-        `${o.vendor} publishes a read date of ${o.last_read_date} against a verification of ${o.verifiedDate}`,
-      );
       assert.equal(typeof o.days_since_read, "number", `${o.vendor} publishes no age for its read date`);
     }
+    for (const o of offers) {
+      const held = stateByKey.get(`${o.vendor}|${o.url}`);
+      if (!held?.last_outcome || !ANSWERED_OUTCOMES.has(held.last_outcome)) continue;
+      const answered = byRecord.get(`${o.vendor}|${o.url}`);
+      if (!answered) continue;
+      fromTheStore++;
+      assert.equal(
+        answered.last_read_date,
+        held.last_attempt_at,
+        `${o.vendor} publishes a read date of ${answered.last_read_date} where the store's own attempt read the page on ${held.last_attempt_at}`,
+      );
+    }
+    assertSharesPopulation(fromTheStore, recordsInTheCatalogue(), 0.5, "records the API dates from the store's own attempt");
   });
 
   it("answers with a read date later than the verification on the records a read has moved", async () => {
@@ -134,16 +158,40 @@ describe("every record publishes the day we last read its page", () => {
     assertSharesPopulation(moved.length, recordsInTheCatalogue(), 0.25, "records the API answers with a read later than the verification");
   });
 
-  it("publishes both dates, each labelled, on the record with the widest gap", async () => {
-    assert.ok(widestGap.gap > 0, "no record reads later than it verifies, so this control proves nothing");
-    const { status, body } = await get(`/vendor/${slugOf(widestGap.offer.vendor)}`);
-    assert.equal(status, 200, `/vendor/${slugOf(widestGap.offer.vendor)} must exist for this test to mean anything`);
-    assert.ok(body.includes(LAST_READ_LABEL), `the page for ${widestGap.offer.vendor} does not label a read date`);
-    assert.ok(body.includes(widestGap.read), `the page for ${widestGap.offer.vendor} does not publish ${widestGap.read}`);
-    assert.ok(body.includes(widestGap.offer.verifiedDate), `the page for ${widestGap.offer.vendor} dropped its verification date`);
+  it("publishes both dates, each labelled, on the record with the widest confirmed gap", async () => {
+    assert.ok(widestConfirmedGap, "no record holds a confirmation older than its last read, so this control proves nothing");
+    const held = confirmationDate(widestConfirmedGap.offer)!;
+    const { status, body } = await get(`/vendor/${slugOf(widestConfirmedGap.offer.vendor)}`);
+    assert.equal(status, 200, `/vendor/${slugOf(widestConfirmedGap.offer.vendor)} must exist for this test to mean anything`);
+    assert.ok(body.includes(LAST_READ_LABEL), `the page for ${widestConfirmedGap.offer.vendor} does not label a read date`);
+    assert.ok(body.includes(widestConfirmedGap.read), `the page for ${widestConfirmedGap.offer.vendor} does not publish ${widestConfirmedGap.read}`);
     assert.ok(
-      body.includes(`last confirmed on ${widestGap.offer.verifiedDate}`),
-      `the page for ${widestGap.offer.vendor} publishes two dates without saying which is which`,
+      body.includes(`last confirmed on ${held}`),
+      `the page for ${widestConfirmedGap.offer.vendor} publishes two dates without saying which is which`,
+    );
+    assert.equal(
+      verifiedCardOn(body),
+      held,
+      `the page for ${widestConfirmedGap.offer.vendor} heads its verification with a date the store did not confirm on`,
+    );
+  });
+
+  it("states no confirmation it cannot source on the record with the widest unconfirmed gap", async () => {
+    assert.ok(widestUnconfirmedGap, "every record holds a confirmation, so this control proves nothing");
+    const offer = widestUnconfirmedGap.offer;
+    const { status, body } = await get(`/vendor/${slugOf(offer.vendor)}`);
+    assert.equal(status, 200, `/vendor/${slugOf(offer.vendor)} must exist for this test to mean anything`);
+    assert.ok(body.includes(widestUnconfirmedGap.read), `the page for ${offer.vendor} does not publish ${widestUnconfirmedGap.read}`);
+    assert.ok(body.includes(offer.verifiedDate), `the page for ${offer.vendor} dropped the date it holds`);
+    assert.equal(
+      verifiedCardOn(body),
+      offer.verifiedDate,
+      `the page for ${offer.vendor} dropped the date it holds from the card that heads its verification`,
+    );
+    assert.ok(body.includes(NO_CONFIRMATION_HELD), `the page for ${offer.vendor} does not say the store holds no confirmation for it`);
+    assert.ok(
+      !body.includes(`last confirmed on ${offer.verifiedDate}`),
+      `the page for ${offer.vendor} states its terms were last confirmed on a date no read in the store confirmed`,
     );
   });
 
@@ -158,8 +206,8 @@ describe("every record publishes the day we last read its page", () => {
   });
 
   it("labels the read date on a record read and verified on the same day", async () => {
-    const together = offers.find((o) => lastReadDate(o) === o.verifiedDate && !/\//.test(o.vendor));
-    assert.ok(together, "no record reads and verifies on the same day, so this control proves nothing");
+    const together = offers.find((o) => confirmationDate(o) !== null && confirmationDate(o) === lastReadDate(o) && !/\//.test(o.vendor));
+    assert.ok(together, "no record reads and confirms on the same day, so this control proves nothing");
     const { status, body } = await get(`/vendor/${slugOf(together.vendor)}`);
     assert.equal(status, 200);
     assert.ok(body.includes(LAST_READ_LABEL), `the page for ${together.vendor} hides the read date because it matches the verification`);
