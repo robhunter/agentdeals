@@ -186,9 +186,21 @@ describe("a free tier a record still describes has not been removed", () => {
       assert.deepStrictEqual(failing, [], `stored removals describing a free plan:\n${failing.join("\n")}`);
     });
 
-    it("still holds the removals whose own page was read against them", () => {
-      const kept = new Set(removals.filter(c => !c.resolution).map(c => c.vendor));
+    it("reads no free plan on offer in the removals whose own page was read against them", () => {
+      const held = new Map(removals.map(c => [c.vendor, c]));
       for (const vendor of ["Burnermail", "bonsai.io", "Unkey", "Webvizio", "Rybbit"]) {
+        const record = held.get(vendor);
+        assert.ok(record, `${vendor} holds a free tier removal record`);
+        assert.ok(
+          !clauseStatingAPlanIsStillFree(record),
+          `${vendor}'s record is not read as describing a free plan on offer`
+        );
+      }
+    });
+
+    it("still holds the removals this rule leaves standing", () => {
+      const kept = new Set(removals.filter(c => !c.resolution).map(c => c.vendor));
+      for (const vendor of ["Burnermail", "bonsai.io", "Unkey", "Webvizio"]) {
         assert.ok(kept.has(vendor), `${vendor} keeps its free tier removal record`);
       }
     });

@@ -4,7 +4,7 @@ import { readFileSync, mkdtempSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { assertCoversPopulation } from "./population-floor.js";
+import { assertPopulationFloor } from "./population-floor.ts";
 
 process.env.AGENTDEALS_REFUSALS_PATH = path.join(
   mkdtempSync(path.join(tmpdir(), "refusals-licence-free-removal-")),
@@ -130,7 +130,7 @@ describe("a licence grants the free use and a pricing page cannot withdraw it (#
           refused.push(record.vendor);
         }
       }
-      assertCoversPopulation(REMOVALS.length, { size: REMOVALS.length, read: "free-tier removals in the change log" }, "removals read through the gate");
+      assertPopulationFloor(REMOVALS.length, 60, "free-tier removal records read through the gate");
       assert.deepStrictEqual(refused.sort(), [...READ_FROM_A_HOSTED_PRICING_PAGE].sort());
     });
   });
@@ -223,12 +223,10 @@ describe("a licence grants the free use and a pricing page cannot withdraw it (#
     it("is absent from every offer the server serves and present in the store", () => {
       const served = loadOffers().filter((o: Record<string, any>) => FREE_GROUNDS_FIELD in o);
       assert.deepStrictEqual(served, []);
-      const stored = OFFERS.filter(o => FREE_GROUNDS_FIELD in o);
-      assertCoversPopulation(
-        stored.length,
-        { size: 1, read: "offers the store marks as free on their licence" },
-        "offers carrying the grounds in the store"
-      );
+      const stored = new Set(OFFERS.filter(o => FREE_GROUNDS_FIELD in o).map(o => o.vendor));
+      for (const vendor of [...READ_FROM_A_HOSTED_PRICING_PAGE, "DBOS", "n8n", "Kong"]) {
+        assert.ok(stored.has(vendor), `${vendor} carries its grounds where the gate reads them`);
+      }
     });
 
     it("is absent from the enriched offer every page and route renders", () => {
