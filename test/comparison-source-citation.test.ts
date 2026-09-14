@@ -10,13 +10,18 @@ const {
   citedSourcesListHtml,
   freeTierSourceOf,
   methodologyBlockEnd,
+  missingSourceLabel,
   readClauseHtml,
   sourceAnchorId,
   withCitedSources,
   CHECK_FINDING_LEAD,
+  MISSING_SOURCE_LABELS,
   NO_CATALOGUE_RECORD,
+  NO_CATALOGUE_RECORD_SOURCE,
 } = await import("../dist/source-citation.js");
-const { tabulatedSubjectSlots, vendorFactRows, SOURCE_MARKER_IN_A_CELL } = await import("../dist/page-reviews.js");
+const { SOURCE_CHECK_OUTCOMES, unconfirmedTermsClause } = await import("../dist/source-check.js");
+const { tabulatedSubjectSlots, tabulatedVendorSlots, vendorFactRows, SOURCE_MARKER_IN_A_CELL } =
+  await import("../dist/page-reviews.js");
 const { RECORD_SOURCE_CLASS, SOURCE_MARKER_MARKUP } = await import("../dist/change-citation.js");
 const { ENDED_OFFER_CLAUSE, offerRetired } = await import("../dist/retirement.js");
 const { namedVendorSlug, vendorSlugMap } = await import("../dist/vendor-slug.js");
@@ -82,6 +87,22 @@ const CITED_SOURCE_LINK =
 
 function citedSourceLinks(html: string): Array<{ url: string; title: string }> {
   return [...html.matchAll(CITED_SOURCE_LINK)].map(m => ({ url: m[1]!, title: m[2]! }));
+}
+
+const MISSING_SOURCE_MARKER = /<(a|span)\b([^>]*\bclass="unsourced-tag"[^>]*)>([^<]*)<\/\1>/g;
+
+interface RenderedMarker {
+  label: string;
+  clause: string | null;
+  anchor: string | null;
+}
+
+function markersMissingASource(html: string): RenderedMarker[] {
+  return [...html.matchAll(new RegExp(MISSING_SOURCE_MARKER.source, "g"))].map(marker => ({
+    label: marker[3]!.trim(),
+    clause: marker[2]!.match(/\btitle="([^"]*)"/)?.[1] ?? null,
+    anchor: marker[2]!.match(/\bhref="#([^"]*)"/)?.[1] ?? null,
+  }));
 }
 
 function startServer(): Promise<{ proc: ChildProcess; base: string }> {
@@ -161,11 +182,42 @@ describe("what a record says about its source, without loading the catalogue", (
     });
     assert.strictEqual(source.cited, false);
     assert.ok(!source.cited && source.clause === ENDED_OFFER_CLAUSE);
+    assert.ok(!source.cited && source.kind === "ended");
   });
 
   it("says a service we hold no record for has none, rather than citing nothing", () => {
     const source = freeTierSourceOf(undefined);
-    assert.deepStrictEqual(source, { cited: false, clause: NO_CATALOGUE_RECORD });
+    assert.deepStrictEqual(source, { cited: false, kind: "no_record", clause: NO_CATALOGUE_RECORD });
+  });
+
+  it("keeps a service the catalogue holds no pricing page for apart from one whose page it read", () => {
+    const source = freeTierSourceOf({ url: "   ", tier: "Free", verifiedDate: "2026-08-01" });
+    assert.ok(!source.cited && source.kind === "no_record");
+  });
+
+  it("settles every outcome short of ok as a read that could not confirm the terms", () => {
+    const settled = SOURCE_CHECK_OUTCOMES.filter((outcome: string) => outcome !== "ok").map(
+      (outcome: string) =>
+        freeTierSourceOf({
+          url: "https://example.com/pricing",
+          verifiedDate: "2026-08-01",
+          source_check: { checked: "2026-09-05", outcome, detail: "" },
+        }),
+    );
+    assert.deepStrictEqual(
+      [...new Set(settled.map((source: { cited: boolean; kind?: string }) => source.kind))],
+      ["unconfirmed"],
+    );
+    assert.strictEqual(new Set(settled.map((source: { clause?: string }) => source.clause)).size, settled.length);
+  });
+
+  it("gives a different word to each thing a marker can stand for", () => {
+    const kinds = Object.keys(MISSING_SOURCE_LABELS);
+    assert.strictEqual(new Set(Object.values(MISSING_SOURCE_LABELS)).size, kinds.length);
+    assert.ok(kinds.length >= 3, `a marker stands for ${kinds.length} things and the reader acts on three`);
+    for (const kind of kinds) {
+      assert.strictEqual(missingSourceLabel({ cited: false, kind, clause: "" }), MISSING_SOURCE_LABELS[kind]);
+    }
   });
 
   it("renders the read as a link, a date and the quote, with a rel that endorses nobody", () => {
@@ -200,7 +252,7 @@ describe("what a record says about its source, without loading the catalogue", (
   it("puts the list of sources inside the methodology block it belongs to", () => {
     const page = '<h2 id="data-source">Data Source</h2>\n<div class="methodology">Compiled by hand. <div>x</div></div>\n<h2>Next</h2>';
     const list = citedSourcesListHtml(
-      [{ vendor: "Example", slug: "example", source: { cited: false, clause: NO_CATALOGUE_RECORD } }],
+      [{ vendor: "Example", slug: "example", source: NO_CATALOGUE_RECORD_SOURCE }],
       (t: string) => t,
       "read-on",
     );
@@ -320,6 +372,107 @@ describe("every comparison page reaches the pages its figures were read from", (
     }
     assert.deepStrictEqual(bare, []);
     assertPopulationFloor(rows, 100, "table rows naming a service we hold a record for");
+  });
+
+  it("leaves no row linking a service's own page without a source or a reason", () => {
+    const bare: string[] = [];
+    let rows = 0;
+    for (const page of COMPILED_PAGES) {
+      const html = staticHalfOf(rendered.get(page)!);
+      for (const slot of tabulatedVendorSlots(html, namedVendorSlug)) {
+        if (slot.slug === null) continue;
+        rows += 1;
+        if (!/class="(?:record-source|unsourced-tag)"/.test(slot.cell)) {
+          bare.push(`${page}: ${slot.subject}`);
+        }
+      }
+    }
+    assert.deepStrictEqual(bare, []);
+    assertPopulationFloor(rows, 200, "table rows naming a service we hold a record for");
+  });
+
+  it("marks a row whose terms are stated in words as readily as one stating a figure", () => {
+    const statedInWords: string[] = [];
+    const bare: string[] = [];
+    for (const page of COMPILED_PAGES) {
+      const html = staticHalfOf(rendered.get(page)!);
+      const figured = new Set(tabulatedSubjectSlots(html, namedVendorSlug).map(slot => slot.cellEnd));
+      for (const slot of tabulatedVendorSlots(html, namedVendorSlug)) {
+        if (slot.slug === null || figured.has(slot.cellEnd)) continue;
+        statedInWords.push(`${page}: ${slot.subject}`);
+        if (!/class="(?:record-source|unsourced-tag)"/.test(slot.cell)) bare.push(`${page}: ${slot.subject}`);
+      }
+    }
+    assert.deepStrictEqual(bare, []);
+    assertPopulationFloor(statedInWords.length, 2, "rows stating a service's terms without a numeral");
+  });
+
+  it("gives each thing a marker stands for its own word, on every page that marks one", () => {
+    const labelForClause = new Map<string, string>([
+      [ENDED_OFFER_CLAUSE, MISSING_SOURCE_LABELS.ended],
+      [NO_CATALOGUE_RECORD, MISSING_SOURCE_LABELS.no_record],
+      ...SOURCE_CHECK_OUTCOMES.filter((outcome: string) => outcome !== "ok").map(
+        (outcome: string) => [unconfirmedTermsClause(outcome), MISSING_SOURCE_LABELS.unconfirmed] as [string, string],
+      ),
+    ]);
+    const wrong: string[] = [];
+    let marked = 0;
+    for (const page of COMPILED_PAGES) {
+      for (const tag of markersMissingASource(rendered.get(page)!)) {
+        marked += 1;
+        if (tag.clause === null) {
+          wrong.push(`${page}: a marker reading ${tag.label} states nothing about what is missing`);
+          continue;
+        }
+        const expected = labelForClause.get(tag.clause);
+        if (expected === undefined) wrong.push(`${page}: no word is settled for ${tag.clause}`);
+        else if (expected !== tag.label) wrong.push(`${page}: ${tag.clause} reads ${tag.label}, not ${expected}`);
+      }
+    }
+    assert.deepStrictEqual(wrong, []);
+    assertPopulationFloor(marked, 60, "markers standing in for a source across the compiled comparison pages");
+  });
+
+  it("never calls an offer that has ended by the word it uses for one it could not confirm", () => {
+    const ended: string[] = [];
+    for (const page of COMPILED_PAGES) {
+      for (const tag of markersMissingASource(rendered.get(page)!)) {
+        if (tag.clause !== ENDED_OFFER_CLAUSE) continue;
+        ended.push(`${page}: ${tag.label}`);
+        assert.strictEqual(tag.label, MISSING_SOURCE_LABELS.ended, `${page} marks an offer that has ended as ${tag.label}`);
+        assert.notStrictEqual(tag.label, MISSING_SOURCE_LABELS.unconfirmed);
+        assert.notStrictEqual(tag.label, MISSING_SOURCE_LABELS.no_record);
+      }
+    }
+    assertPopulationFloor(ended.length, 2, "markers on offers our own record says have ended");
+  });
+
+  it("reaches the sentence that spells out the clause, or carries the whole of it", () => {
+    const unreachable: string[] = [];
+    let reaching = 0;
+    for (const page of COMPILED_PAGES) {
+      const html = rendered.get(page)!;
+      const entries = new Map(
+        [...html.matchAll(/<li id="(source-[a-z0-9-]+)">([\s\S]*?)<\/li>/g)].map(entry => [
+          entry[1]!,
+          entry[2]!.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim(),
+        ]),
+      );
+      for (const tag of markersMissingASource(html)) {
+        if (tag.anchor === null) {
+          if (tag.clause !== NO_CATALOGUE_RECORD) {
+            unreachable.push(`${page}: ${tag.clause} is carried in an attribute and nowhere a reader can see it`);
+          }
+          continue;
+        }
+        reaching += 1;
+        const entry = entries.get(tag.anchor);
+        if (entry === undefined) unreachable.push(`${page}: ${tag.label} points at ${tag.anchor}, which is not on the page`);
+        else if (!entry.includes(tag.clause!)) unreachable.push(`${page}: ${tag.anchor} does not spell out ${tag.clause}`);
+      }
+    }
+    assert.deepStrictEqual(unreachable, []);
+    assertPopulationFloor(reaching, 60, "markers reaching a sentence on the page that spells the clause out");
   });
 
   it("counts the same rows the page register counts, once the markers are stripped", () => {
