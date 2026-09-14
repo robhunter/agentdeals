@@ -2193,7 +2193,9 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("global-nav"), "Should have global nav");
     assert.ok(html.includes("confirmation coverage"), "Should show what share of the catalogue we can source to a confirming read");
     assert.ok(html.includes("Stalest Entries"), "Should have stalest entries section");
-    assert.ok(html.includes("Freshness by Category"), "Should have category breakdown");
+    assert.ok(html.includes("Confirmation Coverage by Category"), "Should have category breakdown");
+    assert.ok(html.includes("Confirmed (90d)"), "The category breakdown should name the confirmations it grades on");
+    assert.ok(html.includes("Catalogue date (90d)"), "The category breakdown should publish the catalogue-date count beside it");
     assert.ok(html.includes("/api/freshness"), "Should link to API endpoint");
     assert.ok(!html.includes("${BASE_URL}"), "Should not have unresolved BASE_URL");
     assert.ok(html.includes("Records we cannot currently check"), "The stalest list should say which entries are stuck and why");

@@ -13,7 +13,7 @@ const REPO = path.join(__dirname, "..");
 
 const { ANSWERED_OUTCOMES, applyAttempt, ATTEMPT_CHANGED, ATTEMPT_CONFIRMED, ATTEMPT_FETCH_FAILED, ATTEMPT_SOURCE_UNUSABLE, ATTEMPT_UNCLEAR } =
   await import("../scripts/verification-state.js");
-const { NO_CONFIRMATION_HELD, OUTCOMES_THAT_READ_THE_PAGE, attemptThatDidNotRead, confirmationDate, lastReadDate, lastReadNote, verificationDates, verificationDatesCell, verificationDatesSentence } =
+const { NO_CONFIRMATION_HELD, OUTCOMES_THAT_READ_THE_PAGE, UNCONFIRMED_DATE_LABEL, VERIFICATION_DATES_HEADING, attemptThatDidNotRead, confirmationDate, lastReadDate, lastReadNote, verificationDates, verificationDatesCell, verificationDatesClause, verificationDatesSentence } =
   await import("../dist/read-date.js");
 const { resetVerificationStateCache } = await import("../dist/verification-state.js");
 
@@ -102,15 +102,42 @@ describe("the day we last read the page", () => {
   it("publishes one date where the read and the confirmation are the same day", () => {
     withState([record({ last_attempt_at: "2026-04-12", last_outcome: ATTEMPT_CONFIRMED, last_success: "2026-04-12" })]);
     assert.equal(verificationDatesCell(offer), "2026-04-12");
-    assert.equal(verificationDatesSentence(offer), "Read and verified 2026-04-12");
+    assert.equal(verificationDatesSentence(offer), "Read and confirmed 2026-04-12");
     assert.match(lastReadNote(offer), /read the vendor's page, and the day we last confirmed/);
   });
 
   it("publishes both dates, each labelled, where the read is later", () => {
     withState([record({ last_attempt_at: "2026-09-09", last_outcome: ATTEMPT_CHANGED, last_success: "2026-04-12" })]);
     assert.equal(verificationDatesCell(offer), "2026-09-09 / 2026-04-12");
-    assert.equal(verificationDatesSentence(offer), "Read 2026-09-09 · verified 2026-04-12");
+    assert.equal(verificationDatesSentence(offer), "Read 2026-09-09 · confirmed 2026-04-12");
     assert.match(lastReadNote(offer), /last confirmed on 2026-04-12/);
+  });
+
+  it("names the catalogue date for what it is where the store holds no confirmation", () => {
+    withState([record({ last_attempt_at: "2026-09-09", last_outcome: ATTEMPT_CHANGED, last_success: null })]);
+    assert.equal(confirmationDate(offer), null);
+    assert.equal(verificationDatesSentence(offer), `Read 2026-09-09 · ${UNCONFIRMED_DATE_LABEL.toLowerCase()} 2026-04-12`);
+    assert.equal(verificationDatesClause(lastReadDate(offer), offer.verifiedDate), `read 2026-09-09, ${UNCONFIRMED_DATE_LABEL.toLowerCase()} 2026-04-12`);
+  });
+
+  it("claims nothing beyond the read where the store holds no confirmation and the catalogue date is no older", () => {
+    withState([record({ last_attempt_at: "2026-04-12", last_outcome: ATTEMPT_CHANGED, last_success: null })]);
+    assert.equal(confirmationDate(offer), null);
+    assert.equal(verificationDatesSentence(offer), "Read 2026-04-12");
+    assert.equal(verificationDatesClause(lastReadDate(offer), offer.verifiedDate), "read 2026-04-12");
+  });
+
+  it("uses one word for the catalogue date wherever it names it", () => {
+    withState([record({ last_attempt_at: "2026-09-09", last_outcome: ATTEMPT_CHANGED, last_success: null })]);
+    const naming = [
+      VERIFICATION_DATES_HEADING,
+      verificationDatesSentence(offer),
+      verificationDatesClause(lastReadDate(offer), offer.verifiedDate),
+    ];
+    for (const text of naming) {
+      assert.match(text.toLowerCase(), new RegExp(UNCONFIRMED_DATE_LABEL.toLowerCase()), `"${text}" does not name the catalogue date`);
+      assert.doesNotMatch(text.toLowerCase(), /verified/, `"${text}" calls the catalogue date verified`);
+    }
   });
 
   it("publishes the attempt that did not read the page, marked as one", () => {
@@ -119,7 +146,7 @@ describe("the day we last read the page", () => {
     assert.equal(verificationDatesCell(offer), "2026-04-12 · tried 2026-09-09, no read");
     assert.equal(
       verificationDatesSentence(offer),
-      "Read and verified 2026-04-12 · tried again 2026-09-09 and did not read the page",
+      "Read and confirmed 2026-04-12 · tried again 2026-09-09 and did not read the page",
     );
     assert.match(lastReadNote(offer), /that attempt confirmed nothing/);
   });

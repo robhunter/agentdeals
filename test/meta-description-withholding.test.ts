@@ -23,6 +23,7 @@ const {
   withholdsTheTerms,
 } = await import("../dist/vendor-verdict.js");
 const { vendorVerdictContextFrom } = await import("../dist/vendor-verdict-input.js");
+const { CONFIRMED_DATE_LABEL, UNCONFIRMED_DATE_LABEL, confirmationDate, publishedDateValue } = await import("../dist/read-date.js");
 
 type Outcome = "ok" | "states_no_amount" | "does_not_name_vendor" | "states_no_terms" | "unreadable";
 
@@ -31,6 +32,8 @@ interface Subject {
   vendor: string;
   outcome: Outcome | null;
   verifiedMonth: string;
+  publishedMonth: string;
+  holdsAConfirmation: boolean;
   termsSuperseded: boolean;
   discontinuedOn: string | null;
   termsWithheld: boolean;
@@ -46,7 +49,8 @@ function monthLabel(isoDate: string): string {
   return `${MONTHS[parseInt(month, 10) - 1]} ${year}`;
 }
 
-const VERIFIED_ASSERTION = new RegExp(`Verified (?:${MONTHS.join("|")}) \\d{4}`);
+const VERIFIED_ASSERTION = new RegExp(`${CONFIRMED_DATE_LABEL} (?:${MONTHS.join("|")}) \\d{4}`);
+const DATED_LINE = new RegExp(`(?:${CONFIRMED_DATE_LABEL}|${UNCONFIRMED_DATE_LABEL}) ((?:${MONTHS.join("|")}) \\d{4})`);
 
 function capitalise(text: string): string {
   return `${text.charAt(0).toUpperCase()}${text.slice(1)}`;
@@ -54,7 +58,11 @@ function capitalise(text: string): string {
 
 function assertedMonth(text: string): string | null {
   const m = text.match(VERIFIED_ASSERTION);
-  return m ? m[0].replace("Verified ", "") : null;
+  return m ? m[0].replace(`${CONFIRMED_DATE_LABEL} `, "") : null;
+}
+
+function datedMonth(text: string): string | null {
+  return text.match(DATED_LINE)?.[1] ?? null;
 }
 
 let subjects: Subject[] = [];
@@ -104,6 +112,8 @@ before(async () => {
       vendor,
       outcome: (primary.source_check?.outcome ?? null) as Outcome | null,
       verifiedMonth: monthLabel(primary.verifiedDate),
+      publishedMonth: monthLabel(publishedDateValue(primary)),
+      holdsAConfirmation: confirmationDate(primary) !== null,
       termsSuperseded: supersedingChange(primary, vendorChanges) !== null,
       discontinuedOn: discontinuedOnOrBefore(vendorChanges, servedOn),
       termsWithheld: because !== null && withholdsTheTerms(because),
@@ -228,7 +238,7 @@ describe("#1412 the meta description withholds wherever the source check failed"
     );
   });
 
-  it("leaves the verification claim standing wherever the source check passed", async () => {
+  it("leaves the dated line standing wherever the source check passed, under the label its date has earned", async () => {
     const pages = await everyVendorPage();
     const population = subjects.filter(s => s.outcome === "ok" && !s.termsSuperseded && !s.termsWithheld);
     assertPopulationFloor(population.length, Math.floor(subjects.length / 5), "records passed their source check");
@@ -236,24 +246,31 @@ describe("#1412 the meta description withholds wherever the source check failed"
     const wrongMonth: string[] = [];
     const droppedFromTheMeta: string[] = [];
     const withheldWithoutCause: string[] = [];
-    let asserting = 0;
+    const unsourcedClaim: string[] = [];
+    let dated = 0;
     for (const subject of population) {
       const page = pages.get(subject.slug)!;
-      const inMeta = assertedMonth(page.meta);
-      const inByline = assertedMonth(page.byline);
+      const inMeta = datedMonth(page.meta);
+      const inByline = datedMonth(page.byline);
       if (page.meta.includes("Not verified")) withheldWithoutCause.push(subject.slug);
       if (inByline !== null && inMeta === null) droppedFromTheMeta.push(subject.slug);
+      if (assertedMonth(page.meta) !== null && !subject.holdsAConfirmation) unsourcedClaim.push(subject.slug);
       if (inMeta === null) continue;
-      asserting++;
-      if (inMeta !== subject.verifiedMonth) {
-        wrongMonth.push(`${subject.slug}: meta says ${inMeta}, the record says ${subject.verifiedMonth}`);
+      dated++;
+      if (inMeta !== subject.publishedMonth) {
+        wrongMonth.push(`${subject.slug}: meta says ${inMeta}, the page publishes ${subject.publishedMonth}`);
       }
     }
 
-    assertPopulationFloor(asserting, Math.floor(population.length / 2), "passing records still carry a verification month");
+    assertPopulationFloor(dated, Math.floor(population.length / 2), "passing records still carry a dated line");
     assert.deepStrictEqual(withheldWithoutCause.slice(0, 20), [], `${withheldWithoutCause.length} passing records withhold`);
     assert.deepStrictEqual(droppedFromTheMeta.slice(0, 20), [], `${droppedFromTheMeta.length} meta descriptions dropped a month the byline still states`);
-    assert.deepStrictEqual(wrongMonth.slice(0, 20), [], `${wrongMonth.length} meta descriptions state a month the record does not`);
+    assert.deepStrictEqual(wrongMonth.slice(0, 20), [], `${wrongMonth.length} meta descriptions state a month the page does not publish`);
+    assert.deepStrictEqual(
+      unsourcedClaim.slice(0, 20),
+      [],
+      `${unsourcedClaim.length} meta descriptions say ${CONFIRMED_DATE_LABEL} over a date the verification store cannot source`,
+    );
   });
 });
 

@@ -7,7 +7,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { SOURCE_CHECK_OUTCOMES } from "../dist/source-check.js";
 import { TERMS_WITHHELD_LABELS } from "../dist/vendor-verdict.js";
-import { ATTEMPT_THAT_DID_NOT_READ } from "../dist/read-date.js";
+import { ATTEMPT_THAT_DID_NOT_READ, VERIFICATION_DATES_HEADING } from "../dist/read-date.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(__dirname, "..");
@@ -264,7 +264,7 @@ describe("a ranked page that publishes terms we could not confirm", () => {
     const body = pageOf.get(route)!;
     assert.ok(
       body.includes(ATTEMPT_THAT_DID_NOT_READ(ATTEMPTED_ON)),
-      `the Read / verified column hides the ${ATTEMPTED_ON} attempt that did not read the page`,
+      `the ${VERIFICATION_DATES_HEADING} column hides the ${ATTEMPTED_ON} attempt that did not read the page`,
     );
     assert.ok(body.includes(CONFIRMED_ON), "the column drops the date the terms were last confirmed");
   });

@@ -9,10 +9,11 @@ export const OUTCOMES_THAT_READ_THE_PAGE = [
 
 const READ_THE_PAGE = new Set<string>(OUTCOMES_THAT_READ_THE_PAGE);
 
-export const VERIFICATION_DATES_HEADING = "Read / verified";
 export const LAST_READ_LABEL = "Last read";
 export const CONFIRMED_DATE_LABEL = "Verified";
 export const UNCONFIRMED_DATE_LABEL = "Catalogue date";
+const UNCONFIRMED_DATE_WORDS = UNCONFIRMED_DATE_LABEL.toLowerCase();
+export const VERIFICATION_DATES_HEADING = `Read / ${UNCONFIRMED_DATE_WORDS}`;
 
 export interface DatedRecord {
   vendor: string;
@@ -100,13 +101,19 @@ export function verificationDatesCell(offer: DatedRecord | null | undefined): st
 
 export function verificationDatesClause(read: string, verified: string): string {
   if (!read) return "";
-  return read > verified ? `read ${read}, verified ${verified}` : `read and verified ${read}`;
+  return read > verified ? `read ${read}, ${UNCONFIRMED_DATE_WORDS} ${verified}` : `read ${read}`;
 }
 
 export function verificationDatesSentence(offer: DatedRecord | null | undefined): string {
-  const { read, verified, readAfterVerified, attempted } = verificationDates(offer);
+  const { read, verified, confirmed, readAfterVerified, attempted } = verificationDates(offer);
   if (!read) return "";
-  const dates = readAfterVerified ? `Read ${read} · verified ${verified}` : `Read and verified ${read}`;
+  const dates = confirmed === read
+    ? `Read and confirmed ${read}`
+    : confirmed
+      ? `Read ${read} · confirmed ${confirmed}`
+      : readAfterVerified
+        ? `Read ${read} · ${UNCONFIRMED_DATE_WORDS} ${verified}`
+        : `Read ${read}`;
   return attempted ? `${dates} · tried again ${attempted} and did not read the page` : dates;
 }
 

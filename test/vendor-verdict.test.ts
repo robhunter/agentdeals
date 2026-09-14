@@ -19,6 +19,7 @@ import { vendorSlugMap } from "../dist/vendor-slug.js";
 import { isNoLongerInForce } from "../dist/change-resolution.js";
 import { levelWithheldReason, levelWithheldSince } from "../dist/source-check.js";
 import { offerEnded, endedVerdictSentence, ENDED_BADGE_LABEL } from "../dist/retirement.js";
+import { CONFIRMED_DATE_LABEL, UNCONFIRMED_DATE_LABEL } from "../dist/read-date.js";
 import { gateFor, utcDate } from "../dist/ranking.js";
 import type { DealChange, RiskCause } from "../dist/types.js";
 
@@ -680,10 +681,10 @@ describe("vendor verdict — as rendered", () => {
     assert.match(html, /<div class="detail-label">Discontinued<\/div>\s*<div class="detail-value"[^>]*>2026-08-10<\/div>/);
   });
 
-  it("leaves the verified stamp on a product being sunset with no date past", async () => {
+  it("leaves the dated stamp on a product being sunset with no date past", async () => {
     const html = await get("/vendor/lost-pixel-com");
     const pageMeta = html.match(/<p class="page-meta">([\s\S]*?)<\/p>/)?.[1] ?? "";
-    assert.match(pageMeta, /Verified [A-Z][a-z]+ \d{4}/);
+    assert.match(pageMeta, new RegExp(`(${CONFIRMED_DATE_LABEL}|${UNCONFIRMED_DATE_LABEL}) [A-Z][a-z]+ \\d{4}`));
     assert.doesNotMatch(pageMeta, /Discontinued/);
     assert.strictEqual(badgeWord(html), "risky", "a product being sunset is still rated on the record we hold");
   });
