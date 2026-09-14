@@ -7,6 +7,7 @@ import { fileURLToPath } from "node:url";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const {
+  CHALLENGE_STATUSES,
   fetchPageText,
   MIN_PAGE_TEXT_LENGTH,
   PAGE_TOO_SHORT_ERROR,
@@ -121,14 +122,23 @@ describe("a page too short to read is read again by a rendering client", () => {
   });
 });
 
-describe("only a page that answered and came back too short is rendered", () => {
-  for (const status of [403, 404, 410, 429, 500]) {
+describe("only a page the fetcher could not read is rendered", () => {
+  for (const status of [404, 410, 500]) {
     it(`does not render a page that answered HTTP ${status}`, async () => {
       const spy = renderSpy({ ok: true, html: RENDERED_WITH_TERMS });
-      const page = await readWith(SHELL, { status }, { render: spy.render });
+      const page = await readWith(SHELL, { status }, { render: spy.render, renderedThisRun: new Set() });
       assert.deepStrictEqual(spy.asked, []);
       assert.strictEqual(page.ok, false);
       assert.strictEqual(page.error, `HTTP ${status}`);
+    });
+  }
+
+  for (const status of CHALLENGE_STATUSES) {
+    it(`renders a page that answered HTTP ${status}`, async () => {
+      const spy = renderSpy({ ok: true, html: RENDERED_WITH_TERMS });
+      const page = await readWith(SHELL, { status }, { render: spy.render, renderedThisRun: new Set() });
+      assert.deepStrictEqual(spy.asked, [OFFER.url]);
+      assert.strictEqual(page.ok, true);
     });
   }
 

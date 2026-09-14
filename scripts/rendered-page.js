@@ -13,6 +13,53 @@ export const MAX_RENDERED_BYTES = 16_000_000;
 
 export const NO_RENDERING_CLIENT = "no rendering client is installed";
 export const RENDER_TIMED_OUT = "the rendering client did not finish in time";
+export const RENDERED_ITS_OWN_ERROR_PAGE =
+  "the rendering client could not reach the site and showed its own error page";
+
+const ERROR_PAGE_BODY_CLASSES = new Set([
+  "neterror",
+  "ssl",
+  "captiveportal",
+  "main-frame-blocked",
+  "insecure-form",
+  "lookalike-url",
+  "https-only",
+  "enterprise-block",
+  "supervised-user-block",
+  "safe-browsing",
+]);
+
+export const RENDERED_THE_CHALLENGE_AGAIN =
+  "the rendering client was served the site's bot challenge instead of the page";
+
+const CHALLENGE_PAGE_TITLES = [
+  "just a moment",
+  "attention required",
+  "security checkpoint",
+  "checking your browser",
+  "verifying you are human",
+  "are you a robot",
+  "access denied",
+];
+
+export function documentTitle(html) {
+  const found = String(html ?? "").match(/<title[^>]*>([\s\S]*?)<\/title>/i)?.[1];
+  return found ? found.replace(/\s+/g, " ").trim() : "";
+}
+
+export function theSitesBotChallenge(html) {
+  const title = documentTitle(html).toLowerCase();
+  return title.length > 0 && CHALLENGE_PAGE_TITLES.some((phrase) => title.includes(phrase));
+}
+
+export function theRenderingClientsOwnErrorPage(html) {
+  const text = String(html ?? "");
+  const body = text.match(/<body\b[^>]*>/i)?.[0];
+  if (!body) return false;
+  const classes = body.match(/\bclass\s*=\s*["']([^"']*)["']/i)?.[1]?.split(/\s+/) ?? [];
+  if (!classes.some((name) => ERROR_PAGE_BODY_CLASSES.has(name))) return false;
+  return /\bid\s*=\s*["']main-message["']/i.test(text);
+}
 
 export const RENDER_USER_AGENT =
   "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36";
@@ -127,10 +174,17 @@ export function renderPageHtml(url, options = {}) {
   const queued = oneAtATime.then(async () => {
     const binary = options.renderer ?? findRenderer(options.env);
     if (!binary) return { ok: false, error: NO_RENDERING_CLIENT };
-    return (options.dump ?? dumpDom)(binary, renderArguments(url, options), {
+    const dumped = await (options.dump ?? dumpDom)(binary, renderArguments(url, options), {
       timeoutMs: options.timeoutMs,
       maxBytes: options.maxBytes,
     });
+    if (dumped.ok && theRenderingClientsOwnErrorPage(dumped.html)) {
+      return { ok: false, error: RENDERED_ITS_OWN_ERROR_PAGE };
+    }
+    if (dumped.ok && theSitesBotChallenge(dumped.html)) {
+      return { ok: false, error: RENDERED_THE_CHALLENGE_AGAIN };
+    }
+    return dumped;
   });
   oneAtATime = queued.then(
     () => undefined,

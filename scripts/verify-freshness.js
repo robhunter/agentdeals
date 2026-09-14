@@ -87,6 +87,55 @@ export function renderingClientCouldNotReadIt(reason) {
   return `${PAGE_TOO_SHORT_ERROR}; the rendering client failed: ${reason}`;
 }
 
+export const CHALLENGE_STATUSES = [401, 403, 429];
+
+export function aChallengeARenderingClientCouldAnswer(status) {
+  return CHALLENGE_STATUSES.includes(status);
+}
+
+const urlsRenderedAfterAChallenge = new Set();
+
+export function forgetChallengeRenders() {
+  urlsRenderedAfterAChallenge.clear();
+}
+
+export function challengeRendersThisRun() {
+  return urlsRenderedAfterAChallenge.size;
+}
+
+export function pageBehindAChallenge(status, rendered, options = {}) {
+  const refused = { ok: false, error: `HTTP ${status}` };
+  if (!rendered?.ok) return refused;
+  const text = stripHtml(rendered.html);
+  if (text.length < (options.minLength ?? MIN_PAGE_TEXT_LENGTH)) return refused;
+  return {
+    ok: true,
+    text,
+    structured: readStructuredPrices(rendered.html),
+    truncated: false,
+    finalUrl: options.finalUrl,
+    status_before_rendering: status,
+    read: READ_BY_RENDERING,
+  };
+}
+
+async function readChallengedPageAgain(url, status, options = {}) {
+  const refused = { ok: false, error: `HTTP ${status}` };
+  if (!aChallengeARenderingClientCouldAnswer(status)) return refused;
+  const ledger = options.renderedThisRun ?? urlsRenderedAfterAChallenge;
+  if (ledger.has(url)) return refused;
+  ledger.add(url);
+  const render = options.render ?? renderPageHtml;
+  let rendered;
+  try {
+    rendered = await render(url);
+  } catch {
+    return refused;
+  }
+  if (rendered?.error === NO_RENDERING_CLIENT) ledger.delete(url);
+  return pageBehindAChallenge(status, rendered, { minLength: options.minLength });
+}
+
 export function pageOnlyARenderingClientCanRead(short, rendered, options = {}) {
   if (rendered.error === NO_RENDERING_CLIENT) return short;
   const unread = (error, chars) => ({ ...short, error, chars, read: READ_BY_RENDERING });
@@ -153,7 +202,11 @@ export async function fetchPageText(url, options = {}) {
     });
     if (!res.ok) {
       await cancelBody(res);
-      return { ok: false, error: `HTTP ${res.status}` };
+      return readChallengedPageAgain(url, res.status, {
+        render: options.render,
+        renderedThisRun: options.renderedThisRun,
+        minLength: options.minLength ?? MIN_PAGE_TEXT_LENGTH,
+      });
     }
     const body = await readBodyWithin(res, ceiling);
     if (body.tooLarge) {
