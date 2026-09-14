@@ -1,0 +1,114 @@
+{
+  "sitemap_pages": 2519,
+  "families": {
+    "vendor": {
+      "total": 1539,
+      "withClaim": 1539
+    },
+    "compare": {
+      "total": 330,
+      "withClaim": 330
+    },
+    "events": {
+      "total": 3,
+      "withClaim": 0
+    },
+    "other": {
+      "total": 647,
+      "withClaim": 2
+    }
+  },
+  "claim_tally": {
+    "api/watchlist": {
+      "pages": 1871,
+      "occurrences": 1876,
+      "examples": [
+        "/vendor/vercel",
+        "/vendor/render",
+        "/vendor/cloudflare-workers"
+      ]
+    },
+    "signed POST": {
+      "pages": 1539,
+      "occurrences": 1539,
+      "examples": [
+        "/vendor/vercel",
+        "/vendor/render",
+        "/vendor/cloudflare-workers"
+      ]
+    },
+    "notified via webhook": {
+      "pages": 1869,
+      "occurrences": 1869,
+      "examples": [
+        "/vendor/vercel",
+        "/vendor/render",
+        "/vendor/cloudflare-workers"
+      ]
+    },
+    "developer-hub": {
+      "pages": 1869,
+      "occurrences": 1869,
+      "examples": [
+        "/vendor/vercel",
+        "/vendor/render",
+        "/vendor/cloudflare-workers"
+      ]
+    },
+    "developers#watchlist": {
+      "pages": 3,
+      "occurrences": 3,
+      "examples": [
+        "/events/google-cloud-next-2026",
+        "/events/microsoft-build-2026",
+        "/events/google-io-2026"
+      ]
+    }
+  },
+  "link_targets": {
+    "/developer-hub": 404,
+    "/developers": 200,
+    "/pricing-changes/feed.xml": 200,
+    "/feed.xml": 200
+  },
+  "api_changes_vendor": {
+    "Vercel": {
+      "status": 200,
+      "total": 1
+    },
+    "Supabase": {
+      "status": 200,
+      "total": 1
+    },
+    "NotARealVendorXyz": {
+      "status": 200,
+      "total": 0
+    }
+  },
+  "feed_vendor_filter": {
+    "/feed.xml?vendor=Vercel": {
+      "status": 200,
+      "entries": 4
+    },
+    "/pricing-changes/feed.xml?vendor=Vercel": {
+      "status": 200,
+      "entries": 50
+    },
+    "/feed.xml?vendor=NotARealVendorXyz": {
+      "status": 200,
+      "entries": 4
+    },
+    "/pricing-changes/feed.xml?vendor=NotARealVendorXyz": {
+      "status": 200,
+      "entries": 50
+    },
+    "/feed.xml (no filter)": {
+      "status": 200,
+      "entries": 4
+    },
+    "/pricing-changes/feed.xml (no filter)": {
+      "status": 200,
+      "entries": 50
+    }
+  }
+}

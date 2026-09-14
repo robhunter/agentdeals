@@ -5,6 +5,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { DEFERENCE } from "../dist/signal-copy.js";
 import { getChangeLogFreshness, loadDealChanges } from "../dist/data.js";
+import { DOCUMENTED_GROUPS, readableEndpoints } from "../dist/api-inventory.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -16,8 +17,6 @@ const OPERATIONAL_ROUTES = new Map<string, string>([
   ["/api/pageviews", "our own analytics"],
   ["/api/traffic", "our own analytics"],
   ["/api/stats", "our own service counters"],
-  ["/api/watchlist", "a caller's own subscriptions"],
-  ["/api/watchlist/:id", "one caller's own subscription"],
   ["/api/feed", "an Atom feed, not a JSON body"],
 ]);
 
@@ -133,7 +132,11 @@ describe("every product route the developer hub documents carries a citation", (
   after(() => { proc?.kill("SIGKILL"); });
 
   it("reads the route table off the page rather than off a copy of it", () => {
-    assert.ok(documented.length >= 30, `the developer hub table yielded ${documented.length} GET routes`);
+    assert.deepStrictEqual(
+      [...documented].sort(),
+      readableEndpoints(DOCUMENTED_GROUPS).map((endpoint) => endpoint.path).sort(),
+      "the developer hub table and the endpoint register name different routes",
+    );
   });
 
   it("asks for a citation on every documented route that is not named as operational", () => {
@@ -246,7 +249,14 @@ describe("every product route the developer hub documents carries a citation", (
 
   it("names as operational only routes that carry no citation", async () => {
     const named = documentedOperationalRoutes(hub);
-    assert.ok(named.length >= 6, `the provenance section names ${named.length} operational routes`);
+    const excludedJsonRoutes = [...OPERATIONAL_ROUTES.entries()]
+      .filter(([, why]) => !why.includes("Atom feed"))
+      .map(([route]) => route);
+    assert.deepStrictEqual(
+      [...named].sort(),
+      excludedJsonRoutes.sort(),
+      "the provenance section and the exclusion list name different routes",
+    );
     for (const route of named) {
       assert.ok(OPERATIONAL_ROUTES.has(route), `${route} is published as operational but is not excluded here`);
       const body = await (await fetch(`${base}${route}`)).text();

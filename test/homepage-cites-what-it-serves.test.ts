@@ -37,7 +37,6 @@ const ROUTES_WE_DO_NOT_PUBLISH = new Map<string, string>([
   ["/api/indexnow/status", "our own crawl plumbing"],
   ["/api/referral-health", "our own link plumbing"],
   ["/api/docs/", "an asset path under /api/docs"],
-  ["/api/watchlist/", "one caller's own subscription"],
   ["/api/vendor-risk/", "published as /api/vendor-risk/:vendor"],
   ["/api/details/", "published as /api/details/:vendor"],
 ]);

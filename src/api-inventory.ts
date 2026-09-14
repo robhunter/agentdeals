@@ -19,6 +19,36 @@ export interface ExampleSubjects {
   codedVendor: string;
 }
 
+export interface WithdrawnEndpoint {
+  method: ApiMethod;
+  path: string;
+  reason: string;
+}
+
+const WATCHLIST_WITHDRAWAL =
+  "The webhook watchlist is withdrawn. No code path ever delivered the signed POST it accepted subscriptions for, so every subscription was silent. Poll /api/changes?vendor= with If-None-Match, or subscribe to /pricing-changes/feed.xml?vendor=.";
+
+export const WITHDRAWN_ENDPOINTS: readonly WithdrawnEndpoint[] = [
+  { method: "POST", path: "/api/watchlist", reason: WATCHLIST_WITHDRAWAL },
+  { method: "GET", path: "/api/watchlist", reason: WATCHLIST_WITHDRAWAL },
+  { method: "GET", path: "/api/watchlist/:id", reason: WATCHLIST_WITHDRAWAL },
+  { method: "DELETE", path: "/api/watchlist/:id", reason: WATCHLIST_WITHDRAWAL },
+];
+
+export const WITHDRAWN_ENDPOINT_PREFIXES: readonly string[] = ["/api/watchlist"];
+
+export function withdrawnEndpointPrefix(pathname: string): string | null {
+  return WITHDRAWN_ENDPOINT_PREFIXES.find(
+    (prefix) => pathname === prefix || pathname.startsWith(prefix + "/"),
+  ) ?? null;
+}
+
+export function withdrawalReasonFor(pathname: string): string | null {
+  const prefix = withdrawnEndpointPrefix(pathname);
+  if (prefix === null) return null;
+  return WITHDRAWN_ENDPOINTS.find((e) => e.path === prefix)?.reason ?? null;
+}
+
 export const API_ENDPOINTS: readonly ApiEndpoint[] = [
   { method: "GET", path: "/api/offers", desc: "Search and browse offers", params: "q, category, limit, offset", group: "product", request: "/api/offers?q=database", cites: true },
   { method: "GET", path: "/api/categories", desc: "List all categories with counts, what each name holds, and the other names answering the same question", params: "", group: "product", cites: true },
@@ -48,10 +78,6 @@ export const API_ENDPOINTS: readonly ApiEndpoint[] = [
   { method: "GET", path: "/api/feed", desc: "Atom feed of pricing changes", params: "", group: "product" },
   { method: "GET", path: "/api/openapi.json", desc: "OpenAPI 3.0 description of this API", params: "", group: "meta" },
   { method: "GET", path: "/api/docs", desc: "Browsable API reference", params: "", group: "meta" },
-  { method: "POST", path: "/api/watchlist", desc: "Subscribe to vendor pricing changes via webhook", params: "vendor, webhook_url (body)", group: "product" },
-  { method: "GET", path: "/api/watchlist", desc: "List active watchlist subscriptions", params: "webhook_url", group: "product" },
-  { method: "GET", path: "/api/watchlist/:id", desc: "Get subscription status", params: "", group: "product", request: "/api/watchlist/{watchlistId}" },
-  { method: "DELETE", path: "/api/watchlist/:id", desc: "Unsubscribe from vendor watch", params: "", group: "product" },
   { method: "POST", path: "/api/signal", desc: "Report a vendor you recommended, or that your user signed up", params: "event, vendor, note (body)", group: "product" },
   { method: "GET", path: "/api/referral-codes", desc: "List every referral code we hold, with the reader benefit and restrictions on each", params: "category", group: "referral", cites: true },
   { method: "GET", path: "/api/referral-codes/:vendor", desc: "Get the referral code we hold for a specific vendor", params: "", group: "referral", request: "/api/referral-codes/{codedVendor}", cites: true },
@@ -88,18 +114,16 @@ export function exampleSubjects(vendors: readonly string[], codedVendors: readon
   return { vendor, otherVendor, codedVendor };
 }
 
-export function exampleRequest(endpoint: ApiEndpoint, subjects: ExampleSubjects, watchlistId = "sub_example"): string {
+export function exampleRequest(endpoint: ApiEndpoint, subjects: ExampleSubjects): string {
   const template = endpoint.request ?? endpoint.path;
   return template
     .replace(/\{vendor\}/g, encodeURIComponent(subjects.vendor))
     .replace(/\{otherVendor\}/g, encodeURIComponent(subjects.otherVendor))
-    .replace(/\{codedVendor\}/g, encodeURIComponent(subjects.codedVendor))
-    .replace(/\{watchlistId\}/g, encodeURIComponent(watchlistId));
+    .replace(/\{codedVendor\}/g, encodeURIComponent(subjects.codedVendor));
 }
 
 export function endpointHref(endpoint: ApiEndpoint, subjects: ExampleSubjects): string | null {
   if (endpoint.method !== "GET") return null;
-  if (endpoint.path === "/api/watchlist/:id") return null;
   return exampleRequest(endpoint, subjects);
 }
 
