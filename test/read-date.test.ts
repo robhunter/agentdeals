@@ -6,14 +6,14 @@ import { join } from "node:path";
 import path from "node:path";
 import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
-import { assertCoversPopulation, assertSharesPopulation, recordsInTheCatalogue } from "./population-floor.ts";
+import { assertCoversPopulation, assertPopulationFloor, assertSharesPopulation, recordsInTheCatalogue } from "./population-floor.ts";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(__dirname, "..");
 
 const { ANSWERED_OUTCOMES, applyAttempt, ATTEMPT_CHANGED, ATTEMPT_CONFIRMED, ATTEMPT_FETCH_FAILED, ATTEMPT_SOURCE_UNUSABLE, ATTEMPT_UNCLEAR } =
   await import("../scripts/verification-state.js");
-const { OUTCOMES_THAT_READ_THE_PAGE, attemptThatDidNotRead, lastReadDate, lastReadNote, verificationDates, verificationDatesCell, verificationDatesSentence } =
+const { NO_CONFIRMATION_HELD, OUTCOMES_THAT_READ_THE_PAGE, attemptThatDidNotRead, confirmationDate, lastReadDate, lastReadNote, verificationDates, verificationDatesCell, verificationDatesSentence } =
   await import("../dist/read-date.js");
 const { resetVerificationStateCache } = await import("../dist/verification-state.js");
 
@@ -142,6 +142,44 @@ describe("the day we last read the page", () => {
     assert.equal(attemptThatDidNotRead(offer), null);
     assert.equal(verificationDatesCell(offer), "2026-04-12");
   });
+
+  it("reads the day the page was read, not the later date the record publishes", () => {
+    withState([record({ last_attempt_at: "2026-04-10", last_outcome: ATTEMPT_CHANGED, last_success: null })]);
+    assert.equal(lastReadDate(offer), "2026-04-10");
+  });
+
+  it("claims no confirmation where the store holds no success", () => {
+    withState([record({ last_attempt_at: "2026-09-09", last_outcome: ATTEMPT_CHANGED, last_success: null })]);
+    assert.equal(confirmationDate(offer), null);
+    const note = lastReadNote(offer);
+    assert.ok(note.includes(NO_CONFIRMATION_HELD), note);
+    assert.doesNotMatch(note, /last confirmed on/);
+    assert.match(note, /on 2026-09-09, found the page different from the terms we hold/);
+    assert.match(note, /the 2026-04-12 beside this date/);
+  });
+
+  it("says what a read that reached the page without terms found", () => {
+    withState([record({ last_attempt_at: "2026-09-09", last_outcome: "states_no_price", last_success: null })]);
+    assert.match(lastReadNote(offer), /could read no amount, tier or rate on the page/);
+  });
+
+  it("claims no confirmation where the store has never held the record", () => {
+    withState([]);
+    assert.equal(confirmationDate(offer), null);
+    assert.ok(lastReadNote(offer).includes(NO_CONFIRMATION_HELD));
+  });
+
+  it("publishes the confirmation the store holds, not the date the record carries", () => {
+    withState([record({ last_attempt_at: "2026-09-10", last_outcome: ATTEMPT_CONFIRMED, last_success: "2026-09-10" })]);
+    assert.equal(confirmationDate(offer), "2026-09-10");
+    assert.match(lastReadNote(offer), /read the vendor's page, and the day we last confirmed/);
+    assert.doesNotMatch(lastReadNote(offer), /2026-04-12/);
+  });
+
+  it("keeps the confirmation it holds beside a later read that disagreed", () => {
+    withState([record({ last_attempt_at: "2026-09-09", last_outcome: ATTEMPT_CHANGED, last_success: "2026-08-30" })]);
+    assert.match(lastReadNote(offer), /last confirmed on 2026-08-30/);
+  });
 });
 
 describe("the state the re-verification writes", () => {
@@ -181,9 +219,77 @@ describe("the catalogue", () => {
     assertCoversPopulation(dated.length, recordsInTheCatalogue(), "records that publish a day we read the page");
   });
 
-  it("never publishes a read date earlier than the day it confirmed the terms", () => {
-    const backwards = offers.filter((o) => lastReadDate(o) < o.verifiedDate);
+  it("never publishes a confirmation later than the day it read the page", () => {
+    const backwards = offers.filter((o) => {
+      const confirmed = confirmationDate(o);
+      return confirmed !== null && confirmed > lastReadDate(o);
+    });
     assert.deepEqual(backwards.map((o) => o.vendor), [], "a record cannot be confirmed on a day we did not read it");
+  });
+
+  it("dates the read from the store's attempt and not from the date the record publishes", () => {
+    const answered = offers.filter((o) => {
+      const held = byKey.get(`${o.vendor}|${o.url}`);
+      return Boolean(held?.last_outcome && ANSWERED_OUTCOMES.has(held.last_outcome));
+    });
+    assertSharesPopulation(answered.length, recordsInTheCatalogue(), 0.5, "records whose last attempt read the page");
+    for (const o of answered) {
+      assert.equal(
+        lastReadDate(o),
+        byKey.get(`${o.vendor}|${o.url}`)!.last_attempt_at,
+        `${o.vendor} publishes a read date the store's own attempt does not give`,
+      );
+    }
+    const earlierThanPublished = answered.filter((o) => lastReadDate(o) < o.verifiedDate);
+    assert.ok(
+      earlierThanPublished.length > 0,
+      "no record was read before the date it publishes, so this control cannot tell the store's attempt from that date",
+    );
+  });
+
+  it("claims a confirmation only on the records the store holds a success for", () => {
+    const claiming = offers.filter((o) => /last confirmed/.test(lastReadNote(o)));
+    const held = offers.filter((o) => confirmationDate(o) !== null);
+    assert.deepEqual(
+      claiming.filter((o) => confirmationDate(o) === null).map((o) => o.vendor),
+      [],
+      "a record states a confirmation date the verification store cannot source",
+    );
+    assert.ok(held.length > 0, "the store holds no confirmation at all, so this assertion proves nothing");
+    for (const o of held) {
+      assert.ok(
+        lastReadNote(o).includes(confirmationDate(o)!) || !/last confirmed on/.test(lastReadNote(o)),
+        `${o.vendor} states a confirmation date other than the ${confirmationDate(o)} the store holds`,
+      );
+    }
+  });
+
+  it("counts the catalogue in each state the verification store leaves it in", () => {
+    const sourced: string[] = [];
+    const none: string[] = [];
+    const storeIsNewer: string[] = [];
+    const noRecord: string[] = [];
+    for (const o of offers) {
+      const held = byKey.get(`${o.vendor}|${o.url}`);
+      if (!held) noRecord.push(o.vendor);
+      else if (!held.last_success) none.push(o.vendor);
+      else if (held.last_success > o.verifiedDate) storeIsNewer.push(o.vendor);
+      else sourced.push(o.vendor);
+    }
+    assert.equal(
+      sourced.length + none.length + storeIsNewer.length + noRecord.length,
+      offers.length,
+      "the four states do not partition the catalogue",
+    );
+    assert.ok(
+      none.length + noRecord.length < offers.length,
+      `every record in the catalogue publishes a date no confirmation in the store can source: ${none.length} with a state record holding no success, ${noRecord.length} with no state record`,
+    );
+    assertPopulationFloor(
+      sourced.length + storeIsNewer.length,
+      200,
+      `of ${offers.length} records can source their confirmation to the store, against ${none.length} holding no success and ${noRecord.length} with no state record`,
+    );
   });
 
   it("gains no read date from an attempt that failed", () => {
