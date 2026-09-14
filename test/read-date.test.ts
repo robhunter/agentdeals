@@ -13,8 +13,10 @@ const REPO = path.join(__dirname, "..");
 
 const { ANSWERED_OUTCOMES, applyAttempt, ATTEMPT_CHANGED, ATTEMPT_CONFIRMED, ATTEMPT_FETCH_FAILED, ATTEMPT_SOURCE_UNUSABLE, ATTEMPT_UNCLEAR } =
   await import("../scripts/verification-state.js");
-const { NO_CONFIRMATION_HELD, OUTCOMES_THAT_READ_THE_PAGE, UNCONFIRMED_DATE_LABEL, VERIFICATION_DATES_HEADING, attemptThatDidNotRead, confirmationDate, lastReadDate, lastReadNote, verificationDates, verificationDatesCell, verificationDatesClause, verificationDatesSentence } =
+const { NO_CONFIRMATION_HELD, OUTCOMES_THAT_READ_THE_PAGE, UNCONFIRMED_DATE_LABEL, VERIFICATION_DATES_HEADING, attemptThatDidNotRead, confirmationDate, lastReadDate, lastReadNote, storedConfirmationClause, verificationDates, verificationDatesCell, verificationDatesClause, verificationDatesSentence } =
   await import("../dist/read-date.js");
+const { publishedTermsEvidence, termsTheVerdictWithholds, unconfirmedTermsFrom } = await import("../dist/vendor-verdict.js");
+const { holdsVerifiedDate } = await import("../scripts/vendor-naming.js");
 const { resetVerificationStateCache } = await import("../dist/verification-state.js");
 
 interface StateRecord {
@@ -207,6 +209,74 @@ describe("the day we last read the page", () => {
     withState([record({ last_attempt_at: "2026-09-09", last_outcome: ATTEMPT_CHANGED, last_success: "2026-08-30" })]);
     assert.match(lastReadNote(offer), /last confirmed on 2026-08-30/);
   });
+
+  describe("a confirmation the page's own verdict does not stand behind", () => {
+    const NO_AMOUNT_ON_THE_PAGE = "the page we cite for this offer names a plan but states no amount";
+    const confirmedOn = (date: string) =>
+      withState([record({ last_attempt_at: date, last_outcome: ATTEMPT_CONFIRMED, last_success: date })]);
+    const standingNote = () => {
+      confirmedOn("2026-09-10");
+      return lastReadNote(offer);
+    };
+
+    it("says the same read disagreed with itself where both come from one day", () => {
+      confirmedOn("2026-09-10");
+      const withheld = { clause: NO_AMOUNT_ON_THE_PAGE, on: "2026-09-10" };
+      const note = lastReadNote(offer, withheld);
+      assert.match(note, /That read matched the terms we publish/);
+      assert.match(note, new RegExp(NO_AMOUNT_ON_THE_PAGE));
+      assert.match(note, /we cannot reconcile the two/);
+      assert.ok(!note.includes(standingNote()), "the page still asserts a confirmation that stands");
+    });
+
+    it("says a later read left the confirmation unconfirmed where the read came after it", () => {
+      confirmedOn("2026-08-30");
+      const withheld = { clause: NO_AMOUNT_ON_THE_PAGE, on: "2026-09-13" };
+      const note = lastReadNote(offer, withheld);
+      assert.match(note, /a confirmation of these terms from 2026-08-30/);
+      assert.match(note, /we have read the page since without confirming them/);
+      assert.match(note, new RegExp(NO_AMOUNT_ON_THE_PAGE));
+      assert.doesNotMatch(note, /last confirmed on/);
+    });
+
+    it("keeps the note it publishes where nothing is withheld", () => {
+      confirmedOn("2026-09-10");
+      assert.match(lastReadNote(offer, null), /read the vendor's page, and the day we last confirmed/);
+      assert.strictEqual(lastReadNote(offer, null), lastReadNote(offer));
+    });
+
+    it("claims no confirmation to withhold where the store holds none", () => {
+      withState([record({ last_attempt_at: "2026-09-13", last_outcome: "states_no_price", last_success: null })]);
+      const note = lastReadNote(offer, { clause: NO_AMOUNT_ON_THE_PAGE, on: "2026-09-13" });
+      assert.ok(note.includes(NO_CONFIRMATION_HELD), note);
+      assert.doesNotMatch(note, /we cannot reconcile the two/);
+    });
+
+    it("names the same two shapes on the MCP surface as on the page", () => {
+      confirmedOn("2026-09-10");
+      const sameRead = storedConfirmationClause(offer, { clause: NO_AMOUNT_ON_THE_PAGE, on: "2026-09-10" });
+      assert.match(sameRead, /that same read on 2026-09-10 and cannot reconcile the two/);
+      assert.ok(!sameRead.includes(storedConfirmationClause(offer)), "the MCP surface still asserts a confirmation that stands");
+      const later = storedConfirmationClause(offer, { clause: NO_AMOUNT_ON_THE_PAGE, on: "2026-09-13" });
+      assert.match(later, /a confirmation of these terms from 2026-09-10/);
+      assert.match(later, /we have read the page since without confirming them/);
+      assert.strictEqual(storedConfirmationClause(offer, null), storedConfirmationClause(offer));
+    });
+
+    it("withholds nothing where the read confirmed the price in words", () => {
+      const rowFor = (outcome: string) => ({
+        vendor: "Examplebase",
+        description: "Free tier: 10 GB per month",
+        source_check: { outcome, checked: "2026-09-10" },
+      });
+      const freePrice = unconfirmedTermsFrom(publishedTermsEvidence(rowFor("states_a_free_price")));
+      assert.ok(freePrice, "a page stating a free price withholds nothing at all, so this control proves nothing");
+      assert.strictEqual(termsTheVerdictWithholds(freePrice), null);
+      const noAmount = unconfirmedTermsFrom(publishedTermsEvidence(rowFor("states_no_amount")));
+      assert.deepStrictEqual(termsTheVerdictWithholds(noAmount), { clause: NO_AMOUNT_ON_THE_PAGE, on: "2026-09-10" });
+      assert.strictEqual(termsTheVerdictWithholds(null), null);
+    });
+  });
 });
 
 describe("the state the re-verification writes", () => {
@@ -235,7 +305,7 @@ describe("the state the re-verification writes", () => {
 });
 
 describe("the catalogue", () => {
-  const offers: Array<{ vendor: string; url: string; verifiedDate: string }> =
+  const offers: Array<{ vendor: string; url: string; verifiedDate: string; source_check?: { outcome: string; checked: string } }> =
     JSON.parse(readFileSync(path.join(REPO, "data", "index.json"), "utf-8")).offers;
   const state: StateRecord[] =
     JSON.parse(readFileSync(path.join(REPO, "data", "verification_state.json"), "utf-8")).records;
@@ -334,6 +404,22 @@ describe("the catalogue", () => {
         `${o.vendor} last failed on ${held.last_attempt_at} with ${held.last_outcome} and that attempt moved the read date`,
       );
     }
+  });
+
+  it("holds no confirmation from a run that refused to stamp the date it confirms", () => {
+    const stamped = offers.filter((o) => {
+      const held = byKey.get(`${o.vendor}|${o.url}`);
+      const check = o.source_check;
+      if (!held || !check || held.last_outcome !== ATTEMPT_CONFIRMED) return false;
+      return holdsVerifiedDate(check.outcome) && held.last_attempt_at === check.checked;
+    });
+    assert.deepEqual(
+      stamped.map((o) => `${o.vendor} (${o.source_check!.outcome})`),
+      [],
+      "the store confirms a record on the same run whose source check held its published date",
+    );
+    const confirmedAtAll = offers.filter((o) => byKey.get(`${o.vendor}|${o.url}`)?.last_outcome === ATTEMPT_CONFIRMED);
+    assertPopulationFloor(confirmedAtAll.length, 200, "records whose last attempt confirmed the terms");
   });
 
   it("moves the read date past the confirmation on the records a read has since answered", () => {

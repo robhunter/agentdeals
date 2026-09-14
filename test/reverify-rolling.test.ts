@@ -15,17 +15,20 @@ const {
   ATTEMPT_CONFIRMED,
   ATTEMPT_FETCH_FAILED,
   ATTEMPT_SOURCE_UNUSABLE,
+  ATTEMPT_STATES_NO_PRICE,
   ATTEMPT_UNCLEAR,
   FAILURE_BOT_BLOCK,
   QUARANTINE_AFTER_FAILURES,
   QUARANTINE_RETRY_DAYS,
   recordAttempts,
+  stampsAConfirmation,
 } = await import("../scripts/verification-state.js");
 const {
   SOURCE_CHECK_OK,
   SOURCE_CHECK_NO_TERMS,
   SOURCE_CHECK_UNREADABLE,
   SOURCE_CHECK_OUTCOMES,
+  holdsVerifiedDate,
 } = await import("../scripts/vendor-naming.js");
 
 describe("rolling re-verification", () => {
@@ -529,5 +532,96 @@ describe("a read that failed buys the record no reprieve", () => {
     const { picked, pickedAfterAFailedRead } = pickOldestEntries(offers, 3, NOW, { verificationState: stateOf(rows) });
     assert.strictEqual(picked.length, 3);
     assert.strictEqual(pickedAfterAFailedRead, 2);
+  });
+});
+
+describe("one run decides the stamp and the stored confirmation together", () => {
+  const NOW = new Date("2026-09-15T09:00:00Z");
+  const THE_DAY_WE_READ = "2026-09-15";
+  const HELD_SINCE = "2026-07-11";
+
+  const PAGES: Record<string, string> = {
+    ok: "Vendora pricing. Free tier: 10 GB per month for $0.",
+    states_a_free_price: "Vendora pricing. Free forever for personal use.",
+    states_no_amount: "Vendora pricing. Hobby plan and Team plan. Contact sales for details.",
+    states_no_terms: "Vendora — open source project. Read the docs, join the community, file an issue on our tracker.",
+    does_not_name_vendor: "A page about something else entirely, priced at $9 per month.",
+    unreadable: "",
+  };
+
+  const readingA = (outcome: string) => async () =>
+    outcome === "unreadable"
+      ? { ok: false, error: "HTTP 503" }
+      : { ok: true, text: PAGES[outcome], truncated: false };
+
+  const vendora = {
+    vendor: "Vendora",
+    url: "https://vendora.example/pricing",
+    description: "Free tier: 10 GB",
+    category: "Storage",
+    verifiedDate: HELD_SINCE,
+  };
+
+  const confirmAfterReading = async (outcome: string) => {
+    const data = { offers: [{ ...vendora }] };
+    const result = await runAiMode([{ index: 0, offer: vendora }], data, false, NOW, {
+      fetchFn: readingA(outcome),
+      verifyFn: async () => ({ status: "confirmed" }),
+      confirmFn: async () => ({ describes_change: true }),
+      rateLimitMs: 0,
+    });
+    const state = new Map();
+    recordAttempts(state, result.attempts, NOW);
+    const record = [...state.values()][0] as { last_outcome: string; last_success: string | null };
+    return {
+      stamped: data.offers[0].verifiedDate !== HELD_SINCE,
+      graded: data.offers[0].source_check.outcome,
+      storedOutcome: record.last_outcome,
+      storedConfirmation: record.last_success,
+    };
+  };
+
+  it("records no confirmation for a read whose stamp it refuses", async () => {
+    const run = await confirmAfterReading("states_no_terms");
+    assert.strictEqual(run.graded, SOURCE_CHECK_NO_TERMS);
+    assert.strictEqual(run.stamped, false, "the run advanced the date it grades as unreadable terms");
+    assert.strictEqual(run.storedOutcome, ATTEMPT_STATES_NO_PRICE);
+    assert.strictEqual(run.storedConfirmation, null, "the store holds a confirmation from a run that refused to stamp one");
+  });
+
+  it("stamps and confirms together on a read the source check agrees with", async () => {
+    for (const outcome of ["ok", "states_a_free_price"]) {
+      const run = await confirmAfterReading(outcome);
+      assert.strictEqual(run.graded, outcome, `the fixture for ${outcome} no longer grades as one`);
+      assert.strictEqual(run.stamped, true, `a ${outcome} read did not advance the published date`);
+      assert.strictEqual(run.storedOutcome, ATTEMPT_CONFIRMED);
+      assert.strictEqual(run.storedConfirmation, THE_DAY_WE_READ);
+    }
+  });
+
+  it("stamps and confirms on every outcome, or on none of them", async () => {
+    const disagreeing: string[] = [];
+    for (const outcome of Object.keys(PAGES)) {
+      const run = await confirmAfterReading(outcome);
+      assert.strictEqual(run.graded, outcome, `the fixture for ${outcome} no longer grades as one`);
+      const confirmed = run.storedOutcome === ATTEMPT_CONFIRMED && run.storedConfirmation !== null;
+      if (run.stamped !== confirmed) disagreeing.push(`${outcome}: stamped ${run.stamped}, confirmed ${confirmed}`);
+    }
+    assert.deepStrictEqual(disagreeing, [], "a run advanced one of the two dates and withheld the other");
+  });
+
+  it("decides both from the outcome that holds the published date", () => {
+    const stamping = SOURCE_CHECK_OUTCOMES.filter((o: string) => stampsAConfirmation("confirmed", o));
+    const readable = SOURCE_CHECK_OUTCOMES.filter((o: string) => !holdsVerifiedDate(o));
+    assert.deepStrictEqual(stamping, readable);
+    assert.ok(stamping.length > 0 && stamping.length < SOURCE_CHECK_OUTCOMES.length, "the predicate answers the same for every outcome");
+  });
+
+  it("confirms nothing for a verdict that was not a confirmation", () => {
+    for (const status of ["changed", "unclear", null]) {
+      for (const outcome of SOURCE_CHECK_OUTCOMES) {
+        assert.strictEqual(stampsAConfirmation(status, outcome), false, `a ${status} verdict stamped ${outcome}`);
+      }
+    }
   });
 });

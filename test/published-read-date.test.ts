@@ -4,13 +4,14 @@ import { spawn, type ChildProcess } from "node:child_process";
 import { readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { assertCoversPopulation, assertSharesPopulation, recordsInTheCatalogue } from "./population-floor.ts";
+import { assertCoversPopulation, assertPopulationFloor, assertSharesPopulation, recordsInTheCatalogue } from "./population-floor.ts";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(__dirname, "..");
 
-const { confirmationDate, lastReadDate, verificationDatesCell, CONFIRMED_DATE_LABEL, LAST_READ_LABEL, NO_CONFIRMATION_HELD, UNCONFIRMED_DATE_LABEL, VERIFICATION_DATES_HEADING } =
+const { confirmationDate, lastReadDate, lastReadNote, storedConfirmationClause, verificationDatesCell, CONFIRMED_DATE_LABEL, LAST_READ_LABEL, NO_CONFIRMATION_HELD, UNCONFIRMED_DATE_LABEL, VERIFICATION_DATES_HEADING } =
   await import("../dist/read-date.js");
+const { publishedTermsEvidence, termsTheVerdictWithholds, unconfirmedTermsFrom } = await import("../dist/vendor-verdict.js");
 const { ANSWERED_OUTCOMES } = await import("../scripts/verification-state.js");
 
 interface CatalogueOffer {
@@ -46,9 +47,30 @@ const publishedDateCardOn = (body: string): { label: string; date: string } | nu
   return m ? { label: m[1]!, date: m[2]! } : null;
 };
 
+const escaped = (text: string) => text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+
+const termsWithheldOn = (offer: CatalogueOffer) =>
+  termsTheVerdictWithholds(unconfirmedTermsFrom(publishedTermsEvidence(offer)));
+
+const holdsAConfirmation = (o: CatalogueOffer) => confirmationDate(o) !== null;
+
+const metaDescriptionOf = (body: string): string =>
+  body.match(/<meta name="description" content="([^"]*)"/)?.[1] ?? "";
+
+const detailNoteOf = (body: string): string =>
+  body.match(/<div class="detail-note">([^<]*)<\/div>/)?.[1] ?? "";
+
+const THE_PAGE_WITHHOLDS = "Not verified — ";
+const pageWithholdsTheTerms = (body: string) => metaDescriptionOf(body).includes(THE_PAGE_WITHHOLDS);
+
 const widestGap = byGap(offers);
-const widestConfirmedGap = byGap(offers.filter((o) => confirmationDate(o) !== null && confirmationDate(o)! < lastReadDate(o)));
 const widestUnconfirmedGap = byGap(offers.filter((o) => confirmationDate(o) === null));
+const pagePrimaries = [...new Set(offers.map((o) => o.vendor))].map((vendor) => offers.find((o) => o.vendor === vendor)!);
+const confirmationsHeld = pagePrimaries.filter(holdsAConfirmation);
+const confirmationsOlderThanTheirRead = confirmationsHeld
+  .filter((o) => confirmationDate(o)! < lastReadDate(o))
+  .map((o) => ({ offer: o, read: lastReadDate(o), gap: daysBetween(o.verifiedDate, lastReadDate(o)) }))
+  .sort((a, b) => b.gap - a.gap);
 
 let serverPort = 0;
 let proc: ChildProcess | null = null;
@@ -164,21 +186,29 @@ describe("every record publishes the day we last read its page", () => {
     assertSharesPopulation(moved.length, recordsInTheCatalogue(), 0.25, "records the API answers with a read later than the verification");
   });
 
-  it("publishes both dates, each labelled, on the record with the widest confirmed gap", async () => {
-    assert.ok(widestConfirmedGap, "no record holds a confirmation older than its last read, so this control proves nothing");
-    const held = confirmationDate(widestConfirmedGap.offer)!;
-    const { status, body } = await get(`/vendor/${slugOf(widestConfirmedGap.offer.vendor)}`);
-    assert.equal(status, 200, `/vendor/${slugOf(widestConfirmedGap.offer.vendor)} must exist for this test to mean anything`);
-    assert.ok(body.includes(LAST_READ_LABEL), `the page for ${widestConfirmedGap.offer.vendor} does not label a read date`);
-    assert.ok(body.includes(widestConfirmedGap.read), `the page for ${widestConfirmedGap.offer.vendor} does not publish ${widestConfirmedGap.read}`);
+  it("publishes both dates, each labelled, on the widest confirmed gap its verdict stands behind", async () => {
+    assert.ok(confirmationsOlderThanTheirRead.length > 0, "no record holds a confirmation older than its last read, so this control proves nothing");
+    let subject: { offer: CatalogueOffer; read: string } | null = null;
+    let body = "";
+    for (const candidate of confirmationsOlderThanTheirRead) {
+      const answer = await get(`/vendor/${slugOf(candidate.offer.vendor)}`);
+      if (answer.status !== 200 || pageWithholdsTheTerms(answer.body)) continue;
+      subject = candidate;
+      body = answer.body;
+      break;
+    }
+    assert.ok(subject, "every confirmation older than its last read sits on a page that withholds the terms, so this control proves nothing");
+    const held = confirmationDate(subject.offer)!;
+    assert.ok(body.includes(LAST_READ_LABEL), `the page for ${subject.offer.vendor} does not label a read date`);
+    assert.ok(body.includes(subject.read), `the page for ${subject.offer.vendor} does not publish ${subject.read}`);
     assert.ok(
       body.includes(`last confirmed on ${held}`),
-      `the page for ${widestConfirmedGap.offer.vendor} publishes two dates without saying which is which`,
+      `the page for ${subject.offer.vendor} publishes two dates without saying which is which`,
     );
     assert.deepStrictEqual(
       publishedDateCardOn(body),
       { label: CONFIRMED_DATE_LABEL, date: held },
-      `the page for ${widestConfirmedGap.offer.vendor} heads its verification with a date the store did not confirm on`,
+      `the page for ${subject.offer.vendor} heads its verification with a date the store did not confirm on`,
     );
   });
 
@@ -199,6 +229,33 @@ describe("every record publishes the day we last read its page", () => {
       !body.includes(`last confirmed on ${offer.verifiedDate}`),
       `the page for ${offer.vendor} states its terms were last confirmed on a date no read in the store confirmed`,
     );
+  });
+
+  it("states no confirmation that stands on a page that says it cannot confirm the terms", async () => {
+    assertPopulationFloor(confirmationsHeld.length, 200, "records the store holds a confirmation for");
+    const contradicting: string[] = [];
+    const denying: string[] = [];
+    const silent: string[] = [];
+    const standing: string[] = [];
+    const withholding: string[] = [];
+    for (const offer of confirmationsHeld) {
+      const { status, body } = await get(`/vendor/${slugOf(offer.vendor)}`);
+      if (status !== 200) continue;
+      const note = detailNoteOf(body);
+      if (!pageWithholdsTheTerms(body)) {
+        standing.push(offer.vendor);
+        if (!note.includes(escaped(lastReadNote(offer)))) silent.push(offer.vendor);
+        continue;
+      }
+      withholding.push(offer.vendor);
+      if (note.includes(escaped(lastReadNote(offer)))) contradicting.push(offer.vendor);
+      if (note.includes(NO_CONFIRMATION_HELD)) denying.push(offer.vendor);
+    }
+    assert.ok(withholding.length > 0, "no page holding a confirmation withholds its terms, so this census proves nothing");
+    assertPopulationFloor(standing.length, 200, "pages whose verdict stands behind the confirmation they publish");
+    assert.deepEqual(contradicting, [], "a page states its terms were confirmed and states it cannot confirm them");
+    assert.deepEqual(denying, [], "a page withholding the terms says we hold no confirmation, and the store holds one");
+    assert.deepEqual(silent, [], "a page whose verdict stands dropped the confirmation it holds");
   });
 
   it("dates its last update no earlier than its last read", async () => {
@@ -243,6 +300,30 @@ describe("every record publishes the day we last read its page", () => {
       publishedLineIn(overHttp),
       "the two MCP surfaces publish different dated lines for the same record",
     );
+  });
+
+  it("relates the confirmation it holds to the read it withholds on, over both MCP transports", async () => {
+    const subject = confirmationsHeld.find((o) => termsWithheldOn(o) !== null);
+    assert.ok(subject, "no record holding a confirmation withholds its terms, so this control proves nothing");
+    const uri = `agentdeals://vendor/${slugOf(subject.vendor)}`;
+    const standing = storedConfirmationClause(subject);
+    const held = confirmationDate(subject)!;
+    const answers = [
+      ["stdio", await readResourceOverStdio(uri)],
+      ["http", await readResourceOverHttp(uri)],
+    ] as const;
+    const lines: string[] = [];
+    for (const [transport, text] of answers) {
+      const line = text.split("\n").find((l) => l.startsWith("**Verification:**")) ?? "";
+      assert.ok(line, `${transport} publishes no verification line for ${subject.vendor}`);
+      assert.ok(
+        !line.includes(standing),
+        `${transport} states a confirmation that stands beside a refusal to confirm: ${line}`,
+      );
+      assert.ok(line.includes(held), `${transport} drops the ${held} confirmation the store holds for ${subject.vendor}`);
+      lines.push(line);
+    }
+    assert.strictEqual(lines[0], lines[1], "the two MCP surfaces relate the confirmation differently");
   });
 
   it("heads every category table with both dates and fills every row", async () => {

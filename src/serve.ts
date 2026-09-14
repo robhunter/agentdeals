@@ -35,7 +35,7 @@ import { NO_CURRENT_FIGURE, costHeadlineCaveat, limitCellText, mayRecommendAsFre
 import { changesByVendor } from "./superseded-census.js";
 import { buildComparisonMap, comparisonSlug } from "./comparison-pairs.js";
 import { comparisonVerdictText, freeTierFaqAnswer, stabilityFaqAnswer, type ComparisonSide, type FreeTierSide, type SideFreeTier, type StabilityRating } from "./comparison-verdict.js";
-import { publishedVendorLevel, vendorVerdictSentence, vendorBadge, freeTierClaim, statesRiskCause, narrowingSentence, changeKindNoun, emptyHistoryCaveatSentence, refusedReadOurConfirmationSupersedes, refusedReadWeHold, refusedReadWithholdingSentence, nothingWeReadDescribesTheTerms, unconfirmedThresholdSentence, unconfirmedTermsOpening, whyWeCannotConfirmTheseTerms, withheldForARefusedRead, withUnconfirmedTerms, refusalWithholdsStability, termsUnconfirmedBySource, closingTerms, termsWithTheReasonWeCannotConfirmThem, termsNotVerifiedMetaSentence, termsWithheldLabel, unconfirmedTermsSentence, withheldBadgeLabel, type BadgeWithholding, type UnconfirmedTerms, type FreeTierClaim, type VendorVerdictInput } from "./vendor-verdict.js";
+import { publishedVendorLevel, vendorVerdictSentence, vendorBadge, freeTierClaim, statesRiskCause, narrowingSentence, changeKindNoun, emptyHistoryCaveatSentence, refusedReadOurConfirmationSupersedes, refusedReadWeHold, refusedReadWithholdingSentence, nothingWeReadDescribesTheTerms, unconfirmedThresholdSentence, unconfirmedTermsOpening, whyWeCannotConfirmTheseTerms, withheldForARefusedRead, withUnconfirmedTerms, refusalWithholdsStability, termsUnconfirmedBySource, termsTheVerdictWithholds, closingTerms, termsWithTheReasonWeCannotConfirmThem, termsNotVerifiedMetaSentence, termsWithheldLabel, unconfirmedTermsSentence, withheldBadgeLabel, type BadgeWithholding, type UnconfirmedTerms, type FreeTierClaim, type VendorVerdictInput } from "./vendor-verdict.js";
 import { tierRecordsAFreeTier } from "./free-tier-record.js";
 import { PAGE_HEAD_OPEN, withLedeBeforeNav } from "./page-lede.js";
 import { withReviewByline } from "./page-byline.js";
@@ -5184,6 +5184,7 @@ ${allCompareLinks.join("\n")}
 
   const lastPricingChange = latestEventDate(vendorChanges);
   const primaryLastRead = lastReadDate(primary);
+  const primaryTermsWithheld = termsTheVerdictWithholds(unconfirmedTermsFor(primary));
   const lastUpdated = lastPricingChange && lastPricingChange > primaryLastRead ? lastPricingChange : primaryLastRead;
   const offerExpiry = offerExpiryAfter(vendorChanges, servedOn);
 
@@ -5483,7 +5484,7 @@ ${referralCalloutHtml}
     <div class="detail-card">
       <div class="detail-label">${LAST_READ_LABEL}</div>
       <div class="detail-value" style="font-family:var(--mono)">${escHtmlServer(primaryLastRead)}</div>
-      <div class="detail-note">${escHtmlServer(lastReadNote(primary))}</div>
+      <div class="detail-note">${escHtmlServer(lastReadNote(primary, primaryTermsWithheld))}</div>
     </div>
   </div>
 
