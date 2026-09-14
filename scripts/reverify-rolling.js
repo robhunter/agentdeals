@@ -119,25 +119,28 @@ export function pickOldestEntries(offers, limit, now = new Date(), options = {})
     a.ts - b.ts ||
     Number(b.readFailed) - Number(a.readFailed);
   const active = entries.filter((entry) => !isQuarantined(entry.record)).sort(byAge);
+  const queue = active.filter((entry) => !entry.awaitingCorroboration);
   const dueRetries = entries
     .filter((entry) => isQuarantined(entry.record) && quarantineRetryDue(entry.record, today))
     .sort(byAge);
 
   const retries = dueRetries.slice(0, Math.min(dueRetries.length, quarantineRetryBudget(limit)));
-  const fromActive = active.slice(0, Math.max(0, limit - retries.length));
-  const spare = limit - retries.length - fromActive.length;
+  const fromQueue = queue.slice(0, Math.max(0, limit - retries.length));
+  const spare = limit - retries.length - fromQueue.length;
   const extraRetries = spare > 0 ? dueRetries.slice(retries.length, retries.length + spare) : [];
+  const secondReadings = active.filter((entry) => entry.awaitingCorroboration).slice(0, limit);
 
-  const drawn = [...retries, ...extraRetries, ...fromActive].sort(byAge);
+  const drawn = [...retries, ...extraRetries, ...fromQueue, ...secondReadings].sort(byAge);
   const picked = drawn.map(({ index, offer }) => ({ index, offer }));
-  const remaining = active.slice(fromActive.length);
+  const remaining = queue.slice(fromQueue.length);
   const oldestRemaining = remaining.length > 0
     ? (remaining[0].offer.verifiedDate || null)
     : null;
   return {
     picked,
     pickedAfterAFailedRead: drawn.filter((entry) => entry.readFailed).length,
-    pickedForASecondReading: drawn.filter((entry) => entry.awaitingCorroboration).length,
+    pickedForASecondReading: secondReadings.length,
+    drawnFromQueue: retries.length + extraRetries.length + fromQueue.length,
     oldestRemaining,
     retriedFromQuarantine: retries.length + extraRetries.length,
     quarantineDue: dueRetries.length,
@@ -477,8 +480,11 @@ export function failedReadingLines(census) {
   ];
 }
 
-export function summaryLines(result, { useAi, checked, oldestRemaining, total, quarantine, repicked, pickedAfterAFailedRead, pickedForASecondReading, failedReadings }) {
+export function summaryLines(result, { useAi, checked, drawnFromQueue, oldestRemaining, total, quarantine, repicked, pickedAfterAFailedRead, pickedForASecondReading, failedReadings }) {
   const lines = ["", "── Summary ──", `Checked: ${checked}`];
+  if (drawnFromQueue !== undefined) {
+    lines.push(`Drawn from the queue, so pages this run advances: ${drawnFromQueue}`);
+  }
   if (pickedAfterAFailedRead !== undefined) {
     lines.push(`Drawn after a read that failed: ${pickedAfterAFailedRead} of ${checked}`);
   }
@@ -592,7 +598,7 @@ async function main() {
 
   const awaitingCorroboration = pagesAwaitingCorroboration(readHeldReadings().held);
   const selection = { refusalHolds: holds, verificationState: state, awaitingCorroboration };
-  const { picked, oldestRemaining, retriedFromQuarantine, pickedAfterAFailedRead, pickedForASecondReading } =
+  const { picked, oldestRemaining, retriedFromQuarantine, pickedAfterAFailedRead, pickedForASecondReading, drawnFromQueue } =
     pickOldestEntries(offers, limit, now, selection);
 
   const renderer = findRenderer();
@@ -602,8 +608,9 @@ async function main() {
       : "No rendering client is installed — a page that comes back too short stays unread"
   );
   console.log(
-    `Rolling re-verification — ${picked.length} oldest entries` +
+    `Rolling re-verification — ${drawnFromQueue} oldest entries` +
       (retriedFromQuarantine > 0 ? `, ${retriedFromQuarantine} retried from quarantine` : "") +
+      (pickedForASecondReading > 0 ? `, ${pickedForASecondReading} re-read to corroborate a held verdict` : "") +
       (useAi ? ` (${VERIFIER_MODEL})` : " (URL-only)") +
       (dryRun ? " (dry-run)" : "")
   );
@@ -624,7 +631,7 @@ async function main() {
 
   const result = useAi
     ? await runAiMode(picked, data, dryRun, now, {
-        windowDays: repickWindowDays(offers.length, picked.length),
+        windowDays: repickWindowDays(offers.length, drawnFromQueue),
       })
     : await runUrlMode(picked, data, dryRun, now);
 
@@ -650,6 +657,7 @@ async function main() {
   for (const line of summaryLines(result, {
     useAi,
     checked: picked.length,
+    drawnFromQueue,
     oldestRemaining,
     total: offers.length,
     quarantine,

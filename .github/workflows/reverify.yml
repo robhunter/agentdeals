@@ -50,7 +50,11 @@ jobs:
           RETRIED=$(grep -oE '^Retried from quarantine: [0-9]+' /tmp/reverify.log | grep -oE '[0-9]+$' || echo 0)
           REPICKED=$(grep -oE '^Checked again on the next run: [0-9]+' /tmp/reverify.log | grep -oE '[0-9]+$' || echo 0)
           HELD=$(grep -oE '^Awaiting a second reading, given up on after [0-9]+ days: [0-9]+' /tmp/reverify.log | grep -oE '[0-9]+$' || echo 0)
+          DRAWN=$(grep -oE '^Drawn from the queue, so pages this run advances: [0-9]+' /tmp/reverify.log | grep -oE '[0-9]+$' || echo 0)
+          SECOND=$(grep -oE '^Drawn to give a held demoting verdict its second reading: [0-9]+' /tmp/reverify.log | grep -oE '[0-9]+$' || echo 0)
           echo "held=$HELD" >> "$GITHUB_OUTPUT"
+          echo "drawn=$DRAWN" >> "$GITHUB_OUTPUT"
+          echo "second=$SECOND" >> "$GITHUB_OUTPUT"
           echo "verified=$VERIFIED" >> "$GITHUB_OUTPUT"
           echo "flagged=$FLAGGED" >> "$GITHUB_OUTPUT"
           echo "recorded=$RECORDED" >> "$GITHUB_OUTPUT"
@@ -71,10 +75,12 @@ jobs:
           RETRIED: ${{ steps.reverify.outputs.retried }}
           REPICKED: ${{ steps.reverify.outputs.repicked }}
           HELD: ${{ steps.reverify.outputs.held }}
+          DRAWN: ${{ steps.reverify.outputs.drawn }}
+          SECOND: ${{ steps.reverify.outputs.second }}
         run: |
           bash scripts/gate-data-push.sh \
             data-quarantine/rolling-reverification \
-            "data(auto): rolling re-verification — ${VERIFIED} verified, ${FLAGGED} flagged, ${RECORDED} changes recorded, ${HELD} awaiting a second reading, ${RETRIED} retried from quarantine, ${QUARANTINED} in quarantine, ${REPICKED} to be checked again" \
+            "data(auto): rolling re-verification — ${VERIFIED} verified of ${DRAWN} drawn from the queue, ${SECOND} re-read to corroborate a held verdict, ${FLAGGED} flagged, ${RECORDED} changes recorded, ${HELD} awaiting a second reading, ${RETRIED} retried from quarantine, ${QUARANTINED} in quarantine, ${REPICKED} to be checked again" \
             data/index.json data/deal_changes.json data/change_refusals.json data/change_corroboration.json data/verification_state.json data/quality_budgets.json data/page-lastmod.json artifacts/free-llm-api-index/README.md
 
       - name: Say where it can be seen what the gate did with this run's data

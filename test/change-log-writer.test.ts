@@ -682,6 +682,17 @@ describe("change log writer", () => {
       assert.strictEqual(repickWindowDays(1580, 0), 1);
       assert.ok(repickWindowDays(10, 1000) >= 1);
     });
+
+    it("measures the window against the pages a run advances, not the pages it read", () => {
+      const source = readFileSync(path.join(REPO, "scripts", "reverify-rolling.js"), "utf-8");
+      assert.match(
+        source,
+        /windowDays: repickWindowDays\(offers\.length, drawnFromQueue\)/,
+        "a run that re-reads 8 held pages shortens the window as though the rotation had sped up"
+      );
+      assert.strictEqual(repickWindowDays(1547, 83), 19);
+      assert.strictEqual(repickWindowDays(1547, 75), 21);
+    });
   });
 
   describe("appendChangeEntries", () => {

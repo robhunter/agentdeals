@@ -284,6 +284,27 @@ describe("quarantine keeps a failing record out of the daily budget without drop
     assert.ok(retriedFromQuarantine < 10, "a run of due retries must not consume the whole budget");
   });
 
+  it("keeps that share at its share of the limit when the run also owes second readings", () => {
+    const offers: any[] = [];
+    const state = new Map();
+    for (let i = 0; i < 40; i++) {
+      offers.push(offer(`Blocked${i}`));
+      failUntilQuarantined(state, `Blocked${i}`, new Date(NOW.getTime() - 30 * 86_400_000));
+    }
+    for (let i = 0; i < 40; i++) offers.push(offer(`Fresh${i}`, "2026-07-01"));
+    const awaitingCorroboration = new Set(
+      offers.filter((o: any) => /^Fresh[0-4]$/.test(o.vendor)).map((o: any) => `${o.vendor}|${o.url}`),
+    );
+
+    const alone = pickOldestEntries(offers, 10, NOW, { verificationState: state });
+    const owing = pickOldestEntries(offers, 10, NOW, { verificationState: state, awaitingCorroboration });
+
+    assert.strictEqual(owing.pickedForASecondReading, 5);
+    assert.strictEqual(owing.retriedFromQuarantine, quarantineRetryBudget(10));
+    assert.strictEqual(owing.retriedFromQuarantine, alone.retriedFromQuarantine);
+    assert.strictEqual(owing.drawnFromQueue, alone.drawnFromQueue);
+  });
+
   it("gives the spare slots to quarantine when there is nothing else left to check", () => {
     const offers: any[] = [];
     const state = new Map();
