@@ -23,6 +23,7 @@ export const REJECT_STATES_NO_NARROWING = "states_no_narrowing";
 export const REJECT_NO_TERMS_TO_NARROW = "no_terms_to_narrow";
 export const REJECT_ZERO_ALLOWANCE = "zero_allowance";
 export const REJECT_RESTATES_STORED_QUANTITIES = "restates_stored_quantities";
+export const REJECT_REMOVAL_DOES_NOT_REACH_THE_LICENCE = "removal_does_not_reach_the_licence";
 
 export const GATE_REASONS = [
   REJECT_NULL_COMPARISON,
@@ -46,6 +47,7 @@ export const GATE_REASONS = [
   REJECT_NO_TERMS_TO_NARROW,
   REJECT_ZERO_ALLOWANCE,
   REJECT_RESTATES_STORED_QUANTITIES,
+  REJECT_REMOVAL_DOES_NOT_REACH_THE_LICENCE,
 ];
 
 export const FREE_TIER_REMOVED = "free_tier_removed";
@@ -59,6 +61,87 @@ export function marksFreeTierAsTheProduct(offer) {
 
 export function vendorsWhoseFreeTierIsTheProduct(offers = []) {
   return new Set(offers.filter(marksFreeTierAsTheProduct).map((offer) => offer?.vendor));
+}
+
+export const FREE_GROUNDS_FIELD = "free_grounds";
+export const FREE_GROUND_LICENCE = "licence";
+export const FREE_GROUND_PLAN = "plan";
+export const FREE_GROUNDS = [FREE_GROUND_LICENCE, FREE_GROUND_PLAN];
+
+export function freeGrounds(offer) {
+  const stored = offer?.[FREE_GROUNDS_FIELD];
+  return Array.isArray(stored) ? stored.filter((ground) => FREE_GROUNDS.includes(ground)) : [];
+}
+
+export function isFreeByLicence(offer) {
+  return freeGrounds(offer).includes(FREE_GROUND_LICENCE);
+}
+
+export function alsoFreeByPlan(offer) {
+  return freeGrounds(offer).includes(FREE_GROUND_PLAN);
+}
+
+export function vendorsFreeByLicence(offers = []) {
+  return new Set(
+    offers.filter(isFreeByLicence).map((offer) => String(offer?.vendor ?? "").toLowerCase())
+  );
+}
+
+export function namesAVendorIn(vendors, vendor) {
+  return vendors.has(String(vendor ?? "").toLowerCase());
+}
+
+const LICENCE_BEARING_HOSTS = [
+  "github.com",
+  "gitlab.com",
+  "codeberg.org",
+  "bitbucket.org",
+  "git.sr.ht",
+  "sourceforge.net",
+  "savannah.gnu.org",
+  "gitea.com",
+  "opensource.org",
+  "spdx.org",
+];
+
+const LICENCE_BEARING_PATH =
+  /licen[cs]e|licensing|\bcopying\b|self[- ]?host|community[- ]?edition|\boss\b|open[- ]?source|source[- ]available|\beula\b|terms-of-(?:use|service)/i;
+
+export function citesALicenceBearingSource(url) {
+  if (typeof url !== "string" || url.length === 0) return false;
+  let parsed;
+  try {
+    parsed = new URL(url);
+  } catch {
+    return false;
+  }
+  const host = parsed.hostname.replace(/^www\./, "").toLowerCase();
+  if (LICENCE_BEARING_HOSTS.some((known) => host === known || host.endsWith(`.${known}`))) {
+    return true;
+  }
+  return LICENCE_BEARING_PATH.test(`${parsed.pathname}${parsed.search}`);
+}
+
+const LICENCE_LEFT_STANDING = [
+  /\b(?:open[- ]?source|oss|community\s+edition|self[- ]?hosted|self[- ]?hosting)\b[^.;]{0,80}\b(?:remains?|is\s+still|stays?|continues?)\b[^.;]{0,40}\bfree\b/i,
+  /\b(?:remains?|still|only)\b[^.;]{0,40}\b(?:open[- ]?source|oss|community\s+edition|self[- ]?hosted)\b[^.;]{0,40}\b(?:free|available)\b/i,
+  /\bonly\s+the\s+(?:open[- ]?source|oss|community)\b[^.;]{0,60}\bremains?\s+free\b/i,
+  /\bself[- ]?host(?:ed|ing)?\b[^.;]{0,40}\b(?:is|remains?)\s+(?:still\s+)?free\b/i,
+  /\b(?:cloud|hosted|managed)\b[^.;]{0,40}\bfree\s+(?:plan|tier)\b[^.;]{0,40}\b(?:removed|gone|no\s+longer|discontinued|withdrawn)\b/i,
+  /\bfree\s+(?:plan|tier)\b[^.;]{0,30}\bon\s+(?:the\s+)?(?:cloud|hosted|managed)\b/i,
+];
+
+export function statesTheLicenceIsUntouched(summary) {
+  if (typeof summary !== "string") return false;
+  return LICENCE_LEFT_STANDING.some((pattern) => pattern.test(summary));
+}
+
+export function removalDoesNotReachTheLicence(record, freeByLicence) {
+  if (record?.change_type !== FREE_TIER_REMOVED) return false;
+  if (freeByLicence !== true) return false;
+  if (record?.date_source === HAND_WRITTEN) return false;
+  if (citesALicenceBearingSource(record?.source_url)) return false;
+  return !statesTheLicenceIsUntouched(record?.summary);
 }
 
 const QUANTITY_CHANGE_TYPES = ["limits_reduced", "limits_increased"];
@@ -1213,6 +1296,7 @@ export async function gateCandidates(candidates, options = {}) {
   const pageCompleteFor = options.pageCompleteFor ?? (() => false);
   const finalUrlFor = options.finalUrlFor ?? (() => undefined);
   const productIsTheFreeTier = vendorsWhoseFreeTierIsTheProduct(options.offers);
+  const freeByLicence = vendorsFreeByLicence(options.offers);
   const accepted = [];
   const rejected = [];
   const unchecked = [];
@@ -1226,6 +1310,7 @@ export async function gateCandidates(candidates, options = {}) {
       pageComplete: pageCompleteFor(original),
       finalUrl: finalUrlFor(original),
       freeTierIsTheProduct: productIsTheFreeTier.has(original?.vendor),
+      freeByLicence: namesAVendorIn(freeByLicence, original?.vendor),
     });
     if (!verdict.ok) {
       rejected.push({ candidate: original, reason: verdict.reason, detail: verdict.detail });
@@ -1451,6 +1536,12 @@ export function auditRecord(record, context = {}) {
       return refuse(
         REJECT_FREE_TIER_IS_THE_PRODUCT,
         `${record.vendor}'s free tier is the product itself, so the vendor publishes no plan with a free row anywhere — a page that names only the paid add-on states what it charges for, not that the product stopped being free`
+      );
+    }
+    if (removalDoesNotReachTheLicence(record, context.freeByLicence)) {
+      return refuse(
+        REJECT_REMOVAL_DOES_NOT_REACH_THE_LICENCE,
+        `${record.vendor} is free because its licence grants the use, and ${record.source_url} is a hosted-pricing surface that states what the vendor sells rather than what the licence permits. A record that ends a licence needs a source that carries one — the repository, its licence file or a self-hosting document — or must say which hosted plan went away and leave the licence standing`
       );
     }
     if (reportsSomethingStillFree(record?.summary)) {

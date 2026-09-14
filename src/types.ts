@@ -77,7 +77,10 @@ export interface Offer {
   product_subtypes?: ProductSubtypes;
   source_check?: SourceCheck;
   free_tier_is_the_product?: true;
+  free_grounds?: FreeGround[];
 }
+
+export type FreeGround = "licence" | "plan";
 
 export type SourceCheckOutcome =
   | "ok"

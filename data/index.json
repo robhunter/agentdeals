@@ -1073,7 +1073,10 @@
           }
         ],
         "reviewed": "2026-08-31"
-      }
+      },
+      "free_grounds": [
+        "licence"
+      ]
     },
     {
       "vendor": "Cloudflare D1",
@@ -3825,7 +3828,11 @@
         "checked": "2026-09-12",
         "outcome": "unreadable",
         "detail": "HTTP 429"
-      }
+      },
+      "free_grounds": [
+        "licence",
+        "plan"
+      ]
     },
     {
       "vendor": "GrowthBook",
@@ -3844,7 +3851,11 @@
         "checked": "2026-09-09",
         "outcome": "ok",
         "detail": "the page names GrowthBook as \"growthbook\" and states \"$40\""
-      }
+      },
+      "free_grounds": [
+        "licence",
+        "plan"
+      ]
     },
     {
       "vendor": "Statsig",
@@ -3910,7 +3921,10 @@
         "checked": "2026-09-09",
         "outcome": "ok",
         "detail": "the page names Kong as \"kong\" and states \"$100\""
-      }
+      },
+      "free_grounds": [
+        "licence"
+      ]
     },
     {
       "vendor": "Hookdeck",
@@ -4053,7 +4067,11 @@
         "checked": "2026-09-09",
         "outcome": "ok",
         "detail": "the page names Directus as \"directus\" and states \"$0\""
-      }
+      },
+      "free_grounds": [
+        "licence",
+        "plan"
+      ]
     },
     {
       "vendor": "Loops",
@@ -4354,7 +4372,11 @@
         "checked": "2026-09-03",
         "outcome": "ok",
         "detail": "text"
-      }
+      },
+      "free_grounds": [
+        "licence",
+        "plan"
+      ]
     },
     {
       "vendor": "Retool",
@@ -4402,7 +4424,10 @@
         "outcome": "ok",
         "detail": "the page names MinIO, renders no terms we can read, and its markup states 1 typed price (AIStor Free USD 0)",
         "read": "markup"
-      }
+      },
+      "free_grounds": [
+        "licence"
+      ]
     },
     {
       "vendor": "Backblaze",
@@ -5014,7 +5039,11 @@
         "checked": "2026-09-09",
         "outcome": "ok",
         "detail": "the page names Penpot as \"penpot\" and states \"$0\""
-      }
+      },
+      "free_grounds": [
+        "licence",
+        "plan"
+      ]
     },
     {
       "vendor": "GitGuardian",
@@ -5179,7 +5208,10 @@
         "checked": "2026-09-09",
         "outcome": "ok",
         "detail": "the page names Formbricks as \"formbricks\" and states \"$74\""
-      }
+      },
+      "free_grounds": [
+        "licence"
+      ]
     },
     {
       "vendor": "Mux",
@@ -5667,7 +5699,10 @@
         "checked": "2026-09-02",
         "outcome": "states_no_terms",
         "detail": "the page names Upptime but states no amount, tier or rate we can read"
-      }
+      },
+      "free_grounds": [
+        "licence"
+      ]
     },
     {
       "vendor": "Cachet",
@@ -5686,7 +5721,10 @@
         "checked": "2026-09-09",
         "outcome": "states_no_amount",
         "detail": "the page names Cachet and says \"Free forever\" but states no amount, rate or price we can read, and the 1 structured-data block in its markup states no price"
-      }
+      },
+      "free_grounds": [
+        "licence"
+      ]
     },
     {
       "vendor": "cState",
@@ -5705,7 +5743,10 @@
         "checked": "2026-09-12",
         "outcome": "unreadable",
         "detail": "HTTP 404"
-      }
+      },
+      "free_grounds": [
+        "licence"
+      ]
     },
     {
       "vendor": "Daily.co",
@@ -5762,7 +5803,10 @@
         "checked": "2026-09-02",
         "outcome": "states_no_terms",
         "detail": "the page names Docusaurus but states no amount, tier or rate we can read"
-      }
+      },
+      "free_grounds": [
+        "licence"
+      ]
     },
     {
       "vendor": "Nextra",
@@ -5781,7 +5825,10 @@
         "checked": "2026-09-02",
         "outcome": "states_no_terms",
         "detail": "the page names Nextra but states no amount, tier or rate we can read"
-      }
+      },
+      "free_grounds": [
+        "licence"
+      ]
     },
     {
       "vendor": "VitePress",
@@ -5801,7 +5848,10 @@
         "checked": "2026-09-02",
         "outcome": "states_no_terms",
         "detail": "the page names VitePress but states no amount, tier or rate we can read"
-      }
+      },
+      "free_grounds": [
+        "licence"
+      ]
     },
     {
       "vendor": "Sphinx",
@@ -5820,7 +5870,10 @@
         "checked": "2026-09-02",
         "outcome": "states_no_terms",
         "detail": "the page names Sphinx but states no amount, tier or rate we can read"
-      }
+      },
+      "free_grounds": [
+        "licence"
+      ]
     },
     {
       "vendor": "Formspree",
@@ -5922,7 +5975,10 @@
         "outcome": "ok",
         "detail": "the page names Meilisearch, renders no terms we can read, and its markup states 1 typed price (USD 0)",
         "read": "markup"
-      }
+      },
+      "free_grounds": [
+        "licence"
+      ]
     },
     {
       "vendor": "ScraperAPI",
@@ -5961,7 +6017,10 @@
         "checked": "2026-09-02",
         "outcome": "states_no_terms",
         "detail": "the page names Playwright but states no amount, tier or rate we can read"
-      }
+      },
+      "free_grounds": [
+        "licence"
+      ]
     },
     {
       "vendor": "Puppeteer",
@@ -5981,7 +6040,10 @@
         "checked": "2026-09-02",
         "outcome": "states_no_terms",
         "detail": "the page names Puppeteer but states no amount, tier or rate we can read"
-      }
+      },
+      "free_grounds": [
+        "licence"
+      ]
     },
     {
       "vendor": "UNPKG",
@@ -6040,7 +6102,10 @@
         "outcome": "unreadable",
         "detail": "page content too short (likely JS-rendered SPA); a rendering client read 285 characters",
         "rendered": true
-      }
+      },
+      "free_grounds": [
+        "licence"
+      ]
     },
     {
       "vendor": "Lunacy",
@@ -6098,7 +6163,10 @@
         "checked": "2026-09-02",
         "outcome": "states_no_terms",
         "detail": "the page names Harbor but states no amount, tier or rate we can read"
-      }
+      },
+      "free_grounds": [
+        "licence"
+      ]
     },
     {
       "vendor": "Amazon ECR Public",
@@ -6217,7 +6285,10 @@
         "checked": "2026-09-02",
         "outcome": "states_no_terms",
         "detail": "the page names Keycloak but states no amount, tier or rate we can read"
-      }
+      },
+      "free_grounds": [
+        "licence"
+      ]
     },
     {
       "vendor": "FusionAuth",
@@ -6239,7 +6310,10 @@
         "checked": "2026-09-13",
         "outcome": "ok",
         "detail": "the page names FusionAuth as \"fusionauth\" and states \"$ 162\""
-      }
+      },
+      "free_grounds": [
+        "licence"
+      ]
     },
     {
       "vendor": "Cerebras",
@@ -6354,7 +6428,10 @@
         "checked": "2026-09-02",
         "outcome": "states_no_amount",
         "detail": "the page names Coolify and says \"free forever\" but states no amount, rate or price we can read"
-      }
+      },
+      "free_grounds": [
+        "licence"
+      ]
     },
     {
       "vendor": "Traefik",
@@ -6374,7 +6451,10 @@
         "checked": "2026-09-02",
         "outcome": "states_no_terms",
         "detail": "the page names Traefik but states no amount, tier or rate we can read"
-      }
+      },
+      "free_grounds": [
+        "licence"
+      ]
     },
     {
       "vendor": "Argo CD",
@@ -6395,7 +6475,10 @@
         "checked": "2026-09-02",
         "outcome": "states_no_terms",
         "detail": "the page names Argo CD but states no amount, tier or rate we can read"
-      }
+      },
+      "free_grounds": [
+        "licence"
+      ]
     },
     {
       "vendor": "BullMQ",
@@ -6415,7 +6498,10 @@
         "checked": "2026-09-10",
         "outcome": "ok",
         "detail": "the page names BullMQ as \"bullmq\" and states \"$1,395\""
-      }
+      },
+      "free_grounds": [
+        "licence"
+      ]
     },
     {
       "vendor": "Automatisch",
@@ -6435,7 +6521,10 @@
         "checked": "2026-09-02",
         "outcome": "states_no_terms",
         "detail": "the page names Automatisch but states no amount, tier or rate we can read"
-      }
+      },
+      "free_grounds": [
+        "licence"
+      ]
     },
     {
       "vendor": "Strapi",
@@ -6455,7 +6544,10 @@
         "checked": "2026-09-02",
         "outcome": "states_no_terms",
         "detail": "the page names Strapi but states no amount, tier or rate we can read"
-      }
+      },
+      "free_grounds": [
+        "licence"
+      ]
     },
     {
       "vendor": "Payload CMS",
@@ -6475,7 +6567,10 @@
         "checked": "2026-09-02",
         "outcome": "states_no_terms",
         "detail": "the page names Payload CMS but states no amount, tier or rate we can read"
-      }
+      },
+      "free_grounds": [
+        "licence"
+      ]
     },
     {
       "vendor": "Prometheus",
@@ -6508,7 +6603,10 @@
           }
         ],
         "reviewed": "2026-09-01"
-      }
+      },
+      "free_grounds": [
+        "licence"
+      ]
     },
     {
       "vendor": "Jaeger",
@@ -6541,7 +6639,10 @@
           }
         ],
         "reviewed": "2026-09-01"
-      }
+      },
+      "free_grounds": [
+        "licence"
+      ]
     },
     {
       "vendor": "Grafana Loki",
@@ -6560,7 +6661,10 @@
         "checked": "2026-09-02",
         "outcome": "states_no_amount",
         "detail": "the page names Grafana Loki and says \"free tier\" but states no amount, rate or price we can read"
-      }
+      },
+      "free_grounds": [
+        "licence"
+      ]
     },
     {
       "vendor": "Plausible Analytics",
@@ -6579,7 +6683,10 @@
         "checked": "2026-09-10",
         "outcome": "ok",
         "detail": "the page names Plausible Analytics as \"plausible analytics\" and states \"$9\""
-      }
+      },
+      "free_grounds": [
+        "licence"
+      ]
     },
     {
       "vendor": "Umami",
@@ -6599,7 +6706,10 @@
         "outcome": "states_no_terms",
         "detail": "the page names Umami but states no amount, tier or rate we can read, and the 1 structured-data block in its markup states no price",
         "rendered": true
-      }
+      },
+      "free_grounds": [
+        "licence"
+      ]
     },
     {
       "vendor": "Woodpecker CI",
@@ -6620,7 +6730,10 @@
         "checked": "2026-09-02",
         "outcome": "states_no_terms",
         "detail": "the page names Woodpecker CI but states no amount, tier or rate we can read"
-      }
+      },
+      "free_grounds": [
+        "licence"
+      ]
     },
     {
       "vendor": "Hoppscotch",
@@ -6642,7 +6755,10 @@
         "outcome": "states_no_terms",
         "detail": "the page names Hoppscotch but states no amount, tier or rate we can read, and its markup carries no structured data",
         "rendered": true
-      }
+      },
+      "free_grounds": [
+        "licence"
+      ]
     },
     {
       "vendor": "Gitea",
@@ -6662,7 +6778,10 @@
         "checked": "2026-09-10",
         "outcome": "ok",
         "detail": "the page names Gitea as \"gitea\" and states \"$9.5\""
-      }
+      },
+      "free_grounds": [
+        "licence"
+      ]
     },
     {
       "vendor": "Appsmith",
@@ -6681,7 +6800,10 @@
         "checked": "2026-09-10",
         "outcome": "ok",
         "detail": "the page names Appsmith as \"appsmith\" and states \"$1,200\""
-      }
+      },
+      "free_grounds": [
+        "licence"
+      ]
     },
     {
       "vendor": "LocalStack",
@@ -6729,7 +6851,10 @@
         "checked": "2026-09-05",
         "outcome": "ok",
         "detail": "the page names Testcontainers as \"testcontainers\" and states \"13,000 EUR\""
-      }
+      },
+      "free_grounds": [
+        "licence"
+      ]
     },
     {
       "vendor": "Moto",
@@ -6750,7 +6875,10 @@
         "checked": "2026-09-02",
         "outcome": "states_no_terms",
         "detail": "the page names Moto but states no amount, tier or rate we can read"
-      }
+      },
+      "free_grounds": [
+        "licence"
+      ]
     },
     {
       "vendor": "AWS SAM CLI",
@@ -6771,7 +6899,10 @@
         "checked": "2026-09-02",
         "outcome": "states_no_terms",
         "detail": "the page names AWS SAM CLI but states no amount, tier or rate we can read"
-      }
+      },
+      "free_grounds": [
+        "licence"
+      ]
     },
     {
       "vendor": "DynamoDB Local",
@@ -6827,7 +6958,10 @@
         "checked": "2026-09-02",
         "outcome": "states_no_amount",
         "detail": "the page names ElasticMQ and says \"starts at\" but states no amount, rate or price we can read"
-      }
+      },
+      "free_grounds": [
+        "licence"
+      ]
     },
     {
       "vendor": "CloudDev",
@@ -6859,7 +6993,10 @@
         "checked": "2026-09-02",
         "outcome": "states_no_terms",
         "detail": "the page names CloudDev but states no amount, tier or rate we can read"
-      }
+      },
+      "free_grounds": [
+        "licence"
+      ]
     },
     {
       "vendor": "Vera AWS",
@@ -6890,7 +7027,10 @@
         "checked": "2026-09-02",
         "outcome": "states_no_terms",
         "detail": "the page names Vera AWS but states no amount, tier or rate we can read"
-      }
+      },
+      "free_grounds": [
+        "licence"
+      ]
     },
     {
       "vendor": "Floci",
@@ -6919,7 +7059,10 @@
         "checked": "2026-09-02",
         "outcome": "states_no_amount",
         "detail": "the page names Floci and says \"Free forever\" but states no amount, rate or price we can read"
-      }
+      },
+      "free_grounds": [
+        "licence"
+      ]
     },
     {
       "vendor": "Brave Search API",
@@ -7307,7 +7450,11 @@
         "checked": "2026-09-05",
         "outcome": "ok",
         "detail": "the page names SuperTokens as \"supertokens\" and states \"$0.02\""
-      }
+      },
+      "free_grounds": [
+        "licence",
+        "plan"
+      ]
     },
     {
       "vendor": "StatusCake",
@@ -8052,7 +8199,11 @@
           }
         ],
         "reviewed": "2026-08-31"
-      }
+      },
+      "free_grounds": [
+        "licence",
+        "plan"
+      ]
     },
     {
       "vendor": "Zilliz Cloud",
@@ -8115,7 +8266,10 @@
           }
         ],
         "reviewed": "2026-08-31"
-      }
+      },
+      "free_grounds": [
+        "licence"
+      ]
     },
     {
       "vendor": "Upstash Vector",
@@ -8177,7 +8331,11 @@
           }
         ],
         "reviewed": "2026-08-31"
-      }
+      },
+      "free_grounds": [
+        "licence",
+        "plan"
+      ]
     },
     {
       "vendor": "Turbopuffer",
@@ -8512,7 +8670,10 @@
         "checked": "2026-09-10",
         "outcome": "ok",
         "detail": "the page names Tyk as \"tyk\" and states \"$200,000\""
-      }
+      },
+      "free_grounds": [
+        "licence"
+      ]
     },
     {
       "vendor": "Stoplight",
@@ -8615,7 +8776,10 @@
         "checked": "2026-09-13",
         "outcome": "ok",
         "detail": "the page names Bruno as \"bruno\" and states \"$0\""
-      }
+      },
+      "free_grounds": [
+        "licence"
+      ]
     },
     {
       "vendor": "Thunder Client",
@@ -9133,7 +9297,10 @@
         "checked": "2026-09-02",
         "outcome": "states_no_terms",
         "detail": "the page names Drone CI but states no amount, tier or rate we can read"
-      }
+      },
+      "free_grounds": [
+        "licence"
+      ]
     },
     {
       "vendor": "Codefresh",
@@ -9623,7 +9790,10 @@
         "checked": "2026-09-03",
         "outcome": "ok",
         "detail": "text"
-      }
+      },
+      "free_grounds": [
+        "licence"
+      ]
     },
     {
       "vendor": "Brainboard",
@@ -15031,7 +15201,11 @@
         "checked": "2026-09-02",
         "outcome": "ok",
         "detail": "text"
-      }
+      },
+      "free_grounds": [
+        "licence",
+        "plan"
+      ]
     },
     {
       "vendor": "MojoAuth",
@@ -15773,7 +15947,10 @@
         "checked": "2026-08-28",
         "outcome": "ok",
         "detail": "text"
-      }
+      },
+      "free_grounds": [
+        "licence"
+      ]
     },
     {
       "vendor": "Smart Grow Logs",
@@ -23009,7 +23186,10 @@
         "checked": "2026-09-11",
         "outcome": "ok",
         "detail": "the page names Circum Icons as \"circum icons\" and states \"$9\""
-      }
+      },
+      "free_grounds": [
+        "licence"
+      ]
     },
     {
       "vendor": "clevebrush.com",
@@ -25818,7 +25998,11 @@
         "checked": "2026-09-11",
         "outcome": "ok",
         "detail": "the page names Rybbit as \"rybbit\" and states \"$0\""
-      }
+      },
+      "free_grounds": [
+        "licence",
+        "plan"
+      ]
     },
     {
       "vendor": "StatCounter",
@@ -30100,7 +30284,10 @@
         "checked": "2026-09-02",
         "outcome": "states_no_terms",
         "detail": "the page names Selenium Grid but states no amount, tier or rate we can read"
-      }
+      },
+      "free_grounds": [
+        "licence"
+      ]
     },
     {
       "vendor": "BrowserStack",
@@ -30212,7 +30399,11 @@
         "checked": "2026-09-02",
         "outcome": "ok",
         "detail": "text"
-      }
+      },
+      "free_grounds": [
+        "licence",
+        "plan"
+      ]
     },
     {
       "vendor": "Gatling",
@@ -30231,7 +30422,10 @@
         "checked": "2026-09-03",
         "outcome": "ok",
         "detail": "text"
-      }
+      },
+      "free_grounds": [
+        "licence"
+      ]
     },
     {
       "vendor": "Locust",
@@ -30251,7 +30445,11 @@
         "checked": "2026-09-02",
         "outcome": "states_no_terms",
         "detail": "the page names Locust but states no amount, tier or rate we can read"
-      }
+      },
+      "free_grounds": [
+        "licence",
+        "plan"
+      ]
     },
     {
       "vendor": "BlazeMeter",
@@ -30290,7 +30488,10 @@
         "checked": "2026-09-02",
         "outcome": "states_no_terms",
         "detail": "the page names Gitleaks but states no amount, tier or rate we can read"
-      }
+      },
+      "free_grounds": [
+        "licence"
+      ]
     },
     {
       "vendor": "TruffleHog",
@@ -30309,7 +30510,10 @@
         "checked": "2026-09-02",
         "outcome": "states_no_terms",
         "detail": "the page names TruffleHog but states no amount, tier or rate we can read"
-      }
+      },
+      "free_grounds": [
+        "licence"
+      ]
     },
     {
       "vendor": "Checkov",
@@ -30331,7 +30535,10 @@
         "checked": "2026-09-02",
         "outcome": "states_no_terms",
         "detail": "the page names Checkov but states no amount, tier or rate we can read"
-      }
+      },
+      "free_grounds": [
+        "licence"
+      ]
     },
     {
       "vendor": "Trivy",
@@ -30351,7 +30558,10 @@
         "checked": "2026-09-02",
         "outcome": "states_no_terms",
         "detail": "the page names Trivy but states no amount, tier or rate we can read"
-      }
+      },
+      "free_grounds": [
+        "licence"
+      ]
     },
     {
       "vendor": "Grype",
@@ -30371,7 +30581,10 @@
         "checked": "2026-09-02",
         "outcome": "states_no_terms",
         "detail": "the page names Grype but states no amount, tier or rate we can read"
-      }
+      },
+      "free_grounds": [
+        "licence"
+      ]
     },
     {
       "vendor": "OWASP ZAP",
@@ -30391,7 +30604,10 @@
         "checked": "2026-09-02",
         "outcome": "states_no_terms",
         "detail": "the page names OWASP ZAP but states no amount, tier or rate we can read"
-      }
+      },
+      "free_grounds": [
+        "licence"
+      ]
     },
     {
       "vendor": "Nuclei",
@@ -30411,7 +30627,10 @@
         "checked": "2026-09-02",
         "outcome": "ok",
         "detail": "text"
-      }
+      },
+      "free_grounds": [
+        "licence"
+      ]
     },
     {
       "vendor": "CodeQL",
@@ -30468,7 +30687,11 @@
         "checked": "2026-09-02",
         "outcome": "states_no_amount",
         "detail": "the page names Renovate and says \"Community plan\" but states no amount, rate or price we can read"
-      }
+      },
+      "free_grounds": [
+        "licence",
+        "plan"
+      ]
     },
     {
       "vendor": "Probely",
@@ -30508,7 +30731,10 @@
         "checked": "2026-09-12",
         "outcome": "ok",
         "detail": "the page names Falco as \"falco\" and states \"$3\""
-      }
+      },
+      "free_grounds": [
+        "licence"
+      ]
     },
     {
       "vendor": "BuddyNS",
@@ -30848,7 +31074,10 @@
         "checked": "2026-09-02",
         "outcome": "states_no_terms",
         "detail": "the page names Cline but states no amount, tier or rate we can read"
-      }
+      },
+      "free_grounds": [
+        "licence"
+      ]
     },
     {
       "vendor": "Aider",
@@ -30870,7 +31099,10 @@
         "checked": "2026-09-02",
         "outcome": "states_no_terms",
         "detail": "the page names Aider but states no amount, tier or rate we can read"
-      }
+      },
+      "free_grounds": [
+        "licence"
+      ]
     },
     {
       "vendor": "Windsurf",
@@ -33610,7 +33842,10 @@
           }
         ],
         "reviewed": "2026-09-01"
-      }
+      },
+      "free_grounds": [
+        "licence"
+      ]
     },
     {
       "vendor": "Elastic",
@@ -33648,7 +33883,10 @@
           }
         ],
         "reviewed": "2026-09-01"
-      }
+      },
+      "free_grounds": [
+        "licence"
+      ]
     },
     {
       "vendor": "Grafana",
@@ -33680,7 +33918,10 @@
           }
         ],
         "reviewed": "2026-09-01"
-      }
+      },
+      "free_grounds": [
+        "licence"
+      ]
     },
     {
       "vendor": "Mockoon",
@@ -33701,7 +33942,10 @@
         "checked": "2026-09-09",
         "outcome": "ok",
         "detail": "the page names Mockoon as \"mockoon\" and states \"$ 100\""
-      }
+      },
+      "free_grounds": [
+        "licence"
+      ]
     },
     {
       "vendor": "Postal",
@@ -33722,7 +33966,10 @@
         "checked": "2026-09-02",
         "outcome": "states_no_terms",
         "detail": "the page names Postal but states no amount, tier or rate we can read"
-      }
+      },
+      "free_grounds": [
+        "licence"
+      ]
     },
     {
       "vendor": "authentik",
@@ -33745,7 +33992,10 @@
         "checked": "2026-09-09",
         "outcome": "ok",
         "detail": "the page names authentik as \"authentik\" and states \"$1\""
-      }
+      },
+      "free_grounds": [
+        "licence"
+      ]
     },
     {
       "vendor": "swaggo/swag",
@@ -33766,7 +34016,10 @@
         "checked": "2026-09-02",
         "outcome": "states_no_terms",
         "detail": "the page names swaggo/swag but states no amount, tier or rate we can read"
-      }
+      },
+      "free_grounds": [
+        "licence"
+      ]
     }
   ],
   "changes": []
