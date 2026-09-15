@@ -1,4 +1,4 @@
-import { ENDED_OFFER_CLAUSE, offerRetired } from "./retirement.js";
+import { endedStatusWord, ENDED_OFFER_CLAUSE, offerRetired } from "./retirement.js";
 import { toSlug } from "./slug.js";
 import type { Offer } from "./types.js";
 
@@ -21,7 +21,7 @@ export function endedIndex(offers: Pick<Offer, "vendor" | "tier">[]): EndedIndex
 }
 
 export function endedRowStatement(tier: string): string {
-  return `${tier} — ${ENDED_OFFER_CLAUSE}, so there is no free tier to compare.`;
+  return `${endedStatusWord(tier)} — ${ENDED_OFFER_CLAUSE}, so there is no free tier to compare.`;
 }
 
 const ROW = /<tr\b[^>]*>[\s\S]*?<\/tr>/gi;

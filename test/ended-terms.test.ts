@@ -4,7 +4,9 @@ import { spawn, type ChildProcess } from "node:child_process";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { dropEndedFromNameList, endedIndex, markEndedVendorRows } from "../dist/ended-surfaces.js";
+import { endedStatusWord, ENDED_STATUS_WHEN_THE_TIER_NAMES_NONE } from "../dist/retirement.js";
 import { endedOffersStatedAsAvailable, ENDED_TERMS_POPULATION, pageSubjectSlug } from "../dist/retired-terms.js";
+import { assertCoversPopulation, assertPopulationFloor, type Population } from "./population-floor.ts";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(__dirname, "..");
@@ -111,6 +113,20 @@ describe("the rendering that keeps an ended offer out of a free comparison", () 
     assert.match(markEndedVendorRows(row, sunset), /Sunset — the offer has ended/);
   });
 
+  it("states the status the tier names, not the rest of what the tier says", () => {
+    const deprecated = endedIndex([{ vendor: "Google Content API for Shopping", tier: "Free (Deprecated)" }]);
+    const row = '<tr><td><a href="/vendor/google-content-api-for-shopping">Google Content API for Shopping</a></td><td>Unlimited calls</td></tr>';
+    const out = markEndedVendorRows(row, deprecated);
+    assert.match(out, /Deprecated — the offer has ended/);
+    assert.doesNotMatch(out, /Free \(Deprecated\)/);
+  });
+
+  it("reads the status out of a tier the catalogue states in any casing", () => {
+    assert.strictEqual(endedStatusWord("RETIRED"), "Retired");
+    assert.strictEqual(endedStatusWord("Free (deprecated)"), "Deprecated");
+    assert.strictEqual(endedStatusWord("Free"), ENDED_STATUS_WHEN_THE_TIER_NAMES_NONE);
+  });
+
   it("drops an ended vendor from a list of names without disturbing the rest", () => {
     const before = "Compare free alternatives: Upstash, Valkey, DragonflyDB, KeyDB, Momento, Garnet, Memcached, Aiven.";
     assert.strictEqual(
@@ -145,6 +161,11 @@ function startServer(): Promise<ChildProcess> {
 
 describe("every route we publish outside the vendor and comparison templates", () => {
   const rendered = new Map<string, string>();
+  const listed = new Set<string>();
+
+  function routesTheSitemapLists(): Population {
+    return { size: listed.size, read: "routes the sitemap lists outside the vendor and comparison sets" };
+  }
 
   before(async () => {
     proc = await startServer();
@@ -153,12 +174,11 @@ describe("every route we publish outside the vendor and comparison templates", (
     const subs = [...index.matchAll(/<loc>([^<]+)<\/loc>/g)]
       .map(m => m[1])
       .filter(u => !/sitemap-(?:vendors|comparisons)\.xml$/.test(u));
-    const paths = new Set<string>();
     for (const sub of subs) {
       const xml = await (await fetch(base + new URL(sub).pathname)).text();
-      for (const m of xml.matchAll(/<loc>([^<]+)<\/loc>/g)) paths.add(new URL(m[1]).pathname);
+      for (const m of xml.matchAll(/<loc>([^<]+)<\/loc>/g)) listed.add(new URL(m[1]).pathname);
     }
-    for (const p of paths) {
+    for (const p of listed) {
       const res = await fetch(base + p);
       if (res.status === 200) rendered.set(p, await res.text());
     }
@@ -166,8 +186,9 @@ describe("every route we publish outside the vendor and comparison templates", (
 
   after(() => { proc?.kill(); });
 
-  it("renders enough of the site for the sweep to mean something", () => {
-    assert.ok(rendered.size > 300, `swept ${rendered.size} routes`);
+  it("renders every route the sitemap lists, so the sweep below reads the whole site", () => {
+    assertPopulationFloor(listed.size, 300, "routes the sitemap lists for the sweep to read");
+    assertCoversPopulation(rendered.size, routesTheSitemapLists(), "routes that rendered for the sweep");
   });
 
   it("states no terms for an offer our own record says has ended", () => {
