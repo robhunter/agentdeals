@@ -721,7 +721,7 @@
       "changed": "2026-09-13"
     },
     "/analytics-alternatives": {
-      "hash": "e7480f79859395b5",
+      "hash": "e05dd410ef466499",
       "changed": "2026-09-15"
     },
     "/analytics-free-tier-comparison-2026": {
@@ -729,7 +729,7 @@
       "changed": "2026-09-15"
     },
     "/api-development-alternatives": {
-      "hash": "941b592f110fa08a",
+      "hash": "d0a47999f78853b7",
       "changed": "2026-09-15"
     },
     "/api-development-free-tier-comparison-2026": {
@@ -1123,8 +1123,8 @@
       "changed": "2026-09-14"
     },
     "/category/email": {
-      "hash": "dc72fa729ea020ec",
-      "changed": "2026-09-14"
+      "hash": "e01ca54a97faa9f8",
+      "changed": "2026-09-15"
     },
     "/category/error-tracking": {
       "hash": "4aa22d9713809620",
@@ -1266,7 +1266,7 @@
       "changed": "2026-09-15"
     },
     "/ci-cd-pricing": {
-      "hash": "a11549378b0c6215",
+      "hash": "40a93ed432a897c9",
       "changed": "2026-09-15"
     },
     "/cicd-free-tier-comparison-2026": {
@@ -2629,8 +2629,8 @@
       "changed": "2026-09-15"
     },
     "/dall-e-shutdown": {
-      "hash": "c6bb3b3f45c53fe9",
-      "changed": "2026-09-12"
+      "hash": "db0634155759cc7e",
+      "changed": "2026-09-15"
     },
     "/database-alternatives": {
       "hash": "a01ade3b89a5b639",
@@ -2641,7 +2641,7 @@
       "changed": "2026-09-15"
     },
     "/database-pricing": {
-      "hash": "999bce2060267d45",
+      "hash": "a9ff488193bec1b1",
       "changed": "2026-09-15"
     },
     "/datadog-alternatives": {
@@ -2664,7 +2664,7 @@
       "daily": true
     },
     "/design-alternatives": {
-      "hash": "5a55edd5aea7c738",
+      "hash": "222c5fa67b2a0e79",
       "changed": "2026-09-15"
     },
     "/developers": {
@@ -2792,8 +2792,8 @@
       "changed": "2026-09-12"
     },
     "/digest/2026-w15": {
-      "hash": "b61b1c30ecb16ea2",
-      "changed": "2026-09-12"
+      "hash": "8c63b427b78ad057",
+      "changed": "2026-09-15"
     },
     "/digest/2026-w16": {
       "hash": "dda33c6cac874cf7",
@@ -2962,7 +2962,7 @@
       "changed": "2026-09-15"
     },
     "/free-tier-risk": {
-      "hash": "bc01eaad6582b7da",
+      "hash": "7a80089730372a2e",
       "changed": "2026-09-15"
     },
     "/free-tier-tracker": {
@@ -3041,7 +3041,7 @@
       "changed": "2026-09-13"
     },
     "/hetzner-pricing-2026": {
-      "hash": "936d93ee15d1abf4",
+      "hash": "4693f29e4bab9886",
       "changed": "2026-09-15"
     },
     "/hosting-alternatives": {
@@ -3105,8 +3105,8 @@
       "changed": "2026-09-12"
     },
     "/openai-realtime-migration": {
-      "hash": "4fb238b442c1d826",
-      "changed": "2026-09-12"
+      "hash": "dfcaa860f4a579e5",
+      "changed": "2026-09-15"
     },
     "/postman-alternatives": {
       "hash": "53d5b50a4ec9bf75",
@@ -3121,7 +3121,7 @@
       "changed": "2026-09-12"
     },
     "/pricing-changes": {
-      "hash": "db628c2317c6cb8c",
+      "hash": "2b5e9cecb1ba04b9",
       "changed": "2026-09-15"
     },
     "/privacy": {
@@ -3137,7 +3137,7 @@
       "changed": "2026-09-15"
     },
     "/q2-pricing-preview-2026": {
-      "hash": "76f309a315420398",
+      "hash": "90fdafaee9b8826d",
       "changed": "2026-09-15"
     },
     "/railway-vs-render": {
@@ -3253,7 +3253,7 @@
       "changed": "2026-09-12"
     },
     "/security-alternatives": {
-      "hash": "b76b8352b5691e0f",
+      "hash": "8281e38b6d0a49f0",
       "changed": "2026-09-15"
     },
     "/security-free-tier-comparison-2026": {
@@ -3272,11 +3272,11 @@
       "daily": true
     },
     "/stability": {
-      "hash": "d6deef73633230cb",
+      "hash": "e92105d22e1b7e71",
       "changed": "2026-09-15"
     },
     "/stack-check": {
-      "hash": "fa252f9c9fa02a25",
+      "hash": "c5223a7250b33841",
       "changed": "2026-09-15"
     },
     "/stacks": {
@@ -3324,7 +3324,7 @@
       "changed": "2026-09-15"
     },
     "/team-collaboration-alternatives": {
-      "hash": "0f61b84702d8eeb0",
+      "hash": "ff3105a2475ad54e",
       "changed": "2026-09-15"
     },
     "/tenor-alternatives": {
@@ -3460,8 +3460,8 @@
       "changed": "2026-09-12"
     },
     "/trends/email": {
-      "hash": "f0ca7d9e0a1dfdb5",
-      "changed": "2026-09-14"
+      "hash": "310abb6e3dd2b0d7",
+      "changed": "2026-09-15"
     },
     "/trends/error-tracking": {
       "hash": "c72d9de57676aaa1",
@@ -3662,7 +3662,7 @@
       "changed": "2026-09-15"
     },
     "/vendor/addy-io": {
-      "hash": "76f303c8ed435812",
+      "hash": "f30d5e1a19ee47df",
       "changed": "2026-09-15"
     },
     "/vendor/ahasend": {
