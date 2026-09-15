@@ -32,6 +32,7 @@ import { DEFAULT_CHANGE_WINDOW_DAYS, defaultChangeWindow, servedWindowOpens, win
 export { RISK_DEMOTION, SEVERE_TYPES_WITHOUT_FLAT_DEMOTION, changeTypeCanDemote } from "./change-demotion.js";
 import { vendorHistorySentence } from "./vendor-history.js";
 import { isNoLongerInForce, recordsStillInForce, recordsWeStandBehind, withResolutionInSummary, withStandingDeclaredOnEach } from "./change-resolution.js";
+import { trackedChanges } from "./change-census.js";
 import { changeCitesASource, changeIsUncited, changeSummaryHtml, changeSummaryMarkdown, changeSummaryText, ratingWithheldForNoSourceSentence, type CitableChange } from "./change-citation.js";
 import { endedVerdictSentence } from "./retirement.js";
 import { resolveCategoryName } from "./category-scope.js";
@@ -1764,7 +1765,7 @@ export interface FormattedWeeklyDigest {
 }
 
 export function getFormattedWeeklyDigest(weeksAgo: number = 0, limit: number = 20): FormattedWeeklyDigest {
-  const allChanges = recordsStillInForce(loadDealChanges());
+  const allChanges = trackedChanges(loadDealChanges());
   const now = new Date();
   const targetDate = new Date(now.getTime() - weeksAgo * 7 * 86400000);
 

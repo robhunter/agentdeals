@@ -719,7 +719,7 @@ function supersededTermsField(offer: StoredTermsOf): { terms_superseded?: Supers
 const stats = {
   offers: offers.length,
   categories: categories.length,
-  dealChanges: recordsStillInForce(dealChanges).length,
+  dealChanges: trackedChanges(dealChanges).length,
 };
 
 function withCatalogueFigures(markdown: string): string {
@@ -9448,7 +9448,7 @@ function buildReportsIndexPage(): string {
     + buildGlobalNav("reports")
     + '<div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; Reports</div>\n'
     + '<h1>Monthly Pricing Intelligence Reports</h1>\n'
-    + '<p class="subtitle">Auto-generated monthly analysis of developer tool pricing trends across ' + recordsStillInForce(allChanges).length + ' tracked changes. ' + listOrderSentence("newest-first") + '</p>\n'
+    + '<p class="subtitle">Auto-generated monthly analysis of developer tool pricing trends across ' + trackedChanges(allChanges).length + ' tracked changes. ' + listOrderSentence("newest-first") + '</p>\n'
     + monthCards
     + '\n<footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>\n'
     + '</div>\n</body>\n</html>';
@@ -23271,8 +23271,9 @@ function buildFreeTierRiskPage(): string {
 
   const negativeTypes = ["free_tier_removed", "limits_reduced", "restriction", "product_deprecated", "open_source_killed", "pricing_model_change", "pricing_restructured"];
   const positiveTypes = ["limits_increased", "new_free_tier", "startup_program_expanded", "pricing_postponed"];
-  const negativeChanges = changesInForce.filter(c => negativeTypes.includes(c.change_type));
-  const positiveChanges = changesInForce.filter(c => positiveTypes.includes(c.change_type));
+  const trackedHere = trackedChanges(changesInForce);
+  const negativeChanges = trackedHere.filter(c => negativeTypes.includes(c.change_type));
+  const positiveChanges = trackedHere.filter(c => positiveTypes.includes(c.change_type));
 
 
   const lowRisk = riskEntries.filter(e => e.risk === "low");
@@ -23369,7 +23370,7 @@ function buildFreeTierRiskPage(): string {
     .sort((a, b) => b[1] - a[1]);
 
   const faqs = [
-    { q: "How often is the Free Tier Risk Index updated?", a: "The grades are editorial and do not move on their own. " + gradingDates + ", and every row on the page carries the date its own grade was set. What is recomputed on every request is the record beneath them — each vendor's tracked changes since the day it was graded, and the scorecard showing how each band has fared. Our change log currently holds " + changesInForce.length + " changes in force across " + offers.length.toLocaleString() + " developer tools, and we add new changes within 48 hours of announcement." },
+    { q: "How often is the Free Tier Risk Index updated?", a: "The grades are editorial and do not move on their own. " + gradingDates + ", and every row on the page carries the date its own grade was set. What is recomputed on every request is the record beneath them — each vendor's tracked changes since the day it was graded, and the scorecard showing how each band has fared. Our change log currently holds " + changeCountPhrase("in_force", changesInForce) + " across " + offers.length.toLocaleString() + " developer tools, and we add new changes within 48 hours of announcement." },
     { q: "Which free tiers are safest to build on in 2026?", a: "Cloudflare, GitHub, Grafana Cloud, AWS Always Free, and Google Cloud Always Free are our lowest-risk picks, graded " + safestPicksGraded + ". They share three traits: backed by profitable companies, the free tier is a strategic acquisition funnel, and strong competitive pressure prevents removal. Section 6 of this page publishes what has happened to each band since." },
     { q: "What are the warning signs that a free tier is about to be removed?", a: "Key signals: (1) acquisition or ownership change (HashiCorp/IBM, Neon/Databricks), (2) license change (MinIO AGPL to proprietary), (3) credit-based pricing transition (Vercel, Netlify), (4) two or more negative changes within 6 months, and (5) 'sustaining mode' language in announcements." },
     { q: "How do you calculate risk scores?", a: "We weight four factors: pricing history (40%) — has the vendor changed before and how recently; financial signals (25%) — profitable vs VC-subsidized, recent acquisitions; competitive pressure (20%) — intense competition keeps free tiers alive; free tier strategic value (15%) — is the free tier a funnel or a cost center. " + gradedWithNoRecordAtAll.length + " of the " + riskEntries.length + " graded vendors have no record in our change log at all, so pricing history supplied nothing for them and their grade rests on the other three factors: " + gradedWithNoRecordAtAll.map(e => e.vendor).join(", ") + "." },
@@ -23516,7 +23517,7 @@ ${mcpCtaCss()}
   <div style="display:grid;gap:.75rem;margin:1rem 0">
     <div class="diff-card" style="border-left-color:#3b82f6">
       <h3>Pricing History (40% weight)</h3>
-      <p class="diff-desc">Has this vendor changed pricing before? How recently? What direction? A vendor with 2+ negative changes in 12 months is flagged high risk. Vendors actively expanding get a boost. Data source: our ${changesInForce.length} tracked deal changes. ${gradedWithNoRecordAtAll.length} of the ${riskEntries.length} graded vendors have no record in that log at all — ${gradedWithNoRecordAtAll.map(e => escHtmlServer(e.vendor)).join(", ")} — so this factor supplied nothing for them and their grade rests on ${GRADE_FACTORS_WITHOUT_PRICING_HISTORY}.</p>
+      <p class="diff-desc">Has this vendor changed pricing before? How recently? What direction? A vendor with 2+ negative changes in 12 months is flagged high risk. Vendors actively expanding get a boost. Data source: our ${trackedHere.length} tracked deal changes. ${gradedWithNoRecordAtAll.length} of the ${riskEntries.length} graded vendors have no record in that log at all — ${gradedWithNoRecordAtAll.map(e => escHtmlServer(e.vendor)).join(", ")} — so this factor supplied nothing for them and their grade rests on ${GRADE_FACTORS_WITHOUT_PRICING_HISTORY}.</p>
     </div>
     <div class="diff-card" style="border-left-color:#8b5cf6">
       <h3>Financial Signals (25% weight)</h3>
@@ -23633,7 +23634,7 @@ ${mcpCtaCss()}
   </div>
 
   <h2 id="heatmap">8. Category Risk Heatmap</h2>
-  <p class="section-intro">Which categories face the most pricing pressure? Darker red = higher percentage of negative changes. Based on ${changesInForce.length} tracked changes across all categories.</p>
+  <p class="section-intro">Which categories face the most pricing pressure? Darker red = higher percentage of negative changes. Based on ${trackedHere.length} tracked changes across all categories.</p>
   <div style="display:grid;gap:.5rem;margin:1rem 0 2rem">
     ${heatmapData.map(h => {
       const barWidth = Math.max(h.total * 8, 30);
@@ -23659,7 +23660,7 @@ ${mcpCtaCss()}
     <strong>Reading the heatmap:</strong> Red bars = negative changes (removals, reductions, restrictions). Green bars = positive changes (expansions, new tiers). Gray = neutral restructurings. Categories with 80%+ negative changes (APIs, Testing, Monitoring) are under the most pricing pressure. AI/ML shows a split — some vendors contracting while new entrants expand.
   </div>
 
-  <h2 id="patterns">9. Pattern Analysis — What ${changesInForce.length} Changes Tell Us</h2>
+  <h2 id="patterns">9. Pattern Analysis — What ${trackedHere.length} Changes Tell Us</h2>
   <p class="section-intro">Statistical patterns from our pricing change dataset that predict future free tier removals.</p>
 
   <div class="diff-card" style="border-left-color:#f85149">
@@ -23685,11 +23686,11 @@ ${mcpCtaCss()}
 
   <div class="diff-card" style="border-left-color:#3fb950">
     <h3>\u{1F6E1}\uFE0F The Safety Signals</h3>
-    <p class="diff-desc">Not all changes are negative. ${positiveChanges.length} of ${changesInForce.length} changes were positive (new tiers or expansions). Safe signals: profitable company with developer funnel business model (Cloudflare, GitHub), open-source core with commercial layer (Grafana, Sentry), and competitive market forcing free tier maintenance (AI coding tools, cloud providers).</p>
+    <p class="diff-desc">Not all changes are negative. ${positiveChanges.length} of ${trackedHere.length} changes were positive (new tiers or expansions). Safe signals: profitable company with developer funnel business model (Cloudflare, GitHub), open-source core with commercial layer (Grafana, Sentry), and competitive market forcing free tier maintenance (AI coding tools, cloud providers).</p>
   </div>
 
   <h2 id="counter">10. Counter-Trends — Who's Expanding Free Tiers</h2>
-  <p class="section-intro">While most pricing changes are negative (${negativeChanges.length} of ${changesInForce.length}), a meaningful minority of vendors are actively expanding. Understanding why reveals what makes a free tier durable.</p>
+  <p class="section-intro">While most pricing changes are negative (${negativeChanges.length} of ${trackedHere.length}), a meaningful minority of vendors are actively expanding. Understanding why reveals what makes a free tier durable.</p>
 
   <div class="verdict-box" style="border-color:#3fb950;background:linear-gradient(135deg,rgba(63,185,80,0.1),rgba(59,130,246,0.1))">
     <h3 style="color:#3fb950">The Cloudflare Model</h3>
@@ -46091,8 +46092,9 @@ function buildStateOfFreeTiersPage(): string {
     .sort((a, b) => b[1].negative - a[1].negative)
     .slice(0, 15);
 
-  const negativeChanges = changesInForce.filter(c => negativeTypes.has(c.change_type)).sort((a, b) => b.date.localeCompare(a.date));
-  const positiveChanges = changesInForce.filter(c => positiveTypes.has(c.change_type)).sort((a, b) => b.date.localeCompare(a.date));
+  const trackedHere = trackedChanges(changesInForce);
+  const negativeChanges = trackedHere.filter(c => negativeTypes.has(c.change_type)).sort((a, b) => b.date.localeCompare(a.date));
+  const positiveChanges = trackedHere.filter(c => positiveTypes.has(c.change_type)).sort((a, b) => b.date.localeCompare(a.date));
 
   const durability = removalDurability(dealChanges);
   const lastingExamples = lastingRemovalExamplesFor("/state-of-free-tiers", dealChanges);
@@ -46295,7 +46297,7 @@ ${globalNavCss()}
     <div class="stat-card"><span class="stat-number">${freeTiers.vouched.toLocaleString()}</span><span class="stat-label">Vouched Today &mdash; ${vouchedPct}%</span></div>
     <div class="stat-card"><span class="stat-number">${freeTiers.unconfirmed.toLocaleString()}</span><span class="stat-label">Recorded, Unconfirmed</span></div>
     <div class="stat-card"><span class="stat-number">${freeTiers.ended}</span><span class="stat-label">Recorded as Ended</span></div>
-    <div class="stat-card"><span class="stat-number">${changesInForce.length}</span><span class="stat-label">Pricing Changes</span></div>
+    <div class="stat-card"><span class="stat-number">${trackedHere.length}</span><span class="stat-label">Pricing Changes</span></div>
     <div class="stat-card"><span class="stat-number">${eligibilityOffers.length}</span><span class="stat-label">With Eligibility Rules</span></div>
   </div>
   <div class="callout">
@@ -50193,7 +50195,7 @@ ${undatedSorted.map(c => buildChangeEntry(c)).join("\n")}
     </div>`;
 
   const title = "Developer Tool Pricing Changes \u2014 Free Tier Tracker";
-  const metaDesc = `Track ${inForceAll.length}+ developer tool pricing changes: free tier removals, limit reductions, price hikes, and new free tiers. Interactive timeline filterable by type, impact, year, and category.`;
+  const metaDesc = `Track ${trackedChanges(allChanges).length}+ developer tool pricing changes: free tier removals, limit reductions, price hikes, and new free tiers. Interactive timeline filterable by type, impact, year, and category.`;
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -50206,7 +50208,7 @@ ${undatedSorted.map(c => buildChangeEntry(c)).join("\n")}
     dateModified: sorted.length > 0 ? sorted[0].date : "2026-04-04",
     temporalCoverage: sorted.length > 0 ? `${sorted[sorted.length - 1].date}/${sorted[0].date}` : undefined,
     variableMeasured: [
-      { "@type": "PropertyValue", name: "Total changes tracked", value: inForceAll.length },
+      { "@type": "PropertyValue", name: "Total changes tracked", value: trackedChanges(allChanges).length },
       { "@type": "PropertyValue", name: "Free tiers removed", value: removedCount },
       { "@type": "PropertyValue", name: "Changes in " + currentYear, value: ytdChanges.length },
     ],
@@ -50931,7 +50933,7 @@ ${globalNavCss()}
       <div class="stat-label">Recently Changed</div>
     </div>
     <div class="stat-card">
-      <div class="stat-value">${allChanges.length}</div>
+      <div class="stat-value">${trackedChanges(allChanges).length}</div>
       <div class="stat-label">Total Tracked</div>
     </div>
   </div>
@@ -52972,7 +52974,7 @@ ${globalNavCss()}
       <div class="stat-label">Vendors</div>
     </div>
     <div class="stat-card">
-      <div class="stat-value">${catInForce.length}</div>
+      <div class="stat-value">${trackedChanges(catInForce).length}</div>
       <div class="stat-label">Changes Tracked</div>
     </div>
     <div class="stat-card">

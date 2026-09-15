@@ -29,6 +29,10 @@ const trackedCount = census.tracked_pricing_changes;
 const SURFACES_THAT_PUBLISH_A_TOTAL = [
   "/",
   "/changes",
+  "/pricing-changes",
+  "/reports",
+  "/expiring",
+  "/feed.xml",
   "/stability",
   "/budget-builder",
   "/stack-check",
@@ -156,21 +160,24 @@ describe("every published total is the tracked count or names the slice it is", 
     assert.deepStrictEqual(wrong, []);
   });
 
-  it("publishes no other slice's figure under the tracked noun", async () => {
-    const otherFigures = CHANGE_SLICES.filter((s: any) => s.id !== "tracked").map((s: any) => s.of(dealChanges).length);
-    const found: string[] = [];
+  it("names the slice in the same sentence wherever it publishes a figure that is not the tracked count", async () => {
+    const superseded = CHANGE_SLICES.filter((s: any) => s.id !== "tracked")
+      .map((s: any) => ({ noun: s.noun, id: s.id, count: s.of(dealChanges).length }));
+    const unnamed: string[] = [];
+    let examined = 0;
     for (const route of SURFACES_THAT_PUBLISH_A_TOTAL) {
       const body = await get(route);
-      for (const pattern of TRACKED_NOUN_PATTERNS) {
-        pattern.lastIndex = 0;
-        for (const match of body.matchAll(pattern)) {
-          const published = Number(match[1].replace(/,/g, ""));
-          if (!claimsTheWholeLog(body, match.index ?? 0)) continue;
-          if (otherFigures.includes(published)) found.push(`${route}: ${match[0].slice(0, 70)}`);
+      for (const slice of superseded) {
+        for (const match of body.matchAll(new RegExp(`(?<![\\d.,$/-])${slice.count}(?![\\d.,%/-])`, "g"))) {
+          const sentence = sentenceAround(body, match.index ?? 0);
+          if (!/\bchange|\brecord|\btrack/i.test(sentence)) continue;
+          examined++;
+          if (!sentence.includes(slice.noun)) unnamed.push(`${route}: ${slice.count} (${slice.id}) in "${sentence.trim().slice(0, 90)}"`);
         }
       }
     }
-    assert.deepStrictEqual(found, []);
+    assertPopulationFloor(examined, 2, "figures from a slice other than the tracked count");
+    assert.deepStrictEqual(unnamed, []);
   });
 
   it("states the rule on /changes with a count for each slice", async () => {
