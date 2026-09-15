@@ -278,6 +278,25 @@ describe("the stdio proxy asks for what it means to return", () => {
 
   after(() => { stdio?.kill("SIGKILL"); api?.kill("SIGKILL"); });
 
+  it("states the published size of the change log on the resource beside the tool", async () => {
+    const { changeCensus } = await import("../dist/change-census.js");
+    const census = changeCensus(loadDealChanges() as never[]);
+    const msg = await rpc("resources/read", { uri: "agentdeals://changes" }) as {
+      result?: { contents?: { text?: string }[] };
+    };
+    const text = msg.result?.contents?.[0]?.text ?? "";
+    const stated = text.match(/(\d[\d,]*) tracked pricing changes/);
+    assert.ok(stated, `the proxy's changes resource states no tracked total: ${text.slice(0, 200)}`);
+    assert.strictEqual(Number(stated[1].replace(/,/g, "")), census.tracked_pricing_changes);
+    for (const [field, count] of Object.entries(census)) {
+      if (field === "tracked_pricing_changes") continue;
+      assert.ok(
+        !new RegExp(`${count} tracked`).test(text),
+        `the proxy's changes resource calls ${count} a tracked count, which is ${field}`,
+      );
+    }
+  });
+
   it("returns the whole window rather than the route's default page", async () => {
     const result = await trackChanges({ since: "2026-01-01", include_expiring: false });
     const changes = result.changes as unknown[];

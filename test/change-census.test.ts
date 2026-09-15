@@ -194,6 +194,44 @@ describe("every published total is the tracked count or names the slice it is", 
     assert.strictEqual(body.change_log_freshness.records_held, sliceById("held").of(dealChanges).length);
   });
 
+  it("publishes the tracked count on the MCP resource door, which no page crawl reaches", async () => {
+    const rpc = async (body: unknown, sessionId?: string) => {
+      const res = await fetch(`http://localhost:${port}/mcp`, {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+          accept: "application/json, text/event-stream",
+          ...(sessionId ? { "mcp-session-id": sessionId } : {}),
+        },
+        body: JSON.stringify(body),
+      });
+      return { text: await res.text(), sessionId: res.headers.get("mcp-session-id") };
+    };
+
+    const opened = await rpc({
+      jsonrpc: "2.0", id: 1, method: "initialize",
+      params: { protocolVersion: "2024-11-05", capabilities: {}, clientInfo: { name: "change-census", version: "1" } },
+    });
+    const sessionId = opened.sessionId;
+    assert.ok(sessionId, "the MCP door opened no session");
+    await rpc({ jsonrpc: "2.0", method: "notifications/initialized" }, sessionId);
+
+    const read = await rpc(
+      { jsonrpc: "2.0", id: 2, method: "resources/read", params: { uri: "agentdeals://changes" } },
+      sessionId,
+    );
+    const stated = read.text.match(/(\d[\d,]*) tracked pricing changes/);
+    assert.ok(stated, `the changes resource states no tracked total: ${read.text.slice(0, 200)}`);
+    assert.strictEqual(Number(stated[1].replace(/,/g, "")), trackedCount);
+    for (const other of CHANGE_SLICES.filter((s: any) => s.id !== "tracked")) {
+      const figure = other.of(dealChanges).length;
+      assert.ok(
+        !new RegExp(`${figure} tracked`).test(read.text),
+        `the changes resource calls ${figure} a tracked count, which is the ${other.id} slice`,
+      );
+    }
+  });
+
   it("does not move the count of changes whose effective date is unknown", async () => {
     const body = await get("/changes");
     const undated = partitionByDateProvenance(dealChanges).discovered.length;
