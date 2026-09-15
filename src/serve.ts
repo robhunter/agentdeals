@@ -49,6 +49,7 @@ import { HETZNER_APRIL_CHANGES, HETZNER_CLOUD_PLANS, HETZNER_PRICES_READ, HETZNE
 import { HUNDRED_GB_SCENARIO, HUNDRED_TB_SCENARIO, ONE_TO_ONE_SCENARIO, STORAGE_RATES_READ, STORAGE_SCALE_WORKLOADS, TEN_TO_ONE_SCENARIO, cheapestProviderAt, costAfterMonthlyEgressGrantFor, costliestProviderAt, egressAllowanceSentence, egressBillAfterMonthlyGrantFor, egressBillOnceOverAllowance, egressRatioWhereCostsMatch, fixedMonthlyGrantsSentence, monthlyEgressGrantGb, monthlyEgressGrantSentence, monthlyStorageCost, providersWithScalingEgressAllowance, rateCardFor, scaleCostFor } from "./storage-cost-model.js";
 import { changeTimelineDate, supersededLineups, supersessionNote } from "./change-lineup.js";
 import { isNoLongerInForce, eventResolutionFields, recordsStillInForce, recordsWeStandBehind, INCLUDE_RETRACTED_REJECTED } from "./change-resolution.js";
+import { SINCE_DEFAULT_SENTENCE } from "./change-window.js";
 import { FREE_TIER_STANDING_LABELS, GRADE_FACTORS_WITHOUT_PRICING_HISTORY, NOT_EVIDENCE_LABELS, citesAChangeOlderThanTheGrade, freeTierStanding, gradesFirstSet, gradesLastSet, gradingDatesClause, neverTracked, riskEntries, scorecard, splitByFreeTierStanding, trackedSinceGrading, type RiskEntry } from "./risk-scorecard.js";
 import { directionRatioLabel } from "./change-direction.js";
 import { removalDurability, removalReturnRateSentence, removalDurabilityPattern, lastingRemovalExamplesFor } from "./removal-durability.js";
@@ -49859,6 +49860,8 @@ function buildDeveloperHubPage(): string {
     + "    <p><code>/api/changes</code> returns <strong>" + CHANGES_DEFAULT_LIMIT + " records by default</strong>. <code>limit</code> sets the page size, <code>offset</code> skips records, and both are echoed back on the response alongside <code>returned</code> &mdash; the count in this page &mdash; and <code>total</code>, the count matching your query before paging. There is no maximum: <code>?limit=1000</code> returns the whole window in one response. An invalid <code>limit</code> or a negative <code>offset</code> answers <code>400</code> rather than being ignored.</p>\n"
     + "    <p>Records we have withdrawn as our own error are not served here, and <code>total</code> counts what you received rather than what the log holds. <code>retracted_excluded</code> reports how many your query matched and we held back. <code>?include_retracted=true</code> returns them alongside the rest, each carrying <code>standing: &quot;retracted&quot;</code> and <code>impact: &quot;none&quot;</code> &mdash; and every record carries a <code>standing</code>, so a live record and a withdrawn one are told apart without a null check. A value other than <code>true</code> or <code>false</code> answers <code>400</code>.</p>\n"
     + "\n"
+    + "    <h3>The window behind a count</h3>\n"
+    + "    <p>With no filter, <code>/api/changes</code> returns the last " + DEFAULT_CHANGE_WINDOW_DAYS + " days. Name a <code>type</code>, <code>vendor</code>, <code>vendors</code> or <code>category</code> and you are answered from the whole change log however old the record &mdash; a vendor you ask for by name is never reported as having changed nothing because the last thing it changed was six months ago. <code>since</code> overrides both. Every response carries <code>date_window</code> naming which of the three ran and the date it opens on, so a <code>total</code> of <code>0</code> can be read as &quot;we hold no such record&quot; rather than guessed at.</p>\n"
     + "    <h2 id=\"referral-codes\">Referral Codes</h2>\n"
     + "    <p>Every code these endpoints return is one we hold ourselves and earn a commission on, with the reader benefit and every restriction attached to it. We hold codes for a handful of the vendors we cover; the <a href=\"/disclosure\">affiliate disclosure</a> lists the same set. Agent-submitted codes are retired &mdash; <code>?source=agent</code> answers with an empty list and the reason, and <code>POST /api/referral-codes</code> answers <code>410</code>.</p>\n"
     + "    <div style=\"overflow-x:auto\">\n"
@@ -54849,6 +54852,7 @@ const dispatchRequest = async (req: IncomingMessage, res: ServerResponse) => {
       offset,
       include_retracted: includeRetracted,
       retracted_excluded: result.retracted_excluded,
+      date_window: result.date_window,
       advisory: context.advisory,
       summary: context.summary,
       date_provenance: dateProvenance,
@@ -55353,7 +55357,7 @@ Parameters:
 Track recent pricing changes across developer tools.
 
 Parameters:
-- since (string, optional): ISO date (YYYY-MM-DD). Default: 7 days ago.
+- since (string, optional): ISO date (YYYY-MM-DD). ${SINCE_DEFAULT_SENTENCE}
 - change_type (enum, optional): free_tier_removed, limits_reduced, restriction, limits_increased, new_free_tier, new_tier, pricing_restructured, open_source_killed, pricing_model_change, startup_program_expanded, pricing_postponed, product_deprecated, rebranded
 - vendor (string, optional): Filter to one vendor
 - vendors (string, optional): Comma-separated vendor names

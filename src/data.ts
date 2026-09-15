@@ -28,6 +28,7 @@ import { DATE_SOURCES, isEventDated, changeDateClause, isoWeekWindow, changesInW
 import { PRODUCT_DEPRECATED, deprecationEndsTheListedProduct } from "./product-deprecation.js";
 import { RISK_DEMOTION } from "./change-demotion.js";
 import { sinceFilterDay } from "./since-parameter.js";
+import { DEFAULT_CHANGE_WINDOW_DAYS, defaultChangeWindow, servedWindowOpens, windowFromSinceParameter, wholeChangeLog, type ChangeWindow } from "./change-window.js";
 export { RISK_DEMOTION, SEVERE_TYPES_WITHOUT_FLAT_DEMOTION, changeTypeCanDemote } from "./change-demotion.js";
 import { vendorHistorySentence } from "./vendor-history.js";
 import { isNoLongerInForce, recordsStillInForce, recordsWeStandBehind, withResolutionInSummary, withStandingDeclaredOnEach } from "./change-resolution.js";
@@ -747,7 +748,7 @@ export function getChangeLogFreshness(now: Date = new Date()): ChangeLogFreshnes
   return changeLogFreshness(loadDealChanges(), now);
 }
 
-export const DEFAULT_CHANGE_WINDOW_DAYS = 30;
+export { DEFAULT_CHANGE_WINDOW_DAYS };
 
 export interface ChangeRecordAudience {
   includeRetracted?: boolean;
@@ -757,6 +758,7 @@ export interface DealChangeResult {
   changes: PublishedDealChange[];
   total: number;
   retracted_excluded: number;
+  date_window: ChangeWindow;
 }
 
 export function getDealChanges(
@@ -770,14 +772,18 @@ export function getDealChanges(
   let results = loadDealChanges();
 
   const sinceDay = sinceFilterDay(since);
+  const namesWhatItWants = Boolean(changeType || vendor || vendors || categories);
 
+  let date_window: ChangeWindow;
   if (sinceDay) {
     results = results.filter((c) => c.date >= sinceDay);
+    date_window = windowFromSinceParameter(sinceDay);
+  } else if (namesWhatItWants) {
+    date_window = wholeChangeLog();
   } else {
-    const windowStart = new Date(Date.now() - DEFAULT_CHANGE_WINDOW_DAYS * 24 * 60 * 60 * 1000)
-      .toISOString()
-      .slice(0, 10);
-    results = results.filter((c) => c.date >= windowStart);
+    const applied = defaultChangeWindow();
+    results = results.filter((c) => c.date >= applied.from);
+    date_window = applied;
   }
 
   if (changeType) {
@@ -812,6 +818,7 @@ export function getDealChanges(
     changes: withStandingDeclaredOnEach(served),
     total: served.length,
     retracted_excluded: results.length - served.length,
+    date_window,
   };
 }
 
@@ -819,6 +826,7 @@ export interface PersonalizedChanges {
   your_stack_changes: PublishedDealChange[];
   advisory: PublishedDealChange[];
   retracted_excluded: number;
+  date_window: ChangeWindow;
   summary: {
     stack_changes_count: number;
     ecosystem_high_impact_count: number;
@@ -841,7 +849,7 @@ export function changeContext(
   since?: string,
   changeType?: string
 ): ChangeContext {
-  const allResult = getDealChanges(since, changeType);
+  const allResult = getDealChanges(since ?? servedWindowOpens(), changeType);
 
   const matchedKeys = new Set(matched.map((c) => `${c.vendor}|${c.date}|${c.change_type}`));
 
@@ -883,6 +891,7 @@ export function getPersonalizedChanges(
     your_stack_changes: stackResult.changes,
     advisory: context.advisory,
     retracted_excluded: stackResult.retracted_excluded,
+    date_window: stackResult.date_window,
     summary: context.summary,
   };
 }

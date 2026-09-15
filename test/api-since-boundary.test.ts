@@ -169,33 +169,33 @@ describe("since names a day and the whole of that day comes back", () => {
   });
 
   it("a declared filter still narrows the change log, and a value we hold nothing for still returns nothing", async () => {
-    const unfiltered = await get("/api/changes?limit=1000");
+    const unfiltered = await get("/api/changes?since=2000-01-01&limit=1000");
     const rows = unfiltered.json.changes as { vendor: string; change_type: string; category?: string }[];
-    assert.ok(rows.length > 1, `the window holds ${rows.length} records, too few for this control`);
+    assert.ok(rows.length > 1, `the log holds ${rows.length} records, too few for this control`);
 
-    const rarestValueInTheWindow = (field: (r: (typeof rows)[number]) => string | undefined, name: string): string => {
+    const rarestValueInTheLog = (field: (r: (typeof rows)[number]) => string | undefined, name: string): string => {
       const counts = new Map<string, number>();
       for (const row of rows) {
         const value = field(row);
         if (value) counts.set(value, (counts.get(value) ?? 0) + 1);
       }
       const narrowing = [...counts.entries()].filter(([, n]) => n < rows.length).sort((a, b) => a[1] - b[1])[0];
-      assert.ok(narrowing, `every record in the window carries one ${name}, so no filter over it can narrow`);
+      assert.ok(narrowing, `every record in the log carries one ${name}, so no filter over it can narrow`);
       return narrowing[0];
     };
 
-    const drawnFromTheWindow: Record<string, string> = {
-      type: rarestValueInTheWindow((r) => r.change_type, "change type"),
-      vendor: rarestValueInTheWindow((r) => r.vendor, "vendor"),
-      category: rarestValueInTheWindow((r) => r.category, "category"),
+    const drawnFromTheLog: Record<string, string> = {
+      type: rarestValueInTheLog((r) => r.change_type, "change type"),
+      vendor: rarestValueInTheLog((r) => r.vendor, "vendor"),
+      category: rarestValueInTheLog((r) => r.category, "category"),
     };
-    drawnFromTheWindow.vendors = drawnFromTheWindow.vendor;
-    drawnFromTheWindow.categories = drawnFromTheWindow.category;
+    drawnFromTheLog.vendors = drawnFromTheLog.vendor;
+    drawnFromTheLog.categories = drawnFromTheLog.category;
 
     for (const param of DECLARED_FILTERS) {
-      const value = drawnFromTheWindow[param]!;
+      const value = drawnFromTheLog[param]!;
       const hit = await get(`/api/changes?limit=1000&${param}=${encodeURIComponent(value)}`);
-      assert.ok(hit.json.total > 0, `${param}=${value} is carried by a record in the window and returned nothing`);
+      assert.ok(hit.json.total > 0, `${param}=${value} is carried by a record in the log and returned nothing`);
       assert.ok(
         hit.json.total < unfiltered.json.total,
         `${param}=${value} returned ${hit.json.total} of ${unfiltered.json.total}, which is no narrower`,
