@@ -188,6 +188,7 @@ export interface PageReviewRecord {
   review_outcome: ReviewOutcome | null;
   review_note: string | null;
   reads_index: boolean;
+  tables_read_index: boolean;
   reads_changes: boolean;
   data_source: PageDataSource;
   data_source_reason: string | null;
@@ -216,6 +217,7 @@ export interface ReviewStatus {
   badge_subjects_unresolved: string[];
   stat_card_subjects_unresolved: string[];
   reads_index: boolean;
+  tables_read_index: boolean;
   reads_changes: boolean;
   data_source: PageDataSource;
   data_source_reason: string | null;
@@ -254,6 +256,7 @@ function normalizeRecord(raw: any): PageReviewRecord | null {
     review_outcome: reviewedAt !== null && REVIEW_OUTCOMES.includes(raw.review_outcome) ? raw.review_outcome : null,
     review_note: reviewedAt !== null && typeof raw.review_note === "string" && raw.review_note.trim() ? raw.review_note.trim() : null,
     reads_index: raw.reads_index === true,
+    tables_read_index: raw.tables_read_index === true,
     reads_changes: raw.reads_changes === true,
     data_source: PAGE_DATA_SOURCES.includes(raw.data_source) ? raw.data_source : "unsourced",
     data_source_reason: typeof raw.data_source_reason === "string" && raw.data_source_reason.trim() ? raw.data_source_reason.trim() : null,
@@ -335,6 +338,7 @@ export function reviewStatus(record: PageReviewRecord, today: string): ReviewSta
     badge_subjects_unresolved: record.badge_subjects_unresolved,
     stat_card_subjects_unresolved: record.stat_card_subjects_unresolved,
     reads_index: record.reads_index,
+    tables_read_index: record.tables_read_index,
     reads_changes: record.reads_changes,
     data_source: record.data_source,
     data_source_reason: record.data_source_reason,
@@ -376,7 +380,7 @@ export function compiledNotice(compiledOn: string, lastChecked: string | null = 
 
 export function dataProvenanceFor(record: PageReviewRecord | null, indexSize: number, today: string): string {
   if (!record) return "";
-  if (record.reads_index) return indexCitation(indexSize);
+  if (record.tables_read_index) return indexCitation(indexSize);
   return compiledNotice(record.published, reviewStatus(record, today).reviewed_at);
 }
 
@@ -756,6 +760,39 @@ export function perturbTextFields(records: any[], fields: string[]): number {
   return touched;
 }
 
+export function withoutScriptsAndStyles(html: string): string {
+  return html
+    .replace(/<script[\s\S]*?<\/script>/g, " ")
+    .replace(/<style[\s\S]*?<\/style>/g, " ");
+}
+
+export function readableText(html: string): string {
+  return withoutScriptsAndStyles(html)
+    .replace(/<[^>]+>/g, " ")
+    .replace(/&[a-z]+;/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+export function readableTableText(html: string): string {
+  const tables = withoutScriptsAndStyles(html).match(/<table\b[\s\S]*?<\/table>/g) ?? [];
+  return tables.map(readableText).join("\n");
+}
+
+export const HAND_COMPILED_DENIALS: RegExp[] = [
+  /do not come from the catalogue behind our search and MCP tools/i,
+  /tables on this page were compiled by hand/i,
+];
+
+export function deniesTheCatalogueSupplied(html: string): boolean {
+  const text = readableText(html);
+  return HAND_COMPILED_DENIALS.some(pattern => pattern.test(text));
+}
+
+export function citesTheIndex(html: string, indexSize: number): boolean {
+  return readableText(html).includes(indexCitation(indexSize));
+}
+
 const TABLE_ROW = /<tr\b[\s\S]*?<\/tr>/g;
 const ROW_CELL = /<t[dh]\b[^>]*>[\s\S]*?<\/t[dh]>/g;
 const VENDOR_CELL_LINK = /href="\/vendor\/([a-z0-9][a-z0-9-]*)"/;
@@ -847,6 +884,7 @@ export function vendorFactRows(html: string, slugFor: VendorSlugLookup): VendorF
 
 export interface PageSourceMeasurement {
   reads_index: boolean;
+  tables_read_index: boolean;
   reads_changes: boolean;
   vendor_fact_rows: number;
 }
@@ -869,6 +907,18 @@ function declarationViolations(page: PageReviewRecord, seen: PageSourceMeasureme
     violations.push({
       path: page.path,
       problem: `reads_index says ${page.reads_index}, perturbing the catalogue says ${seen.reads_index}`,
+    });
+  }
+  if (page.tables_read_index !== seen.tables_read_index) {
+    violations.push({
+      path: page.path,
+      problem: `tables_read_index says ${page.tables_read_index}, perturbing the catalogue and reading the tables says ${seen.tables_read_index}`,
+    });
+  }
+  if (page.tables_read_index && !seen.reads_index) {
+    violations.push({
+      path: page.path,
+      problem: "tables_read_index on a page the catalogue perturbation leaves byte-identical",
     });
   }
   if (page.reads_changes !== seen.reads_changes) {

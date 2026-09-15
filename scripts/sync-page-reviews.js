@@ -6,7 +6,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import {
   CATALOGUE_TEXT_FIELDS, CHANGE_LOG_TEXT_FIELDS, deriveTier, parsePageReviews, pageReviewsPath,
-  perturbTextFields, unresolvedBadgeSubjects, vendorFactRows, vendorsAssertedIn,
+  perturbTextFields, readableTableText, unresolvedBadgeSubjects, vendorFactRows, vendorsAssertedIn,
 } from "../dist/page-reviews.js";
 import { unresolvedStatCardSubjects } from "../dist/superlative-claims.js";
 import { assertedVendorSlugs, isNonVendorSubject, namedVendorSlug, vendorSlugMap } from "../dist/vendor-slug.js";
@@ -25,6 +25,12 @@ derived, never what a reviewer asserted.
 Which stores a page reads is measured rather than carried over. Each page is rendered
 again against a catalogue and a change log whose text fields have been replaced, and a
 byte-identical render means the page never opened that store.
+
+Reading the catalogue at all and sourcing the page's figures from it are recorded
+separately. A page whose only catalogue-derived output is the href of a source link
+reads the catalogue, and every figure a reader compares is still a literal in the
+page. tables_read_index is the narrower measurement — whether the readable text inside
+the page's tables moves — and it is the one the provenance byline is derived from.
 
 A page that reads no catalogue record keeps whichever data_source it was given, and a
 page new to the register defaults to "unsourced" — the state that fails the ratchet —
@@ -182,6 +188,7 @@ async function main() {
         review_outcome: prior?.review_outcome ?? null,
         review_note: prior?.review_note ?? null,
         reads_index: readsIndex,
+        tables_read_index: readableTableText(html) !== readableTableText(withoutIndex),
         reads_changes: html !== withoutChanges,
         data_source: readsIndex ? "catalogue" : prior && prior.data_source !== "catalogue" ? prior.data_source : "unsourced",
         data_source_reason: prior?.data_source_reason ?? null,
@@ -190,6 +197,7 @@ async function main() {
       else {
         if (prior.tier !== record.tier) changes.push(`~ ${route} tier ${prior.tier} -> ${record.tier}`);
         if (prior.reads_index !== record.reads_index) changes.push(`~ ${route} reads_index ${prior.reads_index} -> ${record.reads_index}`);
+        if (prior.tables_read_index !== record.tables_read_index) changes.push(`~ ${route} tables_read_index ${prior.tables_read_index} -> ${record.tables_read_index}`);
         if (prior.reads_changes !== record.reads_changes) changes.push(`~ ${route} reads_changes ${prior.reads_changes} -> ${record.reads_changes}`);
         if (prior.data_source !== record.data_source) changes.push(`~ ${route} data_source ${prior.data_source} -> ${record.data_source}`);
         const before = prior.vendors_asserted.join(","), after = record.vendors_asserted.join(",");
@@ -220,6 +228,7 @@ async function main() {
   const unsourcedA = pages.filter(p => p.tier === "A" && p.data_source === "unsourced").length;
   console.log(`${pages.length} pages, ${tierA} tier A, ${pages.length - tierA} tier B`);
   console.log(`${pages.filter(p => p.reads_index).length} read the catalogue, ${pages.filter(p => p.reads_changes).length} read the change log`);
+  console.log(`${pages.filter(p => p.tables_read_index).length} of those put a catalogue-derived figure in a table, which is what the provenance byline claims`);
   console.log(`${unsourcedA} tier-A pages assert vendor facts and read no catalogue record`);
   for (const line of changes) console.log(line);
   if (opts.dryRun) { console.log("dry run — nothing written"); return; }

@@ -7,8 +7,10 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import {
-  CATALOGUE_TEXT_FIELDS, CHANGE_LOG_TEXT_FIELDS, PAGE_DATA_SOURCES,
-  pageSourceViolations, parsePageReviews, perturbTextFields, unsourcedTierAPaths, vendorFactRows,
+  CATALOGUE_TEXT_FIELDS, CHANGE_LOG_TEXT_FIELDS, PAGE_DATA_SOURCES, PERTURBATION_SENTINEL,
+  citesTheIndex, deniesTheCatalogueSupplied,
+  pageSourceViolations, parsePageReviews, perturbTextFields, readableTableText,
+  unsourcedTierAPaths, vendorFactRows,
   type PageReviewRecord, type PageSourceMeasurement,
 } from "../src/page-reviews.ts";
 import { namedVendorSlug } from "../dist/vendor-slug.js";
@@ -21,6 +23,8 @@ const INDEX_CITATION = /our (?:verified )?index of/i;
 const VERIFICATION_CLAIM = /\b(?:verified|cross-referenced) against\b/i;
 const NAMES_A_YEAR = /\b(?:19|20)\d{2}\b/;
 const COMPILED_NOTICE = /Figures compiled (\d{4}-\d{2}-\d{2}), (?:not re-checked since|last checked (\d{4}-\d{2}-\d{2}))/;
+
+const INDEX_SIZE: number = JSON.parse(readFileSync(path.join(REPO, "data", "index.json"), "utf-8")).offers.length;
 
 function registeredPages(): PageReviewRecord[] {
   return parsePageReviews(readFileSync(path.join(REPO, "data", "page-reviews.json"), "utf-8")).pages;
@@ -64,6 +68,10 @@ function visibleBody(html: string): string {
     .replace(/<style[\s\S]*?<\/style>/g, " ");
 }
 
+function statesProvenance(html: string): boolean {
+  return citesTheIndex(html, INDEX_SIZE) || COMPILED_NOTICE.test(visibleBody(html));
+}
+
 function visibleSentences(html: string): string[] {
   const text = visibleBody(html)
     .replace(/<[^>]+>/g, " ")
@@ -79,6 +87,7 @@ describe("a page may only name the source it actually reads", () => {
   let changesBlind: { proc: ChildProcess; port: number };
   const pages = registeredPages();
   const bodies = new Map<string, string>();
+  const perturbedBodies = new Map<string, string>();
   const consumesIndex = new Map<string, boolean>();
   const measured = new Map<string, PageSourceMeasurement>();
 
@@ -102,9 +111,11 @@ describe("a page may only name the source it actually reads", () => {
         fetch(`http://localhost:${changesBlind.port}${page.path}`).then((r) => r.text()),
       ]);
       bodies.set(page.path, a);
+      perturbedBodies.set(page.path, b);
       consumesIndex.set(page.path, a !== b);
       measured.set(page.path, {
         reads_index: a !== b,
+        tables_read_index: readableTableText(a) !== readableTableText(b),
         reads_changes: a !== c,
         vendor_fact_rows: vendorFactRows(a, namedVendorSlug).length,
       });
@@ -160,10 +171,13 @@ describe("a page may only name the source it actually reads", () => {
       path: "/a-page-that-does-not-exist",
       data_source: "unsourced" as const,
       reads_index: false,
+      tables_read_index: false,
       reads_changes: false,
     }];
     const withOneMore = new Map(measured);
-    withOneMore.set("/a-page-that-does-not-exist", { reads_index: false, reads_changes: false, vendor_fact_rows: 0 });
+    withOneMore.set("/a-page-that-does-not-exist", {
+      reads_index: false, tables_read_index: false, reads_changes: false, vendor_fact_rows: 0,
+    });
     assert.ok(
       pageSourceViolations(admitted, withOneMore, unsourced.length).length > 0,
       `a ${unsourced.length + 1}th unsourced tier-A page passed, so the ratchet allows the number to grow`
@@ -197,10 +211,10 @@ describe("a page may only name the source it actually reads", () => {
     );
   });
 
-  it("names our index as a source only on the pages that read it", () => {
+  it("names our index as a source only on the pages whose tables it supplies", () => {
     const offenders: string[] = [];
     for (const page of pages) {
-      if (page.reads_index) continue;
+      if (page.tables_read_index) continue;
       for (const sentence of visibleSentences(bodies.get(page.path)!)) {
         if (INDEX_CITATION.test(sentence)) offenders.push(`${page.path}: ${sentence}`);
       }
@@ -210,7 +224,7 @@ describe("a page may only name the source it actually reads", () => {
 
   it("still names the index on the pages that do read it, so the rule above is not vacuous", () => {
     const citing = pages.filter(
-      (p) => p.reads_index && visibleSentences(bodies.get(p.path)!).some((s) => INDEX_CITATION.test(s))
+      (p) => p.tables_read_index && visibleSentences(bodies.get(p.path)!).some((s) => INDEX_CITATION.test(s))
     );
     assert.ok(citing.length >= 5, `only ${citing.length} pages cite the index, so the check has almost nothing to allow`);
   });
@@ -231,7 +245,7 @@ describe("a page may only name the source it actually reads", () => {
   it("tells the reader when the figures were compiled on every page that renders no catalogue field", () => {
     const wrong: string[] = [];
     for (const page of pages) {
-      if (page.reads_index || page.tier !== "A") continue;
+      if (page.tables_read_index || page.tier !== "A") continue;
       const found = visibleBody(bodies.get(page.path)!).match(COMPILED_NOTICE);
       if (!found) wrong.push(`${page.path}: no compiled notice`);
       else if (found[1] !== page.published) wrong.push(`${page.path}: notice says ${found[1]}, compiled ${page.published}`);
@@ -243,7 +257,7 @@ describe("a page may only name the source it actually reads", () => {
     const wrong: string[] = [];
     let checked = 0;
     for (const page of pages) {
-      if (page.reads_index || page.tier !== "A") continue;
+      if (page.tables_read_index || page.tier !== "A") continue;
       const found = visibleBody(bodies.get(page.path)!).match(COMPILED_NOTICE)!;
       const claimed = found[2] ?? null;
       const expected = page.reviewed_at;
@@ -279,9 +293,69 @@ describe("a page may only name the source it actually reads", () => {
     assert.deepStrictEqual(saying.sort(), failing.sort());
   });
 
-  it("does not put the compiled notice on a page that reads the catalogue", () => {
-    const wrong = pages.filter((p) => p.reads_index && COMPILED_NOTICE.test(visibleBody(bodies.get(p.path)!)));
+  it("does not put the compiled notice on a page whose tables the catalogue supplies", () => {
+    const wrong = pages.filter((p) => p.tables_read_index && COMPILED_NOTICE.test(visibleBody(bodies.get(p.path)!)));
     assert.deepStrictEqual(wrong.map((p) => p.path), []);
+  });
+
+  it("never publishes the index byline on a page that also tells the reader the tables were compiled by hand", () => {
+    const contradicting = pages
+      .filter((p) => citesTheIndex(bodies.get(p.path)!, INDEX_SIZE) && deniesTheCatalogueSupplied(bodies.get(p.path)!))
+      .map((p) => p.path);
+    assert.deepStrictEqual(contradicting, []);
+  });
+
+  it("keeps enough pages saying the tables were compiled by hand for the rule above to have something to catch", () => {
+    const denying = pages.filter((p) => deniesTheCatalogueSupplied(bodies.get(p.path)!));
+    assertPopulationFloor(denying.length, 18, "registered pages telling the reader their tables were compiled by hand");
+    const citing = pages.filter((p) => citesTheIndex(bodies.get(p.path)!, INDEX_SIZE));
+    assert.ok(citing.length >= 5, `only ${citing.length} pages cite the index, so the pairing cannot arise`);
+  });
+
+  it("gives the index byline to a page it states provenance for exactly when the catalogue moves the text in its tables", () => {
+    const stating = pages.filter((p) => statesProvenance(bodies.get(p.path)!));
+    assert.ok(stating.length > 40, `only ${stating.length} pages state provenance at all, so the rule reaches almost nothing`);
+    const disagreeing = stating
+      .filter((p) => citesTheIndex(bodies.get(p.path)!, INDEX_SIZE) !== measured.get(p.path)!.tables_read_index)
+      .map((p) => `${p.path} cites=${citesTheIndex(bodies.get(p.path)!, INDEX_SIZE)} tables move=${measured.get(p.path)!.tables_read_index}`);
+    assert.deepStrictEqual(disagreeing, []);
+    const citing = stating.filter((p) => citesTheIndex(bodies.get(p.path)!, INDEX_SIZE));
+    assert.ok(citing.length >= 5, `only ${citing.length} of them cite the index, so one arm of the rule is empty`);
+    assert.ok(citing.length < stating.length, "every page stating provenance cites the index, so the other arm is empty");
+  });
+
+  it("separates a page whose tables the catalogue supplies from one it only supplies a source link to", () => {
+    const linkOnly = pages.filter((p) => measured.get(p.path)!.reads_index && !measured.get(p.path)!.tables_read_index);
+    assertPopulationFloor(linkOnly.length, 16, "pages the catalogue reaches without supplying a figure in any table");
+    const everySentinelOutsideTables = linkOnly.filter(
+      (p) => perturbedBodies.get(p.path)!.includes(PERTURBATION_SENTINEL)
+        && !readableTableText(perturbedBodies.get(p.path)!).includes(PERTURBATION_SENTINEL)
+    );
+    assert.ok(
+      everySentinelOutsideTables.length >= 15,
+      `only ${everySentinelOutsideTables.length} of those carry perturbed catalogue text outside their tables, so the narrower measurement is not being exercised`
+    );
+  });
+
+  it("keeps the byline on a page the catalogue reaches through fields it never prints, which no count of perturbed text could find", () => {
+    const silentlySourced = pages.filter(
+      (p) => p.tables_read_index && !readableTableText(perturbedBodies.get(p.path)!).includes(PERTURBATION_SENTINEL)
+    );
+    assert.ok(
+      silentlySourced.length > 0,
+      "every page whose tables the catalogue supplies prints perturbed catalogue text in them, so a sentinel count would do and this measurement is untested"
+    );
+    const stating = silentlySourced.filter((p) => statesProvenance(bodies.get(p.path)!));
+    assert.ok(
+      stating.length > 0,
+      "no page sourced this way states its provenance, so nothing here exercises the byline"
+    );
+    for (const page of stating) {
+      assert.ok(
+        citesTheIndex(bodies.get(page.path)!, INDEX_SIZE),
+        `${page.path} lost the index byline, and its tables move with the catalogue without quoting it`
+      );
+    }
   });
 });
 

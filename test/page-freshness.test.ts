@@ -547,6 +547,7 @@ describe("what a page is allowed to say about where its figures came from", () =
     reviewed_at: null,
     reviewer: null,
     reads_index: false,
+    tables_read_index: false,
     ...over,
   });
 
@@ -555,18 +556,27 @@ describe("what a page is allowed to say about where its figures came from", () =
       JSON.stringify({ pages: [{ path: "/undeclared", published: "2026-04-03", tier: "A" }] })
     );
     assert.strictEqual(parsed.pages[0].reads_index, false);
+    assert.strictEqual(parsed.pages[0].tables_read_index, false);
   });
 
   it("keeps a declared readership through parsing", () => {
     const parsed = parsePageReviews(
-      JSON.stringify({ pages: [{ path: "/declared", published: "2026-04-03", tier: "A", reads_index: true }] })
+      JSON.stringify({ pages: [{ path: "/declared", published: "2026-04-03", tier: "A", reads_index: true, tables_read_index: true }] })
     );
     assert.strictEqual(parsed.pages[0].reads_index, true);
+    assert.strictEqual(parsed.pages[0].tables_read_index, true);
   });
 
-  it("cites the catalogue only for a page that reads it", () => {
-    assert.strictEqual(dataProvenanceFor(record({ reads_index: true }), 1580), indexCitation(1580));
+  it("cites the catalogue only for a page whose tables it supplies", () => {
+    assert.strictEqual(dataProvenanceFor(record({ reads_index: true, tables_read_index: true }), 1580), indexCitation(1580));
     assert.strictEqual(dataProvenanceFor(record(), 1580), compiledNotice("2026-04-03"));
+  });
+
+  it("tells the reader the figures were compiled when the catalogue supplies the page a source link and no figure", () => {
+    assert.strictEqual(
+      dataProvenanceFor(record({ reads_index: true, tables_read_index: false }), 1580),
+      compiledNotice("2026-04-03")
+    );
   });
 
   it("dates the notice from the page's own compilation, not from any other date", () => {

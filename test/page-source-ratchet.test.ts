@@ -18,6 +18,7 @@ function page(overrides: Partial<PageReviewRecord> & { path: string }): PageRevi
     reviewer: null,
     review_outcome: null,
     reads_index: false,
+    tables_read_index: false,
     reads_changes: false,
     data_source: "unsourced",
     data_source_reason: null,
@@ -26,7 +27,7 @@ function page(overrides: Partial<PageReviewRecord> & { path: string }): PageRevi
 }
 
 function seen(overrides: Partial<PageSourceMeasurement> = {}): PageSourceMeasurement {
-  return { reads_index: false, reads_changes: false, vendor_fact_rows: 0, ...overrides };
+  return { reads_index: false, tables_read_index: false, reads_changes: false, vendor_fact_rows: 0, ...overrides };
 }
 
 function filled(count: number, source: PageDataSource = "unsourced"): PageReviewRecord[] {
@@ -34,7 +35,7 @@ function filled(count: number, source: PageDataSource = "unsourced"): PageReview
 }
 
 function measurementsFor(pages: PageReviewRecord[]): Map<string, PageSourceMeasurement> {
-  return new Map(pages.map(p => [p.path, seen({ reads_index: p.reads_index, reads_changes: p.reads_changes })]));
+  return new Map(pages.map(p => [p.path, seen({ reads_index: p.reads_index, tables_read_index: p.tables_read_index, reads_changes: p.reads_changes })]));
 }
 
 function problemsFor(pages: PageReviewRecord[], measured = measurementsFor(pages), budget = pages.filter(p => p.tier === "A" && p.data_source === "unsourced").length): string[] {
@@ -243,8 +244,13 @@ describe("a review date means a review happened, and the outcome says what it fo
     assert.strictEqual(compiledClause(checked, "2026-08-27"), "Compiled 2026-04-03, last checked 2026-08-26");
   });
 
-  it("cites the catalogue instead of a compilation date on a page that renders catalogue fields", () => {
-    const reading = page({ path: "/p", reads_index: true, data_source: "catalogue", reviewed_at: "2026-08-26", review_outcome: "pass" });
+  it("cites the catalogue instead of a compilation date on a page whose tables render catalogue fields", () => {
+    const reading = page({ path: "/p", reads_index: true, tables_read_index: true, data_source: "catalogue", reviewed_at: "2026-08-26", review_outcome: "pass" });
     assert.strictEqual(dataProvenanceFor(reading, 1580, "2026-08-27"), "Data verified from our index of 1,580 developer tools");
+  });
+
+  it("dates the compilation on a page the catalogue reaches without putting a figure in any table", () => {
+    const linkOnly = page({ path: "/p", reads_index: true, tables_read_index: false, data_source: "catalogue", reviewed_at: "2026-08-26", review_outcome: "pass" });
+    assert.strictEqual(dataProvenanceFor(linkOnly, 1580, "2026-08-27"), "Figures compiled 2026-04-03, last checked 2026-08-26");
   });
 });
