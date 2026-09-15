@@ -21,6 +21,7 @@ const INSIDE_THE_WINDOW = dayOffset(-3);
 const ONLY_OLD = "Nimbusdb";
 const ONLY_RECENT = "Quaylight";
 const BOTH = "Terrafold";
+const ADVISORY_SUBJECT = "Wickerstone";
 
 function change(vendor: string, date: string, changeType: string, category: string) {
   return {
@@ -44,6 +45,7 @@ const SYNTHETIC = [
   change(ONLY_RECENT, INSIDE_THE_WINDOW, "limits_reduced", "Monitoring"),
   change(BOTH, OLDER_THAN_THE_WINDOW, "free_tier_removed", "Databases"),
   change(BOTH, INSIDE_THE_WINDOW, "limits_reduced", "Databases"),
+  change(ADVISORY_SUBJECT, INSIDE_THE_WINDOW, "free_tier_removed", "Monitoring"),
 ];
 
 function startServer(changesPath: string): Promise<{ proc: ChildProcess; port: number }> {
@@ -114,7 +116,12 @@ describe("the window a change query ran under is stated on the response", () => 
 
   it("still windows the unfiltered feed, and says so", async () => {
     const feed = await ask("");
-    assert.deepStrictEqual(vendorsIn(feed), [ONLY_RECENT, BOTH].sort(), `the unfiltered feed returned ${vendorsIn(feed)}`);
+    assert.deepStrictEqual(
+      vendorsIn(feed),
+      [ONLY_RECENT, BOTH, ADVISORY_SUBJECT].sort(),
+      `the unfiltered feed returned ${vendorsIn(feed)}, so the default window moved`,
+    );
+    assert.ok(!vendorsIn(feed).includes(ONLY_OLD), `${ONLY_OLD} holds only a record older than the window and reached the feed`);
     assert.strictEqual(feed.date_window.applied, true);
     assert.strictEqual(feed.date_window.source, "default");
     assert.strictEqual(feed.date_window.from, servedWindowOpens());
@@ -172,7 +179,14 @@ describe("the window a change query ran under is stated on the response", () => 
 
   it("keeps the advisory block recent even where the query searched the whole log", async () => {
     const opens = servedWindowOpens();
-    for (const query of [`&vendor=${ONLY_OLD}`, "&type=free_tier_removed", "&since=2000-01-01"]) {
+    const drawnOnItsOwnWindow = `&type=free_tier_removed&vendor=${BOTH}`;
+    const populated = await ask(drawnOnItsOwnWindow);
+    assert.ok(
+      populated.advisory.length > 0,
+      "the advisory block is empty for every query here, so nothing below can tell a recent pool from an old one",
+    );
+
+    for (const query of [drawnOnItsOwnWindow, `&vendor=${ONLY_OLD}`, "&type=free_tier_removed", "&since=2000-01-01"]) {
       const answer = await ask(query);
       const stale = answer.advisory.filter((c) => c.date < opens);
       assert.deepStrictEqual(stale, [], `${query} put a record older than ${opens} in the advisory block`);
