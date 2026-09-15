@@ -19276,7 +19276,7 @@ mcpCtaCss() + "\n" +
   "<div style=\"display:flex;gap:1.5rem;margin:.75rem 0 0;font-size:.75rem;color:var(--text-dim)\">" +
     "<span><span style=\"display:inline-block;width:10px;height:10px;border-radius:2px;background:#f85149;vertical-align:middle;margin-right:.25rem\"></span> Negative</span>" +
     "<span><span style=\"display:inline-block;width:10px;height:10px;border-radius:2px;background:#d29922;vertical-align:middle;margin-right:.25rem\"></span> Restricted / Postponed</span>" +
-    "<span><span style=\"display:inline-block;width:10px;height:10px;border-radius:2px;background:#8b5cf6;vertical-align:middle;margin-right:.25rem\"></span> Restructured</span>" +
+    "<span><span style=\"display:inline-block;width:10px;height:10px;border-radius:2px;background:#8b5cf6;vertical-align:middle;margin-right:.25rem\"></span> Neither</span>" +
     "<span><span style=\"display:inline-block;width:10px;height:10px;border-radius:2px;background:#3fb950;vertical-align:middle;margin-right:.25rem\"></span> Positive</span>" +
   "</div>\n" +
 
@@ -19351,7 +19351,7 @@ mcpCtaCss() + "\n" +
   "</div>\n" +
 
   "<h2>Category Breakdown</h2>\n" +
-  "<p class=\"section-intro\">Which categories saw the most pricing churn? Cloud IaaS (" + (catChangeCounts.get("Cloud IaaS")?.total ?? 0) + " changes), Databases (" + (catChangeCounts.get("Databases")?.total ?? 0) + "), and APIs (" + (catChangeCounts.get("APIs")?.total ?? 0) + ") were the most active. Red = negative, purple = restructured, green = positive.</p>\n" +
+  "<p class=\"section-intro\">Which categories saw the most pricing churn? Cloud IaaS (" + (catChangeCounts.get("Cloud IaaS")?.total ?? 0) + " changes), Databases (" + (catChangeCounts.get("Databases")?.total ?? 0) + "), and APIs (" + (catChangeCounts.get("APIs")?.total ?? 0) + ") were the most active. Red = negative, green = positive, purple = the changes that count neither way.</p>\n" +
   "<div style=\"margin:1.5rem 0\">\n    " + categoryBreakdownHtml + "\n</div>\n" +
 
   "<h2>Monthly Timeline: Did the Pace Accelerate?</h2>\n" +
@@ -19359,7 +19359,7 @@ mcpCtaCss() + "\n" +
   "<div style=\"margin:1.5rem 0\">\n    " + monthlyTimelineHtml + "\n" +
   "  <div style=\"display:flex;gap:1.5rem;margin-top:.75rem;font-size:.75rem;color:var(--text-dim)\">" +
     "<span><span style=\"display:inline-block;width:10px;height:10px;border-radius:2px;background:#f85149;vertical-align:middle;margin-right:.25rem\"></span> Negative</span>" +
-    "<span><span style=\"display:inline-block;width:10px;height:10px;border-radius:2px;background:#8b5cf6;vertical-align:middle;margin-right:.25rem\"></span> Restructured</span>" +
+    "<span><span style=\"display:inline-block;width:10px;height:10px;border-radius:2px;background:#8b5cf6;vertical-align:middle;margin-right:.25rem\"></span> Neither</span>" +
     "<span><span style=\"display:inline-block;width:10px;height:10px;border-radius:2px;background:#3fb950;vertical-align:middle;margin-right:.25rem\"></span> Positive</span>" +
   "</div>\n" +
   "</div>\n" +
@@ -23356,6 +23356,8 @@ function buildFreeTierRiskPage(): string {
   const heatmapData = [...categoryMap.entries()]
     .map(([cat, d]) => ({ category: cat, ...d, pctNeg: Math.round((d.negative / d.total) * 100) }))
     .sort((a, b) => b.total - a.total);
+  const heavilyNegative = heatmapData.filter(h => h.pctNeg >= 80);
+  const heaviestNegative = heavilyNegative.slice(0, 3).map(h => h.category);
 
   const changeMonths = monthlyChangeSeries(changesInForce);
   const monthlyChanges = new Map([...changeMonths.effective].map(([month, records]) => [month, records.length]));
@@ -23665,7 +23667,7 @@ ${mcpCtaCss()}
     }).join("\n    ")}
   </div>
   <div class="context-box">
-    <strong>Reading the heatmap:</strong> Red bars = negative changes (removals, reductions, restrictions). Green bars = positive changes (expansions, new tiers). Gray = neutral restructurings. Categories with 80%+ negative changes (APIs, Testing, Monitoring) are under the most pricing pressure. AI/ML shows a split — some vendors contracting while new entrants expand.
+    <strong>Reading the heatmap:</strong> Red bars = negative changes (removals, reductions, restrictions, restructures). Green bars = positive changes (expansions, new tiers). Gray = the changes that count neither way, which are renames and corrections to our own records. ${heavilyNegative.length} of these ${heatmapData.length} categories sit at 80% or more negative${heaviestNegative.length > 0 ? `, the largest being ${escHtmlServer(heaviestNegative.join(", "))}` : ""}. Which way each type of change counts is published <a href="${CRITERIA_PATH}#change-direction">on the criteria page</a>.
   </div>
 
   <h2 id="patterns">9. Pattern Analysis — What ${trackedHere.length} Changes Tell Us</h2>

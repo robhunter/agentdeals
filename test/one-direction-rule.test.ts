@@ -131,6 +131,20 @@ describe("one direction rule decides every split we publish", () => {
     assert.deepStrictEqual([...new Set(misfiled)], []);
   });
 
+  it("reads the risk heatmap's legend off the rows beneath it", async () => {
+    const page = await (await fetch(`${base}/free-tier-risk`)).text();
+    const rows = [...page.matchAll(/min-width:180px;font-weight:600;font-size:.85rem">([^<]+)<[\s\S]{0,700}?>(\d+)% neg</g)]
+      .map(m => ({ category: m[1], pctNeg: parseInt(m[2], 10) }));
+    assert.ok(rows.length >= 20, `the heatmap rendered ${rows.length} rows`);
+    const legend = page.match(/(\d+) of these (\d+) categories sit at 80% or more negative, the largest being ([^.]+)\./);
+    assert.ok(legend, "the heatmap legend states no count");
+    assert.strictEqual(Number(legend[1]), rows.filter(r => r.pctNeg >= 80).length);
+    assert.strictEqual(Number(legend[2]), rows.length);
+    const named = legend[3].split(", ");
+    const rendered = new Set(rows.map(r => r.category));
+    assert.deepStrictEqual(named.filter(n => !rendered.has(n)), []);
+  });
+
   it("hands the reader's browser the same two sets the server reads", async () => {
     const injected: string[] = [];
     for (const page of ["/stack-check", "/compare-tool"]) {
