@@ -8,6 +8,7 @@ import { CHANGE_DIRECTION, CHANGE_TYPE_MEANING, NEGATIVE_CHANGE_TYPES, POSITIVE_
 import { trackedChanges } from "../dist/change-census.js";
 import { loadDealChanges } from "../dist/data.js";
 import { directionCopiesIn, describeCopy } from "./direction-sets.ts";
+import { assertPopulationFloor } from "./population-floor.ts";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -123,7 +124,7 @@ describe("one direction rule decides every split we publish", () => {
   it("files every entry on the change log under the bucket its type carries", async () => {
     const page = await (await fetch(`${base}/pricing-changes`)).text();
     const entries = [...page.matchAll(/data-type="([a-z_]+)"[^>]*data-category="([a-z]+)"/g)];
-    assert.ok(entries.length >= 400, `the change log rendered ${entries.length} entries`);
+    assertPopulationFloor(entries.length, 400, "entries the change log renders with a bucket");
     const misfiled = entries
       .filter(([, type, filed]) => filed !== CHANGE_DIRECTION[type as keyof typeof CHANGE_DIRECTION])
       .map(([, type, filed]) => `${type} filed as ${filed}`);
