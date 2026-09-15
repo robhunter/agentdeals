@@ -2625,16 +2625,16 @@
       "daily": true
     },
     "/cursor-alternatives": {
-      "hash": "7583ce1b3b725cb5",
-      "changed": "2026-09-13"
+      "hash": "26a1efbddcbe5dd4",
+      "changed": "2026-09-15"
     },
     "/dall-e-shutdown": {
       "hash": "c6bb3b3f45c53fe9",
       "changed": "2026-09-12"
     },
     "/database-alternatives": {
-      "hash": "413106ebfe604202",
-      "changed": "2026-09-14"
+      "hash": "999bd46b47dcc034",
+      "changed": "2026-09-15"
     },
     "/database-free-tier-comparison-2026": {
       "hash": "098e20676fb2aaaa",
@@ -2942,8 +2942,8 @@
       "changed": "2026-09-14"
     },
     "/free-llm-apis": {
-      "hash": "f30e789e3269bfb8",
-      "changed": "2026-09-14"
+      "hash": "8c0ffd93ecc77508",
+      "changed": "2026-09-15"
     },
     "/free-nextjs-stack": {
       "hash": "1e7fd5fab908352a",
@@ -2993,8 +2993,8 @@
       "changed": "2026-09-12"
     },
     "/google-developer-program-2026": {
-      "hash": "99c849a155088cde",
-      "changed": "2026-09-14"
+      "hash": "ea137dccfcf6a05d",
+      "changed": "2026-09-15"
     },
     "/groq-vs-hugging-face": {
       "hash": "497c5aff5d7e90ed",
@@ -3141,8 +3141,8 @@
       "changed": "2026-09-14"
     },
     "/redis-alternatives": {
-      "hash": "8fced3fe71c59384",
-      "changed": "2026-09-13"
+      "hash": "eafc598efd6977a5",
+      "changed": "2026-09-15"
     },
     "/referral-programs": {
       "hash": "f492af7c8181888f",
