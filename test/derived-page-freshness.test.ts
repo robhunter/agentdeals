@@ -8,6 +8,7 @@ import { assertPopulationFloor } from "./population-floor.ts";
 import {
   FRESHNESS_TOKEN,
   FRESHNESS_VERB,
+  compiledClaimFor,
   freshnessClaimFor,
   monthOf,
   vendorSlugsLinkedFrom,
@@ -128,6 +129,7 @@ interface StoredReview {
   published: string;
   reviewed_at: string | null;
   reads_index: boolean;
+  tables_read_index: boolean;
 }
 
 const storedReviews = new Map<string, StoredReview>(
@@ -149,7 +151,7 @@ function namedMonth(isoDate: string): string {
 
 function claimTheDataSupports(pagePath: string, html: string, today: string): string {
   const review = storedReviews.get(pagePath);
-  if (review && !review.reads_index) {
+  if (review && !review.tables_read_index) {
     const checked = review.reviewed_at !== null && review.reviewed_at <= today ? review.reviewed_at : null;
     return checked === null
       ? `Compiled ${review.published}, not re-checked since.`
@@ -178,6 +180,7 @@ const REVIEW_OF_A_HAND_COMPILED_PAGE = {
   review_outcome: null,
   review_note: null,
   reads_index: false,
+  tables_read_index: false,
   reads_changes: false,
   data_source: "unsourced",
   data_source_reason: null,
@@ -261,7 +264,7 @@ describe("A freshness date derived from the records a page lists", () => {
     );
   });
 
-  it("dates a page from its listed records when that page reads the catalogue", () => {
+  it("dates a page from its listed records when the catalogue supplies that page's tables", () => {
     const html = '<a href="/vendor/groq">Groq</a>';
     assert.strictEqual(
       freshnessClaimFor(
@@ -269,9 +272,22 @@ describe("A freshness date derived from the records a page lists", () => {
         html,
         () => ["2026-09-05"],
         "2026-09-09",
-        () => ({ ...REVIEW_OF_A_HAND_COMPILED_PAGE, reads_index: true }) as never,
+        () => ({ ...REVIEW_OF_A_HAND_COMPILED_PAGE, reads_index: true, tables_read_index: true }) as never,
       ),
       "Verified September 2026.",
+    );
+  });
+
+  it("dates a page from its own compilation when the catalogue supplies it a source link and no figure", () => {
+    const html = '<a href="/vendor/groq">Groq</a>';
+    const linkOnly = { ...REVIEW_OF_A_HAND_COMPILED_PAGE, reads_index: true, tables_read_index: false };
+    assert.strictEqual(
+      freshnessClaimFor("/x", html, () => ["2026-09-05"], "2026-09-09", () => linkOnly as never),
+      compiledClaimFor(linkOnly as never, "2026-09-09"),
+    );
+    assert.match(
+      freshnessClaimFor("/x", html, () => ["2026-09-05"], "2026-09-09", () => linkOnly as never),
+      /^Compiled \d{4}-\d{2}-\d{2}, /,
     );
   });
 });
