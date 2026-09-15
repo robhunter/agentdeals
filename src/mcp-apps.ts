@@ -1,5 +1,6 @@
 import { registerAppTool, registerAppResource, RESOURCE_MIME_TYPE } from "@modelcontextprotocol/ext-apps/server";
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import { POSITIVE_CHANGE_TYPES } from "./change-direction.js";
 
 const SHARED_STYLES = `
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -382,7 +383,8 @@ function render(args, data) {
 
   const removals = changes.filter(c => c.change_type === "free_tier_removed" || c.change_type === "open_source_killed" || c.change_type === "product_deprecated");
   const reductions = changes.filter(c => c.change_type === "limits_reduced" || c.change_type === "restriction");
-  const positive = changes.filter(c => c.change_type === "limits_increased" || c.change_type === "new_free_tier" || c.change_type === "startup_program_expanded");
+  const positiveTypes = ${JSON.stringify([...POSITIVE_CHANGE_TYPES])};
+  const positive = changes.filter(c => positiveTypes.indexOf(c.change_type) >= 0);
 
   const stats = [
     { label: isPersonalized ? "Your Stack" : "Total Changes", value: changes.length },

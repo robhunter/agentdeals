@@ -21,7 +21,7 @@ const {
   freeTierStanding,
   splitByFreeTierStanding,
   changeLogNamesFor,
-  FREE_TIER_NEGATIVE_TYPES,
+  FREE_TIER_WORSENED_TYPES,
   GRADE_FACTORS_WITHOUT_PRICING_HISTORY,
   INDEX_SWEEP_STATE,
 } = await import("../dist/risk-scorecard.js");
@@ -265,7 +265,7 @@ describe("the page publishes its own hit rate", () => {
   it("counts a vendor only for a record in force that names a free tier negative", () => {
     for (const entry of riskEntries) {
       for (const negative of negativesSinceGrading(entry, dealChanges)) {
-        assert.ok(FREE_TIER_NEGATIVE_TYPES.includes(negative.change_type), `${negative.change_type} counted against ${entry.vendor}`);
+        assert.ok(FREE_TIER_WORSENED_TYPES.includes(negative.change_type), `${negative.change_type} counted against ${entry.vendor}`);
         assert.strictEqual(whyNotEvidence(negative), null);
         assert.ok(negative.date > entry.graded, `a change from before ${entry.vendor} was graded was counted against it`);
       }
@@ -304,7 +304,7 @@ describe("the grading rules the page states are the rules it applies", () => {
   });
 
   it("keeps its negative set inside the direction map the rest of the site reads", () => {
-    for (const type of FREE_TIER_NEGATIVE_TYPES) {
+    for (const type of FREE_TIER_WORSENED_TYPES) {
       assert.strictEqual(CHANGE_DIRECTION[type], "negative", `${type} is not negative in the shared direction map`);
     }
   });

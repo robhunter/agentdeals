@@ -22,7 +22,7 @@ export interface RiskEntry {
 
 export const RISK_GRADES: RiskGrade[] = ["low", "medium", "high", "dead"];
 
-export const FREE_TIER_NEGATIVE_TYPES = [
+export const FREE_TIER_WORSENED_TYPES = [
   "free_tier_removed",
   "limits_reduced",
   "restriction",
@@ -58,7 +58,7 @@ export function whyNotEvidence(change: GradableChange): NotEvidenceReason | null
 }
 
 export function assertsANegative(change: Pick<DealChange, "change_type">): boolean {
-  return FREE_TIER_NEGATIVE_TYPES.includes(change.change_type);
+  return FREE_TIER_WORSENED_TYPES.includes(change.change_type);
 }
 
 export interface TrackedRecord<T extends GradableChange = GradableChange> {
