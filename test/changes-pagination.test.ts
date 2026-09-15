@@ -18,6 +18,7 @@ const SHAPE_KEYS = [
   "offset",
   "include_retracted",
   "retracted_excluded",
+  "date_window",
   "advisory",
   "summary",
   "date_provenance",
