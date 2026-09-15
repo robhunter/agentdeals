@@ -3,6 +3,7 @@ import assert from "node:assert";
 import { spawn, type ChildProcess } from "node:child_process";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { assertPopulationFloor } from "./population-floor.ts";
 
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
@@ -196,7 +197,7 @@ describe("every published total is the tracked count or names the slice it is", 
   it("does not move the count of changes whose effective date is unknown", async () => {
     const body = await get("/changes");
     const undated = partitionByDateProvenance(dealChanges).discovered.length;
-    assert.ok(undated > 100, `only ${undated} undated records, so the control proves nothing`);
+    assertPopulationFloor(undated, 200, "records whose effective date is unknown");
     assert.ok(
       body.includes(`Effective date unknown (${undated} changes)`),
       `/changes does not publish the undated group at ${undated}`,

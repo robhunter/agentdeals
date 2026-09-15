@@ -226,7 +226,7 @@ export function changeLogFreshness(changes, now = new Date()) {
   const lastDetected = detected.length > 0 ? detected[detected.length - 1] : null;
   const thirtyDaysAgo = isoDay(new Date(Date.parse(today) - 30 * 86400000));
   return {
-    total: changes.length,
+    records_held: changes.length,
     last_recorded_date: last,
     days_since_last_recorded: last === null ? null : Math.max(0, daysBetween(last, today)),
     last_detected_date: lastDetected,

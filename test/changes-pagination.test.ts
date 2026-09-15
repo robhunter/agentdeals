@@ -23,6 +23,7 @@ const SHAPE_KEYS = [
   "summary",
   "date_provenance",
   "all_time_total",
+  "change_census",
   "change_log_freshness",
   "_provenance",
 ];

@@ -49,7 +49,7 @@ import { HETZNER_APRIL_CHANGES, HETZNER_CLOUD_PLANS, HETZNER_PRICES_READ, HETZNE
 import { HUNDRED_GB_SCENARIO, HUNDRED_TB_SCENARIO, ONE_TO_ONE_SCENARIO, STORAGE_RATES_READ, STORAGE_SCALE_WORKLOADS, TEN_TO_ONE_SCENARIO, cheapestProviderAt, costAfterMonthlyEgressGrantFor, costliestProviderAt, egressAllowanceSentence, egressBillAfterMonthlyGrantFor, egressBillOnceOverAllowance, egressRatioWhereCostsMatch, fixedMonthlyGrantsSentence, monthlyEgressGrantGb, monthlyEgressGrantSentence, monthlyStorageCost, providersWithScalingEgressAllowance, rateCardFor, scaleCostFor } from "./storage-cost-model.js";
 import { changeTimelineDate, supersededLineups, supersessionNote } from "./change-lineup.js";
 import { isNoLongerInForce, eventResolutionFields, recordsStillInForce, recordsWeStandBehind, INCLUDE_RETRACTED_REJECTED } from "./change-resolution.js";
-import { trackedChanges, changeCensus, changeCountPhrase, CHANGE_SLICES, CENSUS_NOTE, TRACKED_CHANGE_RULE_ANCHOR, TRACKED_CHANGE_RULE_PATH, TRACKED_CHANGE_RULE_SENTENCE, TRACKED_CHANGE_NOUN } from "./change-census.js";
+import { trackedChanges, changeCensus, changeCountPhrase, CHANGE_SLICES, CENSUS_NOTE, TRACKED_CHANGE_RULE_ANCHOR, TRACKED_CHANGE_RULE_PATH, TRACKED_CHANGE_NOUN } from "./change-census.js";
 import { SINCE_DEFAULT_SENTENCE } from "./change-window.js";
 import { FREE_TIER_STANDING_LABELS, GRADE_FACTORS_WITHOUT_PRICING_HISTORY, NOT_EVIDENCE_LABELS, citesAChangeOlderThanTheGrade, freeTierStanding, gradesFirstSet, gradesLastSet, gradingDatesClause, neverTracked, riskEntries, scorecard, splitByFreeTierStanding, trackedSinceGrading, type RiskEntry } from "./risk-scorecard.js";
 import { directionRatioLabel } from "./change-direction.js";
@@ -50028,7 +50028,7 @@ function whatCountsAsAChangeHtml(changes: DealChange[], listedOnThisPage: number
   const tracked = CHANGE_SLICES[0].of(changes).length;
   return `  <div class="month-group" id="${TRACKED_CHANGE_RULE_ANCHOR}">
     <h2 class="month-heading">What counts as a change</h2>
-    <p class="month-note">${escHtmlServer(TRACKED_CHANGE_RULE_SENTENCE)} That is the figure we publish as <strong>${tracked.toLocaleString("en-US")} ${escHtmlServer(TRACKED_CHANGE_NOUN)}</strong> wherever the phrase appears. Any other total on this site names which of these it is, in the same sentence.</p>
+    <p class="month-note">Wherever this site says <strong>${tracked.toLocaleString("en-US")} ${escHtmlServer(TRACKED_CHANGE_NOUN)}</strong>, it means the first row below. Any other total we publish names which of these four it is, in the same sentence that carries it.</p>
     <table class="rule-table">
       <thead><tr><th>Count</th><th>What we call it</th><th>What it takes in</th></tr></thead>
       <tbody>

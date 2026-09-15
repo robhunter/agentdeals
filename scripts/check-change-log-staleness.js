@@ -147,7 +147,7 @@ export function detectorSchedule(workflowYaml) {
 export function report(freshness, thresholdDays, schedule) {
   const lines = [];
   lines.push("── Change-log freshness ──");
-  lines.push(`Total changes recorded: ${freshness.total}`);
+  lines.push(`Records held in the change log: ${freshness.records_held}`);
   lines.push(`Last change recorded: ${freshness.last_recorded_date ?? "never"}`);
   lines.push(`Days since last change recorded: ${freshness.days_since_last_recorded ?? "n/a"}`);
   lines.push(`Recorded in the last 30 days: ${freshness.recorded_last_30_days}`);

@@ -951,7 +951,7 @@ describe("change log freshness", () => {
 
 describe("the staleness alarm", () => {
   const freshnessAt = (detectedDaysAgo: number | null, recordedDaysAgo = 1) => ({
-    total: 289,
+    records_held: 289,
     last_recorded_date: "2026-08-01",
     days_since_last_recorded: recordedDaysAgo,
     last_detected_date: detectedDaysAgo === null ? null : "2026-08-01",
@@ -1232,7 +1232,7 @@ describe("reading the detector's schedule out of the workflow", () => {
 
   function freshnessNeverDetected() {
     return {
-      total: 289,
+      records_held: 289,
       last_recorded_date: "2026-08-01",
       days_since_last_recorded: 1,
       last_detected_date: null,
