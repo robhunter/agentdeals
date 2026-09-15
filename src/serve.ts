@@ -49,6 +49,7 @@ import { HETZNER_APRIL_CHANGES, HETZNER_CLOUD_PLANS, HETZNER_PRICES_READ, HETZNE
 import { HUNDRED_GB_SCENARIO, HUNDRED_TB_SCENARIO, ONE_TO_ONE_SCENARIO, STORAGE_RATES_READ, STORAGE_SCALE_WORKLOADS, TEN_TO_ONE_SCENARIO, cheapestProviderAt, costAfterMonthlyEgressGrantFor, costliestProviderAt, egressAllowanceSentence, egressBillAfterMonthlyGrantFor, egressBillOnceOverAllowance, egressRatioWhereCostsMatch, fixedMonthlyGrantsSentence, monthlyEgressGrantGb, monthlyEgressGrantSentence, monthlyStorageCost, providersWithScalingEgressAllowance, rateCardFor, scaleCostFor } from "./storage-cost-model.js";
 import { changeTimelineDate, supersededLineups, supersessionNote } from "./change-lineup.js";
 import { isNoLongerInForce, eventResolutionFields, recordsStillInForce, recordsWeStandBehind, INCLUDE_RETRACTED_REJECTED } from "./change-resolution.js";
+import { SINCE_DEFAULT_SENTENCE } from "./change-window.js";
 import { FREE_TIER_STANDING_LABELS, GRADE_FACTORS_WITHOUT_PRICING_HISTORY, NOT_EVIDENCE_LABELS, citesAChangeOlderThanTheGrade, freeTierStanding, gradesFirstSet, gradesLastSet, gradingDatesClause, neverTracked, riskEntries, scorecard, splitByFreeTierStanding, trackedSinceGrading, type RiskEntry } from "./risk-scorecard.js";
 import { directionRatioLabel } from "./change-direction.js";
 import { removalDurability, removalReturnRateSentence, removalDurabilityPattern, lastingRemovalExamplesFor } from "./removal-durability.js";
@@ -54849,6 +54850,7 @@ const dispatchRequest = async (req: IncomingMessage, res: ServerResponse) => {
       offset,
       include_retracted: includeRetracted,
       retracted_excluded: result.retracted_excluded,
+      date_window: result.date_window,
       advisory: context.advisory,
       summary: context.summary,
       date_provenance: dateProvenance,
@@ -55353,7 +55355,7 @@ Parameters:
 Track recent pricing changes across developer tools.
 
 Parameters:
-- since (string, optional): ISO date (YYYY-MM-DD). Default: 7 days ago.
+- since (string, optional): ISO date (YYYY-MM-DD). ${SINCE_DEFAULT_SENTENCE}
 - change_type (enum, optional): free_tier_removed, limits_reduced, restriction, limits_increased, new_free_tier, new_tier, pricing_restructured, open_source_killed, pricing_model_change, startup_program_expanded, pricing_postponed, product_deprecated, rebranded
 - vendor (string, optional): Filter to one vendor
 - vendors (string, optional): Comma-separated vendor names

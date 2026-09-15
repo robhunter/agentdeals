@@ -1,6 +1,7 @@
 import { McpServer, ResourceTemplate } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { oldestVerifiedDateForSlug, getCategories, getDealChanges, getPersonalizedChanges, getNewOffers, getNewestDeals, getOfferDetails, searchOffers, stabilityWithheldDisclosure, enrichOffers, gateForOffer, compareServices, checkVendorRisk, auditStack, getExpiringDeals, getWeeklyDigest, loadOffers, loadDealChanges, classifyStability, publishedStabilityFor, stabilityWithheldSentence, getVendorReferral, sanitizeQuery } from "./data.js";
+import { SINCE_DEFAULT_SENTENCE } from "./change-window.js";
 import { gateDisclosureFor } from "./gate-disclosure.js";
 import { standingOf, INCLUDE_RETRACTED_ACCEPTS } from "./change-resolution.js";
 import { toSlug, vendorSlugMap, resolveVendorSlug } from "./vendor-slug.js";
@@ -411,7 +412,7 @@ export function createServer(getSessionId?: () => string | undefined, getClientN
       },
       _meta: TOOL_UI_META.track_changes,
       inputSchema: {
-        since: z.string().optional().describe("ISO date (YYYY-MM-DD). Default: 7 days ago."),
+        since: z.string().optional().describe(`ISO date (YYYY-MM-DD). ${SINCE_DEFAULT_SENTENCE}`),
         change_type: z.enum(["free_tier_removed", "limits_reduced", "restriction", "limits_increased", "new_free_tier", "new_tier", "pricing_restructured", "open_source_killed", "pricing_model_change", "startup_program_expanded", "pricing_postponed", "product_deprecated", "rebranded", "record_corrected"]).optional().describe("Filter by type of change"),
         vendor: z.string().optional().describe("Filter to one vendor (case-insensitive)"),
         vendors: z.string().optional().describe("Comma-separated vendor names to filter (e.g. 'Vercel,Supabase'). When provided with categories, returns personalized results with advisory section."),
@@ -1106,7 +1107,7 @@ export function getServerCard(baseUrl: string) {
         inputSchema: {
           type: "object",
           properties: {
-            since: { type: "string", description: "ISO date (YYYY-MM-DD). Default: 7 days ago." },
+            since: { type: "string", description: `ISO date (YYYY-MM-DD). ${SINCE_DEFAULT_SENTENCE}` },
             change_type: { type: "string", enum: ["free_tier_removed", "limits_reduced", "restriction", "limits_increased", "new_free_tier", "new_tier", "pricing_restructured", "open_source_killed", "pricing_model_change", "startup_program_expanded", "pricing_postponed", "product_deprecated", "record_corrected"], description: "Filter by type of change" },
             vendor: { type: "string", description: "Filter to one vendor" },
             vendors: { type: "string", description: "Comma-separated vendor names" },

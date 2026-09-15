@@ -29,6 +29,7 @@ export const TRACK_CHANGES_LIMIT = 1000;
 import type { LinkUnreachable, ProductRole, ProductSubtypes, SourceCheck } from "./types.js";
 import type { RefusedRead } from "./change-refusal.js";
 import { NOT_VERIFIED, theReadConfirmedThePrice, publishedTermsEvidence, termsTheVerdictWithholds, termsWithTheReasonWeCannotConfirmThem, unconfirmedTermsFrom } from "./vendor-verdict.js";
+import { SINCE_DEFAULT_SENTENCE } from "./change-window.js";
 
 function mcpError(msg: string) {
   return {
@@ -289,7 +290,7 @@ export function createServer(): McpServer {
       },
       _meta: TOOL_UI_META.track_changes,
       inputSchema: {
-        since: z.string().optional().describe("ISO date (YYYY-MM-DD). Default: 7 days ago."),
+        since: z.string().optional().describe(`ISO date (YYYY-MM-DD). ${SINCE_DEFAULT_SENTENCE}`),
         change_type: z.enum(["free_tier_removed", "limits_reduced", "restriction", "limits_increased", "new_free_tier", "new_tier", "pricing_restructured", "open_source_killed", "pricing_model_change", "startup_program_expanded", "pricing_postponed", "product_deprecated", "rebranded", "record_corrected"]).optional().describe("Filter by type of change"),
         vendor: z.string().optional().describe("Filter to one vendor (case-insensitive)"),
         vendors: z.string().optional().describe("Comma-separated vendor names to filter (e.g. 'Vercel,Supabase'). When provided with categories, returns personalized results with advisory section."),

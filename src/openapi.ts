@@ -4,6 +4,7 @@ import { MCP_TOOL_NAMES } from "./mcp-tool-inventory.js";
 import { RATE_LIMIT_PER_MINUTE, SIGNAL_BODY_MAX } from "./signal.js";
 import { SIGNAL_EVENTS } from "./stats.js";
 import { SINCE_ACCEPTS } from "./since-parameter.js";
+import { DEFAULT_CHANGE_WINDOW_DAYS, SINCE_DEFAULT_SENTENCE } from "./change-window.js";
 import { CHANGE_STANDINGS, INCLUDE_RETRACTED_ACCEPTS } from "./change-resolution.js";
 
 export const CHANGE_TYPES: readonly string[] = Object.keys(CHANGE_DIRECTION);
@@ -173,7 +174,7 @@ const DOCUMENTED_OPERATIONS: Record<string, Record<string, any>> = {
       summary: "Deal and pricing changes",
       description: "Returns tracked pricing and tier changes across vendors. Filter by date, change type, vendor, or category.",
       parameters: [
-        { name: "since", in: "query", description: `Only return changes dated on or after this date. ${SINCE_ACCEPTS}`, schema: { type: "string", format: "date" }, example: "2025-01-01" },
+        { name: "since", in: "query", description: `Only return changes dated on or after this date. ${SINCE_ACCEPTS} ${SINCE_DEFAULT_SENTENCE}`, schema: { type: "string", format: "date" }, example: "2025-01-01" },
         { name: "type", in: "query", description: "Filter by change type. Every type a record can carry is accepted; the same list types the `change_type` field on the records that come back.", schema: { type: "string", enum: [...CHANGE_TYPES] } },
         { name: "vendor", in: "query", description: "Filter by vendor name", schema: { type: "string" } },
         { name: "vendors", in: "query", description: "Comma-separated vendor names to filter by (e.g. 'Vercel,Supabase,Clerk')", schema: { type: "string" }, example: "Vercel,Supabase" },
@@ -198,7 +199,8 @@ const DOCUMENTED_OPERATIONS: Record<string, Record<string, any>> = {
                   offset: { type: "integer" },
                   include_retracted: { type: "boolean", description: "The value this response was built with, echoed back." },
                   retracted_excluded: { type: "integer", description: "How many records matched your query and were withheld for carrying standing 'retracted'. Zero when include_retracted is true, because nothing was withheld. Read this before comparing a count against an earlier one." },
-                  advisory: { type: "array", items: { $ref: "#/components/schemas/PublishedDealChange" }, description: "Top 3 high-impact changes outside your filter. Never contains a retracted record, whatever include_retracted says — this block is what we put forward as worth knowing, not part of your query's result set." },
+                  date_window: { $ref: "#/components/schemas/ChangeDateWindow" },
+                  advisory: { type: "array", items: { $ref: "#/components/schemas/PublishedDealChange" }, description: `Top 3 high-impact changes outside your filter, drawn from the last ${DEFAULT_CHANGE_WINDOW_DAYS} days whatever date_window says — this block is what is worth knowing lately, so it stays recent even when your query searches the whole log. Never contains a retracted record, whatever include_retracted says.` },
                   summary: {
                     type: "object",
                     properties: {
@@ -1523,6 +1525,18 @@ export const openapiSpec = {
           }
         ],
         description: "A change record as /api/changes serves it: every field of DealChange, plus a standing on every record rather than only on the ones we have withdrawn."
+      },
+      ChangeDateWindow: {
+        type: "object",
+        description: `The date filter this response was built under, stated whether or not one ran. A count of 0 means we hold no matching record only when applied is false; when applied is true it means we hold none dated on or after from, and the same query with a wider since may answer differently. The default ${DEFAULT_CHANGE_WINDOW_DAYS}-day window runs on the unfiltered feed alone — a request naming a type, vendor, vendors or category is answered from the whole change log.`,
+        properties: {
+          applied: { type: "boolean", description: "Whether any date filter narrowed this response." },
+          from: { type: "string", format: "date", nullable: true, description: "The earliest date a record could carry and still be returned. Null when applied is false." },
+          source: { type: "string", enum: ["default", "since_parameter", "none"], description: "'since_parameter' — your since value. 'default' — our window, because the request named no filter. 'none' — no date filter ran." },
+          field: { type: "string", enum: ["date"], description: "The record field from compares against. Note that date is the effective date only where date_source is 'vendor_page' or 'hand_written'; where it is 'discovered', date is the day we read the page." },
+          note: { type: "string", description: "The same statement in prose, for a caller reading the response rather than parsing it." }
+        },
+        required: ["applied", "from", "source", "field", "note"]
       },
       ChangeResolution: {
         type: "object",
