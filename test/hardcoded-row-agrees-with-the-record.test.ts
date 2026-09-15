@@ -123,7 +123,7 @@ describe("the rows this rule must leave alone", () => {
       builder: "buildHostingPricingPage",
       array: "services",
       slug: "heroku",
-      because: "the slug reaches a record only by redirect, and that record is a different product",
+      because: "we hold no record under that name and refuse the one its slug reaches, which is a different product",
     },
     {
       builder: "buildLlmApiPricingPage",
@@ -151,10 +151,11 @@ describe("the rows this rule must leave alone", () => {
     const row = rowAt(rows, "buildHostingPricingPage", "services", "heroku");
     assert.ok(row !== null, "the hosting comparison no longer holds a row for heroku");
     const resolution = resolveVendorSlug(row.slug);
-    assert.strictEqual(resolution.type, "redirect");
+    assert.strictEqual(resolution.type, "onlyMatchHasEnded");
+    assert.notStrictEqual(resolution.type, "exact");
     assert.ok(
       freeTierClaimsIn(row).length > 0,
-      "the heroku row no longer states a free allowance, so it no longer shows what widening this rule to redirects would cost",
+      "the heroku row no longer states a free allowance, so it no longer shows what widening this rule past an exact match would cost",
     );
   });
 
