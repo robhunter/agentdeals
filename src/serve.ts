@@ -32406,8 +32406,8 @@ function buildLlmApiPricingPage(): string {
   const thirdChoiceForPrototyping = stillOffered(["cerebras", "cloudflare-workers-ai", "llm7-io"])[0] ?? null;
   const thirdForPrototyping = thirdChoiceForPrototyping === null
     ? ""
-    : ' <a href="/vendor/' + escHtmlServer(thirdChoiceForPrototyping.slug) + '">' + escHtmlServer(thirdChoiceForPrototyping.name)
-      + '</a> for ' + escHtmlServer(thirdChoiceForPrototyping.freeTier) + ' without a credit card.';
+    : ' ' + handwrittenVendorLinkHtml(thirdChoiceForPrototyping.slug, thirdChoiceForPrototyping.name)
+      + ' for ' + escHtmlServer(thirdChoiceForPrototyping.freeTier) + ' without a credit card.';
 
   const frontierReads = providers.filter(p => p.readOn && p.readFrom);
   const frontierReadOn = frontierReads.map(p => p.readOn as string).sort()[0] ?? null;
