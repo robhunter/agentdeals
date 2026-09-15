@@ -273,6 +273,10 @@ describe("the catalogue once every merge is made", () => {
 
   it("sends a comparison naming a retired record to the same comparison naming the survivor", async () => {
     const others = ["supabase", "vercel"];
+    const pathReached = async (path: string): Promise<string> => {
+      const res = await fetch(`http://localhost:${port}${path}`, { redirect: "manual" });
+      return res.status === 301 ? res.headers.get("location")! : path;
+    };
     for (const merge of merges) {
       for (const other of others) {
         if (toSlug(merge.survivor) === other) continue;
@@ -280,7 +284,12 @@ describe("the catalogue once every merge is made", () => {
         const res = await fetch(`http://localhost:${port}/compare/${slug}`, { redirect: "manual" });
         assert.strictEqual(res.status, 301, `/compare/${slug} answers ${res.status} once ${merge.retired} leaves the catalogue`);
         const location = res.headers.get("location")!;
-        assert.strictEqual(location, `/compare/${[toSlug(merge.survivor), other].sort().join("-vs-")}`);
+        const namingTheSurvivor = `/compare/${[toSlug(merge.survivor), other].sort().join("-vs-")}`;
+        assert.strictEqual(
+          location,
+          await pathReached(namingTheSurvivor),
+          `/compare/${slug} and ${namingTheSurvivor} name one pair of records and reach two different pages`,
+        );
         const followed = await fetch(`http://localhost:${port}${location}`, { redirect: "manual" });
         assert.strictEqual(followed.status, 200, `${slug} redirects to a path that answers ${followed.status}`);
       }

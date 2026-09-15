@@ -1471,7 +1471,7 @@ function stackRecCardHtml(rec: EnrichedOfferRow, why: string): string {
       <div class="stack-pick">
         <div class="pick-header">
           <span class="pick-badge">${reading.recommendable ? "Recommended" : "No longer a free-tier pick"}</span>
-          <a href="/vendor/${reading.slug}" class="pick-name">${escHtmlServer(reading.vendor)}</a>${tier}
+          ${handwrittenVendorLinkHtml(reading.slug, reading.vendor, ' class="pick-name"')}${tier}
           ${stackVerdictChipHtml(reading, { compact: true })}
         </div>
         <p class="pick-why">${escHtmlServer(reading.recommendable ? why : reading.why)}</p>
@@ -1514,7 +1514,7 @@ function stackTableCellsHtml(vendorName: string, fallbackLimit: string): { vendo
     };
   }
   return {
-    vendorLink: `<a href="/vendor/${reading.slug}" style="color:var(--text);font-weight:600">${escHtmlServer(vendorName)}</a>`,
+    vendorLink: `${handwrittenVendorLinkHtml(reading.slug, vendorName, ' style="color:var(--text);font-weight:600"')}`,
     limits: stackKeyLimitHtml(reading, 110),
     verdict: stackVerdictChipHtml(reading),
   };
@@ -1538,7 +1538,7 @@ function stackNamedPickHtml(vendorName: string, why: string, tier: string, limit
       <div class="stack-pick">
         <div class="pick-header">
           <span class="pick-badge">${reading.recommendable ? "Recommended" : "No longer a free-tier pick"}</span>
-          <a href="/vendor/${reading.slug}" class="pick-name">${escHtmlServer(vendorName)}</a>
+          ${handwrittenVendorLinkHtml(reading.slug, vendorName, ' class="pick-name"')}
           <span class="pick-tier">${escHtmlServer(tier)}</span>
           ${stackVerdictChipHtml(reading, { compact: true })}
         </div>
@@ -1560,7 +1560,7 @@ function stackAltPicksHtml(altVendors: readonly EnrichedOfferRow[]): string {
       </div>`;
 
   const dropped = ended.length === 0 ? "" : `
-      <p class="alt-ended" style="font-size:.8rem;color:var(--text-muted);margin-top:.5rem">No longer a free-tier pick: ${ended.map(r => `<a href="/vendor/${r.slug}">${escHtmlServer(r.vendor)}</a> — ${escHtmlServer(r.verdict)}`).join("; ")}.</p>`;
+      <p class="alt-ended" style="font-size:.8rem;color:var(--text-muted);margin-top:.5rem">No longer a free-tier pick: ${ended.map(r => `${handwrittenVendorLinkHtml(r.slug, r.vendor)} — ${escHtmlServer(r.verdict)}`).join("; ")}.</p>`;
 
   return `${chips}${dropped}`;
 }
@@ -5679,7 +5679,7 @@ function buildAlternativesPage(slug: string): string | null {
     const hasComparison = comparisonMap.has(compSlug);
     return `<div class="alt-row${curated ? " curated" : ""}">
         <div class="alt-info">
-          <a href="/vendor/${aSlug}" class="alt-vendor-name">${escHtmlServer(a.vendor)}</a>
+          ${handwrittenVendorLinkHtml(aSlug, a.vendor, ' class="alt-vendor-name"')}
           ${riskBadgeHtml(a.risk_level, a.risk_cause, { compact: true, margin: false })}
           ${curated ? '<span class="curated-badge">recommended</span>' : ""}
         </div>
@@ -9184,7 +9184,7 @@ function buildEventPage(slug: string): string | null {
       const riskColors: Record<string, string> = { stable: "#3fb950", caution: "#d29922", risky: "#f85149" };
 
       return '<tr>'
-        + '<td><a href="/vendor/' + vendorSlug + '">' + escHtmlServer(o.vendor) + '</a></td>'
+        + '<td>' + handwrittenVendorLinkHtml(vendorSlug, o.vendor) + '</td>'
         + '<td>' + escHtmlServer(o.tier) + '</td>'
         + '<td>' + escHtmlServer(publishedTermsSummary(o, 100)) + '</td>'
         + '<td>' + riskCellHtml(o.risk_level, o.risk_cause) + '</td>'
@@ -11592,7 +11592,7 @@ ${buildCards(other)}
         <td>Deep semantic analysis, GitHub-native</td>
       </tr>
       <tr>
-        <td style="font-weight:600"><a href="/vendor/sonarcloud" style="color:var(--text)">SonarCloud</a></td>
+        <td style="font-weight:600">${handwrittenVendorLinkHtml("sonarcloud", "SonarCloud", ' style="color:var(--text)"')}</td>
         <td>Code Quality + SAST</td>
         <td>\u221e (public repos)</td>
         <td>\u2014</td>
@@ -12637,7 +12637,7 @@ ${buildCards(other)}
       <dd><a href="/vendor/aptabase">Aptabase</a> \u2014 privacy-friendly analytics with SDKs for Swift, Kotlin, React Native, Flutter, and Electron. 20K events/month free. <a href="/vendor/appfit">AppFit</a> for cross-platform analytics with product journal.</dd>
 
       <dt>Need a customer data platform?</dt>
-      <dd><a href="/vendor/segment">Segment</a> \u2014 $50K in credits for startups, connecting 300+ integrations. <a href="/vendor/census">Census</a> for reverse ETL from your data warehouse to 60+ SaaS tools.</dd>
+      <dd><a href="/vendor/segment">Segment</a> \u2014 $50K in credits for startups, connecting 300+ integrations. ${handwrittenVendorLinkHtml("census", "Census")} for reverse ETL from your data warehouse to 60+ SaaS tools.</dd>
 
       <dt>Want real-time analytics APIs?</dt>
       <dd><a href="/vendor/tinybird">Tinybird</a> \u2014 10 GB storage and 10 QPS free for building real-time analytics endpoints over SQL. Great for dashboards, usage tracking, and product metrics APIs.</dd>
@@ -13614,7 +13614,7 @@ ${buildCards(other)}
       <dd><a href="/vendor/webflow">Webflow</a> \u2014 most powerful visual builder with CMS (2 projects free). <a href="/vendor/framer-com">Framer</a> for polished portfolio sites. <a href="/vendor/plasmic">Plasmic</a> for visual React development with code export.</dd>
 
       <dt>Want pre-built UI components?</dt>
-      <dd><a href="/vendor/shadcnui">ShadcnUI</a> \u2014 copy-paste React + Tailwind components, fully customizable. <a href="/vendor/daisyui">DaisyUI</a> for Tailwind class-based components with 30+ themes. <a href="/vendor/nextui">NextUI</a> for polished React components with animations.</dd>
+      <dd><a href="/vendor/shadcnui">ShadcnUI</a> \u2014 copy-paste React + Tailwind components, fully customizable. <a href="/vendor/daisyui">DaisyUI</a> for Tailwind class-based components with 30+ themes. ${handwrittenVendorLinkHtml("nextui", "NextUI")} for polished React components with animations.</dd>
 
       <dt>Need free icons for your project?</dt>
       <dd><a href="/vendor/lucide">Lucide</a> \u2014 1,500+ MIT-licensed SVG icons, tree-shakable packages for React/Vue/Svelte. <a href="/vendor/tabler-icons-io">Tabler Icons</a> for 4,000+ free icons. <a href="/vendor/iconoir">Iconoir</a> for clean, minimal icon set.</dd>
@@ -14920,7 +14920,7 @@ ${buildCards(apiIntegration)}
       <dd><a href="/vendor/beeceptor">Beeceptor</a> \u2014 no-code mock APIs for REST, SOAP, and GraphQL. <a href="/vendor/mockapi">MockAPI</a> for quick REST mocking with custom data. <a href="/vendor/mockaroo">mockaroo</a> for realistic test data generation.</dd>
 
       <dt>Looking for third-party data APIs?</dt>
-      <dd><a href="/vendor/rapidapi">RapidAPI</a> \u2014 largest API marketplace with thousands of APIs. <a href="/vendor/abstractapi">AbstractAPI</a> for geolocation, email validation, and utility APIs. <a href="/vendor/api-ninjas">API Ninjas</a> for 100+ free REST APIs.</dd>
+      <dd><a href="/vendor/rapidapi">RapidAPI</a> \u2014 largest API marketplace with thousands of APIs. <a href="/vendor/abstractapi">AbstractAPI</a> for geolocation, email validation, and utility APIs. ${handwrittenVendorLinkHtml("api-ninjas", "API Ninjas")} for 100+ free REST APIs.</dd>
 
       <dt>Need to connect multiple APIs together?</dt>
       <dd><a href="/vendor/nango">Nango</a> \u2014 integration infrastructure for 600+ APIs with unified auth and data syncing, 10 connections free. <a href="/vendor/treblle">Treblle</a> for API observability and governance.</dd>
@@ -15239,7 +15239,7 @@ ${buildCards(other)}
       <dd><a href="/vendor/cal-com">Cal.com</a> — open-source, unlimited event types. <a href="/vendor/calendly">Calendly</a> — 1 event type free, polished UX. <a href="/vendor/cally-com">Cally</a> — simple group scheduling.</dd>
 
       <dt>Need async-first team communication?</dt>
-      <dd><a href="/vendor/zulip">Zulip</a> — email-like threading model, great for distributed teams. <a href="/vendor/twist-com">Twist</a> — async conversations that stay organized. <a href="/vendor/loom" style="color:var(--text-muted)">Loom</a> — async video messaging (check current free tier).</dd>
+      <dd><a href="/vendor/zulip">Zulip</a> — email-like threading model, great for distributed teams. <a href="/vendor/twist-com">Twist</a> — async conversations that stay organized. ${handwrittenVendorLinkHtml("loom", "Loom", ' style="color:var(--text-muted)"')} — async video messaging (check current free tier).</dd>
 
       <dt>Need website feedback or comments?</dt>
       <dd><a href="/vendor/utterances">Utterances</a> — GitHub Issues-powered comments, free and lightweight. <a href="/vendor/graphcomment">GraphComment</a> — community comment platform. <a href="/vendor/ruttl-com">ruttl</a> — visual feedback on live websites.</dd>
@@ -18710,7 +18710,7 @@ function buildHetznerPricing2026Page(): string {
     const vendorSlug = toSlug(c.vendor.replace(/ \(.*\)/, ""));
     const isHetzner = c.vendor.startsWith("Hetzner");
     return `<tr${isHetzner ? ` style="background:var(--accent-glow)"` : ""}>
-      <td style="font-weight:600">${isHetzner ? escHtmlServer(c.vendor) : `<a href="/vendor/${vendorSlug}" style="color:var(--text)">${escHtmlServer(c.vendor)}</a>`}</td>
+      <td style="font-weight:600">${isHetzner ? escHtmlServer(c.vendor) : `${handwrittenVendorLinkHtml(vendorSlug, c.vendor, ' style="color:var(--text)"')}`}</td>
       <td style="font-family:var(--mono);font-size:.85rem">${escHtmlServer(c.spec)}</td>
       <td style="font-family:var(--mono);font-weight:600;color:var(--accent)">${escHtmlServer(c.price)}</td>
       <td>${escHtmlServer(c.region)}</td>
@@ -20111,9 +20111,9 @@ function buildSupabaseVsFirebasePage(): string {
     </tr>`).join("\n        ");
 
   const altRows = baasAlts.map(o => {
-    const vendorSlug = o.vendor.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/-+$/, "");
+    const vendorSlug = toSlug(o.vendor);
     return `<tr>
-      <td style="font-weight:600"><a href="/vendor/${vendorSlug}" style="color:var(--text)">${escHtmlServer(o.vendor)}</a></td>
+      <td style="font-weight:600">${handwrittenVendorLinkHtml(vendorSlug, o.vendor, ' style="color:var(--text)"')}</td>
       <td style="font-family:var(--mono);color:var(--accent);font-size:.85rem">${escHtmlServer(o.tier)}</td>
       <td style="color:var(--text-muted);font-size:.85rem">${publishedTermsHtml(o)}</td>
     </tr>`;
@@ -20433,9 +20433,9 @@ function buildVercelVsNetlifyPage(): string {
     </tr>`).join("\n        ");
 
   const altRows = hostingAlts.map(o => {
-    const vendorSlug = o.vendor.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/-+$/, "");
+    const vendorSlug = toSlug(o.vendor);
     return `<tr>
-      <td style="font-weight:600"><a href="/vendor/${vendorSlug}" style="color:var(--text)">${escHtmlServer(o.vendor)}</a></td>
+      <td style="font-weight:600">${handwrittenVendorLinkHtml(vendorSlug, o.vendor, ' style="color:var(--text)"')}</td>
       <td style="font-family:var(--mono);color:var(--accent);font-size:.85rem">${escHtmlServer(o.tier)}</td>
       <td style="color:var(--text-muted);font-size:.85rem">${publishedTermsHtml(o)}</td>
     </tr>`;
@@ -20752,9 +20752,9 @@ function buildNeonVsSupabasePage(): string {
     </tr>`).join("\n        ");
 
   const altRows = dbAlts.map(o => {
-    const vendorSlug = o.vendor.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/-+$/, "");
+    const vendorSlug = toSlug(o.vendor);
     return `<tr>
-      <td style="font-weight:600"><a href="/vendor/${vendorSlug}" style="color:var(--text)">${escHtmlServer(o.vendor)}</a></td>
+      <td style="font-weight:600">${handwrittenVendorLinkHtml(vendorSlug, o.vendor, ' style="color:var(--text)"')}</td>
       <td style="font-family:var(--mono);color:var(--accent);font-size:.85rem">${escHtmlServer(o.tier)}</td>
       <td style="color:var(--text-muted);font-size:.85rem">${publishedTermsHtml(o)}</td>
     </tr>`;
@@ -21073,9 +21073,9 @@ function buildRailwayVsRenderPage(): string {
     </tr>`).join("\n        ");
 
   const altRows = hostingAlts.map(o => {
-    const vendorSlug = o.vendor.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/-+$/, "");
+    const vendorSlug = toSlug(o.vendor);
     return `<tr>
-      <td style="font-weight:600"><a href="/vendor/${vendorSlug}" style="color:var(--text)">${escHtmlServer(o.vendor)}</a></td>
+      <td style="font-weight:600">${handwrittenVendorLinkHtml(vendorSlug, o.vendor, ' style="color:var(--text)"')}</td>
       <td style="font-family:var(--mono);color:var(--accent);font-size:.85rem">${escHtmlServer(o.tier)}</td>
       <td style="color:var(--text-muted);font-size:.85rem">${publishedTermsHtml(o)}</td>
     </tr>`;
@@ -21394,9 +21394,9 @@ function buildDatadogVsNewRelicPage(): string {
     </tr>`).join("\n        ");
 
   const altRows = monitoringAlts.map(o => {
-    const vendorSlug = o.vendor.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/-+$/, "");
+    const vendorSlug = toSlug(o.vendor);
     return `<tr>
-      <td style="font-weight:600"><a href="/vendor/${vendorSlug}" style="color:var(--text)">${escHtmlServer(o.vendor)}</a></td>
+      <td style="font-weight:600">${handwrittenVendorLinkHtml(vendorSlug, o.vendor, ' style="color:var(--text)"')}</td>
       <td style="font-family:var(--mono);color:var(--accent);font-size:.85rem">${escHtmlServer(o.tier)}</td>
       <td style="color:var(--text-muted);font-size:.85rem">${publishedTermsHtml(o)}</td>
     </tr>`;
@@ -22025,9 +22025,9 @@ ${mcpCtaCss()}
     </thead>
     <tbody>
       ${altOffers.map(o => {
-        const vendorSlug = o.vendor.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/-+$/, "");
+        const vendorSlug = toSlug(o.vendor);
         return `<tr>
-        <td style="font-weight:600"><a href="/vendor/${vendorSlug}" style="color:var(--text)">${escHtmlServer(o.vendor)}</a></td>
+        <td style="font-weight:600">${handwrittenVendorLinkHtml(vendorSlug, o.vendor, ' style="color:var(--text)"')}</td>
         <td style="font-family:var(--mono);color:var(--accent);font-size:.85rem">${escHtmlServer(o.tier)}</td>
         <td style="color:var(--text-muted);font-size:.85rem">${escHtmlServer(o.category)}</td>
         <td style="color:var(--text-dim);font-size:.8rem">${escHtmlServer(verificationDatesCell(o))}</td>
@@ -22741,7 +22741,7 @@ ${mcpCtaCss()}
     </thead>
     <tbody>
       ${llmProviders.map(p => `<tr>
-        <td style="font-weight:600"><a href="/vendor/${p.name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/-+$/, "")}" style="color:var(--text)">${escHtmlServer(p.name)}</a></td>
+        <td style="font-weight:600">${handwrittenVendorLinkHtml(toSlug(p.name), p.name, ' style="color:var(--text)"')}</td>
         <td style="font-family:var(--mono);font-size:.8rem">${escHtmlServer(p.freeLimit)}</td>
         <td style="font-family:var(--mono);font-size:.8rem">${escHtmlServer(p.context)}</td>
         <td style="font-size:.8rem;color:var(--text-muted)">${escHtmlServer(p.models)}</td>
@@ -23101,7 +23101,7 @@ function buildGeminiApiPricingChangesPage(): string {
       const stability = stabilityMap.of(a.slug);
       const stabColor = stability === "volatile" ? "#f85149" : stability === "watch" ? "#d29922" : stability === "improving" ? "#3fb950" : "var(--text-dim)";
       return '      <tr>'
-        + '<td style="font-weight:600"><a href="/vendor/' + a.slug + '" style="color:var(--text)">' + escHtmlServer(a.name) + '</a></td>'
+        + '<td style="font-weight:600">' + handwrittenVendorLinkHtml(a.slug, a.name, ' style="color:var(--text)"') + '</td>'
         + '<td style="font-family:var(--mono);font-size:.8rem">' + escHtmlServer(a.freeRequests) + '</td>'
         + '<td style="font-family:var(--mono);font-size:.8rem">' + escHtmlServer(a.freeTokens) + '</td>'
         + '<td style="font-family:var(--mono);font-size:.8rem">' + escHtmlServer(a.context) + '</td>'
@@ -23827,7 +23827,7 @@ function buildStabilityDashboardPage(): string {
   watchVendors.sort(sortByRecent);
   improvingVendors.sort(sortByRecent);
 
-  const toVendorSlug = (name: string) => name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/-+$/g, "");
+  const toVendorSlug = toSlug;
 
   const vendorCategory = new Map<string, string>();
   for (const o of offers) {
@@ -24205,7 +24205,7 @@ function buildOpenaiAssistantsAlternativesPage(): string {
   const providerTableRows = providers.map(p => {
     const cells = providerRecordCells(p.slug, stabilityMap);
     return `<tr>
-      <td style="font-weight:600"><a href="/vendor/${p.slug}" style="color:var(--text)">${escHtmlServer(p.name)}</a></td>
+      <td style="font-weight:600">${handwrittenVendorLinkHtml(p.slug, p.name, ' style="color:var(--text)"')}</td>
       <td style="font-family:var(--mono);font-size:.8rem;color:${cells.tierColor}">${escHtmlServer(cells.tier)}</td>
       <td style="font-family:var(--mono);font-size:.8rem">${cells.rateCell}</td>
       <td style="font-size:.8rem">${escHtmlServer(p.toolUse)}</td>
@@ -24689,7 +24689,7 @@ function buildOpenaiAssistantsMigration2026Page(): string {
   const providerRows = apiProviders.map(p => {
     const cells = providerRecordCells(p.slug, stabilityMap);
     return `<tr>
-      <td style="font-weight:600"><a href="/vendor/${p.slug}" style="color:var(--text)">${escHtmlServer(p.name)}</a></td>
+      <td style="font-weight:600">${handwrittenVendorLinkHtml(p.slug, p.name, ' style="color:var(--text)"')}</td>
       <td style="font-family:var(--mono);font-size:.8rem;color:${cells.tierColor}">${escHtmlServer(cells.tier)}</td>
       <td style="font-size:.8rem">${escHtmlServer(p.toolUse)}</td>
       <td style="font-family:var(--mono);font-size:.8rem">${cells.rateCell}</td>
@@ -24733,7 +24733,7 @@ function buildOpenaiAssistantsMigration2026Page(): string {
   const costTableRows = costRows.map(c => {
     const monthly = monthlyTokenCost(c.rate, 100, 100);
     return `<tr>
-      <td style="font-weight:600;font-size:.85rem"><a href="/vendor/${c.slug}" style="color:var(--text)">${escHtmlServer(c.provider)}</a></td>
+      <td style="font-weight:600;font-size:.85rem">${handwrittenVendorLinkHtml(c.slug, c.provider, ' style="color:var(--text)"')}</td>
       <td style="font-size:.85rem">${escHtmlServer(c.rate.model ?? "Not named in the record")}</td>
       <td style="font-family:var(--mono);font-size:.85rem">${escHtmlServer(c.rate.input)}</td>
       <td style="font-family:var(--mono);font-size:.85rem">${c.rate.output === null ? "&mdash;" : escHtmlServer(c.rate.output)}</td>
@@ -25678,7 +25678,7 @@ function buildFirebaseStudioShutdownPage(): string {
     return items.map(a => {
       const stability = a.slug ? stabilityMap.of(a.slug) : UNRATED_STABILITY;
       const stabColor = stability === "volatile" ? "#f85149" : stability === "watch" ? "#d29922" : stability === "improving" ? "#3fb950" : "var(--text-dim)";
-      const vendorLink = a.slug ? `<a href="/vendor/${a.slug}" style="color:var(--text)">${escHtmlServer(a.name)}</a>` : escHtmlServer(a.name);
+      const vendorLink = a.slug ? `${handwrittenVendorLinkHtml(a.slug, a.name, ' style="color:var(--text)"')}` : escHtmlServer(a.name);
       return `<tr>
         <td style="font-weight:600">${vendorLink}</td>
         <td style="font-family:var(--mono);font-size:.8rem">${escHtmlServer(a.freeCompute)}</td>
@@ -26223,7 +26223,7 @@ function buildOpenAIAssistantsMigrationPage(): string {
 
   const costTableRows = migrationPaths.map(p => {
     const efColor = effortColors[p.migrationEffort] || "var(--text-muted)";
-    const vendorLink = p.slug ? '<a href="/vendor/' + escHtmlServer(p.slug) + '" style="color:var(--text)">' + escHtmlServer(p.name) + '</a>' : escHtmlServer(p.name);
+    const vendorLink = p.slug ? '' + handwrittenVendorLinkHtml(p.slug, p.name, ' style="color:var(--text)"') + '' : escHtmlServer(p.name);
     return '<tr>' +
       '<td style="font-weight:600">' + vendorLink + '</td>' +
       '<td style="font-family:var(--mono);font-size:.85rem">' + escHtmlServer(p.monthlyCostLow) + '</td>' +
@@ -26235,7 +26235,7 @@ function buildOpenAIAssistantsMigrationPage(): string {
 
   const pathCards = migrationPaths.map(p => {
     const borderColor = pathTypeColors[p.type] || "var(--accent)";
-    const vendorLink = p.slug ? '<a href="/vendor/' + escHtmlServer(p.slug) + '" style="color:var(--text)">' + escHtmlServer(p.name) + '</a>' : escHtmlServer(p.name);
+    const vendorLink = p.slug ? '' + handwrittenVendorLinkHtml(p.slug, p.name, ' style="color:var(--text)"') + '' : escHtmlServer(p.name);
     return '<div class="diff-card" style="border-left-color:' + borderColor + '">' +
       '<h3>' + vendorLink + ' ' +
       '<span style="font-size:.75rem;color:var(--text-dim);font-weight:400">' + escHtmlServer(pathTypeLabels[p.type]) + '</span></h3>' +
@@ -26817,7 +26817,7 @@ function buildShutdownTrackerPage(): string {
     return `<div class="shutdown-card" style="border-left-color:${color}">
       <div class="shutdown-header">
         <div>
-          <h3 style="margin:0"><a href="/vendor/${escHtmlServer(s.vendorSlug)}" style="color:var(--text)">${escHtmlServer(s.service)}</a></h3>
+          <h3 style="margin:0">${handwrittenVendorLinkHtml(s.vendorSlug, s.service, ' style="color:var(--text)"')}</h3>
           <div class="shutdown-deadline" style="color:${color}">
             <span class="deadline-icon">\u23f0</span>
             <span>${escHtmlServer(dateStr)}</span>
@@ -26833,7 +26833,7 @@ function buildShutdownTrackerPage(): string {
         <div class="detail-row"><span class="detail-label">Migration path:</span> <span>${escHtmlServer(s.migrationPath)}</span></div>
       </div>
       <div class="shutdown-links">
-        <a href="/vendor/${escHtmlServer(s.vendorSlug)}">Vendor profile \u2192</a>
+        ${servedVendorSlug(s.vendorSlug) === null ? "" : `<a href="/vendor/${escHtmlServer(s.vendorSlug)}">Vendor profile \u2192</a>`}
         ${s.migrationLink ? `<a href="${s.migrationLink}">Migration guide \u2192</a>` : ""}
         ${editorialLink && editorialLink.slug !== slug ? `<a href="/${editorialLink.slug}">Alternatives guide \u2192</a>` : ""}
       </div>
@@ -28000,7 +28000,7 @@ function buildAiCodingPricing2026Page(): string {
   const pricingTableRows = tools.map(t => {
     const vendorSlug = t.slug;
     return `<tr>
-      <td style="font-weight:600"><a href="/vendor/${vendorSlug}" style="color:var(--text)">${escHtmlServer(t.name)}</a></td>
+      <td style="font-weight:600">${handwrittenVendorLinkHtml(vendorSlug, t.name, ' style="color:var(--text)"')}</td>
       <td style="font-family:var(--mono);font-size:.85rem;color:${t.free.includes("free") || t.free.includes("6K") ? "#3fb950" : "var(--accent)"}">${escHtmlServer(t.free)}</td>
       <td style="font-family:var(--mono);font-size:.85rem">${escHtmlServer(t.pro)}</td>
       <td style="font-family:var(--mono);font-size:.85rem">${escHtmlServer(t.power)}</td>
@@ -28013,7 +28013,7 @@ function buildAiCodingPricing2026Page(): string {
     const isOpenSource = t.free.includes("free (OSS)");
     const borderColor = isOpenSource ? "#3fb950" : t.free.includes("6K") ? "#3fb950" : "var(--accent)";
     return `<div class="diff-card" style="border-left-color:${borderColor}">
-      <h3><a href="/vendor/${vendorSlug}" style="color:var(--text)">${escHtmlServer(t.name)}</a> <span style="font-size:.75rem;color:var(--text-dim);font-weight:400">${escHtmlServer(t.model)}</span></h3>
+      <h3>${handwrittenVendorLinkHtml(vendorSlug, t.name, ' style="color:var(--text)"')} <span style="font-size:.75rem;color:var(--text-dim);font-weight:400">${escHtmlServer(t.model)}</span></h3>
       <p class="diff-desc">${escHtmlServer(t.freeDetails)}</p>
     </div>`;
   }).join("\n    ");
@@ -28600,7 +28600,7 @@ function buildAiCodingToolsPricingPage(): string {
   const pricingTableRows = tools.map(t => {
     const freeColor = freeTypeColors[t.freeType] || "var(--text-muted)";
     return '<tr>' +
-      '<td style="font-weight:600"><a href="/vendor/' + escHtmlServer(t.slug) + '" style="color:var(--text)">' + escHtmlServer(t.name) + '</a></td>' +
+      '<td style="font-weight:600">' + handwrittenVendorLinkHtml(t.slug, t.name, ' style="color:var(--text)"') + '</td>' +
       '<td style="font-family:var(--mono);font-size:.85rem;color:' + freeColor + '">' + escHtmlServer(t.free) + '</td>' +
       '<td style="font-family:var(--mono);font-size:.85rem">' + escHtmlServer(t.pro) + '</td>' +
       '<td style="font-family:var(--mono);font-size:.85rem">' + escHtmlServer(t.power) + '</td>' +
@@ -28614,7 +28614,7 @@ function buildAiCodingToolsPricingPage(): string {
     const cards = catTools.map(t => {
       const borderColor = freeTypeColors[t.freeType] || "var(--accent)";
       return '<div class="diff-card" style="border-left-color:' + borderColor + '">' +
-        '<h3><a href="/vendor/' + escHtmlServer(t.slug) + '" style="color:var(--text)">' + escHtmlServer(t.name) + '</a> ' +
+        '<h3>' + handwrittenVendorLinkHtml(t.slug, t.name, ' style="color:var(--text)"') + ' ' +
         '<span style="font-size:.75rem;color:var(--text-dim);font-weight:400">' + escHtmlServer(freeTypeLabels[t.freeType]) + '</span></h3>' +
         '<p class="diff-desc">' + escHtmlServer(t.freeDetails) + '</p>' +
         '</div>';
@@ -28626,7 +28626,7 @@ function buildAiCodingToolsPricingPage(): string {
 
   const costRows = tools.map(t => {
     return '<tr>' +
-      '<td style="font-weight:600"><a href="/vendor/' + escHtmlServer(t.slug) + '" style="color:var(--text)">' + escHtmlServer(t.name) + '</a></td>' +
+      '<td style="font-weight:600">' + handwrittenVendorLinkHtml(t.slug, t.name, ' style="color:var(--text)"') + '</td>' +
       '<td style="font-family:var(--mono);font-size:.85rem">' + escHtmlServer(t.monthlyCostSolo) + '</td>' +
       '<td style="font-family:var(--mono);font-size:.85rem">' + escHtmlServer(t.monthlyCostTeam5) + '</td>' +
       '<td style="font-size:.85rem;color:var(--text-muted)">' + escHtmlServer(t.hiddenCosts) + '</td>' +
@@ -29359,7 +29359,7 @@ function buildCiCdPricingPage(): string {
   const pricingTableRows = tools.map(t => {
     const freeColor = freeTypeColors[t.freeType] || "var(--text-muted)";
     return '<tr>' +
-      '<td style="font-weight:600"><a href="/vendor/' + escHtmlServer(t.slug) + '" style="color:var(--text)">' + escHtmlServer(t.name) + '</a></td>' +
+      '<td style="font-weight:600">' + handwrittenVendorLinkHtml(t.slug, t.name, ' style="color:var(--text)"') + '</td>' +
       '<td style="font-family:var(--mono);font-size:.85rem;color:' + freeColor + '">' + escHtmlServer(t.freeMinutes) + '</td>' +
       '<td style="font-family:var(--mono);font-size:.85rem">' + escHtmlServer(t.concurrency) + '</td>' +
       '<td style="font-family:var(--mono);font-size:.85rem">' + escHtmlServer(t.selfHosted) + '</td>' +
@@ -29374,7 +29374,7 @@ function buildCiCdPricingPage(): string {
     const cards = catTools.map(t => {
       const borderColor = freeTypeColors[t.freeType] || "var(--accent)";
       return '<div class="diff-card" style="border-left-color:' + borderColor + '">' +
-        '<h3><a href="/vendor/' + escHtmlServer(t.slug) + '" style="color:var(--text)">' + escHtmlServer(t.name) + '</a> ' +
+        '<h3>' + handwrittenVendorLinkHtml(t.slug, t.name, ' style="color:var(--text)"') + ' ' +
         '<span style="font-size:.75rem;color:var(--text-dim);font-weight:400">' + escHtmlServer(freeTypeLabels[t.freeType]) + '</span></h3>' +
         '<p class="diff-desc">' + escHtmlServer(t.freeDetails) + '</p>' +
         '</div>';
@@ -29386,7 +29386,7 @@ function buildCiCdPricingPage(): string {
 
   const costRows = tools.map(t => {
     return '<tr>' +
-      '<td style="font-weight:600"><a href="/vendor/' + escHtmlServer(t.slug) + '" style="color:var(--text)">' + escHtmlServer(t.name) + '</a></td>' +
+      '<td style="font-weight:600">' + handwrittenVendorLinkHtml(t.slug, t.name, ' style="color:var(--text)"') + '</td>' +
       '<td style="font-family:var(--mono);font-size:.85rem">' + escHtmlServer(t.monthlyCostSmall) + '</td>' +
       '<td style="font-family:var(--mono);font-size:.85rem">' + escHtmlServer(t.monthlyCostTeam) + '</td>' +
       '<td style="font-size:.85rem;color:var(--text-muted)">' + escHtmlServer(t.hiddenCosts.substring(0, 80)) + (t.hiddenCosts.length > 80 ? "..." : "") + '</td>' +
@@ -29638,7 +29638,7 @@ function buildCiCdPricingPage(): string {
     '  </div>\n' +
     '\n' +
     '  <div class="context-box">\n' +
-    '    <strong>Best value picks:</strong> For open-source projects, <a href="/vendor/github-actions">GitHub Actions</a> (unlimited free minutes). For private repos on a budget, <a href="/vendor/google-cloud-build">Google Cloud Build</a> (120 min/day free) or <a href="/vendor/github-actions">GitHub Actions</a> (2,000 min/mo). For teams wanting zero CI cost, self-hosted <a href="/vendor/jenkins">Jenkins</a> or <a href="/vendor/woodpecker-ci">Woodpecker CI</a> with your own infrastructure.\n' +
+    '    <strong>Best value picks:</strong> For open-source projects, <a href="/vendor/github-actions">GitHub Actions</a> (unlimited free minutes). For private repos on a budget, <a href="/vendor/google-cloud-build">Google Cloud Build</a> (120 min/day free) or <a href="/vendor/github-actions">GitHub Actions</a> (2,000 min/mo). For teams wanting zero CI cost, self-hosted ' + handwrittenVendorLinkHtml("jenkins", "Jenkins") + ' or <a href="/vendor/woodpecker-ci">Woodpecker CI</a> with your own infrastructure.\n' +
     '  </div>\n' +
     '\n' +
     '  <h2 id="hidden-costs">Hidden Costs</h2>\n' +
@@ -29717,7 +29717,7 @@ function buildCiCdPricingPage(): string {
     '\n' +
     '    <div class="verdict-item">\n' +
     '      <strong>Best for maximum control / zero vendor lock-in</strong>\n' +
-    '      <p><a href="/vendor/jenkins">Jenkins</a> for maximum plugin ecosystem and flexibility. <a href="/vendor/woodpecker-ci">Woodpecker CI</a> for a lightweight, modern, container-native alternative. Both are 100% free and open-source.</p>\n' +
+    '      <p>' + handwrittenVendorLinkHtml("jenkins", "Jenkins") + ' for maximum plugin ecosystem and flexibility. <a href="/vendor/woodpecker-ci">Woodpecker CI</a> for a lightweight, modern, container-native alternative. Both are 100% free and open-source.</p>\n' +
     '    </div>\n' +
     '\n' +
     '    <div class="verdict-item">\n' +
@@ -30244,7 +30244,7 @@ function buildDatabasePricingPage(): string {
   const pricingTableRows = services.map(s => {
     const freeColor = freeTypeColors[s.freeType] || "var(--text-muted)";
     return '<tr>' +
-      '<td style="font-weight:600"><a href="/vendor/' + escHtmlServer(s.slug) + '" style="color:var(--text)">' + escHtmlServer(s.name) + '</a></td>' +
+      '<td style="font-weight:600">' + handwrittenVendorLinkHtml(s.slug, s.name, ' style="color:var(--text)"') + '</td>' +
       '<td style="font-family:var(--mono);font-size:.85rem">' + escHtmlServer(s.dbType) + '</td>' +
       '<td style="font-family:var(--mono);font-size:.85rem;color:' + freeColor + '">' + escHtmlServer(s.freeStorage) + '</td>' +
       '<td style="font-family:var(--mono);font-size:.85rem">' + escHtmlServer(s.freeConnections) + '</td>' +
@@ -30258,7 +30258,7 @@ function buildDatabasePricingPage(): string {
     const cards = catServices.map(s => {
       const borderColor = freeTypeColors[s.freeType] || "var(--accent)";
       return '<div class="diff-card" style="border-left-color:' + borderColor + '">' +
-        '<h3><a href="/vendor/' + escHtmlServer(s.slug) + '" style="color:var(--text)">' + escHtmlServer(s.name) + '</a> ' +
+        '<h3>' + handwrittenVendorLinkHtml(s.slug, s.name, ' style="color:var(--text)"') + ' ' +
         '<span style="font-size:.75rem;color:var(--text-dim);font-weight:400">' + escHtmlServer(s.dbType) + ' \u00b7 ' + escHtmlServer(freeTypeLabels[s.freeType]) + '</span></h3>' +
         '<p class="diff-desc">' + escHtmlServer(detailForEndedOffer(offerForSlug(s.slug), s.freeDetails)) + '</p>' +
         '</div>';
@@ -30270,7 +30270,7 @@ function buildDatabasePricingPage(): string {
 
   const costRows = services.map(s => {
     return '<tr>' +
-      '<td style="font-weight:600"><a href="/vendor/' + escHtmlServer(s.slug) + '" style="color:var(--text)">' + escHtmlServer(s.name) + '</a></td>' +
+      '<td style="font-weight:600">' + handwrittenVendorLinkHtml(s.slug, s.name, ' style="color:var(--text)"') + '</td>' +
       '<td style="font-family:var(--mono);font-size:.85rem">' + escHtmlServer(s.monthlyCostSmall) + '</td>' +
       '<td style="font-family:var(--mono);font-size:.85rem">' + escHtmlServer(s.monthlyCostTeam) + '</td>' +
       '<td style="font-size:.85rem;color:var(--text-muted)">' + escHtmlServer(s.hiddenCosts.substring(0, 80)) + (s.hiddenCosts.length > 80 ? "..." : "") + '</td>' +
@@ -30909,7 +30909,7 @@ function buildVectorDatabasePricingPage(): string {
 
   const pricingTableRows = services.map(s =>
     '<tr>' +
-    '<td style="font-weight:600"><a href="/vendor/' + s.slug + '">' + escHtmlServer(s.name) + '</a></td>' +
+    '<td style="font-weight:600">' + handwrittenVendorLinkHtml(s.slug, s.name) + '</td>' +
     '<td style="font-size:.85rem">' + escHtmlServer(s.vectorType) + '</td>' +
     '<td style="font-size:.85rem">' + escHtmlServer(s.freeVectors) + '</td>' +
     '<td style="font-size:.85rem">' + escHtmlServer(s.freeStorage) + '</td>' +
@@ -30936,7 +30936,7 @@ function buildVectorDatabasePricingPage(): string {
       '<div class="section-intro">' + catServices.length + ' service' + (catServices.length !== 1 ? "s" : "") + ' in this category.</div>\n' +
       catServices.map(s =>
         '<div class="diff-card">\n' +
-        '  <h3><a href="/vendor/' + s.slug + '">' + escHtmlServer(s.name) + '</a></h3>\n' +
+        '  <h3>' + handwrittenVendorLinkHtml(s.slug, s.name) + '</h3>\n' +
         '  <div class="diff-desc">' + escHtmlServer(s.freeDetails) + '</div>\n' +
         '</div>'
       ).join("\n");
@@ -32406,8 +32406,8 @@ function buildLlmApiPricingPage(): string {
   const thirdChoiceForPrototyping = stillOffered(["cerebras", "cloudflare-workers-ai", "llm7-io"])[0] ?? null;
   const thirdForPrototyping = thirdChoiceForPrototyping === null
     ? ""
-    : ' <a href="/vendor/' + escHtmlServer(thirdChoiceForPrototyping.slug) + '">' + escHtmlServer(thirdChoiceForPrototyping.name)
-      + '</a> for ' + escHtmlServer(thirdChoiceForPrototyping.freeTier) + ' without a credit card.';
+    : ' ' + handwrittenVendorLinkHtml(thirdChoiceForPrototyping.slug, thirdChoiceForPrototyping.name)
+      + ' for ' + escHtmlServer(thirdChoiceForPrototyping.freeTier) + ' without a credit card.';
 
   const frontierReads = providers.filter(p => p.readOn && p.readFrom);
   const frontierReadOn = frontierReads.map(p => p.readOn as string).sort()[0] ?? null;
@@ -32421,7 +32421,7 @@ function buildLlmApiPricingPage(): string {
   const pricingTableRows = providers.map(p => {
     const freeColor = freeTypeColors[p.freeType] || "var(--text-muted)";
     return '<tr>' +
-      '<td style="font-weight:600"><a href="/vendor/' + escHtmlServer(p.slug) + '" style="color:var(--text)">' + escHtmlServer(p.name) + '</a></td>' +
+      '<td style="font-weight:600">' + handwrittenVendorLinkHtml(p.slug, p.name, ' style="color:var(--text)"') + '</td>' +
       '<td style="font-family:var(--mono);font-size:.85rem;color:' + freeColor + '">' + escHtmlServer(p.freeTier) + '</td>' +
       '<td style="font-family:var(--mono);font-size:.85rem">' + escHtmlServer(p.flagshipModel) + '</td>' +
       '<td style="font-family:var(--mono);font-size:.85rem">' + escHtmlServer(p.inputPrice) + '</td>' +
@@ -32436,7 +32436,7 @@ function buildLlmApiPricingPage(): string {
     const cards = catProviders.map(p => {
       const borderColor = freeTypeColors[p.freeType] || "var(--accent)";
       return '<div class="diff-card" style="border-left-color:' + borderColor + '">' +
-        '<h3><a href="/vendor/' + escHtmlServer(p.slug) + '" style="color:var(--text)">' + escHtmlServer(p.name) + '</a> ' +
+        '<h3>' + handwrittenVendorLinkHtml(p.slug, p.name, ' style="color:var(--text)"') + ' ' +
         '<span style="font-size:.75rem;color:var(--text-dim);font-weight:400">' + escHtmlServer(freeTypeLabels[p.freeType]) + '</span></h3>' +
         '<p class="diff-desc">' + escHtmlServer(detailOf(p)) + '</p>' +
         '<p class="diff-desc" style="margin-top:.5rem"><strong style="color:var(--text)">Key differentiator:</strong> ' + escHtmlServer(p.differentiator) + '</p>' +
@@ -32866,7 +32866,7 @@ function buildAgentPaymentsPage(): string {
       `<span class="proto-badge ${p.protocol === "stripe-mpp" ? "stripe-mpp" : "x402"}">${p.protocol === "stripe-mpp" ? "Stripe MPP" : "x402"}</span>`
     ).join(" ");
     return `<tr>
-      <td><a href="/vendor/${vendorSlug}" class="vendor-link">${escHtmlServer(o.vendor)}</a></td>
+      <td>${handwrittenVendorLinkHtml(vendorSlug, o.vendor, ' class="vendor-link"')}</td>
       <td>${escHtmlServer(o.category)}</td>
       <td class="proto-cell">${badges}</td>
       <td class="tier-cell">${escHtmlServer(o.tier)}</td>
@@ -32891,7 +32891,7 @@ function buildAgentPaymentsPage(): string {
       ).join(" ");
       return `<div class="service-card">
         <div class="service-header">
-          <a href="/vendor/${vendorSlug}" class="vendor-link">${escHtmlServer(o.vendor)}</a>
+          ${handwrittenVendorLinkHtml(vendorSlug, o.vendor, ' class="vendor-link"')}
           ${badges}
         </div>
         <p class="service-tier">${escHtmlServer(o.tier)}</p>
@@ -33141,7 +33141,7 @@ function buildX402ServicesPage(): string {
     const chain = proto?.chain || "Base";
     const settlement = proto?.settlement || "USDC";
     return `<tr>
-      <td><a href="/vendor/${vendorSlug}" class="vendor-link">${escHtmlServer(o.vendor)}</a></td>
+      <td>${handwrittenVendorLinkHtml(vendorSlug, o.vendor, ' class="vendor-link"')}</td>
       <td>${escHtmlServer(o.category)}</td>
       <td class="tier-cell">${escHtmlServer(o.tier)}</td>
       <td class="cost-cell">${escHtmlServer(cost)}</td>
@@ -33158,7 +33158,7 @@ function buildX402ServicesPage(): string {
       const cost = proto?.example_cost || "varies";
       return `<div class="service-card">
         <div class="service-header">
-          <a href="/vendor/${vendorSlug}" class="vendor-link">${escHtmlServer(o.vendor)}</a>
+          ${handwrittenVendorLinkHtml(vendorSlug, o.vendor, ' class="vendor-link"')}
           <span class="cost-tag">${escHtmlServer(cost)}</span>
         </div>
         <p class="service-tier">${escHtmlServer(o.tier)}</p>
@@ -33358,7 +33358,7 @@ function buildDallEShutdownPage(): string {
   const providerTableRows = providers.map(p => {
     const freeColor = p.freeTier.toLowerCase().includes("free") ? "#3fb950" : "var(--accent)";
     const effortColor = p.migrationEffort.startsWith("Minimal") ? "#3fb950" : p.migrationEffort.startsWith("Low") ? "#3fb950" : p.migrationEffort.startsWith("Moderate") ? "#d29922" : "#f85149";
-    const vendorLink = p.slug ? `<a href="/vendor/${p.slug}" style="color:var(--text)">${escHtmlServer(p.name)}</a>` : escHtmlServer(p.name);
+    const vendorLink = p.slug ? `${handwrittenVendorLinkHtml(p.slug, p.name, ' style="color:var(--text)"')}` : escHtmlServer(p.name);
     return `<tr>
       <td style="font-weight:600">${vendorLink}</td>
       <td style="font-family:var(--mono);font-size:.8rem;color:${freeColor}">${escHtmlServer(p.freeTier)}</td>
@@ -33877,7 +33877,7 @@ function buildOpenAIRealtimeMigrationPage(): string {
   const providerTableRows = providers.map(p => {
     const freeColor = p.freeTier.toLowerCase().includes("free") ? "#3fb950" : "var(--accent)";
     const effortColor = p.migrationEffort.startsWith("Minimal") ? "#3fb950" : p.migrationEffort.startsWith("Low") ? "#3fb950" : p.migrationEffort.startsWith("Moderate") ? "#d29922" : "#f85149";
-    const vendorLink = p.slug ? '<a href="/vendor/' + escHtmlServer(p.slug) + '" style="color:var(--text)">' + escHtmlServer(p.name) + "</a>" : escHtmlServer(p.name);
+    const vendorLink = p.slug ? handwrittenVendorLinkHtml(p.slug, p.name, ' style="color:var(--text)"') : escHtmlServer(p.name);
     return '<tr>\n      <td style="font-weight:600">' + vendorLink + '</td>\n      <td style="font-family:var(--mono);font-size:.8rem;color:' + freeColor + '">' + escHtmlServer(p.freeTier) + '</td>\n      <td style="font-size:.8rem">' + escHtmlServer(p.pricing) + '</td>\n      <td style="font-size:.8rem">' + escHtmlServer(p.capability) + '</td>\n      <td style="font-size:.8rem">' + escHtmlServer(p.latency) + '</td>\n      <td><span style="color:' + effortColor + ';font-size:.8rem;font-weight:600">' + escHtmlServer(p.migrationEffort.split(" \u2014 ")[0]) + "</span></td>\n    </tr>";
   }).join("\n        ");
 
@@ -33986,7 +33986,7 @@ function buildAppRunnerMigrationPage(): string {
   const providerTableRows = providers.map(p => {
     const freeColor = p.freeTier.toLowerCase().includes("free") ? "#3fb950" : "var(--accent)";
     const effortColor = p.migrationEffort.startsWith("Low") ? "#3fb950" : p.migrationEffort.startsWith("Moderate") ? "#d29922" : "#f85149";
-    const vendorLink = p.slug ? `<a href="/vendor/${escHtmlServer(p.slug)}" style="color:var(--text)">${escHtmlServer(p.name)}</a>` : escHtmlServer(p.name);
+    const vendorLink = p.slug ? `${handwrittenVendorLinkHtml(p.slug, p.name, ' style="color:var(--text)"')}` : escHtmlServer(p.name);
     return `<tr>
       <td style="font-weight:600">${vendorLink}</td>
       <td style="font-family:var(--mono);font-size:.8rem;color:${freeColor}">${escHtmlServer(p.freeTier)}</td>
@@ -34619,7 +34619,7 @@ function buildAwsFreeTier2026Page(): string {
     </div>`).join("\n    ");
 
   const altRows = cloudAlts.map(a => `<tr>
-      <td style="font-weight:600"><a href="/vendor/${a.slug}" style="color:var(--text)">${escHtmlServer(a.name)}</a></td>
+      <td style="font-weight:600">${handwrittenVendorLinkHtml(a.slug, a.name, ' style="color:var(--text)"')}</td>
       <td style="font-size:.8rem">${escHtmlServer(a.freeTier)}</td>
       <td style="font-size:.8rem;color:var(--text-muted)">${escHtmlServer(a.bestFor)}</td>
     </tr>`).join("\n        ");
@@ -35057,7 +35057,7 @@ function buildGcpFreeTier2026Page(): string {
     </div>`).join("\n    ");
 
   const altRows = cloudAlts.map(a => `<tr>
-      <td style="font-weight:600"><a href="/vendor/${a.slug}" style="color:var(--text)">${escHtmlServer(a.name)}</a></td>
+      <td style="font-weight:600">${handwrittenVendorLinkHtml(a.slug, a.name, ' style="color:var(--text)"')}</td>
       <td style="font-size:.8rem">${escHtmlServer(a.freeTier)}</td>
       <td style="font-size:.8rem;color:var(--text-muted)">${escHtmlServer(a.bestFor)}</td>
     </tr>`).join("\n        ");
@@ -35476,7 +35476,7 @@ function buildAzureFreeTier2026Page(): string {
     </div>`).join("\n    ");
 
   const altRows = cloudAlts.map(a => `<tr>
-      <td style="font-weight:600"><a href="/vendor/${a.slug}" style="color:var(--text)">${escHtmlServer(a.name)}</a></td>
+      <td style="font-weight:600">${handwrittenVendorLinkHtml(a.slug, a.name, ' style="color:var(--text)"')}</td>
       <td style="font-size:.8rem">${escHtmlServer(a.freeTier)}</td>
       <td style="font-size:.8rem;color:var(--text-muted)">${escHtmlServer(a.bestFor)}</td>
     </tr>`).join("\n        ");
@@ -35921,7 +35921,7 @@ function buildDigitalOceanFreeTier2026Page(): string {
     </div>`).join("\n    ");
 
   const altRows = cloudAlts.map(a => `<tr>
-      <td style="font-weight:600"><a href="/vendor/${a.slug}" style="color:var(--text)">${escHtmlServer(a.name)}</a></td>
+      <td style="font-weight:600">${handwrittenVendorLinkHtml(a.slug, a.name, ' style="color:var(--text)"')}</td>
       <td style="font-size:.8rem">${escHtmlServer(a.freeTier)}</td>
       <td style="font-size:.8rem;color:var(--text-muted)">${escHtmlServer(a.bestFor)}</td>
     </tr>`).join("\n        ");
@@ -46372,7 +46372,7 @@ ${globalNavCss()}
     ${countOnCards.map(card => `<div style="padding:1rem;border:1px solid #3fb950;border-radius:8px;background:rgba(63,185,80,0.06)">
       <h3 style="margin:0 0 .5rem;font-size:.95rem;color:#3fb950">${escHtmlServer(card.heading)}</h3>
       <p style="font-size:.85rem;color:var(--text-muted);margin:0 0 .5rem">${card.blurb}</p>
-      <div style="display:flex;flex-wrap:wrap;gap:.3rem">${card.vendors.map(v => `<a href="/vendor/${v.slug}" style="display:inline-block;padding:.15rem .5rem;border:1px solid var(--border);border-radius:12px;font-size:.75rem;color:var(--text-muted)">${escHtmlServer(v.name)}</a>`).join("")}</div>
+      <div style="display:flex;flex-wrap:wrap;gap:.3rem">${card.vendors.map(v => `${handwrittenVendorLinkHtml(v.slug, v.name, ' style="display:inline-block;padding:.15rem .5rem;border:1px solid var(--border);border-radius:12px;font-size:.75rem;color:var(--text-muted)"')}`).join("")}</div>
     </div>`).join("\n    ")}
   </div>
   <div class="callout callout-good">
@@ -47151,7 +47151,7 @@ function buildStackTemplatePage(slug: string): string | null {
 
   const vendorLabel = (s: StackService) =>
     vendorSlugMap.has(s.slug)
-      ? `<a href="/vendor/${escHtmlServer(s.slug)}">${escHtmlServer(s.vendor)}</a>`
+      ? `${handwrittenVendorLinkHtml(s.slug, s.vendor)}`
       : escHtmlServer(s.vendor);
 
   const tableRows = template.services.map(s => {
@@ -47181,7 +47181,7 @@ function buildStackTemplatePage(slug: string): string | null {
   const swapsHtml = template.swaps.map(sw => {
     const reading = stackReadingForSlug(sw.toSlug);
     return `<div class="swap-card">
-      <strong>Swap ${escHtmlServer(sw.from)} for <a href="/vendor/${escHtmlServer(sw.toSlug)}">${escHtmlServer(sw.to)}</a></strong> ${reading ? stackVerdictChipHtml(reading, { alternative: true }) : ""}
+      <strong>Swap ${escHtmlServer(sw.from)} for ${handwrittenVendorLinkHtml(sw.toSlug, sw.to)}</strong> ${reading ? stackVerdictChipHtml(reading, { alternative: true }) : ""}
       <p>${escHtmlServer(reading && !reading.recommendable ? reading.why : sw.saving)}</p>
     </div>`;
   }).join("\n");
@@ -49293,7 +49293,7 @@ function buildBadgesPage(): string {
 ${previewBadges.map(v => `      <div class="preview-card">
         <div class="preview-badge">
           <img src="${BASE_URL}/badge/${v.slug}.svg" alt="${escHtmlServer(v.name)} free tier badge">
-          <a href="/vendor/${v.slug}" style="font-size:.85rem">${escHtmlServer(v.name)}</a>
+          ${handwrittenVendorLinkHtml(v.slug, v.name, ' style="font-size:.85rem"')}
         </div>
         <div class="format-tabs">
           <button class="format-tab active" onclick="showFormat(this,'md','${v.slug}')">Markdown</button>
@@ -51550,7 +51550,7 @@ function buildAgentStackPage(): string {
       const verdict = reading ? stackVerdictChipHtml(reading) : `<span style="color:var(--text-dim)">&mdash;</span>`;
       return `          <tr>
             <td class="role-cell">${escHtmlServer(svc.role)}</td>
-            <td><a href="/vendor/${svc.slug}" class="vendor-link">${escHtmlServer(svc.vendorName)}</a> <span class="tier-badge">${escHtmlServer(svc.tier)}</span></td>
+            <td>${handwrittenVendorLinkHtml(svc.slug, svc.vendorName, ' class="vendor-link"')} <span class="tier-badge">${escHtmlServer(svc.tier)}</span></td>
             <td class="limits-cell">${shortLimits}</td>
             <td class="verdict-cell">${verdict}</td>
             <td class="link-cell">${offerPricingLink(svc, "Pricing →")}</td>
@@ -51558,7 +51558,7 @@ function buildAgentStackPage(): string {
     }).join("\n");
 
     const bundleReadings = recommended.flatMap(r => r.reading ? [r.reading] : []);
-    const endedNote = ended.length === 0 ? "" : `\n        <p class="bundle-ended" style="font-size:.8rem;color:var(--text-muted);margin-top:.5rem">No longer a free-tier pick: ${ended.map(r => `<a href="/vendor/${r.slug}">${escHtmlServer(r.vendor)}</a> \u2014 ${escHtmlServer(r.verdict)}`).join("; ")}.</p>`;
+    const endedNote = ended.length === 0 ? "" : `\n        <p class="bundle-ended" style="font-size:.8rem;color:var(--text-muted);margin-top:.5rem">No longer a free-tier pick: ${ended.map(r => `${handwrittenVendorLinkHtml(r.slug, r.vendor)} \u2014 ${escHtmlServer(r.verdict)}`).join("; ")}.</p>`;
 
     return `      <div class="stack-bundle" id="${bundle.id}">
         <div class="bundle-header">
@@ -51743,7 +51743,7 @@ function buildReferralProgramsPage(): string {
       ? `<div class="referral-conditions"><span class="referral-conditions-heading">${REFERRAL_CONDITIONS_HEADING}</span><ul>${v.restrictions.map(r => `<li>${escHtmlServer(r)}</li>`).join("")}</ul></div>`
       : "";
     return `      <tr data-category="${escHtmlServer(v.category)}">
-        <td><a href="/vendor/${vendorSlug}" class="vendor-link">${escHtmlServer(v.vendor)}</a></td>
+        <td>${handwrittenVendorLinkHtml(vendorSlug, v.vendor, ' class="vendor-link"')}</td>
         <td class="cat-cell">${escHtmlServer(v.category)}</td>
         <td class="benefit-cell">${escHtmlServer(v.referee_benefit)}${conditionsHtml}</td>
         <td class="benefit-cell">${escHtmlServer(v.referrer_benefit)}</td>
@@ -54905,7 +54905,7 @@ const dispatchRequest = async (req: IncomingMessage, res: ServerResponse) => {
         tags: o.tags,
         verifiedDate: o.verifiedDate,
         last_read_date: lastReadDate(o),
-        vendor_page: "/vendor/" + o.vendor.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/-+$/, ""),
+        vendor_page: "/vendor/" + toSlug(o.vendor),
       };
     }).filter(t => !categoryFilter || !validCategories.includes(categoryFilter) || t.category === categoryFilter);
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/ai-coding-pricing", params: { type: categoryFilter }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: tools.length });
@@ -54940,7 +54940,7 @@ const dispatchRequest = async (req: IncomingMessage, res: ServerResponse) => {
         tags: o.tags,
         verifiedDate: o.verifiedDate,
         last_read_date: lastReadDate(o),
-        vendor_page: "/vendor/" + o.vendor.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/-+$/, ""),
+        vendor_page: "/vendor/" + toSlug(o.vendor),
         has_referral: !!(o.referral_program?.available),
       };
     }).filter(t => !hostingTypeFilter || !validHostingTypes.includes(hostingTypeFilter) || t.category === hostingTypeFilter);
@@ -54976,7 +54976,7 @@ const dispatchRequest = async (req: IncomingMessage, res: ServerResponse) => {
         tags: o.tags,
         verifiedDate: o.verifiedDate,
         last_read_date: lastReadDate(o),
-        vendor_page: "/vendor/" + o.vendor.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/-+$/, ""),
+        vendor_page: "/vendor/" + toSlug(o.vendor),
       };
     }).filter(t => !llmTypeFilter || !validLlmTypes.includes(llmTypeFilter) || t.category === llmTypeFilter);
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/llm-pricing", params: { type: llmTypeFilter }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: llmProviders.length });
@@ -55014,7 +55014,7 @@ const dispatchRequest = async (req: IncomingMessage, res: ServerResponse) => {
         tags: o.tags,
         verifiedDate: o.verifiedDate,
         last_read_date: lastReadDate(o),
-        vendor_page: "/vendor/" + o.vendor.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/-+$/, ""),
+        vendor_page: "/vendor/" + toSlug(o.vendor),
       };
     }).filter(t => !startupTypeFilter || !validStartupTypes.includes(startupTypeFilter) || t.category === startupTypeFilter);
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/startup-credits", params: { type: startupTypeFilter }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: startupPrograms.length });
@@ -55039,7 +55039,7 @@ const dispatchRequest = async (req: IncomingMessage, res: ServerResponse) => {
             type: o.referral_program.type,
             commission_type: o.referral_program.commission_type,
             notes: o.referral_program.notes,
-            vendor_page: "/vendor/" + o.vendor.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/-+$/, ""),
+            vendor_page: "/vendor/" + toSlug(o.vendor),
           });
         }
       }
