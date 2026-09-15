@@ -24,7 +24,7 @@ import { AGENT_CARD_PATHS, OPENAPI_ALIAS_PATHS, OPENAPI_CANONICAL_PATH, OPENAPI_
 import { CATEGORY_ALIASES, CATEGORY_RETIREMENTS, EXAMPLE_MEMBERS_BASIS, buildCategoryDirectory, categoryHolds, familySiblings, publishedScopeFor, resolveCategoryName, retiredCategoryNames, retirementFor, scopeFor } from "./category-scope.js";
 import { retiredCategoryDescription, retiredCategoryNoticeHtml, retiredCategoryTitle } from "./category-retirement.js";
 import { LINK_GRACE_DAYS, unreachableNoticeForUrl } from "./link-health.js";
-import { offerEnded, offerRetired, recordedTierSentence, endedHeadline, endedHistorySentence, endedReliabilitySentence, endedEmptyChangeHistorySentence, detailForEndedOffer, ENDED_BADGE_LABEL, ENDED_SINCE_CHANGES_SENTENCE, type OfferTierAndUrl } from "./retirement.js";
+import { offerEnded, offerRetired, recordedTierSentence, endedHeadline, endedHistorySentence, endedReliabilitySentence, endedEmptyChangeHistorySentence, detailForEndedOffer, noLiveRecordUnderThatNameSentence, ENDED_BADGE_LABEL, ENDED_SINCE_CHANGES_SENTENCE, type OfferTierAndUrl } from "./retirement.js";
 import { dropEndedFromNameList, endedIndex, endedRowStatement, markEndedVendorRows } from "./ended-surfaces.js";
 import { amountUnstatedSentence, freePriceConfirmedSentence, freePriceOnlySentence, LAST_RESOLVED, levelWithheldReason, levelWithheldSince, recordPublishesAQuantity, withheldLevelClause, withheldLevelSentence, type LevelWithheldReason } from "./source-check.js";
 import { offerVerdictInput, vendorVerdictContextFrom, type VendorVerdictContext } from "./vendor-verdict-input.js";
@@ -69,7 +69,7 @@ import type { VendorReferralAnswer } from "./referral-surfaces.js";
 import { runHealthCheck, getLastReport, startPeriodicChecks } from "./referral-health.js";
 import { configureDurableBackend, hydrateDurableStores, persistDurableStores, identityStorageReport } from "./durable-store.js";
 import { addFriend, removeFriend, getFriends, getFriendCodesForVendors } from "./friends.js";
-import { changeLogAnchorFor, changeLogVendorMap, toSlug, vendorSlugMap, resolveVendorSlug, namedVendorSlug, comparisonOfOneRecord, recordNamedBySlug, servedVendorSlugForName } from "./vendor-slug.js";
+import { changeLogAnchorFor, changeLogVendorMap, toSlug, vendorSlugMap, resolveVendorSlug, namedVendorSlug, comparisonOfOneRecord, recordNamedBySlug, servedVendorSlug, servedVendorSlugForName } from "./vendor-slug.js";
 import { NO_PUSH_NOTICE, watchCommandBlock, watchRequestsFor } from "./change-watching.js";
 import { createRegistrationLimiter, rateLimitHeaders } from "./rate-limit.js";
 import { offerForSlug, vendorRates, cheapestRate, dearestRate, spanOfRates, formatRate, formatRateSpan, monthlyTokenCost, formatDollars, type ModelRate } from "./model-rates.js";
@@ -570,6 +570,10 @@ function vendorLinkHtml(slug: string | null, name: string, attrs = ""): string {
 
 function changeVendorLinkHtml(name: string, attrs = ""): string {
   return vendorLinkHtml(servedVendorSlugForName(name), name, attrs);
+}
+
+function handwrittenVendorLinkHtml(slug: string, name: string, attrs = ""): string {
+  return vendorLinkHtml(servedVendorSlug(slug) === null ? null : slug, name, attrs);
 }
 
 function changeVendorUrlField(name: string): { url?: string } {
@@ -1198,6 +1202,21 @@ function vendorNamedBySlug(slug: string): string | undefined {
   if (direct) return direct;
   const resolved = resolveVendorSlug(slug);
   return resolved.type === "redirect" ? vendorSlugMap.get(resolved.slug) : undefined;
+}
+
+function endedNamesRefusalPage(
+  requested: string,
+  endedSlugs: string[],
+  basePath: string,
+  browseHref: string,
+  browseLabel: string,
+): string {
+  const named = endedSlugs.map(s => ({ slug: s, name: vendorSlugMap.get(s) ?? s }));
+  const links = named
+    .map(n => `<li><a href="${basePath}/${encodeURIComponent(n.slug)}">${escHtmlServer(n.name)}</a></li>`)
+    .join("");
+  const sentence = noLiveRecordUnderThatNameSentence(requested, named.map(n => n.name));
+  return `<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Vendor not found — AgentDeals</title><style>body{font-family:-apple-system,sans-serif;background:#0f172a;color:#f1f5f9;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0}a{color:#3b82f6}.box{text-align:center;max-width:520px;padding:2rem}ul{list-style:none;padding:0;margin:1rem 0;text-align:left}li{padding:.4rem 0}</style></head><body><div class="box"><h1 style="font-size:3rem;margin-bottom:.5rem">404</h1><p>${escHtmlServer(sentence)}</p><ul>${links}</ul><p style="margin-top:1rem"><a href="${browseHref}">${escHtmlServer(browseLabel)}</a></p></div></body></html>`;
 }
 
 function citedServicesOn(html: string, servedOn: string): CitedService[] {
@@ -31596,7 +31615,7 @@ function buildHostingPricingPage(): string {
   const pricingTableRows = services.map(s => {
     const freeColor = freeTypeColors[s.freeType] || "var(--text-muted)";
     return '<tr>' +
-      '<td style="font-weight:600"><a href="/vendor/' + escHtmlServer(s.slug) + '" style="color:var(--text)">' + escHtmlServer(s.name) + '</a></td>' +
+      '<td style="font-weight:600">' + handwrittenVendorLinkHtml(s.slug, s.name, ' style="color:var(--text)"') + '</td>' +
       '<td style="font-family:var(--mono);font-size:.85rem;color:' + freeColor + '">' + escHtmlServer(s.freeTier) + '</td>' +
       '<td style="font-family:var(--mono);font-size:.85rem">' + escHtmlServer(s.paidFrom) + '</td>' +
       '<td style="font-family:var(--mono);font-size:.85rem">' + escHtmlServer(s.freeBandwidth) + '</td>' +
@@ -31610,7 +31629,7 @@ function buildHostingPricingPage(): string {
     const cards = catServices.map(s => {
       const borderColor = freeTypeColors[s.freeType] || "var(--accent)";
       return '<div class="diff-card" style="border-left-color:' + borderColor + '">' +
-        '<h3><a href="/vendor/' + escHtmlServer(s.slug) + '" style="color:var(--text)">' + escHtmlServer(s.name) + '</a> ' +
+        '<h3>' + handwrittenVendorLinkHtml(s.slug, s.name, ' style="color:var(--text)"') + ' ' +
         '<span style="font-size:.75rem;color:var(--text-dim);font-weight:400">' + escHtmlServer(freeTypeLabels[s.freeType]) + '</span></h3>' +
         '<p class="diff-desc">' + escHtmlServer(s.freeDetails) + '</p>' +
         '</div>';
@@ -31622,7 +31641,7 @@ function buildHostingPricingPage(): string {
 
   const costRows = services.map(s => {
     return '<tr>' +
-      '<td style="font-weight:600"><a href="/vendor/' + escHtmlServer(s.slug) + '" style="color:var(--text)">' + escHtmlServer(s.name) + '</a></td>' +
+      '<td style="font-weight:600">' + handwrittenVendorLinkHtml(s.slug, s.name, ' style="color:var(--text)"') + '</td>' +
       '<td style="font-family:var(--mono);font-size:.85rem">' + escHtmlServer(s.monthlyCostSolo) + '</td>' +
       '<td style="font-family:var(--mono);font-size:.85rem">' + escHtmlServer(s.monthlyCostTeam) + '</td>' +
       '<td style="font-size:.85rem;color:var(--text-muted)">' + escHtmlServer(s.hiddenCosts.substring(0, 80)) + (s.hiddenCosts.length > 80 ? "..." : "") + '</td>' +
@@ -45706,7 +45725,7 @@ ${mcpCtaCss()}
         <td class="check">&#10003;</td>
       </tr>
       <tr>
-        <td class="provider-col"><a href="/vendor/heroku">Heroku</a><span class="removed-badge">FREE REMOVED</span></td>
+        <td class="provider-col">${handwrittenVendorLinkHtml("heroku", "Heroku")}<span class="removed-badge">FREE REMOVED</span></td>
         <td>None (removed Nov 2022)</td>
         <td>N/A</td>
         <td>N/A</td>
@@ -55081,6 +55100,12 @@ const dispatchRequest = async (req: IncomingMessage, res: ServerResponse) => {
             resolvedFrom = vendorParam;
           }
         }
+      } else if (resolution.type === "onlyMatchHasEnded") {
+        const endedNames = resolution.slugs.map(s => vendorSlugMap.get(s) ?? s);
+        logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/details", params: { vendor: vendorParam, alternatives: includeAlternatives, refused_ended_substitution: resolution.slugs.join(",") }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 0 });
+        res.writeHead(404, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+        res.end(JSON.stringify({ error: noLiveRecordUnderThatNameSentence(vendorParam, endedNames), suggestions: endedNames }));
+        return;
       } else if (resolution.type === "disambiguate") {
         const disambiguation = resolution.slugs.map(s => ({ slug: s, name: vendorSlugMap.get(s) ?? s }));
         logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/details", params: { vendor: vendorParam, alternatives: includeAlternatives, disambiguated: true }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: disambiguation.length });
@@ -55640,6 +55665,10 @@ ${catList}
     } else if (resolution.type === "redirect") {
       res.writeHead(301, { "Location": "/vendor/" + resolution.slug });
       res.end();
+    } else if (resolution.type === "onlyMatchHasEnded") {
+      logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/vendor/" + slug, params: { refused_ended_substitution: resolution.slugs.join(",") }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 0 });
+      res.writeHead(404, { "Content-Type": "text/html; charset=utf-8" });
+      res.end(endedNamesRefusalPage(slug, resolution.slugs, "/vendor", "/vendor", `Browse all ${vendorSlugMap.size} vendors`));
     } else if (resolution.type === "disambiguate") {
       const links = resolution.slugs.map(s => {
         const name = vendorSlugMap.get(s) ?? s;
@@ -55817,6 +55846,10 @@ ${catList}
     } else if (resolution.type === "redirect") {
       res.writeHead(301, { "Location": "/alternative-to/" + resolution.slug });
       res.end();
+    } else if (resolution.type === "onlyMatchHasEnded") {
+      logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/alternative-to/" + slug, params: { refused_ended_substitution: resolution.slugs.join(",") }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 0 });
+      res.writeHead(404, { "Content-Type": "text/html; charset=utf-8" });
+      res.end(endedNamesRefusalPage(slug, resolution.slugs, "/alternative-to", "/alternative-to", "Browse all alternatives"));
     } else if (resolution.type === "disambiguate") {
       const links = resolution.slugs.map(s => {
         const name = vendorSlugMap.get(s) ?? s;

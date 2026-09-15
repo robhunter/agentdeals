@@ -68,3 +68,15 @@ export function endedEmptyChangeHistorySentence(vendorName: string): string {
 }
 
 export const ENDED_SINCE_CHANGES_SENTENCE = "The offer has since ended.";
+
+function joinWithAnd(names: string[]): string {
+  const all = [...names];
+  const last = all.pop()!;
+  return all.length ? `${all.join(", ")} and ${last}` : last;
+}
+
+export function noLiveRecordUnderThatNameSentence(requested: string, endedNames: string[]): string {
+  const closest = endedNames.length === 1 ? "The closest name we hold is" : "The closest names we hold are";
+  const ended = endedNames.length === 1 ? "that offer has ended" : "those offers have ended";
+  return `We have no record under "${requested}". ${closest} ${joinWithAnd(endedNames)}, and ${ended}.`;
+}

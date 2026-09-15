@@ -1,8 +1,12 @@
 import { loadDealChanges, loadOffers } from "./data.js";
+import { offerRetired } from "./retirement.js";
 import { isSubSlug, toSlug } from "./slug.js";
 import { comparisonSlugTargets, retiredSlugTargets, selfComparisonSlug } from "./vendor-merges.js";
+import type { Offer } from "./types.js";
+import { resolveVendorName, type VendorNameUniverse, type VendorSlugResolution } from "./vendor-substitution.js";
 
 export { isSubSlug, toSlug };
+export type { VendorSlugResolution };
 
 function buildVendorSlugMap(): Map<string, string> {
   const offers = loadOffers();
@@ -16,6 +20,20 @@ function buildVendorSlugMap(): Map<string, string> {
 }
 
 export const vendorSlugMap: Map<string, string> = buildVendorSlugMap();
+
+export function slugsWhoseEveryRecordEnded(records: Array<Pick<Offer, "vendor" | "tier">>): Set<string> {
+  const stillOffered = new Set<string>();
+  const ended = new Set<string>();
+  for (const record of records) {
+    const slug = toSlug(record.vendor);
+    if (!slug) continue;
+    (offerRetired(record) ? ended : stillOffered).add(slug);
+  }
+  for (const slug of stillOffered) ended.delete(slug);
+  return ended;
+}
+
+export const endedVendorSlugs: Set<string> = slugsWhoseEveryRecordEnded(loadOffers());
 
 export const retiredVendorSlugMap: Map<string, string> = retiredSlugTargets(
   new Set(vendorSlugMap.keys()),
@@ -66,12 +84,6 @@ export function changeLogAnchorFor(vendor: string): string | null {
   const slug = toSlug(vendor);
   return slug ? `vendor-${slug}` : null;
 }
-
-export type VendorSlugResolution =
-  | { type: "exact"; slug: string }
-  | { type: "redirect"; slug: string }
-  | { type: "disambiguate"; slugs: string[] }
-  | { type: "none" };
 
 const NAMES_MORE_THAN_ONE_SUBJECT = /\s(?:\+|&|and|or|vs\.?|versus)\s|\s*\/\s*|,/i;
 
@@ -146,29 +158,21 @@ export function servedVendorSlugForName(name: string): string | null {
   return servedVendorSlug(toSlug(name));
 }
 
+const allVendorSlugs: readonly string[] = [...vendorSlugMap.keys()];
+
+const servedVendorNames: VendorNameUniverse = {
+  known: slug => vendorSlugMap.has(slug),
+  all: () => allVendorSlugs,
+  renamedTo: slug => retiredVendorSlugMap.get(slug) ?? null,
+  hasEnded: slug => endedVendorSlugs.has(slug),
+};
+
 export function resolveVendorSlug(input: string): VendorSlugResolution {
-  if (!input) return { type: "none" };
-  if (vendorSlugMap.has(input)) return { type: "exact", slug: input };
-  const merged = retiredVendorSlugMap.get(input);
-  if (merged) return { type: "redirect", slug: merged };
-  if (input.length < 3) return { type: "none" };
+  return resolveVendorName(input, servedVendorNames);
+}
 
-  const allSlugs = [...vendorSlugMap.keys()];
-
-  const completions = allSlugs.filter(s => s !== input && isSubSlug(input, s));
-  if (completions.length > 0) {
-    const roots = completions.filter(
-      s => !completions.some(other => other !== s && s.startsWith(other + "-"))
-    );
-    if (roots.length === 1) return { type: "redirect", slug: roots[0] };
-    return { type: "disambiguate", slugs: roots.slice(0, 10).sort() };
-  }
-
-  const generalizations = allSlugs.filter(s => s !== input && isSubSlug(s, input));
-  if (generalizations.length > 0) {
-    const longest = generalizations.reduce((a, b) => (b.length > a.length ? b : a));
-    return { type: "redirect", slug: longest };
-  }
-
-  return { type: "none" };
+export function vendorNamesWeWillNotSubstitute(input: string): string[] {
+  const resolution = resolveVendorSlug(input);
+  if (resolution.type !== "onlyMatchHasEnded") return [];
+  return resolution.slugs.map(s => vendorSlugMap.get(s) ?? s);
 }

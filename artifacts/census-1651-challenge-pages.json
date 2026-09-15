@@ -1,0 +1,465 @@
+{
+  "generated_at": "2026-09-14T09:07:27.655Z",
+  "urls": 23,
+  "answer_a_plain_fetch": 5,
+  "read_by_rendering": 11,
+  "unread_after_rendering": 7,
+  "read_and_graded_ok": 6,
+  "rows": [
+    {
+      "vendor": "Autodesk Fusion 360 for Startups",
+      "url": "https://www.autodesk.in/products/fusion-360/startups",
+      "stored_error": "HTTP 403",
+      "last_attempt_at": "2026-09-09",
+      "status": 403,
+      "headers": {
+        "server": "AkamaiGHost"
+      },
+      "fetch_error": null,
+      "fetch_bytes": 409,
+      "answers_a_plain_fetch": false,
+      "rendered": {
+        "read": false,
+        "chars": 0,
+        "error": "page content too short (likely JS-rendered SPA); the rendering client failed: the rendering client did not finish in time",
+        "bytes": null
+      }
+    },
+    {
+      "vendor": "Canva",
+      "url": "https://www.canva.com/pricing/",
+      "stored_error": "HTTP 403",
+      "last_attempt_at": "2026-09-09",
+      "status": 200,
+      "headers": {
+        "cf-ray": "a3ae3aafb8c7f7c9-LAX",
+        "server": "cloudflare"
+      },
+      "fetch_error": null,
+      "fetch_bytes": 9315,
+      "answers_a_plain_fetch": true
+    },
+    {
+      "vendor": "codepen.io",
+      "url": "https://codepen.io/",
+      "stored_error": "HTTP 403",
+      "last_attempt_at": "2026-09-09",
+      "status": 403,
+      "headers": {
+        "cf-mitigated": "challenge",
+        "cf-ray": "a3ae3ab46cc5710a-LAX",
+        "server": "cloudflare"
+      },
+      "fetch_error": null,
+      "fetch_bytes": 5593,
+      "answers_a_plain_fetch": false,
+      "rendered": {
+        "read": false,
+        "chars": 374,
+        "error": "page content too short (likely JS-rendered SPA); a rendering client read 374 characters",
+        "bytes": 28556
+      }
+    },
+    {
+      "vendor": "codesandbox.io",
+      "url": "https://codesandbox.io/pricing",
+      "stored_error": "HTTP 403",
+      "last_attempt_at": "2026-09-09",
+      "status": 403,
+      "headers": {
+        "cf-mitigated": "challenge",
+        "cf-ray": "a3ae3ac649a478d8-LAX",
+        "server": "cloudflare"
+      },
+      "fetch_error": null,
+      "fetch_bytes": 5669,
+      "answers_a_plain_fetch": false,
+      "rendered": {
+        "read": true,
+        "chars": 813,
+        "bytes": 29376,
+        "outcome": "states_no_terms",
+        "detail": "the page names codesandbox.io but states no amount, tier or rate we can read, and its markup carries no structured data",
+        "opening": "Just a moment... codesandbox.io Performing security verification This website uses a security service to protect against malicious bots. Thi"
+      }
+    },
+    {
+      "vendor": "Contentful",
+      "url": "https://www.contentful.com/pricing/",
+      "stored_error": "HTTP 429",
+      "last_attempt_at": "2026-09-12",
+      "status": 429,
+      "headers": {
+        "x-vercel-mitigated": "challenge",
+        "server": "Vercel"
+      },
+      "fetch_error": null,
+      "fetch_bytes": 32182,
+      "answers_a_plain_fetch": false,
+      "rendered": {
+        "read": true,
+        "chars": 24350,
+        "bytes": 907236,
+        "outcome": "ok",
+        "detail": "the page names Contentful as \"contentful\" and states \"$850\"",
+        "opening": "Contentful Pricing | Contentful New Contentful is now officially part of Salesforce! Read more Contentful Products Solutions Resources Devel"
+      }
+    },
+    {
+      "vendor": "coolors",
+      "url": "https://coolors.co/",
+      "stored_error": "HTTP 403",
+      "last_attempt_at": "2026-09-09",
+      "status": 200,
+      "headers": {
+        "cf-ray": "a3ae3b23ca1caf1e-LAX",
+        "server": "cloudflare"
+      },
+      "fetch_error": null,
+      "fetch_bytes": 565105,
+      "answers_a_plain_fetch": true
+    },
+    {
+      "vendor": "Devin",
+      "url": "https://devin.ai/pricing",
+      "stored_error": "HTTP 429",
+      "last_attempt_at": "2026-09-09",
+      "status": 429,
+      "headers": {
+        "x-vercel-mitigated": "challenge",
+        "server": "Vercel"
+      },
+      "fetch_error": null,
+      "fetch_bytes": 32184,
+      "answers_a_plain_fetch": false,
+      "rendered": {
+        "read": true,
+        "chars": 3624,
+        "bytes": 377787,
+        "outcome": "ok",
+        "detail": "the page names Devin as \"devin\" and states \"$0\"",
+        "opening": "Plans and Pricing | Devin Product Solutions Customers Resources Pricing Get a Demo Download Log in Devin Plans and Pricing Choose the perfec"
+      }
+    },
+    {
+      "vendor": "GitGud",
+      "url": "https://gitgud.io",
+      "stored_error": "HTTP 403",
+      "last_attempt_at": "2026-09-12",
+      "status": 403,
+      "headers": {
+        "cf-mitigated": "challenge",
+        "cf-ray": "a3ae3b4b6b5dcb93-LAX",
+        "server": "cloudflare"
+      },
+      "fetch_error": null,
+      "fetch_bytes": 5592,
+      "answers_a_plain_fetch": false,
+      "rendered": {
+        "read": false,
+        "chars": 372,
+        "error": "page content too short (likely JS-rendered SPA); a rendering client read 372 characters",
+        "bytes": 28531
+      }
+    },
+    {
+      "vendor": "HashiCorp Vault",
+      "url": "https://www.hashicorp.com/products/vault/pricing",
+      "stored_error": "HTTP 429",
+      "last_attempt_at": "2026-09-12",
+      "status": 429,
+      "headers": {
+        "x-vercel-mitigated": "challenge",
+        "server": "Vercel"
+      },
+      "fetch_error": null,
+      "fetch_bytes": 32182,
+      "answers_a_plain_fetch": false,
+      "rendered": {
+        "read": true,
+        "chars": 8782,
+        "bytes": 1016727,
+        "outcome": "ok",
+        "detail": "the page names HashiCorp Vault as \"vault\" and states \"$500\"",
+        "opening": "HashiCorp Product Pricing Skip to main content Back Log in Contact us Get started Solutions Solutions The Infrastructure Cloud Streamline in"
+      }
+    },
+    {
+      "vendor": "HCP Terraform",
+      "url": "https://www.hashicorp.com/products/terraform/pricing",
+      "stored_error": "HTTP 429",
+      "last_attempt_at": "2026-09-12",
+      "status": 429,
+      "headers": {
+        "x-vercel-mitigated": "challenge",
+        "server": "Vercel"
+      },
+      "fetch_error": null,
+      "fetch_bytes": 32177,
+      "answers_a_plain_fetch": false,
+      "rendered": {
+        "read": true,
+        "chars": 8130,
+        "bytes": 1001191,
+        "outcome": "ok",
+        "detail": "the page names HCP Terraform as \"hcp terraform\" and states \"$500\"",
+        "opening": "HashiCorp Product Pricing Skip to main content Back Log in Contact us Get started Solutions Solutions The Infrastructure Cloud Streamline in"
+      }
+    },
+    {
+      "vendor": "icedrive.net",
+      "url": "https://www.icedrive.net/",
+      "stored_error": "HTTP 403",
+      "last_attempt_at": "2026-09-09",
+      "status": 200,
+      "headers": {
+        "cf-ray": "a3ae3bb01f9ec3a8-LAX",
+        "server": "cloudflare"
+      },
+      "fetch_error": null,
+      "fetch_bytes": 16034,
+      "answers_a_plain_fetch": true
+    },
+    {
+      "vendor": "Logo.dev",
+      "url": "https://www.logo.dev",
+      "stored_error": "HTTP 429",
+      "last_attempt_at": "2026-09-09",
+      "status": 429,
+      "headers": {
+        "x-vercel-mitigated": "challenge",
+        "server": "Vercel"
+      },
+      "fetch_error": null,
+      "fetch_bytes": 32182,
+      "answers_a_plain_fetch": false,
+      "rendered": {
+        "read": true,
+        "chars": 6753,
+        "bytes": 359071,
+        "outcome": "ok",
+        "detail": "the page names Logo.dev as \"logo dev\" and states \"$10.00\"",
+        "opening": "Logo API - Instant Company Logos for Developers - Logo.dev Products Search Update Pricing Docs Contact sales Sign up Toggle menu Migrate fro"
+      }
+    },
+    {
+      "vendor": "LottieFiles",
+      "url": "https://lottiefiles.com/",
+      "stored_error": "HTTP 403",
+      "last_attempt_at": "2026-09-09",
+      "status": 403,
+      "headers": {
+        "cf-mitigated": "challenge",
+        "cf-ray": "a3ae3bd6a8f50d82-LAX",
+        "server": "cloudflare"
+      },
+      "fetch_error": null,
+      "fetch_bytes": 5683,
+      "answers_a_plain_fetch": false,
+      "rendered": {
+        "read": false,
+        "chars": 0,
+        "error": "page content too short (likely JS-rendered SPA); the rendering client failed: the rendering client did not finish in time",
+        "bytes": null
+      }
+    },
+    {
+      "vendor": "Make",
+      "url": "https://www.make.com/en/pricing",
+      "stored_error": "HTTP 403",
+      "last_attempt_at": "2026-09-12",
+      "status": 200,
+      "headers": {
+        "cf-ray": "a3ae3cf3dfeb1e11-LAX",
+        "server": "cloudflare"
+      },
+      "fetch_error": null,
+      "fetch_bytes": 732568,
+      "answers_a_plain_fetch": true
+    },
+    {
+      "vendor": "MATLAB and Simulink for Startups",
+      "url": "https://mathworks.com/products/startups.html",
+      "stored_error": "HTTP 403",
+      "last_attempt_at": "2026-09-09",
+      "status": 403,
+      "headers": {
+        "server": "AkamaiGHost"
+      },
+      "fetch_error": null,
+      "fetch_bytes": 401,
+      "answers_a_plain_fetch": false,
+      "rendered": {
+        "read": true,
+        "chars": 6395,
+        "bytes": 180251,
+        "outcome": "ok",
+        "detail": "the page names MATLAB and Simulink for Startups as \"matlab and simulink for startups\" and states \"$1\"",
+        "opening": "MATLAB and Simulink for Startups - MATLAB & Simulink Skip to content Search MathWorks.com Products Solutions Learn Training Training Overvie"
+      }
+    },
+    {
+      "vendor": "Namae",
+      "url": "https://namae.dev/",
+      "stored_error": "HTTP 429",
+      "last_attempt_at": "2026-09-07",
+      "status": 429,
+      "headers": {
+        "x-vercel-mitigated": "challenge",
+        "server": "Vercel"
+      },
+      "fetch_error": null,
+      "fetch_bytes": 32188,
+      "answers_a_plain_fetch": false,
+      "rendered": {
+        "read": true,
+        "chars": 846,
+        "bytes": 61243,
+        "outcome": "states_no_terms",
+        "detail": "the page names Namae but states no amount, tier or rate we can read, and its markup carries no structured data",
+        "opening": "namae — Grab a slick name for your new project You need to enable JavaScript to run this app. Grab a slick name for your new project Check a"
+      }
+    },
+    {
+      "vendor": "Namecheap Supersonic",
+      "url": "https://www.namecheap.com/supersonic-cdn/#free-plan",
+      "stored_error": "HTTP 403",
+      "last_attempt_at": "2026-09-07",
+      "status": 403,
+      "headers": {
+        "cf-mitigated": "challenge",
+        "cf-ray": "a3ae3d49bc72bb31-LAX",
+        "server": "cloudflare"
+      },
+      "fetch_error": null,
+      "fetch_bytes": 5752,
+      "answers_a_plain_fetch": false,
+      "rendered": {
+        "read": false,
+        "chars": 388,
+        "error": "page content too short (likely JS-rendered SPA); a rendering client read 388 characters",
+        "bytes": 28736
+      }
+    },
+    {
+      "vendor": "namecheap.com",
+      "url": "https://www.namecheap.com/domains/freedns/",
+      "stored_error": "HTTP 403",
+      "last_attempt_at": "2026-09-07",
+      "status": 403,
+      "headers": {
+        "cf-mitigated": "challenge",
+        "cf-ray": "a3ae3d58cdcc4896-LAX",
+        "server": "cloudflare"
+      },
+      "fetch_error": null,
+      "fetch_bytes": 5755,
+      "answers_a_plain_fetch": false,
+      "rendered": {
+        "read": false,
+        "chars": 388,
+        "error": "page content too short (likely JS-rendered SPA); a rendering client read 388 characters",
+        "bytes": 28739
+      }
+    },
+    {
+      "vendor": "pexels.com",
+      "url": "https://www.pexels.com/",
+      "stored_error": "HTTP 403",
+      "last_attempt_at": "2026-09-09",
+      "status": 403,
+      "headers": {
+        "cf-mitigated": "challenge",
+        "cf-ray": "a3ae3d67b988f7d9-LAX",
+        "server": "cloudflare"
+      },
+      "fetch_error": null,
+      "fetch_bytes": 5661,
+      "answers_a_plain_fetch": false,
+      "rendered": {
+        "read": true,
+        "chars": 5166,
+        "bytes": 752380,
+        "outcome": "states_no_terms",
+        "detail": "the page names pexels.com but states no amount, tier or rate we can read, and the 3 structured-data blocks in its markup state no price",
+        "opening": "Free Stock Photos, Royalty Free Stock Images & Copyright Free Pictures · Pexels Explore Discover Photos Wallpapers NEW Leaderboard Challenge"
+      }
+    },
+    {
+      "vendor": "smartmockups.com",
+      "url": "https://smartmockups.com/",
+      "stored_error": "HTTP 403",
+      "last_attempt_at": "2026-09-10",
+      "status": 200,
+      "headers": {
+        "cf-ray": "a3ae3d8c1b6127d8-LAX",
+        "server": "cloudflare"
+      },
+      "fetch_error": null,
+      "fetch_bytes": 9315,
+      "answers_a_plain_fetch": true
+    },
+    {
+      "vendor": "unsplash.com",
+      "url": "https://unsplash.com/",
+      "stored_error": "HTTP 401",
+      "last_attempt_at": "2026-09-09",
+      "status": 401,
+      "headers": {},
+      "fetch_error": null,
+      "fetch_bytes": 7681,
+      "answers_a_plain_fetch": false,
+      "rendered": {
+        "read": true,
+        "chars": 2778,
+        "bytes": 545497,
+        "outcome": "states_no_terms",
+        "detail": "the page names unsplash.com but states no amount, tier or rate we can read, and its markup carries no structured data",
+        "opening": "Beautiful Free Images & Pictures | Unsplash Unsplash logo Unsplash Home A photo Pen Tool A compass A stack of folders Download Bookmark Phot"
+      }
+    },
+    {
+      "vendor": "Vultr DNS",
+      "url": "https://www.vultr.com/features/advanced-networking/",
+      "stored_error": "HTTP 403",
+      "last_attempt_at": "2026-09-09",
+      "status": 403,
+      "headers": {
+        "cf-mitigated": "challenge",
+        "cf-ray": "a3ae3da44b19f497-SJC",
+        "server": "cloudflare"
+      },
+      "fetch_error": null,
+      "fetch_bytes": 5726,
+      "answers_a_plain_fetch": false,
+      "rendered": {
+        "read": false,
+        "chars": 380,
+        "error": "page content too short (likely JS-rendered SPA); a rendering client read 380 characters",
+        "bytes": 28691
+      }
+    },
+    {
+      "vendor": "Windsurf",
+      "url": "https://windsurf.com/pricing",
+      "stored_error": "HTTP 429",
+      "last_attempt_at": "2026-09-09",
+      "status": 429,
+      "headers": {
+        "x-vercel-mitigated": "challenge",
+        "server": "Vercel"
+      },
+      "fetch_error": null,
+      "fetch_bytes": 32184,
+      "answers_a_plain_fetch": false,
+      "rendered": {
+        "read": true,
+        "chars": 3624,
+        "bytes": 377791,
+        "outcome": "does_not_name_vendor",
+        "detail": "the page never names Windsurf, on a domain that carries its name",
+        "opening": "Plans and Pricing | Devin Product Solutions Customers Resources Pricing Get a Demo Download Log in Devin Plans and Pricing Choose the perfec"
+      }
+    }
+  ]
+}

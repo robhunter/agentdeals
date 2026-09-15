@@ -3,6 +3,7 @@ import { z } from "zod";
 import { oldestVerifiedDateForSlug, getCategories, getDealChanges, getPersonalizedChanges, getNewOffers, getNewestDeals, getOfferDetails, searchOffers, stabilityWithheldDisclosure, enrichOffers, gateForOffer, compareServices, checkVendorRisk, auditStack, getExpiringDeals, getWeeklyDigest, loadOffers, loadDealChanges, classifyStability, publishedStabilityFor, stabilityWithheldSentence, getVendorReferral, sanitizeQuery } from "./data.js";
 import { gateDisclosureFor } from "./gate-disclosure.js";
 import { toSlug, vendorSlugMap, resolveVendorSlug } from "./vendor-slug.js";
+import { noLiveRecordUnderThatNameSentence } from "./retirement.js";
 import { recordToolCall, logRequest, recordSearchQuery } from "./stats.js";
 import { getBestReferralCode } from "./platform-codes.js";
 import { platformCodeAsVendorReferral, type VendorReferralAnswer } from "./referral-surfaces.js";
@@ -118,6 +119,13 @@ export function createServer(getSessionId?: () => string | undefined, getClientN
                   resolvedFrom = vendor;
                 }
               }
+            } else if (resolution.type === "onlyMatchHasEnded") {
+              const endedNames = resolution.slugs.map(s => vendorSlugMap.get(s) ?? s);
+              logRequest({ ts: new Date().toISOString(), type: "mcp", endpoint: "search_deals", params: { vendor, refused_ended_substitution: resolution.slugs.join(",") }, result_count: 0, session_id: getSessionId?.() });
+              return {
+                isError: true,
+                content: [{ type: "text" as const, text: JSON.stringify({ error: noLiveRecordUnderThatNameSentence(vendor, endedNames), suggestions: endedNames }, null, 2) }],
+              };
             } else if (resolution.type === "disambiguate") {
               const vendors = resolution.slugs.map(s => ({ slug: s, name: vendorSlugMap.get(s) ?? s }));
               logRequest({ ts: new Date().toISOString(), type: "mcp", endpoint: "search_deals", params: { vendor, disambiguated: true }, result_count: vendors.length, session_id: getSessionId?.() });
