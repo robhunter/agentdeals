@@ -100,10 +100,10 @@ describe("getFormattedWeeklyDigest logic", () => {
 
   it("total_changes reflects all changes not just this week", async () => {
     const { getFormattedWeeklyDigest, loadDealChanges } = await import("../dist/data.js");
-    const { recordsStillInForce } = await import("../dist/change-resolution.js");
-    const allChanges = recordsStillInForce(loadDealChanges() as never[]) as unknown[];
+    const { trackedChanges } = await import("../dist/change-census.js");
+    const allChanges = trackedChanges(loadDealChanges() as never[]) as unknown[];
     const digest = getFormattedWeeklyDigest(0, 20);
-    assert.strictEqual(digest.total_changes, allChanges.length, "total_changes should equal all-time count");
+    assert.strictEqual(digest.total_changes, allChanges.length, "total_changes should equal the published size of the change log");
   });
 });
 
