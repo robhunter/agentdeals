@@ -14,6 +14,7 @@ import {
 } from "../dist/agent-card.js";
 import { loadOffers, loadDealChanges, getCategories } from "../dist/data.js";
 import { recordsStillInForce } from "../dist/change-resolution.js";
+import { trackedChanges } from "../dist/change-census.js";
 import { MCP_TOOLS } from "../dist/mcp-tool-inventory.js";
 import { openapiSpec } from "../dist/openapi.js";
 
@@ -192,7 +193,7 @@ describe("the service description answers the paths agent directories ask for", 
         offers: offers.length,
         categories: getCategories().length,
         vendors: new Set(offers.map((o: { vendor: string }) => o.vendor)).size,
-        changes_tracked: recordsStillInForce(loadDealChanges()).length,
+        changes_tracked: trackedChanges(loadDealChanges()).length,
       },
     );
     assert.match(card.catalogue.verified_through, /^\d{4}-\d{2}-\d{2}$/);
