@@ -8,7 +8,7 @@ import { assertCoversPopulation, assertPopulationFloor, vendorsInTheCatalogue } 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const { resolveVendorName } = await import("../dist/vendor-substitution.js");
-const { resolveVendorSlug, vendorSlugMap, endedVendorSlugs, namedVendorSlug, servedVendorSlugForName } =
+const { resolveVendorSlug, vendorSlugMap, endedVendorSlugs, namedVendorSlug, servedVendorSlugForName, slugsWhoseEveryRecordEnded } =
   await import("../dist/vendor-slug.js");
 const { findVendor, loadOffers, checkVendorRisk, compareServices, auditStack } = await import("../dist/data.js");
 const { offerRetired, noLiveRecordUnderThatNameSentence } = await import("../dist/retirement.js");
@@ -131,6 +131,61 @@ describe("the substitution rule, on a universe it does not have to read from dis
     ]) {
       assert.deepStrictEqual(resolveVendorName(asked!, universeOf(slugs)), { type: "redirect", slug: expected });
     }
+  });
+});
+
+describe("which slugs count as ended", () => {
+  it("counts a vendor whose every record has ended", () => {
+    const ended = slugsWhoseEveryRecordEnded([
+      { vendor: "Heroku for Startups Program", tier: "Retired" },
+      { vendor: "Google Content API for Shopping", tier: "Free (Deprecated)" },
+    ]);
+    assert.deepStrictEqual([...ended].sort(), ["google-content-api-for-shopping", "heroku-for-startups-program"]);
+  });
+
+  it("does not count a vendor that still has one record on offer", () => {
+    const ended = slugsWhoseEveryRecordEnded([
+      { vendor: "Twilio", tier: "Retired" },
+      { vendor: "Twilio", tier: "Free" },
+    ]);
+    assert.deepStrictEqual([...ended], []);
+  });
+
+  it("does not count a vendor whose records are all still on offer", () => {
+    assert.deepStrictEqual([...slugsWhoseEveryRecordEnded([{ vendor: "Vercel", tier: "Free" }])], []);
+  });
+});
+
+describe("a name carrying extra words, where the record it names has ended", () => {
+  const endedVendors = [...new Set(
+    offers.filter(o => recordsNamed(o.vendor).every(offerRetired)).map(o => o.vendor),
+  )];
+
+  it("reads a population of vendors whose every record has ended", () => {
+    assertPopulationFloor(endedVendors.length, 12, "vendors whose every record has ended");
+  });
+
+  it("refuses every one of them rather than answering about a qualified name", () => {
+    const substituted: string[] = [];
+    for (const vendor of endedVendors) {
+      for (const qualifier of ["free tier", "pricing", "credits"]) {
+        const match = findVendor(offers, `${vendor} ${qualifier}`);
+        if (match.type === "inferred") substituted.push(`${vendor} ${qualifier} -> ${match.offer.vendor}`);
+      }
+    }
+    assert.deepStrictEqual(substituted, []);
+  });
+
+  it("names the record it declined to answer about", () => {
+    const match = findVendor(offers, "Augment Code free tier");
+    assert.strictEqual(match.type, "none");
+    assert.deepStrictEqual(match.suggestions, ["Augment Code"]);
+  });
+
+  it("still resolves a qualified name whose record is one we still offer", () => {
+    const match = findVendor(offers, "AWS Lambda Free");
+    assert.strictEqual(match.type, "inferred");
+    assert.strictEqual(match.offer.vendor, "AWS");
   });
 });
 

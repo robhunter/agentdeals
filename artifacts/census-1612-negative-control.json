@@ -1,0 +1,8 @@
+{
+  "before": "http://127.0.0.1:8793",
+  "after": "http://127.0.0.1:8792",
+  "pages_compared": 71,
+  "cited_source_links_before": 400,
+  "cited_source_list_entries_before": 270,
+  "pages_whose_citations_moved": []
+}

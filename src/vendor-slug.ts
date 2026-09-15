@@ -2,6 +2,7 @@ import { loadDealChanges, loadOffers } from "./data.js";
 import { offerRetired } from "./retirement.js";
 import { isSubSlug, toSlug } from "./slug.js";
 import { comparisonSlugTargets, retiredSlugTargets, selfComparisonSlug } from "./vendor-merges.js";
+import type { Offer } from "./types.js";
 import { resolveVendorName, type VendorNameUniverse, type VendorSlugResolution } from "./vendor-substitution.js";
 
 export { isSubSlug, toSlug };
@@ -20,19 +21,19 @@ function buildVendorSlugMap(): Map<string, string> {
 
 export const vendorSlugMap: Map<string, string> = buildVendorSlugMap();
 
-function buildEndedVendorSlugs(): Set<string> {
+export function slugsWhoseEveryRecordEnded(records: Array<Pick<Offer, "vendor" | "tier">>): Set<string> {
   const stillOffered = new Set<string>();
   const ended = new Set<string>();
-  for (const o of loadOffers()) {
-    const slug = toSlug(o.vendor);
+  for (const record of records) {
+    const slug = toSlug(record.vendor);
     if (!slug) continue;
-    (offerRetired(o) ? ended : stillOffered).add(slug);
+    (offerRetired(record) ? ended : stillOffered).add(slug);
   }
   for (const slug of stillOffered) ended.delete(slug);
   return ended;
 }
 
-export const endedVendorSlugs: Set<string> = buildEndedVendorSlugs();
+export const endedVendorSlugs: Set<string> = slugsWhoseEveryRecordEnded(loadOffers());
 
 export const retiredVendorSlugMap: Map<string, string> = retiredSlugTargets(
   new Set(vendorSlugMap.keys()),

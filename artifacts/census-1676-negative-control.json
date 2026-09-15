@@ -1,0 +1,110 @@
+{
+  "summary": {
+    "listed": 630,
+    "identical": 621,
+    "differ": 9,
+    "unserved": 0,
+    "bytesCompared": 80724661
+  },
+  "differ": [
+    {
+      "path": "/changes",
+      "before": {
+        "status": 200,
+        "bytes": 692027
+      },
+      "after": {
+        "status": 200,
+        "bytes": 691870
+      }
+    },
+    {
+      "path": "/free-tier-risk",
+      "before": {
+        "status": 200,
+        "bytes": 216400
+      },
+      "after": {
+        "status": 200,
+        "bytes": 216326
+      }
+    },
+    {
+      "path": "/hosting-free-tier-comparison-2026",
+      "before": {
+        "status": 200,
+        "bytes": 81981
+      },
+      "after": {
+        "status": 200,
+        "bytes": 81872
+      }
+    },
+    {
+      "path": "/pricing-changes",
+      "before": {
+        "status": 200,
+        "bytes": 1072689
+      },
+      "after": {
+        "status": 200,
+        "bytes": 1072532
+      }
+    },
+    {
+      "path": "/q2-pricing-preview-2026",
+      "before": {
+        "status": 200,
+        "bytes": 417235
+      },
+      "after": {
+        "status": 200,
+        "bytes": 416995
+      }
+    },
+    {
+      "path": "/stability",
+      "before": {
+        "status": 200,
+        "bytes": 308173
+      },
+      "after": {
+        "status": 200,
+        "bytes": 308136
+      }
+    },
+    {
+      "path": "/trends/cloud-hosting",
+      "before": {
+        "status": 200,
+        "bytes": 45833
+      },
+      "after": {
+        "status": 200,
+        "bytes": 45796
+      }
+    },
+    {
+      "path": "/trends/communication",
+      "before": {
+        "status": 200,
+        "bytes": 26507
+      },
+      "after": {
+        "status": 200,
+        "bytes": 26427
+      }
+    },
+    {
+      "path": "/trends/startup-perks",
+      "before": {
+        "status": 200,
+        "bytes": 44283
+      },
+      "after": {
+        "status": 200,
+        "bytes": 44243
+      }
+    }
+  ]
+}

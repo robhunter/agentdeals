@@ -1,0 +1,5730 @@
+{
+  "summary": {
+    "offers": 1547,
+    "short_names": 336,
+    "slug_door_resolves": 290,
+    "slug_door_redirects": 290,
+    "slug_door_disambiguates": 36,
+    "slug_door_none": 10,
+    "match_door_resolves": 13,
+    "match_door_none": 323,
+    "disagree": 290,
+    "both_answer_different_vendors": 13,
+    "slug_door_lands_on_ended": 21,
+    "match_door_lands_on_ended": 0
+  },
+  "rows": [
+    {
+      "name": "360",
+      "slug": "360",
+      "slug_door": {
+        "type": "disambiguate",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": true
+    },
+    {
+      "name": "AWS SAM",
+      "slug": "aws-sam",
+      "slug_door": {
+        "type": "redirect",
+        "target": "AWS SAM CLI",
+        "tier": "Open Source",
+        "ended": false
+      },
+      "match_door": {
+        "type": "inferred",
+        "target": "AWS",
+        "tier": "Free Tier",
+        "ended": false
+      },
+      "agrees": false
+    },
+    {
+      "name": "Aionda",
+      "slug": "aionda",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Aionda Mail",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Alibaba",
+      "slug": "alibaba",
+      "slug_door": {
+        "type": "disambiguate",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": true
+    },
+    {
+      "name": "Alibaba Cloud",
+      "slug": "alibaba-cloud",
+      "slug_door": {
+        "type": "disambiguate",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": true
+    },
+    {
+      "name": "Alibaba Cloud Qwen",
+      "slug": "alibaba-cloud-qwen",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Alibaba Cloud Qwen Code",
+        "tier": "Free (Reduced)",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Amazon",
+      "slug": "amazon",
+      "slug_door": {
+        "type": "disambiguate",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": true
+    },
+    {
+      "name": "Amazon Aurora",
+      "slug": "amazon-aurora",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Amazon Aurora PostgreSQL",
+        "tier": "Free Tier",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Amazon ECR",
+      "slug": "amazon-ecr",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Amazon ECR Public",
+        "tier": "Always Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Amazon Kiro (AWS",
+      "slug": "amazon-kiro-aws",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Amazon Kiro (AWS Startups)",
+        "tier": "Startup Program",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Amazon Q",
+      "slug": "amazon-q",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Amazon Q Developer",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Android",
+      "slug": "android",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Android Studio",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Ant",
+      "slug": "ant",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Ant Design Landing Page",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Ant Design",
+      "slug": "ant-design",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Ant Design Landing Page",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Ant Design Landing",
+      "slug": "ant-design-landing",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Ant Design Landing Page",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Anthropic",
+      "slug": "anthropic",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Anthropic API",
+        "tier": "Pay-as-you-go",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Apache",
+      "slug": "apache",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Apache Netbeans",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Apollo",
+      "slug": "apollo",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Apollo GraphOS",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Apple",
+      "slug": "apple",
+      "slug_door": {
+        "type": "disambiguate",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": true
+    },
+    {
+      "name": "Applitools",
+      "slug": "applitools",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Applitools Eyes",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Appwrite",
+      "slug": "appwrite",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Appwrite Cloud",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Argo",
+      "slug": "argo",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Argo CD",
+        "tier": "Free OSS",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Arize",
+      "slug": "arize",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Arize AX",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Audio",
+      "slug": "audio",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Audio Enhancer",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Augment",
+      "slug": "augment",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Augment Code",
+        "tier": "Retired",
+        "ended": true
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Autodesk",
+      "slug": "autodesk",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Autodesk Fusion 360 for Startups",
+        "tier": "Startup Program",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Autodesk Fusion",
+      "slug": "autodesk-fusion",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Autodesk Fusion 360 for Startups",
+        "tier": "Startup Program",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Autodesk Fusion 360",
+      "slug": "autodesk-fusion-360",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Autodesk Fusion 360 for Startups",
+        "tier": "Startup Program",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Autodesk Fusion 360 for",
+      "slug": "autodesk-fusion-360-for",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Autodesk Fusion 360 for Startups",
+        "tier": "Startup Program",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Base64",
+      "slug": "base64",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Base64 decoder/encoder",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Better",
+      "slug": "better",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Better Stack Logs",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Better Stack",
+      "slug": "better-stack",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Better Stack Logs",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Bitbucket",
+      "slug": "bitbucket",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Bitbucket Pipelines",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Brave",
+      "slug": "brave",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Brave Search API",
+        "tier": "Credit",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Brave Search",
+      "slug": "brave-search",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Brave Search API",
+        "tier": "Credit",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Bricks",
+      "slug": "bricks",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Bricks Note Calculator",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Bricks Note",
+      "slug": "bricks-note",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Bricks Note Calculator",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Bright",
+      "slug": "bright",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Bright Data MCP Server",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Bright Data",
+      "slug": "bright-data",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Bright Data MCP Server",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Bright Data MCP",
+      "slug": "bright-data-mcp",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Bright Data MCP Server",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Browse",
+      "slug": "browse",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Browse AI",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "C2",
+      "slug": "c2",
+      "slug_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": true
+    },
+    {
+      "name": "C2 Object",
+      "slug": "c2-object",
+      "slug_door": {
+        "type": "redirect",
+        "target": "C2 Object Storage",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "CMYK",
+      "slug": "cmyk",
+      "slug_door": {
+        "type": "redirect",
+        "target": "CMYK Pantone",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Calendar",
+      "slug": "calendar",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Calendar Icons Generator",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Calendar Icons",
+      "slug": "calendar-icons",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Calendar Icons Generator",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Carousel",
+      "slug": "carousel",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Carousel Hero",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Cerbos",
+      "slug": "cerbos",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Cerbos Hub",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Chargebee",
+      "slug": "chargebee",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Chargebee Launch Programme",
+        "tier": "Startup Program",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Chargebee Launch",
+      "slug": "chargebee-launch",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Chargebee Launch Programme",
+        "tier": "Startup Program",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Circum",
+      "slug": "circum",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Circum Icons",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Claude",
+      "slug": "claude",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Claude Code",
+        "tier": "Paid",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Clear",
+      "slug": "clear",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Clear Channel Outdoor",
+        "tier": "Startup Program",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Clear Channel",
+      "slug": "clear-channel",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Clear Channel Outdoor",
+        "tier": "Startup Program",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Clever",
+      "slug": "clever",
+      "slug_door": {
+        "type": "disambiguate",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": true
+    },
+    {
+      "name": "Clever Bootstrap",
+      "slug": "clever-bootstrap",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Clever Bootstrap Program",
+        "tier": "Startup Program",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Clockwork",
+      "slug": "clockwork",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Clockwork Micro",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Cloud",
+      "slug": "cloud",
+      "slug_door": {
+        "type": "disambiguate",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": true
+    },
+    {
+      "name": "Cloudflare Durable",
+      "slug": "cloudflare-durable",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Cloudflare Durable Objects",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "inferred",
+        "target": "Cloudflare",
+        "tier": "Startup Program",
+        "ended": false
+      },
+      "agrees": false
+    },
+    {
+      "name": "Cloudflare Dynamic",
+      "slug": "cloudflare-dynamic",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Cloudflare Dynamic Workers",
+        "tier": "Beta",
+        "ended": false
+      },
+      "match_door": {
+        "type": "inferred",
+        "target": "Cloudflare",
+        "tier": "Startup Program",
+        "ended": false
+      },
+      "agrees": false
+    },
+    {
+      "name": "Code",
+      "slug": "code",
+      "slug_door": {
+        "type": "disambiguate",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": true
+    },
+    {
+      "name": "Comet",
+      "slug": "comet",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Comet ML",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Container",
+      "slug": "container",
+      "slug_door": {
+        "type": "disambiguate",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": true
+    },
+    {
+      "name": "Container Registry",
+      "slug": "container-registry",
+      "slug_door": {
+        "type": "disambiguate",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": true
+    },
+    {
+      "name": "Conversion",
+      "slug": "conversion",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Conversion Tools",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Core",
+      "slug": "core",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Core Web Vitals History",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Core Web",
+      "slug": "core-web",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Core Web Vitals History",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Core Web Vitals",
+      "slug": "core-web-vitals",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Core Web Vitals History",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Couchbase",
+      "slug": "couchbase",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Couchbase Capella",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Country-State-City",
+      "slug": "country-state-city",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Country-State-City Microservice API",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Country-State-City Microservice",
+      "slug": "country-state-city-microservice",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Country-State-City Microservice API",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Create@Alibaba",
+      "slug": "create-alibaba",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Create@Alibaba Cloud",
+        "tier": "Startup Program",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Cypress",
+      "slug": "cypress",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Cypress Cloud",
+        "tier": "Starter",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "DB",
+      "slug": "db",
+      "slug_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": true
+    },
+    {
+      "name": "DJ",
+      "slug": "dj",
+      "slug_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": true
+    },
+    {
+      "name": "DaVinci",
+      "slug": "davinci",
+      "slug_door": {
+        "type": "redirect",
+        "target": "DaVinci Resolve",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Dadroit",
+      "slug": "dadroit",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Dadroit V Web",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Dadroit V",
+      "slug": "dadroit-v",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Dadroit V Web",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Data",
+      "slug": "data",
+      "slug_door": {
+        "type": "disambiguate",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": true
+    },
+    {
+      "name": "Databricks",
+      "slug": "databricks",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Databricks (Lakeflow Connect)",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Databricks (Lakeflow",
+      "slug": "databricks-lakeflow",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Databricks (Lakeflow Connect)",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "DeepSeek",
+      "slug": "deepseek",
+      "slug_door": {
+        "type": "redirect",
+        "target": "DeepSeek API",
+        "tier": "Free Credits + Pay-as-you-go",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Deno",
+      "slug": "deno",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Deno Deploy",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Docker",
+      "slug": "docker",
+      "slug_door": {
+        "type": "disambiguate",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": true
+    },
+    {
+      "name": "Domain",
+      "slug": "domain",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Domain Forward",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Drift",
+      "slug": "drift",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Drift for Early Stage Startups",
+        "tier": "Retired",
+        "ended": true
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Drift for",
+      "slug": "drift-for",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Drift for Early Stage Startups",
+        "tier": "Retired",
+        "ended": true
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Drift for Early",
+      "slug": "drift-for-early",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Drift for Early Stage Startups",
+        "tier": "Retired",
+        "ended": true
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Drift for Early Stage",
+      "slug": "drift-for-early-stage",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Drift for Early Stage Startups",
+        "tier": "Retired",
+        "ended": true
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Drone",
+      "slug": "drone",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Drone CI",
+        "tier": "Community (Self-hosted)",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "DynamoDB",
+      "slug": "dynamodb",
+      "slug_door": {
+        "type": "redirect",
+        "target": "DynamoDB Local",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "EMQX",
+      "slug": "emqx",
+      "slug_door": {
+        "type": "redirect",
+        "target": "EMQX Serverless",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Eclipse",
+      "slug": "eclipse",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Eclipse Che",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Esri",
+      "slug": "esri",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Esri Startup Program",
+        "tier": "Startup Program",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Esri Startup",
+      "slug": "esri-startup",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Esri Startup Program",
+        "tier": "Startup Program",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Exif",
+      "slug": "exif",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Exif Editor",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Export",
+      "slug": "export",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Export SDK",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Financial",
+      "slug": "financial",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Financial Data",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Fireworks",
+      "slug": "fireworks",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Fireworks AI",
+        "tier": "Free ($1 credits)",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Fivetran",
+      "slug": "fivetran",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Fivetran Activations",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Float",
+      "slug": "float",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Float UI",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Flutter",
+      "slug": "flutter",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Flutter Flow",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Flyon",
+      "slug": "flyon",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Flyon UI",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Format",
+      "slug": "format",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Format Express",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "FraudLabs",
+      "slug": "fraudlabs",
+      "slug_door": {
+        "type": "redirect",
+        "target": "FraudLabs Pro",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Free",
+      "slug": "free",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Free PO editor",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Free PO",
+      "slug": "free-po",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Free PO editor",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Freshworks",
+      "slug": "freshworks",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Freshworks for Startups",
+        "tier": "Retired",
+        "ended": true
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Freshworks for",
+      "slug": "freshworks-for",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Freshworks for Startups",
+        "tier": "Retired",
+        "ended": true
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "GOOGLE",
+      "slug": "google",
+      "slug_door": {
+        "type": "disambiguate",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": true
+    },
+    {
+      "name": "Gcore",
+      "slug": "gcore",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Gcore DNS",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Geekflare",
+      "slug": "geekflare",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Geekflare API",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Gemini",
+      "slug": "gemini",
+      "slug_door": {
+        "type": "disambiguate",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": true
+    },
+    {
+      "name": "Geokeo",
+      "slug": "geokeo",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Geokeo api",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "GitHub Container",
+      "slug": "github-container",
+      "slug_door": {
+        "type": "redirect",
+        "target": "GitHub Container Registry",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "inferred",
+        "target": "GitHub",
+        "tier": "Student Pack",
+        "ended": false
+      },
+      "agrees": false
+    },
+    {
+      "name": "GitLab",
+      "slug": "gitlab",
+      "slug_door": {
+        "type": "redirect",
+        "target": "GitLab CI",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Google",
+      "slug": "google",
+      "slug_door": {
+        "type": "disambiguate",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": true
+    },
+    {
+      "name": "Google AI",
+      "slug": "google-ai",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Google AI Pro/Ultra",
+        "tier": "Conditional",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Google Artifact",
+      "slug": "google-artifact",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Google Artifact Registry",
+        "tier": "Always Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Google Compute",
+      "slug": "google-compute",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Google Compute Engine",
+        "tier": "Always Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Google Content",
+      "slug": "google-content",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Google Content API for Shopping",
+        "tier": "Free (Deprecated)",
+        "ended": true
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Google Content API",
+      "slug": "google-content-api",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Google Content API for Shopping",
+        "tier": "Free (Deprecated)",
+        "ended": true
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Google Content API for",
+      "slug": "google-content-api-for",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Google Content API for Shopping",
+        "tier": "Free (Deprecated)",
+        "ended": true
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Google Gemini",
+      "slug": "google-gemini",
+      "slug_door": {
+        "type": "disambiguate",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": true
+    },
+    {
+      "name": "Google Gemini Code",
+      "slug": "google-gemini-code",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Google Gemini Code Assist",
+        "tier": "Individual (Free)",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Google Gemini Embedding",
+      "slug": "google-gemini-embedding",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Google Gemini Embedding 2",
+        "tier": "Pay-as-you-go",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Google Maps",
+      "slug": "google-maps",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Google Maps Platform",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Google Secret",
+      "slug": "google-secret",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Google Secret Manager",
+        "tier": "Always Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Google Vector",
+      "slug": "google-vector",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Google Vector Search 2.0",
+        "tier": "Pay-as-you-go",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Google Vector Search",
+      "slug": "google-vector-search",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Google Vector Search 2.0",
+        "tier": "Pay-as-you-go",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Google Vertex",
+      "slug": "google-vertex",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Google Vertex AI Agent Engine",
+        "tier": "Pay-as-you-go",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Google Vertex AI",
+      "slug": "google-vertex-ai",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Google Vertex AI Agent Engine",
+        "tier": "Pay-as-you-go",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Google Vertex AI Agent",
+      "slug": "google-vertex-ai-agent",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Google Vertex AI Agent Engine",
+        "tier": "Pay-as-you-go",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Grafana k6",
+      "slug": "grafana-k6",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Grafana k6 Cloud",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "inferred",
+        "target": "Grafana",
+        "tier": "Free OSS",
+        "ended": false
+      },
+      "agrees": false
+    },
+    {
+      "name": "Guideline",
+      "slug": "guideline",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Guideline 401(k)",
+        "tier": "Startup Program",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "HCP",
+      "slug": "hcp",
+      "slug_door": {
+        "type": "redirect",
+        "target": "HCP Terraform",
+        "tier": "Free (Enhanced)",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Harness",
+      "slug": "harness",
+      "slug_door": {
+        "type": "disambiguate",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": true
+    },
+    {
+      "name": "Harness Feature",
+      "slug": "harness-feature",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Harness Feature Flags",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "HashiCorp",
+      "slug": "hashicorp",
+      "slug_door": {
+        "type": "redirect",
+        "target": "HashiCorp Vault",
+        "tier": "Community / HCP Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Have",
+      "slug": "have",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Have I been pwned?",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Have I",
+      "slug": "have-i",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Have I been pwned?",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Have I been",
+      "slug": "have-i-been",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Have I been pwned?",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Help",
+      "slug": "help",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Help Scout for Startups",
+        "tier": "Startup Program",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Help Scout",
+      "slug": "help-scout",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Help Scout for Startups",
+        "tier": "Startup Program",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Help Scout for",
+      "slug": "help-scout-for",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Help Scout for Startups",
+        "tier": "Startup Program",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Heroku",
+      "slug": "heroku",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Heroku for Startups Program",
+        "tier": "Retired",
+        "ended": true
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Heroku for",
+      "slug": "heroku-for",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Heroku for Startups Program",
+        "tier": "Retired",
+        "ended": true
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Heroku for Startups",
+      "slug": "heroku-for-startups",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Heroku for Startups Program",
+        "tier": "Retired",
+        "ended": true
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Hook",
+      "slug": "hook",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Hook Relay",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Hosting",
+      "slug": "hosting",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Hosting Checker",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "HubSpot",
+      "slug": "hubspot",
+      "slug_door": {
+        "type": "redirect",
+        "target": "HubSpot for Startups",
+        "tier": "Startup Program",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "HubSpot for",
+      "slug": "hubspot-for",
+      "slug_door": {
+        "type": "redirect",
+        "target": "HubSpot for Startups",
+        "tier": "Startup Program",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Hugging",
+      "slug": "hugging",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Hugging Face",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Hurricane",
+      "slug": "hurricane",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Hurricane Electric DNS",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Hurricane Electric",
+      "slug": "hurricane-electric",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Hurricane Electric DNS",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "IBM",
+      "slug": "ibm",
+      "slug_door": {
+        "type": "disambiguate",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": true
+    },
+    {
+      "name": "IP",
+      "slug": "ip",
+      "slug_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": true
+    },
+    {
+      "name": "IP Geolocation API",
+      "slug": "ip-geolocation-api",
+      "slug_door": {
+        "type": "redirect",
+        "target": "IP Geolocation API by ipwho.org",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "inferred",
+        "target": "IP Geolocation",
+        "tier": "Free",
+        "ended": false
+      },
+      "agrees": false
+    },
+    {
+      "name": "IP Geolocation API by",
+      "slug": "ip-geolocation-api-by",
+      "slug_door": {
+        "type": "redirect",
+        "target": "IP Geolocation API by ipwho.org",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "inferred",
+        "target": "IP Geolocation",
+        "tier": "Free",
+        "ended": false
+      },
+      "agrees": false
+    },
+    {
+      "name": "Icon",
+      "slug": "icon",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Icon Horse",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Image",
+      "slug": "image",
+      "slug_door": {
+        "type": "disambiguate",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": true
+    },
+    {
+      "name": "Image BG",
+      "slug": "image-bg",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Image BG Blurer",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Imitate",
+      "slug": "imitate",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Imitate Email",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Inboxes",
+      "slug": "inboxes",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Inboxes App",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "InfluxDB",
+      "slug": "influxdb",
+      "slug_door": {
+        "type": "redirect",
+        "target": "InfluxDB Cloud",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Instabug",
+      "slug": "instabug",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Instabug for Startups",
+        "tier": "Retired",
+        "ended": true
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Instabug for",
+      "slug": "instabug-for",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Instabug for Startups",
+        "tier": "Retired",
+        "ended": true
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Invantive",
+      "slug": "invantive",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Invantive Cloud",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "JSON",
+      "slug": "json",
+      "slug_door": {
+        "type": "disambiguate",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": true
+    },
+    {
+      "name": "JSON to",
+      "slug": "json-to",
+      "slug_door": {
+        "type": "redirect",
+        "target": "JSON to Table",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Karbon",
+      "slug": "karbon",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Karbon Sites",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Keywords",
+      "slug": "keywords",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Keywords AI",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Khan",
+      "slug": "khan",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Khan Academy",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "KillBait",
+      "slug": "killbait",
+      "slug_door": {
+        "type": "redirect",
+        "target": "KillBait API",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Knowlarity",
+      "slug": "knowlarity",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Knowlarity for Startups",
+        "tier": "Startup Program",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Knowlarity for",
+      "slug": "knowlarity-for",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Knowlarity for Startups",
+        "tier": "Startup Program",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "La",
+      "slug": "la",
+      "slug_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": true
+    },
+    {
+      "name": "La Fabrique",
+      "slug": "la-fabrique",
+      "slug_door": {
+        "type": "redirect",
+        "target": "La Fabrique Juridique",
+        "tier": "Startup Program",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Lemon",
+      "slug": "lemon",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Lemon Squeezy",
+        "tier": "Pay-as-you-go",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Lorem",
+      "slug": "lorem",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Lorem Picsum",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "MATLAB",
+      "slug": "matlab",
+      "slug_door": {
+        "type": "redirect",
+        "target": "MATLAB and Simulink for Startups",
+        "tier": "Startup Program",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "MATLAB and",
+      "slug": "matlab-and",
+      "slug_door": {
+        "type": "redirect",
+        "target": "MATLAB and Simulink for Startups",
+        "tier": "Startup Program",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "MATLAB and Simulink",
+      "slug": "matlab-and-simulink",
+      "slug_door": {
+        "type": "redirect",
+        "target": "MATLAB and Simulink for Startups",
+        "tier": "Startup Program",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "MATLAB and Simulink for",
+      "slug": "matlab-and-simulink-for",
+      "slug_door": {
+        "type": "redirect",
+        "target": "MATLAB and Simulink for Startups",
+        "tier": "Startup Program",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "MDB",
+      "slug": "mdb",
+      "slug_door": {
+        "type": "redirect",
+        "target": "MDB GO",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "MIT",
+      "slug": "mit",
+      "slug_door": {
+        "type": "redirect",
+        "target": "MIT OpenCourseWare",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "ManageEngine",
+      "slug": "manageengine",
+      "slug_door": {
+        "type": "redirect",
+        "target": "ManageEngine Log360 Cloud",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "ManageEngine Log360",
+      "slug": "manageengine-log360",
+      "slug_door": {
+        "type": "redirect",
+        "target": "ManageEngine Log360 Cloud",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Market",
+      "slug": "market",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Market Data API",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Market Data",
+      "slug": "market-data",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Market Data API",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Maxim",
+      "slug": "maxim",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Maxim AI",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Microsoft",
+      "slug": "microsoft",
+      "slug_door": {
+        "type": "disambiguate",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": true
+    },
+    {
+      "name": "Microsoft Founders",
+      "slug": "microsoft-founders",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Microsoft Founders Hub",
+        "tier": "Startup Program",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Microsoft To",
+      "slug": "microsoft-to",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Microsoft To Do",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Microsoft for",
+      "slug": "microsoft-for",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Microsoft for Startups",
+        "tier": "Startup Program",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Mistral",
+      "slug": "mistral",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Mistral AI",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Mockplus",
+      "slug": "mockplus",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Mockplus iDoc",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Moesif API",
+      "slug": "moesif-api",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Moesif API Monetization",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "inferred",
+        "target": "Moesif",
+        "tier": "Free",
+        "ended": false
+      },
+      "agrees": false
+    },
+    {
+      "name": "Mozilla",
+      "slug": "mozilla",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Mozilla Observatory",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Multi-Exit",
+      "slug": "multi-exit",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Multi-Exit IP Address Checker",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Multi-Exit IP",
+      "slug": "multi-exit-ip",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Multi-Exit IP Address Checker",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Multi-Exit IP Address",
+      "slug": "multi-exit-ip-address",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Multi-Exit IP Address Checker",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Mutant",
+      "slug": "mutant",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Mutant Mail",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "NS1",
+      "slug": "ns1",
+      "slug_door": {
+        "type": "redirect",
+        "target": "NS1 Connect",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "NVIDIA",
+      "slug": "nvidia",
+      "slug_door": {
+        "type": "redirect",
+        "target": "NVIDIA NIM",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Namecheap",
+      "slug": "namecheap",
+      "slug_door": {
+        "type": "disambiguate",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": true
+    },
+    {
+      "name": "Neo4j",
+      "slug": "neo4j",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Neo4j AuraDB",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "New",
+      "slug": "new",
+      "slug_door": {
+        "type": "disambiguate",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": true
+    },
+    {
+      "name": "News",
+      "slug": "news",
+      "slug_door": {
+        "type": "redirect",
+        "target": "News API",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Ninja",
+      "slug": "ninja",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Ninja Outreach",
+        "tier": "Retired",
+        "ended": true
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Nx",
+      "slug": "nx",
+      "slug_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": true
+    },
+    {
+      "name": "OWASP",
+      "slug": "owasp",
+      "slug_door": {
+        "type": "redirect",
+        "target": "OWASP ZAP",
+        "tier": "Open Source",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Ollama",
+      "slug": "ollama",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Ollama Cloud",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "OntarioNet.ca",
+      "slug": "ontarionet-ca",
+      "slug_door": {
+        "type": "redirect",
+        "target": "OntarioNet.ca CN Test",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "OntarioNet.ca CN",
+      "slug": "ontarionet-ca-cn",
+      "slug_door": {
+        "type": "redirect",
+        "target": "OntarioNet.ca CN Test",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "OpenAPI3",
+      "slug": "openapi3",
+      "slug_door": {
+        "type": "redirect",
+        "target": "OpenAPI3 Designer",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Oracle",
+      "slug": "oracle",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Oracle Cloud",
+        "tier": "Always Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Othor",
+      "slug": "othor",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Othor AI",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "PNG",
+      "slug": "png",
+      "slug_door": {
+        "type": "redirect",
+        "target": "PNG to WebP Converter",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "PNG to",
+      "slug": "png-to",
+      "slug_door": {
+        "type": "redirect",
+        "target": "PNG to WebP Converter",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "PNG to WebP",
+      "slug": "png-to-webp",
+      "slug_door": {
+        "type": "redirect",
+        "target": "PNG to WebP Converter",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Pareto",
+      "slug": "pareto",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Pareto Security",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Payload",
+      "slug": "payload",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Payload CMS",
+        "tier": "Free OSS",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Phantom",
+      "slug": "phantom",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Phantom Buster",
+        "tier": "Startup Program",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Phase",
+      "slug": "phase",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Phase Two",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Pika",
+      "slug": "pika",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Pika Code Screenshots",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Pika Code",
+      "slug": "pika-code",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Pika Code Screenshots",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Pinata",
+      "slug": "pinata",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Pinata IPFS",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Plausible",
+      "slug": "plausible",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Plausible Analytics",
+        "tier": "Free OSS",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Play",
+      "slug": "play",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Play with Docker",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Play with",
+      "slug": "play-with",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Play with Docker",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Pocket",
+      "slug": "pocket",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Pocket Alert",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Preset",
+      "slug": "preset",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Preset Cloud",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Prisma",
+      "slug": "prisma",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Prisma Accelerate",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Proton",
+      "slug": "proton",
+      "slug_door": {
+        "type": "disambiguate",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": true
+    },
+    {
+      "name": "Public",
+      "slug": "public",
+      "slug_door": {
+        "type": "disambiguate",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": true
+    },
+    {
+      "name": "Public Cloud",
+      "slug": "public-cloud",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Public Cloud Threat Intelligence",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Public Cloud Threat",
+      "slug": "public-cloud-threat",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Public Cloud Threat Intelligence",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Quant",
+      "slug": "quant",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Quant Ux",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Radmin",
+      "slug": "radmin",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Radmin VPN",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Redis",
+      "slug": "redis",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Redis Cloud",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Remote",
+      "slug": "remote",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Remote for Startups",
+        "tier": "Startup Program",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Remote for",
+      "slug": "remote-for",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Remote for Startups",
+        "tier": "Startup Program",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Responsively",
+      "slug": "responsively",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Responsively App",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Row",
+      "slug": "row",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Row Zero",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "SSR",
+      "slug": "ssr",
+      "slug_door": {
+        "type": "redirect",
+        "target": "SSR (Server-side Rendering) Checker",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "SSR (Server-side",
+      "slug": "ssr-server-side",
+      "slug_door": {
+        "type": "redirect",
+        "target": "SSR (Server-side Rendering) Checker",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "SSR (Server-side Rendering)",
+      "slug": "ssr-server-side-rendering",
+      "slug_door": {
+        "type": "redirect",
+        "target": "SSR (Server-side Rendering) Checker",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "SVB",
+      "slug": "svb",
+      "slug_door": {
+        "type": "redirect",
+        "target": "SVB (Silicon Valley Bank)",
+        "tier": "Banking Offers",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "SVB (Silicon",
+      "slug": "svb-silicon",
+      "slug_door": {
+        "type": "redirect",
+        "target": "SVB (Silicon Valley Bank)",
+        "tier": "Banking Offers",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "SVB (Silicon Valley",
+      "slug": "svb-silicon-valley",
+      "slug_door": {
+        "type": "redirect",
+        "target": "SVB (Silicon Valley Bank)",
+        "tier": "Banking Offers",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "SVG",
+      "slug": "svg",
+      "slug_door": {
+        "type": "disambiguate",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": true
+    },
+    {
+      "name": "Sauce",
+      "slug": "sauce",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Sauce Labs",
+        "tier": "Open Source",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Scale",
+      "slug": "scale",
+      "slug_door": {
+        "type": "disambiguate",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": true
+    },
+    {
+      "name": "ScaleGrid",
+      "slug": "scalegrid",
+      "slug_door": {
+        "type": "redirect",
+        "target": "ScaleGrid Startup Program",
+        "tier": "Startup Program",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "ScaleGrid Startup",
+      "slug": "scalegrid-startup",
+      "slug_door": {
+        "type": "redirect",
+        "target": "ScaleGrid Startup Program",
+        "tier": "Startup Program",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Scaleway",
+      "slug": "scaleway",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Scaleway Startup Program",
+        "tier": "Startup Program",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Scaleway Startup",
+      "slug": "scaleway-startup",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Scaleway Startup Program",
+        "tier": "Startup Program",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Science",
+      "slug": "science",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Science Exchange",
+        "tier": "Startup Program",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Scraper's",
+      "slug": "scraper-s",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Scraper's Proxy",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Screen",
+      "slug": "screen",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Screen Sharing via Browser",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Screen Sharing",
+      "slug": "screen-sharing",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Screen Sharing via Browser",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Screen Sharing via",
+      "slug": "screen-sharing-via",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Screen Sharing via Browser",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Screenshot",
+      "slug": "screenshot",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Screenshot Scout",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Selenium",
+      "slug": "selenium",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Selenium Grid",
+        "tier": "Open Source",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Semaphore",
+      "slug": "semaphore",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Semaphore CI",
+        "tier": "Community (Self-hosted)",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Sevalla",
+      "slug": "sevalla",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Sevalla (formerly Kinsta)",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Sevalla (formerly",
+      "slug": "sevalla-formerly",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Sevalla (formerly Kinsta)",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Shadcn",
+      "slug": "shadcn",
+      "slug_door": {
+        "type": "disambiguate",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": true
+    },
+    {
+      "name": "Shotstack",
+      "slug": "shotstack",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Shotstack Startup Program",
+        "tier": "Startup Program",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Shotstack Startup",
+      "slug": "shotstack-startup",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Shotstack Startup Program",
+        "tier": "Startup Program",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Simple",
+      "slug": "simple",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Simple Observability",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Smart",
+      "slug": "smart",
+      "slug_door": {
+        "type": "disambiguate",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": true
+    },
+    {
+      "name": "Smart Grow",
+      "slug": "smart-grow",
+      "slug_door": {
+        "type": "disambiguate",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": true
+    },
+    {
+      "name": "Smartcar",
+      "slug": "smartcar",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Smartcar API",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Social",
+      "slug": "social",
+      "slug_door": {
+        "type": "disambiguate",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": true
+    },
+    {
+      "name": "SonarQube",
+      "slug": "sonarqube",
+      "slug_door": {
+        "type": "redirect",
+        "target": "SonarQube Cloud",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Squash",
+      "slug": "squash",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Squash Labs",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Stack",
+      "slug": "stack",
+      "slug_door": {
+        "type": "disambiguate",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": true
+    },
+    {
+      "name": "Standard",
+      "slug": "standard",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Standard Notes",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Startup",
+      "slug": "startup",
+      "slug_door": {
+        "type": "disambiguate",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": true
+    },
+    {
+      "name": "Startup with",
+      "slug": "startup-with",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Startup with IBM",
+        "tier": "Retired",
+        "ended": true
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Stitch",
+      "slug": "stitch",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Stitch Labs",
+        "tier": "Startup Program",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Sublime",
+      "slug": "sublime",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Sublime Text",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Sucuri",
+      "slug": "sucuri",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Sucuri SiteCheck",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Sunrise",
+      "slug": "sunrise",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Sunrise and Sunset",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Sunrise and",
+      "slug": "sunrise-and",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Sunrise and Sunset",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "SurrealDB",
+      "slug": "surrealdb",
+      "slug_door": {
+        "type": "redirect",
+        "target": "SurrealDB Cloud",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "TW",
+      "slug": "tw",
+      "slug_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": true
+    },
+    {
+      "name": "Tavily",
+      "slug": "tavily",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Tavily AI",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Tencent",
+      "slug": "tencent",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Tencent RTC",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Terragrunt",
+      "slug": "terragrunt",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Terragrunt Scale",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "The",
+      "slug": "the",
+      "slug_door": {
+        "type": "disambiguate",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": true
+    },
+    {
+      "name": "The GoSquared",
+      "slug": "the-gosquared",
+      "slug_door": {
+        "type": "redirect",
+        "target": "The GoSquared Early Stage Plan",
+        "tier": "Retired",
+        "ended": true
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "The GoSquared Early",
+      "slug": "the-gosquared-early",
+      "slug_door": {
+        "type": "redirect",
+        "target": "The GoSquared Early Stage Plan",
+        "tier": "Retired",
+        "ended": true
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "The GoSquared Early Stage",
+      "slug": "the-gosquared-early-stage",
+      "slug_door": {
+        "type": "redirect",
+        "target": "The GoSquared Early Stage Plan",
+        "tier": "Retired",
+        "ended": true
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "The IP",
+      "slug": "the-ip",
+      "slug_door": {
+        "type": "redirect",
+        "target": "The IP API",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "The Intercom",
+      "slug": "the-intercom",
+      "slug_door": {
+        "type": "redirect",
+        "target": "The Intercom Early Stage Program",
+        "tier": "Startup Program",
+        "ended": false
+      },
+      "match_door": {
+        "type": "inferred",
+        "target": "Intercom",
+        "tier": "Startup Program",
+        "ended": false
+      },
+      "agrees": false
+    },
+    {
+      "name": "The Intercom Early",
+      "slug": "the-intercom-early",
+      "slug_door": {
+        "type": "redirect",
+        "target": "The Intercom Early Stage Program",
+        "tier": "Startup Program",
+        "ended": false
+      },
+      "match_door": {
+        "type": "inferred",
+        "target": "Intercom",
+        "tier": "Startup Program",
+        "ended": false
+      },
+      "agrees": false
+    },
+    {
+      "name": "The Intercom Early Stage",
+      "slug": "the-intercom-early-stage",
+      "slug_door": {
+        "type": "redirect",
+        "target": "The Intercom Early Stage Program",
+        "tier": "Startup Program",
+        "ended": false
+      },
+      "match_door": {
+        "type": "inferred",
+        "target": "Intercom",
+        "tier": "Startup Program",
+        "ended": false
+      },
+      "agrees": false
+    },
+    {
+      "name": "Thunder",
+      "slug": "thunder",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Thunder Client",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Together",
+      "slug": "together",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Together AI",
+        "tier": "Free ($1 credits)",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Tomorrow.io",
+      "slug": "tomorrow-io",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Tomorrow.io Weather API",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Tomorrow.io Weather",
+      "slug": "tomorrow-io-weather",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Tomorrow.io Weather API",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "TrackWith",
+      "slug": "trackwith",
+      "slug_door": {
+        "type": "redirect",
+        "target": "TrackWith Dicloud",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Twilio Startups",
+      "slug": "twilio-startups",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Twilio Startups Program",
+        "tier": "Retired",
+        "ended": true
+      },
+      "match_door": {
+        "type": "inferred",
+        "target": "Twilio",
+        "tier": "Startup Program",
+        "ended": false
+      },
+      "agrees": false
+    },
+    {
+      "name": "Typesense",
+      "slug": "typesense",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Typesense Cloud",
+        "tier": "Free Credit",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "UI",
+      "slug": "ui",
+      "slug_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": true
+    },
+    {
+      "name": "UUID",
+      "slug": "uuid",
+      "slug_door": {
+        "type": "redirect",
+        "target": "UUID Generator",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Unicorn",
+      "slug": "unicorn",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Unicorn Platform",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Unity",
+      "slug": "unity",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Unity DevOps",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Val",
+      "slug": "val",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Val Town",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "VaocherApp",
+      "slug": "vaocherapp",
+      "slug_door": {
+        "type": "redirect",
+        "target": "VaocherApp QR Code Generator",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "VaocherApp QR",
+      "slug": "vaocherapp-qr",
+      "slug_door": {
+        "type": "redirect",
+        "target": "VaocherApp QR Code Generator",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "VaocherApp QR Code",
+      "slug": "vaocherapp-qr-code",
+      "slug_door": {
+        "type": "redirect",
+        "target": "VaocherApp QR Code Generator",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Vera",
+      "slug": "vera",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Vera AWS",
+        "tier": "Open Source",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Virgil",
+      "slug": "virgil",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Virgil Security",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Visual",
+      "slug": "visual",
+      "slug_door": {
+        "type": "disambiguate",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": true
+    },
+    {
+      "name": "Visual Studio",
+      "slug": "visual-studio",
+      "slug_door": {
+        "type": "disambiguate",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": true
+    },
+    {
+      "name": "Volume Shader",
+      "slug": "volume-shader",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Volume Shader BM",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "inferred",
+        "target": "Volume",
+        "tier": "Free",
+        "ended": false
+      },
+      "agrees": false
+    },
+    {
+      "name": "Vultr",
+      "slug": "vultr",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Vultr DNS",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "WP",
+      "slug": "wp",
+      "slug_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": true
+    },
+    {
+      "name": "Wave",
+      "slug": "wave",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Wave Terminal",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Wdrfree",
+      "slug": "wdrfree",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Wdrfree SVG",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Weights",
+      "slug": "weights",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Weights & Biases",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Weights &",
+      "slug": "weights",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Weights & Biases",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "What",
+      "slug": "what",
+      "slug_door": {
+        "type": "redirect",
+        "target": "What The Diff",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "What The",
+      "slug": "what-the",
+      "slug_door": {
+        "type": "redirect",
+        "target": "What The Diff",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Woodpecker",
+      "slug": "woodpecker",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Woodpecker CI",
+        "tier": "Free OSS",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "X",
+      "slug": "x",
+      "slug_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": true
+    },
+    {
+      "name": "ZITADEL",
+      "slug": "zitadel",
+      "slug_door": {
+        "type": "redirect",
+        "target": "ZITADEL Cloud",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Zendesk",
+      "slug": "zendesk",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Zendesk for Startups",
+        "tier": "Startup Program",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Zendesk for",
+      "slug": "zendesk-for",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Zendesk for Startups",
+        "tier": "Startup Program",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Zhipu",
+      "slug": "zhipu",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Zhipu AI",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "Zilliz",
+      "slug": "zilliz",
+      "slug_door": {
+        "type": "redirect",
+        "target": "Zilliz Cloud",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    },
+    {
+      "name": "dAppling",
+      "slug": "dappling",
+      "slug_door": {
+        "type": "redirect",
+        "target": "dAppling Network",
+        "tier": "Free",
+        "ended": false
+      },
+      "match_door": {
+        "type": "none",
+        "target": null,
+        "tier": null,
+        "ended": null
+      },
+      "agrees": false
+    }
+  ]
+}

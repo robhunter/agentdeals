@@ -1,0 +1,5143 @@
+[
+  {
+    "at": "/localstack-alternatives",
+    "status": 200,
+    "publishing": 7,
+    "renderings": 7,
+    "disclosing": 7,
+    "repeated": [],
+    "published": [
+      {
+        "vendor": "Moto",
+        "tier": "Open Source",
+        "times": 1,
+        "closes": 0,
+        "sentences": 5
+      },
+      {
+        "vendor": "AWS SAM CLI",
+        "tier": "Open Source",
+        "times": 1,
+        "closes": 0,
+        "sentences": 5
+      },
+      {
+        "vendor": "DynamoDB Local",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 5
+      },
+      {
+        "vendor": "ElasticMQ",
+        "tier": "Open Source",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "CloudDev",
+        "tier": "Open Source",
+        "times": 1,
+        "closes": 0,
+        "sentences": 5
+      },
+      {
+        "vendor": "Vera AWS",
+        "tier": "Open Source",
+        "times": 1,
+        "closes": 0,
+        "sentences": 5
+      },
+      {
+        "vendor": "Floci",
+        "tier": "Open Source",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      }
+    ]
+  },
+  {
+    "at": "/postman-alternatives",
+    "status": 200,
+    "publishing": 3,
+    "renderings": 3,
+    "disclosing": 3,
+    "repeated": [],
+    "published": [
+      {
+        "vendor": "BrowserStack Percy",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 2
+      },
+      {
+        "vendor": "Hoppscotch",
+        "tier": "Free OSS",
+        "times": 1,
+        "closes": 0,
+        "sentences": 2
+      },
+      {
+        "vendor": "Insomnia",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      }
+    ]
+  },
+  {
+    "at": "/terraform-alternatives",
+    "status": 200,
+    "publishing": 2,
+    "renderings": 2,
+    "disclosing": 2,
+    "repeated": [],
+    "published": [
+      {
+        "vendor": "Terramate",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 2
+      },
+      {
+        "vendor": "Checkov",
+        "tier": "Open Source",
+        "times": 1,
+        "closes": 0,
+        "sentences": 2
+      }
+    ]
+  },
+  {
+    "at": "/hetzner-alternatives",
+    "status": 200,
+    "publishing": 2,
+    "renderings": 2,
+    "disclosing": 2,
+    "repeated": [],
+    "published": [
+      {
+        "vendor": "Cloudflare Workers",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "Google Cloud Run",
+        "tier": "Always Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      }
+    ]
+  },
+  {
+    "at": "/freshping-alternatives",
+    "status": 200,
+    "publishing": 4,
+    "renderings": 4,
+    "disclosing": 4,
+    "repeated": [],
+    "published": [
+      {
+        "vendor": "UptimeRobot",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 2
+      },
+      {
+        "vendor": "Instatus",
+        "tier": "Starter",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "Upptime",
+        "tier": "Free OSS",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "Cronitor",
+        "tier": "Hacker",
+        "times": 1,
+        "closes": 0,
+        "sentences": 2
+      }
+    ]
+  },
+  {
+    "at": "/heroku-alternatives",
+    "status": 200,
+    "publishing": 2,
+    "renderings": 2,
+    "disclosing": 2,
+    "repeated": [],
+    "published": [
+      {
+        "vendor": "Cloudflare Workers",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "Coolify",
+        "tier": "Free OSS",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      }
+    ]
+  },
+  {
+    "at": "/firebase-alternatives",
+    "status": 200,
+    "publishing": 2,
+    "renderings": 3,
+    "disclosing": 2,
+    "repeated": [
+      "Convex x2"
+    ],
+    "published": [
+      {
+        "vendor": "Convex",
+        "tier": "Free",
+        "times": 2,
+        "closes": 1,
+        "sentences": 1
+      },
+      {
+        "vendor": "PocketBase",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      }
+    ]
+  },
+  {
+    "at": "/github-actions-alternatives",
+    "status": 200,
+    "publishing": 3,
+    "renderings": 3,
+    "disclosing": 3,
+    "repeated": [],
+    "published": [
+      {
+        "vendor": "Woodpecker CI",
+        "tier": "Free OSS",
+        "times": 1,
+        "closes": 0,
+        "sentences": 2
+      },
+      {
+        "vendor": "Drone CI",
+        "tier": "Community (Self-hosted)",
+        "times": 1,
+        "closes": 0,
+        "sentences": 2
+      },
+      {
+        "vendor": "Codefresh",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      }
+    ]
+  },
+  {
+    "at": "/cursor-alternatives",
+    "status": 200,
+    "publishing": 4,
+    "renderings": 4,
+    "disclosing": 4,
+    "repeated": [],
+    "published": [
+      {
+        "vendor": "Claude Code",
+        "tier": "Paid",
+        "times": 1,
+        "closes": 0,
+        "sentences": 3
+      },
+      {
+        "vendor": "Cline",
+        "tier": "Open Source",
+        "times": 1,
+        "closes": 0,
+        "sentences": 3
+      },
+      {
+        "vendor": "Aider",
+        "tier": "Open Source",
+        "times": 1,
+        "closes": 0,
+        "sentences": 3
+      },
+      {
+        "vendor": "Windsurf",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      }
+    ]
+  },
+  {
+    "at": "/datadog-alternatives",
+    "status": 200,
+    "publishing": 4,
+    "renderings": 4,
+    "disclosing": 4,
+    "repeated": [],
+    "published": [
+      {
+        "vendor": "UptimeRobot",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "Sentry",
+        "tier": "OSS Sponsored",
+        "times": 1,
+        "closes": 0,
+        "sentences": 3
+      },
+      {
+        "vendor": "Prometheus",
+        "tier": "Free OSS",
+        "times": 1,
+        "closes": 0,
+        "sentences": 3
+      },
+      {
+        "vendor": "Jaeger",
+        "tier": "Free OSS",
+        "times": 1,
+        "closes": 0,
+        "sentences": 3
+      }
+    ]
+  },
+  {
+    "at": "/vercel-alternatives",
+    "status": 200,
+    "publishing": 3,
+    "renderings": 4,
+    "disclosing": 3,
+    "repeated": [
+      "Cloudflare Pages x2"
+    ],
+    "published": [
+      {
+        "vendor": "Cloudflare Workers",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "Cloudflare Pages",
+        "tier": "Free",
+        "times": 2,
+        "closes": 1,
+        "sentences": 1
+      },
+      {
+        "vendor": "Coolify",
+        "tier": "Free OSS",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      }
+    ]
+  },
+  {
+    "at": "/auth0-alternatives",
+    "status": 200,
+    "publishing": 2,
+    "renderings": 2,
+    "disclosing": 2,
+    "repeated": [],
+    "published": [
+      {
+        "vendor": "Keycloak",
+        "tier": "Free OSS",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "Ory",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      }
+    ]
+  },
+  {
+    "at": "/mongodb-alternatives",
+    "status": 200,
+    "publishing": 2,
+    "renderings": 3,
+    "disclosing": 2,
+    "repeated": [
+      "Convex x2"
+    ],
+    "published": [
+      {
+        "vendor": "Convex",
+        "tier": "Free",
+        "times": 2,
+        "closes": 1,
+        "sentences": 1
+      },
+      {
+        "vendor": "PocketBase",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      }
+    ]
+  },
+  {
+    "at": "/redis-alternatives",
+    "status": 200,
+    "publishing": 2,
+    "renderings": 4,
+    "disclosing": 2,
+    "repeated": [
+      "Upstash x2",
+      "Aiven x2"
+    ],
+    "published": [
+      {
+        "vendor": "Upstash",
+        "tier": "Free",
+        "times": 2,
+        "closes": 1,
+        "sentences": 1
+      },
+      {
+        "vendor": "Aiven",
+        "tier": "Free",
+        "times": 2,
+        "closes": 1,
+        "sentences": 1
+      }
+    ]
+  },
+  {
+    "at": "/ai-free-tiers",
+    "status": 200,
+    "publishing": 35,
+    "renderings": 35,
+    "disclosing": 35,
+    "repeated": [],
+    "published": [
+      {
+        "vendor": "Cerebras",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 4
+      },
+      {
+        "vendor": "Cohere",
+        "tier": "Trial Key",
+        "times": 1,
+        "closes": 0,
+        "sentences": 4
+      },
+      {
+        "vendor": "Scale AI",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 8
+      },
+      {
+        "vendor": "Replicate",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 4
+      },
+      {
+        "vendor": "Baseten",
+        "tier": "Basic (Free Credits)",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "Clarifai",
+        "tier": "Community (Free)",
+        "times": 1,
+        "closes": 0,
+        "sentences": 2
+      },
+      {
+        "vendor": "Neptune.ai",
+        "tier": "Free (Individual)",
+        "times": 1,
+        "closes": 0,
+        "sentences": 2
+      },
+      {
+        "vendor": "Labelbox",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "DeepAR",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 4
+      },
+      {
+        "vendor": "OCR.Space",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "Reducto",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "Audio Enhancer",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "Clair",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 8
+      },
+      {
+        "vendor": "Langtrace",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "Pollinations.AI",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 4
+      },
+      {
+        "vendor": "Portkey",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 4
+      },
+      {
+        "vendor": "ReportGPT",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "xAI",
+        "tier": "Free Credits",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "Devin",
+        "tier": "Free Credits",
+        "times": 1,
+        "closes": 0,
+        "sentences": 2
+      },
+      {
+        "vendor": "Lovable",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "Claude Code",
+        "tier": "Paid",
+        "times": 1,
+        "closes": 0,
+        "sentences": 8
+      },
+      {
+        "vendor": "Cline",
+        "tier": "Open Source",
+        "times": 1,
+        "closes": 0,
+        "sentences": 8
+      },
+      {
+        "vendor": "Aider",
+        "tier": "Open Source",
+        "times": 1,
+        "closes": 0,
+        "sentences": 8
+      },
+      {
+        "vendor": "Windsurf",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 2
+      },
+      {
+        "vendor": "Google Antigravity",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 8
+      },
+      {
+        "vendor": "GitHub Models",
+        "tier": "Retired",
+        "times": 1,
+        "closes": 0,
+        "sentences": 8
+      },
+      {
+        "vendor": "NVIDIA NIM",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 8
+      },
+      {
+        "vendor": "Ollama Cloud",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "LLM7.io",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 4
+      },
+      {
+        "vendor": "Zhipu AI",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 4
+      },
+      {
+        "vendor": "GPU-Bridge",
+        "tier": "Pay-per-use",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "Google Vertex AI Agent Engine",
+        "tier": "Pay-as-you-go",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "Google Vector Search 2.0",
+        "tier": "Pay-as-you-go",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "Alibaba Cloud Qwen Code",
+        "tier": "Free (Reduced)",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "Together AI",
+        "tier": "Free ($1 credits)",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      }
+    ]
+  },
+  {
+    "at": "/database-alternatives",
+    "status": 200,
+    "publishing": 7,
+    "renderings": 7,
+    "disclosing": 7,
+    "repeated": [],
+    "published": [
+      {
+        "vendor": "Upstash",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 2
+      },
+      {
+        "vendor": "Convex",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "Aiven",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "PocketBase",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 3
+      },
+      {
+        "vendor": "Nile",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 2
+      },
+      {
+        "vendor": "DynamoDB Local",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 3
+      },
+      {
+        "vendor": "Couchbase Capella",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 3
+      }
+    ]
+  },
+  {
+    "at": "/hosting-alternatives",
+    "status": 200,
+    "publishing": 15,
+    "renderings": 15,
+    "disclosing": 15,
+    "repeated": [],
+    "published": [
+      {
+        "vendor": "Cloudflare Workers",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "Cloudflare Pages",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "GitHub Pages",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 7
+      },
+      {
+        "vendor": "YepCode",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "Claw.cloud",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "Integrately",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "Alwaysdata",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 7
+      },
+      {
+        "vendor": "dAppling Network",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 7
+      },
+      {
+        "vendor": "Neocities",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 7
+      },
+      {
+        "vendor": "Qoddi",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "surge.sh",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 7
+      },
+      {
+        "vendor": "Versoly",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 7
+      },
+      {
+        "vendor": "Startup with IBM",
+        "tier": "Retired",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "Heroku for Startups Program",
+        "tier": "Retired",
+        "times": 1,
+        "closes": 0,
+        "sentences": 7
+      },
+      {
+        "vendor": "Google Cloud Run",
+        "tier": "Always Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      }
+    ]
+  },
+  {
+    "at": "/monitoring-alternatives",
+    "status": 200,
+    "publishing": 28,
+    "renderings": 28,
+    "disclosing": 28,
+    "repeated": [],
+    "published": [
+      {
+        "vendor": "UptimeRobot",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 2
+      },
+      {
+        "vendor": "Bugsnag",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "Exceptionless",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 18
+      },
+      {
+        "vendor": "Prometheus",
+        "tier": "Free OSS",
+        "times": 1,
+        "closes": 0,
+        "sentences": 18
+      },
+      {
+        "vendor": "Jaeger",
+        "tier": "Free OSS",
+        "times": 1,
+        "closes": 0,
+        "sentences": 18
+      },
+      {
+        "vendor": "Cronitor",
+        "tier": "Hacker",
+        "times": 1,
+        "closes": 0,
+        "sentences": 2
+      },
+      {
+        "vendor": "StatusPile",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "assertible.com",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 18
+      },
+      {
+        "vendor": "Core Web Vitals History",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 18
+      },
+      {
+        "vendor": "deadmanssnitch.com",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 18
+      },
+      {
+        "vendor": "downtimemonkey.com",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 18
+      },
+      {
+        "vendor": "loader.io",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 18
+      },
+      {
+        "vendor": "pagertree.com",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "phare.io",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "pingbreak.com",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 18
+      },
+      {
+        "vendor": "pingpong.one",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 18
+      },
+      {
+        "vendor": "robusta.dev",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "Servervana",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 18
+      },
+      {
+        "vendor": "sitesure.net",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 18
+      },
+      {
+        "vendor": "skylight.io",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 18
+      },
+      {
+        "vendor": "statusgator.com",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 18
+      },
+      {
+        "vendor": "UptimeObserver.com",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 18
+      },
+      {
+        "vendor": "Bugsink",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "elmah.io",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 18
+      },
+      {
+        "vendor": "Embrace",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 18
+      },
+      {
+        "vendor": "Jam",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 18
+      },
+      {
+        "vendor": "Instabug for Startups",
+        "tier": "Retired",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "Google Cloud Monitoring",
+        "tier": "Always Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      }
+    ]
+  },
+  {
+    "at": "/email-service-alternatives",
+    "status": 200,
+    "publishing": 3,
+    "renderings": 4,
+    "disclosing": 3,
+    "repeated": [
+      "Buttondown x2"
+    ],
+    "published": [
+      {
+        "vendor": "Mailchimp",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "Brevo",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "Buttondown",
+        "tier": "Free",
+        "times": 2,
+        "closes": 1,
+        "sentences": 1
+      }
+    ]
+  },
+  {
+    "at": "/ci-cd-alternatives",
+    "status": 200,
+    "publishing": 12,
+    "renderings": 16,
+    "disclosing": 12,
+    "repeated": [
+      "cirrus-ci.org x3",
+      "cirun.io x3"
+    ],
+    "published": [
+      {
+        "vendor": "Woodpecker CI",
+        "tier": "Free OSS",
+        "times": 1,
+        "closes": 0,
+        "sentences": 5
+      },
+      {
+        "vendor": "Unity DevOps",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "Drone CI",
+        "tier": "Community (Self-hosted)",
+        "times": 1,
+        "closes": 0,
+        "sentences": 5
+      },
+      {
+        "vendor": "Codefresh",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "Tugboat",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 5
+      },
+      {
+        "vendor": "appveyor.com",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 5
+      },
+      {
+        "vendor": "cirrus-ci.org",
+        "tier": "Free",
+        "times": 3,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "cirun.io",
+        "tier": "Free",
+        "times": 3,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "LocalOps",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "Mergify",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "RunMyJob",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "Terramate",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 5
+      }
+    ]
+  },
+  {
+    "at": "/security-alternatives",
+    "status": 200,
+    "publishing": 56,
+    "renderings": 56,
+    "disclosing": 56,
+    "repeated": [],
+    "published": [
+      {
+        "vendor": "1Password",
+        "tier": "OSS Teams",
+        "times": 1,
+        "closes": 0,
+        "sentences": 36
+      },
+      {
+        "vendor": "HashiCorp Vault",
+        "tier": "Community / HCP Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 2
+      },
+      {
+        "vendor": "Bugsnag",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "Exceptionless",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 36
+      },
+      {
+        "vendor": "Keycloak",
+        "tier": "Free OSS",
+        "times": 1,
+        "closes": 0,
+        "sentences": 36
+      },
+      {
+        "vendor": "VirusTotal",
+        "tier": "Community (Free)",
+        "times": 1,
+        "closes": 0,
+        "sentences": 3
+      },
+      {
+        "vendor": "FraudLabs Pro",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 36
+      },
+      {
+        "vendor": "LoginLlama",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "aikido.dev",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 3
+      },
+      {
+        "vendor": "CertKit",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 3
+      },
+      {
+        "vendor": "crypteron.com",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 36
+      },
+      {
+        "vendor": "CyberChef",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 36
+      },
+      {
+        "vendor": "Datree",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "DJ Checkup",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 36
+      },
+      {
+        "vendor": "Dotenv",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 36
+      },
+      {
+        "vendor": "Have I been pwned?",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 36
+      },
+      {
+        "vendor": "Internet.nl",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 36
+      },
+      {
+        "vendor": "meterian.io",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 36
+      },
+      {
+        "vendor": "Mozilla Observatory",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 36
+      },
+      {
+        "vendor": "Public Cloud Threat Intelligence",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 36
+      },
+      {
+        "vendor": "qualys.com",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 36
+      },
+      {
+        "vendor": "Smart Grow Vault",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 3
+      },
+      {
+        "vendor": "SOOS",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "ssllabs.com",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 36
+      },
+      {
+        "vendor": "Sucuri SiteCheck",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 36
+      },
+      {
+        "vendor": "TestTLS.com",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "Aserto",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 36
+      },
+      {
+        "vendor": "asgardeo.io",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 3
+      },
+      {
+        "vendor": "Authgear",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 36
+      },
+      {
+        "vendor": "Authy",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 36
+      },
+      {
+        "vendor": "Cerbos Hub",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 36
+      },
+      {
+        "vendor": "logintc.com",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 36
+      },
+      {
+        "vendor": "MojoAuth",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "Okta",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 3
+      },
+      {
+        "vendor": "Ory",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "PropelAuth",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 36
+      },
+      {
+        "vendor": "Stack Auth",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 2
+      },
+      {
+        "vendor": "ZITADEL Cloud",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 36
+      },
+      {
+        "vendor": "Bugsink",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "elmah.io",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 36
+      },
+      {
+        "vendor": "Embrace",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 36
+      },
+      {
+        "vendor": "Jam",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 36
+      },
+      {
+        "vendor": "memfault.com",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 36
+      },
+      {
+        "vendor": "Semaphr",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "Bearer",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 36
+      },
+      {
+        "vendor": "Instabug for Startups",
+        "tier": "Retired",
+        "times": 1,
+        "closes": 0,
+        "sentences": 2
+      },
+      {
+        "vendor": "Gitleaks",
+        "tier": "Open Source",
+        "times": 1,
+        "closes": 0,
+        "sentences": 36
+      },
+      {
+        "vendor": "TruffleHog",
+        "tier": "Open Source",
+        "times": 1,
+        "closes": 0,
+        "sentences": 36
+      },
+      {
+        "vendor": "Checkov",
+        "tier": "Open Source",
+        "times": 1,
+        "closes": 0,
+        "sentences": 36
+      },
+      {
+        "vendor": "Trivy",
+        "tier": "Open Source",
+        "times": 1,
+        "closes": 0,
+        "sentences": 36
+      },
+      {
+        "vendor": "Grype",
+        "tier": "Open Source",
+        "times": 1,
+        "closes": 0,
+        "sentences": 36
+      },
+      {
+        "vendor": "OWASP ZAP",
+        "tier": "Open Source",
+        "times": 1,
+        "closes": 0,
+        "sentences": 36
+      },
+      {
+        "vendor": "CodeQL",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 36
+      },
+      {
+        "vendor": "Dependabot",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 36
+      },
+      {
+        "vendor": "Renovate",
+        "tier": "Open Source",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "Probely",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 2
+      }
+    ]
+  },
+  {
+    "at": "/storage-alternatives",
+    "status": 200,
+    "publishing": 43,
+    "renderings": 43,
+    "disclosing": 43,
+    "repeated": [],
+    "published": [
+      {
+        "vendor": "jsDelivr",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "Statically",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 25
+      },
+      {
+        "vendor": "UNPKG",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 25
+      },
+      {
+        "vendor": "esm.sh",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 25
+      },
+      {
+        "vendor": "seafile.com",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 25
+      },
+      {
+        "vendor": "wormhol.org",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 3
+      },
+      {
+        "vendor": "Wormhole",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 25
+      },
+      {
+        "vendor": "bootstrapcdn.com",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 25
+      },
+      {
+        "vendor": "CacheFly",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 2
+      },
+      {
+        "vendor": "developers.google.com",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 25
+      },
+      {
+        "vendor": "Microsoft Ajax",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 25
+      },
+      {
+        "vendor": "Namecheap Supersonic",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 2
+      },
+      {
+        "vendor": "raw.githack.com",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 25
+      },
+      {
+        "vendor": "Skypack",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 25
+      },
+      {
+        "vendor": "toranproxy.com",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 25
+      },
+      {
+        "vendor": "weserv",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "C2 Object Storage",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 25
+      },
+      {
+        "vendor": "Dropshare",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 3
+      },
+      {
+        "vendor": "embed.ly",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 25
+      },
+      {
+        "vendor": "file.io",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "freetools.site",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 2
+      },
+      {
+        "vendor": "getpantry.cloud",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "GoFile.io",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 3
+      },
+      {
+        "vendor": "icedrive.net",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "ImageEngine",
+        "tier": "Trial",
+        "times": 1,
+        "closes": 0,
+        "sentences": 2
+      },
+      {
+        "vendor": "imgen",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "nitropack.io",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 25
+      },
+      {
+        "vendor": "npoint.io",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "MantleDB",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "We.Team",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 25
+      },
+      {
+        "vendor": "plot.ly",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 25
+      },
+      {
+        "vendor": "podio.com",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "QRME.SH",
+        "tier": "Retired",
+        "times": 1,
+        "closes": 0,
+        "sentences": 25
+      },
+      {
+        "vendor": "QRtracer",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "QuickChart",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 25
+      },
+      {
+        "vendor": "resmush.it",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 25
+      },
+      {
+        "vendor": "sync.com",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 25
+      },
+      {
+        "vendor": "tinypng.com",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 25
+      },
+      {
+        "vendor": "transloadit.com",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 25
+      },
+      {
+        "vendor": "twicpics.com",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 25
+      },
+      {
+        "vendor": "VaocherApp QR Code Generator",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 25
+      },
+      {
+        "vendor": "odrive",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 25
+      },
+      {
+        "vendor": "Google Cloud Storage",
+        "tier": "Always Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      }
+    ]
+  },
+  {
+    "at": "/testing-alternatives",
+    "status": 200,
+    "publishing": 28,
+    "renderings": 28,
+    "disclosing": 28,
+    "repeated": [],
+    "published": [
+      {
+        "vendor": "BrowserStack Percy",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "Moto",
+        "tier": "Open Source",
+        "times": 1,
+        "closes": 0,
+        "sentences": 18
+      },
+      {
+        "vendor": "AWS SAM CLI",
+        "tier": "Open Source",
+        "times": 1,
+        "closes": 0,
+        "sentences": 18
+      },
+      {
+        "vendor": "Appetize",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 18
+      },
+      {
+        "vendor": "Argos",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "Bencher",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 18
+      },
+      {
+        "vendor": "checkbot.io",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "CORS-Tester",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 18
+      },
+      {
+        "vendor": "everystep-automation.com",
+        "tier": "Trial",
+        "times": 1,
+        "closes": 0,
+        "sentences": 2
+      },
+      {
+        "vendor": "gridlastic.com",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 18
+      },
+      {
+        "vendor": "katalon.com",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 18
+      },
+      {
+        "vendor": "Keploy",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 18
+      },
+      {
+        "vendor": "pagegym.com",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 18
+      },
+      {
+        "vendor": "qase.io",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 18
+      },
+      {
+        "vendor": "seotest.me",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 2
+      },
+      {
+        "vendor": "snippets.uilicious.com",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "SSR (Server-side Rendering) Checker",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 18
+      },
+      {
+        "vendor": "testingbot.com",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "Testspace.com",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 18
+      },
+      {
+        "vendor": "tesults.com",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "UseWebhook.com",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 18
+      },
+      {
+        "vendor": "websitepulse.com",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 18
+      },
+      {
+        "vendor": "kogiQA",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 18
+      },
+      {
+        "vendor": "Selenium Grid",
+        "tier": "Open Source",
+        "times": 1,
+        "closes": 0,
+        "sentences": 18
+      },
+      {
+        "vendor": "BrowserStack",
+        "tier": "Open Source",
+        "times": 1,
+        "closes": 0,
+        "sentences": 18
+      },
+      {
+        "vendor": "Gatling",
+        "tier": "Open Source",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "Locust",
+        "tier": "Open Source",
+        "times": 1,
+        "closes": 0,
+        "sentences": 18
+      },
+      {
+        "vendor": "BlazeMeter",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      }
+    ]
+  },
+  {
+    "at": "/analytics-alternatives",
+    "status": 200,
+    "publishing": 20,
+    "renderings": 21,
+    "disclosing": 20,
+    "repeated": [
+      "mouseflow.com x2"
+    ],
+    "published": [
+      {
+        "vendor": "PostHog",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "Umami",
+        "tier": "Free OSS",
+        "times": 1,
+        "closes": 0,
+        "sentences": 2
+      },
+      {
+        "vendor": "Avo",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 11
+      },
+      {
+        "vendor": "Clicky",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 11
+      },
+      {
+        "vendor": "counter.dev",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 11
+      },
+      {
+        "vendor": "Dwh.dev",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 2
+      },
+      {
+        "vendor": "GoatCounter",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 11
+      },
+      {
+        "vendor": "Google Analytics",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 2
+      },
+      {
+        "vendor": "heap.io",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 2
+      },
+      {
+        "vendor": "Hightouch",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 11
+      },
+      {
+        "vendor": "MetricsWave",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 11
+      },
+      {
+        "vendor": "Moesif",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 11
+      },
+      {
+        "vendor": "Repohistory",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 11
+      },
+      {
+        "vendor": "Row Zero",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 11
+      },
+      {
+        "vendor": "StatCounter",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 11
+      },
+      {
+        "vendor": "FullStory.com",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 11
+      },
+      {
+        "vendor": "howuku.com",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "Microsoft Clarity",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "mouseflow.com",
+        "tier": "Free",
+        "times": 2,
+        "closes": 1,
+        "sentences": 1
+      },
+      {
+        "vendor": "UXtweak.com",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      }
+    ]
+  },
+  {
+    "at": "/ai-ml-alternatives",
+    "status": 200,
+    "publishing": 35,
+    "renderings": 35,
+    "disclosing": 35,
+    "repeated": [],
+    "published": [
+      {
+        "vendor": "Cerebras",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 4
+      },
+      {
+        "vendor": "Cohere",
+        "tier": "Trial Key",
+        "times": 1,
+        "closes": 0,
+        "sentences": 4
+      },
+      {
+        "vendor": "Scale AI",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 8
+      },
+      {
+        "vendor": "Replicate",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 4
+      },
+      {
+        "vendor": "Baseten",
+        "tier": "Basic (Free Credits)",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "Clarifai",
+        "tier": "Community (Free)",
+        "times": 1,
+        "closes": 0,
+        "sentences": 2
+      },
+      {
+        "vendor": "Neptune.ai",
+        "tier": "Free (Individual)",
+        "times": 1,
+        "closes": 0,
+        "sentences": 2
+      },
+      {
+        "vendor": "Labelbox",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "DeepAR",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 4
+      },
+      {
+        "vendor": "OCR.Space",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "Reducto",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "Audio Enhancer",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "Clair",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 8
+      },
+      {
+        "vendor": "Langtrace",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "Pollinations.AI",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 4
+      },
+      {
+        "vendor": "Portkey",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 4
+      },
+      {
+        "vendor": "ReportGPT",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "xAI",
+        "tier": "Free Credits",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "Devin",
+        "tier": "Free Credits",
+        "times": 1,
+        "closes": 0,
+        "sentences": 2
+      },
+      {
+        "vendor": "Lovable",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "Claude Code",
+        "tier": "Paid",
+        "times": 1,
+        "closes": 0,
+        "sentences": 8
+      },
+      {
+        "vendor": "Cline",
+        "tier": "Open Source",
+        "times": 1,
+        "closes": 0,
+        "sentences": 8
+      },
+      {
+        "vendor": "Aider",
+        "tier": "Open Source",
+        "times": 1,
+        "closes": 0,
+        "sentences": 8
+      },
+      {
+        "vendor": "Windsurf",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 2
+      },
+      {
+        "vendor": "Google Antigravity",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 8
+      },
+      {
+        "vendor": "GitHub Models",
+        "tier": "Retired",
+        "times": 1,
+        "closes": 0,
+        "sentences": 8
+      },
+      {
+        "vendor": "NVIDIA NIM",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 8
+      },
+      {
+        "vendor": "Ollama Cloud",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "LLM7.io",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 4
+      },
+      {
+        "vendor": "Zhipu AI",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 4
+      },
+      {
+        "vendor": "GPU-Bridge",
+        "tier": "Pay-per-use",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "Google Vertex AI Agent Engine",
+        "tier": "Pay-as-you-go",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "Google Vector Search 2.0",
+        "tier": "Pay-as-you-go",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "Alibaba Cloud Qwen Code",
+        "tier": "Free (Reduced)",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "Together AI",
+        "tier": "Free ($1 credits)",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      }
+    ]
+  },
+  {
+    "at": "/design-alternatives",
+    "status": 200,
+    "publishing": 73,
+    "renderings": 73,
+    "disclosing": 73,
+    "repeated": [],
+    "published": [
+      {
+        "vendor": "Canva",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 8
+      },
+      {
+        "vendor": "Excalidraw",
+        "tier": "Free OSS",
+        "times": 1,
+        "closes": 0,
+        "sentences": 9
+      },
+      {
+        "vendor": "Lunacy",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "Pixlr",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "AllTheFreeStock",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 43
+      },
+      {
+        "vendor": "Ant Design Landing Page",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 9
+      },
+      {
+        "vendor": "Calendar Icons Generator",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 43
+      },
+      {
+        "vendor": "Carousel Hero",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 43
+      },
+      {
+        "vendor": "clevebrush.com",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "cloudconvert.com",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 43
+      },
+      {
+        "vendor": "CMYK Pantone",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 8
+      },
+      {
+        "vendor": "CodeMyUI",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 43
+      },
+      {
+        "vendor": "ColorKit",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 43
+      },
+      {
+        "vendor": "coolors",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 8
+      },
+      {
+        "vendor": "css.glass",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 2
+      },
+      {
+        "vendor": "DaisyUI",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 43
+      },
+      {
+        "vendor": "Flows",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "framer.com",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 43
+      },
+      {
+        "vendor": "Glyphs",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 43
+      },
+      {
+        "vendor": "Gradientos",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 9
+      },
+      {
+        "vendor": "haikei.app",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 43
+      },
+      {
+        "vendor": "hypercolor.dev",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 43
+      },
+      {
+        "vendor": "HyperUI",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 43
+      },
+      {
+        "vendor": "iconify.design",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 43
+      },
+      {
+        "vendor": "Image BG Blurer",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 43
+      },
+      {
+        "vendor": "lensdump.com",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 43
+      },
+      {
+        "vendor": "Logo.dev",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 8
+      },
+      {
+        "vendor": "Lorem Picsum",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 43
+      },
+      {
+        "vendor": "LottieFiles",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 8
+      },
+      {
+        "vendor": "Lucide",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 43
+      },
+      {
+        "vendor": "MagicPattern",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 43
+      },
+      {
+        "vendor": "marvelapp.com",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 43
+      },
+      {
+        "vendor": "Mastershot",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 9
+      },
+      {
+        "vendor": "MDBootstrap",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "Mindmup.com",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 43
+      },
+      {
+        "vendor": "Mockplus iDoc",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "mockupmark.com",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 9
+      },
+      {
+        "vendor": "Mossaik",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 43
+      },
+      {
+        "vendor": "Nappy",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 43
+      },
+      {
+        "vendor": "NSPolygon",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 8
+      },
+      {
+        "vendor": "Octopus.do",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 43
+      },
+      {
+        "vendor": "OKLCH",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 43
+      },
+      {
+        "vendor": "okso.app",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 9
+      },
+      {
+        "vendor": "pexels.com",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 8
+      },
+      {
+        "vendor": "Plasmic",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "Pravatar",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 9
+      },
+      {
+        "vendor": "Proto.io",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 43
+      },
+      {
+        "vendor": "Quant Ux",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 43
+      },
+      {
+        "vendor": "resizeappicon.com",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 43
+      },
+      {
+        "vendor": "Responsively App",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 43
+      },
+      {
+        "vendor": "Rive",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 43
+      },
+      {
+        "vendor": "Scrollbar.app",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 2
+      },
+      {
+        "vendor": "smartmockups.com",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 2
+      },
+      {
+        "vendor": "Shadcn Space",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 43
+      },
+      {
+        "vendor": "Tailwindadmin",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "storyset.com",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 43
+      },
+      {
+        "vendor": "SVG Converter",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 43
+      },
+      {
+        "vendor": "Tailark",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 9
+      },
+      {
+        "vendor": "Tailcolors",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 43
+      },
+      {
+        "vendor": "Tailkits",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 43
+      },
+      {
+        "vendor": "TW Elements",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 43
+      },
+      {
+        "vendor": "tweakcn",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 9
+      },
+      {
+        "vendor": "Unicorn Platform",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 43
+      },
+      {
+        "vendor": "unsplash.com",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 8
+      },
+      {
+        "vendor": "Updrafts.app",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 2
+      },
+      {
+        "vendor": "vector.express",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 43
+      },
+      {
+        "vendor": "vectr.com",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 43
+      },
+      {
+        "vendor": "Vertopal",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 43
+      },
+      {
+        "vendor": "Volume",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 43
+      },
+      {
+        "vendor": "Wdrfree SVG",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "Webstudio",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 43
+      },
+      {
+        "vendor": "whimsical.com",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 43
+      },
+      {
+        "vendor": "Zeplin",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 43
+      }
+    ]
+  },
+  {
+    "at": "/email-alternatives",
+    "status": 200,
+    "publishing": 22,
+    "renderings": 22,
+    "disclosing": 22,
+    "repeated": [],
+    "published": [
+      {
+        "vendor": "Mailchimp",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "Brevo",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "Buttondown",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 9
+      },
+      {
+        "vendor": "debugmail.io",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 2
+      },
+      {
+        "vendor": "dkimvalidator.com",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 9
+      },
+      {
+        "vendor": "EmailLabs.io",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 9
+      },
+      {
+        "vendor": "EmailOctopus",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "Emailvalidation.io",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 2
+      },
+      {
+        "vendor": "Imitate Email",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "ImprovMX",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "Inboxes App",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "mail-tester.com",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 9
+      },
+      {
+        "vendor": "mailcatcher.me",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 9
+      },
+      {
+        "vendor": "mailchannels.com",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 9
+      },
+      {
+        "vendor": "MailerLite.com",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 9
+      },
+      {
+        "vendor": "mailsac.com",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "Mailtrap.io",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "Mutant Mail",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "SimpleLogin",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "Substack",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 9
+      },
+      {
+        "vendor": "Tuta",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "Postal",
+        "tier": "Free OSS",
+        "times": 1,
+        "closes": 0,
+        "sentences": 9
+      }
+    ]
+  },
+  {
+    "at": "/project-management-alternatives",
+    "status": 200,
+    "publishing": 59,
+    "renderings": 59,
+    "disclosing": 59,
+    "repeated": [],
+    "published": [
+      {
+        "vendor": "Cal.com",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "Zoho Projects",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "Zoho Connect",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 42
+      },
+      {
+        "vendor": "BookmarkOS.com",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 42
+      },
+      {
+        "vendor": "Braid",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "Calendly",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 2
+      },
+      {
+        "vendor": "cally.com",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 42
+      },
+      {
+        "vendor": "Chanty.com",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 2
+      },
+      {
+        "vendor": "Duckly",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "element.io",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 42
+      },
+      {
+        "vendor": "Fibery",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 42
+      },
+      {
+        "vendor": "Fizzy",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 42
+      },
+      {
+        "vendor": "flat.social",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 42
+      },
+      {
+        "vendor": "flock.com",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 42
+      },
+      {
+        "vendor": "GitDailies",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 2
+      },
+      {
+        "vendor": "gitter.im",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 42
+      },
+      {
+        "vendor": "gokanban.io",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 2
+      },
+      {
+        "vendor": "Hackmd.io",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 42
+      },
+      {
+        "vendor": "Huly",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "Keybase",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 42
+      },
+      {
+        "vendor": "Lockitbot",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 42
+      },
+      {
+        "vendor": "meet.jit.si",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 42
+      },
+      {
+        "vendor": "Nuclino",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 42
+      },
+      {
+        "vendor": "Pendulums",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 42
+      },
+      {
+        "vendor": "Revolt.chat",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 42
+      },
+      {
+        "vendor": "Rocket.Chat",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 42
+      },
+      {
+        "vendor": "Screen Sharing via Browser",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 42
+      },
+      {
+        "vendor": "Slab",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 42
+      },
+      {
+        "vendor": "Stickies",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 42
+      },
+      {
+        "vendor": "talky.io",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 42
+      },
+      {
+        "vendor": "Teamplify",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 42
+      },
+      {
+        "vendor": "twist.com",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 42
+      },
+      {
+        "vendor": "Webex",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "zoom.us",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 42
+      },
+      {
+        "vendor": "Zulip",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 42
+      },
+      {
+        "vendor": "acunote.com",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 42
+      },
+      {
+        "vendor": "asana.com",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 2
+      },
+      {
+        "vendor": "Backlog",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 42
+      },
+      {
+        "vendor": "Crosswork",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 42
+      },
+      {
+        "vendor": "easyretro.io",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 42
+      },
+      {
+        "vendor": "freedcamp.com",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 42
+      },
+      {
+        "vendor": "Hygger",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 42
+      },
+      {
+        "vendor": "kan.bn",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "kanbanflow.com",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 42
+      },
+      {
+        "vendor": "kanbantool.com",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 42
+      },
+      {
+        "vendor": "leiga.com",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "nTask",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 42
+      },
+      {
+        "vendor": "planitpoker.com",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 42
+      },
+      {
+        "vendor": "point.poker",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "Pulse.red",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 42
+      },
+      {
+        "vendor": "taiga.io",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 42
+      },
+      {
+        "vendor": "taskade.com",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "Tenzu",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 42
+      },
+      {
+        "vendor": "titanapps.io",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 42
+      },
+      {
+        "vendor": "Tweek",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 2
+      },
+      {
+        "vendor": "Yodiz",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 42
+      },
+      {
+        "vendor": "zenhub.com",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 42
+      },
+      {
+        "vendor": "Zube",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 42
+      },
+      {
+        "vendor": "ClickUp",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      }
+    ]
+  },
+  {
+    "at": "/ide-code-editors-alternatives",
+    "status": 200,
+    "publishing": 41,
+    "renderings": 41,
+    "disclosing": 41,
+    "repeated": [],
+    "published": [
+      {
+        "vendor": "JetBrains",
+        "tier": "OSS License",
+        "times": 1,
+        "closes": 0,
+        "sentences": 3
+      },
+      {
+        "vendor": "3Cols",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 3
+      },
+      {
+        "vendor": "OnlineInterview.io",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 28
+      },
+      {
+        "vendor": "DhiWise",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "Karbon Sites",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "Metalama",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 28
+      },
+      {
+        "vendor": "v0.dev",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 28
+      },
+      {
+        "vendor": "Android Studio",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 28
+      },
+      {
+        "vendor": "AndroidIDE",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 28
+      },
+      {
+        "vendor": "Apache Netbeans",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 28
+      },
+      {
+        "vendor": "BBEdit",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 28
+      },
+      {
+        "vendor": "BlueJ",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 28
+      },
+      {
+        "vendor": "cacher.io",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 28
+      },
+      {
+        "vendor": "code.cs50.io",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 28
+      },
+      {
+        "vendor": "Code::Blocks",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 28
+      },
+      {
+        "vendor": "codepen.io",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 5
+      },
+      {
+        "vendor": "codesandbox.io",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 5
+      },
+      {
+        "vendor": "Eclipse Che",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 28
+      },
+      {
+        "vendor": "GetVM",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 28
+      },
+      {
+        "vendor": "JDoodle",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 3
+      },
+      {
+        "vendor": "MarsCode",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 28
+      },
+      {
+        "vendor": "OneCompiler",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 28
+      },
+      {
+        "vendor": "PHPSandbox",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 28
+      },
+      {
+        "vendor": "SoloLearn",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 28
+      },
+      {
+        "vendor": "stackblitz.com",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 28
+      },
+      {
+        "vendor": "Sublime Text",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 28
+      },
+      {
+        "vendor": "Visual Studio Community",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "VSCodium",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 28
+      },
+      {
+        "vendor": "wakatime.com",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 28
+      },
+      {
+        "vendor": "Wave Terminal",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 28
+      },
+      {
+        "vendor": "WebComponents.dev",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 28
+      },
+      {
+        "vendor": "FlutLab",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 28
+      },
+      {
+        "vendor": "Code Time",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 5
+      },
+      {
+        "vendor": "Devin",
+        "tier": "Free Credits",
+        "times": 1,
+        "closes": 0,
+        "sentences": 5
+      },
+      {
+        "vendor": "Lovable",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "Claude Code",
+        "tier": "Paid",
+        "times": 1,
+        "closes": 0,
+        "sentences": 28
+      },
+      {
+        "vendor": "Cline",
+        "tier": "Open Source",
+        "times": 1,
+        "closes": 0,
+        "sentences": 28
+      },
+      {
+        "vendor": "Aider",
+        "tier": "Open Source",
+        "times": 1,
+        "closes": 0,
+        "sentences": 28
+      },
+      {
+        "vendor": "Windsurf",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 5
+      },
+      {
+        "vendor": "Google Antigravity",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 28
+      },
+      {
+        "vendor": "Google Gemini Code Assist",
+        "tier": "Individual (Free)",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      }
+    ]
+  },
+  {
+    "at": "/free-llm-apis",
+    "status": 200,
+    "publishing": 11,
+    "renderings": 11,
+    "disclosing": 11,
+    "repeated": [],
+    "published": [
+      {
+        "vendor": "Cerebras",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 4
+      },
+      {
+        "vendor": "Cohere",
+        "tier": "Trial Key",
+        "times": 1,
+        "closes": 0,
+        "sentences": 4
+      },
+      {
+        "vendor": "Replicate",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 4
+      },
+      {
+        "vendor": "Baseten",
+        "tier": "Basic (Free Credits)",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "Clarifai",
+        "tier": "Community (Free)",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "Pollinations.AI",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "Portkey",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 4
+      },
+      {
+        "vendor": "xAI",
+        "tier": "Free Credits",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "GitHub Models",
+        "tier": "Retired",
+        "times": 1,
+        "closes": 0,
+        "sentences": 2
+      },
+      {
+        "vendor": "NVIDIA NIM",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 2
+      },
+      {
+        "vendor": "Ollama Cloud",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      }
+    ]
+  },
+  {
+    "at": "/api-development-alternatives",
+    "status": 200,
+    "publishing": 21,
+    "renderings": 21,
+    "disclosing": 21,
+    "repeated": [],
+    "published": [
+      {
+        "vendor": "Hoppscotch",
+        "tier": "Free OSS",
+        "times": 1,
+        "closes": 0,
+        "sentences": 2
+      },
+      {
+        "vendor": "AbstractAPI",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "APILayer",
+        "tier": "Free (per API)",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "RapidAPI",
+        "tier": "Free (Basic)",
+        "times": 1,
+        "closes": 0,
+        "sentences": 2
+      },
+      {
+        "vendor": "Amazon SP-API",
+        "tier": "Exempt / Paid",
+        "times": 1,
+        "closes": 0,
+        "sentences": 10
+      },
+      {
+        "vendor": "APIVerve",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "Beeceptor",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 10
+      },
+      {
+        "vendor": "CurlHub",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 2
+      },
+      {
+        "vendor": "Insomnia",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "JSONing",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 10
+      },
+      {
+        "vendor": "Mocko.dev",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 10
+      },
+      {
+        "vendor": "OpenAPI3 Designer",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 10
+      },
+      {
+        "vendor": "PDFBolt",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "RequestBin.com",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "Treblle",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 10
+      },
+      {
+        "vendor": "apiary.io",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 10
+      },
+      {
+        "vendor": "Bootify.io",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "QuickType.io",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 10
+      },
+      {
+        "vendor": "ReqBin",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 2
+      },
+      {
+        "vendor": "Google Content API for Shopping",
+        "tier": "Free (Deprecated)",
+        "times": 1,
+        "closes": 0,
+        "sentences": 10
+      },
+      {
+        "vendor": "swaggo/swag",
+        "tier": "Free OSS",
+        "times": 1,
+        "closes": 0,
+        "sentences": 10
+      }
+    ]
+  },
+  {
+    "at": "/q1-2026-developer-pricing-report",
+    "status": 200,
+    "publishing": 0,
+    "renderings": 0,
+    "disclosing": 0,
+    "repeated": [],
+    "published": []
+  },
+  {
+    "at": "/hetzner-pricing-2026",
+    "status": 200,
+    "publishing": 0,
+    "renderings": 0,
+    "disclosing": 0,
+    "repeated": [],
+    "published": []
+  },
+  {
+    "at": "/team-collaboration-alternatives",
+    "status": 200,
+    "publishing": 39,
+    "renderings": 39,
+    "disclosing": 39,
+    "repeated": [],
+    "published": [
+      {
+        "vendor": "Cal.com",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "Zoho Connect",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 28
+      },
+      {
+        "vendor": "Zoho Meeting",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "Zoho Showtime",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 28
+      },
+      {
+        "vendor": "Zoho Desk",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 28
+      },
+      {
+        "vendor": "BookmarkOS.com",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 28
+      },
+      {
+        "vendor": "Braid",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "Calendly",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 2
+      },
+      {
+        "vendor": "cally.com",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 28
+      },
+      {
+        "vendor": "Chanty.com",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "Duckly",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "element.io",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 28
+      },
+      {
+        "vendor": "flat.social",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 28
+      },
+      {
+        "vendor": "flock.com",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 28
+      },
+      {
+        "vendor": "GitDailies",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 2
+      },
+      {
+        "vendor": "gitter.im",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 28
+      },
+      {
+        "vendor": "Hackmd.io",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 28
+      },
+      {
+        "vendor": "Keybase",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 28
+      },
+      {
+        "vendor": "Lockitbot",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 28
+      },
+      {
+        "vendor": "meet.jit.si",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 28
+      },
+      {
+        "vendor": "Nuclino",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 28
+      },
+      {
+        "vendor": "Revolt.chat",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 28
+      },
+      {
+        "vendor": "Rocket.Chat",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 28
+      },
+      {
+        "vendor": "Screen Sharing via Browser",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 28
+      },
+      {
+        "vendor": "Slab",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 28
+      },
+      {
+        "vendor": "Stickies",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 28
+      },
+      {
+        "vendor": "talky.io",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 28
+      },
+      {
+        "vendor": "twist.com",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 28
+      },
+      {
+        "vendor": "Webex",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "wistia.com",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 28
+      },
+      {
+        "vendor": "zoom.us",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 28
+      },
+      {
+        "vendor": "Zulip",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 28
+      },
+      {
+        "vendor": "GraphComment",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 28
+      },
+      {
+        "vendor": "IntenseDebate",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 28
+      },
+      {
+        "vendor": "Remarkbox",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 2
+      },
+      {
+        "vendor": "Utterances",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 28
+      },
+      {
+        "vendor": "Twilio Startups Program",
+        "tier": "Retired",
+        "times": 1,
+        "closes": 0,
+        "sentences": 2
+      },
+      {
+        "vendor": "The GoSquared Early Stage Plan",
+        "tier": "Retired",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "Drift for Early Stage Startups",
+        "tier": "Retired",
+        "times": 1,
+        "closes": 0,
+        "sentences": 28
+      }
+    ]
+  },
+  {
+    "at": "/free-startup-stack",
+    "status": 200,
+    "publishing": 1,
+    "renderings": 1,
+    "disclosing": 0,
+    "repeated": [],
+    "published": [
+      {
+        "vendor": "PostHog",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 0
+      }
+    ]
+  },
+  {
+    "at": "/free-ai-stack",
+    "status": 200,
+    "publishing": 1,
+    "renderings": 1,
+    "disclosing": 0,
+    "repeated": [],
+    "published": [
+      {
+        "vendor": "Portkey",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 0
+      }
+    ]
+  },
+  {
+    "at": "/free-devops-stack",
+    "status": 200,
+    "publishing": 1,
+    "renderings": 1,
+    "disclosing": 1,
+    "repeated": [],
+    "published": [
+      {
+        "vendor": "GitHub Container Registry",
+        "tier": "Free",
+        "times": 1,
+        "closes": 6,
+        "sentences": 6
+      }
+    ]
+  },
+  {
+    "at": "/free-frontend-stack",
+    "status": 200,
+    "publishing": 2,
+    "renderings": 4,
+    "disclosing": 0,
+    "repeated": [
+      "Cloudflare Pages x2",
+      "PostHog x2"
+    ],
+    "published": [
+      {
+        "vendor": "Cloudflare Pages",
+        "tier": "Free",
+        "times": 2,
+        "closes": 0,
+        "sentences": 0
+      },
+      {
+        "vendor": "PostHog",
+        "tier": "Free",
+        "times": 2,
+        "closes": 0,
+        "sentences": 0
+      }
+    ]
+  },
+  {
+    "at": "/free-nextjs-stack",
+    "status": 200,
+    "publishing": 1,
+    "renderings": 1,
+    "disclosing": 0,
+    "repeated": [],
+    "published": [
+      {
+        "vendor": "PostHog",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 0
+      }
+    ]
+  },
+  {
+    "at": "/free-django-stack",
+    "status": 200,
+    "publishing": 1,
+    "renderings": 4,
+    "disclosing": 0,
+    "repeated": [
+      "Upstash x4"
+    ],
+    "published": [
+      {
+        "vendor": "Upstash",
+        "tier": "Free",
+        "times": 4,
+        "closes": 0,
+        "sentences": 0
+      }
+    ]
+  },
+  {
+    "at": "/free-fastapi-stack",
+    "status": 200,
+    "publishing": 1,
+    "renderings": 4,
+    "disclosing": 0,
+    "repeated": [
+      "Upstash x4"
+    ],
+    "published": [
+      {
+        "vendor": "Upstash",
+        "tier": "Free",
+        "times": 4,
+        "closes": 0,
+        "sentences": 0
+      }
+    ]
+  },
+  {
+    "at": "/free-go-stack",
+    "status": 200,
+    "publishing": 1,
+    "renderings": 2,
+    "disclosing": 0,
+    "repeated": [
+      "Upstash x2"
+    ],
+    "published": [
+      {
+        "vendor": "Upstash",
+        "tier": "Free",
+        "times": 2,
+        "closes": 0,
+        "sentences": 0
+      }
+    ]
+  },
+  {
+    "at": "/free-saas-stack",
+    "status": 200,
+    "publishing": 1,
+    "renderings": 1,
+    "disclosing": 0,
+    "repeated": [],
+    "published": [
+      {
+        "vendor": "PostHog",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 0
+      }
+    ]
+  },
+  {
+    "at": "/q2-pricing-preview-2026",
+    "status": 200,
+    "publishing": 0,
+    "renderings": 0,
+    "disclosing": 0,
+    "repeated": [],
+    "published": []
+  },
+  {
+    "at": "/google-developer-program-2026",
+    "status": 200,
+    "publishing": 0,
+    "renderings": 0,
+    "disclosing": 0,
+    "repeated": [],
+    "published": []
+  },
+  {
+    "at": "/supabase-vs-firebase",
+    "status": 200,
+    "publishing": 2,
+    "renderings": 2,
+    "disclosing": 2,
+    "repeated": [],
+    "published": [
+      {
+        "vendor": "Convex",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      },
+      {
+        "vendor": "PocketBase",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      }
+    ]
+  },
+  {
+    "at": "/vercel-vs-netlify",
+    "status": 200,
+    "publishing": 1,
+    "renderings": 1,
+    "disclosing": 1,
+    "repeated": [],
+    "published": [
+      {
+        "vendor": "Cloudflare Pages",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      }
+    ]
+  },
+  {
+    "at": "/neon-vs-supabase",
+    "status": 200,
+    "publishing": 1,
+    "renderings": 1,
+    "disclosing": 1,
+    "repeated": [],
+    "published": [
+      {
+        "vendor": "Convex",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 1
+      }
+    ]
+  },
+  {
+    "at": "/railway-vs-render",
+    "status": 200,
+    "publishing": 0,
+    "renderings": 0,
+    "disclosing": 0,
+    "repeated": [],
+    "published": []
+  },
+  {
+    "at": "/datadog-vs-new-relic",
+    "status": 200,
+    "publishing": 0,
+    "renderings": 0,
+    "disclosing": 0,
+    "repeated": [],
+    "published": []
+  },
+  {
+    "at": "/free-tier-risk",
+    "status": 200,
+    "publishing": 0,
+    "renderings": 0,
+    "disclosing": 0,
+    "repeated": [],
+    "published": []
+  },
+  {
+    "at": "/hcp-terraform-migration",
+    "status": 200,
+    "publishing": 0,
+    "renderings": 0,
+    "disclosing": 0,
+    "repeated": [],
+    "published": []
+  },
+  {
+    "at": "/terraform-cloud-free-tier-removed",
+    "status": 200,
+    "publishing": 0,
+    "renderings": 0,
+    "disclosing": 0,
+    "repeated": [],
+    "published": []
+  },
+  {
+    "at": "/gemini-api-pricing-2026",
+    "status": 200,
+    "publishing": 0,
+    "renderings": 0,
+    "disclosing": 0,
+    "repeated": [],
+    "published": []
+  },
+  {
+    "at": "/gemini-api-pricing-changes",
+    "status": 200,
+    "publishing": 0,
+    "renderings": 0,
+    "disclosing": 0,
+    "repeated": [],
+    "published": []
+  },
+  {
+    "at": "/free-tier-tracker",
+    "status": 200,
+    "publishing": 0,
+    "renderings": 0,
+    "disclosing": 0,
+    "repeated": [],
+    "published": []
+  },
+  {
+    "at": "/startup-credits",
+    "status": 200,
+    "publishing": 0,
+    "renderings": 0,
+    "disclosing": 0,
+    "repeated": [],
+    "published": []
+  },
+  {
+    "at": "/openai-assistants-migration",
+    "status": 200,
+    "publishing": 0,
+    "renderings": 0,
+    "disclosing": 0,
+    "repeated": [],
+    "published": []
+  },
+  {
+    "at": "/ai-coding-pricing-2026",
+    "status": 200,
+    "publishing": 0,
+    "renderings": 0,
+    "disclosing": 0,
+    "repeated": [],
+    "published": []
+  },
+  {
+    "at": "/ai-coding-tools-pricing",
+    "status": 200,
+    "publishing": 1,
+    "renderings": 1,
+    "disclosing": 0,
+    "repeated": [],
+    "published": [
+      {
+        "vendor": "Google Antigravity",
+        "tier": "Free",
+        "times": 1,
+        "closes": 0,
+        "sentences": 0
+      }
+    ]
+  },
+  {
+    "at": "/ci-cd-pricing",
+    "status": 200,
+    "publishing": 0,
+    "renderings": 0,
+    "disclosing": 0,
+    "repeated": [],
+    "published": []
+  },
+  {
+    "at": "/database-pricing",
+    "status": 200,
+    "publishing": 0,
+    "renderings": 0,
+    "disclosing": 0,
+    "repeated": [],
+    "published": []
+  },
+  {
+    "at": "/vector-database-pricing",
+    "status": 200,
+    "publishing": 0,
+    "renderings": 0,
+    "disclosing": 0,
+    "repeated": [],
+    "published": []
+  },
+  {
+    "at": "/llm-api-pricing",
+    "status": 200,
+    "publishing": 1,
+    "renderings": 1,
+    "disclosing": 0,
+    "repeated": [],
+    "published": [
+      {
+        "vendor": "GitHub Models",
+        "tier": "Retired",
+        "times": 1,
+        "closes": 0,
+        "sentences": 0
+      }
+    ]
+  },
+  {
+    "at": "/aws-free-tier-2026",
+    "status": 200,
+    "publishing": 0,
+    "renderings": 0,
+    "disclosing": 0,
+    "repeated": [],
+    "published": []
+  },
+  {
+    "at": "/gcp-free-tier-2026",
+    "status": 200,
+    "publishing": 0,
+    "renderings": 0,
+    "disclosing": 0,
+    "repeated": [],
+    "published": []
+  },
+  {
+    "at": "/azure-free-tier-2026",
+    "status": 200,
+    "publishing": 0,
+    "renderings": 0,
+    "disclosing": 0,
+    "repeated": [],
+    "published": []
+  },
+  {
+    "at": "/cicd-free-tier-comparison-2026",
+    "status": 200,
+    "publishing": 0,
+    "renderings": 0,
+    "disclosing": 0,
+    "repeated": [],
+    "published": []
+  },
+  {
+    "at": "/cloud-free-tier-comparison-2026",
+    "status": 200,
+    "publishing": 0,
+    "renderings": 0,
+    "disclosing": 0,
+    "repeated": [],
+    "published": []
+  },
+  {
+    "at": "/database-free-tier-comparison-2026",
+    "status": 200,
+    "publishing": 0,
+    "renderings": 0,
+    "disclosing": 0,
+    "repeated": [],
+    "published": []
+  },
+  {
+    "at": "/hosting-free-tier-comparison-2026",
+    "status": 200,
+    "publishing": 0,
+    "renderings": 0,
+    "disclosing": 0,
+    "repeated": [],
+    "published": []
+  },
+  {
+    "at": "/serverless-free-tier-comparison-2026",
+    "status": 200,
+    "publishing": 0,
+    "renderings": 0,
+    "disclosing": 0,
+    "repeated": [],
+    "published": []
+  },
+  {
+    "at": "/auth-comparison-2026",
+    "status": 200,
+    "publishing": 0,
+    "renderings": 0,
+    "disclosing": 0,
+    "repeated": [],
+    "published": []
+  },
+  {
+    "at": "/monitoring-comparison-2026",
+    "status": 200,
+    "publishing": 0,
+    "renderings": 0,
+    "disclosing": 0,
+    "repeated": [],
+    "published": []
+  },
+  {
+    "at": "/email-comparison-2026",
+    "status": 200,
+    "publishing": 0,
+    "renderings": 0,
+    "disclosing": 0,
+    "repeated": [],
+    "published": []
+  },
+  {
+    "at": "/storage-comparison-2026",
+    "status": 200,
+    "publishing": 0,
+    "renderings": 0,
+    "disclosing": 0,
+    "repeated": [],
+    "published": []
+  },
+  {
+    "at": "/analytics-free-tier-comparison-2026",
+    "status": 200,
+    "publishing": 0,
+    "renderings": 0,
+    "disclosing": 0,
+    "repeated": [],
+    "published": []
+  },
+  {
+    "at": "/testing-free-tier-comparison-2026",
+    "status": 200,
+    "publishing": 0,
+    "renderings": 0,
+    "disclosing": 0,
+    "repeated": [],
+    "published": []
+  },
+  {
+    "at": "/api-development-free-tier-comparison-2026",
+    "status": 200,
+    "publishing": 0,
+    "renderings": 0,
+    "disclosing": 0,
+    "repeated": [],
+    "published": []
+  },
+  {
+    "at": "/security-free-tier-comparison-2026",
+    "status": 200,
+    "publishing": 0,
+    "renderings": 0,
+    "disclosing": 0,
+    "repeated": [],
+    "published": []
+  },
+  {
+    "at": "/state-of-free-tiers",
+    "status": 200,
+    "publishing": 0,
+    "renderings": 0,
+    "disclosing": 0,
+    "repeated": [],
+    "published": []
+  },
+  {
+    "at": "/tenor-alternatives",
+    "status": 200,
+    "publishing": 0,
+    "renderings": 0,
+    "disclosing": 0,
+    "repeated": [],
+    "published": []
+  },
+  {
+    "at": "/firebase-studio-shutdown",
+    "status": 200,
+    "publishing": 0,
+    "renderings": 0,
+    "disclosing": 0,
+    "repeated": [],
+    "published": []
+  },
+  {
+    "at": "/openai-assistants-migration-2026",
+    "status": 200,
+    "publishing": 0,
+    "renderings": 0,
+    "disclosing": 0,
+    "repeated": [],
+    "published": []
+  },
+  {
+    "at": "/developers",
+    "status": 200,
+    "publishing": 0,
+    "renderings": 0,
+    "disclosing": 0,
+    "repeated": [],
+    "published": []
+  },
+  {
+    "at": "/guides/langchain",
+    "status": 200,
+    "publishing": 0,
+    "renderings": 0,
+    "disclosing": 0,
+    "repeated": [],
+    "published": []
+  },
+  {
+    "at": "/guides/crewai",
+    "status": 200,
+    "publishing": 0,
+    "renderings": 0,
+    "disclosing": 0,
+    "repeated": [],
+    "published": []
+  },
+  {
+    "at": "/guides/n8n",
+    "status": 200,
+    "publishing": 0,
+    "renderings": 0,
+    "disclosing": 0,
+    "repeated": [],
+    "published": []
+  },
+  {
+    "at": "/guides/vercel-ai-sdk",
+    "status": 200,
+    "publishing": 0,
+    "renderings": 0,
+    "disclosing": 0,
+    "repeated": [],
+    "published": []
+  },
+  {
+    "at": "/dall-e-shutdown",
+    "status": 200,
+    "publishing": 0,
+    "renderings": 0,
+    "disclosing": 0,
+    "repeated": [],
+    "published": []
+  },
+  {
+    "at": "/openai-realtime-migration",
+    "status": 200,
+    "publishing": 0,
+    "renderings": 0,
+    "disclosing": 0,
+    "repeated": [],
+    "published": []
+  },
+  {
+    "at": "/aws-app-runner-migration",
+    "status": 200,
+    "publishing": 0,
+    "renderings": 0,
+    "disclosing": 0,
+    "repeated": [],
+    "published": []
+  }
+]

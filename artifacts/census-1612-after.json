@@ -1,0 +1,4005 @@
+{
+  "base": "http://127.0.0.1:8792",
+  "register_pages": 71,
+  "served": 71,
+  "tags": 128,
+  "tags_linking_to_visible_text": 103,
+  "tags_with_the_clause_only_in_title": 25,
+  "labels": [
+    "Ended",
+    "No record",
+    "Unconfirmed"
+  ],
+  "clauses": [
+    {
+      "clause": "the page we cite for this offer states no amount, tier or rate we can read",
+      "count": 67
+    },
+    {
+      "clause": "no catalogue record",
+      "count": 29
+    },
+    {
+      "clause": "we could not read the page we cite for this offer",
+      "count": 11
+    },
+    {
+      "clause": "the page we cite for this offer states that it is free, in words, and states no allowance we can read",
+      "count": 7
+    },
+    {
+      "clause": "the page we cite for this offer does not name it",
+      "count": 6
+    },
+    {
+      "clause": "the offer has ended",
+      "count": 4
+    },
+    {
+      "clause": "the page we cite for this offer names a plan but states no amount",
+      "count": 3
+    },
+    {
+      "clause": "the page we cite for this offer names the platform it runs on and not the offer itself",
+      "count": 1
+    }
+  ],
+  "tabulated_rows_with_a_slug": 641,
+  "tabulated_rows_with_a_slug_and_no_marker": 545,
+  "unmarked_rows_with_no_digit": 25,
+  "unmarked_by_page": [
+    {
+      "path": "/agent-payments",
+      "rows": [
+        {
+          "slug": "vercel",
+          "subject": "Vercel",
+          "hasDigit": true
+        },
+        {
+          "slug": "render",
+          "subject": "Render",
+          "hasDigit": true
+        },
+        {
+          "slug": "cloudflare-workers",
+          "subject": "Cloudflare Workers",
+          "hasDigit": true
+        },
+        {
+          "slug": "cloudflare-pages",
+          "subject": "Cloudflare Pages",
+          "hasDigit": true
+        },
+        {
+          "slug": "railway",
+          "subject": "Railway",
+          "hasDigit": true
+        },
+        {
+          "slug": "fly-io",
+          "subject": "Fly.io",
+          "hasDigit": true
+        },
+        {
+          "slug": "deno-deploy",
+          "subject": "Deno Deploy",
+          "hasDigit": true
+        },
+        {
+          "slug": "supabase",
+          "subject": "Supabase",
+          "hasDigit": true
+        },
+        {
+          "slug": "neon",
+          "subject": "Neon",
+          "hasDigit": true
+        },
+        {
+          "slug": "cloudflare-d1",
+          "subject": "Cloudflare D1",
+          "hasDigit": true
+        },
+        {
+          "slug": "cloudflare-r2",
+          "subject": "Cloudflare R2",
+          "hasDigit": true
+        },
+        {
+          "slug": "cloudflare-queues",
+          "subject": "Cloudflare Queues",
+          "hasDigit": true
+        },
+        {
+          "slug": "cloudflare-kv",
+          "subject": "Cloudflare KV",
+          "hasDigit": true
+        },
+        {
+          "slug": "cloudflare-durable-objects",
+          "subject": "Cloudflare Durable Objects",
+          "hasDigit": true
+        },
+        {
+          "slug": "firecrawl",
+          "subject": "Firecrawl",
+          "hasDigit": true
+        },
+        {
+          "slug": "cloudflare-dns",
+          "subject": "Cloudflare DNS",
+          "hasDigit": true
+        },
+        {
+          "slug": "stripe",
+          "subject": "Stripe",
+          "hasDigit": true
+        },
+        {
+          "slug": "hugging-face",
+          "subject": "Hugging Face",
+          "hasDigit": true
+        },
+        {
+          "slug": "groq",
+          "subject": "Groq",
+          "hasDigit": true
+        },
+        {
+          "slug": "mistral-ai",
+          "subject": "Mistral AI",
+          "hasDigit": true
+        },
+        {
+          "slug": "openrouter",
+          "subject": "OpenRouter",
+          "hasDigit": true
+        },
+        {
+          "slug": "cloudflare-workers-ai",
+          "subject": "Cloudflare Workers AI",
+          "hasDigit": true
+        },
+        {
+          "slug": "zuplo",
+          "subject": "Zuplo",
+          "hasDigit": true
+        },
+        {
+          "slug": "browserbase",
+          "subject": "Browserbase",
+          "hasDigit": true
+        },
+        {
+          "slug": "cerebras",
+          "subject": "Cerebras",
+          "hasDigit": true
+        },
+        {
+          "slug": "cohere",
+          "subject": "Cohere",
+          "hasDigit": true
+        },
+        {
+          "slug": "openai",
+          "subject": "OpenAI",
+          "hasDigit": true
+        },
+        {
+          "slug": "pinecone",
+          "subject": "Pinecone",
+          "hasDigit": true
+        },
+        {
+          "slug": "qdrant",
+          "subject": "Qdrant",
+          "hasDigit": true
+        },
+        {
+          "slug": "deepgram",
+          "subject": "Deepgram",
+          "hasDigit": true
+        },
+        {
+          "slug": "assemblyai",
+          "subject": "AssemblyAI",
+          "hasDigit": true
+        },
+        {
+          "slug": "replicate",
+          "subject": "Replicate",
+          "hasDigit": true
+        },
+        {
+          "slug": "baseten",
+          "subject": "Baseten",
+          "hasDigit": true
+        },
+        {
+          "slug": "composio",
+          "subject": "Composio",
+          "hasDigit": true
+        },
+        {
+          "slug": "reducto",
+          "subject": "Reducto",
+          "hasDigit": true
+        },
+        {
+          "slug": "tavily-ai",
+          "subject": "Tavily AI",
+          "hasDigit": true
+        },
+        {
+          "slug": "langfuse",
+          "subject": "Langfuse",
+          "hasDigit": true
+        },
+        {
+          "slug": "portkey",
+          "subject": "Portkey",
+          "hasDigit": true
+        },
+        {
+          "slug": "pinata-ipfs",
+          "subject": "Pinata IPFS",
+          "hasDigit": true
+        },
+        {
+          "slug": "xai",
+          "subject": "xAI",
+          "hasDigit": true
+        },
+        {
+          "slug": "anthropic-api",
+          "subject": "Anthropic API",
+          "hasDigit": true
+        },
+        {
+          "slug": "nvidia-nim",
+          "subject": "NVIDIA NIM",
+          "hasDigit": true
+        },
+        {
+          "slug": "siliconflow",
+          "subject": "SiliconFlow",
+          "hasDigit": true
+        },
+        {
+          "slug": "deepseek-api",
+          "subject": "DeepSeek API",
+          "hasDigit": true
+        },
+        {
+          "slug": "exa",
+          "subject": "Exa",
+          "hasDigit": true
+        },
+        {
+          "slug": "hyperbrowser",
+          "subject": "Hyperbrowser",
+          "hasDigit": true
+        },
+        {
+          "slug": "openvps",
+          "subject": "OpenVPS",
+          "hasDigit": true
+        },
+        {
+          "slug": "gpu-bridge",
+          "subject": "GPU-Bridge",
+          "hasDigit": true
+        },
+        {
+          "slug": "strale",
+          "subject": "Strale",
+          "hasDigit": true
+        },
+        {
+          "slug": "tollbooth",
+          "subject": "tollbooth",
+          "hasDigit": true
+        },
+        {
+          "slug": "e2b",
+          "subject": "E2B",
+          "hasDigit": true
+        },
+        {
+          "slug": "together-ai",
+          "subject": "Together AI",
+          "hasDigit": true
+        },
+        {
+          "slug": "fireworks-ai",
+          "subject": "Fireworks AI",
+          "hasDigit": true
+        },
+        {
+          "slug": "modal",
+          "subject": "Modal",
+          "hasDigit": true
+        }
+      ]
+    },
+    {
+      "path": "/ai-coding-tools-pricing",
+      "rows": [
+        {
+          "slug": "cursor",
+          "subject": "Cursor",
+          "hasDigit": true
+        },
+        {
+          "slug": "windsurf",
+          "subject": "Windsurf",
+          "hasDigit": true
+        },
+        {
+          "slug": "amazon-kiro",
+          "subject": "Amazon Kiro",
+          "hasDigit": true
+        },
+        {
+          "slug": "github-copilot",
+          "subject": "GitHub Copilot",
+          "hasDigit": true
+        },
+        {
+          "slug": "google-gemini-code-assist",
+          "subject": "Gemini Code Assist",
+          "hasDigit": true
+        },
+        {
+          "slug": "google-antigravity",
+          "subject": "Google Antigravity",
+          "hasDigit": true
+        },
+        {
+          "slug": "claude-code",
+          "subject": "Claude Code",
+          "hasDigit": true
+        },
+        {
+          "slug": "gemini-cli",
+          "subject": "Gemini CLI",
+          "hasDigit": true
+        },
+        {
+          "slug": "cline",
+          "subject": "Cline",
+          "hasDigit": false
+        },
+        {
+          "slug": "aider",
+          "subject": "Aider",
+          "hasDigit": false
+        },
+        {
+          "slug": "amazon-q-developer",
+          "subject": "Amazon Q Developer",
+          "hasDigit": true
+        },
+        {
+          "slug": "augment-code",
+          "subject": "Augment Code",
+          "hasDigit": true
+        },
+        {
+          "slug": "openai-codex",
+          "subject": "OpenAI Codex",
+          "hasDigit": true
+        },
+        {
+          "slug": "devin",
+          "subject": "Devin",
+          "hasDigit": true
+        },
+        {
+          "slug": "bolt-new",
+          "subject": "Bolt.new",
+          "hasDigit": true
+        },
+        {
+          "slug": "lovable",
+          "subject": "Lovable",
+          "hasDigit": true
+        },
+        {
+          "slug": "marscode",
+          "subject": "MarsCode",
+          "hasDigit": false
+        },
+        {
+          "slug": "cursor",
+          "subject": "Cursor",
+          "hasDigit": true
+        },
+        {
+          "slug": "windsurf",
+          "subject": "Windsurf",
+          "hasDigit": true
+        },
+        {
+          "slug": "amazon-kiro",
+          "subject": "Amazon Kiro",
+          "hasDigit": true
+        },
+        {
+          "slug": "github-copilot",
+          "subject": "GitHub Copilot",
+          "hasDigit": true
+        },
+        {
+          "slug": "google-gemini-code-assist",
+          "subject": "Gemini Code Assist",
+          "hasDigit": true
+        },
+        {
+          "slug": "google-antigravity",
+          "subject": "Google Antigravity",
+          "hasDigit": true
+        },
+        {
+          "slug": "claude-code",
+          "subject": "Claude Code",
+          "hasDigit": true
+        },
+        {
+          "slug": "gemini-cli",
+          "subject": "Gemini CLI",
+          "hasDigit": true
+        },
+        {
+          "slug": "cline",
+          "subject": "Cline",
+          "hasDigit": true
+        },
+        {
+          "slug": "aider",
+          "subject": "Aider",
+          "hasDigit": true
+        },
+        {
+          "slug": "amazon-q-developer",
+          "subject": "Amazon Q Developer",
+          "hasDigit": true
+        },
+        {
+          "slug": "augment-code",
+          "subject": "Augment Code",
+          "hasDigit": true
+        },
+        {
+          "slug": "openai-codex",
+          "subject": "OpenAI Codex",
+          "hasDigit": true
+        },
+        {
+          "slug": "devin",
+          "subject": "Devin",
+          "hasDigit": true
+        },
+        {
+          "slug": "bolt-new",
+          "subject": "Bolt.new",
+          "hasDigit": true
+        },
+        {
+          "slug": "lovable",
+          "subject": "Lovable",
+          "hasDigit": true
+        },
+        {
+          "slug": "marscode",
+          "subject": "MarsCode",
+          "hasDigit": true
+        }
+      ]
+    },
+    {
+      "path": "/aws-app-runner-migration",
+      "rows": [
+        {
+          "slug": "aws",
+          "subject": "Amazon ECS Express Mode",
+          "hasDigit": true
+        },
+        {
+          "slug": "aws",
+          "subject": "AWS Fargate",
+          "hasDigit": true
+        },
+        {
+          "slug": "aws",
+          "subject": "Elastic Beanstalk",
+          "hasDigit": true
+        },
+        {
+          "slug": "google-cloud-run",
+          "subject": "Google Cloud Run",
+          "hasDigit": true
+        },
+        {
+          "slug": "azure",
+          "subject": "Azure Container Apps",
+          "hasDigit": true
+        },
+        {
+          "slug": "railway",
+          "subject": "Railway",
+          "hasDigit": true
+        },
+        {
+          "slug": "render",
+          "subject": "Render",
+          "hasDigit": true
+        },
+        {
+          "slug": "fly-io",
+          "subject": "Fly.io",
+          "hasDigit": true
+        },
+        {
+          "slug": "digitalocean",
+          "subject": "DigitalOcean App Platform",
+          "hasDigit": true
+        },
+        {
+          "slug": "northflank",
+          "subject": "Northflank",
+          "hasDigit": true
+        }
+      ]
+    },
+    {
+      "path": "/ci-cd-pricing",
+      "rows": [
+        {
+          "slug": "github-actions",
+          "subject": "GitHub Actions",
+          "hasDigit": true
+        },
+        {
+          "slug": "gitlab-ci",
+          "subject": "GitLab CI",
+          "hasDigit": true
+        },
+        {
+          "slug": "circleci",
+          "subject": "CircleCI",
+          "hasDigit": true
+        },
+        {
+          "slug": "buildkite",
+          "subject": "Buildkite",
+          "hasDigit": true
+        },
+        {
+          "slug": "semaphore-ci",
+          "subject": "Semaphore CI",
+          "hasDigit": true
+        },
+        {
+          "slug": "harness-ci",
+          "subject": "Harness CI",
+          "hasDigit": true
+        },
+        {
+          "slug": "buddy",
+          "subject": "Buddy",
+          "hasDigit": true
+        },
+        {
+          "slug": "codefresh",
+          "subject": "Codefresh",
+          "hasDigit": true
+        },
+        {
+          "slug": "aws",
+          "subject": "AWS CodeBuild",
+          "hasDigit": true
+        },
+        {
+          "slug": "google-cloud-build",
+          "subject": "Google Cloud Build",
+          "hasDigit": true
+        },
+        {
+          "slug": "azure-devops",
+          "subject": "Azure DevOps",
+          "hasDigit": true
+        },
+        {
+          "slug": "bitbucket-pipelines",
+          "subject": "Bitbucket Pipelines",
+          "hasDigit": true
+        },
+        {
+          "slug": "bitrise",
+          "subject": "Bitrise",
+          "hasDigit": true
+        },
+        {
+          "slug": "codemagic",
+          "subject": "Codemagic",
+          "hasDigit": true
+        },
+        {
+          "slug": "appcircle",
+          "subject": "Appcircle",
+          "hasDigit": true
+        },
+        {
+          "slug": "jenkins",
+          "subject": "Jenkins",
+          "hasDigit": true
+        },
+        {
+          "slug": "drone-ci",
+          "subject": "Drone CI",
+          "hasDigit": true
+        },
+        {
+          "slug": "woodpecker-ci",
+          "subject": "Woodpecker CI",
+          "hasDigit": true
+        },
+        {
+          "slug": "github-actions",
+          "subject": "GitHub Actions",
+          "hasDigit": true
+        },
+        {
+          "slug": "gitlab-ci",
+          "subject": "GitLab CI",
+          "hasDigit": true
+        },
+        {
+          "slug": "circleci",
+          "subject": "CircleCI",
+          "hasDigit": true
+        },
+        {
+          "slug": "buildkite",
+          "subject": "Buildkite",
+          "hasDigit": true
+        },
+        {
+          "slug": "semaphore-ci",
+          "subject": "Semaphore CI",
+          "hasDigit": true
+        },
+        {
+          "slug": "harness-ci",
+          "subject": "Harness CI",
+          "hasDigit": true
+        },
+        {
+          "slug": "buddy",
+          "subject": "Buddy",
+          "hasDigit": true
+        },
+        {
+          "slug": "codefresh",
+          "subject": "Codefresh",
+          "hasDigit": true
+        },
+        {
+          "slug": "aws",
+          "subject": "AWS CodeBuild",
+          "hasDigit": true
+        },
+        {
+          "slug": "google-cloud-build",
+          "subject": "Google Cloud Build",
+          "hasDigit": true
+        },
+        {
+          "slug": "azure-devops",
+          "subject": "Azure DevOps",
+          "hasDigit": true
+        },
+        {
+          "slug": "bitbucket-pipelines",
+          "subject": "Bitbucket Pipelines",
+          "hasDigit": true
+        },
+        {
+          "slug": "bitrise",
+          "subject": "Bitrise",
+          "hasDigit": true
+        },
+        {
+          "slug": "codemagic",
+          "subject": "Codemagic",
+          "hasDigit": true
+        },
+        {
+          "slug": "appcircle",
+          "subject": "Appcircle",
+          "hasDigit": true
+        },
+        {
+          "slug": "jenkins",
+          "subject": "Jenkins",
+          "hasDigit": true
+        },
+        {
+          "slug": "drone-ci",
+          "subject": "Drone CI",
+          "hasDigit": true
+        },
+        {
+          "slug": "woodpecker-ci",
+          "subject": "Woodpecker CI",
+          "hasDigit": true
+        }
+      ]
+    },
+    {
+      "path": "/dall-e-shutdown",
+      "rows": [
+        {
+          "slug": "openai",
+          "subject": "gpt-image-1 (OpenAI)",
+          "hasDigit": true
+        },
+        {
+          "slug": "pollinations-ai",
+          "subject": "Pollinations.AI",
+          "hasDigit": false
+        },
+        {
+          "slug": "cloudflare-workers-ai",
+          "subject": "Cloudflare Workers AI",
+          "hasDigit": true
+        },
+        {
+          "slug": "stability-ai",
+          "subject": "Stability AI",
+          "hasDigit": true
+        },
+        {
+          "slug": "lumenfall",
+          "subject": "Lumenfall.ai",
+          "hasDigit": true
+        },
+        {
+          "slug": "replicate",
+          "subject": "Replicate",
+          "hasDigit": true
+        },
+        {
+          "slug": "hugging-face",
+          "subject": "Hugging Face",
+          "hasDigit": false
+        }
+      ]
+    },
+    {
+      "path": "/database-pricing",
+      "rows": [
+        {
+          "slug": "supabase",
+          "subject": "Supabase",
+          "hasDigit": true
+        },
+        {
+          "slug": "neon",
+          "subject": "Neon",
+          "hasDigit": true
+        },
+        {
+          "slug": "cockroachdb",
+          "subject": "CockroachDB",
+          "hasDigit": true
+        },
+        {
+          "slug": "amazon-aurora-postgresql",
+          "subject": "Amazon Aurora PostgreSQL",
+          "hasDigit": true
+        },
+        {
+          "slug": "nile",
+          "subject": "Nile",
+          "hasDigit": true
+        },
+        {
+          "slug": "turso",
+          "subject": "Turso",
+          "hasDigit": true
+        },
+        {
+          "slug": "cloudflare-d1",
+          "subject": "Cloudflare D1",
+          "hasDigit": true
+        },
+        {
+          "slug": "upstash",
+          "subject": "Upstash",
+          "hasDigit": true
+        },
+        {
+          "slug": "convex",
+          "subject": "Convex",
+          "hasDigit": true
+        },
+        {
+          "slug": "planetscale",
+          "subject": "PlanetScale",
+          "hasDigit": true
+        },
+        {
+          "slug": "prisma-accelerate",
+          "subject": "Prisma Accelerate",
+          "hasDigit": true
+        },
+        {
+          "slug": "mongodb-atlas",
+          "subject": "MongoDB Atlas",
+          "hasDigit": true
+        },
+        {
+          "slug": "firebase",
+          "subject": "Firebase Firestore",
+          "hasDigit": true
+        },
+        {
+          "slug": "couchbase-capella",
+          "subject": "Couchbase Capella",
+          "hasDigit": true
+        },
+        {
+          "slug": "surrealdb-cloud",
+          "subject": "SurrealDB Cloud",
+          "hasDigit": true
+        },
+        {
+          "slug": "dynamodb-local",
+          "subject": "Amazon DynamoDB",
+          "hasDigit": true
+        },
+        {
+          "slug": "google-cloud-bigquery",
+          "subject": "Google Cloud BigQuery",
+          "hasDigit": true
+        },
+        {
+          "slug": "cloudflare-kv",
+          "subject": "Cloudflare KV",
+          "hasDigit": true
+        },
+        {
+          "slug": "redis-cloud",
+          "subject": "Redis Cloud",
+          "hasDigit": true
+        },
+        {
+          "slug": "neo4j-auradb",
+          "subject": "Neo4j AuraDB",
+          "hasDigit": true
+        },
+        {
+          "slug": "influxdb-cloud",
+          "subject": "InfluxDB Cloud",
+          "hasDigit": true
+        },
+        {
+          "slug": "weaviate",
+          "subject": "Weaviate",
+          "hasDigit": true
+        },
+        {
+          "slug": "zilliz-cloud",
+          "subject": "Zilliz Cloud",
+          "hasDigit": true
+        },
+        {
+          "slug": "momento",
+          "subject": "Momento",
+          "hasDigit": true
+        },
+        {
+          "slug": "hasura-cloud",
+          "subject": "Hasura Cloud",
+          "hasDigit": true
+        },
+        {
+          "slug": "supabase",
+          "subject": "Supabase",
+          "hasDigit": true
+        },
+        {
+          "slug": "neon",
+          "subject": "Neon",
+          "hasDigit": true
+        },
+        {
+          "slug": "cockroachdb",
+          "subject": "CockroachDB",
+          "hasDigit": true
+        },
+        {
+          "slug": "amazon-aurora-postgresql",
+          "subject": "Amazon Aurora PostgreSQL",
+          "hasDigit": true
+        },
+        {
+          "slug": "nile",
+          "subject": "Nile",
+          "hasDigit": true
+        },
+        {
+          "slug": "turso",
+          "subject": "Turso",
+          "hasDigit": true
+        },
+        {
+          "slug": "cloudflare-d1",
+          "subject": "Cloudflare D1",
+          "hasDigit": true
+        },
+        {
+          "slug": "upstash",
+          "subject": "Upstash",
+          "hasDigit": true
+        },
+        {
+          "slug": "convex",
+          "subject": "Convex",
+          "hasDigit": true
+        },
+        {
+          "slug": "planetscale",
+          "subject": "PlanetScale",
+          "hasDigit": true
+        },
+        {
+          "slug": "prisma-accelerate",
+          "subject": "Prisma Accelerate",
+          "hasDigit": true
+        },
+        {
+          "slug": "mongodb-atlas",
+          "subject": "MongoDB Atlas",
+          "hasDigit": true
+        },
+        {
+          "slug": "firebase",
+          "subject": "Firebase Firestore",
+          "hasDigit": true
+        },
+        {
+          "slug": "couchbase-capella",
+          "subject": "Couchbase Capella",
+          "hasDigit": true
+        },
+        {
+          "slug": "surrealdb-cloud",
+          "subject": "SurrealDB Cloud",
+          "hasDigit": true
+        },
+        {
+          "slug": "dynamodb-local",
+          "subject": "Amazon DynamoDB",
+          "hasDigit": true
+        },
+        {
+          "slug": "google-cloud-bigquery",
+          "subject": "Google Cloud BigQuery",
+          "hasDigit": true
+        },
+        {
+          "slug": "cloudflare-kv",
+          "subject": "Cloudflare KV",
+          "hasDigit": true
+        },
+        {
+          "slug": "redis-cloud",
+          "subject": "Redis Cloud",
+          "hasDigit": true
+        },
+        {
+          "slug": "neo4j-auradb",
+          "subject": "Neo4j AuraDB",
+          "hasDigit": true
+        },
+        {
+          "slug": "influxdb-cloud",
+          "subject": "InfluxDB Cloud",
+          "hasDigit": true
+        },
+        {
+          "slug": "weaviate",
+          "subject": "Weaviate",
+          "hasDigit": true
+        },
+        {
+          "slug": "zilliz-cloud",
+          "subject": "Zilliz Cloud",
+          "hasDigit": true
+        },
+        {
+          "slug": "momento",
+          "subject": "Momento",
+          "hasDigit": false
+        },
+        {
+          "slug": "hasura-cloud",
+          "subject": "Hasura Cloud",
+          "hasDigit": true
+        }
+      ]
+    },
+    {
+      "path": "/datadog-vs-new-relic",
+      "rows": [
+        {
+          "slug": "sentry",
+          "subject": "Sentry",
+          "hasDigit": true
+        },
+        {
+          "slug": "grafana-cloud",
+          "subject": "Grafana Cloud",
+          "hasDigit": true
+        },
+        {
+          "slug": "betterstack",
+          "subject": "BetterStack",
+          "hasDigit": true
+        },
+        {
+          "slug": "axiom",
+          "subject": "Axiom",
+          "hasDigit": true
+        },
+        {
+          "slug": "middleware-io",
+          "subject": "Middleware.io",
+          "hasDigit": true
+        }
+      ]
+    },
+    {
+      "path": "/firebase-studio-shutdown",
+      "rows": [
+        {
+          "slug": "github-codespaces",
+          "subject": "GitHub Codespaces",
+          "hasDigit": true
+        },
+        {
+          "slug": "gitpod",
+          "subject": "Gitpod",
+          "hasDigit": true
+        },
+        {
+          "slug": "replit",
+          "subject": "Replit",
+          "hasDigit": true
+        },
+        {
+          "slug": "codesandbox",
+          "subject": "CodeSandbox",
+          "hasDigit": true
+        },
+        {
+          "slug": "stackblitz",
+          "subject": "StackBlitz",
+          "hasDigit": false
+        },
+        {
+          "slug": "coder",
+          "subject": "Coder",
+          "hasDigit": false
+        },
+        {
+          "slug": "cursor",
+          "subject": "Cursor",
+          "hasDigit": false
+        },
+        {
+          "slug": "windsurf",
+          "subject": "Windsurf",
+          "hasDigit": false
+        },
+        {
+          "slug": "bolt-new",
+          "subject": "Bolt.new",
+          "hasDigit": false
+        },
+        {
+          "slug": "lovable",
+          "subject": "Lovable",
+          "hasDigit": true
+        },
+        {
+          "slug": "v0",
+          "subject": "v0 (Vercel)",
+          "hasDigit": true
+        }
+      ]
+    },
+    {
+      "path": "/free-tier-risk",
+      "rows": [
+        {
+          "slug": "cloudflare",
+          "subject": "Cloudflare",
+          "hasDigit": true
+        },
+        {
+          "slug": "github",
+          "subject": "GitHub",
+          "hasDigit": true
+        },
+        {
+          "slug": "grafana-cloud",
+          "subject": "Grafana Cloud",
+          "hasDigit": true
+        },
+        {
+          "slug": "cockroachdb",
+          "subject": "CockroachDB",
+          "hasDigit": true
+        },
+        {
+          "slug": "auth0",
+          "subject": "Auth0",
+          "hasDigit": true
+        },
+        {
+          "slug": "sentry",
+          "subject": "Sentry",
+          "hasDigit": true
+        },
+        {
+          "slug": "google-cloud",
+          "subject": "Google Cloud (Always Free)",
+          "hasDigit": true
+        },
+        {
+          "slug": "aws",
+          "subject": "AWS Free Tier",
+          "hasDigit": true
+        },
+        {
+          "slug": "github-copilot",
+          "subject": "GitHub Copilot Free",
+          "hasDigit": true
+        },
+        {
+          "slug": "anthropic-api",
+          "subject": "Anthropic",
+          "hasDigit": true
+        },
+        {
+          "slug": "supabase",
+          "subject": "Supabase",
+          "hasDigit": true
+        },
+        {
+          "slug": "vercel",
+          "subject": "Vercel",
+          "hasDigit": true
+        },
+        {
+          "slug": "netlify",
+          "subject": "Netlify",
+          "hasDigit": true
+        },
+        {
+          "slug": "neon",
+          "subject": "Neon",
+          "hasDigit": true
+        },
+        {
+          "slug": "railway",
+          "subject": "Railway",
+          "hasDigit": true
+        },
+        {
+          "slug": "render",
+          "subject": "Render",
+          "hasDigit": true
+        },
+        {
+          "slug": "stripe",
+          "subject": "Stripe",
+          "hasDigit": true
+        },
+        {
+          "slug": "firebase",
+          "subject": "Firebase",
+          "hasDigit": true
+        },
+        {
+          "slug": "docker-hub",
+          "subject": "Docker Hub",
+          "hasDigit": true
+        },
+        {
+          "slug": "dub-co",
+          "subject": "Dub.co",
+          "hasDigit": true
+        },
+        {
+          "slug": "google-gemini-api",
+          "subject": "Google Gemini API",
+          "hasDigit": true
+        },
+        {
+          "slug": "postman",
+          "subject": "Postman",
+          "hasDigit": true
+        },
+        {
+          "slug": "openai",
+          "subject": "OpenAI",
+          "hasDigit": true
+        },
+        {
+          "slug": "hcp-terraform",
+          "subject": "HCP Terraform",
+          "hasDigit": true
+        },
+        {
+          "slug": "localstack",
+          "subject": "LocalStack",
+          "hasDigit": true
+        },
+        {
+          "slug": "minio",
+          "subject": "MinIO (OSS)",
+          "hasDigit": true
+        },
+        {
+          "slug": "sendgrid",
+          "subject": "SendGrid",
+          "hasDigit": true
+        },
+        {
+          "slug": "logz-io",
+          "subject": "Logz.io",
+          "hasDigit": true
+        },
+        {
+          "slug": "heroku-for-startups-program",
+          "subject": "Heroku",
+          "hasDigit": true
+        },
+        {
+          "slug": "fly-io",
+          "subject": "Fly.io",
+          "hasDigit": true
+        },
+        {
+          "slug": "brave-search-api",
+          "subject": "Brave Search API",
+          "hasDigit": true
+        },
+        {
+          "slug": "amazon-sp-api",
+          "subject": "Amazon SP-API",
+          "hasDigit": true
+        },
+        {
+          "slug": "cloudflare",
+          "subject": "Cloudflare",
+          "hasDigit": true
+        },
+        {
+          "slug": "github",
+          "subject": "GitHub",
+          "hasDigit": true
+        },
+        {
+          "slug": "grafana-cloud",
+          "subject": "Grafana Cloud",
+          "hasDigit": true
+        },
+        {
+          "slug": "cockroachdb",
+          "subject": "CockroachDB",
+          "hasDigit": true
+        },
+        {
+          "slug": "auth0",
+          "subject": "Auth0",
+          "hasDigit": true
+        },
+        {
+          "slug": "sentry",
+          "subject": "Sentry",
+          "hasDigit": true
+        },
+        {
+          "slug": "google-cloud",
+          "subject": "Google Cloud (Always Free)",
+          "hasDigit": true
+        },
+        {
+          "slug": "aws",
+          "subject": "AWS Free Tier",
+          "hasDigit": true
+        },
+        {
+          "slug": "github-copilot",
+          "subject": "GitHub Copilot Free",
+          "hasDigit": true
+        },
+        {
+          "slug": "anthropic-api",
+          "subject": "Anthropic",
+          "hasDigit": true
+        },
+        {
+          "slug": "supabase",
+          "subject": "Supabase",
+          "hasDigit": true
+        },
+        {
+          "slug": "vercel",
+          "subject": "Vercel",
+          "hasDigit": true
+        },
+        {
+          "slug": "netlify",
+          "subject": "Netlify",
+          "hasDigit": true
+        },
+        {
+          "slug": "neon",
+          "subject": "Neon",
+          "hasDigit": true
+        },
+        {
+          "slug": "railway",
+          "subject": "Railway",
+          "hasDigit": true
+        },
+        {
+          "slug": "render",
+          "subject": "Render",
+          "hasDigit": true
+        },
+        {
+          "slug": "stripe",
+          "subject": "Stripe",
+          "hasDigit": true
+        },
+        {
+          "slug": "firebase",
+          "subject": "Firebase",
+          "hasDigit": true
+        },
+        {
+          "slug": "docker-hub",
+          "subject": "Docker Hub",
+          "hasDigit": true
+        },
+        {
+          "slug": "dub-co",
+          "subject": "Dub.co",
+          "hasDigit": true
+        },
+        {
+          "slug": "google-gemini-api",
+          "subject": "Google Gemini API",
+          "hasDigit": true
+        },
+        {
+          "slug": "heroku-for-startups-program",
+          "subject": "Heroku",
+          "hasDigit": true
+        },
+        {
+          "slug": "fly-io",
+          "subject": "Fly.io",
+          "hasDigit": true
+        },
+        {
+          "slug": "postman",
+          "subject": "Postman",
+          "hasDigit": true
+        },
+        {
+          "slug": "openai",
+          "subject": "OpenAI",
+          "hasDigit": true
+        },
+        {
+          "slug": "hcp-terraform",
+          "subject": "HCP Terraform",
+          "hasDigit": true
+        },
+        {
+          "slug": "localstack",
+          "subject": "LocalStack",
+          "hasDigit": true
+        },
+        {
+          "slug": "brave-search-api",
+          "subject": "Brave Search API",
+          "hasDigit": true
+        },
+        {
+          "slug": "amazon-sp-api",
+          "subject": "Amazon SP-API",
+          "hasDigit": true
+        },
+        {
+          "slug": "minio",
+          "subject": "MinIO (OSS)",
+          "hasDigit": true
+        },
+        {
+          "slug": "sendgrid",
+          "subject": "SendGrid",
+          "hasDigit": true
+        },
+        {
+          "slug": "logz-io",
+          "subject": "Logz.io",
+          "hasDigit": true
+        }
+      ]
+    },
+    {
+      "path": "/free-tier-tracker",
+      "rows": [
+        {
+          "slug": "odrive",
+          "subject": "odrive",
+          "hasDigit": true
+        },
+        {
+          "slug": "hcp-terraform",
+          "subject": "HCP Terraform",
+          "hasDigit": true
+        },
+        {
+          "slug": "google",
+          "subject": "Google",
+          "hasDigit": true
+        },
+        {
+          "slug": "amazon-aurora-postgresql",
+          "subject": "Amazon Aurora PostgreSQL",
+          "hasDigit": true
+        },
+        {
+          "slug": "localstack",
+          "subject": "LocalStack",
+          "hasDigit": true
+        },
+        {
+          "slug": "dub-co",
+          "subject": "Dub.co",
+          "hasDigit": true
+        },
+        {
+          "slug": "neo4j-auradb",
+          "subject": "Neo4j AuraDB",
+          "hasDigit": true
+        },
+        {
+          "slug": "digitalocean",
+          "subject": "DigitalOcean",
+          "hasDigit": true
+        },
+        {
+          "slug": "firebase",
+          "subject": "Firebase",
+          "hasDigit": true
+        },
+        {
+          "slug": "xai",
+          "subject": "xAI (Grok)",
+          "hasDigit": true
+        },
+        {
+          "slug": "windsurf",
+          "subject": "Windsurf",
+          "hasDigit": true
+        },
+        {
+          "slug": "github-copilot",
+          "subject": "GitHub Copilot",
+          "hasDigit": true
+        },
+        {
+          "slug": "logz-io",
+          "subject": "Logz.io",
+          "hasDigit": true
+        },
+        {
+          "slug": "postman",
+          "subject": "Postman",
+          "hasDigit": true
+        },
+        {
+          "slug": "unity-devops",
+          "subject": "Unity DevOps",
+          "hasDigit": true
+        },
+        {
+          "slug": "atlassian",
+          "subject": "Atlassian",
+          "hasDigit": true
+        },
+        {
+          "slug": "brave-search-api",
+          "subject": "Brave Search API",
+          "hasDigit": true
+        },
+        {
+          "slug": "minio",
+          "subject": "MinIO",
+          "hasDigit": true
+        },
+        {
+          "slug": "openai",
+          "subject": "OpenAI",
+          "hasDigit": true
+        },
+        {
+          "slug": "x-twitter",
+          "subject": "X (Twitter)",
+          "hasDigit": true
+        },
+        {
+          "slug": "anthropic-api",
+          "subject": "Anthropic",
+          "hasDigit": true
+        },
+        {
+          "slug": "cloudflare",
+          "subject": "Cloudflare",
+          "hasDigit": true
+        },
+        {
+          "slug": "firebase",
+          "subject": "Firebase",
+          "hasDigit": true
+        },
+        {
+          "slug": "github-copilot",
+          "subject": "GitHub Copilot",
+          "hasDigit": true
+        },
+        {
+          "slug": "supabase",
+          "subject": "Supabase",
+          "hasDigit": true
+        },
+        {
+          "slug": "stripe",
+          "subject": "Stripe",
+          "hasDigit": true
+        },
+        {
+          "slug": "cloudflare",
+          "subject": "Cloudflare Startup Program",
+          "hasDigit": true
+        },
+        {
+          "slug": "x-twitter",
+          "subject": "X (Twitter)",
+          "hasDigit": true
+        },
+        {
+          "slug": "vercel",
+          "subject": "Vercel",
+          "hasDigit": true
+        },
+        {
+          "slug": "amazon-sp-api",
+          "subject": "Amazon SP-API",
+          "hasDigit": true
+        },
+        {
+          "slug": "google",
+          "subject": "Google",
+          "hasDigit": true
+        },
+        {
+          "slug": "pythonanywhere",
+          "subject": "PythonAnywhere",
+          "hasDigit": true
+        },
+        {
+          "slug": "neon",
+          "subject": "Neon",
+          "hasDigit": true
+        },
+        {
+          "slug": "devin",
+          "subject": "Cognition Devin",
+          "hasDigit": true
+        },
+        {
+          "slug": "cloudflare-durable-objects",
+          "subject": "Cloudflare Durable Objects",
+          "hasDigit": true
+        },
+        {
+          "slug": "aws",
+          "subject": "AWS",
+          "hasDigit": true
+        },
+        {
+          "slug": "github-actions",
+          "subject": "GitHub Actions",
+          "hasDigit": true
+        },
+        {
+          "slug": "atlassian",
+          "subject": "Atlassian Forge",
+          "hasDigit": true
+        },
+        {
+          "slug": "fly-io",
+          "subject": "Fly.io",
+          "hasDigit": true
+        },
+        {
+          "slug": "vercel",
+          "subject": "Vercel",
+          "hasDigit": true
+        },
+        {
+          "slug": "google-cloud",
+          "subject": "Google Cloud",
+          "hasDigit": true
+        },
+        {
+          "slug": "digitalocean",
+          "subject": "DigitalOcean",
+          "hasDigit": true
+        }
+      ]
+    },
+    {
+      "path": "/gemini-api-pricing-2026",
+      "rows": [
+        {
+          "slug": "google-gemini-api",
+          "subject": "Google Gemini API",
+          "hasDigit": true
+        },
+        {
+          "slug": "anthropic-claude-api",
+          "subject": "Anthropic Claude API",
+          "hasDigit": true
+        },
+        {
+          "slug": "openai-api",
+          "subject": "OpenAI API",
+          "hasDigit": true
+        },
+        {
+          "slug": "groq",
+          "subject": "Groq",
+          "hasDigit": true
+        },
+        {
+          "slug": "mistral-ai",
+          "subject": "Mistral AI",
+          "hasDigit": true
+        },
+        {
+          "slug": "openrouter",
+          "subject": "OpenRouter",
+          "hasDigit": true
+        },
+        {
+          "slug": "cerebras",
+          "subject": "Cerebras",
+          "hasDigit": true
+        },
+        {
+          "slug": "deepseek",
+          "subject": "DeepSeek",
+          "hasDigit": true
+        }
+      ]
+    },
+    {
+      "path": "/gemini-api-pricing-changes",
+      "rows": [
+        {
+          "slug": "groq",
+          "subject": "Groq",
+          "hasDigit": true
+        },
+        {
+          "slug": "cerebras",
+          "subject": "Cerebras",
+          "hasDigit": true
+        },
+        {
+          "slug": "mistral-ai",
+          "subject": "Mistral AI",
+          "hasDigit": true
+        },
+        {
+          "slug": "openrouter",
+          "subject": "OpenRouter",
+          "hasDigit": true
+        },
+        {
+          "slug": "together-ai",
+          "subject": "Together.ai",
+          "hasDigit": true
+        },
+        {
+          "slug": "fireworks-ai",
+          "subject": "Fireworks.ai",
+          "hasDigit": true
+        },
+        {
+          "slug": "nvidia-nim",
+          "subject": "NVIDIA NIM",
+          "hasDigit": true
+        },
+        {
+          "slug": "anthropic-api",
+          "subject": "Anthropic Claude API",
+          "hasDigit": true
+        },
+        {
+          "slug": "openai",
+          "subject": "OpenAI API",
+          "hasDigit": true
+        },
+        {
+          "slug": "deepseek",
+          "subject": "DeepSeek",
+          "hasDigit": true
+        },
+        {
+          "slug": "google-gemini-api",
+          "subject": "Google Gemini API",
+          "hasDigit": true
+        }
+      ]
+    },
+    {
+      "path": "/google-developer-program-2026",
+      "rows": [
+        {
+          "slug": "aws",
+          "subject": "AWS Free Tier",
+          "hasDigit": true
+        },
+        {
+          "slug": "azure",
+          "subject": "Azure Free Account",
+          "hasDigit": true
+        },
+        {
+          "slug": "oracle-cloud",
+          "subject": "Oracle Cloud",
+          "hasDigit": true
+        },
+        {
+          "slug": "digitalocean",
+          "subject": "DigitalOcean",
+          "hasDigit": true
+        },
+        {
+          "slug": "google-cloud-run",
+          "subject": "Google Cloud (direct)",
+          "hasDigit": true
+        },
+        {
+          "slug": "railway",
+          "subject": "Railway",
+          "hasDigit": true
+        },
+        {
+          "slug": "groq",
+          "subject": "Groq",
+          "hasDigit": true
+        },
+        {
+          "slug": "openrouter",
+          "subject": "OpenRouter",
+          "hasDigit": true
+        },
+        {
+          "slug": "cerebras",
+          "subject": "Cerebras",
+          "hasDigit": true
+        },
+        {
+          "slug": "mistral-ai",
+          "subject": "Mistral AI",
+          "hasDigit": true
+        },
+        {
+          "slug": "github-models",
+          "subject": "GitHub Models",
+          "hasDigit": true
+        },
+        {
+          "slug": "cohere",
+          "subject": "Cohere",
+          "hasDigit": false
+        },
+        {
+          "slug": "supabase",
+          "subject": "Supabase",
+          "hasDigit": true
+        },
+        {
+          "slug": "appwrite-cloud",
+          "subject": "Appwrite Cloud",
+          "hasDigit": true
+        },
+        {
+          "slug": "firebase",
+          "subject": "Firebase (direct)",
+          "hasDigit": true
+        }
+      ]
+    },
+    {
+      "path": "/hcp-terraform-migration",
+      "rows": [
+        {
+          "slug": "pulumi",
+          "subject": "Pulumi",
+          "hasDigit": true
+        },
+        {
+          "slug": "spacelift",
+          "subject": "Spacelift",
+          "hasDigit": true
+        },
+        {
+          "slug": "hcp-terraform",
+          "subject": "HCP Terraform",
+          "hasDigit": true
+        },
+        {
+          "slug": "brainboard",
+          "subject": "Brainboard",
+          "hasDigit": true
+        },
+        {
+          "slug": "scalr",
+          "subject": "Scalr",
+          "hasDigit": true
+        },
+        {
+          "slug": "terragrunt-scale",
+          "subject": "Terragrunt Scale",
+          "hasDigit": true
+        },
+        {
+          "slug": "terramate",
+          "subject": "Terramate",
+          "hasDigit": true
+        },
+        {
+          "slug": "terrateam",
+          "subject": "Terrateam",
+          "hasDigit": true
+        },
+        {
+          "slug": "checkov",
+          "subject": "Checkov",
+          "hasDigit": true
+        }
+      ]
+    },
+    {
+      "path": "/hetzner-pricing-2026",
+      "rows": [
+        {
+          "slug": "digitalocean",
+          "subject": "DigitalOcean",
+          "hasDigit": true
+        },
+        {
+          "slug": "vultr",
+          "subject": "Vultr",
+          "hasDigit": true
+        },
+        {
+          "slug": "linode-akamai",
+          "subject": "Linode/Akamai",
+          "hasDigit": true
+        },
+        {
+          "slug": "ovhcloud",
+          "subject": "OVHcloud",
+          "hasDigit": true
+        },
+        {
+          "slug": "aws-lightsail",
+          "subject": "AWS Lightsail",
+          "hasDigit": true
+        },
+        {
+          "slug": "oracle-cloud",
+          "subject": "Oracle Cloud",
+          "hasDigit": true
+        },
+        {
+          "slug": "railway",
+          "subject": "Railway",
+          "hasDigit": true
+        },
+        {
+          "slug": "render",
+          "subject": "Render",
+          "hasDigit": true
+        },
+        {
+          "slug": "fly-io",
+          "subject": "Fly.io",
+          "hasDigit": true
+        }
+      ]
+    },
+    {
+      "path": "/hosting-pricing",
+      "rows": [
+        {
+          "slug": "railway",
+          "subject": "Railway",
+          "hasDigit": true
+        },
+        {
+          "slug": "render",
+          "subject": "Render",
+          "hasDigit": true
+        },
+        {
+          "slug": "fly-io",
+          "subject": "Fly.io",
+          "hasDigit": true
+        },
+        {
+          "slug": "koyeb",
+          "subject": "Koyeb",
+          "hasDigit": true
+        },
+        {
+          "slug": "northflank",
+          "subject": "Northflank",
+          "hasDigit": true
+        },
+        {
+          "slug": "cloudflare-workers",
+          "subject": "Cloudflare Workers",
+          "hasDigit": true
+        },
+        {
+          "slug": "cloudflare-pages",
+          "subject": "Cloudflare Pages",
+          "hasDigit": true
+        },
+        {
+          "slug": "netlify",
+          "subject": "Netlify",
+          "hasDigit": true
+        },
+        {
+          "slug": "deno-deploy",
+          "subject": "Deno Deploy",
+          "hasDigit": true
+        },
+        {
+          "slug": "val-town",
+          "subject": "Val Town",
+          "hasDigit": true
+        },
+        {
+          "slug": "vercel",
+          "subject": "Vercel",
+          "hasDigit": true
+        },
+        {
+          "slug": "google-cloud-run",
+          "subject": "Google Cloud Run",
+          "hasDigit": true
+        },
+        {
+          "slug": "github-pages",
+          "subject": "GitHub Pages",
+          "hasDigit": true
+        },
+        {
+          "slug": "pythonanywhere",
+          "subject": "PythonAnywhere",
+          "hasDigit": true
+        },
+        {
+          "slug": "heroku",
+          "subject": "Heroku",
+          "hasDigit": true
+        },
+        {
+          "slug": "railway",
+          "subject": "Railway",
+          "hasDigit": true
+        },
+        {
+          "slug": "render",
+          "subject": "Render",
+          "hasDigit": true
+        },
+        {
+          "slug": "fly-io",
+          "subject": "Fly.io",
+          "hasDigit": true
+        },
+        {
+          "slug": "koyeb",
+          "subject": "Koyeb",
+          "hasDigit": true
+        },
+        {
+          "slug": "northflank",
+          "subject": "Northflank",
+          "hasDigit": true
+        },
+        {
+          "slug": "cloudflare-workers",
+          "subject": "Cloudflare Workers",
+          "hasDigit": true
+        },
+        {
+          "slug": "cloudflare-pages",
+          "subject": "Cloudflare Pages",
+          "hasDigit": true
+        },
+        {
+          "slug": "netlify",
+          "subject": "Netlify",
+          "hasDigit": true
+        },
+        {
+          "slug": "deno-deploy",
+          "subject": "Deno Deploy",
+          "hasDigit": true
+        },
+        {
+          "slug": "val-town",
+          "subject": "Val Town",
+          "hasDigit": true
+        },
+        {
+          "slug": "vercel",
+          "subject": "Vercel",
+          "hasDigit": true
+        },
+        {
+          "slug": "google-cloud-run",
+          "subject": "Google Cloud Run",
+          "hasDigit": true
+        },
+        {
+          "slug": "github-pages",
+          "subject": "GitHub Pages",
+          "hasDigit": true
+        },
+        {
+          "slug": "pythonanywhere",
+          "subject": "PythonAnywhere",
+          "hasDigit": true
+        },
+        {
+          "slug": "heroku",
+          "subject": "Heroku",
+          "hasDigit": true
+        }
+      ]
+    },
+    {
+      "path": "/llm-api-pricing",
+      "rows": [
+        {
+          "slug": "openai",
+          "subject": "OpenAI",
+          "hasDigit": true
+        },
+        {
+          "slug": "anthropic-api",
+          "subject": "Anthropic",
+          "hasDigit": true
+        },
+        {
+          "slug": "google-gemini-api",
+          "subject": "Google Gemini",
+          "hasDigit": true
+        },
+        {
+          "slug": "mistral-ai",
+          "subject": "Mistral AI",
+          "hasDigit": true
+        },
+        {
+          "slug": "cohere",
+          "subject": "Cohere",
+          "hasDigit": true
+        },
+        {
+          "slug": "xai",
+          "subject": "xAI (Grok)",
+          "hasDigit": true
+        },
+        {
+          "slug": "groq",
+          "subject": "Groq",
+          "hasDigit": true
+        },
+        {
+          "slug": "cerebras",
+          "subject": "Cerebras",
+          "hasDigit": true
+        },
+        {
+          "slug": "openrouter",
+          "subject": "OpenRouter",
+          "hasDigit": true
+        },
+        {
+          "slug": "nvidia-nim",
+          "subject": "NVIDIA NIM",
+          "hasDigit": true
+        },
+        {
+          "slug": "siliconflow",
+          "subject": "SiliconFlow",
+          "hasDigit": true
+        },
+        {
+          "slug": "hugging-face",
+          "subject": "Hugging Face",
+          "hasDigit": true
+        },
+        {
+          "slug": "replicate",
+          "subject": "Replicate",
+          "hasDigit": false
+        },
+        {
+          "slug": "baseten",
+          "subject": "Baseten",
+          "hasDigit": true
+        },
+        {
+          "slug": "cloudflare-workers-ai",
+          "subject": "Cloudflare Workers AI",
+          "hasDigit": true
+        },
+        {
+          "slug": "deepseek-api",
+          "subject": "DeepSeek",
+          "hasDigit": true
+        },
+        {
+          "slug": "github-models",
+          "subject": "GitHub Models",
+          "hasDigit": true
+        },
+        {
+          "slug": "llm7-io",
+          "subject": "LLM7.io",
+          "hasDigit": true
+        },
+        {
+          "slug": "ollama",
+          "subject": "Ollama",
+          "hasDigit": false
+        }
+      ]
+    },
+    {
+      "path": "/neon-vs-supabase",
+      "rows": [
+        {
+          "slug": "cockroachdb",
+          "subject": "CockroachDB",
+          "hasDigit": true
+        },
+        {
+          "slug": "turso",
+          "subject": "Turso",
+          "hasDigit": true
+        },
+        {
+          "slug": "convex",
+          "subject": "Convex",
+          "hasDigit": true
+        }
+      ]
+    },
+    {
+      "path": "/openai-assistants-alternatives",
+      "rows": [
+        {
+          "slug": "openai",
+          "subject": "OpenAI (Responses API)",
+          "hasDigit": true
+        },
+        {
+          "slug": "anthropic-api",
+          "subject": "Anthropic Claude API",
+          "hasDigit": true
+        },
+        {
+          "slug": "google-gemini-api",
+          "subject": "Google Gemini API",
+          "hasDigit": true
+        },
+        {
+          "slug": "github-models",
+          "subject": "GitHub Models",
+          "hasDigit": false
+        },
+        {
+          "slug": "openrouter",
+          "subject": "OpenRouter",
+          "hasDigit": false
+        },
+        {
+          "slug": "cohere",
+          "subject": "Cohere",
+          "hasDigit": false
+        },
+        {
+          "slug": "groq",
+          "subject": "Groq",
+          "hasDigit": false
+        },
+        {
+          "slug": "fireworks-ai",
+          "subject": "Fireworks AI",
+          "hasDigit": true
+        },
+        {
+          "slug": "together-ai",
+          "subject": "Together AI",
+          "hasDigit": true
+        },
+        {
+          "slug": "mistral-ai",
+          "subject": "Mistral AI",
+          "hasDigit": true
+        },
+        {
+          "slug": "deepseek-api",
+          "subject": "DeepSeek API",
+          "hasDigit": true
+        },
+        {
+          "slug": "cerebras",
+          "subject": "Cerebras",
+          "hasDigit": false
+        }
+      ]
+    },
+    {
+      "path": "/openai-assistants-migration",
+      "rows": [
+        {
+          "slug": "openai",
+          "subject": "OpenAI Responses API",
+          "hasDigit": true
+        },
+        {
+          "slug": "azure",
+          "subject": "Azure OpenAI Service",
+          "hasDigit": true
+        },
+        {
+          "slug": "google-gemini-api",
+          "subject": "Google Gemini API",
+          "hasDigit": true
+        },
+        {
+          "slug": "google-gemini-api",
+          "subject": "Google Gemini API",
+          "hasDigit": true
+        },
+        {
+          "slug": "openai",
+          "subject": "OpenAI (Responses API)",
+          "hasDigit": true
+        },
+        {
+          "slug": "azure",
+          "subject": "Azure OpenAI",
+          "hasDigit": true
+        }
+      ]
+    },
+    {
+      "path": "/openai-assistants-migration-2026",
+      "rows": [
+        {
+          "slug": "openai",
+          "subject": "OpenAI (Responses API)",
+          "hasDigit": true
+        },
+        {
+          "slug": "anthropic-api",
+          "subject": "Anthropic Claude",
+          "hasDigit": true
+        },
+        {
+          "slug": "google-gemini-api",
+          "subject": "Google Gemini",
+          "hasDigit": true
+        },
+        {
+          "slug": "deepseek-api",
+          "subject": "DeepSeek",
+          "hasDigit": true
+        },
+        {
+          "slug": "mistral-ai",
+          "subject": "Mistral AI",
+          "hasDigit": true
+        },
+        {
+          "slug": "groq",
+          "subject": "Meta Llama (via Groq)",
+          "hasDigit": false
+        },
+        {
+          "slug": "openai",
+          "subject": "OpenAI (Responses API)",
+          "hasDigit": true
+        },
+        {
+          "slug": "anthropic-api",
+          "subject": "Anthropic Claude",
+          "hasDigit": true
+        },
+        {
+          "slug": "anthropic-api",
+          "subject": "Anthropic Claude",
+          "hasDigit": true
+        },
+        {
+          "slug": "google-gemini-api",
+          "subject": "Google Gemini",
+          "hasDigit": true
+        },
+        {
+          "slug": "google-gemini-api",
+          "subject": "Google Gemini",
+          "hasDigit": true
+        },
+        {
+          "slug": "deepseek-api",
+          "subject": "DeepSeek",
+          "hasDigit": true
+        },
+        {
+          "slug": "mistral-ai",
+          "subject": "Mistral AI",
+          "hasDigit": true
+        }
+      ]
+    },
+    {
+      "path": "/openai-realtime-migration",
+      "rows": [
+        {
+          "slug": "openai",
+          "subject": "OpenAI Realtime API (GA)",
+          "hasDigit": true
+        },
+        {
+          "slug": "deepgram",
+          "subject": "Deepgram",
+          "hasDigit": true
+        },
+        {
+          "slug": "assemblyai",
+          "subject": "AssemblyAI",
+          "hasDigit": true
+        },
+        {
+          "slug": "azure",
+          "subject": "Azure OpenAI Realtime",
+          "hasDigit": true
+        },
+        {
+          "slug": "elevenlabs",
+          "subject": "ElevenLabs",
+          "hasDigit": true
+        },
+        {
+          "slug": "google-cloud",
+          "subject": "Google Cloud Speech-to-Text",
+          "hasDigit": true
+        }
+      ]
+    },
+    {
+      "path": "/railway-vs-render",
+      "rows": [
+        {
+          "slug": "vercel",
+          "subject": "Vercel",
+          "hasDigit": true
+        },
+        {
+          "slug": "netlify",
+          "subject": "Netlify",
+          "hasDigit": true
+        },
+        {
+          "slug": "fly-io",
+          "subject": "Fly.io",
+          "hasDigit": true
+        }
+      ]
+    },
+    {
+      "path": "/state-of-free-tiers",
+      "rows": [
+        {
+          "slug": "google-cloud",
+          "subject": "Google for Startups",
+          "hasDigit": true
+        },
+        {
+          "slug": "cloudflare",
+          "subject": "Cloudflare Startup Program",
+          "hasDigit": true
+        },
+        {
+          "slug": "microsoft-azure",
+          "subject": "Microsoft for Startups",
+          "hasDigit": true
+        },
+        {
+          "slug": "digitalocean",
+          "subject": "DigitalOcean Hatch",
+          "hasDigit": true
+        },
+        {
+          "slug": "aws",
+          "subject": "AWS Activate",
+          "hasDigit": true
+        },
+        {
+          "slug": "railway",
+          "subject": "Railway",
+          "hasDigit": true
+        },
+        {
+          "slug": "vercel",
+          "subject": "Vercel",
+          "hasDigit": false
+        }
+      ]
+    },
+    {
+      "path": "/supabase-vs-firebase",
+      "rows": [
+        {
+          "slug": "convex",
+          "subject": "Convex",
+          "hasDigit": true
+        },
+        {
+          "slug": "appwrite-cloud",
+          "subject": "Appwrite Cloud",
+          "hasDigit": true
+        },
+        {
+          "slug": "nhost",
+          "subject": "Nhost",
+          "hasDigit": true
+        },
+        {
+          "slug": "pocketbase",
+          "subject": "PocketBase",
+          "hasDigit": true
+        }
+      ]
+    },
+    {
+      "path": "/terraform-cloud-free-tier-removed",
+      "rows": [
+        {
+          "slug": "hcp-terraform",
+          "subject": "HCP Terraform Enhanced Free",
+          "hasDigit": true
+        },
+        {
+          "slug": "spacelift",
+          "subject": "Spacelift",
+          "hasDigit": true
+        },
+        {
+          "slug": "scalr",
+          "subject": "Scalr",
+          "hasDigit": false
+        },
+        {
+          "slug": "terragrunt-scale",
+          "subject": "Terragrunt Scale",
+          "hasDigit": true
+        },
+        {
+          "slug": "hcp-terraform",
+          "subject": "HCP Terraform",
+          "hasDigit": true
+        },
+        {
+          "slug": "scalr",
+          "subject": "Scalr",
+          "hasDigit": true
+        },
+        {
+          "slug": "spacelift",
+          "subject": "Spacelift",
+          "hasDigit": true
+        },
+        {
+          "slug": "terragrunt-scale",
+          "subject": "Terragrunt Scale",
+          "hasDigit": true
+        }
+      ]
+    },
+    {
+      "path": "/vector-database-pricing",
+      "rows": [
+        {
+          "slug": "pinecone",
+          "subject": "Pinecone",
+          "hasDigit": true
+        },
+        {
+          "slug": "qdrant",
+          "subject": "Qdrant Cloud",
+          "hasDigit": true
+        },
+        {
+          "slug": "weaviate",
+          "subject": "Weaviate Cloud",
+          "hasDigit": true
+        },
+        {
+          "slug": "zilliz-cloud",
+          "subject": "Zilliz Cloud",
+          "hasDigit": true
+        },
+        {
+          "slug": "chroma",
+          "subject": "Chroma",
+          "hasDigit": false
+        },
+        {
+          "slug": "lancedb",
+          "subject": "LanceDB",
+          "hasDigit": true
+        },
+        {
+          "slug": "upstash-vector",
+          "subject": "Upstash Vector",
+          "hasDigit": true
+        },
+        {
+          "slug": "turbopuffer",
+          "subject": "Turbopuffer",
+          "hasDigit": true
+        },
+        {
+          "slug": "supabase",
+          "subject": "Supabase pgvector",
+          "hasDigit": true
+        },
+        {
+          "slug": "neon",
+          "subject": "Neon pgvector",
+          "hasDigit": true
+        },
+        {
+          "slug": "mongodb-atlas",
+          "subject": "MongoDB Atlas Vector Search",
+          "hasDigit": true
+        }
+      ]
+    },
+    {
+      "path": "/vercel-vs-netlify",
+      "rows": [
+        {
+          "slug": "render",
+          "subject": "Render",
+          "hasDigit": true
+        },
+        {
+          "slug": "cloudflare-pages",
+          "subject": "Cloudflare Pages",
+          "hasDigit": true
+        },
+        {
+          "slug": "railway",
+          "subject": "Railway",
+          "hasDigit": true
+        },
+        {
+          "slug": "fly-io",
+          "subject": "Fly.io",
+          "hasDigit": true
+        },
+        {
+          "slug": "deno-deploy",
+          "subject": "Deno Deploy",
+          "hasDigit": true
+        }
+      ]
+    },
+    {
+      "path": "/x402-services",
+      "rows": [
+        {
+          "slug": "vercel",
+          "subject": "Vercel",
+          "hasDigit": true
+        },
+        {
+          "slug": "render",
+          "subject": "Render",
+          "hasDigit": true
+        },
+        {
+          "slug": "cloudflare-workers",
+          "subject": "Cloudflare Workers",
+          "hasDigit": true
+        },
+        {
+          "slug": "cloudflare-pages",
+          "subject": "Cloudflare Pages",
+          "hasDigit": true
+        },
+        {
+          "slug": "railway",
+          "subject": "Railway",
+          "hasDigit": true
+        },
+        {
+          "slug": "fly-io",
+          "subject": "Fly.io",
+          "hasDigit": true
+        },
+        {
+          "slug": "deno-deploy",
+          "subject": "Deno Deploy",
+          "hasDigit": true
+        },
+        {
+          "slug": "supabase",
+          "subject": "Supabase",
+          "hasDigit": true
+        },
+        {
+          "slug": "neon",
+          "subject": "Neon",
+          "hasDigit": true
+        },
+        {
+          "slug": "cloudflare-d1",
+          "subject": "Cloudflare D1",
+          "hasDigit": true
+        },
+        {
+          "slug": "cloudflare-r2",
+          "subject": "Cloudflare R2",
+          "hasDigit": true
+        },
+        {
+          "slug": "cloudflare-queues",
+          "subject": "Cloudflare Queues",
+          "hasDigit": true
+        },
+        {
+          "slug": "cloudflare-kv",
+          "subject": "Cloudflare KV",
+          "hasDigit": true
+        },
+        {
+          "slug": "cloudflare-durable-objects",
+          "subject": "Cloudflare Durable Objects",
+          "hasDigit": true
+        },
+        {
+          "slug": "firecrawl",
+          "subject": "Firecrawl",
+          "hasDigit": true
+        },
+        {
+          "slug": "cloudflare-dns",
+          "subject": "Cloudflare DNS",
+          "hasDigit": true
+        },
+        {
+          "slug": "hugging-face",
+          "subject": "Hugging Face",
+          "hasDigit": true
+        },
+        {
+          "slug": "groq",
+          "subject": "Groq",
+          "hasDigit": true
+        },
+        {
+          "slug": "mistral-ai",
+          "subject": "Mistral AI",
+          "hasDigit": true
+        },
+        {
+          "slug": "openrouter",
+          "subject": "OpenRouter",
+          "hasDigit": false
+        },
+        {
+          "slug": "cloudflare-workers-ai",
+          "subject": "Cloudflare Workers AI",
+          "hasDigit": true
+        },
+        {
+          "slug": "zuplo",
+          "subject": "Zuplo",
+          "hasDigit": true
+        },
+        {
+          "slug": "browserbase",
+          "subject": "Browserbase",
+          "hasDigit": true
+        },
+        {
+          "slug": "cerebras",
+          "subject": "Cerebras",
+          "hasDigit": true
+        },
+        {
+          "slug": "cohere",
+          "subject": "Cohere",
+          "hasDigit": true
+        },
+        {
+          "slug": "openai",
+          "subject": "OpenAI",
+          "hasDigit": true
+        },
+        {
+          "slug": "pinecone",
+          "subject": "Pinecone",
+          "hasDigit": true
+        },
+        {
+          "slug": "qdrant",
+          "subject": "Qdrant",
+          "hasDigit": true
+        },
+        {
+          "slug": "deepgram",
+          "subject": "Deepgram",
+          "hasDigit": true
+        },
+        {
+          "slug": "assemblyai",
+          "subject": "AssemblyAI",
+          "hasDigit": true
+        },
+        {
+          "slug": "replicate",
+          "subject": "Replicate",
+          "hasDigit": true
+        },
+        {
+          "slug": "baseten",
+          "subject": "Baseten",
+          "hasDigit": true
+        },
+        {
+          "slug": "composio",
+          "subject": "Composio",
+          "hasDigit": true
+        },
+        {
+          "slug": "reducto",
+          "subject": "Reducto",
+          "hasDigit": true
+        },
+        {
+          "slug": "tavily-ai",
+          "subject": "Tavily AI",
+          "hasDigit": true
+        },
+        {
+          "slug": "langfuse",
+          "subject": "Langfuse",
+          "hasDigit": true
+        },
+        {
+          "slug": "portkey",
+          "subject": "Portkey",
+          "hasDigit": true
+        },
+        {
+          "slug": "pinata-ipfs",
+          "subject": "Pinata IPFS",
+          "hasDigit": true
+        },
+        {
+          "slug": "xai",
+          "subject": "xAI",
+          "hasDigit": true
+        },
+        {
+          "slug": "anthropic-api",
+          "subject": "Anthropic API",
+          "hasDigit": true
+        },
+        {
+          "slug": "nvidia-nim",
+          "subject": "NVIDIA NIM",
+          "hasDigit": true
+        },
+        {
+          "slug": "siliconflow",
+          "subject": "SiliconFlow",
+          "hasDigit": true
+        },
+        {
+          "slug": "deepseek-api",
+          "subject": "DeepSeek API",
+          "hasDigit": true
+        },
+        {
+          "slug": "exa",
+          "subject": "Exa",
+          "hasDigit": true
+        },
+        {
+          "slug": "hyperbrowser",
+          "subject": "Hyperbrowser",
+          "hasDigit": true
+        },
+        {
+          "slug": "openvps",
+          "subject": "OpenVPS",
+          "hasDigit": true
+        },
+        {
+          "slug": "gpu-bridge",
+          "subject": "GPU-Bridge",
+          "hasDigit": true
+        },
+        {
+          "slug": "strale",
+          "subject": "Strale",
+          "hasDigit": true
+        },
+        {
+          "slug": "tollbooth",
+          "subject": "tollbooth",
+          "hasDigit": false
+        },
+        {
+          "slug": "e2b",
+          "subject": "E2B",
+          "hasDigit": true
+        },
+        {
+          "slug": "together-ai",
+          "subject": "Together AI",
+          "hasDigit": true
+        },
+        {
+          "slug": "fireworks-ai",
+          "subject": "Fireworks AI",
+          "hasDigit": true
+        },
+        {
+          "slug": "modal",
+          "subject": "Modal",
+          "hasDigit": true
+        }
+      ]
+    }
+  ],
+  "pages": [
+    {
+      "path": "/agent-payments",
+      "status": 200,
+      "tags": [],
+      "unmarked_rows": 54
+    },
+    {
+      "path": "/agent-stack",
+      "status": 200,
+      "tags": [],
+      "unmarked_rows": 0
+    },
+    {
+      "path": "/ai-coding-pricing-2026",
+      "status": 200,
+      "tags": [
+        {
+          "label": "Unconfirmed",
+          "clause": "we could not read the page we cite for this offer",
+          "anchor": "source-windsurf"
+        },
+        {
+          "label": "Unconfirmed",
+          "clause": "the page we cite for this offer does not name it",
+          "anchor": "source-google-gemini-code-assist"
+        },
+        {
+          "label": "Unconfirmed",
+          "clause": "the page we cite for this offer states no amount, tier or rate we can read",
+          "anchor": "source-claude-code"
+        },
+        {
+          "label": "Ended",
+          "clause": "the offer has ended",
+          "anchor": "source-augment-code"
+        },
+        {
+          "label": "Unconfirmed",
+          "clause": "the page we cite for this offer states no amount, tier or rate we can read",
+          "anchor": "source-cline"
+        },
+        {
+          "label": "Unconfirmed",
+          "clause": "the page we cite for this offer states no amount, tier or rate we can read",
+          "anchor": "source-aider"
+        },
+        {
+          "label": "Unconfirmed",
+          "clause": "we could not read the page we cite for this offer",
+          "anchor": "source-windsurf"
+        },
+        {
+          "label": "Unconfirmed",
+          "clause": "the page we cite for this offer does not name it",
+          "anchor": "source-google-gemini-code-assist"
+        },
+        {
+          "label": "Unconfirmed",
+          "clause": "the page we cite for this offer states no amount, tier or rate we can read",
+          "anchor": "source-claude-code"
+        },
+        {
+          "label": "Ended",
+          "clause": "the offer has ended",
+          "anchor": "source-augment-code"
+        },
+        {
+          "label": "Unconfirmed",
+          "clause": "the page we cite for this offer states no amount, tier or rate we can read",
+          "anchor": "source-cline"
+        },
+        {
+          "label": "Unconfirmed",
+          "clause": "the page we cite for this offer states no amount, tier or rate we can read",
+          "anchor": "source-aider"
+        }
+      ],
+      "unmarked_rows": 0
+    },
+    {
+      "path": "/ai-coding-tools-pricing",
+      "status": 200,
+      "tags": [],
+      "unmarked_rows": 34
+    },
+    {
+      "path": "/analytics-free-tier-comparison-2026",
+      "status": 200,
+      "tags": [
+        {
+          "label": "Unconfirmed",
+          "clause": "the page we cite for this offer states no amount, tier or rate we can read",
+          "anchor": "source-google-analytics"
+        },
+        {
+          "label": "No record",
+          "clause": "no catalogue record",
+          "anchor": null
+        },
+        {
+          "label": "Unconfirmed",
+          "clause": "the page we cite for this offer states no amount, tier or rate we can read",
+          "anchor": "source-umami"
+        },
+        {
+          "label": "No record",
+          "clause": "no catalogue record",
+          "anchor": null
+        },
+        {
+          "label": "No record",
+          "clause": "no catalogue record",
+          "anchor": null
+        },
+        {
+          "label": "No record",
+          "clause": "no catalogue record",
+          "anchor": null
+        },
+        {
+          "label": "No record",
+          "clause": "no catalogue record",
+          "anchor": null
+        },
+        {
+          "label": "No record",
+          "clause": "no catalogue record",
+          "anchor": null
+        },
+        {
+          "label": "Unconfirmed",
+          "clause": "the page we cite for this offer states no amount, tier or rate we can read",
+          "anchor": "source-google-analytics"
+        },
+        {
+          "label": "Unconfirmed",
+          "clause": "the page we cite for this offer states no amount, tier or rate we can read",
+          "anchor": "source-umami"
+        },
+        {
+          "label": "No record",
+          "clause": "no catalogue record",
+          "anchor": null
+        },
+        {
+          "label": "No record",
+          "clause": "no catalogue record",
+          "anchor": null
+        },
+        {
+          "label": "No record",
+          "clause": "no catalogue record",
+          "anchor": null
+        },
+        {
+          "label": "Unconfirmed",
+          "clause": "the page we cite for this offer states no amount, tier or rate we can read",
+          "anchor": "source-umami"
+        }
+      ],
+      "unmarked_rows": 0
+    },
+    {
+      "path": "/api-development-free-tier-comparison-2026",
+      "status": 200,
+      "tags": [
+        {
+          "label": "Unconfirmed",
+          "clause": "the page we cite for this offer states no amount, tier or rate we can read",
+          "anchor": "source-hoppscotch"
+        },
+        {
+          "label": "Unconfirmed",
+          "clause": "the page we cite for this offer states that it is free, in words, and states no allowance we can read",
+          "anchor": "source-insomnia"
+        },
+        {
+          "label": "No record",
+          "clause": "no catalogue record",
+          "anchor": null
+        },
+        {
+          "label": "No record",
+          "clause": "no catalogue record",
+          "anchor": null
+        },
+        {
+          "label": "No record",
+          "clause": "no catalogue record",
+          "anchor": null
+        },
+        {
+          "label": "Unconfirmed",
+          "clause": "we could not read the page we cite for this offer",
+          "anchor": "source-rapidapi"
+        },
+        {
+          "label": "Unconfirmed",
+          "clause": "the page we cite for this offer states that it is free, in words, and states no allowance we can read",
+          "anchor": "source-insomnia"
+        },
+        {
+          "label": "Unconfirmed",
+          "clause": "the page we cite for this offer states no amount, tier or rate we can read",
+          "anchor": "source-hoppscotch"
+        },
+        {
+          "label": "Unconfirmed",
+          "clause": "we could not read the page we cite for this offer",
+          "anchor": "source-rapidapi"
+        }
+      ],
+      "unmarked_rows": 0
+    },
+    {
+      "path": "/auth-comparison-2026",
+      "status": 200,
+      "tags": [
+        {
+          "label": "Unconfirmed",
+          "clause": "the page we cite for this offer states no amount, tier or rate we can read",
+          "anchor": "source-propelauth"
+        },
+        {
+          "label": "Unconfirmed",
+          "clause": "the page we cite for this offer states no amount, tier or rate we can read",
+          "anchor": "source-keycloak"
+        },
+        {
+          "label": "No record",
+          "clause": "no catalogue record",
+          "anchor": null
+        },
+        {
+          "label": "Unconfirmed",
+          "clause": "the page we cite for this offer states no amount, tier or rate we can read",
+          "anchor": "source-propelauth"
+        },
+        {
+          "label": "Unconfirmed",
+          "clause": "the page we cite for this offer states no amount, tier or rate we can read",
+          "anchor": "source-keycloak"
+        },
+        {
+          "label": "No record",
+          "clause": "no catalogue record",
+          "anchor": null
+        },
+        {
+          "label": "Unconfirmed",
+          "clause": "the page we cite for this offer states no amount, tier or rate we can read",
+          "anchor": "source-authgear"
+        },
+        {
+          "label": "Unconfirmed",
+          "clause": "the page we cite for this offer names a plan but states no amount",
+          "anchor": "source-mojoauth"
+        },
+        {
+          "label": "Unconfirmed",
+          "clause": "the page we cite for this offer does not name it",
+          "anchor": "source-stack-auth"
+        },
+        {
+          "label": "Unconfirmed",
+          "clause": "the page we cite for this offer states that it is free, in words, and states no allowance we can read",
+          "anchor": "source-permit-io"
+        },
+        {
+          "label": "Unconfirmed",
+          "clause": "the page we cite for this offer states no amount, tier or rate we can read",
+          "anchor": "source-cerbos-hub"
+        },
+        {
+          "label": "Unconfirmed",
+          "clause": "the page we cite for this offer states no amount, tier or rate we can read",
+          "anchor": "source-propelauth"
+        }
+      ],
+      "unmarked_rows": 0
+    },
+    {
+      "path": "/aws-app-runner-migration",
+      "status": 200,
+      "tags": [],
+      "unmarked_rows": 10
+    },
+    {
+      "path": "/aws-free-tier-2026",
+      "status": 200,
+      "tags": [
+        {
+          "label": "Unconfirmed",
+          "clause": "the page we cite for this offer names the platform it runs on and not the offer itself",
+          "anchor": "source-amazon-ecr-public"
+        }
+      ],
+      "unmarked_rows": 0
+    },
+    {
+      "path": "/azure-free-tier-2026",
+      "status": 200,
+      "tags": [],
+      "unmarked_rows": 0
+    },
+    {
+      "path": "/budget-builder",
+      "status": 200,
+      "tags": [],
+      "unmarked_rows": 0
+    },
+    {
+      "path": "/ci-cd-pricing",
+      "status": 200,
+      "tags": [],
+      "unmarked_rows": 36
+    },
+    {
+      "path": "/cicd-free-tier-comparison-2026",
+      "status": 200,
+      "tags": [
+        {
+          "label": "Unconfirmed",
+          "clause": "the page we cite for this offer states no amount, tier or rate we can read",
+          "anchor": "source-drone-ci"
+        },
+        {
+          "label": "Unconfirmed",
+          "clause": "the page we cite for this offer does not name it",
+          "anchor": "source-codefresh"
+        },
+        {
+          "label": "Unconfirmed",
+          "clause": "the page we cite for this offer states no amount, tier or rate we can read",
+          "anchor": "source-terramate"
+        },
+        {
+          "label": "Unconfirmed",
+          "clause": "the page we cite for this offer does not name it",
+          "anchor": "source-runmyjob"
+        },
+        {
+          "label": "Unconfirmed",
+          "clause": "the page we cite for this offer states no amount, tier or rate we can read",
+          "anchor": "source-drone-ci"
+        },
+        {
+          "label": "Unconfirmed",
+          "clause": "the page we cite for this offer states no amount, tier or rate we can read",
+          "anchor": "source-woodpecker-ci"
+        }
+      ],
+      "unmarked_rows": 0
+    },
+    {
+      "path": "/cloud-free-tier-comparison-2026",
+      "status": 200,
+      "tags": [],
+      "unmarked_rows": 0
+    },
+    {
+      "path": "/compare-tool",
+      "status": 200,
+      "tags": [],
+      "unmarked_rows": 0
+    },
+    {
+      "path": "/dall-e-shutdown",
+      "status": 200,
+      "tags": [],
+      "unmarked_rows": 7
+    },
+    {
+      "path": "/database-free-tier-comparison-2026",
+      "status": 200,
+      "tags": [
+        {
+          "label": "No record",
+          "clause": "no catalogue record",
+          "anchor": "source-planetscale"
+        },
+        {
+          "label": "Unconfirmed",
+          "clause": "the page we cite for this offer states no amount, tier or rate we can read",
+          "anchor": "source-pocketbase"
+        },
+        {
+          "label": "Ended",
+          "clause": "the offer has ended",
+          "anchor": "source-momento"
+        }
+      ],
+      "unmarked_rows": 0
+    },
+    {
+      "path": "/database-pricing",
+      "status": 200,
+      "tags": [],
+      "unmarked_rows": 50
+    },
+    {
+      "path": "/datadog-vs-new-relic",
+      "status": 200,
+      "tags": [],
+      "unmarked_rows": 5
+    },
+    {
+      "path": "/digitalocean-free-tier-2026",
+      "status": 200,
+      "tags": [
+        {
+          "label": "Unconfirmed",
+          "clause": "the page we cite for this offer states no amount, tier or rate we can read",
+          "anchor": "source-hetzner"
+        },
+        {
+          "label": "Unconfirmed",
+          "clause": "we could not read the page we cite for this offer",
+          "anchor": "source-vultr"
+        }
+      ],
+      "unmarked_rows": 0
+    },
+    {
+      "path": "/disclosure",
+      "status": 200,
+      "tags": [],
+      "unmarked_rows": 0
+    },
+    {
+      "path": "/email-comparison-2026",
+      "status": 200,
+      "tags": [
+        {
+          "label": "Unconfirmed",
+          "clause": "the page we cite for this offer states no amount, tier or rate we can read",
+          "anchor": "source-emaillabs-io"
+        },
+        {
+          "label": "Unconfirmed",
+          "clause": "the page we cite for this offer states no amount, tier or rate we can read",
+          "anchor": "source-mailerlite-com"
+        },
+        {
+          "label": "Unconfirmed",
+          "clause": "the page we cite for this offer states no amount, tier or rate we can read",
+          "anchor": "source-buttondown"
+        },
+        {
+          "label": "Unconfirmed",
+          "clause": "the page we cite for this offer states no amount, tier or rate we can read",
+          "anchor": "source-substack"
+        },
+        {
+          "label": "No record",
+          "clause": "no catalogue record",
+          "anchor": null
+        },
+        {
+          "label": "Unconfirmed",
+          "clause": "the page we cite for this offer does not name it",
+          "anchor": "source-sendgrid"
+        },
+        {
+          "label": "Unconfirmed",
+          "clause": "the page we cite for this offer states no amount, tier or rate we can read",
+          "anchor": "source-emaillabs-io"
+        },
+        {
+          "label": "Unconfirmed",
+          "clause": "the page we cite for this offer states no amount, tier or rate we can read",
+          "anchor": "source-mailerlite-com"
+        },
+        {
+          "label": "Unconfirmed",
+          "clause": "the page we cite for this offer states no amount, tier or rate we can read",
+          "anchor": "source-buttondown"
+        },
+        {
+          "label": "Unconfirmed",
+          "clause": "the page we cite for this offer states no amount, tier or rate we can read",
+          "anchor": "source-substack"
+        },
+        {
+          "label": "No record",
+          "clause": "no catalogue record",
+          "anchor": null
+        },
+        {
+          "label": "No record",
+          "clause": "no catalogue record",
+          "anchor": null
+        },
+        {
+          "label": "No record",
+          "clause": "no catalogue record",
+          "anchor": null
+        },
+        {
+          "label": "Unconfirmed",
+          "clause": "the page we cite for this offer states that it is free, in words, and states no allowance we can read",
+          "anchor": "source-improvmx"
+        },
+        {
+          "label": "Unconfirmed",
+          "clause": "the page we cite for this offer states that it is free, in words, and states no allowance we can read",
+          "anchor": "source-simplelogin"
+        },
+        {
+          "label": "Unconfirmed",
+          "clause": "the page we cite for this offer states no amount, tier or rate we can read",
+          "anchor": "source-postal"
+        }
+      ],
+      "unmarked_rows": 0
+    },
+    {
+      "path": "/firebase-studio-shutdown",
+      "status": 200,
+      "tags": [],
+      "unmarked_rows": 11
+    },
+    {
+      "path": "/free-ai-stack",
+      "status": 200,
+      "tags": [],
+      "unmarked_rows": 0
+    },
+    {
+      "path": "/free-devops-stack",
+      "status": 200,
+      "tags": [],
+      "unmarked_rows": 0
+    },
+    {
+      "path": "/free-django-stack",
+      "status": 200,
+      "tags": [],
+      "unmarked_rows": 0
+    },
+    {
+      "path": "/free-fastapi-stack",
+      "status": 200,
+      "tags": [],
+      "unmarked_rows": 0
+    },
+    {
+      "path": "/free-frontend-stack",
+      "status": 200,
+      "tags": [],
+      "unmarked_rows": 0
+    },
+    {
+      "path": "/free-go-stack",
+      "status": 200,
+      "tags": [],
+      "unmarked_rows": 0
+    },
+    {
+      "path": "/free-nextjs-stack",
+      "status": 200,
+      "tags": [],
+      "unmarked_rows": 0
+    },
+    {
+      "path": "/free-saas-stack",
+      "status": 200,
+      "tags": [],
+      "unmarked_rows": 0
+    },
+    {
+      "path": "/free-startup-stack",
+      "status": 200,
+      "tags": [],
+      "unmarked_rows": 0
+    },
+    {
+      "path": "/free-tier-risk",
+      "status": 200,
+      "tags": [],
+      "unmarked_rows": 64
+    },
+    {
+      "path": "/free-tier-tracker",
+      "status": 200,
+      "tags": [],
+      "unmarked_rows": 42
+    },
+    {
+      "path": "/gcp-free-tier-2026",
+      "status": 200,
+      "tags": [
+        {
+          "label": "Unconfirmed",
+          "clause": "we could not read the page we cite for this offer",
+          "anchor": "source-google-colab"
+        }
+      ],
+      "unmarked_rows": 0
+    },
+    {
+      "path": "/gemini-api-pricing-2026",
+      "status": 200,
+      "tags": [],
+      "unmarked_rows": 8
+    },
+    {
+      "path": "/gemini-api-pricing-changes",
+      "status": 200,
+      "tags": [],
+      "unmarked_rows": 11
+    },
+    {
+      "path": "/google-developer-program-2026",
+      "status": 200,
+      "tags": [],
+      "unmarked_rows": 15
+    },
+    {
+      "path": "/hcp-terraform-migration",
+      "status": 200,
+      "tags": [],
+      "unmarked_rows": 9
+    },
+    {
+      "path": "/hetzner-pricing-2026",
+      "status": 200,
+      "tags": [],
+      "unmarked_rows": 9
+    },
+    {
+      "path": "/hosting-free-tier-comparison-2026",
+      "status": 200,
+      "tags": [
+        {
+          "label": "Unconfirmed",
+          "clause": "the page we cite for this offer states no amount, tier or rate we can read",
+          "anchor": "source-github-pages"
+        },
+        {
+          "label": "Ended",
+          "clause": "the offer has ended",
+          "anchor": "source-heroku-for-startups-program"
+        },
+        {
+          "label": "Unconfirmed",
+          "clause": "the page we cite for this offer states no amount, tier or rate we can read",
+          "anchor": "source-github-pages"
+        }
+      ],
+      "unmarked_rows": 0
+    },
+    {
+      "path": "/hosting-pricing",
+      "status": 200,
+      "tags": [],
+      "unmarked_rows": 30
+    },
+    {
+      "path": "/llm-api-pricing",
+      "status": 200,
+      "tags": [],
+      "unmarked_rows": 19
+    },
+    {
+      "path": "/monitoring-comparison-2026",
+      "status": 200,
+      "tags": [
+        {
+          "label": "Unconfirmed",
+          "clause": "the page we cite for this offer states no amount, tier or rate we can read",
+          "anchor": "source-prometheus"
+        },
+        {
+          "label": "Unconfirmed",
+          "clause": "the page we cite for this offer states no amount, tier or rate we can read",
+          "anchor": "source-jaeger"
+        },
+        {
+          "label": "Unconfirmed",
+          "clause": "the page we cite for this offer states that it is free, in words, and states no allowance we can read",
+          "anchor": "source-elastic"
+        },
+        {
+          "label": "No record",
+          "clause": "no catalogue record",
+          "anchor": null
+        },
+        {
+          "label": "Unconfirmed",
+          "clause": "the page we cite for this offer states that it is free, in words, and states no allowance we can read",
+          "anchor": "source-elastic"
+        },
+        {
+          "label": "Unconfirmed",
+          "clause": "the page we cite for this offer states no amount, tier or rate we can read",
+          "anchor": "source-pingbreak-com"
+        },
+        {
+          "label": "No record",
+          "clause": "no catalogue record",
+          "anchor": null
+        },
+        {
+          "label": "Unconfirmed",
+          "clause": "the page we cite for this offer states no amount, tier or rate we can read",
+          "anchor": "source-jaeger"
+        }
+      ],
+      "unmarked_rows": 0
+    },
+    {
+      "path": "/neon-vs-supabase",
+      "status": 200,
+      "tags": [],
+      "unmarked_rows": 3
+    },
+    {
+      "path": "/openai-assistants-alternatives",
+      "status": 200,
+      "tags": [],
+      "unmarked_rows": 12
+    },
+    {
+      "path": "/openai-assistants-migration",
+      "status": 200,
+      "tags": [],
+      "unmarked_rows": 6
+    },
+    {
+      "path": "/openai-assistants-migration-2026",
+      "status": 200,
+      "tags": [],
+      "unmarked_rows": 13
+    },
+    {
+      "path": "/openai-realtime-migration",
+      "status": 200,
+      "tags": [],
+      "unmarked_rows": 6
+    },
+    {
+      "path": "/q1-2026-developer-pricing-report",
+      "status": 200,
+      "tags": [],
+      "unmarked_rows": 0
+    },
+    {
+      "path": "/q2-pricing-preview-2026",
+      "status": 200,
+      "tags": [],
+      "unmarked_rows": 0
+    },
+    {
+      "path": "/railway-vs-render",
+      "status": 200,
+      "tags": [],
+      "unmarked_rows": 3
+    },
+    {
+      "path": "/security-free-tier-comparison-2026",
+      "status": 200,
+      "tags": [
+        {
+          "label": "No record",
+          "clause": "no catalogue record",
+          "anchor": null
+        },
+        {
+          "label": "Unconfirmed",
+          "clause": "the page we cite for this offer states no amount, tier or rate we can read",
+          "anchor": "source-codeql"
+        },
+        {
+          "label": "Unconfirmed",
+          "clause": "the page we cite for this offer states no amount, tier or rate we can read",
+          "anchor": "source-gitleaks"
+        },
+        {
+          "label": "Unconfirmed",
+          "clause": "the page we cite for this offer states no amount, tier or rate we can read",
+          "anchor": "source-trufflehog"
+        },
+        {
+          "label": "Unconfirmed",
+          "clause": "the page we cite for this offer states no amount, tier or rate we can read",
+          "anchor": "source-trivy"
+        },
+        {
+          "label": "Unconfirmed",
+          "clause": "the page we cite for this offer states no amount, tier or rate we can read",
+          "anchor": "source-grype"
+        },
+        {
+          "label": "Unconfirmed",
+          "clause": "the page we cite for this offer states no amount, tier or rate we can read",
+          "anchor": "source-checkov"
+        },
+        {
+          "label": "Unconfirmed",
+          "clause": "the page we cite for this offer states no amount, tier or rate we can read",
+          "anchor": "source-owasp-zap"
+        },
+        {
+          "label": "No record",
+          "clause": "no catalogue record",
+          "anchor": "source-stackhawk"
+        },
+        {
+          "label": "Unconfirmed",
+          "clause": "we could not read the page we cite for this offer",
+          "anchor": "source-probely"
+        },
+        {
+          "label": "Unconfirmed",
+          "clause": "the page we cite for this offer states no amount, tier or rate we can read",
+          "anchor": "source-dependabot"
+        },
+        {
+          "label": "Unconfirmed",
+          "clause": "the page we cite for this offer names a plan but states no amount",
+          "anchor": "source-renovate"
+        },
+        {
+          "label": "Unconfirmed",
+          "clause": "we could not read the page we cite for this offer",
+          "anchor": "source-soos"
+        },
+        {
+          "label": "Unconfirmed",
+          "clause": "the page we cite for this offer states no amount, tier or rate we can read",
+          "anchor": "source-codeql"
+        },
+        {
+          "label": "Unconfirmed",
+          "clause": "the page we cite for this offer states no amount, tier or rate we can read",
+          "anchor": "source-dependabot"
+        },
+        {
+          "label": "Unconfirmed",
+          "clause": "the page we cite for this offer names a plan but states no amount",
+          "anchor": "source-renovate"
+        },
+        {
+          "label": "Unconfirmed",
+          "clause": "the page we cite for this offer states no amount, tier or rate we can read",
+          "anchor": "source-owasp-zap"
+        },
+        {
+          "label": "No record",
+          "clause": "no catalogue record",
+          "anchor": "source-stackhawk"
+        },
+        {
+          "label": "Unconfirmed",
+          "clause": "we could not read the page we cite for this offer",
+          "anchor": "source-probely"
+        },
+        {
+          "label": "Unconfirmed",
+          "clause": "the page we cite for this offer states no amount, tier or rate we can read",
+          "anchor": "source-gitleaks"
+        },
+        {
+          "label": "Unconfirmed",
+          "clause": "the page we cite for this offer states no amount, tier or rate we can read",
+          "anchor": "source-trufflehog"
+        },
+        {
+          "label": "Unconfirmed",
+          "clause": "the page we cite for this offer states no amount, tier or rate we can read",
+          "anchor": "source-trivy"
+        },
+        {
+          "label": "Unconfirmed",
+          "clause": "the page we cite for this offer states no amount, tier or rate we can read",
+          "anchor": "source-grype"
+        },
+        {
+          "label": "Unconfirmed",
+          "clause": "the page we cite for this offer states no amount, tier or rate we can read",
+          "anchor": "source-checkov"
+        }
+      ],
+      "unmarked_rows": 0
+    },
+    {
+      "path": "/serverless-free-tier-comparison-2026",
+      "status": 200,
+      "tags": [],
+      "unmarked_rows": 0
+    },
+    {
+      "path": "/shutdowns",
+      "status": 200,
+      "tags": [],
+      "unmarked_rows": 0
+    },
+    {
+      "path": "/stack-check",
+      "status": 200,
+      "tags": [],
+      "unmarked_rows": 0
+    },
+    {
+      "path": "/stacks/ai-startup",
+      "status": 200,
+      "tags": [],
+      "unmarked_rows": 0
+    },
+    {
+      "path": "/stacks/api-first",
+      "status": 200,
+      "tags": [],
+      "unmarked_rows": 0
+    },
+    {
+      "path": "/stacks/open-source",
+      "status": 200,
+      "tags": [],
+      "unmarked_rows": 0
+    },
+    {
+      "path": "/stacks/saas-mvp",
+      "status": 200,
+      "tags": [],
+      "unmarked_rows": 0
+    },
+    {
+      "path": "/stacks/side-project",
+      "status": 200,
+      "tags": [],
+      "unmarked_rows": 0
+    },
+    {
+      "path": "/startup-credits",
+      "status": 200,
+      "tags": [],
+      "unmarked_rows": 0
+    },
+    {
+      "path": "/state-of-free-tiers",
+      "status": 200,
+      "tags": [],
+      "unmarked_rows": 7
+    },
+    {
+      "path": "/storage-comparison-2026",
+      "status": 200,
+      "tags": [
+        {
+          "label": "No record",
+          "clause": "no catalogue record",
+          "anchor": null
+        },
+        {
+          "label": "No record",
+          "clause": "no catalogue record",
+          "anchor": null
+        },
+        {
+          "label": "No record",
+          "clause": "no catalogue record",
+          "anchor": null
+        },
+        {
+          "label": "No record",
+          "clause": "no catalogue record",
+          "anchor": null
+        },
+        {
+          "label": "No record",
+          "clause": "no catalogue record",
+          "anchor": "source-uploadthing"
+        }
+      ],
+      "unmarked_rows": 0
+    },
+    {
+      "path": "/supabase-vs-firebase",
+      "status": 200,
+      "tags": [],
+      "unmarked_rows": 4
+    },
+    {
+      "path": "/tenor-alternatives",
+      "status": 200,
+      "tags": [],
+      "unmarked_rows": 0
+    },
+    {
+      "path": "/terraform-cloud-free-tier-removed",
+      "status": 200,
+      "tags": [],
+      "unmarked_rows": 8
+    },
+    {
+      "path": "/testing-free-tier-comparison-2026",
+      "status": 200,
+      "tags": [
+        {
+          "label": "Unconfirmed",
+          "clause": "the page we cite for this offer states no amount, tier or rate we can read",
+          "anchor": "source-playwright"
+        },
+        {
+          "label": "Unconfirmed",
+          "clause": "the page we cite for this offer states no amount, tier or rate we can read",
+          "anchor": "source-browserstack"
+        },
+        {
+          "label": "Unconfirmed",
+          "clause": "the page we cite for this offer states no amount, tier or rate we can read",
+          "anchor": "source-selenium-grid"
+        },
+        {
+          "label": "Unconfirmed",
+          "clause": "we could not read the page we cite for this offer",
+          "anchor": "source-browserstack-percy"
+        },
+        {
+          "label": "Unconfirmed",
+          "clause": "the page we cite for this offer states no amount, tier or rate we can read",
+          "anchor": "source-playwright"
+        },
+        {
+          "label": "Unconfirmed",
+          "clause": "the page we cite for this offer states no amount, tier or rate we can read",
+          "anchor": "source-browserstack"
+        },
+        {
+          "label": "Unconfirmed",
+          "clause": "the page we cite for this offer states no amount, tier or rate we can read",
+          "anchor": "source-selenium-grid"
+        },
+        {
+          "label": "Unconfirmed",
+          "clause": "the page we cite for this offer states no amount, tier or rate we can read",
+          "anchor": "source-katalon-com"
+        },
+        {
+          "label": "Unconfirmed",
+          "clause": "we could not read the page we cite for this offer",
+          "anchor": "source-browserstack-percy"
+        },
+        {
+          "label": "Unconfirmed",
+          "clause": "the page we cite for this offer states no amount, tier or rate we can read",
+          "anchor": "source-locust"
+        },
+        {
+          "label": "Unconfirmed",
+          "clause": "the page we cite for this offer states no amount, tier or rate we can read",
+          "anchor": "source-bencher"
+        },
+        {
+          "label": "Unconfirmed",
+          "clause": "the page we cite for this offer states no amount, tier or rate we can read",
+          "anchor": "source-moto"
+        }
+      ],
+      "unmarked_rows": 0
+    },
+    {
+      "path": "/vector-database-pricing",
+      "status": 200,
+      "tags": [],
+      "unmarked_rows": 11
+    },
+    {
+      "path": "/vercel-vs-netlify",
+      "status": 200,
+      "tags": [],
+      "unmarked_rows": 5
+    },
+    {
+      "path": "/x402-services",
+      "status": 200,
+      "tags": [],
+      "unmarked_rows": 53
+    }
+  ]
+}
