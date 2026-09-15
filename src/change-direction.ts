@@ -19,6 +19,44 @@ export const CHANGE_DIRECTION: Record<DealChange["change_type"], ChangeDirection
   record_corrected: "neutral",
 };
 
+export const CHANGE_TYPE_MEANING: Record<DealChange["change_type"], string> = {
+  free_tier_removed: "The free tier ended.",
+  open_source_killed: "An open-source licence was withdrawn or replaced.",
+  product_deprecated: "The product or programme was discontinued.",
+  limits_reduced: "The free tier survives with smaller allowances.",
+  restriction: "A new condition on who may use the free tier, or for what.",
+  pricing_restructured: "Published prices moved, or what a plan includes was rearranged.",
+  pricing_model_change: "What the vendor bills for changed — seats to usage, or similar.",
+  limits_increased: "The free tier's allowances grew.",
+  new_free_tier: "A free tier exists where we held none.",
+  new_tier: "A plan was added alongside the ones already published.",
+  startup_program_expanded: "A startup programme's credits or eligibility widened.",
+  pricing_postponed: "An announced increase was deferred.",
+  rebranded: "The product or plan was renamed and the terms stood.",
+  record_corrected: "We corrected a record of our own. It says nothing about the vendor.",
+};
+
+export interface DirectedChangeType {
+  code: DealChange["change_type"];
+  meaning: string;
+  direction: ChangeDirection;
+}
+
+export function changeDirectionTable(): DirectedChangeType[] {
+  return (Object.keys(CHANGE_DIRECTION) as Array<DealChange["change_type"]>).map((code) => ({
+    code,
+    meaning: CHANGE_TYPE_MEANING[code],
+    direction: CHANGE_DIRECTION[code],
+  }));
+}
+
+const typesDirected = (d: ChangeDirection): Set<string> =>
+  new Set(Object.entries(CHANGE_DIRECTION).filter(([, v]) => v === d).map(([k]) => k));
+
+export const NEGATIVE_CHANGE_TYPES = typesDirected("negative");
+export const POSITIVE_CHANGE_TYPES = typesDirected("positive");
+export const NEUTRAL_CHANGE_TYPES = typesDirected("neutral");
+
 export function directionOfChange(changeType: string): ChangeDirection | null {
   return CHANGE_DIRECTION[changeType as DealChange["change_type"]] ?? null;
 }

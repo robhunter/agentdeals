@@ -52,7 +52,7 @@ import { isNoLongerInForce, eventResolutionFields, recordsStillInForce, recordsW
 import { trackedChanges, changeCensus, changeCountPhrase, sliceById, CHANGE_SLICES, CENSUS_NOTE, TRACKED_CHANGE_RULE_ANCHOR, TRACKED_CHANGE_RULE_PATH, TRACKED_CHANGE_NOUN } from "./change-census.js";
 import { SINCE_DEFAULT_SENTENCE } from "./change-window.js";
 import { FREE_TIER_STANDING_LABELS, GRADE_FACTORS_WITHOUT_PRICING_HISTORY, NOT_EVIDENCE_LABELS, citesAChangeOlderThanTheGrade, freeTierStanding, gradesFirstSet, gradesLastSet, gradingDatesClause, neverTracked, riskEntries, scorecard, splitByFreeTierStanding, trackedSinceGrading, type RiskEntry } from "./risk-scorecard.js";
-import { directionRatioLabel } from "./change-direction.js";
+import { CHANGE_DIRECTION, changeDirectionTable, directionRatioLabel } from "./change-direction.js";
 import { removalDurability, removalReturnRateSentence, removalDurabilityPattern, lastingRemovalExamplesFor } from "./removal-durability.js";
 import { changeCitesASource, changeIsUncited, changeSourceCitation, changeSourceLinkHtml, changeCitationHtml, citedClaimHtml, changeSummaryHtml, changeSummaryText, citedChanges, uncitedChangeNotice, uncitedChangeNoticeHtml, ratingWithheldForNoSourceClause, ratingWithheldForNoSourceSentence, UNCITED_CHANGE_LABEL, type CitableChangeRow } from "./change-citation.js";
 import { growthLimitPhrases } from "./growth-limits.js";
@@ -2956,6 +2956,7 @@ function buildCriteriaPage(): string {
 
   const gateRows = GATE_TABLE.map(g => `<tr><td><code>${escHtmlServer(g.code)}</code></td><td>${escHtmlServer(g.description)}</td></tr>`).join("\n");
   const demeritRows = DEMERIT_TABLE.map(d => `<tr><td><code>${escHtmlServer(d.code)}</code></td><td style="text-align:center;font-family:var(--mono)">&minus;${d.points}</td><td>${escHtmlServer(d.trigger)}</td></tr>`).join("\n");
+  const directionRows = changeDirectionTable().map(t => `<tr><td><code>${escHtmlServer(t.code)}</code></td><td>${escHtmlServer(t.meaning)}</td><td style="text-align:center">${escHtmlServer(t.direction)}</td></tr>`).join("\n");
   const notFreeRows = NOT_FREE_TIER_RULES.map(r => `<tr><td><code>${escHtmlServer(String(r.pattern))}</code></td><td>${escHtmlServer(r.note)}</td></tr>`).join("\n");
   const timeLimitedRows = TIME_LIMITED_TIER_RULES.map(r => `<tr><td><code>${escHtmlServer(String(r.pattern))}</code></td><td>${escHtmlServer(r.note)}</td></tr>`).join("\n");
   const membershipGateRows = MEMBERSHIP_GATE_ORDER.map(g => `<tr><td><code>${escHtmlServer(g)}</code> &mdash; ${escHtmlServer(MEMBERSHIP_GATE_RULES[g].label)}</td><td>${escHtmlServer(MEMBERSHIP_GATE_RULES[g].rule)}</td></tr>`).join("\n");
@@ -3080,6 +3081,13 @@ ${demeritRows}
   <p>Vendor pages carry a <code>stable</code> / <code>caution</code> / <code>risky</code> label. <strong style="color:var(--text)">It moves no order on this site</strong> &mdash; the ranking module cannot read it, and flipping every label leaves every listing we publish in the same order.</p>
   <p>It is decided by the <em>type</em> of a recorded change, never by how many records we hold. A vendor that expanded its free tier, postponed a fee, added a tier or changed its name cannot be labelled <code>caution</code> for any of those. <strong style="color:var(--text)">A <code>caution</code> or <code>risky</code> label always renders together with the single dated record that produced it, on the same page and next to the label. Where we cannot show the reason, we do not show the label.</strong></p>
   <p>The honest limit: <code>stable</code> means we hold no record of a free tier removal, a limit reduction or a pricing restructure for that vendor, and that no read of its pricing page since has turned up a change we refused to record without our having read the page again and confirmed the terms afterwards. A change we read and then refused to record is not evidence that nothing moved, so it takes the label off rather than leaving it on, and only a later read that confirms the terms puts it back. Each vendor page states the reason we refused the change we hold for it, or the day we confirmed the terms over it. It is a statement about our records, not a clean bill of health &mdash; a vendor we have never had cause to examine reads the same as one with a long clean history. Until August 2026 the label was derived from a count of records of any type, which inverted that: the vendors we watched most closely were the ones it flagged, and several were flagged for good news. That is fixed, and this paragraph is here so the next version of it is checkable.</p>
+
+  <h3 id="change-direction">Which way a change counts</h3>
+  <p>Every negative and positive count we publish reads one column &mdash; the split on the home page, the <a href="/state-of-free-tiers">State of Free Tiers</a> report, the direction on each <a href="/trends">category trend</a> page, the monthly reports, and the filters over <a href="/pricing-changes">the change log</a>. There is no second classification, so a page cannot count a restructure as neutral while the page it links to counts it as negative.</p>
+  <table><thead><tr><th>Change type</th><th>What it means</th><th>Counts as</th></tr></thead><tbody>
+${directionRows}
+  </tbody></table>
+  <p><code>pricing_restructured</code> and <code>pricing_model_change</code> count as negative because both are a vendor rewriting terms a reader had already planned around. Where we have read the tier in both states and found it no worse, that reading is carried on the record and is what decides the vendor's rating &mdash; these buckets decide how a change is <em>counted</em>, not what we publish about a vendor. Which changes are counted at all is a separate published rule, on <a href="${TRACKED_CHANGE_RULE_PATH}">the change log</a>.</p>
 
   <h3>What we publish when the link itself stops resolving</h3>
   <p>Verification asks whether an offer's terms are still right. A separate daily check asks the cheaper question of whether its link still resolves at all, and it runs over every record regardless of how recently that record was verified.</p>
@@ -4408,8 +4416,8 @@ function buildThisWeekPage(weeksAgo: number): string {
   const metaDesc = digest.headline;
   const canonicalPath = weeksAgo === 0 ? "/this-week" : `/this-week?week=${weeksAgo}`;
 
-  const negativeTypes = new Set(["free_tier_removed", "limits_reduced", "restriction", "open_source_killed", "product_deprecated"]);
-  const positiveTypes = new Set(["new_free_tier", "limits_increased", "startup_program_expanded"]);
+  const negativeTypes = NEGATIVE_CHANGE_TYPES;
+  const positiveTypes = POSITIVE_CHANGE_TYPES;
 
   const losses = digest.top_changes.filter(c => negativeTypes.has(c.change_type));
   const brightSpots = digest.top_changes.filter(c => positiveTypes.has(c.change_type));
@@ -4779,7 +4787,7 @@ const hostingCategories = new Set([
 ]);
 
 const erosionAffectedCategories = (() => {
-  const negTypes = new Set(["free_tier_removed", "limits_reduced", "restriction", "open_source_killed", "product_deprecated"]);
+  const negTypes = NEGATIVE_CHANGE_TYPES;
   const catNeg = new Map<string, number>();
   for (const c of dealChanges) {
     if (c.category && negTypes.has(c.change_type)) {
@@ -9388,7 +9396,7 @@ function buildReportsIndexPage(): string {
     const [y, mo] = m.split("-");
     const monthChanges = recordsStillInForce(changesEffectiveIn(allChanges, m));
     const negative = monthChanges.filter(c => NEGATIVE_CHANGE_TYPES.has(c.change_type)).length;
-    const positive = monthChanges.filter(c => ["new_free_tier","limits_increased","startup_program_expanded","new_tier"].includes(c.change_type)).length;
+    const positive = monthChanges.filter(c => POSITIVE_CHANGE_TYPES.has(c.change_type)).length;
     const neutral = monthChanges.length - negative - positive;
     const sentiment = negative > positive ? "bearish" : positive > negative ? "bullish" : "mixed";
     const sentimentBadge = sentiment === "bearish"
@@ -9466,8 +9474,8 @@ function buildMonthlyReportPage(yearMonth: string): string | null {
   const title = "Developer Tool Pricing Report — " + monthName + " " + yearStr + " | AgentDeals";
   const metaDesc = monthChanges.length + " pricing changes tracked in " + monthName + " " + yearStr + " — free tier removals, new additions, and trend analysis for developer tools.";
 
-  const negativeTypes = new Set(["free_tier_removed","limits_reduced","restriction","product_deprecated","open_source_killed","pricing_model_change"]);
-  const positiveTypes = new Set(["new_free_tier","limits_increased","startup_program_expanded","new_tier"]);
+  const negativeTypes = NEGATIVE_CHANGE_TYPES;
+  const positiveTypes = POSITIVE_CHANGE_TYPES;
 
   const negative = monthChanges.filter(c => negativeTypes.has(c.change_type));
   const positive = monthChanges.filter(c => positiveTypes.has(c.change_type));
@@ -19002,8 +19010,8 @@ function buildQ1PricingReportPage(): string {
 
   const q1Changes = q1TrackedChanges;
 
-  const negativeTypes = new Set(["free_tier_removed", "limits_reduced", "restriction", "open_source_killed", "product_deprecated"]);
-  const positiveTypes = new Set(["limits_increased", "new_free_tier", "startup_program_expanded", "pricing_postponed"]);
+  const negativeTypes = NEGATIVE_CHANGE_TYPES;
+  const positiveTypes = POSITIVE_CHANGE_TYPES;
   const removals = q1Changes.filter(c => c.change_type === "free_tier_removed");
   const restrictions = q1Changes.filter(c => ["limits_reduced", "restriction"].includes(c.change_type));
   const priceIncreases = q1Changes.filter(c => c.change_type === "pricing_restructured");
@@ -23269,11 +23277,11 @@ function buildFreeTierRiskPage(): string {
 
   const changesInForce = recordsStillInForce(dealChanges);
 
-  const negativeTypes = ["free_tier_removed", "limits_reduced", "restriction", "product_deprecated", "open_source_killed", "pricing_model_change", "pricing_restructured"];
-  const positiveTypes = ["limits_increased", "new_free_tier", "startup_program_expanded", "pricing_postponed"];
+  const negativeTypes = NEGATIVE_CHANGE_TYPES;
+  const positiveTypes = POSITIVE_CHANGE_TYPES;
   const trackedHere = trackedChanges(changesInForce);
-  const negativeChanges = trackedHere.filter(c => negativeTypes.includes(c.change_type));
-  const positiveChanges = trackedHere.filter(c => positiveTypes.includes(c.change_type));
+  const negativeChanges = trackedHere.filter(c => negativeTypes.has(c.change_type));
+  const positiveChanges = trackedHere.filter(c => positiveTypes.has(c.change_type));
 
 
   const lowRisk = riskEntries.filter(e => e.risk === "low");
@@ -23341,8 +23349,8 @@ function buildFreeTierRiskPage(): string {
     const cat = normCat(dc.category);
     const entry = categoryMap.get(cat) ?? { total: 0, negative: 0, positive: 0 };
     entry.total++;
-    if (negativeTypes.includes(dc.change_type)) entry.negative++;
-    if (positiveTypes.includes(dc.change_type)) entry.positive++;
+    if (negativeTypes.has(dc.change_type)) entry.negative++;
+    if (positiveTypes.has(dc.change_type)) entry.positive++;
     categoryMap.set(cat, entry);
   }
   const heatmapData = [...categoryMap.entries()]
@@ -23889,8 +23897,8 @@ function buildStabilityDashboardPage(): string {
     .sort((a, b) => b[1] - a[1])
     .slice(0, 12);
 
-  const negativeTypes = ["free_tier_removed", "open_source_killed", "limits_reduced", "restriction", "pricing_restructured", "product_deprecated"];
-  const positiveTypes = ["limits_increased", "new_free_tier", "startup_program_expanded", "pricing_postponed"];
+  const negativeTypes = [...NEGATIVE_CHANGE_TYPES];
+  const positiveTypes = [...POSITIVE_CHANGE_TYPES];
 
   const relatedPages = ALTERNATIVES_PAGES.filter(p =>
     ["free-tier-risk", "state-of-free-tiers", "free-tier-tracker", "free-startup-stack", "q1-2026-developer-pricing-report"].includes(p.slug)
@@ -27042,15 +27050,15 @@ function buildFreeTierTrackerPage(): string {
   const q1End = "2026-03-31";
   const q1Changes = recordsStillInForce(changesInWindow(dealChanges, { start: q1Start, end: q1End }).dated);
 
-  const negativeTypes = ["free_tier_removed", "limits_reduced", "restriction", "open_source_killed", "pricing_model_change", "pricing_restructured", "product_deprecated"];
-  const positiveTypes = ["limits_increased", "new_free_tier", "startup_program_expanded", "pricing_postponed"];
+  const negativeTypes = NEGATIVE_CHANGE_TYPES;
+  const positiveTypes = POSITIVE_CHANGE_TYPES;
 
   const removedOrReduced = q1Changes.filter(c => SEVERE_CHANGE_TYPES.has(c.change_type));
   const limitsReduced = q1Changes.filter(c => ["limits_reduced", "restriction"].includes(c.change_type));
   const restructured = q1Changes.filter(c => ["pricing_restructured", "pricing_model_change", "product_deprecated"].includes(c.change_type));
-  const expanded = q1Changes.filter(c => positiveTypes.includes(c.change_type));
+  const expanded = q1Changes.filter(c => positiveTypes.has(c.change_type));
 
-  const totalNegative = q1Changes.filter(c => negativeTypes.includes(c.change_type)).length;
+  const totalNegative = q1Changes.filter(c => negativeTypes.has(c.change_type)).length;
   const totalPositive = expanded.length;
 
   interface ErosionEntry {
@@ -46034,8 +46042,8 @@ function buildStateOfFreeTiersPage(): string {
   const eligibilityOffers = offers.filter(o => o.eligibility);
   const startupOffers = offers.filter(o => o.tier.toLowerCase().includes("startup") || (o.eligibility && JSON.stringify(o.eligibility).toLowerCase().includes("startup")));
 
-  const negativeTypes = new Set(["free_tier_removed", "limits_reduced", "restriction", "open_source_killed", "product_deprecated"]);
-  const positiveTypes = new Set(["new_free_tier", "limits_increased", "startup_program_expanded"]);
+  const negativeTypes = NEGATIVE_CHANGE_TYPES;
+  const positiveTypes = POSITIVE_CHANGE_TYPES;
   function tallyMonths(months: Map<string, typeof dealChanges>): Array<[string, { total: number; negative: number; positive: number }]> {
     return [...months.entries()].map(([month, records]) => [month, {
       total: records.length,
@@ -47957,8 +47965,8 @@ function buildStackCheckPage(): string {
         '<div class="risk-stat risk-unrated"><div class="count">' + riskCounts.withheld + '</div><div class="label">Unrated</div></div>';
 
       var cardsHtml = '';
-      var negTypes = ['free_tier_removed','limits_reduced','restriction','product_deprecated','open_source_killed','pricing_model_change','pricing_restructured'];
-      var posTypes = ['limits_increased','new_free_tier','startup_program_expanded','pricing_postponed'];
+      var negTypes = ${JSON.stringify([...NEGATIVE_CHANGE_TYPES])};
+      var posTypes = ${JSON.stringify([...POSITIVE_CHANGE_TYPES])};
       for (var i = 0; i < data.services.length; i++) {
         var svc = data.services[i];
         if (svc.status === 'not_found') {
@@ -48229,8 +48237,8 @@ ${globalNavCss()}
 <script>
   var VENDORS = ${JSON.stringify(vendorNames)};
   var PRESETS = ${JSON.stringify(presetMatchups)};
-  var NEG_TYPES = ['free_tier_removed','limits_reduced','restriction','product_deprecated','open_source_killed','pricing_model_change','pricing_restructured'];
-  var POS_TYPES = ['new_free_tier','limits_increased','startup_program_expanded','new_tier'];
+  var NEG_TYPES = ${JSON.stringify([...NEGATIVE_CHANGE_TYPES])};
+  var POS_TYPES = ${JSON.stringify([...POSITIVE_CHANGE_TYPES])};
   var EVENT_DATED_SOURCES = ${JSON.stringify(EVENT_DATED_SOURCES)};
   var EFFECTIVE_DATE_PREFIX = ${JSON.stringify(EFFECTIVE_DATE_PREFIX)};
   var DISCOVERED_DATE_PREFIX = ${JSON.stringify(DISCOVERED_DATE_PREFIX)};
@@ -50063,19 +50071,7 @@ function buildPricingChangesPage(): string {
     return `${monthNames[parseInt(m, 10) - 1]} ${y}`;
   }
 
-  const filterCategory: Record<string, string> = {
-    free_tier_removed: "negative",
-    limits_reduced: "negative",
-    open_source_killed: "negative",
-    product_deprecated: "negative",
-    restriction: "negative",
-    limits_increased: "positive",
-    new_free_tier: "positive",
-    startup_program_expanded: "positive",
-    pricing_restructured: "neutral",
-    pricing_model_change: "neutral",
-    pricing_postponed: "neutral",
-  };
+  const filterCategory: Record<string, string> = CHANGE_DIRECTION;
 
   function buildChangeEntry(c: typeof allChanges[0]): string {
     const badge = changeTypeBadge[c.change_type] ?? { label: c.change_type, color: "#8b949e" };
@@ -52691,8 +52687,8 @@ function buildSearchPage(query: string, categoryFilter: string, typeFilter: stri
     + '</body>\n</html>';
 }
 
-const NEGATIVE_TYPES = new Set(["free_tier_removed", "limits_reduced", "restriction", "open_source_killed", "product_deprecated"]);
-const POSITIVE_TYPES = new Set(["new_free_tier", "limits_increased", "startup_program_expanded"]);
+const NEGATIVE_TYPES = NEGATIVE_CHANGE_TYPES;
+const POSITIVE_TYPES = POSITIVE_CHANGE_TYPES;
 
 function getTrendDirection(changes: Array<{ change_type: string }>): "rising" | "stable" | "declining" {
   let neg = 0, pos = 0;
