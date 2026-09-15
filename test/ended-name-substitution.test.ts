@@ -8,11 +8,11 @@ import { assertCoversPopulation, assertPopulationFloor, vendorsInTheCatalogue } 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const { resolveVendorName } = await import("../dist/vendor-substitution.js");
-const { resolveVendorSlug, vendorSlugMap, endedVendorSlugs, namedVendorSlug, servedVendorSlugForName, slugsWhoseEveryRecordEnded } =
+const { resolveVendorSlug, vendorSlugMap, retiredVendorSlugMap, endedVendorSlugs, namedVendorSlug, servedVendorSlugForName, slugsWhoseEveryRecordEnded } =
   await import("../dist/vendor-slug.js");
 const { findVendor, loadOffers, checkVendorRisk, compareServices, auditStack } = await import("../dist/data.js");
 const { offerRetired, noLiveRecordUnderThatNameSentence } = await import("../dist/retirement.js");
-const { toSlug } = await import("../dist/slug.js");
+const { isSubSlug, toSlug } = await import("../dist/slug.js");
 
 const offers = loadOffers();
 
@@ -97,12 +97,12 @@ describe("the substitution rule, on a universe it does not have to read from dis
     assert.deepStrictEqual(resolution, { type: "disambiguate", slugs: ["claude-code", "code-time"] });
   });
 
-  it("refuses a rename whose survivor has ended rather than forwarding to it", () => {
+  it("forwards a rename to its survivor whatever the tier says, because the two names are one record", () => {
     const resolution = resolveVendorName(
       "old-name",
       universeOf(["new-name"], ["new-name"], { "old-name": "new-name" }),
     );
-    assert.deepStrictEqual(resolution, { type: "onlyMatchHasEnded", slugs: ["new-name"] });
+    assert.deepStrictEqual(resolution, { type: "redirect", slug: "new-name" });
   });
 
   it("refuses a generalisation whose only record has ended", () => {
@@ -156,6 +156,23 @@ describe("which slugs count as ended", () => {
   });
 });
 
+describe("every declared rename, on the catalogue we ship", () => {
+  const renames = [...retiredVendorSlugMap.entries()];
+
+  it("reads a population of declared renames", () => {
+    assertPopulationFloor(renames.length, 4, "slugs the merge registry points at another slug");
+  });
+
+  it("forwards each one to the slug the registry names", () => {
+    const forwarded = renames.map(([from, to]) => [from, resolveVendorSlug(from), to] as const);
+    assert.deepStrictEqual(
+      forwarded.filter(([, resolution, to]) => !(resolution.type === "redirect" && resolution.slug === to))
+        .map(([from, resolution]) => `${from} -> ${resolution.type}`),
+      [],
+    );
+  });
+});
+
 describe("a name carrying extra words, where the record it names has ended", () => {
   const endedVendors = [...new Set(
     offers.filter(o => recordsNamed(o.vendor).every(offerRetired)).map(o => o.vendor),
@@ -165,21 +182,33 @@ describe("a name carrying extra words, where the record it names has ended", () 
     assertPopulationFloor(endedVendors.length, 12, "vendors whose every record has ended");
   });
 
-  it("refuses every one of them rather than answering about a qualified name", () => {
+  it("answers only about a record whose own name the caller typed", () => {
     const substituted: string[] = [];
     for (const vendor of endedVendors) {
       for (const qualifier of ["free tier", "pricing", "credits"]) {
-        const match = findVendor(offers, `${vendor} ${qualifier}`);
-        if (match.type === "inferred") substituted.push(`${vendor} ${qualifier} -> ${match.offer.vendor}`);
+        const asked = `${vendor} ${qualifier}`;
+        const match = findVendor(offers, asked);
+        if (match.type === "none") continue;
+        if (!isSubSlug(toSlug(match.offer.vendor), toSlug(asked))) {
+          substituted.push(`${asked} -> ${match.offer.vendor}`);
+        }
       }
     }
     assert.deepStrictEqual(substituted, []);
   });
 
-  it("names the record it declined to answer about", () => {
+  it("answers the qualified form with the dated end of the offer, not a denial that we hold it", () => {
     const match = findVendor(offers, "Augment Code free tier");
-    assert.strictEqual(match.type, "none");
-    assert.deepStrictEqual(match.suggestions, ["Augment Code"]);
+    assert.strictEqual(match.type, "inferred");
+    assert.strictEqual(match.offer.vendor, "Augment Code");
+
+    const answer = checkVendorRisk("Augment Code free tier") as {
+      result?: { gate?: { code?: string }; risk_cause?: { change_type?: string; date?: string } };
+      error?: string;
+    };
+    assert.strictEqual(answer.error, undefined);
+    assert.strictEqual(answer.result?.gate?.code, "offer_retired");
+    assert.strictEqual(answer.result?.risk_cause?.change_type, "free_tier_removed");
   });
 
   it("still resolves a qualified name whose record is one we still offer", () => {

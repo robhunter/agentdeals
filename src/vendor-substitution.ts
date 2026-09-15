@@ -22,7 +22,7 @@ export function resolveVendorName(input: string, universe: VendorNameUniverse): 
   if (universe.known(input)) return { type: "exact", slug: input };
 
   const renamed = universe.renamedTo(input);
-  if (renamed) return substituteOneOf([renamed], universe);
+  if (renamed) return { type: "redirect", slug: renamed };
   if (input.length < SHORTEST_INPUT_WE_COMPLETE) return { type: "none" };
 
   const all = universe.all();

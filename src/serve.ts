@@ -69,7 +69,7 @@ import type { VendorReferralAnswer } from "./referral-surfaces.js";
 import { runHealthCheck, getLastReport, startPeriodicChecks } from "./referral-health.js";
 import { configureDurableBackend, hydrateDurableStores, persistDurableStores, identityStorageReport } from "./durable-store.js";
 import { addFriend, removeFriend, getFriends, getFriendCodesForVendors } from "./friends.js";
-import { changeLogAnchorFor, changeLogVendorMap, toSlug, vendorSlugMap, resolveVendorSlug, namedVendorSlug, comparisonOfOneRecord, recordNamedBySlug, servedVendorSlugForName } from "./vendor-slug.js";
+import { changeLogAnchorFor, changeLogVendorMap, toSlug, vendorSlugMap, resolveVendorSlug, namedVendorSlug, comparisonOfOneRecord, recordNamedBySlug, servedVendorSlug, servedVendorSlugForName } from "./vendor-slug.js";
 import { NO_PUSH_NOTICE, watchCommandBlock, watchRequestsFor } from "./change-watching.js";
 import { createRegistrationLimiter, rateLimitHeaders } from "./rate-limit.js";
 import { offerForSlug, vendorRates, cheapestRate, dearestRate, spanOfRates, formatRate, formatRateSpan, monthlyTokenCost, formatDollars, type ModelRate } from "./model-rates.js";
@@ -570,6 +570,10 @@ function vendorLinkHtml(slug: string | null, name: string, attrs = ""): string {
 
 function changeVendorLinkHtml(name: string, attrs = ""): string {
   return vendorLinkHtml(servedVendorSlugForName(name), name, attrs);
+}
+
+function handwrittenVendorLinkHtml(slug: string, name: string, attrs = ""): string {
+  return vendorLinkHtml(servedVendorSlug(slug) === null ? null : slug, name, attrs);
 }
 
 function changeVendorUrlField(name: string): { url?: string } {
@@ -31611,7 +31615,7 @@ function buildHostingPricingPage(): string {
   const pricingTableRows = services.map(s => {
     const freeColor = freeTypeColors[s.freeType] || "var(--text-muted)";
     return '<tr>' +
-      '<td style="font-weight:600"><a href="/vendor/' + escHtmlServer(s.slug) + '" style="color:var(--text)">' + escHtmlServer(s.name) + '</a></td>' +
+      '<td style="font-weight:600">' + handwrittenVendorLinkHtml(s.slug, s.name, ' style="color:var(--text)"') + '</td>' +
       '<td style="font-family:var(--mono);font-size:.85rem;color:' + freeColor + '">' + escHtmlServer(s.freeTier) + '</td>' +
       '<td style="font-family:var(--mono);font-size:.85rem">' + escHtmlServer(s.paidFrom) + '</td>' +
       '<td style="font-family:var(--mono);font-size:.85rem">' + escHtmlServer(s.freeBandwidth) + '</td>' +
@@ -31625,7 +31629,7 @@ function buildHostingPricingPage(): string {
     const cards = catServices.map(s => {
       const borderColor = freeTypeColors[s.freeType] || "var(--accent)";
       return '<div class="diff-card" style="border-left-color:' + borderColor + '">' +
-        '<h3><a href="/vendor/' + escHtmlServer(s.slug) + '" style="color:var(--text)">' + escHtmlServer(s.name) + '</a> ' +
+        '<h3>' + handwrittenVendorLinkHtml(s.slug, s.name, ' style="color:var(--text)"') + ' ' +
         '<span style="font-size:.75rem;color:var(--text-dim);font-weight:400">' + escHtmlServer(freeTypeLabels[s.freeType]) + '</span></h3>' +
         '<p class="diff-desc">' + escHtmlServer(s.freeDetails) + '</p>' +
         '</div>';
@@ -31637,7 +31641,7 @@ function buildHostingPricingPage(): string {
 
   const costRows = services.map(s => {
     return '<tr>' +
-      '<td style="font-weight:600"><a href="/vendor/' + escHtmlServer(s.slug) + '" style="color:var(--text)">' + escHtmlServer(s.name) + '</a></td>' +
+      '<td style="font-weight:600">' + handwrittenVendorLinkHtml(s.slug, s.name, ' style="color:var(--text)"') + '</td>' +
       '<td style="font-family:var(--mono);font-size:.85rem">' + escHtmlServer(s.monthlyCostSolo) + '</td>' +
       '<td style="font-family:var(--mono);font-size:.85rem">' + escHtmlServer(s.monthlyCostTeam) + '</td>' +
       '<td style="font-size:.85rem;color:var(--text-muted)">' + escHtmlServer(s.hiddenCosts.substring(0, 80)) + (s.hiddenCosts.length > 80 ? "..." : "") + '</td>' +
@@ -45721,7 +45725,7 @@ ${mcpCtaCss()}
         <td class="check">&#10003;</td>
       </tr>
       <tr>
-        <td class="provider-col"><a href="/vendor/heroku">Heroku</a><span class="removed-badge">FREE REMOVED</span></td>
+        <td class="provider-col">${handwrittenVendorLinkHtml("heroku", "Heroku")}<span class="removed-badge">FREE REMOVED</span></td>
         <td>None (removed Nov 2022)</td>
         <td>N/A</td>
         <td>N/A</td>

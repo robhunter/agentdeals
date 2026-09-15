@@ -31,7 +31,7 @@ export { RISK_DEMOTION, SEVERE_TYPES_WITHOUT_FLAT_DEMOTION, changeTypeCanDemote 
 import { vendorHistorySentence } from "./vendor-history.js";
 import { isNoLongerInForce, recordsStillInForce, withResolutionInSummary } from "./change-resolution.js";
 import { changeCitesASource, changeIsUncited, changeSummaryHtml, changeSummaryMarkdown, changeSummaryText, ratingWithheldForNoSourceSentence, type CitableChange } from "./change-citation.js";
-import { endedVerdictSentence, offerRetired } from "./retirement.js";
+import { endedVerdictSentence } from "./retirement.js";
 import { resolveCategoryName } from "./category-scope.js";
 import { survivingVendorName } from "./vendor-merges.js";
 import {
@@ -901,8 +901,7 @@ export function findVendor(offers: Offer[], name: string): VendorMatch {
   if (!asked) return { type: "none", suggestions: [] };
 
   const namedWithQualifiers = offers.filter((o) => isSubSlug(toSlug(o.vendor), asked));
-  const theOnlyMatch = namedWithQualifiers.length === 1 ? namedWithQualifiers[0] : null;
-  if (theOnlyMatch && !offerRetired(theOnlyMatch)) return { type: "inferred", offer: theOnlyMatch };
+  if (namedWithQualifiers.length === 1) return { type: "inferred", offer: namedWithQualifiers[0] };
 
   const longerNamesContainingIt = offers.filter((o) => isSubSlug(asked, toSlug(o.vendor)));
   const suggestions = [...new Set([...namedWithQualifiers, ...longerNamesContainingIt].map((o) => o.vendor))];

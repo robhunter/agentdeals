@@ -229,7 +229,7 @@ const DOCUMENTED_OPERATIONS: Record<string, Record<string, any>> = {
   "/api/details/{vendor}": {
     get: {
       summary: "Vendor detail with alternatives",
-      description: "Get detailed information about a specific vendor's offer. Optionally includes alternatives in the same category. Accepts canonical vendor names (e.g. \"Supabase\") or short-form slugs (e.g. \"kiro\" → Amazon Kiro, \"proton\" → multi-product disambiguation). Fuzzy matches resolve in-place and return `resolved_from`. Ambiguous inputs return 200 with a `disambiguation` array instead of an `offer`.",
+      description: "Get detailed information about a specific vendor's offer. Optionally includes alternatives in the same category. Accepts canonical vendor names (e.g. \"Supabase\") or short-form slugs (e.g. \"kiro\" → Amazon Kiro, \"proton\" → multi-product disambiguation). Fuzzy matches resolve in-place and return `resolved_from`, except where every record the input would reach is one we publish as ended — those return 404 naming the ended record rather than answering about it. Ambiguous inputs return 200 with a `disambiguation` array instead of an `offer`.",
       parameters: [
         { name: "vendor", in: "path", required: true, description: "Vendor name or short-form slug (URL-encoded)", schema: { type: "string" }, example: "Supabase" },
         { name: "alternatives", in: "query", description: "Include alternative vendors in the same category", schema: { type: "string", enum: ["true", "false"], default: "false" } }
@@ -273,7 +273,7 @@ const DOCUMENTED_OPERATIONS: Record<string, Record<string, any>> = {
           }
         },
         "404": {
-          description: "Vendor not found (no exact match AND no fuzzy resolution)",
+          description: "Vendor not found: either no exact match and no fuzzy resolution, or the only records the input reaches have ended, which we name in `suggestions` rather than substitute",
           content: {
             "application/json": {
               schema: {
