@@ -4,6 +4,7 @@ import { MCP_TOOL_NAMES } from "./mcp-tool-inventory.js";
 import { RATE_LIMIT_PER_MINUTE, SIGNAL_BODY_MAX } from "./signal.js";
 import { SIGNAL_EVENTS } from "./stats.js";
 import { SINCE_ACCEPTS } from "./since-parameter.js";
+import { CHANGE_STANDINGS, INCLUDE_RETRACTED_ACCEPTS } from "./change-resolution.js";
 
 export const CHANGE_TYPES: readonly string[] = Object.keys(CHANGE_DIRECTION);
 
@@ -179,7 +180,8 @@ const DOCUMENTED_OPERATIONS: Record<string, Record<string, any>> = {
         { name: "category", in: "query", description: "Comma-separated category names to filter by (e.g. 'Database,Cloud Hosting'). Case-insensitive partial match.", schema: { type: "string" }, example: "Database,Hosting" },
         { name: "categories", in: "query", description: "Comma-separated category names to filter by (e.g. 'Database,Cloud Hosting'). Case-insensitive partial match.", schema: { type: "string" }, example: "Database,Hosting" },
         { name: "limit", in: "query", description: "Max results per page", schema: { type: "integer", default: 20 } },
-        { name: "offset", in: "query", description: "Number of results to skip", schema: { type: "integer", default: 0 } }
+        { name: "offset", in: "query", description: "Number of results to skip", schema: { type: "integer", default: 0 } },
+        { name: "include_retracted", in: "query", description: `${INCLUDE_RETRACTED_ACCEPTS} Anything other than 'true' or 'false' answers 400 rather than being ignored.`, schema: { type: "boolean", default: false } }
       ],
       responses: {
         "200": {
@@ -189,12 +191,14 @@ const DOCUMENTED_OPERATIONS: Record<string, Record<string, any>> = {
               schema: {
                 type: "object",
                 properties: {
-                  changes: { type: "array", items: { $ref: "#/components/schemas/DealChange" } },
-                  total: { type: "integer" },
+                  changes: { type: "array", items: { $ref: "#/components/schemas/PublishedDealChange" } },
+                  total: { type: "integer", description: "Records matching your query before paging, counting only the ones served. Retracted records are outside this count unless include_retracted is true." },
                   returned: { type: "integer" },
                   limit: { type: "integer" },
                   offset: { type: "integer" },
-                  advisory: { type: "array", items: { $ref: "#/components/schemas/DealChange" }, description: "Top 3 high-impact changes outside your filter" },
+                  include_retracted: { type: "boolean", description: "The value this response was built with, echoed back." },
+                  retracted_excluded: { type: "integer", description: "How many records matched your query and were withheld for carrying standing 'retracted'. Zero when include_retracted is true, because nothing was withheld. Read this before comparing a count against an earlier one." },
+                  advisory: { type: "array", items: { $ref: "#/components/schemas/PublishedDealChange" }, description: "Top 3 high-impact changes outside your filter. Never contains a retracted record, whatever include_retracted says — this block is what we put forward as worth knowing, not part of your query's result set." },
                   summary: {
                     type: "object",
                     properties: {
@@ -1505,6 +1509,20 @@ export const openapiSpec = {
           resolution: { $ref: "#/components/schemas/ChangeResolution" }
         },
         required: ["vendor", "change_type", "date", "summary", "previous_state", "current_state", "impact", "source_url", "category", "alternatives"]
+      },
+      PublishedDealChange: {
+        allOf: [
+          { $ref: "#/components/schemas/DealChange" },
+          {
+            type: "object",
+            properties: {
+              standing: { type: "string", enum: [...CHANGE_STANDINGS], description: "Where the record stands with us. 'in_force' — the change happened and still holds. 'reversed' — it happened and has since been undone, so the record is true history. 'retracted' — the record was our error and we do not stand behind it. Read this rather than testing whether resolution is present: 'reversed' and 'retracted' are different answers to a reader asking whether to trust the record, and the presence of resolution flattens them into one." },
+              impact: { type: "string", enum: ["high", "medium", "low", "none"], description: "'none' whenever standing is 'retracted' — a record we have withdrawn describes no event, so it weighs nothing. Derived at the point of serving; the stored value is left alone." }
+            },
+            required: ["standing"]
+          }
+        ],
+        description: "A change record as /api/changes serves it: every field of DealChange, plus a standing on every record rather than only on the ones we have withdrawn."
       },
       ChangeResolution: {
         type: "object",

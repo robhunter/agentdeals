@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import type { Offer, EnrichedOffer, OfferIndex, DealChange, DealChangesIndex, ChangeDateSource, StabilityClass, Referral, RiskCause, RatingWithheld, LinkUnreachable, SourceCheck } from "./types.js";
+import type { Offer, EnrichedOffer, OfferIndex, DealChange, PublishedDealChange, DealChangesIndex, ChangeDateSource, StabilityClass, Referral, RiskCause, RatingWithheld, LinkUnreachable, SourceCheck } from "./types.js";
 import { isUrlSuspended } from "./referral-health.js";
 import { CHANGE_DIRECTION, type ChangeDirection } from "./change-direction.js";
 import { changeRatesTheListedTier } from "./change-tier.js";
@@ -30,7 +30,7 @@ import { RISK_DEMOTION } from "./change-demotion.js";
 import { sinceFilterDay } from "./since-parameter.js";
 export { RISK_DEMOTION, SEVERE_TYPES_WITHOUT_FLAT_DEMOTION, changeTypeCanDemote } from "./change-demotion.js";
 import { vendorHistorySentence } from "./vendor-history.js";
-import { isNoLongerInForce, recordsStillInForce, withResolutionInSummary } from "./change-resolution.js";
+import { isNoLongerInForce, recordsStillInForce, recordsWeStandBehind, withResolutionInSummary, withStandingDeclaredOnEach } from "./change-resolution.js";
 import { changeCitesASource, changeIsUncited, changeSummaryHtml, changeSummaryMarkdown, changeSummaryText, ratingWithheldForNoSourceSentence, type CitableChange } from "./change-citation.js";
 import { endedVerdictSentence } from "./retirement.js";
 import { resolveCategoryName } from "./category-scope.js";
@@ -749,13 +749,24 @@ export function getChangeLogFreshness(now: Date = new Date()): ChangeLogFreshnes
 
 export const DEFAULT_CHANGE_WINDOW_DAYS = 30;
 
+export interface ChangeRecordAudience {
+  includeRetracted?: boolean;
+}
+
+export interface DealChangeResult {
+  changes: PublishedDealChange[];
+  total: number;
+  retracted_excluded: number;
+}
+
 export function getDealChanges(
   since?: string,
   changeType?: string,
   vendor?: string,
   vendors?: string,
-  categories?: string
-): { changes: DealChange[]; total: number } {
+  categories?: string,
+  audience: ChangeRecordAudience = {}
+): DealChangeResult {
   let results = loadDealChanges();
 
   const sinceDay = sinceFilterDay(since);
@@ -795,12 +806,19 @@ export function getDealChanges(
 
   results = [...results].sort((a, b) => b.date.localeCompare(a.date));
 
-  return { changes: results, total: results.length };
+  const served = audience.includeRetracted ? results : recordsWeStandBehind(results);
+
+  return {
+    changes: withStandingDeclaredOnEach(served),
+    total: served.length,
+    retracted_excluded: results.length - served.length,
+  };
 }
 
 export interface PersonalizedChanges {
-  your_stack_changes: DealChange[];
-  advisory: DealChange[];
+  your_stack_changes: PublishedDealChange[];
+  advisory: PublishedDealChange[];
+  retracted_excluded: number;
   summary: {
     stack_changes_count: number;
     ecosystem_high_impact_count: number;
@@ -814,12 +832,12 @@ const HIGH_IMPACT_CHANGE_TYPES = new Set([
 ]);
 
 export interface ChangeContext {
-  advisory: DealChange[];
+  advisory: PublishedDealChange[];
   summary: PersonalizedChanges["summary"];
 }
 
 export function changeContext(
-  matched: DealChange[],
+  matched: readonly Pick<DealChange, "vendor" | "date" | "change_type">[],
   since?: string,
   changeType?: string
 ): ChangeContext {
@@ -855,14 +873,16 @@ export function getPersonalizedChanges(
   changeType?: string,
   vendor?: string,
   vendors?: string,
-  categories?: string
+  categories?: string,
+  audience: ChangeRecordAudience = {}
 ): PersonalizedChanges {
-  const stackResult = getDealChanges(since, changeType, vendor, vendors, categories);
+  const stackResult = getDealChanges(since, changeType, vendor, vendors, categories, audience);
   const context = changeContext(stackResult.changes, since, changeType);
 
   return {
     your_stack_changes: stackResult.changes,
     advisory: context.advisory,
+    retracted_excluded: stackResult.retracted_excluded,
     summary: context.summary,
   };
 }

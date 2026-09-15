@@ -105,6 +105,8 @@ export type RiskLevel = "stable" | "caution" | "risky";
 
 export type ChangeResolutionState = "reversed" | "retracted";
 
+export type ChangeStanding = "in_force" | ChangeResolutionState;
+
 export interface ChangeRecordRef {
   vendor: string;
   date: string;
@@ -185,6 +187,13 @@ export interface DealChange {
   resolution?: ChangeResolution | null;
   source_check?: ChangeSourceCheck | null;
 }
+
+export type PublishedChangeImpact = DealChange["impact"] | "none";
+
+export type PublishedDealChange = Omit<DealChange, "impact"> & {
+  impact: PublishedChangeImpact;
+  standing: ChangeStanding;
+};
 
 export interface ChangeSourceCheck {
   checked: string;
