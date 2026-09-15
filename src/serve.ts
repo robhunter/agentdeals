@@ -49,7 +49,7 @@ import { HETZNER_APRIL_CHANGES, HETZNER_CLOUD_PLANS, HETZNER_PRICES_READ, HETZNE
 import { HUNDRED_GB_SCENARIO, HUNDRED_TB_SCENARIO, ONE_TO_ONE_SCENARIO, STORAGE_RATES_READ, STORAGE_SCALE_WORKLOADS, TEN_TO_ONE_SCENARIO, cheapestProviderAt, costAfterMonthlyEgressGrantFor, costliestProviderAt, egressAllowanceSentence, egressBillAfterMonthlyGrantFor, egressBillOnceOverAllowance, egressRatioWhereCostsMatch, fixedMonthlyGrantsSentence, monthlyEgressGrantGb, monthlyEgressGrantSentence, monthlyStorageCost, providersWithScalingEgressAllowance, rateCardFor, scaleCostFor } from "./storage-cost-model.js";
 import { changeTimelineDate, supersededLineups, supersessionNote } from "./change-lineup.js";
 import { isNoLongerInForce, eventResolutionFields, recordsStillInForce, recordsWeStandBehind, INCLUDE_RETRACTED_REJECTED } from "./change-resolution.js";
-import { trackedChanges, changeCensus, changeCountPhrase, CHANGE_SLICES, CENSUS_NOTE, TRACKED_CHANGE_RULE_ANCHOR, TRACKED_CHANGE_RULE_PATH, TRACKED_CHANGE_NOUN } from "./change-census.js";
+import { trackedChanges, changeCensus, changeCountPhrase, sliceById, CHANGE_SLICES, CENSUS_NOTE, TRACKED_CHANGE_RULE_ANCHOR, TRACKED_CHANGE_RULE_PATH, TRACKED_CHANGE_NOUN } from "./change-census.js";
 import { SINCE_DEFAULT_SENTENCE } from "./change-window.js";
 import { FREE_TIER_STANDING_LABELS, GRADE_FACTORS_WITHOUT_PRICING_HISTORY, NOT_EVIDENCE_LABELS, citesAChangeOlderThanTheGrade, freeTierStanding, gradesFirstSet, gradesLastSet, gradingDatesClause, neverTracked, riskEntries, scorecard, splitByFreeTierStanding, trackedSinceGrading, type RiskEntry } from "./risk-scorecard.js";
 import { directionRatioLabel } from "./change-direction.js";
@@ -4319,7 +4319,7 @@ ${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" hre
   ${buildGlobalNav("digest")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/digest/archive">Digest</a> &rsaquo; ${weekKey}</div>
   <h1>Pricing Changes: ${dateRange}</h1>
-  <p class="page-meta">Week ${week}, ${year}. ${changes.length} change${changes.length !== 1 ? "s" : ""} tracked.${discoveryClause}</p>
+  <p class="page-meta">${changes.length} change${changes.length !== 1 ? "s" : ""} tracked in week ${week}, ${year}.${discoveryClause}</p>
 ${statsHtml}
 ${bodyHtml}
 ${trendingHtml}
@@ -46342,7 +46342,7 @@ ${globalNavCss()}
   ${squeezeHtml}
 
   <h2>The Bright Spots: Who&rsquo;s Expanding</h2>
-  <p class="section-desc">${positiveChanges.length} tracked changes are developer-positive: new free tiers, expanded limits, and improved startup programs. Notable expansions include GitHub Copilot Free, Auth0 tripling MAU limits, and Amazon Aurora PostgreSQL joining the AWS Free Tier.</p>
+  <p class="section-desc">${positiveChanges.length} of the ${trackedHere.length} ${TRACKED_CHANGE_NOUN} are developer-positive: new free tiers, expanded limits, and improved startup programs. Notable expansions include GitHub Copilot Free, Auth0 tripling MAU limits, and Amazon Aurora PostgreSQL joining the AWS Free Tier.</p>
   <div class="callout callout-good">
     <strong>Trend worth watching:</strong> AI coding tools are in a free-tier arms race. GitHub Copilot launched a free tier (Dec 2025), Google shipped Gemini Code Assist free (Dec 2025), and multiple vendors are competing on generous free completions to capture developer lock-in.
   </div>
@@ -50037,7 +50037,7 @@ function whatCountsAsAChangeHtml(changes: DealChange[], listedOnThisPage: number
 ${rows}
       </tbody>
     </table>
-    <p class="month-note">This timeline lists ${listedOnThisPage.toLocaleString("en-US")} entries &mdash; the tracked changes plus the index housekeeping, which we show so a vendor's history is complete. The same census is on <a href="/api/changes">/api/changes</a> as <code>change_census</code>.</p>
+    <p class="month-note">This timeline lists all ${listedOnThisPage.toLocaleString("en-US")} ${escHtmlServer(sliceById("held").noun)}, not only the ${tracked.toLocaleString("en-US")} ${escHtmlServer(TRACKED_CHANGE_NOUN)}, so a vendor's history is complete. The same census is on <a href="/api/changes">/api/changes</a> as <code>change_census</code>.</p>
   </div>`;
 }
 
@@ -50114,10 +50114,11 @@ ${altHtml}
       </div>`;
   }
 
-  const inForceAll = recordsStillInForce(allChanges);
-  const countable = recordsStillInForce(sorted);
+  const countedAll = trackedChanges(allChanges);
+  const countable = trackedChanges(sorted);
+  const undatedCounted = trackedChanges(undatedChanges).length;
   const upcomingCount = countable.filter(c => c.date >= today).length;
-  const removedCount = countable.filter(c => c.change_type === "free_tier_removed" || c.change_type === "open_source_killed" || c.change_type === "product_deprecated").length;
+  const removedCount = countedAll.filter(c => c.change_type === "free_tier_removed" || c.change_type === "open_source_killed" || c.change_type === "product_deprecated").length;
   const thisMonth = today.slice(0, 7);
   const thisMonthCount = countable.filter(c => c.date.slice(0, 7) === thisMonth).length;
 
@@ -50189,7 +50190,7 @@ ${entriesHtml}
   }).join("\n");
 
   const undatedHtml = undatedSorted.length === 0 ? "" : `    <div class="month-group month-group-undated">
-      <h2 class="month-heading" id="month-undated">${undatedGroupHeading(undatedSorted.length)}</h2>
+      <h2 class="month-heading" id="month-undated">${undatedGroupHeading(undatedSorted.length, allChanges.length)}</h2>
       <p class="month-note">${UNDATED_GROUP_NOTE}</p>
 ${undatedSorted.map(c => buildChangeEntry(c)).join("\n")}
     </div>`;
@@ -50410,8 +50411,8 @@ ${globalNavCss()}
 
   <div class="stats-bar">
     <div class="stat-card">
-      <div class="stat-value">${inForceAll.length}</div>
-      <div class="stat-label">Total Changes</div>
+      <div class="stat-value">${countedAll.length}</div>
+      <div class="stat-label"><a href="${TRACKED_CHANGE_RULE_PATH}">Tracked Changes</a></div>
     </div>
     <div class="stat-card">
       <div class="stat-value">${thisMonthCount}</div>
@@ -50425,7 +50426,7 @@ ${globalNavCss()}
       <div class="stat-value">${removedCount}</div>
       <div class="stat-label">Removals</div>
     </div>
-${undatedTileHtml(undatedSorted.length)}
+${undatedTileHtml(undatedCounted)}
   </div>
 
   <div class="trend-summary">
@@ -50529,11 +50530,12 @@ ${entries}
 
 function buildChangesPage(): string {
   const allChanges = loadDealChanges();
-  const countable = recordsStillInForce(allChanges);
+  const counted = trackedChanges(allChanges);
   const { dated: eventDated, discovered: undatedChanges } = partitionByDateProvenance(allChanges);
   const today = new Date().toISOString().slice(0, 10);
   const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
-  const last30DaysCount = recordsStillInForce(eventDated).filter(c => c.date >= thirtyDaysAgo).length;
+  const last30DaysCount = trackedChanges(eventDated).filter(c => c.date >= thirtyDaysAgo).length;
+  const undatedCounted = trackedChanges(undatedChanges).length;
 
   const sorted = [...eventDated].sort((a, b) => b.date.localeCompare(a.date));
   const undatedSorted = [...undatedChanges].sort((a, b) => b.date.localeCompare(a.date));
@@ -50586,8 +50588,9 @@ ${altHtml}
       </div>`;
   }
 
-  const upcomingCount = recordsStillInForce(sorted).filter(c => c.date >= today).length;
-  const removedCount = countable.filter(c => c.change_type === "free_tier_removed" || c.change_type === "open_source_killed" || c.change_type === "product_deprecated").length;
+  const upcomingCount = trackedChanges(sorted).filter(c => c.date >= today).length;
+  const removedCount = counted.filter(c => c.change_type === "free_tier_removed" || c.change_type === "open_source_killed" || c.change_type === "product_deprecated").length;
+  const entriesListed = sorted.length + undatedSorted.length;
 
   const monthsHtml = Array.from(byMonth.entries()).map(([month, changes]) => {
     const entriesHtml = changes.map(c => buildChangeEntry(c)).join("\n");
@@ -50598,7 +50601,7 @@ ${entriesHtml}
   }).join("\n");
 
   const undatedHtml = undatedSorted.length === 0 ? "" : `    <div class="month-group month-group-undated">
-      <h2 class="month-heading">${undatedGroupHeading(undatedSorted.length)}</h2>
+      <h2 class="month-heading">${undatedGroupHeading(undatedSorted.length, allChanges.length)}</h2>
       <p class="month-note">${UNDATED_GROUP_NOTE}</p>
 ${undatedSorted.map(c => buildChangeEntry(c)).join("\n")}
     </div>`;
@@ -50611,8 +50614,8 @@ ${undatedSorted.map(c => buildChangeEntry(c)).join("\n")}
     "@type": "ItemList",
     itemListOrder: listOrderOf("newest-first"),
     name: title,
-    description: `${metaDesc} This list holds ${countable.length} entries: the tracked changes plus our own index housekeeping, counted at ${BASE_URL}${TRACKED_CHANGE_RULE_PATH}.`,
-    numberOfItems: countable.length,
+    description: `${metaDesc} This list holds every record we hold — ${changeCountPhrase("held", allChanges)} — counted at ${BASE_URL}${TRACKED_CHANGE_RULE_PATH}.`,
+    numberOfItems: entriesListed,
     url: `${BASE_URL}/changes`,
     itemListElement: newestFirst.slice(0, 50).map((c, i) => {
       const citation = changeSourceCitation(c);
@@ -50731,11 +50734,11 @@ ${globalNavCss()}
       <div class="stat-value">${byMonth.size}</div>
       <div class="stat-label">Months Tracked</div>
     </div>
-${undatedTileHtml(undatedSorted.length)}
+${undatedTileHtml(undatedCounted)}
   </div>
 
 ${changeLogFreshnessNote()}
-${whatCountsAsAChangeHtml(dealChanges, countable.length)}
+${whatCountsAsAChangeHtml(dealChanges, entriesListed)}
 ${undatedHtml}
 ${monthsHtml}
 
@@ -52710,7 +52713,7 @@ const trendEmoji: Record<string, { icon: string; color: string; label: string }>
 };
 
 function buildTrendsIndexPage(): string {
-  const allChanges = recordsStillInForce(loadDealChanges());
+  const allChanges = trackedChanges(loadDealChanges());
 
   const byCat = new Map<string, typeof allChanges>();
   for (const c of allChanges) {
@@ -52826,12 +52829,12 @@ function buildTrendsPage(slug: string): string | null {
   const catOffers = offers.filter(o => o.category === categoryName);
   const enriched = enrichOffers(catOffers);
 
-  const catInForce = recordsStillInForce(catChanges);
-  const direction = getTrendDirection(catInForce);
+  const catTracked = trackedChanges(catChanges);
+  const direction = getTrendDirection(catTracked);
   const t = trendEmoji[direction];
 
   const typeBreakdown = new Map<string, number>();
-  for (const c of catInForce) {
+  for (const c of catTracked) {
     typeBreakdown.set(c.change_type, (typeBreakdown.get(c.change_type) ?? 0) + 1);
   }
 
@@ -52840,11 +52843,11 @@ function buildTrendsPage(slug: string): string | null {
 
   const stablePicks = enriched.filter(o => o.risk_level === "stable" && !o.recent_change).slice(0, 12);
 
-  const totalAll = recordsStillInForce(allChanges).length;
-  const categoryPct = totalAll > 0 ? Math.round((catInForce.length / totalAll) * 100) : 0;
+  const totalAll = trackedChanges(allChanges).length;
+  const categoryPct = totalAll > 0 ? Math.round((catTracked.length / totalAll) * 100) : 0;
 
   const title = `${categoryName} Pricing Trends — AgentDeals`;
-  const metaDesc = `Pricing trends for ${categoryName}: ${catInForce.length} tracked changes across ${catOffers.length} vendors. Direction: ${t.label.toLowerCase()}.`;
+  const metaDesc = `Pricing trends for ${categoryName}: ${catTracked.length} ${TRACKED_CHANGE_NOUN} across ${catOffers.length} vendors. Direction: ${t.label.toLowerCase()}.`;
 
   const timelineHtml = catChanges.length > 0 ? catChanges.map(c => {
     const badge = changeTypeBadge[c.change_type] ?? { label: c.change_type, color: "#8b949e" };
@@ -52974,12 +52977,12 @@ ${globalNavCss()}
       <div class="stat-label">Vendors</div>
     </div>
     <div class="stat-card">
-      <div class="stat-value">${trackedChanges(catInForce).length}</div>
-      <div class="stat-label">Changes Tracked</div>
+      <div class="stat-value">${catTracked.length}</div>
+      <div class="stat-label"><a href="${TRACKED_CHANGE_RULE_PATH}">Tracked Changes</a></div>
     </div>
     <div class="stat-card">
       <div class="stat-value">${categoryPct}%</div>
-      <div class="stat-label">of All Changes</div>
+      <div class="stat-label">of All Tracked Changes</div>
     </div>
     <div class="stat-card">
       <div class="stat-value">${atRisk.length}</div>
@@ -53297,7 +53300,7 @@ ${globalNavCss()}
 
   <div style="text-align:center;margin:-1.5rem auto 2.5rem;max-width:640px">
     <a href="/state-of-free-tiers" style="display:inline-flex;align-items:center;gap:.5rem;padding:.6rem 1.25rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);color:var(--text-muted);font-size:.85rem;text-decoration:none;transition:all .2s">
-      <span style="color:#f85149;font-weight:600">${recordsStillInForce(dealChanges).filter(c => NEGATIVE_CHANGE_TYPES.has(c.change_type)).length} negative</span> vs <span style="color:#3fb950;font-weight:600">${recordsStillInForce(dealChanges).filter(c => POSITIVE_CHANGE_TYPES.has(c.change_type)).length} positive</span> changes &mdash; <span style="color:var(--accent)">Read the State of Free Tiers Report &rarr;</span>
+      <span style="color:#f85149;font-weight:600">${trackedChanges(dealChanges).filter(c => NEGATIVE_CHANGE_TYPES.has(c.change_type)).length} negative</span> vs <span style="color:#3fb950;font-weight:600">${trackedChanges(dealChanges).filter(c => POSITIVE_CHANGE_TYPES.has(c.change_type)).length} positive</span> changes &mdash; <span style="color:var(--accent)">Read the State of Free Tiers Report &rarr;</span>
     </a>
   </div>
 

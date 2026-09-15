@@ -9,8 +9,9 @@ export const TRACKED_CHANGE_RULE_PATH = `/changes#${TRACKED_CHANGE_RULE_ANCHOR}`
 export const TRACKED_CHANGE_NOUN = "tracked pricing changes";
 
 export const TRACKED_CHANGE_RULE_SENTENCE =
-  "A tracked pricing change is a dated change a vendor made to published terms, "
-  + "which we recorded, still stands, and we have not withdrawn.";
+  "A tracked pricing change is a change a vendor made to published terms, "
+  + "which we recorded, still stands, and we have not withdrawn. "
+  + "Most carry the date the terms took effect; the rest carry the date we read the page.";
 
 export type CensusSubject = {
   current_state?: string;

@@ -22,6 +22,7 @@ import {
   DISCOVERED_DATE_PREFIX,
   UNDATED_GROUP_NOTE,
 } from "../dist/change-dates.js";
+import { sliceById, TRACKED_CHANGE_NOUN } from "../dist/change-census.js";
 
 const { buildChangeEntry } = await import("../scripts/change-log.js");
 const { planBackfill } = await import("../scripts/backfill-change-date-sources.js");
@@ -193,10 +194,19 @@ describe("the rendering helpers", () => {
   });
 
   it("says in the group heading and note that the effective date is what is missing", () => {
-    assert.match(undatedGroupHeading(1), /1 change\b/);
-    assert.match(undatedGroupHeading(3), /3 changes\b/);
+    assert.match(undatedGroupHeading(1, 2), /1 change\b/);
+    assert.match(undatedGroupHeading(3, 9), /3 changes\b/);
     assert.match(UNDATED_GROUP_NOTE, /not when they took effect/);
     assert.match(UNDATED_GROUP_NOTE, /excluded from the monthly groups/);
+  });
+
+  it("names in the group heading which population the undated count is taken over", () => {
+    const held = sliceById("held");
+    assert.match(undatedGroupHeading(3, 9), new RegExp(`\\b9 ${held.noun}`));
+    assert.ok(
+      !undatedGroupHeading(3, 9).includes(TRACKED_CHANGE_NOUN),
+      "the heading counts over the whole log and must not claim the tracked noun",
+    );
   });
 });
 
@@ -340,7 +350,7 @@ describe("no surface renders a discovery date as the date the vendor changed som
         renderedBadge.test(dated),
         `${route} did not mark the dated control as upcoming, so the check below would pass for the wrong reason`
       );
-      assert.ok(discovered.includes(undatedGroupHeading(1)), `${route} has no undated group`);
+      assert.ok(discovered.includes(undatedGroupHeading(1, 2)), `${route} has no undated group`);
       assert.ok(!renderedBadge.test(discovered), `${route} marked a discovery as upcoming`);
     }
   });

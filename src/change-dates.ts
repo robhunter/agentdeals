@@ -1,5 +1,6 @@
 import type { DealChange, ChangeDateSource } from "./types.js";
 import { PRODUCT_DEPRECATED, deprecationEndsTheListedProduct } from "./product-deprecation.js";
+import { sliceById } from "./change-census.js";
 
 type DatedChange = Pick<DealChange, "date" | "date_source">;
 
@@ -133,8 +134,9 @@ export const UNDATED_GROUP_NOTE =
 
 export const UNDATED_TILE_LABEL = "Effective Date Unknown";
 
-export function undatedGroupHeading(count: number): string {
-  return `Effective date unknown (${count} ${count === 1 ? "change" : "changes"})`;
+export function undatedGroupHeading(count: number, heldTotal: number): string {
+  const noun = sliceById("held").noun;
+  return `Effective date unknown (${count} ${count === 1 ? "change" : "changes"}, of ${heldTotal.toLocaleString("en-US")} ${noun})`;
 }
 
 export function changeDateLabel(c: DatedChange): string {
