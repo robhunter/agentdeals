@@ -131,6 +131,30 @@ describe("a change record we have withdrawn reaches no caller who did not ask fo
     }
   });
 
+  it("reconciles the all-time figure it publishes with the window it publishes it beside", async () => {
+    for (const asked of [false, true]) {
+      const answer = await changes(`include_retracted=${asked}`);
+      const allTime = (answer as unknown as { all_time_total: number }).all_time_total;
+      assert.strictEqual(allTime, answer.total,
+        `a caller asked include_retracted=${asked} and cannot reconcile all_time_total against the whole log`);
+    }
+    const withheld = await changes("include_retracted=false");
+    const asked = await changes("include_retracted=true");
+    assert.strictEqual(
+      (asked as unknown as { all_time_total: number }).all_time_total - (withheld as unknown as { all_time_total: number }).all_time_total,
+      withheld.retracted_excluded,
+      "the gap between the two all-time figures is not the records we held back",
+    );
+  });
+
+  it("says on the developer page that the records are being held back", async () => {
+    const page = await (await fetch(`${base}/developers`)).text();
+    const paging = page.slice(page.indexOf("<h3>Paging on"), page.indexOf("<h3>Paging on") + 3000);
+    for (const stated of ["include_retracted", "retracted_excluded", "standing"]) {
+      assert.ok(paging.includes(stated), `/developers describes paging on /api/changes without naming ${stated}`);
+    }
+  });
+
   it("refuses a value it cannot read rather than quietly withholding what was asked for", async () => {
     for (const value of ["1", "yes", "TRUE", ""]) {
       const res = await fetch(`${base}/api/changes?include_retracted=${value}`);
