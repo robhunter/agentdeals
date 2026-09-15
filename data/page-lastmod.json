@@ -2958,8 +2958,8 @@
       "changed": "2026-09-14"
     },
     "/free-tier-risk": {
-      "hash": "48788ea0d4c8cb39",
-      "changed": "2026-09-14"
+      "hash": "9a7683d81ed79799",
+      "changed": "2026-09-15"
     },
     "/free-tier-tracker": {
       "hash": "a6ec485048731ab1",
@@ -3045,12 +3045,12 @@
       "changed": "2026-09-14"
     },
     "/hosting-free-tier-comparison-2026": {
-      "hash": "f58b19c7a64e0c51",
+      "hash": "e2d125f5ec440ffc",
       "changed": "2026-09-15"
     },
     "/hosting-pricing": {
-      "hash": "696b22eb1c1b507f",
-      "changed": "2026-09-14"
+      "hash": "78094115944ea343",
+      "changed": "2026-09-15"
     },
     "/ide-code-editors-alternatives": {
       "hash": "4284aa99c1a1f3b6",
@@ -3117,8 +3117,8 @@
       "changed": "2026-09-12"
     },
     "/pricing-changes": {
-      "hash": "bfe7cdda1caf3fb8",
-      "changed": "2026-09-14"
+      "hash": "ba0208bca63e7a61",
+      "changed": "2026-09-15"
     },
     "/privacy": {
       "hash": "a45ec77d1237ce8c",
@@ -3133,8 +3133,8 @@
       "changed": "2026-09-14"
     },
     "/q2-pricing-preview-2026": {
-      "hash": "14ea4598d46d5ba4",
-      "changed": "2026-09-14"
+      "hash": "2694685e1d4b1737",
+      "changed": "2026-09-15"
     },
     "/railway-vs-render": {
       "hash": "3e9d423edd1bc233",
@@ -3268,8 +3268,8 @@
       "daily": true
     },
     "/stability": {
-      "hash": "4e19d9c97d449c80",
-      "changed": "2026-09-14"
+      "hash": "6e1d8fb9d9331416",
+      "changed": "2026-09-15"
     },
     "/stack-check": {
       "hash": "46d83c2099709279",
@@ -3392,8 +3392,8 @@
       "changed": "2026-09-12"
     },
     "/trends/cloud-hosting": {
-      "hash": "d27fa36b95e00eae",
-      "changed": "2026-09-14"
+      "hash": "aa4db7ffbf877609",
+      "changed": "2026-09-15"
     },
     "/trends/cloud-iaas": {
       "hash": "25e14f5219afa774",
@@ -3408,8 +3408,8 @@
       "changed": "2026-09-14"
     },
     "/trends/communication": {
-      "hash": "c106ea3298ed0187",
-      "changed": "2026-09-14"
+      "hash": "2f1bb3e18c9b7516",
+      "changed": "2026-09-15"
     },
     "/trends/communication-messaging": {
       "hash": "97eaf71693a24b4b",
@@ -3552,8 +3552,8 @@
       "changed": "2026-09-14"
     },
     "/trends/startup-perks": {
-      "hash": "1760bec69b0e698c",
-      "changed": "2026-09-14"
+      "hash": "5a107df599acd2bc",
+      "changed": "2026-09-15"
     },
     "/trends/status-pages": {
       "hash": "ca756ab2388354e8",
