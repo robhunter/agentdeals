@@ -788,14 +788,18 @@ export interface TabulatedSubjectSlot extends TabulatedSubject {
   cellEnd: number;
 }
 
-export function tabulatedSubjectSlots(html: string, slugFor: VendorSlugLookup): TabulatedSubjectSlot[] {
-  const found: TabulatedSubjectSlot[] = [];
+interface SubjectRowSlot extends TabulatedSubjectSlot {
+  statesAFigure: boolean;
+  linksToItsVendorPage: boolean;
+}
+
+function subjectRowSlots(html: string, slugFor: VendorSlugLookup): SubjectRowSlot[] {
+  const found: SubjectRowSlot[] = [];
   const rows = new RegExp(TABLE_ROW.source, "g");
   for (let row = rows.exec(html); row !== null; row = rows.exec(html)) {
     const cells = row[0].match(ROW_CELL) ?? [];
     const first = cells[0];
     if (first === undefined) continue;
-    if (!cells.slice(1).some(cell => /\d/.test(cellText(cell)))) continue;
     const subject = cellText(first);
     const linked = first.match(VENDOR_CELL_LINK);
     const cellStart = row.index + row[0].indexOf(first);
@@ -804,13 +808,35 @@ export function tabulatedSubjectSlots(html: string, slugFor: VendorSlugLookup): 
       slug: linked ? linked[1]! : subject ? slugFor(subject) : null,
       cell: first,
       cellEnd: cellStart + first.length - "</td>".length,
+      statesAFigure: cells.slice(1).some(cell => /\d/.test(cellText(cell))),
+      linksToItsVendorPage: linked !== null,
     });
   }
   return found;
 }
 
+function asSubjectSlot({ subject, slug, cell, cellEnd }: SubjectRowSlot): TabulatedSubjectSlot {
+  return { subject, slug, cell, cellEnd };
+}
+
+export function tabulatedSubjectSlots(html: string, slugFor: VendorSlugLookup): TabulatedSubjectSlot[] {
+  return subjectRowSlots(html, slugFor)
+    .filter(row => row.statesAFigure)
+    .map(asSubjectSlot);
+}
+
 export function tabulatedSubjects(html: string, slugFor: VendorSlugLookup): TabulatedSubject[] {
   return tabulatedSubjectSlots(html, slugFor).map(({ subject, slug }) => ({ subject, slug }));
+}
+
+export function tabulatedVendorSlots(html: string, slugFor: VendorSlugLookup): TabulatedSubjectSlot[] {
+  return subjectRowSlots(html, slugFor)
+    .filter(row => row.statesAFigure || row.linksToItsVendorPage)
+    .map(asSubjectSlot);
+}
+
+export function tabulatedVendors(html: string, slugFor: VendorSlugLookup): TabulatedSubject[] {
+  return tabulatedVendorSlots(html, slugFor).map(({ subject, slug }) => ({ subject, slug }));
 }
 
 export function vendorFactRows(html: string, slugFor: VendorSlugLookup): VendorFactRow[] {
