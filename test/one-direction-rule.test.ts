@@ -4,7 +4,7 @@ import { spawn, type ChildProcess } from "node:child_process";
 import { readdirSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { CHANGE_DIRECTION, NEGATIVE_CHANGE_TYPES, POSITIVE_CHANGE_TYPES, changeDirectionTable } from "../dist/change-direction.js";
+import { CHANGE_DIRECTION, CHANGE_TYPE_MEANING, NEGATIVE_CHANGE_TYPES, POSITIVE_CHANGE_TYPES, changeDirectionTable } from "../dist/change-direction.js";
 import { trackedChanges } from "../dist/change-census.js";
 import { loadDealChanges } from "../dist/data.js";
 import { directionCopiesIn, describeCopy } from "./direction-sets.ts";
@@ -130,11 +130,26 @@ describe("one direction rule decides every split we publish", () => {
     assert.deepStrictEqual([...new Set(misfiled)], []);
   });
 
+  it("hands the reader's browser the same two sets the server reads", async () => {
+    const injected: string[] = [];
+    for (const page of ["/stack-check", "/compare-tool"]) {
+      const html = await (await fetch(`${base}${page}`)).text();
+      const parse = (name: RegExp) => JSON.parse(html.match(name)?.[1] ?? "null");
+      injected.push(`${page} negative ${JSON.stringify(parse(/var (?:negTypes|NEG_TYPES) = (\[[^\]]*\]);/))}`);
+      injected.push(`${page} positive ${JSON.stringify(parse(/var (?:posTypes|POS_TYPES) = (\[[^\]]*\]);/))}`);
+    }
+    const expected = ["/stack-check", "/compare-tool"].flatMap(page => [
+      `${page} negative ${JSON.stringify([...NEGATIVE_CHANGE_TYPES])}`,
+      `${page} positive ${JSON.stringify([...POSITIVE_CHANGE_TYPES])}`,
+    ]);
+    assert.deepStrictEqual(injected, expected);
+  });
+
   it("publishes the bucket of every change type on the criteria page", async () => {
     const criteria = await (await fetch(`${base}/criteria`)).text();
-    const missing = changeDirectionTable()
-      .filter(t => !criteria.includes(`<code>${t.code}</code></td><td>${t.meaning}</td><td style="text-align:center">${t.direction}`))
-      .map(t => `${t.code} is not published as ${t.direction}`);
+    const missing = Object.entries(CHANGE_DIRECTION)
+      .filter(([code, direction]) => !criteria.includes(`<code>${code}</code></td><td>${CHANGE_TYPE_MEANING[code as keyof typeof CHANGE_TYPE_MEANING]}</td><td style="text-align:center">${direction}`))
+      .map(([code, direction]) => `${code} is not published as ${direction}`);
     assert.deepStrictEqual(missing, []);
     assert.strictEqual(changeDirectionTable().length, Object.keys(CHANGE_DIRECTION).length);
   });
