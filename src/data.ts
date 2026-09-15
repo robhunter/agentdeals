@@ -3,7 +3,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import type { Offer, EnrichedOffer, OfferIndex, DealChange, PublishedDealChange, DealChangesIndex, ChangeDateSource, StabilityClass, Referral, RiskCause, RatingWithheld, LinkUnreachable, SourceCheck } from "./types.js";
 import { isUrlSuspended } from "./referral-health.js";
-import { CHANGE_DIRECTION, type ChangeDirection } from "./change-direction.js";
+import { CHANGE_DIRECTION, NEGATIVE_CHANGE_TYPES, POSITIVE_CHANGE_TYPES } from "./change-direction.js";
 import { changeRatesTheListedTier } from "./change-tier.js";
 import { applyReviewedDirections } from "./change-direction-review.js";
 import { rankForListing, gateFor, utcDate, type TieBreak, type Gate, type GateCode } from "./ranking.js";
@@ -308,11 +308,7 @@ export function isACorrectionToOurOwnRecord(change: Pick<DealChange, "change_typ
   return change.change_type === CORRECTION_TO_OUR_OWN_RECORD;
 }
 
-const directionSet = (d: ChangeDirection) =>
-  new Set(Object.entries(CHANGE_DIRECTION).filter(([, v]) => v === d).map(([k]) => k));
-
-export const NEGATIVE_CHANGE_TYPES = directionSet("negative");
-export const POSITIVE_CHANGE_TYPES = directionSet("positive");
+export { NEGATIVE_CHANGE_TYPES, POSITIVE_CHANGE_TYPES, NEUTRAL_CHANGE_TYPES } from "./change-direction.js";
 
 export const VOLATILE_TYPES = new Set([
   "free_tier_removed",
