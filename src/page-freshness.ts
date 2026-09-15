@@ -55,7 +55,7 @@ export function freshnessClaimFor(
   reviewFor: (pagePath: string) => PageReviewRecord | null = getPageReview,
 ): string {
   const review = reviewFor(pagePath);
-  if (review && !review.reads_index) return compiledClaimFor(review, today);
+  if (review && !review.tables_read_index) return compiledClaimFor(review, today);
   return verifiedSpanClaim(vendorSlugsLinkedFrom(html).flatMap(slug => [...verifiedDatesForSlug(slug)]));
 }
 
