@@ -702,7 +702,7 @@ export { EVENT_DATED_SOURCES, partitionByDateProvenance } from "./change-dates.j
 export { DATE_SOURCES, isEventDated };
 
 export interface ChangeLogFreshness {
-  total: number;
+  records_held: number;
   last_recorded_date: string | null;
   days_since_last_recorded: number | null;
   last_detected_date: string | null;
@@ -728,7 +728,7 @@ export function changeLogFreshness(changes: DealChange[], now: Date = new Date()
   const lastDetected = detected.length > 0 ? detected[detected.length - 1] : null;
   const thirtyDaysAgo = new Date(Date.parse(today) - 30 * 86400000).toISOString().slice(0, 10);
   return {
-    total: changes.length,
+    records_held: changes.length,
     last_recorded_date: last,
     days_since_last_recorded: last === null ? null : Math.max(0, daysBetween(last, today)),
     last_detected_date: lastDetected,

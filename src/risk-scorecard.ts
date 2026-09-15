@@ -1,7 +1,10 @@
 import type { DealChange, Offer } from "./types.js";
 import { PRODUCT_DEPRECATED, deprecationEndsTheListedProduct } from "./product-deprecation.js";
 import { isNoLongerInForce } from "./change-resolution.js";
+import { isIndexHousekeeping } from "./change-census.js";
 import { tierRecordsAFreeTier } from "./free-tier-record.js";
+
+export { INDEX_SWEEP_STATE } from "./change-census.js";
 
 export type RiskGrade = "low" | "medium" | "high" | "dead";
 
@@ -27,8 +30,6 @@ export const FREE_TIER_NEGATIVE_TYPES = [
   "open_source_killed",
 ];
 
-export const INDEX_SWEEP_STATE = "Removed from index";
-
 export type NotEvidenceReason = "no_longer_in_force" | "index_sweep" | "another_product";
 
 export const NOT_EVIDENCE_LABELS: Record<NotEvidenceReason, string> = {
@@ -51,7 +52,7 @@ export function catalogueVendorFor(entry: RiskEntry): string {
 
 export function whyNotEvidence(change: GradableChange): NotEvidenceReason | null {
   if (isNoLongerInForce(change)) return "no_longer_in_force";
-  if (change.current_state === INDEX_SWEEP_STATE) return "index_sweep";
+  if (isIndexHousekeeping(change)) return "index_sweep";
   if (change.change_type === PRODUCT_DEPRECATED && !deprecationEndsTheListedProduct(change)) return "another_product";
   return null;
 }

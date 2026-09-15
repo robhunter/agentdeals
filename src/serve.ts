@@ -49,6 +49,7 @@ import { HETZNER_APRIL_CHANGES, HETZNER_CLOUD_PLANS, HETZNER_PRICES_READ, HETZNE
 import { HUNDRED_GB_SCENARIO, HUNDRED_TB_SCENARIO, ONE_TO_ONE_SCENARIO, STORAGE_RATES_READ, STORAGE_SCALE_WORKLOADS, TEN_TO_ONE_SCENARIO, cheapestProviderAt, costAfterMonthlyEgressGrantFor, costliestProviderAt, egressAllowanceSentence, egressBillAfterMonthlyGrantFor, egressBillOnceOverAllowance, egressRatioWhereCostsMatch, fixedMonthlyGrantsSentence, monthlyEgressGrantGb, monthlyEgressGrantSentence, monthlyStorageCost, providersWithScalingEgressAllowance, rateCardFor, scaleCostFor } from "./storage-cost-model.js";
 import { changeTimelineDate, supersededLineups, supersessionNote } from "./change-lineup.js";
 import { isNoLongerInForce, eventResolutionFields, recordsStillInForce, recordsWeStandBehind, INCLUDE_RETRACTED_REJECTED } from "./change-resolution.js";
+import { trackedChanges, changeCensus, changeCountPhrase, CHANGE_SLICES, CENSUS_NOTE, TRACKED_CHANGE_RULE_ANCHOR, TRACKED_CHANGE_RULE_PATH, TRACKED_CHANGE_RULE_SENTENCE, TRACKED_CHANGE_NOUN } from "./change-census.js";
 import { SINCE_DEFAULT_SENTENCE } from "./change-window.js";
 import { FREE_TIER_STANDING_LABELS, GRADE_FACTORS_WITHOUT_PRICING_HISTORY, NOT_EVIDENCE_LABELS, citesAChangeOlderThanTheGrade, freeTierStanding, gradesFirstSet, gradesLastSet, gradingDatesClause, neverTracked, riskEntries, scorecard, splitByFreeTierStanding, trackedSinceGrading, type RiskEntry } from "./risk-scorecard.js";
 import { directionRatioLabel } from "./change-direction.js";
@@ -522,7 +523,10 @@ const durableHistoryBody = JSON.stringify({
 const offers = loadOffers();
 const categories = getCategories();
 const dealChanges = loadDealChanges();
-const trackedChangeCount = recordsStillInForce(dealChanges).length;
+const trackedChangeCount = trackedChanges(dealChanges).length;
+
+const q1TrackedChanges = trackedChanges(changesInWindow(dealChanges, { start: "2026-01-01", end: "2026-03-31" }).dated);
+const q1ChangeCount = q1TrackedChanges.length;
 
 const verifiedDatesBySlug = (() => {
   const dates = new Map<string, string[]>();
@@ -7453,11 +7457,11 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
   {
     slug: "q1-2026-developer-pricing-report",
     title: "Q1 2026 Developer Pricing Report — The Great Free Tier Reckoning",
-    metaDesc: "50 verified pricing changes across developer tools in Q1 2026: 8 free tiers removed, 6 limits reduced, 1 OSS project killed, while Cloudflare bucked the trend. The definitive quarterly analysis.",
+    metaDesc: `${q1ChangeCount} verified pricing changes across developer tools in Q1 2026: 8 free tiers removed, 6 limits reduced, 1 OSS project killed, while Cloudflare bucked the trend. The definitive quarterly analysis.`,
     contextHtml: "",
     tag: "q1-report",
     primaryVendor: "AgentDeals",
-    hubDesc: "50 pricing changes in Q1 2026 — 8 free tiers removed, narrative analysis, category breakdown, monthly timeline, Cloudflare counter-trend, Q2 outlook",
+    hubDesc: `${q1ChangeCount} pricing changes in Q1 2026 — 8 free tiers removed, narrative analysis, category breakdown, monthly timeline, Cloudflare counter-trend, Q2 outlook`,
   },
   {
     slug: "hetzner-pricing-2026",
@@ -18977,7 +18981,7 @@ ${mcpCtaCss()}
   </div>
 
   <div class="search-cta">
-    <p>This analysis covers Hetzner's April 1 and June 15, 2026 price adjustments and what its cloud plans cost today. For the full quarterly overview covering ${recordsStillInForce(changesInWindow(dealChanges, { start: "2026-01-01", end: "2026-03-31" }).dated).length} pricing changes across all developer tools, see the <a href="/q1-2026-developer-pricing-report">Q1 2026 Developer Pricing Report</a>. Browse all ${offers.length.toLocaleString()} developer tools at <a href="/search">/search</a>.</p>
+    <p>This analysis covers Hetzner's April 1 and June 15, 2026 price adjustments and what its cloud plans cost today. For the full quarterly overview covering ${q1ChangeCount} pricing changes across all developer tools, see the <a href="/q1-2026-developer-pricing-report">Q1 2026 Developer Pricing Report</a>. Browse all ${offers.length.toLocaleString()} developer tools at <a href="/search">/search</a>.</p>
   </div>
 
   ${buildMoreAlternativesGuides(slug)}
@@ -18992,11 +18996,11 @@ ${mcpCtaCss()}
 
 function buildQ1PricingReportPage(): string {
   const title = "Q1 2026 Developer Pricing Report — The Great Free Tier Reckoning";
-  const metaDesc = "50 verified pricing changes across developer tools in Q1 2026: 8 free tiers removed, 6 limits reduced, 1 OSS project killed, while Cloudflare bucked the trend. The definitive quarterly analysis of developer tool pricing.";
+  const metaDesc = `${q1ChangeCount} verified pricing changes across developer tools in Q1 2026: 8 free tiers removed, 6 limits reduced, 1 OSS project killed, while Cloudflare bucked the trend. The definitive quarterly analysis of developer tool pricing.`;
   const slug = "q1-2026-developer-pricing-report";
   const pubDate = "2026-03-24";
 
-  const q1Changes = recordsStillInForce(changesInWindow(dealChanges, { start: "2026-01-01", end: "2026-03-31" }).dated);
+  const q1Changes = q1TrackedChanges;
 
   const negativeTypes = new Set(["free_tier_removed", "limits_reduced", "restriction", "open_source_killed", "product_deprecated"]);
   const positiveTypes = new Set(["limits_increased", "new_free_tier", "startup_program_expanded", "pricing_postponed"]);
@@ -23473,7 +23477,7 @@ ${mcpCtaCss()}
   ${buildGlobalNav("changes")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/alternatives">Guides</a> &rsaquo; Free Tier Risk Index</div>
   <h1>Free Tier Risk Index</h1>
-  <p class="pub-date">Published ${pubDate} &middot; ${gradingDates} &middot; Scored against ${changesInForce.length} tracked pricing changes across ${offers.length.toLocaleString()} developer tools &middot; ${pageDataProvenance("/free-tier-risk", offers.length)}</p>
+  <p class="pub-date">Published ${pubDate} &middot; ${gradingDates} &middot; Scored against ${changeCountPhrase("tracked", changesInForce)} across ${offers.length.toLocaleString()} developer tools &middot; ${pageDataProvenance("/free-tier-risk", offers.length)}</p>
 
   <div class="summary-stats">
     <div class="stat-card"><div class="stat-number" style="color:#3fb950">${lowRisk.length}</div><div class="stat-label">Low Risk (Safe)</div></div>
@@ -23484,7 +23488,7 @@ ${mcpCtaCss()}
 
   <div class="executive-summary">
     <p><strong>The question developers should ask isn't "what's free?" — it's "what will still be free in a year?"</strong></p>
-    <p>We track ${changesInForce.length} pricing changes across the developer tool ecosystem. The data shows a clear pattern: <strong>${negativeChanges.length} negative changes</strong> (free tier removals, limit reductions, restrictions) vs <strong>${positiveChanges.length} positive changes</strong> (expansions, new tiers). Free tier erosion is real, but not universal — some vendors are actively expanding.</p>
+    <p>We track ${changeCountPhrase("tracked", changesInForce)} across the developer tool ecosystem. The data shows a clear pattern: <strong>${negativeChanges.length} negative changes</strong> (free tier removals, limit reductions, restrictions) vs <strong>${positiveChanges.length} positive changes</strong> (expansions, new tiers). Free tier erosion is real, but not universal — some vendors are actively expanding.</p>
     <p>This index scores ${riskEntries.length} major developer tools by free tier sustainability, using our deal change data, company financial signals, and competitive dynamics. <strong>Build on the greens, watch the yellows, plan exits from the reds.</strong></p>
     <p>The grades are editorial. ${gradingDates}, and each row below carries the date its own grade was set. They do not move on their own, so <a href="#scorecard">section 6 scores them</a> against every change we have tracked since — band by band, with the vendors that took nothing left in the denominator.</p>
   </div>
@@ -23758,7 +23762,7 @@ ${mcpCtaCss()}
     </a>`).join("\n    ")}
     <a href="/changes" class="related-page-link">
       <div class="link-title">All Pricing Changes Timeline</div>
-      <div class="link-desc">Full timeline of all ${changesInForce.length} tracked developer tool pricing changes</div>
+      <div class="link-desc">Full timeline of all ${trackedChanges(changesInForce).length} tracked developer tool pricing changes</div>
     </a>
     <a href="/alternatives" class="related-page-link">
       <div class="link-title">Alternatives Guides Hub</div>
@@ -23767,7 +23771,7 @@ ${mcpCtaCss()}
   </div>
 
   <div class="methodology">
-    <strong>Methodology:</strong> Risk scores derived from our dataset of ${changesInForce.length} tracked pricing changes across ${offers.length.toLocaleString()} developer tools. Each vendor scored on pricing history (40%), financial signals (25%), competitive pressure (20%), and free tier strategic value (15%). Pricing history sourced from official vendor announcements and our <a href="/changes">deal change tracker</a>. Financial signals based on public funding data, acquisition history, and profitability indicators. Category heatmap and pattern analysis computed dynamically from our full deal_changes dataset. This index is recomputed from the change record on every request.${dataChangesSegment(changesInForce)}
+    <strong>Methodology:</strong> Risk scores derived from our dataset of ${changeCountPhrase("tracked", changesInForce)} across ${offers.length.toLocaleString()} developer tools, by the rule at <a href="${TRACKED_CHANGE_RULE_PATH}">what counts as a change</a>. Each vendor scored on pricing history (40%), financial signals (25%), competitive pressure (20%), and free tier strategic value (15%). Pricing history sourced from official vendor announcements and our <a href="/changes">deal change tracker</a>. Financial signals based on public funding data, acquisition history, and profitability indicators. Category heatmap and pattern analysis computed dynamically from our full deal_changes dataset. This index is recomputed from the change record on every request.${dataChangesSegment(changesInForce)}
   </div>
 
   <div class="search-cta">
@@ -23989,7 +23993,7 @@ ${mcpCtaCss()}
   ${buildGlobalNav("changes")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/alternatives">Guides</a> &rsaquo; Stability Dashboard</div>
   <h1>${escHtmlServer(title)}</h1>
-  <p class="subtitle">Real-time risk ratings based on <strong>${allChanges.length}</strong> tracked pricing changes across <strong>${vendorsClassified}</strong> vendors.${dataChangesSegment(allChanges)}</p>
+  <p class="subtitle">Real-time risk ratings based on <strong>${trackedChanges(allChanges).length}</strong> <a href="${TRACKED_CHANGE_RULE_PATH}">${TRACKED_CHANGE_NOUN}</a> across <strong>${vendorsClassified}</strong> vendors.${dataChangesSegment(allChanges)}</p>
 
   <div class="summary-stats">
     <div class="stat-card">
@@ -24053,11 +24057,11 @@ ${mcpCtaCss()}
     }).join("\n    ")}
   </div>
   <div class="context-box">
-    <strong>What &ldquo;stable&rdquo; rests on:</strong> An offer is rated stable when we have tracked no negative pricing change for it and nothing is withholding our reading of its pricing page. Absence of bad news is only a signal where we could look &mdash; so an offer whose page we cannot reach or cannot read, whose last read we refused, or whose listing is gated is unrated rather than stable. Our tracking covers ${allChanges.length} pricing changes since 2022, so &ldquo;stable&rdquo; means no negative movement in our observation window.
+    <strong>What &ldquo;stable&rdquo; rests on:</strong> An offer is rated stable when we have tracked no negative pricing change for it and nothing is withholding our reading of its pricing page. Absence of bad news is only a signal where we could look &mdash; so an offer whose page we cannot reach or cannot read, whose last read we refused, or whose listing is gated is unrated rather than stable. Our tracking covers ${changeCountPhrase("tracked", allChanges)} since 2022, by the rule at <a href="${TRACKED_CHANGE_RULE_PATH}">what counts as a change</a>, so &ldquo;stable&rdquo; means no negative movement in our observation window.
   </div>
 
   <h2>Methodology</h2>
-  <p class="section-intro">Stability classifications are computed automatically from our <a href="/changes">deal changes dataset</a> of ${allChanges.length} tracked pricing changes.</p>
+  <p class="section-intro">Stability classifications are computed automatically from our <a href="/changes">deal changes dataset</a> of ${changeCountPhrase("tracked", allChanges)}, by the rule at <a href="${TRACKED_CHANGE_RULE_PATH}">what counts as a change</a>.</p>
   <div class="method-grid">
     <div class="method-col">
       <h3 style="color:${stabilityColors.volatile}">Negative Change Types</h3>
@@ -24079,7 +24083,7 @@ ${mcpCtaCss()}
     &bull; <strong style="color:${stabilityColors.improving}">Improving:</strong> Only positive changes (no negative)<br>
     &bull; <strong style="color:${stabilityColors.stable}">Stable:</strong> No negative changes, on a listing nothing is withholding<br>
     &bull; <strong style="color:${stabilityColors.unrated}">Unrated:</strong> We withhold the class &mdash; pricing page unreachable or unreadable, read refused, or the listing is gated<br><br>
-    <strong>Data freshness:</strong> Classifications update automatically as new pricing changes are tracked. Source data: <code>deal_changes.json</code> with ${allChanges.length} entries covering changes from 2022 to present.
+    <strong>Data freshness:</strong> Classifications update automatically as new pricing changes are tracked. Source data: <code>deal_changes.json</code> with ${changeCountPhrase("held", allChanges)} covering 2022 to present, of which ${changeCountPhrase("tracked", allChanges)}.
   </div>
 
   <h2>Cross-References</h2>
@@ -24087,7 +24091,7 @@ ${mcpCtaCss()}
   <div class="related-pages">
     <a href="/changes" class="related-page-link">
       <div class="link-title">All Pricing Changes Timeline</div>
-      <div class="link-desc">Full timeline of all ${allChanges.length} tracked developer tool pricing changes</div>
+      <div class="link-desc">Full timeline of all ${trackedChanges(allChanges).length} tracked developer tool pricing changes</div>
     </a>
     <a href="/state-of-free-tiers" class="related-page-link">
       <div class="link-title">State of Free Tiers 2026</div>
@@ -46018,7 +46022,7 @@ const STRUCTURALLY_FREE_CARDS = [
 function buildStateOfFreeTiersPage(): string {
   const changesInForce = recordsStillInForce(dealChanges);
   const title = "State of Developer Free Tiers (2026) — Data from " + offers.length.toLocaleString() + "+ Tools | AgentDeals";
-  const metaDesc = `${changesInForce.length} pricing changes tracked across ${offers.length.toLocaleString()} developer tools. ${categories.length} categories analyzed. The authoritative data on developer free tier trends, erosion patterns, and which vendors are still expanding.`;
+  const metaDesc = `${trackedChanges(changesInForce).length} pricing changes tracked across ${offers.length.toLocaleString()} developer tools. ${categories.length} categories analyzed. The authoritative data on developer free tier trends, erosion patterns, and which vendors are still expanding.`;
   const now = new Date().toISOString().split("T")[0];
 
   const reportServedOn = utcDate();
@@ -46269,10 +46273,10 @@ ${globalNavCss()}
   ${buildGlobalNav("report")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; <a href="/guides">Guides</a> &rsaquo; State of Free Tiers</div>
   <h1>State of Developer Free Tiers (2026)</h1>
-  <p class="page-meta">${changesInForce.length} pricing changes tracked across ${offers.length.toLocaleString()} developer tools. ${negativeChanges.length} negative vs ${positiveChanges.length} positive. The ratio tells the story.${dataChangesSegment(changesInForce)}</p>
+  <p class="page-meta">${changeCountPhrase("tracked", changesInForce)} across ${offers.length.toLocaleString()} developer tools, by the rule at <a href="${TRACKED_CHANGE_RULE_PATH}">what counts as a change</a>. ${negativeChanges.length} negative vs ${positiveChanges.length} positive. The ratio tells the story.${dataChangesSegment(changesInForce)}</p>
 
   <h2>Executive Summary</h2>
-  <p class="section-desc">We analyzed ${offers.length.toLocaleString()} developer tool offerings across ${categories.length} categories, tracking ${changesInForce.length} pricing changes over 2024&ndash;2026. Here&rsquo;s what the data shows:</p>
+  <p class="section-desc">We analyzed ${offers.length.toLocaleString()} developer tool offerings across ${categories.length} categories, tracking ${trackedChanges(changesInForce).length} pricing changes over 2024&ndash;2026. Here&rsquo;s what the data shows:</p>
   <ul class="key-takeaways">
     <li><strong>${vouchedPct}% of tracked services offer a free tier we can vouch for today</strong> &mdash; we hold a free-tier record for ${recordedPct}% of them, and can confirm ${freeTiers.vouched.toLocaleString()} of those ${freeTiers.recorded.toLocaleString()} against a source we have read.</li>
     <li><strong>${freeTiers.unconfirmed.toLocaleString()} recorded free tiers we cannot confirm today</strong> &mdash; the record stands, but the page we hold for it states no price we can read, cannot be read at all, does not name the vendor, or carried a change on our last read that we refused to record. Unconfirmed is not the same as gone.</li>
@@ -46329,7 +46333,7 @@ ${globalNavCss()}
   </div>
 
   <h2>The Free Tier Squeeze: Who&rsquo;s Cutting Back</h2>
-  <p class="section-desc">Of ${changesInForce.length} tracked pricing changes, ${negativeChanges.length} (${Math.round((negativeChanges.length / Math.max(changesInForce.length, 1)) * 100)}%) are negative for developers &mdash; free tier removals, limit reductions, and new restrictions. The pattern is clear: as companies mature, raise prices, or get acquired, free tiers shrink.</p>
+  <p class="section-desc">Of ${changeCountPhrase("tracked", changesInForce)}, ${negativeChanges.length} (${Math.round((negativeChanges.length / Math.max(trackedChanges(changesInForce).length, 1)) * 100)}%) are negative for developers &mdash; free tier removals, limit reductions, and new restrictions. The pattern is clear: as companies mature, raise prices, or get acquired, free tiers shrink.</p>
   <div class="callout callout-warn">
     <strong>Key pattern:</strong> ${escHtmlServer(removalDurabilityPattern(durability, lastingExamples))} Plan your architecture around services with structural commitment to free tiers (open-source alternatives, cloud provider loss leaders, or developer-first companies).
   </div>
@@ -46447,7 +46451,7 @@ ${globalNavCss()}
   <p class="section-desc">How we built this dataset:</p>
   <ul style="color:var(--text-muted);font-size:.9rem;padding-left:1.25rem;margin-bottom:1rem">
     <li style="margin-bottom:.4rem"><strong>Verification:</strong> Every offer records the date we read the vendor&rsquo;s public pricing page and the URL we read it from. That is not the same as being able to vouch for it today: ${freeTiers.unconfirmed.toLocaleString()} of the ${freeTiers.recorded.toLocaleString()} recorded free tiers have a source that states no price we can read, cannot be read at all, does not name the vendor, or carried a change on our last read that we refused to record, and those are the ones counted as unconfirmed above.</li>
-    <li style="margin-bottom:.4rem"><strong>Change tracking:</strong> ${changesInForce.length} pricing changes tracked with date, previous state, current state, impact level, and source documentation.</li>
+    <li style="margin-bottom:.4rem"><strong>Change tracking:</strong> ${trackedChanges(changesInForce).length} pricing changes tracked with date, previous state, current state, impact level, and source documentation.</li>
     <li style="margin-bottom:.4rem"><strong>Definition of &ldquo;free tier&rdquo;:</strong> Perpetual free plans, always-free offerings, and generous hobby/starter tiers without time limits. We exclude limited trials (e.g., 14-day, 30-day) and one-time credits.</li>
     <li style="margin-bottom:.4rem"><strong>Update frequency:</strong> Continuous. Our <a href="/freshness">data freshness dashboard</a> shows verification recency by category.</li>
     <li style="margin-bottom:.4rem"><strong>Open data:</strong> All data is accessible via our <a href="/developers">REST API</a> and <a href="/setup">MCP server</a>. Query it from your AI coding assistant.</li>
@@ -47616,7 +47620,7 @@ function buildStackCheckPage(): string {
   const allChanges = loadDealChanges();
   const stabilityMap = publishedStabilityIndex();
   const totalOffers = allOffers.length;
-  const totalChanges = allChanges.length;
+  const totalChanges = trackedChanges(allChanges).length;
 
   const vendorLookup: Record<string, { vendor: string; category: string; description: string; tier: string; slug: string; risk_level: string | null; level_withheld_because: string | null; risk_cause: CitedRiskCause | null; stability: string; recent_changes: Array<{ vendor: string; date: string; change_type: string; summary: string; source_url: string | null; citation_html: string; impact: string; resolved: boolean }> }> = {};
   for (const offer of allOffers) {
@@ -48740,7 +48744,7 @@ function buildBudgetBuilderPage(): string {
   const allChanges = loadDealChanges();
   const stabilityMap = publishedStabilityIndex();
   const totalOffers = allOffers.length;
-  const totalChanges = allChanges.length;
+  const totalChanges = trackedChanges(allChanges).length;
 
   const categoryVendors: Record<string, Array<{ slug: string; name: string; free: string; starter: number; growth: number; scale: number; notes: string; risk_level: string | null; level_withheld_because: string | null; rank_penalty: number; risk_cause: CitedRiskCause | null }>> = {};
   const rankPenaltyFor = (level: "stable" | "caution" | "risky", cause: DealChange | null) =>
@@ -50016,6 +50020,25 @@ function undatedTileHtml(count: number): string {
     </div>`;
 }
 
+function whatCountsAsAChangeHtml(changes: DealChange[], listedOnThisPage: number): string {
+  const rows = CHANGE_SLICES.map((slice) => {
+    const count = slice.of(changes).length;
+    return `      <tr><td><strong>${count.toLocaleString("en-US")}</strong></td><td>${escHtmlServer(slice.noun)}</td><td>${escHtmlServer(slice.admits)}</td></tr>`;
+  }).join("\n");
+  const tracked = CHANGE_SLICES[0].of(changes).length;
+  return `  <div class="month-group" id="${TRACKED_CHANGE_RULE_ANCHOR}">
+    <h2 class="month-heading">What counts as a change</h2>
+    <p class="month-note">${escHtmlServer(TRACKED_CHANGE_RULE_SENTENCE)} That is the figure we publish as <strong>${tracked.toLocaleString("en-US")} ${escHtmlServer(TRACKED_CHANGE_NOUN)}</strong> wherever the phrase appears. Any other total on this site names which of these it is, in the same sentence.</p>
+    <table class="rule-table">
+      <thead><tr><th>Count</th><th>What we call it</th><th>What it takes in</th></tr></thead>
+      <tbody>
+${rows}
+      </tbody>
+    </table>
+    <p class="month-note">This timeline lists ${listedOnThisPage.toLocaleString("en-US")} entries &mdash; the tracked changes plus the index housekeeping, which we show so a vendor's history is complete. The same census is on <a href="/api/changes">/api/changes</a> as <code>change_census</code>.</p>
+  </div>`;
+}
+
 function buildPricingChangesPage(): string {
   const allChanges = loadDealChanges();
   const { dated: eventDated, discovered: undatedChanges } = partitionByDateProvenance(allChanges);
@@ -50579,14 +50602,14 @@ ${undatedSorted.map(c => buildChangeEntry(c)).join("\n")}
     </div>`;
 
   const title = "Deal Change Timeline \u2014 AgentDeals";
-  const metaDesc = `${countable.length} developer infrastructure pricing changes tracked since launch \u2014 ${last30DaysCount} in the last 30 days. Free tier removals, price increases, product shutdowns, and new deals.`;
+  const metaDesc = `${trackedChanges(dealChanges).length} developer infrastructure pricing changes tracked since launch \u2014 ${last30DaysCount} in the last 30 days. Free tier removals, price increases, product shutdowns, and new deals.`;
 
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "ItemList",
     itemListOrder: listOrderOf("newest-first"),
     name: title,
-    description: metaDesc,
+    description: `${metaDesc} This list holds ${countable.length} entries: the tracked changes plus our own index housekeeping, counted at ${BASE_URL}${TRACKED_CHANGE_RULE_PATH}.`,
     numberOfItems: countable.length,
     url: `${BASE_URL}/changes`,
     itemListElement: newestFirst.slice(0, 50).map((c, i) => {
@@ -50642,6 +50665,10 @@ h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5
 .month-group{margin-bottom:2rem}
 .month-heading{font-family:var(--serif);font-size:1.15rem;color:var(--text);margin-bottom:.75rem;padding-bottom:.5rem;border-bottom:1px solid var(--border)}
 .month-note{font-size:.8rem;color:var(--text-muted);margin:-.25rem 0 .75rem;line-height:1.5}
+.rule-table{width:100%;border-collapse:collapse;font-size:.8rem;margin:.75rem 0}
+.rule-table th{text-align:left;color:var(--text-dim);font-family:var(--mono);font-size:.65rem;text-transform:uppercase;letter-spacing:.1em;padding:.4rem .5rem;border-bottom:1px solid var(--border)}
+.rule-table td{padding:.45rem .5rem;border-bottom:1px solid var(--border);color:var(--text-muted);vertical-align:top}
+.rule-table td:first-child{font-family:var(--mono);color:var(--text);white-space:nowrap}
 .chg-entry{display:flex;gap:1rem;padding:.75rem;margin-bottom:.5rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);transition:border-color .2s}
 .chg-entry:hover{border-color:var(--accent)}
 .chg-upcoming{border-color:rgba(88,166,255,0.3)}
@@ -50677,14 +50704,14 @@ ${globalNavCss()}
   ${buildGlobalNav("changes")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; Changes</div>
   <h1>Deal Change Timeline</h1>
-  <p class="page-intro">Every pricing change we\u2019ve tracked \u2014 free tier removals, price increases, restructures, and new deals. ${listOrderSentence("newest-first")} Subscribe to stay ahead.</p>
+  <p class="page-intro">Every pricing change we\u2019ve tracked \u2014 free tier removals, price increases, restructures, and new deals. ${listOrderSentence("newest-first")} <a href="#${TRACKED_CHANGE_RULE_ANCHOR}">What counts as a change</a>. Subscribe to stay ahead.</p>
   <a href="/feed.xml" class="rss-link">\u{1F4E1} Subscribe to deal changes</a>
   <a href="/deadlines" class="rss-link" style="margin-left:.5rem">\u{1F6A8} See upcoming deadlines &rarr;</a>
 
   <div class="stats-bar">
     <div class="stat-card">
-      <div class="stat-value">${countable.length}</div>
-      <div class="stat-label">Total (All Time)</div>
+      <div class="stat-value">${trackedChanges(dealChanges).length}</div>
+      <div class="stat-label"><a href="#${TRACKED_CHANGE_RULE_ANCHOR}">Tracked Changes</a></div>
     </div>
     <div class="stat-card">
       <div class="stat-value">${last30DaysCount}</div>
@@ -50706,6 +50733,7 @@ ${undatedTileHtml(undatedSorted.length)}
   </div>
 
 ${changeLogFreshnessNote()}
+${whatCountsAsAChangeHtml(dealChanges, countable.length)}
 ${undatedHtml}
 ${monthsHtml}
 
@@ -52768,7 +52796,7 @@ ${globalNavCss()}
   ${buildGlobalNav("trends")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; Pricing Trends</div>
   <h1>Pricing Trends by Category</h1>
-  <p class="page-meta">${allChanges.length} tracked pricing changes across ${totalCategories} categories. Ranked by volatility.</p>
+  <p class="page-meta">${changeCountPhrase("tracked", allChanges)} across ${totalCategories} categories, by the rule at <a href="${TRACKED_CHANGE_RULE_PATH}">what counts as a change</a>. Ranked by volatility.</p>
   <div style="margin-bottom:1.5rem;padding:1rem 1.25rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card)">
     <a href="/state-of-free-tiers" style="color:var(--accent);text-decoration:none;font-size:.95rem;font-weight:500">Read the full State of Free Tiers Report</a>
     <span style="color:var(--text-muted);font-size:.85rem"> &mdash; data-driven analysis of erosion patterns, category trends, and which vendors are still expanding.</span>
@@ -54835,7 +54863,15 @@ const dispatchRequest = async (req: IncomingMessage, res: ServerResponse) => {
     const result = getDealChanges(since, type, vendorFilter, vendorsFilter, categoriesFilter, { includeRetracted });
     const page = result.changes.slice(offset, offset + limit);
     const context = changeContext(result.changes, since, type);
-    const allTimeTotal = (includeRetracted ? loadDealChanges() : recordsWeStandBehind(loadDealChanges())).length;
+    const wholeLog = loadDealChanges();
+    const allTimeTotal = trackedChanges(wholeLog).length;
+    const retrievableFromThisDoor = (includeRetracted ? wholeLog : recordsWeStandBehind(wholeLog)).length;
+    const changeCensusBlock = {
+      ...changeCensus(wholeLog),
+      retrievable_from_this_door: retrievableFromThisDoor,
+      rule_url: `${BASE_URL}${TRACKED_CHANGE_RULE_PATH}`,
+      note: `all_time_total is tracked_pricing_changes. ${CENSUS_NOTE} retrievable_from_this_door is how many records this request could return before paging, which follows include_retracted.`,
+    };
     const { dated, discovered } = partitionByDateProvenance(result.changes);
     const dateProvenance = {
       event_dated: dated.length,
@@ -54857,6 +54893,7 @@ const dispatchRequest = async (req: IncomingMessage, res: ServerResponse) => {
       summary: context.summary,
       date_provenance: dateProvenance,
       all_time_total: allTimeTotal,
+      change_census: changeCensusBlock,
       change_log_freshness: changeLogFreshness,
     }, "/changes")));
   } else if (url.pathname === "/api/deadlines" && isGetOrHead) {

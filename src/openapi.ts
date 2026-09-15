@@ -6,6 +6,7 @@ import { SIGNAL_EVENTS } from "./stats.js";
 import { SINCE_ACCEPTS } from "./since-parameter.js";
 import { DEFAULT_CHANGE_WINDOW_DAYS, SINCE_DEFAULT_SENTENCE } from "./change-window.js";
 import { CHANGE_STANDINGS, INCLUDE_RETRACTED_ACCEPTS } from "./change-resolution.js";
+import { CHANGE_SLICES, CENSUS_NOTE, TRACKED_CHANGE_RULE_PATH, TRACKED_CHANGE_RULE_SENTENCE } from "./change-census.js";
 
 export const CHANGE_TYPES: readonly string[] = Object.keys(CHANGE_DIRECTION);
 
@@ -172,7 +173,7 @@ const DOCUMENTED_OPERATIONS: Record<string, Record<string, any>> = {
   "/api/changes": {
     get: {
       summary: "Deal and pricing changes",
-      description: "Returns tracked pricing and tier changes across vendors. Filter by date, change type, vendor, or category.",
+      description: `Returns tracked pricing and tier changes across vendors. Filter by date, change type, vendor, or category. ${TRACKED_CHANGE_RULE_SENTENCE} The rule and the four totals it separates are at ${TRACKED_CHANGE_RULE_PATH}, and every response carries them as change_census.`,
       parameters: [
         { name: "since", in: "query", description: `Only return changes dated on or after this date. ${SINCE_ACCEPTS} ${SINCE_DEFAULT_SENTENCE}`, schema: { type: "string", format: "date" }, example: "2025-01-01" },
         { name: "type", in: "query", description: "Filter by change type. Every type a record can carry is accepted; the same list types the `change_type` field on the records that come back.", schema: { type: "string", enum: [...CHANGE_TYPES] } },
@@ -207,6 +208,17 @@ const DOCUMENTED_OPERATIONS: Record<string, Record<string, any>> = {
                       stack_changes_count: { type: "integer" },
                       ecosystem_high_impact_count: { type: "integer" },
                       period_days: { type: "integer" }
+                    }
+                  },
+                  all_time_total: { type: "integer", description: `The whole change log measured by the published rule, unaffected by your query. Equal to change_census.tracked_pricing_changes. ${TRACKED_CHANGE_RULE_SENTENCE}` },
+                  change_census: {
+                    type: "object",
+                    description: CENSUS_NOTE,
+                    properties: {
+                      ...Object.fromEntries(CHANGE_SLICES.map((slice) => [slice.field, { type: "integer", description: `${slice.noun}. ${slice.admits}` }])),
+                      retrievable_from_this_door: { type: "integer", description: "How many records this request could return before paging. Follows include_retracted, so it is the only figure here that your query moves." },
+                      rule_url: { type: "string", format: "uri" },
+                      note: { type: "string" }
                     }
                   }
                 }
