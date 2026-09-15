@@ -39,6 +39,9 @@ const SURFACES_THAT_PUBLISH_A_TOTAL = [
   "/state-of-free-tiers",
   "/free-tier-risk",
   "/trends",
+  "/trends/startup-perks",
+  "/free-tier-tracker",
+  "/digest/archive",
   "/vendor/vercel",
   "/q1-2026-developer-pricing-report",
 ];
@@ -52,14 +55,20 @@ const TRACKED_NOUN_PATTERNS = [
 ];
 
 const NAMES_A_WINDOW =
-  /Q[1-4]\s*20\d\d|\b20\d\d\s*[–—-]\s*20\d\d|last\s+\d+\s+days|this week|during\b|\bin\s+(?:week\s+\d+|20\d\d)\b|\bin\s+(?:January|February|March|April|May|June|July|August|September|October|November|December)\b/i;
+  /Q[1-4]\s*20\d\d|\b20\d\d\s*[–—-]\s*20\d\d|last\s+\d+\s+days|this week|during\b|between\b|\bin\s+(?:week\s+\d+|20\d\d)\b|\bin\s+(?:January|February|March|April|May|June|July|August|September|October|November|December)\b/i;
+
+const COUNTS_SOMETHING_ELSE = /\bof\b/i;
 
 const SENTENCE_BREAK = /[.!?;:]\s|\s[–—]\s/;
+
+const BLOCK_CLOSE = /<\/(?:div|p|li|tr|section|article|blockquote|h[1-6])>/gi;
 
 function visibleText(body: string): string {
   return body
     .replace(/<script[\s\S]*?<\/script>/gi, " ")
     .replace(/<style[\s\S]*?<\/style>/gi, " ")
+    .replace(/<\/div>\s*<div class="stat-label"/gi, ' <span class="stat-label"')
+    .replace(BLOCK_CLOSE, ". ")
     .replace(/<[^>]+>/g, " ")
     .replace(/&mdash;/g, "—")
     .replace(/&ndash;/g, "–")
@@ -165,6 +174,7 @@ describe("every published total is the tracked count or names the slice it is", 
         for (const match of text.matchAll(pattern)) {
           const published = Number(match[1].replace(/,/g, ""));
           if (published < 40) continue;
+          if (COUNTS_SOMETHING_ELSE.test(match[0])) continue;
           if (!claimsTheWholeLog(text, match.index ?? 0)) continue;
           seen++;
           if (published !== trackedCount) wrong.push(`${route}: ${match[0].slice(0, 70)}`);
@@ -175,10 +185,21 @@ describe("every published total is the tracked count or names the slice it is", 
     assert.deepStrictEqual(wrong, []);
   });
 
-  it("reads a stat tile as one sentence, so a figure and the label beside it are checked together", async () => {
-    const tile = `<div class="stat-card"><div class="stat-value">${sliceById("in_force").of(dealChanges).length}</div><div class="stat-label">Total Changes</div></div>`;
-    const sentence = sentenceAround(visibleText(tile), visibleText(tile).search(/\d/));
+  it("reads a stat tile as one sentence, and does not read the tile beside it as part of the same one", () => {
+    const inForce = sliceById("in_force");
+    const superseded = inForce.of(dealChanges).length;
+    const bar = `<div class="stats-bar">
+      <div class="stat-card"><div class="stat-value">${trackedCount}</div><div class="stat-label">Tracked Changes</div></div>
+      <div class="stat-card"><div class="stat-value">${superseded}</div><div class="stat-label">Total Changes</div></div>
+    </div>
+    <p>Our log holds ${superseded} ${inForce.noun}.</p>`;
+    const text = visibleText(bar);
+    const sentence = sentenceAround(text, text.indexOf(String(superseded)));
     assert.match(sentence, /Total Changes/, "the tile's value and its label do not land in one sentence");
+    assert.ok(
+      !sentence.includes(inForce.noun),
+      `the tile's sentence reached a naming sentence elsewhere on the page: "${sentence}"`,
+    );
   });
 
   it("names the slice in the same sentence wherever it publishes a figure that is not the tracked count", async () => {
