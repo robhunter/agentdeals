@@ -22,6 +22,7 @@ import {
 import { substitutesFor } from "./product-role.js";
 import { supersededTermsRecordFor, type SupersededTermsRecord } from "./superseded-description.js";
 import { isSubSlug, toSlug } from "./slug.js";
+export { sanitizeQuery } from "./search-query.js";
 import { matchingSubject } from "./gate-disclosure.js";
 import { DATE_SOURCES, isEventDated, changeDateClause, isoWeekWindow, changesInWindow, discoveryBatchNote, firstReadHeading, type DateWindow } from "./change-dates.js";
 import { PRODUCT_DEPRECATED, deprecationEndsTheListedProduct } from "./product-deprecation.js";
@@ -219,10 +220,6 @@ function scoreOffer(offer: Offer, terms: string[]): number {
   }
 
   return score;
-}
-
-export function sanitizeQuery(raw: string): string {
-  return raw.replace(/[^a-zA-Z0-9\s.\-+]/g, "").replace(/\s+/g, " ").trim();
 }
 
 export function searchOffers(
