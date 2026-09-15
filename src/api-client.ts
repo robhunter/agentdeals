@@ -86,6 +86,7 @@ export async function fetchDealChanges(params: {
   vendors?: string;
   categories?: string;
   limit?: string;
+  include_retracted?: string;
 }): Promise<unknown> {
   const p: Record<string, string> = {};
   if (params.since) p.since = params.since;
@@ -94,6 +95,7 @@ export async function fetchDealChanges(params: {
   if (params.vendors) p.vendors = params.vendors;
   if (params.categories) p.categories = params.categories;
   if (params.limit) p.limit = params.limit;
+  if (params.include_retracted) p.include_retracted = params.include_retracted;
   return apiFetch("/api/changes", p);
 }
 

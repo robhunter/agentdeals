@@ -48,7 +48,7 @@ import { vendorHistorySentence } from "./vendor-history.js";
 import { HETZNER_APRIL_CHANGES, HETZNER_CLOUD_PLANS, HETZNER_PRICES_READ, HETZNER_PRICE_SOURCE, HETZNER_SINGAPORE_EXAMPLE, cheapestOrderableHetznerPlan, hetznerEntryPriceClause, unorderableHetznerPlans } from "./hetzner-pricing.js";
 import { HUNDRED_GB_SCENARIO, HUNDRED_TB_SCENARIO, ONE_TO_ONE_SCENARIO, STORAGE_RATES_READ, STORAGE_SCALE_WORKLOADS, TEN_TO_ONE_SCENARIO, cheapestProviderAt, costAfterMonthlyEgressGrantFor, costliestProviderAt, egressAllowanceSentence, egressBillAfterMonthlyGrantFor, egressBillOnceOverAllowance, egressRatioWhereCostsMatch, fixedMonthlyGrantsSentence, monthlyEgressGrantGb, monthlyEgressGrantSentence, monthlyStorageCost, providersWithScalingEgressAllowance, rateCardFor, scaleCostFor } from "./storage-cost-model.js";
 import { changeTimelineDate, supersededLineups, supersessionNote } from "./change-lineup.js";
-import { isNoLongerInForce, eventResolutionFields, recordsStillInForce } from "./change-resolution.js";
+import { isNoLongerInForce, eventResolutionFields, recordsStillInForce, recordsWeStandBehind, INCLUDE_RETRACTED_REJECTED } from "./change-resolution.js";
 import { FREE_TIER_STANDING_LABELS, GRADE_FACTORS_WITHOUT_PRICING_HISTORY, NOT_EVIDENCE_LABELS, citesAChangeOlderThanTheGrade, freeTierStanding, gradesFirstSet, gradesLastSet, gradingDatesClause, neverTracked, riskEntries, scorecard, splitByFreeTierStanding, trackedSinceGrading, type RiskEntry } from "./risk-scorecard.js";
 import { directionRatioLabel } from "./change-direction.js";
 import { removalDurability, removalReturnRateSentence, removalDurabilityPattern, lastingRemovalExamplesFor } from "./removal-durability.js";
@@ -49857,6 +49857,7 @@ function buildDeveloperHubPage(): string {
     + "\n"
     + "    <h3>Paging on <code>/api/changes</code></h3>\n"
     + "    <p><code>/api/changes</code> returns <strong>" + CHANGES_DEFAULT_LIMIT + " records by default</strong>. <code>limit</code> sets the page size, <code>offset</code> skips records, and both are echoed back on the response alongside <code>returned</code> &mdash; the count in this page &mdash; and <code>total</code>, the count matching your query before paging. There is no maximum: <code>?limit=1000</code> returns the whole window in one response. An invalid <code>limit</code> or a negative <code>offset</code> answers <code>400</code> rather than being ignored.</p>\n"
+    + "    <p>Records we have withdrawn as our own error are not served here, and <code>total</code> counts what you received rather than what the log holds. <code>retracted_excluded</code> reports how many your query matched and we held back. <code>?include_retracted=true</code> returns them alongside the rest, each carrying <code>standing: &quot;retracted&quot;</code> and <code>impact: &quot;none&quot;</code> &mdash; and every record carries a <code>standing</code>, so a live record and a withdrawn one are told apart without a null check. A value other than <code>true</code> or <code>false</code> answers <code>400</code>.</p>\n"
     + "\n"
     + "    <h2 id=\"referral-codes\">Referral Codes</h2>\n"
     + "    <p>Every code these endpoints return is one we hold ourselves and earn a commission on, with the reader benefit and every restriction attached to it. We hold codes for a handful of the vendors we cover; the <a href=\"/disclosure\">affiliate disclosure</a> lists the same set. Agent-submitted codes are retired &mdash; <code>?source=agent</code> answers with an empty list and the reason, and <code>POST /api/referral-codes</code> answers <code>410</code>.</p>\n"
@@ -54818,20 +54819,27 @@ const dispatchRequest = async (req: IncomingMessage, res: ServerResponse) => {
       res.end(JSON.stringify({ error: `Invalid '${badPaging[0]}' parameter. Expected a non-negative integer.` }));
       return;
     }
+    const retractedParam = url.searchParams.get("include_retracted");
+    if (retractedParam !== null && retractedParam !== "true" && retractedParam !== "false") {
+      res.writeHead(400, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+      res.end(JSON.stringify({ error: INCLUDE_RETRACTED_REJECTED }));
+      return;
+    }
+    const includeRetracted = retractedParam === "true";
     const limit = limitParam === null ? CHANGES_DEFAULT_LIMIT : parseInt(limitParam, 10);
     const offset = offsetParam === null ? 0 : parseInt(offsetParam, 10);
     const changeLogFreshness = getChangeLogFreshness();
-    const result = getDealChanges(since, type, vendorFilter, vendorsFilter, categoriesFilter);
+    const result = getDealChanges(since, type, vendorFilter, vendorsFilter, categoriesFilter, { includeRetracted });
     const page = result.changes.slice(offset, offset + limit);
     const context = changeContext(result.changes, since, type);
-    const allTimeTotal = loadDealChanges().length;
+    const allTimeTotal = (includeRetracted ? loadDealChanges() : recordsWeStandBehind(loadDealChanges())).length;
     const { dated, discovered } = partitionByDateProvenance(result.changes);
     const dateProvenance = {
       event_dated: dated.length,
       discovered: discovered.length,
       note: discovered.length > 0 ? discoveryBatchNote(discovered.length, "in this window") : "",
     };
-    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/changes", params: { since, type, vendor: vendorFilter, vendors: vendorsFilter, categories: categoriesFilter, limit, offset }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: page.length });
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/changes", params: { since, type, vendor: vendorFilter, vendors: vendorsFilter, categories: categoriesFilter, limit, offset, include_retracted: includeRetracted }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: page.length });
     res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
     res.end(JSON.stringify(cited({
       changes: page,
@@ -54839,6 +54847,8 @@ const dispatchRequest = async (req: IncomingMessage, res: ServerResponse) => {
       returned: page.length,
       limit,
       offset,
+      include_retracted: includeRetracted,
+      retracted_excluded: result.retracted_excluded,
       advisory: context.advisory,
       summary: context.summary,
       date_provenance: dateProvenance,
@@ -55354,7 +55364,7 @@ Parameters:
 
 - GET /api/offers — Search deals (params: q, category, eligibility_type, sort, limit, offset)
 - GET /api/categories — List all categories with counts, what each name holds, and the other names answering the same question
-- GET /api/changes — Pricing changes (params: since, type, vendor, vendors, category, categories, limit, offset)
+- GET /api/changes — Pricing changes (params: since, type, vendor, vendors, category, categories, limit, offset, include_retracted)
 - GET /api/new — Recently added offers (params: days)
 - GET /api/newest — Newest deals (params: since, limit, category)
 - GET /api/compare — Compare two vendors (params: a, b)

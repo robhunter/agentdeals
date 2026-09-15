@@ -16,6 +16,8 @@ const SHAPE_KEYS = [
   "returned",
   "limit",
   "offset",
+  "include_retracted",
+  "retracted_excluded",
   "advisory",
   "summary",
   "date_provenance",
@@ -36,6 +38,7 @@ const QUERIES = [
   "?vendors=Slack,Exa",
   "?category=Databases",
   "?categories=Databases",
+  "?include_retracted=true",
   "?vendors=a-vendor-we-do-not-hold",
 ];
 
@@ -72,7 +75,7 @@ describe("/api/changes answers one shape and pages", () => {
   after(() => { proc?.kill("SIGKILL"); });
 
   it("covers a filter of every kind the route accepts", () => {
-    assert.strictEqual(QUERIES.length, 12);
+    assert.strictEqual(QUERIES.length, 13);
   });
 
   for (const query of QUERIES) {
@@ -186,6 +189,7 @@ describe("/api/changes answers one shape and pages", () => {
       categories: "Databases",
       limit: "2",
       offset: "3",
+      include_retracted: "true",
     };
     const baseline = (await get("")).body;
     const inert: string[] = [];
@@ -293,5 +297,34 @@ describe("the stdio proxy asks for what it means to return", () => {
         `a category filter returned ${change.category}`,
       );
     }
+  });
+
+  it("forwards a request for the records we have withdrawn instead of dropping it", async () => {
+    const held = await trackChanges({ since: "2000-01-01", include_expiring: false });
+    const asked = await trackChanges({ since: "2000-01-01", include_expiring: false, include_retracted: true });
+    assert.ok(
+      (held.retracted_excluded as number) > 0,
+      "the log holds nothing withdrawn, so this says nothing about whether the proxy forwards the request",
+    );
+    assert.strictEqual(
+      (asked.total as number) - (held.total as number),
+      held.retracted_excluded as number,
+      `asking for the withheld records returned ${asked.total} against ${held.total}, so the proxy dropped the parameter`,
+    );
+    const withdrawn = (asked.changes as { standing?: string }[]).filter((c) => c.standing === "retracted");
+    assert.strictEqual(withdrawn.length, held.retracted_excluded as number);
+    assert.deepStrictEqual(
+      (held.changes as { standing?: string }[]).filter((c) => c.standing === "retracted"),
+      [],
+      "the proxy served a withdrawn record to a caller who did not ask",
+    );
+  });
+
+  it("says where a record stands even in the shape that keeps four fields", async () => {
+    const concise = await trackChanges({ since: "2000-01-01", include_expiring: false, response_format: "concise" });
+    const changes = concise.changes as Record<string, unknown>[];
+    assert.ok(changes.length > 0, "the concise shape returned nothing");
+    const unstated = changes.filter((c) => !("standing" in c));
+    assert.deepStrictEqual(unstated, [], "the concise shape is the one place a caller cannot tell a withdrawn record");
   });
 });

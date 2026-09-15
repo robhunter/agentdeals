@@ -2,6 +2,7 @@ import { McpServer, ResourceTemplate } from "@modelcontextprotocol/sdk/server/mc
 import { z } from "zod";
 import { oldestVerifiedDateForSlug, getCategories, getDealChanges, getPersonalizedChanges, getNewOffers, getNewestDeals, getOfferDetails, searchOffers, stabilityWithheldDisclosure, enrichOffers, gateForOffer, compareServices, checkVendorRisk, auditStack, getExpiringDeals, getWeeklyDigest, loadOffers, loadDealChanges, classifyStability, publishedStabilityFor, stabilityWithheldSentence, getVendorReferral, sanitizeQuery } from "./data.js";
 import { gateDisclosureFor } from "./gate-disclosure.js";
+import { standingOf, INCLUDE_RETRACTED_ACCEPTS } from "./change-resolution.js";
 import { toSlug, vendorSlugMap, resolveVendorSlug } from "./vendor-slug.js";
 import { noLiveRecordUnderThatNameSentence } from "./retirement.js";
 import { recordToolCall, logRequest, recordSearchQuery } from "./stats.js";
@@ -54,7 +55,7 @@ function toConciseOffer(offer: Offer | EnrichedOffer) {
 }
 
 function toConciseDealChange(change: DealChange) {
-  return { vendor: change.vendor, change_type: change.change_type, date: change.date, date_source: change.date_source, summary: change.summary };
+  return { vendor: change.vendor, change_type: change.change_type, date: change.date, date_source: change.date_source, standing: standingOf(change), summary: change.summary };
 }
 
 export function createServer(getSessionId?: () => string | undefined, getClientName?: () => string | undefined): McpServer {
@@ -416,15 +417,16 @@ export function createServer(getSessionId?: () => string | undefined, getClientN
         vendors: z.string().optional().describe("Comma-separated vendor names to filter (e.g. 'Vercel,Supabase'). When provided with categories, returns personalized results with advisory section."),
         categories: z.string().optional().describe("Comma-separated category names to filter (e.g. 'Database,Cloud Hosting'). Case-insensitive partial match."),
         include_expiring: z.boolean().optional().describe("Include upcoming expirations (default: true)"),
+        include_retracted: z.boolean().optional().describe(INCLUDE_RETRACTED_ACCEPTS),
         lookahead_days: z.number().optional().describe("Days to look ahead for expirations (default: 30)"),
         response_format: z.enum(["concise", "detailed"]).optional().describe("Response detail level. 'concise': vendor, change_type, date, summary only. 'detailed': full response (default)."),
       },
     },
-    async ({ since, change_type, vendor, vendors, categories, include_expiring, lookahead_days, response_format }) => {
+    async ({ since, change_type, vendor, vendors, categories, include_expiring, include_retracted, lookahead_days, response_format }) => {
       try {
         recordToolCall("track_changes", getClientName?.());
 
-        if (!since && !change_type && !vendor && !vendors && !categories && include_expiring === undefined) {
+        if (!since && !change_type && !vendor && !vendors && !categories && include_expiring === undefined && include_retracted === undefined) {
           const digest = getWeeklyDigest();
           logRequest({ ts: new Date().toISOString(), type: "mcp", endpoint: "track_changes", params: {}, result_count: digest.deal_changes.length, session_id: getSessionId?.() });
           if (response_format === "concise") {
@@ -440,11 +442,12 @@ export function createServer(getSessionId?: () => string | undefined, getClientN
 
         const doExpiring = include_expiring !== false;
         const days = Math.min(Math.max(lookahead_days ?? 30, 1), 365);
+        const audience = { includeRetracted: include_retracted === true };
 
         const isPersonalized = !!(vendors || categories);
 
         if (isPersonalized) {
-          const personalized = getPersonalizedChanges(since, change_type, vendor, vendors, categories);
+          const personalized = getPersonalizedChanges(since, change_type, vendor, vendors, categories, audience);
 
           let result: any = personalized;
           if (doExpiring) {
@@ -459,13 +462,13 @@ export function createServer(getSessionId?: () => string | undefined, getClientN
             };
           }
 
-          logRequest({ ts: new Date().toISOString(), type: "mcp", endpoint: "track_changes", params: { since, change_type, vendor, vendors, categories, include_expiring: doExpiring, lookahead_days: days, personalized: true }, result_count: personalized.your_stack_changes.length, session_id: getSessionId?.() });
+          logRequest({ ts: new Date().toISOString(), type: "mcp", endpoint: "track_changes", params: { since, change_type, vendor, vendors, categories, include_expiring: doExpiring, include_retracted: audience.includeRetracted, lookahead_days: days, personalized: true }, result_count: personalized.your_stack_changes.length, session_id: getSessionId?.() });
           return {
             content: [{ type: "text" as const, text: citedJson(result, "/changes") }],
           };
         }
 
-        const changes = getDealChanges(since, change_type, vendor, vendors, categories);
+        const changes = getDealChanges(since, change_type, vendor, vendors, categories, audience);
 
         let result: any = changes;
         if (doExpiring) {
@@ -477,7 +480,7 @@ export function createServer(getSessionId?: () => string | undefined, getClientN
           result = { ...result, changes: result.changes.map(toConciseDealChange) };
         }
 
-        logRequest({ ts: new Date().toISOString(), type: "mcp", endpoint: "track_changes", params: { since, change_type, vendor, vendors, categories, include_expiring: doExpiring, lookahead_days: days }, result_count: changes.changes.length, session_id: getSessionId?.() });
+        logRequest({ ts: new Date().toISOString(), type: "mcp", endpoint: "track_changes", params: { since, change_type, vendor, vendors, categories, include_expiring: doExpiring, include_retracted: audience.includeRetracted, lookahead_days: days }, result_count: changes.changes.length, session_id: getSessionId?.() });
         return {
           content: [{ type: "text" as const, text: citedJson(result, "/changes") }],
         };

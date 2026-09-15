@@ -23,6 +23,8 @@ import { PKG_VERSION } from "./package-version.js";
 import { substitutesFor } from "./product-role.js";
 import { publishedDateLine, storedConfirmationClause, verificationDatesClause } from "./read-date.js";
 
+import { INCLUDE_RETRACTED_ACCEPTS } from "./change-resolution.js";
+
 export const TRACK_CHANGES_LIMIT = 1000;
 import type { LinkUnreachable, ProductRole, ProductSubtypes, SourceCheck } from "./types.js";
 import type { RefusedRead } from "./change-refusal.js";
@@ -293,16 +295,17 @@ export function createServer(): McpServer {
         vendors: z.string().optional().describe("Comma-separated vendor names to filter (e.g. 'Vercel,Supabase'). When provided with categories, returns personalized results with advisory section."),
         categories: z.string().optional().describe("Comma-separated category names to filter (e.g. 'Database,Cloud Hosting'). Case-insensitive partial match."),
         include_expiring: z.boolean().optional().describe("Include upcoming expirations (default: true)"),
+        include_retracted: z.boolean().optional().describe(INCLUDE_RETRACTED_ACCEPTS),
         lookahead_days: z.number().optional().describe("Days to look ahead for expirations (default: 30)"),
         response_format: z.enum(["concise", "detailed"]).optional().describe("Response detail level. 'concise': vendor, change_type, date, summary only. 'detailed': full response (default)."),
       },
     },
-    async ({ since, change_type, vendor, vendors, categories, include_expiring, lookahead_days, response_format }) => {
+    async ({ since, change_type, vendor, vendors, categories, include_expiring, include_retracted, lookahead_days, response_format }) => {
       try {
-        if (!since && !change_type && !vendor && !vendors && !categories && include_expiring === undefined) {
+        if (!since && !change_type && !vendor && !vendors && !categories && include_expiring === undefined && include_retracted === undefined) {
           const data = await fetchWeeklyDigest() as Record<string, unknown>;
           if (response_format === "concise" && Array.isArray(data.deal_changes)) {
-            const conciseDigest = { ...data, deal_changes: (data.deal_changes as Record<string, unknown>[]).map((c) => ({ vendor: c.vendor, change_type: c.change_type, date: c.date, date_source: c.date_source, summary: c.summary })) };
+            const conciseDigest = { ...data, deal_changes: (data.deal_changes as Record<string, unknown>[]).map((c) => ({ vendor: c.vendor, change_type: c.change_type, date: c.date, date_source: c.date_source, standing: c.standing ?? "in_force", summary: c.summary })) };
             return mcpText(conciseDigest);
           }
           return mcpText(data);
@@ -310,6 +313,7 @@ export function createServer(): McpServer {
 
         const params: Record<string, string | undefined> = { since, type: change_type, vendor, vendors, limit: String(TRACK_CHANGES_LIMIT) };
         if (categories) params.categories = categories;
+        if (include_retracted !== undefined) params.include_retracted = String(include_retracted);
         const changes = await fetchDealChanges(params) as Record<string, unknown>;
         const doExpiring = include_expiring !== false;
         const days = Math.min(Math.max(lookahead_days ?? 30, 1), 365);
@@ -322,12 +326,12 @@ export function createServer(): McpServer {
 
         if (response_format === "concise") {
           if (Array.isArray(result.changes)) {
-            result = { ...result, changes: result.changes.map((c: Record<string, unknown>) => ({ vendor: c.vendor, change_type: c.change_type, date: c.date, summary: c.summary })) };
+            result = { ...result, changes: result.changes.map((c: Record<string, unknown>) => ({ vendor: c.vendor, change_type: c.change_type, date: c.date, standing: c.standing ?? "in_force", summary: c.summary })) };
           }
           if (Array.isArray(result.advisory)) {
             result = {
               ...result,
-              advisory: result.advisory.map((c: Record<string, unknown>) => ({ vendor: c.vendor, change_type: c.change_type, date: c.date, summary: c.summary })),
+              advisory: result.advisory.map((c: Record<string, unknown>) => ({ vendor: c.vendor, change_type: c.change_type, date: c.date, standing: c.standing ?? "in_force", summary: c.summary })),
             };
           }
         }

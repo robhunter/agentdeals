@@ -162,7 +162,7 @@ describe("the change feeds date every entry by when we recorded it and say what 
     weekly = await (await fetch(`http://localhost:${port}${WEEKLY_DIGEST_FEED.path}`)).text();
     entries = parseEntries(perChange);
     apiChanges = await (
-      await fetch(`http://localhost:${port}/api/changes?limit=2000&since=2000-01-01`)
+      await fetch(`http://localhost:${port}/api/changes?limit=2000&since=2000-01-01&include_retracted=true`)
     ).json();
   });
 

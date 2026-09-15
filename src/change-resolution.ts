@@ -1,4 +1,10 @@
-import type { ChangeResolution, ChangeResolutionState } from "./types.js";
+import type {
+  ChangeResolution,
+  ChangeResolutionState,
+  ChangeStanding,
+  DealChange,
+  PublishedDealChange,
+} from "./types.js";
 
 export interface ResolvableChange {
   summary: string;
@@ -24,6 +30,34 @@ export function recordsWeStandBehind<T extends Resolvable>(changes: readonly T[]
 
 export function recordsStillInForce<T extends Resolvable>(changes: readonly T[]): T[] {
   return changes.filter((c) => !isNoLongerInForce(c));
+}
+
+export const CHANGE_STANDINGS: ChangeStanding[] = ["in_force", ...RESOLUTION_STATES];
+
+export const INCLUDE_RETRACTED_ACCEPTS =
+  "Records we have withdrawn as our own error (standing 'retracted') are left out unless you ask for them. "
+  + "Set true to receive them alongside the rest; they arrive carrying standing 'retracted' and impact 'none'. "
+  + "Either way, retracted_excluded reports how many your query matched and did not receive.";
+
+export const INCLUDE_RETRACTED_REJECTED =
+  "Invalid 'include_retracted' parameter. Expected 'true' or 'false'.";
+
+export const WITHDRAWN_RECORDS_CARRY_NO_IMPACT = "none";
+
+export function standingOf(change: Resolvable): ChangeStanding {
+  return change.resolution?.state ?? "in_force";
+}
+
+export function publishedImpactOf(change: Resolvable & Pick<DealChange, "impact">): PublishedDealChange["impact"] {
+  return theEventNeverHappened(change) ? WITHDRAWN_RECORDS_CARRY_NO_IMPACT : change.impact;
+}
+
+export function withStandingDeclared(change: DealChange): PublishedDealChange {
+  return { ...change, impact: publishedImpactOf(change), standing: standingOf(change) };
+}
+
+export function withStandingDeclaredOnEach(changes: readonly DealChange[]): PublishedDealChange[] {
+  return changes.map(withStandingDeclared);
 }
 
 export const EVENT_CANCELLED = "https://schema.org/EventCancelled";

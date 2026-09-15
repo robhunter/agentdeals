@@ -54,7 +54,7 @@ export const API_ENDPOINTS: readonly ApiEndpoint[] = [
   { method: "GET", path: "/api/categories", desc: "List all categories with counts, what each name holds, and the other names answering the same question", params: "", group: "product", cites: true },
   { method: "GET", path: "/api/new", desc: "Recently added or updated offers", params: "days", group: "product", request: "/api/new?days=7", cites: true },
   { method: "GET", path: "/api/newest", desc: "Newest deals by verification date", params: "limit", group: "product", request: "/api/newest?limit=10", cites: true },
-  { method: "GET", path: "/api/changes", desc: "Pricing and deal changes", params: "since, type, vendor, vendors, category, categories, limit, offset", group: "product", request: "/api/changes?since=2025-01-01", cites: true },
+  { method: "GET", path: "/api/changes", desc: "Pricing and deal changes", params: "since, type, vendor, vendors, category, categories, limit, offset, include_retracted", group: "product", request: "/api/changes?since=2025-01-01", cites: true },
   { method: "GET", path: "/api/details/:vendor", desc: "Vendor detail with alternatives", params: "", group: "product", request: "/api/details/{vendor}", cites: true },
   { method: "GET", path: "/api/compare", desc: "Compare two vendors side by side", params: "a, b", group: "product", request: "/api/compare?a={vendor}&b={otherVendor}" , requiresParams: true, cites: true },
   { method: "GET", path: "/api/audit-stack", desc: "Audit your infrastructure stack", params: "services", group: "product", request: "/api/audit-stack?services={vendor},{otherVendor}" , requiresParams: true, cites: true },
