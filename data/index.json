@@ -9978,7 +9978,7 @@
       ],
       "verifiedDate": "2026-08-01",
       "source_check": {
-        "checked": "2026-09-14",
+        "checked": "2026-09-15",
         "outcome": "ok",
         "detail": "the page names Pagure.io as \"pagure io\" and states \"2024 libuser A user\""
       }
@@ -10257,9 +10257,9 @@
       ],
       "verifiedDate": "2026-08-25",
       "source_check": {
-        "checked": "2026-09-14",
-        "outcome": "ok",
-        "detail": "the page names Conversion Tools as \"conversion tools\" and states \"free API\"",
+        "checked": "2026-09-15",
+        "outcome": "unreadable",
+        "detail": "page content too short (likely JS-rendered SPA); the rendering client failed: the rendering client did not finish in time",
         "rendered": true
       }
     },
@@ -13278,9 +13278,9 @@
       ],
       "verifiedDate": "2026-08-01",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-15",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names DatoCMS as \"datocms\" and states \"€39\""
       }
     },
     {
@@ -14663,7 +14663,7 @@
       ],
       "verifiedDate": "2026-07-10",
       "source_check": {
-        "checked": "2026-09-14",
+        "checked": "2026-09-15",
         "outcome": "ok",
         "detail": "the page names CertKit as \"certkit\" and states \"$99\"",
         "rendered": true
@@ -16570,7 +16570,7 @@
       ],
       "verifiedDate": "2026-07-08",
       "source_check": {
-        "checked": "2026-09-14",
+        "checked": "2026-09-15",
         "outcome": "ok",
         "detail": "the page names netdata.cloud as \"netdata cloud\" and states \"$90\""
       },
@@ -17220,7 +17220,7 @@
       ],
       "verifiedDate": "2026-08-06",
       "source_check": {
-        "checked": "2026-09-14",
+        "checked": "2026-09-15",
         "outcome": "ok",
         "detail": "the page names CatchJS.com as \"catchjs com\" and states \"$ 44\""
       }
@@ -18999,7 +18999,7 @@
       ],
       "verifiedDate": "2026-08-09",
       "source_check": {
-        "checked": "2026-09-14",
+        "checked": "2026-09-15",
         "outcome": "ok",
         "detail": "the page names Othor AI as \"othor ai\" and states \"$0\""
       },
@@ -24479,9 +24479,10 @@
       ],
       "verifiedDate": "2026-07-20",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "unreadable",
-        "detail": "page content too short (likely JS-rendered SPA)"
+        "checked": "2026-09-15",
+        "outcome": "states_no_terms",
+        "detail": "the page names tweakcn but states no amount, tier or rate we can read, and its markup carries no structured data",
+        "rendered": true
       }
     },
     {
@@ -24679,9 +24680,9 @@
       ],
       "verifiedDate": "2026-08-14",
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-15",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names Webflow as \"webflow\" and states \"$4\""
       }
     },
     {
@@ -24949,9 +24950,10 @@
       ],
       "verifiedDate": "2026-08-09",
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-15",
         "outcome": "unreadable",
-        "detail": "page content too short (likely JS-rendered SPA)"
+        "detail": "page content too short (likely JS-rendered SPA); a rendering client read 451 characters",
+        "rendered": true
       }
     },
     {
@@ -25003,9 +25005,9 @@
       ],
       "verifiedDate": "2026-07-20",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "ok",
-        "detail": "text"
+        "checked": "2026-09-15",
+        "outcome": "states_no_terms",
+        "detail": "the page names build.opensuse.org but states no amount, tier or rate we can read, and its markup carries no structured data"
       }
     },
     {
@@ -25347,9 +25349,9 @@
       ],
       "verifiedDate": "2026-08-12",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "unreadable",
-        "detail": "page content too short (likely JS-rendered SPA)"
+        "checked": "2026-09-15",
+        "outcome": "ok",
+        "detail": "the page names JDoodle as \"jdoodle\" and states \"$0\""
       }
     },
     {
@@ -25636,11 +25638,11 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-08-12",
+      "verifiedDate": "2026-09-15",
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-15",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names Zed as \"zed\" and states \"2026 Daily d\""
       }
     },
     {
@@ -25950,11 +25952,11 @@
         "statistics",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-07-22",
+      "verifiedDate": "2026-09-15",
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-15",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names LogSpot as \"logspot\" and states \"$12,400\""
       }
     },
     {
@@ -26462,9 +26464,10 @@
       ],
       "verifiedDate": "2026-08-12",
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-15",
         "outcome": "unreadable",
-        "detail": "page content too short (likely JS-rendered SPA)"
+        "detail": "page content too short (likely JS-rendered SPA); a rendering client read 147 characters",
+        "rendered": true
       }
     },
     {
@@ -26619,11 +26622,11 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-08-13",
+      "verifiedDate": "2026-09-15",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "unreadable",
-        "detail": "fetch failed"
+        "checked": "2026-09-15",
+        "outcome": "ok",
+        "detail": "the page names Remarkbox as \"remarkbox\" and states \"$0\""
       }
     },
     {
@@ -26886,9 +26889,10 @@
       ],
       "verifiedDate": "2026-07-21",
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-15",
         "outcome": "unreadable",
-        "detail": "page content too short (likely JS-rendered SPA)"
+        "detail": "page content too short (likely JS-rendered SPA); a rendering client read 495 characters",
+        "rendered": true
       }
     },
     {
@@ -26920,9 +26924,10 @@
       ],
       "verifiedDate": "2026-07-24",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "unreadable",
-        "detail": "page content too short (likely JS-rendered SPA)"
+        "checked": "2026-09-15",
+        "outcome": "states_no_terms",
+        "detail": "the page names Bricks Note Calculator but states no amount, tier or rate we can read, and its markup carries no structured data",
+        "rendered": true
       }
     },
     {
@@ -26937,9 +26942,10 @@
       ],
       "verifiedDate": "2026-07-24",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "unreadable",
-        "detail": "page content too short (likely JS-rendered SPA)"
+        "checked": "2026-09-15",
+        "outcome": "states_no_terms",
+        "detail": "the page names Carbon.now.sh but states no amount, tier or rate we can read, and its markup carries no structured data",
+        "rendered": true
       }
     },
     {
@@ -27006,9 +27012,9 @@
       ],
       "verifiedDate": "2026-07-23",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-15",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names Cronhooks as \"cronhooks\" and states \"$0\""
       }
     },
     {
@@ -27230,9 +27236,10 @@
       ],
       "verifiedDate": "2026-07-27",
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-15",
         "outcome": "unreadable",
-        "detail": "page content too short (likely JS-rendered SPA)"
+        "detail": "page content too short (likely JS-rendered SPA); a rendering client read 178 characters",
+        "rendered": true
       }
     },
     {
@@ -27298,9 +27305,10 @@
       ],
       "verifiedDate": "2026-08-12",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "unreadable",
-        "detail": "HTTP 403"
+        "checked": "2026-09-15",
+        "outcome": "states_no_terms",
+        "detail": "the page names ReqBin but states no amount, tier or rate we can read, and its markup carries no structured data",
+        "rendered": true
       }
     },
     {
@@ -27398,11 +27406,13 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-07-21",
+      "verifiedDate": "2026-09-15",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "unreadable",
-        "detail": "page content too short (likely JS-rendered SPA)"
+        "checked": "2026-09-15",
+        "outcome": "ok",
+        "detail": "the page names UUID Generator, renders no terms we can read, and its markup states 1 typed price (USD 0)",
+        "read": "markup",
+        "rendered": true
       }
     },
     {
@@ -27522,7 +27532,7 @@
       ],
       "verifiedDate": "2026-09-02",
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-15",
         "outcome": "does_not_name_vendor",
         "detail": "the page never names Instabug for Startups and is not served from its domain"
       }
@@ -27664,9 +27674,9 @@
         "notes": "No affiliate program. Consulting and add-on partner programs exist."
       },
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-15",
         "outcome": "states_no_terms",
-        "detail": "the page names Heroku for Startups Program but states no amount, tier or rate we can read"
+        "detail": "the page names Heroku for Startups Program but states no amount, tier or rate we can read, and the 2 structured-data blocks in its markup state no price"
       }
     },
     {
@@ -27772,9 +27782,10 @@
         "notes": "Enterprise-focused. Order form minimum 12 months, $25K+ ARR required. Top partner tiers only."
       },
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-15",
         "outcome": "unreadable",
-        "detail": "page content too short (likely JS-rendered SPA)"
+        "detail": "page content too short (likely JS-rendered SPA); a rendering client read 264 characters",
+        "rendered": true
       }
     },
     {
@@ -27817,7 +27828,7 @@
       ],
       "verifiedDate": "2026-09-02",
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-15",
         "outcome": "does_not_name_vendor",
         "detail": "the page never names The GoSquared Early Stage Plan and is not served from its domain"
       }
@@ -27890,9 +27901,9 @@
       ],
       "verifiedDate": "2026-09-02",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names Drift for Early Stage Startups but states no amount, tier or rate we can read"
+        "checked": "2026-09-15",
+        "outcome": "does_not_name_vendor",
+        "detail": "the page never names Drift for Early Stage Startups and is not served from its domain"
       }
     },
     {
@@ -28134,7 +28145,7 @@
         "program": "Achieved Startup Deal"
       },
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-15",
         "outcome": "does_not_name_vendor",
         "detail": "the page never names Achieved and is not served from its domain"
       }
@@ -28159,7 +28170,7 @@
         "program": "Aircall Startup Deal"
       },
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-15",
         "outcome": "does_not_name_vendor",
         "detail": "the page never names Aircall and is not served from its domain"
       }
@@ -28185,7 +28196,7 @@
         "program": "Amazon AWS Startup Deal"
       },
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-15",
         "outcome": "does_not_name_vendor",
         "detail": "the page never names Amazon AWS and is not served from its domain"
       }
@@ -28210,7 +28221,7 @@
         "program": "Axonaut Startup Deal"
       },
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-15",
         "outcome": "does_not_name_vendor",
         "detail": "the page never names Axonaut and is not served from its domain"
       }
@@ -28235,7 +28246,7 @@
         "program": "Azameo Startup Deal"
       },
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-15",
         "outcome": "does_not_name_vendor",
         "detail": "the page never names Azameo and is not served from its domain"
       }
@@ -28260,7 +28271,7 @@
         "program": "Batch Startup Deal"
       },
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-15",
         "outcome": "does_not_name_vendor",
         "detail": "the page never names Batch and is not served from its domain"
       }
@@ -28310,7 +28321,7 @@
         "program": "Botnation Startup Deal"
       },
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-15",
         "outcome": "does_not_name_vendor",
         "detail": "the page never names Botnation and is not served from its domain"
       }
@@ -28335,7 +28346,7 @@
         "program": "CaptainData Startup Deal"
       },
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-15",
         "outcome": "does_not_name_vendor",
         "detail": "the page never names CaptainData and is not served from its domain"
       }
@@ -28360,7 +28371,7 @@
         "program": "Carta Startup Deal"
       },
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-15",
         "outcome": "does_not_name_vendor",
         "detail": "the page never names Carta and is not served from its domain"
       }
@@ -28385,7 +28396,7 @@
         "program": "Caviar Startup Deal"
       },
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-15",
         "outcome": "does_not_name_vendor",
         "detail": "the page never names Caviar and is not served from its domain"
       }
@@ -28410,7 +28421,7 @@
         "program": "Clear Channel Outdoor Startup Deal"
       },
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-15",
         "outcome": "does_not_name_vendor",
         "detail": "the page never names Clear Channel Outdoor and is not served from its domain"
       }
@@ -28436,7 +28447,7 @@
         "program": "CloudImage Startup Deal"
       },
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-15",
         "outcome": "does_not_name_vendor",
         "detail": "the page never names CloudImage and is not served from its domain"
       }
@@ -28462,7 +28473,7 @@
         "program": "Cloudtalk Startup Deal"
       },
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-15",
         "outcome": "does_not_name_vendor",
         "detail": "the page never names Cloudtalk and is not served from its domain"
       }
@@ -28488,7 +28499,7 @@
         "program": "Cloudways Startup Deal"
       },
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-15",
         "outcome": "does_not_name_vendor",
         "detail": "the page never names Cloudways and is not served from its domain"
       }
@@ -28513,7 +28524,7 @@
         "program": "ColdCRM Startup Deal"
       },
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-15",
         "outcome": "does_not_name_vendor",
         "detail": "the page never names ColdCRM and is not served from its domain"
       }
@@ -28538,7 +28549,7 @@
         "program": "Crowdfire Startup Deal"
       },
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-15",
         "outcome": "does_not_name_vendor",
         "detail": "the page never names Crowdfire and is not served from its domain"
       }
@@ -28563,7 +28574,7 @@
         "program": "Dareboost Startup Deal"
       },
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-15",
         "outcome": "does_not_name_vendor",
         "detail": "the page never names Dareboost and is not served from its domain"
       }
@@ -28588,7 +28599,7 @@
         "program": "Datananas Startup Deal"
       },
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-15",
         "outcome": "does_not_name_vendor",
         "detail": "the page never names Datananas and is not served from its domain"
       }
@@ -28613,7 +28624,7 @@
         "program": "Docsend Startup Deal"
       },
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-15",
         "outcome": "does_not_name_vendor",
         "detail": "the page never names Docsend and is not served from its domain"
       }
@@ -28638,7 +28649,7 @@
         "program": "E-Goi Startup Deal"
       },
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-15",
         "outcome": "does_not_name_vendor",
         "detail": "the page never names E-Goi and is not served from its domain"
       }
@@ -28664,7 +28675,7 @@
         "program": "Experian Startup Deal"
       },
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-15",
         "outcome": "does_not_name_vendor",
         "detail": "the page never names Experian and is not served from its domain"
       }
@@ -28689,7 +28700,7 @@
         "program": "findmassleads Startup Deal"
       },
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-15",
         "outcome": "does_not_name_vendor",
         "detail": "the page never names findmassleads and is not served from its domain"
       }
@@ -28714,7 +28725,7 @@
         "program": "Forter Startup Deal"
       },
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-15",
         "outcome": "does_not_name_vendor",
         "detail": "the page never names Forter and is not served from its domain"
       }
@@ -28739,7 +28750,7 @@
         "program": "Freebe Startup Deal"
       },
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-15",
         "outcome": "does_not_name_vendor",
         "detail": "the page never names Freebe and is not served from its domain"
       }
@@ -28764,7 +28775,7 @@
         "program": "Freshchat Startup Deal"
       },
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-15",
         "outcome": "does_not_name_vendor",
         "detail": "the page never names Freshchat and is not served from its domain"
       }
@@ -28789,7 +28800,7 @@
         "program": "Freshdesk Startup Deal"
       },
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-15",
         "outcome": "does_not_name_vendor",
         "detail": "the page never names Freshdesk and is not served from its domain"
       }
@@ -28814,7 +28825,7 @@
         "program": "Freshmarketer Startup Deal"
       },
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-15",
         "outcome": "does_not_name_vendor",
         "detail": "the page never names Freshmarketer and is not served from its domain"
       }
@@ -28839,7 +28850,7 @@
         "program": "Freshsales Startup Deal"
       },
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-15",
         "outcome": "does_not_name_vendor",
         "detail": "the page never names Freshsales and is not served from its domain"
       }
@@ -28864,7 +28875,7 @@
         "program": "Front Startup Deal"
       },
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-15",
         "outcome": "does_not_name_vendor",
         "detail": "the page never names Front and is not served from its domain"
       }
@@ -28889,7 +28900,7 @@
         "program": "GoCardLess Startup Deal"
       },
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-15",
         "outcome": "does_not_name_vendor",
         "detail": "the page never names GoCardLess and is not served from its domain"
       }
@@ -28914,7 +28925,7 @@
         "program": "GOOGLE ADS Startup Deal"
       },
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-15",
         "outcome": "does_not_name_vendor",
         "detail": "the page never names GOOGLE ADS and is not served from its domain"
       }
@@ -28939,7 +28950,7 @@
         "program": "Gorgias Startup Deal"
       },
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-15",
         "outcome": "does_not_name_vendor",
         "detail": "the page never names Gorgias and is not served from its domain"
       }
@@ -28964,7 +28975,7 @@
         "program": "Guideline 401(k) Startup Deal"
       },
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-15",
         "outcome": "does_not_name_vendor",
         "detail": "the page never names Guideline 401(k) and is not served from its domain"
       }
@@ -28989,7 +29000,7 @@
         "program": "Harvestr Startup Deal"
       },
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-15",
         "outcome": "does_not_name_vendor",
         "detail": "the page never names Harvestr and is not served from its domain"
       }
@@ -29014,7 +29025,7 @@
         "program": "Instacart Startup Deal"
       },
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-15",
         "outcome": "does_not_name_vendor",
         "detail": "the page never names Instacart and is not served from its domain"
       }
@@ -29039,7 +29050,7 @@
         "program": "Intercom Startup Deal"
       },
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-15",
         "outcome": "does_not_name_vendor",
         "detail": "the page never names Intercom and is not served from its domain"
       }
@@ -29064,7 +29075,7 @@
         "program": "InVision Startup Deal"
       },
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-15",
         "outcome": "does_not_name_vendor",
         "detail": "the page never names InVision and is not served from its domain"
       }
@@ -29089,7 +29100,7 @@
         "program": "Kaspr Startup Deal"
       },
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-15",
         "outcome": "does_not_name_vendor",
         "detail": "the page never names Kaspr and is not served from its domain"
       }
@@ -29114,7 +29125,7 @@
         "program": "Klaviyo Startup Deal"
       },
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-15",
         "outcome": "does_not_name_vendor",
         "detail": "the page never names Klaviyo and is not served from its domain"
       }
@@ -29139,7 +29150,7 @@
         "program": "Knotel Startup Deal"
       },
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-15",
         "outcome": "does_not_name_vendor",
         "detail": "the page never names Knotel and is not served from its domain"
       }
@@ -29164,7 +29175,7 @@
         "program": "La Fabrique Juridique Startup Deal"
       },
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-15",
         "outcome": "does_not_name_vendor",
         "detail": "the page never names La Fabrique Juridique and is not served from its domain"
       }
@@ -29189,7 +29200,7 @@
         "program": "Legalstart Startup Deal"
       },
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-15",
         "outcome": "does_not_name_vendor",
         "detail": "the page never names Legalstart and is not served from its domain"
       }
@@ -29214,7 +29225,7 @@
         "program": "Libeo Startup Deal"
       },
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-15",
         "outcome": "does_not_name_vendor",
         "detail": "the page never names Libeo and is not served from its domain"
       }
@@ -29239,7 +29250,7 @@
         "program": "Mention Startup Deal"
       },
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-15",
         "outcome": "does_not_name_vendor",
         "detail": "the page never names Mention and is not served from its domain"
       }
@@ -29274,7 +29285,7 @@
         "notes": "Referee must run M10+ cluster for 30+ days."
       },
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-15",
         "outcome": "does_not_name_vendor",
         "detail": "the page never names MongoDB and is not served from its domain"
       }
@@ -29324,7 +29335,7 @@
         "program": "noCRM Startup Deal"
       },
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-15",
         "outcome": "does_not_name_vendor",
         "detail": "the page never names noCRM and is not served from its domain"
       }
@@ -29349,7 +29360,7 @@
         "program": "PayFit Startup Deal"
       },
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-15",
         "outcome": "does_not_name_vendor",
         "detail": "the page never names PayFit and is not served from its domain"
       }
@@ -29374,7 +29385,7 @@
         "program": "Phantom Buster Startup Deal"
       },
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-15",
         "outcome": "does_not_name_vendor",
         "detail": "the page never names Phantom Buster and is not served from its domain"
       }
@@ -29399,9 +29410,9 @@
         "program": "Pipedrive Startup Deal"
       },
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-15",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names Pipedrive as \"pipedrive\" and states \"$720\""
       }
     },
     {
@@ -29424,7 +29435,7 @@
         "program": "PixelMe Startup Deal"
       },
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-15",
         "outcome": "does_not_name_vendor",
         "detail": "the page never names PixelMe and is not served from its domain"
       }
@@ -29449,7 +29460,7 @@
         "program": "Postscript Startup Deal"
       },
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-15",
         "outcome": "does_not_name_vendor",
         "detail": "the page never names Postscript and is not served from its domain"
       }
@@ -29474,7 +29485,7 @@
         "program": "ProspectIn Startup Deal"
       },
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-15",
         "outcome": "does_not_name_vendor",
         "detail": "the page never names ProspectIn and is not served from its domain"
       }

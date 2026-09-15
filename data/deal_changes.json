@@ -9796,6 +9796,57 @@
       "alternatives": [],
       "detected_by": "reverify-ai",
       "recorded_date": "2026-09-13"
+    },
+    {
+      "vendor": "CertKit",
+      "change_type": "pricing_restructured",
+      "date": "2026-09-15",
+      "date_source": "discovered",
+      "summary": "The free tier is now called 'Homelab' and is for personal, non-commercial use. Is not reflected on the current pricing page.",
+      "tier": "Homelab",
+      "tier_direction": "narrowed",
+      "previous_state": "Manage SSL Certificate issuance, renewal, and monitoring. Search the Certificate Transparency Logs. Free for 3 certificates and 1 user after the beta.",
+      "current_state": "Homelab is a free plan for personal, non-commercial use.",
+      "impact": "high",
+      "source_url": "https://www.certkit.io/certificate-management",
+      "category": "Security",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-09-15"
+    },
+    {
+      "vendor": "Othor AI",
+      "change_type": "limits_reduced",
+      "date": "2026-09-15",
+      "date_source": "discovered",
+      "summary": "The free plan now includes 2 data sources and 20 requests/day, down from 5 data sources and unlimited analytics.",
+      "tier": "Free",
+      "tier_direction": "narrowed",
+      "previous_state": "An AI-native fast, simple, and secure alternative to popular business intelligence solutions like Tableau, Power BI, and Looker. Othor utilizes large language models (LLMs) to deliver custom business intelligence solutions in minutes. The Free Forever plan provides one workspace with five datasource connections for one user, with no limits on analytics. [#opensource](https://github.com/othorai/othor.ai)",
+      "current_state": "Free $0 Forever. Including 2 Analytical Agents, 2 Data Sources, Up to 2 Team Members, 2 Dashboards. Usage Limits 20 requests / day · 50,000 tokens / month",
+      "impact": "high",
+      "source_url": "https://othor.ai/pricing",
+      "category": "AI / ML",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-09-15"
+    },
+    {
+      "vendor": "Pagure.io",
+      "change_type": "product_deprecated",
+      "date": "2026-09-15",
+      "date_source": "discovered",
+      "summary": "Pagure.io has been sunset and is now a read-only archive. It is no longer a functional service.",
+      "tier": "Free",
+      "tier_direction": "narrowed",
+      "previous_state": "Pagure.io is a free and open source software code collaboration platform for FOSS-licensed projects, Git-based",
+      "current_state": "Pagure.io was sunset in 2026; this is a read-only snapshot.",
+      "impact": "high",
+      "source_url": "https://pagure.io",
+      "category": "Source Control",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-09-15"
     }
   ]
 }

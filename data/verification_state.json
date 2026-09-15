@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-14",
+  "generated_at": "2026-09-15",
   "records": [
     {
       "vendor": "10minutemail",
@@ -127,12 +127,13 @@
     {
       "vendor": "Achieved",
       "url": "https://www.joinsecret.com/offers",
-      "last_attempt_at": "2026-08-28",
+      "last_attempt_at": "2026-09-15",
       "last_outcome": "source_unusable",
       "last_error": "the page never names Achieved and is not served from its domain",
       "failure_category": "source_unusable",
-      "consecutive_failures": 1,
+      "consecutive_failures": 2,
       "last_success": null,
+      "last_read_at": null,
       "quarantined_since": null
     },
     {
@@ -228,12 +229,13 @@
     {
       "vendor": "Aircall",
       "url": "https://brex.com/rewards/",
-      "last_attempt_at": "2026-08-28",
+      "last_attempt_at": "2026-09-15",
       "last_outcome": "source_unusable",
       "last_error": "the page never names Aircall and is not served from its domain",
       "failure_category": "source_unusable",
-      "consecutive_failures": 1,
+      "consecutive_failures": 2,
       "last_success": null,
+      "last_read_at": null,
       "quarantined_since": null
     },
     {
@@ -329,12 +331,13 @@
     {
       "vendor": "Amazon AWS",
       "url": "https://brex.com/rewards/",
-      "last_attempt_at": "2026-08-28",
+      "last_attempt_at": "2026-09-15",
       "last_outcome": "source_unusable",
       "last_error": "the page never names Amazon AWS and is not served from its domain",
       "failure_category": "source_unusable",
-      "consecutive_failures": 1,
+      "consecutive_failures": 2,
       "last_success": null,
+      "last_read_at": null,
       "quarantined_since": null
     },
     {
@@ -1064,23 +1067,25 @@
     {
       "vendor": "Axonaut",
       "url": "https://www.joinsecret.com/offers",
-      "last_attempt_at": "2026-08-28",
+      "last_attempt_at": "2026-09-15",
       "last_outcome": "source_unusable",
       "last_error": "the page never names Axonaut and is not served from its domain",
       "failure_category": "source_unusable",
-      "consecutive_failures": 1,
+      "consecutive_failures": 2,
       "last_success": null,
+      "last_read_at": null,
       "quarantined_since": null
     },
     {
       "vendor": "Azameo",
       "url": "https://www.joinsecret.com/offers",
-      "last_attempt_at": "2026-08-28",
+      "last_attempt_at": "2026-09-15",
       "last_outcome": "source_unusable",
       "last_error": "the page never names Azameo and is not served from its domain",
       "failure_category": "source_unusable",
-      "consecutive_failures": 1,
+      "consecutive_failures": 2,
       "last_success": null,
+      "last_read_at": null,
       "quarantined_since": null
     },
     {
@@ -1196,12 +1201,13 @@
     {
       "vendor": "Batch",
       "url": "https://www.joinsecret.com/offers",
-      "last_attempt_at": "2026-08-28",
+      "last_attempt_at": "2026-09-15",
       "last_outcome": "source_unusable",
       "last_error": "the page never names Batch and is not served from its domain",
       "failure_category": "source_unusable",
-      "consecutive_failures": 1,
+      "consecutive_failures": 2,
       "last_success": null,
+      "last_read_at": null,
       "quarantined_since": null
     },
     {
@@ -1329,12 +1335,13 @@
     {
       "vendor": "BinShare.net",
       "url": "https://binshare.net",
-      "last_attempt_at": "2026-08-28",
-      "last_outcome": "source_unusable",
-      "last_error": "the page names BinShare.net but states no amount, tier or rate we can read",
-      "failure_category": "source_unusable",
-      "consecutive_failures": 1,
+      "last_attempt_at": "2026-09-15",
+      "last_outcome": "fetch_failed",
+      "last_error": "page content too short (likely JS-rendered SPA); a rendering client read 495 characters",
+      "failure_category": "empty_page",
+      "consecutive_failures": 2,
       "last_success": null,
+      "last_read_at": null,
       "quarantined_since": null
     },
     {
@@ -1528,12 +1535,13 @@
     {
       "vendor": "Botnation",
       "url": "https://www.joinsecret.com/offers",
-      "last_attempt_at": "2026-08-28",
+      "last_attempt_at": "2026-09-15",
       "last_outcome": "source_unusable",
       "last_error": "the page never names Botnation and is not served from its domain",
       "failure_category": "source_unusable",
-      "consecutive_failures": 1,
+      "consecutive_failures": 2,
       "last_success": null,
+      "last_read_at": null,
       "quarantined_since": null
     },
     {
@@ -1617,12 +1625,13 @@
     {
       "vendor": "Bricks Note Calculator",
       "url": "https://free.getbricks.app/",
-      "last_attempt_at": "2026-08-28",
-      "last_outcome": "source_unusable",
-      "last_error": "the page names Bricks Note Calculator but states no amount, tier or rate we can read",
-      "failure_category": "source_unusable",
-      "consecutive_failures": 1,
+      "last_attempt_at": "2026-09-15",
+      "last_outcome": "states_no_price",
+      "last_error": null,
+      "failure_category": null,
+      "consecutive_failures": 0,
       "last_success": null,
+      "last_read_at": "2026-09-15",
       "quarantined_since": null
     },
     {
@@ -1824,12 +1833,13 @@
     {
       "vendor": "build.opensuse.org",
       "url": "https://build.opensuse.org/",
-      "last_attempt_at": "2026-08-28",
-      "last_outcome": "source_unusable",
-      "last_error": "the page names build.opensuse.org but states no amount, tier or rate we can read",
-      "failure_category": "source_unusable",
-      "consecutive_failures": 1,
+      "last_attempt_at": "2026-09-15",
+      "last_outcome": "states_no_price",
+      "last_error": null,
+      "failure_category": null,
+      "consecutive_failures": 0,
       "last_success": null,
+      "last_read_at": "2026-09-15",
       "quarantined_since": null
     },
     {
@@ -2023,12 +2033,13 @@
     {
       "vendor": "CaptainData",
       "url": "https://www.joinsecret.com/offers",
-      "last_attempt_at": "2026-08-28",
+      "last_attempt_at": "2026-09-15",
       "last_outcome": "source_unusable",
       "last_error": "the page never names CaptainData and is not served from its domain",
       "failure_category": "source_unusable",
-      "consecutive_failures": 1,
+      "consecutive_failures": 2,
       "last_success": null,
+      "last_read_at": null,
       "quarantined_since": null
     },
     {
@@ -2045,12 +2056,13 @@
     {
       "vendor": "Carbon.now.sh",
       "url": "https://carbon.now.sh",
-      "last_attempt_at": "2026-08-28",
-      "last_outcome": "source_unusable",
-      "last_error": "the page names Carbon.now.sh but states no amount, tier or rate we can read",
-      "failure_category": "source_unusable",
-      "consecutive_failures": 1,
+      "last_attempt_at": "2026-09-15",
+      "last_outcome": "states_no_price",
+      "last_error": null,
+      "failure_category": null,
+      "consecutive_failures": 0,
       "last_success": null,
+      "last_read_at": "2026-09-15",
       "quarantined_since": null
     },
     {
@@ -2067,35 +2079,37 @@
     {
       "vendor": "Carta",
       "url": "https://brex.com/rewards/",
-      "last_attempt_at": "2026-08-28",
+      "last_attempt_at": "2026-09-15",
       "last_outcome": "source_unusable",
       "last_error": "the page never names Carta and is not served from its domain",
       "failure_category": "source_unusable",
-      "consecutive_failures": 1,
+      "consecutive_failures": 2,
       "last_success": null,
+      "last_read_at": null,
       "quarantined_since": null
     },
     {
       "vendor": "CatchJS.com",
       "url": "https://catchjs.com/",
-      "last_attempt_at": "2026-09-14",
+      "last_attempt_at": "2026-09-15",
       "last_outcome": "changed",
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
       "last_success": null,
-      "last_read_at": "2026-09-14",
+      "last_read_at": "2026-09-15",
       "quarantined_since": null
     },
     {
       "vendor": "Caviar",
       "url": "https://brex.com/rewards/",
-      "last_attempt_at": "2026-08-28",
+      "last_attempt_at": "2026-09-15",
       "last_outcome": "source_unusable",
       "last_error": "the page never names Caviar and is not served from its domain",
       "failure_category": "source_unusable",
-      "consecutive_failures": 1,
+      "consecutive_failures": 2,
       "last_success": null,
+      "last_read_at": null,
       "quarantined_since": null
     },
     {
@@ -2146,13 +2160,13 @@
     {
       "vendor": "CertKit",
       "url": "https://www.certkit.io/certificate-management",
-      "last_attempt_at": "2026-09-14",
+      "last_attempt_at": "2026-09-15",
       "last_outcome": "changed",
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
       "last_success": null,
-      "last_read_at": "2026-09-14",
+      "last_read_at": "2026-09-15",
       "quarantined_since": null
     },
     {
@@ -2349,12 +2363,13 @@
     {
       "vendor": "Clear Channel Outdoor",
       "url": "https://brex.com/rewards/",
-      "last_attempt_at": "2026-08-28",
+      "last_attempt_at": "2026-09-15",
       "last_outcome": "source_unusable",
       "last_error": "the page never names Clear Channel Outdoor and is not served from its domain",
       "failure_category": "source_unusable",
-      "consecutive_failures": 1,
+      "consecutive_failures": 2,
       "last_success": null,
+      "last_read_at": null,
       "quarantined_since": null
     },
     {
@@ -2694,12 +2709,13 @@
     {
       "vendor": "CloudImage",
       "url": "https://www.joinsecret.com/offers",
-      "last_attempt_at": "2026-08-28",
+      "last_attempt_at": "2026-09-15",
       "last_outcome": "source_unusable",
       "last_error": "the page never names CloudImage and is not served from its domain",
       "failure_category": "source_unusable",
-      "consecutive_failures": 1,
+      "consecutive_failures": 2,
       "last_success": null,
+      "last_read_at": null,
       "quarantined_since": null
     },
     {
@@ -2738,23 +2754,25 @@
     {
       "vendor": "Cloudtalk",
       "url": "https://www.joinsecret.com/offers",
-      "last_attempt_at": "2026-08-28",
+      "last_attempt_at": "2026-09-15",
       "last_outcome": "source_unusable",
       "last_error": "the page never names Cloudtalk and is not served from its domain",
       "failure_category": "source_unusable",
-      "consecutive_failures": 1,
+      "consecutive_failures": 2,
       "last_success": null,
+      "last_read_at": null,
       "quarantined_since": null
     },
     {
       "vendor": "Cloudways",
       "url": "https://www.joinsecret.com/offers",
-      "last_attempt_at": "2026-08-28",
+      "last_attempt_at": "2026-09-15",
       "last_outcome": "source_unusable",
       "last_error": "the page never names Cloudways and is not served from its domain",
       "failure_category": "source_unusable",
-      "consecutive_failures": 1,
+      "consecutive_failures": 2,
       "last_success": null,
+      "last_read_at": null,
       "quarantined_since": null
     },
     {
@@ -3082,12 +3100,13 @@
     {
       "vendor": "ColdCRM",
       "url": "https://www.joinsecret.com/offers",
-      "last_attempt_at": "2026-08-28",
+      "last_attempt_at": "2026-09-15",
       "last_outcome": "source_unusable",
       "last_error": "the page never names ColdCRM and is not served from its domain",
       "failure_category": "source_unusable",
-      "consecutive_failures": 1,
+      "consecutive_failures": 2,
       "last_success": null,
+      "last_read_at": null,
       "quarantined_since": null
     },
     {
@@ -3171,11 +3190,11 @@
     {
       "vendor": "Conversion Tools",
       "url": "https://conversiontools.io/",
-      "last_attempt_at": "2026-09-14",
-      "last_outcome": "changed",
-      "last_error": null,
-      "failure_category": null,
-      "consecutive_failures": 0,
+      "last_attempt_at": "2026-09-15",
+      "last_outcome": "fetch_failed",
+      "last_error": "page content too short (likely JS-rendered SPA); the rendering client failed: the rendering client did not finish in time",
+      "failure_category": "empty_page",
+      "consecutive_failures": 1,
       "last_success": null,
       "last_read_at": "2026-09-14",
       "quarantined_since": null
@@ -3416,12 +3435,13 @@
     {
       "vendor": "Cronhooks",
       "url": "https://cronhooks.io/",
-      "last_attempt_at": "2026-08-28",
+      "last_attempt_at": "2026-09-15",
       "last_outcome": "changed",
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
       "last_success": null,
+      "last_read_at": "2026-09-15",
       "quarantined_since": null
     },
     {
@@ -3449,12 +3469,13 @@
     {
       "vendor": "Crowdfire",
       "url": "https://www.joinsecret.com/offers",
-      "last_attempt_at": "2026-08-28",
+      "last_attempt_at": "2026-09-15",
       "last_outcome": "source_unusable",
       "last_error": "the page never names Crowdfire and is not served from its domain",
       "failure_category": "source_unusable",
-      "consecutive_failures": 1,
+      "consecutive_failures": 2,
       "last_success": null,
+      "last_read_at": null,
       "quarantined_since": null
     },
     {
@@ -3693,12 +3714,13 @@
     {
       "vendor": "Dareboost",
       "url": "https://www.joinsecret.com/offers",
-      "last_attempt_at": "2026-08-28",
+      "last_attempt_at": "2026-09-15",
       "last_outcome": "source_unusable",
       "last_error": "the page never names Dareboost and is not served from its domain",
       "failure_category": "source_unusable",
-      "consecutive_failures": 1,
+      "consecutive_failures": 2,
       "last_success": null,
+      "last_read_at": null,
       "quarantined_since": null
     },
     {
@@ -3771,12 +3793,13 @@
     {
       "vendor": "Datananas",
       "url": "https://www.joinsecret.com/offers",
-      "last_attempt_at": "2026-08-28",
+      "last_attempt_at": "2026-09-15",
       "last_outcome": "source_unusable",
       "last_error": "the page never names Datananas and is not served from its domain",
       "failure_category": "source_unusable",
-      "consecutive_failures": 1,
+      "consecutive_failures": 2,
       "last_success": null,
+      "last_read_at": null,
       "quarantined_since": null
     },
     {
@@ -3793,12 +3816,13 @@
     {
       "vendor": "DatoCMS",
       "url": "https://www.datocms.com/",
-      "last_attempt_at": "2026-08-28",
+      "last_attempt_at": "2026-09-15",
       "last_outcome": "changed",
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
       "last_success": null,
+      "last_read_at": "2026-09-15",
       "quarantined_since": null
     },
     {
@@ -4272,12 +4296,13 @@
     {
       "vendor": "Docsend",
       "url": "https://brex.com/rewards/",
-      "last_attempt_at": "2026-08-28",
+      "last_attempt_at": "2026-09-15",
       "last_outcome": "source_unusable",
       "last_error": "the page never names Docsend and is not served from its domain",
       "failure_category": "source_unusable",
-      "consecutive_failures": 1,
+      "consecutive_failures": 2,
       "last_success": null,
+      "last_read_at": null,
       "quarantined_since": null
     },
     {
@@ -4384,12 +4409,13 @@
     {
       "vendor": "Drift for Early Stage Startups",
       "url": "https://www.salesloft.com/platform/drift",
-      "last_attempt_at": "2026-09-02",
+      "last_attempt_at": "2026-09-15",
       "last_outcome": "source_unusable",
-      "last_error": "the page names Drift for Early Stage Startups but states no amount, tier or rate we can read",
+      "last_error": "the page never names Drift for Early Stage Startups and is not served from its domain",
       "failure_category": "source_unusable",
-      "consecutive_failures": 1,
+      "consecutive_failures": 2,
       "last_success": null,
+      "last_read_at": null,
       "quarantined_since": null
     },
     {
@@ -4531,12 +4557,13 @@
     {
       "vendor": "E-Goi",
       "url": "https://www.joinsecret.com/offers",
-      "last_attempt_at": "2026-08-28",
+      "last_attempt_at": "2026-09-15",
       "last_outcome": "source_unusable",
       "last_error": "the page never names E-Goi and is not served from its domain",
       "failure_category": "source_unusable",
-      "consecutive_failures": 1,
+      "consecutive_failures": 2,
       "last_success": null,
+      "last_read_at": null,
       "quarantined_since": null
     },
     {
@@ -4887,12 +4914,13 @@
     {
       "vendor": "Experian",
       "url": "https://brex.com/rewards/",
-      "last_attempt_at": "2026-08-28",
+      "last_attempt_at": "2026-09-15",
       "last_outcome": "source_unusable",
       "last_error": "the page never names Experian and is not served from its domain",
       "failure_category": "source_unusable",
-      "consecutive_failures": 1,
+      "consecutive_failures": 2,
       "last_success": null,
+      "last_read_at": null,
       "quarantined_since": null
     },
     {
@@ -5078,12 +5106,13 @@
     {
       "vendor": "findmassleads",
       "url": "https://www.joinsecret.com/offers",
-      "last_attempt_at": "2026-08-28",
+      "last_attempt_at": "2026-09-15",
       "last_outcome": "source_unusable",
       "last_error": "the page never names findmassleads and is not served from its domain",
       "failure_category": "source_unusable",
-      "consecutive_failures": 1,
+      "consecutive_failures": 2,
       "last_success": null,
+      "last_read_at": null,
       "quarantined_since": null
     },
     {
@@ -5444,12 +5473,13 @@
     {
       "vendor": "Forter",
       "url": "https://brex.com/rewards/",
-      "last_attempt_at": "2026-08-28",
+      "last_attempt_at": "2026-09-15",
       "last_outcome": "source_unusable",
       "last_error": "the page never names Forter and is not served from its domain",
       "failure_category": "source_unusable",
-      "consecutive_failures": 1,
+      "consecutive_failures": 2,
       "last_success": null,
+      "last_read_at": null,
       "quarantined_since": null
     },
     {
@@ -5533,12 +5563,13 @@
     {
       "vendor": "Freebe",
       "url": "https://www.joinsecret.com/offers",
-      "last_attempt_at": "2026-08-28",
+      "last_attempt_at": "2026-09-15",
       "last_outcome": "source_unusable",
       "last_error": "the page never names Freebe and is not served from its domain",
       "failure_category": "source_unusable",
-      "consecutive_failures": 1,
+      "consecutive_failures": 2,
       "last_success": null,
+      "last_read_at": null,
       "quarantined_since": null
     },
     {
@@ -5601,45 +5632,49 @@
     {
       "vendor": "Freshchat",
       "url": "https://www.joinsecret.com/offers",
-      "last_attempt_at": "2026-08-28",
+      "last_attempt_at": "2026-09-15",
       "last_outcome": "source_unusable",
       "last_error": "the page never names Freshchat and is not served from its domain",
       "failure_category": "source_unusable",
-      "consecutive_failures": 1,
+      "consecutive_failures": 2,
       "last_success": null,
+      "last_read_at": null,
       "quarantined_since": null
     },
     {
       "vendor": "Freshdesk",
       "url": "https://www.joinsecret.com/offers",
-      "last_attempt_at": "2026-08-28",
+      "last_attempt_at": "2026-09-15",
       "last_outcome": "source_unusable",
       "last_error": "the page never names Freshdesk and is not served from its domain",
       "failure_category": "source_unusable",
-      "consecutive_failures": 1,
+      "consecutive_failures": 2,
       "last_success": null,
+      "last_read_at": null,
       "quarantined_since": null
     },
     {
       "vendor": "Freshmarketer",
       "url": "https://www.joinsecret.com/offers",
-      "last_attempt_at": "2026-08-28",
+      "last_attempt_at": "2026-09-15",
       "last_outcome": "source_unusable",
       "last_error": "the page never names Freshmarketer and is not served from its domain",
       "failure_category": "source_unusable",
-      "consecutive_failures": 1,
+      "consecutive_failures": 2,
       "last_success": null,
+      "last_read_at": null,
       "quarantined_since": null
     },
     {
       "vendor": "Freshsales",
       "url": "https://www.joinsecret.com/offers",
-      "last_attempt_at": "2026-08-28",
+      "last_attempt_at": "2026-09-15",
       "last_outcome": "source_unusable",
       "last_error": "the page never names Freshsales and is not served from its domain",
       "failure_category": "source_unusable",
-      "consecutive_failures": 1,
+      "consecutive_failures": 2,
       "last_success": null,
+      "last_read_at": null,
       "quarantined_since": null
     },
     {
@@ -5656,12 +5691,13 @@
     {
       "vendor": "Front",
       "url": "https://www.joinsecret.com/offers",
-      "last_attempt_at": "2026-08-28",
+      "last_attempt_at": "2026-09-15",
       "last_outcome": "source_unusable",
       "last_error": "the page never names Front and is not served from its domain",
       "failure_category": "source_unusable",
-      "consecutive_failures": 1,
+      "consecutive_failures": 2,
       "last_success": null,
+      "last_read_at": null,
       "quarantined_since": null
     },
     {
@@ -6158,12 +6194,13 @@
     {
       "vendor": "GoCardLess",
       "url": "https://www.joinsecret.com/offers",
-      "last_attempt_at": "2026-08-28",
+      "last_attempt_at": "2026-09-15",
       "last_outcome": "source_unusable",
       "last_error": "the page never names GoCardLess and is not served from its domain",
       "failure_category": "source_unusable",
-      "consecutive_failures": 1,
+      "consecutive_failures": 2,
       "last_success": null,
+      "last_read_at": null,
       "quarantined_since": null
     },
     {
@@ -6193,12 +6230,13 @@
     {
       "vendor": "GOOGLE ADS",
       "url": "https://brex.com/rewards/",
-      "last_attempt_at": "2026-08-28",
+      "last_attempt_at": "2026-09-15",
       "last_outcome": "source_unusable",
       "last_error": "the page never names GOOGLE ADS and is not served from its domain",
       "failure_category": "source_unusable",
-      "consecutive_failures": 1,
+      "consecutive_failures": 2,
       "last_success": null,
+      "last_read_at": null,
       "quarantined_since": null
     },
     {
@@ -6512,12 +6550,13 @@
     {
       "vendor": "Gorgias",
       "url": "https://brex.com/rewards/",
-      "last_attempt_at": "2026-08-28",
+      "last_attempt_at": "2026-09-15",
       "last_outcome": "source_unusable",
       "last_error": "the page never names Gorgias and is not served from its domain",
       "failure_category": "source_unusable",
-      "consecutive_failures": 1,
+      "consecutive_failures": 2,
       "last_success": null,
+      "last_read_at": null,
       "quarantined_since": null
     },
     {
@@ -6669,12 +6708,13 @@
     {
       "vendor": "Guideline 401(k)",
       "url": "https://brex.com/rewards/",
-      "last_attempt_at": "2026-08-28",
+      "last_attempt_at": "2026-09-15",
       "last_outcome": "source_unusable",
       "last_error": "the page never names Guideline 401(k) and is not served from its domain",
       "failure_category": "source_unusable",
-      "consecutive_failures": 1,
+      "consecutive_failures": 2,
       "last_success": null,
+      "last_read_at": null,
       "quarantined_since": null
     },
     {
@@ -6757,12 +6797,13 @@
     {
       "vendor": "Harvestr",
       "url": "https://www.joinsecret.com/offers",
-      "last_attempt_at": "2026-08-28",
+      "last_attempt_at": "2026-09-15",
       "last_outcome": "source_unusable",
       "last_error": "the page never names Harvestr and is not served from its domain",
       "failure_category": "source_unusable",
-      "consecutive_failures": 1,
+      "consecutive_failures": 2,
       "last_success": null,
+      "last_read_at": null,
       "quarantined_since": null
     },
     {
@@ -6859,12 +6900,13 @@
     {
       "vendor": "Heroku for Startups Program",
       "url": "https://www.heroku.com/startups/",
-      "last_attempt_at": "2026-09-02",
-      "last_outcome": "source_unusable",
-      "last_error": "the page names Heroku for Startups Program but states no amount, tier or rate we can read",
-      "failure_category": "source_unusable",
-      "consecutive_failures": 1,
+      "last_attempt_at": "2026-09-15",
+      "last_outcome": "changed",
+      "last_error": null,
+      "failure_category": null,
+      "consecutive_failures": 0,
       "last_success": null,
+      "last_read_at": "2026-09-15",
       "quarantined_since": null
     },
     {
@@ -7530,23 +7572,25 @@
     {
       "vendor": "Instabug for Startups",
       "url": "https://www.luciq.ai/",
-      "last_attempt_at": "2026-09-02",
+      "last_attempt_at": "2026-09-15",
       "last_outcome": "source_unusable",
       "last_error": "the page never names Instabug for Startups and is not served from its domain",
       "failure_category": "source_unusable",
-      "consecutive_failures": 1,
+      "consecutive_failures": 2,
       "last_success": null,
+      "last_read_at": null,
       "quarantined_since": null
     },
     {
       "vendor": "Instacart",
       "url": "https://brex.com/rewards/",
-      "last_attempt_at": "2026-08-28",
+      "last_attempt_at": "2026-09-15",
       "last_outcome": "source_unusable",
       "last_error": "the page never names Instacart and is not served from its domain",
       "failure_category": "source_unusable",
-      "consecutive_failures": 1,
+      "consecutive_failures": 2,
       "last_success": null,
+      "last_read_at": null,
       "quarantined_since": null
     },
     {
@@ -7597,12 +7641,13 @@
     {
       "vendor": "Intercom",
       "url": "https://brex.com/rewards/",
-      "last_attempt_at": "2026-08-28",
+      "last_attempt_at": "2026-09-15",
       "last_outcome": "source_unusable",
       "last_error": "the page never names Intercom and is not served from its domain",
       "failure_category": "source_unusable",
-      "consecutive_failures": 1,
+      "consecutive_failures": 2,
       "last_success": null,
+      "last_read_at": null,
       "quarantined_since": null
     },
     {
@@ -7641,12 +7686,13 @@
     {
       "vendor": "InVision",
       "url": "https://www.joinsecret.com/offers",
-      "last_attempt_at": "2026-08-28",
+      "last_attempt_at": "2026-09-15",
       "last_outcome": "source_unusable",
       "last_error": "the page never names InVision and is not served from its domain",
       "failure_category": "source_unusable",
-      "consecutive_failures": 1,
+      "consecutive_failures": 2,
       "last_success": null,
+      "last_read_at": null,
       "quarantined_since": null
     },
     {
@@ -7840,12 +7886,13 @@
     {
       "vendor": "JDoodle",
       "url": "https://www.jdoodle.com",
-      "last_attempt_at": "2026-08-28",
-      "last_outcome": "source_unusable",
-      "last_error": "the page names JDoodle but states no amount, tier or rate we can read",
-      "failure_category": "source_unusable",
-      "consecutive_failures": 1,
+      "last_attempt_at": "2026-09-15",
+      "last_outcome": "changed",
+      "last_error": null,
+      "failure_category": null,
+      "consecutive_failures": 0,
       "last_success": null,
+      "last_read_at": "2026-09-15",
       "quarantined_since": null
     },
     {
@@ -8018,12 +8065,13 @@
     {
       "vendor": "Kaspr",
       "url": "https://www.joinsecret.com/offers",
-      "last_attempt_at": "2026-08-28",
+      "last_attempt_at": "2026-09-15",
       "last_outcome": "source_unusable",
       "last_error": "the page never names Kaspr and is not served from its domain",
       "failure_category": "source_unusable",
-      "consecutive_failures": 1,
+      "consecutive_failures": 2,
       "last_success": null,
+      "last_read_at": null,
       "quarantined_since": null
     },
     {
@@ -8130,12 +8178,13 @@
     {
       "vendor": "Klaviyo",
       "url": "https://brex.com/rewards/",
-      "last_attempt_at": "2026-08-28",
+      "last_attempt_at": "2026-09-15",
       "last_outcome": "source_unusable",
       "last_error": "the page never names Klaviyo and is not served from its domain",
       "failure_category": "source_unusable",
-      "consecutive_failures": 1,
+      "consecutive_failures": 2,
       "last_success": null,
+      "last_read_at": null,
       "quarantined_since": null
     },
     {
@@ -8152,12 +8201,13 @@
     {
       "vendor": "Knotel",
       "url": "https://brex.com/rewards/",
-      "last_attempt_at": "2026-08-28",
+      "last_attempt_at": "2026-09-15",
       "last_outcome": "source_unusable",
       "last_error": "the page never names Knotel and is not served from its domain",
       "failure_category": "source_unusable",
-      "consecutive_failures": 1,
+      "consecutive_failures": 2,
       "last_success": null,
+      "last_read_at": null,
       "quarantined_since": null
     },
     {
@@ -8262,12 +8312,13 @@
     {
       "vendor": "La Fabrique Juridique",
       "url": "https://www.joinsecret.com/offers",
-      "last_attempt_at": "2026-08-28",
+      "last_attempt_at": "2026-09-15",
       "last_outcome": "source_unusable",
       "last_error": "the page never names La Fabrique Juridique and is not served from its domain",
       "failure_category": "source_unusable",
-      "consecutive_failures": 1,
+      "consecutive_failures": 2,
       "last_success": null,
+      "last_read_at": null,
       "quarantined_since": null
     },
     {
@@ -8400,12 +8451,13 @@
     {
       "vendor": "Legalstart",
       "url": "https://www.joinsecret.com/offers",
-      "last_attempt_at": "2026-08-28",
+      "last_attempt_at": "2026-09-15",
       "last_outcome": "source_unusable",
       "last_error": "the page never names Legalstart and is not served from its domain",
       "failure_category": "source_unusable",
-      "consecutive_failures": 1,
+      "consecutive_failures": 2,
       "last_success": null,
+      "last_read_at": null,
       "quarantined_since": null
     },
     {
@@ -8455,12 +8507,13 @@
     {
       "vendor": "Libeo",
       "url": "https://www.joinsecret.com/offers",
-      "last_attempt_at": "2026-08-28",
+      "last_attempt_at": "2026-09-15",
       "last_outcome": "source_unusable",
       "last_error": "the page never names Libeo and is not served from its domain",
       "failure_category": "source_unusable",
-      "consecutive_failures": 1,
+      "consecutive_failures": 2,
       "last_success": null,
+      "last_read_at": null,
       "quarantined_since": null
     },
     {
@@ -8790,12 +8843,13 @@
     {
       "vendor": "LogSpot",
       "url": "https://logspot.io",
-      "last_attempt_at": "2026-08-28",
-      "last_outcome": "source_unusable",
-      "last_error": "the page names LogSpot but states no amount, tier or rate we can read",
-      "failure_category": "source_unusable",
-      "consecutive_failures": 1,
-      "last_success": null,
+      "last_attempt_at": "2026-09-15",
+      "last_outcome": "confirmed",
+      "last_error": null,
+      "failure_category": null,
+      "consecutive_failures": 0,
+      "last_success": "2026-09-15",
+      "last_read_at": "2026-09-15",
       "quarantined_since": null
     },
     {
@@ -9358,12 +9412,13 @@
     {
       "vendor": "Mention",
       "url": "https://www.joinsecret.com/offers",
-      "last_attempt_at": "2026-08-28",
+      "last_attempt_at": "2026-09-15",
       "last_outcome": "source_unusable",
       "last_error": "the page never names Mention and is not served from its domain",
       "failure_category": "source_unusable",
-      "consecutive_failures": 1,
+      "consecutive_failures": 2,
       "last_success": null,
+      "last_read_at": null,
       "quarantined_since": null
     },
     {
@@ -9781,12 +9836,13 @@
     {
       "vendor": "MongoDB",
       "url": "https://brex.com/rewards/",
-      "last_attempt_at": "2026-08-28",
+      "last_attempt_at": "2026-09-15",
       "last_outcome": "source_unusable",
       "last_error": "the page never names MongoDB and is not served from its domain",
       "failure_category": "source_unusable",
-      "consecutive_failures": 1,
+      "consecutive_failures": 2,
       "last_success": null,
+      "last_read_at": null,
       "quarantined_since": null
     },
     {
@@ -10008,13 +10064,13 @@
     {
       "vendor": "netdata.cloud",
       "url": "https://www.netdata.cloud/",
-      "last_attempt_at": "2026-09-14",
+      "last_attempt_at": "2026-09-15",
       "last_outcome": "changed",
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
       "last_success": null,
-      "last_read_at": "2026-09-14",
+      "last_read_at": "2026-09-15",
       "quarantined_since": null
     },
     {
@@ -10141,12 +10197,13 @@
     {
       "vendor": "noCRM",
       "url": "https://www.joinsecret.com/offers",
-      "last_attempt_at": "2026-08-28",
+      "last_attempt_at": "2026-09-15",
       "last_outcome": "source_unusable",
       "last_error": "the page never names noCRM and is not served from its domain",
       "failure_category": "source_unusable",
-      "consecutive_failures": 1,
+      "consecutive_failures": 2,
       "last_success": null,
+      "last_read_at": null,
       "quarantined_since": null
     },
     {
@@ -10621,24 +10678,25 @@
     {
       "vendor": "osmnames",
       "url": "https://osmnames.org/",
-      "last_attempt_at": "2026-08-28",
-      "last_outcome": "source_unusable",
-      "last_error": "the page names osmnames but states no amount, tier or rate we can read",
-      "failure_category": "source_unusable",
-      "consecutive_failures": 1,
+      "last_attempt_at": "2026-09-15",
+      "last_outcome": "fetch_failed",
+      "last_error": "page content too short (likely JS-rendered SPA); a rendering client read 451 characters",
+      "failure_category": "empty_page",
+      "consecutive_failures": 2,
       "last_success": null,
+      "last_read_at": null,
       "quarantined_since": null
     },
     {
       "vendor": "Othor AI",
       "url": "https://othor.ai/pricing",
-      "last_attempt_at": "2026-09-14",
+      "last_attempt_at": "2026-09-15",
       "last_outcome": "changed",
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
       "last_success": null,
-      "last_read_at": "2026-09-14",
+      "last_read_at": "2026-09-15",
       "quarantined_since": null
     },
     {
@@ -10790,13 +10848,13 @@
     {
       "vendor": "Pagure.io",
       "url": "https://pagure.io",
-      "last_attempt_at": "2026-09-14",
+      "last_attempt_at": "2026-09-15",
       "last_outcome": "changed",
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
       "last_success": null,
-      "last_read_at": "2026-09-14",
+      "last_read_at": "2026-09-15",
       "quarantined_since": null
     },
     {
@@ -10857,12 +10915,13 @@
     {
       "vendor": "ParityVend",
       "url": "https://www.ambeteco.com/ParityVend/",
-      "last_attempt_at": "2026-08-28",
-      "last_outcome": "source_unusable",
-      "last_error": "the page names ParityVend but states no amount, tier or rate we can read",
-      "failure_category": "source_unusable",
-      "consecutive_failures": 1,
+      "last_attempt_at": "2026-09-15",
+      "last_outcome": "fetch_failed",
+      "last_error": "page content too short (likely JS-rendered SPA); a rendering client read 147 characters",
+      "failure_category": "empty_page",
+      "consecutive_failures": 2,
       "last_success": null,
+      "last_read_at": null,
       "quarantined_since": null
     },
     {
@@ -10879,12 +10938,13 @@
     {
       "vendor": "PayFit",
       "url": "https://www.joinsecret.com/offers",
-      "last_attempt_at": "2026-08-28",
+      "last_attempt_at": "2026-09-15",
       "last_outcome": "source_unusable",
       "last_error": "the page never names PayFit and is not served from its domain",
       "failure_category": "source_unusable",
-      "consecutive_failures": 1,
+      "consecutive_failures": 2,
       "last_success": null,
+      "last_read_at": null,
       "quarantined_since": null
     },
     {
@@ -11003,12 +11063,13 @@
     {
       "vendor": "Phantom Buster",
       "url": "https://www.joinsecret.com/offers",
-      "last_attempt_at": "2026-08-28",
+      "last_attempt_at": "2026-09-15",
       "last_outcome": "source_unusable",
       "last_error": "the page never names Phantom Buster and is not served from its domain",
       "failure_category": "source_unusable",
-      "consecutive_failures": 1,
+      "consecutive_failures": 2,
       "last_success": null,
+      "last_read_at": null,
       "quarantined_since": null
     },
     {
@@ -11181,12 +11242,13 @@
     {
       "vendor": "Pipedrive",
       "url": "https://www.joinsecret.com/offers",
-      "last_attempt_at": "2026-08-28",
-      "last_outcome": "source_unusable",
-      "last_error": "the page never names Pipedrive and is not served from its domain",
-      "failure_category": "source_unusable",
-      "consecutive_failures": 1,
+      "last_attempt_at": "2026-09-15",
+      "last_outcome": "unclear",
+      "last_error": "The provided text does not contain information about Pipedrive or its Startup Program. It lists various deals from other vendors and general information about the marketplace, but does not mention Pipedrive's current offerings.",
+      "failure_category": "ai_undecided",
+      "consecutive_failures": 2,
       "last_success": null,
+      "last_read_at": null,
       "quarantined_since": null
     },
     {
@@ -11203,12 +11265,13 @@
     {
       "vendor": "PixelMe",
       "url": "https://www.joinsecret.com/offers",
-      "last_attempt_at": "2026-08-28",
+      "last_attempt_at": "2026-09-15",
       "last_outcome": "source_unusable",
       "last_error": "the page never names PixelMe and is not served from its domain",
       "failure_category": "source_unusable",
-      "consecutive_failures": 1,
+      "consecutive_failures": 2,
       "last_success": null,
+      "last_read_at": null,
       "quarantined_since": null
     },
     {
@@ -11480,12 +11543,13 @@
     {
       "vendor": "Postscript",
       "url": "https://brex.com/rewards/",
-      "last_attempt_at": "2026-08-28",
+      "last_attempt_at": "2026-09-15",
       "last_outcome": "source_unusable",
       "last_error": "the page never names Postscript and is not served from its domain",
       "failure_category": "source_unusable",
-      "consecutive_failures": 1,
+      "consecutive_failures": 2,
       "last_success": null,
+      "last_read_at": null,
       "quarantined_since": null
     },
     {
@@ -11605,12 +11669,13 @@
     {
       "vendor": "ProspectIn",
       "url": "https://www.joinsecret.com/offers",
-      "last_attempt_at": "2026-08-28",
+      "last_attempt_at": "2026-09-15",
       "last_outcome": "source_unusable",
       "last_error": "the page never names ProspectIn and is not served from its domain",
       "failure_category": "source_unusable",
-      "consecutive_failures": 1,
+      "consecutive_failures": 2,
       "last_success": null,
+      "last_read_at": null,
       "quarantined_since": null
     },
     {
@@ -12045,12 +12110,13 @@
     {
       "vendor": "ray.so",
       "url": "https://ray.so/",
-      "last_attempt_at": "2026-08-28",
-      "last_outcome": "source_unusable",
-      "last_error": "the page names ray.so but states no amount, tier or rate we can read",
-      "failure_category": "source_unusable",
-      "consecutive_failures": 1,
+      "last_attempt_at": "2026-09-15",
+      "last_outcome": "fetch_failed",
+      "last_error": "page content too short (likely JS-rendered SPA); a rendering client read 178 characters",
+      "failure_category": "empty_page",
+      "consecutive_failures": 2,
       "last_success": null,
+      "last_read_at": null,
       "quarantined_since": null
     },
     {
@@ -12122,12 +12188,13 @@
     {
       "vendor": "Remarkbox",
       "url": "https://www.remarkbox.com/",
-      "last_attempt_at": "2026-09-02",
-      "last_outcome": "fetch_failed",
-      "last_error": "fetch failed",
-      "failure_category": "network_error",
-      "consecutive_failures": 1,
-      "last_success": null,
+      "last_attempt_at": "2026-09-15",
+      "last_outcome": "confirmed",
+      "last_error": null,
+      "failure_category": null,
+      "consecutive_failures": 0,
+      "last_success": "2026-09-15",
+      "last_read_at": "2026-09-15",
       "quarantined_since": null
     },
     {
@@ -12268,12 +12335,13 @@
     {
       "vendor": "ReqBin",
       "url": "https://reqbin.com/",
-      "last_attempt_at": "2026-09-02",
-      "last_outcome": "fetch_failed",
-      "last_error": "HTTP 403",
-      "failure_category": "bot_block",
-      "consecutive_failures": 1,
+      "last_attempt_at": "2026-09-15",
+      "last_outcome": "states_no_price",
+      "last_error": null,
+      "failure_category": null,
+      "consecutive_failures": 0,
       "last_success": null,
+      "last_read_at": "2026-09-15",
       "quarantined_since": null
     },
     {
@@ -14709,12 +14777,13 @@
     {
       "vendor": "The GoSquared Early Stage Plan",
       "url": "https://ecosend.io/",
-      "last_attempt_at": "2026-09-02",
+      "last_attempt_at": "2026-09-15",
       "last_outcome": "source_unusable",
       "last_error": "the page never names The GoSquared Early Stage Plan and is not served from its domain",
       "failure_category": "source_unusable",
-      "consecutive_failures": 1,
+      "consecutive_failures": 2,
       "last_success": null,
+      "last_read_at": null,
       "quarantined_since": null
     },
     {
@@ -15199,12 +15268,13 @@
     {
       "vendor": "tweakcn",
       "url": "https://tweakcn.com/",
-      "last_attempt_at": "2026-08-28",
-      "last_outcome": "source_unusable",
-      "last_error": "the page names tweakcn but states no amount, tier or rate we can read",
-      "failure_category": "source_unusable",
-      "consecutive_failures": 1,
+      "last_attempt_at": "2026-09-15",
+      "last_outcome": "states_no_price",
+      "last_error": null,
+      "failure_category": null,
+      "consecutive_failures": 0,
       "last_success": null,
+      "last_read_at": "2026-09-15",
       "quarantined_since": null
     },
     {
@@ -15233,12 +15303,13 @@
     {
       "vendor": "Twilio Startups Program",
       "url": "https://docs.google.com/forms/d/e/1FAIpQLSfcc7bGIqosjJ-vWdSi4iFW2oQ_lcCQh9JXNpREXPCkFBssRw/closedform",
-      "last_attempt_at": "2026-09-02",
-      "last_outcome": "source_unusable",
-      "last_error": "the page names Twilio Startups Program but states no amount, tier or rate we can read",
-      "failure_category": "source_unusable",
-      "consecutive_failures": 1,
+      "last_attempt_at": "2026-09-15",
+      "last_outcome": "fetch_failed",
+      "last_error": "page content too short (likely JS-rendered SPA); a rendering client read 264 characters",
+      "failure_category": "empty_page",
+      "consecutive_failures": 2,
       "last_success": null,
+      "last_read_at": null,
       "quarantined_since": null
     },
     {
@@ -15598,12 +15669,13 @@
     {
       "vendor": "UUID Generator",
       "url": "https://newuuid.com/",
-      "last_attempt_at": "2026-08-28",
-      "last_outcome": "source_unusable",
-      "last_error": "the page names UUID Generator but states no amount, tier or rate we can read",
-      "failure_category": "source_unusable",
-      "consecutive_failures": 1,
-      "last_success": null,
+      "last_attempt_at": "2026-09-15",
+      "last_outcome": "confirmed",
+      "last_error": null,
+      "failure_category": null,
+      "consecutive_failures": 0,
+      "last_success": "2026-09-15",
+      "last_read_at": "2026-09-15",
       "quarantined_since": null
     },
     {
@@ -16099,12 +16171,13 @@
     {
       "vendor": "Webflow",
       "url": "https://webflow.com",
-      "last_attempt_at": "2026-09-02",
+      "last_attempt_at": "2026-09-15",
       "last_outcome": "unclear",
-      "last_error": "The provided text does not contain information about the free tier or its specific limits. It primarily focuses on Webflow's platform features, AI capabilities, and customer success stories. There is no mention of the 2 pages, 20 CMS collections, 50 CMS items, 1 GB bandwidth/month, or 50 form submissions associated with the stored free tier information.",
+      "last_error": "The provided text does not contain specific details about a free tier with the limits described in the stored information (2 pages, 20 CMS collections, 50 CMS items, 1 GB bandwidth/month, 50 form submissions). The page broadly discusses Webflow's platform and features, including AI capabilities and various plans (Enterprise, AEO), but doesn't explicitly outline a free tier with those specific constraints. It mentions 'Start for free' buttons, but doesn't detail the limitations of that free offering.",
       "failure_category": "ai_undecided",
-      "consecutive_failures": 1,
+      "consecutive_failures": 2,
       "last_success": null,
+      "last_read_at": null,
       "quarantined_since": null
     },
     {
@@ -16590,12 +16663,13 @@
     {
       "vendor": "Zed",
       "url": "https://zed.dev/",
-      "last_attempt_at": "2026-08-28",
-      "last_outcome": "source_unusable",
-      "last_error": "the page names Zed but states no amount, tier or rate we can read",
-      "failure_category": "source_unusable",
-      "consecutive_failures": 1,
-      "last_success": null,
+      "last_attempt_at": "2026-09-15",
+      "last_outcome": "confirmed",
+      "last_error": null,
+      "failure_category": null,
+      "consecutive_failures": 0,
+      "last_success": "2026-09-15",
+      "last_read_at": "2026-09-15",
       "quarantined_since": null
     },
     {
