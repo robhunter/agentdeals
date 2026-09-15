@@ -1,6 +1,7 @@
 import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { dirname } from "node:path";
 import { AGENT_TRIGGERS, agentFamiliesByTrigger, agentTriggerForFamily, type AgentTrigger } from "./client-class.js";
+import { recordedQueryForm } from "./search-query.js";
 
 const startedAt = Date.now();
 const serverStartedISO = new Date(startedAt).toISOString();
@@ -478,6 +479,8 @@ function parseTelemetryData(data: Record<string, unknown>): void {
         if (typeof parsed.unfiltered_count !== "number" || !Number.isFinite(parsed.unfiltered_count)) {
           delete parsed.unfiltered_count;
         }
+        parsed.query = recordedQueryForm(parsed.query);
+        if (!parsed.query) continue;
         searchQueryLog.push(parsed);
       }
     }
@@ -2756,7 +2759,7 @@ export function recordSearchQuery(
 ): void {
   if (!query) return;
   if (context.userAgent && isBot(context.userAgent)) return;
-  const normalized = query.trim().toLowerCase();
+  const normalized = recordedQueryForm(query);
   if (!normalized) return;
   const filtered = context.filtered ?? false;
   const entry: SearchQueryEntry = {

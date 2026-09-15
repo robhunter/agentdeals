@@ -3,6 +3,7 @@ import { appendFileSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { hardcodedRowsCarryingASlug } from "./hardcoded-vendor-rows.ts";
+import { searchRecordingCalls } from "./search-recording-paths.ts";
 
 export const HEADROOM = 0.25;
 
@@ -139,6 +140,13 @@ export function rowsCarryingAVendorSlug(): Population {
   return {
     size: hardcodedRowsCarryingASlug().length,
     read: "hardcoded comparison rows in the page source carrying a vendor slug",
+  };
+}
+
+export function pathsThatRecordASearch(): Population {
+  return {
+    size: searchRecordingCalls().length,
+    read: "call sites in the server source that record a search query",
   };
 }
 
