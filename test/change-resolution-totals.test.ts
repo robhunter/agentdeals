@@ -8,6 +8,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { directionRatioLabel, RATIO_ROUNDING_TOLERANCE } from "../dist/change-direction.js";
 import { recordsStillInForce, isNoLongerInForce, resolutionTag } from "../dist/change-resolution.js";
+import { trackedChanges, isIndexHousekeeping } from "../dist/change-census.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(__dirname, "..");
@@ -315,10 +316,14 @@ describe("the population a page counts", () => {
     assert.ok(stated, "the report states no tracked-change total");
     assert.strictEqual(
       parseInt(stated![1]!.replace(/,/g, ""), 10),
-      recordsStillInForce(stored as never[]).length,
-      "the report counts a population other than the records still in force"
+      trackedChanges(stored as never[]).length,
+      "the report counts a population other than the one the published rule defines"
     );
-    assert.strictEqual(recordsStillInForce(stored as never[]).length, stored.length - resolved.length);
+    assert.strictEqual(
+      recordsStillInForce(stored as never[]).length - trackedChanges(stored as never[]).length,
+      stored.filter((c) => isIndexHousekeeping(c as never)).length,
+      "the gap between the two populations is not the index housekeeping the rule leaves out"
+    );
   });
 
   it("states a ratio the figures beside it support", async () => {

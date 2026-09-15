@@ -19,6 +19,7 @@ import { getGuideList, getGuideBySlug } from "./guides.js";
 import { registerMcpAppsResources, TOOL_UI_META } from "./mcp-apps.js";
 import { CATALOGUE_CATEGORY_COUNT, CATALOGUE_OFFER_FLOOR_LABEL, MCP_INSTRUCTIONS } from "./mcp-instructions.js";
 import { MCP_TOOLS } from "./mcp-tool-inventory.js";
+import { trackedChanges, TRACKED_CHANGE_NOUN, TRACKED_CHANGE_RULE_PATH } from "./change-census.js";
 import { PKG_VERSION } from "./package-version.js";
 import { substitutesFor } from "./product-role.js";
 import { publishedDateLine, storedConfirmationClause, verificationDatesClause } from "./read-date.js";
@@ -715,9 +716,13 @@ Suggested monitoring cadence: run this check weekly to catch pricing changes ear
       mimeType: "text/plain",
     },
     async () => {
-      const data = (await fetchDealChanges({ since: "2020-01-01" })) as { changes: Array<{ date: string; vendor: string; change_type: string; summary: string }> };
+      const data = (await fetchDealChanges({ since: "2020-01-01" })) as {
+        changes: Array<{ date: string; vendor: string; change_type: string; summary: string; current_state?: string }>;
+        change_census?: { tracked_pricing_changes?: number };
+      };
       const lines = data.changes.map(c => `- **${c.date}** | ${c.vendor} | ${c.change_type} | ${c.summary}`);
-      const text = `# AgentDeals Pricing Changes\n\n${data.changes.length} tracked changes.\n\n${lines.join("\n")}`;
+      const tracked = data.change_census?.tracked_pricing_changes ?? trackedChanges(data.changes).length;
+      const text = `# AgentDeals Pricing Changes\n\n${tracked} ${TRACKED_CHANGE_NOUN}, by the rule at ${TRACKED_CHANGE_RULE_PATH}. This list holds ${data.changes.length} entries: the tracked changes plus the ones a vendor reversed and our own index housekeeping.\n\n${lines.join("\n")}`;
       return { contents: [{ uri: "agentdeals://changes", text, mimeType: "text/plain" }] };
     }
   );

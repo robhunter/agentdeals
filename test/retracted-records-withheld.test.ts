@@ -39,6 +39,8 @@ interface ChangesResponse {
   returned: number;
   include_retracted: boolean;
   retracted_excluded: number;
+  all_time_total: number;
+  change_census: { retrievable_from_this_door: number; tracked_pricing_changes: number };
 }
 
 function startServer(changesPath?: string): Promise<{ proc: ChildProcess; port: number }> {
@@ -131,20 +133,28 @@ describe("a change record we have withdrawn reaches no caller who did not ask fo
     }
   });
 
-  it("reconciles the all-time figure it publishes with the window it publishes it beside", async () => {
+  it("reconciles what a caller could retrieve with the window it publishes it beside", async () => {
     for (const asked of [false, true]) {
       const answer = await changes(`include_retracted=${asked}`);
-      const allTime = (answer as unknown as { all_time_total: number }).all_time_total;
-      assert.strictEqual(allTime, answer.total,
-        `a caller asked include_retracted=${asked} and cannot reconcile all_time_total against the whole log`);
+      assert.strictEqual(answer.change_census.retrievable_from_this_door, answer.total,
+        `a caller asked include_retracted=${asked} and cannot reconcile what they could retrieve against the whole log`);
     }
     const withheld = await changes("include_retracted=false");
     const asked = await changes("include_retracted=true");
     assert.strictEqual(
-      (asked as unknown as { all_time_total: number }).all_time_total - (withheld as unknown as { all_time_total: number }).all_time_total,
+      asked.change_census.retrievable_from_this_door - withheld.change_census.retrievable_from_this_door,
       withheld.retracted_excluded,
-      "the gap between the two all-time figures is not the records we held back",
+      "the gap between the two retrievable figures is not the records we held back",
     );
+  });
+
+  it("does not move the published size of the change log when a caller asks for withdrawn records", async () => {
+    const withheld = await changes("include_retracted=false");
+    const asked = await changes("include_retracted=true");
+    assert.strictEqual(asked.all_time_total, withheld.all_time_total);
+    assert.strictEqual(asked.all_time_total, asked.change_census.tracked_pricing_changes);
+    assert.ok(asked.all_time_total < asked.change_census.retrievable_from_this_door,
+      "every record a caller can retrieve counts towards the published size, so the two figures say the same thing");
   });
 
   it("says on the developer page that the records are being held back", async () => {

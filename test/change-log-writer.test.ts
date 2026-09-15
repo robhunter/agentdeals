@@ -951,7 +951,7 @@ describe("change log freshness", () => {
 
 describe("the staleness alarm", () => {
   const freshnessAt = (detectedDaysAgo: number | null, recordedDaysAgo = 1) => ({
-    total: 289,
+    records_held: 289,
     last_recorded_date: "2026-08-01",
     days_since_last_recorded: recordedDaysAgo,
     last_detected_date: detectedDaysAgo === null ? null : "2026-08-01",
@@ -1232,7 +1232,7 @@ describe("reading the detector's schedule out of the workflow", () => {
 
   function freshnessNeverDetected() {
     return {
-      total: 289,
+      records_held: 289,
       last_recorded_date: "2026-08-01",
       days_since_last_recorded: 1,
       last_detected_date: null,
@@ -1352,7 +1352,7 @@ describe("the change log's age reaches the surfaces that publish freshness", () 
     const body = await res.json() as any;
     assert.notStrictEqual(body.change_log_freshness.days_since_last_recorded, body.all_time_total);
     assert.strictEqual(typeof body.all_time_total, "number");
-    assert.strictEqual(typeof body.change_log_freshness.total, "number");
+    assert.strictEqual(typeof body.change_log_freshness.records_held, "number");
   });
 
   it("puts the age on a personalized /api/changes response too", async () => {

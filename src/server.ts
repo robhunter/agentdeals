@@ -4,6 +4,7 @@ import { oldestVerifiedDateForSlug, getCategories, getDealChanges, getPersonaliz
 import { SINCE_DEFAULT_SENTENCE } from "./change-window.js";
 import { gateDisclosureFor } from "./gate-disclosure.js";
 import { standingOf, INCLUDE_RETRACTED_ACCEPTS } from "./change-resolution.js";
+import { changeCountPhrase, trackedChanges, TRACKED_CHANGE_RULE_PATH } from "./change-census.js";
 import { toSlug, vendorSlugMap, resolveVendorSlug } from "./vendor-slug.js";
 import { noLiveRecordUnderThatNameSentence } from "./retirement.js";
 import { recordToolCall, logRequest, recordSearchQuery } from "./stats.js";
@@ -856,7 +857,7 @@ Suggested monitoring cadence: run this check weekly to catch pricing changes ear
       const lines = sorted.map(c =>
         `- **${c.date}** | ${c.vendor} | ${c.change_type} | ${c.summary}`
       );
-      const text = `# AgentDeals Pricing Changes\n\n${changes.length} tracked changes.\n\n${lines.join("\n")}`;
+      const text = `# AgentDeals Pricing Changes\n\n${changeCountPhrase("tracked", changes)}, by the rule at ${TRACKED_CHANGE_RULE_PATH}. This list holds ${changes.length} entries: the tracked changes plus the records we have withdrawn, the ones a vendor reversed, and our own index housekeeping.\n\n${lines.join("\n")}`;
       return { contents: [{ uri: "agentdeals://changes", text, mimeType: "text/plain" }] };
     }
   );
