@@ -67,7 +67,7 @@ function startServer() {
   });
 }
 
-function changeLogOnFile(): { vendor: string; date: string }[] {
+function changeLogOnFile(): { vendor: string; date: string; resolution?: { state: string } | null }[] {
   return JSON.parse(
     fs.readFileSync(path.join(__dirname, "..", "data", "deal_changes.json"), "utf-8")
   ).changes;
@@ -86,10 +86,13 @@ describe("track_changes tool", () => {
     const since = "2024-01-01";
     const body = getDealChanges(since);
     const onFile = changeLogOnFile().filter((c) => c.date >= since);
+    const withdrawn = onFile.filter((c) => c.resolution?.state === "retracted");
 
     assert.ok(Array.isArray(body.changes));
     assert.strictEqual(body.total, body.changes.length);
-    assert.strictEqual(body.total, onFile.length);
+    assert.strictEqual(body.total, onFile.length - withdrawn.length);
+    assert.strictEqual(body.retracted_excluded, withdrawn.length);
+    assert.strictEqual(getDealChanges(since, undefined, undefined, undefined, undefined, { includeRetracted: true }).total, onFile.length);
     assertPopulationFloor(body.total, 201, "records in the change log");
     for (const c of body.changes) assert.ok(c.date >= since, `${c.vendor} predates the since date`);
   });

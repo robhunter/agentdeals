@@ -16,6 +16,8 @@ const SHAPE_KEYS = [
   "returned",
   "limit",
   "offset",
+  "include_retracted",
+  "retracted_excluded",
   "advisory",
   "summary",
   "date_provenance",
@@ -36,6 +38,7 @@ const QUERIES = [
   "?vendors=Slack,Exa",
   "?category=Databases",
   "?categories=Databases",
+  "?include_retracted=true",
   "?vendors=a-vendor-we-do-not-hold",
 ];
 
@@ -72,7 +75,7 @@ describe("/api/changes answers one shape and pages", () => {
   after(() => { proc?.kill("SIGKILL"); });
 
   it("covers a filter of every kind the route accepts", () => {
-    assert.strictEqual(QUERIES.length, 12);
+    assert.strictEqual(QUERIES.length, 13);
   });
 
   for (const query of QUERIES) {
@@ -186,6 +189,7 @@ describe("/api/changes answers one shape and pages", () => {
       categories: "Databases",
       limit: "2",
       offset: "3",
+      include_retracted: "true",
     };
     const baseline = (await get("")).body;
     const inert: string[] = [];
