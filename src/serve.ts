@@ -25,6 +25,7 @@ import { CATEGORY_ALIASES, CATEGORY_RETIREMENTS, EXAMPLE_MEMBERS_BASIS, buildCat
 import { retiredCategoryDescription, retiredCategoryNoticeHtml, retiredCategoryTitle } from "./category-retirement.js";
 import { LINK_GRACE_DAYS, unreachableNoticeForUrl } from "./link-health.js";
 import { offerEnded, offerRetired, recordedTierSentence, endedHeadline, endedHistorySentence, endedReliabilitySentence, endedEmptyChangeHistorySentence, detailForEndedOffer, ENDED_BADGE_LABEL, ENDED_SINCE_CHANGES_SENTENCE, type OfferTierAndUrl } from "./retirement.js";
+import { dropEndedFromNameList, endedIndex, endedRowStatement, markEndedVendorRows } from "./ended-surfaces.js";
 import { amountUnstatedSentence, freePriceConfirmedSentence, freePriceOnlySentence, LAST_RESOLVED, levelWithheldReason, levelWithheldSince, recordPublishesAQuantity, withheldLevelClause, withheldLevelSentence, type LevelWithheldReason } from "./source-check.js";
 import { offerVerdictInput, vendorVerdictContextFrom, type VendorVerdictContext } from "./vendor-verdict-input.js";
 import { readingIsBehindTheLoop, reverificationIntervalDays } from "./badge-staleness.js";
@@ -8025,6 +8026,10 @@ function buildTimelyAlternativesPage(slug: string): string | null {
   const config = alternativesPageMap.get(slug);
   if (!config) return null;
 
+  const ended = endedIndex(offers);
+  const metaDesc = dropEndedFromNameList(config.metaDesc, ended);
+  const serviceMatrixHtml = markEndedVendorRows(config.serviceMatrixHtml ?? "", ended);
+
   const riskColors: Record<string, string> = { stable: "#3fb950", caution: "#d29922", risky: "#f85149" };
 
   const primaryChange = dealChanges.find(c => c.vendor === config.primaryVendor);
@@ -8089,7 +8094,7 @@ function buildTimelyAlternativesPage(slug: string): string | null {
     "@type": "ItemList",
     itemListOrder: listOrderOf("as-catalogued"),
     name: config.title,
-    description: config.metaDesc,
+    description: metaDesc,
     numberOfItems: allAlts.length,
     itemListElement: allAlts.map((o, i) => ({
       "@type": "ListItem",
@@ -8120,10 +8125,10 @@ function buildTimelyAlternativesPage(slug: string): string | null {
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>${escHtmlServer(config.title)} — AgentDeals</title>
-<meta name="description" content="${escHtmlServer(config.metaDesc)}">
+<meta name="description" content="${escHtmlServer(metaDesc)}">
 <link rel="canonical" href="${BASE_URL}/${slug}">
 <meta property="og:title" content="${escHtmlServer(config.title)}">
-<meta property="og:description" content="${escHtmlServer(config.metaDesc)}">
+<meta property="og:description" content="${escHtmlServer(metaDesc)}">
 <meta property="og:type" content="website">
 <meta property="og:url" content="${BASE_URL}/${slug}">
 ${OG_IMAGE_META}${GOOGLE_VERIFICATION_META}<link rel="icon" type="image/png" href="/favicon.png">
@@ -8180,7 +8185,7 @@ ${mcpCtaCss()}
   <h2>Top Alternatives</h2>
 ${altCards}
 
-${config.serviceMatrixHtml ?? ""}
+${serviceMatrixHtml}
 
 ${categoryHtml}
 
@@ -10356,6 +10361,11 @@ function buildDatabaseAlternativesPage(): string {
   const enrichedAll = enrichOffers(dbOffers);
   const riskColors: Record<string, string> = { stable: "#3fb950", caution: "#d29922", risky: "#f85149" };
 
+  const momento = offerForSlug("momento");
+  const cachingAnswer = offerRetired(momento)
+    ? `<a href="/vendor/upstash">Upstash Redis</a> (256 MB, serverless). <a href="/vendor/momento">Momento</a> is recorded as ${escHtmlServer(momento!.tier)}, so it is no longer one of them. For managed Redis, <a href="/vendor/aiven">Aiven</a> offers free Valkey.`
+    : `<a href="/vendor/upstash">Upstash Redis</a> (256 MB, serverless) or <a href="/vendor/momento">Momento</a> (5 GB transfer/month). For managed Redis, <a href="/vendor/aiven">Aiven</a> offers free Valkey.`;
+
   const relational = enrichedAll.filter(o =>
     ["Supabase", "Neon", "CockroachDB", "Xata", "Aiven", "Nile", "Nhost", "Hasura Cloud"].includes(o.vendor)
   );
@@ -10654,7 +10664,7 @@ ${buildCards(timeSeries)}
       <dd><a href="/vendor/firebase">Firebase Firestore</a> (1 GiB, real-time sync) or <a href="/vendor/mongodb-atlas">MongoDB Atlas</a> (512 MB, most tutorials). For self-hosted, <a href="/vendor/pocketbase">PocketBase</a> is unlimited.</dd>
 
       <dt>Need caching or rate limiting?</dt>
-      <dd><a href="/vendor/upstash">Upstash Redis</a> (256 MB, serverless) or <a href="/vendor/momento">Momento</a> (5 GB transfer/month). For managed Redis, <a href="/vendor/aiven">Aiven</a> offers free Valkey.</dd>
+      <dd>${cachingAnswer}</dd>
 
       <dt>Building AI / RAG pipelines?</dt>
       <dd><a href="/vendor/upstash-vector">Upstash Vector</a> (10K vectors, serverless) or self-hosted <a href="/vendor/weaviate">Weaviate</a> / <a href="/vendor/lancedb">LanceDB</a> for no limits. <a href="/vendor/zilliz-cloud">Zilliz Cloud</a> for managed Milvus.</dd>
@@ -14282,6 +14292,22 @@ function buildFreeLlmApisPage(): string {
   const enrichedAll = enrichOffers(aiOffers);
   const riskColors: Record<string, string> = { stable: "#3fb950", caution: "#d29922", risky: "#f85149" };
 
+  const githubModels = offerForSlug("github-models");
+  const githubModelsEnded = offerRetired(githubModels);
+  const githubModelsStatus = escHtmlServer(githubModels?.tier ?? "not in our index");
+
+  const ledeClause = githubModelsEnded
+    ? `<strong>GitHub Models</strong> is recorded as ${githubModelsStatus} — GitHub ended it, so it is no longer a way to reach 100+ models for free.`
+    : "And <strong>GitHub Models</strong> provides 100+ models with generous daily limits.";
+
+  const summaryClause = githubModelsEnded
+    ? `GitHub Models is recorded as ${githubModelsStatus}, so the widest free selection it carried is no longer one of the options here.`
+    : "GitHub Models has the widest selection (100+ models).";
+
+  const manyModelsAnswer = githubModelsEnded
+    ? `<a href="/vendor/github-models">GitHub Models</a> is recorded as ${githubModelsStatus} and is no longer a second route to many models.`
+    : `<a href="/vendor/github-models">GitHub Models</a> for 100+ models with daily limits.`;
+
   const providerApis = enrichedAll.filter(o =>
     ["OpenAI", "Anthropic API", "Google Gemini API", "Mistral AI", "Cohere", "xAI"].includes(o.vendor)
   );
@@ -14343,7 +14369,7 @@ function buildFreeLlmApisPage(): string {
     })),
   };
 
-  return `<!DOCTYPE html>
+  return markEndedVendorRows(`<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
@@ -14405,7 +14431,7 @@ ${mcpCtaCss()}
   <h1>Best Free LLM APIs for Developers</h1>
 
   <div class="context">
-    <p>Free LLM API access has never been better. <strong>Groq</strong> delivers Llama 3.3 70B at ~30 RPM on custom LPU hardware \u2014 the fastest free inference available. <strong>Cerebras</strong> offers <strong>1M tokens/day</strong> free. <strong>Mistral</strong> gives access to all models including Large and Codestral at 1B tokens/month. <strong>OpenRouter</strong> aggregates ~30 free models through one OpenAI-compatible API. And <strong>GitHub Models</strong> provides 100+ models with generous daily limits.</p>
+    <p>Free LLM API access has never been better. <strong>Groq</strong> delivers Llama 3.3 70B at ~30 RPM on custom LPU hardware \u2014 the fastest free inference available. <strong>Cerebras</strong> offers <strong>1M tokens/day</strong> free. <strong>Mistral</strong> gives access to all models including Large and Codestral at 1B tokens/month. <strong>OpenRouter</strong> aggregates ~30 free models through one OpenAI-compatible API. ${ledeClause}</p>
     <p>This page compares <strong>${allLlmOffers.length} free LLM API providers</strong> \u2014 from proprietary model APIs (OpenAI, Anthropic, Gemini) to open-model inference platforms (Groq, Cerebras, NVIDIA NIM) and AI gateways (OpenRouter, Portkey). The rate limit comparison table below has the data developers actually need when choosing a provider.</p>
   </div>
 
@@ -14537,7 +14563,7 @@ ${buildCards(aiGateways)}
     </tbody>
   </table>
   </div>
-  <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">Groq and Cerebras lead on free inference \u2014 Groq for speed (custom LPU silicon), Cerebras for daily token volume (1M/day). Mistral offers the broadest model access on free tier (all models, 1B tokens/month at 2 RPM). OpenRouter is ideal if you want one API key for ~30 free models. GitHub Models has the widest selection (100+ models). For proprietary frontier models, most providers are pay-as-you-go with signup credits rather than ongoing free tiers. [[freshness]]</p>
+  <p style="color:var(--text-dim);font-size:.8rem;margin-top:.5rem">Groq and Cerebras lead on free inference \u2014 Groq for speed (custom LPU silicon), Cerebras for daily token volume (1M/day). Mistral offers the broadest model access on free tier (all models, 1B tokens/month at 2 RPM). OpenRouter is ideal if you want one API key for ~30 free models. ${summaryClause} For proprietary frontier models, most providers are pay-as-you-go with signup credits rather than ongoing free tiers. [[freshness]]</p>
 
   <h2>Which Free LLM API Should I Use?</h2>
   <div class="decision-guide">
@@ -14549,7 +14575,7 @@ ${buildCards(aiGateways)}
       <dd><a href="/vendor/cerebras">Cerebras</a> \u2014 1M tokens/day free, ideal for batch processing. <a href="/vendor/mistral-ai">Mistral AI</a> \u2014 1B tokens/month free across all models including Large and Codestral.</dd>
 
       <dt>Want one API key for many models?</dt>
-      <dd><a href="/vendor/openrouter">OpenRouter</a> \u2014 ~30 free models (DeepSeek R1, Llama 3.3, Qwen3, Gemma 3) through one OpenAI-compatible API, ~20 RPM per model. <a href="/vendor/github-models">GitHub Models</a> for 100+ models with daily limits.</dd>
+      <dd><a href="/vendor/openrouter">OpenRouter</a> \u2014 ~30 free models (DeepSeek R1, Llama 3.3, Qwen3, Gemma 3) through one OpenAI-compatible API, ~20 RPM per model. ${manyModelsAnswer}</dd>
 
       <dt>Need a long context window?</dt>
       <dd><a href="/vendor/google-gemini-api">Google Gemini API</a> \u2014 1M token context window on Flash models. Free tier at 10\u201315 RPM (reduced from 2025 levels).</dd>
@@ -14579,7 +14605,7 @@ ${buildCards(aiGateways)}
 </div>
 <script>${mcpCtaScript()}</script>
 </body>
-</html>`;
+</html>`, endedIndex(offers));
 }
 
 function buildApiDevelopmentAlternativesPage(): string {
@@ -19696,7 +19722,7 @@ function buildGoogleDeveloperProgram2026Page(): string {
     },
   };
 
-  return `<!DOCTYPE html>
+  return markEndedVendorRows(`<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
@@ -20004,7 +20030,7 @@ ${mcpCtaCss()}
 </div>
 <script>${mcpCtaScript()}</script>
 </body>
-</html>`;
+</html>`, endedIndex(offers));
 }
 
 function buildSupabaseVsFirebasePage(): string {
