@@ -744,7 +744,8 @@ describe("HTTP transport", () => {
     assert.ok(body.all_time_total >= body.total, "all_time_total should be >= 30-day total");
     const allResp = await fetch(`http://localhost:${serverPort}/api/changes?since=2000-01-01`);
     const allBody = await allResp.json() as any;
-    assert.strictEqual(body.all_time_total, allBody.total, "all_time_total should match since=2000 total");
+    assert.strictEqual(body.change_census.retrievable_from_this_door, allBody.total, "the retrievable figure should match the since=2000 total");
+    assert.strictEqual(body.all_time_total, body.change_census.tracked_pricing_changes, "all_time_total should be the published size of the change log");
   });
 
   it("GET /api/changes filters by since, type, and vendor", async () => {
@@ -1832,7 +1833,7 @@ describe("HTTP transport", () => {
     assert.ok(html.includes("global-nav"), "Should have global nav");
     assert.ok(html.includes("feed.xml"), "Should link to RSS feed");
     assert.ok(!html.includes("${BASE_URL}"), "Should not have unresolved BASE_URL");
-    assert.ok(html.includes("Total (All Time)"), "Should show all-time stat label");
+    assert.ok(html.includes("Tracked Changes"), "Should show the tracked-change stat label");
     assert.ok(html.includes("Last 30 Days"), "Should show 30-day stat label");
     assert.ok(/tracked since launch.*in the last 30 days/.test(html), "Meta description should cite both all-time and 30-day counts");
   });

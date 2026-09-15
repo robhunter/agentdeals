@@ -23488,7 +23488,7 @@ ${mcpCtaCss()}
 
   <div class="executive-summary">
     <p><strong>The question developers should ask isn't "what's free?" — it's "what will still be free in a year?"</strong></p>
-    <p>We track ${changeCountPhrase("tracked", changesInForce)} across the developer tool ecosystem. The data shows a clear pattern: <strong>${negativeChanges.length} negative changes</strong> (free tier removals, limit reductions, restrictions) vs <strong>${positiveChanges.length} positive changes</strong> (expansions, new tiers). Free tier erosion is real, but not universal — some vendors are actively expanding.</p>
+    <p>We track ${trackedChanges(changesInForce).length} pricing changes across the developer tool ecosystem, by the rule at <a href="${TRACKED_CHANGE_RULE_PATH}">what counts as a change</a>. The data shows a clear pattern: <strong>${negativeChanges.length} negative changes</strong> (free tier removals, limit reductions, restrictions) vs <strong>${positiveChanges.length} positive changes</strong> (expansions, new tiers). Free tier erosion is real, but not universal — some vendors are actively expanding.</p>
     <p>This index scores ${riskEntries.length} major developer tools by free tier sustainability, using our deal change data, company financial signals, and competitive dynamics. <strong>Build on the greens, watch the yellows, plan exits from the reds.</strong></p>
     <p>The grades are editorial. ${gradingDates}, and each row below carries the date its own grade was set. They do not move on their own, so <a href="#scorecard">section 6 scores them</a> against every change we have tracked since — band by band, with the vendors that took nothing left in the denominator.</p>
   </div>
