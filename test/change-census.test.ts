@@ -39,6 +39,9 @@ const SURFACES_THAT_PUBLISH_A_TOTAL = [
   "/state-of-free-tiers",
   "/free-tier-risk",
   "/trends",
+  "/trends/startup-perks",
+  "/free-tier-tracker",
+  "/digest/archive",
   "/vendor/vercel",
   "/q1-2026-developer-pricing-report",
 ];
@@ -46,28 +49,49 @@ const SURFACES_THAT_PUBLISH_A_TOTAL = [
 const QUALIFIERS = "(?:[a-z]+\\s+){0,3}";
 
 const TRACKED_NOUN_PATTERNS = [
-  new RegExp(`([\\d,]+)\\s+${QUALIFIERS}tracked ${QUALIFIERS}pricing changes`, "gi"),
-  new RegExp(`([\\d,]+)\\s+${QUALIFIERS}pricing changes tracked`, "gi"),
-  new RegExp(`track\\s+([\\d,]+)\\s+${QUALIFIERS}pricing changes`, "gi"),
-  new RegExp(`<strong>([\\d,]+)</strong>\\s+(?:<a[^>]*>)?tracked pricing changes`, "gi"),
+  new RegExp(`([\\d,]+)\\+?\\s+${QUALIFIERS}tracked ${QUALIFIERS}changes`, "gi"),
+  new RegExp(`([\\d,]+)\\+?\\s+${QUALIFIERS}changes tracked`, "gi"),
+  new RegExp(`track\\s+([\\d,]+)\\+?\\s+${QUALIFIERS}pricing changes`, "gi"),
 ];
 
 const NAMES_A_WINDOW =
-  /Q[1-4]\s*20\d\d|\b20\d\d\s*[–—-]\s*20\d\d|last\s+\d+\s+days|this week|during\b|\bin\s+(?:January|February|March|April|May|June|July|August|September|October|November|December)\b/i;
+  /Q[1-4]\s*20\d\d|\b20\d\d\s*[–—-]\s*20\d\d|last\s+\d+\s+days|this week|during\b|between\b|\bin\s+(?:week\s+\d+|20\d\d)\b|\bin\s+(?:January|February|March|April|May|June|July|August|September|October|November|December)\b/i;
 
-const SENTENCE_BREAK = /[.!?;:]\s|[–—]\s|<\/?[a-z]/i;
+const COUNTS_SOMETHING_ELSE = /\bof\b/i;
 
-function sentenceAround(body: string, index: number): string {
-  const before = body.slice(Math.max(0, index - 200), index);
-  const after = body.slice(index, index + 200);
-  const breaks = [...before.matchAll(new RegExp(SENTENCE_BREAK, "gi"))];
-  const start = breaks.length > 0 ? breaks[breaks.length - 1].index! + breaks[breaks.length - 1][0].length : 0;
-  const end = after.search(new RegExp(SENTENCE_BREAK, "i"));
-  return before.slice(start) + (end === -1 ? after : after.slice(0, end));
+const SENTENCE_BREAK = /[.!?;:]\s|\s[–—]\s/;
+
+const BLOCK_CLOSE = /<\/(?:div|p|li|tr|section|article|blockquote|h[1-6])>/gi;
+
+function visibleText(body: string): string {
+  return body
+    .replace(/<script[\s\S]*?<\/script>/gi, " ")
+    .replace(/<style[\s\S]*?<\/style>/gi, " ")
+    .replace(/<\/div>\s*<div class="stat-label"/gi, ' <span class="stat-label"')
+    .replace(BLOCK_CLOSE, ". ")
+    .replace(/<[^>]+>/g, " ")
+    .replace(/&mdash;/g, "—")
+    .replace(/&ndash;/g, "–")
+    .replace(/&rarr;/g, "→")
+    .replace(/&nbsp;|&#xa0;/g, " ")
+    .replace(/&#39;|&rsquo;/g, "'")
+    .replace(/&quot;/g, '"')
+    .replace(/&amp;/g, "&")
+    .replace(/&[a-z]+;|&#x?[0-9a-f]+;/gi, " ")
+    .replace(/\s+/g, " ");
 }
 
-function claimsTheWholeLog(body: string, index: number): boolean {
-  return !NAMES_A_WINDOW.test(sentenceAround(body, index));
+function sentenceAround(text: string, index: number): string {
+  const before = text.slice(Math.max(0, index - 300), index);
+  const after = text.slice(index, index + 300);
+  const breaks = [...before.matchAll(new RegExp(SENTENCE_BREAK, "g"))];
+  const start = breaks.length > 0 ? breaks[breaks.length - 1].index! + breaks[breaks.length - 1][0].length : 0;
+  const end = after.search(new RegExp(SENTENCE_BREAK));
+  return (before.slice(start) + (end === -1 ? after : after.slice(0, end))).trim();
+}
+
+function claimsTheWholeLog(text: string, index: number): boolean {
+  return !NAMES_A_WINDOW.test(sentenceAround(text, index));
 }
 
 describe("the change census separates four totals and names each", () => {
@@ -144,13 +168,14 @@ describe("every published total is the tracked count or names the slice it is", 
     const wrong: string[] = [];
     let seen = 0;
     for (const route of SURFACES_THAT_PUBLISH_A_TOTAL) {
-      const body = await get(route);
+      const text = visibleText(await get(route));
       for (const pattern of TRACKED_NOUN_PATTERNS) {
         pattern.lastIndex = 0;
-        for (const match of body.matchAll(pattern)) {
+        for (const match of text.matchAll(pattern)) {
           const published = Number(match[1].replace(/,/g, ""));
           if (published < 40) continue;
-          if (!claimsTheWholeLog(body, match.index ?? 0)) continue;
+          if (COUNTS_SOMETHING_ELSE.test(match[0])) continue;
+          if (!claimsTheWholeLog(text, match.index ?? 0)) continue;
           seen++;
           if (published !== trackedCount) wrong.push(`${route}: ${match[0].slice(0, 70)}`);
         }
@@ -160,16 +185,33 @@ describe("every published total is the tracked count or names the slice it is", 
     assert.deepStrictEqual(wrong, []);
   });
 
+  it("reads a stat tile as one sentence, and does not read the tile beside it as part of the same one", () => {
+    const inForce = sliceById("in_force");
+    const superseded = inForce.of(dealChanges).length;
+    const bar = `<div class="stats-bar">
+      <div class="stat-card"><div class="stat-value">${trackedCount}</div><div class="stat-label">Tracked Changes</div></div>
+      <div class="stat-card"><div class="stat-value">${superseded}</div><div class="stat-label">Total Changes</div></div>
+    </div>
+    <p>Our log holds ${superseded} ${inForce.noun}.</p>`;
+    const text = visibleText(bar);
+    const sentence = sentenceAround(text, text.indexOf(String(superseded)));
+    assert.match(sentence, /Total Changes/, "the tile's value and its label do not land in one sentence");
+    assert.ok(
+      !sentence.includes(inForce.noun),
+      `the tile's sentence reached a naming sentence elsewhere on the page: "${sentence}"`,
+    );
+  });
+
   it("names the slice in the same sentence wherever it publishes a figure that is not the tracked count", async () => {
     const superseded = CHANGE_SLICES.filter((s: any) => s.id !== "tracked")
       .map((s: any) => ({ noun: s.noun, id: s.id, count: s.of(dealChanges).length }));
     const unnamed: string[] = [];
     let examined = 0;
     for (const route of SURFACES_THAT_PUBLISH_A_TOTAL) {
-      const body = await get(route);
+      const text = visibleText(await get(route));
       for (const slice of superseded) {
-        for (const match of body.matchAll(new RegExp(`(?<![\\d.,$/-])${slice.count}(?![\\d.,%/-])`, "g"))) {
-          const sentence = sentenceAround(body, match.index ?? 0);
+        for (const match of text.matchAll(new RegExp(`(?<![\\w.,$/-])${slice.count}(?![\\w.,%/-])`, "g"))) {
+          const sentence = sentenceAround(text, match.index ?? 0);
           if (!/\bchange|\brecord|\btrack/i.test(sentence)) continue;
           examined++;
           if (!sentence.includes(slice.noun)) unnamed.push(`${route}: ${slice.count} (${slice.id}) in "${sentence.trim().slice(0, 90)}"`);
@@ -188,6 +230,26 @@ describe("every published total is the tracked count or names the slice it is", 
       assert.ok(body.includes(slice.noun), `/changes never names the ${slice.id} slice`);
       assert.ok(body.includes(`<strong>${count}</strong>`), `/changes publishes no count for ${slice.id}`);
     }
+  });
+
+  it("lists on /changes as many entries as it says it lists, and names that slice", async () => {
+    const body = await get("/changes");
+    const rendered = (body.match(/<div class="chg-entry/g) ?? []).length;
+    const held = sliceById("held");
+    const heldCount = held.of(dealChanges).length;
+    assertPopulationFloor(rendered, 400, "entries rendered on /changes");
+    assert.strictEqual(rendered, heldCount, "/changes renders a number of entries the census does not name");
+
+    const claim = visibleText(body).match(new RegExp(`This timeline lists all ([\\d,]+) ${held.noun}`));
+    assert.ok(claim, "/changes makes no claim about how many entries it lists");
+    assert.strictEqual(Number(claim![1].replace(/,/g, "")), rendered);
+
+    const listNode = [...body.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)]
+      .map((m) => JSON.parse(m[1]))
+      .find((node: any) => node["@type"] === "ItemList");
+    assert.ok(listNode, "/changes carries no ItemList node");
+    assert.strictEqual(listNode.numberOfItems, rendered);
+    assert.ok(listNode.description.includes(`${rendered.toLocaleString("en-US")} ${held.noun}`), listNode.description);
   });
 
   it("carries the census on /api/changes with all_time_total equal to the tracked count", async () => {
@@ -244,9 +306,25 @@ describe("every published total is the tracked count or names the slice it is", 
     const undated = partitionByDateProvenance(dealChanges).discovered.length;
     assertPopulationFloor(undated, 200, "records whose effective date is unknown");
     assert.ok(
-      body.includes(`Effective date unknown (${undated} changes)`),
-      `/changes does not publish the undated group at ${undated}`,
+      body.includes(`Effective date unknown (${undated} changes, of ${dealChanges.length.toLocaleString("en-US")} ${sliceById("held").noun})`),
+      `/changes does not publish the undated group at ${undated} over the held slice`,
     );
+  });
+
+  it("counts the undated tile over the population its own stat bar headlines", async () => {
+    const undatedTracked = partitionByDateProvenance(trackedChanges(dealChanges)).discovered.length;
+    const undatedHeld = partitionByDateProvenance(dealChanges).discovered.length;
+    assert.notStrictEqual(undatedTracked, undatedHeld, "the two populations agree, so the check proves nothing");
+    for (const route of ["/changes", "/pricing-changes"]) {
+      const body = await get(route);
+      const tile = body.match(/<div class="stat-value">(\d+)<\/div>\s*<div class="stat-label">Effective Date Unknown<\/div>/);
+      assert.ok(tile, `${route} renders no undated tile`);
+      assert.strictEqual(
+        Number(tile![1]),
+        undatedTracked,
+        `${route} counts its undated tile over a population its headline tile does not use`,
+      );
+    }
   });
 
   it("states one Q1 figure in prose and in both JSON-LD nodes", async () => {

@@ -150,8 +150,8 @@ describe("what a record we no longer stand behind is counted in", () => {
     { route: "/reports", figure: "the archive subtitle", pattern: /across (\d[\d,]*) tracked changes/ },
     {
       route: "/pricing-changes",
-      figure: "the Total Changes tile",
-      pattern: /class="stat-value">(\d[\d,]*)<\/div>\s*<div class="stat-label">Total Changes/,
+      figure: "the Tracked Changes tile",
+      pattern: /class="stat-value">(\d[\d,]*)<\/div>\s*<div class="stat-label"><a[^>]*>Tracked Changes/,
     },
     {
       route: "/changes",

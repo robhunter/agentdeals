@@ -469,10 +469,10 @@ describe("every weekly surface reports the same week", () => {
     const digest = await digestForWeekStarting(ARCHIVED_BATCH_WEEK);
     assert.ok(digest.discovered_in_week > 0, "the archived week under test should hold a discovery batch");
     const week = await (await fetch(`${base}/digest/${ARCHIVED_BATCH_SLUG}`)).text();
-    assert.ok(week.includes(`${changeCount(digest.changes_in_week)} tracked.`), "the archived week should count its dated changes");
+    assert.ok(week.includes(`${changeCount(digest.changes_in_week)} tracked in week`), "the archived week should count its dated changes");
     assert.ok(week.includes(firstReadHeading(digest.discovered_in_week)), "the archived week should name its discovery batch");
     assert.ok(
-      !week.includes(`${changeCount(digest.changes_in_week + digest.discovered_in_week)} tracked.`),
+      !week.includes(`${changeCount(digest.changes_in_week + digest.discovered_in_week)} tracked in week`),
       "the archived week should not count the batch as changes"
     );
   });
@@ -521,7 +521,7 @@ describe("every weekly surface reports the same week", () => {
     proc = await startHttpServer();
     const base = `http://127.0.0.1:${serverPort}`;
     const week = await (await fetch(`${base}/digest/2026-w34`)).text();
-    assert.ok(week.includes("1 change tracked."), "week 34 should count one change");
+    assert.ok(week.includes("1 change tracked in week 34, 2026."), "week 34 should count one change");
     assert.ok(!week.includes("read for the first time"), "week 34 has no discovery batch to report");
   });
 });
