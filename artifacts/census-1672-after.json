@@ -1,0 +1,30 @@
+{
+  "base": "http://127.0.0.1:8792",
+  "ended_offers": 17,
+  "ended_vendors": [
+    "Momento",
+    "Supportivekoala",
+    "Oaysus",
+    "QRME.SH",
+    "BackgroundStyler.com",
+    "Instabug for Startups",
+    "Freshworks for Startups",
+    "Startup with IBM",
+    "Heroku for Startups Program",
+    "Twilio Startups Program",
+    "The GoSquared Early Stage Plan",
+    "Drift for Early Stage Startups",
+    "FeedBear",
+    "Ninja Outreach",
+    "Augment Code",
+    "GitHub Models",
+    "Google Content API for Shopping"
+  ],
+  "routes": 630,
+  "served": 630,
+  "unserved": [],
+  "findings_total": 0,
+  "findings_on_non_templated": 0,
+  "by_path": {},
+  "findings": []
+}

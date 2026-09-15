@@ -1,0 +1,133 @@
+{
+  "base": "http://127.0.0.1:8791",
+  "ended_offers": 17,
+  "ended_vendors": [
+    "Momento",
+    "Supportivekoala",
+    "Oaysus",
+    "QRME.SH",
+    "BackgroundStyler.com",
+    "Instabug for Startups",
+    "Freshworks for Startups",
+    "Startup with IBM",
+    "Heroku for Startups Program",
+    "Twilio Startups Program",
+    "The GoSquared Early Stage Plan",
+    "Drift for Early Stage Startups",
+    "FeedBear",
+    "Ninja Outreach",
+    "Augment Code",
+    "GitHub Models",
+    "Google Content API for Shopping"
+  ],
+  "routes": 630,
+  "served": 630,
+  "unserved": [],
+  "findings_total": 12,
+  "findings_on_non_templated": 12,
+  "by_path": {
+    "/free-llm-apis": 4,
+    "/cursor-alternatives": 3,
+    "/redis-alternatives": 3,
+    "/database-alternatives": 1,
+    "/google-developer-program-2026": 1
+  },
+  "findings": [
+    {
+      "path": "/cursor-alternatives",
+      "templated": false,
+      "vendor": "Augment Code",
+      "where": "meta description",
+      "unit": "Compare free AI coding alternatives: Claude Code, GitHub Copilot, Cline, Aider, Windsurf, Augment Code, Amazon Q Developer, Gemini CLI.",
+      "reason": "names a free tier"
+    },
+    {
+      "path": "/cursor-alternatives",
+      "templated": false,
+      "vendor": "Augment Code",
+      "where": "<p>",
+      "unit": "Compare free AI coding alternatives: Claude Code, GitHub Copilot, Cline, Aider, Windsurf, Augment Code, Amazon Q Developer, Gemini CLI.",
+      "reason": "names a free tier"
+    },
+    {
+      "path": "/cursor-alternatives",
+      "templated": false,
+      "vendor": "Augment Code",
+      "where": "<tr>",
+      "unit": "Augment Code Free for individuals (limited) IDE extension — Deep codebase understanding — large repo context",
+      "reason": "names a free tier"
+    },
+    {
+      "path": "/database-alternatives",
+      "templated": false,
+      "vendor": "Momento",
+      "where": "<dd>",
+      "unit": "Upstash Redis (256 MB, serverless) or Momento (5 GB transfer/month).",
+      "reason": "states an allowance"
+    },
+    {
+      "path": "/free-llm-apis",
+      "templated": false,
+      "vendor": "GitHub Models",
+      "where": "<p>",
+      "unit": "And GitHub Models provides 100+ models with generous daily limits.",
+      "reason": "names a free tier"
+    },
+    {
+      "path": "/free-llm-apis",
+      "templated": false,
+      "vendor": "GitHub Models",
+      "where": "<tr>",
+      "unit": "GitHub Models Inference 10–15 RPM 50–150 req/day 100+ models, GPT-4o, Llama Widest model selection free",
+      "reason": "names a free tier"
+    },
+    {
+      "path": "/free-llm-apis",
+      "templated": false,
+      "vendor": "GitHub Models",
+      "where": "<p>",
+      "unit": "GitHub Models has the widest selection (100+ models).",
+      "reason": "states an allowance"
+    },
+    {
+      "path": "/free-llm-apis",
+      "templated": false,
+      "vendor": "GitHub Models",
+      "where": "<dd>",
+      "unit": "GitHub Models for 100+ models with daily limits.",
+      "reason": "states an allowance"
+    },
+    {
+      "path": "/google-developer-program-2026",
+      "templated": false,
+      "vendor": "GitHub Models",
+      "where": "<tr>",
+      "unit": "GitHub Models Free for GitHub users GPT-4o, Llama, Phi, Mistral",
+      "reason": "names a free tier"
+    },
+    {
+      "path": "/redis-alternatives",
+      "templated": false,
+      "vendor": "Momento",
+      "where": "meta description",
+      "unit": "Compare free alternatives: Upstash, Valkey, DragonflyDB, KeyDB, Momento, Garnet, Memcached, Aiven.",
+      "reason": "names a free tier"
+    },
+    {
+      "path": "/redis-alternatives",
+      "templated": false,
+      "vendor": "Momento",
+      "where": "<p>",
+      "unit": "Compare free alternatives: Upstash, Valkey, DragonflyDB, KeyDB, Momento, Garnet, Memcached, Aiven.",
+      "reason": "names a free tier"
+    },
+    {
+      "path": "/redis-alternatives",
+      "templated": false,
+      "vendor": "Momento",
+      "where": "<tr>",
+      "unit": "Momento 5 GB transfer/mo No No Managed Zero-config serverless caching + pub/sub",
+      "reason": "states an allowance"
+    }
+  ]
+}

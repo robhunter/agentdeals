@@ -1,15 +1,23 @@
 import type { Offer } from "./types.js";
 
-const RETIRED_TIER = /\b(?:retired|deprecated|discontinued|sunset|withdrawn)\b/i;
+const RETIRED_TIER = /\b(retired|deprecated|discontinued|sunset|withdrawn)\b/i;
 
 export const ENDED_TIERS = ["Retired", "Discontinued", "Sunset", "Withdrawn"] as const;
 
 const ENDED_TIER_SET = new Set<string>(ENDED_TIERS.map(t => t.toLowerCase()));
 
+export const ENDED_STATUS_WHEN_THE_TIER_NAMES_NONE = "Ended";
+
 export type OfferTierAndUrl = Pick<Offer, "tier" | "url">;
 
 export function offerRetired(offer: Pick<Offer, "tier"> | null | undefined): boolean {
   return RETIRED_TIER.test(offer?.tier ?? "");
+}
+
+export function endedStatusWord(tier: string): string {
+  const named = RETIRED_TIER.exec(tier)?.[1];
+  if (!named) return ENDED_STATUS_WHEN_THE_TIER_NAMES_NONE;
+  return named[0].toUpperCase() + named.slice(1).toLowerCase();
 }
 
 export function offerEnded(offer: Pick<Offer, "tier"> | null | undefined): boolean {
