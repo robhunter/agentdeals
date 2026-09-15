@@ -51,6 +51,12 @@ arm "let a withdrawn record be offered as worth knowing, defeating both guards o
 arm "leave the standing optional in the spec" \
   perl -0pi -e 's/            required: \["standing"\]/            required: []/' src/openapi.ts
 
+arm "publish an all-time figure counting what is withheld" \
+  perl -0pi -e 's/const allTimeTotal = \(includeRetracted \? loadDealChanges\(\) : recordsWeStandBehind\(loadDealChanges\(\)\)\)\.length;/const allTimeTotal = loadDealChanges().length;/' src/serve.ts
+
+arm "drop the paragraph telling the developer page reader records are held back" \
+  perl -ni -e 'print unless /Records we have withdrawn as our own error are not served here/' src/serve.ts
+
 restore
 npm run build >/dev/null 2>&1
 echo "--- restored ---"
