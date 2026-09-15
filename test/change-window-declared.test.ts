@@ -5,6 +5,7 @@ import { writeFileSync, mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { assertPopulationFloor } from "./population-floor.ts";
 import { getDealChanges } from "../dist/data.js";
 import { servedWindowOpens, DEFAULT_CHANGE_WINDOW_DAYS } from "../dist/change-window.js";
 
@@ -226,7 +227,7 @@ describe("no vendor we hold a change record for is hidden from a filter by its a
   it("answers every vendor in the log when asked for it by name", () => {
     const everything = getDealChanges("2020-01-01");
     const vendors = [...new Set(everything.changes.map((c) => c.vendor))];
-    assert.ok(vendors.length > 100, `the log carries ${vendors.length} vendors, too few for this to mean anything`);
+    assertPopulationFloor(vendors.length, 100, "vendors the change log names, over which this walk runs");
 
     const outsideTheWindow = vendors.filter((v) =>
       everything.changes.filter((c) => c.vendor === v).every((c) => c.date < servedWindowOpens()),

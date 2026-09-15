@@ -36,7 +36,7 @@ export function windowFromSinceParameter(from: string): ChangeWindow {
   };
 }
 
-export function defaultChangeWindow(nowMs: number = Date.now()): ChangeWindow {
+export function defaultChangeWindow(nowMs: number = Date.now()): ChangeWindow & { from: string } {
   const from = servedWindowOpens(nowMs);
   return {
     applied: true,

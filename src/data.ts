@@ -781,9 +781,9 @@ export function getDealChanges(
   } else if (namesWhatItWants) {
     date_window = wholeChangeLog();
   } else {
-    const windowStart = servedWindowOpens();
-    results = results.filter((c) => c.date >= windowStart);
-    date_window = defaultChangeWindow();
+    const applied = defaultChangeWindow();
+    results = results.filter((c) => c.date >= applied.from);
+    date_window = applied;
   }
 
   if (changeType) {
