@@ -37,6 +37,12 @@ import { findRenderer } from "./rendered-page.js";
 import { isoDay } from "./change-log.js";
 import { recordRefusals, readRefusals, refusalHolds, offerKey } from "./change-refusals.js";
 import {
+  deferralMs,
+  oneTurnOfTheQueue,
+  queueOrderLines,
+  readAnsweredWithNothing,
+} from "./queue-order.js";
+import {
   CORROBORATION_EXPIRY_DAYS,
   heldReadingLines,
   mergeHeld,
@@ -117,6 +123,7 @@ export function pickOldestEntries(offers, limit, now = new Date(), options = {})
       offer,
       record,
       ts,
+      deferred: readAnsweredWithNothing(offer),
       readFailed: lastReadFailed(record),
       awaitingCorroboration: awaiting.has(key),
     };
@@ -125,7 +132,16 @@ export function pickOldestEntries(offers, limit, now = new Date(), options = {})
     Number(b.awaitingCorroboration) - Number(a.awaitingCorroboration) ||
     a.ts - b.ts ||
     Number(b.readFailed) - Number(a.readFailed);
-  const active = entries.filter((entry) => !isQuarantined(entry.record)).sort(byAge);
+  const liveQueueLength = entries.filter(
+    (entry) => !isQuarantined(entry.record) && !entry.awaitingCorroboration
+  ).length;
+  const turnDays = oneTurnOfTheQueue(liveQueueLength, limit);
+  const drawAge = (entry) => entry.ts + (entry.deferred ? deferralMs(turnDays) : 0);
+  const byDrawAge = (a, b) =>
+    Number(b.awaitingCorroboration) - Number(a.awaitingCorroboration) ||
+    drawAge(a) - drawAge(b) ||
+    Number(b.readFailed) - Number(a.readFailed);
+  const active = entries.filter((entry) => !isQuarantined(entry.record)).sort(byDrawAge);
   const queue = active.filter((entry) => !entry.awaitingCorroboration);
   const dueRetries = entries
     .filter((entry) => isQuarantined(entry.record) && quarantineRetryDue(entry.record, today))
@@ -137,7 +153,7 @@ export function pickOldestEntries(offers, limit, now = new Date(), options = {})
   const extraRetries = spare > 0 ? dueRetries.slice(retries.length, retries.length + spare) : [];
   const secondReadings = active.filter((entry) => entry.awaitingCorroboration).slice(0, limit);
 
-  const drawn = [...retries, ...extraRetries, ...fromQueue, ...secondReadings].sort(byAge);
+  const drawn = [...retries, ...extraRetries, ...fromQueue, ...secondReadings].sort(byDrawAge);
   const picked = drawn.map(({ index, offer }) => ({ index, offer }));
   const remaining = queue.slice(fromQueue.length);
   const oldestRemaining = remaining.length > 0
@@ -152,6 +168,9 @@ export function pickOldestEntries(offers, limit, now = new Date(), options = {})
     retriedFromQuarantine: retries.length + extraRetries.length,
     quarantineDue: dueRetries.length,
     quarantineHeld: entries.filter((entry) => isQuarantined(entry.record)).length,
+    deferredATurn: queue.filter((entry) => entry.deferred).length,
+    liveQueueLength,
+    turnDays,
   };
 }
 
@@ -488,11 +507,12 @@ export function failedReadingLines(census) {
   ];
 }
 
-export function summaryLines(result, { useAi, checked, drawnFromQueue, oldestRemaining, total, quarantine, repicked, pickedAfterAFailedRead, pickedForASecondReading, failedReadings }) {
+export function summaryLines(result, { useAi, checked, drawnFromQueue, oldestRemaining, total, quarantine, repicked, pickedAfterAFailedRead, pickedForASecondReading, failedReadings, turnDays, deferredATurn, liveQueueLength }) {
   const lines = ["", "── Summary ──", `Checked: ${checked}`];
   if (drawnFromQueue !== undefined) {
     lines.push(`Drawn from the queue, so pages this run advances: ${drawnFromQueue}`);
   }
+  for (const line of queueOrderLines(turnDays, deferredATurn, liveQueueLength)) lines.push(line);
   if (pickedAfterAFailedRead !== undefined) {
     lines.push(`Drawn after a read that failed: ${pickedAfterAFailedRead} of ${checked}`);
   }
@@ -607,7 +627,7 @@ async function main() {
 
   const awaitingCorroboration = pagesAwaitingCorroboration(readHeldReadings().held);
   const selection = { refusalHolds: holds, verificationState: state, awaitingCorroboration };
-  const { picked, oldestRemaining, retriedFromQuarantine, pickedAfterAFailedRead, pickedForASecondReading, drawnFromQueue } =
+  const { picked, oldestRemaining, retriedFromQuarantine, pickedAfterAFailedRead, pickedForASecondReading, drawnFromQueue, deferredATurn, liveQueueLength, turnDays } =
     pickOldestEntries(offers, limit, now, selection);
 
   const renderer = findRenderer();
@@ -674,6 +694,9 @@ async function main() {
     pickedAfterAFailedRead,
     pickedForASecondReading,
     failedReadings: failedReadingCensus(state, offers),
+    turnDays,
+    deferredATurn,
+    liveQueueLength,
   })) {
     console.log(line);
   }
