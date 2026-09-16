@@ -3103,7 +3103,13 @@
       "category": "Project Management",
       "alternatives": [],
       "recorded_date": "2026-04-12",
-      "date_source": "hand_written"
+      "date_source": "hand_written",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-16",
+        "detail": "Retracted 2026-09-16: sflow.io is live. The domain resolves and https://sflow.io returns HTTP 200 with a full product site - chatbot, data analytics, ScreenyFlow and a WordPress plugin. This row carries no previous_state, no source and no alternatives: it records a failed read of ours, not a change sflow.io made.",
+        "source_url": "https://sflow.io"
+      }
     },
     {
       "vendor": "Quidlo",
@@ -4510,7 +4516,13 @@
         "Lemlist"
       ],
       "recorded_date": "2026-04-17",
-      "date_source": "hand_written"
+      "date_source": "hand_written",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-16",
+        "detail": "Retracted 2026-09-16: the evidence this row cites does not support it. Prospect.io is live and trades as Overloop - prospect.io/pricing returns HTTP 200 and resolves to overloop.com/pricing, where Starter sells at $69/user/month. The row's cited evidence, that joinsecret.com returns 403 errors, is a user-agent block: joinsecret.com returns 403 to curl and 200 to a browser agent, and it serves a byte-identical 301 for a real vendor page and for a slug that does not exist, so it cannot evidence a deal's absence either way. This row was our error, not a change Prospect.io made.",
+        "source_url": "https://overloop.com/pricing"
+      }
     },
     {
       "vendor": "Kluster AI",
