@@ -5,6 +5,7 @@ import { RATE_LIMIT_PER_MINUTE, SIGNAL_BODY_MAX } from "./signal.js";
 import { SIGNAL_EVENTS } from "./stats.js";
 import { SINCE_ACCEPTS } from "./since-parameter.js";
 import { DEFAULT_CHANGE_WINDOW_DAYS, SINCE_DEFAULT_SENTENCE } from "./change-window.js";
+import { NAME_MATCH_SENTENCE } from "./name-match.js";
 import { CHANGE_STANDINGS, INCLUDE_RETRACTED_ACCEPTS } from "./change-resolution.js";
 import { CHANGE_SLICES, CENSUS_NOTE, INCLUDE_INDEX_HOUSEKEEPING_ACCEPTS, INDEX_HOUSEKEEPING_REPORTS, TRACKED_CHANGE_RULE_PATH, TRACKED_CHANGE_RULE_SENTENCE } from "./change-census.js";
 
@@ -177,10 +178,10 @@ const DOCUMENTED_OPERATIONS: Record<string, Record<string, any>> = {
       parameters: [
         { name: "since", in: "query", description: `Only return changes dated on or after this date. ${SINCE_ACCEPTS} ${SINCE_DEFAULT_SENTENCE}`, schema: { type: "string", format: "date" }, example: "2025-01-01" },
         { name: "type", in: "query", description: "Filter by change type. Every type a record can carry is accepted; the same list types the `change_type` field on the records that come back.", schema: { type: "string", enum: [...CHANGE_TYPES] } },
-        { name: "vendor", in: "query", description: "Filter by vendor name", schema: { type: "string" } },
-        { name: "vendors", in: "query", description: "Comma-separated vendor names to filter by (e.g. 'Vercel,Supabase,Clerk')", schema: { type: "string" }, example: "Vercel,Supabase" },
-        { name: "category", in: "query", description: "Comma-separated category names to filter by (e.g. 'Database,Cloud Hosting'). Case-insensitive partial match.", schema: { type: "string" }, example: "Database,Hosting" },
-        { name: "categories", in: "query", description: "Comma-separated category names to filter by (e.g. 'Database,Cloud Hosting'). Case-insensitive partial match.", schema: { type: "string" }, example: "Database,Hosting" },
+        { name: "vendor", in: "query", description: `Filter by vendor name. ${NAME_MATCH_SENTENCE}`, schema: { type: "string" } },
+        { name: "vendors", in: "query", description: `Comma-separated vendor names to filter by (e.g. 'Vercel,Supabase,Clerk'). ${NAME_MATCH_SENTENCE}`, schema: { type: "string" }, example: "Vercel,Supabase" },
+        { name: "category", in: "query", description: `Comma-separated category names to filter by (e.g. 'Database,Cloud Hosting'). ${NAME_MATCH_SENTENCE}`, schema: { type: "string" }, example: "Database,Hosting" },
+        { name: "categories", in: "query", description: `Comma-separated category names to filter by (e.g. 'Database,Cloud Hosting'). ${NAME_MATCH_SENTENCE}`, schema: { type: "string" }, example: "Database,Hosting" },
         { name: "limit", in: "query", description: "Max results per page", schema: { type: "integer", default: 20 } },
         { name: "offset", in: "query", description: "Number of results to skip", schema: { type: "integer", default: 0 } },
         { name: "include_retracted", in: "query", description: `${INCLUDE_RETRACTED_ACCEPTS} Anything other than 'true' or 'false' answers 400 rather than being ignored.`, schema: { type: "boolean", default: false } },

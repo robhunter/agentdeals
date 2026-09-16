@@ -51,6 +51,7 @@ import { changeTimelineDate, supersededLineups, supersessionNote } from "./chang
 import { isNoLongerInForce, eventResolutionFields, recordsStillInForce, recordsWeStandBehind, INCLUDE_RETRACTED_REJECTED } from "./change-resolution.js";
 import { trackedChanges, isTrackedChange, isIndexHousekeeping, recordsOtherThanOurOwnIndexHousekeeping, changeCensus, changeCountPhrase, recordsNotCountedSentence, sliceById, CHANGE_SLICES, CENSUS_NOTE, TRACKED_CHANGE_RULE_ANCHOR, TRACKED_CHANGE_RULE_PATH, TRACKED_CHANGE_NOUN, INDEX_HOUSEKEEPING_CLASS, INDEX_HOUSEKEEPING_BADGE, INDEX_HOUSEKEEPING_BADGE_COLOR, INDEX_HOUSEKEEPING_NOTE, INCLUDE_INDEX_HOUSEKEEPING_REJECTED, indexHousekeepingHeadline } from "./change-census.js";
 import { SINCE_DEFAULT_SENTENCE } from "./change-window.js";
+import { NAME_MATCH_SENTENCE } from "./name-match.js";
 import { FREE_TIER_STANDING_LABELS, GRADE_FACTORS_WITHOUT_PRICING_HISTORY, NOT_EVIDENCE_LABELS, citesAChangeOlderThanTheGrade, freeTierStanding, gradesFirstSet, gradesLastSet, gradingDatesClause, neverTracked, pricingHistoryCoverageAnswer, pricingHistoryCoverageSentence, riskEntries, scorecard, splitByFreeTierStanding, trackedSinceGrading, type RiskEntry } from "./risk-scorecard.js";
 import { CHANGE_DIRECTION, changeDirectionTable, directionRatioLabel } from "./change-direction.js";
 import { removalDurability, removalReturnRateSentence, removalDurabilityPattern, lastingRemovalExamplesFor } from "./removal-durability.js";
@@ -54937,6 +54938,7 @@ const dispatchRequest = async (req: IncomingMessage, res: ServerResponse) => {
       include_index_housekeeping: includeIndexHousekeeping,
       index_housekeeping_excluded: result.index_housekeeping_excluded,
       date_window: result.date_window,
+      name_match: result.name_match,
       advisory: context.advisory,
       summary: context.summary,
       date_provenance: dateProvenance,
@@ -55444,8 +55446,9 @@ Track recent pricing changes across developer tools.
 Parameters:
 - since (string, optional): ISO date (YYYY-MM-DD). ${SINCE_DEFAULT_SENTENCE}
 - change_type (enum, optional): free_tier_removed, limits_reduced, restriction, limits_increased, new_free_tier, new_tier, pricing_restructured, open_source_killed, pricing_model_change, startup_program_expanded, pricing_postponed, product_deprecated, rebranded
-- vendor (string, optional): Filter to one vendor
-- vendors (string, optional): Comma-separated vendor names
+- vendor (string, optional): Filter to one vendor. ${NAME_MATCH_SENTENCE}
+- vendors (string, optional): Comma-separated vendor names. ${NAME_MATCH_SENTENCE}
+- categories (string, optional): Comma-separated category names. ${NAME_MATCH_SENTENCE}
 - include_expiring (boolean, optional): Include upcoming expirations (default: true)
 - lookahead_days (number, optional): Days to look ahead for expirations (default: 30)
 

@@ -29,6 +29,7 @@ import { PRODUCT_DEPRECATED, deprecationEndsTheListedProduct } from "./product-d
 import { RISK_DEMOTION } from "./change-demotion.js";
 import { sinceFilterDay } from "./since-parameter.js";
 import { DEFAULT_CHANGE_WINDOW_DAYS, defaultChangeWindow, servedWindowOpens, windowFromSinceParameter, wholeChangeLog, type ChangeWindow } from "./change-window.js";
+import { nameMatchDisclosure, type AskedByName, type NameMatch } from "./name-match.js";
 export { RISK_DEMOTION, SEVERE_TYPES_WITHOUT_FLAT_DEMOTION, changeTypeCanDemote } from "./change-demotion.js";
 import { vendorHistorySentence } from "./vendor-history.js";
 import { isNoLongerInForce, recordsStillInForce, recordsWeStandBehind, withResolutionInSummary, withStandingDeclaredOnEach } from "./change-resolution.js";
@@ -758,6 +759,7 @@ export interface DealChangeResult {
   retracted_excluded: number;
   index_housekeeping_excluded: number;
   date_window: ChangeWindow;
+  name_match: NameMatch;
 }
 
 export function getDealChanges(
@@ -790,23 +792,30 @@ export function getDealChanges(
     results = results.filter((c) => c.change_type === lowerType);
   }
 
+  const askedByName: AskedByName[] = [];
+
   if (vendors) {
-    const vendorList = vendors.split(",").map((v) => v.trim().toLowerCase()).filter(Boolean);
+    const vendorList = vendors.split(",").map((v) => v.trim()).filter(Boolean);
+    const lowered = vendorList.map((v) => v.toLowerCase());
     results = results.filter((c) => {
       const lowerVendor = c.vendor.toLowerCase();
-      return vendorList.some((v) => lowerVendor.includes(v));
+      return lowered.some((v) => lowerVendor.includes(v));
     });
+    askedByName.push({ parameter: "vendors", field: "vendor", terms: vendorList });
   } else if (vendor) {
     const lowerVendor = vendor.toLowerCase();
     results = results.filter((c) => c.vendor.toLowerCase().includes(lowerVendor));
+    askedByName.push({ parameter: "vendor", field: "vendor", terms: [vendor] });
   }
 
   if (categories) {
-    const catList = categories.split(",").map((c) => c.trim().toLowerCase()).filter(Boolean);
+    const catList = categories.split(",").map((c) => c.trim()).filter(Boolean);
+    const lowered = catList.map((c) => c.toLowerCase());
     results = results.filter((c) => {
       const lowerCat = (c.category || "").toLowerCase();
-      return catList.some((cat) => lowerCat.includes(cat));
+      return lowered.some((cat) => lowerCat.includes(cat));
     });
+    askedByName.push({ parameter: "categories", field: "category", terms: catList });
   }
 
   results = [...results].sort((a, b) => b.date.localeCompare(a.date));
@@ -822,6 +831,7 @@ export function getDealChanges(
     retracted_excluded: results.length - stoodBehind.length,
     index_housekeeping_excluded: stoodBehind.length - served.length,
     date_window,
+    name_match: nameMatchDisclosure(askedByName, served),
   };
 }
 
@@ -831,6 +841,7 @@ export interface PersonalizedChanges {
   retracted_excluded: number;
   index_housekeeping_excluded: number;
   date_window: ChangeWindow;
+  name_match: NameMatch;
   summary: {
     stack_changes_count: number;
     ecosystem_high_impact_count: number;
@@ -897,6 +908,7 @@ export function getPersonalizedChanges(
     retracted_excluded: stackResult.retracted_excluded,
     index_housekeeping_excluded: stackResult.index_housekeeping_excluded,
     date_window: stackResult.date_window,
+    name_match: stackResult.name_match,
     summary: context.summary,
   };
 }
