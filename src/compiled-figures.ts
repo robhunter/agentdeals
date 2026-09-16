@@ -66,6 +66,7 @@ const RECORD_MARKER =
 const STRUCK_SUBJECT = /<span\b[^>]*style="[^"]*text-decoration:\s*line-through[^"]*"/;
 const TRAILING_QUALIFIER = /^(.+?)\s*\([^()]*\)$/;
 const SUBJECT_TAGLINE = /\s+[—–:]\s+/;
+const TRAILING_QUALIFIER_SPAN = /<span\b[^>]*>(?:(?!<span\b)[\s\S])*?<\/span>\s*$/;
 const TIMELINE_BODY = /(<h2\b[^>]*\bid="changes"(?:(?!<\/table>)[\s\S])*?<tbody>)([\s\S]*?)(<\/tbody>)/;
 
 export function staticHalfOf(html: string): string {
@@ -91,8 +92,13 @@ function plainText(fragment: string): string {
     .trim();
 }
 
+function withoutTrailingQualifierSpan(heading: string): string {
+  const stripped = heading.replace(TRAILING_QUALIFIER_SPAN, "");
+  return plainText(stripped) === "" ? heading : stripped;
+}
+
 export function subjectOfCardHeading(heading: string): string {
-  const withoutTagline = heading.split(SUBJECT_TAGLINE)[0]!.trim();
+  const withoutTagline = plainText(withoutTrailingQualifierSpan(heading)).split(SUBJECT_TAGLINE)[0]!.trim();
   const qualified = withoutTagline.match(TRAILING_QUALIFIER);
   return (qualified ? qualified[1]! : withoutTagline).trim();
 }
@@ -142,7 +148,7 @@ function discoverSlots(staticHtml: string): DiscoveredSlot[] {
     const linked = inner.match(VENDOR_LINK);
     slots.push({
       kind: "card",
-      label: subjectOfCardHeading(plainText(undecorated(inner))),
+      label: subjectOfCardHeading(undecorated(inner)),
       linkedSlug: linked ? linked[1]! : null,
       start: heading.index,
       end: heading.index + heading[0].length,

@@ -153,6 +153,31 @@ describe("reading the subject a comparison card is about", () => {
       "Vercel Hobby plan bans commercial use",
     );
   });
+
+  it("drops a styled qualifier the heading carries after the name", () => {
+    assert.strictEqual(
+      subjectOfCardHeading(
+        'AWS Activate <span style="font-size:.75rem;color:var(--text-dim);font-weight:400">Open application</span>',
+      ),
+      "AWS Activate",
+    );
+  });
+
+  it("reads the name out of a heading whose name is itself in a span", () => {
+    assert.strictEqual(
+      subjectOfCardHeading(
+        '<span style="color:var(--text)">Jenkins</span> <span style="font-size:.75rem">Generous free tier</span>',
+      ),
+      "Jenkins",
+    );
+  });
+
+  it("keeps a heading that is one span whole rather than reading it as a qualifier", () => {
+    assert.strictEqual(
+      subjectOfCardHeading('<span class="name">Prometheus + Grafana</span>'),
+      "Prometheus + Grafana",
+    );
+  });
 });
 
 describe("resolving the vendor a compiled figure is about", () => {
