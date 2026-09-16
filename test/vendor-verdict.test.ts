@@ -17,6 +17,7 @@ import {
 import { CHANGE_DIRECTION, enrichOffers, loadDealChanges, loadOffers, publishedRisk, refusalsForVendor, vendorRiskAssessment, classifyStability } from "../dist/data.js";
 import { vendorSlugMap } from "../dist/vendor-slug.js";
 import { isNoLongerInForce } from "../dist/change-resolution.js";
+import { storedTermsAreSuperseded } from "../dist/superseded-description.js";
 import { levelWithheldReason, levelWithheldSince } from "../dist/source-check.js";
 import { offerEnded, endedVerdictSentence, ENDED_BADGE_LABEL } from "../dist/retirement.js";
 import { CONFIRMED_DATE_LABEL, UNCONFIRMED_DATE_LABEL } from "../dist/read-date.js";
@@ -307,6 +308,7 @@ interface VendorRow {
   withheld: ReturnType<typeof levelWithheldReason>;
   badgeRendered: boolean;
   sentence: string;
+  termsSuperseded: boolean;
   tier: string;
   changes: DealChange[];
   gate: Gate | null;
@@ -329,6 +331,7 @@ function vendorRows(): VendorRow[] {
     const ended = offerEnded(primary);
     const unconfirmableSince = levelWithheldSince(primary, enriched.link_unreachable);
     const gate = gateFor(primary, utcDate());
+    const termsSuperseded = storedTermsAreSuperseded(primary, vendorChanges);
     rows.push({
       slug,
       vendor,
@@ -352,7 +355,9 @@ function vendorRows(): VendorRow[] {
         offerEnded: ended,
         gate: gate?.code ?? null,
         refusedReads: refusalsForVendor(vendor),
+        termsSuperseded,
       }),
+      termsSuperseded,
       tier: primary.tier,
       changes: vendorChanges,
       gate,
@@ -571,7 +576,7 @@ describe("vendor verdict — as rendered", () => {
             if (!answers.reliable.includes(row.expected)) {
               wrong.push(`${row.slug}: the reliability answer does not carry the ${row.expected} rating`);
             }
-            if (row.expected === "stable" && !answers.reliable.includes(narrowingSentence(row.changes, row))) {
+            if (row.expected === "stable" && !answers.reliable.includes(narrowingSentence(row.changes, row, row.termsSuperseded))) {
               wrong.push(`${row.slug}: the reliability answer does not say what the records it holds did — ${answers.reliable}`);
             }
           }

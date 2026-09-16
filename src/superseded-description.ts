@@ -1,6 +1,5 @@
 import { changeCitesASource, changeSummaryText, citationLabel } from "./change-citation.js";
 import { changeDateClause } from "./change-dates.js";
-import { narrowsTheStoredTerms } from "./change-direction.js";
 import { isNoLongerInForce } from "./change-resolution.js";
 import { changeRatesTheListedTier, comparableTerms } from "./change-tier.js";
 import { tierRecordsAFreeTier } from "./free-tier-record.js";
@@ -43,7 +42,6 @@ export function supersedesTheStoredTerms(
   offer: Pick<StoredTerms, "vendor" | "description" | "tier">,
 ): boolean {
   if (isNoLongerInForce(change)) return false;
-  if (!narrowsTheStoredTerms(change.change_type)) return false;
   if (!changeRatesTheListedTier(change, offer)) return false;
   return quotesTheStoredTermsAsPrevious(change, offer.description);
 }
@@ -95,6 +93,11 @@ function readingSentence(date: string, source: string, terms: string): string {
 }
 
 export const SUPERSEDED_TERMS_LABEL = "Superseded";
+
+export const SUPERSEDED_TERMS_RULE =
+  "Whether we go on publishing a stored figure does not read this classification: where one of our own " +
+  "records names those terms as the previous ones we withhold them whatever the change counts as, because " +
+  "our own figure being out of date is a fact about our data and has no direction.";
 
 export const STORED_TERMS_WITHHELD_PHRASE = "names them as the previous ones";
 

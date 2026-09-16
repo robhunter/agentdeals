@@ -8,12 +8,15 @@
     "faq_answers": 166,
     "faq_answers_stating_a_figure": 77,
     "faq_answers_with_a_digit_but_no_figure": 41,
-    "records_with_superseded_terms": 188,
-    "vendor_pages_withholding_superseded_terms": 186,
-    "ungated_pages_withholding_superseded_terms": 175
+    "records_with_superseded_terms": 251,
+    "vendor_pages_withholding_superseded_terms": 249,
+    "ungated_pages_withholding_superseded_terms": 234
   },
   "raised_because": {
     "stale_fact_pages": "57 to 58 on 2026-09-09. A review that recorded review_outcome: fail used to restart the staleness clock, so finding errors on a page improved this count by more than fixing them would. The clock now starts at the last read that found nothing outstanding, which is the rule dateModifiedFor already applied to the date those pages publish. Six pages moved and /email-comparison-2026 joined the cohort; 338 stale facts became 346. Nothing about the catalogue changed — the measurement did.",
-    "uncited_change_records": "95 to 98 on 2026-09-06. stathat.com, searchly.com and Prospect.io each cited the page their own summary reports as unreadable, and dropping that citation is the honest fix rather than repointing it at a page that would pass a liveness check. The 35 records that report our own index lost a citation in the same change and are outside this count rather than spending slots in it."
+    "uncited_change_records": "95 to 98 on 2026-09-06. stathat.com, searchly.com and Prospect.io each cited the page their own summary reports as unreadable, and dropping that citation is the honest fix rather than repointing it at a page that would pass a liveness check. The 35 records that report our own index lost a citation in the same change and are outside this count rather than spending slots in it.",
+    "records_with_superseded_terms": "188 to 251 on 2026-09-16. The disclosure used to fire only where the change type is counted as negative, so 65 in-force records whose previous_state is our stored description word for word went on publishing the figure our own record names as the previous one — 51 limit increases, 6 new tiers, 5 new free tiers and 3 rebrands, every one of them found by the re-verification run. Direction no longer gates it: our stored figure being one the vendor's page has moved on from is a fact about our data and has no direction. The catalogue did not move — the predicate did.",
+    "vendor_pages_withholding_superseded_terms": "186 to 249 on 2026-09-16, by the same widening as records_with_superseded_terms. 63 more records withhold their stored terms and all 63 are the first record we hold for their vendor, so the two counts moved by the same 63.",
+    "ungated_pages_withholding_superseded_terms": "175 to 234 on 2026-09-16, by the same widening as records_with_superseded_terms. 59 of the 63 newly withholding records sit on a vendor page no ranking gate holds back; the other 4 were already being published with a gate over them."
   }
 }

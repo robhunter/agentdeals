@@ -199,6 +199,7 @@ export function readmeRow(offer: Offer, allChanges: DealChange[], context: RowCo
   const risk = publishedRisk(offer, vendorChanges, context.servedOn, context.nowMs);
   const withheld = levelWithheldReason(offer, risk.link_unreachable);
   const since = levelWithheldSince(offer, risk.link_unreachable);
+  const superseding = supersedingChange(offer, vendorChanges);
   const input: VendorVerdictInput = {
     vendor: offer.vendor,
     level: risk.risk_level,
@@ -213,9 +214,9 @@ export function readmeRow(offer: Offer, allChanges: DealChange[], context: RowCo
     linkUnreachable: Boolean(risk.link_unreachable),
     sourceCheck: offer.source_check?.outcome ?? null,
     termsConfirmedOn: offer.verifiedDate,
+    termsSuperseded: superseding !== null,
   };
 
-  const superseding = supersedingChange(offer, vendorChanges);
   const reading = superseding ? readingBehindTheChange(superseding) : null;
   const terms: PublishedTerms = reading
     ? { text: reading.terms, as_of: reading.date, source_url: reading.url, source_label: reading.label, quoted: true }

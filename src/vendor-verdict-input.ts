@@ -6,6 +6,7 @@ import { gateFor, utcDate, type Gate } from "./ranking.js";
 import { offerEnded } from "./retirement.js";
 import { levelWithheldReason, levelWithheldSince, recordPublishesAQuantity, type LevelWithheldReason } from "./source-check.js";
 import type { RefusedRead } from "./change-refusal.js";
+import { storedTermsAreSuperseded } from "./superseded-description.js";
 import { whyWeCannotConfirmTheseTerms, type UnconfirmedTerms, type VendorVerdictInput } from "./vendor-verdict.js";
 
 export interface VendorVerdictContext {
@@ -65,6 +66,7 @@ export function vendorVerdictContextFrom(evidence: VendorVerdictEvidence): Vendo
       termsConfirmedOn: primary.verifiedDate,
       refusedReads,
       publishesAQuantity: recordPublishesAQuantity(primary.description),
+      termsSuperseded: storedTermsAreSuperseded(primary, vendorChanges),
     },
   };
 }

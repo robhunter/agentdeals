@@ -19,6 +19,7 @@ const {
   supersedingChange,
   storedTermsAreSuperseded,
 } = await import("../dist/superseded-description.js");
+const { STORED_TERMS_NAMED_AS_PREVIOUS } = await import("../dist/vendor-verdict.js");
 const { openingOfTerms } = await import("../dist/terms-opening.js");
 const { citationLabel } = await import("../dist/change-citation.js");
 const { carriesAnUnrenderedExpression, unrenderedExpressionIn } = await import("../dist/unrendered-text.js");
@@ -261,7 +262,7 @@ describe("#1103 the catalogue population", () => {
     assert.strictEqual(supersedingChange(A_RECORD, [later, earlier]), later);
   });
 
-  it("a change that widens the terms does not compete with the one that narrowed them", () => {
+  it("#1721 takes the newer of two quoting changes whichever way each of them moved", () => {
     const narrowed = { ...A_CHANGE_QUOTING_IT, date: "2026-08-28" } as DealChange;
     const widened = {
       ...A_CHANGE_QUOTING_IT,
@@ -271,12 +272,13 @@ describe("#1103 the catalogue population", () => {
     } as DealChange;
 
     assert.strictEqual(quotesTheStoredTermsAsPrevious(widened, A_RECORD.description), true);
-    assert.strictEqual(supersedingChange(A_RECORD, [narrowed, widened]), narrowed);
+    assert.strictEqual(supersedingChange(A_RECORD, [narrowed, widened]), widened);
+    assert.strictEqual(supersedingChange(A_RECORD, [widened, narrowed]), widened);
   });
 });
 
-describe("#1103 which recorded changes make the stored terms unpublishable", () => {
-  const NARROWS = [
+describe("#1721 which recorded changes make the stored terms unpublishable", () => {
+  const CLAIMS_A_NARROWING = [
     "free_tier_removed",
     "limits_reduced",
     "restriction",
@@ -285,7 +287,7 @@ describe("#1103 which recorded changes make the stored terms unpublishable", () 
     "pricing_restructured",
     "pricing_model_change",
   ];
-  const LEAVES_THE_STORED_FIGURE_CONSERVATIVE = [
+  const CLAIMS_NONE = [
     "limits_increased",
     "new_free_tier",
     "new_tier",
@@ -295,50 +297,67 @@ describe("#1103 which recorded changes make the stored terms unpublishable", () 
     "record_corrected",
   ];
 
-  it("withholds on a change that narrows the terms and publishes on one that does not", async () => {
+  it("reads which types claim a narrowing, which is what a refuting reading is measured against", async () => {
     const { narrowsTheStoredTerms } = await import("../dist/change-direction.js");
-    for (const type of NARROWS) assert.strictEqual(narrowsTheStoredTerms(type), true, type);
-    for (const type of LEAVES_THE_STORED_FIGURE_CONSERVATIVE) {
-      assert.strictEqual(narrowsTheStoredTerms(type), false, type);
-    }
+    for (const type of CLAIMS_A_NARROWING) assert.strictEqual(narrowsTheStoredTerms(type), true, type);
+    for (const type of CLAIMS_NONE) assert.strictEqual(narrowsTheStoredTerms(type), false, type);
   });
 
   it("classifies every change type the data model declares, and nothing is left over", async () => {
     const { CHANGE_DIRECTION } = await import("../dist/change-direction.js");
     const declared = Object.keys(CHANGE_DIRECTION).sort();
-    assert.deepStrictEqual([...NARROWS, ...LEAVES_THE_STORED_FIGURE_CONSERVATIVE].sort(), declared);
+    assert.deepStrictEqual([...CLAIMS_A_NARROWING, ...CLAIMS_NONE].sort(), declared);
   });
 
-  it("withholds on a change type it does not recognise, which is the safe direction", async () => {
+  it("reads a type it does not recognise as claiming a narrowing, which is the safe direction", async () => {
     const { narrowsTheStoredTerms, directionOfChange } = await import("../dist/change-direction.js");
     assert.strictEqual(directionOfChange("terms_rewritten_by_a_type_we_have_not_met"), null);
     assert.strictEqual(narrowsTheStoredTerms("terms_rewritten_by_a_type_we_have_not_met"), true);
     assert.strictEqual(narrowsTheStoredTerms(undefined as unknown as string), true);
   });
 
-  it("does not supersede the terms on a quoting change that widened them", () => {
+  it("withholds on a quoting change of every type the data model declares", () => {
+    for (const change_type of [...CLAIMS_A_NARROWING, ...CLAIMS_NONE, "a_type_we_have_not_met"]) {
+      const quoting = { ...A_CHANGE_QUOTING_IT, change_type };
+      assert.strictEqual(quotesTheStoredTermsAsPrevious(quoting, A_RECORD.description), true, change_type);
+      assert.strictEqual(storedTermsAreSuperseded(A_RECORD, [quoting]), true, change_type);
+    }
+  });
+
+  it("withholds on a quoting change that widened the terms, the same as one that narrowed them", () => {
     const widening = { ...A_CHANGE_QUOTING_IT, change_type: "limits_increased" };
     assert.strictEqual(quotesTheStoredTermsAsPrevious(widening, A_RECORD.description), true);
-    assert.strictEqual(storedTermsAreSuperseded(A_RECORD, [widening]), false);
+    assert.strictEqual(storedTermsAreSuperseded(A_RECORD, [widening]), true);
     assert.strictEqual(storedTermsAreSuperseded(A_RECORD, [A_CHANGE_QUOTING_IT]), true);
   });
 
-  it("takes the newest narrowing change and passes over a newer widening one", () => {
+  it("takes the newest quoting change rather than the newest narrowing one", () => {
     const olderNarrowing = { ...A_CHANGE_QUOTING_IT, date: "2026-08-02" };
     const newerWidening = { ...A_CHANGE_QUOTING_IT, date: "2026-09-04", change_type: "limits_increased" };
-    assert.strictEqual(supersedingChange(A_RECORD, [olderNarrowing, newerWidening])?.date, "2026-08-02");
+    assert.strictEqual(supersedingChange(A_RECORD, [olderNarrowing, newerWidening])?.date, "2026-09-04");
   });
 
-  it("leaves every record the change log only ever widened publishing its terms", () => {
-    const widenedOnly = offers.filter((offer) => {
+  it("holds back every record that quotes and still publishes for a reason that is not direction", async () => {
+    const { changeRatesTheListedTier } = await import("../dist/change-tier.js");
+    const { isNoLongerInForce } = await import("../dist/change-resolution.js");
+    const { readingPricesNothingButATrial } = await import("../dist/superseded-description.js");
+    const quotingAndPublishing = offers.filter((offer) => {
       const quoting = changesFor(offer.vendor).filter(
         (c) => !c.resolution && quotesTheStoredTermsAsPrevious(c, offer.description),
       );
       return quoting.length > 0 && !supersedingChange(offer, changesFor(offer.vendor));
     });
-    assert.ok(widenedOnly.length > 0, "no record in the shipped data exercises this, so the assertion is vacuous");
-    for (const offer of widenedOnly) {
-      assert.strictEqual(supersedingChange(offer, changesFor(offer.vendor)), null, offer.vendor);
+    assert.ok(quotingAndPublishing.length > 0, "no record in the shipped data exercises this, so the assertion is vacuous");
+    for (const offer of quotingAndPublishing) {
+      for (const change of changesFor(offer.vendor)) {
+        if (!quotesTheStoredTermsAsPrevious(change, offer.description)) continue;
+        assert.ok(
+          isNoLongerInForce(change)
+            || !changeRatesTheListedTier(change, offer)
+            || readingPricesNothingButATrial(change, offer),
+          `${offer.vendor} publishes terms its own ${change.change_type} record names as the previous ones, and no rule but direction holds it back`,
+        );
+      }
     }
   });
 });
@@ -910,14 +929,16 @@ describe("#1103 a page whose stored terms its own change log quotes as previous"
     assert.ok(supersededPage.includes("Before:"));
   });
 
-  it("publishes the same terms as current where the recorded change widened them", () => {
+  it("#1721 withholds the stored terms where the recorded change widened them, exactly as where it narrowed them", () => {
     const { change } = fixtureFrom(false, "limits_increased");
     assert.strictEqual(change.previous_state, fixtureFrom(false).record.description);
-    assert.ok(unescaped(descriptionBlockOf(improvedPage)).includes(storedTerms));
+    assert.ok(!unescaped(descriptionBlockOf(improvedPage)).includes(storedTerms), "the page states a figure its own record names as the previous one");
     const isFree = faqAnswersOf(improvedPage).find((pair) => pair.question === `Is ${FIXTURE_VENDOR} free?`);
-    assert.ok(isFree!.answer.startsWith("Yes,"), isFree!.answer);
-    assert.ok("offers" in jsonLdOfType(improvedPage, "WebPage")!.mainEntity);
-    assert.ok(!improvedPage.includes(`class="terms-superseded-text"`), "the page withheld terms a widening replaced");
+    assert.ok(!isFree!.answer.startsWith("Yes,"), isFree!.answer);
+    assert.ok(isFree!.answer.includes(STORED_TERMS_WITHHELD_PHRASE), isFree!.answer);
+    assert.ok(!("offers" in jsonLdOfType(improvedPage, "WebPage")!.mainEntity));
+    assert.ok(improvedPage.includes(`class="terms-superseded-text"`));
+    assert.ok(unescaped(descriptionBlockOf(improvedPage)).includes(change.current_state), descriptionBlockOf(improvedPage));
   });
 
   it("publishes the same terms as current once the change is resolved", () => {
@@ -952,6 +973,15 @@ describe("#1103 every catalogue record whose stored terms are superseded", () =>
 
   it("renders a page for every one of them", () => {
     assert.strictEqual(bodies.size, population.length);
+  });
+
+  it("#1721 holds records counted every way, so the assertions below are not about negative ones only", async () => {
+    const { CHANGE_DIRECTION } = await import("../dist/change-direction.js");
+    const counted: Record<string, number> = { negative: 0, positive: 0, neutral: 0 };
+    for (const { change } of population) counted[CHANGE_DIRECTION[change.change_type]]++;
+    assert.ok(counted.positive > 40, `only ${counted.positive} records counted positive withhold their stored terms`);
+    assert.ok(counted.neutral > 0, `no record counted neutral withholds its stored terms`);
+    assert.ok(counted.negative > 100, `only ${counted.negative} records counted negative withhold their stored terms`);
   });
 
   it("holds a dated, sourced reading for most of them, so the citations below have subjects", () => {
@@ -1106,5 +1136,101 @@ describe("#1103 every catalogue record whose stored terms are superseded", () =>
       })
       .map(({ offer }) => offer.vendor);
     assert.deepStrictEqual(banners.slice(0, 20), []);
+  });
+});
+
+describe("#1721 what the disclosure reads, and what it no longer reads", () => {
+  const SUBJECTS = {
+    counted_positive: "ScrumFast",
+    ended_a_tier: "Mintlify",
+    summary_compares_the_wrong_rows: "Upstash Vector",
+    already_withholding: "Semgrep",
+  };
+  let server: { proc: ChildProcess; port: number } | null = null;
+  const pages = new Map<string, string>();
+  const details = new Map<string, Record<string, any>>();
+  let criteria = "";
+
+  const offerFor = (vendor: string): Offer => {
+    const found = offers.find((o) => o.vendor === vendor)!;
+    assert.ok(found, `${vendor} has left the catalogue — pick another subject for this test`);
+    return found;
+  };
+  const changeFor = (vendor: string): DealChange => {
+    const change = supersedingChange(offerFor(vendor), changesFor(vendor));
+    assert.ok(change, `${vendor} no longer holds a record naming its stored terms as the previous ones — pick another subject`);
+    return change!;
+  };
+
+  before(async () => {
+    server = await startServer({});
+    const at = async (pathname: string) =>
+      fetch(`http://localhost:${server!.port}${pathname}`).then((r) => r.text());
+    criteria = await at("/criteria");
+    for (const vendor of Object.values(SUBJECTS)) {
+      pages.set(vendor, await at(`/vendor/${toSlug(vendor)}`));
+      details.set(vendor, JSON.parse(await at(`/api/details/${encodeURIComponent(vendor)}`)).offer);
+    }
+  });
+
+  after(() => { server?.proc.kill(); });
+
+  it("publishes the rule where the site says which way a change counts", async () => {
+    const { SUPERSEDED_TERMS_RULE } = await import("../dist/superseded-description.js");
+    assert.ok(criteria.includes(escapedFor(SUPERSEDED_TERMS_RULE)), "the criteria page states no rule for the notice");
+    assert.ok(criteria.includes(`id="change-direction"`), "the rule must sit with the classification it says it does not read");
+  });
+
+  it("withholds the terms of a record whose change is counted as positive", async () => {
+    const { CHANGE_DIRECTION } = await import("../dist/change-direction.js");
+    const vendor = SUBJECTS.counted_positive;
+    const offer = offerFor(vendor);
+    const change = changeFor(vendor);
+    assert.strictEqual(CHANGE_DIRECTION[change.change_type], "positive", change.change_type);
+    assert.ok(!unescaped(descriptionBlockOf(pages.get(vendor)!)).includes(offer.description), offer.description);
+    assert.ok(unescaped(metaDescriptionOf(pages.get(vendor)!)).includes(STORED_TERMS_WITHHELD_META_PHRASE));
+    assert.ok(!unescaped(metaDescriptionOf(pages.get(vendor)!)).includes(offer.description.slice(0, 60)));
+  });
+
+  it("carries the dated reading to a machine asking for the record", () => {
+    for (const vendor of [SUBJECTS.counted_positive, SUBJECTS.already_withholding]) {
+      const record = details.get(vendor)!.terms_superseded;
+      assert.ok(record, `/api/details/${vendor} answers null where the page withholds the terms`);
+      assert.deepStrictEqual(record.reading, readingBehindTheChange(changeFor(vendor)), vendor);
+      assert.strictEqual(record.notice, supersededTermsNotice(vendor, changeFor(vendor)), vendor);
+    }
+  });
+
+  it("stops saying a record that ended the tier we list did not narrow the terms", () => {
+    const vendor = SUBJECTS.ended_a_tier;
+    const verdict = unescaped(quickVerdictOf(pages.get(vendor)!));
+    assert.doesNotMatch(verdict, /did not narrow the terms|narrowed the terms/, verdict);
+    assert.ok(verdict.includes(STORED_TERMS_NAMED_AS_PREVIOUS), verdict);
+    assert.ok(verdict.includes(STORED_TERMS_WITHHELD_PHRASE), verdict);
+  });
+
+  it("quotes what the page read and never the arithmetic the record's summary states", () => {
+    const vendor = SUBJECTS.summary_compares_the_wrong_rows;
+    const change = changeFor(vendor);
+    const reading = readingBehindTheChange(change)!;
+    for (const [surface, text] of [
+      ["description block", unescaped(descriptionBlockOf(pages.get(vendor)!))],
+      ["meta description", unescaped(metaDescriptionOf(pages.get(vendor)!))],
+    ] as [string, string][]) {
+      assert.ok(text.includes(reading.terms.slice(0, 60)), `${surface} does not quote the reading`);
+      assert.ok(!text.includes(change.summary), `${surface} states the record's summary as the terms: ${text}`);
+    }
+    assert.strictEqual(details.get(vendor)!.terms_superseded.reading.terms, reading.terms);
+  });
+
+  it("leaves a record that was already withholding exactly where it was", () => {
+    const vendor = SUBJECTS.already_withholding;
+    const change = changeFor(vendor);
+    const page = pages.get(vendor)!;
+    assert.strictEqual(change.change_type, "limits_reduced");
+    assert.ok(unescaped(descriptionBlockOf(page)).includes(readingBehindTheChange(change)!.terms.slice(0, 60)), descriptionBlockOf(page));
+    assert.ok(unescaped(descriptionBlockOf(page)).includes(STORED_TERMS_WITHHELD_PHRASE), descriptionBlockOf(page));
+    assert.match(unescaped(quickVerdictOf(page)), /We rate it caution — one recorded limit reduction/);
+    assert.ok(!unescaped(quickVerdictOf(page)).includes(STORED_TERMS_NAMED_AS_PREVIOUS));
   });
 });
