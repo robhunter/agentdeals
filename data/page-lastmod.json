@@ -14,11 +14,11 @@
       "changed": "2026-09-13"
     },
     "/ai-coding-pricing-2026": {
-      "hash": "9e1f565bb0b9dbff",
+      "hash": "9156c70fc05ce1ab",
       "changed": "2026-09-16"
     },
     "/ai-coding-tools-pricing": {
-      "hash": "71a49150f8c1ab7e",
+      "hash": "c1bc9ae240bab81b",
       "changed": "2026-09-16"
     },
     "/ai-free-tiers": {
@@ -741,7 +741,7 @@
       "changed": "2026-09-05"
     },
     "/auth-comparison-2026": {
-      "hash": "18bd06563ebd4e68",
+      "hash": "0e939b5139376aeb",
       "changed": "2026-09-16"
     },
     "/auth0-alternatives": {
@@ -761,11 +761,11 @@
       "changed": "2026-09-15"
     },
     "/aws-free-tier-2026": {
-      "hash": "c20d648e861b5e50",
+      "hash": "af40534c83efb6d5",
       "changed": "2026-09-16"
     },
     "/azure-free-tier-2026": {
-      "hash": "b6ae1aad3e35f11a",
+      "hash": "6eb98522bfc5e143",
       "changed": "2026-09-16"
     },
     "/backblaze-b2-vs-cloudflare-r2": {
@@ -1266,7 +1266,7 @@
       "changed": "2026-09-16"
     },
     "/ci-cd-pricing": {
-      "hash": "ed47f0632384f613",
+      "hash": "299bb5835274088e",
       "changed": "2026-09-16"
     },
     "/cicd-free-tier-comparison-2026": {
@@ -1278,7 +1278,7 @@
       "changed": "2026-09-12"
     },
     "/cloud-free-tier-comparison-2026": {
-      "hash": "be45b6d0476e4370",
+      "hash": "6a4fdda6a793062e",
       "changed": "2026-09-16"
     },
     "/cloudflare-pages-vs-vercel": {
@@ -2877,8 +2877,8 @@
       "changed": "2026-09-16"
     },
     "/email-comparison-2026": {
-      "hash": "eba2b5a2053f2e94",
-      "changed": "2026-09-15"
+      "hash": "57ea6738c73fa9a1",
+      "changed": "2026-09-16"
     },
     "/email-service-alternatives": {
       "hash": "e25496dd5acc7b83",
@@ -2967,7 +2967,7 @@
       "changed": "2026-09-16"
     },
     "/free-tier-tracker": {
-      "hash": "b24298e2448d110f",
+      "hash": "e784c230a359c38d",
       "changed": "2026-09-16"
     },
     "/freshness": {
@@ -2978,15 +2978,15 @@
       "changed": "2026-09-15"
     },
     "/gcp-free-tier-2026": {
-      "hash": "9838dbc2ad0379af",
+      "hash": "5aec7f256d07c30a",
       "changed": "2026-09-16"
     },
     "/gemini-api-pricing-2026": {
-      "hash": "c7e658332a84c535",
+      "hash": "4ba2125449a80740",
       "changed": "2026-09-16"
     },
     "/gemini-api-pricing-changes": {
-      "hash": "f9cb42974ff8d77d",
+      "hash": "f579489337744aa4",
       "changed": "2026-09-16"
     },
     "/github-actions-alternatives": {
@@ -3042,7 +3042,7 @@
       "changed": "2026-09-15"
     },
     "/hetzner-pricing-2026": {
-      "hash": "9145548e39d918f6",
+      "hash": "c077ad2717d533ec",
       "changed": "2026-09-16"
     },
     "/hosting-alternatives": {
@@ -3062,7 +3062,7 @@
       "changed": "2026-09-16"
     },
     "/llm-api-pricing": {
-      "hash": "117ee0a736ff8eb9",
+      "hash": "f258f02aac85875e",
       "changed": "2026-09-16"
     },
     "/localstack-alternatives": {
@@ -3078,8 +3078,8 @@
       "changed": "2026-09-16"
     },
     "/monitoring-comparison-2026": {
-      "hash": "7b9bb64e37250a01",
-      "changed": "2026-09-15"
+      "hash": "c511b28d44aa6cf5",
+      "changed": "2026-09-16"
     },
     "/neon-vs-supabase": {
       "hash": "e7556abf32845ebf",
@@ -3098,8 +3098,8 @@
       "changed": "2026-09-15"
     },
     "/openai-assistants-migration": {
-      "hash": "2db7ce64d6e69d33",
-      "changed": "2026-09-12"
+      "hash": "e839d72794b21ff3",
+      "changed": "2026-09-16"
     },
     "/openai-assistants-migration-2026": {
       "hash": "746757572e1a5b33",
@@ -3262,7 +3262,7 @@
       "changed": "2026-09-15"
     },
     "/serverless-free-tier-comparison-2026": {
-      "hash": "5b6378471fac0b80",
+      "hash": "4487df990ef71337",
       "changed": "2026-09-16"
     },
     "/setup": {
@@ -3305,7 +3305,7 @@
       "changed": "2026-09-12"
     },
     "/startup-credits": {
-      "hash": "7dea9381d2b782ff",
+      "hash": "ed0d978912bca648",
       "changed": "2026-09-16"
     },
     "/state-of-free-tiers": {
@@ -3317,8 +3317,8 @@
       "changed": "2026-09-16"
     },
     "/storage-comparison-2026": {
-      "hash": "f6ea2b4702e3aaf5",
-      "changed": "2026-09-15"
+      "hash": "04adca8e397be822",
+      "changed": "2026-09-16"
     },
     "/supabase-vs-firebase": {
       "hash": "dbc973505a965975",
@@ -3337,7 +3337,7 @@
       "changed": "2026-09-15"
     },
     "/terraform-cloud-free-tier-removed": {
-      "hash": "bb5e09d9ff0c9141",
+      "hash": "ef0d9713b440b38c",
       "changed": "2026-09-16"
     },
     "/testing-alternatives": {
@@ -3595,7 +3595,7 @@
       "changed": "2026-09-16"
     },
     "/vector-database-pricing": {
-      "hash": "9f377d40091fc448",
+      "hash": "968d7491c713c232",
       "changed": "2026-09-16"
     },
     "/vendor": {
