@@ -283,6 +283,26 @@ describe("vendor verdict — a stable rating reports direction, not volume", () 
     assert.strictEqual(narrowingSentence(noNarrowing), "None of the 2 recorded changes narrowed the terms.");
   });
 
+  it("#1721 says a record names our stored terms as the previous ones rather than which way it moved", () => {
+    const one = [change({ change_type: "limits_increased", date: "2026-09-07" })];
+    assert.strictEqual(
+      narrowingSentence(one, null, true),
+      "The one change we have recorded names our stored terms as the previous ones.",
+    );
+    assert.doesNotMatch(narrowingSentence(one, null, true), /narrow/);
+    assert.strictEqual(
+      narrowingSentence([...one, change({ change_type: "rebranded", date: "2026-08-01" })], null, true),
+      "Of the 2 changes we have recorded, at least one names our stored terms as the previous ones.",
+    );
+    assert.strictEqual(narrowingSentence(one, null, false), "The one change we have recorded did not narrow the terms.");
+  });
+
+  it("#1721 names the narrowing rather than the supersession where a record narrowed the terms", () => {
+    const narrowed = [change({ change_type: "limits_reduced", date: "2026-08-28" })];
+    assert.match(narrowingSentence(narrowed, null, true), /One recorded limit reduction narrowed the terms/);
+    assert.strictEqual(narrowingSentence(narrowed, null, true), narrowingSentence(narrowed, null, false));
+  });
+
   it("never reaches for the second scale's vocabulary", () => {
     for (const changes of [[], [change()], [change({ change_type: "limits_increased" })], [change({ change_type: "product_deprecated" })]]) {
       assert.doesNotMatch(vendorVerdictSentence(input({ changes })), STABILITY_SCALE_WORDS);
