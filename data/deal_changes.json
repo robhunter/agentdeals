@@ -9859,6 +9859,57 @@
       "alternatives": [],
       "detected_by": "reverify-ai",
       "recorded_date": "2026-09-15"
+    },
+    {
+      "vendor": "CockroachDB",
+      "change_type": "new_tier",
+      "date": "2026-09-16",
+      "date_source": "discovered",
+      "summary": "The page offers a 30-day free trial with $400 in credit for new Cloud organizations, and then moves to paid plans like 'Standard' and 'Mission Critical'.",
+      "tier": "Standard",
+      "tier_direction": "narrowed",
+      "previous_state": "Free serverless distributed SQL — 50M Request Units + 10 GiB storage/month, scales to zero",
+      "current_state": "Start free with a $400 credit today $0.092 per vCPU-hour* ≈ $203/mo based on 2 vCPU · 100 GB",
+      "impact": "high",
+      "source_url": "https://www.cockroachlabs.com/pricing/",
+      "category": "Databases",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-09-16"
+    },
+    {
+      "vendor": "Canva",
+      "change_type": "limits_increased",
+      "date": "2026-09-16",
+      "date_source": "discovered",
+      "summary": "The free tier now includes 4.7M+ photos, videos, graphics, and audio, 1.6M+ templates, and 1 Brand Kit (3 colors only). It also includes access to Affinity and up to 20 Standard or Premium AI uses.",
+      "tier": "Free",
+      "tier_direction": "widened",
+      "previous_state": "5 GB cloud storage, 250,000+ free templates, 1 million+ free photos/graphics/elements. Basic photo editing and AI features. Standard exports (PNG, JPG, PDF). No Background Remover, Brand Kit, Magic Resize, custom fonts, or transparent backgrounds on free.",
+      "current_state": "With Free, get: Easy drag-and-drop editor and 1,000+ design types 1.6M+ templates to start fast 4.7M+ photos, videos, graphics, and audio 1 Brand Kit (3 colors only) Ad insights and AI ad creation^ Access to Affinity 5GB of cloud storage AI usage Up to 20 Standard or Premium AI uses^",
+      "impact": "low",
+      "source_url": "https://www.canva.com/pricing/",
+      "category": "Design",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-09-16"
+    },
+    {
+      "vendor": "JDoodle",
+      "change_type": "limits_reduced",
+      "date": "2026-09-16",
+      "date_source": "discovered",
+      "summary": "The free tier now has a limit of 1,000 code executions per day. Previously 200 credits per day.",
+      "tier": "Free",
+      "tier_direction": "narrowed",
+      "previous_state": "Online compiler and editor for more than 60 programming languages with a free plan for REST API code compiling up to 200 credits per day.",
+      "current_state": "The free tier includes the full IDE, saved projects, and all 114 languages, frameworks and databases. It allows 1,000 code executions per day and 100 saved projects.",
+      "impact": "high",
+      "source_url": "https://www.jdoodle.com",
+      "category": "IDE & Code Editors",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-09-16"
     }
   ]
 }
