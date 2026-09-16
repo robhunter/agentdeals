@@ -26,6 +26,7 @@ const {
   vendorSlugForSubject,
 } = await import("../dist/compiled-figures.js");
 const { freeTierEndingRecord } = await import("../dist/data.js");
+const { offerEnded } = await import("../dist/retirement.js");
 const { CHANGE_IMPACT_LEVELS, changeImpactColor, changeImpactLabel, isChangeImpactLevel } =
   await import("../dist/change-impact.js");
 const { vendorSlugMap } = await import("../dist/vendor-slug.js");
@@ -413,6 +414,141 @@ describe("marking a compiled figure whose vendor has moved since", () => {
       slug: "acme", vendor: "Acme", freeTierEnded: true, endedBy: null, since: [],
     }), markup);
     assert.strictEqual(marked, below);
+  });
+
+  const endedCard =
+    '<div class="diff-card"><h3>Acme</h3>' +
+    '<div class="diff-desc"><strong>Free tier:</strong> 50 units/month.</div></div>' +
+    '<h2 id="changes">Pricing Change Timeline</h2>';
+
+  it("names the tier the catalogue stores when no record of ours ends the free tier", () => {
+    const marked = markCompiledFigures(endedCard, () => ({
+      slug: "acme", vendor: "Acme", freeTierEnded: true, endedBy: null, endedTier: "Retired", since: [],
+    }), markup);
+    assert.match(marked, /<strong>Free tier:<\/strong> none\. Acme's offer is recorded as Retired\./);
+    assert.match(marked, /title="Acme's offer is recorded as Retired\."/);
+  });
+
+  it("claims no record of ours and invites no reader to read one when we hold none", () => {
+    const marked = markCompiledFigures(endedCard, () => ({
+      slug: "acme", vendor: "Acme", freeTierEnded: true, endedBy: null, endedTier: "Retired", since: [],
+    }), markup);
+    assert.doesNotMatch(marked, /change log records/);
+    assert.doesNotMatch(marked, /Read what we recorded/);
+  });
+
+  it("keeps saying the change log records the ending when a record of ours does end it", () => {
+    const marked = markCompiledFigures(endedCard, () => ({
+      slug: "acme",
+      vendor: "Acme",
+      freeTierEnded: true,
+      endedBy: { date: "2026-05-01", summary: "Free tier withdrawn" },
+      endedTier: "Retired",
+      since: [],
+    }), markup);
+    assert.match(marked, /title="Our own change log records that the Acme free tier has ended\."/);
+    assert.match(marked, /Our own pricing change record, on 2026-05-01, says: Free tier withdrawn/);
+    assert.match(marked, /Read what we recorded/);
+  });
+
+  it("names the tier as well as the record when the catalogue has ended the offer too", () => {
+    const marked = markCompiledFigures(endedCard, () => ({
+      slug: "acme",
+      vendor: "Acme",
+      freeTierEnded: true,
+      endedBy: { date: "2026-05-01", summary: "Free tier withdrawn" },
+      endedTier: "Retired",
+      since: [],
+    }), markup);
+    assert.match(
+      marked,
+      /none\. Acme's offer is recorded as Retired\. Our own pricing change record, on 2026-05-01, says:/,
+    );
+  });
+
+  it("names no tier beside the record when the catalogue has not ended the offer", () => {
+    const marked = markCompiledFigures(endedCard, () => ({
+      slug: "acme",
+      vendor: "Acme",
+      freeTierEnded: true,
+      endedBy: { date: "2026-05-01", summary: "Free tier withdrawn" },
+      since: [],
+    }), markup);
+    assert.match(marked, /none\. Our own pricing change record, on 2026-05-01, says:/);
+    assert.doesNotMatch(marked, /is recorded as/);
+  });
+
+  it("names an ending it can source to neither a record nor a tier as ended and nothing more", () => {
+    const marked = markCompiledFigures(endedCard, () => ({
+      slug: "acme", vendor: "Acme", freeTierEnded: true, endedBy: null, since: [],
+    }), markup);
+    assert.match(marked, /Acme's offer is recorded as Ended\./);
+    assert.doesNotMatch(marked, /change log records/);
+  });
+});
+
+describe("what a FREE REMOVED marker sources the ending to, over every ended offer the catalogue holds", () => {
+  const catalogue: Array<{ vendor: string; tier: string }> =
+    JSON.parse(readFileSync(path.join(REPO, "data", "index.json"), "utf-8")).offers;
+
+  function endedOffers(): Array<{ vendor: string; tier: string }> {
+    return catalogue.filter(offer => offerEnded(offer));
+  }
+
+  function endingRecordFor(vendor: string): DealChange | null {
+    return freeTierEndingRecord(changes.filter(c => c.vendor.toLowerCase() === vendor.toLowerCase()));
+  }
+
+  function markerFor(offer: { vendor: string; tier: string }): string {
+    const ending = endingRecordFor(offer.vendor);
+    const card =
+      `<div class="diff-card"><h3>${offer.vendor}</h3>` +
+      '<div class="diff-desc"><strong>Free tier:</strong> 50 units/month.</div></div>' +
+      '<h2 id="changes">Pricing Change Timeline</h2>';
+    return markCompiledFigures(card, () => ({
+      slug: null,
+      vendor: offer.vendor,
+      freeTierEnded: true,
+      endedBy: ending ? { date: ending.date, summary: ending.summary } : null,
+      endedTier: offer.tier,
+      since: [],
+    }), markup);
+  }
+
+  const CLAIMS_A_RECORD = /change log records that|Our own pricing change record|Read what we recorded/;
+
+  it("reads every offer whose tier says the offer has ended", () => {
+    assertPopulationFloor(endedOffers().length, 10, "offers in the catalogue whose tier says the offer has ended");
+  });
+
+  it("holds both kinds of ended offer, so neither branch below is read over an empty set", () => {
+    const withARecord = endedOffers().filter(offer => endingRecordFor(offer.vendor) !== null);
+    assertPopulationFloor(withARecord.length, 1, "ended offers we hold a record of the ending for");
+    assertPopulationFloor(endedOffers().length - withARecord.length, 1, "ended offers we hold no record of the ending for");
+  });
+
+  it("claims a record of ours only for an ended offer we hold one for", () => {
+    const unsupported = endedOffers()
+      .filter(offer => endingRecordFor(offer.vendor) === null)
+      .filter(offer => CLAIMS_A_RECORD.test(markerFor(offer)))
+      .map(offer => offer.vendor);
+    assert.deepStrictEqual(unsupported, []);
+  });
+
+  it("sources the ending to the tier the catalogue stores when we hold no record of it", () => {
+    const silent = endedOffers()
+      .filter(offer => endingRecordFor(offer.vendor) === null)
+      .filter(offer => !markerFor(offer).includes(`${offer.vendor}'s offer is recorded as ${offer.tier}.`))
+      .map(offer => offer.vendor);
+    assert.deepStrictEqual(silent, []);
+  });
+
+  it("still quotes the record for an ended offer we do hold one for", () => {
+    const uncited = endedOffers()
+      .filter(offer => endingRecordFor(offer.vendor) !== null)
+      .filter(offer => !CLAIMS_A_RECORD.test(markerFor(offer)))
+      .map(offer => offer.vendor);
+    assert.deepStrictEqual(uncited, []);
   });
 });
 

@@ -13,6 +13,7 @@ const { toSlug } = await import("../dist/vendor-slug.js");
 const { vendorSlugForSubject, vendorSubjectsOnCompiledPage } = await import("../dist/compiled-figures.js");
 const { isOurOwnBookkeeping } = await import("../dist/vendor-verdict.js");
 const { isTrackedChange } = await import("../dist/change-census.js");
+const { freeTierEndingRecord } = await import("../dist/data.js");
 const { resolutionTag } = await import("../dist/change-resolution.js");
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -87,6 +88,36 @@ function markerTooltips(html: string): string[] {
   return [...html.matchAll(marker)].map(hit => hit[1]!);
 }
 
+const ENDED_MARKER =
+  /<a href="\/(?:vendor\/[a-z0-9-]+#changes|changes#vendor-[a-z0-9-]+)" class="removed-badge" title="([^"]*)">FREE REMOVED<\/a>/g;
+const SOURCED_TO_A_RECORD = /^Our own change log records that the (.+) free tier has ended\.$/;
+const SOURCED_TO_A_TIER = /^(.+)'s offer is recorded as .+\.$/;
+
+function endedMarkerTooltips(html: string): string[] {
+  return [...html.matchAll(ENDED_MARKER)].map(hit => hit[1]!.replace(/&amp;/g, "&").replace(/&quot;/g, '"'));
+}
+
+function endingRecordWeHold(): (vendor: string) => boolean {
+  const changes = JSON.parse(readFileSync(path.join(REPO, "data", "deal_changes.json"), "utf-8")).changes;
+  return vendor =>
+    freeTierEndingRecord(
+      changes.filter((change: { vendor?: string }) => (change.vendor ?? "").toLowerCase() === vendor.toLowerCase()),
+    ) !== null;
+}
+
+function vendorsSourcedTo(tooltips: string[], sentence: RegExp): string[] {
+  return tooltips.map(tooltip => sentence.exec(tooltip)?.[1]).filter((vendor): vendor is string => vendor !== undefined);
+}
+
+function tierTheCatalogueStores(): Map<string, string> {
+  const offers = JSON.parse(readFileSync(path.join(REPO, "data", "index.json"), "utf-8")).offers;
+  const stored = new Map<string, string>();
+  for (const offer of offers as Array<{ vendor: string; tier: string }>) {
+    if (!stored.has(offer.vendor.toLowerCase())) stored.set(offer.vendor.toLowerCase(), offer.tier);
+  }
+  return stored;
+}
+
 function withdrawalsQuotedBy(tooltips: string[]): string[] {
   return tooltips.filter(tooltip => WITHDRAWAL_TAGS.some(tag => tooltip.includes(tag)));
 }
@@ -96,6 +127,7 @@ interface PageSweep {
   reachableStale: string[];
   unmarked: string[];
   tooltips: string[];
+  endedTooltips: string[];
   withdrawalsWeHold: string[];
 }
 
@@ -121,6 +153,7 @@ describe("marking a compiled figure the change log has moved past", () => {
         reachableStale,
         unmarked: reachableStale.filter(slug => !marked.has(slug)),
         tooltips: markerTooltips(html),
+        endedTooltips: endedMarkerTooltips(html),
         withdrawalsWeHold: [...reached].filter(slug => withdrawn.has(slug)),
       });
     }
@@ -160,5 +193,55 @@ describe("marking a compiled figure the change log has moved past", () => {
       [],
       "a marker says a figure was superseded and quotes a record we have since withdrawn",
     );
+  });
+
+  it("sources every ended marker it renders to either a record or a tier", () => {
+    const unsourced = swept.flatMap(page =>
+      page.endedTooltips
+        .filter(tooltip => !SOURCED_TO_A_RECORD.test(tooltip) && !SOURCED_TO_A_TIER.test(tooltip))
+        .map(tooltip => `${page.path}: ${tooltip}`),
+    );
+    assert.deepStrictEqual(unsourced, []);
+  });
+
+  it("renders enough ended markers of each kind for the next assertion to bite", () => {
+    const tooltips = swept.flatMap(page => page.endedTooltips);
+    assertPopulationFloor(
+      vendorsSourcedTo(tooltips, SOURCED_TO_A_RECORD).length,
+      9,
+      "ended markers on the register that say a record of ours ends the free tier",
+    );
+    assertPopulationFloor(
+      vendorsSourcedTo(tooltips, SOURCED_TO_A_TIER).length,
+      1,
+      "ended markers on the register that source the ending to the tier the catalogue stores",
+    );
+  });
+
+  it("says a record of ours ends the free tier for exactly the vendors we hold such a record for", () => {
+    const weHold = endingRecordWeHold();
+    const misattributed = swept.flatMap(page => [
+      ...vendorsSourcedTo(page.endedTooltips, SOURCED_TO_A_RECORD)
+        .filter(vendor => !weHold(vendor))
+        .map(vendor => `${page.path}: ${vendor} is sent to a record we do not hold`),
+      ...vendorsSourcedTo(page.endedTooltips, SOURCED_TO_A_TIER)
+        .filter(vendor => weHold(vendor))
+        .map(vendor => `${page.path}: ${vendor} is sourced to its tier and we hold a record of the ending`),
+    ]);
+    assert.deepStrictEqual(misattributed, []);
+  });
+
+  it("quotes the tier the catalogue stores when it sources an ending to the tier", () => {
+    const stored = tierTheCatalogueStores();
+    const restated = swept.flatMap(page =>
+      page.endedTooltips
+        .filter(tooltip => SOURCED_TO_A_TIER.test(tooltip))
+        .filter(tooltip => {
+          const vendor = SOURCED_TO_A_TIER.exec(tooltip)![1]!;
+          return tooltip !== `${vendor}'s offer is recorded as ${stored.get(vendor.toLowerCase())}.`;
+        })
+        .map(tooltip => `${page.path}: ${tooltip}`),
+    );
+    assert.deepStrictEqual(restated, []);
   });
 });
