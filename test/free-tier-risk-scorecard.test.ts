@@ -17,6 +17,7 @@ const {
   trackedSinceGrading,
   negativesSinceGrading,
   neverTracked,
+  pricingHistoryCoverageAnswer,
   pricingHistoryCoverageSentence,
   whyNotEvidence,
   freeTierStanding,
@@ -253,6 +254,23 @@ describe("a grade with no pricing history behind it says so", () => {
     for (const entry of untracked) {
       assert.ok(method.includes(entry.vendor), `the methodology claims change data behind ${entry.vendor}'s grade without exception`);
     }
+  });
+
+  it("answers the same coverage in the structured FAQ, which travels without the page around it", () => {
+    const untracked = riskEntries.filter(e => neverTracked(e, dealChanges));
+    const answer = pricingHistoryCoverageAnswer(untracked, riskEntries);
+    assert.ok(
+      riskHtml.includes(answer),
+      `the FAQ answer does not state the coverage — ${untracked.length} of the ${riskEntries.length} graded vendors rest on no record`,
+    );
+    assert.ok(
+      !/(?:rests? on the other three factors|no record in our change log at all)[^.]*:\s*\./.test(riskHtml),
+      "the FAQ answer opens a list of vendors and names none",
+    );
+    assert.ok(
+      answer.includes("our change log"),
+      "the FAQ answer points at a log the reader cannot see named anywhere else in the answer",
+    );
   });
 });
 
