@@ -36,7 +36,7 @@ import { NO_CURRENT_FIGURE, costHeadlineCaveat, limitCellText, mayRecommendAsFre
 import { changesByVendor } from "./superseded-census.js";
 import { buildComparisonMap, comparisonSlug } from "./comparison-pairs.js";
 import { comparisonVerdictText, freeTierFaqAnswer, stabilityFaqAnswer, type ComparisonSide, type FreeTierSide, type SideFreeTier, type StabilityRating } from "./comparison-verdict.js";
-import { publishedVendorLevel, vendorVerdictSentence, vendorBadge, freeTierClaim, statesRiskCause, narrowingSentence, changeKindNoun, emptyHistoryCaveatSentence, refusedReadOurConfirmationSupersedes, refusedReadWeHold, refusedReadWithholdingSentence, nothingWeReadDescribesTheTerms, unconfirmedThresholdSentence, unconfirmedTermsOpening, whyWeCannotConfirmTheseTerms, withheldForARefusedRead, withUnconfirmedTerms, refusalWithholdsStability, termsUnconfirmedBySource, termsTheVerdictWithholds, closingTerms, termsWithTheReasonWeCannotConfirmThem, termsNotVerifiedMetaSentence, termsWithheldLabel, unconfirmedTermsSentence, withheldBadgeLabel, type BadgeWithholding, type UnconfirmedTerms, type FreeTierClaim, type VendorVerdictInput } from "./vendor-verdict.js";
+import { publishedVendorLevel, vendorVerdictSentence, vendorBadge, freeTierClaim, statesRiskCause, narrowingSentence, changeKindNoun, isOurOwnBookkeeping, emptyHistoryCaveatSentence, refusedReadOurConfirmationSupersedes, refusedReadWeHold, refusedReadWithholdingSentence, nothingWeReadDescribesTheTerms, unconfirmedThresholdSentence, unconfirmedTermsOpening, whyWeCannotConfirmTheseTerms, withheldForARefusedRead, withUnconfirmedTerms, refusalWithholdsStability, termsUnconfirmedBySource, termsTheVerdictWithholds, closingTerms, termsWithTheReasonWeCannotConfirmThem, termsNotVerifiedMetaSentence, termsWithheldLabel, unconfirmedTermsSentence, withheldBadgeLabel, type BadgeWithholding, type UnconfirmedTerms, type FreeTierClaim, type VendorVerdictInput } from "./vendor-verdict.js";
 import { tierRecordsAFreeTier } from "./free-tier-record.js";
 import { PAGE_HEAD_OPEN, withLedeBeforeNav } from "./page-lede.js";
 import { withReviewByline } from "./page-byline.js";
@@ -49,7 +49,7 @@ import { HETZNER_APRIL_CHANGES, HETZNER_CLOUD_PLANS, HETZNER_PRICES_READ, HETZNE
 import { HUNDRED_GB_SCENARIO, HUNDRED_TB_SCENARIO, ONE_TO_ONE_SCENARIO, STORAGE_RATES_READ, STORAGE_SCALE_WORKLOADS, TEN_TO_ONE_SCENARIO, cheapestProviderAt, costAfterMonthlyEgressGrantFor, costliestProviderAt, egressAllowanceSentence, egressBillAfterMonthlyGrantFor, egressBillOnceOverAllowance, egressRatioWhereCostsMatch, fixedMonthlyGrantsSentence, monthlyEgressGrantGb, monthlyEgressGrantSentence, monthlyStorageCost, providersWithScalingEgressAllowance, rateCardFor, scaleCostFor } from "./storage-cost-model.js";
 import { changeTimelineDate, supersededLineups, supersessionNote } from "./change-lineup.js";
 import { isNoLongerInForce, eventResolutionFields, recordsStillInForce, recordsWeStandBehind, INCLUDE_RETRACTED_REJECTED } from "./change-resolution.js";
-import { trackedChanges, changeCensus, changeCountPhrase, sliceById, CHANGE_SLICES, CENSUS_NOTE, TRACKED_CHANGE_RULE_ANCHOR, TRACKED_CHANGE_RULE_PATH, TRACKED_CHANGE_NOUN } from "./change-census.js";
+import { trackedChanges, changeCensus, changeCountPhrase, recordsNotCountedSentence, sliceById, CHANGE_SLICES, CENSUS_NOTE, TRACKED_CHANGE_RULE_ANCHOR, TRACKED_CHANGE_RULE_PATH, TRACKED_CHANGE_NOUN } from "./change-census.js";
 import { SINCE_DEFAULT_SENTENCE } from "./change-window.js";
 import { FREE_TIER_STANDING_LABELS, GRADE_FACTORS_WITHOUT_PRICING_HISTORY, NOT_EVIDENCE_LABELS, citesAChangeOlderThanTheGrade, freeTierStanding, gradesFirstSet, gradesLastSet, gradingDatesClause, neverTracked, riskEntries, scorecard, splitByFreeTierStanding, trackedSinceGrading, type RiskEntry } from "./risk-scorecard.js";
 import { CHANGE_DIRECTION, changeDirectionTable, directionRatioLabel } from "./change-direction.js";
@@ -105,7 +105,7 @@ import { partitionAlternatives, partitionSubstitutes, type SubstitutesPartition,
 import { buildProductFunctions, functionMembers, functionDefinitions, functionMeaningSentence, admissionFor, splitByFunction, labelsNaming, FUNCTION_RESIDUE_COPY, type ProductFunction, FUNCTION_MEMBERSHIP_RULE, FUNCTION_SPLIT_RULE, FUNCTION_NAMING_RULE, FUNCTION_TITLE_RULE, FUNCTION_PICK_RULE } from "./product-function.js";
 import { resolveCuratedAlternatives, curatedAlternativesFor, addCuratedToPool } from "./curated-alternatives.js";
 import type { Agent, ChangeDateSource, DealChange, RiskCause, RatingWithheld, LinkUnreachable, Offer, StabilityClass, SubtypeLabel } from "./types.js";
-import { changeDateLabel, changeEntryDateLabel, changeEntryLongDateLabel, changeDateClause, changeDatePublished, changeEventStartDate, capListSections, latestEventDate, offerExpiryAfter, feedEntryUpdated, undatedGroupHeading, UNDATED_TILE_LABEL, firstReadHeading, discoveryBatchNote, isoWeekOf, monthlyChangeSeries, changesInWindow, discoveryMonthSeriesHeading, periodComparisonSentence, DISCOVERED_DATE_PREFIX, EFFECTIVE_DATE_PREFIX, EVENT_DATED_SOURCES, UNDATED_GROUP_NOTE, UNKNOWN_EFFECTIVE_DATE_MARKER, EFFECTIVE_MONTH_SERIES_NOTE, DISCOVERY_MONTH_SERIES_NOTE, weekRangeLabel } from "./change-dates.js";
+import { ANNOUNCED_BADGE, ANNOUNCED_HEADING, announcedIntro, changeDateLabel, changeEntryDateLabel, changeEntryLongDateLabel, changeDateClause, changeDatePublished, changeEventStartDate, capListSections, latestEventDate, offerExpiryAfter, feedEntryUpdated, undatedGroupHeading, UNDATED_TILE_LABEL, firstReadHeading, discoveryBatchNote, isoWeekOf, monthlyChangeSeries, changesInWindow, discoveryMonthSeriesHeading, periodComparisonSentence, DISCOVERED_DATE_PREFIX, EFFECTIVE_DATE_PREFIX, EVENT_DATED_SOURCES, UNDATED_GROUP_NOTE, UNKNOWN_EFFECTIVE_DATE_MARKER, EFFECTIVE_MONTH_SERIES_NOTE, DISCOVERY_MONTH_SERIES_NOTE, weekRangeLabel } from "./change-dates.js";
 import { changeFeedEntries, feedEntryFields, feedUpdatedTimestamp, changeFeedProvenanceNote, CHANGE_FEED_ENTRY_LIMIT, CHANGE_FEED_DESCRIPTION, CHANGE_FEED_NAMESPACE, CHANGE_FEED_NAMESPACE_PREFIX, channelUpdatedTimestamp, WEEKLY_FEED_POPULATION_NOTE, feedLinkTag, feedEntrySourceXml, digestSourceXml, PER_CHANGE_FEED, WEEKLY_DIGEST_FEED } from "./change-feed.js";
 import { FEED_CORRECTIONS, correctionEntriesXml } from "./feed-corrections.js";
 import { buildDay, emptyPageLastmod, entryDay, fallbackDay, httpDate, lastmodFor, newestLastmod, readPageLastmod, type PageLastmodLedger } from "./page-lastmod.js";
@@ -23331,22 +23331,8 @@ function buildFreeTierRiskPage(): string {
     `<tr><th>Vendor</th><th>${statusHeader}</th><th>Category</th><th>${whatHeader}</th><th>${dateHeader}</th><th>Tracked since graded</th></tr>`;
 
   const categoryMap = new Map<string, { total: number; negative: number; positive: number }>();
-  const normCat = (c: string) => {
-    const cl = c.toLowerCase();
-    if (cl.includes("ai") || cl.includes("ml")) return "AI / ML";
-    if (cl.includes("cloud") && (cl.includes("iaas") || cl.includes("hosting") || cl.includes("storage") || cl.includes("ide"))) return "Cloud Infrastructure";
-    if (cl.includes("database")) return "Databases";
-    if (cl.includes("hosting")) return "Hosting / PaaS";
-    if (cl.includes("api") && !cl.includes("ai")) return "APIs & Gateways";
-    if (cl.includes("monitor") || cl.includes("logging")) return "Monitoring & Observability";
-    if (cl.includes("storage")) return "Storage";
-    if (cl.includes("testing")) return "Testing";
-    if (cl.includes("ci") || cl.includes("infrastructure")) return "CI/CD & Infrastructure";
-    if (cl.includes("container")) return "Containers";
-    return c;
-  };
-  for (const dc of changesInForce) {
-    const cat = normCat(dc.category);
+  for (const dc of trackedHere) {
+    const cat = resolveCategoryName(dc.category);
     const entry = categoryMap.get(cat) ?? { total: 0, negative: 0, positive: 0 };
     entry.total++;
     if (negativeTypes.has(dc.change_type)) entry.negative++;
@@ -23359,7 +23345,7 @@ function buildFreeTierRiskPage(): string {
   const heavilyNegative = heatmapData.filter(h => h.pctNeg >= 80);
   const heaviestNegative = heavilyNegative.slice(0, 3).map(h => h.category);
 
-  const changeMonths = monthlyChangeSeries(changesInForce);
+  const changeMonths = monthlyChangeSeries(trackedHere);
   const monthlyChanges = new Map([...changeMonths.effective].map(([month, records]) => [month, records.length]));
   const discoveryMonths = [...changeMonths.discovered].map(([month, records]) => [month, records.length] as const);
   const discoveredTotal = discoveryMonths.reduce((sum, [, count]) => sum + count, 0);
@@ -23372,7 +23358,7 @@ function buildFreeTierRiskPage(): string {
   );
 
   const vendorChangeCount = new Map<string, number>();
-  for (const dc of changesInForce) {
+  for (const dc of trackedHere) {
     vendorChangeCount.set(dc.vendor, (vendorChangeCount.get(dc.vendor) ?? 0) + 1);
   }
   const repeatVendors = [...vendorChangeCount.entries()]
@@ -52712,11 +52698,14 @@ const trendEmoji: Record<string, { icon: string; color: string; label: string }>
 
 function buildTrendsIndexPage(): string {
   const allChanges = trackedChanges(loadDealChanges());
+  const vendorMade = allChanges.filter(c => !isOurOwnBookkeeping(c));
+  const corrections = allChanges.length - vendorMade.length;
 
   const byCat = new Map<string, typeof allChanges>();
-  for (const c of allChanges) {
-    if (!byCat.has(c.category)) byCat.set(c.category, []);
-    byCat.get(c.category)!.push(c);
+  for (const c of vendorMade) {
+    const name = resolveCategoryName(c.category);
+    if (!byCat.has(name)) byCat.set(name, []);
+    byCat.get(name)!.push(c);
   }
 
   const sorted = Array.from(byCat.entries()).sort((a, b) => b[1].length - a[1].length);
@@ -52799,7 +52788,7 @@ ${globalNavCss()}
   ${buildGlobalNav("trends")}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; Pricing Trends</div>
   <h1>Pricing Trends by Category</h1>
-  <p class="page-meta">${changeCountPhrase("tracked", allChanges)} across ${totalCategories} categories, by the rule at <a href="${TRACKED_CHANGE_RULE_PATH}">what counts as a change</a>. Ranked by volatility.</p>
+  <p class="page-meta">${changeCountPhrase("tracked", allChanges)} across ${totalCategories} categories, by the rule at <a href="${TRACKED_CHANGE_RULE_PATH}">what counts as a change</a>. Ranked by volatility.${corrections > 0 ? ` ${corrections} of them correct an earlier entry of our own rather than reporting anything a vendor did, so no category counts them.` : ""}</p>
   <div style="margin-bottom:1.5rem;padding:1rem 1.25rem;border:1px solid var(--border);border-radius:8px;background:var(--bg-card)">
     <a href="/state-of-free-tiers" style="color:var(--accent);text-decoration:none;font-size:.95rem;font-weight:500">Read the full State of Free Tiers Report</a>
     <span style="color:var(--text-muted);font-size:.85rem"> &mdash; data-driven analysis of erosion patterns, category trends, and which vendors are still expanding.</span>
@@ -52823,13 +52812,18 @@ function buildTrendsPage(slug: string): string | null {
   if (!categoryName) return null;
 
   const allChanges = loadDealChanges();
-  const catChanges = allChanges.filter(c => c.category === categoryName).sort((a, b) => b.date.localeCompare(a.date));
+  const catChanges = allChanges.filter(c => resolveCategoryName(c.category) === categoryName).sort((a, b) => b.date.localeCompare(a.date));
   const catOffers = offers.filter(o => o.category === categoryName);
   const enriched = enrichOffers(catOffers);
 
-  const catTracked = trackedChanges(catChanges);
+  const catTracked = trackedChanges(catChanges).filter(c => !isOurOwnBookkeeping(c));
   const direction = getTrendDirection(catTracked);
   const t = trendEmoji[direction];
+
+  const asOf = new Date().toISOString().slice(0, 10);
+  const announced = catTracked.filter(c => c.date > asOf);
+  const history = catTracked.filter(c => c.date <= asOf);
+  const notCounted = catChanges.length - catTracked.length;
 
   const typeBreakdown = new Map<string, number>();
   for (const c of catTracked) {
@@ -52847,18 +52841,35 @@ function buildTrendsPage(slug: string): string | null {
   const title = `${categoryName} Pricing Trends — AgentDeals`;
   const metaDesc = `Pricing trends for ${categoryName}: ${catTracked.length} ${TRACKED_CHANGE_NOUN} across ${catOffers.length} vendors. Direction: ${t.label.toLowerCase()}.`;
 
-  const timelineHtml = catChanges.length > 0 ? catChanges.map(c => {
+  const timelineItemHtml = (c: DealChange, lead: string = "") => {
     const badge = changeTypeBadge[c.change_type] ?? { label: c.change_type, color: "#8b949e" };
     return `      <div class="timeline-item" style="border-left-color:${badge.color}">
         <div class="timeline-head">
-          <span class="badge" style="background:${badge.color}">${badge.label}</span>
+          ${lead}<span class="badge" style="background:${badge.color}">${badge.label}</span>
           ${changeVendorLinkHtml(c.vendor, ' class="timeline-vendor"')}
           <span class="timeline-date">${changeEntryDateLabel(c)}</span>
           <span class="impact impact-${c.impact}">${c.impact}</span>
         </div>
         <div class="timeline-summary">${changeSummaryHtml(c, escHtmlServer)}</div>
       </div>`;
-  }).join("\n") : `<p class="no-data">No pricing changes tracked for ${escHtmlServer(categoryName)}. All vendors in this category have stable pricing.</p>`;
+  };
+
+  const timelineHtml = history.length > 0
+    ? history.map(c => timelineItemHtml(c)).join("\n")
+    : `<p class="no-data">No pricing changes tracked for ${escHtmlServer(categoryName)}. All vendors in this category have stable pricing.</p>`;
+
+  const announcedHtml = announced.length > 0 ? `
+  <div class="section">
+    <h2>${ANNOUNCED_HEADING}</h2>
+    <p class="section-desc">${announcedIntro(announced.length, asOf)}</p>
+    <div class="timeline">
+${announced.map(c => timelineItemHtml(c, `<span class="badge" style="background:#8b949e">${ANNOUNCED_BADGE}</span> `)).join("\n")}
+    </div>
+  </div>` : "";
+
+  const notCountedHtml = notCounted > 0
+    ? `<p class="section-desc">${recordsNotCountedSentence(notCounted)} <a href="/changes">Read the full change log</a>.</p>`
+    : "";
 
   const breakdownHtml = Array.from(typeBreakdown.entries()).sort((a, b) => b[1] - a[1]).map(([type, count]) => {
     const badge = changeBadge(type);
@@ -52989,12 +53000,13 @@ ${globalNavCss()}
   </div>
 
   ${breakdownHtml ? `<div class="breakdown">${breakdownHtml}</div>` : ""}
-
+${announcedHtml}
   <div class="section">
     <h2>Pricing Change Timeline</h2>
     <div class="timeline">
 ${timelineHtml}
     </div>
+    ${notCountedHtml}
   </div>
 ${atRiskHtml}
 ${stableHtml}
@@ -55922,6 +55934,12 @@ ${catList}
     res.end(buildTrendsIndexPage());
   } else if (url.pathname.startsWith("/trends/") && isGetOrHead) {
     const slug = url.pathname.slice("/trends/".length).replace(/\/$/, "");
+    const aliasName = Object.keys(CATEGORY_ALIASES).find(name => toSlug(name) === slug);
+    if (aliasName && !categorySlugMap.has(slug)) {
+      res.writeHead(301, { Location: `/trends/${toSlug(CATEGORY_ALIASES[aliasName])}` });
+      res.end();
+      return;
+    }
     const html = buildTrendsPage(slug);
     if (html) {
       recordApiHit("/trends/:slug");

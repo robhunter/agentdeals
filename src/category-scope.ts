@@ -367,6 +367,19 @@ export const CATEGORY_SCOPES: Record<string, CategoryScope> = {
 
 export const CATEGORY_ALIASES: Record<string, string> = {
   "Startup Programs": "Startup Perks",
+  "AI/ML": "AI / ML",
+  "AI/ML APIs": "AI / ML",
+  "APIs": "Dev Utilities",
+  "Authentication": "Auth",
+  "Cloud IDE": "IDE & Code Editors",
+  "Developer Tools": "Dev Utilities",
+  "DevOps": "Infrastructure",
+  "E-Commerce": "API Development",
+  "Enterprise Software": "Team Collaboration",
+  "Hosting": "Cloud Hosting",
+  "Media": "Dev Utilities",
+  "Serverless": "Cloud Hosting",
+  "Version Control": "Source Control",
 };
 
 export interface CategoryRetirement {

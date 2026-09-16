@@ -89,7 +89,7 @@ const DOCUMENTED_OPERATIONS: Record<string, Record<string, any>> = {
                     }
                   },
                   example_members_basis: { type: "string" },
-                  retired_names: { type: "object", additionalProperties: { type: "string" }, description: "Category names no longer published, mapped to the name that replaced them." }
+                  retired_names: { type: "object", additionalProperties: { type: "string" }, description: "Names that are not published as categories of their own, mapped to the published category each resolves to. Some were retired and replaced; others are spellings the change log uses for a category we list under another name." }
                 }
               },
               example: {

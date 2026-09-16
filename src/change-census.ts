@@ -93,3 +93,9 @@ export function changeCountPhrase<T extends CensusSubject>(
 export const CENSUS_NOTE =
   `Every total we publish is one of these four and names which. ${TRACKED_CHANGE_RULE_SENTENCE} `
   + `The rule is at ${TRACKED_CHANGE_RULE_PATH}.`;
+
+export function recordsNotCountedSentence(count: number): string {
+  const noun = count === 1 ? "one more record" : `${count} more records`;
+  const verb = count === 1 ? "is" : "are";
+  return `We hold ${noun} filed under this category that ${verb} not counted above: entries the vendor has since reversed, our own index housekeeping, and corrections to earlier entries of our own.`;
+}
