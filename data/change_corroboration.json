@@ -1,26 +1,81 @@
 {
   "held": [
     {
-      "vendor": "Conversion Tools",
-      "change_type": "limits_reduced",
-      "impact": "high",
-      "summary": "The free tier now offers 100 free API calls/month + 100 AI credits/month instead of 30 conversions/day or 300/month, and the file size limit is 10MB.",
-      "previous_state": "Online File Converter for documents, images, video, audio, and eBooks. REST API is available. Libraries for Node.js, PHP, Python. Support files up to 50 GB (for paid plans). The free tier is limited by file size (10MB) and number of conversions (30/Day, 300/Month).",
-      "current_state": "Free users can convert files up to 10 MB. The API offers 100 free API calls/month + 100 AI credits/month.",
-      "source_url": "https://conversiontools.io/",
-      "category": "Dev Utilities",
-      "first_read_date": "2026-09-14"
+      "vendor": "Auth0",
+      "change_type": "restriction",
+      "impact": "medium",
+      "summary": "The free tier now requires credit card verification for custom domains. Was not previously required. The free tier also includes Passkeys, Custom Social Connections, and AI CIBA ADD-ON.",
+      "previous_state": "Identity platform — 25K MAU (B2C), unlimited logins, social + database connections, Universal Login, 1 Enterprise Connection, 5 Organizations, 1 Custom Domain. No credit card required",
+      "current_state": "The Free plan is $0/month and includes up to 25,000 monthly active users, 1 Custom Domain* (credit card verification required), Unlimited Social Connections**, Passwordless Authentication, 5 Organizations, Brand Customization, Basic Attack Protection, Community Support, 1 Enterprise Connection, and new features like Self-Service SSO and SCIM.",
+      "source_url": "https://auth0.com/pricing",
+      "category": "Auth",
+      "first_read_date": "2026-09-16"
     },
     {
-      "vendor": "JDoodle",
-      "change_type": "limits_reduced",
+      "vendor": "Cloudflare Durable Objects",
+      "change_type": "restriction",
       "impact": "high",
-      "summary": "The free tier now has a limit of 1,000 code executions per day. Previously 200 credits per day.",
-      "previous_state": "Online compiler and editor for more than 60 programming languages with a free plan for REST API code compiling up to 200 credits per day.",
-      "current_state": "The free tier offers the full IDE, saved projects, and all 114 languages, frameworks and databases. It includes 1,000 code executions per day and 100 saved projects.",
-      "source_url": "https://www.jdoodle.com",
-      "category": "IDE & Code Editors",
-      "first_read_date": "2026-09-15"
+      "summary": "The free plan now only supports Durable Objects with SQLite storage backend.",
+      "previous_state": "Stateful serverless compute — 100K requests/day on free plan. Strongly consistent storage with WebSocket hibernation. SQLite storage included (first 10 GB on paid plan). Facets: dynamic multi-class Durable Objects without separate namespace bindings (April 2026)",
+      "current_state": "On Workers Free plan: Only Durable Objects with SQLite storage backend are available. Workers Free plan requests are limited to 100,000 / day. Duration is limited to 13,000 GB-s / day. SQLite storage is limited to 5 GB.",
+      "source_url": "https://developers.cloudflare.com/durable-objects/platform/pricing/",
+      "category": "Cloud Hosting",
+      "first_read_date": "2026-09-16"
+    },
+    {
+      "vendor": "Cloudflare KV",
+      "change_type": "restriction",
+      "impact": "low",
+      "summary": "The free plan includes 100,000 reads/day, 1,000 writes/day, and 1 GB storage, but the page states that all limits reset daily at 00:00 UTC.",
+      "previous_state": "Key-value store at the edge — 100K reads/day, 1K writes/day, 1 GB storage. Eventually consistent with global replication",
+      "current_state": "Workers KV is included in both the Free and Paid Workers plans . Free plan 1 Keys read 100,000 / day Keys written 1,000 / day Stored data 1 GB. All limits reset daily at 00:00 UTC.",
+      "source_url": "https://developers.cloudflare.com/kv/platform/pricing/",
+      "category": "Databases",
+      "first_read_date": "2026-09-16"
+    },
+    {
+      "vendor": "Grafana Cloud",
+      "change_type": "pricing_restructured",
+      "impact": "high",
+      "summary": "The free tier now includes a platform fee of $19/month for 50GB ingested for logs, traces, and profiles.",
+      "previous_state": "Free tier with 10K metric series, 50 GB logs, 50 GB traces, 14-day retention, 3 users",
+      "current_state": "The Free tier is now $19/month and includes 10k active series, 50 GB logs, 50 GB traces, 14-day retention, and community support.",
+      "source_url": "https://grafana.com/pricing/",
+      "category": "Monitoring",
+      "first_read_date": "2026-09-16"
+    },
+    {
+      "vendor": "Koyeb",
+      "change_type": "limits_reduced",
+      "impact": "medium",
+      "summary": "The free tier now has a 5 hour/month limit, and storage costs $0.50/mo per GB.",
+      "previous_state": "Free Postgres database (0.25 vCPU, 1 GB RAM, 1 GB storage, 5 hr/month runtime). No free compute tier — Pro plan starts at $29/month with $10 included compute.",
+      "current_state": "Free 5h $ 0 /hr $ 0 /mo vCPU 0.25 RAM 1 GB Storage 1GB. Storage: $0.50/mo per GB",
+      "source_url": "https://www.koyeb.com/pricing",
+      "category": "Databases",
+      "first_read_date": "2026-09-16"
+    },
+    {
+      "vendor": "Oracle Cloud",
+      "change_type": "pricing_restructured",
+      "impact": "low",
+      "summary": "The page confirms the existence of an Always Free tier, it lists many more services as part of it than were originally described (e.g., HeatWave, Autonomous Data Warehouse, NoSQL Database). The page does not explicitly confirm these specific limits, only stating that 'some limitations apply'.",
+      "previous_state": "Always Free includes 2 AMD VMs (1/8 OCPU, 1 GB each), up to 4 Arm VMs (24 GB total), 200 GB block volumes, 20 GB object storage, 2 Autonomous Databases, Load Balancer",
+      "current_state": "Always Free services are available for an unlimited time. Some limitations apply. The following services are available as Always Free: HeatWave AMD-based Compute Arm-based Ampere A1 Compute Block Volume Object Storage Archive Storage Flexible Load Balancer Flexible Network Load Balancer Site-to-Site VPN Autonomous Data Warehouse Autonomous Transaction Processing Autonomous JSON Database NoSQL Database (Phoenix Region only) APEX Application Development Resource Manager (Terraform) Monitoring Notifications Logging Application Performance Monitoring Service Connector Hub Vault Bastions Security Advisor Virtual Cloud Networks Site-to-Site VPN Content Management Starter Edition Email Delivery",
+      "source_url": "https://www.oracle.com/cloud/free/",
+      "category": "Cloud IaaS",
+      "first_read_date": "2026-09-16"
+    },
+    {
+      "vendor": "Render",
+      "change_type": "pricing_restructured",
+      "impact": "medium",
+      "summary": "The Hobby tier still exists. The description of included services has changed. Bandwidth is still 5 GB included, then $0.15/GB. The number of services is still 25.",
+      "previous_state": "Free web services (512 MB RAM, less than 1 CPU), free PostgreSQL (256 MB RAM, 30-day expiry), free Redis (25 MB). 5 GB bandwidth/month included then $0.15/GB, 500 build minutes/month. Up to 25 services, 2 environments per project. Auto-deploy from Git",
+      "current_state": "Hobby is $0/month + compute. Deploy up to 25 services with 5 GB of bandwidth included. Compute options include: 512 MB RAM, less than 1 CPU for $0/month; 512 MB RAM, 1 CPU for $7/month; 2 GB RAM, 2 CPU for $25/month, etc. Postgres options include 256 MB RAM, less than 1 CPU for $0/month; 256 MB RAM, 0.1c-256mb, less than 1 CPU for $6/month, etc. Key Value options include 25 MB RAM, 50 connections free for $0/month; 256 MB RAM, 250 connections for $10/month, etc.",
+      "source_url": "https://render.com/pricing",
+      "category": "Cloud Hosting",
+      "first_read_date": "2026-09-16"
     }
   ],
   "resolved": [
@@ -83,6 +138,30 @@
       "outcome": "corroborated",
       "detail": "a reading on 2026-09-15 read it as product_deprecated too",
       "resolved_date": "2026-09-15"
+    },
+    {
+      "vendor": "Conversion Tools",
+      "change_type": "limits_reduced",
+      "impact": "high",
+      "summary": "The free tier now offers 100 free API calls/month + 100 AI credits/month instead of 30 conversions/day or 300/month, and the file size limit is 10MB.",
+      "previous_state": "Online File Converter for documents, images, video, audio, and eBooks. REST API is available. Libraries for Node.js, PHP, Python. Support files up to 50 GB (for paid plans). The free tier is limited by file size (10MB) and number of conversions (30/Day, 300/Month).",
+      "source_url": "https://conversiontools.io/",
+      "first_read_date": "2026-09-14",
+      "outcome": "contradicted",
+      "detail": "a reading on 2026-09-16 read a change the gate refused as unquantified_limit",
+      "resolved_date": "2026-09-16"
+    },
+    {
+      "vendor": "JDoodle",
+      "change_type": "limits_reduced",
+      "impact": "high",
+      "summary": "The free tier now has a limit of 1,000 code executions per day. Previously 200 credits per day.",
+      "previous_state": "Online compiler and editor for more than 60 programming languages with a free plan for REST API code compiling up to 200 credits per day.",
+      "source_url": "https://www.jdoodle.com",
+      "first_read_date": "2026-09-15",
+      "outcome": "corroborated",
+      "detail": "a reading on 2026-09-16 read it as limits_reduced too",
+      "resolved_date": "2026-09-16"
     }
   ]
 }

@@ -974,6 +974,18 @@
       "refused_date": "2026-09-09"
     },
     {
+      "vendor": "Conversion Tools",
+      "change_type": "limits_reduced",
+      "reason": "unquantified_limit",
+      "detail": "limits_reduced claimed, but the current state names no quantity for anything the stored state measured (50 gb, 10 mb)",
+      "summary": "The free tier now offers 100 free API calls/month + 100 AI credits/month instead of 30 conversions/day or 300/month. The file size limit for free users is still 10MB.",
+      "previous_state": "Online File Converter for documents, images, video, audio, and eBooks. REST API is available. Libraries for Node.js, PHP, Python. Support files up to 50 GB (for paid plans). The free tier is limited by file size (10MB) and number of conversions (30/Day, 300/Month).",
+      "current_state": "Free users get 100 free API calls/month + 100 AI credits/month.",
+      "source_url": "https://conversiontools.io/",
+      "category": "Dev Utilities",
+      "refused_date": "2026-09-16"
+    },
+    {
       "vendor": "Convex",
       "change_type": "limits_increased",
       "reason": "states_no_difference",
@@ -1128,6 +1140,18 @@
       "source_url": "https://www.joinsecret.com/offers",
       "category": "Startup Perks",
       "refused_date": "2026-09-15"
+    },
+    {
+      "vendor": "Databricks (Lakeflow Connect)",
+      "change_type": "free_tier_removed",
+      "reason": "no_price_signal",
+      "detail": "the page read carries no price signal — no amount, named tier or metered rate in 7711 characters, so it states no terms to have changed",
+      "summary": "The page details Lakeflow Connect as a feature accessed through Unity Catalog connections and managed ingestion pipelines. It does not explicitly mention a free tier with 100 DBUs/day. It states that managed ingestion connectors allow admins to create connections and pipelines, and that non-admin users require an admin to create the connection first.",
+      "previous_state": "Azure Databricks Lakeflow Connect — managed data ingestion. Free tier: 100 DBUs/day per workspace (~100M records/day). Supports 40+ data sources including SQL Server, PostgreSQL, MySQL, Salesforce, Sharepoint, Google Sheets. Serverless compute included",
+      "current_state": "Lakeflow Connect allows admin users to create a connection and a managed ingestion pipeline. Non-admin users require an admin to create the connection first. It is part of Unity Catalog connections and managed ingestion pipelines.",
+      "source_url": "https://learn.microsoft.com/en-us/azure/databricks/connect/",
+      "category": "Databases",
+      "refused_date": "2026-09-16"
     },
     {
       "vendor": "DatoCMS",
@@ -1751,6 +1775,18 @@
       "refused_date": "2026-09-10"
     },
     {
+      "vendor": "GitHub Actions",
+      "change_type": "limits_reduced",
+      "reason": "states_no_difference",
+      "detail": "limits_reduced claimed, and every figure the summary carried sat in a clause about our own record rather than about the vendor's terms",
+      "summary": "The free tier for private repositories now has different limits. The stored information states 2,000 minutes, while the current pricing page states 2,000 minutes for the 'GitHub Free' plan. The stored information also mentions a postponed charge for self-hosted runners, which is not mentioned on the current page. The pricing for different runner types is now explicitly stated.",
+      "previous_state": "Free CI/CD for public repos (unlimited minutes). Private repos: 2,000 min/mo GitHub-hosted runners, 500 MB artifact storage, 10 GB cache/repo. Self-hosted runners remain free — planned $0.002/min charge was postponed indefinitely after community backlash (March 2026). Hosted runner prices reduced 39% (Jan 2026)",
+      "current_state": "The GitHub Free plan includes 500 MB of artifact storage, 2,000 minutes per month, and 10 GB of cache storage per repository. Usage beyond these limits is billed.",
+      "source_url": "https://docs.github.com/en/billing/managing-billing-for-github-actions/about-billing-for-github-actions",
+      "category": "CI/CD",
+      "refused_date": "2026-09-16"
+    },
+    {
       "vendor": "GitHub",
       "change_type": "limits_reduced",
       "reason": "unquantified_limit",
@@ -1848,6 +1884,18 @@
       "refused_date": "2026-09-03"
     },
     {
+      "vendor": "Google Cloud Shell",
+      "change_type": "limits_reduced",
+      "reason": "no_price_signal",
+      "detail": "the page read carries no price signal — no amount, named tier or metered rate in 12982 characters, so it states no terms to have changed",
+      "summary": "The documentation states a weekly usage quota of 50 hours for Cloud Shell. It also recommends upgrading to Cloud Workstations for unlimited usage. Additionally, the documentation warns that the $HOME directory will be deleted after 120 days of inactivity.",
+      "previous_state": "Always Free: browser-based terminal with 5 GB persistent disk, pre-installed tools (gcloud, kubectl, docker, git), and built-in code editor",
+      "current_state": "Cloud Shell has a default weekly quota of 50 hours. Sessions are capped at 12 hours and non-interactive sessions end after 40 minutes. The $HOME directory is deleted after 120 days of inactivity.",
+      "source_url": "https://docs.cloud.google.com/shell/docs/quotas-limits",
+      "category": "Dev Utilities",
+      "refused_date": "2026-09-16"
+    },
+    {
       "vendor": "Google Cloud Storage",
       "change_type": "pricing_restructured",
       "reason": "states_no_terms",
@@ -1858,6 +1906,18 @@
       "source_url": "https://cloud.google.com/storage/pricing",
       "category": "Storage",
       "refused_date": "2026-09-03"
+    },
+    {
+      "vendor": "Google Gemini Embedding 2",
+      "change_type": "pricing_model_change",
+      "reason": "states_no_terms",
+      "detail": "every clause of the summary states absence or narration rather than a term the page carries, so it reports the reading rather than a change",
+      "summary": "The pricing page details 'Embedding Gemini 2' as a model available under various tiers (Pro, Flash, Omni) and doesn't mention a specific free tier or pay-as-you-go model as described in the stored information. It lists several embedding models with different capabilities and pricing structures.",
+      "previous_state": "First natively multimodal embedding model — text, images, video, audio, and documents in a single embedding space. Enables cross-modal similarity search and retrieval. Available via Vertex AI and Gemini API.",
+      "current_state": "Gemini Embedding 2 is available as part of several models (Pro, Flash, Omni) with varying capabilities and is not presented as a standalone pay-as-you-go offering.",
+      "source_url": "https://cloud.google.com/vertex-ai/docs/generative-ai/embeddings/get-text-embeddings",
+      "category": "AI / ML",
+      "refused_date": "2026-09-16"
     },
     {
       "vendor": "Google Maps Platform",
@@ -3094,6 +3154,18 @@
       "refused_date": "2026-09-02"
     },
     {
+      "vendor": "Nuclei",
+      "change_type": "new_tier",
+      "reason": "dangling_reference",
+      "detail": "the summary now opens on a reference to a clause that was dropped, so the sentence that travels alone has no subject",
+      "summary": "The page mentions a free cloud tier with generous monthly limits, but also details Pro and Enterprise editions with significantly more features and capabilities. The original stored information only mentioned the open-source nature and no usage limits. The page also indicates that running Nuclei as a service may pose security risks, which was not mentioned previously.",
+      "previous_state": "Open source (MIT) vulnerability scanner with YAML-based template system. 9,000+ community templates for web apps, APIs, networks, DNS, SSL. No usage limits.",
+      "current_state": "For security teams and enterprises, we provide a cloud-hosted service built on top of Nuclei OSS, fine-tuned to help you continuously run vulnerability scans at scale with your team and existing workflows: 50x faster scans, Large scale scanning with high accuracy, Integrations with cloud services (AWS, GCP, Azure, Cloudflare, Fastly, Terraform, Kubernetes), Jira, Slack, Linear, APIs and Webhooks, Executive and compliance reporting.",
+      "source_url": "https://github.com/projectdiscovery/nuclei",
+      "category": "Security",
+      "refused_date": "2026-09-16"
+    },
+    {
       "vendor": "numverify",
       "change_type": "limits_increased",
       "reason": "same_transition_graded_differently",
@@ -3189,6 +3261,30 @@
       "source_url": "https://outlook.live.com",
       "category": "Consumer Email",
       "refused_date": "2026-09-10"
+    },
+    {
+      "vendor": "OVHcloud",
+      "change_type": "product_deprecated",
+      "reason": "restates_stored_quantities",
+      "detail": "narrowing claimed, and every quantity the current state names is one the stored description already held at the same value (9 deployment, 11 deployment), and drops 9 the stored description carried",
+      "summary": "The Kimsufi budget line is discontinued and replaced by the Eco range. Bare Metal prices are increasing 9-11% for new deployments after April 2026.",
+      "previous_state": "Dedicated servers starting from ~€55/mo (Rise line: Intel Xeon, 32 GB RAM, 2×480 GB SSD). Kimsufi budget line discontinued, replaced by Eco range from ~€30/mo. Game line with DDoS protection and high-frequency CPU. Storage line for NAS/backup from ~€40/mo. All include unmetered bandwidth (500 Mbps-1 Gbps depending on range). Post-April 2026: Bare Metal prices increased 9-11% for new deployments",
+      "current_state": "The page mentions an 'Eco' range for web hosting, described as 'For accessible prices', and states Bare Metal prices will increase 9-11% for new deployments post-April 2026.",
+      "source_url": "https://www.ovhcloud.com/en/bare-metal/",
+      "category": "Infrastructure",
+      "refused_date": "2026-09-16"
+    },
+    {
+      "vendor": "OVHcloud",
+      "change_type": "free_tier_removed",
+      "reason": "states_no_difference",
+      "detail": "the summary states that the page agrees with what we hold, and names no figure the stored description did not already carry",
+      "summary": "The €200 credit for 60 days is not mentioned on the current pricing page. While Public Cloud services are listed, there's no explicit mention of a free trial or credit offer. VPS pricing starts at €7.60/mo, which matches the stored information, but the free trial is absent.",
+      "previous_state": "Public Cloud free trial: €200 credit for 60 days. VPS from €7.60/mo (Starter: 1 vCPU, 2 GB RAM, 20 GB SSD NVMe, 250 Mbps unlimited). Discovery instances (d2-2) from ~€5/mo. Object Storage (S3-compatible). Managed Kubernetes (free control plane). 40+ regions across Europe, NA, APAC. April 2026 price increases: VPS +55-67% (VPS-1 €4.90→€7.60, VPS-4 €26→€43.50), Public Cloud/Bare Metal +9-11%. Driven by AI DRAM/NVMe cost surge",
+      "current_state": "The page lists various Public Cloud services including Compute, Containers, Storage, Network, Databases, Analytics, AI, Quantum, Security, Operations, and Developer Tools, with pricing available for individual components like Block Storage, Object Storage, and Databases. VPS pricing starts at €7.60/mo.",
+      "source_url": "https://www.ovhcloud.com/en/public-cloud/",
+      "category": "Cloud IaaS",
+      "refused_date": "2026-09-16"
     },
     {
       "vendor": "Paddle",
@@ -3471,6 +3567,18 @@
       "collided_with": "PromoProxy|limits_reduced|2026-09-01|https://promoproxy.net/"
     },
     {
+      "vendor": "Publist",
+      "change_type": "pricing_restructured",
+      "reason": "page_does_not_name_vendor",
+      "detail": "the page read never names Publist and is not served from its domain, so any terms on it belong to somebody else",
+      "summary": "The page indicates a free tier with access to 344 deals, and a Premium tier with access to 284 deals. The stored information stated a 'Personal plan free forever' with a first deal free, then a 99€/year option or invite friends.",
+      "previous_state": "Personal plan free forever. Access via: First deal free, then 99€/year or invite friends",
+      "current_state": "Get access to 344 deals for free and 271 deals when you upgrade to Premium.",
+      "source_url": "https://www.joinsecret.com/offers",
+      "category": "Startup Perks",
+      "refused_date": "2026-09-16"
+    },
+    {
       "vendor": "pubnub.com",
       "change_type": "limits_reduced",
       "reason": "unquantified_limit",
@@ -3542,6 +3650,18 @@
       "source_url": "https://qoddi.com",
       "category": "Cloud Hosting",
       "refused_date": "2026-08-28"
+    },
+    {
+      "vendor": "Quartzy",
+      "change_type": "startup_program_expanded",
+      "reason": "page_does_not_name_vendor",
+      "detail": "the page read never names Quartzy and is not served from its domain, so any terms on it belong to somebody else",
+      "summary": "The page mentions access to over $350,000 in discounts from partners, including AWS, Slack, OpenAI, and QuickBooks, and a Startup Program is not explicitly mentioned with $10,000 in Quartzy credits. The focus is on Brex Rewards and discounts from various vendors, not a specific Quartzy deal tied to Brex customers.",
+      "previous_state": "Up to $10,000 in Quartzy credits. Access via: Free for Brex customers",
+      "current_state": "Access over $350,000 in discounts from our partners on the tools you already use, including AWS, Slack, OpenAI, and QuickBooks.",
+      "source_url": "https://brex.com/rewards/",
+      "category": "Startup Perks",
+      "refused_date": "2026-09-16"
     },
     {
       "vendor": "readthedocs.org",
@@ -3741,6 +3861,18 @@
       "collided_with": "Rybbit|free_tier_removed|2026-08-28|https://rybbit.com/"
     },
     {
+      "vendor": "Salesforce",
+      "change_type": "restriction",
+      "reason": "page_does_not_name_vendor",
+      "detail": "the page read never names Salesforce and is not served from its domain, so any terms on it belong to somebody else",
+      "summary": "The page mentions access to over $350,000 in discounts from partners, including Salesforce, but does not mention a 25% subscription discount or a $375 limit specifically for startups. It also does not mention the discount being exclusive to Brex customers.",
+      "previous_state": "25% subscription discount, up to $375. Access via: Free for Brex customers",
+      "current_state": "Access over $350,000 in discounts from our partners on the tools you already use, including AWS, Slack, OpenAI, and QuickBooks.",
+      "source_url": "https://brex.com/rewards/",
+      "category": "Startup Perks",
+      "refused_date": "2026-09-16"
+    },
+    {
       "vendor": "Sauce Labs",
       "change_type": "free_tier_removed",
       "reason": "dangling_reference",
@@ -3751,6 +3883,18 @@
       "source_url": "https://saucelabs.com/pricing",
       "category": "Testing",
       "refused_date": "2026-09-03"
+    },
+    {
+      "vendor": "Science Exchange",
+      "change_type": "restriction",
+      "reason": "page_does_not_name_vendor",
+      "detail": "the page read never names Science Exchange and is not served from its domain, so any terms on it belong to somebody else",
+      "summary": "The page mentions access to discounts from top vendors, including Science Exchange, but does not specifically mention a 15% discount on an Enterprise License for Brex customers. It broadly states access to over $350,000 in discounts.",
+      "previous_state": "15% discount on Enterprise License. Access via: Free for Brex customers",
+      "current_state": "Access over $350,000 in discounts from our partners on the tools you already use, including AWS, Slack, OpenAI, and QuickBooks.",
+      "source_url": "https://brex.com/rewards/",
+      "category": "Startup Perks",
+      "refused_date": "2026-09-16"
     },
     {
       "vendor": "ScraperAPI",
@@ -3816,6 +3960,18 @@
       "refused_date": "2026-09-10"
     },
     {
+      "vendor": "SendGrid",
+      "change_type": "free_tier_removed",
+      "reason": "page_does_not_name_vendor",
+      "detail": "the page read never names SendGrid and is not served from its domain, so any terms on it belong to somebody else",
+      "summary": "The page does not mention the $130/month off the Pro 100K Plan specifically for Brex customers. It broadly mentions access to over $350,000 in discounts from partners, including Slack, AWS, OpenAI, and QuickBooks, and a launch stack for startups.",
+      "previous_state": "$130/month off of new Pro 100K Plan. Access via: Free for Brex customers",
+      "current_state": "The page states access to over $350,000 in discounts from partners and a launch stack for startups, but does not mention the specific $130/month discount on the Pro 100K plan for Brex customers.",
+      "source_url": "https://brex.com/rewards/",
+      "category": "Startup Perks",
+      "refused_date": "2026-09-16"
+    },
+    {
       "vendor": "Sendinblue",
       "change_type": "free_tier_removed",
       "reason": "same_transition_graded_differently",
@@ -3867,6 +4023,42 @@
       "collided_with": "Shadcn Studio|pricing_model_change|2026-08-28|https://shadcnstudio.com/theme-editor"
     },
     {
+      "vendor": "Shine",
+      "change_type": "free_tier_removed",
+      "reason": "page_does_not_name_vendor",
+      "detail": "the page read never names Shine and is not served from its domain, so any terms on it belong to somebody else",
+      "summary": "The deal is no longer 6 months free on the Premium plan. The page states that Premium access is granted with a subscription, and offers access to 284 deals when upgrading to Premium.",
+      "previous_state": "6 months free on Premium plan. Access via: First deal free, then 99€/year or invite friends",
+      "current_state": "Get access to 284 deals when you upgrade to Premium.",
+      "source_url": "https://www.joinsecret.com/offers",
+      "category": "Startup Perks",
+      "refused_date": "2026-09-16"
+    },
+    {
+      "vendor": "Shippo",
+      "change_type": "free_tier_removed",
+      "reason": "page_does_not_name_vendor",
+      "detail": "the page read never names Shippo and is not served from its domain, so any terms on it belong to somebody else",
+      "summary": "The page does not mention a 4-month free trial of Shippo Pro Plan specifically for Brex customers. It broadly mentions access to exclusive deals and over $350,000 in discounts from partners, including AWS, Slack, OpenAI, and QuickBooks, but does not detail the Shippo offer.",
+      "previous_state": "4 months free Shippo Pro Plan. Access via: Free for Brex customers",
+      "current_state": "The page states access to 'exclusive deals' and '$350,000 in discounts from our partners' but does not mention Shippo or a free trial of Shippo Pro Plan.",
+      "source_url": "https://brex.com/rewards/",
+      "category": "Startup Perks",
+      "refused_date": "2026-09-16"
+    },
+    {
+      "vendor": "SiliconFlow",
+      "change_type": "free_tier_removed",
+      "reason": "no_removal_evidence",
+      "detail": "a free tier was recorded as removed on the evidence that the page did not mention it, and the summary states no price, ending or replacement where the free tier was",
+      "summary": "The free tier with $1 free credits and 100 requests/day is no longer mentioned. The page shows pricing for various models, all of which have associated costs per token or per image. DeepSeek models are present but are not offered for free.",
+      "previous_state": "Free inference for open-source models with 100 requests/day limit and $1 free credits. Supports DeepSeek-R1, DeepSeek-V3, QwQ-32B, and other open-source models. China-based provider.",
+      "current_state": "DeepSeek-V3.2 costs ¥ 4.00 per M Tokens for input and ¥ 6.00 per M Tokens for output, with a cache price of ¥ 0.40 per M Tokens.",
+      "source_url": "https://siliconflow.cn/pricing",
+      "category": "AI / ML",
+      "refused_date": "2026-09-16"
+    },
+    {
       "vendor": "Simplescraper",
       "change_type": "pricing_restructured",
       "reason": "confirmed_unchanged",
@@ -3889,6 +4081,18 @@
       "source_url": "https://smartparse.io",
       "category": "Dev Utilities",
       "refused_date": "2026-09-10"
+    },
+    {
+      "vendor": "Snap",
+      "change_type": "restriction",
+      "reason": "page_does_not_name_vendor",
+      "detail": "the page read never names Snap and is not served from its domain, so any terms on it belong to somebody else",
+      "summary": "The page no longer mentions the $1,500 Snapchat Ads credit specifically for Brex customers. It broadly mentions access to over $350,000 in discounts from partners, including Snap (OpenAI), but doesn't detail the specific credit amount or exclusivity for Brex users.",
+      "previous_state": "$1,500 of Snapchat Ads credits. Access via: Free for Brex customers",
+      "current_state": "Access over $350,000 in discounts from our partners on the tools you already use, including AWS, Slack, OpenAI, and QuickBooks.",
+      "source_url": "https://brex.com/rewards/",
+      "category": "Startup Perks",
+      "refused_date": "2026-09-16"
     },
     {
       "vendor": "snappify",
@@ -3950,6 +4154,18 @@
       "source_url": "https://standardnotes.com/plans",
       "category": "Productivity & Notes",
       "refused_date": "2026-09-03"
+    },
+    {
+      "vendor": "Stitch Labs",
+      "change_type": "free_tier_removed",
+      "reason": "page_does_not_name_vendor",
+      "detail": "the page read never names Stitch Labs and is not served from its domain, so any terms on it belong to somebody else",
+      "summary": "The Startup Program with 2 months free is not mentioned. The page details a Brex Rewards program with various perks (DashPass, discounts on AWS, Slack, etc.) and a tiered pricing structure starting at $0/user/month and $12/user/month for advanced features.",
+      "previous_state": "2 months free subscription. Access via: Free for Brex customers",
+      "current_state": "Plans start at $0 per user, per month, and more advanced features are available for $12 per user, per month. Access exclusive deals and save with pre-negotiated discounts from top vendors.",
+      "source_url": "https://brex.com/rewards/",
+      "category": "Startup Perks",
+      "refused_date": "2026-09-16"
     },
     {
       "vendor": "Stoplight",
@@ -4517,6 +4733,30 @@
       "collided_with": "Whitespace|limits_reduced|2026-09-01|https://whitespace.dev"
     },
     {
+      "vendor": "Wizishop",
+      "change_type": "free_tier_removed",
+      "reason": "page_does_not_name_vendor",
+      "detail": "the page read never names Wizishop and is not served from its domain, so any terms on it belong to somebody else",
+      "summary": "Wizishop is not mentioned on the page. However, there are several deals for free trials or credits for other services like Notion, Stripe, Google Workspace, etc.",
+      "previous_state": "3 months free on Pro plan. Access via: First deal free, then 99€/year or invite friends",
+      "current_state": "The page does not mention Wizishop or a 3-month free trial on the Pro plan. It offers deals for other services, some of which are free and some require payment or upgrading to Premium.",
+      "source_url": "https://www.joinsecret.com/offers",
+      "category": "Startup Perks",
+      "refused_date": "2026-09-16"
+    },
+    {
+      "vendor": "WP Engine",
+      "change_type": "free_tier_removed",
+      "reason": "page_does_not_name_vendor",
+      "detail": "the page read never names WP Engine and is not served from its domain, so any terms on it belong to somebody else",
+      "summary": "WP Engine is not directly mentioned on the page, but Notion, Stripe, Google Workspace, Brevo, Xero, AWS Activate, Fin, and Airtable all have deals listed. There is no mention of a 3-month free trial on annual plans or the 'Startup Program' as described.",
+      "previous_state": "3 months free on annual plans. Access via: First deal free, then 99€/year or invite friends",
+      "current_state": "The page lists various deals from different vendors, including Notion (3 months free on the Business plan), Stripe ($500 in credits), Google Workspace (20% off Standard plans), and others. There is no specific deal for WP Engine.",
+      "source_url": "https://www.joinsecret.com/offers",
+      "category": "Startup Perks",
+      "refused_date": "2026-09-16"
+    },
+    {
       "vendor": "Wraps",
       "change_type": "limits_reduced",
       "reason": "same_transition_graded_differently",
@@ -4612,6 +4852,30 @@
       "source_url": "https://zenscrape.com/web-scraping-api",
       "category": "Web Scraping",
       "refused_date": "2026-08-29"
+    },
+    {
+      "vendor": "Zentail",
+      "change_type": "startup_program_expanded",
+      "reason": "page_does_not_name_vendor",
+      "detail": "the page read never names Zentail and is not served from its domain, so any terms on it belong to somebody else",
+      "summary": "The page mentions access to over $350,000 in discounts from partners, including AWS, Slack, OpenAI, and QuickBooks, and a 'launch faster' program with exclusive discounts, but does not specifically mention a $3,000 discount on a Zentail contract or a 'Startup Program' tied to Brex customers. It broadly references access to exclusive deals for Brex users.",
+      "previous_state": "$3,000 off annual Zentail contract. Access via: Free for Brex customers",
+      "current_state": "Brex users have access to over $350,000 in discounts from partners like AWS, Slack, OpenAI, and QuickBooks, and can access exclusive deals.",
+      "source_url": "https://brex.com/rewards/",
+      "category": "Startup Perks",
+      "refused_date": "2026-09-16"
+    },
+    {
+      "vendor": "Zhipu AI",
+      "change_type": "limits_increased",
+      "reason": "page_does_not_name_vendor",
+      "detail": "the page read never names Zhipu AI and is not served from its domain, so any terms on it belong to somebody else",
+      "summary": "The page advertises a 20 million token welcome package for new users, but also mentions a promotion to receive up to 200 million tokens by inviting friends. The Flash models are still mentioned, but the page focuses heavily on the GLM-5.3 series and its various plans (including paid options like GLM Coding Plan).",
+      "previous_state": "Free tier for GLM-4 series models. 20 million tokens welcome package plus permanently free Flash models (GLM-4.7-Flash, GLM-4.5-Flash, GLM-4.6V-Flash) with no rate limits or expiration. China-based, function calling support.",
+      "current_state": "New users receive 20 million tokens, and can receive up to 200 million tokens by inviting friends. Flash models are available.",
+      "source_url": "https://open.bigmodel.cn",
+      "category": "AI / ML",
+      "refused_date": "2026-09-16"
     },
     {
       "vendor": "zilore.com",
@@ -4746,6 +5010,18 @@
       "category": "DNS & Domain Management",
       "refused_date": "2026-09-13",
       "collided_with": "Zonomi|limits_increased|2026-09-01|https://zonomi.com/"
+    },
+    {
+      "vendor": "Zoom",
+      "change_type": "restriction",
+      "reason": "page_does_not_name_vendor",
+      "detail": "the page read never names Zoom and is not served from its domain, so any terms on it belong to somebody else",
+      "summary": "The page mentions access to discounts from top vendors, including Zoom, but does not mention a specific 20% discount for Startup Program members. It broadly states access to over $350,000 in discounts.",
+      "previous_state": "20% discount on annual subscription. Access via: Free for Brex customers",
+      "current_state": "Access over $350,000 in discounts from our partners on the tools you already use, including AWS, Slack, OpenAI, and QuickBooks.",
+      "source_url": "https://brex.com/rewards/",
+      "category": "Startup Perks",
+      "refused_date": "2026-09-16"
     }
   ]
 }

@@ -99,9 +99,9 @@
         }
       ],
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-16",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names Render as \"render\" and states \"$10\""
       },
       "product_subtypes": {
         "taxonomy": "Cloud Hosting",
@@ -474,9 +474,9 @@
       ],
       "verifiedDate": "2026-08-13",
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-16",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names Koyeb as \"koyeb\" and states \"$ 0.75\""
       },
       "product_subtypes": {
         "taxonomy": "Databases",
@@ -589,9 +589,9 @@
       ],
       "verifiedDate": "2026-08-15",
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-16",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names Oracle Cloud as \"oracle cloud\" and states \"$300\""
       }
     },
     {
@@ -784,9 +784,9 @@
       ],
       "verifiedDate": "2026-08-31",
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-16",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names CockroachDB as \"cockroachdb\" and states \"$400\""
       },
       "product_subtypes": {
         "taxonomy": "Databases",
@@ -930,9 +930,9 @@
       ],
       "verifiedDate": "2026-08-12",
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-16",
         "outcome": "states_no_terms",
-        "detail": "the page names Databricks (Lakeflow Connect) but states no amount, tier or rate we can read"
+        "detail": "the page names Databricks (Lakeflow Connect) but states no amount, tier or rate we can read, and its markup carries no structured data"
       },
       "product_subtypes": {
         "taxonomy": "Databases",
@@ -1185,9 +1185,9 @@
       ],
       "verifiedDate": "2026-08-11",
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-16",
         "outcome": "states_no_terms",
-        "detail": "the page names PocketBase but states no amount, tier or rate we can read"
+        "detail": "the page names PocketBase but states no amount, tier or rate we can read, and its markup carries no structured data"
       },
       "product_subtypes": {
         "taxonomy": "Databases",
@@ -1224,9 +1224,9 @@
         "notes": "No individual referral program."
       },
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-16",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names GitHub Actions as \"github actions\" and states \"$0.002\""
       }
     },
     {
@@ -1439,9 +1439,9 @@
       ],
       "verifiedDate": "2026-08-14",
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-16",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names Grafana Cloud as \"grafana cloud\" and states \"$0\""
       },
       "product_subtypes": {
         "taxonomy": "Monitoring",
@@ -1480,11 +1480,11 @@
         "freshping-alternative",
         "datadog-alternative"
       ],
-      "verifiedDate": "2026-08-13",
+      "verifiedDate": "2026-09-16",
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-16",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names BetterStack as \"betterstack\" and states \"$0\""
       },
       "product_subtypes": {
         "taxonomy": "Monitoring",
@@ -1597,7 +1597,7 @@
         "free tier",
         "datadog-alternative"
       ],
-      "verifiedDate": "2026-08-31",
+      "verifiedDate": "2026-09-16",
       "referral_program": {
         "available": false,
         "referrer_benefit": "N/A",
@@ -1607,9 +1607,9 @@
         "notes": "Partner program exists. Legacy affiliate program (2008-2010) appears discontinued."
       },
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-16",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names New Relic as \"new relic\" and states \"$0.40\""
       },
       "product_subtypes": {
         "taxonomy": "Monitoring",
@@ -1725,9 +1725,9 @@
         "notes": "Part of Okta. Enterprise referral via Okta partner program only ($100 charity donation per qualified referral)."
       },
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-16",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names Auth0 as \"auth0\" and states \"$ 0\""
       }
     },
     {
@@ -1856,11 +1856,11 @@
         "free tier",
         "email-service-alternative"
       ],
-      "verifiedDate": "2026-08-31",
+      "verifiedDate": "2026-09-16",
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-16",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names Mailjet as \"mailjet\" and states \"$ 0\""
       }
     },
     {
@@ -1933,7 +1933,7 @@
         "cdn",
         "free tier"
       ],
-      "verifiedDate": "2026-08-31",
+      "verifiedDate": "2026-09-16",
       "payment_protocols": [
         {
           "protocol": "x402",
@@ -1952,9 +1952,9 @@
         "notes": "Channel partner program only. No individual referral program."
       },
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-16",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names Cloudflare R2 as \"cloudflare r2\" and states \"$0.015\""
       }
     },
     {
@@ -2115,9 +2115,9 @@
         "notes": "Channel partner program only. No individual referral program."
       },
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-16",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names Cloudflare KV as \"cloudflare\" and states \"$0.50\""
       },
       "product_subtypes": {
         "taxonomy": "Databases",
@@ -2165,9 +2165,9 @@
         "notes": "Channel partner program only. No individual referral program."
       },
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-16",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names Cloudflare Durable Objects as \"cloudflare durable objects\" and states \"$0.15\""
       },
       "product_subtypes": {
         "taxonomy": "Cloud Hosting",
@@ -2262,11 +2262,11 @@
         "free tier",
         "mcp-server"
       ],
-      "verifiedDate": "2026-08-31",
+      "verifiedDate": "2026-09-16",
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-16",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names Bright Data MCP Server as \"bright data mcp server\" and states \"$1\""
       }
     },
     {
@@ -2389,11 +2389,11 @@
         "container-security",
         "iac"
       ],
-      "verifiedDate": "2026-08-31",
+      "verifiedDate": "2026-09-16",
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-16",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names Snyk as \"snyk\" and states \"$25\""
       }
     },
     {
@@ -5015,9 +5015,10 @@
       ],
       "verifiedDate": "2026-04-23",
       "source_check": {
-        "checked": "2026-09-09",
-        "outcome": "unreadable",
-        "detail": "HTTP 403"
+        "checked": "2026-09-16",
+        "outcome": "ok",
+        "detail": "the page names Canva as \"canva\" and states \"$ 0\"",
+        "rendered": true
       }
     },
     {
@@ -10029,7 +10030,7 @@
       ],
       "verifiedDate": "2026-08-02",
       "source_check": {
-        "checked": "2026-09-09",
+        "checked": "2026-09-16",
         "outcome": "states_no_terms",
         "detail": "the page names savannah.gnu.org but states no amount, tier or rate we can read, and its markup carries no structured data"
       }
@@ -10046,7 +10047,7 @@
       ],
       "verifiedDate": "2026-07-31",
       "source_check": {
-        "checked": "2026-09-09",
+        "checked": "2026-09-16",
         "outcome": "states_no_terms",
         "detail": "the page names savannah.nongnu.org but states no amount, tier or rate we can read, and its markup carries no structured data"
       }
@@ -10257,9 +10258,9 @@
       ],
       "verifiedDate": "2026-08-25",
       "source_check": {
-        "checked": "2026-09-15",
-        "outcome": "unreadable",
-        "detail": "page content too short (likely JS-rendered SPA); the rendering client failed: the rendering client did not finish in time",
+        "checked": "2026-09-16",
+        "outcome": "ok",
+        "detail": "the page names Conversion Tools as \"conversion tools\" and states \"free API\"",
         "rendered": true
       }
     },
@@ -22617,9 +22618,10 @@
       ],
       "verifiedDate": "2026-07-15",
       "source_check": {
-        "checked": "2026-09-09",
-        "outcome": "unreadable",
-        "detail": "HTTP 403"
+        "checked": "2026-09-16",
+        "outcome": "states_no_terms",
+        "detail": "the page names icedrive.net but states no amount, tier or rate we can read, and its markup carries no structured data",
+        "rendered": true
       }
     },
     {
@@ -23280,7 +23282,7 @@
       ],
       "verifiedDate": "2026-04-27",
       "source_check": {
-        "checked": "2026-09-09",
+        "checked": "2026-09-16",
         "outcome": "unreadable",
         "detail": "fetch failed"
       }
@@ -23352,7 +23354,7 @@
       ],
       "verifiedDate": "2026-04-12",
       "source_check": {
-        "checked": "2026-09-09",
+        "checked": "2026-09-16",
         "outcome": "unreadable",
         "detail": "HTTP 403"
       }
@@ -23715,7 +23717,7 @@
       ],
       "verifiedDate": "2026-07-20",
       "source_check": {
-        "checked": "2026-09-09",
+        "checked": "2026-09-16",
         "outcome": "unreadable",
         "detail": "HTTP 429"
       }
@@ -23751,9 +23753,10 @@
       ],
       "verifiedDate": "2026-08-19",
       "source_check": {
-        "checked": "2026-09-09",
-        "outcome": "unreadable",
-        "detail": "HTTP 403"
+        "checked": "2026-09-16",
+        "outcome": "states_no_terms",
+        "detail": "the page names LottieFiles but states no amount, tier or rate we can read, and the 1 structured-data block in its markup states no price",
+        "rendered": true
       }
     },
     {
@@ -23969,7 +23972,7 @@
       ],
       "verifiedDate": "2026-05-31",
       "source_check": {
-        "checked": "2026-09-09",
+        "checked": "2026-09-16",
         "outcome": "unreadable",
         "detail": "fetch failed"
       }
@@ -24553,9 +24556,10 @@
       ],
       "verifiedDate": "2026-04-12",
       "source_check": {
-        "checked": "2026-09-09",
-        "outcome": "unreadable",
-        "detail": "HTTP 401"
+        "checked": "2026-09-16",
+        "outcome": "states_no_terms",
+        "detail": "the page names unsplash.com but states no amount, tier or rate we can read, and its markup carries no structured data",
+        "rendered": true
       }
     },
     {
@@ -24662,7 +24666,7 @@
       ],
       "verifiedDate": "2026-06-01",
       "source_check": {
-        "checked": "2026-09-09",
+        "checked": "2026-09-16",
         "outcome": "unreadable",
         "detail": "HTTP 404"
       }
@@ -25263,9 +25267,10 @@
       ],
       "verifiedDate": "2026-08-18",
       "source_check": {
-        "checked": "2026-09-09",
-        "outcome": "unreadable",
-        "detail": "HTTP 403"
+        "checked": "2026-09-16",
+        "outcome": "states_no_terms",
+        "detail": "the page names codepen.io but states no amount, tier or rate we can read, and its markup carries no structured data",
+        "rendered": true
       }
     },
     {
@@ -25280,7 +25285,7 @@
       ],
       "verifiedDate": "2026-04-20",
       "source_check": {
-        "checked": "2026-09-09",
+        "checked": "2026-09-16",
         "outcome": "unreadable",
         "detail": "HTTP 403"
       }
@@ -25349,7 +25354,7 @@
       ],
       "verifiedDate": "2026-08-12",
       "source_check": {
-        "checked": "2026-09-15",
+        "checked": "2026-09-16",
         "outcome": "ok",
         "detail": "the page names JDoodle as \"jdoodle\" and states \"$0\""
       }
@@ -27755,7 +27760,7 @@
         "program": "Knowlarity for Startups Startup Program"
       },
       "source_check": {
-        "checked": "2026-09-09",
+        "checked": "2026-09-16",
         "outcome": "unreadable",
         "detail": "fetch failed"
       }
@@ -29510,7 +29515,7 @@
         "program": "Publist Startup Deal"
       },
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-16",
         "outcome": "does_not_name_vendor",
         "detail": "the page never names Publist and is not served from its domain"
       }
@@ -29535,7 +29540,7 @@
         "program": "Qonto Startup Deal"
       },
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-16",
         "outcome": "does_not_name_vendor",
         "detail": "the page never names Qonto and is not served from its domain"
       }
@@ -29560,7 +29565,7 @@
         "program": "Quartzy Startup Deal"
       },
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-16",
         "outcome": "does_not_name_vendor",
         "detail": "the page never names Quartzy and is not served from its domain"
       }
@@ -29585,7 +29590,7 @@
         "program": "Quickbooks Startup Deal"
       },
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-16",
         "outcome": "does_not_name_vendor",
         "detail": "the page never names Quickbooks and is not served from its domain"
       }
@@ -29610,7 +29615,7 @@
         "program": "Salesforce Startup Deal"
       },
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-16",
         "outcome": "does_not_name_vendor",
         "detail": "the page never names Salesforce and is not served from its domain"
       }
@@ -29635,7 +29640,7 @@
         "program": "Scalingo Startup Deal"
       },
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-16",
         "outcome": "does_not_name_vendor",
         "detail": "the page never names Scalingo and is not served from its domain"
       }
@@ -29660,7 +29665,7 @@
         "program": "Science Exchange Startup Deal"
       },
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-16",
         "outcome": "does_not_name_vendor",
         "detail": "the page never names Science Exchange and is not served from its domain"
       }
@@ -29685,7 +29690,7 @@
         "program": "Scrapingbee Startup Deal"
       },
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-16",
         "outcome": "does_not_name_vendor",
         "detail": "the page never names Scrapingbee and is not served from its domain"
       }
@@ -29710,7 +29715,7 @@
         "program": "Seeqle Startup Deal"
       },
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-16",
         "outcome": "does_not_name_vendor",
         "detail": "the page never names Seeqle and is not served from its domain"
       }
@@ -29735,7 +29740,7 @@
         "program": "Sellsy Startup Deal"
       },
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-16",
         "outcome": "does_not_name_vendor",
         "detail": "the page never names Sellsy and is not served from its domain"
       }
@@ -29768,7 +29773,7 @@
         "notes": "No active affiliate program. Marketplace partner program for integrations only."
       },
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-16",
         "outcome": "does_not_name_vendor",
         "detail": "the page never names SendGrid and is not served from its domain"
       }
@@ -29818,7 +29823,7 @@
         "program": "Shine Startup Deal"
       },
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-16",
         "outcome": "does_not_name_vendor",
         "detail": "the page never names Shine and is not served from its domain"
       }
@@ -29843,7 +29848,7 @@
         "program": "Shippo Startup Deal"
       },
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-16",
         "outcome": "does_not_name_vendor",
         "detail": "the page never names Shippo and is not served from its domain"
       }
@@ -29868,7 +29873,7 @@
         "program": "Slite Startup Deal"
       },
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-16",
         "outcome": "does_not_name_vendor",
         "detail": "the page never names Slite and is not served from its domain"
       }
@@ -29893,7 +29898,7 @@
         "program": "Snap Startup Deal"
       },
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-16",
         "outcome": "does_not_name_vendor",
         "detail": "the page never names Snap and is not served from its domain"
       }
@@ -29918,7 +29923,7 @@
         "program": "Snapcall Startup Deal"
       },
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-16",
         "outcome": "does_not_name_vendor",
         "detail": "the page never names Snapcall and is not served from its domain"
       }
@@ -29943,7 +29948,7 @@
         "program": "Social Champ Startup Deal"
       },
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-16",
         "outcome": "does_not_name_vendor",
         "detail": "the page never names Social Champ and is not served from its domain"
       }
@@ -29968,7 +29973,7 @@
         "program": "SocialBee Startup Deal"
       },
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-16",
         "outcome": "does_not_name_vendor",
         "detail": "the page never names SocialBee and is not served from its domain"
       }
@@ -29993,7 +29998,7 @@
         "program": "Solium Startup Deal"
       },
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-16",
         "outcome": "does_not_name_vendor",
         "detail": "the page never names Solium and is not served from its domain"
       }
@@ -30018,7 +30023,7 @@
         "program": "Squarespace Startup Deal"
       },
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-16",
         "outcome": "does_not_name_vendor",
         "detail": "the page never names Squarespace and is not served from its domain"
       }
@@ -30043,7 +30048,7 @@
         "program": "Stitch Labs Startup Deal"
       },
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-16",
         "outcome": "does_not_name_vendor",
         "detail": "the page never names Stitch Labs and is not served from its domain"
       }
@@ -30069,7 +30074,7 @@
         "program": "Themecloud Startup Deal"
       },
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-16",
         "outcome": "does_not_name_vendor",
         "detail": "the page never names Themecloud and is not served from its domain"
       }
@@ -30094,7 +30099,7 @@
         "program": "Twilio Startup Deal"
       },
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-16",
         "outcome": "does_not_name_vendor",
         "detail": "the page never names Twilio and is not served from its domain"
       }
@@ -30119,7 +30124,7 @@
         "program": "Userguiding Startup Deal"
       },
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-16",
         "outcome": "does_not_name_vendor",
         "detail": "the page never names Userguiding and is not served from its domain"
       }
@@ -30144,7 +30149,7 @@
         "program": "Weglot Startup Deal"
       },
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-16",
         "outcome": "does_not_name_vendor",
         "detail": "the page never names Weglot and is not served from its domain"
       }
@@ -30169,7 +30174,7 @@
         "program": "WEWORK Startup Deal"
       },
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-16",
         "outcome": "does_not_name_vendor",
         "detail": "the page never names WEWORK and is not served from its domain"
       }
@@ -30194,7 +30199,7 @@
         "program": "Wisepops Startup Deal"
       },
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-16",
         "outcome": "does_not_name_vendor",
         "detail": "the page never names Wisepops and is not served from its domain"
       }
@@ -30219,7 +30224,7 @@
         "program": "Wizishop Startup Deal"
       },
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-16",
         "outcome": "does_not_name_vendor",
         "detail": "the page never names Wizishop and is not served from its domain"
       }
@@ -30244,7 +30249,7 @@
         "program": "WP Engine Startup Deal"
       },
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-16",
         "outcome": "does_not_name_vendor",
         "detail": "the page never names WP Engine and is not served from its domain"
       }
@@ -30269,7 +30274,7 @@
         "program": "Yousign Startup Deal"
       },
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-16",
         "outcome": "does_not_name_vendor",
         "detail": "the page never names Yousign and is not served from its domain"
       }
@@ -30294,7 +30299,7 @@
         "program": "Zentail Startup Deal"
       },
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-16",
         "outcome": "does_not_name_vendor",
         "detail": "the page never names Zentail and is not served from its domain"
       }
@@ -30319,7 +30324,7 @@
         "program": "Zoom Startup Deal"
       },
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-16",
         "outcome": "does_not_name_vendor",
         "detail": "the page never names Zoom and is not served from its domain"
       }
@@ -30682,9 +30687,9 @@
       ],
       "verifiedDate": "2026-07-30",
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-16",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names Nuclei as \"nuclei\" and states \"60 req/min\""
       },
       "free_grounds": [
         "licence"
@@ -31437,11 +31442,11 @@
         "google cloud",
         "hetzner-alternative"
       ],
-      "verifiedDate": "2026-08-18",
+      "verifiedDate": "2026-09-16",
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-16",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names Google Compute Engine as \"compute\" and states \"$300\""
       }
     },
     {
@@ -31570,9 +31575,9 @@
       ],
       "verifiedDate": "2026-08-19",
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-16",
         "outcome": "states_no_terms",
-        "detail": "the page names Google Cloud Shell but states no amount, tier or rate we can read"
+        "detail": "the page names Google Cloud Shell but states no amount, tier or rate we can read, and the 2 structured-data blocks in its markup state no price"
       }
     },
     {
@@ -31789,9 +31794,10 @@
       ],
       "verifiedDate": "2026-08-17",
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-16",
         "outcome": "unreadable",
-        "detail": "page content too short (likely JS-rendered SPA)"
+        "detail": "page content too short (likely JS-rendered SPA); the rendering client failed: the rendering client did not finish in time",
+        "rendered": true
       },
       "product_subtypes": {
         "taxonomy": "AI / ML",
@@ -31830,9 +31836,9 @@
         }
       ],
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-16",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names SiliconFlow as \"siliconflow\" and states \"¥ 6.00\""
       },
       "product_subtypes": {
         "taxonomy": "AI / ML",
@@ -31862,9 +31868,10 @@
       ],
       "verifiedDate": "2026-08-20",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "unreadable",
-        "detail": "page content too short (likely JS-rendered SPA)"
+        "checked": "2026-09-16",
+        "outcome": "does_not_name_vendor",
+        "detail": "the page never names Zhipu AI and is not served from its domain",
+        "rendered": true
       },
       "product_subtypes": {
         "taxonomy": "AI / ML",
@@ -33281,9 +33288,9 @@
         "kubernetes_control_plane": "Free (pay for workers only)"
       },
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-16",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names OVHcloud as \"ovhcloud\" and states \"$ 200\""
       }
     },
     {
@@ -33302,9 +33309,9 @@
       ],
       "verifiedDate": "2026-08-18",
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-16",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names OVHcloud as \"ovhcloud\" and states \"$397.20\""
       }
     },
     {
@@ -33572,9 +33579,9 @@
       ],
       "verifiedDate": "2026-08-17",
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-16",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names Google Gemini Embedding 2 as \"embedding\" and states \"$300\""
       },
       "product_subtypes": {
         "taxonomy": "AI / ML",
