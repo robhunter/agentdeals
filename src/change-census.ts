@@ -22,6 +22,20 @@ export function isIndexHousekeeping(change: CensusSubject): boolean {
   return change.current_state === INDEX_SWEEP_STATE;
 }
 
+export const INDEX_HOUSEKEEPING_CLASS = "chg-housekeeping";
+
+export const INDEX_HOUSEKEEPING_BADGE = "our index";
+
+export const INDEX_HOUSEKEEPING_BADGE_COLOR = "#8b949e";
+
+export const INDEX_HOUSEKEEPING_NOTE =
+  "We stopped listing this offer because the page we had imported it from stopped resolving. "
+  + "The vendor's own terms did not move, so this entry is not counted as a pricing change.";
+
+export function indexHousekeepingHeadline(vendor: string): string {
+  return `${vendor}: we stopped listing an offer of ours`;
+}
+
 export function isTrackedChange(change: CensusSubject): boolean {
   return !isNoLongerInForce(change) && !isIndexHousekeeping(change);
 }

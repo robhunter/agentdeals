@@ -7,6 +7,9 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { monthlyChangeSeries, groupByMonth, discoveryMonthSeriesHeading } from "../dist/change-dates.js";
+import { INDEX_HOUSEKEEPING_CLASS } from "../dist/change-census.js";
+
+const NOT_A_TRACKED_CHANGE = ["chg-resolved", INDEX_HOUSEKEEPING_CLASS];
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(__dirname, "..");
@@ -96,7 +99,10 @@ function changeLogMonths(body: string): Map<string, number> {
     const key = monthKeyFromHeading(heading);
     if (!key) continue;
     const entries = [...group.matchAll(/<div class="(chg-entry[^"]*)"/g)];
-    months.set(key, entries.filter(([, classes]) => !classes.includes("chg-resolved")).length);
+    months.set(
+      key,
+      entries.filter(([, classes]) => NOT_A_TRACKED_CHANGE.every(mark => !classes.includes(mark))).length,
+    );
   }
   return months;
 }
@@ -197,7 +203,7 @@ describe("every surface that bins changes by month", () => {
     assertPopulationFloor(expected.size, 12, "months the change log groups by");
     assertPopulationFloor(
       [...expected.values()].reduce((a, b) => a + b, 0),
-      200,
+      150,
       "changes the change log groups into a month"
     );
 
