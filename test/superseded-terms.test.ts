@@ -17,6 +17,7 @@ const {
   supersededTermsNoticeHtml,
   supersededTermsVerdictSentence,
   supersedingChange,
+  supersededTermsRecordFor,
   storedTermsAreSuperseded,
 } = await import("../dist/superseded-description.js");
 const { STORED_TERMS_NAMED_AS_PREVIOUS } = await import("../dist/vendor-verdict.js");
@@ -39,6 +40,7 @@ const {
 
 type Offer = import("../src/types.ts").Offer;
 type DealChange = import("../src/types.ts").DealChange;
+type SupersededTermsRecord = import("../src/superseded-description.ts").SupersededTermsRecord;
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(__dirname, "..");
@@ -1232,5 +1234,50 @@ describe("#1721 what the disclosure reads, and what it no longer reads", () => {
     assert.ok(unescaped(descriptionBlockOf(page)).includes(STORED_TERMS_WITHHELD_PHRASE), descriptionBlockOf(page));
     assert.match(unescaped(quickVerdictOf(page)), /We rate it caution — one recorded limit reduction/);
     assert.ok(!unescaped(quickVerdictOf(page)).includes(STORED_TERMS_NAMED_AS_PREVIOUS));
+  });
+});
+
+describe("#1721 the topic APIs that publish a record beside its terms", () => {
+  const ROWS_AT: Record<string, string> = {
+    "/api/llm-pricing": "providers",
+    "/api/hosting-pricing": "platforms",
+    "/api/ai-coding-pricing": "tools",
+    "/api/startup-credits": "programs",
+    "/api/agent-payments": "services",
+  };
+  let server: { proc: ChildProcess; port: number } | null = null;
+  const rowsByRoute = new Map<string, Record<string, any>[]>();
+
+  const recordFor = (vendor: string, tier: string | undefined): SupersededTermsRecord | null => {
+    const offer = offers.find((o) => o.vendor === vendor && (tier === undefined || o.tier === tier));
+    return offer ? supersededTermsRecordFor(offer, changesFor(vendor)) : null;
+  };
+
+  before(async () => {
+    server = await startServer({});
+    for (const route of Object.keys(ROWS_AT)) {
+      const body = await fetch(`http://localhost:${server.port}${route}`).then((r) => r.json());
+      rowsByRoute.set(route, (body as Record<string, any>)[ROWS_AT[route]] ?? []);
+    }
+  });
+
+  after(() => { server?.proc.kill(); });
+
+  it("answers with the same record the vendor page withholds its terms behind", () => {
+    const wrong: string[] = [];
+    let carried = 0;
+    for (const [route, rows] of rowsByRoute) {
+      assert.ok(rows.length > 0, `${route} lists no records, so nothing below is exercised`);
+      for (const row of rows) {
+        const expected = recordFor(row.vendor, row.tier);
+        if (expected) carried++;
+        const published = row.terms_superseded ?? null;
+        if (JSON.stringify(published) !== JSON.stringify(expected)) {
+          wrong.push(`${route} ${row.vendor}: publishes ${published ? "a record" : "nothing"} where the catalogue says ${expected ? "the terms are superseded" : "they are not"}`);
+        }
+      }
+    }
+    assert.deepStrictEqual(wrong.slice(0, 20), [], wrong.slice(0, 20).join("\n"));
+    assert.ok(carried > 20, `only ${carried} rows across these routes hold superseded terms, so the assertion is close to vacuous`);
   });
 });
