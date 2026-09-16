@@ -22,7 +22,7 @@ const REPO = path.join(__dirname, "..");
 const INDEX_CITATION = /our (?:verified )?index of/i;
 const VERIFICATION_CLAIM = /\b(?:verified|cross-referenced) against\b/i;
 const NAMES_A_YEAR = /\b(?:19|20)\d{2}\b/;
-const COMPILED_NOTICE = /Figures compiled (\d{4}-\d{2}-\d{2}), (?:not re-checked since|last checked (\d{4}-\d{2}-\d{2}))/;
+const COMPILED_NOTICE = /Figures compiled (\d{4}-\d{2}-\d{2})(?:, (?:not re-checked since|last checked (\d{4}-\d{2}-\d{2})))?/;
 
 const INDEX_SIZE: number = JSON.parse(readFileSync(path.join(REPO, "data", "index.json"), "utf-8")).offers.length;
 
@@ -253,19 +253,29 @@ describe("a page may only name the source it actually reads", () => {
     assert.deepStrictEqual(wrong, []);
   });
 
-  it("says a reviewed page was checked on the date of the review, rather than never since publication", () => {
+  it("offers a check date only where the review that made it cleared the page, and never claims none has happened on a page a review read", () => {
     const wrong: string[] = [];
-    let checked = 0;
+    let cleared = 0;
+    let readWithoutClearing = 0;
     for (const page of pages) {
       if (page.tables_read_index || page.tier !== "A") continue;
-      const found = visibleBody(bodies.get(page.path)!).match(COMPILED_NOTICE)!;
+      const body = visibleBody(bodies.get(page.path)!);
+      const found = body.match(COMPILED_NOTICE)!;
       const claimed = found[2] ?? null;
-      const expected = page.reviewed_at;
-      if (claimed !== expected) wrong.push(`${page.path}: notice says last checked ${claimed}, register says ${expected}`);
-      if (expected !== null) checked += 1;
+      const clearedByItsReview = page.reviewed_at !== null && page.review_outcome !== "fail";
+      const expected = clearedByItsReview ? page.reviewed_at : null;
+      if (claimed !== expected) {
+        wrong.push(`${page.path}: notice says last checked ${claimed}, its ${page.review_outcome ?? "absent"} review on ${page.reviewed_at} supports ${expected}`);
+      }
+      if (page.reviewed_at !== null && /not re-checked since/.test(found[0])) {
+        wrong.push(`${page.path}: says none has happened, and a review read it on ${page.reviewed_at}`);
+      }
+      if (clearedByItsReview) cleared += 1;
+      if (page.reviewed_at !== null && !clearedByItsReview) readWithoutClearing += 1;
     }
     assert.deepStrictEqual(wrong, []);
-    assert.ok(checked > 0, "no blind tier-A page carries a review date, so the branch above is never taken");
+    assert.ok(readWithoutClearing > 0, "no blind tier-A page records a review that found it wrong, so the branch above is never taken");
+    assert.strictEqual(cleared + readWithoutClearing > 0, true);
   });
 
   it("makes no re-check claim anywhere on a page that the register contradicts", () => {
@@ -282,9 +292,12 @@ describe("a page may only name the source it actually reads", () => {
       if (page.reviewed_at !== null && saysNever) {
         offenders.push(`${page.path}: says it was never re-checked, reviewed ${page.reviewed_at}`);
       }
+      if (page.review_outcome === "fail" && saysChecked) {
+        offenders.push(`${page.path}: offers ${saysChecked[1]} as the date it was last checked, and that review found it wrong`);
+      }
     }
     assert.deepStrictEqual(offenders, []);
-    assert.ok(claiming > 20, `only ${claiming} pages make a re-check claim at all, so the rule has almost nothing to check`);
+    assert.ok(claiming > 15, `only ${claiming} pages make a re-check claim at all, so the rule has almost nothing to check`);
   });
 
   it("says corrections are outstanding wherever a review recorded a failure, and nowhere else", () => {
@@ -409,10 +422,25 @@ describe("a review that found defects reaches the reader", () => {
     assert.deepStrictEqual(repeated, []);
   });
 
-  it("names the date the figures were last checked, rather than claiming none has happened", () => {
+  it("names no check date beside the compiled figures, and claims none has happened nowhere", () => {
     const compiled = fixture.row(SUBJECT).published;
-    assert.match(rendered.get(SUBJECT)!, new RegExp(`Figures compiled ${compiled}, last checked ${REVIEWED_ON}`));
-    assert.doesNotMatch(rendered.get(SUBJECT)!, new RegExp(`Figures compiled ${compiled}, not re-checked since`));
+    const html = rendered.get(SUBJECT)!;
+
+    assert.match(html, new RegExp(`Figures compiled ${compiled}`));
+    assert.doesNotMatch(html, new RegExp(`Figures compiled ${compiled}, last checked ${REVIEWED_ON}(?![\\s\\S]{0,40}corrections outstanding)`));
+    assert.doesNotMatch(html, new RegExp(`Figures compiled ${compiled}, not re-checked since`));
+    assert.match(html, new RegExp(`Reviewed ${REVIEWED_ON}, corrections outstanding`));
+  });
+
+  it("says corrections are outstanding beside every check date it does name", () => {
+    const html = rendered.get(SUBJECT)!;
+    const offered = [...html.matchAll(/last checked (\d{4}-\d{2}-\d{2})([\s\S]{0,40})/g)];
+
+    assert.ok(offered.length > 0, "the page names no check date anywhere, so the rule below is never taken");
+    for (const [, date, following] of offered) {
+      assert.match(following, /corrections outstanding/,
+        `a check date of ${date} is offered without saying the review that made it found the page wrong`);
+    }
   });
 
   it("leaves a page the fixture set as never reviewed saying it was never re-checked", () => {

@@ -206,6 +206,7 @@ export interface ReviewStatus {
   sla_days: number;
   published: string;
   reviewed_at: string | null;
+  last_checked: string | null;
   clock_starts: string;
   days_since: number;
   days_overdue: number;
@@ -313,7 +314,8 @@ export function reviewStatus(record: PageReviewRecord, today: string): ReviewSta
   const sla = SLA_DAYS[record.tier];
   const reviewedAt = record.reviewed_at !== null && record.reviewed_at <= today ? record.reviewed_at : null;
   const lastRead = reviewedAt ?? record.published;
-  const clockStarts = reviewedAt !== null && restartsTheClock(record.review_outcome) ? lastRead : record.published;
+  const clockRestarted = reviewedAt !== null && restartsTheClock(record.review_outcome);
+  const clockStarts = clockRestarted ? lastRead : record.published;
   const daysSince = Math.max(0, daysBetween(clockStarts, today));
   const overdue = Math.max(0, daysSince - sla);
   let state: ReviewState;
@@ -327,6 +329,7 @@ export function reviewStatus(record: PageReviewRecord, today: string): ReviewSta
     sla_days: sla,
     published: record.published,
     reviewed_at: reviewedAt,
+    last_checked: clockRestarted ? reviewedAt : null,
     clock_starts: clockStarts,
     days_since: daysSince,
     days_overdue: overdue,
@@ -347,11 +350,24 @@ export function reviewStatus(record: PageReviewRecord, today: string): ReviewSta
 
 const SEPARATOR = " &middot; ";
 
+export function readWithoutClearing(status: ReviewStatus): boolean {
+  return status.reviewed_at !== null && status.last_checked === null;
+}
+
+function tailFor(lastChecked: string | null, everRead: boolean): string {
+  if (lastChecked !== null) return `, last checked ${lastChecked}`;
+  return everRead ? "" : ", not re-checked since";
+}
+
+export function checkedTail(status: ReviewStatus): string {
+  return tailFor(status.last_checked, status.reviewed_at !== null);
+}
+
 export function freshnessSegmentFor(record: PageReviewRecord | null, today: string): string {
   if (!record) return "";
   const status = reviewStatus(record, today);
   if (status.state === "never_reviewed") return `${SEPARATOR}Not yet reviewed`;
-  if (status.review_outcome === "fail") return `${SEPARATOR}Reviewed ${status.reviewed_at}, corrections outstanding`;
+  if (readWithoutClearing(status)) return `${SEPARATOR}Reviewed ${status.reviewed_at}, corrections outstanding`;
   if (status.state === "expired") return "";
   return `${SEPARATOR}Reviewed ${status.reviewed_at}`;
 }
@@ -373,15 +389,20 @@ export function indexCitation(indexSize: number): string {
   return `Data verified from our index of ${indexSize.toLocaleString()} developer tools`;
 }
 
+const COMPILED_PREFIX = "Figures compiled";
+
 export function compiledNotice(compiledOn: string, lastChecked: string | null = null): string {
-  if (lastChecked === null) return `Figures compiled ${compiledOn}, not re-checked since`;
-  return `Figures compiled ${compiledOn}, last checked ${lastChecked}`;
+  return `${COMPILED_PREFIX} ${compiledOn}${tailFor(lastChecked, false)}`;
+}
+
+export function compiledNoticeFor(record: PageReviewRecord, status: ReviewStatus): string {
+  return `${COMPILED_PREFIX} ${record.published}${checkedTail(status)}`;
 }
 
 export function dataProvenanceFor(record: PageReviewRecord | null, indexSize: number, today: string): string {
   if (!record) return "";
   if (record.tables_read_index) return indexCitation(indexSize);
-  return compiledNotice(record.published, reviewStatus(record, today).reviewed_at);
+  return compiledNoticeFor(record, reviewStatus(record, today));
 }
 
 export function pageDataProvenance(pagePath: string, indexSize: number, today = utcToday()): string {
@@ -390,9 +411,7 @@ export function pageDataProvenance(pagePath: string, indexSize: number, today = 
 
 export function compiledClause(record: PageReviewRecord | null, today: string): string {
   if (!record) return "";
-  const lastChecked = reviewStatus(record, today).reviewed_at;
-  if (lastChecked === null) return `Compiled ${record.published}, not re-checked since`;
-  return `Compiled ${record.published}, last checked ${lastChecked}`;
+  return `Compiled ${record.published}${checkedTail(reviewStatus(record, today))}`;
 }
 
 export function pageCompiledClause(pagePath: string, today = utcToday()): string {

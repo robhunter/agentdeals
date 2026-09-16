@@ -22,6 +22,10 @@ export function reviewFailedOn(date: string): Partial<RegisterRow> {
   return { reviewed_at: date, reviewer: "fixture", review_outcome: "fail" };
 }
 
+export function reviewPassedOn(date: string): Partial<RegisterRow> {
+  return { reviewed_at: date, reviewer: "fixture", review_outcome: "pass" };
+}
+
 export interface RegisterFixture {
   dir: string;
   file: string;
