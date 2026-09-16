@@ -99,7 +99,8 @@ esac
   echo "<!-- $MARKER -->"
 } >>"$BODY"
 
-EXISTING="$(gh issue list --state open --search "$MARKER in:body" --json number --jq '.[0].number // empty')"
+EXISTING="$(gh issue list --state open --limit 200 --json number,body \
+  --jq "[.[] | select(.body | contains(\"<!-- $MARKER -->\"))] | sort_by(.number) | .[0].number // empty")"
 if [ -n "$EXISTING" ]; then
   if [ "$COMMENT_EVERY_TIME" = "yes" ]; then
     gh issue comment "$EXISTING" --body-file "$BODY"

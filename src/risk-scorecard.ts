@@ -98,6 +98,17 @@ export function neverTracked(entry: RiskEntry, changes: readonly GradableChange[
 export const GRADE_FACTORS_WITHOUT_PRICING_HISTORY =
   "financial signals, competitive pressure and free tier strategic value";
 
+export function pricingHistoryCoverageSentence(
+  withNoRecordAtAll: readonly RiskEntry[],
+  graded: readonly RiskEntry[],
+  nameOf: (entry: RiskEntry) => string = e => e.vendor,
+): string {
+  if (withNoRecordAtAll.length === 0) {
+    return `All ${graded.length} graded vendors hold a record in that log, so this factor supplied something for every grade on this page.`;
+  }
+  return `${withNoRecordAtAll.length} of the ${graded.length} graded vendors have no record in that log at all — ${withNoRecordAtAll.map(nameOf).join(", ")} — so this factor supplied nothing for them and their grade rests on ${GRADE_FACTORS_WITHOUT_PRICING_HISTORY}.`;
+}
+
 export interface BandScore {
   grade: RiskGrade;
   vendors: number;

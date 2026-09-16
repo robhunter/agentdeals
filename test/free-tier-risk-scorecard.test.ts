@@ -17,6 +17,7 @@ const {
   trackedSinceGrading,
   negativesSinceGrading,
   neverTracked,
+  pricingHistoryCoverageSentence,
   whyNotEvidence,
   freeTierStanding,
   splitByFreeTierStanding,
@@ -224,24 +225,31 @@ describe("no entry is silent about its own window", () => {
 });
 
 describe("a grade with no pricing history behind it says so", () => {
-  it("names the vendors our change log has never held a record for", () => {
+  it("names the vendors our change log has never held a record for, and nobody else", () => {
     const untracked = riskEntries.filter(e => neverTracked(e, dealChanges));
-    assert.ok(untracked.length > 0, "every graded vendor has a tracked change, so the disclosure proves nothing");
-    for (const entry of untracked) {
-      assert.ok(
-        riskHtml.includes(`No change has ever been tracked for ${entry.vendor}.`),
-        `${entry.vendor} carries a grade with no record behind it and the page does not say so`,
-      );
-    }
-    assert.ok(
+    const disclosed = riskEntries.filter(e => riskHtml.includes(`No change has ever been tracked for ${e.vendor}.`));
+    assert.deepStrictEqual(
+      disclosed.map(e => e.vendor).sort(),
+      untracked.map(e => e.vendor).sort(),
+      `the page discloses ${disclosed.length} grades as resting on no record, and ${untracked.length} of the ${riskEntries.length} graded vendors rest on none`,
+    );
+    assert.strictEqual(
       riskHtml.includes(GRADE_FACTORS_WITHOUT_PRICING_HISTORY),
-      "the page does not name which factors supplied a grade that pricing history could not",
+      untracked.length > 0,
+      untracked.length > 0
+        ? `${untracked.length} of the ${riskEntries.length} graded vendors rest on no record and the page does not name which factors supplied the grade instead`
+        : `every one of the ${riskEntries.length} graded vendors rests on a record and the page still names the factors that stand in for one`,
     );
   });
 
-  it("does not attribute those grades to the change data in the methodology either", () => {
+  it("states in the methodology how many grades the change log supplied nothing for", () => {
     const untracked = riskEntries.filter(e => neverTracked(e, dealChanges));
     const method = sectionBetween(riskHtml, "methodology", "low");
+    const stated = pricingHistoryCoverageSentence(untracked, riskEntries, () => "").split(" — ")[0]!;
+    assert.ok(
+      method.includes(stated),
+      `the methodology does not say "${stated}" — it counts ${untracked.length} of the ${riskEntries.length} graded vendors as resting on no record`,
+    );
     for (const entry of untracked) {
       assert.ok(method.includes(entry.vendor), `the methodology claims change data behind ${entry.vendor}'s grade without exception`);
     }

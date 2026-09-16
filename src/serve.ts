@@ -51,7 +51,7 @@ import { changeTimelineDate, supersededLineups, supersessionNote } from "./chang
 import { isNoLongerInForce, eventResolutionFields, recordsStillInForce, recordsWeStandBehind, INCLUDE_RETRACTED_REJECTED } from "./change-resolution.js";
 import { trackedChanges, isTrackedChange, isIndexHousekeeping, recordsOtherThanOurOwnIndexHousekeeping, changeCensus, changeCountPhrase, recordsNotCountedSentence, sliceById, CHANGE_SLICES, CENSUS_NOTE, TRACKED_CHANGE_RULE_ANCHOR, TRACKED_CHANGE_RULE_PATH, TRACKED_CHANGE_NOUN, INDEX_HOUSEKEEPING_CLASS, INDEX_HOUSEKEEPING_BADGE, INDEX_HOUSEKEEPING_BADGE_COLOR, INDEX_HOUSEKEEPING_NOTE, INCLUDE_INDEX_HOUSEKEEPING_REJECTED, indexHousekeepingHeadline } from "./change-census.js";
 import { SINCE_DEFAULT_SENTENCE } from "./change-window.js";
-import { FREE_TIER_STANDING_LABELS, GRADE_FACTORS_WITHOUT_PRICING_HISTORY, NOT_EVIDENCE_LABELS, citesAChangeOlderThanTheGrade, freeTierStanding, gradesFirstSet, gradesLastSet, gradingDatesClause, neverTracked, riskEntries, scorecard, splitByFreeTierStanding, trackedSinceGrading, type RiskEntry } from "./risk-scorecard.js";
+import { FREE_TIER_STANDING_LABELS, GRADE_FACTORS_WITHOUT_PRICING_HISTORY, NOT_EVIDENCE_LABELS, citesAChangeOlderThanTheGrade, freeTierStanding, gradesFirstSet, gradesLastSet, gradingDatesClause, neverTracked, pricingHistoryCoverageSentence, riskEntries, scorecard, splitByFreeTierStanding, trackedSinceGrading, type RiskEntry } from "./risk-scorecard.js";
 import { CHANGE_DIRECTION, changeDirectionTable, directionRatioLabel } from "./change-direction.js";
 import { removalDurability, removalReturnRateSentence, removalDurabilityPattern, lastingRemovalExamplesFor } from "./removal-durability.js";
 import { changeCitesASource, changeIsUncited, changeSourceCitation, changeSourceLinkHtml, changeCitationHtml, citedClaimHtml, changeSummaryHtml, changeSummaryText, citedChanges, uncitedChangeNotice, uncitedChangeNoticeHtml, ratingWithheldForNoSourceClause, ratingWithheldForNoSourceSentence, UNCITED_CHANGE_LABEL, type CitableChangeRow } from "./change-citation.js";
@@ -23523,7 +23523,7 @@ ${mcpCtaCss()}
   <div style="display:grid;gap:.75rem;margin:1rem 0">
     <div class="diff-card" style="border-left-color:#3b82f6">
       <h3>Pricing History (40% weight)</h3>
-      <p class="diff-desc">Has this vendor changed pricing before? How recently? What direction? A vendor with 2+ negative changes in 12 months is flagged high risk. Vendors actively expanding get a boost. Data source: our ${trackedHere.length} tracked deal changes. ${gradedWithNoRecordAtAll.length} of the ${riskEntries.length} graded vendors have no record in that log at all — ${gradedWithNoRecordAtAll.map(e => escHtmlServer(e.vendor)).join(", ")} — so this factor supplied nothing for them and their grade rests on ${GRADE_FACTORS_WITHOUT_PRICING_HISTORY}.</p>
+      <p class="diff-desc">Has this vendor changed pricing before? How recently? What direction? A vendor with 2+ negative changes in 12 months is flagged high risk. Vendors actively expanding get a boost. Data source: our ${trackedHere.length} tracked deal changes. ${pricingHistoryCoverageSentence(gradedWithNoRecordAtAll, riskEntries, e => escHtmlServer(e.vendor))}</p>
     </div>
     <div class="diff-card" style="border-left-color:#8b5cf6">
       <h3>Financial Signals (25% weight)</h3>
