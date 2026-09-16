@@ -21,7 +21,7 @@ const REPO = path.join(__dirname, "..");
 
 const offers: Offer[] = JSON.parse(readFileSync(path.join(REPO, "data", "index.json"), "utf-8")).offers;
 const { loadDealChanges, refusalsForVendor } = await import("../dist/data.js");
-const { badgeWithholding, withholdsTheTerms } = await import("../dist/vendor-verdict.js");
+const { badgeWithholding, freeTierClaim, withholdsTheTerms } = await import("../dist/vendor-verdict.js");
 const { vendorVerdictContextFrom } = await import("../dist/vendor-verdict-input.js");
 
 const dealChanges: DealChange[] = loadDealChanges();
@@ -136,9 +136,9 @@ function gateLineOf(html: string): string | null {
   return m ? textOf(m[0]) : null;
 }
 
-type VendorPage = { slug: string; vendor: string; primary: Offer; gate: Gate | null; termsWithheld: boolean; html: string };
+type VendorPage = { slug: string; vendor: string; primary: Offer; gate: Gate | null; termsWithheld: boolean; freeTierEnded: boolean; html: string };
 
-const primaries: { slug: string; vendor: string; primary: Offer; termsWithheld: boolean }[] = [];
+const primaries: { slug: string; vendor: string; primary: Offer; termsWithheld: boolean; freeTierEnded: boolean }[] = [];
 for (const [slug, vendor] of vendorSlugMap.entries()) {
   const vendorOffers = offers.filter(o => o.vendor === vendor);
   if (vendorOffers.length === 0) continue;
@@ -155,6 +155,7 @@ for (const [slug, vendor] of vendorSlugMap.entries()) {
     vendor,
     primary: vendorOffers[0],
     termsWithheld: because !== null && withholdsTheTerms(because),
+    freeTierEnded: context !== null && freeTierClaim(context.input).states === "ended",
   });
 }
 
@@ -690,8 +691,17 @@ describe("the same page an ungated record renders is unchanged", () => {
   });
 
   it("still publishes a zero-price Offer", () => {
-    const missing = publishingItsTerms().filter(p => offerBlock(p)?.price !== "0").map(p => p.slug);
+    const subjects = publishingItsTerms().filter(p => !p.freeTierEnded);
+    assertPopulationFloor(subjects.length, 700, "ungated pages publish terms for a tier we do not say has ended");
+    const missing = subjects.filter(p => offerBlock(p)?.price !== "0").map(p => p.slug);
     assert.deepStrictEqual(missing.slice(0, 20), [], "ungated pages that stopped publishing a zero-price Offer");
+  });
+
+  it("publishes none where we say the free tier has ended", () => {
+    const ended = publishingItsTerms().filter(p => p.freeTierEnded);
+    assert.ok(ended.length > 0, "no ungated page publishing its terms says its free tier has ended");
+    const offering = ended.filter(p => offerBlock(p) !== undefined).map(p => p.slug);
+    assert.deepStrictEqual(offering.slice(0, 20), [], "pages offering a price of zero for a free tier we say has ended");
   });
 
   it("publishes none where the change log supersedes the terms behind it", () => {

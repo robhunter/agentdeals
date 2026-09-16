@@ -666,13 +666,18 @@ function publishedTermsText(offer: Offer): string {
   return unconfirmed ? termsWithTheReasonWeCannotConfirmThem(offer.description, unconfirmed) : offer.description;
 }
 
-const freeTierClaimsByOffer = new Map<string, { on: string; claim: FreeTierClaim | null }>();
+interface OfferStanding {
+  claim: FreeTierClaim;
+  gate: Gate | null;
+}
 
-function freeTierClaimForOffer(offer: Offer): FreeTierClaim | null {
+const standingsByOffer = new Map<string, { on: string; standing: OfferStanding | null }>();
+
+function standingOf(offer: Offer): OfferStanding | null {
   const servedOn = utcDate();
   const key = `${offer.vendor}|${offer.url}|${offer.tier}`;
-  const cached = freeTierClaimsByOffer.get(key);
-  if (cached && cached.on === servedOn) return cached.claim;
+  const cached = standingsByOffer.get(key);
+  if (cached && cached.on === servedOn) return cached.standing;
   const context = vendorVerdictContextFrom({
     vendor: offer.vendor,
     vendorOffers: [offer],
@@ -680,17 +685,21 @@ function freeTierClaimForOffer(offer: Offer): FreeTierClaim | null {
     refusedReads: refusalsFor(offer.vendor),
     servedOn,
   });
-  const claim = context ? freeTierClaim(context.input) : null;
-  freeTierClaimsByOffer.set(key, { on: servedOn, claim });
-  return claim;
+  const standing = context ? { claim: freeTierClaim(context.input), gate: context.gate } : null;
+  standingsByOffer.set(key, { on: servedOn, standing });
+  return standing;
 }
 
-function weStateThisTierIsFree(offer: Offer): boolean {
-  return freeTierClaimForOffer(offer)?.states === "offered" && supersedingChangeFor(offer) === null;
+function weListThisTierAsFreeToday(offer: Offer): boolean {
+  const standing = standingOf(offer);
+  return standing !== null
+    && standing.claim.states !== "ended"
+    && standing.gate === null
+    && supersedingChangeFor(offer) === null;
 }
 
 function freeTierOfferJsonLd(offer: Offer, heldUntil?: string): { offers?: Record<string, string> } {
-  if (!weStateThisTierIsFree(offer)) return {};
+  if (!weListThisTierAsFreeToday(offer)) return {};
   return {
     offers: {
       "@type": "Offer",
@@ -3520,9 +3529,9 @@ function buildComparisonPage(slug: string): string | null {
       itemListOrder: listOrderOf("as-curated"),
       numberOfItems: 2,
       itemListElement: [
-        { offer: a, superseded: supersededA },
-        { offer: b, superseded: supersededB },
-      ].map(({ offer: v, superseded }, i) => ({
+        { offer: a, free: freeSideA.free, superseded: supersededA },
+        { offer: b, free: freeSideB.free, superseded: supersededB },
+      ].map(({ offer: v, free, superseded }, i) => ({
         "@type": "ListItem",
         position: i + 1,
         item: {
@@ -3530,7 +3539,7 @@ function buildComparisonPage(slug: string): string | null {
           name: v.vendor,
           description: superseded ? supersededTermsNotice(v.vendor, superseded) : v.description,
           applicationCategory: v.category,
-          ...freeTierOfferJsonLd(v),
+          ...(free.states === "offered" ? freeTierOfferJsonLd(v) : {}),
           url: v.url,
         },
       })),

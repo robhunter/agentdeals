@@ -11,6 +11,7 @@ const { gateFor, utcDate } = await import("../dist/ranking.js");
 const { CITATION_CLASSES } = await import("../dist/change-citation.js");
 const { loadDealChanges, refusalsForVendor } = await import("../dist/data.js");
 const { badgeWithholding, withholdsTheTerms } = await import("../dist/vendor-verdict.js");
+const { supersedingChange } = await import("../dist/superseded-description.js");
 const { vendorVerdictContextFrom } = await import("../dist/vendor-verdict-input.js");
 
 type Offer = import("../src/types.ts").Offer;
@@ -21,6 +22,10 @@ const REPO = path.join(__dirname, "..");
 const offers: Offer[] = JSON.parse(readFileSync(path.join(REPO, "data", "index.json"), "utf-8")).offers;
 
 const dealChanges = loadDealChanges();
+
+function changesFor(vendor: string) {
+  return dealChanges.filter((c: { vendor: string }) => c.vendor.toLowerCase() === vendor.toLowerCase());
+}
 
 function termsWithheldFor(vendor: string): boolean {
   const context = vendorVerdictContextFrom({
@@ -100,11 +105,9 @@ function faqAnswer(html: string, prefix: string): string | undefined {
 }
 
 function renderedOffer(html: string): Offer | undefined {
-  const webPage = blockOfType(html, "WebPage");
-  const vendor = webPage?.mainEntity?.name;
-  const tier = webPage?.mainEntity?.offers?.description;
-  if (typeof vendor !== "string" || typeof tier !== "string") return undefined;
-  return offers.find(o => o.vendor === vendor && o.tier === tier);
+  const vendor = blockOfType(html, "WebPage")?.mainEntity?.name;
+  if (typeof vendor !== "string") return undefined;
+  return offers.find(o => o.vendor === vendor);
 }
 
 function openingTagsFor(html: string, url: string): string[] {
@@ -252,6 +255,7 @@ describe("a record that is not retired keeps everything the gate would take away
       p => !offerRetired(p.offer) && !p.offer.eligibility && p.offer.source_check?.outcome === "ok"
         && !gateFor(p.offer, utcDate())
         && !termsWithheldFor(p.offer.vendor)
+        && supersedingChange(p.offer, changesFor(p.offer.vendor)) === null
         && p.offer.tier.toLowerCase() !== "none"
         && !p.offer.description.toLowerCase().includes("no free tier"),
     );
