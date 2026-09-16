@@ -471,7 +471,7 @@ describe("a read that failed buys the record no reprieve", () => {
     assert.strictEqual(unreadable, read);
   });
 
-  it("lets the check's outcome decide nothing about which of two same-day reads goes first", () => {
+  it("leaves a page we could not reach where its age puts it, beside one we read the same day", () => {
     const unreadable = offer("Unreadable", SOURCE_CHECK_UNREADABLE);
     const read = offer("Read", SOURCE_CHECK_OK);
     for (const pair of [[unreadable, read], [read, unreadable]]) {
@@ -623,5 +623,163 @@ describe("one run decides the stamp and the stored confirmation together", () =>
         assert.strictEqual(stampsAConfirmation(status, outcome), false, `a ${status} verdict stamped ${outcome}`);
       }
     }
+  });
+});
+
+describe("a page that answered the last reading with nothing waits a turn", () => {
+  const NOW = new Date("2026-09-16T10:00:00Z");
+  const DAY = 24 * 60 * 60 * 1000;
+
+  function dayBefore(days: number) {
+    return new Date(NOW.getTime() - days * DAY).toISOString().slice(0, 10);
+  }
+
+  function offer(vendor: string, outcome: string, readDaysAgo: number) {
+    return {
+      vendor,
+      url: `https://${vendor.toLowerCase()}.example/pricing`,
+      description: `${vendor} free tier`,
+      source_check: { outcome, checked: dayBefore(readDaysAgo), detail: `${vendor} read` },
+    };
+  }
+
+  function order(offers: any[], limit: number) {
+    const { picked } = pickOldestEntries(offers, limit, NOW);
+    return picked.map((entry: any) => entry.offer.vendor);
+  }
+
+  it("draws it after a record of the same age whose page stated terms", () => {
+    const offers = [
+      offer("Empty", SOURCE_CHECK_NO_TERMS, 30),
+      offer("Priced", SOURCE_CHECK_OK, 30),
+    ];
+    assert.deepStrictEqual(order(offers, 2), ["Priced", "Empty"]);
+    assert.deepStrictEqual(order(offers.slice().reverse(), 2), ["Priced", "Empty"]);
+  });
+
+  it("defers no record for a reading that never reached the page", () => {
+    const offers = [
+      offer("Unreached", SOURCE_CHECK_UNREADABLE, 30),
+      offer("Priced", SOURCE_CHECK_OK, 30),
+    ];
+    assert.deepStrictEqual(order(offers, 2), ["Unreached", "Priced"]);
+  });
+
+  it("draws it first once it is a turn older than the records it waited behind", () => {
+    const { turnDays } = pickOldestEntries(
+      [offer("A", SOURCE_CHECK_OK, 1), offer("B", SOURCE_CHECK_OK, 1)],
+      1,
+      NOW,
+    );
+    assert.strictEqual(turnDays, 2);
+    const offers = [
+      offer("Empty", SOURCE_CHECK_NO_TERMS, 5 + turnDays),
+      offer("Priced", SOURCE_CHECK_OK, 5),
+    ];
+    assert.strictEqual(order(offers, 1)[0], "Empty");
+  });
+
+  it("takes the turn from the queue it is ordering and the limit it is drawing", () => {
+    const offers = Array.from({ length: 12 }, (_, i) => offer(`V${i}`, SOURCE_CHECK_OK, i + 1));
+    assert.strictEqual(pickOldestEntries(offers, 3, NOW).turnDays, 4);
+    assert.strictEqual(pickOldestEntries(offers, 6, NOW).turnDays, 2);
+    assert.strictEqual(pickOldestEntries(offers, 12, NOW).turnDays, 1);
+  });
+
+  it("withholds nothing: every live record is drawn inside a turn and its deferral", () => {
+    const offers = Array.from({ length: 20 }, (_, i) =>
+      offer(`V${i}`, i % 2 === 0 ? SOURCE_CHECK_NO_TERMS : SOURCE_CHECK_OK, 10));
+    const limit = 5;
+    const turnDays = pickOldestEntries(offers, limit, NOW).turnDays;
+    const drawn = new Set<string>();
+    const readOn = new Map<string, string>();
+    for (let run = 0; run < 2 * turnDays; run++) {
+      const at = new Date(NOW.getTime() + run * DAY);
+      const rows = offers.map((row) => {
+        const checked = readOn.get(row.vendor);
+        return checked ? { ...row, source_check: { ...row.source_check, checked } } : row;
+      });
+      const { picked } = pickOldestEntries(rows, limit, at);
+      for (const entry of picked) {
+        drawn.add(entry.offer.vendor);
+        readOn.set(entry.offer.vendor, at.toISOString().slice(0, 10));
+      }
+    }
+    assert.strictEqual(drawn.size, offers.length);
+  });
+
+  it("leaves the quarantined set and its retry budget exactly where they were", () => {
+    const offers = Array.from({ length: 12 }, (_, i) =>
+      offer(`V${i}`, i % 2 === 0 ? SOURCE_CHECK_NO_TERMS : SOURCE_CHECK_OK, 20));
+    const state = new Map();
+    for (const row of offers.slice(0, 6)) {
+      for (let i = 0; i < QUARANTINE_AFTER_FAILURES; i++) {
+        recordAttempts(state, [{ vendor: row.vendor, url: row.url, outcome: ATTEMPT_FETCH_FAILED }],
+          new Date(NOW.getTime() - (QUARANTINE_RETRY_DAYS + i) * DAY));
+      }
+    }
+    const result = pickOldestEntries(offers, 4, NOW, { verificationState: state });
+    assert.strictEqual(result.quarantineHeld, 6);
+    assert.strictEqual(result.retriedFromQuarantine, quarantineRetryBudget(4));
+    assert.strictEqual(result.deferredATurn, 3);
+    assert.strictEqual(result.liveQueueLength, 6);
+  });
+
+  it("defers no record nobody has checked, because nothing is known about its page", () => {
+    const unchecked: any = {
+      vendor: "Unchecked",
+      url: "https://unchecked.example/pricing",
+      description: "Unchecked free tier",
+      verifiedDate: dayBefore(30),
+    };
+    const offers = [unchecked, offer("Priced", SOURCE_CHECK_OK, 30)];
+    assert.deepStrictEqual(order(offers, 2), ["Unchecked", "Priced"]);
+    assert.strictEqual(pickOldestEntries(offers, 2, NOW).deferredATurn, 0);
+  });
+
+  it("leaves the quarantine retry order on age alone", () => {
+    const live = Array.from({ length: 100 }, (_, i) => offer(`Live${i}`, SOURCE_CHECK_OK, 1));
+    const quarantined = [
+      offer("OlderEmpty", SOURCE_CHECK_NO_TERMS, 30),
+      offer("OlderEmptyToo", SOURCE_CHECK_NO_TERMS, 30),
+      offer("NewerPriced", SOURCE_CHECK_OK, 25),
+      offer("NewerPricedToo", SOURCE_CHECK_OK, 25),
+    ];
+    const state = new Map();
+    for (const row of quarantined) {
+      const readDaysAgo = row.vendor.startsWith("Older") ? 30 : 25;
+      for (let i = 0; i < QUARANTINE_AFTER_FAILURES; i++) {
+        recordAttempts(state, [{ vendor: row.vendor, url: row.url, outcome: ATTEMPT_FETCH_FAILED }],
+          new Date(NOW.getTime() - (readDaysAgo + QUARANTINE_AFTER_FAILURES - i) * DAY));
+      }
+    }
+    const result = pickOldestEntries([...quarantined, ...live], 10, NOW, { verificationState: state });
+    assert.strictEqual(result.quarantineDue, 4);
+    assert.strictEqual(result.retriedFromQuarantine, 2);
+    assert.ok(result.turnDays > 5, `a turn of ${result.turnDays} days decides nothing here`);
+    const names = new Set(quarantined.map((row) => row.vendor));
+    const retried = result.picked
+      .map((entry: any) => entry.offer.vendor)
+      .filter((vendor: string) => names.has(vendor));
+    assert.deepStrictEqual(retried.sort(), ["OlderEmpty", "OlderEmptyToo"]);
+  });
+
+  it("states the rule and the turn it used in the run's own summary", () => {
+    const lines = summaryLines(
+      { verified: 0, flagged: 0, recorded: [], attempts: [] },
+      { useAi: false, checked: 4, total: 12, turnDays: 20, deferredATurn: 589, liveQueueLength: 1492 },
+    );
+    const text = lines.join("\n");
+    assert.match(text, /Deferred a turn because the page answered their last reading with nothing: 589 of 1492/);
+    assert.match(text, /20 days at this run's limit/);
+    assert.match(text, /A reading that never reached the page is not deferred/);
+  });
+
+  it("says nothing about a deferral when the caller reported no queue", () => {
+    const lines = summaryLines(
+      { verified: 0, flagged: 0, recorded: [], attempts: [] },
+      { useAi: false, checked: 4, total: 12 },
+    );
+    assert.ok(!lines.some((line: string) => line.includes("Deferred a turn")), lines.join("\n"));
   });
 });
