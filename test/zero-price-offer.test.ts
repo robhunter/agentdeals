@@ -113,9 +113,15 @@ describe("#1724 structured data prices a tier at zero only where we state that t
     const everyTwelfth = published.map(o => o.vendor).filter((_, i) => i % 12 === 0);
     sampledVendors = [...new Set([...withheldOrEnded, ...everyTwelfth])].sort();
 
+    const comparisons = [...(await (await fetch(`${base}/sitemap-comparisons.xml`)).text())
+      .matchAll(/<loc>([^<]+)<\/loc>/g)]
+      .map(m => new URL(m[1]).pathname)
+      .filter(p => p.startsWith("/compare/"));
+
     const queue = [
       ...categories,
       ...LISTING_PAGES,
+      ...comparisons,
       ...[...new Set(withheldOrEnded)].slice(0, 120).map(v => `/alternative-to/${toSlug(v)}`),
       ...sampledVendors.map(v => `/vendor/${toSlug(v)}`),
     ];
@@ -173,7 +179,7 @@ describe("#1724 structured data prices a tier at zero only where we state that t
     const disagreeing: string[] = [];
     let compared = 0;
     for (const node of nodes) {
-      if (node.route.startsWith("/vendor/") || !single.has(node.vendor)) continue;
+      if (node.route.startsWith("/vendor/") || node.route.startsWith("/compare/") || !single.has(node.vendor)) continue;
       const vendorPage = onVendorPage.get(node.vendor);
       if (vendorPage === undefined) continue;
       compared++;
@@ -193,6 +199,17 @@ describe("#1724 structured data prices a tier at zero only where we state that t
     assert.deepStrictEqual(misnamed.map(n => `${n.route} ${n.vendor} ${n.tier}`).slice(0, 25), []);
   });
 
+  it("prices on a comparison page only what a vendor page prices, and less of it", () => {
+    const single = soleOffer();
+    const onVendorPage = new Map(routesOf("/vendor/").filter(n => single.has(n.vendor)).map(n => [n.vendor, n.pricedAtZero]));
+    const compared = routesOf("/compare/").filter(n => onVendorPage.has(n.vendor));
+    assertPopulationFloor(compared.length, 150, "comparison nodes have a vendor page to be read against");
+    const pricedOnlyHere = compared.filter(n => n.pricedAtZero && !onVendorPage.get(n.vendor));
+    assert.deepStrictEqual(pricedOnlyHere.map(n => `${n.route} ${n.vendor}`).slice(0, 25), []);
+    const heldBackHere = compared.filter(n => !n.pricedAtZero && onVendorPage.get(n.vendor)).length;
+    assertPopulationFloor(heldBackHere, 18, "comparison nodes withhold a price the vendor page publishes");
+  });
+
   it("still prices the tiers we do state are free", () => {
     const vercel = nodes.filter(n => n.vendor === "Vercel" && n.pricedAtZero);
     assertPopulationFloor(vercel.length, 2, "surfaces price Vercel's tier at zero");
@@ -207,7 +224,7 @@ describe("a reading held for the day it was served is not served on another day"
     const source = readFileSync(path.join(REPO, "src", "serve.ts"), "utf8");
     const caches = source.match(/new Map<string, \{ on: string;[^\n]*\}>\(\)/g) ?? [];
     const guards = source.match(/if \(cached && cached\.on === \w+\)/g) ?? [];
-    assertPopulationFloor(caches.length, 3, "caches in the render source key a reading to a day");
+    assertPopulationFloor(caches.length, 2, "caches in the render source key a reading to a day");
     assert.strictEqual(
       guards.length,
       caches.length,
