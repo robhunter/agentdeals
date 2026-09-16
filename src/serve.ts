@@ -49,7 +49,7 @@ import { HETZNER_APRIL_CHANGES, HETZNER_CLOUD_PLANS, HETZNER_PRICES_READ, HETZNE
 import { HUNDRED_GB_SCENARIO, HUNDRED_TB_SCENARIO, ONE_TO_ONE_SCENARIO, STORAGE_RATES_READ, STORAGE_SCALE_WORKLOADS, TEN_TO_ONE_SCENARIO, cheapestProviderAt, costAfterMonthlyEgressGrantFor, costliestProviderAt, egressAllowanceSentence, egressBillAfterMonthlyGrantFor, egressBillOnceOverAllowance, egressRatioWhereCostsMatch, fixedMonthlyGrantsSentence, monthlyEgressGrantGb, monthlyEgressGrantSentence, monthlyStorageCost, providersWithScalingEgressAllowance, rateCardFor, scaleCostFor } from "./storage-cost-model.js";
 import { changeTimelineDate, supersededLineups, supersessionNote } from "./change-lineup.js";
 import { isNoLongerInForce, eventResolutionFields, recordsStillInForce, recordsWeStandBehind, INCLUDE_RETRACTED_REJECTED } from "./change-resolution.js";
-import { trackedChanges, changeCensus, changeCountPhrase, recordsNotCountedSentence, sliceById, CHANGE_SLICES, CENSUS_NOTE, TRACKED_CHANGE_RULE_ANCHOR, TRACKED_CHANGE_RULE_PATH, TRACKED_CHANGE_NOUN } from "./change-census.js";
+import { trackedChanges, isIndexHousekeeping, changeCensus, changeCountPhrase, recordsNotCountedSentence, sliceById, CHANGE_SLICES, CENSUS_NOTE, TRACKED_CHANGE_RULE_ANCHOR, TRACKED_CHANGE_RULE_PATH, TRACKED_CHANGE_NOUN, INDEX_HOUSEKEEPING_CLASS, INDEX_HOUSEKEEPING_BADGE, INDEX_HOUSEKEEPING_BADGE_COLOR, INDEX_HOUSEKEEPING_NOTE, indexHousekeepingHeadline } from "./change-census.js";
 import { SINCE_DEFAULT_SENTENCE } from "./change-window.js";
 import { FREE_TIER_STANDING_LABELS, GRADE_FACTORS_WITHOUT_PRICING_HISTORY, NOT_EVIDENCE_LABELS, citesAChangeOlderThanTheGrade, freeTierStanding, gradesFirstSet, gradesLastSet, gradingDatesClause, neverTracked, riskEntries, scorecard, splitByFreeTierStanding, trackedSinceGrading, type RiskEntry } from "./risk-scorecard.js";
 import { CHANGE_DIRECTION, changeDirectionTable, directionRatioLabel } from "./change-direction.js";
@@ -4200,7 +4200,7 @@ function buildDigestPage(weekKey: string): string | null {
   const { year, week } = parsed;
 
   const byWeek = getChangesByWeek();
-  const weekRecords = byWeek.get(weekKey) ?? [];
+  const weekRecords = (byWeek.get(weekKey) ?? []).filter(c => !isIndexHousekeeping(c));
   const { dated: changes, discovered } = partitionByDateProvenance(weekRecords);
   const dateRange = formatDateRange(year, week);
   const discoveryNote = discovered.length > 0 ? discoveryBatchNote(discovered.length, `during ${dateRange}`) : "";
@@ -9394,7 +9394,7 @@ function buildReportsIndexPage(): string {
 
   const monthCards = months.map(m => {
     const [y, mo] = m.split("-");
-    const monthChanges = recordsStillInForce(changesEffectiveIn(allChanges, m));
+    const monthChanges = trackedChanges(changesEffectiveIn(allChanges, m));
     const negative = monthChanges.filter(c => NEGATIVE_CHANGE_TYPES.has(c.change_type)).length;
     const positive = monthChanges.filter(c => POSITIVE_CHANGE_TYPES.has(c.change_type)).length;
     const neutral = monthChanges.length - negative - positive;
@@ -9466,7 +9466,7 @@ function buildMonthlyReportPage(yearMonth: string): string | null {
   const allChanges = loadDealChanges();
   const recordedInMonth = changesEffectiveIn(allChanges, yearMonth);
   if (recordedInMonth.length === 0) return null;
-  const monthChanges = recordsStillInForce(recordedInMonth);
+  const monthChanges = trackedChanges(recordedInMonth);
 
   const [yearStr, moStr] = yearMonth.split("-");
   const monthNum = parseInt(moStr);
@@ -19430,8 +19430,9 @@ function buildQ2PricingPreview2026Page(): string {
   const slug = "q2-pricing-preview-2026";
   const pubDate = "2026-03-25";
 
-  const q2Changes = dealChanges.filter(c => c.date >= "2026-04-01" && c.date <= "2026-06-30");
-  const lateQ1Changes = dealChanges.filter(c => c.date >= "2026-03-25" && c.date < "2026-04-01");
+  const confirmed = trackedChanges(dealChanges);
+  const q2Changes = confirmed.filter(c => c.date >= "2026-04-01" && c.date <= "2026-06-30");
+  const lateQ1Changes = confirmed.filter(c => c.date >= "2026-03-25" && c.date < "2026-04-01");
   const timelineChanges = [...lateQ1Changes, ...q2Changes].sort((a, b) => a.date.localeCompare(b.date));
 
   const impactColors: Record<string, string> = { high: "#f85149", medium: "#d29922", low: "#3fb950" };
@@ -23345,7 +23346,7 @@ function buildFreeTierRiskPage(): string {
   const heavilyNegative = heatmapData.filter(h => h.pctNeg >= 80);
   const heaviestNegative = heavilyNegative.slice(0, 3).map(h => h.category);
 
-  const changeMonths = monthlyChangeSeries(changesInForce);
+  const changeMonths = monthlyChangeSeries(trackedChanges(changesInForce));
   const monthlyChanges = new Map([...changeMonths.effective].map(([month, records]) => [month, records.length]));
   const discoveryMonths = [...changeMonths.discovered].map(([month, records]) => [month, records.length] as const);
   const discoveredTotal = discoveryMonths.reduce((sum, [, count]) => sum + count, 0);
@@ -46039,7 +46040,7 @@ function buildStateOfFreeTiersPage(): string {
       positive: records.filter(c => positiveTypes.has(c.change_type)).length,
     }]);
   }
-  const changeMonths = monthlyChangeSeries(changesInForce);
+  const changeMonths = monthlyChangeSeries(trackedChanges(changesInForce));
   const sortedMonths = tallyMonths(changeMonths.effective);
   const discoveryMonths = tallyMonths(changeMonths.discovered);
   const discoveredTotal = [...changeMonths.discovered.values()].reduce((sum, records) => sum + records.length, 0);
@@ -50062,7 +50063,10 @@ function buildPricingChangesPage(): string {
   const filterCategory: Record<string, string> = CHANGE_DIRECTION;
 
   function buildChangeEntry(c: typeof allChanges[0]): string {
-    const badge = changeTypeBadge[c.change_type] ?? { label: c.change_type, color: "#8b949e" };
+    const housekeeping = isIndexHousekeeping(c);
+    const badge = housekeeping
+      ? { label: INDEX_HOUSEKEEPING_BADGE, color: INDEX_HOUSEKEEPING_BADGE_COLOR }
+      : changeTypeBadge[c.change_type] ?? { label: c.change_type, color: "#8b949e" };
     const impactColor = changeImpactColor(c.impact);
     const dated = isEventDated(c);
     const isUpcoming = dated && c.date >= today;
@@ -50078,7 +50082,7 @@ function buildPricingChangesPage(): string {
       : "";
     const vendorCat = (c.category || "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
     const changeYear = dated ? c.date.slice(0, 4) : "";
-    return `      <div class="pc-entry${isUpcoming ? " pc-upcoming" : ""}${dated ? "" : " pc-undated"}${isNoLongerInForce(c) ? " pc-resolved" : ""}${changeIsUncited(c) ? " pc-unsourced" : ""}" id="${changeAnchor(c)}" data-type="${escHtmlServer(c.change_type)}" data-impact="${escHtmlServer(c.impact)}" data-category="${category}" data-vendor-cat="${vendorCat}" data-year="${changeYear}">
+    return `      <div class="pc-entry${isUpcoming ? " pc-upcoming" : ""}${dated ? "" : " pc-undated"}${isNoLongerInForce(c) ? " pc-resolved" : ""}${changeIsUncited(c) ? " pc-unsourced" : ""}${housekeeping ? ` ${INDEX_HOUSEKEEPING_CLASS}` : ""}" id="${changeAnchor(c)}" data-type="${escHtmlServer(c.change_type)}" data-impact="${escHtmlServer(c.impact)}" data-category="${category}" data-vendor-cat="${vendorCat}" data-year="${changeYear}">
         <div class="pc-left">
           <div class="pc-date${dated ? "" : " pc-date-unknown"}">${changeEntryDateLabel(c)}</div>
           ${isUpcoming ? `<div class="pc-upcoming-badge">upcoming</div>` : ""}
@@ -50092,6 +50096,7 @@ function buildPricingChangesPage(): string {
             ${changeIsUncited(c) ? unsourcedTagHtml() : ""}
           </div>
           <div class="pc-summary">${changeSummaryHtml(c, escHtmlServer)}</div>
+${housekeeping ? `          <div class="chg-housekeeping-note" style="font-size:.75rem;color:var(--text-dim);margin-top:.25rem">${escHtmlServer(INDEX_HOUSEKEEPING_NOTE)}</div>` : ""}
 ${stateHtml}
 ${altHtml}
         </div>
@@ -50545,7 +50550,10 @@ function buildChangesPage(): string {
   }
 
   function buildChangeEntry(c: typeof allChanges[0]): string {
-    const badge = changeTypeBadge[c.change_type] ?? { label: c.change_type, color: "#8b949e" };
+    const housekeeping = isIndexHousekeeping(c);
+    const badge = housekeeping
+      ? { label: INDEX_HOUSEKEEPING_BADGE, color: INDEX_HOUSEKEEPING_BADGE_COLOR }
+      : changeTypeBadge[c.change_type] ?? { label: c.change_type, color: "#8b949e" };
     const impactColor = changeImpactColor(c.impact);
     const dated = isEventDated(c);
     const isUpcoming = dated && c.date >= today;
@@ -50554,7 +50562,7 @@ function buildChangesPage(): string {
     const altHtml = c.alternatives && c.alternatives.length > 0
       ? `<div class="chg-alts"><span class="chg-alts-label">Alternatives:</span> ${c.alternatives.map(a => changeVendorLinkHtml(a)).join(", ")}</div>`
       : "";
-    return `      <div class="chg-entry${isUpcoming ? " chg-upcoming" : ""}${dated ? "" : " chg-undated"}${isNoLongerInForce(c) ? " chg-resolved" : ""}${changeIsUncited(c) ? " chg-unsourced" : ""}"${anchorAttr}>
+    return `      <div class="chg-entry${isUpcoming ? " chg-upcoming" : ""}${dated ? "" : " chg-undated"}${isNoLongerInForce(c) ? " chg-resolved" : ""}${changeIsUncited(c) ? " chg-unsourced" : ""}${housekeeping ? ` ${INDEX_HOUSEKEEPING_CLASS}` : ""}"${anchorAttr}>
         <div class="chg-left">
           <div class="chg-date${dated ? "" : " chg-date-unknown"}">${changeEntryDateLabel(c)}</div>
           ${isUpcoming ? `<div class="chg-upcoming-badge">upcoming</div>` : ""}
@@ -50567,6 +50575,7 @@ function buildChangesPage(): string {
             ${changeIsUncited(c) ? unsourcedTagHtml() : ""}
           </div>
           <div class="chg-summary">${changeSummaryHtml(c, escHtmlServer)}</div>
+${housekeeping ? `          <div class="chg-housekeeping-note">${escHtmlServer(INDEX_HOUSEKEEPING_NOTE)}</div>` : ""}
 ${altHtml}
         </div>
       </div>`;
@@ -50608,8 +50617,10 @@ ${undatedSorted.map(c => buildChangeEntry(c)).join("\n")}
         position: i + 1,
         item: {
           "@type": "NewsArticle",
-          headline: `${c.vendor}: ${(changeTypeBadge[c.change_type] ?? { label: c.change_type }).label}`,
-          description: c.summary,
+          headline: isIndexHousekeeping(c)
+            ? indexHousekeepingHeadline(c.vendor)
+            : `${c.vendor}: ${(changeTypeBadge[c.change_type] ?? { label: c.change_type }).label}`,
+          description: isIndexHousekeeping(c) ? `${c.summary} ${INDEX_HOUSEKEEPING_NOTE}` : c.summary,
           ...changeDatePublished(c),
           ...changeVendorUrlField(c.vendor),
           publisher: { "@type": "Organization", name: "AgentDeals", url: BASE_URL },
@@ -50663,6 +50674,8 @@ h1{font-family:var(--serif);font-size:2.25rem;color:var(--text);margin:1rem 0 .5
 .chg-upcoming{border-color:rgba(88,166,255,0.3)}
 .chg-undated{border-style:dashed}
 .chg-resolved{opacity:.6;border-style:dashed}
+.chg-housekeeping{border-style:dotted;background:transparent}
+.chg-housekeeping-note{font-size:.75rem;color:var(--text-dim);margin-top:.25rem;line-height:1.5}
 .chg-left{flex-shrink:0;min-width:100px;text-align:right}
 .chg-date{font-family:var(--mono);font-size:.75rem;color:var(--text-muted)}
 .chg-date-unknown{color:#d29922;font-style:italic}
