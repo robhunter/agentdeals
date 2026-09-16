@@ -109,6 +109,16 @@ export function pricingHistoryCoverageSentence(
   return `${withNoRecordAtAll.length} of the ${graded.length} graded vendors have no record in that log at all — ${withNoRecordAtAll.map(nameOf).join(", ")} — so this factor supplied nothing for them and their grade rests on ${GRADE_FACTORS_WITHOUT_PRICING_HISTORY}.`;
 }
 
+export function pricingHistoryCoverageAnswer(
+  withNoRecordAtAll: readonly RiskEntry[],
+  graded: readonly RiskEntry[],
+): string {
+  if (withNoRecordAtAll.length === 0) {
+    return `All ${graded.length} graded vendors have a record in our change log, so pricing history supplied something for every grade.`;
+  }
+  return `${withNoRecordAtAll.length} of the ${graded.length} graded vendors have no record in our change log at all, so pricing history supplied nothing for them and their grade rests on the other three factors: ${withNoRecordAtAll.map(e => e.vendor).join(", ")}.`;
+}
+
 export interface BandScore {
   grade: RiskGrade;
   vendors: number;
