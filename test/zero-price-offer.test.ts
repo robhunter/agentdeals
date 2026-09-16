@@ -1,6 +1,7 @@
 import { describe, it, before, after } from "node:test";
 import assert from "node:assert";
 import { spawn, type ChildProcess } from "node:child_process";
+import { readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { assertPopulationFloor } from "./population-floor.ts";
@@ -198,5 +199,19 @@ describe("#1724 structured data prices a tier at zero only where we state that t
     assert.ok(vercel.some(n => n.route.startsWith("/vendor/")), "the vendor page prices it");
     assert.ok(vercel.some(n => n.route.startsWith("/category/")), "a category page prices it");
     assert.deepStrictEqual([...new Set(vercel.map(n => n.tier))], ["Hobby"]);
+  });
+});
+
+describe("a reading held for the day it was served is not served on another day", () => {
+  it("holds every day-scoped cache in the render source to the day it stored", () => {
+    const source = readFileSync(path.join(REPO, "src", "serve.ts"), "utf8");
+    const caches = source.match(/new Map<string, \{ on: string;[^\n]*\}>\(\)/g) ?? [];
+    const guards = source.match(/if \(cached && cached\.on === \w+\)/g) ?? [];
+    assertPopulationFloor(caches.length, 3, "caches in the render source key a reading to a day");
+    assert.strictEqual(
+      guards.length,
+      caches.length,
+      `${caches.length} caches hold a reading against a day and ${guards.length} check it before serving one`,
+    );
   });
 });
