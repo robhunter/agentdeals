@@ -49,7 +49,7 @@ import { HETZNER_APRIL_CHANGES, HETZNER_CLOUD_PLANS, HETZNER_PRICES_READ, HETZNE
 import { HUNDRED_GB_SCENARIO, HUNDRED_TB_SCENARIO, ONE_TO_ONE_SCENARIO, STORAGE_RATES_READ, STORAGE_SCALE_WORKLOADS, TEN_TO_ONE_SCENARIO, cheapestProviderAt, costAfterMonthlyEgressGrantFor, costliestProviderAt, egressAllowanceSentence, egressBillAfterMonthlyGrantFor, egressBillOnceOverAllowance, egressRatioWhereCostsMatch, fixedMonthlyGrantsSentence, monthlyEgressGrantGb, monthlyEgressGrantSentence, monthlyStorageCost, providersWithScalingEgressAllowance, rateCardFor, scaleCostFor } from "./storage-cost-model.js";
 import { changeTimelineDate, supersededLineups, supersessionNote } from "./change-lineup.js";
 import { isNoLongerInForce, eventResolutionFields, recordsStillInForce, recordsWeStandBehind, INCLUDE_RETRACTED_REJECTED } from "./change-resolution.js";
-import { trackedChanges, isIndexHousekeeping, recordsOtherThanOurOwnIndexHousekeeping, changeCensus, changeCountPhrase, recordsNotCountedSentence, sliceById, CHANGE_SLICES, CENSUS_NOTE, TRACKED_CHANGE_RULE_ANCHOR, TRACKED_CHANGE_RULE_PATH, TRACKED_CHANGE_NOUN, INDEX_HOUSEKEEPING_CLASS, INDEX_HOUSEKEEPING_BADGE, INDEX_HOUSEKEEPING_BADGE_COLOR, INDEX_HOUSEKEEPING_NOTE, INCLUDE_INDEX_HOUSEKEEPING_REJECTED, indexHousekeepingHeadline } from "./change-census.js";
+import { trackedChanges, isTrackedChange, isIndexHousekeeping, recordsOtherThanOurOwnIndexHousekeeping, changeCensus, changeCountPhrase, recordsNotCountedSentence, sliceById, CHANGE_SLICES, CENSUS_NOTE, TRACKED_CHANGE_RULE_ANCHOR, TRACKED_CHANGE_RULE_PATH, TRACKED_CHANGE_NOUN, INDEX_HOUSEKEEPING_CLASS, INDEX_HOUSEKEEPING_BADGE, INDEX_HOUSEKEEPING_BADGE_COLOR, INDEX_HOUSEKEEPING_NOTE, INCLUDE_INDEX_HOUSEKEEPING_REJECTED, indexHousekeepingHeadline } from "./change-census.js";
 import { SINCE_DEFAULT_SENTENCE } from "./change-window.js";
 import { FREE_TIER_STANDING_LABELS, GRADE_FACTORS_WITHOUT_PRICING_HISTORY, NOT_EVIDENCE_LABELS, citesAChangeOlderThanTheGrade, freeTierStanding, gradesFirstSet, gradesLastSet, gradingDatesClause, neverTracked, riskEntries, scorecard, splitByFreeTierStanding, trackedSinceGrading, type RiskEntry } from "./risk-scorecard.js";
 import { CHANGE_DIRECTION, changeDirectionTable, directionRatioLabel } from "./change-direction.js";
@@ -1154,7 +1154,11 @@ function compiledFigureVerdictFor(
     vendor: named.vendor,
     freeTierEnded: ended,
     endedBy: endedBy ? compiledPageRecordOf(endedBy) : null,
-    since: recordsSinceCompiled(changesForSubject(named), compiledOn, today).map(compiledPageRecordOf),
+    since: recordsSinceCompiled(
+      changesForSubject(named).filter(change => isTrackedChange(change) && !isOurOwnBookkeeping(change)),
+      compiledOn,
+      today,
+    ).map(compiledPageRecordOf),
   };
 }
 
@@ -1176,16 +1180,20 @@ function shortChangeDate(isoDate: string): string {
   return new Date(isoDate).toLocaleDateString("en-US", { month: "short", day: "numeric", timeZone: "UTC" });
 }
 
+function compiledFiguresMarked(html: string, compiledOn: string): string {
+  return markCompiledFigures(html, subject => compiledFigureVerdictFor(subject, compiledOn), {
+    compiledOn,
+    esc: escHtmlServer,
+    shortDate: shortChangeDate,
+  });
+}
+
 function comparisonPageWithLiveRecords(
   html: string,
   compiledOn: string,
   declaredScope: readonly DealChange[],
 ): string {
-  const marked = markCompiledFigures(html, subject => compiledFigureVerdictFor(subject, compiledOn), {
-    compiledOn,
-    esc: escHtmlServer,
-    shortDate: shortChangeDate,
-  });
+  const marked = compiledFiguresMarked(html, compiledOn);
 
   const rows = timelineRecordsFor(
     declaredScope,
@@ -26310,7 +26318,7 @@ function buildOpenAIAssistantsMigrationPage(): string {
     ],
   };
 
-  return '<!DOCTYPE html>\n<html lang="en">\n<head>\n' +
+  return compiledFiguresMarked('<!DOCTYPE html>\n<html lang="en">\n<head>\n' +
     '<meta charset="utf-8">\n' +
     '<meta name="viewport" content="width=device-width,initial-scale=1">\n' +
     '<title>' + escHtmlServer(title) + ' \u2014 AgentDeals</title>\n' +
@@ -26549,7 +26557,7 @@ function buildOpenAIAssistantsMigrationPage(): string {
     '  <footer>AgentDeals &mdash; open source, built for agents | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>\n' +
     '</div>\n' +
     '<script>' + mcpCtaScript() + '</script>\n' +
-    '</body>\n</html>';
+    '</body>\n</html>', pubDate);
 }
 
 function buildShutdownTrackerPage(): string {
@@ -27642,7 +27650,7 @@ function buildStartupCreditsPage(): string {
     ],
   };
 
-  return '<!DOCTYPE html>\n<html lang="en">\n<head>\n' +
+  return compiledFiguresMarked('<!DOCTYPE html>\n<html lang="en">\n<head>\n' +
     '<meta charset="utf-8">\n' +
     '<meta name="viewport" content="width=device-width,initial-scale=1">\n' +
     '<title>' + escHtmlServer(title) + ' \u2014 AgentDeals</title>\n' +
@@ -27880,7 +27888,7 @@ function buildStartupCreditsPage(): string {
     '  </div>\n' +
     '</footer>\n' +
     '<script>' + mcpCtaScript() + '</script>\n' +
-    '</body>\n</html>';
+    '</body>\n</html>', pubDate);
 }
 
 function buildAiCodingPricing2026Page(): string {
@@ -28055,7 +28063,7 @@ function buildAiCodingPricing2026Page(): string {
     about: tools.map(t => ({ "@type": "SoftwareApplication", name: t.name })),
   };
 
-  return `<!DOCTYPE html>
+  return compiledFiguresMarked(`<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
@@ -28271,7 +28279,7 @@ ${mcpCtaCss()}
 </footer>
 <script>${mcpCtaScript()}</script>
 </body>
-</html>`;
+</html>`, pubDate);
 }
 
 function buildAiCodingToolsPricingPage(): string {
@@ -28694,7 +28702,7 @@ function buildAiCodingToolsPricingPage(): string {
     ],
   };
 
-  return '<!DOCTYPE html>\n<html lang="en">\n<head>\n' +
+  return compiledFiguresMarked('<!DOCTYPE html>\n<html lang="en">\n<head>\n' +
     '<meta charset="utf-8">\n' +
     '<meta name="viewport" content="width=device-width,initial-scale=1">\n' +
     '<title>' + escHtmlServer(title) + ' \u2014 AgentDeals</title>\n' +
@@ -29021,7 +29029,7 @@ function buildAiCodingToolsPricingPage(): string {
     '  </div>\n' +
     '</footer>\n' +
     '<script>' + mcpCtaScript() + '</script>\n' +
-    '</body>\n</html>';
+    '</body>\n</html>', pubDate);
 }
 
 function buildCiCdPricingPage(): string {
@@ -29447,7 +29455,7 @@ function buildCiCdPricingPage(): string {
     ],
   };
 
-  return '<!DOCTYPE html>\n<html lang="en">\n<head>\n' +
+  return compiledFiguresMarked('<!DOCTYPE html>\n<html lang="en">\n<head>\n' +
     '<meta charset="utf-8">\n' +
     '<meta name="viewport" content="width=device-width,initial-scale=1">\n' +
     '<title>' + escHtmlServer(title) + ' \u2014 AgentDeals</title>\n' +
@@ -29772,7 +29780,7 @@ function buildCiCdPricingPage(): string {
     '  </div>\n' +
     '</footer>\n' +
     '<script>' + mcpCtaScript() + '</script>\n' +
-    '</body>\n</html>';
+    '</body>\n</html>', pubDate);
 }
 
 function buildDatabasePricingPage(): string {
@@ -30331,7 +30339,7 @@ function buildDatabasePricingPage(): string {
     ],
   };
 
-  return '<!DOCTYPE html>\n<html lang="en">\n<head>\n' +
+  return compiledFiguresMarked('<!DOCTYPE html>\n<html lang="en">\n<head>\n' +
     '<meta charset="utf-8">\n' +
     '<meta name="viewport" content="width=device-width,initial-scale=1">\n' +
     '<title>' + escHtmlServer(title) + ' \u2014 AgentDeals</title>\n' +
@@ -30658,7 +30666,7 @@ function buildDatabasePricingPage(): string {
     '  </div>\n' +
     '</footer>\n' +
     '<script>' + mcpCtaScript() + '</script>\n' +
-    '</body>\n</html>';
+    '</body>\n</html>', pubDate);
 }
 
 function buildVectorDatabasePricingPage(): string {
@@ -30990,7 +30998,7 @@ function buildVectorDatabasePricingPage(): string {
     ["database-pricing", "free-llm-apis", "ai-ml-alternatives", "database-alternatives"].includes(p.slug)
   );
 
-  return '<!DOCTYPE html>\n<html lang="en">\n<head>\n' +
+  return compiledFiguresMarked('<!DOCTYPE html>\n<html lang="en">\n<head>\n' +
     '<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">\n' +
     '<title>' + escHtmlServer(title) + ' \u2014 AgentDeals</title>\n' +
     '<meta name="description" content="' + escHtmlServer(metaDesc) + '">\n' +
@@ -31319,7 +31327,7 @@ function buildVectorDatabasePricingPage(): string {
     '  </div>\n' +
     '</footer>\n' +
     '<script>' + mcpCtaScript() + '</script>\n' +
-    '</body>\n</html>';
+    '</body>\n</html>', pubDate);
 }
 
 function buildHostingPricingPage(): string {
@@ -31699,7 +31707,7 @@ function buildHostingPricingPage(): string {
     ],
   };
 
-  return '<!DOCTYPE html>\n<html lang="en">\n<head>\n' +
+  return compiledFiguresMarked('<!DOCTYPE html>\n<html lang="en">\n<head>\n' +
     '<meta charset="utf-8">\n' +
     '<meta name="viewport" content="width=device-width,initial-scale=1">\n' +
     '<title>' + escHtmlServer(title) + ' \u2014 AgentDeals</title>\n' +
@@ -32038,7 +32046,7 @@ function buildHostingPricingPage(): string {
     '  </div>\n' +
     '</footer>\n' +
     '<script>' + mcpCtaScript() + '</script>\n' +
-    '</body>\n</html>';
+    '</body>\n</html>', pubDate);
 }
 
 const FRONTIER_PRICES_READ_ON = "2026-09-05";
@@ -32498,7 +32506,7 @@ function buildLlmApiPricingPage(): string {
     ],
   };
 
-  return '<!DOCTYPE html>\n<html lang="en">\n<head>\n' +
+  return compiledFiguresMarked('<!DOCTYPE html>\n<html lang="en">\n<head>\n' +
     '<meta charset="utf-8">\n' +
     '<meta name="viewport" content="width=device-width,initial-scale=1">\n' +
     '<title>' + escHtmlServer(title) + ' — AgentDeals</title>\n' +
@@ -32810,7 +32818,7 @@ function buildLlmApiPricingPage(): string {
     '  </div>\n' +
     '</footer>\n' +
     '<script>' + mcpCtaScript() + '</script>\n' +
-    '</body>\n</html>';
+    '</body>\n</html>', pubDate);
 }
 
 function buildAgentPaymentsPage(): string {
@@ -39044,7 +39052,7 @@ function buildAuthComparison2026Page(): string {
     mainEntityOfPage: { "@type": "WebPage", "@id": `${BASE_URL}/${slug}` },
   };
 
-  return `<!DOCTYPE html>
+  return compiledFiguresMarked(`<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
@@ -39922,7 +39930,7 @@ ${mcpCtaCss()}
 </footer>
 <script>${mcpCtaScript()}</script>
 </body>
-</html>`;
+</html>`, pubDate);
 }
 
 function buildEmailComparison2026Page(): string {

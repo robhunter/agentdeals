@@ -30,6 +30,8 @@ const { CHANGE_IMPACT_LEVELS, changeImpactColor, changeImpactLabel, isChangeImpa
   await import("../dist/change-impact.js");
 const { vendorSlugMap } = await import("../dist/vendor-slug.js");
 const { SOURCE_MARKER_MARKUP } = await import("../dist/change-citation.js");
+const { isOurOwnBookkeeping } = await import("../dist/vendor-verdict.js");
+const { isTrackedChange } = await import("../dist/change-census.js");
 
 type DealChange = import("../src/types.ts").DealChange;
 
@@ -113,7 +115,9 @@ const subjectSlug = vendorSlugForSubject;
 function changesForSlug(slug: string): DealChange[] {
   const vendor = vendorSlugMap.get(slug);
   if (!vendor) return [];
-  return changes.filter(c => c.vendor.toLowerCase() === vendor.toLowerCase());
+  return changes.filter(
+    c => c.vendor.toLowerCase() === vendor.toLowerCase() && isTrackedChange(c) && !isOurOwnBookkeeping(c),
+  );
 }
 
 describe("the join between a compiled figure and the records that postdate it", () => {
@@ -151,6 +155,31 @@ describe("reading the subject a comparison card is about", () => {
     assert.strictEqual(
       subjectOfCardHeading("Vercel Hobby plan bans commercial use"),
       "Vercel Hobby plan bans commercial use",
+    );
+  });
+
+  it("drops a styled qualifier the heading carries after the name", () => {
+    assert.strictEqual(
+      subjectOfCardHeading(
+        'AWS Activate <span style="font-size:.75rem;color:var(--text-dim);font-weight:400">Open application</span>',
+      ),
+      "AWS Activate",
+    );
+  });
+
+  it("reads the name out of a heading whose name is itself in a span", () => {
+    assert.strictEqual(
+      subjectOfCardHeading(
+        '<span style="color:var(--text)">Jenkins</span> <span style="font-size:.75rem">Generous free tier</span>',
+      ),
+      "Jenkins",
+    );
+  });
+
+  it("keeps a heading that is one span whole rather than reading it as a qualifier", () => {
+    assert.strictEqual(
+      subjectOfCardHeading('<span class="name">Prometheus + Grafana</span>'),
+      "Prometheus + Grafana",
     );
   });
 });
