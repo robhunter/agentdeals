@@ -44,10 +44,21 @@ function ourOwnIndexHousekeeping(): LoggedChange[] {
   return heldRecords().filter((c) => c.current_state === INDEX_SWEEP_STATE);
 }
 
+function housekeepingWithheldOnItsOwnGround(): LoggedChange[] {
+  return ourOwnIndexHousekeeping().filter((c) => !c.resolution);
+}
+
 function housekeepingPopulation(): Population {
   return {
     size: ourOwnIndexHousekeeping().length,
     read: "records in the log that are our own index housekeeping",
+  };
+}
+
+function housekeepingReachingTheHousekeepingGround(): Population {
+  return {
+    size: housekeepingWithheldOnItsOwnGround().length,
+    read: "records that are our own index housekeeping and are not already withheld as retracted",
   };
 }
 
@@ -97,20 +108,29 @@ describe("our own index housekeeping reaches no caller who did not ask for it", 
       "records a whole-log query accounted for");
     assert.strictEqual(answer.changes.filter((c) => c.current_state === INDEX_SWEEP_STATE).length, 0);
     assert.strictEqual(answer.changes.filter((c) => c.reports === REPORTS_OUR_INDEX).length, 0);
-    assert.strictEqual(answer.index_housekeeping_excluded, ourOwnIndexHousekeeping().length);
+    assert.strictEqual(answer.index_housekeeping_excluded, housekeepingWithheldOnItsOwnGround().length);
   });
 
   it("withholds them from a type-filtered feed, which is the query that named six live products", async () => {
     const answer = await ask("type=product_deprecated&limit=1000");
     const deprecations = heldRecords().filter((c) => c.change_type === "product_deprecated");
-    const vendorsOwnDeprecations = deprecations.filter((c) => c.current_state !== INDEX_SWEEP_STATE);
+    const withheldAsOurs = deprecations.filter((c) => c.current_state === INDEX_SWEEP_STATE && !c.resolution);
+    const withheldAsRetracted = deprecations.filter((c) => c.resolution);
+    const vendorsOwnDeprecations = deprecations.filter(
+      (c) => c.current_state !== INDEX_SWEEP_STATE && !c.resolution,
+    );
 
     assertPopulationFloor(deprecations.length, 50, "records typed product_deprecated in the log");
-    assert.ok(ourOwnIndexHousekeeping().length > 0, "no housekeeping record in the log to withhold");
+    assert.ok(withheldAsOurs.length > 0, "no housekeeping record in the log to withhold");
 
+    assert.strictEqual(
+      answer.total + answer.index_housekeeping_excluded + answer.retracted_excluded,
+      deprecations.length,
+      "a type-filtered query served some records and named a ground for withholding the rest, and the two do not add up to what the log holds under that type",
+    );
     assert.strictEqual(answer.total, vendorsOwnDeprecations.length);
-    assert.strictEqual(answer.total, deprecations.length - ourOwnIndexHousekeeping().length);
-    assert.strictEqual(answer.index_housekeeping_excluded, ourOwnIndexHousekeeping().length);
+    assert.strictEqual(answer.index_housekeeping_excluded, withheldAsOurs.length);
+    assert.strictEqual(answer.retracted_excluded, withheldAsRetracted.length);
     assert.ok(answer.total < deprecations.length,
       `a type-filtered total of ${answer.total} still counts every record the log holds under that type`);
   });
@@ -137,7 +157,7 @@ describe("our own index housekeeping reaches no caller who did not ask for it", 
     assert.strictEqual(asked.total, withheld.total + withheld.index_housekeeping_excluded);
     assertCoversPopulation(
       asked.changes.filter((c) => c.reports === REPORTS_OUR_INDEX).length,
-      housekeepingPopulation(),
+      housekeepingReachingTheHousekeepingGround(),
       "housekeeping records returned to a caller who asked for them",
     );
     assert.strictEqual(asked.all_time_total, withheld.all_time_total,
@@ -150,7 +170,7 @@ describe("our own index housekeeping reaches no caller who did not ask for it", 
 
     assert.strictEqual(
       asked.change_census.retrievable_from_this_door - withheld.change_census.retrievable_from_this_door,
-      ourOwnIndexHousekeeping().length,
+      housekeepingWithheldOnItsOwnGround().length,
     );
     assert.strictEqual(asked.change_census.tracked_pricing_changes, withheld.change_census.tracked_pricing_changes);
   });
