@@ -337,6 +337,10 @@ export function markCompiledFigures(
 
 export function vendorSlugForSubject(subject: CompiledFigureSubject): string | null {
   if (subject.linkedSlug && vendorSlugMap.has(subject.linkedSlug)) return subject.linkedSlug;
+  if (subject.linkedSlug) {
+    const linked = resolveVendorSlug(subject.linkedSlug);
+    if (linked.type === "redirect" && vendorSlugMap.has(linked.slug)) return linked.slug;
+  }
   if (isNonVendorSubject(subject.label)) return null;
   if (subject.kind === "card") return slugNamedByHeading(subject.label);
   const asserted = assertedVendorSlugs(subject.label);

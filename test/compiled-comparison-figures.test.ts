@@ -30,6 +30,8 @@ const { CHANGE_IMPACT_LEVELS, changeImpactColor, changeImpactLabel, isChangeImpa
   await import("../dist/change-impact.js");
 const { vendorSlugMap } = await import("../dist/vendor-slug.js");
 const { SOURCE_MARKER_MARKUP } = await import("../dist/change-citation.js");
+const { isOurOwnBookkeeping } = await import("../dist/vendor-verdict.js");
+const { isTrackedChange } = await import("../dist/change-census.js");
 
 type DealChange = import("../src/types.ts").DealChange;
 
@@ -113,7 +115,9 @@ const subjectSlug = vendorSlugForSubject;
 function changesForSlug(slug: string): DealChange[] {
   const vendor = vendorSlugMap.get(slug);
   if (!vendor) return [];
-  return changes.filter(c => c.vendor.toLowerCase() === vendor.toLowerCase());
+  return changes.filter(
+    c => c.vendor.toLowerCase() === vendor.toLowerCase() && isTrackedChange(c) && !isOurOwnBookkeeping(c),
+  );
 }
 
 describe("the join between a compiled figure and the records that postdate it", () => {
