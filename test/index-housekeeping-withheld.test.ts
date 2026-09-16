@@ -51,6 +51,17 @@ function housekeepingPopulation(): Population {
   };
 }
 
+function recordsTheChangeLogHolds(): Population {
+  return { size: heldRecords().length, read: "records the change log holds" };
+}
+
+function deprecationsTheVendorMade(): Population {
+  const theirs = heldRecords().filter(
+    (c) => c.change_type === "product_deprecated" && c.current_state !== INDEX_SWEEP_STATE && !c.resolution,
+  );
+  return { size: theirs.length, read: "deprecations in the log that a vendor made" };
+}
+
 function startServer(changesPath?: string): Promise<{ proc: ChildProcess; port: number }> {
   return new Promise((resolve, reject) => {
     const env: NodeJS.ProcessEnv = { ...process.env, PORT: "0", BASE_URL: "http://localhost" };
@@ -82,7 +93,7 @@ describe("our own index housekeeping reaches no caller who did not ask for it", 
     const answer = await ask(`since=${THE_WHOLE_LOG}&limit=1000`);
 
     assertCoversPopulation(answer.returned + answer.index_housekeeping_excluded + answer.retracted_excluded,
-      { size: heldRecords().length, read: "records the change log holds" },
+      recordsTheChangeLogHolds(),
       "records a whole-log query accounted for");
     assert.strictEqual(answer.changes.filter((c) => c.current_state === INDEX_SWEEP_STATE).length, 0);
     assert.strictEqual(answer.changes.filter((c) => c.reports === REPORTS_OUR_INDEX).length, 0);
@@ -155,7 +166,7 @@ describe("our own index housekeeping reaches no caller who did not ask for it", 
     const everything = await ask("type=product_deprecated&limit=1000&include_index_housekeeping=true");
     const vendorsOwn = everything.changes.filter((c) => c.reports !== REPORTS_OUR_INDEX);
 
-    assertCoversPopulation(served.returned, { size: vendorsOwn.length, read: "deprecations the vendor made" },
+    assertCoversPopulation(served.returned, deprecationsTheVendorMade(),
       "deprecations still served after the filter");
     assert.deepStrictEqual(
       served.changes.map(recordKey).sort(),
