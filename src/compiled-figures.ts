@@ -1,5 +1,6 @@
 import { assertedVendorSlugs, changeLogAnchorFor, changeLogVendorNamed, isNonVendorSubject, resolveVendorSlug, toSlug, vendorSlugMap } from "./vendor-slug.js";
 import { SOURCE_MARKER_MARKUP, changeSummaryHtml, changeSummaryText } from "./change-citation.js";
+import { ENDED_STATUS_WHEN_THE_TIER_NAMES_NONE, recordedTierSentence } from "./retirement.js";
 
 export interface CompiledPageRecord {
   vendor: string;
@@ -34,6 +35,7 @@ export interface CompiledFigureVerdict {
   vendor: string;
   freeTierEnded: boolean;
   endedBy: CompiledPageRecord | null;
+  endedTier?: string | null;
   since: readonly CompiledPageRecord[];
 }
 
@@ -197,10 +199,22 @@ export function appendToCompiledFigureSlots(html: string, markupFor: CompiledFig
 
 const FREE_TIER_REMOVED_LABEL = "FREE REMOVED";
 
-function endedBadgeHtml(verdict: CompiledFigureVerdict): string {
+function endingWeRecorded(verdict: CompiledFigureVerdict): string {
+  return `Our own change log records that the ${verdict.vendor} free tier has ended.`;
+}
+
+function endingTheCatalogueStates(verdict: CompiledFigureVerdict): string {
+  return recordedTierSentence(verdict.vendor, verdict.endedTier ?? ENDED_STATUS_WHEN_THE_TIER_NAMES_NONE);
+}
+
+function endedProvenanceText(verdict: CompiledFigureVerdict): string {
+  return verdict.endedBy ? endingWeRecorded(verdict) : endingTheCatalogueStates(verdict);
+}
+
+function endedBadgeHtml(verdict: CompiledFigureVerdict, options: CompiledFigureMarkupOptions): string {
   return (
     ` <a href="${recordsHrefFor(verdict)}" class="removed-badge"` +
-    ` title="Our own change log records that the ${verdict.vendor} free tier has ended.">` +
+    ` title="${options.esc(endedProvenanceText(verdict))}">` +
     `${FREE_TIER_REMOVED_LABEL}</a>`
   );
 }
@@ -262,14 +276,16 @@ function endedCardDescriptionHtml(
   tag: string,
 ): string {
   const ending = verdict.endedBy;
-  const recorded = ending
-    ? `Our own pricing change record, ${options.esc(recordDateClause(ending))}, says: ` +
-      changeSummaryHtml(ending, options.esc)
-    : `Our own change log records that the ${options.esc(verdict.vendor)} free tier has ended.`;
-  return (
-    `<${tag} class="diff-desc"><strong>Free tier:</strong> none. ${recorded} ` +
-    `<a href="${recordsHrefFor(verdict)}">Read what we recorded &rarr;</a></${tag}>`
-  );
+  if (!ending) {
+    return `<${tag} class="diff-desc"><strong>Free tier:</strong> none. ${options.esc(endingTheCatalogueStates(verdict))}</${tag}>`;
+  }
+  const clauses = [
+    verdict.endedTier ? options.esc(endingTheCatalogueStates(verdict)) : "",
+    `Our own pricing change record, ${options.esc(recordDateClause(ending))}, says: ` +
+      changeSummaryHtml(ending, options.esc),
+    `<a href="${recordsHrefFor(verdict)}">Read what we recorded &rarr;</a>`,
+  ].filter(clause => clause !== "");
+  return `<${tag} class="diff-desc"><strong>Free tier:</strong> none. ${clauses.join(" ")}</${tag}>`;
 }
 
 export function markCompiledFigures(
@@ -286,7 +302,7 @@ export function markCompiledFigures(
     if (!verdict.freeTierEnded && verdict.since.length === 0) continue;
 
     const badge = verdict.freeTierEnded
-      ? (slot.alreadyStatesRemoval ? "" : endedBadgeHtml(verdict))
+      ? (slot.alreadyStatesRemoval ? "" : endedBadgeHtml(verdict, options))
       : recordedSinceBadgeHtml(verdict, options);
 
     if (slot.kind === "card") {

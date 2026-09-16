@@ -1116,6 +1116,7 @@ function changesForSubject(named: CompiledFigureVendor): DealChange[] {
 interface SubjectFreeTier {
   ended: boolean;
   endedBy: (CitableChangeRow & { date: string; date_source?: ChangeDateSource }) | null;
+  endedTier: string | null;
 }
 
 type CitedRiskCause = RiskCause & { citation_html: string };
@@ -1133,13 +1134,12 @@ function compiledPageRecordOf(record: CitableChangeRow & { date: string; date_so
 function freeTierForSubject(named: CompiledFigureVendor): SubjectFreeTier {
   if (named.slug === null) {
     const ending = freeTierEndingRecord(changesForSubject(named));
-    return { ended: ending !== null, endedBy: ending };
+    return { ended: ending !== null, endedBy: ending, endedTier: null };
   }
   const claim = freeTierClaimFor(named.vendor, today);
-  return {
-    ended: claim?.states === "ended",
-    endedBy: claim?.states === "ended" && claim.how === "removed" ? claim.cause : null,
-  };
+  if (claim?.states !== "ended") return { ended: false, endedBy: null, endedTier: null };
+  if (claim.how === "removed") return { ended: true, endedBy: claim.cause, endedTier: null };
+  return { ended: true, endedBy: freeTierEndingRecord(changesForSubject(named)), endedTier: claim.tier };
 }
 
 function compiledFigureVerdictFor(
@@ -1148,12 +1148,13 @@ function compiledFigureVerdictFor(
 ): CompiledFigureVerdict | null {
   const named = vendorForSubject(subject);
   if (!named) return null;
-  const { ended, endedBy } = freeTierForSubject(named);
+  const { ended, endedBy, endedTier } = freeTierForSubject(named);
   return {
     slug: named.slug,
     vendor: named.vendor,
     freeTierEnded: ended,
     endedBy: endedBy ? compiledPageRecordOf(endedBy) : null,
+    endedTier,
     since: recordsSinceCompiled(
       changesForSubject(named).filter(change => isTrackedChange(change) && !isOurOwnBookkeeping(change)),
       compiledOn,
