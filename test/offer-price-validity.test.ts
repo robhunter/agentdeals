@@ -10,6 +10,8 @@ import { fileURLToPath } from "node:url";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(__dirname, "..");
 
+const { offerExpiryAfter } = await import("../dist/change-dates.js");
+
 const TODAY = new Date().toISOString().slice(0, 10);
 const dayOffset = (days: number) =>
   new Date(Date.parse(TODAY) + days * 86400000).toISOString().slice(0, 10);
@@ -31,7 +33,10 @@ const FIXTURE_VENDORS = [
   "Foldergrid",
   "Gustline",
   "Halcyonio",
+  "Ironvale",
 ];
+
+const RATED_RISKY_OVER_A_CHANGE_THAT_ENDS_THE_OFFER = ["Beaconstack", "Foldergrid"];
 
 const FIXTURE_CHANGES: ChangeSpec[] = [
   { vendor: "Aurorabase", date: dayOffset(21), type: "limits_reduced", source: "vendor_page" },
@@ -56,17 +61,18 @@ const FIXTURE_CHANGES: ChangeSpec[] = [
   },
   { vendor: "Gustline", date: dayOffset(9), type: "limits_reduced", source: "discovered" },
   { vendor: "Halcyonio", date: TODAY, type: "limits_reduced", source: "vendor_page" },
+  { vendor: "Ironvale", date: dayOffset(45), type: "limits_reduced", source: "vendor_page" },
+  { vendor: "Ironvale", date: dayOffset(12), type: "limits_reduced", source: "vendor_page" },
 ];
 
 const EXPECTED_EXPIRY: Record<string, string | null> = {
   Aurorabase: dayOffset(21),
-  Beaconstack: dayOffset(12),
   Cirruslane: null,
   Datumforge: null,
   Everglow: null,
-  Foldergrid: dayOffset(26),
   Gustline: null,
   Halcyonio: null,
+  Ironvale: dayOffset(12),
 };
 
 function offer(vendor: string) {
@@ -78,6 +84,11 @@ function offer(vendor: string) {
     url: `https://example.com/${vendor.toLowerCase()}/pricing`,
     tags: ["database"],
     verifiedDate: dayOffset(-11),
+    source_check: {
+      checked: dayOffset(-11),
+      outcome: "ok",
+      detail: `the page names ${vendor} and states "10 GB storage"`,
+    },
   };
 }
 
@@ -169,11 +180,26 @@ describe("a vendor page states a free tier's price expiry only when a dated chan
     if (tmp) rmSync(tmp, { recursive: true, force: true });
   });
 
-  it("emits an Offer for every vendor, so the assertions below are about a rendered field", () => {
+  it("emits an Offer for every vendor whose tier it states is free, so the assertions below are about a rendered field", () => {
     for (const vendor of FIXTURE_VENDORS) {
+      if (RATED_RISKY_OVER_A_CHANGE_THAT_ENDS_THE_OFFER.includes(vendor)) continue;
       const offers = offerJsonLd(pages.get(vendor)!);
       assert.ok(offers, `/vendor/${toSlug(vendor)} emitted no Offer in its JSON-LD`);
       assert.strictEqual(offers!.price, "0");
+    }
+    assert.ok(
+      Object.values(EXPECTED_EXPIRY).filter(date => date !== null).length >= 2,
+      "fewer than two of the vendors that emit an Offer expect a date",
+    );
+  });
+
+  it("prices nothing at zero for a vendor it rates risky over a change that ends the offer", () => {
+    for (const vendor of RATED_RISKY_OVER_A_CHANGE_THAT_ENDS_THE_OFFER) {
+      assert.strictEqual(
+        offerJsonLd(pages.get(vendor)!),
+        null,
+        `/vendor/${toSlug(vendor)} priced a tier at zero above its own removal record`,
+      );
     }
   });
 
@@ -202,11 +228,11 @@ describe("a vendor page states a free tier's price expiry only when a dated chan
   });
 
   it("prefers the first of several future changes over the last", () => {
-    const beaconstack = offerJsonLd(pages.get("Beaconstack")!)!;
+    const ironvale = offerJsonLd(pages.get("Ironvale")!)!;
     assert.strictEqual(
-      beaconstack.priceValidUntil,
+      ironvale.priceValidUntil,
       dayOffset(12),
-      `Beaconstack has changes at ${dayOffset(12)} and ${dayOffset(45)} and published ${beaconstack.priceValidUntil}`
+      `Ironvale has changes at ${dayOffset(12)} and ${dayOffset(45)} and published ${ironvale.priceValidUntil}`
     );
   });
 
@@ -216,9 +242,13 @@ describe("a vendor page states a free tier's price expiry only when a dated chan
       !("priceValidUntil" in everglow),
       `Everglow's free tier was dated ${everglow.priceValidUntil} by the retirement of Everglow Meshpipe`
     );
-    const foldergrid = offerJsonLd(pages.get("Foldergrid")!)!;
     assert.strictEqual(
-      foldergrid.priceValidUntil,
+      offerExpiryAfter(FIXTURE_CHANGES.filter(c => c.vendor === "Everglow").map(change), TODAY),
+      null,
+      "the retirement of Everglow Meshpipe dates the Everglow offer"
+    );
+    assert.strictEqual(
+      offerExpiryAfter(FIXTURE_CHANGES.filter(c => c.vendor === "Foldergrid").map(change), TODAY),
       dayOffset(26),
       "a deprecation naming the vendor itself did not date the offer"
     );
@@ -273,7 +303,7 @@ describe("no vendor page publishes a price expiry that has already passed", () =
       present++;
       if (until < TODAY) expired.push(`${slug} ${until}`);
     }
-    assertPopulationFloor(emitting, Math.floor(slugs.length / 2), `vendor pages of ${slugs.length} emit an Offer at all`);
+    assertPopulationFloor(emitting, Math.floor(slugs.length / 5), `vendor pages of ${slugs.length} emit an Offer at all`);
     assert.deepStrictEqual(
       expired.slice(0, 10),
       [],

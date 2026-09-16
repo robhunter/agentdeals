@@ -666,6 +666,42 @@ function publishedTermsText(offer: Offer): string {
   return unconfirmed ? termsWithTheReasonWeCannotConfirmThem(offer.description, unconfirmed) : offer.description;
 }
 
+const freeTierClaimsByOffer = new Map<string, { on: string; claim: FreeTierClaim | null }>();
+
+function freeTierClaimForOffer(offer: Offer): FreeTierClaim | null {
+  const servedOn = utcDate();
+  const key = `${offer.vendor}|${offer.url}|${offer.tier}`;
+  const cached = freeTierClaimsByOffer.get(key);
+  if (cached && cached.on === servedOn) return cached.claim;
+  const context = vendorVerdictContextFrom({
+    vendor: offer.vendor,
+    vendorOffers: [offer],
+    vendorChanges: changesFor(offer.vendor),
+    refusedReads: refusalsFor(offer.vendor),
+    servedOn,
+  });
+  const claim = context ? freeTierClaim(context.input) : null;
+  freeTierClaimsByOffer.set(key, { on: servedOn, claim });
+  return claim;
+}
+
+function weStateThisTierIsFree(offer: Offer): boolean {
+  return freeTierClaimForOffer(offer)?.states === "offered" && supersedingChangeFor(offer) === null;
+}
+
+function freeTierOfferJsonLd(offer: Offer, heldUntil?: string): { offers?: Record<string, string> } {
+  if (!weStateThisTierIsFree(offer)) return {};
+  return {
+    offers: {
+      "@type": "Offer",
+      price: "0",
+      priceCurrency: "USD",
+      description: offer.tier,
+      ...(heldUntil ? { priceValidUntil: heldUntil } : {}),
+    },
+  };
+}
+
 function statesTermsWeCannotConfirm(offer: Offer): boolean {
   return supersedingChangeFor(offer) === null && unconfirmedTermsFor(offer) !== null;
 }
@@ -2117,7 +2153,7 @@ function buildCategoryPage(slug: string): string | null {
         name: o.vendor,
         description: publishedTermsText(o),
         applicationCategory: categoryName,
-        offers: { "@type": "Offer", price: "0", priceCurrency: "USD", description: o.tier },
+        ...freeTierOfferJsonLd(o),
         ...(offerRetired(o) ? {} : { url: o.url }),
       },
     })),
@@ -2659,7 +2695,7 @@ ${cards}`;
     name: offer.vendor,
     description: publishedTermsText(offer),
     applicationCategory: offer.category,
-    offers: { "@type": "Offer", price: "0", priceCurrency: "USD", description: offer.tier },
+    ...freeTierOfferJsonLd(offer),
     ...(offerRetired(offer) ? {} : { url: offer.url }),
   });
 
@@ -3484,9 +3520,9 @@ function buildComparisonPage(slug: string): string | null {
       itemListOrder: listOrderOf("as-curated"),
       numberOfItems: 2,
       itemListElement: [
-        { offer: a, free: freeSideA.free, superseded: supersededA },
-        { offer: b, free: freeSideB.free, superseded: supersededB },
-      ].map(({ offer: v, free, superseded }, i) => ({
+        { offer: a, superseded: supersededA },
+        { offer: b, superseded: supersededB },
+      ].map(({ offer: v, superseded }, i) => ({
         "@type": "ListItem",
         position: i + 1,
         item: {
@@ -3494,9 +3530,7 @@ function buildComparisonPage(slug: string): string | null {
           name: v.vendor,
           description: superseded ? supersededTermsNotice(v.vendor, superseded) : v.description,
           applicationCategory: v.category,
-          ...(free.states === "offered" && !superseded
-            ? { offers: { "@type": "Offer", price: "0", priceCurrency: "USD", description: v.tier } }
-            : {}),
+          ...freeTierOfferJsonLd(v),
           url: v.url,
         },
       })),
@@ -5267,17 +5301,7 @@ ${allCompareLinks.join("\n")}
       description: termsSuperseded ? supersededTermsNotice(vendorName, termsSuperseded) : primary.description,
       applicationCategory: primary.category,
       ...(offerRetired(primary) ? {} : { url: primary.url }),
-      ...(primaryGate || termsSuperseded
-        ? {}
-        : {
-            offers: {
-              "@type": "Offer",
-              price: "0",
-              priceCurrency: "USD",
-              description: primary.tier,
-              ...(offerExpiry ? { priceValidUntil: offerExpiry } : {}),
-            },
-          }),
+      ...freeTierOfferJsonLd(primary, offerExpiry ?? undefined),
     },
   };
   if (pricingEvents.length > 0) {
@@ -5763,7 +5787,7 @@ ${renderAuditBlock(altRanking.tie_break)}
         description: publishedTermsText(a),
         applicationCategory: a.category,
         url: a.url,
-        offers: { "@type": "Offer", price: "0", priceCurrency: "USD", description: a.tier },
+        ...freeTierOfferJsonLd(a),
       },
     })),
   };
@@ -8146,7 +8170,7 @@ function buildTimelyAlternativesPage(slug: string): string | null {
         "@type": "SoftwareApplication",
         name: o.vendor,
         description: publishedTermsText(o),
-        offers: { "@type": "Offer", price: "0", priceCurrency: "USD", description: o.tier },
+        ...freeTierOfferJsonLd(o),
         ...(offerRetired(o) ? {} : { url: o.url }),
       },
     })),
@@ -9874,7 +9898,7 @@ function buildAiFreeTiersPage(): string {
         "@type": "SoftwareApplication",
         name: o.vendor,
         description: publishedTermsText(o),
-        offers: { "@type": "Offer", price: "0", priceCurrency: "USD", description: o.tier },
+        ...freeTierOfferJsonLd(o),
         ...(offerRetired(o) ? {} : { url: o.url }),
       },
     })),
@@ -10130,7 +10154,7 @@ function buildHostingAlternativesPage(): string {
         "@type": "SoftwareApplication",
         name: o.vendor,
         description: publishedTermsText(o),
-        offers: { "@type": "Offer", price: "0", priceCurrency: "USD", description: o.tier },
+        ...freeTierOfferJsonLd(o),
         ...(offerRetired(o) ? {} : { url: o.url }),
       },
     })),
@@ -10474,7 +10498,7 @@ function buildDatabaseAlternativesPage(): string {
         "@type": "SoftwareApplication",
         name: o.vendor,
         description: publishedTermsText(o),
-        offers: { "@type": "Offer", price: "0", priceCurrency: "USD", description: o.tier },
+        ...freeTierOfferJsonLd(o),
         ...(offerRetired(o) ? {} : { url: o.url }),
       },
     })),
@@ -10814,7 +10838,7 @@ function buildMonitoringAlternativesPage(): string {
         "@type": "SoftwareApplication",
         name: o.vendor,
         description: publishedTermsText(o),
-        offers: { "@type": "Offer", price: "0", priceCurrency: "USD", description: o.tier },
+        ...freeTierOfferJsonLd(o),
         ...(offerRetired(o) ? {} : { url: o.url }),
       },
     })),
@@ -11143,7 +11167,7 @@ function buildCiCdAlternativesPage(): string {
         "@type": "SoftwareApplication",
         name: o.vendor,
         description: publishedTermsText(o),
-        offers: { "@type": "Offer", price: "0", priceCurrency: "USD", description: o.tier },
+        ...freeTierOfferJsonLd(o),
         ...(offerRetired(o) ? {} : { url: o.url }),
       },
     })),
@@ -11466,7 +11490,7 @@ function buildSecurityAlternativesPage(): string {
         "@type": "SoftwareApplication",
         name: o.vendor,
         description: publishedTermsText(o),
-        offers: { "@type": "Offer", price: "0", priceCurrency: "USD", description: o.tier },
+        ...freeTierOfferJsonLd(o),
         ...(offerRetired(o) ? {} : { url: o.url }),
       },
     })),
@@ -11804,7 +11828,7 @@ function buildTestingAlternativesPage(): string {
         "@type": "SoftwareApplication",
         name: o.vendor,
         description: publishedTermsText(o),
-        offers: { "@type": "Offer", price: "0", priceCurrency: "USD", description: o.tier },
+        ...freeTierOfferJsonLd(o),
         ...(offerRetired(o) ? {} : { url: o.url }),
       },
     })),
@@ -12126,7 +12150,7 @@ function buildStorageAlternativesPage(): string {
         "@type": "SoftwareApplication",
         name: o.vendor,
         description: publishedTermsText(o),
-        offers: { "@type": "Offer", price: "0", priceCurrency: "USD", description: o.tier },
+        ...freeTierOfferJsonLd(o),
         ...(offerRetired(o) ? {} : { url: o.url }),
       },
     })),
@@ -12439,7 +12463,7 @@ function buildAnalyticsAlternativesPage(): string {
         "@type": "SoftwareApplication",
         name: o.vendor,
         description: publishedTermsText(o),
-        offers: { "@type": "Offer", price: "0", priceCurrency: "USD", description: o.tier },
+        ...freeTierOfferJsonLd(o),
         ...(offerRetired(o) ? {} : { url: o.url }),
       },
     })),
@@ -12756,7 +12780,7 @@ function buildAiMlAlternativesPage(): string {
         "@type": "SoftwareApplication",
         name: o.vendor,
         description: publishedTermsText(o),
-        offers: { "@type": "Offer", price: "0", priceCurrency: "USD", description: o.tier },
+        ...freeTierOfferJsonLd(o),
         ...(offerRetired(o) ? {} : { url: o.url }),
       },
     })),
@@ -13079,7 +13103,7 @@ function buildEmailAlternativesPage(): string {
         "@type": "SoftwareApplication",
         name: o.vendor,
         description: publishedTermsText(o),
-        offers: { "@type": "Offer", price: "0", priceCurrency: "USD", description: o.tier },
+        ...freeTierOfferJsonLd(o),
         ...(offerRetired(o) ? {} : { url: o.url }),
       },
     })),
@@ -13413,7 +13437,7 @@ function buildDesignAlternativesPage(): string {
         "@type": "SoftwareApplication",
         name: o.vendor,
         description: publishedTermsText(o),
-        offers: { "@type": "Offer", price: "0", priceCurrency: "USD", description: o.tier },
+        ...freeTierOfferJsonLd(o),
         ...(offerRetired(o) ? {} : { url: o.url }),
       },
     })),
@@ -13751,7 +13775,7 @@ function buildProjectManagementAlternativesPage(): string {
         "@type": "SoftwareApplication",
         name: o.vendor,
         description: publishedTermsText(o),
-        offers: { "@type": "Offer", price: "0", priceCurrency: "USD", description: o.tier },
+        ...freeTierOfferJsonLd(o),
         ...(offerRetired(o) ? {} : { url: o.url }),
       },
     })),
@@ -14080,7 +14104,7 @@ function buildIdeCodeEditorsAlternativesPage(): string {
         "@type": "SoftwareApplication",
         name: o.vendor,
         description: publishedTermsText(o),
-        offers: { "@type": "Offer", price: "0", priceCurrency: "USD", description: o.tier },
+        ...freeTierOfferJsonLd(o),
         ...(offerRetired(o) ? {} : { url: o.url }),
       },
     })),
@@ -14406,7 +14430,7 @@ function buildFreeLlmApisPage(): string {
         "@type": "SoftwareApplication",
         name: o.vendor,
         description: publishedTermsText(o),
-        offers: { "@type": "Offer", price: "0", priceCurrency: "USD", description: o.tier },
+        ...freeTierOfferJsonLd(o),
         ...(offerRetired(o) ? {} : { url: o.url }),
       },
     })),
@@ -14725,7 +14749,7 @@ function buildApiDevelopmentAlternativesPage(): string {
         "@type": "SoftwareApplication",
         name: o.vendor,
         description: publishedTermsText(o),
-        offers: { "@type": "Offer", price: "0", priceCurrency: "USD", description: o.tier },
+        ...freeTierOfferJsonLd(o),
         ...(offerRetired(o) ? {} : { url: o.url }),
       },
     })),
@@ -15041,7 +15065,7 @@ function buildTeamCollaborationAlternativesPage(): string {
         "@type": "SoftwareApplication",
         name: o.vendor,
         description: publishedTermsText(o),
-        offers: { "@type": "Offer", price: "0", priceCurrency: "USD", description: o.tier },
+        ...freeTierOfferJsonLd(o),
         ...(offerRetired(o) ? {} : { url: o.url }),
       },
     })),
