@@ -407,6 +407,24 @@ describe("a row never states a rating the catalogue withholds", () => {
     assert.match(row.verdict.sentence, /limit reduction/);
   });
 
+  it("#1721 rates a row whose stored terms a record names as the previous ones without claiming a direction", () => {
+    const superseded = offer({ vendor: "Superseded Vendor" });
+    const widening = change({
+      vendor: "Superseded Vendor",
+      change_type: "limits_increased",
+      date: "2026-08-20",
+      summary: "The monthly request allowance rose from 1,000 to 10,000",
+      previous_state: superseded.description,
+      current_state: "Free tier with 10,000 requests/month and one seat",
+    });
+    const row = rowFor([superseded], [widening], "Superseded Vendor");
+    assert.equal(row.verdict.kind, "rating");
+    assert.doesNotMatch((row.verdict as { sentence: string }).sentence, /narrow the terms/);
+    assert.match((row.verdict as { sentence: string }).sentence, /names our stored terms as the previous ones/);
+    assert.equal(row.terms.quoted, true);
+    assert.equal(row.terms.text, widening.current_state);
+  });
+
   it("marks an ended offer as ended rather than rating it", () => {
     const retired = offer({ vendor: "Gone Vendor", tier: "Retired" });
     const row = rowFor([retired], [], "Gone Vendor");

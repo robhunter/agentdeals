@@ -86,6 +86,7 @@ export interface VendorVerdictInput {
   termsConfirmedOn: string;
   refusedReads?: readonly RefusedRead[];
   publishesAQuantity?: boolean;
+  termsSuperseded?: boolean;
 }
 
 export type BadgeWithholding =
@@ -581,9 +582,18 @@ export function isOurOwnBookkeeping(
   return isACorrectionToOurOwnRecord(change) || theEventNeverHappened(change);
 }
 
+export const STORED_TERMS_NAMED_AS_PREVIOUS = "names our stored terms as the previous ones";
+
+export function supersededTermsHoldTheDirection(recorded: number): string {
+  return recorded === 1
+    ? `The one change we have recorded ${STORED_TERMS_NAMED_AS_PREVIOUS}.`
+    : `Of the ${recorded} changes we have recorded, at least one ${STORED_TERMS_NAMED_AS_PREVIOUS}.`;
+}
+
 export function narrowingSentence(
   changes: VendorVerdictInput["changes"],
   offer: GradedOffer | null = null,
+  termsSuperseded: boolean = false,
 ): string {
   const cited = changes.filter(c => !changeIsUncited(c));
   const withdrawn = cited.filter(theEventNeverHappened);
@@ -599,6 +609,7 @@ export function narrowingSentence(
   }
   const narrowing = narrowingChanges(byTheVendor, offer);
   if (narrowing.length === 0) {
+    if (termsSuperseded) return supersededTermsHoldTheDirection(total);
     return total === 1
       ? `The one change we have recorded did not narrow the terms.`
       : `None of the ${total} recorded changes narrowed the terms.`;
@@ -643,5 +654,5 @@ export function vendorVerdictSentence(input: VendorVerdictInput): string {
       ? `It's stable — ${confirmingReadClause(confirmed)}.`
       : `It's stable — zero pricing changes recorded.`;
   }
-  return `We rate it stable. ${narrowingSentence(input.changes, { vendor: input.vendor, tier: input.tier })}`;
+  return `We rate it stable. ${narrowingSentence(input.changes, { vendor: input.vendor, tier: input.tier }, input.termsSuperseded)}`;
 }

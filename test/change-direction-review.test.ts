@@ -119,7 +119,18 @@ describe("#1528 a record's stored direction is read before its change_type", () 
       } as DealChange;
       assert.strictEqual(readingDescribesNoNarrowing(increase), false, direction);
       assert.strictEqual(changeRatesTheListedTier(increase, AN_OFFER), true, direction);
-      assert.strictEqual(storedTermsAreSuperseded(AN_OFFER, [increase]), false, direction);
+      assert.strictEqual(publishedRisk(AN_OFFER, [increase], "2026-09-16").risk_cause, null, direction);
+    }
+  });
+
+  it("#1721 withholds the stored terms a record names as the previous ones whichever way it read them", () => {
+    for (const direction of [undefined, "narrowed", "unchanged", "widened"]) {
+      const increase = {
+        ...A_RECORD_TYPED_AS_A_REDUCTION,
+        change_type: "limits_increased",
+        tier_direction: direction,
+      } as DealChange;
+      assert.strictEqual(storedTermsAreSuperseded(AN_OFFER, [increase]), true, String(direction));
     }
   });
 

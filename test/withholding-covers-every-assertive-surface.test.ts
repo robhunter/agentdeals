@@ -388,7 +388,7 @@ describe("a withholding we publish reaches every surface that states the terms",
     assertSharesPopulation(
       affirming.filter(page => answersOf(page).every(answer => answer.startsWith(`Yes, ${page.vendor} offers`))).length,
       vendorsInTheCatalogue(),
-      0.02,
+      0.015,
       "vendor pages answering yes over a read that found the plan and not the amount",
     );
 

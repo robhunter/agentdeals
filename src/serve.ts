@@ -30,7 +30,7 @@ import { amountUnstatedSentence, freePriceConfirmedSentence, freePriceOnlySenten
 import { offerVerdictInput, vendorVerdictContextFrom, type VendorVerdictContext } from "./vendor-verdict-input.js";
 import { readingIsBehindTheLoop, reverificationIntervalDays } from "./badge-staleness.js";
 import { LAST_READ_LABEL, UNCONFIRMED_DATE_LABEL, VERIFICATION_DATES_HEADING, lastReadDate, lastReadNote, publishedDateLabel, publishedDateValue, verificationDatesCell, verificationDatesSentence } from "./read-date.js";
-import { SUPERSEDED_TERMS_LABEL, readingBehindTheChange, supersededTermsAnswer, supersededTermsMetaSentence, supersededTermsNotice, supersededTermsNoticeHtml, supersededTermsRecord, supersededTermsVerdictSentence, supersedingChange, type SupersededTermsRecord } from "./superseded-description.js";
+import { SUPERSEDED_TERMS_LABEL, SUPERSEDED_TERMS_RULE, readingBehindTheChange, supersededTermsAnswer, supersededTermsMetaSentence, supersededTermsNotice, supersededTermsNoticeHtml, supersededTermsRecord, supersededTermsVerdictSentence, supersedingChange, type SupersededTermsRecord } from "./superseded-description.js";
 import { openingOfTerms, punctuated, punctuatedOpeningOfTerms } from "./terms-opening.js";
 import { NO_CURRENT_FIGURE, costHeadlineCaveat, limitCellText, mayRecommendAsFree, proseWithoutNames, readsActive, stackFreshnessStatement } from "./stack-claim.js";
 import { changesByVendor } from "./superseded-census.js";
@@ -3098,6 +3098,7 @@ ${demeritRows}
 ${directionRows}
   </tbody></table>
   <p><code>pricing_restructured</code> and <code>pricing_model_change</code> count as negative because both are a vendor rewriting terms a reader had already planned around. Where we have read the tier in both states and found it no worse, that reading is carried on the record and is what decides the vendor's rating &mdash; these buckets decide how a change is <em>counted</em>, not what we publish about a vendor. Which changes are counted at all is a separate published rule, on <a href="${TRACKED_CHANGE_RULE_PATH}">the change log</a>.</p>
+  <p><strong style="color:var(--text)">${escHtmlServer(SUPERSEDED_TERMS_RULE)}</strong> A vendor that raised a limit and one that cut it both leave our stored sentence describing a page that no longer says it, and both get the same <em>${escHtmlServer(SUPERSEDED_TERMS_LABEL)}</em> notice in place of our figure.</p>
 
   <h3>What we publish when the link itself stops resolving</h3>
   <p>Verification asks whether an offer's terms are still right. A separate daily check asks the cheaper question of whether its link still resolves at all, and it runs over every record regardless of how recently that record was verified.</p>
@@ -5322,7 +5323,7 @@ ${allCompareLinks.join("\n")}
     : riskLevel === null
     ? `${levelWithheldBecause}`
     : riskLevel === "stable"
-    ? `${vendorName}'s free tier is considered stable.${vendorChanges.length > 0 ? ` ${narrowingSentence(vendorChanges, primary)} See the pricing history below.` : ""}`
+    ? `${vendorName}'s free tier is considered stable.${vendorChanges.length > 0 ? ` ${narrowingSentence(vendorChanges, primary, termsSuperseded !== null)} See the pricing history below.` : ""}`
     : riskLevel === "caution"
     ? `${vendorName}'s free tier requires caution because of one specific recorded change${riskCause ? `, ${changeDateClause(riskCause)}: ${changeSummaryText(riskCause)}` : "."}`
     : `${vendorName}'s free tier is considered risky because of one specific recorded change${riskCause ? `, ${changeDateClause(riskCause)}: ${changeSummaryText(riskCause)}` : "."} Consider alternatives.`;
@@ -5336,7 +5337,7 @@ ${allCompareLinks.join("\n")}
     ? `${withheldLevelSentence(levelWithheld, vendorName, unconfirmableSince)} We cannot confirm what this offer provides today, so we are not recommending it for production or for anything else until we can.`
     : hasFree
     ? (riskLevel === "stable" || (primaryGate && historyLevel === "stable")
-      ? `${vendorName}'s free tier can be suitable for small production workloads and side projects. ${primaryGate ? "It" : "We rate it stable and it"} offers ${escHtmlServer(keyLimit)}, so it's a reasonable starting point.${vendorChanges.length > 0 ? ` ${narrowingSentence(vendorChanges, primary)}` : ""} Monitor your usage against the limits and have an upgrade plan ready.`
+      ? `${vendorName}'s free tier can be suitable for small production workloads and side projects. ${primaryGate ? "It" : "We rate it stable and it"} offers ${escHtmlServer(keyLimit)}, so it's a reasonable starting point.${vendorChanges.length > 0 ? ` ${narrowingSentence(vendorChanges, primary, termsSuperseded !== null)}` : ""} Monitor your usage against the limits and have an upgrade plan ready.`
       : riskLevel === null
       ? `${vendorName}'s free tier is usable for prototyping and development. ${primaryGate ? vendorHistorySentence(vendorName, historyLevel, riskCause) : levelWithheldBecause}`
       : `${vendorName}'s free tier is usable for prototyping and development, but we rate it ${riskLevel}${riskCause ? ` because of one recorded ${changeKindNoun(riskCause.change_type)}, ${changeDateClause(riskCause)}` : ""}. Consider alternatives with more stable pricing for critical services.`)
@@ -5781,7 +5782,7 @@ ${renderAuditBlock(altRanking.tie_break)}
     : riskLevel === null
     ? `${altWithheldBecause} Our stored record says ${vendorName} offers a free tier (${primary.tier}), and we are not publishing a stability judgement over it.`
     : riskLevel === "stable"
-    ? `Yes, ${vendorName} currently offers a free tier (${primary.tier}). ${vendorChanges.length === 0 ? "No pricing changes have been recorded." : narrowingSentence(vendorChanges, primary)}`
+    ? `Yes, ${vendorName} currently offers a free tier (${primary.tier}). ${vendorChanges.length === 0 ? "No pricing changes have been recorded." : narrowingSentence(vendorChanges, primary, supersedingChangeFor(primary) !== null)}`
     : riskLevel === "caution"
     ? `${vendorName} has a free tier (${primary.tier}), but it's flagged as "caution" because of one specific recorded change${riskCause ? `, ${changeDateClause(riskCause)}: ${changeSummaryText(riskCause)}` : "."}`
     : `${vendorName}'s free tier (${primary.tier}) is considered risky because of one specific recorded change${riskCause ? `, ${changeDateClause(riskCause)}: ${changeSummaryText(riskCause)}` : "."} Consider migrating to a more stable alternative.`;

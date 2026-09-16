@@ -2118,7 +2118,7 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": true,
-      "reads_changes": false,
+      "reads_changes": true,
       "data_source": "catalogue",
       "data_source_reason": null
     },
