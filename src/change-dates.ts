@@ -223,3 +223,17 @@ export function latestEventDate(changes: DatedChange[], notAfter?: string): stri
   }
   return latest;
 }
+
+export const ANNOUNCED_HEADING = "Announced, not yet in effect";
+
+export const ANNOUNCED_BADGE = "Announced";
+
+export function hasNotTakenEffect(change: Pick<DealChange, "date">, asOf: string): boolean {
+  return change.date > asOf;
+}
+
+export function announcedIntro(count: number, asOf: string): string {
+  const subject = count === 1 ? "One record here carries" : `${count} records here carry`;
+  const verb = count === 1 ? "it has" : "they have";
+  return `${subject} a date after ${asOf}. The vendor has announced ${count === 1 ? "it" : "them"} and ${verb} not taken effect, so ${count === 1 ? "it is" : "they are"} not part of the history below.`;
+}
