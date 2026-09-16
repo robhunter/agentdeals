@@ -4,7 +4,7 @@ import { oldestVerifiedDateForSlug, getCategories, getDealChanges, getPersonaliz
 import { SINCE_DEFAULT_SENTENCE } from "./change-window.js";
 import { gateDisclosureFor } from "./gate-disclosure.js";
 import { standingOf, INCLUDE_RETRACTED_ACCEPTS } from "./change-resolution.js";
-import { changeCountPhrase, trackedChanges, TRACKED_CHANGE_RULE_PATH } from "./change-census.js";
+import { changeCountPhrase, trackedChanges, INCLUDE_INDEX_HOUSEKEEPING_ACCEPTS, TRACKED_CHANGE_RULE_PATH } from "./change-census.js";
 import { toSlug, vendorSlugMap, resolveVendorSlug } from "./vendor-slug.js";
 import { noLiveRecordUnderThatNameSentence } from "./retirement.js";
 import { recordToolCall, logRequest, recordSearchQuery } from "./stats.js";
@@ -420,15 +420,16 @@ export function createServer(getSessionId?: () => string | undefined, getClientN
         categories: z.string().optional().describe("Comma-separated category names to filter (e.g. 'Database,Cloud Hosting'). Case-insensitive partial match."),
         include_expiring: z.boolean().optional().describe("Include upcoming expirations (default: true)"),
         include_retracted: z.boolean().optional().describe(INCLUDE_RETRACTED_ACCEPTS),
+        include_index_housekeeping: z.boolean().optional().describe(INCLUDE_INDEX_HOUSEKEEPING_ACCEPTS),
         lookahead_days: z.number().optional().describe("Days to look ahead for expirations (default: 30)"),
         response_format: z.enum(["concise", "detailed"]).optional().describe("Response detail level. 'concise': vendor, change_type, date, summary only. 'detailed': full response (default)."),
       },
     },
-    async ({ since, change_type, vendor, vendors, categories, include_expiring, include_retracted, lookahead_days, response_format }) => {
+    async ({ since, change_type, vendor, vendors, categories, include_expiring, include_retracted, include_index_housekeeping, lookahead_days, response_format }) => {
       try {
         recordToolCall("track_changes", getClientName?.());
 
-        if (!since && !change_type && !vendor && !vendors && !categories && include_expiring === undefined && include_retracted === undefined) {
+        if (!since && !change_type && !vendor && !vendors && !categories && include_expiring === undefined && include_retracted === undefined && include_index_housekeeping === undefined) {
           const digest = getWeeklyDigest();
           logRequest({ ts: new Date().toISOString(), type: "mcp", endpoint: "track_changes", params: {}, result_count: digest.deal_changes.length, session_id: getSessionId?.() });
           if (response_format === "concise") {
@@ -444,7 +445,7 @@ export function createServer(getSessionId?: () => string | undefined, getClientN
 
         const doExpiring = include_expiring !== false;
         const days = Math.min(Math.max(lookahead_days ?? 30, 1), 365);
-        const audience = { includeRetracted: include_retracted === true };
+        const audience = { includeRetracted: include_retracted === true, includeIndexHousekeeping: include_index_housekeeping === true };
 
         const isPersonalized = !!(vendors || categories);
 
@@ -464,7 +465,7 @@ export function createServer(getSessionId?: () => string | undefined, getClientN
             };
           }
 
-          logRequest({ ts: new Date().toISOString(), type: "mcp", endpoint: "track_changes", params: { since, change_type, vendor, vendors, categories, include_expiring: doExpiring, include_retracted: audience.includeRetracted, lookahead_days: days, personalized: true }, result_count: personalized.your_stack_changes.length, session_id: getSessionId?.() });
+          logRequest({ ts: new Date().toISOString(), type: "mcp", endpoint: "track_changes", params: { since, change_type, vendor, vendors, categories, include_expiring: doExpiring, include_retracted: audience.includeRetracted, include_index_housekeeping: audience.includeIndexHousekeeping, lookahead_days: days, personalized: true }, result_count: personalized.your_stack_changes.length, session_id: getSessionId?.() });
           return {
             content: [{ type: "text" as const, text: citedJson(result, "/changes") }],
           };
@@ -482,7 +483,7 @@ export function createServer(getSessionId?: () => string | undefined, getClientN
           result = { ...result, changes: result.changes.map(toConciseDealChange) };
         }
 
-        logRequest({ ts: new Date().toISOString(), type: "mcp", endpoint: "track_changes", params: { since, change_type, vendor, vendors, categories, include_expiring: doExpiring, include_retracted: audience.includeRetracted, lookahead_days: days }, result_count: changes.changes.length, session_id: getSessionId?.() });
+        logRequest({ ts: new Date().toISOString(), type: "mcp", endpoint: "track_changes", params: { since, change_type, vendor, vendors, categories, include_expiring: doExpiring, include_retracted: audience.includeRetracted, include_index_housekeeping: audience.includeIndexHousekeeping, lookahead_days: days }, result_count: changes.changes.length, session_id: getSessionId?.() });
         return {
           content: [{ type: "text" as const, text: citedJson(result, "/changes") }],
         };

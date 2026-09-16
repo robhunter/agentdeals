@@ -49,7 +49,7 @@ import { HETZNER_APRIL_CHANGES, HETZNER_CLOUD_PLANS, HETZNER_PRICES_READ, HETZNE
 import { HUNDRED_GB_SCENARIO, HUNDRED_TB_SCENARIO, ONE_TO_ONE_SCENARIO, STORAGE_RATES_READ, STORAGE_SCALE_WORKLOADS, TEN_TO_ONE_SCENARIO, cheapestProviderAt, costAfterMonthlyEgressGrantFor, costliestProviderAt, egressAllowanceSentence, egressBillAfterMonthlyGrantFor, egressBillOnceOverAllowance, egressRatioWhereCostsMatch, fixedMonthlyGrantsSentence, monthlyEgressGrantGb, monthlyEgressGrantSentence, monthlyStorageCost, providersWithScalingEgressAllowance, rateCardFor, scaleCostFor } from "./storage-cost-model.js";
 import { changeTimelineDate, supersededLineups, supersessionNote } from "./change-lineup.js";
 import { isNoLongerInForce, eventResolutionFields, recordsStillInForce, recordsWeStandBehind, INCLUDE_RETRACTED_REJECTED } from "./change-resolution.js";
-import { trackedChanges, isIndexHousekeeping, changeCensus, changeCountPhrase, recordsNotCountedSentence, sliceById, CHANGE_SLICES, CENSUS_NOTE, TRACKED_CHANGE_RULE_ANCHOR, TRACKED_CHANGE_RULE_PATH, TRACKED_CHANGE_NOUN, INDEX_HOUSEKEEPING_CLASS, INDEX_HOUSEKEEPING_BADGE, INDEX_HOUSEKEEPING_BADGE_COLOR, INDEX_HOUSEKEEPING_NOTE, indexHousekeepingHeadline } from "./change-census.js";
+import { trackedChanges, isIndexHousekeeping, recordsOtherThanOurOwnIndexHousekeeping, changeCensus, changeCountPhrase, recordsNotCountedSentence, sliceById, CHANGE_SLICES, CENSUS_NOTE, TRACKED_CHANGE_RULE_ANCHOR, TRACKED_CHANGE_RULE_PATH, TRACKED_CHANGE_NOUN, INDEX_HOUSEKEEPING_CLASS, INDEX_HOUSEKEEPING_BADGE, INDEX_HOUSEKEEPING_BADGE_COLOR, INDEX_HOUSEKEEPING_NOTE, INCLUDE_INDEX_HOUSEKEEPING_REJECTED, indexHousekeepingHeadline } from "./change-census.js";
 import { SINCE_DEFAULT_SENTENCE } from "./change-window.js";
 import { FREE_TIER_STANDING_LABELS, GRADE_FACTORS_WITHOUT_PRICING_HISTORY, NOT_EVIDENCE_LABELS, citesAChangeOlderThanTheGrade, freeTierStanding, gradesFirstSet, gradesLastSet, gradingDatesClause, neverTracked, riskEntries, scorecard, splitByFreeTierStanding, trackedSinceGrading, type RiskEntry } from "./risk-scorecard.js";
 import { CHANGE_DIRECTION, changeDirectionTable, directionRatioLabel } from "./change-direction.js";
@@ -49862,6 +49862,7 @@ function buildDeveloperHubPage(): string {
     + "    <h3>Paging on <code>/api/changes</code></h3>\n"
     + "    <p><code>/api/changes</code> returns <strong>" + CHANGES_DEFAULT_LIMIT + " records by default</strong>. <code>limit</code> sets the page size, <code>offset</code> skips records, and both are echoed back on the response alongside <code>returned</code> &mdash; the count in this page &mdash; and <code>total</code>, the count matching your query before paging. There is no maximum: <code>?limit=1000</code> returns the whole window in one response. An invalid <code>limit</code> or a negative <code>offset</code> answers <code>400</code> rather than being ignored.</p>\n"
     + "    <p>Records we have withdrawn as our own error are not served here, and <code>total</code> counts what you received rather than what the log holds. <code>retracted_excluded</code> reports how many your query matched and we held back. <code>?include_retracted=true</code> returns them alongside the rest, each carrying <code>standing: &quot;retracted&quot;</code> and <code>impact: &quot;none&quot;</code> &mdash; and every record carries a <code>standing</code>, so a live record and a withdrawn one are told apart without a null check. A value other than <code>true</code> or <code>false</code> answers <code>400</code>.</p>\n"
+    + "    <p>Our own index housekeeping is not served here either. These records say we stopped listing an offer of ours because the page we imported it from stopped resolving &mdash; the vendor's terms did not move &mdash; so counting them as vendor activity overstates it. They carry <code>reports: &quot;our_index&quot;</code>, <code>index_housekeeping_excluded</code> reports how many your query matched and we held back, and <code>?include_index_housekeeping=true</code> returns them alongside the rest. A value other than <code>true</code> or <code>false</code> answers <code>400</code>. This is why <code>?type=product_deprecated</code> and the same count taken off the whole log agree: both leave them out.</p>\n"
     + "\n"
     + "    <h3>The window behind a count</h3>\n"
     + "    <p>With no filter, <code>/api/changes</code> returns the last " + DEFAULT_CHANGE_WINDOW_DAYS + " days. Name a <code>type</code>, <code>vendor</code>, <code>vendors</code> or <code>category</code> and you are answered from the whole change log however old the record &mdash; a vendor you ask for by name is never reported as having changed nothing because the last thing it changed was six months ago. <code>since</code> overrides both. Every response carries <code>date_window</code> naming which of the three ran and the date it opens on, so a <code>total</code> of <code>0</code> can be read as &quot;we hold no such record&quot; rather than guessed at.</p>\n"
@@ -54885,20 +54886,28 @@ const dispatchRequest = async (req: IncomingMessage, res: ServerResponse) => {
       return;
     }
     const includeRetracted = retractedParam === "true";
+    const housekeepingParam = url.searchParams.get("include_index_housekeeping");
+    if (housekeepingParam !== null && housekeepingParam !== "true" && housekeepingParam !== "false") {
+      res.writeHead(400, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+      res.end(JSON.stringify({ error: INCLUDE_INDEX_HOUSEKEEPING_REJECTED }));
+      return;
+    }
+    const includeIndexHousekeeping = housekeepingParam === "true";
     const limit = limitParam === null ? CHANGES_DEFAULT_LIMIT : parseInt(limitParam, 10);
     const offset = offsetParam === null ? 0 : parseInt(offsetParam, 10);
     const changeLogFreshness = getChangeLogFreshness();
-    const result = getDealChanges(since, type, vendorFilter, vendorsFilter, categoriesFilter, { includeRetracted });
+    const result = getDealChanges(since, type, vendorFilter, vendorsFilter, categoriesFilter, { includeRetracted, includeIndexHousekeeping });
     const page = result.changes.slice(offset, offset + limit);
     const context = changeContext(result.changes, since, type);
     const wholeLog = loadDealChanges();
     const allTimeTotal = trackedChanges(wholeLog).length;
-    const retrievableFromThisDoor = (includeRetracted ? wholeLog : recordsWeStandBehind(wholeLog)).length;
+    const standBehindHere = includeRetracted ? wholeLog : recordsWeStandBehind(wholeLog);
+    const retrievableFromThisDoor = (includeIndexHousekeeping ? standBehindHere : recordsOtherThanOurOwnIndexHousekeeping(standBehindHere)).length;
     const changeCensusBlock = {
       ...changeCensus(wholeLog),
       retrievable_from_this_door: retrievableFromThisDoor,
       rule_url: `${BASE_URL}${TRACKED_CHANGE_RULE_PATH}`,
-      note: `all_time_total is tracked_pricing_changes. ${CENSUS_NOTE} retrievable_from_this_door is how many records this request could return before paging, which follows include_retracted.`,
+      note: `all_time_total is tracked_pricing_changes. ${CENSUS_NOTE} retrievable_from_this_door is how many records this request could return before paging, which follows include_retracted and include_index_housekeeping.`,
     };
     const { dated, discovered } = partitionByDateProvenance(result.changes);
     const dateProvenance = {
@@ -54906,7 +54915,7 @@ const dispatchRequest = async (req: IncomingMessage, res: ServerResponse) => {
       discovered: discovered.length,
       note: discovered.length > 0 ? discoveryBatchNote(discovered.length, "in this window") : "",
     };
-    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/changes", params: { since, type, vendor: vendorFilter, vendors: vendorsFilter, categories: categoriesFilter, limit, offset, include_retracted: includeRetracted }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: page.length });
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/changes", params: { since, type, vendor: vendorFilter, vendors: vendorsFilter, categories: categoriesFilter, limit, offset, include_retracted: includeRetracted, include_index_housekeeping: includeIndexHousekeeping }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: page.length });
     res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
     res.end(JSON.stringify(cited({
       changes: page,
@@ -54916,6 +54925,8 @@ const dispatchRequest = async (req: IncomingMessage, res: ServerResponse) => {
       offset,
       include_retracted: includeRetracted,
       retracted_excluded: result.retracted_excluded,
+      include_index_housekeeping: includeIndexHousekeeping,
+      index_housekeeping_excluded: result.index_housekeeping_excluded,
       date_window: result.date_window,
       advisory: context.advisory,
       summary: context.summary,
@@ -55433,7 +55444,7 @@ Parameters:
 
 - GET /api/offers — Search deals (params: q, category, eligibility_type, sort, limit, offset)
 - GET /api/categories — List all categories with counts, what each name holds, and the other names answering the same question
-- GET /api/changes — Pricing changes (params: since, type, vendor, vendors, category, categories, limit, offset, include_retracted)
+- GET /api/changes — Pricing changes (params: since, type, vendor, vendors, category, categories, limit, offset, include_retracted, include_index_housekeeping)
 - GET /api/new — Recently added offers (params: days)
 - GET /api/newest — Newest deals (params: since, limit, category)
 - GET /api/compare — Compare two vendors (params: a, b)

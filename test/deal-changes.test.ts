@@ -1,6 +1,7 @@
 import { describe, it } from "node:test";
 import assert from "node:assert";
 import { assertPopulationFloor } from "./population-floor.ts";
+import { INDEX_SWEEP_STATE } from "../dist/change-census.js";
 import { spawn } from "node:child_process";
 import path from "node:path";
 import fs from "node:fs";
@@ -87,12 +88,14 @@ describe("track_changes tool", () => {
     const body = getDealChanges(since);
     const onFile = changeLogOnFile().filter((c) => c.date >= since);
     const withdrawn = onFile.filter((c) => c.resolution?.state === "retracted");
+    const ourOwnIndex = onFile.filter((c) => !c.resolution && c.current_state === INDEX_SWEEP_STATE);
 
     assert.ok(Array.isArray(body.changes));
     assert.strictEqual(body.total, body.changes.length);
-    assert.strictEqual(body.total, onFile.length - withdrawn.length);
+    assert.strictEqual(body.total, onFile.length - withdrawn.length - ourOwnIndex.length);
     assert.strictEqual(body.retracted_excluded, withdrawn.length);
-    assert.strictEqual(getDealChanges(since, undefined, undefined, undefined, undefined, { includeRetracted: true }).total, onFile.length);
+    assert.strictEqual(body.index_housekeeping_excluded, ourOwnIndex.length);
+    assert.strictEqual(getDealChanges(since, undefined, undefined, undefined, undefined, { includeRetracted: true, includeIndexHousekeeping: true }).total, onFile.length);
     assertPopulationFloor(body.total, 201, "records in the change log");
     for (const c of body.changes) assert.ok(c.date >= since, `${c.vendor} predates the since date`);
   });
