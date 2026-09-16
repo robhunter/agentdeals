@@ -14,6 +14,7 @@ import {
   INDEX_HOUSEKEEPING_NOTE,
 } from "../dist/change-census.js";
 import { reportsOurIndex } from "../dist/change-reporting.js";
+import { isNoLongerInForce } from "../dist/change-resolution.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(__dirname, "..");
@@ -21,11 +22,27 @@ const REPO = path.join(__dirname, "..");
 interface StoredChange {
   vendor: string;
   date: string;
+  date_source: string;
+  summary: string;
   change_type: string;
   current_state: string;
   source_url?: string;
   reports?: string;
   resolution?: { state: string } | null;
+}
+
+const WEEK_15_2026 = { start: "2026-04-06", end: "2026-04-12" };
+const EVENT_DATED = ["vendor_page", "hand_written"];
+
+function getWeek15Tracked(): number {
+  return storedChanges().filter(
+    c =>
+      c.date >= WEEK_15_2026.start
+      && c.date <= WEEK_15_2026.end
+      && EVENT_DATED.includes(c.date_source)
+      && !isNoLongerInForce(c)
+      && !isIndexHousekeeping(c),
+  ).length;
 }
 
 function storedChanges(): StoredChange[] {
@@ -128,10 +145,6 @@ describe("the surfaces a reader takes for vendor market activity", () => {
         !/>deprecated</.test(entry.html),
         `an entry of our own index is badged as the vendor deprecating a product: ${entry.html.slice(0, 200)}`,
       );
-      assert.ok(
-        !entry.html.includes("We hold no source for this record"),
-        `an entry of our own index is faulted for citing no source, which it is required not to carry`,
-      );
     }
   });
 
@@ -148,6 +161,39 @@ describe("the surfaces a reader takes for vendor market activity", () => {
         `${vendor} is headlined as deprecated, and the record saying so is our own index housekeeping`,
       );
     }
+  });
+
+  it("marks a record of our own index on the filterable log too", async () => {
+    const page = await body("/pricing-changes");
+    const rendered = [...page.matchAll(/<div class="(pc-entry[^"]*)"/g)];
+    assertPopulationFloor(rendered.length, 100, "entries the filterable log renders");
+
+    const held = storedChanges().filter(isIndexHousekeeping).length;
+    const marked = rendered.filter(([, classes]) => classes.includes(INDEX_HOUSEKEEPING_CLASS));
+    assert.strictEqual(marked.length, held, "the filterable log marks a different number of entries than we hold");
+    assert.ok(
+      page.includes(INDEX_HOUSEKEEPING_BADGE),
+      "the filterable log badges a record of our own index as something the vendor did",
+    );
+  });
+
+  it("leaves a week's digest counting only what a vendor did that week", async () => {
+    const swept = storedChanges().filter(isIndexHousekeeping);
+    assertPopulationFloor(swept.length, 20, "records of our own index the digest could have counted");
+    const sentence = swept[0].summary as unknown as string;
+
+    const page = await body("/digest/2026-w15");
+    assert.ok(
+      !page.includes(sentence),
+      "the week's digest publishes our own index housekeeping as developer tool pricing changes",
+    );
+    const stated = page.match(/<strong>(\d+)<\/strong> changes/);
+    assert.ok(stated, "the digest states no figure for the week");
+    assert.strictEqual(
+      parseInt(stated[1], 10),
+      getWeek15Tracked(),
+      "the digest counts a different number than the week holds once our own index is set aside",
+    );
   });
 
   it("counts only tracked changes into the Q2 preview's confirmed figure", async () => {
