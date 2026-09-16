@@ -1,4 +1,4 @@
-import { compiledNotice, getPageReview, qualityBudget, reviewStatus, utcToday, type PageReviewRecord } from "./page-reviews.js";
+import { compiledNotice, getPageReview, qualityBudget, readWithoutClearing, reviewStatus, utcToday, type PageReviewRecord } from "./page-reviews.js";
 
 export interface FaqItem {
   q: string;
@@ -52,7 +52,7 @@ export function faqProvenanceClause(record: PageReviewRecord | null, today: stri
   if (!record) return "";
   const status = reviewStatus(record, today);
   const notice = compiledNotice(record.published, status.reviewed_at);
-  return status.review_outcome === "fail" ? `${notice}; corrections outstanding.` : `${notice}.`;
+  return readWithoutClearing(status) ? `${notice}; corrections outstanding.` : `${notice}.`;
 }
 
 export function pageFaqProvenanceClause(pagePath: string, today = utcToday()): string {

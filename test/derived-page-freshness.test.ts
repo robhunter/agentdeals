@@ -152,10 +152,11 @@ function namedMonth(isoDate: string): string {
 function claimTheDataSupports(pagePath: string, html: string, today: string): string {
   const review = storedReviews.get(pagePath);
   if (review && !review.tables_read_index) {
-    const checked = review.reviewed_at !== null && review.reviewed_at <= today ? review.reviewed_at : null;
-    return checked === null
-      ? `Compiled ${review.published}, not re-checked since.`
-      : `Compiled ${review.published}, last checked ${checked}.`;
+    const read = review.reviewed_at !== null && review.reviewed_at <= today ? review.reviewed_at : null;
+    if (read === null) return `Compiled ${review.published}, not re-checked since.`;
+    return review.review_outcome === "fail"
+      ? `Compiled ${review.published}.`
+      : `Compiled ${review.published}, last checked ${read}.`;
   }
   const dates = [...html.matchAll(/href="\/vendor\/([a-z0-9][a-z0-9-]*)"/g)]
     .flatMap(link => [...verifiedDatesForSlug(link[1]!)])
