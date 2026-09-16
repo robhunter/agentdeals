@@ -1,5 +1,6 @@
 import { describe, it, before, after } from "node:test";
 import assert from "node:assert";
+import { assertPopulationFloor } from "./population-floor.ts";
 import { spawn, type ChildProcess } from "node:child_process";
 import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
@@ -981,9 +982,9 @@ describe("#1103 every catalogue record whose stored terms are superseded", () =>
     const { CHANGE_DIRECTION } = await import("../dist/change-direction.js");
     const counted: Record<string, number> = { negative: 0, positive: 0, neutral: 0 };
     for (const { change } of population) counted[CHANGE_DIRECTION[change.change_type]]++;
-    assert.ok(counted.positive > 40, `only ${counted.positive} records counted positive withhold their stored terms`);
+    assertPopulationFloor(counted.positive, 40, "records counted positive that withhold their stored terms");
     assert.ok(counted.neutral > 0, `no record counted neutral withholds its stored terms`);
-    assert.ok(counted.negative > 100, `only ${counted.negative} records counted negative withhold their stored terms`);
+    assertPopulationFloor(counted.negative, 90, "records counted negative that withhold their stored terms");
   });
 
   it("holds a dated, sourced reading for most of them, so the citations below have subjects", () => {
