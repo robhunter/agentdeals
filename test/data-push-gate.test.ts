@@ -1305,3 +1305,96 @@ describe("#1337 main moving under a run whose data the suite accepted", () => {
     assert.match(run.stdout, /more often than this run replays onto it/);
   });
 });
+
+describe("#1710 a red main reaches the issue the reporter opened, not one that mentions it", () => {
+  const REPORTER = join(REPO, "scripts", "report-data-push-outcome.sh");
+  let bin = "";
+
+  before(() => {
+    bin = mkdtempSync(join(tmpdir(), "report-outcome-gh-"));
+    writeFileSync(
+      join(bin, "gh"),
+      [
+        "#!/usr/bin/env bash",
+        "set -euo pipefail",
+        'if [ "$1 $2" = "issue list" ]; then',
+        '  EXPR=""',
+        '  FROM="$GH_OPEN_ISSUES"',
+        '  while [ "$#" -gt 0 ]; do',
+        '    if [ "$1" = "--jq" ]; then EXPR="$2"; fi',
+        '    if [ "$1" = "--search" ]; then FROM="$GH_INDEX_RETURNS"; fi',
+        "    shift",
+        "  done",
+        '  jq -r "$EXPR" <"$FROM"',
+        "  exit 0",
+        "fi",
+        'if [ "$1 $2" = "issue comment" ]; then echo "comment $3" >>"$GH_ACTIONS"; exit 0; fi',
+        'if [ "$1 $2" = "issue create" ]; then echo "create" >>"$GH_ACTIONS"; exit 0; fi',
+        'echo "unexpected gh call: $*" >&2; exit 3',
+      ].join("\n"),
+      { mode: 0o755 },
+    );
+  });
+
+  after(() => {
+    if (bin && existsSync(bin)) rmSync(bin, { recursive: true, force: true });
+  });
+
+  function report(
+    outcome: string,
+    openIssues: Array<{ number: number; body: string }>,
+    indexReturns: Array<{ number: number; body: string }> = openIssues,
+  ): string[] {
+    const issues = join(bin, "issues.json");
+    const indexed = join(bin, "indexed.json");
+    const actions = join(bin, "actions.txt");
+    writeFileSync(issues, JSON.stringify(openIssues));
+    writeFileSync(indexed, JSON.stringify(indexReturns));
+    writeFileSync(actions, "");
+    const run = spawnSync("bash", [REPORTER, "Daily rolling re-verification", outcome, "test/some-file.test.ts"], {
+      encoding: "utf8",
+      env: {
+        ...process.env,
+        PATH: `${bin}:${process.env.PATH}`,
+        GH_OPEN_ISSUES: issues,
+        GH_INDEX_RETURNS: indexed,
+        GH_ACTIONS: actions,
+      },
+    });
+    assert.strictEqual(run.status, 0, `${run.stdout}${run.stderr}`);
+    return readFileSync(actions, "utf8").split("\n").filter(Boolean);
+  }
+
+  const marked = (marker: string) => `A previous run said this.\n\n<!-- ${marker} -->`;
+
+  it("comments on the open issue carrying its own marker", () => {
+    assert.deepStrictEqual(report("shipped-over-failures", [{ number: 90, body: marked("data-push-over-failures") }]), ["comment 90"]);
+  });
+
+  it("opens its own issue rather than commenting on one that only writes the marker out", () => {
+    const quoting = { number: 1531, body: "I replayed nine batches. The run reports `data-push-vendorholdback` at priority/medium." };
+    assert.deepStrictEqual(report("shipped-over-failures", [quoting]), ["create"]);
+    assert.deepStrictEqual(report("held-back-a-vendor", [quoting]), ["create"]);
+  });
+
+  it("keeps each outcome out of another outcome's issue", () => {
+    const heldBack = { number: 77, body: marked("data-push-vendorholdback") };
+    assert.deepStrictEqual(report("shipped-over-failures", [heldBack]), ["create"]);
+    assert.deepStrictEqual(report("refused", [heldBack]), ["create"]);
+    assert.deepStrictEqual(report("held-back-a-vendor", [heldBack]), ["comment 77"]);
+  });
+
+  it("finds the carrier among the open issues rather than among a search engine's hits", () => {
+    const carrier = { number: 90, body: marked("data-push-over-failures") };
+    assert.deepStrictEqual(report("shipped-over-failures", [carrier], []), ["comment 90"]);
+  });
+
+  it("picks the same issue every run when more than one carries the marker", () => {
+    const carriers = [
+      { number: 400, body: marked("data-push-over-failures") },
+      { number: 120, body: marked("data-push-over-failures") },
+    ];
+    assert.deepStrictEqual(report("shipped-over-failures", carriers), ["comment 120"]);
+    assert.deepStrictEqual(report("shipped-over-failures", [...carriers].reverse()), ["comment 120"]);
+  });
+});

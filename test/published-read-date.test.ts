@@ -302,6 +302,28 @@ describe("every record publishes the day we last read its page", () => {
     );
   });
 
+  it("dates the record it hands over whether or not it can confirm the terms", async () => {
+    const every = Math.max(1, Math.floor(pagePrimaries.length / 40));
+    const sample = pagePrimaries.filter((_, at) => at % every === 0);
+    const cannotConfirm = sample.filter((o) => termsWithheldOn(o) !== null);
+    assertPopulationFloor(cannotConfirm.length, 1, `of the ${sample.length} sampled records, ones whose terms the last read did not confirm`);
+
+    const dateless: string[] = [];
+    const caveated: string[] = [];
+    for (const offer of sample) {
+      const text = await readResourceOverHttp(`agentdeals://vendor/${slugOf(offer.vendor)}`);
+      const dated = text.split("\n").find((l) => l.startsWith(`**${CONFIRMED_DATE_LABEL}:**`) || l.startsWith(`**${UNCONFIRMED_DATE_LABEL}:**`));
+      if (!dated?.includes(confirmationDate(offer) ?? offer.verifiedDate)) dateless.push(offer.vendor);
+      if (text.includes("**Verification:** ")) caveated.push(offer.vendor);
+    }
+    assert.deepEqual(
+      dateless,
+      [],
+      `the vendor resource hands over ${dateless.length} of ${sample.length} sampled records without the date the record holds`,
+    );
+    assertPopulationFloor(caveated.length, 1, "sampled records the resource hands over with the reason we cannot confirm them");
+  });
+
   it("relates the confirmation it holds to the read it withholds on, over both MCP transports", async () => {
     const subject = confirmationsHeld.find((o) => termsWithheldOn(o) !== null);
     assert.ok(subject, "no record holding a confirmation withholds its terms, so this control proves nothing");

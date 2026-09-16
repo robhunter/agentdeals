@@ -681,9 +681,10 @@ Suggested monitoring cadence: run this check weekly to catch pricing changes ear
       text += `**Tier:** ${match.tier}\n`;
       text += `**Description:** ${unconfirmed ? termsWithTheReasonWeCannotConfirmThem(match.description, unconfirmed) : match.description}\n`;
       text += `**Pricing Page:** ${match.url}\n`;
-      text += unconfirmed && !theReadConfirmedThePrice(unconfirmed)
-        ? `**Verification:** ${NOT_VERIFIED(unconfirmed.clause)} ${storedConfirmationClause(match, termsTheVerdictWithholds(unconfirmed))}\n`
-        : `${publishedDateLine(match)}\n`;
+      text += `${publishedDateLine(match)}\n`;
+      if (unconfirmed && !theReadConfirmedThePrice(unconfirmed)) {
+        text += `**Verification:** ${NOT_VERIFIED(unconfirmed.clause)} ${storedConfirmationClause(match, termsTheVerdictWithholds(unconfirmed))}\n`;
+      }
       text += `**Last read:** ${match.last_read_date}\n`;
       if (match.eligibility) {
         text += `**Eligibility:** ${match.eligibility.type} — ${match.eligibility.conditions.join(", ")}\n`;
