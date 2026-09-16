@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated": "2026-09-15",
+  "generated": "2026-09-16",
   "pages": {
     "/": {
       "daily": true
@@ -2661,7 +2661,8 @@
       "changed": "2026-09-12"
     },
     "/deadlines": {
-      "daily": true
+      "hash": "8314610239102c48",
+      "changed": "2026-09-16"
     },
     "/design-alternatives": {
       "hash": "087bbeb9f1c10153",
@@ -2962,8 +2963,8 @@
       "changed": "2026-09-15"
     },
     "/free-tier-risk": {
-      "hash": "8fcc73947441543b",
-      "changed": "2026-09-15"
+      "hash": "a67417c80e4c1b93",
+      "changed": "2026-09-16"
     },
     "/free-tier-tracker": {
       "hash": "1937b061ca77d5d0",
@@ -3352,248 +3353,246 @@
       "changed": "2026-09-15"
     },
     "/trends": {
-      "hash": "b0f9d5def9c65dd8",
-      "changed": "2026-09-15"
+      "hash": "e13b466bd76f0ed6",
+      "changed": "2026-09-16"
     },
     "/trends/ai-coding": {
-      "hash": "d07a47e99e161300",
-      "changed": "2026-09-15"
+      "hash": "fb8b2311a1f0accd",
+      "changed": "2026-09-16"
     },
     "/trends/ai-ml": {
-      "hash": "821bf5b96969a462",
-      "changed": "2026-09-15"
+      "hash": "8d8d6f093d4ce010",
+      "changed": "2026-09-16"
     },
     "/trends/analytics": {
-      "hash": "b66b3fb95e6221f9",
-      "changed": "2026-09-15"
+      "hash": "1f4581de530bd185",
+      "changed": "2026-09-16"
     },
     "/trends/api-development": {
-      "hash": "86e247c492edc773",
-      "changed": "2026-09-15"
+      "hash": "a41d30a450d9bc4a",
+      "changed": "2026-09-16"
     },
     "/trends/api-gateway": {
-      "hash": "aec6680656444414",
-      "changed": "2026-09-15"
+      "hash": "66770f79fe964f4c",
+      "changed": "2026-09-16"
     },
     "/trends/auth": {
-      "hash": "e1fe195fb23e7230",
-      "changed": "2026-09-15"
+      "hash": "6596fbd11fe65be2",
+      "changed": "2026-09-16"
     },
     "/trends/background-jobs": {
-      "hash": "fef275252515563a",
-      "changed": "2026-09-15"
+      "hash": "5a831c175cce8172",
+      "changed": "2026-09-16"
     },
     "/trends/browser-automation": {
-      "hash": "82c4848034249c99",
-      "changed": "2026-09-15"
+      "hash": "206a728fc03779fb",
+      "changed": "2026-09-16"
     },
     "/trends/cdn": {
-      "hash": "bf3d434bda3e58ff",
-      "changed": "2026-09-15"
+      "hash": "b6befe7f21ea4258",
+      "changed": "2026-09-16"
     },
     "/trends/ci-cd": {
-      "hash": "a7c60ae15a42791f",
-      "changed": "2026-09-15"
+      "hash": "cb6ac896f11a1c86",
+      "changed": "2026-09-16"
     },
     "/trends/cloud-hosting": {
-      "hash": "76b30104b826fd1a",
-      "changed": "2026-09-15"
+      "daily": true
     },
     "/trends/cloud-iaas": {
-      "hash": "8eee0abc0e3daee5",
-      "changed": "2026-09-15"
+      "hash": "2668282ae4d4025d",
+      "changed": "2026-09-16"
     },
     "/trends/cloud-storage": {
-      "hash": "44137b6a59128043",
-      "changed": "2026-09-15"
+      "hash": "dbf58a8fb3cafe70",
+      "changed": "2026-09-16"
     },
     "/trends/code-quality": {
-      "hash": "0a3e01de477539ba",
-      "changed": "2026-09-15"
+      "hash": "7e085e26249b9cc3",
+      "changed": "2026-09-16"
     },
     "/trends/communication": {
-      "hash": "2936f71307b9b67f",
-      "changed": "2026-09-15"
+      "hash": "c6bc807ae3f1de25",
+      "changed": "2026-09-16"
     },
     "/trends/communication-messaging": {
-      "hash": "ae9a33f8480b6d26",
-      "changed": "2026-09-15"
+      "hash": "82984ed99adcb4ae",
+      "changed": "2026-09-16"
     },
     "/trends/consumer-email": {
-      "hash": "a39e38ecaf891018",
-      "changed": "2026-09-15"
+      "hash": "a620fb2506ee555e",
+      "changed": "2026-09-16"
     },
     "/trends/container-registry": {
-      "hash": "50342b232207d63e",
-      "changed": "2026-09-15"
+      "hash": "338cdede8fccdf57",
+      "changed": "2026-09-16"
     },
     "/trends/databases": {
-      "hash": "0d69d17075251e9f",
-      "changed": "2026-09-15"
+      "hash": "e8d32a204d6f7ca7",
+      "changed": "2026-09-16"
     },
     "/trends/design": {
-      "hash": "216ea2410bc43d3a",
-      "changed": "2026-09-15"
+      "hash": "671b2c52038ebef6",
+      "changed": "2026-09-16"
     },
     "/trends/design-creative": {
-      "hash": "e362cdc934829130",
-      "changed": "2026-09-15"
+      "hash": "474b7ec1fc60864c",
+      "changed": "2026-09-16"
     },
     "/trends/dev-utilities": {
-      "hash": "89092293d9cde5e7",
-      "changed": "2026-09-15"
+      "hash": "1e67f8be60bfad2c",
+      "changed": "2026-09-16"
     },
     "/trends/diagramming": {
-      "hash": "cfdc3eecd7e18b5c",
-      "changed": "2026-09-15"
+      "hash": "c0b5ba0ce7d235a7",
+      "changed": "2026-09-16"
     },
     "/trends/dns-domain-management": {
-      "hash": "c96b82cc88370f14",
-      "changed": "2026-09-15"
+      "hash": "549256f698d94681",
+      "changed": "2026-09-16"
     },
     "/trends/documentation": {
-      "hash": "c7b0ad5fad7b0c5b",
-      "changed": "2026-09-15"
+      "hash": "8e2cc59db0ec315e",
+      "changed": "2026-09-16"
     },
     "/trends/education": {
-      "hash": "22bfacd4ea15bf83",
-      "changed": "2026-09-15"
+      "hash": "d807ae9429c1e127",
+      "changed": "2026-09-16"
     },
     "/trends/email": {
-      "hash": "11d78473dbae1c4b",
-      "changed": "2026-09-15"
+      "hash": "38c81a88ce546725",
+      "changed": "2026-09-16"
     },
     "/trends/error-tracking": {
-      "hash": "a8902e674ea89c47",
-      "changed": "2026-09-15"
+      "hash": "80f2f4f6b8bec6ff",
+      "changed": "2026-09-16"
     },
     "/trends/feature-flags": {
-      "hash": "342f7536d06dd6ae",
-      "changed": "2026-09-15"
+      "hash": "aff8e08d1de1e08f",
+      "changed": "2026-09-16"
     },
     "/trends/forms": {
-      "hash": "0f12505b824921dd",
-      "changed": "2026-09-15"
+      "hash": "4c9bfc9279dd883d",
+      "changed": "2026-09-16"
     },
     "/trends/headless-cms": {
-      "hash": "80ddd77ebf7d353c",
-      "changed": "2026-09-15"
+      "hash": "16d18a88b369d4a2",
+      "changed": "2026-09-16"
     },
     "/trends/ide-code-editors": {
-      "hash": "1c9e06ca488a80cf",
-      "changed": "2026-09-15"
+      "hash": "bf282a6068e89353",
+      "changed": "2026-09-16"
     },
     "/trends/infrastructure": {
-      "hash": "fe0f1eb2d51e3626",
-      "changed": "2026-09-15"
+      "daily": true
     },
     "/trends/localization": {
-      "hash": "3afe74968b3b2998",
-      "changed": "2026-09-15"
+      "hash": "936b52d307993ae1",
+      "changed": "2026-09-16"
     },
     "/trends/logging": {
-      "hash": "a6c1a7f77f0447fb",
-      "changed": "2026-09-15"
+      "hash": "08bb4c459f021f2b",
+      "changed": "2026-09-16"
     },
     "/trends/low-code-platforms": {
-      "hash": "06a3a8f109f1e3a4",
-      "changed": "2026-09-15"
+      "hash": "97da71668a6d14fd",
+      "changed": "2026-09-16"
     },
     "/trends/maps-geolocation": {
-      "hash": "a552fc2c1249dec1",
-      "changed": "2026-09-15"
+      "hash": "d623db2e6976d663",
+      "changed": "2026-09-16"
     },
     "/trends/messaging": {
-      "hash": "01424b36ddf06169",
-      "changed": "2026-09-15"
+      "hash": "76c8c083c45302fb",
+      "changed": "2026-09-16"
     },
     "/trends/mobile-development": {
-      "hash": "c94cf5e93e3204fb",
-      "changed": "2026-09-15"
+      "hash": "80aa8f67a17d2708",
+      "changed": "2026-09-16"
     },
     "/trends/monitoring": {
-      "hash": "55187b97a32f58b1",
-      "changed": "2026-09-15"
+      "hash": "b89718c70db31a3b",
+      "changed": "2026-09-16"
     },
     "/trends/notebooks-data-science": {
-      "hash": "a739e31433d17cf5",
-      "changed": "2026-09-15"
+      "hash": "a8c4107458760522",
+      "changed": "2026-09-16"
     },
     "/trends/password-managers": {
-      "hash": "8ae1ca2976c6ac6e",
-      "changed": "2026-09-15"
+      "hash": "c1d0dee6eac68b46",
+      "changed": "2026-09-16"
     },
     "/trends/payments": {
-      "hash": "996f679b546fa4a8",
-      "changed": "2026-09-15"
+      "hash": "5b0751ebc68c718f",
+      "changed": "2026-09-16"
     },
     "/trends/productivity-notes": {
-      "hash": "90f2b41a0bd911ae",
-      "changed": "2026-09-15"
+      "hash": "725c9e0ecb248077",
+      "changed": "2026-09-16"
     },
     "/trends/project-management": {
-      "hash": "eb25284ee4607be5",
-      "changed": "2026-09-15"
+      "hash": "8d1b1bef5d4fefde",
+      "changed": "2026-09-16"
     },
     "/trends/search": {
-      "hash": "8cfe6effafc5cd5b",
-      "changed": "2026-09-15"
+      "hash": "46b15a42b947da9e",
+      "changed": "2026-09-16"
     },
     "/trends/secrets-management": {
-      "hash": "f9e80aef9cb053f7",
-      "changed": "2026-09-15"
+      "hash": "11033f5a6b99768b",
+      "changed": "2026-09-16"
     },
     "/trends/security": {
-      "hash": "6a3e8692554acdce",
-      "changed": "2026-09-15"
+      "hash": "58a35d6b9b44c43e",
+      "changed": "2026-09-16"
     },
     "/trends/server-management": {
-      "hash": "ec1f295a22099f43",
-      "changed": "2026-09-15"
+      "hash": "b2eff591cb709c1d",
+      "changed": "2026-09-16"
     },
     "/trends/source-control": {
-      "hash": "eed890c800b1a091",
-      "changed": "2026-09-15"
+      "hash": "db9632ff5d92a8d3",
+      "changed": "2026-09-16"
     },
     "/trends/startup-perks": {
-      "hash": "2200684c1e474b23",
-      "changed": "2026-09-15"
+      "hash": "aaa29bd9b120727a",
+      "changed": "2026-09-16"
     },
     "/trends/status-pages": {
-      "hash": "518a5798b651c6e1",
-      "changed": "2026-09-15"
+      "hash": "e39a6a58b3e1df68",
+      "changed": "2026-09-16"
     },
     "/trends/storage": {
-      "hash": "1cbc6bea2c07ca76",
-      "changed": "2026-09-15"
+      "hash": "bf74c3a3e2d93d4f",
+      "changed": "2026-09-16"
     },
     "/trends/team-collaboration": {
-      "hash": "aabaa937ef54bdf6",
-      "changed": "2026-09-15"
+      "hash": "a0055194b22befe7",
+      "changed": "2026-09-16"
     },
     "/trends/testing": {
-      "hash": "d625e687f6f44144",
-      "changed": "2026-09-15"
+      "hash": "91d42c42a817dd7e",
+      "changed": "2026-09-16"
     },
     "/trends/tunneling-networking": {
-      "hash": "3ea10cb038d5ccc5",
-      "changed": "2026-09-15"
+      "hash": "d6b9dc14690ffe33",
+      "changed": "2026-09-16"
     },
     "/trends/video": {
-      "hash": "29d52298380051be",
-      "changed": "2026-09-15"
+      "hash": "671f4c0305b7bb97",
+      "changed": "2026-09-16"
     },
     "/trends/vpn-privacy": {
-      "hash": "a2a2f07b3e700886",
-      "changed": "2026-09-15"
+      "hash": "68e1d3ad5f9d7b12",
+      "changed": "2026-09-16"
     },
     "/trends/web-scraping": {
-      "hash": "5835f60cef97b983",
-      "changed": "2026-09-15"
+      "hash": "92376ea45ba7fbfc",
+      "changed": "2026-09-16"
     },
     "/trends/workflow-automation": {
-      "hash": "165bae3504224cda",
-      "changed": "2026-09-15"
+      "hash": "8f6960c60bee3d41",
+      "changed": "2026-09-16"
     },
     "/vector-database-pricing": {
       "hash": "bb73ccaaf0b707c1",
