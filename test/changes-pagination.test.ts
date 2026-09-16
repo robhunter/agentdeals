@@ -18,6 +18,8 @@ const SHAPE_KEYS = [
   "offset",
   "include_retracted",
   "retracted_excluded",
+  "include_index_housekeeping",
+  "index_housekeeping_excluded",
   "date_window",
   "advisory",
   "summary",
@@ -192,6 +194,7 @@ describe("/api/changes answers one shape and pages", () => {
       limit: "2",
       offset: "3",
       include_retracted: "true",
+      include_index_housekeeping: "true",
     };
     const baseline = (await get("")).body;
     const inert: string[] = [];

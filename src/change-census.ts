@@ -36,8 +36,23 @@ export function indexHousekeepingHeadline(vendor: string): string {
   return `${vendor}: we stopped listing an offer of ours`;
 }
 
+export const INDEX_HOUSEKEEPING_REPORTS = "our_index";
+
+export const INCLUDE_INDEX_HOUSEKEEPING_ACCEPTS =
+  `Records of our own index housekeeping (reports '${INDEX_HOUSEKEEPING_REPORTS}') are left out unless you ask for them. `
+  + "They say we stopped listing an offer of ours, not that the vendor changed anything, so counting them "
+  + "as vendor activity overstates it. Set true to receive them alongside the rest. "
+  + "Either way, index_housekeeping_excluded reports how many your query matched and did not receive.";
+
+export const INCLUDE_INDEX_HOUSEKEEPING_REJECTED =
+  "Invalid 'include_index_housekeeping' parameter. Expected 'true' or 'false'.";
+
 export function isTrackedChange(change: CensusSubject): boolean {
   return !isNoLongerInForce(change) && !isIndexHousekeeping(change);
+}
+
+export function recordsOtherThanOurOwnIndexHousekeeping<T extends CensusSubject>(changes: readonly T[]): T[] {
+  return changes.filter((c) => !isIndexHousekeeping(c));
 }
 
 export function trackedChanges<T extends CensusSubject>(changes: readonly T[]): T[] {

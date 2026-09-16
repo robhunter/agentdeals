@@ -32,7 +32,7 @@ import { DEFAULT_CHANGE_WINDOW_DAYS, defaultChangeWindow, servedWindowOpens, win
 export { RISK_DEMOTION, SEVERE_TYPES_WITHOUT_FLAT_DEMOTION, changeTypeCanDemote } from "./change-demotion.js";
 import { vendorHistorySentence } from "./vendor-history.js";
 import { isNoLongerInForce, recordsStillInForce, recordsWeStandBehind, withResolutionInSummary, withStandingDeclaredOnEach } from "./change-resolution.js";
-import { trackedChanges } from "./change-census.js";
+import { trackedChanges, recordsOtherThanOurOwnIndexHousekeeping } from "./change-census.js";
 import { changeCitesASource, changeIsUncited, changeSummaryHtml, changeSummaryMarkdown, changeSummaryText, ratingWithheldForNoSourceSentence, type CitableChange } from "./change-citation.js";
 import { endedVerdictSentence } from "./retirement.js";
 import { resolveCategoryName } from "./category-scope.js";
@@ -749,12 +749,14 @@ export { DEFAULT_CHANGE_WINDOW_DAYS };
 
 export interface ChangeRecordAudience {
   includeRetracted?: boolean;
+  includeIndexHousekeeping?: boolean;
 }
 
 export interface DealChangeResult {
   changes: PublishedDealChange[];
   total: number;
   retracted_excluded: number;
+  index_housekeeping_excluded: number;
   date_window: ChangeWindow;
 }
 
@@ -809,12 +811,16 @@ export function getDealChanges(
 
   results = [...results].sort((a, b) => b.date.localeCompare(a.date));
 
-  const served = audience.includeRetracted ? results : recordsWeStandBehind(results);
+  const stoodBehind = audience.includeRetracted ? results : recordsWeStandBehind(results);
+  const served = audience.includeIndexHousekeeping
+    ? stoodBehind
+    : recordsOtherThanOurOwnIndexHousekeeping(stoodBehind);
 
   return {
     changes: withStandingDeclaredOnEach(served),
     total: served.length,
-    retracted_excluded: results.length - served.length,
+    retracted_excluded: results.length - stoodBehind.length,
+    index_housekeeping_excluded: stoodBehind.length - served.length,
     date_window,
   };
 }
@@ -823,6 +829,7 @@ export interface PersonalizedChanges {
   your_stack_changes: PublishedDealChange[];
   advisory: PublishedDealChange[];
   retracted_excluded: number;
+  index_housekeeping_excluded: number;
   date_window: ChangeWindow;
   summary: {
     stack_changes_count: number;
@@ -888,6 +895,7 @@ export function getPersonalizedChanges(
     your_stack_changes: stackResult.changes,
     advisory: context.advisory,
     retracted_excluded: stackResult.retracted_excluded,
+    index_housekeeping_excluded: stackResult.index_housekeeping_excluded,
     date_window: stackResult.date_window,
     summary: context.summary,
   };
@@ -1641,7 +1649,7 @@ export function getWeeklyDigest(): {
   const fmt = (d: Date) => d.toISOString().slice(0, 10);
   const today = fmt(now);
 
-  const allDealChanges = recordsStillInForce(loadDealChanges());
+  const allDealChanges = trackedChanges(loadDealChanges());
   const weekWindow = isoWeekWindow(now);
   const week = `${weekWindow.start} to ${weekWindow.end}`;
   const inWeek = changesInWindow(allDealChanges, weekWindow);
