@@ -21,6 +21,7 @@ const SHAPE_KEYS = [
   "include_index_housekeeping",
   "index_housekeeping_excluded",
   "date_window",
+  "name_match",
   "advisory",
   "summary",
   "date_provenance",

@@ -2,6 +2,7 @@ import { McpServer, ResourceTemplate } from "@modelcontextprotocol/sdk/server/mc
 import { z } from "zod";
 import { oldestVerifiedDateForSlug, getCategories, getDealChanges, getPersonalizedChanges, getNewOffers, getNewestDeals, getOfferDetails, searchOffers, stabilityWithheldDisclosure, enrichOffers, gateForOffer, compareServices, checkVendorRisk, auditStack, getExpiringDeals, getWeeklyDigest, loadOffers, loadDealChanges, classifyStability, publishedStabilityFor, stabilityWithheldSentence, getVendorReferral, sanitizeQuery } from "./data.js";
 import { SINCE_DEFAULT_SENTENCE } from "./change-window.js";
+import { NAME_MATCH_SENTENCE } from "./name-match.js";
 import { gateDisclosureFor } from "./gate-disclosure.js";
 import { standingOf, INCLUDE_RETRACTED_ACCEPTS } from "./change-resolution.js";
 import { changeCountPhrase, trackedChanges, INCLUDE_INDEX_HOUSEKEEPING_ACCEPTS, TRACKED_CHANGE_RULE_PATH } from "./change-census.js";
@@ -415,9 +416,9 @@ export function createServer(getSessionId?: () => string | undefined, getClientN
       inputSchema: {
         since: z.string().optional().describe(`ISO date (YYYY-MM-DD). ${SINCE_DEFAULT_SENTENCE}`),
         change_type: z.enum(["free_tier_removed", "limits_reduced", "restriction", "limits_increased", "new_free_tier", "new_tier", "pricing_restructured", "open_source_killed", "pricing_model_change", "startup_program_expanded", "pricing_postponed", "product_deprecated", "rebranded", "record_corrected"]).optional().describe("Filter by type of change"),
-        vendor: z.string().optional().describe("Filter to one vendor (case-insensitive)"),
-        vendors: z.string().optional().describe("Comma-separated vendor names to filter (e.g. 'Vercel,Supabase'). When provided with categories, returns personalized results with advisory section."),
-        categories: z.string().optional().describe("Comma-separated category names to filter (e.g. 'Database,Cloud Hosting'). Case-insensitive partial match."),
+        vendor: z.string().optional().describe(`Filter to one vendor. ${NAME_MATCH_SENTENCE}`),
+        vendors: z.string().optional().describe(`Comma-separated vendor names to filter (e.g. 'Vercel,Supabase'). When provided with categories, returns personalized results with advisory section. ${NAME_MATCH_SENTENCE}`),
+        categories: z.string().optional().describe(`Comma-separated category names to filter (e.g. 'Database,Cloud Hosting'). ${NAME_MATCH_SENTENCE}`),
         include_expiring: z.boolean().optional().describe("Include upcoming expirations (default: true)"),
         include_retracted: z.boolean().optional().describe(INCLUDE_RETRACTED_ACCEPTS),
         include_index_housekeeping: z.boolean().optional().describe(INCLUDE_INDEX_HOUSEKEEPING_ACCEPTS),
@@ -1112,8 +1113,8 @@ export function getServerCard(baseUrl: string) {
           properties: {
             since: { type: "string", description: `ISO date (YYYY-MM-DD). ${SINCE_DEFAULT_SENTENCE}` },
             change_type: { type: "string", enum: ["free_tier_removed", "limits_reduced", "restriction", "limits_increased", "new_free_tier", "new_tier", "pricing_restructured", "open_source_killed", "pricing_model_change", "startup_program_expanded", "pricing_postponed", "product_deprecated", "record_corrected"], description: "Filter by type of change" },
-            vendor: { type: "string", description: "Filter to one vendor" },
-            vendors: { type: "string", description: "Comma-separated vendor names" },
+            vendor: { type: "string", description: `Filter to one vendor. ${NAME_MATCH_SENTENCE}` },
+            vendors: { type: "string", description: `Comma-separated vendor names. ${NAME_MATCH_SENTENCE}` },
             include_expiring: { type: "boolean", description: "Include upcoming expirations (default: true)" },
             lookahead_days: { type: "number", description: "Days to look ahead for expirations (default: 30)" },
             response_format: { type: "string", enum: ["concise", "detailed"], description: "Response detail level. 'concise': vendor, change_type, date, summary only. 'detailed': full response (default)." },

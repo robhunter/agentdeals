@@ -32,6 +32,7 @@ import type { LinkUnreachable, ProductRole, ProductSubtypes, SourceCheck } from 
 import type { RefusedRead } from "./change-refusal.js";
 import { NOT_VERIFIED, theReadConfirmedThePrice, publishedTermsEvidence, termsTheVerdictWithholds, termsWithTheReasonWeCannotConfirmThem, unconfirmedTermsFrom } from "./vendor-verdict.js";
 import { SINCE_DEFAULT_SENTENCE } from "./change-window.js";
+import { NAME_MATCH_SENTENCE } from "./name-match.js";
 
 function mcpError(msg: string) {
   return {
@@ -294,9 +295,9 @@ export function createServer(): McpServer {
       inputSchema: {
         since: z.string().optional().describe(`ISO date (YYYY-MM-DD). ${SINCE_DEFAULT_SENTENCE}`),
         change_type: z.enum(["free_tier_removed", "limits_reduced", "restriction", "limits_increased", "new_free_tier", "new_tier", "pricing_restructured", "open_source_killed", "pricing_model_change", "startup_program_expanded", "pricing_postponed", "product_deprecated", "rebranded", "record_corrected"]).optional().describe("Filter by type of change"),
-        vendor: z.string().optional().describe("Filter to one vendor (case-insensitive)"),
-        vendors: z.string().optional().describe("Comma-separated vendor names to filter (e.g. 'Vercel,Supabase'). When provided with categories, returns personalized results with advisory section."),
-        categories: z.string().optional().describe("Comma-separated category names to filter (e.g. 'Database,Cloud Hosting'). Case-insensitive partial match."),
+        vendor: z.string().optional().describe(`Filter to one vendor. ${NAME_MATCH_SENTENCE}`),
+        vendors: z.string().optional().describe(`Comma-separated vendor names to filter (e.g. 'Vercel,Supabase'). When provided with categories, returns personalized results with advisory section. ${NAME_MATCH_SENTENCE}`),
+        categories: z.string().optional().describe(`Comma-separated category names to filter (e.g. 'Database,Cloud Hosting'). ${NAME_MATCH_SENTENCE}`),
         include_expiring: z.boolean().optional().describe("Include upcoming expirations (default: true)"),
         include_retracted: z.boolean().optional().describe(INCLUDE_RETRACTED_ACCEPTS),
         include_index_housekeeping: z.boolean().optional().describe(INCLUDE_INDEX_HOUSEKEEPING_ACCEPTS),
