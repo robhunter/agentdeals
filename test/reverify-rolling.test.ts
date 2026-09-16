@@ -725,6 +725,45 @@ describe("a page that answered the last reading with nothing waits a turn", () =
     assert.strictEqual(result.liveQueueLength, 6);
   });
 
+  it("defers no record nobody has checked, because nothing is known about its page", () => {
+    const unchecked: any = {
+      vendor: "Unchecked",
+      url: "https://unchecked.example/pricing",
+      description: "Unchecked free tier",
+      verifiedDate: dayBefore(30),
+    };
+    const offers = [unchecked, offer("Priced", SOURCE_CHECK_OK, 30)];
+    assert.deepStrictEqual(order(offers, 2), ["Unchecked", "Priced"]);
+    assert.strictEqual(pickOldestEntries(offers, 2, NOW).deferredATurn, 0);
+  });
+
+  it("leaves the quarantine retry order on age alone", () => {
+    const live = Array.from({ length: 100 }, (_, i) => offer(`Live${i}`, SOURCE_CHECK_OK, 1));
+    const quarantined = [
+      offer("OlderEmpty", SOURCE_CHECK_NO_TERMS, 30),
+      offer("OlderEmptyToo", SOURCE_CHECK_NO_TERMS, 30),
+      offer("NewerPriced", SOURCE_CHECK_OK, 25),
+      offer("NewerPricedToo", SOURCE_CHECK_OK, 25),
+    ];
+    const state = new Map();
+    for (const row of quarantined) {
+      const readDaysAgo = row.vendor.startsWith("Older") ? 30 : 25;
+      for (let i = 0; i < QUARANTINE_AFTER_FAILURES; i++) {
+        recordAttempts(state, [{ vendor: row.vendor, url: row.url, outcome: ATTEMPT_FETCH_FAILED }],
+          new Date(NOW.getTime() - (readDaysAgo + QUARANTINE_AFTER_FAILURES - i) * DAY));
+      }
+    }
+    const result = pickOldestEntries([...quarantined, ...live], 10, NOW, { verificationState: state });
+    assert.strictEqual(result.quarantineDue, 4);
+    assert.strictEqual(result.retriedFromQuarantine, 2);
+    assert.ok(result.turnDays > 5, `a turn of ${result.turnDays} days decides nothing here`);
+    const names = new Set(quarantined.map((row) => row.vendor));
+    const retried = result.picked
+      .map((entry: any) => entry.offer.vendor)
+      .filter((vendor: string) => names.has(vendor));
+    assert.deepStrictEqual(retried.sort(), ["OlderEmpty", "OlderEmptyToo"]);
+  });
+
   it("states the rule and the turn it used in the run's own summary", () => {
     const lines = summaryLines(
       { verified: 0, flagged: 0, recorded: [], attempts: [] },

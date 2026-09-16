@@ -96,7 +96,7 @@ console.log(`Simulated ${RUNS} runs at limit ${LIMIT}; ${before.budget} drawn fr
   + `quarantine retry budget. One turn of the queue = ${after.turn} days.\n`);
 
 console.log("AC-3 — the cost, in days since a record was last drawn, after the simulated rotation:");
-for (const [label, sim] of [["by age alone (today's order)", before], ["with the deferral", after]]) {
+for (const [label, sim] of [["by age alone", before], ["with the deferral", after]]) {
   const all = ageProfile(sim.rows);
   const drawn = ageProfile(sim.rows.filter((r) => !r.deferred));
   const held = ageProfile(sim.rows.filter((r) => r.deferred));
@@ -163,9 +163,10 @@ for (const pair of placeable) {
 }
 console.log(`  ${placeable.length} of ${pairs.length} pairs name a vendor this index holds a record for.`);
 console.log(`  by age alone:                      ${beforeHits} of ${placeable.length}`);
-console.log(`  under the rule this issue asks for (a change recorded within ${RECENCY_N} days draws the vendor `
-  + `ahead): ${recencyHits} of ${placeable.length}`);
-console.log(`  with the deferral this branch ships: ${afterHits} of ${placeable.length}`);
+console.log(`  with a vendor drawn ahead for ${RECENCY_N} days after a change is recorded for it: `
+  + `${recencyHits} of ${placeable.length}`);
+console.log(`  with a page that answered its last reading with nothing deferred a turn: `
+  + `${afterHits} of ${placeable.length}`);
 const deferredPairs = placeable.filter((p) => held.get(p.vendor)?.deferred);
 console.log(`  ${deferredPairs.length} of those ${placeable.length} vendors cite a page that answered its last `
   + `reading with nothing, so re-reading it sooner could not have found the second change either.`);
