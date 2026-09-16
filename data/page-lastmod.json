@@ -2793,8 +2793,8 @@
       "changed": "2026-09-15"
     },
     "/digest/2026-w15": {
-      "hash": "3e8c6a2c49e9e3d3",
-      "changed": "2026-09-15"
+      "hash": "b57cd123ec54d092",
+      "changed": "2026-09-16"
     },
     "/digest/2026-w16": {
       "hash": "2cea9fc3dd7012a7",
@@ -2963,7 +2963,7 @@
       "changed": "2026-09-15"
     },
     "/free-tier-risk": {
-      "hash": "a67417c80e4c1b93",
+      "hash": "2507dda335b4e618",
       "changed": "2026-09-16"
     },
     "/free-tier-tracker": {
@@ -3122,8 +3122,8 @@
       "changed": "2026-09-12"
     },
     "/pricing-changes": {
-      "hash": "199c5f58b6295cca",
-      "changed": "2026-09-15"
+      "hash": "80b24abcf04e573d",
+      "changed": "2026-09-16"
     },
     "/privacy": {
       "hash": "a45ec77d1237ce8c",
@@ -3138,8 +3138,8 @@
       "changed": "2026-09-15"
     },
     "/q2-pricing-preview-2026": {
-      "hash": "56d121f6228d1001",
-      "changed": "2026-09-15"
+      "hash": "e300559e4a56522b",
+      "changed": "2026-09-16"
     },
     "/railway-vs-render": {
       "hash": "5286f11cb28378a1",
@@ -3154,8 +3154,8 @@
       "changed": "2026-09-12"
     },
     "/reports": {
-      "hash": "092a5d1b2e299d1a",
-      "changed": "2026-09-15"
+      "hash": "9f17659a55b097d8",
+      "changed": "2026-09-16"
     },
     "/reports/2022-11": {
       "hash": "f69ca4f64d1a4292",
@@ -3230,8 +3230,8 @@
       "changed": "2026-09-15"
     },
     "/reports/2026-04": {
-      "hash": "aec83073295a43c1",
-      "changed": "2026-09-15"
+      "hash": "f8214ba543039786",
+      "changed": "2026-09-16"
     },
     "/reports/2026-05": {
       "hash": "a25c23d47779b75f",
@@ -3309,8 +3309,8 @@
       "changed": "2026-09-15"
     },
     "/state-of-free-tiers": {
-      "hash": "f52b42b29fe49558",
-      "changed": "2026-09-15"
+      "hash": "e157f22a03c18e2b",
+      "changed": "2026-09-16"
     },
     "/storage-alternatives": {
       "hash": "fc5a3028a7ac6096",
