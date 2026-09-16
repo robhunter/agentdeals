@@ -5,7 +5,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { getCategories, loadDealChanges } from "../dist/data.js";
 import { trackedChanges } from "../dist/change-census.js";
-import { resolveCategoryName } from "../dist/category-scope.js";
+import { CATEGORY_ALIASES, CHANGE_LOG_CATEGORY_NAMES, resolveChangeCategory } from "../dist/category-scope.js";
 import { isOurOwnBookkeeping } from "../dist/vendor-verdict.js";
 import { NEGATIVE_CHANGE_TYPES, POSITIVE_CHANGE_TYPES } from "../dist/change-direction.js";
 import { toSlug } from "../dist/slug.js";
@@ -24,8 +24,8 @@ describe("the change log files every record under a category we publish", () => 
     const used = [...new Set(loadDealChanges().map((c: { category: string }) => c.category))];
     assertPopulationFloor(used.length, 40, "category names the change log uses");
     const unresolved = used
-      .filter((name) => !published.has(resolveCategoryName(name)))
-      .map((name) => `${name} resolves to ${resolveCategoryName(name)}`);
+      .filter((name) => !published.has(resolveChangeCategory(name)))
+      .map((name) => `${name} resolves to ${resolveChangeCategory(name)}`);
     assert.deepStrictEqual(unresolved, []);
   });
 
@@ -39,10 +39,20 @@ describe("the change log files every record under a category we publish", () => 
     assert.deepStrictEqual(shared, []);
   });
 
+  it("points every declared name at a category we publish", () => {
+    const published = publishedCategories();
+    const declared = Object.entries({ ...CATEGORY_ALIASES, ...CHANGE_LOG_CATEGORY_NAMES }) as Array<[string, string]>;
+    assert.ok(declared.length > 0, "nothing is declared, so the mapping proves nothing");
+    const broken = declared
+      .filter(([from, to]) => !published.has(to) || published.has(from))
+      .map(([from, to]) => `${from} -> ${to}`);
+    assert.deepStrictEqual(broken, []);
+  });
+
   it("sends two spellings of one category to one slug and one published name", () => {
     assert.strictEqual(toSlug("AI/ML"), toSlug("AI / ML"));
-    assert.strictEqual(resolveCategoryName("AI/ML"), resolveCategoryName("AI / ML"));
-    assert.ok(publishedCategories().has(resolveCategoryName("AI/ML")));
+    assert.strictEqual(resolveChangeCategory("AI/ML"), resolveChangeCategory("AI / ML"));
+    assert.ok(publishedCategories().has(resolveChangeCategory("AI/ML")));
   });
 });
 
@@ -108,6 +118,24 @@ describe("every trends row lands on the page it promised", () => {
     assert.deepStrictEqual(disagreed, []);
   });
 
+  it("answers a category= filter on an alias the way it answers the name it resolves to", async () => {
+    const renames = Object.entries(CATEGORY_ALIASES) as Array<[string, string]>;
+    assert.ok(renames.length > 0, "no category has been renamed, so the agreement proves nothing");
+    const doors = ["/api/offers?category=", "/api/newest?since=2020-01-01&limit=50&category=", "/api/agent-payments?category="];
+    const refused: string[] = [];
+    for (const [renamed, published] of renames) {
+      for (const door of doors) {
+        const underOldName = await fetch(`${base}${door}${encodeURIComponent(renamed)}`);
+        const underNewName = await fetch(`${base}${door}${encodeURIComponent(published)}`);
+        assert.strictEqual(underOldName.status, 200, `${door}${renamed} answered ${underOldName.status}`);
+        assert.strictEqual(underNewName.status, 200, `${door}${published} answered ${underNewName.status}`);
+        const [a, b] = [await underOldName.text(), await underNewName.text()];
+        if (a !== b) refused.push(`${door}: ${renamed} answers differently from ${published}`);
+      }
+    }
+    assert.deepStrictEqual(refused, []);
+  });
+
   it("gives one row to each category and counts every record the site tracks", async () => {
     const rows = await rowsOnTheIndex();
     const published = publishedCategories();
@@ -125,11 +153,11 @@ describe("every trends row lands on the page it promised", () => {
     const summed = rows.reduce((total, r) => total + r.changes, 0);
     assert.strictEqual(summed, trackedChanges(loadDealChanges()).length - corrections.length);
     for (const correction of corrections) {
-      const category = resolveCategoryName((correction as { category: string }).category);
+      const category = resolveChangeCategory((correction as { category: string }).category);
       const row = rows.find((r) => r.category === category);
       assert.ok(row, `${category} carries a correction and has no row`);
       const counted = countedByATrendPage().filter(
-        (c: { category: string }) => resolveCategoryName(c.category) === category,
+        (c: { category: string }) => resolveChangeCategory(c.category) === category,
       ).length;
       assert.strictEqual(row!.changes, counted);
     }
@@ -140,7 +168,7 @@ describe("every trends row lands on the page it promised", () => {
     const ahead = countedByATrendPage().filter((c: { date: string }) => c.date > asOf);
     assert.ok(ahead.length > 0, "nothing is dated ahead of today, so the partition proves nothing");
     for (const change of ahead) {
-      const slug = toSlug(resolveCategoryName((change as { category: string }).category));
+      const slug = toSlug(resolveChangeCategory((change as { category: string }).category));
       const html = await (await fetch(`${base}/trends/${slug}`)).text();
       const history = html.split("<h2>Pricing Change Timeline</h2>")[1] ?? "";
       assert.ok(
@@ -203,7 +231,7 @@ describe("the category risk heatmap counts the population its caption names", ()
     const wrong: string[] = [];
     for (const bar of bars) {
       const mine = population.filter(
-        (c: { category: string }) => resolveCategoryName(c.category) === bar.category,
+        (c: { category: string }) => resolveChangeCategory(c.category) === bar.category,
       );
       const negative = mine.filter((c: { change_type: string }) => NEGATIVE_CHANGE_TYPES.has(c.change_type)).length;
       const positive = mine.filter((c: { change_type: string }) => POSITIVE_CHANGE_TYPES.has(c.change_type)).length;
@@ -232,7 +260,7 @@ describe("the category risk heatmap counts the population its caption names", ()
     assert.ok(emailRecords > 0, "no record is filed under Email, so the separation proves nothing");
     assert.strictEqual(named("Email")!.total, emailRecords);
     const eitherBucket = population.filter((c: { category: string }) =>
-      ["AI / ML", "Email"].includes(resolveCategoryName(c.category)),
+      ["AI / ML", "Email"].includes(resolveChangeCategory(c.category)),
     ).length;
     assert.strictEqual(named("AI / ML")!.total + named("Email")!.total, eitherBucket);
     assert.notStrictEqual(named("AI / ML")!.total, eitherBucket);

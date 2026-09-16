@@ -1463,7 +1463,7 @@ export function getNewestDeals(params: {
   let results = loadOffers().filter((o) => o.verifiedDate >= sinceDate);
 
   if (params.category) {
-    const lowerCat = params.category.toLowerCase();
+    const lowerCat = resolveCategoryName(params.category).toLowerCase();
     results = results.filter((o) => o.category.toLowerCase() === lowerCat);
   }
 

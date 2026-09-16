@@ -367,6 +367,9 @@ export const CATEGORY_SCOPES: Record<string, CategoryScope> = {
 
 export const CATEGORY_ALIASES: Record<string, string> = {
   "Startup Programs": "Startup Perks",
+};
+
+export const CHANGE_LOG_CATEGORY_NAMES: Record<string, string> = {
   "AI/ML": "AI / ML",
   "AI/ML APIs": "AI / ML",
   "APIs": "Dev Utilities",
@@ -414,6 +417,10 @@ export type CategoryState = "live" | "retired" | "absent";
 
 export function resolveCategoryName(name: string): string {
   return CATEGORY_ALIASES[name] ?? name;
+}
+
+export function resolveChangeCategory(name: string): string {
+  return CHANGE_LOG_CATEGORY_NAMES[name] ?? resolveCategoryName(name);
 }
 
 export function categoryState(name: string, liveNames: ReadonlySet<string>): CategoryState {

@@ -21,7 +21,7 @@ import { buildDailyRollup, readRollups, coverageOf, ROLLUP_DATE_PATTERN } from "
 import { configureVendorSeries, recordVendorRequest, flushVendorSeries, readVendorSeries, vendorSeriesGauge, vendorExportAuthorized, isSeriesDate, seriesDateRange, VENDOR_SERIES_PATH, VENDOR_SERIES_RETENTION_DAYS, VENDOR_SERIES_NOTES } from "./vendor-series.js";
 import { openapiSpec } from "./openapi.js";
 import { AGENT_CARD_PATHS, OPENAPI_ALIAS_PATHS, OPENAPI_CANONICAL_PATH, OPENAPI_YAML_PATH, serviceDescription } from "./agent-card.js";
-import { CATEGORY_ALIASES, CATEGORY_RETIREMENTS, EXAMPLE_MEMBERS_BASIS, buildCategoryDirectory, categoryHolds, familySiblings, publishedScopeFor, resolveCategoryName, retiredCategoryNames, retirementFor, scopeFor } from "./category-scope.js";
+import { CATEGORY_ALIASES, CATEGORY_RETIREMENTS, CHANGE_LOG_CATEGORY_NAMES, EXAMPLE_MEMBERS_BASIS, buildCategoryDirectory, categoryHolds, familySiblings, publishedScopeFor, resolveCategoryName, resolveChangeCategory, retiredCategoryNames, retirementFor, scopeFor } from "./category-scope.js";
 import { retiredCategoryDescription, retiredCategoryNoticeHtml, retiredCategoryTitle } from "./category-retirement.js";
 import { LINK_GRACE_DAYS, unreachableNoticeForUrl } from "./link-health.js";
 import { offerEnded, offerRetired, recordedTierSentence, endedHeadline, endedHistorySentence, endedReliabilitySentence, endedEmptyChangeHistorySentence, detailForEndedOffer, noLiveRecordUnderThatNameSentence, ENDED_BADGE_LABEL, ENDED_SINCE_CHANGES_SENTENCE, type OfferTierAndUrl } from "./retirement.js";
@@ -23332,7 +23332,7 @@ function buildFreeTierRiskPage(): string {
 
   const categoryMap = new Map<string, { total: number; negative: number; positive: number }>();
   for (const dc of trackedHere) {
-    const cat = resolveCategoryName(dc.category);
+    const cat = resolveChangeCategory(dc.category);
     const entry = categoryMap.get(cat) ?? { total: 0, negative: 0, positive: 0 };
     entry.total++;
     if (negativeTypes.has(dc.change_type)) entry.negative++;
@@ -23345,7 +23345,7 @@ function buildFreeTierRiskPage(): string {
   const heavilyNegative = heatmapData.filter(h => h.pctNeg >= 80);
   const heaviestNegative = heavilyNegative.slice(0, 3).map(h => h.category);
 
-  const changeMonths = monthlyChangeSeries(trackedHere);
+  const changeMonths = monthlyChangeSeries(changesInForce);
   const monthlyChanges = new Map([...changeMonths.effective].map(([month, records]) => [month, records.length]));
   const discoveryMonths = [...changeMonths.discovered].map(([month, records]) => [month, records.length] as const);
   const discoveredTotal = discoveryMonths.reduce((sum, [, count]) => sum + count, 0);
@@ -52703,7 +52703,7 @@ function buildTrendsIndexPage(): string {
 
   const byCat = new Map<string, typeof allChanges>();
   for (const c of vendorMade) {
-    const name = resolveCategoryName(c.category);
+    const name = resolveChangeCategory(c.category);
     if (!byCat.has(name)) byCat.set(name, []);
     byCat.get(name)!.push(c);
   }
@@ -52812,7 +52812,7 @@ function buildTrendsPage(slug: string): string | null {
   if (!categoryName) return null;
 
   const allChanges = loadDealChanges();
-  const catChanges = allChanges.filter(c => resolveCategoryName(c.category) === categoryName).sort((a, b) => b.date.localeCompare(a.date));
+  const catChanges = allChanges.filter(c => resolveChangeCategory(c.category) === categoryName).sort((a, b) => b.date.localeCompare(a.date));
   const catOffers = offers.filter(o => o.category === categoryName);
   const enriched = enrichOffers(catOffers);
 
@@ -54790,7 +54790,7 @@ const dispatchRequest = async (req: IncomingMessage, res: ServerResponse) => {
       filtered = filtered.filter(o => o.payment_protocols!.some(p => p.protocol.toLowerCase() === lp));
     }
     if (categoryFilter) {
-      const lc = categoryFilter.toLowerCase();
+      const lc = resolveCategoryName(categoryFilter).toLowerCase();
       filtered = filtered.filter(o => o.category.toLowerCase() === lc);
     }
 
@@ -55934,9 +55934,9 @@ ${catList}
     res.end(buildTrendsIndexPage());
   } else if (url.pathname.startsWith("/trends/") && isGetOrHead) {
     const slug = url.pathname.slice("/trends/".length).replace(/\/$/, "");
-    const aliasName = Object.keys(CATEGORY_ALIASES).find(name => toSlug(name) === slug);
-    if (aliasName && !categorySlugMap.has(slug)) {
-      res.writeHead(301, { Location: `/trends/${toSlug(CATEGORY_ALIASES[aliasName])}` });
+    const otherName = Object.keys({ ...CATEGORY_ALIASES, ...CHANGE_LOG_CATEGORY_NAMES }).find(name => toSlug(name) === slug);
+    if (otherName && !categorySlugMap.has(slug)) {
+      res.writeHead(301, { Location: `/trends/${toSlug(resolveChangeCategory(otherName))}` });
       res.end();
       return;
     }
