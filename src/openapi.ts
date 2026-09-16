@@ -6,7 +6,7 @@ import { SIGNAL_EVENTS } from "./stats.js";
 import { SINCE_ACCEPTS } from "./since-parameter.js";
 import { DEFAULT_CHANGE_WINDOW_DAYS, SINCE_DEFAULT_SENTENCE } from "./change-window.js";
 import { CHANGE_STANDINGS, INCLUDE_RETRACTED_ACCEPTS } from "./change-resolution.js";
-import { CHANGE_SLICES, CENSUS_NOTE, INCLUDE_INDEX_HOUSEKEEPING_ACCEPTS, TRACKED_CHANGE_RULE_PATH, TRACKED_CHANGE_RULE_SENTENCE } from "./change-census.js";
+import { CHANGE_SLICES, CENSUS_NOTE, INCLUDE_INDEX_HOUSEKEEPING_ACCEPTS, INDEX_HOUSEKEEPING_REPORTS, TRACKED_CHANGE_RULE_PATH, TRACKED_CHANGE_RULE_SENTENCE } from "./change-census.js";
 
 export const CHANGE_TYPES: readonly string[] = Object.keys(CHANGE_DIRECTION);
 
@@ -202,7 +202,7 @@ const DOCUMENTED_OPERATIONS: Record<string, Record<string, any>> = {
                   include_retracted: { type: "boolean", description: "The value this response was built with, echoed back." },
                   retracted_excluded: { type: "integer", description: "How many records matched your query and were withheld for carrying standing 'retracted'. Zero when include_retracted is true, because nothing was withheld. Read this before comparing a count against an earlier one." },
                   include_index_housekeeping: { type: "boolean", description: "The value this response was built with, echoed back." },
-                  index_housekeeping_excluded: { type: "integer", description: "How many records matched your query and were withheld for carrying reports 'our_index'. Zero when include_index_housekeeping is true, because nothing was withheld. Read this before comparing a count against an earlier one." },
+                  index_housekeeping_excluded: { type: "integer", description: `How many records matched your query and were withheld for carrying reports '${INDEX_HOUSEKEEPING_REPORTS}'. Zero when include_index_housekeeping is true, because nothing was withheld. Read this before comparing a count against an earlier one.` },
                   date_window: { $ref: "#/components/schemas/ChangeDateWindow" },
                   advisory: { type: "array", items: { $ref: "#/components/schemas/PublishedDealChange" }, description: `Top 3 high-impact changes outside your filter, drawn from the last ${DEFAULT_CHANGE_WINDOW_DAYS} days whatever date_window says — this block is what is worth knowing lately, so it stays recent even when your query searches the whole log. Never contains a retracted record, whatever include_retracted says.` },
                   summary: {
