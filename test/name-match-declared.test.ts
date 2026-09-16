@@ -200,18 +200,29 @@ describe("a name filter says what it matched (issue #1688)", () => {
       "a capped list stopped the counts adding to total",
     );
 
-    const named = served().find((c) => c.vendor);
-    assert.ok(named, "the change log names no vendor, so this control cannot run");
-    const both = getDealChanges(WHOLE_LOG, undefined, undefined, `${asked},${named.vendor}`);
+    const counts = new Map<string, number>();
+    for (const record of result.changes as Record[]) {
+      counts.set(record.vendor, (counts.get(record.vendor) ?? 0) + 1);
+    }
+    const ranked = [...counts.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
+    const smallest = { name: ranked[ranked.length - 1][0], records: ranked[ranked.length - 1][1] };
+    assert.ok(
+      ranked[0][1] > smallest.records,
+      `every name matching ${asked} holds the same number of records, so a list ordered by count could not drop this one`,
+    );
+
+    const both = getDealChanges(WHOLE_LOG, undefined, undefined, `${asked},${smallest.name}`);
     const bothFilter = soleFilter(both);
     assert.ok(
       bothFilter.matched_names_omitted > 0,
       "this request lists every name it matched, so a dropped exact match could not show here",
     );
-    assert.ok(
-      bothFilter.matched.some((m) => m.name === named.vendor && m.how === "exact"),
-      `vendors=${asked},${named.vendor} dropped the name the caller asked for to make room`,
+    assert.strictEqual(
+      bothFilter.matched[0].name,
+      smallest.name,
+      `vendors=${asked},${smallest.name} ranks the name the caller asked for below names they did not`,
     );
+    assert.strictEqual(bothFilter.matched[0].how, "exact");
   });
 
   it("describes both filters when a request names a vendor and a category", () => {
