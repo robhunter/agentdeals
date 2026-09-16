@@ -13,7 +13,24 @@ const PREDICATE = `  const standing = standingOf(offer);
   return standing !== null
     && standing.claim.states !== "ended"
     && standing.gate === null
+    && supersedingChangeFor(offer) === null
+    && !descriptionDeniesAFreeTier(offer.description);`;
+
+const WITHOUT_DENIAL = `  const standing = standingOf(offer);
+  return standing !== null
+    && standing.claim.states !== "ended"
+    && standing.gate === null
     && supersedingChangeFor(offer) === null;`;
+
+const HEDGE = `  const unconfirmed = unconfirmedTermsFor(offer);
+  if (!unconfirmed) return offer.tier;
+  const reason = unconfirmedTermsSentence(unconfirmed);
+  return describedAs.endsWith(reason) ? \`\${offer.tier} — \${reason}\` : offer.tier;`;
+
+const DENIAL_BODY = `  const sentences = sentencesOf(description ?? "");
+  const denying = new Set(sentences.filter(s => DENIES_A_FREE_TIER.test(s.text)).map(s => s.at));
+  if (denying.size === 0) return false;
+  return !sentences.some(s => !denying.has(s.at) && sentenceOffersSomethingFree(s.text));`;
 
 const MUTANTS = [
   ["every-node-is-priced-at-zero", "src/serve.ts", PREDICATE,
@@ -44,8 +61,28 @@ const MUTANTS = [
     "  const key = offer.vendor;\n  const cached = standingsByOffer.get(key);"],
 
   ["the-node-prices-a-tier-it-does-not-list", "src/serve.ts",
-    '      description: offer.tier,\n      ...(heldUntil ? { priceValidUntil: heldUntil } : {}),',
-    '      description: "Free",\n      ...(heldUntil ? { priceValidUntil: heldUntil } : {}),'],
+    '      name: offer.tier,\n      description: pricedTierDescription(offer, describedAs),',
+    '      name: "Free",\n      description: pricedTierDescription(offer, describedAs),'],
+
+  ["the-denial-half-is-dropped", "src/serve.ts", PREDICATE, WITHOUT_DENIAL],
+
+  ["a-denial-stands-even-where-another-sentence-offers-something-free",
+    "src/free-tier-record.ts", DENIAL_BODY,
+    '  return sentencesOf(description ?? "").some(s => DENIES_A_FREE_TIER.test(s.text));'],
+
+  ["the-denial-is-read-across-the-whole-description-at-once",
+    "src/free-tier-record.ts", DENIAL_BODY,
+    '  const text = description ?? "";\n  if (!DENIES_A_FREE_TIER.test(text)) return false;\n  return !sentenceOffersSomethingFree(text);'],
+
+  ["a-scoping-word-between-free-and-the-plan-is-not-read",
+    "src/free-tier-record.ts",
+    "`\\\\bno\\\\s+(?:${A_WORD_THAT_MODIFIES}\\\\s+){0,3}free\\\\s+(?:${A_WORD_THAT_MODIFIES}\\\\s+){0,2}${A_PLAN_WE_WOULD_PRICE}\\\\b`",
+    "`\\\\bno\\\\s+(?:${A_WORD_THAT_MODIFIES}\\\\s+){0,3}free\\\\s+${A_PLAN_WE_WOULD_PRICE}\\\\b`"],
+
+  ["the-price-is-never-hedged", "src/serve.ts", HEDGE, "  return offer.tier;"],
+
+  ["the-price-is-hedged-past-what-its-own-node-says", "src/serve.ts", HEDGE,
+    "  const unconfirmed = unconfirmedTermsFor(offer);\n  if (!unconfirmed) return offer.tier;\n  return `${offer.tier} — ${unconfirmedTermsSentence(unconfirmed)}`;"],
 
   ["the-price-is-dated-from-a-change-that-has-passed", "src/change-dates.ts",
     "    if (!c.date || c.date <= onDate) continue;",
@@ -56,8 +93,8 @@ const MUTANTS = [
     "  return true;"],
 
   ["a-comparison-page-takes-the-looser-rule", "src/serve.ts",
-    '          ...(free.states === "offered" ? freeTierOfferJsonLd(v) : {}),',
-    "          ...freeTierOfferJsonLd(v),"],
+    '            ...(free.states === "offered" ? freeTierOfferJsonLd(v, describedAs) : {}),',
+    "            ...freeTierOfferJsonLd(v, describedAs),"],
 ];
 
 function run(cmd, args) {

@@ -64,6 +64,7 @@ try {
 
   const byKind = new Map();
   let nodesTotal = 0, offersTotal = 0, offerBesideWithholding = 0;
+  let hedgedOffers = 0, offerSayingMoreThanItsNode = 0;
   const witnesses = [];
 
   for (const route of routes) {
@@ -82,10 +83,15 @@ try {
       if (withholds) held.withholdingNodes++;
       const priced = node.offers?.price === "0";
       if (priced) { held.offers++; offersTotal++; pageOffers++; }
+      if (priced && node.offers.description !== node.offers.name) {
+        hedgedOffers++;
+        const reason = node.offers.description.slice(`${node.offers.name} — `.length);
+        if (!(node.description ?? "").includes(reason)) offerSayingMoreThanItsNode++;
+      }
       if (priced && withholds) {
         held.offerBesideWithholding++;
         offerBesideWithholding++;
-        if (witnesses.length < 12) witnesses.push({ route, name: node.name, tier: node.offers.description });
+        if (witnesses.length < 12) witnesses.push({ route, name: node.name, tier: node.offers.name });
       }
     }
     if (pageOffers > 0) held.pagesWithOffers++;
@@ -98,6 +104,8 @@ try {
     console.log(`${kind.padEnd(22)}${String(h.pages).padStart(5)}${String(h.pagesWithOffers).padStart(9)}${String(h.nodes).padStart(21)}${String(h.offers).padStart(11)}${String(h.withholdingNodes).padStart(19)}${String(h.offerBesideWithholding).padStart(38)}`);
   }
   console.log(`\ntotal nodes ${nodesTotal} · $0 Offers ${offersTotal} · $0 beside a withholding description ${offerBesideWithholding}`);
+  console.log(`$0 Offers carrying the reason we cannot confirm the terms ${hedgedOffers}`
+    + ` · of those, saying more than the node's own description ${offerSayingMoreThanItsNode}`);
   for (const w of witnesses) console.log(`  witness: ${w.route} | ${w.name} | ${w.tier}`);
 } finally {
   proc.kill("SIGTERM");

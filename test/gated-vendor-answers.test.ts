@@ -11,6 +11,7 @@ const { vendorSlugMap } = await import("../dist/vendor-slug.js");
 const { offerEnded } = await import("../dist/retirement.js");
 const { STORED_TERMS_WITHHELD_PHRASE, supersededTermsNotice, supersedingChange } = await import("../dist/superseded-description.js");
 const { qualityBudget } = await import("../dist/page-reviews.js");
+const { descriptionDeniesAFreeTier } = await import("../dist/free-tier-record.js");
 
 type Offer = import("../src/types.ts").Offer;
 type DealChange = import("../src/types.ts").DealChange;
@@ -691,10 +692,18 @@ describe("the same page an ungated record renders is unchanged", () => {
   });
 
   it("still publishes a zero-price Offer", () => {
-    const subjects = publishingItsTerms().filter(p => !p.freeTierEnded);
+    const subjects = publishingItsTerms()
+      .filter(p => !p.freeTierEnded && !descriptionDeniesAFreeTier(p.primary.description));
     assertPopulationFloor(subjects.length, 700, "ungated pages publish terms for a tier we do not say has ended");
     const missing = subjects.filter(p => offerBlock(p)?.price !== "0").map(p => p.slug);
     assert.deepStrictEqual(missing.slice(0, 20), [], "ungated pages that stopped publishing a zero-price Offer");
+  });
+
+  it("publishes none where our own stored description denies a free tier", () => {
+    const denying = publishingItsTerms().filter(p => descriptionDeniesAFreeTier(p.primary.description));
+    assert.ok(denying.length > 0, "no ungated page publishing its terms denies a free tier in the same description");
+    const offering = denying.filter(p => offerBlock(p) !== undefined).map(p => p.slug);
+    assert.deepStrictEqual(offering.slice(0, 20), [], "pages offering a price of zero beside a description denying one");
   });
 
   it("publishes none where we say the free tier has ended", () => {

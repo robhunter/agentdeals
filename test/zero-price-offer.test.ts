@@ -7,9 +7,16 @@ import { fileURLToPath } from "node:url";
 import { assertPopulationFloor } from "./population-floor.ts";
 
 const { toSlug } = await import("../dist/slug.js");
+const { descriptionDeniesAFreeTier } = await import("../dist/free-tier-record.js");
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(__dirname, "..");
+
+const storedDescriptions = new Map<string, string>(
+  (JSON.parse(readFileSync(path.join(REPO, "data", "index.json"), "utf-8")).offers as
+    { vendor: string; tier: string; description: string }[])
+    .map(o => [`${o.vendor}|${o.tier}`, o.description ?? ""]),
+);
 
 interface PublishedOffer {
   vendor: string;
@@ -27,6 +34,7 @@ interface Node {
   description: string;
   pricedAtZero: boolean;
   tier: string | null;
+  offerDescription: string | null;
 }
 
 function startServer(): Promise<{ proc: ChildProcess; port: number }> {
@@ -56,7 +64,8 @@ function softwareNodes(route: string, html: string): Node[] {
         vendor: record.name,
         description: typeof record.description === "string" ? record.description : "",
         pricedAtZero: record.offers?.price === "0",
-        tier: typeof record.offers?.description === "string" ? record.offers.description : null,
+        tier: typeof record.offers?.name === "string" ? record.offers.name : null,
+        offerDescription: typeof record.offers?.description === "string" ? record.offers.description : null,
       });
     }
     Object.values(record).forEach(visit);
@@ -68,6 +77,14 @@ function softwareNodes(route: string, html: string): Node[] {
 }
 
 const WITHHOLDS_OUR_TERMS = /We are not publishing our stored .+ terms beside it/;
+
+function caveatCarriedBy(node: Node): string | null {
+  const stored = storedDescriptions.get(`${node.vendor}|${node.tier}`);
+  if (stored === undefined) return null;
+  if (node.description === stored) return "";
+  const closed = /[.!?…]$/.test(stored.trim()) ? stored : `${stored}.`;
+  return node.description.startsWith(`${closed} `) ? node.description.slice(closed.length + 1) : null;
+}
 
 const LISTING_PAGES = [
   "/best/free-testing", "/best/free-monitoring", "/best/free-ai-ml", "/best/free-search",
@@ -208,6 +225,43 @@ describe("#1724 structured data prices a tier at zero only where we state that t
     assert.deepStrictEqual(pricedOnlyHere.map(n => `${n.route} ${n.vendor}`).slice(0, 25), []);
     const heldBackHere = compared.filter(n => !n.pricedAtZero && onVendorPage.get(n.vendor)).length;
     assertPopulationFloor(heldBackHere, 18, "comparison nodes withhold a price the vendor page publishes");
+  });
+
+  it("carries the reason we cannot confirm the terms into the Offer it prices", () => {
+    const readable = nodes
+      .filter(n => n.pricedAtZero && n.tier !== null)
+      .map(n => ({ node: n, caveat: caveatCarriedBy(n) }))
+      .filter((x): x is { node: Node; caveat: string } => x.caveat !== null);
+    assertPopulationFloor(readable.length, 400, "priced nodes publish a description we can read against the record");
+
+    const hedged = readable.filter(x => x.caveat !== "");
+    assertPopulationFloor(hedged.length, 200, "priced nodes say why we cannot confirm the terms");
+    assert.deepStrictEqual(
+      hedged.filter(x => x.node.offerDescription !== `${x.node.tier} — ${x.caveat}`)
+        .map(x => `${x.node.route} ${x.node.vendor}: ${x.node.offerDescription}`).slice(0, 25),
+      [],
+    );
+    assert.deepStrictEqual(
+      readable.filter(x => x.caveat === "" && x.node.offerDescription !== x.node.tier)
+        .map(x => `${x.node.route} ${x.node.vendor}: ${x.node.offerDescription}`).slice(0, 25),
+      [],
+    );
+  });
+
+  it("publishes no price of zero where our own stored description denies a free tier", () => {
+    const denying = new Set(
+      [...storedDescriptions].filter(([, text]) => descriptionDeniesAFreeTier(text)).map(([key]) => key));
+    assertPopulationFloor(denying.size, 10, "stored descriptions deny a free tier");
+    const naming = nodesNaming(denying);
+    assertPopulationFloor(naming.length, 2, "nodes name an offer whose description denies a free tier");
+    assert.deepStrictEqual(pricedAmong(denying).slice(0, 25), []);
+  });
+
+  it("still prices a tier whose description denies a free tier of another kind", () => {
+    for (const vendor of ["Koyeb", "Crowdin"]) {
+      const priced = nodes.filter(n => n.vendor === vendor && n.pricedAtZero);
+      assert.ok(priced.length > 0, `no surface prices ${vendor}, whose description names a free plan of its own`);
+    }
   });
 
   it("still prices the tiers we do state are free", () => {
