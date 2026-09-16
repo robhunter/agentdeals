@@ -51,45 +51,49 @@ function fieldValue(record: NameBearingRecord, field: NameMatchField): string {
   return (field === "vendor" ? record.vendor : record.category) || "";
 }
 
+function joined(parts: readonly string[], last: string): string {
+  return parts.length === 1 ? parts[0] : `${parts.slice(0, -1).join(", ")} ${last} ${parts[parts.length - 1]}`;
+}
+
 function listForNote(names: readonly string[]): string {
   const shown = names.slice(0, MAX_NAMES_IN_NOTE);
   const rest = names.length - shown.length;
-  const joined =
-    shown.length === 1
-      ? shown[0]
-      : `${shown.slice(0, -1).join(", ")} and ${shown[shown.length - 1]}`;
-  return rest > 0 ? `${joined} and ${rest} more` : joined;
+  if (rest === 0) return joined(shown, "and");
+  return `${shown.join(", ")} and ${rest} more`;
+}
+
+function askedFor(field: NameMatchField, terms: readonly string[]): string {
+  return `You asked for a ${field} matching ${joined(terms.map((t) => `"${t}"`), "or")}.`;
 }
 
 function filterNote(
-  parameter: NameMatchParameter,
   field: NameMatchField,
   asked: readonly string[],
   own: number,
   foreign: number,
   foreignNames: readonly string[],
 ): string {
-  const request = `${parameter}=${asked.join(",")}`;
+  const request = askedFor(field, asked);
   const total = own + foreign;
   if (total === 0) {
-    return `You asked for ${request}. No record matched, under that ${field} name or any other containing it.`;
+    return `${request} No record matched, under that ${field} name or any other containing it.`;
   }
   if (foreign === 0) {
     return (
-      `You asked for ${request}. All ${total} of these records are under a ${field} name you asked for. `
+      `${request} All ${total} of these records are under a ${field} name you asked for. `
       + `This filter matches any ${field} whose name contains your text, so a longer name would have been returned `
       + `here too; none is in the change log today.`
     );
   }
   if (own === 0) {
     return (
-      `You asked for ${request}. Not one of these ${total} records is under a ${field} name you asked for — `
+      `${request} Not one of these ${total} records is under a ${field} name you asked for — `
       + `every one is under ${listForNote(foreignNames)}, returned because this filter matches any ${field} whose `
       + `name contains your text.`
     );
   }
   return (
-    `You asked for ${request}. ${own} of these ${total} records are under a ${field} name you asked for; the other `
+    `${request} ${own} of these ${total} records are under a ${field} name you asked for; the other `
     + `${foreign} are under ${listForNote(foreignNames)}, returned because this filter matches any ${field} whose `
     + `name contains your text.`
   );
@@ -131,7 +135,6 @@ function describeFilter(asked: AskedByName, records: readonly NameBearingRecord[
     records_under_a_name_you_asked_for: ownRecords,
     records_under_another_name: foreignRecords,
     note: filterNote(
-      asked.parameter,
       asked.field,
       asked.terms,
       ownRecords,

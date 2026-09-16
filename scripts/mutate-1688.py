@@ -57,6 +57,16 @@ MUTATIONS = {
         "        vendor: z.string().optional().describe(`Filter to one vendor. ${NAME_MATCH_SENTENCE}`),",
         '        vendor: z.string().optional().describe("Filter to one vendor (case-insensitive)"),',
     ),
+    "note-quotes-a-parameter-the-caller-may-not-have-sent": (
+        "src/name-match.ts",
+        "  const request = askedFor(field, asked);",
+        '  const request = `You asked for ${field}s=${asked.join(",")}.`;',
+    ),
+    "truncated-list-doubles-its-conjunction": (
+        "src/name-match.ts",
+        '  return `${shown.join(", ")} and ${rest} more`;',
+        '  return `${joined(shown, "and")} and ${rest} more`;',
+    ),
 }
 
 if len(sys.argv) < 2 or sys.argv[1] not in MUTATIONS:

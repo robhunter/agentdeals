@@ -182,6 +182,16 @@ describe("a name filter says what it matched (issue #1688)", () => {
     for (const match of foreign) {
       assert.ok(contains(match.name, "ai"), `categories=ai lists ${match.name}, which does not contain it`);
     }
+
+    const listed = filter.note.match(/every one is under (.+), returned because/);
+    assert.ok(listed, "the note does not list the categories it reached");
+    assert.ok(foreign.length > 6, `only ${foreign.length} categories contain "ai", so the note lists them all`);
+    assert.match(listed[1], / and \d+ more$/);
+    assert.strictEqual(
+      listed[1].split(" and ").length,
+      2,
+      `a truncated list reads its own conjunction twice: "${listed[1]}"`,
+    );
   });
 
   it("counts the names it could not list, and lists every name the caller asked for", () => {
@@ -240,6 +250,24 @@ describe("a name filter says what it matched (issue #1688)", () => {
         result.total,
       );
     }
+  });
+
+  it("quotes back the text the caller sent and no parameter name they may not have used", () => {
+    const alias = byCategory("ai");
+    const spelled = getDealChanges(WHOLE_LOG, undefined, undefined, undefined, "ai");
+    assert.strictEqual(soleFilter(alias).note, soleFilter(spelled).note);
+
+    let checked = 0;
+    for (const name of [...vendorNames(), "ai", "Pilot"]) {
+      const note = soleFilter(byVendor(name)).note;
+      assert.ok(
+        !/\b(vendor|vendors|category|categories)=/.test(note),
+        `the note for ${name} names a parameter, and /api/changes reads category and categories into one filter`,
+      );
+      assert.ok(note.includes(`"${name}"`), `the note for ${name} does not quote what the caller sent`);
+      checked++;
+    }
+    assertCoversPopulation(checked, vendorsTheChangeLogNames(), "notes read for the text they quote");
   });
 
   it("says no name filter ran when none did", () => {
