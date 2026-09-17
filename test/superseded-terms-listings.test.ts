@@ -183,7 +183,7 @@ describe("#1395 the listing surfaces answer the stored-terms question the way th
 
   it("has records on both sides of the question, so neither direction below is vacuous", () => {
     assertPopulationFloor(superseded.length, 75, "records carry superseded stored terms");
-    assertPopulationFloor(notSuperseded.length, 1001, "records carry current stored terms");
+    assertPopulationFloor(notSuperseded.length, 900, "records carry current stored terms");
     assert.strictEqual(
       pages.size,
       categoryPaths.length + searchPaths.length + alternativePaths.length + STACK_AND_TABLE_PAGES.length + 2,

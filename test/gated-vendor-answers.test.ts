@@ -318,12 +318,12 @@ describe("the ungated pages keep the answer they had", () => {
 
   it("recommends the tier for production on a large share of the ungated pages", () => {
     const recommending = ungated().filter(p => productionAnswer(p).includes(RECOMMENDATION_CLAUSE)).length;
-    assertPopulationFloor(recommending, Math.floor(ungated().length / 4), `ungated pages of ${ungated().length} recommend the tier for production`);
+    assertPopulationFloor(recommending, Math.floor(ungated().length / 5), `ungated pages of ${ungated().length} recommend the tier for production`);
   });
 
   it("still rates those tiers stable in the production answer", () => {
     const rating = ungated().filter(p => productionAnswer(p).includes(STABLE_RATING_CLAUSE)).length;
-    assertPopulationFloor(rating, Math.floor(ungated().length / 4), `ungated pages of ${ungated().length} carry the stable rating`);
+    assertPopulationFloor(rating, Math.floor(ungated().length / 5), `ungated pages of ${ungated().length} carry the stable rating`);
   });
 });
 

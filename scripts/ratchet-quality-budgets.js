@@ -1,5 +1,5 @@
 import { readFileSync, writeFileSync } from "node:fs";
-import { dirname, join, resolve } from "node:path";
+import { resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import {
   QUALITY_BUDGET_NAMES, aDataRunMayRaise, newestChangeBySlug, pageReviewsPath, parsePageReviews,
@@ -9,8 +9,7 @@ import { toSlug } from "../dist/vendor-slug.js";
 import { uncitedChangesAgainstBudget } from "../dist/change-reporting.js";
 import { passedWithoutRecordingAFinding } from "../dist/source-check.js";
 import { supersededCensus } from "../dist/superseded-census.js";
-
-const REPO = join(dirname(fileURLToPath(import.meta.url)), "..");
+import { loadDealChanges, loadOffers } from "../dist/data.js";
 
 const HELP = `Keep data/quality_budgets.json in step with what the shipped data measures.
 
@@ -33,6 +32,10 @@ fetched, not a regression in anything we ship. So this raises those three to wha
 measures, in the same commit as the data that moved them. Nothing outside a run of this script
 can raise them: a code change that widened the predicate would leave the measurement over the
 budget and the suite fails, which is the direction that carries information.
+
+Every budget is measured through the same loaders the server reads, not off the data files. A
+budget measured on a file the server transforms before publishing caps a population no reader
+ever sees, and it caps it in the loose direction.
 
 Usage: node scripts/ratchet-quality-budgets.js [options]
 
@@ -62,10 +65,10 @@ function parseArgs(argv) {
 
 export function measureBudgets(date) {
   const index = parsePageReviews(readFileSync(pageReviewsPath(), "utf-8"));
-  const changes = JSON.parse(readFileSync(join(REPO, "data", "deal_changes.json"), "utf-8")).changes;
+  const changes = loadDealChanges();
   const newest = newestChangeBySlug(changes, date, toSlug);
   const stale = staleFactPages(index.pages, date, slug => newest.get(slug) ?? null);
-  const offers = JSON.parse(readFileSync(join(REPO, "data", "index.json"), "utf-8")).offers ?? [];
+  const offers = loadOffers();
   return {
     stale_fact_pages: stale.length,
     unsourced_tier_a: unsourcedTierAPaths(index.pages).length,
