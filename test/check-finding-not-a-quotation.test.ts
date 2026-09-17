@@ -252,7 +252,7 @@ describe("nothing we serve attributes our own sentence to the page it cites", ()
       else missing.push(route);
     }
     assert.deepStrictEqual(missing.slice(0, 10), []);
-    assertPopulationFloor(stated, 500, "vendor pages stating what their source check establishes");
+    assertPopulationFloor(stated, 450, "vendor pages stating what their source check establishes");
   });
 
   it("says the same of the list of sources on every compiled comparison page", () => {

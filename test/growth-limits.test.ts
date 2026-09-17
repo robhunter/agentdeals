@@ -367,7 +367,7 @@ describe("a page whose last read we refused states neither a threshold nor an em
     for (const slug of ["refusedcorp", "equalcorp"]) {
       const res = await get(`/vendor/${slug}`);
       assert.equal(res.status, 200);
-      assert.match(res.body, /we are not rating this offer today/);
+      assert.match(res.body, /so we cannot confirm these terms and are not rating this offer today/);
     }
   });
 
