@@ -5,6 +5,7 @@ import { spawn, type ChildProcess } from "node:child_process";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import {
+  CANNOT_CONFIRM_THESE_TERMS,
   CHANGE_KIND_NOUN,
   narrowingSentence,
   publishedVendorLevel,
@@ -422,7 +423,7 @@ describe("vendor verdict — corpus invariant, computed offline", () => {
       if (named !== row.expected) {
         wrong.push(`${row.slug}: badge says ${row.expected}, verdict says ${named ?? "nothing"}`);
       }
-      if (row.withheld && !/cannot confirm the terms above/.test(row.sentence)) {
+      if (row.withheld && !row.sentence.includes(CANNOT_CONFIRM_THESE_TERMS)) {
         wrong.push(`${row.slug}: rates the vendor without saying we cannot confirm the terms we print`);
       }
     }

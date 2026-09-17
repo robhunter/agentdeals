@@ -43,7 +43,7 @@ import { withReviewByline } from "./page-byline.js";
 import { freshnessClaimFor, withFreshnessClaim } from "./page-freshness.js";
 import { UNGRADED_IMPACT_COLOR, changeImpactColor, changeImpactLabel, changeImpactWord, isChangeImpactLevel } from "./change-impact.js";
 import { COMPARED_SERVICES_PLACEHOLDER, appendToCompiledFigureSlots, fillComparedServicesCount, markCompiledFigures, recordsSinceCompiled, replaceTimelineRows, staticHalfOf, timelineRecordsFor, vendorForSubject, vendorSubjectsOnCompiledPage, type CompiledFigureSubject, type CompiledFigureVendor, type CompiledFigureVerdict, type CompiledPageRecord } from "./compiled-figures.js";
-import { CHECK_ESTABLISHES, CHECK_SCOPE_CLASS, NO_CATALOGUE_RECORD_SOURCE, citedSourcesListHtml, freeTierSourceOf, pageQuoteHtml, readClauseHtml, serviceSourceMarkerHtml, uncitedSourceTagHtml, withCitedSources, type CitedService, type FreeTierSource } from "./source-citation.js";
+import { CHECK_ESTABLISHES, CHECK_SCOPE_CLASS, NO_CATALOGUE_RECORD_SOURCE, citedSourcesListHtml, freeTierSourceOf, freeTierSourceWeMayCite, pageQuoteHtml, readClauseHtml, serviceSourceMarkerHtml, uncitedSourceTagHtml, withCitedSources, type CitedService, type FreeTierSource } from "./source-citation.js";
 import { vendorHistorySentence } from "./vendor-history.js";
 import { HETZNER_APRIL_CHANGES, HETZNER_CLOUD_PLANS, HETZNER_PRICES_READ, HETZNER_PRICE_SOURCE, HETZNER_SINGAPORE_EXAMPLE, cheapestOrderableHetznerPlan, hetznerEntryPriceClause, unorderableHetznerPlans } from "./hetzner-pricing.js";
 import { HUNDRED_GB_SCENARIO, HUNDRED_TB_SCENARIO, ONE_TO_ONE_SCENARIO, STORAGE_RATES_READ, STORAGE_SCALE_WORKLOADS, TEN_TO_ONE_SCENARIO, cheapestProviderAt, costAfterMonthlyEgressGrantFor, costliestProviderAt, egressAllowanceSentence, egressBillAfterMonthlyGrantFor, egressBillOnceOverAllowance, egressRatioWhereCostsMatch, fixedMonthlyGrantsSentence, monthlyEgressGrantGb, monthlyEgressGrantSentence, monthlyStorageCost, providersWithScalingEgressAllowance, rateCardFor, scaleCostFor } from "./storage-cost-model.js";
@@ -4999,7 +4999,7 @@ function buildVendorPage(slug: string): string | null {
   })();
 
   const freeTierSourceLine = (() => {
-    const source = freeTierSourceOf(primary);
+    const source = freeTierSourceWeMayCite(primary, reasonWeCannotConfirmFor(primary));
     if (!source.cited) return "";
     const read = readClauseHtml(
       source.readOn,
@@ -5344,6 +5344,11 @@ ${allCompareLinks.join("\n")}
     : "";
   const withUnconfirmedTermsCaveat = (terms: string) =>
     termsWeCannotConfirm ? withUnconfirmedTerms(terms, termsWeCannotConfirm) : terms;
+  const reasonARecordedEndingDoesNotAnswer = reasonWeCannotConfirmFor(primary);
+  const withTheReasonARecordedEndingLeaves = (terms: string) =>
+    reasonARecordedEndingDoesNotAnswer
+      ? withUnconfirmedTerms(terms, reasonARecordedEndingDoesNotAnswer)
+      : terms;
   const eligibilityConditionsSentence = primaryEligibilityConditions.length > 0
     ? ` Eligibility: ${primaryEligibilityConditions.join("; ")}.`
     : "";
@@ -5355,7 +5360,7 @@ ${allCompareLinks.join("\n")}
   const faqFreeAnswer = termsSuperseded
     ? `${gateSentencesBeforeTheTerms}${supersededTermsAnswer(vendorName, termsSuperseded)}`
     : retiredSentence
-    ? `${retiredSentence} ${storedTerms}`
+    ? `${retiredSentence} ${withTheReasonARecordedEndingLeaves(storedTerms)}`
     : primaryGateBeyondEligibility
     ? `${eligibilityGateSentence}${primaryGateBeyondEligibility.reason} ${termsWeCannotConfirm ? `${unconfirmedTermsPreamble}${withUnconfirmedTermsCaveat(storedTerms)}` : storedTerms}${eligibilityConditionsSentence}`
     : termsWeCannotConfirm
@@ -5366,7 +5371,7 @@ ${allCompareLinks.join("\n")}
   const faqTierAnswer = termsSuperseded
     ? `${eligibilityGateSentence}${vendorName}'s free tier is called "${primary.tier}". ${supersededTermsNotice(vendorName, termsSuperseded)}`
     : retiredSentence
-    ? `${retiredSentence} ${primary.description}`
+    ? `${retiredSentence} ${withTheReasonARecordedEndingLeaves(primary.description)}`
     : eligibilityGateSentence + (termsWeCannotConfirm
     ? `${unconfirmedTermsPreamble}Our stored record calls ${vendorName}'s free tier "${primary.tier}". ${withUnconfirmedTermsCaveat(primary.description)}`
     : `${vendorName}'s free tier is called "${primary.tier}". ${primary.description}`);

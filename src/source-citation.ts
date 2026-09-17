@@ -124,6 +124,15 @@ export function freeTierSourceOf(offer: SourcedOffer | null | undefined): FreeTi
   };
 }
 
+export function freeTierSourceWeMayCite(
+  offer: SourcedOffer | null | undefined,
+  termsWeCannotConfirm: { clause: string } | null,
+): FreeTierSource {
+  const source = freeTierSourceOf(offer);
+  if (!source.cited || !termsWeCannotConfirm) return source;
+  return { cited: false, kind: "unconfirmed", clause: termsWeCannotConfirm.clause };
+}
+
 export interface CitedService {
   vendor: string;
   slug: string | null;

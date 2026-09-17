@@ -25,6 +25,7 @@ const { tabulatedSubjectSlots, tabulatedVendorSlots, vendorFactRows, SOURCE_MARK
 const { RECORD_SOURCE_CLASS, SOURCE_MARKER_MARKUP } = await import("../dist/change-citation.js");
 const { ENDED_OFFER_CLAUSE, offerRetired } = await import("../dist/retirement.js");
 const { namedVendorSlug, vendorSlugMap } = await import("../dist/vendor-slug.js");
+const { unconfirmedTermsForOffer } = await import("../dist/vendor-verdict-input.js");
 const { staticHalfOf } = await import("../dist/compiled-figures.js");
 
 type Offer = import("../src/types.ts").Offer;
@@ -73,7 +74,15 @@ const PAGES_THAT_ALREADY_LINKED_OUT = [
   "/q2-pricing-preview-2026",
 ];
 
-const VENDOR_PAGE = "/vendor/upstash";
+const [VENDOR_SLUG, VENDOR_WE_CAN_CONFIRM] = (() => {
+  for (const [slug, vendor] of vendorSlugMap) {
+    const record = primaryFor.get(vendor);
+    if (record && freeTierSourceOf(record).cited && unconfirmedTermsForOffer(record) === null) return [slug, vendor];
+  }
+  throw new Error("no vendor publishes terms we can confirm beside the read they came from");
+})();
+
+const VENDOR_PAGE = `/vendor/${VENDOR_SLUG}`;
 
 const OURS = /localhost|agentdeals\.dev|fonts\.(?:googleapis|gstatic)\.com/;
 
@@ -521,7 +530,7 @@ describe("every comparison page reaches the pages its figures were read from", (
 
   it("reaches a vendor's own pricing page from the free tier it publishes", () => {
     const html = rendered.get(VENDOR_PAGE)!;
-    const record = primaryFor.get("Upstash")!;
+    const record = primaryFor.get(VENDOR_WE_CAN_CONFIRM)!;
     const block = html.slice(html.indexOf("Free Tier Details"));
     const line = block.slice(0, block.indexOf("</div>"));
     assert.match(
