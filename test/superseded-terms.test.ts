@@ -21,7 +21,7 @@ const {
   supersededTermsRecordFor,
   storedTermsAreSuperseded,
 } = await import("../dist/superseded-description.js");
-const { STORED_TERMS_NAMED_AS_PREVIOUS } = await import("../dist/vendor-verdict.js");
+const { STORED_TERMS_NAMED_AS_PREVIOUS, narrowingSentence } = await import("../dist/vendor-verdict.js");
 const { openingOfTerms } = await import("../dist/terms-opening.js");
 const { citationLabel } = await import("../dist/change-citation.js");
 const { carriesAnUnrenderedExpression, unrenderedExpressionIn } = await import("../dist/unrendered-text.js");
@@ -29,8 +29,9 @@ const { toSlug } = await import("../dist/slug.js");
 const { qualityBudget } = await import("../dist/page-reviews.js");
 const { supersededCensus } = await import("../dist/superseded-census.js");
 const { utcDate } = await import("../dist/ranking.js");
-const { loadDealChanges } = await import("../dist/data.js");
+const { loadDealChanges, changesRatingTheListedTier, publishedRisk } = await import("../dist/data.js");
 const { tierRecordsAFreeTier } = await import("../dist/free-tier-record.js");
+const { CHANGE_DIRECTION: CHANGE_DIRECTION_OF } = await import("../dist/change-direction.js");
 const {
   describesOnlyATrial,
   mentionsSomethingFree,
@@ -1176,16 +1177,74 @@ describe("#1103 every catalogue record whose stored terms are superseded", () =>
 });
 
 describe("#1721 what the disclosure reads, and what it no longer reads", () => {
-  const SUBJECTS = {
-    counted_positive: "ScrumFast",
-    ended_a_tier: "Mintlify",
-    summary_compares_the_wrong_rows: "Upstash Vector",
-    already_withholding: "Semgrep",
+  const withholdingBehindARecord = (): { offer: Offer; change: DealChange }[] => {
+    const found: { offer: Offer; change: DealChange }[] = [];
+    for (const offer of offers) {
+      const change = supersedingChange(offer, changesFor(offer.vendor));
+      if (change) found.push({ offer, change });
+    }
+    return found;
   };
+
+  const WITHHOLDING = withholdingBehindARecord();
+  const NEEDED = new Map<string, string>();
+  const TAKEN = new Set<string>();
+
+  const aSubjectThat = (
+    property: string,
+    holds: (subject: { offer: Offer; change: DealChange }) => boolean,
+  ): string | null => {
+    const found = WITHHOLDING.find(
+      (subject) => !TAKEN.has(subject.offer.vendor) && holds(subject),
+    );
+    if (!found) return null;
+    TAKEN.add(found.offer.vendor);
+    NEEDED.set(found.offer.vendor, property);
+    return found.offer.vendor;
+  };
+
+  const SUBJECTS = {
+    ended_a_tier: aSubjectThat(
+      "holds records that supersede our stored terms without any of them narrowing the terms",
+      ({ offer }) =>
+        narrowingSentence(changesFor(offer.vendor), offer, true).includes(
+          STORED_TERMS_NAMED_AS_PREVIOUS,
+        ),
+    ),
+    already_withholding: aSubjectThat(
+      "is rated caution on exactly one recorded limit reduction",
+      ({ offer, change }) => {
+        if (change.change_type !== "limits_reduced") return false;
+        const rating = changesRatingTheListedTier(offer, changesFor(offer.vendor));
+        if (rating.length !== 1 || rating[0]!.change_type !== "limits_reduced") return false;
+        return publishedRisk(offer, changesFor(offer.vendor), "2026-09-11").risk_level === "caution";
+      },
+    ),
+    counted_positive: aSubjectThat(
+      "holds a record our own classification counts as positive",
+      ({ change }) => CHANGE_DIRECTION_OF[change.change_type] === "positive",
+    ),
+    summary_compares_the_wrong_rows: aSubjectThat(
+      "holds a record whose summary states an arithmetic the reading does not, and whose meta sentence is long enough to quote the reading",
+      ({ offer, change }) => {
+        const reading = readingBehindTheChange(change);
+        if (reading === null || (change.summary ?? "") === "") return false;
+        if (reading.terms.includes(change.summary!)) return false;
+        return supersededTermsMetaSentence(offer.vendor, change).includes(reading.terms.slice(0, 60));
+      },
+    ),
+  };
+
   let server: { proc: ChildProcess; port: number } | null = null;
   const pages = new Map<string, string>();
   const details = new Map<string, Record<string, any>>();
   let criteria = "";
+
+  const subjectFor = (property: keyof typeof SUBJECTS): string => {
+    const vendor = SUBJECTS[property];
+    assert.ok(vendor, `no offer withholding behind a record ${property.replace(/_/g, " ")}, so this has no subject`);
+    return vendor!;
+  };
 
   const offerFor = (vendor: string): Offer => {
     const found = offers.find((o) => o.vendor === vendor)!;
@@ -1194,7 +1253,7 @@ describe("#1721 what the disclosure reads, and what it no longer reads", () => {
   };
   const changeFor = (vendor: string): DealChange => {
     const change = supersedingChange(offerFor(vendor), changesFor(vendor));
-    assert.ok(change, `${vendor} no longer holds a record naming its stored terms as the previous ones — pick another subject`);
+    assert.ok(change, `${vendor} no longer ${NEEDED.get(vendor) ?? "holds a record naming its stored terms as the previous ones"}`);
     return change!;
   };
 
@@ -1204,6 +1263,7 @@ describe("#1721 what the disclosure reads, and what it no longer reads", () => {
       fetch(`http://localhost:${server!.port}${pathname}`).then((r) => r.text());
     criteria = await at("/criteria");
     for (const vendor of Object.values(SUBJECTS)) {
+      if (!vendor) continue;
       pages.set(vendor, await at(`/vendor/${toSlug(vendor)}`));
       details.set(vendor, JSON.parse(await at(`/api/details/${encodeURIComponent(vendor)}`)).offer);
     }
@@ -1219,7 +1279,7 @@ describe("#1721 what the disclosure reads, and what it no longer reads", () => {
 
   it("withholds the terms of a record whose change is counted as positive", async () => {
     const { CHANGE_DIRECTION } = await import("../dist/change-direction.js");
-    const vendor = SUBJECTS.counted_positive;
+    const vendor = subjectFor("counted_positive");
     const offer = offerFor(vendor);
     const change = changeFor(vendor);
     assert.strictEqual(CHANGE_DIRECTION[change.change_type], "positive", change.change_type);
@@ -1229,7 +1289,7 @@ describe("#1721 what the disclosure reads, and what it no longer reads", () => {
   });
 
   it("carries the dated reading to a machine asking for the record", () => {
-    for (const vendor of [SUBJECTS.counted_positive, SUBJECTS.already_withholding]) {
+    for (const vendor of [subjectFor("counted_positive"), subjectFor("already_withholding")]) {
       const record = details.get(vendor)!.terms_superseded;
       assert.ok(record, `/api/details/${vendor} answers null where the page withholds the terms`);
       assert.deepStrictEqual(record.reading, readingBehindTheChange(changeFor(vendor)), vendor);
@@ -1238,7 +1298,7 @@ describe("#1721 what the disclosure reads, and what it no longer reads", () => {
   });
 
   it("stops saying a record that ended the tier we list did not narrow the terms", () => {
-    const vendor = SUBJECTS.ended_a_tier;
+    const vendor = subjectFor("ended_a_tier");
     const verdict = unescaped(quickVerdictOf(pages.get(vendor)!));
     assert.doesNotMatch(verdict, /did not narrow the terms|narrowed the terms/, verdict);
     assert.ok(verdict.includes(STORED_TERMS_NAMED_AS_PREVIOUS), verdict);
@@ -1246,7 +1306,7 @@ describe("#1721 what the disclosure reads, and what it no longer reads", () => {
   });
 
   it("quotes what the page read and never the arithmetic the record's summary states", () => {
-    const vendor = SUBJECTS.summary_compares_the_wrong_rows;
+    const vendor = subjectFor("summary_compares_the_wrong_rows");
     const change = changeFor(vendor);
     const reading = readingBehindTheChange(change)!;
     for (const [surface, text] of [
@@ -1260,7 +1320,7 @@ describe("#1721 what the disclosure reads, and what it no longer reads", () => {
   });
 
   it("leaves a record that was already withholding exactly where it was", () => {
-    const vendor = SUBJECTS.already_withholding;
+    const vendor = subjectFor("already_withholding");
     const change = changeFor(vendor);
     const page = pages.get(vendor)!;
     assert.strictEqual(change.change_type, "limits_reduced");
