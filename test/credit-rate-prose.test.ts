@@ -18,11 +18,14 @@ const rateFrom = (text: string, unit: RegExp) => {
   return match ? Number(match[1].replace(/,/g, "")) : null;
 };
 
+const metered = (unit: string) =>
+  new RegExp(String.raw`(\d[\d,]*) credits?(?: limit)?\s*(?:\/|per )\s*${unit}`, "i");
+
 const RECORDED = {
-  allowance: rateFrom(netlify.description, /(\d[\d,]*) credits\/month/),
-  bandwidth: rateFrom(netlify.description, /(\d[\d,]*) credits\/GB(?!-)/),
-  compute: rateFrom(netlify.description, /(\d[\d,]*) credits\/GB-hour/),
-  requests: rateFrom(netlify.description, /(\d[\d,]*) credits\/10K/),
+  allowance: rateFrom(netlify.description, metered("month")),
+  bandwidth: rateFrom(netlify.description, metered("GB(?!-)")),
+  compute: rateFrom(netlify.description, metered("GB-hour")),
+  requests: rateFrom(netlify.description, metered("10[Kk]")),
   deploy: rateFrom(netlify.description, /(\d[\d,]*) credits each/),
 };
 
@@ -37,6 +40,21 @@ const disagreeing = (pattern: RegExp, recorded: number | null) =>
 describe("prose that quotes a credit rate agrees with the record that holds it (#1332)", () => {
   it("reads every rate the vendor meters from the record rather than from a literal", () => {
     assert.deepStrictEqual(RECORDED, { allowance: 300, bandwidth: 20, compute: 10, requests: 2, deploy: 15 });
+  });
+
+  it("reads a rate the record states in the vendor's words as well as in ours", () => {
+    const asWeStoreIt =
+      "300 credits/month (deploys at 15 credits each, bandwidth at 20 credits/GB, compute at 10 credits/GB-hour, web requests at 2 credits/10K)";
+    const asTheVendorWritesIt =
+      "The Free plan offers 300 credit limit / month, including production deploys (15 credits each), " +
+      "compute (10 credits per GB-hour), bandwidth (20 credits per GB), and web requests (2 credits per 10k requests).";
+    for (const text of [asWeStoreIt, asTheVendorWritesIt]) {
+      assert.equal(rateFrom(text, metered("month")), 300);
+      assert.equal(rateFrom(text, metered("GB(?!-)")), 20);
+      assert.equal(rateFrom(text, metered("GB-hour")), 10);
+      assert.equal(rateFrom(text, metered("10[Kk]")), 2);
+      assert.equal(rateFrom(text, /(\d[\d,]*) credits each/), 15);
+    }
   });
 
   it("publishes no bandwidth rate the record does not hold", () => {
