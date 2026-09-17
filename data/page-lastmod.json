@@ -1171,15 +1171,15 @@
       "changed": "2026-09-17"
     },
     "/category/mobile-development": {
-      "hash": "077285fac0b1683d",
-      "changed": "2026-09-16"
+      "hash": "c0cead243fe08240",
+      "changed": "2026-09-17"
     },
     "/category/monitoring": {
-      "hash": "6f9c8cdc175a78f7",
+      "hash": "acc7c4df8a904766",
       "changed": "2026-09-17"
     },
     "/category/notebooks-data-science": {
-      "hash": "15f312d5205f31c2",
+      "hash": "8d8ffb238e3dd90c",
       "changed": "2026-09-17"
     },
     "/category/password-managers": {
@@ -1251,8 +1251,8 @@
       "changed": "2026-09-16"
     },
     "/category/web-scraping": {
-      "hash": "53946f1209602b06",
-      "changed": "2026-09-16"
+      "hash": "079450b955bffe25",
+      "changed": "2026-09-17"
     },
     "/category/workflow-automation": {
       "hash": "628d1688c7296a31",
@@ -1746,7 +1746,7 @@
       "changed": "2026-09-17"
     },
     "/compare/datalore-vs-hex": {
-      "hash": "8dbe6d8624b2d96d",
+      "hash": "600004b12b0668f0",
       "changed": "2026-09-17"
     },
     "/compare/dbos-vs-make": {
@@ -1762,7 +1762,7 @@
       "changed": "2026-09-16"
     },
     "/compare/deepnote-vs-hex": {
-      "hash": "6e688aab62b5a022",
+      "hash": "bc6362840daa9edc",
       "changed": "2026-09-17"
     },
     "/compare/diawi-vs-expo": {
@@ -3074,7 +3074,7 @@
       "changed": "2026-09-16"
     },
     "/monitoring-alternatives": {
-      "hash": "a426ae930a62620a",
+      "hash": "59c8950d1d0803ce",
       "changed": "2026-09-17"
     },
     "/monitoring-comparison-2026": {
@@ -3277,7 +3277,7 @@
       "changed": "2026-09-17"
     },
     "/stack-check": {
-      "hash": "c4c1e7429e23b21c",
+      "hash": "9979725538580894",
       "changed": "2026-09-17"
     },
     "/stacks": {
@@ -5996,7 +5996,7 @@
       "changed": "2026-09-17"
     },
     "/vendor/hex": {
-      "hash": "17533a033a2e7f9b",
+      "hash": "7c9186383c23aed0",
       "changed": "2026-09-17"
     },
     "/vendor/highlight-io": {
@@ -6218,7 +6218,7 @@
       "changed": "2026-09-17"
     },
     "/vendor/installonair": {
-      "hash": "37d1d20d32946ccf",
+      "hash": "f27f9b14abea071c",
       "changed": "2026-09-17"
     },
     "/vendor/instatus": {
@@ -6893,7 +6893,7 @@
       "changed": "2026-09-17"
     },
     "/vendor/microlink-io": {
-      "hash": "d6a1d5ffa3316203",
+      "hash": "22509ed21a3b5bc6",
       "changed": "2026-09-17"
     },
     "/vendor/microsoft-ajax": {
