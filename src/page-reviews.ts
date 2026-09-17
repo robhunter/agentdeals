@@ -429,8 +429,9 @@ export function noFigureComesFromOurRecords(census: TableFigureCensus): boolean 
 }
 
 export function soleCreditedTable(census: TableFigureCensus): TableCredit | null {
-  if (census.tables.length < 2) return null;
-  const credited = census.tables.filter(table => table.from_records > 0);
+  const tables = census.tables ?? [];
+  if (tables.length < 2) return null;
+  const credited = tables.filter(table => table.from_records > 0);
   if (credited.length !== 1) return null;
   return credited[0].label ? credited[0] : null;
 }
@@ -450,7 +451,7 @@ function escapeLabel(label: string): string {
 }
 
 export function tableNaming(label: string): string {
-  return `the &ldquo;${escapeLabel(label.replace(/^\d+\.\s+/, ""))}&rdquo; table below`;
+  return `the &ldquo;${escapeLabel(label.replace(/^\d+\.\s+/, ""))}&rdquo; table`;
 }
 
 export function recordsCitation(indexSize: number): string {

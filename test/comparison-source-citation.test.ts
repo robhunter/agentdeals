@@ -524,7 +524,10 @@ describe("every comparison page reaches the pages its figures were read from", (
   });
 
   it("keeps the methodology block on the head-to-head page that already carried one", () => {
-    assert.match(rendered.get("/vercel-vs-netlify")!, /figures in the tables below come from our records for [\d,]+ developer tools/i);
+    assert.match(
+      rendered.get("/vercel-vs-netlify")!,
+      /figures in (?:the tables below|the &ldquo;[^&]+&rdquo; table) come from our records for [\d,]+ developer tools/i,
+    );
     assert.match(rendered.get("/vercel-vs-netlify")!, /verified against/i);
   });
 

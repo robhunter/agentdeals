@@ -219,7 +219,7 @@ async function main() {
         if (prior.reads_index !== record.reads_index) changes.push(`~ ${route} reads_index ${prior.reads_index} -> ${record.reads_index}`);
         if (prior.tables_read_index !== record.tables_read_index) changes.push(`~ ${route} tables_read_index ${prior.tables_read_index} -> ${record.tables_read_index}`);
         if (prior.table_figures !== record.table_figures || prior.table_figures_from_records !== record.table_figures_from_records) {
-          changes.push(`~ ${route} table figures from our index ${prior.table_figures_from_records ?? "?"}/${prior.table_figures ?? "?"} -> ${record.table_figures_from_records}/${record.table_figures}`);
+          changes.push(`~ ${route} table figures from our records ${prior.table_figures_from_records ?? "?"}/${prior.table_figures ?? "?"} -> ${record.table_figures_from_records}/${record.table_figures}`);
         }
         const splitBefore = (prior.tables ?? []).map(t => `${t.label} ${t.from_records}/${t.figures}`).join("; ");
         const splitAfter = record.tables.map(t => `${t.label} ${t.from_records}/${t.figures}`).join("; ");
@@ -260,7 +260,9 @@ async function main() {
   const whollySourced = withFigures.filter(p => p.table_figures_from_records === p.table_figures);
   const tabulated = withFigures.reduce((sum, p) => sum + p.table_figures, 0);
   const sourced = withFigures.reduce((sum, p) => sum + p.table_figures_from_records, 0);
-  console.log(`${sourced} of ${tabulated} table figures across ${withFigures.length} pages come from the catalogue; ${whollySourced.length} pages may state that without qualifying it`);
+  const confined = withFigures.filter(p => p.tables.length > 1 && p.tables.filter(t => t.from_records > 0).length === 1);
+  console.log(`${sourced} of ${tabulated} table figures across ${withFigures.length} pages come from our records; ${whollySourced.length} pages may state that without qualifying it`);
+  console.log(`${confined.length} pages hold every credited figure in one of several tables, so the byline names that table`);
   console.log(`${unsourcedA} tier-A pages assert vendor facts and read no catalogue record`);
   for (const line of changes) console.log(line);
   if (opts.dryRun) { console.log("dry run — nothing written"); return; }

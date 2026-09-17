@@ -257,7 +257,7 @@ describe("a page may only name the source it actually reads", () => {
       const seen = measured.get(page.path)!;
       const body = readableText(bodies.get(page.path)!);
       const mixed = seen.table_figures_from_records > 0 && !everyFigureComesFromOurRecords(seen);
-      const stated = body.match(/(\d+) of (\d+) figures in (?:the tables below|the .* table below) come from our records for/);
+      const stated = body.match(/(\d+) of (\d+) figures in (?:the tables below|the .*? table) come from our records for/);
       if (!mixed) {
         if (stated) wrong.push(`${page.path}: states ${stated[1]} of ${stated[2]} and its figures are not mixed`);
         continue;
@@ -331,6 +331,21 @@ describe("a page may only name the source it actually reads", () => {
       if (!readableText(bodies.get(page.path)!).includes(quoted)) missing.push(`${page.path}: does not state ${quoted}`);
     }
     assert.deepStrictEqual(missing, []);
+  });
+
+  it("points down only where the tables are, because the methodology block sits under them", () => {
+    const wrong: string[] = [];
+    let pointing = 0;
+    for (const page of pages) {
+      const body = visibleBody(bodies.get(page.path)!);
+      const claim = body.search(/figures in the tables below come from our records/i);
+      if (claim === -1) continue;
+      pointing += 1;
+      const above = [...body.matchAll(/<table\b/g)].filter((m) => m.index! < claim).length;
+      if (above > 0) wrong.push(`${page.path}: says the tables are below with ${above} of them above the sentence`);
+    }
+    assert.deepStrictEqual(wrong, []);
+    assert.ok(pointing >= 4, `only ${pointing} pages point the reader downwards, so the rule checks almost nothing`);
   });
 
   it("leaves the first table of a comparison page uncredited, which is why the scoping matters", () => {

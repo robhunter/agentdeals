@@ -296,11 +296,11 @@ describe("a review date means a review happened, and the outcome says what it fo
     ));
     assert.strictEqual(
       dataProvenanceFor(confined, 1580, "2026-08-27"),
-      "Figures compiled 2026-04-03, not re-checked since &middot; 37 of 40 figures in the &ldquo;Recent Pricing Changes&rdquo; table below come from our records for 1,580 developer tools",
+      "Figures compiled 2026-04-03, not re-checked since &middot; 37 of 40 figures in the &ldquo;Recent Pricing Changes&rdquo; table come from our records for 1,580 developer tools",
     );
     assert.strictEqual(
       figureSourceSentence(confined, 1580),
-      "37 of 40 figures in the &ldquo;Recent Pricing Changes&rdquo; table below come from our records for 1,580 developer tools.",
+      "37 of 40 figures in the &ldquo;Recent Pricing Changes&rdquo; table come from our records for 1,580 developer tools.",
     );
   });
 
@@ -332,7 +332,7 @@ describe("a review date means a review happened, and the outcome says what it fo
     const ampersand = tabulating("/p", split(["Comparison", 0, 19], ["Recent GCP & Google Changes", 2, 2]));
     assert.strictEqual(
       figureSourceSentence(ampersand, 1580),
-      "2 of 2 figures in the &ldquo;Recent GCP &amp; Google Changes&rdquo; table below come from our records for 1,580 developer tools.",
+      "2 of 2 figures in the &ldquo;Recent GCP &amp; Google Changes&rdquo; table come from our records for 1,580 developer tools.",
     );
   });
 
