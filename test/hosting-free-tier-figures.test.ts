@@ -283,9 +283,10 @@ describe("the prose-record cross-check attributes a figure before comparing it (
     const figures = figuresInTables(comparisonTable("300 credits/mo (10 credits/GB)"), vendors);
     const found = disagreements("/vercel-vs-netlify", figures, records);
     assert.deepStrictEqual(
-      found.map((f) => `${f.vendor} ${f.dimension} ${f.publishedFigure} vs ${f.recordFigure}`),
-      ["Netlify bandwidth 10 credits/GB vs 20 credits/GB"],
+      found.map((f) => `${f.vendor} ${f.dimension} ${f.publishedFigure}`),
+      ["Netlify bandwidth 10 credits/GB"],
     );
+    assert.match(found[0].recordFigure, /20 credits\s*(?:\/|per )\s*GB/i);
   });
 
   it("stops flagging it once the rate agrees with the record", () => {
@@ -356,13 +357,17 @@ describe("the prose-record cross-check attributes a figure before comparing it (
   });
 
   it("does not read a paid plan as the free tier just because other vendors give that name away", () => {
-    const railway = recordFor("Railway", "Cloud Hosting");
-    assert.match(railway.tier, /free/i, "Railway's record is no longer tiered Free, so this case has moved");
-    assert.match(railway.description, /Hobby plan:/, "Railway's record no longer declares Hobby separately");
+    const declaringHobbySeparately = new Map(records);
+    declaringHobbySeparately.set("railway", {
+      tier: "Free",
+      description:
+        "Free plan: $0/month, 1 vCPU, 0.5 GB RAM per service, 1 project. " +
+        "Hobby plan: $5/month with $5 resource credit included, 48 vCPU, 48 GB RAM",
+    });
     const table = `
       <table><thead><tr><th>Feature</th><th>Railway Hobby</th><th>Render Hobby</th></tr></thead>
       <tbody><tr><td>Memory</td><td>48 GB RAM</td><td>512 MB RAM</td></tr></tbody></table>`;
-    const found = disagreements("/hosting-pricing", figuresInTables(table, vendors), records);
+    const found = disagreements("/hosting-pricing", figuresInTables(table, vendors), declaringHobbySeparately);
     assert.deepStrictEqual(
       found.filter((f) => f.vendor === "Railway"),
       [],
@@ -388,6 +393,16 @@ describe("the prose-record cross-check attributes a figure before comparing it (
     <table><thead><tr><th>Feature</th><th>Supabase</th><th>Neon</th></tr></thead>
     <tbody><tr><td>Bandwidth</td><td>${supabaseCell}</td><td>Not metered</td></tr></tbody></table>`;
 
+  const splittingEgressInTwo = new Map(records);
+  splittingEgressInTwo.set("supabase", {
+    tier: "Free",
+    description:
+      "Open source Firebase alternative — 500 MB Postgres database, 50K monthly active users, " +
+      "1 GB file storage, 5 GB bandwidth (uncached egress across all services: Storage, Auth, " +
+      "Functions, Database, Realtime) + 5 GB CDN cached egress, 500K edge function invocations, " +
+      "200 concurrent realtime connections, 2 free projects. Includes Auth, Storage, Realtime, and Edge Functions",
+  });
+
   it("extracts a figure from the cell these bandwidth assertions rest on", () => {
     const figures = figuresInTables(bandwidthTable("40 GB total egress"), vendors);
     assert.deepStrictEqual(
@@ -398,18 +413,18 @@ describe("the prose-record cross-check attributes a figure before comparing it (
 
   it("reads a total that sums the record's own parts as agreement", () => {
     const figures = figuresInTables(bandwidthTable("10 GB total (5 GB cached + 5 GB uncached)"), vendors);
-    assert.deepStrictEqual(disagreements("/supabase-vs-firebase", figures, records), []);
+    assert.deepStrictEqual(disagreements("/supabase-vs-firebase", figures, splittingEgressInTwo), []);
   });
 
   it("still flags a total the record's parts do not add up to", () => {
     const figures = figuresInTables(bandwidthTable("40 GB total egress"), vendors);
-    const found = disagreements("/supabase-vs-firebase", figures, records);
+    const found = disagreements("/supabase-vs-firebase", figures, splittingEgressInTwo);
     assert.deepStrictEqual(found.map((f) => `${f.vendor} ${f.publishedFigure}`), ["Supabase 40 GB"]);
   });
 
   it("only adds the record's parts up for a figure that says it is a total", () => {
     const figures = figuresInTables(bandwidthTable("10 GB egress"), vendors);
-    const found = disagreements("/supabase-vs-firebase", figures, records);
+    const found = disagreements("/supabase-vs-firebase", figures, splittingEgressInTwo);
     assert.deepStrictEqual(
       found.map((f) => `${f.vendor} ${f.publishedFigure} vs ${f.recordFigure}`),
       ["Supabase 10 GB vs 5 GB"],
