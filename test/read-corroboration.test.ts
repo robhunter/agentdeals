@@ -8,6 +8,7 @@ import { fileURLToPath } from "node:url";
 const REPO = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 
 const { runAiMode, pickOldestEntries, summaryLines } = await import("../scripts/reverify-rolling.js");
+const { reportOnlyLines } = await import("../scripts/restate-superseded-terms.js");
 const {
   CORROBORATED,
   CONTRADICTED,
@@ -44,6 +45,14 @@ const published = (paths: { changesPath: string }) =>
   JSON.parse(readFileSync(paths.changesPath, "utf-8")).changes as any[];
 const store = (paths: { corroborationPath: string }) =>
   JSON.parse(readFileSync(paths.corroborationPath, "utf-8")) as Store;
+
+function restatementSummary() {
+  return reportOnlyLines({
+    offers_we_may_restate_from_their_reading: 204,
+    offers_we_refuse_to_restate: { tier_is_not_one_we_record_as_free: 30 },
+    offers_re_read_since_the_record_and_still_withheld: 141,
+  });
+}
 
 function runSummary() {
   return summaryLines(
@@ -489,7 +498,7 @@ describe("#1650 — the commit message says how far the catalogue got", () => {
     const source = workflow();
     const gate = gateStep(source);
     const used = [...new Set([...commitMessage(source).matchAll(/\$\{([A-Z_]+)\}/g)].map((m) => m[1]!))].sort();
-    const declared = [...gate.matchAll(/^\s+([A-Z_]+): \$\{\{ steps\.reverify\.outputs\.([a-z_]+) \}\}$/gm)];
+    const declared = [...gate.matchAll(/^\s+([A-Z_]+): \$\{\{ steps\.(?:reverify|restate)\.outputs\.([a-z_]+) \}\}$/gm)];
     const produced = [...source.matchAll(/echo "([a-z_]+)=\$[A-Z_]+" >> "\$GITHUB_OUTPUT"/g)].map((m) => m[1]!);
 
     assert.ok(used.length >= 8, `the commit message states ${used.length} counts`);
@@ -553,7 +562,7 @@ describe("#1640 — the held readings survive the run that took them", () => {
     const patterns = [...workflow.matchAll(/grep -oE '(\^[^']+)'/g)].map((m) => m[1]!);
     assert.ok(patterns.length >= 6, `the workflow reads ${patterns.length} counts out of the run summary`);
 
-    const printed = runSummary().join("\n");
+    const printed = [...runSummary(), ...restatementSummary()].join("\n");
     const silent = patterns.filter((pattern) => !new RegExp(pattern, "m").test(printed));
     assert.deepStrictEqual(
       silent,

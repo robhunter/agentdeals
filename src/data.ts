@@ -21,6 +21,7 @@ import {
 } from "./source-check.js";
 import { substitutesFor } from "./product-role.js";
 import { supersededTermsMeasure, supersededTermsRecordFor, type SupersededTermsMeasure, type SupersededTermsRecord } from "./superseded-description.js";
+import { restatementRulings, withheldTermsMeasure, type WithheldTermsMeasure } from "./restatement.js";
 import { isSubSlug, toSlug } from "./slug.js";
 export { sanitizeQuery } from "./search-query.js";
 import { matchingSubject } from "./gate-disclosure.js";
@@ -1558,11 +1559,13 @@ export interface FreshnessMetrics {
     stamped_within_90_days: number;
   }>;
   quarantine: QuarantineSummary;
-  superseded_terms: SupersededTermsMeasure;
+  superseded_terms: SupersededTermsMeasure & WithheldTermsMeasure;
 }
 
 export function getFreshnessMetrics(): FreshnessMetrics {
   const offers = loadOffers();
+  const changes = loadDealChanges();
+  const byVendor = changesByVendor();
   const now = new Date();
   const nowMs = now.getTime();
   const dayMs = 24 * 60 * 60 * 1000;
@@ -1645,7 +1648,12 @@ export function getFreshnessMetrics(): FreshnessMetrics {
     freshest_entries: freshest,
     by_category: byCategory,
     quarantine: quarantineSummary(),
-    superseded_terms: supersededTermsMeasure(offers, loadDealChanges()),
+    superseded_terms: {
+      ...supersededTermsMeasure(offers, changes),
+      ...withheldTermsMeasure(
+        restatementRulings(offers, (offer) => byVendor.get(offer.vendor.toLowerCase()) ?? [], utcDate(now)),
+      ),
+    },
   };
 }
 
