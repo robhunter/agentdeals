@@ -5,7 +5,7 @@ import {
   CATALOGUE_TEXT_FIELDS, PERTURBATION_SENTINEL,
   compiledClause, compiledNotice, dataProvenanceFor, figureSourceSentence, freshnessSegmentFor, pageSourceViolations,
   parsePageReviews, perturbTextFields, unsourcedTierAPaths, vendorFactRows,
-  type PageDataSource, type PageReviewRecord, type PageSourceMeasurement,
+  type PageDataSource, type PageReviewRecord, type PageSourceMeasurement, type TableCredit,
 } from "../src/page-reviews.ts";
 
 function page(overrides: Partial<PageReviewRecord> & { path: string }): PageReviewRecord {
@@ -21,6 +21,7 @@ function page(overrides: Partial<PageReviewRecord> & { path: string }): PageRevi
     tables_read_index: false,
     table_figures: 0,
     table_figures_from_records: 0,
+    tables: [],
     reads_changes: false,
     data_source: "unsourced",
     data_source_reason: null,
@@ -31,8 +32,25 @@ function page(overrides: Partial<PageReviewRecord> & { path: string }): PageRevi
 function seen(overrides: Partial<PageSourceMeasurement> = {}): PageSourceMeasurement {
   return {
     reads_index: false, tables_read_index: false, table_figures: 0, table_figures_from_records: 0,
-    reads_changes: false, vendor_fact_rows: 0, ...overrides,
+    tables: [], reads_changes: false, vendor_fact_rows: 0, ...overrides,
   };
+}
+
+function split(...tables: [string | null, number, number][]): TableCredit[] {
+  return tables.map(([label, from_records, figures]) => ({ label, figures, from_records }));
+}
+
+function tabulating(path: string, tables: TableCredit[], overrides: Partial<PageReviewRecord> = {}): PageReviewRecord {
+  return page({
+    path,
+    reads_index: true,
+    tables_read_index: true,
+    data_source: "catalogue",
+    tables,
+    table_figures: tables.reduce((sum, t) => sum + t.figures, 0),
+    table_figures_from_records: tables.reduce((sum, t) => sum + t.from_records, 0),
+    ...overrides,
+  });
 }
 
 function filled(count: number, source: PageDataSource = "unsourced"): PageReviewRecord[] {
@@ -268,6 +286,87 @@ describe("a review date means a review happened, and the outcome says what it fo
       "Figures compiled 2026-04-03, last checked 2026-08-26 &middot; 3 of 12 figures in the tables below come from our records for 1,580 developer tools",
     );
     assert.strictEqual(figureSourceSentence(mixed, 1580), "3 of 12 figures in the tables below come from our records for 1,580 developer tools.");
+  });
+
+  it("scopes the share to the one table holding it, and counts against that table rather than the page", () => {
+    const confined = tabulating("/p", split(
+      ["1. Free Tier Comparison Table", 0, 39],
+      ["3. Cost at Scale", 0, 66],
+      ["Recent Pricing Changes", 37, 40],
+    ));
+    assert.strictEqual(
+      dataProvenanceFor(confined, 1580, "2026-08-27"),
+      "Figures compiled 2026-04-03, not re-checked since &middot; 37 of 40 figures in the &ldquo;Recent Pricing Changes&rdquo; table below come from our records for 1,580 developer tools",
+    );
+    assert.strictEqual(
+      figureSourceSentence(confined, 1580),
+      "37 of 40 figures in the &ldquo;Recent Pricing Changes&rdquo; table below come from our records for 1,580 developer tools.",
+    );
+  });
+
+  it("claims the page only where the figures are spread over more than one of its tables", () => {
+    const spread = tabulating("/p", split(["Stack Overview", 9, 14], ["The Upgrade Path", 5, 18]));
+    assert.strictEqual(
+      figureSourceSentence(spread, 1580),
+      "14 of 32 figures in the tables below come from our records for 1,580 developer tools.",
+    );
+  });
+
+  it("claims the page where the page is one table, because the two scopes are the same claim", () => {
+    const single = tabulating("/p", split(["All Q1 2026 Changes", 46, 47]));
+    assert.strictEqual(
+      figureSourceSentence(single, 1580),
+      "46 of 47 figures in the tables below come from our records for 1,580 developer tools.",
+    );
+  });
+
+  it("falls back to the page when the table holding the figures has no heading to name it by", () => {
+    const unnamed = tabulating("/p", split(["Comparison", 0, 12], [null, 4, 9]));
+    assert.strictEqual(
+      figureSourceSentence(unnamed, 1580),
+      "4 of 21 figures in the tables below come from our records for 1,580 developer tools.",
+    );
+  });
+
+  it("escapes a heading before quoting it, because the heading is a reader's text and not ours", () => {
+    const ampersand = tabulating("/p", split(["Comparison", 0, 19], ["Recent GCP & Google Changes", 2, 2]));
+    assert.strictEqual(
+      figureSourceSentence(ampersand, 1580),
+      "2 of 2 figures in the &ldquo;Recent GCP &amp; Google Changes&rdquo; table below come from our records for 1,580 developer tools.",
+    );
+  });
+
+  it("keeps the unqualified claim on a page every one of whose tables our records supply", () => {
+    const wholly = tabulating("/p", split(["Stack Overview", 23, 23], ["What to Upgrade First", 6, 6]));
+    assert.strictEqual(figureSourceSentence(wholly, 1580), "Figures in the tables below come from our records for 1,580 developer tools.");
+  });
+
+  it("refuses a register whose per-table split does not add up to the total the byline states", () => {
+    const inconsistent = page({
+      path: "/p", reads_index: true, tables_read_index: true, data_source: "catalogue",
+      table_figures: 145, table_figures_from_records: 37,
+      tables: split(["Comparison", 0, 39], ["Recent Pricing Changes", 37, 40]),
+    });
+    const problems = problemsFor([inconsistent], new Map([["/p", seen({
+      reads_index: true, tables_read_index: true, table_figures: 145, table_figures_from_records: 37,
+      tables: split(["Comparison", 0, 39], ["Recent Pricing Changes", 37, 40]),
+    })]]), 1);
+    assert.ok(
+      problems.some(p => p.includes("the per-table split totals 37 of 79 against a page total of 37 of 145")),
+      `a register whose split contradicts its own total passed: ${JSON.stringify(problems)}`,
+    );
+  });
+
+  it("refuses a register whose tables the served page no longer lays out that way", () => {
+    const moved = tabulating("/p", split(["Comparison", 0, 39], ["Recent Pricing Changes", 37, 40]));
+    const problems = problemsFor([moved], new Map([["/p", seen({
+      reads_index: true, tables_read_index: true, table_figures: 79, table_figures_from_records: 37,
+      tables: split(["Comparison", 37, 39], ["Recent Pricing Changes", 0, 40]),
+    })]]), 1);
+    assert.ok(
+      problems.some(p => p.includes("the served page splits them as Comparison 37/39, Recent Pricing Changes 0/40")),
+      `the register named a table the render credits nothing: ${JSON.stringify(problems)}`,
+    );
   });
 
   it("names our index nowhere on a page none of whose table figures it supplies", () => {
