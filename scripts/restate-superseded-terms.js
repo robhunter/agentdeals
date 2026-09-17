@@ -112,9 +112,21 @@ export function summaryLines(measure, written, path) {
   ];
 }
 
+export function reportOnlyLines(measure) {
+  return [
+    "",
+    "── Summary ──",
+    `We may restate from that reading: ${measure.offers_we_may_restate_from_their_reading}`,
+    ...refusalLines(measure),
+    `Re-read since the record and still withheld: ${measure.offers_re_read_since_the_record_and_still_withheld}`,
+    "Restated this run: 0",
+    "Run again with --write to store those readings as our terms.",
+  ];
+}
+
 async function main() {
   const args = process.argv.slice(2);
-  const dryRun = args.includes("--dry-run");
+  const dryRun = !args.includes("--write");
   const limitIdx = args.indexOf("--limit");
   const limit = limitIdx !== -1 ? parseInt(args[limitIdx + 1], 10) : Infinity;
   if (limitIdx !== -1 && (isNaN(limit) || limit < 1)) {
@@ -157,6 +169,12 @@ async function main() {
 
   const rulings = rulingsOver(data.offers ?? [], today);
   const measure = withheldTermsMeasure(rulings);
+
+  if (dryRun) {
+    for (const line of reportOnlyLines(measure)) console.log(line);
+    process.exit(0);
+  }
+
   const written = applyRestatements(data, rulings, today, limit);
 
   for (const entry of written) {
@@ -165,10 +183,8 @@ async function main() {
     console.log(`      now: ${entry.description}`);
   }
 
-  const store = writeRestatements([...held, ...written], { dryRun });
-  if (!dryRun && written.length > 0) {
-    writeFileSync(path, JSON.stringify(data, null, 2) + "\n");
-  }
+  const store = writeRestatements([...held, ...written]);
+  if (written.length > 0) writeFileSync(path, JSON.stringify(data, null, 2) + "\n");
   for (const line of summaryLines(measure, written, store.path)) console.log(line);
   process.exit(0);
 }

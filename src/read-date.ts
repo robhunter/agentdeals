@@ -11,6 +11,7 @@ const READ_THE_PAGE = new Set<string>(OUTCOMES_THAT_READ_THE_PAGE);
 
 export const LAST_READ_LABEL = "Last read";
 export const CONFIRMED_DATE_LABEL = "Verified";
+export const RESTATED_DATE_LABEL = "Read from the vendor's page";
 export const UNCONFIRMED_DATE_LABEL = "Catalogue date";
 const UNCONFIRMED_DATE_WORDS = UNCONFIRMED_DATE_LABEL.toLowerCase();
 export const VERIFICATION_DATES_HEADING = `Read / ${UNCONFIRMED_DATE_WORDS}`;
@@ -19,6 +20,7 @@ export interface DatedRecord {
   vendor: string;
   url: string;
   verifiedDate: string;
+  restated_from?: { reading_date: string } | null;
 }
 
 export function outcomeReadThePage(outcome: string | null | undefined): boolean {
@@ -35,8 +37,15 @@ export function lastReadDate(offer: DatedRecord | null | undefined): string {
   return dates.length > 0 ? dates[dates.length - 1] : verified;
 }
 
+export function termsCameFromAReading(
+  offer: DatedRecord | null | undefined,
+): { reading_date: string } | null {
+  return offer?.restated_from ?? null;
+}
+
 export function confirmationDate(offer: DatedRecord | null | undefined): string | null {
   if (!offer?.vendor || !offer?.url) return null;
+  if (termsCameFromAReading(offer)) return null;
   return loadVerificationState().get(`${offer.vendor}|${offer.url}`)?.last_success ?? null;
 }
 
@@ -46,10 +55,13 @@ export function lastAttemptDate(offer: DatedRecord | null | undefined): string |
 }
 
 export function publishedDateLabel(offer: DatedRecord | null | undefined): string {
+  if (termsCameFromAReading(offer)) return RESTATED_DATE_LABEL;
   return confirmationDate(offer) ? CONFIRMED_DATE_LABEL : UNCONFIRMED_DATE_LABEL;
 }
 
 export function publishedDateValue(offer: DatedRecord | null | undefined): string {
+  const reading = termsCameFromAReading(offer);
+  if (reading) return reading.reading_date;
   return confirmationDate(offer) ?? offer?.verifiedDate ?? "";
 }
 

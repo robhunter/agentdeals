@@ -206,6 +206,18 @@ describe("a restatement is reversible, visible and does not overwrite a hand-wri
     assert.equal(data.offers[0].source_check, undefined);
   });
 
+  it("does not call terms taken from a reading that disagreed with us a verification of ours", async () => {
+    const { CONFIRMED_DATE_LABEL, RESTATED_DATE_LABEL, confirmationDate, publishedDateLabel, publishedDateValue } =
+      await import("../dist/read-date.js");
+    const stored = { vendor: "Netlify", url: "https://netlify.com/pricing", verifiedDate: "2026-08-26" };
+    const restated = { ...stored, restated_from: { reading_date: "2026-09-07" } };
+    assert.equal(publishedDateLabel(restated), RESTATED_DATE_LABEL);
+    assert.notEqual(RESTATED_DATE_LABEL, CONFIRMED_DATE_LABEL);
+    assert.equal(publishedDateValue(restated), "2026-09-07");
+    assert.equal(confirmationDate(restated), null);
+    assert.notEqual(publishedDateLabel(stored), RESTATED_DATE_LABEL);
+  });
+
   it("does not write over an entry again from a record no newer than the one it came from", () => {
     const restated = { ...IPAPI.offer, restated_from: { record_date: "2026-09-07" } };
     assert.equal(
@@ -256,6 +268,14 @@ describe("what we publish about the terms we are withholding", () => {
   it("holds back a reading that answers for something else on more than one entry", () => {
     const measure = withheldTermsMeasure(rulings);
     assert.ok(measure.offers_we_refuse_to_restate[READING_ANSWERS_FOR_SOMETHING_ELSE] > 1);
-    assert.ok(measure.offers_we_may_restate_from_their_reading > 0);
+    assert.ok(measure.offers_we_refuse_to_restate[TIER_IS_NOT_ONE_WE_RECORD_AS_FREE] > 1);
+  });
+
+  it("publishes no entry as verified whose terms we took from a reading", () => {
+    const restated = offers.filter((o) => o.restated_from);
+    assert.deepEqual(
+      restated.filter((o) => rulings.some((ruling) => ruling.offer === o && !ruling.refusal)).map((o) => o.vendor),
+      [],
+    );
   });
 });
