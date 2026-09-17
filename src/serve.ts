@@ -74,6 +74,7 @@ import { configureDurableBackend, hydrateDurableStores, persistDurableStores, id
 import { addFriend, removeFriend, getFriends, getFriendCodesForVendors } from "./friends.js";
 import { changeLogAnchorFor, changeLogVendorMap, toSlug, vendorSlugMap, resolveVendorSlug, namedVendorSlug, comparisonOfOneRecord, recordNamedBySlug, servedVendorSlug, servedVendorSlugForName } from "./vendor-slug.js";
 import { NO_PUSH_NOTICE, watchCommandBlock, watchRequestsFor } from "./change-watching.js";
+import { clauseNaming, quantitiesNotIn } from "./quoted-figures.js";
 import { createRegistrationLimiter, rateLimitHeaders } from "./rate-limit.js";
 import { offerForSlug, vendorRates, cheapestRate, dearestRate, spanOfRates, formatRate, formatRateSpan, monthlyTokenCost, formatDollars, type ModelRate } from "./model-rates.js";
 import { STALE_FACT_PAGES_BASELINE, factsOutdatedBy, linkifyVerdictBlocks, newestChangeBySlug, overdueReport, pageCompiledClause, pageDataProvenance, pageDateModified, tabulatedVendorSlots, tabulatedVendors, utcToday, verdictsOutdatedBy } from "./page-reviews.js";
@@ -621,6 +622,55 @@ const refusalsHeldByVendor = refusalsByVendor(loadChangeRefusals());
 
 function refusalsFor(vendorName: string): ChangeRefusal[] {
   return refusalsHeldByVendor.get(vendorName.toLowerCase()) ?? [];
+}
+
+export function whatWeHoldAbout(vendorName: string): string[] {
+  const stored = offers.filter(o => o.vendor === vendorName).map(o => o.description);
+  const recorded = changesFor(vendorName).flatMap(change =>
+    [change.summary, change.previous_state, change.current_state].filter((text): text is string => typeof text === "string"),
+  );
+  return [...stored, ...recorded];
+}
+
+function recordedClause(vendorName: string, tier: string, subject: string): string | null {
+  const offer = offers.find(o => o.vendor === vendorName && o.tier === tier);
+  return offer ? clauseNaming(offer.description, subject) : null;
+}
+
+const ORACLE_ALWAYS_FREE_VENDOR = "Oracle Cloud";
+const ORACLE_ALWAYS_FREE_TIER = "Always Free";
+
+export function oracleArmAllowance(): string {
+  return recordedClause(ORACLE_ALWAYS_FREE_VENDOR, ORACLE_ALWAYS_FREE_TIER, "Ampere") ?? ORACLE_ALWAYS_FREE_TIER;
+}
+
+export function oracleBlockStorage(): string {
+  return recordedClause(ORACLE_ALWAYS_FREE_VENDOR, ORACLE_ALWAYS_FREE_TIER, "block volumes") ?? "";
+}
+
+function oracleAlwaysFreeSpec(): string {
+  const block = oracleBlockStorage();
+  return block === "" ? oracleArmAllowance() : `${oracleArmAllowance()}, ${block}`;
+}
+
+export const NO_RECORD_BEHIND_THIS_FIGURE = "Hand-typed — we hold no record";
+export const FIGURE_NOT_IN_OUR_RECORD = "Hand-typed — not in our record";
+
+export function figureProvenance(claim: string, vendorName: string): string | null {
+  const held = whatWeHoldAbout(vendorName);
+  if (held.length === 0) return NO_RECORD_BEHIND_THIS_FIGURE;
+  return quantitiesNotIn(claim, held).length === 0 ? null : FIGURE_NOT_IN_OUR_RECORD;
+}
+
+function figureProvenanceHtml(claim: string, vendorName: string, vendorSlug: string): string {
+  const handTyped = figureProvenance(claim, vendorName);
+  if (handTyped !== null) return escHtmlServer(handTyped);
+  const slug = servedVendorSlug(vendorSlug) === null ? null : vendorSlug;
+  return slug === null ? "Our record" : `<a href="/vendor/${slug}">Our record</a>`;
+}
+
+function hetznerReadProvenanceHtml(): string {
+  return `<a href="${HETZNER_PRICE_SOURCE}" target="_blank" rel="noopener">hetzner.com</a>, read ${HETZNER_PRICES_READ}`;
 }
 
 const unconfirmedTermsByOffer = new Map<string, { on: string; unconfirmed: UnconfirmedTerms | null }>();
@@ -10390,7 +10440,7 @@ ${buildCards(startupCredits)}
       <tr>
         <td style="font-weight:600"><a href="/vendor/oracle-cloud" style="color:var(--text)">Oracle Cloud</a></td>
         <td>VPS / IaaS</td>
-        <td>4 Arm VMs (24 GB total), 200 GB storage</td>
+        <td>${escHtmlServer(oracleAlwaysFreeSpec())}</td>
         <td>10 TB/mo</td>
         <td>Always-free VMs, most generous IaaS tier</td>
       </tr>
@@ -10427,7 +10477,7 @@ ${buildCards(startupCredits)}
       <dd><a href="/vendor/cloudflare-workers">Cloudflare Workers</a> (100K req/day, edge-fast) for lightweight APIs. <a href="/vendor/deno-deploy">Deno Deploy</a> for TypeScript-native. <a href="/vendor/google-cloud-run">Google Cloud Run</a> for containerized APIs with auto-scale.</dd>
 
       <dt>Need a full VM with root access?</dt>
-      <dd><a href="/vendor/oracle-cloud">Oracle Cloud</a> is unmatched — 4 Arm VMs, 24 GB RAM, 200 GB storage, permanently free. <a href="/vendor/aws">AWS</a> and <a href="/vendor/azure">Azure</a> offer 12-month free tiers with t2.micro/B1 instances.</dd>
+      <dd><a href="/vendor/oracle-cloud">Oracle Cloud</a> is unmatched — ${escHtmlServer(oracleAlwaysFreeSpec())}, permanently free. <a href="/vendor/aws">AWS</a> and <a href="/vendor/azure">Azure</a> offer 12-month free tiers with t2.micro/B1 instances.</dd>
 
       <dt>Running Docker containers?</dt>
       <dd><a href="/vendor/google-cloud-run">Google Cloud Run</a> (scale to zero, 2M req/mo free) or <a href="/vendor/fly-io">Fly.io</a> (legacy accounts: 3 shared VMs). <a href="/vendor/railway">Railway</a> and <a href="/vendor/koyeb">Koyeb</a> (paid, from $29/mo) also run containers natively.</dd>
@@ -18782,8 +18832,8 @@ function buildHetznerPricing2026Page(): string {
     { vendor: "Vultr", spec: "Cloud — 1 vCPU, 1 GB", price: "$5/mo", region: "Global", note: "Not re-read since March 2026" },
     { vendor: "Linode/Akamai", spec: "Nanode — 1 vCPU, 1 GB", price: "$5/mo", region: "Global", note: "Not re-read since March 2026" },
     { vendor: "OVHcloud", spec: "VPS-1 — 1 vCPU, 2 GB", price: "$7.60/mo", region: "EU", note: "Rose 55% on April 1, 2026" },
-    { vendor: "AWS Lightsail", spec: "1 vCPU, 512 MB", price: "$3.50/mo", region: "US", note: "Minimal free tier" },
-    { vendor: "Oracle Cloud", spec: "Ampere — 4 OCPUs, 24 GB", price: "Free (Always Free)", region: "Global", note: "Best free tier for VMs" },
+    { vendor: "AWS Lightsail", spec: "2 vCPUs, 512 MB", price: "$5/mo", region: "US", note: "The $3.50 bundle is IPv6-only; every other row here has a public IPv4 address" },
+    { vendor: "Oracle Cloud", spec: oracleArmAllowance(), price: "Free (Always Free)", region: "Global", note: "Best free tier for VMs" },
     { vendor: "Railway", spec: "Free Plan", price: "$1/mo min", region: "US", note: "30-day trial with $5 credits, then $1/mo minimum" },
     { vendor: "Render", spec: "Free Tier", price: "Free (750h/mo)", region: "US", note: "Auto-sleep on free tier" },
     { vendor: "Fly.io", spec: "shared-cpu-1x, 256 MB", price: "$1.94/mo", region: "Global", note: "No free tier for new accounts — 2 hrs runtime or 7-day trial" },
@@ -18798,8 +18848,13 @@ function buildHetznerPricing2026Page(): string {
       <td style="font-family:var(--mono);font-weight:600;color:var(--accent)">${escHtmlServer(c.price)}</td>
       <td>${escHtmlServer(c.region)}</td>
       <td style="color:var(--text-muted);font-size:.85rem">${escHtmlServer(c.note)}</td>
+      <td class="figure-provenance" style="color:var(--text-muted);font-size:.85rem">${isHetzner ? hetznerReadProvenanceHtml() : figureProvenanceHtml(`${c.spec} ${c.price}`, c.vendor, vendorSlug)}</td>
     </tr>`;
   }).join("\n        ");
+
+  const handTypedAlternativeRowCount = competitorPricing.filter(
+    c => !c.vendor.startsWith("Hetzner") && figureProvenance(`${c.spec} ${c.price}`, c.vendor) !== null,
+  ).length;
 
   const relatedPages = ALTERNATIVES_PAGES.filter(p =>
     ["hetzner-alternatives", "hosting-alternatives", "q1-2026-developer-pricing-report"].includes(p.slug)
@@ -18992,11 +19047,11 @@ ${mcpCtaCss()}
   </div>
 
   <h2 id="alternatives">6. Alternatives Comparison</h2>
-  <p class="section-intro">How does the cheapest Hetzner plan you can order compare to the competition? The DigitalOcean and OVHcloud rows come from our own change records; the Vultr and Linode rows were verified in March 2026 and we have not re-read them, which is marked in the table rather than hidden. We also compared against ${altOffers.length} hosting alternatives from our index.</p>
+  <p class="section-intro">How does the cheapest Hetzner plan you can order compare to the competition? Every row says in its last column where its figures come from: a row reads <em>Our record</em> only where every quantity beside it appears in what we hold for that vendor, and <em>Hand-typed</em> where it does not — a hand-typed row is one nothing re-reads, so it cannot go stale loudly. ${handTypedAlternativeRowCount} of the ${competitorPricing.length} rows are hand-typed. We also compared against ${altOffers.length} hosting alternatives from our index.</p>
   <div style="overflow-x:auto">
     <table class="pricing-table">
       <thead>
-        <tr><th>Provider</th><th>Spec</th><th>Price</th><th>Region</th><th>Notes</th></tr>
+        <tr><th>Provider</th><th>Spec</th><th>Price</th><th>Region</th><th>Notes</th><th>Where this figure comes from</th></tr>
       </thead>
       <tbody>
         ${altTableRows}
@@ -19055,7 +19110,7 @@ ${mcpCtaCss()}
   </div>
 
   <div class="methodology">
-    <strong>Methodology:</strong> The plan table in section 1 was read from <a href="${HETZNER_PRICE_SOURCE}" target="_blank" rel="noopener">hetzner.com</a> on ${HETZNER_PRICES_READ} — plan names, specs and availability from the three cloud family pages, monthly prices from the price API those pages draw from. The April figures come from <a href="https://www.hetzner.com/pressroom/statement-price-adjustment/" target="_blank" rel="noopener">Hetzner's April press statement</a> and our own change record; the June scope comes from <a href="https://www.hetzner.com/pressroom/standardization-and-price-adjustment-of-our-server-products/" target="_blank" rel="noopener">Hetzner's June statement</a>. DigitalOcean and OVHcloud competitor prices come from our change records; Vultr and Linode were last verified in March 2026 and are marked as such in the table. The competitors compared here were chosen by hand.
+    <strong>Methodology:</strong> The plan table in section 1 was read from <a href="${HETZNER_PRICE_SOURCE}" target="_blank" rel="noopener">hetzner.com</a> on ${HETZNER_PRICES_READ} — plan names, specs and availability from the three cloud family pages, monthly prices from the price API those pages draw from. The April figures come from <a href="https://www.hetzner.com/pressroom/statement-price-adjustment/" target="_blank" rel="noopener">Hetzner's April press statement</a> and our own change record; the June scope comes from <a href="https://www.hetzner.com/pressroom/standardization-and-price-adjustment-of-our-server-products/" target="_blank" rel="noopener">Hetzner's June statement</a>. Every competitor row in section 6 states its own provenance in the table's last column rather than in this paragraph, and ${handTypedAlternativeRowCount} of the ${competitorPricing.length} are hand-typed with nothing behind them that a re-read would correct. The competitors compared here were chosen by hand.
   </div>
 
   <div class="search-cta">
@@ -19764,7 +19819,7 @@ function buildGoogleDeveloperProgram2026Page(): string {
   const creditAlternatives = [
     { vendor: "AWS Free Tier", credits: "12 months free + always-free services", highlight: "750h EC2 t2.micro, 5GB S3, 1M Lambda requests", link: "/vendor/aws" },
     { vendor: "Azure Free Account", credits: "$200 credits (30 days) + 12 months free", highlight: "750h B1s VM, 5GB Blob Storage, 250GB SQL", link: "/vendor/azure" },
-    { vendor: "Oracle Cloud", credits: "Always Free — no expiry", highlight: "4 Ampere OCPUs, 24GB RAM, 200GB block storage", link: "/vendor/oracle-cloud" },
+    { vendor: "Oracle Cloud", credits: "Always Free — no expiry", highlight: oracleAlwaysFreeSpec(), link: "/vendor/oracle-cloud" },
     { vendor: "DigitalOcean", credits: "$200 credits (60 days)", highlight: "Good for testing, then $4/mo droplets", link: "/vendor/digitalocean" },
     { vendor: "Google Cloud (direct)", credits: "$300 credits (90 days) + always-free tier", highlight: "Same GCP services, no subscription needed", link: "/vendor/google-cloud-run" },
     { vendor: "Railway", credits: "$5 trial credit, then $1/mo min", highlight: "No sleep, GitHub deploy, usage-based", link: "/vendor/railway" },
@@ -20037,7 +20092,7 @@ ${mcpCtaCss()}
     </table>
   </div>
   <div class="context-box">
-    <strong>Best strategy:</strong> Oracle Cloud's Always Free tier (4 Ampere OCPUs, 24GB RAM) provides more compute than GDP Premium's credits ever could — and it never expires. Combine with AWS and Azure free tiers for a multi-cloud setup that costs $0/month. See our <a href="/free-startup-stack">Free Startup Stack</a> guide for a complete infrastructure setup.
+    <strong>Best strategy:</strong> Oracle Cloud's Always Free tier (${escHtmlServer(oracleArmAllowance())}) never expires, so it outlasts any credit grant GDP Premium ever made. Combine with AWS and Azure free tiers for a multi-cloud setup that costs $0/month. See our <a href="/free-startup-stack">Free Startup Stack</a> guide for a complete infrastructure setup.
   </div>
 
   <h2 id="ai-alts">6. Free AI/LLM API Alternatives</h2>
@@ -20101,7 +20156,7 @@ ${mcpCtaCss()}
     </div>
     <div class="verdict-item">
       <strong>If you're a student or learning:</strong>
-      <p>Don't pay for AI Pro. Use <a href="/vendor/oracle-cloud">Oracle Cloud Always Free</a> (4 OCPUs, 24GB RAM — more than GDP Premium ever offered), <a href="/vendor/firebase">Firebase Spark</a>, and free LLM APIs. Total cost: $0.</p>
+      <p>Don't pay for AI Pro. Use <a href="/vendor/oracle-cloud">Oracle Cloud Always Free</a> (${escHtmlServer(oracleArmAllowance())}, and it never expires), <a href="/vendor/firebase">Firebase Spark</a>, and free LLM APIs. Total cost: $0.</p>
     </div>
   </div>
 
