@@ -5394,7 +5394,13 @@
       "category": "CI/CD",
       "alternatives": [],
       "detected_by": "reverify-ai",
-      "recorded_date": "2026-08-28"
+      "recorded_date": "2026-08-28",
+      "resolution": {
+        "state": "retracted",
+        "date": "2026-09-17",
+        "detail": "Retracted 2026-09-17: accurate about the Starter plan and attached to the free one. bitrise.io/pricing renders its comparison table with three columns headed \"Starter Pro Enterprise\" — the free Hobby plan has no column in it. Build timeout reads \"210 minutes | 210 minutes | Custom (up to 4h)\" and Dependency cache storage reads \"2 GB | 100 GB | Custom\", so both figures in this record are the Starter column. The page states the free plan's timeout in its FAQ: \"On our Free plan, your build times out at 90 minutes, while on Starter and Pro, it can run up to 210 minutes.\" Our stored 90-minute timeout was right and this record withheld it. The Hobby card states no figures at all — \"Enough build credits for you to build your small project a few times per month\" — and confirms our stored one-user cap: \"Access for a team of one (that's you!)\".",
+        "source_url": "https://bitrise.io/pricing"
+      }
     },
     {
       "vendor": "Airtable",
