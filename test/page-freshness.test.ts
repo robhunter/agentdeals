@@ -5,7 +5,7 @@ import { readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import {
-  compiledNotice, dataProvenanceFor, daysBetween, deriveTier, freshnessSegmentFor, indexCitation,
+  compiledNotice, dataProvenanceFor, daysBetween, deriveTier, freshnessSegmentFor, recordsCitation,
   linkifyVerdictBlocks, overdueReport,
   parsePageReviews, restartsTheClock, reviewStatus, verdictBlocks, vendorsAssertedIn, verdictsOutdatedBy,
   OUTCOME_RESTARTS_THE_CLOCK, REVIEW_OUTCOMES, SLA_DAYS, EXPIRY_MULTIPLE,
@@ -49,7 +49,7 @@ function jsonLdOf(html: string): any {
 function record(over: Partial<PageReviewRecord> = {}): PageReviewRecord {
   return {
     path: "/p", published: "2026-01-01", tier: "A", vendors_asserted: [], badge_subjects_unresolved: [],
-    reviewed_at: null, reviewer: null, table_figures: 0, table_figures_from_index: 0, ...over,
+    reviewed_at: null, reviewer: null, table_figures: 0, table_figures_from_records: 0, ...over,
   };
 }
 
@@ -571,12 +571,12 @@ describe("what a page is allowed to say about where its figures came from", () =
   });
 
   it("cites the catalogue only for a page whose every table figure it supplies", () => {
-    const supplied = { reads_index: true, tables_read_index: true, table_figures: 7, table_figures_from_index: 7 };
-    assert.strictEqual(dataProvenanceFor(record(supplied), 1580), indexCitation(1580));
+    const supplied = { reads_index: true, tables_read_index: true, table_figures: 7, table_figures_from_records: 7 };
+    assert.strictEqual(dataProvenanceFor(record(supplied), 1580), recordsCitation(1580));
     assert.strictEqual(dataProvenanceFor(record(), 1580), compiledNotice("2026-04-03"));
     assert.notStrictEqual(
-      dataProvenanceFor(record({ ...supplied, table_figures_from_index: 6 }), 1580),
-      indexCitation(1580),
+      dataProvenanceFor(record({ ...supplied, table_figures_from_records: 6 }), 1580),
+      recordsCitation(1580),
     );
   });
 

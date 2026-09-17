@@ -1,4 +1,4 @@
-import { compiledClause, everyFigureComesFromTheIndex, getPageReview, utcToday, type PageReviewRecord } from "./page-reviews.js";
+import { compiledClause, everyFigureComesFromOurRecords, getPageReview, utcToday, type PageReviewRecord } from "./page-reviews.js";
 
 export const FRESHNESS_TOKEN = "[[freshness]]";
 
@@ -61,7 +61,7 @@ export function freshnessClaimFor(
 ): string {
   const review = reviewFor(pagePath);
   if (!review) return verifiedSpanClaim(vendorSlugsLinkedFrom(html).flatMap(slug => [...verifiedDatesForSlug(slug)]));
-  if (!everyFigureComesFromTheIndex(review)) return compiledClaimFor(review, today);
+  if (!everyFigureComesFromOurRecords(review)) return compiledClaimFor(review, today);
   return verifiedSpanClaim(subjectsOfItsOwnFigures(review, html).flatMap(slug => [...verifiedDatesForSlug(slug)]));
 }
 
