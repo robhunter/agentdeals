@@ -144,7 +144,7 @@ export function removalDoesNotReachTheLicence(record, freeByLicence) {
   return !statesTheLicenceIsUntouched(record?.summary);
 }
 
-const QUANTITY_CHANGE_TYPES = ["limits_reduced", "limits_increased"];
+export const QUANTITY_CHANGE_TYPES = ["limits_reduced", "limits_increased"];
 const DEMOTING_QUANTITY_TYPES = ["limits_reduced", "free_tier_removed"];
 
 export const RECLASSIFIED_AS_RESTRUCTURE = "pricing_restructured";
