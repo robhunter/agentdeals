@@ -132,7 +132,7 @@ interface StoredReview {
   reads_index: boolean;
   tables_read_index: boolean;
   table_figures: number;
-  table_figures_from_index: number;
+  table_figures_from_records: number;
   vendors_tabulated: string[];
 }
 
@@ -154,7 +154,7 @@ function namedMonth(isoDate: string): string {
 }
 
 function everyTableFigureCameFromOurRecords(review: StoredReview): boolean {
-  return review.table_figures > 0 && review.table_figures_from_index === review.table_figures;
+  return review.table_figures > 0 && review.table_figures_from_records === review.table_figures;
 }
 
 function claimTheDataSupports(pagePath: string, html: string, today: string): string {
@@ -192,7 +192,7 @@ const REVIEW_OF_A_HAND_COMPILED_PAGE = {
   reads_index: false,
   tables_read_index: false,
   table_figures: 0,
-  table_figures_from_index: 0,
+  table_figures_from_records: 0,
   reads_changes: false,
   data_source: "unsourced",
   data_source_reason: null,
@@ -286,7 +286,7 @@ describe("A freshness date derived from the records a page lists", () => {
         "2026-09-09",
         () => ({
           ...REVIEW_OF_A_HAND_COMPILED_PAGE,
-          reads_index: true, tables_read_index: true, table_figures: 9, table_figures_from_index: 9,
+          reads_index: true, tables_read_index: true, table_figures: 9, table_figures_from_records: 9,
         }) as never,
       ),
       "Verified September 2026.",
@@ -310,7 +310,7 @@ describe("A freshness date derived from the records a page lists", () => {
     const html = '<a href="/vendor/groq">Groq</a>';
     const mixed = {
       ...REVIEW_OF_A_HAND_COMPILED_PAGE,
-      reads_index: true, tables_read_index: true, table_figures: 9, table_figures_from_index: 8,
+      reads_index: true, tables_read_index: true, table_figures: 9, table_figures_from_records: 8,
     };
     assert.strictEqual(
       freshnessClaimFor("/x", html, () => ["2026-09-05"], "2026-09-09", () => mixed as never),
@@ -323,7 +323,7 @@ describe("A freshness date derived from the records a page lists", () => {
     const dates: Record<string, string[]> = { groq: ["2026-09-05"], cerebras: ["2026-04-01"] };
     const tabulating = {
       ...REVIEW_OF_A_HAND_COMPILED_PAGE,
-      reads_index: true, tables_read_index: true, table_figures: 9, table_figures_from_index: 9,
+      reads_index: true, tables_read_index: true, table_figures: 9, table_figures_from_records: 9,
       vendors_tabulated: ["groq"],
     };
     assert.strictEqual(

@@ -20,7 +20,7 @@ function page(overrides: Partial<PageReviewRecord> & { path: string }): PageRevi
     reads_index: false,
     tables_read_index: false,
     table_figures: 0,
-    table_figures_from_index: 0,
+    table_figures_from_records: 0,
     reads_changes: false,
     data_source: "unsourced",
     data_source_reason: null,
@@ -30,7 +30,7 @@ function page(overrides: Partial<PageReviewRecord> & { path: string }): PageRevi
 
 function seen(overrides: Partial<PageSourceMeasurement> = {}): PageSourceMeasurement {
   return {
-    reads_index: false, tables_read_index: false, table_figures: 0, table_figures_from_index: 0,
+    reads_index: false, tables_read_index: false, table_figures: 0, table_figures_from_records: 0,
     reads_changes: false, vendor_fact_rows: 0, ...overrides,
   };
 }
@@ -44,7 +44,7 @@ function measurementsFor(pages: PageReviewRecord[]): Map<string, PageSourceMeasu
     reads_index: p.reads_index,
     tables_read_index: p.tables_read_index,
     table_figures: p.table_figures,
-    table_figures_from_index: p.table_figures_from_index,
+    table_figures_from_records: p.table_figures_from_records,
     reads_changes: p.reads_changes,
   })]));
 }
@@ -256,30 +256,30 @@ describe("a review date means a review happened, and the outcome says what it fo
   });
 
   it("cites the catalogue instead of a compilation date on a page whose every table figure it supplies", () => {
-    const reading = page({ path: "/p", reads_index: true, tables_read_index: true, table_figures: 12, table_figures_from_index: 12, data_source: "catalogue", reviewed_at: "2026-08-26", review_outcome: "pass" });
-    assert.strictEqual(dataProvenanceFor(reading, 1580, "2026-08-27"), "Figures in the tables below come from our index of 1,580 developer tools");
-    assert.strictEqual(figureSourceSentence(reading, 1580), "Figures in the tables below come from our index of 1,580 developer tools.");
+    const reading = page({ path: "/p", reads_index: true, tables_read_index: true, table_figures: 12, table_figures_from_records: 12, data_source: "catalogue", reviewed_at: "2026-08-26", review_outcome: "pass" });
+    assert.strictEqual(dataProvenanceFor(reading, 1580, "2026-08-27"), "Figures in the tables below come from our records for 1,580 developer tools");
+    assert.strictEqual(figureSourceSentence(reading, 1580), "Figures in the tables below come from our records for 1,580 developer tools.");
   });
 
   it("dates the compilation and states the share on a page whose tables mix our records with literals", () => {
-    const mixed = page({ path: "/p", published: "2026-04-03", reads_index: true, tables_read_index: true, table_figures: 12, table_figures_from_index: 3, data_source: "catalogue", reviewed_at: "2026-08-26", review_outcome: "pass" });
+    const mixed = page({ path: "/p", published: "2026-04-03", reads_index: true, tables_read_index: true, table_figures: 12, table_figures_from_records: 3, data_source: "catalogue", reviewed_at: "2026-08-26", review_outcome: "pass" });
     assert.strictEqual(
       dataProvenanceFor(mixed, 1580, "2026-08-27"),
-      "Figures compiled 2026-04-03, last checked 2026-08-26 &middot; 3 of 12 figures in the tables below come from our index of 1,580 developer tools",
+      "Figures compiled 2026-04-03, last checked 2026-08-26 &middot; 3 of 12 figures in the tables below come from our records for 1,580 developer tools",
     );
-    assert.strictEqual(figureSourceSentence(mixed, 1580), "3 of 12 figures in the tables below come from our index of 1,580 developer tools.");
+    assert.strictEqual(figureSourceSentence(mixed, 1580), "3 of 12 figures in the tables below come from our records for 1,580 developer tools.");
   });
 
   it("names our index nowhere on a page none of whose table figures it supplies", () => {
-    const none = page({ path: "/p", published: "2026-04-03", reads_index: true, tables_read_index: true, table_figures: 12, table_figures_from_index: 0, data_source: "catalogue", reviewed_at: "2026-08-26", review_outcome: "pass" });
+    const none = page({ path: "/p", published: "2026-04-03", reads_index: true, tables_read_index: true, table_figures: 12, table_figures_from_records: 0, data_source: "catalogue", reviewed_at: "2026-08-26", review_outcome: "pass" });
     assert.strictEqual(dataProvenanceFor(none, 1580, "2026-08-27"), "Figures compiled 2026-04-03, last checked 2026-08-26");
     assert.strictEqual(figureSourceSentence(none, 1580), "");
   });
 
   it("refuses a register that credits more figures to our records than the page publishes", () => {
-    const overcounting = page({ path: "/p", reads_index: true, tables_read_index: true, table_figures: 4, table_figures_from_index: 9, data_source: "catalogue" });
+    const overcounting = page({ path: "/p", reads_index: true, tables_read_index: true, table_figures: 4, table_figures_from_records: 9, data_source: "catalogue" });
     const problems = problemsFor([overcounting], new Map([["/p", seen({
-      reads_index: true, tables_read_index: true, table_figures: 4, table_figures_from_index: 9,
+      reads_index: true, tables_read_index: true, table_figures: 4, table_figures_from_records: 9,
     })]]), 1);
     assert.ok(
       problems.some(p => p.includes("9 figures traced to a record out of 4 published")),
@@ -288,9 +288,9 @@ describe("a review date means a review happened, and the outcome says what it fo
   });
 
   it("refuses a register whose figure counts the perturbation does not bear out", () => {
-    const drifted = page({ path: "/p", reads_index: true, tables_read_index: true, table_figures: 12, table_figures_from_index: 12, data_source: "catalogue" });
+    const drifted = page({ path: "/p", reads_index: true, tables_read_index: true, table_figures: 12, table_figures_from_records: 12, data_source: "catalogue" });
     const problems = problemsFor([drifted], new Map([["/p", seen({
-      reads_index: true, tables_read_index: true, table_figures: 12, table_figures_from_index: 3,
+      reads_index: true, tables_read_index: true, table_figures: 12, table_figures_from_records: 3,
     })]]), 1);
     assert.ok(
       problems.some(p => p.includes("replacing both stores says 3 of 12")),

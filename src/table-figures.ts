@@ -39,5 +39,5 @@ export function censusTableFigures(served: string, servedWithoutTheCatalogue: st
       unmoved += 1;
     }
   }
-  return { table_figures: figures.length, table_figures_from_index: figures.length - unmoved };
+  return { table_figures: figures.length, table_figures_from_records: figures.length - unmoved };
 }

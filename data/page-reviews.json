@@ -75,10 +75,10 @@
       "reads_index": true,
       "tables_read_index": true,
       "table_figures": 47,
-      "table_figures_from_index": 47,
       "reads_changes": true,
       "data_source": "catalogue",
-      "data_source_reason": null
+      "data_source_reason": null,
+      "table_figures_from_records": 47
     },
     {
       "path": "/agent-stack",
@@ -95,10 +95,10 @@
       "reads_index": true,
       "tables_read_index": true,
       "table_figures": 23,
-      "table_figures_from_index": 23,
       "reads_changes": true,
       "data_source": "catalogue",
-      "data_source_reason": null
+      "data_source_reason": null,
+      "table_figures_from_records": 23
     },
     {
       "path": "/ai-coding-pricing-2026",
@@ -131,10 +131,10 @@
       "reads_index": true,
       "tables_read_index": false,
       "table_figures": 49,
-      "table_figures_from_index": 32,
       "reads_changes": true,
       "data_source": "catalogue",
-      "data_source_reason": null
+      "data_source_reason": null,
+      "table_figures_from_records": 32
     },
     {
       "path": "/ai-coding-tools-pricing",
@@ -182,10 +182,10 @@
       "reads_index": true,
       "tables_read_index": false,
       "table_figures": 138,
-      "table_figures_from_index": 49,
       "reads_changes": true,
       "data_source": "catalogue",
-      "data_source_reason": null
+      "data_source_reason": null,
+      "table_figures_from_records": 49
     },
     {
       "path": "/analytics-free-tier-comparison-2026",
@@ -215,10 +215,10 @@
       "reads_index": true,
       "tables_read_index": false,
       "table_figures": 34,
-      "table_figures_from_index": 5,
       "reads_changes": true,
       "data_source": "catalogue",
-      "data_source_reason": null
+      "data_source_reason": null,
+      "table_figures_from_records": 5
     },
     {
       "path": "/api-development-free-tier-comparison-2026",
@@ -253,10 +253,10 @@
       "reads_index": true,
       "tables_read_index": false,
       "table_figures": 33,
-      "table_figures_from_index": 10,
       "reads_changes": true,
       "data_source": "catalogue",
-      "data_source_reason": null
+      "data_source_reason": null,
+      "table_figures_from_records": 10
     },
     {
       "path": "/auth-comparison-2026",
@@ -307,10 +307,10 @@
       "reads_index": true,
       "tables_read_index": false,
       "table_figures": 76,
-      "table_figures_from_index": 5,
       "reads_changes": true,
       "data_source": "catalogue",
-      "data_source_reason": null
+      "data_source_reason": null,
+      "table_figures_from_records": 5
     },
     {
       "path": "/aws-app-runner-migration",
@@ -344,10 +344,10 @@
       "reads_index": false,
       "tables_read_index": false,
       "table_figures": 42,
-      "table_figures_from_index": 4,
       "reads_changes": true,
       "data_source": "unsourced",
-      "data_source_reason": null
+      "data_source_reason": null,
+      "table_figures_from_records": 4
     },
     {
       "path": "/aws-free-tier-2026",
@@ -385,10 +385,10 @@
       "reads_index": true,
       "tables_read_index": false,
       "table_figures": 56,
-      "table_figures_from_index": 18,
       "reads_changes": true,
       "data_source": "catalogue",
-      "data_source_reason": null
+      "data_source_reason": null,
+      "table_figures_from_records": 18
     },
     {
       "path": "/azure-free-tier-2026",
@@ -418,10 +418,10 @@
       "reads_index": true,
       "tables_read_index": false,
       "table_figures": 38,
-      "table_figures_from_index": 3,
       "reads_changes": true,
       "data_source": "catalogue",
-      "data_source_reason": null
+      "data_source_reason": null,
+      "table_figures_from_records": 3
     },
     {
       "path": "/budget-builder",
@@ -438,10 +438,10 @@
       "reads_index": true,
       "tables_read_index": false,
       "table_figures": 0,
-      "table_figures_from_index": 0,
       "reads_changes": true,
       "data_source": "catalogue",
-      "data_source_reason": "the risk level beside each vendor is the level the catalogue publishes for that record, withholding included"
+      "data_source_reason": "the risk level beside each vendor is the level the catalogue publishes for that record, withholding included",
+      "table_figures_from_records": 0
     },
     {
       "path": "/ci-cd-pricing",
@@ -491,10 +491,10 @@
       "reads_index": false,
       "tables_read_index": false,
       "table_figures": 115,
-      "table_figures_from_index": 17,
       "reads_changes": true,
       "data_source": "unsourced",
-      "data_source_reason": null
+      "data_source_reason": null,
+      "table_figures_from_records": 17
     },
     {
       "path": "/cicd-free-tier-comparison-2026",
@@ -537,10 +537,10 @@
       "reads_index": true,
       "tables_read_index": false,
       "table_figures": 55,
-      "table_figures_from_index": 20,
       "reads_changes": true,
       "data_source": "catalogue",
-      "data_source_reason": null
+      "data_source_reason": null,
+      "table_figures_from_records": 20
     },
     {
       "path": "/cloud-free-tier-comparison-2026",
@@ -566,10 +566,10 @@
       "reads_index": true,
       "tables_read_index": false,
       "table_figures": 65,
-      "table_figures_from_index": 15,
       "reads_changes": true,
       "data_source": "catalogue",
-      "data_source_reason": null
+      "data_source_reason": null,
+      "table_figures_from_records": 15
     },
     {
       "path": "/compare-tool",
@@ -586,10 +586,10 @@
       "reads_index": false,
       "tables_read_index": false,
       "table_figures": 0,
-      "table_figures_from_index": 0,
       "reads_changes": false,
       "data_source": "editorial",
-      "data_source_reason": "a picker that links to comparison pages and asserts nothing about any vendor itself"
+      "data_source_reason": "a picker that links to comparison pages and asserts nothing about any vendor itself",
+      "table_figures_from_records": 0
     },
     {
       "path": "/dall-e-shutdown",
@@ -618,10 +618,10 @@
       "reads_index": false,
       "tables_read_index": false,
       "table_figures": 21,
-      "table_figures_from_index": 5,
       "reads_changes": true,
       "data_source": "unsourced",
-      "data_source_reason": null
+      "data_source_reason": null,
+      "table_figures_from_records": 5
     },
     {
       "path": "/database-free-tier-comparison-2026",
@@ -667,10 +667,10 @@
       "reads_index": true,
       "tables_read_index": false,
       "table_figures": 48,
-      "table_figures_from_index": 12,
       "reads_changes": true,
       "data_source": "catalogue",
-      "data_source_reason": null
+      "data_source_reason": null,
+      "table_figures_from_records": 12
     },
     {
       "path": "/database-pricing",
@@ -726,10 +726,10 @@
       "reads_index": true,
       "tables_read_index": false,
       "table_figures": 145,
-      "table_figures_from_index": 37,
       "reads_changes": true,
       "data_source": "catalogue",
-      "data_source_reason": null
+      "data_source_reason": null,
+      "table_figures_from_records": 37
     },
     {
       "path": "/datadog-vs-new-relic",
@@ -756,10 +756,10 @@
       "reads_index": true,
       "tables_read_index": true,
       "table_figures": 39,
-      "table_figures_from_index": 12,
       "reads_changes": true,
       "data_source": "catalogue",
-      "data_source_reason": null
+      "data_source_reason": null,
+      "table_figures_from_records": 12
     },
     {
       "path": "/digitalocean-free-tier-2026",
@@ -791,10 +791,10 @@
       "reads_index": true,
       "tables_read_index": false,
       "table_figures": 56,
-      "table_figures_from_index": 8,
       "reads_changes": true,
       "data_source": "catalogue",
-      "data_source_reason": null
+      "data_source_reason": null,
+      "table_figures_from_records": 8
     },
     {
       "path": "/disclosure",
@@ -811,10 +811,10 @@
       "reads_index": false,
       "tables_read_index": false,
       "table_figures": 0,
-      "table_figures_from_index": 0,
       "reads_changes": false,
       "data_source": "editorial",
-      "data_source_reason": "states how we are paid and links our policies; names no vendor"
+      "data_source_reason": "states how we are paid and links our policies; names no vendor",
+      "table_figures_from_records": 0
     },
     {
       "path": "/email-comparison-2026",
@@ -861,14 +861,14 @@
       "reviewed_at": "2026-09-05",
       "reviewer": "coder",
       "review_outcome": "fail",
-      "review_note": "Read against resend.com/pricing, mailersend.com/pricing and mailerlite.com/pricing on 2026-09-05, after a Resend record dated 2026-09-05 moved under the 2026-09-04 review. Resend: 3,000 emails/month and the 100/day cap hold; custom domains on Free is 3, not the 1 the page published, and the catalogue record carried the same 1. MailerSend: the Free plan is 500 emails/month with 1 domain, 10 templates, 5 seats, 1,000 daily API requests and 1-day activity retention, and the 14-day Professional trial carries the same 500 — so the 3,000 the page published on three surfaces was not the trial figure either. Hobby is $7.00/month monthly, $5.60 billed yearly, for 5,000 emails. MailerLite: the Free plan is 250 subscribers and 2,500 monthly emails, below both the 1,000/12,000 the page published and the 500/12,000 in our own record; the record is the stale side and no change record holds 250. Corrected on this page: the MailerSend table row, section and 3K cost-trap cell, the MailerLite table row and section, the Resend section, and the transactional-email answer on /email-service-alternatives. Not verified in this pass: Amazon SES, Brevo, Mailtrap, Loops, Mailjet, Postmark, Maileroo, EmailOctopus, Buttondown, Substack, SMTP2GO, EmailLabs.io and the 10K/50K/100K/500K rows of the cost-trap table.",
+      "review_note": "Read against resend.com/pricing, mailersend.com/pricing and mailerlite.com/pricing on 2026-09-05, after a Resend record dated 2026-09-05 moved under the 2026-09-04 review. Resend: 3,000 emails/month and the 100/day cap hold; custom domains on Free is 3, not the 1 the page published, and the catalogue record carried the same 1. MailerSend: the Free plan is 500 emails/month with 1 domain, 10 templates, 5 seats, 1,000 daily API requests and 1-day activity retention, and the 14-day Professional trial carries the same 500 \u2014 so the 3,000 the page published on three surfaces was not the trial figure either. Hobby is $7.00/month monthly, $5.60 billed yearly, for 5,000 emails. MailerLite: the Free plan is 250 subscribers and 2,500 monthly emails, below both the 1,000/12,000 the page published and the 500/12,000 in our own record; the record is the stale side and no change record holds 250. Corrected on this page: the MailerSend table row, section and 3K cost-trap cell, the MailerLite table row and section, the Resend section, and the transactional-email answer on /email-service-alternatives. Not verified in this pass: Amazon SES, Brevo, Mailtrap, Loops, Mailjet, Postmark, Maileroo, EmailOctopus, Buttondown, Substack, SMTP2GO, EmailLabs.io and the 10K/50K/100K/500K rows of the cost-trap table.",
       "reads_index": true,
       "tables_read_index": false,
       "table_figures": 54,
-      "table_figures_from_index": 5,
       "reads_changes": true,
       "data_source": "catalogue",
-      "data_source_reason": null
+      "data_source_reason": null,
+      "table_figures_from_records": 5
     },
     {
       "path": "/firebase-studio-shutdown",
@@ -898,10 +898,10 @@
       "reads_index": false,
       "tables_read_index": false,
       "table_figures": 24,
-      "table_figures_from_index": 5,
       "reads_changes": true,
       "data_source": "unsourced",
-      "data_source_reason": null
+      "data_source_reason": null,
+      "table_figures_from_records": 5
     },
     {
       "path": "/free-ai-stack",
@@ -929,10 +929,10 @@
       "reads_index": true,
       "tables_read_index": true,
       "table_figures": 9,
-      "table_figures_from_index": 9,
       "reads_changes": true,
       "data_source": "catalogue",
-      "data_source_reason": null
+      "data_source_reason": null,
+      "table_figures_from_records": 9
     },
     {
       "path": "/free-devops-stack",
@@ -960,10 +960,10 @@
       "reads_index": true,
       "tables_read_index": true,
       "table_figures": 19,
-      "table_figures_from_index": 19,
       "reads_changes": true,
       "data_source": "catalogue",
-      "data_source_reason": null
+      "data_source_reason": null,
+      "table_figures_from_records": 19
     },
     {
       "path": "/free-django-stack",
@@ -990,10 +990,10 @@
       "reads_index": true,
       "tables_read_index": true,
       "table_figures": 32,
-      "table_figures_from_index": 14,
       "reads_changes": true,
       "data_source": "catalogue",
-      "data_source_reason": null
+      "data_source_reason": null,
+      "table_figures_from_records": 14
     },
     {
       "path": "/free-fastapi-stack",
@@ -1019,10 +1019,10 @@
       "reads_index": true,
       "tables_read_index": true,
       "table_figures": 32,
-      "table_figures_from_index": 14,
       "reads_changes": true,
       "data_source": "catalogue",
-      "data_source_reason": null
+      "data_source_reason": null,
+      "table_figures_from_records": 14
     },
     {
       "path": "/free-frontend-stack",
@@ -1049,10 +1049,10 @@
       "reads_index": true,
       "tables_read_index": true,
       "table_figures": 12,
-      "table_figures_from_index": 12,
       "reads_changes": true,
       "data_source": "catalogue",
-      "data_source_reason": null
+      "data_source_reason": null,
+      "table_figures_from_records": 12
     },
     {
       "path": "/free-go-stack",
@@ -1079,10 +1079,10 @@
       "reads_index": true,
       "tables_read_index": true,
       "table_figures": 30,
-      "table_figures_from_index": 13,
       "reads_changes": true,
       "data_source": "catalogue",
-      "data_source_reason": null
+      "data_source_reason": null,
+      "table_figures_from_records": 13
     },
     {
       "path": "/free-nextjs-stack",
@@ -1110,10 +1110,10 @@
       "reads_index": true,
       "tables_read_index": true,
       "table_figures": 30,
-      "table_figures_from_index": 12,
       "reads_changes": true,
       "data_source": "catalogue",
-      "data_source_reason": null
+      "data_source_reason": null,
+      "table_figures_from_records": 12
     },
     {
       "path": "/free-saas-stack",
@@ -1141,10 +1141,10 @@
       "reads_index": true,
       "tables_read_index": true,
       "table_figures": 45,
-      "table_figures_from_index": 14,
       "reads_changes": true,
       "data_source": "catalogue",
-      "data_source_reason": null
+      "data_source_reason": null,
+      "table_figures_from_records": 14
     },
     {
       "path": "/free-startup-stack",
@@ -1172,10 +1172,10 @@
       "reads_index": true,
       "tables_read_index": true,
       "table_figures": 13,
-      "table_figures_from_index": 13,
       "reads_changes": true,
       "data_source": "catalogue",
-      "data_source_reason": null
+      "data_source_reason": null,
+      "table_figures_from_records": 13
     },
     {
       "path": "/free-tier-risk",
@@ -1235,10 +1235,10 @@
       "reads_index": true,
       "tables_read_index": true,
       "table_figures": 48,
-      "table_figures_from_index": 0,
       "reads_changes": true,
       "data_source": "catalogue",
-      "data_source_reason": null
+      "data_source_reason": null,
+      "table_figures_from_records": 0
     },
     {
       "path": "/free-tier-tracker",
@@ -1304,10 +1304,10 @@
       "reads_index": false,
       "tables_read_index": false,
       "table_figures": 47,
-      "table_figures_from_index": 46,
       "reads_changes": true,
       "data_source": "unsourced",
-      "data_source_reason": null
+      "data_source_reason": null,
+      "table_figures_from_records": 46
     },
     {
       "path": "/gcp-free-tier-2026",
@@ -1341,10 +1341,10 @@
       "reads_index": true,
       "tables_read_index": false,
       "table_figures": 38,
-      "table_figures_from_index": 2,
       "reads_changes": true,
       "data_source": "catalogue",
-      "data_source_reason": null
+      "data_source_reason": null,
+      "table_figures_from_records": 2
     },
     {
       "path": "/gemini-api-pricing-2026",
@@ -1374,10 +1374,10 @@
       "reads_index": false,
       "tables_read_index": false,
       "table_figures": 9,
-      "table_figures_from_index": 0,
       "reads_changes": true,
       "data_source": "unsourced",
-      "data_source_reason": null
+      "data_source_reason": null,
+      "table_figures_from_records": 0
     },
     {
       "path": "/gemini-api-pricing-changes",
@@ -1408,10 +1408,10 @@
       "reads_index": false,
       "tables_read_index": false,
       "table_figures": 36,
-      "table_figures_from_index": 0,
       "reads_changes": true,
       "data_source": "unsourced",
-      "data_source_reason": null
+      "data_source_reason": null,
+      "table_figures_from_records": 0
     },
     {
       "path": "/google-developer-program-2026",
@@ -1451,10 +1451,10 @@
       "reads_index": true,
       "tables_read_index": true,
       "table_figures": 39,
-      "table_figures_from_index": 4,
       "reads_changes": true,
       "data_source": "catalogue",
-      "data_source_reason": null
+      "data_source_reason": null,
+      "table_figures_from_records": 4
     },
     {
       "path": "/hcp-terraform-migration",
@@ -1485,10 +1485,10 @@
       "reads_index": true,
       "tables_read_index": true,
       "table_figures": 0,
-      "table_figures_from_index": 0,
       "reads_changes": true,
       "data_source": "catalogue",
-      "data_source_reason": null
+      "data_source_reason": null,
+      "table_figures_from_records": 0
     },
     {
       "path": "/hetzner-pricing-2026",
@@ -1520,10 +1520,10 @@
       "reads_index": true,
       "tables_read_index": true,
       "table_figures": 96,
-      "table_figures_from_index": 3,
       "reads_changes": true,
       "data_source": "catalogue",
-      "data_source_reason": null
+      "data_source_reason": null,
+      "table_figures_from_records": 3
     },
     {
       "path": "/hosting-free-tier-comparison-2026",
@@ -1563,10 +1563,10 @@
       "reads_index": true,
       "tables_read_index": false,
       "table_figures": 85,
-      "table_figures_from_index": 27,
       "reads_changes": true,
       "data_source": "catalogue",
-      "data_source_reason": null
+      "data_source_reason": null,
+      "table_figures_from_records": 27
     },
     {
       "path": "/hosting-pricing",
@@ -1609,10 +1609,10 @@
       "reads_index": false,
       "tables_read_index": false,
       "table_figures": 139,
-      "table_figures_from_index": 53,
       "reads_changes": true,
       "data_source": "unsourced",
-      "data_source_reason": null
+      "data_source_reason": null,
+      "table_figures_from_records": 53
     },
     {
       "path": "/llm-api-pricing",
@@ -1661,10 +1661,10 @@
       "reads_index": true,
       "tables_read_index": false,
       "table_figures": 62,
-      "table_figures_from_index": 35,
       "reads_changes": true,
       "data_source": "catalogue",
-      "data_source_reason": null
+      "data_source_reason": null,
+      "table_figures_from_records": 35
     },
     {
       "path": "/monitoring-comparison-2026",
@@ -1726,10 +1726,10 @@
       "reads_index": true,
       "tables_read_index": false,
       "table_figures": 100,
-      "table_figures_from_index": 19,
       "reads_changes": true,
       "data_source": "catalogue",
-      "data_source_reason": null
+      "data_source_reason": null,
+      "table_figures_from_records": 19
     },
     {
       "path": "/neon-vs-supabase",
@@ -1757,10 +1757,10 @@
       "reads_index": true,
       "tables_read_index": true,
       "table_figures": 23,
-      "table_figures_from_index": 8,
       "reads_changes": true,
       "data_source": "catalogue",
-      "data_source_reason": null
+      "data_source_reason": null,
+      "table_figures_from_records": 8
     },
     {
       "path": "/openai-assistants-alternatives",
@@ -1794,10 +1794,10 @@
       "reads_index": true,
       "tables_read_index": true,
       "table_figures": 21,
-      "table_figures_from_index": 21,
       "reads_changes": true,
       "data_source": "catalogue",
-      "data_source_reason": null
+      "data_source_reason": null,
+      "table_figures_from_records": 21
     },
     {
       "path": "/openai-assistants-migration",
@@ -1823,10 +1823,10 @@
       "reads_index": false,
       "tables_read_index": false,
       "table_figures": 30,
-      "table_figures_from_index": 5,
       "reads_changes": true,
       "data_source": "unsourced",
-      "data_source_reason": null
+      "data_source_reason": null,
+      "table_figures_from_records": 5
     },
     {
       "path": "/openai-assistants-migration-2026",
@@ -1853,10 +1853,10 @@
       "reads_index": true,
       "tables_read_index": true,
       "table_figures": 40,
-      "table_figures_from_index": 40,
       "reads_changes": true,
       "data_source": "catalogue",
-      "data_source_reason": null
+      "data_source_reason": null,
+      "table_figures_from_records": 40
     },
     {
       "path": "/openai-realtime-migration",
@@ -1885,10 +1885,10 @@
       "reads_index": false,
       "tables_read_index": false,
       "table_figures": 22,
-      "table_figures_from_index": 0,
       "reads_changes": true,
       "data_source": "unsourced",
-      "data_source_reason": null
+      "data_source_reason": null,
+      "table_figures_from_records": 0
     },
     {
       "path": "/q1-2026-developer-pricing-report",
@@ -1907,10 +1907,10 @@
       "reads_index": false,
       "tables_read_index": false,
       "table_figures": 0,
-      "table_figures_from_index": 0,
       "reads_changes": true,
       "data_source": "unsourced",
-      "data_source_reason": null
+      "data_source_reason": null,
+      "table_figures_from_records": 0
     },
     {
       "path": "/q2-pricing-preview-2026",
@@ -1933,10 +1933,10 @@
       "reads_index": false,
       "tables_read_index": false,
       "table_figures": 0,
-      "table_figures_from_index": 0,
       "reads_changes": true,
       "data_source": "unsourced",
-      "data_source_reason": null
+      "data_source_reason": null,
+      "table_figures_from_records": 0
     },
     {
       "path": "/railway-vs-render",
@@ -1961,10 +1961,10 @@
       "reads_index": true,
       "tables_read_index": true,
       "table_figures": 51,
-      "table_figures_from_index": 11,
       "reads_changes": true,
       "data_source": "catalogue",
-      "data_source_reason": null
+      "data_source_reason": null,
+      "table_figures_from_records": 11
     },
     {
       "path": "/security-free-tier-comparison-2026",
@@ -2016,10 +2016,10 @@
       "reads_index": true,
       "tables_read_index": false,
       "table_figures": 29,
-      "table_figures_from_index": 3,
       "reads_changes": true,
       "data_source": "catalogue",
-      "data_source_reason": null
+      "data_source_reason": null,
+      "table_figures_from_records": 3
     },
     {
       "path": "/serverless-free-tier-comparison-2026",
@@ -2062,10 +2062,10 @@
       "reads_index": true,
       "tables_read_index": false,
       "table_figures": 65,
-      "table_figures_from_index": 27,
       "reads_changes": true,
       "data_source": "catalogue",
-      "data_source_reason": null
+      "data_source_reason": null,
+      "table_figures_from_records": 27
     },
     {
       "path": "/shutdowns",
@@ -2082,10 +2082,10 @@
       "reads_index": false,
       "tables_read_index": false,
       "table_figures": 0,
-      "table_figures_from_index": 0,
       "reads_changes": true,
       "data_source": "unsourced",
-      "data_source_reason": null
+      "data_source_reason": null,
+      "table_figures_from_records": 0
     },
     {
       "path": "/stack-check",
@@ -2102,10 +2102,10 @@
       "reads_index": true,
       "tables_read_index": false,
       "table_figures": 0,
-      "table_figures_from_index": 0,
       "reads_changes": true,
       "data_source": "catalogue",
-      "data_source_reason": null
+      "data_source_reason": null,
+      "table_figures_from_records": 0
     },
     {
       "path": "/stacks/ai-startup",
@@ -2124,10 +2124,10 @@
       "reads_index": true,
       "tables_read_index": true,
       "table_figures": 35,
-      "table_figures_from_index": 7,
       "reads_changes": true,
       "data_source": "catalogue",
-      "data_source_reason": null
+      "data_source_reason": null,
+      "table_figures_from_records": 7
     },
     {
       "path": "/stacks/api-first",
@@ -2146,10 +2146,10 @@
       "reads_index": true,
       "tables_read_index": true,
       "table_figures": 31,
-      "table_figures_from_index": 3,
       "reads_changes": false,
       "data_source": "catalogue",
-      "data_source_reason": null
+      "data_source_reason": null,
+      "table_figures_from_records": 3
     },
     {
       "path": "/stacks/open-source",
@@ -2168,10 +2168,10 @@
       "reads_index": true,
       "tables_read_index": true,
       "table_figures": 35,
-      "table_figures_from_index": 7,
       "reads_changes": true,
       "data_source": "catalogue",
-      "data_source_reason": null
+      "data_source_reason": null,
+      "table_figures_from_records": 7
     },
     {
       "path": "/stacks/saas-mvp",
@@ -2190,10 +2190,10 @@
       "reads_index": true,
       "tables_read_index": true,
       "table_figures": 35,
-      "table_figures_from_index": 7,
       "reads_changes": true,
       "data_source": "catalogue",
-      "data_source_reason": null
+      "data_source_reason": null,
+      "table_figures_from_records": 7
     },
     {
       "path": "/stacks/side-project",
@@ -2212,10 +2212,10 @@
       "reads_index": true,
       "tables_read_index": true,
       "table_figures": 35,
-      "table_figures_from_index": 7,
       "reads_changes": true,
       "data_source": "catalogue",
-      "data_source_reason": null
+      "data_source_reason": null,
+      "table_figures_from_records": 7
     },
     {
       "path": "/startup-credits",
@@ -2247,10 +2247,10 @@
       "reads_index": false,
       "tables_read_index": false,
       "table_figures": 103,
-      "table_figures_from_index": 66,
       "reads_changes": true,
       "data_source": "unsourced",
-      "data_source_reason": null
+      "data_source_reason": null,
+      "table_figures_from_records": 66
     },
     {
       "path": "/state-of-free-tiers",
@@ -2274,10 +2274,10 @@
       "reads_index": true,
       "tables_read_index": true,
       "table_figures": 6,
-      "table_figures_from_index": 0,
       "reads_changes": true,
       "data_source": "catalogue",
-      "data_source_reason": null
+      "data_source_reason": null,
+      "table_figures_from_records": 0
     },
     {
       "path": "/storage-comparison-2026",
@@ -2319,10 +2319,10 @@
       "reads_index": true,
       "tables_read_index": false,
       "table_figures": 81,
-      "table_figures_from_index": 19,
       "reads_changes": true,
       "data_source": "catalogue",
-      "data_source_reason": null
+      "data_source_reason": null,
+      "table_figures_from_records": 19
     },
     {
       "path": "/supabase-vs-firebase",
@@ -2349,10 +2349,10 @@
       "reads_index": true,
       "tables_read_index": true,
       "table_figures": 28,
-      "table_figures_from_index": 7,
       "reads_changes": true,
       "data_source": "catalogue",
-      "data_source_reason": null
+      "data_source_reason": null,
+      "table_figures_from_records": 7
     },
     {
       "path": "/tenor-alternatives",
@@ -2369,10 +2369,10 @@
       "reads_index": false,
       "tables_read_index": false,
       "table_figures": 1,
-      "table_figures_from_index": 0,
       "reads_changes": true,
       "data_source": "unsourced",
-      "data_source_reason": null
+      "data_source_reason": null,
+      "table_figures_from_records": 0
     },
     {
       "path": "/terraform-cloud-free-tier-removed",
@@ -2400,10 +2400,10 @@
       "reads_index": false,
       "tables_read_index": false,
       "table_figures": 38,
-      "table_figures_from_index": 0,
       "reads_changes": true,
       "data_source": "unsourced",
-      "data_source_reason": null
+      "data_source_reason": null,
+      "table_figures_from_records": 0
     },
     {
       "path": "/testing-free-tier-comparison-2026",
@@ -2452,10 +2452,10 @@
       "reads_index": true,
       "tables_read_index": false,
       "table_figures": 38,
-      "table_figures_from_index": 20,
       "reads_changes": true,
       "data_source": "catalogue",
-      "data_source_reason": null
+      "data_source_reason": null,
+      "table_figures_from_records": 20
     },
     {
       "path": "/vector-database-pricing",
@@ -2496,10 +2496,10 @@
       "reads_index": false,
       "tables_read_index": false,
       "table_figures": 65,
-      "table_figures_from_index": 7,
       "reads_changes": true,
       "data_source": "unsourced",
-      "data_source_reason": null
+      "data_source_reason": null,
+      "table_figures_from_records": 7
     },
     {
       "path": "/vercel-vs-netlify",
@@ -2528,10 +2528,10 @@
       "reads_index": true,
       "tables_read_index": true,
       "table_figures": 48,
-      "table_figures_from_index": 32,
       "reads_changes": true,
       "data_source": "catalogue",
-      "data_source_reason": null
+      "data_source_reason": null,
+      "table_figures_from_records": 32
     },
     {
       "path": "/x402-services",
@@ -2600,10 +2600,10 @@
       "reads_index": true,
       "tables_read_index": true,
       "table_figures": 54,
-      "table_figures_from_index": 3,
       "reads_changes": true,
       "data_source": "catalogue",
-      "data_source_reason": null
+      "data_source_reason": null,
+      "table_figures_from_records": 3
     }
   ]
 }

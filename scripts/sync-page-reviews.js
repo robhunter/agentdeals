@@ -34,7 +34,7 @@ page. tables_read_index is the narrower measurement — whether the readable tex
 the page's tables moves at all.
 
 Narrower still, and the one the provenance byline is derived from: table_figures counts
-the quantities a reader compares inside those tables and table_figures_from_index counts
+the quantities a reader compares inside those tables and table_figures_from_records counts
 how many of them move when both stores are replaced at once. A page may state our index
 as the source of its figures without qualifying it only when the two are equal, because
 the byline is a claim about every figure on the page and one moving cell does not earn
@@ -211,8 +211,8 @@ async function main() {
         if (prior.tier !== record.tier) changes.push(`~ ${route} tier ${prior.tier} -> ${record.tier}`);
         if (prior.reads_index !== record.reads_index) changes.push(`~ ${route} reads_index ${prior.reads_index} -> ${record.reads_index}`);
         if (prior.tables_read_index !== record.tables_read_index) changes.push(`~ ${route} tables_read_index ${prior.tables_read_index} -> ${record.tables_read_index}`);
-        if (prior.table_figures !== record.table_figures || prior.table_figures_from_index !== record.table_figures_from_index) {
-          changes.push(`~ ${route} table figures from our index ${prior.table_figures_from_index ?? "?"}/${prior.table_figures ?? "?"} -> ${record.table_figures_from_index}/${record.table_figures}`);
+        if (prior.table_figures !== record.table_figures || prior.table_figures_from_records !== record.table_figures_from_records) {
+          changes.push(`~ ${route} table figures from our index ${prior.table_figures_from_records ?? "?"}/${prior.table_figures ?? "?"} -> ${record.table_figures_from_records}/${record.table_figures}`);
         }
         if (prior.reads_changes !== record.reads_changes) changes.push(`~ ${route} reads_changes ${prior.reads_changes} -> ${record.reads_changes}`);
         if (prior.data_source !== record.data_source) changes.push(`~ ${route} data_source ${prior.data_source} -> ${record.data_source}`);
@@ -247,9 +247,9 @@ async function main() {
   console.log(`${pages.filter(p => p.reads_index).length} read the catalogue, ${pages.filter(p => p.reads_changes).length} read the change log`);
   console.log(`${pages.filter(p => p.tables_read_index).length} of those put catalogue-derived text in a table`);
   const withFigures = pages.filter(p => p.table_figures > 0);
-  const whollySourced = withFigures.filter(p => p.table_figures_from_index === p.table_figures);
+  const whollySourced = withFigures.filter(p => p.table_figures_from_records === p.table_figures);
   const tabulated = withFigures.reduce((sum, p) => sum + p.table_figures, 0);
-  const sourced = withFigures.reduce((sum, p) => sum + p.table_figures_from_index, 0);
+  const sourced = withFigures.reduce((sum, p) => sum + p.table_figures_from_records, 0);
   console.log(`${sourced} of ${tabulated} table figures across ${withFigures.length} pages come from the catalogue; ${whollySourced.length} pages may state that without qualifying it`);
   console.log(`${unsourcedA} tier-A pages assert vendor facts and read no catalogue record`);
   for (const line of changes) console.log(line);
