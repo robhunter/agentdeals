@@ -4,16 +4,22 @@ import assert from "node:assert";
 const {
   A_RECORD_NO_NEWER_ALREADY_RESTATED_THIS,
   READING_ANSWERS_FOR_SOMETHING_ELSE,
+  READING_DESCRIBES_THE_PAGE_NOT_THE_TERMS,
+  READING_DROPS_THE_CAP_ON_WHO_MAY_USE_IT,
   READING_SAYS_WHAT_WE_ALREADY_STORE,
+  READING_STATES_NO_FIGURE_WHERE_OUR_TERMS_DO,
   RESTATEMENT_REFUSALS,
   TIER_IS_NOT_ONE_WE_RECORD_AS_FREE,
   readingAnswersForTheListedTier,
+  readingDropsTheCapOnWhoMayUseIt,
   readingSaysTheListedTierIsGone,
+  readingStatesNoFigureWhereOurTermsDo,
   restatementRulings,
   ruleOnRestating,
   weHaveReadThePageSinceTheRecord,
   withheldTermsMeasure,
 } = await import("../dist/restatement.js");
+const { describesThePageRatherThanTheTerms } = await import("../dist/superseding-reading.js");
 const { supersededTermsNotice, supersedingChange } = await import("../dist/superseded-description.js");
 const { changesByVendor } = await import("../dist/superseded-census.js");
 const { loadDealChanges, loadOffers } = await import("../dist/data.js");
@@ -128,6 +134,70 @@ const IPAPI = {
   }),
 };
 
+const BURNERMAIL = {
+  offer: offer({
+    vendor: "Burnermail",
+    tier: "Free",
+    url: "https://burnermail.io/",
+    description: "Free 5 Burner Email Addresses, 1 Mailbox, 7-day Mailbox History",
+  }),
+  change: change({
+    vendor: "Burnermail",
+    change_type: "free_tier_removed",
+    date: "2026-08-28",
+    recorded_date: "2026-08-28",
+    previous_state: "Free 5 Burner Email Addresses, 1 Mailbox, 7-day Mailbox History",
+    current_state:
+      "The page encourages users to sign up and use burner addresses, but does not detail any free tier offerings. It states \"Why We're Removing Burner Mail's Free Plan Read more →\".",
+    source_url: "https://burnermail.io/",
+  }),
+};
+
+const GITHUB_ACTIONS = {
+  offer: offer({
+    vendor: "GitHub Actions",
+    tier: "Free",
+    url: "https://docs.github.com/en/billing/managing-billing-for-github-actions",
+    description:
+      "Free CI/CD for public repos (unlimited minutes). Private repos: 2,000 min/mo GitHub-hosted runners, 500 MB artifact storage, 10 GB cache/repo.",
+  }),
+  change: change({
+    vendor: "GitHub Actions",
+    change_type: "pricing_restructured",
+    date: "2026-09-02",
+    recorded_date: "2026-09-02",
+    previous_state:
+      "Free CI/CD for public repos (unlimited minutes). Private repos: 2,000 min/mo GitHub-hosted runners, 500 MB artifact storage, 10 GB cache/repo.",
+    current_state:
+      "GitHub Actions usage is free for self-hosted runners and public repositories. For private repositories, each account receives a quota of free minutes, artifact storage, and cache storage.",
+    source_url: "https://docs.github.com/en/billing/managing-billing-for-github-actions",
+  }),
+};
+
+const POSTMAN = {
+  offer: offer({
+    vendor: "Postman",
+    tier: "Free",
+    url: "https://www.postman.com/pricing/",
+    description:
+      "Free for single user only (since March 2026). Unlimited collections, environments, mock servers, basic monitoring. Team collaboration removed — requires Team plan ($19/user/mo).",
+  }),
+  change: change({
+    vendor: "Postman",
+    change_type: "limits_reduced",
+    date: "2026-09-02",
+    recorded_date: "2026-09-02",
+    previous_state:
+      "Free for single user only (since March 2026). Unlimited collections, environments, mock servers, basic monitoring. Team collaboration removed — requires Team plan ($19/user/mo).",
+    current_state:
+      "The Free plan costs $0 per month and includes 50 AI credits, an API client, core tools, specs & mock servers, native Git, Collection Runner & Performance Testing runs, manual Flows, and 1,000 API monitoring requests per month.",
+    source_url: "https://www.postman.com/pricing/",
+  }),
+};
+
+const TOMORROW_IO =
+  "Tomorrow.io offers a free tier with access to 60+ data layers, 5-Day Forecast, Weather Timelines, Core Weather Data Layers, and 1 automatically monitored Location.";
+
 describe("restating a withheld description from the reading the page already shows", () => {
   it("restates terms a record says are gone, where the record grades the edition itself", () => {
     const ruling = ruleOnRestating(PAGURE.offer, PAGURE.change, TODAY);
@@ -172,6 +242,62 @@ describe("restating a withheld description from the reading the page already sho
       ruleOnRestating(offer(), sameAsStored, TODAY)?.refusal,
       READING_SAYS_WHAT_WE_ALREADY_STORE,
     );
+  });
+
+  it("refuses a reading that reports on the page instead of stating the terms", () => {
+    assert.equal(
+      ruleOnRestating(BURNERMAIL.offer, BURNERMAIL.change, TODAY)?.refusal,
+      READING_DESCRIBES_THE_PAGE_NOT_THE_TERMS,
+    );
+    assert.ok(describesThePageRatherThanTheTerms(BURNERMAIL.change.current_state));
+  });
+
+  it("restates a reading that names the vendor rather than the page it was read from", () => {
+    assert.equal(describesThePageRatherThanTheTerms(PAGURE.change.current_state), false);
+    assert.equal(describesThePageRatherThanTheTerms(TOMORROW_IO), false);
+    assert.equal(ruleOnRestating(PAGURE.offer, PAGURE.change, TODAY)?.refusal, null);
+  });
+
+  it("refuses a reading that states no figure where the terms it would replace do", () => {
+    assert.equal(
+      ruleOnRestating(GITHUB_ACTIONS.offer, GITHUB_ACTIONS.change, TODAY)?.refusal,
+      READING_STATES_NO_FIGURE_WHERE_OUR_TERMS_DO,
+    );
+    assert.ok(
+      readingStatesNoFigureWhereOurTermsDo(
+        GITHUB_ACTIONS.offer.description,
+        GITHUB_ACTIONS.change.current_state,
+      ),
+    );
+  });
+
+  it("restates a figureless reading where the terms it replaces state no figure either", () => {
+    assert.equal(
+      readingStatesNoFigureWhereOurTermsDo(PAGURE.offer.description, PAGURE.change.current_state),
+      false,
+    );
+  });
+
+  it("refuses a reading that drops how many people may use the free tier", () => {
+    assert.equal(
+      ruleOnRestating(POSTMAN.offer, POSTMAN.change, TODAY)?.refusal,
+      READING_DROPS_THE_CAP_ON_WHO_MAY_USE_IT,
+    );
+  });
+
+  it("restates a reading that states its own count of who may use the free tier", () => {
+    const threeInstead = "There is a Basic plan that is free and includes the first 3 users.";
+    assert.equal(readingDropsTheCapOnWhoMayUseIt(POSTMAN.offer.description, threeInstead), false);
+    assert.ok(readingDropsTheCapOnWhoMayUseIt(POSTMAN.offer.description, POSTMAN.change.current_state));
+  });
+
+  it("lets a restatement drop a caveat that does not decide the tier", () => {
+    const noCard = offer({
+      description: "Uptime monitoring for 5 servers at a 60-second interval. No credit card required.",
+    });
+    const reading = "The Hobby plan is free forever and monitors 10 servers at a 30-second interval.";
+    assert.equal(readingDropsTheCapOnWhoMayUseIt(noCard.description, reading), false);
+    assert.equal(readingStatesNoFigureWhereOurTermsDo(noCard.description, reading), false);
   });
 
   it("refuses every reason it names and names every reason it refuses on", () => {
@@ -308,6 +434,21 @@ describe("what we publish about the terms we are withholding", () => {
     const measure = withheldTermsMeasure(rulings);
     assert.ok(measure.offers_we_refuse_to_restate[READING_ANSWERS_FOR_SOMETHING_ELSE] > 1);
     assert.ok(measure.offers_we_refuse_to_restate[TIER_IS_NOT_ONE_WE_RECORD_AS_FREE] > 1);
+  });
+
+  it("stores no reading that reports on the page, loses a figure, or drops who may use the tier", () => {
+    const accepted = rulings.filter((ruling: { refusal: string | null }) => !ruling.refusal);
+    const failing = (test: (ruling: any) => boolean) =>
+      accepted.filter(test).map((ruling: any) => ruling.offer.vendor);
+    assert.deepEqual(failing((r) => describesThePageRatherThanTheTerms(r.reading.terms)), []);
+    assert.deepEqual(
+      failing((r) => readingStatesNoFigureWhereOurTermsDo(r.offer.description, r.reading.terms)),
+      [],
+    );
+    assert.deepEqual(
+      failing((r) => readingDropsTheCapOnWhoMayUseIt(r.offer.description, r.reading.terms)),
+      [],
+    );
   });
 
   it("publishes no entry as verified whose terms we took from a reading", () => {

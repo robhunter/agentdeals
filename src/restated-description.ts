@@ -18,8 +18,12 @@ function endsOnAnInitialism(clause: string): boolean {
   return AN_INITIALISM.test(last.replace(/^[^A-Za-z]+/, ""));
 }
 
+export function statesAFigure(text: string): boolean {
+  return A_FIGURE.test(text);
+}
+
 export function statesTerms(text: string): boolean {
-  return A_FIGURE.test(text) || A_WORD_STATING_TERMS.test(text);
+  return statesAFigure(text) || A_WORD_STATING_TERMS.test(text);
 }
 
 export function saysWhatTheProductIs(clause: string): boolean {
