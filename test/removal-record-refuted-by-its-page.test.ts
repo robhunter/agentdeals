@@ -19,7 +19,8 @@ const { REMOVAL_CLASS, aFreePlanOnThePageWouldRefuteIt, removalRecordsInTheServe
 const { publishedRisk } = await import("../dist/data.js");
 const { storedTermsAreSuperseded } = await import("../dist/superseded-description.js");
 const { theEventNeverHappened } = await import("../dist/change-resolution.js");
-const { isOurOwnBookkeeping, narrowingSentence } = await import("../dist/vendor-verdict.js");
+const { isOurOwnBookkeeping, narrowingChanges, narrowingSentence } = await import("../dist/vendor-verdict.js");
+const { changeIsUncited } = await import("../dist/change-citation.js");
 
 type Offer = import("../src/types.ts").Offer;
 type DealChange = import("../src/types.ts").DealChange;
@@ -102,6 +103,16 @@ const STILL_STANDS = [
 
 function changesFor(vendor: string): DealChange[] {
   return changes.filter((c) => c.vendor.toLowerCase() === vendor.toLowerCase());
+}
+
+function recordsByVendor(): Array<[string, DealChange[]]> {
+  const held = new Map<string, DealChange[]>();
+  for (const change of changes) {
+    const existing = held.get(change.vendor);
+    if (existing) existing.push(change);
+    else held.set(change.vendor, [change]);
+  }
+  return [...held];
 }
 
 function offerFor(vendor: string): Offer | undefined {
@@ -270,15 +281,36 @@ describe("what a vendor page says once we withdraw the only record we held", () 
     }
   });
 
-  it("says whose error it was", () => {
-    assert.equal(
-      narrowingSentence(changesFor("Middleware.io")),
-      "The one record we hold was our own error and has been withdrawn.",
+  it("says whose error it was, of every vendor whose single cited record we withdrew", () => {
+    const subjects = recordsByVendor().filter(
+      ([, held]) => held.length === 1 && !changeIsUncited(held[0]) && theEventNeverHappened(held[0]),
     );
+    assert.ok(
+      subjects.length > 0,
+      "no vendor holds one cited record we have withdrawn, so this case has no subject to read",
+    );
+    for (const [vendor, held] of subjects) {
+      assert.equal(
+        narrowingSentence(held),
+        "The one record we hold was our own error and has been withdrawn.",
+        vendor,
+      );
+    }
   });
 
-  it("keeps counting the changes a vendor did make", () => {
-    assert.match(narrowingSentence(changesFor("ploi.io")), /narrowed the terms/);
+  it("keeps counting the changes a vendor did make, wherever we withdrew another of theirs", () => {
+    const subjects = recordsByVendor().filter(
+      ([, held]) =>
+        held.some(theEventNeverHappened) &&
+        narrowingChanges(held.filter((c) => !isOurOwnBookkeeping(c)), null).length > 0,
+    );
+    assert.ok(
+      subjects.length > 0,
+      "no vendor holds both a withdrawn record and a narrowing one, so this case has no subject to read",
+    );
+    for (const [vendor, held] of subjects) {
+      assert.match(narrowingSentence(held), /narrowed the terms/, vendor);
+    }
   });
 
   it("separates a withdrawal from a correction entry and from an uncited record", () => {

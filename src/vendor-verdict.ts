@@ -211,7 +211,7 @@ function capitalise(text: string): string {
   return `${text.charAt(0).toUpperCase()}${text.slice(1)}`;
 }
 
-function narrowingChanges(
+export function narrowingChanges(
   changes: VendorVerdictInput["changes"],
   offer: GradedOffer | null,
 ): VendorVerdictInput["changes"] {
