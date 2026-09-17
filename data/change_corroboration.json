@@ -56,17 +56,6 @@
       "first_read_date": "2026-09-16"
     },
     {
-      "vendor": "Oracle Cloud",
-      "change_type": "pricing_restructured",
-      "impact": "low",
-      "summary": "The page confirms the existence of an Always Free tier, it lists many more services as part of it than were originally described (e.g., HeatWave, Autonomous Data Warehouse, NoSQL Database). The page does not explicitly confirm these specific limits, only stating that 'some limitations apply'.",
-      "previous_state": "Always Free includes 2 AMD VMs (1/8 OCPU, 1 GB each), up to 4 Arm VMs (24 GB total), 200 GB block volumes, 20 GB object storage, 2 Autonomous Databases, Load Balancer",
-      "current_state": "Always Free services are available for an unlimited time. Some limitations apply. The following services are available as Always Free: HeatWave AMD-based Compute Arm-based Ampere A1 Compute Block Volume Object Storage Archive Storage Flexible Load Balancer Flexible Network Load Balancer Site-to-Site VPN Autonomous Data Warehouse Autonomous Transaction Processing Autonomous JSON Database NoSQL Database (Phoenix Region only) APEX Application Development Resource Manager (Terraform) Monitoring Notifications Logging Application Performance Monitoring Service Connector Hub Vault Bastions Security Advisor Virtual Cloud Networks Site-to-Site VPN Content Management Starter Edition Email Delivery",
-      "source_url": "https://www.oracle.com/cloud/free/",
-      "category": "Cloud IaaS",
-      "first_read_date": "2026-09-16"
-    },
-    {
       "vendor": "Render",
       "change_type": "pricing_restructured",
       "impact": "medium",
@@ -162,6 +151,18 @@
       "outcome": "corroborated",
       "detail": "a reading on 2026-09-16 read it as limits_reduced too",
       "resolved_date": "2026-09-16"
+    },
+    {
+      "vendor": "Oracle Cloud",
+      "change_type": "pricing_restructured",
+      "impact": "low",
+      "summary": "The page confirms the existence of an Always Free tier, it lists many more services as part of it than were originally described (e.g., HeatWave, Autonomous Data Warehouse, NoSQL Database). The page does not explicitly confirm these specific limits, only stating that 'some limitations apply'.",
+      "previous_state": "Always Free includes 2 AMD VMs (1/8 OCPU, 1 GB each), up to 4 Arm VMs (24 GB total), 200 GB block volumes, 20 GB object storage, 2 Autonomous Databases, Load Balancer",
+      "source_url": "https://www.oracle.com/cloud/free/",
+      "first_read_date": "2026-09-16",
+      "outcome": "baseline_moved",
+      "detail": "the terms it was read against are no longer the terms we publish",
+      "resolved_date": "2026-09-17"
     }
   ]
 }
