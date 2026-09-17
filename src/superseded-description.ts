@@ -1,7 +1,7 @@
 import { changeCitesASource, changeSummaryText, citationLabel } from "./change-citation.js";
 import { changeDateClause } from "./change-dates.js";
 import { isNoLongerInForce } from "./change-resolution.js";
-import { changeRatesTheListedTier, comparableTerms } from "./change-tier.js";
+import { changeGradesTheListedTier, comparableTerms } from "./change-tier.js";
 import { tierRecordsAFreeTier } from "./free-tier-record.js";
 import { describesOnlyATrial, openingOfAReading } from "./superseding-reading.js";
 import { punctuated } from "./terms-opening.js";
@@ -42,7 +42,7 @@ export function supersedesTheStoredTerms(
   offer: Pick<StoredTerms, "vendor" | "description" | "tier">,
 ): boolean {
   if (isNoLongerInForce(change)) return false;
-  if (!changeRatesTheListedTier(change, offer)) return false;
+  if (!changeGradesTheListedTier(change, offer)) return false;
   return quotesTheStoredTermsAsPrevious(change, offer.description);
 }
 
@@ -185,4 +185,40 @@ export function supersededTermsRecordFor(
 ): SupersededTermsRecord | null {
   const change = supersedingChange(offer, vendorChanges);
   return change ? supersededTermsRecord(offer.vendor, change) : null;
+}
+
+export interface SupersededTermsMeasure {
+  offers_whose_stored_terms_a_record_supersedes: number;
+  offers_we_could_restate_from_a_sourced_reading: number;
+  oldest_reading_we_are_withholding_behind: string | null;
+}
+
+export function supersededTermsMeasure(
+  offers: readonly Pick<StoredTerms, "vendor" | "description" | "tier">[],
+  changes: readonly (QuotingChange & { vendor: string })[],
+): SupersededTermsMeasure {
+  const byVendor = new Map<string, (QuotingChange & { vendor: string })[]>();
+  for (const change of changes) {
+    const key = change.vendor.toLowerCase();
+    const held = byVendor.get(key);
+    if (held) held.push(change);
+    else byVendor.set(key, [change]);
+  }
+
+  const readings: string[] = [];
+  let superseded = 0;
+  for (const offer of offers) {
+    const change = supersedingChange(offer, byVendor.get(offer.vendor.toLowerCase()) ?? []);
+    if (!change) continue;
+    superseded++;
+    const reading = readingBehindTheChange(change);
+    if (reading) readings.push(reading.date);
+  }
+  readings.sort();
+
+  return {
+    offers_whose_stored_terms_a_record_supersedes: superseded,
+    offers_we_could_restate_from_a_sourced_reading: readings.length,
+    oldest_reading_we_are_withholding_behind: readings[0] ?? null,
+  };
 }

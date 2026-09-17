@@ -265,11 +265,17 @@ describe("#1724 structured data prices a tier at zero only where we state that t
   });
 
   it("still prices the tiers we do state are free", () => {
-    const vercel = nodes.filter(n => n.vendor === "Vercel" && n.pricedAtZero);
-    assertPopulationFloor(vercel.length, 2, "surfaces price Vercel's tier at zero");
-    assert.ok(vercel.some(n => n.route.startsWith("/vendor/")), "the vendor page prices it");
-    assert.ok(vercel.some(n => n.route.startsWith("/category/")), "a category page prices it");
-    assert.deepStrictEqual([...new Set(vercel.map(n => n.tier))], ["Hobby"]);
+    const onVendorPages = routesOf("/vendor/").filter(n => n.pricedAtZero);
+    const onCategoryPages = routesOf("/category/").filter(n => n.pricedAtZero);
+    assertPopulationFloor(onVendorPages.length, 20, "vendor pages price a tier at zero");
+    assertPopulationFloor(onCategoryPages.length, 20, "category rows price a tier at zero");
+    assert.deepStrictEqual(
+      [...onVendorPages, ...onCategoryPages]
+        .filter(n => n.tier === null || !tiersWeHold.get(n.vendor)?.has(n.tier))
+        .map(n => `${n.route} ${n.vendor} ${n.tier}`)
+        .slice(0, 25),
+      [],
+    );
   });
 });
 

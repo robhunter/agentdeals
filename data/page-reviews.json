@@ -74,8 +74,8 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 47,
-      "table_figures_from_records": 47,
+      "table_figures": 48,
+      "table_figures_from_records": 48,
       "tables": [
         {
           "label": "Protocol Comparison",
@@ -84,8 +84,8 @@
         },
         {
           "label": "All Payment-Enabled Services",
-          "figures": 47,
-          "from_records": 47
+          "figures": 48,
+          "from_records": 48
         }
       ],
       "reads_changes": true,
@@ -106,23 +106,23 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 23,
-      "table_figures_from_records": 23,
+      "table_figures": 18,
+      "table_figures_from_records": 18,
       "tables": [
         {
           "label": "RAG Agent",
-          "figures": 7,
-          "from_records": 7
+          "figures": 8,
+          "from_records": 8
         },
         {
           "label": "Autonomous Coding Agent",
-          "figures": 7,
-          "from_records": 7
+          "figures": 2,
+          "from_records": 2
         },
         {
           "label": "Data Pipeline Agent",
-          "figures": 6,
-          "from_records": 6
+          "figures": 5,
+          "from_records": 5
         },
         {
           "label": "Chat / Customer Agent",
@@ -1159,8 +1159,8 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 39,
-      "table_figures_from_records": 12,
+      "table_figures": 42,
+      "table_figures_from_records": 15,
       "tables": [
         {
           "label": "1. Free Tier Comparison Table",
@@ -1174,8 +1174,8 @@
         },
         {
           "label": "5. Other Monitoring Alternatives",
-          "figures": 12,
-          "from_records": 12
+          "figures": 15,
+          "from_records": 15
         }
       ],
       "reads_changes": true,
@@ -1469,13 +1469,13 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 19,
-      "table_figures_from_records": 19,
+      "table_figures": 15,
+      "table_figures_from_records": 15,
       "tables": [
         {
           "label": "Stack Overview",
-          "figures": 19,
-          "from_records": 19
+          "figures": 15,
+          "from_records": 15
         },
         {
           "label": "Open-Source Self-Hosted Alternatives",
@@ -1511,13 +1511,13 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 32,
-      "table_figures_from_records": 14,
+      "table_figures": 31,
+      "table_figures_from_records": 13,
       "tables": [
         {
           "label": "Stack Overview",
-          "figures": 14,
-          "from_records": 9
+          "figures": 13,
+          "from_records": 8
         },
         {
           "label": "The $24/Month Upgrade — What to Spend First",
@@ -1552,13 +1552,13 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 32,
-      "table_figures_from_records": 14,
+      "table_figures": 31,
+      "table_figures_from_records": 13,
       "tables": [
         {
           "label": "Stack Overview",
-          "figures": 14,
-          "from_records": 9
+          "figures": 13,
+          "from_records": 8
         },
         {
           "label": "The $20/Month Upgrade — What to Spend First",
@@ -1636,13 +1636,13 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 30,
-      "table_figures_from_records": 13,
+      "table_figures": 29,
+      "table_figures_from_records": 12,
       "tables": [
         {
           "label": "Stack Overview",
-          "figures": 13,
-          "from_records": 8
+          "figures": 12,
+          "from_records": 7
         },
         {
           "label": "The $20/Month Upgrade — What to Spend First",
@@ -1679,18 +1679,18 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 30,
-      "table_figures_from_records": 12,
+      "table_figures": 28,
+      "table_figures_from_records": 10,
       "tables": [
         {
           "label": "Stack Overview",
-          "figures": 12,
-          "from_records": 8
+          "figures": 10,
+          "from_records": 7
         },
         {
           "label": "The $20/Month Upgrade — What to Spend First",
           "figures": 18,
-          "from_records": 4
+          "from_records": 3
         }
       ],
       "reads_changes": true,
@@ -1722,13 +1722,13 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 45,
-      "table_figures_from_records": 14,
+      "table_figures": 44,
+      "table_figures_from_records": 13,
       "tables": [
         {
           "label": "Stack Overview",
-          "figures": 14,
-          "from_records": 10
+          "figures": 13,
+          "from_records": 8
         },
         {
           "label": "The Growth Path — From $0 to $500/Month",
@@ -1738,7 +1738,7 @@
         {
           "label": "When to Upgrade — Service by Service",
           "figures": 22,
-          "from_records": 3
+          "from_records": 4
         }
       ],
       "reads_changes": true,
@@ -1770,13 +1770,13 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 13,
-      "table_figures_from_records": 13,
+      "table_figures": 11,
+      "table_figures_from_records": 11,
       "tables": [
         {
           "label": "Stack Overview",
-          "figures": 13,
-          "from_records": 13
+          "figures": 11,
+          "from_records": 11
         }
       ],
       "reads_changes": true,
@@ -2907,8 +2907,8 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 51,
-      "table_figures_from_records": 11,
+      "table_figures": 50,
+      "table_figures_from_records": 10,
       "tables": [
         {
           "label": "1. Free Tier Comparison Table",
@@ -2922,8 +2922,8 @@
         },
         {
           "label": "5. Other PaaS Alternatives",
-          "figures": 11,
-          "from_records": 11
+          "figures": 10,
+          "from_records": 10
         }
       ],
       "reads_changes": true,
@@ -3144,13 +3144,13 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 35,
-      "table_figures_from_records": 7,
+      "table_figures": 32,
+      "table_figures_from_records": 4,
       "tables": [
         {
           "label": "The Stack",
-          "figures": 35,
-          "from_records": 7
+          "figures": 32,
+          "from_records": 4
         }
       ],
       "reads_changes": true,
@@ -3173,16 +3173,16 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 31,
-      "table_figures_from_records": 3,
+      "table_figures": 29,
+      "table_figures_from_records": 1,
       "tables": [
         {
           "label": "The Stack",
-          "figures": 31,
-          "from_records": 3
+          "figures": 29,
+          "from_records": 1
         }
       ],
-      "reads_changes": false,
+      "reads_changes": true,
       "data_source": "catalogue",
       "data_source_reason": null
     },
@@ -3202,13 +3202,13 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 35,
-      "table_figures_from_records": 7,
+      "table_figures": 34,
+      "table_figures_from_records": 6,
       "tables": [
         {
           "label": "The Stack",
-          "figures": 35,
-          "from_records": 7
+          "figures": 34,
+          "from_records": 6
         }
       ],
       "reads_changes": true,
@@ -3260,13 +3260,13 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 35,
-      "table_figures_from_records": 7,
+      "table_figures": 34,
+      "table_figures_from_records": 6,
       "tables": [
         {
           "label": "The Stack",
-          "figures": 35,
-          "from_records": 7
+          "figures": 34,
+          "from_records": 6
         }
       ],
       "reads_changes": true,
@@ -3729,8 +3729,8 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 48,
-      "table_figures_from_records": 32,
+      "table_figures": 41,
+      "table_figures_from_records": 25,
       "tables": [
         {
           "label": "1. Free Tier Comparison Table",
@@ -3744,8 +3744,8 @@
         },
         {
           "label": "5. Other Hosting Alternatives",
-          "figures": 32,
-          "from_records": 32
+          "figures": 25,
+          "from_records": 25
         }
       ],
       "reads_changes": true,

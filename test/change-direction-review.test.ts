@@ -14,7 +14,14 @@ const {
   loadDirectionReview,
   reviewKey,
 } = await import("../dist/change-direction-review.js");
-const { supersedingChange, storedTermsAreSuperseded } = await import("../dist/superseded-description.js");
+const {
+  supersedingChange,
+  storedTermsAreSuperseded,
+  quotesTheStoredTermsAsPrevious,
+  readingPricesNothingButATrial,
+} = await import("../dist/superseded-description.js");
+const { isNoLongerInForce } = await import("../dist/change-resolution.js");
+const { supersededCensus } = await import("../dist/superseded-census.js");
 const { changesRatingTheListedTier, publishedRisk, loadDealChanges, loadOffers } = await import("../dist/data.js");
 const { buildChangeEntry, TIER_DIRECTIONS } = await import("../scripts/change-log.js");
 
@@ -94,13 +101,13 @@ describe("#1528 a record's stored direction is read before its change_type", () 
     assert.strictEqual(storedTermsAreSuperseded(AN_OFFER, [narrowed]), true);
   });
 
-  it("publishes the stored terms and rates nothing where the direction refutes the type", () => {
+  it("rates nothing where the direction refutes the type, and goes on withholding the terms it names as previous", () => {
     for (const direction of ["unchanged", "widened"]) {
       const refuted = { ...A_RECORD_TYPED_AS_A_REDUCTION, tier_direction: direction } as DealChange;
       assert.strictEqual(readingDescribesNoNarrowing(refuted), true, direction);
       assert.strictEqual(changeRatesTheListedTier(refuted, AN_OFFER), false, direction);
-      assert.strictEqual(storedTermsAreSuperseded(AN_OFFER, [refuted]), false, direction);
       assert.deepStrictEqual(changesRatingTheListedTier(AN_OFFER, [refuted]), [], direction);
+      assert.strictEqual(storedTermsAreSuperseded(AN_OFFER, [refuted]), true, direction);
     }
   });
 
@@ -344,28 +351,36 @@ describe("#1528 a record typed as a reduction whose own review reads no narrowin
     });
   };
 
-  it("publishes the terms of every vendor whose own two states state no narrowing, and rates none of them from these records", () => {
+  it("rates no vendor whose own two states state no narrowing, and still withholds the terms those records name as previous", () => {
     const subjects = vendorsWhoseOwnTwoStatesStateNoNarrowing();
     assert.ok(
       subjects.length > 0,
       "no catalogued vendor holds a record typed as a reduction whose review reads no narrowing, so this has no subject",
     );
-    const withholding: string[] = [];
+    const publishing: string[] = [];
     const rated: string[] = [];
     for (const vendor of subjects) {
-      if (!publishesItsStoredTerms(vendor)) withholding.push(vendor);
+      const offer = offerFor(vendor);
+      const namesOurTermsAsPrevious = changesFor(vendor).some(
+        (change) =>
+          !isNoLongerInForce(change) &&
+          quotesTheStoredTermsAsPrevious(change, offer.description) &&
+          changeGradesTheListedTier(change, offer) &&
+          !readingPricesNothingButATrial(change, offer),
+      );
+      if (namesOurTermsAsPrevious && publishesItsStoredTerms(vendor)) publishing.push(vendor);
       const risk = ratedBy(vendor);
       if (risk.risk_level === "caution" || risk.risk_level === "risky") rated.push(`${vendor} reads ${risk.risk_level}`);
     }
     assert.deepStrictEqual(
-      withholding.slice(0, 20),
-      [],
-      `vendors withholding stored terms over a record their own review reads as no narrowing:\n${withholding.slice(0, 20).join("\n")}`,
-    );
-    assert.deepStrictEqual(
       rated.slice(0, 20),
       [],
       `vendors rated down by a record their own review reads as no narrowing:\n${rated.slice(0, 20).join("\n")}`,
+    );
+    assert.deepStrictEqual(
+      publishing.slice(0, 20),
+      [],
+      `vendors publishing stored terms an in-force record of ours names as the previous ones:\n${publishing.slice(0, 20).join("\n")}`,
     );
   });
 
@@ -389,5 +404,52 @@ describe("#1528 a record typed as a reduction whose own review reads no narrowin
       );
     }
     assertCoversPopulation(checked, recordsTheDiscoveryRuleWasWrittenAgainst(), "records that discover a limit, replayed");
+  });
+});
+
+describe("#1744 the direction a record is given cannot decide whether we publish our stored terms", () => {
+  const censusOf = (changes: DealChange[]) => supersededCensus(offers, changes, "2026-09-17");
+
+  it("measures one population whether the review is overlaid or not", () => {
+    const reviewed = loadDirectionReview().directions;
+    assert.ok(reviewed.length > 0, "the review states no direction, so this has no subject");
+    assert.deepStrictEqual(censusOf(applyReviewedDirections(stored)), censusOf(stored));
+  });
+
+  it("withholds no less where every record is read as no narrowing", () => {
+    const withoutADirection = censusOf(stored.map((change) => ({ ...change, tier_direction: undefined })));
+    for (const direction of ["unchanged", "widened"]) {
+      const forced = stored.map((change) => ({ ...change, tier_direction: direction }) as DealChange);
+      assert.deepStrictEqual(censusOf(forced), withoutADirection, direction);
+    }
+  });
+
+  it("takes no page out of withholding whichever direction every record is given", () => {
+    const withoutADirection = censusOf(stored.map((change) => ({ ...change, tier_direction: undefined })));
+    for (const direction of TIER_DIRECTIONS) {
+      const forced = stored.map((change) => ({ ...change, tier_direction: direction }) as DealChange);
+      const measured = censusOf(forced);
+      for (const [name, floor] of Object.entries(withoutADirection)) {
+        assert.ok(
+          measured[name as keyof typeof measured] >= floor,
+          `${direction} took ${name} from ${floor} to ${measured[name as keyof typeof measured]}`,
+        );
+      }
+    }
+  });
+
+  it("counts the population the vendor pages render, which is what the budget caps", async () => {
+    const { measureBudgets } = await import("../scripts/ratchet-quality-budgets.js");
+    const measured = measureBudgets("2026-09-17");
+    const served = censusOf(liveChanges);
+    assert.strictEqual(measured.records_with_superseded_terms, served.records_with_superseded_terms);
+    assert.strictEqual(
+      measured.vendor_pages_withholding_superseded_terms,
+      served.vendor_pages_withholding_superseded_terms,
+    );
+    assert.strictEqual(
+      measured.ungated_pages_withholding_superseded_terms,
+      served.ungated_pages_withholding_superseded_terms,
+    );
   });
 });

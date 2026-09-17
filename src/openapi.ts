@@ -625,6 +625,15 @@ const DOCUMENTED_OPERATIONS: Record<string, Record<string, any>> = {
                         }
                       }
                     }
+                  },
+                  superseded_terms: {
+                    type: "object",
+                    description: "Offers whose stored description one of our own in-force change records names as the previous terms. Neither freshness_score nor stamp_score counts them: a read that finds a change records what it found in the change log and leaves the catalogue entry saying the old thing, so the entry is neither confirmed nor restated. The vendor page for such an offer withholds our stored terms and quotes the reading instead.",
+                    properties: {
+                      offers_whose_stored_terms_a_record_supersedes: { type: "integer", description: "Offers our own in-force change log contradicts." },
+                      offers_we_could_restate_from_a_sourced_reading: { type: "integer", description: "How many of those records carry a dated reading with a source URL — the sentence the vendor page already shows in place of our terms." },
+                      oldest_reading_we_are_withholding_behind: { type: "string", format: "date", nullable: true, description: "The oldest such reading. How far back the longest-standing withheld entry goes." }
+                    }
                   }
                 }
               }

@@ -994,6 +994,39 @@ describe("#1103 every catalogue record whose stored terms are superseded", () =>
     );
   });
 
+  it("#1744 publishes how many entries our own change log contradicts, beside the two scores that do not count them", async () => {
+    const metrics = await fetch(`http://localhost:${server!.port}/api/freshness`).then((r) => r.json());
+    const published = metrics.superseded_terms;
+    const records = supersededRecords();
+    const readings = records
+      .map(({ change }) => readingBehindTheChange(change))
+      .filter((reading) => reading !== null)
+      .map((reading) => reading!.date)
+      .sort();
+
+    assert.strictEqual(published.offers_whose_stored_terms_a_record_supersedes, records.length);
+    assert.strictEqual(published.offers_we_could_restate_from_a_sourced_reading, readings.length);
+    assert.strictEqual(published.oldest_reading_we_are_withholding_behind, readings[0] ?? null);
+    assert.ok(published.offers_whose_stored_terms_a_record_supersedes >= population.length);
+
+    const rendering = population.filter(({ offer }) =>
+      bodies.get(`/vendor/${toSlug(offer.vendor)}`)!.includes(STORED_TERMS_WITHHELD_PHRASE),
+    );
+    assert.strictEqual(rendering.length, population.length);
+  });
+
+  it("#1744 declares every field of that measure in the schema we publish", async () => {
+    const { openapiSpec } = await import("../dist/openapi.js");
+    const metrics = await fetch(`http://localhost:${server!.port}/api/freshness`).then((r) => r.json());
+    const declared = (openapiSpec as any).paths["/api/freshness"].get.responses["200"]
+      .content["application/json"].schema.properties.superseded_terms;
+    assert.ok(declared, "/api/freshness declares no superseded_terms");
+    assert.deepStrictEqual(
+      Object.keys(metrics.superseded_terms).sort(),
+      Object.keys(declared.properties).sort(),
+    );
+  });
+
   it("says why it withholds on the rest, where there is no reading to publish instead", () => {
     const silent = population
       .filter(({ change }) => !readingBehindTheChange(change))
