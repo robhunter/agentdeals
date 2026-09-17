@@ -3,7 +3,7 @@ import assert from "node:assert";
 import { spawn, type ChildProcess } from "node:child_process";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { assertPopulationFloor } from "./population-floor.ts";
+import { assertPopulationFloor, assertSharesPopulation, type Population } from "./population-floor.ts";
 
 const { CANNOT_CONFIRM_THESE_TERMS, whyWeCannotConfirmTheseTerms } = await import("../dist/vendor-verdict.js");
 const { vendorVerdictContextFrom, reasonWeCannotConfirmTheTerms } = await import("../dist/vendor-verdict-input.js");
@@ -167,6 +167,11 @@ describe("a vendor page states the reason it cannot confirm the terms in its own
   const pages: VendorPage[] = [];
   const unreadable: string[] = [];
 
+  const pagesRead = (): Population => ({
+    size: pages.length,
+    read: "vendor pages read with a node, a terms block and a verdict",
+  });
+
   before(async () => {
     const withheld = reasonsByVendorSlug();
     server = await startServer();
@@ -213,7 +218,12 @@ describe("a vendor page states the reason it cannot confirm the terms in its own
 
   it("says in the verdict a reader sees that it cannot confirm the terms, wherever the node says so", () => {
     const stated = pages.filter(p => p.reason !== null && p.reason.includes(CANNOT_CONFIRM_THESE_TERMS));
-    assertPopulationFloor(stated.length, 200, "vendor pages whose node states a reason we cannot confirm the terms");
+    assertSharesPopulation(
+      stated.length,
+      pagesRead(),
+      0.35,
+      "vendor pages whose node states a reason we cannot confirm the terms",
+    );
     assert.deepStrictEqual(
       stated.filter(p => !p.verdict.includes(CANNOT_CONFIRM_THESE_TERMS))
         .map(p => `${p.route}: ${p.verdict.slice(-120)}`).slice(0, 15),
