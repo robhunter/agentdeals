@@ -49,7 +49,7 @@ function jsonLdOf(html: string): any {
 function record(over: Partial<PageReviewRecord> = {}): PageReviewRecord {
   return {
     path: "/p", published: "2026-01-01", tier: "A", vendors_asserted: [], badge_subjects_unresolved: [],
-    reviewed_at: null, reviewer: null, table_figures: 0, table_figures_from_records: 0, ...over,
+    reviewed_at: null, reviewer: null, table_figures: 0, table_figures_from_records: 0, tables: [], ...over,
   };
 }
 

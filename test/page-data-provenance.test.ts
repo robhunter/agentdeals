@@ -10,10 +10,10 @@ import {
   CATALOGUE_TEXT_FIELDS, CHANGE_LOG_TEXT_FIELDS, PAGE_DATA_SOURCES, PERTURBATION_SENTINEL,
   OUR_RECORDS_FOR, citesOurRecords, deniesTheCatalogueSupplied, everyFigureComesFromOurRecords, partialRecordsCitation,
   pageSourceViolations, parsePageReviews, perturbTextFields, readableTableText, readableText,
-  unsourcedTierAPaths, vendorFactRows,
+  soleCreditedTable, tableScopedCitation, unsourcedTierAPaths, vendorFactRows,
   type PageReviewRecord, type PageSourceMeasurement,
 } from "../src/page-reviews.ts";
-import { censusTableFigures } from "../dist/table-figures.js";
+import { censusTableFigures, tableLabels } from "../dist/table-figures.js";
 import { namedVendorSlug } from "../dist/vendor-slug.js";
 import { NEVER_REVIEWED, registerWith, reviewFailedOn, type RegisterFixture } from "./page-review-fixture.ts";
 
@@ -180,12 +180,13 @@ describe("a page may only name the source it actually reads", () => {
       tables_read_index: false,
       table_figures: 0,
       table_figures_from_records: 0,
+      tables: [],
       reads_changes: false,
     }];
     const withOneMore = new Map(measured);
     withOneMore.set("/a-page-that-does-not-exist", {
       reads_index: false, tables_read_index: false, table_figures: 0, table_figures_from_records: 0,
-      reads_changes: false, vendor_fact_rows: 0,
+      tables: [], reads_changes: false, vendor_fact_rows: 0,
     });
     assert.ok(
       pageSourceViolations(admitted, withOneMore, unsourced.length).length > 0,
@@ -256,15 +257,18 @@ describe("a page may only name the source it actually reads", () => {
       const seen = measured.get(page.path)!;
       const body = readableText(bodies.get(page.path)!);
       const mixed = seen.table_figures_from_records > 0 && !everyFigureComesFromOurRecords(seen);
-      const stated = body.match(/(\d+) of (\d+) figures in the tables below come from our records for/);
+      const stated = body.match(/(\d+) of (\d+) figures in (?:the tables below|the .*? table) come from our records for/);
       if (!mixed) {
         if (stated) wrong.push(`${page.path}: states ${stated[1]} of ${stated[2]} and its figures are not mixed`);
         continue;
       }
       if (!stated) continue;
       stating += 1;
-      if (Number(stated[1]) !== seen.table_figures_from_records || Number(stated[2]) !== seen.table_figures) {
-        wrong.push(`${page.path}: states ${stated[1]} of ${stated[2]}, the perturbation says ${seen.table_figures_from_records} of ${seen.table_figures}`);
+      const sole = soleCreditedTable(seen);
+      const from = sole ? sole.from_records : seen.table_figures_from_records;
+      const figures = sole ? sole.figures : seen.table_figures;
+      if (Number(stated[1]) !== from || Number(stated[2]) !== figures) {
+        wrong.push(`${page.path}: states ${stated[1]} of ${stated[2]}, the perturbation says ${from} of ${figures}`);
       }
     }
     assert.deepStrictEqual(wrong, []);
@@ -278,15 +282,84 @@ describe("a page may only name the source it actually reads", () => {
         && readableText(bodies.get(p.path)!).includes(OUR_RECORDS_FOR)
     );
     const silent = mixedAndPublishing
-      .filter((p) => !readableText(bodies.get(p.path)!).includes(
-        partialRecordsCitation(p.table_figures_from_records, p.table_figures, INDEX_SIZE)
-      ))
+      .filter((p) => {
+        const sole = soleCreditedTable(p);
+        const expected = sole
+          ? tableScopedCitation(sole, INDEX_SIZE)
+          : partialRecordsCitation(p.table_figures_from_records, p.table_figures, INDEX_SIZE);
+        return !readableText(bodies.get(p.path)!).includes(readableText(expected));
+      })
       .map((p) => p.path);
     assert.deepStrictEqual(silent, []);
     assert.ok(
       mixedAndPublishing.length >= 5,
       `only ${mixedAndPublishing.length} mixed pages name our index, so the rule reaches almost nothing`
     );
+  });
+
+  it("claims no share of a page whose figures all sit in one of its tables, because the reader reads it over every table", () => {
+    const overreaching: string[] = [];
+    let scoped = 0;
+    for (const page of pages) {
+      const seen = measured.get(page.path)!;
+      const body = readableText(bodies.get(page.path)!);
+      const sole = soleCreditedTable(seen);
+      const claimsThePage = /\d+ of \d+ figures in the tables below come from our records for/.test(body);
+      if (!sole) continue;
+      scoped += 1;
+      const starved = seen.tables.filter((t) => t.from_records === 0 && t.figures > 0);
+      if (claimsThePage) {
+        overreaching.push(
+          `${page.path}: claims ${seen.table_figures_from_records} of ${seen.table_figures} for the page while ${sole.label} holds every one and ${starved.map((t) => `${t.label} 0/${t.figures}`).join(", ")}`
+        );
+      }
+    }
+    assert.deepStrictEqual(overreaching, []);
+    assertPopulationFloor(scoped, 27, "registered pages whose credited figures all sit in one of several tables");
+  });
+
+  it("names a table the served page lays out under that heading, so the byline cannot point at nothing", () => {
+    const missing: string[] = [];
+    for (const page of pages) {
+      const seen = measured.get(page.path)!;
+      if (everyFigureComesFromOurRecords(seen)) continue;
+      const sole = soleCreditedTable(seen);
+      if (!sole?.label) continue;
+      const headings = tableLabels(bodies.get(page.path)!).filter((label): label is string => label !== null);
+      if (!headings.includes(sole.label)) missing.push(`${page.path}: no table sits under ${sole.label}`);
+      const quoted = readableText(tableScopedCitation(sole, INDEX_SIZE));
+      if (!readableText(bodies.get(page.path)!).includes(quoted)) missing.push(`${page.path}: does not state ${quoted}`);
+    }
+    assert.deepStrictEqual(missing, []);
+  });
+
+  it("points down only where the tables are, because the methodology block sits under them", () => {
+    const wrong: string[] = [];
+    let pointing = 0;
+    for (const page of pages) {
+      const body = visibleBody(bodies.get(page.path)!);
+      const claim = body.search(/figures in the tables below come from our records/i);
+      if (claim === -1) continue;
+      pointing += 1;
+      const above = [...body.matchAll(/<table\b/g)].filter((m) => m.index! < claim).length;
+      if (above > 0) wrong.push(`${page.path}: says the tables are below with ${above} of them above the sentence`);
+    }
+    assert.deepStrictEqual(wrong, []);
+    assert.ok(pointing >= 4, `only ${pointing} pages point the reader downwards, so the rule checks almost nothing`);
+  });
+
+  it("leaves the first table of a comparison page uncredited, which is why the scoping matters", () => {
+    const comparisons = ["/database-pricing", "/hosting-pricing", "/llm-api-pricing", "/monitoring-comparison-2026"];
+    const unexercised: string[] = [];
+    for (const path of comparisons) {
+      const seen = measured.get(path);
+      if (!seen) { unexercised.push(`${path}: not on the register`); continue; }
+      const first = seen.tables[0];
+      if (!first || first.figures === 0) unexercised.push(`${path}: first table publishes no figure`);
+      else if (first.from_records > 0) unexercised.push(`${path}: first table is credited ${first.from_records} of ${first.figures}`);
+      else if (!soleCreditedTable(seen)) unexercised.push(`${path}: credit is not confined to one table`);
+    }
+    assert.deepStrictEqual(unexercised, []);
   });
 
   it("keeps the unqualified claim on every page that earns it", () => {

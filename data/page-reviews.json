@@ -75,10 +75,22 @@
       "reads_index": true,
       "tables_read_index": true,
       "table_figures": 47,
+      "table_figures_from_records": 47,
+      "tables": [
+        {
+          "label": "Protocol Comparison",
+          "figures": 0,
+          "from_records": 0
+        },
+        {
+          "label": "All Payment-Enabled Services",
+          "figures": 47,
+          "from_records": 47
+        }
+      ],
       "reads_changes": true,
       "data_source": "catalogue",
-      "data_source_reason": null,
-      "table_figures_from_records": 47
+      "data_source_reason": null
     },
     {
       "path": "/agent-stack",
@@ -95,10 +107,32 @@
       "reads_index": true,
       "tables_read_index": true,
       "table_figures": 23,
+      "table_figures_from_records": 23,
+      "tables": [
+        {
+          "label": "RAG Agent",
+          "figures": 7,
+          "from_records": 7
+        },
+        {
+          "label": "Autonomous Coding Agent",
+          "figures": 7,
+          "from_records": 7
+        },
+        {
+          "label": "Data Pipeline Agent",
+          "figures": 6,
+          "from_records": 6
+        },
+        {
+          "label": "Chat / Customer Agent",
+          "figures": 3,
+          "from_records": 3
+        }
+      ],
       "reads_changes": true,
       "data_source": "catalogue",
-      "data_source_reason": null,
-      "table_figures_from_records": 23
+      "data_source_reason": null
     },
     {
       "path": "/ai-coding-pricing-2026",
@@ -131,10 +165,22 @@
       "reads_index": true,
       "tables_read_index": false,
       "table_figures": 49,
+      "table_figures_from_records": 32,
+      "tables": [
+        {
+          "label": "Pricing Comparison Table",
+          "figures": 16,
+          "from_records": 0
+        },
+        {
+          "label": "Recent Pricing Changes",
+          "figures": 33,
+          "from_records": 32
+        }
+      ],
       "reads_changes": true,
       "data_source": "catalogue",
-      "data_source_reason": null,
-      "table_figures_from_records": 32
+      "data_source_reason": null
     },
     {
       "path": "/ai-coding-tools-pricing",
@@ -182,10 +228,32 @@
       "reads_index": true,
       "tables_read_index": false,
       "table_figures": 138,
+      "table_figures_from_records": 49,
+      "tables": [
+        {
+          "label": "Pricing Comparison Table",
+          "figures": 30,
+          "from_records": 0
+        },
+        {
+          "label": "What You Actually Get for Free",
+          "figures": 0,
+          "from_records": 0
+        },
+        {
+          "label": "Cost Comparison by Use Case",
+          "figures": 58,
+          "from_records": 0
+        },
+        {
+          "label": "Recent Pricing Changes",
+          "figures": 50,
+          "from_records": 49
+        }
+      ],
       "reads_changes": true,
       "data_source": "catalogue",
-      "data_source_reason": null,
-      "table_figures_from_records": 49
+      "data_source_reason": null
     },
     {
       "path": "/analytics-free-tier-comparison-2026",
@@ -215,10 +283,32 @@
       "reads_index": true,
       "tables_read_index": false,
       "table_figures": 34,
+      "table_figures_from_records": 5,
+      "tables": [
+        {
+          "label": "Main Comparison Table",
+          "figures": 4,
+          "from_records": 0
+        },
+        {
+          "label": "Self-Hosted Analytics",
+          "figures": 0,
+          "from_records": 0
+        },
+        {
+          "label": "The Analytics Cost Trap",
+          "figures": 24,
+          "from_records": 0
+        },
+        {
+          "label": "Pricing Change Timeline",
+          "figures": 6,
+          "from_records": 5
+        }
+      ],
       "reads_changes": true,
       "data_source": "catalogue",
-      "data_source_reason": null,
-      "table_figures_from_records": 5
+      "data_source_reason": null
     },
     {
       "path": "/api-development-free-tier-comparison-2026",
@@ -253,10 +343,27 @@
       "reads_index": true,
       "tables_read_index": false,
       "table_figures": 33,
+      "table_figures_from_records": 10,
+      "tables": [
+        {
+          "label": "Main Comparison Table",
+          "figures": 4,
+          "from_records": 0
+        },
+        {
+          "label": "The API Tool Migration Trap",
+          "figures": 16,
+          "from_records": 0
+        },
+        {
+          "label": "Pricing Change Timeline",
+          "figures": 13,
+          "from_records": 10
+        }
+      ],
       "reads_changes": true,
       "data_source": "catalogue",
-      "data_source_reason": null,
-      "table_figures_from_records": 10
+      "data_source_reason": null
     },
     {
       "path": "/auth-comparison-2026",
@@ -307,10 +414,52 @@
       "reads_index": true,
       "tables_read_index": false,
       "table_figures": 76,
+      "table_figures_from_records": 5,
+      "tables": [
+        {
+          "label": "Main Comparison Table",
+          "figures": 17,
+          "from_records": 0
+        },
+        {
+          "label": "Managed Auth Platforms",
+          "figures": 4,
+          "from_records": 0
+        },
+        {
+          "label": "BaaS-Integrated Auth",
+          "figures": 4,
+          "from_records": 0
+        },
+        {
+          "label": "Self-Hosted / Open Source",
+          "figures": 1,
+          "from_records": 0
+        },
+        {
+          "label": "Specialized Auth Providers",
+          "figures": 0,
+          "from_records": 0
+        },
+        {
+          "label": "Authorization & Permissions",
+          "figures": 0,
+          "from_records": 0
+        },
+        {
+          "label": "The Growth Cost Trap: Free to 100K MAU",
+          "figures": 45,
+          "from_records": 0
+        },
+        {
+          "label": "Pricing Change Timeline",
+          "figures": 5,
+          "from_records": 5
+        }
+      ],
       "reads_changes": true,
       "data_source": "catalogue",
-      "data_source_reason": null,
-      "table_figures_from_records": 5
+      "data_source_reason": null
     },
     {
       "path": "/aws-app-runner-migration",
@@ -344,10 +493,32 @@
       "reads_index": false,
       "tables_read_index": false,
       "table_figures": 42,
+      "table_figures_from_records": 4,
+      "tables": [
+        {
+          "label": "Deprecation Timeline",
+          "figures": 0,
+          "from_records": 0
+        },
+        {
+          "label": "Container Deployment Alternatives",
+          "figures": 23,
+          "from_records": 0
+        },
+        {
+          "label": "Pricing Comparison",
+          "figures": 15,
+          "from_records": 0
+        },
+        {
+          "label": "AWS Change Timeline",
+          "figures": 4,
+          "from_records": 4
+        }
+      ],
       "reads_changes": true,
       "data_source": "unsourced",
-      "data_source_reason": null,
-      "table_figures_from_records": 4
+      "data_source_reason": null
     },
     {
       "path": "/aws-free-tier-2026",
@@ -385,10 +556,37 @@
       "reads_index": true,
       "tables_read_index": false,
       "table_figures": 56,
+      "table_figures_from_records": 18,
+      "tables": [
+        {
+          "label": "Always Free Services",
+          "figures": 7,
+          "from_records": 0
+        },
+        {
+          "label": "12-Month Free Tier",
+          "figures": 12,
+          "from_records": 0
+        },
+        {
+          "label": "Short-Term Trials",
+          "figures": 7,
+          "from_records": 0
+        },
+        {
+          "label": "AWS vs Alternatives",
+          "figures": 12,
+          "from_records": 0
+        },
+        {
+          "label": "Recent AWS Changes",
+          "figures": 18,
+          "from_records": 18
+        }
+      ],
       "reads_changes": true,
       "data_source": "catalogue",
-      "data_source_reason": null,
-      "table_figures_from_records": 18
+      "data_source_reason": null
     },
     {
       "path": "/azure-free-tier-2026",
@@ -418,10 +616,37 @@
       "reads_index": true,
       "tables_read_index": false,
       "table_figures": 38,
+      "table_figures_from_records": 3,
+      "tables": [
+        {
+          "label": "Always Free Services",
+          "figures": 10,
+          "from_records": 0
+        },
+        {
+          "label": "12-Month Free Tier",
+          "figures": 8,
+          "from_records": 0
+        },
+        {
+          "label": "$200 Trial Credit",
+          "figures": 4,
+          "from_records": 0
+        },
+        {
+          "label": "Azure vs Alternatives",
+          "figures": 11,
+          "from_records": 0
+        },
+        {
+          "label": "Recent Azure Changes",
+          "figures": 5,
+          "from_records": 3
+        }
+      ],
       "reads_changes": true,
       "data_source": "catalogue",
-      "data_source_reason": null,
-      "table_figures_from_records": 3
+      "data_source_reason": null
     },
     {
       "path": "/budget-builder",
@@ -438,10 +663,11 @@
       "reads_index": true,
       "tables_read_index": false,
       "table_figures": 0,
+      "table_figures_from_records": 0,
+      "tables": [],
       "reads_changes": true,
       "data_source": "catalogue",
-      "data_source_reason": "the risk level beside each vendor is the level the catalogue publishes for that record, withholding included",
-      "table_figures_from_records": 0
+      "data_source_reason": "the risk level beside each vendor is the level the catalogue publishes for that record, withholding included"
     },
     {
       "path": "/ci-cd-pricing",
@@ -491,10 +717,32 @@
       "reads_index": false,
       "tables_read_index": false,
       "table_figures": 115,
+      "table_figures_from_records": 17,
+      "tables": [
+        {
+          "label": "Pricing Comparison Table",
+          "figures": 31,
+          "from_records": 0
+        },
+        {
+          "label": "What You Actually Get for Free",
+          "figures": 13,
+          "from_records": 0
+        },
+        {
+          "label": "Cost Comparison by Team Size",
+          "figures": 49,
+          "from_records": 0
+        },
+        {
+          "label": "Recent Pricing Changes",
+          "figures": 22,
+          "from_records": 17
+        }
+      ],
       "reads_changes": true,
       "data_source": "unsourced",
-      "data_source_reason": null,
-      "table_figures_from_records": 17
+      "data_source_reason": null
     },
     {
       "path": "/cicd-free-tier-comparison-2026",
@@ -537,10 +785,47 @@
       "reads_index": true,
       "tables_read_index": false,
       "table_figures": 55,
+      "table_figures_from_records": 20,
+      "tables": [
+        {
+          "label": "Main Comparison Table",
+          "figures": 18,
+          "from_records": 0
+        },
+        {
+          "label": "General-Purpose CI/CD",
+          "figures": 4,
+          "from_records": 0
+        },
+        {
+          "label": "Developer-Focused CI/CD",
+          "figures": 2,
+          "from_records": 0
+        },
+        {
+          "label": "Mobile CI/CD",
+          "figures": 2,
+          "from_records": 0
+        },
+        {
+          "label": "Specialized CI/CD",
+          "figures": 4,
+          "from_records": 0
+        },
+        {
+          "label": "Self-Hosted CI/CD (Unlimited Free)",
+          "figures": 0,
+          "from_records": 0
+        },
+        {
+          "label": "Pricing Change Timeline",
+          "figures": 25,
+          "from_records": 20
+        }
+      ],
       "reads_changes": true,
       "data_source": "catalogue",
-      "data_source_reason": null,
-      "table_figures_from_records": 20
+      "data_source_reason": null
     },
     {
       "path": "/cloud-free-tier-comparison-2026",
@@ -566,10 +851,47 @@
       "reads_index": true,
       "tables_read_index": false,
       "table_figures": 65,
+      "table_figures_from_records": 15,
+      "tables": [
+        {
+          "label": "Free Trial Credits",
+          "figures": 7,
+          "from_records": 0
+        },
+        {
+          "label": "Always-Free Compute",
+          "figures": 12,
+          "from_records": 0
+        },
+        {
+          "label": "Always-Free Databases",
+          "figures": 13,
+          "from_records": 0
+        },
+        {
+          "label": "Serverless Functions",
+          "figures": 0,
+          "from_records": 0
+        },
+        {
+          "label": "Storage & CDN",
+          "figures": 10,
+          "from_records": 0
+        },
+        {
+          "label": "Startup Credit Programs",
+          "figures": 8,
+          "from_records": 0
+        },
+        {
+          "label": "Pricing Change Timeline",
+          "figures": 15,
+          "from_records": 15
+        }
+      ],
       "reads_changes": true,
       "data_source": "catalogue",
-      "data_source_reason": null,
-      "table_figures_from_records": 15
+      "data_source_reason": null
     },
     {
       "path": "/compare-tool",
@@ -586,10 +908,11 @@
       "reads_index": false,
       "tables_read_index": false,
       "table_figures": 0,
+      "table_figures_from_records": 0,
+      "tables": [],
       "reads_changes": false,
       "data_source": "editorial",
-      "data_source_reason": "a picker that links to comparison pages and asserts nothing about any vendor itself",
-      "table_figures_from_records": 0
+      "data_source_reason": "a picker that links to comparison pages and asserts nothing about any vendor itself"
     },
     {
       "path": "/dall-e-shutdown",
@@ -618,10 +941,32 @@
       "reads_index": false,
       "tables_read_index": false,
       "table_figures": 21,
+      "table_figures_from_records": 5,
+      "tables": [
+        {
+          "label": "Shutdown Timeline",
+          "figures": 0,
+          "from_records": 0
+        },
+        {
+          "label": "Image Generation API Alternatives",
+          "figures": 8,
+          "from_records": 0
+        },
+        {
+          "label": "Pricing Comparison",
+          "figures": 8,
+          "from_records": 0
+        },
+        {
+          "label": "OpenAI Pricing Change Timeline",
+          "figures": 5,
+          "from_records": 5
+        }
+      ],
       "reads_changes": true,
       "data_source": "unsourced",
-      "data_source_reason": null,
-      "table_figures_from_records": 5
+      "data_source_reason": null
     },
     {
       "path": "/database-free-tier-comparison-2026",
@@ -667,10 +1012,47 @@
       "reads_index": true,
       "tables_read_index": false,
       "table_figures": 48,
+      "table_figures_from_records": 12,
+      "tables": [
+        {
+          "label": "Main Comparison Table",
+          "figures": 14,
+          "from_records": 0
+        },
+        {
+          "label": "Postgres-Compatible Databases",
+          "figures": 5,
+          "from_records": 0
+        },
+        {
+          "label": "Firebase / BaaS Databases",
+          "figures": 5,
+          "from_records": 0
+        },
+        {
+          "label": "Edge / Embedded Databases",
+          "figures": 2,
+          "from_records": 0
+        },
+        {
+          "label": "Key-Value / Cache Databases",
+          "figures": 4,
+          "from_records": 0
+        },
+        {
+          "label": "Vector Databases",
+          "figures": 5,
+          "from_records": 0
+        },
+        {
+          "label": "Pricing Change Timeline",
+          "figures": 13,
+          "from_records": 12
+        }
+      ],
       "reads_changes": true,
       "data_source": "catalogue",
-      "data_source_reason": null,
-      "table_figures_from_records": 12
+      "data_source_reason": null
     },
     {
       "path": "/database-pricing",
@@ -726,10 +1108,32 @@
       "reads_index": true,
       "tables_read_index": false,
       "table_figures": 145,
+      "table_figures_from_records": 37,
+      "tables": [
+        {
+          "label": "Pricing Comparison Table",
+          "figures": 39,
+          "from_records": 0
+        },
+        {
+          "label": "What You Actually Get for Free",
+          "figures": 16,
+          "from_records": 0
+        },
+        {
+          "label": "Cost Comparison by Team Size",
+          "figures": 50,
+          "from_records": 0
+        },
+        {
+          "label": "Recent Pricing Changes",
+          "figures": 40,
+          "from_records": 37
+        }
+      ],
       "reads_changes": true,
       "data_source": "catalogue",
-      "data_source_reason": null,
-      "table_figures_from_records": 37
+      "data_source_reason": null
     },
     {
       "path": "/datadog-vs-new-relic",
@@ -756,10 +1160,27 @@
       "reads_index": true,
       "tables_read_index": true,
       "table_figures": 39,
+      "table_figures_from_records": 12,
+      "tables": [
+        {
+          "label": "1. Free Tier Comparison Table",
+          "figures": 8,
+          "from_records": 0
+        },
+        {
+          "label": "3. Cost at Scale",
+          "figures": 19,
+          "from_records": 0
+        },
+        {
+          "label": "5. Other Monitoring Alternatives",
+          "figures": 12,
+          "from_records": 12
+        }
+      ],
       "reads_changes": true,
       "data_source": "catalogue",
-      "data_source_reason": null,
-      "table_figures_from_records": 12
+      "data_source_reason": null
     },
     {
       "path": "/digitalocean-free-tier-2026",
@@ -791,10 +1212,32 @@
       "reads_index": true,
       "tables_read_index": false,
       "table_figures": 56,
+      "table_figures_from_records": 8,
+      "tables": [
+        {
+          "label": "Free Services (Permanent)",
+          "figures": 5,
+          "from_records": 0
+        },
+        {
+          "label": "2026 Pricing Highlights",
+          "figures": 31,
+          "from_records": 0
+        },
+        {
+          "label": "DigitalOcean vs Alternatives",
+          "figures": 12,
+          "from_records": 0
+        },
+        {
+          "label": "Recent DigitalOcean Changes",
+          "figures": 8,
+          "from_records": 8
+        }
+      ],
       "reads_changes": true,
       "data_source": "catalogue",
-      "data_source_reason": null,
-      "table_figures_from_records": 8
+      "data_source_reason": null
     },
     {
       "path": "/disclosure",
@@ -811,10 +1254,11 @@
       "reads_index": false,
       "tables_read_index": false,
       "table_figures": 0,
+      "table_figures_from_records": 0,
+      "tables": [],
       "reads_changes": false,
       "data_source": "editorial",
-      "data_source_reason": "states how we are paid and links our policies; names no vendor",
-      "table_figures_from_records": 0
+      "data_source_reason": "states how we are paid and links our policies; names no vendor"
     },
     {
       "path": "/email-comparison-2026",
@@ -861,14 +1305,41 @@
       "reviewed_at": "2026-09-05",
       "reviewer": "coder",
       "review_outcome": "fail",
-      "review_note": "Read against resend.com/pricing, mailersend.com/pricing and mailerlite.com/pricing on 2026-09-05, after a Resend record dated 2026-09-05 moved under the 2026-09-04 review. Resend: 3,000 emails/month and the 100/day cap hold; custom domains on Free is 3, not the 1 the page published, and the catalogue record carried the same 1. MailerSend: the Free plan is 500 emails/month with 1 domain, 10 templates, 5 seats, 1,000 daily API requests and 1-day activity retention, and the 14-day Professional trial carries the same 500 \u2014 so the 3,000 the page published on three surfaces was not the trial figure either. Hobby is $7.00/month monthly, $5.60 billed yearly, for 5,000 emails. MailerLite: the Free plan is 250 subscribers and 2,500 monthly emails, below both the 1,000/12,000 the page published and the 500/12,000 in our own record; the record is the stale side and no change record holds 250. Corrected on this page: the MailerSend table row, section and 3K cost-trap cell, the MailerLite table row and section, the Resend section, and the transactional-email answer on /email-service-alternatives. Not verified in this pass: Amazon SES, Brevo, Mailtrap, Loops, Mailjet, Postmark, Maileroo, EmailOctopus, Buttondown, Substack, SMTP2GO, EmailLabs.io and the 10K/50K/100K/500K rows of the cost-trap table.",
+      "review_note": "Read against resend.com/pricing, mailersend.com/pricing and mailerlite.com/pricing on 2026-09-05, after a Resend record dated 2026-09-05 moved under the 2026-09-04 review. Resend: 3,000 emails/month and the 100/day cap hold; custom domains on Free is 3, not the 1 the page published, and the catalogue record carried the same 1. MailerSend: the Free plan is 500 emails/month with 1 domain, 10 templates, 5 seats, 1,000 daily API requests and 1-day activity retention, and the 14-day Professional trial carries the same 500 — so the 3,000 the page published on three surfaces was not the trial figure either. Hobby is $7.00/month monthly, $5.60 billed yearly, for 5,000 emails. MailerLite: the Free plan is 250 subscribers and 2,500 monthly emails, below both the 1,000/12,000 the page published and the 500/12,000 in our own record; the record is the stale side and no change record holds 250. Corrected on this page: the MailerSend table row, section and 3K cost-trap cell, the MailerLite table row and section, the Resend section, and the transactional-email answer on /email-service-alternatives. Not verified in this pass: Amazon SES, Brevo, Mailtrap, Loops, Mailjet, Postmark, Maileroo, EmailOctopus, Buttondown, Substack, SMTP2GO, EmailLabs.io and the 10K/50K/100K/500K rows of the cost-trap table.",
       "reads_index": true,
       "tables_read_index": false,
       "table_figures": 54,
+      "table_figures_from_records": 5,
+      "tables": [
+        {
+          "label": "Main Comparison Table",
+          "figures": 6,
+          "from_records": 0
+        },
+        {
+          "label": "Migration Paths by Use Case",
+          "figures": 2,
+          "from_records": 0
+        },
+        {
+          "label": "Email Verification",
+          "figures": 0,
+          "from_records": 0
+        },
+        {
+          "label": "Growth Cost Trap",
+          "figures": 41,
+          "from_records": 0
+        },
+        {
+          "label": "Pricing Change Timeline",
+          "figures": 5,
+          "from_records": 5
+        }
+      ],
       "reads_changes": true,
       "data_source": "catalogue",
-      "data_source_reason": null,
-      "table_figures_from_records": 5
+      "data_source_reason": null
     },
     {
       "path": "/firebase-studio-shutdown",
@@ -898,10 +1369,37 @@
       "reads_index": false,
       "tables_read_index": false,
       "table_figures": 24,
+      "table_figures_from_records": 5,
+      "tables": [
+        {
+          "label": "Shutdown Timeline",
+          "figures": 0,
+          "from_records": 0
+        },
+        {
+          "label": "Cloud IDE Free Tier Comparison",
+          "figures": 6,
+          "from_records": 0
+        },
+        {
+          "label": "AI Full-Stack Builder Alternatives",
+          "figures": 0,
+          "from_records": 0
+        },
+        {
+          "label": "Hidden Costs of Migration",
+          "figures": 13,
+          "from_records": 0
+        },
+        {
+          "label": "Firebase Pricing Change Timeline",
+          "figures": 5,
+          "from_records": 5
+        }
+      ],
       "reads_changes": true,
       "data_source": "unsourced",
-      "data_source_reason": null,
-      "table_figures_from_records": 5
+      "data_source_reason": null
     },
     {
       "path": "/free-ai-stack",
@@ -929,10 +1427,22 @@
       "reads_index": true,
       "tables_read_index": true,
       "table_figures": 9,
+      "table_figures_from_records": 9,
+      "tables": [
+        {
+          "label": "Stack Overview",
+          "figures": 9,
+          "from_records": 9
+        },
+        {
+          "label": "Open-Source Self-Hosted Alternatives",
+          "figures": 0,
+          "from_records": 0
+        }
+      ],
       "reads_changes": true,
       "data_source": "catalogue",
-      "data_source_reason": null,
-      "table_figures_from_records": 9
+      "data_source_reason": null
     },
     {
       "path": "/free-devops-stack",
@@ -960,10 +1470,22 @@
       "reads_index": true,
       "tables_read_index": true,
       "table_figures": 19,
+      "table_figures_from_records": 19,
+      "tables": [
+        {
+          "label": "Stack Overview",
+          "figures": 19,
+          "from_records": 19
+        },
+        {
+          "label": "Open-Source Self-Hosted Alternatives",
+          "figures": 0,
+          "from_records": 0
+        }
+      ],
       "reads_changes": true,
       "data_source": "catalogue",
-      "data_source_reason": null,
-      "table_figures_from_records": 19
+      "data_source_reason": null
     },
     {
       "path": "/free-django-stack",
@@ -990,10 +1512,22 @@
       "reads_index": true,
       "tables_read_index": true,
       "table_figures": 32,
+      "table_figures_from_records": 14,
+      "tables": [
+        {
+          "label": "Stack Overview",
+          "figures": 14,
+          "from_records": 9
+        },
+        {
+          "label": "The $24/Month Upgrade — What to Spend First",
+          "figures": 18,
+          "from_records": 5
+        }
+      ],
       "reads_changes": true,
       "data_source": "catalogue",
-      "data_source_reason": null,
-      "table_figures_from_records": 14
+      "data_source_reason": null
     },
     {
       "path": "/free-fastapi-stack",
@@ -1019,10 +1553,22 @@
       "reads_index": true,
       "tables_read_index": true,
       "table_figures": 32,
+      "table_figures_from_records": 14,
+      "tables": [
+        {
+          "label": "Stack Overview",
+          "figures": 14,
+          "from_records": 9
+        },
+        {
+          "label": "The $20/Month Upgrade — What to Spend First",
+          "figures": 18,
+          "from_records": 5
+        }
+      ],
       "reads_changes": true,
       "data_source": "catalogue",
-      "data_source_reason": null,
-      "table_figures_from_records": 14
+      "data_source_reason": null
     },
     {
       "path": "/free-frontend-stack",
@@ -1049,10 +1595,22 @@
       "reads_index": true,
       "tables_read_index": true,
       "table_figures": 12,
+      "table_figures_from_records": 12,
+      "tables": [
+        {
+          "label": "Stack Overview",
+          "figures": 12,
+          "from_records": 12
+        },
+        {
+          "label": "Open-Source Self-Hosted Alternatives",
+          "figures": 0,
+          "from_records": 0
+        }
+      ],
       "reads_changes": true,
       "data_source": "catalogue",
-      "data_source_reason": null,
-      "table_figures_from_records": 12
+      "data_source_reason": null
     },
     {
       "path": "/free-go-stack",
@@ -1079,10 +1637,22 @@
       "reads_index": true,
       "tables_read_index": true,
       "table_figures": 30,
+      "table_figures_from_records": 13,
+      "tables": [
+        {
+          "label": "Stack Overview",
+          "figures": 13,
+          "from_records": 8
+        },
+        {
+          "label": "The $20/Month Upgrade — What to Spend First",
+          "figures": 17,
+          "from_records": 5
+        }
+      ],
       "reads_changes": true,
       "data_source": "catalogue",
-      "data_source_reason": null,
-      "table_figures_from_records": 13
+      "data_source_reason": null
     },
     {
       "path": "/free-nextjs-stack",
@@ -1110,10 +1680,22 @@
       "reads_index": true,
       "tables_read_index": true,
       "table_figures": 30,
+      "table_figures_from_records": 12,
+      "tables": [
+        {
+          "label": "Stack Overview",
+          "figures": 12,
+          "from_records": 8
+        },
+        {
+          "label": "The $20/Month Upgrade — What to Spend First",
+          "figures": 18,
+          "from_records": 4
+        }
+      ],
       "reads_changes": true,
       "data_source": "catalogue",
-      "data_source_reason": null,
-      "table_figures_from_records": 12
+      "data_source_reason": null
     },
     {
       "path": "/free-saas-stack",
@@ -1141,10 +1723,27 @@
       "reads_index": true,
       "tables_read_index": true,
       "table_figures": 45,
+      "table_figures_from_records": 14,
+      "tables": [
+        {
+          "label": "Stack Overview",
+          "figures": 14,
+          "from_records": 10
+        },
+        {
+          "label": "The Growth Path — From $0 to $500/Month",
+          "figures": 9,
+          "from_records": 1
+        },
+        {
+          "label": "When to Upgrade — Service by Service",
+          "figures": 22,
+          "from_records": 3
+        }
+      ],
       "reads_changes": true,
       "data_source": "catalogue",
-      "data_source_reason": null,
-      "table_figures_from_records": 14
+      "data_source_reason": null
     },
     {
       "path": "/free-startup-stack",
@@ -1172,10 +1771,17 @@
       "reads_index": true,
       "tables_read_index": true,
       "table_figures": 13,
+      "table_figures_from_records": 13,
+      "tables": [
+        {
+          "label": "Stack Overview",
+          "figures": 13,
+          "from_records": 13
+        }
+      ],
       "reads_changes": true,
       "data_source": "catalogue",
-      "data_source_reason": null,
-      "table_figures_from_records": 13
+      "data_source_reason": null
     },
     {
       "path": "/free-tier-risk",
@@ -1235,10 +1841,42 @@
       "reads_index": true,
       "tables_read_index": true,
       "table_figures": 48,
+      "table_figures_from_records": 0,
+      "tables": [
+        {
+          "label": "2. 🟢 Low Risk — Safe to Build On",
+          "figures": 7,
+          "from_records": 0
+        },
+        {
+          "label": "3. 🟡 Medium Risk — Use with Caution",
+          "figures": 8,
+          "from_records": 0
+        },
+        {
+          "label": "4. 🔴 High Risk — Plan Your Exit",
+          "figures": 0,
+          "from_records": 0
+        },
+        {
+          "label": "5. ⚫ Already Changed — Lessons Learned",
+          "figures": 9,
+          "from_records": 0
+        },
+        {
+          "label": "6. Scorecard — How the Grades Have Held Up",
+          "figures": 0,
+          "from_records": 0
+        },
+        {
+          "label": "7. Full Scoring Table",
+          "figures": 24,
+          "from_records": 0
+        }
+      ],
       "reads_changes": true,
       "data_source": "catalogue",
-      "data_source_reason": null,
-      "table_figures_from_records": 0
+      "data_source_reason": null
     },
     {
       "path": "/free-tier-tracker",
@@ -1304,10 +1942,17 @@
       "reads_index": false,
       "tables_read_index": false,
       "table_figures": 47,
+      "table_figures_from_records": 46,
+      "tables": [
+        {
+          "label": "All Q1 2026 Changes",
+          "figures": 47,
+          "from_records": 46
+        }
+      ],
       "reads_changes": true,
       "data_source": "unsourced",
-      "data_source_reason": null,
-      "table_figures_from_records": 46
+      "data_source_reason": null
     },
     {
       "path": "/gcp-free-tier-2026",
@@ -1341,10 +1986,32 @@
       "reads_index": true,
       "tables_read_index": false,
       "table_figures": 38,
+      "table_figures_from_records": 2,
+      "tables": [
+        {
+          "label": "Always Free Products",
+          "figures": 19,
+          "from_records": 0
+        },
+        {
+          "label": "Free Trial & AI/ML Tools",
+          "figures": 5,
+          "from_records": 0
+        },
+        {
+          "label": "GCP vs AWS vs Others",
+          "figures": 12,
+          "from_records": 0
+        },
+        {
+          "label": "Recent GCP & Google Changes",
+          "figures": 2,
+          "from_records": 2
+        }
+      ],
       "reads_changes": true,
       "data_source": "catalogue",
-      "data_source_reason": null,
-      "table_figures_from_records": 2
+      "data_source_reason": null
     },
     {
       "path": "/gemini-api-pricing-2026",
@@ -1374,10 +2041,27 @@
       "reads_index": false,
       "tables_read_index": false,
       "table_figures": 9,
+      "table_figures_from_records": 0,
+      "tables": [
+        {
+          "label": "1. What's Changing April 1",
+          "figures": 3,
+          "from_records": 0
+        },
+        {
+          "label": "4. New Tier Structure & Spend Caps",
+          "figures": 6,
+          "from_records": 0
+        },
+        {
+          "label": "6. Free LLM API Comparison",
+          "figures": 0,
+          "from_records": 0
+        }
+      ],
       "reads_changes": true,
       "data_source": "unsourced",
-      "data_source_reason": null,
-      "table_figures_from_records": 0
+      "data_source_reason": null
     },
     {
       "path": "/gemini-api-pricing-changes",
@@ -1408,10 +2092,27 @@
       "reads_index": false,
       "tables_read_index": false,
       "table_figures": 36,
+      "table_figures_from_records": 0,
+      "tables": [
+        {
+          "label": "1. What Changed — Before vs After",
+          "figures": 2,
+          "from_records": 0
+        },
+        {
+          "label": "3. Cost Analysis by Usage Tier",
+          "figures": 21,
+          "from_records": 0
+        },
+        {
+          "label": "4. Alternative Free LLM APIs",
+          "figures": 13,
+          "from_records": 0
+        }
+      ],
       "reads_changes": true,
       "data_source": "unsourced",
-      "data_source_reason": null,
-      "table_figures_from_records": 0
+      "data_source_reason": null
     },
     {
       "path": "/google-developer-program-2026",
@@ -1451,10 +2152,32 @@
       "reads_index": true,
       "tables_read_index": true,
       "table_figures": 39,
+      "table_figures_from_records": 4,
+      "tables": [
+        {
+          "label": "2. Price Comparison Table",
+          "figures": 13,
+          "from_records": 0
+        },
+        {
+          "label": "5. Free Cloud Credit Alternatives",
+          "figures": 20,
+          "from_records": 4
+        },
+        {
+          "label": "6. Free AI/LLM API Alternatives",
+          "figures": 1,
+          "from_records": 0
+        },
+        {
+          "label": "7. Firebase Alternatives",
+          "figures": 5,
+          "from_records": 0
+        }
+      ],
       "reads_changes": true,
       "data_source": "catalogue",
-      "data_source_reason": null,
-      "table_figures_from_records": 4
+      "data_source_reason": null
     },
     {
       "path": "/hcp-terraform-migration",
@@ -1485,10 +2208,27 @@
       "reads_index": true,
       "tables_read_index": true,
       "table_figures": 0,
+      "table_figures_from_records": 0,
+      "tables": [
+        {
+          "label": "1. What's Changing on March 31",
+          "figures": 0,
+          "from_records": 0
+        },
+        {
+          "label": "4. Decision Matrix",
+          "figures": 0,
+          "from_records": 0
+        },
+        {
+          "label": "6. Free IaC Alternatives Comparison",
+          "figures": 0,
+          "from_records": 0
+        }
+      ],
       "reads_changes": true,
       "data_source": "catalogue",
-      "data_source_reason": null,
-      "table_figures_from_records": 0
+      "data_source_reason": null
     },
     {
       "path": "/hetzner-pricing-2026",
@@ -1520,10 +2260,27 @@
       "reads_index": true,
       "tables_read_index": true,
       "table_figures": 96,
+      "table_figures_from_records": 3,
+      "tables": [
+        {
+          "label": "1. Every Cloud Plan, Priced Today",
+          "figures": 50,
+          "from_records": 0
+        },
+        {
+          "label": "2. What the April 1 Adjustment Did",
+          "figures": 17,
+          "from_records": 0
+        },
+        {
+          "label": "6. Alternatives Comparison",
+          "figures": 29,
+          "from_records": 3
+        }
+      ],
       "reads_changes": true,
       "data_source": "catalogue",
-      "data_source_reason": null,
-      "table_figures_from_records": 3
+      "data_source_reason": null
     },
     {
       "path": "/hosting-free-tier-comparison-2026",
@@ -1563,10 +2320,27 @@
       "reads_index": true,
       "tables_read_index": false,
       "table_figures": 85,
+      "table_figures_from_records": 27,
+      "tables": [
+        {
+          "label": "Main Comparison Table",
+          "figures": 23,
+          "from_records": 0
+        },
+        {
+          "label": "The Hosting Cost Trap",
+          "figures": 35,
+          "from_records": 0
+        },
+        {
+          "label": "Pricing Change Timeline",
+          "figures": 27,
+          "from_records": 27
+        }
+      ],
       "reads_changes": true,
       "data_source": "catalogue",
-      "data_source_reason": null,
-      "table_figures_from_records": 27
+      "data_source_reason": null
     },
     {
       "path": "/hosting-pricing",
@@ -1609,10 +2383,32 @@
       "reads_index": false,
       "tables_read_index": false,
       "table_figures": 139,
+      "table_figures_from_records": 53,
+      "tables": [
+        {
+          "label": "Pricing Comparison Table",
+          "figures": 36,
+          "from_records": 0
+        },
+        {
+          "label": "What You Actually Get for Free",
+          "figures": 12,
+          "from_records": 0
+        },
+        {
+          "label": "Cost Comparison by Use Case",
+          "figures": 38,
+          "from_records": 0
+        },
+        {
+          "label": "Recent Pricing Changes",
+          "figures": 53,
+          "from_records": 53
+        }
+      ],
       "reads_changes": true,
       "data_source": "unsourced",
-      "data_source_reason": null,
-      "table_figures_from_records": 53
+      "data_source_reason": null
     },
     {
       "path": "/llm-api-pricing",
@@ -1661,10 +2457,27 @@
       "reads_index": true,
       "tables_read_index": false,
       "table_figures": 62,
+      "table_figures_from_records": 35,
+      "tables": [
+        {
+          "label": "Pricing Comparison Table",
+          "figures": 25,
+          "from_records": 0
+        },
+        {
+          "label": "What You Actually Get for Free",
+          "figures": 1,
+          "from_records": 0
+        },
+        {
+          "label": "Recent Pricing Changes",
+          "figures": 36,
+          "from_records": 35
+        }
+      ],
       "reads_changes": true,
       "data_source": "catalogue",
-      "data_source_reason": null,
-      "table_figures_from_records": 35
+      "data_source_reason": null
     },
     {
       "path": "/monitoring-comparison-2026",
@@ -1726,10 +2539,37 @@
       "reads_index": true,
       "tables_read_index": false,
       "table_figures": 100,
+      "table_figures_from_records": 19,
+      "tables": [
+        {
+          "label": "Main Comparison Table",
+          "figures": 41,
+          "from_records": 0
+        },
+        {
+          "label": "Uptime & Synthetic Monitoring",
+          "figures": 8,
+          "from_records": 0
+        },
+        {
+          "label": "Cron & Job Monitoring",
+          "figures": 0,
+          "from_records": 0
+        },
+        {
+          "label": "Annual Cost by Scale (Infrastructure + APM + Logs)",
+          "figures": 29,
+          "from_records": 0
+        },
+        {
+          "label": "Pricing Change Timeline",
+          "figures": 22,
+          "from_records": 19
+        }
+      ],
       "reads_changes": true,
       "data_source": "catalogue",
-      "data_source_reason": null,
-      "table_figures_from_records": 19
+      "data_source_reason": null
     },
     {
       "path": "/neon-vs-supabase",
@@ -1757,10 +2597,27 @@
       "reads_index": true,
       "tables_read_index": true,
       "table_figures": 23,
+      "table_figures_from_records": 8,
+      "tables": [
+        {
+          "label": "1. Free Tier Comparison Table",
+          "figures": 8,
+          "from_records": 0
+        },
+        {
+          "label": "3. Cost at Scale",
+          "figures": 7,
+          "from_records": 0
+        },
+        {
+          "label": "5. Other Database Alternatives",
+          "figures": 8,
+          "from_records": 8
+        }
+      ],
       "reads_changes": true,
       "data_source": "catalogue",
-      "data_source_reason": null,
-      "table_figures_from_records": 8
+      "data_source_reason": null
     },
     {
       "path": "/openai-assistants-alternatives",
@@ -1794,10 +2651,27 @@
       "reads_index": true,
       "tables_read_index": true,
       "table_figures": 21,
+      "table_figures_from_records": 21,
+      "tables": [
+        {
+          "label": "What’s Changing",
+          "figures": 0,
+          "from_records": 0
+        },
+        {
+          "label": "Free Tier Comparison Table",
+          "figures": 16,
+          "from_records": 16
+        },
+        {
+          "label": "OpenAI Pricing Change Timeline",
+          "figures": 5,
+          "from_records": 5
+        }
+      ],
       "reads_changes": true,
       "data_source": "catalogue",
-      "data_source_reason": null,
-      "table_figures_from_records": 21
+      "data_source_reason": null
     },
     {
       "path": "/openai-assistants-migration",
@@ -1823,10 +2697,32 @@
       "reads_index": false,
       "tables_read_index": false,
       "table_figures": 30,
+      "table_figures_from_records": 5,
+      "tables": [
+        {
+          "label": "Cost Comparison by Usage Tier",
+          "figures": 20,
+          "from_records": 0
+        },
+        {
+          "label": "Free Tier Alternatives",
+          "figures": 3,
+          "from_records": 0
+        },
+        {
+          "label": "Migration Timeline",
+          "figures": 2,
+          "from_records": 0
+        },
+        {
+          "label": "OpenAI Pricing Changes Timeline",
+          "figures": 5,
+          "from_records": 5
+        }
+      ],
       "reads_changes": true,
       "data_source": "unsourced",
-      "data_source_reason": null,
-      "table_figures_from_records": 5
+      "data_source_reason": null
     },
     {
       "path": "/openai-assistants-migration-2026",
@@ -1853,10 +2749,42 @@
       "reads_index": true,
       "tables_read_index": true,
       "table_figures": 40,
+      "table_figures_from_records": 40,
+      "tables": [
+        {
+          "label": "2. Feature Migration Map",
+          "figures": 0,
+          "from_records": 0
+        },
+        {
+          "label": "Direct API Alternatives",
+          "figures": 14,
+          "from_records": 14
+        },
+        {
+          "label": "Agent Frameworks",
+          "figures": 0,
+          "from_records": 0
+        },
+        {
+          "label": "Wire-Compatible Bridges",
+          "figures": 0,
+          "from_records": 0
+        },
+        {
+          "label": "6. Token Cost Comparison",
+          "figures": 21,
+          "from_records": 21
+        },
+        {
+          "label": "7. OpenAI Pricing Change Timeline",
+          "figures": 5,
+          "from_records": 5
+        }
+      ],
       "reads_changes": true,
       "data_source": "catalogue",
-      "data_source_reason": null,
-      "table_figures_from_records": 40
+      "data_source_reason": null
     },
     {
       "path": "/openai-realtime-migration",
@@ -1885,10 +2813,27 @@
       "reads_index": false,
       "tables_read_index": false,
       "table_figures": 22,
+      "table_figures_from_records": 0,
+      "tables": [
+        {
+          "label": "Real-Time Audio API Alternatives",
+          "figures": 11,
+          "from_records": 0
+        },
+        {
+          "label": "Pricing Comparison",
+          "figures": 11,
+          "from_records": 0
+        },
+        {
+          "label": "OpenAI Change Timeline",
+          "figures": 0,
+          "from_records": 0
+        }
+      ],
       "reads_changes": true,
       "data_source": "unsourced",
-      "data_source_reason": null,
-      "table_figures_from_records": 0
+      "data_source_reason": null
     },
     {
       "path": "/q1-2026-developer-pricing-report",
@@ -1907,10 +2852,11 @@
       "reads_index": false,
       "tables_read_index": false,
       "table_figures": 0,
+      "table_figures_from_records": 0,
+      "tables": [],
       "reads_changes": true,
       "data_source": "unsourced",
-      "data_source_reason": null,
-      "table_figures_from_records": 0
+      "data_source_reason": null
     },
     {
       "path": "/q2-pricing-preview-2026",
@@ -1933,10 +2879,11 @@
       "reads_index": false,
       "tables_read_index": false,
       "table_figures": 0,
+      "table_figures_from_records": 0,
+      "tables": [],
       "reads_changes": true,
       "data_source": "unsourced",
-      "data_source_reason": null,
-      "table_figures_from_records": 0
+      "data_source_reason": null
     },
     {
       "path": "/railway-vs-render",
@@ -1961,10 +2908,27 @@
       "reads_index": true,
       "tables_read_index": true,
       "table_figures": 51,
+      "table_figures_from_records": 11,
+      "tables": [
+        {
+          "label": "1. Free Tier Comparison Table",
+          "figures": 25,
+          "from_records": 0
+        },
+        {
+          "label": "3. Cost at Scale",
+          "figures": 15,
+          "from_records": 0
+        },
+        {
+          "label": "5. Other PaaS Alternatives",
+          "figures": 11,
+          "from_records": 11
+        }
+      ],
       "reads_changes": true,
       "data_source": "catalogue",
-      "data_source_reason": null,
-      "table_figures_from_records": 11
+      "data_source_reason": null
     },
     {
       "path": "/security-free-tier-comparison-2026",
@@ -2016,10 +2980,27 @@
       "reads_index": true,
       "tables_read_index": false,
       "table_figures": 29,
+      "table_figures_from_records": 3,
+      "tables": [
+        {
+          "label": "Main Comparison Table",
+          "figures": 5,
+          "from_records": 0
+        },
+        {
+          "label": "The DevSecOps Cost Trap",
+          "figures": 21,
+          "from_records": 0
+        },
+        {
+          "label": "Pricing Change Timeline",
+          "figures": 3,
+          "from_records": 3
+        }
+      ],
       "reads_changes": true,
       "data_source": "catalogue",
-      "data_source_reason": null,
-      "table_figures_from_records": 3
+      "data_source_reason": null
     },
     {
       "path": "/serverless-free-tier-comparison-2026",
@@ -2062,10 +3043,42 @@
       "reads_index": true,
       "tables_read_index": false,
       "table_figures": 65,
+      "table_figures_from_records": 27,
+      "tables": [
+        {
+          "label": "Main Comparison Table",
+          "figures": 27,
+          "from_records": 0
+        },
+        {
+          "label": "Traditional FaaS",
+          "figures": 0,
+          "from_records": 0
+        },
+        {
+          "label": "Edge Compute",
+          "figures": 8,
+          "from_records": 0
+        },
+        {
+          "label": "Full-Service Serverless",
+          "figures": 1,
+          "from_records": 0
+        },
+        {
+          "label": "Specialized Serverless",
+          "figures": 1,
+          "from_records": 0
+        },
+        {
+          "label": "Pricing Change Timeline",
+          "figures": 28,
+          "from_records": 27
+        }
+      ],
       "reads_changes": true,
       "data_source": "catalogue",
-      "data_source_reason": null,
-      "table_figures_from_records": 27
+      "data_source_reason": null
     },
     {
       "path": "/shutdowns",
@@ -2082,10 +3095,17 @@
       "reads_index": false,
       "tables_read_index": false,
       "table_figures": 0,
+      "table_figures_from_records": 0,
+      "tables": [
+        {
+          "label": "Related Pricing Changes",
+          "figures": 0,
+          "from_records": 0
+        }
+      ],
       "reads_changes": true,
       "data_source": "unsourced",
-      "data_source_reason": null,
-      "table_figures_from_records": 0
+      "data_source_reason": null
     },
     {
       "path": "/stack-check",
@@ -2102,10 +3122,11 @@
       "reads_index": true,
       "tables_read_index": false,
       "table_figures": 0,
+      "table_figures_from_records": 0,
+      "tables": [],
       "reads_changes": true,
       "data_source": "catalogue",
-      "data_source_reason": null,
-      "table_figures_from_records": 0
+      "data_source_reason": null
     },
     {
       "path": "/stacks/ai-startup",
@@ -2124,10 +3145,17 @@
       "reads_index": true,
       "tables_read_index": true,
       "table_figures": 35,
+      "table_figures_from_records": 7,
+      "tables": [
+        {
+          "label": "The Stack",
+          "figures": 35,
+          "from_records": 7
+        }
+      ],
       "reads_changes": true,
       "data_source": "catalogue",
-      "data_source_reason": null,
-      "table_figures_from_records": 7
+      "data_source_reason": null
     },
     {
       "path": "/stacks/api-first",
@@ -2146,10 +3174,17 @@
       "reads_index": true,
       "tables_read_index": true,
       "table_figures": 31,
+      "table_figures_from_records": 3,
+      "tables": [
+        {
+          "label": "The Stack",
+          "figures": 31,
+          "from_records": 3
+        }
+      ],
       "reads_changes": false,
       "data_source": "catalogue",
-      "data_source_reason": null,
-      "table_figures_from_records": 3
+      "data_source_reason": null
     },
     {
       "path": "/stacks/open-source",
@@ -2168,10 +3203,17 @@
       "reads_index": true,
       "tables_read_index": true,
       "table_figures": 35,
+      "table_figures_from_records": 7,
+      "tables": [
+        {
+          "label": "The Stack",
+          "figures": 35,
+          "from_records": 7
+        }
+      ],
       "reads_changes": true,
       "data_source": "catalogue",
-      "data_source_reason": null,
-      "table_figures_from_records": 7
+      "data_source_reason": null
     },
     {
       "path": "/stacks/saas-mvp",
@@ -2190,10 +3232,17 @@
       "reads_index": true,
       "tables_read_index": true,
       "table_figures": 35,
+      "table_figures_from_records": 7,
+      "tables": [
+        {
+          "label": "The Stack",
+          "figures": 35,
+          "from_records": 7
+        }
+      ],
       "reads_changes": true,
       "data_source": "catalogue",
-      "data_source_reason": null,
-      "table_figures_from_records": 7
+      "data_source_reason": null
     },
     {
       "path": "/stacks/side-project",
@@ -2212,10 +3261,17 @@
       "reads_index": true,
       "tables_read_index": true,
       "table_figures": 35,
+      "table_figures_from_records": 7,
+      "tables": [
+        {
+          "label": "The Stack",
+          "figures": 35,
+          "from_records": 7
+        }
+      ],
       "reads_changes": true,
       "data_source": "catalogue",
-      "data_source_reason": null,
-      "table_figures_from_records": 7
+      "data_source_reason": null
     },
     {
       "path": "/startup-credits",
@@ -2247,10 +3303,22 @@
       "reads_index": false,
       "tables_read_index": false,
       "table_figures": 103,
+      "table_figures_from_records": 66,
+      "tables": [
+        {
+          "label": "Comparison Table",
+          "figures": 35,
+          "from_records": 0
+        },
+        {
+          "label": "Recent Changes",
+          "figures": 68,
+          "from_records": 66
+        }
+      ],
       "reads_changes": true,
       "data_source": "unsourced",
-      "data_source_reason": null,
-      "table_figures_from_records": 66
+      "data_source_reason": null
     },
     {
       "path": "/state-of-free-tiers",
@@ -2274,10 +3342,27 @@
       "reads_index": true,
       "tables_read_index": true,
       "table_figures": 6,
+      "table_figures_from_records": 0,
+      "tables": [
+        {
+          "label": "Category Erosion: Where Free Tiers Are Disappearing",
+          "figures": 0,
+          "from_records": 0
+        },
+        {
+          "label": "Startup Credit Programs: The Hidden Goldmine",
+          "figures": 6,
+          "from_records": 0
+        },
+        {
+          "label": "Category Landscape",
+          "figures": 0,
+          "from_records": 0
+        }
+      ],
       "reads_changes": true,
       "data_source": "catalogue",
-      "data_source_reason": null,
-      "table_figures_from_records": 0
+      "data_source_reason": null
     },
     {
       "path": "/storage-comparison-2026",
@@ -2319,10 +3404,32 @@
       "reads_index": true,
       "tables_read_index": false,
       "table_figures": 81,
+      "table_figures_from_records": 19,
+      "tables": [
+        {
+          "label": "Main Comparison Table",
+          "figures": 32,
+          "from_records": 0
+        },
+        {
+          "label": "Media & Image CDN",
+          "figures": 6,
+          "from_records": 0
+        },
+        {
+          "label": "Growth Cost Trap: Scaling from Free to Enterprise",
+          "figures": 24,
+          "from_records": 0
+        },
+        {
+          "label": "Pricing Change Timeline",
+          "figures": 19,
+          "from_records": 19
+        }
+      ],
       "reads_changes": true,
       "data_source": "catalogue",
-      "data_source_reason": null,
-      "table_figures_from_records": 19
+      "data_source_reason": null
     },
     {
       "path": "/supabase-vs-firebase",
@@ -2349,10 +3456,27 @@
       "reads_index": true,
       "tables_read_index": true,
       "table_figures": 28,
+      "table_figures_from_records": 7,
+      "tables": [
+        {
+          "label": "1. Free Tier Comparison Table",
+          "figures": 8,
+          "from_records": 0
+        },
+        {
+          "label": "3. Cost at Scale",
+          "figures": 13,
+          "from_records": 0
+        },
+        {
+          "label": "5. Other BaaS Alternatives",
+          "figures": 7,
+          "from_records": 7
+        }
+      ],
       "reads_changes": true,
       "data_source": "catalogue",
-      "data_source_reason": null,
-      "table_figures_from_records": 7
+      "data_source_reason": null
     },
     {
       "path": "/tenor-alternatives",
@@ -2369,10 +3493,27 @@
       "reads_index": false,
       "tables_read_index": false,
       "table_figures": 1,
+      "table_figures_from_records": 0,
+      "tables": [
+        {
+          "label": "Migration Timeline",
+          "figures": 0,
+          "from_records": 0
+        },
+        {
+          "label": "GIF API Alternative Comparison",
+          "figures": 1,
+          "from_records": 0
+        },
+        {
+          "label": "Tenor Pricing Change Timeline",
+          "figures": 0,
+          "from_records": 0
+        }
+      ],
       "reads_changes": true,
       "data_source": "unsourced",
-      "data_source_reason": null,
-      "table_figures_from_records": 0
+      "data_source_reason": null
     },
     {
       "path": "/terraform-cloud-free-tier-removed",
@@ -2400,10 +3541,32 @@
       "reads_index": false,
       "tables_read_index": false,
       "table_figures": 38,
+      "table_figures_from_records": 0,
+      "tables": [
+        {
+          "label": "1. What Changed — Before vs After",
+          "figures": 0,
+          "from_records": 0
+        },
+        {
+          "label": "3. Migration Cost Analysis",
+          "figures": 32,
+          "from_records": 0
+        },
+        {
+          "label": "4. Alternative Platforms Comparison",
+          "figures": 0,
+          "from_records": 0
+        },
+        {
+          "label": "5. Free Alternatives Table",
+          "figures": 6,
+          "from_records": 0
+        }
+      ],
       "reads_changes": true,
       "data_source": "unsourced",
-      "data_source_reason": null,
-      "table_figures_from_records": 0
+      "data_source_reason": null
     },
     {
       "path": "/testing-free-tier-comparison-2026",
@@ -2452,10 +3615,27 @@
       "reads_index": true,
       "tables_read_index": false,
       "table_figures": 38,
+      "table_figures_from_records": 20,
+      "tables": [
+        {
+          "label": "Main Comparison Table",
+          "figures": 4,
+          "from_records": 0
+        },
+        {
+          "label": "The Testing Cost Trap",
+          "figures": 14,
+          "from_records": 0
+        },
+        {
+          "label": "Pricing Change Timeline",
+          "figures": 20,
+          "from_records": 20
+        }
+      ],
       "reads_changes": true,
       "data_source": "catalogue",
-      "data_source_reason": null,
-      "table_figures_from_records": 20
+      "data_source_reason": null
     },
     {
       "path": "/vector-database-pricing",
@@ -2496,10 +3676,32 @@
       "reads_index": false,
       "tables_read_index": false,
       "table_figures": 65,
+      "table_figures_from_records": 7,
+      "tables": [
+        {
+          "label": "Free Tier Comparison Table",
+          "figures": 22,
+          "from_records": 0
+        },
+        {
+          "label": "Self-Hosted vs Managed Cost Comparison",
+          "figures": 14,
+          "from_records": 0
+        },
+        {
+          "label": "Cost Comparison by Team Size",
+          "figures": 22,
+          "from_records": 0
+        },
+        {
+          "label": "Recent Pricing Changes",
+          "figures": 7,
+          "from_records": 7
+        }
+      ],
       "reads_changes": true,
       "data_source": "unsourced",
-      "data_source_reason": null,
-      "table_figures_from_records": 7
+      "data_source_reason": null
     },
     {
       "path": "/vercel-vs-netlify",
@@ -2528,10 +3730,27 @@
       "reads_index": true,
       "tables_read_index": true,
       "table_figures": 48,
+      "table_figures_from_records": 32,
+      "tables": [
+        {
+          "label": "1. Free Tier Comparison Table",
+          "figures": 4,
+          "from_records": 0
+        },
+        {
+          "label": "3. Cost at Scale",
+          "figures": 12,
+          "from_records": 0
+        },
+        {
+          "label": "5. Other Hosting Alternatives",
+          "figures": 32,
+          "from_records": 32
+        }
+      ],
       "reads_changes": true,
       "data_source": "catalogue",
-      "data_source_reason": null,
-      "table_figures_from_records": 32
+      "data_source_reason": null
     },
     {
       "path": "/x402-services",
@@ -2600,10 +3819,17 @@
       "reads_index": true,
       "tables_read_index": true,
       "table_figures": 54,
+      "table_figures_from_records": 3,
+      "tables": [
+        {
+          "label": "All x402-Enabled Services",
+          "figures": 54,
+          "from_records": 3
+        }
+      ],
       "reads_changes": true,
       "data_source": "catalogue",
-      "data_source_reason": null,
-      "table_figures_from_records": 3
+      "data_source_reason": null
     }
   ]
 }

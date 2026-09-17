@@ -175,6 +175,12 @@ export function lowerBudgetInstruction(name: string, to: number): string {
   return `set ${name} to ${to} in ${file} — run npm run ratchet:budgets — so the slot cannot be reused`;
 }
 
+export interface TableCredit {
+  label: string | null;
+  figures: number;
+  from_records: number;
+}
+
 export interface PageReviewRecord {
   path: string;
   published: string;
@@ -191,6 +197,7 @@ export interface PageReviewRecord {
   tables_read_index: boolean;
   table_figures: number;
   table_figures_from_records: number;
+  tables: TableCredit[];
   reads_changes: boolean;
   data_source: PageDataSource;
   data_source_reason: string | null;
@@ -247,6 +254,15 @@ function wholeCount(value: unknown): number {
   return typeof value === "number" && Number.isInteger(value) && value >= 0 ? value : 0;
 }
 
+function normalizeTableCredits(raw: unknown): TableCredit[] {
+  if (!Array.isArray(raw)) return [];
+  return raw.map((entry: any) => ({
+    label: typeof entry?.label === "string" && entry.label.trim() ? entry.label.trim() : null,
+    figures: wholeCount(entry?.figures),
+    from_records: wholeCount(entry?.from_records),
+  }));
+}
+
 function normalizeRecord(raw: any): PageReviewRecord | null {
   if (!raw || typeof raw.path !== "string" || !raw.path.startsWith("/")) return null;
   if (!isReviewDate(raw.published)) return null;
@@ -268,6 +284,7 @@ function normalizeRecord(raw: any): PageReviewRecord | null {
     tables_read_index: raw.tables_read_index === true,
     table_figures: wholeCount(raw.table_figures),
     table_figures_from_records: wholeCount(raw.table_figures_from_records),
+    tables: normalizeTableCredits(raw.tables),
     reads_changes: raw.reads_changes === true,
     data_source: PAGE_DATA_SOURCES.includes(raw.data_source) ? raw.data_source : "unsourced",
     data_source_reason: typeof raw.data_source_reason === "string" && raw.data_source_reason.trim() ? raw.data_source_reason.trim() : null,
@@ -400,6 +417,7 @@ export function pageFreshnessSentence(pagePath: string, today = utcToday()): str
 export interface TableFigureCensus {
   table_figures: number;
   table_figures_from_records: number;
+  tables: TableCredit[];
 }
 
 export function everyFigureComesFromOurRecords(census: TableFigureCensus): boolean {
@@ -410,10 +428,30 @@ export function noFigureComesFromOurRecords(census: TableFigureCensus): boolean 
   return !(census.table_figures_from_records > 0);
 }
 
+export function soleCreditedTable(census: TableFigureCensus): TableCredit | null {
+  const tables = census.tables ?? [];
+  if (tables.length < 2) return null;
+  const credited = tables.filter(table => table.from_records > 0);
+  if (credited.length !== 1) return null;
+  return credited[0].label ? credited[0] : null;
+}
+
 export const OUR_RECORDS_FOR = "our records for";
 
 function ourRecordsFor(indexSize: number): string {
   return `${OUR_RECORDS_FOR} ${indexSize.toLocaleString()} developer tools`;
+}
+
+function escapeLabel(label: string): string {
+  return label
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
+
+export function tableNaming(label: string): string {
+  return `the &ldquo;${escapeLabel(label.replace(/^\d+\.\s+/, ""))}&rdquo; table`;
 }
 
 export function recordsCitation(indexSize: number): string {
@@ -422,6 +460,17 @@ export function recordsCitation(indexSize: number): string {
 
 export function partialRecordsCitation(fromRecords: number, figures: number, indexSize: number): string {
   return `${fromRecords} of ${figures} figures in the tables below come from ${ourRecordsFor(indexSize)}`;
+}
+
+export function tableScopedCitation(table: TableCredit, indexSize: number): string {
+  return `${table.from_records} of ${table.figures} figures in ${tableNaming(table.label ?? "")} come from ${ourRecordsFor(indexSize)}`;
+}
+
+function scopedCitation(census: TableFigureCensus, indexSize: number): string {
+  const sole = soleCreditedTable(census);
+  return sole
+    ? tableScopedCitation(sole, indexSize)
+    : partialRecordsCitation(census.table_figures_from_records, census.table_figures, indexSize);
 }
 
 const COMPILED_PREFIX = "Figures compiled";
@@ -439,7 +488,7 @@ export function dataProvenanceFor(record: PageReviewRecord | null, indexSize: nu
   if (everyFigureComesFromOurRecords(record)) return recordsCitation(indexSize);
   const compiled = compiledNoticeFor(record, reviewStatus(record, today));
   if (noFigureComesFromOurRecords(record)) return compiled;
-  return compiled + SEPARATOR + partialRecordsCitation(record.table_figures_from_records, record.table_figures, indexSize);
+  return compiled + SEPARATOR + scopedCitation(record, indexSize);
 }
 
 export function pageDataProvenance(pagePath: string, indexSize: number, today = utcToday()): string {
@@ -449,7 +498,7 @@ export function pageDataProvenance(pagePath: string, indexSize: number, today = 
 export function figureSourceSentence(record: PageReviewRecord | null, indexSize: number): string {
   if (!record || noFigureComesFromOurRecords(record)) return "";
   if (everyFigureComesFromOurRecords(record)) return `${recordsCitation(indexSize)}.`;
-  return `${partialRecordsCitation(record.table_figures_from_records, record.table_figures, indexSize)}.`;
+  return `${scopedCitation(record, indexSize)}.`;
 }
 
 export function pageFigureSource(pagePath: string, indexSize: number): string {
@@ -953,8 +1002,13 @@ export interface PageSourceMeasurement {
   tables_read_index: boolean;
   table_figures: number;
   table_figures_from_records: number;
+  tables: TableCredit[];
   reads_changes: boolean;
   vendor_fact_rows: number;
+}
+
+function tableSplit(tables: TableCredit[] | undefined): string {
+  return (tables ?? []).map(table => `${table.label ?? "unlabelled"} ${table.from_records}/${table.figures}`).join(", ") || "no tables";
 }
 
 export interface PageSourceViolation {
@@ -999,6 +1053,22 @@ function declarationViolations(page: PageReviewRecord, seen: PageSourceMeasureme
     violations.push({
       path: page.path,
       problem: `${page.table_figures_from_records} figures traced to a record out of ${page.table_figures} published`,
+    });
+  }
+  if (tableSplit(page.tables) !== tableSplit(seen.tables)) {
+    violations.push({
+      path: page.path,
+      problem: `the register splits the figures as ${tableSplit(page.tables)}, the served page splits them as ${tableSplit(seen.tables)}`,
+    });
+  }
+  const split = page.tables.reduce(
+    (totals, table) => ({ figures: totals.figures + table.figures, from_records: totals.from_records + table.from_records }),
+    { figures: 0, from_records: 0 },
+  );
+  if (split.figures !== page.table_figures || split.from_records !== page.table_figures_from_records) {
+    violations.push({
+      path: page.path,
+      problem: `the per-table split totals ${split.from_records} of ${split.figures} against a page total of ${page.table_figures_from_records} of ${page.table_figures}`,
     });
   }
   if (page.reads_changes !== seen.reads_changes) {
