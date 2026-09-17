@@ -21,6 +21,7 @@ interface CountedOffer {
   url: string;
   verifiedDate: string;
   category: string;
+  restated_from?: { reading_date: string } | null;
 }
 
 const m = getFreshnessMetrics();
@@ -33,8 +34,10 @@ const ageInDays = (date: string) => Math.floor((nowMs - new Date(date).getTime()
 const within = (date: string | null | undefined, days: number) =>
   Boolean(date) && ageInDays(date as string) <= days;
 
+const termsWeTookFromAReading = (o: CountedOffer) => Boolean(o.restated_from);
+
 const storedSuccessOf = (o: CountedOffer): string | null =>
-  store.get(`${o.vendor}|${o.url}`)?.last_success ?? null;
+  termsWeTookFromAReading(o) ? null : (store.get(`${o.vendor}|${o.url}`)?.last_success ?? null);
 
 const confirmedFromTheStore = offers.filter((o) => within(storedSuccessOf(o), 90));
 const stampedFromTheCatalogue = offers.filter((o) => within(o.verifiedDate, 90));
@@ -78,6 +81,15 @@ describe("the freshness figure counts confirmations and says so", () => {
       `the two counts are equal, so either every catalogue date is now sourced to a confirming read ` +
         `or one of the counts has been widened to match the other — ${bothCounts()}`,
     );
+  });
+
+  it("counts no confirmation for an entry whose terms came from a reading that disagreed with us", () => {
+    const confirmed = offers.find((o) => storedSuccessOf(o) !== null);
+    assert.ok(confirmed, "no entry in the catalogue holds a confirming read to build the case on");
+    const restated = { ...confirmed, restated_from: { reading_date: "2026-09-07" } };
+    assert.notStrictEqual(store.get(`${confirmed.vendor}|${confirmed.url}`)?.last_success, undefined);
+    assert.strictEqual(storedSuccessOf(restated), null);
+    assert.strictEqual(confirmationDate(restated), null);
   });
 
   it("admits no confirmation the store does not hold", () => {
