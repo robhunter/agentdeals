@@ -27,7 +27,7 @@ import { LINK_GRACE_DAYS, unreachableNoticeForUrl } from "./link-health.js";
 import { offerEnded, offerRetired, recordedTierSentence, endedHeadline, endedHistorySentence, endedReliabilitySentence, endedEmptyChangeHistorySentence, detailForEndedOffer, noLiveRecordUnderThatNameSentence, ENDED_BADGE_LABEL, ENDED_SINCE_CHANGES_SENTENCE, type OfferTierAndUrl } from "./retirement.js";
 import { dropEndedFromNameList, endedIndex, endedRowStatement, markEndedVendorRows } from "./ended-surfaces.js";
 import { amountUnstatedSentence, freePriceConfirmedSentence, freePriceOnlySentence, LAST_RESOLVED, levelWithheldReason, levelWithheldSince, recordPublishesAQuantity, withheldLevelClause, withheldLevelSentence, type LevelWithheldReason } from "./source-check.js";
-import { offerVerdictInput, vendorVerdictContextFrom, type VendorVerdictContext } from "./vendor-verdict-input.js";
+import { offerVerdictInput, reasonWeCannotConfirmTheTerms, vendorVerdictContextFrom, type VendorVerdictContext } from "./vendor-verdict-input.js";
 import { readingIsBehindTheLoop, reverificationIntervalDays } from "./badge-staleness.js";
 import { LAST_READ_LABEL, UNCONFIRMED_DATE_LABEL, VERIFICATION_DATES_HEADING, lastReadDate, lastReadNote, publishedDateLabel, publishedDateValue, verificationDatesCell, verificationDatesSentence } from "./read-date.js";
 import { SUPERSEDED_TERMS_LABEL, SUPERSEDED_TERMS_RULE, readingBehindTheChange, supersededTermsAnswer, supersededTermsMetaSentence, supersededTermsNotice, supersededTermsNoticeHtml, supersededTermsRecord, supersededTermsVerdictSentence, supersedingChange, type SupersededTermsRecord } from "./superseded-description.js";
@@ -647,8 +647,12 @@ function unconfirmedTermsSpanHtml(unconfirmed: UnconfirmedTerms): string {
     + `${escHtmlServer(unconfirmedTermsSentence(unconfirmed))}</span>`;
 }
 
+function reasonWeCannotConfirmFor(offer: Offer): UnconfirmedTerms | null {
+  return reasonWeCannotConfirmTheTerms(offer, unconfirmedTermsFor(offer));
+}
+
 function termsUnconfirmedNoticeHtml(offer: Offer): string {
-  const unconfirmed = unconfirmedTermsFor(offer);
+  const unconfirmed = reasonWeCannotConfirmFor(offer);
   if (!unconfirmed || unconfirmed.because.reason === "link_unreachable") return "";
   return unconfirmedTermsSpanHtml(unconfirmed);
 }
@@ -662,7 +666,7 @@ function supersedingChangeFor(offer: StoredTermsOf): DealChange | null {
 function publishedTermsText(offer: Offer): string {
   const superseded = supersedingChangeFor(offer);
   if (superseded) return supersededTermsNotice(offer.vendor, superseded);
-  const unconfirmed = unconfirmedTermsFor(offer);
+  const unconfirmed = reasonWeCannotConfirmFor(offer);
   return unconfirmed ? termsWithTheReasonWeCannotConfirmThem(offer.description, unconfirmed) : offer.description;
 }
 
@@ -700,7 +704,7 @@ function weListThisTierAsFreeToday(offer: Offer): boolean {
 }
 
 function pricedTierDescription(offer: Offer, describedAs: string): string {
-  const unconfirmed = unconfirmedTermsFor(offer);
+  const unconfirmed = reasonWeCannotConfirmFor(offer);
   if (!unconfirmed) return offer.tier;
   const reason = unconfirmedTermsSentence(unconfirmed);
   return describedAs.endsWith(reason) ? `${offer.tier} — ${reason}` : offer.tier;
@@ -752,7 +756,7 @@ function storedTermsHtml(offer: StoredTermsOf): string {
 function publishedTermsHtml(offer: Offer): string {
   const stored = storedTermsHtml(offer);
   if (supersedingChangeFor(offer)) return stored;
-  const unconfirmed = unconfirmedTermsFor(offer);
+  const unconfirmed = reasonWeCannotConfirmFor(offer);
   if (!unconfirmed) return stored;
   return stored + unconfirmedTermsSpanHtml(unconfirmed);
 }
@@ -3450,10 +3454,10 @@ function buildComparisonPage(slug: string): string | null {
 
   const riskBadge = (o: { risk_level: string | null; risk_cause: RiskCause | null }) => riskBadgeHtml(o.risk_level, o.risk_cause, { margin: false });
 
-  const descBlockHtml = (vendor: string, description: string, superseded: typeof supersededA) =>
+  const descBlockHtml = (offer: Offer, superseded: typeof supersededA) =>
     superseded
-      ? `<div class="desc-block terms-superseded-text"><strong>${SUPERSEDED_TERMS_LABEL}:</strong> ${supersededTermsNoticeHtml(vendor, superseded, escHtmlServer)} <a href="#changes">Read what we recorded &darr;</a></div>`
-      : `<div class="desc-block">${escHtmlServer(description)}</div>`;
+      ? `<div class="desc-block terms-superseded-text"><strong>${SUPERSEDED_TERMS_LABEL}:</strong> ${supersededTermsNoticeHtml(offer.vendor, superseded, escHtmlServer)} <a href="#changes">Read what we recorded &darr;</a></div>`
+      : `<div class="desc-block">${publishedTermsHtml(offer)}</div>`;
 
   const changesHtml = (changes: typeof a.deal_changes, vendor: string) => {
     if (changes.length === 0) return `<p style="color:var(--text-dim);font-size:.85rem">No recorded pricing changes for ${escHtmlServer(vendor)}.</p>`;
@@ -3542,10 +3546,10 @@ function buildComparisonPage(slug: string): string | null {
       itemListOrder: listOrderOf("as-curated"),
       numberOfItems: 2,
       itemListElement: [
-        { offer: a, free: freeSideA.free, superseded: supersededA },
-        { offer: b, free: freeSideB.free, superseded: supersededB },
-      ].map(({ offer: v, free, superseded }, i) => {
-        const describedAs = superseded ? supersededTermsNotice(v.vendor, superseded) : v.description;
+        { offer: a, free: freeSideA.free },
+        { offer: b, free: freeSideB.free },
+      ].map(({ offer: v, free }, i) => {
+        const describedAs = publishedTermsText(v);
         return {
           "@type": "ListItem",
           position: i + 1,
@@ -3652,7 +3656,7 @@ ${verdictHtml}
       <div class="detail-row"><span class="detail-label">Verified</span><span class="detail-value">${escHtmlServer(a.verifiedDate)}</span></div>
       <div class="detail-row"><span class="detail-label">${LAST_READ_LABEL}</span><span class="detail-value">${escHtmlServer(lastReadDate(a))}</span></div>
       <div class="detail-row"><span class="detail-label">Changes</span><span class="detail-value">${a.deal_changes.length} recorded</span></div>
-      ${descBlockHtml(a.vendor, a.description, supersededA)}
+      ${descBlockHtml(a, supersededA)}
       ${a.referral ? `<div style="margin-top:.75rem;padding:.5rem .75rem;border:1px solid #3fb95040;border-left:3px solid #3fb950;border-radius:0 6px 6px 0;background:#3fb95010;font-size:.8rem">\ud83d\udd17 <a href="${escHtmlServer(a.referral.url)}" rel="noopener sponsored" target="_blank">Referral link</a>: ${escHtmlServer(a.referral.referee_value ?? "Save with our referral link")} <a href="/disclosure" style="font-size:.7rem;color:var(--text-dim)">(disclosure)</a></div>` : ""}
     </div>
     <div class="vendor-col">
@@ -3662,7 +3666,7 @@ ${verdictHtml}
       <div class="detail-row"><span class="detail-label">Verified</span><span class="detail-value">${escHtmlServer(b.verifiedDate)}</span></div>
       <div class="detail-row"><span class="detail-label">${LAST_READ_LABEL}</span><span class="detail-value">${escHtmlServer(lastReadDate(b))}</span></div>
       <div class="detail-row"><span class="detail-label">Changes</span><span class="detail-value">${b.deal_changes.length} recorded</span></div>
-      ${descBlockHtml(b.vendor, b.description, supersededB)}
+      ${descBlockHtml(b, supersededB)}
       ${b.referral ? `<div style="margin-top:.75rem;padding:.5rem .75rem;border:1px solid #3fb95040;border-left:3px solid #3fb950;border-radius:0 6px 6px 0;background:#3fb95010;font-size:.8rem">\ud83d\udd17 <a href="${escHtmlServer(b.referral.url)}" rel="noopener sponsored" target="_blank">Referral link</a>: ${escHtmlServer(b.referral.referee_value ?? "Save with our referral link")} <a href="/disclosure" style="font-size:.7rem;color:var(--text-dim)">(disclosure)</a></div>` : ""}
     </div>
   </div>
@@ -5313,9 +5317,7 @@ ${allCompareLinks.join("\n")}
     ...eventResolutionFields(c),
     description: c.summary,
   }));
-  const primaryDescribedAs = termsSuperseded
-    ? supersededTermsNotice(vendorName, termsSuperseded)
-    : primary.description;
+  const primaryDescribedAs = publishedTermsText(primary);
   const jsonLd: Record<string, any> = {
     "@context": "https://schema.org",
     "@type": "WebPage",

@@ -1513,7 +1513,12 @@ describe("HTTP transport", () => {
       assert.strictEqual(offer["@type"], "Offer");
       assert.strictEqual(offer.price, "0");
       assert.strictEqual(offer.priceCurrency, "USD");
-      assert.strictEqual(offer.description, primaryRecordOf(String(page.mainEntity.name))?.tier);
+      const tier = primaryRecordOf(String(page.mainEntity.name))?.tier;
+      assert.strictEqual(offer.name, tier);
+      assert.ok(
+        String(offer.description) === tier || String(offer.description).startsWith(`${tier} — `),
+        `the Offer describes itself as "${offer.description}", which does not open with the tier it names`,
+      );
       return;
     }
 
