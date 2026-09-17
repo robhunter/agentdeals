@@ -41,6 +41,8 @@ export const READING_SAYS_WHAT_WE_ALREADY_STORE = "reading_says_what_we_already_
 
 export const A_RECORD_NO_NEWER_ALREADY_RESTATED_THIS = "a_record_no_newer_already_restated_this";
 
+export const THIS_READING_IS_HELD_BACK_BY_NAME = "this_reading_is_held_back_by_name";
+
 export const RESTATEMENT_REFUSALS: readonly string[] = [
   TIER_IS_NOT_ONE_WE_RECORD_AS_FREE,
   READING_ANSWERS_FOR_SOMETHING_ELSE,
@@ -49,7 +51,41 @@ export const RESTATEMENT_REFUSALS: readonly string[] = [
   READING_DROPS_THE_CAP_ON_WHO_MAY_USE_IT,
   READING_SAYS_WHAT_WE_ALREADY_STORE,
   A_RECORD_NO_NEWER_ALREADY_RESTATED_THIS,
+  THIS_READING_IS_HELD_BACK_BY_NAME,
 ];
+
+export interface AReadingHeldBackByName {
+  vendor: string;
+  reading_opens: string;
+  we_go_on_storing: string;
+  the_rule_that_should_reach_it: string;
+}
+
+export const READINGS_HELD_BACK_BY_NAME: readonly AReadingHeldBackByName[] = [
+  {
+    vendor: "ImgBB",
+    reading_opens: "ImgBB is a free image hosting service. Upgrade to unlock all the features.",
+    we_go_on_storing: "32 MB / image limit",
+    the_rule_that_should_reach_it: "https://github.com/robhunter/agentdeals/issues/1424",
+  },
+  {
+    vendor: "Prisma Accelerate",
+    reading_opens: "Free tier includes 1M requests / month",
+    we_go_on_storing: "100,000 operations/month",
+    the_rule_that_should_reach_it: "https://github.com/robhunter/agentdeals/issues/1756",
+  },
+];
+
+export function theHoldOnThisReading(
+  offer: Pick<RestatableOffer, "vendor">,
+  reading: string,
+): AReadingHeldBackByName | null {
+  const held = READINGS_HELD_BACK_BY_NAME.find(
+    (hold) => hold.vendor.toLowerCase() === offer.vendor.toLowerCase(),
+  );
+  if (!held) return null;
+  return reading.trimStart().startsWith(held.reading_opens) ? held : null;
+}
 
 const A_CAP_ON_WHO_MAY_USE_IT =
   /\b(?:single|one|1)\s+(?:[A-Za-z-]+\s+){0,2}?(?:users?|seats?|members?|collaborators?|editors?|developers?)\b|\bsingle[\s-](?:user|seat|player|tenant)\b/i;
@@ -113,6 +149,9 @@ export function restatementRefusal(
   }
   if (!aLaterRecordThanTheOneWeRestatedFrom(change, offer.restated_from)) {
     return A_RECORD_NO_NEWER_ALREADY_RESTATED_THIS;
+  }
+  if (theHoldOnThisReading(offer, reading.terms)) {
+    return THIS_READING_IS_HELD_BACK_BY_NAME;
   }
   return null;
 }
