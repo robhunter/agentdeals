@@ -31,6 +31,7 @@ export const TRACK_CHANGES_LIMIT = 1000;
 import type { LinkUnreachable, ProductRole, ProductSubtypes, SourceCheck } from "./types.js";
 import type { RefusedRead } from "./change-refusal.js";
 import { NOT_VERIFIED, theReadConfirmedThePrice, publishedTermsEvidence, termsTheVerdictWithholds, termsWithTheReasonWeCannotConfirmThem, unconfirmedTermsFrom } from "./vendor-verdict.js";
+import { reasonWeCannotConfirmTheTerms } from "./vendor-verdict-input.js";
 import { SINCE_DEFAULT_SENTENCE } from "./change-window.js";
 import { NAME_MATCH_SENTENCE } from "./name-match.js";
 
@@ -675,7 +676,7 @@ Suggested monitoring cadence: run this check weekly to catch pricing changes ear
 
       const changesData = (await fetchDealChanges({ vendor: match.vendor, since: "2020-01-01" })) as { changes: Array<{ date: string; change_type: string; summary: string; previous_state: string; current_state: string }> };
       const alternatives = substitutesFor(data.offers, match).slice(0, 5);
-      const unconfirmed = unconfirmedTermsFrom(publishedTermsEvidence(match));
+      const unconfirmed = reasonWeCannotConfirmTheTerms(match, unconfirmedTermsFrom(publishedTermsEvidence(match)));
 
       let text = `# ${match.vendor}\n\n`;
       text += `**Category:** ${match.category}\n`;
