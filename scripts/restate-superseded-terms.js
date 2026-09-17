@@ -42,7 +42,7 @@ export function restatementEntry(ruling, today) {
     url: offer.url,
     restated_on: restatement?.restated_on ?? today,
     previous_description: offer.description,
-    description: reading.terms,
+    description: ruling.description,
     reading_date: reading.date,
     source_url: reading.url,
     record_date: change.date,
@@ -67,7 +67,7 @@ export function applyRestatements(data, rulings, today, limit = Infinity) {
     const index = byKey.get(offerKey(ruling.offer.vendor, ruling.offer.url));
     if (index === undefined) continue;
     written.push(restatementEntry(ruling, today));
-    data.offers[index].description = ruling.reading.terms;
+    data.offers[index].description = ruling.description;
     data.offers[index].restated_from = ruling.restatement;
   }
   return written;
@@ -98,6 +98,14 @@ export function refusalLines(measure) {
   return lines;
 }
 
+export function openingLine(measure) {
+  const keeping = measure.restatements_keeping_the_stored_sentence_saying_what_the_product_is ?? 0;
+  return (
+    `  keeping the stored sentence saying what the product is: ${keeping}` +
+    ` of ${measure.offers_we_may_restate_from_their_reading}`
+  );
+}
+
 export function summaryLines(measure, written, path) {
   return [
     "",
@@ -105,6 +113,7 @@ export function summaryLines(measure, written, path) {
     `Offers withholding their stored terms behind a sourced reading: ` +
       `${measure.offers_we_may_restate_from_their_reading + Object.values(measure.offers_we_refuse_to_restate).reduce((a, b) => a + b, 0)}`,
     `We may restate from that reading: ${measure.offers_we_may_restate_from_their_reading}`,
+    openingLine(measure),
     ...refusalLines(measure),
     `Re-read since the record and still withheld: ${measure.offers_re_read_since_the_record_and_still_withheld}`,
     `Restated this run: ${written.length}`,
@@ -117,6 +126,7 @@ export function reportOnlyLines(measure) {
     "",
     "── Summary ──",
     `We may restate from that reading: ${measure.offers_we_may_restate_from_their_reading}`,
+    openingLine(measure),
     ...refusalLines(measure),
     `Re-read since the record and still withheld: ${measure.offers_re_read_since_the_record_and_still_withheld}`,
     "Restated this run: 0",
