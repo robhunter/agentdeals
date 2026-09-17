@@ -5344,6 +5344,11 @@ ${allCompareLinks.join("\n")}
     : "";
   const withUnconfirmedTermsCaveat = (terms: string) =>
     termsWeCannotConfirm ? withUnconfirmedTerms(terms, termsWeCannotConfirm) : terms;
+  const reasonARecordedEndingDoesNotAnswer = reasonWeCannotConfirmFor(primary);
+  const withTheReasonARecordedEndingLeaves = (terms: string) =>
+    reasonARecordedEndingDoesNotAnswer
+      ? withUnconfirmedTerms(terms, reasonARecordedEndingDoesNotAnswer)
+      : terms;
   const eligibilityConditionsSentence = primaryEligibilityConditions.length > 0
     ? ` Eligibility: ${primaryEligibilityConditions.join("; ")}.`
     : "";
@@ -5355,7 +5360,7 @@ ${allCompareLinks.join("\n")}
   const faqFreeAnswer = termsSuperseded
     ? `${gateSentencesBeforeTheTerms}${supersededTermsAnswer(vendorName, termsSuperseded)}`
     : retiredSentence
-    ? `${retiredSentence} ${storedTerms}`
+    ? `${retiredSentence} ${withTheReasonARecordedEndingLeaves(storedTerms)}`
     : primaryGateBeyondEligibility
     ? `${eligibilityGateSentence}${primaryGateBeyondEligibility.reason} ${termsWeCannotConfirm ? `${unconfirmedTermsPreamble}${withUnconfirmedTermsCaveat(storedTerms)}` : storedTerms}${eligibilityConditionsSentence}`
     : termsWeCannotConfirm
@@ -5366,7 +5371,7 @@ ${allCompareLinks.join("\n")}
   const faqTierAnswer = termsSuperseded
     ? `${eligibilityGateSentence}${vendorName}'s free tier is called "${primary.tier}". ${supersededTermsNotice(vendorName, termsSuperseded)}`
     : retiredSentence
-    ? `${retiredSentence} ${primary.description}`
+    ? `${retiredSentence} ${withTheReasonARecordedEndingLeaves(primary.description)}`
     : eligibilityGateSentence + (termsWeCannotConfirm
     ? `${unconfirmedTermsPreamble}Our stored record calls ${vendorName}'s free tier "${primary.tier}". ${withUnconfirmedTermsCaveat(primary.description)}`
     : `${vendorName}'s free tier is called "${primary.tier}". ${primary.description}`);
