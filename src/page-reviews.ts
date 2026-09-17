@@ -407,7 +407,7 @@ export function everyFigureComesFromTheIndex(census: TableFigureCensus): boolean
 }
 
 export function noFigureComesFromTheIndex(census: TableFigureCensus): boolean {
-  return census.table_figures_from_index === 0;
+  return !(census.table_figures_from_index > 0);
 }
 
 const OUR_INDEX_OF = "our index of";
