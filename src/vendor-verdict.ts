@@ -450,10 +450,17 @@ export function unconfirmedTermsFrom(input: TermsEvidence): UnconfirmedTerms | n
   };
 }
 
+export const CANNOT_CONFIRM_THESE_TERMS = "so we cannot confirm these terms";
+
 export function unconfirmedTermsSentence(unconfirmed: UnconfirmedTerms): string {
   return unconfirmed.theReadFoundAFreePlan
     ? unconfirmed.sentence
-    : `${capitalise(unconfirmed.clause)}, so we cannot confirm these terms today.`;
+    : `${capitalise(unconfirmed.clause)}, ${CANNOT_CONFIRM_THESE_TERMS} today.`;
+}
+
+export function refusedReadVerdictSentence(because: RefusedReadWithholding): string {
+  return `${capitalise(refusedReadWithholdingClause(because))},`
+    + ` ${CANNOT_CONFIRM_THESE_TERMS} and are not rating this offer today.`;
 }
 
 export const UNVERIFIED_TERMS_CAVEAT =
@@ -627,11 +634,11 @@ export function vendorVerdictSentence(input: VendorVerdictInput): string {
     const unconfirmed = whyWeCannotConfirmTheseTerms(input);
     if (unconfirmed) return unconfirmedTermsSentence(unconfirmed);
     const clause = withheldLevelClause(input.levelWithheld, input.unconfirmableSince);
-    return `${clause.charAt(0).toUpperCase()}${clause.slice(1)}, so we cannot confirm these terms today.`;
+    return `${capitalise(clause)}, ${CANNOT_CONFIRM_THESE_TERMS} today.`;
   }
   const refused = refusalWithholdsStability(input);
   if (refused) {
-    return `${capitalise(refusedReadClause(refused))}, so we are not rating this offer today.`;
+    return refusedReadVerdictSentence(refusedReadWithholding(refused));
   }
 
   const level = publishedVendorLevel(input.level, input.cause);
@@ -639,7 +646,7 @@ export function vendorVerdictSentence(input: VendorVerdictInput): string {
 
   if (level !== "stable" && input.cause) {
     const unconfirmed = input.levelWithheld
-      ? ` ${capitalise(withheldLevelClause(input.levelWithheld, input.unconfirmableSince))}, so we cannot confirm the terms above.`
+      ? ` ${capitalise(withheldLevelClause(input.levelWithheld, input.unconfirmableSince))}, ${CANNOT_CONFIRM_THESE_TERMS} today.`
       : "";
     return `We rate it ${level} — one recorded ${changeKindNoun(input.cause.change_type)}, ${changeDateClause(input.cause)}.${unconfirmed}`;
   }

@@ -3,7 +3,7 @@ import { changesByVendor, enrichOffers, publishedRisk, refusalsForVendor } from 
 
 type EnrichedOfferRow = ReturnType<typeof enrichOffers>[number];
 import { gateFor, utcDate, type Gate } from "./ranking.js";
-import { offerEnded, offerRetired } from "./retirement.js";
+import { offerEnded } from "./retirement.js";
 import { levelWithheldReason, levelWithheldSince, recordPublishesAQuantity, type LevelWithheldReason } from "./source-check.js";
 import type { RefusedRead } from "./change-refusal.js";
 import { storedTermsAreSuperseded } from "./superseded-description.js";
@@ -81,7 +81,7 @@ export function reasonWeCannotConfirmTheTerms(
   offer: Pick<Offer, "tier">,
   unconfirmed: UnconfirmedTerms | null,
 ): UnconfirmedTerms | null {
-  return offerRetired(offer) ? null : unconfirmed;
+  return offerEnded(offer) ? null : unconfirmed;
 }
 
 export function unconfirmedTermsForOffer(offer: Offer, servedOn: string = utcDate()): UnconfirmedTerms | null {
