@@ -1,7 +1,7 @@
 import { tierRecordsAFreeTier, DENIES_A_FREE_TIER } from "./free-tier-record.js";
-import { mentionsSomethingFree } from "./superseding-reading.js";
+import { describesThePageRatherThanTheTerms, mentionsSomethingFree } from "./superseding-reading.js";
 import { VERDICTS_ABOUT_THE_EDITION_ITSELF, comparableTerms } from "./change-tier.js";
-import { restatedDescription } from "./restated-description.js";
+import { restatedDescription, statesAFigure } from "./restated-description.js";
 import {
   readingBehindTheChange,
   supersedingChange,
@@ -30,6 +30,13 @@ export const TIER_IS_NOT_ONE_WE_RECORD_AS_FREE = "tier_is_not_one_we_record_as_f
 
 export const READING_ANSWERS_FOR_SOMETHING_ELSE = "reading_answers_for_something_else";
 
+export const READING_DESCRIBES_THE_PAGE_NOT_THE_TERMS = "reading_describes_the_page_not_the_terms";
+
+export const READING_STATES_NO_FIGURE_WHERE_OUR_TERMS_DO =
+  "reading_states_no_figure_where_our_terms_do";
+
+export const READING_DROPS_THE_CAP_ON_WHO_MAY_USE_IT = "reading_drops_the_cap_on_who_may_use_it";
+
 export const READING_SAYS_WHAT_WE_ALREADY_STORE = "reading_says_what_we_already_store";
 
 export const A_RECORD_NO_NEWER_ALREADY_RESTATED_THIS = "a_record_no_newer_already_restated_this";
@@ -37,9 +44,18 @@ export const A_RECORD_NO_NEWER_ALREADY_RESTATED_THIS = "a_record_no_newer_alread
 export const RESTATEMENT_REFUSALS: readonly string[] = [
   TIER_IS_NOT_ONE_WE_RECORD_AS_FREE,
   READING_ANSWERS_FOR_SOMETHING_ELSE,
+  READING_DESCRIBES_THE_PAGE_NOT_THE_TERMS,
+  READING_STATES_NO_FIGURE_WHERE_OUR_TERMS_DO,
+  READING_DROPS_THE_CAP_ON_WHO_MAY_USE_IT,
   READING_SAYS_WHAT_WE_ALREADY_STORE,
   A_RECORD_NO_NEWER_ALREADY_RESTATED_THIS,
 ];
+
+const A_CAP_ON_WHO_MAY_USE_IT =
+  /\b(?:single|one|1)\s+(?:[A-Za-z-]+\s+){0,2}?(?:users?|seats?|members?|collaborators?|editors?|developers?)\b|\bsingle[\s-](?:user|seat|player|tenant)\b/i;
+
+const SOMEONE_WHO_USES_IT =
+  /\b(?:users?|seats?|members?|collaborators?|editors?|developers?|people|individuals?|team)\b/i;
 
 export function readingSaysTheListedTierIsGone(change: QuotingChange, reading: string): boolean {
   if (VERDICTS_ABOUT_THE_EDITION_ITSELF.includes(change.change_type)) return true;
@@ -53,6 +69,14 @@ export function readingAnswersForTheListedTier(
 ): boolean {
   if (!tierRecordsAFreeTier(offer.tier ?? "")) return false;
   return mentionsSomethingFree(reading) || readingSaysTheListedTierIsGone(change, reading);
+}
+
+export function readingStatesNoFigureWhereOurTermsDo(description: string, reading: string): boolean {
+  return statesAFigure(description) && !statesAFigure(reading);
+}
+
+export function readingDropsTheCapOnWhoMayUseIt(description: string, reading: string): boolean {
+  return A_CAP_ON_WHO_MAY_USE_IT.test(description) && !SOMEONE_WHO_USES_IT.test(reading);
 }
 
 export function aLaterRecordThanTheOneWeRestatedFrom(
@@ -71,6 +95,15 @@ export function restatementRefusal(
   if (!tierRecordsAFreeTier(offer.tier ?? "")) return TIER_IS_NOT_ONE_WE_RECORD_AS_FREE;
   if (!readingAnswersForTheListedTier(change, offer, reading.terms)) {
     return READING_ANSWERS_FOR_SOMETHING_ELSE;
+  }
+  if (describesThePageRatherThanTheTerms(reading.terms)) {
+    return READING_DESCRIBES_THE_PAGE_NOT_THE_TERMS;
+  }
+  if (readingStatesNoFigureWhereOurTermsDo(offer.description, reading.terms)) {
+    return READING_STATES_NO_FIGURE_WHERE_OUR_TERMS_DO;
+  }
+  if (readingDropsTheCapOnWhoMayUseIt(offer.description, reading.terms)) {
+    return READING_DROPS_THE_CAP_ON_WHO_MAY_USE_IT;
   }
   if (
     comparableTerms(restatedDescription(offer.description, reading.terms)) ===

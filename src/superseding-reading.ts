@@ -80,6 +80,12 @@ export function mentionsSomethingFree(text: string): boolean {
   return whereItIsOfferedOutrightIn(text, A_FREE_PRICE) >= 0;
 }
 
+export const THE_PAGE_WE_READ = /\b(?:the|this|its|that)\s+(?:[A-Za-z]+\s+){0,2}page\b/i;
+
+export function describesThePageRatherThanTheTerms(reading: string): boolean {
+  return THE_PAGE_WE_READ.test(reading);
+}
+
 export function namesAPriceOfNothing(reading: string): boolean {
   return A_PRICE_OF_NOTHING.test(reading);
 }
