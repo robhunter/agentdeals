@@ -16,8 +16,11 @@ export function absenceIssueBody(marker) {
     "The staleness gate reads `days_since_last_detected` and starts failing the daily run at the",
     "same commit that adds `--ai` to the workflow. There is no flag to flip separately.",
     "",
-    "Opened by `.github/workflows/reverify.yml`, which will not open a second one while this is",
-    `open. Marker: ${marker}`,
+    "Opened by `scripts/signal-detector-absence.sh`, which will not open a second one while this",
+    "is open. It finds this issue again by the marker below, so prose quoting the marker's words",
+    "elsewhere does not silence the alarm.",
+    "",
+    `<!-- ${marker} -->`,
     "",
   ].join("\n");
 }

@@ -146,17 +146,4 @@ jobs:
         if: always() && steps.staleness.outputs.open_absence_issue == 'true'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          MARKER: reverify-detector-not-scheduled
-        run: |
-          set -euo pipefail
-          EXISTING=$(gh issue list --state open --search "$MARKER in:body" --json number --jq '.[0].number // empty')
-          if [ -n "$EXISTING" ]; then
-            echo "Absence already signalled by issue #$EXISTING — not opening another."
-            exit 0
-          fi
-          node scripts/detector-absence-issue-body.js "$MARKER" > /tmp/absence-issue.md
-          gh issue create \
-            --title "No change detector is scheduled — the daily job cannot notice a pricing change" \
-            --label "priority/high" \
-            --label "type: bug" \
-            --body-file /tmp/absence-issue.md
+        run: bash scripts/signal-detector-absence.sh reverify-detector-not-scheduled
