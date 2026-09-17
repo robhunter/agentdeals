@@ -47,8 +47,10 @@ const {
   REJECT_MEASURES_THE_OPPOSITE,
   REJECT_RESTATES_STORED_QUANTITIES,
   GATE_REASONS,
+  QUANTITY_CHANGE_TYPES,
   claimsNarrowing,
   restatedStoredQuantities,
+  unquantifiedInCurrentState,
 } = await import("../scripts/change-gate.js");
 
 const { REFUSAL_REASONS_THAT_MEASURED_NO_DIFFERENCE } = await import("../dist/change-refusal.js");
@@ -1044,13 +1046,19 @@ describe("a recorded change must describe a change", () => {
       assert.ok(held, `no record we hold for ${vendor} on ${date}`);
       return held;
     };
-    const storedRefusal = (vendor: string, refusedOn: string) => {
-      const held = storedRefusals.find(
-        (r: any) => r.vendor === vendor && r.refused_date === refusedOn
-      );
-      assert.ok(held, `no refusal we hold for ${vendor} on ${refusedOn}`);
-      return held;
+    const sameFiguresEitherSide = (entry: any) => {
+      const before = quantities(entry?.previous_state).sort((a: number, b: number) => a - b);
+      const after = quantities(entry?.current_state).sort((a: number, b: number) => a - b);
+      return before.length === after.length && before.every((v: number, i: number) => v === after[i]);
     };
+    const summaryAssertsTheStatesMatch = (entry: any) =>
+      QUANTITY_CHANGE_TYPES.includes(entry?.change_type) &&
+      assertsAgreement(entry?.summary) &&
+      sameFiguresEitherSide(entry);
+    const currentStateNamesNoStoredQuantity = (entry: any) =>
+      QUANTITY_CHANGE_TYPES.includes(entry?.change_type) &&
+      unquantifiedInCurrentState(entry) !== null &&
+      !summaryAssertsTheStatesMatch(entry);
 
     it("refuses a read whose every figure the stored description already carried", () => {
       const verdict = describesChange(THE_WORKERS_FREE_PLAN_READ_TWICE);
@@ -1085,14 +1093,34 @@ describe("a recorded change must describe a change", () => {
       assert.strictEqual(restatedStoredQuantities(servervana), null);
     });
 
-    it("keeps the refusal that fires when the current state names no quantity at all", () => {
-      const pages = storedRefusal("Cloudflare Pages", "2026-09-02");
-      assert.strictEqual(describesChange(pages).reason, REJECT_UNQUANTIFIED_LIMIT);
+    it("keeps every shipped refusal whose summary says the page matches what we stored", () => {
+      const subjects = storedRefusals.filter(summaryAssertsTheStatesMatch);
+      assert.ok(
+        subjects.length > 0,
+        "no refusal we ship claims a quantity change, asserts agreement and carries the same figures either side"
+      );
+      for (const subject of subjects) {
+        assert.strictEqual(
+          describesChange(subject).reason,
+          REJECT_STATES_NO_DIFFERENCE,
+          `${subject.vendor} claims ${subject.change_type} and its summary says the page matches what we stored`
+        );
+      }
     });
 
-    it("keeps the refusal that fires on what the summary says about itself", () => {
-      const workers = storedRefusal("Cloudflare Workers", "2026-09-01");
-      assert.strictEqual(describesChange(workers).reason, REJECT_STATES_NO_DIFFERENCE);
+    it("keeps every shipped refusal whose current state names no quantity at all", () => {
+      const subjects = storedRefusals.filter(currentStateNamesNoStoredQuantity);
+      assert.ok(
+        subjects.length > 0,
+        "no refusal we ship claims a quantity change whose current state measures nothing the stored state measured"
+      );
+      for (const subject of subjects) {
+        assert.strictEqual(
+          describesChange(subject).reason,
+          REJECT_UNQUANTIFIED_LIMIT,
+          `${subject.vendor} claims ${subject.change_type} and its current state names no quantity we stored`
+        );
+      }
     });
 
     it("fires only on a record that claims narrowing", () => {
