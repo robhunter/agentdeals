@@ -245,9 +245,9 @@
         "notes": "Channel partner program only. No individual referral program."
       },
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-17",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names Cloudflare Pages as \"cloudflare pages\" and states \"Free plan\""
       },
       "product_subtypes": {
         "taxonomy": "Cloud Hosting",
@@ -1439,7 +1439,7 @@
       ],
       "verifiedDate": "2026-08-14",
       "source_check": {
-        "checked": "2026-09-16",
+        "checked": "2026-09-17",
         "outcome": "ok",
         "detail": "the page names Grafana Cloud as \"grafana cloud\" and states \"$0\""
       },
@@ -1725,7 +1725,7 @@
         "notes": "Part of Okta. Enterprise referral via Okta partner program only ($100 charity donation per qualified referral)."
       },
       "source_check": {
-        "checked": "2026-09-16",
+        "checked": "2026-09-17",
         "outcome": "ok",
         "detail": "the page names Auth0 as \"auth0\" and states \"$ 0\""
       }
@@ -2115,7 +2115,7 @@
         "notes": "Channel partner program only. No individual referral program."
       },
       "source_check": {
-        "checked": "2026-09-16",
+        "checked": "2026-09-17",
         "outcome": "ok",
         "detail": "the page names Cloudflare KV as \"cloudflare\" and states \"$0.50\""
       },
@@ -2165,7 +2165,7 @@
         "notes": "Channel partner program only. No individual referral program."
       },
       "source_check": {
-        "checked": "2026-09-16",
+        "checked": "2026-09-17",
         "outcome": "ok",
         "detail": "the page names Cloudflare Durable Objects as \"cloudflare durable objects\" and states \"$0.15\""
       },
@@ -2413,9 +2413,9 @@
       ],
       "verifiedDate": "2026-08-15",
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-17",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names Fingerprint as \"fingerprint\" and states \"$0\""
       }
     },
     {
@@ -3091,9 +3091,9 @@
       ],
       "verifiedDate": "2026-08-15",
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-17",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names Amplitude as \"amplitude\" and states \"$0\""
       }
     },
     {
@@ -3149,11 +3149,11 @@
         "queues",
         "free tier"
       ],
-      "verifiedDate": "2026-09-02",
+      "verifiedDate": "2026-09-17",
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-17",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names Trigger.dev as \"trigger dev\" and states \"$0\""
       }
     },
     {
@@ -3203,9 +3203,9 @@
       ],
       "verifiedDate": "2026-08-13",
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-17",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names Doppler as \"doppler\" and states \"$8\""
       }
     },
     {
@@ -3529,7 +3529,7 @@
         "incorporation",
         "startup perks"
       ],
-      "verifiedDate": "2026-09-02",
+      "verifiedDate": "2026-09-17",
       "eligibility": {
         "type": "fintech",
         "conditions": [
@@ -3546,9 +3546,9 @@
         "notes": "Partner ecosystem for integrations. No individual referral program."
       },
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-17",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names Stripe Atlas as \"stripe atlas\" and states \"$50\""
       }
     },
     {
@@ -4045,9 +4045,9 @@
       ],
       "verifiedDate": "2026-08-16",
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-17",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names Postman as \"postman\" and states \"$0\""
       }
     },
     {
@@ -4564,9 +4564,9 @@
       ],
       "verifiedDate": "2026-09-02",
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-17",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names Spacelift as \"spacelift\" and states \"$20,000\""
       }
     },
     {
@@ -4702,9 +4702,9 @@
         }
       ],
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-17",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names Browserbase as \"browserbase\" and states \"$20,\""
       }
     },
     {
@@ -5376,9 +5376,9 @@
       },
       "expires_date": "2026-08-31",
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-17",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names Cloudflare as \"cloudflare\" and states \"$350\""
       }
     },
     {
@@ -5547,11 +5547,11 @@
         "code quality",
         "analytics"
       ],
-      "verifiedDate": "2026-08-15",
+      "verifiedDate": "2026-09-17",
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-17",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names Codecov as \"codecov\" and states \"$5\""
       }
     },
     {
@@ -6339,9 +6339,9 @@
         }
       ],
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-17",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names Cerebras as \"cerebras\" and states \"750 token/sec\""
       },
       "product_subtypes": {
         "taxonomy": "AI / ML",
@@ -6424,11 +6424,11 @@
         "heroku-alternative",
         "vercel-alternative"
       ],
-      "verifiedDate": "2026-08-28",
+      "verifiedDate": "2026-09-17",
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-17",
         "outcome": "states_a_free_price",
-        "detail": "the page names Coolify and states its price in words as \"free forever\""
+        "detail": "the page names Coolify and states its price in words as \"free forever\", and its markup carries no structured data"
       },
       "free_grounds": [
         "licence"
@@ -6659,9 +6659,9 @@
       ],
       "verifiedDate": "2026-07-27",
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-17",
         "outcome": "states_a_free_price",
-        "detail": "the page names Grafana Loki and states its price in words as \"free tier\""
+        "detail": "the page names Grafana Loki and states its price in words as \"free tier\", and its markup carries no structured data"
       },
       "free_grounds": [
         "licence"
@@ -6947,7 +6947,7 @@
         "local-dev",
         "localstack-alternative"
       ],
-      "verifiedDate": "2026-08-14",
+      "verifiedDate": "2026-09-17",
       "product_role": {
         "deployment_model": "self_hosted",
         "is_addon": false,
@@ -6956,9 +6956,9 @@
         "reviewed": "2026-08-25"
       },
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-17",
         "outcome": "states_no_amount",
-        "detail": "the page names ElasticMQ and says \"starts at\" but states no amount, rate or price we can read"
+        "detail": "the page names ElasticMQ and says \"starts at\" but states no amount, rate or price we can read, and its markup carries no structured data"
       },
       "free_grounds": [
         "licence"
@@ -7048,7 +7048,7 @@
         "open-source",
         "localstack-alternative"
       ],
-      "verifiedDate": "2026-08-31",
+      "verifiedDate": "2026-09-17",
       "product_role": {
         "deployment_model": "local_dev_only",
         "is_addon": false,
@@ -7057,9 +7057,9 @@
         "reviewed": "2026-08-25"
       },
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-17",
         "outcome": "states_a_free_price",
-        "detail": "the page names Floci and states its price in words as \"Free forever\""
+        "detail": "the page names Floci and states its price in words as \"Free forever\", and its markup carries no structured data"
       },
       "free_grounds": [
         "licence"
@@ -7472,9 +7472,9 @@
       ],
       "verifiedDate": "2026-08-13",
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-17",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names StatusCake as \"statuscake\" and states \"$0\""
       },
       "product_subtypes": {
         "taxonomy": "Monitoring",
@@ -7864,9 +7864,9 @@
       ],
       "verifiedDate": "2026-07-30",
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-17",
         "outcome": "states_a_free_price",
-        "detail": "the page names AbstractAPI and states its price in words as \"Free API\""
+        "detail": "the page names AbstractAPI and states its price in words as \"Free API\", and its markup carries no structured data"
       }
     },
     {
@@ -7882,11 +7882,11 @@
         "exchange-rates",
         "ip-geolocation"
       ],
-      "verifiedDate": "2026-08-28",
+      "verifiedDate": "2026-09-17",
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-17",
         "outcome": "states_a_free_price",
-        "detail": "the page names APILayer and states its price in words as \"free plans\""
+        "detail": "the page names APILayer and states its price in words as \"free plans\", and the 1 structured-data block in its markup states no price"
       }
     },
     {
@@ -8287,9 +8287,9 @@
       ],
       "verifiedDate": "2026-08-13",
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-17",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names Upstash Vector as \"upstash vector\" and states \"$0\""
       },
       "product_subtypes": {
         "taxonomy": "Databases",
@@ -8448,9 +8448,9 @@
         }
       ],
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-17",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names Replicate as \"replicate\" and states \"$0.04\""
       },
       "product_subtypes": {
         "taxonomy": "AI / ML",
@@ -8875,9 +8875,9 @@
       ],
       "verifiedDate": "2026-08-15",
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-17",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names Neo4j AuraDB as \"neo4j auradb\" and states \"$0\""
       },
       "product_subtypes": {
         "taxonomy": "Databases",
@@ -9517,9 +9517,9 @@
       ],
       "verifiedDate": "2026-07-31",
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-17",
         "outcome": "states_a_free_price",
-        "detail": "the page names Zoho Projects and states its price in words as \"free version\""
+        "detail": "the page names Zoho Projects and states its price in words as \"free version\", and the 1 structured-data block in its markup states no price"
       }
     },
     {
@@ -9551,9 +9551,9 @@
       ],
       "verifiedDate": "2026-07-31",
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-17",
         "outcome": "states_no_amount",
-        "detail": "the page names Zoho Meeting and says \"Starts at\" but states no amount, rate or price we can read"
+        "detail": "the page names Zoho Meeting and says \"Starts at\" but states no amount, rate or price we can read, and the 2 structured-data blocks in its markup state no price"
       }
     },
     {
@@ -9569,9 +9569,9 @@
       ],
       "verifiedDate": "2026-08-15",
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-17",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names Zoho Vault as \"zoho vault\" and states \"$4\""
       }
     },
     {
@@ -9712,9 +9712,9 @@
       ],
       "verifiedDate": "2026-08-01",
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-17",
         "outcome": "states_a_free_price",
-        "detail": "the page names Zoho Forms and states its price in words as \"free plan\""
+        "detail": "the page names Zoho Forms and states its price in words as \"free plan\", and its markup carries no structured data"
       }
     },
     {
@@ -9893,9 +9893,9 @@
       ],
       "verifiedDate": "2026-08-12",
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-17",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names Terragrunt Scale as \"terragrunt scale\" and states \"$0\""
       }
     },
     {
@@ -10276,9 +10276,9 @@
       ],
       "verifiedDate": "2026-07-05",
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-17",
         "outcome": "states_a_free_price",
-        "detail": "the page names Country-State-City Microservice API and states its price in words as \"Free tier\""
+        "detail": "the page names Country-State-City Microservice API and states its price in words as \"Free tier\", and its markup carries no structured data"
       }
     },
     {
@@ -10467,9 +10467,9 @@
       ],
       "verifiedDate": "2026-07-07",
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-17",
         "outcome": "states_a_free_price",
-        "detail": "the page names DB Designer and states its price in words as \"free plan\""
+        "detail": "the page names DB Designer and states its price in words as \"free plan\", and the 1 structured-data block in its markup states no price"
       }
     },
     {
@@ -10955,11 +10955,11 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-08-27",
+      "verifiedDate": "2026-09-17",
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-17",
         "outcome": "states_a_free_price",
-        "detail": "the page names IPLocate and states its price in words as \"free tier\""
+        "detail": "the page names IPLocate and states its price in words as \"free tier\", and the 1 structured-data block in its markup states no price"
       }
     },
     {
@@ -11360,9 +11360,9 @@
       ],
       "verifiedDate": "2026-08-01",
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-17",
         "outcome": "states_a_free_price",
-        "detail": "the page names OCR.Space and states its price in words as \"free tier\""
+        "detail": "the page names OCR.Space and states its price in words as \"free tier\", and its markup carries no structured data"
       },
       "product_subtypes": {
         "taxonomy": "AI / ML",
@@ -12211,9 +12211,9 @@
       ],
       "verifiedDate": "2026-08-02",
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-17",
         "outcome": "states_a_free_price",
-        "detail": "the page names Braid and states its price in words as \"Free Forever\""
+        "detail": "the page names Braid and states its price in words as \"Free Forever\", and its markup carries no structured data"
       }
     },
     {
@@ -12502,9 +12502,9 @@
       ],
       "verifiedDate": "2026-07-09",
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-17",
         "outcome": "states_no_amount",
-        "detail": "the page names Huly and says \"team plans\" but states no amount, rate or price we can read"
+        "detail": "the page names Huly and says \"team plans\" but states no amount, rate or price we can read, and its markup carries no structured data"
       }
     },
     {
@@ -13260,9 +13260,9 @@
       ],
       "verifiedDate": "2026-08-12",
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-17",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names Crystallize as \"crystallize\" and states \"$949\""
       }
     },
     {
@@ -13316,11 +13316,11 @@
         "content",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-08-28",
+      "verifiedDate": "2026-09-17",
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-17",
         "outcome": "states_no_amount",
-        "detail": "the page names Solo and says \"Pro plan\" but states no amount, rate or price we can read"
+        "detail": "the page names Solo and says \"Pro plan\" but states no amount, rate or price we can read, and its markup carries no structured data"
       }
     },
     {
@@ -13428,9 +13428,9 @@
       ],
       "verifiedDate": "2026-08-04",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_a_free_price",
-        "detail": "the page names DhiWise and states its price in words as \"free plans\""
+        "checked": "2026-09-17",
+        "outcome": "does_not_name_vendor",
+        "detail": "the page never names DhiWise, on a domain that carries its name"
       }
     },
     {
@@ -14504,9 +14504,9 @@
       ],
       "verifiedDate": "2026-08-04",
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-17",
         "outcome": "states_a_free_price",
-        "detail": "the page names testingbot.com and states its price in words as \"free plan\""
+        "detail": "the page names testingbot.com and states its price in words as \"free plan\", and the 2 structured-data blocks in its markup state no price"
       }
     },
     {
@@ -14538,11 +14538,11 @@
         "qa",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-08-27",
+      "verifiedDate": "2026-09-17",
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-17",
         "outcome": "states_a_free_price",
-        "detail": "the page names tesults.com and states its price in words as \"free plan\""
+        "detail": "the page names tesults.com and states its price in words as \"free plan\", and its markup carries no structured data"
       }
     },
     {
@@ -15064,9 +15064,10 @@
       ],
       "verifiedDate": "2026-07-11",
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-17",
         "outcome": "states_a_free_price",
-        "detail": "the page names asgardeo.io and states its price in words as \"free tier\""
+        "detail": "the page names asgardeo.io and states its price in words as \"free tier\", and the 1 structured-data block in its markup states no price",
+        "rendered": true
       }
     },
     {
@@ -15219,9 +15220,9 @@
       ],
       "verifiedDate": "2026-08-16",
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-17",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names Logto as \"logto\" and states \"$0\""
       },
       "free_grounds": [
         "licence",
@@ -15261,9 +15262,9 @@
       ],
       "verifiedDate": "2026-07-10",
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-17",
         "outcome": "states_a_free_price",
-        "detail": "the page names Okta and states its price in words as \"Free Plan\""
+        "detail": "the page names Okta and states its price in words as \"Free Plan\", and its markup carries no structured data"
       }
     },
     {
@@ -15463,9 +15464,9 @@
       ],
       "verifiedDate": "2026-08-05",
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-17",
         "outcome": "states_no_amount",
-        "detail": "the page names bitnami.com and says \"standard package\" but states no amount, rate or price we can read"
+        "detail": "the page names bitnami.com and says \"standard package\" but states no amount, rate or price we can read, and its markup carries no structured data"
       }
     },
     {
@@ -15965,11 +15966,11 @@
         "log-management",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-09-02",
+      "verifiedDate": "2026-09-17",
       "source_check": {
-        "checked": "2026-08-28",
+        "checked": "2026-09-17",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names openobserve.ai as \"openobserve ai\" and states \"$0.50\""
       },
       "free_grounds": [
         "licence"
@@ -16098,11 +16099,11 @@
         "developer-tools",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-08-31",
+      "verifiedDate": "2026-09-17",
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-17",
         "outcome": "states_a_free_price",
-        "detail": "the page names localizely.com and states its price in words as \"Free forever\""
+        "detail": "the page names localizely.com and states its price in words as \"Free forever\", and the 1 structured-data block in its markup states no price"
       }
     },
     {
@@ -16117,9 +16118,9 @@
       ],
       "verifiedDate": "2026-08-08",
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-17",
         "outcome": "states_no_amount",
-        "detail": "the page names Loco and says \"Pro plans\" but states no amount, rate or price we can read"
+        "detail": "the page names Loco and says \"Pro plans\" but states no amount, rate or price we can read, and its markup carries no structured data"
       }
     },
     {
@@ -16172,9 +16173,9 @@
       ],
       "verifiedDate": "2026-08-06",
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-17",
         "outcome": "states_a_free_price",
-        "detail": "the page names Texterify and states its price in words as \"free plan\""
+        "detail": "the page names Texterify and states its price in words as \"free plan\", and its markup carries no structured data"
       }
     },
     {
@@ -16692,11 +16693,11 @@
         "observability",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-07-13",
+      "verifiedDate": "2026-09-17",
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-17",
         "outcome": "states_a_free_price",
-        "detail": "the page names phare.io and states its price in words as \"free plan\""
+        "detail": "the page names phare.io and states its price in words as \"free plan\", and the 6 structured-data blocks in its markup state no price"
       },
       "product_subtypes": {
         "taxonomy": "Monitoring",
@@ -17327,11 +17328,11 @@
         "crash-reporting",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-08-30",
+      "verifiedDate": "2026-09-17",
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-17",
         "outcome": "states_a_free_price",
-        "detail": "the page names Semaphr and states its price in words as \"Free forever\""
+        "detail": "the page names Semaphr and states its price in words as \"Free forever\", and its markup carries no structured data"
       }
     },
     {
@@ -17398,11 +17399,11 @@
         "free-for-dev",
         "email-service-alternative"
       ],
-      "verifiedDate": "2026-09-01",
+      "verifiedDate": "2026-09-17",
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-17",
         "outcome": "ok",
-        "detail": "text"
+        "detail": "the page names AhaSend as \"ahasend\" and states \"1000 emails per month\""
       }
     },
     {
@@ -17468,9 +17469,9 @@
       ],
       "verifiedDate": "2026-07-15",
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-17",
         "outcome": "states_a_free_price",
-        "detail": "the page names Burnermail and states its price in words as \"Free Plan\""
+        "detail": "the page names Burnermail and states its price in words as \"Free Plan\", and its markup carries no structured data"
       }
     },
     {
@@ -17673,11 +17674,11 @@
         "email",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-08-26",
+      "verifiedDate": "2026-09-17",
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-17",
         "outcome": "states_a_free_price",
-        "detail": "the page names ImprovMX and states its price in words as \"free tier\""
+        "detail": "the page names ImprovMX and states its price in words as \"free tier\", and its markup carries no structured data"
       }
     },
     {
@@ -17881,9 +17882,9 @@
       ],
       "verifiedDate": "2026-07-15",
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-17",
         "outcome": "states_no_amount",
-        "detail": "the page names mailsac.com and says \"Enterprise plan\" but states no amount, rate or price we can read"
+        "detail": "the page names mailsac.com and says \"Enterprise plan\" but states no amount, rate or price we can read, and the 4 structured-data blocks in its markup state no price"
       }
     },
     {
@@ -17913,11 +17914,11 @@
         "email",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-08-27",
+      "verifiedDate": "2026-09-17",
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-17",
         "outcome": "states_a_free_price",
-        "detail": "the page names Mutant Mail and states its price in words as \"free forever\""
+        "detail": "the page names Mutant Mail and states its price in words as \"free forever\", and the 1 structured-data block in its markup states no price"
       }
     },
     {
@@ -18084,11 +18085,11 @@
         "email",
         "free-for-dev"
       ],
-      "verifiedDate": "2026-08-26",
+      "verifiedDate": "2026-09-17",
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-17",
         "outcome": "states_a_free_price",
-        "detail": "the page names Tuta and states its price in words as \"free version\""
+        "detail": "the page names Tuta and states its price in words as \"free version\", and its markup carries no structured data"
       }
     },
     {
@@ -18367,9 +18368,9 @@
       ],
       "verifiedDate": "2026-08-06",
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-17",
         "outcome": "states_a_free_price",
-        "detail": "the page names formlets.com and states its price in words as \"Free Forever\""
+        "detail": "the page names formlets.com and states its price in words as \"Free Forever\", and its markup carries no structured data"
       }
     },
     {
@@ -18490,9 +18491,9 @@
       ],
       "verifiedDate": "2026-08-05",
       "source_check": {
-        "checked": "2026-09-02",
+        "checked": "2026-09-17",
         "outcome": "states_no_amount",
-        "detail": "the page names SimplePDF.eu and says \"Pro plans\" but states no amount, rate or price we can read"
+        "detail": "the page names SimplePDF.eu and says \"Pro plans\" but states no amount, rate or price we can read, and the 3 structured-data blocks in its markup state no price"
       }
     },
     {
@@ -24045,9 +24046,10 @@
       ],
       "verifiedDate": "2026-04-05",
       "source_check": {
-        "checked": "2026-09-09",
-        "outcome": "unreadable",
-        "detail": "HTTP 403"
+        "checked": "2026-09-17",
+        "outcome": "states_no_terms",
+        "detail": "the page names pexels.com but states no amount, tier or rate we can read, and the 3 structured-data blocks in its markup state no price",
+        "rendered": true
       }
     },
     {
@@ -27931,7 +27933,7 @@
         "program": "Autodesk Fusion 360 for Startups Startup Program"
       },
       "source_check": {
-        "checked": "2026-09-09",
+        "checked": "2026-09-17",
         "outcome": "unreadable",
         "detail": "HTTP 403"
       }
@@ -28063,9 +28065,10 @@
         "program": "MATLAB and Simulink for Startups Startup Program"
       },
       "source_check": {
-        "checked": "2026-09-09",
-        "outcome": "unreadable",
-        "detail": "HTTP 403"
+        "checked": "2026-09-17",
+        "outcome": "ok",
+        "detail": "the page names MATLAB and Simulink for Startups as \"matlab and simulink for startups\" and states \"$1\"",
+        "rendered": true
       }
     },
     {
@@ -30892,7 +30895,7 @@
         "notes": "Referred user must be active 30+ days and have paid $100+. Terms read from the referral dashboard on 2026-08-29."
       },
       "source_check": {
-        "checked": "2026-09-09",
+        "checked": "2026-09-17",
         "outcome": "unreadable",
         "detail": "HTTP 403"
       }
@@ -30999,9 +31002,9 @@
       ],
       "verifiedDate": "2026-07-25",
       "source_check": {
-        "checked": "2026-09-09",
-        "outcome": "unreadable",
-        "detail": "HTTP 429"
+        "checked": "2026-09-17",
+        "outcome": "ok",
+        "detail": "the page names Devin as \"devin\" and states \"$0\""
       }
     },
     {
@@ -31185,9 +31188,9 @@
       ],
       "verifiedDate": "2026-06-25",
       "source_check": {
-        "checked": "2026-09-09",
-        "outcome": "unreadable",
-        "detail": "HTTP 429"
+        "checked": "2026-09-17",
+        "outcome": "does_not_name_vendor",
+        "detail": "the page never names Windsurf, on a domain that carries its name"
       }
     },
     {
@@ -31307,7 +31310,7 @@
         "program": "Google AI Pro/Ultra"
       },
       "source_check": {
-        "checked": "2026-09-09",
+        "checked": "2026-09-17",
         "outcome": "unreadable",
         "detail": "HTTP 404"
       }
@@ -32142,9 +32145,10 @@
       ],
       "verifiedDate": "2026-04-17",
       "source_check": {
-        "checked": "2026-09-09",
-        "outcome": "unreadable",
-        "detail": "HTTP 404"
+        "checked": "2026-09-17",
+        "outcome": "states_no_terms",
+        "detail": "the page names Microsoft To Do but states no amount, tier or rate we can read, and its markup carries no structured data",
+        "rendered": true
       }
     },
     {
@@ -32221,7 +32225,7 @@
       ],
       "verifiedDate": "2026-04-23",
       "source_check": {
-        "checked": "2026-09-09",
+        "checked": "2026-09-17",
         "outcome": "unreadable",
         "detail": "HTTP 404"
       }
@@ -33035,7 +33039,7 @@
         "notes": "Channel partner program only. No individual referral program."
       },
       "source_check": {
-        "checked": "2026-09-09",
+        "checked": "2026-09-17",
         "outcome": "unreadable",
         "detail": "HTTP 404"
       },
@@ -33413,7 +33417,7 @@
         }
       ],
       "source_check": {
-        "checked": "2026-09-09",
+        "checked": "2026-09-17",
         "outcome": "unreadable",
         "detail": "fetch failed"
       }
@@ -33444,7 +33448,7 @@
         }
       ],
       "source_check": {
-        "checked": "2026-09-09",
+        "checked": "2026-09-17",
         "outcome": "unreadable",
         "detail": "fetch failed"
       }
@@ -33475,7 +33479,7 @@
         }
       ],
       "source_check": {
-        "checked": "2026-09-09",
+        "checked": "2026-09-17",
         "outcome": "unreadable",
         "detail": "HTTP 404"
       }
@@ -33506,7 +33510,7 @@
         }
       ],
       "source_check": {
-        "checked": "2026-09-09",
+        "checked": "2026-09-17",
         "outcome": "unreadable",
         "detail": "HTTP 404"
       }
@@ -33526,7 +33530,7 @@
       ],
       "verifiedDate": "2026-04-15",
       "source_check": {
-        "checked": "2026-09-09",
+        "checked": "2026-09-17",
         "outcome": "unreadable",
         "detail": "HTTP 404"
       }

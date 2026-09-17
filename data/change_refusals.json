@@ -41,12 +41,12 @@
       "change_type": "limits_reduced",
       "reason": "unquantified_limit",
       "detail": "limits_reduced claimed, but the current state names no quantity for anything the stored state measured (15 rest, 1,000 request, 1 request)",
-      "summary": "The free tier is still offered, but the description is different. The page states each API has a free tier with a 'generous usage allowance' but does not specify 1,000 requests/month per API or a 1 request/second rate limit. The page also explicitly states that the free tiers may not be used in commercial projects, while the stored info states non-commercial use only.",
+      "summary": "The free tier is still offered, but the description is significantly different. The page states each API has a free tier with a 'generous usage allowance' but does not specify 1,000 requests/month per API or a 1 request/second rate limit. The page also explicitly states the free tiers may not be used in commercial projects, while the stored info states non-commercial use only.",
       "previous_state": "Suite of 15 REST APIs (IP geolocation, email validation, screenshots, exchange rates, phone validation, etc.) — free tier: 1,000 requests/month per API, 1 request/second rate limit. Non-commercial use only on free tier",
       "current_state": "Each of our API’s has a free tier with a generous usage allowance for you to try the product out and verify that the speed and data quality work for you. The free tiers of our API’s may not be used in commercial projects.",
       "source_url": "https://www.abstractapi.com/api",
       "category": "API Development",
-      "refused_date": "2026-08-28"
+      "refused_date": "2026-09-17"
     },
     {
       "vendor": "Achieved",
@@ -332,6 +332,18 @@
     {
       "vendor": "asgardeo.io",
       "change_type": "pricing_restructured",
+      "reason": "dangling_reference",
+      "detail": "the summary now opens on a reference to a clause that was dropped, so the sentence that travels alone has no subject",
+      "summary": "The pricing information is not directly comparable to the stored deal info. The page focuses on a broader platform with multiple products (Agent Platform, API Platform, Identity Platform) and deployment options (SaaS, Self-hosted). The stored deal info specifically mentions a 'Free tier' with 7,500 Consumer MAUs and 250 B2B MAUs, but the current page does not explicitly state these limits for a free tier. It mentions a 'generous free-forever tier' and a 30-day full-feature trial, but doesn't provide specific MAU limits.",
+      "previous_state": "Seamless Integration of SSO, MFA, passwordless auth and more. Includes SDKs for frontend and backend apps. Free tier: 7,500 Consumer MAUs (B2C), 250 B2B MAUs, 2 social login providers.",
+      "current_state": "The page mentions a 'generous free-forever tier' and a 30-day full-feature trial, but does not specify MAU limits. It also offers paid plans (PAYG and enterprise) and a self-hosted option.",
+      "source_url": "https://wso2.com/asgardeo",
+      "category": "Auth",
+      "refused_date": "2026-09-17"
+    },
+    {
+      "vendor": "asgardeo.io",
+      "change_type": "pricing_restructured",
       "reason": "states_no_terms",
       "detail": "every clause of the summary states absence rather than a term the page carries, so it reports the reading rather than a change",
       "summary": "The pricing page does not explicitly state the free tier limits of 7,500 Consumer MAUs and 250 B2B MAUs, or the 2 social login providers. It only mentions a 'generous free-forever tier' and doesn't provide specific numbers.",
@@ -364,6 +376,18 @@
       "source_url": "https://auth0.com/pricing",
       "category": "Auth",
       "refused_date": "2026-09-02"
+    },
+    {
+      "vendor": "Auth0",
+      "change_type": "restriction",
+      "reason": "restates_stored_quantities",
+      "detail": "narrowing claimed, and every quantity the current state names is one the stored description already held at the same value (1 custom), and drops 3 the stored description carried",
+      "summary": "The free tier now requires credit card verification for custom domains, which was not previously stated.",
+      "previous_state": "Identity platform — 25K MAU (B2C), unlimited logins, social + database connections, Universal Login, 1 Enterprise Connection, 5 Organizations, 1 Custom Domain. No credit card required",
+      "current_state": "Includes 1 Custom Domain* *credit card verification required for custom domains.",
+      "source_url": "https://auth0.com/pricing",
+      "category": "Auth",
+      "refused_date": "2026-09-17"
     },
     {
       "vendor": "Authress",
@@ -538,6 +562,19 @@
       "refused_date": "2026-08-29"
     },
     {
+      "vendor": "Browserbase",
+      "change_type": "limits_increased",
+      "reason": "same_transition_graded_differently",
+      "detail": "same vendor, source_url and previous_state as Browserbase|limits_increased|2026-09-02|https://www.browserbase.com/pricing",
+      "summary": "The free plan now offers 3 concurrent browsers and 1 browser hour, along with 3 agent runs, 1,000 search calls, and 1,000 fetch calls. Previously 1 browser hour, 1 concurrent browser, and 7-day data retention.",
+      "previous_state": "Headless browser infrastructure — 1 browser hour/mo, 1 concurrent browser, 15-minute max session, 7-day data retention, 1 project",
+      "current_state": "Infrastructure 3 concurrent browsers 1 browser hour 3 Agent runs included 1,000 Search calls 1,000 Fetch calls 15 minutes /session",
+      "source_url": "https://www.browserbase.com/pricing",
+      "category": "Browser Automation",
+      "refused_date": "2026-09-17",
+      "collided_with": "Browserbase|limits_increased|2026-09-02|https://www.browserbase.com/pricing"
+    },
+    {
       "vendor": "Bubble",
       "change_type": "free_tier_removed",
       "reason": "free_tier_still_offered",
@@ -682,6 +719,18 @@
       "source_url": "https://cerebras.ai/",
       "category": "AI / ML",
       "refused_date": "2026-09-02"
+    },
+    {
+      "vendor": "Cerebras",
+      "change_type": "free_tier_removed",
+      "reason": "states_no_terms",
+      "detail": "every clause of the summary states absence or bookkeeping or narration rather than a term the page carries, so it reports the reading rather than a change",
+      "summary": "The page mentions a free trial on the Cerebras Inference Cloud, but does not detail a sustained free tier with 1M tokens/day and 10-30 requests/min. It highlights fast inference speeds and various models (QWEN 3.8 27B, GPT 5.6 Sol Ultrafast, Kimi K2.6, Codex-Spark) but doesn't confirm the original free tier details.",
+      "previous_state": "Ultra-fast LLM inference API. Free tier: 1M tokens/day, 10-30 requests/min (varies by model). Models include Llama 3.1 8B, Qwen 3 235B, GPT-OSS 120B. Multi-thousand tokens/sec inference speed",
+      "current_state": "Start with a free trial on the Cerebras Inference Cloud.",
+      "source_url": "https://cerebras.ai/",
+      "category": "AI / ML",
+      "refused_date": "2026-09-17"
     },
     {
       "vendor": "Chanty.com",
@@ -829,16 +878,29 @@
       "refused_date": "2026-09-09"
     },
     {
+      "vendor": "Cloudflare KV",
+      "change_type": "restriction",
+      "reason": "same_transition_graded_differently",
+      "detail": "same vendor, source_url and previous_state as Cloudflare KV|limits_reduced|2026-09-02|https://developers.cloudflare.com/kv/platform/pricing/",
+      "summary": "The free plan includes 100,000 reads/day, 1,000 writes/day, and 1 GB storage, but the page states that all limits reset daily at 00:00 UTC.",
+      "previous_state": "Key-value store at the edge — 100K reads/day, 1K writes/day, 1 GB storage. Eventually consistent with global replication",
+      "current_state": "Workers KV is included in both the Free and Paid Workers plans . Free plan 1 Keys read 100,000 / day Keys written 1,000 / day Stored data 1 GB. All limits reset daily at 00:00 UTC.",
+      "source_url": "https://developers.cloudflare.com/kv/platform/pricing/",
+      "category": "Databases",
+      "refused_date": "2026-09-17",
+      "collided_with": "Cloudflare KV|limits_reduced|2026-09-02|https://developers.cloudflare.com/kv/platform/pricing/"
+    },
+    {
       "vendor": "Cloudflare Pages",
       "change_type": "limits_reduced",
       "reason": "unquantified_limit",
       "detail": "limits_reduced claimed, but the current state names no quantity for anything the stored state measured (100 sit, 500 build, 100 custom)",
-      "summary": "The number of projects allowed on the free tier has been reduced.",
+      "summary": "The number of projects allowed on the Free plan has been reduced from 'up to 100 sites' to '100 projects 2 per account'.",
       "previous_state": "Up to 100 sites (soft limit), unlimited bandwidth, 500 builds/month, 100 custom domains per project",
-      "current_state": "Cloudflare Pages has a limit of 100 projects per account on the Free plan.",
+      "current_state": "Cloudflare Pages has a limit of 100 projects 2 per account.",
       "source_url": "https://developers.cloudflare.com/pages/platform/limits/",
       "category": "Cloud Hosting",
-      "refused_date": "2026-09-02"
+      "refused_date": "2026-09-17"
     },
     {
       "vendor": "Cloudflare Workers AI",
@@ -864,6 +926,19 @@
       "source_url": "https://developers.cloudflare.com/workers/platform/pricing/",
       "category": "Cloud Hosting",
       "refused_date": "2026-09-01"
+    },
+    {
+      "vendor": "Cloudflare",
+      "change_type": "limits_increased",
+      "reason": "same_transition_graded_differently",
+      "detail": "same vendor, source_url and previous_state as Cloudflare|limits_increased|2026-09-02|https://www.cloudflare.com/forstartups/",
+      "summary": "The Startup Program now offers up to $350k in credits, with tiers offering $10k, $100k, and $350k. Workers AI is capped at $2,500 for Tier 3, $10,000 for Tier 2, and $50,000 for Tier 1. R2 is capped at $10,000. AI Gateway is temporarily not covered by credits.",
+      "previous_state": "Up to $250K in Cloudflare credits across 4 tiers: Bootstrapped ($5K), Up-and-Coming ($25K), Seed-Funded ($100K), High Growth ($250K). Covers Workers, R2, Workers AI, Stream, Durable Objects, and more. Credits expire within 1 year. Max $10K toward R2/Cache Reserve, up to $50K for Workers AI",
+      "current_state": "Tier 3 offers $10k in credits. Tier 2 offers $100k in credits. Tier 1 offers $350k in credits. Workers AI is covered up to $2,500 for Tier 3, $10,000 for Tier 2, and $50,000 for Tier 1. R2 is covered up to $10,000.",
+      "source_url": "https://www.cloudflare.com/forstartups/",
+      "category": "Startup Perks",
+      "refused_date": "2026-09-17",
+      "collided_with": "Cloudflare|limits_increased|2026-09-02|https://www.cloudflare.com/forstartups/"
     },
     {
       "vendor": "Cloudways",
@@ -1182,12 +1257,12 @@
       "change_type": "limits_reduced",
       "reason": "unquantified_limit",
       "detail": "limits_reduced claimed, but the current state names no quantity for anything the stored state measured (2 database)",
-      "summary": "The page does not explicitly state the limits of the free tier. It only mentions a 'generous free plan' and 'competitive pricing'.",
+      "summary": "The page does not explicitly state the limits of the free plan, but emphasizes a 'generous free plan' and 'competitive pricing'. It does not mention the specific limits of 2 database models and 10 tables per model.",
       "previous_state": "Cloud-based Database schema design and modeling tool with a free starter plan of 2 Database models and ten tables per model.",
-      "current_state": "The page states there is a 'generous free plan' but does not specify the number of database models or tables per model.",
+      "current_state": "The page states there is a 'generous free plan' but does not specify any limits on database models or tables per model.",
       "source_url": "https://www.dbdesigner.net/",
       "category": "Dev Utilities",
-      "refused_date": "2026-08-28"
+      "refused_date": "2026-09-17"
     },
     {
       "vendor": "DB-IP",
@@ -1250,6 +1325,18 @@
       "source_url": "https://www.deployhq.com/",
       "category": "CI/CD",
       "refused_date": "2026-08-29"
+    },
+    {
+      "vendor": "DhiWise",
+      "change_type": "free_tier_removed",
+      "reason": "page_does_not_name_vendor",
+      "detail": "the page read never names DhiWise and is not served from its domain, so any terms on it belong to somebody else",
+      "summary": "The page does not mention a free tier. It focuses on a product called Rocket that generates full-stack applications from prompts, offering features like backend setup, database schemas, and deployment. The page highlights the capabilities of the platform and includes testimonials, but does not detail any free plans or tiers.",
+      "previous_state": "Converts Figma designs into dynamic Flutter and React applications. Its code generation technology is designed to optimize workflows for building production-ready mobile and web experiences.",
+      "current_state": "The page does not mention a free tier or any associated features. It focuses on the capabilities of the Rocket platform, which appears to be a paid service based on usage or subscription.",
+      "source_url": "https://www.dhiwise.com/",
+      "category": "IDE & Code Editors",
+      "refused_date": "2026-09-17"
     },
     {
       "vendor": "DigitalOcean",
@@ -1505,6 +1592,19 @@
       "category": "Storage",
       "refused_date": "2026-09-13",
       "collided_with": "Filebase|limits_increased|2026-09-01|https://filebase.com/"
+    },
+    {
+      "vendor": "Fingerprint",
+      "change_type": "new_free_tier",
+      "reason": "same_transition_graded_differently",
+      "detail": "same vendor, source_url and previous_state as Fingerprint|limits_increased|2026-09-02|https://fingerprint.com/pricing/",
+      "summary": "The free tier now includes a 14 day free trial of the Pro Plus plan and offers 500k Android API calls/mo. The free tier is described as 'New!' and is for web and mobile device identification up to 1,000 API calls per month.",
+      "previous_state": "Device identification and fraud prevention — 1,000 API calls/month free. Browser fingerprinting, bot detection, and account fraud prevention. Useful for auth flows, anti-fraud, and bot detection in apps.",
+      "current_state": "The Free plan offers web and mobile device identification for $0/month up to 1,000 API calls per month and includes a 14 day free trial of the Pro Plus plan, as well as 500k Android API calls/mo.",
+      "source_url": "https://fingerprint.com/pricing/",
+      "category": "Security",
+      "refused_date": "2026-09-17",
+      "collided_with": "Fingerprint|limits_increased|2026-09-02|https://fingerprint.com/pricing/"
     },
     {
       "vendor": "Firebase",
@@ -1956,6 +2056,19 @@
       "refused_date": "2026-09-15"
     },
     {
+      "vendor": "Grafana Cloud",
+      "change_type": "pricing_restructured",
+      "reason": "same_transition_graded_differently",
+      "detail": "same vendor, source_url and previous_state as Grafana Cloud|pricing_restructured|2026-09-02|https://grafana.com/pricing/",
+      "summary": "The free tier now includes a platform fee of $19/month for 50GB ingested for logs, traces, and profiles.",
+      "previous_state": "Free tier with 10K metric series, 50 GB logs, 50 GB traces, 14-day retention, 3 users",
+      "current_state": "The Free tier is now $19/month and includes 10k active series, 50 GB logs, 50 GB traces, 14-day retention, and community support.",
+      "source_url": "https://grafana.com/pricing/",
+      "category": "Monitoring",
+      "refused_date": "2026-09-17",
+      "collided_with": "Grafana Cloud|pricing_restructured|2026-09-02|https://grafana.com/pricing/"
+    },
+    {
       "vendor": "Grafana k6 Cloud",
       "change_type": "limits_reduced",
       "reason": "same_transition_graded_differently",
@@ -1967,6 +2080,19 @@
       "category": "Testing",
       "refused_date": "2026-09-10",
       "collided_with": "Grafana k6 Cloud|limits_reduced|2026-08-28|https://grafana.com/pricing/"
+    },
+    {
+      "vendor": "Grafana Loki",
+      "change_type": "new_free_tier",
+      "reason": "same_transition_graded_differently",
+      "detail": "same vendor, source_url and previous_state as Grafana Loki|new_free_tier|2026-08-28|https://grafana.com/oss/loki/",
+      "summary": "The page details a free tier for Grafana Cloud Logs offering up to 50GB of logs. There are also paid options and an Enterprise Logs self-managed solution.",
+      "previous_state": "Free OSS (AGPLv3). Horizontally-scalable log aggregation system by Grafana Labs. Label-based indexing (like Prometheus for logs), integrates with Grafana dashboards",
+      "current_state": "Get up to 50GB of logs at no cost in the free tier of Grafana Cloud.",
+      "source_url": "https://grafana.com/oss/loki/",
+      "category": "Logging",
+      "refused_date": "2026-09-17",
+      "collided_with": "Grafana Loki|new_free_tier|2026-08-28|https://grafana.com/oss/loki/"
     },
     {
       "vendor": "Grapedrop",
@@ -2829,12 +2955,12 @@
       "change_type": "limits_reduced",
       "reason": "unquantified_limit",
       "detail": "limits_reduced claimed, but the current state names no quantity for anything the stored state measured (1,500 api)",
-      "summary": "The free tier appears to be limited to public email addresses (@mailsac.com) which are subject to throttling. Accessing features like custom forwarding (to web socket, webhook, slack, etc.) requires 'reserving' an address, implying a paid feature. The original deal info stated a 1,500 monthly API limit for the free tier, which is not mentioned on the current pricing page.",
+      "summary": "The free tier appears to be limited to public addresses with throttling. Custom domains and private forwarding require a 'reservation' and are not part of the basic free offering. The API is still available, but the 1,500 monthly limit is not explicitly stated.",
       "previous_state": "Free API for temporary email testing, free public email hosting, outbound capture, email-to-slack/websocket/webhook (1,500 monthly API limit)",
       "current_state": "Sending to any address @mailsac.com works, but it’s public and subject to throttling. To access custom forwarding features (to web socket, webhook, slack, etc), you must “reserve” that address first.",
       "source_url": "https://mailsac.com",
       "category": "Email",
-      "refused_date": "2026-08-28"
+      "refused_date": "2026-09-17"
     },
     {
       "vendor": "Mailtrap.io",
@@ -3073,12 +3199,12 @@
       "change_type": "limits_reduced",
       "reason": "unquantified_limit",
       "detail": "limits_reduced claimed, but the current state names no quantity for anything the stored state measured (200,000 nod, 400,000 relationship)",
-      "summary": "The free tier now has a limit of 0GB and does not include many features that were previously included.",
+      "summary": "The free tier now has limits on the database size (up to 128GB memory) and does not include multiple databases per instance, availability zone configuration, or a service availability SLA.",
       "previous_state": "Graph database cloud service — free tier: single database, up to 200,000 nodes and 400,000 relationships. Full Cypher query language support. No credit card required",
-      "current_state": "AuraDB Free is $0 with a database size limit of up to 0GB. It is a single-zone service with no SLA. It includes auto-pause/resume, automated rolling updates, and the Aura Console. It does *not* include database monitoring, query log forwarding, advanced metrics, secondaries, vector optimization, RBAC, SSO, customer managed keys, security log forwarding, private endpoints, or change data capture.",
+      "current_state": "AuraDB Free offers a database with up to 128GB memory. It does not include multiple databases per instance, an availability zone configuration, or a service availability SLA.",
       "source_url": "https://neo4j.com/pricing/",
       "category": "Databases",
-      "refused_date": "2026-09-02"
+      "refused_date": "2026-09-17"
     },
     {
       "vendor": "Nile",
@@ -3177,6 +3303,18 @@
       "category": "Dev Utilities",
       "refused_date": "2026-09-13",
       "collided_with": "numverify|limits_increased|2026-08-28|https://numverify.com/"
+    },
+    {
+      "vendor": "Okta",
+      "change_type": "rebranded",
+      "reason": "dangling_reference",
+      "detail": "the summary now opens on a reference to a clause that was dropped, so the sentence that travels alone has no subject",
+      "summary": "The free tier now appears to be the 'Okta Integrator Free Plan' and is focused on building and testing integrations. The original description mentioned developer authentication via Auth0 with 25,000 MAU, social login, passwordless, MFA, and SSO, which is not explicitly stated for the Integrator Free Plan. There's also a separate 'Auth0 Platform' offering mentioned, but its free tier details aren't fully outlined on this page.",
+      "previous_state": "Developer authentication via Auth0 platform — 25,000 MAU free, social login, passwordless, MFA, SSO. Note: developer.okta.com/signup now routes to Auth0.",
+      "current_state": "Access the Okta Integrator Free Plan. Build, test, and manage integrations. Access is limited to 90 days of inactivity.",
+      "source_url": "https://developer.okta.com/signup/",
+      "category": "Auth",
+      "refused_date": "2026-09-17"
     },
     {
       "vendor": "Okta",
@@ -3723,6 +3861,18 @@
       "source_url": "https://rendi.dev",
       "category": "Dev Utilities",
       "refused_date": "2026-09-09"
+    },
+    {
+      "vendor": "Replicate",
+      "change_type": "free_tier_removed",
+      "reason": "no_removal_evidence",
+      "detail": "a free tier was recorded as removed on the evidence that the page did not mention it, and the summary states no price, ending or replacement where the free tier was",
+      "summary": "The free tier as described is no longer accurate. The pricing page details pay-per-second billing for various hardware options and does not mention a free tier with unlimited runs on a curated model collection without billing.",
+      "previous_state": "ML model hosting and inference platform — free runs on curated model collection without billing. Pay-per-second billing by hardware type (CPU/GPU) after free allowance. No credit card required to start",
+      "current_state": "You only pay for what you use on Replicate. Some models are billed by hardware and time, others by input and output. Public models are billed by the time they take to run, with price-per-second varying according to the hardware in use.",
+      "source_url": "https://replicate.com/pricing",
+      "category": "AI / ML",
+      "refused_date": "2026-09-17"
     },
     {
       "vendor": "Replicate",
@@ -4332,12 +4482,12 @@
       "change_type": "restriction",
       "reason": "states_no_narrowing",
       "detail": "a restriction was recorded by a summary that reports the free tier still standing and names no term that moved",
-      "summary": "The free tier is still offered. The description is less specific. The current page only mentions a 'free plan' and a 'free trial of paid features' without explicitly linking it to open-source projects.",
+      "summary": "The free tier is still offered, but the description is broader. The stored deal info specified 'free for Open Source', but the page states 'Start free' with no mention of open source restrictions.",
       "previous_state": "Selenium Browser and Device Testing, [free for Open Source](https://testingbot.com/open-source)",
-      "current_state": "TestingBot offers a free plan and a free trial of paid features. No credit card is required to start.",
+      "current_state": "The page offers a 'Start free' option with no credit card required, allowing users to run automated tests, live manual sessions, screenshot tests and visual comparisons on browsers and real devices. It does not mention any open-source requirement.",
       "source_url": "https://testingbot.com/",
       "category": "Testing",
-      "refused_date": "2026-08-28"
+      "refused_date": "2026-09-17"
     },
     {
       "vendor": "The GoSquared Early Stage Plan",
@@ -4548,6 +4698,19 @@
       "refused_date": "2026-09-10"
     },
     {
+      "vendor": "Upstash Vector",
+      "change_type": "limits_increased",
+      "reason": "same_transition_graded_differently",
+      "detail": "same vendor, source_url and previous_state as Upstash Vector|limits_increased|2026-09-02|https://upstash.com/pricing/vector",
+      "summary": "The free tier now has a maximum vector count of 200 Million, up from 10K. The daily query limit is 10K, matching previously.",
+      "previous_state": "Serverless vector database by Upstash — 10K vectors, 1536 dimensions, 150K query units/day free. REST API, no connection management",
+      "current_state": "Daily Query/Update Limit 10 K, Max Vectors x Dimensions 200 Million, Max Dimensions 1,536, Max Namespaces 100, Max Data 1 GB",
+      "source_url": "https://upstash.com/pricing/vector",
+      "category": "Databases",
+      "refused_date": "2026-09-17",
+      "collided_with": "Upstash Vector|limits_increased|2026-09-02|https://upstash.com/pricing/vector"
+    },
+    {
       "vendor": "Upstash",
       "change_type": "limits_reduced",
       "reason": "measures_no_change",
@@ -4731,6 +4894,18 @@
       "category": "Error Tracking",
       "refused_date": "2026-09-13",
       "collided_with": "Whitespace|limits_reduced|2026-09-01|https://whitespace.dev"
+    },
+    {
+      "vendor": "Windsurf",
+      "change_type": "pricing_restructured",
+      "reason": "page_does_not_name_vendor",
+      "detail": "the page read never names Windsurf and is not served from its domain, so any terms on it belong to somebody else",
+      "summary": "The free tier still exists, but the description of the free tier is different. The stored information mentions a credit system replaced by quotas in March 2026, while the current page states the free tier includes a 'light quota to code with agents, limited model availability, unlimited inline edits, and unlimited Tab completions'. The pricing for other tiers has also changed (Teams is now $80/month instead of $40/month, and a Max tier at $200/month has been added).",
+      "previous_state": "AI-powered IDE by Codeium (formerly Codeium Editor). Free tier: limited daily quotas for Cascade AI flows, code completions, AI chat (credit system replaced by quotas Mar 2026). Pro $20/mo, Teams $40/mo, Max $200/mo. SWE-1.5 Fast Agent model for faster iteration. Grandfathered Pro subscribers keep $15/mo indefinitely. All tiers include premium models",
+      "current_state": "The Free plan includes a light quota to code with agents, limited model availability, unlimited inline edits, and unlimited Tab completions.",
+      "source_url": "https://windsurf.com/pricing",
+      "category": "AI Coding",
+      "refused_date": "2026-09-17"
     },
     {
       "vendor": "Wizishop",
@@ -4943,12 +5118,12 @@
       "change_type": "limits_reduced",
       "reason": "measures_the_opposite",
       "detail": "limits_reduced claimed, and every quantity that moved between the two states moved the other way — 3 meeting against 60 minut, 3 meeting against 100 meeting",
-      "summary": "The free tier now has a 60-minute meeting limit and supports up to 100 participants, whereas the stored information stated up to 3 meeting participants and 10 webinar attendees with no time limit specified.",
+      "summary": "The free tier now has a 60-minute meeting limit and supports up to 100 participants, whereas the stored information stated up to 3 meeting participants and no time limit.",
       "previous_state": "Meetings with upto 3 meeting participants & 10 Webinar attendees.",
-      "current_state": "Free tier offers up to 60 minutes of meetings and supports 100 meeting participants.",
+      "current_state": "The free plan offers up to 60 minutes of meetings and supports 100 meeting participants.",
       "source_url": "https://zoho.com/meeting",
       "category": "Video",
-      "refused_date": "2026-08-31"
+      "refused_date": "2026-09-17"
     },
     {
       "vendor": "Zoho Projects",
@@ -4976,15 +5151,15 @@
     },
     {
       "vendor": "Zoho Vault",
-      "change_type": "limits_increased",
+      "change_type": "limits_reduced",
       "reason": "unquantified_limit",
-      "detail": "limits_increased claimed, but the current state names no quantity for anything the stored state measured (1 user)",
-      "summary": "The free tier now has more features than originally stated. It includes access from unlimited devices, passwordless authentication, and free migration/onboarding assistance.",
+      "detail": "limits_reduced claimed, but the current state names no quantity for anything the stored state measured (1 user)",
+      "summary": "The free plan now has limitations not previously mentioned. While it still offers unlimited passwords, notes, and documents, features like identity and access management, multi-factor authentication, exhaustive integrations, and audit trails are no longer included in the free tier.",
       "previous_state": "Password manager (Zoho) — unlimited passwords for 1 user, password generator, browser extensions (Chrome/Firefox/Safari/Edge), mobile apps, secure sharing, offline access",
-      "current_state": "The free plan includes unlimited passwords, notes, and documents, fine-grained password sharing with access control workflow, identity and access management + multi-factor authentication bundled with the app, exhaustive integrations and audit trails, passwordless authentication, free migration and onboarding assistance, and access from unlimited devices.",
+      "current_state": "The free plan includes unlimited passwords, notes, and documents. Other features like identity and access management, multi-factor authentication, exhaustive integrations, and audit trails are not included in the free plan.",
       "source_url": "https://zoho.com/vault",
       "category": "Password Managers",
-      "refused_date": "2026-09-02"
+      "refused_date": "2026-09-17"
     },
     {
       "vendor": "zoneedit.com",

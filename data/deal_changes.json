@@ -1289,6 +1289,21 @@
       "date_source": "hand_written"
     },
     {
+      "vendor": "Render",
+      "change_type": "pricing_restructured",
+      "date": "2026-09-02",
+      "date_source": "discovered",
+      "summary": "The free tier now includes compute options with varying RAM and CPU, and the limits for PostgreSQL and Key Value stores have been updated. Bandwidth for the Hobby tier is now 5GB included per month, then $0.15 per GB.",
+      "previous_state": "Free web services (512 MB RAM, 0.1 CPU), free PostgreSQL (256 MB RAM, 30-day expiry), free Redis (25 MB). 100 GB bandwidth/month, 500 build minutes/month. 1 project with 2 environments. Auto-deploy from Git",
+      "current_state": "Hobby tier is $0/mo + compute. It includes up to 25 services, 5 GB of bandwidth included per month then $0.15 per GB, single-service previews, global regions & CDN, custom domains, firewall & DDoS mitigation.  Postgres offers options starting at 256 MB RAM and Key Value starts free with 25 MB RAM.",
+      "impact": "high",
+      "source_url": "https://render.com/pricing",
+      "category": "Cloud Hosting",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-09-02"
+    },
+    {
       "vendor": "Redis",
       "change_type": "pricing_restructured",
       "date": "2024-03-20",
@@ -7815,21 +7830,6 @@
       "recorded_date": "2026-09-02"
     },
     {
-      "vendor": "Render",
-      "change_type": "pricing_restructured",
-      "date": "2026-09-02",
-      "date_source": "discovered",
-      "summary": "The free tier now includes compute options with varying RAM and CPU, and the limits for PostgreSQL and Key Value stores have been updated. Bandwidth for the Hobby tier is now 5GB included per month, then $0.15 per GB.",
-      "previous_state": "Free web services (512 MB RAM, 0.1 CPU), free PostgreSQL (256 MB RAM, 30-day expiry), free Redis (25 MB). 100 GB bandwidth/month, 500 build minutes/month. 1 project with 2 environments. Auto-deploy from Git",
-      "current_state": "Hobby tier is $0/mo + compute. It includes up to 25 services, 5 GB of bandwidth included per month then $0.15 per GB, single-service previews, global regions & CDN, custom domains, firewall & DDoS mitigation.  Postgres offers options starting at 256 MB RAM and Key Value starts free with 25 MB RAM.",
-      "impact": "high",
-      "source_url": "https://render.com/pricing",
-      "category": "Cloud Hosting",
-      "alternatives": [],
-      "detected_by": "reverify-ai",
-      "recorded_date": "2026-09-02"
-    },
-    {
       "vendor": "Oracle Cloud",
       "change_type": "pricing_restructured",
       "date": "2026-09-02",
@@ -9916,6 +9916,23 @@
       "alternatives": [],
       "detected_by": "reverify-ai",
       "recorded_date": "2026-09-16"
+    },
+    {
+      "vendor": "Braid",
+      "change_type": "new_tier",
+      "date": "2026-09-17",
+      "date_source": "discovered",
+      "summary": "The free tier now has a name ('Community') and is explicitly an open group with public access. There is also a 'Team' plan with a 30-day free trial, then pay-what-you-can.",
+      "tier": "Community",
+      "tier_direction": "unchanged",
+      "previous_state": "Chat app designed for teams. Free for public access group, unlimited users, history, and integrations. also, it provides a self-hostable open-source version.",
+      "current_state": "Community Open group with public access Free Forever ∞ Users ∞ History ∞ Integrations",
+      "impact": "low",
+      "source_url": "https://www.braidchat.com/",
+      "category": "Team Collaboration",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-09-17"
     }
   ]
 }
