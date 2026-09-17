@@ -80,6 +80,16 @@ function textFragments(html: string): string[] {
     .filter(fragment => fragment !== "");
 }
 
+function withoutTruncation(sentence: string): string {
+  return sentence.replace(/(?:\.\.\.|…)\s*$/, "").trim();
+}
+
+function readsBackAState(sentence: string, states: readonly string[]): boolean {
+  const read = withoutTruncation(sentence);
+  if (read === "") return false;
+  return states.some(state => state.includes(read) || read.includes(state));
+}
+
 function sentencesStatingTheAllowance(html: string): string[] {
   return textFragments(html)
     .flatMap(fragment => fragment.split(/(?<=[.!?])\s+/))
@@ -169,7 +179,7 @@ describe("#1734 — a page states the Always Free allowance by quoting the recor
     assertPopulationFloor(routes.length, 700, "pages outside /vendor/ read for this offer's allowance");
 
     const held = statedQuantities(theRecord().description);
-    const superseded = statesWeHaveSuperseded().map(state => statedQuantities(state));
+    const superseded = statesWeHaveSuperseded();
 
     const unaccounted: string[] = [];
     const quotingTheRecord = new Set<string>();
@@ -177,12 +187,11 @@ describe("#1734 — a page states the Always Free allowance by quoting the recor
 
     for (const [route, html] of await readAll(routes)) {
       for (const sentence of sentencesStatingTheAllowance(html)) {
-        const stated = statedQuantities(sentence);
-        if (stated.every(quantity => held.includes(quantity))) {
+        if (statedQuantities(sentence).every(quantity => held.includes(quantity))) {
           quotingTheRecord.add(route);
           continue;
         }
-        if (superseded.some(state => stated.every(quantity => state.includes(quantity)))) {
+        if (readsBackAState(sentence, superseded)) {
           quotingASupersededState.add(route);
           continue;
         }
@@ -205,17 +214,17 @@ describe("#1734 — a page states the Always Free allowance by quoting the recor
   });
 
   it("keeps the allowance the record replaced wherever we publish what changed", async () => {
-    const superseded = statesWeHaveSuperseded().map(state => statedQuantities(state));
-    assert.ok(superseded.length > 0, "we hold no superseded state for this offer, so nothing pins the change log");
+    const superseded = statesWeHaveSuperseded();
+    const replaced = statedQuantities(theRecord().description);
+    const dropped = superseded.flatMap(statedQuantities).filter(quantity => !replaced.includes(quantity));
+    assert.ok(dropped.length > 0, "we hold no superseded quantity for this offer, so nothing pins the change log");
 
     for (const route of CHANGE_LOG_SURFACES) {
-      const sentences = sentencesStatingTheAllowance(await fetchPage(route));
-      const historical = sentences.filter(sentence => {
-        const stated = statedQuantities(sentence);
-        return superseded.some(state => stated.every(quantity => state.includes(quantity)) && stated.length > 0);
-      });
+      const readBack = sentencesStatingTheAllowance(await fetchPage(route)).filter(sentence =>
+        readsBackAState(sentence, superseded),
+      );
       assert.ok(
-        historical.length > 0,
+        readBack.some(sentence => dropped.some(quantity => statedQuantities(sentence).includes(quantity))),
         `${route} no longer states what this offer's allowance was before we corrected it`,
       );
     }
@@ -238,11 +247,15 @@ describe("#1734 — the alternatives table says where each row's figures come fr
       .replace(/\s+/g, " ")
       .trim();
     rows = [...table.matchAll(/<tr[\s\S]*?<\/tr>/g)]
-      .map(row =>
-        [...row[0].matchAll(/<td[^>]*>([\s\S]*?)<\/td>/g)].map(cell =>
+      .map(row => {
+        const cells = [...row[0].matchAll(/<td[^>]*>([\s\S]*?)<\/td>/g)].map(cell =>
           unescapeServed(cell[1]!.replace(/<[^>]*>/g, " ")).replace(/\s+/g, " ").trim(),
-        ),
-      )
+        );
+        const provenance = row[0].match(/<td[^>]*class="[^"]*\bfigure-provenance\b[^"]*"[^>]*>([\s\S]*?)<\/td>/);
+        return cells.length === 0
+          ? cells
+          : [...cells.slice(0, 5), provenance === null ? "" : unescapeServed(provenance[1]!.replace(/<[^>]*>/g, " ")).replace(/\s+/g, " ").trim()];
+      })
       .filter(cells => cells.length > 0);
   });
 
