@@ -257,3 +257,28 @@ describe("a vendor page states the reason it cannot confirm the terms in its own
     );
   });
 });
+
+describe("only a tier that is the ending itself withholds the reason we cannot confirm the terms", () => {
+  const reason = {
+    because: { reason: "states_no_terms" as const },
+    clause: "the page we cite for this offer states no amount, tier or rate we can read",
+    sentence: "The page we cite for this offer states no amount, tier or rate we can read.",
+    theReadFoundAFreePlan: false,
+    on: "2026-09-02",
+  };
+
+  for (const tier of ENDED_TIERS as readonly string[]) {
+    it(`states none where the tier is ${tier}`, () => {
+      assert.strictEqual(reasonWeCannotConfirmTheTerms({ tier }, reason), null);
+    });
+  }
+
+  it("states one where the tier only mentions an ending beside a live plan", () => {
+    assert.strictEqual(reasonWeCannotConfirmTheTerms({ tier: "Free (Deprecated)" }, reason), reason);
+    assert.strictEqual(reasonWeCannotConfirmTheTerms({ tier: "Free (sunset 2026)" }, reason), reason);
+  });
+
+  it("states none where we hold no reason at all", () => {
+    assert.strictEqual(reasonWeCannotConfirmTheTerms({ tier: "Free" }, null), null);
+  });
+});
