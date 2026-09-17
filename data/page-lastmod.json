@@ -1063,7 +1063,7 @@
       "changed": "2026-09-17"
     },
     "/category/cloud-iaas": {
-      "hash": "b91130ec382d422d",
+      "hash": "a5d658b350effebe",
       "changed": "2026-09-17"
     },
     "/category/cloud-storage": {
@@ -3038,15 +3038,15 @@
       "changed": "2026-09-16"
     },
     "/hetzner-alternatives": {
-      "hash": "efe5e169f30d372f",
-      "changed": "2026-09-16"
+      "hash": "b8ac537acfe1956f",
+      "changed": "2026-09-17"
     },
     "/hetzner-pricing-2026": {
       "hash": "9405726c7617cf95",
       "changed": "2026-09-16"
     },
     "/hosting-alternatives": {
-      "hash": "3469c41716c6663c",
+      "hash": "5f62951893fa50e9",
       "changed": "2026-09-17"
     },
     "/hosting-free-tier-comparison-2026": {
@@ -3277,7 +3277,7 @@
       "changed": "2026-09-16"
     },
     "/stack-check": {
-      "hash": "df24033b9603bd6a",
+      "hash": "2f45654ac79f4232",
       "changed": "2026-09-17"
     },
     "/stacks": {
@@ -7297,8 +7297,8 @@
       "changed": "2026-09-17"
     },
     "/vendor/oracle-cloud": {
-      "hash": "04009d3f94023c12",
-      "changed": "2026-09-16"
+      "hash": "6bf7747fd0ab0b25",
+      "changed": "2026-09-17"
     },
     "/vendor/orama": {
       "hash": "e62be1478eb9c25c",
