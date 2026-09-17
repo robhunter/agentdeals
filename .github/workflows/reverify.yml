@@ -62,12 +62,27 @@ jobs:
           echo "retried=$RETRIED" >> "$GITHUB_OUTPUT"
           echo "repicked=$REPICKED" >> "$GITHUB_OUTPUT"
 
+      - name: Compile, so the restatement pass reads the predicates the site reads
+        run: npm run build
+
+      - name: Store the reading for entries we are withholding and it answers for
+        id: restate
+        run: |
+          set -o pipefail
+          node scripts/restate-superseded-terms.js | tee /tmp/restate.log
+          RESTATED=$(grep -oE '^Restated this run: [0-9]+' /tmp/restate.log | grep -oE '[0-9]+$' || echo 0)
+          STILL=$(grep -oE '^Re-read since the record and still withheld: [0-9]+' /tmp/restate.log | grep -oE '[0-9]+$' || echo 0)
+          echo "restated=$RESTATED" >> "$GITHUB_OUTPUT"
+          echo "still_withheld=$STILL" >> "$GITHUB_OUTPUT"
+
       - name: Run the suite, then push to main only if it is green
         id: gate
         env:
           GATE_RATCHET_BUDGETS: "1"
           GATE_UPDATE_PAGE_LASTMOD: "1"
           GATE_REGENERATE_LLM_INDEX: "1"
+          RESTATED: ${{ steps.restate.outputs.restated }}
+          STILL_WITHHELD: ${{ steps.restate.outputs.still_withheld }}
           VERIFIED: ${{ steps.reverify.outputs.verified }}
           FLAGGED: ${{ steps.reverify.outputs.flagged }}
           RECORDED: ${{ steps.reverify.outputs.recorded }}
@@ -80,8 +95,8 @@ jobs:
         run: |
           bash scripts/gate-data-push.sh \
             data-quarantine/rolling-reverification \
-            "data(auto): rolling re-verification — ${VERIFIED} verified of ${DRAWN} drawn from the queue, ${SECOND} re-read to corroborate a held verdict, ${FLAGGED} flagged, ${RECORDED} changes recorded, ${HELD} awaiting a second reading, ${RETRIED} retried from quarantine, ${QUARANTINED} in quarantine, ${REPICKED} to be checked again" \
-            data/index.json data/deal_changes.json data/change_refusals.json data/change_corroboration.json data/verification_state.json data/quality_budgets.json data/page-lastmod.json artifacts/free-llm-api-index/README.md
+            "data(auto): rolling re-verification — ${VERIFIED} verified of ${DRAWN} drawn from the queue, ${SECOND} re-read to corroborate a held verdict, ${FLAGGED} flagged, ${RECORDED} changes recorded, ${RESTATED} restated from their reading with ${STILL_WITHHELD} re-read and still withheld, ${HELD} awaiting a second reading, ${RETRIED} retried from quarantine, ${QUARANTINED} in quarantine, ${REPICKED} to be checked again" \
+            data/index.json data/deal_changes.json data/restated_terms.json data/change_refusals.json data/change_corroboration.json data/verification_state.json data/quality_budgets.json data/page-lastmod.json artifacts/free-llm-api-index/README.md
 
       - name: Say where it can be seen what the gate did with this run's data
         if: always() && (steps.gate.outputs.quarantined == 'true' || steps.gate.outputs.pushed_over_failures == 'true' || steps.gate.outputs.drifted_guards != '' || steps.gate.outputs.held_back_vendors != '')

@@ -632,7 +632,10 @@ const DOCUMENTED_OPERATIONS: Record<string, Record<string, any>> = {
                     properties: {
                       offers_whose_stored_terms_a_record_supersedes: { type: "integer", description: "Offers our own in-force change log contradicts." },
                       offers_we_could_restate_from_a_sourced_reading: { type: "integer", description: "How many of those records carry a dated reading with a source URL — the sentence the vendor page already shows in place of our terms." },
-                      oldest_reading_we_are_withholding_behind: { type: "string", format: "date", nullable: true, description: "The oldest such reading. How far back the longest-standing withheld entry goes." }
+                      oldest_reading_we_are_withholding_behind: { type: "string", format: "date", nullable: true, description: "The oldest such reading. How far back the longest-standing withheld entry goes." },
+                      offers_we_may_restate_from_their_reading: { type: "integer", description: "Withheld offers where the reading answers for the tier the entry describes, so it may be stored as our terms, attributed to the reading and to the date it was read." },
+                      offers_we_refuse_to_restate: { type: "object", additionalProperties: { type: "integer" }, description: "The rest, counted by the ground we refuse on. A reading that prices a different plan than the entry describes is not a restatement of that entry." },
+                      offers_re_read_since_the_record_and_still_withheld: { type: "integer", description: "Withheld offers whose cited page we have read again since the reading and which we still cannot answer from our own stored terms." }
                     }
                   }
                 }
