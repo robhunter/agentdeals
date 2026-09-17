@@ -77,7 +77,7 @@ import { NO_PUSH_NOTICE, watchCommandBlock, watchRequestsFor } from "./change-wa
 import { clauseNaming, quantitiesNotIn } from "./quoted-figures.js";
 import { createRegistrationLimiter, rateLimitHeaders } from "./rate-limit.js";
 import { offerForSlug, vendorRates, cheapestRate, dearestRate, spanOfRates, formatRate, formatRateSpan, monthlyTokenCost, formatDollars, type ModelRate } from "./model-rates.js";
-import { STALE_FACT_PAGES_BASELINE, factsOutdatedBy, linkifyVerdictBlocks, newestChangeBySlug, overdueReport, pageCompiledClause, pageDataProvenance, pageDateModified, tabulatedVendorSlots, tabulatedVendors, utcToday, verdictsOutdatedBy } from "./page-reviews.js";
+import { STALE_FACT_PAGES_BASELINE, factsOutdatedBy, linkifyVerdictBlocks, newestChangeBySlug, overdueReport, pageCompiledClause, pageDataProvenance, pageDateModified, pageFigureSource, tabulatedVendorSlots, tabulatedVendors, utcToday, verdictsOutdatedBy } from "./page-reviews.js";
 import { faqPageJsonLd, type FaqItem } from "./faq-provenance.js";
 import {
   GENEROSITY_JSON_TOKEN,
@@ -15631,7 +15631,7 @@ ${mcpCtaCss()}
   <h1>The Complete Free Startup Stack</h1>
 
   <div class="context">
-    <p>You can build and launch a complete SaaS product without spending a dollar on infrastructure. This guide recommends the best free tier for each layer of a typical startup stack — <strong>10 categories</strong> from hosting to analytics — with exact limits pulled from our index of ${offers.length.toLocaleString()}+ verified developer tools.</p>
+    <p>You can build and launch a complete SaaS product without spending a dollar on infrastructure. This guide recommends the best free tier for each layer of a typical startup stack — <strong>10 categories</strong> from hosting to analytics — with exact limits for each. ${pageFigureSource("/free-startup-stack", offers.length)}</p>
     <p>Each recommendation includes alternatives, a "when you'll outgrow it" guide, and stability notes based on our tracking of ${trackedChangeCount} real pricing changes. ${stackFreshnessNote(pageReadings)}</p>
   </div>
 
@@ -15938,7 +15938,7 @@ ${mcpCtaCss()}
   <h1>The Complete Free AI/ML Stack</h1>
 
   <div class="context">
-    <p>Everything you need to build, train, and deploy AI applications — without spending a dollar. This guide recommends the best free tier for each layer of an AI/ML development stack — <strong>10 categories</strong> from LLM APIs to speech AI — with exact limits pulled from our index of ${offers.length.toLocaleString()}+ verified developer tools.</p>
+    <p>Everything you need to build, train, and deploy AI applications — without spending a dollar. This guide recommends the best free tier for each layer of an AI/ML development stack — <strong>10 categories</strong> from LLM APIs to speech AI — with exact limits for each. ${pageFigureSource("/free-ai-stack", offers.length)}</p>
     <p>Designed for solo AI developers, indie hackers, and startup teams prototyping AI features. Each recommendation includes alternatives, a "when you'll outgrow it" guide, and stability notes based on our tracking of ${trackedChangeCount} real pricing changes. ${stackFreshnessNote(pageReadings)}</p>
   </div>
 
@@ -16267,7 +16267,7 @@ ${mcpCtaCss()}
   <h1>The Complete Free DevOps Stack</h1>
 
   <div class="context">
-    <p>Everything you need to build, deploy, and operate software infrastructure — without spending a dollar. This guide recommends the best free tier for each layer of a DevOps stack — <strong>10 categories</strong> from CI/CD pipelines to secrets management — with exact limits pulled from our index of ${offers.length.toLocaleString()}+ verified developer tools.</p>
+    <p>Everything you need to build, deploy, and operate software infrastructure — without spending a dollar. This guide recommends the best free tier for each layer of a DevOps stack — <strong>10 categories</strong> from CI/CD pipelines to secrets management — with exact limits for each. ${pageFigureSource("/free-devops-stack", offers.length)}</p>
     <p>Designed for solo developers, small teams, and startups setting up their first production infrastructure. Each recommendation includes alternatives, a "when you'll outgrow it" guide, and stability notes based on our tracking of ${trackedChangeCount} real pricing changes. ${stackFreshnessNote(pageReadings)}</p>
   </div>
 
@@ -16596,7 +16596,7 @@ ${mcpCtaCss()}
   <h1>The Complete Free Frontend Stack</h1>
 
   <div class="context">
-    <p>Everything you need to build, deploy, and ship frontend projects — without spending a dollar. This guide recommends the best free tier for each layer of a frontend/Jamstack stack — <strong>10 categories</strong> from static hosting to feature flags — with exact limits pulled from our index of ${offers.length.toLocaleString()}+ verified developer tools.</p>
+    <p>Everything you need to build, deploy, and ship frontend projects — without spending a dollar. This guide recommends the best free tier for each layer of a frontend/Jamstack stack — <strong>10 categories</strong> from static hosting to feature flags — with exact limits for each. ${pageFigureSource("/free-frontend-stack", offers.length)}</p>
     <p>Designed for solo developers, freelancers, and small teams building websites, web apps, and Jamstack projects. Each recommendation includes alternatives, a "when you'll outgrow it" guide, and stability notes based on our tracking of ${trackedChangeCount} real pricing changes. ${stackFreshnessNote(pageReadings)}</p>
   </div>
 
@@ -16952,7 +16952,7 @@ ${mcpCtaCss()}
   <h1>The Complete Free Next.js Stack</h1>
 
   <div class="context">
-    <p>Everything you need to build and ship a Next.js app — without spending a dollar. This guide recommends the best free tier for each layer of your Next.js infrastructure — <strong>10 layers</strong> from hosting to background jobs — with exact limits pulled from our index of ${offers.length.toLocaleString()}+ verified developer tools.</p>
+    <p>Everything you need to build and ship a Next.js app — without spending a dollar. This guide recommends the best free tier for each layer of your Next.js infrastructure — <strong>10 layers</strong> from hosting to background jobs — with exact limits for each. ${pageFigureSource("/free-nextjs-stack", offers.length)}</p>
     <p>Designed for solo developers, indie hackers, and small teams building SaaS products, side projects, or MVPs with Next.js. Each recommendation includes alternatives, a "when you'll outgrow it" guide, "why not X" callouts for popular-but-not-recommended options, and stability notes based on our tracking of ${trackedChangeCount} real pricing changes. ${stackFreshnessNote(pageReadings)}</p>
   </div>
 
@@ -17344,7 +17344,7 @@ ${mcpCtaCss()}
   <h1>The Complete Free Django/Python Stack</h1>
 
   <div class="context">
-    <p>Everything you need to build and ship a Django app — without spending a dollar. This guide recommends the best free tier for each layer of your Django infrastructure — <strong>10 layers</strong> from hosting to search — with exact limits pulled from our index of ${offers.length.toLocaleString()}+ verified developer tools.</p>
+    <p>Everything you need to build and ship a Django app — without spending a dollar. This guide recommends the best free tier for each layer of your Django infrastructure — <strong>10 layers</strong> from hosting to search — with exact limits for each. ${pageFigureSource("/free-django-stack", offers.length)}</p>
     <p>Designed for Python developers building SaaS products, AI/ML applications, APIs, and side projects with Django. Each recommendation includes alternatives, a "when you'll outgrow it" guide, "why not X" callouts for popular-but-not-recommended options, and stability notes based on our tracking of ${trackedChangeCount} real pricing changes. ${stackFreshnessNote(pageReadings)}</p>
   </div>
 
@@ -17756,7 +17756,7 @@ ${mcpCtaCss()}
   <h1>The Complete Free FastAPI/Python Stack</h1>
 
   <div class="context">
-    <p>Everything you need to build and ship a FastAPI app — without spending a dollar. This guide recommends the best free tier for each layer of your FastAPI infrastructure — <strong>10 layers</strong> from ASGI hosting to API documentation — with exact limits pulled from our index of ${offers.length.toLocaleString()}+ verified developer tools.</p>
+    <p>Everything you need to build and ship a FastAPI app — without spending a dollar. This guide recommends the best free tier for each layer of your FastAPI infrastructure — <strong>10 layers</strong> from ASGI hosting to API documentation — with exact limits for each. ${pageFigureSource("/free-fastapi-stack", offers.length)}</p>
     <p>Designed for Python developers building REST APIs, AI/ML serving endpoints, microservices, and async backend services with FastAPI. Each recommendation includes alternatives, a "when you'll outgrow it" guide, "why not X" callouts for popular-but-not-recommended options, and stability notes based on our tracking of ${trackedChangeCount} real pricing changes. ${stackFreshnessNote(pageReadings)}</p>
   </div>
 
@@ -18180,7 +18180,7 @@ ${mcpCtaCss()}
   <h1>The Complete Free Go/Golang Stack</h1>
 
   <div class="context">
-    <p>Everything you need to build and ship a Go service — without spending a dollar. This guide recommends the best free tier for each layer of your Go infrastructure — <strong>10 layers</strong> from single-binary hosting to API documentation — with exact limits pulled from our index of ${offers.length.toLocaleString()}+ verified developer tools.</p>
+    <p>Everything you need to build and ship a Go service — without spending a dollar. This guide recommends the best free tier for each layer of your Go infrastructure — <strong>10 layers</strong> from single-binary hosting to API documentation — with exact limits for each. ${pageFigureSource("/free-go-stack", offers.length)}</p>
     <p>Designed for developers building REST APIs, CLI tools, microservices, DevOps tooling, and cloud-native infrastructure with Go. Each recommendation includes alternatives, a "when you'll outgrow it" guide, "why not X" callouts for popular-but-not-recommended options, and stability notes based on our tracking of ${trackedChangeCount} real pricing changes. ${stackFreshnessNote(pageReadings)}</p>
   </div>
 
@@ -18720,7 +18720,7 @@ ${mcpCtaCss()}
   <h1>The Complete Free SaaS Starter Stack for 2026</h1>
 
   <div class="context">
-    <p>You can build and launch a complete SaaS product without spending a dollar on infrastructure. This guide gives you the <strong>opinionated "just tell me what to use" answer</strong> \u2014 the best free tier for each layer of a SaaS stack, with exact limits pulled from our index of ${offers.length.toLocaleString()}+ verified developer tools.</p>
+    <p>You can build and launch a complete SaaS product without spending a dollar on infrastructure. This guide gives you the <strong>opinionated "just tell me what to use" answer</strong> \u2014 the best free tier for each layer of a SaaS stack, with exact limits for each. ${pageFigureSource("/free-saas-stack", offers.length)}</p>
     <p>Every recommendation includes alternatives, "when you'll outgrow it" guidance, "why not X" callouts for popular-but-not-recommended options, and stability notes based on our tracking of ${trackedChangeCount} real pricing changes. ${stackFreshnessNote(pageReadings)}</p>
   </div>
 
@@ -20497,7 +20497,7 @@ ${mcpCtaCss()}
   </div>
 
   <div class="methodology">
-    <strong>Methodology:</strong> Free tier data sourced from our verified index of ${offers.length.toLocaleString()} developer tools. Supabase data verified against <a href="https://supabase.com/pricing" target="_blank" rel="noopener">supabase.com/pricing</a> (${supabaseOffer?.verifiedDate ?? "2026-03"}). Firebase data verified against <a href="https://firebase.google.com/pricing" target="_blank" rel="noopener">firebase.google.com/pricing</a> (${firebaseOffer?.verifiedDate ?? "2026-03"}). Cost-at-scale analysis based on published pricing tiers. Deal changes tracked from official vendor announcements.
+    <strong>Methodology:</strong> ${pageFigureSource("/supabase-vs-firebase", offers.length)} Supabase data verified against <a href="https://supabase.com/pricing" target="_blank" rel="noopener">supabase.com/pricing</a> (${supabaseOffer?.verifiedDate ?? "2026-03"}). Firebase data verified against <a href="https://firebase.google.com/pricing" target="_blank" rel="noopener">firebase.google.com/pricing</a> (${firebaseOffer?.verifiedDate ?? "2026-03"}). Cost-at-scale analysis based on published pricing tiers. Deal changes tracked from official vendor announcements.
   </div>
 
   <div class="search-cta">
@@ -20814,7 +20814,7 @@ ${mcpCtaCss()}
   </div>
 
   <div class="methodology">
-    <strong>Methodology:</strong> Free tier data sourced from our verified index of ${offers.length.toLocaleString()} developer tools. Vercel data verified against <a href="https://vercel.com/pricing" target="_blank" rel="noopener">vercel.com/pricing</a> (${vercelOffer?.verifiedDate ?? "2026-03"}). Netlify data verified against <a href="https://www.netlify.com/pricing/" target="_blank" rel="noopener">netlify.com/pricing</a> (${netlifyOffer?.verifiedDate ?? "2026-03"}). Cost-at-scale analysis based on published pricing tiers. Deal changes tracked from official vendor announcements.
+    <strong>Methodology:</strong> ${pageFigureSource("/vercel-vs-netlify", offers.length)} Vercel data verified against <a href="https://vercel.com/pricing" target="_blank" rel="noopener">vercel.com/pricing</a> (${vercelOffer?.verifiedDate ?? "2026-03"}). Netlify data verified against <a href="https://www.netlify.com/pricing/" target="_blank" rel="noopener">netlify.com/pricing</a> (${netlifyOffer?.verifiedDate ?? "2026-03"}). Cost-at-scale analysis based on published pricing tiers. Deal changes tracked from official vendor announcements.
   </div>
 
   <div class="search-cta">
@@ -21133,7 +21133,7 @@ ${mcpCtaCss()}
   </div>
 
   <div class="methodology">
-    <strong>Methodology:</strong> Free tier data sourced from our verified index of ${offers.length.toLocaleString()} developer tools. Neon data verified against <a href="https://neon.com/pricing" target="_blank" rel="noopener">neon.com/pricing</a> (${neonOffer?.verifiedDate ?? "2026-03"}). Supabase data verified against <a href="https://supabase.com/pricing" target="_blank" rel="noopener">supabase.com/pricing</a> (${supabaseOffer?.verifiedDate ?? "2026-03"}). Cost-at-scale analysis based on published pricing tiers. Deal changes tracked from official vendor announcements.
+    <strong>Methodology:</strong> ${pageFigureSource("/neon-vs-supabase", offers.length)} Neon data verified against <a href="https://neon.com/pricing" target="_blank" rel="noopener">neon.com/pricing</a> (${neonOffer?.verifiedDate ?? "2026-03"}). Supabase data verified against <a href="https://supabase.com/pricing" target="_blank" rel="noopener">supabase.com/pricing</a> (${supabaseOffer?.verifiedDate ?? "2026-03"}). Cost-at-scale analysis based on published pricing tiers. Deal changes tracked from official vendor announcements.
   </div>
 
   <div class="search-cta">
@@ -21454,7 +21454,7 @@ ${mcpCtaCss()}
   </div>
 
   <div class="methodology">
-    <strong>Methodology:</strong> Free tier data sourced from our verified index of ${offers.length.toLocaleString()} developer tools. Railway data verified against <a href="https://railway.com/pricing" target="_blank" rel="noopener">railway.com/pricing</a> (${railwayOffer?.verifiedDate ?? "2026-03"}). Render data verified against <a href="https://render.com/pricing" target="_blank" rel="noopener">render.com/pricing</a> (${renderOffer?.verifiedDate ?? "2026-03"}). Cost-at-scale analysis based on published pricing tiers and usage-based calculations. Deal changes tracked from official vendor announcements.
+    <strong>Methodology:</strong> ${pageFigureSource("/railway-vs-render", offers.length)} Railway data verified against <a href="https://railway.com/pricing" target="_blank" rel="noopener">railway.com/pricing</a> (${railwayOffer?.verifiedDate ?? "2026-03"}). Render data verified against <a href="https://render.com/pricing" target="_blank" rel="noopener">render.com/pricing</a> (${renderOffer?.verifiedDate ?? "2026-03"}). Cost-at-scale analysis based on published pricing tiers and usage-based calculations. Deal changes tracked from official vendor announcements.
   </div>
 
   <div class="search-cta">
@@ -21770,7 +21770,7 @@ ${mcpCtaCss()}
   </div>
 
   <div class="methodology">
-    <strong>Methodology:</strong> Free tier data sourced from our verified index of ${offers.length.toLocaleString()} developer tools. Datadog data verified against <a href="https://www.datadoghq.com/pricing/" target="_blank" rel="noopener">datadoghq.com/pricing</a> (${datadogOffer?.verifiedDate ?? "2026-03"}). New Relic data verified against <a href="https://newrelic.com/pricing" target="_blank" rel="noopener">newrelic.com/pricing</a> (${newRelicOffer?.verifiedDate ?? "2026-03"}). Cost-at-scale analysis based on published pricing tiers. Deal changes tracked from official vendor announcements.
+    <strong>Methodology:</strong> ${pageFigureSource("/datadog-vs-new-relic", offers.length)} Datadog data verified against <a href="https://www.datadoghq.com/pricing/" target="_blank" rel="noopener">datadoghq.com/pricing</a> (${datadogOffer?.verifiedDate ?? "2026-03"}). New Relic data verified against <a href="https://newrelic.com/pricing" target="_blank" rel="noopener">newrelic.com/pricing</a> (${newRelicOffer?.verifiedDate ?? "2026-03"}). Cost-at-scale analysis based on published pricing tiers. Deal changes tracked from official vendor announcements.
   </div>
 
   <div class="search-cta">
@@ -22205,7 +22205,7 @@ ${mcpCtaCss()}
   </div>
 
   <div class="methodology">
-    <strong>Methodology:</strong> Free tier details sourced from <a href="https://www.hashicorp.com/products/terraform/pricing" target="_blank" rel="noopener">HashiCorp's pricing page</a>. [[freshness]] Migration steps based on official Terraform backend migration documentation. Resource counts and feature comparisons from our index of ${offers.length.toLocaleString()} tracked developer tools.
+    <strong>Methodology:</strong> Free tier details sourced from <a href="https://www.hashicorp.com/products/terraform/pricing" target="_blank" rel="noopener">HashiCorp's pricing page</a>. [[freshness]] Migration steps based on official Terraform backend migration documentation. ${pageFigureSource("/hcp-terraform-migration", offers.length)}
   </div>
 
   <div class="search-cta">

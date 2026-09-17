@@ -8,6 +8,7 @@ import {
   CATALOGUE_TEXT_FIELDS, CHANGE_LOG_TEXT_FIELDS, deriveTier, parsePageReviews, pageReviewsPath,
   perturbTextFields, readableTableText, unresolvedBadgeSubjects, vendorFactRows, vendorsAssertedIn,
 } from "../dist/page-reviews.js";
+import { censusTableFigures } from "../dist/table-figures.js";
 import { unresolvedStatCardSubjects } from "../dist/superlative-claims.js";
 import { assertedVendorSlugs, isNonVendorSubject, namedVendorSlug, vendorSlugMap } from "../dist/vendor-slug.js";
 
@@ -30,7 +31,16 @@ Reading the catalogue at all and sourcing the page's figures from it are recorde
 separately. A page whose only catalogue-derived output is the href of a source link
 reads the catalogue, and every figure a reader compares is still a literal in the
 page. tables_read_index is the narrower measurement — whether the readable text inside
-the page's tables moves — and it is the one the provenance byline is derived from.
+the page's tables moves at all.
+
+Narrower still, and the one the provenance byline is derived from: table_figures counts
+the quantities a reader compares inside those tables and table_figures_from_index counts
+how many of them move when both stores are replaced at once. A page may state our index
+as the source of its figures without qualifying it only when the two are equal, because
+the byline is a claim about every figure on the page and one moving cell does not earn
+it. Both stores are replaced together for that count, because a figure we hold in the
+change log is one we hold, and the reader is being told the difference between a figure
+from a record and a figure someone typed into the page.
 
 A page that reads no catalogue record keeps whichever data_source it was given, and a
 page new to the register defaults to "unsourced" — the state that fails the ratchet —
@@ -158,19 +168,21 @@ async function main() {
   const perturbedIndex = writePerturbed(tmp, "index.json", "offers", CATALOGUE_TEXT_FIELDS);
   const perturbedChanges = writePerturbed(tmp, "deal_changes.json", "changes", CHANGE_LOG_TEXT_FIELDS);
 
-  const [real, blindIndex, blindChanges] = await Promise.all([
+  const [real, blindIndex, blindChanges, blindToBoth] = await Promise.all([
     startServer(),
     startServer({ AGENTDEALS_INDEX_PATH: perturbedIndex }),
     startServer({ AGENTDEALS_CHANGES_PATH: perturbedChanges }),
+    startServer({ AGENTDEALS_INDEX_PATH: perturbedIndex, AGENTDEALS_CHANGES_PATH: perturbedChanges }),
   ]);
   const pages = [];
   const changes = [];
   try {
     for (const route of [...EDITORIAL_PAGES].sort()) {
-      const [html, withoutIndex, withoutChanges] = await Promise.all([
+      const [html, withoutIndex, withoutChanges, withoutEither] = await Promise.all([
         render(real.port, route),
         render(blindIndex.port, route),
         render(blindChanges.port, route),
+        render(blindToBoth.port, route),
       ]);
       const prior = byPath.get(route);
       const published = prior?.published ?? routeFirstServed(route) ?? new Date().toISOString().slice(0, 10);
@@ -189,6 +201,7 @@ async function main() {
         review_note: prior?.review_note ?? null,
         reads_index: readsIndex,
         tables_read_index: readableTableText(html) !== readableTableText(withoutIndex),
+        ...censusTableFigures(html, withoutEither),
         reads_changes: html !== withoutChanges,
         data_source: readsIndex ? "catalogue" : prior && prior.data_source !== "catalogue" ? prior.data_source : "unsourced",
         data_source_reason: prior?.data_source_reason ?? null,
@@ -198,6 +211,9 @@ async function main() {
         if (prior.tier !== record.tier) changes.push(`~ ${route} tier ${prior.tier} -> ${record.tier}`);
         if (prior.reads_index !== record.reads_index) changes.push(`~ ${route} reads_index ${prior.reads_index} -> ${record.reads_index}`);
         if (prior.tables_read_index !== record.tables_read_index) changes.push(`~ ${route} tables_read_index ${prior.tables_read_index} -> ${record.tables_read_index}`);
+        if (prior.table_figures !== record.table_figures || prior.table_figures_from_index !== record.table_figures_from_index) {
+          changes.push(`~ ${route} table figures from our index ${prior.table_figures_from_index ?? "?"}/${prior.table_figures ?? "?"} -> ${record.table_figures_from_index}/${record.table_figures}`);
+        }
         if (prior.reads_changes !== record.reads_changes) changes.push(`~ ${route} reads_changes ${prior.reads_changes} -> ${record.reads_changes}`);
         if (prior.data_source !== record.data_source) changes.push(`~ ${route} data_source ${prior.data_source} -> ${record.data_source}`);
         const before = prior.vendors_asserted.join(","), after = record.vendors_asserted.join(",");
@@ -215,6 +231,7 @@ async function main() {
     real.child.kill();
     blindIndex.child.kill();
     blindChanges.child.kill();
+    blindToBoth.child.kill();
     rmSync(tmp, { recursive: true, force: true });
   }
 
@@ -228,7 +245,12 @@ async function main() {
   const unsourcedA = pages.filter(p => p.tier === "A" && p.data_source === "unsourced").length;
   console.log(`${pages.length} pages, ${tierA} tier A, ${pages.length - tierA} tier B`);
   console.log(`${pages.filter(p => p.reads_index).length} read the catalogue, ${pages.filter(p => p.reads_changes).length} read the change log`);
-  console.log(`${pages.filter(p => p.tables_read_index).length} of those put a catalogue-derived figure in a table, which is what the provenance byline claims`);
+  console.log(`${pages.filter(p => p.tables_read_index).length} of those put catalogue-derived text in a table`);
+  const withFigures = pages.filter(p => p.table_figures > 0);
+  const whollySourced = withFigures.filter(p => p.table_figures_from_index === p.table_figures);
+  const tabulated = withFigures.reduce((sum, p) => sum + p.table_figures, 0);
+  const sourced = withFigures.reduce((sum, p) => sum + p.table_figures_from_index, 0);
+  console.log(`${sourced} of ${tabulated} table figures across ${withFigures.length} pages come from the catalogue; ${whollySourced.length} pages may state that without qualifying it`);
   console.log(`${unsourcedA} tier-A pages assert vendor facts and read no catalogue record`);
   for (const line of changes) console.log(line);
   if (opts.dryRun) { console.log("dry run — nothing written"); return; }

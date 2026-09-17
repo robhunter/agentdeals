@@ -74,6 +74,8 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": true,
+      "table_figures": 47,
+      "table_figures_from_index": 47,
       "reads_changes": true,
       "data_source": "catalogue",
       "data_source_reason": null
@@ -92,6 +94,8 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": true,
+      "table_figures": 23,
+      "table_figures_from_index": 23,
       "reads_changes": true,
       "data_source": "catalogue",
       "data_source_reason": null
@@ -126,6 +130,8 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": false,
+      "table_figures": 49,
+      "table_figures_from_index": 32,
       "reads_changes": true,
       "data_source": "catalogue",
       "data_source_reason": null
@@ -175,6 +181,8 @@
       "review_note": "Recommends GitHub Copilot Pro and Copilot Student to two reader segments while its own change table renders a HIGH-impact 2026-04-20 record saying new signups for both are paused. GitHub reopened them in June 2026 and our change log holds no reopening record, so the table is stale and the recommendation was wrong for the two months it was true. Also names Gemini 2.5 Pro and 'Claude Opus 4 and o3' as current models, and omits the Copilot Business signup pause of 2026-04-22 while recommending Copilot Business to enterprise readers.",
       "reads_index": true,
       "tables_read_index": false,
+      "table_figures": 138,
+      "table_figures_from_index": 49,
       "reads_changes": true,
       "data_source": "catalogue",
       "data_source_reason": null
@@ -206,6 +214,8 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": false,
+      "table_figures": 34,
+      "table_figures_from_index": 5,
       "reads_changes": true,
       "data_source": "catalogue",
       "data_source_reason": null
@@ -242,6 +252,8 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": false,
+      "table_figures": 33,
+      "table_figures_from_index": 10,
       "reads_changes": true,
       "data_source": "catalogue",
       "data_source_reason": null
@@ -294,6 +306,8 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": false,
+      "table_figures": 76,
+      "table_figures_from_index": 5,
       "reads_changes": true,
       "data_source": "catalogue",
       "data_source_reason": null
@@ -329,6 +343,8 @@
       "review_note": null,
       "reads_index": false,
       "tables_read_index": false,
+      "table_figures": 42,
+      "table_figures_from_index": 4,
       "reads_changes": true,
       "data_source": "unsourced",
       "data_source_reason": null
@@ -368,6 +384,8 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": false,
+      "table_figures": 56,
+      "table_figures_from_index": 18,
       "reads_changes": true,
       "data_source": "catalogue",
       "data_source_reason": null
@@ -399,6 +417,8 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": false,
+      "table_figures": 38,
+      "table_figures_from_index": 3,
       "reads_changes": true,
       "data_source": "catalogue",
       "data_source_reason": null
@@ -417,6 +437,8 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": false,
+      "table_figures": 0,
+      "table_figures_from_index": 0,
       "reads_changes": true,
       "data_source": "catalogue",
       "data_source_reason": "the risk level beside each vendor is the level the catalogue publishes for that record, withholding included"
@@ -438,7 +460,6 @@
         "gitlab-ci",
         "google-cloud-build",
         "harness-ci",
-        "jenkins",
         "woodpecker-ci"
       ],
       "vendors_tabulated": [
@@ -458,7 +479,6 @@
         "gitlab-ci",
         "google-cloud-build",
         "harness-ci",
-        "jenkins",
         "semaphore-ci",
         "woodpecker-ci"
       ],
@@ -470,6 +490,8 @@
       "review_note": null,
       "reads_index": false,
       "tables_read_index": false,
+      "table_figures": 115,
+      "table_figures_from_index": 17,
       "reads_changes": true,
       "data_source": "unsourced",
       "data_source_reason": null
@@ -514,6 +536,8 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": false,
+      "table_figures": 55,
+      "table_figures_from_index": 20,
       "reads_changes": true,
       "data_source": "catalogue",
       "data_source_reason": null
@@ -541,6 +565,8 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": false,
+      "table_figures": 65,
+      "table_figures_from_index": 15,
       "reads_changes": true,
       "data_source": "catalogue",
       "data_source_reason": null
@@ -559,6 +585,8 @@
       "review_note": null,
       "reads_index": false,
       "tables_read_index": false,
+      "table_figures": 0,
+      "table_figures_from_index": 0,
       "reads_changes": false,
       "data_source": "editorial",
       "data_source_reason": "a picker that links to comparison pages and asserts nothing about any vendor itself"
@@ -579,8 +607,7 @@
         "lumenfall",
         "lumenfall-ai",
         "openai",
-        "replicate",
-        "stability-ai"
+        "replicate"
       ],
       "badge_subjects_unresolved": [],
       "stat_card_subjects_unresolved": [],
@@ -590,6 +617,8 @@
       "review_note": null,
       "reads_index": false,
       "tables_read_index": false,
+      "table_figures": 21,
+      "table_figures_from_index": 5,
       "reads_changes": true,
       "data_source": "unsourced",
       "data_source_reason": null
@@ -618,7 +647,6 @@
         "convex",
         "firebase",
         "lancedb",
-        "momento",
         "mongodb-atlas",
         "neon",
         "nile",
@@ -638,6 +666,8 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": false,
+      "table_figures": 48,
+      "table_figures_from_index": 12,
       "reads_changes": true,
       "data_source": "catalogue",
       "data_source_reason": null
@@ -678,7 +708,6 @@
         "neo4j-auradb",
         "neon",
         "nile",
-        "planetscale",
         "prisma-accelerate",
         "redis-cloud",
         "supabase",
@@ -696,6 +725,8 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": false,
+      "table_figures": 145,
+      "table_figures_from_index": 37,
       "reads_changes": true,
       "data_source": "catalogue",
       "data_source_reason": null
@@ -724,6 +755,8 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": true,
+      "table_figures": 39,
+      "table_figures_from_index": 12,
       "reads_changes": true,
       "data_source": "catalogue",
       "data_source_reason": null
@@ -757,6 +790,8 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": false,
+      "table_figures": 56,
+      "table_figures_from_index": 8,
       "reads_changes": true,
       "data_source": "catalogue",
       "data_source_reason": null
@@ -775,6 +810,8 @@
       "review_note": null,
       "reads_index": false,
       "tables_read_index": false,
+      "table_figures": 0,
+      "table_figures_from_index": 0,
       "reads_changes": false,
       "data_source": "editorial",
       "data_source_reason": "states how we are paid and links our policies; names no vendor"
@@ -824,9 +861,11 @@
       "reviewed_at": "2026-09-05",
       "reviewer": "coder",
       "review_outcome": "fail",
-      "review_note": "Read against resend.com/pricing, mailersend.com/pricing and mailerlite.com/pricing on 2026-09-05, after a Resend record dated 2026-09-05 moved under the 2026-09-04 review. Resend: 3,000 emails/month and the 100/day cap hold; custom domains on Free is 3, not the 1 the page published, and the catalogue record carried the same 1. MailerSend: the Free plan is 500 emails/month with 1 domain, 10 templates, 5 seats, 1,000 daily API requests and 1-day activity retention, and the 14-day Professional trial carries the same 500 \u2014 so the 3,000 the page published on three surfaces was not the trial figure either. Hobby is $7.00/month monthly, $5.60 billed yearly, for 5,000 emails. MailerLite: the Free plan is 250 subscribers and 2,500 monthly emails, below both the 1,000/12,000 the page published and the 500/12,000 in our own record; the record is the stale side and no change record holds 250. Corrected on this page: the MailerSend table row, section and 3K cost-trap cell, the MailerLite table row and section, the Resend section, and the transactional-email answer on /email-service-alternatives. Not verified in this pass: Amazon SES, Brevo, Mailtrap, Loops, Mailjet, Postmark, Maileroo, EmailOctopus, Buttondown, Substack, SMTP2GO, EmailLabs.io and the 10K/50K/100K/500K rows of the cost-trap table.",
+      "review_note": "Read against resend.com/pricing, mailersend.com/pricing and mailerlite.com/pricing on 2026-09-05, after a Resend record dated 2026-09-05 moved under the 2026-09-04 review. Resend: 3,000 emails/month and the 100/day cap hold; custom domains on Free is 3, not the 1 the page published, and the catalogue record carried the same 1. MailerSend: the Free plan is 500 emails/month with 1 domain, 10 templates, 5 seats, 1,000 daily API requests and 1-day activity retention, and the 14-day Professional trial carries the same 500 — so the 3,000 the page published on three surfaces was not the trial figure either. Hobby is $7.00/month monthly, $5.60 billed yearly, for 5,000 emails. MailerLite: the Free plan is 250 subscribers and 2,500 monthly emails, below both the 1,000/12,000 the page published and the 500/12,000 in our own record; the record is the stale side and no change record holds 250. Corrected on this page: the MailerSend table row, section and 3K cost-trap cell, the MailerLite table row and section, the Resend section, and the transactional-email answer on /email-service-alternatives. Not verified in this pass: Amazon SES, Brevo, Mailtrap, Loops, Mailjet, Postmark, Maileroo, EmailOctopus, Buttondown, Substack, SMTP2GO, EmailLabs.io and the 10K/50K/100K/500K rows of the cost-trap table.",
       "reads_index": true,
       "tables_read_index": false,
+      "table_figures": 54,
+      "table_figures_from_index": 5,
       "reads_changes": true,
       "data_source": "catalogue",
       "data_source_reason": null
@@ -846,7 +885,6 @@
       "vendors_tabulated": [
         "codesandbox",
         "github-codespaces",
-        "gitpod",
         "lovable",
         "replit",
         "v0"
@@ -859,6 +897,8 @@
       "review_note": null,
       "reads_index": false,
       "tables_read_index": false,
+      "table_figures": 24,
+      "table_figures_from_index": 5,
       "reads_changes": true,
       "data_source": "unsourced",
       "data_source_reason": null
@@ -888,6 +928,8 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": true,
+      "table_figures": 9,
+      "table_figures_from_index": 9,
       "reads_changes": true,
       "data_source": "catalogue",
       "data_source_reason": null
@@ -917,6 +959,8 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": true,
+      "table_figures": 19,
+      "table_figures_from_index": 19,
       "reads_changes": true,
       "data_source": "catalogue",
       "data_source_reason": null
@@ -945,6 +989,8 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": true,
+      "table_figures": 32,
+      "table_figures_from_index": 14,
       "reads_changes": true,
       "data_source": "catalogue",
       "data_source_reason": null
@@ -972,6 +1018,8 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": true,
+      "table_figures": 32,
+      "table_figures_from_index": 14,
       "reads_changes": true,
       "data_source": "catalogue",
       "data_source_reason": null
@@ -1000,6 +1048,8 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": true,
+      "table_figures": 12,
+      "table_figures_from_index": 12,
       "reads_changes": true,
       "data_source": "catalogue",
       "data_source_reason": null
@@ -1028,6 +1078,8 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": true,
+      "table_figures": 30,
+      "table_figures_from_index": 13,
       "reads_changes": true,
       "data_source": "catalogue",
       "data_source_reason": null
@@ -1057,6 +1109,8 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": true,
+      "table_figures": 30,
+      "table_figures_from_index": 12,
       "reads_changes": true,
       "data_source": "catalogue",
       "data_source_reason": null
@@ -1086,6 +1140,8 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": true,
+      "table_figures": 45,
+      "table_figures_from_index": 14,
       "reads_changes": true,
       "data_source": "catalogue",
       "data_source_reason": null
@@ -1115,6 +1171,8 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": true,
+      "table_figures": 13,
+      "table_figures_from_index": 13,
       "reads_changes": true,
       "data_source": "catalogue",
       "data_source_reason": null
@@ -1127,6 +1185,7 @@
         "auth0",
         "cloudflare",
         "github",
+        "minio",
         "neon",
         "netlify",
         "railway",
@@ -1136,42 +1195,36 @@
       ],
       "vendors_tabulated": [
         "amazon-sp-api",
-        "anthropic",
+        "anthropic-api",
         "auth0",
-        "aws-free-tier",
+        "aws",
         "brave-search-api",
         "cloudflare",
         "cockroachdb",
         "docker-hub",
         "dub-co",
-        "fauna",
         "firebase",
         "fly-io",
-        "freshping",
         "github",
-        "github-copilot-free",
-        "google-cloud-always-free",
+        "github-copilot",
+        "google-cloud",
         "google-gemini-api",
         "grafana-cloud",
         "hcp-terraform",
-        "heroku",
         "localstack",
         "logz-io",
-        "minio-oss",
+        "minio",
         "neon",
         "netlify",
         "openai",
-        "planetscale",
         "postman",
         "railway",
         "render",
         "sendgrid",
         "sentry",
-        "spotify-api",
         "stripe",
         "supabase",
-        "vercel",
-        "x-api-twitter"
+        "vercel"
       ],
       "badge_subjects_unresolved": [],
       "stat_card_subjects_unresolved": [],
@@ -1181,6 +1234,8 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": true,
+      "table_figures": 48,
+      "table_figures_from_index": 0,
       "reads_changes": true,
       "data_source": "catalogue",
       "data_source_reason": null
@@ -1207,32 +1262,24 @@
       "vendors_tabulated": [
         "amazon-aurora-postgresql",
         "amazon-sp-api",
-        "anthropic",
-        "anthropic-claude",
+        "anthropic-api",
         "atlassian",
-        "atlassian-forge",
         "aws",
         "brave-search-api",
         "cloudflare",
         "cloudflare-durable-objects",
-        "cloudflare-startup-program",
-        "cognition-devin",
+        "devin",
         "digitalocean",
-        "docker-desktop",
         "dub-co",
         "firebase",
         "fly-io",
-        "freshping",
         "github-actions",
         "github-copilot",
         "google",
         "google-cloud",
-        "google-gemini-2-0-flash",
-        "google-programmable-search-engine",
         "hcp-terraform",
         "localstack",
         "logz-io",
-        "microsoft-partner-developer-benefits",
         "minio",
         "neo4j-auradb",
         "neon",
@@ -1240,16 +1287,13 @@
         "openai",
         "postman",
         "pythonanywhere",
-        "spotify-api",
         "stripe",
         "supabase",
         "unity-devops",
         "vercel",
         "windsurf",
-        "x-api-twitter",
         "x-twitter",
-        "xai-grok",
-        "xero-developer-api"
+        "xai"
       ],
       "badge_subjects_unresolved": [],
       "stat_card_subjects_unresolved": [],
@@ -1259,6 +1303,8 @@
       "review_note": null,
       "reads_index": false,
       "tables_read_index": false,
+      "table_figures": 47,
+      "table_figures_from_index": 46,
       "reads_changes": true,
       "data_source": "unsourced",
       "data_source_reason": null
@@ -1294,6 +1340,8 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": false,
+      "table_figures": 38,
+      "table_figures_from_index": 2,
       "reads_changes": true,
       "data_source": "catalogue",
       "data_source_reason": null
@@ -1325,6 +1373,8 @@
       "review_note": "Written in the future tense about an event 165 days past. Section 1 is headed \"What's Changing April 1\" and reads \"Google is introducing billing-account-level spend caps\"; \"April 1\" appears 7 times and the byline says \"Figures compiled 2026-03-26, last checked 2026-04-02\". It calls Gemini 3.1 Pro \"the latest flagship\" twice; ai.google.dev/gemini-api/docs/pricing, fetched 2026-09-13, lists 3.5, 3.6, 3.7 and 3.8 Flash and says \"Gemini 3.8 Flash is now available\" - the page names none of them. Gemini 2.0 Flash is listed as \"Deprecated, scheduled for retirement\" and is absent from Google's page entirely. Three comparison rows contradict our own records: OpenAI reads \"GPT-3.5 only, 3 RPM\" and \"GPT-3.5 Turbo (free)\" against a record verified 2026-09-10 saying the only free OpenAI model is omni-moderation-latest; Mistral AI reads \"1B tokens/month\" against a record verified 2026-09-05 saying $10/mo in API credits, and the What To Do section recommends Mistral on that number; DeepSeek reads V3/R1 against our V3.2 record. The Gemini row omits four free models our own record lists. Filed on https://github.com/robhunter/agentdeals/issues/1183 and https://github.com/robhunter/agentdeals/issues/1637.",
       "reads_index": false,
       "tables_read_index": false,
+      "table_figures": 9,
+      "table_figures_from_index": 0,
       "reads_changes": true,
       "data_source": "unsourced",
       "data_source_reason": null
@@ -1357,6 +1407,8 @@
       "review_note": "Hero stat reads 5 RPM for the Gemini free tier. Our own record for Google Gemini API (verifiedDate 2026-08-18, source_check.checked 2026-09-05, outcome ok) gives Gemini 2.5 Flash 10 RPM and 2.5 Flash-Lite 15 RPM, and its 2026-09-03 change records a restructure to Gemini 3.6 Flash, 3.5 Flash and 3.5 Live - models the page never names. The page's \"Figures compiled 2026-04-08, not re-checked since\" byline is honest and does not fix the number a reader takes away. Filed as row ten on https://github.com/robhunter/agentdeals/issues/1183.",
       "reads_index": false,
       "tables_read_index": false,
+      "table_figures": 36,
+      "table_figures_from_index": 0,
       "reads_changes": true,
       "data_source": "unsourced",
       "data_source_reason": null
@@ -1381,7 +1433,6 @@
         "cerebras",
         "digitalocean",
         "firebase",
-        "github-models",
         "google-ai-pro-ultra",
         "google-cloud-run",
         "groq",
@@ -1399,6 +1450,8 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": true,
+      "table_figures": 39,
+      "table_figures_from_index": 4,
       "reads_changes": true,
       "data_source": "catalogue",
       "data_source_reason": null
@@ -1431,6 +1484,8 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": true,
+      "table_figures": 0,
+      "table_figures_from_index": 0,
       "reads_changes": true,
       "data_source": "catalogue",
       "data_source_reason": null
@@ -1447,7 +1502,6 @@
         "digitalocean",
         "fly-io",
         "hetzner",
-        "linode-akamai",
         "oracle-cloud",
         "ovhcloud",
         "railway",
@@ -1465,6 +1519,8 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": true,
+      "table_figures": 96,
+      "table_figures_from_index": 3,
       "reads_changes": true,
       "data_source": "catalogue",
       "data_source_reason": null
@@ -1491,7 +1547,6 @@
         "deno-deploy",
         "fly-io",
         "github-pages",
-        "heroku",
         "koyeb",
         "netlify",
         "pythonanywhere",
@@ -1507,6 +1562,8 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": false,
+      "table_figures": 85,
+      "table_figures_from_index": 27,
       "reads_changes": true,
       "data_source": "catalogue",
       "data_source_reason": null
@@ -1534,8 +1591,6 @@
         "fly-io",
         "github-pages",
         "google-cloud-run",
-        "heroku",
-        "heroku-for-startups-program",
         "koyeb",
         "netlify",
         "northflank",
@@ -1553,6 +1608,8 @@
       "review_note": null,
       "reads_index": false,
       "tables_read_index": false,
+      "table_figures": 139,
+      "table_figures_from_index": 53,
       "reads_changes": true,
       "data_source": "unsourced",
       "data_source_reason": null
@@ -1603,6 +1660,8 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": false,
+      "table_figures": 62,
+      "table_figures_from_index": 35,
       "reads_changes": true,
       "data_source": "catalogue",
       "data_source_reason": null
@@ -1666,6 +1725,8 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": false,
+      "table_figures": 100,
+      "table_figures_from_index": 19,
       "reads_changes": true,
       "data_source": "catalogue",
       "data_source_reason": null
@@ -1695,6 +1756,8 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": true,
+      "table_figures": 23,
+      "table_figures_from_index": 8,
       "reads_changes": true,
       "data_source": "catalogue",
       "data_source_reason": null
@@ -1730,6 +1793,8 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": true,
+      "table_figures": 21,
+      "table_figures_from_index": 21,
       "reads_changes": true,
       "data_source": "catalogue",
       "data_source_reason": null
@@ -1744,6 +1809,7 @@
         "openai"
       ],
       "vendors_tabulated": [
+        "anthropic-api",
         "azure",
         "google-gemini-api",
         "openai"
@@ -1756,6 +1822,8 @@
       "review_note": null,
       "reads_index": false,
       "tables_read_index": false,
+      "table_figures": 30,
+      "table_figures_from_index": 5,
       "reads_changes": true,
       "data_source": "unsourced",
       "data_source_reason": null
@@ -1784,6 +1852,8 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": true,
+      "table_figures": 40,
+      "table_figures_from_index": 40,
       "reads_changes": true,
       "data_source": "catalogue",
       "data_source_reason": null
@@ -1803,7 +1873,6 @@
         "assemblyai",
         "azure",
         "deepgram",
-        "elevenlabs",
         "google-cloud",
         "openai"
       ],
@@ -1815,6 +1884,8 @@
       "review_note": null,
       "reads_index": false,
       "tables_read_index": false,
+      "table_figures": 22,
+      "table_figures_from_index": 0,
       "reads_changes": true,
       "data_source": "unsourced",
       "data_source_reason": null
@@ -1835,6 +1906,8 @@
       "review_note": null,
       "reads_index": false,
       "tables_read_index": false,
+      "table_figures": 0,
+      "table_figures_from_index": 0,
       "reads_changes": true,
       "data_source": "unsourced",
       "data_source_reason": null
@@ -1859,6 +1932,8 @@
       "review_note": null,
       "reads_index": false,
       "tables_read_index": false,
+      "table_figures": 0,
+      "table_figures_from_index": 0,
       "reads_changes": true,
       "data_source": "unsourced",
       "data_source_reason": null
@@ -1885,6 +1960,8 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": true,
+      "table_figures": 51,
+      "table_figures_from_index": 11,
       "reads_changes": true,
       "data_source": "catalogue",
       "data_source_reason": null
@@ -1938,6 +2015,8 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": false,
+      "table_figures": 29,
+      "table_figures_from_index": 3,
       "reads_changes": true,
       "data_source": "catalogue",
       "data_source_reason": null
@@ -1982,6 +2061,8 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": false,
+      "table_figures": 65,
+      "table_figures_from_index": 27,
       "reads_changes": true,
       "data_source": "catalogue",
       "data_source_reason": null
@@ -2000,6 +2081,8 @@
       "review_note": null,
       "reads_index": false,
       "tables_read_index": false,
+      "table_figures": 0,
+      "table_figures_from_index": 0,
       "reads_changes": true,
       "data_source": "unsourced",
       "data_source_reason": null
@@ -2018,6 +2101,8 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": false,
+      "table_figures": 0,
+      "table_figures_from_index": 0,
       "reads_changes": true,
       "data_source": "catalogue",
       "data_source_reason": null
@@ -2038,6 +2123,8 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": true,
+      "table_figures": 35,
+      "table_figures_from_index": 7,
       "reads_changes": true,
       "data_source": "catalogue",
       "data_source_reason": null
@@ -2058,6 +2145,8 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": true,
+      "table_figures": 31,
+      "table_figures_from_index": 3,
       "reads_changes": false,
       "data_source": "catalogue",
       "data_source_reason": null
@@ -2078,6 +2167,8 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": true,
+      "table_figures": 35,
+      "table_figures_from_index": 7,
       "reads_changes": true,
       "data_source": "catalogue",
       "data_source_reason": null
@@ -2098,6 +2189,8 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": true,
+      "table_figures": 35,
+      "table_figures_from_index": 7,
       "reads_changes": true,
       "data_source": "catalogue",
       "data_source_reason": null
@@ -2118,6 +2211,8 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": true,
+      "table_figures": 35,
+      "table_figures_from_index": 7,
       "reads_changes": true,
       "data_source": "catalogue",
       "data_source_reason": null
@@ -2151,6 +2246,8 @@
       "review_note": null,
       "reads_index": false,
       "tables_read_index": false,
+      "table_figures": 103,
+      "table_figures_from_index": 66,
       "reads_changes": true,
       "data_source": "unsourced",
       "data_source_reason": null
@@ -2176,6 +2273,8 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": true,
+      "table_figures": 6,
+      "table_figures_from_index": 0,
       "reads_changes": true,
       "data_source": "catalogue",
       "data_source_reason": null
@@ -2219,6 +2318,8 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": false,
+      "table_figures": 81,
+      "table_figures_from_index": 19,
       "reads_changes": true,
       "data_source": "catalogue",
       "data_source_reason": null
@@ -2247,6 +2348,8 @@
       "review_note": "Read against nhost.io/pricing on 2026-09-07, after an Nhost record dated 2026-09-07 moved under the 2026-09-05 review. The Starter plan reads $0/month, a limit of 1 project, the project paused after 1 week of inactivity, 1 GB database, 1 GB storage and 5 GB egress. The comparison table gave Nhost 5 GB File Storage and the catalogue description said the same; the vendor gives 1 GB, so both were corrected. Database (1 GB) and Bandwidth (5 GB) already matched. The one-project limit and the inactivity pause are stated by neither surface and the table has no column for either. The Appwrite Cloud, Supabase, Firebase, PocketBase and Convex claims are unchanged since the 2026-09-05 reading and were not re-fetched.",
       "reads_index": true,
       "tables_read_index": true,
+      "table_figures": 28,
+      "table_figures_from_index": 7,
       "reads_changes": true,
       "data_source": "catalogue",
       "data_source_reason": null
@@ -2265,6 +2368,8 @@
       "review_note": null,
       "reads_index": false,
       "tables_read_index": false,
+      "table_figures": 1,
+      "table_figures_from_index": 0,
       "reads_changes": true,
       "data_source": "unsourced",
       "data_source_reason": null
@@ -2294,6 +2399,8 @@
       "review_note": null,
       "reads_index": false,
       "tables_read_index": false,
+      "table_figures": 38,
+      "table_figures_from_index": 0,
       "reads_changes": true,
       "data_source": "unsourced",
       "data_source_reason": null
@@ -2344,6 +2451,8 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": false,
+      "table_figures": 38,
+      "table_figures_from_index": 20,
       "reads_changes": true,
       "data_source": "catalogue",
       "data_source_reason": null
@@ -2386,6 +2495,8 @@
       "review_note": null,
       "reads_index": false,
       "tables_read_index": false,
+      "table_figures": 65,
+      "table_figures_from_index": 7,
       "reads_changes": true,
       "data_source": "unsourced",
       "data_source_reason": null
@@ -2416,6 +2527,8 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": true,
+      "table_figures": 48,
+      "table_figures_from_index": 32,
       "reads_changes": true,
       "data_source": "catalogue",
       "data_source_reason": null
@@ -2486,6 +2599,8 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": true,
+      "table_figures": 54,
+      "table_figures_from_index": 3,
       "reads_changes": true,
       "data_source": "catalogue",
       "data_source_reason": null
