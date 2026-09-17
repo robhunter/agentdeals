@@ -254,7 +254,13 @@ describe("a restatement is reversible, visible and does not overwrite a hand-wri
     run("--write");
     const written = JSON.parse(readFileSync(index, "utf-8"));
     assert.notEqual(written.offers[0].description, IPAPI.offer.description);
-    assert.equal(JSON.parse(readFileSync(store, "utf-8")).restatements.length, 1);
+    assert.equal(
+      written.offers[0].description,
+      `IP address geolocation API — ${IPAPI.change.current_state}`,
+    );
+    const held = JSON.parse(readFileSync(store, "utf-8")).restatements;
+    assert.equal(held.length, 1);
+    assert.equal(held[0].description, written.offers[0].description);
 
     run("--revert", "ipapi");
     assert.deepEqual(JSON.parse(readFileSync(index, "utf-8")), before);

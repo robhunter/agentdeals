@@ -1,6 +1,7 @@
 import { tierRecordsAFreeTier, DENIES_A_FREE_TIER } from "./free-tier-record.js";
 import { mentionsSomethingFree } from "./superseding-reading.js";
 import { VERDICTS_ABOUT_THE_EDITION_ITSELF, comparableTerms } from "./change-tier.js";
+import { restatedDescription } from "./restated-description.js";
 import {
   readingBehindTheChange,
   supersedingChange,
@@ -71,7 +72,10 @@ export function restatementRefusal(
   if (!readingAnswersForTheListedTier(change, offer, reading.terms)) {
     return READING_ANSWERS_FOR_SOMETHING_ELSE;
   }
-  if (comparableTerms(reading.terms) === comparableTerms(offer.description)) {
+  if (
+    comparableTerms(restatedDescription(offer.description, reading.terms)) ===
+    comparableTerms(offer.description)
+  ) {
     return READING_SAYS_WHAT_WE_ALREADY_STORE;
   }
   if (!aLaterRecordThanTheOneWeRestatedFrom(change, offer.restated_from)) {
@@ -86,6 +90,7 @@ export interface RestatementRuling {
   reading: SourcedReading;
   refusal: string | null;
   restatement: Restatement | null;
+  description: string;
 }
 
 export function ruleOnRestating(
@@ -101,6 +106,7 @@ export function ruleOnRestating(
     change,
     reading,
     refusal,
+    description: restatedDescription(offer.description, reading.terms),
     restatement: refusal
       ? null
       : {
@@ -136,10 +142,15 @@ export function weHaveReadThePageSinceTheRecord(
   return checked !== "" && checked > reading.date;
 }
 
+export function restatementKeepsWhatTheProductIs(ruling: RestatementRuling): boolean {
+  return !ruling.refusal && ruling.description !== ruling.reading.terms;
+}
+
 export interface WithheldTermsMeasure {
   offers_we_may_restate_from_their_reading: number;
   offers_we_refuse_to_restate: Record<string, number>;
   offers_re_read_since_the_record_and_still_withheld: number;
+  restatements_keeping_the_stored_sentence_saying_what_the_product_is: number;
 }
 
 export function withheldTermsMeasure(rulings: readonly RestatementRuling[]): WithheldTermsMeasure {
@@ -147,14 +158,17 @@ export function withheldTermsMeasure(rulings: readonly RestatementRuling[]): Wit
   for (const reason of RESTATEMENT_REFUSALS) refused[reason] = 0;
   let mayRestate = 0;
   let reRead = 0;
+  let keepingTheOpening = 0;
   for (const ruling of rulings) {
     if (ruling.refusal) refused[ruling.refusal] = (refused[ruling.refusal] ?? 0) + 1;
     else mayRestate++;
+    if (restatementKeepsWhatTheProductIs(ruling)) keepingTheOpening++;
     if (weHaveReadThePageSinceTheRecord(ruling.offer, ruling.reading)) reRead++;
   }
   return {
     offers_we_may_restate_from_their_reading: mayRestate,
     offers_we_refuse_to_restate: refused,
     offers_re_read_since_the_record_and_still_withheld: reRead,
+    restatements_keeping_the_stored_sentence_saying_what_the_product_is: keepingTheOpening,
   };
 }
