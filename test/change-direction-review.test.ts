@@ -21,6 +21,7 @@ const {
   readingPricesNothingButATrial,
 } = await import("../dist/superseded-description.js");
 const { isNoLongerInForce } = await import("../dist/change-resolution.js");
+const { tierRecordsAFreeTier } = await import("../dist/free-tier-record.js");
 const { supersededCensus } = await import("../dist/superseded-census.js");
 const { changesRatingTheListedTier, publishedRisk, loadDealChanges, loadOffers } = await import("../dist/data.js");
 const { buildChangeEntry, TIER_DIRECTIONS } = await import("../scripts/change-log.js");
@@ -384,23 +385,62 @@ describe("#1528 a record typed as a reduction whose own review reads no narrowin
     );
   });
 
+  const recordsThatGenuinelyNarrowAFreeTier = (): { offer: Offer; change: DealChange }[] => {
+    const found: { offer: Offer; change: DealChange }[] = [];
+    for (const offer of offers) {
+      if (!tierRecordsAFreeTier(offer.tier ?? "")) continue;
+      const change = supersedingChange(offer, changesFor(offer.vendor));
+      if (!change) continue;
+      if (!narrowsTheStoredTerms(change.change_type)) continue;
+      if (readingDescribesNoNarrowing(change)) continue;
+      found.push({ offer, change });
+    }
+    return found;
+  };
+
   it("leaves a genuine narrowing withholding and rated", () => {
-    const offer = offerFor("Netlify");
-    assert.strictEqual(storedTermsAreSuperseded(offer, changesFor("Netlify")), true);
-    assert.ok(supersedingChange(offer, changesFor("Netlify")));
+    const subjects = recordsThatGenuinelyNarrowAFreeTier();
+    assert.ok(
+      subjects.length > 0,
+      "no catalogued free tier holds a record that narrows its stored terms and whose own review does not refute it, so this has no subject",
+    );
+    const keepingTheirVerdict = subjects.filter(({ offer, change }) =>
+      changeRatesTheListedTier(change, offer),
+    );
+    assert.deepStrictEqual(
+      subjects
+        .filter((subject) => !keepingTheirVerdict.includes(subject))
+        .map(({ offer, change }) => `${offer.vendor} ${change.change_type}`),
+      [],
+    );
+    assert.deepStrictEqual(
+      subjects
+        .filter(({ offer }) => !storedTermsAreSuperseded(offer, changesFor(offer.vendor)))
+        .map(({ offer }) => offer.vendor),
+      [],
+    );
+    const readingCautionOrRisky = subjects.filter(({ offer }) => {
+      const level = ratedBy(offer.vendor).risk_level;
+      return level === "caution" || level === "risky";
+    });
+    assert.ok(
+      readingCautionOrRisky.length > 0,
+      `${subjects.length} free tiers hold a genuine narrowing and none of them reads caution or risky`,
+    );
   });
 
   it("leaves the records that discover a limit exactly where they were", () => {
-    const discovered = DISCOVER_A_LIMIT;
     let checked = 0;
-    for (const vendor of discovered) {
+    for (const vendor of DISCOVER_A_LIMIT) {
       const offer = offers.find((o) => o.vendor.toLowerCase() === vendor.toLowerCase());
       if (!offer) continue;
       checked++;
+      const own = changesFor(vendor);
+      const withoutTheReview = own.map((change) => ({ ...change, tier_direction: undefined }));
       assert.strictEqual(
-        storedTermsAreSuperseded(offer, changesFor(vendor)),
-        true,
-        `${vendor} stopped withholding, which this rule was not meant to reach`,
+        storedTermsAreSuperseded(offer, own),
+        storedTermsAreSuperseded(offer, withoutTheReview),
+        `${vendor} withholds differently once its own review is read, which this rule was not meant to reach`,
       );
     }
     assertCoversPopulation(checked, recordsTheDiscoveryRuleWasWrittenAgainst(), "records that discover a limit, replayed");
