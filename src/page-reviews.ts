@@ -189,6 +189,8 @@ export interface PageReviewRecord {
   review_note: string | null;
   reads_index: boolean;
   tables_read_index: boolean;
+  table_figures: number;
+  table_figures_from_index: number;
   reads_changes: boolean;
   data_source: PageDataSource;
   data_source_reason: string | null;
@@ -219,6 +221,8 @@ export interface ReviewStatus {
   stat_card_subjects_unresolved: string[];
   reads_index: boolean;
   tables_read_index: boolean;
+  table_figures: number;
+  table_figures_from_index: number;
   reads_changes: boolean;
   data_source: PageDataSource;
   data_source_reason: string | null;
@@ -237,6 +241,10 @@ export function daysBetween(from: string, to: string): number {
   const b = Date.parse(to + "T00:00:00Z");
   if (Number.isNaN(a) || Number.isNaN(b)) return 0;
   return Math.round((b - a) / 86_400_000);
+}
+
+function wholeCount(value: unknown): number {
+  return typeof value === "number" && Number.isInteger(value) && value >= 0 ? value : 0;
 }
 
 function normalizeRecord(raw: any): PageReviewRecord | null {
@@ -258,6 +266,8 @@ function normalizeRecord(raw: any): PageReviewRecord | null {
     review_note: reviewedAt !== null && typeof raw.review_note === "string" && raw.review_note.trim() ? raw.review_note.trim() : null,
     reads_index: raw.reads_index === true,
     tables_read_index: raw.tables_read_index === true,
+    table_figures: wholeCount(raw.table_figures),
+    table_figures_from_index: wholeCount(raw.table_figures_from_index),
     reads_changes: raw.reads_changes === true,
     data_source: PAGE_DATA_SOURCES.includes(raw.data_source) ? raw.data_source : "unsourced",
     data_source_reason: typeof raw.data_source_reason === "string" && raw.data_source_reason.trim() ? raw.data_source_reason.trim() : null,
@@ -342,6 +352,8 @@ export function reviewStatus(record: PageReviewRecord, today: string): ReviewSta
     stat_card_subjects_unresolved: record.stat_card_subjects_unresolved,
     reads_index: record.reads_index,
     tables_read_index: record.tables_read_index,
+    table_figures: record.table_figures,
+    table_figures_from_index: record.table_figures_from_index,
     reads_changes: record.reads_changes,
     data_source: record.data_source,
     data_source_reason: record.data_source_reason,
@@ -385,8 +397,31 @@ export function pageFreshnessSentence(pagePath: string, today = utcToday()): str
   return freshnessSentenceFor(getPageReview(pagePath), today);
 }
 
+export interface TableFigureCensus {
+  table_figures: number;
+  table_figures_from_index: number;
+}
+
+export function everyFigureComesFromTheIndex(census: TableFigureCensus): boolean {
+  return census.table_figures > 0 && census.table_figures_from_index === census.table_figures;
+}
+
+export function noFigureComesFromTheIndex(census: TableFigureCensus): boolean {
+  return !(census.table_figures_from_index > 0);
+}
+
+const OUR_INDEX_OF = "our index of";
+
+function ourIndexOf(indexSize: number): string {
+  return `${OUR_INDEX_OF} ${indexSize.toLocaleString()} developer tools`;
+}
+
 export function indexCitation(indexSize: number): string {
-  return `Data verified from our index of ${indexSize.toLocaleString()} developer tools`;
+  return `Figures in the tables below come from ${ourIndexOf(indexSize)}`;
+}
+
+export function partialIndexCitation(fromIndex: number, figures: number, indexSize: number): string {
+  return `${fromIndex} of ${figures} figures in the tables below come from ${ourIndexOf(indexSize)}`;
 }
 
 const COMPILED_PREFIX = "Figures compiled";
@@ -401,12 +436,24 @@ export function compiledNoticeFor(record: PageReviewRecord, status: ReviewStatus
 
 export function dataProvenanceFor(record: PageReviewRecord | null, indexSize: number, today: string): string {
   if (!record) return "";
-  if (record.tables_read_index) return indexCitation(indexSize);
-  return compiledNoticeFor(record, reviewStatus(record, today));
+  if (everyFigureComesFromTheIndex(record)) return indexCitation(indexSize);
+  const compiled = compiledNoticeFor(record, reviewStatus(record, today));
+  if (noFigureComesFromTheIndex(record)) return compiled;
+  return compiled + SEPARATOR + partialIndexCitation(record.table_figures_from_index, record.table_figures, indexSize);
 }
 
 export function pageDataProvenance(pagePath: string, indexSize: number, today = utcToday()): string {
   return dataProvenanceFor(getPageReview(pagePath), indexSize, today);
+}
+
+export function figureSourceSentence(record: PageReviewRecord | null, indexSize: number): string {
+  if (!record || noFigureComesFromTheIndex(record)) return "";
+  if (everyFigureComesFromTheIndex(record)) return `${indexCitation(indexSize)}.`;
+  return `${partialIndexCitation(record.table_figures_from_index, record.table_figures, indexSize)}.`;
+}
+
+export function pageFigureSource(pagePath: string, indexSize: number): string {
+  return figureSourceSentence(getPageReview(pagePath), indexSize);
 }
 
 export function compiledClause(record: PageReviewRecord | null, today: string): string {
@@ -904,6 +951,8 @@ export function vendorFactRows(html: string, slugFor: VendorSlugLookup): VendorF
 export interface PageSourceMeasurement {
   reads_index: boolean;
   tables_read_index: boolean;
+  table_figures: number;
+  table_figures_from_index: number;
   reads_changes: boolean;
   vendor_fact_rows: number;
 }
@@ -938,6 +987,18 @@ function declarationViolations(page: PageReviewRecord, seen: PageSourceMeasureme
     violations.push({
       path: page.path,
       problem: "tables_read_index on a page the catalogue perturbation leaves byte-identical",
+    });
+  }
+  if (page.table_figures !== seen.table_figures || page.table_figures_from_index !== seen.table_figures_from_index) {
+    violations.push({
+      path: page.path,
+      problem: `the register says ${page.table_figures_from_index} of ${page.table_figures} table figures come from our records, replacing both stores says ${seen.table_figures_from_index} of ${seen.table_figures}`,
+    });
+  }
+  if (page.table_figures_from_index > page.table_figures) {
+    violations.push({
+      path: page.path,
+      problem: `${page.table_figures_from_index} figures traced to a record out of ${page.table_figures} published`,
     });
   }
   if (page.reads_changes !== seen.reads_changes) {

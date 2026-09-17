@@ -47,7 +47,10 @@ function jsonLdOf(html: string): any {
 }
 
 function record(over: Partial<PageReviewRecord> = {}): PageReviewRecord {
-  return { path: "/p", published: "2026-01-01", tier: "A", vendors_asserted: [], badge_subjects_unresolved: [], reviewed_at: null, reviewer: null, ...over };
+  return {
+    path: "/p", published: "2026-01-01", tier: "A", vendors_asserted: [], badge_subjects_unresolved: [],
+    reviewed_at: null, reviewer: null, table_figures: 0, table_figures_from_index: 0, ...over,
+  };
 }
 
 before(async () => { proc = await startServer(); });
@@ -567,9 +570,14 @@ describe("what a page is allowed to say about where its figures came from", () =
     assert.strictEqual(parsed.pages[0].tables_read_index, true);
   });
 
-  it("cites the catalogue only for a page whose tables it supplies", () => {
-    assert.strictEqual(dataProvenanceFor(record({ reads_index: true, tables_read_index: true }), 1580), indexCitation(1580));
+  it("cites the catalogue only for a page whose every table figure it supplies", () => {
+    const supplied = { reads_index: true, tables_read_index: true, table_figures: 7, table_figures_from_index: 7 };
+    assert.strictEqual(dataProvenanceFor(record(supplied), 1580), indexCitation(1580));
     assert.strictEqual(dataProvenanceFor(record(), 1580), compiledNotice("2026-04-03"));
+    assert.notStrictEqual(
+      dataProvenanceFor(record({ ...supplied, table_figures_from_index: 6 }), 1580),
+      indexCitation(1580),
+    );
   });
 
   it("tells the reader the figures were compiled when the catalogue supplies the page a source link and no figure", () => {

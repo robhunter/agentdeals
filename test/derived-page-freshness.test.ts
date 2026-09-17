@@ -128,8 +128,12 @@ interface StoredReview {
   path: string;
   published: string;
   reviewed_at: string | null;
+  review_outcome: string | null;
   reads_index: boolean;
   tables_read_index: boolean;
+  table_figures: number;
+  table_figures_from_index: number;
+  vendors_tabulated: string[];
 }
 
 const storedReviews = new Map<string, StoredReview>(
@@ -149,18 +153,23 @@ function namedMonth(isoDate: string): string {
   return `${MONTH_NAMES[Number(isoDate.slice(5, 7)) - 1]} ${isoDate.slice(0, 4)}`;
 }
 
+function everyTableFigureCameFromOurRecords(review: StoredReview): boolean {
+  return review.table_figures > 0 && review.table_figures_from_index === review.table_figures;
+}
+
 function claimTheDataSupports(pagePath: string, html: string, today: string): string {
   const review = storedReviews.get(pagePath);
-  if (review && !review.tables_read_index) {
+  if (review && !everyTableFigureCameFromOurRecords(review)) {
     const read = review.reviewed_at !== null && review.reviewed_at <= today ? review.reviewed_at : null;
     if (read === null) return `Compiled ${review.published}, not re-checked since.`;
     return review.review_outcome === "fail"
       ? `Compiled ${review.published}.`
       : `Compiled ${review.published}, last checked ${read}.`;
   }
-  const dates = [...html.matchAll(/href="\/vendor\/([a-z0-9][a-z0-9-]*)"/g)]
-    .flatMap(link => [...verifiedDatesForSlug(link[1]!)])
-    .sort();
+  const subjects = review && review.vendors_tabulated.length > 0
+    ? review.vendors_tabulated
+    : [...html.matchAll(/href="\/vendor\/([a-z0-9][a-z0-9-]*)"/g)].map(link => link[1]!);
+  const dates = subjects.flatMap(slug => [...verifiedDatesForSlug(slug)]).sort();
   if (dates.length === 0) return "";
   const oldest = namedMonth(dates[0]!);
   const newest = namedMonth(dates[dates.length - 1]!);
@@ -182,6 +191,8 @@ const REVIEW_OF_A_HAND_COMPILED_PAGE = {
   review_note: null,
   reads_index: false,
   tables_read_index: false,
+  table_figures: 0,
+  table_figures_from_index: 0,
   reads_changes: false,
   data_source: "unsourced",
   data_source_reason: null,
@@ -265,7 +276,7 @@ describe("A freshness date derived from the records a page lists", () => {
     );
   });
 
-  it("dates a page from its listed records when the catalogue supplies that page's tables", () => {
+  it("dates a page from its listed records when the catalogue supplies every figure in its tables", () => {
     const html = '<a href="/vendor/groq">Groq</a>';
     assert.strictEqual(
       freshnessClaimFor(
@@ -273,7 +284,10 @@ describe("A freshness date derived from the records a page lists", () => {
         html,
         () => ["2026-09-05"],
         "2026-09-09",
-        () => ({ ...REVIEW_OF_A_HAND_COMPILED_PAGE, reads_index: true, tables_read_index: true }) as never,
+        () => ({
+          ...REVIEW_OF_A_HAND_COMPILED_PAGE,
+          reads_index: true, tables_read_index: true, table_figures: 9, table_figures_from_index: 9,
+        }) as never,
       ),
       "Verified September 2026.",
     );
@@ -289,6 +303,39 @@ describe("A freshness date derived from the records a page lists", () => {
     assert.match(
       freshnessClaimFor("/x", html, () => ["2026-09-05"], "2026-09-09", () => linkOnly as never),
       /^Compiled \d{4}-\d{2}-\d{2}, /,
+    );
+  });
+
+  it("dates a page from its own compilation when one figure in its tables is still hand-typed", () => {
+    const html = '<a href="/vendor/groq">Groq</a>';
+    const mixed = {
+      ...REVIEW_OF_A_HAND_COMPILED_PAGE,
+      reads_index: true, tables_read_index: true, table_figures: 9, table_figures_from_index: 8,
+    };
+    assert.strictEqual(
+      freshnessClaimFor("/x", html, () => ["2026-09-05"], "2026-09-09", () => mixed as never),
+      compiledClaimFor(mixed as never, "2026-09-09"),
+    );
+  });
+
+  it("spans the records its own figures are about, not every vendor it links to", () => {
+    const html = '<a href="/vendor/groq">Groq</a><a href="/vendor/cerebras">Cerebras</a>';
+    const dates: Record<string, string[]> = { groq: ["2026-09-05"], cerebras: ["2026-04-01"] };
+    const tabulating = {
+      ...REVIEW_OF_A_HAND_COMPILED_PAGE,
+      reads_index: true, tables_read_index: true, table_figures: 9, table_figures_from_index: 9,
+      vendors_tabulated: ["groq"],
+    };
+    assert.strictEqual(
+      freshnessClaimFor("/x", html, (slug) => dates[slug] ?? [], "2026-09-09", () => tabulating as never),
+      "Verified September 2026.",
+    );
+    assert.strictEqual(
+      freshnessClaimFor(
+        "/x", html, (slug) => dates[slug] ?? [], "2026-09-09",
+        () => ({ ...tabulating, vendors_tabulated: ["groq", "cerebras"] }) as never,
+      ),
+      "Verified April to September 2026.",
     );
   });
 });

@@ -1,4 +1,4 @@
-import { compiledClause, getPageReview, utcToday, type PageReviewRecord } from "./page-reviews.js";
+import { compiledClause, everyFigureComesFromTheIndex, getPageReview, utcToday, type PageReviewRecord } from "./page-reviews.js";
 
 export const FRESHNESS_TOKEN = "[[freshness]]";
 
@@ -47,6 +47,11 @@ export function compiledClaimFor(review: PageReviewRecord, today: string): strin
   return clause === "" ? "" : `${clause}.`;
 }
 
+export function subjectsOfItsOwnFigures(review: PageReviewRecord, html: string): string[] {
+  const tabulated = review.vendors_tabulated;
+  return tabulated.length > 0 ? tabulated : vendorSlugsLinkedFrom(html);
+}
+
 export function freshnessClaimFor(
   pagePath: string,
   html: string,
@@ -55,8 +60,9 @@ export function freshnessClaimFor(
   reviewFor: (pagePath: string) => PageReviewRecord | null = getPageReview,
 ): string {
   const review = reviewFor(pagePath);
-  if (review && !review.tables_read_index) return compiledClaimFor(review, today);
-  return verifiedSpanClaim(vendorSlugsLinkedFrom(html).flatMap(slug => [...verifiedDatesForSlug(slug)]));
+  if (!review) return verifiedSpanClaim(vendorSlugsLinkedFrom(html).flatMap(slug => [...verifiedDatesForSlug(slug)]));
+  if (!everyFigureComesFromTheIndex(review)) return compiledClaimFor(review, today);
+  return verifiedSpanClaim(subjectsOfItsOwnFigures(review, html).flatMap(slug => [...verifiedDatesForSlug(slug)]));
 }
 
 export function claimsFreshness(html: string): boolean {

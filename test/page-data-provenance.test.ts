@@ -8,11 +8,12 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import {
   CATALOGUE_TEXT_FIELDS, CHANGE_LOG_TEXT_FIELDS, PAGE_DATA_SOURCES, PERTURBATION_SENTINEL,
-  citesTheIndex, deniesTheCatalogueSupplied,
-  pageSourceViolations, parsePageReviews, perturbTextFields, readableTableText,
+  citesTheIndex, deniesTheCatalogueSupplied, everyFigureComesFromTheIndex, partialIndexCitation,
+  pageSourceViolations, parsePageReviews, perturbTextFields, readableTableText, readableText,
   unsourcedTierAPaths, vendorFactRows,
   type PageReviewRecord, type PageSourceMeasurement,
 } from "../src/page-reviews.ts";
+import { censusTableFigures } from "../dist/table-figures.js";
 import { namedVendorSlug } from "../dist/vendor-slug.js";
 import { NEVER_REVIEWED, registerWith, reviewFailedOn, type RegisterFixture } from "./page-review-fixture.ts";
 
@@ -85,6 +86,7 @@ describe("a page may only name the source it actually reads", () => {
   let real: { proc: ChildProcess; port: number };
   let perturbed: { proc: ChildProcess; port: number };
   let changesBlind: { proc: ChildProcess; port: number };
+  let bothBlind: { proc: ChildProcess; port: number };
   const pages = registeredPages();
   const bodies = new Map<string, string>();
   const perturbedBodies = new Map<string, string>();
@@ -99,16 +101,18 @@ describe("a page may only name the source it actually reads", () => {
     const touchedChanges = perturbStore("deal_changes.json", "changes", CHANGE_LOG_TEXT_FIELDS, perturbedChanges);
     assertPopulationFloor(touchedIndex, 1001, "catalogue fields perturbed for the comparison below");
     assertPopulationFloor(touchedChanges, 101, "change-log fields perturbed for the comparison below");
-    [real, perturbed, changesBlind] = await Promise.all([
+    [real, perturbed, changesBlind, bothBlind] = await Promise.all([
       startServer({}),
       startServer({ AGENTDEALS_INDEX_PATH: perturbedIndex }),
       startServer({ AGENTDEALS_CHANGES_PATH: perturbedChanges }),
+      startServer({ AGENTDEALS_INDEX_PATH: perturbedIndex, AGENTDEALS_CHANGES_PATH: perturbedChanges }),
     ]);
     for (const page of pages) {
-      const [a, b, c] = await Promise.all([
+      const [a, b, c, d] = await Promise.all([
         fetch(`http://localhost:${real.port}${page.path}`).then((r) => r.text()),
         fetch(`http://localhost:${perturbed.port}${page.path}`).then((r) => r.text()),
         fetch(`http://localhost:${changesBlind.port}${page.path}`).then((r) => r.text()),
+        fetch(`http://localhost:${bothBlind.port}${page.path}`).then((r) => r.text()),
       ]);
       bodies.set(page.path, a);
       perturbedBodies.set(page.path, b);
@@ -116,6 +120,7 @@ describe("a page may only name the source it actually reads", () => {
       measured.set(page.path, {
         reads_index: a !== b,
         tables_read_index: readableTableText(a) !== readableTableText(b),
+        ...censusTableFigures(a, d),
         reads_changes: a !== c,
         vendor_fact_rows: vendorFactRows(a, namedVendorSlug).length,
       });
@@ -126,6 +131,7 @@ describe("a page may only name the source it actually reads", () => {
     real?.proc.kill();
     perturbed?.proc.kill();
     changesBlind?.proc.kill();
+    bothBlind?.proc.kill();
     if (tmp) rmSync(tmp, { recursive: true, force: true });
   });
 
@@ -172,11 +178,14 @@ describe("a page may only name the source it actually reads", () => {
       data_source: "unsourced" as const,
       reads_index: false,
       tables_read_index: false,
+      table_figures: 0,
+      table_figures_from_index: 0,
       reads_changes: false,
     }];
     const withOneMore = new Map(measured);
     withOneMore.set("/a-page-that-does-not-exist", {
-      reads_index: false, tables_read_index: false, reads_changes: false, vendor_fact_rows: 0,
+      reads_index: false, tables_read_index: false, table_figures: 0, table_figures_from_index: 0,
+      reads_changes: false, vendor_fact_rows: 0,
     });
     assert.ok(
       pageSourceViolations(admitted, withOneMore, unsourced.length).length > 0,
@@ -211,10 +220,10 @@ describe("a page may only name the source it actually reads", () => {
     );
   });
 
-  it("names our index as a source only on the pages whose tables it supplies", () => {
+  it("names our index as a source only on the pages it supplies a table figure to", () => {
     const offenders: string[] = [];
     for (const page of pages) {
-      if (page.tables_read_index) continue;
+      if (page.table_figures_from_index > 0) continue;
       for (const sentence of visibleSentences(bodies.get(page.path)!)) {
         if (INDEX_CITATION.test(sentence)) offenders.push(`${page.path}: ${sentence}`);
       }
@@ -224,9 +233,79 @@ describe("a page may only name the source it actually reads", () => {
 
   it("still names the index on the pages that do read it, so the rule above is not vacuous", () => {
     const citing = pages.filter(
-      (p) => p.tables_read_index && visibleSentences(bodies.get(p.path)!).some((s) => INDEX_CITATION.test(s))
+      (p) => p.table_figures_from_index > 0 && visibleSentences(bodies.get(p.path)!).some((s) => INDEX_CITATION.test(s))
     );
     assert.ok(citing.length >= 5, `only ${citing.length} pages cite the index, so the check has almost nothing to allow`);
+  });
+
+  it("claims every figure came from our records only where every figure did", () => {
+    const overclaiming = pages
+      .filter((p) => citesTheIndex(bodies.get(p.path)!, INDEX_SIZE))
+      .filter((p) => !everyFigureComesFromTheIndex(measured.get(p.path)!))
+      .map((p) => `${p.path}: ${measured.get(p.path)!.table_figures_from_index} of ${measured.get(p.path)!.table_figures} table figures move with our stores`);
+    assert.deepStrictEqual(overclaiming, []);
+  });
+
+  it("states the proportion the perturbation measured wherever the figures are mixed", () => {
+    const wrong: string[] = [];
+    let stating = 0;
+    for (const page of pages) {
+      const seen = measured.get(page.path)!;
+      const body = readableText(bodies.get(page.path)!);
+      const mixed = seen.table_figures_from_index > 0 && !everyFigureComesFromTheIndex(seen);
+      const stated = body.match(/(\d+) of (\d+) figures in the tables below come from our index of/);
+      if (!mixed) {
+        if (stated) wrong.push(`${page.path}: states ${stated[1]} of ${stated[2]} and its figures are not mixed`);
+        continue;
+      }
+      if (!stated) continue;
+      stating += 1;
+      if (Number(stated[1]) !== seen.table_figures_from_index || Number(stated[2]) !== seen.table_figures) {
+        wrong.push(`${page.path}: states ${stated[1]} of ${stated[2]}, the perturbation says ${seen.table_figures_from_index} of ${seen.table_figures}`);
+      }
+    }
+    assert.deepStrictEqual(wrong, []);
+    assert.ok(stating >= 5, `only ${stating} pages state a proportion, so the rule has almost nothing to check`);
+  });
+
+  it("puts the proportion where the reader is, not only in the register", () => {
+    const mixedAndPublishing = pages.filter(
+      (p) => p.table_figures_from_index > 0
+        && !everyFigureComesFromTheIndex(p)
+        && readableText(bodies.get(p.path)!).includes("our index of")
+    );
+    const silent = mixedAndPublishing
+      .filter((p) => !readableText(bodies.get(p.path)!).includes(
+        partialIndexCitation(p.table_figures_from_index, p.table_figures, INDEX_SIZE)
+      ))
+      .map((p) => p.path);
+    assert.deepStrictEqual(silent, []);
+    assert.ok(
+      mixedAndPublishing.length >= 5,
+      `only ${mixedAndPublishing.length} mixed pages name our index, so the rule reaches almost nothing`
+    );
+  });
+
+  it("keeps the unqualified claim on every page that earns it", () => {
+    const earned = pages.filter((p) => everyFigureComesFromTheIndex(measured.get(p.path)!));
+    assertPopulationFloor(earned.length, 6, "registered pages whose every table figure moves with our stores");
+    const silenced = earned
+      .filter((p) => statesProvenance(bodies.get(p.path)!) && !citesTheIndex(bodies.get(p.path)!, INDEX_SIZE))
+      .map((p) => p.path);
+    assert.deepStrictEqual(silenced, []);
+  });
+
+  it("offers no verification claim beside a byline saying the page was never reviewed", () => {
+    const contradicting: string[] = [];
+    for (const page of pages) {
+      const byline = bodies.get(page.path)!.match(/<p class="pub-date"[^>]*>[\s\S]*?<\/p>/g) ?? [];
+      for (const line of byline.map(readableText)) {
+        if (/Not yet reviewed/.test(line) && /\bverified\b/i.test(line)) contradicting.push(`${page.path}: ${line}`);
+      }
+    }
+    assert.deepStrictEqual(contradicting, []);
+    const neverReviewed = pages.filter((p) => p.reviewed_at === null);
+    assert.ok(neverReviewed.length > 10, `only ${neverReviewed.length} pages are unreviewed, so the pairing can barely arise`);
   });
 
   it("dates every verification claim a page cannot support from a record", () => {
@@ -242,23 +321,31 @@ describe("a page may only name the source it actually reads", () => {
     assert.deepStrictEqual(offenders, []);
   });
 
-  it("tells the reader when the figures were compiled on every page that renders no catalogue field", () => {
+  function datesItsOwnCompilation(page: PageReviewRecord): boolean {
+    if (page.tier !== "A" || everyFigureComesFromTheIndex(page)) return false;
+    return !page.tables_read_index || statesProvenance(bodies.get(page.path)!);
+  }
+
+  it("tells the reader when the figures were compiled on every page it did not wholly supply", () => {
     const wrong: string[] = [];
-    for (const page of pages) {
-      if (page.tables_read_index || page.tier !== "A") continue;
+    for (const page of pages.filter(datesItsOwnCompilation)) {
       const found = visibleBody(bodies.get(page.path)!).match(COMPILED_NOTICE);
       if (!found) wrong.push(`${page.path}: no compiled notice`);
       else if (found[1] !== page.published) wrong.push(`${page.path}: notice says ${found[1]}, compiled ${page.published}`);
     }
     assert.deepStrictEqual(wrong, []);
+    assertPopulationFloor(
+      pages.filter(datesItsOwnCompilation).length,
+      34,
+      "tier-A pages carrying a compiled notice because our records do not supply every figure they publish",
+    );
   });
 
   it("offers a check date only where the review that made it cleared the page, and never claims none has happened on a page a review read", () => {
     const wrong: string[] = [];
     let cleared = 0;
     let readWithoutClearing = 0;
-    for (const page of pages) {
-      if (page.tables_read_index || page.tier !== "A") continue;
+    for (const page of pages.filter(datesItsOwnCompilation)) {
       const body = visibleBody(bodies.get(page.path)!);
       const found = body.match(COMPILED_NOTICE)!;
       const claimed = found[2] ?? null;
@@ -306,8 +393,8 @@ describe("a page may only name the source it actually reads", () => {
     assert.deepStrictEqual(saying.sort(), failing.sort());
   });
 
-  it("does not put the compiled notice on a page whose tables the catalogue supplies", () => {
-    const wrong = pages.filter((p) => p.tables_read_index && COMPILED_NOTICE.test(visibleBody(bodies.get(p.path)!)));
+  it("does not put the compiled notice on a page whose every table figure the catalogue supplies", () => {
+    const wrong = pages.filter((p) => everyFigureComesFromTheIndex(p) && COMPILED_NOTICE.test(visibleBody(bodies.get(p.path)!)));
     assert.deepStrictEqual(wrong.map((p) => p.path), []);
   });
 
@@ -325,12 +412,12 @@ describe("a page may only name the source it actually reads", () => {
     assert.ok(citing.length >= 5, `only ${citing.length} pages cite the index, so the pairing cannot arise`);
   });
 
-  it("gives the index byline to a page it states provenance for exactly when the catalogue moves the text in its tables", () => {
+  it("gives the index byline to a page it states provenance for exactly when the catalogue moves every figure in its tables", () => {
     const stating = pages.filter((p) => statesProvenance(bodies.get(p.path)!));
     assert.ok(stating.length > 40, `only ${stating.length} pages state provenance at all, so the rule reaches almost nothing`);
     const disagreeing = stating
-      .filter((p) => citesTheIndex(bodies.get(p.path)!, INDEX_SIZE) !== measured.get(p.path)!.tables_read_index)
-      .map((p) => `${p.path} cites=${citesTheIndex(bodies.get(p.path)!, INDEX_SIZE)} tables move=${measured.get(p.path)!.tables_read_index}`);
+      .filter((p) => citesTheIndex(bodies.get(p.path)!, INDEX_SIZE) !== everyFigureComesFromTheIndex(measured.get(p.path)!))
+      .map((p) => `${p.path} cites=${citesTheIndex(bodies.get(p.path)!, INDEX_SIZE)} figures moving=${measured.get(p.path)!.table_figures_from_index}/${measured.get(p.path)!.table_figures}`);
     assert.deepStrictEqual(disagreeing, []);
     const citing = stating.filter((p) => citesTheIndex(bodies.get(p.path)!, INDEX_SIZE));
     assert.ok(citing.length >= 5, `only ${citing.length} of them cite the index, so one arm of the rule is empty`);
@@ -350,13 +437,14 @@ describe("a page may only name the source it actually reads", () => {
     );
   });
 
-  it("keeps the byline on a page the catalogue reaches through fields it never prints, which no count of perturbed text could find", () => {
+  it("credits a figure our stores moved without printing perturbed text in the table, which no count of that text could find", () => {
     const silentlySourced = pages.filter(
-      (p) => p.tables_read_index && !readableTableText(perturbedBodies.get(p.path)!).includes(PERTURBATION_SENTINEL)
+      (p) => measured.get(p.path)!.table_figures_from_index > 0
+        && !readableTableText(perturbedBodies.get(p.path)!).includes(PERTURBATION_SENTINEL)
     );
     assert.ok(
       silentlySourced.length > 0,
-      "every page whose tables the catalogue supplies prints perturbed catalogue text in them, so a sentinel count would do and this measurement is untested"
+      "every page we credit prints perturbed catalogue text in its tables, so a sentinel count would do and this measurement is untested"
     );
     const stating = silentlySourced.filter((p) => statesProvenance(bodies.get(p.path)!));
     assert.ok(
@@ -365,8 +453,8 @@ describe("a page may only name the source it actually reads", () => {
     );
     for (const page of stating) {
       assert.ok(
-        citesTheIndex(bodies.get(page.path)!, INDEX_SIZE),
-        `${page.path} lost the index byline, and its tables move with the catalogue without quoting it`
+        readableText(bodies.get(page.path)!).includes("our index of"),
+        `${page.path} names no source for the figures that move with our stores without quoting them`
       );
     }
   });

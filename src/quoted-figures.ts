@@ -1,5 +1,4 @@
 const UNIT_ALIASES: Record<string, string> = {
-  b: "b",
   kb: "kb",
   kib: "kb",
   mb: "mb",
