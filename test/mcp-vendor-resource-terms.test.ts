@@ -36,7 +36,12 @@ function offerFor(vendor: string, outcome: string) {
 
 const UNCONFIRMED = NOT_OK_OUTCOMES.map((outcome: string, i: number) => offerFor(`Cavecorp${i + 1}`, outcome));
 const CONFIRMED = [offerFor("Cleancorp1", "ok"), offerFor("Cleancorp2", "ok")];
-const CORPUS = [...UNCONFIRMED, ...CONFIRMED];
+const RETIRED = [{
+  ...offerFor("Gonecorp1", NOT_OK_OUTCOMES[0]),
+  tier: "Retired",
+  description: `There is no free tier: gonecorp1.example no longer serves the product. Checked ${CHECKED_ON}, the domain redirects to an unrelated parking page. The former offer was 10 GB storage and 5 projects.`,
+}];
+const CORPUS = [...UNCONFIRMED, ...CONFIRMED, ...RETIRED];
 
 const slugOf = (vendor: string) => vendor.toLowerCase();
 
@@ -167,6 +172,23 @@ for (const [how, resources] of bothBuilders) {
           `${offer.vendor} (${offer.source_check.outcome}) carries a bare verification date`,
         );
         assert.ok(text.includes(CONFIRMED_ON), `${offer.vendor} drops the date our own record was last confirmed`);
+      }
+    });
+
+    it("names no reason to doubt a record whose own terms state the offer is gone", () => {
+      for (const offer of RETIRED) {
+        const text = resources().get(`agentdeals://vendor/${slugOf(offer.vendor)}`) ?? "";
+        assert.ok(text.includes(offer.description), `${offer.vendor} no longer states the terms`);
+        assert.doesNotMatch(
+          text,
+          /\*\*Verification:\*\* Not verified —/,
+          `${offer.vendor} states a reason to doubt terms that already say the offer is gone`,
+        );
+        assert.doesNotMatch(
+          text,
+          /so we cannot confirm these terms today/,
+          `${offer.vendor} closes its own retirement notice with a caveat against it`,
+        );
       }
     });
 
