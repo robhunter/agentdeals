@@ -6,6 +6,7 @@ const SUITE = [
   "test/quality-budget-report.test.ts",
   "test/page-data-provenance.test.ts",
   "test/faq-provenance.test.ts",
+  "test/detector-absence-alarm.test.ts",
 ];
 
 const MUTANTS = [
@@ -56,6 +57,18 @@ const MUTANTS = [
   ["the-issue-is-looked-up-by-searching-for-the-markers-words", "scripts/report-quality-budgets.sh",
     'EXISTING="$(gh issue list --state open --limit 200 --json number,body \\\n  --jq "[.[] | select(.body | contains(\\"<!-- $MARKER -->\\"))] | .[0].number // empty")"',
     'EXISTING="$(gh issue list --state open --search "$MARKER in:body" --json number --jq \'.[0].number // empty\')"'],
+
+  ["the-absence-alarm-is-looked-up-by-searching-for-the-markers-words", "scripts/signal-detector-absence.sh",
+    'EXISTING="$(gh issue list --state open --limit 200 --json number,body \\\n  --jq "[.[] | select(.body | contains(\\"<!-- $MARKER -->\\"))] | sort_by(.number) | .[0].number // empty")"',
+    'EXISTING="$(gh issue list --state open --search "$MARKER in:body" --json number --jq \'.[0].number // empty\')"'],
+
+  ["the-absence-alarm-matches-the-marker-anywhere-in-a-body", "scripts/signal-detector-absence.sh",
+    'contains(\\"<!-- $MARKER -->\\")',
+    'contains(\\"$MARKER\\")'],
+
+  ["the-absence-alarm-states-its-marker-in-prose-a-quoting-issue-can-repeat", "scripts/detector-absence-issue-body.js",
+    "    `<!-- ${marker} -->`,",
+    "    `Marker: ${marker}`,"],
 
   ["nothing-in-test-reads-as-a-budget", "test/budget-assertions.ts",
     "  if (!IDENTIFIER_PATH.test(text)) return false;",
