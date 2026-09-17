@@ -5,6 +5,12 @@ import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { isoDay } from "./change-log.js";
 import { offerKey } from "./change-refusals.js";
+import {
+  corroborationPath,
+  readHeldReadings,
+  releaseReadingsWhoseBaselineMoved,
+  writeHeldReadings,
+} from "./change-corroboration.js";
 import { loadDealChanges } from "../dist/data.js";
 import { changesByVendor } from "../dist/superseded-census.js";
 import { RESTATEMENT_REFUSALS, restatementRulings, withheldTermsMeasure } from "../dist/restatement.js";
@@ -71,6 +77,41 @@ export function applyRestatements(data, rulings, today, limit = Infinity) {
     data.offers[index].restated_from = ruling.restatement;
   }
   return written;
+}
+
+export function termsTheWriteWouldPublish(rulings) {
+  return new Map(
+    rulings
+      .filter((ruling) => !ruling.refusal)
+      .map((ruling) => [offerKey(ruling.offer.vendor, ruling.offer.url), ruling.description]),
+  );
+}
+
+export function termsTheWriteDidPublish(written) {
+  return new Map(written.map((entry) => [offerKey(entry.vendor, entry.url), entry.description]));
+}
+
+export function releaseHeldReadingsBehind(storedTerms, options = {}) {
+  const path = options.path ?? corroborationPath();
+  const store = readHeldReadings(path);
+  const { stillHeld, resolutions } = releaseReadingsWhoseBaselineMoved(store.held, storedTerms, {
+    now: options.now ?? new Date(),
+  });
+  if (resolutions.length === 0) return { resolutions, path, written: false };
+  const outcome = writeHeldReadings(stillHeld, [...store.resolved, ...resolutions], {
+    dryRun: options.dryRun,
+    now: options.now ?? new Date(),
+    path,
+  });
+  return { resolutions, path, written: outcome.written };
+}
+
+export function releaseLines(resolutions) {
+  if (resolutions.length === 0) return ["No reading was being held against terms this run replaces."];
+  return [
+    `Readings released because this run replaced the terms they were read against: ${resolutions.length}`,
+    ...resolutions.map(({ vendor, change_type }) => `  ⇥ ${vendor} (${change_type}) released as baseline_moved`),
+  ];
 }
 
 export function newestRestatementFor(entries, vendor) {
@@ -179,7 +220,9 @@ async function main() {
   const measure = withheldTermsMeasure(rulings);
 
   if (dryRun) {
+    const wouldRelease = releaseHeldReadingsBehind(termsTheWriteWouldPublish(rulings), { dryRun: true });
     for (const line of reportOnlyLines(measure)) console.log(line);
+    for (const line of releaseLines(wouldRelease.resolutions)) console.log(line);
     process.exit(0);
   }
 
@@ -191,9 +234,11 @@ async function main() {
     console.log(`      now: ${entry.description}`);
   }
 
+  const released = releaseHeldReadingsBehind(termsTheWriteDidPublish(written));
   const store = writeRestatements([...held, ...written]);
   if (written.length > 0) writeFileSync(path, JSON.stringify(data, null, 2) + "\n");
   for (const line of summaryLines(measure, written, store.path)) console.log(line);
+  for (const line of releaseLines(released.resolutions)) console.log(line);
   process.exit(0);
 }
 

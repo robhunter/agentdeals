@@ -110,6 +110,30 @@ export function whatTheSecondReadingSaid(key, { accepted, refused, confirmed }) 
   return null;
 }
 
+export function baselineHasMoved(held, storedTerms) {
+  const key = keyOfReading(held);
+  return storedTerms.has(key) && storedTerms.get(key) !== held.previous_state;
+}
+
+export function baselineMovedResolution(held, { now = new Date() } = {}) {
+  return resolutionEntry(
+    held,
+    BASELINE_MOVED,
+    "the terms it was read against are no longer the terms we publish",
+    { now }
+  );
+}
+
+export function releaseReadingsWhoseBaselineMoved(heldReadings, storedTerms, { now = new Date() } = {}) {
+  const stillHeld = [];
+  const resolutions = [];
+  for (const held of heldReadings) {
+    if (baselineHasMoved(held, storedTerms)) resolutions.push(baselineMovedResolution(held, { now }));
+    else stillHeld.push(held);
+  }
+  return { stillHeld, resolutions };
+}
+
 export function resolveHeldReadings(heldReadings, reading, options = {}) {
   const now = options.now ?? new Date();
   const today = isoDay(now);
@@ -121,10 +145,8 @@ export function resolveHeldReadings(heldReadings, reading, options = {}) {
 
   for (const held of heldReadings) {
     const key = keyOfReading(held);
-    if (storedTerms.has(key) && storedTerms.get(key) !== held.previous_state) {
-      resolutions.push(
-        resolutionEntry(held, BASELINE_MOVED, "the terms it was read against are no longer the terms we publish", { now })
-      );
+    if (baselineHasMoved(held, storedTerms)) {
+      resolutions.push(baselineMovedResolution(held, { now }));
       continue;
     }
     const second = whatTheSecondReadingSaid(key, reading);
