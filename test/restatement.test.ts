@@ -29,7 +29,11 @@ const {
   newestRestatementFor,
   restatementEntry,
   revertRestatement,
+  termsTheWriteWouldPublish,
 } = await import("../scripts/restate-superseded-terms.js");
+const { BASELINE_MOVED, releaseReadingsWhoseBaselineMoved } = await import(
+  "../scripts/change-corroboration.js"
+);
 
 type Offer = import("../src/types.ts").Offer;
 type DealChange = import("../src/types.ts").DealChange;
@@ -391,6 +395,105 @@ describe("a restatement is reversible, visible and does not overwrite a hand-wri
     run("--revert", "ipapi");
     assert.deepEqual(JSON.parse(readFileSync(index, "utf-8")), before);
     assert.deepEqual(JSON.parse(readFileSync(store, "utf-8")).restatements, []);
+  });
+
+  it("releases a reading held against terms the write replaces, and holds the rest", () => {
+    const heldBehindIpapi = {
+      vendor: "ipapi",
+      change_type: "limits_reduced",
+      impact: "medium",
+      summary: "The daily allowance moved.",
+      previous_state: IPAPI.offer.description,
+      source_url: IPAPI.offer.url,
+      first_read_date: "2026-09-16",
+    };
+    const heldElsewhere = { ...heldBehindIpapi, vendor: "Example", source_url: "https://example.com/pricing" };
+    const { resolutions, stillHeld } = releaseReadingsWhoseBaselineMoved(
+      [heldBehindIpapi, heldElsewhere],
+      termsTheWriteWouldPublish([ruleOnRestating(IPAPI.offer, IPAPI.change, TODAY)!]),
+    );
+    assert.deepEqual(resolutions.map((entry: { vendor: string }) => entry.vendor), ["ipapi"]);
+    assert.equal(resolutions[0].outcome, BASELINE_MOVED);
+    assert.deepEqual(stillHeld.map((entry: { vendor: string }) => entry.vendor), ["Example"]);
+  });
+
+  it("holds a reading the write leaves reading against the terms we still publish", () => {
+    const refused = { ...IPAPI.offer, tier: "Paid" };
+    const heldBehindIpapi = {
+      vendor: "ipapi",
+      change_type: "limits_reduced",
+      impact: "medium",
+      summary: "The daily allowance moved.",
+      previous_state: IPAPI.offer.description,
+      source_url: IPAPI.offer.url,
+      first_read_date: "2026-09-16",
+    };
+    const ruling = ruleOnRestating(refused, IPAPI.change, TODAY)!;
+    assert.ok(ruling.refusal);
+    const { resolutions } = releaseReadingsWhoseBaselineMoved(
+      [heldBehindIpapi],
+      termsTheWriteWouldPublish([ruling]),
+    );
+    assert.deepEqual(resolutions, []);
+  });
+
+  it("leaves no reading held against terms the write replaced, on the store it wrote", async () => {
+    const { mkdtempSync, readFileSync, writeFileSync } = await import("node:fs");
+    const { tmpdir } = await import("node:os");
+    const { join } = await import("node:path");
+    const { execFileSync } = await import("node:child_process");
+
+    const dir = mkdtempSync(join(tmpdir(), "restate-release-"));
+    const index = join(dir, "index.json");
+    const store = join(dir, "restated.json");
+    const log = join(dir, "changes.json");
+    const corroboration = join(dir, "corroboration.json");
+    const untouched = offer({ vendor: "Example", description: "Free tier: 100 GB of transfer a month." });
+    const heldBehind = (vendor: string, url: string, previous: string) => ({
+      vendor,
+      change_type: "limits_reduced",
+      impact: "medium",
+      summary: "The allowance moved.",
+      previous_state: previous,
+      source_url: url,
+      first_read_date: "2026-09-16",
+    });
+    writeFileSync(index, JSON.stringify({ offers: [{ ...IPAPI.offer }, untouched] }, null, 2));
+    writeFileSync(store, JSON.stringify({ restatements: [] }, null, 2));
+    writeFileSync(log, JSON.stringify({ changes: [IPAPI.change] }, null, 2));
+    writeFileSync(
+      corroboration,
+      JSON.stringify(
+        {
+          held: [
+            heldBehind("ipapi", IPAPI.offer.url!, IPAPI.offer.description),
+            heldBehind("Example", untouched.url!, untouched.description),
+          ],
+          resolved: [],
+        },
+        null,
+        2,
+      ),
+    );
+    const env = {
+      ...process.env,
+      AGENTDEALS_INDEX_PATH: index,
+      AGENTDEALS_RESTATED_PATH: store,
+      AGENTDEALS_CHANGES_PATH: log,
+      AGENTDEALS_CORROBORATION_PATH: corroboration,
+    };
+    const run = (...args: string[]) =>
+      execFileSync(process.execPath, ["scripts/restate-superseded-terms.js", ...args], { env, encoding: "utf-8" });
+
+    const reported = run();
+    assert.match(reported, /released as baseline_moved/);
+    assert.deepEqual(JSON.parse(readFileSync(corroboration, "utf-8")).resolved, []);
+
+    run("--write");
+    const after = JSON.parse(readFileSync(corroboration, "utf-8"));
+    assert.deepEqual(after.held.map((entry: { vendor: string }) => entry.vendor), ["Example"]);
+    assert.deepEqual(after.resolved.map((entry: { vendor: string }) => entry.vendor), ["ipapi"]);
+    assert.equal(after.resolved[0].outcome, BASELINE_MOVED);
   });
 
   it("puts back the newest terms it wrote for a vendor", () => {
