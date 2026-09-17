@@ -9910,6 +9910,40 @@
       "alternatives": [],
       "detected_by": "reverify-ai",
       "recorded_date": "2026-09-16"
+    },
+    {
+      "vendor": "Braid",
+      "change_type": "new_tier",
+      "date": "2026-09-17",
+      "date_source": "discovered",
+      "summary": "The free tier now has a name ('Community') and is explicitly an open group with public access. There is also a 'Team' tier which is a private group with a 30-day free trial, then pay-what-you-can.",
+      "tier": "Community",
+      "tier_direction": "unchanged",
+      "previous_state": "Chat app designed for teams. Free for public access group, unlimited users, history, and integrations. also, it provides a self-hostable open-source version.",
+      "current_state": "Community Open group with public access Free Forever ∞ Users ∞ History ∞ Integrations",
+      "impact": "medium",
+      "source_url": "https://www.braidchat.com/",
+      "category": "Team Collaboration",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-09-17"
+    },
+    {
+      "vendor": "Auth0",
+      "change_type": "restriction",
+      "date": "2026-09-17",
+      "date_source": "discovered",
+      "summary": "The free tier now requires credit card verification for custom domains.",
+      "tier": "Free",
+      "tier_direction": "narrowed",
+      "previous_state": "Identity platform — 25K MAU (B2C), unlimited logins, social + database connections, Universal Login, 1 Enterprise Connection, 5 Organizations, 1 Custom Domain. No credit card required",
+      "current_state": "Up to 25,000 monthly active users. Includes 1 Custom Domain* Secure Agentic AI workflows Passwordless Authentication Unlimited Social Connections** 5 Organizations Brand Customization Basic Attack Protection Community Support 1 Enterprise Connection *credit card verification required for custom domains.",
+      "impact": "low",
+      "source_url": "https://auth0.com/pricing",
+      "category": "Auth",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-09-17"
     }
   ]
 }

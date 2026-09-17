@@ -1,70 +1,169 @@
 {
   "held": [
     {
-      "vendor": "Auth0",
-      "change_type": "restriction",
-      "impact": "medium",
-      "summary": "The free tier now requires credit card verification for custom domains. Was not previously required. The free tier also includes Passkeys, Custom Social Connections, and AI CIBA ADD-ON.",
-      "previous_state": "Identity platform — 25K MAU (B2C), unlimited logins, social + database connections, Universal Login, 1 Enterprise Connection, 5 Organizations, 1 Custom Domain. No credit card required",
-      "current_state": "The Free plan is $0/month and includes up to 25,000 monthly active users, 1 Custom Domain* (credit card verification required), Unlimited Social Connections**, Passwordless Authentication, 5 Organizations, Brand Customization, Basic Attack Protection, Community Support, 1 Enterprise Connection, and new features like Self-Service SSO and SCIM.",
-      "source_url": "https://auth0.com/pricing",
-      "category": "Auth",
-      "first_read_date": "2026-09-16"
-    },
-    {
-      "vendor": "Cloudflare Durable Objects",
-      "change_type": "restriction",
-      "impact": "high",
-      "summary": "The free plan now only supports Durable Objects with SQLite storage backend.",
-      "previous_state": "Stateful serverless compute — 100K requests/day on free plan. Strongly consistent storage with WebSocket hibernation. SQLite storage included (first 10 GB on paid plan). Facets: dynamic multi-class Durable Objects without separate namespace bindings (April 2026)",
-      "current_state": "On Workers Free plan: Only Durable Objects with SQLite storage backend are available. Workers Free plan requests are limited to 100,000 / day. Duration is limited to 13,000 GB-s / day. SQLite storage is limited to 5 GB.",
-      "source_url": "https://developers.cloudflare.com/durable-objects/platform/pricing/",
-      "category": "Cloud Hosting",
-      "first_read_date": "2026-09-16"
-    },
-    {
-      "vendor": "Cloudflare KV",
-      "change_type": "restriction",
-      "impact": "low",
-      "summary": "The free plan includes 100,000 reads/day, 1,000 writes/day, and 1 GB storage, but the page states that all limits reset daily at 00:00 UTC.",
-      "previous_state": "Key-value store at the edge — 100K reads/day, 1K writes/day, 1 GB storage. Eventually consistent with global replication",
-      "current_state": "Workers KV is included in both the Free and Paid Workers plans . Free plan 1 Keys read 100,000 / day Keys written 1,000 / day Stored data 1 GB. All limits reset daily at 00:00 UTC.",
-      "source_url": "https://developers.cloudflare.com/kv/platform/pricing/",
-      "category": "Databases",
-      "first_read_date": "2026-09-16"
-    },
-    {
-      "vendor": "Grafana Cloud",
+      "vendor": "bitnami.com",
       "change_type": "pricing_restructured",
       "impact": "high",
-      "summary": "The free tier now includes a platform fee of $19/month for 50GB ingested for logs, traces, and profiles.",
-      "previous_state": "Free tier with 10K metric series, 50 GB logs, 50 GB traces, 14-day retention, 3 users",
-      "current_state": "The Free tier is now $19/month and includes 10k active series, 50 GB logs, 50 GB traces, 14-day retention, and community support.",
-      "source_url": "https://grafana.com/pricing/",
-      "category": "Monitoring",
-      "first_read_date": "2026-09-16"
+      "summary": "The free tier is now limited to non-production use cases and only provides access to a portion of the Bitnami Secure Images catalog. Access to all images and other benefits requires a purchase.",
+      "previous_state": "Deploy prepared apps on IaaS. Management of 1 AWS micro instance free",
+      "current_state": "Developers can access a portion of Bitnami Secure Images for non-production use cases. Free images are only available in the latest tag. For access to all the images/applications in the catalog, along with many other benefits, you can purchase Bitnami Secure Images.",
+      "source_url": "https://bitnami.com/",
+      "category": "Server Management",
+      "first_read_date": "2026-09-17"
     },
     {
-      "vendor": "Koyeb",
+      "vendor": "Burnermail",
+      "change_type": "free_tier_removed",
+      "impact": "high",
+      "summary": "Burner Mail is removing its free plan.",
+      "previous_state": "Free 5 Burner Email Addresses, 1 Mailbox, 7-day Mailbox History",
+      "current_state": "Users must create an account and choose a plan.",
+      "source_url": "https://burnermail.io/",
+      "category": "Email",
+      "first_read_date": "2026-09-17"
+    },
+    {
+      "vendor": "Chanty.com",
+      "change_type": "pricing_restructured",
+      "impact": "high",
+      "summary": "The free plan is still mentioned. The details are significantly different. The page highlights features like 'Full control over how your employees communicate' and '120+ permission settings'.",
+      "previous_state": "Chanty is another alternative to Slack. It has a free forever plan for small teams (up to 5) with unlimited public and private conversations, searchable history, unlimited 1:1 audio calls, unlimited voice messages, ten integrations, and 20 GB storage per team.",
+      "current_state": "The page mentions a free plan, but details focus on AI agents and enterprise features. It does not specify user limits, storage, or integration numbers.",
+      "source_url": "https://chanty.com/",
+      "category": "Team Collaboration",
+      "first_read_date": "2026-09-17"
+    },
+    {
+      "vendor": "Cohere",
+      "change_type": "pricing_restructured",
+      "impact": "high",
+      "summary": "The Trial API key is still mentioned.",
+      "previous_state": "AI model API. Trial key: 1,000 API calls/month across all endpoints (Chat, Embed, Rerank). Access to Command R+, Rerank 3.5, Embed 4. Non-commercial use only",
+      "current_state": "API calls made from a Trial API key are free, but the page focuses on paid Model Vault tiers with hourly/monthly rates for Embed, Rerank, and Parse.",
+      "source_url": "https://cohere.com/pricing",
+      "category": "AI / ML",
+      "first_read_date": "2026-09-17"
+    },
+    {
+      "vendor": "Crystallize",
       "change_type": "limits_reduced",
       "impact": "medium",
-      "summary": "The free tier now has a 5 hour/month limit, and storage costs $0.50/mo per GB.",
-      "previous_state": "Free Postgres database (0.25 vCPU, 1 GB RAM, 1 GB storage, 5 hr/month runtime). No free compute tier — Pro plan starts at $29/month with $10 included compute.",
-      "current_state": "Free 5h $ 0 /hr $ 0 /mo vCPU 0.25 RAM 1 GB Storage 1GB. Storage: $0.50/mo per GB",
-      "source_url": "https://www.koyeb.com/pricing",
-      "category": "Databases",
-      "first_read_date": "2026-09-16"
+      "summary": "The Particle plan is now a metered free tier, and limits have changed.",
+      "previous_state": "Headless PIM with ecommerce support. Built-in GraphQL API. Particle plan (free): unlimited users, 100 catalog items, 25 orders/month, 5 GB bandwidth/month, 25K API calls/month.",
+      "current_state": "Particle Free + metering / month Start free ✓ One tenant per project ✓ Unlimited users ✓ Full feature set ✓ Unlimited languages. Orders: 25/month, Items: 100, Bandwidth: 5 GB, API calls: 25000. Cost per extra order: $2.50, Cost per extra item: $0.10, Cost per extra GB: $0.50, Cost per extra 25k API calls: $10.00",
+      "source_url": "https://crystallize.com/pricing",
+      "category": "Headless CMS",
+      "first_read_date": "2026-09-17"
     },
     {
-      "vendor": "Render",
+      "vendor": "Devin",
+      "change_type": "pricing_restructured",
+      "impact": "high",
+      "summary": "The pricing has been restructured. Is no longer accurate. The page now offers multiple tiers: Free, Pro, Max, and Team, with varying pricing and features. The Free tier still exists. The Team plan is now $80/month + $40/mo per full dev seat, and there's a new Max plan at $200/month.",
+      "previous_state": "Autonomous AI software engineer by Cognition Labs. Core plan pay-as-you-go starting at $20 (ACUs at $2.25 each). Team plan $500/mo (250 ACUs at $2.00 each). Enterprise with custom pricing, VPC deployment, SSO. Previously $500-only pricing before January 2026 restructuring",
+      "current_state": "Teams $80 /month for team plan + $40/mo per full dev seat. Select plan Everything in Pro, plus: Unlimited team members Share and collaborate Centralized billing Admin dashboard with analytics Priority support",
+      "source_url": "https://devin.ai/pricing",
+      "category": "AI Coding",
+      "first_read_date": "2026-09-17"
+    },
+    {
+      "vendor": "Doppler",
+      "change_type": "limits_reduced",
+      "impact": "high",
+      "summary": "The free tier now has a 14-day trial for the Team plan, and the limits for projects, environments, and config syncs have changed.",
+      "previous_state": "Secrets management — up to 3 users, 10 projects, 4 environments per project. CLI, SDKs, and integrations included",
+      "current_state": "Free for 3 users. Projects: 10. Environments: 4. Config syncs: 5.",
+      "source_url": "https://www.doppler.com/pricing",
+      "category": "Secrets Management",
+      "first_read_date": "2026-09-17"
+    },
+    {
+      "vendor": "formlets.com",
+      "change_type": "pricing_restructured",
+      "impact": "high",
+      "summary": "The free tier now offers unlimited submissions.",
+      "previous_state": "Online forms, unlimited single page forms/month, 100 submissions/month, email notifications.",
+      "current_state": "Unlimited submits & No signup/creditcard needed",
+      "source_url": "https://formlets.com/",
+      "category": "Forms",
+      "first_read_date": "2026-09-17"
+    },
+    {
+      "vendor": "Logto",
+      "change_type": "pricing_restructured",
+      "impact": "high",
+      "summary": "The pricing model has shifted to token-based billing in addition to MAU limits.",
+      "previous_state": "Open-source identity solution — 50K MAU free (cloud), unlimited self-hosted. OIDC, social login, passwordless, MFA, RBAC, multi-tenancy, webhooks",
+      "current_state": "The Free plan is $0/month for up to 50,000 MAU and includes 50K tokens, user authentication, machine-to-machine apps, account APIs, audit logs, and user management. Additional features like RBAC, MFA, and Organizations are available as add-ons.",
+      "source_url": "https://logto.io/pricing",
+      "category": "Auth",
+      "first_read_date": "2026-09-17"
+    },
+    {
+      "vendor": "MATLAB and Simulink for Startups",
+      "change_type": "pricing_restructured",
+      "impact": "high",
+      "summary": "The Startup Program now offers access to MATLAB and Simulink at 'low startup pricing' rather than a 'startup-friendly price', and lists specific annual individual license costs: USD 1,770 for MATLAB and Simulink Suite (40+ add-ons) and USD 4,235 for MATLAB and Simulink Suite (90+ add-ons). The program also offers support, training credits, and co-marketing opportunities. Eligibility criteria are defined as founded within the last 5 years, fewer than 15 engineers, and less than $1 million USD in annual revenue.",
+      "previous_state": "Eligible early stage technology startups can get MATLAB, Simulink, and more than 90 industry-specific toolboxes at a startup-friendly price along with other exclusive benefits.",
+      "current_state": "MATLAB Suite Includes 40+ add-on products Annual individual license USD 1,770 MATLAB and Simulink Suite Includes 90+ add-on products Annual individual license USD 4,235",
+      "source_url": "https://mathworks.com/products/startups.html",
+      "category": "Startup Perks",
+      "first_read_date": "2026-09-17"
+    },
+    {
+      "vendor": "Ory",
+      "change_type": "pricing_restructured",
+      "impact": "high",
+      "summary": "Ory's own page now redirects to ory.com. The free tier is no longer a simple 25k MAU. A 'Developer' tier exists, it has no included monthly credit and pricing is based on aDAU, M2M tokens, and permission checks. The self-hosted option is still available.",
+      "previous_state": "Open-source identity infrastructure — Kratos (identity), Hydra (OAuth2/OIDC), Oathkeeper (API gateway), Keto (permissions). Cloud: 25K MAU free. Self-hosted: unlimited, Apache 2.0",
+      "current_state": "The Developer tier has no included monthly credit. Pricing is $0.14 / aDAU / month, $0.007 / token / month, and $0.000090 / check / month.",
+      "source_url": "https://www.ory.sh/pricing/",
+      "category": "Auth",
+      "first_read_date": "2026-09-17"
+    },
+    {
+      "vendor": "Postman",
+      "change_type": "limits_reduced",
+      "impact": "high",
+      "summary": "The free tier now includes 50 AI credits per month and has several limitations previously. Team collaboration features are no longer included in the free tier and require a paid plan.",
+      "previous_state": "Free for single user only (since March 2026). Unlimited collections, environments, mock servers, basic monitoring. Team collaboration (shared workspaces, collection sharing) removed — requires Team plan ($19/user/mo). Postman-alternative tag: see Bruno, Hoppscotch, Insomnia, Thunder Client",
+      "current_state": "The Free plan costs $0 per month and includes 50 AI credits, API client & core tools, specs & mock servers, Native Git, Collection Runner & Performance Testing runs, and manual Flows.",
+      "source_url": "https://www.postman.com/pricing/",
+      "category": "Testing",
+      "first_read_date": "2026-09-17"
+    },
+    {
+      "vendor": "Spacelift",
       "change_type": "pricing_restructured",
       "impact": "medium",
-      "summary": "The Hobby tier still exists. The description of included services has changed. Bandwidth is still 5 GB included, then $0.15/GB. The number of services is still 25.",
-      "previous_state": "Free web services (512 MB RAM, less than 1 CPU), free PostgreSQL (256 MB RAM, 30-day expiry), free Redis (25 MB). 5 GB bandwidth/month included then $0.15/GB, 500 build minutes/month. Up to 25 services, 2 environments per project. Auto-deploy from Git",
-      "current_state": "Hobby is $0/month + compute. Deploy up to 25 services with 5 GB of bandwidth included. Compute options include: 512 MB RAM, less than 1 CPU for $0/month; 512 MB RAM, 1 CPU for $7/month; 2 GB RAM, 2 CPU for $25/month, etc. Postgres options include 256 MB RAM, less than 1 CPU for $0/month; 256 MB RAM, 0.1c-256mb, less than 1 CPU for $6/month, etc. Key Value options include 25 MB RAM, 50 connections free for $0/month; 256 MB RAM, 250 connections for $10/month, etc.",
-      "source_url": "https://render.com/pricing",
-      "category": "Cloud Hosting",
-      "first_read_date": "2026-09-16"
+      "summary": "The free plan now includes 2 users and 1 public worker. The free plan is still offered.",
+      "previous_state": "IaC orchestration platform — 2 users, 1 API key, 1 public worker, OIDC integration, credential-less cloud provider integration, cost estimation",
+      "current_state": "The Starter + plan is offered either as an annual subscription and includes unlimited users, 2 public workers and 1 or 2 private workers.",
+      "source_url": "https://spacelift.io/pricing",
+      "category": "Infrastructure",
+      "first_read_date": "2026-09-17"
+    },
+    {
+      "vendor": "Terragrunt Scale",
+      "change_type": "pricing_restructured",
+      "impact": "high",
+      "summary": "The free tier now has a limit of 25 infrastructure units, down from '500+ managed resources' or matching HCP Terraform's free tier.",
+      "previous_state": "IaC orchestration platform by Gruntwork — free tier with GitOps from GitHub/GitLab, dependency-ordered plan/apply, drift detection, and module update automation. Limits match or exceed HCP Terraform free tier (500+ managed resources). Positioned as HCP Terraform alternative",
+      "current_state": "All plans include unlimited runs and resources. Free Forever $0 Free Up to 25 infrastructure units* For individuals, start-ups, or teams looking to try before buying Terragrunt-native IaC Pipeline Unlimited Runs Unlimited Resources (no RUM) Community Support",
+      "source_url": "https://terragrunt.com/terragrunt-scale",
+      "category": "Infrastructure",
+      "first_read_date": "2026-09-17"
+    },
+    {
+      "vendor": "Zoho Projects",
+      "change_type": "limits_reduced",
+      "impact": "medium",
+      "summary": "The free plan now offers 3 users, 3 projects, and 5MB of storage.",
+      "previous_state": "Free for 3 users, 2 projects & 10 MB attachment limit. The same plan applies to [Bugtracker](https://zoho.com/bugtracker).",
+      "current_state": "The free plan includes 3 users, 3 projects, and 5MB of storage.",
+      "source_url": "https://zoho.com/projects",
+      "category": "Project Management",
+      "first_read_date": "2026-09-17"
     }
   ],
   "resolved": [
@@ -162,6 +261,78 @@
       "first_read_date": "2026-09-16",
       "outcome": "baseline_moved",
       "detail": "the terms it was read against are no longer the terms we publish",
+      "resolved_date": "2026-09-17"
+    },
+    {
+      "vendor": "Auth0",
+      "change_type": "restriction",
+      "impact": "medium",
+      "summary": "The free tier now requires credit card verification for custom domains. Was not previously required. The free tier also includes Passkeys, Custom Social Connections, and AI CIBA ADD-ON.",
+      "previous_state": "Identity platform — 25K MAU (B2C), unlimited logins, social + database connections, Universal Login, 1 Enterprise Connection, 5 Organizations, 1 Custom Domain. No credit card required",
+      "source_url": "https://auth0.com/pricing",
+      "first_read_date": "2026-09-16",
+      "outcome": "corroborated",
+      "detail": "a reading on 2026-09-17 read it as restriction too",
+      "resolved_date": "2026-09-17"
+    },
+    {
+      "vendor": "Cloudflare Durable Objects",
+      "change_type": "restriction",
+      "impact": "high",
+      "summary": "The free plan now only supports Durable Objects with SQLite storage backend.",
+      "previous_state": "Stateful serverless compute — 100K requests/day on free plan. Strongly consistent storage with WebSocket hibernation. SQLite storage included (first 10 GB on paid plan). Facets: dynamic multi-class Durable Objects without separate namespace bindings (April 2026)",
+      "source_url": "https://developers.cloudflare.com/durable-objects/platform/pricing/",
+      "first_read_date": "2026-09-16",
+      "outcome": "corroborated",
+      "detail": "a reading on 2026-09-17 read it as restriction too",
+      "resolved_date": "2026-09-17"
+    },
+    {
+      "vendor": "Cloudflare KV",
+      "change_type": "restriction",
+      "impact": "low",
+      "summary": "The free plan includes 100,000 reads/day, 1,000 writes/day, and 1 GB storage, but the page states that all limits reset daily at 00:00 UTC.",
+      "previous_state": "Key-value store at the edge — 100K reads/day, 1K writes/day, 1 GB storage. Eventually consistent with global replication",
+      "source_url": "https://developers.cloudflare.com/kv/platform/pricing/",
+      "first_read_date": "2026-09-16",
+      "outcome": "corroborated",
+      "detail": "a reading on 2026-09-17 read it as restriction too",
+      "resolved_date": "2026-09-17"
+    },
+    {
+      "vendor": "Grafana Cloud",
+      "change_type": "pricing_restructured",
+      "impact": "high",
+      "summary": "The free tier now includes a platform fee of $19/month for 50GB ingested for logs, traces, and profiles.",
+      "previous_state": "Free tier with 10K metric series, 50 GB logs, 50 GB traces, 14-day retention, 3 users",
+      "source_url": "https://grafana.com/pricing/",
+      "first_read_date": "2026-09-16",
+      "outcome": "corroborated",
+      "detail": "a reading on 2026-09-17 read it as pricing_restructured too",
+      "resolved_date": "2026-09-17"
+    },
+    {
+      "vendor": "Koyeb",
+      "change_type": "limits_reduced",
+      "impact": "medium",
+      "summary": "The free tier now has a 5 hour/month limit, and storage costs $0.50/mo per GB.",
+      "previous_state": "Free Postgres database (0.25 vCPU, 1 GB RAM, 1 GB storage, 5 hr/month runtime). No free compute tier — Pro plan starts at $29/month with $10 included compute.",
+      "source_url": "https://www.koyeb.com/pricing",
+      "first_read_date": "2026-09-16",
+      "outcome": "contradicted",
+      "detail": "a reading on 2026-09-17 read it as pricing_restructured",
+      "resolved_date": "2026-09-17"
+    },
+    {
+      "vendor": "Render",
+      "change_type": "pricing_restructured",
+      "impact": "medium",
+      "summary": "The Hobby tier still exists. The description of included services has changed. Bandwidth is still 5 GB included, then $0.15/GB. The number of services is still 25.",
+      "previous_state": "Free web services (512 MB RAM, less than 1 CPU), free PostgreSQL (256 MB RAM, 30-day expiry), free Redis (25 MB). 5 GB bandwidth/month included then $0.15/GB, 500 build minutes/month. Up to 25 services, 2 environments per project. Auto-deploy from Git",
+      "source_url": "https://render.com/pricing",
+      "first_read_date": "2026-09-16",
+      "outcome": "corroborated",
+      "detail": "a reading on 2026-09-17 read it as pricing_restructured too",
       "resolved_date": "2026-09-17"
     }
   ]
