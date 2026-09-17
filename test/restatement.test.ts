@@ -6,9 +6,11 @@ const {
   READING_ANSWERS_FOR_SOMETHING_ELSE,
   READING_DESCRIBES_THE_PAGE_NOT_THE_TERMS,
   READING_DROPS_THE_CAP_ON_WHO_MAY_USE_IT,
+  READINGS_HELD_BACK_BY_NAME,
   READING_SAYS_WHAT_WE_ALREADY_STORE,
   READING_STATES_NO_FIGURE_WHERE_OUR_TERMS_DO,
   RESTATEMENT_REFUSALS,
+  THIS_READING_IS_HELD_BACK_BY_NAME,
   TIER_IS_NOT_ONE_WE_RECORD_AS_FREE,
   readingAnswersForTheListedTier,
   readingDropsTheCapOnWhoMayUseIt,
@@ -16,6 +18,7 @@ const {
   readingStatesNoFigureWhereOurTermsDo,
   restatementRulings,
   ruleOnRestating,
+  theHoldOnThisReading,
   weHaveReadThePageSinceTheRecord,
   withheldTermsMeasure,
 } = await import("../dist/restatement.js");
@@ -309,6 +312,34 @@ describe("restating a withheld description from the reading the page already sho
     const measure = withheldTermsMeasure([]);
     assert.deepEqual(Object.keys(measure.offers_we_refuse_to_restate).sort(), [...RESTATEMENT_REFUSALS].sort());
   });
+
+  it("holds back the reading a hold names, and only while the vendor keeps reading that way", () => {
+    const hold = READINGS_HELD_BACK_BY_NAME[0]!;
+    const held = {
+      offer: offer({ vendor: hold.vendor, description: `Terms stating ${hold.we_go_on_storing}.` }),
+      change: change({
+        vendor: hold.vendor,
+        previous_state: `Terms stating ${hold.we_go_on_storing}.`,
+        current_state: `${hold.reading_opens} Free plan, 5 GB.`,
+      }),
+    };
+    assert.equal(
+      ruleOnRestating(held.offer, held.change, TODAY)?.refusal,
+      THIS_READING_IS_HELD_BACK_BY_NAME,
+    );
+
+    const readAgain = { ...held.change, current_state: "The Free plan gives you 5 GB of storage." };
+    assert.equal(theHoldOnThisReading(held.offer, readAgain.current_state), null);
+    assert.equal(ruleOnRestating(held.offer, readAgain, TODAY)?.refusal, null);
+  });
+
+  it("holds back no vendor a hold does not name", () => {
+    assert.equal(theHoldOnThisReading(PAGURE.offer, PAGURE.change.current_state), null);
+    for (const hold of READINGS_HELD_BACK_BY_NAME) {
+      assert.match(hold.the_rule_that_should_reach_it, /^https:\/\/github\.com\/robhunter\/agentdeals\/issues\/\d+$/);
+      assert.ok(hold.we_go_on_storing.length > 0, hold.vendor);
+    }
+  });
 });
 
 describe("a restatement is reversible, visible and does not overwrite a hand-written entry", () => {
@@ -537,6 +568,42 @@ describe("what we publish about the terms we are withholding", () => {
     const measure = withheldTermsMeasure(rulings);
     assert.ok(measure.offers_we_refuse_to_restate[READING_ANSWERS_FOR_SOMETHING_ELSE] > 1);
     assert.ok(measure.offers_we_refuse_to_restate[TIER_IS_NOT_ONE_WE_RECORD_AS_FREE] > 1);
+  });
+
+  it("reaches the record each hold was written against, and goes on storing what it names", () => {
+    for (const hold of READINGS_HELD_BACK_BY_NAME) {
+      const ruling = rulings.find(
+        (r: any) => r.offer.vendor.toLowerCase() === hold.vendor.toLowerCase(),
+      );
+      assert.ok(
+        ruling,
+        `${hold.vendor} is no longer withholding behind a reading, so this hold has nothing to hold — drop it and note ${hold.the_rule_that_should_reach_it}`,
+      );
+      assert.equal(
+        ruling.refusal,
+        THIS_READING_IS_HELD_BACK_BY_NAME,
+        `${hold.vendor} reads ${ruling.reading.terms.slice(0, 80)}`,
+      );
+      assert.ok(
+        ruling.offer.description.includes(hold.we_go_on_storing),
+        `${hold.vendor} no longer stores ${hold.we_go_on_storing}: ${ruling.offer.description}`,
+      );
+    }
+  });
+
+  it("holds nothing by name that a rule of ours already reaches", () => {
+    const measure = withheldTermsMeasure(rulings);
+    assert.equal(
+      measure.offers_we_refuse_to_restate[THIS_READING_IS_HELD_BACK_BY_NAME],
+      READINGS_HELD_BACK_BY_NAME.length,
+    );
+    const heldByName = rulings.filter(
+      (r: any) => r.refusal === THIS_READING_IS_HELD_BACK_BY_NAME,
+    );
+    assert.deepEqual(
+      heldByName.map((r: any) => r.offer.vendor).sort(),
+      READINGS_HELD_BACK_BY_NAME.map((hold) => hold.vendor).sort(),
+    );
   });
 
   it("stores no reading that reports on the page, loses a figure, or drops who may use the tier", () => {
