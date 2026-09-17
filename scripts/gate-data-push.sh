@@ -241,4 +241,5 @@ while :; do
     tail -n 60 "$LOG"
     quarantine "main moved while the suite ran and the tree it moved to does not compile with this run's commit on top"
   fi
+  derive_from_the_data
 done

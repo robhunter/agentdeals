@@ -243,15 +243,27 @@ const FAILING_BY_MODE: Record<string, Array<{ file: string; drifted?: typeof A_G
   crashed: [],
   vendor: [],
   "vendor-one-at-a-time": [],
+  "budget-against-the-tree": [],
 };
 
 const GATE_CONFIGURATION = ["GATE_RATCHET_BUDGETS", "GATE_UPDATE_PAGE_LASTMOD", "GATE_REGENERATE_LLM_INDEX"];
 
-const SUITE = `import { appendFileSync, readFileSync, writeFileSync } from "node:fs";
+const PAGES_THE_TREE_HOLDS = `readdirSync("data").filter((f) => f.endsWith(".json")).length`;
+
+const SUITE = `import { appendFileSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
 const modes = ${JSON.stringify(FAILING_BY_MODE)};
 const mode = process.env.GATE_FIXTURE_TESTS || "green";
 let failing = modes[mode];
 let blamed = [];
+let budgetDisagreement = "";
+if (mode === "budget-against-the-tree") {
+  const recorded = JSON.parse(readFileSync("data/quality_budgets.json", "utf8")).budgets.fixture_pages;
+  const measured = ${PAGES_THE_TREE_HOLDS};
+  if (measured !== recorded) {
+    budgetDisagreement = measured + " pages, over the " + recorded + " recorded";
+    failing = [{ file: "test/the-data-this-run-wrote-is-wrong.test.ts" }];
+  }
+}
 if (mode.startsWith("vendor")) {
   const rows = JSON.parse(readFileSync("data/deal_changes.json", "utf8")).changes;
   blamed = rows.filter((r) => r.reading === "wrong").map((r) => r.vendor);
@@ -274,6 +286,7 @@ console.log("\\u2139 fail " + (red ? 1 : 0));
 if (red) {
   console.log("\\u2716 failing tests:");
   for (const f of failing) console.log("the fixture assertion in " + f.file);
+  if (budgetDisagreement) console.log("  the tree holds " + budgetDisagreement);
   for (const v of blamed) console.log("  the reading this run wrote for " + v + " is wrong");
   if (mode === "crashed") console.log("the suite died before it named a file");
   process.exit(1);
@@ -289,7 +302,7 @@ const BUILD = `if (process.env.GATE_FIXTURE_BUILD === "fail") {
 const BUDGETS_BEFORE = `${JSON.stringify({ version: 1, budgets: { fixture_pages: 57 } }, null, 2)}\n`;
 const BUDGETS_AFTER = `${JSON.stringify({ version: 1, budgets: { fixture_pages: 56 } }, null, 2)}\n`;
 
-const RATCHET = `import { writeFileSync } from "node:fs";
+const RATCHET = `import { readdirSync, writeFileSync } from "node:fs";
 const mode = process.env.GATE_FIXTURE_RATCHET || "lower";
 if (mode === "throw") {
   console.log("the fixture ratchet could not read the data it measures");
@@ -298,6 +311,14 @@ if (mode === "throw") {
 if (mode === "lower") {
   writeFileSync("data/quality_budgets.json", ${JSON.stringify(BUDGETS_AFTER)});
   console.log("Lowered fixture_pages 57 -> 56");
+}
+if (mode === "measures-the-tree") {
+  const pages = ${PAGES_THE_TREE_HOLDS};
+  writeFileSync(
+    "data/quality_budgets.json",
+    JSON.stringify({ version: 1, budgets: { fixture_pages: pages } }, null, 2) + "\\n",
+  );
+  console.log("Recorded fixture_pages " + pages);
 }
 `;
 
@@ -402,7 +423,7 @@ function fixtureRepo(options: { shallow?: boolean } = {}): { work: string; origi
 
 type GateMode = keyof typeof FAILING_BY_MODE;
 
-type RatchetMode = "lower" | "throw";
+type RatchetMode = "lower" | "throw" | "measures-the-tree";
 
 interface GateRun {
   mode: GateMode;
@@ -1284,6 +1305,35 @@ describe("#1337 main moving under a run whose data the suite accepted", () => {
       "the workflow would report this run as shipped over failures, and it shipped nothing",
     );
     assert.strictEqual(quarantineRefs(origin, "data-quarantine/fixture").length, 1);
+  });
+
+  it("measures again what it derives from the tree, so the replay does not leave the run's own figures behind", () => {
+    const { work, origin } = fixtureRepo();
+    writeFileSync(join(work, "data", "health.json"), '{"checked":11}\n');
+    commitToMainFromElsewhere(origin, "data/a-sibling-job-wrote-this.json", '{"rows":[]}\n');
+
+    const run = runGate(
+      work,
+      { mode: "budget-against-the-tree", ratchet: "measures-the-tree" },
+      "data-quarantine/fixture",
+      "data(auto): fixture",
+      "data/health.json",
+      "data/quality_budgets.json",
+    );
+
+    assert.strictEqual(run.status, 0, `${run.stdout}${run.stderr}`);
+    assert.deepStrictEqual(
+      quarantineRefs(origin, "data-quarantine/fixture"),
+      [],
+      "the replay left a figure measuring the tree before it moved, and the suite read it as the data being wrong",
+    );
+    assert.strictEqual(git(origin, "show", "main:data/health.json"), '{"checked":11}');
+    assert.strictEqual(
+      JSON.parse(git(origin, "show", "main:data/quality_budgets.json")).budgets.fixture_pages,
+      5,
+      "what reached main states a figure nothing in that tree measures",
+    );
+    assert.strictEqual(suiteRuns(run.stdout), 2);
   });
 
   it("bounds the replays, so a main that keeps moving quarantines rather than looping", () => {
