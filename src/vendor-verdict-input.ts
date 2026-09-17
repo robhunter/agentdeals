@@ -3,7 +3,7 @@ import { changesByVendor, enrichOffers, publishedRisk, refusalsForVendor } from 
 
 type EnrichedOfferRow = ReturnType<typeof enrichOffers>[number];
 import { gateFor, utcDate, type Gate } from "./ranking.js";
-import { offerEnded } from "./retirement.js";
+import { offerEnded, offerRetired } from "./retirement.js";
 import { levelWithheldReason, levelWithheldSince, recordPublishesAQuantity, type LevelWithheldReason } from "./source-check.js";
 import type { RefusedRead } from "./change-refusal.js";
 import { storedTermsAreSuperseded } from "./superseded-description.js";
@@ -77,6 +77,13 @@ export function offerVerdictInput(
   return vendorVerdictContextFrom({ ...evidence, vendorOffers: [evidence.offer] })?.input ?? null;
 }
 
+export function reasonWeCannotConfirmTheTerms(
+  offer: Pick<Offer, "tier">,
+  unconfirmed: UnconfirmedTerms | null,
+): UnconfirmedTerms | null {
+  return offerRetired(offer) ? null : unconfirmed;
+}
+
 export function unconfirmedTermsForOffer(offer: Offer, servedOn: string = utcDate()): UnconfirmedTerms | null {
   const input = offerVerdictInput({
     vendor: offer.vendor,
@@ -85,5 +92,5 @@ export function unconfirmedTermsForOffer(offer: Offer, servedOn: string = utcDat
     refusedReads: refusalsForVendor(offer.vendor),
     servedOn,
   });
-  return input ? whyWeCannotConfirmTheseTerms(input) : null;
+  return reasonWeCannotConfirmTheTerms(offer, input ? whyWeCannotConfirmTheseTerms(input) : null);
 }

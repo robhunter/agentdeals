@@ -8,8 +8,8 @@ import { fileURLToPath } from "node:url";
 
 const { gateFor, utcDate } = await import("../dist/ranking.js");
 const { vendorSlugMap } = await import("../dist/vendor-slug.js");
-const { offerEnded } = await import("../dist/retirement.js");
-const { STORED_TERMS_WITHHELD_PHRASE, supersededTermsNotice, supersedingChange } = await import("../dist/superseded-description.js");
+const { offerEnded, offerRetired } = await import("../dist/retirement.js");
+const { STORED_TERMS_WITHHELD_PHRASE, supersedingChange } = await import("../dist/superseded-description.js");
 const { qualityBudget } = await import("../dist/page-reviews.js");
 const { descriptionDeniesAFreeTier } = await import("../dist/free-tier-record.js");
 
@@ -35,11 +35,6 @@ for (const offer of offers) {
     dealChanges.filter(c => c.vendor.toLowerCase() === offer.vendor.toLowerCase()),
   );
   if (superseding) supersededBy.set(offer, superseding);
-}
-
-function publishedDescriptionOf(offer: Offer): string {
-  const superseding = supersededBy.get(offer);
-  return superseding ? supersededTermsNotice(offer.vendor, superseding) : offer.description;
 }
 
 const PAY_AS_YOU_GO_REASON = 'Tier "Pay-as-you-go" is usage-billed from the first request.';
@@ -183,12 +178,22 @@ describe("the page a gated record renders does not answer the free-tier question
   it("renders one page per vendor and reads the record that page renders", () => {
     assert.strictEqual(rendered.length, primaries.length, "a vendor page did not render for every vendor the catalogue lists");
     assertPopulationFloor(primaries.length, 1, "vendors the catalogue lists");
+    const secondRecordToRuleOut = rendered.filter(p => offers.filter(o => o.vendor === p.vendor).length > 1);
+    assertPopulationFloor(secondRecordToRuleOut.length, 5, "vendors hold a second record the identity below has to rule out");
     for (const p of rendered) {
+      const node = blockOfType(p.html, "WebPage")?.mainEntity;
       assert.strictEqual(
-        blockOfType(p.html, "WebPage")?.mainEntity?.description,
-        publishedDescriptionOf(p.primary),
+        node?.url ?? null,
+        offerRetired(p.primary) ? null : p.primary.url,
         `/vendor/${p.slug} renders a record other than the first this vendor holds`,
       );
+      if (typeof node?.offers?.name === "string") {
+        assert.strictEqual(
+          node.offers.name,
+          p.primary.tier,
+          `/vendor/${p.slug} prices a tier the first record this vendor holds does not name`,
+        );
+      }
     }
   });
 

@@ -10,7 +10,8 @@ import { fetchBadgeVerdicts, type SiteFreeTierVerdict } from "./badge-verdicts.t
 const { eligibilityGate, eligibilityGateAsPublished, publishableEligibilityConditions, CONDITION_RECORDING_AN_UNREAD_PROGRAM } =
   await import("../dist/eligibility.js");
 const { gateFor, notAFreeOfferGateFor, utcDate } = await import("../dist/ranking.js");
-const { supersededTermsNotice, supersedingChange } = await import("../dist/superseded-description.js");
+const { supersedingChange } = await import("../dist/superseded-description.js");
+const { offerRetired } = await import("../dist/retirement.js");
 
 type Offer = import("../src/types.ts").Offer;
 type DealChange = import("../src/types.ts").DealChange;
@@ -28,11 +29,6 @@ function changeSuperseding(offer: Offer) {
     offer,
     dealChanges.filter(c => c.vendor.toLowerCase() === offer.vendor.toLowerCase()),
   );
-}
-
-function publishedDescriptionOf(offer: Offer): string {
-  const superseding = changeSuperseding(offer);
-  return superseding ? supersededTermsNotice(offer.vendor, superseding) : offer.description;
 }
 
 function slugOf(vendor: string): string {
@@ -109,11 +105,15 @@ function faqAnswer(html: string, prefix: string): string | undefined {
 }
 
 function renderedOffer(html: string): Offer | undefined {
-  const webPage = blockOfType(html, "WebPage");
-  const vendor = webPage?.mainEntity?.name;
-  const description = webPage?.mainEntity?.description;
-  if (typeof vendor !== "string" || typeof description !== "string") return undefined;
-  return offers.find(o => o.vendor === vendor && publishedDescriptionOf(o) === description);
+  const node = blockOfType(html, "WebPage")?.mainEntity;
+  const vendor = node?.name;
+  if (typeof vendor !== "string") return undefined;
+  const held = offers.filter(o => o.vendor === vendor);
+  const tier = node?.offers?.name;
+  const url = node?.url;
+  if (typeof tier === "string") return held.find(o => o.tier === tier);
+  if (typeof url === "string") return held.find(o => o.url === url);
+  return held.find(o => offerRetired(o)) ?? held[0];
 }
 
 type RenderedPage = { vendor: string; slug: string; html: string; offer: Offer };
