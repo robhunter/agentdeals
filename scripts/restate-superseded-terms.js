@@ -158,10 +158,8 @@ async function main() {
       console.error(`${revert} was restated on ${entry.restated_on} but is no longer in the index.`);
       process.exit(2);
     }
-    if (!dryRun) {
-      writeFileSync(path, JSON.stringify(data, null, 2) + "\n");
-      writeRestatements(left);
-    }
+    writeFileSync(path, JSON.stringify(data, null, 2) + "\n");
+    writeRestatements(left);
     console.log(`Reverted ${entry.vendor} to the terms we stored before ${entry.restated_on}.`);
     console.log(`  restored: ${entry.previous_description}`);
     process.exit(0);

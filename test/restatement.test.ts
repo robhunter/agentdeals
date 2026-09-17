@@ -228,6 +228,39 @@ describe("a restatement is reversible, visible and does not overwrite a hand-wri
     assert.equal(ruleOnRestating(restated, newer, TODAY)?.refusal, null);
   });
 
+  it("leaves the index and the record of the write agreeing after a round trip", async () => {
+    const { mkdtempSync, readFileSync, writeFileSync } = await import("node:fs");
+    const { tmpdir } = await import("node:os");
+    const { join } = await import("node:path");
+    const { execFileSync } = await import("node:child_process");
+
+    const dir = mkdtempSync(join(tmpdir(), "restate-"));
+    const index = join(dir, "index.json");
+    const store = join(dir, "restated.json");
+    const log = join(dir, "changes.json");
+    const before = { offers: [{ ...IPAPI.offer }] };
+    writeFileSync(index, JSON.stringify(before, null, 2));
+    writeFileSync(store, JSON.stringify({ restatements: [] }, null, 2));
+    writeFileSync(log, JSON.stringify({ changes: [IPAPI.change] }, null, 2));
+    const env = {
+      ...process.env,
+      AGENTDEALS_INDEX_PATH: index,
+      AGENTDEALS_RESTATED_PATH: store,
+      AGENTDEALS_CHANGES_PATH: log,
+    };
+    const run = (...args: string[]) =>
+      execFileSync(process.execPath, ["scripts/restate-superseded-terms.js", ...args], { env, encoding: "utf-8" });
+
+    run("--write");
+    const written = JSON.parse(readFileSync(index, "utf-8"));
+    assert.notEqual(written.offers[0].description, IPAPI.offer.description);
+    assert.equal(JSON.parse(readFileSync(store, "utf-8")).restatements.length, 1);
+
+    run("--revert", "ipapi");
+    assert.deepEqual(JSON.parse(readFileSync(index, "utf-8")), before);
+    assert.deepEqual(JSON.parse(readFileSync(store, "utf-8")).restatements, []);
+  });
+
   it("puts back the newest terms it wrote for a vendor", () => {
     const first = restatementEntry(ruleOnRestating(IPAPI.offer, IPAPI.change, "2026-09-10")!, "2026-09-10");
     const second = { ...first, restated_on: "2026-09-16", previous_description: "the one before last" };
