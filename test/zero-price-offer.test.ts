@@ -4,7 +4,7 @@ import { spawn, type ChildProcess } from "node:child_process";
 import { readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { assertPopulationFloor } from "./population-floor.ts";
+import { assertPopulationFloor, assertSharesPopulation, type Population } from "./population-floor.ts";
 
 const { toSlug } = await import("../dist/slug.js");
 const { descriptionDeniesAFreeTier } = await import("../dist/free-tier-record.js");
@@ -112,6 +112,15 @@ describe("#1724 structured data prices a tier at zero only where we state that t
   const soleOffer = () => new Set(
     [...tiersWeHold].filter(([vendor, tiers]) =>
       tiers.size === 1 && published.filter(o => o.vendor === vendor).length === 1).map(([vendor]) => vendor));
+  const readAgainstTheirVendorPage = () => {
+    const single = soleOffer();
+    const onVendorPage = new Map(routesOf("/vendor/").filter(n => single.has(n.vendor)).map(n => [n.vendor, n.pricedAtZero]));
+    return { onVendorPage, compared: routesOf("/compare/").filter(n => onVendorPage.has(n.vendor)) };
+  };
+  const comparisonNodesWithAVendorPage = (): Population => ({
+    size: readAgainstTheirVendorPage().compared.length,
+    read: "comparison nodes with a vendor page to be read against",
+  });
 
   before(async () => {
     server = await startServer();
@@ -217,14 +226,17 @@ describe("#1724 structured data prices a tier at zero only where we state that t
   });
 
   it("prices on a comparison page only what a vendor page prices, and less of it", () => {
-    const single = soleOffer();
-    const onVendorPage = new Map(routesOf("/vendor/").filter(n => single.has(n.vendor)).map(n => [n.vendor, n.pricedAtZero]));
-    const compared = routesOf("/compare/").filter(n => onVendorPage.has(n.vendor));
+    const { onVendorPage, compared } = readAgainstTheirVendorPage();
     assertPopulationFloor(compared.length, 150, "comparison nodes have a vendor page to be read against");
     const pricedOnlyHere = compared.filter(n => n.pricedAtZero && !onVendorPage.get(n.vendor));
     assert.deepStrictEqual(pricedOnlyHere.map(n => `${n.route} ${n.vendor}`).slice(0, 25), []);
     const heldBackHere = compared.filter(n => !n.pricedAtZero && onVendorPage.get(n.vendor)).length;
-    assertPopulationFloor(heldBackHere, 18, "comparison nodes withhold a price the vendor page publishes");
+    assertSharesPopulation(
+      heldBackHere,
+      comparisonNodesWithAVendorPage(),
+      0.05,
+      "comparison nodes withhold a price the vendor page publishes",
+    );
   });
 
   it("carries the reason we cannot confirm the terms into the Offer it prices", () => {
