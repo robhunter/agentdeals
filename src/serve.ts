@@ -7,7 +7,7 @@ import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/
 import { createServer, getServerCard } from "./server.js";
 import { oldestVerifiedDateForSlug, vendorRiskAssessment, publishedRisk, levelWithheldStatement, vendorNotIndexedSentence, riskCauseOf, freeTierEndingRecord, NEGATIVE_CHANGE_TYPES, POSITIVE_CHANGE_TYPES, SEVERE_CHANGE_TYPES, loadOffers, getCategories, getNewOffers, getNewestDeals, searchOffers, enrichOffers, gateForOffer, loadDealChanges, getDealChanges, changeContext, DEFAULT_CHANGE_WINDOW_DAYS, getOfferDetails, compareServices, checkVendorRisk, auditStack, getExpiringDeals, getWeeklyDigest, getFormattedWeeklyDigest, getFreshnessMetrics, publishedStabilityIndex, stabilityWithheldDisclosure, UNRATED_STABILITY, type StabilityIndex, type PublishedStabilityClass, getVendorReferral, sanitizeQuery, getChangeLogFreshness, isEventDated, partitionByDateProvenance } from "./data.js";
 import { loadChangeRefusals, changesRatingTheListedTier, stabilityDeciders } from "./data.js";
-import { A_DEMOTION_IN_FORCE_RULE, NO_DEMOTION_IN_FORCE_RULE, A_COMPLETE_LOG_NOTICE, A_VERDICT_ROLLS_NOTICE, A_WITHHELD_RATING_DOES_NOT_LAPSE, lapsingDemotionStated, VOLATILE_WHILE_A_DEMOTION_COUNTS_RULE, WATCH_RECEIVES_FROM_VOLATILE_RULE , confirmationCoverage, confirmationCoverageSentence, HOW_THE_CATALOGUE_IS_MAINTAINED } from "./data.js";
+import { A_DEMOTION_IN_FORCE_RULE, NO_DEMOTION_IN_FORCE_RULE, A_COMPLETE_LOG_NOTICE, A_VERDICT_ROLLS_NOTICE, A_WITHHELD_RATING_DOES_NOT_LAPSE, lapsingDemotionStated, VOLATILE_WHILE_A_DEMOTION_COUNTS_RULE, WATCH_RECEIVES_FROM_VOLATILE_RULE , confirmationCoverage, confirmationCoverageSentence, HOW_THE_CATALOGUE_IS_MAINTAINED, NOTHING_CONTRADICTS_OUR_TERMS_FOR } from "./data.js";
 import { confirmingRead, confirmingReadSentence, refusalsByVendor, refusedReadSentence, supersededRefusalSentence, type ChangeRefusal } from "./change-refusal.js";
 import { getStackRecommendation } from "./stacks.js";
 import { estimateCosts } from "./costs.js";
@@ -2062,11 +2062,11 @@ function buildCategoryPage(slug: string): string | null {
   const catGates = catStanding.map((o) => gateFor(o, catServedOn));
   const catGatedClause = gatedShareDescriptionClause(catStandingCount, catGates);
   const title = `Free ${categoryName} Tools & Deals (${catCount} offers) — AgentDeals`;
-  const catVerified = catStanding.filter(termsWePublishAsVerified);
-  const catVerifiedSentence = catVerified.length === 0
+  const catUncontradicted = catStanding.filter(termsWePublishAsVerified);
+  const catUncontradictedSentence = catUncontradicted.length === 0
     ? ""
-    : ` Verified pricing for ${catVerified.slice(0, 5).map(o => o.vendor).join(", ")}${catVerified.length > 5 ? " and more" : ""}.`;
-  const metaDesc = `Compare ${catStandingCount} free ${categoryName.toLowerCase()} tools, free tiers, and developer deals.${catGatedClause ? ` ${catGatedClause}` : ""}${catVerifiedSentence}${termsWeCannotConfirmMetaClause(catStanding)}`;
+    : ` ${NOTHING_CONTRADICTS_OUR_TERMS_FOR} ${catUncontradicted.slice(0, 5).map(o => o.vendor).join(", ")}${catUncontradicted.length > 5 ? " and more" : ""}.`;
+  const metaDesc = `Compare ${catStandingCount} free ${categoryName.toLowerCase()} tools, free tiers, and developer deals.${catGatedClause ? ` ${catGatedClause}` : ""}${catUncontradictedSentence}${termsWeCannotConfirmMetaClause(catStanding)}`;
 
   const offersHtml = catOffers.map((o) => `        <tr>
           <td style="font-weight:600;color:var(--text);white-space:nowrap"><a href="/vendor/${toSlug(o.vendor)}" style="color:var(--text)">${escHtmlServer(o.vendor)}</a></td>
@@ -2179,7 +2179,7 @@ function buildCategoryPage(slug: string): string | null {
   const catNoBest = unrankedBestAnswer({
     noun: `${categoryName} services in our catalogue`,
     size: catCount,
-    whereToLook: "listed in the table above with each one's tier, published terms and the date we last verified it",
+    whereToLook: "listed in the table above with each one's tier, published terms and the read and catalogue dates we hold",
     basis: statedFreeTierBasis(catStatesFreeTier, catStatesNoFreeTier),
   });
 
@@ -2192,7 +2192,7 @@ function buildCategoryPage(slug: string): string | null {
       q: `How many free ${categoryName.toLowerCase()} tools are there?`,
       a: `${catStatesNoFreeTier === 0
         ? `We track ${catStandingCount} ${categoryName.toLowerCase()} services with free tiers on AgentDeals.`
-        : `We track ${catCount} ${categoryName.toLowerCase()} services on AgentDeals, ${catStatesFreeTier} of which state a free tier we hold as current.`} These range from generous always-free tiers to limited trial periods. Each listing is verified with the actual pricing page.`,
+        : `We track ${catCount} ${categoryName.toLowerCase()} services on AgentDeals, ${catStatesFreeTier} of which state a free tier we hold as current.`} These range from generous always-free tiers to limited trial periods. ${confirmationCoverageSentence(confirmationCoverage(catOffers), categoryName)}`,
     },
     {
       q: `How stable are ${categoryName.toLowerCase()} free tiers?`,
@@ -10084,7 +10084,7 @@ ${mcpCtaCss()}
 
   <div class="context">
     <p>The AI pricing landscape is volatile. <strong>Google slashed Gemini free tier limits 50-80%</strong> in late 2025. <strong>OpenAI discontinued free trial credits</strong> and deprecated the Assistants API. But new players are offering generous free tiers to win developer mindshare — <strong>Groq</strong> and <strong>Cerebras</strong> provide blazing-fast inference, <strong>Mistral</strong> offers 1 billion tokens/month, and <strong>Google Antigravity</strong> is 100% free during preview.</p>
-    <p>This page compares <strong>${allAiOffers.length} free AI offers</strong> across our index — exact rate limits, not marketing copy. We track ${enrichedMl.length} AI/ML tools and ${enrichedCoding.length} AI coding tools, all verified against live pricing pages.</p>
+    <p>This page compares <strong>${allAiOffers.length} free AI offers</strong> across our index — exact rate limits, not marketing copy. We track ${enrichedMl.length} AI/ML tools and ${enrichedCoding.length} AI coding tools. ${escHtmlServer(confirmationCoverageSentence(confirmationCoverage(allAiOffers), "AI"))}</p>
   </div>
 
   ${changesHtml}

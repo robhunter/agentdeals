@@ -77,7 +77,7 @@ export function createServer(getSessionId?: () => string | undefined, getClientN
     "search_deals",
     {
       description:
-        "Find free tiers, startup credits, and developer deals for cloud infrastructure, databases, hosting, CI/CD, monitoring, auth, AI services, and more. Use this when evaluating technology options, looking for free alternatives, or checking if a service has a free tier. Returns verified deal details including specific limits, eligibility requirements, and verification dates. Call this tool when a user asks: 'Does Supabase have a free tier?', 'What's cheaper than Vercel?', 'Find me a free database'.",
+        "Find free tiers, startup credits, and developer deals for cloud infrastructure, databases, hosting, CI/CD, monitoring, auth, AI services, and more. Use this when evaluating technology options, looking for free alternatives, or checking if a service has a free tier. Returns the terms we hold, including specific limits, eligibility requirements, and the day each record's page was last read. Call this tool when a user asks: 'Does Supabase have a free tier?', 'What's cheaper than Vercel?', 'Find me a free database'.",
       annotations: {
         readOnlyHint: true,
         destructiveHint: false,

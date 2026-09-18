@@ -125,7 +125,7 @@ try {
     const proseOnly = [...proseVendors].filter((v) => owedVendors.has(v) && !carriedVendors.has(v));
 
     const meta = metaDescriptionOf(html);
-    const verifiedList = meta.match(/Verified pricing for ([^.]*)\./);
+    const verifiedList = meta.match(/Nothing on record contradicts our terms for ([^.]*)\./);
     const namedAsVerified = verifiedList
       ? verifiedList[1].replace(/ and more$/, "").split(", ").map((n) => n.trim().toLowerCase())
       : [];

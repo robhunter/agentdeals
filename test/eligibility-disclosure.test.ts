@@ -12,6 +12,7 @@ const { eligibilityGate, eligibilityGateAsPublished, publishableEligibilityCondi
 const { gateFor, notAFreeOfferGateFor, utcDate } = await import("../dist/ranking.js");
 const { supersedingChange } = await import("../dist/superseded-description.js");
 const { offerRetired } = await import("../dist/retirement.js");
+const { NOTHING_CONTRADICTS_OUR_TERMS_FOR } = await import("../dist/data.js");
 
 type Offer = import("../src/types.ts").Offer;
 type DealChange = import("../src/types.ts").DealChange;
@@ -359,7 +360,7 @@ describe("a category page does not count a gated offer as a plain free tier", ()
       }
       assert.ok(description.includes(QUALIFICATION), `${where} description is ${description}`);
       assert.ok(
-        description.indexOf(QUALIFICATION) < description.indexOf("Verified pricing for"),
+        description.indexOf(QUALIFICATION) < description.indexOf(NOTHING_CONTRADICTS_OUR_TERMS_FOR),
         `${where} appends the qualification after the vendor list, where a snippet truncates it`,
       );
     }

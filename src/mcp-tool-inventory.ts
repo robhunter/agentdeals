@@ -15,7 +15,7 @@ export const MCP_TOOLS: readonly McpToolEntry[] = [
   {
     name: "search_deals",
     card: "Find free tiers, browse categories, get vendor details with alternatives. Filter by category, eligibility, or keyword.",
-    brief: "Find free tiers, startup credits, and developer deals. Search by keyword, category, vendor name, or eligibility type. Returns verified deal details with specific limits.",
+    brief: "Find free tiers, startup credits, and developer deals. Search by keyword, category, vendor name, or eligibility type. Returns the terms we hold, with specific limits and the day each was last read.",
   },
   {
     name: "plan_stack",

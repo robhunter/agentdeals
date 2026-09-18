@@ -1043,13 +1043,16 @@ export function confirmationCoverage(
   };
 }
 
-export function confirmationCoverageSentence(coverage: ConfirmationCoverage): string {
+export function confirmationCoverageSentence(coverage: ConfirmationCoverage, listing = ""): string {
   const confirmed = coverage.confirmed_within_90_days;
   const held = coverage.offers;
   const entries = held === 1 ? "entry" : "entries";
   const carries = confirmed === 1 ? "carries" : "carry";
-  return `Of the ${held.toLocaleString("en-US")} ${entries} we hold, ${confirmed.toLocaleString("en-US")} ${carries} terms a read confirmed in the last ${CONFIRMATION_WINDOW_DAYS} days.`;
+  const counted = listing ? `${listing} ${entries}` : entries;
+  return `Of the ${held.toLocaleString("en-US")} ${counted} we hold, ${confirmed.toLocaleString("en-US")} ${carries} terms a read confirmed in the last ${CONFIRMATION_WINDOW_DAYS} days.`;
 }
+
+export const NOTHING_CONTRADICTS_OUR_TERMS_FOR = "Nothing on record contradicts our terms for";
 
 export const CHANGE_IS_AN_EVENT = new Set<DealChange["change_type"]>([
   "pricing_restructured",
