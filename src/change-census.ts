@@ -18,6 +18,16 @@ export type CensusSubject = {
   resolution?: ChangeResolution | null;
 };
 
+export function howEachRecordWasRead(records: { detected_by?: string }[]): string {
+  const total = records.length;
+  const scheduled = records.filter((record) => record.detected_by).length;
+  const byHand = total - scheduled;
+  const hand = "read by hand from the vendor's pricing page or official announcement on the day";
+  if (scheduled === 0) return `Every one was ${hand} it was recorded.`;
+  if (byHand === 0) return "Every one was written by the scheduled re-read of the vendor's page.";
+  return `${scheduled} of them were written by the scheduled re-read of the vendor's page; the other ${byHand} were ${hand} they were recorded.`;
+}
+
 export function isIndexHousekeeping(change: CensusSubject): boolean {
   return change.current_state === INDEX_SWEEP_STATE;
 }

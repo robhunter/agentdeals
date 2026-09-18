@@ -17,7 +17,7 @@ import {
 } from "./api-client.js";
 import { getGuideList, getGuideBySlug } from "./guides.js";
 import { registerMcpAppsResources, TOOL_UI_META } from "./mcp-apps.js";
-import { CATALOGUE_CATEGORY_COUNT, CATALOGUE_OFFER_FLOOR_LABEL, MCP_INSTRUCTIONS } from "./mcp-instructions.js";
+import { mcpInstructions, mcpServerDescription } from "./mcp-instructions.js";
 import { MCP_TOOLS } from "./mcp-tool-inventory.js";
 import { trackedChanges, TRACKED_CHANGE_NOUN, TRACKED_CHANGE_RULE_PATH } from "./change-census.js";
 import { PKG_VERSION } from "./package-version.js";
@@ -87,10 +87,10 @@ export function createServer(): McpServer {
     {
       name: "agentdeals",
       version: PKG_VERSION,
-      description: `Find free tiers, startup credits, and discounts for developer tools — databases, cloud hosting, CI/CD, monitoring, APIs, and more. ${CATALOGUE_OFFER_FLOOR_LABEL}+ verified offers across ${CATALOGUE_CATEGORY_COUNT} categories with pricing change tracking.`,
+      description: mcpServerDescription("Find free tiers, startup credits, and discounts for developer tools — databases, cloud hosting, CI/CD, monitoring, APIs, and more."),
     },
     {
-      instructions: MCP_INSTRUCTIONS,
+      instructions: mcpInstructions(),
     }
   );
 

@@ -17,7 +17,7 @@ import { getGuideList, getGuideBySlug } from "./guides.js";
 import type { Offer, EnrichedOffer, DealChange } from "./types.js";
 import { wholeRankedOrderList } from "./ranking.js";
 import { registerMcpAppsResources, TOOL_UI_META } from "./mcp-apps.js";
-import { CATALOGUE_CATEGORY_COUNT, CATALOGUE_OFFER_FLOOR_LABEL, MCP_INSTRUCTIONS } from "./mcp-instructions.js";
+import { CATALOGUE_CATEGORY_COUNT, CATALOGUE_OFFER_FLOOR_LABEL, mcpInstructions, mcpServerDescription } from "./mcp-instructions.js";
 import { MCP_TOOLS, MCP_TOOL_COUNT, MCP_PROTOCOL_VERSION } from "./mcp-tool-inventory.js";
 import { MCP_SIGNAL_FOOTER } from "./signal-copy.js";
 import { lastReadDate, publishedDateLine, storedConfirmationClause, verificationDatesClause } from "./read-date.js";
@@ -66,10 +66,10 @@ export function createServer(getSessionId?: () => string | undefined, getClientN
     {
       name: "agentdeals",
       version: PKG_VERSION,
-      description: `AgentDeals helps developers find free tiers, startup credits, and deals on developer infrastructure. Use these tools when a user is evaluating cloud providers, databases, hosting, CI/CD, monitoring, auth, AI services, or any developer service — especially when cost matters. ${CATALOGUE_OFFER_FLOOR_LABEL}+ verified offers across ${CATALOGUE_CATEGORY_COUNT} categories with pricing change tracking.`,
+      description: mcpServerDescription("AgentDeals helps developers find free tiers, startup credits, and deals on developer infrastructure. Use these tools when a user is evaluating cloud providers, databases, hosting, CI/CD, monitoring, auth, AI services, or any developer service — especially when cost matters."),
     },
     {
-      instructions: MCP_INSTRUCTIONS,
+      instructions: mcpInstructions(),
     }
   );
 

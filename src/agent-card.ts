@@ -1,5 +1,5 @@
 import { PACKAGE_MANIFEST, PKG_VERSION, REPOSITORY_URL } from "./package-version.js";
-import { loadOffers, loadDealChanges, getCategories } from "./data.js";
+import { loadOffers, loadDealChanges, getCategories, confirmationCoverage, confirmationCoverageSentence, WHAT_A_CONFIRMATION_IS } from "./data.js";
 import { recordsStillInForce } from "./change-resolution.js";
 import { trackedChanges } from "./change-census.js";
 import { MCP_TOOLS, MCP_PROTOCOL_VERSION } from "./mcp-tool-inventory.js";
@@ -31,18 +31,25 @@ export interface CatalogueFigures {
   categories: number;
   vendors: number;
   changes_tracked: number;
-  verified_through: string;
+  confirmed_within_90_days: number;
+  freshness_score: number;
+  catalogue_dated_between: { oldest: string; newest: string };
+  what_confirmed_means: string;
 }
 
 export function catalogueFigures(): CatalogueFigures {
   const offers = loadOffers();
   const dates = offers.map((o) => o.verifiedDate).filter(Boolean).sort();
+  const coverage = confirmationCoverage(offers);
   return {
     offers: offers.length,
     categories: getCategories().length,
     vendors: new Set(offers.map((o) => o.vendor)).size,
     changes_tracked: trackedChanges(loadDealChanges()).length,
-    verified_through: dates[dates.length - 1] ?? "",
+    confirmed_within_90_days: coverage.confirmed_within_90_days,
+    freshness_score: coverage.freshness_score,
+    catalogue_dated_between: { oldest: dates[0] ?? "", newest: dates[dates.length - 1] ?? "" },
+    what_confirmed_means: WHAT_A_CONFIRMATION_IS,
   };
 }
 
@@ -60,7 +67,7 @@ export function buildServiceDescription(input: ServiceDescriptionInput) {
   return {
     document_type: "service-description",
     name: "AgentDeals",
-    description: `An index of ${catalogue.offers} verified free tiers, startup credits and developer-tool discounts across ${catalogue.categories} categories, answered over MCP and a JSON HTTP API.`,
+    description: `An index of ${catalogue.offers.toLocaleString("en-US")} free tiers, startup credits and developer-tool discounts across ${catalogue.categories} categories, answered over MCP and a JSON HTTP API. ${confirmationCoverageSentence(catalogue)}`,
     version: input.version,
     homepage: baseUrl,
     documentation_url: `${baseUrl}/setup`,
@@ -89,7 +96,7 @@ export function buildServiceDescription(input: ServiceDescriptionInput) {
       },
     ],
     tools: input.tools.map((t) => ({ name: t.name, description: t.brief })),
-    catalogue,
+    catalogue: { ...catalogue, confirmation_url: `${baseUrl}/api/freshness` },
     data: {
       license: input.license.name,
       license_url: input.license.url,

@@ -1012,6 +1012,45 @@ export const A_WITHHELD_RATING_DOES_NOT_LAPSE =
 export const A_COMPLETE_LOG_NOTICE =
   "Every record we hold is listed here, newest first. A record is never removed from this list, so a vendor named here stays named here whatever its verdict does afterwards.";
 
+export const CONFIRMATION_WINDOW_DAYS = 90;
+
+export const WHAT_A_CONFIRMATION_IS =
+  "An entry counts as confirmed when we can source the terms we publish on it to a read that confirmed them. The catalogue date beside an entry records when the entry was last written, and is not a confirmation.";
+
+export const HOW_THE_CATALOGUE_IS_MAINTAINED =
+  `Entries are re-read on a schedule and every attempt is recorded, whether or not it confirmed anything. ${WHAT_A_CONFIRMATION_IS}`;
+
+export interface ConfirmationCoverage {
+  offers: number;
+  confirmed_within_90_days: number;
+  freshness_score: number;
+}
+
+export function confirmationCoverage(
+  offers: Offer[] = loadOffers(),
+  now: Date = new Date(),
+): ConfirmationCoverage {
+  const dayMs = 24 * 60 * 60 * 1000;
+  const nowMs = now.getTime();
+  const confirmed = offers.filter((offer) => {
+    const on = confirmationDate(offer);
+    return on !== null && Math.floor((nowMs - new Date(on).getTime()) / dayMs) <= CONFIRMATION_WINDOW_DAYS;
+  }).length;
+  return {
+    offers: offers.length,
+    confirmed_within_90_days: confirmed,
+    freshness_score: offers.length > 0 ? Math.round((confirmed / offers.length) * 100) : 0,
+  };
+}
+
+export function confirmationCoverageSentence(coverage: ConfirmationCoverage): string {
+  const confirmed = coverage.confirmed_within_90_days;
+  const held = coverage.offers;
+  const entries = held === 1 ? "entry" : "entries";
+  const carries = confirmed === 1 ? "carries" : "carry";
+  return `Of the ${held.toLocaleString("en-US")} ${entries} we hold, ${confirmed.toLocaleString("en-US")} ${carries} terms a read confirmed in the last ${CONFIRMATION_WINDOW_DAYS} days.`;
+}
+
 export const CHANGE_IS_AN_EVENT = new Set<DealChange["change_type"]>([
   "pricing_restructured",
   "limits_reduced",
@@ -1634,7 +1673,7 @@ export function getFreshnessMetrics(): FreshnessMetrics {
 
   const confirmations = withAge.map((o) => o.confirmed_on).filter((d): d is string => Boolean(d)).sort();
   const stampedWithin90 = stampedWithin(90);
-  const confirmedWithin90 = confirmedWithin(90);
+  const coverage = confirmationCoverage(offers, now);
 
   const sorted = [...withAge].sort((a, b) => b.days_since_verified - a.days_since_verified);
   const entryOf = (o: (typeof withAge)[number]): FreshnessEntry => {
@@ -1677,12 +1716,12 @@ export function getFreshnessMetrics(): FreshnessMetrics {
     stamped_within_180_days: stampedWithin(180),
     confirmed_within_7_days: confirmedWithin(7),
     confirmed_within_30_days: confirmedWithin(30),
-    confirmed_within_90_days: confirmedWithin90,
+    confirmed_within_90_days: coverage.confirmed_within_90_days,
     confirmed_within_180_days: confirmedWithin(180),
     offers_holding_a_confirmation: confirmations.length,
     oldest_confirmation_held: confirmations[0] ?? null,
     attempted_within_90_days: attemptedWithin(90),
-    freshness_score: rate(confirmedWithin90, total),
+    freshness_score: coverage.freshness_score,
     stamp_score: rate(stampedWithin90, total),
     stalest_entries: stalest,
     freshest_entries: freshest,

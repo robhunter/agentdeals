@@ -491,7 +491,7 @@ describe("#1061 what a reader sees instead", () => {
     const html = await get("/category/databases");
     const line = html.match(/<p class="cat-meta">([^<]*)<\/p>/);
     assert.ok(line, "the category page must carry a meta line");
-    assert.match(line[1], /Data verified through \d{4}-\d{2}-\d{2}\./);
+    assert.match(line[1], /Catalogue dates here run to \d{4}-\d{2}-\d{2}\./);
   });
 });
 

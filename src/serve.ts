@@ -7,7 +7,7 @@ import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/
 import { createServer, getServerCard } from "./server.js";
 import { oldestVerifiedDateForSlug, vendorRiskAssessment, publishedRisk, levelWithheldStatement, vendorNotIndexedSentence, riskCauseOf, freeTierEndingRecord, NEGATIVE_CHANGE_TYPES, POSITIVE_CHANGE_TYPES, SEVERE_CHANGE_TYPES, loadOffers, getCategories, getNewOffers, getNewestDeals, searchOffers, enrichOffers, gateForOffer, loadDealChanges, getDealChanges, changeContext, DEFAULT_CHANGE_WINDOW_DAYS, getOfferDetails, compareServices, checkVendorRisk, auditStack, getExpiringDeals, getWeeklyDigest, getFormattedWeeklyDigest, getFreshnessMetrics, publishedStabilityIndex, stabilityWithheldDisclosure, UNRATED_STABILITY, type StabilityIndex, type PublishedStabilityClass, getVendorReferral, sanitizeQuery, getChangeLogFreshness, isEventDated, partitionByDateProvenance } from "./data.js";
 import { loadChangeRefusals, changesRatingTheListedTier, stabilityDeciders } from "./data.js";
-import { A_DEMOTION_IN_FORCE_RULE, NO_DEMOTION_IN_FORCE_RULE, A_COMPLETE_LOG_NOTICE, A_VERDICT_ROLLS_NOTICE, A_WITHHELD_RATING_DOES_NOT_LAPSE, lapsingDemotionStated, VOLATILE_WHILE_A_DEMOTION_COUNTS_RULE, WATCH_RECEIVES_FROM_VOLATILE_RULE } from "./data.js";
+import { A_DEMOTION_IN_FORCE_RULE, NO_DEMOTION_IN_FORCE_RULE, A_COMPLETE_LOG_NOTICE, A_VERDICT_ROLLS_NOTICE, A_WITHHELD_RATING_DOES_NOT_LAPSE, lapsingDemotionStated, VOLATILE_WHILE_A_DEMOTION_COUNTS_RULE, WATCH_RECEIVES_FROM_VOLATILE_RULE , confirmationCoverage, confirmationCoverageSentence, HOW_THE_CATALOGUE_IS_MAINTAINED } from "./data.js";
 import { confirmingRead, confirmingReadSentence, refusalsByVendor, refusedReadSentence, supersededRefusalSentence, type ChangeRefusal } from "./change-refusal.js";
 import { getStackRecommendation } from "./stacks.js";
 import { estimateCosts } from "./costs.js";
@@ -51,7 +51,7 @@ import { HETZNER_APRIL_CHANGES, HETZNER_CLOUD_PLANS, HETZNER_PRICES_READ, HETZNE
 import { HUNDRED_GB_SCENARIO, HUNDRED_TB_SCENARIO, ONE_TO_ONE_SCENARIO, STORAGE_RATES_READ, STORAGE_SCALE_WORKLOADS, TEN_TO_ONE_SCENARIO, cheapestProviderAt, costAfterMonthlyEgressGrantFor, costliestProviderAt, egressAllowanceSentence, egressBillAfterMonthlyGrantFor, egressBillOnceOverAllowance, egressRatioWhereCostsMatch, fixedMonthlyGrantsSentence, monthlyEgressGrantGb, monthlyEgressGrantSentence, monthlyStorageCost, providersWithScalingEgressAllowance, rateCardFor, scaleCostFor } from "./storage-cost-model.js";
 import { changeTimelineDate, supersededLineups, supersessionNote } from "./change-lineup.js";
 import { isNoLongerInForce, eventResolutionFields, recordsStillInForce, recordsWeStandBehind, INCLUDE_RETRACTED_REJECTED } from "./change-resolution.js";
-import { trackedChanges, isTrackedChange, isIndexHousekeeping, recordsOtherThanOurOwnIndexHousekeeping, changeCensus, changeCountPhrase, recordsNotCountedSentence, sliceById, CHANGE_SLICES, CENSUS_NOTE, TRACKED_CHANGE_RULE_ANCHOR, TRACKED_CHANGE_RULE_PATH, TRACKED_CHANGE_NOUN, INDEX_HOUSEKEEPING_CLASS, INDEX_HOUSEKEEPING_BADGE, INDEX_HOUSEKEEPING_BADGE_COLOR, INDEX_HOUSEKEEPING_NOTE, INCLUDE_INDEX_HOUSEKEEPING_REJECTED, indexHousekeepingHeadline } from "./change-census.js";
+import { trackedChanges, howEachRecordWasRead, isTrackedChange, isIndexHousekeeping, recordsOtherThanOurOwnIndexHousekeeping, changeCensus, changeCountPhrase, recordsNotCountedSentence, sliceById, CHANGE_SLICES, CENSUS_NOTE, TRACKED_CHANGE_RULE_ANCHOR, TRACKED_CHANGE_RULE_PATH, TRACKED_CHANGE_NOUN, INDEX_HOUSEKEEPING_CLASS, INDEX_HOUSEKEEPING_BADGE, INDEX_HOUSEKEEPING_BADGE_COLOR, INDEX_HOUSEKEEPING_NOTE, INCLUDE_INDEX_HOUSEKEEPING_REJECTED, indexHousekeepingHeadline } from "./change-census.js";
 import { SINCE_DEFAULT_SENTENCE } from "./change-window.js";
 import { NAME_MATCH_SENTENCE } from "./name-match.js";
 import { FREE_TIER_STANDING_LABELS, GRADE_FACTORS_WITHOUT_PRICING_HISTORY, NOT_EVIDENCE_LABELS, citesAChangeOlderThanTheGrade, freeTierStanding, gradesFirstSet, gradesLastSet, gradingDatesClause, neverTracked, pricingHistoryCoverageAnswer, pricingHistoryCoverageSentence, riskEntries, scorecard, splitByFreeTierStanding, trackedSinceGrading, type RiskEntry } from "./risk-scorecard.js";
@@ -148,7 +148,7 @@ function verifiedThrough(records: Array<{ verifiedDate?: string }>): string | nu
 
 function dataVerifiedSegment(records: Array<{ verifiedDate?: string }>): string {
   const latest = verifiedThrough(records);
-  return latest ? ` Data verified through ${latest}.` : "";
+  return latest ? ` Catalogue dates here run to ${latest}.` : "";
 }
 
 const __filename = fileURLToPath(import.meta.url);
@@ -527,7 +527,8 @@ const durableHistoryBody = JSON.stringify({
 const offers = loadOffers();
 const categories = getCategories();
 const dealChanges = loadDealChanges();
-const trackedChangeCount = trackedChanges(dealChanges).length;
+const trackedChangeRecords = trackedChanges(dealChanges);
+const trackedChangeCount = trackedChangeRecords.length;
 
 const q1TrackedChanges = trackedChanges(changesInWindow(dealChanges, { start: "2026-01-01", end: "2026-03-31" }).dated);
 const q1ChangeCount = q1TrackedChanges.length;
@@ -840,7 +841,8 @@ const stats = {
 function withCatalogueFigures(markdown: string): string {
   return markdown
     .replaceAll("{{OFFER_COUNT}}", stats.offers.toLocaleString("en-US"))
-    .replaceAll("{{CATEGORY_COUNT}}", String(stats.categories));
+    .replaceAll("{{CATEGORY_COUNT}}", String(stats.categories))
+    .replaceAll("{{CONFIRMATION_COVERAGE}}", confirmationCoverageSentence(confirmationCoverage()));
 }
 
 export function changeLogFreshnessNote(now: Date = new Date()): string {
@@ -2368,7 +2370,7 @@ ${offersHtml}
 
 function buildCategoryIndexPage(): string {
   const title = `All Categories (${stats.categories}) — AgentDeals`;
-  const metaDesc = `Browse ${stats.categories} categories of free developer tools. ${stats.offers}+ verified free tiers across databases, hosting, monitoring, CI/CD, auth, and more.`;
+  const metaDesc = `Browse ${stats.categories} categories of free developer tools. ${stats.offers}+ free tiers across databases, hosting, monitoring, CI/CD, auth, and more.`;
 
   const sortedCats = [...categories].sort((a, b) => b.count - a.count);
   const catCardsHtml = sortedCats.map(c => `
@@ -27633,7 +27635,7 @@ ${mcpCtaCss()}
 
   <div id="methodology" class="methodology">
     <p><strong>Data Source &amp; Methodology</strong></p>
-    <p>This tracker is powered by AgentDeals&rsquo; <code>track_changes</code> tool, which monitors ${trackedChangeCount} verified pricing changes across ${offers.length.toLocaleString()} developer tools. Each change was read by hand from the vendor&rsquo;s pricing page or official announcement on the day it was recorded. Change types: <em>free_tier_removed</em>, <em>limits_reduced</em>, <em>restriction</em>, <em>open_source_killed</em>, <em>pricing_restructured</em>, <em>new_free_tier</em>, <em>limits_increased</em>, <em>startup_program_expanded</em>.</p>
+    <p>This tracker is powered by AgentDeals&rsquo; <code>track_changes</code> tool, which monitors ${trackedChangeCount} pricing changes across ${offers.length.toLocaleString()} developer tools. ${escHtmlServer(howEachRecordWasRead(trackedChangeRecords))} Change types: <em>free_tier_removed</em>, <em>limits_reduced</em>, <em>restriction</em>, <em>open_source_killed</em>, <em>pricing_restructured</em>, <em>new_free_tier</em>, <em>limits_increased</em>, <em>startup_program_expanded</em>.</p>
     <p>Impact is scored as high (affects thousands of developers or eliminates a widely-used free tier), medium (meaningful change to limits or pricing structure), or low (minor adjustments). Sources linked for each entry.</p>
     <p>Missing a change? <a href="https://github.com/robhunter/agentdeals/issues">File an issue</a> and we&rsquo;ll add it.</p>
   </div>
@@ -55366,11 +55368,11 @@ ${[...corrections, ...weekEntries].join("\n")}
   } else if (url.pathname === "/llms.txt" && isGetOrHead) {
     const llmsTxt = `# AgentDeals
 
-> An MCP server and REST API that aggregates free tiers, startup credits, and developer tool deals. ${stats.offers} verified offers across ${stats.categories} categories with pricing change tracking.
+> An MCP server and REST API that aggregates free tiers, startup credits, and developer tool deals. ${stats.offers.toLocaleString("en-US")} offers across ${stats.categories} categories with pricing change tracking. ${confirmationCoverageSentence(confirmationCoverage())}
 
 ## What AgentDeals Does
 
-AgentDeals helps developers find free tiers, startup credits, and deals on developer infrastructure — databases, cloud hosting, CI/CD, monitoring, auth, AI services, and more. Data is verified and includes specific free tier limits, eligibility requirements, and pricing change history.
+AgentDeals helps developers find free tiers, startup credits, and deals on developer infrastructure — databases, cloud hosting, CI/CD, monitoring, auth, AI services, and more. Every entry carries specific free tier limits, eligibility requirements, pricing change history, and the date behind the terms we publish. ${HOW_THE_CATALOGUE_IS_MAINTAINED} Per-entry and per-category coverage is at ${BASE_URL}/api/freshness.
 
 ## How ranking works — read this before trusting an order
 
@@ -55414,7 +55416,7 @@ ${MCP_TOOLS.map(t => `- **${t.name}**: ${t.brief}`).join("\n")}
     const catList = categories.map(c => `- ${c.name} (${c.count} offers)`).join("\n");
     const llmsFullTxt = `# AgentDeals — Full Reference
 
-> ${stats.offers} verified developer tool deals across ${stats.categories} categories. Free tiers, startup credits, and pricing change tracking.
+> ${stats.offers.toLocaleString("en-US")} developer tool deals across ${stats.categories} categories. Free tiers, startup credits, and pricing change tracking. ${confirmationCoverageSentence(confirmationCoverage())}
 
 ## MCP Connection
 

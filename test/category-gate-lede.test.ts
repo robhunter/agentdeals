@@ -30,7 +30,7 @@ const CLAUSE_FORMS: Record<string, (n: number) => string> = {
   not_a_free_offer: (n) => (n === 1 ? "1 is not a free offer" : `${n} are not free offers`),
   offer_expired: (n) => (n === 1 ? "1 has expired" : `${n} have expired`),
   offer_retired: (n) => (n === 1 ? "1 has ended" : `${n} have ended`),
-  verification_lapsed: (n) => (n === 1 ? "1 has not been re-confirmed recently enough" : `${n} have not been re-confirmed recently enough`),
+  verification_lapsed: (n) => `${n} we have not been able to confirm in the last 180 days`,
 };
 
 const CLAUSE_ORDER = ["eligibility_restricted", "not_a_free_offer", "offer_expired", "offer_retired", "verification_lapsed"];
@@ -58,7 +58,7 @@ function endedClause(ended: number): string {
 }
 
 function expectedLede(total: number, codes: string[], ended = 0): string {
-  const counted = `${total} verified free tiers and developer deals`;
+  const counted = `${total} free tiers and developer deals`;
   const alsoEnded = endedClause(ended);
   if (codes.length === 0) return `${counted}.${alsoEnded}`;
   if (eligibilityAccountsForAll({ codes, total })) {
@@ -209,7 +209,7 @@ describe("a category page discloses every gated record, not eligibility alone", 
       assert.ok(!lede.includes("  "), `/category/${c.slug} lede holds a gap: ${lede}`);
       const rest = lede.slice(expected.length);
       assert.ok(
-        rest === "" || /^ Data verified through \d{4}-\d{2}-\d{2}\.$/.test(rest),
+        rest === "" || /^ Catalogue dates here run to \d{4}-\d{2}-\d{2}\.$/.test(rest),
         `/category/${c.slug} lede carries ${JSON.stringify(rest)} after the sentence`,
       );
     }
@@ -269,7 +269,7 @@ describe("a category page discloses every gated record, not eligibility alone", 
       const lede = ledeOf(await page(`/category/${c.slug}`));
       assert.ok(lede.includes(ALL_GATED_ELIGIBILITY_LEDE), `/category/${c.slug} lede is ${lede}`);
       assert.ok(
-        !lede.startsWith(`${c.total} verified free tiers and developer deals.`),
+        !lede.startsWith(`${c.total} free tiers and developer deals.`),
         `/category/${c.slug} closes the count claim before qualifying it: ${lede}`,
       );
     }

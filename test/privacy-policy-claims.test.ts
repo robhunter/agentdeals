@@ -3,7 +3,7 @@ import assert from "node:assert";
 import { spawn, type ChildProcess } from "node:child_process";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { MCP_INSTRUCTIONS } from "../dist/mcp-instructions.js";
+import { mcpInstructions } from "../dist/mcp-instructions.js";
 import { MCP_SIGNAL_INSTRUCTIONS, PRIVACY_SCOPE } from "../dist/signal-copy.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -99,7 +99,7 @@ describe("#1043 the promise the policy makes about the intake surfaces holds", (
   });
 
   it("tells the sender on both MCP surfaces", () => {
-    assert.ok(MCP_INSTRUCTIONS.includes(SHARING_NOTICE), "the server instructions invite a note without saying where it can go");
+    assert.ok(mcpInstructions().includes(SHARING_NOTICE), "the server instructions invite a note without saying where it can go");
     assert.ok(MCP_SIGNAL_INSTRUCTIONS.includes(SHARING_NOTICE), "the MCP invitation omits where a note can go");
   });
 

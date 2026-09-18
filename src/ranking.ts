@@ -1,6 +1,6 @@
 import { createHash } from "node:crypto";
 import { changeSummaryText } from "./change-citation.js";
-import { gateCensusSentence } from "./gate-disclosure.js";
+import { gateCensusSentence, VERIFICATION_LAPSED_DAYS } from "./gate-disclosure.js";
 import { LINK_GRACE_DAYS, unreachableNoticeForUrl } from "./link-health.js";
 import { listEndedTiers, offerEnded, recordedTierSentence } from "./retirement.js";
 import { LAST_RESOLVED, withheldLevelSentence } from "./source-check.js";
@@ -22,7 +22,6 @@ export const NAMED_SUBSET_FIELD_RULE =
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 const STALE_VERIFICATION_DAYS = 90;
-const VERIFICATION_LAPSED_DAYS = 180;
 const EXPIRING_SOON_DAYS = 90;
 const ADVERSE_CHANGE_WINDOW_DAYS = 365;
 
