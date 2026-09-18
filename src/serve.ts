@@ -3551,6 +3551,7 @@ function buildComparisonPage(slug: string): string | null {
       vendor,
       recordedChanges,
       rating: rated as StabilityRating | null,
+      ratedOn: risk.risk_cause?.date ?? null,
       ratingWithheldBecause: levelWithheldReason(risk, risk.link_unreachable),
       refusedRead: risk.refused_read,
       unconfirmableSince: levelWithheldSince(risk, risk.link_unreachable),

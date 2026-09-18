@@ -37,9 +37,13 @@ const MUTANTS = [
     TIMELINE_SECTION,
     `    <h2>Pricing Change Timeline</h2>`],
 
-  ["the-window-the-copy-publishes-is-not-the-window-the-filter-uses", "src/data.ts",
+  ["the-filter-narrows-to-ten-days-while-the-copy-still-publishes-ninety", "src/data.ts",
     `  const cutoffDate = new Date(now.getTime() - RECENT_CHANGE_WINDOW_DAYS * 24 * 60 * 60 * 1000)`,
-    `  const cutoffDate = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000)`],
+    `  const cutoffDate = new Date(now.getTime() - 10 * 24 * 60 * 60 * 1000)`],
+
+  ["the-filter-widens-to-a-year-while-the-copy-still-publishes-ninety", "src/data.ts",
+    `  const cutoffDate = new Date(now.getTime() - RECENT_CHANGE_WINDOW_DAYS * 24 * 60 * 60 * 1000)`,
+    `  const cutoffDate = new Date(now.getTime() - 365 * 24 * 60 * 60 * 1000)`],
 
   ["a-comparison-heading-carries-a-verdict-that-lapses", "src/serve.ts",
     COMPARE_HEADING,

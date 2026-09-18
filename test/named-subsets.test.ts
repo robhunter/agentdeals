@@ -6,7 +6,7 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { assertCoversPopulation, assertPopulationFloor, vendorsInTheCatalogue, categoriesInTheCatalogue } from "./population-floor.ts";
-import { NAMED_SUBSET_RULE, NAMED_SUBSET_FIELD_RULE, wholeRankedOrderList } from "../dist/ranking.js";
+import { NAMED_SUBSET_RULE, NAMED_SUBSET_FIELD_RULE, CRITERIA_PATH, wholeRankedOrderList } from "../dist/ranking.js";
 import { toSlug } from "../dist/slug.js";
 import {
   loadOffers,
@@ -43,7 +43,7 @@ const DEMOTED_IN_BASIS = /([\d,]+) (?:is|are) demoted with the reason named/;
 const GATED_IN_BASIS = /([\d,]+) (?:is|are) listed last behind a stated gate/;
 const RECOUNTED_ELSEWHERE = [LISTING_BASIS, HOLDS_IN_ALL, STATED_COUNTS, CHANGES_STATED];
 const PAGES_DATING_A_DEMOTION_FLOOR = 32;
-const VENDORS_EXEMPTED_BY_A_STATED_WINDOW_FLOOR = 600;
+const ROLLING_VERDICT_HEADINGS = ["At-Risk Vendors", "Stable Picks"];
 const CLOCK_BASE_DAYS = Number(process.env.AGENTDEALS_CLOCK_BASE_DAYS ?? 0);
 
 interface Surfaces {
@@ -475,16 +475,49 @@ describe("what a page names changes overnight only where the page itself says wh
       [],
       "a trends page declares no section a complete log, and declaring one is the only thing that keeps a heading out of the exemption's denominator",
     );
-    const exempted = inventory.flatMap(pagePath => {
+    const named = trendsPages.flatMap(pagePath => {
       const surfaces = today.get(pagePath)!;
-      return surfaces.vendors
-        .filter(vendor => namedOnlyUnderARollingWindow(surfaces, vendor))
-        .map(vendor => `${pagePath}: ${vendor}`);
+      return ROLLING_VERDICT_HEADINGS.flatMap(heading =>
+        (surfaces.regions[heading] ?? []).map(vendor => ({ pagePath, heading, vendor, surfaces })));
     });
-    assertPopulationFloor(
-      exempted.length,
-      VENDORS_EXEMPTED_BY_A_STATED_WINDOW_FLOOR,
-      "vendors whose every verdict heading states the window its membership rolls on",
+    assert.ok(
+      named.length > 0,
+      `no trends page names a vendor under ${ROLLING_VERDICT_HEADINGS.join(" or ")}, so nothing below reads the exemption at all`,
+    );
+    const unexempted = named
+      .filter(({ surfaces, vendor }) => !namedOnlyUnderARollingWindow(surfaces, vendor))
+      .map(({ pagePath, heading, vendor }) => `${pagePath} "${heading}": ${vendor}`);
+    assert.deepEqual(
+      unexempted.slice(0, 8),
+      [],
+      `${unexempted.length} of ${named.length} vendors named under a heading whose membership rolls with the clock are not covered by a window that heading states`,
+    );
+  });
+
+  it("names under a stated membership rule every vendor that rule qualifies, not the first few", t => {
+    if (CLOCK_BASE_DAYS !== 0) return t.skip("the qualifying set is read on the real clock, which the shifted server does not share");
+    const qualifyingIn = new Map<string, Set<string>>();
+    const offersByCategory = new Map<string, ReturnType<typeof loadOffers>>();
+    for (const offer of loadOffers()) {
+      if (!offersByCategory.has(offer.category)) offersByCategory.set(offer.category, []);
+      offersByCategory.get(offer.category)!.push(offer);
+    }
+    for (const [category, list] of offersByCategory) {
+      const qualifying = enrichOffers(list).filter(o => o.risk_level === "stable" && !o.recent_change);
+      qualifyingIn.set(toSlug(category), new Set(qualifying.map(o => toSlug(o.vendor))));
+    }
+    const withheld: string[] = [];
+    for (const pagePath of inventory.filter(p => p.startsWith("/trends/"))) {
+      const qualifying = qualifyingIn.get(pagePath.slice("/trends/".length));
+      if (qualifying === undefined) continue;
+      const named = new Set(today.get(pagePath)!.regions["Stable Picks"] ?? []);
+      const unnamed = [...qualifying].filter(vendor => !named.has(vendor)).sort();
+      if (unnamed.length > 0) withheld.push(`${pagePath}: ${unnamed.length} of ${qualifying.size} unnamed, ${unnamed.slice(0, 3).join(", ")}`);
+    }
+    assert.deepEqual(
+      withheld.slice(0, 8),
+      [],
+      `${withheld.length} pages state the rule for being in a section and then name only some of the vendors that satisfy it, which is the named subset ${CRITERIA_PATH}#subsets publishes a promise against`,
     );
   });
 
