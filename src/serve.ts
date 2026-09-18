@@ -19,6 +19,7 @@ import { RATED_LEVELS, isRated, gradeForStack } from "./stack-grade.js";
 import { provenanceBlock } from "./provenance.js";
 import { recordApiHit, recordSessionConnect, recordSessionDisconnect, recordLandingPageView, getStats, getConnectionStats, loadTelemetry, flushTelemetry, flushPending, FLUSH_INTERVAL_SECONDS, logRequest, getPublicRequestLogResult, getTelemetryHealth, recordPageView, getPageViews, recordReferralListingCall, recordReferralVendorLookup, getReferralMarketplaceStats, getSessionClassification, recordSearchQuery, getSearchAnalytics, getApiHitsByEndpoint, recordTraffic, getTrafficReport, getSignalReport, publicSignalReport, getRollupDaySource, getRollupDatesAvailable, setDurableRollupCoverage, redisJsonGet, redisJsonMget, redisJsonSet, redisJsonSetWithoutExpiry, useRedis } from "./stats.js";
 import { buildDailyRollup, readRollups, coverageOf, ROLLUP_DATE_PATTERN } from "./analytics-rollup.js";
+import { AGENT_OPENS_WINDOW_DAYS, HOMEPAGE_GUIDE_COUNT, agentOpensByPath, agentOpensWindow, browseSectionSentence, guideSelectionSentence, guidesGroupedByHeading, guidesHomepageLinks } from "./homepage-routing.js";
 import { configureVendorSeries, recordVendorRequest, flushVendorSeries, readVendorSeries, vendorSeriesGauge, vendorExportAuthorized, isSeriesDate, seriesDateRange, VENDOR_SERIES_PATH, VENDOR_SERIES_RETENTION_DAYS, VENDOR_SERIES_NOTES } from "./vendor-series.js";
 import { openapiSpec } from "./openapi.js";
 import { AGENT_CARD_PATHS, OPENAPI_ALIAS_PATHS, OPENAPI_CANONICAL_PATH, OPENAPI_YAML_PATH, serviceDescription } from "./agent-card.js";
@@ -995,46 +996,6 @@ function riskCellHtml(level: string | null | undefined, cause: RiskCause | null 
     ? `<br>${citedClaimHtml(cause, escHtmlServer, riskCauseLabel(cause), "font-size:.7rem;color:var(--text-dim)")}`
     : "";
   return `<span style="color:${color}">${resolved}</span>${causeHtml}`;
-}
-
-function buildChangesHtml(): string {
-  return recentChanges.map((c) => {
-    const badge = changeTypeBadge[c.change_type] ?? { label: c.change_type, color: "#8b949e" };
-    return `      <div class="change-entry">
-        <div class="change-header">
-          <span class="change-badge" style="background:${badge.color}">${badge.label}</span>
-          <span class="change-vendor">${homepageVendorLink(c.vendor)}</span>
-          <span class="change-date">${changeEntryDateLabel(c)}</span>
-        </div>
-        <div class="change-summary">${changeSummaryHtml(c, escHtmlServer)}</div>
-      </div>`;
-  }).join("\n");
-}
-
-function buildDeadlinesHtml(): string {
-  if (upcomingDeadlines.length === 0) return "";
-  return upcomingDeadlines.map((c) => {
-    const badge = changeTypeBadge[c.change_type] ?? { label: c.change_type, color: "#8b949e" };
-    const deadlineDate = new Date(c.date + "T00:00:00Z");
-    const todayDate = new Date(today + "T00:00:00Z");
-    const daysLeft = Math.ceil((deadlineDate.getTime() - todayDate.getTime()) / 86400000);
-    const urgentClass = daysLeft <= 14 ? " deadline-urgent" : "";
-    const daysLabel = daysLeft === 1 ? "1 day" : `${daysLeft} days`;
-    const impactColor = changeImpactColor(c.impact);
-    return `      <div class="deadline-item${urgentClass}">
-        <div class="deadline-left">
-          <div class="deadline-countdown" style="border-color:${impactColor}"><span class="deadline-days">${daysLeft}</span><span class="deadline-unit">${daysLeft === 1 ? "day" : "days"}</span></div>
-        </div>
-        <div class="deadline-right">
-          <div class="deadline-header">
-            <span class="change-badge" style="background:${badge.color}">${badge.label}</span>
-            <span class="change-vendor">${homepageVendorLink(c.vendor)}</span>
-            <span class="deadline-date">${changeEntryDateLabel(c)}</span>
-          </div>
-          <div class="change-summary">${changeSummaryHtml(c, escHtmlServer)}</div>
-        </div>
-      </div>`;
-  }).join("\n");
 }
 
 function buildChangingSoonSection(): string {
@@ -8516,6 +8477,38 @@ const guideSectionOrder: { type: GuideContentType; heading: string; description:
   { type: "integration", heading: "Framework Integration Guides", description: "Step-by-step guides for using AgentDeals MCP tools with popular AI agent frameworks." },
 ];
 
+const guideSectionHeadings = new Map(guideSectionOrder.map(s => [s.type, s.heading]));
+
+interface GuideIndexEntry {
+  type: GuideContentType;
+  heading: string;
+  slug: string;
+  title: string;
+  hubDesc: string;
+}
+
+function guidesIndexEntries(): GuideIndexEntry[] {
+  const entries: GuideIndexEntry[] = [];
+  for (const page of ALTERNATIVES_PAGES) {
+    const type = classifyGuide(page.slug);
+    entries.push({ type, heading: guideSectionHeadings.get(type)!, slug: page.slug, title: page.title, hubDesc: page.hubDesc });
+  }
+  for (const guide of INTEGRATION_GUIDES) {
+    entries.push({
+      type: "integration",
+      heading: guideSectionHeadings.get("integration")!,
+      slug: `guides/${guide.slug}`,
+      title: guide.title,
+      hubDesc: guide.hubDesc,
+    });
+  }
+  return entries;
+}
+
+function guideCardTitle(title: string): string {
+  return title.split(" — ")[0];
+}
+
 interface IntegrationGuide {
   slug: string;
   title: string;
@@ -9780,12 +9773,8 @@ function buildGuidesPage(): string {
 
   const grouped = new Map<GuideContentType, { slug: string; title: string; hubDesc: string }[]>();
   for (const section of guideSectionOrder) grouped.set(section.type, []);
-  for (const page of ALTERNATIVES_PAGES) {
-    const type = classifyGuide(page.slug);
-    grouped.get(type)!.push({ slug: page.slug, title: page.title, hubDesc: page.hubDesc });
-  }
-  for (const guide of INTEGRATION_GUIDES) {
-    grouped.get("integration")!.push({ slug: `guides/${guide.slug}`, title: guide.title, hubDesc: guide.hubDesc });
+  for (const entry of guidesIndexEntries()) {
+    grouped.get(entry.type)!.push({ slug: entry.slug, title: entry.title, hubDesc: entry.hubDesc });
   }
 
   const allAlternativesItems = ALTERNATIVES_PAGES.map((p, i) => ({
@@ -9827,7 +9816,7 @@ function buildGuidesPage(): string {
     const pages = grouped.get(section.type) ?? [];
     if (pages.length === 0) return "";
     const cards = pages.map(p => {
-      const shortTitle = p.title.split(" — ")[0];
+      const shortTitle = guideCardTitle(p.title);
       const type = classifyGuide(p.slug);
       const badgeColor = guideContentTypeColors[type];
       const badgeLabel = guideContentTypeLabels[type];
@@ -53172,6 +53161,50 @@ ${stableHtml}
 </html>`;
 }
 
+function buildHomepageGuidesSection(): string {
+  const population = guidesIndexEntries().map(e => ({ slug: e.slug, title: guideCardTitle(e.title), heading: e.heading }));
+  const window = agentOpensWindow(durableRollups, AGENT_OPENS_WINDOW_DAYS);
+  const selected = window === null
+    ? population.map(g => ({ ...g, agentOpens: 0 }))
+    : guidesHomepageLinks(population, agentOpensByPath(durableRollups, AGENT_OPENS_WINDOW_DAYS), HOMEPAGE_GUIDE_COUNT);
+  const groups = guidesGroupedByHeading(selected, guideSectionOrder.map(s => s.heading));
+  const rows = groups.map(group => `      <div class="answer-group">
+        <h3>${escHtmlServer(group.heading)}</h3>
+        <p>${group.guides.map(g => `<a href="/${g.slug}">${escHtmlServer(g.title)}</a>`).join(" &middot; ")}</p>
+      </div>`).join("\n");
+  return `  <div class="section" id="answers">
+    <div class="section-label">Answers</div>
+    <h2>Guides that answer a pricing question</h2>
+    <p>${escHtmlServer(guideSelectionSentence(selected.length, population.length, window))}</p>
+    <div class="answer-groups">
+${rows}
+    </div>
+    <a href="/guides" class="see-all-link">All ${population.length} guides &rarr;</a>
+  </div>`;
+}
+
+function buildBrowseCategoryPills(directory: { name: string; slug: string; count: number }[]): string {
+  return directory
+    .map(c => `<a class="cat-pill" href="/category/${c.slug}" data-cat="${escHtmlServer(c.name)}">${escHtmlServer(c.name)} (${c.count})</a>`)
+    .join("");
+}
+
+function buildBrowseSection(): string {
+  const directory = buildCategoryDirectory(categories, offers, toSlug);
+  return `  <div class="section" id="browse">
+    <div class="section-label">Explore</div>
+    <h2>Browse deals</h2>
+    <p>${escHtmlServer(browseSectionSentence(directory.length, offers.length))} <a href="/category">Category index</a></p>
+    <div class="browse-controls">
+      <input type="text" class="search-input" id="deal-search" placeholder="Search ${stats.offers.toLocaleString()}+ deals &mdash; try &ldquo;database&rdquo; or &ldquo;hosting&rdquo;">
+      <div class="category-pills" id="cat-pills">${buildBrowseCategoryPills(directory)}</div>
+    </div>
+    <div class="deal-cards" id="deal-cards"></div>
+    <button class="show-more" id="show-more" style="display:none">Show more</button>
+    <div class="browse-status" id="browse-status"></div>
+  </div>`;
+}
+
 function buildLandingPage(): string {
   return `<!DOCTYPE html>
 <html lang="en">
@@ -53340,7 +53373,12 @@ a:hover{color:var(--accent-hover);text-decoration:underline}
 .search-input:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-glow)}
 .search-input::placeholder{color:var(--text-dim)}
 .category-pills{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.75rem}
-.cat-pill{display:inline-block;padding:.25rem .7rem;border-radius:20px;font-size:.75rem;font-weight:500;background:transparent;color:var(--text-muted);border:1px solid var(--border);cursor:pointer;transition:all .2s;font-family:var(--sans)}
+.cat-pill{display:inline-block;padding:.25rem .7rem;border-radius:20px;font-size:.75rem;font-weight:500;background:transparent;color:var(--text-muted);border:1px solid var(--border);cursor:pointer;transition:all .2s;font-family:var(--sans);text-decoration:none}
+.answer-groups{display:grid;gap:1rem;margin-top:1rem}
+.answer-group h3{font-family:var(--serif);font-size:.95rem;color:var(--text);margin:0 0 .3rem}
+.answer-group p{margin:0;font-size:.85rem;color:var(--text-dim);line-height:1.8}
+.answer-group a{color:var(--text-muted);text-decoration:none}
+.answer-group a:hover{color:var(--accent);text-decoration:underline}
 .cat-pill:hover{border-color:var(--accent);color:var(--text)}
 .cat-pill.active{background:var(--accent);border-color:var(--accent);color:var(--bg);font-weight:600}
 .deal-cards{display:grid;gap:.75rem;margin-top:1rem}
@@ -53360,19 +53398,9 @@ a:hover{color:var(--accent-hover);text-decoration:underline}
 .connect-block{background:var(--bg-card);backdrop-filter:blur(12px);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin-top:1.5rem}
 .connect-block pre{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:1rem;overflow-x:auto;font-size:.8rem;color:var(--text-muted);line-height:1.5;margin-top:.75rem;position:relative}
 .connect-block code{font-family:var(--mono)}
-.client-tabs{display:flex;gap:.25rem;flex-wrap:wrap;margin-top:1.5rem;border-bottom:1px solid var(--border);padding-bottom:0}
-.client-tab{padding:.5rem 1rem;font-size:.8rem;font-weight:500;font-family:var(--sans);color:var(--text-muted);background:transparent;border:1px solid transparent;border-bottom:none;border-radius:8px 8px 0 0;cursor:pointer;transition:all .2s;white-space:nowrap}
-.client-tab:hover{color:var(--text);background:var(--accent-glow)}
-.client-tab.active{color:var(--accent);background:var(--bg-card);border-color:var(--border);border-bottom:1px solid var(--bg-card);margin-bottom:-1px;position:relative;z-index:1}
-.client-panel{display:none}
-.client-panel.active{display:block}
 .copy-btn{position:absolute;top:.5rem;right:.5rem;background:var(--bg-elevated);border:1px solid var(--border);border-radius:6px;padding:.25rem .5rem;font-size:.65rem;font-family:var(--mono);color:var(--text-muted);cursor:pointer;transition:all .2s}
 .copy-btn:hover{border-color:var(--accent);color:var(--accent)}
 .copy-btn.copied{color:#4ade80;border-color:#4ade80}
-.transport-toggle{display:flex;gap:.5rem;margin-top:.75rem}
-.transport-btn{padding:.3rem .75rem;font-size:.75rem;font-family:var(--mono);color:var(--text-dim);background:transparent;border:1px solid var(--border);border-radius:6px;cursor:pointer;transition:all .2s}
-.transport-btn:hover{color:var(--text);border-color:var(--accent)}
-.transport-btn.active{color:var(--accent);background:var(--accent-glow);border-color:var(--accent)}
 .transport-content{display:none}
 .transport-content.active{display:block}
 
@@ -53485,30 +53513,14 @@ ${buildChangingSoonSection()}
     <div id="sb-results" class="sb-results"></div>
   </div>
 
-  <div class="divider"></div>
-
-  <div class="section" id="whats-changed">
-    <div class="section-label">What&rsquo;s Changed</div>
-    <h2>Recent pricing changes</h2>
-    <p>Free tiers get removed. Limits change. We track it so your agent doesn't recommend dead deals.</p>
-${buildChangesHtml()}
-    <a href="/api/changes" class="see-all-link">See all ${stats.dealChanges} tracked changes &rarr;</a>
-  </div>
+${buildRecentChangesSection()}
 
   <div class="divider"></div>
 
-${upcomingDeadlines.length > 0 ? `  <div class="section">
-    <div class="section-label">Act Now</div>
-    <h2>Pricing changes coming soon</h2>
-    <p>Free tiers disappearing, prices increasing, products shutting down. Don't get caught off guard.</p>
-    <div class="deadlines-section">
-${buildDeadlinesHtml()}
-    </div>
-    <p style="margin-top:.75rem;font-size:.9rem"><a href="/expiring">See what\u2019s expiring soon &rarr;</a></p>
-  </div>
+${buildHomepageGuidesSection()}
 
   <div class="divider"></div>
-` : ""}
+
   <div class="section">
     <div class="section-label">The Problem</div>
     <p class="problem-text">When ${homepageVendorLink("Claude Code")} recommends ${homepageVendorLink("Railway")}, it doesn't know what ${homepageVendorLink("Render")} puts in its free tier. When it suggests ${homepageVendorLink("Supabase")}, it doesn't know <strong>${escHtmlServer(acceleratorCreditClause(acceleratorCreditCeiling()))}</strong> &mdash; ${homepageVendorLink(ACCELERATOR_CREDIT_VENDOR)}.</p>
@@ -53524,7 +53536,7 @@ ${buildDeadlinesHtml()}
       <div class="how-card">
         <div class="how-card-icon">01</div>
         <h3>Browse</h3>
-        <p>Search and filter ${stats.offers.toLocaleString()}+ deals directly on this page. No setup required.</p>
+        <p>Every category is a link on this page, and each one lists its own deals. Search across all ${stats.offers.toLocaleString()} runs in your browser. <a href="/category" style="color:var(--accent);text-decoration:underline">Category index</a></p>
       </div>
       <div class="how-card">
         <div class="how-card-icon">02</div>
@@ -53535,57 +53547,25 @@ ${buildDeadlinesHtml()}
       <div class="how-card">
         <div class="how-card-icon">03</div>
         <h3>MCP</h3>
-        <p>Connect any MCP client. Local via npx or remote HTTP.</p>
-        <pre><code>// Local (recommended)
-"command": "npx", "args": ["-y", "agentdeals"]
-
-// Remote
-"url": "${BASE_URL}/mcp"</code></pre>
+        <p>Connect any MCP client, local via npx or remote HTTP. The config is in <a href="#connect" style="color:var(--accent);text-decoration:underline">Connect your agent</a> below; per-client paths are on <a href="/setup" style="color:var(--accent);text-decoration:underline">Setup</a>.</p>
       </div>
     </div>
   </div>
 
   <div class="divider"></div>
 
-  <div class="section" id="browse">
-    <div class="section-label">Explore</div>
-    <h2>Browse deals</h2>
-    <div class="browse-controls">
-      <input type="text" class="search-input" id="deal-search" placeholder="Search ${stats.offers.toLocaleString()}+ deals &mdash; try &ldquo;database&rdquo; or &ldquo;hosting&rdquo;">
-      <div class="category-pills" id="cat-pills"></div>
-    </div>
-    <div class="deal-cards" id="deal-cards"></div>
-    <button class="show-more" id="show-more" style="display:none">Show more</button>
-    <div class="browse-status" id="browse-status"></div>
-  </div>
-${buildRecentChangesSection()}
+${buildBrowseSection()}
 
   <div class="divider"></div>
 
   <div class="section" id="connect">
     <div class="section-label">Get Started</div>
     <h2>Connect your agent</h2>
-    <p>Copy-paste config for your MCP client. Each supports local (npx) or remote (HTTP) transport.</p>
+    <p>One config, every MCP client. <a href="/setup">Setup</a> carries the config file path for each client we support, and the one-click installer.</p>
 
-    <div class="client-tabs" id="client-tabs">
-      <button class="client-tab active" data-client="claude-desktop">Claude Desktop</button>
-      <button class="client-tab" data-client="claude-code">Claude Code</button>
-      <button class="client-tab" data-client="cursor">Cursor</button>
-      <button class="client-tab" data-client="cline">Cline</button>
-      <button class="client-tab" data-client="windsurf">Windsurf</button>
-    </div>
-
-    <div class="client-panel active" id="panel-claude-desktop">
-      <div class="connect-block">
-        <h3 style="font-family:var(--serif);font-size:1rem;color:var(--text);margin-bottom:.25rem">Claude Desktop</h3>
-        <p style="font-size:.85rem;color:var(--text-muted);margin-bottom:.25rem">Add to <code>claude_desktop_config.json</code></p>
-        <p style="font-size:.75rem;color:var(--text-dim);margin-bottom:.5rem">macOS: <code>~/Library/Application Support/Claude/</code> &nbsp;|&nbsp; Windows: <code>%APPDATA%\\Claude\\</code></p>
-        <div class="transport-toggle">
-          <button class="transport-btn active" data-transport="local">npx (local)</button>
-          <button class="transport-btn" data-transport="remote">Remote HTTP</button>
-        </div>
-        <div class="transport-content active" data-transport="local">
-          <pre><button class="copy-btn" onclick="copyConfig(this)">Copy</button><code>{
+    <div class="connect-block">
+      <p style="font-size:.85rem;color:var(--text-muted);margin-bottom:.5rem">Local, via npx &mdash; add to your client's MCP config file:</p>
+      <pre><button class="copy-btn" onclick="copyConfig(this)">Copy</button><code>{
   "mcpServers": {
     "agentdeals": {
       "command": "npx",
@@ -53593,145 +53573,8 @@ ${buildRecentChangesSection()}
     }
   }
 }</code></pre>
-        </div>
-        <div class="transport-content" data-transport="remote">
-          <pre><button class="copy-btn" onclick="copyConfig(this)">Copy</button><code>{
-  "mcpServers": {
-    "agentdeals": {
-      "url": "${BASE_URL}/mcp"
-    }
-  }
-}</code></pre>
-        </div>
-      </div>
-    </div>
-
-    <div class="client-panel" id="panel-claude-code">
-      <div class="connect-block">
-        <h3 style="font-family:var(--serif);font-size:1rem;color:var(--text);margin-bottom:.25rem">Claude Code</h3>
-        <p style="font-size:.85rem;color:var(--text-muted);margin-bottom:.25rem">Run in your terminal, or add to <code>.mcp.json</code> in your project root</p>
-        <div class="transport-toggle">
-          <button class="transport-btn active" data-transport="local">npx (local)</button>
-          <button class="transport-btn" data-transport="remote">Remote HTTP</button>
-        </div>
-        <div class="transport-content active" data-transport="local">
-          <pre><button class="copy-btn" onclick="copyConfig(this)">Copy</button><code>claude mcp add agentdeals -- npx -y agentdeals</code></pre>
-          <p style="font-size:.75rem;color:var(--text-dim);margin-top:.5rem">Or add to <code>.mcp.json</code>:</p>
-          <pre><button class="copy-btn" onclick="copyConfig(this)">Copy</button><code>{
-  "mcpServers": {
-    "agentdeals": {
-      "command": "npx",
-      "args": ["-y", "agentdeals"]
-    }
-  }
-}</code></pre>
-        </div>
-        <div class="transport-content" data-transport="remote">
-          <pre><button class="copy-btn" onclick="copyConfig(this)">Copy</button><code>claude mcp add agentdeals --transport http ${BASE_URL}/mcp</code></pre>
-          <p style="font-size:.75rem;color:var(--text-dim);margin-top:.5rem">Or add to <code>.mcp.json</code>:</p>
-          <pre><button class="copy-btn" onclick="copyConfig(this)">Copy</button><code>{
-  "mcpServers": {
-    "agentdeals": {
-      "type": "url",
-      "url": "${BASE_URL}/mcp"
-    }
-  }
-}</code></pre>
-        </div>
-      </div>
-    </div>
-
-    <div class="client-panel" id="panel-cursor">
-      <div class="connect-block">
-        <h3 style="font-family:var(--serif);font-size:1rem;color:var(--text);margin-bottom:.25rem">Cursor</h3>
-        <p style="font-size:.85rem;color:var(--text-muted);margin-bottom:.25rem">Add to <code>.cursor/mcp.json</code> in your project root</p>
-        <p style="font-size:.75rem;color:var(--text-dim);margin-bottom:.5rem">Or global: <code>~/.cursor/mcp.json</code></p>
-        <div class="transport-toggle">
-          <button class="transport-btn active" data-transport="local">npx (local)</button>
-          <button class="transport-btn" data-transport="remote">Remote HTTP</button>
-        </div>
-        <div class="transport-content active" data-transport="local">
-          <pre><button class="copy-btn" onclick="copyConfig(this)">Copy</button><code>{
-  "mcpServers": {
-    "agentdeals": {
-      "command": "npx",
-      "args": ["-y", "agentdeals"]
-    }
-  }
-}</code></pre>
-        </div>
-        <div class="transport-content" data-transport="remote">
-          <pre><button class="copy-btn" onclick="copyConfig(this)">Copy</button><code>{
-  "mcpServers": {
-    "agentdeals": {
-      "url": "${BASE_URL}/mcp"
-    }
-  }
-}</code></pre>
-        </div>
-      </div>
-    </div>
-
-    <div class="client-panel" id="panel-cline">
-      <div class="connect-block">
-        <h3 style="font-family:var(--serif);font-size:1rem;color:var(--text);margin-bottom:.25rem">Cline (VS Code)</h3>
-        <p style="font-size:.85rem;color:var(--text-muted);margin-bottom:.25rem">Add to <code>cline_mcp_settings.json</code></p>
-        <p style="font-size:.75rem;color:var(--text-dim);margin-bottom:.5rem">Cline sidebar &rarr; MCP Servers &rarr; Configure &nbsp;|&nbsp; Or: <code>~/Library/Application Support/Code/User/globalStorage/saoudrizwan.claude-dev/settings/</code></p>
-        <div class="transport-toggle">
-          <button class="transport-btn active" data-transport="local">npx (local)</button>
-          <button class="transport-btn" data-transport="remote">Remote HTTP</button>
-        </div>
-        <div class="transport-content active" data-transport="local">
-          <pre><button class="copy-btn" onclick="copyConfig(this)">Copy</button><code>{
-  "mcpServers": {
-    "agentdeals": {
-      "command": "npx",
-      "args": ["-y", "agentdeals"]
-    }
-  }
-}</code></pre>
-        </div>
-        <div class="transport-content" data-transport="remote">
-          <pre><button class="copy-btn" onclick="copyConfig(this)">Copy</button><code>{
-  "mcpServers": {
-    "agentdeals": {
-      "url": "${BASE_URL}/mcp",
-      "transportType": "streamable-http"
-    }
-  }
-}</code></pre>
-        </div>
-      </div>
-    </div>
-
-    <div class="client-panel" id="panel-windsurf">
-      <div class="connect-block">
-        <h3 style="font-family:var(--serif);font-size:1rem;color:var(--text);margin-bottom:.25rem">Windsurf</h3>
-        <p style="font-size:.85rem;color:var(--text-muted);margin-bottom:.25rem">Add to <code>~/.codeium/windsurf/mcp_config.json</code></p>
-        <div class="transport-toggle">
-          <button class="transport-btn active" data-transport="local">npx (local)</button>
-          <button class="transport-btn" data-transport="remote">Remote HTTP</button>
-        </div>
-        <div class="transport-content active" data-transport="local">
-          <pre><button class="copy-btn" onclick="copyConfig(this)">Copy</button><code>{
-  "mcpServers": {
-    "agentdeals": {
-      "command": "npx",
-      "args": ["-y", "agentdeals"]
-    }
-  }
-}</code></pre>
-        </div>
-        <div class="transport-content" data-transport="remote">
-          <pre><button class="copy-btn" onclick="copyConfig(this)">Copy</button><code>{
-  "mcpServers": {
-    "agentdeals": {
-      "url": "${BASE_URL}/mcp"
-    }
-  }
-}</code></pre>
-        </div>
-      </div>
+      <p style="font-size:.85rem;color:var(--text-muted);margin-top:.75rem">Remote HTTP transport: <code>${BASE_URL}/mcp</code></p>
+      <p style="font-size:.85rem;margin-top:.75rem"><a href="/setup">Per-client instructions and the one-click installer &rarr;</a></p>
     </div>
 
     <div class="connect-block" style="margin-top:1.5rem">
@@ -53752,30 +53595,6 @@ ${buildRecentChangesSection()}
   <footer>AgentDeals &mdash; open source, built for agents | <a href="/developers">REST API</a> | <a href="/privacy">Privacy</a> | <a href="/press">Press</a> | <a href="/disclosure">Affiliate Disclosure</a></footer>
 </div>
 <script>
-(function(){
-  var tabs=document.querySelectorAll('.client-tab');
-  var panels=document.querySelectorAll('.client-panel');
-  tabs.forEach(function(tab){
-    tab.addEventListener('click',function(){
-      tabs.forEach(function(t){t.classList.remove('active')});
-      panels.forEach(function(p){p.classList.remove('active')});
-      tab.classList.add('active');
-      var panel=document.getElementById('panel-'+tab.getAttribute('data-client'));
-      if(panel)panel.classList.add('active');
-    });
-  });
-  document.querySelectorAll('.transport-toggle').forEach(function(toggle){
-    var block=toggle.closest('.connect-block');
-    toggle.querySelectorAll('.transport-btn').forEach(function(btn){
-      btn.addEventListener('click',function(){
-        toggle.querySelectorAll('.transport-btn').forEach(function(b){b.classList.remove('active')});
-        block.querySelectorAll('.transport-content').forEach(function(c){c.classList.remove('active')});
-        btn.classList.add('active');
-        block.querySelectorAll('.transport-content[data-transport="'+btn.getAttribute('data-transport')+'"]').forEach(function(c){c.classList.add('active')});
-      });
-    });
-  });
-})();
 function copyConfig(btn){
   var code=btn.parentElement.querySelector('code');
   if(!code)return;
@@ -53833,15 +53652,12 @@ function copyConfig(btn){
     });
   }
 
-  function loadCategories(){
-    fetch('/api/categories').then(function(r){return r.json();}).then(function(data){
-      var html='<span class="cat-pill active" data-cat="">All</span>';
-      for(var i=0;i<data.categories.length;i++){
-        var c=data.categories[i];
-        html+='<span class="cat-pill" data-cat="'+escHtml(c.name)+'">'+escHtml(c.name)+' ('+c.count+')</span>';
-      }
-      pillsEl.innerHTML=html;
-    });
+  function addAllPill(){
+    var all=document.createElement('span');
+    all.className='cat-pill active';
+    all.setAttribute('data-cat','');
+    all.textContent='All';
+    pillsEl.insertBefore(all,pillsEl.firstChild);
   }
 
   search.addEventListener('input',function(){
@@ -53856,6 +53672,7 @@ function copyConfig(btn){
   pillsEl.addEventListener('click',function(e){
     var pill=e.target.closest('.cat-pill');
     if(!pill)return;
+    e.preventDefault();
     var pills=pillsEl.querySelectorAll('.cat-pill');
     for(var i=0;i<pills.length;i++)pills[i].classList.remove('active');
     pill.classList.add('active');
@@ -53870,12 +53687,12 @@ function copyConfig(btn){
   });
 
   cardsEl.addEventListener('click',function(e){
-    if(e.target.closest('.deal-link'))return;
+    if(e.target.closest('a'))return;
     var card=e.target.closest('.deal-card');
     if(card&&card.dataset.url)window.open(card.dataset.url,'_blank','noopener');
   });
 
-  loadCategories();
+  addAllPill();
   loadOffers(false);
 })();
 </script>

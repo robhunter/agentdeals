@@ -1032,7 +1032,7 @@ export interface TrafficClassification {
 const CLASS_DAY_RETENTION = 30;
 const MAX_CLASS_ROUTE_KEYS_PER_DAY = 200;
 const MAX_FAMILY_KEYS_PER_DAY = 40;
-const CLASS_ROUTE_SEP = "|";
+export const CLASS_ROUTE_SEP = "|";
 const UNKNOWN_FAMILY_KEY = "unknown";
 
 const SESSION_DAY_RETENTION = 90;

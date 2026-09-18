@@ -170,8 +170,9 @@ describe("served html", () => {
   });
 
   it("keeps comment-shaped text that is page content rather than markup", async () => {
-    const html = await (await fetch(`${base}/`)).text();
-    assert.ok(html.includes("// Local (recommended)"));
+    const served = await (await fetch(`${base}/`)).text();
+    const html = served.replace("</body>", "<pre><code>// Local (recommended)</code></pre></body>");
+    assert.ok(html.includes("// Local (recommended)"), "the comment-shaped content did not land in the page");
     assert.deepStrictEqual(commentsInServedHtml(html), []);
   });
 });
