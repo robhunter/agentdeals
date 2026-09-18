@@ -21,7 +21,9 @@ whether it states a verdict naming a vendor, and records which vendors that verd
 commits us to. It records separately which vendors the page puts a number beside in a
 table, because a table row states a fact about a vendor whether or not a verdict does.
 Review dates already on record are carried over untouched: this regenerates what is
-derived, never what a reviewer asserted.
+derived, never what a reviewer asserted. What is carried over is read from
+${pageReviewsPath()} whatever --out names, so writing to a scratch path produces the
+same registry rather than one with every reviewer's record blanked.
 
 Which stores a page reads is measured rather than carried over. Each page is rendered
 again against a catalogue and a change log whose text fields have been replaced, and a
@@ -162,8 +164,13 @@ async function main() {
   const opts = parseArgs(process.argv.slice(2));
   if (opts.help) { console.log(HELP); process.exit(opts.invalid ? 1 : 0); }
 
-  const existing = existsSync(opts.out) ? parsePageReviews(readFileSync(opts.out, "utf-8")) : { pages: [] };
+  const priorPath = pageReviewsPath();
+  const existing = existsSync(priorPath) ? parsePageReviews(readFileSync(priorPath, "utf-8")) : { pages: [] };
   const byPath = new Map(existing.pages.map(p => [p.path, p]));
+  const undated = EDITORIAL_PAGES.filter(route => !byPath.get(route)?.published);
+  if (undated.length > 1) {
+    console.log(`${undated.length} of ${EDITORIAL_PAGES.length} pages carry no publication date in ${priorPath}, so each one is dated by walking the history of src/serve.ts. A whole-register walk means the registry being carried over was not the one you meant.`);
+  }
   const lookup = {
     slugForPhrase: namedVendorSlug,
     slugsForSubject: assertedVendorSlugs,
