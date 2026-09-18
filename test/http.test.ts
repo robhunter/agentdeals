@@ -841,7 +841,7 @@ describe("HTTP transport", () => {
     const body = await response.json() as any;
     assert.ok(body.offer);
     assert.ok(Array.isArray(body.alternatives));
-    assert.strictEqual(body.alternatives.length, body.offer.tie_break.ranked_total, "the door named a prefix of the order it ranked");
+    assert.strictEqual(body.alternatives.length, body.tie_break.ranked_total, "the door named a prefix of the order it ranked");
   });
 
   it("GET /api/details/:vendor returns 404 for unknown vendor", async () => {

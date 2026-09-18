@@ -24,6 +24,7 @@ import {
 import { MCP_TOOLS_WITHDRAWN } from "../dist/mcp-tool-inventory.js";
 import { CHANGE_DIRECTION } from "../dist/change-direction.js";
 import { loadOffers } from "../dist/data.js";
+import { substitutesFor } from "../dist/product-role.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -48,6 +49,21 @@ function operationFor(endpoint: ApiEndpoint) {
 function citesInTheSpec(endpoint: ApiEndpoint): boolean {
   const json = operationFor(endpoint)?.responses?.["200"]?.content?.["application/json"];
   return json ? JSON.stringify(json.schema).includes("#/components/schemas/Provenance") : false;
+}
+
+function documentedKeys(schema: unknown, discriminator: string): Set<string> {
+  const shared = new Set<string>();
+  const branches: Record<string, any>[] = [];
+  const visit = (node: any): void => {
+    if (!node || typeof node !== "object") return;
+    if (Array.isArray(node.allOf)) { node.allOf.forEach(visit); return; }
+    if (Array.isArray(node.oneOf)) { branches.push(...node.oneOf); return; }
+    for (const key of Object.keys(node.properties ?? {})) shared.add(key);
+  };
+  visit(schema);
+  const branch = branches.find((candidate) => candidate.properties?.[discriminator] !== undefined);
+  assert.ok(branch, `the schema declares no response shape carrying ${discriminator}`);
+  return new Set([...shared, ...Object.keys(branch.properties ?? {})]);
 }
 
 function probeRequest(endpoint: ApiEndpoint, subjects: ReturnType<typeof exampleSubjects>): string | null {
@@ -174,6 +190,43 @@ describe("the machine-readable spec describes what the API serves", () => {
     const documented = API_ENDPOINTS.filter((e) => DOCUMENTED_GROUPS.includes(e.group));
     const inSpec = documented.filter((e) => operationFor(e) !== undefined);
     assert.strictEqual(inSpec.length, documented.length);
+  });
+
+  it("serves on /api/details the top-level keys its own schema declares, each of them once", async () => {
+    const schema = (spec.paths["/api/details/{vendor}"].get as unknown as { responses: Record<string, { content: Record<string, { schema: unknown }> }> })
+      .responses["200"].content["application/json"].schema;
+    const resolved = documentedKeys(schema, "offer");
+    const ambiguous = documentedKeys(schema, "disambiguation");
+    for (const field of ["relatedVendors", "alternatives", "tie_break"]) {
+      assert.ok(resolved.has(field), `the schema for /api/details no longer declares ${field}, so this test can no longer hold it anywhere`);
+    }
+
+    const offers = loadOffers();
+    const subject = offers
+      .map((offer) => ({ vendor: offer.vendor, substitutes: substitutesFor(offers, offer).length }))
+      .sort((a, b) => b.substitutes - a.substitutes)[0].vendor;
+
+    const read = async (request: string) => await (await fetch(`${base}${request}`, { redirect: "error" })).json() as Record<string, any>;
+    const whole = await read(`/api/details/${encodeURIComponent(subject)}?alternatives=true`);
+    const withoutTheFlag = await read(`/api/details/${encodeURIComponent(subject)}`);
+    const fuzzy = await read("/api/details/kiro?alternatives=true");
+    const ambiguousBody = await read("/api/details/proton");
+
+    const served = (body: Record<string, unknown>) => Object.keys(body).sort();
+    const declared = (keys: Set<string>, ...absent: string[]) => [...keys].filter((key) => !absent.includes(key)).sort();
+
+    assert.deepStrictEqual(served(whole), declared(resolved, "resolved_from"), "the keys /api/details serves against a canonical name are not the keys its schema declares");
+    assert.deepStrictEqual(served(withoutTheFlag), declared(resolved, "resolved_from", "alternatives"), "alternatives=false serves a different key set than the schema's one optional array allows for");
+    assert.deepStrictEqual(served(fuzzy), declared(resolved), "a fuzzy-resolved answer serves a different key set than the schema declares");
+    assert.deepStrictEqual(served(ambiguousBody), declared(ambiguous), "a disambiguation answer serves a different key set than the schema declares");
+
+    for (const field of ["relatedVendors", "alternatives", "tie_break"]) {
+      assert.ok(!(field in whole.offer), `${field} is served inside offer as well as beside it — the response carries it twice`);
+    }
+    assert.strictEqual(whole.alternatives.length, whole.tie_break.ranked_total, "the door named a prefix of the order it ranked");
+    assert.ok(whole.alternatives.length > 1, `${subject} names ${whole.alternatives.length} alternatives, too few for this to test anything`);
+    assert.deepStrictEqual(whole.alternatives.map((alternative: { vendor: string }) => alternative.vendor), whole.relatedVendors, "alternatives and relatedVendors name a different order");
+    assert.ok(typeof whole.tie_break.ranked_total === "number", "ranked_total is unreachable at the position the schema declares");
   });
 
   it("says which methods the developer hub's own table holds", async () => {
