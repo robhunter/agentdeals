@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated": "2026-09-17",
+  "generated": "2026-09-18",
   "pages": {
     "/": {
       "daily": true
@@ -30,8 +30,7 @@
       "changed": "2026-09-17"
     },
     "/alternative-to": {
-      "hash": "7faf48ee736e00b8",
-      "changed": "2026-09-16"
+      "daily": true
     },
     "/alternative-to/360-monitoring": {
       "daily": true
@@ -3277,8 +3276,7 @@
       "changed": "2026-09-17"
     },
     "/stack-check": {
-      "hash": "9979725538580894",
-      "changed": "2026-09-17"
+      "daily": true
     },
     "/stacks": {
       "hash": "624d85451d42fd6f",
@@ -3440,8 +3438,7 @@
       "changed": "2026-09-16"
     },
     "/trends/dev-utilities": {
-      "hash": "1e67f8be60bfad2c",
-      "changed": "2026-09-16"
+      "daily": true
     },
     "/trends/diagramming": {
       "hash": "c0b5ba0ce7d235a7",
@@ -5118,8 +5115,7 @@
       "changed": "2026-09-17"
     },
     "/vendor/dub-co": {
-      "hash": "a4a230d1781a12c8",
-      "changed": "2026-09-17"
+      "daily": true
     },
     "/vendor/duckdns-org": {
       "hash": "9bb0d5376671eef5",
