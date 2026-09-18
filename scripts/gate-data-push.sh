@@ -19,6 +19,8 @@ UPDATE_PAGE_LASTMOD="${GATE_UPDATE_PAGE_LASTMOD:-}"
 PAGE_LASTMOD_PATH="data/page-lastmod.json"
 REGENERATE_LLM_INDEX="${GATE_REGENERATE_LLM_INDEX:-}"
 LLM_INDEX_PATH="artifacts/free-llm-api-index/README.md"
+SYNC_PAGE_REVIEWS="${GATE_SYNC_PAGE_REVIEWS:-}"
+PAGE_REVIEWS_PATH="data/page-reviews.json"
 
 among_the_committable() {
   local wanted="$1"
@@ -41,6 +43,11 @@ fi
 
 if [ -n "$REGENERATE_LLM_INDEX" ] && ! among_the_committable "$LLM_INDEX_PATH" "$@"; then
   echo "usage: GATE_REGENERATE_LLM_INDEX is set but $LLM_INDEX_PATH is not among the paths this run may commit ($*), so the index generated here would be left behind in the workspace." >&2
+  exit 2
+fi
+
+if [ -n "$SYNC_PAGE_REVIEWS" ] && ! among_the_committable "$PAGE_REVIEWS_PATH" "$@"; then
+  echo "usage: GATE_SYNC_PAGE_REVIEWS is set but $PAGE_REVIEWS_PATH is not among the paths this run may commit ($*), so the figure counts measured here would be left behind in the workspace and main would go red on them." >&2
   exit 2
 fi
 
@@ -140,6 +147,15 @@ derive_from_the_data() {
       amend_with_what_the_derivation_moved "The published index reads this run's records, in the same commit as the records it reads."
     else
       echo "The index could not be generated, so the one already published stands rather than a new stale one. That says nothing about whether this run's data is right, so the data goes on to the suite, and the job that regenerates the index on every push to main fails loudly on its own."
+    fi
+  fi
+
+  if [ -n "$SYNC_PAGE_REVIEWS" ]; then
+    echo "── Counting again, on every registered page, the figures a reader compares that come from a record this run holds ──"
+    if node "$SCRIPT_DIR/sync-page-reviews.js" --measured-only; then
+      amend_with_what_the_derivation_moved "The figure counts the provenance bylines state are the ones this run's data renders, in the same commit as the data that moved them."
+    else
+      echo "The pages could not be counted, so every byline keeps the figures it states. That says nothing about whether this run's data is right, so the data goes on to the suite — which is where a byline stating a count its own table does not hold goes red."
     fi
   fi
 }

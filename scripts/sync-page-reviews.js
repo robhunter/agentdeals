@@ -14,6 +14,10 @@ import { assertedVendorSlugs, isNonVendorSubject, namedVendorSlug, vendorSlugMap
 
 const REPO = join(dirname(fileURLToPath(import.meta.url)), "..");
 
+const MEASURED_BY_THE_RENDER = [
+  "reads_index", "tables_read_index", "table_figures", "table_figures_from_records", "tables", "reads_changes",
+];
+
 const HELP = `Rebuild the editorial page review registry.
 
 Renders every page that carries hand-written prose, derives its review tier from
@@ -60,9 +64,20 @@ which is an event that happened, unlike a hand-typed literal.
 
 Usage: node scripts/sync-page-reviews.js [options]
 
-  --out <path>    Registry to write (default ${pageReviewsPath()})
-  --dry-run       Report the diff, write nothing
-  --help          This text
+  --out <path>       Registry to write (default ${pageReviewsPath()})
+  --dry-run          Report the diff, write nothing
+  --measured-only    Write what this run measured, carry and report the rest
+  --help             This text
+
+--measured-only is for a job that rewrites the stores and has nobody reading its
+output. It writes ${MEASURED_BY_THE_RENDER.join(", ")}
+and carries every other field from the registry it read, so a job that reads no
+page cannot move a tier, an asserted vendor or a data source. Those are reported
+under a heading saying they were measured and not written. data_source is the one
+that matters: it feeds the unsourced_tier_a ratchet, and a budget that moves with
+nobody reading why is a budget nobody is keeping. A page whose measured
+data_source differs from the one it carries is left exactly as it stands, because
+a record asserting a source its own measurement denies is worse than a stale one.
 `;
 
 const EDITORIAL_PAGES = [
@@ -95,12 +110,13 @@ const EDITORIAL_PAGES = [
 ];
 
 function parseArgs(argv) {
-  const opts = { out: pageReviewsPath(), dryRun: false };
+  const opts = { out: pageReviewsPath(), dryRun: false, measuredOnly: false };
   for (let i = 0; i < argv.length; i++) {
     const arg = argv[i];
     if (arg === "--help" || arg === "-h") return { help: true };
     else if (arg === "--out") opts.out = argv[++i];
     else if (arg === "--dry-run") opts.dryRun = true;
+    else if (arg === "--measured-only") opts.measuredOnly = true;
     else {
       console.error(`Unknown argument: ${arg}`);
       return { help: true, invalid: true };
@@ -190,6 +206,8 @@ async function main() {
   ]);
   const pages = [];
   const changes = [];
+  const withheld = [];
+  const held = [];
   try {
     for (const route of [...EDITORIAL_PAGES].sort()) {
       const [html, withoutIndex, withoutChanges, withoutEither] = await Promise.all([
@@ -220,29 +238,38 @@ async function main() {
         data_source: readsIndex ? "catalogue" : prior && prior.data_source !== "catalogue" ? prior.data_source : "unsourced",
         data_source_reason: prior?.data_source_reason ?? null,
       };
+      const heldBack = Boolean(opts.measuredOnly && prior && prior.data_source !== record.data_source);
+      const note = (line, measured) => (opts.measuredOnly && (heldBack || !measured) ? withheld : changes).push(line);
       if (!prior) changes.push(`+ ${route} (published ${published}, tier ${record.tier}, data_source ${record.data_source})`);
       else {
-        if (prior.tier !== record.tier) changes.push(`~ ${route} tier ${prior.tier} -> ${record.tier}`);
-        if (prior.reads_index !== record.reads_index) changes.push(`~ ${route} reads_index ${prior.reads_index} -> ${record.reads_index}`);
-        if (prior.tables_read_index !== record.tables_read_index) changes.push(`~ ${route} tables_read_index ${prior.tables_read_index} -> ${record.tables_read_index}`);
+        if (prior.tier !== record.tier) note(`~ ${route} tier ${prior.tier} -> ${record.tier}`, false);
+        if (prior.reads_index !== record.reads_index) note(`~ ${route} reads_index ${prior.reads_index} -> ${record.reads_index}`, true);
+        if (prior.tables_read_index !== record.tables_read_index) note(`~ ${route} tables_read_index ${prior.tables_read_index} -> ${record.tables_read_index}`, true);
         if (prior.table_figures !== record.table_figures || prior.table_figures_from_records !== record.table_figures_from_records) {
-          changes.push(`~ ${route} table figures from our records ${prior.table_figures_from_records ?? "?"}/${prior.table_figures ?? "?"} -> ${record.table_figures_from_records}/${record.table_figures}`);
+          note(`~ ${route} table figures from our records ${prior.table_figures_from_records ?? "?"}/${prior.table_figures ?? "?"} -> ${record.table_figures_from_records}/${record.table_figures}`, true);
         }
         const splitBefore = (prior.tables ?? []).map(t => `${t.label} ${t.from_records}/${t.figures}`).join("; ");
         const splitAfter = record.tables.map(t => `${t.label} ${t.from_records}/${t.figures}`).join("; ");
-        if (splitBefore !== splitAfter) changes.push(`~ ${route} per-table split [${splitBefore}] -> [${splitAfter}]`);
-        if (prior.reads_changes !== record.reads_changes) changes.push(`~ ${route} reads_changes ${prior.reads_changes} -> ${record.reads_changes}`);
-        if (prior.data_source !== record.data_source) changes.push(`~ ${route} data_source ${prior.data_source} -> ${record.data_source}`);
+        if (splitBefore !== splitAfter) note(`~ ${route} per-table split [${splitBefore}] -> [${splitAfter}]`, true);
+        if (prior.reads_changes !== record.reads_changes) note(`~ ${route} reads_changes ${prior.reads_changes} -> ${record.reads_changes}`, true);
+        if (prior.data_source !== record.data_source) note(`~ ${route} data_source ${prior.data_source} -> ${record.data_source}`, false);
         const before = prior.vendors_asserted.join(","), after = record.vendors_asserted.join(",");
-        if (before !== after) changes.push(`~ ${route} vendors ${prior.vendors_asserted.length} -> ${record.vendors_asserted.length}`);
+        if (before !== after) note(`~ ${route} vendors ${prior.vendors_asserted.length} -> ${record.vendors_asserted.length}`, false);
         const tabulatedBefore = prior.vendors_tabulated.join(","), tabulatedAfter = record.vendors_tabulated.join(",");
-        if (tabulatedBefore !== tabulatedAfter) changes.push(`~ ${route} tabulated vendors ${prior.vendors_tabulated.length} -> ${record.vendors_tabulated.length}`);
+        if (tabulatedBefore !== tabulatedAfter) note(`~ ${route} tabulated vendors ${prior.vendors_tabulated.length} -> ${record.vendors_tabulated.length}`, false);
         const unresolvedBefore = prior.badge_subjects_unresolved.join(","), unresolvedAfter = record.badge_subjects_unresolved.join(",");
-        if (unresolvedBefore !== unresolvedAfter) changes.push(`~ ${route} unresolved badge subjects [${unresolvedBefore}] -> [${unresolvedAfter}]`);
+        if (unresolvedBefore !== unresolvedAfter) note(`~ ${route} unresolved badge subjects [${unresolvedBefore}] -> [${unresolvedAfter}]`, false);
         const cardsBefore = (prior.stat_card_subjects_unresolved ?? []).join(","), cardsAfter = record.stat_card_subjects_unresolved.join(",");
-        if (cardsBefore !== cardsAfter) changes.push(`~ ${route} unresolved stat card subjects [${cardsBefore}] -> [${cardsAfter}]`);
+        if (cardsBefore !== cardsAfter) note(`~ ${route} unresolved stat card subjects [${cardsBefore}] -> [${cardsAfter}]`, false);
       }
-      pages.push(record);
+      if (heldBack) {
+        held.push(`= ${route} stands as it is: the render says data_source ${record.data_source} against the ${prior.data_source} on record, and that is the unsourced_tier_a ratchet moving`);
+        pages.push(prior);
+      } else if (opts.measuredOnly && prior) {
+        pages.push({ ...prior, ...Object.fromEntries(MEASURED_BY_THE_RENDER.map(field => [field, record[field]])) });
+      } else {
+        pages.push(record);
+      }
     }
   } finally {
     real.child.kill();
@@ -272,6 +299,10 @@ async function main() {
   console.log(`${confined.length} pages hold every credited figure in one of several tables, so the byline names that table`);
   console.log(`${unsourcedA} tier-A pages assert vendor facts and read no catalogue record`);
   for (const line of changes) console.log(line);
+  if (withheld.length > 0 || held.length > 0) {
+    console.log(`${withheld.length + held.length} measured and not written, because a tier, an asserted vendor and a data source are judgements and this run read no page:`);
+    for (const line of [...held, ...withheld]) console.log(line);
+  }
   if (opts.dryRun) { console.log("dry run — nothing written"); return; }
   writeFileSync(opts.out, serialized);
   console.log(`wrote ${opts.out}`);

@@ -71,6 +71,27 @@ describe("#1317 the suite sees every commit that reaches main", () => {
     }
   });
 
+  it("measures the review register again in the job that rewrites the stores its figures come from", () => {
+    const syncing = GATED_WORKFLOWS.filter((f) => /GATE_SYNC_PAGE_REVIEWS:\s*"1"/.test(source(f)));
+    assert.ok(
+      syncing.length > 0,
+      "no scheduled job measures the review register again, so every provenance byline states a figure count nobody has checked since a person last ran the script by hand",
+    );
+    const rewritesTheChangeLog = GATED_WORKFLOWS.filter((f) => /data\/deal_changes\.json/.test(gateStepOf(f).body));
+    assert.deepStrictEqual(
+      syncing,
+      rewritesTheChangeLog,
+      "the counts move when a change record with a quantity in it lands, so the job that lands one is the job that measures them again",
+    );
+    for (const file of syncing) {
+      assert.match(
+        gateStepOf(file).body,
+        /data\/page-reviews\.json/,
+        `${file} measures the register again and may not commit it, so what it measured is left in the workspace and main goes red on it`,
+      );
+    }
+  });
+
   it("pushes to main from one place only, and that place runs the suite first", () => {
     const offenders: string[] = [];
     for (const file of workflowFiles()) {
@@ -246,7 +267,7 @@ const FAILING_BY_MODE: Record<string, Array<{ file: string; drifted?: typeof A_G
   "budget-against-the-tree": [],
 };
 
-const GATE_CONFIGURATION = ["GATE_RATCHET_BUDGETS", "GATE_UPDATE_PAGE_LASTMOD", "GATE_REGENERATE_LLM_INDEX"];
+const GATE_CONFIGURATION = ["GATE_RATCHET_BUDGETS", "GATE_UPDATE_PAGE_LASTMOD", "GATE_REGENERATE_LLM_INDEX", "GATE_SYNC_PAGE_REVIEWS"];
 
 const PAGES_THE_TREE_HOLDS = `readdirSync("data").filter((f) => f.endsWith(".json")).length`;
 
@@ -383,7 +404,7 @@ function git(cwd: string, ...args: string[]): string {
   return run.stdout.trim();
 }
 
-function fixtureRepo(options: { shallow?: boolean } = {}): { work: string; origin: string } {
+function fixtureRepo(options: { shallow?: boolean; pageReviews?: boolean } = {}): { work: string; origin: string } {
   const root = mkdtempSync(join(scratch, "repo-"));
   const origin = join(root, "origin.git");
   const work = join(root, "work");
@@ -401,6 +422,9 @@ function fixtureRepo(options: { shallow?: boolean } = {}): { work: string; origi
   writeFileSync(join(work, "data", "deal_changes.json"), CHANGES_ON_MAIN);
   writeFileSync(join(work, "data", "quality_budgets.json"), BUDGETS_BEFORE);
   writeFileSync(join(work, "data", "page-lastmod.json"), '{"version":1,"pages":{}}\n');
+  if (options.pageReviews) {
+    writeFileSync(join(work, "data", "page-reviews.json"), readFileSync(join(REPO, "data", "page-reviews.json"), "utf8"));
+  }
   mkdirSync(join(work, "artifacts", "free-llm-api-index"), { recursive: true });
   writeFileSync(join(work, "artifacts", "free-llm-api-index", "README.md"), "# the index this run has not regenerated yet\n");
   writeFileSync(join(work, "untracked-by-the-gate.txt"), "before\n");
@@ -432,6 +456,7 @@ interface GateRun {
   ratchet?: RatchetMode;
   lastmod?: true;
   llmIndex?: true;
+  pageReviews?: true;
   replays?: number;
 }
 
@@ -451,12 +476,14 @@ function runGate(work: string, mode: GateMode | GateRun, ...args: string[]) {
       GATE_RATCHET_BUDGETS: opts.ratchet === undefined ? "" : "1",
       GATE_UPDATE_PAGE_LASTMOD: opts.lastmod ? "1" : "",
       GATE_REGENERATE_LLM_INDEX: opts.llmIndex ? "1" : "",
+      GATE_SYNC_PAGE_REVIEWS: opts.pageReviews ? "1" : "",
       GATE_REPLAYS_ONTO_A_MOVED_MAIN: opts.replays === undefined ? "" : String(opts.replays),
       GATE_DRIFTED_GUARDS: opts.driftTo ?? join(work, "drifted-guards.md"),
       GITHUB_OUTPUT: outputs,
       AGENTDEALS_DATA_GATING_TESTS_PATH: join(work, "gating-tests.json"),
       AGENTDEALS_PAGE_LASTMOD_PATH: join(work, "data", "page-lastmod.json"),
       AGENTDEALS_LLM_INDEX_PATH: join(work, "artifacts", "free-llm-api-index", "README.md"),
+      AGENTDEALS_PAGE_REVIEWS_PATH: join(work, "data", "page-reviews.json"),
     },
   });
   return {
@@ -941,6 +968,59 @@ describe("#1335 the gate's own configuration does not configure the suite it run
     "data/page-lastmod.json",
     "artifacts/free-llm-api-index/README.md",
   ];
+
+  it("refuses to measure the register on a run that may not commit what it measures", () => {
+    const { work } = fixtureRepo({ pageReviews: true });
+    writeFileSync(join(work, "data", "health.json"), '{"checked":23}\n');
+
+    const run = runGate(
+      work,
+      { mode: "green", pageReviews: true },
+      "data-quarantine/fixture",
+      "data(auto): fixture",
+      "data/health.json",
+    );
+
+    assert.strictEqual(run.status, 2, `the gate measured a register it could not commit: ${run.stdout}${run.stderr}`);
+    assert.match(run.stderr, /GATE_SYNC_PAGE_REVIEWS is set but data\/page-reviews\.json is not among the paths/);
+  });
+
+  it("commits the figure counts it measured, and carries the tier it did not", () => {
+    const { work, origin } = fixtureRepo({ pageReviews: true });
+    const before = mainSha(origin);
+    const at = join(work, "data", "page-reviews.json");
+    const register = JSON.parse(readFileSync(at, "utf8"));
+    const subject = register.pages.find((p: { path: string }) => p.path === "/storage-comparison-2026");
+    assert.ok(subject, "the fixture register does not hold the page this asserts about");
+    const measured = subject.table_figures;
+    assert.ok(measured > 0, "the page this asserts about publishes no table figures, so a count cannot be corrected on it");
+    subject.table_figures = 9;
+    subject.tier = "B";
+    writeFileSync(at, `${JSON.stringify(register, null, 2)}\n`);
+
+    const run = runGate(
+      work,
+      { mode: "green", pageReviews: true },
+      "data-quarantine/fixture",
+      "data(auto): fixture",
+      "data/health.json",
+      "data/page-reviews.json",
+    );
+
+    assert.strictEqual(run.status, 0, `the gate refused a green run: ${run.stdout}${run.stderr}`);
+    assert.match(run.stdout, /Counting again, on every registered page/, "the gate no longer counts the figures this run's data renders");
+    assert.strictEqual(
+      git(origin, "rev-list", "--count", `${before}..main`),
+      "1",
+      "the figure counts arrived as a commit of their own rather than with the data that moved them",
+    );
+    const onMain = JSON.parse(git(origin, "show", "main:data/page-reviews.json"));
+    const after = onMain.pages.find((p: { path: string }) => p.path === "/storage-comparison-2026");
+    assert.strictEqual(after.table_figures, measured, "the gate committed a figure count its own render denies");
+    assert.strictEqual(after.tier, "B", "the gate rewrote a tier, which is a judgement no run that read no page may make");
+    const reviewed = onMain.pages.filter((p: { reviewed_at: string | null }) => p.reviewed_at !== null);
+    assert.ok(reviewed.length >= 20, `the register the gate committed carries ${reviewed.length} review records, so the run blanked what a reviewer asserted`);
+  });
 
   it("hands the suite neither variable, so a nested run reads its own arguments", () => {
     const { work } = fixtureRepo();

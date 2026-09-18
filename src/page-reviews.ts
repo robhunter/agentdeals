@@ -1005,10 +1005,15 @@ export interface PageSourceMeasurement {
   tables: TableCredit[];
   reads_changes: boolean;
   vendor_fact_rows: number;
+  vendors_tabulated: string[];
 }
 
 function tableSplit(tables: TableCredit[] | undefined): string {
   return (tables ?? []).map(table => `${table.label ?? "unlabelled"} ${table.from_records}/${table.figures}`).join(", ") || "no tables";
+}
+
+function namedVendors(slugs: string[] | undefined): string {
+  return [...(slugs ?? [])].sort().join(", ") || "none";
 }
 
 export interface PageSourceViolation {
@@ -1075,6 +1080,12 @@ function declarationViolations(page: PageReviewRecord, seen: PageSourceMeasureme
     violations.push({
       path: page.path,
       problem: `reads_changes says ${page.reads_changes}, perturbing the change log says ${seen.reads_changes}`,
+    });
+  }
+  if (namedVendors(page.vendors_tabulated) !== namedVendors(seen.vendors_tabulated)) {
+    violations.push({
+      path: page.path,
+      problem: `vendors_tabulated names ${namedVendors(page.vendors_tabulated)}, the served tables put a number beside ${namedVendors(seen.vendors_tabulated)}`,
     });
   }
   if (seen.reads_index && page.data_source !== "catalogue") {

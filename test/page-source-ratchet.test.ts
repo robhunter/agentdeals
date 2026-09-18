@@ -32,7 +32,7 @@ function page(overrides: Partial<PageReviewRecord> & { path: string }): PageRevi
 function seen(overrides: Partial<PageSourceMeasurement> = {}): PageSourceMeasurement {
   return {
     reads_index: false, tables_read_index: false, table_figures: 0, table_figures_from_records: 0,
-    tables: [], reads_changes: false, vendor_fact_rows: 0, ...overrides,
+    tables: [], reads_changes: false, vendor_fact_rows: 0, vendors_tabulated: [], ...overrides,
   };
 }
 
@@ -64,6 +64,7 @@ function measurementsFor(pages: PageReviewRecord[]): Map<string, PageSourceMeasu
     table_figures: p.table_figures,
     table_figures_from_records: p.table_figures_from_records,
     reads_changes: p.reads_changes,
+    vendors_tabulated: p.vendors_tabulated ?? [],
   })]));
 }
 
