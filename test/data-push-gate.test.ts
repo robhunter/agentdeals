@@ -404,7 +404,7 @@ function git(cwd: string, ...args: string[]): string {
   return run.stdout.trim();
 }
 
-function fixtureRepo(options: { shallow?: boolean } = {}): { work: string; origin: string } {
+function fixtureRepo(options: { shallow?: boolean; pageReviews?: boolean } = {}): { work: string; origin: string } {
   const root = mkdtempSync(join(scratch, "repo-"));
   const origin = join(root, "origin.git");
   const work = join(root, "work");
@@ -422,7 +422,9 @@ function fixtureRepo(options: { shallow?: boolean } = {}): { work: string; origi
   writeFileSync(join(work, "data", "deal_changes.json"), CHANGES_ON_MAIN);
   writeFileSync(join(work, "data", "quality_budgets.json"), BUDGETS_BEFORE);
   writeFileSync(join(work, "data", "page-lastmod.json"), '{"version":1,"pages":{}}\n');
-  writeFileSync(join(work, "data", "page-reviews.json"), readFileSync(join(REPO, "data", "page-reviews.json"), "utf8"));
+  if (options.pageReviews) {
+    writeFileSync(join(work, "data", "page-reviews.json"), readFileSync(join(REPO, "data", "page-reviews.json"), "utf8"));
+  }
   mkdirSync(join(work, "artifacts", "free-llm-api-index"), { recursive: true });
   writeFileSync(join(work, "artifacts", "free-llm-api-index", "README.md"), "# the index this run has not regenerated yet\n");
   writeFileSync(join(work, "untracked-by-the-gate.txt"), "before\n");
@@ -968,7 +970,7 @@ describe("#1335 the gate's own configuration does not configure the suite it run
   ];
 
   it("refuses to measure the register on a run that may not commit what it measures", () => {
-    const { work } = fixtureRepo();
+    const { work } = fixtureRepo({ pageReviews: true });
     writeFileSync(join(work, "data", "health.json"), '{"checked":23}\n');
 
     const run = runGate(
@@ -984,7 +986,7 @@ describe("#1335 the gate's own configuration does not configure the suite it run
   });
 
   it("commits the figure counts it measured, and carries the tier it did not", () => {
-    const { work, origin } = fixtureRepo();
+    const { work, origin } = fixtureRepo({ pageReviews: true });
     const before = mainSha(origin);
     const at = join(work, "data", "page-reviews.json");
     const register = JSON.parse(readFileSync(at, "utf8"));
