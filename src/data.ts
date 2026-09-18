@@ -535,7 +535,9 @@ export function enrichOffers(offers: Offer[]): EnrichedOffer[] {
   const now = new Date();
   const servedOn = utcDate();
   const ninetyDaysMs = 90 * 24 * 60 * 60 * 1000;
-  const cutoffDate = new Date(now.getTime() - ninetyDaysMs).toISOString().slice(0, 10);
+  const cutoffDate = new Date(now.getTime() - RECENT_CHANGE_WINDOW_DAYS * 24 * 60 * 60 * 1000)
+    .toISOString()
+    .slice(0, 10);
 
   const vendorChanges = new Map<string, DealChange[]>();
   for (const c of changes) {
@@ -981,6 +983,26 @@ export interface VendorRiskResult {
 }
 
 export const VERDICT_WINDOW_DAYS = 180;
+
+export const RECENT_CHANGE_WINDOW_DAYS = 90;
+
+export const A_DEMOTION_IN_FORCE_RULE =
+  `A vendor is named here for as long as a demotion is in force against it: a one-off pricing event, recorded against a source we cite, whose date falls in the last ${VERDICT_WINDOW_DAYS} days — or a standing condition, also cited, such as a free tier withdrawn or a product retired, which does not expire with time. A demotion can lift with nothing about the vendor having changed, and that happens on the day the vendor's newest qualifying event passes ${VERDICT_WINDOW_DAYS} days.`;
+
+export const NO_DEMOTION_IN_FORCE_RULE =
+  `A vendor is named here for as long as no demotion is in force against it and we hold no change record for it dated in the last ${RECENT_CHANGE_WINDOW_DAYS} days — any record, including ones the timeline above does not count. A vendor can join this section on a day we recorded nothing about it, when the later of those two clocks runs out: ${RECENT_CHANGE_WINDOW_DAYS} days after its newest record, or the day the demotion against it lapses. It leaves on the day we file a new record, or the day we can no longer vouch for the terms we list.`;
+
+export const VOLATILE_WHILE_A_DEMOTION_COUNTS_RULE =
+  `Counting only changes we cite a source for and the vendor has not reversed: two or more negative changes hold a vendor here while at least one of them still carries a demotion — a one-off pricing event whose date falls in the last ${VERDICT_WINDOW_DAYS} days, or a standing condition that does not expire with time. A vendor whose newest such event passes ${VERDICT_WINDOW_DAYS} days moves to Watch below on that day, with nothing about the vendor having changed. A vendor whose free tier was removed, whose open-source version was killed, or whose product was retired stays here whatever the date.`;
+
+export const WATCH_RECEIVES_FROM_VOLATILE_RULE =
+  `This section also receives vendors from Volatile above: a vendor arrives here on the day its newest qualifying pricing event passes ${VERDICT_WINDOW_DAYS} days and stops counting against it, without our having recorded anything new.`;
+
+export const A_VERDICT_ROLLS_NOTICE =
+  `A verdict here is not a fixed property of the vendor. A one-off pricing event demotes a vendor while its recorded date falls in the last ${VERDICT_WINDOW_DAYS} days and then lapses on its own, with nothing about the vendor having changed; a standing condition — a free tier withdrawn, a product retired — does not lapse with time. A badge carrying a date states the record it rests on; a badge with no date rests on no record in force.`;
+
+export const A_COMPLETE_LOG_NOTICE =
+  "Every record we hold is listed here, newest first. A record is never removed from this list, so a vendor named here stays named here whatever its verdict does afterwards.";
 
 export const CHANGE_IS_AN_EVENT = new Set<DealChange["change_type"]>([
   "pricing_restructured",
