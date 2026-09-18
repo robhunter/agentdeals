@@ -99,7 +99,7 @@ jobs:
             data/index.json data/deal_changes.json data/change_refusals.json data/change_corroboration.json data/verification_state.json data/quality_budgets.json data/page-lastmod.json artifacts/free-llm-api-index/README.md
 
       - name: Say where it can be seen what the gate did with this run's data
-        if: always() && (steps.gate.outputs.quarantined == 'true' || steps.gate.outputs.pushed_over_failures == 'true' || steps.gate.outputs.drifted_guards != '' || steps.gate.outputs.held_back_vendors != '')
+        if: always() && (steps.gate.outputs.quarantined == 'true' || steps.gate.outputs.pushed_over_failures == 'true' || steps.gate.outputs.drifted_guards != '' || steps.gate.outputs.pushed_commit != '' || steps.gate.outputs.pushed_nothing == 'true' || steps.gate.outputs.held_back_vendors != '')
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           QUARANTINED: ${{ steps.gate.outputs.quarantined }}
@@ -109,6 +109,8 @@ jobs:
           NON_BLOCKING_FILES: ${{ steps.gate.outputs.non_blocking_files }}
           HELD_BACK_VENDORS: ${{ steps.gate.outputs.held_back_vendors }}
           DRIFTED_GUARDS_BODY: ${{ steps.gate.outputs.drifted_guards_body }}
+          PUSHED_COMMIT: ${{ steps.gate.outputs.pushed_commit }}
+          PUSHED_NOTHING: ${{ steps.gate.outputs.pushed_nothing }}
         run: |
           if [ "$QUARANTINED" = "true" ]; then
             bash scripts/report-data-push-outcome.sh "Daily rolling re-verification" refused "$QUARANTINE_REF" "$QUARANTINE_REASON"
@@ -122,6 +124,9 @@ jobs:
           fi
           if [ "$PUSHED_OVER_FAILURES" = "true" ]; then
             bash scripts/report-data-push-outcome.sh "Daily rolling re-verification" shipped-over-failures "$NON_BLOCKING_FILES"
+          fi
+          if [ -n "$PUSHED_COMMIT" ] || [ "$PUSHED_NOTHING" = "true" ]; then
+            bash scripts/report-data-push-outcome.sh "Daily rolling re-verification" reached-main "$PUSHED_COMMIT"
           fi
 
       - name: Measure the quality budgets against the data that reached main
