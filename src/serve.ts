@@ -68,7 +68,7 @@ import { submitReferralCode, getCodesByAgent, getCodeById, updateCode, revokeCod
 import { getBestReferralCode, listAllReferralCodes, AGENT_SUBMISSION_RETIRED_REASON } from "./platform-codes.js";
 import { DOCUMENTED_GROUPS, HOMEPAGE_GROUPS, endpointHref, endpointPathHref, endpointsInGroups, exampleSubjects, readableRequestLines, withdrawalReasonFor, type ApiEndpoint, type ExampleSubjects } from "./api-inventory.js";
 import { MCP_TOOLS, MCP_TOOL_COUNT, mcpToolNameList } from "./mcp-tool-inventory.js";
-import { ACCELERATOR_CREDIT_PROGRAM, ACCELERATOR_CREDIT_VENDOR, acceleratorCreditClause, programCeiling } from "./homepage-claims.js";
+import { ACCELERATOR_CREDIT_PROGRAM, ACCELERATOR_CREDIT_VENDOR, RECENT_CHANGES_ON_THE_HOME_PAGE, UPCOMING_DEADLINES_ON_THE_HOME_PAGE, acceleratorCreditClause, atMostShownHere, onlyTheMostRecentShown, programCeiling } from "./homepage-claims.js";
 import { REFERRAL_CONDITIONS_HEADING, allOurReferralLinks, heldReferralLinkForVendor, ourReferralLinkFor, platformCodeAsVendorReferral, referralLinkCountClause, referrerDisclosureSentence } from "./referral-surfaces.js";
 import type { VendorReferralAnswer } from "./referral-surfaces.js";
 import { runHealthCheck, getLastReport, startPeriodicChecks } from "./referral-health.js";
@@ -109,7 +109,7 @@ import { partitionAlternatives, partitionSubstitutes, type SubstitutesPartition,
 import { buildProductFunctions, functionMembers, functionDefinitions, functionMeaningSentence, admissionFor, splitByFunction, labelsNaming, FUNCTION_RESIDUE_COPY, type ProductFunction, FUNCTION_MEMBERSHIP_RULE, FUNCTION_SPLIT_RULE, FUNCTION_NAMING_RULE, FUNCTION_TITLE_RULE, FUNCTION_PICK_RULE } from "./product-function.js";
 import { resolveCuratedAlternatives, curatedAlternativesFor, addCuratedToPool } from "./curated-alternatives.js";
 import type { Agent, ChangeDateSource, DealChange, RiskCause, RatingWithheld, LinkUnreachable, Offer, StabilityClass, SubtypeLabel } from "./types.js";
-import { ANNOUNCED_BADGE, ANNOUNCED_HEADING, announcedIntro, changeDateLabel, changeEntryDateLabel, changeEntryLongDateLabel, changeDateClause, changeDatePublished, changeEventStartDate, capListSections, latestEventDate, offerExpiryAfter, feedEntryUpdated, undatedGroupHeading, UNDATED_TILE_LABEL, firstReadHeading, discoveryBatchNote, isoWeekOf, monthlyChangeSeries, changesInWindow, discoveryMonthSeriesHeading, periodComparisonSentence, DISCOVERED_DATE_PREFIX, EFFECTIVE_DATE_PREFIX, EVENT_DATED_SOURCES, UNDATED_GROUP_NOTE, UNKNOWN_EFFECTIVE_DATE_MARKER, EFFECTIVE_MONTH_SERIES_NOTE, DISCOVERY_MONTH_SERIES_NOTE, weekRangeLabel } from "./change-dates.js";
+import { A_DATED_HEADING_MARKER, A_DATED_SECTION_MARKER, datedHeadingNoticeHtml, datedSectionNoticeHtml, namedOnceItsDateArrived, namedWhileAheadOf, namedWhileNotBefore, ANNOUNCED_BADGE, ANNOUNCED_HEADING, announcedIntro, changeDateLabel, changeEntryDateLabel, changeEntryLongDateLabel, changeDateClause, changeDatePublished, changeEventStartDate, capListSections, latestEventDate, offerExpiryAfter, feedEntryUpdated, undatedGroupHeading, UNDATED_TILE_LABEL, firstReadHeading, discoveryBatchNote, isoWeekOf, monthlyChangeSeries, changesInWindow, discoveryMonthSeriesHeading, periodComparisonSentence, DISCOVERED_DATE_PREFIX, EFFECTIVE_DATE_PREFIX, EVENT_DATED_SOURCES, UNDATED_GROUP_NOTE, UNKNOWN_EFFECTIVE_DATE_MARKER, EFFECTIVE_MONTH_SERIES_NOTE, DISCOVERY_MONTH_SERIES_NOTE, weekRangeLabel } from "./change-dates.js";
 import { changeFeedEntries, feedEntryFields, feedUpdatedTimestamp, changeFeedProvenanceNote, CHANGE_FEED_ENTRY_LIMIT, CHANGE_FEED_DESCRIPTION, CHANGE_FEED_NAMESPACE, CHANGE_FEED_NAMESPACE_PREFIX, channelUpdatedTimestamp, WEEKLY_FEED_POPULATION_NOTE, feedLinkTag, feedEntrySourceXml, digestSourceXml, PER_CHANGE_FEED, WEEKLY_DIGEST_FEED } from "./change-feed.js";
 import { FEED_CORRECTIONS, correctionEntriesXml } from "./feed-corrections.js";
 import { buildDay, emptyPageLastmod, entryDay, fallbackDay, httpDate, lastmodFor, newestLastmod, readPageLastmod, type PageLastmodLedger } from "./page-lastmod.js";
@@ -857,12 +857,12 @@ const hasAlreadyTakenEffect = (c: { date: string }) => c.date <= today;
 const recentChanges = [...dealChanges]
   .filter(hasAlreadyTakenEffect)
   .sort((a, b) => b.date.localeCompare(a.date))
-  .slice(0, 5);
+  .slice(0, RECENT_CHANGES_ON_THE_HOME_PAGE);
 
 const upcomingDeadlines = [...dealChanges]
   .filter((c) => !hasAlreadyTakenEffect(c))
   .sort((a, b) => a.date.localeCompare(b.date))
-  .slice(0, 5);
+  .slice(0, UPCOMING_DEADLINES_ON_THE_HOME_PAGE);
 
 const changeTypeBadge: Record<DealChange["change_type"], { label: string; color: string }> = {
   free_tier_removed: { label: "removed", color: "#f85149" },
@@ -1023,6 +1023,14 @@ function buildChangingSoonSection(): string {
     <div class="section-label">Changing Soon</div>
     <h2>Upcoming deal changes</h2>
     <p>Free tiers disappearing, prices increasing. These changes are happening now.</p>
+    ${datedSectionNoticeHtml(
+      `${namedWhileAheadOf("A change", today)} ${listOrderSentence("soonest-first")} ${atMostShownHere(UPCOMING_DEADLINES_ON_THE_HOME_PAGE)}`,
+      [
+        { when: "On the day its date arrives it moves to", text: "Recent pricing changes, below", href: "#recent-changes" },
+        { when: "Every deadline we hold, including any this list is too short to reach, is on", text: "the deadline tracker", href: "/deadlines" },
+      ],
+      escHtmlServer,
+    )}
     <div class="cs-list">
 ${entries}
     </div>
@@ -1073,6 +1081,13 @@ function buildRecentChangesSection(): string {
     <div class="section-label">Fresh Intel</div>
     <h2>Recent pricing changes</h2>
     <p>The latest shifts in developer tool pricing \u2014 tracked automatically. ${listOrderSentence("newest-first")}</p>
+    ${datedSectionNoticeHtml(
+      `${namedOnceItsDateArrived("A change", today)} ${onlyTheMostRecentShown(RECENT_CHANGES_ON_THE_HOME_PAGE)}`,
+      [
+        { when: "A change leaves this list on the day a more recent one takes effect, and stays in", text: "the full change log", href: "/changes" },
+      ],
+      escHtmlServer,
+    )}
     <div class="rc-list">
 ${entries}
     </div>
@@ -1256,8 +1271,27 @@ function shortChangeDate(isoDate: string): string {
   return new Date(isoDate).toLocaleDateString("en-US", { month: "short", day: "numeric", timeZone: "UTC" });
 }
 
+const CARD_GROUP_INTRO_END = '</h2>\n' + '  <p class="section-intro">';
+
+function withDatedHeadingNotice(html: string, compiledOn: string): string {
+  const groupHeading = html.indexOf('<h2 id="categories">');
+  if (groupHeading === -1) return html;
+  const introEnd = html.indexOf("</p>", html.indexOf(CARD_GROUP_INTRO_END, groupHeading));
+  if (introEnd === -1) return html;
+  const at = introEnd + "</p>".length;
+  const notice = datedHeadingNoticeHtml(
+    `These figures were compiled on ${compiledOn}; a dated badge marks a card whose vendor we have recorded a change for since, and the date moves to the newer record on the day that record takes effect.`,
+    [
+      { when: "Every record we hold for any vendor named below is in", text: "the full change log", href: "/changes" },
+    ],
+    escHtmlServer,
+    ' class="section-intro dated-rule"',
+  );
+  return html.slice(0, at) + "\n  " + notice + html.slice(at);
+}
+
 function compiledFiguresMarked(html: string, compiledOn: string): string {
-  return markCompiledFigures(html, subject => compiledFigureVerdictFor(subject, compiledOn), {
+  return markCompiledFigures(withDatedHeadingNotice(html, compiledOn), subject => compiledFigureVerdictFor(subject, compiledOn), {
     compiledOn,
     esc: escHtmlServer,
     shortDate: shortChangeDate,
@@ -4104,6 +4138,7 @@ h2{font-family:var(--serif);font-size:1.25rem;color:var(--text);margin:2rem 0 .7
 .section li{margin-bottom:.75rem;font-size:.9rem;color:var(--text-muted);line-height:1.6}
 .section li strong{color:var(--text)}
 .section p{font-size:.9rem;color:var(--text-muted);line-height:1.6;margin-bottom:.5rem}
+.section p.dated-rule{font-size:.78rem;color:var(--text-dim);margin-bottom:.85rem}
 .changes-cols{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem}
 .changes-col h3{font-size:.85rem;color:var(--accent);font-family:var(--mono);margin-bottom:.75rem;text-transform:uppercase;letter-spacing:.05em}
 .category-hub-link{margin-top:2rem;padding:1rem 1.25rem;border-radius:12px;background:linear-gradient(135deg,rgba(59,130,246,0.1),rgba(168,85,247,0.1));border:1px solid rgba(59,130,246,0.2)}
@@ -26987,8 +27022,8 @@ function buildShutdownTrackerPage(): string {
     itemListOrder: listOrderOf("as-curated"),
     name: title,
     description: metaDesc,
-    numberOfItems: activeCount,
-    itemListElement: shutdowns.filter(s => new Date(s.deadline) >= today).map((s, i) => ({
+    numberOfItems: shutdowns.length,
+    itemListElement: shutdowns.map((s, i) => ({
       "@type": "ListItem",
       position: i + 1,
       name: s.service,
@@ -27081,6 +27116,15 @@ ${buildGlobalNav("guides")}
   <div class="breadcrumb"><a href="/">Home</a> / <a href="/guides">Guides</a> / Shutdown Tracker</div>
   <h1>${escHtmlServer(title)}</h1>
   <p class="subtitle">${escHtmlServer(subtitle)}</p>
+  ${datedSectionNoticeHtml(
+    `A shutdown is grouped by how many days its deadline is from ${today.toISOString().slice(0, 10)}: 30 or fewer is Imminent, up to 90 is Upcoming, beyond that is Later This Year.`,
+    [
+      { when: "On the day its deadline passes it moves to", text: "Recently Completed, below", href: "#completed" },
+      { when: "Nothing is removed from this page when its deadline arrives, and every pricing change we hold for these vendors is in", text: "the full change log", href: "/changes" },
+    ],
+    escHtmlServer,
+    ' class="subtitle dated-rule"',
+  )}
   <div class="pub-date">Published ${pubDate} &middot; ${activeCount} active shutdowns${nextDeadline ? ` &middot; Next deadline in ${nextDaysLeft} days` : ""} &middot; ${pageDataProvenance("/shutdowns", offers.length)}</div>
 
   <div class="summary-stats">
@@ -50554,6 +50598,14 @@ ${upcomingChanges.length > 0 ? `
   <div class="upcoming-section" id="upcoming">
     <h2>Upcoming Changes</h2>
     <p class="upcoming-intro">Announced pricing changes with future effective dates. Plan ahead.</p>
+    ${datedSectionNoticeHtml(
+      namedWhileNotBefore("A change", today),
+      [
+        { when: "The day after that date it stops being upcoming and is listed only under the month it falls in, in the timeline below and in", text: "the full change log", href: "/changes" },
+      ],
+      escHtmlServer,
+      ' class="upcoming-intro dated-rule"',
+    )}
 ${upcomingChanges.map(c => buildChangeEntry(c)).join("\n")}
   </div>
 ` : ""}
@@ -51040,6 +51092,15 @@ ${globalNavCss()}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; Expiring</div>
   <h1>Upcoming Free Tier Changes</h1>
   <p class="page-intro">Free tiers disappearing, prices increasing, products shutting down. Don\u2019t get caught off guard.</p>
+  ${datedSectionNoticeHtml(
+    `A change is grouped under the month its effective date falls in while that date is ${today} or later. A change whose effective date we do not hold is grouped instead by the day we discovered it, under Recently Discovered, and leaves that section 30 days after that day.`,
+    [
+      { when: "On the day its date passes it moves out of its month and into", text: "Recently Changed, below", href: "#recently-changed" },
+      { when: "It leaves that section 30 days later, and every record we hold stays in", text: "the full change log", href: "/changes" },
+    ],
+    escHtmlServer,
+    ' class="page-intro dated-rule"',
+  )}
 
   <div class="stats-bar">
     <div class="stat-card${urgentCount > 0 ? " stat-urgent" : ""}">
@@ -51063,7 +51124,7 @@ ${globalNavCss()}
 ${changeLogFreshnessNote()}
 ${totalUpcoming > 0 ? upcomingHtml : `  <div class="no-upcoming">No upcoming pricing changes in the next 30 days. Check back soon or <a href="/feed.xml">subscribe via RSS</a>.</div>`}
 
-${recent.length > 0 ? `  <div class="recent-section">
+${recent.length > 0 ? `  <div class="recent-section" id="recently-changed">
     <h2>Recently Changed</h2>
     <p class="recent-desc">${recent.length} pricing changes in the last 30 days.</p>
     <button class="recent-toggle" onclick="document.querySelector('.recent-entries').classList.toggle('show');this.textContent=this.textContent==='Show recent changes'?'Hide recent changes':'Show recent changes'">Show recent changes</button>
@@ -51530,6 +51591,14 @@ ${globalNavCss()}
   <div class="breadcrumb"><a href="/">AgentDeals</a> &rsaquo; Deadlines</div>
   <h1>Developer Tool Deadline Tracker</h1>
   <p class="page-intro">${deadlines.length} upcoming deadlines across developer infrastructure \u2014 API shutdowns, free tier removals, and price changes. ${listOrderSentence("soonest-first")}</p>
+  ${datedSectionNoticeHtml(
+    `${namedWhileAheadOf("A deadline", today)} It is not removed because the shutdown was cancelled or because we stopped holding the record.`,
+    [
+      { when: "On the day its date arrives it leaves this page for", text: "the full change log", href: "/changes" },
+    ],
+    escHtmlServer,
+    ' class="page-intro dated-rule"',
+  )}
   <a href="/feed.xml" class="rss-link">\u{1F4E1} Subscribe to changes</a>
 
   <div class="stats-bar">
@@ -52996,7 +53065,14 @@ function buildTrendsPage(slug: string): string | null {
   const announcedHtml = announced.length > 0 ? `
   <div class="section">
     <h2>${ANNOUNCED_HEADING}</h2>
-    <p class="section-desc">${announcedIntro(announced.length, asOf)}</p>
+    ${datedSectionNoticeHtml(
+      announcedIntro(announced.length, asOf),
+      [
+        { when: "On its own date a record here joins", text: "the Pricing Change Timeline, below", href: "#timeline" },
+      ],
+      escHtmlServer,
+      ' class="section-desc dated-rule"',
+    )}
     <div class="timeline">
 ${announced.map(c => timelineItemHtml(c, `<span class="badge" style="background:#8b949e">${ANNOUNCED_BADGE}</span> `)).join("\n")}
     </div>
@@ -53137,7 +53213,7 @@ ${globalNavCss()}
 
   ${breakdownHtml ? `<div class="breakdown">${breakdownHtml}</div>` : ""}
 ${announcedHtml}
-  <div class="section">
+  <div class="section" id="timeline">
     <h2>Pricing Change Timeline</h2>
     <p class="section-desc">${escHtmlServer(A_COMPLETE_LOG_NOTICE)}</p>
     <div class="timeline">
