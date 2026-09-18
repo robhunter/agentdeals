@@ -1,4 +1,4 @@
-import { loadDealChanges, loadOffers, demotionWithheldInForce } from "../dist/data.js";
+import { loadDealChanges, loadOffers, demotionWithheldForNoSource } from "../dist/data.js";
 import { uncitedChangesAgainstBudget } from "../dist/change-reporting.js";
 
 const HELP = `List the change records that cite no source, so they can be cited or retracted.
@@ -36,7 +36,7 @@ function parseArgs(argv) {
   return opts;
 }
 
-export function uncitedReport(changes, offers, nowMs = Date.now()) {
+export function uncitedReport(changes, offers) {
   const offerByVendor = new Map();
   for (const offer of offers) {
     const key = offer.vendor.toLowerCase();
@@ -44,7 +44,7 @@ export function uncitedReport(changes, offers, nowMs = Date.now()) {
   }
   return uncitedChangesAgainstBudget(changes).map((change) => {
     const offer = offerByVendor.get(change.vendor.toLowerCase()) ?? null;
-    const withheld = demotionWithheldInForce(change, nowMs);
+    const withheld = demotionWithheldForNoSource(change);
     return {
       vendor: change.vendor,
       date: change.date,

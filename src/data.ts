@@ -25,7 +25,7 @@ import { restatementRulings, withheldTermsMeasure, type WithheldTermsMeasure } f
 import { isSubSlug, toSlug } from "./slug.js";
 export { sanitizeQuery } from "./search-query.js";
 import { matchingSubject } from "./gate-disclosure.js";
-import { DATE_SOURCES, isEventDated, changeDateClause, isoWeekWindow, changesInWindow, discoveryBatchNote, firstReadHeading, type DateWindow } from "./change-dates.js";
+import { DATE_SOURCES, isEventDated, changeDateClause, changeEntryDateLabel, isoWeekWindow, changesInWindow, discoveryBatchNote, firstReadHeading, type DateWindow } from "./change-dates.js";
 import { PRODUCT_DEPRECATED, deprecationEndsTheListedProduct } from "./product-deprecation.js";
 import { RISK_DEMOTION } from "./change-demotion.js";
 import { sinceFilterDay } from "./since-parameter.js";
@@ -998,8 +998,16 @@ export const VOLATILE_WHILE_A_DEMOTION_COUNTS_RULE =
 export const WATCH_RECEIVES_FROM_VOLATILE_RULE =
   `This section also receives vendors from Volatile above: a vendor arrives here on the day its newest qualifying pricing event passes ${VERDICT_WINDOW_DAYS} days and stops counting against it, without our having recorded anything new.`;
 
-export const A_VERDICT_ROLLS_NOTICE =
-  `A verdict here is not a fixed property of the vendor. A one-off pricing event demotes a vendor while its recorded date falls in the last ${VERDICT_WINDOW_DAYS} days and then lapses on its own, with nothing about the vendor having changed; a standing condition — a free tier withdrawn, a product retired — does not lapse with time. A badge carrying a date states the record it rests on; a badge with no date rests on no record in force.`;
+export const A_VERDICT_LAPSES_RULE =
+  `A verdict here is not a fixed property of the vendor. A one-off pricing event demotes a vendor while its recorded date falls in the last ${VERDICT_WINDOW_DAYS} days and then lapses on its own, with nothing about the vendor having changed; a standing condition — a free tier withdrawn, a product retired — does not lapse with time.`;
+
+export const A_BADGE_STATES_THE_RECORD_IT_RESTS_ON =
+  "A badge carrying a date states the record it rests on; a badge with no date rests on no record in force.";
+
+export const A_VERDICT_ROLLS_NOTICE = `${A_VERDICT_LAPSES_RULE} ${A_BADGE_STATES_THE_RECORD_IT_RESTS_ON}`;
+
+export const A_WITHHELD_RATING_DOES_NOT_LAPSE =
+  "We withhold a rating because of what our own evidence does not show, so it stays withheld until a source, a retraction or a corrected record clears it. It does not expire on a clock.";
 
 export const A_COMPLETE_LOG_NOTICE =
   "Every record we hold is listed here, newest first. A record is never removed from this list, so a vendor named here stays named here whatever its verdict does afterwards.";
@@ -1024,11 +1032,15 @@ export function changeTypesThatCanDemote(): Set<DealChange["change_type"]> {
   return new Set([...types, PRODUCT_DEPRECATED as DealChange["change_type"]]);
 }
 
+export function demotionCanLapse(changeType: string): boolean {
+  return CHANGE_IS_AN_EVENT.has(changeType as DealChange["change_type"]);
+}
+
 export function verdictHasLapsed(
   change: Pick<DealChange, "change_type" | "date">,
   nowMs: number = Date.now(),
 ): boolean {
-  if (!CHANGE_IS_AN_EVENT.has(change.change_type)) return false;
+  if (!demotionCanLapse(change.change_type)) return false;
   const windowOpens = new Date(nowMs - VERDICT_WINDOW_DAYS * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
   return change.date < windowOpens;
 }
@@ -1040,11 +1052,17 @@ export function demotionInForce(
   return verdictHasLapsed(change, nowMs) ? null : demotionForChange(change);
 }
 
-export function demotionWithheldInForce(
-  change: Pick<DealChange, "change_type" | "vendor" | "summary" | "date"> & CitableChange & { resolution?: DealChange["resolution"] },
-  nowMs: number = Date.now(),
-): "risky" | "caution" | null {
-  return verdictHasLapsed(change, nowMs) ? null : demotionWithheldForNoSource(change);
+export function demotionLapsesOn(date: string): string {
+  const lapses = Date.parse(`${date}T00:00:00Z`) + (VERDICT_WINDOW_DAYS + 1) * 24 * 60 * 60 * 1000;
+  return new Date(lapses).toISOString().slice(0, 10);
+}
+
+export function lapsingDemotionStated(
+  cause: { change_type: string; date: string; date_source?: ChangeDateSource },
+): string {
+  return demotionCanLapse(cause.change_type)
+    ? `${A_VERDICT_LAPSES_RULE} This one rests on a record ${changeEntryDateLabel(cause)}, so it lapses on ${demotionLapsesOn(cause.date)} unless we record something new first.`
+    : `${A_VERDICT_LAPSES_RULE} This one rests on a standing condition, so it does not lapse.`;
 }
 
 const RISK_RANK: Record<"stable" | "caution" | "risky", number> = { stable: 0, caution: 1, risky: 2 };
@@ -1075,7 +1093,7 @@ export function vendorRiskAssessment(vendorChanges: DealChange[], nowMs: number 
       if (better(best, level, c)) best = { level, cause: c };
       continue;
     }
-    const withheld = demotionWithheldInForce(c, nowMs);
+    const withheld = demotionWithheldForNoSource(c);
     if (!withheld) continue;
     const level = atTwelveMonths(withheld, c.date);
     if (better(uncited, level, c)) uncited = { level, cause: c };
@@ -1088,7 +1106,7 @@ export function vendorRiskAssessment(vendorChanges: DealChange[], nowMs: number 
       cause: null,
       rating_withheld: {
         reason: "no_source",
-        records: vendorChanges.filter(c => demotionWithheldInForce(c, nowMs) !== null).length,
+        records: vendorChanges.filter(c => demotionWithheldForNoSource(c) !== null).length,
       },
     };
   }
