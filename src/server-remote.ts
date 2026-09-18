@@ -21,7 +21,7 @@ import { CATALOGUE_CATEGORY_COUNT, CATALOGUE_OFFER_FLOOR_LABEL, MCP_INSTRUCTIONS
 import { MCP_TOOLS } from "./mcp-tool-inventory.js";
 import { trackedChanges, TRACKED_CHANGE_NOUN, TRACKED_CHANGE_RULE_PATH } from "./change-census.js";
 import { PKG_VERSION } from "./package-version.js";
-import { substitutesFor } from "./product-role.js";
+import { wholeRankedOrderList } from "./ranking.js";
 import { publishedDateLine, storedConfirmationClause, verificationDatesClause } from "./read-date.js";
 
 import { INCLUDE_RETRACTED_ACCEPTS } from "./change-resolution.js";
@@ -675,7 +675,12 @@ Suggested monitoring cadence: run this check weekly to catch pricing changes ear
       }
 
       const changesData = (await fetchDealChanges({ vendor: match.vendor, since: "2020-01-01" })) as { changes: Array<{ date: string; change_type: string; summary: string; previous_state: string; current_state: string }> };
-      const alternatives = substitutesFor(data.offers, match).slice(0, 5);
+      const details = (await fetchOfferDetails(match.vendor)) as { offer?: { relatedVendors?: string[] } };
+      const byVendor = new Map(data.offers.map(o => [o.vendor, o]));
+      const alternatives = (details.offer?.relatedVendors ?? []).flatMap(name => {
+        const held = byVendor.get(name);
+        return held ? [held] : [];
+      });
       const unconfirmed = reasonWeCannotConfirmTheTerms(match, unconfirmedTermsFrom(publishedTermsEvidence(match)));
 
       let text = `# ${match.vendor}\n\n`;
@@ -705,6 +710,7 @@ Suggested monitoring cadence: run this check weekly to catch pricing changes ear
 
       if (alternatives.length > 0) {
         text += `\n## Alternatives in ${match.category}\n\n`;
+        text += `${wholeRankedOrderList(alternatives.length)}\n\n`;
         for (const a of alternatives) {
           text += `- **${a.vendor}** — ${a.tier}: ${a.description}\n`;
         }

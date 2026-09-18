@@ -98,7 +98,7 @@ import { changeAnchor, changeRecordHref } from "./change-anchor.js";
 import { SSE_KEEPALIVE_FRAME, keepaliveIntervalMs, sessionRecoveryBody } from "./mcp-stream.js";
 import { ASSISTANTS_API_SHUTDOWN } from "./assistants-shutdown.js";
 import { discontinuedOnOrBefore, PRODUCT_DEPRECATED } from "./product-deprecation.js";
-import { rankOffers, rankForListing, rotateListing, utcDate, gateFor, notAFreeOfferGateFor, descriptionDeniesFreeTier, classifyTier, CRITERIA_PATH, DEMOTE_ONLY_POLICY, DISCLOSURE_RATIONALE, TIE_BREAK_ALGORITHM, NAMED_SUBSET_RULE, NAMED_SUBSET_FIELD_RULE, GATE_TABLE, DEMERIT_TABLE, NOT_FREE_TIER_RULES, TIME_LIMITED_TIER_RULES, type TieBreak, type Gate } from "./ranking.js";
+import { rankOffers, rankForListing, rotateListing, utcDate, gateFor, notAFreeOfferGateFor, descriptionDeniesFreeTier, classifyTier, CRITERIA_PATH, DEMOTE_ONLY_POLICY, DISCLOSURE_RATIONALE, TIE_BREAK_ALGORITHM, NAMED_SUBSET_RULE, NAMED_SUBSET_FIELD_RULE, wholeRankedOrderClause, GATE_TABLE, DEMERIT_TABLE, NOT_FREE_TIER_RULES, TIME_LIMITED_TIER_RULES, type TieBreak, type Gate } from "./ranking.js";
 import type { RankedEntry, RankingResult } from "./ranking.js";
 import { eligibilityGateAsPublished, gatedShareDescriptionClause, gatedShareLede, publishableEligibilityConditions } from "./eligibility.js";
 import { gateDisclosureFor } from "./gate-disclosure.js";
@@ -2592,7 +2592,7 @@ function auditBlockCss(): string {
 
 function renderAuditBlock(tie: TieBreak, listed?: { total: number }): string {
   const truncationNote = listed
-    ? ` The list above is every one of the ${listed.total} entries in that order, not a prefix of it.`
+    ? ` The list above is ${wholeRankedOrderClause(listed.total)}.`
     : "";
   return `  <div class="audit-block">
     <strong style="color:var(--text)">Recompute today's order yourself.</strong> The order above is a permutation seeded only on the UTC date and the query key &mdash; no vendor name, slug, id or offer field is an input.${truncationNote} <a href="${CRITERIA_PATH}">The algorithm is published</a>, so anyone can reproduce this page's order without asking us.
@@ -3230,7 +3230,7 @@ ${directionRows}
   <h3>The tie-break</h3>
   <p>Tied offers are ordered by a permutation seeded on the UTC date and the query key, and nothing else. No vendor name, slug, id, index or offer field is an input, so an offer's position is uniform regardless of what it is called or where it sits in our file. The order rotates daily; the membership of the list does not.</p>
   <pre>${escHtmlServer(TIE_BREAK_ALGORITHM)}</pre>
-  <p>Every ranked page publishes the <code>date</code>, <code>query_key</code>, <code>seed</code> and <code>tie_count</code> it used, and the JSON APIs return the same block. <strong style="color:var(--text)">You can recompute today's order yourself and check it against what we served, without asking us.</strong> That is the point: not for sale should be auditable, not merely asserted.</p>
+  <p>Every ranked page publishes the <code>date</code>, <code>query_key</code>, <code>seed</code>, <code>tie_count</code> and <code>ranked_total</code> it used, and the JSON APIs return the same block. <code>ranked_total</code> is every entry the seed ordered, so a list that names fewer than it is a prefix and says so. <strong style="color:var(--text)">You can recompute today's order yourself and check it against what we served, without asking us.</strong> That is the point: not for sale should be auditable, not merely asserted.</p>
 
   <h3 id="subsets">Surfaces with room for only a few of them</h3>
   <p><strong style="color:var(--text)">${escHtmlServer(NAMED_SUBSET_RULE)}</strong></p>

@@ -168,7 +168,7 @@ export function getOfferDetails(
       substitutesFor(offers, match),
       { queryKey: `related:${match.category}:${match.vendor}`, changes: loadDealChanges() },
     );
-    const sameCategoryOffers = relatedRanking.entries.slice(0, 5).map((e) => e.offer);
+    const sameCategoryOffers = relatedRanking.entries.map((e) => e.offer);
     const relatedVendors = sameCategoryOffers.map((o) => o.vendor);
     const result: EnrichedOffer & { relatedVendors: string[]; alternatives?: EnrichedOffer[]; tie_break: TieBreak } = {
       ...enrichOffers([match])[0],
@@ -1213,7 +1213,7 @@ export function checkVendorRisk(
     substitutesFor(offers, offer),
     { queryKey: `vendor-risk-alternatives:${offer.vendor}`, changes: allChanges },
   );
-  const alternatives = alternativesRanking.entries.slice(0, 3).map((e) => ({
+  const alternatives = alternativesRanking.entries.map((e) => ({
     vendor: e.offer.vendor,
     category: e.offer.category,
     tier: e.offer.tier,
