@@ -137,27 +137,23 @@ describe("the home page's past-tense change lists carry only changes that have t
     if (tmp) rmSync(tmp, { recursive: true, force: true });
   });
 
-  const whatsChanged = () =>
-    sliceSection(html, 'id="whats-changed"', 'href="/api/changes"', "Recent pricing changes");
-  const freshIntel = () =>
-    sliceSection(html, 'id="recent-changes"', 'href="/expiring" class="see-all-link"', "Fresh Intel");
+  const recentChanges = () =>
+    sliceSection(html, 'id="recent-changes"', 'href="/expiring" class="see-all-link"', "Recent pricing changes");
   const comingSoon = () =>
-    sliceSection(html, "Pricing changes coming soon", "expiring soon", "Pricing changes coming soon");
+    sliceSection(html, 'id="changing-soon"', 'href="/changes" class="see-all-link"', "Upcoming deal changes");
 
   it("dates every entry under Recent pricing changes on or before today", () => {
-    const dates = entryDates(whatsChanged(), "change-date");
+    const dates = entryDates(recentChanges(), "rc-date");
     assert.strictEqual(dates.length, 5, "Recent pricing changes did not render five entries, so the dates below prove nothing");
     for (const date of dates) {
       assert.ok(date <= TODAY, `Recent pricing changes leads with ${date}, which has not arrived yet`);
     }
   });
 
-  it("dates every entry under Fresh Intel on or before today", () => {
-    const dates = entryDates(freshIntel(), "rc-date");
-    assert.strictEqual(dates.length, 5, "Fresh Intel did not render five entries, so the dates below prove nothing");
-    for (const date of dates) {
-      assert.ok(date <= TODAY, `Fresh Intel leads with ${date}, which has not arrived yet`);
-    }
+  it("carries the past-tense change list once", () => {
+    const headings = [...html.matchAll(/<h2[^>]*>([^<]*)<\/h2>/g)].map((m) => m[1].trim());
+    const repeats = headings.filter((h) => h === "Recent pricing changes");
+    assert.strictEqual(repeats.length, 1, "the home page carries more than one Recent pricing changes heading");
   });
 
   it("publishes no datePublished later than the day the page was built", () => {
@@ -178,21 +174,17 @@ describe("the home page's past-tense change lists carry only changes that have t
     for (const upcoming of FUTURE) {
       assert.ok(
         soon.includes(upcoming.vendor),
-        `${upcoming.vendor} takes effect on ${upcoming.date} and is missing from Pricing changes coming soon`
+        `${upcoming.vendor} takes effect on ${upcoming.date} and is missing from Upcoming deal changes`
       );
       assert.ok(
-        !vendorsIn(whatsChanged()).includes(upcoming.vendor),
+        !vendorsIn(recentChanges()).includes(upcoming.vendor),
         `${upcoming.vendor} takes effect on ${upcoming.date} and is listed under Recent pricing changes`
-      );
-      assert.ok(
-        !vendorsIn(freshIntel()).includes(upcoming.vendor),
-        `${upcoming.vendor} takes effect on ${upcoming.date} and is listed under Fresh Intel`
       );
     }
   });
 
   it("never lists the same change as both already changed and changing soon", () => {
-    const recent = vendorsIn(whatsChanged());
+    const recent = vendorsIn(recentChanges());
     const soon = vendorsIn(comingSoon());
     assert.ok(recent.length > 0 && soon.length > 0, "one of the two lists is empty, so an empty overlap proves nothing");
     const both = recent.filter((v) => soon.includes(v));
@@ -201,7 +193,7 @@ describe("the home page's past-tense change lists carry only changes that have t
 
   it("counts a change that takes effect today as one that has happened", () => {
     assert.ok(
-      vendorsIn(whatsChanged()).includes(EFFECTIVE_TODAY.vendor),
+      vendorsIn(recentChanges()).includes(EFFECTIVE_TODAY.vendor),
       `${EFFECTIVE_TODAY.vendor} takes effect today and is missing from Recent pricing changes`
     );
     assert.ok(
@@ -212,7 +204,7 @@ describe("the home page's past-tense change lists carry only changes that have t
 
   it("still fills all five slots from the changes that have taken effect", () => {
     assert.deepStrictEqual(
-      vendorsIn(whatsChanged()),
+      vendorsIn(recentChanges()),
       EXPECTED_RECENT,
       "Recent pricing changes is not the five newest changes that have taken effect"
     );
@@ -235,11 +227,11 @@ describe("the home page counts the changes it lists, not the changes it holds", 
   });
 
   it("advertises the number of entries it published, not the cap it could have filled", () => {
-    const section = sliceSection(html, 'id="recent-changes"', 'href="/expiring" class="see-all-link"', "Fresh Intel");
+    const section = sliceSection(html, 'id="recent-changes"', 'href="/expiring" class="see-all-link"', "Recent pricing changes");
     assert.deepStrictEqual(
       vendorsIn(section),
       SPARSE_PAST.map((c) => c.vendor),
-      "Fresh Intel did not render exactly the changes that have taken effect"
+      "Recent pricing changes did not render exactly the changes that have taken effect"
     );
     const items = itemListItems(html);
     assert.strictEqual(
@@ -260,7 +252,7 @@ describe("the home page counts the changes it lists, not the changes it holds", 
   });
 
   it("still counts down to every change that has not taken effect", () => {
-    const soon = vendorsIn(sliceSection(html, "Pricing changes coming soon", "expiring soon", "Pricing changes coming soon"));
+    const soon = vendorsIn(sliceSection(html, 'id="changing-soon"', 'href="/changes" class="see-all-link"', "Upcoming deal changes"));
     assert.deepStrictEqual(soon, FUTURE.map((c) => c.vendor));
   });
 });

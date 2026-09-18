@@ -252,9 +252,10 @@ describe("the homepage publishes only what it can serve", () => {
   });
 
   it("links the vendor on every change it puts on the page", () => {
-    const cells = [...home.matchAll(/<span class="change-vendor">([\s\S]*?)<\/span>/g)].map(([, cell]) => cell);
+    const cells = [...home.matchAll(/<(span|a)\b[^>]*class="(?:change|rc|cs)-vendor"[^>]*>([\s\S]*?)<\/\1>/g)]
+      .map(([, tag, inner]) => ({ tag, inner }));
     assert.ok(cells.length > 0, "the homepage renders no change cards");
-    const unlinked = cells.filter((cell) => !/<a\b/.test(cell)).map((cell) => cell.trim());
+    const unlinked = cells.filter(({ tag, inner }) => tag !== "a" && !/<a\b/.test(inner)).map(({ inner }) => inner.trim());
     assert.deepStrictEqual(unlinked, [], `change cards naming a vendor with no link: ${unlinked.join(", ")}`);
   });
 
