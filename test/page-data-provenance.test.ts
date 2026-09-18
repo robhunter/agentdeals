@@ -123,6 +123,7 @@ describe("a page may only name the source it actually reads", () => {
         ...censusTableFigures(a, d),
         reads_changes: a !== c,
         vendor_fact_rows: vendorFactRows(a, namedVendorSlug).length,
+        vendors_tabulated: [...new Set(vendorFactRows(a, namedVendorSlug).map((r) => r.slug))].sort(),
       });
     }
   });
@@ -186,7 +187,7 @@ describe("a page may only name the source it actually reads", () => {
     const withOneMore = new Map(measured);
     withOneMore.set("/a-page-that-does-not-exist", {
       reads_index: false, tables_read_index: false, table_figures: 0, table_figures_from_records: 0,
-      tables: [], reads_changes: false, vendor_fact_rows: 0,
+      tables: [], reads_changes: false, vendor_fact_rows: 0, vendors_tabulated: [],
     });
     assert.ok(
       pageSourceViolations(admitted, withOneMore, unsourced.length).length > 0,

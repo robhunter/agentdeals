@@ -69,6 +69,69 @@ describe("rebuilding the review register to a path of its own", () => {
   });
 });
 
+describe("rebuilding the register from a job that read no page", () => {
+  function rebuiltFrom(overrides: Record<string, Record<string, unknown>>) {
+    const fixture = registerWith(REPO, "register-measured-only-", overrides);
+    const out = path.join(fixture.dir, "written.json");
+    const stdout = rebuild(["--measured-only", "--out", out], { AGENTDEALS_PAGE_REVIEWS_PATH: fixture.file });
+    const written = new Map(parsePageReviews(readFileSync(out, "utf-8")).pages.map((p) => [p.path, p]));
+    return { stdout, written, cleanup: () => rmSync(fixture.dir, { recursive: true, force: true }) };
+  }
+
+  it("writes the figure counts the render measured over the ones it carried", () => {
+    const run = rebuiltFrom({ "/storage-comparison-2026": { table_figures: 9, table_figures_from_records: 4 } });
+    try {
+      const after = run.written.get("/storage-comparison-2026")!;
+      const onTheRegister = onRecord().find((p) => p.path === "/storage-comparison-2026")!;
+      assert.strictEqual(after.table_figures, onTheRegister.table_figures);
+      assert.strictEqual(after.table_figures_from_records, onTheRegister.table_figures_from_records);
+      assert.match(run.stdout, /~ \/storage-comparison-2026 table figures from our records 4\/9 -> \d+\/\d+/);
+    } finally {
+      run.cleanup();
+    }
+  });
+
+  it("carries a tier and an asserted vendor the render disagrees with, and says it measured them", () => {
+    const run = rebuiltFrom({ "/llm-api-pricing": { tier: "B", vendors_asserted: [] } });
+    try {
+      const after = run.written.get("/llm-api-pricing")!;
+      assert.strictEqual(after.tier, "B");
+      assert.deepStrictEqual(after.vendors_asserted, []);
+      assert.match(run.stdout, /measured and not written/);
+      assert.match(run.stdout, /~ \/llm-api-pricing tier B -> A/);
+      assert.match(run.stdout, /~ \/llm-api-pricing vendors 0 -> \d+/);
+    } finally {
+      run.cleanup();
+    }
+  });
+
+  it("leaves a whole page as it stands when the source it would be given moves the ratchet", () => {
+    const run = rebuiltFrom({
+      "/storage-comparison-2026": { data_source: "unsourced", table_figures: 9, table_figures_from_records: 4 },
+    });
+    try {
+      const after = run.written.get("/storage-comparison-2026")!;
+      assert.strictEqual(after.data_source, "unsourced");
+      assert.strictEqual(after.table_figures, 9, "the figures were written on a page whose source the same run would not move");
+      assert.match(run.stdout, /= \/storage-comparison-2026 stands as it is: the render says data_source catalogue against the unsourced on record, and that is the unsourced_tier_a ratchet moving/);
+    } finally {
+      run.cleanup();
+    }
+  });
+
+  it("still carries every review a reviewer asserted", () => {
+    const run = rebuiltFrom({ "/llm-api-pricing": { tier: "B" } });
+    try {
+      const blanked = onRecord().flatMap((page) =>
+        REVIEW_FIELDS.filter((field) => page[field] !== null && (run.written.get(page.path)?.[field] ?? null) !== page[field])
+          .map((field) => `${page.path} ${field}`));
+      assert.deepStrictEqual(blanked, []);
+    } finally {
+      run.cleanup();
+    }
+  });
+});
+
 describe("dating a page from the history of the server", () => {
   it("says how many pages it is about to walk the history for", () => {
     const fixture = registerWith(REPO, "register-undated-", {
