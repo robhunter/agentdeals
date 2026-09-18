@@ -1,5 +1,6 @@
 import { createHash } from "node:crypto";
 import { changeSummaryText } from "./change-citation.js";
+import { gateCensusSentence } from "./gate-disclosure.js";
 import { LINK_GRACE_DAYS, unreachableNoticeForUrl } from "./link-health.js";
 import { listEndedTiers, offerEnded, recordedTierSentence } from "./retirement.js";
 import { LAST_RESOLVED, withheldLevelSentence } from "./source-check.js";
@@ -75,32 +76,43 @@ export interface Gate {
   reason: string;
 }
 
-export const GATE_TABLE: { code: GateCode; description: string }[] = [
+export interface GateTableRow {
+  code: GateCode;
+  rule: string;
+  census?: (offers: Offer[], date: string) => string;
+}
+
+export const GATE_TABLE: GateTableRow[] = [
   {
     code: "eligibility_restricted",
-    description:
+    rule:
       "The offer is not generally available — it requires accelerator, student, open-source, startup or similar qualification. Such offers appear on the category page, not on a ranked recommendation surface.",
   },
   {
     code: "not_a_free_offer",
-    description:
+    rule:
       "The stated tier is not a free offer (see the tier classification below).",
   },
   {
     code: "offer_expired",
-    description: "The offer's own stated expiry date has already passed.",
+    rule: "The offer's own stated expiry date has already passed.",
   },
   {
     code: "offer_retired",
-    description:
+    rule:
       `The tier we hold records the offer as ended: ${listEndedTiers()}. The vendor page stays up and still answers whether the offer exists, but an ended offer is not ranked at any position.`,
   },
   {
     code: "verification_lapsed",
-    description:
-      `We have not been able to confirm the offer for more than ${VERIFICATION_LAPSED_DAYS} days. This is a floor, not a filter: no offer currently trips it.`,
+    rule:
+      `We have not been able to confirm the offer for more than ${VERIFICATION_LAPSED_DAYS} days. This is a floor, not a filter.`,
+    census: (offers, date) => gateCensusSentence("verification_lapsed", offers.map(offer => gateFor(offer, date)), date),
   },
 ];
+
+export function gateTableRowText(row: GateTableRow, offers: Offer[], date: string): string {
+  return row.census ? `${row.rule} ${row.census(offers, date)}` : row.rule;
+}
 
 export type DemeritCode =
   | "free_tier_withdrawn"

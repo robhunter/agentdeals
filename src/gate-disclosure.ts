@@ -38,6 +38,13 @@ export function gateClauseList(codes: GateCode[]): string {
   return clauses.join(", ");
 }
 
+export function gateCensusSentence(code: GateCode, gates: (Gate | null)[], date: string): string {
+  const scope = `On ${date}, across the ${gates.length.toLocaleString("en-US")} offers we hold`;
+  const tripping = gates.filter((g): g is Gate => g !== null && g.code === code).map((g) => g.code);
+  if (tripping.length === 0) return `${scope}, no offer trips it.`;
+  return `${scope}, ${gateClauseList(tripping)}.`;
+}
+
 export function gateDisclosureSentence(subject: string, total: number, codes: GateCode[]): string {
   const gated = codes.length;
   if (gated === 0 || total === 0) return "";
