@@ -55326,7 +55326,7 @@ const dispatchRequest = async (req: IncomingMessage, res: ServerResponse) => {
         const disambiguation = resolution.slugs.map(s => ({ slug: s, name: vendorSlugMap.get(s) ?? s }));
         logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/details", params: { vendor: vendorParam, alternatives: includeAlternatives, disambiguated: true }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: disambiguation.length });
         res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
-        res.end(JSON.stringify({ disambiguation, resolved_from: vendorParam }));
+        res.end(JSON.stringify(citedAcrossTheWholeIndex({ disambiguation, resolved_from: vendorParam })));
         return;
       }
     }
@@ -55337,9 +55337,10 @@ const dispatchRequest = async (req: IncomingMessage, res: ServerResponse) => {
       return;
     }
     logRequest({ ts: new Date().toISOString(), type: "api", endpoint: "/api/details", params: { vendor: vendorParam, alternatives: includeAlternatives, ...(resolvedFrom ? { resolved_from: resolvedFrom } : {}) }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
-    const offerWithCode = { ...detailResult.offer, referral_code: getBestReferralCode(detailResult.offer.vendor) };
+    const { relatedVendors, alternatives, tie_break, ...offerRecord } = detailResult.offer;
+    const offerWithCode = { ...offerRecord, referral_code: getBestReferralCode(detailResult.offer.vendor) };
     res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
-    res.end(JSON.stringify(withAgentBlock({ offer: offerWithCode, ...(includeAlternatives ? { alternatives: detailResult.offer.alternatives } : {}), ...(resolvedFrom ? { resolved_from: resolvedFrom } : {}) }, singleVendorSlug(url.pathname))));
+    res.end(JSON.stringify(withAgentBlock({ offer: offerWithCode, relatedVendors, ...(includeAlternatives ? { alternatives } : {}), tie_break, ...(resolvedFrom ? { resolved_from: resolvedFrom } : {}) }, singleVendorSlug(url.pathname))));
   } else if (url.pathname === "/api/expiring" && isGetOrHead) {
     recordApiHit("/api/expiring");
     const withinDays = Math.min(Math.max(parseInt(url.searchParams.get("within_days") ?? "30", 10) || 30, 1), 365);

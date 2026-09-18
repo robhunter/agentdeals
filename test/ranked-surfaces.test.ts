@@ -257,7 +257,7 @@ const RANKED_SURFACES: Array<{
   { queryKeyPrefix: "alternatives", publishedAt: "/vendor/vercel", seedIn: "html" },
   { queryKeyPrefix: "alternative-to", publishedAt: "/alternative-to/vercel", seedIn: "html" },
   { queryKeyPrefix: "curated-alternatives", publishedAt: "/vendor/postman", seedIn: "html" },
-  { queryKeyPrefix: "related", publishedAt: "/api/details/doppler", seedIn: "json", jsonSeed: (b) => b.offer?.tie_break?.seed },
+  { queryKeyPrefix: "related", publishedAt: "/api/details/doppler", seedIn: "json", jsonSeed: (b) => b.tie_break?.seed },
   { queryKeyPrefix: "vendor-risk-alternatives", publishedAt: "/api/vendor-risk/doppler", seedIn: "json", jsonSeed: (b) => b.tie_break?.seed },
   { queryKeyPrefix: "stack", publishedAt: "/api/stack?use_case=Next.js+SaaS+app", seedIn: "json", jsonSeed: (b) => b.stack?.[0]?.tie_break?.seed },
 ];

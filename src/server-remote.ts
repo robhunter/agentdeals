@@ -130,6 +130,8 @@ export function createServer(): McpServer {
             const data = await fetchOfferDetails(vendor, true) as {
               offer?: Record<string, unknown>;
               alternatives?: unknown[];
+              relatedVendors?: string[];
+              tie_break?: Record<string, unknown>;
               disambiguation?: { slug: string; name: string }[];
               resolved_from?: string;
             };
@@ -141,6 +143,12 @@ export function createServer(): McpServer {
             }
             if (data.alternatives && !data.offer.alternatives) {
               data.offer.alternatives = data.alternatives;
+            }
+            if (data.relatedVendors && !data.offer.relatedVendors) {
+              data.offer.relatedVendors = data.relatedVendors;
+            }
+            if (data.tie_break && !data.offer.tie_break) {
+              data.offer.tie_break = data.tie_break;
             }
             if (data.resolved_from) {
               data.offer.resolved_from = data.resolved_from;
@@ -675,9 +683,9 @@ Suggested monitoring cadence: run this check weekly to catch pricing changes ear
       }
 
       const changesData = (await fetchDealChanges({ vendor: match.vendor, since: "2020-01-01" })) as { changes: Array<{ date: string; change_type: string; summary: string; previous_state: string; current_state: string }> };
-      const details = (await fetchOfferDetails(match.vendor)) as { offer?: { relatedVendors?: string[] } };
+      const details = (await fetchOfferDetails(match.vendor)) as { relatedVendors?: string[]; offer?: { relatedVendors?: string[] } };
       const byVendor = new Map(data.offers.map(o => [o.vendor, o]));
-      const alternatives = (details.offer?.relatedVendors ?? []).flatMap(name => {
+      const alternatives = (details.relatedVendors ?? details.offer?.relatedVendors ?? []).flatMap(name => {
         const held = byVendor.get(name);
         return held ? [held] : [];
       });

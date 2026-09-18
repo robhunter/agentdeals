@@ -318,15 +318,15 @@ describe("#1032 the other recommendation surfaces", () => {
     for (const subject of subjects) {
       const { status, body } = await get(`/api/details/${encodeURIComponent(subject.vendor)}?alternatives=true`);
       if (status !== 200) continue;
-      const parsed = JSON.parse(body) as { offer?: { relatedVendors?: string[]; alternatives?: Array<{ vendor: string }> } };
-      const related = parsed.offer?.relatedVendors;
+      const parsed = JSON.parse(body) as { relatedVendors?: string[]; alternatives?: Array<{ vendor: string }> };
+      const related = parsed.relatedVendors;
       if (!related?.length) continue;
       answered += 1;
       for (const gated of [GATED_ADDON, GATED_LOCAL]) {
         if (!gateAppliesFor(gated, subject.vendor)) continue;
         gateChecks += 1;
         if (related.includes(gated)) offenders.push(`${gated} related to ${subject.vendor}`);
-        if (parsed.offer?.alternatives?.some((a) => a.vendor === gated)) offenders.push(`${gated} listed as an alternative to ${subject.vendor}`);
+        if (parsed.alternatives?.some((a) => a.vendor === gated)) offenders.push(`${gated} listed as an alternative to ${subject.vendor}`);
       }
     }
     assert.ok(answered > 10, `the sweep must actually read detail results, read ${answered}`);

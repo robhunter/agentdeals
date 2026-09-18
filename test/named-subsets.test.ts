@@ -692,7 +692,7 @@ const ABOVE_ANY_CAP = ["cloudflare-d1", "cloudflare-workers"];
 const BELOW_EVERY_CAP = ["qdrant", "kaggle"];
 
 interface TieBreakBlock { tie_count: number; ranked_total: number }
-interface ApiDetails { offer: { vendor: string; relatedVendors: string[]; alternatives: { vendor: string }[]; tie_break: TieBreakBlock } }
+interface ApiDetails { offer: { vendor: string }; relatedVendors: string[]; alternatives: { vendor: string }[]; tie_break: TieBreakBlock }
 interface ApiVendorRisk { alternatives: { vendor: string }[]; tie_break: TieBreakBlock }
 interface ApiStack { stack: { role: string; reason: string; candidates: unknown[]; tie_break: TieBreakBlock }[] }
 
@@ -779,14 +779,14 @@ describe("every door that names alternatives names the whole ranked order", () =
     try {
       for (const slug of ABOVE_ANY_CAP) {
         const details = await (await fetch(`${base}/api/details/${slug}?alternatives=true`)).json() as ApiDetails;
-        const named = details.offer.alternatives.length;
+        const named = details.alternatives.length;
         assert.ok(named > 5, `${slug} must hold more alternatives than the largest cap for this to be a control, got ${named}`);
-        assert.equal(named, details.offer.tie_break.ranked_total, `/api/details/${slug} names ${named} of the ${details.offer.tie_break.ranked_total} it ranked`);
-        assert.deepEqual(namesFrom(details.offer.alternatives), details.offer.relatedVendors.slice().sort(), `/api/details/${slug} disagrees with its own relatedVendors`);
+        assert.equal(named, details.tie_break.ranked_total, `/api/details/${slug} names ${named} of the ${details.tie_break.ranked_total} it ranked`);
+        assert.deepEqual(details.alternatives.map((a) => a.vendor), details.relatedVendors, `/api/details/${slug} disagrees with its own relatedVendors`);
 
         const risk = await (await fetch(`${base}/api/vendor-risk/${encodeURIComponent(details.offer.vendor)}`)).json() as ApiVendorRisk;
         assert.equal(risk.alternatives.length, risk.tie_break.ranked_total, `/api/vendor-risk/${details.offer.vendor} names ${risk.alternatives.length} of the ${risk.tie_break.ranked_total} it ranked`);
-        assert.deepEqual(namesFrom(risk.alternatives), namesFrom(details.offer.alternatives), `the two JSON doors name different alternatives for ${slug}`);
+        assert.deepEqual(namesFrom(risk.alternatives), namesFrom(details.alternatives), `the two JSON doors name different alternatives for ${slug}`);
 
         const page = await (await fetch(`${base}/vendor/${slug}`)).text();
         const section = page.slice(page.indexOf('<h2 id="alternatives">'));
@@ -794,7 +794,7 @@ describe("every door that names alternatives names the whole ranked order", () =
         assert.ok(claim, `/vendor/${slug} publishes no claim about how much of the order it shows`);
         assert.equal(Number(claim[1]), named, `/vendor/${slug} shows ${claim[1]} alternatives where its own JSON names ${named}`);
         const onThePage = [...section.matchAll(/<td><a href="\/vendor\/([a-z0-9.-]+)">/g)].map((m) => m[1]).sort();
-        assert.deepEqual(namesFrom(details.offer.alternatives).map(toSlug).sort(), onThePage, `/api/details/${slug} and /vendor/${slug} name different alternatives`);
+        assert.deepEqual(namesFrom(details.alternatives).map(toSlug).sort(), onThePage, `/api/details/${slug} and /vendor/${slug} name different alternatives`);
       }
     } finally {
       proc.kill();
@@ -808,11 +808,11 @@ describe("every door that names alternatives names the whole ranked order", () =
     try {
       for (const slug of BELOW_EVERY_CAP) {
         const details = await (await fetch(`${base}/api/details/${slug}?alternatives=true`)).json() as ApiDetails;
-        const named = details.offer.alternatives.length;
+        const named = details.alternatives.length;
         assert.ok(named > 0 && named <= 3, `${slug} must hold at most the smallest cap for this to be a control, got ${named}`);
-        assert.equal(named, details.offer.tie_break.ranked_total, `/api/details/${slug} names ${named} of the ${details.offer.tie_break.ranked_total} it ranked`);
+        assert.equal(named, details.tie_break.ranked_total, `/api/details/${slug} names ${named} of the ${details.tie_break.ranked_total} it ranked`);
         const risk = await (await fetch(`${base}/api/vendor-risk/${encodeURIComponent(details.offer.vendor)}`)).json() as ApiVendorRisk;
-        assert.deepEqual(namesFrom(risk.alternatives), namesFrom(details.offer.alternatives), `the two JSON doors name different alternatives for ${slug}`);
+        assert.deepEqual(namesFrom(risk.alternatives), namesFrom(details.alternatives), `the two JSON doors name different alternatives for ${slug}`);
       }
     } finally {
       proc.kill();
@@ -848,7 +848,7 @@ describe("every door that names alternatives names the whole ranked order", () =
         const answered = await callMcpTool(base, "search_deals", { vendor: details.offer.vendor }) as { alternatives?: { vendor: string }[]; tie_break: TieBreakBlock };
         const named = answered.alternatives ?? [];
         assert.equal(named.length, answered.tie_break.ranked_total, `search_deals names ${named.length} of the ${answered.tie_break.ranked_total} it ranked for ${slug}`);
-        assert.deepEqual(namesFrom(named), namesFrom(details.offer.alternatives), `search_deals and /api/details name different alternatives for ${slug}`);
+        assert.deepEqual(namesFrom(named), namesFrom(details.alternatives), `search_deals and /api/details name different alternatives for ${slug}`);
       }
     } finally {
       proc.kill();

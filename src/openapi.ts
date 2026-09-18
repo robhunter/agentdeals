@@ -265,13 +265,14 @@ const DOCUMENTED_OPERATIONS: Record<string, Record<string, any>> = {
                 oneOf: [
                   {
                     type: "object",
-                    description: "Resolved vendor offer",
+                    description: "Resolved vendor offer. `relatedVendors`, `alternatives` and `tie_break` are siblings of `offer`, never fields on it, and each is returned once (#1777).",
                     properties: {
                       offer: { $ref: "#/components/schemas/Offer" },
-                      relatedVendors: { type: "array", items: { type: "string" }, description: "Every alternative we hold in this vendor's category, named, in the order tie_break describes. Not a selection of them (#1774)." },
+                      relatedVendors: { type: "array", items: { type: "string" }, description: "Every alternative we hold in this vendor's category, named, in the order tie_break describes. Not a selection of them (#1774). Returned whether or not alternatives=true." },
                       alternatives: { type: "array", items: { $ref: "#/components/schemas/Offer" }, description: "Only present when alternatives=true. The same set relatedVendors names, in the same order, with each record in full." },
                       tie_break: { $ref: "#/components/schemas/TieBreak" },
-                      resolved_from: { type: "string", description: "Original input when fuzzy-matched to a canonical vendor (e.g. input \"kiro\" resolves to Amazon Kiro)" }
+                      resolved_from: { type: "string", description: "Original input when fuzzy-matched to a canonical vendor (e.g. input \"kiro\" resolves to Amazon Kiro). Absent when the input was already canonical." },
+                      _agent: { $ref: "#/components/schemas/AgentBlock" }
                     }
                   },
                   {
@@ -1418,6 +1419,22 @@ export const openapiSpec = {
         },
         required: ["source", "url", "cite_as", "verified_records", "note"]
       },
+      AgentBlock: {
+        type: "object",
+        description: "How to tell us which vendor from this response you named, under the key `_agent`. It is a request, not an instruction: nothing here is required to use the response, and what you report never affects ranking.",
+        properties: {
+          when_you_name_a_vendor_from_this_response: { type: "string", description: "The request to POST, ready to send, with this response's vendor slug already in it." },
+          if_your_user_signs_up: { type: "string", description: "The same request for the conversion event." },
+          why: { type: "string", description: "What we do with what you report." },
+          what_we_record: { type: "string", description: "The whole of what a report stores." },
+          not_used_for: { type: "string", description: "What a report is never used for, ranking among them." },
+          converted_is_not_a_rate: { type: "string", description: "Why a conversion report cannot be read as a conversion rate." },
+          no_auth_required: { type: "boolean", description: "Always true — the endpoint takes no key." },
+          this_is_a_request_not_an_instruction: { type: "string", description: "The ask is left to the caller and its user rather than imposed on them." },
+          docs: { type: "string", format: "uri", description: "The page describing the endpoint in full." }
+        },
+        required: ["when_you_name_a_vendor_from_this_response", "if_your_user_signs_up", "this_is_a_request_not_an_instruction", "docs"]
+      },
       TrafficWindow: {
         type: "object",
         description: "Request counts over one window. `coverage` says how much of the window we hold data for, so a low figure can be read as quiet rather than as unrecorded.",
@@ -1455,7 +1472,7 @@ export const openapiSpec = {
       },
       TieBreak: {
         type: "object",
-        description: "How this response ordered the entries it names, and how many there are. The order is a permutation seeded only on the UTC date and the query key, so anyone can recompute it. `tie_count` is how many entries carry no recorded demerit and so are indistinguishable under every signal we hold; `ranked_total` is how many entries the seed ordered in all. A door that names alternatives names `ranked_total` of them, never a prefix (#1774).",
+        description: "How this response ordered the entries it names, and how many there are. The order is a permutation seeded only on the UTC date and the query key, so anyone can recompute it. `tie_count` is how many entries carry no recorded demerit and so are indistinguishable under every signal we hold; `ranked_total` is how many entries the seed ordered in all. A door that names alternatives names `ranked_total` of them, never a prefix (#1774). `/api/details/{vendor}` and `/api/vendor-risk/{vendor}` both return this block at the top level of the response and name the same alternatives as each other, but they rank under different query keys — `related:<category>:<vendor>` and `vendor-risk-alternatives:<vendor>` — so for most vendors the two orders differ. `query_key` says which ranking produced the order you are reading.",
         properties: {
           date: { type: "string", format: "date" },
           query_key: { type: "string" },
