@@ -7,6 +7,7 @@ export interface ComparisonSide {
   vendor: string;
   recordedChanges: number;
   rating: StabilityRating | null;
+  ratedOn?: string | null;
   ratingWithheldBecause: LevelWithheldReason | null;
   refusedRead?: RefusedRead | null;
   unconfirmableSince: string;
@@ -151,8 +152,9 @@ export function comparisonVerdictText(
 }
 
 export function stabilityFaqAnswer(a: ComparisonSide, b: ComparisonSide): string {
+  const restingOn = (side: ComparisonSide) => (side.ratedOn ? ` on a record dated ${side.ratedOn}` : "");
   const stated = (side: ComparisonSide) =>
-    `${side.vendor} has ${recordedChangesPhrase(side.recordedChanges)}${side.rating ? ` and is rated ${side.rating}` : ""}.`;
+    `${side.vendor} has ${recordedChangesPhrase(side.recordedChanges)}${side.rating ? ` and is rated ${side.rating}${restingOn(side)}` : ""}.`;
   const clause = stabilityVerdictClause(a, b);
   return `${stated(a)} ${stated(b)}${clause ? ` ${clause}` : ""}`;
 }

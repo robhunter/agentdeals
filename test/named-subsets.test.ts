@@ -5,10 +5,21 @@ import { mkdtempSync, readFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { assertCoversPopulation, assertPopulationFloor, vendorsInTheCatalogue } from "./population-floor.ts";
-import { NAMED_SUBSET_RULE, NAMED_SUBSET_FIELD_RULE, wholeRankedOrderList } from "../dist/ranking.js";
+import { assertCoversPopulation, assertPopulationFloor, vendorsInTheCatalogue, categoriesInTheCatalogue } from "./population-floor.ts";
+import { NAMED_SUBSET_RULE, NAMED_SUBSET_FIELD_RULE, CRITERIA_PATH, wholeRankedOrderList } from "../dist/ranking.js";
 import { toSlug } from "../dist/slug.js";
-import { loadOffers, getOfferDetails, checkVendorRisk } from "../dist/data.js";
+import {
+  loadOffers,
+  loadDealChanges,
+  enrichOffers,
+  getOfferDetails,
+  checkVendorRisk,
+  A_COMPLETE_LOG_NOTICE,
+  A_DEMOTION_IN_FORCE_RULE,
+  NO_DEMOTION_IN_FORCE_RULE,
+  RECENT_CHANGE_WINDOW_DAYS,
+  VERDICT_WINDOW_DAYS,
+} from "../dist/data.js";
 import { substitutesFor } from "../dist/product-role.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -32,6 +43,7 @@ const DEMOTED_IN_BASIS = /([\d,]+) (?:is|are) demoted with the reason named/;
 const GATED_IN_BASIS = /([\d,]+) (?:is|are) listed last behind a stated gate/;
 const RECOUNTED_ELSEWHERE = [LISTING_BASIS, HOLDS_IN_ALL, STATED_COUNTS, CHANGES_STATED];
 const PAGES_DATING_A_DEMOTION_FLOOR = 32;
+const ROLLING_VERDICT_HEADINGS = ["At-Risk Vendors", "Stable Picks"];
 const CLOCK_BASE_DAYS = Number(process.env.AGENTDEALS_CLOCK_BASE_DAYS ?? 0);
 
 interface Surfaces {
@@ -41,6 +53,7 @@ interface Surfaces {
   vendorSequence: string[];
   demotedHeadingFound: boolean;
   windowedHeadings: string[];
+  completeLogHeadings: string[];
   datesBehindEachDemotion: Record<string, string[]>;
   metaDescription: string | null;
   itemListNames: string[];
@@ -132,11 +145,19 @@ export function vendorsByRegion(body: string): Record<string, string[]> {
   return Object.fromEntries([...regions].map(([k, v]) => [k, [...v].sort()]));
 }
 
-function headingsCoveringARollingWindow(body: string): string[] {
+function headingsWhoseSectionSays(body: string, says: (section: string) => boolean): string[] {
   const headings = headingsOf(body);
   return headings
-    .filter((heading, at) => A_ROLLING_WINDOW.test(stripTags(body.slice(heading.at, headings[at + 1]?.at ?? body.length))))
+    .filter((heading, at) => says(stripTags(body.slice(heading.at, headings[at + 1]?.at ?? body.length))))
     .map(heading => heading.text);
+}
+
+function headingsCoveringARollingWindow(body: string): string[] {
+  return headingsWhoseSectionSays(body, section => A_ROLLING_WINDOW.test(section));
+}
+
+function headingsDeclaringACompleteLog(body: string): string[] {
+  return headingsWhoseSectionSays(body, section => section.includes(A_COMPLETE_LOG_NOTICE));
 }
 
 function demotedRegionOf(body: string): string | null {
@@ -219,6 +240,7 @@ function surfacesOf(body: string): Surfaces {
     vendorSequence: [...body.matchAll(/href="\/vendor\/([a-z0-9-]+)"/g)].map(m => m[1]!),
     demotedHeadingFound: demotedRegionOf(body) !== null,
     windowedHeadings: headingsCoveringARollingWindow(body),
+    completeLogHeadings: headingsDeclaringACompleteLog(body),
     datesBehindEachDemotion: datesBehindEachDemotion(body),
     metaDescription,
     itemListNames: itemListNames.sort(),
@@ -246,10 +268,14 @@ function vendorsThatChangeHeading(before: Surfaces, after: Surfaces): string[] {
     .sort();
 }
 
-function namedOnlyUnderARollingWindow(surfaces: Surfaces, vendor: string): boolean {
-  const headings = Object.entries(surfaces.regions)
-    .filter(([, vendors]) => vendors.includes(vendor))
+function headingsWhoseMembershipIsAVerdict(surfaces: Surfaces, vendor: string): string[] {
+  return Object.entries(surfaces.regions)
+    .filter(([heading, vendors]) => vendors.includes(vendor) && !surfaces.completeLogHeadings.includes(heading))
     .map(([heading]) => heading);
+}
+
+function namedOnlyUnderARollingWindow(surfaces: Surfaces, vendor: string): boolean {
+  const headings = headingsWhoseMembershipIsAVerdict(surfaces, vendor);
   return headings.length > 0 && headings.every(heading => surfaces.windowedHeadings.includes(heading));
 }
 
@@ -418,6 +444,80 @@ describe("what a page names changes overnight only where the page itself says wh
       unexplained.slice(0, 8),
       [],
       `${unexplained.length} vendor${unexplained.length === 1 ? " is" : "s are"} named under a different heading tomorrow with nothing on the page dating the move`,
+    );
+  });
+
+  it("keeps every name a section promises never to drop", () => {
+    const dropped: string[] = [];
+    for (const pagePath of inventory) {
+      const [before, after] = bothDays(pagePath);
+      for (const heading of before.completeLogHeadings) {
+        const lost = (before.regions[heading] ?? []).filter(vendor => !(after.regions[heading] ?? []).includes(vendor));
+        if (lost.length > 0) dropped.push(`${pagePath} "${heading}": ${lost.slice(0, 4).join(", ")}`);
+      }
+    }
+    assert.deepEqual(
+      dropped.slice(0, 8),
+      [],
+      `${dropped.length} section${dropped.length === 1 ? "" : "s"} told the reader a record is never removed and then stopped naming a vendor tomorrow`,
+    );
+  });
+
+  it("exempts a move from the assertions above only where a section earned it", () => {
+    const trendsPages = inventory.filter(p => p.startsWith("/trends/"));
+    assertCoversPopulation(
+      trendsPages.length,
+      categoriesInTheCatalogue(),
+      "category trends pages read against a clock a day ahead",
+    );
+    assert.deepEqual(
+      trendsPages.filter(p => today.get(p)!.completeLogHeadings.length === 0).slice(0, 8),
+      [],
+      "a trends page declares no section a complete log, and declaring one is the only thing that keeps a heading out of the exemption's denominator",
+    );
+    const named = trendsPages.flatMap(pagePath => {
+      const surfaces = today.get(pagePath)!;
+      return ROLLING_VERDICT_HEADINGS.flatMap(heading =>
+        (surfaces.regions[heading] ?? []).map(vendor => ({ pagePath, heading, vendor, surfaces })));
+    });
+    assert.ok(
+      named.length > 0,
+      `no trends page names a vendor under ${ROLLING_VERDICT_HEADINGS.join(" or ")}, so nothing below reads the exemption at all`,
+    );
+    const unexempted = named
+      .filter(({ surfaces, vendor }) => !namedOnlyUnderARollingWindow(surfaces, vendor))
+      .map(({ pagePath, heading, vendor }) => `${pagePath} "${heading}": ${vendor}`);
+    assert.deepEqual(
+      unexempted.slice(0, 8),
+      [],
+      `${unexempted.length} of ${named.length} vendors named under a heading whose membership rolls with the clock are not covered by a window that heading states`,
+    );
+  });
+
+  it("names under a stated membership rule every vendor that rule qualifies, not the first few", t => {
+    if (CLOCK_BASE_DAYS !== 0) return t.skip("the qualifying set is read on the real clock, which the shifted server does not share");
+    const qualifyingIn = new Map<string, Set<string>>();
+    const offersByCategory = new Map<string, ReturnType<typeof loadOffers>>();
+    for (const offer of loadOffers()) {
+      if (!offersByCategory.has(offer.category)) offersByCategory.set(offer.category, []);
+      offersByCategory.get(offer.category)!.push(offer);
+    }
+    for (const [category, list] of offersByCategory) {
+      const qualifying = enrichOffers(list).filter(o => o.risk_level === "stable" && !o.recent_change);
+      qualifyingIn.set(toSlug(category), new Set(qualifying.map(o => toSlug(o.vendor))));
+    }
+    const withheld: string[] = [];
+    for (const pagePath of inventory.filter(p => p.startsWith("/trends/"))) {
+      const qualifying = qualifyingIn.get(pagePath.slice("/trends/".length));
+      if (qualifying === undefined) continue;
+      const named = new Set(today.get(pagePath)!.regions["Stable Picks"] ?? []);
+      const unnamed = [...qualifying].filter(vendor => !named.has(vendor)).sort();
+      if (unnamed.length > 0) withheld.push(`${pagePath}: ${unnamed.length} of ${qualifying.size} unnamed, ${unnamed.slice(0, 3).join(", ")}`);
+    }
+    assert.deepEqual(
+      withheld.slice(0, 8),
+      [],
+      `${withheld.length} pages state the rule for being in a section and then name only some of the vendors that satisfy it, which is the named subset ${CRITERIA_PATH}#subsets publishes a promise against`,
     );
   });
 
@@ -628,6 +728,30 @@ describe("what counts as a page saying why, on pages built to test it", () => {
     assert.deepEqual(movesWithNoDatedReason(inTheWindow, outOfIt), []);
   });
 
+  it("reads a dated log that never drops a record as no bar to a windowed section's exemption", () => {
+    const windowed = (vendors: string[]) => ({
+      heading: "At Risk",
+      note: `Named here while a demotion is in force — an event in the last 180 days, or a standing condition.`,
+      vendors,
+    });
+    const log = { heading: "Change Timeline", note: A_COMPLETE_LOG_NOTICE, vendors: ["alfa", "bravo"] };
+    const inTheWindow = surfacesOf(aPage({ title: TITLE, sections: [windowed(["alfa", "bravo"]), log] }));
+    const outOfIt = surfacesOf(aPage({ title: TITLE, sections: [windowed(["alfa"]), log] }));
+    assert.deepEqual(movesWithNoDatedReason(inTheWindow, outOfIt), []);
+
+    const undeclared = { ...log, note: "The changes we hold for this category, newest first." };
+    const alsoNamedWithNoWindow = surfacesOf(aPage({ title: TITLE, sections: [windowed(["alfa", "bravo"]), undeclared] }));
+    const droppedThere = surfacesOf(aPage({ title: TITLE, sections: [windowed(["alfa"]), undeclared] }));
+    assert.deepEqual(movesWithNoDatedReason(alsoNamedWithNoWindow, droppedThere), ["bravo"]);
+  });
+
+  it("reads a name held only by a section that declares itself a log as earning no exemption", () => {
+    const log = (vendors: string[]) => ({ heading: "Change Timeline", note: A_COMPLETE_LOG_NOTICE, vendors });
+    const named = surfacesOf(aPage({ title: TITLE, sections: [listing(["alfa"]), log(["bravo"])] }));
+    const gone = surfacesOf(aPage({ title: TITLE, sections: [listing(["alfa"])] }));
+    assert.deepEqual(vendorsNoLongerNamed(named, gone), ["bravo"]);
+  });
+
   it("reads a section that names no window as not free to stop naming someone", () => {
     const droppedEntirely = surfacesOf(aPage({ title: TITLE, sections: [listing(["alfa"])] }));
     assert.deepEqual(vendorsNoLongerNamed(listedTogether, droppedEntirely), ["bravo"]);
@@ -685,6 +809,37 @@ describe("the rule that decides it is published where a reader can find it", () 
       proc.kill();
       rmSync(scratch, { recursive: true, force: true });
     }
+  });
+
+  it("publishes, in the sentence a section prints, the window that section's own filter reads", () => {
+    assert.ok(
+      NO_DEMOTION_IN_FORCE_RULE.includes(`in the last ${RECENT_CHANGE_WINDOW_DAYS} days`),
+      "Stable Picks prints a window its own recent-change filter does not use",
+    );
+    assert.ok(
+      A_DEMOTION_IN_FORCE_RULE.includes(`in the last ${VERDICT_WINDOW_DAYS} days`),
+      "At-Risk Vendors prints a window the verdict engine does not use",
+    );
+
+    const dated = (daysAgo: number) =>
+      new Date(Date.now() - daysAgo * A_DAY_IN_MS).toISOString().slice(0, 10);
+    const newestChangeFor = new Map<string, string>();
+    for (const change of loadDealChanges()) {
+      const key = change.vendor.toLowerCase();
+      if (change.date > (newestChangeFor.get(key) ?? "")) newestChangeFor.set(key, change.date);
+    }
+    const inside = dated(RECENT_CHANGE_WINDOW_DAYS - 1);
+    const outside = dated(RECENT_CHANGE_WINDOW_DAYS + 1);
+    const disagreeing = enrichOffers(loadOffers()).filter(offer => {
+      const newest = newestChangeFor.get(offer.vendor.toLowerCase());
+      if (newest === undefined || (newest > outside && newest < inside)) return false;
+      return (newest >= inside) !== (offer.recent_change !== null);
+    });
+    assert.deepEqual(
+      disagreeing.slice(0, 4).map(offer => `${offer.vendor}: newest ${newestChangeFor.get(offer.vendor.toLowerCase())}`),
+      [],
+      `${disagreeing.length} offers carry a recent_change the published ${RECENT_CHANGE_WINDOW_DAYS}-day sentence does not account for, so a section states one window and filters on another`,
+    );
   });
 });
 

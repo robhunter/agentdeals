@@ -7,6 +7,7 @@ import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/
 import { createServer, getServerCard } from "./server.js";
 import { oldestVerifiedDateForSlug, vendorRiskAssessment, publishedRisk, levelWithheldStatement, vendorNotIndexedSentence, riskCauseOf, freeTierEndingRecord, NEGATIVE_CHANGE_TYPES, POSITIVE_CHANGE_TYPES, SEVERE_CHANGE_TYPES, loadOffers, getCategories, getNewOffers, getNewestDeals, searchOffers, enrichOffers, gateForOffer, loadDealChanges, getDealChanges, changeContext, DEFAULT_CHANGE_WINDOW_DAYS, getOfferDetails, compareServices, checkVendorRisk, auditStack, getExpiringDeals, getWeeklyDigest, getFormattedWeeklyDigest, getFreshnessMetrics, publishedStabilityIndex, stabilityWithheldDisclosure, UNRATED_STABILITY, type StabilityIndex, type PublishedStabilityClass, getVendorReferral, sanitizeQuery, getChangeLogFreshness, isEventDated, partitionByDateProvenance } from "./data.js";
 import { loadChangeRefusals, changesRatingTheListedTier, stabilityDeciders } from "./data.js";
+import { A_DEMOTION_IN_FORCE_RULE, NO_DEMOTION_IN_FORCE_RULE, A_COMPLETE_LOG_NOTICE, A_VERDICT_ROLLS_NOTICE, VOLATILE_WHILE_A_DEMOTION_COUNTS_RULE, WATCH_RECEIVES_FROM_VOLATILE_RULE } from "./data.js";
 import { confirmingRead, confirmingReadSentence, refusalsByVendor, refusedReadSentence, supersededRefusalSentence, type ChangeRefusal } from "./change-refusal.js";
 import { getStackRecommendation } from "./stacks.js";
 import { estimateCosts } from "./costs.js";
@@ -3550,6 +3551,7 @@ function buildComparisonPage(slug: string): string | null {
       vendor,
       recordedChanges,
       rating: rated as StabilityRating | null,
+      ratedOn: risk.risk_cause?.date ?? null,
       ratingWithheldBecause: levelWithheldReason(risk, risk.link_unreachable),
       refusedRead: risk.refused_read,
       unconfirmableSince: levelWithheldSince(risk, risk.link_unreachable),
@@ -3564,6 +3566,7 @@ function buildComparisonPage(slug: string): string | null {
   <div class="verdict-section">
     <h2>Verdict</h2>
     <p>${escHtmlServer(verdictText)}</p>
+    <p style="color:var(--text-muted);font-size:.85rem;margin-top:.5rem">${escHtmlServer(A_VERDICT_ROLLS_NOTICE)}</p>
     <div class="verdict-details">
       <a href="/vendor/${toSlug(a.vendor)}" class="vendor-link">${escHtmlServer(a.vendor)} profile &rarr;</a>
       <a href="/vendor/${toSlug(b.vendor)}" class="vendor-link">${escHtmlServer(b.vendor)} profile &rarr;</a>
@@ -3700,7 +3703,8 @@ ${categoryContextHtml}
 ${verdictHtml}
   <div class="compare-grid">
     <div class="vendor-col">
-      <h2><a href="/vendor/${toSlug(a.vendor)}">${escHtmlServer(a.vendor)}</a> ${riskBadge(riskA)}</h2>
+      <h2><a href="/vendor/${toSlug(a.vendor)}">${escHtmlServer(a.vendor)}</a></h2>
+      <div class="detail-row"><span class="detail-label">Risk</span><span class="detail-value">${riskBadge(riskA)}</span></div>
       <div class="detail-row"><span class="detail-label">Category</span><span class="detail-value">${escHtmlServer(a.category)}</span></div>
       <div class="detail-row"><span class="detail-label">Tier</span><span class="detail-value" style="color:var(--accent)">${escHtmlServer(a.tier)}</span></div>
       <div class="detail-row"><span class="detail-label">Verified</span><span class="detail-value">${escHtmlServer(a.verifiedDate)}</span></div>
@@ -3710,7 +3714,8 @@ ${verdictHtml}
       ${a.referral ? `<div style="margin-top:.75rem;padding:.5rem .75rem;border:1px solid #3fb95040;border-left:3px solid #3fb950;border-radius:0 6px 6px 0;background:#3fb95010;font-size:.8rem">\ud83d\udd17 <a href="${escHtmlServer(a.referral.url)}" rel="noopener sponsored" target="_blank">Referral link</a>: ${escHtmlServer(a.referral.referee_value ?? "Save with our referral link")} <a href="/disclosure" style="font-size:.7rem;color:var(--text-dim)">(disclosure)</a></div>` : ""}
     </div>
     <div class="vendor-col">
-      <h2><a href="/vendor/${toSlug(b.vendor)}">${escHtmlServer(b.vendor)}</a> ${riskBadge(riskB)}</h2>
+      <h2><a href="/vendor/${toSlug(b.vendor)}">${escHtmlServer(b.vendor)}</a></h2>
+      <div class="detail-row"><span class="detail-label">Risk</span><span class="detail-value">${riskBadge(riskB)}</span></div>
       <div class="detail-row"><span class="detail-label">Category</span><span class="detail-value">${escHtmlServer(b.category)}</span></div>
       <div class="detail-row"><span class="detail-label">Tier</span><span class="detail-value" style="color:var(--accent)">${escHtmlServer(b.tier)}</span></div>
       <div class="detail-row"><span class="detail-label">Verified</span><span class="detail-value">${escHtmlServer(b.verifiedDate)}</span></div>
@@ -24149,6 +24154,7 @@ ${mcpCtaCss()}
 
   <h2>${stabilityEmoji.volatile} Volatile — High Risk</h2>
   <p class="section-intro">These vendor free tiers have been removed, severely cut, or show multiple negative changes. If you depend on these, plan a migration.</p>
+  <p class="section-intro">${escHtmlServer(VOLATILE_WHILE_A_DEMOTION_COUNTS_RULE)}</p>
   ${volatileVendors.map(v => buildVendorCard(v, stabilityColors.volatile)).join("\n  ")}
   <div class="context-box">
     <strong>What makes a vendor volatile?</strong> Free tier removed entirely, open-source version killed, product deprecated, or two or more negative pricing changes. These vendors have demonstrated a pattern of degrading their free tier offering.
@@ -24156,6 +24162,7 @@ ${mcpCtaCss()}
 
   <h2>${stabilityEmoji.watch} Watch — Moderate Risk</h2>
   <p class="section-intro">One negative pricing change tracked. The free tier still exists but has been tightened. Monitor for further changes.</p>
+  <p class="section-intro">${escHtmlServer(WATCH_RECEIVES_FROM_VOLATILE_RULE)}</p>
   ${watchVendors.map(v => buildVendorCard(v, stabilityColors.watch)).join("\n  ")}
   <div class="context-box">
     <strong>What puts a vendor on watch?</strong> A single negative change &mdash; limits reduced, restrictions added, or pricing restructured. One change doesn&rsquo;t mean the free tier is going away, but it&rsquo;s a signal to pay attention.
@@ -52972,7 +52979,7 @@ function buildTrendsPage(slug: string): string | null {
   const atRisk = enriched.filter(o => (o.risk_level === "risky" || o.risk_level === "caution") && o.risk_cause)
     .sort((a, b) => (a.risk_level === "risky" ? 0 : 1) - (b.risk_level === "risky" ? 0 : 1));
 
-  const stablePicks = enriched.filter(o => o.risk_level === "stable" && !o.recent_change).slice(0, 12);
+  const stablePicks = enriched.filter(o => o.risk_level === "stable" && !o.recent_change);
 
   const totalAll = trackedChanges(allChanges).length;
   const categoryPct = totalAll > 0 ? Math.round((catTracked.length / totalAll) * 100) : 0;
@@ -53020,6 +53027,7 @@ ${announced.map(c => timelineItemHtml(c, `<span class="badge" style="background:
   const atRiskHtml = atRisk.length > 0 ? `
   <div class="section">
     <h2>At-Risk Vendors</h2>
+    <p class="section-desc">All ${atRisk.length} of the ${catOffers.length} vendors we list in this category that carry one. ${escHtmlServer(A_DEMOTION_IN_FORCE_RULE)}</p>
     <div class="vendor-list">
 ${atRisk.map(o => {
     return `      <a href="/vendor/${toSlug(o.vendor)}" class="vendor-item">
@@ -53033,7 +53041,7 @@ ${atRisk.map(o => {
   const stableHtml = stablePicks.length > 0 ? `
   <div class="section">
     <h2>Stable Picks</h2>
-    <p class="section-desc">Vendors with no recent pricing changes and low risk scores.</p>
+    <p class="section-desc">All ${stablePicks.length} of the ${catOffers.length} vendors we list in this category that qualify, not a selection of them. ${escHtmlServer(NO_DEMOTION_IN_FORCE_RULE)}</p>
     <div class="stable-grid">
 ${stablePicks.map(o => `      <a href="/vendor/${toSlug(o.vendor)}" class="stable-card">
         <span class="stable-name">${escHtmlServer(o.vendor)}</span>
@@ -53142,6 +53150,7 @@ ${globalNavCss()}
 ${announcedHtml}
   <div class="section">
     <h2>Pricing Change Timeline</h2>
+    <p class="section-desc">${escHtmlServer(A_COMPLETE_LOG_NOTICE)}</p>
     <div class="timeline">
 ${timelineHtml}
     </div>
