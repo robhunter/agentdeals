@@ -992,7 +992,7 @@ describe("search_deals vendor alternatives", () => {
       assert.ok(Array.isArray(offer.relatedVendors));
       assert.ok(Array.isArray(offer.alternatives));
       assert.ok(offer.alternatives.length > 0);
-      assert.ok(offer.alternatives.length <= 5);
+      assert.strictEqual(offer.alternatives.length, offer.tie_break.ranked_total, "the tool named a prefix of the order it ranked");
       const alt = offer.alternatives[0];
       assert.ok(typeof alt.vendor === "string");
       assert.ok(typeof alt.category === "string");
@@ -1020,13 +1020,13 @@ describe("search_deals vendor alternatives", () => {
       const searchResult = searchResponses.find((r: any) => r.id === 2) as any;
       assert.ok(!searchResult.result.isError);
       const offer = JSON.parse(searchResult.result.content[0].text);
-      assert.ok(offer.alternatives.length <= 5);
+      assert.strictEqual(offer.alternatives.length, offer.tie_break.ranked_total, "the tool named a prefix of the order it ranked");
     } finally {
       proc.kill();
     }
   });
 
-  it("caps alternatives at 5", async () => {
+  it("names every alternative it ranked, and names the same ones in the same order under relatedVendors", async () => {
     const proc = startServer();
     try {
       const responses = (await sendMcpMessages(proc, [
@@ -1042,7 +1042,7 @@ describe("search_deals vendor alternatives", () => {
       const result = responses.find((r: any) => r.id === 2) as any;
       assert.ok(!result.result.isError);
       const offer = JSON.parse(result.result.content[0].text);
-      assert.ok(offer.alternatives.length <= 5);
+      assert.strictEqual(offer.alternatives.length, offer.tie_break.ranked_total, "the tool named a prefix of the order it ranked");
       assert.deepStrictEqual(
         offer.relatedVendors,
         offer.alternatives.map((a: any) => a.vendor)

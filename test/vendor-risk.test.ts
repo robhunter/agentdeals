@@ -16,7 +16,7 @@ describe("checkVendorRisk logic", () => {
     assert.ok(typeof result.result.free_tier_longevity_days === "number");
     assert.ok(Array.isArray(result.result.changes));
     assert.ok(Array.isArray(result.result.alternatives));
-    assert.ok(result.result.alternatives.length <= 3);
+    assert.strictEqual(result.result.alternatives.length, result.result.tie_break.ranked_total, "the door named a prefix of the order it ranked");
     assert.ok(result.result.summary.length > 0);
     assert.ok(result.result.category.length > 0);
   });

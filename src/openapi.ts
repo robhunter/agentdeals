@@ -268,7 +268,9 @@ const DOCUMENTED_OPERATIONS: Record<string, Record<string, any>> = {
                     description: "Resolved vendor offer",
                     properties: {
                       offer: { $ref: "#/components/schemas/Offer" },
-                      alternatives: { type: "array", items: { $ref: "#/components/schemas/Offer" }, description: "Only present when alternatives=true" },
+                      relatedVendors: { type: "array", items: { type: "string" }, description: "Every alternative we hold in this vendor's category, named, in the order tie_break describes. Not a selection of them (#1774)." },
+                      alternatives: { type: "array", items: { $ref: "#/components/schemas/Offer" }, description: "Only present when alternatives=true. The same set relatedVendors names, in the same order, with each record in full." },
+                      tie_break: { $ref: "#/components/schemas/TieBreak" },
                       resolved_from: { type: "string", description: "Original input when fuzzy-matched to a canonical vendor (e.g. input \"kiro\" resolves to Amazon Kiro)" }
                     }
                   },
@@ -448,8 +450,10 @@ const DOCUMENTED_OPERATIONS: Record<string, Record<string, any>> = {
                   source_check: { $ref: "#/components/schemas/SourceCheck" },
                   free_tier_longevity_days: { type: "number", nullable: true, description: "Null where the gate code is offer_retired or not_a_free_offer (#1241) — a count of days a free tier has held has no referent where our own record says there is no free tier." },
                   changes: { type: "array", items: { $ref: "#/components/schemas/DealChange" } },
+                  tie_break: { $ref: "#/components/schemas/TieBreak" },
                   alternatives: {
                     type: "array",
+                    description: "Every alternative we hold in this vendor's category, in the order tie_break describes. Not a selection of them (#1774).",
                     items: {
                       type: "object",
                       properties: {
@@ -762,7 +766,7 @@ const DOCUMENTED_OPERATIONS: Record<string, Record<string, any>> = {
                         demoted_count: { type: "integer" },
                         excluded_count: { type: "integer" },
                         reason: { type: "string" },
-                        tie_break: { type: "object", properties: { date: { type: "string" }, query_key: { type: "string" }, seed: { type: "string" }, tie_count: { type: "integer" }, algorithm: { type: "string" } } }
+                        tie_break: { $ref: "#/components/schemas/TieBreak" }
                       }
                     }
                   },
@@ -1448,6 +1452,19 @@ export const openapiSpec = {
           source_check: { $ref: "#/components/schemas/SourceCheck" }
         },
         required: ["vendor", "category", "description", "tier", "url", "tags", "verifiedDate"]
+      },
+      TieBreak: {
+        type: "object",
+        description: "How this response ordered the entries it names, and how many there are. The order is a permutation seeded only on the UTC date and the query key, so anyone can recompute it. `tie_count` is how many entries carry no recorded demerit and so are indistinguishable under every signal we hold; `ranked_total` is how many entries the seed ordered in all. A door that names alternatives names `ranked_total` of them, never a prefix (#1774).",
+        properties: {
+          date: { type: "string", format: "date" },
+          query_key: { type: "string" },
+          seed: { type: "string" },
+          tie_count: { type: "integer" },
+          ranked_total: { type: "integer", description: "Every entry the seed ordered, tied and demoted and gated together. The array this block describes carries all of them." },
+          algorithm: { type: "string" }
+        },
+        required: ["date", "query_key", "seed", "tie_count", "ranked_total", "algorithm"]
       },
       VendorMatch: {
         type: "object",

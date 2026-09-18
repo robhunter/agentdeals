@@ -15,7 +15,7 @@ import { getStackRecommendation } from "./stacks.js";
 import { estimateCosts } from "./costs.js";
 import { getGuideList, getGuideBySlug } from "./guides.js";
 import type { Offer, EnrichedOffer, DealChange } from "./types.js";
-import { substitutesFor } from "./product-role.js";
+import { wholeRankedOrderList } from "./ranking.js";
 import { registerMcpAppsResources, TOOL_UI_META } from "./mcp-apps.js";
 import { CATALOGUE_CATEGORY_COUNT, CATALOGUE_OFFER_FLOOR_LABEL, MCP_INSTRUCTIONS } from "./mcp-instructions.js";
 import { MCP_TOOLS, MCP_TOOL_COUNT, MCP_PROTOCOL_VERSION } from "./mcp-tool-inventory.js";
@@ -151,6 +151,7 @@ export function createServer(getSessionId?: () => string | undefined, getClientN
           }
           logRequest({ ts: new Date().toISOString(), type: "mcp", endpoint: "search_deals", params: { vendor, ...(resolvedFrom ? { resolved_from: resolvedFrom } : {}) }, result_count: 1, session_id: getSessionId?.() });
           const offerWithCode: Record<string, unknown> = { ...result.offer, referral_code: getBestReferralCode(result.offer.vendor) };
+          if (result.offer.alternatives) offerWithCode.alternatives = result.offer.alternatives.map(toConciseOffer);
           if (resolvedFrom) offerWithCode.resolved_from = resolvedFrom;
           return {
             content: [{ type: "text" as const, text: citedJson(offerWithCode) }, SIGNAL_FOOTER_CONTENT],
@@ -805,7 +806,8 @@ Suggested monitoring cadence: run this check weekly to catch pricing changes ear
       }
       const changes = loadDealChanges().filter(c => c.vendor.toLowerCase() === match.vendor.toLowerCase());
       const stability = publishedStabilityFor(match.vendor);
-      const alternatives = substitutesFor(offers, match).slice(0, 5);
+      const details = getOfferDetails(match.vendor, true);
+      const alternatives = "offer" in details ? details.offer.alternatives ?? [] : [];
 
       let text = `# ${match.vendor}\n\n`;
       text += `**Category:** ${match.category}\n`;
@@ -838,6 +840,7 @@ Suggested monitoring cadence: run this check weekly to catch pricing changes ear
 
       if (alternatives.length > 0) {
         text += `\n## Alternatives in ${match.category}\n\n`;
+        text += `${wholeRankedOrderList(alternatives.length)}\n\n`;
         for (const a of alternatives) {
           text += `- **${a.vendor}** — ${a.tier}: ${a.description}\n`;
         }

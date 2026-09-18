@@ -6,8 +6,10 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { assertCoversPopulation, assertPopulationFloor, vendorsInTheCatalogue } from "./population-floor.ts";
-import { NAMED_SUBSET_RULE, NAMED_SUBSET_FIELD_RULE } from "../dist/ranking.js";
+import { NAMED_SUBSET_RULE, NAMED_SUBSET_FIELD_RULE, wholeRankedOrderList } from "../dist/ranking.js";
 import { toSlug } from "../dist/slug.js";
+import { loadOffers, getOfferDetails, checkVendorRisk } from "../dist/data.js";
+import { substitutesFor } from "../dist/product-role.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(__dirname, "..");
@@ -679,6 +681,200 @@ describe("the rule that decides it is published where a reader can find it", () 
       assert.ok(text.includes(NAMED_SUBSET_RULE), "/criteria does not state the rule the pages follow");
       assert.ok(text.includes(NAMED_SUBSET_FIELD_RULE), "/criteria does not say why no field picks the members instead");
       assert.ok(body.includes('id="subsets"'), "nothing on a page can link to the rule it says it follows");
+    } finally {
+      proc.kill();
+      rmSync(scratch, { recursive: true, force: true });
+    }
+  });
+});
+
+const ABOVE_ANY_CAP = ["cloudflare-d1", "cloudflare-workers"];
+const BELOW_EVERY_CAP = ["qdrant", "kaggle"];
+
+interface TieBreakBlock { tie_count: number; ranked_total: number }
+interface ApiDetails { offer: { vendor: string; relatedVendors: string[]; alternatives: { vendor: string }[]; tie_break: TieBreakBlock } }
+interface ApiVendorRisk { alternatives: { vendor: string }[]; tie_break: TieBreakBlock }
+interface ApiStack { stack: { role: string; reason: string; candidates: unknown[]; tie_break: TieBreakBlock }[] }
+
+async function mcpSession(base: string): Promise<{ endpoint: string; headers: Record<string, string> }> {
+  const endpoint = `${base}/mcp`;
+  const accept = "application/json, text/event-stream";
+  const init = await fetch(endpoint, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", Accept: accept },
+    body: JSON.stringify({ jsonrpc: "2.0", id: 1, method: "initialize", params: { protocolVersion: "2025-06-18", capabilities: {}, clientInfo: { name: "named-subsets", version: "1.0.0" } } }),
+  });
+  const headers = { "Content-Type": "application/json", Accept: accept, "Mcp-Session-Id": init.headers.get("mcp-session-id") ?? "" };
+  await fetch(endpoint, { method: "POST", headers, body: JSON.stringify({ jsonrpc: "2.0", method: "notifications/initialized" }) });
+  return { endpoint, headers };
+}
+
+function jsonRpcResult(body: string): { result?: { contents?: { text?: string }[]; content?: { text?: string }[] } } {
+  const line = body.split("\n").find((l) => l.startsWith("data: ")) ?? body;
+  return JSON.parse(line.replace(/^data: /, ""));
+}
+
+async function callMcpTool(base: string, name: string, args: Record<string, unknown>): Promise<unknown> {
+  const { endpoint, headers } = await mcpSession(base);
+  const res = await fetch(endpoint, {
+    method: "POST",
+    headers,
+    body: JSON.stringify({ jsonrpc: "2.0", id: 2, method: "tools/call", params: { name, arguments: args } }),
+  });
+  return JSON.parse(jsonRpcResult(await res.text()).result?.content?.[0]?.text ?? "{}");
+}
+
+async function readMcpResources(base: string, uris: string[]): Promise<Map<string, string>> {
+  const { endpoint, headers } = await mcpSession(base);
+  const read = new Map<string, string>();
+  for (const uri of uris) {
+    const res = await fetch(endpoint, { method: "POST", headers, body: JSON.stringify({ jsonrpc: "2.0", id: 2, method: "resources/read", params: { uri } }) });
+    read.set(uri, jsonRpcResult(await res.text()).result?.contents?.[0]?.text ?? "");
+  }
+  return read;
+}
+
+describe("every door that names alternatives names the whole ranked order", () => {
+  const namesFrom = (list: { vendor: string }[]): string[] => list.map((a) => a.vendor).sort();
+
+  it("names every alternative it ranked, at both JSON doors, for every vendor the catalogue holds", () => {
+    const offers = loadOffers();
+    const vendors = [...new Map(offers.map((o) => [o.vendor.trim().toLowerCase(), o.vendor])).values()];
+    const short: string[] = [];
+    const disagreeing: string[] = [];
+    const undercounted: string[] = [];
+    let read = 0;
+
+    for (const vendor of vendors) {
+      const details = getOfferDetails(vendor, true);
+      if ("error" in details) continue;
+      read++;
+      const ranked = details.offer.tie_break.ranked_total;
+      const candidates = substitutesFor(offers, offers.find((o) => o.vendor === vendor)!).length;
+      const alternatives = details.offer.alternatives ?? [];
+
+      if (ranked !== candidates) undercounted.push(`${vendor} ranked ${ranked} of ${candidates} substitutes`);
+      if (ranked < details.offer.tie_break.tie_count) undercounted.push(`${vendor} ranked ${ranked} under a tie of ${details.offer.tie_break.tie_count}`);
+      if (alternatives.length !== ranked) short.push(`/api/details ${vendor} names ${alternatives.length} of ${ranked}`);
+      if (details.offer.relatedVendors.length !== ranked) short.push(`relatedVendors ${vendor} names ${details.offer.relatedVendors.length} of ${ranked}`);
+
+      const risk = checkVendorRisk(vendor);
+      if ("error" in risk) continue;
+      const riskRanked = risk.result.tie_break.ranked_total;
+      if (risk.result.alternatives.length !== riskRanked) short.push(`/api/vendor-risk ${vendor} names ${risk.result.alternatives.length} of ${riskRanked}`);
+      if (namesFrom(alternatives).join("|") !== namesFrom(risk.result.alternatives).join("|")) {
+        disagreeing.push(`${vendor}: details names ${alternatives.length}, vendor-risk names ${risk.result.alternatives.length}`);
+      }
+    }
+
+    assertCoversPopulation(read, vendorsInTheCatalogue(), "vendors read through both JSON doors");
+    assert.deepEqual(undercounted.slice(0, 5), [], `a door ranked fewer entries than the catalogue holds substitutes for (${undercounted.length} vendors)`);
+    assert.deepEqual(short.slice(0, 5), [], `a door named a prefix of the order it ranked (${short.length} doors)`);
+    assert.deepEqual(disagreeing.slice(0, 5), [], `the two JSON doors named different alternatives for the same vendor (${disagreeing.length} vendors)`);
+  });
+
+  it("answers a vendor with more alternatives than any cap the same way at all three doors", async () => {
+    const scratch = mkdtempSync(path.join(tmpdir(), "named-subsets-doors-"));
+    const { proc, base } = await startServer(path.join(scratch, "inventory.json"), 0);
+    try {
+      for (const slug of ABOVE_ANY_CAP) {
+        const details = await (await fetch(`${base}/api/details/${slug}?alternatives=true`)).json() as ApiDetails;
+        const named = details.offer.alternatives.length;
+        assert.ok(named > 5, `${slug} must hold more alternatives than the largest cap for this to be a control, got ${named}`);
+        assert.equal(named, details.offer.tie_break.ranked_total, `/api/details/${slug} names ${named} of the ${details.offer.tie_break.ranked_total} it ranked`);
+        assert.deepEqual(namesFrom(details.offer.alternatives), details.offer.relatedVendors.slice().sort(), `/api/details/${slug} disagrees with its own relatedVendors`);
+
+        const risk = await (await fetch(`${base}/api/vendor-risk/${encodeURIComponent(details.offer.vendor)}`)).json() as ApiVendorRisk;
+        assert.equal(risk.alternatives.length, risk.tie_break.ranked_total, `/api/vendor-risk/${details.offer.vendor} names ${risk.alternatives.length} of the ${risk.tie_break.ranked_total} it ranked`);
+        assert.deepEqual(namesFrom(risk.alternatives), namesFrom(details.offer.alternatives), `the two JSON doors name different alternatives for ${slug}`);
+
+        const page = await (await fetch(`${base}/vendor/${slug}`)).text();
+        const section = page.slice(page.indexOf('<h2 id="alternatives">'));
+        const claim = section.match(/The list above is every one of the (\d+) entries in that order, not a prefix of it\./);
+        assert.ok(claim, `/vendor/${slug} publishes no claim about how much of the order it shows`);
+        assert.equal(Number(claim[1]), named, `/vendor/${slug} shows ${claim[1]} alternatives where its own JSON names ${named}`);
+        const onThePage = [...section.matchAll(/<td><a href="\/vendor\/([a-z0-9.-]+)">/g)].map((m) => m[1]).sort();
+        assert.deepEqual(namesFrom(details.offer.alternatives).map(toSlug).sort(), onThePage, `/api/details/${slug} and /vendor/${slug} name different alternatives`);
+      }
+    } finally {
+      proc.kill();
+      rmSync(scratch, { recursive: true, force: true });
+    }
+  });
+
+  it("answers a vendor holding fewer alternatives than any cap the same way at all three doors", async () => {
+    const scratch = mkdtempSync(path.join(tmpdir(), "named-subsets-under-"));
+    const { proc, base } = await startServer(path.join(scratch, "inventory.json"), 0);
+    try {
+      for (const slug of BELOW_EVERY_CAP) {
+        const details = await (await fetch(`${base}/api/details/${slug}?alternatives=true`)).json() as ApiDetails;
+        const named = details.offer.alternatives.length;
+        assert.ok(named > 0 && named <= 3, `${slug} must hold at most the smallest cap for this to be a control, got ${named}`);
+        assert.equal(named, details.offer.tie_break.ranked_total, `/api/details/${slug} names ${named} of the ${details.offer.tie_break.ranked_total} it ranked`);
+        const risk = await (await fetch(`${base}/api/vendor-risk/${encodeURIComponent(details.offer.vendor)}`)).json() as ApiVendorRisk;
+        assert.deepEqual(namesFrom(risk.alternatives), namesFrom(details.offer.alternatives), `the two JSON doors name different alternatives for ${slug}`);
+      }
+    } finally {
+      proc.kill();
+      rmSync(scratch, { recursive: true, force: true });
+    }
+  });
+
+  it("publishes on every stack role the same total its own reason states", async () => {
+    const scratch = mkdtempSync(path.join(tmpdir(), "named-subsets-stack-"));
+    const { proc, base } = await startServer(path.join(scratch, "inventory.json"), 0);
+    try {
+      const stack = await (await fetch(`${base}/api/stack?use_case=saas`)).json() as ApiStack;
+      assert.ok(stack.stack.length > 0, "/api/stack names no role, so it states no total");
+      for (const role of stack.stack) {
+        const stated = role.reason.match(/(\d+) of (\d+) .* carry no recorded demerit/);
+        assert.ok(stated, `the ${role.role} role states no total for the order it picked from`);
+        assert.equal(role.tie_break.tie_count, Number(stated[1]), `the ${role.role} role publishes a tie of ${role.tie_break.tie_count} and says ${stated[1]}`);
+        assert.equal(role.tie_break.ranked_total, Number(stated[2]), `the ${role.role} role publishes a total of ${role.tie_break.ranked_total} and says ${stated[2]}`);
+        assert.ok(role.tie_break.ranked_total >= role.candidates.length, `the ${role.role} role names ${role.candidates.length} out of a published total of ${role.tie_break.ranked_total}`);
+      }
+    } finally {
+      proc.kill();
+      rmSync(scratch, { recursive: true, force: true });
+    }
+  });
+
+  it("names on the MCP search tool every alternative its own JSON door names", async () => {
+    const scratch = mkdtempSync(path.join(tmpdir(), "named-subsets-tool-"));
+    const { proc, base } = await startServer(path.join(scratch, "inventory.json"), 0);
+    try {
+      for (const slug of [...ABOVE_ANY_CAP, ...BELOW_EVERY_CAP]) {
+        const details = await (await fetch(`${base}/api/details/${slug}?alternatives=true`)).json() as ApiDetails;
+        const answered = await callMcpTool(base, "search_deals", { vendor: details.offer.vendor }) as { alternatives?: { vendor: string }[]; tie_break: TieBreakBlock };
+        const named = answered.alternatives ?? [];
+        assert.equal(named.length, answered.tie_break.ranked_total, `search_deals names ${named.length} of the ${answered.tie_break.ranked_total} it ranked for ${slug}`);
+        assert.deepEqual(namesFrom(named), namesFrom(details.offer.alternatives), `search_deals and /api/details name different alternatives for ${slug}`);
+      }
+    } finally {
+      proc.kill();
+      rmSync(scratch, { recursive: true, force: true });
+    }
+  });
+
+  it("names the whole order on the MCP vendor resource and says that is what it is", async () => {
+    const offers = loadOffers();
+    const slugs = [...ABOVE_ANY_CAP, ...BELOW_EVERY_CAP];
+    const scratch = mkdtempSync(path.join(tmpdir(), "named-subsets-mcp-"));
+    const { proc, base } = await startServer(path.join(scratch, "inventory.json"), 0);
+    try {
+      const read = await readMcpResources(base, slugs.map((s) => `agentdeals://vendor/${s}`));
+      for (const slug of slugs) {
+        const match = offers.find((o) => toSlug(o.vendor) === slug)!;
+        const text = read.get(`agentdeals://vendor/${slug}`) ?? "";
+        const details = getOfferDetails(match.vendor, true);
+        assert.ok(!("error" in details), `${slug} is not answered by /api/details`);
+        const alternatives = ("offer" in details ? details.offer.alternatives : []) ?? [];
+        assert.ok(alternatives.length > 0, `${slug} names no alternatives, so the MCP resource has nothing to be read against`);
+        assert.ok(text.includes(wholeRankedOrderList(alternatives.length)), `the MCP vendor resource for ${slug} does not say how much of the order it names`);
+        for (const a of alternatives) {
+          assert.ok(text.includes(`- **${a.vendor}**`), `the MCP vendor resource for ${slug} does not name ${a.vendor}, which its own JSON door does`);
+        }
+      }
     } finally {
       proc.kill();
       rmSync(scratch, { recursive: true, force: true });

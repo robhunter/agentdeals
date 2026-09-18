@@ -210,6 +210,7 @@ export interface TieBreak {
   query_key: string;
   seed: string;
   tie_count: number;
+  ranked_total: number;
   algorithm: string;
 }
 
@@ -224,6 +225,14 @@ export interface RankingResult<T> {
 
 export const TIE_BREAK_ALGORITHM =
   "seed = sha256(utc_date + '|' + query_key + '|p' + demerit_total); order = Fisher-Yates over the tied set driven by mulberry32(first 4 bytes of seed). No vendor name, slug, id, index or offer field is an input.";
+
+export function wholeRankedOrderClause(total: number): string {
+  return `every one of the ${total} entries in that order, not a prefix of it`;
+}
+
+export function wholeRankedOrderList(total: number): string {
+  return `This list is ${wholeRankedOrderClause(total)}. Tied entries are ordered by a seed published at ${CRITERIA_PATH}, so the order rotates daily and the membership does not.`;
+}
 
 export function tieBreakSeed(date: string, queryKey: string, band: number): string {
   return createHash("sha256").update(`${date}|${queryKey}|p${band}`).digest("hex");
@@ -509,6 +518,7 @@ export function rankOffers<T extends Offer>(candidates: T[], opts: RankOptions):
       query_key: opts.queryKey,
       seed: tieBreakSeed(date, opts.queryKey, 0),
       tie_count: qualified.length,
+      ranked_total: ranked.length,
       algorithm: TIE_BREAK_ALGORITHM,
     },
     criteria_path: CRITERIA_PATH,
@@ -540,11 +550,12 @@ export function rankForListing<T extends Offer>(candidates: T[], opts: RankOptio
     tieBreakSeed(date, opts.queryKey, gatedBand),
   ).map((e) => ({ offer: e.offer, demerits: [], demerit_total: gatedBand, disclosures: [], gate: e.gate }));
 
+  const entries = [...result.ranked, ...gatedTail];
   return {
-    entries: [...result.ranked, ...gatedTail],
+    entries,
     qualified_count: result.qualified.length,
     demoted_count: result.demoted.length,
     gated_count: result.excluded.length,
-    tie_break: result.tie_break,
+    tie_break: { ...result.tie_break, ranked_total: entries.length },
   };
 }
