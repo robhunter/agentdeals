@@ -5,6 +5,8 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { confirmationCoverage, confirmationCoverageSentence, loadDealChanges, loadOffers, CONFIRMATION_WINDOW_DAYS } from "../dist/data.js";
 import { confirmationDate } from "../dist/read-date.js";
+import { toSlug } from "../dist/slug.js";
+import { assertCoversPopulation, categoriesInTheCatalogue } from "./population-floor.ts";
 
 const REPO = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
 const A_DAY_IN_MS = 86400000;
@@ -12,10 +14,86 @@ const A_DAY_IN_MS = 86400000;
 const A_VERIFICATION_ADJECTIVE = /\b(?:verified|human-verified|fact-checked|fact checked)\b/i;
 const A_SENTENCE = /[^.!?\n]+[.!?]*/g;
 const A_CATALOGUE_SCALE_FIGURE = /\b\d{1,3},?\d{3}\+?\b/;
+const A_LISTING_SET = /\b(?:each|every|all)\b/i;
+const A_CONFIRMED_OF_A_LISTING_SET =
+  /Of the ([\d,]+) (.+?) entr(?:y|ies) we hold, ([\d,]+) (?:carry|carries) terms a read confirmed in the last (\d+) days\./;
 
 interface Served {
   path: string;
   prose: string;
+}
+
+function unescapeHtml(text: string): string {
+  return text
+    .replace(/&quot;/g, '"').replace(/&#39;/g, "'").replace(/&mdash;/g, "—")
+    .replace(/&ndash;/g, "–").replace(/&rsaquo;/g, "›").replace(/&amp;/g, "&")
+    .replace(/&lt;/g, "<").replace(/&gt;/g, ">");
+}
+
+function faqAnswers(html: string): string[] {
+  const answers: string[] = [];
+  for (const block of html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)) {
+    let parsed: any;
+    try { parsed = JSON.parse(block[1]); } catch { continue; }
+    if (parsed?.["@type"] !== "FAQPage") continue;
+    for (const entry of parsed.mainEntity ?? []) {
+      const text = entry?.acceptedAnswer?.text;
+      if (typeof text === "string") answers.push(text);
+    }
+  }
+  return answers;
+}
+
+function metaDescriptionOf(html: string): string {
+  return unescapeHtml(html.match(/<meta name="description" content="([^"]*)"/)?.[1] ?? "");
+}
+
+function categoryRoutes(): string[] {
+  return [...new Set(loadOffers().map((offer: { category: string }) => offer.category))]
+    .map((name) => `/category/${toSlug(name)}`);
+}
+
+async function everyListingSetClaim(base: string): Promise<Served[]> {
+  const served: Served[] = [];
+  for (const route of categoryRoutes()) {
+    const html = await (await fetch(`${base}${route}`)).text();
+    const prose = [metaDescriptionOf(html), ...faqAnswers(html)].join("\n");
+    assert.ok(prose.trim().length > 0, `${route} served no meta description or FAQ answer for this assertion to read`);
+    served.push({ path: route, prose });
+  }
+  const ai = await (await fetch(`${base}/ai-free-tiers`)).text();
+  served.push({ path: "/ai-free-tiers", prose: unescapeHtml(ai.replace(/<[^>]+>/g, " ")) });
+  return served;
+}
+
+async function toolDescriptions(base: string): Promise<Served[]> {
+  const opened = await fetch(`${base}/mcp`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", "Accept": "application/json, text/event-stream" },
+    body: JSON.stringify({
+      jsonrpc: "2.0", id: 1, method: "initialize",
+      params: { protocolVersion: "2025-03-26", capabilities: {}, clientInfo: { name: "test", version: "1.0" } },
+    }),
+  });
+  const session = opened.headers.get("mcp-session-id") ?? "";
+  await opened.text();
+  assert.ok(session, "the MCP door opened no session for tools/list to be asked on");
+  const headers = {
+    "Content-Type": "application/json",
+    "Accept": "application/json, text/event-stream",
+    "Mcp-Session-Id": session,
+  };
+  await fetch(`${base}/mcp`, { method: "POST", headers, body: JSON.stringify({ jsonrpc: "2.0", method: "notifications/initialized" }) });
+  const listed = await fetch(`${base}/mcp`, { method: "POST", headers, body: JSON.stringify({ jsonrpc: "2.0", id: 2, method: "tools/list" }) });
+  const tools = sseResponses(await listed.text()).find((r) => r.id === 2)?.result?.tools ?? [];
+  assert.ok(tools.length > 0, "tools/list answered no tool for this assertion to read");
+  const card = JSON.parse(await (await fetch(`${base}/.well-known/agent-card.json`)).text());
+  const onTheCard = card.tools ?? [];
+  assert.ok(onTheCard.length > 0, "the agent card publishes no tools[] for this assertion to read");
+  return [
+    ...tools.map((tool: any) => ({ path: `tools/list ${tool.name}`, prose: String(tool.description ?? "") })),
+    ...onTheCard.map((tool: any) => ({ path: `agent card tools[] ${tool.name}`, prose: String(tool.description ?? "") })),
+  ];
 }
 
 function startServer(clockShiftMs: number): Promise<{ proc: ChildProcess; base: string }> {
@@ -83,6 +161,16 @@ async function everySelfDescription(base: string): Promise<Served[]> {
 
 function censusOn(shiftMs: number): number {
   return confirmationCoverage(loadOffers(), new Date(Date.now() + shiftMs)).confirmed_within_90_days;
+}
+
+function aCategoryWhoseCensusMovesBy(days: number): { route: string; held: any[] } | null {
+  const offers = loadOffers();
+  const later = new Date(Date.now() + days * A_DAY_IN_MS);
+  const moving = categoryRoutes()
+    .map((route) => ({ route, held: offers.filter((offer: { category: string }) => `/category/${toSlug(offer.category)}` === route) }))
+    .filter(({ held }) => confirmationCoverage(held).confirmed_within_90_days !== confirmationCoverage(held, later).confirmed_within_90_days)
+    .sort((a, b) => b.held.length - a.held.length);
+  return moving[0] ?? null;
 }
 
 function theFirstDayTheCensusMoves(): number {
@@ -217,10 +305,75 @@ describe("the date a page prints beside its count", () => {
   });
 });
 
+describe("what a listing page claims about the set it lists", () => {
+  let proc: ChildProcess | null = null;
+  let listings: Served[] = [];
+  let tools: Served[] = [];
+
+  before(async () => {
+    const started = await startServer(0);
+    proc = started.proc;
+    listings = await everyListingSetClaim(started.base);
+    tools = await toolDescriptions(started.base);
+  });
+
+  after(() => { if (proc) proc.kill(); });
+
+  it("reads every category the catalogue holds", () => {
+    const categories = listings.filter((listing) => listing.path.startsWith("/category/")).length;
+    assertCoversPopulation(categories, categoriesInTheCatalogue(), "category pages read for a claim over their listings");
+  });
+
+  it("calls no set of listings verified, on any of them", () => {
+    const claiming: string[] = [];
+    for (const listing of listings) {
+      for (const sentence of listing.prose.match(A_SENTENCE) ?? []) {
+        if (!A_VERIFICATION_ADJECTIVE.test(sentence) || !A_LISTING_SET.test(sentence)) continue;
+        claiming.push(`${listing.path}: ${sentence.trim()}`);
+      }
+    }
+    assert.deepEqual(claiming.slice(0, 10), [], `${claiming.length} listing-page sentences call a whole set of listings verified`);
+  });
+
+  it("states how many of what it lists a read confirmed instead", () => {
+    const silent = listings.filter((listing) => !A_CONFIRMED_OF_A_LISTING_SET.test(listing.prose)).map((listing) => listing.path);
+    assert.deepEqual(silent.slice(0, 10), [], `${silent.length} listing pages state no confirmed count over the set they list`);
+  });
+
+  it("states the count the census takes over that category, not another one", () => {
+    const offers = loadOffers();
+    const wrong: string[] = [];
+    for (const listing of listings.filter((l) => l.path.startsWith("/category/"))) {
+      const stated = listing.prose.match(A_CONFIRMED_OF_A_LISTING_SET)!;
+      const held = offers.filter((offer: { category: string }) => `/category/${toSlug(offer.category)}` === listing.path);
+      const census = confirmationCoverage(held);
+      const says = { held: Number(stated[1].replace(/,/g, "")), confirmed: Number(stated[3].replace(/,/g, "")) };
+      if (says.held !== census.offers || says.confirmed !== census.confirmed_within_90_days) {
+        wrong.push(`${listing.path} says ${says.confirmed} of ${says.held}, the census says ${census.confirmed_within_90_days} of ${census.offers}`);
+      }
+    }
+    assert.deepEqual(wrong.slice(0, 10), [], `${wrong.length} category pages state a confirmed count the census does not`);
+    const confirmed = listings
+      .filter((l) => l.path.startsWith("/category/"))
+      .reduce((total, l) => total + Number(l.prose.match(A_CONFIRMED_OF_A_LISTING_SET)![3].replace(/,/g, "")), 0);
+    assert.equal(confirmed, confirmationCoverage().confirmed_within_90_days,
+      "the categories do not add up to the catalogue the self-description documents state");
+  });
+
+  it("promises no verification in a tool description every client is charged for", () => {
+    const claiming = tools.filter((tool) => A_VERIFICATION_ADJECTIVE.test(tool.prose)).map((tool) => tool.path);
+    assert.deepEqual(claiming, [], `${claiming.length} tool descriptions promise a verified result`);
+    assert.ok(tools.some((tool) => tool.path.startsWith("tools/list ")) && tools.some((tool) => tool.path.startsWith("agent card ")),
+      "only one of the two surfaces publishing a tool description was read");
+  });
+});
+
 describe("the figure moves with the store rather than with an edit", () => {
   it("restates it on a day the census says something different", async () => {
     const moves = theFirstDayTheCensusMoves();
     assert.ok(moves > 0, `the census does not move within ${CONFIRMATION_WINDOW_DAYS + 30} days, so this assertion has no second day to read`);
+    const listing = aCategoryWhoseCensusMovesBy(moves);
+    assert.ok(listing, `no category's census moves within ${moves} days, so a page-level figure has no second day to read`);
 
     for (const day of [0, moves]) {
       const shift = day * A_DAY_IN_MS;
@@ -232,6 +385,13 @@ describe("the figure moves with the store rather than with an edit", () => {
           .filter((document) => !document.prose.includes(confirmationCoverageSentence(expected)))
           .map((document) => document.path);
         assert.deepEqual(wrong, [], `on +${day} days, ${wrong.length} documents do not state ${expected.confirmed_within_90_days} of ${expected.offers}`);
+
+        const html = await (await fetch(`${base}${listing.route}`)).text();
+        const onThePage = [metaDescriptionOf(html), ...faqAnswers(html)].join("\n").match(A_CONFIRMED_OF_A_LISTING_SET);
+        const overTheCategory = confirmationCoverage(listing.held, new Date(Date.now() + shift));
+        assert.ok(onThePage, `on +${day} days, ${listing.route} states no confirmed count over the set it lists`);
+        assert.equal(Number(onThePage[3].replace(/,/g, "")), overTheCategory.confirmed_within_90_days,
+          `on +${day} days, ${listing.route} states ${onThePage[3]} where its own census counts ${overTheCategory.confirmed_within_90_days}`);
       } finally {
         proc.kill();
       }
@@ -239,5 +399,10 @@ describe("the figure moves with the store rather than with an edit", () => {
 
     assert.notEqual(censusOn(0), censusOn(moves * A_DAY_IN_MS),
       "both days were asserted against the same census, so a hard-coded figure would pass");
+    assert.notEqual(
+      confirmationCoverage(listing.held).confirmed_within_90_days,
+      confirmationCoverage(listing.held, new Date(Date.now() + moves * A_DAY_IN_MS)).confirmed_within_90_days,
+      `${listing.route} counts the same on both days, so a figure hard-coded into the page would pass`,
+    );
   });
 });

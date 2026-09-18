@@ -11,6 +11,7 @@ import { assertCoversPopulation, assertPopulationFloor, categoriesInTheCatalogue
 const { gateFor, utcDate } = await import("../dist/ranking.js");
 const { gatedShareLede } = await import("../dist/eligibility.js");
 const { toSlug } = await import("../dist/vendor-slug.js");
+const { NOTHING_CONTRADICTS_OUR_TERMS_FOR } = await import("../dist/data.js");
 
 type Offer = import("../src/types.ts").Offer;
 type Gate = { code: string; reason: string } | null;
@@ -304,7 +305,7 @@ describe("a category page discloses every gated record, not eligibility alone", 
         : `${clausesFor(c.codes)}.`;
       assert.ok(description.includes(clause), `/category/${c.slug} description is ${description}`);
       assert.ok(
-        description.indexOf(clause) < description.indexOf("Verified pricing for"),
+        description.indexOf(clause) < description.indexOf(NOTHING_CONTRADICTS_OUR_TERMS_FOR),
         `/category/${c.slug} appends the clause after the vendor list, where a snippet truncates it`,
       );
     }

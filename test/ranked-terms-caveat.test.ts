@@ -6,6 +6,7 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { SOURCE_CHECK_OUTCOMES } from "../dist/source-check.js";
+import { NOTHING_CONTRADICTS_OUR_TERMS_FOR } from "../dist/data.js";
 import { TERMS_WITHHELD_LABELS } from "../dist/vendor-verdict.js";
 import { ATTEMPT_THAT_DID_NOT_READ, VERIFICATION_DATES_HEADING } from "../dist/read-date.js";
 
@@ -396,17 +397,21 @@ describe("the structured data beside those cards", () => {
     }
   });
 
-  it("names no vendor as verified while the same page caveats it", () => {
+  it("names no vendor as uncontradicted while the same page caveats it", () => {
+    const naming = new RegExp(`${NOTHING_CONTRADICTS_OUR_TERMS_FOR} ([^.]*)\\.`);
+    let read = 0;
     for (const route of rankedPaths) {
       const body = pageOf.get(route)!;
       const named = new Set(vendorsNamedInOrder(body));
       const meta = metaDescriptionOf(body);
-      const verified = meta.match(/Verified pricing for ([^.]*)\./);
-      if (!verified) continue;
-      const asVerified = verified[1].replace(/ and more$/, "").split(", ").map((v) => v.trim());
-      const withheld = asVerified.filter((vendor) => OFFERS.some((offer) => offer.vendor === vendor && named.has(slugOf(vendor))));
-      assert.deepStrictEqual(withheld, [], `${route} calls ${withheld.join(", ")} verified and caveats the same offer below`);
+      const uncontradicted = meta.match(naming);
+      if (!uncontradicted) continue;
+      read++;
+      const asUncontradicted = uncontradicted[1].replace(/ and more$/, "").split(", ").map((v) => v.trim());
+      const withheld = asUncontradicted.filter((vendor) => OFFERS.some((offer) => offer.vendor === vendor && named.has(slugOf(vendor))));
+      assert.deepStrictEqual(withheld, [], `${route} says nothing contradicts ${withheld.join(", ")} and caveats the same offer below`);
     }
+    assert.ok(read > 0, `none of the ${rankedPaths.length} ranked pages names a vendor list for this assertion to read`);
   });
 });
 
