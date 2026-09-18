@@ -569,6 +569,13 @@ export function statesRiskCause(input: VendorVerdictInput): boolean {
   return word !== null && word !== "stable" && input.cause !== null;
 }
 
+export function demotionTheVerdictNames(input: VendorVerdictInput): RiskCause | null {
+  if (input.offerEnded || withholdingDecides(input) || refusalWithholdsStability(input)) return null;
+  const word = vendorVerdictWord(input);
+  const stated = input.gate || word === null ? input.historyLevel : word;
+  return stated !== "stable" && input.cause ? input.cause : null;
+}
+
 export function uncitedOnlySentence(records: number): string {
   if (records === 0) return "";
   return records === 1

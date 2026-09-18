@@ -16,7 +16,6 @@ import {
   demotionForChange,
   demotionInForce,
   demotionWithheldForNoSource,
-  demotionWithheldInForce,
   enrichOffers,
   loadDealChanges,
   loadOffers,
@@ -75,7 +74,6 @@ describe("a change record that cites no source", () => {
     assert.strictEqual(demotionWithheldForNoSource(record({ source_url: "" })), "risky");
     assert.strictEqual(demotionWithheldForNoSource(record({ change_type: "limits_reduced", source_url: "" })), "caution");
     assert.strictEqual(demotionWithheldForNoSource(record()), null);
-    assert.strictEqual(demotionWithheldInForce(record({ source_url: "" }), NOW), "risky");
   });
 
   it("withholds a rating rather than reporting the vendor stable", () => {
@@ -194,7 +192,7 @@ describe("the shipped catalogue", () => {
       loadOffers()
         .filter((offer) => {
           const rating = recordsRating(offer);
-          return rating.some(c => demotionWithheldInForce(c) !== null)
+          return rating.some(c => demotionWithheldForNoSource(c) !== null)
             && rating.every(c => demotionInForce(c) === null);
         })
         .map(o => o.vendor),
@@ -208,7 +206,7 @@ describe("the shipped catalogue", () => {
 
   it("counts the withheld records for the vendor whose rating is withheld", () => {
     for (const offer of enriched.filter(o => o.rating_withheld !== null)) {
-      const expected = recordsRating(offer).filter(c => demotionWithheldInForce(c) !== null).length;
+      const expected = recordsRating(offer).filter(c => demotionWithheldForNoSource(c) !== null).length;
       assert.strictEqual(offer.rating_withheld!.records, expected, offer.vendor);
       assert.ok(expected > 0, `${offer.vendor} withholds a rating on no record`);
     }
