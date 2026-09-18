@@ -45,7 +45,8 @@ if [ -n "$REGENERATE_LLM_INDEX" ] && ! among_the_committable "$LLM_INDEX_PATH" "
 fi
 
 if [ -z "$(git status --porcelain -- "$@")" ]; then
-  echo "No change under $* — nothing to commit or push."
+  echo "pushed_nothing=true" >>"$OUTPUT"
+  echo "No change under $* — nothing to commit or push. Nothing is being held back either, which is what an open alarm for this job needs to hear."
   exit 0
 fi
 
@@ -203,6 +204,7 @@ while :; do
   fi
 
   if push_to_main; then
+    echo "pushed_commit=$COMMIT" >>"$OUTPUT"
     if [ -n "$HELD_BACK_VENDORS" ]; then
       echo "held_back_vendors=$HELD_BACK_VENDORS" >>"$OUTPUT"
       echo "Held back and left for the next run to read again: $HELD_BACK_VENDORS. Every other vendor this run read is on main."

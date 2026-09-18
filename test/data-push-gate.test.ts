@@ -146,7 +146,7 @@ describe("#1317 the suite sees every commit that reaches main", () => {
 
   it("gives every outcome a marker of its own, so none of them buries another", () => {
     const reporter = readFileSync(join(REPO, "scripts", "report-data-push-outcome.sh"), "utf8");
-    const markers = [...reporter.matchAll(/MARKER="([a-z-]+)"/g)].map((m) => m[1]!);
+    const markers = [...reporter.matchAll(/^\s*MARKER="([a-z-]+)"$/gm)].map((m) => m[1]!);
     assert.deepStrictEqual(markers, [
       "data-push-refused",
       "data-push-over-failures",
@@ -537,6 +537,11 @@ describe("#1317 the gate, run against a repository", () => {
     assert.strictEqual(git(origin, "show", "main:data/health.json"), '{"checked":3}');
     assert.strictEqual(git(origin, "log", "-1", "--format=%s", "main"), "data(auto): fixture");
     assert.deepStrictEqual(quarantineRefs(origin, "data-quarantine/fixture"), [], "a green run quarantined something");
+    assert.match(
+      run.outputs,
+      /pushed_commit=[0-9a-f]{7}/,
+      "the push names no commit, so an alarm this job opened yesterday has nothing to close on",
+    );
   });
 
   it("commits nothing when the run produced no data change, and leaves the suite unrun", () => {
@@ -549,6 +554,11 @@ describe("#1317 the gate, run against a repository", () => {
     assert.strictEqual(mainSha(origin), before);
     assert.match(run.stdout, /nothing to commit or push/);
     assert.doesNotMatch(run.stdout, /tests 2/, "the gate ran the suite with nothing to push");
+    assert.match(
+      run.outputs,
+      /pushed_nothing=true/,
+      "a run that held nothing back looks the same from outside as one that was refused",
+    );
   });
 
   it("commits only the paths it was given, so an unrelated file cannot ride along", () => {
@@ -1398,8 +1408,10 @@ describe("#1710 a red main reaches the issue the reporter opened, not one that m
     const issues = join(bin, "issues.json");
     const indexed = join(bin, "indexed.json");
     const actions = join(bin, "actions.txt");
-    writeFileSync(issues, JSON.stringify(openIssues));
-    writeFileSync(indexed, JSON.stringify(indexReturns));
+    const asTheSystemOpenedThem = (them: Array<{ number: number; body: string }>) =>
+      them.map((issue) => ({ author: { login: "app/github-actions" }, ...issue }));
+    writeFileSync(issues, JSON.stringify(asTheSystemOpenedThem(openIssues)));
+    writeFileSync(indexed, JSON.stringify(asTheSystemOpenedThem(indexReturns)));
     writeFileSync(actions, "");
     const run = spawnSync("bash", [REPORTER, "Daily rolling re-verification", outcome, "test/some-file.test.ts"], {
       encoding: "utf8",
@@ -1446,5 +1458,443 @@ describe("#1710 a red main reaches the issue the reporter opened, not one that m
     ];
     assert.deepStrictEqual(report("shipped-over-failures", carriers), ["comment 120"]);
     assert.deepStrictEqual(report("shipped-over-failures", [...carriers].reverse()), ["comment 120"]);
+  });
+});
+
+const FAKE_GH_TRACKER = [
+  "#!/usr/bin/env bash",
+  "set -euo pipefail",
+  'STATE="$GH_STATE"',
+  "record() { printf '%s\\n' \"$1\" >>\"$GH_ACTIONS\"; }",
+  'sub="$1 $2"',
+  "shift 2",
+  'case "$sub" in',
+  '  "issue list")',
+  "    EXPR='.'",
+  '    WANT="OPEN"',
+  '    while [ "$#" -gt 0 ]; do',
+  '      case "$1" in',
+  '        --jq) EXPR="$2"; shift 2 ;;',
+  '        --state) case "$2" in open) WANT="OPEN" ;; closed) WANT="CLOSED" ;; *) WANT="ANY" ;; esac; shift 2 ;;',
+  "        *) shift ;;",
+  "      esac",
+  "    done",
+  '    jq -c --arg want "$WANT" \'[.[] | select($want == "ANY" or .state == $want)]\' "$STATE" | jq -r "$EXPR"',
+  "    ;;",
+  '  "issue create")',
+  '    TITLE=""; BODY_FILE=""',
+  '    while [ "$#" -gt 0 ]; do',
+  '      case "$1" in',
+  '        --title) TITLE="$2"; shift 2 ;;',
+  '        --body-file) BODY_FILE="$2"; shift 2 ;;',
+  "        --label) shift 2 ;;",
+  "        *) shift ;;",
+  "      esac",
+  "    done",
+  '    NEXT="$(jq \'[.[].number] | max // 0 | . + 1\' "$STATE")"',
+  '    jq --argjson n "$NEXT" --arg t "$TITLE" --rawfile b "$BODY_FILE" \\',
+  "      '. + [{number: $n, title: $t, body: $b, author: {login: \"app/github-actions\"}, state: \"OPEN\"}]' \\",
+  '      "$STATE" >"$STATE.next"',
+  '    mv "$STATE.next" "$STATE"',
+  '    record "create $NEXT"',
+  "    ;;",
+  '  "issue comment")',
+  '    N="$1"; shift',
+  '    BODY_FILE=""',
+  '    while [ "$#" -gt 0 ]; do',
+  '      case "$1" in --body-file) BODY_FILE="$2"; shift 2 ;; *) shift ;; esac',
+  "    done",
+  '    jq -c -n --argjson n "$N" --rawfile b "$BODY_FILE" \'{issue: $n, body: $b}\' >>"$GH_COMMENTS"',
+  '    record "comment $N"',
+  "    ;;",
+  '  "issue close")',
+  '    N="$1"',
+  "    jq --argjson n \"$N\" 'map(if .number == $n then .state = \"CLOSED\" else . end)' \"$STATE\" >\"$STATE.next\"",
+  '    mv "$STATE.next" "$STATE"',
+  '    record "close $N"',
+  "    ;;",
+  '  *) echo "unexpected gh call: $sub $*" >&2; exit 3 ;;',
+  "esac",
+].join("\n");
+
+describe("#1764 a refusal alarm belongs to one job, and the job that reaches main closes it", () => {
+  const REPORTER = join(REPO, "scripts", "report-data-push-outcome.sh");
+  const ROTATION = "Daily rolling re-verification";
+  const DATES = "Page dates";
+  const LIVENESS = "Link liveness";
+
+  interface TrackedIssue {
+    number: number;
+    title: string;
+    body: string;
+    author: { login: string };
+    state: "OPEN" | "CLOSED";
+  }
+
+  let bin = "";
+  let elsewhere = "";
+
+  before(() => {
+    bin = mkdtempSync(join(tmpdir(), "alarm-tracker-"));
+    elsewhere = mkdtempSync(join(tmpdir(), "alarm-no-repo-"));
+    writeFileSync(join(bin, "gh"), FAKE_GH_TRACKER, { mode: 0o755 });
+  });
+
+  after(() => {
+    for (const dir of [bin, elsewhere]) if (dir && existsSync(dir)) rmSync(dir, { recursive: true, force: true });
+  });
+
+  class Tracker {
+    readonly state: string;
+    readonly actions: string;
+    readonly comments: string;
+    readonly cwd: string;
+
+    constructor(seed: Array<Partial<TrackedIssue> & { number: number; body: string }>, cwd: string) {
+      this.cwd = cwd;
+      const stamp = `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+      this.state = join(bin, `issues-${stamp}.json`);
+      this.actions = join(bin, `actions-${stamp}.txt`);
+      this.comments = join(bin, `comments-${stamp}.jsonl`);
+      writeFileSync(
+        this.state,
+        JSON.stringify(
+          seed.map((issue) => ({
+            title: "seeded",
+            author: { login: "app/github-actions" },
+            state: "OPEN" as const,
+            ...issue,
+          })),
+        ),
+      );
+      writeFileSync(this.actions, "");
+      writeFileSync(this.comments, "");
+    }
+
+    report(job: string, outcome: string, detail = "the-detail"): string[] {
+      const before = readFileSync(this.actions, "utf8").split("\n").filter(Boolean);
+      const run = spawnSync("bash", [REPORTER, job, outcome, detail], {
+        cwd: this.cwd,
+        encoding: "utf8",
+        env: { ...process.env, PATH: `${bin}:${process.env.PATH}`, GH_STATE: this.state, GH_ACTIONS: this.actions, GH_COMMENTS: this.comments },
+      });
+      assert.strictEqual(run.status, 0, `${run.stdout}${run.stderr}`);
+      return readFileSync(this.actions, "utf8").split("\n").filter(Boolean).slice(before.length);
+    }
+
+    issues(): TrackedIssue[] {
+      return JSON.parse(readFileSync(this.state, "utf8")) as TrackedIssue[];
+    }
+
+    open(): TrackedIssue[] {
+      return this.issues().filter((issue) => issue.state === "OPEN");
+    }
+
+    commentsOn(number: number): string[] {
+      return readFileSync(this.comments, "utf8")
+        .split("\n")
+        .filter(Boolean)
+        .map((line) => JSON.parse(line) as { issue: number; body: string })
+        .filter((comment) => comment.issue === number)
+        .map((comment) => comment.body);
+    }
+  }
+
+  const alarmFor = (job: string) => `an earlier run said this.\n\n<!-- data-push-refused:${job} -->`;
+
+  function tracker(seed: Array<Partial<TrackedIssue> & { number: number; body: string }> = [], cwd = elsewhere): Tracker {
+    return new Tracker(seed, cwd);
+  }
+
+  it("opens one alarm per job, so two refused jobs are two issues", () => {
+    const t = tracker();
+    assert.deepStrictEqual(t.report(ROTATION, "refused"), ["create 1"]);
+    assert.deepStrictEqual(t.report(DATES, "refused"), ["create 2"]);
+    assert.deepStrictEqual(
+      t.open().map((issue) => issue.number),
+      [1, 2],
+    );
+  });
+
+  it("names the job in the title, which is the only part of an alarm a list of issues shows", () => {
+    const t = tracker();
+    t.report(ROTATION, "refused");
+    t.report(DATES, "refused");
+    const titles = t.open().map((issue) => issue.title);
+    assert.ok(
+      titles.every((title) => title.includes(ROTATION) || title.includes(DATES)),
+      `neither alarm says which job is frozen: ${titles.join(" / ")}`,
+    );
+    assert.strictEqual(new Set(titles).size, 2, `both jobs are frozen under the same title: ${titles.join(" / ")}`);
+  });
+
+  it("comments on its own job's open alarm rather than opening a second one for the same freeze", () => {
+    const t = tracker();
+    t.report(ROTATION, "refused");
+    assert.deepStrictEqual(t.report(ROTATION, "refused"), ["comment 1"]);
+    assert.strictEqual(t.open().length, 1);
+  });
+
+  it("closes the refused job's alarm when that job reaches main, and names the commit that cleared it", () => {
+    const t = tracker();
+    t.report(ROTATION, "refused");
+    assert.deepStrictEqual(t.report(ROTATION, "reached-main", "abc1234"), ["comment 1", "close 1"]);
+    assert.deepStrictEqual(t.open(), []);
+    assert.match(t.commentsOn(1).join("\n"), /abc1234/, "the alarm closes without saying which commit cleared it");
+  });
+
+  it("leaves another job's alarm open when this job reaches main", () => {
+    const t = tracker();
+    t.report(ROTATION, "refused");
+    t.report(DATES, "refused");
+    t.report(DATES, "reached-main", "abc1234");
+    assert.deepStrictEqual(
+      t.open().map((issue) => issue.number),
+      [1],
+    );
+  });
+
+  it("closes the alarm on a run that had nothing to push, because nothing was held back either", () => {
+    const t = tracker();
+    t.report(LIVENESS, "refused");
+    t.report(LIVENESS, "reached-main", "");
+    assert.deepStrictEqual(t.open(), []);
+  });
+
+  it("does nothing on a job that reaches main with no alarm of its own open", () => {
+    const t = tracker();
+    assert.deepStrictEqual(t.report(DATES, "reached-main", "abc1234"), []);
+  });
+
+  it("does not touch an issue that carries the marker but was not opened by the system", () => {
+    const written = { number: 1131, body: `The alarm writes <!-- data-push-refused:page-dates --> into its body.`, author: { login: "robhunterclaude" } };
+    const refusing = tracker([written]);
+    assert.deepStrictEqual(refusing.report(DATES, "refused"), ["create 1132"]);
+
+    const clearing = tracker([written]);
+    assert.deepStrictEqual(clearing.report(DATES, "reached-main", "abc1234"), []);
+    assert.deepStrictEqual(
+      clearing.open().map((issue) => issue.number),
+      [1131],
+    );
+  });
+
+  it("closes an alarm that names no job once no job has one of its own, and not before", () => {
+    const shared = { number: 1335, body: "A scheduled data push was refused.\n\n<!-- data-push-refused -->" };
+
+    const stillFrozen = tracker([shared]);
+    stillFrozen.report(ROTATION, "refused");
+    stillFrozen.report(DATES, "reached-main", "abc1234");
+    assert.ok(
+      stillFrozen.open().some((issue) => issue.number === 1335),
+      "an alarm that speaks for every job closed while one of them was still refused",
+    );
+
+    const clear = tracker([shared]);
+    clear.report(DATES, "reached-main", "abc1234");
+    assert.deepStrictEqual(clear.open(), []);
+    assert.match(clear.commentsOn(1335).join("\n"), /names no job/);
+  });
+
+  it("holds the open set to the jobs whose last run did not reach main, replayed over a fortnight", () => {
+    const history: Array<{ job: string; outcome: "refused" | "reached-main" }> = [
+      { job: LIVENESS, outcome: "refused" },
+      { job: ROTATION, outcome: "refused" },
+      { job: DATES, outcome: "reached-main" },
+      { job: LIVENESS, outcome: "reached-main" },
+      { job: ROTATION, outcome: "reached-main" },
+      { job: DATES, outcome: "reached-main" },
+      { job: ROTATION, outcome: "refused" },
+      { job: DATES, outcome: "reached-main" },
+      { job: ROTATION, outcome: "reached-main" },
+    ];
+    const t = tracker();
+    const lastOutcome = new Map<string, string>();
+    for (const event of history) {
+      t.report(event.job, event.outcome);
+      lastOutcome.set(event.job, event.outcome);
+      const frozen = [...lastOutcome.entries()].filter(([, outcome]) => outcome === "refused").map(([job]) => job);
+      assert.strictEqual(
+        t.open().length,
+        frozen.length,
+        `after ${event.job} ${event.outcome}, ${t.open().length} alarms are open and ${frozen.length} jobs are frozen`,
+      );
+      for (const job of frozen) {
+        assert.ok(
+          t.open().some((issue) => issue.title.includes(job)),
+          `${job} is frozen and no open alarm says so`,
+        );
+      }
+    }
+    assert.deepStrictEqual(t.open(), [], "every job reached main and something is still open");
+  });
+
+  it("closes the alarm a morning refusal opened when the same job pushes that evening", () => {
+    const t = tracker();
+    t.report(ROTATION, "refused", "data-quarantine/rolling-reverification-20260913T110600Z-09fe52f");
+    assert.strictEqual(t.open().length, 1);
+    t.report(ROTATION, "reached-main", "8b02543");
+    assert.deepStrictEqual(t.open(), [], "a refusal and a push the same day left an alarm open overnight");
+  });
+
+  describe("how long the catalogue has been frozen", () => {
+    let repo = "";
+    let shallow = "";
+
+    const hoursAgo = (hours: number) => new Date(Date.now() - hours * 3600 * 1000).toISOString();
+
+    function commit(work: string, subject: string, when: string): void {
+      writeFileSync(join(work, `${Math.random().toString(36).slice(2)}.txt`), `${subject}\n`);
+      git(work, "add", "-A");
+      const run = spawnSync("git", ["commit", "-q", "-m", subject], {
+        cwd: work,
+        encoding: "utf8",
+        env: { ...process.env, GIT_AUTHOR_DATE: when, GIT_COMMITTER_DATE: when },
+      });
+      assert.strictEqual(run.status, 0, run.stderr);
+    }
+
+    before(() => {
+      const root = mkdtempSync(join(tmpdir(), "alarm-history-"));
+      const origin = join(root, "origin.git");
+      repo = join(root, "work");
+      spawnSync("git", ["init", "--bare", "--initial-branch=main", origin], { encoding: "utf8" });
+      git(root, "clone", origin, repo);
+      git(repo, "config", "user.email", "fixture@example.com");
+      git(repo, "config", "user.name", "fixture");
+      commit(repo, "data(auto): rolling re-verification — 4 verified of 75 drawn", hoursAgo(33));
+      commit(repo, "data(auto): page dates — 11 pages whose output moved", hoursAgo(2));
+      commit(repo, "a merge that is not a data push", hoursAgo(1));
+      git(repo, "push", "origin", "HEAD:main");
+      shallow = join(root, "shallow");
+      git(root, "clone", "--depth", "1", `file://${origin}`, shallow);
+      assert.strictEqual(git(shallow, "rev-parse", "--is-shallow-repository"), "true");
+    });
+
+    const statedHours = (body: string): number => {
+      const stated = body.match(/Frozen for \*\*([0-9.]+) hours\*\*/);
+      assert.ok(stated, `the alarm states no interval:\n${body}`);
+      return Number(stated[1]);
+    };
+
+    it("measures from the last commit of the refused job, not of whichever job pushed last", () => {
+      const t = tracker([], repo);
+      t.report(ROTATION, "refused");
+      t.report(DATES, "refused");
+      const rotation = statedHours(t.commentsOn(1).join("") || t.issues()[0]!.body);
+      const dates = statedHours(t.issues()[1]!.body);
+      assert.ok(Math.abs(rotation - 33) < 0.2, `the rotation has been frozen 33 hours and its alarm says ${rotation}`);
+      assert.ok(Math.abs(dates - 2) < 0.2, `page dates has been frozen 2 hours and its alarm says ${dates}`);
+    });
+
+    it("reads past the tip of a shallow checkout, which is the only kind a scheduled run has", () => {
+      const t = tracker([], shallow);
+      t.report(ROTATION, "refused");
+      const stated = statedHours(t.issues()[0]!.body);
+      assert.ok(Math.abs(stated - 33) < 0.2, `a one-commit checkout cannot see 33 hours back and the alarm says ${stated}`);
+    });
+
+    it("says it cannot measure rather than stating a number it did not measure", () => {
+      const t = tracker();
+      t.report(ROTATION, "refused");
+      const body = t.issues()[0]!.body;
+      assert.doesNotMatch(body, /Frozen for/);
+      assert.match(body, /cannot be stated here/);
+    });
+
+    it("never measures from the run's own refused commit, which is the one that did not reach main", () => {
+      const alone = mkdtempSync(join(tmpdir(), "alarm-unpushed-"));
+      git(alone, "init", "--initial-branch=main", ".");
+      git(alone, "config", "user.email", "fixture@example.com");
+      git(alone, "config", "user.name", "fixture");
+      commit(alone, "data(auto): rolling re-verification — what this run wrote and could not push", hoursAgo(0));
+
+      const t = tracker([], alone);
+      t.report(ROTATION, "refused");
+      const body = t.issues()[0]!.body;
+      assert.doesNotMatch(body, /Frozen for/, "the alarm measured the freeze from the commit the freeze is about");
+      assert.match(body, /cannot be stated here/);
+      rmSync(alone, { recursive: true, force: true });
+    });
+  });
+});
+
+describe("#1764 every scheduled data job reports the push that clears its alarm", () => {
+  it("tells the reporter when the gate reached main, wherever the gate runs", () => {
+    for (const file of GATED_WORKFLOWS) {
+      const text = source(file);
+      assert.match(
+        text,
+        /bash scripts\/report-data-push-outcome\.sh "[^"]+" reached-main "\$PUSHED_COMMIT"/,
+        `${file} pushes and says nothing, so an alarm it opened yesterday stays open`,
+      );
+      assert.match(
+        text,
+        /steps\.gate\.outputs\.pushed_commit != '' \|\| steps\.gate\.outputs\.pushed_nothing == 'true'/,
+        `${file} never reaches the step that would close its alarm`,
+      );
+      assert.match(
+        text,
+        /if \[ "\$PUSHED_OVER_FAILURES" = "true" \]; then\n\s+bash scripts\/report-data-push-outcome\.sh "[^"]+" shipped-over-failures/,
+        `${file} reports a red main on a run that had none, now that the step also runs on a clean push`,
+      );
+    }
+  });
+
+  it("names the commit on every way a push can succeed, not only the clean one", () => {
+    const gate = readFileSync(GATE, "utf8");
+    const pushed = gate.slice(gate.indexOf("if push_to_main; then"));
+    for (const branch of ["held_back_vendors=", "quarantined=false"]) {
+      assert.ok(
+        pushed.indexOf("pushed_commit=$COMMIT") < pushed.indexOf(branch),
+        `a push that reached main under ${branch.replace("=", "")} names no commit, so it closes no alarm`,
+      );
+    }
+  });
+
+  it("clears the same marker the refusal writes", () => {
+    const reporter = readFileSync(join(REPO, "scripts", "report-data-push-outcome.sh"), "utf8");
+    const refused = reporter.match(/MARKER="(data-push-refused)"/);
+    const clears = reporter.match(/CLEARS_MARKER="([a-z-]+)"/);
+    assert.ok(refused && clears, "the refusal and the clearing name no marker between them");
+    assert.strictEqual(clears[1], refused[1], "the push clears a marker no refusal ever writes");
+  });
+
+  it("scopes the refusal alarm to the job and leaves every other outcome shared", () => {
+    const reporter = readFileSync(join(REPO, "scripts", "report-data-push-outcome.sh"), "utf8");
+    const scoped = [...reporter.matchAll(/^\s*SCOPE="([^"]*)"$/gm)].map((m) => m[1]!);
+    assert.deepStrictEqual(scoped, ["", "$JOB_SLUG"], "the outcomes that are scoped to a job are not the ones this work scopes");
+  });
+
+  it("looks only at issues the system opened, on every lookup that can change an issue", () => {
+    const reporter = readFileSync(join(REPO, "scripts", "report-data-push-outcome.sh"), "utf8");
+    const lookups = reporter.match(/gh issue list/g) ?? [];
+    const filtered = reporter.match(/select\(\.author\.login == \\"\$OPENED_BY_THE_SYSTEM\\"\)/g) ?? [];
+    assert.ok(lookups.length >= 2, `the reporter makes ${lookups.length} issue lookups`);
+    assert.strictEqual(
+      filtered.length,
+      lookups.length,
+      `${lookups.length - filtered.length} of ${lookups.length} lookups reach issues nobody's alarm wrote`,
+    );
+  });
+
+  it("knows the commit each job writes, in the words that job's workflow commits", () => {
+    const reporter = readFileSync(join(REPO, "scripts", "report-data-push-outcome.sh"), "utf8");
+    const table = new Map(
+      [...reporter.matchAll(/^\s*"([^"]+)"\) echo "(data\(auto\): [^"]+)" ;;$/gm)].map((m) => [m[1]!, m[2]!]),
+    );
+    for (const file of GATED_WORKFLOWS) {
+      const text = source(file);
+      const job = text.match(/report-data-push-outcome\.sh "([^"]+)" refused/)?.[1];
+      assert.ok(job, `${file} reports a refusal for no named job`);
+      const subject = table.get(job);
+      assert.ok(subject, `${file} reports as "${job}" and the reporter cannot find that job's commits on main`);
+      const message = gateStepOf(file).body.match(/"(data\(auto\): [^"]+)"/)?.[1];
+      assert.ok(message, `${file} commits under no data(auto) message`);
+      assert.ok(
+        message.startsWith(subject),
+        `${file} commits "${message}" and its alarm looks for "${subject}", so it can never say how long it has been frozen`,
+      );
+    }
   });
 });
