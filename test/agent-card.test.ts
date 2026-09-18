@@ -12,7 +12,7 @@ import {
   buildServiceDescription,
   urlsDeclaredBy,
 } from "../dist/agent-card.js";
-import { loadOffers, loadDealChanges, getCategories } from "../dist/data.js";
+import { loadOffers, loadDealChanges, getCategories, confirmationCoverage, confirmationCoverageSentence } from "../dist/data.js";
 import { recordsStillInForce } from "../dist/change-resolution.js";
 import { trackedChanges } from "../dist/change-census.js";
 import { MCP_TOOLS } from "../dist/mcp-tool-inventory.js";
@@ -196,8 +196,10 @@ describe("the service description answers the paths agent directories ask for", 
         changes_tracked: trackedChanges(loadDealChanges()).length,
       },
     );
-    assert.match(card.catalogue.verified_through, /^\d{4}-\d{2}-\d{2}$/);
-    assert.ok(card.description.includes(String(card.catalogue.offers)), "the description states a different figure from the catalogue block");
+    assert.match(card.catalogue.catalogue_dated_between.oldest, /^\d{4}-\d{2}-\d{2}$/);
+    assert.match(card.catalogue.catalogue_dated_between.newest, /^\d{4}-\d{2}-\d{2}$/);
+    assert.ok(card.catalogue.catalogue_dated_between.oldest <= card.catalogue.catalogue_dated_between.newest);
+    assert.ok(card.description.includes(card.catalogue.offers.toLocaleString("en-US")), "the description states a different figure from the catalogue block");
   });
 
   it("states the same catalogue the home page states", async () => {
@@ -221,11 +223,12 @@ describe("the service description answers the paths agent directories ask for", 
       version: "9.9.9",
       license: { name: "MIT", url: "https://opensource.org/licenses/MIT" },
       repositoryUrl: "https://github.com/robhunter/agentdeals",
-      catalogue: { offers: 3, categories: 2, vendors: 3, changes_tracked: 1, verified_through: "2020-01-01" },
+      catalogue: { offers: 3, categories: 2, vendors: 3, changes_tracked: 1, confirmed_within_90_days: 1, freshness_score: 33, catalogue_dated_between: { oldest: "2020-01-01", newest: "2020-06-01" }, what_confirmed_means: "what a confirmation is" },
       tools: [{ name: "search_deals", brief: "brief" }],
     });
     assert.strictEqual(smaller.catalogue.offers, 3);
-    assert.match(smaller.description, /\b3 verified\b/);
+    assert.match(smaller.description, /An index of 3 free tiers/);
+    assert.match(smaller.description, /Of the 3 entries we hold, 1 carries terms a read confirmed/);
     assert.match(smaller.description, /across 2 categories/);
     assert.strictEqual(smaller.tools.length, 1);
     assert.strictEqual(smaller.version, "9.9.9");
@@ -260,8 +263,12 @@ describe("the service description answers the paths agent directories ask for", 
     const offers = loadOffers();
     assert.ok(!/\{\{[A-Z_]+\}\}/.test(served), `an unresolved placeholder reached a reader: ${served.match(/\{\{[A-Z_]+\}\}/)?.[0]}`);
     assert.ok(
-      served.includes(`${offers.length.toLocaleString("en-US")} verified offers`),
-      `the served markdown does not state ${offers.length} verified offers`,
+      served.includes(`${offers.length.toLocaleString("en-US")} offers`),
+      `the served markdown does not state ${offers.length} offers`,
+    );
+    assert.ok(
+      served.includes(confirmationCoverageSentence(confirmationCoverage())),
+      "the served markdown states a catalogue size without stating how much of it a read has confirmed",
     );
     assert.ok(
       served.includes(`across ${getCategories().length} categories`),

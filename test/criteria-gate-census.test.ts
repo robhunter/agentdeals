@@ -17,7 +17,7 @@ const THE_FLOOR = "verification_lapsed";
 const THE_RULE = /more than (\d+) days/;
 const THE_CENSUS = /On (\d{4}-\d{2}-\d{2}), across the ([\d,]+) offers we hold, (.+?)\./;
 const NO_OFFER_TRIPS_IT = "no offer trips it";
-const A_COUNT_THAT_LAPSED = /^([\d,]+) (?:has|have) not been re-confirmed recently enough$/;
+const A_COUNT_THAT_LAPSED = /^([\d,]+) we have not been able to confirm in the last \d+ days$/;
 const DAYS_TO_SEARCH_FOR_A_SECOND_COUNT = 90;
 
 const A_CLAIM_ABOUT_THE_CATALOGUE = [
@@ -226,15 +226,15 @@ describe("the census clause agrees in number with the count it states", () => {
   });
 
   it("says one offer has not been re-confirmed when one has not", () => {
-    assert.equal(gateCensusSentence(THE_FLOOR, gatesWhere(1, 1546), date), `On ${date}, across the 1,547 offers we hold, 1 has not been re-confirmed recently enough.`);
+    assert.equal(gateCensusSentence(THE_FLOOR, gatesWhere(1, 1546), date), `On ${date}, across the 1,547 offers we hold, 1 we have not been able to confirm in the last 180 days.`);
   });
 
   it("says several have not been re-confirmed when several have not", () => {
-    assert.equal(gateCensusSentence(THE_FLOOR, gatesWhere(3, 1544), date), `On ${date}, across the 1,547 offers we hold, 3 have not been re-confirmed recently enough.`);
+    assert.equal(gateCensusSentence(THE_FLOOR, gatesWhere(3, 1544), date), `On ${date}, across the 1,547 offers we hold, 3 we have not been able to confirm in the last 180 days.`);
   });
 
   it("counts only the offers this gate code excludes", () => {
     const mixed = [{ code: THE_FLOOR, reason: "" }, { code: "not_a_free_offer", reason: "" }, { code: "eligibility_restricted", reason: "" }, null];
-    assert.equal(gateCensusSentence(THE_FLOOR, mixed, date), `On ${date}, across the 4 offers we hold, 1 has not been re-confirmed recently enough.`);
+    assert.equal(gateCensusSentence(THE_FLOOR, mixed, date), `On ${date}, across the 4 offers we hold, 1 we have not been able to confirm in the last 180 days.`);
   });
 });

@@ -279,7 +279,7 @@ describe("a category lede counts no free tier the site says has ended", () => {
       const ended = censusOf(population).ended;
       const lede = ledeOf(await page(`/category/${slugOf(category)}`));
       assert.ok(
-        lede.startsWith(`${population.length - ended} verified free tiers and developer deals`),
+        lede.startsWith(`${population.length - ended} free tiers and developer deals`),
         `/category/${slugOf(category)} counts ${population.length} less ${ended} ended as: ${lede}`,
       );
       if (ended === 0) {
@@ -338,7 +338,7 @@ describe("a category lede counts no free tier the site says has ended", () => {
       const population = offers.filter((o) => o.category === offer.category);
       const standing = population.length - censusOf(population).ended;
       assert.ok(
-        lede.startsWith(`${standing} verified free tiers`),
+        lede.startsWith(`${standing} free tiers`),
         `/category/${slugOf(offer.category)} still counts ${offer.vendor}: ${lede}`,
       );
       checked++;

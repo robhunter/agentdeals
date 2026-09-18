@@ -1,5 +1,7 @@
 import type { Gate, GateCode } from "./ranking.js";
 
+export const VERIFICATION_LAPSED_DAYS = 180;
+
 const GATE_CLAUSES: { code: GateCode; one: string; many: (n: number) => string }[] = [
   {
     code: "eligibility_restricted",
@@ -23,8 +25,8 @@ const GATE_CLAUSES: { code: GateCode; one: string; many: (n: number) => string }
   },
   {
     code: "verification_lapsed",
-    one: "1 has not been re-confirmed recently enough",
-    many: (n) => `${n} have not been re-confirmed recently enough`,
+    one: `1 we have not been able to confirm in the last ${VERIFICATION_LAPSED_DAYS} days`,
+    many: (n) => `${n} we have not been able to confirm in the last ${VERIFICATION_LAPSED_DAYS} days`,
   },
 ];
 

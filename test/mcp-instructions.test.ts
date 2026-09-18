@@ -3,27 +3,28 @@ import assert from "node:assert";
 import { spawn, type ChildProcess } from "node:child_process";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { CATALOGUE_CATEGORY_COUNT, CATALOGUE_OFFER_FLOOR_LABEL, MCP_INSTRUCTIONS } from "../dist/mcp-instructions.js";
+import { CATALOGUE_CATEGORY_COUNT, CATALOGUE_OFFER_FLOOR_LABEL, mcpInstructions } from "../dist/mcp-instructions.js";
+import { confirmationCoverage, confirmationCoverageSentence } from "../dist/data.js";
 import { getCategories, loadOffers } from "../dist/data.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-describe("MCP_INSTRUCTIONS constant (issue #977)", () => {
+describe("the MCP instructions (issue #977)", () => {
   it("is between 200 and 400 words", () => {
-    const wc = MCP_INSTRUCTIONS.split(/\s+/).filter(Boolean).length;
+    const wc = mcpInstructions().split(/\s+/).filter(Boolean).length;
     assert.ok(wc >= 200 && wc <= 400, `expected 200-400 words, got ${wc}`);
   });
 
-  it("covers identity, trigger conditions, tool selection, and unique value", () => {
-    assert.match(MCP_INSTRUCTIONS, /AgentDeals/);
-    assert.ok(MCP_INSTRUCTIONS.includes(`${CATALOGUE_OFFER_FLOOR_LABEL}+ free tiers`));
-    assert.ok(MCP_INSTRUCTIONS.includes(`across ${CATALOGUE_CATEGORY_COUNT} developer-tool categories`));
-    assert.match(MCP_INSTRUCTIONS, /search_deals/);
-    assert.match(MCP_INSTRUCTIONS, /plan_stack/);
-    assert.match(MCP_INSTRUCTIONS, /compare_vendors/);
-    assert.match(MCP_INSTRUCTIONS, /track_changes/);
-    assert.match(MCP_INSTRUCTIONS, /verified/i);
-    assert.match(MCP_INSTRUCTIONS, /pricing change/i);
+  it("covers identity, trigger conditions, tool selection, and how much of the catalogue a read confirmed", () => {
+    assert.match(mcpInstructions(), /AgentDeals/);
+    assert.ok(mcpInstructions().includes(`${CATALOGUE_OFFER_FLOOR_LABEL}+ free tiers`));
+    assert.ok(mcpInstructions().includes(`across ${CATALOGUE_CATEGORY_COUNT} developer-tool categories`));
+    assert.match(mcpInstructions(), /search_deals/);
+    assert.match(mcpInstructions(), /plan_stack/);
+    assert.match(mcpInstructions(), /compare_vendors/);
+    assert.match(mcpInstructions(), /track_changes/);
+    assert.ok(mcpInstructions().includes(confirmationCoverageSentence(confirmationCoverage())));
+    assert.match(mcpInstructions(), /pricing change/i);
   });
 
   it("counts the catalogue rather than remembering how big it once was", () => {
@@ -88,6 +89,6 @@ describe("MCP initialize response includes instructions (issue #977)", () => {
     const initResp = responses.find((r) => r.id === 1);
     assert.ok(initResp, "expected an initialize response with id 1");
     assert.ok(initResp.result, "expected initialize result");
-    assert.strictEqual(initResp.result.instructions, MCP_INSTRUCTIONS, "initialize.result.instructions should match MCP_INSTRUCTIONS");
+    assert.strictEqual(initResp.result.instructions, mcpInstructions(), "initialize.result.instructions should match the served instructions");
   });
 });

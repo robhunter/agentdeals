@@ -29,7 +29,7 @@ export function endedFreeTierClause(ended: number): string {
 }
 
 export function gatedShareLede(total: number, gates: (Gate | null)[], ended = 0): string {
-  const counted = `${total} verified free tiers and developer deals`;
+  const counted = `${total} free tiers and developer deals`;
   const codes = gatedCodes(gates);
   const alsoEnded = endedFreeTierClause(ended);
   if (codes.length === 0) return `${counted}.${alsoEnded}`;

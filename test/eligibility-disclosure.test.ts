@@ -299,7 +299,7 @@ describe("a category page does not count a gated offer as a plain free tier", ()
       const lede = ledeOf(html);
       const where = `/category/${slugOf(category)} (${gated} gated, ${restricted} restricted, of ${total})`;
       if (gated === 0) {
-        assert.ok(lede.startsWith(`${total} verified free tiers and developer deals.`), `${where} lede is ${lede}`);
+        assert.ok(lede.startsWith(`${total} free tiers and developer deals.`), `${where} lede is ${lede}`);
         assert.ok(!lede.includes(QUALIFICATION), `${where} states a restriction it does not hold`);
         continue;
       }
@@ -311,7 +311,7 @@ describe("a category page does not count a gated offer as a plain free tier", ()
       if (gated === total && restricted === total) {
         assert.ok(lede.includes("none of them generally available"), `${where} lede is ${lede}`);
         assert.ok(
-          !lede.startsWith(`${total} verified free tiers and developer deals.`),
+          !lede.startsWith(`${total} free tiers and developer deals.`),
           `${where} closes the count claim before qualifying it: ${lede}`,
         );
       } else if (gated === total && total > 1) {

@@ -1027,10 +1027,10 @@ describe("what counts as a page saying why, on pages built to test it", () => {
     const said = surfacesOf(aPage({ title: TITLE, description: "We hold 2 offers here.", sections: [listing(["alfa", "bravo"])] }));
     const rewritten = surfacesOf(aPage({
       title: TITLE,
-      description: "We hold 2 offers here. 1 has not been re-confirmed recently enough.",
+      description: "We hold 2 offers here. 1 of them dropped off the ranked list.",
       sections: [listing(["alfa", "bravo"])],
     }));
-    assert.deepEqual(sentencesItChangedWithoutSayingWhy(said, rewritten), ["# has not been re-confirmed recently enough."]);
+    assert.deepEqual(sentencesItChangedWithoutSayingWhy(said, rewritten), ["# of them dropped off the ranked list."]);
   });
 });
 
