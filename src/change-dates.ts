@@ -237,3 +237,54 @@ export function announcedIntro(count: number, asOf: string): string {
   const verb = count === 1 ? "it has" : "they have";
   return `${subject} a date after ${asOf}. The vendor has announced ${count === 1 ? "it" : "them"} and ${verb} not taken effect, so ${count === 1 ? "it is" : "they are"} not part of the history below.`;
 }
+
+export const A_DATED_SECTION_MARKER =
+  "What this section prints is decided by the calendar, not by anything the vendor did.";
+
+export const A_DATED_HEADING_MARKER =
+  "A date in a heading below cites a record we hold, not a property of the vendor it names.";
+
+export interface DatedSectionDestination {
+  when: string;
+  text: string;
+  href: string;
+}
+
+export function datedSectionNoticeHtml(
+  rule: string,
+  destinations: readonly DatedSectionDestination[],
+  esc: (text: string) => string,
+  attributes = ' class="dated-rule"',
+): string {
+  const whereToLook = destinations
+    .map((d) => `${esc(d.when)} <a href="${d.href}">${esc(d.text)}</a>.`)
+    .join(" ");
+  return `<p${attributes}>${esc(A_DATED_SECTION_MARKER)} ${esc(rule)} ${whereToLook}</p>`;
+}
+
+export function datedHeadingNoticeHtml(
+  rule: string,
+  destinations: readonly DatedSectionDestination[],
+  esc: (text: string) => string,
+  attributes = ' class="dated-rule"',
+): string {
+  const whereToLook = destinations
+    .map((d) => `${esc(d.when)} <a href="${d.href}">${esc(d.text)}</a>.`)
+    .join(" ");
+  return `<p${attributes}>${esc(A_DATED_HEADING_MARKER)} ${esc(rule)} ${whereToLook}</p>`;
+}
+
+export const WHICH_DATE_WE_HOLD =
+  "That date is the effective date where the vendor states one, and the day we discovered the change where the vendor does not.";
+
+export function namedWhileAheadOf(subject: string, asOf: string): string {
+  return `${subject} is named here only while the date we hold for it is later than ${asOf}. ${WHICH_DATE_WE_HOLD}`;
+}
+
+export function namedOnceItsDateArrived(subject: string, asOf: string): string {
+  return `${subject} is named here only once the date we hold for it has arrived, on or before ${asOf}. ${WHICH_DATE_WE_HOLD}`;
+}
+
+export function namedWhileNotBefore(subject: string, asOf: string): string {
+  return `${subject} is named here only while its effective date is ${asOf} or later.`;
+}

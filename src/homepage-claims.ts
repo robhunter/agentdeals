@@ -48,3 +48,15 @@ export function figureIsHeldBy(figure: string, corpus: readonly string[]): boole
   const wanted = normaliseFigure(figure);
   return corpus.some((text) => figuresIn(text).some((held) => normaliseFigure(held) === wanted));
 }
+
+export const RECENT_CHANGES_ON_THE_HOME_PAGE = 5;
+
+export const UPCOMING_DEADLINES_ON_THE_HOME_PAGE = 5;
+
+export function atMostShownHere(cap: number): string {
+  return `At most ${cap} are shown here.`;
+}
+
+export function onlyTheMostRecentShown(cap: number): string {
+  return `Only the ${cap} most recent are shown.`;
+}

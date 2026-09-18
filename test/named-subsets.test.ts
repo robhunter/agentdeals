@@ -21,6 +21,8 @@ import {
   VERDICT_WINDOW_DAYS,
 } from "../dist/data.js";
 import { substitutesFor } from "../dist/product-role.js";
+import { A_DATED_HEADING_MARKER, A_DATED_SECTION_MARKER, ANNOUNCED_HEADING } from "../dist/change-dates.js";
+import { RECENT_CHANGES_ON_THE_HOME_PAGE, UPCOMING_DEADLINES_ON_THE_HOME_PAGE, atMostShownHere, onlyTheMostRecentShown } from "../dist/homepage-claims.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(__dirname, "..");
@@ -52,7 +54,12 @@ interface Surfaces {
   vendors: string[];
   vendorSequence: string[];
   demotedHeadingFound: boolean;
+  headings: string[];
   windowedHeadings: string[];
+  datedHeadings: string[];
+  datedCitationHeadings: string[];
+  destinationsOf: Record<string, string[]>;
+  headingAtAnchor: Record<string, string>;
   completeLogHeadings: string[];
   datesBehindEachDemotion: Record<string, string[]>;
   metaDescription: string | null;
@@ -122,9 +129,81 @@ function stripTags(html: string): string {
   return decodeEntities(html.replace(/<[^>]*>/g, "")).replace(/\s+/g, " ").trim();
 }
 
-function headingsOf(html: string): { at: number; text: string }[] {
-  return [...html.matchAll(/<h[1-4][^>]*>([\s\S]*?)<\/h[1-4]>/g)].map(m => ({ at: m.index!, text: stripTags(m[1]!) }));
+function headingsOf(html: string): { at: number; text: string; level: number }[] {
+  return [...html.matchAll(/<h([1-4])[^>]*>([\s\S]*?)<\/h[1-4]>/g)].map(m => ({
+    at: m.index!,
+    text: stripTags(m[2]!),
+    level: Number(m[1]!),
+  }));
 }
+
+function paragraphAround(body: string, at: number): string {
+  const open = body.lastIndexOf("<p", at);
+  const close = body.indexOf("</p>", at);
+  if (open === -1 || close === -1) return "";
+  return body.slice(open, close);
+}
+
+function headingsADeclarationCovers(body: string, at: number): string[] {
+  const headings = headingsOf(body);
+  const own = headings.filter(heading => heading.at < at).pop();
+  if (!own) return [];
+  const covered = [own.text];
+  for (const heading of headings) {
+    if (heading.at <= own.at) continue;
+    if (heading.level <= own.level) break;
+    covered.push(heading.text);
+  }
+  return covered;
+}
+
+interface Declaration {
+  headings: string[];
+  destinations: string[];
+}
+
+function declarationsOf(body: string, marker: string): Declaration[] {
+  const found: Declaration[] = [];
+  for (let at = body.indexOf(marker); at !== -1; at = body.indexOf(marker, at + 1)) {
+    const destinations = [...paragraphAround(body, at).matchAll(/href="([^"]+)"/g)].map(m => m[1]!);
+    if (destinations.length === 0) continue;
+    found.push({ headings: headingsADeclarationCovers(body, at), destinations });
+  }
+  return found;
+}
+
+function headingAtEachAnchor(body: string): Record<string, string> {
+  const headings = headingsOf(body);
+  const resolved: Record<string, string> = {};
+  for (const anchor of body.matchAll(/\sid="([^"]+)"/g)) {
+    const name = anchor[1]!;
+    if (name in resolved) continue;
+    const tagStart = body.lastIndexOf("<", anchor.index!);
+    const own = headings.find(heading => heading.at === tagStart);
+    const next = own ?? headings.find(heading => heading.at >= tagStart);
+    if (next) resolved[name] = next.text;
+  }
+  return resolved;
+}
+
+const A_DATE_IN_A_HEADING = /\b(?:\d{4}-\d{2}-\d{2}|[A-Z]{3} \d{1,2}|\d{1,2} [A-Z][a-z]{2,8} \d{4}|[A-Z][a-z]{2,8} \d{1,2},? \d{4})\b/g;
+
+function withoutItsDate(heading: string): string {
+  return heading.replace(A_DATE_IN_A_HEADING, "").replace(/\s+/g, " ").trim();
+}
+
+const SECTIONS_GROUPED_BY_A_DATE: Array<{ page: string; heading: string; served: "always" | "when it holds one" }> = [
+  { page: "/", heading: "Recent pricing changes", served: "always" },
+  { page: "/ci-cd-pricing", heading: "Category Breakdown", served: "always" },
+  { page: "/deadlines", heading: "Developer Tool Deadline Tracker", served: "always" },
+  { page: "/expiring", heading: "Upcoming Free Tier Changes", served: "always" },
+  { page: "/shutdowns", heading: "Developer Tool Shutdown Tracker 2026", served: "always" },
+  { page: "/", heading: "Upcoming deal changes", served: "when it holds one" },
+  { page: "/pricing-changes", heading: "Upcoming Changes", served: "when it holds one" },
+  { page: "/trends/cloud-hosting", heading: ANNOUNCED_HEADING, served: "when it holds one" },
+];
+
+const DECLARED_DATED_HEADINGS_FLOOR = 126;
 
 export function vendorsByRegion(body: string): Record<string, string[]> {
   const regions = new Map<string, Set<string>>();
@@ -229,6 +308,14 @@ function surfacesOf(body: string): Surfaces {
   const metaDescription = meta ? decodeEntities(meta[1]!) : null;
   const counts = metaDescription?.match(STATED_COUNTS) ?? null;
   const changes = metaDescription?.match(CHANGES_STATED) ?? null;
+  const dated = declarationsOf(body, A_DATED_SECTION_MARKER);
+  const citations = declarationsOf(body, A_DATED_HEADING_MARKER);
+  const destinationsOf: Record<string, string[]> = {};
+  for (const declaration of [...dated, ...citations]) {
+    for (const heading of declaration.headings) {
+      destinationsOf[heading] = [...new Set([...(destinationsOf[heading] ?? []), ...declaration.destinations])];
+    }
+  }
   return {
     changesStated: changes ? asCount(changes[1] ?? changes[2]!) : null,
     changesListed: headingsOf(body)
@@ -239,7 +326,12 @@ function surfacesOf(body: string): Surfaces {
     vendors: [...new Set([...body.matchAll(/href="\/vendor\/([a-z0-9-]+)"/g)].map(m => m[1]!))].sort(),
     vendorSequence: [...body.matchAll(/href="\/vendor\/([a-z0-9-]+)"/g)].map(m => m[1]!),
     demotedHeadingFound: demotedRegionOf(body) !== null,
+    headings: headingsOf(body).map(heading => heading.text),
     windowedHeadings: headingsCoveringARollingWindow(body),
+    datedHeadings: [...new Set(dated.flatMap(declaration => declaration.headings))],
+    datedCitationHeadings: [...new Set(citations.flatMap(declaration => declaration.headings))],
+    destinationsOf,
+    headingAtAnchor: headingAtEachAnchor(body),
     completeLogHeadings: headingsDeclaringACompleteLog(body),
     datesBehindEachDemotion: datesBehindEachDemotion(body),
     metaDescription,
@@ -260,6 +352,70 @@ function headingsNaming(surfaces: Surfaces, vendor: string): string {
 
 function coversADifferentDay(before: Surfaces, after: Surfaces): boolean {
   return before.title !== after.title;
+}
+
+function headingsNamingEach(surfaces: Surfaces, vendor: string): string[] {
+  return Object.entries(surfaces.regions)
+    .filter(([, vendors]) => vendors.includes(vendor))
+    .map(([heading]) => heading);
+}
+
+function citedUndated(surfaces: Surfaces, heading: string): string {
+  return surfaces.datedCitationHeadings.includes(heading) ? withoutItsDate(heading) : heading;
+}
+
+function headingsGainedAndLost(before: Surfaces, after: Surfaces, vendor: string): { lost: string[]; gained: string[] } {
+  const was = new Map(headingsNamingEach(before, vendor).map(h => [citedUndated(before, h), h]));
+  const now = new Map(headingsNamingEach(after, vendor).map(h => [citedUndated(after, h), h]));
+  return {
+    lost: [...was].filter(([stable]) => !now.has(stable)).map(([, heading]) => heading),
+    gained: [...now].filter(([stable]) => !was.has(stable)).map(([, heading]) => heading),
+  };
+}
+
+function headingsADeclarationSendsThemTo(surfaces: Surfaces, after: Surfaces, headings: string[]): Set<string> {
+  const promised = new Set<string>();
+  for (const heading of headings) {
+    for (const destination of surfaces.destinationsOf[heading] ?? []) {
+      if (!destination.startsWith("#")) continue;
+      const lands = after.headingAtAnchor[destination.slice(1)];
+      if (lands !== undefined) promised.add(lands);
+    }
+  }
+  return promised;
+}
+
+function stableRegions(surfaces: Surfaces): Map<string, Set<string>> {
+  const named = new Map<string, Set<string>>();
+  for (const [heading, vendors] of Object.entries(surfaces.regions)) {
+    const stable = citedUndated(surfaces, heading);
+    if (!named.has(stable)) named.set(stable, new Set());
+    for (const vendor of vendors) named.get(stable)!.add(vendor);
+  }
+  return named;
+}
+
+function destinationNames(
+  destination: string,
+  vendor: string,
+  after: Surfaces,
+  pages: Map<string, Surfaces>,
+): boolean {
+  if (destination.startsWith("#")) {
+    const heading = after.headingAtAnchor[destination.slice(1)];
+    if (heading === undefined) return false;
+    return (stableRegions(after).get(citedUndated(after, heading)) ?? new Set<string>()).has(vendor);
+  }
+  if (!destination.startsWith("/")) return false;
+  return pages.get(destination.split("#")[0]!)?.vendors.includes(vendor) ?? false;
+}
+
+function movedOnlyBetweenDatedSections(before: Surfaces, after: Surfaces, vendor: string): boolean {
+  const { lost, gained } = headingsGainedAndLost(before, after, vendor);
+  if (lost.length === 0 && gained.length === 0) return true;
+  if (!lost.every(heading => before.datedHeadings.includes(heading))) return false;
+  const sentTo = headingsADeclarationSendsThemTo(before, after, lost);
+  return gained.every(heading => after.datedHeadings.includes(heading) || sentTo.has(heading));
 }
 
 function vendorsThatChangeHeading(before: Surfaces, after: Surfaces): string[] {
@@ -287,6 +443,7 @@ function movesWithNoDatedReason(before: Surfaces, after: Surfaces): string[] {
   if (coversADifferentDay(before, after)) return [];
   return vendorsThatChangeHeading(before, after).filter(vendor => {
     if (namedOnlyUnderARollingWindow(before, vendor) || namedOnlyUnderARollingWindow(after, vendor)) return false;
+    if (movedOnlyBetweenDatedSections(before, after, vendor)) return false;
     return datedDemotionFor(before, vendor) === datedDemotionFor(after, vendor);
   });
 }
@@ -325,10 +482,14 @@ function answersByQuestion(answers: string[]): Map<string, string> {
 
 function vendorsNoLongerNamed(before: Surfaces, after: Surfaces): string[] {
   if (coversADifferentDay(before, after)) return [];
-  const gained = after.vendors.filter(vendor => !before.vendors.includes(vendor) && !namedOnlyUnderARollingWindow(after, vendor));
+  const gained = after.vendors.filter(vendor =>
+    !before.vendors.includes(vendor)
+    && !namedOnlyUnderARollingWindow(after, vendor)
+    && !movedOnlyBetweenDatedSections(before, after, vendor));
   const lost = before.vendors.filter(vendor =>
     !after.vendors.includes(vendor)
     && !namedOnlyUnderARollingWindow(before, vendor)
+    && !movedOnlyBetweenDatedSections(before, after, vendor)
     && !datedDemotionFor(before, vendor));
   return [...lost, ...gained].sort();
 }
@@ -460,6 +621,84 @@ describe("what a page names changes overnight only where the page itself says wh
       dropped.slice(0, 8),
       [],
       `${dropped.length} section${dropped.length === 1 ? "" : "s"} told the reader a record is never removed and then stopped naming a vendor tomorrow`,
+    );
+  });
+
+  it("puts a record where the section that let it go says the reader will find it", () => {
+    const stranded: string[] = [];
+    let declaring = 0;
+    for (const pagePath of inventory) {
+      const [before, after] = bothDays(pagePath);
+      const declared = [...new Set([...before.datedHeadings, ...before.datedCitationHeadings])];
+      declaring += declared.length;
+      if (coversADifferentDay(before, after)) continue;
+      const namedNow = stableRegions(after);
+      for (const heading of declared) {
+        const stable = citedUndated(before, heading);
+        const held = namedNow.get(stable) ?? new Set<string>();
+        for (const vendor of (before.regions[heading] ?? []).filter(v => !held.has(v))) {
+          const destinations = before.destinationsOf[heading] ?? [];
+          if (destinations.some(destination => destinationNames(destination, vendor, after, tomorrow))) continue;
+          stranded.push(`${pagePath} "${heading}": ${vendor} is not at ${destinations.join(" or ") || "any destination it names"}`);
+        }
+      }
+    }
+    assertPopulationFloor(declaring, DECLARED_DATED_HEADINGS_FLOOR, "headings covered by a stated date rule");
+    assert.deepEqual(
+      stranded.slice(0, 8),
+      [],
+      `${stranded.length} record${stranded.length === 1 ? " was" : "s were"} dropped by a section that tells the reader where to look next, and are not there`,
+    );
+  });
+
+  it("states the date rule in every section that re-groups a record when a date passes", () => {
+    assert.deepEqual(
+      [...new Set(SECTIONS_GROUPED_BY_A_DATE.map(section => section.page))].filter(p => !inventory.includes(p)),
+      [],
+      "a page this reads for a stated date rule is not served on both clocks, so the rule below is read on fewer sections than it names",
+    );
+    const silent: string[] = [];
+    const rendered: string[] = [];
+    const gone: string[] = [];
+    for (const { page, heading, served } of SECTIONS_GROUPED_BY_A_DATE) {
+      const surfaces = today.get(page)!;
+      if (!surfaces.headings.includes(heading)) {
+        if (served === "always") gone.push(`${page} "${heading}"`);
+        continue;
+      }
+      rendered.push(`${page} "${heading}"`);
+      if (surfaces.datedHeadings.includes(heading) || surfaces.datedCitationHeadings.includes(heading)) continue;
+      silent.push(`${page} "${heading}"`);
+    }
+    assert.deepEqual(
+      gone,
+      [],
+      `${gone.length} sections this reads for a stated date rule are not on the page at all, so it reads fewer than it names`,
+    );
+    assert.deepEqual(
+      silent,
+      [],
+      `${silent.length} of ${rendered.length} sections re-group a record when a date passes and state no rule that would tell a reader it was going to`,
+    );
+  });
+
+  it("gives two different headings two different names, so nothing is exempted by being confused with something else", () => {
+    const confused: string[] = [];
+    for (const pagePath of inventory) {
+      const surfaces = today.get(pagePath)!;
+      const byStableName = new Map<string, string[]>();
+      for (const heading of Object.keys(surfaces.regions)) {
+        const stable = citedUndated(surfaces, heading);
+        byStableName.set(stable, [...(byStableName.get(stable) ?? []), heading]);
+      }
+      for (const [stable, headings] of byStableName) {
+        if (headings.length > 1) confused.push(`${pagePath}: ${headings.slice(0, 3).join(" and ")} all read as "${stable}"`);
+      }
+    }
+    assert.deepEqual(
+      confused.slice(0, 8),
+      [],
+      `${confused.length} pages let a rule about dates in headings strip away enough that two different sections carry the same name`,
     );
   });
 
@@ -805,6 +1044,51 @@ describe("the rule that decides it is published where a reader can find it", () 
       assert.ok(text.includes(NAMED_SUBSET_RULE), "/criteria does not state the rule the pages follow");
       assert.ok(text.includes(NAMED_SUBSET_FIELD_RULE), "/criteria does not say why no field picks the members instead");
       assert.ok(body.includes('id="subsets"'), "nothing on a page can link to the rule it says it follows");
+    } finally {
+      proc.kill();
+      rmSync(scratch, { recursive: true, force: true });
+    }
+  });
+
+  it("prints on the home page as many changes as the length it states, or every one it holds", async () => {
+    const scratch = mkdtempSync(path.join(tmpdir(), "named-subsets-home-"));
+    const { proc, base } = await startServer(path.join(scratch, "inventory.json"), 0);
+    try {
+      const body = await (await fetch(`${base}/`)).text();
+      const onThisDay = new Date().toISOString().slice(0, 10);
+      const held = loadDealChanges();
+      const sections = [
+        {
+          id: "changing-soon",
+          entry: "cs-entry",
+          states: atMostShownHere(UPCOMING_DEADLINES_ON_THE_HOME_PAGE),
+          cap: UPCOMING_DEADLINES_ON_THE_HOME_PAGE,
+          qualifying: held.filter(change => change.date > onThisDay).length,
+        },
+        {
+          id: "recent-changes",
+          entry: "rc-entry",
+          states: onlyTheMostRecentShown(RECENT_CHANGES_ON_THE_HOME_PAGE),
+          cap: RECENT_CHANGES_ON_THE_HOME_PAGE,
+          qualifying: held.filter(change => change.date <= onThisDay).length,
+        },
+      ];
+      for (const section of sections) {
+        const at = body.indexOf(`id="${section.id}"`);
+        assert.ok(at !== -1, `the home page serves no section with id="${section.id}", so nothing below reads its stated length`);
+        const ends = body.indexOf('<div class="divider">', at);
+        const region = body.slice(at, ends === -1 ? undefined : ends);
+        assert.ok(
+          stripTags(region).includes(section.states),
+          `"${section.id}" does not print "${section.states}", so a reader cannot tell a full list from a truncated one`,
+        );
+        const printed = [...region.matchAll(new RegExp(`class="${section.entry}"`, "g"))].length;
+        assert.equal(
+          printed,
+          Math.min(section.cap, section.qualifying),
+          `"${section.id}" states a length of ${section.cap} and holds ${section.qualifying} that qualify, and prints ${printed}`,
+        );
+      }
     } finally {
       proc.kill();
       rmSync(scratch, { recursive: true, force: true });
