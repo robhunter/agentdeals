@@ -9,6 +9,8 @@ import { fileURLToPath } from "node:url";
 
 const { changeCitesASource, citationLabel } = await import("../dist/change-citation.js");
 const { isNoLongerInForce } = await import("../dist/change-resolution.js");
+const { loadDealChanges, loadOffers } = await import("../dist/data.js");
+const { survivingVendorName } = await import("../dist/vendor-merges.js");
 
 type DealChange = import("../src/types.ts").DealChange;
 
@@ -26,9 +28,7 @@ const ENTRY_CLASS: Record<string, string> = {
   "/q2-pricing-preview-2026": "change-card",
 };
 
-const changes: DealChange[] = JSON.parse(
-  readFileSync(path.join(REPO, "data", "deal_changes.json"), "utf-8"),
-).changes;
+const changes: DealChange[] = loadDealChanges();
 
 function sourceOf(change: { source_url?: string | null }): string | null {
   return changeCitesASource(change) ? change.source_url!.trim() : null;
@@ -120,6 +120,23 @@ describe("every change we publish reaches the page it was read from", () => {
   });
 
   after(() => proc?.kill());
+
+  it("reads the change log by the route the site reads it", () => {
+    const stored: DealChange[] = JSON.parse(
+      readFileSync(path.join(REPO, "data", "deal_changes.json"), "utf-8"),
+    ).changes;
+    const live = new Set(loadOffers().map((offer) => offer.vendor.trim().toLowerCase()));
+    const retired = stored
+      .filter((change) => survivingVendorName(change.vendor, live) !== null)
+      .map((change) => change.vendor);
+    assertPopulationFloor(retired.length, 1, "records the store files under a name the registry retired");
+    const unresolved = changes.filter((change) => retired.includes(change.vendor));
+    assert.deepStrictEqual(
+      [...new Set(unresolved.map((change) => change.vendor))],
+      [],
+      "the sweep holds a record under a name the site does not publish it under",
+    );
+  });
 
   it("has a population on both sides of the question", () => {
     const inForceWithSource = changes.filter((c) => !isNoLongerInForce(c) && changeCitesASource(c));
@@ -281,10 +298,14 @@ describe("every change we publish reaches the page it was read from", () => {
     assert.ok(items.length > 0, "/changes publishes an empty ItemList");
     const byHeadline = new Map<string, Record<string, any>>(items.map((i: Record<string, any>) => [i.headline, i]));
     let checked = 0;
+    const unmatched: string[] = [];
     for (const item of items) {
       const vendor = String(item.headline).split(":")[0];
       const record = changes.find((c) => c.vendor === vendor && c.summary === item.description);
-      if (!record) continue;
+      if (!record) {
+        unmatched.push(`${vendor} :: ${String(item.description).slice(0, 60)}`);
+        continue;
+      }
       checked++;
       const source = sourceOf(record);
       if (source === null) {
@@ -295,7 +316,12 @@ describe("every change we publish reaches the page it was read from", () => {
       assert.strictEqual(item.citation?.["@type"], "WebPage");
       assert.strictEqual(item.citation?.name, citationLabel(source));
     }
-    assert.ok(checked > items.length / 2, `matched only ${checked} of ${items.length} list items back to a record`);
+    assert.deepStrictEqual(
+      unmatched,
+      [],
+      `${unmatched.length} of ${items.length} list items reach no record, so nothing checks their citation`,
+    );
+    assert.strictEqual(checked, items.length);
     assert.strictEqual(byHeadline.size > 0, true);
   });
 });
