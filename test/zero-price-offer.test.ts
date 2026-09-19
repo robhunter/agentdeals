@@ -4,9 +4,9 @@ import { spawn, type ChildProcess } from "node:child_process";
 import { readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { assertPopulationFloor, assertSharesPopulation, type Population } from "./population-floor.ts";
+import { assertCoversPopulation, assertPopulationFloor, assertSharesPopulation, type Population } from "./population-floor.ts";
+import { everyRouteTheSitemapPublishes } from "./sitemap-routes.ts";
 
-const { toSlug } = await import("../dist/slug.js");
 const { descriptionDeniesAFreeTier } = await import("../dist/free-tier-record.js");
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -32,6 +32,7 @@ interface Node {
   route: string;
   vendor: string;
   description: string;
+  statesAPrice: boolean;
   pricedAtZero: boolean;
   tier: string | null;
   offerDescription: string | null;
@@ -63,6 +64,7 @@ function softwareNodes(route: string, html: string): Node[] {
         route,
         vendor: record.name,
         description: typeof record.description === "string" ? record.description : "",
+        statesAPrice: typeof record.offers?.price === "string",
         pricedAtZero: record.offers?.price === "0",
         tier: typeof record.offers?.name === "string" ? record.offers.name : null,
         offerDescription: typeof record.offers?.description === "string" ? record.offers.description : null,
@@ -86,19 +88,13 @@ function caveatCarriedBy(node: Node): string | null {
   return node.description.startsWith(`${closed} `) ? node.description.slice(closed.length + 1) : null;
 }
 
-const LISTING_PAGES = [
-  "/best/free-testing", "/best/free-monitoring", "/best/free-ai-ml", "/best/free-search",
-  "/best/free-logging", "/best/free-databases", "/best/free-cloud-hosting",
-  "/free-saas-stack", "/free-ai-stack", "/agent-payments", "/x402-services",
-  "/ai-free-tiers", "/redis-alternatives", "/auth0-alternatives", "/vercel-alternatives",
-];
-
 describe("#1724 structured data prices a tier at zero only where we state that tier is free", () => {
   let server: { proc: ChildProcess; port: number } | null = null;
   let base = "";
   let published: PublishedOffer[] = [];
   const nodes: Node[] = [];
-  let sampledVendors: string[] = [];
+  let routesRead: string[] = [];
+  let routesPublished: string[] = [];
 
   const tiersWeHold = new Map<string, Set<string>>();
   const routesOf = (kind: string) => nodes.filter(n => n.route.startsWith(kind));
@@ -121,6 +117,23 @@ describe("#1724 structured data prices a tier at zero only where we state that t
     size: readAgainstTheirVendorPage().compared.length,
     read: "comparison nodes with a vendor page to be read against",
   });
+  const routesTheSitemapPublishes = (): Population => ({
+    size: routesPublished.length,
+    read: "routes the sitemap publishes",
+  });
+  const listingNodesWithAVendorPage = (): Population => {
+    const single = soleOffer();
+    const named = new Set(routesOf("/vendor/").filter(n => single.has(n.vendor)).map(n => n.vendor));
+    return {
+      size: nodes.filter(n =>
+        !n.route.startsWith("/vendor/") && !n.route.startsWith("/compare/") && named.has(n.vendor)).length,
+      read: "listing nodes with a vendor page to be read against",
+    };
+  };
+  const vendorsWhoseTermsWeWithhold = (): Population => ({
+    size: new Set(published.filter(o => o.terms_superseded).map(o => o.vendor)).size,
+    read: "vendors the catalogue withholds the stored terms of",
+  });
 
   before(async () => {
     server = await startServer();
@@ -132,48 +145,40 @@ describe("#1724 structured data prices a tier at zero only where we state that t
       else tiersWeHold.set(row.vendor, new Set([row.tier]));
     }
 
-    const categories = [...new Set(published.map(o => `/category/${toSlug(o.category)}`))];
-    const withheldOrEnded = published
-      .filter(o => o.terms_superseded || o.gate || (o.risk_level === "risky" && o.risk_cause))
-      .map(o => o.vendor);
-    const everyTwelfth = published.map(o => o.vendor).filter((_, i) => i % 12 === 0);
-    sampledVendors = [...new Set([...withheldOrEnded, ...everyTwelfth])].sort();
-
-    const comparisons = [...(await (await fetch(`${base}/sitemap-comparisons.xml`)).text())
-      .matchAll(/<loc>([^<]+)<\/loc>/g)]
-      .map(m => new URL(m[1]).pathname)
-      .filter(p => p.startsWith("/compare/"));
-
-    const queue = [
-      ...categories,
-      ...LISTING_PAGES,
-      ...comparisons,
-      ...[...new Set(withheldOrEnded)].slice(0, 120).map(v => `/alternative-to/${toSlug(v)}`),
-      ...sampledVendors.map(v => `/vendor/${toSlug(v)}`),
-    ];
+    routesPublished = await everyRouteTheSitemapPublishes(base);
+    const queue = [...routesPublished];
+    const read: string[] = [];
     let next = 0;
     await Promise.all(Array.from({ length: 12 }, async () => {
       while (next < queue.length) {
         const route = queue[next++];
         const response = await fetch(base + route);
-        if (response.ok) nodes.push(...softwareNodes(route, await response.text()));
+        if (!response.ok) continue;
+        read.push(route);
+        nodes.push(...softwareNodes(route, await response.text()));
       }
     }));
+    routesRead = read;
   });
 
   after(() => { server?.proc.kill(); });
 
-  it("reads enough nodes on each surface for the sweeps below to mean something", () => {
-    assertPopulationFloor(nodes.length, 1700, "structured-data nodes read across the surfaces");
-    assertPopulationFloor(routesOf("/category/").length, 900, "nodes read on category pages");
+  it("reads every page the site publishes, rather than a sample of the ones a change happens to have touched", () => {
+    assertCoversPopulation(routesRead.length, routesTheSitemapPublishes(), "routes answered and read for nodes");
     assertPopulationFloor(routesOf("/vendor/").length, 300, "nodes read on vendor pages");
+    assertPopulationFloor(routesOf("/category/").length, 900, "nodes read on category pages");
     assertPopulationFloor(routesOf("/alternative-to/").length, 250, "nodes read on alternatives pages");
+    assertPopulationFloor(routesOf("/compare/").length, 250, "nodes read on comparison pages");
     assertPopulationFloor(nodes.filter(n => n.pricedAtZero).length, 550, "nodes priced at zero");
   });
 
   it("publishes no price of zero beside a description withholding the terms it prices", () => {
     const withholding = nodes.filter(n => WITHHOLDS_OUR_TERMS.test(n.description));
-    assertPopulationFloor(withholding.length, 300, "nodes withhold our stored terms");
+    assertCoversPopulation(
+      new Set(withholding.map(n => n.vendor)).size,
+      vendorsWhoseTermsWeWithhold(),
+      "vendors carry a node withholding our stored terms",
+    );
     assertPopulationFloor(
       new Set(withholding.map(n => n.route.replace(/\/[^/]*$/, "/"))).size,
       3,
@@ -199,7 +204,7 @@ describe("#1724 structured data prices a tier at zero only where we state that t
     assert.deepStrictEqual(pricedAmong(gated).slice(0, 25), []);
   });
 
-  it("gives a listing and a vendor page the same answer about the same offer", () => {
+  it("gives a listing and a vendor page the same answer about the same offer, wherever the listing answers at all", () => {
     const single = soleOffer();
     const onVendorPage = new Map(routesOf("/vendor/").filter(n => single.has(n.vendor)).map(n => [n.vendor, n.pricedAtZero]));
     const disagreeing: string[] = [];
@@ -207,11 +212,17 @@ describe("#1724 structured data prices a tier at zero only where we state that t
     for (const node of nodes) {
       if (node.route.startsWith("/vendor/") || node.route.startsWith("/compare/") || !single.has(node.vendor)) continue;
       const vendorPage = onVendorPage.get(node.vendor);
-      if (vendorPage === undefined) continue;
+      if (vendorPage === undefined || !node.statesAPrice) continue;
       compared++;
       if (vendorPage !== node.pricedAtZero) disagreeing.push(`${node.route} ${node.vendor}`);
     }
-    assertPopulationFloor(compared, 350, "listing nodes have a vendor page to be read against");
+    assertPopulationFloor(compared, 350, "listing nodes state a price and have a vendor page to be read against");
+    assertSharesPopulation(
+      compared,
+      listingNodesWithAVendorPage(),
+      0.5,
+      "listing nodes readable against a vendor page state a price at all",
+    );
     assert.deepStrictEqual(disagreeing.slice(0, 25), []);
   });
 
