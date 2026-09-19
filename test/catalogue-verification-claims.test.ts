@@ -8,7 +8,8 @@ import { confirmationDate, CONFIRMED_DATE_LABEL } from "../dist/read-date.js";
 import { toSlug } from "../dist/slug.js";
 import { assertCoversPopulation, assertPopulationFloor, categoriesInTheCatalogue } from "./population-floor.ts";
 import { everyRouteTheSitemapPublishes } from "./sitemap-routes.ts";
-import { bundleExclusions, everyFileThisRepositoryPublishes } from "./published-files.ts";
+import { bundleExclusions, everyFileThisRepositoryPublishes, excludedFromTheBundle } from "./published-files.ts";
+import { readdirSync } from "node:fs";
 
 const REPO = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
 const A_DAY_IN_MS = 86400000;
@@ -311,6 +312,12 @@ describe("what the files this repository publishes claim about confirmation", ()
     const channels = new Set(published.flatMap((file) => file.channels));
     assert.deepEqual([...channels].sort(), ["npm", "the MCP registry", "the extension bundle"],
       "a distribution channel dropped out of the derivation, so the files it carries are no longer read");
+
+    const reached = new Set(published.map((file) => file.path));
+    const missed = readdirSync(REPO)
+      .filter((entry) => /\.(?:md|json)$/.test(entry) && entry !== "package-lock.json")
+      .filter((entry) => !excludedFromTheBundle(entry) && !reached.has(entry));
+    assert.deepEqual(missed, [], `${missed.length} root files the bundle carries were never read as published prose`);
   });
 
   it("leaves out only what no channel carries, and says so by excluding it", () => {
@@ -361,6 +368,24 @@ describe("what the files this repository publishes claim about confirmation", ()
     ];
     for (const sentence of kept) {
       assert.deepEqual(claimsOver(sentence), [], `this rule refuses a sentence that is true and addressed to its reader: ${sentence}`);
+    }
+  });
+
+  it("reads a claim of hand-checking in the forms a published file would carry it in", () => {
+    for (const stated of ["Every listing is human-verified.", "Each price is fact-checked.", "Each price is fact checked.", "The catalogue is verified by hand.", "Every entry is read by hand."]) {
+      assert.ok(BY_HAND.test(stated), `this rule no longer refuses a claim that the catalogue is checked by hand: ${stated}`);
+    }
+    for (const stated of ["We read the vendor's own page and record the terms it states.", "A scheduled re-read wrote this entry."]) {
+      assert.ok(!BY_HAND.test(stated), `this rule refuses a description of how a reading is actually made: ${stated}`);
+    }
+  });
+
+  it("reads one date over the catalogue apart from a date over one record", () => {
+    for (const stated of ["- Data verified as of 2026-03-14", "Catalogue checked on 2026-03-14", "This index was confirmed on 2026-03-14."]) {
+      assert.ok(A_DATE_THE_CATALOGUE_CARRIES.test(stated), `this rule no longer refuses a date stated over the whole catalogue: ${stated}`);
+    }
+    for (const stated of ["Railway's terms were confirmed on 2026-09-14.", "We last read this page on 2026-09-14."]) {
+      assert.ok(!A_DATE_THE_CATALOGUE_CARRIES.test(stated), `this rule refuses a date stated over one record: ${stated}`);
     }
   });
 });

@@ -164,7 +164,12 @@ describe("what tools/list publishes is what the product offers", () => {
     for (const copy of PUBLISHED_TOOL_COPIES) {
       const full = path.join(__dirname, "..", copy.file);
       const current = readFileSync(full, "utf8");
-      assert.strictEqual(current, withSection(current, copy.heading, copy.render(), copy.endOfSection),
+      const rendered = copy.render();
+      assert.ok(rendered.startsWith(copy.heading) && rendered.split("\n").length > MCP_TOOL_NAMES.length,
+        `${copy.file}'s section renders nothing the file could be checked against`);
+      assert.ok(current.includes(rendered),
+        `${copy.file} does not carry the section the registry renders — scripts/sync-published-tool-copy.mjs writes it`);
+      assert.strictEqual(current, withSection(current, copy.heading, rendered, copy.endOfSection),
         `${copy.file}'s "${copy.heading}" is a second copy of the contract and has drifted from the registry — scripts/sync-published-tool-copy.mjs rewrites it`);
       for (const name of MCP_TOOL_NAMES) {
         assert.ok(current.includes(name), `${copy.file} does not name ${name}, which tools/list offers`);
