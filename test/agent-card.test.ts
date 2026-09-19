@@ -5,10 +5,12 @@ import { readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import {
+  A2A_REQUIRED_INTERFACE_FIELDS,
   AGENT_CARD_PATHS,
   OPENAPI_ALIAS_PATHS,
   OPENAPI_CANONICAL_PATH,
   OPENAPI_YAML_PATH,
+  PATHS_ASKED_ONE_DIRECTORY_UP,
   buildServiceDescription,
   urlsDeclaredBy,
 } from "../dist/agent-card.js";
@@ -386,5 +388,85 @@ describe("the OpenAPI document answers the root paths clients ask for", () => {
     const source = readFileSync(path.join(REPO, "src", "serve.ts"), "utf-8");
     const emitters = [...source.matchAll(/res\.end\(JSON\.stringify\(openapiSpec\)\)/g)].length;
     assert.ok(emitters <= 2, `${emitters} places serialise the spec; the aliases should share one`);
+  });
+});
+
+describe("#1811 a directory asking one directory up is sent to the document we already serve", () => {
+  let aliasProc: ChildProcess | null = null;
+  let aliasBase = "";
+  const redirects = new Map<string, { status: number; location: string | null }>();
+  const followed = new Map<string, { status: number; body: string }>();
+  const canonical = new Map<string, { status: number; body: string }>();
+
+  before(async () => {
+    const started = await startServer();
+    aliasProc = started.proc;
+    aliasBase = `http://127.0.0.1:${started.port}`;
+    for (const { asked, answered } of PATHS_ASKED_ONE_DIRECTORY_UP) {
+      const stop = await fetch(`${aliasBase}${asked}`, { redirect: "manual" });
+      redirects.set(asked, { status: stop.status, location: stop.headers.get("location") });
+      await stop.text();
+      const go = await fetch(`${aliasBase}${asked}`, { redirect: "follow" });
+      followed.set(asked, { status: go.status, body: await go.text() });
+      if (!canonical.has(answered)) {
+        const direct = await fetch(`${aliasBase}${answered}`, { redirect: "manual" });
+        canonical.set(answered, { status: direct.status, body: await direct.text() });
+      }
+    }
+  });
+
+  after(() => { aliasProc?.kill("SIGKILL"); });
+
+  it("301s each path to the document that answers it", () => {
+    assert.ok(PATHS_ASKED_ONE_DIRECTORY_UP.length >= 6, "the redirect table names fewer paths than the edge logs recorded");
+    const wrong = PATHS_ASKED_ONE_DIRECTORY_UP
+      .filter(({ asked, answered }) => redirects.get(asked)!.status !== 301 || redirects.get(asked)!.location !== answered)
+      .map(({ asked, answered }) => `${asked} → ${redirects.get(asked)!.status} ${redirects.get(asked)!.location} (wanted 301 ${answered})`);
+    assert.deepStrictEqual(wrong, []);
+  });
+
+  it("answers 200 with the canonical document byte for byte once the redirect is followed", () => {
+    const refused = PATHS_ASKED_ONE_DIRECTORY_UP
+      .filter(({ asked }) => followed.get(asked)!.status !== 200)
+      .map(({ asked }) => `${asked} → ${followed.get(asked)!.status}`);
+    assert.deepStrictEqual(refused, [], "a redirect that lands on nothing is the 404 it replaced");
+
+    const differing = PATHS_ASKED_ONE_DIRECTORY_UP
+      .filter(({ asked, answered }) => followed.get(asked)!.body !== canonical.get(answered)!.body)
+      .map(({ asked, answered }) => `${asked} does not land on ${answered}`);
+    assert.deepStrictEqual(differing, []);
+
+    for (const [answered, served] of canonical) {
+      assert.strictEqual(served.status, 200, `${answered} is the target of a redirect and does not answer`);
+      assert.ok(served.body.length > 0, `${answered} answers with an empty body`);
+    }
+  });
+
+  it("adds no document — every target is one the service already served", () => {
+    const known = new Set<string>([...AGENT_CARD_PATHS, "/.well-known/mcp.json", "/llms.txt"]);
+    const invented = PATHS_ASKED_ONE_DIRECTORY_UP.filter(({ answered }) => !known.has(answered)).map(({ answered }) => answered);
+    assert.deepStrictEqual(invented, [], "a redirect points at a document this service did not already publish");
+  });
+
+  it("declares no transport, protocol version or method on any of them", () => {
+    for (const { asked } of PATHS_ASKED_ONE_DIRECTORY_UP) {
+      const body = followed.get(asked)!.body;
+      if (!body.trimStart().startsWith("{")) continue;
+      const doc = JSON.parse(body) as Record<string, unknown>;
+      for (const field of A2A_REQUIRED_INTERFACE_FIELDS) {
+        assert.ok(!(field in doc), `${asked} lands on a document declaring ${field}`);
+      }
+    }
+  });
+
+  it("puts none of them in robots.txt or in any sitemap", async () => {
+    const robots = await (await fetch(`${aliasBase}/robots.txt`)).text();
+    const sitemapNames = [...(await (await fetch(`${aliasBase}/sitemap.xml`)).text()).matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1]!);
+    const sitemaps = await Promise.all(
+      sitemapNames.filter((u) => /sitemap/.test(u)).map(async (u) => (await fetch(`${aliasBase}${new URL(u).pathname}`)).text()),
+    );
+    const published = [robots, ...sitemaps].join("\n");
+    const listed = PATHS_ASKED_ONE_DIRECTORY_UP.filter(({ asked }) => published.includes(asked)).map(({ asked }) => asked);
+    assert.deepStrictEqual(listed, [], "a fallback path for a client that already knows our host is being published as a page");
   });
 });

@@ -22,7 +22,7 @@ import { buildDailyRollup, readRollups, coverageOf, ROLLUP_DATE_PATTERN } from "
 import { AGENT_OPENS_WINDOW_DAYS, HOMEPAGE_GUIDE_COUNT, agentOpensByPath, agentOpensWindow, browseSectionSentence, guideSelectionSentence, guidesGroupedByHeading, guidesHomepageLinks } from "./homepage-routing.js";
 import { configureVendorSeries, recordVendorRequest, flushVendorSeries, readVendorSeries, vendorSeriesGauge, vendorExportAuthorized, isSeriesDate, seriesDateRange, VENDOR_SERIES_PATH, VENDOR_SERIES_RETENTION_DAYS, VENDOR_SERIES_NOTES } from "./vendor-series.js";
 import { openapiSpec } from "./openapi.js";
-import { AGENT_CARD_PATHS, OPENAPI_ALIAS_PATHS, OPENAPI_CANONICAL_PATH, OPENAPI_YAML_PATH, serviceDescription } from "./agent-card.js";
+import { AGENT_CARD_PATHS, OPENAPI_ALIAS_PATHS, OPENAPI_CANONICAL_PATH, OPENAPI_YAML_PATH, serviceDescription, theDocumentWeAlreadyServe } from "./agent-card.js";
 import { CATEGORY_ALIASES, CATEGORY_RETIREMENTS, CHANGE_LOG_CATEGORY_NAMES, EXAMPLE_MEMBERS_BASIS, buildCategoryDirectory, categoryHolds, familySiblings, publishedScopeFor, resolveCategoryName, resolveChangeCategory, retiredCategoryNames, retirementFor, scopeFor } from "./category-scope.js";
 import { retiredCategoryDescription, retiredCategoryNoticeHtml, retiredCategoryTitle } from "./category-retirement.js";
 import { LINK_GRACE_DAYS, unreachableNoticeForUrl } from "./link-health.js";
@@ -54445,6 +54445,7 @@ const dispatchRequest = async (req: IncomingMessage, res: ServerResponse) => {
     !url.pathname.startsWith("/.well-known/") &&
     !(AGENT_CARD_PATHS as readonly string[]).includes(url.pathname) &&
     !(OPENAPI_ALIAS_PATHS as readonly string[]).includes(url.pathname) &&
+    theDocumentWeAlreadyServe(url.pathname) === null &&
     url.pathname !== OPENAPI_YAML_PATH &&
     url.pathname !== "/feed.xml";
   if (isPagePath) {
@@ -54657,6 +54658,12 @@ const dispatchRequest = async (req: IncomingMessage, res: ServerResponse) => {
       "X-Content-Type-Options": "nosniff",
     });
     res.end(JSON.stringify(manifest, null, 2));
+  } else if (theDocumentWeAlreadyServe(url.pathname) !== null && isGetOrHead) {
+    const answered = theDocumentWeAlreadyServe(url.pathname)!;
+    recordApiHit(answered);
+    logRequest({ ts: new Date().toISOString(), type: "api", endpoint: answered, params: { asked: url.pathname }, user_agent: req.headers["user-agent"] ?? "unknown", result_count: 1 });
+    res.writeHead(301, { Location: answered, "Cache-Control": "public, max-age=3600", "Access-Control-Allow-Origin": "*" });
+    res.end();
   } else if ((AGENT_CARD_PATHS as readonly string[]).includes(url.pathname) && isGetOrHead) {
     recordApiHit(url.pathname);
     res.writeHead(200, {
