@@ -721,7 +721,7 @@
       "changed": "2026-09-18"
     },
     "/analytics-alternatives": {
-      "hash": "46d20652d57d16ba",
+      "hash": "3c850688e6e0d253",
       "changed": "2026-09-19"
     },
     "/analytics-free-tier-comparison-2026": {
@@ -1027,7 +1027,7 @@
       "changed": "2026-09-19"
     },
     "/category/analytics": {
-      "hash": "bd68a89303dae95d",
+      "hash": "bad5316343a1187a",
       "changed": "2026-09-19"
     },
     "/category/api-development": {
@@ -1095,7 +1095,7 @@
       "changed": "2026-09-19"
     },
     "/category/design": {
-      "hash": "2af6de8a16288a42",
+      "hash": "7e69f3670e05fbb3",
       "changed": "2026-09-19"
     },
     "/category/design-creative": {
@@ -1906,11 +1906,11 @@
       "changed": "2026-09-18"
     },
     "/compare/fivetran-activations-vs-heap-io": {
-      "hash": "fd3a85164f47c3ec",
-      "changed": "2026-09-18"
+      "hash": "ea7a4c5e297d25f6",
+      "changed": "2026-09-19"
     },
     "/compare/fivetran-activations-vs-smartlook-com": {
-      "hash": "e88a7fa9cf64c485",
+      "hash": "20bb8cdbd25598c3",
       "changed": "2026-09-19"
     },
     "/compare/flickr-vs-icloud": {
@@ -2664,7 +2664,7 @@
       "daily": true
     },
     "/design-alternatives": {
-      "hash": "97dc65fddaeeb076",
+      "hash": "3d68c1a502be752c",
       "changed": "2026-09-19"
     },
     "/developers": {
@@ -2792,8 +2792,8 @@
       "changed": "2026-09-15"
     },
     "/digest/2026-w15": {
-      "hash": "93866df1ba70953b",
-      "changed": "2026-09-16"
+      "hash": "8bae5f8ae8a28c1a",
+      "changed": "2026-09-19"
     },
     "/digest/2026-w16": {
       "hash": "b0c7f3d3854508aa",
@@ -2962,7 +2962,7 @@
       "changed": "2026-09-19"
     },
     "/free-tier-risk": {
-      "hash": "0e3e8a526feaef93",
+      "hash": "3857baf9e6ef1366",
       "changed": "2026-09-19"
     },
     "/free-tier-tracker": {
@@ -3136,7 +3136,7 @@
       "changed": "2026-09-19"
     },
     "/q2-pricing-preview-2026": {
-      "hash": "a94c9097853e7e5c",
+      "hash": "125d9c4b90220cdf",
       "changed": "2026-09-19"
     },
     "/railway-vs-render": {
@@ -3252,11 +3252,11 @@
       "changed": "2026-09-12"
     },
     "/security-alternatives": {
-      "hash": "71669d0862359932",
+      "hash": "26b8129ea64e077e",
       "changed": "2026-09-19"
     },
     "/security-free-tier-comparison-2026": {
-      "hash": "e73df2681026bc8b",
+      "hash": "04fba65c38c5bb0b",
       "changed": "2026-09-19"
     },
     "/serverless-free-tier-comparison-2026": {
@@ -3271,11 +3271,11 @@
       "daily": true
     },
     "/stability": {
-      "hash": "637bb38728f39b2c",
+      "hash": "eafb1f7d0d3b1e8f",
       "changed": "2026-09-19"
     },
     "/stack-check": {
-      "hash": "82440a3f16f9329b",
+      "hash": "5f37f478a61316ad",
       "changed": "2026-09-19"
     },
     "/stacks": {
@@ -3363,7 +3363,7 @@
       "changed": "2026-09-19"
     },
     "/trends/analytics": {
-      "hash": "35049994d2a4b933",
+      "hash": "7ec94680b96773b7",
       "changed": "2026-09-19"
     },
     "/trends/api-development": {
@@ -3430,8 +3430,8 @@
       "changed": "2026-09-19"
     },
     "/trends/design": {
-      "hash": "4c52b9997d02728f",
-      "changed": "2026-09-18"
+      "hash": "88629137bcd0939b",
+      "changed": "2026-09-19"
     },
     "/trends/design-creative": {
       "hash": "ca6c5c4443470b88",
@@ -5371,7 +5371,7 @@
       "daily": true
     },
     "/vendor/fivetran-activations": {
-      "hash": "1ca7bcb6df4cad9f",
+      "hash": "83f7d6208f57a424",
       "changed": "2026-09-19"
     },
     "/vendor/fizzy": {
@@ -5983,7 +5983,7 @@
       "changed": "2026-09-19"
     },
     "/vendor/heroui": {
-      "hash": "7e3915e16acb0b21",
+      "hash": "5b9f9ef02ad3a7ae",
       "changed": "2026-09-19"
     },
     "/vendor/hetzner": {
@@ -8947,7 +8947,7 @@
       "changed": "2026-09-19"
     },
     "/vendor/umso": {
-      "hash": "ea30c6bf309dc38b",
+      "hash": "b82806648eb1eab1",
       "changed": "2026-09-19"
     },
     "/vendor/undraw": {
