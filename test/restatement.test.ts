@@ -2,6 +2,7 @@ import { describe, it } from "node:test";
 import assert from "node:assert";
 
 const {
+  A_LATER_READ_CONFIRMED_THE_TERMS_WE_STORE,
   A_RECORD_NO_NEWER_ALREADY_RESTATED_THIS,
   READING_ANSWERS_FOR_SOMETHING_ELSE,
   READING_DESCRIBES_THE_PAGE_NOT_THE_TERMS,
@@ -26,6 +27,7 @@ const { describesThePageRatherThanTheTerms } = await import("../dist/superseding
 const { supersededTermsNotice, supersedingChange } = await import("../dist/superseded-description.js");
 const { changesByVendor } = await import("../dist/superseded-census.js");
 const { loadDealChanges, loadOffers } = await import("../dist/data.js");
+const { loadVerificationState } = await import("../dist/verification-state.js");
 const { utcDate } = await import("../dist/ranking.js");
 const {
   applyRestatements,
@@ -368,15 +370,76 @@ describe("a restatement is reversible, visible and does not overwrite a hand-wri
   });
 
   it("does not call terms taken from a reading that disagreed with us a verification of ours", async () => {
-    const { CONFIRMED_DATE_LABEL, RESTATED_DATE_LABEL, confirmationDate, publishedDateLabel, publishedDateValue } =
+    const { CONFIRMED_DATE_LABEL, UNCONFIRMED_DATE_LABEL, confirmationDate, publishedDateLabel, publishedDateValue } =
       await import("../dist/read-date.js");
     const stored = { vendor: "Netlify", url: "https://netlify.com/pricing", verifiedDate: "2026-08-26" };
     const restated = { ...stored, restated_from: { reading_date: "2026-09-07" } };
-    assert.equal(publishedDateLabel(restated), RESTATED_DATE_LABEL);
-    assert.notEqual(RESTATED_DATE_LABEL, CONFIRMED_DATE_LABEL);
-    assert.equal(publishedDateValue(restated), "2026-09-07");
+    assert.equal(publishedDateLabel(restated), UNCONFIRMED_DATE_LABEL);
+    assert.notEqual(UNCONFIRMED_DATE_LABEL, CONFIRMED_DATE_LABEL);
     assert.equal(confirmationDate(restated), null);
-    assert.notEqual(publishedDateLabel(stored), RESTATED_DATE_LABEL);
+  });
+
+  it("adds the reading's date to what the record already publishes rather than standing in for it", async () => {
+    const { RESTATED_DATE_LABEL, UNCONFIRMED_DATE_LABEL, publishedDateLine, restatedReadingLine, restatedReadingDate } =
+      await import("../dist/read-date.js");
+    const stored = { vendor: "Netlify", url: "https://netlify.com/pricing", verifiedDate: "2026-08-26" };
+    const restated = { ...stored, restated_from: { reading_date: "2026-09-07" } };
+    assert.equal(publishedDateLine(restated), `**${UNCONFIRMED_DATE_LABEL}:** 2026-08-26`);
+    assert.equal(publishedDateLine(restated), publishedDateLine(stored));
+    assert.equal(restatedReadingLine(restated), `**${RESTATED_DATE_LABEL}:** 2026-09-07`);
+    assert.equal(restatedReadingDate(restated), "2026-09-07");
+    assert.equal(restatedReadingLine(stored), null);
+    assert.equal(restatedReadingDate(stored), null);
+  });
+
+  it("keeps our terms where a read since the reading found them still accurate", () => {
+    const readingDate = IPAPI.change.date;
+    const confirmedSince = [...loadVerificationState().values()]
+      .filter((r) => r.last_success !== null && r.last_success > readingDate)
+      .sort((a, b) => a.last_success!.localeCompare(b.last_success!))[0];
+    assert.ok(
+      confirmedSince,
+      `no record in the store was confirmed after ${readingDate}, so this control proves nothing`,
+    );
+    const ours = { ...IPAPI.offer, vendor: confirmedSince.vendor, url: confirmedSince.url };
+    assert.equal(
+      ruleOnRestating(ours, IPAPI.change, TODAY)?.refusal,
+      A_LATER_READ_CONFIRMED_THE_TERMS_WE_STORE,
+    );
+    assert.equal(ruleOnRestating(IPAPI.offer, IPAPI.change, TODAY)?.refusal, null);
+  });
+
+  it("does not tell a reader a read disagreed with the terms that read is the source of", async () => {
+    const { WHAT_THE_LAST_READ_FOUND, noConfirmationNote } = await import("../dist/read-date.js");
+    const disagreed = WHAT_THE_LAST_READ_FOUND.changed;
+    const ours = noConfirmationNote("2026-09-09", "2026-08-26", "changed");
+    assert.ok(ours.includes(disagreed), "a record whose terms are our own keeps the note it had");
+
+    const sameRead = noConfirmationNote("2026-09-07", "2026-08-26", "changed", "2026-09-07");
+    assert.ok(!sameRead.includes(disagreed));
+    assert.match(sameRead, /on 2026-09-07, is where the terms above come from/);
+
+    const readAgainSince = noConfirmationNote("2026-09-09", "2026-08-26", "changed", "2026-08-28");
+    assert.ok(!readAgainSince.includes(disagreed));
+    assert.match(readAgainSince, /come from our read of 2026-08-28/);
+    assert.match(readAgainSince, /on 2026-09-09, without confirming them/);
+
+    const noReadSince = noConfirmationNote("2026-08-26", "2026-08-26", "changed", "2026-08-28");
+    assert.ok(!noReadSince.includes(disagreed));
+    assert.ok(!noReadSince.includes("we have read the page since"), "no read is later than the one we restated from");
+  });
+
+  it("restates where the newest read reached the page and did not confirm what we store", () => {
+    const readingDate = IPAPI.change.date;
+    const readWithoutConfirming = [...loadVerificationState().values()]
+      .filter((r) => r.last_attempt_at !== null && r.last_attempt_at > readingDate)
+      .filter((r) => r.last_success === null || r.last_success <= readingDate)[0];
+    assert.ok(
+      readWithoutConfirming,
+      `no record in the store was read after ${readingDate} without confirming, so this control proves nothing`,
+    );
+    const ours = { ...IPAPI.offer, vendor: readWithoutConfirming.vendor, url: readWithoutConfirming.url };
+    assert.equal(ruleOnRestating(ours, IPAPI.change, TODAY)?.refusal, null);
   });
 
   it("does not write over an entry again from a record no newer than the one it came from", () => {

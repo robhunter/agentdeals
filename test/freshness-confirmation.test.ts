@@ -13,6 +13,7 @@ const {
   publishedDateLabel,
   publishedDateLine,
   publishedDateValue,
+  restatedReadingLine,
 } = await import("../dist/read-date.js");
 const { loadVerificationState } = await import("../dist/verification-state.js");
 
@@ -212,6 +213,21 @@ describe("a date the store cannot source is not labelled as a confirmation", () 
       assert.ok(
         !source.includes(`**${CONFIRMED_DATE_LABEL}:**`),
         `${file} must not spell the confirmed label out beside a date the store may not hold`,
+      );
+    }
+  });
+
+  it("names where terms taken from a reading came from, on every surface that publishes the record's own date", () => {
+    const repo = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
+    const reading = { vendor: "Netlify", url: "https://netlify.com/pricing", verifiedDate: "2026-08-26", restated_from: { reading_date: "2026-09-07" } };
+    assert.strictEqual(publishedDateValue(reading), reading.verifiedDate, "a restatement may not stand in for the record's own date");
+    assert.ok(restatedReadingLine(reading), "a restated record must publish the day its terms were read");
+    for (const file of ["src/server.ts", "src/server-remote.ts", "src/serve.ts"]) {
+      const source = readFileSync(path.join(repo, file), "utf8");
+      assert.match(
+        source,
+        /restatedReading(Line|Date)\(/,
+        `${file} publishes the record's own date and must say when a reading replaced its terms`,
       );
     }
   });
