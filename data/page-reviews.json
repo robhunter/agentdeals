@@ -1830,7 +1830,8 @@
         "sentry",
         "stripe",
         "supabase",
-        "vercel"
+        "vercel",
+        "x-twitter"
       ],
       "badge_subjects_unresolved": [],
       "stat_card_subjects_unresolved": [],
