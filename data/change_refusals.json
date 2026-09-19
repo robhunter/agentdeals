@@ -330,6 +330,19 @@
       "refused_date": "2026-08-29"
     },
     {
+      "vendor": "Artillery",
+      "change_type": "limits_reduced",
+      "reason": "same_transition_graded_differently",
+      "detail": "same vendor, source_url and previous_state as Artillery|limits_reduced|2026-09-02|https://www.artillery.io/pricing",
+      "summary": "The free tier now includes 30 reports/month instead of 100.",
+      "previous_state": "Open source load testing CLI (MPL 2.0) with no limits. Artillery Cloud free tier includes 100 test report runs per month.",
+      "current_state": "The Free tier is $0/month and includes 30 reports/month.",
+      "source_url": "https://www.artillery.io/pricing",
+      "category": "Testing",
+      "refused_date": "2026-09-19",
+      "collided_with": "Artillery|limits_reduced|2026-09-02|https://www.artillery.io/pricing"
+    },
+    {
       "vendor": "asana.com",
       "change_type": "free_tier_removed",
       "reason": "removal_read_from_root",
@@ -539,6 +552,18 @@
       "refused_date": "2026-09-18"
     },
     {
+      "vendor": "bleemeo.com",
+      "change_type": "free_tier_removed",
+      "reason": "removal_read_from_root",
+      "detail": "a free tier was recorded as removed from https://bleemeo.com, a domain root that states no price, ending or replacement where the free tier was — a homepage's silence is not evidence that one ended",
+      "summary": "The free tier is no longer explicitly mentioned. The page promotes a 15-day free trial of the full product, and then per-host pricing.",
+      "previous_state": "Free for 3 servers, 5 uptime monitors, unlimited users, unlimited dashboards, unlimited alerting rules.",
+      "current_state": "The page offers a 15-day free trial, then per-host pricing.",
+      "source_url": "https://bleemeo.com",
+      "category": "Monitoring",
+      "refused_date": "2026-09-19"
+    },
+    {
       "vendor": "Braid",
       "change_type": "pricing_restructured",
       "reason": "dangling_reference",
@@ -554,13 +579,13 @@
       "vendor": "Brave Search API",
       "change_type": "free_tier_removed",
       "reason": "confirmed_unchanged",
-      "detail": "The stored description already stated the 2,000 queries/mo free tier was eliminated Feb 2026 and that $5 in credits were provided. The current page simply rephrases this, offering $5 credits monthly and pricing per 1000 requests.",
-      "summary": "The free tier of 2,000 queries/mo has been eliminated. The pricing is now $5 per 1,000 requests with $5 in free monthly credits.",
+      "detail": "The stored description already stated the 2,000 queries/mo free tier was eliminated Feb 2026 and that $5 in credits were included.",
+      "summary": "The free tier of 2,000 queries/mo has been eliminated. The page now states a $5 credit per month is included with both the Search and Answers API plans.",
       "previous_state": "$5 prepaid metered credits ($0.003-$0.005 per query depending on endpoint). Web search, news, videos, images, LLM context endpoints. 50 req/sec rate limit. Attribution required. Credit card required, overages billed with no spending cap. Free tier (2,000 queries/mo) eliminated Feb 2026",
-      "current_state": "$5 per 1,000 requests. Includes $5 in free credits every month.",
+      "current_state": "Includes $5 in free credits every month.",
       "source_url": "https://brave.com/search/api/",
       "category": "Search",
-      "refused_date": "2026-09-03"
+      "refused_date": "2026-09-19"
     },
     {
       "vendor": "Brevo",
@@ -831,6 +856,18 @@
       "refused_date": "2026-08-28"
     },
     {
+      "vendor": "CircleCI",
+      "change_type": "limits_reduced",
+      "reason": "measures_no_change",
+      "detail": "limits_reduced claimed, and every quantity the record compares holds the same value once notation and period are normalised — 30 credit/mo against 30,000 credit/mo, 6,000 build against 6,000 build, 5 user against 5 active",
+      "summary": "The free tier still exists, but the description is incomplete. The page details that the free tier includes 30,000 credits/month, up to 6,000 build minutes on a small Docker resource class, 5 active users, and 30x concurrency. However, it also details additional limits and costs for exceeding those limits, such as additional users costing $15/month and credits expiring monthly. The page also details additional resource classes and features available in paid tiers.",
+      "previous_state": "30K credits/month (up to 6,000 build minutes on small Docker), 5 users, 30x concurrency, no credit card required",
+      "current_state": "The Free plan includes 30,000 credits/month, up to 6,000 build minutes using a small Docker resource class, 5 active users, and 30x concurrency. Additional users cost $15/month. Credits expire monthly.",
+      "source_url": "https://circleci.com/pricing/",
+      "category": "CI/CD",
+      "refused_date": "2026-09-19"
+    },
+    {
       "vendor": "Circum Icons",
       "change_type": "free_tier_removed",
       "reason": "same_transition_graded_differently",
@@ -1039,6 +1076,18 @@
       "refused_date": "2026-09-10"
     },
     {
+      "vendor": "codacy.com",
+      "change_type": "free_tier_removed",
+      "reason": "no_price_signal",
+      "detail": "the page read carries no price signal — no amount, named tier or metered rate in 14952 characters, so it states no terms to have changed",
+      "summary": "The page no longer explicitly mentions a free tier with 4 users and 7 repos. It prominently features a 'Start free' button which leads to a 14-day free trial, and focuses heavily on paid features and AI-assisted tools.",
+      "previous_state": "Automated code reviews for PHP, Python, Ruby, Java, JavaScript, Scala, CSS, and CoffeeScript — free for open source. 4 users, 7 repos on free plan. Static analysis, security patterns, duplication detection, code complexity metrics",
+      "current_state": "The page offers a 14-day free trial with no credit card required, but does not detail a permanent free tier with specific user and repository limits.",
+      "source_url": "https://www.codacy.com/",
+      "category": "Code Quality",
+      "refused_date": "2026-09-19"
+    },
+    {
       "vendor": "Codefresh",
       "change_type": "limits_reduced",
       "reason": "unquantified_limit",
@@ -1061,6 +1110,18 @@
       "source_url": "https://codehooks.io/",
       "category": "Databases",
       "refused_date": "2026-09-11"
+    },
+    {
+      "vendor": "Codemagic",
+      "change_type": "limits_reduced",
+      "reason": "unquantified_limit",
+      "detail": "limits_reduced claimed, but the current state names no quantity for anything the stored state measured (500 maco, 1 parallel, 60 build, 3 gb)",
+      "summary": "The free tier now has a 30-day build history instead of 60 days.",
+      "previous_state": "Mobile CI/CD platform — free tier (individual accounts): 500 macOS M2 build minutes/month, unlimited apps, 1 parallel build, 60-day build history, 3 GB cache/build. Supports Flutter, iOS, Android, React Native",
+      "current_state": "Build history & artifact storage 30 days",
+      "source_url": "https://codemagic.io/pricing/",
+      "category": "CI/CD",
+      "refused_date": "2026-09-19"
     },
     {
       "vendor": "coderabbit.ai",
@@ -1223,12 +1284,12 @@
       "change_type": "limits_reduced",
       "reason": "measures_no_change",
       "detail": "limits_reduced claimed, and every quantity the record compares holds the same value once notation and period are normalised — 5 monitor against 5 monitor",
-      "summary": "The Hacker plan still exists but the features and limits have changed. SMS alerts are no longer included, and a branded status page is no longer included.",
+      "summary": "The Hacker plan now lacks SMS alerts and premium integrations. The Hacker plan also does not include branded or custom status pages.",
       "previous_state": "Cron job and uptime monitoring — free Hacker plan: 5 monitors, 5-minute check frequency, email, Slack, and webhook alerts, 1 status page (50 subscribers), 12-month data retention, single user",
-      "current_state": "Hacker $0 free forever. Limited monitoring for homelabs and small projects. 5 monitors. Email and Slack alerts. Basic status page. No SMS alerts. No premium integrations.",
+      "current_state": "The Hacker plan is $0 forever and includes 5 monitors, email and chat alerts, and a basic status page. It does not include SMS alerts, premium integrations, a branded page, or a custom private page.",
       "source_url": "https://cronitor.io/pricing",
       "category": "Monitoring",
-      "refused_date": "2026-09-03"
+      "refused_date": "2026-09-19"
     },
     {
       "vendor": "Crowdfire",
@@ -1317,6 +1378,18 @@
       "refused_date": "2026-09-16"
     },
     {
+      "vendor": "Dataimporter.io",
+      "change_type": "free_tier_removed",
+      "reason": "no_price_signal",
+      "detail": "the page read carries no price signal — no amount, named tier or metered rate in 4191 characters, so it states no terms to have changed",
+      "summary": "The page does not explicitly state a free plan with a 20,000 record limit. It mentions a 'Try it free today!' call to action, but does not detail the limits of the free trial. The page highlights processing 5 billion records monthly, suggesting a paid service.",
+      "previous_state": "Tool for connecting, cleaning, and importing data into Salesforce. Free Plan includes up to 20,000 records per month.",
+      "current_state": "The page promotes a tool for Salesforce data migration, import, and backup with options for data loading, migration, and backup. It mentions a free trial but does not specify limits.",
+      "source_url": "https://www.dataimporter.io",
+      "category": "Dev Utilities",
+      "refused_date": "2026-09-19"
+    },
+    {
       "vendor": "DatoCMS",
       "change_type": "pricing_restructured",
       "reason": "dangling_reference",
@@ -1364,6 +1437,18 @@
       "category": "Dev Utilities",
       "refused_date": "2026-09-10",
       "collided_with": "DB-IP|limits_reduced|2026-08-28|https://db-ip.com/api/free"
+    },
+    {
+      "vendor": "DBOS",
+      "change_type": "pricing_restructured",
+      "reason": "confirmed_unchanged",
+      "detail": "Report restates information already in the stored description and adds new information (DBOS Teams) not previously mentioned.",
+      "summary": "The pricing for DBOS Pro and DBOS Teams has been updated. DBOS Pro is $99/month for 2 user seats, 3 apps, and 1 million checkpoints, with extra checkpoints at $50/million. DBOS Teams is $499/month for 10 user seats, 10 apps, and 10 million checkpoints, with extra checkpoints at $40/million. The open-source DBOS Transact library remains free for TypeScript, Python, Go, and Java.",
+      "previous_state": "Open-source durable workflow orchestration library (DBOS Transact) — free forever for TypeScript, Python, Go, Java, Kotlin. Self-host with PostgreSQL backend; community support via Discord. Managed DBOS Cloud is paid-only (Pro from $99/mo: 2 seats, 3 apps, 1M checkpoints/mo).",
+      "current_state": "DBOS Pro is $99 /month and includes 2 user seats, management of up to 3 DBOS apps, and recording/management of 1 million checkpoints per month. Extra checkpoints are $50 per million.",
+      "source_url": "https://www.dbos.dev/pricing",
+      "category": "Workflow Automation",
+      "refused_date": "2026-09-19"
     },
     {
       "vendor": "debugmail.io",
@@ -1415,6 +1500,18 @@
       "refused_date": "2026-08-29"
     },
     {
+      "vendor": "deployment.io",
+      "change_type": "free_tier_removed",
+      "reason": "no_price_signal",
+      "detail": "the page read carries no price signal — no amount, named tier or metered rate in 7452 characters, so it states no terms to have changed",
+      "summary": "The free tier described in the stored information is no longer prominently advertised. The page now focuses on a 'Managed' service and a 'Platform' offering, with the free tier mentioned as 'Start for free →' but without details on limits.",
+      "previous_state": "Deployment.io helps developers automate deployments on AWS. On our free tier, a developer (single user) can deploy unlimited static sites, web services, and environments. We provide 10 job executions free per month with previews and auto-deploys included in the free tier.",
+      "current_state": "The platform is available to 'Start for free →', but the page does not detail the limits or features of the free tier. It focuses on paid 'Managed' services and the 'Platform' offering with features like shared context, planning, and execution.",
+      "source_url": "https://deployment.io",
+      "category": "Infrastructure",
+      "refused_date": "2026-09-19"
+    },
+    {
       "vendor": "DhiWise",
       "change_type": "free_tier_removed",
       "reason": "page_does_not_name_vendor",
@@ -1425,6 +1522,18 @@
       "source_url": "https://www.dhiwise.com/",
       "category": "IDE & Code Editors",
       "refused_date": "2026-09-17"
+    },
+    {
+      "vendor": "Diawi",
+      "change_type": "limits_reduced",
+      "reason": "no_price_signal",
+      "detail": "the page read carries no price signal — no amount, named tier or metered rate in 2452 characters, so it states no terms to have changed",
+      "summary": "The page mentions more features are available with a paid account (custom URLs, APIs, stats, no expiration), implying the free tier has limitations beyond the 1-day expiration and ten installations mentioned in the stored deal info. The page does not explicitly state the limits of the free tier.",
+      "previous_state": "Deploy iOS & Android apps directly to devices. Free plan: app uploads, password-protected links, 1-day expiration, ten installations.",
+      "current_state": "The free service allows app uploads and installations, password protection, and sharing via links. More features are available with a paid account.",
+      "source_url": "https://www.diawi.com",
+      "category": "Mobile Development",
+      "refused_date": "2026-09-19"
     },
     {
       "vendor": "DigitalOcean",
@@ -1669,6 +1778,31 @@
       "refused_date": "2026-09-09"
     },
     {
+      "vendor": "FeedBear",
+      "change_type": "pricing_restructured",
+      "reason": "confirmed_unchanged",
+      "detail": "The stored description already noted a $49/month Startup plan and a 14-day trial. The new description simply adds an annual pricing option and details the plan's features, which weren't previously tracked.",
+      "summary": "The 'Startup' plan exists but has different pricing. The current pricing page lists $49/month (or $40/year) with a 14-day trial.",
+      "previous_state": "There is no startup program and no free tier: feedbear.com/early-stage redirects to the pricing page, where Startup is the second of four paid plans at $49/month, described as being for early stage businesses that need more powerful community features. Checked 2026-09-02, entry is a 14-day trial. The former record read that price as a startup discount.",
+      "current_state": "The Startup plan costs $49/month billed monthly or $40/month billed annually. It includes everything in the Lite plan plus 3 team members, unlimited boards, a custom domain, and integrations with Intercom, Slack, Trello, Jira and Zapier.",
+      "source_url": "https://www.feedbear.com/pricing",
+      "category": "Startup Perks",
+      "refused_date": "2026-09-19"
+    },
+    {
+      "vendor": "Figma",
+      "change_type": "limits_increased",
+      "reason": "same_transition_graded_differently",
+      "detail": "same vendor, source_url and previous_state as Figma|limits_reduced|2026-09-03|https://www.figma.com/pricing/",
+      "summary": "The Starter plan now includes unlimited drafts, UI kits and templates, and 150 AI credits/day (up to 500/mo). Previously limits of 3 Figma design files + 3 FigJam files, and 30-day version history.",
+      "previous_state": "Collaborative design tool — free Starter plan with unlimited personal drafts, unlimited viewers/commenters, unlimited cloud storage, 30-day version history, 150 AI credits/day (500/mo). Team projects limited to 3 Figma design files + 3 FigJam files. No team libraries or branching on free.",
+      "current_state": "Includes: Unlimited drafts UI kits and templates 150 AI credits/day, up to 500 AI credits/mo",
+      "source_url": "https://www.figma.com/pricing/",
+      "category": "Design",
+      "refused_date": "2026-09-19",
+      "collided_with": "Figma|limits_reduced|2026-09-03|https://www.figma.com/pricing/"
+    },
+    {
       "vendor": "file.io",
       "change_type": "limits_increased",
       "reason": "unquantified_limit",
@@ -1729,6 +1863,19 @@
       "source_url": "https://fireworks.ai/pricing",
       "category": "AI / ML",
       "refused_date": "2026-09-07"
+    },
+    {
+      "vendor": "fivenines.io",
+      "change_type": "new_tier",
+      "reason": "same_transition_graded_differently",
+      "detail": "same vendor, source_url and previous_state as fivenines.io|free_tier_removed|2026-08-28|https://fivenines.io/",
+      "summary": "The page highlights a 'Start free trial' option (14-day trial, no credit card required) and a €19/month plan. It also mentions monitoring 5 servers is possible with the €19 plan.",
+      "previous_state": "Linux server monitoring with real‑time dashboards and alerting — free forever for up to 5 monitored servers at 60-seconds interval. No credit card required.",
+      "current_state": "The page offers a 14-day free trial and a starting plan at €19/month. The €19 plan allows monitoring of servers.",
+      "source_url": "https://fivenines.io/",
+      "category": "Monitoring",
+      "refused_date": "2026-09-19",
+      "collided_with": "fivenines.io|free_tier_removed|2026-08-28|https://fivenines.io/"
     },
     {
       "vendor": "flightcontrol.dev",
@@ -2261,12 +2408,12 @@
       "change_type": "limits_reduced",
       "reason": "unquantified_limit",
       "detail": "limits_reduced claimed, but the current state names no quantity for anything the stored state measured (2,000 harnes)",
-      "summary": "The free plan now has significantly reduced limits compared to the stored information. The stored info stated 2,000 build credits/month, while the current page details limits for concurrent pipeline executions (up to 60), storage (250GB), and organizations (up to 1).",
+      "summary": "The free plan now includes Harness Open Source and Litmus Chaos, but the build credit limit is no longer mentioned. The free plan is now explicitly for 'individual developers and small teams'.",
       "previous_state": "CI/CD platform — free plan: 2,000 Harness Cloud build credits/month (Linux, macOS, Windows runners), YAML pipelines, secrets management, test intelligence. Requires business email for cloud runners; self-hosted runner alternative available",
-      "current_state": "Free Plan is available for individual developers and small teams. It includes up to 60 concurrent pipeline executions, 250GB storage, up to 1 organization, up to 500 maximum users, up to 5 custom dashboards, unlimited templates, up to 5 custom roles, and policy as code.",
+      "current_state": "The Free Plan includes Harness Open Source, Litmus Chaos, and Community support.",
       "source_url": "https://www.harness.io/pricing",
-      "category": "Dev Utilities",
-      "refused_date": "2026-08-29"
+      "category": "CI/CD",
+      "refused_date": "2026-09-19"
     },
     {
       "vendor": "Hasura Cloud",
@@ -2867,6 +3014,19 @@
       "refused_date": "2026-09-11"
     },
     {
+      "vendor": "leiga.com",
+      "change_type": "pricing_restructured",
+      "reason": "same_transition_graded_differently",
+      "detail": "same vendor, source_url and previous_state as leiga.com|pricing_restructured|2026-08-28|https://www.leiga.com/",
+      "summary": "The page states Leiga is 'Free forever.",
+      "previous_state": "Leiga is a SaaS product that uses AI to automatically manage your projects, helping your team stay focused and unleash immense potential, ensuring your projects progress as planned. Free for up to 10 users, 20 custom fields, 2GB of storage space, Video Recording with AI limited to 5 mins/video, Automation Runs at 20/user/month.",
+      "current_state": "Leiga is free forever with no credit card required.",
+      "source_url": "https://www.leiga.com/",
+      "category": "Project Management",
+      "refused_date": "2026-09-19",
+      "collided_with": "leiga.com|pricing_restructured|2026-08-28|https://www.leiga.com/"
+    },
+    {
       "vendor": "LemonSqueezy",
       "change_type": "pricing_model_change",
       "reason": "confirmed_unchanged",
@@ -3027,6 +3187,18 @@
       "refused_date": "2026-08-29"
     },
     {
+      "vendor": "Loops",
+      "change_type": "limits_reduced",
+      "reason": "measures_no_change",
+      "detail": "limits_reduced claimed, and every quantity the record compares holds the same value once notation and period are normalised — 1,000 contact against 1,000 newest, 4,000 email per 30 days against 4,000 email",
+      "summary": "The free plan now includes unlimited contacts, but limits sends to 4,000 total emails to your 1,000 newest contacts.",
+      "previous_state": "1,000 contacts, 4,000 emails per 30 days (marketing + transactional). All features included. Transactional-only recipients don't count toward contact limit",
+      "current_state": "The free plan includes unlimited contacts and up to 4,000 total emails to your 1,000 newest contacts in any rolling 30-day window, counting marketing and transactional sends together.",
+      "source_url": "https://loops.so/pricing",
+      "category": "Email",
+      "refused_date": "2026-09-19"
+    },
+    {
       "vendor": "lost-pixel.com",
       "change_type": "product_deprecated",
       "reason": "same_transition_graded_differently",
@@ -3050,6 +3222,18 @@
       "source_url": "https://mailchimp.com/pricing/",
       "category": "Email",
       "refused_date": "2026-09-03"
+    },
+    {
+      "vendor": "Mailchimp",
+      "change_type": "limits_reduced",
+      "reason": "measures_the_opposite",
+      "detail": "limits_reduced claimed, and every quantity that moved between the two states moved the other way — 250 contact against 500 contact",
+      "summary": "The free tier now has a contact limit and send limit. The stored information stated 250 contacts and 500 sends/month, while the current page states a limit of 500 contacts and the ability to send 100 emails without payment information.",
+      "previous_state": "Email marketing — 250 contacts, 500 sends/month (250/day cap), 1 audience, 1 seat, marketing CRM, forms and landing pages, email support first 30 days",
+      "current_state": "The Free plan has a limit of 500 contacts and allows sending up to 100 emails without payment information. Sending will be paused if the contact or email send limit is exceeded.",
+      "source_url": "https://mailchimp.com/pricing/",
+      "category": "Email",
+      "refused_date": "2026-09-19"
     },
     {
       "vendor": "Maileroo",
@@ -3111,6 +3295,18 @@
       "source_url": "https://mailtrap.io/",
       "category": "Email",
       "refused_date": "2026-09-07"
+    },
+    {
+      "vendor": "Make",
+      "change_type": "limits_increased",
+      "reason": "confirmed_unchanged",
+      "detail": "The stored description already implied a visual workflow builder (formerly Integromat) and the 1000 credits/month remain the same. The added details are new information, but don't represent a change to the core terms.",
+      "summary": "The Free plan now includes 1,000 credits/month, no-code visual workflow builder, 3000+ apps, Routers & filters, Customer support, a 15-minute minimum interval between runs. The page now offers more detailed information about the Free plan and other paid plans.",
+      "previous_state": "Visual workflow automation (formerly Integromat) — 1,000 credits/month (renamed from operations; each module action counts as one credit), 512 MB data transfer/mo, 2 active scenarios, 15-minute minimum interval between scheduled runs, 5 MB max file size, 5-minute max scenario runtime, 7-day execution log retention",
+      "current_state": "The Free plan includes 1,000 credits/month, no-code visual workflow builder, 3000+ apps, Routers & filters, Customer support, 15-minute minimum interval between runs.",
+      "source_url": "https://www.make.com/en/pricing",
+      "category": "Workflow Automation",
+      "refused_date": "2026-09-19"
     },
     {
       "vendor": "ManageEngine Log360 Cloud",
@@ -3183,6 +3379,18 @@
       "source_url": "https://zoho.com/meeting",
       "category": "Cloud IaaS",
       "refused_date": "2026-08-29"
+    },
+    {
+      "vendor": "Meilisearch",
+      "change_type": "pricing_restructured",
+      "reason": "no_price_signal",
+      "detail": "the page read carries no price signal — no amount, named tier or metered rate in 4605 characters, so it states no terms to have changed",
+      "summary": "The page details Meilisearch as a platform with various features like full-text search, vector search, and AI retrieval, and mentions 'Meilisearch Cloud' with options for 'Enterprise' and 'Startups'. While the core remains open-source, the emphasis is on a broader platform with paid options. The original 'Free OSS' tier is not explicitly mentioned as a standalone offering on this page.",
+      "previous_state": "Free OSS (MIT). Instant search engine with typo tolerance, faceted search, filtering, and sorting. Sub-50ms response times. REST API",
+      "current_state": "The page highlights Meilisearch Cloud with options for Enterprise and Startups, and mentions a pricing structure for these. It does not explicitly detail a standalone 'Free OSS' tier, but does mention open source availability and a link to GitHub.",
+      "source_url": "https://www.meilisearch.com/",
+      "category": "Search",
+      "refused_date": "2026-09-19"
     },
     {
       "vendor": "Mendix",
@@ -3332,6 +3540,18 @@
       "source_url": "https://www.myfitnesspal.com/premium",
       "category": "Fitness & Health",
       "refused_date": "2026-09-03"
+    },
+    {
+      "vendor": "n8n",
+      "change_type": "free_tier_removed",
+      "reason": "confirmed_unchanged",
+      "detail": "The report largely restates information already in the stored description. The 'Community Edition' name is a detail not previously claimed, and doesn't change the functionality.",
+      "summary": "The free self-hosted tier is now referred to as the 'Community Edition' and is available on GitHub. The cloud free plan has been removed. All cloud plans now require payment, with free trials available.",
+      "previous_state": "Workflow automation — self-hosted free (Sustainable Use License). 400+ integrations, visual workflow builder. Cloud free plan removed; all Cloud plans require payment (14-day free trial available). Unlimited active workflows on all paid plans",
+      "current_state": "A standard, self-hosted version of n8n is available on GitHub.",
+      "source_url": "https://n8n.io/pricing/",
+      "category": "Background Jobs",
+      "refused_date": "2026-09-19"
     },
     {
       "vendor": "Namecheap Supersonic",
@@ -3881,6 +4101,18 @@
       "refused_date": "2026-09-15"
     },
     {
+      "vendor": "Preset Cloud",
+      "change_type": "free_tier_removed",
+      "reason": "no_price_signal",
+      "detail": "the page read carries no price signal — no amount, named tier or metered rate in 4303 characters, so it states no terms to have changed",
+      "summary": "The page promotes a 'Try for Free' option but does not explicitly state a forever-free tier for up to 5 users as described in the stored deal info. It mentions 'Preset Cloud' as a managed service but doesn't detail the free tier limits.",
+      "previous_state": "A hosted Apache Superset service. Forever free for teams of up to 5 users, featuring unlimited dashboards and charts, a no-code chart builder, and a collaborative SQL editor.",
+      "current_state": "Preset Cloud is a fully-managed, cloud-hosted service for Apache Superset. Users can 'Try for Free'.",
+      "source_url": "https://preset.io/",
+      "category": "Notebooks & Data Science",
+      "refused_date": "2026-09-19"
+    },
+    {
       "vendor": "Projects",
       "change_type": "pricing_restructured",
       "reason": "confirmed_unchanged",
@@ -4032,12 +4264,12 @@
       "change_type": "free_tier_removed",
       "reason": "removal_read_from_root",
       "detail": "a free tier was recorded as removed from https://reducto.ai, a domain root that states no price, ending or replacement where the free tier was — a homepage's silence is not evidence that one ended",
-      "summary": "The free tier with 15k credits is no longer explicitly mentioned. The page states you can get API access by starting on the Standard tier, which is a pay-as-you-go plan.",
+      "summary": "The free tier with 15k credits is no longer explicitly mentioned. The pricing page focuses on a pay-as-you-go model with r-1 at 1¢ per page. Access to an API key requires starting on the Standard tier (pay-as-you-go).",
       "previous_state": "Turn any unstructured documents (PDF, XLSX, JPG, PPTX, etc.) into structured JSON data. Parse, extract data, and edit PDF forms. Free tier with 15k free credits and pay-as-you-go.",
-      "current_state": "API access is available through the Standard tier, a pay-as-you-go plan.",
+      "current_state": "API access is available on the Standard tier, a pay-as-you-go plan. r-1 model costs 1¢ per page.",
       "source_url": "https://reducto.ai",
       "category": "AI / ML",
-      "refused_date": "2026-08-29"
+      "refused_date": "2026-09-19"
     },
     {
       "vendor": "Remote for Startups",
@@ -4372,6 +4604,31 @@
       "refused_date": "2026-09-01"
     },
     {
+      "vendor": "Sentry",
+      "change_type": "limits_reduced",
+      "reason": "measures_no_change",
+      "detail": "limits_reduced claimed, and every quantity the record compares holds the same value once notation and period are normalised — 5 error/mo against 5 error/mo, 5 span/mo against 5 span, 50 session against 50 session",
+      "summary": "The free Developer plan now has limits of 5K errors/month, 5GB logs, 5M spans, and 50 session replays. It is limited to one user.",
+      "previous_state": "Developer tier: 1 user, 5K errors/month, 5M spans/month, 50 session replays, 5GB application logs, 1GB attachments",
+      "current_state": "Limited to one user. Error Monitoring and Tracing Alerts and notifications via email 10 custom dashboards MCP access. 5k errors/month, 5GB logs, 5M spans, 50 session replays.",
+      "source_url": "https://sentry.io/pricing/",
+      "category": "Monitoring",
+      "refused_date": "2026-09-19"
+    },
+    {
+      "vendor": "serveo",
+      "change_type": "limits_reduced",
+      "reason": "same_transition_graded_differently",
+      "detail": "same vendor, source_url and previous_state as serveo|limits_reduced|2026-09-02|https://serveo.net/",
+      "summary": "The free tier now has limits. It offers 3 active tunnels and requires accepting an interstitial warning.",
+      "previous_state": "Expose local servers to the internet. No installation, no signup. Free subdomain, no limits.",
+      "current_state": "The Free Plan for hobbyists and testing gets 3 active tunnels and custom subdomains for $0/month, but includes an interstitial warning.",
+      "source_url": "https://serveo.net/",
+      "category": "Tunneling & Networking",
+      "refused_date": "2026-09-19",
+      "collided_with": "serveo|limits_reduced|2026-09-02|https://serveo.net/"
+    },
+    {
       "vendor": "serveravatar.com",
       "change_type": "limits_increased",
       "reason": "same_transition_graded_differently",
@@ -4457,6 +4714,19 @@
       "source_url": "https://simplescraper.io",
       "category": "Web Scraping",
       "refused_date": "2026-09-14"
+    },
+    {
+      "vendor": "smartlook.com",
+      "change_type": "product_deprecated",
+      "reason": "same_transition_graded_differently",
+      "detail": "same vendor, source_url and previous_state as smartlook.com|product_deprecated|2026-08-28|https://www.smartlook.com/",
+      "summary": "Smartlook is being deprecated and will be fully decommissioned on September 30, 2027. While a free plan will be available until then, it will have limitations. New subscriptions are not being sold as of May 31, 2026, and renewals are ending August 31, 2026. The features are being transitioned to Splunk Digital Experience Analytics.",
+      "previous_state": "Free plan: 3,000 sessions/month, three heatmaps, one funnel. Note: reaching End of Sale May 2026.",
+      "current_state": "After August 31, 2027, the Smartlook platform will be available in free mode, providing access to some historical data before the account is fully deactivated on September 30, 2027. You may continue using Smartlook until your paid plan ends (after which you may use the free plan until September 30, 2027).",
+      "source_url": "https://www.smartlook.com/",
+      "category": "Analytics",
+      "refused_date": "2026-09-19",
+      "collided_with": "smartlook.com|product_deprecated|2026-08-28|https://www.smartlook.com/"
     },
     {
       "vendor": "smartmockups.com",
@@ -4618,6 +4888,19 @@
       "refused_date": "2026-08-29"
     },
     {
+      "vendor": "Supabase",
+      "change_type": "restriction",
+      "reason": "same_transition_graded_differently",
+      "detail": "same vendor, source_url and previous_state as Supabase|pricing_restructured|2026-09-03|https://supabase.com/pricing",
+      "summary": "The free tier now pauses after 1 week of inactivity.",
+      "previous_state": "Open source Firebase alternative — 500 MB Postgres database, 50K monthly active users, 1 GB file storage, 5 GB bandwidth (uncached egress across all services: Storage, Auth, Functions, Database, Realtime) + 5 GB CDN cached egress, 500K edge function invocations, 200 concurrent realtime connections, 2 free projects. Includes Auth, Storage, Realtime, and Edge Functions",
+      "current_state": "Free projects are paused after 1 week of inactivity.",
+      "source_url": "https://supabase.com/pricing",
+      "category": "Databases",
+      "refused_date": "2026-09-19",
+      "collided_with": "Supabase|pricing_restructured|2026-09-03|https://supabase.com/pricing"
+    },
+    {
       "vendor": "Supermaven",
       "change_type": "limits_reduced",
       "reason": "same_transition_graded_differently",
@@ -4751,6 +5034,18 @@
       "source_url": "https://www.tawk.to/pricing/",
       "category": "Communication",
       "refused_date": "2026-08-29"
+    },
+    {
+      "vendor": "Tencent RTC",
+      "change_type": "pricing_restructured",
+      "reason": "confirmed_unchanged",
+      "detail": "The current page still offers 10,000 free minutes, just framed as a 'Free Trial'. The addition of 'Free Plan' and 'Starter Plan' are new details, but don't invalidate the original offer.",
+      "summary": "The page mentions a 'Free Plan' and a 'Starter Plan' with a pricing calculator, and offers a 'Free Trial' with 10,000 free minutes.",
+      "previous_state": "Tencent Real-Time Communication (TRTC) offers solutions for group audio/video calls.10,000 free minutes/month for the first year.",
+      "current_state": "Offers a free trial with 10,000 free minutes. Also mentions a 'Free Plan' and a 'Starter Plan' with a pricing calculator.",
+      "source_url": "https://trtc.io/",
+      "category": "Team Collaboration",
+      "refused_date": "2026-09-19"
     },
     {
       "vendor": "Terragrunt Scale",
@@ -4913,6 +5208,18 @@
       "collided_with": "TraceLog|pricing_restructured|2026-08-28|https://tracelog.io/"
     },
     {
+      "vendor": "Turbopuffer",
+      "change_type": "pricing_restructured",
+      "reason": "states_no_terms",
+      "detail": "every clause of the summary states bookkeeping rather than a term the page carries, so it reports the reading rather than a change",
+      "summary": "The pricing page indicates a $16/month minimum usage for all plans, contradicting the stored information stating 'no minimum'.",
+      "previous_state": "Serverless vector database — pay-per-use with no minimum. $0.30/M vectors stored/month, $0.04/M vectors queried. No free tier but extremely low entry cost for small workloads",
+      "current_state": "Includes all database features with a $16/month minimum usage.",
+      "source_url": "https://turbopuffer.com/pricing",
+      "category": "Databases",
+      "refused_date": "2026-09-19"
+    },
+    {
       "vendor": "Tyk",
       "change_type": "pricing_restructured",
       "reason": "confirmed_unchanged",
@@ -5015,12 +5322,12 @@
       "change_type": "limits_increased",
       "reason": "measures_no_change",
       "detail": "limits_increased claimed, and every quantity the record compares holds the same value once notation and period are normalised — 50 uptime against 50 monitor",
-      "summary": "The free tier now includes dependency monitoring, HTTP, port & ping monitors, keyword monitoring, API monitoring, UDP monitoring, location-specific monitoring, slow response alerts, DNS monitoring, SSL & Domain exp. monitoring, and basic status pages. It also states 'No credit card required!'",
+      "summary": "The free tier now includes dependency monitoring, HTTP, port & ping monitor, keyword monitor, API monitoring, UDP monitoring, location-specific monitoring, slow response alerts, DNS monitoring, SSL & Domain exp. monitor, and basic status pages. It also states that SMS/Voice call credits are not included and can be added.",
       "previous_state": "50 uptime monitors, 5-minute check intervals, 3-month log retention, email alerts. Personal/non-commercial use only on free tier",
-      "current_state": "Free $ 0 /month. 50 monitors, 5 min. monitoring interval, Dependency monitoring, HTTP, port & ping monitor, Keyword monitor, API monitoring, UDP monitoring, Location-specific monitoring, Slow response alerts, DNS monitoring, SSL & Domain exp. monitor, Only 5 integrations, Basic status pages.",
+      "current_state": "The Free tier offers 50 monitors, 5 min. monitoring interval, Dependency monitoring, HTTP, port & ping monitor, Keyword monitor, API monitoring, UDP monitoring, Location-specific monitoring, Slow response alerts, DNS monitoring, SSL & Domain exp. monitor, and basic status pages.",
       "source_url": "https://uptimerobot.com/pricing/",
       "category": "Monitoring",
-      "refused_date": "2026-09-03"
+      "refused_date": "2026-09-19"
     },
     {
       "vendor": "uptimetoolbox.com",
@@ -5082,6 +5389,19 @@
       "source_url": "https://vaadin.com/pricing",
       "category": "Testing",
       "refused_date": "2026-09-07"
+    },
+    {
+      "vendor": "Vast.ai",
+      "change_type": "pricing_model_change",
+      "reason": "same_transition_graded_differently",
+      "detail": "same vendor, source_url and previous_state as Vast.ai|pricing_model_change|2026-09-02|https://vast.ai/startup",
+      "summary": "The startup program now offers a credit *match* up to the amount spent, rather than a fixed $2,500 in free credits. The program matches dollar-for-dollar on verified compute spend.",
+      "previous_state": "GPU marketplace — startup program offers $2,500 in free GPU credits. Access to A100s, H200s, and consumer cards. Up to 81% savings vs. major cloud GPU providers. 24/7 priority support during credit period. No long-term contracts",
+      "current_state": "The Vast.ai Startup Program matches your compute spend with credits — so your budget goes twice as far. Apply for the Startup Credit Matching Program Apply below and our team will reach out to finalize your offer. Spend on Vast, and we match your spend in credits — dollar for dollar.",
+      "source_url": "https://vast.ai/startup",
+      "category": "Startup Perks",
+      "refused_date": "2026-09-19",
+      "collided_with": "Vast.ai|pricing_model_change|2026-09-02|https://vast.ai/startup"
     },
     {
       "vendor": "vatcheckapi.com",
@@ -5231,6 +5551,19 @@
       "category": "Email",
       "refused_date": "2026-09-11",
       "collided_with": "Wraps|new_free_tier|2026-08-28|https://wraps.dev"
+    },
+    {
+      "vendor": "Wufoo",
+      "change_type": "pricing_restructured",
+      "reason": "same_transition_graded_differently",
+      "detail": "same vendor, source_url and previous_state as Wufoo|pricing_restructured|2026-09-01|https://www.wufoo.com/",
+      "summary": "The free plan now allows up to 5 forms, not 100 submissions.",
+      "previous_state": "Quick forms to use on websites. The free plan has a limit of 100 submissions each month.",
+      "current_state": "Sign up for a FREE account and build up to 5 forms for free.",
+      "source_url": "https://www.wufoo.com/",
+      "category": "Forms",
+      "refused_date": "2026-09-19",
+      "collided_with": "Wufoo|pricing_restructured|2026-09-01|https://www.wufoo.com/"
     },
     {
       "vendor": "Xata",
@@ -5388,6 +5721,18 @@
       "source_url": "https://zoho.com/bookings",
       "category": "Workflow Automation",
       "refused_date": "2026-08-29"
+    },
+    {
+      "vendor": "Zoho Bookings",
+      "change_type": "limits_reduced",
+      "reason": "unquantified_limit",
+      "detail": "limits_reduced claimed, but the current state names no quantity for anything the stored state measured (1 staff, 1 service)",
+      "summary": "The free plan is no longer explicitly described with the same limitations. While a free plan is mentioned as available after a 15-day trial, the page details numerous features and integrations available in paid plans, and does not reiterate the '1 staff member, 1 service type' limitation for the free tier.",
+      "previous_state": "Appointment scheduling for 1 staff member, 1 service type, with calendar sync free",
+      "current_state": "The page offers a 15-day premium trial, after which users can continue on the free plan. The free plan's specific limitations are not stated. The page details features like appointment limits, routing forms, CRM integrations, and WhatsApp integration, which are likely not all included in the free plan.",
+      "source_url": "https://zoho.com/bookings",
+      "category": "Workflow Automation",
+      "refused_date": "2026-09-19"
     },
     {
       "vendor": "Zoho Checkout",

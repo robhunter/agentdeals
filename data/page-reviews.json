@@ -282,8 +282,8 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": false,
-      "table_figures": 34,
-      "table_figures_from_records": 5,
+      "table_figures": 35,
+      "table_figures_from_records": 6,
       "tables": [
         {
           "label": "Main Comparison Table",
@@ -302,8 +302,8 @@
         },
         {
           "label": "Pricing Change Timeline",
-          "figures": 6,
-          "from_records": 5
+          "figures": 7,
+          "from_records": 6
         }
       ],
       "reads_changes": true,
@@ -850,8 +850,8 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": false,
-      "table_figures": 65,
-      "table_figures_from_records": 15,
+      "table_figures": 69,
+      "table_figures_from_records": 19,
       "tables": [
         {
           "label": "Free Trial Credits",
@@ -885,8 +885,8 @@
         },
         {
           "label": "Pricing Change Timeline",
-          "figures": 15,
-          "from_records": 15
+          "figures": 19,
+          "from_records": 19
         }
       ],
       "reads_changes": true,
@@ -1011,7 +1011,7 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": false,
-      "table_figures": 48,
+      "table_figures": 47,
       "table_figures_from_records": 12,
       "tables": [
         {
@@ -1046,7 +1046,7 @@
         },
         {
           "label": "Pricing Change Timeline",
-          "figures": 13,
+          "figures": 12,
           "from_records": 12
         }
       ],
@@ -1211,8 +1211,8 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": false,
-      "table_figures": 56,
-      "table_figures_from_records": 8,
+      "table_figures": 60,
+      "table_figures_from_records": 12,
       "tables": [
         {
           "label": "Free Services (Permanent)",
@@ -1231,8 +1231,8 @@
         },
         {
           "label": "Recent DigitalOcean Changes",
-          "figures": 8,
-          "from_records": 8
+          "figures": 12,
+          "from_records": 12
         }
       ],
       "reads_changes": true,
@@ -3302,8 +3302,8 @@
       "review_note": null,
       "reads_index": false,
       "tables_read_index": false,
-      "table_figures": 103,
-      "table_figures_from_records": 66,
+      "table_figures": 107,
+      "table_figures_from_records": 70,
       "tables": [
         {
           "label": "Comparison Table",
@@ -3312,8 +3312,8 @@
         },
         {
           "label": "Recent Changes",
-          "figures": 68,
-          "from_records": 66
+          "figures": 72,
+          "from_records": 70
         }
       ],
       "reads_changes": true,
