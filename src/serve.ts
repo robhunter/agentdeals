@@ -6,7 +6,7 @@ import { dirname, join } from "node:path";
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
 import { createServer, getServerCard } from "./server.js";
 import { oldestVerifiedDateForSlug, vendorRiskAssessment, publishedRisk, levelWithheldStatement, vendorNotIndexedSentence, riskCauseOf, freeTierEndingRecord, NEGATIVE_CHANGE_TYPES, POSITIVE_CHANGE_TYPES, SEVERE_CHANGE_TYPES, loadOffers, getCategories, getNewOffers, getNewestDeals, searchOffers, enrichOffers, gateForOffer, loadDealChanges, getDealChanges, changeContext, DEFAULT_CHANGE_WINDOW_DAYS, getOfferDetails, compareServices, checkVendorRisk, auditStack, getExpiringDeals, getWeeklyDigest, getFormattedWeeklyDigest, getFreshnessMetrics, publishedStabilityIndex, stabilityWithheldDisclosure, UNRATED_STABILITY, type StabilityIndex, type PublishedStabilityClass, getVendorReferral, sanitizeQuery, getChangeLogFreshness, isEventDated, partitionByDateProvenance } from "./data.js";
-import { loadChangeRefusals, changesRatingTheListedTier, stabilityDeciders } from "./data.js";
+import { loadChangeRefusals, changesRatingTheListedTier, stabilityDeciders, vendorNameAsPublished } from "./data.js";
 import { A_DEMOTION_IN_FORCE_RULE, NO_DEMOTION_IN_FORCE_RULE, A_COMPLETE_LOG_NOTICE, A_VERDICT_ROLLS_NOTICE, A_WITHHELD_RATING_DOES_NOT_LAPSE, lapsingDemotionStated, VOLATILE_WHILE_A_DEMOTION_COUNTS_RULE, WATCH_RECEIVES_FROM_VOLATILE_RULE , confirmationCoverage, confirmationCoverageSentence, HOW_THE_CATALOGUE_IS_MAINTAINED, NOTHING_CONTRADICTS_OUR_TERMS_FOR, THE_DATES_WE_HOLD } from "./data.js";
 import { confirmingRead, confirmingReadSentence, refusalsByVendor, refusedReadSentence, supersededRefusalSentence, type ChangeRefusal } from "./change-refusal.js";
 import { getStackRecommendation } from "./stacks.js";
@@ -10561,7 +10561,7 @@ function buildDatabaseAlternativesPage(): string {
     : `<a href="/vendor/upstash">Upstash Redis</a> (256 MB, serverless) or <a href="/vendor/momento">Momento</a> (5 GB transfer/month). For managed Redis, <a href="/vendor/aiven">Aiven</a> offers free Valkey.`;
 
   const relational = enrichedAll.filter(o =>
-    ["Supabase", "Neon", "CockroachDB", "Xata", "Aiven", "Nile", "Nhost", "Hasura Cloud"].includes(o.vendor)
+    ["Supabase", "Neon", "CockroachDB", "Xata", "Aiven", "Nile", "Nhost", "Hasura"].includes(o.vendor)
   );
   const document = enrichedAll.filter(o =>
     ["MongoDB Atlas", "Firebase", "Appwrite Cloud", "Convex", "PocketBase", "SurrealDB Cloud", "Couchbase Capella"].includes(o.vendor)
@@ -11550,7 +11550,7 @@ function buildSecurityAlternativesPage(): string {
   const riskColors: Record<string, string> = { stable: "#3fb950", caution: "#d29922", risky: "#f85149" };
 
   const appSecurity = enrichedAll.filter(o =>
-    ["Snyk", "SonarCloud", "Semgrep", "CodeQL", "FOSSA", "aikido.dev", "Bearer", "Corgea", "Datree", "hostedscan.com", "meterian.io", "SOOS", "Probely", "StackHawk", "OWASP ZAP", "Nuclei", "qualys.com", "Checkov"].includes(o.vendor)
+    ["Snyk", "SonarQube Cloud", "Semgrep", "CodeQL", "FOSSA", "aikido.dev", "Bearer", "Corgea", "Datree", "hostedscan.com", "meterian.io", "SOOS", "Probely", "StackHawk", "OWASP ZAP", "Nuclei", "qualys.com", "Checkov"].includes(o.vendor)
   );
   const secretScanning = enrichedAll.filter(o =>
     ["GitGuardian", "HashiCorp Vault", "Doppler", "Infisical", "Gitleaks", "TruffleHog", "Dotenv", "Google Secret Manager", "crypteron.com", "Smart Grow Vault"].includes(o.vendor)
@@ -12541,7 +12541,7 @@ function buildAnalyticsAlternativesPage(): string {
     ["Aptabase", "AppFit", "Avo", "DocBeacon", "Moesif", "TraceLog"].includes(o.vendor)
   );
   const dataInfra = enrichedAll.filter(o =>
-    ["Segment", "Census", "Tinybird", "Dwh.dev", "Hightouch", "Row Zero", "Expensify"].includes(o.vendor)
+    ["Segment", "Fivetran Activations", "Tinybird", "Dwh.dev", "Hightouch", "Row Zero", "Expensify"].includes(o.vendor)
   );
   const other = enrichedAll.filter(o =>
     !productAnalytics.includes(o) && !webAnalytics.includes(o) && !sessionReplay.includes(o) && !eventTracking.includes(o) && !dataInfra.includes(o)
@@ -12855,7 +12855,7 @@ function buildAiMlAlternativesPage(): string {
     ["Hugging Face", "Kaggle", "Replicate", "Baseten", "Vast.ai", "paperspace", "Weights & Biases", "Comet ML", "Neptune.ai"].includes(o.vendor)
   );
   const aiObservability = enrichedAll.filter(o =>
-    ["Langfuse", "LangWatch", "Langtrace", "Arize AI", "Arize AX", "Braintrust", "Maxim AI", "Keywords AI", "Portkey", "Composio", "Zenable"].includes(o.vendor)
+    ["Langfuse", "LangWatch", "Langtrace", "Arize AX", "Braintrust", "Maxim AI", "Keywords AI", "Portkey", "Composio", "Zenable"].includes(o.vendor)
   );
   const specializedAi = enrichedAll.filter(o =>
     ["Deepgram", "AssemblyAI", "Roboflow", "Scale AI", "Clarifai", "Labelbox", "Pinecone", "Qdrant", "OCR.Space", "Parseur", "Reducto", "Tavily AI", "wolfram.com", "DeepAR", "Audio Enhancer", "Clair", "Othor AI", "ReportGPT"].includes(o.vendor)
@@ -13172,7 +13172,7 @@ function buildEmailAlternativesPage(): string {
     ["Verifalia", "Emailvalidation.io", "verimail.io", "Antideo", "mail-tester.com", "dkimvalidator.com", "Mailcheck.ai", "TempMailDetector.com"].includes(o.vendor)
   );
   const forwardingAliases = enrichedAll.filter(o =>
-    ["SimpleLogin", "AnonAddy", "forwardemail.net", "ImprovMX", "Bump", "Burnermail", "Mutant Mail", "DNSExit", "trashmail.com"].includes(o.vendor)
+    ["SimpleLogin", "addy.io", "forwardemail.net", "ImprovMX", "Bump", "Burnermail", "Mutant Mail", "DNSExit", "trashmail.com"].includes(o.vendor)
   );
   const temporaryTesting = enrichedAll.filter(o =>
     ["mailsac.com", "10minutemail", "inboxkitten.com", "mailinator.com", "temp-mail.io", "EtherealMail", "debugmail.io", "mailcatcher.me", "Imitate Email", "Inboxes App"].includes(o.vendor)
@@ -13500,7 +13500,7 @@ function buildDesignAlternativesPage(): string {
     ["Webflow", "framer.com", "Proto.io", "Plasmic", "Webstudio", "Quant Ux", "TeleportHQ", "Unicorn Platform", "landen.co", "Grapedrop", "marvelapp.com", "Octopus.do", "Updrafts.app", "walkme.com"].includes(o.vendor)
   );
   const uiComponents = enrichedAll.filter(o =>
-    ["ShadcnUI", "DaisyUI", "NextUI", "Float UI", "HyperUI", "TW Elements", "Tailkits", "MDBootstrap", "Flyon UI", "Tailark", "Tailwindadmin", "Tailcolors", "Shadcn Space", "Shadcn Studio", "tweakcn", "CodedThemes", "CodeMyUI", "Ant Design Landing Page", "Backlight", "Wdrfree SVG"].includes(o.vendor)
+    ["ShadcnUI", "DaisyUI", "HeroUI", "Float UI", "HyperUI", "TW Elements", "Tailkits", "MDBootstrap", "Flyon UI", "Tailark", "Tailwindadmin", "Tailcolors", "Shadcn Space", "Shadcn Studio", "tweakcn", "CodedThemes", "CodeMyUI", "Ant Design Landing Page", "Backlight", "Wdrfree SVG"].includes(o.vendor)
   );
   const iconsIllustrations = enrichedAll.filter(o =>
     ["Lucide", "Iconoir", "tabler-icons.io", "iconify.design", "Circum Icons", "unDraw", "storyset.com", "LottieFiles", "Rive", "Glyphs", "Icon Horse", "Logo.dev", "Calendar Icons Generator", "movingpencils.com", "NSPolygon", "Mossaik"].includes(o.vendor)
@@ -14173,7 +14173,7 @@ function buildIdeCodeEditorsAlternativesPage(): string {
     ["Visual Studio Code", "VSCodium", "JetBrains", "Zed", "Sublime Text", "Android Studio", "Visual Studio Community", "Apache Netbeans", "Code::Blocks", "Brackets", "BBEdit", "Wave Terminal", "AndroidIDE"].includes(o.vendor)
   );
   const cloudIdes = enrichedAll.filter(o =>
-    ["GitHub Codespaces", "Replit", "codesandbox.io", "stackblitz.com", "codepen.io", "Eclipse Che", "GetVM", "code.cs50.io", "MarsCode", "PHPSandbox", "FlutLab", "JDoodle", "OneCompiler", "Paiza", "SoloLearn", "Components.studio", "WebComponents.dev"].includes(o.vendor)
+    ["GitHub Codespaces", "Replit", "codesandbox.io", "stackblitz.com", "codepen.io", "Eclipse Che", "GetVM", "code.cs50.io", "MarsCode", "PHPSandbox", "FlutLab", "JDoodle", "OneCompiler", "Paiza", "SoloLearn", "WebComponents.dev"].includes(o.vendor)
   );
   const aiAssistants = enrichedAll.filter(o =>
     ["GitHub Copilot", "Cursor", "Windsurf", "Supermaven", "Amazon Q Developer", "Augment Code", "Cline", "Aider", "Claude Code", "Gemini CLI", "OpenAI Codex", "ForgeCode"].includes(o.vendor)
@@ -15129,7 +15129,7 @@ function buildTeamCollaborationAlternativesPage(): string {
   const riskColors: Record<string, string> = { stable: "#3fb950", caution: "#d29922", risky: "#f85149" };
 
   const chatMessaging = enrichedAll.filter(o =>
-    ["Slack API", "Discord API", "Rocket.Chat", "Pumble", "Chanty.com", "element.io", "Revolt.chat", "Zulip", "flock.com", "gitter.im", "Keybase", "Braid", "twist.com", "Tawk.to", "Crisp", "Helploom"].includes(o.vendor)
+    ["Slack", "Discord API", "Rocket.Chat", "Pumble", "Chanty.com", "element.io", "Revolt.chat", "Zulip", "flock.com", "gitter.im", "Keybase", "Braid", "twist.com", "Tawk.to", "Crisp", "Helploom"].includes(o.vendor)
   );
   const videoMeetings = enrichedAll.filter(o =>
     ["meet.jit.si", "zoom.us", "Webex", "Daily.co", "Whereby", "Tencent RTC", "talky.io", "LiveKit", "Mux", "wistia.com", "flat.social", "Duckly", "Screen Sharing via Browser"].includes(o.vendor)
@@ -46272,7 +46272,7 @@ function buildStateOfFreeTiersPage(): string {
   const positiveChanges = trackedHere.filter(c => positiveTypes.has(c.change_type)).sort((a, b) => b.date.localeCompare(a.date));
 
   const durability = removalDurability(dealChanges);
-  const lastingExamples = lastingRemovalExamplesFor("/state-of-free-tiers", dealChanges);
+  const lastingExamples = lastingRemovalExamplesFor("/state-of-free-tiers", dealChanges, vendorNameAsPublished);
 
   const categoryShares = categories.map(c => {
     const census = freeTierCensus(offers.filter(o => o.category === c.name), reportServedOn);

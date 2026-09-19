@@ -93,21 +93,35 @@ export interface LastingRemovalExample {
   year: string;
 }
 
-export function removalsRecordedFor<T extends RemovalCandidate>(vendor: string, log: readonly T[]): T[] {
+export type VendorNameResolver = (vendor: string) => string;
+
+const spelledAsTheLogStoresIt: VendorNameResolver = (vendor) => vendor;
+
+export function removalsRecordedFor<T extends RemovalCandidate>(
+  vendor: string,
+  log: readonly T[],
+  resolve: VendorNameResolver = spelledAsTheLogStoresIt,
+): T[] {
+  const subject = resolve(vendor);
   return log
-    .filter((c) => isAFreeTierRemoval(c) && c.vendor === vendor)
+    .filter((c) => isAFreeTierRemoval(c) && resolve(c.vendor) === subject)
     .sort((a, b) => a.date.localeCompare(b.date));
 }
 
-export function removalNamedOn<T extends RemovalCandidate>(vendor: string, log: readonly T[]): T | null {
-  return removalsRecordedFor(vendor, log)[0] ?? null;
+export function removalNamedOn<T extends RemovalCandidate>(
+  vendor: string,
+  log: readonly T[],
+  resolve: VendorNameResolver = spelledAsTheLogStoresIt,
+): T | null {
+  return removalsRecordedFor(vendor, log, resolve)[0] ?? null;
 }
 
 export function removalStillLasting<T extends RemovalCandidate>(
   vendor: string,
   log: readonly T[],
+  resolve: VendorNameResolver = spelledAsTheLogStoresIt,
 ): LastingRemovalExample | null {
-  const removals = removalsRecordedFor(vendor, log);
+  const removals = removalsRecordedFor(vendor, log, resolve);
   if (removals.length === 0) return null;
   const everyOneHeld = removals.every(
     (removal) => !theEventNeverHappened(removal) && !theFreeTierCameBackAfter(removal, log),
@@ -120,10 +134,19 @@ export function removalStillLasting<T extends RemovalCandidate>(
 export function lastingRemovalExamplesFor<T extends RemovalCandidate>(
   route: string,
   log: readonly T[],
+  resolve: VendorNameResolver = spelledAsTheLogStoresIt,
 ): LastingRemovalExample[] {
   return REMOVALS_PAGES_NAME_AS_LASTING.filter((named) => named.route === route)
-    .map((named) => removalStillLasting(named.vendor, log))
+    .map((named) => removalStillLasting(named.vendor, log, resolve))
     .filter((example): example is LastingRemovalExample => example !== null);
+}
+
+export function removalsNamedAsLastingWeHoldNoRecordFor<T extends RemovalCandidate>(
+  log: readonly T[],
+  resolve: VendorNameResolver = spelledAsTheLogStoresIt,
+  named: readonly RemovalNamedAsLasting[] = REMOVALS_PAGES_NAME_AS_LASTING,
+): RemovalNamedAsLasting[] {
+  return named.filter((page) => removalsRecordedFor(page.vendor, log, resolve).length === 0);
 }
 
 function namesInASentence(names: readonly string[]): string {

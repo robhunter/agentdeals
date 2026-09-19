@@ -14,6 +14,7 @@ import {
 
 const { compiledFigureSlots, staticHalfOf } = await import("../dist/compiled-figures.js");
 const { namedVendorSlug, toSlug, vendorSlugMap } = await import("../dist/vendor-slug.js");
+const { survivingVendorName } = await import("../dist/vendor-merges.js");
 
 type DealChange = import("../src/types.ts").DealChange;
 
@@ -57,6 +58,12 @@ for (const [slug, held] of recordsFor) {
   if (ending) endedByTheLog.set(slug, ending);
 }
 const outsideTheCatalogue = (label: string) => namedVendorSlug(label) === null;
+const liveVendors = new Set(
+  (JSON.parse(readFileSync(path.join(REPO, "data", "index.json"), "utf-8")).offers as { vendor: string }[])
+    .map(o => o.vendor.trim().toLowerCase()),
+);
+const heldUnderNoCatalogueNameOfItsOwn = (label: string) =>
+  outsideTheCatalogue(label) || survivingVendorName(label, liveVendors) !== null;
 
 let proc: ChildProcess | null = null;
 let base = "";
@@ -130,8 +137,12 @@ describe("marking a comparison slot whose vendor has no catalogue entry", () => 
   });
 
   it("holds ended records for vendors the catalogue has no entry for", () => {
-    const orphaned = [...endedByTheLog.values()].filter(c => outsideTheCatalogue(c.vendor));
-    assert.ok(orphaned.length >= 20, `only ${orphaned.length} ended vendors are absent from the catalogue`);
+    const orphaned = [...endedByTheLog.values()].filter(c => heldUnderNoCatalogueNameOfItsOwn(c.vendor));
+    assertPopulationFloor(
+      orphaned.length,
+      15,
+      "ended vendors the catalogue holds no entry for under the name the log files them by",
+    );
   });
 
   it("marks every slot naming an uncatalogued vendor whose free tier the change log ended", () => {

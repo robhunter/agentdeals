@@ -15,8 +15,10 @@ import {
   removalNamedOn,
   removalReturnRateSentence,
   removalStillLasting,
+  removalsNamedAsLastingWeHoldNoRecordFor,
   theFreeTierCameBackAfter,
 } from "../dist/removal-durability.js";
+import { loadDealChanges, vendorNameAsPublished } from "../dist/data.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(__dirname, "..");
@@ -29,7 +31,9 @@ type LogRecord = {
   resolution?: { state: string; date: string; detail?: string } | null;
 };
 
-const LOG: LogRecord[] = JSON.parse(
+const LOG: LogRecord[] = loadDealChanges();
+
+const STORED: LogRecord[] = JSON.parse(
   readFileSync(path.join(REPO, "data", "deal_changes.json"), "utf8"),
 ).changes;
 
@@ -126,7 +130,7 @@ describe("the sentences the report builds from that partition", () => {
 
   it("asserts no permanence, on today's log and on a log where nothing has come back", () => {
     const durability = removalDurability(LOG);
-    const examples = lastingRemovalExamplesFor("/state-of-free-tiers", LOG);
+    const examples = lastingRemovalExamplesFor("/state-of-free-tiers", LOG, vendorNameAsPublished);
     assert.strictEqual(prosePutsRemovalBeyondReturn(removalReturnRateSentence(durability)), false);
     assert.strictEqual(prosePutsRemovalBeyondReturn(removalDurabilityPattern(durability, examples)), false);
 
@@ -168,23 +172,61 @@ describe("the vendors our pages name as removals that lasted", () => {
     const routes = [...new Set(REMOVALS_PAGES_NAME_AS_LASTING.map((named) => named.route))];
     assertPopulationFloor(routes.length, 1, "pages naming a removal as lasting");
     for (const route of routes) {
-      assert.ok(lastingRemovalExamplesFor(route, LOG).length > 0, `${route} has no example left to name`);
+      assert.ok(
+        lastingRemovalExamplesFor(route, LOG, vendorNameAsPublished).length > 0,
+        `${route} has no example left to name`,
+      );
     }
   });
 
-  it("holds a removal record for every vendor it names", () => {
+  it("holds a removal record for every vendor it names, in the log the site reads", () => {
+    assert.deepStrictEqual(removalsNamedAsLastingWeHoldNoRecordFor(LOG, vendorNameAsPublished), []);
+  });
+
+  it("holds one for every vendor it names under the name the log stores too", () => {
     for (const named of REMOVALS_PAGES_NAME_AS_LASTING) {
-      assert.ok(removalNamedOn(named.vendor, LOG), `${named.route} names ${named.vendor}, which has no removal record`);
+      assert.ok(
+        removalNamedOn(named.vendor, STORED, vendorNameAsPublished),
+        `${named.route} names ${named.vendor}, which has no removal record`,
+      );
     }
+  });
+
+  it("names the page and the vendor when a name it holds reaches no record", () => {
+    const absent = { vendor: "Vendor We Never Recorded", route: "/state-of-free-tiers" };
+    assert.deepStrictEqual(
+      removalsNamedAsLastingWeHoldNoRecordFor(LOG, vendorNameAsPublished, [
+        ...REMOVALS_PAGES_NAME_AS_LASTING,
+        absent,
+      ]),
+      [absent],
+    );
+  });
+
+  it("reaches the record after the catalogue renames a vendor out from under the name a page holds", () => {
+    const stored = removal("Acme Legacy", "2025-01-15");
+    const published = [{ ...stored, vendor: "Acme" }];
+    const resolve = (vendor: string) => (vendor === "Acme Legacy" ? "Acme" : vendor);
+
+    assert.strictEqual(removalStillLasting("Acme Legacy", published), null);
+    assert.strictEqual(removalStillLasting("Acme Legacy", published, resolve)?.vendor, "Acme");
+    assert.strictEqual(removalStillLasting("Acme", [stored], resolve)?.vendor, "Acme Legacy");
+    assert.deepStrictEqual(
+      removalsNamedAsLastingWeHoldNoRecordFor(published, resolve, [
+        { vendor: "Acme Legacy", route: "/state-of-free-tiers" },
+      ]),
+      [],
+    );
   });
 
   it("names no vendor carrying a resolution or a later positive record", () => {
     const durability = removalDurability(LOG);
-    const cameBack = new Set(durability.cameBack.map((r) => r.removal.vendor));
-    const retracted = new Set(durability.retracted.map((r) => r.vendor));
+    const cameBack = new Set(durability.cameBack.map((r) => vendorNameAsPublished(r.removal.vendor)));
+    const retracted = new Set(durability.retracted.map((r) => vendorNameAsPublished(r.vendor)));
     for (const named of REMOVALS_PAGES_NAME_AS_LASTING) {
-      assert.ok(!cameBack.has(named.vendor), `${named.route} names ${named.vendor}, whose free tier came back`);
-      assert.ok(!retracted.has(named.vendor), `${named.route} names ${named.vendor}, whose removal we retracted`);
+      const subject = vendorNameAsPublished(named.vendor);
+      assert.ok(!cameBack.has(subject), `${named.route} names ${named.vendor}, whose free tier came back`);
+      assert.ok(!retracted.has(subject), `${named.route} names ${named.vendor}, whose removal we retracted`);
     }
   });
 
@@ -199,15 +241,19 @@ describe("the vendors our pages name as removals that lasted", () => {
 
   it("drops a named vendor from the report as soon as its removal is reversed", () => {
     const named = REMOVALS_PAGES_NAME_AS_LASTING.find((n) => n.route === "/state-of-free-tiers")!;
+    const subject = vendorNameAsPublished(named.vendor);
     const reversed = LOG.map((c) =>
-      c.vendor === named.vendor && c.change_type === "free_tier_removed"
+      vendorNameAsPublished(c.vendor) === subject && c.change_type === "free_tier_removed"
         ? { ...c, resolution: reversedOn("2026-09-08") }
         : c,
     );
-    const examples = lastingRemovalExamplesFor("/state-of-free-tiers", reversed);
-    assert.ok(!examples.some((e) => e.vendor === named.vendor), `${named.vendor} is still named as lasting`);
+    const examples = lastingRemovalExamplesFor("/state-of-free-tiers", reversed, vendorNameAsPublished);
     assert.ok(
-      removalReturnRateSentence(removalDurability(reversed)).includes(named.vendor),
+      !examples.some((e) => vendorNameAsPublished(e.vendor) === subject),
+      `${named.vendor} is still named as lasting`,
+    );
+    assert.ok(
+      removalReturnRateSentence(removalDurability(reversed)).includes(subject),
       `${named.vendor} is not named among the returns`,
     );
   });
@@ -313,9 +359,10 @@ describe("no page tells a reader a removed free tier cannot return", () => {
       const durability = removalDurability(LOG);
       const report = visibleText(await (await fetch(`${base}/state-of-free-tiers`)).text());
       const held = sentenceStatingRemovalsHeld(report, durability.stillInForce.length, durability.weStandBehind.length);
-      for (const example of lastingRemovalExamplesFor("/state-of-free-tiers", LOG)) {
+      for (const example of lastingRemovalExamplesFor("/state-of-free-tiers", LOG, vendorNameAsPublished)) {
         assert.ok(held.includes(example.vendor), `${example.vendor} lasted and the report does not name it: ${held}`);
       }
+      assert.deepStrictEqual(removalsNamedAsLastingWeHoldNoRecordFor(LOG, vendorNameAsPublished), []);
       for (const returned of durability.cameBack) {
         assert.ok(report.includes(returned.removal.vendor), `${returned.removal.vendor} came back and the report is silent`);
       }
@@ -326,7 +373,10 @@ describe("no page tells a reader a removed free tier cannot return", () => {
 
   it("finds none when a fifth removal is reversed, and moves the published figures with it", async () => {
     const standing = removalDurability(LOG).stillInForce.find(
-      (r) => !REMOVALS_PAGES_NAME_AS_LASTING.some((named) => named.vendor === r.vendor),
+      (r) =>
+        !REMOVALS_PAGES_NAME_AS_LASTING.some(
+          (named) => vendorNameAsPublished(named.vendor) === vendorNameAsPublished(r.vendor),
+        ),
     )!;
     const before = removalDurability(LOG);
     const reversed = LOG.map((c) =>
@@ -362,8 +412,9 @@ describe("no page tells a reader a removed free tier cannot return", () => {
 
   it("stops naming a vendor as a removal that lasted once the log says it came back", async () => {
     const named = REMOVALS_PAGES_NAME_AS_LASTING.find((n) => n.route === "/state-of-free-tiers")!;
+    const subject = vendorNameAsPublished(named.vendor);
     const reversed = LOG.map((c) =>
-      c.vendor === named.vendor && c.change_type === "free_tier_removed"
+      vendorNameAsPublished(c.vendor) === subject && c.change_type === "free_tier_removed"
         ? { ...c, resolution: reversedOn("2026-09-08") }
         : c,
     );
@@ -377,8 +428,8 @@ describe("no page tells a reader a removed free tier cannot return", () => {
       const text = visibleText(await (await fetch(`http://localhost:${port}/state-of-free-tiers`)).text());
       assert.deepStrictEqual(claimsOfPermanence(text), []);
       const held = sentenceStatingRemovalsHeld(text, after.stillInForce.length, after.weStandBehind.length);
-      assert.ok(!held.includes(named.vendor), `${named.vendor} came back and is still named as lasting: ${held}`);
-      for (const example of lastingRemovalExamplesFor("/state-of-free-tiers", reversed)) {
+      assert.ok(!held.includes(subject), `${named.vendor} came back and is still named as lasting: ${held}`);
+      for (const example of lastingRemovalExamplesFor("/state-of-free-tiers", reversed, vendorNameAsPublished)) {
         assert.ok(held.includes(example.vendor), `${example.vendor} lasted and the report does not name it: ${held}`);
       }
     } finally {
