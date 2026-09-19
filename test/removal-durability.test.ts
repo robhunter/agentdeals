@@ -183,6 +183,17 @@ describe("the vendors our pages name as removals that lasted", () => {
     assert.deepStrictEqual(removalsNamedAsLastingWeHoldNoRecordFor(LOG, vendorNameAsPublished), []);
   });
 
+  it("reads the log the site reads rather than the file underneath it", () => {
+    const renamed = STORED.filter((stored, at) => LOG[at]!.vendor !== stored.vendor);
+    assert.ok(renamed.length > 0, "the loader renames no record, so the two stores cannot be told apart here");
+    for (const stored of renamed) {
+      assert.ok(
+        !LOG.some(read => read.vendor === stored.vendor && read.date === stored.date),
+        `${stored.vendor} is read under a name the site does not publish it by`,
+      );
+    }
+  });
+
   it("holds one for every vendor it names under the name the log stores too", () => {
     for (const named of REMOVALS_PAGES_NAME_AS_LASTING) {
       assert.ok(
