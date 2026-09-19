@@ -17,6 +17,24 @@ export const AGENT_CARD_PATHS = [
 
 export const OPENAPI_ALIAS_PATHS = ["/openapi.json", "/swagger.json"] as const;
 
+export interface AskedOneDirectoryUp {
+  asked: string;
+  answered: string;
+}
+
+export const PATHS_ASKED_ONE_DIRECTORY_UP: readonly AskedOneDirectoryUp[] = [
+  { asked: "/agent-card.json", answered: "/.well-known/agent-card.json" },
+  { asked: "/agent.json", answered: "/.well-known/agent.json" },
+  { asked: "/a2a/agent-card.json", answered: "/.well-known/agent-card.json" },
+  { asked: "/api/agent-card.json", answered: "/.well-known/agent-card.json" },
+  { asked: "/mcp.json", answered: "/.well-known/mcp.json" },
+  { asked: "/agents.txt", answered: "/llms.txt" },
+];
+
+export function theDocumentWeAlreadyServe(asked: string): string | null {
+  return PATHS_ASKED_ONE_DIRECTORY_UP.find((alias) => alias.asked === asked)?.answered ?? null;
+}
+
 export const OPENAPI_YAML_PATH = "/openapi.yaml";
 
 export const OPENAPI_CANONICAL_PATH = "/api/openapi.json";
