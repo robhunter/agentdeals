@@ -132,6 +132,59 @@ export function revertRestatement(data, entries, vendor) {
   return { entry, reverted: true, left: entries.filter((held) => held !== entry) };
 }
 
+export function restatementsFrom(entries, day) {
+  return entries.filter((entry) => entry.restated_on === day);
+}
+
+export function aLaterRunRestatedThisAgain(entries, entry) {
+  return entries.some(
+    (held) =>
+      held !== entry &&
+      offerKey(held.vendor, held.url) === offerKey(entry.vendor, entry.url) &&
+      held.restated_on > entry.restated_on,
+  );
+}
+
+export function revertRun(data, entries, day) {
+  const written = restatementsFrom(entries, day);
+  const reverted = [];
+  const supersededBefore = [];
+  const gone = [];
+  for (const entry of written) {
+    if (aLaterRunRestatedThisAgain(entries, entry)) {
+      supersededBefore.push(entry);
+      continue;
+    }
+    const offer = (data.offers ?? []).find(
+      (candidate) => offerKey(candidate.vendor, candidate.url) === offerKey(entry.vendor, entry.url),
+    );
+    if (!offer) {
+      gone.push(entry);
+      continue;
+    }
+    offer.description = entry.previous_description;
+    delete offer.restated_from;
+    reverted.push(entry);
+  }
+  return { written, reverted, supersededBefore, gone, left: entries.filter((held) => !reverted.includes(held)) };
+}
+
+export function revertRunLines(day, outcome) {
+  const lines = [`Reverted ${outcome.reverted.length} of the ${outcome.written.length} entries restated on ${day}.`];
+  for (const entry of outcome.reverted) {
+    lines.push(`  ⇤ ${entry.vendor} restored to the terms we stored before ${day}`);
+  }
+  for (const entry of outcome.supersededBefore) {
+    lines.push(
+      `  ⇥ ${entry.vendor} left alone — a later run restated it again, so revert that run first`,
+    );
+  }
+  for (const entry of outcome.gone) {
+    lines.push(`  ⇥ ${entry.vendor} left alone — it is no longer in the index`);
+  }
+  return lines;
+}
+
 export function refusalLines(measure) {
   const lines = [];
   for (const reason of RESTATEMENT_REFUSALS) {
@@ -187,6 +240,12 @@ async function main() {
   }
   const revertIdx = args.indexOf("--revert");
   const revert = revertIdx !== -1 ? args[revertIdx + 1] : null;
+  const revertRunIdx = args.indexOf("--revert-run");
+  const revertDay = revertRunIdx !== -1 ? args[revertRunIdx + 1] : null;
+  if (revertRunIdx !== -1 && !/^\d{4}-\d{2}-\d{2}$/.test(revertDay ?? "")) {
+    console.error(`Invalid day: ${revertDay}. --revert-run takes the YYYY-MM-DD a run recorded.`);
+    process.exit(2);
+  }
 
   const path = indexPath();
   let data;
@@ -199,6 +258,20 @@ async function main() {
 
   const today = isoDay(new Date());
   const held = readRestatements();
+
+  if (revertDay) {
+    const outcome = revertRun(data, held, revertDay);
+    if (outcome.written.length === 0) {
+      console.error(`No restatement was recorded on ${revertDay}.`);
+      process.exit(2);
+    }
+    if (outcome.reverted.length > 0) {
+      writeFileSync(path, JSON.stringify(data, null, 2) + "\n");
+      writeRestatements(outcome.left);
+    }
+    for (const line of revertRunLines(revertDay, outcome)) console.log(line);
+    process.exit(outcome.reverted.length === outcome.written.length ? 0 : 1);
+  }
 
   if (revert) {
     const { entry, reverted, left } = revertRestatement(data, held, revert);

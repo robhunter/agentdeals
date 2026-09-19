@@ -9,6 +9,10 @@ on:
         description: "Number of oldest entries to re-verify"
         required: false
         default: "75"
+      restate_limit:
+        description: "Most withheld entries this run may restate — blank restates every one a reading can answer for"
+        required: false
+        default: ""
 
 permissions:
   contents: write
@@ -65,14 +69,18 @@ jobs:
       - name: Compile, so the restatement pass reads the predicates the site reads
         run: npm run build
 
-      - name: Count the entries a reading could answer for, and the ones it could not
+      - name: Store the readings the withheld entries already show, and count the ones no reading answers
         id: restate
+        env:
+          RESTATE_LIMIT: ${{ github.event.inputs.restate_limit }}
         run: |
           set -o pipefail
-          node scripts/restate-superseded-terms.js | tee /tmp/restate.log
-          RESTATED=$(grep -oE '^We may restate from that reading: [0-9]+' /tmp/restate.log | grep -oE '[0-9]+$' || echo 0)
+          node scripts/restate-superseded-terms.js --write ${RESTATE_LIMIT:+--limit "$RESTATE_LIMIT"} | tee /tmp/restate.log
+          RESTATED=$(grep -oE '^Restated this run: [0-9]+' /tmp/restate.log | grep -oE '[0-9]+$' || echo 0)
+          ANSWERABLE=$(grep -oE '^We may restate from that reading: [0-9]+' /tmp/restate.log | grep -oE '[0-9]+$' || echo 0)
           STILL=$(grep -oE '^Re-read since the record and still withheld: [0-9]+' /tmp/restate.log | grep -oE '[0-9]+$' || echo 0)
           echo "restated=$RESTATED" >> "$GITHUB_OUTPUT"
+          echo "answerable=$ANSWERABLE" >> "$GITHUB_OUTPUT"
           echo "still_withheld=$STILL" >> "$GITHUB_OUTPUT"
 
       - name: Run the suite, then push to main only if it is green
@@ -83,6 +91,7 @@ jobs:
           GATE_REGENERATE_LLM_INDEX: "1"
           GATE_SYNC_PAGE_REVIEWS: "1"
           RESTATED: ${{ steps.restate.outputs.restated }}
+          ANSWERABLE: ${{ steps.restate.outputs.answerable }}
           STILL_WITHHELD: ${{ steps.restate.outputs.still_withheld }}
           VERIFIED: ${{ steps.reverify.outputs.verified }}
           FLAGGED: ${{ steps.reverify.outputs.flagged }}
@@ -96,7 +105,7 @@ jobs:
         run: |
           bash scripts/gate-data-push.sh \
             data-quarantine/rolling-reverification \
-            "data(auto): rolling re-verification — ${VERIFIED} verified of ${DRAWN} drawn from the queue, ${SECOND} re-read to corroborate a held verdict, ${FLAGGED} flagged, ${RECORDED} changes recorded, ${RESTATED} withheld entries a reading could answer for with ${STILL_WITHHELD} re-read and still withheld, ${HELD} awaiting a second reading, ${RETRIED} retried from quarantine, ${QUARANTINED} in quarantine, ${REPICKED} to be checked again" \
+            "data(auto): rolling re-verification — ${VERIFIED} verified of ${DRAWN} drawn from the queue, ${SECOND} re-read to corroborate a held verdict, ${FLAGGED} flagged, ${RECORDED} changes recorded, ${RESTATED} of ${ANSWERABLE} withheld entries restated from the reading their page already showed with ${STILL_WITHHELD} re-read and still withheld, ${HELD} awaiting a second reading, ${RETRIED} retried from quarantine, ${QUARANTINED} in quarantine, ${REPICKED} to be checked again" \
             data/index.json data/deal_changes.json data/change_refusals.json data/change_corroboration.json data/verification_state.json data/restated_terms.json data/quality_budgets.json data/page-lastmod.json data/page-reviews.json artifacts/free-llm-api-index/README.md
 
       - name: Say where it can be seen what the gate did with this run's data
