@@ -34134,8 +34134,8 @@
       "verifiedDate": "2026-09-19",
       "source_check": {
         "checked": "2026-09-19",
-        "outcome": "states_a_free_price",
-        "detail": "the page's entire price evidence is the word \"Free\" under the Community plan; it states no figure anywhere"
+        "outcome": "states_no_amount",
+        "detail": "the page names Coder and says \"Community Free\" but states no amount, rate or price we can read, and the 1 structured-data block in its markup states no price"
       },
       "free_grounds": [
         "licence",
@@ -34184,26 +34184,6 @@
         "checked": "2026-09-19",
         "outcome": "ok",
         "detail": "the page names Stability AI and states \"Get started with 25 free credits\" against \"1 credit = $0.01\""
-      }
-    },
-    {
-      "vendor": "PlanetScale",
-      "category": "Databases",
-      "description": "There is no free tier: planetscale.com/pricing, read 2026-09-19, prices every plan and the word \"free\" does not occur anywhere on it. PlanetScale Postgres single node starts at $5/month, Postgres Metal at $50/month, Neki PS-10 arm64 at $30/month and Vitess PS-10 at $39/month. Our own change log records the free Hobby plan — 5 GB storage, 1B row reads and 10M row writes a month — removed on 2024-04-08, with all free-tier databases deleted after a 30-day grace period.",
-      "tier": "Retired",
-      "url": "https://planetscale.com/pricing",
-      "tags": [
-        "database",
-        "mysql",
-        "postgres",
-        "serverless",
-        "vitess"
-      ],
-      "verifiedDate": "2026-09-19",
-      "source_check": {
-        "checked": "2026-09-19",
-        "outcome": "ok",
-        "detail": "the page names PlanetScale and states \"Starting at $5/month\"; the string \"free\" does not occur in 6,302 characters of visible text"
       }
     },
     {
