@@ -1054,6 +1054,8 @@ export function confirmationCoverageSentence(coverage: ConfirmationCoverage, lis
 
 export const NOTHING_CONTRADICTS_OUR_TERMS_FOR = "Nothing on record contradicts our terms for";
 
+export const THE_DATES_WE_HOLD = "the read and catalogue dates we hold";
+
 export const CHANGE_IS_AN_EVENT = new Set<DealChange["change_type"]>([
   "pricing_restructured",
   "limits_reduced",

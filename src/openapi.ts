@@ -128,7 +128,7 @@ const DOCUMENTED_OPERATIONS: Record<string, Record<string, any>> = {
       ],
       responses: {
         "200": {
-          description: "List of recently verified offers",
+          description: "List of offers by catalogue date, newest first",
           content: {
             "application/json": {
               schema: {
@@ -147,9 +147,9 @@ const DOCUMENTED_OPERATIONS: Record<string, Record<string, any>> = {
   "/api/newest": {
     get: {
       summary: "Newest deals",
-      description: "Returns deals sorted by verified date (newest first) with days_since_update. Use for periodic 'what's new' checks.",
+      description: "Returns deals sorted by catalogue date (newest first) with days_since_update. Use for periodic 'what's new' checks.",
       parameters: [
-        { name: "since", in: "query", description: `Only return deals verified on or after this date. ${SINCE_ACCEPTS} Default: 30 days ago`, schema: { type: "string", format: "date" } },
+        { name: "since", in: "query", description: `Only return deals whose catalogue date is on or after this date. ${SINCE_ACCEPTS} Default: 30 days ago`, schema: { type: "string", format: "date" } },
         { name: "limit", in: "query", description: "Max results (default: 20, max: 50)", schema: { type: "integer", default: 20 } },
         { name: "category", in: "query", description: "Filter by category name", schema: { type: "string" } }
       ],
