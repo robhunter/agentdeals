@@ -5,6 +5,7 @@ import { writeFileSync, mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { assertPopulationFloor } from "./population-floor.ts";
 import {
   OUR_OWN_RECORD_RATHER_THAN_THAT_PAGE,
   amountUnstatedSentence,
@@ -89,6 +90,10 @@ function unescapeServed(s: string): string {
     .replace(/&mdash;/g, "—").replace(/&#39;/g, "'").replace(/&amp;/g, "&");
 }
 
+function timesItSays(html: string, clause: string): number {
+  return unescapeServed(html).split(clause).length - 1;
+}
+
 function captionLine(html: string): string {
   const match = html.match(/<p class="(?:amount-unstated-line|free-price-line)"[^>]*>([\s\S]*?)<\/p>/);
   return match ? unescapeServed(match[1].replace(/<[^>]+>/g, "")).replace(/\s+/g, " ").trim() : "";
@@ -126,6 +131,17 @@ describe("a record whose terms came from a reading says so wherever it says wher
     for (const offer of READ_FROM_THE_PAGE) {
       assert.match(captionLine(pages.get(offer.vendor) ?? ""), new RegExp(limitsReadFromTheVendorsPage(READ_ON)));
     }
+  });
+
+  it("says it on every surface that says where the terms came from, not only the caption a reader sees first", () => {
+    const readClauses = timesItSays(pages.get("Readcorp2") ?? "", limitsReadFromTheVendorsPage(READ_ON));
+    const ownClauses = timesItSays(pages.get("Ownrecordcorp2") ?? "", OUR_OWN_RECORD_RATHER_THAN_THAT_PAGE);
+    assertPopulationFloor(ownClauses, 5, "surfaces on a vendor page saying where the terms came from");
+    assert.equal(
+      readClauses,
+      ownClauses,
+      "a record that read its terms off the page says so on fewer surfaces than one that did not",
+    );
   });
 
   it("claims no record of its own on a page whose terms it read off the vendor", () => {
