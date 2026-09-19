@@ -18,6 +18,12 @@ const ENDED_WORD = /\b(?:retired|retires|retiring|retirement|deprecated|deprecat
 
 const NO_OFFER_WORD = /\bno free\b|\bnot free\b|\bwithout a free\b|\bfree tier (?:removed|gone|withdrawn|is gone)\b|\bnot available\b|\bn\/a\b/i;
 
+const OPENS_BY_DENYING_A_FREE_TIER = /^\s*(?:none|no free (?:tier|plan|allowance))\b/i;
+
+export function statesNoFreeTier(text: string): boolean {
+  return OPENS_BY_DENYING_A_FREE_TIER.test(text);
+}
+
 const AFFIRMATIVE_FREE = /\bfree\b|\bfreemium\b|\bno credit card\b|\bgenerous\b/i;
 
 const ALLOWANCE_UNIT = "gb|gib|mb|mib|tb|tib|kb|tokens?|requests?|req|calls?|rpm|rps|tpm|qps|models?|minutes?|hours?|builds?|seats?|users?|projects?|messages?|emails?|operations?|ops|commands?|neurons?|rows?|records?|events?|pageviews?|visits?|sessions?|domains?|sites?|repos(?:itories)?|containers?|deploys?|queries|invocations?|executions?|jobs?|runs?|workflows?|credits?|checks?|monitors?|alerts?|dashboards?|members?|collaborators?";

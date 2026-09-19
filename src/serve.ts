@@ -77,6 +77,7 @@ import { addFriend, removeFriend, getFriends, getFriendCodesForVendors } from ".
 import { changeLogAnchorFor, changeLogVendorMap, toSlug, vendorSlugMap, resolveVendorSlug, namedVendorSlug, comparisonOfOneRecord, recordNamedBySlug, servedVendorSlug, servedVendorSlugForName } from "./vendor-slug.js";
 import { NO_PUSH_NOTICE, watchCommandBlock, watchRequestsFor } from "./change-watching.js";
 import { clauseNaming, quantitiesNotIn } from "./quoted-figures.js";
+import { statesNoFreeTier } from "./retired-terms.js";
 import { createRegistrationLimiter, rateLimitHeaders } from "./rate-limit.js";
 import { offerForSlug, vendorRates, cheapestRate, dearestRate, spanOfRates, formatRate, formatRateSpan, monthlyTokenCost, formatDollars, type ModelRate } from "./model-rates.js";
 import { STALE_FACT_PAGES_BASELINE, factsOutdatedBy, linkifyVerdictBlocks, newestChangeBySlug, overdueReport, pageCompiledClause, pageDataProvenance, pageDateModified, pageFigureSource, tabulatedVendorSlots, tabulatedVendors, utcToday, verdictsOutdatedBy } from "./page-reviews.js";
@@ -48615,7 +48616,16 @@ ${globalNavCss()}
 </html>`;
 }
 function buildEstimatePage(): string {
-  const estimatorData = buildEstimatorData();
+  const estimatorData = buildEstimatorData().map(category => ({
+    ...category,
+    vendors: category.vendors.map(vendor => ({
+      ...vendor,
+      noFreeTier: statesNoFreeTier(vendor.free),
+      freeCell: statesNoFreeTier(vendor.free)
+        ? `<td class="cost-high" title="${escHtmlServer(vendor.name)} has no free tier">n/a</td>`
+        : `<td class="cost-free">$0</td>`,
+    })),
+  }));
   const allOffers = loadOffers();
   const totalVendors = new Set(estimatorData.flatMap(c => c.vendors.map(v => v.slug))).size;
   const totalCategories = estimatorData.length;
@@ -48835,6 +48845,7 @@ function buildEstimatePage(): string {
 
       var rows = [];
       var totals = { starter: 0, growth: 0, scale: 0 };
+      var withoutAFreeTier = [];
       for (var i = 0; i < keys.length; i++) {
         var catId = keys[i];
         var slug = sels[catId];
@@ -48848,11 +48859,13 @@ function buildEstimatePage(): string {
         totals.growth += v.growth;
         totals.scale += v.scale;
 
+        if (v.noFreeTier) withoutAFreeTier.push(v.name);
+
         rows.push('<tr>'
           + '<td>' + catLabel + '</td>'
           + '<td class="vendor-name"><a href="' + vendorUrl + '">' + v.name + '</a>'
           + '<span class="free-tier-info">' + v.free + '</span></td>'
-          + '<td class="cost-free">$0</td>'
+          + v.freeCell
           + '<td class="' + costClass(v.starter) + '">' + formatCost(v.starter) + '</td>'
           + '<td class="' + costClass(v.growth) + '">' + formatCost(v.growth) + '</td>'
           + '<td class="' + costClass(v.scale) + '">' + formatCost(v.scale) + '</td>'
@@ -48881,7 +48894,9 @@ function buildEstimatePage(): string {
         + '<th>Notes</th></tr></thead><tbody>';
       html += rows.join('');
       html += '<tr class="total-row"><td>Total</td><td></td>'
-        + '<td class="cost-free">$0/mo</td>'
+        + (withoutAFreeTier.length > 0
+          ? '<td class="cost-high" title="no free tier: ' + withoutAFreeTier.join(', ') + '">n/a</td>'
+          : '<td class="cost-free">$0/mo</td>')
         + '<td>' + formatCost(totals.starter) + '/mo</td>'
         + '<td>' + formatCost(totals.growth) + '/mo</td>'
         + '<td>' + formatCost(totals.scale) + '/mo</td>'
