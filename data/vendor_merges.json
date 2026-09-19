@@ -6,6 +6,7 @@
     { "retired": "Census", "survivor": "Fivetran Activations" },
     { "retired": "Colaboratory", "survivor": "Google Colab" },
     { "retired": "Components.studio", "survivor": "WebComponents.dev" },
+    { "retired": "Gitpod", "survivor": "Ona" },
     { "retired": "Hasura Cloud", "survivor": "Hasura" },
     { "retired": "Landen", "survivor": "Umso" },
     { "retired": "LemonSqueezy", "survivor": "Lemon Squeezy" },

@@ -686,6 +686,7 @@
         "gitlab-ci",
         "google-cloud-build",
         "harness-ci",
+        "jenkins",
         "woodpecker-ci"
       ],
       "vendors_tabulated": [
@@ -705,6 +706,7 @@
         "gitlab-ci",
         "google-cloud-build",
         "harness-ci",
+        "jenkins",
         "semaphore-ci",
         "woodpecker-ci"
       ],
@@ -923,14 +925,16 @@
         "lumenfall-ai",
         "openai",
         "pollinations-ai",
-        "replicate"
+        "replicate",
+        "stability-ai"
       ],
       "vendors_tabulated": [
         "cloudflare-workers-ai",
         "lumenfall",
         "lumenfall-ai",
         "openai",
-        "replicate"
+        "replicate",
+        "stability-ai"
       ],
       "badge_subjects_unresolved": [],
       "stat_card_subjects_unresolved": [],
@@ -1347,6 +1351,7 @@
       "tier": "A",
       "vendors_asserted": [
         "bolt-new",
+        "coder",
         "cursor",
         "github-codespaces",
         "lovable",
@@ -1356,6 +1361,7 @@
       "vendors_tabulated": [
         "codesandbox",
         "github-codespaces",
+        "gitpod",
         "lovable",
         "replit",
         "v0"
@@ -2795,6 +2801,7 @@
         "assemblyai",
         "azure",
         "deepgram",
+        "elevenlabs",
         "google-cloud",
         "openai"
       ],
@@ -2802,6 +2809,7 @@
         "assemblyai",
         "azure",
         "deepgram",
+        "elevenlabs",
         "google-cloud",
         "openai"
       ],

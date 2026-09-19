@@ -34096,6 +34096,114 @@
       "free_grounds": [
         "licence"
       ]
+    },
+    {
+      "vendor": "ElevenLabs",
+      "category": "AI / ML",
+      "description": "Free plan at $0 per month: 10,000 credits per month and 3 Projects in Studio, with Text to Speech, Speech to Text, Sound Effects, Voice Design, Music, Productions and Image. No commercial licence on the free plan — that starts at Starter, $6 per month for 30,000 credits. Unused credits do not roll over on the free plan, and cancelling a paid plan drops the account back to it. elevenlabs.io/pricing, read 2026-09-19.",
+      "tier": "Free",
+      "url": "https://elevenlabs.io/pricing",
+      "tags": [
+        "ai",
+        "text-to-speech",
+        "speech-to-text",
+        "voice",
+        "audio",
+        "api"
+      ],
+      "verifiedDate": "2026-09-19",
+      "source_check": {
+        "checked": "2026-09-19",
+        "outcome": "ok",
+        "detail": "the page names ElevenLabs and states \"Free $0 per month\" over \"10k credits per month\""
+      }
+    },
+    {
+      "vendor": "Coder",
+      "category": "IDE & Code Editors",
+      "description": "Community edition is free and open source, self-hosted: unlimited workspaces provisioned on infrastructure you already own, environments defined as code, desktop or web IDEs including VS Code, JetBrains, Cursor and Jupyter, and up to 5 concurrent Coder Agents — the same agent limit the paid Premium plan carries. Premium is billed annually per user and AI Premium is custom; coder.com/pricing states no figure for either. Read 2026-09-19.",
+      "tier": "Free OSS",
+      "url": "https://coder.com/pricing",
+      "tags": [
+        "cde",
+        "remote-development",
+        "workspaces",
+        "self-hosted",
+        "open source"
+      ],
+      "verifiedDate": "2026-09-19",
+      "source_check": {
+        "checked": "2026-09-19",
+        "outcome": "states_no_amount",
+        "detail": "the page names Coder and says \"Community Free\" but states no amount, rate or price we can read, and the 1 structured-data block in its markup states no price"
+      },
+      "free_grounds": [
+        "licence",
+        "plan"
+      ]
+    },
+    {
+      "vendor": "Jenkins",
+      "category": "CI/CD",
+      "description": "Free OSS (MIT). Self-hosted automation server — a self-contained Java program that runs out of the box on your own machine, with no hosted or paid plan offered by the project. Over 1,900 plugins; the leading open source automation server. jenkins.io/license/ carries the MIT License, which grants use free of charge. Read 2026-09-19.",
+      "tier": "Free OSS",
+      "url": "https://www.jenkins.io/",
+      "tags": [
+        "ci",
+        "cd",
+        "pipelines",
+        "self-hosted",
+        "open source",
+        "github-actions-alternative"
+      ],
+      "verifiedDate": "2026-09-19",
+      "source_check": {
+        "checked": "2026-09-19",
+        "outcome": "states_no_terms",
+        "detail": "the page names Jenkins but states no amount, tier or rate we can read"
+      },
+      "free_grounds": [
+        "licence"
+      ]
+    },
+    {
+      "vendor": "Stability AI",
+      "category": "AI / ML",
+      "description": "Developer Platform API is credit-priced at 1 credit = $0.01, with 25 free credits to start — a one-time $0.25 grant, not a monthly allowance. Per-image costs: SDXL 1.0 from 0.9 credits, Stable Diffusion 3.5 Flash 2.5, Stable Image Core 3, Stable Diffusion 3.5 Medium 3.5, Large 6.5, Stable Image Ultra 8. Stable Audio 2.5 is 20 credits and 3.0 is 26. platform.stability.ai/pricing, read 2026-09-19.",
+      "tier": "Free Credits",
+      "url": "https://platform.stability.ai/pricing",
+      "tags": [
+        "ai",
+        "image-generation",
+        "text-to-image",
+        "api",
+        "credits"
+      ],
+      "verifiedDate": "2026-09-19",
+      "source_check": {
+        "checked": "2026-09-19",
+        "outcome": "ok",
+        "detail": "the page names Stability AI and states \"Get started with 25 free credits\" against \"1 credit = $0.01\""
+      }
+    },
+    {
+      "vendor": "Ona",
+      "category": "IDE & Code Editors",
+      "description": "There is no free tier: formerly Gitpod, and gitpod.io/pricing now 308-redirects to ona.com/pricing, which on a read of 2026-09-19 does not contain the word \"free\" anywhere. Core starts at $20/month for up to 100 team members with 80 to 2,200 included Ona Compute Units a month; add-on OCUs are $10 per 40 OCUs; Enterprise is custom. Self-hosted cloud development environments and agents.",
+      "tier": "Retired",
+      "url": "https://ona.com/pricing",
+      "tags": [
+        "cde",
+        "remote-development",
+        "workspaces",
+        "gitpod"
+      ],
+      "verifiedDate": "2026-09-19",
+      "source_check": {
+        "checked": "2026-09-19",
+        "outcome": "ok",
+        "detail": "the page names Ona and states \"Core from $20 / month\"; the string \"free\" does not occur in 6,586 characters of visible text"
+      }
     }
   ],
   "changes": []

@@ -260,12 +260,6 @@
       ]
     },
     {
-      "name": "ElevenLabs",
-      "named_by": [
-        "OpenAI"
-      ]
-    },
-    {
       "name": "env0",
       "named_by": [
         "HCP Terraform",
@@ -683,12 +677,6 @@
       "name": "Short.io",
       "named_by": [
         "Dub.co"
-      ]
-    },
-    {
-      "name": "Stability AI",
-      "named_by": [
-        "OpenAI"
       ]
     },
     {
