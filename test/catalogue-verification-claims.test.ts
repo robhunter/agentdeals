@@ -4,7 +4,7 @@ import { spawn, type ChildProcess } from "node:child_process";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { confirmationCoverage, confirmationCoverageSentence, loadDealChanges, loadOffers, CONFIRMATION_WINDOW_DAYS } from "../dist/data.js";
-import { confirmationDate } from "../dist/read-date.js";
+import { confirmationDate, CONFIRMED_DATE_LABEL } from "../dist/read-date.js";
 import { toSlug } from "../dist/slug.js";
 import { assertCoversPopulation, assertPopulationFloor, categoriesInTheCatalogue } from "./population-floor.ts";
 
@@ -414,31 +414,48 @@ interface AnExemption {
   storedVerbatim?: boolean;
 }
 
-function proseWeStoreAsTheVendorStatedIt(): string[] {
-  const stored: string[] = [];
-  const keep = (field: unknown) => { if (typeof field === "string") stored.push(field); };
-  for (const offer of loadOffers() as Record<string, unknown>[]) {
-    keep(offer.description);
-    keep(offer.tier);
-    for (const value of Object.values(offer.referral_program ?? {})) keep(value);
-  }
-  for (const change of loadDealChanges() as Record<string, unknown>[]) {
-    keep(change.summary);
-    keep(change.current_state);
-    keep(change.previous_state);
-  }
-  return stored
-    .flatMap((field) => field.match(A_SENTENCE) ?? [field])
-    .map((said) => said.trim())
-    .filter((said) => said.length > 20 && A_VERIFICATION_ADJECTIVE.test(said));
+function everyStringIn(node: unknown, found: string[] = []): string[] {
+  if (typeof node === "string") found.push(node);
+  else if (Array.isArray(node)) {
+    for (const entry of node) everyStringIn(entry, found);
+    if (node.every((entry) => typeof entry === "string")) found.push(node.join("; "));
+  } else if (node && typeof node === "object") for (const value of Object.values(node)) everyStringIn(value, found);
+  return found;
 }
 
+function asOneRun(text: string): string {
+  return text.toLowerCase().replace(/[^a-z0-9]+/g, "");
+}
+
+function proseWeStoreAsTheVendorStatedIt(): string[] {
+  return everyStringIn([loadOffers(), loadDealChanges()])
+    .filter((held) => A_VERIFICATION_ADJECTIVE.test(held))
+    .map(asOneRun);
+}
+
+const A_SHARED_RUN = 20;
+
+function theWordInContext(said: string): string[] {
+  const run = asOneRun(said);
+  const at = run.search(/verified|humanverified|factchecked/);
+  if (at < 0) return [];
+  const probes = [28, 24, 20, 16].map((before) => run.slice(Math.max(0, at - before), at + 8))
+    .concat([28, 24, 20].map((after) => run.slice(Math.max(0, at - 4), at + after)));
+  return probes.filter((probe) => probe.length >= A_SHARED_RUN);
+}
+
+const A_MONTH = "January|February|March|April|May|June|July|August|September|October|November|December";
+const A_PER_RECORD_STAMP = new RegExp(
+  `\\b${CONFIRMED_DATE_LABEL} (?:\\d{4}-\\d{2}-\\d{2}|(?:${A_MONTH})(?: \\d{1,2}| \\d{4}))\\b`,
+  "i",
+);
+
 const THE_WORD_IS_NOT_A_CLAIM_OVER_OUR_LISTINGS: AnExemption[] = [
-  { why: "a withholding names the word in order to refuse the claim", sentence: /\b(?:cannot be|could not be|was not|is not|were not) (?:re-)?verified\b/i },
-  { why: "one record and one date, which is the per-record form", sentence: /\bverified:?\s*\d{4}-\d{2}-\d{2}\b/i },
+  { why: "a withholding names the word in order to refuse the claim", sentence: /\b(?:cannot be|could not be|was not|is not|were not|not)\s+(?:re-)?verified\b/i },
+  { why: `the word names one record on one date, the form this repo labels ${CONFIRMED_DATE_LABEL}`, sentence: A_PER_RECORD_STAMP },
   { why: "the sentence is a record we store as the vendor stated it", storedVerbatim: true },
   { why: "the word qualifies whom a vendor checks, not what we list", sentence: /\bverified (?:students|teachers|recipients|paid signups?|compute spend|partners|domains?|accounts?)\b/i },
-  { why: "the API reference names a field kept for older callers", route: /^\/developers$/, sentence: /^verified\s*\.?$/i },
+  { why: "a bare column label is not a sentence about a set of listings", sentence: /^verified\s*\.?$/i },
   { why: "#1058 owns what a per-record stamp means on /best", route: /^\/best\// },
   { why: "#1081 AC-2 owns the freshness claim on the vs-pair pages", route: /^\/[a-z0-9-]+-vs-[a-z0-9-]+$/ },
   { why: "/criteria publishes what the word means", route: /^\/criteria$/ },
@@ -463,16 +480,16 @@ function familyOf(route: string): string {
   return parts.length > 1 ? `/${parts[0]}/*` : route;
 }
 
-function aPageFromEveryFamily(routes: string[]): { family: string; route: string }[] {
-  const members = new Map<string, string[]>();
-  for (const route of routes) members.set(familyOf(route), [...(members.get(familyOf(route)) ?? []), route]);
-  const reading: { family: string; route: string }[] = [];
-  for (const [family, held] of members) {
-    const sorted = [...held].sort();
-    const picks = sorted.length > 1 ? [sorted[0]!, sorted[Math.floor(sorted.length / 2)]!, sorted[sorted.length - 1]!] : sorted;
-    for (const route of [...new Set(picks)]) reading.push({ family, route });
+function everyPageOfEveryFamily(routes: string[]): { family: string; route: string }[] {
+  return [...routes].sort().map((route) => ({ family: familyOf(route), route }));
+}
+
+async function inBatches<T, R>(items: T[], size: number, each: (item: T) => Promise<R>): Promise<R[]> {
+  const done: R[] = [];
+  for (let at = 0; at < items.length; at += size) {
+    done.push(...await Promise.all(items.slice(at, at + size).map(each)));
   }
-  return reading;
+  return done;
 }
 
 const A_PROSE_FIELD = new Set(["description", "text", "summary", "note", "disclaimer"]);
@@ -538,11 +555,14 @@ describe("the word verified, over every page family the sitemap publishes", () =
     vendorProse = proseWeStoreAsTheVendorStatedIt();
     published = await everyRouteTheSitemapPublishes(started.base);
     doors = await everyDoorTheOpenApiPublishes(started.base);
-    read = [...aPageFromEveryFamily(published), ...doors.map((route) => ({ family: route, route }))];
-    for (const { route } of read) {
+    read = [...everyPageOfEveryFamily(published), ...doors.map((route) => ({ family: route, route }))];
+    const served = await inBatches(read, 12, async ({ route }) => {
       const exemptRoute = THE_WORD_IS_NOT_A_CLAIM_OVER_OUR_LISTINGS.find((one) => one.route && !one.sentence && one.route.test(route));
-      if (exemptRoute) { explainedBy.add(exemptRoute.why); continue; }
-      const html = await (await fetch(`${started.base}${route}`)).text();
+      if (exemptRoute) { explainedBy.add(exemptRoute.why); return { route, html: null }; }
+      return { route, html: await (await fetch(`${started.base}${route}`)).text() };
+    });
+    for (const { route, html } of served) {
+      if (html === null) continue;
       for (const surface of proseAnswersOf(html)) {
         surfacesRead += 1;
         for (const sentence of surface.text.match(A_SENTENCE) ?? []) {
@@ -551,8 +571,8 @@ describe("the word verified, over every page family the sitemap publishes", () =
           const said = sentence.trim();
           const exempt = THE_WORD_IS_NOT_A_CLAIM_OVER_OUR_LISTINGS.find((one) => {
             if (one.sentence) return (one.route ? one.route.test(route) : true) && one.sentence.test(said);
-            return one.storedVerbatim === true && said.length > 20
-              && vendorProse.some((held) => held.includes(said) || said.includes(held));
+            if (one.storedVerbatim !== true) return false;
+            return theWordInContext(said).some((probe) => vendorProse.some((held) => held.includes(probe)));
           });
           if (exempt) explainedBy.add(exempt.why);
           else unexplained.push(`${route} (${surface.where}): ${sentence.trim().slice(0, 200)}`);
