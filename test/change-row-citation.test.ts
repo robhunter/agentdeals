@@ -27,17 +27,18 @@ const storedChanges: DealChange[] = JSON.parse(
 
 const liveVendors = new Set(loadOffers().map((offer) => offer.vendor.trim().toLowerCase()));
 
-const vendorsRenamedWithAnUncitedRow = (): Population => {
-  const survivors = new Set(
+const survivorsWithAnUncitedRow = (): string[] => [
+  ...new Set(
     renamedVendorsWithARenderedRecord()
       .filter((entry) => aClaimAPageCanCarry(entry.summary) && !changeCitesASource(entry.change))
       .map((entry) => entry.survivor),
-  );
-  return {
-    size: survivors.size,
-    read: "vendors the registry renamed that hold a change record we cite no page for",
-  };
-};
+  ),
+];
+
+const vendorsRenamedWithAnUncitedRow = (): Population => ({
+  size: survivorsWithAnUncitedRow().length,
+  read: "vendors the registry renamed that hold a change record we cite no page for",
+});
 
 const renamedVendorsWithARenderedRecord = (): Array<{ retired: string; survivor: string; summary: string; change: DealChange }> =>
   storedChanges
@@ -347,13 +348,20 @@ describe("every published change row carries the page it was read from", () => {
   });
 
   it("finds the uncited row of every vendor the registry renamed, under the name it survives as", () => {
+    const wanted = survivorsWithAnUncitedRow();
     assertPopulationFloor(
-      vendorsRenamedWithAnUncitedRow().size,
+      wanted.length,
       1,
       "vendors the registry renamed that hold a change record we cite no page for",
     );
+    const found = new Set(statedForARenamedVendor.map((row) => row.split(" :: ")[1]));
+    assert.deepStrictEqual(
+      wanted.filter((vendor) => !found.has(vendor)),
+      [],
+      "a renamed vendor's uncited row is rendered under a name this sweep never found",
+    );
     assertCoversPopulation(
-      new Set(statedForARenamedVendor.map((row) => row.split(" :: ")[1])).size,
+      found.size,
       vendorsRenamedWithAnUncitedRow(),
       "renamed vendors whose uncited row was found under the surviving name",
     );
