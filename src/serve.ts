@@ -10695,7 +10695,7 @@ ${mcpCtaCss()}
   <div class="context">
     <p>Choosing a database is one of the most consequential infrastructure decisions for any project. The good news: in 2026, there are <strong>${dbOffers.length} free database options</strong> across every category — relational, document, key-value, edge, graph, vector, and time-series. The bad news: free tiers vary wildly, from <strong>MongoDB Atlas's cramped 512 MB</strong> to <strong>Turso's generous 5 GB</strong> and <strong>CockroachDB's 10 GiB</strong>.</p>
     <p>This page compares every free database in our index, organized by type, with exact limits read from live pricing pages. Whether you need a Postgres database, a Redis cache, an edge SQLite store, or a vector database for RAG — we've got the comparison.</p>
-    <p><strong>New:</strong> See our <a href="/database-free-tier-comparison-2026">Database Free Tier Comparison 2026</a> for a focused side-by-side matrix of the top 10 databases with use-case recommendations and the PlanetScale cautionary tale.</p>
+    <p><strong>New:</strong> See our <a href="/database-free-tier-comparison-2026">Database Free Tier Comparison 2026</a> for a focused side-by-side matrix of the top 10 databases with use-case recommendations and the story of PlanetScale&rsquo;s free tier removal.</p>
   </div>
 
   ${changesHtml}
@@ -37458,7 +37458,7 @@ ${mcpCtaCss()}
         <td style="color:#f85149">High (proprietary)</td>
       </tr>
       <tr style="background:rgba(248,81,73,0.08)">
-        <td class="provider-col"><span style="color:var(--text-dim);text-decoration:line-through">PlanetScale</span> <span class="removed-badge">REMOVED</span></td>
+        <td class="provider-col"><span style="color:var(--text-dim);text-decoration:line-through">PlanetScale</span> <span class="removed-badge">FREE REMOVED</span></td>
         <td>Serverless MySQL</td>
         <td style="font-family:var(--mono);color:var(--text-dim)">Was 5 GB</td>
         <td style="color:var(--text-dim)">Was 1B row reads/mo</td>
@@ -37472,7 +37472,7 @@ ${mcpCtaCss()}
   </div>
 
   <div class="context-box">
-    <strong>Storage leaders:</strong> CockroachDB (10 GiB) and Turso/Cloudflare D1 (5 GB each) offer the most free storage. <strong>Supabase</strong> has the most complete free package (Postgres + auth + storage + real-time). <strong>Neon</strong> lets you create up to 100 projects with 0.5 GB each — ideal for microservices or per-client databases. PlanetScale's removal in April 2024 was one of the most impactful free tier changes in developer tooling history.
+    <strong>Storage leaders:</strong> CockroachDB (10 GiB) and Turso/Cloudflare D1 (5 GB each) offer the most free storage. <strong>Supabase</strong> has the most complete free package (Postgres + auth + storage + real-time). <strong>Neon</strong> lets you create up to 100 projects with 0.5 GB each — ideal for microservices or per-client databases. PlanetScale's free tier removal in April 2024 was one of the most impactful such changes in developer tooling history.
   </div>
 
   <h2 id="postgres">Postgres-Compatible Databases</h2>
@@ -37798,7 +37798,7 @@ ${mcpCtaCss()}
 
   <div class="diff-card" style="border-left-color:#d29922">
     <h3>Why it matters</h3>
-    <p class="diff-desc">PlanetScale's free tier was widely recommended in tutorials, courses, and starter templates. Its removal broke thousands of hobby projects and forced a mass migration to Neon, Supabase, and Turso. It demonstrated that <strong>even popular, well-funded companies can eliminate free tiers</strong> when business priorities shift.</p>
+    <p class="diff-desc">PlanetScale's free tier, removed in April 2024, was widely recommended in tutorials, courses, and starter templates. Its removal broke thousands of hobby projects and forced a mass migration to Neon, Supabase, and Turso. It demonstrated that <strong>even popular, well-funded companies can eliminate free tiers</strong> when business priorities shift.</p>
   </div>
 
   <div class="diff-card" style="border-left-color:#3fb950">
@@ -47704,7 +47704,7 @@ function buildEstimatorData(): EstimatorCategory[] {
       vendors: [
         { slug: "supabase", name: "Supabase", free: "500 MB storage, 50K MAU", starter: 25, growth: 25, scale: 75, notes: "Pro $25/mo, usage-based after limits" },
         { slug: "neon", name: "Neon", free: "0.5 GB storage, 100 CU-hours", starter: 19, growth: 69, scale: 350, notes: "Launch $19/mo, Scale $69/mo" },
-        { slug: "planetscale", name: "PlanetScale", free: "5 GB storage, 1B reads", starter: 39, growth: 39, scale: 99, notes: "Scaler $39/mo, Scaler Pro $99/mo" },
+        { slug: "planetscale", name: "PlanetScale", free: "No free tier", starter: 39, growth: 39, scale: 99, notes: "Free Hobby plan removed April 2024; every plan is paid" },
         { slug: "turso", name: "Turso", free: "100 DBs, 5 GB storage", starter: 0, growth: 29, scale: 29, notes: "Generous free tier, Scaler $29/mo" },
         { slug: "upstash", name: "Upstash", free: "256 MB Redis, 500K cmd/mo", starter: 0, growth: 10, scale: 50, notes: "Pay-per-request, $0.2/100K commands" },
         { slug: "mongodb-atlas", name: "MongoDB Atlas", free: "512 MB shared cluster", starter: 9, growth: 57, scale: 230, notes: "Dedicated clusters from $57/mo" },

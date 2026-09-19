@@ -132,7 +132,10 @@ const DENIES_IT = /^\s*(?:no\b|non-existent|none\b|n\/?a\b|not\b|never\b|zero\b|
 
 const STATES_FREENESS = /\bfree\b|\bno cost\b|\$0(?![.,\d])/i;
 
-const ENDED = "removed|retired|retirement|ended|withdrawn|discontinued|eliminated|sunset";
+const ENDED =
+  "removed|removal|retired|retirement|ended|withdrawn|discontinued|eliminated|sunset|killed|shut down|shut off";
+
+const ASKS_RATHER_THAN_STATES = /\?\s*$/;
 
 const STATES_THERE_IS_NO_FREE_TIER = new RegExp(
   [
@@ -156,6 +159,10 @@ export function deniesTheFreeTier(value: string): boolean {
 
 export function statesThereIsNoFreeTier(value: string): boolean {
   return STATES_THERE_IS_NO_FREE_TIER.test(value);
+}
+
+export function asksRatherThanStates(claim: string): boolean {
+  return ASKS_RATHER_THAN_STATES.test(claim.trim());
 }
 
 export function affirmsAFreeTier(field: string, value: string): boolean {
