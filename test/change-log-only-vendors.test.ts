@@ -1,6 +1,6 @@
 import { describe, it, before, after } from "node:test";
 import assert from "node:assert";
-import { assertPopulationFloor } from "./population-floor.ts";
+import { assertCoversPopulation, assertPopulationFloor, vendorsTheChangeLogEnds } from "./population-floor.ts";
 import { spawn, type ChildProcess } from "node:child_process";
 import { readFileSync } from "node:fs";
 import path from "node:path";
@@ -13,7 +13,7 @@ import {
 } from "./badge-verdicts.ts";
 
 const { compiledFigureSlots, staticHalfOf } = await import("../dist/compiled-figures.js");
-const { namedVendorSlug, toSlug, vendorSlugMap } = await import("../dist/vendor-slug.js");
+const { changeLogAnchorFor, namedVendorSlug, toSlug, vendorSlugMap } = await import("../dist/vendor-slug.js");
 const { survivingVendorName, vendorMerges } = await import("../dist/vendor-merges.js");
 
 type DealChange = import("../src/types.ts").DealChange;
@@ -64,6 +64,8 @@ const liveVendors = new Set(
 );
 const heldUnderNoCatalogueNameOfItsOwn = (label: string) =>
   outsideTheCatalogue(label) || survivingVendorName(label, liveVendors) !== null;
+const changeLogAnchorAsPublished = (label: string) =>
+  changeLogAnchorFor(survivingVendorName(label, liveVendors) ?? label) ?? "";
 
 let proc: ChildProcess | null = null;
 let base = "";
@@ -136,13 +138,28 @@ describe("marking a comparison slot whose vendor has no catalogue entry", () => 
     assert.strictEqual(verdicts.size, badgeLinksOnBadgesPage(badges).length);
   });
 
-  it("holds ended records for vendors the catalogue has no entry for", () => {
-    const orphaned = [...endedByTheLog.values()].filter(c => heldUnderNoCatalogueNameOfItsOwn(c.vendor));
-    assertPopulationFloor(
-      orphaned.length,
-      15,
-      "ended vendors the catalogue holds no entry for under the name the log files them by",
+  it("addresses every vendor whose free tier it ended, including the ones the catalogue holds no entry for", () => {
+    const log = pages.get("/changes");
+    assert.ok(log, "the change log did not render");
+    const addressed = new Set([...log.matchAll(/ id="(vendor-[a-z0-9-]+)"/g)].map(m => m[1]!));
+    const unaddressed = [...endedByTheLog.values()]
+      .filter(c => !addressed.has(changeLogAnchorAsPublished(c.vendor)))
+      .map(c => `${c.vendor} -> ${changeLogAnchorAsPublished(c.vendor)}`)
+      .sort();
+    assert.deepStrictEqual(unaddressed, []);
+    assertCoversPopulation(
+      endedByTheLog.size,
+      vendorsTheChangeLogEnds(),
+      "vendors the change log ends and addresses",
     );
+  });
+
+  it("leaves the change log as the only route to a vendor it ended that the catalogue holds no entry for", () => {
+    const orphaned = [...endedByTheLog.values()].filter(c => heldUnderNoCatalogueNameOfItsOwn(c.vendor));
+    const publishing = orphaned
+      .map(c => `/vendor/${toSlug(c.vendor)}`)
+      .filter(route => pages.has(route));
+    assert.deepStrictEqual(publishing, []);
   });
 
   it("keeps a vendor in that population when the registry renames it into the catalogue", () => {

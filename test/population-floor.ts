@@ -136,6 +136,33 @@ export function pagesOnTheReviewRegister(): Population {
   return { size: JSON.parse(readFileSync(at, "utf-8")).pages.length, read: "pages the review register holds" };
 }
 
+const ENDS_A_FREE_TIER = new Set(["free_tier_removed", "open_source_killed"]);
+
+type StoredChange = { vendor: string; change_type: string; date: string; resolution?: unknown };
+
+export function vendorsTheChangeLogEnds(): Population {
+  const REPO = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
+  const at = process.env.AGENTDEALS_CHANGES_PATH || path.join(REPO, "data", "deal_changes.json");
+  const standing = new Map<string, StoredChange[]>();
+  for (const change of JSON.parse(readFileSync(at, "utf-8")).changes as StoredChange[]) {
+    if (change.resolution) continue;
+    const key = change.vendor.trim().toLowerCase();
+    const held = standing.get(key);
+    if (held) held.push(change);
+    else standing.set(key, [change]);
+  }
+  let ended = 0;
+  for (const held of standing.values()) {
+    const ending = held
+      .filter((change) => ENDS_A_FREE_TIER.has(change.change_type))
+      .sort((a, b) => b.date.localeCompare(a.date))[0];
+    if (!ending) continue;
+    if (held.some((change) => change.change_type === "new_free_tier" && change.date > ending.date)) continue;
+    ended++;
+  }
+  return { size: ended, read: "vendors whose free tier the change log ends" };
+}
+
 export function rowsCarryingAVendorSlug(): Population {
   return {
     size: hardcodedRowsCarryingASlug().length,
