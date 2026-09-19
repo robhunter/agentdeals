@@ -15,6 +15,7 @@ on:
         default: ""
 
 permissions:
+  actions: write
   contents: write
   issues: write
 
@@ -86,6 +87,7 @@ jobs:
       - name: Run the suite, then push to main only if it is green
         id: gate
         env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GATE_RATCHET_BUDGETS: "1"
           GATE_UPDATE_PAGE_LASTMOD: "1"
           GATE_REGENERATE_LLM_INDEX: "1"
