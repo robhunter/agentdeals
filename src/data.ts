@@ -9,7 +9,7 @@ import { applyReviewedDirections } from "./change-direction-review.js";
 import { rankForListing, gateFor, utcDate, type TieBreak, type Gate, type GateCode } from "./ranking.js";
 import { unreachableNoticeForUrl, resetLinkHealthCache } from "./link-health.js";
 import { quarantineSummary, resetVerificationStateCache, type QuarantineSummary } from "./verification-state.js";
-import { confirmationDate, daysSince, lastAttemptDate, lastReadDate } from "./read-date.js";
+import { confirmationDate, daysSince, lastAttemptDate, lastReadDate, restatedReadingDate } from "./read-date.js";
 import {
   amountUnstatedSentence,
   cannotVouchForLevel,
@@ -1341,7 +1341,7 @@ export function checkVendorRisk(
     summary = `${vendorHistorySentence(offer.vendor, "stable", cause)} Free tier verified for ${longevityDays} days.`;
   }
   if (!gate && !withheldReason && sourceStatesNoAmount(offer)) {
-    summary = `${summary} ${amountUnstatedSentence(offer.vendor)}`;
+    summary = `${summary} ${amountUnstatedSentence(offer.vendor, restatedReadingDate(offer))}`;
   }
   if (matchNotice.type === "inferred") {
     summary = `${answeredAboutAnotherNameSentence(matchNotice)} ${summary}`;

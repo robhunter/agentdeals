@@ -5003,12 +5003,14 @@ function buildVendorPage(slug: string): string | null {
 
   const termsUnconfirmed = termsUnconfirmedBySource(verdictInput);
 
+  const termsReadFrom = restatedReadingDate(primary);
+
   const amountUnstatedLine = !levelWithheld && termsUnconfirmed === "states_no_amount"
-    ? `\n  <p class="amount-unstated-line" style="margin:.4rem 0 .6rem;font-size:.9rem;color:var(--text-muted)"><strong style="color:#d29922">Source states no amount:</strong> ${escHtmlServer(amountUnstatedSentence(vendorName))}</p>`
+    ? `\n  <p class="amount-unstated-line" style="margin:.4rem 0 .6rem;font-size:.9rem;color:var(--text-muted)"><strong style="color:#d29922">Source states no amount:</strong> ${escHtmlServer(amountUnstatedSentence(vendorName, termsReadFrom))}</p>`
     : "";
 
   const freePriceLine = !levelWithheld && termsUnconfirmed === "states_a_free_price"
-    ? `\n  <p class="free-price-line" style="margin:.4rem 0 .6rem;font-size:.9rem;color:var(--text-muted)"><strong style="color:#3fb950">Source states a free price:</strong> ${escHtmlServer(recordPublishesAQuantity(primary.description) ? freePriceConfirmedSentence(vendorName) : freePriceOnlySentence(vendorName))}</p>`
+    ? `\n  <p class="free-price-line" style="margin:.4rem 0 .6rem;font-size:.9rem;color:var(--text-muted)"><strong style="color:#3fb950">Source states a free price:</strong> ${escHtmlServer(recordPublishesAQuantity(primary.description) ? freePriceConfirmedSentence(vendorName, termsReadFrom) : freePriceOnlySentence(vendorName))}</p>`
     : "";
 
   const ratingWithheldLine = ratingWithheld && !offerHasEnded && !primaryGate
@@ -5454,7 +5456,7 @@ ${allCompareLinks.join("\n")}
     ? `${withheldLevelSentence(levelWithheld, vendorName, unconfirmableSince)} We cannot confirm what this offer provides today, so we are not recommending it for production or for anything else until we can.`
     : hasFree
     ? (riskLevel === "stable" || (primaryGate && historyLevel === "stable")
-      ? `${vendorName}'s free tier can be suitable for small production workloads and side projects. ${primaryGate ? "It" : "We rate it stable and it"} offers ${escHtmlServer(keyLimit)}, so it's a reasonable starting point.${vendorChanges.length > 0 ? ` ${narrowingSentence(vendorChanges, primary, termsSuperseded !== null)}` : ""} Monitor your usage against the limits and have an upgrade plan ready.`
+      ? `${vendorName}'s free tier can be suitable for small production workloads and side projects. ${primaryGate ? "It" : "We rate it stable and it"} offers ${keyLimit}, so it's a reasonable starting point.${vendorChanges.length > 0 ? ` ${narrowingSentence(vendorChanges, primary, termsSuperseded !== null)}` : ""} Monitor your usage against the limits and have an upgrade plan ready.`
       : riskLevel === null
       ? `${vendorName}'s free tier is usable for prototyping and development. ${primaryGate ? vendorHistorySentence(vendorName, historyLevel, riskCause) : levelWithheldBecause}`
       : `${vendorName}'s free tier is usable for prototyping and development, but we rate it ${riskLevel}${riskCause ? ` because of one recorded ${changeKindNoun(riskCause.change_type)}, ${changeDateClause(riskCause)}` : ""}. Consider alternatives with more stable pricing for critical services.`)

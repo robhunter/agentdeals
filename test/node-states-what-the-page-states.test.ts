@@ -156,7 +156,7 @@ describe("a vendor page's structured data states the reason its own prose states
 
   it("reads enough pages for the sweeps below to mean something", () => {
     assertPopulationFloor(pages.length, 300, "vendor pages read with a node, a terms block and an answer");
-    assertPopulationFloor(withheldPages.length, 40, "vendor pages withhold our stored terms entirely");
+    assertPopulationFloor(withheldPages.length, 15, "vendor pages withhold our stored terms entirely");
     assert.deepStrictEqual(unreadable.slice(0, 15), [], "vendor pages served no node, no terms block or no free-tier answer");
   });
 

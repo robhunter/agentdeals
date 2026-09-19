@@ -15,6 +15,8 @@ const { ANSWERED_OUTCOMES, applyAttempt, ATTEMPT_CHANGED, ATTEMPT_CONFIRMED, ATT
   await import("../scripts/verification-state.js");
 const { NO_CONFIRMATION_HELD, OUTCOMES_THAT_READ_THE_PAGE, UNCONFIRMED_DATE_LABEL, VERIFICATION_DATES_HEADING, attemptThatDidNotRead, confirmationDate, lastReadDate, lastReadNote, storedConfirmationClause, verificationDates, verificationDatesCell, verificationDatesClause, verificationDatesSentence } =
   await import("../dist/read-date.js");
+const { confirmationALaterReadContradicted } = await import("../dist/read-date.js");
+const { aReadSinceTheReadingConfirmedWhatWeStore } = await import("../dist/restatement.js");
 const { publishedTermsEvidence, termsTheVerdictWithholds, unconfirmedTermsFrom } = await import("../dist/vendor-verdict.js");
 const { holdsVerifiedDate } = await import("../scripts/vendor-naming.js");
 const { resetVerificationStateCache } = await import("../dist/verification-state.js");
@@ -275,6 +277,42 @@ describe("the day we last read the page", () => {
       const noAmount = unconfirmedTermsFrom(publishedTermsEvidence(rowFor("states_no_amount")));
       assert.deepStrictEqual(termsTheVerdictWithholds(noAmount), { clause: NO_AMOUNT_ON_THE_PAGE, on: "2026-09-10" });
       assert.strictEqual(termsTheVerdictWithholds(null), null);
+    });
+  });
+
+  describe("a confirmation a later read has already contradicted", () => {
+    const READING = { date: "2026-09-02", url: "https://examplebase.dev/pricing", label: "examplebase.dev", terms: "Free: 1 GB" };
+
+    it("stands where nothing has been read since", () => {
+      withState([record({ last_success: "2026-09-10", last_outcome: "confirmed", last_attempt_at: "2026-09-10" })]);
+      assert.strictEqual(confirmationALaterReadContradicted(offer), null);
+      assert.strictEqual(aReadSinceTheReadingConfirmedWhatWeStore(offer, READING), true);
+    });
+
+    it("stands where the read since reached the page without disagreeing", () => {
+      withState([record({ last_success: "2026-09-10", last_outcome: "link_ok", last_attempt_at: "2026-09-14" })]);
+      assert.strictEqual(confirmationALaterReadContradicted(offer), null);
+      assert.strictEqual(aReadSinceTheReadingConfirmedWhatWeStore(offer, READING), true);
+    });
+
+    it("falls where the read since found the page changed, so a stale confirmation refuses nothing", () => {
+      withState([record({ last_success: "2026-09-10", last_outcome: "changed", last_attempt_at: "2026-09-14" })]);
+      assert.strictEqual(confirmationALaterReadContradicted(offer), "2026-09-14");
+      assert.strictEqual(aReadSinceTheReadingConfirmedWhatWeStore(offer, READING), false);
+    });
+
+    it("stands where the read that found a change came before the confirmation, not after it", () => {
+      withState([record({ last_success: "2026-09-14", last_outcome: "changed", last_attempt_at: "2026-09-10" })]);
+      assert.strictEqual(confirmationALaterReadContradicted(offer), null);
+      assert.strictEqual(aReadSinceTheReadingConfirmedWhatWeStore(offer, READING), true);
+    });
+
+    it("refuses nothing on a reading newer than the confirmation, whatever was read since", () => {
+      withState([record({ last_success: "2026-09-10", last_outcome: "confirmed", last_attempt_at: "2026-09-10" })]);
+      assert.strictEqual(
+        aReadSinceTheReadingConfirmedWhatWeStore(offer, { ...READING, date: "2026-09-12" }),
+        false,
+      );
     });
   });
 });

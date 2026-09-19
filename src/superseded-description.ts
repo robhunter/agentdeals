@@ -75,8 +75,12 @@ export function storedTermsAreSuperseded(
   return supersedingChange(offer, vendorChanges) !== null;
 }
 
+export function asOneRunOfText(text: string): string {
+  return text.replace(/\s+/g, " ").trim();
+}
+
 export function readingBehindTheChange(change: QuotingChange): SourcedReading | null {
-  const terms = (change.current_state ?? "").trim();
+  const terms = asOneRunOfText(change.current_state ?? "");
   if (terms === "" || carriesAnUnrenderedExpression(terms)) return null;
   if (!changeCitesASource(change)) return null;
   const url = change.source_url!.trim();

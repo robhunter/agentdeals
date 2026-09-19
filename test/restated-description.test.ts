@@ -1,5 +1,7 @@
 import { describe, it } from "node:test";
 import assert from "node:assert";
+import { assertPopulationFloor } from "./population-floor.ts";
+import { readRestatements } from "../scripts/restate-superseded-terms.js";
 
 const { RESTATEMENT_JOIN, clauseSayingWhatTheProductIs, restatedDescription, statesTerms } =
   await import("../dist/restated-description.js");
@@ -11,6 +13,7 @@ const {
   withheldTermsMeasure,
 } = await import("../dist/restatement.js");
 const { changesByVendor } = await import("../dist/superseded-census.js");
+const { readingBehindTheChange } = await import("../dist/superseded-description.js");
 const { loadDealChanges, loadOffers } = await import("../dist/data.js");
 const { utcDate } = await import("../dist/ranking.js");
 
@@ -113,7 +116,14 @@ describe("restating the terms and keeping the sentence a human wrote", () => {
   });
 });
 
-describe("what the catalogue would keep if the rotation restated every entry it may", () => {
+interface ComposedEntry {
+  vendor: string;
+  stored: string;
+  description: string;
+  terms: string;
+}
+
+describe("every entry the rotation restates, whether it has restated it yet or not", () => {
   const offers = loadOffers() as Offer[];
   const byVendor = changesByVendor(loadDealChanges());
   const rulings = restatementRulings(
@@ -123,32 +133,59 @@ describe("what the catalogue would keep if the rotation restated every entry it 
   );
   const restatable = rulings.filter((ruling: any) => !ruling.refusal);
 
+  const composed: ComposedEntry[] = [
+    ...restatable.map((ruling: any) => ({
+      vendor: ruling.offer.vendor,
+      stored: ruling.offer.description,
+      description: ruling.description,
+      terms: ruling.reading.terms,
+    })),
+    ...readRestatements().map((entry: any) => ({
+      vendor: entry.vendor,
+      stored: entry.previous_description,
+      description: entry.description,
+      terms: entry.reading_terms,
+    })),
+  ];
+
+  const keepsWhatTheProductIs = (entry: ComposedEntry) => entry.description !== entry.terms;
+
+  it("reads every entry it has already restated as well as every entry it may, so the write cannot empty this block", () => {
+    assertPopulationFloor(composed.length, 90, "entries the rotation has restated or may restate");
+    assert.deepStrictEqual(
+      composed.filter((entry) => typeof entry.terms !== "string" || entry.terms === "")
+        .map((entry) => entry.vendor).slice(0, 15),
+      [],
+      "entries recorded without the reading their terms came from",
+    );
+  });
+
   it("keeps a sentence a human wrote on some entries and takes the reading whole on the rest", () => {
-    const keeping = restatable.filter(restatementKeepsWhatTheProductIs);
-    const whole = restatable.filter((ruling: any) => ruling.description === ruling.reading.terms);
-    assert.equal(keeping.length + whole.length, restatable.length);
-    assert.ok(keeping.length > 0);
+    const keeping = composed.filter(keepsWhatTheProductIs);
+    const whole = composed.filter((entry) => entry.description === entry.terms);
+    assert.equal(keeping.length + whole.length, composed.length);
+    assertPopulationFloor(keeping.length, 60, "entries keeping the sentence a human wrote");
     assert.equal(
       withheldTermsMeasure(rulings).restatements_keeping_the_stored_sentence_saying_what_the_product_is,
-      keeping.length,
+      restatable.filter(restatementKeepsWhatTheProductIs).length,
     );
   });
 
   it("publishes the whole of the reading whichever way it composes the entry", () => {
-    for (const ruling of restatable) {
+    for (const entry of composed) {
       assert.ok(
-        ruling.description.endsWith(ruling.reading.terms),
-        `${ruling.offer.vendor} drops part of the reading it restates from`,
+        entry.description.endsWith(entry.terms),
+        `${entry.vendor} drops part of the reading it restates from`,
       );
     }
   });
 
   it("opens every kept sentence on the stored description and states no terms in it", () => {
-    for (const ruling of restatable.filter(restatementKeepsWhatTheProductIs)) {
-      const kept = ruling.description.length - ruling.reading.terms.length - RESTATEMENT_JOIN.length;
-      const clause = ruling.description.slice(0, kept);
-      assert.ok(ruling.offer.description.startsWith(clause), ruling.offer.vendor);
-      assert.equal(statesTerms(clause), false, `${ruling.offer.vendor} keeps a clause stating terms`);
+    for (const entry of composed.filter(keepsWhatTheProductIs)) {
+      const kept = entry.description.length - entry.terms.length - RESTATEMENT_JOIN.length;
+      const clause = entry.description.slice(0, kept);
+      assert.ok(entry.stored.startsWith(clause), entry.vendor);
+      assert.equal(statesTerms(clause), false, `${entry.vendor} keeps a clause stating terms`);
     }
   });
 
@@ -172,5 +209,43 @@ describe("what the catalogue would keep if the rotation restated every entry it 
       source_url: "https://example.com/pricing",
     };
     assert.equal(ruleOnRestating(offer, change, "2026-09-17")?.refusal, READING_SAYS_WHAT_WE_ALREADY_STORE);
+  });
+});
+
+describe("a reading is text lifted off a page, and the page's spacing is not part of it", () => {
+  const A_RUN_OF_SPACING = /\s\s|\t|\n/;
+
+  const changeQuoting = (currentState: string) => ({
+    vendor: "Example",
+    change_type: "limits_reduced",
+    date: "2026-09-07",
+    recorded_date: "2026-09-07",
+    date_source: "vendor_page",
+    previous_state: "Vector database — the free tier holds 1 GB.",
+    current_state: currentState,
+    source_url: "https://example.com/pricing",
+  });
+
+  it("reads a double space, a tab and a newline as one space each", () => {
+    assert.equal(
+      readingBehindTheChange(changeQuoting("Free includes 1 user.  AI search\tand\nediting are not."))?.terms,
+      "Free includes 1 user. AI search and editing are not.",
+    );
+  });
+
+  it("holds the change log's own spacing, so the rule above has something to normalise", () => {
+    const quoting = loadDealChanges().filter(
+      (change: { current_state?: string | null }) => A_RUN_OF_SPACING.test(change.current_state ?? ""),
+    );
+    assert.ok(
+      quoting.length > 0,
+      "no change record holds a run of spacing, so nothing in the store exercises the rule above",
+    );
+    assert.deepStrictEqual(
+      quoting.map((change: any) => readingBehindTheChange(change))
+        .filter((reading: any) => reading !== null && A_RUN_OF_SPACING.test(reading.terms))
+        .map((reading: any) => reading.terms.slice(0, 60)),
+      [],
+    );
   });
 });
