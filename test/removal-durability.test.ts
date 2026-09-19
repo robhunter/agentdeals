@@ -259,7 +259,10 @@ describe("the vendors our pages name as removals that lasted", () => {
   });
 });
 
-function startServer(changesPath: string | null): Promise<{ proc: ChildProcess; port: number }> {
+function startServer(
+  changesPath: string | null,
+  env: NodeJS.ProcessEnv = {},
+): Promise<{ proc: ChildProcess; port: number }> {
   return new Promise((resolve, reject) => {
     const child = spawn("node", [path.join(REPO, "dist", "serve.js")], {
       stdio: ["pipe", "pipe", "pipe"],
@@ -268,6 +271,7 @@ function startServer(changesPath: string | null): Promise<{ proc: ChildProcess; 
         PORT: "0",
         BASE_URL: "http://localhost:3000",
         ...(changesPath ? { AGENTDEALS_CHANGES_PATH: changesPath } : {}),
+        ...env,
       },
     });
     const timeout = setTimeout(() => {
@@ -404,6 +408,37 @@ describe("no page tells a reader a removed free tier cannot return", () => {
         !text.includes(`${before.cameBack.length} of the ${before.weStandBehind.length} removals we stand behind`),
         "the page published the figure from before the reversal",
       );
+    } finally {
+      proc.kill();
+      rmSync(dir, { recursive: true, force: true });
+    }
+  });
+
+  it("names the record under the name we publish it by once the catalogue renames it", async () => {
+    const named = REMOVALS_PAGES_NAME_AS_LASTING.find((n) => n.route === "/state-of-free-tiers")!;
+    const catalogue: { vendor: string }[] = JSON.parse(
+      readFileSync(path.join(REPO, "data", "index.json"), "utf8"),
+    ).offers;
+    const survivor = catalogue
+      .map((o) => o.vendor)
+      .find((vendor) => !STORED.some((c) => c.vendor === vendor) && !named.vendor.includes(vendor))!;
+
+    const dir = mkdtempSync(path.join(tmpdir(), "removal-durability-renamed-"));
+    const mergesPath = path.join(dir, "vendor_merges.json");
+    writeFileSync(
+      mergesPath,
+      JSON.stringify({ merges: [{ retired: named.vendor, survivor }], shared_pricing_pages: [] }),
+    );
+    const { proc, port } = await startServer(null, { AGENTDEALS_MERGES_PATH: mergesPath });
+    try {
+      const text = visibleText(await (await fetch(`http://localhost:${port}/state-of-free-tiers`)).text());
+      const durability = removalDurability(STORED);
+      const held = sentenceStatingRemovalsHeld(text, durability.stillInForce.length, durability.weStandBehind.length);
+      assert.ok(
+        held.includes(survivor),
+        `${named.vendor} is published as ${survivor} and the report names neither: ${held}`,
+      );
+      assert.ok(!held.includes(named.vendor), `${named.vendor} is named under a name we no longer publish: ${held}`);
     } finally {
       proc.kill();
       rmSync(dir, { recursive: true, force: true });

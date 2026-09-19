@@ -19,7 +19,8 @@ export interface VendorMergeRegistry {
 }
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const MERGES_PATH = path.join(__dirname, "..", "data", "vendor_merges.json");
+const MERGES_PATH =
+  process.env.AGENTDEALS_MERGES_PATH || path.join(__dirname, "..", "data", "vendor_merges.json");
 
 let cached: VendorMergeRegistry | null = null;
 

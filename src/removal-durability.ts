@@ -135,9 +135,11 @@ export function lastingRemovalExamplesFor<T extends RemovalCandidate>(
   route: string,
   log: readonly T[],
   resolve: VendorNameResolver = spelledAsTheLogStoresIt,
+  named: readonly RemovalNamedAsLasting[] = REMOVALS_PAGES_NAME_AS_LASTING,
 ): LastingRemovalExample[] {
-  return REMOVALS_PAGES_NAME_AS_LASTING.filter((named) => named.route === route)
-    .map((named) => removalStillLasting(named.vendor, log, resolve))
+  return named
+    .filter((page) => page.route === route)
+    .map((page) => removalStillLasting(page.vendor, log, resolve))
     .filter((example): example is LastingRemovalExample => example !== null);
 }
 

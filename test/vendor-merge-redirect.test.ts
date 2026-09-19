@@ -334,6 +334,19 @@ describe("a page that picks its rows by writing vendor names out", () => {
   const selections = vendorSelectionsWrittenByHand();
   const survivorOf = new Map(merges.map((m) => [key(m.retired), m.survivor]));
 
+  it("reads a selection written on a vendor field and no other", () => {
+    const source = `
+      const named = all.filter(o => ["Alpha", "Beta"].includes(o.vendor));
+      const byCategory = all.filter(o => ["Gamma"].includes(o.category));
+      const byVariable = all.filter(o => chosen.includes(o.vendor));
+      const withTwoArguments = all.filter(o => ["Delta"].includes(o.vendor, 1));
+    `;
+    assert.deepStrictEqual(
+      vendorSelectionsWrittenByHand(source).map(s => s.names),
+      [["Alpha", "Beta"]],
+    );
+  });
+
   it("reads the selections in the page source this is measured over", () => {
     assertPopulationFloor(selections.length, 75, "hand-written vendor selections in the page source");
     assertPopulationFloor(
@@ -353,6 +366,20 @@ describe("a page that picks its rows by writing vendor names out", () => {
         ),
     );
     assert.deepStrictEqual(leftBehind, []);
+  });
+
+  it("writes every name out in the letters the catalogue holds it in", () => {
+    const exactly = new Set(offers.map((o) => o.vendor));
+    const heldAs = new Map(offers.map((o) => [key(o.vendor), o.vendor]));
+    const miscased = selections.flatMap((selection) =>
+      selection.names
+        .filter((name) => !exactly.has(name) && heldAs.has(key(name)))
+        .map(
+          (name) =>
+            `serve.ts:${selection.line} ${selection.builder ?? "module"} selects "${name}", and the catalogue holds it as "${heldAs.get(key(name))}"`,
+        ),
+    );
+    assert.deepStrictEqual(miscased, []);
   });
 
   it("selects a record for every renamed vendor a registered merge points at", () => {

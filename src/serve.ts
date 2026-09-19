@@ -10895,7 +10895,7 @@ function buildMonitoringAlternativesPage(): string {
   const riskColors: Record<string, string> = { stable: "#3fb950", caution: "#d29922", risky: "#f85149" };
 
   const apmObservability = enrichedAll.filter(o =>
-    ["New Relic", "Grafana Cloud", "Datadog", "Sentry", "Middleware.io", "AppSignal", "Axiom", "Sematext", "Inspector.dev", "skylight.io"].includes(o.vendor)
+    ["New Relic", "Grafana Cloud", "Datadog", "Sentry", "Middleware.io", "AppSignal", "Axiom", "Sematext", "inspector.dev", "skylight.io"].includes(o.vendor)
   );
   const uptimeSynthetic = enrichedAll.filter(o =>
     ["BetterStack", "UptimeRobot", "StatusCake", "Hyperping", "OnlineOrNot", "Cronitor", "Healthchecks.io", "Uptimia", "Pulsetic", "SweetUptime", "UptimeObserver.com", "downtimemonkey.com", "fivenines.io", "pingbreak.com", "Pingmeter.com", "assertible.com", "bleemeo.com", "MonitorMonk", "Xitoring.com", "360 Monitoring", "sitesure.net", "Servervana", "uptimetoolbox.com", "deadmanssnitch.com"].includes(o.vendor)
