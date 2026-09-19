@@ -177,4 +177,27 @@ describe("a record whose terms came from a reading says so wherever it says wher
     assert.ok(!freePriceOnlySentence("Widgetson").includes(OUR_OWN_RECORD_RATHER_THAN_THAT_PAGE));
     assert.ok(!freePriceOnlySentence("Widgetson").includes(limitsReadFromTheVendorsPage(READ_ON)));
   });
+
+  it("counts the records whose terms came from a reading, and not the ones holding our own", async () => {
+    const metrics = await fetch(`http://localhost:${serverPort}/api/freshness`).then((r) => r.json()) as {
+      superseded_terms: {
+        offers_whose_terms_came_from_a_reading: number;
+        offers_restated_by_change_type: Record<string, number>;
+        oldest_reading_we_publish_as_our_terms: string | null;
+        newest_reading_we_publish_as_our_terms: string | null;
+      };
+    };
+    const published = metrics.superseded_terms;
+
+    assert.strictEqual(published.offers_whose_terms_came_from_a_reading, READ_FROM_THE_PAGE.length);
+    assert.ok(
+      HELD_IN_OUR_OWN_RECORD.length > 0,
+      "the fixture holds no unrestated record, so a count of every record would pass this",
+    );
+    assert.deepStrictEqual(published.offers_restated_by_change_type, {
+      limits_reduced: READ_FROM_THE_PAGE.length,
+    });
+    assert.strictEqual(published.oldest_reading_we_publish_as_our_terms, READ_ON);
+    assert.strictEqual(published.newest_reading_we_publish_as_our_terms, READ_ON);
+  });
 });
