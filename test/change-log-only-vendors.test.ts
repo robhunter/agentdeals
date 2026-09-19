@@ -64,8 +64,12 @@ const liveVendors = new Set(
 );
 const heldUnderNoCatalogueNameOfItsOwn = (label: string) =>
   outsideTheCatalogue(label) || survivingVendorName(label, liveVendors) !== null;
-const changeLogAnchorAsPublished = (label: string) =>
-  changeLogAnchorFor(survivingVendorName(label, liveVendors) ?? label) ?? "";
+const vendorNameAsPublished = (label: string) => survivingVendorName(label, liveVendors) ?? label;
+const changeLogAnchorAsPublished = (label: string) => changeLogAnchorFor(vendorNameAsPublished(label)) ?? "";
+const CHANGE_LOG_ENTRY = /<div class="chg-entry[^"]*"[^>]*>([\s\S]*?)(?=\n      <div class="chg-entry|\n    <\/div>)/g;
+const changeLogEntries = (log: string) => [...log.matchAll(CHANGE_LOG_ENTRY)].map(m => m[1]!);
+const vendorNamedIn = (entry: string) => entry.match(/class="chg-vendor"[^>]*>([\s\S]*?)<\//)?.[1]?.trim() ?? "";
+const dateShownOn = (entry: string) => entry.match(/class="chg-date[^"]*">[^<]*?(\d{4}-\d{2}-\d{2})/)?.[1] ?? "";
 
 let proc: ChildProcess | null = null;
 let base = "";
@@ -138,10 +142,19 @@ describe("marking a comparison slot whose vendor has no catalogue entry", () => 
     assert.strictEqual(verdicts.size, badgeLinksOnBadgesPage(badges).length);
   });
 
-  it("addresses every vendor whose free tier it ended, including the ones the catalogue holds no entry for", () => {
+  it("publishes the record that ended each vendor's free tier, including the ones the catalogue holds no entry for", () => {
     const log = pages.get("/changes");
     assert.ok(log, "the change log did not render");
     const addressed = new Set([...log.matchAll(/ id="(vendor-[a-z0-9-]+)"/g)].map(m => m[1]!));
+    const carried = new Set(
+      changeLogEntries(log)
+        .map(entry => `${toSlug(vendorNamedIn(entry))}|${dateShownOn(entry)}`),
+    );
+    const withheld = [...endedByTheLog.values()]
+      .filter(c => !carried.has(`${toSlug(vendorNameAsPublished(c.vendor))}|${c.date}`))
+      .map(c => `${c.vendor} ${c.date} -> ${toSlug(vendorNameAsPublished(c.vendor))}`)
+      .sort();
+    assert.deepStrictEqual(withheld, []);
     const unaddressed = [...endedByTheLog.values()]
       .filter(c => !addressed.has(changeLogAnchorAsPublished(c.vendor)))
       .map(c => `${c.vendor} -> ${changeLogAnchorAsPublished(c.vendor)}`)
@@ -150,7 +163,7 @@ describe("marking a comparison slot whose vendor has no catalogue entry", () => 
     assertCoversPopulation(
       endedByTheLog.size,
       vendorsTheChangeLogEnds(),
-      "vendors the change log ends and addresses",
+      "vendors the change log ends, publishes the ending record for and addresses",
     );
   });
 
@@ -183,10 +196,16 @@ describe("marking a comparison slot whose vendor has no catalogue entry", () => 
   it("marks every slot naming an uncatalogued vendor whose free tier the change log ended", () => {
     const ended = everySlotOnEveryPage().filter(slot => endedByTheLog.has(slot.slug));
     const named = ended.filter(slot => outsideTheCatalogue(slot.label));
+    const listed = ended.filter(slot => !outsideTheCatalogue(slot.label));
     const unmarked = named
       .filter(slot => !REMOVAL_MARKER.test(slot.markup))
       .map(slot => `${slot.path}: ${slot.kind} ${slot.label}`);
     assert.deepStrictEqual(unmarked, []);
+    assert.strictEqual(
+      named.length + listed.length,
+      ended.length,
+      "a slot naming an ended vendor reached neither half of the sweep",
+    );
     assertPopulationFloor(
       ended.length,
       18,

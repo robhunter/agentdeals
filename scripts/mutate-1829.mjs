@@ -26,8 +26,13 @@ const MUTANTS = [
   ],
   [
     "test/population-floor.ts",
-    "s|if \\(change.resolution\\) continue;|if (change.resolution) continue;\\n    if (ENDS_A_FREE_TIER.has(change.change_type) \\&\\& change.vendor.length > 40) continue;|",
-    "the population reader drops an ending record it should count",
+    "s|const ENDS_A_FREE_TIER = new Set\\(\\[\"free_tier_removed\", \"open_source_killed\"\\]\\);|const ENDS_A_FREE_TIER = new Set([\"free_tier_removed\"]);|",
+    "the population reader stops counting a closed source as an ending",
+  ],
+  [
+    "test/population-floor.ts",
+    "s|if \\(held.some\\(\\(change\\) => change.change_type === \"new_free_tier\" \\&\\& change.date > ending.date\\)\\) continue;||",
+    "the population reader counts a vendor that was offered a free tier again",
   ],
   [
     "test/change-log-only-vendors.test.ts",
