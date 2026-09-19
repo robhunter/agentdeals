@@ -19,6 +19,7 @@ import {
   shareClearsHeadroom,
   REGISTERED_FROM,
   vendorsInTheCatalogue,
+  vendorsTheChangeLogEnds,
 } from "./population-floor.ts";
 
 const TEST_DIR = path.dirname(fileURLToPath(import.meta.url));
@@ -207,6 +208,33 @@ describe("a sweep read against the population it covers states coverage, not hea
     const categories = categoriesInTheCatalogue();
     assert.ok(catalogue.size > categories.size, "the catalogue holds more vendors than categories");
     assert.notStrictEqual(catalogue.read, categories.read);
+  });
+
+  it("counts a vendor the change log ends whatever the catalogue holds for it", () => {
+    const scratch = mkdtempSync(path.join(tmpdir(), "change-log-population-"));
+    const at = path.join(scratch, "deal_changes.json");
+    const stored = [
+      { vendor: "Ended", change_type: "free_tier_removed", date: "2026-01-01" },
+      { vendor: "ended", change_type: "restriction", date: "2026-03-01" },
+      { vendor: "Source Closed", change_type: "open_source_killed", date: "2026-01-01" },
+      { vendor: "Ended Then Offered Again", change_type: "free_tier_removed", date: "2026-01-01" },
+      { vendor: "Ended Then Offered Again", change_type: "new_free_tier", date: "2026-02-01" },
+      { vendor: "Retracted", change_type: "free_tier_removed", date: "2026-01-01", resolution: { state: "reversed" } },
+      { vendor: "Narrowed", change_type: "limits_reduced", date: "2026-01-01" },
+    ];
+    writeFileSync(at, JSON.stringify({ changes: stored }));
+    const held = process.env.AGENTDEALS_CHANGES_PATH;
+    process.env.AGENTDEALS_CHANGES_PATH = at;
+    try {
+      assert.strictEqual(vendorsTheChangeLogEnds().size, 2);
+      assert.strictEqual(vendorsTheChangeLogEnds().read, "vendors whose free tier the change log ends");
+      writeFileSync(at, JSON.stringify({ changes: stored.filter(c => c.vendor !== "Source Closed") }));
+      assert.strictEqual(vendorsTheChangeLogEnds().size, 1, "the population is read from the store, not carried");
+    } finally {
+      if (held === undefined) delete process.env.AGENTDEALS_CHANGES_PATH;
+      else process.env.AGENTDEALS_CHANGES_PATH = held;
+      rmSync(scratch, { recursive: true, force: true });
+    }
   });
 
   it("refuses a population handed over as a number rather than read from the data", () => {
