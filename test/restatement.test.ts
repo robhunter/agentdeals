@@ -550,6 +550,24 @@ describe("a restatement is reversible, visible and does not overwrite a hand-wri
     assert.equal(ruleOnRestating(IPAPI.offer, IPAPI.change, TODAY)?.refusal, null);
   });
 
+  it("declares every ground it refuses on, so a ground that fires is one the measure names", () => {
+    const reverted = {
+      ...IPAPI.offer,
+      restatement_reverted: { record_date: IPAPI.change.date, reverted_on: "2026-09-19" },
+    };
+    const grounds = [
+      ruleOnRestating(reverted, IPAPI.change, TODAY)!.refusal,
+      ruleOnRestating({ ...IPAPI.offer, tier: "Paid" }, IPAPI.change, TODAY)!.refusal,
+      ruleOnRestating({ ...IPAPI.offer, restated_from: { record_date: IPAPI.change.date } }, IPAPI.change, TODAY)!.refusal,
+    ];
+    assert.deepEqual(grounds.filter((ground) => ground === null), [], "a fixture that should refuse did not");
+    const undeclared = grounds.filter((ground) => !RESTATEMENT_REFUSALS.includes(ground!));
+    assert.deepEqual(undeclared, [], "a ground we refuse on is missing from the grounds we publish");
+
+    const measure = withheldTermsMeasure([ruleOnRestating(reverted, IPAPI.change, TODAY)!]);
+    assert.equal(measure.offers_we_refuse_to_restate[A_RESTATEMENT_FROM_THIS_RECORD_WAS_REVERTED], 1);
+  });
+
   it("does not write over an entry again from a record no newer than the one it came from", () => {
     const restated = { ...IPAPI.offer, restated_from: { record_date: "2026-09-07" } };
     assert.equal(
