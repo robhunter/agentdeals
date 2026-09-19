@@ -17,11 +17,11 @@ A record is published here when it carries one of four subtype labels, and by no
 - `model_hosting` — you supply or select a model and the platform serves it behind an endpoint on hardware you choose
 - `embeddings_api` — returns a vector for text or media so it can be compared to other vectors; the vector is the output, not a completion
 
-31 records carry one of those. The catalogue holds them under **AI / ML** and **AI Coding**, and 51 records there are left out. Each is left out for a stated reason, counted here so the size of each reason is visible:
+31 records carry one of those. The catalogue holds them under **AI / ML** and **AI Coding**, and 53 records there are left out. Each is left out for a stated reason, counted here so the size of each reason is visible:
 
 | | Records | Why |
 | --- | --- | --- |
-| `not_read_against_subtypes` | 20 | We have not read this record against any subtype taxonomy, so we hold no basis for saying it serves models. That states what we have not done rather than a finding about the product, and it stops applying the day the record is classified. |
+| `not_read_against_subtypes` | 22 | We have not read this record against any subtype taxonomy, so we hold no basis for saying it serves models. That states what we have not done rather than a finding about the product, and it stops applying the day the record is classified. |
 | `no_subtype_applies` | 8 | We have read this record against the taxonomy and none of its subtypes applies, so it is not one of the kinds of product those labels describe. |
 | `another_function` | 23 | The record is labelled, and every label it carries names a different function — observability, evaluation, labelling, generation and the rest are not the serving of a model behind an API. |
 
