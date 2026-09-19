@@ -31,7 +31,7 @@ import { dropEndedFromNameList, endedIndex, endedRowStatement, markEndedVendorRo
 import { amountUnstatedSentence, freePriceConfirmedSentence, freePriceOnlySentence, LAST_RESOLVED, levelWithheldReason, levelWithheldSince, recordPublishesAQuantity, withheldLevelClause, withheldLevelSentence, type LevelWithheldReason } from "./source-check.js";
 import { offerVerdictInput, reasonWeCannotConfirmTheTerms, vendorVerdictContextFrom, type VendorVerdictContext } from "./vendor-verdict-input.js";
 import { readingIsBehindTheLoop, reverificationIntervalDays } from "./badge-staleness.js";
-import { LAST_READ_LABEL, UNCONFIRMED_DATE_LABEL, VERIFICATION_DATES_HEADING, lastReadDate, lastReadNote, publishedDateLabel, publishedDateValue, verificationDatesCell, verificationDatesSentence } from "./read-date.js";
+import { LAST_READ_LABEL, RESTATED_DATE_LABEL, UNCONFIRMED_DATE_LABEL, VERIFICATION_DATES_HEADING, lastReadDate, lastReadNote, publishedDateLabel, publishedDateValue, restatedReadingDate, verificationDatesCell, verificationDatesSentence } from "./read-date.js";
 import { SUPERSEDED_TERMS_LABEL, SUPERSEDED_TERMS_RULE, readingBehindTheChange, supersededTermsAnswer, supersededTermsMetaSentence, supersededTermsNotice, supersededTermsNoticeHtml, supersededTermsRecord, supersededTermsVerdictSentence, supersedingChange, type SupersededTermsRecord } from "./superseded-description.js";
 import { openingOfTerms, punctuated, punctuatedOpeningOfTerms } from "./terms-opening.js";
 import { NO_CURRENT_FIGURE, costHeadlineCaveat, limitCellText, mayRecommendAsFree, proseWithoutNames, readsActive, stackFreshnessStatement } from "./stack-claim.js";
@@ -5640,7 +5640,11 @@ ${referralCalloutHtml}
       <div class="detail-label">${discontinuedOn ? "Discontinued" : linkUnreachable ? "Link last reachable" : publishedDateLabel(primary)}</div>
       <div class="detail-value" style="font-family:var(--mono)">${escHtmlServer(discontinuedOn ?? (linkUnreachable ? (linkUnreachable.last_reachable ?? "no reachable date on record") : publishedDateValue(primary)))}</div>
     </div>
-    <div class="detail-card">
+    ${restatedReadingDate(primary) ? `<div class="detail-card">
+      <div class="detail-label">${RESTATED_DATE_LABEL}</div>
+      <div class="detail-value" style="font-family:var(--mono)">${escHtmlServer(restatedReadingDate(primary)!)}</div>
+    </div>
+    ` : ""}<div class="detail-card">
       <div class="detail-label">${LAST_READ_LABEL}</div>
       <div class="detail-value" style="font-family:var(--mono)">${escHtmlServer(primaryLastRead)}</div>
       <div class="detail-note">${escHtmlServer(lastReadNote(primary, primaryTermsWithheld))}</div>

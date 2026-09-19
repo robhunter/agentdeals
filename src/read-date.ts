@@ -43,10 +43,16 @@ export function termsCameFromAReading(
   return offer?.restated_from ?? null;
 }
 
-export function confirmationDate(offer: DatedRecord | null | undefined): string | null {
+export function storedConfirmationDate(
+  offer: { vendor?: string; url?: string } | null | undefined,
+): string | null {
   if (!offer?.vendor || !offer?.url) return null;
-  if (termsCameFromAReading(offer)) return null;
   return loadVerificationState().get(`${offer.vendor}|${offer.url}`)?.last_success ?? null;
+}
+
+export function confirmationDate(offer: DatedRecord | null | undefined): string | null {
+  if (termsCameFromAReading(offer)) return null;
+  return storedConfirmationDate(offer);
 }
 
 export function lastAttemptDate(offer: DatedRecord | null | undefined): string | null {
@@ -55,18 +61,24 @@ export function lastAttemptDate(offer: DatedRecord | null | undefined): string |
 }
 
 export function publishedDateLabel(offer: DatedRecord | null | undefined): string {
-  if (termsCameFromAReading(offer)) return RESTATED_DATE_LABEL;
   return confirmationDate(offer) ? CONFIRMED_DATE_LABEL : UNCONFIRMED_DATE_LABEL;
 }
 
 export function publishedDateValue(offer: DatedRecord | null | undefined): string {
-  const reading = termsCameFromAReading(offer);
-  if (reading) return reading.reading_date;
   return confirmationDate(offer) ?? offer?.verifiedDate ?? "";
 }
 
 export function publishedDateLine(offer: DatedRecord | null | undefined): string {
   return `**${publishedDateLabel(offer)}:** ${publishedDateValue(offer)}`;
+}
+
+export function restatedReadingDate(offer: DatedRecord | null | undefined): string | null {
+  return termsCameFromAReading(offer)?.reading_date ?? null;
+}
+
+export function restatedReadingLine(offer: DatedRecord | null | undefined): string | null {
+  const read = restatedReadingDate(offer);
+  return read ? `**${RESTATED_DATE_LABEL}:** ${read}` : null;
 }
 
 export interface VerificationDates {
@@ -129,7 +141,7 @@ export function verificationDatesSentence(offer: DatedRecord | null | undefined)
   return attempted ? `${dates} · tried again ${attempted} and did not read the page` : dates;
 }
 
-const WHAT_THE_LAST_READ_FOUND: Record<string, string> = {
+export const WHAT_THE_LAST_READ_FOUND: Record<string, string> = {
   changed: "found the page different from the terms we hold",
   states_no_price: "could read no amount, tier or rate on the page",
   link_ok: "reached the page without reading terms from it",
@@ -137,9 +149,24 @@ const WHAT_THE_LAST_READ_FOUND: Record<string, string> = {
 
 export const NO_CONFIRMATION_HELD = "We hold no confirmation of the terms we publish";
 
-export function noConfirmationNote(read: string, verified: string, outcome: string | null): string {
+export function theReadOurTermsCameFrom(read: string, restatedFrom: string | null): string {
+  if (!restatedFrom) return "";
+  if (restatedFrom === read) return ` Our last read of it, on ${read}, is where the terms above come from.`;
+  if (restatedFrom > read) return ` The terms above come from our read of ${restatedFrom}.`;
+  return ` The terms above come from our read of ${restatedFrom}, and we have read the page since,`
+    + ` on ${read}, without confirming them.`;
+}
+
+export function noConfirmationNote(
+  read: string,
+  verified: string,
+  outcome: string | null,
+  restatedFrom: string | null = null,
+): string {
   const found = outcome ? WHAT_THE_LAST_READ_FOUND[outcome] : undefined;
-  const reading = read && found ? ` Our last read of it, on ${read}, ${found}.` : "";
+  const reading = restatedFrom
+    ? theReadOurTermsCameFrom(read, restatedFrom)
+    : read && found ? ` Our last read of it, on ${read}, ${found}.` : "";
   const beside = verified && verified !== read
     ? ` — the ${verified} beside this date is not one we can source to a read that confirmed them`
     : "";
@@ -171,7 +198,9 @@ export function lastReadNote(
   const tail = attempted
     ? ` We tried again on ${attempted} and did not read the page, so that attempt confirmed nothing.`
     : "";
-  if (!confirmed) return noConfirmationNote(read, verified, lastReadOutcome(offer)) + tail;
+  if (!confirmed) {
+    return noConfirmationNote(read, verified, lastReadOutcome(offer), restatedReadingDate(offer)) + tail;
+  }
   if (withheld) {
     return `The day we last read the vendor's page. ${unreconciledConfirmationNote(confirmed, withheld)}` + tail;
   }

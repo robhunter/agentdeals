@@ -20,7 +20,7 @@ import { registerMcpAppsResources, TOOL_UI_META } from "./mcp-apps.js";
 import { CATALOGUE_CATEGORY_COUNT, CATALOGUE_OFFER_FLOOR_LABEL, mcpInstructions, mcpServerDescription } from "./mcp-instructions.js";
 import { MCP_TOOLS, MCP_TOOL_COUNT, MCP_PROTOCOL_VERSION } from "./mcp-tool-inventory.js";
 import { MCP_SIGNAL_FOOTER } from "./signal-copy.js";
-import { lastReadDate, publishedDateLine, storedConfirmationClause, verificationDatesClause } from "./read-date.js";
+import { lastReadDate, publishedDateLine, restatedReadingLine, storedConfirmationClause, verificationDatesClause } from "./read-date.js";
 import { unconfirmedTermsForOffer } from "./vendor-verdict-input.js";
 import { NOT_VERIFIED, theReadConfirmedThePrice, termsTheVerdictWithholds, termsWithTheReasonWeCannotConfirmThem } from "./vendor-verdict.js";
 import { BASE_URL } from "./base-url.js";
@@ -819,6 +819,8 @@ Suggested monitoring cadence: run this check weekly to catch pricing changes ear
       text += `**Description:** ${unconfirmed ? termsWithTheReasonWeCannotConfirmThem(match.description, unconfirmed) : match.description}\n`;
       text += `**Pricing Page:** ${match.url}\n`;
       text += `${publishedDateLine(match)}\n`;
+      const restatedLine = restatedReadingLine(match);
+      if (restatedLine) text += `${restatedLine}\n`;
       if (unconfirmed && !theReadConfirmedThePrice(unconfirmed)) {
         text += `**Verification:** ${NOT_VERIFIED(unconfirmed.clause)} ${storedConfirmationClause(match, termsTheVerdictWithholds(unconfirmed))}\n`;
       }

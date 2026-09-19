@@ -2,6 +2,7 @@ import { tierRecordsAFreeTier, DENIES_A_FREE_TIER } from "./free-tier-record.js"
 import { describesThePageRatherThanTheTerms, mentionsSomethingFree } from "./superseding-reading.js";
 import { VERDICTS_ABOUT_THE_EDITION_ITSELF, comparableTerms } from "./change-tier.js";
 import { restatedDescription, statesAFigure } from "./restated-description.js";
+import { storedConfirmationDate } from "./read-date.js";
 import {
   readingBehindTheChange,
   supersedingChange,
@@ -26,6 +27,8 @@ export interface Restatement {
   restated_on: string;
 }
 
+export const A_LATER_READ_CONFIRMED_THE_TERMS_WE_STORE = "a_later_read_confirmed_the_terms_we_store";
+
 export const TIER_IS_NOT_ONE_WE_RECORD_AS_FREE = "tier_is_not_one_we_record_as_free";
 
 export const READING_ANSWERS_FOR_SOMETHING_ELSE = "reading_answers_for_something_else";
@@ -44,6 +47,7 @@ export const A_RECORD_NO_NEWER_ALREADY_RESTATED_THIS = "a_record_no_newer_alread
 export const THIS_READING_IS_HELD_BACK_BY_NAME = "this_reading_is_held_back_by_name";
 
 export const RESTATEMENT_REFUSALS: readonly string[] = [
+  A_LATER_READ_CONFIRMED_THE_TERMS_WE_STORE,
   TIER_IS_NOT_ONE_WE_RECORD_AS_FREE,
   READING_ANSWERS_FOR_SOMETHING_ELSE,
   READING_DESCRIBES_THE_PAGE_NOT_THE_TERMS,
@@ -123,11 +127,22 @@ export function aLaterRecordThanTheOneWeRestatedFrom(
   return change.date > restated.record_date;
 }
 
+export function aReadSinceTheReadingConfirmedWhatWeStore(
+  offer: Pick<RestatableOffer, "vendor" | "url">,
+  reading: SourcedReading,
+): boolean {
+  const confirmed = storedConfirmationDate(offer);
+  return confirmed !== null && confirmed > reading.date;
+}
+
 export function restatementRefusal(
   offer: RestatableOffer,
   change: QuotingChange,
   reading: SourcedReading,
 ): string | null {
+  if (aReadSinceTheReadingConfirmedWhatWeStore(offer, reading)) {
+    return A_LATER_READ_CONFIRMED_THE_TERMS_WE_STORE;
+  }
   if (!tierRecordsAFreeTier(offer.tier ?? "")) return TIER_IS_NOT_ONE_WE_RECORD_AS_FREE;
   if (!readingAnswersForTheListedTier(change, offer, reading.terms)) {
     return READING_ANSWERS_FOR_SOMETHING_ELSE;
