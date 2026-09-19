@@ -1014,6 +1014,19 @@ describe("#1103 every catalogue record whose stored terms are superseded", () =>
     assert.strictEqual(published.oldest_reading_we_are_withholding_behind, readings[0] ?? null);
     assert.ok(published.offers_whose_stored_terms_a_record_supersedes >= population.length);
 
+    const restated = offers.filter((o) => o.restated_from);
+    assert.strictEqual(published.offers_whose_terms_came_from_a_reading, restated.length);
+    assert.strictEqual(
+      published.newest_reading_we_publish_as_our_terms,
+      restated.map((o) => o.restated_from!.reading_date).sort().pop() ?? null,
+    );
+    for (const offer of restated) {
+      assert.ok(
+        !records.some(({ offer: withholding }) => withholding === offer),
+        `${offer.vendor} is counted as restated and as still withholding behind a record it has already answered`,
+      );
+    }
+
     const rendering = population.filter(({ offer }) =>
       bodies.get(`/vendor/${toSlug(offer.vendor)}`)!.includes(STORED_TERMS_WITHHELD_PHRASE),
     );

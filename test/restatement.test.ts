@@ -17,6 +17,7 @@ const {
   readingDropsTheCapOnWhoMayUseIt,
   readingSaysTheListedTierIsGone,
   readingStatesNoFigureWhereOurTermsDo,
+  restatementCensus,
   restatementRulings,
   ruleOnRestating,
   theHoldOnThisReading,
@@ -34,6 +35,7 @@ const {
   newestRestatementFor,
   restatementEntry,
   revertRestatement,
+  revertRun,
   termsTheWriteWouldPublish,
 } = await import("../scripts/restate-superseded-terms.js");
 const { BASELINE_MOVED, releaseReadingsWhoseBaselineMoved } = await import(
@@ -361,6 +363,64 @@ describe("a restatement is reversible, visible and does not overwrite a hand-wri
     assert.deepEqual(left, []);
   });
 
+  it("puts a whole run back in one step, not one vendor at a time", () => {
+    const data = { offers: [{ ...PAGURE.offer }, { ...IPAPI.offer }] };
+    const written = applyRestatements(
+      data,
+      [ruleOnRestating(PAGURE.offer, PAGURE.change, TODAY)!, ruleOnRestating(IPAPI.offer, IPAPI.change, TODAY)!],
+      TODAY,
+    );
+    assert.equal(written.length, 2);
+
+    assert.notEqual(data.offers[0].description, PAGURE.offer.description);
+    assert.notEqual(data.offers[1].description, IPAPI.offer.description);
+
+    const outcome = revertRun(data, written, TODAY);
+    assert.equal(outcome.reverted.length, 2);
+    assert.deepEqual(outcome.left, []);
+    assert.equal(data.offers[0].description, PAGURE.offer.description);
+    assert.equal(data.offers[1].description, IPAPI.offer.description);
+    assert.equal(data.offers[0].restated_from, undefined);
+    assert.equal(data.offers[1].restated_from, undefined);
+  });
+
+  it("reverts only the run it is given, and leaves every other run standing", () => {
+    const data = { offers: [{ ...PAGURE.offer }, { ...IPAPI.offer }] };
+    const earlier = applyRestatements(data, [ruleOnRestating(PAGURE.offer, PAGURE.change, TODAY)!], TODAY);
+    const later = applyRestatements(data, [ruleOnRestating(IPAPI.offer, IPAPI.change, "2026-09-18")!], "2026-09-18");
+
+    const outcome = revertRun(data, [...earlier, ...later], TODAY);
+    assert.deepEqual(outcome.reverted.map((e: { vendor: string }) => e.vendor), ["Pagure.io"]);
+    assert.equal(data.offers[0].description, PAGURE.offer.description);
+    assert.equal(data.offers[1].description, later[0].description);
+    assert.deepEqual(outcome.left, later);
+  });
+
+  it("refuses to put back an entry a later run restated again, rather than restoring the wrong terms", () => {
+    const data = { offers: [{ ...IPAPI.offer }] };
+    const first = applyRestatements(data, [ruleOnRestating(IPAPI.offer, IPAPI.change, TODAY)!], TODAY);
+    const newer = {
+      ...IPAPI.change,
+      date: "2026-09-18",
+      recorded_date: "2026-09-18",
+      previous_state: data.offers[0].description,
+      current_state: "The free tier now offers 500 lookups/day.",
+    };
+    const second = applyRestatements(data, [ruleOnRestating(data.offers[0], newer, "2026-09-18")!], "2026-09-18");
+    assert.equal(second.length, 1, "the fixture must restate the same entry twice for this control to prove anything");
+
+    const held = [...first, ...second];
+    const outcome = revertRun(data, held, TODAY);
+    assert.deepEqual(outcome.reverted, []);
+    assert.deepEqual(outcome.supersededBefore.map((e: { vendor: string }) => e.vendor), ["ipapi"]);
+    assert.equal(
+      data.offers[0].description,
+      second[0].description,
+      "the entry still reads what the later run stored, rather than the terms the earlier run replaced",
+    );
+    assert.deepEqual(outcome.left, held);
+  });
+
   it("leaves the date a reading last agreed with us exactly where it was", () => {
     const ruling = ruleOnRestating(IPAPI.offer, IPAPI.change, TODAY)!;
     const data = { offers: [{ ...IPAPI.offer, verifiedDate: "2026-08-01" }] };
@@ -499,6 +559,44 @@ describe("a restatement is reversible, visible and does not overwrite a hand-wri
     run("--revert", "ipapi");
     assert.deepEqual(JSON.parse(readFileSync(index, "utf-8")), before);
     assert.deepEqual(JSON.parse(readFileSync(store, "utf-8")).restatements, []);
+
+    run("--write");
+    const day = JSON.parse(readFileSync(store, "utf-8")).restatements[0].restated_on;
+    const output = run("--revert-run", day);
+    assert.match(output, /Reverted 1 of the 1 entries restated on /);
+    assert.deepEqual(JSON.parse(readFileSync(index, "utf-8")), before);
+    assert.deepEqual(JSON.parse(readFileSync(store, "utf-8")).restatements, []);
+  });
+
+  it("refuses a day it recorded nothing on rather than reporting an empty revert as done", async () => {
+    const { mkdtempSync, writeFileSync } = await import("node:fs");
+    const { tmpdir } = await import("node:os");
+    const { join } = await import("node:path");
+    const { spawnSync } = await import("node:child_process");
+
+    const dir = mkdtempSync(join(tmpdir(), "restate-run-"));
+    const index = join(dir, "index.json");
+    const store = join(dir, "restated.json");
+    const log = join(dir, "changes.json");
+    writeFileSync(index, JSON.stringify({ offers: [{ ...IPAPI.offer }] }, null, 2));
+    writeFileSync(store, JSON.stringify({ restatements: [] }, null, 2));
+    writeFileSync(log, JSON.stringify({ changes: [IPAPI.change] }, null, 2));
+    const env = {
+      ...process.env,
+      AGENTDEALS_INDEX_PATH: index,
+      AGENTDEALS_RESTATED_PATH: store,
+      AGENTDEALS_CHANGES_PATH: log,
+    };
+    const run = (...args: string[]) =>
+      spawnSync(process.execPath, ["scripts/restate-superseded-terms.js", ...args], { env, encoding: "utf-8" });
+
+    const silent = run("--revert-run", "2026-01-01");
+    assert.equal(silent.status, 2);
+    assert.match(silent.stderr, /No restatement was recorded on 2026-01-01/);
+
+    const misread = run("--revert-run", "yesterday");
+    assert.equal(misread.status, 2);
+    assert.match(misread.stderr, /--revert-run takes the YYYY-MM-DD a run recorded/);
   });
 
   it("releases a reading held against terms the write replaces, and holds the rest", () => {
@@ -604,6 +702,51 @@ describe("a restatement is reversible, visible and does not overwrite a hand-wri
     const first = restatementEntry(ruleOnRestating(IPAPI.offer, IPAPI.change, "2026-09-10")!, "2026-09-10");
     const second = { ...first, restated_on: "2026-09-16", previous_description: "the one before last" };
     assert.equal(newestRestatementFor([first, second], "ipapi")?.restated_on, "2026-09-16");
+  });
+});
+
+describe("a restatement is counted where it happened, and nowhere a confirmation is counted", () => {
+  it("counts exactly what the write stored, by the verdict the reading came from", () => {
+    const data = { offers: [{ ...PAGURE.offer }, { ...IPAPI.offer }, { ...BURNERMAIL.offer }] };
+    assert.deepEqual(restatementCensus(data.offers), {
+      offers_whose_terms_came_from_a_reading: 0,
+      offers_restated_by_change_type: {},
+      oldest_reading_we_publish_as_our_terms: null,
+      newest_reading_we_publish_as_our_terms: null,
+    });
+
+    const written = applyRestatements(
+      data,
+      [ruleOnRestating(PAGURE.offer, PAGURE.change, TODAY)!, ruleOnRestating(IPAPI.offer, IPAPI.change, TODAY)!],
+      TODAY,
+    );
+    assert.equal(written.length, 2);
+
+    const census = restatementCensus(data.offers);
+    assert.equal(census.offers_whose_terms_came_from_a_reading, written.length);
+    assert.deepEqual(census.offers_restated_by_change_type, {
+      [PAGURE.change.change_type]: 1,
+      [IPAPI.change.change_type]: 1,
+    });
+    assert.equal(census.oldest_reading_we_publish_as_our_terms, IPAPI.change.date);
+    assert.equal(census.newest_reading_we_publish_as_our_terms, PAGURE.change.date);
+  });
+
+  it("counts a restated entry back out again once its restatement is reverted", () => {
+    const data = { offers: [{ ...IPAPI.offer }] };
+    const written = applyRestatements(data, [ruleOnRestating(IPAPI.offer, IPAPI.change, TODAY)!], TODAY);
+    assert.equal(restatementCensus(data.offers).offers_whose_terms_came_from_a_reading, 1);
+    revertRun(data, written, TODAY);
+    assert.equal(restatementCensus(data.offers).offers_whose_terms_came_from_a_reading, 0);
+  });
+
+  it("does not count an entry a reading only could have answered for", () => {
+    const withheld = { ...IPAPI.offer };
+    assert.ok(
+      ruleOnRestating(withheld, IPAPI.change, TODAY)?.refusal === null,
+      "the fixture must be restatable for this control to separate could-restate from did-restate",
+    );
+    assert.equal(restatementCensus([withheld]).offers_whose_terms_came_from_a_reading, 0);
   });
 });
 

@@ -1978,3 +1978,62 @@ describe("#1764 every scheduled data job reports the push that clears its alarm"
     }
   });
 });
+
+describe("#1744 the rotation stores the readings its withheld pages already show", () => {
+  const RESTATE = "scripts/restate-superseded-terms.js";
+
+  function restatingWorkflows(): string[] {
+    return workflowFiles().filter((f) => source(f).includes(RESTATE));
+  }
+
+  function restateStepOf(file: string): WorkflowStep {
+    const step = stepsOf(source(file)).find((s) => s.body.includes(RESTATE));
+    assert.ok(step, `${file} has no step that runs ${RESTATE}`);
+    return step;
+  }
+
+  it("runs the pass with --write, so a withheld page has a route out that needs no human", () => {
+    const restating = restatingWorkflows();
+    assert.ok(restating.length > 0, `no workflow runs ${RESTATE}, so nothing clears a withheld entry`);
+    for (const file of restating) {
+      assert.match(
+        restateStepOf(file).body,
+        new RegExp(`${RESTATE.replace(/[.]/g, "\\.")}\\s+--write`),
+        `${file} runs the restatement pass and stores nothing — the entries it counts stay withheld for ever`,
+      );
+    }
+  });
+
+  it("commits every file the write writes, so no half of the write is left in the workspace", async () => {
+    const { indexPath, restatementsPath } = await import("../scripts/restate-superseded-terms.js");
+    const { corroborationPath } = await import("../scripts/change-corroboration.js");
+    const written = [indexPath(), restatementsPath(), corroborationPath()].map((p) =>
+      relative(REPO, p).split(sep).join("/"),
+    );
+    for (const file of restatingWorkflows()) {
+      const committable = gateStepOf(file).body;
+      for (const path of written) {
+        assert.ok(
+          committable.includes(path),
+          `${file} writes ${path} and may not commit it, so the write reaches main in pieces`,
+        );
+      }
+    }
+  });
+
+  it("says in the commit how many entries it restated, not only how many it could have", () => {
+    for (const file of restatingWorkflows()) {
+      const step = restateStepOf(file).body;
+      assert.match(step, /\^Restated this run: /, `${file} never reads back what the write actually stored`);
+      const message = gateStepOf(file).body.match(/"(data\(auto\): [^"]+)"/)?.[1] ?? "";
+      const counted = [...step.matchAll(/echo "([a-z_]+)=\$/g)].map((m) => m[1]!);
+      assert.ok(counted.includes("restated"), `${file} reads back no count of what the write stored`);
+      for (const name of counted) {
+        assert.ok(
+          message.includes(`\${${name.toUpperCase()}}`),
+          `${file} counts ${name} and the commit it writes never says it`,
+        );
+      }
+    }
+  });
+});

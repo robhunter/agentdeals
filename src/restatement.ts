@@ -234,6 +234,33 @@ export function restatementKeepsWhatTheProductIs(ruling: RestatementRuling): boo
   return !ruling.refusal && ruling.description !== ruling.reading.terms;
 }
 
+export interface RestatementCensus {
+  offers_whose_terms_came_from_a_reading: number;
+  offers_restated_by_change_type: Record<string, number>;
+  oldest_reading_we_publish_as_our_terms: string | null;
+  newest_reading_we_publish_as_our_terms: string | null;
+}
+
+export function restatementCensus(
+  offers: readonly Pick<RestatableOffer, "restated_from">[],
+): RestatementCensus {
+  const byType: Record<string, number> = {};
+  const readings: string[] = [];
+  for (const offer of offers) {
+    const restated = offer.restated_from;
+    if (!restated) continue;
+    byType[restated.change_type] = (byType[restated.change_type] ?? 0) + 1;
+    readings.push(restated.reading_date);
+  }
+  readings.sort();
+  return {
+    offers_whose_terms_came_from_a_reading: readings.length,
+    offers_restated_by_change_type: byType,
+    oldest_reading_we_publish_as_our_terms: readings[0] ?? null,
+    newest_reading_we_publish_as_our_terms: readings[readings.length - 1] ?? null,
+  };
+}
+
 export interface WithheldTermsMeasure {
   offers_we_may_restate_from_their_reading: number;
   offers_we_refuse_to_restate: Record<string, number>;
