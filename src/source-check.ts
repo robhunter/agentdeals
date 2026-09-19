@@ -147,8 +147,18 @@ export function sourceStatesNoAmount(offer: Pick<Offer, "source_check">): boolea
   return offer.source_check?.outcome === "states_no_amount";
 }
 
-export function amountUnstatedSentence(subject: string): string {
-  return `The page we cite for ${subject} names a plan but states no amount, so these limits come from our own record rather than from that page.`;
+export const OUR_OWN_RECORD_RATHER_THAN_THAT_PAGE =
+  "come from our own record rather than from that page";
+
+export function limitsReadFromTheVendorsPage(readFrom: string): string {
+  return `the limits stated here come from our read of the vendor's page on ${readFrom}`;
+}
+
+export function amountUnstatedSentence(subject: string, readFrom: string | null = null): string {
+  const where = readFrom
+    ? limitsReadFromTheVendorsPage(readFrom)
+    : `these limits ${OUR_OWN_RECORD_RATHER_THAN_THAT_PAGE}`;
+  return `The page we cite for ${subject} names a plan but states no amount, so ${where}.`;
 }
 
 export function outcomeConfirmsThePrice(outcome: string | null | undefined): boolean {
@@ -168,8 +178,11 @@ export function recordPublishesAQuantity(description: string | null | undefined)
   return typeof description === "string" && A_QUANTITY.test(description);
 }
 
-export function freePriceConfirmedSentence(subject: string): string {
-  return `The page we cite for ${subject} states in words that it is free, which confirms the price — the limits stated here come from our own record rather than from that page.`;
+export function freePriceConfirmedSentence(subject: string, readFrom: string | null = null): string {
+  const where = readFrom
+    ? limitsReadFromTheVendorsPage(readFrom)
+    : `the limits stated here ${OUR_OWN_RECORD_RATHER_THAN_THAT_PAGE}`;
+  return `The page we cite for ${subject} states in words that it is free, which confirms the price — ${where}.`;
 }
 
 export function freePriceOnlySentence(subject: string): string {

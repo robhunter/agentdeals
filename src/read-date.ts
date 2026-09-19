@@ -16,11 +16,14 @@ export const UNCONFIRMED_DATE_LABEL = "Catalogue date";
 const UNCONFIRMED_DATE_WORDS = UNCONFIRMED_DATE_LABEL.toLowerCase();
 export const VERIFICATION_DATES_HEADING = `Read / ${UNCONFIRMED_DATE_WORDS}`;
 
-export interface DatedRecord {
+export interface RestatableRecord {
+  restated_from?: { reading_date: string } | null;
+}
+
+export interface DatedRecord extends RestatableRecord {
   vendor: string;
   url: string;
   verifiedDate: string;
-  restated_from?: { reading_date: string } | null;
 }
 
 export function outcomeReadThePage(outcome: string | null | undefined): boolean {
@@ -38,7 +41,7 @@ export function lastReadDate(offer: DatedRecord | null | undefined): string {
 }
 
 export function termsCameFromAReading(
-  offer: DatedRecord | null | undefined,
+  offer: RestatableRecord | null | undefined,
 ): { reading_date: string } | null {
   return offer?.restated_from ?? null;
 }
@@ -48,6 +51,19 @@ export function storedConfirmationDate(
 ): string | null {
   if (!offer?.vendor || !offer?.url) return null;
   return loadVerificationState().get(`${offer.vendor}|${offer.url}`)?.last_success ?? null;
+}
+
+export const OUTCOME_CONTRADICTING_WHAT_WE_STORE = "changed";
+
+export function confirmationALaterReadContradicted(
+  offer: { vendor?: string; url?: string } | null | undefined,
+): string | null {
+  if (!offer?.vendor || !offer?.url) return null;
+  const record = loadVerificationState().get(`${offer.vendor}|${offer.url}`);
+  if (!record?.last_success) return null;
+  if (record.last_outcome !== OUTCOME_CONTRADICTING_WHAT_WE_STORE) return null;
+  const read = record.last_attempt_at ?? record.last_read_at ?? null;
+  return read && read > record.last_success ? read : null;
 }
 
 export function confirmationDate(offer: DatedRecord | null | undefined): string | null {
@@ -72,7 +88,7 @@ export function publishedDateLine(offer: DatedRecord | null | undefined): string
   return `**${publishedDateLabel(offer)}:** ${publishedDateValue(offer)}`;
 }
 
-export function restatedReadingDate(offer: DatedRecord | null | undefined): string | null {
+export function restatedReadingDate(offer: RestatableRecord | null | undefined): string | null {
   return termsCameFromAReading(offer)?.reading_date ?? null;
 }
 

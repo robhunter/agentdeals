@@ -1,5 +1,7 @@
 import { describe, it } from "node:test";
 import assert from "node:assert";
+import { assertPopulationFloor } from "./population-floor.ts";
+import { readRestatements } from "../scripts/restate-superseded-terms.js";
 
 const { RESTATEMENT_JOIN, clauseSayingWhatTheProductIs, restatedDescription, statesTerms } =
   await import("../dist/restated-description.js");
@@ -113,7 +115,14 @@ describe("restating the terms and keeping the sentence a human wrote", () => {
   });
 });
 
-describe("what the catalogue would keep if the rotation restated every entry it may", () => {
+interface ComposedEntry {
+  vendor: string;
+  stored: string;
+  description: string;
+  terms: string;
+}
+
+describe("every entry the rotation restates, whether it has restated it yet or not", () => {
   const offers = loadOffers() as Offer[];
   const byVendor = changesByVendor(loadDealChanges());
   const rulings = restatementRulings(
@@ -123,32 +132,59 @@ describe("what the catalogue would keep if the rotation restated every entry it 
   );
   const restatable = rulings.filter((ruling: any) => !ruling.refusal);
 
+  const composed: ComposedEntry[] = [
+    ...restatable.map((ruling: any) => ({
+      vendor: ruling.offer.vendor,
+      stored: ruling.offer.description,
+      description: ruling.description,
+      terms: ruling.reading.terms,
+    })),
+    ...readRestatements().map((entry: any) => ({
+      vendor: entry.vendor,
+      stored: entry.previous_description,
+      description: entry.description,
+      terms: entry.reading_terms,
+    })),
+  ];
+
+  const keepsWhatTheProductIs = (entry: ComposedEntry) => entry.description !== entry.terms;
+
+  it("reads every entry it has already restated as well as every entry it may, so the write cannot empty this block", () => {
+    assertPopulationFloor(composed.length, 90, "entries the rotation has restated or may restate");
+    assert.deepStrictEqual(
+      composed.filter((entry) => typeof entry.terms !== "string" || entry.terms === "")
+        .map((entry) => entry.vendor).slice(0, 15),
+      [],
+      "entries recorded without the reading their terms came from",
+    );
+  });
+
   it("keeps a sentence a human wrote on some entries and takes the reading whole on the rest", () => {
-    const keeping = restatable.filter(restatementKeepsWhatTheProductIs);
-    const whole = restatable.filter((ruling: any) => ruling.description === ruling.reading.terms);
-    assert.equal(keeping.length + whole.length, restatable.length);
-    assert.ok(keeping.length > 0);
+    const keeping = composed.filter(keepsWhatTheProductIs);
+    const whole = composed.filter((entry) => entry.description === entry.terms);
+    assert.equal(keeping.length + whole.length, composed.length);
+    assertPopulationFloor(keeping.length, 60, "entries keeping the sentence a human wrote");
     assert.equal(
       withheldTermsMeasure(rulings).restatements_keeping_the_stored_sentence_saying_what_the_product_is,
-      keeping.length,
+      restatable.filter(restatementKeepsWhatTheProductIs).length,
     );
   });
 
   it("publishes the whole of the reading whichever way it composes the entry", () => {
-    for (const ruling of restatable) {
+    for (const entry of composed) {
       assert.ok(
-        ruling.description.endsWith(ruling.reading.terms),
-        `${ruling.offer.vendor} drops part of the reading it restates from`,
+        entry.description.endsWith(entry.terms),
+        `${entry.vendor} drops part of the reading it restates from`,
       );
     }
   });
 
   it("opens every kept sentence on the stored description and states no terms in it", () => {
-    for (const ruling of restatable.filter(restatementKeepsWhatTheProductIs)) {
-      const kept = ruling.description.length - ruling.reading.terms.length - RESTATEMENT_JOIN.length;
-      const clause = ruling.description.slice(0, kept);
-      assert.ok(ruling.offer.description.startsWith(clause), ruling.offer.vendor);
-      assert.equal(statesTerms(clause), false, `${ruling.offer.vendor} keeps a clause stating terms`);
+    for (const entry of composed.filter(keepsWhatTheProductIs)) {
+      const kept = entry.description.length - entry.terms.length - RESTATEMENT_JOIN.length;
+      const clause = entry.description.slice(0, kept);
+      assert.ok(entry.stored.startsWith(clause), entry.vendor);
+      assert.equal(statesTerms(clause), false, `${entry.vendor} keeps a clause stating terms`);
     }
   });
 

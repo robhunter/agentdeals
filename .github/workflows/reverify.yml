@@ -97,7 +97,7 @@ jobs:
           bash scripts/gate-data-push.sh \
             data-quarantine/rolling-reverification \
             "data(auto): rolling re-verification — ${VERIFIED} verified of ${DRAWN} drawn from the queue, ${SECOND} re-read to corroborate a held verdict, ${FLAGGED} flagged, ${RECORDED} changes recorded, ${RESTATED} withheld entries a reading could answer for with ${STILL_WITHHELD} re-read and still withheld, ${HELD} awaiting a second reading, ${RETRIED} retried from quarantine, ${QUARANTINED} in quarantine, ${REPICKED} to be checked again" \
-            data/index.json data/deal_changes.json data/change_refusals.json data/change_corroboration.json data/verification_state.json data/quality_budgets.json data/page-lastmod.json data/page-reviews.json artifacts/free-llm-api-index/README.md
+            data/index.json data/deal_changes.json data/change_refusals.json data/change_corroboration.json data/verification_state.json data/restated_terms.json data/quality_budgets.json data/page-lastmod.json data/page-reviews.json artifacts/free-llm-api-index/README.md
 
       - name: Say where it can be seen what the gate did with this run's data
         if: always() && (steps.gate.outputs.quarantined == 'true' || steps.gate.outputs.pushed_over_failures == 'true' || steps.gate.outputs.drifted_guards != '' || steps.gate.outputs.pushed_commit != '' || steps.gate.outputs.pushed_nothing == 'true' || steps.gate.outputs.held_back_vendors != '')

@@ -1,5 +1,5 @@
 import type { DealChange, RatingWithheld, RiskCause, SourceCheck, SourceCheckOutcome } from "./types.js";
-import type { TermsWeCannotConfirm } from "./read-date.js";
+import { restatedReadingDate, type TermsWeCannotConfirm } from "./read-date.js";
 import { CHANGE_DIRECTION, isACorrectionToOurOwnRecord } from "./data.js";
 import { changeRatesTheListedTier, type GradedOffer } from "./change-tier.js";
 import { isNoLongerInForce, theEventNeverHappened } from "./change-resolution.js";
@@ -87,6 +87,7 @@ export interface VendorVerdictInput {
   refusedReads?: readonly RefusedRead[];
   publishesAQuantity?: boolean;
   termsSuperseded?: boolean;
+  termsReadFrom?: string | null;
 }
 
 export type BadgeWithholding =
@@ -308,10 +309,12 @@ export function nothingWeReadDescribesTheTerms(
   return !unconfirmed.theReadFoundAFreePlan;
 }
 
-const TERMS_ONLY_SENTENCES: Record<TermsOnlyOutcome, (subject: string, publishesAQuantity: boolean) => string> = {
-  states_no_amount: amountUnstatedSentence,
-  states_a_free_price: (subject, publishesAQuantity) =>
-    publishesAQuantity ? freePriceConfirmedSentence(subject) : freePriceOnlySentence(subject),
+type TermsOnlySentence = (subject: string, publishesAQuantity: boolean, readFrom: string | null) => string;
+
+const TERMS_ONLY_SENTENCES: Record<TermsOnlyOutcome, TermsOnlySentence> = {
+  states_no_amount: (subject, _publishesAQuantity, readFrom) => amountUnstatedSentence(subject, readFrom),
+  states_a_free_price: (subject, publishesAQuantity, readFrom) =>
+    publishesAQuantity ? freePriceConfirmedSentence(subject, readFrom) : freePriceOnlySentence(subject),
 };
 
 type TermsOnlyWithholding = Extract<TermsWithholding, { reason: TermsOnlyOutcome }>;
@@ -329,6 +332,7 @@ export interface TermsEvidence {
   sourceChecked?: string | null;
   linkCheckedOn?: string | null;
   publishesAQuantity?: boolean;
+  termsReadFrom?: string | null;
 }
 
 export const TERMS_WITHHELD_LABELS: Record<TermsWithholdingTag, string> = {
@@ -371,6 +375,7 @@ export interface PublishedTermsRow {
   risk_level?: PublishedRiskLevel | null;
   risk_cause?: RiskCause | null;
   offer_ended?: boolean;
+  restated_from?: { reading_date: string } | null;
 }
 
 export function publishedTermsEvidence(row: PublishedTermsRow): TermsEvidence {
@@ -392,6 +397,7 @@ export function publishedTermsEvidence(row: PublishedTermsRow): TermsEvidence {
     sourceChecked: row.source_check?.checked ?? null,
     linkCheckedOn: link?.checked ?? null,
     publishesAQuantity: recordPublishesAQuantity(row.description),
+    termsReadFrom: restatedReadingDate(row),
   };
 }
 
@@ -405,6 +411,7 @@ export function termsEvidenceOf(input: VendorVerdictInput): TermsEvidence {
     sourceChecked: input.sourceChecked ?? null,
     linkCheckedOn: input.linkCheckedOn ?? null,
     publishesAQuantity: input.publishesAQuantity,
+    termsReadFrom: input.termsReadFrom ?? null,
   };
 }
 
@@ -438,7 +445,11 @@ export function unconfirmedTermsFrom(input: TermsEvidence): UnconfirmedTerms | n
       theReadFoundAFreePlan,
       on,
       clause: unconfirmedTermsClause(because.reason),
-      sentence: TERMS_ONLY_SENTENCES[because.reason](input.vendor, publishesAQuantity(input)),
+      sentence: TERMS_ONLY_SENTENCES[because.reason](
+        input.vendor,
+        publishesAQuantity(input),
+        input.termsReadFrom ?? null,
+      ),
     };
   }
   return {

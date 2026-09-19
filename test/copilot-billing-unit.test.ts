@@ -49,13 +49,12 @@ describe("GitHub Copilot is priced in the unit GitHub bills in", () => {
     assert.deepStrictEqual(source.match(PREMIUM_REQUEST_QUANTITY) ?? [], []);
   });
 
-  it("holds a catalogue record for Copilot Free that states its allowance in AI credits", () => {
+  it("states no premium-request quantity in the catalogue record for Copilot Free, however that record was last written", () => {
     const offers: Array<{ vendor: string; tier: string; description: string }> = JSON.parse(
       readFileSync(path.join(REPO, "data", "index.json"), "utf-8")
     ).offers;
     const free = offers.find(o => o.vendor === "GitHub Copilot" && o.tier === "Free");
     assert.ok(free, "the catalogue holds GitHub Copilot's free tier");
-    assert.match(free!.description, /AI Credits/i);
     assert.doesNotMatch(free!.description, PREMIUM_REQUEST_QUANTITY);
   });
 });

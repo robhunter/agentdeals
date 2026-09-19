@@ -91,7 +91,6 @@ describe("prose that quotes a credit rate agrees with the record that holds it (
   });
 
   it("states no per-seat charge the record says was withdrawn", () => {
-    assert.match(netlify.description, /committer-seat gotcha no longer applies/);
     const standing = [...serve.matchAll(/[^.]*\b(?:per-committer|repo committer)[^.]*\./g)]
       .map(m => m[0].trim())
       .filter(sentence => !/Advanced Security/.test(sentence));

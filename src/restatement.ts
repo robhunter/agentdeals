@@ -2,7 +2,7 @@ import { tierRecordsAFreeTier, DENIES_A_FREE_TIER } from "./free-tier-record.js"
 import { describesThePageRatherThanTheTerms, mentionsSomethingFree } from "./superseding-reading.js";
 import { VERDICTS_ABOUT_THE_EDITION_ITSELF, comparableTerms } from "./change-tier.js";
 import { restatedDescription, statesAFigure } from "./restated-description.js";
-import { storedConfirmationDate } from "./read-date.js";
+import { confirmationALaterReadContradicted, storedConfirmationDate } from "./read-date.js";
 import {
   readingBehindTheChange,
   supersedingChange,
@@ -132,7 +132,8 @@ export function aReadSinceTheReadingConfirmedWhatWeStore(
   reading: SourcedReading,
 ): boolean {
   const confirmed = storedConfirmationDate(offer);
-  return confirmed !== null && confirmed > reading.date;
+  if (confirmed === null || confirmed <= reading.date) return false;
+  return confirmationALaterReadContradicted(offer) === null;
 }
 
 export function restatementRefusal(

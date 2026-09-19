@@ -50,6 +50,7 @@ export function restatementEntry(ruling, today) {
     previous_description: offer.description,
     description: ruling.description,
     reading_date: reading.date,
+    reading_terms: reading.terms,
     source_url: reading.url,
     record_date: change.date,
     change_type: change.change_type,
