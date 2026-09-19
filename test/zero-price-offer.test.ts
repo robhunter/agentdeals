@@ -236,6 +236,16 @@ describe("#1724 structured data prices a tier at zero only where we state that t
     assert.deepStrictEqual(misnamed.map(n => `${n.route} ${n.vendor} ${n.tier}`).slice(0, 25), []);
   });
 
+  it("states a price only under a name the catalogue answers for", () => {
+    const stating = nodes.filter(n => n.statesAPrice);
+    assertPopulationFloor(stating.length, 550, "nodes state a price under some name");
+    assert.deepStrictEqual(
+      stating.filter(n => !tiersWeHold.has(n.vendor)).map(n => `${n.route} ${n.vendor}`).slice(0, 25),
+      [],
+      "a name we hold no record for reaches neither the tier check above nor the vendor page below",
+    );
+  });
+
   it("prices on a comparison page only what a vendor page prices, and less of it", () => {
     const { onVendorPage, compared } = readAgainstTheirVendorPage();
     assertPopulationFloor(compared.length, 150, "comparison nodes have a vendor page to be read against");
