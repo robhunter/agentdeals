@@ -5,6 +5,7 @@ import { readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { MCP_TOOLS, MCP_TOOLS_WITHDRAWN, MCP_TOOL_COUNT, MCP_TOOL_NAMES } from "../dist/mcp-tool-inventory.js";
+import { PUBLISHED_TOOL_COPIES, withSection } from "../scripts/sync-published-tool-copy.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const SERVER_SOURCE = path.join(__dirname, "..", "src", "server.ts");
@@ -154,6 +155,32 @@ describe("what tools/list publishes is what the product offers", () => {
     const glama = JSON.parse(readFileSync(GLAMA, "utf8"));
     assert.strictEqual(glama.tools, MCP_TOOL_COUNT, "glama.json states a different count");
     assert.match(glama.description, new RegExp(`\\b${MCP_TOOL_COUNT} intent-based MCP tools\\b`), "glama.json's description states a different count");
+  });
+
+  it("the files we publish state the contract the protocol answers with", async () => {
+    const { tools } = await listedTools();
+    const served = new Set(tools.map((t: any) => t.name));
+
+    for (const copy of PUBLISHED_TOOL_COPIES) {
+      const full = path.join(__dirname, "..", copy.file);
+      const current = readFileSync(full, "utf8");
+      const rendered = copy.render();
+      assert.ok(rendered.startsWith(copy.heading) && rendered.split("\n").length > MCP_TOOL_NAMES.length,
+        `${copy.file}'s section renders nothing the file could be checked against`);
+      assert.ok(current.includes(rendered),
+        `${copy.file} does not carry the section the registry renders — scripts/sync-published-tool-copy.mjs writes it`);
+      assert.strictEqual(current, withSection(current, copy.heading, rendered, copy.endOfSection),
+        `${copy.file}'s "${copy.heading}" is a second copy of the contract and has drifted from the registry — scripts/sync-published-tool-copy.mjs rewrites it`);
+      for (const name of MCP_TOOL_NAMES) {
+        assert.ok(current.includes(name), `${copy.file} does not name ${name}, which tools/list offers`);
+        assert.ok(served.has(name), `${copy.file} names ${name} and the protocol does not offer it`);
+      }
+    }
+
+    const readme = readFileSync(path.join(__dirname, "..", "README.md"), "utf8");
+    const documented = [...readme.matchAll(/^### ([a-z_]+)\n\n\*\*Parameters:\*\*/gm)].map(([, name]) => name);
+    assert.deepStrictEqual(documented, [...MCP_TOOL_NAMES],
+      "README.md offers one set of tools in its table and documents the parameters of another");
   });
 
   it("the server card names the same tools", async () => {

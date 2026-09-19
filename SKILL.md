@@ -40,13 +40,16 @@ No API key required. No environment variables needed.
 ## Tools
 
 ### search_deals
-Find free tiers, startup credits, and developer deals. Filter by category, vendor, or keyword. Returns verified deal details including specific limits, eligibility requirements, and verification dates.
+Find free tiers, startup credits, and developer deals. Search by keyword, category, vendor name, or eligibility type. Returns the terms we hold, with specific limits and the day each was last read.
 
 ### plan_stack
-Plan a technology stack with cost-optimized infrastructure. Three modes: recommend (suggest services), estimate (cost analysis), audit (find savings and risks).
+Plan a technology stack with cost-optimized choices. Per role, returns the set of free-tier offers whose terms we can stand behind today — not a single pick — with the recorded facts behind any demotion. Does not model technical fit; the caller applies that. Also estimates costs at scale and audits existing stacks for risk.
 
 ### compare_vendors
-Compare developer tools side by side — free tier limits, pricing tiers, stability ratings, and recent pricing changes. Pass 1 vendor for a risk check, or 2 for a full comparison.
+Compare developer tools side by side — free tier limits, pricing tiers, risk levels, and recent pricing changes.
 
 ### track_changes
-Track recent pricing changes across developer tools — removed free tiers, limit cuts, improvements, and upcoming expirations. Weekly digest format.
+Track pricing changes across developer tools — free tier removals, limit reductions, new free tiers, and upcoming expirations.
+
+### get_referral_code
+Look up the referral link we hold for a vendor, with the reader benefit and every restriction attached to it. We hold codes for a handful of vendors and earn a commission on them; /disclosure lists all of them.

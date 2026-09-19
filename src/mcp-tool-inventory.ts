@@ -63,6 +63,20 @@ export function isPublishedMcpTool(name: string): boolean {
   return MCP_TOOL_NAMES.includes(name);
 }
 
+export const SKILL_TOOLS_HEADING = "## Tools";
+
+export const README_TOOLS_HEADING = "## Available Tools";
+
+export function skillToolsSection(): string {
+  const entries = MCP_TOOLS.map((tool) => `### ${tool.name}\n${tool.brief}`);
+  return [SKILL_TOOLS_HEADING, "", ...entries.flatMap((entry, index) => (index === entries.length - 1 ? [entry] : [entry, ""]))].join("\n");
+}
+
+export function readmeToolsSection(): string {
+  const rows = MCP_TOOLS.map((tool) => `| \`${tool.name}\` | ${tool.card} |`);
+  return [README_TOOLS_HEADING, "", "| Tool | Description |", "|------|-------------|", ...rows].join("\n");
+}
+
 export function withdrawalReason(name: string): string | null {
   return MCP_TOOLS_WITHDRAWN.find((t) => t.name === name)?.reason ?? null;
 }

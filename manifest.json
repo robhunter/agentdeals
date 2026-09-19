@@ -4,7 +4,7 @@
   "display_name": "AgentDeals",
   "version": "0.3.1",
   "description": "Search 1,600+ developer tool deals, compare vendors, check pricing stability, and estimate costs. Free tiers, startup credits, and promotional offers across 67 categories.",
-  "long_description": "AgentDeals indexes real, verified pricing data from 1,600+ developer infrastructure vendors across 67 categories. Search deals by keyword, category, or eligibility. Compare vendors side-by-side, check pricing stability and risk, estimate infrastructure costs, get full stack recommendations, and monitor pricing changes \u2014 all from within Claude Desktop.\n\nData is fetched from a hosted API (no local data needed). Tools cover the full lifecycle: discovery, comparison, risk assessment, cost estimation, and ongoing monitoring.",
+  "long_description": "AgentDeals indexes pricing data from 1,600+ developer infrastructure vendors across 67 categories, each entry carrying the day we last read the vendor's own page. How many of them a read confirmed inside the last 90 days is measured on the catalogue and published at https://agentdeals.dev/api/freshness. Search deals by keyword, category, or eligibility. Compare vendors side-by-side, check pricing stability and risk, estimate infrastructure costs, get full stack recommendations, and monitor pricing changes \u2014 all from within Claude Desktop.\n\nData is fetched from a hosted API (no local data needed). Tools cover the full lifecycle: discovery, comparison, risk assessment, cost estimation, and ongoing monitoring.",
   "author": {
     "name": "Rob Hunter",
     "url": "https://github.com/robhunter"

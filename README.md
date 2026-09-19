@@ -5,7 +5,7 @@
 
 An MCP server that aggregates free tiers, startup credits, and developer tool deals — so your AI agent (or you) can find the best infrastructure offers without leaving the workflow.
 
-AgentDeals indexes real, verified pricing data from 1,500+ developer infrastructure vendors across 60 categories. Available on [npm](https://www.npmjs.com/package/agentdeals) for local use or as a hosted remote server. Connect any MCP-compatible client and search deals by keyword, category, or eligibility.
+AgentDeals indexes pricing data from 1,500+ developer infrastructure vendors across 60 categories. Every entry carries the day we last read the vendor's own page, and how many of them a read confirmed inside the last 90 days is measured on the catalogue rather than asserted here — [agentdeals.dev/api/freshness](https://agentdeals.dev/api/freshness) publishes that count, and every listing page states it over the set it lists. Available on [npm](https://www.npmjs.com/package/agentdeals) for local use or as a hosted remote server. Connect any MCP-compatible client and search deals by keyword, category, or eligibility.
 
 **Live:** [agentdeals.dev](https://agentdeals.dev)
 
@@ -321,10 +321,11 @@ curl "https://agentdeals.dev/api/openapi.json"
 
 | Tool | Description |
 |------|-------------|
-| `search_deals` | Find free tiers, startup credits, and developer deals for cloud infrastructure, databases, hosting, CI/CD, monitoring, auth, AI services, and more. |
-| `plan_stack` | Plan a technology stack with cost-optimized infrastructure choices. Recommends free-tier services, estimates costs, or audits existing stacks. |
-| `compare_vendors` | Compare developer tools side by side — free tier limits, pricing tiers, and recent pricing changes. |
-| `track_changes` | Track recent pricing changes across developer tools — free tier removals, limit reductions, new free tiers, and expirations. |
+| `search_deals` | Find free tiers, browse categories, get vendor details with alternatives. Filter by category, eligibility, or keyword. |
+| `plan_stack` | Get stack recommendations, cost estimates, or a full infrastructure audit for your project. |
+| `compare_vendors` | Compare 2 vendors side-by-side or check a single vendor's pricing risk. |
+| `track_changes` | Track pricing changes, upcoming expirations, and new deals. Weekly digest with no params. |
+| `get_referral_code` | Look up the referral link we hold for a vendor, with the conditions attached to it. We hold codes for a handful of vendors. |
 
 ### search_deals
 
@@ -333,8 +334,8 @@ curl "https://agentdeals.dev/api/openapi.json"
 - `category` (string, optional) — Filter by category. Pass `"list"` to get all categories with counts.
 - `vendor` (string, optional) — Get full details for a specific vendor (fuzzy match). Returns alternatives.
 - `eligibility` (string, optional) — Filter: `public`, `accelerator`, `oss`, `student`, `fintech`, `geographic`, `enterprise`
-- `sort` (string, optional) — Sort: `vendor` (A-Z), `category`, `newest` (recently verified first)
-- `since` (string, optional) — ISO date. Only return deals verified/added after this date.
+- `sort` (string, optional) — Sort: `vendor` (A-Z), `category`, `newest` (newest catalogue date first)
+- `since` (string, optional) — ISO date (YYYY-MM-DD). Only return deals whose catalogue date is on or after this date.
 - `limit` (number, optional) — Max results (default: 20)
 - `offset` (number, optional) — Pagination offset
 
@@ -362,6 +363,11 @@ curl "https://agentdeals.dev/api/openapi.json"
 - `vendors` (string, optional) — Comma-separated vendor names to filter
 - `include_expiring` (boolean, optional) — Include upcoming expirations (default: true)
 - `lookahead_days` (number, optional) — Days to look ahead for expirations (default: 30)
+
+### get_referral_code
+
+**Parameters:**
+- `vendor` (string, required) — Vendor name to get the referral code for (e.g. `'Railway'`)
 
 ## Use Cases
 
@@ -420,11 +426,11 @@ npm run serve
 
 ## Stats
 
-- **1,525** vendor offers across **54** categories
-- **57** tracked pricing changes
-- **4** MCP tools + **6** prompt templates + **17** REST API endpoints
-- **266** passing tests
-- Data verified as of 2026-03-14
+Every figure we publish about the catalogue is measured on it, so this section links the measure rather than restating it — a number typed here is a second copy, and a second copy drifts.
+
+- Catalogue size, categories, and how many entries a read confirmed inside the last 90 days — [/api/freshness](https://agentdeals.dev/api/freshness)
+- Tracked pricing changes — [/api/changes](https://agentdeals.dev/api/changes)
+- MCP tools, prompt templates, and REST endpoints — [/setup](https://agentdeals.dev/setup) and [/llms.txt](https://agentdeals.dev/llms.txt)
 
 ## Registries
 
