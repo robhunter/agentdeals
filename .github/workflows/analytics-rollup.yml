@@ -11,6 +11,7 @@ on:
         default: ""
 
 permissions:
+  actions: write
   contents: write
   issues: write
 
@@ -52,6 +53,7 @@ jobs:
       - name: Run the suite, then push to main only if it is green
         id: gate
         env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           WRITTEN: ${{ steps.rollup.outputs.written }}
         run: |
           bash scripts/gate-data-push.sh \

@@ -21,6 +21,7 @@ REGENERATE_LLM_INDEX="${GATE_REGENERATE_LLM_INDEX:-}"
 LLM_INDEX_PATH="artifacts/free-llm-api-index/README.md"
 SYNC_PAGE_REVIEWS="${GATE_SYNC_PAGE_REVIEWS:-}"
 PAGE_REVIEWS_PATH="data/page-reviews.json"
+SUITE_WORKFLOW="${GATE_SUITE_WORKFLOW:-tests.yml}"
 
 among_the_committable() {
   local wanted="$1"
@@ -83,6 +84,16 @@ BATCH_COMMIT_AS_THE_RUN_WROTE_IT=""
 
 push_to_main() {
   git push origin HEAD:main
+}
+
+ask_the_suite_to_read_main() {
+  if gh workflow run "$SUITE_WORKFLOW" --ref main >/dev/null 2>&1; then
+    echo "suite_run_requested=true" >>"$OUTPUT"
+    echo "Asked $SUITE_WORKFLOW to read main, because a push made with this job's own token starts no run of its own."
+  else
+    echo "suite_run_requested=false" >>"$OUTPUT"
+    echo "Could not ask $SUITE_WORKFLOW to read main. The data is on main either way and nothing will run the suite behind it."
+  fi
 }
 
 replay_onto_main() {
@@ -221,6 +232,7 @@ while :; do
 
   if push_to_main; then
     echo "pushed_commit=$COMMIT" >>"$OUTPUT"
+    ask_the_suite_to_read_main
     if [ -n "$HELD_BACK_VENDORS" ]; then
       echo "held_back_vendors=$HELD_BACK_VENDORS" >>"$OUTPUT"
       echo "Held back and left for the next run to read again: $HELD_BACK_VENDORS. Every other vendor this run read is on main."

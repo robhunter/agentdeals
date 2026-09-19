@@ -458,17 +458,38 @@ interface GateRun {
   llmIndex?: true;
   pageReviews?: true;
   replays?: number;
+  asking?: "answers" | "refuses";
+}
+
+const ASKED_FOR = "what-the-gate-asked-for.txt";
+
+function aClientTheGateCanAsk(work: string, behaviour: "answers" | "refuses"): string {
+  const bin = join(work, "bin");
+  mkdirSync(bin, { recursive: true });
+  writeFileSync(
+    join(bin, "gh"),
+    `#!/usr/bin/env bash\nprintf '%s\\n' "$*" >>${JSON.stringify(join(work, ASKED_FOR))}\nexit ${behaviour === "answers" ? 0 : 1}\n`,
+    { mode: 0o755 },
+  );
+  return bin;
+}
+
+function whatTheGateAskedFor(work: string): string[] {
+  const log = join(work, ASKED_FOR);
+  return existsSync(log) ? readFileSync(log, "utf8").split("\n").filter(Boolean) : [];
 }
 
 function runGate(work: string, mode: GateMode | GateRun, ...args: string[]) {
   const opts: GateRun = typeof mode === "string" ? { mode } : mode;
   const outputs = join(work, "step-outputs.txt");
   const envReport = join(work, "the-environment-the-suite-ran-in.txt");
+  const onPath = `${aClientTheGateCanAsk(work, opts.asking ?? "refuses")}:${process.env.PATH}`;
   const run = spawnSync("bash", [GATE, ...args], {
     cwd: work,
     encoding: "utf8",
     env: {
       ...process.env,
+      PATH: onPath,
       GATE_FIXTURE_TESTS: opts.mode,
       GATE_FIXTURE_BUILD: opts.build ?? "ok",
       GATE_FIXTURE_RATCHET: opts.ratchet ?? "lower",
@@ -1183,6 +1204,106 @@ describe("#1326 the gate, asked to lower a budget", () => {
       BUDGETS_BEFORE.trim(),
       "the gate lowered a budget for a job that never asked it to",
     );
+  });
+});
+
+describe("#1785 a push the platform starts no run for asks for one itself", () => {
+  before(() => {
+    scratch = mkdtempSync(join(tmpdir(), "gate-asks-"));
+  });
+
+  after(() => {
+    if (scratch && existsSync(scratch)) rmSync(scratch, { recursive: true, force: true });
+  });
+
+  const PATHS = ["data-quarantine/fixture", "data(auto): fixture", "data/health.json"];
+  const SUITE_WORKFLOW = readFileSync(GATE, "utf8").match(/^SUITE_WORKFLOW="\$\{GATE_SUITE_WORKFLOW:-([^}"]+)\}"$/m)?.[1];
+
+  it("names a workflow that exists and can be asked to run", () => {
+    assert.ok(SUITE_WORKFLOW, "the gate names no workflow to ask for");
+    assert.ok(
+      workflowFiles().includes(SUITE_WORKFLOW!),
+      `the gate asks for ${SUITE_WORKFLOW}, which is not among ${workflowFiles().join(", ")}`,
+    );
+    assert.match(
+      source(SUITE_WORKFLOW!),
+      /^ {2}workflow_dispatch:/m,
+      `${SUITE_WORKFLOW} cannot be asked to run, so asking for it fails every time`,
+    );
+  });
+
+  for (const file of GATED_WORKFLOWS) {
+    it(`gives ${file} what asking for a run takes`, () => {
+      assert.match(
+        source(file),
+        /^permissions:\n(?:.*\n)*? {2}actions: write$/m,
+        `${file} cannot ask for a workflow run`,
+      );
+      assert.match(
+        gateStepOf(file).body,
+        /GH_TOKEN: \$\{\{ secrets\.GITHUB_TOKEN \}\}/,
+        `${file} runs the gate with no token to ask with`,
+      );
+    });
+  }
+
+  it("asks the suite to read main after a green push", () => {
+    const { work, origin } = fixtureRepo();
+    writeFileSync(join(work, "data", "health.json"), '{"checked":21}\n');
+
+    const run = runGate(work, { mode: "green", asking: "answers" }, ...PATHS);
+
+    assert.strictEqual(run.status, 0, `${run.stdout}${run.stderr}`);
+    assert.deepStrictEqual(whatTheGateAskedFor(work), [`workflow run ${SUITE_WORKFLOW} --ref main`]);
+    assert.match(run.outputs, /^suite_run_requested=true$/m);
+    assert.strictEqual(git(origin, "show", "main:data/health.json"), '{"checked":21}');
+  });
+
+  it("asks for one behind a push that went out over a red suite, which is the push nothing else reads", () => {
+    const { work } = fixtureRepo();
+    writeFileSync(join(work, "data", "health.json"), '{"checked":22}\n');
+
+    const run = runGate(work, { mode: "excused", asking: "answers" }, ...PATHS);
+
+    assert.strictEqual(run.status, 0, `${run.stdout}${run.stderr}`);
+    assert.match(run.outputs, /^pushed_over_failures=true$/m);
+    assert.deepStrictEqual(whatTheGateAskedFor(work), [`workflow run ${SUITE_WORKFLOW} --ref main`]);
+  });
+
+  it("asks for nothing when the data never reached main", () => {
+    const { work, origin } = fixtureRepo();
+    const before = mainSha(origin);
+    writeFileSync(join(work, "data", "health.json"), '{"checked":23}\n');
+
+    const run = runGate(work, { mode: "red", asking: "answers" }, ...PATHS);
+
+    assert.strictEqual(run.status, 1, "the gate pushed data the suite refused");
+    assert.strictEqual(mainSha(origin), before);
+    assert.deepStrictEqual(whatTheGateAskedFor(work), []);
+  });
+
+  it("asks once, for the push that landed, when main moved under the run", () => {
+    const { work, origin } = fixtureRepo();
+    writeFileSync(join(work, "data", "health.json"), '{"checked":25}\n');
+    commitToMainFromElsewhere(origin, "another-job-wrote-this.txt", "landed while the suite ran\n");
+
+    const run = runGate(work, { mode: "green", asking: "answers" }, ...PATHS);
+
+    assert.strictEqual(run.status, 0, `${run.stdout}${run.stderr}`);
+    assert.strictEqual(git(origin, "show", "main:data/health.json"), '{"checked":25}');
+    assert.deepStrictEqual(whatTheGateAskedFor(work), [`workflow run ${SUITE_WORKFLOW} --ref main`]);
+  });
+
+  it("keeps the data on main when the ask is refused, and says so", () => {
+    const { work, origin } = fixtureRepo();
+    writeFileSync(join(work, "data", "health.json"), '{"checked":24}\n');
+
+    const run = runGate(work, { mode: "green", asking: "refuses" }, ...PATHS);
+
+    assert.strictEqual(run.status, 0, `a refused ask stopped the run: ${run.stdout}${run.stderr}`);
+    assert.strictEqual(git(origin, "show", "main:data/health.json"), '{"checked":24}');
+    assert.match(run.outputs, /^suite_run_requested=false$/m);
+    assert.match(run.stdout, /Could not ask/);
   });
 });
 

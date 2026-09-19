@@ -9,6 +9,7 @@ on:
   workflow_dispatch:
 
 permissions:
+  actions: write
   contents: write
   issues: write
 
@@ -46,6 +47,7 @@ jobs:
       - name: Run the suite, then push to main only if it is green
         id: gate
         env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ROWS: ${{ steps.generate.outputs.rows }}
           WITHHELD: ${{ steps.generate.outputs.withheld }}
           PRIOR: ${{ steps.generate.outputs.withPriorTerms }}
