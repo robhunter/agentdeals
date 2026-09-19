@@ -13,6 +13,7 @@ const {
   withheldTermsMeasure,
 } = await import("../dist/restatement.js");
 const { changesByVendor } = await import("../dist/superseded-census.js");
+const { readingBehindTheChange } = await import("../dist/superseded-description.js");
 const { loadDealChanges, loadOffers } = await import("../dist/data.js");
 const { utcDate } = await import("../dist/ranking.js");
 
@@ -208,5 +209,43 @@ describe("every entry the rotation restates, whether it has restated it yet or n
       source_url: "https://example.com/pricing",
     };
     assert.equal(ruleOnRestating(offer, change, "2026-09-17")?.refusal, READING_SAYS_WHAT_WE_ALREADY_STORE);
+  });
+});
+
+describe("a reading is text lifted off a page, and the page's spacing is not part of it", () => {
+  const A_RUN_OF_SPACING = /\s\s|\t|\n/;
+
+  const changeQuoting = (currentState: string) => ({
+    vendor: "Example",
+    change_type: "limits_reduced",
+    date: "2026-09-07",
+    recorded_date: "2026-09-07",
+    date_source: "vendor_page",
+    previous_state: "Vector database — the free tier holds 1 GB.",
+    current_state: currentState,
+    source_url: "https://example.com/pricing",
+  });
+
+  it("reads a double space, a tab and a newline as one space each", () => {
+    assert.equal(
+      readingBehindTheChange(changeQuoting("Free includes 1 user.  AI search\tand\nediting are not."))?.terms,
+      "Free includes 1 user. AI search and editing are not.",
+    );
+  });
+
+  it("holds the change log's own spacing, so the rule above has something to normalise", () => {
+    const quoting = loadDealChanges().filter(
+      (change: { current_state?: string | null }) => A_RUN_OF_SPACING.test(change.current_state ?? ""),
+    );
+    assert.ok(
+      quoting.length > 0,
+      "no change record holds a run of spacing, so nothing in the store exercises the rule above",
+    );
+    assert.deepStrictEqual(
+      quoting.map((change: any) => readingBehindTheChange(change))
+        .filter((reading: any) => reading !== null && A_RUN_OF_SPACING.test(reading.terms))
+        .map((reading: any) => reading.terms.slice(0, 60)),
+      [],
+    );
   });
 });
