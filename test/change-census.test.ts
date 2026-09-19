@@ -333,7 +333,7 @@ describe("every published total is the tracked count or names the slice it is", 
       (c) => isTrackedChange(c) && c.date >= "2026-01-01" && c.date <= "2026-03-31" && c.date_source !== "discovered",
     ).length;
     assert.ok(inQ1 > 10, `only ${inQ1} Q1 records, so the check proves nothing`);
-    const claimed = [...body.matchAll(/([\d,]+) verified pricing changes/g)].map((m) => Number(m[1].replace(/,/g, "")));
+    const claimed = [...body.matchAll(/([\d,]+) recorded pricing changes/g)].map((m) => Number(m[1].replace(/,/g, "")));
     assert.ok(claimed.length >= 3, `only ${claimed.length} Q1 claims found across prose and JSON-LD`);
     assert.deepStrictEqual([...new Set(claimed)], [inQ1]);
   });

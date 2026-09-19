@@ -6,7 +6,7 @@ import { fileURLToPath } from "node:url";
 import { confirmationCoverage, confirmationCoverageSentence, loadDealChanges, loadOffers, CONFIRMATION_WINDOW_DAYS } from "../dist/data.js";
 import { confirmationDate } from "../dist/read-date.js";
 import { toSlug } from "../dist/slug.js";
-import { assertCoversPopulation, categoriesInTheCatalogue } from "./population-floor.ts";
+import { assertCoversPopulation, assertPopulationFloor, categoriesInTheCatalogue } from "./population-floor.ts";
 
 const REPO = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
 const A_DAY_IN_MS = 86400000;
@@ -404,5 +404,202 @@ describe("the figure moves with the store rather than with an edit", () => {
       confirmationCoverage(listing.held, new Date(Date.now() + moves * A_DAY_IN_MS)).confirmed_within_90_days,
       `${listing.route} counts the same on both days, so a figure hard-coded into the page would pass`,
     );
+  });
+});
+
+interface AnExemption {
+  why: string;
+  sentence?: RegExp;
+  route?: RegExp;
+  storedVerbatim?: boolean;
+}
+
+function proseWeStoreAsTheVendorStatedIt(): string[] {
+  const stored: string[] = [];
+  const keep = (field: unknown) => { if (typeof field === "string") stored.push(field); };
+  for (const offer of loadOffers() as Record<string, unknown>[]) {
+    keep(offer.description);
+    keep(offer.tier);
+    for (const value of Object.values(offer.referral_program ?? {})) keep(value);
+  }
+  for (const change of loadDealChanges() as Record<string, unknown>[]) {
+    keep(change.summary);
+    keep(change.current_state);
+    keep(change.previous_state);
+  }
+  return stored
+    .flatMap((field) => field.match(A_SENTENCE) ?? [field])
+    .map((said) => said.trim())
+    .filter((said) => said.length > 20 && A_VERIFICATION_ADJECTIVE.test(said));
+}
+
+const THE_WORD_IS_NOT_A_CLAIM_OVER_OUR_LISTINGS: AnExemption[] = [
+  { why: "a withholding names the word in order to refuse the claim", sentence: /\b(?:cannot be|could not be|was not|is not|were not) (?:re-)?verified\b/i },
+  { why: "one record and one date, which is the per-record form", sentence: /\bverified:?\s*\d{4}-\d{2}-\d{2}\b/i },
+  { why: "the sentence is a record we store as the vendor stated it", storedVerbatim: true },
+  { why: "the word qualifies whom a vendor checks, not what we list", sentence: /\bverified (?:students|teachers|recipients|paid signups?|compute spend|partners|domains?|accounts?)\b/i },
+  { why: "the API reference names a field kept for older callers", route: /^\/developers$/, sentence: /^verified\s*\.?$/i },
+  { why: "#1058 owns what a per-record stamp means on /best", route: /^\/best\// },
+  { why: "#1081 AC-2 owns the freshness claim on the vs-pair pages", route: /^\/[a-z0-9-]+-vs-[a-z0-9-]+$/ },
+  { why: "/criteria publishes what the word means", route: /^\/criteria$/ },
+];
+
+const A_ROUTE_IN_A_SITEMAP = /<loc>([^<]+)<\/loc>/g;
+
+async function everyRouteTheSitemapPublishes(base: string): Promise<string[]> {
+  const index = await (await fetch(`${base}/sitemap.xml`)).text();
+  const sitemaps = [...index.matchAll(A_ROUTE_IN_A_SITEMAP)].map((found) => new URL(found[1]!).pathname);
+  assert.ok(sitemaps.length > 0, "the sitemap index lists no sitemap for this population to be read from");
+  const routes: string[] = [];
+  for (const sitemap of sitemaps) {
+    const listed = await (await fetch(`${base}${sitemap}`)).text();
+    for (const found of listed.matchAll(A_ROUTE_IN_A_SITEMAP)) routes.push(new URL(found[1]!).pathname);
+  }
+  return [...new Set(routes)];
+}
+
+function familyOf(route: string): string {
+  const parts = route.split("/").filter(Boolean);
+  return parts.length > 1 ? `/${parts[0]}/*` : route;
+}
+
+function aPageFromEveryFamily(routes: string[]): { family: string; route: string }[] {
+  const members = new Map<string, string[]>();
+  for (const route of routes) members.set(familyOf(route), [...(members.get(familyOf(route)) ?? []), route]);
+  const reading: { family: string; route: string }[] = [];
+  for (const [family, held] of members) {
+    const sorted = [...held].sort();
+    const picks = sorted.length > 1 ? [sorted[0]!, sorted[Math.floor(sorted.length / 2)]!, sorted[sorted.length - 1]!] : sorted;
+    for (const route of [...new Set(picks)]) reading.push({ family, route });
+  }
+  return reading;
+}
+
+const A_PROSE_FIELD = new Set(["description", "text", "summary", "note", "disclaimer"]);
+
+function describedIn(node: unknown, found: string[] = []): string[] {
+  if (Array.isArray(node)) for (const entry of node) describedIn(entry, found);
+  else if (node && typeof node === "object") {
+    for (const [key, value] of Object.entries(node)) {
+      if (A_PROSE_FIELD.has(key) && typeof value === "string") found.push(value);
+      else describedIn(value, found);
+    }
+  }
+  return found;
+}
+
+async function everyDoorTheOpenApiPublishes(base: string): Promise<string[]> {
+  const spec = await (await fetch(`${base}/openapi.json`)).json() as { paths?: Record<string, unknown> };
+  const doors = Object.keys(spec.paths ?? {}).filter((door) => !door.includes("{") && !door.includes(":"));
+  assert.ok(doors.length > 0, "/openapi.json publishes no path for this population to be read from");
+  return ["/openapi.json", ...doors];
+}
+
+function proseSurfacesOf(html: string): { where: string; text: string }[] {
+  const surfaces: { where: string; text: string }[] = [];
+  const meta = html.match(/<meta name="description" content="([^"]*)"/);
+  if (meta) surfaces.push({ where: "meta description", text: unescapeHtml(meta[1]!) });
+  const og = html.match(/<meta property="og:description" content="([^"]*)"/);
+  if (og) surfaces.push({ where: "og:description", text: unescapeHtml(og[1]!) });
+  for (const block of html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)) {
+    let parsed: unknown;
+    try { parsed = JSON.parse(block[1]!); } catch { continue; }
+    for (const described of describedIn(parsed)) surfaces.push({ where: "JSON-LD description", text: described });
+  }
+  const stripped = html.replace(/<script[\s\S]*?<\/script>/g, " ").replace(/<style[\s\S]*?<\/style>/g, " ");
+  const broken = stripped.replace(/<\/(?:p|div|td|th|tr|li|h[1-6]|section|article|figcaption|blockquote)>/g, ".\n");
+  surfaces.push({ where: "body", text: unescapeHtml(broken.replace(/<[^>]+>/g, " ")).replace(/[^\S\n]+/g, " ") });
+  return surfaces;
+}
+
+function proseAnswersOf(served: string): { where: string; text: string }[] {
+  if (!served.trimStart().startsWith("{") && !served.trimStart().startsWith("[")) return proseSurfacesOf(served);
+  try {
+    return describedIn(JSON.parse(served)).map((text) => ({ where: "JSON description", text }));
+  } catch {
+    return proseSurfacesOf(served);
+  }
+}
+
+describe("the word verified, over every page family the sitemap publishes", () => {
+  let proc: ChildProcess | null = null;
+  let published: string[] = [];
+  let doors: string[] = [];
+  let vendorProse: string[] = [];
+  let read: { family: string; route: string }[] = [];
+  let unexplained: string[] = [];
+  const explainedBy = new Set<string>();
+  let surfacesRead = 0;
+  let carryingTheWord = 0;
+
+  before(async () => {
+    const started = await startServer(0);
+    proc = started.proc;
+    vendorProse = proseWeStoreAsTheVendorStatedIt();
+    published = await everyRouteTheSitemapPublishes(started.base);
+    doors = await everyDoorTheOpenApiPublishes(started.base);
+    read = [...aPageFromEveryFamily(published), ...doors.map((route) => ({ family: route, route }))];
+    for (const { route } of read) {
+      const exemptRoute = THE_WORD_IS_NOT_A_CLAIM_OVER_OUR_LISTINGS.find((one) => one.route && !one.sentence && one.route.test(route));
+      if (exemptRoute) { explainedBy.add(exemptRoute.why); continue; }
+      const html = await (await fetch(`${started.base}${route}`)).text();
+      for (const surface of proseAnswersOf(html)) {
+        surfacesRead += 1;
+        for (const sentence of surface.text.match(A_SENTENCE) ?? []) {
+          if (!A_VERIFICATION_ADJECTIVE.test(sentence)) continue;
+          carryingTheWord += 1;
+          const said = sentence.trim();
+          const exempt = THE_WORD_IS_NOT_A_CLAIM_OVER_OUR_LISTINGS.find((one) => {
+            if (one.sentence) return (one.route ? one.route.test(route) : true) && one.sentence.test(said);
+            return one.storedVerbatim === true && said.length > 20
+              && vendorProse.some((held) => held.includes(said) || said.includes(held));
+          });
+          if (exempt) explainedBy.add(exempt.why);
+          else unexplained.push(`${route} (${surface.where}): ${sentence.trim().slice(0, 200)}`);
+        }
+      }
+    }
+  });
+
+  after(() => { if (proc) proc.kill(); });
+
+  it("reads every door the OpenAPI document publishes, which no sitemap lists", () => {
+    assert.ok(doors.length >= 10, `only ${doors.length} doors were derived from /openapi.json, so the API surface is not in the population`);
+    for (const door of doors) {
+      assert.ok(read.some((one) => one.route === door), `${door} is published and was not read`);
+    }
+  });
+
+  it("reads a page from every family the sitemap publishes, rather than a list written by hand", () => {
+    const families = new Set(published.map(familyOf));
+    assert.deepEqual([...families].filter((family) => !read.some((one) => one.family === family)), [],
+      "a family the sitemap publishes was not read");
+    assert.ok(published.length >= loadOffers().length,
+      `the sitemap published ${published.length} routes over ${loadOffers().length} offers we hold, so the population is not the site`);
+    for (const family of ["/vendor/*", "/alternative-to/*", "/category/*", "/compare/*", "/best/*"]) {
+      assert.ok(families.has(family), `${family} is published and is not in the population this sweep derives`);
+    }
+    assertPopulationFloor(families.size, 100, "page families derived from the sitemap");
+  });
+
+  it("applies no verification adjective to a set of listings we publish", () => {
+    assert.deepEqual(unexplained.slice(0, 10), [],
+      `${unexplained.length} served sentences call something of ours verified without a reason this test names`);
+  });
+
+  it("needs every reason it names, so a stale exemption cannot hide a family", () => {
+    const unused = THE_WORD_IS_NOT_A_CLAIM_OVER_OUR_LISTINGS.filter((one) => !explainedBy.has(one.why)).map((one) => one.why);
+    assert.deepEqual(unused, [], `${unused.length} exemptions matched nothing served, so they are covering for a page nobody reads`);
+  });
+
+  it("explains the word in fewer reasons than there are pages to explain", () => {
+    assert.ok(THE_WORD_IS_NOT_A_CLAIM_OVER_OUR_LISTINGS.length <= 20,
+      `${THE_WORD_IS_NOT_A_CLAIM_OVER_OUR_LISTINGS.length} exemptions is a census, not a reason list`);
+  });
+
+  it("reads enough prose carrying the word for the sweep to be able to fail", () => {
+    assertPopulationFloor(surfacesRead, 2000, "prose surfaces read for a verification claim");
+    assert.ok(carryingTheWord >= 30, `only ${carryingTheWord} served sentences carry the word at all, so the extractor is reading nothing`);
+    assert.ok(vendorProse.length >= 10, `only ${vendorProse.length} stored records carry the word, so the store-derived exemption reads nothing`);
   });
 });

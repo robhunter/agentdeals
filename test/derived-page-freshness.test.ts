@@ -214,31 +214,31 @@ describe("A freshness date derived from the records a page lists", () => {
   });
 
   it("names one month when every record it holds was read in that month", () => {
-    assert.strictEqual(verifiedSpanClaim(["2026-08-04"]), "Verified August 2026.");
+    assert.strictEqual(verifiedSpanClaim(["2026-08-04"]), `${FRESHNESS_VERB} August 2026.`);
     assert.strictEqual(
       verifiedSpanClaim(["2026-08-28", "2026-08-04", "2026-08-15"]),
-      "Verified August 2026.",
+      `${FRESHNESS_VERB} August 2026.`,
     );
   });
 
   it("names the span its records cover, oldest first", () => {
     assert.strictEqual(
       verifiedSpanClaim(["2026-09-05", "2026-07-01", "2026-08-14"]),
-      "Verified July to September 2026.",
+      `${FRESHNESS_VERB} July to September 2026.`,
     );
   });
 
   it("repeats the year only when the span crosses one", () => {
     assert.strictEqual(
       verifiedSpanClaim(["2026-03-02", "2025-12-19"]),
-      "Verified December 2025 to March 2026.",
+      `${FRESHNESS_VERB} December 2025 to March 2026.`,
     );
   });
 
   it("spans the records it can date and ignores the rest", () => {
     assert.strictEqual(
       verifiedSpanClaim(["2026-07-01", "", "2026-09-05", "soon"]),
-      "Verified July to September 2026.",
+      `${FRESHNESS_VERB} July to September 2026.`,
     );
   });
 
@@ -289,7 +289,7 @@ describe("A freshness date derived from the records a page lists", () => {
           reads_index: true, tables_read_index: true, table_figures: 9, table_figures_from_records: 9,
         }) as never,
       ),
-      "Verified September 2026.",
+      `${FRESHNESS_VERB} September 2026.`,
     );
   });
 
@@ -328,14 +328,14 @@ describe("A freshness date derived from the records a page lists", () => {
     };
     assert.strictEqual(
       freshnessClaimFor("/x", html, (slug) => dates[slug] ?? [], "2026-09-09", () => tabulating as never),
-      "Verified September 2026.",
+      `${FRESHNESS_VERB} September 2026.`,
     );
     assert.strictEqual(
       freshnessClaimFor(
         "/x", html, (slug) => dates[slug] ?? [], "2026-09-09",
         () => ({ ...tabulating, vendors_tabulated: ["groq", "cerebras"] }) as never,
       ),
-      "Verified April to September 2026.",
+      `${FRESHNESS_VERB} April to September 2026.`,
     );
   });
 });

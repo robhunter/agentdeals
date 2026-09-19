@@ -20,7 +20,7 @@ function yearOf(monthAndYear: string): string {
   return monthAndYear.slice(monthAndYear.lastIndexOf(" ") + 1);
 }
 
-export const FRESHNESS_VERB = "Verified";
+export const FRESHNESS_VERB = "Catalogue dates";
 
 export function verifiedSpanClaim(verifiedDates: readonly string[]): string {
   const dated = verifiedDates.filter(date => monthOf(date) !== "").sort();

@@ -121,7 +121,7 @@ if you are quoting us:
   unconfirmed.
 
 Pages generated from the index carry no review clock. They report the freshness of the
-records they render (`Data verified through …`) or of the change log (`Latest tracked
+records they render (`Catalogue dates here run to …`) or of the change log (`Latest tracked
 change …`), which is what actually determines what they say.
 
 ## Telling us what you recommended — `/api/signal`
