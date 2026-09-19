@@ -22,11 +22,11 @@
       "changed": "2026-09-18"
     },
     "/ai-free-tiers": {
-      "hash": "83ce6bdb2109d221",
+      "hash": "9602e44642627518",
       "changed": "2026-09-19"
     },
     "/ai-ml-alternatives": {
-      "hash": "b837afd86d21eadd",
+      "hash": "e05dc73d205847fe",
       "changed": "2026-09-19"
     },
     "/alternative-to": {
@@ -1023,8 +1023,8 @@
       "changed": "2026-09-18"
     },
     "/category/ai-ml": {
-      "hash": "0a0126cae0d69ebc",
-      "changed": "2026-09-18"
+      "hash": "8da2b1bdea21ba8e",
+      "changed": "2026-09-19"
     },
     "/category/analytics": {
       "hash": "9398b0df20b13d6d",
@@ -1115,8 +1115,8 @@
       "changed": "2026-09-18"
     },
     "/category/documentation": {
-      "hash": "ca135d05c5b0afb0",
-      "changed": "2026-09-18"
+      "hash": "66ae76ceed9cfcd1",
+      "changed": "2026-09-19"
     },
     "/category/education": {
       "hash": "9add3d671d3834ea",
@@ -1810,8 +1810,8 @@
       "changed": "2026-09-18"
     },
     "/compare/docusaurus-vs-gitbook": {
-      "hash": "cfbf4fc511bdc990",
-      "changed": "2026-09-18"
+      "hash": "fa7b87b9b531b0cf",
+      "changed": "2026-09-19"
     },
     "/compare/docusaurus-vs-nextra": {
       "hash": "04c41d6b0a5a7028",
@@ -1990,8 +1990,8 @@
       "changed": "2026-09-18"
     },
     "/compare/gitbook-vs-nextra": {
-      "hash": "2d72ba43d856a221",
-      "changed": "2026-09-18"
+      "hash": "5b7b88e89d18ac88",
+      "changed": "2026-09-19"
     },
     "/compare/gitgud-vs-sourceforge": {
       "hash": "00f09764f6b2c227",
@@ -3275,7 +3275,7 @@
       "changed": "2026-09-18"
     },
     "/stack-check": {
-      "hash": "ffa010e522cc1b23",
+      "hash": "fc77a59791cdfa2c",
       "changed": "2026-09-19"
     },
     "/stacks": {
@@ -4006,8 +4006,8 @@
       "changed": "2026-09-18"
     },
     "/vendor/beampipe-io": {
-      "hash": "c33d2ac0fdccfe86",
-      "changed": "2026-09-18"
+      "hash": "9cd4da945886a6ae",
+      "changed": "2026-09-19"
     },
     "/vendor/beanstalkapp-com": {
       "hash": "8a9273605f79d48c",
@@ -4588,8 +4588,8 @@
       "changed": "2026-09-18"
     },
     "/vendor/codedthemes": {
-      "hash": "fee9feea945b1048",
-      "changed": "2026-09-18"
+      "hash": "596d4670a3cb2a44",
+      "changed": "2026-09-19"
     },
     "/vendor/codefactor": {
       "hash": "edd675121c8d1ae2",
@@ -5000,8 +5000,8 @@
       "changed": "2026-09-18"
     },
     "/vendor/diawi": {
-      "hash": "81f4c0eee1e6ae83",
-      "changed": "2026-09-18"
+      "hash": "47bccda1c3879a6b",
+      "changed": "2026-09-19"
     },
     "/vendor/diffjson": {
       "hash": "ae1eba594a4fee38",
@@ -5647,8 +5647,8 @@
       "changed": "2026-09-18"
     },
     "/vendor/gitbook": {
-      "hash": "09e321aea3145a79",
-      "changed": "2026-09-18"
+      "hash": "0cd1074cdabf07c2",
+      "changed": "2026-09-19"
     },
     "/vendor/gitdailies": {
       "hash": "c1df85f295ea629c",
@@ -5731,8 +5731,8 @@
       "changed": "2026-09-18"
     },
     "/vendor/gofile-io": {
-      "hash": "4cf110c3b8070046",
-      "changed": "2026-09-18"
+      "hash": "3d1643d7ea6a03ce",
+      "changed": "2026-09-19"
     },
     "/vendor/gokanban-io": {
       "hash": "8ff4e9480bb2c28e",
@@ -5983,8 +5983,8 @@
       "changed": "2026-09-18"
     },
     "/vendor/heroui": {
-      "hash": "31f90a0353639371",
-      "changed": "2026-09-18"
+      "hash": "369f6570b5f61346",
+      "changed": "2026-09-19"
     },
     "/vendor/hetzner": {
       "daily": true
@@ -6576,8 +6576,8 @@
       "changed": "2026-09-18"
     },
     "/vendor/loadly": {
-      "hash": "6be21f6f5f98b552",
-      "changed": "2026-09-18"
+      "hash": "ed9144f48fbf6862",
+      "changed": "2026-09-19"
     },
     "/vendor/loadmill-com": {
       "hash": "32785c917e875630",
@@ -6899,8 +6899,8 @@
       "changed": "2026-09-18"
     },
     "/vendor/microsoft-clarity": {
-      "hash": "263c98e4d45889c9",
-      "changed": "2026-09-18"
+      "hash": "1546556469da093e",
+      "changed": "2026-09-19"
     },
     "/vendor/microsoft-for-startups": {
       "hash": "c6cf89524d0aaaa5",
@@ -7516,8 +7516,8 @@
       "changed": "2026-09-18"
     },
     "/vendor/plausible-analytics": {
-      "hash": "14b836644774c920",
-      "changed": "2026-09-18"
+      "hash": "fca6c8451790947a",
+      "changed": "2026-09-19"
     },
     "/vendor/play-with-docker": {
       "hash": "37761418fd96ba3c",
@@ -7727,8 +7727,8 @@
       "changed": "2026-09-18"
     },
     "/vendor/qrtracer": {
-      "hash": "1bafd8798a9c9473",
-      "changed": "2026-09-18"
+      "hash": "d11513696e0879ca",
+      "changed": "2026-09-19"
     },
     "/vendor/qstash": {
       "hash": "f55b0d46aba5d864",
@@ -7815,8 +7815,8 @@
       "daily": true
     },
     "/vendor/remarkbox": {
-      "hash": "2877f339577570f8",
-      "changed": "2026-09-18"
+      "hash": "5b97f667f33d047e",
+      "changed": "2026-09-19"
     },
     "/vendor/remote-for-startups": {
       "hash": "97773b9a44c3f35d",
@@ -8037,8 +8037,8 @@
       "changed": "2026-09-18"
     },
     "/vendor/screenshotbase-com": {
-      "hash": "6d4a25f8f66470b3",
-      "changed": "2026-09-18"
+      "hash": "44673cdef7e86721",
+      "changed": "2026-09-19"
     },
     "/vendor/screenshotlayer": {
       "hash": "f94fc910778b39ae",
@@ -8617,8 +8617,8 @@
       "changed": "2026-09-18"
     },
     "/vendor/tailwindadmin": {
-      "hash": "3a9c52b68d7cda34",
-      "changed": "2026-09-18"
+      "hash": "760cc11cf830ae38",
+      "changed": "2026-09-19"
     },
     "/vendor/talky-io": {
       "hash": "d96af2da1f075822",
@@ -8869,8 +8869,8 @@
       "changed": "2026-09-18"
     },
     "/vendor/ttl-sh": {
-      "hash": "1b22e2416f5b3f0e",
-      "changed": "2026-09-18"
+      "hash": "fe430aeb764282c4",
+      "changed": "2026-09-19"
     },
     "/vendor/tugboat": {
       "hash": "f388d6ec8853645f",
@@ -8899,8 +8899,8 @@
       "changed": "2026-09-18"
     },
     "/vendor/tweek": {
-      "hash": "8c2ebdbf7e459d71",
-      "changed": "2026-09-18"
+      "hash": "dcf78e0d63818864",
+      "changed": "2026-09-19"
     },
     "/vendor/twicpics-com": {
       "hash": "9d17167d48153425",
