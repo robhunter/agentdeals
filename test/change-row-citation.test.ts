@@ -11,15 +11,47 @@ const { changeCitesASource, uncitedChangeNotice, CITATION_CLASS, UNCITED_NOTE_CL
 );
 const { feedEntrySourceXml, digestSourceXml, VIA_LINK_REL, NO_SOURCE_HELD_ELEMENT, CHANGE_FEED_NAMESPACE_PREFIX, CHANGE_FEED_ENTRY_LIMIT } =
   await import("../dist/change-feed.js");
+const { loadDealChanges, loadOffers } = await import("../dist/data.js");
+const { survivingVendorName, vendorMerges } = await import("../dist/vendor-merges.js");
 
 type DealChange = import("../src/types.ts").DealChange;
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(__dirname, "..");
 
-const changes: DealChange[] = JSON.parse(
+const changes: DealChange[] = loadDealChanges();
+
+const storedChanges: DealChange[] = JSON.parse(
   readFileSync(path.join(REPO, "data", "deal_changes.json"), "utf-8"),
 ).changes;
+
+const liveVendors = new Set(loadOffers().map((offer) => offer.vendor.trim().toLowerCase()));
+
+const survivorsWithAnUncitedRow = (): string[] => [
+  ...new Set(
+    renamedVendorsWithARenderedRecord()
+      .filter((entry) => aClaimAPageCanCarry(entry.summary) && !changeCitesASource(entry.change))
+      .map((entry) => entry.survivor),
+  ),
+];
+
+const vendorsRenamedWithAnUncitedRow = (): Population => ({
+  size: survivorsWithAnUncitedRow().length,
+  read: "vendors the registry renamed that hold a change record we cite no page for",
+});
+
+const renamedVendorsWithARenderedRecord = (): Array<{ retired: string; survivor: string; summary: string; change: DealChange }> =>
+  storedChanges
+    .map((change) => ({
+      retired: change.vendor,
+      survivor: survivingVendorName(change.vendor, liveVendors, vendorMerges()),
+      summary: change.summary,
+      change,
+    }))
+    .filter(
+      (entry): entry is { retired: string; survivor: string; summary: string; change: DealChange } =>
+        entry.survivor !== null,
+    );
 
 const entriesThePerChangeFeedCanPublish = (): Population => ({
   size: Math.min(changes.length, CHANGE_FEED_ENTRY_LIMIT),
@@ -31,9 +63,47 @@ const WEEKLY_FEED = "/feed.xml";
 const CHANGE_LOG_ROUTES = ["/changes", "/pricing-changes"];
 
 const ANCHOR = 45;
+const WORDS_IN_A_CLAIM = 3;
+const AROUND_A_CLAIM = 28;
 const LOOKBEHIND = 900;
 const LOOKAHEAD = 260;
 const ELLIPSIS = ["...", "…"];
+
+const aClaimAPageCanCarry = (summary: string): boolean =>
+  summary.trim().split(/\s+/).filter(Boolean).length >= WORDS_IN_A_CLAIM;
+
+interface Swallower {
+  before: string;
+  after: string;
+}
+
+function longerProseTheSiteRenders(): string[] {
+  const texts = new Set<string>();
+  for (const change of changes) {
+    for (const text of [change.summary, change.previous_state, change.current_state]) {
+      if (text) texts.add(text);
+    }
+  }
+  for (const offer of loadOffers()) {
+    if (offer.description) texts.add(offer.description);
+  }
+  return [...texts];
+}
+
+function claimsThatSwallow(summary: string, prose: readonly string[]): Swallower[] {
+  const found: Swallower[] = [];
+  for (const text of prose) {
+    if (text.length <= summary.length) continue;
+    let at = text.indexOf(summary);
+    while (at >= 0) {
+      const before = text.slice(Math.max(0, at - AROUND_A_CLAIM), at);
+      const after = text.slice(at + summary.length, at + summary.length + AROUND_A_CLAIM);
+      if (before !== "" || after !== "") found.push({ before, after });
+      at = text.indexOf(summary, at + 1);
+    }
+  }
+  return found;
+}
 
 const sourceOf = (change: { source_url?: string | null }): string | null =>
   changeCitesASource(change) ? change.source_url!.trim() : null;
@@ -71,13 +141,15 @@ interface RenderableRow {
   summary: string;
   anchors: string[];
   sources: string[];
+  vendors: string[];
   notices: string[];
+  swallowers: Swallower[];
 }
 
 function rowsFromTheStore(records: readonly DealChange[]): RenderableRow[] {
   const bySummary = new Map<string, { sources: Set<string>; vendors: Set<string> }>();
   for (const change of records) {
-    if (change.summary.length < 25) continue;
+    if (!aClaimAPageCanCarry(change.summary)) continue;
     if (!bySummary.has(change.summary)) {
       bySummary.set(change.summary, { sources: new Set(), vendors: new Set() });
     }
@@ -86,11 +158,14 @@ function rowsFromTheStore(records: readonly DealChange[]): RenderableRow[] {
     const url = sourceOf(change);
     if (url) group.sources.add(url);
   }
+  const prose = longerProseTheSiteRenders();
   return [...bySummary].map(([summary, group]) => ({
     summary,
     anchors: [...new Set([summary.slice(0, ANCHOR), encode(summary.slice(0, ANCHOR))])],
     sources: [...group.sources],
+    vendors: [...group.vendors],
     notices: [...group.vendors].map(uncitedChangeNotice),
+    swallowers: claimsThatSwallow(summary, prose),
   }));
 }
 
@@ -111,6 +186,17 @@ function occurrences(page: string, needle: string): number[] {
     at = page.indexOf(needle, at + 1);
   }
   return found;
+}
+
+function readsAsPartOfALongerClaim(page: string, at: number, row: RenderableRow): boolean {
+  if (row.swallowers.length === 0) return false;
+  const before = decode(page.slice(Math.max(0, at - AROUND_A_CLAIM * 4), at));
+  const after = decode(page.slice(at + row.summary.length, at + row.summary.length + AROUND_A_CLAIM * 4));
+  return row.swallowers.some(
+    (piece) =>
+      (piece.before !== "" && before.endsWith(piece.before)) ||
+      (piece.after !== "" && after.startsWith(piece.after)),
+  );
 }
 
 function evidenceBeside(page: string, at: number, row: RenderableRow): "source" | "no-source" | null {
@@ -158,6 +244,9 @@ describe("every published change row carries the page it was read from", () => {
   let statedRows = 0;
   let pagesWithARow = 0;
   const bare: string[] = [];
+  const insideALongerClaim: string[] = [];
+  const statedForARenamedVendor: string[] = [];
+  const survivorsOfARename = new Set(renamedVendorsWithARenderedRecord().map((entry) => entry.survivor));
 
   async function fetchPath(pathname: string): Promise<string> {
     const cached = bodies.get(pathname);
@@ -201,11 +290,21 @@ describe("every published change row carries the page it was read from", () => {
         const spots = [...new Set(row.anchors.flatMap((anchor) => occurrences(page, anchor)))];
         for (const at of spots) {
           if (!pageAgreesWithSummary(page, at, row.summary)) continue;
+          if (readsAsPartOfALongerClaim(page, at, row)) {
+            insideALongerClaim.push(`${pathname} :: ${row.summary.slice(0, 70)}`);
+            continue;
+          }
           here++;
           const evidence = evidenceBeside(page, at, row);
           if (evidence === "source") citedRows++;
-          else if (evidence === "no-source") statedRows++;
-          else bare.push(`${pathname} :: ${row.summary.slice(0, 70)}`);
+          else if (evidence === "no-source") {
+            statedRows++;
+            for (const vendor of row.vendors) {
+              if (survivorsOfARename.has(vendor)) {
+                statedForARenamedVendor.push(`${pathname} :: ${vendor} :: ${row.summary.slice(0, 70)}`);
+              }
+            }
+          } else bare.push(`${pathname} :: ${row.summary.slice(0, 70)}`);
         }
       }
       rowsChecked += here;
@@ -225,6 +324,16 @@ describe("every published change row carries the page it was read from", () => {
       60,
       "summaries no record holds a source for, so the no-source branch is not vacuous",
     );
+    assertPopulationFloor(
+      rows.filter((row) => row.swallowers.length > 0).length,
+      3,
+      "summaries a longer claim the site renders holds word for word",
+    );
+    assertPopulationFloor(
+      insideALongerClaim.length,
+      10,
+      "matches the sweep set aside because the page renders them inside a longer claim",
+    );
   });
 
   it("shows the page behind every change row it renders, on the page that renders it", () => {
@@ -236,6 +345,43 @@ describe("every published change row carries the page it was read from", () => {
     assertPopulationFloor(citedRows, 5000, "rows shown beside the page they were read from");
     assertPopulationFloor(statedRows, 400, "rows shown beside a statement that we hold no source");
     assert.strictEqual(citedRows + statedRows, rowsChecked);
+  });
+
+  it("finds the uncited row of every vendor the registry renamed, under the name it survives as", () => {
+    const wanted = survivorsWithAnUncitedRow();
+    assertPopulationFloor(
+      wanted.length,
+      1,
+      "vendors the registry renamed that hold a change record we cite no page for",
+    );
+    const found = new Set(statedForARenamedVendor.map((row) => row.split(" :: ")[1]));
+    assert.deepStrictEqual(
+      wanted.filter((vendor) => !found.has(vendor)),
+      [],
+      "a renamed vendor's uncited row is rendered under a name this sweep never found",
+    );
+    assertCoversPopulation(
+      found.size,
+      vendorsRenamedWithAnUncitedRow(),
+      "renamed vendors whose uncited row was found under the surviving name",
+    );
+  });
+
+  it("states no uncited row under a name the registry retired", () => {
+    const retired = renamedVendorsWithARenderedRecord().map((entry) => ({
+      notice: uncitedChangeNotice(entry.retired),
+      of: entry.retired,
+    }));
+    const found: string[] = [];
+    for (const pathname of sweptPaths) {
+      const page = bodies.get(pathname) ?? "";
+      for (const entry of retired) {
+        if (page.includes(entry.notice) || page.includes(encode(entry.notice))) {
+          found.push(`${pathname} :: ${entry.of}`);
+        }
+      }
+    }
+    assert.deepStrictEqual(found, []);
   });
 
   for (const route of CHANGE_LOG_ROUTES) {
@@ -283,6 +429,49 @@ describe("every published change row carries the page it was read from", () => {
       feed.includes(`xmlns:${CHANGE_FEED_NAMESPACE_PREFIX}=`),
       "the weekly feed can emit a namespaced element it never declares",
     );
+  });
+});
+
+describe("a sentence the page renders inside a longer claim is not a second row", () => {
+  const SUMMARY = "Rebranded to addy.io";
+  const DESCRIPTION =
+    "Open-source email alias/forwarding. Rebranded to addy.io. Free tier: unlimited standard aliases.";
+
+  const rowFor = (summary: string, prose: readonly string[]): RenderableRow => ({
+    summary,
+    anchors: [summary.slice(0, ANCHOR)],
+    sources: [],
+    vendors: ["addy.io"],
+    notices: [uncitedChangeNotice("addy.io")],
+    swallowers: claimsThatSwallow(summary, prose),
+  });
+
+  const readAt = (page: string, row: RenderableRow): boolean =>
+    readsAsPartOfALongerClaim(page, page.indexOf(row.summary), row);
+
+  it("sets aside the sentence a stored description carries", () => {
+    const page = `<div class="change-detail"><span>Before:</span> ${DESCRIPTION}</div>`;
+    assert.strictEqual(readAt(page, rowFor(SUMMARY, [DESCRIPTION])), true);
+  });
+
+  it("keeps the row the page renders on its own", () => {
+    const page = `<div class="chg-summary">${SUMMARY} <span class="unsourced-note">We hold no source</span></div>`;
+    assert.strictEqual(readAt(page, rowFor(SUMMARY, [DESCRIPTION])), false);
+  });
+
+  it("sets aside a summary a longer summary opens with", () => {
+    const longer = "Reclassified from Free to Trial tier. No permanent free plan exists — 30-day trial only.";
+    const page = `<div class="chg-summary">${longer} <a href="https://acme.test">Source</a></div>`;
+    assert.strictEqual(readAt(page, rowFor("No permanent free plan", [longer])), true);
+  });
+
+  it("sets nothing aside for a claim no longer text holds", () => {
+    assert.deepStrictEqual(claimsThatSwallow("Free tier withdrawn on 1 April", [DESCRIPTION]), []);
+  });
+
+  it("reads a claim as a claim only when it carries enough words to attribute", () => {
+    assert.strictEqual(aClaimAPageCanCarry("Rebranded to addy.io"), true);
+    assert.strictEqual(aClaimAPageCanCarry("Free ended"), false);
   });
 });
 
