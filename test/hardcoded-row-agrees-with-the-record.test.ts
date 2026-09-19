@@ -311,6 +311,28 @@ function namedAsASubject(page: string, vendor: string, claim: string): NamedSubj
   );
 }
 
+describe("the claims this rule is declared not to read", () => {
+  const declared = NAMES_A_SUBJECT_RATHER_THAN_CLAIMING[0]!;
+
+  it("suppresses only a claim carrying the text it names, on the page and the vendor it names", () => {
+    assert.ok(namedAsASubject(declared.page, declared.vendor, `${declared.claim} — AgentDeals`) !== null);
+    assert.strictEqual(namedAsASubject("/database-alternatives", declared.vendor, declared.claim), null);
+    assert.strictEqual(namedAsASubject(declared.page, "Supabase", declared.claim), null);
+    assert.strictEqual(
+      namedAsASubject(declared.page, declared.vendor, `${declared.vendor} offers 5 GB of free storage.`),
+      null,
+    );
+  });
+
+  it("names a page and a reason on every one of them", () => {
+    for (const exemption of NAMES_A_SUBJECT_RATHER_THAN_CLAIMING) {
+      assert.match(exemption.page, /^\/[a-z0-9-]+$/);
+      assert.ok(exemption.claim.length > 20, `${exemption.page} names too little text to be a claim`);
+      assert.ok(exemption.because.length > 20, `${exemption.page} gives no reason`);
+    }
+  });
+});
+
 describe("a page naming a vendor whose offer has ended does not present it as free", () => {
   const pairs = pairsTheRegisterRecords();
 
