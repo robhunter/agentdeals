@@ -9,9 +9,11 @@
     { "retired": "Hasura Cloud", "survivor": "Hasura" },
     { "retired": "Landen", "survivor": "Umso" },
     { "retired": "LemonSqueezy", "survivor": "Lemon Squeezy" },
+    { "retired": "Mistral API", "survivor": "Mistral AI" },
     { "retired": "NextUI", "survivor": "HeroUI" },
     { "retired": "Slack API", "survivor": "Slack" },
     { "retired": "SonarCloud", "survivor": "SonarQube Cloud" },
+    { "retired": "Synadia NGS", "survivor": "synadia.com" },
     { "retired": "v0", "survivor": "v0.dev" }
   ],
   "shared_pricing_pages": [
