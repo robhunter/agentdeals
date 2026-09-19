@@ -3,11 +3,15 @@
     { "retired": "AnonAddy", "survivor": "addy.io" },
     { "retired": "Anthropic Claude API", "survivor": "Anthropic API" },
     { "retired": "Arize AI", "survivor": "Arize AX" },
+    { "retired": "Census", "survivor": "Fivetran Activations" },
     { "retired": "Colaboratory", "survivor": "Google Colab" },
     { "retired": "Components.studio", "survivor": "WebComponents.dev" },
     { "retired": "Hasura Cloud", "survivor": "Hasura" },
+    { "retired": "Landen", "survivor": "Umso" },
     { "retired": "LemonSqueezy", "survivor": "Lemon Squeezy" },
+    { "retired": "NextUI", "survivor": "HeroUI" },
     { "retired": "Slack API", "survivor": "Slack" },
+    { "retired": "SonarCloud", "survivor": "SonarQube Cloud" },
     { "retired": "v0", "survivor": "v0.dev" }
   ],
   "shared_pricing_pages": [

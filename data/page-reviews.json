@@ -2965,6 +2965,7 @@
         "semgrep",
         "snyk",
         "socket-dev",
+        "sonarqube-cloud",
         "soos",
         "tailscale",
         "trivy",
