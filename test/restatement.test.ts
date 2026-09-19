@@ -4,6 +4,7 @@ import assert from "node:assert";
 const {
   A_LATER_READ_CONFIRMED_THE_TERMS_WE_STORE,
   A_RECORD_NO_NEWER_ALREADY_RESTATED_THIS,
+  A_RESTATEMENT_FROM_THIS_RECORD_WAS_REVERTED,
   READING_ANSWERS_FOR_SOMETHING_ELSE,
   READING_DESCRIBES_THE_PAGE_NOT_THE_TERMS,
   READING_DROPS_THE_CAP_ON_WHO_MAY_USE_IT,
@@ -356,11 +357,17 @@ describe("a restatement is reversible, visible and does not overwrite a hand-wri
     assert.equal(data.offers[0].restated_from.record_date, "2026-09-15");
     assert.equal(written[0].previous_description, PAGURE.offer.description);
 
-    const { reverted, left } = revertRestatement(data, written, "Pagure.io");
+    const { reverted, left } = revertRestatement(data, written, "Pagure.io", "2026-09-19");
     assert.equal(reverted, true);
     assert.equal(data.offers[0].description, PAGURE.offer.description);
     assert.equal(data.offers[0].restated_from, undefined);
-    assert.deepEqual(left, []);
+    assert.deepEqual(left.map((e: { vendor: string; reverted_on?: string }) => [e.vendor, e.reverted_on]), [
+      ["Pagure.io", "2026-09-19"],
+    ]);
+    assert.deepEqual(data.offers[0].restatement_reverted, {
+      record_date: PAGURE.change.date,
+      reverted_on: "2026-09-19",
+    });
   });
 
   it("puts a whole run back in one step, not one vendor at a time", () => {
@@ -377,7 +384,11 @@ describe("a restatement is reversible, visible and does not overwrite a hand-wri
 
     const outcome = revertRun(data, written, TODAY);
     assert.equal(outcome.reverted.length, 2);
-    assert.deepEqual(outcome.left, []);
+    assert.deepEqual(
+      outcome.left.map((e: { vendor: string; reverted_on?: string }) => [e.vendor, e.reverted_on]),
+      [["Pagure.io", TODAY], ["ipapi", TODAY]],
+      "the ledger drops what it reverted, so nothing records that the restatement ever happened",
+    );
     assert.equal(data.offers[0].description, PAGURE.offer.description);
     assert.equal(data.offers[1].description, IPAPI.offer.description);
     assert.equal(data.offers[0].restated_from, undefined);
@@ -393,7 +404,10 @@ describe("a restatement is reversible, visible and does not overwrite a hand-wri
     assert.deepEqual(outcome.reverted.map((e: { vendor: string }) => e.vendor), ["Pagure.io"]);
     assert.equal(data.offers[0].description, PAGURE.offer.description);
     assert.equal(data.offers[1].description, later[0].description);
-    assert.deepEqual(outcome.left, later);
+    assert.deepEqual(
+      outcome.left.map((e: { vendor: string; reverted_on?: string }) => [e.vendor, e.reverted_on ?? "standing"]),
+      [["Pagure.io", TODAY], ["ipapi", "standing"]],
+    );
   });
 
   it("refuses to put back an entry a later run restated again, rather than restoring the wrong terms", () => {
@@ -512,6 +526,48 @@ describe("a restatement is reversible, visible and does not overwrite a hand-wri
     assert.equal(ruleOnRestating(unconfirmed, IPAPI.change, TODAY)?.refusal, null);
   });
 
+  it("does not restate again from a record whose restatement was put back by hand", () => {
+    const reverted = {
+      ...IPAPI.offer,
+      restatement_reverted: { record_date: IPAPI.change.date, reverted_on: "2026-09-19" },
+    };
+    assert.equal(
+      ruleOnRestating(reverted, IPAPI.change, TODAY)?.refusal,
+      A_RESTATEMENT_FROM_THIS_RECORD_WAS_REVERTED,
+    );
+    const older = { ...IPAPI.change, date: "2026-09-01", recorded_date: "2026-09-01" };
+    assert.equal(
+      ruleOnRestating(reverted, older, TODAY)?.refusal,
+      A_RESTATEMENT_FROM_THIS_RECORD_WAS_REVERTED,
+      "a record older than the one that was reverted is not new evidence",
+    );
+    const newer = { ...IPAPI.change, date: "2026-09-18", recorded_date: "2026-09-18" };
+    assert.equal(
+      ruleOnRestating(reverted, newer, TODAY)?.refusal,
+      null,
+      "a newer record contradicting the entry may still restate it, which is what stops a revert freezing it for ever",
+    );
+    assert.equal(ruleOnRestating(IPAPI.offer, IPAPI.change, TODAY)?.refusal, null);
+  });
+
+  it("declares every ground it refuses on, so a ground that fires is one the measure names", () => {
+    const reverted = {
+      ...IPAPI.offer,
+      restatement_reverted: { record_date: IPAPI.change.date, reverted_on: "2026-09-19" },
+    };
+    const grounds = [
+      ruleOnRestating(reverted, IPAPI.change, TODAY)!.refusal,
+      ruleOnRestating({ ...IPAPI.offer, tier: "Paid" }, IPAPI.change, TODAY)!.refusal,
+      ruleOnRestating({ ...IPAPI.offer, restated_from: { record_date: IPAPI.change.date } }, IPAPI.change, TODAY)!.refusal,
+    ];
+    assert.deepEqual(grounds.filter((ground) => ground === null), [], "a fixture that should refuse did not");
+    const undeclared = grounds.filter((ground) => !RESTATEMENT_REFUSALS.includes(ground!));
+    assert.deepEqual(undeclared, [], "a ground we refuse on is missing from the grounds we publish");
+
+    const measure = withheldTermsMeasure([ruleOnRestating(reverted, IPAPI.change, TODAY)!]);
+    assert.equal(measure.offers_we_refuse_to_restate[A_RESTATEMENT_FROM_THIS_RECORD_WAS_REVERTED], 1);
+  });
+
   it("does not write over an entry again from a record no newer than the one it came from", () => {
     const restated = { ...IPAPI.offer, restated_from: { record_date: "2026-09-07" } };
     assert.equal(
@@ -556,16 +612,37 @@ describe("a restatement is reversible, visible and does not overwrite a hand-wri
     assert.equal(held.length, 1);
     assert.equal(held[0].description, written.offers[0].description);
 
+    const day = held[0].restated_on;
     run("--revert", "ipapi");
-    assert.deepEqual(JSON.parse(readFileSync(index, "utf-8")), before);
-    assert.deepEqual(JSON.parse(readFileSync(store, "utf-8")).restatements, []);
+    const back = JSON.parse(readFileSync(index, "utf-8"));
+    assert.equal(back.offers[0].description, IPAPI.offer.description);
+    assert.equal(back.offers[0].restated_from, undefined);
+    assert.deepEqual(back.offers[0].restatement_reverted, { record_date: IPAPI.change.date, reverted_on: day });
+
+    const afterRevert = JSON.parse(readFileSync(store, "utf-8")).restatements;
+    assert.equal(afterRevert.length, 1, "the ledger forgot a restatement that happened, so it cannot be traced");
+    assert.equal(afterRevert[0].reverted_on, day);
 
     run("--write");
-    const day = JSON.parse(readFileSync(store, "utf-8")).restatements[0].restated_on;
-    const output = run("--revert-run", day);
+    assert.equal(
+      JSON.parse(readFileSync(index, "utf-8")).offers[0].description,
+      IPAPI.offer.description,
+      "the next run wrote the reverted terms straight back, so the revert lasted until the rotation woke up",
+    );
+
+    const newer = { ...IPAPI.change, date: "2026-09-18", recorded_date: "2026-09-18" };
+    writeFileSync(log, JSON.stringify({ changes: [newer] }, null, 2));
+    run("--write");
+    assert.notEqual(
+      JSON.parse(readFileSync(index, "utf-8")).offers[0].description,
+      IPAPI.offer.description,
+      "a record newer than the one that was reverted is refused too, so a revert freezes the entry for ever",
+    );
+
+    const restatedAgain = JSON.parse(readFileSync(store, "utf-8")).restatements;
+    const output = run("--revert-run", restatedAgain[restatedAgain.length - 1].restated_on);
     assert.match(output, /Reverted 1 of the 1 entries restated on /);
-    assert.deepEqual(JSON.parse(readFileSync(index, "utf-8")), before);
-    assert.deepEqual(JSON.parse(readFileSync(store, "utf-8")).restatements, []);
+    assert.equal(JSON.parse(readFileSync(index, "utf-8")).offers[0].description, IPAPI.offer.description);
   });
 
   it("refuses a day it recorded nothing on rather than reporting an empty revert as done", async () => {

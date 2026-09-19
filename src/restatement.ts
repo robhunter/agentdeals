@@ -17,6 +17,12 @@ export interface RestatableOffer {
   url?: string;
   source_check?: { checked?: string } | null;
   restated_from?: Restatement | null;
+  restatement_reverted?: RevertedRestatement | null;
+}
+
+export interface RevertedRestatement {
+  record_date: string;
+  reverted_on: string;
 }
 
 export interface Restatement {
@@ -26,6 +32,9 @@ export interface Restatement {
   change_type: string;
   restated_on: string;
 }
+
+export const A_RESTATEMENT_FROM_THIS_RECORD_WAS_REVERTED =
+  "a_restatement_from_this_record_was_reverted";
 
 export const A_LATER_READ_CONFIRMED_THE_TERMS_WE_STORE = "a_later_read_confirmed_the_terms_we_store";
 
@@ -47,6 +56,7 @@ export const A_RECORD_NO_NEWER_ALREADY_RESTATED_THIS = "a_record_no_newer_alread
 export const THIS_READING_IS_HELD_BACK_BY_NAME = "this_reading_is_held_back_by_name";
 
 export const RESTATEMENT_REFUSALS: readonly string[] = [
+  A_RESTATEMENT_FROM_THIS_RECORD_WAS_REVERTED,
   A_LATER_READ_CONFIRMED_THE_TERMS_WE_STORE,
   TIER_IS_NOT_ONE_WE_RECORD_AS_FREE,
   READING_ANSWERS_FOR_SOMETHING_ELSE,
@@ -136,11 +146,22 @@ export function aReadSinceTheReadingConfirmedWhatWeStore(
   return confirmationALaterReadContradicted(offer) === null;
 }
 
+export function aRestatementFromThisRecordWasReverted(
+  change: QuotingChange,
+  reverted: RevertedRestatement | null | undefined,
+): boolean {
+  if (!reverted) return false;
+  return change.date <= reverted.record_date;
+}
+
 export function restatementRefusal(
   offer: RestatableOffer,
   change: QuotingChange,
   reading: SourcedReading,
 ): string | null {
+  if (aRestatementFromThisRecordWasReverted(change, offer.restatement_reverted)) {
+    return A_RESTATEMENT_FROM_THIS_RECORD_WAS_REVERTED;
+  }
   if (aReadSinceTheReadingConfirmedWhatWeStore(offer, reading)) {
     return A_LATER_READ_CONFIRMED_THE_TERMS_WE_STORE;
   }

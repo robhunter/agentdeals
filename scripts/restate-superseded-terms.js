@@ -115,29 +115,46 @@ export function releaseLines(resolutions) {
   ];
 }
 
+export function standingRestatements(entries) {
+  return entries.filter((entry) => !entry.reverted_on);
+}
+
 export function newestRestatementFor(entries, vendor) {
-  const named = entries.filter((entry) => entry.vendor.toLowerCase() === vendor.toLowerCase());
+  const named = standingRestatements(entries).filter(
+    (entry) => entry.vendor.toLowerCase() === vendor.toLowerCase(),
+  );
   return named.sort((a, b) => a.restated_on.localeCompare(b.restated_on)).pop() ?? null;
 }
 
-export function revertRestatement(data, entries, vendor) {
-  const entry = newestRestatementFor(entries, vendor);
-  if (!entry) return { entry: null, reverted: false };
+export function putTheStoredTermsBack(data, entry, today) {
   const offer = (data.offers ?? []).find(
     (candidate) => offerKey(candidate.vendor, candidate.url) === offerKey(entry.vendor, entry.url),
   );
-  if (!offer) return { entry, reverted: false };
+  if (!offer) return null;
   offer.description = entry.previous_description;
   delete offer.restated_from;
-  return { entry, reverted: true, left: entries.filter((held) => held !== entry) };
+  offer.restatement_reverted = { record_date: entry.record_date, reverted_on: today };
+  return { ...entry, reverted_on: today };
+}
+
+export function withTheRevertRecorded(entries, entry, recorded) {
+  return entries.map((held) => (held === entry ? recorded : held));
+}
+
+export function revertRestatement(data, entries, vendor, today) {
+  const entry = newestRestatementFor(entries, vendor);
+  if (!entry) return { entry: null, reverted: false };
+  const recorded = putTheStoredTermsBack(data, entry, today ?? entry.restated_on);
+  if (!recorded) return { entry, reverted: false };
+  return { entry, reverted: true, left: withTheRevertRecorded(entries, entry, recorded) };
 }
 
 export function restatementsFrom(entries, day) {
-  return entries.filter((entry) => entry.restated_on === day);
+  return standingRestatements(entries).filter((entry) => entry.restated_on === day);
 }
 
 export function aLaterRunRestatedThisAgain(entries, entry) {
-  return entries.some(
+  return standingRestatements(entries).some(
     (held) =>
       held !== entry &&
       offerKey(held.vendor, held.url) === offerKey(entry.vendor, entry.url) &&
@@ -145,28 +162,26 @@ export function aLaterRunRestatedThisAgain(entries, entry) {
   );
 }
 
-export function revertRun(data, entries, day) {
+export function revertRun(data, entries, day, today) {
   const written = restatementsFrom(entries, day);
   const reverted = [];
   const supersededBefore = [];
   const gone = [];
+  let left = entries;
   for (const entry of written) {
     if (aLaterRunRestatedThisAgain(entries, entry)) {
       supersededBefore.push(entry);
       continue;
     }
-    const offer = (data.offers ?? []).find(
-      (candidate) => offerKey(candidate.vendor, candidate.url) === offerKey(entry.vendor, entry.url),
-    );
-    if (!offer) {
+    const recorded = putTheStoredTermsBack(data, entry, today ?? day);
+    if (!recorded) {
       gone.push(entry);
       continue;
     }
-    offer.description = entry.previous_description;
-    delete offer.restated_from;
+    left = withTheRevertRecorded(left, entry, recorded);
     reverted.push(entry);
   }
-  return { written, reverted, supersededBefore, gone, left: entries.filter((held) => !reverted.includes(held)) };
+  return { written, reverted, supersededBefore, gone, left };
 }
 
 export function revertRunLines(day, outcome) {
@@ -260,7 +275,7 @@ async function main() {
   const held = readRestatements();
 
   if (revertDay) {
-    const outcome = revertRun(data, held, revertDay);
+    const outcome = revertRun(data, held, revertDay, today);
     if (outcome.written.length === 0) {
       console.error(`No restatement was recorded on ${revertDay}.`);
       process.exit(2);
@@ -274,7 +289,7 @@ async function main() {
   }
 
   if (revert) {
-    const { entry, reverted, left } = revertRestatement(data, held, revert);
+    const { entry, reverted, left } = revertRestatement(data, held, revert, today);
     if (!entry) {
       console.error(`No restatement recorded for ${revert}.`);
       process.exit(2);
