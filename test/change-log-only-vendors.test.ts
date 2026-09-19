@@ -1,6 +1,6 @@
 import { describe, it, before, after } from "node:test";
 import assert from "node:assert";
-import { assertPopulationFloor } from "./population-floor.ts";
+import { assertCoversPopulation, assertPopulationFloor, vendorsTheChangeLogEnds } from "./population-floor.ts";
 import { spawn, type ChildProcess } from "node:child_process";
 import { readFileSync } from "node:fs";
 import path from "node:path";
@@ -13,7 +13,7 @@ import {
 } from "./badge-verdicts.ts";
 
 const { compiledFigureSlots, staticHalfOf } = await import("../dist/compiled-figures.js");
-const { namedVendorSlug, toSlug, vendorSlugMap } = await import("../dist/vendor-slug.js");
+const { changeLogAnchorFor, namedVendorSlug, toSlug, vendorSlugMap } = await import("../dist/vendor-slug.js");
 const { survivingVendorName, vendorMerges } = await import("../dist/vendor-merges.js");
 
 type DealChange = import("../src/types.ts").DealChange;
@@ -64,6 +64,12 @@ const liveVendors = new Set(
 );
 const heldUnderNoCatalogueNameOfItsOwn = (label: string) =>
   outsideTheCatalogue(label) || survivingVendorName(label, liveVendors) !== null;
+const vendorNameAsPublished = (label: string) => survivingVendorName(label, liveVendors) ?? label;
+const changeLogAnchorAsPublished = (label: string) => changeLogAnchorFor(vendorNameAsPublished(label)) ?? "";
+const CHANGE_LOG_ENTRY = /<div class="chg-entry[^"]*"[^>]*>([\s\S]*?)(?=\n      <div class="chg-entry|\n    <\/div>)/g;
+const changeLogEntries = (log: string) => [...log.matchAll(CHANGE_LOG_ENTRY)].map(m => m[1]!);
+const vendorNamedIn = (entry: string) => entry.match(/class="chg-vendor"[^>]*>([\s\S]*?)<\//)?.[1]?.trim() ?? "";
+const dateShownOn = (entry: string) => entry.match(/class="chg-date[^"]*">[^<]*?(\d{4}-\d{2}-\d{2})/)?.[1] ?? "";
 
 let proc: ChildProcess | null = null;
 let base = "";
@@ -136,13 +142,37 @@ describe("marking a comparison slot whose vendor has no catalogue entry", () => 
     assert.strictEqual(verdicts.size, badgeLinksOnBadgesPage(badges).length);
   });
 
-  it("holds ended records for vendors the catalogue has no entry for", () => {
-    const orphaned = [...endedByTheLog.values()].filter(c => heldUnderNoCatalogueNameOfItsOwn(c.vendor));
-    assertPopulationFloor(
-      orphaned.length,
-      15,
-      "ended vendors the catalogue holds no entry for under the name the log files them by",
+  it("publishes the record that ended each vendor's free tier, including the ones the catalogue holds no entry for", () => {
+    const log = pages.get("/changes");
+    assert.ok(log, "the change log did not render");
+    const addressed = new Set([...log.matchAll(/ id="(vendor-[a-z0-9-]+)"/g)].map(m => m[1]!));
+    const carried = new Set(
+      changeLogEntries(log)
+        .map(entry => `${toSlug(vendorNamedIn(entry))}|${dateShownOn(entry)}`),
     );
+    const withheld = [...endedByTheLog.values()]
+      .filter(c => !carried.has(`${toSlug(vendorNameAsPublished(c.vendor))}|${c.date}`))
+      .map(c => `${c.vendor} ${c.date} -> ${toSlug(vendorNameAsPublished(c.vendor))}`)
+      .sort();
+    assert.deepStrictEqual(withheld, []);
+    const unaddressed = [...endedByTheLog.values()]
+      .filter(c => !addressed.has(changeLogAnchorAsPublished(c.vendor)))
+      .map(c => `${c.vendor} -> ${changeLogAnchorAsPublished(c.vendor)}`)
+      .sort();
+    assert.deepStrictEqual(unaddressed, []);
+    assertCoversPopulation(
+      endedByTheLog.size,
+      vendorsTheChangeLogEnds(),
+      "vendors the change log ends, publishes the ending record for and addresses",
+    );
+  });
+
+  it("leaves the change log as the only route to a vendor it ended that the catalogue holds no entry for", () => {
+    const orphaned = [...endedByTheLog.values()].filter(c => heldUnderNoCatalogueNameOfItsOwn(c.vendor));
+    const publishing = orphaned
+      .map(c => `/vendor/${toSlug(c.vendor)}`)
+      .filter(route => pages.has(route));
+    assert.deepStrictEqual(publishing, []);
   });
 
   it("keeps a vendor in that population when the registry renames it into the catalogue", () => {
@@ -164,14 +194,23 @@ describe("marking a comparison slot whose vendor has no catalogue entry", () => 
   });
 
   it("marks every slot naming an uncatalogued vendor whose free tier the change log ended", () => {
-    const named = everySlotOnEveryPage().filter(
-      slot => outsideTheCatalogue(slot.label) && endedByTheLog.has(slot.slug),
-    );
+    const ended = everySlotOnEveryPage().filter(slot => endedByTheLog.has(slot.slug));
+    const named = ended.filter(slot => outsideTheCatalogue(slot.label));
+    const listed = ended.filter(slot => !outsideTheCatalogue(slot.label));
     const unmarked = named
       .filter(slot => !REMOVAL_MARKER.test(slot.markup))
       .map(slot => `${slot.path}: ${slot.kind} ${slot.label}`);
     assert.deepStrictEqual(unmarked, []);
-    assert.ok(named.length >= 3, `only ${named.length} slots name an uncatalogued ended vendor`);
+    assert.strictEqual(
+      named.length + listed.length,
+      ended.length,
+      "a slot naming an ended vendor reached neither half of the sweep",
+    );
+    assertPopulationFloor(
+      ended.length,
+      18,
+      "slots naming a vendor whose free tier the change log ended",
+    );
   });
 
   it("reaches a vendor's records through the name its own page is filed under", () => {
@@ -214,14 +253,15 @@ describe("marking a comparison slot whose vendor has no catalogue entry", () => 
   it("lands every change-log marker on the record it rests on", () => {
     const log = pages.get("/changes");
     assert.ok(log, "the change log did not render");
-    let landed = 0;
+    let reaching = 0;
     for (const slot of everySlotOnEveryPage()) {
       for (const href of slot.markup.matchAll(/href="\/changes#(vendor-[a-z0-9-]+)"/g)) {
         assert.ok(log!.includes(` id="${href[1]}"`), `${slot.path}: ${slot.label} points at a missing ${href[1]}`);
-        landed++;
+        reaching++;
       }
+      reaching += [...slot.markup.matchAll(/href="\/vendor\/[a-z0-9-]+#changes"/g)].length;
     }
-    assert.ok(landed >= 2, `only ${landed} markers point at the change log`);
+    assertPopulationFloor(reaching, 150, "markers on a slot reaching a vendor's records");
   });
 
   it("gives the change log one anchor per vendor and no more", () => {
