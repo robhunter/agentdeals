@@ -15,6 +15,7 @@ const {
 const { toSlug } = await import("../dist/slug.js");
 const { citedRecords } = await import("../dist/provenance.js");
 const { getOfferDetails, loadDealChanges } = await import("../dist/data.js");
+const { readRestatements } = await import("../scripts/restate-superseded-terms.js");
 
 type Offer = import("../src/types.ts").Offer;
 type DealChange = import("../src/types.ts").DealChange;
@@ -37,6 +38,9 @@ const supersedingFor = (offer: Offer): DealChange | null => supersedingChange(of
 
 const superseded = offers.filter((o) => supersedingFor(o) !== null);
 const notSuperseded = offers.filter((o) => supersedingFor(o) === null);
+
+const firstRecordFor = (vendor: string): Offer | undefined => offers.find((o) => o.vendor === vendor);
+const answeredByTheVendorName = (offer: Offer): boolean => firstRecordFor(offer.vendor) === offer;
 
 const HEAD = 45;
 const squash = (text: string): string => text.replace(/\s+/g, " ").trim();
@@ -181,8 +185,12 @@ describe("#1395 the listing surfaces answer the stored-terms question the way th
 
   after(() => { server?.proc.kill(); });
 
-  it("has records on both sides of the question, so neither direction below is vacuous", () => {
-    assertPopulationFloor(superseded.length, 75, "records carry superseded stored terms");
+  it("has records on both sides of the question, whether withheld or already restated, so neither direction below is vacuous", () => {
+    assertPopulationFloor(
+      superseded.length + readRestatements().length,
+      75,
+      "records the change log names as superseding our stored terms, withheld or restated",
+    );
     assertPopulationFloor(notSuperseded.length, 900, "records carry current stored terms");
     assert.strictEqual(
       pages.size,
@@ -335,8 +343,9 @@ describe("#1395 the listing surfaces answer the stored-terms question the way th
   it("carries the reading behind the change and the sentence the vendor page prints", async () => {
     const offer = superseded.find((o) => {
       const change = supersedingFor(o)!;
-      return change.source_url && change.current_state;
+      return answeredByTheVendorName(o) && change.source_url && change.current_state;
     })!;
+    assert.ok(offer, "no record the vendor name resolves to holds a sourced reading for this endpoint to be read against");
     const change = supersedingFor(offer)!;
     const payload = await (await fetch(`${base}/api/details/${encodeURIComponent(offer.vendor)}`)).json();
     const marked = payload.offer.terms_superseded;
@@ -386,7 +395,8 @@ describe("#1395 the listing surfaces answer the stored-terms question the way th
   });
 
   it("gives the vendor tool the same fields the endpoint gives", () => {
-    const offer = superseded[0];
+    const offer = superseded.find(answeredByTheVendorName)!;
+    assert.ok(offer, "no record the vendor name resolves to withholds its stored terms for this tool to be read against");
     const result = getOfferDetails(offer.vendor, true) as { offer: Record<string, unknown> };
     for (const field of ["risk_level", "risk_cause", "rating_withheld", "recent_change", "stability", "terms_superseded"]) {
       assert.ok(field in result.offer, `getOfferDetails omits ${field}`);

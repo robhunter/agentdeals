@@ -7,6 +7,7 @@ import { confirmationCoverage, confirmationCoverageSentence, loadDealChanges, lo
 import { confirmationDate, CONFIRMED_DATE_LABEL } from "../dist/read-date.js";
 import { toSlug } from "../dist/slug.js";
 import { assertCoversPopulation, assertPopulationFloor, categoriesInTheCatalogue } from "./population-floor.ts";
+import { everyRouteTheSitemapPublishes } from "./sitemap-routes.ts";
 
 const REPO = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
 const A_DAY_IN_MS = 86400000;
@@ -460,20 +461,6 @@ const THE_WORD_IS_NOT_A_CLAIM_OVER_OUR_LISTINGS: AnExemption[] = [
   { why: "#1081 AC-2 owns the freshness claim on the vs-pair pages", route: /^\/[a-z0-9-]+-vs-[a-z0-9-]+$/ },
   { why: "/criteria publishes what the word means", route: /^\/criteria$/ },
 ];
-
-const A_ROUTE_IN_A_SITEMAP = /<loc>([^<]+)<\/loc>/g;
-
-async function everyRouteTheSitemapPublishes(base: string): Promise<string[]> {
-  const index = await (await fetch(`${base}/sitemap.xml`)).text();
-  const sitemaps = [...index.matchAll(A_ROUTE_IN_A_SITEMAP)].map((found) => new URL(found[1]!).pathname);
-  assert.ok(sitemaps.length > 0, "the sitemap index lists no sitemap for this population to be read from");
-  const routes: string[] = [];
-  for (const sitemap of sitemaps) {
-    const listed = await (await fetch(`${base}${sitemap}`)).text();
-    for (const found of listed.matchAll(A_ROUTE_IN_A_SITEMAP)) routes.push(new URL(found[1]!).pathname);
-  }
-  return [...new Set(routes)];
-}
 
 function familyOf(route: string): string {
   const parts = route.split("/").filter(Boolean);

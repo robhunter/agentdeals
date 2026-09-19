@@ -1,6 +1,6 @@
 import { describe, it, before, after } from "node:test";
 import assert from "node:assert";
-import { assertPopulationFloor } from "./population-floor.ts";
+import { assertPopulationFloor, assertSharesPopulation, type Population } from "./population-floor.ts";
 import { spawn, type ChildProcess } from "node:child_process";
 import { readFileSync } from "node:fs";
 import path from "node:path";
@@ -169,6 +169,12 @@ after(() => { proc?.kill(); });
 
 const gated = () => rendered.filter(p => p.gate);
 const ungated = () => rendered.filter(p => !p.gate);
+const gatedPages = (): Population => ({ size: gated().length, read: "vendor pages a gate holds back" });
+const ungatedPages = (): Population => ({ size: ungated().length, read: "vendor pages no gate holds back" });
+const restrictedPages = (): Population => ({
+  size: gated().filter(p => p.gate!.code === "eligibility_restricted").length,
+  read: "gated pages whose gate is the restriction rather than the tier",
+});
 const supersededTerms = (p: VendorPage) => supersededBy.has(p.primary);
 const publishingItsTerms = () => ungated().filter(p => !supersededTerms(p));
 const freeAnswer = (p: VendorPage) => faqAnswer(p.html, `Is ${p.vendor} free?`);
@@ -313,17 +319,17 @@ describe("the ungated pages keep the answer they had", () => {
 
   it("answers yes on a large share of the ungated pages", () => {
     const answering = ungated().filter(p => freeAnswer(p).startsWith("Yes")).length;
-    assertPopulationFloor(answering, Math.floor(ungated().length / 4), `ungated pages of ${ungated().length} answer yes`);
+    assertSharesPopulation(answering, ungatedPages(), 0.2, "ungated pages answer yes");
   });
 
   it("recommends the tier for production on a large share of the ungated pages", () => {
     const recommending = ungated().filter(p => productionAnswer(p).includes(RECOMMENDATION_CLAUSE)).length;
-    assertPopulationFloor(recommending, Math.floor(ungated().length / 5), `ungated pages of ${ungated().length} recommend the tier for production`);
+    assertSharesPopulation(recommending, ungatedPages(), 0.2, "ungated pages recommend the tier for production");
   });
 
   it("still rates those tiers stable in the production answer", () => {
     const rating = ungated().filter(p => productionAnswer(p).includes(STABLE_RATING_CLAUSE)).length;
-    assertPopulationFloor(rating, Math.floor(ungated().length / 5), `ungated pages of ${ungated().length} carry the stable rating`);
+    assertSharesPopulation(rating, ungatedPages(), 0.2, "ungated pages carry the stable rating");
   });
 });
 
@@ -354,10 +360,11 @@ describe("the production answer reads the same gate", () => {
 
   it("opens with whatever opens the free-tier answer on the same page", () => {
     const subjects = gated().filter(p => freeAnswer(p).startsWith(p.gate!.reason));
-    assertPopulationFloor(
+    assertSharesPopulation(
       subjects.length,
-      Math.floor(gated().length / 3),
-      `gated pages of ${gated().length} open the free-tier answer with the gate`,
+      gatedPages(),
+      0.33,
+      "gated pages open the free-tier answer with the gate",
     );
     const contradicting = subjects
       .filter(p => !productionAnswer(p).startsWith(p.gate!.reason))
@@ -431,7 +438,7 @@ describe("the heading agrees with the title on the same page", () => {
   it("keeps it on a page whose gate is the restriction rather than the tier", () => {
     const restricted = gated().filter(p => p.gate!.code === "eligibility_restricted");
     const heading = restricted.filter(p => / Free Tier \d{4}/.test(headingOf(p.html))).length;
-    assertPopulationFloor(heading, Math.floor(restricted.length / 2), `restricted pages of ${restricted.length} still head a free tier`);
+    assertSharesPopulation(heading, restrictedPages(), 0.5, "restricted pages still head a free tier");
   });
 
   it("heads a page whose title withholds the free-tier form with the pricing form", () => {
@@ -603,7 +610,7 @@ describe("no question a gated page asks presupposes what its own answer denies",
 
   it("asks whether the free tier is reliable only where the answer declines to rate it", () => {
     const asking = gated().filter(p => asks(p.html, `Is ${p.vendor}'s free tier reliable?`));
-    assertPopulationFloor(asking.length, Math.floor(gated().length / 3), `gated pages of ${gated().length} ask whether the free tier is reliable`);
+    assertSharesPopulation(asking.length, gatedPages(), 0.33, "gated pages ask whether the free tier is reliable");
     const rating = asking
       .filter(p => !DECLINES_TO_RATE.some(form => reliability(p).includes(form)))
       .map(p => `${p.slug} (${p.gate!.code}): ${reliability(p).slice(0, 90)}`);
@@ -635,7 +642,7 @@ describe("no question a gated page asks presupposes what its own answer denies",
 
   it("still asks what the tier is where the gate is the restriction rather than the tier", () => {
     const asking = gated().filter(p => asks(p.html, `What is ${p.vendor}'s free tier?`)).length;
-    assertPopulationFloor(asking, Math.floor(gated().length / 3), `gated pages of ${gated().length} ask what the tier is`);
+    assertSharesPopulation(asking, gatedPages(), 0.33, "gated pages ask what the tier is");
   });
 });
 
@@ -688,7 +695,7 @@ describe("the same page an ungated record renders is unchanged", () => {
       const answer = faqAnswer(p.html, `Is ${p.vendor}'s free tier reliable?`);
       return /is considered stable|requires caution|is considered risky/.test(answer);
     }).length;
-    assertPopulationFloor(rating, Math.floor(ungated().length / 4), `ungated pages of ${ungated().length} rate the tier`);
+    assertSharesPopulation(rating, ungatedPages(), 0.25, "ungated pages rate the tier");
   });
 
   it("still answers when the reader will outgrow it", () => {

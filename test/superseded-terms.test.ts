@@ -1,6 +1,6 @@
 import { describe, it, before, after } from "node:test";
 import assert from "node:assert";
-import { assertPopulationFloor } from "./population-floor.ts";
+import { assertPopulationFloor, assertSharesPopulation, type Population } from "./population-floor.ts";
 import { spawn, type ChildProcess } from "node:child_process";
 import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
@@ -958,6 +958,10 @@ describe("#1103 every catalogue record whose stored terms are superseded", () =>
   const bodies = new Map<string, string>();
   const population = supersededPagesRender();
   const withARecordedReading = () => population.filter(({ change }) => readingBehindTheChange(change));
+  const recordsThesePagesWithhold = (): Population => ({
+    size: population.length,
+    read: "records these pages withhold the stored terms of",
+  });
 
   before(async () => {
     server = await startServer({});
@@ -983,9 +987,9 @@ describe("#1103 every catalogue record whose stored terms are superseded", () =>
     const { CHANGE_DIRECTION } = await import("../dist/change-direction.js");
     const counted: Record<string, number> = { negative: 0, positive: 0, neutral: 0 };
     for (const { change } of population) counted[CHANGE_DIRECTION[change.change_type]]++;
-    assertPopulationFloor(counted.positive, 40, "records counted positive that withhold their stored terms");
+    assertSharesPopulation(counted.positive, recordsThesePagesWithhold(), 0.1, "records counted positive that withhold their stored terms");
     assert.ok(counted.neutral > 0, `no record counted neutral withholds its stored terms`);
-    assertPopulationFloor(counted.negative, 90, "records counted negative that withhold their stored terms");
+    assertSharesPopulation(counted.negative, recordsThesePagesWithhold(), 0.4, "records counted negative that withhold their stored terms");
   });
 
   it("holds a dated, sourced reading for most of them, so the citations below have subjects", () => {
@@ -1177,16 +1181,7 @@ describe("#1103 every catalogue record whose stored terms are superseded", () =>
 });
 
 describe("#1721 what the disclosure reads, and what it no longer reads", () => {
-  const withholdingBehindARecord = (): { offer: Offer; change: DealChange }[] => {
-    const found: { offer: Offer; change: DealChange }[] = [];
-    for (const offer of offers) {
-      const change = supersedingChange(offer, changesFor(offer.vendor));
-      if (change) found.push({ offer, change });
-    }
-    return found;
-  };
-
-  const WITHHOLDING = withholdingBehindARecord();
+  const WITHHOLDING = supersededPagesRender();
   const NEEDED = new Map<string, string>();
   const TAKEN = new Set<string>();
 
@@ -1270,6 +1265,17 @@ describe("#1721 what the disclosure reads, and what it no longer reads", () => {
   });
 
   after(() => { server?.proc.kill(); });
+
+  it("takes each subject from the record its own vendor name resolves to", () => {
+    const addressedElsewhere = WITHHOLDING
+      .filter(({ offer }) => firstRecordFor(offer.vendor) !== offer)
+      .map(({ offer }) => `${offer.vendor} / ${offer.tier}`);
+    assert.deepStrictEqual(
+      addressedElsewhere,
+      [],
+      "every assertion below reads /vendor/<slug> and /api/details/<vendor>, which answer for one record per vendor",
+    );
+  });
 
   it("publishes the rule where the site says which way a change counts", async () => {
     const { SUPERSEDED_TERMS_RULE } = await import("../dist/superseded-description.js");

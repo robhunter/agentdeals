@@ -174,8 +174,16 @@ describe("enrichOffers", () => {
     const offer = offers.find((o: { vendor: string }) => o.vendor.toLowerCase() === recentChange.vendor.toLowerCase());
     if (!offer) return;
 
+    const newestForThatVendor = changes
+      .filter((c: { vendor: string; date: string }) =>
+        c.vendor.toLowerCase() === offer.vendor.toLowerCase() && c.date >= ninetyDaysAgo)
+      .sort((a: { date: string }, b: { date: string }) => b.date.localeCompare(a.date))[0];
+
     const enriched = enrichOffers([offer]);
     assert.ok(enriched[0].recent_change !== null, "Should have recent_change");
-    assert.ok(enriched[0].recent_change!.includes(recentChange.date), "Should include change date");
+    assert.ok(
+      enriched[0].recent_change!.includes(newestForThatVendor.date),
+      `recent_change names ${enriched[0].recent_change}, not the newest record inside the window, dated ${newestForThatVendor.date}`,
+    );
   });
 });

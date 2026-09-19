@@ -47382,16 +47382,19 @@ function buildStackTemplatePage(slug: string): string | null {
       "@type": "ItemList",
       "itemListOrder": listOrderOf("as-curated"),
       "numberOfItems": template.services.length,
-      "itemListElement": template.services.map((s, i) => ({
-        "@type": "ListItem",
-        "position": i + 1,
-        "item": {
-          "@type": "SoftwareApplication",
-          "name": s.vendor,
-          "applicationCategory": s.category,
-          "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
-        },
-      })),
+      "itemListElement": template.services.map((s, i) => {
+        const reading = templateReadings.get(s.slug);
+        return {
+          "@type": "ListItem",
+          "position": i + 1,
+          "item": {
+            "@type": "SoftwareApplication",
+            "name": reading ? reading.vendor : s.vendor,
+            "applicationCategory": s.category,
+            ...(reading ? freeTierOfferJsonLd(reading.primary, publishedTermsText(reading.primary)) : {}),
+          },
+        };
+      }),
     },
   };
 
