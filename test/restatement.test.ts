@@ -429,17 +429,27 @@ describe("a restatement is reversible, visible and does not overwrite a hand-wri
     assert.ok(!noReadSince.includes("we have read the page since"), "no read is later than the one we restated from");
   });
 
-  it("restates where the newest read reached the page and did not confirm what we store", () => {
+  it("restates where the confirmation we hold is older than the reading that supersedes it", () => {
     const readingDate = IPAPI.change.date;
-    const readWithoutConfirming = [...loadVerificationState().values()]
-      .filter((r) => r.last_attempt_at !== null && r.last_attempt_at > readingDate)
-      .filter((r) => r.last_success === null || r.last_success <= readingDate)[0];
+    const held = [...loadVerificationState().values()];
+    const confirmedBefore = held
+      .filter((r) => r.last_success !== null && r.last_success < readingDate)
+      .sort((a, b) => b.last_success!.localeCompare(a.last_success!))[0];
     assert.ok(
-      readWithoutConfirming,
-      `no record in the store was read after ${readingDate} without confirming, so this control proves nothing`,
+      confirmedBefore,
+      `no record in the store holds a confirmation older than ${readingDate}, so this control proves nothing`,
     );
-    const ours = { ...IPAPI.offer, vendor: readWithoutConfirming.vendor, url: readWithoutConfirming.url };
-    assert.equal(ruleOnRestating(ours, IPAPI.change, TODAY)?.refusal, null);
+    const stale = { ...IPAPI.offer, vendor: confirmedBefore.vendor, url: confirmedBefore.url };
+    assert.equal(
+      ruleOnRestating(stale, IPAPI.change, TODAY)?.refusal,
+      null,
+      `${confirmedBefore.vendor} was confirmed on ${confirmedBefore.last_success}, before the reading, and a confirmation we hold from before a reading cannot answer it`,
+    );
+
+    const neverConfirmed = held.find((r) => r.last_success === null);
+    assert.ok(neverConfirmed, "no record in the store lacks a confirmation, so this control proves nothing");
+    const unconfirmed = { ...IPAPI.offer, vendor: neverConfirmed.vendor, url: neverConfirmed.url };
+    assert.equal(ruleOnRestating(unconfirmed, IPAPI.change, TODAY)?.refusal, null);
   });
 
   it("does not write over an entry again from a record no newer than the one it came from", () => {

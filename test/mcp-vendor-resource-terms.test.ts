@@ -6,7 +6,7 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { SOURCE_CHECK_OUTCOMES, outcomeConfirmsThePrice } from "../dist/source-check.js";
-import { CONFIRMED_DATE_LABEL, RESTATED_DATE_LABEL, UNCONFIRMED_DATE_LABEL, confirmationDate, publishedDateLabel } from "../dist/read-date.js";
+import { CONFIRMED_DATE_LABEL, LAST_READ_LABEL, RESTATED_DATE_LABEL, UNCONFIRMED_DATE_LABEL, WHAT_THE_LAST_READ_FOUND, confirmationDate, publishedDateLabel, theReadOurTermsCameFrom } from "../dist/read-date.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(__dirname, "..");
@@ -231,6 +231,14 @@ for (const [how, resources] of bothBuilders) {
           `${offer.vendor} calls a reading that disagreed with us a verification of ours`,
         );
       }
+      for (const offer of [...CONFIRMED, ...UNCONFIRMED, ...RETIRED]) {
+        const text = resources().get(`agentdeals://vendor/${slugOf(offer.vendor)}`) ?? "";
+        assert.doesNotMatch(
+          text,
+          new RegExp(`\\*\\*${RESTATED_DATE_LABEL}:`),
+          `${offer.vendor} states the terms we stored and names a reading we took them from`,
+        );
+      }
     });
 
     it("leaves a resource whose read confirmed the terms publishing its date, under the label the store justifies", () => {
@@ -257,6 +265,52 @@ for (const [how, resources] of bothBuilders) {
 const TERMS_LINES = new RegExp(`^\\*\\*(?:Description|${CONFIRMED_DATE_LABEL}|${UNCONFIRMED_DATE_LABEL}|${RESTATED_DATE_LABEL}|Verification):\\*\\*`);
 
 const statedTerms = (text: string) => text.split("\n").filter((line) => TERMS_LINES.test(line));
+
+describe("the vendor page built from the same index", () => {
+  const pageFor = async (vendor: string) => {
+    const res = await fetch(`http://localhost:${serverPort}/vendor/${slugOf(vendor)}`);
+    assert.equal(res.status, 200, `/vendor/${slugOf(vendor)} did not render`);
+    return res.text();
+  };
+  const cardValue = (body: string, label: string) =>
+    body.match(
+      new RegExp(`<div class="detail-label">${label}</div>\\s*<div class="detail-value"[^>]*>([^<]+)<`),
+    )?.[1]
+      ?.trim() ?? null;
+
+  it("states a restated record's own date and the day its terms were read, as the resource does", async () => {
+    for (const offer of RESTATED) {
+      const body = await pageFor(offer.vendor);
+      assert.equal(cardValue(body, UNCONFIRMED_DATE_LABEL), offer.verifiedDate);
+      assert.equal(cardValue(body, RESTATED_DATE_LABEL), offer.restated_from.reading_date);
+    }
+  });
+
+  it("names no reading behind terms we stored ourselves", async () => {
+    for (const offer of CONFIRMED) {
+      const body = await pageFor(offer.vendor);
+      assert.equal(cardValue(body, RESTATED_DATE_LABEL), null, `${offer.vendor} names a reading behind our own terms`);
+    }
+  });
+
+  it("tells a reader beside the read date which read a restated record's terms came from", async () => {
+    for (const offer of RESTATED) {
+      const body = await pageFor(offer.vendor);
+      const note = body.match(
+        new RegExp(`<div class="detail-label">${LAST_READ_LABEL}</div>[\\s\\S]*?<div class="detail-note">([^<]*)<`),
+      )?.[1];
+      assert.ok(note, `${offer.vendor} renders no note beside the day we last read it`);
+      assert.ok(
+        note.includes(theReadOurTermsCameFrom(offer.verifiedDate, offer.restated_from.reading_date).trim()),
+        `${offer.vendor} does not say which read its terms came from: ${note}`,
+      );
+      assert.ok(
+        !note.includes(WHAT_THE_LAST_READ_FOUND.changed),
+        `${offer.vendor} says a read disagreed with terms that came from a read`,
+      );
+    }
+  });
+});
 
 describe("the two vendor resource builders", () => {
   it("state the terms and their verification identically, so neither can drift from the other", () => {
