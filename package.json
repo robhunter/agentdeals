@@ -67,6 +67,7 @@
     "mutate:1497": "node scripts/mutate-1497.mjs",
     "report:budgets": "node scripts/report-quality-budgets.js",
     "generate:llm-readme": "node scripts/generate-llm-api-readme.js",
+    "sync:tool-copy": "node scripts/sync-published-tool-copy.mjs",
     "mutate:1560": "node scripts/mutate-1560.mjs"
   },
   "dependencies": {

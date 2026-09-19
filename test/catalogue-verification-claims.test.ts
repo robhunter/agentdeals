@@ -8,6 +8,7 @@ import { confirmationDate, CONFIRMED_DATE_LABEL } from "../dist/read-date.js";
 import { toSlug } from "../dist/slug.js";
 import { assertCoversPopulation, assertPopulationFloor, categoriesInTheCatalogue } from "./population-floor.ts";
 import { everyRouteTheSitemapPublishes } from "./sitemap-routes.ts";
+import { bundleExclusions, everyFileThisRepositoryPublishes } from "./published-files.ts";
 
 const REPO = path.join(path.dirname(fileURLToPath(import.meta.url)), "..");
 const A_DAY_IN_MS = 86400000;
@@ -18,6 +19,21 @@ const A_CATALOGUE_SCALE_FIGURE = /\b\d{1,3},?\d{3}\+?\b/;
 const A_LISTING_SET = /\b(?:each|every|all)\b/i;
 const A_CONFIRMED_OF_A_LISTING_SET =
   /Of the ([\d,]+) (.+?) entr(?:y|ies) we hold, ([\d,]+) (?:carry|carries) terms a read confirmed in the last (\d+) days\./;
+
+const A_THING_WE_PUBLISH = /\b(?:deal|deals|data|pricing|listing|listings|results|entries|entry|record|records|offer|offers|catalogue|catalog|index)\b/i;
+const ADDRESSED_TO_THE_READER = /\byou(?:r|rs|rself)?\b/i;
+const BY_HAND = /human-verified|fact-checked|fact checked|verified by hand|read by hand/i;
+const A_DATE_THE_CATALOGUE_CARRIES =
+  /\b(?:data|catalogue|catalog|index)\b[^.\n]{0,60}\b(?:verified|checked|confirmed)\b[^.\n]{0,20}(?:as of|on)\s+\d{4}-\d{2}-\d{2}/i;
+
+const FILES_EVERY_CHANNEL_LIST_MUST_REACH = [
+  "README.md",
+  "SKILL.md",
+  "manifest.json",
+  ".claude-plugin/plugin.json",
+  "server.json",
+  "package.json",
+];
 
 interface Served {
   path: string;
@@ -273,6 +289,79 @@ describe("what the self-description documents claim about confirmation", () => {
       `the confirmed count ${coverage.confirmed_within_90_days} is not separating itself from the ${stamped} entries carrying a catalogue date`);
     const holdingNone = offers.filter((o: any) => confirmationDate(o) === null).length;
     assert.ok(holdingNone > 0, "every entry holds a confirmation, so this measure cannot show a shortfall");
+  });
+});
+
+describe("what the files this repository publishes claim about confirmation", () => {
+  const published = everyFileThisRepositoryPublishes();
+
+  function claimsOver(prose: string): string[] {
+    return (prose.match(A_SENTENCE) ?? [])
+      .filter((sentence) => A_VERIFICATION_ADJECTIVE.test(sentence) && A_THING_WE_PUBLISH.test(sentence))
+      .filter((sentence) => !ADDRESSED_TO_THE_READER.test(sentence))
+      .map((sentence) => sentence.trim());
+  }
+
+  it("reads every file we ship, on every channel we ship it through", () => {
+    for (const named of FILES_EVERY_CHANNEL_LIST_MUST_REACH) {
+      const found = published.find((file) => file.path === named);
+      assert.ok(found, `${named} is published and this population does not reach it`);
+      assert.ok(found.channels.length > 0 && found.prose.length > 0, `${named} was reached with no channel or no prose to read`);
+    }
+    const channels = new Set(published.flatMap((file) => file.channels));
+    assert.deepEqual([...channels].sort(), ["npm", "the MCP registry", "the extension bundle"],
+      "a distribution channel dropped out of the derivation, so the files it carries are no longer read");
+  });
+
+  it("leaves out only what no channel carries, and says so by excluding it", () => {
+    const reached = new Set(published.map((file) => file.path));
+    for (const named of bundleExclusions().filter((pattern) => /^[A-Za-z][\w.-]*\.(?:md|json)$/.test(pattern))) {
+      if (named === "server.json") continue;
+      assert.ok(!reached.has(named), `${named} is named as excluded from the bundle and still reached this population`);
+    }
+    assert.ok(!reached.has("CONTRIBUTING.md") && !reached.has("AGENT_README.md"),
+      "a file no distribution carries is being read as published prose");
+    assert.ok(reached.has("server.json"),
+      "server.json is excluded from the bundle and filed with the registry, and only the registry channel can reach it");
+  });
+
+  it("calls nothing we publish verified, in any file we publish", () => {
+    const claiming = published.flatMap((file) => claimsOver(file.prose).map((sentence) => `${file.path}: ${sentence}`));
+    assert.deepEqual(claiming, [], `${claiming.length} sentences in the files we publish call what we hold verified`);
+  });
+
+  it("claims no hand-checking of the catalogue, in any file we publish", () => {
+    const claiming = published.filter((file) => BY_HAND.test(file.prose)).map((file) => file.path);
+    assert.deepEqual(claiming, [], `${claiming.length} published files claim the catalogue is checked by hand`);
+  });
+
+  it("states no date as the day the catalogue was verified", () => {
+    const dated = published
+      .map((file) => ({ path: file.path, found: file.prose.match(A_DATE_THE_CATALOGUE_CARRIES) }))
+      .filter((read) => read.found)
+      .map((read) => `${read.path}: ${read.found![0]}`);
+    assert.deepEqual(dated, [], `${dated.length} published files state one date on which the whole catalogue was verified`);
+  });
+
+  it("reads the claim as one we make, not as one a contributor is asked to make", () => {
+    const refused = [
+      "AgentDeals indexes real, verified pricing data from 1,600+ developer infrastructure vendors across 67 categories.",
+      "AgentDeals indexes real, verified pricing data from 1,500+ developer infrastructure vendors across 60 categories.",
+      "Only return deals verified/added after this date.",
+      "- Data verified as of 2026-03-14",
+      "Returns verified deal details including specific limits, eligibility requirements, and verification dates.",
+    ];
+    for (const sentence of refused) {
+      assert.deepEqual(claimsOver(sentence), [sentence], `this rule no longer refuses a sentence it was written for: ${sentence}`);
+    }
+    const kept = [
+      "| `verifiedDate` | string | ISO date (YYYY-MM-DD) when you personally verified the deal on the vendor's site |",
+      "Use this to verify that a recommended service still has its free tier.",
+      "Every entry carries the day we last read the vendor's own page.",
+    ];
+    for (const sentence of kept) {
+      assert.deepEqual(claimsOver(sentence), [], `this rule refuses a sentence that is true and addressed to its reader: ${sentence}`);
+    }
   });
 });
 
