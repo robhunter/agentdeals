@@ -91,8 +91,8 @@ async function toolDescriptions(base: string): Promise<Served[]> {
   const onTheCard = card.tools ?? [];
   assert.ok(onTheCard.length > 0, "the agent card publishes no tools[] for this assertion to read");
   return [
-    ...tools.map((tool: any) => ({ path: `tools/list ${tool.name}`, prose: String(tool.description ?? "") })),
-    ...onTheCard.map((tool: any) => ({ path: `agent card tools[] ${tool.name}`, prose: String(tool.description ?? "") })),
+    ...tools.map((tool: any) => ({ path: `tools/list ${tool.name}`, prose: describedIn(tool).join("\n") })),
+    ...onTheCard.map((tool: any) => ({ path: `agent card tools[] ${tool.name}`, prose: describedIn(tool).join("\n") })),
   ];
 }
 
