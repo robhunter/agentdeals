@@ -72,6 +72,52 @@ export function hardcodedRowsCarryingASlug(source?: string): HardcodedRow[] {
   return rows;
 }
 
+export interface VendorSelection {
+  builder: string | null;
+  declared: string | null;
+  line: number;
+  names: string[];
+}
+
+function selectsOnAVendorField(node: ts.CallExpression): boolean {
+  if (node.arguments.length !== 1) return false;
+  const argument = node.arguments[0]!;
+  return ts.isPropertyAccessExpression(argument) && argument.name.text === "vendor";
+}
+
+function everyElementIsAString(node: ts.ArrayLiteralExpression): boolean {
+  return node.elements.length > 0 && node.elements.every(element => ts.isStringLiteralLike(element));
+}
+
+export function vendorSelectionsWrittenByHand(source?: string): VendorSelection[] {
+  const text = source ?? readFileSync(PAGE_SOURCE, "utf-8");
+  const parsed = ts.createSourceFile("serve.ts", text, ts.ScriptTarget.ES2022, true);
+  const selections: VendorSelection[] = [];
+
+  const read = (node: ts.Node): void => {
+    if (ts.isCallExpression(node) && ts.isPropertyAccessExpression(node.expression)) {
+      const list = node.expression.expression;
+      if (
+        node.expression.name.text === "includes" &&
+        ts.isArrayLiteralExpression(list) &&
+        everyElementIsAString(list) &&
+        selectsOnAVendorField(node)
+      ) {
+        selections.push({
+          builder: enclosingBuilder(node),
+          declared: declaredName(node),
+          line: parsed.getLineAndCharacterOfPosition(node.getStart(parsed)).line + 1,
+          names: list.elements.map(element => (element as ts.StringLiteralLike).text),
+        });
+      }
+    }
+    ts.forEachChild(node, read);
+  };
+  read(parsed);
+
+  return selections;
+}
+
 export function arraysHoldingASlug(rows: HardcodedRow[]): string[] {
   return [...new Set(rows.map(row => `${row.builder ?? "module"}.${row.array ?? "anonymous"}`))].sort();
 }

@@ -11,7 +11,7 @@ const MUTANTS = [
     "<strong>Key pattern:</strong> ${escHtmlServer(removalDurabilityPattern(durability, lastingExamples))} Plan your architecture",
     "<strong>Key pattern:</strong> Once a free tier is removed, it never comes back. Heroku (2022), PlanetScale (2024), SendGrid (2025), Brave Search (2026), X API (2026) &mdash; all permanent. Plan your architecture"],
   ["the-named-examples-are-written-out-rather-than-read-off-the-log", "src/serve.ts",
-    "  const lastingExamples = lastingRemovalExamplesFor(\"/state-of-free-tiers\", dealChanges);",
+    "  const lastingExamples = lastingRemovalExamplesFor(\"/state-of-free-tiers\", dealChanges, vendorNameAsPublished);",
     "  const lastingExamples = [\"Heroku\", \"PlanetScale\", \"SendGrid\", \"Brave Search API\", \"X API (Twitter)\"].map(vendor => ({ vendor, date: \"2022-11-28\", year: \"2022\" }));"],
   ["the-key-pattern-names-no-example-at-all", "src/serve.ts",
     "${escHtmlServer(removalDurabilityPattern(durability, lastingExamples))}",

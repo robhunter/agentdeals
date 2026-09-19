@@ -14,6 +14,8 @@ import {
   vendorMerges,
 } from "../dist/vendor-merges.js";
 import { toSlug } from "../dist/slug.js";
+import { vendorSelectionsWrittenByHand } from "./hardcoded-vendor-rows.ts";
+import { assertPopulationFloor } from "./population-floor.ts";
 
 type Offer = import("../src/types.ts").Offer;
 type DealChange = import("../src/types.ts").DealChange;
@@ -323,6 +325,74 @@ describe("the catalogue once every merge is made", () => {
       assert.ok(
         !/no recorded pricing changes/i.test(textOf(html)),
         `/vendor/${toSlug(merge.survivor)} reads its history as empty after absorbing ${merge.retired}`,
+      );
+    }
+  });
+});
+
+describe("a page that picks its rows by writing vendor names out", () => {
+  const selections = vendorSelectionsWrittenByHand();
+  const survivorOf = new Map(merges.map((m) => [key(m.retired), m.survivor]));
+
+  it("reads a selection written on a vendor field and no other", () => {
+    const source = `
+      const named = all.filter(o => ["Alpha", "Beta"].includes(o.vendor));
+      const byCategory = all.filter(o => ["Gamma"].includes(o.category));
+      const byVariable = all.filter(o => chosen.includes(o.vendor));
+      const withTwoArguments = all.filter(o => ["Delta"].includes(o.vendor, 1));
+    `;
+    assert.deepStrictEqual(
+      vendorSelectionsWrittenByHand(source).map(s => s.names),
+      [["Alpha", "Beta"]],
+    );
+  });
+
+  it("reads the selections in the page source this is measured over", () => {
+    assertPopulationFloor(selections.length, 75, "hand-written vendor selections in the page source");
+    assertPopulationFloor(
+      selections.flatMap((s) => s.names).length,
+      650,
+      "vendor names those selections are written with",
+    );
+  });
+
+  it("writes every name out as one the catalogue still holds it under", () => {
+    const leftBehind = selections.flatMap((selection) =>
+      selection.names
+        .filter((name) => survivorOf.has(key(name)))
+        .map(
+          (name) =>
+            `serve.ts:${selection.line} ${selection.builder ?? "module"} selects "${name}", which the catalogue renamed to "${survivorOf.get(key(name))}"`,
+        ),
+    );
+    assert.deepStrictEqual(leftBehind, []);
+  });
+
+  it("writes every name out in the letters the catalogue holds it in", () => {
+    const exactly = new Set(offers.map((o) => o.vendor));
+    const heldAs = new Map(offers.map((o) => [key(o.vendor), o.vendor]));
+    const miscased = selections.flatMap((selection) =>
+      selection.names
+        .filter((name) => !exactly.has(name) && heldAs.has(key(name)))
+        .map(
+          (name) =>
+            `serve.ts:${selection.line} ${selection.builder ?? "module"} selects "${name}", and the catalogue holds it as "${heldAs.get(key(name))}"`,
+        ),
+    );
+    assert.deepStrictEqual(miscased, []);
+  });
+
+  it("selects a record for every renamed vendor a registered merge points at", () => {
+    const named = [...new Set(selections.flatMap((s) => s.names))];
+    const survivorsSelected = alreadyMade.filter((m) => named.includes(m.survivor));
+    assert.ok(
+      survivorsSelected.length > 0,
+      "no selection names a vendor a merge renamed, so this file proves nothing about renames",
+    );
+    for (const merge of survivorsSelected) {
+      assert.ok(
+        offers.some((o) => key(o.vendor) === key(merge.survivor)),
+        `a selection names ${merge.survivor} and the catalogue holds no record under it`,
       );
     }
   });

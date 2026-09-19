@@ -70,6 +70,7 @@ const REFUSALS_PATH =
   process.env.AGENTDEALS_REFUSALS_PATH || path.join(__dirname, "..", "data", "change_refusals.json");
 
 let cachedOffers: Offer[] | null = null;
+let cachedLiveVendorNames: Set<string> | null = null;
 let cachedChanges: DealChange[] | null = null;
 let cachedRefusals: ChangeRefusal[] | null = null;
 
@@ -118,6 +119,7 @@ export function withoutGateInput(offer: Offer): Offer {
 
 export function resetCache(): void {
   cachedOffers = null;
+  cachedLiveVendorNames = null;
   cachedChanges = null;
   cachedRefusals = null;
   refusalIndex = null;
@@ -640,12 +642,22 @@ export function loadDealChanges(): DealChange[] {
     return cachedChanges;
   }
 
-  const live = new Set(loadOffers().map((o) => o.vendor.trim().toLowerCase()));
   cachedChanges = applyReviewedDirections(data.changes.map(withResolutionInSummary)).map((change) => {
-    const survivor = survivingVendorName(change.vendor, live);
-    return survivor ? { ...change, vendor: survivor } : change;
+    const survivor = vendorNameAsPublished(change.vendor);
+    return survivor === change.vendor ? change : { ...change, vendor: survivor };
   });
   return cachedChanges;
+}
+
+function liveVendorNames(): Set<string> {
+  if (!cachedLiveVendorNames) {
+    cachedLiveVendorNames = new Set(loadOffers().map((o) => o.vendor.trim().toLowerCase()));
+  }
+  return cachedLiveVendorNames;
+}
+
+export function vendorNameAsPublished(vendor: string): string {
+  return survivingVendorName(vendor, liveVendorNames()) ?? vendor;
 }
 
 export function loadChangeRefusals(): ChangeRefusal[] {

@@ -14,6 +14,7 @@ import {
 
 const { compiledFigureSlots, staticHalfOf } = await import("../dist/compiled-figures.js");
 const { namedVendorSlug, toSlug, vendorSlugMap } = await import("../dist/vendor-slug.js");
+const { survivingVendorName, vendorMerges } = await import("../dist/vendor-merges.js");
 
 type DealChange = import("../src/types.ts").DealChange;
 
@@ -57,6 +58,12 @@ for (const [slug, held] of recordsFor) {
   if (ending) endedByTheLog.set(slug, ending);
 }
 const outsideTheCatalogue = (label: string) => namedVendorSlug(label) === null;
+const liveVendors = new Set(
+  (JSON.parse(readFileSync(path.join(REPO, "data", "index.json"), "utf-8")).offers as { vendor: string }[])
+    .map(o => o.vendor.trim().toLowerCase()),
+);
+const heldUnderNoCatalogueNameOfItsOwn = (label: string) =>
+  outsideTheCatalogue(label) || survivingVendorName(label, liveVendors) !== null;
 
 let proc: ChildProcess | null = null;
 let base = "";
@@ -130,8 +137,30 @@ describe("marking a comparison slot whose vendor has no catalogue entry", () => 
   });
 
   it("holds ended records for vendors the catalogue has no entry for", () => {
-    const orphaned = [...endedByTheLog.values()].filter(c => outsideTheCatalogue(c.vendor));
-    assert.ok(orphaned.length >= 20, `only ${orphaned.length} ended vendors are absent from the catalogue`);
+    const orphaned = [...endedByTheLog.values()].filter(c => heldUnderNoCatalogueNameOfItsOwn(c.vendor));
+    assertPopulationFloor(
+      orphaned.length,
+      15,
+      "ended vendors the catalogue holds no entry for under the name the log files them by",
+    );
+  });
+
+  it("keeps a vendor in that population when the registry renames it into the catalogue", () => {
+    const made = vendorMerges().filter(
+      m => !liveVendors.has(m.retired.trim().toLowerCase()) && liveVendors.has(m.survivor.trim().toLowerCase()),
+    );
+    assert.ok(made.length > 0, "no merge is made, so a rename moves nothing here");
+    for (const merge of made) {
+      assert.strictEqual(
+        outsideTheCatalogue(merge.retired),
+        false,
+        `${merge.retired} reaches the catalogue, so this is the half a rename moves it to`,
+      );
+      assert.ok(
+        heldUnderNoCatalogueNameOfItsOwn(merge.retired),
+        `${merge.retired} reaches the catalogue only as ${merge.survivor} and drops out of the population`,
+      );
+    }
   });
 
   it("marks every slot naming an uncatalogued vendor whose free tier the change log ended", () => {
