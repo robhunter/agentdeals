@@ -1282,6 +1282,18 @@ describe("#1785 a push the platform starts no run for asks for one itself", () =
     assert.deepStrictEqual(whatTheGateAskedFor(work), []);
   });
 
+  it("asks once, for the push that landed, when main moved under the run", () => {
+    const { work, origin } = fixtureRepo();
+    writeFileSync(join(work, "data", "health.json"), '{"checked":25}\n');
+    commitToMainFromElsewhere(origin, "another-job-wrote-this.txt", "landed while the suite ran\n");
+
+    const run = runGate(work, { mode: "green", asking: "answers" }, ...PATHS);
+
+    assert.strictEqual(run.status, 0, `${run.stdout}${run.stderr}`);
+    assert.strictEqual(git(origin, "show", "main:data/health.json"), '{"checked":25}');
+    assert.deepStrictEqual(whatTheGateAskedFor(work), [`workflow run ${SUITE_WORKFLOW} --ref main`]);
+  });
+
   it("keeps the data on main when the ask is refused, and says so", () => {
     const { work, origin } = fixtureRepo();
     writeFileSync(join(work, "data", "health.json"), '{"checked":24}\n');
