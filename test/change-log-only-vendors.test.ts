@@ -181,14 +181,17 @@ describe("marking a comparison slot whose vendor has no catalogue entry", () => 
   });
 
   it("marks every slot naming an uncatalogued vendor whose free tier the change log ended", () => {
-    const named = everySlotOnEveryPage().filter(
-      slot => outsideTheCatalogue(slot.label) && endedByTheLog.has(slot.slug),
-    );
+    const ended = everySlotOnEveryPage().filter(slot => endedByTheLog.has(slot.slug));
+    const named = ended.filter(slot => outsideTheCatalogue(slot.label));
     const unmarked = named
       .filter(slot => !REMOVAL_MARKER.test(slot.markup))
       .map(slot => `${slot.path}: ${slot.kind} ${slot.label}`);
     assert.deepStrictEqual(unmarked, []);
-    assert.ok(named.length >= 3, `only ${named.length} slots name an uncatalogued ended vendor`);
+    assertPopulationFloor(
+      ended.length,
+      18,
+      "slots naming a vendor whose free tier the change log ended",
+    );
   });
 
   it("reaches a vendor's records through the name its own page is filed under", () => {
@@ -231,14 +234,15 @@ describe("marking a comparison slot whose vendor has no catalogue entry", () => 
   it("lands every change-log marker on the record it rests on", () => {
     const log = pages.get("/changes");
     assert.ok(log, "the change log did not render");
-    let landed = 0;
+    let reaching = 0;
     for (const slot of everySlotOnEveryPage()) {
       for (const href of slot.markup.matchAll(/href="\/changes#(vendor-[a-z0-9-]+)"/g)) {
         assert.ok(log!.includes(` id="${href[1]}"`), `${slot.path}: ${slot.label} points at a missing ${href[1]}`);
-        landed++;
+        reaching++;
       }
+      reaching += [...slot.markup.matchAll(/href="\/vendor\/[a-z0-9-]+#changes"/g)].length;
     }
-    assert.ok(landed >= 2, `only ${landed} markers point at the change log`);
+    assertPopulationFloor(reaching, 150, "markers on a slot reaching a vendor's records");
   });
 
   it("gives the change log one anchor per vendor and no more", () => {
