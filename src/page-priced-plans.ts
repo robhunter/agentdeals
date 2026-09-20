@@ -82,23 +82,19 @@ function currencyIn(entries: Array<[string, unknown]>): string | null {
   return null;
 }
 
-function plansWithin(value: unknown, into: PricedPlan[], reading: number): void {
-  if (Array.isArray(value)) {
-    for (const item of value) plansWithin(item, into, reading);
-    return;
-  }
-  if (!value || typeof value !== "object") return;
+function plansOn(value: unknown, reading: number): PricedPlan[] {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return [];
   const entries = Object.entries(value as Record<string, unknown>);
   const name = nameIn(entries);
-  if (name !== null) {
-    const currency = currencyIn(entries);
-    for (const [key, item] of entries) {
-      if (typeof item !== "number" || !Number.isFinite(item)) continue;
-      if (!A_PRICE_KEY.test(key)) continue;
-      into.push({ name, amount: item, field: key, currency, period: periodOf(key), reading });
-    }
+  if (name === null) return [];
+  const currency = currencyIn(entries);
+  const found: PricedPlan[] = [];
+  for (const [key, item] of entries) {
+    if (typeof item !== "number" || !Number.isFinite(item)) continue;
+    if (!A_PRICE_KEY.test(key)) continue;
+    found.push({ name, amount: item, field: key, currency, period: periodOf(key), reading });
   }
-  for (const [, item] of entries) plansWithin(item, into, reading);
+  return found;
 }
 
 export function readingsOf(html: string): string[] {
@@ -128,9 +124,7 @@ export function pricedPlansIn(html: string): PricedPlan[] {
       } catch {
         continue;
       }
-      const plans: PricedPlan[] = [];
-      plansWithin(parsed, plans, at);
-      for (const plan of plans) {
+      for (const plan of plansOn(parsed, at)) {
         const key = `${plan.name} ${plan.field} ${plan.amount}`;
         if (already.has(key)) continue;
         already.add(key);
