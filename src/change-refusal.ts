@@ -42,6 +42,34 @@ const MEASURED_NO_DIFFERENCE_REASONS = new Set<string>(
   REFUSAL_REASONS_THAT_MEASURED_NO_DIFFERENCE,
 );
 
+export const REFUSAL_REASONS_THAT_VOID_THE_READS_STANDING = [
+  "states_no_terms",
+  "no_price_signal",
+  "removal_read_from_root",
+  "no_removal_evidence",
+  "no_terms_to_narrow",
+  "no_baseline",
+  "states_no_narrowing",
+] as const;
+
+export type VoidingRefusalReason =
+  (typeof REFUSAL_REASONS_THAT_VOID_THE_READS_STANDING)[number];
+
+const VOIDING_REASONS = new Set<string>(REFUSAL_REASONS_THAT_VOID_THE_READS_STANDING);
+
+export const REFUSAL_REASONS_THAT_LEAVE_THE_READ_STANDING = [
+  "page_does_not_name_vendor",
+  "unquantified_limit",
+  "removal_read_from_redirect",
+  "free_plan_still_described",
+  "free_tier_is_the_product",
+  "dangling_reference",
+  "measures_the_opposite",
+  "zero_allowance",
+  "removal_does_not_reach_the_licence",
+  "same_transition_graded_differently",
+] as const;
+
 export type RefusedRead = Pick<ChangeRefusal, "reason" | "refused_date">;
 
 export function refusalConfirmsTheStoredTerms(refusal: Pick<ChangeRefusal, "reason">): boolean {
@@ -50,6 +78,10 @@ export function refusalConfirmsTheStoredTerms(refusal: Pick<ChangeRefusal, "reas
 
 export function refusalMeasuredNoDifference(refusal: Pick<ChangeRefusal, "reason">): boolean {
   return MEASURED_NO_DIFFERENCE_REASONS.has(refusal.reason);
+}
+
+export function refusalVoidsTheReadsStanding(refusal: Pick<ChangeRefusal, "reason">): boolean {
+  return VOIDING_REASONS.has(refusal.reason);
 }
 
 function mostRecent(refusals: readonly RefusedRead[]): RefusedRead | null {
@@ -67,7 +99,10 @@ export function refusalPredatesConfirmation(
   return refusal.refused_date < termsConfirmedOn;
 }
 
-export type ReadSettlement = "restated_the_terms_we_publish" | "named_no_figure_that_moved";
+export type ReadSettlement =
+  | "restated_the_terms_we_publish"
+  | "named_no_figure_that_moved"
+  | "had_no_standing_to_contradict";
 
 export interface SettledRead {
   settlement: ReadSettlement;
@@ -75,7 +110,9 @@ export interface SettledRead {
 }
 
 export function refusalSettledTheRead(refusal: Pick<ChangeRefusal, "reason">): boolean {
-  return refusalConfirmsTheStoredTerms(refusal) || refusalMeasuredNoDifference(refusal);
+  return refusalConfirmsTheStoredTerms(refusal)
+    || refusalMeasuredNoDifference(refusal)
+    || refusalVoidsTheReadsStanding(refusal);
 }
 
 export function howWeSettledTheRead(
@@ -87,7 +124,9 @@ export function howWeSettledTheRead(
   if (sameRead.some(r => !refusalSettledTheRead(r))) return null;
   const confirming = mostRecent(sameRead.filter(refusalConfirmsTheStoredTerms));
   if (confirming) return { settlement: "restated_the_terms_we_publish", refusal: confirming };
-  return { settlement: "named_no_figure_that_moved", refusal: mostRecent(sameRead)! };
+  const measured = mostRecent(sameRead.filter(refusalMeasuredNoDifference));
+  if (measured) return { settlement: "named_no_figure_that_moved", refusal: measured };
+  return { settlement: "had_no_standing_to_contradict", refusal: mostRecent(sameRead)! };
 }
 
 function latestRead(refusals: readonly RefusedRead[]): RefusedRead | null {
