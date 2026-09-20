@@ -6,6 +6,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import {
   arraysHoldingASlug,
+  asksRatherThanStates,
   buildersHoldingASlug,
   fieldsDenyingTheFreeTier,
   freeTierClaimsIn,
@@ -274,6 +275,64 @@ function startServer(): Promise<ChildProcess> {
   });
 }
 
+interface NamedSubject {
+  page: string;
+  vendor: string;
+  claim: string;
+  because: string;
+}
+
+const NAMES_A_SUBJECT_RATHER_THAN_CLAIMING: NamedSubject[] = [
+  {
+    page: "/database-free-tier-comparison-2026",
+    vendor: "PlanetScale",
+    claim: "Database Free Tier Comparison 2026 — Supabase vs Neon vs Firebase vs Turso vs PlanetScale",
+    because: "the page's own title lists the vendors it compares, and one of them is the subject of the comparison rather than an offer it sells",
+  },
+  {
+    page: "/database-pricing",
+    vendor: "PlanetScale",
+    claim: "Database Free Tier Comparison 2026 — Supabase vs Neon vs Firebase vs Turso vs PlanetScale",
+    because: "the label on a link to that comparison, which is the title above",
+  },
+  {
+    page: "/database-pricing",
+    vendor: "PlanetScale",
+    claim: "Database Pricing Comparison 2026 — Free Tiers, Storage Limits & Costs Compared",
+    because: "the page's own title, followed by the meta description listing the services it compares",
+  },
+];
+
+function namedAsASubject(page: string, vendor: string, claim: string): NamedSubject | null {
+  return (
+    NAMES_A_SUBJECT_RATHER_THAN_CLAIMING.find(
+      exemption => exemption.page === page && exemption.vendor === vendor && claim.includes(exemption.claim),
+    ) ?? null
+  );
+}
+
+describe("the claims this rule is declared not to read", () => {
+  const declared = NAMES_A_SUBJECT_RATHER_THAN_CLAIMING[0]!;
+
+  it("suppresses only a claim carrying the text it names, on the page and the vendor it names", () => {
+    assert.ok(namedAsASubject(declared.page, declared.vendor, `${declared.claim} — AgentDeals`) !== null);
+    assert.strictEqual(namedAsASubject("/database-alternatives", declared.vendor, declared.claim), null);
+    assert.strictEqual(namedAsASubject(declared.page, "Supabase", declared.claim), null);
+    assert.strictEqual(
+      namedAsASubject(declared.page, declared.vendor, `${declared.vendor} offers 5 GB of free storage.`),
+      null,
+    );
+  });
+
+  it("names a page and a reason on every one of them", () => {
+    for (const exemption of NAMES_A_SUBJECT_RATHER_THAN_CLAIMING) {
+      assert.match(exemption.page, /^\/[a-z0-9-]+$/);
+      assert.ok(exemption.claim.length > 20, `${exemption.page} names too little text to be a claim`);
+      assert.ok(exemption.because.length > 20, `${exemption.page} gives no reason`);
+    }
+  });
+});
+
 describe("a page naming a vendor whose offer has ended does not present it as free", () => {
   const pairs = pairsTheRegisterRecords();
 
@@ -300,8 +359,8 @@ describe("a page naming a vendor whose offer has ended does not present it as fr
     assert.strictEqual(read, pairs.length);
   });
 
-  it("publishes no claim of a free tier for one, in the page text or in its structured data", async () => {
-    const affirming: string[] = [];
+  async function claimsOnEveryPair(): Promise<Array<{ pair: PublishedPair; where: string; claim: string }>> {
+    const found: Array<{ pair: PublishedPair; where: string; claim: string }> = [];
     for (const pair of pairs) {
       const html = await (await fetch(`http://localhost:${port}${pair.page}`, { redirect: "manual" })).text();
       const surfaces: Array<{ where: string; claim: string }> = [
@@ -313,13 +372,40 @@ describe("a page naming a vendor whose offer has ended does not present it as fr
       for (const surface of surfaces) {
         if (!STATES_FREENESS.test(surface.claim)) continue;
         if (statesThereIsNoFreeTier(surface.claim)) continue;
-        affirming.push(`  ${pair.page} — ${pair.vendor} — ${surface.where}: ${surface.claim.slice(0, 200)}`);
+        if (asksRatherThanStates(surface.claim)) continue;
+        found.push({ pair, ...surface });
       }
     }
+    return found;
+  }
+
+  it("publishes no claim of a free tier for one, in the page text or in its structured data", async () => {
+    const affirming = (await claimsOnEveryPair())
+      .filter(found => namedAsASubject(found.pair.page, found.pair.vendor, found.claim) === null)
+      .map(found => `  ${found.pair.page} — ${found.pair.vendor} — ${found.where}: ${found.claim.slice(0, 200)}`);
     assert.deepStrictEqual(
       affirming,
       [],
       `${affirming.length} published claims present a retired offer as free, over ${pairs.length} page and vendor pairs the register records:\n${affirming.join("\n")}`,
+    );
+  });
+
+  it("holds every declared exemption to a claim the sweep still finds on the page it names", async () => {
+    const live = new Set(pairs.map(pair => `${pair.page}|${pair.vendor}`));
+    const found = await claimsOnEveryPair();
+    const stale = NAMES_A_SUBJECT_RATHER_THAN_CLAIMING.filter(exemption => {
+      if (!live.has(`${exemption.page}|${exemption.vendor}`)) return false;
+      return !found.some(
+        claim =>
+          claim.pair.page === exemption.page
+          && claim.pair.vendor === exemption.vendor
+          && claim.claim.includes(exemption.claim),
+      );
+    }).map(exemption => `  ${exemption.page} — ${exemption.vendor} — ${exemption.claim}`);
+    assert.deepStrictEqual(
+      stale,
+      [],
+      `${stale.length} exemptions name a claim no longer served, so they hide nothing and say something untrue:\n${stale.join("\n")}`,
     );
   });
 });

@@ -14,9 +14,15 @@ export type StatedTerms = {
 
 const BLOCK_TAGS = "tr|li|dd|dt|p|h1|h2|h3|h4|h5|h6|figcaption|blockquote|summary|caption";
 
-const ENDED_WORD = /\b(?:retired|retires|retiring|retirement|deprecated|deprecation|discontinued|sunset|sunsetting|withdrawn|withdrew|shut down|shutting down|shutdown|wound down|no longer|has ended|have ended|ended|closed to new|removed|removal)\b/i;
+const ENDED_WORD = /\b(?:retired|retires|retiring|retirement|deprecated|deprecation|discontinued|sunset|sunsetting|withdrawn|withdrew|shut down|shutting down|shutdown|wound down|no longer|has ended|have ended|ended|closed to new|removed|removal|killed|kills|killing|eliminated|eliminates)\b/i;
 
 const NO_OFFER_WORD = /\bno free\b|\bnot free\b|\bwithout a free\b|\bfree tier (?:removed|gone|withdrawn|is gone)\b|\bnot available\b|\bn\/a\b/i;
+
+const OPENS_BY_DENYING_A_FREE_TIER = /^\s*(?:none|no free (?:tier|plan|allowance))\b/i;
+
+export function statesNoFreeTier(text: string): boolean {
+  return OPENS_BY_DENYING_A_FREE_TIER.test(text);
+}
 
 const AFFIRMATIVE_FREE = /\bfree\b|\bfreemium\b|\bno credit card\b|\bgenerous\b/i;
 

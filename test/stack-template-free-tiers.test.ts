@@ -7,6 +7,7 @@ import { fileURLToPath } from "node:url";
 import { classifyTier } from "../dist/ranking.js";
 import { toSlug } from "../dist/vendor-slug.js";
 import { limitsPublishedOn } from "../dist/stack-claim.js";
+import { statesNoFreeTier } from "../dist/retired-terms.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.join(__dirname, "..");
@@ -46,7 +47,13 @@ type StackRow = { stack: string; vendor: string; slug: string; freeTier: string 
 
 const rows: StackRow[] = [];
 const stackPaths: string[] = [];
-const estimatorVendors: Array<{ slug: string; name: string; free: string }> = [];
+const estimatorVendors: Array<{
+  slug: string;
+  name: string;
+  free: string;
+  noFreeTier?: boolean;
+  freeCell: string;
+}> = [];
 
 describe("a stack that totals $0 names no vendor our catalogue says is paid (#1183 row ten)", () => {
   before(async () => {
@@ -69,7 +76,7 @@ describe("a stack that totals $0 names no vendor our catalogue says is paid (#11
     const estimate = await (await fetch(`${base}/estimate`)).text();
     const embedded = estimate.match(/var EST_DATA = (\[[\s\S]*?\]);\n/);
     assert.ok(embedded, "the estimator no longer embeds its vendor table");
-    for (const category of JSON.parse(embedded![1]) as Array<{ vendors: Array<{ slug: string; name: string; free: string }> }>) {
+    for (const category of JSON.parse(embedded![1]) as Array<{ vendors: typeof estimatorVendors }>) {
       estimatorVendors.push(...category.vendors);
     }
   });
@@ -124,9 +131,23 @@ describe("a stack that totals $0 names no vendor our catalogue says is paid (#11
       .filter((v) => {
         const classes = tierClassesFor(v.slug);
         if (classes.length === 0 || classes.includes("free")) return false;
-        return !/^(?:None|No free tier)\b/i.test(v.free);
+        return !statesNoFreeTier(v.free);
       })
       .map((v) => `the estimator offers ${v.name} a free tier of "${v.free}" on a ${tierClassesFor(v.slug).join("/")} record`);
     assert.deepStrictEqual(wrong.sort(), []);
+  });
+
+  it("prices a row that states no free tier at nothing rather than at $0", () => {
+    const denying = estimatorVendors.filter((v) => statesNoFreeTier(v.free));
+    assert.ok(denying.length > 0, "no estimator row states that its vendor has no free tier, so this read an empty set");
+    const priced = denying
+      .filter((v) => v.noFreeTier !== true || /cost-free|\$0/.test(v.freeCell))
+      .map((v) => `${v.name} states "${v.free}" and the estimator prices it ${v.freeCell}`);
+    assert.deepStrictEqual(priced, []);
+    const offering = estimatorVendors
+      .filter((v) => !statesNoFreeTier(v.free))
+      .filter((v) => v.noFreeTier !== false || !v.freeCell.includes('class="cost-free">$0'))
+      .map((v) => `${v.name} states a free tier of "${v.free}" and the estimator prices it ${v.freeCell}`);
+    assert.deepStrictEqual(offering, []);
   });
 });
