@@ -10180,6 +10180,23 @@
       "alternatives": [],
       "detected_by": "reverify-ai",
       "recorded_date": "2026-09-19"
+    },
+    {
+      "vendor": "pagecrawl.io",
+      "change_type": "limits_reduced",
+      "date": "2026-09-20",
+      "date_source": "discovered",
+      "summary": "The free tier now has limits of 6 pages, up to 220 checks, and a check frequency of up to 60 minutes. Previously up to 6 monitors with 60-minute interval checks.",
+      "tier": "Free Forever",
+      "tier_direction": "narrowed",
+      "previous_state": "Monitor website changes, free for up to 6 monitors with 60-minute interval checks.",
+      "current_state": "The Free Forever plan allows tracking up to 6 pages with up to 220 checks and a frequency of up to 60 minutes.",
+      "impact": "medium",
+      "source_url": "https://pagecrawl.io/",
+      "category": "Monitoring",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-09-20"
     }
   ]
 }
