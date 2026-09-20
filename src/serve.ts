@@ -31,7 +31,7 @@ import { dropEndedFromNameList, endedIndex, endedRowStatement, markEndedVendorRo
 import { amountUnstatedSentence, freePriceConfirmedSentence, freePriceOnlySentence, LAST_RESOLVED, levelWithheldReason, levelWithheldSince, recordPublishesAQuantity, withheldLevelClause, withheldLevelSentence, type LevelWithheldReason } from "./source-check.js";
 import { offerVerdictInput, reasonWeCannotConfirmTheTerms, vendorVerdictContextFrom, type VendorVerdictContext } from "./vendor-verdict-input.js";
 import { readingIsBehindTheLoop, reverificationIntervalDays } from "./badge-staleness.js";
-import { LAST_READ_LABEL, RESTATED_DATE_LABEL, UNCONFIRMED_DATE_LABEL, VERIFICATION_DATES_HEADING, lastReadDate, lastReadNote, publishedDateLabel, publishedDateValue, restatedReadingDate, verificationDatesCell, verificationDatesSentence } from "./read-date.js";
+import { LAST_READ_LABEL, READ_CONTRADICTS_LABEL, RESTATED_DATE_LABEL, UNCONFIRMED_DATE_LABEL, VERIFICATION_DATES_HEADING, contradictedTermsSentence, lastReadDate, lastReadNote, publishedDateLabel, publishedDateValue, readThatContradictsOurTerms, restatedReadingDate, verificationDatesCell, verificationDatesSentence, type LastReading } from "./read-date.js";
 import { SUPERSEDED_TERMS_LABEL, SUPERSEDED_TERMS_RULE, readingBehindTheChange, supersededTermsAnswer, supersededTermsMetaSentence, supersededTermsNotice, supersededTermsNoticeHtml, supersededTermsRecord, supersededTermsVerdictSentence, supersedingChange, type SupersededTermsRecord } from "./superseded-description.js";
 import { openingOfTerms, punctuated, punctuatedOpeningOfTerms } from "./terms-opening.js";
 import { NO_CURRENT_FIGURE, costHeadlineCaveat, limitCellText, mayRecommendAsFree, proseWithoutNames, readsActive, stackFreshnessStatement } from "./stack-claim.js";
@@ -712,6 +712,31 @@ function termsUnconfirmedNoticeHtml(offer: Offer): string {
   return unconfirmedTermsSpanHtml(unconfirmed);
 }
 
+function alreadySpeaksForItself(offer: Offer): boolean {
+  return offerEnded(offer)
+    || supersedingChangeFor(offer) !== null
+    || unconfirmedTermsFor(offer) !== null;
+}
+
+function readContradictingTheTermsFor(offer: Offer): LastReading | null {
+  return alreadySpeaksForItself(offer) ? null : readThatContradictsOurTerms(offer);
+}
+
+function contradictedTermsNoticeHtml(offer: Offer): string {
+  const reading = readContradictingTheTermsFor(offer);
+  if (!reading) return "";
+  return `<span class="listing-read-contradicts" style="display:block;margin-top:.3rem;color:#d29922">`
+    + `${escHtmlServer(contradictedTermsSentence(reading))}</span>`;
+}
+
+function contradictedTermsMarkerHtml(offer: Offer): string {
+  const reading = readContradictingTheTermsFor(offer);
+  if (!reading) return "";
+  return `<br><span class="terms-read-contradicts" title="${escHtmlServer(contradictedTermsSentence(reading))}"`
+    + ` style="font-size:.7rem;color:var(--text-dim)">${escHtmlServer(READ_CONTRADICTS_LABEL)}`
+    + ` &middot; ${escHtmlServer(reading.date)}</span>`;
+}
+
 type StoredTermsOf = Pick<Offer, "vendor" | "description" | "tier">;
 
 function supersedingChangeFor(offer: StoredTermsOf): DealChange | null {
@@ -783,12 +808,16 @@ function freeTierOfferJsonLd(
   };
 }
 
+function nothingWeHoldContradicts(offer: Offer): boolean {
+  return unconfirmedTermsFor(offer) === null && readContradictingTheTermsFor(offer) === null;
+}
+
 function statesTermsWeCannotConfirm(offer: Offer): boolean {
-  return supersedingChangeFor(offer) === null && unconfirmedTermsFor(offer) !== null;
+  return supersedingChangeFor(offer) === null && !nothingWeHoldContradicts(offer);
 }
 
 function termsWePublishAsVerified(offer: Offer): boolean {
-  return supersedingChangeFor(offer) === null && unconfirmedTermsFor(offer) === null;
+  return supersedingChangeFor(offer) === null && nothingWeHoldContradicts(offer);
 }
 
 function termsWeCannotConfirmMetaClause(listed: readonly Offer[]): string {
@@ -986,7 +1015,7 @@ function durabilityCellHtml(offer: EnrichedOfferRow): string {
 function quickComparisonTermsCellHtml(offer: EnrichedOfferRow): string {
   const terms = escHtmlServer(publishedTermsSummary(offer, 120));
   const unconfirmed = unconfirmedTermsFor(offer);
-  if (!unconfirmed || !offer.stability) return terms;
+  if (!unconfirmed || !offer.stability) return terms + contradictedTermsMarkerHtml(offer);
   const on = unconfirmed.on ? ` &middot; ${escHtmlServer(unconfirmed.on)}` : "";
   return `${terms} <span class="listing-terms-unconfirmed" title="${escHtmlServer(unconfirmedTermsSentence(unconfirmed))}"`
     + ` style="font-size:.7rem;color:#d29922;white-space:nowrap">not confirmed &middot; ${escHtmlServer(termsWithheldLabel(unconfirmed))}${on}</span>`;
@@ -2074,7 +2103,7 @@ function buildCategoryPage(slug: string): string | null {
   const offersHtml = catOffers.map((o) => `        <tr>
           <td style="font-weight:600;color:var(--text);white-space:nowrap"><a href="/vendor/${toSlug(o.vendor)}" style="color:var(--text)">${escHtmlServer(o.vendor)}</a></td>
           <td style="font-family:var(--mono);color:var(--accent);white-space:nowrap">${escHtmlServer(o.tier)}</td>
-          <td style="color:var(--text-muted)">${storedTermsHtml(o)}${listingEligibilityNoticeHtml(o)}${listingUnreachableNoticeHtml(o)}${termsUnconfirmedNoticeHtml(o)}</td>
+          <td style="color:var(--text-muted)">${storedTermsHtml(o)}${listingEligibilityNoticeHtml(o)}${listingUnreachableNoticeHtml(o)}${termsUnconfirmedNoticeHtml(o)}${contradictedTermsNoticeHtml(o)}</td>
           <td style="font-family:var(--mono);color:var(--text-dim);white-space:nowrap">${escHtmlServer(verificationDatesCell(o))}</td>
         </tr>`).join("\n");
 

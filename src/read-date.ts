@@ -267,6 +267,61 @@ export function readingSettledByRefusals(
   return { ...reading, found: WHAT_A_SETTLED_READ_FOUND[settled.settlement] };
 }
 
+export interface WhatCameAfterTheRead {
+  refusals: readonly RefusedRead[];
+  restatedFrom: string | null;
+  confirmedOn: string | null;
+}
+
+export function restatementSettles(reading: LastReading, restatedFrom: string | null): boolean {
+  return restatedFrom !== null && restatedFrom >= reading.date;
+}
+
+export function confirmationSettles(reading: LastReading, confirmedOn: string | null): boolean {
+  return confirmedOn !== null && confirmedOn > reading.date;
+}
+
+export function somethingLaterSettledTheRead(
+  reading: LastReading,
+  after: WhatCameAfterTheRead,
+): boolean {
+  return howWeSettledTheRead(after.refusals, reading.date) !== null
+    || restatementSettles(reading, after.restatedFrom)
+    || confirmationSettles(reading, after.confirmedOn);
+}
+
+export function contradictingRead(
+  reading: LastReading | null,
+  after: WhatCameAfterTheRead,
+): LastReading | null {
+  if (!reading || reading.outcome !== OUTCOME_CONTRADICTING_WHAT_WE_STORE) return null;
+  return somethingLaterSettledTheRead(reading, after) ? null : reading;
+}
+
+export function whatCameAfterTheRead(
+  offer: (DatedRecord & ReadRecord) | null | undefined,
+): WhatCameAfterTheRead {
+  return {
+    refusals: offer?.vendor ? storedRefusalsFor(offer.vendor) : [],
+    restatedFrom: restatedReadingDate(offer),
+    confirmedOn: storedConfirmationDate(offer),
+  };
+}
+
+export function readThatContradictsOurTerms(
+  offer: (DatedRecord & ReadRecord) | null | undefined,
+): LastReading | null {
+  if (!offer?.vendor || !offer?.url) return null;
+  return contradictingRead(readingFromVerificationState(offer), whatCameAfterTheRead(offer));
+}
+
+export const READ_CONTRADICTS_LABEL = "read found the page different";
+
+export function contradictedTermsSentence(reading: LastReading): string {
+  return `Our read on ${reading.date} ${WHAT_THE_LAST_READ_FOUND[OUTCOME_CONTRADICTING_WHAT_WE_STORE]},`
+    + ` and ${NO_CONFIRMATION_HELD.toLowerCase()}.`;
+}
+
 export function theReadOurTermsCameFrom(read: string, restatedFrom: string | null): string {
   if (!restatedFrom) return "";
   if (restatedFrom === read) return ` Our last read of it, on ${read}, is where the terms above come from.`;

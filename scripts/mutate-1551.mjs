@@ -1,107 +1,92 @@
 import { readFileSync, writeFileSync } from "node:fs";
 import { execFileSync } from "node:child_process";
 
-const SUITES = [
-  "test/what-the-last-read-found.test.ts",
-  "test/read-date.test.ts",
-];
+const SUITES = ["test/listing-reads-the-store.test.ts"];
 
 const MUTANTS = [
-  ["the-date-stops-bounding-which-refusal-settles", "src/change-refusal.ts",
-    "  const sameRead = refusals.filter(r => r.refused_date === read);",
-    "  const sameRead = refusals.filter(() => true);"],
+  ["the-lede-stops-reading-the-verification-store", "src/serve.ts",
+    "  return unconfirmedTermsFor(offer) === null && readContradictingTheTermsFor(offer) === null;",
+    "  return unconfirmedTermsFor(offer) === null;"],
 
-  ["a-read-with-no-refusal-is-settled", "src/change-refusal.ts",
-    "  if (sameRead.length === 0) return null;",
-    "  if (false) return null;"],
+  ["the-lede-calls-every-record-contradicted", "src/serve.ts",
+    "  return unconfirmedTermsFor(offer) === null && readContradictingTheTermsFor(offer) === null;",
+    "  return false;"],
 
-  ["a-refusal-on-other-grounds-stops-holding-the-disagreement", "src/change-refusal.ts",
-    "  if (sameRead.some(r => !refusalSettledTheRead(r))) return null;",
-    ""],
+  ["the-listing-row-stops-stating-the-read", "src/serve.ts",
+    "${termsUnconfirmedNoticeHtml(o)}${contradictedTermsNoticeHtml(o)}</td>",
+    "${termsUnconfirmedNoticeHtml(o)}</td>"],
 
-  ["one-settling-reason-is-enough-however-the-others-read", "src/change-refusal.ts",
-    "  if (sameRead.some(r => !refusalSettledTheRead(r))) return null;",
-    "  if (sameRead.every(r => !refusalSettledTheRead(r))) return null;"],
+  ["an-ended-offer-is-flagged-over-terms-it-no-longer-publishes", "src/serve.ts",
+    "  return offerEnded(offer)\n    || supersedingChangeFor(offer) !== null\n    || unconfirmedTermsFor(offer) !== null;",
+    "  return supersedingChangeFor(offer) !== null || unconfirmedTermsFor(offer) !== null;"],
 
-  ["a-confirming-reason-stops-outranking-a-measured-one", "src/change-refusal.ts",
-    `  if (confirming) return { settlement: "restated_the_terms_we_publish", refusal: confirming };`,
-    ""],
+  ["a-row-that-already-speaks-gets-a-second-reason", "src/serve.ts",
+    "  return offerEnded(offer)\n    || supersedingChangeFor(offer) !== null\n    || unconfirmedTermsFor(offer) !== null;",
+    "  return offerEnded(offer);"],
 
-  ["the-two-settlements-are-reported-the-other-way-round", "src/change-refusal.ts",
-    `  if (confirming) return { settlement: "restated_the_terms_we_publish", refusal: confirming };`,
-    `  if (confirming) return { settlement: "named_no_figure_that_moved", refusal: confirming };`],
+  ["a-superseded-row-gets-a-second-reason", "src/serve.ts",
+    "  return offerEnded(offer)\n    || supersedingChangeFor(offer) !== null\n    || unconfirmedTermsFor(offer) !== null;",
+    "  return offerEnded(offer) || unconfirmedTermsFor(offer) !== null;"],
 
-  ["a-measured-difference-is-reported-as-a-restatement", "src/change-refusal.ts",
-    `  return { settlement: "named_no_figure_that_moved", refusal: mostRecent(sameRead)! };`,
-    `  return { settlement: "restated_the_terms_we_publish", refusal: mostRecent(sameRead)! };`],
+  ["nothing-already-speaks-for-itself", "src/serve.ts",
+    "  return alreadySpeaksForItself(offer) ? null : readThatContradictsOurTerms(offer);",
+    "  return readThatContradictsOurTerms(offer);"],
 
-  ["settling-stops-reading-the-reasons-that-confirm-our-terms", "src/change-refusal.ts",
-    "  return refusalConfirmsTheStoredTerms(refusal) || refusalMeasuredNoDifference(refusal);",
-    "  return refusalMeasuredNoDifference(refusal);"],
+  ["every-outcome-counts-as-a-contradiction", "src/read-date.ts",
+    "  if (!reading || reading.outcome !== OUTCOME_CONTRADICTING_WHAT_WE_STORE) return null;\n  return somethingLaterSettledTheRead(reading, after) ? null : reading;",
+    "  if (!reading) return null;\n  return somethingLaterSettledTheRead(reading, after) ? null : reading;"],
 
-  ["settling-stops-reading-the-reasons-that-measured-no-difference", "src/change-refusal.ts",
-    "  return refusalConfirmsTheStoredTerms(refusal) || refusalMeasuredNoDifference(refusal);",
-    "  return refusalConfirmsTheStoredTerms(refusal);"],
-
-  ["every-reason-settles-the-read-that-raised-it", "src/change-refusal.ts",
-    "  return refusalConfirmsTheStoredTerms(refusal) || refusalMeasuredNoDifference(refusal);",
-    "  return true;"],
-
-  ["a-settled-read-of-any-outcome-takes-the-settled-clause", "src/read-date.ts",
-    "  if (settled && outcome === OUTCOME_CONTRADICTING_WHAT_WE_STORE) {",
-    "  if (settled) {"],
-
-  ["the-settlement-answers-for-a-read-that-confirmed-instead", "src/read-date.ts",
-    "  if (settled && outcome === OUTCOME_CONTRADICTING_WHAT_WE_STORE) {",
-    "  if (settled && outcome === OUTCOME_THAT_CONFIRMED) {"],
-
-  ["an-unsettled-read-stops-saying-what-it-found", "src/read-date.ts",
-    "  return outcome ? WHAT_THE_LAST_READ_FOUND[outcome] ?? null : null;",
-    "  return null;"],
-
-  ["a-reading-of-any-outcome-is-rewritten-by-a-refusal", "src/read-date.ts",
-    "  if (!reading || reading.outcome !== OUTCOME_CONTRADICTING_WHAT_WE_STORE) return reading;",
-    "  if (!reading) return reading;"],
-
-  ["the-rewrite-stops-reaching-the-reading", "src/read-date.ts",
-    "  return { ...reading, found: WHAT_A_SETTLED_READ_FOUND[settled.settlement] };",
+  ["nothing-later-can-settle-a-contradicting-read", "src/read-date.ts",
+    "  return somethingLaterSettledTheRead(reading, after) ? null : reading;",
     "  return reading;"],
 
-  ["the-rewrite-reports-the-other-settlement", "src/read-date.ts",
-    "  return { ...reading, found: WHAT_A_SETTLED_READ_FOUND[settled.settlement] };",
-    `  return { ...reading, found: WHAT_A_SETTLED_READ_FOUND.named_no_figure_that_moved };`],
+  ["everything-later-settles-a-contradicting-read", "src/read-date.ts",
+    "  return somethingLaterSettledTheRead(reading, after) ? null : reading;",
+    "  return null;"],
 
-  ["the-reading-lookup-stops-reading-the-refusals", "src/read-date.ts",
-    "  return readingSettledByRefusals(readingFromVerificationState(offer), storedRefusalsFor(offer.vendor));",
-    "  return readingSettledByRefusals(readingFromVerificationState(offer), []);"],
+  ["a-refusal-stops-settling-the-read", "src/read-date.ts",
+    "  return howWeSettledTheRead(after.refusals, reading.date) !== null\n    || restatementSettles(reading, after.restatedFrom)\n    || confirmationSettles(reading, after.confirmedOn);",
+    "  return restatementSettles(reading, after.restatedFrom)\n    || confirmationSettles(reading, after.confirmedOn);"],
 
-  ["the-note-stops-reading-the-refusals", "src/read-date.ts",
-    "    const settled = howWeSettledTheRead(refusals, read);",
-    "    const settled = null;"],
+  ["a-restatement-stops-settling-the-read", "src/read-date.ts",
+    "  return howWeSettledTheRead(after.refusals, reading.date) !== null\n    || restatementSettles(reading, after.restatedFrom)\n    || confirmationSettles(reading, after.confirmedOn);",
+    "  return howWeSettledTheRead(after.refusals, reading.date) !== null\n    || confirmationSettles(reading, after.confirmedOn);"],
 
-  ["the-note-settles-on-the-catalogue-date-rather-than-the-read", "src/read-date.ts",
-    "    const settled = howWeSettledTheRead(refusals, read);",
-    "    const settled = howWeSettledTheRead(refusals, verified);"],
+  ["a-confirmation-stops-settling-the-read", "src/read-date.ts",
+    "  return howWeSettledTheRead(after.refusals, reading.date) !== null\n    || restatementSettles(reading, after.restatedFrom)\n    || confirmationSettles(reading, after.confirmedOn);",
+    "  return howWeSettledTheRead(after.refusals, reading.date) !== null\n    || restatementSettles(reading, after.restatedFrom);"],
 
-  ["the-outcome-is-published-for-a-day-we-did-not-read", "src/data.ts",
-    "  if (!reading || reading.date !== publishedReadDate) {",
-    "  if (!reading) {"],
+  ["a-restatement-from-before-the-read-settles-it", "src/read-date.ts",
+    "  return restatedFrom !== null && restatedFrom >= reading.date;",
+    "  return restatedFrom !== null;"],
 
-  ["the-outcome-field-stops-carrying-what-the-store-holds", "src/data.ts",
-    "  return { last_read_outcome: reading.outcome, last_read_found: reading.found };",
-    "  return { last_read_outcome: null, last_read_found: reading.found };"],
+  ["a-restatement-from-that-same-read-stops-settling-it", "src/read-date.ts",
+    "  return restatedFrom !== null && restatedFrom >= reading.date;",
+    "  return restatedFrom !== null && restatedFrom > reading.date;"],
 
-  ["the-clause-field-stops-carrying-what-the-read-found", "src/data.ts",
-    "  return { last_read_outcome: reading.outcome, last_read_found: reading.found };",
-    "  return { last_read_outcome: reading.outcome, last_read_found: null };"],
+  ["a-confirmation-the-same-read-disagreed-with-settles-it", "src/read-date.ts",
+    "  return confirmedOn !== null && confirmedOn > reading.date;",
+    "  return confirmedOn !== null && confirmedOn >= reading.date;"],
 
-  ["the-refusal-store-stops-folding-the-vendor-name", "src/refusal-store.ts",
-    "      const key = refusal.vendor.trim().toLowerCase();",
-    "      const key = refusal.vendor;"],
+  ["any-confirmation-ever-held-settles-the-read", "src/read-date.ts",
+    "  return confirmedOn !== null && confirmedOn > reading.date;",
+    "  return confirmedOn !== null;"],
 
-  ["the-refusal-lookup-stops-folding-the-vendor-name", "src/refusal-store.ts",
-    "  return cachedByVendor.get(vendor.trim().toLowerCase()) ?? [];",
-    "  return cachedByVendor.get(vendor) ?? [];"],
+  ["the-notice-stops-naming-the-day-of-the-read", "src/read-date.ts",
+    "  return `Our read on ${reading.date} ${WHAT_THE_LAST_READ_FOUND[OUTCOME_CONTRADICTING_WHAT_WE_STORE]},`",
+    "  return `Our last read ${WHAT_THE_LAST_READ_FOUND[OUTCOME_CONTRADICTING_WHAT_WE_STORE]},`"],
+
+  ["the-notice-stops-saying-what-the-read-found", "src/read-date.ts",
+    "  return `Our read on ${reading.date} ${WHAT_THE_LAST_READ_FOUND[OUTCOME_CONTRADICTING_WHAT_WE_STORE]},`",
+    "  return `Our read on ${reading.date} could not be reconciled,`"],
+
+  ["the-ranked-table-stops-marking-a-contradicting-read", "src/serve.ts",
+    "  if (!unconfirmed || !offer.stability) return terms + contradictedTermsMarkerHtml(offer);",
+    "  if (!unconfirmed || !offer.stability) return terms;"],
+
+  ["the-count-stops-covering-the-rows-it-newly-flags", "src/serve.ts",
+    "  return supersedingChangeFor(offer) === null && !nothingWeHoldContradicts(offer);",
+    "  return supersedingChangeFor(offer) === null && unconfirmedTermsFor(offer) !== null;"],
 ];
 
 function run(cmd, args) {
@@ -139,12 +124,10 @@ if (!suitesPass()) {
   process.exit(2);
 }
 
-const only = process.argv.slice(2);
 const survivors = [];
 const uncompiled = [];
 const notApplied = [];
 for (const [name, file, from, to] of MUTANTS) {
-  if (only.length > 0 && !only.some((w) => name.includes(w))) continue;
   const original = readFileSync(file, "utf-8");
   const found = occurrences(original, from);
   if (found !== 1) {
@@ -161,9 +144,8 @@ for (const [name, file, from, to] of MUTANTS) {
   if (green) survivors.push(name);
 }
 run("npm", ["run", "build"]);
-const written = only.length > 0 ? MUTANTS.filter((m) => only.some((w) => m[0].includes(w))).length : MUTANTS.length;
-const scored = written - notApplied.length - uncompiled.length;
-console.log(`\n${scored - survivors.length}/${scored} killed, of ${written} written`);
+const scored = MUTANTS.length - notApplied.length - uncompiled.length;
+console.log(`\n${scored - survivors.length}/${scored} killed, of ${MUTANTS.length} written`);
 if (survivors.length > 0) console.log("survivors:", survivors.join(", "));
 if (uncompiled.length > 0) console.log("did not compile:", uncompiled.join(", "));
 if (notApplied.length > 0) console.log("not applied:", notApplied.join(", "));
