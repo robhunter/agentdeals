@@ -80,7 +80,7 @@ import { clauseNaming, quantitiesNotIn } from "./quoted-figures.js";
 import { statesNoFreeTier } from "./retired-terms.js";
 import { createRegistrationLimiter, rateLimitHeaders } from "./rate-limit.js";
 import { offerForSlug, vendorRates, cheapestRate, dearestRate, spanOfRates, formatRate, formatRateSpan, monthlyTokenCost, formatDollars, type ModelRate } from "./model-rates.js";
-import { STALE_FACT_PAGES_BASELINE, factsOutdatedBy, linkifyVerdictBlocks, newestChangeBySlug, overdueReport, pageCompiledClause, pageDataProvenance, pageDateModified, pageFigureSource, tabulatedVendorSlots, tabulatedVendors, utcToday, verdictsOutdatedBy } from "./page-reviews.js";
+import { DECLARED_FIGURE_READS, FRONTIER_PRICES_READ_ON, READ_DATES_THAT_ARE_NOT_FIGURE_READS, STALE_FACT_PAGES_BASELINE, TABLE_STALENESS_DISCLOSURES, declaredFigureReadsFor, factsOutdatedBy, linkifyVerdictBlocks, newestChangeBySlug, overdueReport, pageCompiledClause, pageDataProvenance, pageDateModified, pageFigureSource, tabulatedVendorSlots, tabulatedVendors, utcToday, verdictsOutdatedBy } from "./page-reviews.js";
 import { faqPageJsonLd, type FaqItem } from "./faq-provenance.js";
 import {
   GENEROSITY_JSON_TOKEN,
@@ -32260,8 +32260,6 @@ function buildHostingPricingPage(): string {
     '</body>\n</html>', pubDate);
 }
 
-const FRONTIER_PRICES_READ_ON = "2026-09-05";
-
 function buildLlmApiPricingPage(): string {
   const title = LLM_API_PRICING_TITLE;
   const metaDesc = LLM_API_PRICING_META_DESC;
@@ -54317,16 +54315,29 @@ const dispatchRequest = async (req: IncomingMessage, res: ServerResponse) => {
       names_no_resolvable_vendor: p.tier === "A" && p.vendors_asserted.length === 0,
       verdict_records_changed_since_review: verdictsOutdatedBy(p, slug => changeDateFor.get(slug) ?? null),
       records_changed_since_read: factsOutdatedBy(p, slug => changeDateFor.get(slug) ?? null),
+      figure_reads_declared: declaredFigureReadsFor(p.path),
     }));
+    const flagsMeasuredFrom = (source: string) =>
+      pages.reduce((n, p) => n + p.records_changed_since_read.filter(f => f.compared_against_source === source).length, 0);
     res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
     res.end(JSON.stringify({
       ...report,
       stale_fact_pages_budget: STALE_FACT_PAGES_BASELINE,
+      figure_read_dates: {
+        declared: DECLARED_FIGURE_READS,
+        read_dates_we_do_not_treat_as_figure_reads: READ_DATES_THAT_ARE_NOT_FIGURE_READS,
+        table_staleness_disclosures: TABLE_STALENESS_DISCLOSURES,
+      },
       totals: {
         ...report.totals,
         pages_with_outdated_verdicts: pages.filter(p => p.verdict_records_changed_since_review.length > 0).length,
         pages_with_records_changed_since_read: pages.filter(p => p.records_changed_since_read.length > 0).length,
         records_changed_since_read: pages.reduce((n, p) => n + p.records_changed_since_read.length, 0),
+        records_changed_since_read_by_reference_date: {
+          page_clock: flagsMeasuredFrom("page_clock"),
+          figures_read: flagsMeasuredFrom("figures_read"),
+        },
+        pages_declaring_a_figure_read: pages.filter(p => p.figure_reads_declared.length > 0).length,
         unresolved_badge_subjects: [...new Set(pages.flatMap(p => p.badge_subjects_unresolved))].sort(),
         unresolved_stat_card_subjects: [...new Set(pages.flatMap(p => p.stat_card_subjects_unresolved))].sort(),
       },

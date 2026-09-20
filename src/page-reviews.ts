@@ -562,8 +562,141 @@ export function newestChangeBySlug(
 
 export type FactSurface = "verdict" | "table";
 
+export const HETZNER_PLAN_TABLE_READ_ON = "2026-09-04";
+export const FRONTIER_PRICES_READ_ON = "2026-09-05";
+export const STORAGE_RATE_CARD_READ_ON = "2026-09-07";
+
+export interface DeclaredFigureRead {
+  path: string;
+  read_on: string;
+  vendors: readonly string[];
+  cited_from: string;
+  covers: string;
+}
+
+export const DECLARED_FIGURE_READS: readonly DeclaredFigureRead[] = [
+  {
+    path: "/hetzner-pricing-2026",
+    read_on: HETZNER_PLAN_TABLE_READ_ON,
+    vendors: ["hetzner"],
+    cited_from: "hetzner.com",
+    covers: "the plan table in section 1",
+  },
+  {
+    path: "/llm-api-pricing",
+    read_on: FRONTIER_PRICES_READ_ON,
+    vendors: ["openai", "anthropic-api", "google-gemini-api", "mistral-ai"],
+    cited_from: "each vendor's own pricing page",
+    covers: "the frontier rows of the pricing table",
+  },
+  {
+    path: "/storage-comparison-2026",
+    read_on: STORAGE_RATE_CARD_READ_ON,
+    vendors: ["cloudflare-r2", "aws", "backblaze-b2", "google-cloud-storage"],
+    cited_from: "each provider's own pricing page",
+    covers: "the pay-as-you-go rate card",
+  },
+];
+
+export interface ReadDateWeDoNotTreatAsAFigureRead {
+  states: string;
+  rendered_by: string;
+  why: string;
+}
+
+export const READ_DATES_THAT_ARE_NOT_FIGURE_READS: readonly ReadDateWeDoNotTreatAsAFigureRead[] = [
+  {
+    states: "We read that on <date> from <host>",
+    rendered_by: "readClauseHtml, in a span classed cited-source-read",
+    why:
+      "A source check reads the cited page for a vendor name and a price. It settles whether the citation still " +
+      "supports the record rather than what any table cell says, and it is rendered below the change timeline " +
+      "rather than inside a table.",
+  },
+  {
+    states: "The limits on this page were read from vendor pricing pages between <date> and <date>",
+    rendered_by: "stackFreshnessStatement",
+    why:
+      "The range spans the verified dates of the catalogue records a stack page renders. Dating one vendor's cell " +
+      "by it would date that cell by the oldest or the newest read of a different vendor.",
+  },
+  {
+    states: "As of <date>, <host> reads: <terms>",
+    rendered_by: "readingSentence, in superseded-description",
+    why:
+      "A restatement of the vendor's own terms shown beside the figure. It discloses that the figure has moved " +
+      "rather than dating the figure.",
+  },
+];
+
+export interface TableStalenessDisclosure {
+  name: string;
+  signature: string;
+  states: string;
+}
+
+export const TABLE_STALENESS_DISCLOSURES: readonly TableStalenessDisclosure[] = [
+  {
+    name: "changed_marker",
+    signature: "an anchor whose text reads CHANGED and a short date",
+    states: "We recorded a pricing change for this vendor after this table was compiled.",
+  },
+  {
+    name: "dated_vendor_quote",
+    signature: "As of <date>, <host> reads:",
+    states: "The vendor's own page, read on that date, states these terms.",
+  },
+  {
+    name: "row_level_provenance",
+    signature: "a cell stating where its own figure came from",
+    states: "This row states its own provenance in the table rather than in the byline.",
+  },
+];
+
+export type ReferenceDateSource = "figures_read" | "page_clock";
+
+export interface ReferenceDate {
+  date: string;
+  source: ReferenceDateSource;
+}
+
+export interface DatedPage {
+  path: string;
+  clock_starts: string;
+}
+
+export interface DatedFigure {
+  slug: string;
+  surface: FactSurface;
+}
+
+export function declaredFigureReadsFor(
+  pagePath: string,
+  reads: readonly DeclaredFigureRead[] = DECLARED_FIGURE_READS,
+): DeclaredFigureRead[] {
+  return reads.filter(read => read.path === pagePath);
+}
+
+export function referenceDateFor(
+  page: DatedPage,
+  figure: DatedFigure,
+  reads: readonly DeclaredFigureRead[] = DECLARED_FIGURE_READS,
+): ReferenceDate {
+  const clock: ReferenceDate = { date: page.clock_starts, source: "page_clock" };
+  if (figure.surface !== "table") return clock;
+  const covering = declaredFigureReadsFor(page.path, reads)
+    .filter(read => read.vendors.includes(figure.slug))
+    .map(read => read.read_on)
+    .filter(readOn => readOn > page.clock_starts)
+    .sort();
+  const newest = covering[covering.length - 1];
+  return newest === undefined ? clock : { date: newest, source: "figures_read" };
+}
+
 export interface OutdatedFact extends OutdatedVerdict {
   surface: FactSurface;
+  compared_against: string;
+  compared_against_source: ReferenceDateSource;
 }
 
 export interface StatedVendors {
@@ -575,12 +708,21 @@ export function vendorsStatedBy(record: StatedVendors): string[] {
   return [...new Set([...record.vendors_asserted, ...record.vendors_tabulated])].sort();
 }
 
-export function factsOutdatedBy(status: ReviewStatus, changeDateFor: (slug: string) => string | null): OutdatedFact[] {
+export function factsOutdatedBy(
+  status: ReviewStatus,
+  changeDateFor: (slug: string) => string | null,
+  reads: readonly DeclaredFigureRead[] = DECLARED_FIGURE_READS,
+): OutdatedFact[] {
   const asserted = new Set(status.vendors_asserted);
   const out: OutdatedFact[] = [];
   for (const slug of vendorsStatedBy(status)) {
     const changed = changeDateFor(slug);
-    if (changed && changed > status.clock_starts) out.push({ slug, changed, surface: asserted.has(slug) ? "verdict" : "table" });
+    if (!changed) continue;
+    const surface: FactSurface = asserted.has(slug) ? "verdict" : "table";
+    const against = referenceDateFor(status, { slug, surface }, reads);
+    if (changed > against.date) {
+      out.push({ slug, changed, surface, compared_against: against.date, compared_against_source: against.source });
+    }
   }
   return out.sort((a, b) => b.changed.localeCompare(a.changed) || a.slug.localeCompare(b.slug));
 }
