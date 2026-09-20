@@ -74,8 +74,8 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 48,
-      "table_figures_from_records": 48,
+      "table_figures": 42,
+      "table_figures_from_records": 42,
       "tables": [
         {
           "label": "Protocol Comparison",
@@ -84,8 +84,8 @@
         },
         {
           "label": "All Payment-Enabled Services",
-          "figures": 48,
-          "from_records": 48
+          "figures": 42,
+          "from_records": 42
         }
       ],
       "reads_changes": true,
@@ -106,13 +106,13 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 18,
-      "table_figures_from_records": 18,
+      "table_figures": 16,
+      "table_figures_from_records": 16,
       "tables": [
         {
           "label": "RAG Agent",
-          "figures": 8,
-          "from_records": 8
+          "figures": 7,
+          "from_records": 7
         },
         {
           "label": "Autonomous Coding Agent",
@@ -126,8 +126,8 @@
         },
         {
           "label": "Chat / Customer Agent",
-          "figures": 3,
-          "from_records": 3
+          "figures": 2,
+          "from_records": 2
         }
       ],
       "reads_changes": true,
@@ -1435,13 +1435,13 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 9,
-      "table_figures_from_records": 9,
+      "table_figures": 8,
+      "table_figures_from_records": 8,
       "tables": [
         {
           "label": "Stack Overview",
-          "figures": 9,
-          "from_records": 9
+          "figures": 8,
+          "from_records": 8
         },
         {
           "label": "Open-Source Self-Hosted Alternatives",
@@ -1779,13 +1779,13 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 11,
-      "table_figures_from_records": 11,
+      "table_figures": 9,
+      "table_figures_from_records": 9,
       "tables": [
         {
           "label": "Stack Overview",
-          "figures": 11,
-          "from_records": 11
+          "figures": 9,
+          "from_records": 9
         }
       ],
       "reads_changes": true,
@@ -3158,16 +3158,16 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 32,
-      "table_figures_from_records": 4,
+      "table_figures": 31,
+      "table_figures_from_records": 3,
       "tables": [
         {
           "label": "The Stack",
-          "figures": 32,
-          "from_records": 4
+          "figures": 31,
+          "from_records": 3
         }
       ],
-      "reads_changes": true,
+      "reads_changes": false,
       "data_source": "catalogue",
       "data_source_reason": null
     },
@@ -3245,13 +3245,13 @@
       "review_note": null,
       "reads_index": true,
       "tables_read_index": true,
-      "table_figures": 35,
-      "table_figures_from_records": 7,
+      "table_figures": 34,
+      "table_figures_from_records": 6,
       "tables": [
         {
           "label": "The Stack",
-          "figures": 35,
-          "from_records": 7
+          "figures": 34,
+          "from_records": 6
         }
       ],
       "reads_changes": true,
