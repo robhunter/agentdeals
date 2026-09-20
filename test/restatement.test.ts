@@ -486,19 +486,19 @@ describe("a restatement is reversible, visible and does not overwrite a hand-wri
   it("does not tell a reader a read disagreed with the terms that read is the source of", async () => {
     const { WHAT_THE_LAST_READ_FOUND, noConfirmationNote } = await import("../dist/read-date.js");
     const disagreed = WHAT_THE_LAST_READ_FOUND.changed;
-    const ours = noConfirmationNote("2026-09-09", "2026-08-26", "changed");
+    const ours = noConfirmationNote("2026-09-09", "2026-08-26", "changed", null);
     assert.ok(ours.includes(disagreed), "a record whose terms are our own keeps the note it had");
 
-    const sameRead = noConfirmationNote("2026-09-07", "2026-08-26", "changed", "2026-09-07");
+    const sameRead = noConfirmationNote("2026-09-07", "2026-08-26", "changed", null, "2026-09-07");
     assert.ok(!sameRead.includes(disagreed));
     assert.match(sameRead, /on 2026-09-07, is where the terms above come from/);
 
-    const readAgainSince = noConfirmationNote("2026-09-09", "2026-08-26", "changed", "2026-08-28");
+    const readAgainSince = noConfirmationNote("2026-09-09", "2026-08-26", "changed", null, "2026-08-28");
     assert.ok(!readAgainSince.includes(disagreed));
     assert.match(readAgainSince, /come from our read of 2026-08-28/);
     assert.match(readAgainSince, /on 2026-09-09, without confirming them/);
 
-    const noReadSince = noConfirmationNote("2026-08-26", "2026-08-26", "changed", "2026-08-28");
+    const noReadSince = noConfirmationNote("2026-08-26", "2026-08-26", "changed", null, "2026-08-28");
     assert.ok(!noReadSince.includes(disagreed));
     assert.ok(!noReadSince.includes("we have read the page since"), "no read is later than the one we restated from");
   });

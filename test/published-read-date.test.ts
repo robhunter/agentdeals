@@ -12,6 +12,7 @@ const REPO = path.join(__dirname, "..");
 const { confirmationDate, lastReadDate, lastReadNote, storedConfirmationClause, verificationDatesCell, CONFIRMED_DATE_LABEL, LAST_READ_LABEL, NO_CONFIRMATION_HELD, UNCONFIRMED_DATE_LABEL, VERIFICATION_DATES_HEADING } =
   await import("../dist/read-date.js");
 const { publishedTermsEvidence, termsTheVerdictWithholds, unconfirmedTermsFrom } = await import("../dist/vendor-verdict.js");
+const { refusalsForVendor } = await import("../dist/data.js");
 const { ANSWERED_OUTCOMES } = await import("../scripts/verification-state.js");
 
 interface CatalogueOffer {
@@ -244,11 +245,11 @@ describe("every record publishes the day we last read its page", () => {
       const note = detailNoteOf(body);
       if (!pageWithholdsTheTerms(body)) {
         standing.push(offer.vendor);
-        if (!note.includes(escaped(lastReadNote(offer)))) silent.push(offer.vendor);
+        if (!note.includes(escaped(lastReadNote(offer, null, refusalsForVendor(offer.vendor))))) silent.push(offer.vendor);
         continue;
       }
       withholding.push(offer.vendor);
-      if (note.includes(escaped(lastReadNote(offer)))) contradicting.push(offer.vendor);
+      if (note.includes(escaped(lastReadNote(offer, null, refusalsForVendor(offer.vendor))))) contradicting.push(offer.vendor);
       if (note.includes(NO_CONFIRMATION_HELD)) denying.push(offer.vendor);
     }
     assert.ok(withholding.length > 0, "no page holding a confirmation withholds its terms, so this census proves nothing");

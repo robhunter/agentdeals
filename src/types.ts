@@ -154,6 +154,8 @@ export interface EnrichedOffer extends Offer {
   days_since_verified: number;
   last_read_date: string;
   days_since_read: number;
+  last_read_outcome: string | null;
+  last_read_found: string | null;
   link_unreachable: LinkUnreachable | null;
   gate: import("./ranking.js").Gate | null;
   refused_read: import("./change-refusal.js").RefusedRead | null;

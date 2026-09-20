@@ -67,6 +67,29 @@ export function refusalPredatesConfirmation(
   return refusal.refused_date < termsConfirmedOn;
 }
 
+export type ReadSettlement = "restated_the_terms_we_publish" | "named_no_figure_that_moved";
+
+export interface SettledRead {
+  settlement: ReadSettlement;
+  refusal: RefusedRead;
+}
+
+export function refusalSettledTheRead(refusal: Pick<ChangeRefusal, "reason">): boolean {
+  return refusalConfirmsTheStoredTerms(refusal) || refusalMeasuredNoDifference(refusal);
+}
+
+export function howWeSettledTheRead(
+  refusals: readonly RefusedRead[],
+  read: string,
+): SettledRead | null {
+  const sameRead = refusals.filter(r => r.refused_date === read);
+  if (sameRead.length === 0) return null;
+  if (sameRead.some(r => !refusalSettledTheRead(r))) return null;
+  const confirming = mostRecent(sameRead.filter(refusalConfirmsTheStoredTerms));
+  if (confirming) return { settlement: "restated_the_terms_we_publish", refusal: confirming };
+  return { settlement: "named_no_figure_that_moved", refusal: mostRecent(sameRead)! };
+}
+
 function latestRead(refusals: readonly RefusedRead[]): RefusedRead | null {
   let held: RefusedRead | null = null;
   for (const refusal of refusals) {
