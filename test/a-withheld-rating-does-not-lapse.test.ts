@@ -5,6 +5,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { assertPopulationFloor } from "./population-floor.ts";
 import type { DealChange } from "../dist/types.js";
+import type { VendorVerdictInput } from "../dist/vendor-verdict.js";
 
 const {
   A_VERDICT_LAPSES_RULE,
@@ -170,11 +171,44 @@ describe("a demotion resting on a dated record", () => {
   });
 });
 
+describe("the narrowing the page reads before it states a withholding", () => {
+  const withheld = { reason: "no_source", records: 1 } as const;
+  const input = (over: Partial<VendorVerdictInput> = {}): VendorVerdictInput => ({
+    vendor: "Fixture Vendor",
+    level: null,
+    historyLevel: "caution",
+    cause: null,
+    changes: [uncited()],
+    levelWithheld: null,
+    unconfirmableSince: "",
+    termsConfirmedOn: "",
+    ratingWithheld: withheld,
+    ...over,
+  });
+
+  it("states the withholding on an offer a reader can still get", () => {
+    assert.deepStrictEqual(withholdingThatDoesNotLapse(input()), withheld);
+  });
+
+  it("states nothing where the offer has ended, because the ending is why there is no rating", () => {
+    assert.strictEqual(withholdingThatDoesNotLapse(input({ offerEnded: true })), null);
+  });
+
+  it("states nothing where a gate already answers why there is no rating", () => {
+    assert.strictEqual(withholdingThatDoesNotLapse(input({ gate: "offer_retired" })), null);
+  });
+
+  it("states nothing where no rating is withheld", () => {
+    assert.strictEqual(withholdingThatDoesNotLapse(input({ ratingWithheld: null })), null);
+  });
+});
+
 describe("the vendor pages", () => {
   let server: { proc: ChildProcess; base: string };
   const naming: string[] = [];
   const silent: string[] = [];
   const statingAWithholding: string[] = [];
+  const withholdingSuppressed: string[] = [];
 
   before(async () => {
     const offers = loadOffers();
@@ -194,7 +228,8 @@ describe("the vendor pages", () => {
       });
       if (!context) continue;
       (demotionTheVerdictNames(context.input) ? naming : silent).push(toSlug(vendor));
-      if (withholdingThatDoesNotLapse(context.input)) statingAWithholding.push(toSlug(vendor));
+      if (!context.input.ratingWithheld) continue;
+      (withholdingThatDoesNotLapse(context.input) ? statingAWithholding : withholdingSuppressed).push(toSlug(vendor));
     }
     server = await startServer();
   });
@@ -276,5 +311,16 @@ describe("the vendor pages", () => {
       [],
       `${quiet.length} of ${statingAWithholding.length} vendor pages withhold a rating without saying the withholding does not expire`,
     );
+  });
+
+  it("say nothing about a withholding where the page already answers why there is no rating", async () => {
+    for (const slug of withholdingSuppressed) {
+      const body = await (await fetch(`${server.base}/vendor/${slug}`)).text();
+      assert.doesNotMatch(
+        body,
+        /class="rating-withheld-line"/,
+        `${slug} states a withholding beside the ending or the gate that is the reason`,
+      );
+    }
   });
 });
