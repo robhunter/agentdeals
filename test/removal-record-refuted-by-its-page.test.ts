@@ -265,6 +265,15 @@ describe("a plan ladder the page publishes as numbers in its own markup", () => 
     assert.equal(freePlanStatedOn(readablePartsOf(twice))?.where, "priced");
   });
 
+  it("reports a plan the page embeds twice once", () => {
+    const payload = aPageEmbedding([{ plan: { name: "Free", currency: "USD", monthlyPrice: 0 } }]);
+    const plans = readablePartsOf(`${payload}${payload}`).plans;
+    assert.deepEqual(
+      plans.map((plan) => `${plan.name} ${plan.amount} ${plan.field}`),
+      ["Free 0 monthlyPrice"],
+    );
+  });
+
   it("separates the ladders a page keeps in different payloads", () => {
     const deploy = aPageEmbedding([{ plan: { name: "Starter", currency: "USD", monthlyPrice: 5 } }]);
     const keys = aPageEmbedding([{ plan: { name: "Free", currency: "USD", monthlyPrice: 0 } }]);
