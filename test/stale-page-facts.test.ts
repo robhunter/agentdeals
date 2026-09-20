@@ -64,15 +64,15 @@ describe("what a page states a fact about is more than what its verdict awards",
     const status = statusOf({ vendors_asserted: ["neon"], vendors_tabulated: ["neon", "firebase"] });
     const stale = factsOutdatedBy(status, slug => (slug === "neon" ? "2026-08-01" : "2026-07-01"));
     assert.deepStrictEqual(stale, [
-      { slug: "neon", changed: "2026-08-01", surface: "verdict" },
-      { slug: "firebase", changed: "2026-07-01", surface: "table" },
+      { slug: "neon", changed: "2026-08-01", surface: "verdict", compared_against: "2026-04-03", compared_against_source: "page_clock" },
+      { slug: "firebase", changed: "2026-07-01", surface: "table", compared_against: "2026-04-03", compared_against_source: "page_clock" },
     ]);
   });
 
   it("reports a table fact on a page whose verdict blocks name no vendor at all", () => {
     const status = statusOf({ vendors_asserted: [], vendors_tabulated: ["render"] });
     assert.deepStrictEqual(factsOutdatedBy(status, () => "2026-08-01"), [
-      { slug: "render", changed: "2026-08-01", surface: "table" },
+      { slug: "render", changed: "2026-08-01", surface: "table", compared_against: "2026-04-03", compared_against_source: "page_clock" },
     ]);
   });
 
