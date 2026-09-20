@@ -37681,8 +37681,8 @@ ${mcpCtaCss()}
       <tr>
         <td class="provider-col">Momento</td>
         <td>Cache + pub/sub</td>
-        <td style="font-family:var(--mono)">5 GB transfer/mo</td>
-        <td>Unlimited (within transfer limit)</td>
+        <td style="font-family:var(--mono)">Removed Sept 2026 &mdash; was 5 GB transfer/mo</td>
+        <td>Was unlimited within that transfer limit</td>
         <td class="cross">Cache only</td>
         <td>High-throughput caching</td>
       </tr>
@@ -45005,7 +45005,7 @@ ${mcpCtaCss()}
   </div>
 
   <div class="executive-summary">
-    <p><strong>Quick verdict:</strong> The developer security landscape splits sharply between <strong>open-source tools</strong> (Trivy, Semgrep, OWASP ZAP, Nuclei, Gitleaks, Checkov) that are truly unlimited when self-hosted, and <strong>hosted platforms</strong> (Snyk, SonarCloud, GitGuardian, StackHawk) with generous free tiers that cap scans, repos, or contributors. For most teams, a stack of OSS tools covers 90% of security needs at zero cost &mdash; but hosted platforms add CI/CD integration, dashboards, and triage workflows that save engineering time.</p>
+    <p><strong>Quick verdict:</strong> The developer security landscape splits sharply between <strong>open-source tools</strong> (Trivy, Semgrep, OWASP ZAP, Nuclei, Gitleaks, Checkov) that are truly unlimited when self-hosted, and <strong>hosted platforms</strong> (Snyk, SonarCloud, GitGuardian) with generous free tiers that cap scans, repos, or contributors. For most teams, a stack of OSS tools covers 90% of security needs at zero cost &mdash; but hosted platforms add CI/CD integration, dashboards, and triage workflows that save engineering time.</p>
     <p><strong>The open-source advantage:</strong> Security is the strongest category for OSS tools. Trivy (vulnerability scanning), Semgrep (SAST), OWASP ZAP (DAST), Gitleaks (secrets), and Checkov (IaC) together provide comprehensive coverage with no scan limits, no contributor caps, and no vendor lock-in. The trade-off is self-hosting, configuration, and building your own reporting &mdash; which is why hosted platforms like Snyk and GitGuardian thrive despite strong OSS alternatives.</p>
   </div>
 
@@ -45164,10 +45164,10 @@ ${mcpCtaCss()}
       <tr>
         <td class="provider-col">StackHawk</td>
         <td>DAST</td>
-        <td>1 app, unlimited scans, CI/CD, cURL repro steps</td>
+        <td>Removed April 2026 &mdash; was 1 app, unlimited scans</td>
         <td class="cross">&#10007;</td>
-        <td class="check">&#10003;</td>
-        <td class="check">&#10003;</td>
+        <td>Was included</td>
+        <td>Was included</td>
         <td class="cross">&#10007;</td>
       </tr>
       <tr>
@@ -45409,7 +45409,7 @@ ${mcpCtaCss()}
       <tr>
         <td>DAST</td>
         <td class="cheapest">$0 (OWASP ZAP)</td>
-        <td>$0 (StackHawk, 1 app)</td>
+        <td>None &mdash; StackHawk removed its free plan</td>
         <td class="expensive">$3,000&ndash;12,000/yr</td>
       </tr>
       <tr>
@@ -45467,7 +45467,7 @@ ${mcpCtaCss()}
 
     <div class="verdict-item">
       <strong>Best free DAST &rarr; OWASP ZAP</strong>
-      <p>No scan limits, no app limits, full CI/CD integration. The gold standard that commercial DAST tools benchmark against. For teams wanting a simpler managed experience, StackHawk&rsquo;s free tier (1 app, unlimited scans) provides a modern UI on top of ZAP&rsquo;s engine.</p>
+      <p>No scan limits, no app limits, full CI/CD integration. The gold standard that commercial DAST tools benchmark against. StackHawk, the managed alternative we used to name here, removed its free Developer plan in April 2026 and now starts at $10/user/month.</p>
     </div>
 
     <div class="verdict-item">
@@ -45509,8 +45509,8 @@ ${mcpCtaCss()}
   </div>
 
   <div class="diff-card">
-    <h3>StackHawk&rsquo;s 1-app limit constrains microservices</h3>
-    <div class="diff-desc">StackHawk&rsquo;s free Developer plan covers 1 application with unlimited scans. For teams with multiple services (API, frontend, admin panel), each additional app requires the Pro plan at $35/app/month. A microservices architecture with 5 services would cost $140/month. Alternative: use OWASP ZAP (unlimited apps) with StackHawk-style CI integration via the ZAP GitHub Action.</div>
+    <h3>StackHawk is no longer a free option</h3>
+    <div class="diff-desc">The free Developer plan is gone: our own pricing change record, dated 2026-04-12, says it was removed for an enterprise sales model. StackHawk now sells Wingman at $10/user/month, which covers unlimited apps and 50 scans per user per month, and StackHawk Scale on request. There is no per-app rate. Teams that budgeted DAST around a free managed tier should either move to OWASP ZAP (unlimited apps) via the ZAP GitHub Action, or price the per-seat plan.</div>
   </div>
 
   <div class="diff-card">

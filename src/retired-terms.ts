@@ -9,10 +9,12 @@ export type StatedTerms = {
   vendor: string;
   where: string;
   unit: string;
-  reason: "names a free tier" | "states an allowance";
+  reason: "names a free tier" | "states an allowance" | "prices it at zero";
 };
 
 const BLOCK_TAGS = "tr|li|dd|dt|p|h1|h2|h3|h4|h5|h6|figcaption|blockquote|summary|caption";
+
+const CARD_DESCRIPTION = /<div\b[^>]*class="[^"]*\bdiff-desc\b[^"]*"[^>]*>(?:(?!<div\b)[\s\S])*?<\/div>/gi;
 
 const ENDED_WORD = /\b(?:retired|retires|retiring|retirement|deprecated|deprecation|discontinued|sunset|sunsetting|withdrawn|withdrew|shut down|shutting down|shutdown|wound down|no longer|has ended|have ended|ended|closed to new|removed|removal|killed|kills|killing|eliminated|eliminates)\b/i;
 
@@ -31,6 +33,12 @@ const ALLOWANCE_UNIT = "gb|gib|mb|mib|tb|tib|kb|tokens?|requests?|req|calls?|rpm
 const ALLOWANCE_QUANTITY = new RegExp(`\\b\\d[\\d,.]*\\s*[km]?\\+?\\s*(?:${ALLOWANCE_UNIT})\\b`, "i");
 
 const PRICE = /[$€£]\s?\d|\bUSD\b|\bper (?:seat|user|month|GB-month)\b|\bpay-as-you-go\b/i;
+
+const ZERO_PRICE = /[$€£]\s?0(?:\.0+)?(?![\d.,])/;
+
+const FREE_AS_A_LICENCE = /\bfree (?:software|and open[- ]source)\b/gi;
+
+const FREE_AS_A_CREDENTIAL = /\bfree (?:auth(?:entication)?|access|api)?\s?(?:token|key|sign-?up|registration)\b/gi;
 
 export function endedOfferPopulation(offers: Offer[]): EndedOffer[] {
   return offers
@@ -59,13 +67,22 @@ function blankOut(html: string, pattern: RegExp): string {
   return html.replace(pattern, m => " ".repeat(m.length));
 }
 
+const SOURCE_REGISTER_ENTRY = /<li\b[^>]*\bid="source-[a-z0-9-]+"[^>]*>[\s\S]*?<\/li>/gi;
+
+export function surfacesThatRecommend(html: string): string {
+  const timeline = /<h2\b[^>]*\bid="changes"/i.exec(html);
+  return blankOut(timeline ? html.slice(0, timeline.index) : html, SOURCE_REGISTER_ENTRY);
+}
+
 function renderedBody(html: string): string {
-  return blankOut(
+  return surfacesThatRecommend(
     blankOut(
-      blankOut(html, /<script\b[\s\S]*?<\/script>/gi),
-      /<style\b[\s\S]*?<\/style>/gi,
+      blankOut(
+        blankOut(html, /<script\b[\s\S]*?<\/script>/gi),
+        /<style\b[\s\S]*?<\/style>/gi,
+      ),
+      /<head\b[\s\S]*?<\/head>|<!--[\s\S]*?-->/gi,
     ),
-    /<head\b[\s\S]*?<\/head>|<!--[\s\S]*?-->/gi,
   );
 }
 
@@ -94,6 +111,9 @@ function blockSpans(html: string): Span[] {
       break;
     }
   }
+  for (const m of html.matchAll(CARD_DESCRIPTION)) {
+    spans.push({ tag: "div", start: m.index!, end: m.index! + m[0].length });
+  }
   return spans;
 }
 
@@ -119,9 +139,11 @@ function names(vendor: string): RegExp {
 }
 
 function claimIn(unit: string): StatedTerms["reason"] | null {
-  if (ENDED_WORD.test(unit) || NO_OFFER_WORD.test(unit)) return null;
-  if (AFFIRMATIVE_FREE.test(unit)) return "names a free tier";
-  if (ALLOWANCE_QUANTITY.test(unit) && !PRICE.test(unit)) return "states an allowance";
+  const text = unit.replace(FREE_AS_A_LICENCE, " ").replace(FREE_AS_A_CREDENTIAL, " ");
+  if (ENDED_WORD.test(text) || NO_OFFER_WORD.test(text)) return null;
+  if (AFFIRMATIVE_FREE.test(text)) return "names a free tier";
+  if (ZERO_PRICE.test(text)) return "prices it at zero";
+  if (ALLOWANCE_QUANTITY.test(text) && !PRICE.test(text)) return "states an allowance";
   return null;
 }
 
