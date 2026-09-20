@@ -2,6 +2,7 @@ import { describe, it, before, after } from "node:test";
 import assert from "node:assert";
 import { spawn, type ChildProcess } from "node:child_process";
 import fs from "node:fs";
+import os from "node:os";
 
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -17,6 +18,7 @@ import {
   serializeBestOfPublished,
 } from "../dist/best-of-publication.js";
 import { toSlug } from "../dist/slug.js";
+import { gateDisclosureSentence, matchingSubject } from "../dist/gate-disclosure.js";
 import { CATEGORY_RETIREMENTS } from "../dist/category-scope.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -41,13 +43,26 @@ function dayAfter(from: string, days: number): string {
   return new Date(Date.parse(`${from}T00:00:00Z`) + days * DAY_MS).toISOString().slice(0, 10);
 }
 
-function qualifiedCount(fn: ProductFunction, date: string): number {
+function rankingOf(fn: ProductFunction, date: string) {
   return rankOffers(enrichOffers(functionMembers(offers, fn)), {
     queryKey: `best-of:${fn.categories[0] ?? fn.subtypes[0]}`,
     changes,
     date,
     verificationLedger: ledger,
-  }).qualified.length;
+  });
+}
+
+function qualifiedCount(fn: ProductFunction, date: string): number {
+  return rankingOf(fn, date).qualified.length;
+}
+
+function escapeForHtml(text: string): string {
+  return text
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
 }
 
 function reachesTheVendorFloor(fn: ProductFunction): boolean {
@@ -309,20 +324,60 @@ describe("the site as its own clock will read it on 2026-10-29 and on 2026-12-01
     }
   });
 
-  it("names the gated offers a page holds, with the reason and its date", async () => {
-    const html = await body(todayPort, "/best/free-ai-coding");
-    assert.ok(html.includes('id="not-ranked"'), "/best/free-ai-coding carries no block for the offers it gates");
-    const gated = functions.find(fn => fn.slug === "ai-coding");
-    assert.ok(gated, "ai-coding is no longer a product function");
-    const ranking = rankOffers(enrichOffers(functionMembers(offers, gated!)), {
-      queryKey: `best-of:${gated!.categories[0] ?? gated!.subtypes[0]}`,
-      changes,
-      date: TODAY,
-      verificationLedger: ledger,
-    });
-    assert.ok(ranking.excluded.length > 0, "ai-coding gates no offer, so this page demonstrates nothing");
-    for (const entry of ranking.excluded) {
-      assert.ok(html.includes(entry.gate.code), `/best/free-ai-coding does not name the gate ${entry.gate.code}`);
+  it("counts the offers it gates, and says under which rule", async () => {
+    const pagesWithAGate = functions.filter(fn => published.slugs.includes(`free-${fn.slug}`) && rankingOf(fn, TODAY).excluded.length > 0);
+    assert.ok(pagesWithAGate.length >= 10, `only ${pagesWithAGate.length} published pages gate an offer today`);
+    for (const fn of pagesWithAGate) {
+      const ranking = rankingOf(fn, TODAY);
+      const held = ranking.ranked.length + ranking.excluded.length;
+      const expected = gateDisclosureSentence(
+        matchingSubject("offer", held),
+        held,
+        ranking.excluded.map(e => e.gate.code),
+      );
+      const html = await body(todayPort, `/best/free-${fn.slug}`);
+      assert.ok(html.includes('id="not-ranked"'), `/best/free-${fn.slug} carries no block for the offers it gates`);
+      assert.ok(html.includes(escapeForHtml(expected)), `/best/free-${fn.slug} does not state "${expected}"`);
     }
+  });
+
+  it("keeps a published path while it still holds a record, and withdraws it when it holds none", async () => {
+    const held = functions.find(fn => fn.slug === "search" && published.slugs.includes("free-search"));
+    assert.ok(held, "free-search is not a published category function, so this pair demonstrates nothing");
+    const members = functionMembers(offers, held!).map(o => o.vendor);
+    assert.ok(members.length >= MIN_VENDORS, `Search holds ${members.length} records, fewer than the vendor floor`);
+
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), "best-of-emptied-"));
+    const catalogue = JSON.parse(fs.readFileSync(path.join(REPO, "data", "index.json"), "utf8"));
+    const movedTo = "Databases";
+    const away = (keep: number) => ({
+      ...catalogue,
+      offers: catalogue.offers.map((o: { vendor: string; category: string }) =>
+        members.includes(o.vendor) && members.indexOf(o.vendor) >= keep ? { ...o, category: movedTo, tags: ["databases"], product_subtypes: undefined } : o),
+    });
+    const oneLeft = path.join(dir, "one-left.json");
+    const noneLeft = path.join(dir, "none-left.json");
+    fs.writeFileSync(oneLeft, JSON.stringify(away(1)));
+    fs.writeFileSync(noneLeft, JSON.stringify(away(0)));
+
+    const [a, b] = await Promise.all([
+      startServer({ AGENTDEALS_INDEX_PATH: oneLeft }),
+      startServer({ AGENTDEALS_INDEX_PATH: noneLeft }),
+    ]);
+    try {
+      assert.strictEqual(await status(a.port, "/best/free-search"), 200, "/best/free-search is withdrawn while it still holds a record");
+      assert.notStrictEqual(await status(b.port, "/best/free-search"), 200, "/best/free-search still answers with no record behind it");
+    } finally {
+      a.child.kill();
+      b.child.kill();
+      fs.rmSync(dir, { recursive: true, force: true });
+    }
+  });
+
+  it("says nothing of the kind on a page that gates nothing", async () => {
+    const clean = functions.find(fn => published.slugs.includes(`free-${fn.slug}`) && rankingOf(fn, TODAY).excluded.length === 0);
+    assert.ok(clean, "every published page gates an offer, so the empty case is untested");
+    const html = await body(todayPort, `/best/free-${clean!.slug}`);
+    assert.ok(!html.includes('id="not-ranked"'), `/best/free-${clean!.slug} gates nothing and still carries the block`);
   });
 });

@@ -2513,7 +2513,8 @@ const bestOfSlugMap = new Map<string, ProductFunction>();
 for (const fn of productFunctions) {
   const slug = `free-${fn.slug}`;
   const generallyAvailable = functionMembers(offers, fn).filter((o) => !o.eligibility);
-  if (generallyAvailable.length < BEST_OF_MIN_VENDORS && !bestOfPublishedBefore.has(slug)) continue;
+  const heldOpen = bestOfPublishedBefore.has(slug) && generallyAvailable.length > 0;
+  if (generallyAvailable.length < BEST_OF_MIN_VENDORS && !heldOpen) continue;
   bestOfSlugMap.set(slug, fn);
 }
 
@@ -2756,10 +2757,7 @@ ${cards}`;
   );
   const excludedHtml = excluded.length === 0 ? "" : `
   <h2 id="${BEST_OF_GATED_ID}">Not on our ranked list</h2>
-  <p class="page-meta" style="margin-bottom:1rem">${escHtmlServer(gateDisclosure)} ${escHtmlServer(DISCLOSURE_RATIONALE)}</p>
-  <ul class="best-gated-list">
-${excluded.map(e => `    <li><a href="/vendor/${toSlug(e.offer.vendor)}">${escHtmlServer(e.offer.vendor)}</a> &mdash; <code>${escHtmlServer(e.gate.code)}</code> &middot; ${escHtmlServer(e.gate.reason)}</li>`).join("\n")}
-  </ul>
+  <p class="page-meta" style="margin-bottom:1rem">${escHtmlServer(gateDisclosure)} <a href="${CRITERIA_PATH}">Here is how that order is derived</a>.</p>
 `;
 
   const tableRows = qualified.map((e) => {
@@ -2903,8 +2901,6 @@ h2{font-family:var(--serif);font-size:1.4rem;color:var(--text);margin:2.5rem 0 1
 .other-best a:hover{border-color:var(--accent);color:var(--text);text-decoration:none}
 .tie-note{background:var(--accent-glow);border:1px solid var(--accent);border-radius:8px;padding:1rem 1.25rem;margin-bottom:1.5rem;font-size:.9rem;color:var(--text-muted)}
 .tie-note strong{color:var(--text)}
-.best-gated-list{list-style:none;padding:0;margin:0 0 1rem;font-size:.9rem;color:var(--text-muted)}
-.best-gated-list li{padding:.4rem 0;border-bottom:1px solid var(--border)}
 .best-pick-demoted{opacity:.85;border-style:dashed}
 .best-pick-demoted .best-pick-rank{color:#d29922;font-family:var(--mono);font-size:1.1rem}
 .demerit-list{list-style:none;margin:.5rem 0;padding:0;font-size:.8rem;color:var(--text-muted)}
