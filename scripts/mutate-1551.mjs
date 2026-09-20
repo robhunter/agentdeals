@@ -13,8 +13,8 @@ const MUTANTS = [
     "  return false;"],
 
   ["the-listing-row-stops-stating-the-read", "src/serve.ts",
-    "  const reading = readContradictingTheTermsFor(offer);\n  if (!reading) return \"\";\n  return `<span class=\"listing-read-contradicts\"",
-    "  const reading = readContradictingTheTermsFor(offer);\n  if (reading) return \"\";\n  return `<span class=\"listing-read-contradicts\""],
+    "${termsUnconfirmedNoticeHtml(o)}${contradictedTermsNoticeHtml(o)}</td>",
+    "${termsUnconfirmedNoticeHtml(o)}</td>"],
 
   ["an-ended-offer-is-flagged-over-terms-it-no-longer-publishes", "src/serve.ts",
     "  return offerEnded(offer)\n    || supersedingChangeFor(offer) !== null\n    || unconfirmedTermsFor(offer) !== null;",

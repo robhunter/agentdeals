@@ -282,6 +282,9 @@ describe("the two surfaces that describe one read", () => {
     let pages = 0;
     let flagged = 0;
     let doubled = 0;
+    let supersededRows = 0;
+    let supersededHoldingARead = 0;
+    const restated: string[] = [];
     const uncounted: string[] = [];
     const unspoken: string[] = [];
     for (const slug of categorySlugs) {
@@ -293,7 +296,15 @@ describe("the two surfaces that describe one read", () => {
       let speaking = 0;
       for (const row of body.split("<tr").filter((r) => r.includes("/vendor/"))) {
         const vendorSlug = row.match(/\/vendor\/([a-z0-9-]+)"/)?.[1];
-        if (!vendorSlug || endedSlugs.has(vendorSlug) || row.includes(SUPERSEDED_TERMS_LABEL)) continue;
+        if (!vendorSlug) continue;
+        if (row.includes(SUPERSEDED_TERMS_LABEL)) {
+          supersededRows++;
+          const superseded = offers.find((o) => slugOf(o.vendor) === vendorSlug && slugOf(o.category) === slug);
+          if (superseded && readThatContradictsOurTerms(superseded)) supersededHoldingARead++;
+          if (row.includes("listing-read-contradicts")) restated.push(`/category/${slug} ${vendorSlug}`);
+          continue;
+        }
+        if (endedSlugs.has(vendorSlug)) continue;
         if (row.includes("listing-read-contradicts")) {
           contradicting++;
           if (row.includes("listing-terms-unconfirmed")) doubled++;
@@ -306,8 +317,15 @@ describe("the two surfaces that describe one read", () => {
     }
     assertPopulationFloor(pages, 40, "category pages read for the count");
     assertPopulationFloor(flagged, 80, "rows flagged over a contradicting read");
+    assertPopulationFloor(supersededRows, 50, "listed rows whose terms a change superseded");
+    assertPopulationFloor(supersededHoldingARead, 40, "superseded rows that also hold a contradicting read");
     assert.deepStrictEqual(uncounted, [], `a page flags rows its own count leaves out: ${uncounted.join("; ")}`);
     assert.deepStrictEqual(unspoken, [], `a page counts rows that say nothing: ${unspoken.join("; ")}`);
+    assert.deepStrictEqual(
+      restated,
+      [],
+      `a row whose terms are superseded restates a read date beside the notice: ${restated.join("; ")}`,
+    );
     assert.strictEqual(doubled, 0, `${doubled} rows carry two reasons for the same terms`);
   });
 
