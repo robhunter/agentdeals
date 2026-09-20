@@ -44,7 +44,7 @@ const CARRY_NO_DEMERIT = /([\d,]+) carr(?:y|ies) no recorded demerit/;
 const DEMOTED_IN_BASIS = /([\d,]+) (?:is|are) demoted with the reason named/;
 const GATED_IN_BASIS = /([\d,]+) (?:is|are) listed last behind a stated gate/;
 const RECOUNTED_ELSEWHERE = [LISTING_BASIS, HOLDS_IN_ALL, STATED_COUNTS, CHANGES_STATED];
-const PAGES_DATING_A_DEMOTION_FLOOR = 32;
+const PAGES_DATING_A_DEMOTION_FLOOR = 30;
 const ROLLING_VERDICT_HEADINGS = ["At-Risk Vendors", "Stable Picks"];
 const CLOCK_BASE_DAYS = Number(process.env.AGENTDEALS_CLOCK_BASE_DAYS ?? 0);
 

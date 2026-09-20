@@ -43,6 +43,7 @@ jobs:
             exit 1
           fi
           node scripts/report-page-lastmod.js "$RUNNER_TEMP/page-lastmod.json" data/page-lastmod.json >> "$GITHUB_OUTPUT"
+          node scripts/record-best-of-published.js
 
       - name: Run the suite, then push to main only if it is green
         id: gate
@@ -55,7 +56,7 @@ jobs:
           bash scripts/gate-data-push.sh \
             data-quarantine/page-lastmod \
             "data(auto): page dates — ${MOVED} pages whose output moved, ${ADDED} new, ${DROPPED} gone" \
-            data/page-lastmod.json
+            data/page-lastmod.json data/best-of-published.json
 
       - name: Say where it can be seen what the gate did with this run's dates
         if: always() && (steps.gate.outputs.quarantined == 'true' || steps.gate.outputs.pushed_over_failures == 'true' || steps.gate.outputs.drifted_guards != '' || steps.gate.outputs.pushed_commit != '' || steps.gate.outputs.pushed_nothing == 'true')

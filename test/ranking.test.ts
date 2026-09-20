@@ -156,31 +156,32 @@ describe("tier classification", () => {
 
 describe("gates", () => {
   it("excludes offers that are not generally available", () => {
-    const g = gateFor(offer({ eligibility: { type: "student", conditions: ["enrolled"] } }), TODAY);
+    const g = gateFor(offer({ eligibility: { type: "student", conditions: ["enrolled"] } }), TODAY, []);
     assert.strictEqual(g?.code, "eligibility_restricted");
   });
 
   it("excludes an offer whose stated expiry has passed", () => {
-    const g = gateFor(offer({ expires_date: "2026-08-24" }), TODAY);
+    const g = gateFor(offer({ expires_date: "2026-08-24" }), TODAY, []);
     assert.strictEqual(g?.code, "offer_expired");
   });
 
   it("excludes an offer we have not confirmed in 180 days", () => {
-    const g = gateFor(offer({ verifiedDate: "2026-01-01" }), TODAY);
+    const g = gateFor(offer({ verifiedDate: "2026-01-01" }), TODAY, []);
     assert.strictEqual(g?.code, "verification_lapsed");
   });
 
   it("lets a healthy free offer through", () => {
-    assert.strictEqual(gateFor(offer(), TODAY), null);
+    assert.strictEqual(gateFor(offer(), TODAY, []), null);
   });
 
   it("every gate code is documented on the criteria page table", () => {
     const documented = new Set(GATE_TABLE.map((g) => g.code));
-    for (const code of ["eligibility_restricted", "not_a_free_offer", "offer_expired", "offer_retired", "verification_lapsed"]) {
+    for (const code of ["eligibility_restricted", "not_a_free_offer", "offer_expired", "offer_retired", "product_discontinued", "verification_lapsed"]) {
       assert.ok(documented.has(code as never), `${code} must be documented`);
     }
+    const byVendor = changesByVendor(dealChanges);
     for (const o of index.offers) {
-      const gate = gateFor(o, TODAY);
+      const gate = gateFor(o, TODAY, byVendor.get(o.vendor.toLowerCase()) ?? []);
       if (gate) assert.ok(documented.has(gate.code), `${o.vendor} is gated ${gate.code}, which the table does not describe`);
     }
   });

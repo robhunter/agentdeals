@@ -24,6 +24,11 @@ const GATE_CLAUSES: { code: GateCode; one: string; many: (n: number) => string }
     many: (n) => `${n} have ended`,
   },
   {
+    code: "product_discontinued",
+    one: "1 has been discontinued",
+    many: (n) => `${n} have been discontinued`,
+  },
+  {
     code: "verification_lapsed",
     one: `1 we have not been able to confirm in the last ${VERIFICATION_LAPSED_DAYS} days`,
     many: (n) => `${n} we have not been able to confirm in the last ${VERIFICATION_LAPSED_DAYS} days`,

@@ -164,8 +164,8 @@ describe("#1038 — the level is checkable", () => {
   });
 
   it("the vendor page publishes the dated cause beside the badge in the <h1>", async () => {
-    const { enrichOffers, loadOffers, loadDealChanges, vendorRiskAssessment } = await import("../dist/data.js");
-    const { gateFor, utcDate } = await import("../dist/ranking.js");
+    const { enrichOffers, gateForOffer, loadOffers, loadDealChanges, vendorRiskAssessment } = await import("../dist/data.js");
+    const { utcDate } = await import("../dist/ranking.js");
     const changes = loadDealChanges();
     const seen = new Set<string>();
     const oneRecordEach = enrichOffers(loadOffers())
@@ -180,7 +180,7 @@ describe("#1038 — the level is checkable", () => {
     const wouldWarn = (o: { vendor: string }) =>
       vendorRiskAssessment(changes.filter(c => c.vendor.toLowerCase() === o.vendor.toLowerCase())).level !== "stable";
     const gated = oneRecordEach
-      .filter((o: object) => gateFor(o, utcDate()) !== null)
+      .filter((o: object) => gateForOffer(o, utcDate()) !== null)
       .filter(wouldWarn)
       .slice(0, 6);
     assert.ok(listed.length > 0, "expected at least one warned vendor the ranker lists");
@@ -193,7 +193,7 @@ describe("#1038 — the level is checkable", () => {
       for (const level of ["stable", "caution", "risky"]) {
         assert.ok(
           !new RegExp(level).test(h1),
-          `${offer.vendor}: the <h1> of a ${gateFor(offer, utcDate())!.code} record reads ${level}`,
+          `${offer.vendor}: the <h1> of a ${gateForOffer(offer, utcDate())!.code} record reads ${level}`,
         );
       }
     }

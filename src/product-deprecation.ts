@@ -86,18 +86,18 @@ export function productNamedApartFromVendor(subject: string, vendor: string): st
   return words(named).filter(w => !fromVendor.has(w) && !GENERIC_WORDS.has(w));
 }
 
-type DeprecationRecord = Pick<DealChange, "change_type" | "vendor" | "summary">;
+type DeprecationSubject = Pick<DealChange, "change_type" | "vendor" | "summary">;
 
 const endsTheListedProductCache = new WeakMap<object, boolean>();
 
-function decide(change: DeprecationRecord): boolean {
+function decide(change: DeprecationSubject): boolean {
   if (change.change_type !== PRODUCT_DEPRECATED) return false;
   const reading = readDeprecation(change.summary ?? "");
   if (!reading) return false;
   return productNamedApartFromVendor(reading.subject, change.vendor).length === 0;
 }
 
-export function deprecationEndsTheListedProduct(change: DeprecationRecord): boolean {
+export function deprecationEndsTheListedProduct(change: DeprecationSubject): boolean {
   const cached = endsTheListedProductCache.get(change as object);
   if (cached !== undefined) return cached;
   const decision = decide(change);
@@ -145,9 +145,15 @@ function datesAfterPredicate(text: string): string[] {
   return found;
 }
 
-export function discontinuationDate(
-  change: Pick<DealChange, "change_type" | "vendor" | "summary" | "current_state">,
-): string | null {
+export const DISCONTINUATION_DATE_UNRESOLVED = "unknown";
+
+const ISO_DATE = /^\d{4}-\d{2}-\d{2}$/;
+
+export type DeprecationText = Pick<DealChange, "change_type" | "vendor" | "summary" | "current_state">;
+
+export type DeprecationRecord = DeprecationText & Pick<DealChange, "discontinued_date">;
+
+export function discontinuationDateStatedInText(change: DeprecationText): string | null {
   if (!deprecationEndsTheListedProduct(change)) return null;
   const dates = [
     ...datesAfterPredicate(change.summary ?? ""),
@@ -157,8 +163,20 @@ export function discontinuationDate(
   return dates.sort().pop() ?? null;
 }
 
+export function discontinuationDate(change: DeprecationRecord): string | null {
+  if (!deprecationEndsTheListedProduct(change)) return null;
+  const stated = change.discontinued_date;
+  if (stated === DISCONTINUATION_DATE_UNRESOLVED) return null;
+  if (typeof stated === "string" && ISO_DATE.test(stated)) return stated;
+  return discontinuationDateStatedInText(change);
+}
+
+export function discontinuedClause(vendorName: string, discontinuedOn: string): string {
+  return `${vendorName} was discontinued on ${discontinuedOn}, so it is not a current option`;
+}
+
 export function discontinuedOnOrBefore(
-  changes: Array<Pick<DealChange, "change_type" | "vendor" | "summary" | "current_state">>,
+  changes: readonly DeprecationRecord[],
   today: string,
 ): string | null {
   let latestPast: string | null = null;

@@ -43,6 +43,7 @@ const WITHHELD_LABELS: Record<string, string> = {
   not_a_free_offer: "unrated — not a free offer",
   offer_expired: "unrated — offer expired",
   offer_retired: "unrated — offer ended",
+  product_discontinued: "unrated — product discontinued",
   verification_lapsed: "unrated — not re-confirmed",
   read_not_reconciled: "unrated — change not reconciled",
   change_measured_no_difference: "unrated — change refused",
@@ -86,7 +87,7 @@ function badgeColor(svg: string): string {
 }
 
 before(async () => {
-  const { loadOffers, loadDealChanges, enrichOffers, publishedRisk, refusalsForVendor } = await import("../dist/data.js");
+  const { loadOffers, loadDealChanges, enrichOffers, publishedRisk, refusalsForVendor, gateForOffer } = await import("../dist/data.js");
   const { vendorSlugMap } = await import("../dist/vendor-slug.js");
   const { levelWithheldReason } = await import("../dist/source-check.js");
   const { vendorBadge } = await import("../dist/vendor-verdict.js");
@@ -124,7 +125,7 @@ before(async () => {
       termsConfirmedOn: primary.verifiedDate,
       ratingWithheld: e.rating_withheld,
       offerEnded: offerEnded(primary),
-      gate: gateFor(primary, servedOn)?.code ?? null,
+      gate: gateForOffer(primary, servedOn)?.code ?? null,
       linkUnreachable: Boolean(e.link_unreachable),
     }) as { kind: "rating" | "ended" | "none"; word?: string; because?: Withholding };
     const verifiedDate = own.reduce(
