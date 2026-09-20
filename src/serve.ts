@@ -712,9 +712,14 @@ function termsUnconfirmedNoticeHtml(offer: Offer): string {
   return unconfirmedTermsSpanHtml(unconfirmed);
 }
 
+function alreadySpeaksForItself(offer: Offer): boolean {
+  return offerEnded(offer)
+    || supersedingChangeFor(offer) !== null
+    || unconfirmedTermsFor(offer) !== null;
+}
+
 function readContradictingTheTermsFor(offer: Offer): LastReading | null {
-  if (offerEnded(offer) || unconfirmedTermsFor(offer)) return null;
-  return readThatContradictsOurTerms(offer);
+  return alreadySpeaksForItself(offer) ? null : readThatContradictsOurTerms(offer);
 }
 
 function contradictedTermsNoticeHtml(offer: Offer): string {

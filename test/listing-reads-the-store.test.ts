@@ -22,6 +22,7 @@ const {
 } = await import("../dist/read-date.js");
 const { NOTHING_CONTRADICTS_OUR_TERMS_FOR } = await import("../dist/data.js");
 const { offerEnded } = await import("../dist/retirement.js");
+const { SUPERSEDED_TERMS_LABEL } = await import("../dist/superseded-description.js");
 const { REFUSAL_REASONS_THAT_CONFIRM_THE_STORED_TERMS, REFUSAL_REASONS_THAT_MEASURED_NO_DIFFERENCE } =
   await import("../dist/change-refusal.js");
 
@@ -95,6 +96,14 @@ const rowFor = (body: string, vendor: string): string | null =>
   body.split("<tr").find((row) => row.includes(`/vendor/${slugOf(vendor)}"`)) ?? null;
 
 const categorySlugs = [...new Set(offers.map((o) => o.category))].map(slugOf);
+
+const endedSlugs = new Set(offers.filter((o) => offerEnded(o)).map((o) => slugOf(o.vendor)));
+
+const REASON_CLASSES = [
+  "listing-read-contradicts",
+  "listing-terms-unconfirmed",
+  "listing-link-unreachable",
+];
 
 describe("a read our own store says contradicted the terms", () => {
   it("is a contradiction until something later settles it", () => {
@@ -240,10 +249,9 @@ describe("the two surfaces that describe one read", () => {
         const row = rowFor(body, offer.vendor);
         if (row === null) continue;
         checked++;
-        const speaks = row.includes("listing-read-contradicts")
-          || row.includes("listing-terms-unconfirmed")
-          || row.includes("listing-link-unreachable")
-          || row.includes("listing-eligibility-restricted");
+        const speaks = REASON_CLASSES.some((c) => row.includes(c))
+          || row.includes("listing-eligibility-restricted")
+          || row.includes(SUPERSEDED_TERMS_LABEL);
         if (!speaks) silent.push(`/category/${slug} ${offer.vendor}`);
       }
     }
@@ -268,6 +276,39 @@ describe("the two surfaces that describe one read", () => {
       }
     }
     assertPopulationFloor(spoken, 40, "rows rendering the contradiction notice");
+  });
+
+  it("counts every row it flags, and gives no row two reasons", async () => {
+    let pages = 0;
+    let flagged = 0;
+    let doubled = 0;
+    const uncounted: string[] = [];
+    const unspoken: string[] = [];
+    for (const slug of categorySlugs) {
+      const { status, body } = await get(`/category/${slug}`);
+      if (status !== 200) continue;
+      pages++;
+      const stated = Number(body.match(/could not confirm today's terms for (\d+) of them/)?.[1] ?? 0);
+      let contradicting = 0;
+      let speaking = 0;
+      for (const row of body.split("<tr").filter((r) => r.includes("/vendor/"))) {
+        const vendorSlug = row.match(/\/vendor\/([a-z0-9-]+)"/)?.[1];
+        if (!vendorSlug || endedSlugs.has(vendorSlug) || row.includes(SUPERSEDED_TERMS_LABEL)) continue;
+        if (row.includes("listing-read-contradicts")) {
+          contradicting++;
+          if (row.includes("listing-terms-unconfirmed")) doubled++;
+        }
+        if (REASON_CLASSES.some((c) => row.includes(c))) speaking++;
+      }
+      flagged += contradicting;
+      if (stated < contradicting) uncounted.push(`/category/${slug} flags ${contradicting} and counts ${stated}`);
+      if (stated > speaking) unspoken.push(`/category/${slug} counts ${stated} and only ${speaking} say why`);
+    }
+    assertPopulationFloor(pages, 40, "category pages read for the count");
+    assertPopulationFloor(flagged, 80, "rows flagged over a contradicting read");
+    assert.deepStrictEqual(uncounted, [], `a page flags rows its own count leaves out: ${uncounted.join("; ")}`);
+    assert.deepStrictEqual(unspoken, [], `a page counts rows that say nothing: ${unspoken.join("; ")}`);
+    assert.strictEqual(doubled, 0, `${doubled} rows carry two reasons for the same terms`);
   });
 
   it("says nothing about a read against an offer that has ended", async () => {
