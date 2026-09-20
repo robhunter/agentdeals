@@ -23,8 +23,12 @@ const {
 const { NOTHING_CONTRADICTS_OUR_TERMS_FOR } = await import("../dist/data.js");
 const { offerEnded } = await import("../dist/retirement.js");
 const { SUPERSEDED_TERMS_LABEL } = await import("../dist/superseded-description.js");
-const { REFUSAL_REASONS_THAT_CONFIRM_THE_STORED_TERMS, REFUSAL_REASONS_THAT_MEASURED_NO_DIFFERENCE } =
-  await import("../dist/change-refusal.js");
+const {
+  REFUSAL_REASONS_THAT_CONFIRM_THE_STORED_TERMS,
+  REFUSAL_REASONS_THAT_LEAVE_THE_READ_STANDING,
+  REFUSAL_REASONS_THAT_MEASURED_NO_DIFFERENCE,
+  REFUSAL_REASONS_THAT_VOID_THE_READS_STANDING,
+} = await import("../dist/change-refusal.js");
 
 const FOUND_A_DIFFERENCE = WHAT_THE_LAST_READ_FOUND.changed;
 
@@ -147,6 +151,7 @@ describe("a read our own store says contradicted the terms", () => {
     const settling = [
       ...REFUSAL_REASONS_THAT_CONFIRM_THE_STORED_TERMS,
       ...REFUSAL_REASONS_THAT_MEASURED_NO_DIFFERENCE,
+      ...REFUSAL_REASONS_THAT_VOID_THE_READS_STANDING,
     ];
     assert.ok(settling.length > 1, "the register of settling refusal reasons is too small to derive from");
     for (const reason of settling) {
@@ -167,8 +172,18 @@ describe("a read our own store says contradicted the terms", () => {
 
   it("is not settled by a refusal that withheld for some other reason", () => {
     const read = readingOn("2026-09-16");
-    const refusals = [{ vendor: "Examplecorp", refused_date: "2026-09-16", reason: "states_no_terms" }];
-    assert.deepStrictEqual(contradictingRead(read, { ...nothingCameAfter, refusals } as never), read);
+    assert.ok(
+      REFUSAL_REASONS_THAT_LEAVE_THE_READ_STANDING.length > 1,
+      "the register of reasons that leave a read standing is too small to derive from",
+    );
+    for (const reason of REFUSAL_REASONS_THAT_LEAVE_THE_READ_STANDING) {
+      const refusals = [{ vendor: "Examplecorp", refused_date: "2026-09-16", reason }];
+      assert.deepStrictEqual(
+        contradictingRead(read, { ...nothingCameAfter, refusals } as never),
+        read,
+        `a refusal reading ${reason} on the same day settled a read it does not speak to`,
+      );
+    }
   });
 
   it("states the read date and what it found, and says we hold no confirmation", () => {

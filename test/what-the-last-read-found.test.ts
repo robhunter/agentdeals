@@ -7,13 +7,17 @@ import { fileURLToPath } from "node:url";
 import { enrichOffers, loadOffers } from "../dist/data.js";
 import {
   REFUSAL_REASONS_THAT_CONFIRM_THE_STORED_TERMS,
+  REFUSAL_REASONS_THAT_LEAVE_THE_READ_STANDING,
   REFUSAL_REASONS_THAT_MEASURED_NO_DIFFERENCE,
+  REFUSAL_REASONS_THAT_VOID_THE_READS_STANDING,
   howWeSettledTheRead,
   refusalSettledTheRead,
+  refusalVoidsTheReadsStanding,
   type RefusedRead,
 } from "../dist/change-refusal.js";
 import {
   WHAT_A_SETTLED_READ_FOUND,
+  WHAT_A_VOIDED_READ_FOUND,
   WHAT_THE_LAST_READ_FOUND,
   lastReadNote,
   readingSettledByRefusals,
@@ -124,15 +128,16 @@ describe("what our own refusal says about the read that raised it", () => {
     assert.strictEqual(settled?.settlement, "restated_the_terms_we_publish");
   });
 
-  it("settles on every reason in the two sets we publish and on no other", () => {
+  it("settles on every reason in the sets we publish and on no other", () => {
     for (const reason of [
       ...REFUSAL_REASONS_THAT_CONFIRM_THE_STORED_TERMS,
       ...REFUSAL_REASONS_THAT_MEASURED_NO_DIFFERENCE,
+      ...REFUSAL_REASONS_THAT_VOID_THE_READS_STANDING,
     ]) {
       assert.ok(refusalSettledTheRead({ reason }), `${reason} does not settle the read it refused`);
       assert.ok(howWeSettledTheRead([refused(reason)], READ), `${reason} settles nothing on the day it was refused`);
     }
-    for (const reason of ["unquantified_limit", "same_transition_graded_differently", "measures_the_opposite", "states_no_terms"]) {
+    for (const reason of REFUSAL_REASONS_THAT_LEAVE_THE_READ_STANDING) {
       assert.ok(!refusalSettledTheRead({ reason }), `${reason} settles a read it does not settle`);
       assert.strictEqual(howWeSettledTheRead([refused(reason)], READ), null);
     }
@@ -243,9 +248,13 @@ describe("the catalogue as it stands", () => {
       .filter((r) => r.refused_date === record.last_attempt_at);
     if (sameDay.length === 0) return null;
     if (sameDay.some((r) => !refusalSettledTheRead(r))) return null;
-    return sameDay.some((r) => (REFUSAL_REASONS_THAT_CONFIRM_THE_STORED_TERMS as readonly string[]).includes(r.reason))
-      ? RESTATED
-      : NO_FIGURE_MOVED;
+    if (sameDay.some((r) => (REFUSAL_REASONS_THAT_CONFIRM_THE_STORED_TERMS as readonly string[]).includes(r.reason))) {
+      return RESTATED;
+    }
+    if (sameDay.some((r) => (REFUSAL_REASONS_THAT_MEASURED_NO_DIFFERENCE as readonly string[]).includes(r.reason))) {
+      return NO_FIGURE_MOVED;
+    }
+    return WHAT_A_VOIDED_READ_FOUND[sameDay.filter(refusalVoidsTheReadsStanding)[0].reason];
   }
 
   const settled = enriched.filter((o) => settledFromStore(o) !== null);
