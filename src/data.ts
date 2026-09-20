@@ -9,7 +9,8 @@ import { applyReviewedDirections } from "./change-direction-review.js";
 import { rankForListing, gateFor, utcDate, type TieBreak, type Gate, type GateCode } from "./ranking.js";
 import { unreachableNoticeForUrl, resetLinkHealthCache } from "./link-health.js";
 import { quarantineSummary, resetVerificationStateCache, type QuarantineSummary } from "./verification-state.js";
-import { confirmationDate, daysSince, lastAttemptDate, lastReadDate, restatedReadingDate } from "./read-date.js";
+import { resetRefusalStoreCache } from "./refusal-store.js";
+import { confirmationDate, daysSince, lastAttemptDate, lastReadDate, lastReadingFor, restatedReadingDate } from "./read-date.js";
 import {
   amountUnstatedSentence,
   cannotVouchForLevel,
@@ -126,6 +127,7 @@ export function resetCache(): void {
   publishedChangesByVendor = null;
   resetLinkHealthCache();
   resetVerificationStateCache();
+  resetRefusalStoreCache();
 }
 
 export function oldestVerifiedDateForSlug(slug: string): string | null {
@@ -524,6 +526,22 @@ export function publishedStabilityIndex(): StabilityIndex {
   };
 }
 
+export interface WhatTheLastReadConcluded {
+  last_read_outcome: string | null;
+  last_read_found: string | null;
+}
+
+export function whatTheLastReadConcluded(
+  offer: Offer,
+  publishedReadDate: string,
+): WhatTheLastReadConcluded {
+  const reading = lastReadingFor(offer);
+  if (!reading || reading.date !== publishedReadDate) {
+    return { last_read_outcome: null, last_read_found: null };
+  }
+  return { last_read_outcome: reading.outcome, last_read_found: reading.found };
+}
+
 export interface StabilityWithheldDisclosure {
   stability_withheld: number;
   stability_withheld_summary?: string;
@@ -600,10 +618,11 @@ export function enrichOffers(offers: Offer[]): EnrichedOffer[] {
 
     const last_read_date = lastReadDate(offer);
     const days_since_read = daysSince(last_read_date, now);
+    const { last_read_outcome, last_read_found } = whatTheLastReadConcluded(offer, last_read_date);
 
     const terms_superseded = supersededTermsRecordFor(offer, vendorAllChangesList.get(key) ?? []);
 
-    const enriched = { ...offer, recent_change, expires_soon, risk_level, risk_cause, rating_withheld, stability, days_since_verified, last_read_date, days_since_read, link_unreachable, gate, refused_read, terms_superseded };
+    const enriched = { ...offer, recent_change, expires_soon, risk_level, risk_cause, rating_withheld, stability, days_since_verified, last_read_date, days_since_read, last_read_outcome, last_read_found, link_unreachable, gate, refused_read, terms_superseded };
     return stripReferrerValue(enriched);
   });
 }

@@ -16,6 +16,7 @@ const { ANSWERED_OUTCOMES, applyAttempt, ATTEMPT_CHANGED, ATTEMPT_CONFIRMED, ATT
 const { NO_CONFIRMATION_HELD, OUTCOMES_THAT_READ_THE_PAGE, UNCONFIRMED_DATE_LABEL, VERIFICATION_DATES_HEADING, attemptThatDidNotRead, confirmationDate, lastReadDate, lastReadNote, storedConfirmationClause, verificationDates, verificationDatesCell, verificationDatesClause, verificationDatesSentence } =
   await import("../dist/read-date.js");
 const { confirmationALaterReadContradicted } = await import("../dist/read-date.js");
+const { refusalsForVendor } = await import("../dist/data.js");
 const { aReadSinceTheReadingConfirmedWhatWeStore } = await import("../dist/restatement.js");
 const { publishedTermsEvidence, termsTheVerdictWithholds, unconfirmedTermsFrom } = await import("../dist/vendor-verdict.js");
 const { holdsVerifiedDate } = await import("../scripts/vendor-naming.js");
@@ -107,14 +108,14 @@ describe("the day we last read the page", () => {
     withState([record({ last_attempt_at: "2026-04-12", last_outcome: ATTEMPT_CONFIRMED, last_success: "2026-04-12" })]);
     assert.equal(verificationDatesCell(offer), "2026-04-12");
     assert.equal(verificationDatesSentence(offer), "Read and confirmed 2026-04-12");
-    assert.match(lastReadNote(offer), /read the vendor's page, and the day we last confirmed/);
+    assert.match(lastReadNote(offer, null, []), /read the vendor's page, and the day we last confirmed/);
   });
 
   it("publishes both dates, each labelled, where the read is later", () => {
     withState([record({ last_attempt_at: "2026-09-09", last_outcome: ATTEMPT_CHANGED, last_success: "2026-04-12" })]);
     assert.equal(verificationDatesCell(offer), "2026-09-09 / 2026-04-12");
     assert.equal(verificationDatesSentence(offer), "Read 2026-09-09 · confirmed 2026-04-12");
-    assert.match(lastReadNote(offer), /last confirmed on 2026-04-12/);
+    assert.match(lastReadNote(offer, null, []), /last confirmed on 2026-04-12/);
   });
 
   it("names the catalogue date for what it is where the store holds no confirmation", () => {
@@ -152,7 +153,7 @@ describe("the day we last read the page", () => {
       verificationDatesSentence(offer),
       "Read and confirmed 2026-04-12 · tried again 2026-09-09 and did not read the page",
     );
-    assert.match(lastReadNote(offer), /that attempt confirmed nothing/);
+    assert.match(lastReadNote(offer, null, []), /that attempt confirmed nothing/);
   });
 
   it("publishes the attempt after a read that answered on an earlier day", () => {
@@ -182,7 +183,7 @@ describe("the day we last read the page", () => {
   it("claims no confirmation where the store holds no success", () => {
     withState([record({ last_attempt_at: "2026-09-09", last_outcome: ATTEMPT_CHANGED, last_success: null })]);
     assert.equal(confirmationDate(offer), null);
-    const note = lastReadNote(offer);
+    const note = lastReadNote(offer, null, []);
     assert.ok(note.includes(NO_CONFIRMATION_HELD), note);
     assert.doesNotMatch(note, /last confirmed on/);
     assert.match(note, /on 2026-09-09, found the page different from the terms we hold/);
@@ -191,25 +192,25 @@ describe("the day we last read the page", () => {
 
   it("says what a read that reached the page without terms found", () => {
     withState([record({ last_attempt_at: "2026-09-09", last_outcome: "states_no_price", last_success: null })]);
-    assert.match(lastReadNote(offer), /could read no amount, tier or rate on the page/);
+    assert.match(lastReadNote(offer, null, []), /could read no amount, tier or rate on the page/);
   });
 
   it("claims no confirmation where the store has never held the record", () => {
     withState([]);
     assert.equal(confirmationDate(offer), null);
-    assert.ok(lastReadNote(offer).includes(NO_CONFIRMATION_HELD));
+    assert.ok(lastReadNote(offer, null, []).includes(NO_CONFIRMATION_HELD));
   });
 
   it("publishes the confirmation the store holds, not the date the record carries", () => {
     withState([record({ last_attempt_at: "2026-09-10", last_outcome: ATTEMPT_CONFIRMED, last_success: "2026-09-10" })]);
     assert.equal(confirmationDate(offer), "2026-09-10");
-    assert.match(lastReadNote(offer), /read the vendor's page, and the day we last confirmed/);
-    assert.doesNotMatch(lastReadNote(offer), /2026-04-12/);
+    assert.match(lastReadNote(offer, null, []), /read the vendor's page, and the day we last confirmed/);
+    assert.doesNotMatch(lastReadNote(offer, null, []), /2026-04-12/);
   });
 
   it("keeps the confirmation it holds beside a later read that disagreed", () => {
     withState([record({ last_attempt_at: "2026-09-09", last_outcome: ATTEMPT_CHANGED, last_success: "2026-08-30" })]);
-    assert.match(lastReadNote(offer), /last confirmed on 2026-08-30/);
+    assert.match(lastReadNote(offer, null, []), /last confirmed on 2026-08-30/);
   });
 
   describe("a confirmation the page's own verdict does not stand behind", () => {
@@ -218,13 +219,13 @@ describe("the day we last read the page", () => {
       withState([record({ last_attempt_at: date, last_outcome: ATTEMPT_CONFIRMED, last_success: date })]);
     const standingNote = () => {
       confirmedOn("2026-09-10");
-      return lastReadNote(offer);
+      return lastReadNote(offer, null, []);
     };
 
     it("says the same read disagreed with itself where both come from one day", () => {
       confirmedOn("2026-09-10");
       const withheld = { clause: NO_AMOUNT_ON_THE_PAGE, on: "2026-09-10" };
-      const note = lastReadNote(offer, withheld);
+      const note = lastReadNote(offer, withheld, []);
       assert.match(note, /That read matched the terms we publish/);
       assert.match(note, new RegExp(NO_AMOUNT_ON_THE_PAGE));
       assert.match(note, /we cannot reconcile the two/);
@@ -234,7 +235,7 @@ describe("the day we last read the page", () => {
     it("says a later read left the confirmation unconfirmed where the read came after it", () => {
       confirmedOn("2026-08-30");
       const withheld = { clause: NO_AMOUNT_ON_THE_PAGE, on: "2026-09-13" };
-      const note = lastReadNote(offer, withheld);
+      const note = lastReadNote(offer, withheld, []);
       assert.match(note, /a confirmation of these terms from 2026-08-30/);
       assert.match(note, /we have read the page since without confirming them/);
       assert.match(note, new RegExp(NO_AMOUNT_ON_THE_PAGE));
@@ -243,13 +244,13 @@ describe("the day we last read the page", () => {
 
     it("keeps the note it publishes where nothing is withheld", () => {
       confirmedOn("2026-09-10");
-      assert.match(lastReadNote(offer, null), /read the vendor's page, and the day we last confirmed/);
-      assert.strictEqual(lastReadNote(offer, null), lastReadNote(offer));
+      assert.match(lastReadNote(offer, null, []), /read the vendor's page, and the day we last confirmed/);
+      assert.strictEqual(lastReadNote(offer, null, []), lastReadNote(offer, null, []));
     });
 
     it("claims no confirmation to withhold where the store holds none", () => {
       withState([record({ last_attempt_at: "2026-09-13", last_outcome: "states_no_price", last_success: null })]);
-      const note = lastReadNote(offer, { clause: NO_AMOUNT_ON_THE_PAGE, on: "2026-09-13" });
+      const note = lastReadNote(offer, { clause: NO_AMOUNT_ON_THE_PAGE, on: "2026-09-13" }, []);
       assert.ok(note.includes(NO_CONFIRMATION_HELD), note);
       assert.doesNotMatch(note, /we cannot reconcile the two/);
     });
@@ -383,7 +384,7 @@ describe("the catalogue", () => {
   });
 
   it("claims a confirmation only on the records the store holds a success for", () => {
-    const claiming = offers.filter((o) => /last confirmed/.test(lastReadNote(o)));
+    const claiming = offers.filter((o) => /last confirmed/.test(lastReadNote(o, null, refusalsForVendor(o.vendor))));
     const held = offers.filter((o) => confirmationDate(o) !== null);
     assert.deepEqual(
       claiming.filter((o) => confirmationDate(o) === null).map((o) => o.vendor),
@@ -393,7 +394,7 @@ describe("the catalogue", () => {
     assert.ok(held.length > 0, "the store holds no confirmation at all, so this assertion proves nothing");
     for (const o of held) {
       assert.ok(
-        lastReadNote(o).includes(confirmationDate(o)!) || !/last confirmed on/.test(lastReadNote(o)),
+        lastReadNote(o, null, refusalsForVendor(o.vendor)).includes(confirmationDate(o)!) || !/last confirmed on/.test(lastReadNote(o, null, refusalsForVendor(o.vendor))),
         `${o.vendor} states a confirmation date other than the ${confirmationDate(o)} the store holds`,
       );
     }

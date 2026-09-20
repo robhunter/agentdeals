@@ -5690,7 +5690,7 @@ ${referralCalloutHtml}
     ` : ""}<div class="detail-card">
       <div class="detail-label">${LAST_READ_LABEL}</div>
       <div class="detail-value" style="font-family:var(--mono)">${escHtmlServer(primaryLastRead)}</div>
-      <div class="detail-note">${escHtmlServer(lastReadNote(primary, primaryTermsWithheld))}</div>
+      <div class="detail-note">${escHtmlServer(lastReadNote(primary, primaryTermsWithheld, verdictInput.refusedReads ?? []))}</div>
     </div>
   </div>
 

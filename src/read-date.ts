@@ -1,3 +1,5 @@
+import { howWeSettledTheRead, type ReadSettlement, type RefusedRead, type SettledRead } from "./change-refusal.js";
+import { storedRefusalsFor } from "./refusal-store.js";
 import { loadVerificationState } from "./verification-state.js";
 
 export const OUTCOMES_THAT_READ_THE_PAGE = [
@@ -163,6 +165,23 @@ export const WHAT_THE_LAST_READ_FOUND: Record<string, string> = {
   link_ok: "reached the page without reading terms from it",
 };
 
+export const WHAT_A_SETTLED_READ_FOUND: Record<ReadSettlement, string> = {
+  restated_the_terms_we_publish:
+    "found a change we then refused to record, because it restated the terms we already publish",
+  named_no_figure_that_moved:
+    "found a change we then refused to record, because it named no figure that had moved",
+};
+
+export function whatTheLastReadFound(
+  outcome: string | null | undefined,
+  settled: SettledRead | null,
+): string | null {
+  if (settled && outcome === OUTCOME_CONTRADICTING_WHAT_WE_STORE) {
+    return WHAT_A_SETTLED_READ_FOUND[settled.settlement];
+  }
+  return outcome ? WHAT_THE_LAST_READ_FOUND[outcome] ?? null : null;
+}
+
 export const NO_CONFIRMATION_HELD = "We hold no confirmation of the terms we publish";
 
 export const OUTCOME_THAT_CONFIRMED = "confirmed";
@@ -217,6 +236,10 @@ function readingFromSourceCheck(offer: ReadRecord): LastReading | null {
 }
 
 export function lastReadingFor(offer: ReadRecord): LastReading | null {
+  return readingSettledByRefusals(readingFromVerificationState(offer), storedRefusalsFor(offer.vendor));
+}
+
+function readingFromVerificationState(offer: ReadRecord): LastReading | null {
   const record = loadVerificationState().get(`${offer.vendor}|${offer.url}`);
   const date = record?.last_attempt_at;
   const outcome = record?.last_outcome;
@@ -234,6 +257,16 @@ export function lastReadingFor(offer: ReadRecord): LastReading | null {
   };
 }
 
+export function readingSettledByRefusals(
+  reading: LastReading | null,
+  refusals: readonly RefusedRead[],
+): LastReading | null {
+  if (!reading || reading.outcome !== OUTCOME_CONTRADICTING_WHAT_WE_STORE) return reading;
+  const settled = howWeSettledTheRead(refusals, reading.date);
+  if (!settled) return reading;
+  return { ...reading, found: WHAT_A_SETTLED_READ_FOUND[settled.settlement] };
+}
+
 export function theReadOurTermsCameFrom(read: string, restatedFrom: string | null): string {
   if (!restatedFrom) return "";
   if (restatedFrom === read) return ` Our last read of it, on ${read}, is where the terms above come from.`;
@@ -246,9 +279,10 @@ export function noConfirmationNote(
   read: string,
   verified: string,
   outcome: string | null,
+  settled: SettledRead | null,
   restatedFrom: string | null = null,
 ): string {
-  const found = outcome ? WHAT_THE_LAST_READ_FOUND[outcome] : undefined;
+  const found = whatTheLastReadFound(outcome, settled);
   const reading = restatedFrom
     ? theReadOurTermsCameFrom(read, restatedFrom)
     : read && found ? ` Our last read of it, on ${read}, ${found}.` : "";
@@ -277,14 +311,16 @@ export function unreconciledConfirmationNote(confirmed: string, withheld: TermsW
 
 export function lastReadNote(
   offer: DatedRecord | null | undefined,
-  withheld: TermsWeCannotConfirm | null = null,
+  withheld: TermsWeCannotConfirm | null,
+  refusals: readonly RefusedRead[],
 ): string {
   const { read, verified, confirmed, attempted } = verificationDates(offer);
   const tail = attempted
     ? ` We tried again on ${attempted} and did not read the page, so that attempt confirmed nothing.`
     : "";
   if (!confirmed) {
-    return noConfirmationNote(read, verified, lastReadOutcome(offer), restatedReadingDate(offer)) + tail;
+    const settled = howWeSettledTheRead(refusals, read);
+    return noConfirmationNote(read, verified, lastReadOutcome(offer), settled, restatedReadingDate(offer)) + tail;
   }
   if (withheld) {
     return `The day we last read the vendor's page. ${unreconciledConfirmationNote(confirmed, withheld)}` + tail;
