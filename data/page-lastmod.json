@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "generated": "2026-09-19",
+  "generated": "2026-09-20",
   "pages": {
     "/": {
       "daily": true
@@ -1011,8 +1011,8 @@
       "changed": "2026-09-18"
     },
     "/budget-builder": {
-      "hash": "8ec0a147d69d5421",
-      "changed": "2026-09-19"
+      "hash": "5e05ab7f32a7946a",
+      "changed": "2026-09-20"
     },
     "/category": {
       "hash": "869166272e9bf22c",
@@ -2633,12 +2633,12 @@
       "changed": "2026-09-19"
     },
     "/database-alternatives": {
-      "hash": "7d3541908ffe6c1c",
-      "changed": "2026-09-19"
+      "hash": "080e479a1a7469e5",
+      "changed": "2026-09-20"
     },
     "/database-free-tier-comparison-2026": {
-      "hash": "5315657f94f1e6cf",
-      "changed": "2026-09-19"
+      "hash": "ef611396c125b1a7",
+      "changed": "2026-09-20"
     },
     "/database-pricing": {
       "hash": "a8cd75310c29feed",
@@ -2888,8 +2888,8 @@
       "changed": "2026-09-12"
     },
     "/estimate": {
-      "hash": "a06f4b17b49e0e44",
-      "changed": "2026-09-19"
+      "hash": "a93bda4d4bd0ce80",
+      "changed": "2026-09-20"
     },
     "/events": {
       "hash": "1cd961743e560957",
@@ -2911,8 +2911,7 @@
       "daily": true
     },
     "/feed.xml": {
-      "hash": "e1e3b62f767616a3",
-      "changed": "2026-09-19"
+      "daily": true
     },
     "/firebase-alternatives": {
       "hash": "201e1aed55b48a44",
@@ -3347,8 +3346,7 @@
       "changed": "2026-09-19"
     },
     "/this-week": {
-      "hash": "71c9285d1dcfceff",
-      "changed": "2026-09-19"
+      "daily": true
     },
     "/trends": {
       "hash": "57de5f3d822ceda5",
