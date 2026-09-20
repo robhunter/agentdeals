@@ -34204,6 +34204,26 @@
         "outcome": "ok",
         "detail": "the page names Ona and states \"Core from $20 / month\"; the string \"free\" does not occur in 6,586 characters of visible text"
       }
+    },
+    {
+      "vendor": "PlanetScale",
+      "category": "Databases",
+      "description": "Managed MySQL, Postgres and Vitess, formerly a serverless MySQL with a free Hobby plan. No free tier. planetscale.com/pricing, read 2026-09-19, prices every plan: Postgres EBS non-HA PS-5 from $5/month, Neki PS-10 arm64 $30/month, Vitess PS-10 $39/month, Metal from $50/month.",
+      "tier": "Retired",
+      "url": "https://planetscale.com/pricing",
+      "tags": [
+        "database",
+        "mysql",
+        "postgres",
+        "vitess",
+        "free tier"
+      ],
+      "verifiedDate": "2026-09-19",
+      "source_check": {
+        "checked": "2026-09-19",
+        "outcome": "ok",
+        "detail": "the string \"free\" does not occur in 6,302 characters of visible text and the cheapest plan is \"Starting at $5/month\""
+      }
     }
   ],
   "changes": []

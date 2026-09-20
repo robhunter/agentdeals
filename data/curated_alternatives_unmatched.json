@@ -596,15 +596,6 @@
       ]
     },
     {
-      "name": "PlanetScale",
-      "named_by": [
-        "Amazon Aurora PostgreSQL",
-        "DigitalOcean",
-        "Supabase",
-        "Xata Lite"
-      ]
-    },
-    {
       "name": "Podman",
       "named_by": [
         "Docker Hub",
