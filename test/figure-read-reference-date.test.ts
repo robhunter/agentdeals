@@ -89,6 +89,65 @@ describe("a declared figure read dates the cell it covers", () => {
   });
 });
 
+function constructedStatus(over: Partial<PageReviewRecord> = {}) {
+  return reviewStatus({
+    path: "/p",
+    published: "2026-04-03",
+    tier: "A",
+    vendors_asserted: [],
+    vendors_tabulated: [],
+    badge_subjects_unresolved: [],
+    stat_card_subjects_unresolved: [],
+    reviewed_at: null,
+    reviewer: null,
+    review_outcome: null,
+    review_note: null,
+    reads_index: false,
+    tables_read_index: false,
+    table_figures: 0,
+    table_figures_from_records: 0,
+    tables: [],
+    reads_changes: false,
+    data_source: "unsourced",
+    data_source_reason: null,
+    ...over,
+  }, "2026-09-20");
+}
+
+const A_READ_AFTER_THE_PAGE_WAS_PUBLISHED: DeclaredFigureRead[] = [
+  { path: "/p", read_on: "2026-06-01", vendors: ["hetzner"], cited_from: "example.test", covers: "section 1" },
+];
+
+describe("a flag left standing by a declared read names that read as its reference date", () => {
+  it("carries the read date and the read as its source", () => {
+    const status = constructedStatus({ vendors_tabulated: ["hetzner"] });
+    assert.deepStrictEqual(factsOutdatedBy(status, () => "2026-07-01", A_READ_AFTER_THE_PAGE_WAS_PUBLISHED), [
+      {
+        slug: "hetzner",
+        changed: "2026-07-01",
+        surface: "table",
+        compared_against: "2026-06-01",
+        compared_against_source: "figures_read",
+      },
+    ]);
+  });
+
+  it("reports no flag at all where the record predates the read", () => {
+    const status = constructedStatus({ vendors_tabulated: ["hetzner"] });
+    assert.deepStrictEqual(factsOutdatedBy(status, () => "2026-05-01", A_READ_AFTER_THE_PAGE_WAS_PUBLISHED), []);
+    assert.strictEqual(factsOutdatedBy(status, () => "2026-05-01", []).length, 1);
+  });
+
+  it("measures a second vendor on the same page from the page clock in the same call", () => {
+    const status = constructedStatus({ vendors_tabulated: ["hetzner", "render"] });
+    const flags = factsOutdatedBy(status, () => "2026-07-01", A_READ_AFTER_THE_PAGE_WAS_PUBLISHED);
+    assert.deepStrictEqual(
+      flags.map(f => [f.slug, f.compared_against, f.compared_against_source]),
+      [["hetzner", "2026-06-01", "figures_read"], ["render", "2026-04-03", "page_clock"]],
+    );
+  });
+});
+
 describe("a fact names the date it was measured against and where that date came from", () => {
   it("carries the page clock on a flag no declared read reaches", () => {
     const flag = flagsOn("/hetzner-pricing-2026").find(f => f.slug === "render");
