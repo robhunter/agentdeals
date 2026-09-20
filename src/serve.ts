@@ -5451,6 +5451,9 @@ ${allCompareLinks.join("\n")}
     ? ` Eligibility: ${primaryEligibilityConditions.join("; ")}.`
     : "";
   const gateSentencesBeforeTheTerms = `${eligibilityGateSentence}${primaryGateBeyondEligibility ? `${primaryGateBeyondEligibility.reason} ` : ""}`;
+  const gateBesideARecordedEnding = primaryGateBeyondEligibility && primaryGateBeyondEligibility.code !== "offer_retired"
+    ? `${primaryGateBeyondEligibility.reason} `
+    : "";
   const weCanStillSayTheFreeTierExists = !termsWeCannotConfirm || termsWeCannotConfirm.theReadFoundAFreePlan;
   const freeTierAnswerLead = weCanStillSayTheFreeTierExists
     ? `${primaryEligibilityGate ? "" : "Yes, "}${vendorName} offers a free tier: ${primary.tier}.`
@@ -5458,7 +5461,7 @@ ${allCompareLinks.join("\n")}
   const faqFreeAnswer = termsSuperseded
     ? `${gateSentencesBeforeTheTerms}${supersededTermsAnswer(vendorName, termsSuperseded)}`
     : retiredSentence
-    ? `${retiredSentence} ${withTheReasonARecordedEndingLeaves(storedTerms)}`
+    ? `${gateBesideARecordedEnding}${retiredSentence} ${withTheReasonARecordedEndingLeaves(storedTerms)}`
     : primaryGateBeyondEligibility
     ? `${eligibilityGateSentence}${primaryGateBeyondEligibility.reason} ${termsWeCannotConfirm ? `${unconfirmedTermsPreamble}${withUnconfirmedTermsCaveat(storedTerms)}` : storedTerms}${eligibilityConditionsSentence}`
     : termsWeCannotConfirm

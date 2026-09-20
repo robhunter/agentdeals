@@ -164,8 +164,8 @@ describe("#1038 — the level is checkable", () => {
   });
 
   it("the vendor page publishes the dated cause beside the badge in the <h1>", async () => {
-    const { enrichOffers, loadOffers, loadDealChanges, vendorRiskAssessment } = await import("../dist/data.js");
-    const { gateFor, utcDate } = await import("../dist/ranking.js");
+    const { enrichOffers, gateForOffer, loadOffers, loadDealChanges, vendorRiskAssessment } = await import("../dist/data.js");
+    const { utcDate } = await import("../dist/ranking.js");
     const changes = loadDealChanges();
     const seen = new Set<string>();
     const oneRecordEach = enrichOffers(loadOffers())

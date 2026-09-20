@@ -324,16 +324,19 @@ describe("a deprecated offer the ranker still rates keeps its rating", () => {
     }
   });
 
-  it("is demoted rather than gated, which is why it still has something to rate", () => {
+  it("is gated only where a record of ours names a day that has passed", () => {
     for (const record of retiredButNotEnded) {
       const ranking = rankOffers(offers.filter(o => o.category === record.category), {
         queryKey: `best-of:${record.category}`,
         changes: dealChanges,
         date: TODAY,
       });
-      assert.ok(
-        !ranking.excluded.some((e: { offer: Offer }) => e.offer.vendor === record.vendor),
-        `${record.vendor} is gated, so the page should say the offer ended`,
+      const excluded = ranking.excluded.find((e: { offer: Offer }) => e.offer.vendor === record.vendor);
+      if (!excluded) continue;
+      assert.strictEqual(
+        excluded.gate.code,
+        "product_discontinued",
+        `${record.vendor} is gated ${excluded.gate.code} on the wording of its tier`,
       );
     }
   });

@@ -65,8 +65,8 @@ const MUTANTS = [
   {
     name: "the gate an API result publishes reads no change records",
     file: "src/data.ts",
-    from: `  return gateFor(offer, utcDate(), changesForVendor(offer.vendor));`,
-    to: `  return gateFor(offer, utcDate(), []);`,
+    from: `  return gateFor(offer, date, changesForVendor(offer.vendor));`,
+    to: `  return gateFor(offer, date, []);`,
   },
   {
     name: "the vendor page reads no change records",

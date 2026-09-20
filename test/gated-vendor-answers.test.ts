@@ -209,6 +209,7 @@ describe("the page a gated record renders does not answer the free-tier question
     assert.ok(codes.has("offer_expired"), "no vendor page renders a record gated as offer_expired");
     assert.ok(codes.has("eligibility_restricted"), "no vendor page renders a record gated on eligibility");
     assert.ok(codes.has("offer_retired"), "no vendor page renders a record gated as offer_retired");
+    assert.ok(codes.has("product_discontinued"), "no vendor page renders a record gated as product_discontinued");
   });
 
   it("answers no gated record with yes, whichever code gates it", () => {

@@ -31,10 +31,11 @@ const CLAUSE_FORMS: Record<string, (n: number) => string> = {
   not_a_free_offer: (n) => (n === 1 ? "1 is not a free offer" : `${n} are not free offers`),
   offer_expired: (n) => (n === 1 ? "1 has expired" : `${n} have expired`),
   offer_retired: (n) => (n === 1 ? "1 has ended" : `${n} have ended`),
+  product_discontinued: (n) => (n === 1 ? "1 has been discontinued" : `${n} have been discontinued`),
   verification_lapsed: (n) => `${n} we have not been able to confirm in the last 180 days`,
 };
 
-const CLAUSE_ORDER = ["eligibility_restricted", "not_a_free_offer", "offer_expired", "offer_retired", "verification_lapsed"];
+const CLAUSE_ORDER = ["eligibility_restricted", "not_a_free_offer", "offer_expired", "offer_retired", "product_discontinued", "verification_lapsed"];
 
 function clausesFor(codes: string[]): string {
   const parts: string[] = [];
@@ -295,7 +296,7 @@ describe("a category page discloses every gated record, not eligibility alone", 
       const description = descriptionOf(await page(`/category/${c.slug}`));
       if (c.gated === 0) {
         assert.ok(
-          !/application or qualification|not a free offer|are not free offers|has expired|have expired|has ended|have ended/.test(description),
+          !/application or qualification|not a free offer|are not free offers|has expired|have expired|has ended|have ended|has been discontinued|have been discontinued/.test(description),
           `/category/${c.slug} description states a gate no record holds: ${description}`,
         );
         continue;
@@ -370,7 +371,7 @@ describe("a category page puts no record forward", () => {
   });
 });
 
-const GATE_CODES = ["eligibility_restricted", "not_a_free_offer", "offer_expired", "offer_retired", "verification_lapsed"];
+const GATE_CODES = ["eligibility_restricted", "not_a_free_offer", "offer_expired", "offer_retired", "product_discontinued", "verification_lapsed"];
 
 function population(total: number, codes: string[], ended = 0): { total: number; codes: string[]; gates: Gate[]; ended: number } {
   const gates: Gate[] = codes.map((code) => ({ code, reason: "" }));
@@ -387,7 +388,7 @@ const FORMS = [
   { name: "all gated, eligibility and one more", ...population(12, [...Array(11).fill("eligibility_restricted"), "offer_retired"]) },
   { name: "all gated, no eligibility", ...population(3, ["not_a_free_offer", "offer_expired", "offer_retired"]) },
   { name: "the only record gated", ...population(1, ["offer_retired"]) },
-  { name: "every code at once", ...population(9, [...GATE_CODES, ...GATE_CODES.slice(0, 4)]) },
+  { name: "every code at once", ...population(10, [...GATE_CODES, ...GATE_CODES.slice(0, 4)]) },
   { name: "one ended, nothing gated", ...population(12, [], 1) },
   { name: "four ended, nothing gated", ...population(12, [], 4) },
   { name: "ended alongside a gate", ...population(12, ["not_a_free_offer"], 3) },

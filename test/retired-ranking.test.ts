@@ -160,17 +160,44 @@ describe("the ended records leave the ranked set and nothing else does", () => {
     }
   });
 
-  it("demerits a still-served deprecated offer rather than gating it", () => {
-    const deprecated = offers.find(o => o.tier === "Free (Deprecated)");
-    assert.ok(deprecated, "no record carries a deprecated-but-served tier, so this control has no subject");
-    const ranking = rankCategory(deprecated!.category);
-    assert.ok(
-      !ranking.excluded.some(e => e.offer.vendor === deprecated!.vendor),
-      `${deprecated!.vendor} was gated with the ended records`,
-    );
-    const entry = ranking.demoted.find(e => e.offer.vendor === deprecated!.vendor);
-    assert.ok(entry, `${deprecated!.vendor} carries no demerit for its deprecation`);
+  it("demerits a deprecated-worded tier whose record names no day that has passed", () => {
+    const deprecated = baseOffer({ tier: "Free (Deprecated)" });
+    const withdrawing = {
+      vendor: "Acme",
+      change_type: "product_deprecated",
+      date: TODAY,
+      summary: "Acme is being sunset.",
+      previous_state: "",
+      current_state: "",
+      impact: "high",
+      source_url: "",
+      category: "Databases",
+      alternatives: [],
+    } as DealChange;
+    const ranking = rankOffers([deprecated], { queryKey: "deprecated-but-served", changes: [withdrawing], date: TODAY });
+    assert.deepStrictEqual(ranking.excluded.map(e => e.gate.code), [], "a deprecated-worded tier was gated on its wording alone");
+    const entry = ranking.demoted.find(e => e.offer.vendor === deprecated.vendor);
+    assert.ok(entry, `${deprecated.vendor} carries no demerit for its deprecation`);
     assert.ok(entry!.demerits.some(d => d.code === "free_tier_withdrawn"));
+  });
+
+  it("gates the same tier once the record names a day that has passed", () => {
+    const deprecated = baseOffer({ tier: "Free (Deprecated)" });
+    const ended = {
+      vendor: "Acme",
+      change_type: "product_deprecated",
+      date: TODAY,
+      discontinued_date: "2026-08-10",
+      summary: "Acme is being sunset.",
+      previous_state: "",
+      current_state: "",
+      impact: "high",
+      source_url: "",
+      category: "Databases",
+      alternatives: [],
+    } as DealChange;
+    const ranking = rankOffers([deprecated], { queryKey: "deprecated-and-ended", changes: [ended], date: TODAY });
+    assert.deepStrictEqual(ranking.excluded.map(e => e.gate.code), ["product_discontinued"]);
   });
 
   it("removes exactly one record from each affected category and none from the others", () => {

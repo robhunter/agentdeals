@@ -7,6 +7,7 @@ import { fileURLToPath } from "node:url";
 import {
   CANNOT_CONFIRM_THESE_TERMS,
   CHANGE_KIND_NOUN,
+  gateStatesAnEnding,
   narrowingSentence,
   publishedVendorLevel,
   statesRiskCause,
@@ -326,6 +327,7 @@ interface VendorRow {
   historyLevel: "stable" | "caution" | "risky";
   badge: string;
   ended: boolean;
+  badgeEnded: boolean;
   withheld: ReturnType<typeof levelWithheldReason>;
   badgeRendered: boolean;
   sentence: string;
@@ -349,9 +351,10 @@ function vendorRows(): VendorRow[] {
       .sort((a, b) => b.date.localeCompare(a.date));
     const withheld = levelWithheldReason(primary, enriched.link_unreachable);
     const expected = publishedVendorLevel(enriched.risk_level ?? null, enriched.risk_cause ?? null);
-    const ended = offerEnded(primary);
-    const unconfirmableSince = levelWithheldSince(primary, enriched.link_unreachable);
     const gate = gateForOffer(primary, utcDate());
+    const ended = offerEnded(primary);
+    const badgeEnded = ended || gateStatesAnEnding(gate?.code ?? null);
+    const unconfirmableSince = levelWithheldSince(primary, enriched.link_unreachable);
     const termsSuperseded = storedTermsAreSuperseded(primary, vendorChanges);
     rows.push({
       slug,
@@ -359,9 +362,10 @@ function vendorRows(): VendorRow[] {
       expected,
       historyLevel: publishedRisk(primary, vendorChanges).history_level,
       ended,
-      badge: ended ? ENDED_BADGE_LABEL : expected,
+      badgeEnded,
+      badge: badgeEnded ? ENDED_BADGE_LABEL : expected,
       withheld,
-      badgeRendered: ended || !(gate || enriched.risk_level === null || (enriched.link_unreachable && expected === "stable")),
+      badgeRendered: badgeEnded || !(gate || enriched.risk_level === null || (enriched.link_unreachable && expected === "stable")),
       sentence: vendorVerdictSentence({
         vendor,
         tier: primary.tier,
@@ -408,7 +412,7 @@ describe("vendor verdict — corpus invariant, computed offline", () => {
         continue;
       }
       if (row.gate) {
-        if (row.badgeRendered) wrong.push(`${row.slug}: rates a gated record ${row.badge} beside its name`);
+        if (row.badgeRendered && !row.badgeEnded) wrong.push(`${row.slug}: rates a gated record ${row.badge} beside its name`);
         if (!row.sentence.includes(`${row.vendor} ${GATED_LEVEL_PHRASE[row.historyLevel]}`)) {
           wrong.push(`${row.slug}: gated verdict says ${row.sentence}, over a history we read as ${row.historyLevel}`);
         }
@@ -532,10 +536,10 @@ describe("vendor verdict — as rendered", () => {
         const cell = comparisonCell(html);
 
         if (badge !== null && badge !== ENDED_BADGE_LABEL) rating++;
-        if (row.gate && !row.ended && badge !== null) {
+        if (row.gate && !row.badgeEnded && badge !== null) {
           wrong.push(`${row.slug}: the h1 of a ${row.gate.code} record rates it ${badge}`);
         }
-        if (row.gate && row.ended && badge !== ENDED_BADGE_LABEL) {
+        if (row.gate && row.badgeEnded && badge !== ENDED_BADGE_LABEL) {
           wrong.push(`${row.slug}: the h1 of an ended offer reads ${badge ?? "nothing"}`);
         }
         if (row.badgeRendered && badge !== row.badge) {

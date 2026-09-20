@@ -43,6 +43,7 @@ const WITHHELD_LABELS: Record<string, string> = {
   not_a_free_offer: "unrated — not a free offer",
   offer_expired: "unrated — offer expired",
   offer_retired: "unrated — offer ended",
+  product_discontinued: "unrated — product discontinued",
   verification_lapsed: "unrated — not re-confirmed",
   read_not_reconciled: "unrated — change not reconciled",
   change_measured_no_difference: "unrated — change refused",

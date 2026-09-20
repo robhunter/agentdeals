@@ -426,7 +426,7 @@ describe("the disclosure reuses one composition", () => {
     };
     assert.strictEqual(gateFor(restricted, "2026-09-02", [])!.code, "eligibility_restricted");
     assert.deepStrictEqual(
-      eligibilityGateAsPublished(restricted, "2026-09-02"),
+      eligibilityGateAsPublished(restricted, "2026-09-02", []),
       gateFor(restricted, "2026-09-02", []),
     );
   });
@@ -439,7 +439,7 @@ describe("the disclosure reuses one composition", () => {
     };
     assert.strictEqual(gateFor(ended, "2026-09-02", [])!.code, "offer_retired");
     assert.ok(eligibilityGate(ended), "the record still carries an eligibility block");
-    assert.strictEqual(eligibilityGateAsPublished(ended, "2026-09-02"), null);
+    assert.strictEqual(eligibilityGateAsPublished(ended, "2026-09-02", []), null);
   });
 
   it("keeps it where the expiry date has passed, because the ranker still returns the restriction", () => {
@@ -450,7 +450,7 @@ describe("the disclosure reuses one composition", () => {
     };
     assert.strictEqual(gateFor(expired, "2026-09-02", [])!.code, "eligibility_restricted");
     assert.deepStrictEqual(
-      eligibilityGateAsPublished(expired, "2026-09-02"),
+      eligibilityGateAsPublished(expired, "2026-09-02", []),
       gateFor(expired, "2026-09-02", []),
     );
   });

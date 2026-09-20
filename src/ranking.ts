@@ -74,8 +74,6 @@ export type GateCode =
 
 export type VendorChangeLookup = (vendor: string) => readonly DealChange[];
 
-export const NO_CHANGES_FOR_ANY_VENDOR: VendorChangeLookup = () => [];
-
 export interface Gate {
   code: GateCode;
   reason: string;

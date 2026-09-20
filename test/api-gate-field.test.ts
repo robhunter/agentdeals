@@ -120,8 +120,9 @@ const CLAUSE_TEXT: Record<string, [string, (n: number) => string]> = {
   not_a_free_offer: ["1 is not a free offer", n => `${n} are not free offers`],
   offer_expired: ["1 has expired", n => `${n} have expired`],
   offer_retired: ["1 has ended", n => `${n} have ended`],
+  product_discontinued: ["1 has been discontinued", n => `${n} have been discontinued`],
 };
-const CLAUSE_ORDER = ["eligibility_restricted", "not_a_free_offer", "offer_expired", "offer_retired"];
+const CLAUSE_ORDER = ["eligibility_restricted", "not_a_free_offer", "offer_expired", "offer_retired", "product_discontinued"];
 
 function expectedSummary(noun: string, records: Offer[]): string {
   const codes = records.map(o => gateForOffer(o, TODAY)).filter(Boolean).map(g => g!.code);
