@@ -7,6 +7,8 @@ const TESTS = [
   "test/ranking.test.ts",
 ].join(" ");
 
+const ONLY = process.argv[2] ?? null;
+
 const MUTANTS = [
   {
     name: "the gate never reads the vendor's records",
@@ -101,6 +103,7 @@ let killed = 0;
 const survived = [];
 
 for (const mutant of MUTANTS) {
+  if (ONLY !== null && !mutant.name.includes(ONLY)) continue;
   restore();
   const before = readFileSync(mutant.file, "utf8");
   if (!before.includes(mutant.from)) {

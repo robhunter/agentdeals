@@ -11,7 +11,7 @@ import {
 } from "../dist/product-deprecation.js";
 import { discontinuedGateFor, gateFor, rankOffers } from "../dist/ranking.js";
 import { gateClauseList } from "../dist/gate-disclosure.js";
-import { changesForVendor, loadDealChanges, loadOffers } from "../dist/data.js";
+import { changesForVendor, gateForOffer, loadDealChanges, loadOffers } from "../dist/data.js";
 import { toSlug } from "../dist/slug.js";
 import type { DealChange, Offer } from "../dist/types.js";
 
@@ -167,6 +167,15 @@ describe("nothing we hold ranks as a free tier past the day its own record ends 
   it("checks that against a non-empty set of offers", () => {
     const checked = past.flatMap(({ change }) => offersFor(change.vendor));
     assert.ok(checked.length > 0, "no offer we hold belongs to a vendor whose record names a past discontinuation day");
+  });
+
+  it("publishes the same gate to a caller reading the record out of the catalogue", () => {
+    const ungated = past.flatMap(({ change }) =>
+      offersFor(change.vendor)
+        .filter((held) => gateForOffer(held, TODAY)?.code !== "product_discontinued")
+        .map((held) => `${held.vendor} [${held.tier}] reads ${gateForOffer(held, TODAY)?.code ?? "no gate"}`),
+    );
+    assert.deepStrictEqual(ungated, []);
   });
 });
 
