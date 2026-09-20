@@ -165,6 +165,75 @@ export const WHAT_THE_LAST_READ_FOUND: Record<string, string> = {
 
 export const NO_CONFIRMATION_HELD = "We hold no confirmation of the terms we publish";
 
+export const OUTCOME_THAT_CONFIRMED = "confirmed";
+
+export const OUTCOMES_A_READING_CAN_SETTLE = [
+  OUTCOME_THAT_CONFIRMED,
+  OUTCOME_CONTRADICTING_WHAT_WE_STORE,
+] as const;
+
+const CAN_SETTLE = new Set<string>(OUTCOMES_A_READING_CAN_SETTLE);
+
+export interface LastReading {
+  date: string;
+  outcome: string;
+  confirmed: boolean;
+  settles: boolean;
+  read_the_page: boolean;
+  found: string | null;
+  consecutive_failures: number;
+  last_success: string | null;
+  last_error: string | null;
+}
+
+export interface ReadRecord {
+  vendor: string;
+  url: string;
+  source_check?: { checked?: string; outcome?: string } | null;
+}
+
+export type ReadingLookup = (offer: ReadRecord) => LastReading | null;
+
+export const WHAT_A_SOURCE_CHECK_FOUND: Record<string, string> = {
+  states_no_terms: WHAT_THE_LAST_READ_FOUND.states_no_price,
+};
+
+function readingFromSourceCheck(offer: ReadRecord): LastReading | null {
+  const checked = offer.source_check?.checked;
+  const outcome = offer.source_check?.outcome;
+  if (!checked || !outcome) return null;
+  const found = WHAT_A_SOURCE_CHECK_FOUND[outcome] ?? null;
+  return {
+    date: checked,
+    outcome,
+    confirmed: false,
+    settles: found === null,
+    read_the_page: true,
+    found,
+    consecutive_failures: 0,
+    last_success: null,
+    last_error: null,
+  };
+}
+
+export function lastReadingFor(offer: ReadRecord): LastReading | null {
+  const record = loadVerificationState().get(`${offer.vendor}|${offer.url}`);
+  const date = record?.last_attempt_at;
+  const outcome = record?.last_outcome;
+  if (!record || !date || !outcome) return readingFromSourceCheck(offer);
+  return {
+    date,
+    outcome,
+    confirmed: outcome === OUTCOME_THAT_CONFIRMED,
+    settles: CAN_SETTLE.has(outcome),
+    read_the_page: outcomeReadThePage(outcome),
+    found: WHAT_THE_LAST_READ_FOUND[outcome] ?? null,
+    consecutive_failures: record.consecutive_failures ?? 0,
+    last_success: record.last_success,
+    last_error: record.last_error ?? record.failure_category ?? null,
+  };
+}
+
 export function theReadOurTermsCameFrom(read: string, restatedFrom: string | null): string {
   if (!restatedFrom) return "";
   if (restatedFrom === read) return ` Our last read of it, on ${read}, is where the terms above come from.`;
