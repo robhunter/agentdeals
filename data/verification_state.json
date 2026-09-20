@@ -820,13 +820,12 @@
     {
       "vendor": "asana.com",
       "url": "https://asana.com/",
-      "last_attempt_at": "2026-09-20",
-      "last_outcome": "states_no_price",
+      "last_attempt_at": "2026-09-02",
+      "last_outcome": "changed",
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
       "last_success": null,
-      "last_read_at": "2026-09-20",
       "quarantined_since": null
     },
     {
@@ -5884,13 +5883,12 @@
     {
       "vendor": "Gatling",
       "url": "https://gatling.io/pricing",
-      "last_attempt_at": "2026-09-20",
+      "last_attempt_at": "2026-09-03",
       "last_outcome": "changed",
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
       "last_success": null,
-      "last_read_at": "2026-09-20",
       "quarantined_since": null
     },
     {
@@ -9687,18 +9685,6 @@
       "quarantined_since": null
     },
     {
-      "vendor": "Mendix",
-      "url": "https://www.mendix.com/pricing/",
-      "last_attempt_at": "2026-09-20",
-      "last_outcome": "changed",
-      "last_error": null,
-      "failure_category": null,
-      "consecutive_failures": 0,
-      "last_success": null,
-      "last_read_at": "2026-09-20",
-      "quarantined_since": null
-    },
-    {
       "vendor": "Mention",
       "url": "https://www.joinsecret.com/offers",
       "last_attempt_at": "2026-09-15",
@@ -11219,13 +11205,12 @@
     {
       "vendor": "paraio.com",
       "url": "https://paraio.com",
-      "last_attempt_at": "2026-09-20",
-      "last_outcome": "source_unusable",
-      "last_error": "the page never names paraio.com, on a domain that carries its name",
-      "failure_category": "source_unusable",
-      "consecutive_failures": 1,
+      "last_attempt_at": "2026-08-28",
+      "last_outcome": "confirmed",
+      "last_error": null,
+      "failure_category": null,
+      "consecutive_failures": 0,
       "last_success": "2026-08-28",
-      "last_read_at": null,
       "quarantined_since": null
     },
     {
@@ -12235,13 +12220,12 @@
     {
       "vendor": "Qoddi",
       "url": "https://qoddi.com",
-      "last_attempt_at": "2026-09-20",
+      "last_attempt_at": "2026-08-28",
       "last_outcome": "changed",
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
       "last_success": null,
-      "last_read_at": "2026-09-20",
       "quarantined_since": null
     },
     {
@@ -13989,13 +13973,12 @@
     {
       "vendor": "SnapAPI",
       "url": "https://snapapi.pics",
-      "last_attempt_at": "2026-09-20",
-      "last_outcome": "fetch_failed",
-      "last_error": "fetch failed",
-      "failure_category": "network_error",
-      "consecutive_failures": 1,
+      "last_attempt_at": "2026-09-02",
+      "last_outcome": "confirmed",
+      "last_error": null,
+      "failure_category": null,
+      "consecutive_failures": 0,
       "last_success": "2026-09-02",
-      "last_read_at": null,
       "quarantined_since": null
     },
     {
@@ -14955,13 +14938,12 @@
     {
       "vendor": "taskade.com",
       "url": "https://www.taskade.com/",
-      "last_attempt_at": "2026-09-20",
+      "last_attempt_at": "2026-08-28",
       "last_outcome": "changed",
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
       "last_success": null,
-      "last_read_at": "2026-09-20",
       "quarantined_since": null
     },
     {
@@ -17201,13 +17183,12 @@
     {
       "vendor": "Zenscrape",
       "url": "https://zenscrape.com/web-scraping-api",
-      "last_attempt_at": "2026-09-20",
+      "last_attempt_at": "2026-08-28",
       "last_outcome": "changed",
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
       "last_success": null,
-      "last_read_at": "2026-09-20",
       "quarantined_since": null
     },
     {

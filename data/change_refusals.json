@@ -5872,18 +5872,6 @@
     },
     {
       "vendor": "Zenscrape",
-      "change_type": "pricing_restructured",
-      "reason": "confirmed_unchanged",
-      "detail": "\"API calls\" and \"Searched Credits\" appear to be the same thing, so the report doesn't describe a change.",
-      "summary": "The free plan now only includes 1,000 credits per month.",
-      "previous_state": "Web scraping API with headless browsers, residentials IPs, and straightforward pricing. One thousand free API calls/month and extra credits for students and non-profits.",
-      "current_state": "The Free plan includes 1,000 Searched Credits per month.",
-      "source_url": "https://zenscrape.com/web-scraping-api",
-      "category": "Web Scraping",
-      "refused_date": "2026-09-20"
-    },
-    {
-      "vendor": "Zenscrape",
       "change_type": "limits_reduced",
       "reason": "states_no_difference",
       "detail": "the summary states that the page agrees with what we hold, and names no figure the stored description did not already carry",

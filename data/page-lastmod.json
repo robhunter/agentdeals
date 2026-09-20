@@ -1058,11 +1058,11 @@
       "changed": "2026-09-20"
     },
     "/category/ci-cd": {
-      "hash": "a1c0d698c7d5bebc",
+      "hash": "f4310c0032ca8df2",
       "changed": "2026-09-20"
     },
     "/category/cloud-hosting": {
-      "hash": "1917f8b84093de1d",
+      "hash": "b56712abc347192c",
       "changed": "2026-09-20"
     },
     "/category/cloud-iaas": {
@@ -1162,7 +1162,7 @@
       "changed": "2026-09-20"
     },
     "/category/low-code-platforms": {
-      "hash": "782d452dfde9b567",
+      "hash": "8e388545183df065",
       "changed": "2026-09-20"
     },
     "/category/maps-geolocation": {
@@ -1198,7 +1198,7 @@
       "changed": "2026-09-20"
     },
     "/category/project-management": {
-      "hash": "81d764cc1a0c4c7e",
+      "hash": "b2145dfe82c60c0d",
       "changed": "2026-09-20"
     },
     "/category/search": {
@@ -1238,7 +1238,7 @@
       "changed": "2026-09-20"
     },
     "/category/testing": {
-      "hash": "dd4f12c5d2a6b0e4",
+      "hash": "ff5fd276ee86b49f",
       "changed": "2026-09-20"
     },
     "/category/tunneling-networking": {
@@ -1254,7 +1254,7 @@
       "changed": "2026-09-20"
     },
     "/category/web-scraping": {
-      "hash": "172c8245827f29fc",
+      "hash": "2662c4d332b67353",
       "changed": "2026-09-20"
     },
     "/category/workflow-automation": {
@@ -1265,7 +1265,7 @@
       "daily": true
     },
     "/ci-cd-alternatives": {
-      "hash": "17cc958cc60e7090",
+      "hash": "3d30d469049924c6",
       "changed": "2026-09-20"
     },
     "/ci-cd-pricing": {
@@ -1461,8 +1461,8 @@
       "changed": "2026-09-18"
     },
     "/compare/bright-data-mcp-server-vs-snapapi": {
-      "hash": "b9f4eaa032d4bd20",
-      "changed": "2026-09-20"
+      "hash": "7891f6f42470810d",
+      "changed": "2026-09-18"
     },
     "/compare/bright-data-mcp-server-vs-webscraping-ai": {
       "hash": "dfe848897e86f20f",
@@ -1957,8 +1957,8 @@
       "changed": "2026-09-20"
     },
     "/compare/geekflare-api-vs-snapapi": {
-      "hash": "c6c5d68c4c72803b",
-      "changed": "2026-09-20"
+      "hash": "39dcd03d5361bb88",
+      "changed": "2026-09-18"
     },
     "/compare/gemfury-vs-appveyor-com": {
       "hash": "7a3a8c4b42cc2b88",
@@ -2529,8 +2529,8 @@
       "changed": "2026-09-18"
     },
     "/compare/snapapi-vs-webscraping-ai": {
-      "hash": "dcf9759bfc735545",
-      "changed": "2026-09-20"
+      "hash": "46b63653579c5375",
+      "changed": "2026-09-18"
     },
     "/compare/sololearn-vs-code-cs50-io": {
       "hash": "84b480fb68d2732f",
@@ -2928,7 +2928,7 @@
       "changed": "2026-09-20"
     },
     "/free-devops-stack": {
-      "hash": "2443138e973a63df",
+      "hash": "bdc327f7fbb37682",
       "changed": "2026-09-20"
     },
     "/free-django-stack": {
@@ -2991,7 +2991,7 @@
       "changed": "2026-09-20"
     },
     "/github-actions-alternatives": {
-      "hash": "4e456b9009244b65",
+      "hash": "a8edfb9408d17b17",
       "changed": "2026-09-20"
     },
     "/github-actions-vs-gitlab-ci": {
@@ -3273,11 +3273,11 @@
       "daily": true
     },
     "/stability": {
-      "hash": "412fc96515081f28",
+      "hash": "c63ba545ac90cc17",
       "changed": "2026-09-20"
     },
     "/stack-check": {
-      "hash": "ab8e3dcb18bafb95",
+      "hash": "ca95c06179128941",
       "changed": "2026-09-20"
     },
     "/stacks": {
@@ -3309,7 +3309,7 @@
       "changed": "2026-09-20"
     },
     "/state-of-free-tiers": {
-      "hash": "94d150b3ceb8f8fe",
+      "hash": "58d0ca37ed28fe32",
       "changed": "2026-09-20"
     },
     "/storage-alternatives": {
@@ -3345,7 +3345,7 @@
       "changed": "2026-09-20"
     },
     "/testing-free-tier-comparison-2026": {
-      "hash": "171a132ca4125892",
+      "hash": "474ea83349cc36dc",
       "changed": "2026-09-20"
     },
     "/this-week": {
@@ -3586,8 +3586,8 @@
       "changed": "2026-09-18"
     },
     "/trends/web-scraping": {
-      "hash": "fca46b4b89c181e3",
-      "changed": "2026-09-20"
+      "hash": "c254a77ac58f9038",
+      "changed": "2026-09-18"
     },
     "/trends/workflow-automation": {
       "hash": "fdbb26cec60392e0",
@@ -3869,7 +3869,7 @@
       "changed": "2026-09-20"
     },
     "/vendor/asana-com": {
-      "hash": "87124f194ea4d7fc",
+      "hash": "9dde10be911b1828",
       "changed": "2026-09-20"
     },
     "/vendor/aserto": {
@@ -4223,7 +4223,7 @@
       "changed": "2026-09-20"
     },
     "/vendor/buildkite": {
-      "hash": "177c47ad201becea",
+      "hash": "69177c99506e23af",
       "changed": "2026-09-20"
     },
     "/vendor/bullmq": {
@@ -5577,7 +5577,7 @@
       "changed": "2026-09-20"
     },
     "/vendor/gatling": {
-      "hash": "8587a206f6793424",
+      "hash": "d47d7f79cd33da49",
       "changed": "2026-09-20"
     },
     "/vendor/gcore-dns": {
@@ -6876,7 +6876,7 @@
       "changed": "2026-09-20"
     },
     "/vendor/mendix": {
-      "hash": "44ec5ba8f7dc3062",
+      "hash": "1b93757eb4234c12",
       "changed": "2026-09-20"
     },
     "/vendor/mention": {
@@ -8321,7 +8321,7 @@
       "changed": "2026-09-20"
     },
     "/vendor/snapapi": {
-      "hash": "89ece4d37574637e",
+      "hash": "5636835ef596fac3",
       "changed": "2026-09-20"
     },
     "/vendor/snapcall": {
@@ -8657,7 +8657,7 @@
       "changed": "2026-09-20"
     },
     "/vendor/taskade-com": {
-      "hash": "ec6f245d441a356b",
+      "hash": "79311817a66886f7",
       "changed": "2026-09-20"
     },
     "/vendor/tavily-ai": {
@@ -9422,7 +9422,7 @@
       "changed": "2026-09-20"
     },
     "/vendor/zenscrape": {
-      "hash": "fb8fd0f9ad9a9a33",
+      "hash": "f219c125d0e0901b",
       "changed": "2026-09-20"
     },
     "/vendor/zentail": {

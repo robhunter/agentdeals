@@ -1364,7 +1364,7 @@
     {
       "vendor": "Buildkite",
       "category": "CI/CD",
-      "description": "The Free Plan offers up to 5 users, up to 10 concurrent jobs, up to 2,000 Linux vCPU minutes per month, up to 250k test executions per month, 30 days build retention, and 50GB/month artifact storage.",
+      "description": "500 hosted agent minutes/month, 3 concurrent jobs, 90-day build retention, 50K test executions. Free for open-source projects",
       "tier": "Personal",
       "url": "https://buildkite.com/pricing/",
       "tags": [
@@ -1380,13 +1380,6 @@
         "checked": "2026-09-05",
         "outcome": "ok",
         "detail": "the page names Buildkite as \"buildkite\" and states \"$ 0\""
-      },
-      "restated_from": {
-        "reading_date": "2026-09-05",
-        "source_url": "https://buildkite.com/pricing/",
-        "record_date": "2026-09-05",
-        "change_type": "limits_reduced",
-        "restated_on": "2026-09-20"
       }
     },
     {
@@ -12599,9 +12592,9 @@
       ],
       "verifiedDate": "2026-08-02",
       "source_check": {
-        "checked": "2026-09-20",
+        "checked": "2026-08-28",
         "outcome": "ok",
-        "detail": "the page names Zenscrape as \"zenscrape\" and states \"$0\""
+        "detail": "text"
       }
     },
     {
@@ -20984,9 +20977,9 @@
       ],
       "verifiedDate": "2026-08-27",
       "source_check": {
-        "checked": "2026-09-20",
-        "outcome": "does_not_name_vendor",
-        "detail": "the page never names paraio.com, on a domain that carries its name"
+        "checked": "2026-09-02",
+        "outcome": "states_no_amount",
+        "detail": "the page names paraio.com and says \"Premium plans\" but states no amount, rate or price we can read"
       },
       "product_subtypes": {
         "taxonomy": "Cloud Hosting",
@@ -21109,9 +21102,9 @@
       ],
       "verifiedDate": "2026-07-05",
       "source_check": {
-        "checked": "2026-09-20",
+        "checked": "2026-09-03",
         "outcome": "ok",
-        "detail": "the page names Mendix as \"mendix\" and states \"$0\"",
+        "detail": "text",
         "unrendered_prices": [
           "Mendix Basic Plan USD 75.00",
           "Mendix Standard Plan USD 998.00"
@@ -21528,9 +21521,9 @@
       ],
       "verifiedDate": "2026-07-14",
       "source_check": {
-        "checked": "2026-09-20",
-        "outcome": "ok",
-        "detail": "the page names Qoddi as \"qoddi\" and states \"$6\""
+        "checked": "2026-09-02",
+        "outcome": "states_no_amount",
+        "detail": "the page names Qoddi and says \"premium Tier\" but states no amount, rate or price we can read"
       },
       "product_subtypes": {
         "taxonomy": "Cloud Hosting",
@@ -22647,9 +22640,9 @@
       ],
       "verifiedDate": "2026-08-12",
       "source_check": {
-        "checked": "2026-09-20",
+        "checked": "2026-09-02",
         "outcome": "states_no_amount",
-        "detail": "the page names asana.com and says \"Starter plan\" but states no amount, rate or price we can read, and the 1 structured-data block in its markup states no price"
+        "detail": "the page names asana.com and says \"Starter plan\" but states no amount, rate or price we can read"
       }
     },
     {
@@ -23243,11 +23236,10 @@
       ],
       "verifiedDate": "2026-07-18",
       "source_check": {
-        "checked": "2026-09-20",
+        "checked": "2026-09-03",
         "outcome": "ok",
-        "detail": "the page names taskade.com as \"taskade\" and states \"$10\"",
+        "detail": "text",
         "unrendered_prices": [
-          "Business USD 25",
           "Enterprise USD 250"
         ]
       }
@@ -27926,9 +27918,9 @@
       ],
       "verifiedDate": "2026-08-31",
       "source_check": {
-        "checked": "2026-09-20",
-        "outcome": "unreadable",
-        "detail": "fetch failed"
+        "checked": "2026-09-02",
+        "outcome": "ok",
+        "detail": "text"
       }
     },
     {
@@ -31689,9 +31681,9 @@
       ],
       "verifiedDate": "2026-08-16",
       "source_check": {
-        "checked": "2026-09-20",
+        "checked": "2026-09-03",
         "outcome": "ok",
-        "detail": "the page names Gatling as \"gatling\" and states \"€10\""
+        "detail": "text"
       },
       "free_grounds": [
         "licence"
