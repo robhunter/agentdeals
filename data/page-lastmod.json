@@ -764,11 +764,11 @@
       "changed": "2026-09-20"
     },
     "/aws-free-tier-2026": {
-      "hash": "d99ef834f26b080e",
+      "hash": "43b265dc877a760b",
       "changed": "2026-09-20"
     },
     "/azure-free-tier-2026": {
-      "hash": "6f9a7d2114d3dca8",
+      "hash": "4157195e52b6cc25",
       "changed": "2026-09-20"
     },
     "/backblaze-b2-vs-cloudflare-r2": {
@@ -2867,7 +2867,7 @@
       "changed": "2026-09-19"
     },
     "/digitalocean-free-tier-2026": {
-      "hash": "56ecce06ea247910",
+      "hash": "7418ecb0ee465f22",
       "changed": "2026-09-20"
     },
     "/disclosure": {
@@ -2979,7 +2979,7 @@
       "changed": "2026-09-20"
     },
     "/gcp-free-tier-2026": {
-      "hash": "e085fef322118d59",
+      "hash": "928822374b2cb074",
       "changed": "2026-09-20"
     },
     "/gemini-api-pricing-2026": {
@@ -3051,11 +3051,11 @@
       "changed": "2026-09-20"
     },
     "/hosting-free-tier-comparison-2026": {
-      "hash": "f88296d13e1c769c",
+      "hash": "8aa1d89f707a1e7d",
       "changed": "2026-09-20"
     },
     "/hosting-pricing": {
-      "hash": "cc493fd2468d7054",
+      "hash": "a06e1f3c1b3950cc",
       "changed": "2026-09-20"
     },
     "/ide-code-editors-alternatives": {
