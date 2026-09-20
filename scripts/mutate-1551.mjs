@@ -17,21 +17,15 @@ const MUTANTS = [
     "  const reading = readContradictingTheTermsFor(offer);\n  if (reading) return \"\";\n  return `<span class=\"listing-read-contradicts\""],
 
   ["an-ended-offer-is-flagged-over-terms-it-no-longer-publishes", "src/serve.ts",
-    "  return offerEnded(offer)
-    || supersedingChangeFor(offer) !== null
-    || unconfirmedTermsFor(offer) !== null;",
+    "  return offerEnded(offer)\n    || supersedingChangeFor(offer) !== null\n    || unconfirmedTermsFor(offer) !== null;",
     "  return supersedingChangeFor(offer) !== null || unconfirmedTermsFor(offer) !== null;"],
 
   ["a-row-that-already-speaks-gets-a-second-reason", "src/serve.ts",
-    "  return offerEnded(offer)
-    || supersedingChangeFor(offer) !== null
-    || unconfirmedTermsFor(offer) !== null;",
+    "  return offerEnded(offer)\n    || supersedingChangeFor(offer) !== null\n    || unconfirmedTermsFor(offer) !== null;",
     "  return offerEnded(offer);"],
 
   ["a-superseded-row-gets-a-second-reason", "src/serve.ts",
-    "  return offerEnded(offer)
-    || supersedingChangeFor(offer) !== null
-    || unconfirmedTermsFor(offer) !== null;",
+    "  return offerEnded(offer)\n    || supersedingChangeFor(offer) !== null\n    || unconfirmedTermsFor(offer) !== null;",
     "  return offerEnded(offer) || unconfirmedTermsFor(offer) !== null;"],
 
   ["nothing-already-speaks-for-itself", "src/serve.ts",
