@@ -14,6 +14,7 @@ const {
   visibleTextOf,
   whereAFreePlanIsStated,
 } = await import("../dist/page-free-plan.js");
+const { aPlanPricedAtNothing, ladderNamesIn, pricedPlansIn } = await import("../dist/page-priced-plans.js");
 const { REMOVAL_CLASS, aFreePlanOnThePageWouldRefuteIt, removalRecordsInTheServedWindow, removalRecordsStillInForce } =
   await import("../dist/removal-record.js");
 const { publishedRisk } = await import("../dist/data.js");
@@ -81,6 +82,7 @@ const RETRACTED = [
 const RETYPED: Record<string, { date: string; type: string }> = {
   "localazy.com": { date: "2026-09-07", type: "limits_reduced" },
   InstallOnAir: { date: "2026-08-28", type: "limits_reduced" },
+  Unkey: { date: "2026-08-28", type: "limits_reduced" },
 };
 
 const STILL_STANDS = [
@@ -89,7 +91,6 @@ const STILL_STANDS = [
   "fivenines.io",
   "IPTrace",
   "LogRocket",
-  "Unkey",
   "Webvizio",
   "Xitoring.com",
   "Rybbit",
@@ -164,6 +165,100 @@ describe("a page that prices a plan at nothing", () => {
     for (const priced of ["$0 /mo", "$ 0 /month", "€0 /mo", "£0 per month", "$0.00 / user"]) {
       assert.ok(A_PLAN_PRICED_AT_NOTHING.test(priced), priced);
     }
+  });
+
+  it("reads an amount of nothing the page states as a number rather than a currency string", () => {
+    const plans = pricedPlansIn(aPageEmbedding([{ plan: { name: "Free", currency: "USD", monthlyPrice: 0 } }]));
+    assert.deepEqual(
+      plans.map((plan) => `${plan.name} ${plan.amount} ${plan.field}`),
+      ["Free 0 monthlyPrice"],
+    );
+    assert.equal(aPlanPricedAtNothing(plans)?.name, "Free");
+    assert.equal(A_PLAN_PRICED_AT_NOTHING.test(JSON.stringify(plans[0])), false);
+  });
+});
+
+function aPageEmbedding(payload: unknown): string {
+  return `<html><body><script>self.__next_f.push([1,${JSON.stringify(JSON.stringify(payload))}])</script></body></html>`;
+}
+
+describe("a plan ladder the page publishes as numbers in its own markup", () => {
+  it("is where a free plan is read once the rendered text and the structured markup have both said nothing", () => {
+    const page = aPageEmbedding([{ plan: { name: "Free", currency: "USD", monthlyPrice: 0, annualPrice: 0 } }]);
+    const parts = readablePartsOf(page);
+    assert.equal(whereAFreePlanIsStated(parts.visible), null);
+    assert.equal(whereAFreePlanIsStated(parts.structured), null);
+    assert.equal(freePlanStatedOn(parts)?.where, "priced");
+    assert.equal(freePlanStatedOn(parts)?.sentence, "Free: 0 USD per month, read from monthlyPrice");
+    assert.equal(statedOnlyInMarkupWeDiscard(parts), true);
+  });
+
+  it("never outranks what the rendered page says, so it can only add a reading", () => {
+    const priced = aPageEmbedding([{ plan: { name: "Free", currency: "USD", monthlyPrice: 0 } }]);
+    const alsoVisible = `<html><body><p>Free. $0 /month . 300 Requests / Day.</p></body></html>${priced}`;
+    assert.equal(freePlanStatedOn(readablePartsOf(alsoVisible))?.where, "visible");
+    assert.equal(statedOnlyInMarkupWeDiscard(readablePartsOf(alsoVisible)), false);
+  });
+
+  it("reads nothing off a ladder whose cheapest plan is paid", () => {
+    const page = aPageEmbedding([
+      { plan: { name: "Starter", currency: "USD", monthlyPrice: 5 } },
+      { plan: { name: "Pro", currency: "USD", monthlyPrice: 25 } },
+    ]);
+    const parts = readablePartsOf(page);
+    assert.deepEqual(ladderNamesIn(parts.plans), ["Starter", "Pro"]);
+    assert.equal(freePlanStatedOn(parts), null);
+  });
+
+  it("does not read a plan priced at nothing whose own name calls it a trial", () => {
+    for (const name of ["Free trial", "14-day trial", "Free credits"]) {
+      const parts = readablePartsOf(aPageEmbedding([{ plan: { name, currency: "USD", monthlyPrice: 0 } }]));
+      assert.equal(ladderNamesIn(parts.plans).length, 1, name);
+      assert.equal(freePlanStatedOn(parts), null, name);
+    }
+  });
+
+  it("does not read a price off a field the page does not name as one", () => {
+    const parts = readablePartsOf(aPageEmbedding([{ plan: { name: "Free", monthlyQuota: 0 } }]));
+    assert.deepEqual(parts.plans, []);
+    assert.equal(freePlanStatedOn(parts), null);
+  });
+
+  it("does not mistake a metered rate for a plan priced at nothing", () => {
+    const parts = readablePartsOf(aPageEmbedding([{ label: "Egress/GB", price: 0.05 }]));
+    assert.deepEqual(
+      parts.plans.map((plan) => plan.amount),
+      [0.05],
+    );
+    assert.equal(freePlanStatedOn(parts), null);
+  });
+
+  it("reads a plan nested inside an object far larger than the one it will parse", () => {
+    const filler = "x".repeat(20000);
+    const page = aPageEmbedding([{ notes: filler, plan: { name: "Free", currency: "USD", monthlyPrice: 0 } }]);
+    assert.ok(page.length > 20000);
+    assert.equal(freePlanStatedOn(readablePartsOf(page))?.where, "priced");
+  });
+
+  it("follows the escaping the page actually uses, not one level of it", () => {
+    const plan = { plan: { name: "Free", currency: "USD", monthlyPrice: 0 } };
+    const once = aPageEmbedding([plan]);
+    const twice = `<html><body><script>self.__next_f.push([1,${JSON.stringify(JSON.stringify(JSON.stringify([plan])))}])</script></body></html>`;
+    assert.equal(freePlanStatedOn(readablePartsOf(once))?.where, "priced");
+    assert.equal(freePlanStatedOn(readablePartsOf(twice))?.where, "priced");
+  });
+
+  it("separates the ladders a page keeps in different payloads", () => {
+    const deploy = aPageEmbedding([{ plan: { name: "Starter", currency: "USD", monthlyPrice: 5 } }]);
+    const keys = aPageEmbedding([{ plan: { name: "Free", currency: "USD", monthlyPrice: 0 } }]);
+    const plans = readablePartsOf(`${deploy}${keys}`).plans;
+    assert.deepEqual(ladderNamesIn(plans), ["Starter", "Free"]);
+    assert.equal(new Set(plans.map((plan) => plan.reading)).size, 2);
+  });
+
+  it("reads nothing at all off a page that publishes no plan objects", () => {
+    assert.deepEqual(readablePartsOf(PLAN_LADDERS.middleware).plans, []);
+    assert.deepEqual(readablePartsOf("<html><body><p>Free. $0 /month.</p></body></html>").plans, []);
   });
 });
 
