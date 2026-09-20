@@ -22,7 +22,7 @@ const {
   vendorRiskAssessment,
   verdictHasLapsed,
 } = await import("../dist/data.js");
-const { demotionTheVerdictNames } = await import("../dist/vendor-verdict.js");
+const { demotionTheVerdictNames, withholdingThatDoesNotLapse } = await import("../dist/vendor-verdict.js");
 const { utcDate } = await import("../dist/ranking.js");
 const { vendorVerdictContextFrom } = await import("../dist/vendor-verdict-input.js");
 const { toSlug } = await import("../dist/vendor-slug.js");
@@ -33,6 +33,7 @@ const REPO = path.join(__dirname, "..");
 const DAY = 24 * 60 * 60 * 1000;
 const EVERY_NTH_UNDEMOTED_PAGE = 7;
 const PAGES_NAMING_A_LAPSING_DEMOTION_FLOOR = 140;
+const PAGES_STATING_A_WITHHELD_RATING_FLOOR = 8;
 
 const record = (over: Partial<DealChange> = {}): DealChange => ({
   vendor: "Fixture Vendor",
@@ -173,6 +174,7 @@ describe("the vendor pages", () => {
   let server: { proc: ChildProcess; base: string };
   const naming: string[] = [];
   const silent: string[] = [];
+  const statingAWithholding: string[] = [];
 
   before(async () => {
     const offers = loadOffers();
@@ -192,6 +194,7 @@ describe("the vendor pages", () => {
       });
       if (!context) continue;
       (demotionTheVerdictNames(context.input) ? naming : silent).push(toSlug(vendor));
+      if (withholdingThatDoesNotLapse(context.input)) statingAWithholding.push(toSlug(vendor));
     }
     server = await startServer();
   });
@@ -256,15 +259,13 @@ describe("the vendor pages", () => {
   });
 
   it("state on every page that withholds a rating that the withholding runs on no clock", async () => {
-    const offers = loadOffers();
-    const withholding = [...new Set(
-      offers
-        .filter(offer => vendorRiskAssessment(recordsFor(offer.vendor), Date.now()).rating_withheld !== null)
-        .map(offer => toSlug(offer.vendor)),
-    )];
-    assert.ok(withholding.length > 0, "no vendor in the catalogue withholds a rating, so this reads nothing");
+    assertPopulationFloor(
+      statingAWithholding.length,
+      PAGES_STATING_A_WITHHELD_RATING_FLOOR,
+      "vendor pages the renderer states a withheld rating on",
+    );
     const quiet: string[] = [];
-    for (const slug of withholding) {
+    for (const slug of statingAWithholding) {
       const body = await (await fetch(`${server.base}/vendor/${slug}`)).text();
       const found = body.match(/<p class="rating-withheld-line"[^>]*>([\s\S]*?)<\/p>/);
       const line = found ? found[1].replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim() : "";
@@ -273,7 +274,7 @@ describe("the vendor pages", () => {
     assert.deepStrictEqual(
       quiet.slice(0, 8),
       [],
-      `${quiet.length} of ${withholding.length} vendor pages withhold a rating without saying the withholding does not expire`,
+      `${quiet.length} of ${statingAWithholding.length} vendor pages withhold a rating without saying the withholding does not expire`,
     );
   });
 });

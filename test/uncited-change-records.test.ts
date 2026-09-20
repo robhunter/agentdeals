@@ -11,6 +11,7 @@ import {
 } from "../dist/change-citation.js";
 import { uncitedChangesAgainstBudget } from "../dist/change-reporting.js";
 import {
+  changesByVendor,
   changesRatingTheListedTier,
   classifyStability,
   demotionForChange,
@@ -19,9 +20,13 @@ import {
   enrichOffers,
   loadDealChanges,
   loadOffers,
+  refusalsForVendor,
   vendorRiskAssessment,
 } from "../dist/data.js";
-import { vendorBadge, vendorVerdictSentence, statesRiskCause, type VendorVerdictInput } from "../dist/vendor-verdict.js";
+import { vendorBadge, vendorVerdictSentence, statesRiskCause, withholdingThatDoesNotLapse, type VendorVerdictInput } from "../dist/vendor-verdict.js";
+import { offerVerdictInput } from "../dist/vendor-verdict-input.js";
+import { utcDate } from "../dist/ranking.js";
+import { assertPopulationFloor } from "./population-floor.ts";
 import { toSlug } from "../dist/vendor-slug.js";
 import { uncitedReport } from "../scripts/uncited-changes.js";
 import type { DealChange } from "../dist/types.js";
@@ -228,7 +233,22 @@ describe("the vendor page, for a vendor whose records cite no source", () => {
 
   const changes = loadDealChanges();
   const offers = loadOffers();
-  const withheldSubjects = enrichOffers(offers).filter(o => o.rating_withheld !== null);
+  const servedOn = utcDate();
+  const changeLog = changesByVendor();
+  const withheldSubjects = enrichOffers(offers)
+    .filter(o => o.rating_withheld !== null)
+    .flatMap(offer => {
+      const input = offerVerdictInput({
+        offer,
+        vendor: offer.vendor,
+        vendorChanges: changeLog.get(offer.vendor.toLowerCase()) ?? [],
+        refusedReads: refusalsForVendor(offer.vendor),
+        servedOn,
+      });
+      return input ? [{ offer, input }] : [];
+    });
+  const badgedAsWithheld = withheldSubjects.filter(row => vendorBadge(row.input).kind === "none");
+  const statingTheWithholding = withheldSubjects.filter(row => withholdingThatDoesNotLapse(row.input) !== null);
   const markedSubjects = offers.filter(o =>
     changes.some(c => c.vendor.toLowerCase() === o.vendor.toLowerCase() && changeIsUncited(c)));
 
@@ -265,16 +285,22 @@ describe("the vendor page, for a vendor whose records cite no source", () => {
 
   it("draws no risk badge and states no cause, on every vendor whose rating is withheld", async () => {
     assert.ok(markedSubjects.length > 0, "the catalogue holds no record citing no source to render");
-    for (const offer of withheldSubjects) {
+    assertPopulationFloor(badgedAsWithheld.length, 8, "vendor pages whose badge withholds a rating");
+    assertPopulationFloor(statingTheWithholding.length, 8, "vendor pages the renderer states a withheld rating on");
+    for (const { offer, input } of withheldSubjects) {
       const html = await get(`/vendor/${toSlug(offer.vendor)}`);
-      const h1 = html.match(/<h1>[\s\S]*?<\/h1>/)?.[0] ?? "";
-      assert.strictEqual(
-        h1.match(/<span class="risk-badge"[^>]*>([a-z]+)<\/span>/)?.[1] ?? null,
-        null,
-        `${offer.vendor} draws a risk badge on a withheld rating`,
-      );
-      assert.doesNotMatch(html, /class="risk-cause-line"/, `${offer.vendor} states a risk cause`);
-      assert.match(html, /class="rating-withheld-line"/, `${offer.vendor} does not say why it is unrated`);
+      if (vendorBadge(input).kind === "none") {
+        const h1 = html.match(/<h1>[\s\S]*?<\/h1>/)?.[0] ?? "";
+        assert.strictEqual(
+          h1.match(/<span class="risk-badge"[^>]*>([a-z]+)<\/span>/)?.[1] ?? null,
+          null,
+          `${offer.vendor} draws a risk badge on a withheld rating`,
+        );
+        assert.doesNotMatch(html, /class="risk-cause-line"/, `${offer.vendor} states a risk cause`);
+      }
+      if (withholdingThatDoesNotLapse(input)) {
+        assert.match(html, /class="rating-withheld-line"/, `${offer.vendor} does not say why it is unrated`);
+      }
     }
   });
 
@@ -293,7 +319,8 @@ describe("the vendor page, for a vendor whose records cite no source", () => {
   });
 
   it("stamps no removal or at-risk badge on a vendor whose rating is withheld", async () => {
-    for (const offer of withheldSubjects) {
+    assertPopulationFloor(badgedAsWithheld.length, 8, "vendor pages whose badge withholds a rating");
+    for (const { offer } of badgedAsWithheld) {
       const svg = await get(`/badge/${toSlug(offer.vendor)}.svg`);
       assert.doesNotMatch(svg, /free tier removed|at risk|deprecated/, `${offer.vendor}'s badge asserts a verdict`);
       assert.match(svg, /unrated/, `${offer.vendor}'s badge does not say the rating is withheld`);
