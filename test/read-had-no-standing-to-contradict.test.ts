@@ -58,6 +58,7 @@ interface StoredRefusal {
   vendor: string;
   reason: string;
   refused_date: string;
+  source_url: string | null;
 }
 
 const offers: CatalogueOffer[] =
@@ -320,6 +321,28 @@ describe("the pages that describe a read our own refusal voided", () => {
       }
     }
     assertPopulationFloor(spoke.length, 40, "voided reads whose vendor page states what the read found");
+    assert.deepStrictEqual(wrong.slice(0, 20), [], wrong.slice(0, 20).join("\n"));
+  });
+
+  it("says we read a domain root wherever the refusal recorded one", async () => {
+    const readFromARoot = voidedByItsOwnRefusal.filter((offer) =>
+      sameDayRefusals(offer).some((r) => r.reason === "removal_read_from_root"));
+    assertPopulationFloor(readFromARoot.length, 8, "reads a refusal voided as taken from a domain root");
+    const wrong: string[] = [];
+    for (const offer of readFromARoot) {
+      const refusal = sameDayRefusals(offer).find((r) => r.reason === "removal_read_from_root")!;
+      const read = new URL(refusal.source_url!);
+      assert.strictEqual(
+        read.pathname,
+        "/",
+        `${refusal.vendor} was refused for a removal read off a domain root, and ${read.href} is not one`,
+      );
+      const { status, body } = await get(`/vendor/${slugOf(offer.vendor)}`);
+      if (status !== 200 || !body.includes("Our last read of it, on ")) continue;
+      if (!/Our last read of it, on \d{4}-\d{2}-\d{2}, reached a domain root/.test(body)) {
+        wrong.push(`/vendor/${slugOf(offer.vendor)} reads ${read.href} and does not say it read a root`);
+      }
+    }
     assert.deepStrictEqual(wrong.slice(0, 20), [], wrong.slice(0, 20).join("\n"));
   });
 
