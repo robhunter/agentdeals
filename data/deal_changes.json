@@ -6564,7 +6564,7 @@
       "date_source": "discovered",
       "summary": "Log retention on the free plan narrowed from 7 days to 1, and audit log retention from 30 days to 3. Keys, requests and APIs are unchanged and the plan is still priced at nothing.",
       "previous_state": "API key management — 1K keys, 150K verifications/month, 7-day logs, 30-day audit logs. Unlimited APIs. Ratelimiting included",
-      "current_state": "unkey.com/pricing prices its \"Free\" API key management plan at 0 USD / mo and lists \"1k API keys\", \"150K valid requests / mo\", \"1-day logs retention\", \"3-day audit log retention\" and \"Unlimited APIs\".",
+      "current_state": "The \"Free\" API key management plan is priced at 0 USD / mo and lists \"1k API keys\", \"150K valid requests / mo\", \"1-day logs retention\", \"3-day audit log retention\" and \"Unlimited APIs\".",
       "impact": "medium",
       "source_url": "https://www.unkey.com/pricing",
       "category": "API Gateway",
