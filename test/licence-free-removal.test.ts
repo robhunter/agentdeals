@@ -145,10 +145,22 @@ describe("a licence grants the free use and a pricing page cannot withdraw it (#
     });
 
     it("keeps a removal on an offer whose free thing is a hosted plan", async () => {
-      const records = removalFor("Unkey");
-      assert.ok(records.length > 0);
-      assert.ok(!isFreeByLicence(offerFor("Unkey")));
-      assert.deepStrictEqual(await refusalReasons(records), []);
+      const onAHostedPlan = REMOVALS.filter(c => {
+        const offer = offerFor(c.vendor);
+        return offer !== null && !isFreeByLicence(offer);
+      });
+      assert.ok(
+        onAHostedPlan.length > 0,
+        "no removal sits on an offer the licence does not make free, so this case has no subject to read",
+      );
+      const reached: string[] = [];
+      for (const record of onAHostedPlan) {
+        const reasons = await refusalReasons([record]);
+        if (reasons.includes(REJECT_REMOVAL_DOES_NOT_REACH_THE_LICENCE)) {
+          reached.push(`${record.vendor} ${record.date}`);
+        }
+      }
+      assert.deepStrictEqual(reached, [], "the licence gate refused a record whose offer no licence makes free");
     });
 
     it("keeps a read that says which hosted plan ended and leaves the licence standing", async () => {

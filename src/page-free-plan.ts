@@ -1,6 +1,7 @@
 import { offeredOutrightAndNotDenied, sentencesOf } from "./superseding-reading.js";
+import { aPlanPricedAtNothing, pricedPlansIn, readingOf, type PricedPlan } from "./page-priced-plans.js";
 
-export type WhereStated = "visible" | "structured";
+export type WhereStated = "visible" | "structured" | "priced";
 
 export const A_PLAN_PRICED_AT_NOTHING =
   /\b(?:always\s+free|free\s+forever|forever\s+free)\b|\bfree[\s'"’-]{0,3}(?:plans?|tiers?|editions?|versions?)\b|\b(?:plans?|tiers?|editions?|versions?)\b[^.!?]{0,24}?\bis\s+free\b|[$€£]\s?0(?:[.,]0{1,2})?\s*(?:\/\s*|per\s+)(?:mo|month|user|seat|year|yr)\b|\bfree\b\s*[:=]\s*[$€£]\s?0\b/i;
@@ -10,6 +11,7 @@ export const A_QUESTION = /\?\s*$/;
 export interface ReadableParts {
   visible: string;
   structured: string;
+  plans: PricedPlan[];
 }
 
 export interface FreePlanStatement {
@@ -92,7 +94,7 @@ export function structuredTextOf(html: string): string {
 }
 
 export function readablePartsOf(html: string): ReadableParts {
-  return { visible: visibleTextOf(html), structured: structuredTextOf(html) };
+  return { visible: visibleTextOf(html), structured: structuredTextOf(html), plans: pricedPlansIn(html) };
 }
 
 export function statesAFreePlan(sentence: string): boolean {
@@ -112,9 +114,12 @@ export function freePlanStatedOn(parts: ReadableParts): FreePlanStatement | null
   if (visible) return { where: "visible", sentence: visible };
   const structured = whereAFreePlanIsStated(parts.structured);
   if (structured) return { where: "structured", sentence: structured };
+  const priced = aPlanPricedAtNothing(parts.plans);
+  if (priced) return { where: "priced", sentence: readingOf(priced) };
   return null;
 }
 
 export function statedOnlyInMarkupWeDiscard(parts: ReadableParts): boolean {
-  return freePlanStatedOn(parts)?.where === "structured";
+  const where = freePlanStatedOn(parts)?.where;
+  return where === "structured" || where === "priced";
 }

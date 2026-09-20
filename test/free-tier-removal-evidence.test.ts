@@ -188,7 +188,7 @@ describe("a free tier a record still describes has not been removed", () => {
 
     it("reads no free plan on offer in the removals whose own page was read against them", () => {
       const held = new Map(removals.map(c => [c.vendor, c]));
-      for (const vendor of ["Burnermail", "bonsai.io", "Unkey", "Webvizio", "Rybbit"]) {
+      for (const vendor of ["Burnermail", "bonsai.io", "Webvizio", "Rybbit"]) {
         const record = held.get(vendor);
         assert.ok(record, `${vendor} holds a free tier removal record`);
         assert.ok(
@@ -200,7 +200,7 @@ describe("a free tier a record still describes has not been removed", () => {
 
     it("still holds the removals this rule leaves standing", () => {
       const kept = new Set(removals.filter(c => !c.resolution).map(c => c.vendor));
-      for (const vendor of ["Burnermail", "bonsai.io", "Unkey", "Webvizio"]) {
+      for (const vendor of ["Burnermail", "bonsai.io", "Webvizio"]) {
         assert.ok(kept.has(vendor), `${vendor} keeps its free tier removal record`);
       }
     });
