@@ -31555,11 +31555,11 @@ function buildHostingPricingPage(): string {
       freeBandwidth: "5 GB (then $0.15/GB)",
       freeBuildMinutes: "750 hrs/mo",
       freeCompute: "Less than 1 CPU, 512 MB RAM (spins down)",
-      freeDetails: "Free web services with less than 1 CPU, 512 MB RAM, auto-sleep after 15 minutes of inactivity. 750 build hours/month, 5 GB bandwidth/month included then $0.15/GB. Free PostgreSQL (90-day expiry, 256 MB). Free Redis (25 MB, 50 connections). Supports Docker, Node, Python, Go, Ruby, Rust.",
+      freeDetails: "Free web services with less than 1 CPU, 512 MB RAM, auto-sleep after 15 minutes of inactivity. 750 build hours/month, 5 GB bandwidth/month included then $0.15/GB. Free PostgreSQL (30-day expiry, 256 MB). Free Redis (25 MB, 50 connections). Supports Docker, Node, Python, Go, Ruby, Rust.",
       freeType: "limited",
       monthlyCostSolo: "$0–7",
       monthlyCostTeam: "$19/seat + usage",
-      hiddenCosts: "Free web services spin down after 15 minutes (was 30, tightened Sep 2025). Free Postgres expires after 90 days. Cold starts add 30–60 seconds on free tier.",
+      hiddenCosts: "Free web services spin down after 15 minutes (was 30, tightened Sep 2025). Free Postgres expires after 30 days. Cold starts add 30–60 seconds on free tier.",
     },
     {
       name: "Fly.io",
@@ -34770,7 +34770,7 @@ function buildAwsFreeTier2026Page(): string {
     { name: "GCP (Google Cloud)", slug: "google-cloud", freeTier: "Always Free: e2-micro VM, 1 TiB BigQuery, Cloud Run 2M req/mo", strength: "Most generous always-free compute", bestFor: "Side projects needing a persistent VM" },
     { name: "Azure", slug: "azure", freeTier: "12-month: VMs, SQL, Cosmos DB (1K RU/s + 25 GB). $200 credit", strength: "Enterprise integration, .NET ecosystem", bestFor: "Teams already on Microsoft stack" },
     { name: "Railway", slug: "railway", freeTier: "$5 free trial credit, usage-based pricing after", strength: "Best developer experience, instant deploys", bestFor: "Quick prototypes, hobby projects" },
-    { name: "Render", slug: "render", freeTier: "Free web services (512 MB RAM), free PostgreSQL (90 days)", strength: "Simple PaaS with generous free tier", bestFor: "Replacing Heroku for small apps" },
+    { name: "Render", slug: "render", freeTier: "Free web services (512 MB RAM), free PostgreSQL (30 days)", strength: "Simple PaaS with generous free tier", bestFor: "Replacing Heroku for small apps" },
     { name: "Supabase", slug: "supabase", freeTier: "500 MB database, 50K MAU auth, 1 GB storage", strength: "Full BaaS with PostgreSQL + auth + storage", bestFor: "Firebase alternative with SQL" },
     { name: "Neon", slug: "neon", freeTier: "512 MiB storage, 190 compute hours, branching", strength: "Serverless PostgreSQL with scale-to-zero", bestFor: "Database-only needs with branching" },
     { name: "Cloudflare", slug: "cloudflare", freeTier: "Workers 100K req/day, R2 10 GB, D1 5 GB, Pages unlimited", strength: "Edge-first with zero egress fees on R2", bestFor: "Global edge apps, static sites, storage" },
@@ -35215,7 +35215,7 @@ function buildGcpFreeTier2026Page(): string {
     { name: "Azure", slug: "azure", freeTier: "12-month: VMs, SQL, Cosmos DB (1K RU/s + 25 GB). $200 credit", strength: "Best .NET/Windows integration, hybrid cloud", bestFor: "Microsoft stack teams, enterprise" },
     { name: "Cloudflare", slug: "cloudflare", freeTier: "Workers 100K req/day, R2 10 GB (zero egress), D1 5 GB, Pages unlimited", strength: "Zero egress on R2, global edge network", bestFor: "Edge computing, static sites, storage" },
     { name: "Railway", slug: "railway", freeTier: "$5 free trial credit, usage-based pricing", strength: "Best developer experience, instant deploys", bestFor: "Quick prototypes, hobby projects" },
-    { name: "Render", slug: "render", freeTier: "Free web services (512 MB RAM), free PostgreSQL (90 days)", strength: "Simple PaaS, Heroku replacement", bestFor: "Small web apps, side projects" },
+    { name: "Render", slug: "render", freeTier: "Free web services (512 MB RAM), free PostgreSQL (30 days)", strength: "Simple PaaS, Heroku replacement", bestFor: "Small web apps, side projects" },
     { name: "Supabase", slug: "supabase", freeTier: "500 MB database, 50K MAU auth, 1 GB storage", strength: "Full BaaS with PostgreSQL + auth + storage", bestFor: "Firebase alternative with SQL" },
     { name: "Vercel", slug: "vercel", freeTier: "Unlimited deploys (hobby), 100 GB bandwidth, serverless functions", strength: "Best Next.js hosting, instant previews", bestFor: "Frontend apps and Jamstack sites" },
     { name: "Neon", slug: "neon", freeTier: "512 MiB storage, 190 compute hours, branching", strength: "Serverless PostgreSQL with scale-to-zero", bestFor: "Database-only needs with branching" },
@@ -35627,7 +35627,7 @@ function buildAzureFreeTier2026Page(): string {
     { name: "AWS", slug: "aws", freeTier: "Always Free: Lambda 1M req/mo, DynamoDB 25 GB, 30+ services", strength: "Most services under one roof", bestFor: "Serverless backends, broadest ecosystem" },
     { name: "GCP (Google Cloud)", slug: "google-cloud", freeTier: "Always Free: e2-micro VM, BigQuery 1 TiB, Cloud Run 2M req/mo", strength: "Most generous always-free compute", bestFor: "Side projects needing a persistent VM" },
     { name: "Railway", slug: "railway", freeTier: "$5 free trial credit, usage-based pricing after", strength: "Best developer experience, instant deploys", bestFor: "Quick prototypes, hobby projects" },
-    { name: "Render", slug: "render", freeTier: "Free web services (512 MB RAM), free PostgreSQL (90 days)", strength: "Simple PaaS with generous free tier", bestFor: "Replacing Heroku for small apps" },
+    { name: "Render", slug: "render", freeTier: "Free web services (512 MB RAM), free PostgreSQL (30 days)", strength: "Simple PaaS with generous free tier", bestFor: "Replacing Heroku for small apps" },
     { name: "Supabase", slug: "supabase", freeTier: "500 MB database, 50K MAU auth, 1 GB storage", strength: "Full BaaS with PostgreSQL + auth + storage", bestFor: "Firebase alternative with SQL" },
     { name: "Neon", slug: "neon", freeTier: "512 MiB storage, 190 compute hours, branching", strength: "Serverless PostgreSQL with scale-to-zero", bestFor: "Database-only needs with branching" },
     { name: "Cloudflare", slug: "cloudflare", freeTier: "Workers 100K req/day, R2 10 GB, D1 5 GB, Pages unlimited", strength: "Edge-first with zero egress fees on R2", bestFor: "Global edge apps, static sites, storage" },
@@ -36080,7 +36080,7 @@ function buildDigitalOceanFreeTier2026Page(): string {
     { name: "Hetzner", slug: "hetzner", freeTier: `No free tier — cheapest orderable plan is ${hetznerEntryPriceClause()}`, strength: "Strong price/performance above the entry tier", bestFor: "European hosting, raw compute power" },
     { name: "Vultr", slug: "vultr", freeTier: "Free DNS hosting on any account, cheapest VPS at $2.50/mo", strength: "Global locations, competitive pricing", bestFor: "Low-cost VPS, multiple regions" },
     { name: "Railway", slug: "railway", freeTier: "$5 free trial credit, usage-based pricing", strength: "Best DX, instant deploys from Git", bestFor: "Quick prototypes, hobby projects" },
-    { name: "Render", slug: "render", freeTier: "Free web services (512 MB RAM), free PostgreSQL (90 days)", strength: "Simple PaaS, free hobby tier", bestFor: "Heroku replacement, small apps" },
+    { name: "Render", slug: "render", freeTier: "Free web services (512 MB RAM), free PostgreSQL (30 days)", strength: "Simple PaaS, free hobby tier", bestFor: "Heroku replacement, small apps" },
     { name: "Cloudflare", slug: "cloudflare", freeTier: "Workers 100K req/day, R2 10 GB, D1 5 GB, Pages unlimited", strength: "Edge-first, zero egress on R2", bestFor: "Edge computing, static sites, storage" },
   ];
 
@@ -45946,7 +45946,7 @@ ${mcpCtaCss()}
 
   <div class="diff-card">
     <h3><a href="/vendor/render">Render</a> <span class="winner-badge">BEST FREE BACKEND</span></h3>
-    <div class="diff-desc"><strong>Free tier:</strong> Free web services with 512 MB RAM, less than 1 CPU, 5 GB bandwidth/month included then $0.15/GB, 500 build minutes/month. Free PostgreSQL database (256 MB RAM, 30-day expiry for inactive DBs). Free Redis (25 MB). Custom domains with automatic SSL. <strong>Key limitation:</strong> Free services spin down after 15 minutes of inactivity with 30&ndash;60 second cold starts. The PostgreSQL free tier deletes data after 30 days of inactivity. Best for side projects, staging environments, and apps that can tolerate cold starts. <a href="/railway-vs-render">See Railway vs Render comparison &rarr;</a></div>
+    <div class="diff-desc"><strong>Free tier:</strong> Free web services with 512 MB RAM, less than 1 CPU, 5 GB bandwidth/month included then $0.15/GB, 500 build minutes/month. Free PostgreSQL database (256 MB RAM, expires 30 days after creation). Free Redis (25 MB). Custom domains with automatic SSL. <strong>Key limitation:</strong> Free services spin down after 15 minutes of inactivity with 30&ndash;60 second cold starts. A free PostgreSQL database expires 30 days after it is created, in use or not, and Render deletes it 14 days later unless you upgrade it. Best for side projects, staging environments, and apps that can tolerate cold starts. <a href="/railway-vs-render">See Railway vs Render comparison &rarr;</a></div>
   </div>
 
   <div class="diff-card">
