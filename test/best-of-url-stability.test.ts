@@ -290,10 +290,11 @@ describe("the site as its own clock will read it on 2026-10-29 and on 2026-12-01
     }
   });
 
-  it("lists no best-of path in the sitemap that answers 404", async () => {
+  it("lists no path in the sitemap that answers 404", async () => {
     const xml = await body(aheadPort, "/sitemap-pages.xml");
-    const paths = [...xml.matchAll(/<loc>[^<]*?(\/best\/[^<]*)<\/loc>/g)].map(m => m[1]);
-    assert.ok(paths.length > 0, "the sitemap lists no best-of path at all");
+    const paths = [...xml.matchAll(/<loc>https?:\/\/[^/]*(\/[^<]*)<\/loc>/g)].map(m => m[1]);
+    assert.ok(paths.filter(p => p.startsWith("/best/")).length > 0, "the sitemap lists no best-of path at all");
+    assert.ok(paths.length > 200, `the sitemap lists only ${paths.length} paths`);
     const dead: string[] = [];
     for (const pathname of paths) {
       if (await status(aheadPort, pathname) !== 200) dead.push(pathname);
@@ -342,18 +343,24 @@ describe("the site as its own clock will read it on 2026-10-29 and on 2026-12-01
   });
 
   it("keeps a published path while it still holds a record, and withdraws it when it holds none", async () => {
-    const held = functions.find(fn => fn.slug === "search" && published.slugs.includes("free-search"));
-    assert.ok(held, "free-search is not a published category function, so this pair demonstrates nothing");
+    const held = functions.find(fn =>
+      fn.categories.length === 0
+      && published.slugs.includes(`free-${fn.slug}`)
+      && functionMembers(offers, fn).filter(o => !o.eligibility).length >= MIN_VENDORS);
+    assert.ok(held, "no published page is named after a subtype label, so this pair demonstrates nothing");
+    const subtype = held!.subtypes[0];
     const members = functionMembers(offers, held!).map(o => o.vendor);
-    assert.ok(members.length >= MIN_VENDORS, `Search holds ${members.length} records, fewer than the vendor floor`);
 
     const dir = fs.mkdtempSync(path.join(os.tmpdir(), "best-of-emptied-"));
     const catalogue = JSON.parse(fs.readFileSync(path.join(REPO, "data", "index.json"), "utf8"));
-    const movedTo = "Databases";
+    const unlabel = (o: { product_subtypes?: { labels: { subtype: string }[] } }) =>
+      o.product_subtypes
+        ? { ...o, product_subtypes: { ...o.product_subtypes, labels: o.product_subtypes.labels.filter(l => l.subtype !== subtype) } }
+        : o;
     const away = (keep: number) => ({
       ...catalogue,
-      offers: catalogue.offers.map((o: { vendor: string; category: string }) =>
-        members.includes(o.vendor) && members.indexOf(o.vendor) >= keep ? { ...o, category: movedTo, tags: ["databases"], product_subtypes: undefined } : o),
+      offers: catalogue.offers.map((o: { vendor: string }) =>
+        members.includes(o.vendor) && members.indexOf(o.vendor) >= keep ? unlabel(o) : o),
     });
     const oneLeft = path.join(dir, "one-left.json");
     const noneLeft = path.join(dir, "none-left.json");
@@ -365,8 +372,9 @@ describe("the site as its own clock will read it on 2026-10-29 and on 2026-12-01
       startServer({ AGENTDEALS_INDEX_PATH: noneLeft }),
     ]);
     try {
-      assert.strictEqual(await status(a.port, "/best/free-search"), 200, "/best/free-search is withdrawn while it still holds a record");
-      assert.notStrictEqual(await status(b.port, "/best/free-search"), 200, "/best/free-search still answers with no record behind it");
+      const route = `/best/free-${held!.slug}`;
+      assert.strictEqual(await status(a.port, route), 200, `${route} is withdrawn while it still holds a record`);
+      assert.strictEqual(await status(b.port, route), 404, `${route} does not 404 with no record behind it`);
     } finally {
       a.child.kill();
       b.child.kill();
