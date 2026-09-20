@@ -38,7 +38,7 @@ export function vendorVerdictContextFrom(evidence: VendorVerdictEvidence): Vendo
   const linkUnreachable = enriched.link_unreachable;
   const levelWithheld = levelWithheldReason(primary, linkUnreachable);
   const unconfirmableSince = levelWithheldSince(primary, linkUnreachable);
-  const gate = gateFor(primary, servedOn);
+  const gate = gateFor(primary, servedOn, vendorChanges);
 
   return {
     vendorOffers,

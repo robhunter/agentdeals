@@ -449,7 +449,7 @@ const DOCUMENTED_OPERATIONS: Record<string, Record<string, any>> = {
                   rating_withheld: { type: "object", nullable: true, description: "Non-null where every record that would have set a non-stable risk_level carries an empty source_url (#1352). The level is withheld rather than reported as stable, and the records are named on the vendor page marked as unsourced.", properties: { reason: { type: "string", enum: ["no_source"] }, records: { type: "number" } } },
                   gate: { $ref: "#/components/schemas/Gate" },
                   source_check: { $ref: "#/components/schemas/SourceCheck" },
-                  free_tier_longevity_days: { type: "number", nullable: true, description: "Null where the gate code is offer_retired or not_a_free_offer (#1241) — a count of days a free tier has held has no referent where our own record says there is no free tier." },
+                  free_tier_longevity_days: { type: "number", nullable: true, description: "Null where the gate code is offer_retired, product_discontinued or not_a_free_offer (#1241) — a count of days a free tier has held has no referent where our own record says there is no free tier." },
                   changes: { type: "array", items: { $ref: "#/components/schemas/DealChange" } },
                   tie_break: { $ref: "#/components/schemas/TieBreak" },
                   alternatives: {
@@ -1532,7 +1532,7 @@ export const openapiSpec = {
         nullable: true,
         description: "Why we do not rank this offer, or null where we do. The same verdict rankOffers applies, from the same function (#1241) — nothing is filtered out of a response because of it, so a caller asking whether an offer exists still gets the record. The full code table is published at /criteria.",
         properties: {
-          code: { type: "string", enum: ["eligibility_restricted", "not_a_free_offer", "offer_expired", "offer_retired", "verification_lapsed"] },
+          code: { type: "string", enum: ["eligibility_restricted", "not_a_free_offer", "offer_expired", "offer_retired", "product_discontinued", "verification_lapsed"] },
           reason: { type: "string", description: "The reason we publish for this record, naming the tier, date or restriction the code was decided on." }
         },
         required: ["code", "reason"]

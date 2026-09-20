@@ -50,8 +50,8 @@ import {
   type RefusedRead,
 } from "./change-refusal.js";
 
-export function gateForOffer(offer: Offer): Gate | null {
-  return gateFor(offer, utcDate());
+export function gateForOffer(offer: Offer, date: string = utcDate()): Gate | null {
+  return gateFor(offer, date, changesForVendor(offer.vendor));
 }
 
 export function gateRiskSummary(gate: Gate): string {
@@ -59,7 +59,7 @@ export function gateRiskSummary(gate: Gate): string {
   return `${gate.reason} We do not rate an offer we do not list.`;
 }
 
-const GATES_WITHOUT_A_LONGEVITY_REFERENT = new Set<GateCode>(["offer_retired", "not_a_free_offer"]);
+const GATES_WITHOUT_A_LONGEVITY_REFERENT = new Set<GateCode>(["offer_retired", "product_discontinued", "not_a_free_offer"]);
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const INDEX_PATH =
@@ -469,6 +469,18 @@ export function changesByVendor(): Map<string, DealChange[]> {
     byVendor.get(key)!.push(c);
   }
   return byVendor;
+}
+
+const changesByVendorFor = new WeakMap<DealChange[], Map<string, DealChange[]>>();
+
+export function changesForVendor(vendor: string): DealChange[] {
+  const all = loadDealChanges();
+  let index = changesByVendorFor.get(all);
+  if (!index) {
+    index = changesByVendor();
+    changesByVendorFor.set(all, index);
+  }
+  return index.get(vendor.toLowerCase()) ?? [];
 }
 
 export function publishedStabilityIndex(): StabilityIndex {
@@ -1213,7 +1225,7 @@ export function publishedRisk(
   const grading = changesRatingTheListedTier(offer, vendorChanges);
   const assessment = vendorRiskAssessment(grading, nowMs);
   const link_unreachable = unreachableNoticeForUrl(offer.url, nowMs);
-  const gate = gateFor(offer, servedOn);
+  const gate = gateFor(offer, servedOn, vendorChanges);
   const refused_read = refusedReadWithholdingStability({
     historyLevel: assessment.level,
     publishedChanges: publishedChangeCount(offer.vendor),

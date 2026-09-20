@@ -2,7 +2,8 @@ import { createHash } from "node:crypto";
 import { changeSummaryText } from "./change-citation.js";
 import { gateCensusSentence, VERIFICATION_LAPSED_DAYS } from "./gate-disclosure.js";
 import { LINK_GRACE_DAYS, unreachableNoticeForUrl } from "./link-health.js";
-import { listEndedTiers, offerEnded, recordedTierSentence } from "./retirement.js";
+import { discontinuedClause, discontinuedOnOrBefore } from "./product-deprecation.js";
+import { listEndedTiers, offerEnded, recordedTierSentence, THE_PAGE_STAYS_UP_UNRANKED } from "./retirement.js";
 import { LAST_RESOLVED, withheldLevelSentence } from "./source-check.js";
 import type { ChangeDateSource, DealChange, LinkUnreachable, Offer } from "./types.js";
 
@@ -68,7 +69,10 @@ export type GateCode =
   | "not_a_free_offer"
   | "offer_expired"
   | "offer_retired"
+  | "product_discontinued"
   | "verification_lapsed";
+
+export type VendorChangeLookup = (vendor: string) => readonly DealChange[];
 
 export interface Gate {
   code: GateCode;
@@ -78,7 +82,7 @@ export interface Gate {
 export interface GateTableRow {
   code: GateCode;
   rule: string;
-  census?: (offers: Offer[], date: string) => string;
+  census?: (offers: Offer[], date: string, changesFor: VendorChangeLookup) => string;
 }
 
 export const GATE_TABLE: GateTableRow[] = [
@@ -99,18 +103,29 @@ export const GATE_TABLE: GateTableRow[] = [
   {
     code: "offer_retired",
     rule:
-      `The tier we hold records the offer as ended: ${listEndedTiers()}. The vendor page stays up and still answers whether the offer exists, but an ended offer is not ranked at any position.`,
+      `The tier we hold records the offer as ended: ${listEndedTiers()}. ${THE_PAGE_STAYS_UP_UNRANKED}`,
+  },
+  {
+    code: "product_discontinued",
+    rule:
+      `A deprecation we have recorded against this vendor names the day the product we list stops, and that day has passed. ${THE_PAGE_STAYS_UP_UNRANKED}`,
   },
   {
     code: "verification_lapsed",
     rule:
       `We have not been able to confirm the offer for more than ${VERIFICATION_LAPSED_DAYS} days. This is a floor, not a filter.`,
-    census: (offers, date) => gateCensusSentence("verification_lapsed", offers.map(offer => gateFor(offer, date)), date),
+    census: (offers, date, changesFor) =>
+      gateCensusSentence("verification_lapsed", offers.map(offer => gateFor(offer, date, changesFor(offer.vendor))), date),
   },
 ];
 
-export function gateTableRowText(row: GateTableRow, offers: Offer[], date: string): string {
-  return row.census ? `${row.rule} ${row.census(offers, date)}` : row.rule;
+export function gateTableRowText(
+  row: GateTableRow,
+  offers: Offer[],
+  date: string,
+  changesFor: VendorChangeLookup,
+): string {
+  return row.census ? `${row.rule} ${row.census(offers, date, changesFor)}` : row.rule;
 }
 
 export type DemeritCode =
@@ -322,9 +337,24 @@ export function notAFreeOfferGateFor(offer: Pick<Offer, "tier">): Gate | null {
   };
 }
 
-export function gateFor(offer: Offer, date: string): Gate | null {
+export function discontinuedGateFor(
+  offer: Pick<Offer, "vendor">,
+  vendorChanges: readonly DealChange[],
+  date: string,
+): Gate | null {
+  const discontinuedOn = discontinuedOnOrBefore(vendorChanges, date);
+  if (!discontinuedOn) return null;
+  return {
+    code: "product_discontinued",
+    reason: `${discontinuedClause(offer.vendor, discontinuedOn)}.`,
+  };
+}
+
+export function gateFor(offer: Offer, date: string, vendorChanges: readonly DealChange[]): Gate | null {
   const retired = retiredGateFor(offer);
   if (retired) return retired;
+  const discontinued = discontinuedGateFor(offer, vendorChanges, date);
+  if (discontinued) return discontinued;
   const restricted = eligibilityGateFor(offer);
   if (restricted) return restricted;
   const notAFreeOffer = notAFreeOfferGateFor(offer);
@@ -488,7 +518,7 @@ export function rankOffers<T extends Offer>(candidates: T[], opts: RankOptions):
   const excluded: ExcludedEntry<T>[] = [];
   const entries: RankedEntry<T>[] = [];
   for (const offer of candidates) {
-    const gate = gateFor(offer, date);
+    const gate = gateFor(offer, date, byVendor.get(offer.vendor.toLowerCase()) ?? []);
     if (gate) {
       excluded.push({ offer, gate });
       continue;

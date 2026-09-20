@@ -135,6 +135,7 @@ export const WITHHOLDING_SCOPE = {
   not_a_free_offer: "the_rating",
   offer_expired: "the_rating",
   offer_retired: "the_rating",
+  product_discontinued: "the_rating",
   verification_lapsed: "the_rating",
 } as const satisfies Record<WithholdingTag, WithholdingScope>;
 
@@ -161,6 +162,7 @@ export const WITHHOLDING_BADGE_LABELS: Record<BadgeWithholdingTag, string> = {
   not_a_free_offer: "unrated — not a free offer",
   offer_expired: "unrated — offer expired",
   offer_retired: "unrated — offer ended",
+  product_discontinued: "unrated — product discontinued",
   verification_lapsed: "unrated — not re-confirmed",
 };
 
@@ -552,8 +554,14 @@ export function badgeWithholding(input: VendorVerdictInput): BadgeWithholding | 
   return null;
 }
 
+export const GATES_STATING_AN_ENDING: readonly GateCode[] = ["product_discontinued"];
+
+export function gateStatesAnEnding(gate: GateCode | null | undefined): boolean {
+  return gate != null && GATES_STATING_AN_ENDING.includes(gate);
+}
+
 export function vendorBadge(input: VendorVerdictInput): VendorBadge {
-  if (input.offerEnded) return { kind: "ended" };
+  if (input.offerEnded || gateStatesAnEnding(input.gate)) return { kind: "ended" };
   const withheld = badgeWithholding(input);
   if (withheld) return { kind: "none", because: withheld };
   const word = publishedVendorLevel(input.level, input.cause);
@@ -569,7 +577,10 @@ export type FreeTierClaim =
 
 export function freeTierClaim(input: VendorVerdictInput): FreeTierClaim {
   const badge = vendorBadge(input);
-  if (badge.kind === "ended") return { states: "ended", how: "retired", tier: input.tier ?? null };
+  if (badge.kind === "ended") {
+    if (!input.offerEnded && input.cause) return { states: "ended", how: "removed", cause: input.cause };
+    return { states: "ended", how: "retired", tier: input.tier ?? null };
+  }
   if (badge.kind === "none") return { states: "unconfirmed", because: badge.because };
   if (badge.word === "risky" && input.cause) return { states: "ended", how: "removed", cause: input.cause };
   return { states: "offered", level: badge.word };

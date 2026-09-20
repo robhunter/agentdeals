@@ -6,6 +6,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const { classifyTier, gateFor, notAFreeOfferGateFor, descriptionDeniesFreeTier } = await import("../dist/ranking.js");
+const { gateForOffer } = await import("../dist/data.js");
 const { toSlug } = await import("../dist/slug.js");
 
 type Offer = import("../src/types.ts").Offer;
@@ -77,7 +78,7 @@ describe("a free-tier classification agrees with the record it rests on", () => 
 
   it("gates every record that is not a free offer out of the ranked set", () => {
     assert.ok(notFreeRecords.length > 0, "no record classifies as not a free offer, so this check read an empty population");
-    const ungated = notFreeRecords.filter(o => gateFor(o, today) === null).map(o => o.vendor);
+    const ungated = notFreeRecords.filter(o => gateForOffer(o, today) === null).map(o => o.vendor);
     assert.deepStrictEqual(ungated, [], `these records are not a free offer and reach the ranked set anyway: ${ungated.join(", ")}`);
   });
 });

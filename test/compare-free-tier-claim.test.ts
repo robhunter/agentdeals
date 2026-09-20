@@ -80,7 +80,7 @@ async function fetchAll<T>(items: T[], worker: (item: T) => Promise<void>, lanes
 
 before(async () => {
   const { buildComparisonMap } = await import("../dist/comparison-pairs.js");
-  const { enrichOffers, loadOffers, loadDealChanges } = await import("../dist/data.js");
+  const { enrichOffers, loadOffers, loadDealChanges, gateForOffer } = await import("../dist/data.js");
   const { toSlug } = await import("../dist/vendor-slug.js");
   const { supersedingChange } = await import("../dist/superseded-description.js");
   const { gateFor, utcDate } = await import("../dist/ranking.js");
@@ -115,7 +115,7 @@ before(async () => {
     const since = levelWithheldSince(primary, unreachable);
     const refusedRead = enriched.refused_read;
     const reasonsItCouldGive = [
-      gateFor(primary, servedOn)?.reason,
+      gateForOffer(primary, servedOn)?.reason,
       withheld ? withheldLevelSentence(withheld, vendor, since) : null,
       refusedRead ? refusedReadSentence(vendor, refusedRead) : null,
       ratingWithheldForNoSourceSentence(vendor),

@@ -9,7 +9,7 @@ import { fileURLToPath } from "node:url";
 const { offerRetired, recordedTierSentence } = await import("../dist/retirement.js");
 const { gateFor, utcDate } = await import("../dist/ranking.js");
 const { CITATION_CLASSES } = await import("../dist/change-citation.js");
-const { loadDealChanges, refusalsForVendor } = await import("../dist/data.js");
+const { loadDealChanges, refusalsForVendor, gateForOffer } = await import("../dist/data.js");
 const { badgeWithholding, withholdsTheTerms } = await import("../dist/vendor-verdict.js");
 const { supersedingChange } = await import("../dist/superseded-description.js");
 const { vendorVerdictContextFrom } = await import("../dist/vendor-verdict-input.js");
@@ -183,18 +183,28 @@ describe("a record marked retired in its tier is read as retired", () => {
   });
 
   it("answers it from the stored tier rather than from the description", () => {
+    let answered = 0;
     for (const p of renderedVendorPages.filter(x => offerRetired(x.offer))) {
       const sentence = recordedTierSentence(p.offer.vendor, p.offer.tier);
+      const gate = gateForOffer(p.offer, utcDate());
+      const ahead = gate && gate.code !== "offer_retired" ? `${gate.reason} ` : "";
       for (const question of [`Is ${p.offer.vendor} free?`, `What is ${p.offer.vendor}'s free tier?`]) {
-        const answer = faqAnswer(p.html, question) ?? "";
-        const opening = `${answer.split(". ")[0]}.`;
+        const answer = faqAnswer(p.html, question);
+        if (answer === undefined) continue;
+        answered++;
+        assert.ok(
+          answer.startsWith(`${ahead}${sentence}`),
+          `${p.slug} answers "${question}" with ${answer.slice(0, 90)}`,
+        );
+        const stated = answer.slice(ahead.length);
+        const opening = `${stated.split(". ")[0]}.`;
         assert.ok(
           opening.includes(p.offer.tier),
           `${p.slug} opens its answer to "${question}" without naming the tier it stores: ${opening}`,
         );
-        assert.ok(answer.startsWith(sentence), `${p.slug} answers "${question}" with ${answer.slice(0, 70)}`);
       }
     }
+    assert.ok(answered > 0, "no retired record answers either free-tier question, so this reads nothing");
   });
 
   it("sends no reader to the URL it holds for the offer", () => {
@@ -253,7 +263,7 @@ describe("a record that is not retired keeps everything the gate would take away
   it("still answers yes where nothing else withholds the answer", () => {
     const plainlyFree = renderedVendorPages.filter(
       p => !offerRetired(p.offer) && !p.offer.eligibility && p.offer.source_check?.outcome === "ok"
-        && !gateFor(p.offer, utcDate())
+        && !gateForOffer(p.offer, utcDate())
         && !termsWithheldFor(p.offer.vendor)
         && supersedingChange(p.offer, changesFor(p.offer.vendor)) === null
         && p.offer.tier.toLowerCase() !== "none"

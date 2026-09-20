@@ -21,7 +21,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(__dirname, "..");
 
 const offers: Offer[] = JSON.parse(readFileSync(path.join(REPO, "data", "index.json"), "utf-8")).offers;
-const { loadDealChanges, refusalsForVendor } = await import("../dist/data.js");
+const { loadDealChanges, refusalsForVendor, gateForOffer } = await import("../dist/data.js");
 const { badgeWithholding, freeTierClaim, withholdsTheTerms } = await import("../dist/vendor-verdict.js");
 const { vendorVerdictContextFrom } = await import("../dist/vendor-verdict-input.js");
 
@@ -161,7 +161,7 @@ before(async () => {
   proc = await startServer();
   await fetchAll(primaries.map(p => `/vendor/${p.slug}`));
   for (const p of primaries) {
-    rendered.push({ ...p, gate: gateFor(p.primary, TODAY), html: await page(`/vendor/${p.slug}`) });
+    rendered.push({ ...p, gate: gateForOffer(p.primary, TODAY), html: await page(`/vendor/${p.slug}`) });
   }
 });
 
@@ -209,6 +209,7 @@ describe("the page a gated record renders does not answer the free-tier question
     assert.ok(codes.has("offer_expired"), "no vendor page renders a record gated as offer_expired");
     assert.ok(codes.has("eligibility_restricted"), "no vendor page renders a record gated on eligibility");
     assert.ok(codes.has("offer_retired"), "no vendor page renders a record gated as offer_retired");
+    assert.ok(codes.has("product_discontinued"), "no vendor page renders a record gated as product_discontinued");
   });
 
   it("answers no gated record with yes, whichever code gates it", () => {
