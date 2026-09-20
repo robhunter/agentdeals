@@ -15,8 +15,8 @@ export const A_PRICE_KEY = /price|cost|amount/i;
 const A_MONTHLY_PRICE_KEY = /month/i;
 const A_YEARLY_PRICE_KEY = /annual|year/i;
 const A_CURRENCY_CODE = /^[A-Z]{3}$/;
-const LONGEST_NAME = 60;
-const LONGEST_OBJECT_WE_PARSE = 8192;
+export const LONGEST_NAME = 60;
+export const LONGEST_OBJECT_WE_PARSE = 8192;
 
 const SCRIPT_BODY = /<script\b[^>]*>([\s\S]*?)<\/script>/gi;
 const A_DOUBLE_QUOTED_LITERAL = /"(?:[^"\\]|\\[\s\S])*"/g;

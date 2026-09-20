@@ -14,7 +14,9 @@ const {
   visibleTextOf,
   whereAFreePlanIsStated,
 } = await import("../dist/page-free-plan.js");
-const { aPlanPricedAtNothing, ladderNamesIn, pricedPlansIn } = await import("../dist/page-priced-plans.js");
+const { aPlanPricedAtNothing, ladderNamesIn, pricedPlansIn, LONGEST_NAME, LONGEST_OBJECT_WE_PARSE } = await import(
+  "../dist/page-priced-plans.js"
+);
 const { REMOVAL_CLASS, aFreePlanOnThePageWouldRefuteIt, removalRecordsInTheServedWindow, removalRecordsStillInForce } =
   await import("../dist/removal-record.js");
 const { publishedRisk } = await import("../dist/data.js");
@@ -234,10 +236,25 @@ describe("a plan ladder the page publishes as numbers in its own markup", () => 
   });
 
   it("reads a plan nested inside an object far larger than the one it will parse", () => {
-    const filler = "x".repeat(20000);
+    const filler = "x".repeat(LONGEST_OBJECT_WE_PARSE * 2);
     const page = aPageEmbedding([{ notes: filler, plan: { name: "Free", currency: "USD", monthlyPrice: 0 } }]);
-    assert.ok(page.length > 20000);
+    assert.ok(page.length > LONGEST_OBJECT_WE_PARSE);
     assert.equal(freePlanStatedOn(readablePartsOf(page))?.where, "priced");
+  });
+
+  it("counts a brace inside a plan's own prose as prose, not as structure", () => {
+    const description = "Wrap the key in { to template it";
+    const page = aPageEmbedding([{ plan: { name: "Free", description, currency: "USD", monthlyPrice: 0 } }]);
+    assert.equal(freePlanStatedOn(readablePartsOf(page))?.where, "priced");
+  });
+
+  it("does not take a paragraph for a plan name", () => {
+    const paragraph =
+      "Everything you need to start fast, with the core tools to protect and manage your API at no cost.";
+    assert.ok(paragraph.length > LONGEST_NAME);
+    const parts = readablePartsOf(aPageEmbedding([{ plan: { title: paragraph, currency: "USD", monthlyPrice: 0 } }]));
+    assert.deepEqual(parts.plans, []);
+    assert.equal(freePlanStatedOn(parts), null);
   });
 
   it("follows the escaping the page actually uses, not one level of it", () => {
