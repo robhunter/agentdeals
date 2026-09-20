@@ -34224,6 +34224,27 @@
         "outcome": "ok",
         "detail": "the string \"free\" does not occur in 6,302 characters of visible text and the cheapest plan is \"Starting at $5/month\""
       }
+    },
+    {
+      "vendor": "StackHawk",
+      "category": "Security",
+      "description": "Hosted DAST for CI/CD, repositioned as a security platform for AI coding agents. No free tier. stackhawk.com/pricing, read 2026-09-20, publishes two plans: Wingman at $10 per user per month, covering unlimited apps and 50 agentic scans per user per month, and StackHawk Scale on request. The page states \"unlimited apps — no per-app or per-scan math\", so there is no per-app rate, and every occurrence of \"free\" on it names a 14-day trial.",
+      "tier": "Retired",
+      "url": "https://www.stackhawk.com/pricing/",
+      "tags": [
+        "security",
+        "dast",
+        "scanning",
+        "api",
+        "ci-cd",
+        "developer tools"
+      ],
+      "verifiedDate": "2026-09-20",
+      "source_check": {
+        "checked": "2026-09-20",
+        "outcome": "ok",
+        "detail": "the page states \"Wingman by StackHawk\" at \"$10 /user/mo\" with \"Unlimited apps and 50 scans/user/month\" and \"StackHawk Scale\" as \"Talk to us\"; $10 is the only amount in 4,482 characters of visible text, and all four occurrences of \"free\" name the 14-day trial"
+      }
     }
   ],
   "changes": []

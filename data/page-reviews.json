@@ -2958,6 +2958,7 @@
         "renovate",
         "semgrep",
         "snyk",
+        "stackhawk",
         "trivy",
         "trufflehog"
       ],
@@ -2992,7 +2993,7 @@
       "review_outcome": null,
       "review_note": null,
       "reads_index": true,
-      "tables_read_index": false,
+      "tables_read_index": true,
       "table_figures": 28,
       "table_figures_from_records": 3,
       "tables": [
