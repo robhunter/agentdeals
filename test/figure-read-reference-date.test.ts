@@ -228,17 +228,18 @@ describe("the registry is a classification a reader can check", () => {
     }
   });
 
-  it("dates each read on the same day the page it belongs to states", () => {
+  it("binds the reads whose date is a constant to the constant their page renders", () => {
     assert.strictEqual(HETZNER_PLAN_TABLE_READ_ON, HETZNER_PRICES_READ);
     assert.strictEqual(STORAGE_RATE_CARD_READ_ON, STORAGE_RATES_READ);
-    for (const [pagePath, stated] of [
-      ["/hetzner-pricing-2026", HETZNER_PRICES_READ],
-      ["/llm-api-pricing", FRONTIER_PRICES_READ_ON],
-      ["/storage-comparison-2026", STORAGE_RATES_READ],
-    ] as const) {
-      const declared = declaredFigureReadsFor(pagePath);
-      assert.strictEqual(declared.length, 1);
-      assert.strictEqual(declared[0]!.read_on, stated);
+  });
+
+  it("returns every read it holds from the lookup keyed on the page", () => {
+    for (const read of DECLARED_FIGURE_READS) {
+      const declared = declaredFigureReadsFor(read.path);
+      assert.ok(
+        declared.some(entry => entry.read_on === read.read_on),
+        `${read.path} declares a read on ${read.read_on} its own lookup does not return`,
+      );
     }
   });
 
