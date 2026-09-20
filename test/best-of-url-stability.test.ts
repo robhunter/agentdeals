@@ -20,6 +20,7 @@ import {
 import { toSlug } from "../dist/slug.js";
 import { gateDisclosureSentence, matchingSubject } from "../dist/gate-disclosure.js";
 import { CATEGORY_RETIREMENTS } from "../dist/category-scope.js";
+import { assertPopulationFloor } from "./population-floor.ts";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(__dirname, "..");
@@ -294,7 +295,7 @@ describe("the site as its own clock will read it on 2026-10-29 and on 2026-12-01
     const xml = await body(aheadPort, "/sitemap-pages.xml");
     const paths = [...xml.matchAll(/<loc>https?:\/\/[^/]*(\/[^<]*)<\/loc>/g)].map(m => m[1]);
     assert.ok(paths.filter(p => p.startsWith("/best/")).length > 0, "the sitemap lists no best-of path at all");
-    assert.ok(paths.length > 200, `the sitemap lists only ${paths.length} paths`);
+    assertPopulationFloor(paths.length, 301, "paths listed in the page sitemap");
     const dead: string[] = [];
     for (const pathname of paths) {
       if (await status(aheadPort, pathname) !== 200) dead.push(pathname);
@@ -379,6 +380,16 @@ describe("the site as its own clock will read it on 2026-10-29 and on 2026-12-01
       a.child.kill();
       b.child.kill();
       fs.rmSync(dir, { recursive: true, force: true });
+    }
+  });
+
+  it("serves what reaches the floor when the ledger cannot be read at all", async () => {
+    const missing = path.join(os.tmpdir(), `best-of-published-absent-${process.pid}.json`);
+    const { child, port } = await startServer({ AGENTDEALS_BEST_OF_PUBLISHED_PATH: missing });
+    try {
+      assert.strictEqual(await status(port, "/best/free-ai-coding"), 200, "a page that reaches the floor is withheld when the ledger is absent");
+    } finally {
+      child.kill();
     }
   });
 

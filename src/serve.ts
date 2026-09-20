@@ -2507,7 +2507,13 @@ function countedNoun(count: number, noun: string): string {
 
 const productFunctions = buildProductFunctions(categories.map(c => c.name));
 
-const bestOfPublishedBefore = new Set(readBestOfPublished().slugs);
+let bestOfPublishedBefore: ReadonlySet<string>;
+try {
+  bestOfPublishedBefore = new Set(readBestOfPublished().slugs);
+} catch (err) {
+  console.error(`Serving only the best-of paths that reach the picks floor today: ${(err as Error).message}`);
+  bestOfPublishedBefore = new Set<string>();
+}
 
 const bestOfSlugMap = new Map<string, ProductFunction>();
 for (const fn of productFunctions) {
