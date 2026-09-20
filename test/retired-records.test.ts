@@ -9,7 +9,7 @@ import { fileURLToPath } from "node:url";
 const { offerRetired, recordedTierSentence } = await import("../dist/retirement.js");
 const { gateFor, utcDate } = await import("../dist/ranking.js");
 const { CITATION_CLASSES } = await import("../dist/change-citation.js");
-const { loadDealChanges, refusalsForVendor } = await import("../dist/data.js");
+const { loadDealChanges, refusalsForVendor, gateForOffer } = await import("../dist/data.js");
 const { badgeWithholding, withholdsTheTerms } = await import("../dist/vendor-verdict.js");
 const { supersedingChange } = await import("../dist/superseded-description.js");
 const { vendorVerdictContextFrom } = await import("../dist/vendor-verdict-input.js");
@@ -253,7 +253,7 @@ describe("a record that is not retired keeps everything the gate would take away
   it("still answers yes where nothing else withholds the answer", () => {
     const plainlyFree = renderedVendorPages.filter(
       p => !offerRetired(p.offer) && !p.offer.eligibility && p.offer.source_check?.outcome === "ok"
-        && !gateFor(p.offer, utcDate())
+        && !gateForOffer(p.offer, utcDate())
         && !termsWithheldFor(p.offer.vendor)
         && supersedingChange(p.offer, changesFor(p.offer.vendor)) === null
         && p.offer.tier.toLowerCase() !== "none"

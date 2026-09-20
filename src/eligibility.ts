@@ -1,7 +1,7 @@
 import { eligibilityGateFor, gateFor } from "./ranking.js";
 import type { Gate, GateCode } from "./ranking.js";
 import { gateClauseList, gateDisclosureSentence } from "./gate-disclosure.js";
-import type { Offer } from "./types.js";
+import type { DealChange, Offer } from "./types.js";
 
 export const CONDITION_RECORDING_AN_UNREAD_PROGRAM = "Startup program — check vendor for eligibility details";
 
@@ -9,8 +9,12 @@ export function eligibilityGate(offer: Pick<Offer, "eligibility">): Gate | null 
   return eligibilityGateFor(offer);
 }
 
-export function eligibilityGateAsPublished(offer: Offer, date: string): Gate | null {
-  const gate = gateFor(offer, date);
+export function eligibilityGateAsPublished(
+  offer: Offer,
+  date: string,
+  vendorChanges: readonly DealChange[],
+): Gate | null {
+  const gate = gateFor(offer, date, vendorChanges);
   return gate && gate.code === "eligibility_restricted" ? gate : null;
 }
 

@@ -15,7 +15,7 @@ import {
   vendorVerdictWord,
   type VendorVerdictInput,
 } from "../dist/vendor-verdict.js";
-import { CHANGE_DIRECTION, enrichOffers, loadDealChanges, loadOffers, publishedRisk, refusalsForVendor, vendorRiskAssessment, classifyStability } from "../dist/data.js";
+import { CHANGE_DIRECTION, enrichOffers, gateForOffer, loadDealChanges, loadOffers, publishedRisk, refusalsForVendor, vendorRiskAssessment, classifyStability } from "../dist/data.js";
 import { vendorSlugMap } from "../dist/vendor-slug.js";
 import { isNoLongerInForce } from "../dist/change-resolution.js";
 import { storedTermsAreSuperseded } from "../dist/superseded-description.js";
@@ -351,7 +351,7 @@ function vendorRows(): VendorRow[] {
     const expected = publishedVendorLevel(enriched.risk_level ?? null, enriched.risk_cause ?? null);
     const ended = offerEnded(primary);
     const unconfirmableSince = levelWithheldSince(primary, enriched.link_unreachable);
-    const gate = gateFor(primary, utcDate());
+    const gate = gateForOffer(primary, utcDate());
     const termsSuperseded = storedTermsAreSuperseded(primary, vendorChanges);
     rows.push({
       slug,

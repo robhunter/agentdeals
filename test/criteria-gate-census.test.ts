@@ -6,7 +6,7 @@ import { fileURLToPath } from "node:url";
 
 const { GATE_TABLE, DEMERIT_TABLE, NOT_FREE_TIER_RULES, TIME_LIMITED_TIER_RULES, gateFor, utcDate } = await import("../dist/ranking.js");
 const { gateCensusSentence } = await import("../dist/gate-disclosure.js");
-const { loadOffers } = await import("../dist/data.js");
+const { loadOffers, gateForOffer } = await import("../dist/data.js");
 
 type Offer = import("../src/types.ts").Offer;
 
@@ -29,7 +29,7 @@ const A_CLAIM_ABOUT_THE_CATALOGUE = [
 const offers: Offer[] = loadOffers();
 
 function censusAt(date: string): number {
-  return offers.filter((offer) => gateFor(offer, date)?.code === THE_FLOOR).length;
+  return offers.filter((offer) => gateForOffer(offer, date)?.code === THE_FLOOR).length;
 }
 
 function dateShiftedBy(days: number): string {
@@ -155,7 +155,7 @@ describe("the criteria page counts the offers that trip the verification floor",
     for (const day of readOn) {
       const text = gateRowText(served.get(day)!, THE_FLOOR);
       const date = THE_CENSUS.exec(text)![1]!;
-      const expected = gateCensusSentence(THE_FLOOR, offers.map((offer) => gateFor(offer, date)), date);
+      const expected = gateCensusSentence(THE_FLOOR, offers.map((offer) => gateForOffer(offer, date)), date);
       assert.ok(
         text.endsWith(expected),
         `on ${date} the criteria page ends its ${THE_FLOOR} row "${text.slice(-90)}" where the clause a category page prints for the same offers reads "${expected}"`,

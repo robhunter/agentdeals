@@ -5,7 +5,7 @@ import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/streamableHttp.js";
 import { createServer, getServerCard } from "./server.js";
-import { oldestVerifiedDateForSlug, vendorRiskAssessment, publishedRisk, levelWithheldStatement, vendorNotIndexedSentence, riskCauseOf, freeTierEndingRecord, NEGATIVE_CHANGE_TYPES, POSITIVE_CHANGE_TYPES, SEVERE_CHANGE_TYPES, loadOffers, getCategories, getNewOffers, getNewestDeals, searchOffers, enrichOffers, gateForOffer, loadDealChanges, getDealChanges, changeContext, DEFAULT_CHANGE_WINDOW_DAYS, getOfferDetails, compareServices, checkVendorRisk, auditStack, getExpiringDeals, getWeeklyDigest, getFormattedWeeklyDigest, getFreshnessMetrics, publishedStabilityIndex, stabilityWithheldDisclosure, UNRATED_STABILITY, type StabilityIndex, type PublishedStabilityClass, getVendorReferral, sanitizeQuery, getChangeLogFreshness, isEventDated, partitionByDateProvenance } from "./data.js";
+import { changesForVendor, oldestVerifiedDateForSlug, vendorRiskAssessment, publishedRisk, levelWithheldStatement, vendorNotIndexedSentence, riskCauseOf, freeTierEndingRecord, NEGATIVE_CHANGE_TYPES, POSITIVE_CHANGE_TYPES, SEVERE_CHANGE_TYPES, loadOffers, getCategories, getNewOffers, getNewestDeals, searchOffers, enrichOffers, gateForOffer, loadDealChanges, getDealChanges, changeContext, DEFAULT_CHANGE_WINDOW_DAYS, getOfferDetails, compareServices, checkVendorRisk, auditStack, getExpiringDeals, getWeeklyDigest, getFormattedWeeklyDigest, getFreshnessMetrics, publishedStabilityIndex, stabilityWithheldDisclosure, UNRATED_STABILITY, type StabilityIndex, type PublishedStabilityClass, getVendorReferral, sanitizeQuery, getChangeLogFreshness, isEventDated, partitionByDateProvenance } from "./data.js";
 import { loadChangeRefusals, changesRatingTheListedTier, stabilityDeciders, vendorNameAsPublished } from "./data.js";
 import { A_DEMOTION_IN_FORCE_RULE, NO_DEMOTION_IN_FORCE_RULE, A_COMPLETE_LOG_NOTICE, A_VERDICT_ROLLS_NOTICE, A_WITHHELD_RATING_DOES_NOT_LAPSE, lapsingDemotionStated, VOLATILE_WHILE_A_DEMOTION_COUNTS_RULE, WATCH_RECEIVES_FROM_VOLATILE_RULE , confirmationCoverage, confirmationCoverageSentence, HOW_THE_CATALOGUE_IS_MAINTAINED, NOTHING_CONTRADICTS_OUR_TERMS_FOR, THE_DATES_WE_HOLD } from "./data.js";
 import { confirmingRead, confirmingReadSentence, refusalsByVendor, refusedReadSentence, supersededRefusalSentence, type ChangeRefusal } from "./change-refusal.js";
@@ -100,7 +100,7 @@ import {
 import { changeAnchor, changeRecordHref } from "./change-anchor.js";
 import { SSE_KEEPALIVE_FRAME, keepaliveIntervalMs, sessionRecoveryBody } from "./mcp-stream.js";
 import { ASSISTANTS_API_SHUTDOWN } from "./assistants-shutdown.js";
-import { discontinuedOnOrBefore, PRODUCT_DEPRECATED } from "./product-deprecation.js";
+import { discontinuedClause, discontinuedOnOrBefore, PRODUCT_DEPRECATED } from "./product-deprecation.js";
 import { rankOffers, rankForListing, rotateListing, utcDate, gateFor, notAFreeOfferGateFor, descriptionDeniesFreeTier, classifyTier, CRITERIA_PATH, DEMOTE_ONLY_POLICY, DISCLOSURE_RATIONALE, TIE_BREAK_ALGORITHM, NAMED_SUBSET_RULE, NAMED_SUBSET_FIELD_RULE, wholeRankedOrderClause, GATE_TABLE, gateTableRowText, DEMERIT_TABLE, NOT_FREE_TIER_RULES, TIME_LIMITED_TIER_RULES, type TieBreak, type Gate } from "./ranking.js";
 import type { RankedEntry, RankingResult } from "./ranking.js";
 import { eligibilityGateAsPublished, gatedShareDescriptionClause, gatedShareLede, publishableEligibilityConditions } from "./eligibility.js";
@@ -2043,7 +2043,7 @@ function listingUnreachableNoticeHtml(offer: Offer): string {
 }
 
 function listingEligibilityNoticeHtml(offer: Offer): string {
-  const gate = eligibilityGateAsPublished(offer, utcDate());
+  const gate = eligibilityGateAsPublished(offer, utcDate(), changesForVendor(offer.vendor));
   if (!gate) return "";
   const conditions = publishableEligibilityConditions(offer);
   const conditionsHtml = conditions.length > 0
@@ -2062,7 +2062,7 @@ function buildCategoryPage(slug: string): string | null {
   const catEnded = endedFreeTiersIn(catOffers, catServedOn);
   const catStanding = catOffers.filter((o) => !catEnded.includes(o));
   const catStandingCount = catStanding.length;
-  const catGates = catStanding.map((o) => gateFor(o, catServedOn));
+  const catGates = catStanding.map((o) => gateFor(o, catServedOn, changesForVendor(o.vendor)));
   const catGatedClause = gatedShareDescriptionClause(catStandingCount, catGates);
   const title = `Free ${categoryName} Tools & Deals (${catCount} offers) — AgentDeals`;
   const catUncontradicted = catStanding.filter(termsWePublishAsVerified);
@@ -3112,7 +3112,7 @@ function buildCriteriaPage(): string {
   const title = "How AgentDeals ranks — published criteria — AgentDeals";
   const metaDesc = "Our ranking method in full: the gates, the demerits and their weights, the tie-break seed, and the reason there is no top slot to sell. Recompute any ranked page yourself.";
 
-  const gateRows = GATE_TABLE.map(g => `<tr><td><code>${escHtmlServer(g.code)}</code></td><td>${escHtmlServer(gateTableRowText(g, offers, date))}</td></tr>`).join("\n");
+  const gateRows = GATE_TABLE.map(g => `<tr><td><code>${escHtmlServer(g.code)}</code></td><td>${escHtmlServer(gateTableRowText(g, offers, date, changesForVendor))}</td></tr>`).join("\n");
   const demeritRows = DEMERIT_TABLE.map(d => `<tr><td><code>${escHtmlServer(d.code)}</code></td><td style="text-align:center;font-family:var(--mono)">&minus;${d.points}</td><td>${escHtmlServer(d.trigger)}</td></tr>`).join("\n");
   const directionRows = changeDirectionTable().map(t => `<tr><td><code>${escHtmlServer(t.code)}</code></td><td>${escHtmlServer(t.meaning)}</td><td style="text-align:center">${escHtmlServer(t.direction)}</td></tr>`).join("\n");
   const notFreeRows = NOT_FREE_TIER_RULES.map(r => `<tr><td><code>${escHtmlServer(String(r.pattern))}</code></td><td>${escHtmlServer(r.note)}</td></tr>`).join("\n");
@@ -4966,7 +4966,7 @@ const CURATED_ALTS_HEADING = "Recommended Migration Targets";
 
 const NO_FREE_TIER_FOR_PRODUCTION = "There is no free tier here to run in production.";
 
-const GATES_LEAVING_NO_FREE_TIER: readonly string[] = ["not_a_free_offer", "offer_expired"];
+const GATES_LEAVING_NO_FREE_TIER: readonly string[] = ["not_a_free_offer", "offer_expired", "product_discontinued"];
 
 const GATES_LEAVING_NOTHING_TO_RUN_IN_PRODUCTION: readonly string[] = [...GATES_LEAVING_NO_FREE_TIER, "offer_retired"];
 
@@ -5055,7 +5055,7 @@ function buildVendorPage(slug: string): string | null {
     ? `\n  <p class="rating-withheld-line" style="margin:.4rem 0 .6rem;font-size:.9rem;color:var(--text-muted)"><strong style="color:#8b949e">No rating:</strong> ${escHtmlServer(ratingWithheldForNoSourceSentence(vendorName))} ${ratingWithheld.records === 1 ? "It is" : `All ${ratingWithheld.records} are`} listed below, marked. ${escHtmlServer(A_WITHHELD_RATING_DOES_NOT_LAPSE)} <a href="#changes" style="white-space:nowrap">Full history &darr;</a></p>`
     : "";
 
-  const primaryEligibilityGate = eligibilityGateAsPublished(primary, servedOn);
+  const primaryEligibilityGate = eligibilityGateAsPublished(primary, servedOn, vendorChanges);
   const primaryEligibilityConditions = publishableEligibilityConditions(primary);
   const primaryNotAFreeOfferGate = notAFreeOfferGateFor(primary);
   const primaryGateBeyondEligibility = primaryGate && primaryGate.code !== "eligibility_restricted" ? primaryGate : primaryNotAFreeOfferGate;
@@ -5159,7 +5159,7 @@ function buildVendorPage(slug: string): string | null {
   const keyLimit = openingOfTerms(publishableTerms, 120);
   const verdictLine2 = vendorVerdictSentence(verdictInput);
   const verdictLine3 = discontinuedOn
-    ? `${vendorName} was discontinued on ${discontinuedOn}, so it is not a current option${alternatives.length > 0 ? ` — the ${alternatives.length} alternatives below are replacements` : ""}.`
+    ? `${discontinuedClause(vendorName, discontinuedOn)}${alternatives.length > 0 ? ` — the ${alternatives.length} alternatives below are replacements` : ""}.`
     : alternatives.length > 0 && !termsWeCannotConfirm && !primaryGate
     ? `Best for ${primary.category.toLowerCase()} workloads${alternatives.length >= 5 ? ` — ${alternatives.length} alternatives available` : ""}.`
     : "";

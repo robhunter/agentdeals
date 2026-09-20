@@ -102,20 +102,20 @@ describe("a tier that records the offer as ended is gated, not ranked", () => {
   });
 
   it("gates a record whose tier records the offer as ended", () => {
-    const gate = gateFor(baseOffer({ tier: "Retired" }), TODAY);
+    const gate = gateFor(baseOffer({ tier: "Retired" }), TODAY, []);
     assert.strictEqual(gate?.code, "offer_retired");
     assert.match(gate!.reason, /Retired/);
   });
 
   it("does not gate a deprecated offer that is still being served", () => {
-    assert.strictEqual(gateFor(baseOffer({ tier: "Free (Deprecated)" }), TODAY), null);
+    assert.strictEqual(gateFor(baseOffer({ tier: "Free (Deprecated)" }), TODAY, []), null);
     assert.strictEqual(classifyTier("Free (Deprecated)").class, "free");
   });
 
   it("reads the ended tier ahead of an eligibility restriction on the same record", () => {
     const both = baseOffer({ tier: "Retired", eligibility: { type: "student", conditions: ["enrolled"] } });
-    assert.strictEqual(gateFor(both, TODAY)?.code, "offer_retired");
-    assert.strictEqual(gateFor(baseOffer({ eligibility: { type: "student", conditions: ["enrolled"] } }), TODAY)?.code, "eligibility_restricted");
+    assert.strictEqual(gateFor(both, TODAY, [])?.code, "offer_retired");
+    assert.strictEqual(gateFor(baseOffer({ eligibility: { type: "student", conditions: ["enrolled"] } }), TODAY, [])?.code, "eligibility_restricted");
   });
 
   it("reads the whole tier string, not a word inside it", () => {
@@ -123,7 +123,7 @@ describe("a tier that records the offer as ended is gated, not ranked", () => {
     assert.ok(offerEnded({ tier: "  retired  " }));
     for (const tier of ["Free (Sunset 2026)", "Free until sunset", "Retired Plan Migration Credit", "Not Discontinued"]) {
       assert.ok(!offerEnded({ tier }), `"${tier}" was read as an ended offer`);
-      assert.notStrictEqual(gateFor(baseOffer({ tier }), TODAY)?.code, "offer_retired");
+      assert.notStrictEqual(gateFor(baseOffer({ tier }), TODAY, [])?.code, "offer_retired");
     }
   });
 

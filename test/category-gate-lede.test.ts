@@ -11,7 +11,7 @@ import { assertCoversPopulation, assertPopulationFloor, categoriesInTheCatalogue
 const { gateFor, utcDate } = await import("../dist/ranking.js");
 const { gatedShareLede } = await import("../dist/eligibility.js");
 const { toSlug } = await import("../dist/vendor-slug.js");
-const { NOTHING_CONTRADICTS_OUR_TERMS_FOR } = await import("../dist/data.js");
+const { NOTHING_CONTRADICTS_OUR_TERMS_FOR, gateForOffer } = await import("../dist/data.js");
 
 type Offer = import("../src/types.ts").Offer;
 type Gate = { code: string; reason: string } | null;
@@ -94,7 +94,7 @@ function buildCensus(verdicts: Map<string, SiteFreeTierVerdict>): CategoryCensus
   return categoryNames.map((name) => {
     const held = offers.filter((o) => o.category === name);
     const records = held.filter((o) => verdicts.get(toSlug(o.vendor)) !== "ended");
-    const gates: Gate[] = records.map((o) => gateFor(o, TODAY));
+    const gates: Gate[] = records.map((o) => gateForOffer(o, TODAY));
     return {
       name,
       slug: slugOf(name),

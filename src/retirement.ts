@@ -43,6 +43,9 @@ export function recordedTierSentence(vendorName: string, tier: string): string {
   return `${vendorName}'s offer is recorded as ${tier}.`;
 }
 
+export const THE_PAGE_STAYS_UP_UNRANKED =
+  "The vendor page stays up and still answers whether the offer exists, but an ended offer is not ranked at any position.";
+
 export const ENDED_OFFER_CLAUSE = "the offer has ended";
 
 export const ENDED_BADGE_LABEL = "retired";

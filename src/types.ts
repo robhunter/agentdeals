@@ -187,6 +187,7 @@ export interface DealChange {
   date_source?: ChangeDateSource;
   resolution?: ChangeResolution | null;
   source_check?: ChangeSourceCheck | null;
+  discontinued_date?: string | null;
 }
 
 export type PublishedChangeImpact = DealChange["impact"] | "none";

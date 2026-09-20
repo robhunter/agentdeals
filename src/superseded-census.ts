@@ -49,6 +49,7 @@ export function supersededCensus(
 ): SupersededCensus {
   const superseded = supersededRecords(offers, changes);
   const supersededOffers = new Set(superseded.map(({ offer }) => offer));
+  const byVendor = changesByVendor(changes);
 
   let vendorPages = 0;
   for (const { offer } of superseded) {
@@ -59,7 +60,7 @@ export function supersededCensus(
   for (const vendor of vendorSlugMap.values()) {
     const primary = primaryOfferFor(offers, vendor);
     if (!primary) continue;
-    if (gateFor(primary, date)) continue;
+    if (gateFor(primary, date, byVendor.get(primary.vendor.toLowerCase()) ?? [])) continue;
     if (supersededOffers.has(primary)) ungatedPages++;
   }
 

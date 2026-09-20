@@ -19,6 +19,7 @@ const {
 } = await import("../dist/retirement.js");
 const { vendorVerdictSentence, vendorVerdictWord } = await import("../dist/vendor-verdict.js");
 const { classifyTier, gateFor, rankOffers } = await import("../dist/ranking.js");
+const { gateForOffer } = await import("../dist/data.js");
 
 type Offer = import("../src/types.ts").Offer;
 type DealChange = import("../src/types.ts").DealChange;
@@ -154,7 +155,7 @@ describe("a tier closed to new accounts is not a free offer", () => {
 
   it("gates every carrier as not_a_free_offer rather than by eligibility", () => {
     for (const offer of offers.filter(o => /^legacy free$/i.test(o.tier.trim()))) {
-      const gate = gateFor(offer, TODAY);
+      const gate = gateForOffer(offer, TODAY);
       assert.strictEqual(gate?.code, "not_a_free_offer", `${offer.vendor} took a different gate`);
       assert.strictEqual(gate?.reason, `Tier "${offer.tier}" is a free tier closed to new accounts.`);
     }

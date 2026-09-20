@@ -86,7 +86,7 @@ function badgeColor(svg: string): string {
 }
 
 before(async () => {
-  const { loadOffers, loadDealChanges, enrichOffers, publishedRisk, refusalsForVendor } = await import("../dist/data.js");
+  const { loadOffers, loadDealChanges, enrichOffers, publishedRisk, refusalsForVendor, gateForOffer } = await import("../dist/data.js");
   const { vendorSlugMap } = await import("../dist/vendor-slug.js");
   const { levelWithheldReason } = await import("../dist/source-check.js");
   const { vendorBadge } = await import("../dist/vendor-verdict.js");
@@ -124,7 +124,7 @@ before(async () => {
       termsConfirmedOn: primary.verifiedDate,
       ratingWithheld: e.rating_withheld,
       offerEnded: offerEnded(primary),
-      gate: gateFor(primary, servedOn)?.code ?? null,
+      gate: gateForOffer(primary, servedOn)?.code ?? null,
       linkUnreachable: Boolean(e.link_unreachable),
     }) as { kind: "rating" | "ended" | "none"; word?: string; because?: Withholding };
     const verifiedDate = own.reduce(

@@ -135,6 +135,7 @@ export const WITHHOLDING_SCOPE = {
   not_a_free_offer: "the_rating",
   offer_expired: "the_rating",
   offer_retired: "the_rating",
+  product_discontinued: "the_rating",
   verification_lapsed: "the_rating",
 } as const satisfies Record<WithholdingTag, WithholdingScope>;
 
@@ -161,6 +162,7 @@ export const WITHHOLDING_BADGE_LABELS: Record<BadgeWithholdingTag, string> = {
   not_a_free_offer: "unrated — not a free offer",
   offer_expired: "unrated — offer expired",
   offer_retired: "unrated — offer ended",
+  product_discontinued: "unrated — product discontinued",
   verification_lapsed: "unrated — not re-confirmed",
 };
 

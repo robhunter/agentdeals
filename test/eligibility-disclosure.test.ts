@@ -12,7 +12,7 @@ const { eligibilityGate, eligibilityGateAsPublished, publishableEligibilityCondi
 const { gateFor, notAFreeOfferGateFor, utcDate } = await import("../dist/ranking.js");
 const { supersedingChange } = await import("../dist/superseded-description.js");
 const { offerRetired } = await import("../dist/retirement.js");
-const { NOTHING_CONTRADICTS_OUR_TERMS_FOR } = await import("../dist/data.js");
+const { NOTHING_CONTRADICTS_OUR_TERMS_FOR, gateForOffer } = await import("../dist/data.js");
 
 type Offer = import("../src/types.ts").Offer;
 type DealChange = import("../src/types.ts").DealChange;
@@ -56,7 +56,7 @@ function termsWithheldFor(vendor: string): boolean {
   return because !== null && withholdsTheTerms(because);
 }
 
-const publishesARestriction = (offer: Offer) => gateFor(offer, TODAY)?.code === "eligibility_restricted";
+const publishesARestriction = (offer: Offer) => gateForOffer(offer, TODAY)?.code === "eligibility_restricted";
 
 let port = 0;
 let proc: ChildProcess | null = null;
@@ -158,7 +158,7 @@ describe("a vendor page whose record is gated on eligibility says so", () => {
     for (const p of rendered.filter(x => x.offer.eligibility)) {
       const answer = faqAnswer(p.html, `Is ${p.vendor} free?`) ?? "";
       assert.ok(
-        answer.startsWith(gateFor(p.offer, "")!.reason),
+        answer.startsWith(gateForOffer(p.offer, "")!.reason),
         `${p.slug} opens with ${answer.slice(0, 60)}`,
       );
     }
@@ -167,7 +167,7 @@ describe("a vendor page whose record is gated on eligibility says so", () => {
   it("still answers yes where the page renders an ungated record for a vendor that also holds a gated one", () => {
     const controls = rendered.filter(
       p => !p.offer.eligibility
-        && !gateFor(p.offer, utcDate())
+        && !gateForOffer(p.offer, utcDate())
         && !termsWithheldFor(p.vendor)
         && !changeSuperseding(p.offer),
     );
@@ -189,7 +189,7 @@ describe("a vendor page whose record is gated on eligibility says so", () => {
     assert.ok(subjects.length > 0, "no rendered page has the restriction as its effective gate");
     for (const p of subjects) {
       const description = blockOfType(p.html, "WebPage")?.description ?? "";
-      assert.ok(description.startsWith(gateFor(p.offer, TODAY)!.reason), `${p.slug} description is unqualified`);
+      assert.ok(description.startsWith(gateForOffer(p.offer, TODAY)!.reason), `${p.slug} description is unqualified`);
     }
   });
 
@@ -246,7 +246,7 @@ describe("the category page a gated offer is sent to states the restriction", ()
       const html = await page(`/category/${slugOf(category)}`);
       for (const o of gated) {
         assert.ok(
-          html.includes(escapeHtml(gateFor(o, TODAY)!.reason)),
+          html.includes(escapeHtml(gateForOffer(o, TODAY)!.reason)),
           `/category/${slugOf(category)} omits the restriction on ${o.vendor}`,
         );
       }
@@ -271,7 +271,7 @@ describe("a category page does not count a gated offer as a plain free tier", ()
     return {
       total: inCategory.length,
       restricted: inCategory.filter(publishesARestriction).length,
-      gated: inCategory.filter(o => gateFor(o, utcDate())).length,
+      gated: inCategory.filter(o => gateForOffer(o, utcDate())).length,
       ended: held.length - inCategory.length,
     };
   };
@@ -378,7 +378,7 @@ describe("the other answers on a gated vendor page", () => {
       "no vendor page renders a record gated only by its eligibility, so this check reads nothing",
     );
     for (const p of pagesStillNamingATier()) {
-      const reason = gateFor(p.offer, "")!.reason;
+      const reason = gateForOffer(p.offer, "")!.reason;
       for (const question of [`What is ${p.vendor}'s free tier?`, `Is ${p.vendor}'s free tier good for production?`]) {
         const answer = faqAnswer(p.html, question) ?? "";
         assert.ok(answer.startsWith(reason), `${p.slug} answers "${question}" with ${answer.slice(0, 70)}`);
@@ -388,7 +388,7 @@ describe("the other answers on a gated vendor page", () => {
 
   it("leaves the two that describe our record rather than the offer alone", () => {
     for (const p of gatedPages()) {
-      const reason = gateFor(p.offer, "")!.reason;
+      const reason = gateForOffer(p.offer, "")!.reason;
       for (const question of [
         `What changed in ${p.vendor}'s pricing?`,
         `What category is ${p.vendor} in?`,
@@ -404,7 +404,7 @@ describe("the other answers on a gated vendor page", () => {
 describe("the disclosure reuses one composition", () => {
   it("returns the ranking gate unchanged for a record carrying eligibility", () => {
     const gated = offers.find(o => o.eligibility)!;
-    assert.deepStrictEqual(eligibilityGate(gated), gateFor(gated, ""));
+    assert.deepStrictEqual(eligibilityGate(gated), gateFor(gated, "", []));
     assert.strictEqual(eligibilityGate(gated)!.code, "eligibility_restricted");
   });
 
@@ -413,7 +413,7 @@ describe("the disclosure reuses one composition", () => {
       vendor: "Acme", category: "Databases", description: "A free tier.", tier: "Free",
       url: "https://example.com/pricing", tags: [], verifiedDate: "2026-08-20", expires_date: "2026-01-01",
     };
-    assert.strictEqual(gateFor(expired, "2026-09-01")!.code, "offer_expired");
+    assert.strictEqual(gateFor(expired, "2026-09-01", [])!.code, "offer_expired");
     assert.strictEqual(eligibilityGate(expired), null);
     assert.deepStrictEqual(publishableEligibilityConditions(expired), []);
   });
@@ -424,10 +424,10 @@ describe("the disclosure reuses one composition", () => {
       url: "https://example.com/pricing", tags: [], verifiedDate: "2026-08-20",
       eligibility: { type: "startup", conditions: ["Pre-Series B"], program: "Acme for Startups" },
     };
-    assert.strictEqual(gateFor(restricted, "2026-09-02")!.code, "eligibility_restricted");
+    assert.strictEqual(gateFor(restricted, "2026-09-02", [])!.code, "eligibility_restricted");
     assert.deepStrictEqual(
       eligibilityGateAsPublished(restricted, "2026-09-02"),
-      gateFor(restricted, "2026-09-02"),
+      gateFor(restricted, "2026-09-02", []),
     );
   });
 
@@ -437,7 +437,7 @@ describe("the disclosure reuses one composition", () => {
       url: "https://example.com/pricing", tags: [], verifiedDate: "2026-08-20",
       eligibility: { type: "startup", conditions: ["Pre-Series B"], program: "Acme for Startups" },
     };
-    assert.strictEqual(gateFor(ended, "2026-09-02")!.code, "offer_retired");
+    assert.strictEqual(gateFor(ended, "2026-09-02", [])!.code, "offer_retired");
     assert.ok(eligibilityGate(ended), "the record still carries an eligibility block");
     assert.strictEqual(eligibilityGateAsPublished(ended, "2026-09-02"), null);
   });
@@ -448,10 +448,10 @@ describe("the disclosure reuses one composition", () => {
       url: "https://example.com/pricing", tags: [], verifiedDate: "2026-08-20", expires_date: "2026-01-01",
       eligibility: { type: "startup", conditions: ["Pre-Series B"], program: "Acme for Startups" },
     };
-    assert.strictEqual(gateFor(expired, "2026-09-02")!.code, "eligibility_restricted");
+    assert.strictEqual(gateFor(expired, "2026-09-02", [])!.code, "eligibility_restricted");
     assert.deepStrictEqual(
       eligibilityGateAsPublished(expired, "2026-09-02"),
-      gateFor(expired, "2026-09-02"),
+      gateFor(expired, "2026-09-02", []),
     );
   });
 

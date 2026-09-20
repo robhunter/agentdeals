@@ -6,6 +6,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const { gateFor, utcDate, GATE_TABLE } = await import("../dist/ranking.js");
+const { gateForOffer } = await import("../dist/data.js");
 const { gateClauseList, gateDisclosureSentence, matchingSubject } = await import("../dist/gate-disclosure.js");
 const { LAST_RESOLVED, LEVEL_WITHHOLDING_OUTCOMES, WHEN_WE_LOOKED, withheldLevelSentence } = await import("../dist/source-check.js");
 
@@ -108,11 +109,11 @@ function recordKey(o: { vendor: string; tier: string; url: string }): string {
 }
 
 const expectedGates = new Map<string, Gate>(
-  offers.map(o => [recordKey(o), (gateFor(o, TODAY) as Gate) ?? null]),
+  offers.map(o => [recordKey(o), (gateForOffer(o, TODAY) as Gate) ?? null]),
 );
 
-const gatedRecords = offers.filter(o => gateFor(o, TODAY) !== null);
-const gatedByCode = (code: string) => gatedRecords.filter(o => gateFor(o, TODAY)!.code === code);
+const gatedRecords = offers.filter(o => gateForOffer(o, TODAY) !== null);
+const gatedByCode = (code: string) => gatedRecords.filter(o => gateForOffer(o, TODAY)!.code === code);
 
 const CLAUSE_TEXT: Record<string, [string, (n: number) => string]> = {
   eligibility_restricted: ["1 requires an application or qualification", n => `${n} require an application or qualification`],
@@ -123,7 +124,7 @@ const CLAUSE_TEXT: Record<string, [string, (n: number) => string]> = {
 const CLAUSE_ORDER = ["eligibility_restricted", "not_a_free_offer", "offer_expired", "offer_retired"];
 
 function expectedSummary(noun: string, records: Offer[]): string {
-  const codes = records.map(o => gateFor(o, TODAY)).filter(Boolean).map(g => g!.code);
+  const codes = records.map(o => gateForOffer(o, TODAY)).filter(Boolean).map(g => g!.code);
   if (codes.length === 0) return "";
   const clauses = CLAUSE_ORDER
     .map(code => ({ code, n: codes.filter(c => c === code).length }))
@@ -145,7 +146,7 @@ function categoryWhere(predicate: (gated: number, total: number) => boolean): st
   const categories = [...new Set(offers.map(o => o.category))].sort();
   const found = categories.find(c => {
     const rows = inCategory(c);
-    return rows.length > 3 && predicate(rows.filter(o => gateFor(o, TODAY) !== null).length, rows.length);
+    return rows.length > 3 && predicate(rows.filter(o => gateForOffer(o, TODAY) !== null).length, rows.length);
   });
   assert.ok(found, "no category matched the shape this test needs");
   return found!;
@@ -207,7 +208,7 @@ describe("every JSON surface carries the ranker's gate (issue #1241 Part 1)", ()
       const body = await getJson(`/api/offers?q=${encodeURIComponent(record.vendor)}&limit=50`);
       const row = body.offers.find((o: any) => recordKey(o) === recordKey(record));
       if (!row) { absent.push(record.vendor); continue; }
-      assert.strictEqual(row.gate.code, gateFor(record, TODAY)!.code, record.vendor);
+      assert.strictEqual(row.gate.code, gateForOffer(record, TODAY)!.code, record.vendor);
     }
     assert.deepStrictEqual(absent, [], "gated records a search by vendor name no longer returns");
   });
@@ -301,7 +302,7 @@ describe("the response states how many of its offers are gated (issue #1241 Part
     const category = categoryWhere((gated, total) => gated > 1 && gated < total);
     const records = inCategory(category);
     const body = await getJson(`/api/offers?category=${encodeURIComponent(category)}&limit=5`);
-    assert.strictEqual(body.gated, records.filter(o => gateFor(o, TODAY) !== null).length);
+    assert.strictEqual(body.gated, records.filter(o => gateForOffer(o, TODAY) !== null).length);
     assert.ok(body.gated < body.total);
     assert.strictEqual(body.gate_summary, expectedSummary("offer", records));
   });
@@ -400,7 +401,7 @@ describe("/api/vendor-risk does not rate an offer we do not list (issue #1241 Pa
   });
 
   it("ungated vendors keep their rating, their longevity and their sentence", async () => {
-    const ungated = offers.filter(o => gateFor(o, TODAY) === null).slice(0, 40);
+    const ungated = offers.filter(o => gateForOffer(o, TODAY) === null).slice(0, 40);
     let stillRated = 0;
     for (const offer of ungated) {
       const body = await getJson(`/api/vendor-risk/${encodeURIComponent(offer.vendor)}`);
