@@ -29,7 +29,7 @@ const { freeTierEndingRecord } = await import("../dist/data.js");
 const { offerEnded } = await import("../dist/retirement.js");
 const { CHANGE_IMPACT_LEVELS, changeImpactColor, changeImpactLabel, isChangeImpactLevel } =
   await import("../dist/change-impact.js");
-const { vendorSlugMap } = await import("../dist/vendor-slug.js");
+const { changeLogVendorMap, vendorSlugMap } = await import("../dist/vendor-slug.js");
 const { SOURCE_MARKER_MARKUP } = await import("../dist/change-citation.js");
 const { isOurOwnBookkeeping } = await import("../dist/vendor-verdict.js");
 const { isTrackedChange } = await import("../dist/change-census.js");
@@ -210,9 +210,19 @@ describe("resolving the vendor a compiled figure is about", () => {
   });
 
   it("names a vendor the change log holds and the catalogue does not", () => {
-    const named = vendorForSubject({ kind: "row", label: "StackHawk", linkedSlug: null });
-    assert.deepStrictEqual(named, { slug: null, vendor: "StackHawk" });
-    assert.strictEqual(vendorSlugForSubject({ kind: "row", label: "StackHawk", linkedSlug: null }), null);
+    const noPageOfTheirOwn = [...changeLogVendorMap.values()]
+      .filter(vendor => vendorSlugForSubject({ kind: "row", label: vendor, linkedSlug: null }) === null)
+      .sort();
+    assertPopulationFloor(noPageOfTheirOwn.length, 40, "change-log vendors the catalogue holds no page for");
+    const unnamed = noPageOfTheirOwn.filter(vendor => {
+      const named = vendorForSubject({ kind: "row", label: vendor, linkedSlug: null });
+      return named === null || named.slug !== null || named.vendor !== vendor;
+    });
+    assert.deepStrictEqual(
+      unnamed.slice(0, 8),
+      [],
+      `${unnamed.length} of ${noPageOfTheirOwn.length} vendors the change log holds and the catalogue has no page for are left unnamed`,
+    );
   });
 
   it("keeps a vendor's own page when the catalogue holds it under a longer name", () => {

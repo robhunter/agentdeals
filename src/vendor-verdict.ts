@@ -591,6 +591,11 @@ export function statesRiskCause(input: VendorVerdictInput): boolean {
   return word !== null && word !== "stable" && input.cause !== null;
 }
 
+export function withholdingThatDoesNotLapse(input: VendorVerdictInput): RatingWithheld | null {
+  if (input.offerEnded || input.gate) return null;
+  return input.ratingWithheld ?? null;
+}
+
 export function demotionTheVerdictNames(input: VendorVerdictInput): RiskCause | null {
   if (input.offerEnded || withholdingDecides(input) || refusalWithholdsStability(input)) return null;
   const word = vendorVerdictWord(input);
