@@ -104,7 +104,7 @@ import { discontinuedOnOrBefore, PRODUCT_DEPRECATED } from "./product-deprecatio
 import { rankOffers, rankForListing, rotateListing, utcDate, gateFor, notAFreeOfferGateFor, descriptionDeniesFreeTier, classifyTier, CRITERIA_PATH, DEMOTE_ONLY_POLICY, DISCLOSURE_RATIONALE, TIE_BREAK_ALGORITHM, NAMED_SUBSET_RULE, NAMED_SUBSET_FIELD_RULE, wholeRankedOrderClause, GATE_TABLE, gateTableRowText, DEMERIT_TABLE, NOT_FREE_TIER_RULES, TIME_LIMITED_TIER_RULES, type TieBreak, type Gate } from "./ranking.js";
 import type { RankedEntry, RankingResult } from "./ranking.js";
 import { eligibilityGateAsPublished, gatedShareDescriptionClause, gatedShareLede, publishableEligibilityConditions } from "./eligibility.js";
-import { gateDisclosureFor } from "./gate-disclosure.js";
+import { gateDisclosureFor, gateDisclosureSentence, matchingSubject } from "./gate-disclosure.js";
 import { verificationLedger, QUARANTINE_AFTER_FAILURES } from "./verification-state.js";
 import { partitionAlternatives, partitionSubstitutes, type SubstitutesPartition, productRoleSentence, MEMBERSHIP_GATE_RULES, MEMBERSHIP_GATE_ORDER, MEMBERSHIP_GATE_SYMMETRY, MEMBERSHIP_GATE_SCOPE, MEMBERSHIP_GATE_CORRECTIONS, SUBTYPE_TAXONOMIES, SUBTYPE_MEMBERSHIP_RULE, SUBTYPE_MEMBERSHIP_GROUP_SCOPE, CURATED_SUBTYPE_EXEMPTION, membershipGroupsFor, subtypeDefinition, CROSS_TAXONOMY_RULE, CROSS_TAXONOMY_RULINGS } from "./product-role.js";
 import { buildProductFunctions, functionMembers, functionDefinitions, functionMeaningSentence, admissionFor, splitByFunction, labelsNaming, FUNCTION_RESIDUE_COPY, type ProductFunction, FUNCTION_MEMBERSHIP_RULE, FUNCTION_SPLIT_RULE, FUNCTION_NAMING_RULE, FUNCTION_TITLE_RULE, FUNCTION_PICK_RULE } from "./product-function.js";
@@ -114,6 +114,7 @@ import { A_DATED_HEADING_MARKER, A_DATED_SECTION_MARKER, datedHeadingNoticeHtml,
 import { changeFeedEntries, feedEntryFields, feedUpdatedTimestamp, changeFeedProvenanceNote, CHANGE_FEED_ENTRY_LIMIT, CHANGE_FEED_DESCRIPTION, CHANGE_FEED_NAMESPACE, CHANGE_FEED_NAMESPACE_PREFIX, channelUpdatedTimestamp, WEEKLY_FEED_POPULATION_NOTE, feedLinkTag, feedEntrySourceXml, digestSourceXml, PER_CHANGE_FEED, WEEKLY_DIGEST_FEED } from "./change-feed.js";
 import { FEED_CORRECTIONS, correctionEntriesXml } from "./feed-corrections.js";
 import { buildDay, emptyPageLastmod, entryDay, fallbackDay, httpDate, lastmodFor, newestLastmod, readPageLastmod, type PageLastmodLedger } from "./page-lastmod.js";
+import { bestOfPathResolves, readBestOfPublished } from "./best-of-publication.js";
 import { datedUrl, entityTag, isNotModified, matchesEntityTag, revalidationHeaders } from "./conditional-request.js";
 import { dayNamedBySince, SINCE_REJECTED } from "./since-parameter.js";
 import type { AgentBalance } from "./ledger.js";
@@ -952,6 +953,7 @@ function stabilityCellHtml(
 const DURABILITY_COLUMN_HEADING = "Durability";
 const DURABILITY_NOT_PUBLISHED = "not published";
 const QUICK_COMPARISON_ID = "quick-comparison";
+const BEST_OF_GATED_ID = "not-ranked";
 
 const DURABILITY_COLORS: Record<string, string> = {
   stable: "#3fb950",
@@ -2505,11 +2507,29 @@ function countedNoun(count: number, noun: string): string {
 
 const productFunctions = buildProductFunctions(categories.map(c => c.name));
 
+let bestOfPublishedBefore: ReadonlySet<string>;
+try {
+  bestOfPublishedBefore = new Set(readBestOfPublished().slugs);
+} catch (err) {
+  console.error(`Serving only the best-of paths that reach the picks floor today: ${(err as Error).message}`);
+  bestOfPublishedBefore = new Set<string>();
+}
+
 const bestOfSlugMap = new Map<string, ProductFunction>();
 for (const fn of productFunctions) {
+  const slug = `free-${fn.slug}`;
   const generallyAvailable = functionMembers(offers, fn).filter((o) => !o.eligibility);
-  if (generallyAvailable.length < BEST_OF_MIN_VENDORS) continue;
-  bestOfSlugMap.set(`free-${fn.slug}`, fn);
+  const heldOpen = bestOfPublishedBefore.has(slug) && generallyAvailable.length > 0;
+  if (generallyAvailable.length < BEST_OF_MIN_VENDORS && !heldOpen) continue;
+  bestOfSlugMap.set(slug, fn);
+}
+
+const bestOfRetiredCategorySlugs = new Map<string, string>();
+for (const name of Object.keys(CATEGORY_RETIREMENTS)) {
+  const slug = toSlug(name);
+  if (bestOfPublishedBefore.has(`free-${slug}`) && !bestOfSlugMap.has(`free-${slug}`)) {
+    bestOfRetiredCategorySlugs.set(`free-${slug}`, slug);
+  }
 }
 
 function functionSubject(fn: ProductFunction): string {
@@ -2535,7 +2555,12 @@ function publishedBestOf(date = utcDate()): Map<string, ProductFunction> {
   if (held) return held;
   const publishing = new Map<string, ProductFunction>();
   for (const [slug, fn] of bestOfSlugMap) {
-    if (rankFunction(fn, date).qualified.length >= BEST_OF_MIN_PICKS) publishing.set(slug, fn);
+    const resolves = bestOfPathResolves({
+      qualified: rankFunction(fn, date).qualified.length,
+      minPicks: BEST_OF_MIN_PICKS,
+      publishedBefore: bestOfPublishedBefore.has(slug),
+    });
+    if (resolves) publishing.set(slug, fn);
   }
   bestOfPublishedByDate.clear();
   bestOfPublishedByDate.set(date, publishing);
@@ -2730,6 +2755,17 @@ ${cards}`;
     ? `      <p style="color:var(--text-muted);font-size:.9rem">Nothing on this page is demoted today &mdash; we hold no disqualifying record against any of these offers.</p>`
     : demoted.map((e, i) => renderCard(e, i, true)).join("\n");
 
+  const excluded = ranking.excluded;
+  const gateDisclosure = gateDisclosureSentence(
+    matchingSubject("offer", ranking.ranked.length + excluded.length),
+    ranking.ranked.length + excluded.length,
+    excluded.map(e => e.gate.code),
+  );
+  const excludedHtml = excluded.length === 0 ? "" : `
+  <h2 id="${BEST_OF_GATED_ID}">Not on our ranked list</h2>
+  <p class="page-meta" style="margin-bottom:1rem">${escHtmlServer(gateDisclosure)} <a href="${CRITERIA_PATH}">Here is how that order is derived</a>.</p>
+`;
+
   const tableRows = qualified.map((e) => {
     const o = e.offer;
     return `        <tr>
@@ -2909,6 +2945,7 @@ ${reviewsHtml}
   <h2>Demoted &mdash; and exactly why</h2>
   <p class="page-meta" style="margin-bottom:1rem">These offers reach this page too and rank below the list above. Each one names the recorded fact behind it. ${escHtmlServer(DISCLOSURE_RATIONALE)}</p>
 ${demotedHtml}
+${excludedHtml}
 
 ${renderAuditBlock(tie)}
 
@@ -55703,6 +55740,12 @@ ${catList}
     res.end(buildBestOfIndexPage());
   } else if (url.pathname.startsWith("/best/") && isGetOrHead) {
     const slug = url.pathname.slice("/best/".length).replace(/\/$/, "");
+    const retiredCategorySlug = bestOfRetiredCategorySlugs.get(slug);
+    if (retiredCategorySlug) {
+      res.writeHead(301, { Location: `/category/${retiredCategorySlug}` });
+      res.end();
+      return;
+    }
     const html = buildBestOfPage(slug);
     if (html) {
       recordApiHit("/best/:slug");
