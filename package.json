@@ -41,6 +41,7 @@
     "mutate:1774": "node scripts/mutate-1774.mjs",
     "mutate:1777": "node scripts/mutate-1777.mjs",
     "mutate:1849": "node scripts/mutate-1849.mjs",
+    "mutate:1853": "node scripts/mutate-1853.mjs",
     "test:gated": "node --test --test-concurrency 1 --test-reporter=spec --test-reporter-destination=stdout --test-reporter=./scripts/reporters/failing-tests.js --test-reporter-destination=$GATE_FAILING_TESTS test/**/*.test.ts",
     "floors": "node scripts/report-population-floors.js",
     "ratchet:budgets": "node scripts/ratchet-quality-budgets.js --lower",

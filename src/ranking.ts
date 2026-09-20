@@ -3,6 +3,7 @@ import { changeSummaryText } from "./change-citation.js";
 import { gateCensusSentence, VERIFICATION_LAPSED_DAYS } from "./gate-disclosure.js";
 import { LINK_GRACE_DAYS, unreachableNoticeForUrl } from "./link-health.js";
 import { discontinuedClause, discontinuedOnOrBefore } from "./product-deprecation.js";
+import { lastReadingFor, type LastReading, type ReadingLookup } from "./read-date.js";
 import { listEndedTiers, offerEnded, recordedTierSentence, THE_PAGE_STAYS_UP_UNRANKED } from "./retirement.js";
 import { LAST_RESOLVED, withheldLevelSentence } from "./source-check.js";
 import type { ChangeDateSource, DealChange, LinkUnreachable, Offer } from "./types.js";
@@ -128,6 +129,16 @@ export function gateTableRowText(
   return row.census ? `${row.rule} ${row.census(offers, date, changesFor)}` : row.rule;
 }
 
+export function demeritTableRowText(
+  row: DemeritTableRow,
+  offers: Offer[],
+  date: string,
+  ledger?: VerificationLedger,
+  lastReading?: ReadingLookup,
+): string {
+  return row.census ? `${row.trigger} ${row.census(offers, date, ledger, lastReading)}` : row.trigger;
+}
+
 export type DemeritCode =
   | "free_tier_withdrawn"
   | "link_gone"
@@ -144,7 +155,21 @@ export interface Demerit {
   about_us?: boolean;
 }
 
-export const DEMERIT_TABLE: { code: DemeritCode; points: number; trigger: string }[] = [
+export type DemeritCensus = (
+  offers: Offer[],
+  date: string,
+  ledger?: VerificationLedger,
+  lastReading?: ReadingLookup,
+) => string;
+
+export interface DemeritTableRow {
+  code: DemeritCode;
+  points: number;
+  trigger: string;
+  census?: DemeritCensus;
+}
+
+export const DEMERIT_TABLE: DemeritTableRow[] = [
   {
     code: "free_tier_withdrawn",
     points: 3,
@@ -173,7 +198,12 @@ export const DEMERIT_TABLE: { code: DemeritCode; points: number; trigger: string
     code: "stale_verification",
     points: 1,
     trigger:
-      `We have not confirmed the offer against the vendor's own pricing page for more than ${STALE_VERIFICATION_DAYS} days. This measures our confidence, not the vendor.`,
+      `Our most recent reading of the vendor's own pricing page did not confirm the offer, or there has been no reading of it for more than ${STALE_VERIFICATION_DAYS} days. This measures our confidence, not the vendor.`,
+    census: (offers, date, ledger, lastReading) =>
+      staleVerificationCensusSentence(
+        offers.map(offer => verificationDoubt(offer, date, ledger, (lastReading ?? lastReadingFor)(offer))),
+        date,
+      ),
   },
   {
     code: "expiring_soon",
@@ -298,6 +328,7 @@ export interface RankOptions {
   date?: string;
   verificationLedger?: VerificationLedger;
   linkHealth?: LinkHealthLookup;
+  lastReading?: ReadingLookup;
 }
 
 function daysBetween(fromIso: string, toIso: string): number {
@@ -371,42 +402,169 @@ export function gateFor(offer: Offer, date: string, vendorChanges: readonly Deal
   return null;
 }
 
-function staleVerificationDemerit(
-  offer: Offer,
-  date: string,
-  ledger?: VerificationLedger,
-): Demerit | null {
-  if (!offer.verifiedDate) return null;
-  const age = daysBetween(offer.verifiedDate, date);
-  if (age <= STALE_VERIFICATION_DAYS) return null;
+const OUR_CONFIDENCE_NOT_THE_VENDOR = "This is our confidence in the record, not a change by the vendor.";
 
-  const failure = ledger?.get(offer.vendor.toLowerCase());
-  if (failure && failure.consecutive_failures > 0) {
-    const attempts = failure.consecutive_failures === 1 ? "attempt" : "attempts";
-    const since = failure.last_success
-      ? `last confirmed ${failure.last_success}`
-      : "never confirmed since it was indexed";
-    return {
-      code: "stale_verification",
-      points: 1,
-      about_us: true,
-      date: failure.last_attempt,
-      reason:
-        `We cannot confirm this offer: ${failure.consecutive_failures} consecutive re-check ${attempts} have failed ` +
-        `(most recently ${failure.last_attempt} — ${failure.last_error}), ${since}. ` +
-        `This is our inability to verify, not a change by the vendor.`,
-    };
-  }
+export interface AttemptsThatFailed {
+  consecutive_failures: number;
+  last_attempt: string;
+  last_error: string;
+  last_success: string | null;
+}
 
+function attemptsOf(reading: LastReading): AttemptsThatFailed | null {
+  if (reading.consecutive_failures < 1) return null;
+  return {
+    consecutive_failures: reading.consecutive_failures,
+    last_attempt: reading.date,
+    last_error: reading.last_error ?? "no reason recorded",
+    last_success: reading.last_success,
+  };
+}
+
+function attemptsOfLedgerEntry(failure: VerificationFailure | undefined): AttemptsThatFailed | null {
+  if (!failure || failure.consecutive_failures < 1) return null;
+  return {
+    consecutive_failures: failure.consecutive_failures,
+    last_attempt: failure.last_attempt,
+    last_error: failure.last_error,
+    last_success: failure.last_success,
+  };
+}
+
+function attemptsThatFailedDemerit(attempts: AttemptsThatFailed): Demerit {
+  const counted = attempts.consecutive_failures === 1 ? "attempt has" : "attempts have";
+  const since = attempts.last_success
+    ? `last confirmed ${attempts.last_success}`
+    : "never confirmed since it was indexed";
   return {
     code: "stale_verification",
     points: 1,
     about_us: true,
-    date: offer.verifiedDate,
+    date: attempts.last_attempt,
     reason:
-      `We have not confirmed this offer against the vendor's pricing page since ${offer.verifiedDate} (${age} days). ` +
-      `This is our confidence in the record, not a change by the vendor.`,
+      `We cannot confirm this offer: ${attempts.consecutive_failures} consecutive re-check ${counted} failed ` +
+      `(most recently ${attempts.last_attempt} — ${attempts.last_error}), ${since}. ` +
+      `This is our inability to verify, not a change by the vendor.`,
   };
+}
+
+export const A_READING_THAT_DID_NOT_CONFIRM = "did not confirm the terms we hold";
+
+function whatTheReadingFoundDemerit(reading: LastReading): Demerit {
+  return {
+    code: "stale_verification",
+    points: 1,
+    about_us: true,
+    date: reading.date,
+    reason:
+      `Our last read of the vendor's pricing page, on ${reading.date}, ${reading.found ?? A_READING_THAT_DID_NOT_CONFIRM}. ` +
+      OUR_CONFIDENCE_NOT_THE_VENDOR,
+  };
+}
+
+function noReadingSinceDemerit(verifiedDate: string, age: number): Demerit {
+  return {
+    code: "stale_verification",
+    points: 1,
+    about_us: true,
+    date: verifiedDate,
+    reason:
+      `We have not confirmed this offer against the vendor's pricing page since ${verifiedDate} (${age} days). ` +
+      OUR_CONFIDENCE_NOT_THE_VENDOR,
+  };
+}
+
+export function insideTheStalenessWindow(day: string | null | undefined, date: string): boolean {
+  if (!day) return false;
+  const age = daysBetween(day, date);
+  return age >= 0 && age <= STALE_VERIFICATION_DAYS;
+}
+
+export function readingInsideTheStalenessWindow(
+  reading: LastReading | null,
+  date: string,
+): LastReading | null {
+  return reading && insideTheStalenessWindow(reading.date, date) ? reading : null;
+}
+
+export type VerificationDoubt =
+  | { basis: "could_not_read"; attempts: AttemptsThatFailed }
+  | { basis: "could_not_confirm"; reading: LastReading }
+  | { basis: "unsettled"; reading: LastReading }
+  | { basis: "no_reading"; verifiedDate: string; age: number };
+
+export function verificationDoubt(
+  offer: Pick<Offer, "vendor" | "verifiedDate">,
+  date: string,
+  ledger: VerificationLedger | undefined,
+  lastReading: LastReading | null,
+): VerificationDoubt | null {
+  const reading = readingInsideTheStalenessWindow(lastReading, date);
+
+  if (reading?.confirmed) return null;
+  if (reading && !reading.read_the_page && insideTheStalenessWindow(reading.last_success, date)) return null;
+  if (reading && !reading.settles) {
+    const attempts = attemptsOf(reading);
+    if (attempts) return { basis: "could_not_read", attempts };
+    return { basis: "could_not_confirm", reading };
+  }
+
+  if (!offer.verifiedDate) return null;
+  const age = daysBetween(offer.verifiedDate, date);
+  if (age <= STALE_VERIFICATION_DAYS) return null;
+
+  const fromTheLedger = attemptsOfLedgerEntry(ledger?.get(offer.vendor.toLowerCase()));
+  if (fromTheLedger) return { basis: "could_not_read", attempts: fromTheLedger };
+  if (reading) return { basis: "unsettled", reading };
+  return { basis: "no_reading", verifiedDate: offer.verifiedDate, age };
+}
+
+const DOUBT_CLAUSES: { basis: VerificationDoubt["basis"]; clause: (n: string) => string }[] = [
+  {
+    basis: "could_not_confirm",
+    clause: (n) => `${n} where the page we read states nothing that could confirm the record`,
+  },
+  {
+    basis: "could_not_read",
+    clause: (n) => `${n} where our re-checks have not been able to read the page at all`,
+  },
+  {
+    basis: "unsettled",
+    clause: (n) => `${n} where a reading did not settle the record and the catalogue date has passed the window`,
+  },
+  {
+    basis: "no_reading",
+    clause: (n) => `${n} where we have read nothing inside that window`,
+  },
+];
+
+export const WHAT_MOVES_STALE_VERIFICATION =
+  `A reading that confirms the record clears it. Where the page we read could not confirm it, and where our re-checks could not read the page at all, the demerit is dated to that reading and does not grow with the calendar — only a later reading moves those counts. The other two still start at the ${STALE_VERIFICATION_DAYS}-day mark, so the clock alone can move them.`;
+
+export function staleVerificationCensusSentence(
+  doubts: (VerificationDoubt | null)[],
+  date: string,
+): string {
+  const scope = `On ${date}, of the ${doubts.length.toLocaleString("en-US")} records we hold`;
+  const held = doubts.filter((d): d is VerificationDoubt => d !== null);
+  if (held.length === 0) return `${scope}, none meets it.`;
+  const clauses = DOUBT_CLAUSES.map(({ basis, clause }) =>
+    clause(held.filter((d) => d.basis === basis).length.toLocaleString("en-US")),
+  );
+  return `${scope}, ${held.length.toLocaleString("en-US")} meet it — ${clauses.join(", ")}. ${WHAT_MOVES_STALE_VERIFICATION}`;
+}
+
+function staleVerificationDemerit(
+  offer: Offer,
+  date: string,
+  ledger: VerificationLedger | undefined,
+  lastReading: LastReading | null,
+): Demerit | null {
+  const doubt = verificationDoubt(offer, date, ledger, lastReading);
+  if (!doubt) return null;
+  if (doubt.basis === "could_not_read") return attemptsThatFailedDemerit(doubt.attempts);
+  if (doubt.basis === "no_reading") return noReadingSinceDemerit(doubt.verifiedDate, doubt.age);
+  return whatTheReadingFoundDemerit(doubt.reading);
 }
 
 export function unreachableLinkDemerit(
@@ -430,10 +588,12 @@ export function evaluate<T extends Offer>(
     changesForVendor: DealChange[];
     verificationLedger?: VerificationLedger;
     linkHealth?: LinkHealthLookup;
+    lastReading?: ReadingLookup;
   },
 ): RankedEntry<T> {
   const { date, changesForVendor, verificationLedger } = opts;
   const lookUpLink = opts.linkHealth ?? unreachableNoticeForUrl;
+  const lookUpReading = opts.lastReading ?? lastReadingFor;
   const demerits: Demerit[] = [];
   const disclosures: Disclosure[] = [];
 
@@ -481,7 +641,9 @@ export function evaluate<T extends Offer>(
     });
   }
 
-  const stale = linkDemerit ? null : staleVerificationDemerit(offer, date, verificationLedger);
+  const stale = linkDemerit
+    ? null
+    : staleVerificationDemerit(offer, date, verificationLedger, lookUpReading(offer));
   if (stale) demerits.push(stale);
 
   if (offer.expires_date && offer.expires_date >= date) {
@@ -529,6 +691,7 @@ export function rankOffers<T extends Offer>(candidates: T[], opts: RankOptions):
         changesForVendor: byVendor.get(offer.vendor.toLowerCase()) ?? [],
         verificationLedger: opts.verificationLedger,
         linkHealth: opts.linkHealth,
+        lastReading: opts.lastReading,
       }),
     );
   }

@@ -16,6 +16,7 @@ import {
   type ProductFunction,
 } from "../dist/product-function.js";
 import { rankOffers, rotateListing, tieBreakSeed } from "../dist/ranking.js";
+import { readBestOfPublished } from "../dist/best-of-publication.js";
 import { verificationLedger } from "../dist/verification-state.js";
 import type { Offer } from "../dist/types.js";
 
@@ -40,7 +41,9 @@ function rankedFor(fn: ProductFunction, date: string) {
 }
 
 const reaching = functions.filter(fn => functionMembers(offers, fn).filter(o => !o.eligibility).length >= MIN_VENDORS);
-const published = reaching.filter(fn => rankedFor(fn, TODAY).qualified.length >= MIN_PICKS);
+const publishedBefore = new Set(readBestOfPublished().slugs);
+const heldOpen = (slug: string): boolean => publishedBefore.has(`free-${slug}`);
+const published = reaching.filter(fn => rankedFor(fn, TODAY).qualified.length >= MIN_PICKS || heldOpen(fn.slug));
 const withheld = reaching.filter(fn => !published.includes(fn));
 
 function reachesAPage(offer: Offer): boolean {
@@ -223,7 +226,7 @@ describe("every function with enough vendors to compare has a page", () => {
       assert.ok(fn, `${subtype} names no function`);
       const picks = rankedFor(fn!, TODAY).qualified.length;
       const { status } = await page(`/best/free-${fn!.slug}`);
-      if (picks >= MIN_PICKS) {
+      if (picks >= MIN_PICKS || heldOpen(fn!.slug)) {
         served++;
         assert.strictEqual(status, 200, `/best/free-${fn!.slug} answers ${status} for a subtype with ${picks} picks`);
       } else {

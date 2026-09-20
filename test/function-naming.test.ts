@@ -22,6 +22,7 @@ import {
   type ProductFunction,
 } from "../dist/product-function.js";
 import { rankOffers } from "../dist/ranking.js";
+import { readBestOfPublished } from "../dist/best-of-publication.js";
 import { verificationLedger } from "../dist/verification-state.js";
 import { assertSharesPopulation, categoriesInTheCatalogue } from "./population-floor.ts";
 
@@ -46,7 +47,10 @@ function picksFor(fn: ProductFunction, date = TODAY): number {
 }
 
 const reaching = functions.filter(fn => functionMembers(offers, fn).filter(o => !o.eligibility).length >= MIN_VENDORS);
-const published = reaching.filter(fn => picksFor(fn) >= MIN_PICKS);
+const publishedBefore = new Set(readBestOfPublished().slugs);
+const heldOpen = (fn: ProductFunction): boolean => publishedBefore.has(`free-${fn.slug}`);
+const meetingThePicksFloor = reaching.filter(fn => picksFor(fn) >= MIN_PICKS);
+const published = reaching.filter(fn => picksFor(fn) >= MIN_PICKS || heldOpen(fn));
 
 function startServer(env: NodeJS.ProcessEnv = {}): Promise<{ child: ChildProcess; port: number }> {
   return new Promise((resolve, reject) => {
@@ -316,9 +320,9 @@ describe("a page's title names a class of product", () => {
 });
 
 describe("a page named after a class publishes more than one of them", () => {
-  it("serves no page whose list holds a single pick", async () => {
+  it("opens no new page whose list holds a single pick", async () => {
     let checked = 0;
-    for (const fn of published) {
+    for (const fn of meetingThePicksFloor) {
       const { status, html } = await page(`/best/free-${fn.slug}`);
       assert.strictEqual(status, 200, `/best/free-${fn.slug} answers ${status}`);
       const demotedAt = html.indexOf("<h2>Demoted");
@@ -329,8 +333,18 @@ describe("a page named after a class publishes more than one of them", () => {
     assert.ok(checked >= 70, `only ${checked} pages were read, so this sweep is not measuring the namespace`);
   });
 
+  it("keeps a path it has published before, under the picks floor or not", async () => {
+    const underTheFloorAndHeldOpen = reaching.filter(fn => picksFor(fn) < MIN_PICKS && heldOpen(fn));
+    const map = await page("/sitemap-pages.xml");
+    for (const fn of underTheFloorAndHeldOpen) {
+      const { status } = await page(`/best/free-${fn.slug}`);
+      assert.strictEqual(status, 200, `/best/free-${fn.slug} has published before and answers ${status}`);
+      assert.ok(map.html.includes(`/best/free-${fn.slug}<`), `/best/free-${fn.slug} answers 200 and is in no sitemap`);
+    }
+  });
+
   it("withholds the URL from a function that reaches the record threshold and would publish one", async () => {
-    const withheld = reaching.filter(fn => picksFor(fn) < MIN_PICKS);
+    const withheld = reaching.filter(fn => picksFor(fn) < MIN_PICKS && !heldOpen(fn));
     assert.ok(withheld.length > 0, "no function is withheld today, so this test asserts nothing");
     const map = await page("/sitemap-pages.xml");
     for (const fn of withheld) {

@@ -79,12 +79,20 @@ describe("checkVendorRisk logic", () => {
     assert.ok(!("error" in result));
     const total = (alt: { demerits: { points: number }[] }) =>
       alt.demerits.reduce((sum, d) => sum + d.points, 0);
-    for (let i = 1; i < result.result.alternatives.length; i++) {
+    const ranked = result.result.alternatives.filter((alt) => !alt.gate);
+    const gated = result.result.alternatives.filter((alt) => alt.gate);
+    assert.ok(ranked.length > 0, "no alternative is ranked, so this ordering asserts nothing");
+    for (let i = 1; i < ranked.length; i++) {
       assert.ok(
-        total(result.result.alternatives[i]) >= total(result.result.alternatives[i - 1]),
-        `${result.result.alternatives[i].vendor} carries fewer demerits than the entry above it`
+        total(ranked[i]) >= total(ranked[i - 1]),
+        `${ranked[i].vendor} carries fewer demerits than the entry above it`
       );
     }
+    assert.deepEqual(
+      result.result.alternatives.slice(ranked.length).map((alt) => alt.vendor),
+      gated.map((alt) => alt.vendor),
+      "a gated alternative is ordered among the ranked ones rather than after them",
+    );
   });
 
   it("alternatives carry a risk level we can publish, or null where we cannot vouch for one", async () => {
