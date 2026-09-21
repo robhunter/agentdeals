@@ -108,7 +108,7 @@
       "source_check": {
         "checked": "2026-09-16",
         "outcome": "ok",
-        "detail": "the page names Render as \"render\" and states \"$10\""
+        "detail": "the page names Render as \"render\""
       },
       "product_subtypes": {
         "taxonomy": "Cloud Hosting",
@@ -268,7 +268,7 @@
       "source_check": {
         "checked": "2026-09-17",
         "outcome": "ok",
-        "detail": "the page names Cloudflare Pages as \"cloudflare pages\" and states \"Free plan\""
+        "detail": "the page names Cloudflare Pages as \"cloudflare pages\""
       },
       "product_subtypes": {
         "taxonomy": "Cloud Hosting",
@@ -399,7 +399,7 @@
       "source_check": {
         "checked": "2026-09-18",
         "outcome": "ok",
-        "detail": "the page names Fly.io as \"fly io\" and states \"$5\""
+        "detail": "the page names Fly.io as \"fly io\""
       },
       "product_subtypes": {
         "taxonomy": "Cloud Hosting",
@@ -504,7 +504,7 @@
       "source_check": {
         "checked": "2026-09-16",
         "outcome": "ok",
-        "detail": "the page names Koyeb as \"koyeb\" and states \"$ 0.75\""
+        "detail": "the page names Koyeb as \"koyeb\""
       },
       "product_subtypes": {
         "taxonomy": "Databases",
@@ -536,7 +536,7 @@
       "source_check": {
         "checked": "2026-09-05",
         "outcome": "ok",
-        "detail": "the page names AWS as \"aws\" and states \"$200\""
+        "detail": "the page names AWS as \"aws\""
       }
     },
     {
@@ -558,7 +558,7 @@
       "source_check": {
         "checked": "2026-09-18",
         "outcome": "ok",
-        "detail": "the page names Azure as \"azure\" and states \"$100\""
+        "detail": "the page names Azure as \"azure\""
       }
     },
     {
@@ -597,7 +597,7 @@
       "source_check": {
         "checked": "2026-09-19",
         "outcome": "ok",
-        "detail": "the page names DigitalOcean as \"digitalocean\" and states \"$0.05\""
+        "detail": "the page names DigitalOcean as \"digitalocean\""
       }
     },
     {
@@ -638,7 +638,7 @@
       "source_check": {
         "checked": "2026-09-09",
         "outcome": "ok",
-        "detail": "the page names DigitalOcean as \"digitalocean\" and states \"$500\""
+        "detail": "the page names DigitalOcean as \"digitalocean\""
       }
     },
     {
@@ -660,7 +660,7 @@
       "source_check": {
         "checked": "2026-09-16",
         "outcome": "ok",
-        "detail": "the page names Oracle Cloud as \"oracle cloud\" and states \"$300\""
+        "detail": "the page names Oracle Cloud as \"oracle cloud\""
       }
     },
     {
@@ -862,7 +862,7 @@
       "source_check": {
         "checked": "2026-09-16",
         "outcome": "ok",
-        "detail": "the page names CockroachDB as \"cockroachdb\" and states \"$400\""
+        "detail": "the page names CockroachDB as \"cockroachdb\""
       },
       "product_subtypes": {
         "taxonomy": "Databases",
@@ -972,7 +972,7 @@
       "source_check": {
         "checked": "2026-09-07",
         "outcome": "ok",
-        "detail": "the page names Firebase as \"firebase\" and states \"$300\""
+        "detail": "the page names Firebase as \"firebase\""
       },
       "product_subtypes": {
         "taxonomy": "Databases",
@@ -1137,7 +1137,7 @@
       "source_check": {
         "checked": "2026-09-05",
         "outcome": "ok",
-        "detail": "the page names Xata as \"xata\" and states \"$0.012\""
+        "detail": "the page names Xata as \"xata\""
       },
       "product_subtypes": {
         "taxonomy": "Databases",
@@ -1190,7 +1190,7 @@
       "source_check": {
         "checked": "2026-09-13",
         "outcome": "ok",
-        "detail": "the page names Cloudflare D1 as \"cloudflare d1\" and states \"$0.001\""
+        "detail": "the page names Cloudflare D1 as \"cloudflare d1\""
       },
       "product_subtypes": {
         "taxonomy": "Databases",
@@ -1351,7 +1351,7 @@
       "source_check": {
         "checked": "2026-09-19",
         "outcome": "ok",
-        "detail": "the page names CircleCI as \"circleci\" and states \"$20,000\""
+        "detail": "the page names CircleCI as \"circleci\""
       },
       "restated_from": {
         "reading_date": "2026-09-03",
@@ -1400,7 +1400,7 @@
       "source_check": {
         "checked": "2026-09-05",
         "outcome": "ok",
-        "detail": "the page names Bitbucket Pipelines as \"bitbucket pipelines\" and states \"$10\""
+        "detail": "the page names Bitbucket Pipelines as \"bitbucket pipelines\""
       }
     },
     {
@@ -1491,7 +1491,7 @@
       "source_check": {
         "checked": "2026-09-09",
         "outcome": "ok",
-        "detail": "the page names Datadog as \"datadog\" and states \"$ 500\""
+        "detail": "the page names Datadog as \"datadog\""
       },
       "product_subtypes": {
         "taxonomy": "Monitoring",
@@ -1631,7 +1631,7 @@
       "source_check": {
         "checked": "2026-09-13",
         "outcome": "ok",
-        "detail": "the page names Axiom as \"axiom\" and states \"$25\""
+        "detail": "the page names Axiom as \"axiom\""
       },
       "product_subtypes": {
         "taxonomy": "Monitoring",
@@ -1699,7 +1699,7 @@
       "source_check": {
         "checked": "2026-09-16",
         "outcome": "ok",
-        "detail": "the page names New Relic as \"new relic\" and states \"$0.40\""
+        "detail": "the page names New Relic as \"new relic\""
       },
       "product_subtypes": {
         "taxonomy": "Monitoring",
@@ -1757,7 +1757,7 @@
       "source_check": {
         "checked": "2026-09-19",
         "outcome": "ok",
-        "detail": "the page names UptimeRobot as \"uptimerobot\" and states \"$ 13\""
+        "detail": "the page names UptimeRobot as \"uptimerobot\""
       },
       "product_subtypes": {
         "taxonomy": "Monitoring",
@@ -1887,7 +1887,7 @@
       "source_check": {
         "checked": "2026-09-05",
         "outcome": "ok",
-        "detail": "the page names Resend as \"resend\" and states \"$20\""
+        "detail": "the page names Resend as \"resend\""
       }
     },
     {
@@ -1936,7 +1936,7 @@
       "source_check": {
         "checked": "2026-09-19",
         "outcome": "ok",
-        "detail": "the page names Mailchimp as \"mailchimp\" and states \"$ 20\""
+        "detail": "the page names Mailchimp as \"mailchimp\""
       }
     },
     {
@@ -1986,7 +1986,7 @@
       "source_check": {
         "checked": "2026-09-05",
         "outcome": "ok",
-        "detail": "the page names Brevo as \"brevo\" and states \"Free forever\"",
+        "detail": "the page names Brevo as \"brevo\"",
         "unrendered_prices": [
           "Starter USD 9",
           "Standard USD 18",
@@ -2014,7 +2014,7 @@
       "source_check": {
         "checked": "2026-09-09",
         "outcome": "ok",
-        "detail": "the page names Algolia as \"algolia\" and states \"$1.75\""
+        "detail": "the page names Algolia as \"algolia\""
       }
     },
     {
@@ -2051,7 +2051,7 @@
       "source_check": {
         "checked": "2026-09-16",
         "outcome": "ok",
-        "detail": "the page names Cloudflare R2 as \"cloudflare r2\" and states \"$0.015\""
+        "detail": "the page names Cloudflare R2 as \"cloudflare r2\""
       }
     },
     {
@@ -2079,7 +2079,7 @@
       "source_check": {
         "checked": "2026-09-09",
         "outcome": "ok",
-        "detail": "the page names Backblaze B2 as \"backblaze b2\" and states \"$ 6.95\""
+        "detail": "the page names Backblaze B2 as \"backblaze b2\""
       }
     },
     {
@@ -2099,7 +2099,7 @@
       "source_check": {
         "checked": "2026-09-07",
         "outcome": "ok",
-        "detail": "the page names Tigris as \"tigris\" and states \"$1.90\""
+        "detail": "the page names Tigris as \"tigris\""
       }
     },
     {
@@ -2140,7 +2140,7 @@
       "source_check": {
         "checked": "2026-09-09",
         "outcome": "ok",
-        "detail": "the page names CloudAMQP as \"cloudamqp\" and states \"$ 19\""
+        "detail": "the page names CloudAMQP as \"cloudamqp\""
       }
     },
     {
@@ -2221,7 +2221,7 @@
       "source_check": {
         "checked": "2026-09-17",
         "outcome": "ok",
-        "detail": "the page names Cloudflare KV as \"cloudflare\" and states \"$0.50\""
+        "detail": "the page names Cloudflare KV as \"cloudflare\""
       },
       "product_subtypes": {
         "taxonomy": "Databases",
@@ -2278,7 +2278,7 @@
       "source_check": {
         "checked": "2026-09-17",
         "outcome": "ok",
-        "detail": "the page names Cloudflare Durable Objects as \"cloudflare durable objects\" and states \"$0.15\""
+        "detail": "the page names Cloudflare Durable Objects as \"cloudflare durable objects\""
       },
       "product_subtypes": {
         "taxonomy": "Cloud Hosting",
@@ -2336,7 +2336,7 @@
       "source_check": {
         "checked": "2026-09-09",
         "outcome": "ok",
-        "detail": "the page names Pusher as \"pusher\" and states \"$49\""
+        "detail": "the page names Pusher as \"pusher\""
       }
     },
     {
@@ -2357,7 +2357,7 @@
       "source_check": {
         "checked": "2026-09-09",
         "outcome": "ok",
-        "detail": "the page names Ably as \"ably\" and states \"$2.50\"",
+        "detail": "the page names Ably as \"ably\"",
         "unrendered_prices": [
           "Monthly Active Users USD 0.05"
         ]
@@ -2384,7 +2384,7 @@
       "source_check": {
         "checked": "2026-09-16",
         "outcome": "ok",
-        "detail": "the page names Bright Data MCP Server as \"bright data mcp server\" and states \"$1\""
+        "detail": "the page names Bright Data MCP Server as \"bright data mcp server\""
       }
     },
     {
@@ -2414,7 +2414,7 @@
       "source_check": {
         "checked": "2026-09-13",
         "outcome": "ok",
-        "detail": "the page names Firecrawl as \"firecrawl\" and states \"$83\""
+        "detail": "the page names Firecrawl as \"firecrawl\""
       }
     },
     {
@@ -2435,7 +2435,7 @@
       "source_check": {
         "checked": "2026-09-13",
         "outcome": "ok",
-        "detail": "the page names Apify as \"apify\" and states \"$1.5\""
+        "detail": "the page names Apify as \"apify\""
       },
       "restated_from": {
         "reading_date": "2026-09-01",
@@ -2518,7 +2518,7 @@
       "source_check": {
         "checked": "2026-09-16",
         "outcome": "ok",
-        "detail": "the page names Snyk as \"snyk\" and states \"$25\""
+        "detail": "the page names Snyk as \"snyk\""
       }
     },
     {
@@ -2567,7 +2567,7 @@
       "source_check": {
         "checked": "2026-09-09",
         "outcome": "ok",
-        "detail": "the page names SonarQube Cloud as \"sonarqube cloud\" and states \"$32\""
+        "detail": "the page names SonarQube Cloud as \"sonarqube cloud\""
       }
     },
     {
@@ -2635,7 +2635,7 @@
       "source_check": {
         "checked": "2026-09-09",
         "outcome": "ok",
-        "detail": "the page names Cloudflare DNS as \"cloudflare\" and states \"$5\""
+        "detail": "the page names Cloudflare DNS as \"cloudflare\""
       }
     },
     {
@@ -2704,7 +2704,7 @@
       "source_check": {
         "checked": "2026-09-09",
         "outcome": "ok",
-        "detail": "the page names Fastly as \"fastly\" and states \"$0.28\""
+        "detail": "the page names Fastly as \"fastly\""
       },
       "restated_from": {
         "reading_date": "2026-09-09",
@@ -2854,7 +2854,7 @@
       "source_check": {
         "checked": "2026-09-05",
         "outcome": "ok",
-        "detail": "the page names Stripe as \"stripe\" and states \"$5.00\""
+        "detail": "the page names Stripe as \"stripe\""
       }
     },
     {
@@ -2922,7 +2922,7 @@
       "source_check": {
         "checked": "2026-09-09",
         "outcome": "ok",
-        "detail": "the page names Hygraph as \"hygraph\" and states \"$ 199\""
+        "detail": "the page names Hygraph as \"hygraph\""
       }
     },
     {
@@ -3012,7 +3012,7 @@
       "source_check": {
         "checked": "2026-09-13",
         "outcome": "ok",
-        "detail": "the page names Groq as \"groq\" and states \"$350\""
+        "detail": "the page names Groq as \"groq\""
       },
       "product_subtypes": {
         "taxonomy": "AI / ML",
@@ -3046,7 +3046,7 @@
       "source_check": {
         "checked": "2026-09-05",
         "outcome": "ok",
-        "detail": "the page writes \"google\", the domain we cite Google Gemini API from, and states \"$0.75\""
+        "detail": "the page writes \"google\", the domain we cite Google Gemini API from"
       },
       "product_subtypes": {
         "taxonomy": "AI / ML",
@@ -3240,7 +3240,7 @@
       "source_check": {
         "checked": "2026-09-12",
         "outcome": "ok",
-        "detail": "the page names PostHog as \"posthog\" and states \"$5\""
+        "detail": "the page names PostHog as \"posthog\""
       }
     },
     {
@@ -3372,7 +3372,7 @@
       "source_check": {
         "checked": "2026-09-18",
         "outcome": "ok",
-        "detail": "the page names Doppler as \"doppler\" and states \"$8\""
+        "detail": "the page names Doppler as \"doppler\""
       }
     },
     {
@@ -3402,7 +3402,7 @@
       "source_check": {
         "checked": "2026-09-12",
         "outcome": "ok",
-        "detail": "the page names PostHog as \"posthog\" and states \"$5\""
+        "detail": "the page names PostHog as \"posthog\""
       }
     },
     {
@@ -3431,7 +3431,7 @@
       "source_check": {
         "checked": "2026-09-09",
         "outcome": "ok",
-        "detail": "the page names Segment as \"segment\" and states \"$120\""
+        "detail": "the page names Segment as \"segment\""
       }
     },
     {
@@ -3458,7 +3458,7 @@
       "source_check": {
         "checked": "2026-09-09",
         "outcome": "ok",
-        "detail": "the page names Amplitude as \"amplitude\" and states \"$60,000\""
+        "detail": "the page names Amplitude as \"amplitude\""
       }
     },
     {
@@ -3624,7 +3624,7 @@
       "source_check": {
         "checked": "2026-09-13",
         "outcome": "ok",
-        "detail": "the page names Brex as \"brex\" and states \"$6\""
+        "detail": "the page names Brex as \"brex\""
       }
     },
     {
@@ -3715,7 +3715,7 @@
       "source_check": {
         "checked": "2026-09-17",
         "outcome": "ok",
-        "detail": "the page names Stripe Atlas as \"stripe atlas\" and states \"$50\""
+        "detail": "the page names Stripe Atlas as \"stripe atlas\""
       }
     },
     {
@@ -3744,7 +3744,7 @@
       "source_check": {
         "checked": "2026-09-09",
         "outcome": "ok",
-        "detail": "the page names SVB (Silicon Valley Bank) as \"silicon\" and states \"$1\""
+        "detail": "the page names SVB (Silicon Valley Bank) as \"silicon\""
       }
     },
     {
@@ -3781,7 +3781,7 @@
       "source_check": {
         "checked": "2026-09-09",
         "outcome": "ok",
-        "detail": "the page names GitHub as \"github\" and states \"$100\""
+        "detail": "the page names GitHub as \"github\""
       }
     },
     {
@@ -3909,7 +3909,7 @@
       "source_check": {
         "checked": "2026-09-09",
         "outcome": "ok",
-        "detail": "the page names Polar as \"polar\" and states \"$20\""
+        "detail": "the page names Polar as \"polar\""
       }
     },
     {
@@ -3928,7 +3928,7 @@
       "source_check": {
         "checked": "2026-09-12",
         "outcome": "ok",
-        "detail": "the page names Paddle as \"paddle\" and states \"$100,000\""
+        "detail": "the page names Paddle as \"paddle\""
       }
     },
     {
@@ -4031,7 +4031,7 @@
       "source_check": {
         "checked": "2026-09-09",
         "outcome": "ok",
-        "detail": "the page names GrowthBook as \"growthbook\" and states \"$40\""
+        "detail": "the page names GrowthBook as \"growthbook\""
       },
       "free_grounds": [
         "licence",
@@ -4054,7 +4054,7 @@
       "source_check": {
         "checked": "2026-09-09",
         "outcome": "ok",
-        "detail": "the page names Statsig as \"statsig\" and states \"$150\""
+        "detail": "the page names Statsig as \"statsig\""
       }
     },
     {
@@ -4108,7 +4108,7 @@
       "source_check": {
         "checked": "2026-09-09",
         "outcome": "ok",
-        "detail": "the page names Kong as \"kong\" and states \"$100\""
+        "detail": "the page names Kong as \"kong\""
       },
       "free_grounds": [
         "licence"
@@ -4149,7 +4149,7 @@
       "source_check": {
         "checked": "2026-09-09",
         "outcome": "ok",
-        "detail": "the page names Unkey as \"unkey\" and states \"$ 5\""
+        "detail": "the page names Unkey as \"unkey\""
       },
       "restated_from": {
         "reading_date": "2026-08-28",
@@ -4221,7 +4221,7 @@
       "source_check": {
         "checked": "2026-09-05",
         "outcome": "ok",
-        "detail": "the page names Cypress Cloud as \"cypress cloud\" and states \"$67\""
+        "detail": "the page names Cypress Cloud as \"cypress cloud\""
       },
       "restated_from": {
         "reading_date": "2026-09-05",
@@ -4292,7 +4292,7 @@
       "source_check": {
         "checked": "2026-09-19",
         "outcome": "ok",
-        "detail": "the page names Loops as \"loops\" and states \"Free Plan\""
+        "detail": "the page names Loops as \"loops\""
       }
     },
     {
@@ -4311,7 +4311,7 @@
       "source_check": {
         "checked": "2026-09-09",
         "outcome": "ok",
-        "detail": "the page names ClouDNS as \"cloudns\" and states \"$2.95\""
+        "detail": "the page names ClouDNS as \"cloudns\""
       }
     },
     {
@@ -4331,7 +4331,7 @@
       "source_check": {
         "checked": "2026-09-07",
         "outcome": "ok",
-        "detail": "the page names Tinybird as \"tinybird\" and states \"$ 49\""
+        "detail": "the page names Tinybird as \"tinybird\""
       },
       "restated_from": {
         "reading_date": "2026-09-07",
@@ -4402,7 +4402,7 @@
       "source_check": {
         "checked": "2026-09-09",
         "outcome": "ok",
-        "detail": "the page names Crisp as \"crisp\" and states \"$ 45\""
+        "detail": "the page names Crisp as \"crisp\""
       }
     },
     {
@@ -4526,7 +4526,7 @@
       "source_check": {
         "checked": "2026-09-05",
         "outcome": "ok",
-        "detail": "the page names Nile as \"nile\" and states \"$ 15\""
+        "detail": "the page names Nile as \"nile\""
       },
       "product_subtypes": {
         "taxonomy": "Databases",
@@ -4556,7 +4556,7 @@
       "source_check": {
         "checked": "2026-09-09",
         "outcome": "ok",
-        "detail": "the page names Cron-job.org as \"cron job org\" and states \"60x/hour\""
+        "detail": "the page names Cron-job.org as \"cron job org\""
       }
     },
     {
@@ -4601,7 +4601,7 @@
       "source_check": {
         "checked": "2026-09-19",
         "outcome": "ok",
-        "detail": "the page names n8n as \"n8n\" and states \"4,000 EUR\""
+        "detail": "the page names n8n as \"n8n\""
       },
       "free_grounds": [
         "licence",
@@ -4762,7 +4762,7 @@
       "source_check": {
         "checked": "2026-09-18",
         "outcome": "ok",
-        "detail": "the page names Spacelift as \"spacelift\" and states \"$20,000\""
+        "detail": "the page names Spacelift as \"spacelift\""
       }
     },
     {
@@ -4865,7 +4865,7 @@
       "source_check": {
         "checked": "2026-09-09",
         "outcome": "ok",
-        "detail": "the page names Browserless as \"browserless\" and states \"$25\""
+        "detail": "the page names Browserless as \"browserless\""
       }
     },
     {
@@ -4900,7 +4900,7 @@
       "source_check": {
         "checked": "2026-09-17",
         "outcome": "ok",
-        "detail": "the page names Browserbase as \"browserbase\" and states \"$20,\""
+        "detail": "the page names Browserbase as \"browserbase\""
       },
       "restated_from": {
         "reading_date": "2026-09-02",
@@ -4927,7 +4927,7 @@
       "source_check": {
         "checked": "2026-09-09",
         "outcome": "ok",
-        "detail": "the page names Discord API as \"discord api\" and states \"50 requests per second\""
+        "detail": "the page names Discord API as \"discord api\""
       },
       "free_tier_is_the_product": true
     },
@@ -5107,7 +5107,7 @@
       "source_check": {
         "checked": "2026-09-09",
         "outcome": "ok",
-        "detail": "the page names LogRocket as \"logrocket\" and states \"$50\""
+        "detail": "the page names LogRocket as \"logrocket\""
       }
     },
     {
@@ -5166,7 +5166,7 @@
       "source_check": {
         "checked": "2026-09-09",
         "outcome": "ok",
-        "detail": "the page names GitBook as \"gitbook\" and states \"$65\""
+        "detail": "the page names GitBook as \"gitbook\""
       },
       "restated_from": {
         "reading_date": "2026-08-28",
@@ -5213,7 +5213,7 @@
       "source_check": {
         "checked": "2026-09-19",
         "outcome": "ok",
-        "detail": "the page names Figma as \"figma\" and states \"$16\""
+        "detail": "the page names Figma as \"figma\""
       }
     },
     {
@@ -5315,7 +5315,7 @@
       "source_check": {
         "checked": "2026-09-09",
         "outcome": "ok",
-        "detail": "the page names Sendbird as \"sendbird\" and states \"$349\""
+        "detail": "the page names Sendbird as \"sendbird\""
       }
     },
     {
@@ -5426,7 +5426,7 @@
       "source_check": {
         "checked": "2026-09-09",
         "outcome": "ok",
-        "detail": "the page names Tally as \"tally\" and states \"$ 24\""
+        "detail": "the page names Tally as \"tally\""
       }
     },
     {
@@ -5447,7 +5447,7 @@
       "source_check": {
         "checked": "2026-09-09",
         "outcome": "ok",
-        "detail": "the page names Formbricks as \"formbricks\" and states \"$74\""
+        "detail": "the page names Formbricks as \"formbricks\""
       },
       "free_grounds": [
         "licence"
@@ -5478,7 +5478,7 @@
       "source_check": {
         "checked": "2026-09-12",
         "outcome": "ok",
-        "detail": "the page names Mux as \"mux\" and states \"$20\""
+        "detail": "the page names Mux as \"mux\""
       },
       "restated_from": {
         "reading_date": "2026-09-12",
@@ -5505,7 +5505,7 @@
       "source_check": {
         "checked": "2026-09-12",
         "outcome": "ok",
-        "detail": "the page names Lokalise as \"lokalise\" and states \"$ 999\""
+        "detail": "the page names Lokalise as \"lokalise\""
       }
     },
     {
@@ -5525,7 +5525,7 @@
       "source_check": {
         "checked": "2026-09-13",
         "outcome": "ok",
-        "detail": "the page names Cal.com as \"cal com\" and states \"$12\""
+        "detail": "the page names Cal.com as \"cal com\""
       },
       "restated_from": {
         "reading_date": "2026-09-13",
@@ -5652,7 +5652,7 @@
       "source_check": {
         "checked": "2026-09-17",
         "outcome": "ok",
-        "detail": "the page names Cloudflare as \"cloudflare\" and states \"$350\""
+        "detail": "the page names Cloudflare as \"cloudflare\""
       }
     },
     {
@@ -5683,7 +5683,7 @@
       "source_check": {
         "checked": "2026-09-12",
         "outcome": "ok",
-        "detail": "the page names Amazon Kiro (AWS Startups) as \"startups\" and states \"$200,000\""
+        "detail": "the page names Amazon Kiro (AWS Startups) as \"startups\""
       }
     },
     {
@@ -5846,7 +5846,7 @@
       "source_check": {
         "checked": "2026-09-17",
         "outcome": "ok",
-        "detail": "the page names Codecov as \"codecov\" and states \"$5\""
+        "detail": "the page names Codecov as \"codecov\""
       }
     },
     {
@@ -5866,7 +5866,7 @@
       "source_check": {
         "checked": "2026-09-07",
         "outcome": "ok",
-        "detail": "the page names Dub.co as \"dub\" and states \"$ 3\""
+        "detail": "the page names Dub.co as \"dub\""
       }
     },
     {
@@ -5910,7 +5910,7 @@
       "source_check": {
         "checked": "2026-09-13",
         "outcome": "ok",
-        "detail": "the page names Liveblocks as \"liveblocks\" and states \"$ 25\""
+        "detail": "the page names Liveblocks as \"liveblocks\""
       },
       "restated_from": {
         "reading_date": "2026-09-01",
@@ -5964,7 +5964,7 @@
       "source_check": {
         "checked": "2026-09-09",
         "outcome": "ok",
-        "detail": "the page names Atlassian Statuspage as \"atlassian\" and states \"$29\""
+        "detail": "the page names Atlassian Statuspage as \"atlassian\""
       }
     },
     {
@@ -5984,7 +5984,7 @@
       "source_check": {
         "checked": "2026-09-09",
         "outcome": "ok",
-        "detail": "the page names OpenStatus as \"openstatus\" and states \"$30\"",
+        "detail": "the page names OpenStatus as \"openstatus\"",
         "unrendered_prices": [
           "Pro USD 100",
           "Scale USD 500"
@@ -6201,7 +6201,7 @@
       "source_check": {
         "checked": "2026-09-13",
         "outcome": "ok",
-        "detail": "the page names Formspree as \"formspree\" and states \"$10\"",
+        "detail": "the page names Formspree as \"formspree\"",
         "rendered": true
       }
     },
@@ -6241,7 +6241,7 @@
       "source_check": {
         "checked": "2026-09-10",
         "outcome": "ok",
-        "detail": "the page names LocationIQ as \"locationiq\" and states \"$25\""
+        "detail": "the page names LocationIQ as \"locationiq\""
       }
     },
     {
@@ -6306,7 +6306,7 @@
       "source_check": {
         "checked": "2026-09-10",
         "outcome": "ok",
-        "detail": "the page names ScraperAPI as \"scraperapi\" and states \"$49\""
+        "detail": "the page names ScraperAPI as \"scraperapi\""
       }
     },
     {
@@ -6452,7 +6452,7 @@
       "source_check": {
         "checked": "2026-09-20",
         "outcome": "ok",
-        "detail": "the page names Pixlr as \"pixlr\" and states \"$1.99\""
+        "detail": "the page names Pixlr as \"pixlr\""
       }
     },
     {
@@ -6540,7 +6540,7 @@
       "source_check": {
         "checked": "2026-09-12",
         "outcome": "ok",
-        "detail": "the page names Stream as \"stream\" and states \"$10\""
+        "detail": "the page names Stream as \"stream\""
       }
     },
     {
@@ -6579,7 +6579,7 @@
       "source_check": {
         "checked": "2026-09-05",
         "outcome": "ok",
-        "detail": "the page names Hanko as \"hanko\" and states \"$29\""
+        "detail": "the page names Hanko as \"hanko\""
       },
       "restated_from": {
         "reading_date": "2026-09-05",
@@ -6633,7 +6633,7 @@
       "source_check": {
         "checked": "2026-09-13",
         "outcome": "ok",
-        "detail": "the page names FusionAuth as \"fusionauth\" and states \"$ 162\""
+        "detail": "the page names FusionAuth as \"fusionauth\""
       },
       "free_grounds": [
         "licence"
@@ -6671,7 +6671,7 @@
       "source_check": {
         "checked": "2026-09-17",
         "outcome": "ok",
-        "detail": "the page names Cerebras as \"cerebras\" and states \"750 token/sec\""
+        "detail": "the page names Cerebras as \"cerebras\""
       },
       "product_subtypes": {
         "taxonomy": "AI / ML",
@@ -6711,7 +6711,7 @@
       "source_check": {
         "checked": "2026-09-18",
         "outcome": "ok",
-        "detail": "the page names Cohere as \"cohere\" and states \"$4.00\""
+        "detail": "the page names Cohere as \"cohere\""
       },
       "product_subtypes": {
         "taxonomy": "AI / ML",
@@ -6828,7 +6828,7 @@
       "source_check": {
         "checked": "2026-09-10",
         "outcome": "ok",
-        "detail": "the page names BullMQ as \"bullmq\" and states \"$1,395\""
+        "detail": "the page names BullMQ as \"bullmq\""
       },
       "free_grounds": [
         "licence"
@@ -7115,7 +7115,7 @@
       "source_check": {
         "checked": "2026-09-10",
         "outcome": "ok",
-        "detail": "the page names Gitea as \"gitea\" and states \"$9.5\""
+        "detail": "the page names Gitea as \"gitea\""
       },
       "free_grounds": [
         "licence"
@@ -7137,7 +7137,7 @@
       "source_check": {
         "checked": "2026-09-10",
         "outcome": "ok",
-        "detail": "the page names Appsmith as \"appsmith\" and states \"$1,200\""
+        "detail": "the page names Appsmith as \"appsmith\""
       },
       "free_grounds": [
         "licence"
@@ -7168,7 +7168,7 @@
       "source_check": {
         "checked": "2026-09-07",
         "outcome": "ok",
-        "detail": "the page names LocalStack as \"localstack\" and states \"$39\""
+        "detail": "the page names LocalStack as \"localstack\""
       },
       "restated_from": {
         "reading_date": "2026-09-07",
@@ -7195,7 +7195,7 @@
       "source_check": {
         "checked": "2026-09-05",
         "outcome": "ok",
-        "detail": "the page names Testcontainers as \"testcontainers\" and states \"13,000 EUR\""
+        "detail": "the page names Testcontainers as \"testcontainers\""
       },
       "free_grounds": [
         "licence"
@@ -7466,7 +7466,7 @@
       "source_check": {
         "checked": "2026-09-10",
         "outcome": "ok",
-        "detail": "the page names OpenAI as \"openai\" and states \"$10.00\""
+        "detail": "the page names OpenAI as \"openai\""
       },
       "product_subtypes": {
         "taxonomy": "AI / ML",
@@ -7546,7 +7546,7 @@
       "source_check": {
         "checked": "2026-09-09",
         "outcome": "ok",
-        "detail": "the page names FOSSA as \"fossa\" and states \"$ 2\""
+        "detail": "the page names FOSSA as \"fossa\""
       }
     },
     {
@@ -7566,7 +7566,7 @@
       "source_check": {
         "checked": "2026-09-07",
         "outcome": "ok",
-        "detail": "the page names Twingate as \"twingate\" and states \"$15\""
+        "detail": "the page names Twingate as \"twingate\""
       },
       "restated_from": {
         "reading_date": "2026-09-07",
@@ -7592,7 +7592,7 @@
       "source_check": {
         "checked": "2026-09-09",
         "outcome": "ok",
-        "detail": "the page names PythonAnywhere as \"pythonanywhere\" and states \"$10\""
+        "detail": "the page names PythonAnywhere as \"pythonanywhere\""
       },
       "product_subtypes": {
         "taxonomy": "Cloud Hosting",
@@ -7631,7 +7631,7 @@
       "source_check": {
         "checked": "2026-09-05",
         "outcome": "ok",
-        "detail": "the page names GitHub Codespaces as \"github codespaces\" and states \"free plan\""
+        "detail": "the page names GitHub Codespaces as \"github codespaces\""
       }
     },
     {
@@ -7733,7 +7733,7 @@
       "source_check": {
         "checked": "2026-09-10",
         "outcome": "ok",
-        "detail": "the page names Pinecone as \"pinecone\" and states \"$20\""
+        "detail": "the page names Pinecone as \"pinecone\""
       },
       "product_subtypes": {
         "taxonomy": "AI / ML",
@@ -7785,7 +7785,7 @@
       "source_check": {
         "checked": "2026-09-10",
         "outcome": "ok",
-        "detail": "the page names Qdrant as \"qdrant\" and states \"Free Tier\""
+        "detail": "the page names Qdrant as \"qdrant\""
       },
       "product_subtypes": {
         "taxonomy": "AI / ML",
@@ -7822,7 +7822,7 @@
       "source_check": {
         "checked": "2026-09-05",
         "outcome": "ok",
-        "detail": "the page names SuperTokens as \"supertokens\" and states \"$0.02\""
+        "detail": "the page names SuperTokens as \"supertokens\""
       },
       "free_grounds": [
         "licence",
@@ -8098,7 +8098,7 @@
       "source_check": {
         "checked": "2026-09-10",
         "outcome": "ok",
-        "detail": "the page names Semaphore CI as \"semaphore ci\" and states \"$0.003\""
+        "detail": "the page names Semaphore CI as \"semaphore ci\""
       }
     },
     {
@@ -8215,7 +8215,7 @@
       "source_check": {
         "checked": "2026-09-20",
         "outcome": "ok",
-        "detail": "the page names Sematext as \"sematext\" and states \"$5\"",
+        "detail": "the page names Sematext as \"sematext\"",
         "unrendered_prices": [
           "USD 69.00"
         ]
@@ -8299,7 +8299,7 @@
       "source_check": {
         "checked": "2026-09-09",
         "outcome": "ok",
-        "detail": "the page names BigDataCloud as \"bigdatacloud\" and states \"$29.95\""
+        "detail": "the page names BigDataCloud as \"bigdatacloud\""
       }
     },
     {
@@ -8365,7 +8365,7 @@
       "source_check": {
         "checked": "2026-09-10",
         "outcome": "ok",
-        "detail": "the page names Geocodio as \"geocodio\" and states \"$325\""
+        "detail": "the page names Geocodio as \"geocodio\""
       }
     },
     {
@@ -8385,7 +8385,7 @@
       "source_check": {
         "checked": "2026-09-05",
         "outcome": "ok",
-        "detail": "the page names CurrencyFreaks as \"currencyfreaks\" and states \"$9.99\"",
+        "detail": "the page names CurrencyFreaks as \"currencyfreaks\"",
         "unrendered_prices": [
           "Growth Annual USD 499.99",
           "Professional Annual USD 999.99"
@@ -8489,7 +8489,7 @@
       "source_check": {
         "checked": "2026-09-10",
         "outcome": "ok",
-        "detail": "the page names Kaggle as \"kaggle\" and states \"$850,000\"",
+        "detail": "the page names Kaggle as \"kaggle\"",
         "rendered": true
       },
       "product_subtypes": {
@@ -8521,7 +8521,7 @@
       "source_check": {
         "checked": "2026-09-10",
         "outcome": "ok",
-        "detail": "the page names Roboflow as \"roboflow\" and states \"$79\""
+        "detail": "the page names Roboflow as \"roboflow\""
       },
       "product_subtypes": {
         "taxonomy": "AI / ML",
@@ -8662,7 +8662,7 @@
       "source_check": {
         "checked": "2026-09-10",
         "outcome": "ok",
-        "detail": "the page names LanceDB as \"lancedb\" and states \"$779\""
+        "detail": "the page names LanceDB as \"lancedb\""
       },
       "product_subtypes": {
         "taxonomy": "Databases",
@@ -8776,7 +8776,7 @@
       "source_check": {
         "checked": "2026-09-19",
         "outcome": "ok",
-        "detail": "the page names Turbopuffer as \"turbopuffer\" and states \"$16\""
+        "detail": "the page names Turbopuffer as \"turbopuffer\""
       },
       "product_subtypes": {
         "taxonomy": "Databases",
@@ -8817,7 +8817,7 @@
       "source_check": {
         "checked": "2026-09-12",
         "outcome": "ok",
-        "detail": "the page names AssemblyAI as \"assemblyai\" and states \"$0.21\""
+        "detail": "the page names AssemblyAI as \"assemblyai\""
       },
       "product_subtypes": {
         "taxonomy": "AI / ML",
@@ -8871,7 +8871,7 @@
       "source_check": {
         "checked": "2026-09-17",
         "outcome": "ok",
-        "detail": "the page names Replicate as \"replicate\" and states \"$0.04\""
+        "detail": "the page names Replicate as \"replicate\""
       },
       "product_subtypes": {
         "taxonomy": "AI / ML",
@@ -9105,7 +9105,7 @@
       "source_check": {
         "checked": "2026-09-10",
         "outcome": "ok",
-        "detail": "the page names Tyk as \"tyk\" and states \"$200,000\""
+        "detail": "the page names Tyk as \"tyk\""
       },
       "free_grounds": [
         "licence"
@@ -9128,7 +9128,7 @@
       "source_check": {
         "checked": "2026-09-10",
         "outcome": "ok",
-        "detail": "the page names Stoplight as \"stoplight\" and states \"$44\""
+        "detail": "the page names Stoplight as \"stoplight\""
       },
       "restated_from": {
         "reading_date": "2026-08-28",
@@ -9155,7 +9155,7 @@
       "source_check": {
         "checked": "2026-09-05",
         "outcome": "ok",
-        "detail": "the page writes \"swagger\", the domain we cite SwaggerHub from, and states \"2600 EUR\""
+        "detail": "the page writes \"swagger\", the domain we cite SwaggerHub from"
       }
     },
     {
@@ -9296,7 +9296,7 @@
       "source_check": {
         "checked": "2026-09-13",
         "outcome": "ok",
-        "detail": "the page names CrateDB as \"cratedb\" and states \"$0.073\"",
+        "detail": "the page names CrateDB as \"cratedb\"",
         "rendered": true
       },
       "product_subtypes": {
@@ -9364,7 +9364,7 @@
       "source_check": {
         "checked": "2026-09-12",
         "outcome": "ok",
-        "detail": "the page names InfluxDB Cloud as \"influxdb cloud\" and states \"$55\""
+        "detail": "the page names InfluxDB Cloud as \"influxdb cloud\""
       },
       "product_subtypes": {
         "taxonomy": "Databases",
@@ -9395,7 +9395,7 @@
       "source_check": {
         "checked": "2026-09-10",
         "outcome": "ok",
-        "detail": "the page names Apollo GraphOS as \"apollo graphos\" and states \"$50\""
+        "detail": "the page names Apollo GraphOS as \"apollo graphos\""
       }
     },
     {
@@ -9475,7 +9475,7 @@
       "source_check": {
         "checked": "2026-09-05",
         "outcome": "ok",
-        "detail": "the page names Uptimia as \"uptimia\" and states \"$9\""
+        "detail": "the page names Uptimia as \"uptimia\""
       },
       "product_subtypes": {
         "taxonomy": "Monitoring",
@@ -9507,7 +9507,7 @@
       "source_check": {
         "checked": "2026-09-12",
         "outcome": "ok",
-        "detail": "the page names OnlineOrNot as \"onlineornot\" and states \"$15\""
+        "detail": "the page names OnlineOrNot as \"onlineornot\""
       },
       "product_subtypes": {
         "taxonomy": "Monitoring",
@@ -9594,7 +9594,7 @@
       "source_check": {
         "checked": "2026-09-09",
         "outcome": "ok",
-        "detail": "the page names incident.io as \"incident io\" and states \"$ 19\""
+        "detail": "the page names incident.io as \"incident io\""
       },
       "product_subtypes": {
         "taxonomy": "Monitoring",
@@ -9631,7 +9631,7 @@
       "source_check": {
         "checked": "2026-09-09",
         "outcome": "ok",
-        "detail": "the page names AppSignal as \"appsignal\" and states \"$279\""
+        "detail": "the page names AppSignal as \"appsignal\""
       },
       "product_subtypes": {
         "taxonomy": "Monitoring",
@@ -9807,7 +9807,7 @@
       "source_check": {
         "checked": "2026-09-10",
         "outcome": "ok",
-        "detail": "the page names Bitrise as \"bitrise\" and states \"$99\""
+        "detail": "the page names Bitrise as \"bitrise\""
       }
     },
     {
@@ -9829,7 +9829,7 @@
       "source_check": {
         "checked": "2026-09-19",
         "outcome": "ok",
-        "detail": "the page names Codemagic as \"codemagic\" and states \"$0.095\""
+        "detail": "the page names Codemagic as \"codemagic\""
       },
       "restated_from": {
         "reading_date": "2026-09-03",
@@ -9858,7 +9858,7 @@
       "source_check": {
         "checked": "2026-09-10",
         "outcome": "ok",
-        "detail": "the page names Appcircle as \"appcircle\" and states \"Starter Plan\""
+        "detail": "the page names Appcircle as \"appcircle\""
       }
     },
     {
@@ -10055,7 +10055,7 @@
       "source_check": {
         "checked": "2026-09-17",
         "outcome": "ok",
-        "detail": "the page names Zoho Vault as \"zoho vault\" and states \"$4\""
+        "detail": "the page names Zoho Vault as \"zoho vault\""
       }
     },
     {
@@ -10180,7 +10180,7 @@
       "source_check": {
         "checked": "2026-09-07",
         "outcome": "ok",
-        "detail": "the page names Zoho Campaigns as \"zoho campaigns\" and states \"free plan\""
+        "detail": "the page names Zoho Campaigns as \"zoho campaigns\""
       }
     },
     {
@@ -10216,7 +10216,7 @@
       "source_check": {
         "checked": "2026-09-10",
         "outcome": "ok",
-        "detail": "the page names Zoho Sign as \"zoho sign\" and states \"$30\""
+        "detail": "the page names Zoho Sign as \"zoho sign\""
       }
     },
     {
@@ -10358,7 +10358,7 @@
       "source_check": {
         "checked": "2026-09-05",
         "outcome": "ok",
-        "detail": "the page names Scalr as \"scalr\" and states \"$0.99\""
+        "detail": "the page names Scalr as \"scalr\""
       },
       "restated_from": {
         "reading_date": "2026-09-05",
@@ -10479,7 +10479,7 @@
       "source_check": {
         "checked": "2026-09-15",
         "outcome": "ok",
-        "detail": "the page names Pagure.io as \"pagure io\" and states \"2024 libuser A user\""
+        "detail": "the page names Pagure.io as \"pagure io\""
       },
       "restated_from": {
         "reading_date": "2026-09-15",
@@ -10588,7 +10588,7 @@
       "source_check": {
         "checked": "2026-09-10",
         "outcome": "ok",
-        "detail": "the page names APIVerve as \"apiverve\" and states \"200 free credits / month\""
+        "detail": "the page names APIVerve as \"apiverve\""
       }
     },
     {
@@ -10622,7 +10622,7 @@
       "source_check": {
         "checked": "2026-09-18",
         "outcome": "ok",
-        "detail": "the page names Browse AI as \"browse ai\" and states \"$2,190\"",
+        "detail": "the page names Browse AI as \"browse ai\"",
         "unrendered_prices": [
           "Personal Plan USD 19",
           "Professional Plan USD 69"
@@ -10677,7 +10677,7 @@
       "source_check": {
         "checked": "2026-09-10",
         "outcome": "ok",
-        "detail": "the page names Canopy as \"canopy\" and states \"$49.99\""
+        "detail": "the page names Canopy as \"canopy\""
       }
     },
     {
@@ -10711,7 +10711,7 @@
       "source_check": {
         "checked": "2026-09-09",
         "outcome": "ok",
-        "detail": "the page names Cloudmersive as \"cloudmersive\" and states \"$540,000\""
+        "detail": "the page names Cloudmersive as \"cloudmersive\""
       }
     },
     {
@@ -10765,7 +10765,7 @@
       "source_check": {
         "checked": "2026-09-16",
         "outcome": "ok",
-        "detail": "the page names Conversion Tools as \"conversion tools\" and states \"free API\"",
+        "detail": "the page names Conversion Tools as \"conversion tools\"",
         "rendered": true
       }
     },
@@ -10800,7 +10800,7 @@
       "source_check": {
         "checked": "2026-09-12",
         "outcome": "ok",
-        "detail": "the page names Coupler as \"coupler\" and states \"40 hours a month\""
+        "detail": "the page names Coupler as \"coupler\""
       }
     },
     {
@@ -10817,7 +10817,7 @@
       "source_check": {
         "checked": "2026-09-09",
         "outcome": "ok",
-        "detail": "the page names CraftMyPDF as \"craftmypdf\" and states \"$1,284.5000\""
+        "detail": "the page names CraftMyPDF as \"craftmypdf\""
       }
     },
     {
@@ -10834,7 +10834,7 @@
       "source_check": {
         "checked": "2026-09-10",
         "outcome": "ok",
-        "detail": "the page names Cube as \"cube\" and states \"$1.42\""
+        "detail": "the page names Cube as \"cube\""
       }
     },
     {
@@ -10886,7 +10886,7 @@
       "source_check": {
         "checked": "2026-09-07",
         "outcome": "ok",
-        "detail": "the page names CustomJS as \"customjs\" and states \"Free tier\""
+        "detail": "the page names CustomJS as \"customjs\""
       }
     },
     {
@@ -10991,7 +10991,7 @@
       "source_check": {
         "checked": "2026-09-10",
         "outcome": "ok",
-        "detail": "the page names DB-IP as \"db ip\" and states \"Free API\""
+        "detail": "the page names DB-IP as \"db ip\""
       },
       "restated_from": {
         "reading_date": "2026-08-28",
@@ -11038,7 +11038,7 @@
       "source_check": {
         "checked": "2026-09-09",
         "outcome": "ok",
-        "detail": "the page names Deepnote as \"deepnote\" and states \"$39\""
+        "detail": "the page names Deepnote as \"deepnote\""
       },
       "restated_from": {
         "reading_date": "2026-09-09",
@@ -11113,7 +11113,7 @@
       "source_check": {
         "checked": "2026-09-10",
         "outcome": "ok",
-        "detail": "the page names Doppio as \"doppio\" and states \"$ 16\""
+        "detail": "the page names Doppio as \"doppio\""
       }
     },
     {
@@ -11148,7 +11148,7 @@
       "source_check": {
         "checked": "2026-09-10",
         "outcome": "ok",
-        "detail": "the page names DynamicDocs as \"dynamicdocs\" and states \"$0.062\""
+        "detail": "the page names DynamicDocs as \"dynamicdocs\""
       }
     },
     {
@@ -11165,7 +11165,7 @@
       "source_check": {
         "checked": "2026-09-10",
         "outcome": "ok",
-        "detail": "the page names Export SDK as \"export sdk\" and states \"free plan\""
+        "detail": "the page names Export SDK as \"export sdk\""
       }
     },
     {
@@ -11293,7 +11293,7 @@
       "source_check": {
         "checked": "2026-09-05",
         "outcome": "ok",
-        "detail": "the page names Hex as \"hex\" and states \"$0.32\""
+        "detail": "the page names Hex as \"hex\""
       }
     },
     {
@@ -11348,7 +11348,7 @@
       "source_check": {
         "checked": "2026-09-10",
         "outcome": "ok",
-        "detail": "the page names Invantive Cloud as \"invantive cloud\" and states \"€ 2.36\""
+        "detail": "the page names Invantive Cloud as \"invantive cloud\""
       },
       "restated_from": {
         "reading_date": "2026-08-28",
@@ -11372,7 +11372,7 @@
       "source_check": {
         "checked": "2026-09-10",
         "outcome": "ok",
-        "detail": "the page names IP Geolocation API by ipwho.org as \"geolocation\" and states \"$10\""
+        "detail": "the page names IP Geolocation API by ipwho.org as \"geolocation\""
       },
       "restated_from": {
         "reading_date": "2026-08-28",
@@ -11430,7 +11430,7 @@
       "source_check": {
         "checked": "2026-09-09",
         "outcome": "ok",
-        "detail": "the page names IP2Location.io as \"ip2location io\" and states \"$499\""
+        "detail": "the page names IP2Location.io as \"ip2location io\""
       }
     },
     {
@@ -11465,7 +11465,7 @@
       "source_check": {
         "checked": "2026-09-09",
         "outcome": "ok",
-        "detail": "the page names ipapi.is as \"ipapi is\" and states \"$200\""
+        "detail": "the page names ipapi.is as \"ipapi is\""
       }
     },
     {
@@ -11482,7 +11482,7 @@
       "source_check": {
         "checked": "2026-09-10",
         "outcome": "ok",
-        "detail": "the page names ipbase.com as \"ipbase com\" and states \"free API\""
+        "detail": "the page names ipbase.com as \"ipbase com\""
       }
     },
     {
@@ -11516,7 +11516,7 @@
       "source_check": {
         "checked": "2026-09-10",
         "outcome": "ok",
-        "detail": "the page names IPTrace as \"iptrace\" and states \"$10\""
+        "detail": "the page names IPTrace as \"iptrace\""
       }
     },
     {
@@ -11533,7 +11533,7 @@
       "source_check": {
         "checked": "2026-09-09",
         "outcome": "ok",
-        "detail": "the page names JSON IP as \"jsonip\" and states \"40 billion API requests per month\""
+        "detail": "the page names JSON IP as \"jsonip\""
       }
     },
     {
@@ -11550,7 +11550,7 @@
       "source_check": {
         "checked": "2026-09-09",
         "outcome": "ok",
-        "detail": "the page names JSON to Table as \"json to table\" and states \"$50,000\""
+        "detail": "the page names JSON to Table as \"json to table\""
       }
     },
     {
@@ -11567,7 +11567,7 @@
       "source_check": {
         "checked": "2026-09-10",
         "outcome": "ok",
-        "detail": "the page names JSON2Video as \"json2video\" and states \"$49.95\""
+        "detail": "the page names JSON2Video as \"json2video\""
       }
     },
     {
@@ -11618,7 +11618,7 @@
       "source_check": {
         "checked": "2026-09-10",
         "outcome": "ok",
-        "detail": "the page names JSONSwiss as \"jsonswiss\" and states \"$128\""
+        "detail": "the page names JSONSwiss as \"jsonswiss\""
       }
     },
     {
@@ -11653,7 +11653,7 @@
       "source_check": {
         "checked": "2026-09-10",
         "outcome": "ok",
-        "detail": "the page names Kreya as \"kreya\" and states \"4 emails a year\""
+        "detail": "the page names Kreya as \"kreya\""
       }
     },
     {
@@ -11775,7 +11775,7 @@
       "source_check": {
         "checked": "2026-09-10",
         "outcome": "ok",
-        "detail": "the page names Mockerito as \"mockerito\" and states \"$ 15\""
+        "detail": "the page names Mockerito as \"mockerito\""
       },
       "restated_from": {
         "reading_date": "2026-08-28",
@@ -11903,7 +11903,7 @@
       "source_check": {
         "checked": "2026-09-10",
         "outcome": "ok",
-        "detail": "the page names numlookupapi.com as \"numlookupapi com\" and states \"Free API\""
+        "detail": "the page names numlookupapi.com as \"numlookupapi com\""
       }
     },
     {
@@ -11972,7 +11972,7 @@
       "source_check": {
         "checked": "2026-09-10",
         "outcome": "ok",
-        "detail": "the page names Parseur as \"parseur\" and states \"$1,284.00\""
+        "detail": "the page names Parseur as \"parseur\""
       },
       "product_subtypes": {
         "taxonomy": "AI / ML",
@@ -12000,7 +12000,7 @@
       "source_check": {
         "checked": "2026-09-10",
         "outcome": "ok",
-        "detail": "the page names PDF-API.io as \"pdf api io\" and states \"$ 120.00\""
+        "detail": "the page names PDF-API.io as \"pdf api io\""
       }
     },
     {
@@ -12034,7 +12034,7 @@
       "source_check": {
         "checked": "2026-09-14",
         "outcome": "ok",
-        "detail": "the page names pdfEndpoint.com as \"pdfendpoint com\" and states \"$9\"",
+        "detail": "the page names pdfEndpoint.com as \"pdfendpoint com\"",
         "rendered": true
       }
     },
@@ -12069,7 +12069,7 @@
       "source_check": {
         "checked": "2026-09-07",
         "outcome": "ok",
-        "detail": "the page names PrefectCloud as \"prefect cloud\" and states \"$100\""
+        "detail": "the page names PrefectCloud as \"prefect cloud\""
       }
     },
     {
@@ -12104,7 +12104,7 @@
       "source_check": {
         "checked": "2026-09-09",
         "outcome": "ok",
-        "detail": "the page names ProxySentry as \"proxysentry\" and states \"$25\""
+        "detail": "the page names ProxySentry as \"proxysentry\""
       }
     },
     {
@@ -12159,7 +12159,7 @@
       "source_check": {
         "checked": "2026-09-09",
         "outcome": "ok",
-        "detail": "the page names Rendi as \"rendi\" and states \"$0.15\""
+        "detail": "the page names Rendi as \"rendi\""
       }
     },
     {
@@ -12229,7 +12229,7 @@
       "source_check": {
         "checked": "2026-09-09",
         "outcome": "ok",
-        "detail": "the page names ScrapingAnt as \"scrapingant\" and states \"$42\""
+        "detail": "the page names ScrapingAnt as \"scrapingant\""
       }
     },
     {
@@ -12246,7 +12246,7 @@
       "source_check": {
         "checked": "2026-09-10",
         "outcome": "ok",
-        "detail": "the page names SerpApi as \"serpapi\" and states \"$ 25\""
+        "detail": "the page names SerpApi as \"serpapi\""
       }
     },
     {
@@ -12263,7 +12263,7 @@
       "source_check": {
         "checked": "2026-09-14",
         "outcome": "ok",
-        "detail": "the page names Simplescraper as \"simplescraper\" and states \"$2,850,000\"",
+        "detail": "the page names Simplescraper as \"simplescraper\"",
         "rendered": true
       }
     },
@@ -12281,7 +12281,7 @@
       "source_check": {
         "checked": "2026-09-10",
         "outcome": "ok",
-        "detail": "the page names Geekflare API as \"geekflare api\" and states \"$ 29\""
+        "detail": "the page names Geekflare API as \"geekflare api\""
       }
     },
     {
@@ -12298,7 +12298,7 @@
       "source_check": {
         "checked": "2026-09-10",
         "outcome": "ok",
-        "detail": "the page names SmartParse as \"smartparse\" and states \"$ 119\""
+        "detail": "the page names SmartParse as \"smartparse\""
       }
     },
     {
@@ -12375,7 +12375,7 @@
       "source_check": {
         "checked": "2026-09-05",
         "outcome": "ok",
-        "detail": "the page writes \"tavily\", the domain we cite Tavily AI from, and states \"$0.008\""
+        "detail": "the page writes \"tavily\", the domain we cite Tavily AI from"
       },
       "product_subtypes": {
         "taxonomy": "AI / ML",
@@ -12403,7 +12403,7 @@
       "source_check": {
         "checked": "2026-09-09",
         "outcome": "ok",
-        "detail": "the page names The IP API as \"the ip api\" and states \"1k free req / day\""
+        "detail": "the page names The IP API as \"the ip api\""
       }
     },
     {
@@ -12420,7 +12420,7 @@
       "source_check": {
         "checked": "2026-09-10",
         "outcome": "ok",
-        "detail": "the page names TinyMCE as \"tinymce\" and states \"Free Plan\""
+        "detail": "the page names TinyMCE as \"tinymce\""
       },
       "restated_from": {
         "reading_date": "2026-08-28",
@@ -12444,7 +12444,7 @@
       "source_check": {
         "checked": "2026-09-10",
         "outcome": "ok",
-        "detail": "the page names Tomorrow.io Weather API as \"tomorrow io weather api\" and states \"$210\""
+        "detail": "the page names Tomorrow.io Weather API as \"tomorrow io weather api\""
       },
       "restated_from": {
         "reading_date": "2026-08-28",
@@ -12509,7 +12509,7 @@
       "source_check": {
         "checked": "2026-09-10",
         "outcome": "ok",
-        "detail": "the page names vatcheckapi.com as \"vatcheckapi com\" and states \"Free API\""
+        "detail": "the page names vatcheckapi.com as \"vatcheckapi com\""
       }
     },
     {
@@ -12543,7 +12543,7 @@
       "source_check": {
         "checked": "2026-09-10",
         "outcome": "ok",
-        "detail": "the page names WebScraping.AI as \"webscraping ai\" and states \"$999\""
+        "detail": "the page names WebScraping.AI as \"webscraping ai\""
       }
     },
     {
@@ -12628,7 +12628,7 @@
       "source_check": {
         "checked": "2026-09-10",
         "outcome": "ok",
-        "detail": "the page names Zipcodestack as \"zipcodestack\" and states \"Free API\""
+        "detail": "the page names Zipcodestack as \"zipcodestack\""
       },
       "restated_from": {
         "reading_date": "2026-08-28",
@@ -12837,7 +12837,7 @@
       "source_check": {
         "checked": "2026-09-10",
         "outcome": "ok",
-        "detail": "the page names Calendly as \"calendly\" and states \"$150\""
+        "detail": "the page names Calendly as \"calendly\""
       }
     },
     {
@@ -12871,7 +12871,7 @@
       "source_check": {
         "checked": "2026-09-10",
         "outcome": "ok",
-        "detail": "the page names cDox as \"cdox\" and states \"$8\""
+        "detail": "the page names cDox as \"cdox\""
       }
     },
     {
@@ -12888,7 +12888,7 @@
       "source_check": {
         "checked": "2026-09-18",
         "outcome": "ok",
-        "detail": "the page names Chanty.com as \"chanty\" and states \"$12\""
+        "detail": "the page names Chanty.com as \"chanty\""
       }
     },
     {
@@ -13146,7 +13146,7 @@
       "source_check": {
         "checked": "2026-09-10",
         "outcome": "ok",
-        "detail": "the page names Linkinize as \"linkinize\" and states \"2.5 hours per month\""
+        "detail": "the page names Linkinize as \"linkinize\""
       }
     },
     {
@@ -13289,7 +13289,7 @@
       "source_check": {
         "checked": "2026-09-10",
         "outcome": "ok",
-        "detail": "the page names Pumble as \"pumble\" and states \"$20\""
+        "detail": "the page names Pumble as \"pumble\""
       }
     },
     {
@@ -13357,7 +13357,7 @@
       "source_check": {
         "checked": "2026-09-07",
         "outcome": "ok",
-        "detail": "the page names ruttl.com as \"ruttl\" and states \"$18\""
+        "detail": "the page names ruttl.com as \"ruttl\""
       }
     },
     {
@@ -13408,7 +13408,7 @@
       "source_check": {
         "checked": "2026-09-07",
         "outcome": "ok",
-        "detail": "the page names SiteDots as \"sitedots\" and states \"$ 17\""
+        "detail": "the page names SiteDots as \"sitedots\""
       },
       "restated_from": {
         "reading_date": "2026-09-07",
@@ -13595,7 +13595,7 @@
       "source_check": {
         "checked": "2026-09-14",
         "outcome": "ok",
-        "detail": "the page names TimeCamp as \"timecamp\" and states \"$ 3.99\"",
+        "detail": "the page names TimeCamp as \"timecamp\"",
         "unrendered_prices": [
           "Ultimate Plan USD 10.99"
         ]
@@ -13633,7 +13633,7 @@
       "source_check": {
         "checked": "2026-09-07",
         "outcome": "ok",
-        "detail": "the page names transfernow as \"transfernow\" and states \"€ 6\"",
+        "detail": "the page names transfernow as \"transfernow\"",
         "unrendered_prices": [
           "EUR 96",
           "EUR 288"
@@ -13753,7 +13753,7 @@
       "source_check": {
         "checked": "2026-09-10",
         "outcome": "ok",
-        "detail": "the page names Webvizio as \"webvizio\" and states \"Enterprise tiers\""
+        "detail": "the page names Webvizio as \"webvizio\""
       }
     },
     {
@@ -13918,7 +13918,7 @@
       "source_check": {
         "checked": "2026-09-18",
         "outcome": "ok",
-        "detail": "the page names Crystallize as \"crystallize\" and states \"$949\""
+        "detail": "the page names Crystallize as \"crystallize\""
       }
     },
     {
@@ -13937,7 +13937,7 @@
       "source_check": {
         "checked": "2026-09-15",
         "outcome": "ok",
-        "detail": "the page names DatoCMS as \"datocms\" and states \"€39\""
+        "detail": "the page names DatoCMS as \"datocms\""
       }
     },
     {
@@ -14254,7 +14254,7 @@
       "source_check": {
         "checked": "2026-09-09",
         "outcome": "ok",
-        "detail": "the page names coderabbit.ai as \"coderabbit\" and states \"$143\""
+        "detail": "the page names coderabbit.ai as \"coderabbit\""
       }
     },
     {
@@ -14427,7 +14427,7 @@
       "source_check": {
         "checked": "2026-09-10",
         "outcome": "ok",
-        "detail": "the page names houndci.com as \"houndci\" and states \"$29\""
+        "detail": "the page names houndci.com as \"houndci\""
       }
     },
     {
@@ -14462,7 +14462,7 @@
       "source_check": {
         "checked": "2026-09-10",
         "outcome": "ok",
-        "detail": "the page names scan.coverity.com as \"coverity\" and states \"4 builds per day\""
+        "detail": "the page names scan.coverity.com as \"coverity\""
       }
     },
     {
@@ -14583,7 +14583,7 @@
       "source_check": {
         "checked": "2026-09-10",
         "outcome": "ok",
-        "detail": "the page names tickgit.com as \"tickgit\" and states \"$3\""
+        "detail": "the page names tickgit.com as \"tickgit\""
       }
     },
     {
@@ -14660,7 +14660,7 @@
       "source_check": {
         "checked": "2026-09-10",
         "outcome": "ok",
-        "detail": "the page names cirun.io as \"cirun io\" and states \"$ 0.824\""
+        "detail": "the page names cirun.io as \"cirun io\""
       }
     },
     {
@@ -14679,7 +14679,7 @@
       "source_check": {
         "checked": "2026-09-20",
         "outcome": "ok",
-        "detail": "the page names deployhq.com as \"deployhq com\" and states \"$9\"",
+        "detail": "the page names deployhq.com as \"deployhq com\"",
         "unrendered_prices": [
           "USD 21",
           "EUR 21",
@@ -14726,7 +14726,7 @@
       "source_check": {
         "checked": "2026-09-12",
         "outcome": "ok",
-        "detail": "the page names Mergify as \"mergify\" and states \"20 safe deploys per day\""
+        "detail": "the page names Mergify as \"mergify\""
       }
     },
     {
@@ -14745,7 +14745,7 @@
       "source_check": {
         "checked": "2026-09-14",
         "outcome": "ok",
-        "detail": "the page names Nx Cloud as \"nx cloud\" and states \"$29\""
+        "detail": "the page names Nx Cloud as \"nx cloud\""
       }
     },
     {
@@ -14803,7 +14803,7 @@
       "source_check": {
         "checked": "2026-09-10",
         "outcome": "ok",
-        "detail": "the page names Squash Labs as \"squash labs\" and states \"$40\""
+        "detail": "the page names Squash Labs as \"squash labs\""
       }
     },
     {
@@ -14893,7 +14893,7 @@
       "source_check": {
         "checked": "2026-09-12",
         "outcome": "ok",
-        "detail": "the page names Argos as \"argos\" and states \"$510\""
+        "detail": "the page names Argos as \"argos\""
       }
     },
     {
@@ -14929,7 +14929,7 @@
       "source_check": {
         "checked": "2026-09-10",
         "outcome": "ok",
-        "detail": "the page names BugBug as \"bugbug\" and states \"Free plan\""
+        "detail": "the page names BugBug as \"bugbug\""
       },
       "restated_from": {
         "reading_date": "2026-08-28",
@@ -14954,7 +14954,7 @@
       "source_check": {
         "checked": "2026-09-13",
         "outcome": "ok",
-        "detail": "the page names checkbot.io as \"checkbot\" and states \"$10\""
+        "detail": "the page names checkbot.io as \"checkbot\""
       }
     },
     {
@@ -15294,7 +15294,7 @@
       "source_check": {
         "checked": "2026-09-10",
         "outcome": "ok",
-        "detail": "the page names webhook.site as \"webhook site\" and states \"$7.5\""
+        "detail": "the page names webhook.site as \"webhook site\""
       },
       "restated_from": {
         "reading_date": "2026-08-28",
@@ -15354,7 +15354,7 @@
       "source_check": {
         "checked": "2026-09-12",
         "outcome": "ok",
-        "detail": "the page names aikido.dev as \"aikido dev\" and states \"$75\""
+        "detail": "the page names aikido.dev as \"aikido dev\""
       }
     },
     {
@@ -15371,7 +15371,7 @@
       "source_check": {
         "checked": "2026-09-15",
         "outcome": "ok",
-        "detail": "the page names CertKit as \"certkit\" and states \"$99\"",
+        "detail": "the page names CertKit as \"certkit\"",
         "rendered": true
       }
     },
@@ -15525,7 +15525,7 @@
       "source_check": {
         "checked": "2026-09-09",
         "outcome": "ok",
-        "detail": "the page writes \"letsencrypt\", the domain we cite letsencrypt.org from, and states \"2025 Annual R\""
+        "detail": "the page writes \"letsencrypt\", the domain we cite letsencrypt.org from"
       }
     },
     {
@@ -15713,7 +15713,7 @@
       "source_check": {
         "checked": "2026-09-10",
         "outcome": "ok",
-        "detail": "the page names Virgil Security as \"virgil security\" and states \"$123\""
+        "detail": "the page names Virgil Security as \"virgil security\""
       },
       "restated_from": {
         "reading_date": "2026-08-28",
@@ -15900,7 +15900,7 @@
       "source_check": {
         "checked": "2026-09-10",
         "outcome": "ok",
-        "detail": "the page names duo.com as \"duo\" and states \"$3\""
+        "detail": "the page names duo.com as \"duo\""
       }
     },
     {
@@ -16011,7 +16011,7 @@
       "source_check": {
         "checked": "2026-09-18",
         "outcome": "ok",
-        "detail": "the page names Ory as \"ory\" and states \"$770\""
+        "detail": "the page names Ory as \"ory\""
       },
       "restated_from": {
         "reading_date": "2026-09-18",
@@ -16037,7 +16037,7 @@
       "source_check": {
         "checked": "2026-09-12",
         "outcome": "ok",
-        "detail": "the page names Phase Two as \"phase two\" and states \"$21\""
+        "detail": "the page names Phase Two as \"phase two\""
       }
     },
     {
@@ -16111,7 +16111,7 @@
       "source_check": {
         "checked": "2026-09-10",
         "outcome": "ok",
-        "detail": "the page names Appho.st as \"appho st\" and states \"$2.99\"",
+        "detail": "the page names Appho.st as \"appho st\"",
         "rendered": true
       }
     },
@@ -16164,7 +16164,7 @@
       "source_check": {
         "checked": "2026-09-10",
         "outcome": "ok",
-        "detail": "the page names InstallOnAir as \"installonair\" and states \"$1\""
+        "detail": "the page names InstallOnAir as \"installonair\""
       }
     },
     {
@@ -16308,7 +16308,7 @@
       "source_check": {
         "checked": "2026-09-10",
         "outcome": "ok",
-        "detail": "the page names serveravatar.com as \"serveravatar\" and states \"$12\""
+        "detail": "the page names serveravatar.com as \"serveravatar\""
       },
       "restated_from": {
         "reading_date": "2026-08-28",
@@ -16332,7 +16332,7 @@
       "source_check": {
         "checked": "2026-09-10",
         "outcome": "ok",
-        "detail": "the page names xcloud.host as \"xcloud host\" and states \"$9.99\""
+        "detail": "the page names xcloud.host as \"xcloud host\""
       },
       "restated_from": {
         "reading_date": "2026-08-28",
@@ -16375,7 +16375,7 @@
       "source_check": {
         "checked": "2026-09-10",
         "outcome": "ok",
-        "detail": "the page names EMQX Serverless as \"emqx serverless\" and states \"$2.00\""
+        "detail": "the page names EMQX Serverless as \"emqx serverless\""
       }
     },
     {
@@ -16466,7 +16466,7 @@
       "source_check": {
         "checked": "2026-09-10",
         "outcome": "ok",
-        "detail": "the page names Pingram.io as \"pingram io\" and states \"$20\""
+        "detail": "the page names Pingram.io as \"pingram io\""
       }
     },
     {
@@ -16484,7 +16484,7 @@
       "source_check": {
         "checked": "2026-09-19",
         "outcome": "ok",
-        "detail": "the page names Pocket Alert as \"pocket alert\" and states \"$6\"",
+        "detail": "the page names Pocket Alert as \"pocket alert\"",
         "unrendered_prices": [
           "Medium USD 12",
           "Large USD 25"
@@ -16506,7 +16506,7 @@
       "source_check": {
         "checked": "2026-09-11",
         "outcome": "ok",
-        "detail": "the page names pubnub.com as \"pubnub\" and states \"212m requests/min\""
+        "detail": "the page names pubnub.com as \"pubnub\""
       }
     },
     {
@@ -16524,7 +16524,7 @@
       "source_check": {
         "checked": "2026-09-11",
         "outcome": "ok",
-        "detail": "the page names scaledrone.com as \"scaledrone com\" and states \"100,000 daily e\""
+        "detail": "the page names scaledrone.com as \"scaledrone com\""
       }
     },
     {
@@ -16561,7 +16561,7 @@
       "source_check": {
         "checked": "2026-09-13",
         "outcome": "ok",
-        "detail": "the page names SuprSend as \"suprsend\" and states \"$72.50\""
+        "detail": "the page names SuprSend as \"suprsend\""
       }
     },
     {
@@ -16579,7 +16579,7 @@
       "source_check": {
         "checked": "2026-09-13",
         "outcome": "ok",
-        "detail": "the page names synadia.com as \"synadia\" and states \"$49\""
+        "detail": "the page names synadia.com as \"synadia\""
       },
       "restated_from": {
         "reading_date": "2026-09-13",
@@ -16640,7 +16640,7 @@
       "source_check": {
         "checked": "2026-09-11",
         "outcome": "ok",
-        "detail": "the page names log.dog as \"logdog\" and states \"free plan\""
+        "detail": "the page names log.dog as \"logdog\""
       }
     },
     {
@@ -16658,7 +16658,7 @@
       "source_check": {
         "checked": "2026-09-13",
         "outcome": "ok",
-        "detail": "the page names logflare.app as \"logflare\" and states \"$15\""
+        "detail": "the page names logflare.app as \"logflare\""
       }
     },
     {
@@ -16737,7 +16737,7 @@
       "source_check": {
         "checked": "2026-09-17",
         "outcome": "ok",
-        "detail": "the page names openobserve.ai as \"openobserve ai\" and states \"$0.50\""
+        "detail": "the page names openobserve.ai as \"openobserve ai\""
       },
       "free_grounds": [
         "licence"
@@ -16828,7 +16828,7 @@
       "source_check": {
         "checked": "2026-09-07",
         "outcome": "ok",
-        "detail": "the page names localazy.com as \"localazy com\" and states \"$89\"",
+        "detail": "the page names localazy.com as \"localazy com\"",
         "unrendered_prices": [
           "Professional - 1,000 keys USD 41",
           "Professional - 1,500 keys USD 52",
@@ -16921,7 +16921,7 @@
       "source_check": {
         "checked": "2026-09-09",
         "outcome": "ok",
-        "detail": "the page names SimpleLocalize as \"simplelocalize\" and states \"€25.00\"",
+        "detail": "the page names SimpleLocalize as \"simplelocalize\"",
         "unrendered_prices": [
           "Business Plan EUR 99.00",
           "Team Plan EUR 35.00"
@@ -17166,7 +17166,7 @@
       "source_check": {
         "checked": "2026-09-19",
         "outcome": "ok",
-        "detail": "the page names fivenines.io as \"fivenines io\" and states \"€19\"",
+        "detail": "the page names fivenines.io as \"fivenines io\"",
         "unrendered_prices": [
           "Pro EUR 49"
         ]
@@ -17198,7 +17198,7 @@
       "source_check": {
         "checked": "2026-09-12",
         "outcome": "ok",
-        "detail": "the page names incidenthub.cloud as \"incidenthub cloud\" and states \"$ 35\""
+        "detail": "the page names incidenthub.cloud as \"incidenthub cloud\""
       },
       "product_subtypes": {
         "taxonomy": "Monitoring",
@@ -17261,7 +17261,7 @@
       "source_check": {
         "checked": "2026-09-11",
         "outcome": "ok",
-        "detail": "the page names linkok.com as \"linkok com\" and states \"$5\""
+        "detail": "the page names linkok.com as \"linkok com\""
       },
       "product_subtypes": {
         "taxonomy": "Monitoring",
@@ -17348,7 +17348,7 @@
       "source_check": {
         "checked": "2026-09-15",
         "outcome": "ok",
-        "detail": "the page names netdata.cloud as \"netdata cloud\" and states \"$90\""
+        "detail": "the page names netdata.cloud as \"netdata cloud\""
       },
       "product_subtypes": {
         "taxonomy": "Monitoring",
@@ -17410,7 +17410,7 @@
       "source_check": {
         "checked": "2026-09-20",
         "outcome": "ok",
-        "detail": "the page names pagecrawl.io as \"pagecrawl io\" and states \"$671\"",
+        "detail": "the page names pagecrawl.io as \"pagecrawl io\"",
         "unrendered_prices": [
           "Ultimate USD 99"
         ]
@@ -17541,7 +17541,7 @@
       "source_check": {
         "checked": "2026-09-11",
         "outcome": "ok",
-        "detail": "the page names Pingmeter.com as \"pingmeter\" and states \"$4.99\""
+        "detail": "the page names Pingmeter.com as \"pingmeter\""
       },
       "product_subtypes": {
         "taxonomy": "Monitoring",
@@ -17611,7 +17611,7 @@
       "source_check": {
         "checked": "2026-09-12",
         "outcome": "ok",
-        "detail": "the page names robusta.dev as \"robusta dev\" and states \"$2.50\""
+        "detail": "the page names robusta.dev as \"robusta dev\""
       },
       "product_subtypes": {
         "taxonomy": "Monitoring",
@@ -17663,7 +17663,7 @@
       "source_check": {
         "checked": "2026-09-07",
         "outcome": "ok",
-        "detail": "the page names Simple Observability as \"simple observability\" and states \"$3\""
+        "detail": "the page names Simple Observability as \"simple observability\""
       },
       "product_subtypes": {
         "taxonomy": "Monitoring",
@@ -18001,7 +18001,7 @@
       "source_check": {
         "checked": "2026-09-13",
         "outcome": "ok",
-        "detail": "the page names Bugsink as \"bugsink\" and states \"$16\""
+        "detail": "the page names Bugsink as \"bugsink\""
       }
     },
     {
@@ -18019,7 +18019,7 @@
       "source_check": {
         "checked": "2026-09-15",
         "outcome": "ok",
-        "detail": "the page names CatchJS.com as \"catchjs com\" and states \"$ 44\""
+        "detail": "the page names CatchJS.com as \"catchjs com\""
       },
       "restated_from": {
         "reading_date": "2026-09-01",
@@ -18176,7 +18176,7 @@
       "source_check": {
         "checked": "2026-09-05",
         "outcome": "ok",
-        "detail": "the page names bonsai.io as \"bonsai\" and states \"$25\""
+        "detail": "the page names bonsai.io as \"bonsai\""
       }
     },
     {
@@ -18245,7 +18245,7 @@
       "source_check": {
         "checked": "2026-09-11",
         "outcome": "ok",
-        "detail": "the page names Antideo as \"antideo\" and states \"Free API\""
+        "detail": "the page names Antideo as \"antideo\""
       }
     },
     {
@@ -18348,7 +18348,7 @@
       "source_check": {
         "checked": "2026-09-11",
         "outcome": "ok",
-        "detail": "the page names DNSExit as \"dnsexit\" and states \"$9.99\""
+        "detail": "the page names DNSExit as \"dnsexit\""
       }
     },
     {
@@ -18400,7 +18400,7 @@
       "source_check": {
         "checked": "2026-09-10",
         "outcome": "ok",
-        "detail": "the page names EmailOctopus as \"emailoctopus\" and states \"$ 480\""
+        "detail": "the page names EmailOctopus as \"emailoctopus\""
       }
     },
     {
@@ -18417,7 +18417,7 @@
       "source_check": {
         "checked": "2026-09-11",
         "outcome": "ok",
-        "detail": "the page names Emailvalidation.io as \"emailvalidation io\" and states \"$9\""
+        "detail": "the page names Emailvalidation.io as \"emailvalidation io\""
       }
     },
     {
@@ -18452,7 +18452,7 @@
       "source_check": {
         "checked": "2026-09-11",
         "outcome": "ok",
-        "detail": "the page names forwardemail.net as \"forwardemail net\" and states \"$3\""
+        "detail": "the page names forwardemail.net as \"forwardemail net\""
       },
       "restated_from": {
         "reading_date": "2026-08-28",
@@ -18476,7 +18476,7 @@
       "source_check": {
         "checked": "2026-09-12",
         "outcome": "ok",
-        "detail": "the page names Imitate Email as \"imitate email\" and states \"free forever\""
+        "detail": "the page names Imitate Email as \"imitate email\""
       }
     },
     {
@@ -18679,7 +18679,7 @@
       "source_check": {
         "checked": "2026-09-11",
         "outcome": "ok",
-        "detail": "the page names MailerSend.com as \"mailersend com\" and states \"$1\""
+        "detail": "the page names MailerSend.com as \"mailersend com\""
       }
     },
     {
@@ -18737,7 +18737,7 @@
       "source_check": {
         "checked": "2026-09-07",
         "outcome": "ok",
-        "detail": "the page names Mailtrap.io as \"mailtrap io\" and states \"1M emails per month\""
+        "detail": "the page names Mailtrap.io as \"mailtrap io\""
       }
     },
     {
@@ -18771,7 +18771,7 @@
       "source_check": {
         "checked": "2026-09-11",
         "outcome": "ok",
-        "detail": "the page names Plunk as \"plunk\" and states \"$0.001\""
+        "detail": "the page names Plunk as \"plunk\""
       }
     },
     {
@@ -18788,7 +18788,7 @@
       "source_check": {
         "checked": "2026-09-11",
         "outcome": "ok",
-        "detail": "the page names Sendpulse as \"sendpulse\" and states \"free plan\""
+        "detail": "the page names Sendpulse as \"sendpulse\""
       }
     },
     {
@@ -18805,7 +18805,7 @@
       "source_check": {
         "checked": "2026-09-11",
         "outcome": "ok",
-        "detail": "the page names SendStreak as \"sendstreak\" and states \"free plan\""
+        "detail": "the page names SendStreak as \"sendstreak\""
       }
     },
     {
@@ -18856,7 +18856,7 @@
       "source_check": {
         "checked": "2026-09-11",
         "outcome": "ok",
-        "detail": "the page names Sweego as \"sweego\" and states \"free plan\""
+        "detail": "the page names Sweego as \"sweego\""
       }
     },
     {
@@ -18891,7 +18891,7 @@
       "source_check": {
         "checked": "2026-09-11",
         "outcome": "ok",
-        "detail": "the page names TempMailDetector.com as \"tempmaildetector com\" and states \"$0.005\""
+        "detail": "the page names TempMailDetector.com as \"tempmaildetector com\""
       }
     },
     {
@@ -18908,7 +18908,7 @@
       "source_check": {
         "checked": "2026-09-11",
         "outcome": "ok",
-        "detail": "the page names Aionda Mail as \"aionda mail\" and states \"€18.49\""
+        "detail": "the page names Aionda Mail as \"aionda mail\""
       },
       "restated_from": {
         "reading_date": "2026-08-28",
@@ -18949,7 +18949,7 @@
       "source_check": {
         "checked": "2026-09-11",
         "outcome": "ok",
-        "detail": "the page names Verifalia as \"verifalia\" and states \"$49\""
+        "detail": "the page names Verifalia as \"verifalia\""
       }
     },
     {
@@ -18966,7 +18966,7 @@
       "source_check": {
         "checked": "2026-09-11",
         "outcome": "ok",
-        "detail": "the page names verimail.io as \"verimail io\" and states \"Free forever\""
+        "detail": "the page names verimail.io as \"verimail io\""
       }
     },
     {
@@ -19025,7 +19025,7 @@
       "source_check": {
         "checked": "2026-09-11",
         "outcome": "ok",
-        "detail": "the page names Abby as \"abby\" and states \"$12\""
+        "detail": "the page names Abby as \"abby\""
       }
     },
     {
@@ -19086,7 +19086,7 @@
       "source_check": {
         "checked": "2026-09-11",
         "outcome": "ok",
-        "detail": "the page names Toggled.dev as \"toggled dev\" and states \"$49\""
+        "detail": "the page names Toggled.dev as \"toggled dev\""
       },
       "restated_from": {
         "reading_date": "2026-08-28",
@@ -19145,7 +19145,7 @@
       "source_check": {
         "checked": "2026-09-13",
         "outcome": "ok",
-        "detail": "the page names feedback.fish as \"feedback fish\" and states \"$19\""
+        "detail": "the page names feedback.fish as \"feedback fish\""
       }
     },
     {
@@ -19179,7 +19179,7 @@
       "source_check": {
         "checked": "2026-09-13",
         "outcome": "ok",
-        "detail": "the page names Formcarry.com as \"formcarry com\" and states \"$6\""
+        "detail": "the page names Formcarry.com as \"formcarry com\""
       },
       "restated_from": {
         "reading_date": "2026-09-01",
@@ -19292,7 +19292,7 @@
       "source_check": {
         "checked": "2026-09-20",
         "outcome": "ok",
-        "detail": "the page names Formware.io as \"formware io\" and states \"$29.99\"",
+        "detail": "the page names Formware.io as \"formware io\"",
         "rendered": true
       }
     },
@@ -19310,7 +19310,7 @@
       "source_check": {
         "checked": "2026-09-13",
         "outcome": "ok",
-        "detail": "the page names HeroTofu.com as \"herotofu com\" and states \"$8.33\""
+        "detail": "the page names HeroTofu.com as \"herotofu com\""
       },
       "restated_from": {
         "reading_date": "2026-09-01",
@@ -19351,7 +19351,7 @@
       "source_check": {
         "checked": "2026-09-13",
         "outcome": "ok",
-        "detail": "the page names Pageclip as \"pageclip\" and states \"$ 9\""
+        "detail": "the page names Pageclip as \"pageclip\""
       }
     },
     {
@@ -19426,7 +19426,7 @@
       "source_check": {
         "checked": "2026-09-12",
         "outcome": "ok",
-        "detail": "the page names Survicate as \"survicate\" and states \"$114\""
+        "detail": "the page names Survicate as \"survicate\""
       }
     },
     {
@@ -19443,7 +19443,7 @@
       "source_check": {
         "checked": "2026-09-11",
         "outcome": "ok",
-        "detail": "the page names Typeform.com as \"typeform com\" and states \"$3.67\""
+        "detail": "the page names Typeform.com as \"typeform com\""
       }
     },
     {
@@ -19712,7 +19712,7 @@
       "source_check": {
         "checked": "2026-09-13",
         "outcome": "ok",
-        "detail": "the page names Langfuse as \"langfuse\" and states \"$29\""
+        "detail": "the page names Langfuse as \"langfuse\""
       },
       "product_subtypes": {
         "taxonomy": "AI / ML",
@@ -19808,7 +19808,7 @@
       "source_check": {
         "checked": "2026-09-14",
         "outcome": "ok",
-        "detail": "the page names LangWatch as \"langwatch\" and states \"€ 29\""
+        "detail": "the page names LangWatch as \"langwatch\""
       },
       "product_subtypes": {
         "taxonomy": "AI / ML",
@@ -19885,7 +19885,7 @@
       "source_check": {
         "checked": "2026-09-18",
         "outcome": "ok",
-        "detail": "the page writes \"mediaworkbench\", the domain we cite Mediaworkbench.ai from, and states \"$49\""
+        "detail": "the page writes \"mediaworkbench\", the domain we cite Mediaworkbench.ai from"
       },
       "product_subtypes": {
         "taxonomy": "AI / ML",
@@ -19980,7 +19980,7 @@
       "source_check": {
         "checked": "2026-09-18",
         "outcome": "ok",
-        "detail": "the page names Portkey as \"portkey\" and states \"$ 59.99\""
+        "detail": "the page names Portkey as \"portkey\""
       },
       "product_subtypes": {
         "taxonomy": "AI / ML",
@@ -20015,7 +20015,7 @@
       "source_check": {
         "checked": "2026-09-13",
         "outcome": "ok",
-        "detail": "the page names ReportGPT as \"reportgpt\" and states \"$ 10\""
+        "detail": "the page names ReportGPT as \"reportgpt\""
       },
       "product_subtypes": {
         "taxonomy": "AI / ML",
@@ -20039,7 +20039,7 @@
       "source_check": {
         "checked": "2026-09-13",
         "outcome": "ok",
-        "detail": "the page names Zenable as \"zenable\" and states \"$99\""
+        "detail": "the page names Zenable as \"zenable\""
       },
       "product_subtypes": {
         "taxonomy": "AI / ML",
@@ -20106,7 +20106,7 @@
       "source_check": {
         "checked": "2026-09-13",
         "outcome": "ok",
-        "detail": "the page names cdnjs.com as \"cdnjs\" and states \"250 billion requests per month\""
+        "detail": "the page names cdnjs.com as \"cdnjs\""
       }
     },
     {
@@ -20190,7 +20190,7 @@
       "source_check": {
         "checked": "2026-09-14",
         "outcome": "ok",
-        "detail": "the page names OVHcloud as \"ovhcloud\" and states \"$61.59\""
+        "detail": "the page names OVHcloud as \"ovhcloud\""
       }
     },
     {
@@ -20381,7 +20381,7 @@
       "source_check": {
         "checked": "2026-09-11",
         "outcome": "ok",
-        "detail": "the page names Apply.build as \"apply build\" and states \"Free tier\""
+        "detail": "the page names Apply.build as \"apply build\""
       },
       "product_subtypes": {
         "taxonomy": "Cloud Hosting",
@@ -20551,7 +20551,7 @@
       "source_check": {
         "checked": "2026-09-14",
         "outcome": "ok",
-        "detail": "the page names encore.dev as \"encoredev\" and states \"$60\""
+        "detail": "the page names encore.dev as \"encoredev\""
       },
       "product_subtypes": {
         "taxonomy": "Cloud Hosting",
@@ -20668,7 +20668,7 @@
       "source_check": {
         "checked": "2026-09-10",
         "outcome": "ok",
-        "detail": "the page names Northflank as \"northflank\" and states \"$24\""
+        "detail": "the page names Northflank as \"northflank\""
       },
       "product_subtypes": {
         "taxonomy": "Cloud Hosting",
@@ -20744,7 +20744,7 @@
       "source_check": {
         "checked": "2026-09-13",
         "outcome": "ok",
-        "detail": "the page names Activepieces as \"activepieces\" and states \"$1,240\""
+        "detail": "the page names Activepieces as \"activepieces\""
       },
       "product_subtypes": {
         "taxonomy": "Cloud Hosting",
@@ -20769,7 +20769,7 @@
       "source_check": {
         "checked": "2026-09-20",
         "outcome": "ok",
-        "detail": "the page names Back4App as \"back4app\" and states \"$ 15\""
+        "detail": "the page names Back4App as \"back4app\""
       },
       "product_subtypes": {
         "taxonomy": "Cloud Hosting",
@@ -20927,7 +20927,7 @@
       "source_check": {
         "checked": "2026-09-12",
         "outcome": "ok",
-        "detail": "the page names Integrately as \"integrately\" and states \"$ 5\""
+        "detail": "the page names Integrately as \"integrately\""
       },
       "product_subtypes": {
         "taxonomy": "Cloud Hosting",
@@ -21036,7 +21036,7 @@
       "source_check": {
         "checked": "2026-09-13",
         "outcome": "ok",
-        "detail": "the page names BudiBase as \"budibase\" and states \"£700\""
+        "detail": "the page names BudiBase as \"budibase\""
       }
     },
     {
@@ -21213,7 +21213,7 @@
       "source_check": {
         "checked": "2026-09-11",
         "outcome": "ok",
-        "detail": "the page names Awardspace.com as \"awardspace com\" and states \"$2.99\""
+        "detail": "the page names Awardspace.com as \"awardspace com\""
       },
       "product_subtypes": {
         "taxonomy": "Cloud Hosting",
@@ -21249,7 +21249,7 @@
       "source_check": {
         "checked": "2026-09-14",
         "outcome": "ok",
-        "detail": "the page names Bubble as \"bubble\" and states \"$10,000\"",
+        "detail": "the page names Bubble as \"bubble\"",
         "rendered": true
       },
       "product_subtypes": {
@@ -21588,7 +21588,7 @@
       "source_check": {
         "checked": "2026-09-11",
         "outcome": "ok",
-        "detail": "the page names Serv00.com as \"serv00 com\" and states \"€4\""
+        "detail": "the page names Serv00.com as \"serv00 com\""
       },
       "product_subtypes": {
         "taxonomy": "Cloud Hosting",
@@ -21618,7 +21618,7 @@
       "source_check": {
         "checked": "2026-09-10",
         "outcome": "ok",
-        "detail": "the page names SourceForge as \"sourceforge\" and states \"$300\""
+        "detail": "the page names SourceForge as \"sourceforge\""
       }
     },
     {
@@ -21741,7 +21741,7 @@
       "source_check": {
         "checked": "2026-09-10",
         "outcome": "ok",
-        "detail": "the page names dnspod.com as \"dnspod\" and states \"$10.08\"",
+        "detail": "the page names dnspod.com as \"dnspod\"",
         "rendered": true
       },
       "restated_from": {
@@ -21804,7 +21804,7 @@
       "source_check": {
         "checked": "2026-09-13",
         "outcome": "ok",
-        "detail": "the page names freedns.afraid.org as \"freedns\" and states \"$5\""
+        "detail": "the page names freedns.afraid.org as \"freedns\""
       }
     },
     {
@@ -21922,7 +21922,7 @@
       "source_check": {
         "checked": "2026-09-05",
         "outcome": "ok",
-        "detail": "the page names noip as \"noip\" and states \"$24.95\""
+        "detail": "the page names noip as \"noip\""
       }
     },
     {
@@ -22001,7 +22001,7 @@
       "source_check": {
         "checked": "2026-09-13",
         "outcome": "ok",
-        "detail": "the page names zoneedit.com as \"zoneedit\" and states \"100,000 DNS queries per month\""
+        "detail": "the page names zoneedit.com as \"zoneedit\""
       }
     },
     {
@@ -22019,7 +22019,7 @@
       "source_check": {
         "checked": "2026-09-13",
         "outcome": "ok",
-        "detail": "the page names Zonomi as \"zonomi\" and states \"$1\""
+        "detail": "the page names Zonomi as \"zonomi\""
       },
       "restated_from": {
         "reading_date": "2026-09-01",
@@ -22097,7 +22097,7 @@
       "source_check": {
         "checked": "2026-09-13",
         "outcome": "ok",
-        "detail": "the page names 4EVERLAND as \"4everland\" and states \"$15\""
+        "detail": "the page names 4EVERLAND as \"4everland\""
       }
     },
     {
@@ -22131,7 +22131,7 @@
       "source_check": {
         "checked": "2026-09-13",
         "outcome": "ok",
-        "detail": "the page names Filebase as \"filebase\" and states \"$15\""
+        "detail": "the page names Filebase as \"filebase\""
       }
     },
     {
@@ -22178,7 +22178,7 @@
       "source_check": {
         "checked": "2026-09-11",
         "outcome": "ok",
-        "detail": "the page names codehooks.io as \"codehooks io\" and states \"$19\""
+        "detail": "the page names codehooks.io as \"codehooks io\""
       },
       "product_subtypes": {
         "taxonomy": "Databases",
@@ -22329,7 +22329,7 @@
       "source_check": {
         "checked": "2026-09-10",
         "outcome": "ok",
-        "detail": "the page names skyvia.com as \"skyvia com\" and states \"30 billion records processed per month\""
+        "detail": "the page names skyvia.com as \"skyvia com\""
       },
       "product_subtypes": {
         "taxonomy": "Databases",
@@ -22427,7 +22427,7 @@
       "source_check": {
         "checked": "2026-09-13",
         "outcome": "ok",
-        "detail": "the page names Expose as \"expose\" and states \"$79\""
+        "detail": "the page names Expose as \"expose\""
       }
     },
     {
@@ -22444,7 +22444,7 @@
       "source_check": {
         "checked": "2026-09-09",
         "outcome": "ok",
-        "detail": "the page names Hamachi as \"hamachi\" and states \"$ 49\""
+        "detail": "the page names Hamachi as \"hamachi\""
       }
     },
     {
@@ -22461,7 +22461,7 @@
       "source_check": {
         "checked": "2026-09-13",
         "outcome": "ok",
-        "detail": "the page names localhost.run as \"localhost run\" and states \"$9\""
+        "detail": "the page names localhost.run as \"localhost run\""
       }
     },
     {
@@ -22573,7 +22573,7 @@
       "source_check": {
         "checked": "2026-09-13",
         "outcome": "ok",
-        "detail": "the page names webhookrelay.com as \"webhookrelay com\" and states \"Free plan\""
+        "detail": "the page names webhookrelay.com as \"webhookrelay com\""
       }
     },
     {
@@ -22590,7 +22590,7 @@
       "source_check": {
         "checked": "2026-09-14",
         "outcome": "ok",
-        "detail": "the page names Xirsys as \"xirsys\" and states \"$39\"",
+        "detail": "the page names Xirsys as \"xirsys\"",
         "rendered": true
       }
     },
@@ -22608,7 +22608,7 @@
       "source_check": {
         "checked": "2026-09-07",
         "outcome": "ok",
-        "detail": "the page names ZeroTier as \"zerotier\" and states \"$18\""
+        "detail": "the page names ZeroTier as \"zerotier\""
       }
     },
     {
@@ -22676,7 +22676,7 @@
       "source_check": {
         "checked": "2026-09-11",
         "outcome": "ok",
-        "detail": "the page names Basecamp as \"basecamp\" and states \"$25\""
+        "detail": "the page names Basecamp as \"basecamp\""
       },
       "restated_from": {
         "reading_date": "2026-08-28",
@@ -22700,7 +22700,7 @@
       "source_check": {
         "checked": "2026-09-11",
         "outcome": "ok",
-        "detail": "the page names bitrix24.com as \"bitrix24\" and states \"$ 10\""
+        "detail": "the page names bitrix24.com as \"bitrix24\""
       }
     },
     {
@@ -22734,7 +22734,7 @@
       "source_check": {
         "checked": "2026-09-18",
         "outcome": "ok",
-        "detail": "the page names clickup.com as \"clickup\" and states \"$3.9\""
+        "detail": "the page names clickup.com as \"clickup\""
       }
     },
     {
@@ -22751,7 +22751,7 @@
       "source_check": {
         "checked": "2026-09-20",
         "outcome": "ok",
-        "detail": "the page names Clockify as \"clockify\" and states \"24 hours a day\""
+        "detail": "the page names Clockify as \"clockify\""
       }
     },
     {
@@ -22854,7 +22854,7 @@
       "source_check": {
         "checked": "2026-09-11",
         "outcome": "ok",
-        "detail": "the page names GForge as \"gforge\" and states \"$6\""
+        "detail": "the page names GForge as \"gforge\""
       }
     },
     {
@@ -23151,7 +23151,7 @@
       "source_check": {
         "checked": "2026-09-11",
         "outcome": "ok",
-        "detail": "the page names ScrumFast as \"scrumfast\" and states \"$4\""
+        "detail": "the page names ScrumFast as \"scrumfast\""
       },
       "restated_from": {
         "reading_date": "2026-08-28",
@@ -23175,7 +23175,7 @@
       "source_check": {
         "checked": "2026-09-09",
         "outcome": "ok",
-        "detail": "the page names Shake as \"shake\" and states \"$160\""
+        "detail": "the page names Shake as \"shake\""
       },
       "restated_from": {
         "reading_date": "2026-09-09",
@@ -23345,7 +23345,7 @@
       "source_check": {
         "checked": "2026-09-20",
         "outcome": "ok",
-        "detail": "the page names Toggl as \"toggl\" and states \"00 Weekly d\""
+        "detail": "the page names Toggl as \"toggl\""
       }
     },
     {
@@ -23436,7 +23436,7 @@
       "source_check": {
         "checked": "2026-09-11",
         "outcome": "ok",
-        "detail": "the page names borgbase.com as \"borgbase com\" and states \"$2\""
+        "detail": "the page names borgbase.com as \"borgbase com\""
       }
     },
     {
@@ -23454,7 +23454,7 @@
       "source_check": {
         "checked": "2026-09-11",
         "outcome": "ok",
-        "detail": "the page names degoo.com as \"degoo com\" and states \"$2.99\""
+        "detail": "the page names degoo.com as \"degoo com\""
       }
     },
     {
@@ -23509,7 +23509,7 @@
       "source_check": {
         "checked": "2026-09-20",
         "outcome": "ok",
-        "detail": "the page names Ente as \"ente\" and states \"€10\"",
+        "detail": "the page names Ente as \"ente\"",
         "unrendered_prices": [
           "EUR 0.99",
           "EUR 4.99",
@@ -23655,7 +23655,7 @@
       "source_check": {
         "checked": "2026-09-11",
         "outcome": "ok",
-        "detail": "the page names image-charts.com as \"image charts com\" and states \"$99\""
+        "detail": "the page names image-charts.com as \"image charts com\""
       }
     },
     {
@@ -23691,7 +23691,7 @@
       "source_check": {
         "checked": "2026-09-11",
         "outcome": "ok",
-        "detail": "the page names ImgBB as \"imgbb\" and states \"$ 3.99\""
+        "detail": "the page names ImgBB as \"imgbb\""
       }
     },
     {
@@ -23745,7 +23745,7 @@
       "source_check": {
         "checked": "2026-09-14",
         "outcome": "ok",
-        "detail": "the page names MConverter as \"mconverter\" and states \"premium plans\""
+        "detail": "the page names MConverter as \"mconverter\""
       }
     },
     {
@@ -23781,7 +23781,7 @@
       "source_check": {
         "checked": "2026-09-10",
         "outcome": "ok",
-        "detail": "the page names npoint.io as \"npoint io\" and states \"2,000 requests/minute\"",
+        "detail": "the page names npoint.io as \"npoint io\"",
         "rendered": true
       }
     },
@@ -23800,7 +23800,7 @@
       "source_check": {
         "checked": "2026-09-12",
         "outcome": "ok",
-        "detail": "the page names MantleDB as \"mantledb\" and states \"$3\""
+        "detail": "the page names MantleDB as \"mantledb\""
       }
     },
     {
@@ -23836,7 +23836,7 @@
       "source_check": {
         "checked": "2026-09-07",
         "outcome": "ok",
-        "detail": "the page names packagecloud.io as \"packagecloud io\" and states \"$1\""
+        "detail": "the page names packagecloud.io as \"packagecloud io\""
       },
       "restated_from": {
         "reading_date": "2026-08-28",
@@ -23976,7 +23976,7 @@
       "source_check": {
         "checked": "2026-09-19",
         "outcome": "ok",
-        "detail": "the page names QRtracer as \"qrtracer\" and states \"€5.99\""
+        "detail": "the page names QRtracer as \"qrtracer\""
       },
       "restated_from": {
         "reading_date": "2026-09-19",
@@ -24037,7 +24037,7 @@
       "source_check": {
         "checked": "2026-09-10",
         "outcome": "ok",
-        "detail": "the page names sirv.com as \"sirv com\" and states \"6 times per year\""
+        "detail": "the page names sirv.com as \"sirv com\""
       }
     },
     {
@@ -24257,7 +24257,7 @@
       "source_check": {
         "checked": "2026-09-11",
         "outcome": "ok",
-        "detail": "the page names Circum Icons as \"circum icons\" and states \"$9\""
+        "detail": "the page names Circum Icons as \"circum icons\""
       },
       "free_grounds": [
         "licence"
@@ -24332,7 +24332,7 @@
       "source_check": {
         "checked": "2026-09-09",
         "outcome": "ok",
-        "detail": "the page names CodedThemes as \"codedthemes\" and states \"$129.00\""
+        "detail": "the page names CodedThemes as \"codedthemes\""
       }
     },
     {
@@ -24459,7 +24459,7 @@
       "source_check": {
         "checked": "2026-09-11",
         "outcome": "ok",
-        "detail": "the page names Float UI as \"float ui\" and states \"$29\""
+        "detail": "the page names Float UI as \"float ui\""
       }
     },
     {
@@ -24495,7 +24495,7 @@
       "source_check": {
         "checked": "2026-09-11",
         "outcome": "ok",
-        "detail": "the page names Flyon UI as \"flyonui\" and states \"$24,895\""
+        "detail": "the page names Flyon UI as \"flyonui\""
       }
     },
     {
@@ -24568,7 +24568,7 @@
       "source_check": {
         "checked": "2026-09-11",
         "outcome": "ok",
-        "detail": "the page names Grapedrop as \"grapedrop\" and states \"$ 4.90\""
+        "detail": "the page names Grapedrop as \"grapedrop\""
       },
       "restated_from": {
         "reading_date": "2026-08-28",
@@ -24647,7 +24647,7 @@
       "source_check": {
         "checked": "2026-09-11",
         "outcome": "ok",
-        "detail": "the page names Icon Horse as \"icon horse\" and states \"$79\""
+        "detail": "the page names Icon Horse as \"icon horse\""
       },
       "restated_from": {
         "reading_date": "2026-08-28",
@@ -24690,7 +24690,7 @@
       "source_check": {
         "checked": "2026-09-11",
         "outcome": "ok",
-        "detail": "the page names Iconoir as \"iconoir\" and states \"441K downloads/month\""
+        "detail": "the page names Iconoir as \"iconoir\""
       }
     },
     {
@@ -24897,7 +24897,7 @@
       "source_check": {
         "checked": "2026-09-11",
         "outcome": "ok",
-        "detail": "the page names MDBootstrap as \"mdbootstrap\" and states \"$119\""
+        "detail": "the page names MDBootstrap as \"mdbootstrap\""
       }
     },
     {
@@ -25013,7 +25013,7 @@
       "source_check": {
         "checked": "2026-09-11",
         "outcome": "ok",
-        "detail": "the page names HeroUI as \"heroui\" and states \"$250.00\""
+        "detail": "the page names HeroUI as \"heroui\""
       }
     },
     {
@@ -25288,7 +25288,7 @@
       "source_check": {
         "checked": "2026-09-11",
         "outcome": "ok",
-        "detail": "the page names Shadcn Studio as \"shadcn studio\" and states \"$13.4\""
+        "detail": "the page names Shadcn Studio as \"shadcn studio\""
       }
     },
     {
@@ -25306,7 +25306,7 @@
       "source_check": {
         "checked": "2026-09-10",
         "outcome": "ok",
-        "detail": "the page names ShadcnUI as \"shadcn ui\" and states \"$420,000\""
+        "detail": "the page names ShadcnUI as \"shadcn ui\""
       }
     },
     {
@@ -25433,7 +25433,7 @@
       "source_check": {
         "checked": "2026-09-11",
         "outcome": "ok",
-        "detail": "the page names tabler-icons.io as \"tabler icons\" and states \"$ 9\""
+        "detail": "the page names tabler-icons.io as \"tabler icons\""
       }
     },
     {
@@ -25562,7 +25562,7 @@
       "source_check": {
         "checked": "2026-09-11",
         "outcome": "ok",
-        "detail": "the page names UI Avatars as \"ui avatars\" and states \"4,482,273,694 requests a month\""
+        "detail": "the page names UI Avatars as \"ui avatars\""
       }
     },
     {
@@ -25745,7 +25745,7 @@
       "source_check": {
         "checked": "2026-09-15",
         "outcome": "ok",
-        "detail": "the page names Webflow as \"webflow\" and states \"$4\""
+        "detail": "the page names Webflow as \"webflow\""
       }
     },
     {
@@ -25903,7 +25903,7 @@
       "source_check": {
         "checked": "2026-09-18",
         "outcome": "ok",
-        "detail": "the page names geojs.io as \"geojs io\" and states \"$100\""
+        "detail": "the page names geojs.io as \"geojs io\""
       }
     },
     {
@@ -25993,7 +25993,7 @@
       "source_check": {
         "checked": "2026-09-13",
         "outcome": "ok",
-        "detail": "the page names nominatim.org as \"nominatim\" and states \"30 million queries per day\""
+        "detail": "the page names nominatim.org as \"nominatim\""
       }
     },
     {
@@ -26011,7 +26011,7 @@
       "source_check": {
         "checked": "2026-09-13",
         "outcome": "ok",
-        "detail": "the page names opencagedata.com as \"opencagedata com\" and states \"2,500 geocoding API requests/day\""
+        "detail": "the page names opencagedata.com as \"opencagedata com\""
       }
     },
     {
@@ -26477,7 +26477,7 @@
       "source_check": {
         "checked": "2026-09-13",
         "outcome": "ok",
-        "detail": "the page names mockaroo as \"mockaroo\" and states \"$60\""
+        "detail": "the page names mockaroo as \"mockaroo\""
       }
     },
     {
@@ -26494,7 +26494,7 @@
       "source_check": {
         "checked": "2026-09-13",
         "outcome": "ok",
-        "detail": "the page names Mocklets as \"mocklets\" and states \"$5\""
+        "detail": "the page names Mocklets as \"mocklets\""
       },
       "restated_from": {
         "reading_date": "2026-09-01",
@@ -26535,7 +26535,7 @@
       "source_check": {
         "checked": "2026-09-18",
         "outcome": "ok",
-        "detail": "the page names Paiza as \"paiza\" and states \"$9.80\""
+        "detail": "the page names Paiza as \"paiza\""
       }
     },
     {
@@ -26570,7 +26570,7 @@
       "source_check": {
         "checked": "2026-09-13",
         "outcome": "ok",
-        "detail": "the page names Replit as \"replit\" and states \"$20\""
+        "detail": "the page names Replit as \"replit\""
       },
       "restated_from": {
         "reading_date": "2026-09-01",
@@ -26663,7 +26663,7 @@
       "source_check": {
         "checked": "2026-09-13",
         "outcome": "ok",
-        "detail": "the page names Visual Studio Community as \"visual studio community\" and states \"$1\""
+        "detail": "the page names Visual Studio Community as \"visual studio community\""
       }
     },
     {
@@ -26748,7 +26748,7 @@
       "source_check": {
         "checked": "2026-09-15",
         "outcome": "ok",
-        "detail": "the page names Zed as \"zed\" and states \"2026 Daily d\""
+        "detail": "the page names Zed as \"zed\""
       }
     },
     {
@@ -26791,7 +26791,7 @@
       "source_check": {
         "checked": "2026-09-11",
         "outcome": "ok",
-        "detail": "the page names Aptabase as \"aptabase\" and states \"$10\""
+        "detail": "the page names Aptabase as \"aptabase\""
       }
     },
     {
@@ -26845,7 +26845,7 @@
       "source_check": {
         "checked": "2026-09-09",
         "outcome": "ok",
-        "detail": "the page names Fivetran Activations as \"fivetran activations\" and states \"$17.23\""
+        "detail": "the page names Fivetran Activations as \"fivetran activations\""
       },
       "restated_from": {
         "reading_date": "2026-09-09",
@@ -26949,7 +26949,7 @@
       "source_check": {
         "checked": "2026-09-19",
         "outcome": "ok",
-        "detail": "the page names Expensify as \"expensify\" and states \"$5\""
+        "detail": "the page names Expensify as \"expensify\""
       }
     },
     {
@@ -26967,7 +26967,7 @@
       "source_check": {
         "checked": "2026-09-11",
         "outcome": "ok",
-        "detail": "the page names getinsights.io as \"getinsights io\" and states \"$12\""
+        "detail": "the page names getinsights.io as \"getinsights io\""
       }
     },
     {
@@ -27022,7 +27022,7 @@
       "source_check": {
         "checked": "2026-09-12",
         "outcome": "ok",
-        "detail": "the page names heap.io as \"heap io\" and states \"$1\""
+        "detail": "the page names heap.io as \"heap io\""
       }
     },
     {
@@ -27058,7 +27058,7 @@
       "source_check": {
         "checked": "2026-09-11",
         "outcome": "ok",
-        "detail": "the page names Hotjar as \"hotjar\" and states \"Free plan\""
+        "detail": "the page names Hotjar as \"hotjar\""
       },
       "restated_from": {
         "reading_date": "2026-08-28",
@@ -27083,7 +27083,7 @@
       "source_check": {
         "checked": "2026-09-15",
         "outcome": "ok",
-        "detail": "the page names LogSpot as \"logspot\" and states \"$12,400\""
+        "detail": "the page names LogSpot as \"logspot\""
       }
     },
     {
@@ -27213,7 +27213,7 @@
       "source_check": {
         "checked": "2026-09-12",
         "outcome": "ok",
-        "detail": "the page names TraceLog as \"tracelog\" and states \"€2,840\""
+        "detail": "the page names TraceLog as \"tracelog\""
       },
       "restated_from": {
         "reading_date": "2026-08-28",
@@ -27238,7 +27238,7 @@
       "source_check": {
         "checked": "2026-09-20",
         "outcome": "ok",
-        "detail": "the page names Trackingplan as \"trackingplan\" and states \"€14\""
+        "detail": "the page names Trackingplan as \"trackingplan\""
       }
     },
     {
@@ -27329,7 +27329,7 @@
       "source_check": {
         "checked": "2026-09-10",
         "outcome": "ok",
-        "detail": "the page names inspectlet.com as \"inspectlet com\" and states \"$34\""
+        "detail": "the page names inspectlet.com as \"inspectlet com\""
       }
     },
     {
@@ -27469,7 +27469,7 @@
       "source_check": {
         "checked": "2026-09-12",
         "outcome": "ok",
-        "detail": "the page names veriphone as \"veriphone\" and states \"$0.25\""
+        "detail": "the page names veriphone as \"veriphone\""
       },
       "restated_from": {
         "reading_date": "2026-08-28",
@@ -27512,7 +27512,7 @@
       "source_check": {
         "checked": "2026-09-13",
         "outcome": "ok",
-        "detail": "the page names CoinMarketCap as \"coinmarketcap\" and states \"Free API\""
+        "detail": "the page names CoinMarketCap as \"coinmarketcap\""
       }
     },
     {
@@ -27530,7 +27530,7 @@
       "source_check": {
         "checked": "2026-09-18",
         "outcome": "ok",
-        "detail": "the page names Currencyapi as \"currencyapi\" and states \"0.002 USD\""
+        "detail": "the page names Currencyapi as \"currencyapi\""
       },
       "restated_from": {
         "reading_date": "2026-09-02",
@@ -27555,7 +27555,7 @@
       "source_check": {
         "checked": "2026-09-18",
         "outcome": "ok",
-        "detail": "the page names currencylayer as \"currencylayer\" and states \"£10\""
+        "detail": "the page names currencylayer as \"currencylayer\""
       }
     },
     {
@@ -27573,7 +27573,7 @@
       "source_check": {
         "checked": "2026-09-13",
         "outcome": "ok",
-        "detail": "the page names exchangerate-api.com as \"exchangerate api com\" and states \"$10\""
+        "detail": "the page names exchangerate-api.com as \"exchangerate api com\""
       }
     },
     {
@@ -27647,7 +27647,7 @@
       "source_check": {
         "checked": "2026-09-19",
         "outcome": "ok",
-        "detail": "the page names Qonversion as \"qonversion\" and states \"$1\""
+        "detail": "the page names Qonversion as \"qonversion\""
       },
       "restated_from": {
         "reading_date": "2026-09-19",
@@ -27672,7 +27672,7 @@
       "source_check": {
         "checked": "2026-09-18",
         "outcome": "ok",
-        "detail": "the page names RevenueCat as \"revenuecat\" and states \"$17\""
+        "detail": "the page names RevenueCat as \"revenuecat\""
       }
     },
     {
@@ -27690,7 +27690,7 @@
       "source_check": {
         "checked": "2026-09-18",
         "outcome": "ok",
-        "detail": "the page names vatlayer as \"vatlayer\" and states \"$9.99\""
+        "detail": "the page names vatlayer as \"vatlayer\""
       }
     },
     {
@@ -27848,7 +27848,7 @@
       "source_check": {
         "checked": "2026-09-18",
         "outcome": "ok",
-        "detail": "the page names PhantomJsCloud as \"phantomjscloud\" and states \"$0.15\""
+        "detail": "the page names PhantomJsCloud as \"phantomjscloud\""
       }
     },
     {
@@ -27866,7 +27866,7 @@
       "source_check": {
         "checked": "2026-09-20",
         "outcome": "ok",
-        "detail": "the page names screenshotbase.com as \"screenshotbase com\" and states \"$15\""
+        "detail": "the page names screenshotbase.com as \"screenshotbase com\""
       }
     },
     {
@@ -27989,7 +27989,7 @@
       "source_check": {
         "checked": "2026-09-12",
         "outcome": "ok",
-        "detail": "the page names Iubenda as \"iubenda\" and states \"12,795.78 Eur\""
+        "detail": "the page names Iubenda as \"iubenda\""
       }
     },
     {
@@ -28224,7 +28224,7 @@
       "source_check": {
         "checked": "2026-09-12",
         "outcome": "ok",
-        "detail": "the page names Domain Forward as \"domain forward\" and states \"$15\""
+        "detail": "the page names Domain Forward as \"domain forward\""
       }
     },
     {
@@ -28345,7 +28345,7 @@
       "source_check": {
         "checked": "2026-09-12",
         "outcome": "ok",
-        "detail": "the page names PDFMonkey as \"pdfmonkey\" and states \"20 free PDF a month\""
+        "detail": "the page names PDFMonkey as \"pdfmonkey\""
       }
     },
     {
@@ -28362,7 +28362,7 @@
       "source_check": {
         "checked": "2026-09-12",
         "outcome": "ok",
-        "detail": "the page names Pika Code Screenshots as \"screenshots\" and states \"$99\""
+        "detail": "the page names Pika Code Screenshots as \"screenshots\""
       }
     },
     {
@@ -28542,7 +28542,7 @@
       "source_check": {
         "checked": "2026-09-18",
         "outcome": "ok",
-        "detail": "the page names Sunrise and Sunset as \"sunrise sunset\" and states \"free API\""
+        "detail": "the page names Sunrise and Sunset as \"sunrise sunset\""
       }
     },
     {
@@ -28786,7 +28786,7 @@
       "source_check": {
         "checked": "2026-09-18",
         "outcome": "ok",
-        "detail": "the page names Microsoft for Startups as \"microsoft for startups\" and states \"$150,000\""
+        "detail": "the page names Microsoft for Startups as \"microsoft for startups\""
       }
     },
     {
@@ -28812,7 +28812,7 @@
       "source_check": {
         "checked": "2026-09-20",
         "outcome": "ok",
-        "detail": "the page names Create@Alibaba Cloud as \"alibaba\" and states \"$120\""
+        "detail": "the page names Create@Alibaba Cloud as \"alibaba\""
       }
     },
     {
@@ -28893,7 +28893,7 @@
       "source_check": {
         "checked": "2026-09-18",
         "outcome": "ok",
-        "detail": "the page names Scaleway Startup Program as \"scaleway startup program\" and states \"€4.99\""
+        "detail": "the page names Scaleway Startup Program as \"scaleway startup program\""
       }
     },
     {
@@ -28921,7 +28921,7 @@
       "source_check": {
         "checked": "2026-09-19",
         "outcome": "ok",
-        "detail": "the page names ScaleGrid Startup Program as \"startup\" and states \"$1.5\""
+        "detail": "the page names ScaleGrid Startup Program as \"startup\""
       }
     },
     {
@@ -29047,7 +29047,7 @@
       "source_check": {
         "checked": "2026-09-18",
         "outcome": "ok",
-        "detail": "the page names Zendesk for Startups as \"zendesk for startups\" and states \"$100\""
+        "detail": "the page names Zendesk for Startups as \"zendesk for startups\""
       }
     },
     {
@@ -29074,7 +29074,7 @@
       "source_check": {
         "checked": "2026-09-18",
         "outcome": "ok",
-        "detail": "the page names Help Scout for Startups as \"help scout for startups\" and states \"$1\""
+        "detail": "the page names Help Scout for Startups as \"help scout for startups\""
       }
     },
     {
@@ -29224,7 +29224,7 @@
       "source_check": {
         "checked": "2026-09-18",
         "outcome": "ok",
-        "detail": "the page names Esri Startup Program as \"esri startup program\" and states \"$2\""
+        "detail": "the page names Esri Startup Program as \"esri startup program\""
       }
     },
     {
@@ -29249,7 +29249,7 @@
       "source_check": {
         "checked": "2026-09-18",
         "outcome": "ok",
-        "detail": "the page names MATLAB and Simulink for Startups as \"matlab and simulink for startups\" and states \"$1\"",
+        "detail": "the page names MATLAB and Simulink for Startups as \"matlab and simulink for startups\"",
         "rendered": true
       }
     },
@@ -29268,7 +29268,7 @@
       "source_check": {
         "checked": "2026-09-19",
         "outcome": "ok",
-        "detail": "the page names FeedBear as \"feedbear\" and states \"$19\""
+        "detail": "the page names FeedBear as \"feedbear\""
       }
     },
     {
@@ -29293,7 +29293,7 @@
       "source_check": {
         "checked": "2026-09-18",
         "outcome": "ok",
-        "detail": "the page names Remote for Startups as \"remote for startups\" and states \"$500,000\""
+        "detail": "the page names Remote for Startups as \"remote for startups\""
       }
     },
     {
@@ -29488,7 +29488,7 @@
       "source_check": {
         "checked": "2026-09-12",
         "outcome": "ok",
-        "detail": "the page names Bench as \"bench\" and states \"$1,910\""
+        "detail": "the page names Bench as \"bench\""
       }
     },
     {
@@ -30602,7 +30602,7 @@
       "source_check": {
         "checked": "2026-09-15",
         "outcome": "ok",
-        "detail": "the page names Pipedrive as \"pipedrive\" and states \"$720\""
+        "detail": "the page names Pipedrive as \"pipedrive\""
       }
     },
     {
@@ -30985,7 +30985,7 @@
       "source_check": {
         "checked": "2026-09-12",
         "outcome": "ok",
-        "detail": "the page names Sendinblue as \"sendinblue\" and states \"$720\""
+        "detail": "the page names Sendinblue as \"sendinblue\""
       }
     },
     {
@@ -31589,7 +31589,7 @@
       "source_check": {
         "checked": "2026-09-20",
         "outcome": "ok",
-        "detail": "the page names Sauce Labs as \"sauce labs\" and states \"$ 39\""
+        "detail": "the page names Sauce Labs as \"sauce labs\""
       }
     },
     {
@@ -31634,7 +31634,7 @@
       "source_check": {
         "checked": "2026-09-20",
         "outcome": "ok",
-        "detail": "the page names Applitools Eyes as \"applitools eyes\" and states \"$667\""
+        "detail": "the page names Applitools Eyes as \"applitools eyes\""
       }
     },
     {
@@ -31729,7 +31729,7 @@
       "source_check": {
         "checked": "2026-09-18",
         "outcome": "ok",
-        "detail": "the page names BlazeMeter as \"blazemeter\" and states \"$99\""
+        "detail": "the page names BlazeMeter as \"blazemeter\""
       }
     },
     {
@@ -31888,7 +31888,7 @@
       "source_check": {
         "checked": "2026-09-16",
         "outcome": "ok",
-        "detail": "the page names Nuclei as \"nuclei\" and states \"60 req/min\""
+        "detail": "the page names Nuclei as \"nuclei\""
       },
       "free_grounds": [
         "licence"
@@ -31992,7 +31992,7 @@
       "source_check": {
         "checked": "2026-09-12",
         "outcome": "ok",
-        "detail": "the page names Falco as \"falco\" and states \"$3\""
+        "detail": "the page names Falco as \"falco\""
       },
       "free_grounds": [
         "licence"
@@ -32012,7 +32012,7 @@
       "source_check": {
         "checked": "2026-09-12",
         "outcome": "ok",
-        "detail": "the page names BuddyNS as \"buddyns\" and states \"enterprise plans\""
+        "detail": "the page names BuddyNS as \"buddyns\""
       }
     },
     {
@@ -32055,7 +32055,7 @@
       "source_check": {
         "checked": "2026-09-18",
         "outcome": "ok",
-        "detail": "the page names NS1 Connect as \"ns1 connect\" and states \"$99.00\""
+        "detail": "the page names NS1 Connect as \"ns1 connect\""
       }
     },
     {
@@ -32146,7 +32146,7 @@
       "source_check": {
         "checked": "2026-09-19",
         "outcome": "ok",
-        "detail": "the page names Vast.ai as \"vast ai\" and states \"$500\""
+        "detail": "the page names Vast.ai as \"vast ai\""
       }
     },
     {
@@ -32227,7 +32227,7 @@
       "source_check": {
         "checked": "2026-09-09",
         "outcome": "ok",
-        "detail": "the page writes \"bolt\", the domain we cite Bolt.new from, and states \"$100\""
+        "detail": "the page writes \"bolt\", the domain we cite Bolt.new from"
       }
     },
     {
@@ -32472,7 +32472,7 @@
       "source_check": {
         "checked": "2026-09-12",
         "outcome": "ok",
-        "detail": "the page names Gemini CLI as \"gemini cli\" and states \"Free tier\""
+        "detail": "the page names Gemini CLI as \"gemini cli\""
       }
     },
     {
@@ -32599,7 +32599,7 @@
       "source_check": {
         "checked": "2026-09-20",
         "outcome": "ok",
-        "detail": "the page names Google Cloud BigQuery as \"google cloud bigquery\" and states \"$6.25\""
+        "detail": "the page names Google Cloud BigQuery as \"google cloud bigquery\""
       },
       "product_subtypes": {
         "taxonomy": "Databases",
@@ -32630,7 +32630,7 @@
       "source_check": {
         "checked": "2026-09-05",
         "outcome": "ok",
-        "detail": "the page writes \"google\", the domain we cite Google Cloud Run from, and states \"$0.000018\""
+        "detail": "the page writes \"google\", the domain we cite Google Cloud Run from"
       },
       "product_subtypes": {
         "taxonomy": "Cloud Hosting",
@@ -32666,7 +32666,7 @@
       "source_check": {
         "checked": "2026-09-16",
         "outcome": "ok",
-        "detail": "the page names Google Compute Engine as \"compute\" and states \"$300\""
+        "detail": "the page names Google Compute Engine as \"compute\""
       }
     },
     {
@@ -32684,7 +32684,7 @@
       "source_check": {
         "checked": "2026-09-20",
         "outcome": "ok",
-        "detail": "the page names Google Cloud Storage as \"google cloud storage\" and states \"$0.000027397\""
+        "detail": "the page names Google Cloud Storage as \"google cloud storage\""
       }
     },
     {
@@ -32703,7 +32703,7 @@
       "source_check": {
         "checked": "2026-09-05",
         "outcome": "ok",
-        "detail": "the page writes \"google\", the domain we cite Google Cloud Pub/Sub from, and states \"$169\""
+        "detail": "the page writes \"google\", the domain we cite Google Cloud Pub/Sub from"
       },
       "restated_from": {
         "reading_date": "2026-09-03",
@@ -32730,7 +32730,7 @@
       "source_check": {
         "checked": "2026-09-05",
         "outcome": "ok",
-        "detail": "the page writes \"google\", the domain we cite Google Cloud Build from, and states \"$0.006\""
+        "detail": "the page writes \"google\", the domain we cite Google Cloud Build from"
       }
     },
     {
@@ -32767,7 +32767,7 @@
       "source_check": {
         "checked": "2026-09-20",
         "outcome": "ok",
-        "detail": "the page names Google Cloud Logging as \"logging\" and states \"$0.50\""
+        "detail": "the page names Google Cloud Logging as \"logging\""
       }
     },
     {
@@ -32823,7 +32823,7 @@
       "source_check": {
         "checked": "2026-09-20",
         "outcome": "ok",
-        "detail": "the page names Google Cloud Monitoring as \"monitoring\" and states \"$0.50\""
+        "detail": "the page names Google Cloud Monitoring as \"monitoring\""
       },
       "product_subtypes": {
         "taxonomy": "Monitoring",
@@ -32864,7 +32864,7 @@
       "source_check": {
         "checked": "2026-09-20",
         "outcome": "ok",
-        "detail": "the page names ClickUp as \"clickup\" and states \"$7\""
+        "detail": "the page names ClickUp as \"clickup\""
       }
     },
     {
@@ -33065,7 +33065,7 @@
       "source_check": {
         "checked": "2026-09-16",
         "outcome": "ok",
-        "detail": "the page names SiliconFlow as \"siliconflow\" and states \"¥ 6.00\""
+        "detail": "the page names SiliconFlow as \"siliconflow\""
       },
       "product_subtypes": {
         "taxonomy": "AI / ML",
@@ -33140,7 +33140,7 @@
       "source_check": {
         "checked": "2026-09-20",
         "outcome": "ok",
-        "detail": "the page names DeepSeek API as \"deepseek api\" and states \"$0.003\""
+        "detail": "the page names DeepSeek API as \"deepseek api\""
       },
       "product_subtypes": {
         "taxonomy": "AI / ML",
@@ -33340,7 +33340,7 @@
       "source_check": {
         "checked": "2026-09-20",
         "outcome": "ok",
-        "detail": "the page names Obsidian as \"obsidian\" and states \"$4\""
+        "detail": "the page names Obsidian as \"obsidian\""
       }
     },
     {
@@ -33358,7 +33358,7 @@
       "source_check": {
         "checked": "2026-09-05",
         "outcome": "ok",
-        "detail": "the page writes \"apple\", the domain we cite Apple Notes from, and states \"$0.99\""
+        "detail": "the page writes \"apple\", the domain we cite Apple Notes from"
       }
     },
     {
@@ -33419,7 +33419,7 @@
       "source_check": {
         "checked": "2026-09-20",
         "outcome": "ok",
-        "detail": "the page names Standard Notes as \"standard notes\" and states \"$ 90\""
+        "detail": "the page names Standard Notes as \"standard notes\""
       }
     },
     {
@@ -33525,7 +33525,7 @@
       "source_check": {
         "checked": "2026-09-05",
         "outcome": "ok",
-        "detail": "the page writes \"google\", the domain we cite Google Drive from, and states \"$1.99\""
+        "detail": "the page writes \"google\", the domain we cite Google Drive from"
       }
     },
     {
@@ -33544,7 +33544,7 @@
       "source_check": {
         "checked": "2026-09-05",
         "outcome": "ok",
-        "detail": "the page names Google Photos as \"google photos\" and states \"$1.99\""
+        "detail": "the page names Google Photos as \"google photos\""
       }
     },
     {
@@ -33563,7 +33563,7 @@
       "source_check": {
         "checked": "2026-09-05",
         "outcome": "ok",
-        "detail": "the page names iCloud as \"icloud\" and states \"$0.99\""
+        "detail": "the page names iCloud as \"icloud\""
       }
     },
     {
@@ -33581,7 +33581,7 @@
       "source_check": {
         "checked": "2026-09-05",
         "outcome": "ok",
-        "detail": "the page names OneDrive as \"onedrive\" and states \"$19.99\""
+        "detail": "the page names OneDrive as \"onedrive\""
       }
     },
     {
@@ -33618,7 +33618,7 @@
       "source_check": {
         "checked": "2026-09-20",
         "outcome": "ok",
-        "detail": "the page names Dropbox as \"dropbox\" and states \"$9.99\""
+        "detail": "the page names Dropbox as \"dropbox\""
       }
     },
     {
@@ -33704,7 +33704,7 @@
       "source_check": {
         "checked": "2026-09-20",
         "outcome": "ok",
-        "detail": "the page names Bitwarden as \"bitwarden\" and states \"$ 1.65\""
+        "detail": "the page names Bitwarden as \"bitwarden\""
       }
     },
     {
@@ -33864,7 +33864,7 @@
       "source_check": {
         "checked": "2026-09-05",
         "outcome": "ok",
-        "detail": "the page names Discord as \"discord\" and states \"2 of 3 Submit a Request\""
+        "detail": "the page names Discord as \"discord\""
       }
     },
     {
@@ -33922,7 +33922,7 @@
       "source_check": {
         "checked": "2026-09-05",
         "outcome": "ok",
-        "detail": "the page names Microsoft Teams as \"microsoft teams\" and states \"$4.00\""
+        "detail": "the page names Microsoft Teams as \"microsoft teams\""
       }
     },
     {
@@ -34158,7 +34158,7 @@
       "source_check": {
         "checked": "2026-09-05",
         "outcome": "ok",
-        "detail": "the page names Windscribe as \"windscribe\" and states \"$9.00\""
+        "detail": "the page names Windscribe as \"windscribe\""
       }
     },
     {
@@ -34325,7 +34325,7 @@
       "source_check": {
         "checked": "2026-09-10",
         "outcome": "ok",
-        "detail": "the page names Khan Academy as \"khan academy\" and states \"$1\"",
+        "detail": "the page names Khan Academy as \"khan academy\"",
         "rendered": true
       }
     },
@@ -34387,7 +34387,7 @@
       "source_check": {
         "checked": "2026-09-05",
         "outcome": "ok",
-        "detail": "the page names Coursera as \"coursera\" and states \"$70\""
+        "detail": "the page names Coursera as \"coursera\""
       }
     },
     {
@@ -34443,7 +34443,7 @@
       "source_check": {
         "checked": "2026-09-10",
         "outcome": "ok",
-        "detail": "the page names Outlook.com as \"outlook com\" and states \"$19.99\"",
+        "detail": "the page names Outlook.com as \"outlook com\"",
         "rendered": true
       }
     },
@@ -34500,7 +34500,7 @@
       "source_check": {
         "checked": "2026-09-05",
         "outcome": "ok",
-        "detail": "the page writes \"tuta\", the domain we cite Tutanota from, and states \"€3\""
+        "detail": "the page writes \"tuta\", the domain we cite Tutanota from"
       }
     },
     {
@@ -34581,7 +34581,7 @@
       "source_check": {
         "checked": "2026-09-16",
         "outcome": "ok",
-        "detail": "the page names OVHcloud as \"ovhcloud\" and states \"$397.20\""
+        "detail": "the page names OVHcloud as \"ovhcloud\""
       }
     },
     {
@@ -34653,7 +34653,7 @@
       "source_check": {
         "checked": "2026-09-10",
         "outcome": "ok",
-        "detail": "the page names Hyperbrowser as \"hyperbrowser\" and states \"$299\"",
+        "detail": "the page names Hyperbrowser as \"hyperbrowser\"",
         "rendered": true
       }
     },
@@ -34851,7 +34851,7 @@
       "source_check": {
         "checked": "2026-09-16",
         "outcome": "ok",
-        "detail": "the page names Google Gemini Embedding 2 as \"embedding\" and states \"$300\""
+        "detail": "the page names Google Gemini Embedding 2 as \"embedding\""
       },
       "product_subtypes": {
         "taxonomy": "AI / ML",
@@ -34940,7 +34940,7 @@
       "source_check": {
         "checked": "2026-09-05",
         "outcome": "ok",
-        "detail": "the page names E2B as \"e2b\" and states \"$21\""
+        "detail": "the page names E2B as \"e2b\""
       },
       "product_subtypes": {
         "taxonomy": "AI / ML",
@@ -34980,7 +34980,7 @@
       "source_check": {
         "checked": "2026-09-07",
         "outcome": "ok",
-        "detail": "the page names Together AI as \"together ai\" and states \"$0.30\"",
+        "detail": "the page names Together AI as \"together ai\"",
         "unrendered_prices": [
           "USD 6.49",
           "Image generation (per image) USD 0.0006"
@@ -35074,7 +35074,7 @@
       "source_check": {
         "checked": "2026-09-05",
         "outcome": "ok",
-        "detail": "the page names Modal as \"modal\" and states \"$0.001972\""
+        "detail": "the page names Modal as \"modal\""
       },
       "product_subtypes": {
         "taxonomy": "AI / ML",
@@ -35111,7 +35111,7 @@
       "source_check": {
         "checked": "2026-09-09",
         "outcome": "ok",
-        "detail": "the page names Amazon SES as \"amazon ses\" and states \"$0.16\""
+        "detail": "the page names Amazon SES as \"amazon ses\""
       }
     },
     {
@@ -35155,7 +35155,7 @@
       "source_check": {
         "checked": "2026-09-09",
         "outcome": "ok",
-        "detail": "the page names SigNoz as \"signoz\" and states \"$199\""
+        "detail": "the page names SigNoz as \"signoz\""
       },
       "product_subtypes": {
         "taxonomy": "Monitoring",
@@ -35326,7 +35326,7 @@
       "source_check": {
         "checked": "2026-09-09",
         "outcome": "ok",
-        "detail": "the page names authentik as \"authentik\" and states \"$1\""
+        "detail": "the page names authentik as \"authentik\""
       },
       "free_grounds": [
         "licence"

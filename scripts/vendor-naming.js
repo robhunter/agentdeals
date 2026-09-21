@@ -1,3 +1,4 @@
+import { figuresWeAlsoPublish } from "./change-gate.js";
 import { READ_BY_RENDERING } from "./rendered-page.js";
 import { priceLabel, structuredDetail, unrenderedPrices } from "./structured-prices.js";
 
@@ -247,6 +248,28 @@ function namedClause(vendor, naming) {
     : `the page names ${vendor} as "${naming.form}"`;
 }
 
+export const MOST_FIGURES_REPORTED = 4;
+
+export const STATES_NO_FIGURE_WE_PUBLISH = "states amounts, none of which is a figure we publish";
+
+const AN_AMOUNT_OF_ZERO = /^(?:[$€£¥₹]\s?0(?:[.,]0+)?|0(?:\.0+)?\s?(?:USD|EUR|GBP))$/i;
+
+export function statesAnAmountOfZero(signal) {
+  return typeof signal === "string" && AN_AMOUNT_OF_ZERO.test(signal.trim());
+}
+
+export function figuresWorthReporting(signals, terms) {
+  const ours = figuresWeAlsoPublish(signals, terms);
+  if (ours.length > 0) return ours.slice(0, MOST_FIGURES_REPORTED);
+  const free = (signals ?? []).find(statesAnAmountOfZero);
+  return free ? [String(free).trim()] : [];
+}
+
+export function statedFiguresClause(figures) {
+  if (figures.length === 0) return STATES_NO_FIGURE_WE_PUBLISH;
+  return `states ${figures.map((figure) => `"${figure}"`).join(" and ")}`;
+}
+
 export function classifySource(offer, page, signals) {
   if (!page || !page.ok) {
     return { outcome: SOURCE_CHECK_UNREADABLE, detail: page?.error ?? "not fetched" };
@@ -297,7 +320,11 @@ export function classifySource(offer, page, signals) {
       detail: `the page names ${offer.vendor} and says "${found[0]}" but states no amount, rate or price we can read${markupClause(structured)}`,
     };
   }
-  return { outcome: SOURCE_CHECK_OK, detail: `${namedClause(offer.vendor, naming)} and states "${found[0]}"` };
+  const reported = figuresWorthReporting(found, offer.description);
+  return {
+    outcome: SOURCE_CHECK_OK,
+    detail: `${namedClause(offer.vendor, naming)} and ${statedFiguresClause(reported)}`,
+  };
 }
 
 export const MAX_UNRENDERED_PRICES_RECORDED = 6;

@@ -219,11 +219,20 @@ describe("what a re-verification learned about the cited page", () => {
   });
 
   it("says what it read on the page it passed, rather than which layer matched", () => {
-    const text = "Vercel Hobby plan, free forever. Pro is $20/month.";
-    const result = classifySource({ vendor: "Vercel", url: "https://vercel.com/pricing" }, { ok: true, text }, priceSignals(text));
+    const text = "Vercel Hobby plan, free forever. 100 GB bandwidth / month included. Pro is $20/month.";
+    const result = classifySource(
+      {
+        vendor: "Vercel",
+        url: "https://vercel.com/pricing",
+        description: "Hobby — 100 GB bandwidth / month, free forever",
+      },
+      { ok: true, text },
+      priceSignals(text),
+    );
     assert.strictEqual(passedWithoutRecordingAFinding({ source_check: result }), false, result.detail);
     assert.match(result.detail, /names Vercel/);
-    assert.match(result.detail, /\$20/);
+    assert.match(result.detail, /100 GB bandwidth/);
+    assert.doesNotMatch(result.detail, /\$20/);
   });
 
   it("does not claim a page named the vendor when all it wrote was the domain", () => {
