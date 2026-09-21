@@ -58,10 +58,14 @@ function statedSelection(section: string): StatedSelection | null {
 }
 
 function statedRankedWindow(section: string): { days: number; from: string; to: string } | null {
-  const stated = section.match(
-    /across the (\d+) days we can attribute in full, (\d{4}-\d{2}-\d{2}) to (\d{4}-\d{2}-\d{2})/,
+  const many = section.match(
+    /across the (\d+) days on which every guide we publish had its own count, (\d{4}-\d{2}-\d{2}) to (\d{4}-\d{2}-\d{2})/,
   );
-  return stated ? { days: Number(stated[1]), from: stated[2], to: stated[3] } : null;
+  if (many) return { days: Number(many[1]), from: many[2], to: many[3] };
+  const one = section.match(
+    /on (\d{4}-\d{2}-\d{2}), the one day on which every guide we publish had its own count/,
+  );
+  return one ? { days: 1, from: one[1], to: one[1] } : null;
 }
 
 function hrefsIn(html: string): string[] {
@@ -276,7 +280,19 @@ describe("the guide list on the home page follows the traffic it says it does", 
     assert.ok(stated, "the guide section does not state a window");
     assert.strictEqual(stated.days, 2, "the guide section counted days it was not given");
     assert.deepStrictEqual([stated.from, stated.to], ["2026-01-01", "2026-01-02"], "the guide section states a window it did not read");
-    assert.match(section, /Membership is that ranking and nothing else/);
+  });
+
+  it("says how much of the list it named on slug order rather than on opens", () => {
+    const section = sectionOf(html, "answers");
+    const scored = Object.keys(opens).filter((slug) => published.includes(slug)).length;
+    const tied = HOMEPAGE_GUIDE_COUNT - scored;
+    assert.ok(tied > 0, "this window scores every named guide, so it cannot show the tie");
+    assert.match(
+      section,
+      new RegExp(`${tied} of the ${HOMEPAGE_GUIDE_COUNT} tie on opens with the first guide we left out`),
+      "the guide section named guides on slug order without saying so",
+    );
+    assert.doesNotMatch(section, /and nothing else/, "the page claimed the list was that ranking and nothing else while a tie decided part of it");
   });
 
   it("states the share that reached no page once the window carries requests it could not attribute", async () => {
@@ -294,8 +310,8 @@ describe("the guide list on the home page follows the traffic it says it does", 
       try {
         const page = await (await fetch(`http://localhost:${other.port}/`)).text();
         const section = sectionOf(page, "answers");
-        assert.doesNotMatch(section, /and nothing else/, "the page claimed completeness over a window it could not attribute in full");
-        assert.match(section, /100 of 1,?000 agent requests in those days \(10\.0%\) went to a shared bucket/);
+        assert.doesNotMatch(section, /and nothing else/, "the page claimed completeness over a window carrying requests that reached no path of their own");
+        assert.match(section, /100 of 1,?000 agent requests that day \(10\.0%\) reached a shared bucket rather than a path of their own/);
       } finally {
         other.proc.kill();
       }

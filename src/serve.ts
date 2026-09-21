@@ -19,7 +19,7 @@ import { RATED_LEVELS, isRated, gradeForStack } from "./stack-grade.js";
 import { provenanceBlock } from "./provenance.js";
 import { recordApiHit, recordSessionConnect, recordSessionDisconnect, recordLandingPageView, getStats, getConnectionStats, loadTelemetry, flushTelemetry, flushPending, FLUSH_INTERVAL_SECONDS, logRequest, getPublicRequestLogResult, getTelemetryHealth, recordPageView, getPageViews, recordReferralListingCall, recordReferralVendorLookup, getReferralMarketplaceStats, getSessionClassification, recordSearchQuery, getSearchAnalytics, getApiHitsByEndpoint, recordTraffic, getTrafficReport, getSignalReport, publicSignalReport, getRollupDaySource, getRollupDatesAvailable, setDurableRollupCoverage, setReservedRouteKeys, reservedRoutePathsInForce, reservedRouteClassesInForce, MAX_CLASS_ROUTE_KEYS_PER_DAY, redisJsonGet, redisJsonMget, redisJsonSet, redisJsonSetWithoutExpiry, useRedis } from "./stats.js";
 import { buildDailyRollup, readRollups, coverageOf, ROLLUP_DATE_PATTERN } from "./analytics-rollup.js";
-import { AGENT_OPENS_WINDOW_DAYS, HOMEPAGE_GUIDE_COUNT, RANKED_TRAFFIC_CLASS, agentOpensByPath, agentOpensWindow, agentRequestAttribution, browseSectionSentence, guideSelectionSentence, guidesGroupedByHeading, guidesHomepageLinks, rankableDays } from "./homepage-routing.js";
+import { AGENT_OPENS_WINDOW_DAYS, HOMEPAGE_GUIDE_COUNT, RANKED_TRAFFIC_CLASS, agentOpensByPath, agentOpensWindow, agentRequestAttribution, browseSectionSentence, guideSelectionSentence, guidesGroupedByHeading, guidesTiedAtCut, rankGuidesByAgentOpens, rankableDays } from "./homepage-routing.js";
 import { configureVendorSeries, recordVendorRequest, flushVendorSeries, readVendorSeries, vendorSeriesGauge, vendorExportAuthorized, isSeriesDate, seriesDateRange, VENDOR_SERIES_PATH, VENDOR_SERIES_RETENTION_DAYS, VENDOR_SERIES_NOTES } from "./vendor-series.js";
 import { openapiSpec } from "./openapi.js";
 import { AGENT_CARD_PATHS, OPENAPI_ALIAS_PATHS, OPENAPI_CANONICAL_PATH, OPENAPI_YAML_PATH, serviceDescription, theDocumentWeAlreadyServe } from "./agent-card.js";
@@ -53363,9 +53363,10 @@ function buildHomepageGuidesSection(): string {
   const held = agentOpensWindow(durableRollups, AGENT_OPENS_WINDOW_DAYS);
   const ranked = rankableDays(durableRollups, population, AGENT_OPENS_WINDOW_DAYS);
   const rankedWindow = agentOpensWindow(ranked, AGENT_OPENS_WINDOW_DAYS);
-  const selected = rankedWindow === null
+  const order = rankedWindow === null
     ? population.map(g => ({ ...g, agentOpens: 0 }))
-    : guidesHomepageLinks(population, agentOpensByPath(ranked), HOMEPAGE_GUIDE_COUNT);
+    : rankGuidesByAgentOpens(population, agentOpensByPath(ranked));
+  const selected = rankedWindow === null ? order : order.slice(0, HOMEPAGE_GUIDE_COUNT);
   const groups = guidesGroupedByHeading(selected, guideSectionOrder.map(s => s.heading));
   const rows = groups.map(group => `      <div class="answer-group">
         <h3>${escHtmlServer(group.heading)}</h3>
@@ -53380,6 +53381,7 @@ function buildHomepageGuidesSection(): string {
       heldDays: held?.days ?? 0,
       rankedWindow,
       attribution: agentRequestAttribution(ranked),
+      tiedAtCut: guidesTiedAtCut(order, HOMEPAGE_GUIDE_COUNT),
     }))}</p>
     <div class="answer-groups">
 ${rows}
