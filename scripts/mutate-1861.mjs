@@ -22,8 +22,8 @@ const MUTANTS = [
     `  return { read: "a_read_that_confirmed_them", on: confirmed ?? "" };`],
 
   ["the-catalogue-date-stands-in-for-a-confirmation", "src/read-date.ts",
-    "  const confirmed = confirmationDate(offer);",
-    "  const confirmed = offer?.verifiedDate ?? null;"],
+    `  const confirmed = confirmationDate(offer);\n  return confirmed ? { read: "a_read_that_confirmed_them", on: confirmed } : null;`,
+    `  const confirmed = offer?.verifiedDate ?? null;\n  return confirmed ? { read: "a_read_that_confirmed_them", on: confirmed } : null;`],
 
   ["a-restatement-is-dated-to-the-read-that-followed-it", "src/read-date.ts",
     `  if (restated) return { read: "a_read_we_restated_them_from", on: restated };`,
