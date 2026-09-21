@@ -1704,29 +1704,39 @@ describe("#1589 a replay conflicting only in what this run derives is resolved, 
     assert.strictEqual(git(origin, "show", "main:data/quality_budgets.json"), BUDGETS_AFTER.trim());
   });
 
-  it("pushes the rotation's own case — a conflict in the page ledger, on a run that rebuilds it", () => {
+  it("pushes the rotation's own case — the page ledger and a budget at once, on a run that rebuilds both", () => {
     const { work, origin } = fixtureRepo();
     writeFileSync(join(work, "data", "health.json"), '{"checked":34}\n');
     commitToMainFromElsewhere(origin, "data/page-lastmod.json", '{"version":1,"generated":"2026-04-04","pages":{}}\n');
+    commitToMainFromElsewhere(origin, "data/quality_budgets.json", BUDGETS_ON_MAIN);
 
     const run = runGate(
       work,
-      { mode: "green", lastmod: true },
+      { mode: "green", ratchet: "lower", lastmod: true },
       "data-quarantine/fixture",
       "data(auto): fixture",
       "data/health.json",
       "data/page-lastmod.json",
+      "data/quality_budgets.json",
     );
 
     assert.strictEqual(run.status, 0, `the rotation's own refusal still holds the batch: ${run.stdout}${run.stderr}`);
     assert.deepStrictEqual(quarantineRefs(origin, "data-quarantine/fixture"), []);
     assert.strictEqual(git(origin, "show", "main:data/health.json"), '{"checked":34}');
-    const ledger = JSON.parse(git(origin, "show", "main:data/page-lastmod.json"));
-    assert.ok(
-      Object.keys(ledger.pages).length > 100,
-      `what reached main is not a ledger either side derived, it holds ${Object.keys(ledger.pages).length} pages`,
+    assert.strictEqual(
+      git(origin, "show", "main:data/quality_budgets.json"),
+      BUDGETS_AFTER.trim(),
+      "the second of the two conflicted files reached main as neither side's copy nor a measurement",
     );
-    assert.match(run.stdout, /Replayed over a conflict in data\/page-lastmod\.json/);
+    const derivations = [...run.stdout.matchAll(/Read (\d+) pages twice/g)];
+    assert.strictEqual(derivations.length, 2, `the ledger was not derived again after the replay: ${run.stdout}`);
+    const ledger = JSON.parse(git(origin, "show", "main:data/page-lastmod.json"));
+    assert.strictEqual(
+      Object.keys(ledger.pages).length,
+      Number(derivations[1]![1]),
+      "what reached main is not the ledger the derivation wrote against the tree it replayed onto",
+    );
+    assert.match(run.stdout, /Replayed over a conflict in data\/page-lastmod\.json data\/quality_budgets\.json/);
   });
 });
 
