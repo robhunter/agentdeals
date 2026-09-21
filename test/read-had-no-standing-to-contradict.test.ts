@@ -6,7 +6,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { GATE_REASONS } from "../scripts/change-gate.js";
 import { SUPPRESSED_SAME_TRANSITION_REGRADED } from "../scripts/change-log.js";
-import { assertPopulationFloor } from "./population-floor.ts";
+import { assertPopulationFloor, assertSharesPopulation, type Population } from "./population-floor.ts";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(__dirname, "..");
@@ -108,6 +108,11 @@ const voidedByItsOwnRefusal = offers.filter((offer) => {
   if (sameDay.length === 0) return false;
   if (!sameDay.every((r) => refusalVoidsTheReadsStanding(r))) return false;
   return nothingLaterSpokeFor(offer);
+});
+
+const recordsVoidedByTheirOwnRefusal = (): Population => ({
+  size: voidedByItsOwnRefusal.length,
+  read: "records whose last read its own refusal voided",
 });
 
 const stillContradicted = offers.filter((offer) => {
@@ -327,7 +332,12 @@ describe("the pages that describe a read our own refusal voided", () => {
   it("says we read a domain root wherever the refusal recorded one", async () => {
     const readFromARoot = voidedByItsOwnRefusal.filter((offer) =>
       sameDayRefusals(offer).some((r) => r.reason === "removal_read_from_root"));
-    assertPopulationFloor(readFromARoot.length, 8, "reads a refusal voided as taken from a domain root");
+    assertSharesPopulation(
+      readFromARoot.length,
+      recordsVoidedByTheirOwnRefusal(),
+      0.05,
+      "reads a refusal voided as taken from a domain root",
+    );
     const wrong: string[] = [];
     for (const offer of readFromARoot) {
       const refusal = sameDayRefusals(offer).find((r) => r.reason === "removal_read_from_root")!;
