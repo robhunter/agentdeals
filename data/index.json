@@ -1137,7 +1137,7 @@
       "source_check": {
         "checked": "2026-09-21",
         "outcome": "ok",
-        "detail": "the page names Xata as \"xata\" and states amounts, none of which is a figure we publish"
+        "detail": "the page names Xata as \"xata\" and states amounts, none of which we matched to the terms we publish"
       },
       "product_subtypes": {
         "taxonomy": "Databases",
@@ -1400,7 +1400,7 @@
       "source_check": {
         "checked": "2026-09-21",
         "outcome": "ok",
-        "detail": "the page names Bitbucket Pipelines as \"bitbucket pipelines\" and states amounts, none of which is a figure we publish"
+        "detail": "the page names Bitbucket Pipelines as \"bitbucket pipelines\" and states amounts, none of which we matched to the terms we publish"
       }
     },
     {
@@ -6579,7 +6579,7 @@
       "source_check": {
         "checked": "2026-09-21",
         "outcome": "ok",
-        "detail": "the page names Hanko as \"hanko\" and states amounts, none of which is a figure we publish"
+        "detail": "the page names Hanko as \"hanko\" and states amounts, none of which we matched to the terms we publish"
       },
       "restated_from": {
         "reading_date": "2026-09-05",
@@ -7195,7 +7195,7 @@
       "source_check": {
         "checked": "2026-09-21",
         "outcome": "ok",
-        "detail": "the page names Testcontainers as \"testcontainers\" and states amounts, none of which is a figure we publish"
+        "detail": "the page names Testcontainers as \"testcontainers\" and states amounts, none of which we matched to the terms we publish"
       },
       "free_grounds": [
         "licence"
@@ -7631,7 +7631,7 @@
       "source_check": {
         "checked": "2026-09-21",
         "outcome": "ok",
-        "detail": "the page names GitHub Codespaces as \"github codespaces\" and states amounts, none of which is a figure we publish"
+        "detail": "the page names GitHub Codespaces as \"github codespaces\" and states amounts, none of which we matched to the terms we publish"
       }
     },
     {
@@ -9155,7 +9155,7 @@
       "source_check": {
         "checked": "2026-09-21",
         "outcome": "ok",
-        "detail": "the page writes \"swagger\", the domain we cite SwaggerHub from, and states amounts, none of which is a figure we publish"
+        "detail": "the page writes \"swagger\", the domain we cite SwaggerHub from, and states amounts, none of which we matched to the terms we publish"
       }
     },
     {
@@ -9475,7 +9475,7 @@
       "source_check": {
         "checked": "2026-09-21",
         "outcome": "ok",
-        "detail": "the page names Uptimia as \"uptimia\" and states amounts, none of which is a figure we publish"
+        "detail": "the page names Uptimia as \"uptimia\" and states amounts, none of which we matched to the terms we publish"
       },
       "product_subtypes": {
         "taxonomy": "Monitoring",
@@ -18176,7 +18176,7 @@
       "source_check": {
         "checked": "2026-09-21",
         "outcome": "ok",
-        "detail": "the page names bonsai.io as \"bonsai\" and states amounts, none of which is a figure we publish"
+        "detail": "the page names bonsai.io as \"bonsai\" and states amounts, none of which we matched to the terms we publish"
       }
     },
     {
@@ -21922,7 +21922,7 @@
       "source_check": {
         "checked": "2026-09-21",
         "outcome": "ok",
-        "detail": "the page names noip as \"noip\" and states amounts, none of which is a figure we publish"
+        "detail": "the page names noip as \"noip\" and states amounts, none of which we matched to the terms we publish"
       }
     },
     {
@@ -23238,7 +23238,7 @@
       "source_check": {
         "checked": "2026-09-21",
         "outcome": "ok",
-        "detail": "the page names taskade.com as \"taskade\" and states amounts, none of which is a figure we publish",
+        "detail": "the page names taskade.com as \"taskade\" and states amounts, none of which we matched to the terms we publish",
         "unrendered_prices": [
           "Business USD 25",
           "Enterprise USD 250"
@@ -31642,7 +31642,7 @@
       "source_check": {
         "checked": "2026-09-21",
         "outcome": "ok",
-        "detail": "the page names Applitools Eyes as \"applitools eyes\" and states amounts, none of which is a figure we publish"
+        "detail": "the page names Applitools Eyes as \"applitools eyes\" and states amounts, none of which we matched to the terms we publish"
       }
     },
     {
@@ -31691,7 +31691,7 @@
       "source_check": {
         "checked": "2026-09-21",
         "outcome": "ok",
-        "detail": "the page names Gatling as \"gatling\" and states amounts, none of which is a figure we publish"
+        "detail": "the page names Gatling as \"gatling\" and states amounts, none of which we matched to the terms we publish"
       },
       "free_grounds": [
         "licence"
@@ -33148,7 +33148,7 @@
       "source_check": {
         "checked": "2026-09-21",
         "outcome": "ok",
-        "detail": "the page names DeepSeek API as \"deepseek api\" and states amounts, none of which is a figure we publish"
+        "detail": "the page names DeepSeek API as \"deepseek api\" and states amounts, none of which we matched to the terms we publish"
       },
       "product_subtypes": {
         "taxonomy": "AI / ML",
@@ -33366,7 +33366,7 @@
       "source_check": {
         "checked": "2026-09-21",
         "outcome": "ok",
-        "detail": "the page names Apple Notes as \"notes\" and states amounts, none of which is a figure we publish"
+        "detail": "the page names Apple Notes as \"notes\" and states amounts, none of which we matched to the terms we publish"
       }
     },
     {
@@ -33872,7 +33872,7 @@
       "source_check": {
         "checked": "2026-09-21",
         "outcome": "ok",
-        "detail": "the page names Discord as \"discord\" and states amounts, none of which is a figure we publish"
+        "detail": "the page names Discord as \"discord\" and states amounts, none of which we matched to the terms we publish"
       }
     },
     {
@@ -34074,7 +34074,7 @@
       "source_check": {
         "checked": "2026-09-21",
         "outcome": "ok",
-        "detail": "the page names DaVinci Resolve as \"davinci resolve\" and states amounts, none of which is a figure we publish"
+        "detail": "the page names DaVinci Resolve as \"davinci resolve\" and states amounts, none of which we matched to the terms we publish"
       }
     },
     {
@@ -34620,7 +34620,7 @@
       "source_check": {
         "checked": "2026-09-21",
         "outcome": "ok",
-        "detail": "the page names Exa as \"exa\" and states amounts, none of which is a figure we publish"
+        "detail": "the page names Exa as \"exa\" and states amounts, none of which we matched to the terms we publish"
       },
       "product_subtypes": {
         "taxonomy": "AI / ML",

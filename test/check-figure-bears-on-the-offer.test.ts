@@ -335,6 +335,11 @@ describe("no record we publish reports a figure its own terms do not state", () 
     assert.strictEqual(detailAttributedToOurReading(withAFigure), withAFigure);
   });
 
+  it("leaves a sentence whose claim is not the clause it ends on", () => {
+    const notTheTail = `it ${THE_CLAIM_THIS_RESTATES}, read on 2026-09-21`;
+    assert.strictEqual(detailAttributedToOurReading(notTheTail), notTheTail);
+  });
+
   it("leaves a record whose reported figure is one we publish exactly as it was", () => {
     const kept = reporting.filter(offer => {
       const figures = reportedFigures(offer.source_check!.detail ?? "")!.figures;
