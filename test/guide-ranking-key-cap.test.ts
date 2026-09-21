@@ -34,6 +34,7 @@ const {
   agentRequestAttribution,
   guideSelectionSentence,
   guidesTiedAtCut,
+  opensDecidedPrefix,
   rankableDays,
   rankGuidesByAgentOpens,
 } = await import("../dist/homepage-routing.js");
@@ -217,30 +218,40 @@ describe("the homepage guide ranking and the class-route key cap (#1863)", () =>
   });
 
   describe("AC-2 the page does not claim completeness it does not have", () => {
-    const selection = (days: Rollup[], heldDays: number) => guideSelectionSentence({
-      selectedCount: HOMEPAGE_GUIDE_COUNT,
-      populationCount: POPULATION.length,
-      heldDays,
-      rankedWindow: agentOpensWindow(days, AGENT_OPENS_WINDOW_DAYS),
-      attribution: agentRequestAttribution(days),
-      tiedAtCut: guidesTiedAtCut(
-        rankGuidesByAgentOpens(POPULATION, agentOpensByPath(days)),
-        HOMEPAGE_GUIDE_COUNT,
-      ),
-    });
+    const published = (days: Rollup[]) =>
+      opensDecidedPrefix(rankGuidesByAgentOpens(POPULATION, agentOpensByPath(days)), HOMEPAGE_GUIDE_COUNT);
 
-    it("claims the ranking and nothing else only where every request reached a path and nothing ties at the cut", () => {
+    const selection = (days: Rollup[], heldDays: number) => {
+      const shown = published(days);
+      return guideSelectionSentence({
+        selectedCount: shown.length,
+        populationCount: POPULATION.length,
+        heldDays,
+        rankedWindow: agentOpensWindow(days, AGENT_OPENS_WINDOW_DAYS),
+        attribution: agentRequestAttribution(days),
+        opensDecided: shown.length > 0,
+      });
+    };
+
+    it("claims the ranking and nothing else where every request reached a path of its own", () => {
       const days = distinctlyRankedFixture();
       assert.equal(agentRequestAttribution(days).unattributed, 0);
       assert.match(selection(days, days.length), /Membership is that ranking and nothing else/);
     });
 
-    it("withholds that claim on a fixture whose guides all tie below the leader", () => {
+    it("publishes the leader alone on a fixture whose guides all tie below it", () => {
       const days = everyGuideKeyedFixture();
       assert.equal(agentRequestAttribution(days).unattributed, 0);
+      const shown = published(days);
+      assert.equal(shown.length, 1);
+      assert.equal(guidesTiedAtCut(
+        rankGuidesByAgentOpens(POPULATION, agentOpensByPath(days)),
+        shown.length,
+      ), 0);
       const sentence = selection(days, days.length);
-      assert.match(sentence, /19 of the 20 tie on opens with the first guide we left out/);
-      assert.doesNotMatch(sentence, /and nothing else/);
+      assert.match(sentence, new RegExp(`The 1 of ${POPULATION.length} guides AI agents opened most`));
+      assert.match(sentence, /Membership is that ranking and nothing else/);
+      assert.doesNotMatch(sentence, /tie on opens/);
     });
 
     it("states the share that reached no path where any request did not", () => {
@@ -281,7 +292,7 @@ describe("the homepage guide ranking and the class-route key cap (#1863)", () =>
         heldDays: days.length,
         rankedWindow: null,
         attribution: agentRequestAttribution([]),
-        tiedAtCut: 0,
+        opensDecided: false,
       });
       assert.doesNotMatch(sentence, /opened most/);
       assert.doesNotMatch(sentence, /and nothing else/);
@@ -295,7 +306,7 @@ describe("the homepage guide ranking and the class-route key cap (#1863)", () =>
         heldDays: 0,
         rankedWindow: null,
         attribution: agentRequestAttribution([]),
-        tiedAtCut: 0,
+        opensDecided: false,
       });
       assert.equal(sentence, `All ${POPULATION.length} guides we publish, in the order /guides lists them.`);
     });

@@ -111,6 +111,16 @@ export function rankGuidesByAgentOpens(
     .sort((a, b) => b.agentOpens - a.agentOpens || a.slug.localeCompare(b.slug));
 }
 
+export function opensDecidedPrefix(
+  ranked: readonly RankedGuide[],
+  cap = HOMEPAGE_GUIDE_COUNT,
+): RankedGuide[] {
+  for (let length = Math.min(cap, ranked.length); length > 0; length--) {
+    if (ranked[length - 1].agentOpens > (ranked[length]?.agentOpens ?? 0)) return ranked.slice(0, length);
+  }
+  return [];
+}
+
 export function guidesTiedAtCut(
   ranked: readonly RankedGuide[],
   count = HOMEPAGE_GUIDE_COUNT,
@@ -135,7 +145,7 @@ export interface GuideSelection {
   heldDays: number;
   rankedWindow: AgentOpensWindow | null;
   attribution: AgentRequestAttribution;
-  tiedAtCut: number;
+  opensDecided: boolean;
 }
 
 function sharePhrase(part: number, whole: number): string {
@@ -150,13 +160,17 @@ function rankedWindowPhrase(window: AgentOpensWindow): string {
 }
 
 export function guideSelectionSentence(selection: GuideSelection): string {
-  const { selectedCount, populationCount, heldDays, rankedWindow, attribution, tiedAtCut } = selection;
+  const { selectedCount, populationCount, heldDays, rankedWindow, attribution, opensDecided } = selection;
   if (heldDays === 0) {
     return `All ${populationCount} guides we publish, in the order /guides lists them.`;
   }
   if (!rankedWindow) {
     return `All ${populationCount} guides we publish, in the order /guides lists them, and not a ranking. `
       + `We hold ${heldDays} days of traffic and can rank on none of them: on every one, at least one guide's requests could have been folded into a shared bucket, so a zero there would not mean no agent opened it.`;
+  }
+  if (!opensDecided) {
+    return `All ${populationCount} guides we publish, in the order /guides lists them, and not a ranking. `
+      + `We can rank ${rankedWindowPhrase(rankedWindow)}, but no guide was opened more often than the next one below it, so opens put none of them ahead of the rest.`;
   }
   const lede = `The ${selectedCount} of ${populationCount} guides AI agents opened most ${rankedWindowPhrase(rankedWindow)}. `;
   const qualifications: string[] = [];
@@ -166,12 +180,6 @@ export function guideSelectionSentence(selection: GuideSelection): string {
       `${attribution.unattributed} of ${attribution.total} agent requests ${span} `
       + `(${sharePhrase(attribution.unattributed, attribution.total)}) reached a shared bucket rather than a path of their own, `
       + `so the page each asked for is in none of these counts.`,
-    );
-  }
-  if (tiedAtCut > 0) {
-    qualifications.push(
-      `${tiedAtCut} of the ${selectedCount} tie on opens with the first guide we left out, `
-      + `so slug order rather than opens put them here.`,
     );
   }
   if (qualifications.length === 0) {
