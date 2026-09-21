@@ -1,18 +1,22 @@
 import { describe, it, before, after } from "node:test";
 import assert from "node:assert";
 import { spawn, type ChildProcess } from "node:child_process";
-import { readFileSync } from "node:fs";
-import path from "node:path";
+import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import path, { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { assertCoversPopulation, assertSharesPopulation, recordsInTheCatalogue, vendorsInTheCatalogue, type Population } from "./population-floor.ts";
 import { GATE_REASONS, REJECT_MEASURES_NO_CHANGE, REJECT_NULL_COMPARISON, REJECT_RESTATES_STORED_QUANTITIES, REJECT_STATES_NO_DIFFERENCE } from "../scripts/change-gate.js";
 import { SUPPRESSED_SAME_TRANSITION_REGRADED } from "../scripts/change-log.js";
 import { refusalsByVendor, refusedReadTheConfirmationSupersedes, refusedReadWithholdingStability, supersededRefusalSentence, REFUSAL_REASONS_THAT_CONFIRM_THE_STORED_TERMS, REFUSAL_REASONS_THAT_MEASURED_NO_DIFFERENCE, MEASURED_NO_DIFFERENCE_BADGE_LABEL, UNRECONCILED_READ_BADGE_LABEL } from "../dist/change-refusal.js";
-import { checkVendorRisk, enrichOffers, loadChangeRefusals, loadDealChanges, loadOffers, publishedChangeCount } from "../dist/data.js";
+import { checkVendorRisk, enrichOffers, loadChangeRefusals, loadDealChanges, loadOffers, publishedChangeCount, publishedRisk } from "../dist/data.js";
+import { resetVerificationStateCache } from "../dist/verification-state.js";
 import { LEVEL_WITHHOLDING_OUTCOMES } from "../dist/source-check.js";
 import { offerEnded } from "../dist/retirement.js";
 import { vendorSlugMap } from "../dist/vendor-slug.js";
-import { vendorVerdictSentence } from "../dist/vendor-verdict.js";
+import { termsNotVerifiedMetaSentence, vendorVerdictSentence, whyWeCannotConfirmTheseTerms } from "../dist/vendor-verdict.js";
+import { vendorVerdictContextFrom } from "../dist/vendor-verdict-input.js";
+import { OUTCOMES_THAT_READ_THE_PAGE } from "../dist/read-date.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(__dirname, "..");
@@ -49,9 +53,15 @@ const badgeLabelOf = (svg: string): string => {
 };
 
 const CONFIRMING = new Set<string>(REFUSAL_REASONS_THAT_CONFIRM_THE_STORED_TERMS);
+const READ_THE_PAGE = new Set<string>(OUTCOMES_THAT_READ_THE_PAGE);
 const MEASURED_NO_DIFFERENCE = new Set<string>(REFUSAL_REASONS_THAT_MEASURED_NO_DIFFERENCE);
 
 const NO_RUN_HAS_WRITTEN_YET: string[] = [REJECT_RESTATES_STORED_QUANTITIES];
+
+const CARD_LAST_READ = /Last read<\/div>\s*<div class="detail-value"[^>]*>(\d{4}-\d{2}-\d{2})</;
+const CLAUSE_DATED_TO_OUR_LAST_READ = /[Ww]hen we last read the page we cite for [^,]+, on (\d{4}-\d{2}-\d{2}),/g;
+const CLAUSE_READ_AGAIN_SINCE =
+  /[Ww]hen we read the page we cite for [^,]+ on (\d{4}-\d{2}-\d{2}),[\s\S]{0,220}?we have read it again since, on (\d{4}-\d{2}-\d{2}),/g;
 
 const COULD_NOT_RECONCILE = /we found a change we could not reconcile with the terms we publish/;
 const NAMED_NO_FIGURE_THAT_MOVED =
@@ -65,7 +75,7 @@ interface OfferRead {
   last_read_date: string;
   risk_level: string | null;
   gate: { code: string } | null;
-  refused_read: { reason: string; refused_date: string } | null;
+  refused_read: { reason: string; refused_date: string; read_again_on: string | null } | null;
 }
 
 interface Subject {
@@ -409,27 +419,63 @@ describe("a refused change is not a signal that nothing changed", () => {
     const fields = new Set(published.flatMap(row => Object.keys(row.refused_read!)));
     assert.deepStrictEqual(
       [...fields].sort(),
-      ["reason", "refused_date"],
-      "the refusal record reaches the API beyond the day it was refused and the rule that refused it",
+      ["read_again_on", "reason", "refused_date"],
+      "the refusal record reaches the API beyond the day it was refused, the rule that refused it, and any read since",
     );
     const counted = payload._provenance.verified_records + (payload._provenance.withheld_records ?? 0);
     assert.strictEqual(counted, payload.offers.length, "the provenance block counts a record the response does not return");
   });
 
-  it("withholds on no read older than the one it calls our last", async () => {
+  it("names a read since the refusal wherever it holds one, and none where it does not", async () => {
     const payload = await (await fetch(`http://localhost:${serverPort}/api/offers?limit=2000`)).json() as {
       offers: Array<OfferRead>;
     };
-    const contradicting = payload.offers
+    const unnamed = payload.offers
       .filter(row => row.refused_read && row.last_read_date > row.refused_read.refused_date)
-      .map(row => `${row.vendor} (${row.tier}): withholds on ${row.refused_read!.refused_date}, read ${row.last_read_date}`);
+      .filter(row => row.refused_read!.read_again_on !== row.last_read_date)
+      .map(row => `${row.vendor} (${row.tier}): withholds on ${row.refused_read!.refused_date}, read ${row.last_read_date}, names ${row.refused_read!.read_again_on}`);
     assert.deepStrictEqual(
-      contradicting.slice(0, 20),
+      unnamed.slice(0, 20),
       [],
-      `records naming two different days as the day we last read the page:\n${contradicting.slice(0, 20).join("\n")}`,
+      `records whose verdict is older than our last read and does not name it:\n${unnamed.slice(0, 20).join("\n")}`,
+    );
+    const invented = payload.offers
+      .filter(row => row.refused_read && row.refused_read.read_again_on !== null)
+      .filter(row => !(row.refused_read!.read_again_on! > row.refused_read!.refused_date))
+      .map(row => `${row.vendor} (${row.tier}): names ${row.refused_read!.read_again_on} as later than ${row.refused_read!.refused_date}`);
+    assert.deepStrictEqual(
+      invented.slice(0, 20),
+      [],
+      `records naming a read since the refusal that is not after it:\n${invented.slice(0, 20).join("\n")}`,
     );
     assertCoversPopulation(payload.offers.length, recordsInTheCatalogue(), "records read for the day their verdict dates itself to");
     assertSharesPopulation(payload.offers.filter(row => row.refused_read).length, recordsInTheCatalogue(), 0.03, "records publish a refused read");
+  });
+
+  it("hides no read the same page reports, on every page that dates its withholding", () => {
+    const withholding: string[] = [];
+    let agreeing = 0;
+    let naming = 0;
+    for (const { slug, vendor } of subjects) {
+      const html = pages.get(slug) ?? "";
+      const card = html.match(CARD_LAST_READ)?.[1];
+      if (!card) continue;
+      for (const match of html.matchAll(CLAUSE_DATED_TO_OUR_LAST_READ)) {
+        if (match[1] === card) agreeing++;
+        else if (card > match[1]) withholding.push(`${vendor}: verdict calls ${match[1]} our last read, card reports ${card}`);
+      }
+      for (const match of html.matchAll(CLAUSE_READ_AGAIN_SINCE)) {
+        naming++;
+        if (match[2] !== card) withholding.push(`${vendor}: verdict names ${match[2]} as the read since, card reports ${card}`);
+        if (!(match[2] > match[1])) withholding.push(`${vendor}: verdict reads ${match[2]} as later than ${match[1]}`);
+      }
+    }
+    assert.ok(agreeing + naming > 0, "no vendor page dates a withholding, so the two surfaces are compared on nothing");
+    assert.deepStrictEqual(
+      withholding.slice(0, 20),
+      [],
+      `pages whose verdict dates itself before a read the same page reports:\n${withholding.slice(0, 20).join("\n")}`,
+    );
   });
 
   it("holds the withholding wherever nothing has confirmed the terms since", async () => {
@@ -942,5 +988,242 @@ describe("the refusal log and the rules that write it read the same vocabulary",
   it("treats a reason it has never seen as one it could not reconcile", () => {
     const invented = "a_rule_no_gate_writes";
     assert.ok(!CONFIRMING.has(invented), "an unclassified reason is read as a confirmation");
+  });
+
+  it("carries the read we took after the refusal, and nothing where the refusal is our last read", () => {
+    const refusals = [{ reason: "unquantified_limit", refused_date: "2026-08-28" }];
+    const held = (lastReadOn: string) =>
+      refusedReadWithholdingStability({ historyLevel: "stable", publishedChanges: 0, termsConfirmedOn: "2026-07-14", lastReadOn, refusals });
+    assert.strictEqual(held("2026-09-20")?.read_again_on, "2026-09-20", "a read after the refusal is not carried on the withholding");
+    assert.strictEqual(held("2026-08-28")?.read_again_on, null, "the day of the refusal is carried as a read since it");
+    assert.strictEqual(held("2026-08-01")?.read_again_on, null, "a read before the refusal is carried as one since it");
+    assert.strictEqual(held("2026-09-20")?.refused_date, "2026-08-28", "the day we refused moved to the day we read again");
+    assert.strictEqual(held("2026-09-20")?.reason, "unquantified_limit", "the reason moved with the later read");
+  });
+
+  it("states the later read in the verdict rather than dating the verdict to the refusal", () => {
+    const verdict = (lastReadOn: string) => vendorVerdictSentence({
+      vendor: "Qoddi",
+      level: "stable",
+      historyLevel: "stable",
+      cause: null,
+      changes: [],
+      levelWithheld: null,
+      unconfirmableSince: "",
+      termsConfirmedOn: "2026-07-14",
+      lastReadOn,
+      refusedReads: [{ reason: "unquantified_limit", refused_date: "2026-08-28" }],
+    });
+    assert.strictEqual(
+      verdict("2026-09-20"),
+      "When we read the page we cite for this offer on 2026-08-28, we found a change we could not reconcile"
+      + " with the terms we publish, and we have read it again since, on 2026-09-20, without confirming them,"
+      + " so we cannot confirm these terms and are not rating this offer today.",
+      "a verdict over a refusal older than our last read does not name the later read",
+    );
+    assert.strictEqual(
+      verdict("2026-08-28"),
+      "When we last read the page we cite for this offer, on 2026-08-28, we found a change we could not"
+      + " reconcile with the terms we publish, so we cannot confirm these terms and are not rating this offer today.",
+      "a verdict whose refusal is our last read stopped saying so",
+    );
+  });
+
+  it("keeps the register of the refusal it names when it names a read since", () => {
+    const verdict = (reason: string) => vendorVerdictSentence({
+      vendor: "Zenscrape",
+      level: "stable",
+      historyLevel: "stable",
+      cause: null,
+      changes: [],
+      levelWithheld: null,
+      unconfirmableSince: "",
+      termsConfirmedOn: "2026-08-02",
+      lastReadOn: "2026-09-20",
+      refusedReads: [{ reason, refused_date: "2026-08-29" }],
+    });
+    assert.match(
+      verdict("states_no_difference"),
+      NAMED_NO_FIGURE_THAT_MOVED,
+      "an equality finding read as one we could not reconcile once a later read was named",
+    );
+    assert.match(
+      verdict("unquantified_limit"),
+      COULD_NOT_RECONCILE,
+      "a refusal we could not reconcile read as an equality finding once a later read was named",
+    );
+    for (const reason of ["states_no_difference", "unquantified_limit"]) {
+      assert.ok(
+        verdict(reason).includes("we have read it again since, on 2026-09-20"),
+        `a ${reason} verdict names no read since the refusal`,
+      );
+    }
+  });
+
+  it("names the read since the refusal on the sentence and the meta line too, in both registers", () => {
+    const input = (reason: string) => ({
+      vendor: "Zenscrape",
+      level: "stable" as const,
+      historyLevel: "stable" as const,
+      cause: null,
+      changes: [],
+      levelWithheld: null,
+      unconfirmableSince: "",
+      termsConfirmedOn: "2026-08-02",
+      lastReadOn: "2026-09-20",
+      refusedReads: [{ reason, refused_date: "2026-08-29" }],
+    });
+    const READ_AGAIN = "we have read it again since, on 2026-09-20";
+    for (const [reason, register] of [
+      ["states_no_difference", NAMED_NO_FIGURE_THAT_MOVED],
+      ["unquantified_limit", COULD_NOT_RECONCILE],
+    ] as const) {
+      const unconfirmed = whyWeCannotConfirmTheseTerms(input(reason));
+      assert.ok(unconfirmed, `no reason is given for withholding a ${reason} refusal`);
+      assert.ok(
+        unconfirmed!.sentence.includes(READ_AGAIN),
+        `the ${reason} sentence names no read since the refusal: ${unconfirmed!.sentence}`,
+      );
+      assert.match(unconfirmed!.sentence, register, `the ${reason} sentence lost the register of its refusal`);
+      const meta = termsNotVerifiedMetaSentence(input(reason));
+      assert.ok(meta, `no meta line is written for a ${reason} refusal`);
+      assert.ok(
+        meta!.includes("2026-09-20"),
+        `the ${reason} meta line names no read since the refusal: ${meta}`,
+      );
+      assert.ok(meta!.includes("2026-08-29"), `the ${reason} meta line drops the day we refused: ${meta}`);
+    }
+  });
+
+  it("holds the withholding over a read that did not confirm, however many times we read", () => {
+    const refusals = [{ reason: "states_no_difference", refused_date: "2026-08-29" }];
+    const held = refusedReadWithholdingStability({
+      historyLevel: "stable",
+      publishedChanges: 0,
+      termsConfirmedOn: "2026-08-02",
+      lastReadOn: "2026-09-20",
+      refusals,
+    });
+    assert.strictEqual(held?.refused_date, "2026-08-29", "a read that did not confirm cleared the withholding");
+    assert.strictEqual(
+      refusedReadWithholdingStability({
+        historyLevel: "stable",
+        publishedChanges: 0,
+        termsConfirmedOn: "2026-09-20",
+        lastReadOn: "2026-09-20",
+        refusals,
+      }),
+      null,
+      "a read that confirmed the terms left the withholding standing",
+    );
+  });
+});
+
+describe("the day the catalogue reports as our last read reaches the refusal it publishes", () => {
+  const held = process.env.AGENTDEALS_VERIFICATION_STATE_PATH;
+  let scratch = "";
+  let subject: ReturnType<typeof loadOffers>[number] | null = null;
+  let refusedOn = "";
+
+  before(() => {
+    scratch = mkdtempSync(join(tmpdir(), "read-after-refusal-"));
+    const refusals = refusalsByVendor(loadChangeRefusals());
+    for (const offer of loadOffers()) {
+      if (publishedChangeCount(offer.vendor) > 0) continue;
+      const withholding = refusedReadWithholdingStability({
+        historyLevel: "stable",
+        publishedChanges: 0,
+        termsConfirmedOn: offer.verifiedDate,
+        lastReadOn: offer.verifiedDate,
+        refusals: refusals.get(offer.vendor.toLowerCase()) ?? [],
+      });
+      if (!withholding) continue;
+      subject = offer;
+      refusedOn = withholding.refused_date;
+      break;
+    }
+    process.env.AGENTDEALS_VERIFICATION_STATE_PATH = join(scratch, "verification_state.json");
+  });
+
+  after(() => {
+    if (held === undefined) delete process.env.AGENTDEALS_VERIFICATION_STATE_PATH;
+    else process.env.AGENTDEALS_VERIFICATION_STATE_PATH = held;
+    rmSync(scratch, { recursive: true, force: true });
+    resetVerificationStateCache();
+  });
+
+  function readOn(date: string, outcome: string): void {
+    writeFileSync(
+      process.env.AGENTDEALS_VERIFICATION_STATE_PATH!,
+      JSON.stringify({
+        generated_at: date,
+        records: [{
+          vendor: subject!.vendor,
+          url: subject!.url,
+          last_attempt_at: date,
+          last_outcome: outcome,
+          last_success: null,
+          last_read_at: READ_THE_PAGE.has(outcome) ? date : null,
+          consecutive_failures: 0,
+          quarantined_since: null,
+        }],
+      }),
+    );
+    resetVerificationStateCache();
+  }
+
+  const dayAfter = (date: string): string =>
+    new Date(Date.parse(`${date}T00:00:00Z`) + 86_400_000).toISOString().slice(0, 10);
+
+  it("names a read the catalogue took after the refusal", () => {
+    assert.ok(subject, "no record in the catalogue withholds on a refusal, so the wiring is untested");
+    const readAgain = dayAfter(refusedOn);
+    readOn(readAgain, "changed");
+    const risk = publishedRisk(subject!, [], readAgain);
+    assert.strictEqual(risk.refused_read?.refused_date, refusedOn, "the day we refused moved with the later read");
+    assert.strictEqual(
+      risk.refused_read?.read_again_on,
+      readAgain,
+      "the day the catalogue reports as our last read does not reach the refusal it publishes",
+    );
+  });
+
+  it("names nothing where the read the catalogue reports is the refusal's own day", () => {
+    readOn(refusedOn, "changed");
+    const risk = publishedRisk(subject!, [], refusedOn);
+    assert.strictEqual(risk.refused_read?.refused_date, refusedOn, "the withholding moved off the refusal");
+    assert.strictEqual(risk.refused_read?.read_again_on, null, "the refusal's own day reads as a read since it");
+  });
+
+  it("carries that same day into the sentence the vendor page composes", () => {
+    const readAgain = dayAfter(refusedOn);
+    readOn(readAgain, "changed");
+    const context = vendorVerdictContextFrom({
+      vendor: subject!.vendor,
+      vendorOffers: loadOffers().filter(o => o.vendor === subject!.vendor && o.url === subject!.url),
+      vendorChanges: [],
+      refusedReads: refusalsByVendor(loadChangeRefusals()).get(subject!.vendor.toLowerCase()) ?? [],
+      servedOn: readAgain,
+    });
+    assert.ok(context, "the vendor page composes no verdict for a record that withholds");
+    assert.strictEqual(
+      context!.input.lastReadOn,
+      readAgain,
+      "the vendor page reads a different day as our last read than the catalogue does",
+    );
+    assert.ok(
+      vendorVerdictSentence(context!.input).includes(`we have read it again since, on ${readAgain},`),
+      `the vendor page's verdict names no read since the refusal: ${vendorVerdictSentence(context!.input)}`,
+    );
+  });
+
+  it("names nothing where the later attempt did not read the page", () => {
+    readOn(dayAfter(refusedOn), "fetch_failed");
+    const risk = publishedRisk(subject!, [], dayAfter(refusedOn));
+    assert.strictEqual(
+      risk.refused_read?.read_again_on,
+      null,
+      "an attempt that did not read the page reads as a read since the refusal",
+    );
   });
 });

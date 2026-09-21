@@ -49,6 +49,7 @@ import {
   type ChangeRefusal,
   type ChangeRefusalIndex,
   type RefusedRead,
+  type RefusedReadWeHold,
 } from "./change-refusal.js";
 
 export function gateForOffer(offer: Offer, date: string = utcDate()): Gate | null {
@@ -406,7 +407,7 @@ export function standingNarrowingsCitingNoSource(vendorChanges: readonly DealCha
 
 export interface StabilityWithholding {
   link_unreachable: LinkUnreachable | null;
-  refused_read: RefusedRead | null;
+  refused_read: RefusedReadWeHold | null;
   rating_withheld: RatingWithheld | null;
   source_check: SourceCheck | null;
   gate: Gate | null;
@@ -1223,7 +1224,7 @@ export interface PublishedRisk {
   link_unreachable: LinkUnreachable | null;
   source_check: SourceCheck | null;
   gate: Gate | null;
-  refused_read: RefusedRead | null;
+  refused_read: RefusedReadWeHold | null;
   stability: StabilityClass | null;
   stability_withheld_because: string | null;
 }
@@ -1249,6 +1250,7 @@ export function publishedRisk(
     historyLevel: assessment.level,
     publishedChanges: publishedChangeCount(offer.vendor),
     termsConfirmedOn: offer.verifiedDate,
+    lastReadOn: lastReadDate(offer),
     refusals: refusalsForVendor(offer.vendor),
   });
   const withheld =

@@ -5,6 +5,7 @@ import { citationLabel, ratingWithheldForNoSourceSentence } from "./change-citat
 import { CHANGE_DIRECTION } from "./change-direction.js";
 import { gateRiskSummary, publishedRisk } from "./data.js";
 import { LINK_GRACE_DAYS } from "./link-health.js";
+import { lastReadDate } from "./read-date.js";
 import {
   NOT_FREE_TIER_RULES,
   TIME_LIMITED_TIER_RULES,
@@ -214,6 +215,7 @@ export function readmeRow(offer: Offer, allChanges: DealChange[], context: RowCo
     linkUnreachable: Boolean(risk.link_unreachable),
     sourceCheck: offer.source_check?.outcome ?? null,
     termsConfirmedOn: offer.verifiedDate,
+    lastReadOn: lastReadDate(offer),
     termsSuperseded: superseding !== null,
   };
 

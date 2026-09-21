@@ -31,6 +31,9 @@ import {
   measuredNoDifferenceClause,
   measuredNoDifferenceMetaClause,
   measuredNoDifferenceSentence,
+  measuredNoDifferenceThenReadAgainClause,
+  measuredNoDifferenceThenReadAgainMetaClause,
+  measuredNoDifferenceThenReadAgainSentence,
   refusalMeasuredNoDifference,
   refusedReadClause,
   refusedReadTheConfirmationSupersedes,
@@ -39,9 +42,13 @@ import {
   unreconciledReadClause,
   unreconciledReadMetaClause,
   unreconciledReadSentence,
+  unreconciledReadThenReadAgainClause,
+  unreconciledReadThenReadAgainMetaClause,
+  unreconciledReadThenReadAgainSentence,
   MEASURED_NO_DIFFERENCE_BADGE_LABEL,
   UNRECONCILED_READ_BADGE_LABEL,
   type RefusedRead,
+  type RefusedReadWeHold,
 } from "./change-refusal.js";
 
 export type { PublishedRiskLevel };
@@ -84,6 +91,7 @@ export interface VendorVerdictInput {
   sourceChecked?: string | null;
   linkCheckedOn?: string | null;
   termsConfirmedOn: string;
+  lastReadOn: string;
   refusedReads?: readonly RefusedRead[];
   publishesAQuantity?: boolean;
   termsSuperseded?: boolean;
@@ -93,8 +101,8 @@ export interface VendorVerdictInput {
 export type BadgeWithholding =
   | { reason: "gated"; gate: GateCode }
   | { reason: "no_source" }
-  | { reason: "read_not_reconciled"; refusedOn: string }
-  | { reason: "change_measured_no_difference"; refusedOn: string }
+  | { reason: "read_not_reconciled"; refusedOn: string; readAgainOn: string | null }
+  | { reason: "change_measured_no_difference"; refusedOn: string; readAgainOn: string | null }
   | { reason: LevelWithheldReason };
 
 export type Withholding = BadgeWithholding | { reason: TermsOnlyOutcome };
@@ -174,27 +182,50 @@ export function refusedReadWithholdingSentence(
   subject: string,
   because: RefusedReadWithholding,
 ): string {
+  if (because.readAgainOn) {
+    return because.reason === "change_measured_no_difference"
+      ? measuredNoDifferenceThenReadAgainSentence(subject, because.refusedOn, because.readAgainOn)
+      : unreconciledReadThenReadAgainSentence(subject, because.refusedOn, because.readAgainOn);
+  }
   return because.reason === "change_measured_no_difference"
     ? measuredNoDifferenceSentence(subject, because.refusedOn)
     : unreconciledReadSentence(subject, because.refusedOn);
 }
 
 export function refusedReadWithholdingClause(because: RefusedReadWithholding): string {
+  if (because.readAgainOn) {
+    return because.reason === "change_measured_no_difference"
+      ? measuredNoDifferenceThenReadAgainClause(because.refusedOn, because.readAgainOn)
+      : unreconciledReadThenReadAgainClause(because.refusedOn, because.readAgainOn);
+  }
   return because.reason === "change_measured_no_difference"
     ? measuredNoDifferenceClause(because.refusedOn)
     : unreconciledReadClause(because.refusedOn);
 }
 
 export function refusedReadWithholdingMetaClause(because: RefusedReadWithholding): string {
+  if (because.readAgainOn) {
+    return because.reason === "change_measured_no_difference"
+      ? measuredNoDifferenceThenReadAgainMetaClause(because.refusedOn, because.readAgainOn)
+      : unreconciledReadThenReadAgainMetaClause(because.refusedOn, because.readAgainOn);
+  }
   return because.reason === "change_measured_no_difference"
     ? measuredNoDifferenceMetaClause(because.refusedOn)
     : unreconciledReadMetaClause(because.refusedOn);
 }
 
-export function refusedReadWithholding(refusal: RefusedRead): RefusedReadWithholding {
+export function refusedReadWithholding(refusal: RefusedReadWeHold): RefusedReadWithholding {
   return refusalMeasuredNoDifference(refusal)
-    ? { reason: "change_measured_no_difference", refusedOn: refusal.refused_date }
-    : { reason: "read_not_reconciled", refusedOn: refusal.refused_date };
+    ? {
+      reason: "change_measured_no_difference",
+      refusedOn: refusal.refused_date,
+      readAgainOn: refusal.read_again_on,
+    }
+    : {
+      reason: "read_not_reconciled",
+      refusedOn: refusal.refused_date,
+      readAgainOn: refusal.read_again_on,
+    };
 }
 
 export type VendorBadge =
@@ -254,11 +285,12 @@ export function vendorVerdictWord(input: VendorVerdictInput): PublishedRiskLevel
   return publishedVendorLevel(input.level, input.cause);
 }
 
-export function refusedReadWeHold(input: VendorVerdictInput): RefusedRead | null {
+export function refusedReadWeHold(input: VendorVerdictInput): RefusedReadWeHold | null {
   return refusedReadWithholdingStability({
     historyLevel: input.historyLevel,
     publishedChanges: input.changes.length,
     termsConfirmedOn: input.termsConfirmedOn,
+    lastReadOn: input.lastReadOn,
     refusals: input.refusedReads ?? [],
   });
 }
@@ -267,7 +299,7 @@ export function refusedReadOurConfirmationSupersedes(input: VendorVerdictInput):
   return refusedReadTheConfirmationSupersedes(input.refusedReads ?? [], input.termsConfirmedOn);
 }
 
-export function refusalWithholdsStability(input: VendorVerdictInput): RefusedRead | null {
+export function refusalWithholdsStability(input: VendorVerdictInput): RefusedReadWeHold | null {
   if (input.offerEnded) return null;
   if (input.gate) return null;
   if (withholdingDecides(input)) return null;
@@ -329,7 +361,7 @@ export interface TermsEvidence {
   vendor: string;
   levelWithheld: LevelWithheldReason | null;
   unconfirmableSince: string;
-  refusedRead: RefusedRead | null;
+  refusedRead: RefusedReadWeHold | null;
   sourceCheck: SourceCheckOutcome | null;
   sourceChecked?: string | null;
   linkCheckedOn?: string | null;
@@ -371,7 +403,7 @@ export interface PublishedTermsRow {
   description?: string | null;
   source_check?: Pick<SourceCheck, "outcome" | "checked"> | null;
   link_unreachable?: { last_reachable?: string | null; checked?: string | null } | null;
-  refused_read?: RefusedRead | null;
+  refused_read?: RefusedReadWeHold | null;
   rating_withheld?: RatingWithheld | null;
   gate?: unknown;
   risk_level?: PublishedRiskLevel | null;
