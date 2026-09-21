@@ -61,6 +61,10 @@ const MUTANTS = [
     "      lastReadOn: enriched.last_read_date,",
     "      lastReadOn: primary.verifiedDate,"],
 
+  ["the-meta-clause-names-a-read-that-is-the-refusal", "src/vendor-verdict.ts",
+    "      ? measuredNoDifferenceThenReadAgainMetaClause(because.refusedOn, because.readAgainOn)\n      : unreconciledReadThenReadAgainMetaClause(because.refusedOn, because.readAgainOn);",
+    "      ? measuredNoDifferenceThenReadAgainMetaClause(because.refusedOn, because.refusedOn)\n      : unreconciledReadThenReadAgainMetaClause(because.refusedOn, because.refusedOn);"],
+
   ["the-named-read-is-the-day-we-refused", "src/change-refusal.ts",
     "  return lastReadOn > refusal.refused_date ? lastReadOn : null;",
     "  return lastReadOn > refusal.refused_date ? refusal.refused_date : null;"],

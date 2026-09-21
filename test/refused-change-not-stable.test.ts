@@ -14,7 +14,7 @@ import { resetVerificationStateCache } from "../dist/verification-state.js";
 import { LEVEL_WITHHOLDING_OUTCOMES } from "../dist/source-check.js";
 import { offerEnded } from "../dist/retirement.js";
 import { vendorSlugMap } from "../dist/vendor-slug.js";
-import { vendorVerdictSentence } from "../dist/vendor-verdict.js";
+import { termsNotVerifiedMetaSentence, vendorVerdictSentence, whyWeCannotConfirmTheseTerms } from "../dist/vendor-verdict.js";
 import { vendorVerdictContextFrom } from "../dist/vendor-verdict-input.js";
 import { OUTCOMES_THAT_READ_THE_PAGE } from "../dist/read-date.js";
 
@@ -1057,6 +1057,41 @@ describe("the refusal log and the rules that write it read the same vocabulary",
         verdict(reason).includes("we have read it again since, on 2026-09-20"),
         `a ${reason} verdict names no read since the refusal`,
       );
+    }
+  });
+
+  it("names the read since the refusal on the sentence and the meta line too, in both registers", () => {
+    const input = (reason: string) => ({
+      vendor: "Zenscrape",
+      level: "stable" as const,
+      historyLevel: "stable" as const,
+      cause: null,
+      changes: [],
+      levelWithheld: null,
+      unconfirmableSince: "",
+      termsConfirmedOn: "2026-08-02",
+      lastReadOn: "2026-09-20",
+      refusedReads: [{ reason, refused_date: "2026-08-29" }],
+    });
+    const READ_AGAIN = "we have read it again since, on 2026-09-20";
+    for (const [reason, register] of [
+      ["states_no_difference", NAMED_NO_FIGURE_THAT_MOVED],
+      ["unquantified_limit", COULD_NOT_RECONCILE],
+    ] as const) {
+      const unconfirmed = whyWeCannotConfirmTheseTerms(input(reason));
+      assert.ok(unconfirmed, `no reason is given for withholding a ${reason} refusal`);
+      assert.ok(
+        unconfirmed!.sentence.includes(READ_AGAIN),
+        `the ${reason} sentence names no read since the refusal: ${unconfirmed!.sentence}`,
+      );
+      assert.match(unconfirmed!.sentence, register, `the ${reason} sentence lost the register of its refusal`);
+      const meta = termsNotVerifiedMetaSentence(input(reason));
+      assert.ok(meta, `no meta line is written for a ${reason} refusal`);
+      assert.ok(
+        meta!.includes("2026-09-20"),
+        `the ${reason} meta line names no read since the refusal: ${meta}`,
+      );
+      assert.ok(meta!.includes("2026-08-29"), `the ${reason} meta line drops the day we refused: ${meta}`);
     }
   });
 
