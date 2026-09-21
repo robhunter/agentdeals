@@ -6,6 +6,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { fetchBadgeVerdicts, type SiteFreeTierVerdict } from "./badge-verdicts.ts";
+import { appendedAfter, statesBoth } from "./snippet-order.ts";
 
 const { eligibilityGate, eligibilityGateAsPublished, publishableEligibilityConditions, CONDITION_RECORDING_AN_UNREAD_PROGRAM } =
   await import("../dist/eligibility.js");
@@ -349,6 +350,7 @@ describe("a category page does not count a gated offer as a plain free tier", ()
   });
 
   it("carries the same qualification into the search snippet, ahead of the vendor list", async () => {
+    let ordered = 0;
     for (const category of categoryNames) {
       const { total, restricted } = censusOf(category);
       const html = await page(`/category/${slugOf(category)}`);
@@ -360,10 +362,12 @@ describe("a category page does not count a gated offer as a plain free tier", ()
       }
       assert.ok(description.includes(QUALIFICATION), `${where} description is ${description}`);
       assert.ok(
-        description.indexOf(QUALIFICATION) < description.indexOf(NOTHING_CONTRADICTS_OUR_TERMS_FOR),
+        !appendedAfter(description, QUALIFICATION, NOTHING_CONTRADICTS_OUR_TERMS_FOR),
         `${where} appends the qualification after the vendor list, where a snippet truncates it`,
       );
+      if (statesBoth(description, QUALIFICATION, NOTHING_CONTRADICTS_OUR_TERMS_FOR)) ordered++;
     }
+    assert.ok(ordered > 0, "no category description states both a qualification and a vendor list, so the ordering is read on nothing");
   });
 });
 

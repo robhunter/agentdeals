@@ -10,17 +10,18 @@ import {
   gateStatesAnEnding,
   narrowingSentence,
   publishedVendorLevel,
+  refusedReadWeHold,
   statesRiskCause,
   vendorBadge,
   vendorVerdictSentence,
   vendorVerdictWord,
   type VendorVerdictInput,
 } from "../dist/vendor-verdict.js";
-import { CHANGE_DIRECTION, enrichOffers, gateForOffer, loadDealChanges, loadOffers, publishedRisk, refusalsForVendor, vendorRiskAssessment, classifyStability } from "../dist/data.js";
+import { CHANGE_DIRECTION, gateForOffer, loadDealChanges, loadOffers, refusalsForVendor, vendorRiskAssessment, classifyStability } from "../dist/data.js";
 import { vendorSlugMap } from "../dist/vendor-slug.js";
 import { isNoLongerInForce } from "../dist/change-resolution.js";
-import { storedTermsAreSuperseded } from "../dist/superseded-description.js";
-import { levelWithheldReason, levelWithheldSince } from "../dist/source-check.js";
+import { levelWithheldReason } from "../dist/source-check.js";
+import { vendorVerdictContextFrom } from "../dist/vendor-verdict-input.js";
 import { offerEnded, endedVerdictSentence, ENDED_BADGE_LABEL } from "../dist/retirement.js";
 import { CONFIRMED_DATE_LABEL, UNCONFIRMED_DATE_LABEL } from "../dist/read-date.js";
 import { gateFor, utcDate } from "../dist/ranking.js";
@@ -331,6 +332,7 @@ interface VendorRow {
   withheld: ReturnType<typeof levelWithheldReason>;
   badgeRendered: boolean;
   sentence: string;
+  readAgainOn: string | null;
   termsSuperseded: boolean;
   tier: string;
   changes: DealChange[];
@@ -343,45 +345,38 @@ function vendorRows(): VendorRow[] {
   const changes = loadDealChanges();
   const rows: VendorRow[] = [];
   for (const [slug, vendor] of vendorSlugMap) {
-    const primary = offers.find(o => o.vendor === vendor);
+    const vendorOffers = offers.filter(o => o.vendor === vendor);
+    const primary = vendorOffers[0];
     if (!primary) continue;
-    const enriched = enrichOffers([primary])[0];
     const vendorChanges = changes
       .filter(c => c.vendor.toLowerCase() === vendor.toLowerCase())
       .sort((a, b) => b.date.localeCompare(a.date));
-    const withheld = levelWithheldReason(primary, enriched.link_unreachable);
+    const context = vendorVerdictContextFrom({
+      vendor,
+      vendorOffers,
+      vendorChanges,
+      refusedReads: refusalsForVendor(vendor),
+      servedOn: utcDate(),
+    })!;
+    const enriched = context.enriched;
+    const withheld = context.levelWithheld;
     const expected = publishedVendorLevel(enriched.risk_level ?? null, enriched.risk_cause ?? null);
     const gate = gateForOffer(primary, utcDate());
     const ended = offerEnded(primary);
     const badgeEnded = ended || gateStatesAnEnding(gate?.code ?? null);
-    const unconfirmableSince = levelWithheldSince(primary, enriched.link_unreachable);
-    const termsSuperseded = storedTermsAreSuperseded(primary, vendorChanges);
+    const termsSuperseded = context.input.termsSuperseded ?? false;
     rows.push({
       slug,
       vendor,
       expected,
-      historyLevel: publishedRisk(primary, vendorChanges).history_level,
+      historyLevel: context.input.historyLevel,
       ended,
       badgeEnded,
       badge: badgeEnded ? ENDED_BADGE_LABEL : expected,
       withheld,
       badgeRendered: badgeEnded || !(gate || enriched.risk_level === null || (enriched.link_unreachable && expected === "stable")),
-      sentence: vendorVerdictSentence({
-        vendor,
-        tier: primary.tier,
-        level: enriched.risk_level ?? null,
-        historyLevel: publishedRisk(primary, vendorChanges).history_level,
-        cause: enriched.risk_cause ?? null,
-        changes: vendorChanges,
-        levelWithheld: withheld,
-        unconfirmableSince,
-        termsConfirmedOn: primary.verifiedDate,
-        ratingWithheld: enriched.rating_withheld ?? null,
-        offerEnded: ended,
-        gate: gate?.code ?? null,
-        refusedReads: refusalsForVendor(vendor),
-        termsSuperseded,
-      }),
+      sentence: vendorVerdictSentence(context.input),
+      readAgainOn: refusedReadWeHold(context.input)?.read_again_on ?? null,
       termsSuperseded,
       tier: primary.tier,
       changes: vendorChanges,
@@ -569,6 +564,10 @@ describe("vendor verdict — as rendered", () => {
     assert.deepStrictEqual(wrong.slice(0, 20), [], `vendor routes rendering more than one judgement:\n${wrong.slice(0, 20).join("\n")}`);
     assertPopulationFloor(rating, 400, "vendor pages rate the vendor beside its name");
     assert.ok(rows.some(r => r.gate && !r.ended), "no gated record reaches a vendor page, so the gate criterion has no subject");
+    assert.ok(
+      rows.some(r => r.readAgainOn !== null),
+      "no vendor route holds a refused read we have read again since, so the sweep reads no record read twice",
+    );
   });
 
   it("answers both of its own stability questions with the same word", async () => {

@@ -7,6 +7,7 @@ import { fileURLToPath } from "node:url";
 
 import { fetchBadgeVerdicts, type SiteFreeTierVerdict } from "./badge-verdicts.ts";
 import { assertCoversPopulation, assertPopulationFloor, categoriesInTheCatalogue } from "./population-floor.ts";
+import { appendedAfter, statesBoth } from "./snippet-order.ts";
 
 const { gateFor, utcDate } = await import("../dist/ranking.js");
 const { gatedShareLede } = await import("../dist/eligibility.js");
@@ -292,6 +293,7 @@ describe("a category page discloses every gated record, not eligibility alone", 
   });
 
   it("carries the widened clause list into the search snippet", async () => {
+    let ordered = 0;
     for (const c of census) {
       const description = descriptionOf(await page(`/category/${c.slug}`));
       if (c.gated === 0) {
@@ -306,10 +308,12 @@ describe("a category page discloses every gated record, not eligibility alone", 
         : `${clausesFor(c.codes)}.`;
       assert.ok(description.includes(clause), `/category/${c.slug} description is ${description}`);
       assert.ok(
-        description.indexOf(clause) < description.indexOf(NOTHING_CONTRADICTS_OUR_TERMS_FOR),
+        !appendedAfter(description, clause, NOTHING_CONTRADICTS_OUR_TERMS_FOR),
         `/category/${c.slug} appends the clause after the vendor list, where a snippet truncates it`,
       );
+      if (statesBoth(description, clause, NOTHING_CONTRADICTS_OUR_TERMS_FOR)) ordered++;
     }
+    assert.ok(ordered > 0, "no category description states both a clause list and a vendor list, so the ordering is read on nothing");
   });
 });
 
