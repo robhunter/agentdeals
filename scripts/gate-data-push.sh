@@ -78,9 +78,11 @@ rm -f "$DRIFTED_GUARDS"
 
 REPLAYS=0
 REPLAYS_ONTO_A_MOVED_MAIN="${GATE_REPLAYS_ONTO_A_MOVED_MAIN:-2}"
+COMMITS_ONE_REPLAY_RESOLVES=10
 HELD_BACK_VENDORS=""
 BATCH_AS_THE_RUN_WROTE_IT=""
 BATCH_COMMIT_AS_THE_RUN_WROTE_IT=""
+READINGS_THE_REPLAY_COULD_NOT_MERGE=""
 
 push_to_main() {
   git push origin HEAD:main
@@ -96,13 +98,58 @@ ask_the_suite_to_read_main() {
   fi
 }
 
-replay_onto_main() {
-  git fetch origin main || return 1
-  if ! git rebase FETCH_HEAD; then
-    git rebase --abort || true
+paths_the_derivation_regenerates() {
+  if [ -n "$RATCHET_BUDGETS" ]; then echo "$BUDGETS_PATH"; fi
+  if [ -n "$UPDATE_PAGE_LASTMOD" ]; then echo "$PAGE_LASTMOD_PATH"; fi
+  if [ -n "$REGENERATE_LLM_INDEX" ]; then echo "$LLM_INDEX_PATH"; fi
+  if [ -n "$SYNC_PAGE_REVIEWS" ]; then echo "$PAGE_REVIEWS_PATH"; fi
+}
+
+take_mains_copy_of_what_this_run_derives() {
+  local conflicted regenerated held path
+  conflicted="$(git diff --name-only --diff-filter=U)"
+  [ -n "$conflicted" ] || return 1
+  regenerated="$(paths_the_derivation_regenerates)"
+  held=""
+  while IFS= read -r path; do
+    [ -n "$path" ] || continue
+    if [ -z "$regenerated" ] || ! printf '%s\n' "$regenerated" | grep -qxF -- "$path"; then
+      held="${held:+$held }$path"
+    fi
+  done <<<"$conflicted"
+  if [ -n "$held" ]; then
+    READINGS_THE_REPLAY_COULD_NOT_MERGE="$held"
     return 1
   fi
-  COMMIT="$(git rev-parse --short HEAD)"
+  while IFS= read -r path; do
+    [ -n "$path" ] || continue
+    git checkout --ours -- "$path" || return 1
+    git add -- "$path" || return 1
+  done <<<"$conflicted"
+  if git diff --cached --quiet HEAD; then
+    git commit -q --allow-empty -C REBASE_HEAD || return 1
+  fi
+  echo "── Replayed over a conflict in $(tr '\n' ' ' <<<"$conflicted" | sed 's/ *$//'), which this run regenerates from the tree it replayed onto. Took main's copy and left the derivation below to overwrite it, rather than holding the batch for a merge whose result is discarded either way ──"
+}
+
+replay_onto_main() {
+  READINGS_THE_REPLAY_COULD_NOT_MERGE=""
+  git fetch origin main || return 1
+  if git rebase FETCH_HEAD; then
+    COMMIT="$(git rev-parse --short HEAD)"
+    return 0
+  fi
+  local resolved=0
+  while take_mains_copy_of_what_this_run_derives; do
+    if GIT_EDITOR=true git rebase --continue; then
+      COMMIT="$(git rev-parse --short HEAD)"
+      return 0
+    fi
+    resolved="$((resolved + 1))"
+    [ "$resolved" -lt "$COMMITS_ONE_REPLAY_RESOLVES" ] || break
+  done
+  git rebase --abort || true
+  return 1
 }
 
 quarantine() {
@@ -265,7 +312,7 @@ while :; do
 
   echo "── main moved while the suite ran. Replaying this run's commit onto it and running the suite again, so what reaches main is what the suite read ──"
   if ! replay_onto_main; then
-    quarantine "main moved while the suite ran and this run's commit does not replay onto it"
+    quarantine "main moved while the suite ran and this run's commit does not replay onto it${READINGS_THE_REPLAY_COULD_NOT_MERGE:+ — the conflict is in $READINGS_THE_REPLAY_COULD_NOT_MERGE, which this run does not regenerate after a replay, so the two sides are a real disagreement}"
   fi
   if ! npm run build >>"$LOG" 2>&1; then
     tail -n 60 "$LOG"
