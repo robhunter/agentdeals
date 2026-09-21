@@ -22,6 +22,11 @@ export const CHECK_ESTABLISHES =
 export const CHECK_ESTABLISHES_ON_A_LIST =
   "A source check reads each cited page for that service's name and a price; the figures in the tables above are from our own records.";
 
+export const CHECK_ESTABLISHES_ON_THE_REST_OF_A_LIST =
+  "A source check reads each cited page for that service's name and a price."
+  + " The figures in the tables above are from our own records, except for the services"
+  + " whose entry below dates them to a read of the vendor's own page.";
+
 export function pageQuoteHtml(quote: string, esc: Escaper): string {
   return `<span class="${PAGE_QUOTE_CLASS}">where it says: &ldquo;${esc(quote)}&rdquo;</span>`;
 }
@@ -137,6 +142,21 @@ export interface CitedService {
   vendor: string;
   slug: string | null;
   source: FreeTierSource;
+  termsCameFrom?: string | null;
+}
+
+export function servicesWhoseFiguresAreOurOwn(
+  services: readonly CitedService[],
+): readonly CitedService[] {
+  return services.filter(service => !service.termsCameFrom);
+}
+
+export function citedSourcesScopeNote(services: readonly CitedService[]): string | null {
+  const ourOwn = servicesWhoseFiguresAreOurOwn(services);
+  if (ourOwn.length === 0) return null;
+  return ourOwn.length === services.length
+    ? CHECK_ESTABLISHES_ON_A_LIST
+    : CHECK_ESTABLISHES_ON_THE_REST_OF_A_LIST;
 }
 
 export function sourceAnchorId(service: Pick<CitedService, "vendor" | "slug">): string {
@@ -184,6 +204,8 @@ export const CITED_SOURCES_CLASS = "cited-sources";
 
 export const CHECK_SCOPE_CLASS = "check-scope";
 
+export const TERMS_CAME_FROM_CLASS = "terms-came-from";
+
 export function citedSourcesListHtml(
   services: readonly CitedService[],
   esc: Escaper,
@@ -203,12 +225,19 @@ export function citedSourcesListHtml(
             { dateClass, linkText: citationLabel },
           )
         : esc(service.source.clause);
-      return `<li id="${esc(sourceAnchorId(service))}">${name} &mdash; ${body}</li>`;
+      const cameFrom = service.termsCameFrom
+        ? `. <span class="${TERMS_CAME_FROM_CLASS}">${esc(service.termsCameFrom)}</span>`
+        : "";
+      return `<li id="${esc(sourceAnchorId(service))}">${name} &mdash; ${body}${cameFrom}</li>`;
     })
     .join("\n      ");
+  const scope = citedSourcesScopeNote(services);
+  const scopeHtml = scope === null
+    ? ""
+    : `<p class="${CHECK_SCOPE_CLASS}" style="margin:1rem 0 0;font-size:.8rem;color:var(--text-dim)">${esc(scope)}</p>\n    `;
   return (
-    `<p class="${CHECK_SCOPE_CLASS}" style="margin:1rem 0 0;font-size:.8rem;color:var(--text-dim)">${esc(CHECK_ESTABLISHES_ON_A_LIST)}</p>\n` +
-    `    <ul class="${CITED_SOURCES_CLASS}" style="margin:.5rem 0 0 1.1rem;padding:0;font-size:.85rem;line-height:1.7">\n` +
+    `${scopeHtml}` +
+    `<ul class="${CITED_SOURCES_CLASS}" style="margin:.5rem 0 0 1.1rem;padding:0;font-size:.85rem;line-height:1.7">\n` +
     `      ${items}\n    </ul>`
   );
 }

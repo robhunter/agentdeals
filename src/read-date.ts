@@ -351,6 +351,45 @@ export function theReadOurTermsCameFrom(read: string, restatedFrom: string | nul
     + ` on ${read}, without confirming them.`;
 }
 
+export function termsLastConfirmedOn(confirmed: string): string {
+  return `Our stored terms were last confirmed on ${confirmed}.`;
+}
+
+export const READS_OUR_TERMS_CAN_COME_FROM = [
+  "a_read_that_confirmed_them",
+  "a_read_we_restated_them_from",
+] as const;
+
+export type ReadOurTermsCameFrom = (typeof READS_OUR_TERMS_CAN_COME_FROM)[number];
+
+export interface TermsProvenance {
+  read: ReadOurTermsCameFrom;
+  on: string;
+}
+
+export function whereOurTermsCameFrom(
+  offer: DatedRecord | null | undefined,
+): TermsProvenance | null {
+  const restated = restatedReadingDate(offer);
+  if (restated) return { read: "a_read_we_restated_them_from", on: restated };
+  const confirmed = confirmationDate(offer);
+  return confirmed ? { read: "a_read_that_confirmed_them", on: confirmed } : null;
+}
+
+const HOW_A_PROVENANCE_IS_STATED: Record<
+  ReadOurTermsCameFrom,
+  (provenance: TermsProvenance, readOn: string) => string
+> = {
+  a_read_that_confirmed_them: provenance => termsLastConfirmedOn(provenance.on),
+  a_read_we_restated_them_from: (provenance, readOn) =>
+    theReadOurTermsCameFrom(readOn, provenance.on).trim(),
+};
+
+export function whereOurTermsCameFromClause(provenance: TermsProvenance, readOn: string): string {
+  return HOW_A_PROVENANCE_IS_STATED[provenance.read](provenance, readOn);
+}
+
+
 export function noConfirmationNote(
   read: string,
   verified: string,
@@ -412,7 +451,7 @@ export function storedConfirmationClause(
 ): string {
   const confirmed = confirmationDate(offer);
   if (!confirmed) return `${NO_CONFIRMATION_HELD}.`;
-  if (!withheld) return `Our stored terms were last confirmed on ${confirmed}.`;
+  if (!withheld) return termsLastConfirmedOn(confirmed);
   return theSameReadDisagreedWithItself(confirmed, withheld)
     ? `We matched our stored terms against that same read on ${confirmed} and cannot reconcile the two.`
     : `Our records hold a confirmation of these terms from ${confirmed}, and we have read the page since without confirming them.`;
