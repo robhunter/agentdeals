@@ -58,8 +58,8 @@ const MUTANTS = [
     `  const obj = (raw ?? {}) as Record<string, unknown>;\n  const reserved = Array.isArray(obj.reserved_paths)`],
 
   ["every-day-in-the-window-is-ranked", "src/homepage-routing.ts",
-    `  return mostRecentDays(rollups, days).filter((day) => {`,
-    `  return mostRecentDays(rollups, days).filter((day) => Boolean(day) || (() => {`],
+    `): DailyRollup[] {\n  return mostRecentDays(rollups, days).filter((day) => {`,
+    `): DailyRollup[] {\n  if (guides) return mostRecentDays(rollups, days);\n  return mostRecentDays(rollups, days).filter((day) => {`],
 
   ["one-measured-guide-makes-a-day-rankable", "src/homepage-routing.ts",
     `    return guides.every((guide) => {`,
@@ -94,12 +94,12 @@ const MUTANTS = [
     `  return \`\${pct.toFixed(1)}%\`;`],
 
   ["an-unrankable-window-still-makes-a-ranking-claim", "src/homepage-routing.ts",
-    `  if (!rankedWindow) {\n    return \`All \${populationCount} guides we publish, in the order /guides lists them, and not a ranking. \``,
-    `  if (false) {\n    return \`All \${populationCount} guides we publish, in the order /guides lists them, and not a ranking. \``],
+    `    return \`All \${populationCount} guides we publish, in the order /guides lists them, and not a ranking. \`\n      + \`We hold \${heldDays} days of traffic and can rank on none of them: on every one, at least one guide's requests could have been folded into a shared bucket, so a zero there would not mean no agent opened it.\`;`,
+    `    return \`The \${selectedCount} of \${populationCount} guides AI agents opened most across the \${heldDays} days of traffic we hold. Membership is that ranking and nothing else.\`;`],
 
   ["the-reservation-covers-every-class-not-the-ranked-one", "src/serve.ts",
     `setReservedRouteKeys(guidesIndexEntries().map(e => \`/\${e.slug}\`), [RANKED_TRAFFIC_CLASS]);`,
-    `setReservedRouteKeys(guidesIndexEntries().map(e => \`/\${e.slug}\`), [...TRAFFIC_CLASSES]);`],
+    `setReservedRouteKeys(guidesIndexEntries().map(e => \`/\${e.slug}\`), ["ai_agent", "browser", "unknown"]);`],
 
   ["nothing-is-reserved-at-all", "src/serve.ts",
     `setReservedRouteKeys(guidesIndexEntries().map(e => \`/\${e.slug}\`), [RANKED_TRAFFIC_CLASS]);`,

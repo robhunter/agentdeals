@@ -1,4 +1,5 @@
-import { describe, it, beforeEach, afterEach } from "node:test";
+import { describe, it, before, after, beforeEach, afterEach } from "node:test";
+import { spawn, type ChildProcess } from "node:child_process";
 import assert from "node:assert";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -173,6 +174,21 @@ describe("the homepage guide ranking and the class-route key cap (#1863)", () =>
     it("counts a day with no overflow even where a guide holds no key", () => {
       const quiet = dayWith("2026-09-21", { [agentKey(`/${CONTROL_SLUG}`)]: 4 });
       assert.deepEqual(rankableDays([quiet], POPULATION, AGENT_OPENS_WINDOW_DAYS), [quiet]);
+    });
+
+    it("counts a day that overflowed but kept a key for every guide, with nothing reserved", () => {
+      const map: Record<string, number> = { [agentKey(OVERFLOW_PAGE_KEY)]: 900 };
+      for (const guide of POPULATION) map[agentKey(`/${guide.slug}`)] = 3;
+      const day = dayWith("2026-09-21", map);
+      assert.equal(day.traffic.class_route_truncation, null);
+      assert.deepEqual(rankableDays([day], POPULATION, AGENT_OPENS_WINDOW_DAYS), [day]);
+
+      const withoutOne = { ...map };
+      delete withoutOne[agentKey(`/${POPULATION[1].slug}`)];
+      assert.deepEqual(
+        rankableDays([dayWith("2026-09-21", withoutOne)], POPULATION, AGENT_OPENS_WINDOW_DAYS),
+        [],
+      );
     });
 
     it("counts a day whose reserved paths cover the population even where a guide holds no key", () => {
@@ -455,6 +471,56 @@ describe("the homepage guide ranking and the class-route key cap (#1863)", () =>
       setReservedRouteKeys(["/Guides/LangChain", "/ok-path", "../escape"], [RANKED_TRAFFIC_CLASS]);
       assert.equal(normalizePagePath("/ok-path"), "/ok-path");
       assert.equal(normalizePagePath("/Guides/LangChain"), "__unmatched__");
+    });
+  });
+
+  describe("the server reserves the population it ranks", () => {
+    let proc: ChildProcess | undefined;
+    let history: any;
+    let guideCount = 0;
+
+    before(async () => {
+      const started = await new Promise<{ proc: ChildProcess; port: number }>((resolve, reject) => {
+        const child = spawn("node", [join(REPO, "dist", "serve.js")], {
+          stdio: ["pipe", "pipe", "pipe"],
+          env: { ...process.env, PORT: "0", BASE_URL: "http://localhost:3000" },
+        });
+        const timer = setTimeout(() => {
+          child.kill();
+          reject(new Error("Server startup timeout"));
+        }, 40000);
+        child.stderr!.on("data", (data: Buffer) => {
+          const m = data.toString().match(/running on http:\/\/localhost:(\d+)/);
+          if (m) {
+            clearTimeout(timer);
+            resolve({ proc: child, port: Number(m[1]) });
+          }
+        });
+        child.on("error", (err) => {
+          clearTimeout(timer);
+          reject(err);
+        });
+      });
+      proc = started.proc;
+      history = await (await fetch(`http://localhost:${started.port}/api/analytics/history`)).json();
+      const guides = await (await fetch(`http://localhost:${started.port}/guides`)).text();
+      guideCount = [...guides.matchAll(/<a href="\/([^"]+)" class="guide-card"/g)].length;
+    });
+
+    after(() => proc?.kill());
+
+    it("reserves a key for every guide it publishes, and only for the class it ranks", () => {
+      assert.ok(guideCount > 0, "/guides listed no guides, so this proves nothing");
+      assert.equal(history.class_route_keys.reserved_paths, guideCount);
+      assert.equal(history.class_route_keys.ranked_class, RANKED_TRAFFIC_CLASS);
+      assert.equal(history.class_route_keys.cap, MAX_CLASS_ROUTE_KEYS_PER_DAY);
+    });
+
+    it("publishes each held day's truncation beside the day it belongs to", () => {
+      assert.ok(Array.isArray(history.days) && history.days.length > 0, "no days published");
+      for (const day of history.days) {
+        assert.ok("class_route_truncation" in day, `${day.date} publishes no truncation field`);
+      }
     });
   });
 
