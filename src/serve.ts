@@ -31,7 +31,7 @@ import { dropEndedFromNameList, endedIndex, endedRowStatement, markEndedVendorRo
 import { amountUnstatedSentence, freePriceConfirmedSentence, freePriceOnlySentence, LAST_RESOLVED, levelWithheldReason, levelWithheldSince, recordPublishesAQuantity, withheldLevelClause, withheldLevelSentence, type LevelWithheldReason } from "./source-check.js";
 import { offerVerdictInput, reasonWeCannotConfirmTheTerms, vendorVerdictContextFrom, type VendorVerdictContext } from "./vendor-verdict-input.js";
 import { readingIsBehindTheLoop, reverificationIntervalDays } from "./badge-staleness.js";
-import { LAST_READ_LABEL, READ_CONTRADICTS_LABEL, RESTATED_DATE_LABEL, UNCONFIRMED_DATE_LABEL, VERIFICATION_DATES_HEADING, contradictedTermsSentence, lastReadDate, lastReadNote, publishedDateLabel, publishedDateValue, readThatContradictsOurTerms, restatedReadingDate, verificationDatesCell, verificationDatesSentence, type LastReading } from "./read-date.js";
+import { LAST_READ_LABEL, READ_CONTRADICTS_LABEL, RESTATED_DATE_LABEL, UNCONFIRMED_DATE_LABEL, VERIFICATION_DATES_HEADING, contradictedTermsSentence, lastReadDate, lastReadNote, publishedDateLabel, publishedDateValue, readThatContradictsOurTerms, restatedReadingDate, verificationDatesCell, verificationDatesSentence, whereOurTermsCameFrom, whereOurTermsCameFromClause, type LastReading } from "./read-date.js";
 import { SUPERSEDED_TERMS_LABEL, SUPERSEDED_TERMS_RULE, readingBehindTheChange, supersededTermsAnswer, supersededTermsMetaSentence, supersededTermsNotice, supersededTermsNoticeHtml, supersededTermsRecord, supersededTermsVerdictSentence, supersedingChange, type SupersededTermsRecord } from "./superseded-description.js";
 import { openingOfTerms, punctuated, punctuatedOpeningOfTerms } from "./terms-opening.js";
 import { NO_CURRENT_FIGURE, costHeadlineCaveat, limitCellText, mayRecommendAsFree, proseWithoutNames, readsActive, stackFreshnessStatement } from "./stack-claim.js";
@@ -1350,8 +1350,16 @@ function comparisonPageWithLiveRecords(
 
 const SOURCE_READ_DATE_CLASS = "cited-source-read";
 
-function freeTierSourceForVendor(vendorName: string, servedOn: string): FreeTierSource {
-  return freeTierSourceOf(vendorVerdictContext(vendorName, servedOn)?.primary);
+function termsCameFromClause(offer: Offer | null | undefined, source: FreeTierSource): string | null {
+  if (!source.cited || !offer) return null;
+  const provenance = whereOurTermsCameFrom(offer);
+  return provenance ? whereOurTermsCameFromClause(provenance, lastReadDate(offer)) : null;
+}
+
+function citedServiceFor(vendorName: string, slug: string | null, servedOn: string): CitedService {
+  const primary = vendorVerdictContext(vendorName, servedOn)?.primary;
+  const source = freeTierSourceOf(primary);
+  return { vendor: vendorName, slug, source, termsCameFrom: termsCameFromClause(primary, source) };
 }
 
 function vendorNamedBySlug(slug: string): string | undefined {
@@ -1380,7 +1388,7 @@ function citedServicesOn(html: string, servedOn: string): CitedService[] {
   const found = new Map<string, CitedService>();
   const add = (vendor: string, slug: string | null) => {
     if (!found.has(vendor)) {
-      found.set(vendor, { vendor, slug, source: freeTierSourceForVendor(vendor, servedOn) });
+      found.set(vendor, citedServiceFor(vendor, slug, servedOn));
     }
   };
   for (const subject of vendorSubjectsOnCompiledPage(html)) {
@@ -5134,7 +5142,10 @@ function buildVendorPage(slug: string): string | null {
       escHtmlServer,
       { dateClass: SOURCE_READ_DATE_CLASS },
     );
-    return `\n    <p class="free-tier-source-line" style="margin:.5rem 0 0;font-size:.8rem;color:var(--text-dim)">${read}. <span class="${CHECK_SCOPE_CLASS}">${escHtmlServer(CHECK_ESTABLISHES)}</span></p>`;
+    const scope = whereOurTermsCameFrom(primary)
+      ? ""
+      : ` <span class="${CHECK_SCOPE_CLASS}">${escHtmlServer(CHECK_ESTABLISHES)}</span>`;
+    return `\n    <p class="free-tier-source-line" style="margin:.5rem 0 0;font-size:.8rem;color:var(--text-dim)">${read}.${scope}</p>`;
   })();
 
   const alternativesMembership = partitionSubstitutes(

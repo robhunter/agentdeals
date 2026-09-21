@@ -9,12 +9,14 @@ import { fileURLToPath } from "node:url";
 const {
   CHECK_ESTABLISHES,
   CHECK_ESTABLISHES_ON_A_LIST,
+  CHECK_ESTABLISHES_ON_THE_REST_OF_A_LIST,
   CHECK_FINDING_LEAD,
   PAGE_QUOTE_CLASS,
   freeTierSourceOf,
   pageQuoteHtml,
   readClauseHtml,
 } = await import("../dist/source-citation.js");
+const { whereOurTermsCameFrom } = await import("../dist/read-date.js");
 const { NAMING_TOKENS_RECORDED_INSTEAD_OF_EVIDENCE, checkFinding } = await import("../dist/source-check.js");
 const { toSlug } = await import("../dist/vendor-slug.js");
 
@@ -164,6 +166,12 @@ const FREE_TIER_SOURCE_LINE = /<p class="free-tier-source-line"[\s\S]*?<\/p>/;
 
 const vendorRoutes = [...new Set(primaries.map(offer => `/vendor/${toSlug(offer.vendor)}`))];
 
+const primaryForRoute = new Map<string, Offer>();
+for (const offer of primaries) {
+  const route = `/vendor/${toSlug(offer.vendor)}`;
+  if (!primaryForRoute.has(route)) primaryForRoute.set(route, offer);
+}
+
 interface Swept {
   quotes: string[];
   sourceLine: string;
@@ -243,20 +251,25 @@ describe("nothing we serve attributes our own sentence to the page it cites", ()
     assert.deepStrictEqual(leaked.slice(0, 10), []);
   });
 
-  it("says on the page what a check establishes, wherever a citation sits beside the limits", () => {
+  it("says on the page what a check establishes, wherever the limits beside a citation are our own", () => {
     const missing: string[] = [];
     let stated = 0;
     for (const [route, page] of swept) {
       if (page.sourceLine === "") continue;
+      if (whereOurTermsCameFrom(primaryForRoute.get(route))) continue;
       if (page.sourceLine.includes(CHECK_ESTABLISHES)) stated++;
       else missing.push(route);
     }
     assert.deepStrictEqual(missing.slice(0, 10), []);
-    assertPopulationFloor(stated, 450, "vendor pages stating what their source check establishes");
+    assertPopulationFloor(stated, 150, "vendor pages stating what their source check establishes");
   });
 
   it("says the same of the list of sources on every compiled comparison page", () => {
-    const missing = COMPILED_PAGES.filter(page => !rendered.get(page)!.includes(CHECK_ESTABLISHES_ON_A_LIST));
+    const missing = COMPILED_PAGES.filter(page => {
+      const html = rendered.get(page)!;
+      return !html.includes(CHECK_ESTABLISHES_ON_A_LIST)
+        && !html.includes(CHECK_ESTABLISHES_ON_THE_REST_OF_A_LIST);
+    });
     assert.deepStrictEqual(missing, []);
   });
 
