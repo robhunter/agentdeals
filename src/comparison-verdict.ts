@@ -1,5 +1,5 @@
 import { withheldLevelSentence, type LevelWithheldReason } from "./source-check.js";
-import { refusedReadSentence, type RefusedRead } from "./change-refusal.js";
+import { refusedReadSentence, type RefusedReadWeHold } from "./change-refusal.js";
 
 export type StabilityRating = "stable" | "caution" | "risky";
 
@@ -9,7 +9,7 @@ export interface ComparisonSide {
   rating: StabilityRating | null;
   ratedOn?: string | null;
   ratingWithheldBecause: LevelWithheldReason | null;
-  refusedRead?: RefusedRead | null;
+  refusedRead?: RefusedReadWeHold | null;
   unconfirmableSince: string;
 }
 

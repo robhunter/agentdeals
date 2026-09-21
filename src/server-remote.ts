@@ -29,7 +29,7 @@ import { INCLUDE_INDEX_HOUSEKEEPING_ACCEPTS } from "./change-census.js";
 
 export const TRACK_CHANGES_LIMIT = 1000;
 import type { LinkUnreachable, ProductRole, ProductSubtypes, SourceCheck } from "./types.js";
-import type { RefusedRead } from "./change-refusal.js";
+import type { RefusedReadWeHold } from "./change-refusal.js";
 import { NOT_VERIFIED, theReadConfirmedThePrice, publishedTermsEvidence, termsTheVerdictWithholds, termsWithTheReasonWeCannotConfirmThem, unconfirmedTermsFrom } from "./vendor-verdict.js";
 import { reasonWeCannotConfirmTheTerms } from "./vendor-verdict-input.js";
 import { SINCE_DEFAULT_SENTENCE } from "./change-window.js";
@@ -676,7 +676,7 @@ Suggested monitoring cadence: run this check weekly to catch pricing changes ear
       mimeType: "text/plain",
     },
     async (_uri, { slug }) => {
-      const data = (await fetchOffers({ limit: 2000 })) as { offers: Array<{ vendor: string; category: string; tier: string; description: string; url: string; verifiedDate: string; last_read_date: string; tags: string[]; eligibility?: { type: string; conditions: string[] }; expires_date?: string; product_role?: ProductRole; product_subtypes?: ProductSubtypes; source_check?: SourceCheck | null; link_unreachable?: LinkUnreachable | null; refused_read?: RefusedRead | null; restated_from?: { reading_date: string } | null }>; total: number };
+      const data = (await fetchOffers({ limit: 2000 })) as { offers: Array<{ vendor: string; category: string; tier: string; description: string; url: string; verifiedDate: string; last_read_date: string; tags: string[]; eligibility?: { type: string; conditions: string[] }; expires_date?: string; product_role?: ProductRole; product_subtypes?: ProductSubtypes; source_check?: SourceCheck | null; link_unreachable?: LinkUnreachable | null; refused_read?: RefusedReadWeHold | null; restated_from?: { reading_date: string } | null }>; total: number };
       const match = data.offers.find(o => toSlug(o.vendor) === slug);
       if (!match) {
         return { contents: [{ uri: `agentdeals://vendor/${slug}`, text: `No vendor found matching "${slug}".`, mimeType: "text/plain" }] };

@@ -65,6 +65,7 @@ export function vendorVerdictContextFrom(evidence: VendorVerdictEvidence): Vendo
       sourceChecked: primary.source_check?.checked ?? null,
       linkCheckedOn: linkUnreachable?.checked ?? null,
       termsConfirmedOn: primary.verifiedDate,
+      lastReadOn: enriched.last_read_date,
       refusedReads,
       publishesAQuantity: recordPublishesAQuantity(primary.description),
       termsSuperseded: storedTermsAreSuperseded(primary, vendorChanges),

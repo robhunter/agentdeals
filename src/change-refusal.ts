@@ -72,6 +72,10 @@ export const REFUSAL_REASONS_THAT_LEAVE_THE_READ_STANDING = [
 
 export type RefusedRead = Pick<ChangeRefusal, "reason" | "refused_date">;
 
+export interface RefusedReadWeHold extends RefusedRead {
+  read_again_on: string | null;
+}
+
 export function refusalConfirmsTheStoredTerms(refusal: Pick<ChangeRefusal, "reason">): boolean {
   return CONFIRMING_REASONS.has(refusal.reason);
 }
@@ -147,28 +151,35 @@ function latestRead(refusals: readonly RefusedRead[]): RefusedRead | null {
   return held === null ? null : { reason: held.reason, refused_date: held.refused_date };
 }
 
+export function readAgainAfterTheRefusal(refusal: RefusedRead, lastReadOn: string): string | null {
+  return lastReadOn > refusal.refused_date ? lastReadOn : null;
+}
+
 export function refusedReadThatWithholds(
   refusals: readonly RefusedRead[],
   termsConfirmedOn: string,
-): RefusedRead | null {
-  return latestRead(
+  lastReadOn: string,
+): RefusedReadWeHold | null {
+  const held = latestRead(
     refusals.filter(
       r => !refusalConfirmsTheStoredTerms(r) && !refusalPredatesConfirmation(r, termsConfirmedOn),
     ),
   );
+  return held === null ? null : { ...held, read_again_on: readAgainAfterTheRefusal(held, lastReadOn) };
 }
 
 export interface StabilityEvidence {
   historyLevel: string | null;
   publishedChanges: number;
   termsConfirmedOn: string;
+  lastReadOn: string;
   refusals: readonly RefusedRead[];
 }
 
-export function refusedReadWithholdingStability(state: StabilityEvidence): RefusedRead | null {
+export function refusedReadWithholdingStability(state: StabilityEvidence): RefusedReadWeHold | null {
   if (state.historyLevel !== "stable") return null;
   if (state.publishedChanges > 0) return null;
-  return refusedReadThatWithholds(state.refusals, state.termsConfirmedOn);
+  return refusedReadThatWithholds(state.refusals, state.termsConfirmedOn, state.lastReadOn);
 }
 
 export function refusedReadTheConfirmationSupersedes(
@@ -240,21 +251,73 @@ export function measuredNoDifferenceSentence(subject: string, refusedOn: string)
     + ` and refusing a change is not a confirmation of the terms we publish for it.`;
 }
 
+export function unreconciledReadThenReadAgainClause(refusedOn: string, readOn: string): string {
+  return `when we read the page we cite for this offer on ${refusedOn},`
+    + ` we found a change we could not reconcile with the terms we publish,`
+    + ` and we have read it again since, on ${readOn}, without confirming them`;
+}
+
+export function unreconciledReadThenReadAgainSentence(
+  subject: string,
+  refusedOn: string,
+  readOn: string,
+): string {
+  return `When we read the page we cite for ${subject} on ${refusedOn},`
+    + ` we found a change we could not reconcile with the terms we publish for it,`
+    + ` and we have read it again since, on ${readOn}, without confirming them.`;
+}
+
+export function measuredNoDifferenceThenReadAgainClause(refusedOn: string, readOn: string): string {
+  return `when we read the page we cite for this offer on ${refusedOn},`
+    + ` we refused the change we considered recording because it named no figure that had moved,`
+    + ` and we have read it again since, on ${readOn}, without confirming the terms above`;
+}
+
+export function measuredNoDifferenceThenReadAgainSentence(
+  subject: string,
+  refusedOn: string,
+  readOn: string,
+): string {
+  return `When we read the page we cite for ${subject} on ${refusedOn},`
+    + ` we refused the change we considered recording because it named no figure that had moved,`
+    + ` and we have read it again since, on ${readOn}, without confirming the terms we publish for it.`;
+}
+
 export function unreconciledReadMetaClause(refusedOn: string): string {
   return `our last read, on ${refusedOn}, found a change we could not reconcile`;
+}
+
+export function unreconciledReadThenReadAgainMetaClause(refusedOn: string, readOn: string): string {
+  return `our read of ${refusedOn} found a change we could not reconcile,`
+    + ` and our read of ${readOn} did not confirm the terms`;
 }
 
 export function measuredNoDifferenceMetaClause(refusedOn: string): string {
   return `we refused the change we last considered recording, on ${refusedOn}`;
 }
 
-export function refusedReadClause(refusal: RefusedRead): string {
+export function measuredNoDifferenceThenReadAgainMetaClause(refusedOn: string, readOn: string): string {
+  return `we refused the change we considered recording on ${refusedOn},`
+    + ` and our read of ${readOn} did not confirm the terms`;
+}
+
+export function refusedReadClause(refusal: RefusedReadWeHold): string {
+  if (refusal.read_again_on) {
+    return refusalMeasuredNoDifference(refusal)
+      ? measuredNoDifferenceThenReadAgainClause(refusal.refused_date, refusal.read_again_on)
+      : unreconciledReadThenReadAgainClause(refusal.refused_date, refusal.read_again_on);
+  }
   return refusalMeasuredNoDifference(refusal)
     ? measuredNoDifferenceClause(refusal.refused_date)
     : unreconciledReadClause(refusal.refused_date);
 }
 
-export function refusedReadSentence(subject: string, refusal: RefusedRead): string {
+export function refusedReadSentence(subject: string, refusal: RefusedReadWeHold): string {
+  if (refusal.read_again_on) {
+    return refusalMeasuredNoDifference(refusal)
+      ? measuredNoDifferenceThenReadAgainSentence(subject, refusal.refused_date, refusal.read_again_on)
+      : unreconciledReadThenReadAgainSentence(subject, refusal.refused_date, refusal.read_again_on);
+  }
   return refusalMeasuredNoDifference(refusal)
     ? measuredNoDifferenceSentence(subject, refusal.refused_date)
     : unreconciledReadSentence(subject, refusal.refused_date);
