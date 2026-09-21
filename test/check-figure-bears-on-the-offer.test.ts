@@ -1,12 +1,14 @@
 import { describe, it } from "node:test";
 import assert from "node:assert";
-import { readFileSync } from "node:fs";
+import { readFileSync, readdirSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import {
+  A_CLAIM_ABOUT_WHAT_THE_PAGE_CONTAINS,
   MOST_FIGURES_REPORTED,
   SOURCE_CHECK_OK,
-  STATES_NO_FIGURE_WE_PUBLISH,
+  THE_NEGATION_NAMES_OUR_OWN_READING,
+  WE_MATCHED_NO_AMOUNT_TO_OUR_TERMS,
   classifySource,
   figuresWorthReporting,
   statesAnAmountOfZero,
@@ -16,6 +18,10 @@ import {
   detailWithoutFiguresWeDoNotPublish,
   reportedFigures,
 } from "../scripts/withdraw-figures-we-do-not-publish.js";
+import {
+  THE_CLAIM_THIS_RESTATES,
+  detailAttributedToOurReading,
+} from "../scripts/restate-fallback-as-our-own-reading.js";
 import { assertPopulationFloor, assertSharesPopulation, recordsInTheCatalogue } from "./population-floor.ts";
 
 type Offer = import("../src/types.ts").Offer;
@@ -44,7 +50,7 @@ describe("the figure a source check reports bears on the offer", () => {
     assert.doesNotMatch(check.detail, /\$29/);
   });
 
-  it("reports no figure at all where none of them is one we publish", () => {
+  it("reports no figure at all where we matched none of them to the terms we publish", () => {
     const check = checkOf(
       {
         vendor: "Hookline",
@@ -55,7 +61,24 @@ describe("the figure a source check reports bears on the offer", () => {
     );
     assert.strictEqual(check.outcome, SOURCE_CHECK_OK);
     assert.doesNotMatch(check.detail, /and states "/);
-    assert.ok(check.detail.endsWith(STATES_NO_FIGURE_WE_PUBLISH), check.detail);
+    assert.ok(check.detail.endsWith(WE_MATCHED_NO_AMOUNT_TO_OUR_TERMS), check.detail);
+  });
+
+  it("says what our reading matched and nothing about what the page holds beyond it", () => {
+    const offer = {
+      vendor: "Hookline",
+      url: "https://hookline.dev/pricing",
+      description: "Free plan includes 5 GB storage",
+    };
+    const reached = "Hookline pricing. Plans start at $49/mo for teams that need more.";
+    const whatWeRead = priceSignals(reached);
+    assert.ok(!whatWeRead.some(signal => /5\s?GB/i.test(signal)), whatWeRead.join(" · "));
+    const alsoOnThePage = `${reached} Every free workspace comes with 5 GB storage.`;
+    const check = classifySource(offer, { ok: true, text: alsoOnThePage }, whatWeRead);
+    assert.strictEqual(check.outcome, SOURCE_CHECK_OK);
+    assert.ok(check.detail.endsWith(WE_MATCHED_NO_AMOUNT_TO_OUR_TERMS), check.detail);
+    assert.doesNotMatch(check.detail, A_CLAIM_ABOUT_WHAT_THE_PAGE_CONTAINS);
+    assert.strictEqual(classifySource(offer, { ok: true, text: reached }, whatWeRead).detail, check.detail);
   });
 
   it("reports the numeric signal the check passed on rather than a tier name with no figure in it", () => {
@@ -239,6 +262,82 @@ describe("no record we publish reports a figure its own terms do not state", () 
     );
     assertPopulationFloor(reporting.length, 180, "records still reporting a figure the page states");
     assertPopulationFloor(amounts.length, 40, "records still reporting a figure that is not a stated zero");
+  });
+
+  it("reads the sentence this rule retires as a claim about the page, in any casing", () => {
+    for (const retired of [
+      "states amounts, none of which is a figure we publish",
+      "States amounts, none of which IS an amount we publish",
+      "states no amount we publish",
+      "states none of the figures we publish",
+      "does not state a price we publish",
+      "a sentence saying no amount on the page is a figure we publish",
+    ]) {
+      assert.match(retired, A_CLAIM_ABOUT_WHAT_THE_PAGE_CONTAINS, retired);
+    }
+    assert.doesNotMatch(WE_MATCHED_NO_AMOUNT_TO_OUR_TERMS, A_CLAIM_ABOUT_WHAT_THE_PAGE_CONTAINS);
+    assert.doesNotMatch('states "1,000 events/mo"', A_CLAIM_ABOUT_WHAT_THE_PAGE_CONTAINS);
+  });
+
+  it("attributes the fallback's negation to our own reading and not to the page", () => {
+    assert.match(WE_MATCHED_NO_AMOUNT_TO_OUR_TERMS, THE_NEGATION_NAMES_OUR_OWN_READING);
+    for (const overclaim of [
+      "states no amount we publish",
+      "states none of the figures we publish",
+      "states amounts, none of which is a figure we publish",
+    ]) {
+      assert.doesNotMatch(overclaim, THE_NEGATION_NAMES_OUR_OWN_READING, overclaim);
+    }
+  });
+
+  it("describes the field across every served module without claiming a figure of ours is absent from the page", () => {
+    const served = path.join(__dirname, "..", "src");
+    const modules = readdirSync(served).filter(name => name.endsWith(".ts"));
+    assertPopulationFloor(modules.length, 30, "modules the server is built from");
+    const claiming = modules.filter(name =>
+      A_CLAIM_ABOUT_WHAT_THE_PAGE_CONTAINS.test(readFileSync(path.join(served, name), "utf-8")),
+    );
+    assert.deepStrictEqual(claiming, []);
+  });
+
+  it("publishes no check sentence saying a figure of ours is absent from the page it read", () => {
+    const claiming = offers.filter(offer =>
+      A_CLAIM_ABOUT_WHAT_THE_PAGE_CONTAINS.test(offer.source_check?.detail ?? ""),
+    );
+    assert.deepStrictEqual(
+      claiming.map(offer => `${offer.vendor} — ${offer.source_check!.detail}`).slice(0, 10),
+      [],
+      `${claiming.length} of ${offers.length} records claim a figure of ours is not on the page`,
+    );
+  });
+
+  it("restates a stored claim about the page as a statement about our own reading", () => {
+    for (const named of [
+      'the page names Xata as "xata"',
+      'the page writes "swagger", the domain we cite SwaggerHub from',
+    ]) {
+      const stored = `${named} and ${THE_CLAIM_THIS_RESTATES}`;
+      const settled = detailAttributedToOurReading(stored);
+      assert.strictEqual(settled, `${named} and ${WE_MATCHED_NO_AMOUNT_TO_OUR_TERMS}`);
+      assert.doesNotMatch(settled, A_CLAIM_ABOUT_WHAT_THE_PAGE_CONTAINS);
+      assert.match(settled, THE_NEGATION_NAMES_OUR_OWN_READING);
+    }
+  });
+
+  it("restates a sentence once, and reading it again leaves it alone", () => {
+    const stored = `the page names Hanko as "hanko" and ${THE_CLAIM_THIS_RESTATES}`;
+    const once = detailAttributedToOurReading(stored);
+    assert.strictEqual(detailAttributedToOurReading(once), once);
+  });
+
+  it("leaves a stored sentence that reports a figure the page states", () => {
+    const withAFigure = 'the page names Render as "render" and states "5 GB included per month"';
+    assert.strictEqual(detailAttributedToOurReading(withAFigure), withAFigure);
+  });
+
+  it("leaves a sentence whose claim is not the clause it ends on", () => {
+    const notTheTail = `it ${THE_CLAIM_THIS_RESTATES}, read on 2026-09-21`;
+    assert.strictEqual(detailAttributedToOurReading(notTheTail), notTheTail);
   });
 
   it("leaves a record whose reported figure is one we publish exactly as it was", () => {
