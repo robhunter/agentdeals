@@ -404,7 +404,11 @@ function git(cwd: string, ...args: string[]): string {
   return run.stdout.trim();
 }
 
-function fixtureRepo(options: { shallow?: boolean; pageReviews?: boolean } = {}): { work: string; origin: string } {
+const LEDGER_ON_MAIN = `${JSON.stringify({ version: 1, generated: "2026-01-01", pages: {} }, null, 2)}\n`;
+
+const INDEX_ON_MAIN = `${JSON.stringify({ offers: [{ vendor: "Steadyvendor", tier: AS_MAIN_HAS_IT }] }, null, 2)}\n`;
+
+function fixtureRepo(options: { shallow?: boolean; pageReviews?: boolean; index?: boolean } = {}): { work: string; origin: string } {
   const root = mkdtempSync(join(scratch, "repo-"));
   const origin = join(root, "origin.git");
   const work = join(root, "work");
@@ -421,7 +425,10 @@ function fixtureRepo(options: { shallow?: boolean; pageReviews?: boolean } = {})
   writeFileSync(join(work, "data", "health.json"), '{"checked":1}\n');
   writeFileSync(join(work, "data", "deal_changes.json"), CHANGES_ON_MAIN);
   writeFileSync(join(work, "data", "quality_budgets.json"), BUDGETS_BEFORE);
-  writeFileSync(join(work, "data", "page-lastmod.json"), '{"version":1,"pages":{}}\n');
+  writeFileSync(join(work, "data", "page-lastmod.json"), LEDGER_ON_MAIN);
+  if (options.index) {
+    writeFileSync(join(work, "data", "index.json"), INDEX_ON_MAIN);
+  }
   if (options.pageReviews) {
     writeFileSync(join(work, "data", "page-reviews.json"), readFileSync(join(REPO, "data", "page-reviews.json"), "utf8"));
   }
@@ -1564,6 +1571,162 @@ describe("#1337 main moving under a run whose data the suite accepted", () => {
     assert.strictEqual(suiteRuns(run.stdout), 1);
     assert.strictEqual(quarantineRefs(origin, "data-quarantine/fixture").length, 1);
     assert.match(run.stdout, /more often than this run replays onto it/);
+  });
+});
+
+describe("#1589 a replay conflicting only in what this run derives is resolved, not held back", () => {
+  before(() => {
+    scratch = mkdtempSync(join(tmpdir(), "gate-replay-derived-"));
+  });
+
+  after(() => {
+    if (scratch && existsSync(scratch)) rmSync(scratch, { recursive: true, force: true });
+  });
+
+  const BUDGETS_ON_MAIN = `${JSON.stringify({ version: 1, budgets: { fixture_pages: 99 } }, null, 2)}\n`;
+
+  const WITH_THE_BUDGET = [
+    "data-quarantine/fixture",
+    "data(auto): fixture",
+    "data/health.json",
+    "data/quality_budgets.json",
+  ];
+
+  it("pushes the batch when the only conflict is a budget the derivation measures again", () => {
+    const { work, origin } = fixtureRepo();
+    writeFileSync(join(work, "data", "health.json"), '{"checked":31}\n');
+    commitToMainFromElsewhere(origin, "data/quality_budgets.json", BUDGETS_ON_MAIN);
+
+    const run = runGate(work, { mode: "green", ratchet: "lower" }, ...WITH_THE_BUDGET);
+
+    assert.strictEqual(run.status, 0, `the gate held a batch whose only conflict it overwrites: ${run.stdout}${run.stderr}`);
+    assert.deepStrictEqual(quarantineRefs(origin, "data-quarantine/fixture"), []);
+    assert.strictEqual(
+      git(origin, "show", "main:data/health.json"),
+      '{"checked":31}',
+      "the reading this run made did not reach main",
+    );
+    assert.strictEqual(
+      git(origin, "show", "main:data/quality_budgets.json"),
+      BUDGETS_AFTER.trim(),
+      "what reached main is a budget neither side measured against the tree it shipped with",
+    );
+    assert.strictEqual(suiteRuns(run.stdout), 2, "the suite did not read the tree the replay produced");
+  });
+
+  it("says in the log which files it resolved by regenerating rather than by merging", () => {
+    const { work, origin } = fixtureRepo();
+    writeFileSync(join(work, "data", "health.json"), '{"checked":32}\n');
+    commitToMainFromElsewhere(origin, "data/quality_budgets.json", BUDGETS_ON_MAIN);
+
+    const run = runGate(work, { mode: "green", ratchet: "lower" }, ...WITH_THE_BUDGET);
+
+    assert.strictEqual(run.status, 0, `${run.stdout}${run.stderr}`);
+    const said = run.stdout.split("\n").filter((line) => /Replayed over a conflict in/.test(line));
+    assert.strictEqual(said.length, 1, `a reader of this run cannot tell it from a clean replay: ${run.stdout}`);
+    assert.match(said[0]!, /data\/quality_budgets\.json/, `the line names no file: ${said[0]}`);
+  });
+
+  it("holds the batch when the conflict is in a reading this run made, and names that file", () => {
+    const { work, origin } = fixtureRepo({ index: true });
+    writeFileSync(join(work, "data", "health.json"), '{"checked":33}\n');
+    writeFileSync(join(work, "data", "index.json"), '{"offers":[{"vendor":"Steadyvendor","tier":"what this run read"}]}\n');
+    commitToMainFromElsewhere(origin, "data/index.json", '{"offers":[{"vendor":"Steadyvendor","tier":"what another job read"}]}\n');
+    const before = mainSha(origin);
+
+    const run = runGate(
+      work,
+      { mode: "green", ratchet: "lower" },
+      "data-quarantine/fixture",
+      "data(auto): fixture",
+      "data/health.json",
+      "data/index.json",
+      "data/quality_budgets.json",
+    );
+
+    assert.strictEqual(run.status, 1, `the gate merged away a disagreement about what a page said: ${run.stdout}${run.stderr}`);
+    assert.strictEqual(mainSha(origin), before, "main moved on a batch that conflicts in a reading");
+    assert.strictEqual(quarantineRefs(origin, "data-quarantine/fixture").length, 1);
+    assert.match(run.stdout, /does not replay onto it/);
+    assert.match(run.stdout, /data\/index\.json/, "the refusal does not name the file that held the batch");
+    assert.match(run.outputs, /quarantine_reason=.*data\/index\.json/);
+  });
+
+  it("holds the batch when the conflicted file is one this run was not asked to regenerate", () => {
+    const { work, origin } = fixtureRepo();
+    writeFileSync(join(work, "data", "page-lastmod.json"), '{"version":1,"generated":"2026-02-02","pages":{}}\n');
+    commitToMainFromElsewhere(origin, "data/page-lastmod.json", '{"version":1,"generated":"2026-03-03","pages":{}}\n');
+    const before = mainSha(origin);
+
+    const run = runGate(
+      work,
+      "green",
+      "data-quarantine/fixture",
+      "data(auto): fixture",
+      "data/page-lastmod.json",
+    );
+
+    assert.strictEqual(
+      run.status,
+      1,
+      `the gate discarded a conflict in a file nothing downstream rewrites: ${run.stdout}${run.stderr}`,
+    );
+    assert.strictEqual(mainSha(origin), before);
+    assert.strictEqual(quarantineRefs(origin, "data-quarantine/fixture").length, 1);
+    assert.match(run.stdout, /data\/page-lastmod\.json/);
+  });
+
+  it("keeps this run's commit when taking main's copy leaves it with nothing of its own", () => {
+    const { work, origin } = fixtureRepo();
+    writeFileSync(join(work, "data", "quality_budgets.json"), `${JSON.stringify({ version: 1, budgets: { fixture_pages: 70 } }, null, 2)}\n`);
+    commitToMainFromElsewhere(origin, "data/quality_budgets.json", BUDGETS_ON_MAIN);
+    const sibling = mainSha(origin);
+
+    const run = runGate(
+      work,
+      { mode: "green", ratchet: "lower" },
+      "data-quarantine/fixture",
+      "data(auto): fixture",
+      "data/quality_budgets.json",
+    );
+
+    assert.strictEqual(run.status, 0, `${run.stdout}${run.stderr}`);
+    assert.strictEqual(
+      git(origin, "rev-list", "--count", `${sibling}..main`),
+      "1",
+      "the replay dropped this run's commit and the derivation then amended someone else's",
+    );
+    assert.strictEqual(
+      git(origin, "log", "-1", "--format=%s", "main"),
+      "data(auto): fixture",
+      "what reached main carries another job's commit message, so this run rewrote a commit that was not its own",
+    );
+    assert.strictEqual(git(origin, "show", "main:data/quality_budgets.json"), BUDGETS_AFTER.trim());
+  });
+
+  it("pushes the rotation's own case — a conflict in the page ledger, on a run that rebuilds it", () => {
+    const { work, origin } = fixtureRepo();
+    writeFileSync(join(work, "data", "health.json"), '{"checked":34}\n');
+    commitToMainFromElsewhere(origin, "data/page-lastmod.json", '{"version":1,"generated":"2026-04-04","pages":{}}\n');
+
+    const run = runGate(
+      work,
+      { mode: "green", lastmod: true },
+      "data-quarantine/fixture",
+      "data(auto): fixture",
+      "data/health.json",
+      "data/page-lastmod.json",
+    );
+
+    assert.strictEqual(run.status, 0, `the rotation's own refusal still holds the batch: ${run.stdout}${run.stderr}`);
+    assert.deepStrictEqual(quarantineRefs(origin, "data-quarantine/fixture"), []);
+    assert.strictEqual(git(origin, "show", "main:data/health.json"), '{"checked":34}');
+    const ledger = JSON.parse(git(origin, "show", "main:data/page-lastmod.json"));
+    assert.ok(
+      Object.keys(ledger.pages).length > 100,
+      `what reached main is not a ledger either side derived, it holds ${Object.keys(ledger.pages).length} pages`,
+    );
+    assert.match(run.stdout, /Replayed over a conflict in data\/page-lastmod\.json/);
   });
 });
 
