@@ -43,6 +43,27 @@ function withoutScripts(html: string): string {
   return html.replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, "");
 }
 
+interface StatedSelection {
+  named: number;
+  population: number;
+  ranked: boolean;
+}
+
+function statedSelection(section: string): StatedSelection | null {
+  const ranked = section.match(/The (\d+) of (\d+) guides AI agents opened most/);
+  if (ranked) return { named: Number(ranked[1]), population: Number(ranked[2]), ranked: true };
+  const all = section.match(/All (\d+) guides we publish, in the order \/guides lists them/);
+  if (all) return { named: Number(all[1]), population: Number(all[1]), ranked: false };
+  return null;
+}
+
+function statedRankedWindow(section: string): { days: number; from: string; to: string } | null {
+  const stated = section.match(
+    /across the (\d+) days we can attribute in full, (\d{4}-\d{2}-\d{2}) to (\d{4}-\d{2}-\d{2})/,
+  );
+  return stated ? { days: Number(stated[1]), from: stated[2], to: stated[3] } : null;
+}
+
 function hrefsIn(html: string): string[] {
   return [...html.matchAll(/href="(\/[^"]*)"/g)].map((m) => m[1]);
 }
@@ -155,20 +176,35 @@ describe("the home page routes a reader to an answer in one hop", () => {
 
   it("names as many guides as the section says it does", () => {
     const named = guidePathsOn(home);
-    const stated = sectionOf(home, "answers").match(/The (\d+) of (\d+) guides/);
+    const stated = statedSelection(sectionOf(home, "answers"));
     assert.ok(stated, "the guide section does not state how many of how many it names");
-    assert.strictEqual(named.length, Number(stated[1]), "the guide section names a different number than it states");
-    assert.strictEqual(named.length, HOMEPAGE_GUIDE_COUNT, "the guide section named a different number than it selects");
+    assert.strictEqual(named.length, stated.named, "the guide section names a different number than it states");
+    assert.strictEqual(
+      named.length,
+      stated.ranked ? HOMEPAGE_GUIDE_COUNT : stated.population,
+      "the guide section named a different number than it selects",
+    );
   });
 
-  it("states the window of traffic its ranking was taken over", () => {
+  it("states the window of traffic its ranking was taken over, or that it has none to rank on", () => {
     const section = sectionOf(home, "answers");
-    const stated = section.match(/across the (\d+) days of traffic we hold, (\d{4}-\d{2}-\d{2}) to (\d{4}-\d{2}-\d{2})/);
-    assert.ok(stated, "the guide section does not say which traffic it ranked over");
-    const days = Number(stated[1]);
-    assert.ok(days > 0, "the guide section says it ranked over no traffic at all");
-    assert.ok(days <= AGENT_OPENS_WINDOW_DAYS, `the guide section claims ${days} days where the ranking reads at most ${AGENT_OPENS_WINDOW_DAYS}`);
-    assert.ok(stated[2] <= stated[3], "the stated window ends before it begins");
+    const stated = statedSelection(section);
+    assert.ok(stated, "the guide section does not say what it is naming");
+    const window = statedRankedWindow(section);
+
+    if (!stated.ranked) {
+      assert.equal(window, null, "the section disclaims a ranking and states a ranked window anyway");
+      assert.doesNotMatch(section, /opened most/, "the section disclaims a ranking and claims one anyway");
+      return;
+    }
+
+    assert.ok(window, "the guide section does not say which traffic it ranked over");
+    assert.ok(window.days > 0, "the guide section says it ranked over no traffic at all");
+    assert.ok(
+      window.days <= AGENT_OPENS_WINDOW_DAYS,
+      `the guide section claims ${window.days} days where the ranking reads at most ${AGENT_OPENS_WINDOW_DAYS}`,
+    );
+    assert.ok(window.from <= window.to, "the stated window ends before it begins");
   });
 
   it("links a guide for every group of /guides it draws one from", () => {
@@ -235,10 +271,37 @@ describe("the guide list on the home page follows the traffic it says it does", 
   });
 
   it("states the window it was given rather than the one it ships with", () => {
-    const stated = sectionOf(html, "answers").match(/across the (\d+) days of traffic we hold, (\d{4}-\d{2}-\d{2}) to (\d{4}-\d{2}-\d{2})/);
+    const section = sectionOf(html, "answers");
+    const stated = statedRankedWindow(section);
     assert.ok(stated, "the guide section does not state a window");
-    assert.strictEqual(Number(stated[1]), 2, "the guide section counted days it was not given");
-    assert.deepStrictEqual([stated[2], stated[3]], ["2026-01-01", "2026-01-02"], "the guide section states a window it did not read");
+    assert.strictEqual(stated.days, 2, "the guide section counted days it was not given");
+    assert.deepStrictEqual([stated.from, stated.to], ["2026-01-01", "2026-01-02"], "the guide section states a window it did not read");
+    assert.match(section, /Membership is that ranking and nothing else/);
+  });
+
+  it("states the share that reached no page once the window carries requests it could not attribute", async () => {
+    const withOverflow = mkdtempSync(path.join(tmpdir(), "homepage-guide-overflow-"));
+    try {
+      assert.ok(published.length > 0, "the guide population is empty, so this proves nothing");
+      writeFileSync(path.join(withOverflow, "2026-01-01.json"), JSON.stringify({
+        date: "2026-01-01",
+        traffic: {
+          by_class_route: { "ai_agent|/free-django-stack": 900, "ai_agent|__other_pages__": 100 },
+          class_route_truncation: { reserved_paths: published.map((slug) => `/${slug}`) },
+        },
+      }));
+      const other = await startServer({ AGENTDEALS_ROLLUP_DIR: withOverflow });
+      try {
+        const page = await (await fetch(`http://localhost:${other.port}/`)).text();
+        const section = sectionOf(page, "answers");
+        assert.doesNotMatch(section, /and nothing else/, "the page claimed completeness over a window it could not attribute in full");
+        assert.match(section, /100 of 1,?000 agent requests in those days \(10\.0%\) went to a shared bucket/);
+      } finally {
+        other.proc.kill();
+      }
+    } finally {
+      rmSync(withOverflow, { recursive: true, force: true });
+    }
   });
 });
 

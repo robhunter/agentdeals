@@ -1,6 +1,6 @@
 import { readFileSync, writeFileSync, readdirSync, mkdirSync, existsSync } from "node:fs";
 import { join } from "node:path";
-import type { RollupDaySource, DurableRollupCoverage } from "./stats.js";
+import type { RollupDaySource, DurableRollupCoverage, ClassRouteTruncation } from "./stats.js";
 
 export const ROLLUP_SCHEMA_VERSION = 1;
 export const ROLLUP_DIR = "data/analytics";
@@ -40,6 +40,7 @@ export interface RollupTraffic {
   ai_agent_families: Record<string, number>;
   not_found_by_class: Record<string, number>;
   redirects_by_class: Record<string, number>;
+  class_route_truncation: ClassRouteTruncation | null;
 }
 
 export interface DailyRollup {
@@ -93,6 +94,7 @@ export function buildDailyRollup(source: RollupDaySource, generatedAt: string): 
       ai_agent_families: sortedNumericMap(Object.entries(source.families)),
       not_found_by_class: sortedNumericMap(Object.entries(source.not_found)),
       redirects_by_class: sortedNumericMap(Object.entries(source.redirects)),
+      class_route_truncation: source.class_route_truncation,
     },
     mcp_tool_calls: source.mcp_tool_calls,
     referrers: sortedNumericMap(Object.entries(source.referrers)),
@@ -114,6 +116,22 @@ function numericMap(raw: unknown): Record<string, number> {
 function numberAt(raw: Record<string, unknown>, key: string): number {
   const value = raw[key];
   return typeof value === "number" && Number.isFinite(value) ? value : 0;
+}
+
+function parseClassRouteTruncation(raw: unknown): ClassRouteTruncation | null {
+  if (!raw || typeof raw !== "object") return null;
+  const obj = raw as Record<string, unknown>;
+  const reserved = Array.isArray(obj.reserved_paths)
+    ? obj.reserved_paths.filter((p): p is string => typeof p === "string")
+    : [];
+  return {
+    key_cap: numberAt(obj, "key_cap"),
+    keys_kept: numberAt(obj, "keys_kept"),
+    keys_discarded: numberAt(obj, "keys_discarded"),
+    keys_discarded_is_exact: obj.keys_discarded_is_exact === true,
+    requests_discarded: numberAt(obj, "requests_discarded"),
+    reserved_paths: reserved,
+  };
 }
 
 export function parseRollup(raw: unknown): DailyRollup | null {
@@ -142,6 +160,7 @@ export function parseRollup(raw: unknown): DailyRollup | null {
       ai_agent_families: numericMap(traffic.ai_agent_families),
       not_found_by_class: numericMap(traffic.not_found_by_class),
       redirects_by_class: numericMap(traffic.redirects_by_class),
+      class_route_truncation: parseClassRouteTruncation(traffic.class_route_truncation),
     },
     mcp_tool_calls: numberAt(obj, "mcp_tool_calls"),
     referrers: numericMap(obj.referrers),
