@@ -97,6 +97,19 @@ describe("the figure a source check reports bears on the offer", () => {
     assert.match(check.detail, /and states "\$0"/);
   });
 
+  it("reports the first price of zero the page states, not the last", () => {
+    const check = checkOf(
+      {
+        vendor: "Hookline",
+        url: "https://hookline.dev/pricing",
+        description: "Free plan includes 5 GB storage",
+      },
+      "Hookline pricing. Free is $0 a month. Enterprise is priced on application, with $ 0.00 up front.",
+    );
+    assert.match(check.detail, /and states "\$0"/);
+    assert.doesNotMatch(check.detail, /0\.00/);
+  });
+
   it("holds the reported figures to a sentence rather than a list of every match", () => {
     const ours = "Free plan includes 1 project, 2 seats, 3 builds, 4 monitors, 5 checks and 6 alerts";
     const page = "Free: 1 project / mo, 2 seats / mo, 3 builds / mo, 4 monitors / mo, 5 checks / mo, 6 alerts / mo.";
