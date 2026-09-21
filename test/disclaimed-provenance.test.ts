@@ -220,13 +220,13 @@ describe("a page never disclaims provenance our records hold", () => {
     let dated = 0;
     let ours = 0;
     for (const [route, html] of compiled) {
-      const entries = [...html.matchAll(CITED_ENTRY)]
-        .map(m => ({ slug: m[1]!, body: m[2]! }))
-        .filter(entry => entry.body.includes(`class="${RECORD_SOURCE_CLASS}"`));
+      const entries = [...html.matchAll(CITED_ENTRY)].map(m => ({ slug: m[1]!, body: m[2]! }));
       assert.ok(entries.length > 0, route);
       const datedHere = entries.filter(e => {
         const offer = primaryForSlug.get(e.slug);
-        return offer !== undefined && storesDateOurTermsToARead(offer);
+        return offer !== undefined
+          && e.body.includes(`class="${RECORD_SOURCE_CLASS}"`)
+          && storesDateOurTermsToARead(offer);
       });
       const oursHere = entries.filter(e => !datedHere.includes(e));
       dated += datedHere.length;
@@ -246,7 +246,7 @@ describe("a page never disclaims provenance our records hold", () => {
     assert.deepStrictEqual(wrongNote.slice(0, 10), []);
     assert.deepStrictEqual(wrongEntry.slice(0, 10), []);
     assertPopulationFloor(dated, 90, "cited services a list dates to a read of the vendor's page");
-    assertPopulationFloor(ours, 60, "cited services whose figures a list leaves as our own");
+    assertPopulationFloor(ours, 70, "cited services whose figures a list leaves as our own");
   });
 
   it("names the reading a restated entry was taken from, not the read that followed it", () => {
