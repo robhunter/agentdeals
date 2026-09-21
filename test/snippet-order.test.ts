@@ -1,6 +1,6 @@
 import { describe, it } from "node:test";
 import assert from "node:assert";
-import { appendedAfter, statesBoth } from "./snippet-order.ts";
+import { appendedAfter, statesBoth, vendorsNamedAsUncontradicted } from "./snippet-order.ts";
 
 const { NOTHING_CONTRADICTS_OUR_TERMS_FOR } = await import("../dist/data.js");
 
@@ -51,5 +51,35 @@ describe("a search snippet states its qualification ahead of the vendor list", (
     assert.strictEqual(appendedAfter("a b", "b", "a"), true);
     assert.strictEqual(appendedAfter("a b", "a", "b"), false);
     assert.strictEqual(appendedAfter("a b", "a", "a"), false);
+  });
+});
+
+describe("the vendors a description names as uncontradicted", () => {
+  it("reads every name where one of them carries a dot", () => {
+    assert.deepStrictEqual(
+      vendorsNamedAsUncontradicted(`${OPENING} ${QUALIFICATION} ${VENDOR_LIST}`),
+      ["Render", "Fly.io", "Railway"],
+    );
+  });
+
+  it("reads the names ahead of a truncated tail and not the tail", () => {
+    const description = `${OPENING} ${NOTHING_CONTRADICTS_OUR_TERMS_FOR} Cal.com, Trigger.dev, cdnjs.com and more.`;
+    assert.deepStrictEqual(vendorsNamedAsUncontradicted(description), ["Cal.com", "Trigger.dev", "cdnjs.com"]);
+  });
+
+  it("reads a list of one", () => {
+    const description = `${OPENING} ${NOTHING_CONTRADICTS_OUR_TERMS_FOR} Proton VPN.`;
+    assert.deepStrictEqual(vendorsNamedAsUncontradicted(description), ["Proton VPN"]);
+  });
+
+  it("names nobody where the description carries no vendor list", () => {
+    assert.deepStrictEqual(vendorsNamedAsUncontradicted(`${OPENING} ${QUALIFICATION} ${UNCONFIRMED}`), []);
+  });
+
+  it("refuses to read a list that something else follows", () => {
+    assert.throws(
+      () => vendorsNamedAsUncontradicted(`${OPENING} ${VENDOR_LIST} ${QUALIFICATION}`),
+      /runs to the end of the description/,
+    );
   });
 });
