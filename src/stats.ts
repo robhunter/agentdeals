@@ -1051,6 +1051,10 @@ export function reservedRoutePathsInForce(): string[] {
   return [...reservedRoutePaths].sort();
 }
 
+export function reservedRouteClassesInForce(): string[] {
+  return [...reservedRouteClasses].sort();
+}
+
 export function reservedRoutePathsCovering(date: string, reservedFrom: string): string[] {
   if (!reservedFrom || date <= reservedFrom) return [];
   return reservedRoutePathsInForce();

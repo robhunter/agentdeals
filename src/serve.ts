@@ -17,7 +17,7 @@ import { agentBlock, DEFERENCE, signalExampleSlug, signalHeaderValue, signalHtml
 import { BASE_URL } from "./base-url.js";
 import { RATED_LEVELS, isRated, gradeForStack } from "./stack-grade.js";
 import { provenanceBlock } from "./provenance.js";
-import { recordApiHit, recordSessionConnect, recordSessionDisconnect, recordLandingPageView, getStats, getConnectionStats, loadTelemetry, flushTelemetry, flushPending, FLUSH_INTERVAL_SECONDS, logRequest, getPublicRequestLogResult, getTelemetryHealth, recordPageView, getPageViews, recordReferralListingCall, recordReferralVendorLookup, getReferralMarketplaceStats, getSessionClassification, recordSearchQuery, getSearchAnalytics, getApiHitsByEndpoint, recordTraffic, getTrafficReport, getSignalReport, publicSignalReport, getRollupDaySource, getRollupDatesAvailable, setDurableRollupCoverage, setReservedRouteKeys, reservedRoutePathsInForce, MAX_CLASS_ROUTE_KEYS_PER_DAY, redisJsonGet, redisJsonMget, redisJsonSet, redisJsonSetWithoutExpiry, useRedis } from "./stats.js";
+import { recordApiHit, recordSessionConnect, recordSessionDisconnect, recordLandingPageView, getStats, getConnectionStats, loadTelemetry, flushTelemetry, flushPending, FLUSH_INTERVAL_SECONDS, logRequest, getPublicRequestLogResult, getTelemetryHealth, recordPageView, getPageViews, recordReferralListingCall, recordReferralVendorLookup, getReferralMarketplaceStats, getSessionClassification, recordSearchQuery, getSearchAnalytics, getApiHitsByEndpoint, recordTraffic, getTrafficReport, getSignalReport, publicSignalReport, getRollupDaySource, getRollupDatesAvailable, setDurableRollupCoverage, setReservedRouteKeys, reservedRoutePathsInForce, reservedRouteClassesInForce, MAX_CLASS_ROUTE_KEYS_PER_DAY, redisJsonGet, redisJsonMget, redisJsonSet, redisJsonSetWithoutExpiry, useRedis } from "./stats.js";
 import { buildDailyRollup, readRollups, coverageOf, ROLLUP_DATE_PATTERN } from "./analytics-rollup.js";
 import { AGENT_OPENS_WINDOW_DAYS, HOMEPAGE_GUIDE_COUNT, RANKED_TRAFFIC_CLASS, agentOpensByPath, agentOpensWindow, agentRequestAttribution, browseSectionSentence, guideSelectionSentence, guidesGroupedByHeading, guidesHomepageLinks, rankableDays } from "./homepage-routing.js";
 import { configureVendorSeries, recordVendorRequest, flushVendorSeries, readVendorSeries, vendorSeriesGauge, vendorExportAuthorized, isSeriesDate, seriesDateRange, VENDOR_SERIES_PATH, VENDOR_SERIES_RETENTION_DAYS, VENDOR_SERIES_NOTES } from "./vendor-series.js";
@@ -517,7 +517,7 @@ function durableHistoryBody(): string {
     coverage: durableRollupCoverage,
     class_route_keys: {
       cap: MAX_CLASS_ROUTE_KEYS_PER_DAY,
-      ranked_class: RANKED_TRAFFIC_CLASS,
+      reserved_classes: reservedRouteClassesInForce(),
       reserved_paths: reservedRoutePathsInForce().length,
     },
     days: durableRollups.map(r => ({

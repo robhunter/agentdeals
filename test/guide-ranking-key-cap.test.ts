@@ -512,7 +512,7 @@ describe("the homepage guide ranking and the class-route key cap (#1863)", () =>
     it("reserves a key for every guide it publishes, and only for the class it ranks", () => {
       assert.ok(guideCount > 0, "/guides listed no guides, so this proves nothing");
       assert.equal(history.class_route_keys.reserved_paths, guideCount);
-      assert.equal(history.class_route_keys.ranked_class, RANKED_TRAFFIC_CLASS);
+      assert.deepEqual(history.class_route_keys.reserved_classes, [RANKED_TRAFFIC_CLASS]);
       assert.equal(history.class_route_keys.cap, MAX_CLASS_ROUTE_KEYS_PER_DAY);
     });
 

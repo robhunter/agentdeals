@@ -59,7 +59,7 @@ const MUTANTS = [
 
   ["every-day-in-the-window-is-ranked", "src/homepage-routing.ts",
     `): DailyRollup[] {\n  return mostRecentDays(rollups, days).filter((day) => {`,
-    `): DailyRollup[] {\n  if (guides) return mostRecentDays(rollups, days);\n  return mostRecentDays(rollups, days).filter((day) => {`],
+    `): DailyRollup[] {\n  if (days > 0) return mostRecentDays(rollups, days);\n  return mostRecentDays(rollups, days).filter((day) => {`],
 
   ["one-measured-guide-makes-a-day-rankable", "src/homepage-routing.ts",
     `    return guides.every((guide) => {`,
