@@ -1030,10 +1030,37 @@ export interface TrafficClassification {
 }
 
 const CLASS_DAY_RETENTION = 30;
-const MAX_CLASS_ROUTE_KEYS_PER_DAY = 200;
+export const MAX_CLASS_ROUTE_KEYS_PER_DAY = 200;
+const MAX_DISCARDED_CLASS_ROUTE_KEYS_PER_DAY = 200;
 const MAX_FAMILY_KEYS_PER_DAY = 40;
 export const CLASS_ROUTE_SEP = "|";
+export const DISCARDED_KEY_OVERFLOW = "__more_keys__";
 const UNKNOWN_FAMILY_KEY = "unknown";
+
+const RESERVED_ROUTE_PATH = /^\/[a-z0-9][a-z0-9._\-/]{0,127}$/;
+
+let reservedRoutePaths: ReadonlySet<string> = new Set<string>();
+let reservedRouteClasses: ReadonlySet<string> = new Set<string>();
+
+export function setReservedRouteKeys(paths: readonly string[], classes: readonly string[]): void {
+  reservedRoutePaths = new Set(paths.filter((p) => RESERVED_ROUTE_PATH.test(p)));
+  reservedRouteClasses = new Set(classes);
+}
+
+export function reservedRoutePathsInForce(): string[] {
+  return [...reservedRoutePaths].sort();
+}
+
+export function reservedRoutePathsCovering(date: string, reservedFrom: string): string[] {
+  if (!reservedFrom || date <= reservedFrom) return [];
+  return reservedRoutePathsInForce();
+}
+
+export function isReservedClassRouteKey(key: string): boolean {
+  const sep = key.indexOf(CLASS_ROUTE_SEP);
+  if (sep < 0) return false;
+  return reservedRouteClasses.has(key.slice(0, sep)) && reservedRoutePaths.has(key.slice(sep + 1));
+}
 
 const SESSION_DAY_RETENTION = 90;
 export const MAX_SESSION_CLIENT_KEYS_PER_DAY = 120;
@@ -1066,6 +1093,7 @@ interface PageViewSnapshot {
   updated_at: string;
   classes: Record<string, Record<string, number>>;
   class_routes: Record<string, Record<string, number>>;
+  class_route_discards: Record<string, Record<string, number>>;
   families: Record<string, Record<string, number>>;
   mcp: Record<string, number>;
   sessions: Record<string, number>;
@@ -1080,6 +1108,7 @@ interface PageViewSnapshot {
   signals_from: string;
   all_time_trustworthy_from: string;
   outcome_split_from: string;
+  reserved_routes_from: string;
 }
 
 function emptySnapshot(): PageViewSnapshot {
@@ -1090,6 +1119,7 @@ function emptySnapshot(): PageViewSnapshot {
     updated_at: "",
     classes: {},
     class_routes: {},
+    class_route_discards: {},
     families: {},
     mcp: {},
     sessions: {},
@@ -1104,6 +1134,7 @@ function emptySnapshot(): PageViewSnapshot {
     sessions_from: "",
     all_time_trustworthy_from: "",
     outcome_split_from: "",
+    reserved_routes_from: "",
   };
 }
 
@@ -1142,7 +1173,7 @@ function bumpBounded(
   cap: number,
   overflowKey: string,
   known?: Record<string, number>,
-): void {
+): string {
   if (key !== overflowKey && !(key in map) && !(known && key in known)) {
     const size = known
       ? new Set([...Object.keys(map), ...Object.keys(known)]).size
@@ -1150,6 +1181,47 @@ function bumpBounded(
     if (size >= cap) key = overflowKey;
   }
   bump(map, key, delta);
+  return key;
+}
+
+function cappedClassRouteKeyCount(
+  map: Record<string, number>,
+  known?: Record<string, number>,
+): number {
+  const keys = known ? new Set([...Object.keys(map), ...Object.keys(known)]) : Object.keys(map);
+  let n = 0;
+  for (const key of keys) if (!isReservedClassRouteKey(key)) n++;
+  return n;
+}
+
+function bumpClassRoute(
+  target: Record<string, number>,
+  discards: Record<string, number>,
+  key: string,
+  delta: number,
+  knownTarget?: Record<string, number>,
+  knownDiscards?: Record<string, number>,
+): void {
+  if (isReservedClassRouteKey(key)) {
+    bump(target, key, delta);
+    return;
+  }
+  let used = key;
+  if (!(key in target) && !(knownTarget && key in knownTarget)) {
+    if (cappedClassRouteKeyCount(target, knownTarget) >= MAX_CLASS_ROUTE_KEYS_PER_DAY) {
+      used = classRouteOverflowKey(key);
+    }
+  }
+  bump(target, used, delta);
+  if (used === key) return;
+  bumpBounded(
+    discards,
+    key,
+    delta,
+    MAX_DISCARDED_CLASS_ROUTE_KEYS_PER_DAY,
+    DISCARDED_KEY_OVERFLOW,
+    knownDiscards,
+  );
 }
 
 function countPendingPageViewKeys(): number {
@@ -1158,6 +1230,7 @@ function countPendingPageViewKeys(): number {
   for (const day of Object.values(pendingPageViews.referrers)) n += Object.keys(day).length;
   for (const day of Object.values(pendingPageViews.classes)) n += Object.keys(day).length;
   for (const day of Object.values(pendingPageViews.class_routes)) n += Object.keys(day).length;
+  for (const day of Object.values(pendingPageViews.class_route_discards)) n += Object.keys(day).length;
   for (const day of Object.values(pendingPageViews.families)) n += Object.keys(day).length;
   for (const day of Object.values(pendingPageViews.not_found)) n += Object.keys(day).length;
   for (const day of Object.values(pendingPageViews.redirects)) n += Object.keys(day).length;
@@ -1181,6 +1254,7 @@ function mergeSnapshot(base: PageViewSnapshot, delta: PageViewSnapshot): PageVie
     updated_at: base.updated_at,
     classes: {},
     class_routes: {},
+    class_route_discards: {},
     families: {},
     mcp: { ...base.mcp },
     sessions: { ...base.sessions },
@@ -1195,11 +1269,13 @@ function mergeSnapshot(base: PageViewSnapshot, delta: PageViewSnapshot): PageVie
     sessions_from: base.sessions_from || delta.sessions_from,
     all_time_trustworthy_from: base.all_time_trustworthy_from || delta.all_time_trustworthy_from,
     outcome_split_from: base.outcome_split_from || delta.outcome_split_from,
+    reserved_routes_from: base.reserved_routes_from || delta.reserved_routes_from,
   };
   for (const [date, map] of Object.entries(base.days)) out.days[date] = { ...map };
   for (const [date, map] of Object.entries(base.referrers)) out.referrers[date] = { ...map };
   for (const [date, map] of Object.entries(base.classes)) out.classes[date] = { ...map };
   for (const [date, map] of Object.entries(base.class_routes)) out.class_routes[date] = { ...map };
+  for (const [date, map] of Object.entries(base.class_route_discards)) out.class_route_discards[date] = { ...map };
   for (const [date, map] of Object.entries(base.families)) out.families[date] = { ...map };
   for (const [date, map] of Object.entries(base.session_clients)) out.session_clients[date] = { ...map };
   for (const [date, map] of Object.entries(base.not_found)) out.not_found[date] = { ...map };
@@ -1245,8 +1321,15 @@ function mergeSnapshot(base: PageViewSnapshot, delta: PageViewSnapshot): PageVie
   }
   for (const [date, map] of Object.entries(delta.class_routes)) {
     const target = (out.class_routes[date] ??= {});
+    const discards = (out.class_route_discards[date] ??= {});
     for (const [key, count] of Object.entries(map)) {
-      bumpBounded(target, key, count, MAX_CLASS_ROUTE_KEYS_PER_DAY, classRouteOverflowKey(key));
+      bumpClassRoute(target, discards, key, count);
+    }
+  }
+  for (const [date, map] of Object.entries(delta.class_route_discards)) {
+    const target = (out.class_route_discards[date] ??= {});
+    for (const [key, count] of Object.entries(map)) {
+      bumpBounded(target, key, count, MAX_DISCARDED_CLASS_ROUTE_KEYS_PER_DAY, DISCARDED_KEY_OVERFLOW);
     }
   }
   for (const [date, map] of Object.entries(delta.families)) {
@@ -1272,7 +1355,7 @@ function classRouteOverflowKey(key: string): string {
 }
 
 function pruneSnapshot(snapshot: PageViewSnapshot): void {
-  for (const field of ["days", "referrers", "class_routes", "families"] as const) {
+  for (const field of ["days", "referrers", "class_routes", "class_route_discards", "families"] as const) {
     const dates = Object.keys(snapshot[field]).sort().reverse();
     for (const date of dates.slice(PAGE_VIEW_DAY_RETENTION)) delete snapshot[field][date];
   }
@@ -1323,6 +1406,7 @@ function adoptSnapshot(snapshot: PageViewSnapshot): PageViewSnapshot {
   const today = new Date().toISOString().slice(0, 10);
   if (!snapshot.all_time_trustworthy_from) snapshot.all_time_trustworthy_from = today;
   if (!snapshot.outcome_split_from) snapshot.outcome_split_from = today;
+  if (!snapshot.reserved_routes_from) snapshot.reserved_routes_from = today;
   return snapshot;
 }
 
@@ -1352,6 +1436,7 @@ function normalizeSnapshot(raw: unknown): PageViewSnapshot {
   snapshot.updated_at = typeof obj.updated_at === "string" ? obj.updated_at : "";
   snapshot.classes = numericMapOfMaps(obj.classes);
   snapshot.class_routes = numericMapOfMaps(obj.class_routes);
+  snapshot.class_route_discards = numericMapOfMaps(obj.class_route_discards);
   snapshot.families = numericMapOfMaps(obj.families);
   snapshot.mcp = numericMap(obj.mcp);
   snapshot.sessions = numericMap(obj.sessions);
@@ -1368,6 +1453,8 @@ function normalizeSnapshot(raw: unknown): PageViewSnapshot {
     typeof obj.all_time_trustworthy_from === "string" ? obj.all_time_trustworthy_from : "";
   snapshot.outcome_split_from =
     typeof obj.outcome_split_from === "string" ? obj.outcome_split_from : "";
+  snapshot.reserved_routes_from =
+    typeof obj.reserved_routes_from === "string" ? obj.reserved_routes_from : "";
   return snapshot;
 }
 
@@ -1516,6 +1603,7 @@ export function normalizePagePath(path: string): string {
   if (typeof path !== "string" || path.length === 0) return UNMATCHED_PAGE_KEY;
   const clean = path.split("?")[0].split("#")[0];
   if (clean === "/") return "/";
+  if (reservedRoutePaths.has(clean)) return clean;
   for (const prefix of DYNAMIC_PAGE_PREFIXES) {
     if (clean.startsWith(prefix)) return `${prefix}:slug`;
   }
@@ -1565,13 +1653,13 @@ export function recordTraffic(
   const route = normalizeRoutePath(path);
 
   bump((pendingPageViews.classes[today] ??= {}), client_class, 1);
-  bumpBounded(
+  bumpClassRoute(
     (pendingPageViews.class_routes[today] ??= {}),
+    (pendingPageViews.class_route_discards[today] ??= {}),
     `${client_class}${CLASS_ROUTE_SEP}${route}`,
     1,
-    MAX_CLASS_ROUTE_KEYS_PER_DAY,
-    `${client_class}${CLASS_ROUTE_SEP}${OVERFLOW_PAGE_KEY}`,
     pageViewSnapshot.class_routes[today],
+    pageViewSnapshot.class_route_discards[today],
   );
   if (client_class === "ai_agent") {
     bumpBounded(
@@ -2606,12 +2694,22 @@ export interface RollupDayPageViews {
   by_route: Record<string, number>;
 }
 
+export interface ClassRouteTruncation {
+  key_cap: number;
+  keys_kept: number;
+  keys_discarded: number;
+  keys_discarded_is_exact: boolean;
+  requests_discarded: number;
+  reserved_paths: string[];
+}
+
 export interface RollupDaySource {
   date: string;
   page_views: RollupDayPageViews;
   referrers: Record<string, number>;
   classes: Record<string, number>;
   class_routes: Record<string, number>;
+  class_route_truncation: ClassRouteTruncation;
   families: Record<string, number>;
   mcp_tool_calls: number;
   not_found: Record<string, number>;
@@ -2619,6 +2717,33 @@ export interface RollupDaySource {
   signals: RollupSignalFacets;
   available: boolean;
   reason: string | null;
+}
+
+export function summarizeClassRouteTruncation(
+  classRoutes: Record<string, number>,
+  discards: Record<string, number>,
+  reservedPaths: readonly string[],
+): ClassRouteTruncation {
+  let keysKept = 0;
+  for (const key of Object.keys(classRoutes)) {
+    if (key.slice(key.indexOf(CLASS_ROUTE_SEP) + 1) !== OVERFLOW_PAGE_KEY) keysKept++;
+  }
+  let keysDiscarded = 0;
+  let requestsDiscarded = 0;
+  let exact = true;
+  for (const [key, count] of Object.entries(discards)) {
+    requestsDiscarded += count;
+    if (key === DISCARDED_KEY_OVERFLOW) exact = false;
+    else keysDiscarded++;
+  }
+  return {
+    key_cap: MAX_CLASS_ROUTE_KEYS_PER_DAY,
+    keys_kept: keysKept,
+    keys_discarded: keysDiscarded,
+    keys_discarded_is_exact: exact,
+    requests_discarded: requestsDiscarded,
+    reserved_paths: [...reservedPaths].sort(),
+  };
 }
 
 function emptySignalFacets(): RollupSignalFacets {
@@ -2684,6 +2809,7 @@ export function getRollupDaySource(date: string): RollupDaySource {
     referrers: {},
     classes: {},
     class_routes: {},
+    class_route_truncation: summarizeClassRouteTruncation({}, {}, []),
     families: {},
     mcp_tool_calls: 0,
     not_found: {},
@@ -2705,6 +2831,11 @@ export function getRollupDaySource(date: string): RollupDaySource {
     referrers: { ...(view.referrers[date] ?? {}) },
     classes: { ...(view.classes[date] ?? {}) },
     class_routes: { ...(view.class_routes[date] ?? {}) },
+    class_route_truncation: summarizeClassRouteTruncation(
+      view.class_routes[date] ?? {},
+      view.class_route_discards[date] ?? {},
+      reservedRoutePathsCovering(date, view.reserved_routes_from),
+    ),
     families: { ...(view.families[date] ?? {}) },
     mcp_tool_calls: view.mcp[date] ?? 0,
     not_found: { ...(view.not_found[date] ?? {}) },
@@ -2719,7 +2850,7 @@ export function getRollupDatesAvailable(): string[] {
   if (!useRedis() || !pageViewsLoaded) return [];
   const view = mergeSnapshot(pageViewSnapshot, pendingPageViews);
   const dates = new Set<string>();
-  for (const field of ["days", "referrers", "classes", "class_routes", "families", "not_found", "redirects", "signals"] as const) {
+  for (const field of ["days", "referrers", "classes", "class_routes", "class_route_discards", "families", "not_found", "redirects", "signals"] as const) {
     for (const date of Object.keys(view[field])) dates.add(date);
   }
   for (const date of Object.keys(view.mcp)) dates.add(date);
