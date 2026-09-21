@@ -47,6 +47,7 @@ const WITHHELD_LABELS: Record<string, string> = {
   verification_lapsed: "unrated — not re-confirmed",
   read_not_reconciled: "unrated — change not reconciled",
   change_measured_no_difference: "unrated — change refused",
+  read_had_no_standing: "unrated — change not established",
 };
 
 const WITHHELD_LABEL_SET = new Set(Object.values(WITHHELD_LABELS));

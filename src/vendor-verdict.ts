@@ -28,26 +28,20 @@ import { vendorHistorySentence, type PublishedRiskLevel } from "./vendor-history
 import {
   confirmingRead,
   confirmingReadClause,
-  measuredNoDifferenceClause,
-  measuredNoDifferenceMetaClause,
-  measuredNoDifferenceSentence,
-  measuredNoDifferenceThenReadAgainClause,
-  measuredNoDifferenceThenReadAgainMetaClause,
-  measuredNoDifferenceThenReadAgainSentence,
-  refusalMeasuredNoDifference,
+  howARefusedReadReads,
   refusedReadClause,
+  refusedReadClauseAs,
+  refusedReadMetaClauseAs,
+  refusedReadSentenceAs,
   refusedReadTheConfirmationSupersedes,
   refusedReadWithholdingStability,
   supersededRefusalClause,
-  unreconciledReadClause,
-  unreconciledReadMetaClause,
-  unreconciledReadSentence,
-  unreconciledReadThenReadAgainClause,
-  unreconciledReadThenReadAgainMetaClause,
-  unreconciledReadThenReadAgainSentence,
   MEASURED_NO_DIFFERENCE_BADGE_LABEL,
+  READ_HAD_NO_STANDING_BADGE_LABEL,
   UNRECONCILED_READ_BADGE_LABEL,
   type RefusedRead,
+  type RefusedReadAs,
+  type RefusedReadRegister,
   type RefusedReadWeHold,
 } from "./change-refusal.js";
 
@@ -98,22 +92,35 @@ export interface VendorVerdictInput {
   termsReadFrom?: string | null;
 }
 
+export type RefusedReadWithholdingTag =
+  | "read_not_reconciled"
+  | "change_measured_no_difference"
+  | "read_had_no_standing";
+
+export const REFUSED_READ_WITHHOLDING_TAG: Record<RefusedReadRegister, RefusedReadWithholdingTag> = {
+  could_not_reconcile_the_change: "read_not_reconciled",
+  named_no_figure_that_moved: "change_measured_no_difference",
+  had_no_standing_to_contradict: "read_had_no_standing",
+};
+
+export interface RefusedReadWithholding extends RefusedReadAs {
+  reason: RefusedReadWithholdingTag;
+}
+
 export type BadgeWithholding =
   | { reason: "gated"; gate: GateCode }
   | { reason: "no_source" }
-  | { reason: "read_not_reconciled"; refusedOn: string; readAgainOn: string | null }
-  | { reason: "change_measured_no_difference"; refusedOn: string; readAgainOn: string | null }
+  | RefusedReadWithholding
   | { reason: LevelWithheldReason };
 
 export type Withholding = BadgeWithholding | { reason: TermsOnlyOutcome };
 
-export type RefusedReadWithholding = Extract<
-  BadgeWithholding,
-  { reason: "read_not_reconciled" | "change_measured_no_difference" }
->;
+const TAGS_A_REFUSED_READ_WITHHOLDS_UNDER = new Set<string>(
+  Object.values(REFUSED_READ_WITHHOLDING_TAG),
+);
 
 export function withheldForARefusedRead(because: Withholding): because is RefusedReadWithholding {
-  return because.reason === "read_not_reconciled" || because.reason === "change_measured_no_difference";
+  return TAGS_A_REFUSED_READ_WITHHOLDS_UNDER.has(because.reason);
 }
 
 export type BadgeWithholdingTag = Exclude<BadgeWithholding["reason"], "gated"> | GateCode;
@@ -138,6 +145,7 @@ export const WITHHOLDING_SCOPE = {
   states_a_free_price: "the_terms",
   read_not_reconciled: "the_terms",
   change_measured_no_difference: "the_terms",
+  read_had_no_standing: "the_terms",
   no_source: "the_rating",
   eligibility_restricted: "the_rating",
   not_a_free_offer: "the_rating",
@@ -166,6 +174,7 @@ export const WITHHOLDING_BADGE_LABELS: Record<BadgeWithholdingTag, string> = {
   does_not_name_product: "unrated — page omits product",
   read_not_reconciled: UNRECONCILED_READ_BADGE_LABEL,
   change_measured_no_difference: MEASURED_NO_DIFFERENCE_BADGE_LABEL,
+  read_had_no_standing: READ_HAD_NO_STANDING_BADGE_LABEL,
   eligibility_restricted: "unrated — restricted offer",
   not_a_free_offer: "unrated — not a free offer",
   offer_expired: "unrated — offer expired",
@@ -182,50 +191,20 @@ export function refusedReadWithholdingSentence(
   subject: string,
   because: RefusedReadWithholding,
 ): string {
-  if (because.readAgainOn) {
-    return because.reason === "change_measured_no_difference"
-      ? measuredNoDifferenceThenReadAgainSentence(subject, because.refusedOn, because.readAgainOn)
-      : unreconciledReadThenReadAgainSentence(subject, because.refusedOn, because.readAgainOn);
-  }
-  return because.reason === "change_measured_no_difference"
-    ? measuredNoDifferenceSentence(subject, because.refusedOn)
-    : unreconciledReadSentence(subject, because.refusedOn);
+  return refusedReadSentenceAs(subject, because);
 }
 
 export function refusedReadWithholdingClause(because: RefusedReadWithholding): string {
-  if (because.readAgainOn) {
-    return because.reason === "change_measured_no_difference"
-      ? measuredNoDifferenceThenReadAgainClause(because.refusedOn, because.readAgainOn)
-      : unreconciledReadThenReadAgainClause(because.refusedOn, because.readAgainOn);
-  }
-  return because.reason === "change_measured_no_difference"
-    ? measuredNoDifferenceClause(because.refusedOn)
-    : unreconciledReadClause(because.refusedOn);
+  return refusedReadClauseAs(because);
 }
 
 export function refusedReadWithholdingMetaClause(because: RefusedReadWithholding): string {
-  if (because.readAgainOn) {
-    return because.reason === "change_measured_no_difference"
-      ? measuredNoDifferenceThenReadAgainMetaClause(because.refusedOn, because.readAgainOn)
-      : unreconciledReadThenReadAgainMetaClause(because.refusedOn, because.readAgainOn);
-  }
-  return because.reason === "change_measured_no_difference"
-    ? measuredNoDifferenceMetaClause(because.refusedOn)
-    : unreconciledReadMetaClause(because.refusedOn);
+  return refusedReadMetaClauseAs(because);
 }
 
 export function refusedReadWithholding(refusal: RefusedReadWeHold): RefusedReadWithholding {
-  return refusalMeasuredNoDifference(refusal)
-    ? {
-      reason: "change_measured_no_difference",
-      refusedOn: refusal.refused_date,
-      readAgainOn: refusal.read_again_on,
-    }
-    : {
-      reason: "read_not_reconciled",
-      refusedOn: refusal.refused_date,
-      readAgainOn: refusal.read_again_on,
-    };
+  const read = howARefusedReadReads(refusal);
+  return { reason: REFUSED_READ_WITHHOLDING_TAG[read.register], ...read };
 }
 
 export type VendorBadge =
@@ -327,6 +306,7 @@ export const WHAT_THE_READ_LEFT_STANDING = {
   states_a_free_price: "the_free_plan",
   read_not_reconciled: "nothing",
   change_measured_no_difference: "nothing",
+  read_had_no_standing: "nothing",
 } as const satisfies Record<TermsWithholdingTag, WhatTheReadLeftStanding>;
 
 type ReadNothingTag = {
@@ -348,6 +328,7 @@ export const WHERE_THE_DOUBT_SITS = {
   states_a_free_price: "the_read_confirmed_the_price",
   read_not_reconciled: "our_read_did_not_confirm",
   change_measured_no_difference: "our_read_did_not_confirm",
+  read_had_no_standing: "our_read_did_not_confirm",
 } as const satisfies Record<TermsWithholdingTag, WhereTheDoubtSits>;
 
 export function whereTheDoubtSits(unconfirmed: UnconfirmedTerms): WhereTheDoubtSits {
@@ -400,6 +381,7 @@ export const TERMS_WITHHELD_LABELS: Record<TermsWithholdingTag, string> = {
   states_a_free_price: "page states a free price",
   read_not_reconciled: "read not reconciled",
   change_measured_no_difference: "no difference measured",
+  read_had_no_standing: "change not established",
 };
 
 export function termsWithheldLabel(unconfirmed: UnconfirmedTerms): string {
@@ -556,6 +538,7 @@ const EMPTY_HISTORY_TAIL: Record<ReadNothingTag, string> = {
   does_not_name_product: "so nothing we have read describes these terms",
   read_not_reconciled: "so we cannot tell you that nothing changed",
   change_measured_no_difference: "so we cannot tell you that nothing changed",
+  read_had_no_standing: "so we cannot tell you that nothing changed",
 };
 
 export function emptyHistoryCaveatSentence(subject: string, unconfirmed: TermsNoReadDescribes): string {

@@ -8,7 +8,7 @@ import { fileURLToPath } from "node:url";
 import { assertCoversPopulation, assertSharesPopulation, recordsInTheCatalogue, vendorsInTheCatalogue, type Population } from "./population-floor.ts";
 import { GATE_REASONS, REJECT_MEASURES_NO_CHANGE, REJECT_NULL_COMPARISON, REJECT_RESTATES_STORED_QUANTITIES, REJECT_STATES_NO_DIFFERENCE } from "../scripts/change-gate.js";
 import { SUPPRESSED_SAME_TRANSITION_REGRADED } from "../scripts/change-log.js";
-import { refusalsByVendor, refusedReadTheConfirmationSupersedes, refusedReadWithholdingStability, supersededRefusalSentence, REFUSAL_REASONS_THAT_CONFIRM_THE_STORED_TERMS, REFUSAL_REASONS_THAT_MEASURED_NO_DIFFERENCE, MEASURED_NO_DIFFERENCE_BADGE_LABEL, UNRECONCILED_READ_BADGE_LABEL } from "../dist/change-refusal.js";
+import { refusalsByVendor, refusedReadRegister, refusedReadTheConfirmationSupersedes, refusedReadWithholdingStability, supersededRefusalSentence, REFUSAL_REASONS_THAT_CONFIRM_THE_STORED_TERMS, REFUSAL_REASONS_THAT_MEASURED_NO_DIFFERENCE, REFUSED_READ_REGISTERS, MEASURED_NO_DIFFERENCE_BADGE_LABEL, READ_HAD_NO_STANDING_BADGE_LABEL, UNRECONCILED_READ_BADGE_LABEL, WHAT_A_VOIDED_READ_FOUND } from "../dist/change-refusal.js";
 import { checkVendorRisk, enrichOffers, loadChangeRefusals, loadDealChanges, loadOffers, publishedChangeCount, publishedRisk } from "../dist/data.js";
 import { resetVerificationStateCache } from "../dist/verification-state.js";
 import { LEVEL_WITHHOLDING_OUTCOMES } from "../dist/source-check.js";
@@ -66,7 +66,33 @@ const CLAUSE_READ_AGAIN_SINCE =
 const COULD_NOT_RECONCILE = /we found a change we could not reconcile with the terms we publish/;
 const NAMED_NO_FIGURE_THAT_MOVED =
   /we refused the change we considered recording because it named no figure that had moved/;
-const WITHHELD_FOR_A_REFUSAL = new RegExp(`${COULD_NOT_RECONCILE.source}|${NAMED_NO_FIGURE_THAT_MOVED.source}`);
+
+const asPattern = (literal: string): string => literal.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+const hadNoStandingFor = (reason: string): RegExp =>
+  new RegExp(`we ${asPattern(WHAT_A_VOIDED_READ_FOUND[reason])}`);
+
+const HAD_NO_STANDING = new RegExp(
+  [...new Set(Object.values(WHAT_A_VOIDED_READ_FOUND) as string[])]
+    .map(found => `we ${asPattern(found)}`)
+    .join("|"),
+);
+
+const REGISTER_WORDING: Record<string, RegExp> = {
+  could_not_reconcile_the_change: COULD_NOT_RECONCILE,
+  named_no_figure_that_moved: NAMED_NO_FIGURE_THAT_MOVED,
+  had_no_standing_to_contradict: HAD_NO_STANDING,
+};
+
+const REGISTER_BADGE: Record<string, string> = {
+  could_not_reconcile_the_change: UNRECONCILED_READ_BADGE_LABEL,
+  named_no_figure_that_moved: MEASURED_NO_DIFFERENCE_BADGE_LABEL,
+  had_no_standing_to_contradict: READ_HAD_NO_STANDING_BADGE_LABEL,
+};
+
+const WITHHELD_FOR_A_REFUSAL = new RegExp(
+  Object.values(REGISTER_WORDING).map(pattern => pattern.source).join("|"),
+);
 
 interface OfferRead {
   vendor: string;
@@ -87,6 +113,7 @@ interface Subject {
   confirmedOn: string;
   supersededRefusal: { reason: string; refused_date: string } | null;
   unreconciled: boolean;
+  register: string | null;
   measuredNoDifference: boolean;
   onlyTheRefusal: boolean;
   otherwiseWithheld: boolean;
@@ -98,13 +125,20 @@ interface Subject {
 }
 
 const reasonWePublish = (subject: Subject): RegExp =>
-  subject.measuredNoDifference ? NAMED_NO_FIGURE_THAT_MOVED : COULD_NOT_RECONCILE;
+  subject.register === "had_no_standing_to_contradict"
+    ? hadNoStandingFor(subject.refusedRead!.reason)
+    : REGISTER_WORDING[subject.register ?? "could_not_reconcile_the_change"];
 
 const reasonWeMustNotPublish = (subject: Subject): RegExp =>
-  subject.measuredNoDifference ? COULD_NOT_RECONCILE : NAMED_NO_FIGURE_THAT_MOVED;
+  new RegExp(
+    Object.entries(REGISTER_WORDING)
+      .filter(([register]) => register !== subject.register)
+      .map(([, pattern]) => pattern.source)
+      .join("|"),
+  );
 
 const badgeWeExpect = (subject: Subject): string =>
-  subject.measuredNoDifference ? MEASURED_NO_DIFFERENCE_BADGE_LABEL : UNRECONCILED_READ_BADGE_LABEL;
+  REGISTER_BADGE[subject.register ?? "could_not_reconcile_the_change"];
 
 let subjects: Subject[] = [];
 
@@ -207,6 +241,7 @@ before(async () => {
         )
         : null,
       unreconciled,
+      register: refusedRead === null ? null : refusedReadRegister(refusedRead),
       measuredNoDifference: refusedRead !== null && MEASURED_NO_DIFFERENCE.has(refusedRead.reason),
       onlyTheRefusal: unreconciled && !otherwiseWithheld,
       otherwiseWithheld,
@@ -683,10 +718,13 @@ describe("a page states the reason we withheld, not a reason its own refusal con
       if (!reasonWePublish(subject).test(page)) crossed.push(`/vendor/${subject.slug} states neither reason`);
     }
     assert.deepStrictEqual(crossed.slice(0, 20), [], `pages naming the wrong family of refusal:\n${crossed.slice(0, 20).join("\n")}`);
-    assert.ok(
-      subjects.some(s => s.onlyTheRefusal && s.measuredNoDifference)
-      && subjects.some(s => s.onlyTheRefusal && !s.measuredNoDifference),
-      "one of the two families is empty, so this control compares nothing",
+    const unrepresented = REFUSED_READ_REGISTERS.filter(
+      (register: string) => !subjects.some(s => s.onlyTheRefusal && s.register === register),
+    );
+    assert.deepStrictEqual(
+      unrepresented,
+      [],
+      `no vendor withholds on these registers alone, so this control compares nothing for them: ${unrepresented.join(", ")}`,
     );
   });
 
@@ -735,7 +773,9 @@ describe("a page states the reason we withheld, not a reason its own refusal con
   });
 
   it("leaves a vendor whose refused read we could not reconcile withheld and unrated", () => {
-    const unreconciled = subjects.filter(s => s.onlyTheRefusal && !s.measuredNoDifference);
+    const unreconciled = subjects.filter(
+      s => s.onlyTheRefusal && s.register === "could_not_reconcile_the_change",
+    );
     assert.ok(
       unreconciled.length > 0,
       "no vendor withholds on a read we could not reconcile alone, so the reading this asserts is untested",
@@ -770,9 +810,10 @@ describe("a page states the reason we withheld, not a reason its own refusal con
   });
 
   it("names no single family of refusal on a page that counts both", async () => {
-    const bothFamilies = subjects.some(s => s.onlyTheRefusal && s.measuredNoDifference)
-      && subjects.some(s => s.onlyTheRefusal && !s.measuredNoDifference);
-    assert.ok(bothFamilies, "the withheld population holds one family only, so a page naming it is not yet wrong");
+    const familiesHeld = REFUSED_READ_REGISTERS.filter(
+      (register: string) => subjects.some(s => s.onlyTheRefusal && s.register === register),
+    ).length;
+    assert.ok(familiesHeld > 1, "the withheld population holds one family only, so a page naming it is not yet wrong");
     const narrow: string[] = [];
     for (const route of ["/state-of-free-tiers", "/criteria"]) {
       const page = await (await fetch(`http://localhost:${serverPort}${route}`)).text();
@@ -796,10 +837,9 @@ describe("a page states the reason we withheld, not a reason its own refusal con
   });
 
   it("gives an agent the same reason on either transport", async () => {
-    const oneOfEach = [
-      subjects.find(s => s.onlyTheRefusal && s.measuredNoDifference),
-      subjects.find(s => s.onlyTheRefusal && !s.measuredNoDifference),
-    ];
+    const oneOfEach = REFUSED_READ_REGISTERS.map(
+      (register: string) => subjects.find(s => s.onlyTheRefusal && s.register === register),
+    );
     for (const subject of oneOfEach) {
       assert.ok(subject, "a family of refused read has no vendor to read over MCP");
       const line = stabilityLineOf(await readResourceOverHttp(`agentdeals://vendor/${subject.slug}`));

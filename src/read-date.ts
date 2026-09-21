@@ -1,4 +1,6 @@
-import { howWeSettledTheRead, type ReadSettlement, type RefusedRead, type SettledRead, type VoidingRefusalReason } from "./change-refusal.js";
+import { howWeSettledTheRead, READ_NO_TERMS_FROM_THE_PAGE, WHAT_A_VOIDED_READ_FOUND, type ReadSettlement, type RefusedRead, type SettledRead, type VoidingRefusalReason } from "./change-refusal.js";
+
+export { WHAT_A_VOIDED_READ_FOUND };
 import { storedRefusalsFor } from "./refusal-store.js";
 import { loadVerificationState } from "./verification-state.js";
 
@@ -161,7 +163,7 @@ export function verificationDatesSentence(offer: DatedRecord | null | undefined)
 
 export const WHAT_THE_LAST_READ_FOUND: Record<string, string> = {
   changed: "found the page different from the terms we hold",
-  states_no_price: "could read no amount, tier or rate on the page",
+  states_no_price: READ_NO_TERMS_FROM_THE_PAGE,
   link_ok: "reached the page without reading terms from it",
 };
 
@@ -175,16 +177,6 @@ export const WHAT_A_SETTLED_READ_FOUND: Record<SettlementStatedTheSameWayForEver
     "found a change we then refused to record, because it restated the terms we already publish",
   named_no_figure_that_moved:
     "found a change we then refused to record, because it named no figure that had moved",
-};
-
-export const WHAT_A_VOIDED_READ_FOUND: Record<VoidingRefusalReason, string> = {
-  states_no_terms: WHAT_THE_LAST_READ_FOUND.states_no_price,
-  no_price_signal: WHAT_THE_LAST_READ_FOUND.states_no_price,
-  removal_read_from_root: "reached a domain root that states nothing about the terms we hold",
-  no_removal_evidence: "found the page did not mention this offer, which is not evidence it ended",
-  no_terms_to_narrow: "found no earlier figure of ours for the page to have narrowed",
-  no_baseline: "found no earlier figure of ours for the page to have narrowed",
-  states_no_narrowing: "found the free tier still standing and no term that had moved",
 };
 
 export function whatASettledReadFound(settled: SettledRead): string {
