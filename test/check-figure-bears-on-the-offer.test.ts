@@ -106,8 +106,85 @@ describe("the figure a source check reports bears on the offer", () => {
   });
 
   it("does not read a currency amount as the allowance that carries the same number", () => {
-    assert.deepStrictEqual(figuresWeAlsoPublish(["$5"], "Free plan includes 5 GB storage"), []);
+    assert.deepStrictEqual(figuresWeAlsoPublish(["$1,000"], "Free plan includes 1,000 events/mo"), []);
+    assert.deepStrictEqual(
+      figuresWeAlsoPublish(["1,000 events/mo"], "Free plan includes 1,000 events/mo"),
+      ["1,000 events/mo"],
+    );
+  });
+
+  it("does not read a figure of a different size as the one we publish", () => {
+    assert.deepStrictEqual(figuresWeAlsoPublish(["2,000 events/mo"], "Free plan includes 1,000 events/mo"), []);
     assert.deepStrictEqual(figuresWeAlsoPublish(["5 GB / mo"], "Free plan includes 5 GB storage"), ["5 GB / mo"]);
+  });
+
+  it("prefers the allowance we publish over a price of zero the page also states", () => {
+    const check = checkOf(
+      {
+        vendor: "Hookline",
+        url: "https://hookline.dev/pricing",
+        description: "Free plan includes 1M events / month",
+      },
+      "Hookline pricing. Free $0 to start. The free plan includes 1M events / month.",
+    );
+    assert.match(check.detail, /and states "1M events \/ month"/);
+    assert.doesNotMatch(check.detail, /\$0/);
+  });
+
+  it("reports a figure the page states twice only once", () => {
+    const ours = "Free plan includes 1,000 events/mo";
+    const page = "Free: 1,000 events/mo. Still free at 1,000 events/mo after the trial.";
+    assert.strictEqual(priceSignals(page).filter(signal => /1,000 events/.test(signal)).length, 2);
+    assert.deepStrictEqual(figuresWeAlsoPublish(priceSignals(page), ours), ["1,000 events/mo"]);
+  });
+});
+
+describe("the figures already stored are settled by the same rule", () => {
+  it("withdraws a figure the record does not publish and keeps the naming clause", () => {
+    assert.strictEqual(
+      detailWithoutFiguresWeDoNotPublish(
+        'the page names Render as "render" and states "$10"',
+        "Free web services (512 MB RAM), 5 GB bandwidth/month",
+      ),
+      'the page names Render as "render"',
+    );
+  });
+
+  it("leaves the clause that ends in a comma reading as a sentence", () => {
+    assert.strictEqual(
+      detailWithoutFiguresWeDoNotPublish(
+        'the page writes "swagger", the domain we cite SwaggerHub from, and states "$21"',
+        "Free plan includes 3 collaborators",
+      ),
+      'the page writes "swagger", the domain we cite SwaggerHub from',
+    );
+  });
+
+  it("leaves a stored figure the record publishes exactly as it was", () => {
+    const kept = 'the page names Hookline as "hookline" and states "1,000 events/mo"';
+    assert.strictEqual(detailWithoutFiguresWeDoNotPublish(kept, "Free plan includes 1,000 events/mo"), kept);
+  });
+
+  it("reads back every figure the check itself wrote", () => {
+    const check = checkOf(
+      {
+        vendor: "Hookline",
+        url: "https://hookline.dev/pricing",
+        description: "Free plan includes 1,000 events/mo and 20 GB of bandwidth",
+      },
+      "Hookline pricing. Teams from $29/mo. Free: 1,000 events/mo and 20 GB / mo of bandwidth.",
+    );
+    assert.deepStrictEqual(reportedFigures(check.detail)?.figures, ["1,000 events/mo", "20 GB / mo"]);
+  });
+
+  it("narrows a stored pair to the figure we publish", () => {
+    assert.strictEqual(
+      detailWithoutFiguresWeDoNotPublish(
+        'the page names Hookline as "hookline" and states "$49" and "1,000 events/mo"',
+        "Free plan includes 1,000 events/mo",
+      ),
+      'the page names Hookline as "hookline" and states "1,000 events/mo"',
+    );
   });
 });
 
@@ -123,15 +200,24 @@ describe("no record we publish reports a figure its own terms do not state", () 
     const unrelated: string[] = [];
     for (const offer of reporting) {
       const detail = offer.source_check!.detail ?? "";
-      if (detailWithoutFiguresWeDoNotPublish(detail, offer.description) !== detail) {
-        unrelated.push(`${offer.vendor} — ${detail}`);
-      }
+      const figures = reportedFigures(detail)!.figures;
+      const ours = new Set(figuresWeAlsoPublish(figures, offer.description));
+      const strangers = figures.filter(figure => !ours.has(figure) && !statesAnAmountOfZero(figure));
+      if (strangers.length > 0) unrelated.push(`${offer.vendor} — ${detail}`);
     }
     assert.deepStrictEqual(
       unrelated.slice(0, 10),
       [],
       `${unrelated.length} of ${reporting.length} records report a figure their own terms do not state`,
     );
+  });
+
+  it("is settled, so the same rule applied again moves nothing", () => {
+    const moved = passing.filter(offer => {
+      const detail = offer.source_check!.detail ?? "";
+      return detailWithoutFiguresWeDoNotPublish(detail, offer.description) !== detail;
+    });
+    assert.deepStrictEqual(moved.map(offer => offer.vendor).slice(0, 10), []);
   });
 
   it("keeps reporting the figures that are ours, including amounts that are not zero", () => {
