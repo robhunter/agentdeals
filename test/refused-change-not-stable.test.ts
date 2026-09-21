@@ -1,18 +1,22 @@
 import { describe, it, before, after } from "node:test";
 import assert from "node:assert";
 import { spawn, type ChildProcess } from "node:child_process";
-import { readFileSync } from "node:fs";
-import path from "node:path";
+import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
+import path, { join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { assertCoversPopulation, assertSharesPopulation, recordsInTheCatalogue, vendorsInTheCatalogue, type Population } from "./population-floor.ts";
 import { GATE_REASONS, REJECT_MEASURES_NO_CHANGE, REJECT_NULL_COMPARISON, REJECT_RESTATES_STORED_QUANTITIES, REJECT_STATES_NO_DIFFERENCE } from "../scripts/change-gate.js";
 import { SUPPRESSED_SAME_TRANSITION_REGRADED } from "../scripts/change-log.js";
 import { refusalsByVendor, refusedReadTheConfirmationSupersedes, refusedReadWithholdingStability, supersededRefusalSentence, REFUSAL_REASONS_THAT_CONFIRM_THE_STORED_TERMS, REFUSAL_REASONS_THAT_MEASURED_NO_DIFFERENCE, MEASURED_NO_DIFFERENCE_BADGE_LABEL, UNRECONCILED_READ_BADGE_LABEL } from "../dist/change-refusal.js";
-import { checkVendorRisk, enrichOffers, loadChangeRefusals, loadDealChanges, loadOffers, publishedChangeCount } from "../dist/data.js";
+import { checkVendorRisk, enrichOffers, loadChangeRefusals, loadDealChanges, loadOffers, publishedChangeCount, publishedRisk } from "../dist/data.js";
+import { resetVerificationStateCache } from "../dist/verification-state.js";
 import { LEVEL_WITHHOLDING_OUTCOMES } from "../dist/source-check.js";
 import { offerEnded } from "../dist/retirement.js";
 import { vendorSlugMap } from "../dist/vendor-slug.js";
 import { vendorVerdictSentence } from "../dist/vendor-verdict.js";
+import { vendorVerdictContextFrom } from "../dist/vendor-verdict-input.js";
+import { OUTCOMES_THAT_READ_THE_PAGE } from "../dist/read-date.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(__dirname, "..");
@@ -49,6 +53,7 @@ const badgeLabelOf = (svg: string): string => {
 };
 
 const CONFIRMING = new Set<string>(REFUSAL_REASONS_THAT_CONFIRM_THE_STORED_TERMS);
+const READ_THE_PAGE = new Set<string>(OUTCOMES_THAT_READ_THE_PAGE);
 const MEASURED_NO_DIFFERENCE = new Set<string>(REFUSAL_REASONS_THAT_MEASURED_NO_DIFFERENCE);
 
 const NO_RUN_HAS_WRITTEN_YET: string[] = [REJECT_RESTATES_STORED_QUANTITIES];
@@ -1075,6 +1080,115 @@ describe("the refusal log and the rules that write it read the same vocabulary",
       }),
       null,
       "a read that confirmed the terms left the withholding standing",
+    );
+  });
+});
+
+describe("the day the catalogue reports as our last read reaches the refusal it publishes", () => {
+  const held = process.env.AGENTDEALS_VERIFICATION_STATE_PATH;
+  let scratch = "";
+  let subject: ReturnType<typeof loadOffers>[number] | null = null;
+  let refusedOn = "";
+
+  before(() => {
+    scratch = mkdtempSync(join(tmpdir(), "read-after-refusal-"));
+    const refusals = refusalsByVendor(loadChangeRefusals());
+    for (const offer of loadOffers()) {
+      if (publishedChangeCount(offer.vendor) > 0) continue;
+      const withholding = refusedReadWithholdingStability({
+        historyLevel: "stable",
+        publishedChanges: 0,
+        termsConfirmedOn: offer.verifiedDate,
+        lastReadOn: offer.verifiedDate,
+        refusals: refusals.get(offer.vendor.toLowerCase()) ?? [],
+      });
+      if (!withholding) continue;
+      subject = offer;
+      refusedOn = withholding.refused_date;
+      break;
+    }
+    process.env.AGENTDEALS_VERIFICATION_STATE_PATH = join(scratch, "verification_state.json");
+  });
+
+  after(() => {
+    if (held === undefined) delete process.env.AGENTDEALS_VERIFICATION_STATE_PATH;
+    else process.env.AGENTDEALS_VERIFICATION_STATE_PATH = held;
+    rmSync(scratch, { recursive: true, force: true });
+    resetVerificationStateCache();
+  });
+
+  function readOn(date: string, outcome: string): void {
+    writeFileSync(
+      process.env.AGENTDEALS_VERIFICATION_STATE_PATH!,
+      JSON.stringify({
+        generated_at: date,
+        records: [{
+          vendor: subject!.vendor,
+          url: subject!.url,
+          last_attempt_at: date,
+          last_outcome: outcome,
+          last_success: null,
+          last_read_at: READ_THE_PAGE.has(outcome) ? date : null,
+          consecutive_failures: 0,
+          quarantined_since: null,
+        }],
+      }),
+    );
+    resetVerificationStateCache();
+  }
+
+  const dayAfter = (date: string): string =>
+    new Date(Date.parse(`${date}T00:00:00Z`) + 86_400_000).toISOString().slice(0, 10);
+
+  it("names a read the catalogue took after the refusal", () => {
+    assert.ok(subject, "no record in the catalogue withholds on a refusal, so the wiring is untested");
+    const readAgain = dayAfter(refusedOn);
+    readOn(readAgain, "changed");
+    const risk = publishedRisk(subject!, [], readAgain);
+    assert.strictEqual(risk.refused_read?.refused_date, refusedOn, "the day we refused moved with the later read");
+    assert.strictEqual(
+      risk.refused_read?.read_again_on,
+      readAgain,
+      "the day the catalogue reports as our last read does not reach the refusal it publishes",
+    );
+  });
+
+  it("names nothing where the read the catalogue reports is the refusal's own day", () => {
+    readOn(refusedOn, "changed");
+    const risk = publishedRisk(subject!, [], refusedOn);
+    assert.strictEqual(risk.refused_read?.refused_date, refusedOn, "the withholding moved off the refusal");
+    assert.strictEqual(risk.refused_read?.read_again_on, null, "the refusal's own day reads as a read since it");
+  });
+
+  it("carries that same day into the sentence the vendor page composes", () => {
+    const readAgain = dayAfter(refusedOn);
+    readOn(readAgain, "changed");
+    const context = vendorVerdictContextFrom({
+      vendor: subject!.vendor,
+      vendorOffers: loadOffers().filter(o => o.vendor === subject!.vendor && o.url === subject!.url),
+      vendorChanges: [],
+      refusedReads: refusalsByVendor(loadChangeRefusals()).get(subject!.vendor.toLowerCase()) ?? [],
+      servedOn: readAgain,
+    });
+    assert.ok(context, "the vendor page composes no verdict for a record that withholds");
+    assert.strictEqual(
+      context!.input.lastReadOn,
+      readAgain,
+      "the vendor page reads a different day as our last read than the catalogue does",
+    );
+    assert.ok(
+      vendorVerdictSentence(context!.input).includes(`we have read it again since, on ${readAgain},`),
+      `the vendor page's verdict names no read since the refusal: ${vendorVerdictSentence(context!.input)}`,
+    );
+  });
+
+  it("names nothing where the later attempt did not read the page", () => {
+    readOn(dayAfter(refusedOn), "fetch_failed");
+    const risk = publishedRisk(subject!, [], dayAfter(refusedOn));
+    assert.strictEqual(
+      risk.refused_read?.read_again_on,
+      null,
+      "an attempt that did not read the page reads as a read since the refusal",
     );
   });
 });
