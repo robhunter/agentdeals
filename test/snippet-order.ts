@@ -19,3 +19,19 @@ export function assertAheadOfTheVendorList(description: string, clause: string, 
   );
   return statesBoth(description, clause, NOTHING_CONTRADICTS_OUR_TERMS_FOR);
 }
+
+export function vendorsNamedAsUncontradicted(description: string): string[] {
+  const at = description.indexOf(NOTHING_CONTRADICTS_OUR_TERMS_FOR);
+  if (at === -1) return [];
+  const named = description.slice(at + NOTHING_CONTRADICTS_OUR_TERMS_FOR.length).trim();
+  assert.ok(
+    /\.$/.test(named) && !/\.\s/.test(named),
+    `a vendor list runs to the end of the description, and this one does not: ${description}`,
+  );
+  return named
+    .replace(/\.$/, "")
+    .replace(/ and more$/, "")
+    .split(", ")
+    .map((vendor) => vendor.trim())
+    .filter(Boolean);
+}

@@ -6,7 +6,7 @@ import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { SOURCE_CHECK_OUTCOMES } from "../dist/source-check.js";
-import { NOTHING_CONTRADICTS_OUR_TERMS_FOR } from "../dist/data.js";
+import { vendorsNamedAsUncontradicted } from "./snippet-order.ts";
 import { TERMS_WITHHELD_LABELS } from "../dist/vendor-verdict.js";
 import { ATTEMPT_THAT_DID_NOT_READ, VERIFICATION_DATES_HEADING } from "../dist/read-date.js";
 
@@ -417,16 +417,13 @@ describe("the structured data beside those cards", () => {
   });
 
   it("names no vendor as uncontradicted while the same page caveats it", () => {
-    const naming = new RegExp(`${NOTHING_CONTRADICTS_OUR_TERMS_FOR} ([^.]*)\\.`);
     let read = 0;
     for (const route of rankedPaths) {
       const body = pageOf.get(route)!;
-      const meta = metaDescriptionOf(body);
-      const uncontradicted = meta.match(naming);
-      if (!uncontradicted) continue;
+      const asUncontradicted = vendorsNamedAsUncontradicted(metaDescriptionOf(body));
+      if (asUncontradicted.length === 0) continue;
       read++;
       const caveated = caveatedRowsIn(body);
-      const asUncontradicted = uncontradicted[1].replace(/ and more$/, "").split(", ").map((v) => v.trim());
       const withheld = asUncontradicted.filter((vendor) => caveated.has(slugOf(vendor)));
       assert.ok(caveated.size > 0, `${route} caveats no row, so naming a vendor as uncontradicted is read against nothing`);
       assert.deepStrictEqual(withheld, [], `${route} says nothing contradicts ${withheld.join(", ")} and caveats the same offer below`);

@@ -6,9 +6,9 @@ import { fileURLToPath } from "node:url";
 
 import { fetchBadgeVerdicts, type SiteFreeTierVerdict } from "./badge-verdicts.ts";
 import { assertCoversPopulation, assertPopulationFloor, categoriesInTheCatalogue } from "./population-floor.ts";
-import { assertAheadOfTheVendorList } from "./snippet-order.ts";
+import { assertAheadOfTheVendorList, vendorsNamedAsUncontradicted } from "./snippet-order.ts";
 
-const { getCategories, NOTHING_CONTRADICTS_OUR_TERMS_FOR } = await import("../dist/data.js");
+const { getCategories } = await import("../dist/data.js");
 const { toSlug } = await import("../dist/vendor-slug.js");
 const {
   measuredNoDifferenceClause,
@@ -278,16 +278,11 @@ describe("a category description counts the terms it could not confirm", () => {
     let vouched = 0;
     const contradicted: string[] = [];
     for (const page of pages) {
-      const at = page.description.indexOf(NOTHING_CONTRADICTS_OUR_TERMS_FOR);
-      if (at === -1) continue;
-      const list = page.description.slice(at + NOTHING_CONTRADICTS_OUR_TERMS_FOR.length + 1)
-        .replace(/\.$/, "")
-        .replace(/ and more$/, "");
-      for (const vendor of list.split(", ")) {
+      for (const vendor of vendorsNamedAsUncontradicted(page.description)) {
         vouched++;
-        const row = page.standing.find((r) => r.slug === toSlug(vendor.trim()));
+        const row = page.standing.find((r) => r.slug === toSlug(vendor));
         if (row === undefined || row.counted !== null) {
-          contradicted.push(`/category/${page.slug} ${vendor.trim()}`);
+          contradicted.push(`/category/${page.slug} ${vendor}`);
         }
       }
     }

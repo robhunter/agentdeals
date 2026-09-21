@@ -5,6 +5,7 @@ import { readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { assertPopulationFloor } from "./population-floor.ts";
+import { vendorsNamedAsUncontradicted } from "./snippet-order.ts";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.join(__dirname, "..");
@@ -20,7 +21,6 @@ const {
   restatementSettles,
   somethingLaterSettledTheRead,
 } = await import("../dist/read-date.js");
-const { NOTHING_CONTRADICTS_OUR_TERMS_FOR } = await import("../dist/data.js");
 const { offerEnded } = await import("../dist/retirement.js");
 const { SUPERSEDED_TERMS_LABEL } = await import("../dist/superseded-description.js");
 const {
@@ -88,13 +88,8 @@ const get = async (p: string) => {
 const metaDescriptionOf = (body: string): string =>
   body.match(/<meta name="description" content="([^"]*)"/)?.[1] ?? "";
 
-const NAMED_AS_UNCONTRADICTED = new RegExp(`${NOTHING_CONTRADICTS_OUR_TERMS_FOR} ([^.]*)\\.`);
-
-const namedAsUncontradicted = (body: string): string[] => {
-  const m = metaDescriptionOf(body).match(NAMED_AS_UNCONTRADICTED);
-  if (!m) return [];
-  return m[1].replace(/ and more$/, "").split(", ").map((v) => v.trim()).filter(Boolean);
-};
+const namedAsUncontradicted = (body: string): string[] =>
+  vendorsNamedAsUncontradicted(metaDescriptionOf(body));
 
 const rowFor = (body: string, vendor: string): string | null =>
   body.split("<tr").find((row) => row.includes(`/vendor/${slugOf(vendor)}"`)) ?? null;
