@@ -6,14 +6,14 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { fetchBadgeVerdicts, type SiteFreeTierVerdict } from "./badge-verdicts.ts";
-import { appendedAfter, statesBoth } from "./snippet-order.ts";
+import { assertAheadOfTheVendorList } from "./snippet-order.ts";
 
 const { eligibilityGate, eligibilityGateAsPublished, publishableEligibilityConditions, CONDITION_RECORDING_AN_UNREAD_PROGRAM } =
   await import("../dist/eligibility.js");
 const { gateFor, notAFreeOfferGateFor, utcDate } = await import("../dist/ranking.js");
 const { supersedingChange } = await import("../dist/superseded-description.js");
 const { offerRetired } = await import("../dist/retirement.js");
-const { NOTHING_CONTRADICTS_OUR_TERMS_FOR, gateForOffer } = await import("../dist/data.js");
+const { gateForOffer } = await import("../dist/data.js");
 
 type Offer = import("../src/types.ts").Offer;
 type DealChange = import("../src/types.ts").DealChange;
@@ -361,11 +361,7 @@ describe("a category page does not count a gated offer as a plain free tier", ()
         continue;
       }
       assert.ok(description.includes(QUALIFICATION), `${where} description is ${description}`);
-      assert.ok(
-        !appendedAfter(description, QUALIFICATION, NOTHING_CONTRADICTS_OUR_TERMS_FOR),
-        `${where} appends the qualification after the vendor list, where a snippet truncates it`,
-      );
-      if (statesBoth(description, QUALIFICATION, NOTHING_CONTRADICTS_OUR_TERMS_FOR)) ordered++;
+      if (assertAheadOfTheVendorList(description, QUALIFICATION, where)) ordered++;
     }
     assert.ok(ordered > 0, "no category description states both a qualification and a vendor list, so the ordering is read on nothing");
   });

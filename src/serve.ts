@@ -38,7 +38,7 @@ import { NO_CURRENT_FIGURE, costHeadlineCaveat, limitCellText, mayRecommendAsFre
 import { changesByVendor } from "./superseded-census.js";
 import { buildComparisonMap, comparisonSlug } from "./comparison-pairs.js";
 import { comparisonVerdictText, freeTierFaqAnswer, stabilityFaqAnswer, type ComparisonSide, type FreeTierSide, type SideFreeTier, type StabilityRating } from "./comparison-verdict.js";
-import { publishedVendorLevel, vendorVerdictSentence, vendorBadge, freeTierClaim, statesRiskCause, withholdingThatDoesNotLapse, demotionTheVerdictNames, narrowingSentence, changeKindNoun, isOurOwnBookkeeping, emptyHistoryCaveatSentence, refusedReadOurConfirmationSupersedes, refusedReadWeHold, refusedReadWithholdingSentence, nothingWeReadDescribesTheTerms, unconfirmedThresholdSentence, unconfirmedTermsOpening, whyWeCannotConfirmTheseTerms, withheldForARefusedRead, withUnconfirmedTerms, refusalWithholdsStability, termsUnconfirmedBySource, termsTheVerdictWithholds, closingTerms, termsWithTheReasonWeCannotConfirmThem, termsNotVerifiedMetaSentence, termsWithheldLabel, unconfirmedTermsSentence, withheldBadgeLabel, type BadgeWithholding, type UnconfirmedTerms, type FreeTierClaim, type VendorVerdictInput } from "./vendor-verdict.js";
+import { publishedVendorLevel, vendorVerdictSentence, vendorBadge, freeTierClaim, statesRiskCause, withholdingThatDoesNotLapse, demotionTheVerdictNames, narrowingSentence, changeKindNoun, isOurOwnBookkeeping, emptyHistoryCaveatSentence, refusedReadOurConfirmationSupersedes, refusedReadWeHold, refusedReadWithholdingSentence, nothingWeReadDescribesTheTerms, unconfirmedThresholdSentence, unconfirmedTermsOpening, whyWeCannotConfirmTheseTerms, withheldForARefusedRead, withUnconfirmedTerms, refusalWithholdsStability, termsUnconfirmedBySource, termsTheVerdictWithholds, closingTerms, termsWithTheReasonWeCannotConfirmThem, termsNotVerifiedMetaSentence, termsWithheldLabel, theReadConfirmedThePrice, unconfirmedTermsSentence, whereTheDoubtSits, withheldBadgeLabel, type BadgeWithholding, type UnconfirmedTerms, type FreeTierClaim, type VendorVerdictInput, type WhereTheDoubtSits } from "./vendor-verdict.js";
 import { descriptionDeniesAFreeTier, tierRecordsAFreeTier } from "./free-tier-record.js";
 import { PAGE_HEAD_OPEN, withLedeBeforeNav } from "./page-lede.js";
 import { withReviewByline } from "./page-byline.js";
@@ -707,9 +707,17 @@ function unconfirmedTermsFor(offer: Offer): UnconfirmedTerms | null {
   return unconfirmed;
 }
 
-function unconfirmedTermsSpanHtml(unconfirmed: UnconfirmedTerms): string {
-  return `<span class="listing-terms-unconfirmed" style="display:block;margin-top:.3rem;color:#d29922">`
+function termsReadNoticeSpanHtml(unconfirmed: UnconfirmedTerms, kind: string, colour: string): string {
+  return `<span class="${kind}" style="display:block;margin-top:.3rem;color:${colour}">`
     + `${escHtmlServer(unconfirmedTermsSentence(unconfirmed))}</span>`;
+}
+
+function unconfirmedTermsSpanHtml(unconfirmed: UnconfirmedTerms): string {
+  return termsReadNoticeSpanHtml(unconfirmed, "listing-terms-unconfirmed", "#d29922");
+}
+
+function confirmedPriceSpanHtml(unconfirmed: UnconfirmedTerms): string {
+  return termsReadNoticeSpanHtml(unconfirmed, "listing-terms-free-price", "#3fb950");
 }
 
 function reasonWeCannotConfirmFor(offer: Offer): UnconfirmedTerms | null {
@@ -717,15 +725,18 @@ function reasonWeCannotConfirmFor(offer: Offer): UnconfirmedTerms | null {
 }
 
 function termsUnconfirmedNoticeHtml(offer: Offer): string {
+  if (supersedingChangeFor(offer) !== null) return "";
   const unconfirmed = reasonWeCannotConfirmFor(offer);
   if (!unconfirmed || unconfirmed.because.reason === "link_unreachable") return "";
-  return unconfirmedTermsSpanHtml(unconfirmed);
+  return theReadConfirmedThePrice(unconfirmed)
+    ? confirmedPriceSpanHtml(unconfirmed)
+    : unconfirmedTermsSpanHtml(unconfirmed);
 }
 
 function alreadySpeaksForItself(offer: Offer): boolean {
   return offerEnded(offer)
     || supersedingChangeFor(offer) !== null
-    || unconfirmedTermsFor(offer) !== null;
+    || termsTheVerdictWithholds(unconfirmedTermsFor(offer)) !== null;
 }
 
 function readContradictingTheTermsFor(offer: Offer): LastReading | null {
@@ -818,21 +829,56 @@ function freeTierOfferJsonLd(
   };
 }
 
-function nothingWeHoldContradicts(offer: Offer): boolean {
-  return unconfirmedTermsFor(offer) === null && readContradictingTheTermsFor(offer) === null;
+type DoubtWeCount = Exclude<WhereTheDoubtSits, "the_read_confirmed_the_price">;
+
+const WHAT_THE_COUNT_SEPARATES: Record<DoubtWeCount, string> = {
+  the_page_did_not_answer: "the page we cite did not answer",
+  our_read_did_not_confirm: "our own read did not confirm them",
+};
+
+function whereTheDoubtSitsFor(offer: Offer): DoubtWeCount | null {
+  if (supersedingChangeFor(offer) !== null) return null;
+  const unconfirmed = unconfirmedTermsFor(offer);
+  const where = unconfirmed === null ? null : whereTheDoubtSits(unconfirmed);
+  if (where !== null && where !== "the_read_confirmed_the_price") return where;
+  return readContradictingTheTermsFor(offer) === null ? null : "our_read_did_not_confirm";
 }
 
 function statesTermsWeCannotConfirm(offer: Offer): boolean {
-  return supersedingChangeFor(offer) === null && !nothingWeHoldContradicts(offer);
+  return whereTheDoubtSitsFor(offer) !== null;
 }
 
-function termsWePublishAsVerified(offer: Offer): boolean {
-  return supersedingChangeFor(offer) === null && nothingWeHoldContradicts(offer);
+function nothingOnRecordContradictsOurTerms(offer: Offer): boolean {
+  return supersedingChangeFor(offer) === null && !statesTermsWeCannotConfirm(offer);
 }
 
 function termsWeCannotConfirmMetaClause(listed: readonly Offer[]): string {
-  const count = listed.filter(statesTermsWeCannotConfirm).length;
-  return count === 0 ? "" : ` We could not confirm today's terms for ${count} of them, and each says which and why.`;
+  const named = Object.entries(WHAT_THE_COUNT_SEPARATES)
+    .map(([where, said]) => ({ said, count: listed.filter(o => whereTheDoubtSitsFor(o) === where).length }))
+    .filter(part => part.count > 0);
+  const count = named.reduce((total, part) => total + part.count, 0);
+  if (count === 0) return "";
+  const split = named.length === 1
+    ? `, and on all ${count} ${named[0].said}`
+    : `: ${named.map(part => `on ${part.count} ${part.said}`).join(", and ")}`;
+  return ` We could not confirm today's terms for ${count} of them${split}. Each row says why.`;
+}
+
+function unconfirmedRowAttribute(offer: Offer): string {
+  const where = whereTheDoubtSitsFor(offer);
+  return where === null ? "" : ` data-unconfirmed="${where}"`;
+}
+
+const DESCRIPTION_CHARACTER_CAP = 307;
+const VENDORS_A_DESCRIPTION_NAMES = 5;
+
+function uncontradictedVendorClause(vendors: readonly string[], room: number): string {
+  for (let naming = Math.min(VENDORS_A_DESCRIPTION_NAMES, vendors.length); naming >= 1; naming--) {
+    const clause = ` ${NOTHING_CONTRADICTS_OUR_TERMS_FOR} ${vendors.slice(0, naming).join(", ")}`
+      + `${vendors.length > naming ? " and more" : ""}.`;
+    if (clause.length <= room) return clause;
+  }
+  return "";
 }
 
 function supersededTermsListingHtml(vendor: string, change: DealChange): string {
@@ -2112,13 +2158,12 @@ function buildCategoryPage(slug: string): string | null {
   const catGates = catStanding.map((o) => gateFor(o, catServedOn, changesForVendor(o.vendor)));
   const catGatedClause = gatedShareDescriptionClause(catStandingCount, catGates);
   const title = `Free ${categoryName} Tools & Deals (${catCount} offers) — AgentDeals`;
-  const catUncontradicted = catStanding.filter(termsWePublishAsVerified);
-  const catUncontradictedSentence = catUncontradicted.length === 0
-    ? ""
-    : ` ${NOTHING_CONTRADICTS_OUR_TERMS_FOR} ${catUncontradicted.slice(0, 5).map(o => o.vendor).join(", ")}${catUncontradicted.length > 5 ? " and more" : ""}.`;
-  const metaDesc = `Compare ${catStandingCount} free ${categoryName.toLowerCase()} tools, free tiers, and developer deals.${catGatedClause ? ` ${catGatedClause}` : ""}${catUncontradictedSentence}${termsWeCannotConfirmMetaClause(catStanding)}`;
+  const catUncontradicted = catStanding.filter(nothingOnRecordContradictsOurTerms);
+  const catMeasured = `Compare ${catStandingCount} free ${categoryName.toLowerCase()} tools, free tiers, and developer deals.${catGatedClause ? ` ${catGatedClause}` : ""}${termsWeCannotConfirmMetaClause(catStanding)}`;
+  const metaDesc = catMeasured
+    + uncontradictedVendorClause(catUncontradicted.map(o => o.vendor), DESCRIPTION_CHARACTER_CAP - catMeasured.length);
 
-  const offersHtml = catOffers.map((o) => `        <tr>
+  const offersHtml = catOffers.map((o) => `        <tr${catStanding.includes(o) ? unconfirmedRowAttribute(o) : ""}>
           <td style="font-weight:600;color:var(--text);white-space:nowrap"><a href="/vendor/${toSlug(o.vendor)}" style="color:var(--text)">${escHtmlServer(o.vendor)}</a></td>
           <td style="font-family:var(--mono);color:var(--accent);white-space:nowrap">${escHtmlServer(o.tier)}</td>
           <td style="color:var(--text-muted)">${storedTermsHtml(o)}${listingEligibilityNoticeHtml(o)}${listingUnreachableNoticeHtml(o)}${termsUnconfirmedNoticeHtml(o)}${contradictedTermsNoticeHtml(o)}</td>

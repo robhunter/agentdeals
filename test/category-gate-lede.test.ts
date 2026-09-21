@@ -7,12 +7,12 @@ import { fileURLToPath } from "node:url";
 
 import { fetchBadgeVerdicts, type SiteFreeTierVerdict } from "./badge-verdicts.ts";
 import { assertCoversPopulation, assertPopulationFloor, categoriesInTheCatalogue } from "./population-floor.ts";
-import { appendedAfter, statesBoth } from "./snippet-order.ts";
+import { assertAheadOfTheVendorList } from "./snippet-order.ts";
 
 const { gateFor, utcDate } = await import("../dist/ranking.js");
 const { gatedShareLede } = await import("../dist/eligibility.js");
 const { toSlug } = await import("../dist/vendor-slug.js");
-const { NOTHING_CONTRADICTS_OUR_TERMS_FOR, gateForOffer } = await import("../dist/data.js");
+const { gateForOffer } = await import("../dist/data.js");
 
 type Offer = import("../src/types.ts").Offer;
 type Gate = { code: string; reason: string } | null;
@@ -307,11 +307,7 @@ describe("a category page discloses every gated record, not eligibility alone", 
         ? `All ${c.total} require an application or qualification.`
         : `${clausesFor(c.codes)}.`;
       assert.ok(description.includes(clause), `/category/${c.slug} description is ${description}`);
-      assert.ok(
-        !appendedAfter(description, clause, NOTHING_CONTRADICTS_OUR_TERMS_FOR),
-        `/category/${c.slug} appends the clause after the vendor list, where a snippet truncates it`,
-      );
-      if (statesBoth(description, clause, NOTHING_CONTRADICTS_OUR_TERMS_FOR)) ordered++;
+      if (assertAheadOfTheVendorList(description, clause, `/category/${c.slug}`)) ordered++;
     }
     assert.ok(ordered > 0, "no category description states both a clause list and a vendor list, so the ordering is read on nothing");
   });
