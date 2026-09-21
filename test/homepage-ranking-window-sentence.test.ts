@@ -10,6 +10,7 @@ const {
   agentRequestAttribution,
   guideSelectionSentence,
   guidesTiedAtCut,
+  opensDecidedPrefix,
   rankGuidesByAgentOpens,
   rankableDays,
 } = await import("../dist/homepage-routing.js");
@@ -42,7 +43,7 @@ function selection(over: Record<string, unknown> = {}) {
     heldDays: AGENT_OPENS_WINDOW_DAYS,
     rankedWindow: { days: 14, from: "2026-09-08", to: "2026-09-21" },
     attribution: { attributed: 0, unattributed: 0, total: 0 },
-    tiedAtCut: 0,
+    opensDecided: true,
     ...over,
   });
 }
@@ -66,7 +67,6 @@ describe("the home page states the window its guide ranking actually measured (#
         const sentence = selection({
           rankedWindow: { days, from: "2026-09-08", to: "2026-09-21" },
           attribution: { attributed: 90, unattributed: 10, total: 100 },
-          tiedAtCut: 3,
         });
         assert.doesNotMatch(sentence, /\b1 days\b/, `a one-day window was counted as days: ${sentence}`);
         assert.doesNotMatch(sentence, /\b1 guides\b/, `one guide was counted as guides: ${sentence}`);
@@ -123,38 +123,140 @@ describe("the home page states the window its guide ranking actually measured (#
       assert.equal(guidesTiedAtCut(ranked, HOMEPAGE_GUIDE_COUNT), 0);
     });
 
-    it("names the tie and withholds the completeness claim where any guide ties at the cut", () => {
-      const sentence = selection({ tiedAtCut: 12 });
-      assert.match(sentence, /12 of the 20 tie on opens with the first guide we left out/);
-      assert.match(sentence, /so slug order rather than opens put them here/);
-      assert.doesNotMatch(sentence, /and nothing else/);
+    it("nothing the page publishes ties at its own cut, on any ranking the ranker can produce", () => {
+      for (const shape of [
+        (i: number) => (i < 8 ? 9 - i : 1),
+        (i: number) => POPULATION_SIZE - i,
+        () => 0,
+        (i: number) => (i === 0 ? 5 : 1),
+        (i: number) => Math.max(0, 40 - i * 2),
+      ]) {
+        const order = rankGuidesByAgentOpens(
+          POPULATION,
+          new Map(POPULATION.map((guide, i) => [`/${guide.slug}`, shape(i)])),
+        );
+        const published = opensDecidedPrefix(order, HOMEPAGE_GUIDE_COUNT);
+        assert.equal(
+          guidesTiedAtCut(order, published.length),
+          0,
+          `${published.length} published, ${guidesTiedAtCut(order, published.length)} of them a tie`,
+        );
+      }
     });
 
-    it("claims the ranking and nothing else only where nothing ties at the cut", () => {
-      assert.match(selection(), /Membership is that ranking and nothing else/);
+    it("states the ranking and nothing else, with no tie left to disclose", () => {
+      const sentence = selection();
+      assert.match(sentence, /Membership is that ranking and nothing else/);
+      assert.doesNotMatch(sentence, /tie on opens/);
+      assert.doesNotMatch(sentence, /slug order/);
+    });
+  });
+
+  describe("AC-1 opens decide membership, so a guide no agent opened is never on the page", () => {
+    it("publishes the longest run whose last guide outscores the first one left out", () => {
+      const order = rankGuidesByAgentOpens(
+        POPULATION,
+        new Map(POPULATION.map((guide, i) => [`/${guide.slug}`, i < 8 ? 9 - i : 1])),
+      );
+      const published = opensDecidedPrefix(order, HOMEPAGE_GUIDE_COUNT);
+      assert.equal(published.length, 8);
+      assert.equal(published[published.length - 1].agentOpens, 2);
+      assert.equal(order[published.length].agentOpens, 1);
     });
 
-    it("reads the same tie off the ranking the page publishes", () => {
+    it("caps the run at the count the page publishes", () => {
+      const order = rankGuidesByAgentOpens(
+        POPULATION,
+        new Map(POPULATION.map((guide, i) => [`/${guide.slug}`, POPULATION_SIZE - i])),
+      );
+      assert.equal(opensDecidedPrefix(order, HOMEPAGE_GUIDE_COUNT).length, HOMEPAGE_GUIDE_COUNT);
+    });
+
+    it("names no guide with no opens, whatever the ranking and whatever the cap", () => {
+      for (const opened of [0, 1, 7, 20, 40, POPULATION_SIZE]) {
+        const order = rankGuidesByAgentOpens(
+          POPULATION,
+          new Map(POPULATION.map((guide, i) => [`/${guide.slug}`, i < opened ? POPULATION_SIZE - i : 0])),
+        );
+        for (const cap of [1, 8, HOMEPAGE_GUIDE_COUNT, POPULATION_SIZE]) {
+          const published = opensDecidedPrefix(order, cap);
+          assert.deepEqual(
+            published.filter((guide) => guide.agentOpens === 0).map((guide) => guide.slug),
+            [],
+            `${opened} guides opened, cap ${cap}`,
+          );
+          assert.ok(published.length <= Math.min(cap, opened), `${opened} opened, cap ${cap}, published ${published.length}`);
+        }
+      }
+    });
+
+    it("publishes nothing where every guide drew the same number of opens", () => {
+      for (const flat of [0, 1, 9]) {
+        const order = rankGuidesByAgentOpens(
+          POPULATION,
+          new Map(POPULATION.map((guide) => [`/${guide.slug}`, flat])),
+        );
+        assert.deepEqual(opensDecidedPrefix(order, HOMEPAGE_GUIDE_COUNT), []);
+      }
+    });
+
+    it("reads the run off a day the ranker keeps", () => {
       const counts: Record<string, number> = { [agentKey(`/${POPULATION[0].slug}`)]: 5 };
       for (const guide of POPULATION.slice(1)) counts[agentKey(`/${guide.slug}`)] = 1;
-      const day = dayWith("2026-09-22", counts);
-      const ranked = rankableDays([day], POPULATION, AGENT_OPENS_WINDOW_DAYS);
+      const ranked = rankableDays([dayWith("2026-09-22", counts)], POPULATION, AGENT_OPENS_WINDOW_DAYS);
       assert.equal(ranked.length, 1);
 
       const order = rankGuidesByAgentOpens(POPULATION, agentOpensByPath(ranked));
-      const tied = guidesTiedAtCut(order, HOMEPAGE_GUIDE_COUNT);
-      assert.equal(tied, HOMEPAGE_GUIDE_COUNT - 1);
+      const published = opensDecidedPrefix(order, HOMEPAGE_GUIDE_COUNT);
+      assert.deepEqual(published.map((guide) => guide.slug), [POPULATION[0].slug]);
 
       const sentence = guideSelectionSentence({
-        selectedCount: HOMEPAGE_GUIDE_COUNT,
+        selectedCount: published.length,
         populationCount: POPULATION_SIZE,
         heldDays: 1,
         rankedWindow: agentOpensWindow(ranked, AGENT_OPENS_WINDOW_DAYS),
         attribution: agentRequestAttribution(ranked),
-        tiedAtCut: tied,
+        opensDecided: published.length > 0,
       });
-      assert.match(sentence, new RegExp(`${tied} of the ${HOMEPAGE_GUIDE_COUNT} tie on opens`));
-      assert.match(sentence, /on 2026-09-22, the one day/);
+      assert.match(sentence, /The 1 of 97 guides AI agents opened most on 2026-09-22, the one day/);
+      assert.doesNotMatch(sentence, /\b1 guides\b/);
+    });
+  });
+
+  describe("AC-6 the fallback names the condition that put the page on it", () => {
+    it("says opens separated nothing where the window is rankable and the run is empty", () => {
+      const sentence = selection({
+        rankedWindow: { days: 1, from: "2026-09-22", to: "2026-09-22" },
+        opensDecided: false,
+      });
+      assert.match(sentence, /All 97 guides we publish, in the order \/guides lists them, and not a ranking\./);
+      assert.match(sentence, /We can rank on 2026-09-22, the one day on which every guide we publish had its own count/);
+      assert.match(sentence, /no guide was opened more often than the next one below it/);
+      assert.doesNotMatch(sentence, /can rank on none of them/);
+    });
+
+    it("keeps the unrankable-window sentence for the case it was written for", () => {
+      const sentence = selection({ rankedWindow: null, opensDecided: false });
+      assert.match(sentence, /We hold 14 days of traffic and can rank on none of them/);
+      assert.doesNotMatch(sentence, /We can rank on/);
+    });
+
+    it("states no window it could not rank on, at every length the window can take", () => {
+      for (let days = 1; days <= AGENT_OPENS_WINDOW_DAYS; days++) {
+        const sentence = selection({
+          rankedWindow: { days, from: "2026-09-08", to: "2026-09-21" },
+          opensDecided: false,
+        });
+        assert.doesNotMatch(sentence, /can rank on none of them/, `a rankable ${days}-day window read as unrankable`);
+        assert.doesNotMatch(sentence, /\b1 days\b/, `a one-day window was counted as days: ${sentence}`);
+      }
+    });
+
+    it("holds the sentence for a day we hold nothing for", () => {
+      assert.equal(
+        selection({ heldDays: 0, rankedWindow: null, opensDecided: false }),
+        `All ${POPULATION_SIZE} guides we publish, in the order /guides lists them.`,
+      );
     });
   });
 });
