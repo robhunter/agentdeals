@@ -457,7 +457,7 @@
       "keys_kept": 225,
       "keys_discarded": 200,
       "keys_discarded_is_exact": false,
-      "requests_discarded": 2803,
+      "requests_discarded": 8994,
       "reserved_paths": []
     }
   },

@@ -2701,7 +2701,7 @@ export interface RollupDayPageViews {
 export interface ClassRouteTruncation {
   key_cap: number;
   keys_kept: number;
-  keys_discarded: number;
+  keys_discarded: number | null;
   keys_discarded_is_exact: boolean;
   requests_discarded: number;
   reserved_paths: string[];
@@ -2729,22 +2729,25 @@ export function summarizeClassRouteTruncation(
   reservedPaths: readonly string[],
 ): ClassRouteTruncation {
   let keysKept = 0;
-  for (const key of Object.keys(classRoutes)) {
-    if (key.slice(key.indexOf(CLASS_ROUTE_SEP) + 1) !== OVERFLOW_PAGE_KEY) keysKept++;
+  let requestsDiscarded = 0;
+  for (const [key, count] of Object.entries(classRoutes)) {
+    if (key.slice(key.indexOf(CLASS_ROUTE_SEP) + 1) === OVERFLOW_PAGE_KEY) requestsDiscarded += count;
+    else keysKept++;
   }
   let keysDiscarded = 0;
-  let requestsDiscarded = 0;
-  let exact = true;
+  let requestsWithAKey = 0;
+  let saturated = false;
   for (const [key, count] of Object.entries(discards)) {
-    requestsDiscarded += count;
-    if (key === DISCARDED_KEY_OVERFLOW) exact = false;
+    requestsWithAKey += count;
+    if (key === DISCARDED_KEY_OVERFLOW) saturated = true;
     else keysDiscarded++;
   }
+  const noKeyLevelRecord = requestsDiscarded > 0 && Object.keys(discards).length === 0;
   return {
     key_cap: MAX_CLASS_ROUTE_KEYS_PER_DAY,
     keys_kept: keysKept,
-    keys_discarded: keysDiscarded,
-    keys_discarded_is_exact: exact,
+    keys_discarded: noKeyLevelRecord ? null : keysDiscarded,
+    keys_discarded_is_exact: !noKeyLevelRecord && !saturated && requestsWithAKey >= requestsDiscarded,
     requests_discarded: requestsDiscarded,
     reserved_paths: [...reservedPaths].sort(),
   };
