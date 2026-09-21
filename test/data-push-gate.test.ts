@@ -323,7 +323,7 @@ const BUILD = `if (process.env.GATE_FIXTURE_BUILD === "fail") {
 const BUDGETS_BEFORE = `${JSON.stringify({ version: 1, budgets: { fixture_pages: 57 } }, null, 2)}\n`;
 const BUDGETS_AFTER = `${JSON.stringify({ version: 1, budgets: { fixture_pages: 56 } }, null, 2)}\n`;
 
-const RATCHET = `import { readdirSync, writeFileSync } from "node:fs";
+const RATCHET = `import { readdirSync, readFileSync, writeFileSync } from "node:fs";
 const mode = process.env.GATE_FIXTURE_RATCHET || "lower";
 if (mode === "throw") {
   console.log("the fixture ratchet could not read the data it measures");
@@ -332,6 +332,14 @@ if (mode === "throw") {
 if (mode === "lower") {
   writeFileSync("data/quality_budgets.json", ${JSON.stringify(BUDGETS_AFTER)});
   console.log("Lowered fixture_pages 57 -> 56");
+}
+if (mode === "lowers-only-what-is-earned") {
+  if (readFileSync("data/quality_budgets.json", "utf8") === ${JSON.stringify(BUDGETS_BEFORE)}) {
+    writeFileSync("data/quality_budgets.json", ${JSON.stringify(BUDGETS_AFTER)});
+    console.log("Lowered fixture_pages 57 -> 56");
+  } else {
+    console.log("No budget this run's data earned is lower than the one already recorded");
+  }
 }
 if (mode === "measures-the-tree") {
   const pages = ${PAGES_THE_TREE_HOLDS};
@@ -454,7 +462,7 @@ function fixtureRepo(options: { shallow?: boolean; pageReviews?: boolean; index?
 
 type GateMode = keyof typeof FAILING_BY_MODE;
 
-type RatchetMode = "lower" | "throw" | "measures-the-tree";
+type RatchetMode = "lower" | "throw" | "measures-the-tree" | "lowers-only-what-is-earned";
 
 interface GateRun {
   mode: GateMode;
@@ -1674,6 +1682,23 @@ describe("#1589 a replay conflicting only in what this run derives is resolved, 
     assert.strictEqual(mainSha(origin), before);
     assert.strictEqual(quarantineRefs(origin, "data-quarantine/fixture").length, 1);
     assert.match(run.stdout, /data\/page-lastmod\.json/);
+  });
+
+  it("leaves a budget another job already lowered where it found it", () => {
+    const { work, origin } = fixtureRepo();
+    const LOWERED_BY_A_SIBLING = `${JSON.stringify({ version: 1, budgets: { fixture_pages: 40 } }, null, 2)}\n`;
+    writeFileSync(join(work, "data", "health.json"), '{"checked":36}\n');
+    commitToMainFromElsewhere(origin, "data/quality_budgets.json", LOWERED_BY_A_SIBLING);
+
+    const run = runGate(work, { mode: "green", ratchet: "lowers-only-what-is-earned" }, ...WITH_THE_BUDGET);
+
+    assert.strictEqual(run.status, 0, `${run.stdout}${run.stderr}`);
+    assert.strictEqual(git(origin, "show", "main:data/health.json"), '{"checked":36}');
+    assert.strictEqual(
+      git(origin, "show", "main:data/quality_budgets.json"),
+      LOWERED_BY_A_SIBLING.trim(),
+      "the resolution kept this run's own copy, so a budget another job had already lowered was raised back by a replay",
+    );
   });
 
   it("keeps this run's commit when taking main's copy leaves it with nothing of its own", () => {

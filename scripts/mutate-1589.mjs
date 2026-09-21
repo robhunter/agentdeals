@@ -80,10 +80,12 @@ if (!run("node", SUITE)) {
   process.exit(2);
 }
 
+const only = process.argv.slice(2);
 const survivors = [];
 const unparsed = [];
 const notApplied = [];
 for (const [name, file, from, to] of MUTANTS) {
+  if (only.length > 0 && !only.some((pattern) => name.includes(pattern))) continue;
   const original = readFileSync(file, "utf-8");
   const found = occurrences(original, from);
   if (found !== 1) {
@@ -99,8 +101,9 @@ for (const [name, file, from, to] of MUTANTS) {
   console.log(`${green ? "SURVIVED" : parses ? "killed  " : "NOT APPLIED — does not parse"}  ${name}`);
   if (green) survivors.push(name);
 }
-const scored = MUTANTS.length - notApplied.length - unparsed.length;
-console.log(`\n${scored - survivors.length}/${scored} killed, of ${MUTANTS.length} written`);
+const written = only.length > 0 ? MUTANTS.filter(([name]) => only.some((p) => name.includes(p))).length : MUTANTS.length;
+const scored = written - notApplied.length - unparsed.length;
+console.log(`\n${scored - survivors.length}/${scored} killed, of ${written} written`);
 if (survivors.length > 0) console.log("survivors:", survivors.join(", "));
 if (unparsed.length > 0) console.log("does not parse:", unparsed.join(", "));
 if (notApplied.length > 0) console.log("not applied:", notApplied.join(", "));
