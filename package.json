@@ -80,7 +80,8 @@
     "mutate:1719": "node scripts/mutate-1719.mjs",
     "mutate:1861": "node scripts/mutate-1861.mjs",
     "mutate:1863": "node scripts/mutate-1863.mjs",
-    "mutate:1589": "node scripts/mutate-1589.mjs"
+    "mutate:1589": "node scripts/mutate-1589.mjs",
+    "mutate:1880": "node scripts/mutate-1880.mjs"
   },
   "dependencies": {
     "@modelcontextprotocol/ext-apps": "^1.5.0",

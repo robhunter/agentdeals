@@ -333,6 +333,27 @@ type ReadNothingTag = {
   [K in TermsWithholdingTag]: (typeof WHAT_THE_READ_LEFT_STANDING)[K] extends "nothing" ? K : never;
 }[TermsWithholdingTag];
 
+export type WhereTheDoubtSits =
+  | "the_page_did_not_answer"
+  | "our_read_did_not_confirm"
+  | "the_read_confirmed_the_price";
+
+export const WHERE_THE_DOUBT_SITS = {
+  link_unreachable: "the_page_did_not_answer",
+  unreadable: "the_page_did_not_answer",
+  states_no_terms: "the_page_did_not_answer",
+  does_not_name_vendor: "the_page_did_not_answer",
+  does_not_name_product: "the_page_did_not_answer",
+  states_no_amount: "the_page_did_not_answer",
+  states_a_free_price: "the_read_confirmed_the_price",
+  read_not_reconciled: "our_read_did_not_confirm",
+  change_measured_no_difference: "our_read_did_not_confirm",
+} as const satisfies Record<TermsWithholdingTag, WhereTheDoubtSits>;
+
+export function whereTheDoubtSits(unconfirmed: UnconfirmedTerms): WhereTheDoubtSits {
+  return WHERE_THE_DOUBT_SITS[unconfirmed.because.reason];
+}
+
 export interface TermsNoReadDescribes extends UnconfirmedTerms {
   because: Extract<TermsWithholding, { reason: ReadNothingTag }>;
 }
@@ -546,7 +567,7 @@ export function emptyHistoryCaveatSentence(subject: string, unconfirmed: TermsNo
 export const NOT_VERIFIED = (clause: string): string => `Not verified — ${clause}.`;
 
 export function theReadConfirmedThePrice(unconfirmed: UnconfirmedTerms | null | undefined): boolean {
-  return outcomeConfirmsThePrice(unconfirmed?.because.reason);
+  return unconfirmed != null && whereTheDoubtSits(unconfirmed) === "the_read_confirmed_the_price";
 }
 
 export function termsTheVerdictWithholds(

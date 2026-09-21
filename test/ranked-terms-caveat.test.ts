@@ -22,6 +22,8 @@ const ATTEMPTED_ON = dayOffset(-1);
 
 const NOT_OK_OUTCOMES = SOURCE_CHECK_OUTCOMES.filter((outcome: string) => outcome !== "ok");
 
+const OUTCOME_CONFIRMING_THE_PRICE = "states_a_free_price";
+
 interface FixtureOffer {
   vendor: string;
   category: string;
@@ -144,8 +146,18 @@ function applicationsIn(body: string): ApplicationNode[] {
   return blocks.flatMap((block) => collectApplications(JSON.parse(block), []));
 }
 
-function caveatSentencesIn(body: string): string[] {
-  return [...body.matchAll(/class="listing-terms-unconfirmed"[^>]*>([\s\S]*?)<\/span>/g)]
+function caveatedRowsIn(body: string): Set<string> {
+  const caveated = new Set<string>();
+  for (const row of body.split("<tr").filter((r) => r.includes("/vendor/"))) {
+    if (!row.includes(`class="listing-terms-unconfirmed"`)) continue;
+    const slug = row.match(/\/vendor\/([a-z0-9-]+)"/)?.[1];
+    if (slug) caveated.add(slug);
+  }
+  return caveated;
+}
+
+function readNoticeSentencesIn(body: string): string[] {
+  return [...body.matchAll(/class="listing-terms-(?:unconfirmed|free-price)"[^>]*>([\s\S]*?)<\/span>/g)]
     .map((m) => unescapeServed(m[1].replace(/<[^>]*>/g, "").trim()))
     .filter((sentence) => sentence.length > 0);
 }
@@ -335,7 +347,7 @@ describe("the structured data beside those cards", () => {
     let closed = 0;
     for (const route of rankedPaths) {
       const body = pageOf.get(route)!;
-      const spoken = caveatSentencesIn(body);
+      const spoken = readNoticeSentencesIn(body);
       for (const offer of OFFERS) {
         for (const node of applicationsFor(body, offer.vendor)) {
           assert.ok(
@@ -371,7 +383,7 @@ describe("the structured data beside those cards", () => {
   it("does not carry the caveat in prose and withhold it from the node on the same page", () => {
     for (const route of rankedPaths) {
       const body = pageOf.get(route)!;
-      const spoken = caveatSentencesIn(body);
+      const spoken = readNoticeSentencesIn(body);
       if (spoken.length === 0) continue;
       const silent = OFFERS
         .flatMap((offer) => applicationsFor(body, offer.vendor).map((node) => ({ offer, node })))
@@ -382,10 +394,17 @@ describe("the structured data beside those cards", () => {
   });
 
   it("says on every page how many of the offers it lists we could not confirm", () => {
+    assert.strictEqual(
+      OFFERS.filter((offer) => offer.source_check.outcome === OUTCOME_CONFIRMING_THE_PRICE).length,
+      1,
+      "the corpus holds no read that confirmed the price, so leaving one out of the count is read on nothing",
+    );
     for (const route of rankedPaths) {
       const body = pageOf.get(route)!;
       const named = new Set(vendorsNamedInOrder(body));
-      const owing = OFFERS.filter((offer) => named.has(slugOf(offer.vendor))).length;
+      const owing = OFFERS
+        .filter((offer) => offer.source_check.outcome !== OUTCOME_CONFIRMING_THE_PRICE)
+        .filter((offer) => named.has(slugOf(offer.vendor))).length;
       const meta = metaDescriptionOf(body);
       if (owing === 0) {
         assert.doesNotMatch(meta, /could not confirm today's terms/, `${route} discloses a count it does not owe: "${meta}"`);
@@ -402,13 +421,14 @@ describe("the structured data beside those cards", () => {
     let read = 0;
     for (const route of rankedPaths) {
       const body = pageOf.get(route)!;
-      const named = new Set(vendorsNamedInOrder(body));
       const meta = metaDescriptionOf(body);
       const uncontradicted = meta.match(naming);
       if (!uncontradicted) continue;
       read++;
+      const caveated = caveatedRowsIn(body);
       const asUncontradicted = uncontradicted[1].replace(/ and more$/, "").split(", ").map((v) => v.trim());
-      const withheld = asUncontradicted.filter((vendor) => OFFERS.some((offer) => offer.vendor === vendor && named.has(slugOf(vendor))));
+      const withheld = asUncontradicted.filter((vendor) => caveated.has(slugOf(vendor)));
+      assert.ok(caveated.size > 0, `${route} caveats no row, so naming a vendor as uncontradicted is read against nothing`);
       assert.deepStrictEqual(withheld, [], `${route} says nothing contradicts ${withheld.join(", ")} and caveats the same offer below`);
     }
     assert.ok(read > 0, `none of the ${rankedPaths.length} ranked pages names a vendor list for this assertion to read`);
