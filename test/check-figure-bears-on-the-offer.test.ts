@@ -1,6 +1,6 @@
 import { describe, it } from "node:test";
 import assert from "node:assert";
-import { readFileSync } from "node:fs";
+import { readFileSync, readdirSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import {
@@ -267,6 +267,7 @@ describe("no record we publish reports a figure its own terms do not state", () 
       "states no amount we publish",
       "states none of the figures we publish",
       "does not state a price we publish",
+      "a sentence saying no amount on the page is a figure we publish",
     ]) {
       assert.match(retired, A_CLAIM_ABOUT_WHAT_THE_PAGE_CONTAINS, retired);
     }
@@ -283,6 +284,16 @@ describe("no record we publish reports a figure its own terms do not state", () 
     ]) {
       assert.doesNotMatch(overclaim, THE_NEGATION_NAMES_OUR_OWN_READING, overclaim);
     }
+  });
+
+  it("describes the field across every served module without claiming a figure of ours is absent from the page", () => {
+    const served = path.join(__dirname, "..", "src");
+    const modules = readdirSync(served).filter(name => name.endsWith(".ts"));
+    assertPopulationFloor(modules.length, 30, "modules the server is built from");
+    const claiming = modules.filter(name =>
+      A_CLAIM_ABOUT_WHAT_THE_PAGE_CONTAINS.test(readFileSync(path.join(served, name), "utf-8")),
+    );
+    assert.deepStrictEqual(claiming, []);
   });
 
   it("publishes no check sentence saying a figure of ours is absent from the page it read", () => {

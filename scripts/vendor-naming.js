@@ -253,7 +253,7 @@ export const MOST_FIGURES_REPORTED = 4;
 export const WE_MATCHED_NO_AMOUNT_TO_OUR_TERMS = "states amounts, none of which we matched to the terms we publish";
 
 export const A_CLAIM_ABOUT_WHAT_THE_PAGE_CONTAINS =
-  /\b(?:none of which is an? (?:figure|amount|price|rate) we publish|states no (?:figure|amount|price|rate)s? (?:of ours|we publish)|states none of the (?:figures|amounts|prices|rates) we publish|does not state (?:a|any) (?:figure|amount|price|rate) we publish|no (?:figure|amount|price|rate) we publish (?:is|appears) on the page)\b/i;
+  /\b(?:none of which is an? (?:figure|amount|price|rate) we publish|states no (?:figure|amount|price|rate)s? (?:of ours|we publish)|states none of the (?:figures|amounts|prices|rates) we publish|does not state (?:a|any) (?:figure|amount|price|rate) we publish|no (?:figure|amount|price|rate) we publish (?:is|appears) on the page|no (?:figure|amount|price|rate) on the page is an? (?:figure|amount|price|rate) we publish)\b/i;
 
 export const THE_NEGATION_NAMES_OUR_OWN_READING =
   /\b(?:we|our reading) (?:[a-z]+ )?(?:matched|match|read|could match|can read)\b/i;
