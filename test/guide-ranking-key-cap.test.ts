@@ -33,7 +33,7 @@ const {
   agentOpensWindow,
   agentRequestAttribution,
   guideSelectionSentence,
-  guidesHomepageLinks,
+  guidesTiedAtCut,
   rankableDays,
   rankGuidesByAgentOpens,
 } = await import("../dist/homepage-routing.js");
@@ -116,6 +116,14 @@ function everyGuideKeyedFixture(): Rollup[] {
   });
 }
 
+function distinctlyRankedFixture(): Rollup[] {
+  return WINDOW_DATES.map((date) => {
+    const map: Record<string, number> = { [agentKey(`/${CONTROL_SLUG}`)]: POPULATION.length + 1 };
+    OTHER_SLUGS.forEach((slug, i) => { map[agentKey(`/${slug}`)] = POPULATION.length - i; });
+    return dayWith(date, map);
+  });
+}
+
 function controlFoldedOnSixDays(): Rollup[] {
   return everyGuideKeyedFixture().map((day, index) => {
     if (index >= 6) return day;
@@ -161,7 +169,7 @@ describe("the homepage guide ranking and the class-route key cap (#1863)", () =>
         "a day kept for the ranking must measure the control",
       );
 
-      const selected = guidesHomepageLinks(POPULATION, agentOpensByPath(ranked), HOMEPAGE_GUIDE_COUNT);
+      const selected = rankGuidesByAgentOpens(POPULATION, agentOpensByPath(ranked)).slice(0, HOMEPAGE_GUIDE_COUNT);
       assert.equal(selected[0].slug, CONTROL_SLUG);
 
       const overEveryDay = rankByTotalOverEveryDay(days);
@@ -215,12 +223,24 @@ describe("the homepage guide ranking and the class-route key cap (#1863)", () =>
       heldDays,
       rankedWindow: agentOpensWindow(days, AGENT_OPENS_WINDOW_DAYS),
       attribution: agentRequestAttribution(days),
+      tiedAtCut: guidesTiedAtCut(
+        rankGuidesByAgentOpens(POPULATION, agentOpensByPath(days)),
+        HOMEPAGE_GUIDE_COUNT,
+      ),
     });
 
-    it("claims the ranking and nothing else only where every agent request reached a path", () => {
-      const days = everyGuideKeyedFixture();
+    it("claims the ranking and nothing else only where every request reached a path and nothing ties at the cut", () => {
+      const days = distinctlyRankedFixture();
       assert.equal(agentRequestAttribution(days).unattributed, 0);
       assert.match(selection(days, days.length), /Membership is that ranking and nothing else/);
+    });
+
+    it("withholds that claim on a fixture whose guides all tie below the leader", () => {
+      const days = everyGuideKeyedFixture();
+      assert.equal(agentRequestAttribution(days).unattributed, 0);
+      const sentence = selection(days, days.length);
+      assert.match(sentence, /19 of the 20 tie on opens with the first guide we left out/);
+      assert.doesNotMatch(sentence, /and nothing else/);
     });
 
     it("states the share that reached no path where any request did not", () => {
@@ -261,6 +281,7 @@ describe("the homepage guide ranking and the class-route key cap (#1863)", () =>
         heldDays: days.length,
         rankedWindow: null,
         attribution: agentRequestAttribution([]),
+        tiedAtCut: 0,
       });
       assert.doesNotMatch(sentence, /opened most/);
       assert.doesNotMatch(sentence, /and nothing else/);
@@ -274,6 +295,7 @@ describe("the homepage guide ranking and the class-route key cap (#1863)", () =>
         heldDays: 0,
         rankedWindow: null,
         attribution: agentRequestAttribution([]),
+        tiedAtCut: 0,
       });
       assert.equal(sentence, `All ${POPULATION.length} guides we publish, in the order /guides lists them.`);
     });

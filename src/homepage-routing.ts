@@ -111,12 +111,13 @@ export function rankGuidesByAgentOpens(
     .sort((a, b) => b.agentOpens - a.agentOpens || a.slug.localeCompare(b.slug));
 }
 
-export function guidesHomepageLinks(
-  guides: readonly GuideEntry[],
-  opens: Map<string, number>,
+export function guidesTiedAtCut(
+  ranked: readonly RankedGuide[],
   count = HOMEPAGE_GUIDE_COUNT,
-): RankedGuide[] {
-  return rankGuidesByAgentOpens(guides, opens).slice(0, count);
+): number {
+  const firstLeftOut = ranked[count];
+  if (!firstLeftOut) return 0;
+  return ranked.slice(0, count).filter((guide) => guide.agentOpens === firstLeftOut.agentOpens).length;
 }
 
 export function guidesGroupedByHeading(
@@ -134,6 +135,7 @@ export interface GuideSelection {
   heldDays: number;
   rankedWindow: AgentOpensWindow | null;
   attribution: AgentRequestAttribution;
+  tiedAtCut: number;
 }
 
 function sharePhrase(part: number, whole: number): string {
@@ -141,8 +143,14 @@ function sharePhrase(part: number, whole: number): string {
   return pct > 0 && pct < 0.1 ? "under 0.1%" : `${pct.toFixed(1)}%`;
 }
 
+function rankedWindowPhrase(window: AgentOpensWindow): string {
+  return window.days === 1
+    ? `on ${window.to}, the one day on which every guide we publish had its own count`
+    : `across the ${window.days} days on which every guide we publish had its own count, ${window.from} to ${window.to}`;
+}
+
 export function guideSelectionSentence(selection: GuideSelection): string {
-  const { selectedCount, populationCount, heldDays, rankedWindow, attribution } = selection;
+  const { selectedCount, populationCount, heldDays, rankedWindow, attribution, tiedAtCut } = selection;
   if (heldDays === 0) {
     return `All ${populationCount} guides we publish, in the order /guides lists them.`;
   }
@@ -150,13 +158,27 @@ export function guideSelectionSentence(selection: GuideSelection): string {
     return `All ${populationCount} guides we publish, in the order /guides lists them, and not a ranking. `
       + `We hold ${heldDays} days of traffic and can rank on none of them: on every one, at least one guide's requests could have been folded into a shared bucket, so a zero there would not mean no agent opened it.`;
   }
-  const lede = `The ${selectedCount} of ${populationCount} guides AI agents opened most across the ${rankedWindow.days} days we can attribute in full, ${rankedWindow.from} to ${rankedWindow.to}. `;
-  if (attribution.unattributed === 0) {
+  const lede = `The ${selectedCount} of ${populationCount} guides AI agents opened most ${rankedWindowPhrase(rankedWindow)}. `;
+  const qualifications: string[] = [];
+  if (attribution.unattributed > 0) {
+    const span = rankedWindow.days === 1 ? "that day" : "in those days";
+    qualifications.push(
+      `${attribution.unattributed} of ${attribution.total} agent requests ${span} `
+      + `(${sharePhrase(attribution.unattributed, attribution.total)}) reached a shared bucket rather than a path of their own, `
+      + `so the page each asked for is in none of these counts.`,
+    );
+  }
+  if (tiedAtCut > 0) {
+    qualifications.push(
+      `${tiedAtCut} of the ${selectedCount} tie on opens with the first guide we left out, `
+      + `so slug order rather than opens put them here.`,
+    );
+  }
+  if (qualifications.length === 0) {
     return lede
       + `Membership is that ranking and nothing else, so it changes when the window moves — every guide we publish stays at /guides.`;
   }
-  return lede
-    + `${attribution.unattributed} of ${attribution.total} agent requests in those days (${sharePhrase(attribution.unattributed, attribution.total)}) went to a shared bucket rather than a page, so this ranks what we attributed and not every request — every guide we publish stays at /guides.`;
+  return lede + qualifications.join(" ") + ` Every guide we publish stays at /guides.`;
 }
 
 export function browseSectionSentence(categories: number, offers: number): string {
