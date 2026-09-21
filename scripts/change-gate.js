@@ -437,6 +437,31 @@ export function measuredValue(attribute) {
   return value * (attribute?.scale ?? 1);
 }
 
+export function statesTheSameQuantity(stated, published) {
+  const value = measuredValue(stated);
+  if (value === null || value !== measuredValue(published)) return false;
+  if (stated?.unit && stated.unit === published?.unit) return true;
+  const measures = new Set((published?.words ?? []).filter(isAMeasureWord));
+  return (stated?.words ?? []).some((word) => isAMeasureWord(word) && measures.has(word));
+}
+
+export function figuresWeAlsoPublish(signals, terms) {
+  const published = quantifiedAttributes(terms);
+  if (published.length === 0) return [];
+  const bearing = [];
+  const seen = new Set();
+  for (const signal of signals ?? []) {
+    const figure = String(signal ?? "").trim();
+    const key = figure.toLowerCase().replace(/\s+/g, " ");
+    if (key === "" || seen.has(key)) continue;
+    const stated = quantifiedAttributes(figure);
+    if (!stated.some((quantity) => published.some((ours) => statesTheSameQuantity(quantity, ours)))) continue;
+    seen.add(key);
+    bearing.push(figure);
+  }
+  return bearing;
+}
+
 const NO_ALIASES = new Map();
 
 export function unitAliases(pageText) {
