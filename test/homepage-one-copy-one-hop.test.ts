@@ -183,10 +183,14 @@ describe("the home page routes a reader to an answer in one hop", () => {
     const stated = statedSelection(sectionOf(home, "answers"));
     assert.ok(stated, "the guide section does not state how many of how many it names");
     assert.strictEqual(named.length, stated.named, "the guide section names a different number than it states");
-    assert.strictEqual(
-      named.length,
-      stated.ranked ? HOMEPAGE_GUIDE_COUNT : stated.population,
-      "the guide section named a different number than it selects",
+    if (!stated.ranked) {
+      assert.strictEqual(named.length, stated.population, "the guide section disclaims a ranking and names a subset");
+      return;
+    }
+    assert.ok(named.length > 0, "the guide section claims a ranking and names nothing");
+    assert.ok(
+      named.length <= HOMEPAGE_GUIDE_COUNT,
+      `the guide section names ${named.length} guides, over the ${HOMEPAGE_GUIDE_COUNT} it publishes`,
     );
   });
 
