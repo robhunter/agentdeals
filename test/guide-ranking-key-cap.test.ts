@@ -293,7 +293,7 @@ describe("the homepage guide ranking and the class-route key cap (#1863)", () =>
 
     it("refuses to call the discarded-key count exact once its own tracker saturates", () => {
       const truncation = summarizeClassRouteTruncation(
-        {},
+        { [agentKey(OVERFLOW_PAGE_KEY)]: 301 },
         { [agentKey("/b")]: 1, [DISCARDED_KEY_OVERFLOW]: 300 },
         [],
       );
@@ -307,7 +307,7 @@ describe("the homepage guide ranking and the class-route key cap (#1863)", () =>
       const built = buildDailyRollup({
         ...source,
         class_route_truncation: summarizeClassRouteTruncation(
-          { [agentKey("/a")]: 5 },
+          { [agentKey("/a")]: 5, [agentKey(OVERFLOW_PAGE_KEY)]: 7 },
           { [agentKey("/b")]: 7 },
           ["/a"],
         ),
@@ -319,6 +319,54 @@ describe("the homepage guide ranking and the class-route key cap (#1863)", () =>
     it("reads a rollup written before the block existed as no measurement rather than a zero", () => {
       const legacy = parseRollup({ date: "2026-09-01", traffic: { by_class_route: {} } });
       assert.equal(legacy?.traffic.class_route_truncation, null);
+    });
+
+    it("#1877 summarises a day with no key-level record as no measurement rather than a zero", () => {
+      const truncation = summarizeClassRouteTruncation(
+        { [agentKey("/a")]: 5, [agentKey(OVERFLOW_PAGE_KEY)]: 20785 },
+        {},
+        [],
+      );
+      assert.equal(truncation.keys_discarded, null);
+      assert.equal(truncation.keys_discarded_is_exact, false);
+      assert.equal(truncation.requests_discarded, 20785);
+    });
+
+    it("#1877 counts a day that discarded nothing as a measured zero, not as an absence", () => {
+      const truncation = summarizeClassRouteTruncation({ [agentKey("/a")]: 5 }, {}, []);
+      assert.equal(truncation.keys_discarded, 0);
+      assert.equal(truncation.keys_discarded_is_exact, true);
+      assert.equal(truncation.requests_discarded, 0);
+    });
+
+    it("#1877 calls the key count a lower bound where the record covers part of the day", () => {
+      const truncation = summarizeClassRouteTruncation(
+        { [agentKey(OVERFLOW_PAGE_KEY)]: 8994 },
+        { [agentKey("/b")]: 2803 },
+        [],
+      );
+      assert.equal(truncation.requests_discarded, 8994);
+      assert.equal(truncation.keys_discarded, 1);
+      assert.equal(truncation.keys_discarded_is_exact, false);
+    });
+
+    it("#1877 reads a stored null key count back as a null and not as a zero", () => {
+      const parsed = parseRollup({
+        date: "2026-09-20",
+        traffic: {
+          by_class_route: {},
+          class_route_truncation: {
+            key_cap: 200,
+            keys_kept: 200,
+            keys_discarded: null,
+            keys_discarded_is_exact: false,
+            requests_discarded: 20785,
+            reserved_paths: [],
+          },
+        },
+      });
+      assert.equal(parsed?.traffic.class_route_truncation?.keys_discarded, null);
+      assert.equal(parsed?.traffic.class_route_truncation?.requests_discarded, 20785);
     });
 
     it("reports no reserved paths for a day the reservation did not cover in full", () => {
@@ -541,6 +589,11 @@ describe("the homepage guide ranking and the class-route key cap (#1863)", () =>
           truncation.requests_discarded,
           overflow,
           `${file} reports ${truncation.requests_discarded} requests discarded against ${overflow} in the overflow buckets`,
+        );
+        assert.notEqual(
+          truncation.keys_discarded === 0 && overflow > 0,
+          true,
+          `${file} counts 0 keys discarded against ${overflow} requests in the overflow buckets, so it states an absence as a zero`,
         );
       }
     });

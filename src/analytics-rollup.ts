@@ -124,10 +124,12 @@ function parseClassRouteTruncation(raw: unknown): ClassRouteTruncation | null {
   const reserved = Array.isArray(obj.reserved_paths)
     ? obj.reserved_paths.filter((p): p is string => typeof p === "string")
     : [];
+  const keysDiscarded = obj.keys_discarded;
   return {
     key_cap: numberAt(obj, "key_cap"),
     keys_kept: numberAt(obj, "keys_kept"),
-    keys_discarded: numberAt(obj, "keys_discarded"),
+    keys_discarded:
+      typeof keysDiscarded === "number" && Number.isFinite(keysDiscarded) ? keysDiscarded : null,
     keys_discarded_is_exact: obj.keys_discarded_is_exact === true,
     requests_discarded: numberAt(obj, "requests_discarded"),
     reserved_paths: reserved,

@@ -427,9 +427,9 @@
     "class_route_truncation": {
       "key_cap": 200,
       "keys_kept": 200,
-      "keys_discarded": 0,
-      "keys_discarded_is_exact": true,
-      "requests_discarded": 0,
+      "keys_discarded": null,
+      "keys_discarded_is_exact": false,
+      "requests_discarded": 20785,
       "reserved_paths": []
     }
   },
