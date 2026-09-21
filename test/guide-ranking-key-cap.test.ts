@@ -385,6 +385,31 @@ describe("the homepage guide ranking and the class-route key cap (#1863)", () =>
       );
     });
 
+    it("spends the whole cap on unreserved keys even where reservations came first", () => {
+      const guides = Array.from({ length: 12 }, (_, i) => `/reserved-guide-${i}`);
+      setReservedRouteKeys(guides, [RANKED_TRAFFIC_CLASS]);
+      for (const guide of guides) {
+        recordTrafficRaw(classifyRequest(guide, AGENT_UA), guide, 200);
+      }
+
+      const flood = MAX_CLASS_ROUTE_KEYS_PER_DAY + 50;
+      for (let i = 0; i < flood; i++) {
+        const path = `/flood${String(i).padStart(4, "0")}`;
+        recordTrafficRaw(classifyRequest(path, AGENT_UA), path, 200);
+      }
+
+      const source = getRollupDaySource(new Date().toISOString().slice(0, 10));
+      const unreserved = Object.keys(source.class_routes).filter((key) => {
+        const path = key.slice(key.indexOf(CLASS_ROUTE_SEP) + 1);
+        return path !== OVERFLOW_PAGE_KEY && !guides.includes(path);
+      });
+      assert.equal(
+        unreserved.length,
+        MAX_CLASS_ROUTE_KEYS_PER_DAY,
+        "reserving a key must not spend the budget the cap holds for everything else",
+      );
+    });
+
     it("folds an unreserved path once the cap binds", () => {
       setReservedRouteKeys(["/reserved-only"], [RANKED_TRAFFIC_CLASS]);
       const flood = MAX_CLASS_ROUTE_KEYS_PER_DAY + 10;
