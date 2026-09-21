@@ -258,16 +258,20 @@ describe("the guide list on the home page follows the traffic it says it does", 
     if (tmp) rmSync(tmp, { recursive: true, force: true });
   });
 
-  it("names the set that traffic ranks highest, re-derived from the same window", () => {
+  it("names the run that traffic ranks highest, re-derived from the same window", () => {
     assert.ok(published.length > HOMEPAGE_GUIDE_COUNT, "/guides lists no more guides than the home page names");
-    const expected = [...published]
-      .sort((a, b) => (opens[b] ?? 0) - (opens[a] ?? 0) || a.localeCompare(b))
-      .slice(0, HOMEPAGE_GUIDE_COUNT)
-      .map((slug) => `/${slug}`)
-      .sort();
+    const ranked = [...published].sort((a, b) => (opens[b] ?? 0) - (opens[a] ?? 0) || a.localeCompare(b));
+    let expected: string[] = [];
+    for (let length = Math.min(HOMEPAGE_GUIDE_COUNT, ranked.length); length > 0; length--) {
+      if ((opens[ranked[length - 1]] ?? 0) > (opens[ranked[length]] ?? 0)) {
+        expected = ranked.slice(0, length);
+        break;
+      }
+    }
+    assert.ok(expected.length > 0, "this window separates no guide from the next, so it cannot show the rule");
     assert.deepStrictEqual(
       guidePathsOn(html).sort(),
-      expected,
+      expected.map((slug) => `/${slug}`).sort(),
       "the home page named a different set of guides than the traffic it was given ranks highest",
     );
   });
@@ -286,17 +290,19 @@ describe("the guide list on the home page follows the traffic it says it does", 
     assert.deepStrictEqual([stated.from, stated.to], ["2026-01-01", "2026-01-02"], "the guide section states a window it did not read");
   });
 
-  it("says how much of the list it named on slug order rather than on opens", () => {
+  it("names no guide the window left on slug order, and stops short of the count it publishes", () => {
     const section = sectionOf(html, "answers");
+    const named = guidePathsOn(html);
     const scored = Object.keys(opens).filter((slug) => published.includes(slug)).length;
-    const tied = HOMEPAGE_GUIDE_COUNT - scored;
-    assert.ok(tied > 0, "this window scores every named guide, so it cannot show the tie");
-    assert.match(
-      section,
-      new RegExp(`${tied} of the ${HOMEPAGE_GUIDE_COUNT} tie on opens with the first guide we left out`),
-      "the guide section named guides on slug order without saying so",
+    assert.ok(scored < HOMEPAGE_GUIDE_COUNT, "this window scores the whole list, so it cannot show the cut");
+    assert.ok(
+      named.length < HOMEPAGE_GUIDE_COUNT,
+      `the guide section named ${named.length} guides where only ${scored} were opened`,
     );
-    assert.doesNotMatch(section, /and nothing else/, "the page claimed the list was that ranking and nothing else while a tie decided part of it");
+    const unopened = named.filter((path) => (opens[path.slice(1)] ?? 0) === 0);
+    assert.deepStrictEqual(unopened, [], "the guide section named a guide this window recorded no opens for");
+    assert.doesNotMatch(section, /tie on opens/, "the guide section disclosed a tie in a list opens decided");
+    assert.match(section, /Membership is that ranking and nothing else/);
   });
 
   it("states the share that reached no page once the window carries requests it could not attribute", async () => {
