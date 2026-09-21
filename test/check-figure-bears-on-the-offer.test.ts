@@ -7,6 +7,7 @@ import {
   A_CLAIM_ABOUT_WHAT_THE_PAGE_CONTAINS,
   MOST_FIGURES_REPORTED,
   SOURCE_CHECK_OK,
+  THE_NEGATION_NAMES_OUR_OWN_READING,
   WE_MATCHED_NO_AMOUNT_TO_OUR_TERMS,
   classifySource,
   figuresWorthReporting,
@@ -259,10 +260,29 @@ describe("no record we publish reports a figure its own terms do not state", () 
     assertPopulationFloor(amounts.length, 40, "records still reporting a figure that is not a stated zero");
   });
 
-  it("reads the sentence this rule retires as a claim about the page, and its replacement as one about us", () => {
-    assert.match("states amounts, none of which is a figure we publish", A_CLAIM_ABOUT_WHAT_THE_PAGE_CONTAINS);
+  it("reads the sentence this rule retires as a claim about the page, in any casing", () => {
+    for (const retired of [
+      "states amounts, none of which is a figure we publish",
+      "States amounts, none of which IS an amount we publish",
+      "states no amount we publish",
+      "states none of the figures we publish",
+      "does not state a price we publish",
+    ]) {
+      assert.match(retired, A_CLAIM_ABOUT_WHAT_THE_PAGE_CONTAINS, retired);
+    }
     assert.doesNotMatch(WE_MATCHED_NO_AMOUNT_TO_OUR_TERMS, A_CLAIM_ABOUT_WHAT_THE_PAGE_CONTAINS);
     assert.doesNotMatch('states "1,000 events/mo"', A_CLAIM_ABOUT_WHAT_THE_PAGE_CONTAINS);
+  });
+
+  it("attributes the fallback's negation to our own reading and not to the page", () => {
+    assert.match(WE_MATCHED_NO_AMOUNT_TO_OUR_TERMS, THE_NEGATION_NAMES_OUR_OWN_READING);
+    for (const overclaim of [
+      "states no amount we publish",
+      "states none of the figures we publish",
+      "states amounts, none of which is a figure we publish",
+    ]) {
+      assert.doesNotMatch(overclaim, THE_NEGATION_NAMES_OUR_OWN_READING, overclaim);
+    }
   });
 
   it("publishes no check sentence saying a figure of ours is absent from the page it read", () => {
