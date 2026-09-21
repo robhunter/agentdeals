@@ -13,8 +13,12 @@ const { toSlug } = await import("../dist/vendor-slug.js");
 const {
   measuredNoDifferenceClause,
   measuredNoDifferenceThenReadAgainClause,
+  readHadNoStandingClause,
+  readHadNoStandingThenReadAgainClause,
   unreconciledReadClause,
   unreconciledReadThenReadAgainClause,
+  REFUSAL_REASONS_THAT_VOID_THE_READS_STANDING,
+  WHAT_A_VOIDED_READ_FOUND,
 } = await import("../dist/change-refusal.js");
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -36,6 +40,7 @@ const CONFIRMS_THE_PRICE = "which confirms the price";
 const WHAT_A_READ_OF_OURS_FOUND = [
   "we found a change we could not reconcile with the terms we publish",
   "we refused the change we considered recording because it named no figure that had moved",
+  ...[...new Set(Object.values(WHAT_A_VOIDED_READ_FOUND) as string[])].map((found) => `we ${found}`),
 ];
 
 const REFUSAL_CLAUSES = [
@@ -43,6 +48,10 @@ const REFUSAL_CLAUSES = [
   measuredNoDifferenceClause("2026-01-01"),
   unreconciledReadThenReadAgainClause("2026-01-01", "2026-01-02"),
   measuredNoDifferenceThenReadAgainClause("2026-01-01", "2026-01-02"),
+  ...REFUSAL_REASONS_THAT_VOID_THE_READS_STANDING.flatMap((reason: string) => [
+    readHadNoStandingClause("2026-01-01", WHAT_A_VOIDED_READ_FOUND[reason]),
+    readHadNoStandingThenReadAgainClause("2026-01-01", "2026-01-02", WHAT_A_VOIDED_READ_FOUND[reason]),
+  ]),
 ];
 
 let port = 0;
