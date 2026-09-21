@@ -18,6 +18,10 @@ import {
   detailWithoutFiguresWeDoNotPublish,
   reportedFigures,
 } from "../scripts/withdraw-figures-we-do-not-publish.js";
+import {
+  THE_CLAIM_THIS_RESTATES,
+  detailAttributedToOurReading,
+} from "../scripts/restate-fallback-as-our-own-reading.js";
 import { assertPopulationFloor, assertSharesPopulation, recordsInTheCatalogue } from "./population-floor.ts";
 
 type Offer = import("../src/types.ts").Offer;
@@ -305,6 +309,30 @@ describe("no record we publish reports a figure its own terms do not state", () 
       [],
       `${claiming.length} of ${offers.length} records claim a figure of ours is not on the page`,
     );
+  });
+
+  it("restates a stored claim about the page as a statement about our own reading", () => {
+    for (const named of [
+      'the page names Xata as "xata"',
+      'the page writes "swagger", the domain we cite SwaggerHub from',
+    ]) {
+      const stored = `${named} and ${THE_CLAIM_THIS_RESTATES}`;
+      const settled = detailAttributedToOurReading(stored);
+      assert.strictEqual(settled, `${named} and ${WE_MATCHED_NO_AMOUNT_TO_OUR_TERMS}`);
+      assert.doesNotMatch(settled, A_CLAIM_ABOUT_WHAT_THE_PAGE_CONTAINS);
+      assert.match(settled, THE_NEGATION_NAMES_OUR_OWN_READING);
+    }
+  });
+
+  it("restates a sentence once, and reading it again leaves it alone", () => {
+    const stored = `the page names Hanko as "hanko" and ${THE_CLAIM_THIS_RESTATES}`;
+    const once = detailAttributedToOurReading(stored);
+    assert.strictEqual(detailAttributedToOurReading(once), once);
+  });
+
+  it("leaves a stored sentence that reports a figure the page states", () => {
+    const withAFigure = 'the page names Render as "render" and states "5 GB included per month"';
+    assert.strictEqual(detailAttributedToOurReading(withAFigure), withAFigure);
   });
 
   it("leaves a record whose reported figure is one we publish exactly as it was", () => {
