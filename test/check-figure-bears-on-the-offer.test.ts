@@ -4,9 +4,10 @@ import { readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import {
+  A_CLAIM_ABOUT_WHAT_THE_PAGE_CONTAINS,
   MOST_FIGURES_REPORTED,
   SOURCE_CHECK_OK,
-  STATES_NO_FIGURE_WE_PUBLISH,
+  WE_MATCHED_NO_AMOUNT_TO_OUR_TERMS,
   classifySource,
   figuresWorthReporting,
   statesAnAmountOfZero,
@@ -44,7 +45,7 @@ describe("the figure a source check reports bears on the offer", () => {
     assert.doesNotMatch(check.detail, /\$29/);
   });
 
-  it("reports no figure at all where none of them is one we publish", () => {
+  it("reports no figure at all where we matched none of them to the terms we publish", () => {
     const check = checkOf(
       {
         vendor: "Hookline",
@@ -55,7 +56,24 @@ describe("the figure a source check reports bears on the offer", () => {
     );
     assert.strictEqual(check.outcome, SOURCE_CHECK_OK);
     assert.doesNotMatch(check.detail, /and states "/);
-    assert.ok(check.detail.endsWith(STATES_NO_FIGURE_WE_PUBLISH), check.detail);
+    assert.ok(check.detail.endsWith(WE_MATCHED_NO_AMOUNT_TO_OUR_TERMS), check.detail);
+  });
+
+  it("says what our reading matched and nothing about what the page holds beyond it", () => {
+    const offer = {
+      vendor: "Hookline",
+      url: "https://hookline.dev/pricing",
+      description: "Free plan includes 5 GB storage",
+    };
+    const reached = "Hookline pricing. Plans start at $49/mo for teams that need more.";
+    const whatWeRead = priceSignals(reached);
+    assert.ok(!whatWeRead.some(signal => /5\s?GB/i.test(signal)), whatWeRead.join(" · "));
+    const alsoOnThePage = `${reached} Every free workspace comes with 5 GB storage.`;
+    const check = classifySource(offer, { ok: true, text: alsoOnThePage }, whatWeRead);
+    assert.strictEqual(check.outcome, SOURCE_CHECK_OK);
+    assert.ok(check.detail.endsWith(WE_MATCHED_NO_AMOUNT_TO_OUR_TERMS), check.detail);
+    assert.doesNotMatch(check.detail, A_CLAIM_ABOUT_WHAT_THE_PAGE_CONTAINS);
+    assert.strictEqual(classifySource(offer, { ok: true, text: reached }, whatWeRead).detail, check.detail);
   });
 
   it("reports the numeric signal the check passed on rather than a tier name with no figure in it", () => {
@@ -239,6 +257,23 @@ describe("no record we publish reports a figure its own terms do not state", () 
     );
     assertPopulationFloor(reporting.length, 180, "records still reporting a figure the page states");
     assertPopulationFloor(amounts.length, 40, "records still reporting a figure that is not a stated zero");
+  });
+
+  it("reads the sentence this rule retires as a claim about the page, and its replacement as one about us", () => {
+    assert.match("states amounts, none of which is a figure we publish", A_CLAIM_ABOUT_WHAT_THE_PAGE_CONTAINS);
+    assert.doesNotMatch(WE_MATCHED_NO_AMOUNT_TO_OUR_TERMS, A_CLAIM_ABOUT_WHAT_THE_PAGE_CONTAINS);
+    assert.doesNotMatch('states "1,000 events/mo"', A_CLAIM_ABOUT_WHAT_THE_PAGE_CONTAINS);
+  });
+
+  it("publishes no check sentence saying a figure of ours is absent from the page it read", () => {
+    const claiming = offers.filter(offer =>
+      A_CLAIM_ABOUT_WHAT_THE_PAGE_CONTAINS.test(offer.source_check?.detail ?? ""),
+    );
+    assert.deepStrictEqual(
+      claiming.map(offer => `${offer.vendor} — ${offer.source_check!.detail}`).slice(0, 10),
+      [],
+      `${claiming.length} of ${offers.length} records claim a figure of ours is not on the page`,
+    );
   });
 
   it("leaves a record whose reported figure is one we publish exactly as it was", () => {

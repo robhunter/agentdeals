@@ -250,7 +250,10 @@ function namedClause(vendor, naming) {
 
 export const MOST_FIGURES_REPORTED = 4;
 
-export const STATES_NO_FIGURE_WE_PUBLISH = "states amounts, none of which is a figure we publish";
+export const WE_MATCHED_NO_AMOUNT_TO_OUR_TERMS = "states amounts, none of which we matched to the terms we publish";
+
+export const A_CLAIM_ABOUT_WHAT_THE_PAGE_CONTAINS =
+  /\b(?:none of which is a figure we publish|states no figure (?:of ours|we publish)|does not state (?:a|any) figure we publish|no figure we publish (?:is|appears) on the page)\b/i;
 
 const AN_AMOUNT_OF_ZERO = /^(?:[$€£¥₹]\s?0(?:[.,]0+)?|0(?:\.0+)?\s?(?:USD|EUR|GBP))$/i;
 
@@ -266,7 +269,7 @@ export function figuresWorthReporting(signals, terms) {
 }
 
 export function statedFiguresClause(figures) {
-  if (figures.length === 0) return STATES_NO_FIGURE_WE_PUBLISH;
+  if (figures.length === 0) return WE_MATCHED_NO_AMOUNT_TO_OUR_TERMS;
   return `states ${figures.map((figure) => `"${figure}"`).join(" and ")}`;
 }
 
