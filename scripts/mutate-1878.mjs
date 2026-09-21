@@ -4,6 +4,7 @@ import { execFileSync } from "node:child_process";
 const SUITES = [
   "test/homepage-ranking-window-sentence.test.ts",
   "test/guide-ranking-key-cap.test.ts",
+  "test/homepage-one-copy-one-hop.test.ts",
 ];
 
 const MUTANTS = [
@@ -24,19 +25,19 @@ const MUTANTS = [
     `    const span = "in those days";`],
 
   ["a-guide-below-the-cut-counts-as-tied", "src/homepage-routing.ts",
-    "  return ranked.slice(0, count).filter((guide) => guide.agentOpens === first.agentOpens).length;",
-    "  return ranked.slice(0, count).filter((guide) => guide.agentOpens >= first.agentOpens).length;"],
+    "  return ranked.slice(0, count).filter((guide) => guide.agentOpens === firstLeftOut.agentOpens).length;",
+    "  return ranked.slice(0, count).filter((guide) => guide.agentOpens >= firstLeftOut.agentOpens).length;"],
 
   ["the-tie-is-read-against-the-last-guide-named", "src/homepage-routing.ts",
-    "  const first = ranked[count];",
-    "  const first = ranked[count - 1];"],
+    "  const firstLeftOut = ranked[count];",
+    "  const firstLeftOut = ranked[count - 1];"],
 
   ["nothing-ever-ties-at-the-cut", "src/homepage-routing.ts",
-    "  const first = ranked[count];\n  if (!first) return 0;",
-    "  const first = ranked[count];\n  if (first) return 0;"],
+    "  if (!firstLeftOut) return 0;",
+    "  if (firstLeftOut) return 0;"],
 
   ["the-completeness-claim-survives-a-tie", "src/homepage-routing.ts",
-    "  if (selection.tiedAtCut > 0) {",
+    "  if (tiedAtCut > 0) {",
     "  if (false) {"],
 
   ["the-page-reports-no-tie-however-many-there-are", "src/serve.ts",
