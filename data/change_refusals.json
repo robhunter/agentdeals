@@ -306,6 +306,18 @@
       "refused_date": "2026-09-03"
     },
     {
+      "vendor": "Applitools Eyes",
+      "change_type": "free_tier_removed",
+      "reason": "no_removal_evidence",
+      "detail": "a free tier was recorded as removed on the evidence that the page did not mention it, and the summary states no price, ending or replacement where the free tier was",
+      "summary": "The free tier is no longer explicitly mentioned. The lowest tier available is 'Starter' at $667/month, with 100,000 component checkpoints or 1,000 page checkpoints.",
+      "previous_state": "Free tier: 50 Test Units per month, unlimited users. AI-powered Visual AI testing to detect meaningful visual differences while ignoring acceptable rendering variations. Supports Playwright, Cypress, Selenium, Storybook. No credit card required.",
+      "current_state": "Starter plan costs $667 / mo, paid annually. Includes Unlimited users, 100,000 component checkpoints or 1,000 page checkpoints, Visual validation with Visual AI, Visual AI MCP server, Figma design integration, Storybook component testing, Cross-browser & device testing, CI/CD pipeline integrations, Automated maintenance & RCA, Accessibility testing, and Standard support (portal / email).",
+      "source_url": "https://applitools.com/platform-pricing/",
+      "category": "Testing",
+      "refused_date": "2026-09-21"
+    },
+    {
       "vendor": "Argos",
       "change_type": "free_tier_removed",
       "reason": "removal_read_from_root",
@@ -441,15 +453,15 @@
     },
     {
       "vendor": "AWS",
-      "change_type": "limits_increased",
+      "change_type": "pricing_restructured",
       "reason": "confirmed_unchanged",
-      "detail": "The current page clarifies the $100 + up to $100 is equivalent to a total of $200 over 6 months. The removal of the specific services list doesn't change the core offering, as the stored description didn't guarantee those services were *always* free, only that they were *included* in the free tier.",
-      "summary": "The free tier now offers up to $200 in credits over 6 months, instead of $100 + up to $100 more. The specific services included in the always-free tier are no longer explicitly listed.",
+      "detail": "The report accurately reflects the stored description's terms regarding the $100 + up to $100 credit and 6-month timeframe, just with more detail. The addition of 'access to all AWS services on a paid plan' is not a change to the *free* tier, but a clarification of what happens after the free tier ends.",
+      "summary": "The free tier now offers up to $200 in credits over 6 months, split into $100 immediately and up to $100 more earned through activities. It also provides free usage of select services and access to all AWS services on a paid plan.",
       "previous_state": "Always-free tier includes Lambda (1M invocations/mo), DynamoDB (25 GB), CloudWatch. New accounts get $100 credit at sign-up + up to $100 more via activities, free plan for 6 months",
       "current_state": "When you create a new AWS Free Tier account, you get $100 in credits immediately. As you explore key services, you can earn up to $100 more. That's up to $200 over 6 months to build, break things, and experiment with no charges and no surprise bills on the Free plan. The account closes on its own 6 months after you open it or when your credits run out, whichever comes first. You won’t be charged unless you convert to a Paid plan.",
       "source_url": "https://aws.amazon.com/free/",
       "category": "Cloud IaaS",
-      "refused_date": "2026-09-05"
+      "refused_date": "2026-09-21"
     },
     {
       "vendor": "Basecamp",
@@ -564,6 +576,18 @@
       "refused_date": "2026-09-19"
     },
     {
+      "vendor": "bonsai.io",
+      "change_type": "free_tier_removed",
+      "reason": "no_baseline",
+      "detail": "free_tier_removed claimed, and the clause that named the terms the change was measured on was dropped — what is left states no earlier figure and nothing the stored description measured",
+      "summary": "The free plan described in the stored deal info is no longer available. The lowest tier is now the 'Staging' plan at $15/month with 1 GB storage and 256 MB memory.",
+      "previous_state": "Free Sandbox plan: 125 MB memory, 125 MB storage, 35K documents. Free forever. Managed Elasticsearch.",
+      "current_state": "The Staging plan costs $15/month and includes 1 GB storage, 256 MB memory, and 100k documents.",
+      "source_url": "https://bonsai.io/pricing",
+      "category": "Search",
+      "refused_date": "2026-09-21"
+    },
+    {
       "vendor": "Brackets",
       "change_type": "rebranded",
       "reason": "no_price_signal",
@@ -588,6 +612,19 @@
       "refused_date": "2026-08-29"
     },
     {
+      "vendor": "Braintrust",
+      "change_type": "pricing_restructured",
+      "reason": "same_transition_graded_differently",
+      "detail": "graded as Braintrust|pricing_restructured|2026-09-03|https://www.braintrust.dev/pricing, a record we withdrew",
+      "summary": "The Starter plan now includes $10 in credits and token rates, and the processed data limit is 1 GB + $4/GB. The scores limit is 10k + $2.50/1k. Data retention is 14 days. The page also mentions a 30-day data retention period available with the Pro plan, and custom data retention policies for Enterprise plans.",
+      "previous_state": "Evals, prompt playground, and data management for Gen AI. Starter plan (free): 1 GB processed data/month, 10k scores/month, 14 days data retention. Unlimited users, projects, datasets, playgrounds, and experiments. Overage: $4/GB data, $2.50 per 1k scores.",
+      "current_state": "Starter plan: $0 / month, $10 credits + tok rates, 1 GB processed data + $4/GB, 10k scores + $2.50/1k, 14-day retention, Unlimited users, projects, datasets, playgrounds, and experiments.",
+      "source_url": "https://www.braintrust.dev/pricing",
+      "category": "AI / ML",
+      "refused_date": "2026-09-21",
+      "collided_with": "Braintrust|pricing_restructured|2026-09-03|https://www.braintrust.dev/pricing"
+    },
+    {
       "vendor": "Brave Search API",
       "change_type": "free_tier_removed",
       "reason": "confirmed_unchanged",
@@ -610,6 +647,18 @@
       "source_url": "https://www.brevo.com/pricing/",
       "category": "Email",
       "refused_date": "2026-09-05"
+    },
+    {
+      "vendor": "Brevo",
+      "change_type": "limits_reduced",
+      "reason": "unquantified_limit",
+      "detail": "limits_reduced claimed, but the current state names no quantity for anything the stored state measured (300 email)",
+      "summary": "The free tier now limits emails to 300/day, but previously had unlimited contacts. The current page states a free plan exists with no credit card needed, but does not explicitly state unlimited contacts.",
+      "previous_state": "300 emails/day, unlimited contacts (fair use policy), marketing automation, segmentation, landing pages. Formerly Sendinblue",
+      "current_state": "Free forever, no credit card needed. Best for individuals and solopreneurs building an online presence.",
+      "source_url": "https://www.brevo.com/pricing/",
+      "category": "Email",
+      "refused_date": "2026-09-21"
     },
     {
       "vendor": "Brex",
@@ -1196,6 +1245,18 @@
       "refused_date": "2026-09-13"
     },
     {
+      "vendor": "Comet ML",
+      "change_type": "pricing_restructured",
+      "reason": "confirmed_unchanged",
+      "detail": "The report confirms the 'Free Cloud' plan exists as previously described and clarifies existing information (Open Source is downloadable). The introduction of 'Opik' and 'Ollie' are *new* offerings, not changes to the existing 'Free Cloud' plan.",
+      "summary": "The 'Free Cloud' plan still exists. The page also introduces 'Opik' and 'Ollie' with associated trials and paid plans. The 'Open Source' option is now explicitly named as a downloadable option.",
+      "previous_state": "ML experiment tracking and LLM evaluation — There are multiple free options: 'Free' (Open Source GitHub), 'Free Cloud' (up to 10 team members, 25k spans per month, 60-day data retention), and a 'Free' plan for academics. The 'Free Cloud' plan includes Agent tracing & analysis, Test Suites & assertions, and Agent Playground.",
+      "current_state": "Up to 10 team members, 25k spans per month, 60-day data retention. Includes: Agent tracing & analysis, Test Suites & assertions, Agent Playground",
+      "source_url": "https://www.comet.com/site/pricing/",
+      "category": "AI / ML",
+      "refused_date": "2026-09-21"
+    },
+    {
       "vendor": "ConfigCat",
       "change_type": "limits_increased",
       "reason": "measures_no_change",
@@ -1535,6 +1596,19 @@
       "category": "AI / ML",
       "refused_date": "2026-09-10",
       "collided_with": "Deepgram|new_free_tier|2026-08-28|https://deepgram.com/pricing"
+    },
+    {
+      "vendor": "DeepSeek API",
+      "change_type": "pricing_restructured",
+      "reason": "same_transition_graded_differently",
+      "detail": "same vendor, source_url and previous_state as DeepSeek API|pricing_restructured|2026-09-03|https://api-docs.deepseek.com/quick_start/pricing",
+      "summary": "Pricing has significantly changed. The current pricing shows a range of $0.003 - $1.32/M input and $0.6 - $3.96/M output depending on cache status and peak/off-peak hours.",
+      "previous_state": "Among the cheapest LLM APIs available. DeepSeek V3.2 (deepseek-chat): $0.28/M input, $0.42/M output (1M context). DeepSeek V3.2 Thinking (deepseek-reasoner): $0.28/M input, $0.42/M output. Cache hits 90% cheaper. Off-peak discounts available. China-based.",
+      "current_state": "1M INPUT TOKENS (CACHE HIT) OFF-PEAK $0.003 PEAK $0.006; 1M INPUT TOKENS (CACHE MISS) OFF-PEAK $0.15 PEAK $0.3; 1M OUTPUT TOKENS OFF-PEAK $0.6 PEAK $1.2",
+      "source_url": "https://api-docs.deepseek.com/quick_start/pricing",
+      "category": "AI / ML",
+      "refused_date": "2026-09-21",
+      "collided_with": "DeepSeek API|pricing_restructured|2026-09-03|https://api-docs.deepseek.com/quick_start/pricing"
     },
     {
       "vendor": "deployhq.com",
@@ -2148,6 +2222,18 @@
       "refused_date": "2026-09-03"
     },
     {
+      "vendor": "Gcore DNS",
+      "change_type": "limits_increased",
+      "reason": "unquantified_limit",
+      "detail": "limits_increased claimed, but the current state names no quantity for anything the stored state measured (210 pop, 10,000,000 request, 0.20 currency, 1,000,000 request, 1 zone)",
+      "summary": "The free tier for Managed DNS now limits dynamic RRset to 1 per zone, which matches the stored information. However, the free tier now includes unlimited requests, whereas the stored information stated 10,000,000 requests included, with costs of €0.20 per 1,000,000 requests over that limit.",
+      "previous_state": "Managed DNS has a free tier with unlimited zones, Anycast across 210+ PoPs, DDoS protection, IPv4/IPv6, 10,000,000 requests included, and costs €0.20 per 1,000,000 requests over that limit. It also limits dynamic RRset to 1 per zone.",
+      "current_state": "Unlimited requests included.",
+      "source_url": "https://gcore.com/pricing/edge-network",
+      "category": "DNS & Domain Management",
+      "refused_date": "2026-09-21"
+    },
+    {
       "vendor": "geocodify.com",
       "change_type": "limits_increased",
       "reason": "unquantified_limit",
@@ -2646,6 +2732,18 @@
       "source_url": "https://hunter.io/pricing",
       "category": "Dev Utilities",
       "refused_date": "2026-09-05"
+    },
+    {
+      "vendor": "Hunter.io",
+      "change_type": "limits_increased",
+      "reason": "states_no_difference",
+      "detail": "the summary states that the page agrees with what we hold, and names no figure the stored description did not already carry",
+      "summary": "The free tier still exists, but the description is more detailed. The free tier includes 50 credits per month, connection to 1 email account, 500 recipients per sequence, and unlimited team members.",
+      "previous_state": "Email finder and verification API — free tier: 50 credits/month (searches + verifications), 1 connected email account, 500 recipients per sequence, unlimited team members",
+      "current_state": "The Free plan costs $0 and includes 50 credits per month, connection to 1 email account, 500 recipients per sequence, and unlimited team members.",
+      "source_url": "https://hunter.io/pricing",
+      "category": "Dev Utilities",
+      "refused_date": "2026-09-21"
     },
     {
       "vendor": "Hygraph",
@@ -3566,6 +3664,18 @@
       "refused_date": "2026-09-09"
     },
     {
+      "vendor": "Mistral AI",
+      "change_type": "limits_increased",
+      "reason": "confirmed_unchanged",
+      "detail": "The report restates the stored description and notes additional details not present in the original description.",
+      "summary": "The free plan now includes limited messages, web searches, and coding sessions, $10/mo in API credits, and access to Mistral models in Studio. The current page details more specific limits (e.g., up to 5 free web searches, up to 40 free image generations) and additional features like voice mode, skills, and connectors. The Pro plan is $14.99/mo, and there's a Team plan at $24.99/user/mo.",
+      "previous_state": "Free plan includes $10/mo in API credits and access to Mistral models in Studio, alongside limited messages, web searches and coding sessions. Paid API rates start at $0.5/M input and $1.5/M output tokens for Mistral Large; batch processing halves the price and cached input tokens cost up to 90% less.",
+      "current_state": "The Free plan provides limited access to Vibe, including our latest models, chat, search, creation, and Vibe for code for agentic coding in your terminal. On the Free plan, you also get access to Mistral Studio. It includes $10 /mo in API credits.",
+      "source_url": "https://mistral.ai/pricing",
+      "category": "AI / ML",
+      "refused_date": "2026-09-21"
+    },
+    {
       "vendor": "mockaroo",
       "change_type": "limits_reduced",
       "reason": "same_transition_graded_differently",
@@ -3693,12 +3803,12 @@
       "change_type": "limits_reduced",
       "reason": "null_comparison",
       "detail": "summary states \"down from\" between two values of 500 and no stored quantity is absent from the current state",
-      "summary": "The free tier now offers 1 GB of storage and 50 million query tokens, down from the stored 1 GB storage and 50M query tokens. The number of connections is now 500, down from the stored 500 max connections.",
+      "summary": "The free tier now offers 1 GB of storage and 50 million query tokens, down from the stored value of 1 GB storage and 50M serverless query tokens. The number of connections is now 500, down from the stored value of 500.",
       "previous_state": "Postgres for multi-tenant apps — 1 GB storage, 50M serverless query tokens, 500 max connections. Unlimited databases and tenant DBs. Always-on (no cold starts)",
-      "current_state": "Free tier includes 1 GB storage, 50 million query tokens, and 500 connections.",
+      "current_state": "The Free tier offers 1 GB of storage, 50 million query tokens, and 500 connections.",
       "source_url": "https://www.thenile.dev/pricing",
       "category": "Databases",
-      "refused_date": "2026-09-05"
+      "refused_date": "2026-09-21"
     },
     {
       "vendor": "NordPass",
@@ -4005,6 +4115,18 @@
       "refused_date": "2026-08-29"
     },
     {
+      "vendor": "paperspace",
+      "change_type": "pricing_restructured",
+      "reason": "restates_stored_quantities",
+      "detail": "narrowing claimed, and every quantity the current state names is one the stored description already held at the same value (5 GB storage), and drops 2 the stored description carried",
+      "summary": "The free tier now explicitly states 'Plus utilization costs on paid instances' and 'Basic instances (billed per hour)'. The stored information only mentioned 'billed per hour' without specifying it applied to basic instances. The Pro tier is now $8/month instead of $12/month. The free tier now appears twice on the page.",
+      "previous_state": "ML platform (now part of DigitalOcean) — There is a 'Free' tier offering public projects, 5GB storage, and basic instances (billed per hour). Other tiers include 'Pro' ($12/month), 'Growth' ($39/month), and various team plans (T0, T1, T2) with different storage and instance limits, all with utilization costs on paid instances.",
+      "current_state": "The 'Free' tier offers public projects, 5GB storage, and basic instances (billed per hour) with utilization costs on paid instances.",
+      "source_url": "https://www.paperspace.com/pricing",
+      "category": "AI / ML",
+      "refused_date": "2026-09-21"
+    },
+    {
       "vendor": "PDF-API.io",
       "change_type": "limits_reduced",
       "reason": "confirmed_unchanged",
@@ -4236,6 +4358,19 @@
       "refused_date": "2026-09-19"
     },
     {
+      "vendor": "Prisma Accelerate",
+      "change_type": "limits_increased",
+      "reason": "same_transition_graded_differently",
+      "detail": "same vendor, source_url and previous_state as Prisma Accelerate|limits_increased|2026-09-05|https://www.prisma.io/pricing",
+      "summary": "The free tier now offers 200,000 operations/month instead of 100,000. Prisma Postgres is now included in the free tier with 500 MB storage and 5 databases.",
+      "previous_state": "Connection pooling and caching for any database — 100,000 operations/month, 10 connection pool limit, auto-scaling. Also available: Prisma Postgres free tier with 500 MB storage and up to 5 databases",
+      "current_state": "Free $0 / month. Prisma Postgres 200k operations / month, 500 MB storage, 5 databases.",
+      "source_url": "https://www.prisma.io/pricing",
+      "category": "Databases",
+      "refused_date": "2026-09-21",
+      "collided_with": "Prisma Accelerate|limits_increased|2026-09-05|https://www.prisma.io/pricing"
+    },
+    {
       "vendor": "Projects",
       "change_type": "pricing_restructured",
       "reason": "confirmed_unchanged",
@@ -4368,6 +4503,18 @@
       "source_url": "https://railway.com/pricing",
       "category": "Cloud Hosting",
       "refused_date": "2026-09-18"
+    },
+    {
+      "vendor": "Ramp",
+      "change_type": "limits_reduced",
+      "reason": "confirmed_unchanged",
+      "detail": "The current page clarifies details about the AWS credits (Activate program, varying amounts) and provides more examples of partner discounts, but doesn't fundamentally change the offer of AWS credits and partner discounts up to a total of $350,000. The stored description didn't guarantee a fixed $5,000 AWS credit.",
+      "summary": "AWS credits are now available through the AWS Activate program, with amounts varying (up to $2,500 for OpenAI, up to $100,000 for Datadog, $350 for Google Cloud Platform, and $5,000 for QuickNode). The partner discounts on other tools are still available, but the total value of the partner rewards program is now explicitly stated as $350,000, and the specific amount for AWS credits is no longer fixed at $5,000.",
+      "previous_state": "Up to $5,000 in AWS credits plus partner discounts on Notion, and other tools. Part of $350K+ total partner rewards program",
+      "current_state": "Access $350,000 in partner rewards, including AWS credits through the AWS Activate program, and discounts on various tools like Notion, Deel, 1Password, and many others. Specific credit amounts vary by partner (e.g., $2,500 for OpenAI, $100,000 for Datadog).",
+      "source_url": "https://ramp.com/rewards/aws",
+      "category": "Startup Perks",
+      "refused_date": "2026-09-21"
     },
     {
       "vendor": "readthedocs.org",
@@ -5122,6 +5269,18 @@
       "refused_date": "2026-09-09"
     },
     {
+      "vendor": "SwaggerHub",
+      "change_type": "free_tier_removed",
+      "reason": "free_tier_still_offered",
+      "detail": "a free tier was recorded as removed by a summary that reports the page still offering one",
+      "summary": "The page prominently features a 'Try Free' button leading to a free trial, but also states that there's a difference between free Swagger tools and commercial Swagger products. The free tools (Editor, Codegen, UI) are open-source and run locally. The page does not mention a permanent free tier for SwaggerHub itself.",
+      "previous_state": "API design and documentation platform (SmartBear) — no permanent free tier. Swagger's own pricing FAQ, read 2026-09-05: \"You can get started with Swagger with a free trial, no credit card required, then choose the plan that best fits your usage and requirements.\" The same FAQ puts the free Swagger tools on the open-source side — Swagger Editor, Swagger UI and Swagger Codegen, run locally — and SwaggerHub among the commercial products. Plan prices are client-rendered and were not read.",
+      "current_state": "Users can start a free trial of SwaggerHub. There are also free, open-source Swagger tools available (Editor, Codegen, UI) that run locally.",
+      "source_url": "https://swagger.io/tools/swaggerhub/pricing/",
+      "category": "API Development",
+      "refused_date": "2026-09-21"
+    },
+    {
       "vendor": "SweetUptime",
       "change_type": "limits_increased",
       "reason": "same_transition_graded_differently",
@@ -5562,6 +5721,18 @@
       "refused_date": "2026-09-05"
     },
     {
+      "vendor": "URLscan.io",
+      "change_type": "limits_reduced",
+      "reason": "unquantified_limit",
+      "detail": "limits_reduced claimed, but the current state names no quantity for anything the stored state measured (50 private, 1,000 unlisted, 5,000 public, 1,000 search, 10,000 result)",
+      "summary": "The free tier now has different limits for Private Scans, Unlisted Scans, and Search/Result Requests.",
+      "previous_state": "URL and website security scanner API — free tier: 50 private scans/day, 1,000 unlisted scans/day, 5,000 public scans/day, 1,000 search requests/day, 10,000 result requests/day",
+      "current_state": "Private Scans: 50/day, Unlisted Scans: 1,000/day, Search Requests: 1,000/day, Result Requests: 10,000/day",
+      "source_url": "https://urlscan.io/pricing",
+      "category": "Security",
+      "refused_date": "2026-09-21"
+    },
+    {
       "vendor": "UserCheck",
       "change_type": "limits_increased",
       "reason": "same_transition_graded_differently",
@@ -5788,15 +5959,15 @@
     },
     {
       "vendor": "Xata",
-      "change_type": "pricing_model_change",
+      "change_type": "pricing_restructured",
       "reason": "confirmed_unchanged",
-      "detail": "The stored description already stated the managed platform was now paid with a 14-day trial. The current page simply provides pricing details.",
-      "summary": "The self-hosted, free forever option is still mentioned, but the managed platform is now paid, with pricing starting at $0.012/hr + $0.28/GB/month. A 14-day free trial with no credit card required is offered for the commercial tier.",
+      "detail": "The report accurately reflects the stored description's statement that the managed platform is now paid with a trial and credit.",
+      "summary": "The free, self-hosted tier still exists, but the managed platform is now paid, starting at $0.012/hr + $0.28/GB/month, with a 14-day free trial and $100 credit.",
       "previous_state": "Open-source Postgres platform (Apache 2.0) with copy-on-write branching and scale-to-zero. Self-hosted on Kubernetes — free forever. Managed platform is now paid (compute + storage billed hourly); 14-day free trial with $100 credit on the commercial tier.",
-      "current_state": "Xata Cloud is a fully managed, pay-as-you-go service starting at $0.012 /hr + $0.28/GB/mo storage. A 14-day free trial is available. Self-managed is free.",
+      "current_state": "Xata Cloud is a fully managed, pay-as-you-go service starting at $0.012 /hr + $0.28/GB/month. A 14-day free trial is available.",
       "source_url": "https://xata.io/pricing",
       "category": "Databases",
-      "refused_date": "2026-09-05"
+      "refused_date": "2026-09-21"
     },
     {
       "vendor": "xcloud.host",
