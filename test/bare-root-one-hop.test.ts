@@ -7,7 +7,12 @@ import {
   probeOffer,
   summarise,
   applyRepoints,
+  heldPopulation,
+  repointsTheRulingTakes,
+  verifiedDatesThatMoved,
 } from "../scripts/bare-root-one-hop-audit.mjs";
+import { figuresWeAlsoPublish } from "../scripts/change-gate.js";
+import { reportedFigures } from "../scripts/withdraw-figures-we-do-not-publish.js";
 
 const ROOT = "https://cloud.typesense.org/";
 
@@ -24,7 +29,9 @@ const OFFER = {
 };
 
 const PRICING_PAGE =
-  "Typesense Cloud pricing. Free tier $0/mo for a 64 MB cluster. Production clusters from $19.20 per month.";
+  "Typesense Cloud pricing. Free: 64 MB RAM / month. Production clusters from $19.20 per month.";
+const A_PAGE_OF_AMOUNTS_THAT_ARE_NOT_OURS =
+  "Typesense Cloud pricing. Free tier $0/mo for a starter cluster. Production clusters from $19.20 per month.";
 const A_PAGE_THAT_NAMES_THE_VENDOR_AND_NO_TERMS =
   "Typesense Cloud. Search that ships in minutes. Talk to us about your workload.";
 const A_PAGE_OF_PRICES_FOR_SOMEBODY_ELSE =
@@ -213,5 +220,104 @@ describe("applying the repoints a probe earned", () => {
     assert.deepStrictEqual(applied, []);
     assert.deepStrictEqual(movedSinceTheProbe, ["Typesense Cloud"]);
     assert.strictEqual(offers[0].url, "https://cloud.typesense.org/plans");
+  });
+
+  it("repoints neither offer when one vendor and URL carries two of them", async () => {
+    const probe = await aProbeThatFoundAPricingPage();
+    const offers = [{ ...OFFER }, { ...OFFER, description: "Free trial cluster, 14 days." }];
+    const { applied, sharedByTwoOffers } = applyRepoints(offers, [probe]);
+    assert.deepStrictEqual(applied, []);
+    assert.deepStrictEqual(sharedByTwoOffers, [
+      { vendor: "Typesense Cloud", url: ROOT, offers: 2 },
+    ]);
+    assert.deepStrictEqual(
+      offers.map((offer) => offer.url),
+      [ROOT, ROOT]
+    );
+  });
+});
+
+describe("the guard that refuses a write which moved a verified date", () => {
+  const TWO_OFFERS_ONE_VENDOR = [
+    { vendor: "OVHcloud", verifiedDate: "2026-08-18" },
+    { vendor: "OVHcloud", verifiedDate: "2026-08-20" },
+  ];
+
+  it("says nothing moved when one vendor carries two dates and neither changed", () => {
+    const before = TWO_OFFERS_ONE_VENDOR.map((offer) => offer.verifiedDate);
+    assert.deepStrictEqual(verifiedDatesThatMoved(before, TWO_OFFERS_ONE_VENDOR), []);
+  });
+
+  it("names the offer whose date moved, by the position it was read at", () => {
+    const before = TWO_OFFERS_ONE_VENDOR.map((offer) => offer.verifiedDate);
+    const after = [TWO_OFFERS_ONE_VENDOR[0], { vendor: "OVHcloud", verifiedDate: "2026-09-22" }];
+    assert.deepStrictEqual(verifiedDatesThatMoved(before, after), [
+      { vendor: "OVHcloud", from: "2026-08-20", to: "2026-09-22" },
+    ]);
+  });
+});
+
+describe("taking only the repoints whose page quotes a figure we already publish", () => {
+  async function aProbeOfAPageStating(text: string) {
+    return probeOffer(
+      OFFER,
+      servedFrom({
+        [ROOT]: answering(A_PAGE_THAT_NAMES_THE_VENDOR_AND_NO_TERMS, ROOT),
+        "https://cloud.typesense.org/pricing": answering(
+          text,
+          "https://cloud.typesense.org/pricing"
+        ),
+      }),
+      "2026-09-22"
+    );
+  }
+
+  it("holds a page that states amounts our own terms do not contain", async () => {
+    const held = await aProbeOfAPageStating(A_PAGE_OF_AMOUNTS_THAT_ARE_NOT_OURS);
+    assert.strictEqual(held.repoint_to, "https://cloud.typesense.org/pricing");
+    assert.deepStrictEqual(repointsTheRulingTakes([held]), []);
+
+    const offers = [{ ...OFFER }];
+    assert.deepStrictEqual(applyRepoints(offers, [held]).applied, []);
+    assert.strictEqual(offers[0].url, ROOT);
+    assert.strictEqual(offers[0].source_check.outcome, "states_no_terms");
+  });
+
+  it("names a held offer with the amounts its page states beside the terms we hold", async () => {
+    const held = await aProbeOfAPageStating(A_PAGE_OF_AMOUNTS_THAT_ARE_NOT_OURS);
+    assert.deepStrictEqual(heldPopulation([held]), [
+      {
+        vendor: "Typesense Cloud",
+        url: ROOT,
+        the_page_we_are_not_citing: "https://cloud.typesense.org/pricing",
+        amounts_the_page_states: ["$0", "$19.20"],
+        terms_we_hold: OFFER.description,
+      },
+    ]);
+  });
+
+  it("counts the two populations apart in the summary", async () => {
+    const taken = await aProbeOfAPageStating(PRICING_PAGE);
+    const held = await aProbeOfAPageStating(A_PAGE_OF_AMOUNTS_THAT_ARE_NOT_OURS);
+    const summary = summarise([taken, held]);
+    assert.strictEqual(summary.one_hop_answers, 2);
+    assert.strictEqual(summary.one_hop_answers_quoting_a_figure_we_publish, 1);
+    assert.strictEqual(summary.one_hop_answers_matching_no_figure_of_ours, 1);
+    assert.deepStrictEqual(heldPopulation([taken]), []);
+  });
+
+  it("stores a check reporting only figures the repointed offer itself publishes", async () => {
+    const taken = await aProbeOfAPageStating(PRICING_PAGE);
+    const offers = [{ ...OFFER }];
+    applyRepoints(offers, [taken]);
+
+    const reported = reportedFigures(offers[0].source_check.detail)!.figures;
+    assert.ok(reported.length > 0, offers[0].source_check.detail);
+    assert.deepStrictEqual(
+      reported.filter(
+        (figure: string) => figuresWeAlsoPublish([figure], offers[0].description).length === 0
+      ),
+      []
+    );
   });
 });

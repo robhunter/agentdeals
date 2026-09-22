@@ -42,12 +42,44 @@ const MUTANTS = [
     `    offer.source_check = probe.root.check;`],
 
   ["an-offer-whose-url-moved-since-the-probe-is-repointed-anyway", AUDIT,
-    `    const offer = offers.find((one) => one.vendor === probe.vendor && one.url === probe.url);`,
-    `    const offer = offers.find((one) => one.vendor === probe.vendor);`],
+    `  return offers.filter((one) => one.vendor === probe.vendor && one.url === probe.url);`,
+    `  return offers.filter((one) => one.vendor === probe.vendor);`],
 
   ["a-root-we-could-not-fetch-is-counted-as-read", AUDIT,
     `  const rootUnreadable = probes.filter((p) => !p.root.ok);`,
     `  const rootUnreadable = probes.filter((p) => p.root.ok === false && p.root.error === "");`],
+
+  ["the-ruling-takes-every-repoint-the-probe-earned", AUDIT,
+    `  return repointsTheReportEarned(probes).filter(quotesAFigureWeAlsoPublish);`,
+    `  return repointsTheReportEarned(probes);`],
+
+  ["a-page-matching-none-of-our-figures-counts-as-quoting-one", AUDIT,
+    `  return (probe.winner_figures_we_also_publish ?? []).length > 0;`,
+    `  return true;`],
+
+  ["a-stated-amount-counts-as-a-figure-we-publish", AUDIT,
+    `    winner_figures_we_also_publish: winner?.figures_we_also_publish ?? [],`,
+    `    winner_figures_we_also_publish: winner?.amounts_the_page_states ?? [],`],
+
+  ["a-vendor-and-url-carrying-two-offers-repoints-the-first", AUDIT,
+    `    if (matched.length > 1) {\n      sharedByTwoOffers.push({ vendor: probe.vendor, url: probe.url, offers: matched.length });\n      continue;\n    }\n    const [offer] = matched;`,
+    `    const [offer] = matched;`],
+
+  ["the-held-population-is-the-repoints-we-took", AUDIT,
+    `  return repointsTheReportEarned(probes).filter((probe) => !quotesAFigureWeAlsoPublish(probe));`,
+    `  return repointsTheReportEarned(probes).filter((probe) => quotesAFigureWeAlsoPublish(probe));`],
+
+  ["a-held-offer-is-named-without-the-amounts-its-page-states", AUDIT,
+    `    amounts_the_page_states: probe.winner_amounts_the_page_states,`,
+    `    amounts_the_page_states: [],`],
+
+  ["a-held-offer-is-named-without-the-terms-we-hold", AUDIT,
+    `    terms_we_hold: probe.terms_we_hold,\n  }));`,
+    `    terms_we_hold: null,\n  }));`],
+
+  ["the-summary-counts-no-repoint-as-held", AUDIT,
+    `    one_hop_answers_matching_no_figure_of_ours: heldForMatchingNoFigureOfOurs(probes).length,`,
+    `    one_hop_answers_matching_no_figure_of_ours: 0,`],
 ];
 
 function run(cmd, args) {
