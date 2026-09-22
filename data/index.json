@@ -3878,7 +3878,7 @@
       "category": "Logging",
       "description": "Acquired by Cloudflare. Up to 1B events/month, 7-day retention, unlimited seats and environments. Includes tracing, log management, error tracking, metrics",
       "tier": "Free",
-      "url": "https://baselime.io/",
+      "url": "https://baselime.io/pricing",
       "tags": [
         "logging",
         "observability",
@@ -3888,9 +3888,9 @@
       ],
       "verifiedDate": "2026-07-24",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names Baselime but states no amount, tier or rate we can read"
+        "checked": "2026-09-22",
+        "outcome": "ok",
+        "detail": "the page names Baselime as \"baselime\" and states \"1B events/month\""
       }
     },
     {
@@ -6509,7 +6509,7 @@
       "category": "Error Tracking",
       "description": "Real-time error, feature, and log reporting. Free plan: 3,000 events/month, 1 project, 1 user, 3-day retention. Also fully open source (Apache 2.0) for self-hosted unlimited use",
       "tier": "Free",
-      "url": "https://exceptionless.com",
+      "url": "https://exceptionless.com/pricing",
       "tags": [
         "error tracking",
         "logging",
@@ -6518,9 +6518,9 @@
       ],
       "verifiedDate": "2026-07-29",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names Exceptionless but states no amount, tier or rate we can read"
+        "checked": "2026-09-22",
+        "outcome": "ok",
+        "detail": "the page names Exceptionless as \"exceptionless\" and states \"3,000 events per month\""
       }
     },
     {
@@ -10912,16 +10912,16 @@
       "category": "Web Scraping",
       "description": "A browser extension (Google Chrome, MS Edge) for data extraction from web pages CSV or Excel. The free plan gives you 500 pages/month.",
       "tier": "Free",
-      "url": "https://dataminer.io/",
+      "url": "https://dataminer.io/pricing",
       "tags": [
         "developer-tools",
         "free-for-dev"
       ],
       "verifiedDate": "2026-08-03",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names Data Miner but states no amount, tier or rate we can read"
+        "checked": "2026-09-22",
+        "outcome": "ok",
+        "detail": "the page names Data Miner as \"data miner\" and states \"500 pages/month\""
       }
     },
     {
@@ -12517,16 +12517,16 @@
       "category": "Dev Utilities",
       "description": "Global weather data including current conditions, hourly and daily forecasts, and weather alerts via our API. Integrating AI models and ML systems to analyze and combine multiple weather models to deliver improved forecast accuracy. Free tier includes 10,000 API calls/month.",
       "tier": "Free",
-      "url": "https://weatherxu.com/",
+      "url": "https://weatherxu.com/pricing",
       "tags": [
         "developer-tools",
         "free-for-dev"
       ],
       "verifiedDate": "2026-07-09",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names WeatherXu but states no amount, tier or rate we can read"
+        "checked": "2026-09-22",
+        "outcome": "ok",
+        "detail": "the page names WeatherXu as \"weatherxu\" and states \"10,000 API calls/month\""
       }
     },
     {
@@ -12551,16 +12551,16 @@
       "category": "Code Quality",
       "description": "AI-powered code review assistant. The free plan has a limit of 25,000 monthly tokens (~10 PRs).",
       "tier": "Free",
-      "url": "https://whatthediff.ai",
+      "url": "https://whatthediff.ai/pricing",
       "tags": [
         "developer-tools",
         "free-for-dev"
       ],
       "verifiedDate": "2026-07-31",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names What The Diff but states no amount, tier or rate we can read"
+        "checked": "2026-09-22",
+        "outcome": "ok",
+        "detail": "the page names What The Diff as \"what the diff\" and states \"25,000 tokens per month\" and \"25k tokens per month\""
       }
     },
     {
@@ -12568,16 +12568,16 @@
       "category": "Web Scraping",
       "description": "Turn any website into a parameterized API. 30k API calls per month.",
       "tier": "Free",
-      "url": "https://wrapapi.com/",
+      "url": "https://wrapapi.com/pricing",
       "tags": [
         "developer-tools",
         "free-for-dev"
       ],
       "verifiedDate": "2026-08-02",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names wrapapi.com but states no amount, tier or rate we can read"
+        "checked": "2026-09-22",
+        "outcome": "ok",
+        "detail": "the page names wrapapi.com as \"wrapapi com\" and states \"30,000 API calls per month\""
       }
     },
     {
@@ -13188,16 +13188,16 @@
       "category": "Diagramming",
       "description": "Collaborative whiteboard — 3 editable boards, unlimited team members, 10 AI credits/month, 5 Talktracks, 160+ app integrations including Zoom, Slack, and Google Drive",
       "tier": "Free",
-      "url": "https://miro.com/",
+      "url": "https://miro.com/pricing",
       "tags": [
         "developer-tools",
         "free-for-dev"
       ],
       "verifiedDate": "2026-08-12",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names Miro but states no amount, tier or rate we can read"
+        "checked": "2026-09-22",
+        "outcome": "ok",
+        "detail": "the page names Miro as \"miro\" and states \"10 credits per month\""
       }
     },
     {
@@ -13652,16 +13652,16 @@
       "category": "CI/CD",
       "description": "Preview every pull request, automated and on-demand. Free tier: $0/month, 5GB storage, 512MB RAM, no credit card required.",
       "tier": "Free",
-      "url": "https://tugboat.qa",
+      "url": "https://tugboat.qa/pricing",
       "tags": [
         "developer-tools",
         "free-for-dev"
       ],
       "verifiedDate": "2026-07-09",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names Tugboat but states no amount, tier or rate we can read"
+        "checked": "2026-09-22",
+        "outcome": "ok",
+        "detail": "the page names Tugboat as \"tugboat\" and states \"$0\""
       }
     },
     {
@@ -13847,16 +13847,16 @@
       "category": "Team Collaboration",
       "description": "Real-time chat with a unique email-like threading model. The free plan includes 10,000 messages of search history and File storage up to 5 GB. also, it provides a self-hostable open-source version.",
       "tier": "Free",
-      "url": "https://zulip.com/",
+      "url": "https://zulip.com/plans",
       "tags": [
         "developer-tools",
         "free-for-dev"
       ],
       "verifiedDate": "2026-07-31",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names Zulip but states no amount, tier or rate we can read"
+        "checked": "2026-09-22",
+        "outcome": "ok",
+        "detail": "the page names Zulip as \"zulip\" and states \"5 GB per user\" and \"5 GB total 5 GB/user\" and \"5 GB/user\""
       }
     },
     {
@@ -15327,7 +15327,7 @@
       "category": "Testing",
       "description": "A web UI automation tool that functions without the need for selectors. Every developer gets 500 actions per month for free.",
       "tier": "Free",
-      "url": "https://kogiqa.com",
+      "url": "https://kogiqa.com/pricing",
       "tags": [
         "testing",
         "qa",
@@ -15335,9 +15335,9 @@
       ],
       "verifiedDate": "2026-08-04",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names kogiQA but states no amount, tier or rate we can read"
+        "checked": "2026-09-22",
+        "outcome": "ok",
+        "detail": "the page names kogiQA as \"kogiqa\" and states \"500 actions per month\""
       }
     },
     {
@@ -15584,16 +15584,16 @@
       "category": "Security",
       "description": "AI-powered development security platform (rebranded from PyUp). Free: 1 codebase, 100 scans/month, 1 user, non-commercial only. Uses public vulnerability databases (Safety's proprietary 4x database requires paid plan). Email support with 48-hour response.",
       "tier": "Free",
-      "url": "https://getsafety.com/",
+      "url": "https://getsafety.com/pricing",
       "tags": [
         "security",
         "free-for-dev"
       ],
       "verifiedDate": "2026-08-16",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names Safety but states no amount, tier or rate we can read"
+        "checked": "2026-09-22",
+        "outcome": "ok",
+        "detail": "the page names Safety as \"safety\" and states \"100 scans per month\""
       }
     },
     {
@@ -17721,7 +17721,7 @@
       "category": "Monitoring",
       "description": "Application performance monitoring — free for first 100,000 traces/month.",
       "tier": "Free",
-      "url": "https://www.skylight.io/",
+      "url": "https://www.skylight.io/pricing",
       "tags": [
         "monitoring",
         "observability",
@@ -17729,9 +17729,9 @@
       ],
       "verifiedDate": "2026-07-13",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names skylight.io but states no amount, tier or rate we can read"
+        "checked": "2026-09-22",
+        "outcome": "ok",
+        "detail": "the page names skylight.io as \"skylight\" and states \"100,000 free traces per month\""
       },
       "product_subtypes": {
         "taxonomy": "Monitoring",
@@ -18052,7 +18052,7 @@
       "category": "Error Tracking",
       "description": "Mobile app monitoring. Free for small teams with up to 1 million user sessions per year.",
       "tier": "Free",
-      "url": "https://embrace.io/",
+      "url": "https://embrace.io/pricing",
       "tags": [
         "error-tracking",
         "crash-reporting",
@@ -18060,9 +18060,9 @@
       ],
       "verifiedDate": "2026-08-05",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names Embrace but states no amount, tier or rate we can read"
+        "checked": "2026-09-22",
+        "outcome": "ok",
+        "detail": "the page names Embrace as \"embrace\" and states \"1 million sessions / year\" and \"1 million sessions per year\""
       }
     },
     {
@@ -18595,16 +18595,16 @@
       "category": "Email",
       "description": "Email API with REST API and SMTP integrations. Free: 100 emails/day (~3,000/month), 3 domains, community support.",
       "tier": "Free",
-      "url": "https://www.mailchannels.com",
+      "url": "https://www.mailchannels.com/pricing",
       "tags": [
         "email",
         "free-for-dev"
       ],
       "verifiedDate": "2026-08-20",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names mailchannels.com but states no amount, tier or rate we can read"
+        "checked": "2026-09-22",
+        "outcome": "ok",
+        "detail": "the page names mailchannels.com as \"mailchannels\" and states \"100 emails per day\" and \"100 emails/day\""
       }
     },
     {
@@ -18653,16 +18653,16 @@
       "category": "Email",
       "description": "250 subscribers, 2,500 emails/month free, 2 user seats, community support",
       "tier": "Free",
-      "url": "https://www.mailerlite.com",
+      "url": "https://www.mailerlite.com/pricing",
       "tags": [
         "email",
         "free-for-dev"
       ],
       "verifiedDate": "2026-07-13",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names MailerLite.com but states no amount, tier or rate we can read"
+        "checked": "2026-09-22",
+        "outcome": "ok",
+        "detail": "the page names MailerLite.com as \"mailerlite\" and states \"2,500 emails per month\""
       }
     },
     {
@@ -19376,16 +19376,16 @@
       "category": "Forms",
       "description": "Powerful and easy form backend for your website, forever free plan allows 50 submissions per month, 250MB file storage, Zapier integration, CSV/JSON export, custom redirect, custom response page, Telegram & Slack bot, single email notifications.",
       "tier": "Free",
-      "url": "https://smartforms.dev/",
+      "url": "https://smartforms.dev/pricing",
       "tags": [
         "forms",
         "free-for-dev"
       ],
       "verifiedDate": "2026-08-06",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names smartforms.dev but states no amount, tier or rate we can read"
+        "checked": "2026-09-22",
+        "outcome": "ok",
+        "detail": "the page names smartforms.dev as \"smartforms\" and states \"50 Submissions/Month\" and \"250MB Bandwidth/Month\""
       }
     },
     {
@@ -20940,7 +20940,7 @@
       "category": "Cloud Hosting",
       "description": "Mobile backend. 1GB of data storage, 30K API requests/day, and 10K pushes/day are free. Compute instances require paid plan. (API is very similar to Parse Platform)",
       "tier": "Free",
-      "url": "https://leancloud.app/",
+      "url": "https://leancloud.app/pricing",
       "tags": [
         "hosting",
         "paas",
@@ -20948,9 +20948,9 @@
       ],
       "verifiedDate": "2026-07-15",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names LeanCloud but states no amount, tier or rate we can read"
+        "checked": "2026-09-22",
+        "outcome": "ok",
+        "detail": "the page names LeanCloud as \"leancloud\" and states \"1 GB 2 USD/day\" and \"1 GB free quota per day\""
       },
       "product_subtypes": {
         "taxonomy": "Cloud Hosting",
@@ -21894,7 +21894,7 @@
       "category": "DNS & Domain Management",
       "description": "DNS-based firewall, 300K free queries monthly",
       "tier": "Free",
-      "url": "https://nextdns.io",
+      "url": "https://nextdns.io/pricing",
       "tags": [
         "dns",
         "domain",
@@ -21902,9 +21902,9 @@
       ],
       "verifiedDate": "2026-08-12",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names nextdns.io but states no amount, tier or rate we can read"
+        "checked": "2026-09-22",
+        "outcome": "ok",
+        "detail": "the page names nextdns.io as \"nextdns io\" and states \"300,000 queries/month\""
       }
     },
     {
@@ -22139,7 +22139,7 @@
       "category": "Databases",
       "description": "8base is a full-stack low-code development platform built for JavaScript developers built on top of MySQL and GraphQL and serverless backend-as-a-service. It allows you to start building web applications quickly using a UI app builder and scale quickly, The Free tier includes rows: 2,500, Storage: 500, Serverless computing: 1Gb/h, and client app users: 5.",
       "tier": "Free",
-      "url": "https://www.8base.com/",
+      "url": "https://www.8base.com/pricing",
       "tags": [
         "database",
         "data",
@@ -22147,9 +22147,9 @@
       ],
       "verifiedDate": "2026-07-15",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names 8base.com but states no amount, tier or rate we can read"
+        "checked": "2026-09-22",
+        "outcome": "ok",
+        "detail": "the page names 8base.com as \"8base\" and states \"1 GB-Hours 2 GB /mo\" and \"1GB-Hours Bandwidth 2 GB /mo\""
       },
       "product_subtypes": {
         "taxonomy": "Databases",
@@ -24294,7 +24294,7 @@
       "category": "Design",
       "description": "Convert anything to anything. +200 supported formats including videos and gifs. Free for up to 10 conversions per day.",
       "tier": "Free",
-      "url": "https://cloudconvert.com/",
+      "url": "https://cloudconvert.com/pricing",
       "tags": [
         "design",
         "ui",
@@ -24302,9 +24302,9 @@
       ],
       "verifiedDate": "2026-07-05",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names cloudconvert.com but states no amount, tier or rate we can read"
+        "checked": "2026-09-22",
+        "outcome": "ok",
+        "detail": "the page names cloudconvert.com as \"cloudconvert\" and states \"10 conversions per day\""
       }
     },
     {
@@ -27291,7 +27291,7 @@
       "category": "Analytics",
       "description": "30,000 sessions/month with 12 months data retention and three user seats.",
       "tier": "Free",
-      "url": "https://www.fullstory.com",
+      "url": "https://www.fullstory.com/pricing",
       "tags": [
         "analytics",
         "statistics",
@@ -27299,9 +27299,9 @@
       ],
       "verifiedDate": "2026-07-21",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names FullStory.com but states no amount, tier or rate we can read"
+        "checked": "2026-09-22",
+        "outcome": "ok",
+        "detail": "the page names FullStory.com as \"fullstory\" and states \"30,000 sessions per month\""
       }
     },
     {
@@ -28275,16 +28275,16 @@
       "category": "Dev Utilities",
       "description": "Add webhook support to your app without the hassles: done-for-you queueing, retries with backoff, and logging. The free plan has 100 deliveries per day, 14-day retention, and 3 hook endpoints.",
       "tier": "Free",
-      "url": "https://www.hookrelay.dev/",
+      "url": "https://www.hookrelay.dev/pricing",
       "tags": [
         "developer-tools",
         "free-for-dev"
       ],
       "verifiedDate": "2026-07-23",
       "source_check": {
-        "checked": "2026-09-02",
-        "outcome": "states_no_terms",
-        "detail": "the page names Hook Relay but states no amount, tier or rate we can read"
+        "checked": "2026-09-22",
+        "outcome": "ok",
+        "detail": "the page names Hook Relay as \"hook relay\" and states \"100 deliveries per day\""
       }
     },
     {

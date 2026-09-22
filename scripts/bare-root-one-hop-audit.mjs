@@ -5,10 +5,11 @@ import { createHash } from "node:crypto";
 import { resolve, dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { fetchPageText } from "./verify-freshness.js";
-import { priceSignals } from "./change-gate.js";
+import { priceSignals, figuresWeAlsoPublish } from "./change-gate.js";
 import {
   classifySource,
   sourceCheckRecord,
+  statesAnAmount,
   SOURCE_CHECK_OK,
   SOURCE_CHECK_NO_TERMS,
 } from "./vendor-naming.js";
@@ -20,6 +21,8 @@ const INDEX_PATH =
 const CONCURRENCY = 12;
 
 export const ONE_HOP_PATHS = ["/pricing", "/pricing/", "/plans", "/pricing.html"];
+
+export const MOST_AMOUNTS_NAMED = 6;
 
 export function oneHopUrls(url) {
   const { origin } = new URL(url);
@@ -56,6 +59,8 @@ export async function readPageFor(offer, url, fetchFn = fetchPageText, checked =
     signals: signals.length,
     outcome,
     detail,
+    figures_we_also_publish: figuresWeAlsoPublish(signals, offer.description),
+    amounts_the_page_states: signals.filter(statesAnAmount).slice(0, MOST_AMOUNTS_NAMED),
     check: sourceCheckRecord({ ...offer, url }, page, signals, checked),
   };
 }
@@ -83,6 +88,7 @@ export async function probeOffer(offer, fetchFn = fetchPageText, checked = today
   return {
     vendor: offer.vendor,
     url: offer.url,
+    terms_we_hold: offer.description ?? null,
     stored_outcome: offer.source_check?.outcome ?? null,
     stored_checked: offer.source_check?.checked ?? null,
     verified_date: offer.verifiedDate ?? null,
@@ -92,6 +98,8 @@ export async function probeOffer(offer, fetchFn = fetchPageText, checked = today
     winner_signals: winner?.signals ?? 0,
     winner_detail: winner?.detail ?? null,
     winner_check: winner?.check ?? null,
+    winner_figures_we_also_publish: winner?.figures_we_also_publish ?? [],
+    winner_amounts_the_page_states: winner?.amounts_the_page_states ?? [],
     lost_to_the_winner: lost.map((hop) => hop.url),
   };
 }
@@ -105,20 +113,58 @@ export function repointsTheReportEarned(probes) {
   );
 }
 
+export function quotesAFigureWeAlsoPublish(probe) {
+  return (probe.winner_figures_we_also_publish ?? []).length > 0;
+}
+
+export function repointsTheRulingTakes(probes) {
+  return repointsTheReportEarned(probes).filter(quotesAFigureWeAlsoPublish);
+}
+
+export function heldForMatchingNoFigureOfOurs(probes) {
+  return repointsTheReportEarned(probes).filter((probe) => !quotesAFigureWeAlsoPublish(probe));
+}
+
+export function heldPopulation(probes) {
+  return heldForMatchingNoFigureOfOurs(probes).map((probe) => ({
+    vendor: probe.vendor,
+    url: probe.url,
+    the_page_we_are_not_citing: probe.repoint_to,
+    amounts_the_page_states: probe.winner_amounts_the_page_states,
+    terms_we_hold: probe.terms_we_hold,
+  }));
+}
+
+export function verifiedDatesThatMoved(before, offers) {
+  return offers
+    .map((offer, at) => ({ vendor: offer.vendor, from: before[at], to: offer.verifiedDate }))
+    .filter((seen) => seen.from !== seen.to);
+}
+
+export function offersTheProbeMatches(offers, probe) {
+  return offers.filter((one) => one.vendor === probe.vendor && one.url === probe.url);
+}
+
 export function applyRepoints(offers, probes) {
   const applied = [];
   const movedSinceTheProbe = [];
-  for (const probe of repointsTheReportEarned(probes)) {
-    const offer = offers.find((one) => one.vendor === probe.vendor && one.url === probe.url);
-    if (!offer) {
+  const sharedByTwoOffers = [];
+  for (const probe of repointsTheRulingTakes(probes)) {
+    const matched = offersTheProbeMatches(offers, probe);
+    if (matched.length === 0) {
       movedSinceTheProbe.push(probe.vendor);
       continue;
     }
+    if (matched.length > 1) {
+      sharedByTwoOffers.push({ vendor: probe.vendor, url: probe.url, offers: matched.length });
+      continue;
+    }
+    const [offer] = matched;
     offer.url = probe.repoint_to;
     offer.source_check = probe.winner_check;
     applied.push({ vendor: probe.vendor, from: probe.url, to: probe.repoint_to });
   }
-  return { applied, movedSinceTheProbe };
+  return { applied, movedSinceTheProbe, sharedByTwoOffers };
 }
 
 export function summarise(probes) {
@@ -140,6 +186,8 @@ export function summarise(probes) {
     root_unreadable: rootUnreadable.length,
     root_other: probes.length - rootAnswers.length - rootStatesNoTerms.length - rootUnreadable.length,
     one_hop_answers: repointable.length,
+    one_hop_answers_quoting_a_figure_we_publish: repointsTheRulingTakes(probes).length,
+    one_hop_answers_matching_no_figure_of_ours: heldForMatchingNoFigureOfOurs(probes).length,
     one_hop_redirects_to_the_root: redirectsHome.length,
     one_hop_readable_states_no_terms: hopReadableNoTerms.length,
     one_hop_does_not_name_vendor: hopNamesNoVendor.length,
@@ -195,19 +243,23 @@ function cachedFetcher(cacheDir) {
 function applyFromReport(reportPath) {
   const data = JSON.parse(readFileSync(INDEX_PATH, "utf-8"));
   const { probes } = JSON.parse(readFileSync(reportPath, "utf-8"));
-  const datesBefore = new Map((data.offers ?? []).map((offer) => [offer.vendor, offer.verifiedDate]));
-  const { applied, movedSinceTheProbe } = applyRepoints(data.offers ?? [], probes);
-  const advanced = (data.offers ?? []).filter(
-    (offer) => datesBefore.get(offer.vendor) !== offer.verifiedDate
-  );
+  const datesBefore = (data.offers ?? []).map((offer) => offer.verifiedDate);
+  const { applied, movedSinceTheProbe, sharedByTwoOffers } = applyRepoints(data.offers ?? [], probes);
+  const advanced = verifiedDatesThatMoved(datesBefore, data.offers ?? []);
   if (advanced.length > 0) {
     console.error(`refusing to write: ${advanced.length} verified dates moved`);
     process.exit(2);
   }
   writeFileSync(INDEX_PATH, JSON.stringify(data, null, 2) + "\n");
   console.error(`repointed ${applied.length} offers in ${INDEX_PATH}, 0 verified dates moved`);
+  console.error(
+    `held, page states amounts and none matched the terms we hold: ${heldForMatchingNoFigureOfOurs(probes).length}`
+  );
   if (movedSinceTheProbe.length > 0) {
     console.error(`left alone, moved since the probe: ${movedSinceTheProbe.join(", ")}`);
+  }
+  for (const pair of sharedByTwoOffers) {
+    console.error(`left alone, ${pair.offers} offers share ${pair.vendor} at ${pair.url}`);
   }
 }
 
@@ -241,9 +293,10 @@ async function main() {
   });
 
   const summary = summarise(probes);
+  const held = heldPopulation(probes);
   console.error(JSON.stringify(summary, null, 2));
-  writeFileSync(out, JSON.stringify({ summary, probes }, null, 2) + "\n");
-  console.error(`wrote ${out}`);
+  writeFileSync(out, JSON.stringify({ summary, held, probes }, null, 2) + "\n");
+  console.error(`wrote ${out}, naming ${held.length} held offers with the amounts their page states`);
 }
 
 const runningAsScript =
