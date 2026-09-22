@@ -2430,6 +2430,71 @@
       "record_date": "2026-09-21",
       "change_type": "limits_increased",
       "summary": "The free tier limits for requests and resources have changed. Previously 2M requests/month, 360K GB-seconds memory, and 180K vCPU-seconds compute. The current pricing page states 2 million requests/month, 360,000 GiB-seconds RAM, and 240,000 vCPU-seconds for both Services with request-based billing and Jobs."
+    },
+    {
+      "vendor": "Appwrite Cloud",
+      "url": "https://appwrite.io/pricing",
+      "restated_on": "2026-09-22",
+      "previous_description": "Open-source BaaS — 75K MAU, 2 GB storage, 750K function executions/month, 5 GB bandwidth, 1 database, 1 bucket and 2 functions per project. Limit of 2 projects. Projects pause after 1 week of inactivity",
+      "description": "Open-source BaaS — Serverless compute is available for $0 fixed fee. $10 of compute credits for database usage are included every month. Reads and writes are subject to plan quotas and overage rates.",
+      "reading_date": "2026-09-22",
+      "reading_terms": "Serverless compute is available for $0 fixed fee. $10 of compute credits for database usage are included every month. Reads and writes are subject to plan quotas and overage rates.",
+      "source_url": "https://appwrite.io/pricing",
+      "record_date": "2026-09-22",
+      "change_type": "pricing_restructured",
+      "summary": "The page now focuses on a $0 fixed fee for serverless compute and mentions $10 of compute credits per month."
+    },
+    {
+      "vendor": "Buildkite",
+      "url": "https://buildkite.com/pricing/",
+      "restated_on": "2026-09-22",
+      "previous_description": "500 hosted agent minutes/month, 3 concurrent jobs, 90-day build retention, 50K test executions. Free for open-source projects",
+      "description": "The Free Plan offers up to 5 users, up to 10 concurrent jobs, up to 2,000 Linux vCPU minutes per month, up to 250k test executions per month, 30 days build retention, and 50GB/month artifact storage.",
+      "reading_date": "2026-09-05",
+      "reading_terms": "The Free Plan offers up to 5 users, up to 10 concurrent jobs, up to 2,000 Linux vCPU minutes per month, up to 250k test executions per month, 30 days build retention, and 50GB/month artifact storage.",
+      "source_url": "https://buildkite.com/pricing/",
+      "record_date": "2026-09-05",
+      "change_type": "limits_reduced",
+      "summary": "The free plan now offers 2,000 Linux vCPU minutes/month and 250k test executions, up from 500 minutes and 50k executions. The free plan also includes 30 days build retention instead of 90. The open-source specific mention is gone."
+    },
+    {
+      "vendor": "WorkOS",
+      "url": "https://workos.com/pricing",
+      "restated_on": "2026-09-22",
+      "previous_description": "User Management is free for up to 1 million users. Single Sign-On starts at $125/connection. Directory Sync starts at $125/connection. Audit Logs are free with paid options for log streaming and event retention. Radar is free for the first 1,000 checks.",
+      "description": "Up to 1 million users Free. Per additional 1M users $2,500 / mo",
+      "reading_date": "2026-09-22",
+      "reading_terms": "Up to 1 million users Free. Per additional 1M users $2,500 / mo",
+      "source_url": "https://workos.com/pricing",
+      "record_date": "2026-09-22",
+      "change_type": "limits_reduced",
+      "summary": "The free tier for User Management is now limited to 1 million monthly active users, and additional users are $2,500/month. Single Sign-On and Directory Sync are now priced per connection, starting at $125/connection, with tiered discounts. Audit Logs are free, but log streaming and event retention are paid add-ons. Radar is free for the first 1,000 checks, then $100/month for 50k checks."
+    },
+    {
+      "vendor": "Ollama Cloud",
+      "url": "https://ollama.com/pricing",
+      "restated_on": "2026-09-22",
+      "previous_description": "Cloud-hosted Ollama for running open-source LLMs — free tier for light usage with 1 concurrent model. Access Llama, Mistral, Gemma, and other open models via API",
+      "description": "Cloud-hosted Ollama for running open-source LLMs — The Free plan costs $0 and includes starter usage credits. Buying usage credits unlocks all models. It includes 1 concurrent request.",
+      "reading_date": "2026-09-22",
+      "reading_terms": "The Free plan costs $0 and includes starter usage credits. Buying usage credits unlocks all models. It includes 1 concurrent request.",
+      "source_url": "https://ollama.com/pricing",
+      "record_date": "2026-09-22",
+      "change_type": "pricing_model_change",
+      "summary": "The free tier now includes usage credits instead of unlimited access to a single model. It also requires purchasing credits to unlock all models."
+    },
+    {
+      "vendor": "Apple Notes",
+      "url": "https://www.apple.com/icloud/",
+      "restated_on": "2026-09-22",
+      "previous_description": "Fully free on Apple devices. Unlimited notes with rich text, checklists, tables, sketches, document scanning. Shared notes. iCloud sync counts against 5 GB iCloud free storage. Locked notes with password/biometric.",
+      "description": "The first 5GB of iCloud storage is free. Additional storage requires a paid iCloud+ subscription, with plans starting at $0.99/month for 50GB. Features like Private Relay and Hide My Email are also part of paid plans.",
+      "reading_date": "2026-09-22",
+      "reading_terms": "The first 5GB of iCloud storage is free. Additional storage requires a paid iCloud+ subscription, with plans starting at $0.99/month for 50GB. Features like Private Relay and Hide My Email are also part of paid plans.",
+      "source_url": "https://www.apple.com/icloud/",
+      "record_date": "2026-09-22",
+      "change_type": "pricing_restructured",
+      "summary": "The page details iCloud+ with a free 5GB tier. Emphasizes paid plans for increased storage and features like Private Relay, Hide My Email, and HomeKit Secure Video. The free tier is now part of a broader iCloud+ ecosystem and is limited to 5GB of storage."
     }
   ]
 }

@@ -1781,15 +1781,15 @@
     },
     {
       "vendor": "Dub.co",
-      "change_type": "limits_reduced",
+      "change_type": "limits_increased",
       "reason": "measures_no_change",
-      "detail": "limits_reduced claimed, and every quantity the record compares holds the same value once notation and period are normalised — 25 link/mo against 25 link/mo, 1,000 tracked/mo against 1 tracked/mo, 3 custom against 3 custom",
-      "summary": "The free tier now includes 1K tracked events/mo, 25 new links/mo, and AI assistant, whereas the stored information stated 25 new links/month, 1,000 tracked events/month.",
+      "detail": "limits_increased claimed, and every quantity the record compares holds the same value once notation and period are normalised — 25 link/mo against 25 link/mo, 1,000 tracked/mo against 1 tracked/mo, 3 custom against 3 custom",
+      "summary": "The free tier now includes 1K tracked events/month and 25 new links/month, whereas the stored information states 1,000 tracked events/month and 25 new links/month. The free tier also includes AI assistant, Link tags, API access, 3 custom domains, UTM templates, 30-day analytics retention, and QR codes, which were not previously mentioned.",
       "previous_state": "Open-source link management — 25 new links/month, 1,000 tracked events/month, 3 custom domains, 1 user, 30-day analytics retention, API with native SDKs. No credit card required",
-      "current_state": "Free $0 free forever – the most generous free plan on the market Start for free 1K tracked events/mo Real-time analytics 1 user Basic support 25 new links/mo AI assistant Link tags API access 3 custom domains UTM templates 30-day analytics retention QR codes",
+      "current_state": "$0 free forever – the most generous free plan on the market Start for free 1K tracked events/mo Real-time analytics 1 user Basic support 25 new links/mo AI assistant Link tags API access 3 custom domains UTM templates 30-day analytics retention QR codes",
       "source_url": "https://dub.co/pricing/links",
       "category": "Dev Utilities",
-      "refused_date": "2026-09-07"
+      "refused_date": "2026-09-22"
     },
     {
       "vendor": "duo.com",
@@ -1875,6 +1875,19 @@
       "source_url": "https://emailvalidation.io",
       "category": "Email",
       "refused_date": "2026-09-11"
+    },
+    {
+      "vendor": "Exa",
+      "change_type": "free_tier_removed",
+      "reason": "same_transition_graded_differently",
+      "detail": "same vendor, source_url and previous_state as Exa|limits_reduced|2026-09-03|https://exa.ai/pricing",
+      "summary": "The free tier has been replaced with a 'Starter' plan offering $20 credits on sign-up with $10 monthly, and a 'Pay as you go' plan. Previously 1,000 free searches/month with an API key. Is no longer available. The x402 pay-per-query search with no API key is also not mentioned.",
+      "previous_state": "AI-native search engine API — x402 pay-per-query search, semantic and keyword search, auto-generated summaries, contents retrieval. No API key required with x402. 1,000 free searches/month with API key.",
+      "current_state": "Start for free with over $120 in credits per year. Starter: $20 credits on sign-up with $10 credits every month. No payment method required. Includes: Free $10 credits per month, MCP server access, Claude Connector, ChatGPT plugin, 50+ integrations, Access to all endpoints, 10 Search Queries Per Second (QPS), 50 Agent concurrency, Data Web index, People index, Company index, Scholarly works index",
+      "source_url": "https://exa.ai/pricing",
+      "category": "AI / ML",
+      "refused_date": "2026-09-22",
+      "collided_with": "Exa|limits_reduced|2026-09-03|https://exa.ai/pricing"
     },
     {
       "vendor": "Expensify",
@@ -1977,15 +1990,15 @@
     },
     {
       "vendor": "Firebase",
-      "change_type": "limits_increased",
+      "change_type": "limits_reduced",
       "reason": "confirmed_unchanged",
-      "detail": "The report restates the stored description, and the differences are simply clarifications of existing limits (e.g., specifying 'Standard edition' for Firestore, adding 'Network egress' for Firestore, and clarifying '2M' for Cloud Functions).",
-      "summary": "Firestore storage limit increased to 5 GB, and reads/writes are now 20K/50K respectively. App Hosting storage is now 10 GB with 360 MB/day data transfer. Cloud Functions invocations are now 2M/month.",
+      "detail": "Reads are unchanged, writes were not mentioned in the stored description, and the Cloud Functions limit is the same (2M vs 2,000,000).",
+      "summary": "Firestore read/write limits have changed. The Spark plan now offers 20K writes/day and 50K reads/day. Cloud Functions invocations are now limited to 2,000,000/month, down from 2M. Storage limits for Cloud Storage have also changed.",
       "previous_state": "Full BaaS — Auth (50K MAU), Firestore (1 GiB storage, 50K reads/day), Cloud Functions (2M invocations/month), Hosting, Analytics, Crashlytics all free",
-      "current_state": "Cloud Firestore Standard edition: Stored data 1 GiB total, Network egress 10 GiB/month, Documents written 20K writes/day, Documents read 50K reads/day. App Hosting: Storage 10 GB, Data transfer 360 MB/day. Cloud Functions: 2 百万/月までは無料",
+      "current_state": "Cloud Firestore Standard edition offers 1 GiB total storage, 20K writes/day, and 50K reads/day for free. Cloud Functions offers up to 2,000,000 invocations/month for free.",
       "source_url": "https://firebase.google.com/pricing",
       "category": "Databases",
-      "refused_date": "2026-09-07"
+      "refused_date": "2026-09-22"
     },
     {
       "vendor": "Fireworks AI",
@@ -2407,12 +2420,12 @@
       "change_type": "limits_reduced",
       "reason": "measures_the_opposite",
       "detail": "limits_reduced claimed, and every quantity that moved between the two states moved the other way — 180 vcpu against 240,000 vcpu",
-      "summary": "The free tier limits have changed. The stored information states 2M requests/month, 360K GB-seconds memory, and 180K vCPU-seconds compute. The current pricing page states 2 million requests, 360,000 GiB-seconds memory, and 180,000 vCPU-seconds compute for request-based billing, and 240,000 vCPU-seconds and 450,000 GiB-seconds for instance-based billing.",
+      "summary": "The free tier limits for requests and resources have changed. The stored information states 2M requests/month, 360K GB-seconds memory, and 180K vCPU-seconds compute. The current pricing page states 2 million requests/month, 360,000 GiB-seconds memory, and 180,000 vCPU-seconds compute for request-based billing, and 240,000 vCPU-seconds and 450,000 GiB-seconds for instance-based billing.",
       "previous_state": "Always Free: 2M requests/month, 360K GB-seconds memory, 180K vCPU-seconds compute, 1 GB North America egress. Fully managed serverless containers",
-      "current_state": "The free tier includes 2 million requests per month. For request-based billing, it also includes 180,000 vCPU-seconds and 360,000 GiB-seconds per month. For instance-based billing, it includes 240,000 vCPU-seconds and 450,000 GiB-seconds per month.",
+      "current_state": "The free tier includes 2 million requests per month. For request-based billing, it includes 180,000 vCPU-seconds and 360,000 GiB-seconds per month. For instance-based billing, it includes 240,000 vCPU-seconds and 450,000 GiB-seconds per month.",
       "source_url": "https://cloud.google.com/run/pricing",
       "category": "Cloud Hosting",
-      "refused_date": "2026-09-03"
+      "refused_date": "2026-09-22"
     },
     {
       "vendor": "Google Cloud Shell",
@@ -2439,6 +2452,18 @@
       "refused_date": "2026-09-20"
     },
     {
+      "vendor": "Google Drive",
+      "change_type": "pricing_restructured",
+      "reason": "confirmed_unchanged",
+      "detail": "The core offering of 15GB storage remains, and the report acknowledges this. The change is contextual (being part of Google One) but doesn't alter the available storage for a free user.",
+      "summary": "The free tier of 15GB still exists, but is now part of the Google One ecosystem. The page details paid plans (100GB, 2TB, 5TB) with additional features.",
+      "previous_state": "15 GB shared across Google Drive, Gmail, and Google Photos. Google Docs/Sheets/Slides don't count against quota. Real-time collaboration. File sharing with permissions. Max file upload 5 TB.",
+      "current_state": "All Google accounts come with up to 15 GB of storage, which is included as part of the total storage offered in other Google One plans.",
+      "source_url": "https://one.google.com/about/plans",
+      "category": "Cloud Storage",
+      "refused_date": "2026-09-22"
+    },
+    {
       "vendor": "Google Gemini Embedding 2",
       "change_type": "pricing_model_change",
       "reason": "states_no_terms",
@@ -2461,6 +2486,30 @@
       "source_url": "https://mapsplatform.google.com/pricing/",
       "category": "Maps/Geolocation",
       "refused_date": "2026-09-09"
+    },
+    {
+      "vendor": "Google Meet",
+      "change_type": "pricing_restructured",
+      "reason": "confirmed_unchanged",
+      "detail": "The current page doesn't explicitly state 1-on-1 calls are removed, only that premium features are now paid. The stored description had a 24-hour limit, which isn't contradicted.",
+      "summary": "The free tier no longer offers unlimited 1-on-1 calls.",
+      "previous_state": "1-hour group meetings (up to 100 participants). Unlimited 1-on-1 calls (24-hour limit). Screen sharing. Real-time captions. Background effects. No recording or breakout rooms on free.",
+      "current_state": "The page mentions 'premium features' like recordings and AI note-taking, implying they are no longer part of the free tier. It also promotes 'Try Meet for work' which suggests a paid upgrade for enhanced features.",
+      "source_url": "https://workspace.google.com/products/meet/",
+      "category": "Communication & Messaging",
+      "refused_date": "2026-09-22"
+    },
+    {
+      "vendor": "Google Photos",
+      "change_type": "pricing_restructured",
+      "reason": "confirmed_unchanged",
+      "detail": "The descriptions both state 15GB of storage is included with a Google account. The report describes a shift in *presentation* of the free tier, not a change in its terms.",
+      "summary": "The free tier of 15GB still exists, but is now part of the broader Google One ecosystem. The page focuses on paid plans, and the free tier is presented as the baseline storage included with all Google accounts.",
+      "previous_state": "15 GB shared across Google Drive, Gmail, and Google Photos. Photos stored at original quality count against quota. Basic editing tools. Sharing, albums, face grouping. No unlimited storage saver quality since June 2021.",
+      "current_state": "All Google accounts come with up to 15 GB of storage, which is included as part of the total storage offered in other Google One plans.",
+      "source_url": "https://one.google.com/about/plans",
+      "category": "Cloud Storage",
+      "refused_date": "2026-09-22"
     },
     {
       "vendor": "Google Vector Search 2.0",
@@ -2785,13 +2834,13 @@
       "vendor": "iCloud",
       "change_type": "restriction",
       "reason": "confirmed_unchanged",
-      "detail": "The stored description explicitly states Private Relay and Hide My Email are *not* included, which matches the current page. The report highlights Apple Invites, which wasn't mentioned in the stored description.",
-      "summary": "iCloud Private Relay and Hide My Email are no longer included in the free tier. Apple Invites is now included with all paid tiers, and has limited features on the free tier.",
+      "detail": "The stored description explicitly states Private Relay and Hide My Email are *not* included, which aligns with the current page's lack of mention of those features.",
+      "summary": "The free tier still exists, but iCloud Private Relay and Hide My Email are no longer included in the free tier.",
       "previous_state": "5 GB total across iCloud Drive, Photos, Mail, backups, Notes. Device backups, iCloud Keychain, Find My included. No iCloud Private Relay or Hide My Email on free tier.",
-      "current_state": "The free tier includes 5GB of storage. iCloud Private Relay and Hide My Email are not included. Apple Invites has limited features. Paid tiers include iCloud Private Relay, Hide My Email, Custom Email Domain, and HomeKit Secure Video.",
+      "current_state": "The 5GB free plan includes back up and sync of data across devices.",
       "source_url": "https://www.apple.com/icloud/",
       "category": "Cloud Storage",
-      "refused_date": "2026-09-03"
+      "refused_date": "2026-09-22"
     },
     {
       "vendor": "Icon Horse",
@@ -3013,6 +3062,19 @@
       "source_url": "https://www.ip2location.io/",
       "category": "Dev Utilities",
       "refused_date": "2026-09-09"
+    },
+    {
+      "vendor": "ipinfo.io",
+      "change_type": "limits_reduced",
+      "reason": "same_transition_graded_differently",
+      "detail": "graded as ipinfo.io|limits_reduced|2026-09-05|https://ipinfo.io/pricing, a record we withdrew",
+      "summary": "The IPinfo Lite plan now has a limit of 50 API requests per month.",
+      "previous_state": "IP geolocation and data API. IPinfo Lite (free plan): unlimited requests, country and continent-level geolocation only (no city/region/postal code), ASN name and domain. Does NOT include company, carrier, or privacy/anonymity detection (paid plans only). Community support.",
+      "current_state": "IPinfo Lite $0 /mo Free forever · no credit card ... 50 API req / mo",
+      "source_url": "https://ipinfo.io/pricing",
+      "category": "Maps/Geolocation",
+      "refused_date": "2026-09-22",
+      "collided_with": "ipinfo.io|limits_reduced|2026-09-05|https://ipinfo.io/pricing"
     },
     {
       "vendor": "IPLocate",
@@ -3285,6 +3347,18 @@
       "refused_date": "2026-08-28"
     },
     {
+      "vendor": "localazy.com",
+      "change_type": "limits_reduced",
+      "reason": "measures_no_change",
+      "detail": "limits_reduced claimed, and every quantity the record compares holds the same value once notation and period are normalised — 1000 source against 1,000 source",
+      "summary": "The free tier now has a limit of 1,000 source keys, whereas the stored information states unlimited source language strings.",
+      "previous_state": "Free for 1000 source language strings, unlimited languages, unlimited contributors, startup and open source deals",
+      "current_state": "The free plan includes 1,000 source keys.",
+      "source_url": "https://localazy.com/pricing",
+      "category": "Localization",
+      "refused_date": "2026-09-22"
+    },
+    {
       "vendor": "LocalOps",
       "change_type": "limits_reduced",
       "reason": "unquantified_limit",
@@ -3498,12 +3572,12 @@
       "change_type": "limits_reduced",
       "reason": "unquantified_limit",
       "detail": "limits_reduced claimed, but the current state names no quantity for anything the stored state measured (4,000 email, 150 cap, 1 domain, 3 log, 50 test, 1 sandbox, 1,500 email, 500 contact, 1 user)",
-      "summary": "The free tier limits for Email API/SMTP have changed. The stored information states 4,000 emails/month, while a user quote on the page states 1,000 emails/month.",
+      "summary": "The free tier for Email API/SMTP now allows 1000 emails/month, not 4000.",
       "previous_state": "Three separate free products. Email API/SMTP: 4,000 emails/month (150/day cap), 1 domain, 3-day log retention. Email Sandbox (testing): 50 test emails/month, 1 sandbox. Email Marketing: 1,500 emails/month, 500 contacts. 1 user each.",
-      "current_state": "A user quote states they can send 1000 mails/month for free.",
+      "current_state": "You can send emails from your domain for free. They allow 1000 mails/month.",
       "source_url": "https://mailtrap.io/",
       "category": "Email",
-      "refused_date": "2026-09-07"
+      "refused_date": "2026-09-22"
     },
     {
       "vendor": "Make",
@@ -3650,6 +3724,18 @@
       "category": "Startup Perks",
       "refused_date": "2026-09-18",
       "collided_with": "Microsoft for Startups|limits_increased|2026-09-02|https://startups.microsoft.com/en-us/"
+    },
+    {
+      "vendor": "Microsoft Teams",
+      "change_type": "new_tier",
+      "reason": "confirmed_unchanged",
+      "detail": "Report restates the stored description and details additional paid plans, which were not part of the stored description.",
+      "summary": "The free version of Teams allows up to 60 minute group meetings with up to 100 participants and 5 GB of cloud storage per user. The page highlights a 'Teams Essentials' plan at $4.00/user/month that includes extra cloud storage, unlimited group meetings up to 30 hours with up to 300 people, and anytime tech support. The page also details additional features available with Microsoft 365 Personal or Family subscriptions, including unlimited group calls/meetings and 1 TB of cloud storage.",
+      "previous_state": "Unlimited chat messages and search. Group meetings up to 60 minutes, up to 100 participants. 5 GB per user file storage. Screen sharing. No meeting recording or webinars on free.",
+      "current_state": "The free version of Teams allows up to 60 minute group meetings with up to 100 participants and 5 GB of cloud storage per user. Teams Essentials is available for $4.00 per user/month, offering extra cloud storage, unlimited group meetings up to 30 hours with up to 300 people, and anytime tech support.",
+      "source_url": "https://www.microsoft.com/en-us/microsoft-teams/free",
+      "category": "Communication & Messaging",
+      "refused_date": "2026-09-22"
     },
     {
       "vendor": "MinIO",
@@ -3812,15 +3898,15 @@
     },
     {
       "vendor": "NordPass",
-      "change_type": "limits_increased",
+      "change_type": "limits_reduced",
       "reason": "unquantified_limit",
-      "detail": "limits_increased claimed, but the current state names no quantity for anything the stored state measured (1 device)",
-      "summary": "The free tier now includes access on multiple devices, Password Health, and a Data Breach Scanner, which were previously exclusive to paid tiers.",
+      "detail": "limits_reduced claimed, but the current state names no quantity for anything the stored state measured (1 device)",
+      "summary": "The free plan now has limitations on access to multiple devices, password health, and data breach scanner.",
       "previous_state": "Unlimited passwords on 1 device at a time. Password generator. Import/export. AutoFill. No passkey storage, no item sharing, no email masking, no password health, no data breach scanner on free.",
-      "current_state": "The Free plan includes autosave & autofill, secure storage, access on multiple devices, Password Health, and Data Breach Scanner.",
+      "current_state": "The Free plan includes autosave & autofill and secure storage, but does *not* include access on multiple devices, password health, or a data breach scanner.",
       "source_url": "https://nordpass.com/plans/",
       "category": "Password Managers",
-      "refused_date": "2026-09-05"
+      "refused_date": "2026-09-22"
     },
     {
       "vendor": "Notion",
@@ -3952,10 +4038,10 @@
       "detail": "a free tier was recorded as removed on the evidence that the page did not mention it, and the summary states no price, ending or replacement where the free tier was",
       "summary": "The free tier is no longer explicitly mentioned. The lowest paid tier, Microsoft 365 Basic, offers 100 GB of cloud storage for $1.99/month or $19.99/year.",
       "previous_state": "5 GB storage. File sharing and collaboration. Office for the web (Word, Excel, PowerPoint — basic editing). Personal Vault (3 files limit on free). Photo upload. Mobile app.",
-      "current_state": "The lowest paid tier, Microsoft 365 Basic, offers 100 GB of cloud storage for $1.99/month or $19.99/year.",
+      "current_state": "Microsoft 365 Basic offers 100 GB of cloud storage for $1.99/month or $19.99/year.",
       "source_url": "https://www.microsoft.com/en-us/microsoft-365/onedrive/compare-onedrive-plans",
       "category": "Cloud Storage",
-      "refused_date": "2026-09-05"
+      "refused_date": "2026-09-22"
     },
     {
       "vendor": "OnlineOrNot",
@@ -4259,6 +4345,18 @@
       "category": "Analytics",
       "refused_date": "2026-09-10",
       "collided_with": "Plausible Analytics|free_tier_removed|2026-08-28|https://plausible.io/"
+    },
+    {
+      "vendor": "ploi.io",
+      "change_type": "limits_reduced",
+      "reason": "restates_stored_quantities",
+      "detail": "narrowing claimed, and every quantity the current state names is one the stored description already held at the same value (1 server, 1 site, 5 site/mo)",
+      "summary": "The free plan now has different features and limits.",
+      "previous_state": "Server management tool to easily manage and deploy your servers & sites — The free plan includes up to 1 server, up to 1 site, and 5 site deployments per month.",
+      "current_state": "The free plan includes up to 1 server, up to 1 site, and 5 site deployments per month. It also includes access to site monitoring, file explorer, status pages, and basic features.",
+      "source_url": "https://ploi.io/pricing",
+      "category": "Server Management",
+      "refused_date": "2026-09-22"
     },
     {
       "vendor": "podio.com",
@@ -4661,6 +4759,18 @@
       "source_url": "https://repsy.io",
       "category": "CI/CD",
       "refused_date": "2026-09-10"
+    },
+    {
+      "vendor": "Resend",
+      "change_type": "pricing_restructured",
+      "reason": "confirmed_unchanged",
+      "detail": "The daily limit was already 100 emails according to the stored description.",
+      "summary": "The free tier now has a daily limit of 100 emails. The free tier is still available.",
+      "previous_state": "Developer-first email API — 3K emails/month free (100/day cap), 3 domains, 1K marketing contacts/month, 5 AI credits, 30-day data retention",
+      "current_state": "The Free plan includes 3,000 emails / mo (100 emails a day), 3 domains, ticket support, 10,000 automation runs, and 30-day data retention.",
+      "source_url": "https://resend.com/pricing",
+      "category": "Email",
+      "refused_date": "2026-09-22"
     },
     {
       "vendor": "reviewable.io",
@@ -5220,6 +5330,18 @@
       "collided_with": "Supermaven|limits_reduced|2026-08-28|https://www.supermaven.com/"
     },
     {
+      "vendor": "SuperTokens",
+      "change_type": "limits_reduced",
+      "reason": "confirmed_unchanged",
+      "detail": "The minimum billing for MFA and Account Linking was already in the stored description. The cloud pricing change is a minor increase from $0.01 to $0.02, but the free tier remains the same.",
+      "summary": "The pricing for Multi-factor Authentication and Account Linking now includes a minimum billing of $100/month. The cloud pricing is $0.02 per MAU, and is free under 5K MAUs.",
+      "previous_state": "Open source authentication — Self hosting the open source features is free without any limits! Cloud is free under 5K MAUs. Multi-factor Authentication is $0.01 / MAU (Minimum $100 / month). Account Linking is $0.005 / MAU (Minimum $100 / month).",
+      "current_state": "Cloud pricing is $0.02 per MAU (Free under 5K monthly active users). Multi-factor Authentication is $0.01 / MAU (Minimum $100 / month). Account Linking is $0.005 / MAU (Minimum $100 / month).",
+      "source_url": "https://supertokens.com/pricing",
+      "category": "Auth",
+      "refused_date": "2026-09-22"
+    },
+    {
       "vendor": "SuprSend",
       "change_type": "free_tier_removed",
       "reason": "free_tier_still_offered",
@@ -5461,6 +5583,18 @@
       "source_url": "https://www.timecamp.com/",
       "category": "Project Management",
       "refused_date": "2026-09-14"
+    },
+    {
+      "vendor": "Tinybird",
+      "change_type": "limits_increased",
+      "reason": "states_no_difference",
+      "detail": "the summary states that the page agrees with what we hold, and names no figure the stored description did not already carry",
+      "summary": "The free tier still exists, but the description is more detailed. The page specifies 0.25 vCPUs, 1 thread/request, and community support, which aligns with the stored information. However, the page also details limits on other resources like Kafka topics, data transfer, and API requests that were not mentioned in the stored description.",
+      "previous_state": "Real-time analytics data platform — Free tier includes 1k requests per day, 10GB included storage, 0.25 vCPUs, and community support.",
+      "current_state": "Free tier includes 0.25 vCPUs, 1 thread/request, 1k requests per day, 10GB included storage, and community support.",
+      "source_url": "https://www.tinybird.co/pricing",
+      "category": "Analytics",
+      "refused_date": "2026-09-22"
     },
     {
       "vendor": "TinyMCE",
@@ -5807,6 +5941,18 @@
       "refused_date": "2026-09-02"
     },
     {
+      "vendor": "Vercel",
+      "change_type": "limits_reduced",
+      "reason": "states_no_difference",
+      "detail": "limits_reduced claimed, summary asserts the page matches what we stored, and the two states carry the same quantities",
+      "summary": "The Hobby plan still exists, but many of the included limits are now 'starting at' prices, indicating they are no longer fully included. Specifically, Edge Requests, Fast Data Transfer, Blob Storage, Image Transformations, Function Invocations, Active CPU, and Provisioned Memory all have associated costs if exceeded.",
+      "previous_state": "Hobby $0 /mo. Includes 1M Edge Requests, 100 GB Fast Data Transfer, 1 GB Blob Storage, 5K Image Transformations, 1M Function Invocations, 4 hours Active CPU, and 360 GB-hrs Provisioned Memory, with overages billed at various rates.",
+      "current_state": "Hobby $0 /mo. Includes 1M Edge Requests, 100 GB Fast Data Transfer, 1 GB Blob Storage, 5K Image Transformations, 1M Function Invocations, 4 hours Active CPU, and 360 GB-hrs Provisioned Memory, with overages billed at various rates.",
+      "source_url": "https://vercel.com/pricing",
+      "category": "Cloud Hosting",
+      "refused_date": "2026-09-22"
+    },
+    {
       "vendor": "veriphone",
       "change_type": "pricing_restructured",
       "reason": "confirmed_unchanged",
@@ -5894,6 +6040,18 @@
       "category": "Error Tracking",
       "refused_date": "2026-09-13",
       "collided_with": "Whitespace|limits_reduced|2026-09-01|https://whitespace.dev"
+    },
+    {
+      "vendor": "Windscribe",
+      "change_type": "limits_reduced",
+      "reason": "zero_allowance",
+      "detail": "limits_reduced claimed on a state that grants zero of a resource — \"0 GB\", \"0 Location\". A vendor states a withdrawn allowance by dropping the row, not by publishing a zero, so a literal zero reads as a widget or plan configurator that had not populated when the page was fetched",
+      "summary": "The free tier now offers 0 GB/month of data and no locations, whereas previously it offered 10 GB/month and 11 server locations.",
+      "previous_state": "10 GB/month free data. 11 server locations. Ad/tracker blocker (R.O.B.E.R.T.). Firewall (kill switch). WireGuard, IKEv2, OpenVPN. Browser extension included. Additional 5 GB for tweeting about them.",
+      "current_state": "0 GB/Month 0 Location(s)",
+      "source_url": "https://windscribe.com/upgrade",
+      "category": "VPN & Privacy",
+      "refused_date": "2026-09-22"
     },
     {
       "vendor": "Windsurf",
@@ -6043,6 +6201,18 @@
     },
     {
       "vendor": "Zenscrape",
+      "change_type": "pricing_restructured",
+      "reason": "confirmed_unchanged",
+      "detail": "'API calls' and 'searched requests' are likely equivalent, and the 1,000 limit is consistent. The added context about being a 'starting point' and paid options is new detail not covered in the stored description, but doesn't change the core free tier offering.",
+      "summary": "The free plan now explicitly states it includes 1,000 searched requests per month. The free plan is still available. Is now presented as a basic starting point alongside these paid options.",
+      "previous_state": "Web scraping API with headless browsers, residentials IPs, and straightforward pricing. One thousand free API calls/month and extra credits for students and non-profits.",
+      "current_state": "The Free plan includes 1,000 searched requests per month and costs $0/mo.",
+      "source_url": "https://zenscrape.com/web-scraping-api",
+      "category": "Web Scraping",
+      "refused_date": "2026-09-22"
+    },
+    {
+      "vendor": "Zenscrape",
       "change_type": "limits_reduced",
       "reason": "states_no_difference",
       "detail": "the summary states that the page agrees with what we hold, and names no figure the stored description did not already carry",
@@ -6076,6 +6246,18 @@
       "source_url": "https://open.bigmodel.cn",
       "category": "AI / ML",
       "refused_date": "2026-09-16"
+    },
+    {
+      "vendor": "Zilliz Cloud",
+      "change_type": "limits_increased",
+      "reason": "measures_no_change",
+      "detail": "limits_increased claimed, and every quantity the record compares holds the same value once notation and period are normalised — 5 GB storage against 5 GB storage, 5 collection against 5 collection",
+      "summary": "The free tier still exists, but the description is more detailed. The free tier now explicitly states Community support via a Slack invite link.",
+      "previous_state": "Managed Milvus vector database — free tier: 5 GB storage, 2.5M vector compute units/month, up to 5 collections. Milvus open-source also free to self-host with no limits",
+      "current_state": "Free Starting point for learning and personal projects. $0 Start for Free 5 GB storage 2.5M vCUs per month included Up to 5 collections Community support: Slack invite link",
+      "source_url": "https://zilliz.com/pricing",
+      "category": "Databases",
+      "refused_date": "2026-09-22"
     },
     {
       "vendor": "zilore.com",
