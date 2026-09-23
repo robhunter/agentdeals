@@ -147,6 +147,19 @@
       "refused_date": "2026-08-29"
     },
     {
+      "vendor": "Algolia",
+      "change_type": "new_free_tier",
+      "reason": "same_transition_graded_differently",
+      "detail": "same vendor, source_url and previous_state as Algolia|limits_reduced|2026-08-28|https://www.algolia.com/pricing",
+      "summary": "A 'Free' plan is also offered with 10K search requests/month and 50K records. The 'Grow Plus' plan is also available with 10K search requests/month and 100K records, plus additional features.",
+      "previous_state": "Search-as-a-service — 10K search requests/month, 1M records, AI recommendations included",
+      "current_state": "Grow plan includes 10K search requests /month and 100K records. A free plan is available with 10K search requests/month and 50K records.",
+      "source_url": "https://www.algolia.com/pricing",
+      "category": "Search",
+      "refused_date": "2026-09-23",
+      "collided_with": "Algolia|limits_reduced|2026-08-28|https://www.algolia.com/pricing"
+    },
+    {
       "vendor": "Amazon AWS",
       "change_type": "pricing_restructured",
       "reason": "page_does_not_name_vendor",
@@ -217,6 +230,18 @@
       "source_url": "https://amplitude.com/pricing",
       "category": "Analytics",
       "refused_date": "2026-09-18"
+    },
+    {
+      "vendor": "Amplitude",
+      "change_type": "pricing_restructured",
+      "reason": "confirmed_unchanged",
+      "detail": "Both descriptions offer the Growth plan free for one year with a 100M event/month limit. The current page adds details about year two and other features, which weren't part of the stored description.",
+      "summary": "The Startup Scholarship has been replaced with a 'Early Stage Startup Pricing' plan offering the full Growth plan for free for one year, up to 100M events/month. Year two is 40% off the annual Plus plan, or the option to drop to a free 2M events/month plan.",
+      "previous_state": "1 year free Growth plan — 200K MTUs or 100M events/month. All Growth features including Behavioral Cohorts, Pathfinder, experimentation, and predictive audiences. 96%+ approval rate",
+      "current_state": "Your first year of Amplitude is 100% free. Everything: product analytics, session replays, MCP, and agents. Up to 100M events a month. $60,000 value. Year two, 40% off. Get started. As soon as your account is created, you’ll be prompted to apply.",
+      "source_url": "https://amplitude.com/startups",
+      "category": "Startup Perks",
+      "refused_date": "2026-09-23"
     },
     {
       "vendor": "Apify",
@@ -1054,12 +1079,12 @@
       "change_type": "limits_reduced",
       "reason": "states_no_difference",
       "detail": "limits_reduced claimed, summary asserts the page matches what we stored, and the two states carry the same quantities",
-      "summary": "The page confirms a free plan exists, but details a record limit of 200 for zones created on or after 2024-09-01, while older zones retain a 1,000-record cap. This aligns with the stored information. However, the page does not explicitly state 'unlimited zones and queries' as the free plan offers.",
+      "summary": "The page confirms a free plan exists, but states a records-per-zone cap of 200 for zones created on or after 2024-09-01, while zones created before that date retain the legacy 1,000-record cap. This matches the stored information. However, the page also promotes numerous paid add-ons and plans, and does not focus on the free plan's details beyond its existence.",
       "previous_state": "Free authoritative DNS hosting — unlimited zones and queries, DDoS protection, free SSL/TLS. Records-per-zone cap is 200 for zones created on or after 2024-09-01; zones created before that date retain the legacy 1,000-record cap.",
-      "current_state": "Records-per-zone cap is 200 for zones created on or after 2024-09-01; zones created before that date retain the legacy 1,000-record cap.",
+      "current_state": "The free plan exists, but has a 200 record limit for zones created on or after 2024-09-01, and a 1,000 record limit for zones created before that date.",
       "source_url": "https://www.cloudflare.com/plans/free/",
       "category": "DNS & Domain Management",
-      "refused_date": "2026-09-09"
+      "refused_date": "2026-09-23"
     },
     {
       "vendor": "Cloudflare KV",
@@ -1683,6 +1708,19 @@
       "refused_date": "2026-09-03"
     },
     {
+      "vendor": "Directus",
+      "change_type": "new_free_tier",
+      "reason": "same_transition_graded_differently",
+      "detail": "same vendor, source_url and previous_state as Directus|new_free_tier|2026-08-28|https://directus.io/pricing",
+      "summary": "Directus's own page now redirects to directus.com. The free self-hosted tier is still available. The Open Innovation Grant now provides a fully permissive license for organizations under $5M revenue and fewer than 50 employees, with cloud hosting at $99/mo.",
+      "previous_state": "Self-hosted free (BSL license, free for <$5M revenue). Cloud free tier discontinued Nov 2025 — Cloud starts at $15/mo",
+      "current_state": "Organizations under $5M in annual revenue and fewer than 50 employees qualify for fully permissive access to Directus at no software cost. Self-hosted is completely free. Cloud hosting is $99/mo.",
+      "source_url": "https://directus.io/pricing",
+      "category": "Headless CMS",
+      "refused_date": "2026-09-23",
+      "collided_with": "Directus|new_free_tier|2026-08-28|https://directus.io/pricing"
+    },
+    {
       "vendor": "DNSExit",
       "change_type": "pricing_restructured",
       "reason": "same_transition_graded_differently",
@@ -2004,13 +2042,13 @@
       "vendor": "Fireworks AI",
       "change_type": "pricing_restructured",
       "reason": "confirmed_unchanged",
-      "detail": "The report simply restates the free credit amount already known.",
-      "summary": "The free tier now offers $1 in free credits for serverless inference.",
+      "detail": "The report confirms the free tier remains the same; the addition of broader pricing doesn't alter the stated free tier.",
+      "summary": "The free tier of $1 in credits still exists. The current page presents a comprehensive pricing structure beyond that.",
       "previous_state": "Fast inference platform for LLMs and image models. Free tier: $1 free credits. Serverless and on-demand deployment options",
-      "current_state": "Serverless Inference offers $1 in free credits. Beyond that, pricing is per token, and varies by model and tier (Standard, Priority, Fast). Training and on-demand deployments have separate, detailed pricing structures based on GPU usage and model parameters.",
+      "current_state": "Serverless Inference is available with pay per token pricing, and users can get started with $1 in free credits.",
       "source_url": "https://fireworks.ai/pricing",
       "category": "AI / ML",
-      "refused_date": "2026-09-07"
+      "refused_date": "2026-09-23"
     },
     {
       "vendor": "fivenines.io",
@@ -3248,6 +3286,18 @@
       "refused_date": "2026-09-14"
     },
     {
+      "vendor": "LastPass",
+      "change_type": "new_free_tier",
+      "reason": "confirmed_unchanged",
+      "detail": "Report details additions (free trials) not covered in the stored description.",
+      "summary": "The free plan is now described as being limited to 1 device type, with unlimited password storage, autofill, dark web monitoring, and basic password sharing. The page also offers 30-day free trials for Premium and Families, and free trials for Business plans.",
+      "previous_state": "Free plan: Limited to 1 device type. Simple password management with unlimited password storage, autofill, dark web monitoring, and basic password sharing.",
+      "current_state": "Free plan Limited to 1 device type. Simple password management with unlimited password storage, autofill, dark web monitoring, and basic password sharing.",
+      "source_url": "https://www.lastpass.com/pricing",
+      "category": "Password Managers",
+      "refused_date": "2026-09-23"
+    },
+    {
       "vendor": "LaunchDarkly",
       "change_type": "limits_reduced",
       "reason": "no_baseline",
@@ -3424,13 +3474,13 @@
       "vendor": "Logz.io",
       "change_type": "pricing_restructured",
       "reason": "confirmed_unchanged",
-      "detail": "The report restates information already present in the stored description (pricing and free trial for Log Management). The addition of Infrastructure Monitoring and Distributed Tracing to the free trial doesn't contradict the stored description, which explicitly stated there was *no permanent free tier* and only a 14-day trial.",
-      "summary": "The pricing page offers a 'Free Trial' for Log Management, Infrastructure Monitoring, and Distributed Tracing. It also details consumption-based pricing starting at $0.92/GB/day for Log Management. Is not referenced on the current page.",
+      "detail": "The stored description already acknowledged consumption-based pricing at $0.92/GB/day and the availability of a free trial. The report simply restates this information and adds details about other products with free trials, which weren't part of the original stored description.",
+      "summary": "The pricing page offers a 'Free Trial' for Log Management, Infrastructure Monitoring, and Distributed Tracing. Also details consumption-based pricing starting at $0.92/GB/day.",
       "previous_state": "ELK-based log management — 14-day free trial only. No permanent free tier. Consumption-based pricing starts at $0.92/ingested GB/day. Community plan removed",
-      "current_state": "Logz.io offers a 'Free Trial' for Log Management, Infrastructure Monitoring, and Distributed Tracing. Log Management is priced at $0.92 per ingested GB per day.",
+      "current_state": "Log Management is priced at $0.92 per ingested GB, per day, with options for additional retention at varying costs. A free trial is available.",
       "source_url": "https://logz.io/pricing/",
       "category": "Logging",
-      "refused_date": "2026-09-09"
+      "refused_date": "2026-09-23"
     },
     {
       "vendor": "Lokalise",
@@ -3664,6 +3714,18 @@
       "refused_date": "2026-08-29"
     },
     {
+      "vendor": "MEGA",
+      "change_type": "limits_reduced",
+      "reason": "states_no_terms",
+      "detail": "every clause of the summary states absence or bookkeeping rather than a term the page carries, so it reports the reading rather than a change",
+      "summary": "The free tier now offers an unspecified amount of storage (indicated by !{freePlanStorage}) instead of the previously stated 20 GB.",
+      "previous_state": "20 GB permanent storage. End-to-end encrypted. MEGA Chat. File sharing with encryption. Desktop and mobile sync. 1 GB transfer quota that replenishes. Up to 5 GB additional via achievements (temporary).",
+      "current_state": "The free plan offers !{freePlanStorage} storage and limited transfer.",
+      "source_url": "https://mega.io/pricing",
+      "category": "Cloud Storage",
+      "refused_date": "2026-09-23"
+    },
+    {
       "vendor": "Meilisearch",
       "change_type": "pricing_restructured",
       "reason": "no_price_signal",
@@ -3724,6 +3786,18 @@
       "category": "Startup Perks",
       "refused_date": "2026-09-18",
       "collided_with": "Microsoft for Startups|limits_increased|2026-09-02|https://startups.microsoft.com/en-us/"
+    },
+    {
+      "vendor": "Microsoft Founders Hub",
+      "change_type": "limits_reduced",
+      "reason": "restates_stored_quantities",
+      "detail": "narrowing claimed, and every quantity the current state names is one the stored description already held at the same value (150,000 currency), and drops 5 the stored description carried",
+      "summary": "The page states access to up to $150,000 in credits, but does not mention the $5,000 option or the specific inclusions of M365 Business Premium, GitHub Enterprise, and Visual Studio Enterprise.",
+      "previous_state": "Up to $5,000 Azure credits (basic path, no investor required) or up to $150,000 (investor network path). Includes M365 Business Premium (50 seats), GitHub Enterprise (20 users), Visual Studio Enterprise (5 users), Power Apps (10 users)",
+      "current_state": "Access to up to $150,000 in credits.",
+      "source_url": "https://www.microsoft.com/en-us/startups",
+      "category": "Startup Perks",
+      "refused_date": "2026-09-23"
     },
     {
       "vendor": "Microsoft Teams",
@@ -3811,6 +3885,18 @@
       "source_url": "https://mockupmark.com/create/free",
       "category": "Design",
       "refused_date": "2026-09-14"
+    },
+    {
+      "vendor": "Momento",
+      "change_type": "free_tier_removed",
+      "reason": "restates_stored_quantities",
+      "detail": "narrowing claimed, and every quantity the current state names is one the stored description already held at the same value (13 currency, 0.0105 currency, 1 currency, 1 operation, 0.01 currency), and drops 4 the stored description carried",
+      "summary": "The page no longer mentions a free tier. Momento Cache Flex is $13 per GB-month, Momento Cache Cluster starts at $0.0105 per instance-hour, Pub/sub Topics are $1 per 1M operations, and Valkey Router is $0.01 per GB of data transfer. A Starter Basic Support plan is $0, but is a support level, not a product allowance.",
+      "previous_state": "Managed Valkey cache, cluster and pub/sub, formerly a serverless cache with a free tier. No free tier. gomomento.com/pricing, read 2026-09-05, prices every plan: Momento Cache Flex from $13 per GB-month, Momento Cache Cluster from $0.0105 per instance-hour, Pub/sub Topics from $1 per 1M operations, Valkey Router $0.01 per GB of data transfer. The only $0 on the page is the Starter Basic Support plan, which is a support level and not a product allowance.",
+      "current_state": "Momento Cache Flex from $13 per GB-month, Momento Cache Cluster from $0.0105 per instance-hour, Pub / sub Topics from $1 per 1M operations, Valkey Router $0.01 per GB of data transfer.",
+      "source_url": "https://www.gomomento.com/pricing",
+      "category": "Databases",
+      "refused_date": "2026-09-23"
     },
     {
       "vendor": "mouseflow.com",
@@ -4114,6 +4200,18 @@
       "source_url": "https://www.ovhcloud.com/en/public-cloud/",
       "category": "Cloud IaaS",
       "refused_date": "2026-09-16"
+    },
+    {
+      "vendor": "packagecloud.io",
+      "change_type": "limits_reduced",
+      "reason": "unquantified_limit",
+      "detail": "limits_reduced claimed, but the current state names no quantity for anything the stored state measured (10 python)",
+      "summary": "The free plan now has limits of 10 GB bandwidth and 2 GB storage. The stored information indicated unlimited storage and bandwidth for the free tier, as well as free Maven, Python, Alpine, and Helm repositories.",
+      "previous_state": "Hosted Package Repositories for YUM, APT, RubyGem and PyPI — Maven Repository: Create a Maven repository for Java artifacts and SNAPSHOTS in 10 seconds, for FREE. Python Repository: Easy to use private hosted PyPi repositories. Works with all Python package types. Get started for FREE! Alpine Repository: Easy to use private hosted Alpine repositories. Get started for FREE! Helm Repository: Create a Helm repository for Helm charts in 10 seconds, for FREE.",
+      "current_state": "The Free Plan offers 10 GB bandwidth, 2 GB storage, and Unlimited CI/CD Minutes.",
+      "source_url": "https://packagecloud.io/pricing",
+      "category": "Storage",
+      "refused_date": "2026-09-23"
     },
     {
       "vendor": "Paddle",
@@ -4910,6 +5008,19 @@
       "collided_with": "ScrumFast|limits_increased|2026-08-28|https://www.scrumfast.com"
     },
     {
+      "vendor": "Segment",
+      "change_type": "startup_program_expanded",
+      "reason": "same_transition_graded_differently",
+      "detail": "same vendor, source_url and previous_state as Segment|free_tier_removed|2026-08-28|https://segment.com/docs/guides/usage-and-billing/discounts-for-startups-npos/",
+      "summary": "Segment's own page now redirects to twilio.com. The page details a $120/month discount for non-profits. Requires verification of non-profit status.",
+      "previous_state": "$50,000 in credits toward monthly Team plan for up to 2 years. Includes access to $1M+ in partner deals (AWS, Google, Intercom) and Analytics Academy",
+      "current_state": "Segment offers a $120 per month discount on our monthly Team plan for non-profits. Contact our support team with proof of your non-profit status for more details.",
+      "source_url": "https://segment.com/docs/guides/usage-and-billing/discounts-for-startups-npos/",
+      "category": "Startup Perks",
+      "refused_date": "2026-09-23",
+      "collided_with": "Segment|free_tier_removed|2026-08-28|https://segment.com/docs/guides/usage-and-billing/discounts-for-startups-npos/"
+    },
+    {
       "vendor": "Semaphore CI",
       "change_type": "pricing_restructured",
       "reason": "confirmed_unchanged",
@@ -5172,13 +5283,13 @@
       "vendor": "SonarQube Cloud",
       "change_type": "free_tier_removed",
       "reason": "states_no_terms",
-      "detail": "every clause of the summary states absence or bookkeeping or hedge rather than a term the page carries, so it reports the reading rather than a change",
-      "summary": "The pricing page does not explicitly mention a free tier. It highlights features like AI code review and security analysis but directs users to 'View plans' suggesting a paid model. The original deal specified a free and unlimited tier for open-source projects.",
+      "detail": "every clause of the summary states absence or narration rather than a term the page carries, so it reports the reading rather than a change",
+      "summary": "The pricing page does not explicitly mention a free tier with unlimited analysis for open-source projects. It focuses on SonarQube Cloud as a paid service with features like AI code verification and CI/CD integration. While it mentions integrations with GitHub, Bitbucket, Azure DevOps and GitLab, and highlights use cases for open source projects, it doesn't guarantee a free offering for them.",
       "previous_state": "Code quality and security analysis — free and unlimited for open-source projects, 15+ languages, CI/CD integration. Formerly SonarCloud.",
-      "current_state": "The page promotes SonarQube Cloud with features like AI code verification and security analysis, directing users to view plans for pricing.",
+      "current_state": "SonarQube Cloud offers automated code quality and security reviews and integrates with DevOps platforms. It verifies AI-generated and developer-written code in real time.",
       "source_url": "https://www.sonarsource.com/products/sonarcloud/",
       "category": "Security",
-      "refused_date": "2026-09-09"
+      "refused_date": "2026-09-23"
     },
     {
       "vendor": "Spacelift",
@@ -5383,12 +5494,12 @@
       "change_type": "limits_reduced",
       "reason": "unquantified_limit",
       "detail": "limits_reduced claimed, but the current state names no quantity for anything the stored state measured (5 currency, 100 currency, 5 currency, 9 currency, 50 currency)",
-      "summary": "The specific credit amounts for AWS, Google Cloud, MongoDB, Slack, and Segment are no longer explicitly mentioned. The page mentions 'Discounted partner offers' and 'Benefit from exclusive partner discounts on software and services' but does not detail the specific amounts or partners.",
+      "summary": "The specific credit amounts for AWS, Google Cloud, MongoDB, Slack, and Segment are no longer explicitly mentioned. The page mentions 'Discounted partner offers' and 'Benefit from exclusive partner discounts on software and services', and 'SVB technology, life science/healthcare & global business clients can save on software and services such as workforce collaboration, infrastructure, talents and more', but does not detail the specific amounts or partners.",
       "previous_state": "$5K AWS credits, up to $100K Google Cloud credits (usage-based annual cap), $5K MongoDB credits, $9K off Slack, and $50K Segment credits for SVB startup banking customers. Now a division of First Citizens BancShares",
       "current_state": "SVB technology, life science/healthcare & global business clients can save on software and services such as workforce collaboration, infrastructure, talents and more.",
       "source_url": "https://www.svb.com/startup-banking/",
       "category": "Startup Perks",
-      "refused_date": "2026-09-09"
+      "refused_date": "2026-09-23"
     },
     {
       "vendor": "SwaggerHub",
@@ -5613,13 +5724,13 @@
       "vendor": "Together AI",
       "change_type": "free_tier_removed",
       "reason": "states_no_terms",
-      "detail": "every clause of the summary states absence rather than a term the page carries, so it reports the reading rather than a change",
-      "summary": "The $1 free credit offer is not mentioned on the pricing page. The page details pricing per 1M tokens for various models, and offers different compute options (Serverless Inference, Provisioned Throughput, Dedicated Inference, GPU Clusters, etc.) but does not mention a free tier.",
+      "detail": "every clause of the summary states absence or restatement rather than a term the page carries, so it reports the reading rather than a change",
+      "summary": "The $1 credit free tier is not mentioned on the pricing page. The page details pricing per 1M tokens for various models, and costs for compute, storage, and fine-tuning.",
       "previous_state": "Fast inference API for open-source LLMs (Llama, Mixtral, Code Llama). Free tier: $1 free credits on signup. Pay-per-token after",
-      "current_state": "The pricing page details costs per 1M tokens for various models, and offers different compute options like Serverless Inference, Provisioned Throughput, and Dedicated Inference.",
+      "current_state": "The pricing page lists costs for various models based on token usage, compute resources, storage, and fine-tuning services. No mention of a free credit tier is present.",
       "source_url": "https://www.together.ai/pricing",
       "category": "AI / ML",
-      "refused_date": "2026-09-07"
+      "refused_date": "2026-09-23"
     },
     {
       "vendor": "Toggl",
@@ -5779,6 +5890,18 @@
       "source_url": "https://unirateapi.com",
       "category": "Dev Utilities",
       "refused_date": "2026-09-10"
+    },
+    {
+      "vendor": "Unkey",
+      "change_type": "free_tier_removed",
+      "reason": "no_baseline",
+      "detail": "free_tier_removed claimed, and the clause that named the terms the change was measured on was dropped — what is left states no earlier figure and nothing the stored description measured",
+      "summary": "The free tier described in the stored information no longer exists. The lowest tier is now $5/month with limited resources.",
+      "previous_state": "The \"Free\" API key management plan is priced at 0 USD / mo and lists \"1k API keys\", \"150K valid requests / mo\", \"1-day logs retention\", \"3-day audit log retention\" and \"Unlimited APIs\".",
+      "current_state": "Starts at $ 5 /month. Includes Up to 1 vCPU / 2 GB per Instance, 1 concurrent build, 1 custom domain, $5/mo usage credits, and Email support.",
+      "source_url": "https://www.unkey.com/pricing",
+      "category": "API Gateway",
+      "refused_date": "2026-09-23"
     },
     {
       "vendor": "Uploadcare",

@@ -2495,6 +2495,32 @@
       "record_date": "2026-09-22",
       "change_type": "pricing_restructured",
       "summary": "The page details iCloud+ with a free 5GB tier. Emphasizes paid plans for increased storage and features like Private Relay, Hide My Email, and HomeKit Secure Video. The free tier is now part of a broader iCloud+ ecosystem and is limited to 5GB of storage."
+    },
+    {
+      "vendor": "Buildkite",
+      "url": "https://buildkite.com/pricing/",
+      "restated_on": "2026-09-23",
+      "previous_description": "500 hosted agent minutes/month, 3 concurrent jobs, 90-day build retention, 50K test executions. Free for open-source projects",
+      "description": "The Free Plan offers up to 5 users, up to 10 concurrent jobs, up to 2,000 Linux vCPU minutes per month, up to 250k test executions per month, 30 days build retention, and 50GB/month artifact storage.",
+      "reading_date": "2026-09-05",
+      "reading_terms": "The Free Plan offers up to 5 users, up to 10 concurrent jobs, up to 2,000 Linux vCPU minutes per month, up to 250k test executions per month, 30 days build retention, and 50GB/month artifact storage.",
+      "source_url": "https://buildkite.com/pricing/",
+      "record_date": "2026-09-05",
+      "change_type": "limits_reduced",
+      "summary": "The free plan now offers 2,000 Linux vCPU minutes/month and 250k test executions, up from 500 minutes and 50k executions. The free plan also includes 30 days build retention instead of 90. The open-source specific mention is gone."
+    },
+    {
+      "vendor": "Foursquare",
+      "url": "https://foursquare.com/pricing/",
+      "restated_on": "2026-09-23",
+      "previous_description": "Location discovery, venue search, and context-aware content — Places API Pro endpoints: 0-500 Calls $0.00 CPM, 501 to 100,000 Calls $15.00 CPM, 100,001 to 500,000 Calls $12.00 CPM, 500,001+ Calls $9.00 CPM. Places API Premium endpoints: 0-100,000 Calls $18.75 CPM, 100,001 to 500,000 Calls $15.00 CPM, 500,001+ Calls $11.25 CPM.",
+      "description": "Location discovery, venue search, and context-aware content — Places API Pro endpoints: 0 &#8211; 500 Calls $0.00 CPM, 501 to 100,000 Calls $15.00 CPM, 100,001 to 500,000 Calls $12.00 CPM, 500,001+ Calls $9.00 CPM. Enjoy up to 10,000 free calls on Pro endpoints.",
+      "reading_date": "2026-09-23",
+      "reading_terms": "Places API Pro endpoints: 0 &#8211; 500 Calls $0.00 CPM, 501 to 100,000 Calls $15.00 CPM, 100,001 to 500,000 Calls $12.00 CPM, 500,001+ Calls $9.00 CPM. Enjoy up to 10,000 free calls on Pro endpoints.",
+      "source_url": "https://foursquare.com/pricing/",
+      "record_date": "2026-09-23",
+      "change_type": "new_free_tier",
+      "summary": "The Places API Pro endpoints pricing remains the same. A free tier of 10,000 calls on Pro endpoints has been added."
     }
   ]
 }
