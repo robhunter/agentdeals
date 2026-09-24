@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-22",
+  "generated_at": "2026-09-24",
   "records": [
     {
       "vendor": "10minutemail",
@@ -96,12 +96,13 @@
     {
       "vendor": "Ably",
       "url": "https://ably.com/pricing",
-      "last_attempt_at": "2026-09-09",
-      "last_outcome": "changed",
+      "last_attempt_at": "2026-09-24",
+      "last_outcome": "confirmed",
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": null,
+      "last_success": "2026-09-24",
+      "last_read_at": "2026-09-24",
       "quarantined_since": null
     },
     {
@@ -258,12 +259,13 @@
     {
       "vendor": "Algolia",
       "url": "https://www.algolia.com/pricing",
-      "last_attempt_at": "2026-09-09",
+      "last_attempt_at": "2026-09-24",
       "last_outcome": "changed",
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
       "last_success": null,
+      "last_read_at": "2026-09-24",
       "quarantined_since": null
     },
     {
@@ -418,12 +420,13 @@
     {
       "vendor": "Amplitude",
       "url": "https://amplitude.com/startups",
-      "last_attempt_at": "2026-09-09",
+      "last_attempt_at": "2026-09-24",
       "last_outcome": "changed",
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
       "last_success": null,
+      "last_read_at": "2026-09-24",
       "quarantined_since": null
     },
     {
@@ -975,11 +978,11 @@
     {
       "vendor": "Autodesk Fusion 360 for Startups",
       "url": "https://www.autodesk.in/products/fusion-360/startups",
-      "last_attempt_at": "2026-09-17",
+      "last_attempt_at": "2026-09-24",
       "last_outcome": "fetch_failed",
       "last_error": "HTTP 403",
       "failure_category": "bot_block",
-      "consecutive_failures": 5,
+      "consecutive_failures": 6,
       "last_success": null,
       "last_read_at": null,
       "quarantined_since": "2026-08-28"
@@ -1126,12 +1129,13 @@
     {
       "vendor": "Backblaze B2",
       "url": "https://www.backblaze.com/cloud-storage/pricing",
-      "last_attempt_at": "2026-09-09",
+      "last_attempt_at": "2026-09-24",
       "last_outcome": "confirmed",
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-09-09",
+      "last_success": "2026-09-24",
+      "last_read_at": "2026-09-24",
       "quarantined_since": null
     },
     {
@@ -1866,12 +1870,13 @@
     {
       "vendor": "Buildkite",
       "url": "https://buildkite.com/pricing/",
-      "last_attempt_at": "2026-09-05",
+      "last_attempt_at": "2026-09-24",
       "last_outcome": "changed",
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
       "last_success": null,
+      "last_read_at": "2026-09-24",
       "quarantined_since": null
     },
     {
@@ -2546,12 +2551,13 @@
     {
       "vendor": "CloudAMQP",
       "url": "https://www.cloudamqp.com/plans.html",
-      "last_attempt_at": "2026-09-09",
+      "last_attempt_at": "2026-09-24",
       "last_outcome": "changed",
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
       "last_success": null,
+      "last_read_at": "2026-09-24",
       "quarantined_since": null
     },
     {
@@ -2591,12 +2597,13 @@
     {
       "vendor": "Cloudflare DNS",
       "url": "https://www.cloudflare.com/plans/free/",
-      "last_attempt_at": "2026-09-09",
+      "last_attempt_at": "2026-09-24",
       "last_outcome": "changed",
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
       "last_success": null,
+      "last_read_at": "2026-09-24",
       "quarantined_since": null
     },
     {
@@ -2614,11 +2621,11 @@
     {
       "vendor": "Cloudflare Dynamic Workers",
       "url": "https://developers.cloudflare.com/workers/runtime-apis/dynamic-workers/",
-      "last_attempt_at": "2026-09-17",
+      "last_attempt_at": "2026-09-24",
       "last_outcome": "fetch_failed",
       "last_error": "HTTP 404",
       "failure_category": "unreachable",
-      "consecutive_failures": 5,
+      "consecutive_failures": 6,
       "last_success": null,
       "last_read_at": null,
       "quarantined_since": "2026-08-28"
@@ -2790,12 +2797,13 @@
     {
       "vendor": "ClouDNS",
       "url": "https://www.cloudns.net/pricing/",
-      "last_attempt_at": "2026-09-09",
+      "last_attempt_at": "2026-09-24",
       "last_outcome": "confirmed",
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-09-09",
+      "last_success": "2026-09-24",
+      "last_read_at": "2026-09-24",
       "quarantined_since": null
     },
     {
@@ -2825,11 +2833,11 @@
     {
       "vendor": "CMYK Pantone",
       "url": "https://www.cmyktopantone.com/",
-      "last_attempt_at": "2026-09-16",
+      "last_attempt_at": "2026-09-24",
       "last_outcome": "fetch_failed",
       "last_error": "fetch failed",
       "failure_category": "network_error",
-      "consecutive_failures": 5,
+      "consecutive_failures": 6,
       "last_success": null,
       "last_read_at": null,
       "quarantined_since": "2026-08-28"
@@ -2895,13 +2903,13 @@
     {
       "vendor": "Code Time",
       "url": "https://marketplace.visualstudio.com/items?itemName=softwaredotcom.swdc-vscode",
-      "last_attempt_at": "2026-09-09",
-      "last_outcome": "fetch_failed",
-      "last_error": "HTTP 404",
-      "failure_category": "unreachable",
-      "consecutive_failures": 1,
+      "last_attempt_at": "2026-09-24",
+      "last_outcome": "changed",
+      "last_error": null,
+      "failure_category": null,
+      "consecutive_failures": 0,
       "last_success": null,
-      "last_read_at": null,
+      "last_read_at": "2026-09-24",
       "quarantined_since": null
     },
     {
@@ -3097,11 +3105,11 @@
     {
       "vendor": "codesandbox.io",
       "url": "https://codesandbox.io/pricing",
-      "last_attempt_at": "2026-09-16",
+      "last_attempt_at": "2026-09-24",
       "last_outcome": "fetch_failed",
       "last_error": "HTTP 403",
       "failure_category": "bot_block",
-      "consecutive_failures": 5,
+      "consecutive_failures": 6,
       "last_success": null,
       "last_read_at": null,
       "quarantined_since": "2026-08-28"
@@ -3294,11 +3302,11 @@
     {
       "vendor": "coolors",
       "url": "https://coolors.co/",
-      "last_attempt_at": "2026-09-16",
+      "last_attempt_at": "2026-09-24",
       "last_outcome": "fetch_failed",
       "last_error": "HTTP 403",
       "failure_category": "bot_block",
-      "consecutive_failures": 5,
+      "consecutive_failures": 6,
       "last_success": null,
       "last_read_at": null,
       "quarantined_since": "2026-08-28"
@@ -3477,23 +3485,25 @@
     {
       "vendor": "Crisp",
       "url": "https://crisp.chat/en/pricing/",
-      "last_attempt_at": "2026-09-09",
-      "last_outcome": "changed",
-      "last_error": null,
-      "failure_category": null,
-      "consecutive_failures": 0,
+      "last_attempt_at": "2026-09-24",
+      "last_outcome": "unclear",
+      "last_error": "Could not parse AI response",
+      "failure_category": "ai_undecided",
+      "consecutive_failures": 1,
       "last_success": null,
+      "last_read_at": null,
       "quarantined_since": null
     },
     {
       "vendor": "Cron-job.org",
       "url": "https://cron-job.org/en/",
-      "last_attempt_at": "2026-09-09",
+      "last_attempt_at": "2026-09-24",
       "last_outcome": "confirmed",
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-09-09",
+      "last_success": "2026-09-24",
+      "last_read_at": "2026-09-24",
       "quarantined_since": null
     },
     {
@@ -3546,12 +3556,13 @@
     {
       "vendor": "Crowdin",
       "url": "https://crowdin.com/pricing",
-      "last_attempt_at": "2026-09-07",
+      "last_attempt_at": "2026-09-24",
       "last_outcome": "confirmed",
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-09-07",
+      "last_success": "2026-09-24",
+      "last_read_at": "2026-09-24",
       "quarantined_since": null
     },
     {
@@ -3685,12 +3696,13 @@
     {
       "vendor": "Cursor",
       "url": "https://www.cursor.com/pricing",
-      "last_attempt_at": "2026-09-09",
+      "last_attempt_at": "2026-09-24",
       "last_outcome": "confirmed",
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-09-09",
+      "last_success": "2026-09-24",
+      "last_read_at": "2026-09-24",
       "quarantined_since": null
     },
     {
@@ -3823,13 +3835,14 @@
     {
       "vendor": "Datadog",
       "url": "https://www.datadoghq.com/pricing/",
-      "last_attempt_at": "2026-09-09",
+      "last_attempt_at": "2026-09-24",
       "last_outcome": "unclear",
-      "last_error": "The pricing page does not explicitly mention a free tier with specific limits like 'up to 5 hosts with 1-day metric retention'. It broadly mentions 'Free Trial' and lists various products, but doesn't detail a persistent free tier. It also indicates some products are unavailable on the US-FED site.",
+      "last_error": "The pricing page does not explicitly mention a free tier with the stated limits (5 hosts, 1-day retention). It broadly lists Infrastructure Monitoring as a product but doesn't detail free tier specifics within the provided text.",
       "failure_category": "ai_undecided",
-      "consecutive_failures": 2,
+      "consecutive_failures": 3,
       "last_success": null,
-      "quarantined_since": null
+      "last_read_at": null,
+      "quarantined_since": "2026-09-24"
     },
     {
       "vendor": "Dataimporter.io",
@@ -4053,12 +4066,13 @@
     {
       "vendor": "Deno Deploy",
       "url": "https://deno.com/deploy/pricing",
-      "last_attempt_at": "2026-09-09",
+      "last_attempt_at": "2026-09-24",
       "last_outcome": "confirmed",
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-09-09",
+      "last_success": "2026-09-24",
+      "last_read_at": "2026-09-24",
       "quarantined_since": null
     },
     {
@@ -4239,12 +4253,13 @@
     {
       "vendor": "DigitalOcean",
       "url": "https://www.digitalocean.com/startups",
-      "last_attempt_at": "2026-09-09",
+      "last_attempt_at": "2026-09-24",
       "last_outcome": "changed",
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
       "last_success": null,
+      "last_read_at": "2026-09-24",
       "quarantined_since": null
     },
     {
@@ -4261,12 +4276,13 @@
     {
       "vendor": "Directus",
       "url": "https://directus.io/pricing",
-      "last_attempt_at": "2026-09-09",
+      "last_attempt_at": "2026-09-24",
       "last_outcome": "changed",
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
       "last_success": null,
+      "last_read_at": "2026-09-24",
       "quarantined_since": null
     },
     {
@@ -4651,13 +4667,13 @@
     {
       "vendor": "E2B",
       "url": "https://e2b.dev/pricing",
-      "last_attempt_at": "2026-09-22",
+      "last_attempt_at": "2026-09-24",
       "last_outcome": "changed",
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
       "last_success": null,
-      "last_read_at": "2026-09-22",
+      "last_read_at": "2026-09-24",
       "quarantined_since": null
     },
     {
@@ -4914,11 +4930,11 @@
     {
       "vendor": "Evernote",
       "url": "https://evernote.com/free",
-      "last_attempt_at": "2026-09-17",
+      "last_attempt_at": "2026-09-24",
       "last_outcome": "fetch_failed",
       "last_error": "HTTP 404",
       "failure_category": "unreachable",
-      "consecutive_failures": 5,
+      "consecutive_failures": 6,
       "last_success": null,
       "last_read_at": null,
       "quarantined_since": "2026-08-28"
@@ -5079,12 +5095,13 @@
     {
       "vendor": "Fastly",
       "url": "https://www.fastly.com/pricing",
-      "last_attempt_at": "2026-09-09",
+      "last_attempt_at": "2026-09-24",
       "last_outcome": "changed",
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
       "last_success": null,
+      "last_read_at": "2026-09-24",
       "quarantined_since": null
     },
     {
@@ -5255,12 +5272,13 @@
     {
       "vendor": "Fireworks AI",
       "url": "https://fireworks.ai/pricing",
-      "last_attempt_at": "2026-09-07",
+      "last_attempt_at": "2026-09-24",
       "last_outcome": "changed",
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
       "last_success": null,
+      "last_read_at": "2026-09-24",
       "quarantined_since": null
     },
     {
@@ -5300,12 +5318,13 @@
     {
       "vendor": "Flagsmith",
       "url": "https://www.flagsmith.com/pricing",
-      "last_attempt_at": "2026-09-09",
-      "last_outcome": "confirmed",
+      "last_attempt_at": "2026-09-24",
+      "last_outcome": "changed",
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
       "last_success": "2026-09-09",
+      "last_read_at": "2026-09-24",
       "quarantined_since": null
     },
     {
@@ -5619,12 +5638,13 @@
     {
       "vendor": "Foursquare",
       "url": "https://foursquare.com/pricing/",
-      "last_attempt_at": "2026-09-07",
+      "last_attempt_at": "2026-09-24",
       "last_outcome": "changed",
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
       "last_success": null,
+      "last_read_at": "2026-09-24",
       "quarantined_since": null
     },
     {
@@ -6195,12 +6215,13 @@
     {
       "vendor": "GitHub",
       "url": "https://education.github.com/pack",
-      "last_attempt_at": "2026-09-09",
-      "last_outcome": "changed",
+      "last_attempt_at": "2026-09-24",
+      "last_outcome": "confirmed",
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": null,
+      "last_success": "2026-09-24",
+      "last_read_at": "2026-09-24",
       "quarantined_since": null
     },
     {
@@ -6355,11 +6376,11 @@
     {
       "vendor": "Google AI Pro/Ultra",
       "url": "https://one.google.com/ai-premium",
-      "last_attempt_at": "2026-09-17",
+      "last_attempt_at": "2026-09-24",
       "last_outcome": "fetch_failed",
       "last_error": "HTTP 404",
       "failure_category": "unreachable",
-      "consecutive_failures": 5,
+      "consecutive_failures": 6,
       "last_success": null,
       "last_read_at": null,
       "quarantined_since": "2026-08-28"
@@ -6694,11 +6715,11 @@
     {
       "vendor": "GPU-Bridge",
       "url": "https://gpu-bridge.com",
-      "last_attempt_at": "2026-09-17",
+      "last_attempt_at": "2026-09-24",
       "last_outcome": "fetch_failed",
       "last_error": "fetch failed",
       "failure_category": "network_error",
-      "consecutive_failures": 5,
+      "consecutive_failures": 6,
       "last_success": null,
       "last_read_at": null,
       "quarantined_since": "2026-08-28"
@@ -6809,12 +6830,13 @@
     {
       "vendor": "GrowthBook",
       "url": "https://www.growthbook.io/pricing",
-      "last_attempt_at": "2026-09-09",
-      "last_outcome": "changed",
+      "last_attempt_at": "2026-09-24",
+      "last_outcome": "confirmed",
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-28",
+      "last_success": "2026-09-24",
+      "last_read_at": "2026-09-24",
       "quarantined_since": null
     },
     {
@@ -6935,12 +6957,13 @@
     {
       "vendor": "Harness Feature Flags",
       "url": "https://www.harness.io/pricing",
-      "last_attempt_at": "2026-09-09",
+      "last_attempt_at": "2026-09-24",
       "last_outcome": "changed",
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
       "last_success": null,
+      "last_read_at": "2026-09-24",
       "quarantined_since": null
     },
     {
@@ -7201,12 +7224,13 @@
     {
       "vendor": "Hookdeck",
       "url": "https://hookdeck.com/pricing",
-      "last_attempt_at": "2026-09-09",
+      "last_attempt_at": "2026-09-24",
       "last_outcome": "confirmed",
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-09-09",
+      "last_success": "2026-09-24",
+      "last_read_at": "2026-09-24",
       "quarantined_since": null
     },
     {
@@ -7350,12 +7374,13 @@
     {
       "vendor": "Hygraph",
       "url": "https://hygraph.com/pricing",
-      "last_attempt_at": "2026-09-09",
-      "last_outcome": "changed",
+      "last_attempt_at": "2026-09-24",
+      "last_outcome": "confirmed",
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-08-28",
+      "last_success": "2026-09-24",
+      "last_read_at": "2026-09-24",
       "quarantined_since": null
     },
     {
@@ -7576,12 +7601,13 @@
     {
       "vendor": "imgix",
       "url": "https://www.imgix.com/pricing",
-      "last_attempt_at": "2026-09-07",
+      "last_attempt_at": "2026-09-24",
       "last_outcome": "changed",
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
       "last_success": null,
+      "last_read_at": "2026-09-24",
       "quarantined_since": null
     },
     {
@@ -7657,12 +7683,13 @@
     {
       "vendor": "Infisical",
       "url": "https://infisical.com/pricing",
-      "last_attempt_at": "2026-09-09",
-      "last_outcome": "changed",
+      "last_attempt_at": "2026-09-24",
+      "last_outcome": "confirmed",
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": null,
+      "last_success": "2026-09-24",
+      "last_read_at": "2026-09-24",
       "quarantined_since": null
     },
     {
@@ -7691,12 +7718,13 @@
     {
       "vendor": "Inngest",
       "url": "https://www.inngest.com/pricing",
-      "last_attempt_at": "2026-09-09",
-      "last_outcome": "changed",
+      "last_attempt_at": "2026-09-24",
+      "last_outcome": "confirmed",
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": null,
+      "last_success": "2026-09-24",
+      "last_read_at": "2026-09-24",
       "quarantined_since": null
     },
     {
@@ -7928,12 +7956,13 @@
     {
       "vendor": "ipapi",
       "url": "https://ipapi.co/#pricing",
-      "last_attempt_at": "2026-09-07",
-      "last_outcome": "changed",
+      "last_attempt_at": "2026-09-24",
+      "last_outcome": "confirmed",
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": null,
+      "last_success": "2026-09-24",
+      "last_read_at": "2026-09-24",
       "quarantined_since": null
     },
     {
@@ -8408,11 +8437,11 @@
     {
       "vendor": "Knowlarity for Startups",
       "url": "https://www.knowlarity.com/startups/",
-      "last_attempt_at": "2026-09-16",
+      "last_attempt_at": "2026-09-24",
       "last_outcome": "fetch_failed",
       "last_error": "fetch failed",
       "failure_category": "network_error",
-      "consecutive_failures": 5,
+      "consecutive_failures": 6,
       "last_success": null,
       "last_read_at": null,
       "quarantined_since": "2026-08-28"
@@ -8420,12 +8449,13 @@
     {
       "vendor": "Kong",
       "url": "https://konghq.com/pricing",
-      "last_attempt_at": "2026-09-09",
+      "last_attempt_at": "2026-09-24",
       "last_outcome": "changed",
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
       "last_success": null,
+      "last_read_at": "2026-09-24",
       "quarantined_since": null
     },
     {
@@ -8593,12 +8623,13 @@
     {
       "vendor": "LastPass",
       "url": "https://www.lastpass.com/pricing",
-      "last_attempt_at": "2026-09-03",
+      "last_attempt_at": "2026-09-24",
       "last_outcome": "changed",
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
       "last_success": null,
+      "last_read_at": "2026-09-24",
       "quarantined_since": null
     },
     {
@@ -8904,13 +8935,13 @@
     {
       "vendor": "LocalStack",
       "url": "https://www.localstack.cloud/pricing",
-      "last_attempt_at": "2026-09-22",
+      "last_attempt_at": "2026-09-24",
       "last_outcome": "changed",
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
       "last_success": null,
-      "last_read_at": "2026-09-22",
+      "last_read_at": "2026-09-24",
       "quarantined_since": null
     },
     {
@@ -9029,11 +9060,11 @@
     {
       "vendor": "Logo.dev",
       "url": "https://www.logo.dev",
-      "last_attempt_at": "2026-09-16",
+      "last_attempt_at": "2026-09-24",
       "last_outcome": "fetch_failed",
       "last_error": "HTTP 429",
       "failure_category": "bot_block",
-      "consecutive_failures": 5,
+      "consecutive_failures": 6,
       "last_success": null,
       "last_read_at": null,
       "quarantined_since": "2026-08-28"
@@ -9076,12 +9107,13 @@
     {
       "vendor": "Logz.io",
       "url": "https://logz.io/pricing/",
-      "last_attempt_at": "2026-09-09",
+      "last_attempt_at": "2026-09-24",
       "last_outcome": "changed",
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
       "last_success": null,
+      "last_read_at": "2026-09-24",
       "quarantined_since": null
     },
     {
@@ -9568,13 +9600,13 @@
     {
       "vendor": "MEGA",
       "url": "https://mega.io/pricing",
-      "last_attempt_at": "2026-09-22",
+      "last_attempt_at": "2026-09-24",
       "last_outcome": "changed",
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
       "last_success": null,
-      "last_read_at": "2026-09-22",
+      "last_read_at": "2026-09-24",
       "quarantined_since": null
     },
     {
@@ -9639,12 +9671,13 @@
     {
       "vendor": "Mercury",
       "url": "https://mercury.com/perks",
-      "last_attempt_at": "2026-09-09",
+      "last_attempt_at": "2026-09-24",
       "last_outcome": "changed",
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
       "last_success": null,
+      "last_read_at": "2026-09-24",
       "quarantined_since": null
     },
     {
@@ -10016,12 +10049,13 @@
     {
       "vendor": "Momento",
       "url": "https://www.gomomento.com/pricing",
-      "last_attempt_at": "2026-09-05",
+      "last_attempt_at": "2026-09-24",
       "last_outcome": "changed",
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
       "last_success": null,
+      "last_read_at": "2026-09-24",
       "quarantined_since": null
     },
     {
@@ -10352,13 +10386,13 @@
     {
       "vendor": "Nhost",
       "url": "https://nhost.io/pricing",
-      "last_attempt_at": "2026-09-22",
+      "last_attempt_at": "2026-09-24",
       "last_outcome": "changed",
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
       "last_success": null,
-      "last_read_at": "2026-09-22",
+      "last_read_at": "2026-09-24",
       "quarantined_since": null
     },
     {
@@ -10469,12 +10503,13 @@
     {
       "vendor": "Novu",
       "url": "https://novu.co/pricing",
-      "last_attempt_at": "2026-09-09",
+      "last_attempt_at": "2026-09-24",
       "last_outcome": "confirmed",
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-09-09",
+      "last_success": "2026-09-24",
+      "last_read_at": "2026-09-24",
       "quarantined_since": null
     },
     {
@@ -10503,11 +10538,11 @@
     {
       "vendor": "NSPolygon",
       "url": "https://nspolygon.com",
-      "last_attempt_at": "2026-09-16",
+      "last_attempt_at": "2026-09-24",
       "last_outcome": "fetch_failed",
       "last_error": "fetch failed",
       "failure_category": "network_error",
-      "consecutive_failures": 5,
+      "consecutive_failures": 6,
       "last_success": null,
       "last_read_at": null,
       "quarantined_since": "2026-08-28"
@@ -10722,12 +10757,13 @@
     {
       "vendor": "OneSignal",
       "url": "https://onesignal.com/pricing",
-      "last_attempt_at": "2026-09-09",
+      "last_attempt_at": "2026-09-24",
       "last_outcome": "changed",
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
       "last_success": null,
+      "last_read_at": "2026-09-24",
       "quarantined_since": null
     },
     {
@@ -10860,11 +10896,11 @@
     {
       "vendor": "OpenVPS",
       "url": "https://openvps.ai",
-      "last_attempt_at": "2026-09-17",
+      "last_attempt_at": "2026-09-24",
       "last_outcome": "fetch_failed",
       "last_error": "fetch failed",
       "failure_category": "network_error",
-      "consecutive_failures": 5,
+      "consecutive_failures": 6,
       "last_success": null,
       "last_read_at": null,
       "quarantined_since": "2026-08-28"
@@ -11011,12 +11047,13 @@
     {
       "vendor": "packagecloud.io",
       "url": "https://packagecloud.io/pricing",
-      "last_attempt_at": "2026-09-07",
+      "last_attempt_at": "2026-09-24",
       "last_outcome": "changed",
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
       "last_success": null,
+      "last_read_at": "2026-09-24",
       "quarantined_since": null
     },
     {
@@ -11069,12 +11106,13 @@
     {
       "vendor": "PagerDuty",
       "url": "https://www.pagerduty.com/pricing/",
-      "last_attempt_at": "2026-09-07",
+      "last_attempt_at": "2026-09-24",
       "last_outcome": "confirmed",
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-09-07",
+      "last_success": "2026-09-24",
+      "last_read_at": "2026-09-24",
       "quarantined_since": null
     },
     {
@@ -11150,12 +11188,13 @@
     {
       "vendor": "paraio.com",
       "url": "https://paraio.com",
-      "last_attempt_at": "2026-08-28",
-      "last_outcome": "confirmed",
-      "last_error": null,
-      "failure_category": null,
-      "consecutive_failures": 0,
+      "last_attempt_at": "2026-09-24",
+      "last_outcome": "source_unusable",
+      "last_error": "the page never names paraio.com, on a domain that carries its name",
+      "failure_category": "source_unusable",
+      "consecutive_failures": 1,
       "last_success": "2026-08-28",
+      "last_read_at": null,
       "quarantined_since": null
     },
     {
@@ -11416,12 +11455,13 @@
     {
       "vendor": "Pinata IPFS",
       "url": "https://pinata.cloud/pricing",
-      "last_attempt_at": "2026-09-07",
+      "last_attempt_at": "2026-09-24",
       "last_outcome": "confirmed",
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-09-07",
+      "last_success": "2026-09-24",
+      "last_read_at": "2026-09-24",
       "quarantined_since": null
     },
     {
@@ -11494,12 +11534,13 @@
     {
       "vendor": "Pipedream",
       "url": "https://pipedream.com/pricing",
-      "last_attempt_at": "2026-09-09",
-      "last_outcome": "fetch_failed",
-      "last_error": "page content too short (likely JS-rendered SPA)",
-      "failure_category": "empty_page",
-      "consecutive_failures": 2,
-      "last_success": null,
+      "last_attempt_at": "2026-09-24",
+      "last_outcome": "confirmed",
+      "last_error": null,
+      "failure_category": null,
+      "consecutive_failures": 0,
+      "last_success": "2026-09-24",
+      "last_read_at": "2026-09-24",
       "quarantined_since": null
     },
     {
@@ -11690,12 +11731,13 @@
     {
       "vendor": "podio.com",
       "url": "https://www.progress.com/podio/pricing",
-      "last_attempt_at": "2026-09-07",
+      "last_attempt_at": "2026-09-24",
       "last_outcome": "changed",
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
       "last_success": null,
+      "last_read_at": "2026-09-24",
       "quarantined_since": null
     },
     {
@@ -11723,12 +11765,13 @@
     {
       "vendor": "Polar",
       "url": "https://polar.sh/",
-      "last_attempt_at": "2026-09-09",
+      "last_attempt_at": "2026-09-24",
       "last_outcome": "changed",
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
       "last_success": null,
+      "last_read_at": "2026-09-24",
       "quarantined_since": null
     },
     {
@@ -11758,12 +11801,13 @@
     {
       "vendor": "positionstack",
       "url": "https://positionstack.com/pricing",
-      "last_attempt_at": "2026-09-07",
-      "last_outcome": "changed",
+      "last_attempt_at": "2026-09-24",
+      "last_outcome": "confirmed",
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": null,
+      "last_success": "2026-09-24",
+      "last_read_at": "2026-09-24",
       "quarantined_since": null
     },
     {
@@ -12129,12 +12173,13 @@
     {
       "vendor": "Pusher",
       "url": "https://pusher.com/channels/pricing",
-      "last_attempt_at": "2026-09-09",
+      "last_attempt_at": "2026-09-24",
       "last_outcome": "confirmed",
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-09-09",
+      "last_success": "2026-09-24",
+      "last_read_at": "2026-09-24",
       "quarantined_since": null
     },
     {
@@ -12173,12 +12218,13 @@
     {
       "vendor": "Qoddi",
       "url": "https://qoddi.com",
-      "last_attempt_at": "2026-08-28",
+      "last_attempt_at": "2026-09-24",
       "last_outcome": "changed",
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
       "last_success": null,
+      "last_read_at": "2026-09-24",
       "quarantined_since": null
     },
     {
@@ -12231,12 +12277,13 @@
     {
       "vendor": "QStash",
       "url": "https://upstash.com/pricing/qstash",
-      "last_attempt_at": "2026-09-09",
+      "last_attempt_at": "2026-09-24",
       "last_outcome": "confirmed",
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-09-09",
+      "last_success": "2026-09-24",
+      "last_read_at": "2026-09-24",
       "quarantined_since": null
     },
     {
@@ -12917,12 +12964,13 @@
     {
       "vendor": "Sanity",
       "url": "https://www.sanity.io/pricing",
-      "last_attempt_at": "2026-09-09",
-      "last_outcome": "changed",
+      "last_attempt_at": "2026-09-24",
+      "last_outcome": "confirmed",
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": null,
+      "last_success": "2026-09-24",
+      "last_read_at": "2026-09-24",
       "quarantined_since": null
     },
     {
@@ -13227,12 +13275,13 @@
     {
       "vendor": "Segment",
       "url": "https://segment.com/docs/guides/usage-and-billing/discounts-for-startups-npos/",
-      "last_attempt_at": "2026-09-09",
+      "last_attempt_at": "2026-09-24",
       "last_outcome": "changed",
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
       "last_success": null,
+      "last_read_at": "2026-09-24",
       "quarantined_since": null
     },
     {
@@ -13774,12 +13823,13 @@
     {
       "vendor": "Slack",
       "url": "https://slack.com/pricing",
-      "last_attempt_at": "2026-09-03",
+      "last_attempt_at": "2026-09-24",
       "last_outcome": "changed",
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
       "last_success": null,
+      "last_read_at": "2026-09-24",
       "quarantined_since": null
     },
     {
@@ -13901,12 +13951,13 @@
     {
       "vendor": "SnapAPI",
       "url": "https://snapapi.pics",
-      "last_attempt_at": "2026-09-02",
-      "last_outcome": "confirmed",
-      "last_error": null,
-      "failure_category": null,
-      "consecutive_failures": 0,
+      "last_attempt_at": "2026-09-24",
+      "last_outcome": "fetch_failed",
+      "last_error": "fetch failed",
+      "failure_category": "network_error",
+      "consecutive_failures": 1,
       "last_success": "2026-09-02",
+      "last_read_at": null,
       "quarantined_since": null
     },
     {
@@ -14041,12 +14092,13 @@
     {
       "vendor": "SonarQube Cloud",
       "url": "https://www.sonarsource.com/products/sonarcloud/",
-      "last_attempt_at": "2026-09-09",
+      "last_attempt_at": "2026-09-24",
       "last_outcome": "changed",
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
       "last_success": null,
+      "last_read_at": "2026-09-24",
       "quarantined_since": null
     },
     {
@@ -14281,12 +14333,13 @@
     {
       "vendor": "Statsig",
       "url": "https://statsig.com/pricing",
-      "last_attempt_at": "2026-09-09",
+      "last_attempt_at": "2026-09-24",
       "last_outcome": "confirmed",
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-09-09",
+      "last_success": "2026-09-24",
+      "last_read_at": "2026-09-24",
       "quarantined_since": null
     },
     {
@@ -14658,12 +14711,13 @@
     {
       "vendor": "SVB (Silicon Valley Bank)",
       "url": "https://www.svb.com/startup-banking/",
-      "last_attempt_at": "2026-09-09",
+      "last_attempt_at": "2026-09-24",
       "last_outcome": "changed",
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
       "last_success": null,
+      "last_read_at": "2026-09-24",
       "quarantined_since": null
     },
     {
@@ -14680,12 +14734,13 @@
     {
       "vendor": "Svix",
       "url": "https://www.svix.com/pricing/",
-      "last_attempt_at": "2026-09-09",
+      "last_attempt_at": "2026-09-24",
       "last_outcome": "changed",
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
       "last_success": null,
+      "last_read_at": "2026-09-24",
       "quarantined_since": null
     },
     {
@@ -14965,12 +15020,13 @@
     {
       "vendor": "TeleportHQ",
       "url": "https://teleporthq.io/pricing",
-      "last_attempt_at": "2026-09-07",
+      "last_attempt_at": "2026-09-24",
       "last_outcome": "changed",
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
       "last_success": null,
+      "last_read_at": "2026-09-24",
       "quarantined_since": null
     },
     {
@@ -15346,12 +15402,13 @@
     {
       "vendor": "Together AI",
       "url": "https://www.together.ai/pricing",
-      "last_attempt_at": "2026-09-07",
+      "last_attempt_at": "2026-09-24",
       "last_outcome": "changed",
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
       "last_success": null,
+      "last_read_at": "2026-09-24",
       "quarantined_since": null
     },
     {
@@ -15850,12 +15907,13 @@
     {
       "vendor": "Unkey",
       "url": "https://www.unkey.com/pricing",
-      "last_attempt_at": "2026-09-09",
+      "last_attempt_at": "2026-09-24",
       "last_outcome": "changed",
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
       "last_success": null,
+      "last_read_at": "2026-09-24",
       "quarantined_since": null
     },
     {
@@ -16413,11 +16471,11 @@
     {
       "vendor": "Vultr DNS",
       "url": "https://www.vultr.com/features/advanced-networking/",
-      "last_attempt_at": "2026-09-17",
+      "last_attempt_at": "2026-09-24",
       "last_outcome": "fetch_failed",
       "last_error": "HTTP 403",
       "failure_category": "bot_block",
-      "consecutive_failures": 5,
+      "consecutive_failures": 6,
       "last_success": null,
       "last_read_at": null,
       "quarantined_since": "2026-08-28"
@@ -16482,11 +16540,11 @@
     {
       "vendor": "Wdrfree SVG",
       "url": "https://wdrfree.com/free-svg",
-      "last_attempt_at": "2026-09-16",
+      "last_attempt_at": "2026-09-24",
       "last_outcome": "fetch_failed",
       "last_error": "HTTP 404",
       "failure_category": "unreachable",
-      "consecutive_failures": 5,
+      "consecutive_failures": 6,
       "last_success": null,
       "last_read_at": null,
       "quarantined_since": "2026-08-28"
@@ -16767,11 +16825,11 @@
     {
       "vendor": "Windsurf",
       "url": "https://windsurf.com/pricing",
-      "last_attempt_at": "2026-09-17",
+      "last_attempt_at": "2026-09-24",
       "last_outcome": "source_unusable",
       "last_error": "the page never names Windsurf, on a domain that carries its name",
       "failure_category": "source_unusable",
-      "consecutive_failures": 5,
+      "consecutive_failures": 6,
       "last_success": null,
       "last_read_at": null,
       "quarantined_since": "2026-08-28"
@@ -17127,12 +17185,13 @@
     {
       "vendor": "ZeroTier",
       "url": "https://www.zerotier.com/pricing",
-      "last_attempt_at": "2026-09-07",
+      "last_attempt_at": "2026-09-24",
       "last_outcome": "confirmed",
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": "2026-09-07",
+      "last_success": "2026-09-24",
+      "last_read_at": "2026-09-24",
       "quarantined_since": null
     },
     {
@@ -17483,12 +17542,13 @@
     {
       "vendor": "Zuplo",
       "url": "https://zuplo.com/pricing",
-      "last_attempt_at": "2026-09-09",
-      "last_outcome": "changed",
+      "last_attempt_at": "2026-09-24",
+      "last_outcome": "confirmed",
       "last_error": null,
       "failure_category": null,
       "consecutive_failures": 0,
-      "last_success": null,
+      "last_success": "2026-09-24",
+      "last_read_at": "2026-09-24",
       "quarantined_since": null
     }
   ]

@@ -10367,6 +10367,57 @@
       "alternatives": [],
       "detected_by": "reverify-ai",
       "recorded_date": "2026-09-22"
+    },
+    {
+      "vendor": "Foursquare",
+      "change_type": "new_free_tier",
+      "date": "2026-09-24",
+      "date_source": "discovered",
+      "summary": "The Places API Pro endpoints pricing remains the same, but a free tier of 10,000 calls is now offered. Additionally, Foursquare offers several new plans and products like Spatial Desktop, Spatial Workbench, and MotherDuck with varying pricing structures.",
+      "tier": "Places API Pro",
+      "tier_direction": "widened",
+      "previous_state": "Location discovery, venue search, and context-aware content — Places API Pro endpoints: 0-500 Calls $0.00 CPM, 501 to 100,000 Calls $15.00 CPM, 100,001 to 500,000 Calls $12.00 CPM, 500,001+ Calls $9.00 CPM. Places API Premium endpoints: 0-100,000 Calls $18.75 CPM, 100,001 to 500,000 Calls $15.00 CPM, 500,001+ Calls $11.25 CPM.",
+      "current_state": "Places API Pro endpoints: Enjoy up to 10,000 free calls. 0 – 500 Calls $0.00 CPM, 501 to 100,000 Calls $15.00 CPM, 100,001 to 500,000 Calls $12.00 CPM, 500,001+ Calls $9.00 CPM",
+      "impact": "low",
+      "source_url": "https://foursquare.com/pricing/",
+      "category": "Maps/Geolocation",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-09-24"
+    },
+    {
+      "vendor": "Slack",
+      "change_type": "limits_increased",
+      "date": "2026-09-24",
+      "date_source": "discovered",
+      "summary": "The free tier now includes 1:1 external messages via Slack Connect and basic AI features (AI conversation summaries, Slackbot, AI workflow generation, AI search, AI daily recaps, AI file summaries). It also includes SAML-based single sign-on and SCIM user management.",
+      "tier": "Free",
+      "tier_direction": "widened",
+      "previous_state": "90-day message history. 1-to-1 huddles. 10 app integrations. 5 GB total file storage for workspace. No group huddles, no screen sharing in huddles, no Slack Connect, no guest accounts on free. Free API access with the same rate limits as paid plans; non-Marketplace apps created after May 2025 have stricter API rate limits.",
+      "current_state": "The free plan includes 90 days of message history, up to 10 apps, 1:1 meetings with screen sharing, 1:1 external messages, basic AI features, SAML-based single sign-on, and SCIM user management.",
+      "impact": "medium",
+      "source_url": "https://slack.com/pricing",
+      "category": "Communication & Messaging",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-09-24"
+    },
+    {
+      "vendor": "Qoddi",
+      "change_type": "restriction",
+      "date": "2026-09-24",
+      "date_source": "discovered",
+      "summary": "The free tier now only offers 3 static sites, and requires account verification with a credit or debit card.",
+      "tier": "Free",
+      "tier_direction": "unchanged",
+      "previous_state": "PaaS service similar to Heroku with a developer-centric approach. Free tier: 3 static sites (512 MB RAM, shared CPU, Git deployment, unlimited bandwidth). Preview environments auto-deleted after 48 hours.",
+      "current_state": "Your first three static sites are free. Account verification requires a credit or debit card.",
+      "impact": "medium",
+      "source_url": "https://qoddi.com",
+      "category": "Cloud Hosting",
+      "alternatives": [],
+      "detected_by": "reverify-ai",
+      "recorded_date": "2026-09-24"
     }
   ]
 }
