@@ -6778,7 +6778,7 @@ const ALTERNATIVES_PAGES: AlternativesPageConfig[] = [
       </tr>
       <tr>
         <td style="font-weight:600"><a href="/vendor/buildkite" style="color:var(--text)">Buildkite</a></td>
-        <td>500 hosted min/mo</td><td>3 concurrent</td><td>Unlimited</td>
+        <td>2,000 vCPU min/mo</td><td>10 concurrent</td><td>5</td>
         <td>\u2705 Free</td><td>\u2705</td>
         <td>Proprietary</td>
       </tr>
@@ -11570,8 +11570,8 @@ ${buildCards(specialized)}
       <tr>
         <td style="font-weight:600"><a href="/vendor/buildkite" style="color:var(--text)">Buildkite</a></td>
         <td>General</td>
-        <td>500 hosted min/mo</td>
-        <td>3 jobs</td>
+        <td>2,000 vCPU min/mo</td>
+        <td>10 jobs</td>
         <td>Hybrid (cloud + self-hosted), large-scale builds</td>
       </tr>
       <tr>
@@ -29419,16 +29419,16 @@ function buildCiCdPricingPage(): string {
       name: "Buildkite",
       slug: "buildkite",
       category: "general",
-      freeMinutes: "500 hosted min/mo",
-      concurrency: "3 concurrent jobs",
-      selfHosted: "Free (unlimited)",
-      paidFrom: "$15/user/mo (Teams)",
+      freeMinutes: "2,000 Linux vCPU min/mo",
+      concurrency: "10 concurrent jobs",
+      selfHosted: "Free (up to 10 concurrent jobs)",
+      paidFrom: "$30/active user/mo (Pro)",
       pricingModel: "Per-user",
-      freeDetails: "500 hosted agent minutes/month, 3 concurrent jobs, 90-day build retention, 50K test executions. Unlimited self-hosted agents at no cost on all plans. Free for open-source projects (unlimited everything). Test analytics included.",
+      freeDetails: "Up to 5 users, 10 concurrent jobs, 2,000 Linux vCPU minutes/month on hosted agents, 250K test executions/month, 30-day build retention and 50 GB/month of artifact storage. Self-hosted agents are free up to the same 10 concurrent jobs. Special pricing for open-source projects on request.",
       freeType: "limited",
       monthlyCostSmall: "$0",
-      monthlyCostTeam: "$15/user",
-      hiddenCosts: "500 hosted minutes is tight. The real value is unlimited self-hosted agents — but you pay for your own infrastructure. Enterprise features (SSO, audit logs) require custom pricing.",
+      monthlyCostTeam: "$30/active user",
+      hiddenCosts: "Pro includes 10 self-hosted agents and charges $3.50 per agent/month beyond that. Enterprise features (SSO, audit logs) require custom pricing.",
     },
     {
       name: "Semaphore CI",
@@ -30026,7 +30026,7 @@ function buildCiCdPricingPage(): string {
     '\n' +
     '    <div class="verdict-item">\n' +
     '      <strong>Best for enterprise / large teams</strong>\n' +
-    '      <p><a href="/vendor/gitlab-ci">GitLab CI</a> Premium ($29/user) includes CI/CD + security scanning + container registry + package registry. <a href="/vendor/buildkite">Buildkite</a> for teams already running self-hosted infrastructure \u2014 unlimited free agents.</p>\n' +
+    '      <p><a href="/vendor/gitlab-ci">GitLab CI</a> Premium ($29/user) includes CI/CD + security scanning + container registry + package registry. <a href="/vendor/buildkite">Buildkite</a> for teams already running self-hosted infrastructure \u2014 self-hosted agents are free up to 10 concurrent jobs.</p>\n' +
     '    </div>\n' +
     '\n' +
     '    <div class="verdict-item">\n' +
@@ -38216,9 +38216,9 @@ ${mcpCtaCss()}
       </tr>
       <tr>
         <td class="provider-col"><a href="/vendor/buildkite" style="color:var(--text)">Buildkite</a></td>
-        <td style="font-family:var(--mono)">Unlimited (self-hosted)<br>Hosted: usage-based</td>
-        <td>Unlimited (self-hosted)</td>
-        <td>Bring-your-own storage</td>
+        <td style="font-family:var(--mono)">Unlimited (self-hosted)<br>Hosted: 2,000 Linux vCPU min/mo</td>
+        <td>10</td>
+        <td>50 GB/month artifact storage</td>
         <td>Your hardware (self-hosted)</td>
         <td>Same limits for all repos</td>
         <td class="check">Free (self-hosted)</td>
