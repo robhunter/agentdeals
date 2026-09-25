@@ -5500,8 +5500,8 @@
     {
       "vendor": "Lokalise",
       "category": "Localization",
-      "description": "Localization platform — 1 project, 2 target languages, 500K hosted words, 500 translation keys, 10K processed words/year, 2 advanced seats, 1 integration, 1 automation, 1 GB OTA calls",
-      "tier": "Free",
+      "description": "Localization and translation management platform, formerly with a free plan. No free tier. lokalise.com/pricing, read 2026-09-25, prices every plan: Explorer $149/month and Growth $379/month with annual billing, Advanced from $1,049/month with annual billing, Enterprise by estimate. Every plan comes with a free 14-day trial, no credit card required, and when the trial ends a paid plan is needed to continue.",
+      "tier": "Retired",
       "url": "https://lokalise.com/pricing/",
       "tags": [
         "localization",
@@ -5510,11 +5510,11 @@
         "internationalization",
         "developer tools"
       ],
-      "verifiedDate": "2026-07-28",
+      "verifiedDate": "2026-09-25",
       "source_check": {
-        "checked": "2026-09-12",
+        "checked": "2026-09-25",
         "outcome": "ok",
-        "detail": "the page names Lokalise as \"lokalise\""
+        "detail": "the visible pricing page names no Free plan, the cheapest plan is \"$149/mo with annual billing\", and the FAQ says \"When the trial ends, you'll need to upgrade to a paid plan to continue\""
       }
     },
     {
