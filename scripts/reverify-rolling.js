@@ -26,6 +26,7 @@ import {
   REJECT_UNQUANTIFIED_LIMIT,
 } from "./change-gate.js";
 import {
+  checkKeptOnlyTheName,
   sourceCheckRecord,
   holdsVerifiedDate,
   READ_FROM_MARKUP,
@@ -126,6 +127,7 @@ export function pickOldestEntries(offers, limit, now = new Date(), options = {})
       deferred: readAnsweredWithNothing(offer),
       readFailed: lastReadFailed(record),
       awaitingCorroboration: awaiting.has(key),
+      keptOnlyTheName: checkKeptOnlyTheName(offer),
     };
   });
   const byAge = (a, b) =>
@@ -139,6 +141,7 @@ export function pickOldestEntries(offers, limit, now = new Date(), options = {})
   const drawAge = (entry) => entry.ts + (entry.deferred ? deferralMs(turnDays) : 0);
   const byDrawAge = (a, b) =>
     Number(b.awaitingCorroboration) - Number(a.awaitingCorroboration) ||
+    Number(b.keptOnlyTheName) - Number(a.keptOnlyTheName) ||
     drawAge(a) - drawAge(b) ||
     Number(b.readFailed) - Number(a.readFailed);
   const active = entries.filter((entry) => !isQuarantined(entry.record)).sort(byDrawAge);
@@ -163,6 +166,8 @@ export function pickOldestEntries(offers, limit, now = new Date(), options = {})
     picked,
     pickedAfterAFailedRead: drawn.filter((entry) => entry.readFailed).length,
     pickedForASecondReading: secondReadings.length,
+    pickedBecauseTheCheckKeptOnlyTheName: fromQueue.filter((entry) => entry.keptOnlyTheName).length,
+    queuedWithACheckThatKeptOnlyTheName: queue.filter((entry) => entry.keptOnlyTheName).length,
     drawnFromQueue: retries.length + extraRetries.length + fromQueue.length,
     oldestRemaining,
     retriedFromQuarantine: retries.length + extraRetries.length,
@@ -507,10 +512,15 @@ export function failedReadingLines(census) {
   ];
 }
 
-export function summaryLines(result, { useAi, checked, drawnFromQueue, oldestRemaining, total, quarantine, repicked, pickedAfterAFailedRead, pickedForASecondReading, failedReadings, turnDays, deferredATurn, liveQueueLength }) {
+export function summaryLines(result, { useAi, checked, drawnFromQueue, oldestRemaining, total, quarantine, repicked, pickedAfterAFailedRead, pickedForASecondReading, failedReadings, turnDays, deferredATurn, liveQueueLength, pickedBecauseTheCheckKeptOnlyTheName, queuedWithACheckThatKeptOnlyTheName }) {
   const lines = ["", "── Summary ──", `Checked: ${checked}`];
   if (drawnFromQueue !== undefined) {
     lines.push(`Drawn from the queue, so pages this run advances: ${drawnFromQueue}`);
+  }
+  if (queuedWithACheckThatKeptOnlyTheName !== undefined) {
+    lines.push(
+      `Drawn first because the stored check kept only the vendor's name: ${pickedBecauseTheCheckKeptOnlyTheName} of ${queuedWithACheckThatKeptOnlyTheName}`
+    );
   }
   for (const line of queueOrderLines(turnDays, deferredATurn, liveQueueLength)) lines.push(line);
   if (pickedAfterAFailedRead !== undefined) {
@@ -627,7 +637,7 @@ async function main() {
 
   const awaitingCorroboration = pagesAwaitingCorroboration(readHeldReadings().held);
   const selection = { refusalHolds: holds, verificationState: state, awaitingCorroboration };
-  const { picked, oldestRemaining, retriedFromQuarantine, pickedAfterAFailedRead, pickedForASecondReading, drawnFromQueue, deferredATurn, liveQueueLength, turnDays } =
+  const { picked, oldestRemaining, retriedFromQuarantine, pickedAfterAFailedRead, pickedForASecondReading, drawnFromQueue, deferredATurn, liveQueueLength, turnDays, pickedBecauseTheCheckKeptOnlyTheName, queuedWithACheckThatKeptOnlyTheName } =
     pickOldestEntries(offers, limit, now, selection);
 
   const renderer = findRenderer();
@@ -697,6 +707,8 @@ async function main() {
     turnDays,
     deferredATurn,
     liveQueueLength,
+    pickedBecauseTheCheckKeptOnlyTheName,
+    queuedWithACheckThatKeptOnlyTheName,
   })) {
     console.log(line);
   }
