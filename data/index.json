@@ -582,17 +582,17 @@
       "free_tier_limits": {
         "credits": "$200 for 60 days",
         "static_sites": "3 apps, 1 GiB outbound/mo each",
-        "functions": "25,000 GiB-seconds/mo",
+        "functions": "90,000 GiB-seconds/mo",
         "droplets_from": "$4/mo (1 vCPU, 512 MB, 10 GB SSD)"
       },
       "referral_program": {
         "available": true,
         "referrer_benefit": "$25 credit",
-        "referee_benefit": "$200 credit (60 days)",
+        "referee_benefit": "No credit stated on the referral page",
         "program_url": "https://www.digitalocean.com/referral-program",
         "type": "self-service",
         "commission_type": "credits",
-        "notes": "Both referrer and referee receive credits."
+        "notes": "The referrer gets $25 after the referred account spends its first $25. The referral page states no credit for the referred account."
       },
       "source_check": {
         "checked": "2026-09-19",
@@ -629,11 +629,11 @@
       "referral_program": {
         "available": true,
         "referrer_benefit": "$25 credit",
-        "referee_benefit": "$200 credit (60 days)",
+        "referee_benefit": "No credit stated on the referral page",
         "program_url": "https://www.digitalocean.com/referral-program",
         "type": "self-service",
         "commission_type": "credits",
-        "notes": "Both referrer and referee receive credits."
+        "notes": "The referrer gets $25 after the referred account spends its first $25. The referral page states no credit for the referred account."
       },
       "source_check": {
         "checked": "2026-09-25",
