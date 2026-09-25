@@ -5,6 +5,7 @@ import {
   DEMERIT_TABLE,
   demeritTableRowText,
   rankOffers,
+  utcDate,
   verificationDoubt,
   type Demerit,
   type VerificationDoubt,
@@ -12,6 +13,8 @@ import {
 } from "../dist/ranking.js";
 import { lastReadingFor, WHAT_THE_LAST_READ_FOUND, type LastReading } from "../dist/read-date.js";
 import { loadVerificationState, verificationLedger } from "../dist/verification-state.js";
+import { howWeSettledTheRead } from "../dist/change-refusal.js";
+import { storedRefusalsFor } from "../dist/refusal-store.js";
 import type { Offer } from "../dist/types.js";
 import { assertPopulationFloor } from "./population-floor.ts";
 
@@ -235,6 +238,7 @@ describe("no published reason states a gap a reading we hold contradicts", () =>
   const offers = loadOffers();
   const changes = loadDealChanges();
   const ledger = verificationLedger();
+  const TODAY = utcDate();
 
   function everyStaleReason(date: string): { offer: Offer; reason: string }[] {
     const result = rankOffers(enrichOffers(offers), {
@@ -255,23 +259,23 @@ describe("no published reason states a gap a reading we hold contradicts", () =>
   it("holds over every record whose page we read inside the window", () => {
     const readInsideTheWindow = offers.filter(o => {
       const checked = o.source_check?.checked;
-      return Boolean(checked) && daysApart(checked!, DATE) <= STALE_VERIFICATION_DAYS;
+      return Boolean(checked) && daysApart(checked!, TODAY) <= STALE_VERIFICATION_DAYS;
     });
     assertPopulationFloor(readInsideTheWindow.length, 1100, "records read inside the staleness window");
 
     const readInside = new Set(readInsideTheWindow.map(o => `${o.vendor}|${o.url}`));
-    const contradicted = everyStaleReason(DATE)
+    const contradicted = everyStaleReason(TODAY)
       .filter(({ offer }) => readInside.has(`${offer.vendor}|${offer.url}`))
       .filter(({ reason }) => DAY_COUNT_SENTENCE.test(reason));
     assert.deepEqual(contradicted.map(c => c.offer.vendor), []);
   });
 
   it("dates every reason to the reading it is drawn from, where a reading falls inside the window", () => {
-    const reasons = everyStaleReason(DATE);
+    const reasons = everyStaleReason(TODAY);
     assertPopulationFloor(reasons.length, 400, "records carrying a stale_verification demerit");
     const drawnFromAReading = reasons.filter(({ offer }) => {
       const held = lastReadingFor(offer);
-      return Boolean(held) && daysApart(held!.date, DATE) <= STALE_VERIFICATION_DAYS;
+      return Boolean(held) && daysApart(held!.date, TODAY) <= STALE_VERIFICATION_DAYS;
     });
     assertPopulationFloor(drawnFromAReading.length, 400, "demerits drawn from a reading inside the window");
     const undated = drawnFromAReading.filter(({ offer, reason }) => !reason.includes(lastReadingFor(offer)!.date));
@@ -279,7 +283,7 @@ describe("no published reason states a gap a reading we hold contradicts", () =>
   });
 
   it("publishes no day count at all while every record has been read inside the window", () => {
-    const counting = everyStaleReason(DATE).filter(({ reason }) => DAY_COUNT_SENTENCE.test(reason));
+    const counting = everyStaleReason(TODAY).filter(({ reason }) => DAY_COUNT_SENTENCE.test(reason));
     assert.deepEqual(counting.map(c => c.offer.vendor), []);
   });
 });
@@ -389,8 +393,13 @@ describe("what the catalogue records about a record's last reading", () => {
   const stored = loadVerificationState();
   const ABSENT = { vendor: "No Such Vendor", url: "https://example.invalid/pricing" };
 
-  function recordWhoseLastOutcomeWas(outcome: string): Offer {
-    const offer = offers.find(o => stored.get(`${o.vendor}|${o.url}`)?.last_outcome === outcome);
+  function aRefusalSettledItsLastRead(offer: Offer): boolean {
+    const read = stored.get(`${offer.vendor}|${offer.url}`)?.last_attempt_at;
+    return Boolean(read) && howWeSettledTheRead(storedRefusalsFor(offer.vendor), read!) !== null;
+  }
+
+  function recordWhoseLastOutcomeWas(outcome: string, passOver: (offer: Offer) => boolean = () => false): Offer {
+    const offer = offers.find(o => stored.get(`${o.vendor}|${o.url}`)?.last_outcome === outcome && !passOver(o));
     assert.ok(offer, `no record's last reading is ${outcome}, so this asserts nothing`);
     return offer;
   }
@@ -403,7 +412,7 @@ describe("what the catalogue records about a record's last reading", () => {
   });
 
   it("reads a disagreement as settling the record without confirming it", () => {
-    const read = lastReadingFor(recordWhoseLastOutcomeWas("changed"))!;
+    const read = lastReadingFor(recordWhoseLastOutcomeWas("changed", aRefusalSettledItsLastRead))!;
     assert.equal(read.confirmed, false);
     assert.equal(read.settles, true);
     assert.equal(read.read_the_page, true);
