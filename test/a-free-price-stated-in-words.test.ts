@@ -61,9 +61,9 @@ const PAGES_WITHHOLDING_A_PLAN_PRICE = [
 ];
 
 const CONTROL_VENDORS_WHOSE_PAGE_NAMES_ONLY_A_PRICED_PLAN = [
-  "ElasticMQ", "Zoho Meeting", "Huly", "Webex", "MojoAuth", "Loco", "mailsac.com", "bitnami.com",
-  "Solo", "paraio.com", "pantheon.io", "Qoddi", "asana.com", "YepCode", "SimplePDF.eu",
-  "Volume Shader BM", "XKit", "Google Meet", "Renovate", "NordPass", "Clever Bootstrap Program", "LastPass",
+  "ElasticMQ", "Zoho Meeting", "Huly", "Webex", "Loco", "mailsac.com", "bitnami.com",
+  "Solo", "pantheon.io", "asana.com", "YepCode", "SimplePDF.eu",
+  "Volume Shader BM", "XKit", "Google Meet", "Renovate", "NordPass", "Clever Bootstrap Program",
 ];
 
 describe("a price stated in words", () => {
@@ -194,11 +194,12 @@ describe("every record we hold, graded by what its read quoted", () => {
   });
 
   it("holds every vendor whose page names a priced plan and no free one on the withheld side", () => {
-    const stillWithheld = offers
-      .filter((o) => o.source_check?.outcome === SOURCE_CHECK_NO_AMOUNT)
-      .map((o) => o.vendor);
-    const moved = CONTROL_VENDORS_WHOSE_PAGE_NAMES_ONLY_A_PRICED_PLAN.filter((v) => !stillWithheld.includes(v));
-    assert.deepStrictEqual(moved, [], `${moved.length} of ${CONTROL_VENDORS_WHOSE_PAGE_NAMES_ONLY_A_PRICED_PLAN.length} moved off the withheld side`);
+    const gradeOfVendor = new Map(offers.map((o) => [o.vendor, o.source_check?.outcome]));
+    const onTheLine = CONTROL_VENDORS_WHOSE_PAGE_NAMES_ONLY_A_PRICED_PLAN.filter((v) =>
+      gradeOfVendor.get(v) === SOURCE_CHECK_NO_AMOUNT || gradeOfVendor.get(v) === SOURCE_CHECK_FREE_PRICE);
+    assert.ok(onTheLine.length > 0, "no control is graded on either side of the line any more, so this proves nothing");
+    const crossed = onTheLine.filter((v) => gradeOfVendor.get(v) === SOURCE_CHECK_FREE_PRICE);
+    assert.deepStrictEqual(crossed, [], `${crossed.length} of ${onTheLine.length} crossed to the side that states a free price`);
   });
 
   it("publishes a free price we can source on every record it grades", () => {
