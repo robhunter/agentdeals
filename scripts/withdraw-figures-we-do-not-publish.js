@@ -19,6 +19,11 @@ export function reportedFigures(detail) {
   };
 }
 
+export function needsAReread(detail, terms) {
+  const reported = reportedFigures(detail);
+  return reported !== null && figuresWorthReporting(reported.figures, terms).length === 0;
+}
+
 export function detailWithoutFiguresWeDoNotPublish(detail, terms) {
   const reported = reportedFigures(detail);
   if (!reported) return detail;
@@ -26,38 +31,39 @@ export function detailWithoutFiguresWeDoNotPublish(detail, terms) {
   if (keep.length === reported.figures.length && keep.every((figure, at) => figure === reported.figures[at])) {
     return detail;
   }
-  if (keep.length === 0) return reported.named.replace(/,$/, "");
+  if (keep.length === 0) return detail;
   return `${reported.named} and ${statedFiguresClause(keep)}`;
 }
 
 function run({ write }) {
   const data = JSON.parse(fs.readFileSync(INDEX, "utf-8"));
-  const counts = { checked: 0, reporting: 0, unchanged: 0, narrowed: 0, withdrawn: 0 };
-  const withdrawn = [];
+  const counts = { checked: 0, reporting: 0, unchanged: 0, narrowed: 0, reread: 0 };
+  const reread = [];
   for (const offer of data.offers) {
     if (offer.source_check?.outcome !== "ok") continue;
     counts.checked++;
     const detail = offer.source_check.detail ?? "";
     if (!reportedFigures(detail)) continue;
     counts.reporting++;
+    if (needsAReread(detail, offer.description)) {
+      counts.reread++;
+      reread.push(`${offer.vendor}: ${reportedFigures(detail).figures.join(" and ")}`);
+      continue;
+    }
     const settled = detailWithoutFiguresWeDoNotPublish(detail, offer.description);
     if (settled === detail) {
       counts.unchanged++;
       continue;
     }
-    if (reportedFigures(settled)) counts.narrowed++;
-    else {
-      counts.withdrawn++;
-      withdrawn.push(`${offer.vendor}: ${reportedFigures(detail).figures.join(" and ")}`);
-    }
+    counts.narrowed++;
     offer.source_check.detail = settled;
   }
   console.log(`Records passing the source check: ${counts.checked}`);
   console.log(`Reporting a figure the page states: ${counts.reporting}`);
   console.log(`Reporting a figure we publish, left alone: ${counts.unchanged}`);
   console.log(`Narrowed to the figures we publish: ${counts.narrowed}`);
-  console.log(`Figure withdrawn, naming kept: ${counts.withdrawn}`);
-  for (const line of withdrawn.slice(0, 15)) console.log(`  ${line}`);
+  console.log(`Reporting only figures we do not publish, left for a re-read: ${counts.reread}`);
+  for (const line of reread.slice(0, 15)) console.log(`  ${line}`);
   if (write) {
     fs.writeFileSync(INDEX, `${JSON.stringify(data, null, 2)}\n`);
     console.log(`Wrote ${INDEX}`);

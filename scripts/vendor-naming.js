@@ -248,6 +248,27 @@ function namedClause(vendor, naming) {
     : `the page names ${vendor} as "${naming.form}"`;
 }
 
+const ANY_FORM = "\u0000";
+
+function escapeForPattern(text) {
+  return text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+export function detailIsOnlyTheNaming(detail, vendor) {
+  const text = String(detail ?? "").trim();
+  if (text === "" || typeof vendor !== "string" || vendor === "") return false;
+  return [NAMED_IN_PAGE_TEXT, NAMED_BY_A_HOST_THE_PAGE_WRITES].some((via) => {
+    const clause = namedClause(vendor, { via, form: ANY_FORM }).replace(/,$/, "");
+    const pattern = escapeForPattern(clause).replace(ANY_FORM, '[^"]*');
+    return new RegExp(`^${pattern},?$`).test(text);
+  });
+}
+
+export function checkKeptOnlyTheName(offer) {
+  const check = offer?.source_check;
+  return check?.outcome === SOURCE_CHECK_OK && detailIsOnlyTheNaming(check.detail, offer?.vendor);
+}
+
 export const MOST_FIGURES_REPORTED = 4;
 
 export const WE_MATCHED_NO_AMOUNT_TO_OUR_TERMS = "states amounts, none of which we matched to the terms we publish";

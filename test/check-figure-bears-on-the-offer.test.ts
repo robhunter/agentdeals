@@ -176,24 +176,14 @@ describe("the figure a source check reports bears on the offer", () => {
 });
 
 describe("the figures already stored are settled by the same rule", () => {
-  it("withdraws a figure the record does not publish and keeps the naming clause", () => {
-    assert.strictEqual(
-      detailWithoutFiguresWeDoNotPublish(
-        'the page names Render as "render" and states "$10"',
-        "Free web services (512 MB RAM), 5 GB bandwidth/month",
-      ),
-      'the page names Render as "render"',
-    );
-  });
-
-  it("leaves the clause that ends in a comma reading as a sentence", () => {
-    assert.strictEqual(
-      detailWithoutFiguresWeDoNotPublish(
-        'the page writes "swagger", the domain we cite SwaggerHub from, and states "$21"',
-        "Free plan includes 3 collaborators",
-      ),
-      'the page writes "swagger", the domain we cite SwaggerHub from',
-    );
+  it("leaves a stored finding whose only figure the record does not publish as it is, in either naming form", () => {
+    const stored = [
+      ['the page names Render as "render" and states "$10"', "Free web services (512 MB RAM), 5 GB bandwidth/month"],
+      ['the page writes "swagger", the domain we cite SwaggerHub from, and states "$21"', "Free plan includes 3 collaborators"],
+    ];
+    for (const [detail, terms] of stored) {
+      assert.strictEqual(detailWithoutFiguresWeDoNotPublish(detail, terms), detail);
+    }
   });
 
   it("leaves a stored figure the record publishes exactly as it was", () => {
