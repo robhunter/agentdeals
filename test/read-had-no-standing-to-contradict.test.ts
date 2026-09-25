@@ -115,6 +115,8 @@ const recordsVoidedByTheirOwnRefusal = (): Population => ({
   read: "records whose last read its own refusal voided",
 });
 
+const CONTRADICTED_RECORDS_WHOSE_PAGES_ARE_READ = 120;
+
 const stillContradicted = offers.filter((offer) => {
   const sameDay = sameDayRefusals(offer);
   if (sameDay.length > 0 && sameDay.every((r) => refusalSettledTheRead(r))) return false;
@@ -295,7 +297,11 @@ describe("the pages that describe a read our own refusal voided", () => {
 
   it("holds records on both sides of the rule", () => {
     assertPopulationFloor(voidedByItsOwnRefusal.length, 50, "records whose last read its own refusal voided");
-    assertPopulationFloor(stillContradicted.length, 200, "records whose last read still contradicts the terms");
+    assertPopulationFloor(
+      stillContradicted.length,
+      CONTRADICTED_RECORDS_WHOSE_PAGES_ARE_READ,
+      "records whose last read still contradicts the terms",
+    );
   });
 
   it("publishes no difference on a vendor page whose read its own refusal voided", async () => {
@@ -359,7 +365,7 @@ describe("the pages that describe a read our own refusal voided", () => {
   it("still publishes the difference where no refusal settled the read", async () => {
     const quiet: string[] = [];
     let spoke = 0;
-    for (const offer of stillContradicted.slice(0, 120)) {
+    for (const offer of stillContradicted.slice(0, CONTRADICTED_RECORDS_WHOSE_PAGES_ARE_READ)) {
       const { status, body } = await get(`/vendor/${slugOf(offer.vendor)}`);
       if (status !== 200) continue;
       if (!body.includes("Our last read of it, on ")) continue;

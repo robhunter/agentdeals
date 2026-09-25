@@ -39,7 +39,7 @@ export function lastReadDate(offer: DatedRecord | null | undefined): string {
   if (!offer?.vendor || !offer?.url) return verified;
   const record = loadVerificationState().get(`${offer.vendor}|${offer.url}`);
   if (outcomeReadThePage(record?.last_outcome) && record?.last_attempt_at) return record.last_attempt_at;
-  const candidates = [verified, record?.last_read_at ?? null];
+  const candidates = [verified, record?.last_read_at ?? null, record?.last_success ?? null];
   const dates = candidates.filter((d): d is string => Boolean(d)).sort();
   return dates.length > 0 ? dates[dates.length - 1] : verified;
 }

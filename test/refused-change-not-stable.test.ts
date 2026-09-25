@@ -799,11 +799,15 @@ describe("a page states the reason we withheld, not a reason its own refusal con
       s => s.published > 0 && s.reasons.some(r => MEASURED_NO_DIFFERENCE.has(r)),
     );
     assert.ok(both.length > 0, "no vendor holds both an equality refusal and a published change, so the control is empty");
+    const givenARating = both.filter(s => !s.gated && !s.ended && !s.otherwiseWithheld);
+    assert.ok(givenARating.length > 0, "every vendor holding both is gated, ended or withheld on other grounds, so no rating is left to read");
     const moved: string[] = [];
     for (const subject of both) {
       const page = pages.get(subject.slug) ?? "";
       if (WITHHELD_FOR_A_REFUSAL.test(page)) moved.push(`/vendor/${subject.slug} withholds for a refusal`);
-      const verdict = verdictParagraphOf(page);
+    }
+    for (const subject of givenARating) {
+      const verdict = verdictParagraphOf(pages.get(subject.slug) ?? "");
       if (!/We rate it /.test(verdict)) moved.push(`/vendor/${subject.slug}: ${verdict.slice(0, 120)}`);
     }
     assert.deepStrictEqual(moved, [], `a published change stopped setting the verdict:\n${moved.join("\n")}`);

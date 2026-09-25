@@ -92,6 +92,14 @@ describe("the day we last read the page", () => {
     assert.equal(lastReadDate(offer), "2026-04-12");
   });
 
+  it("is the confirmation we hold where it is later than the date the record publishes and no read since resolved the page", () => {
+    for (const outcome of [ATTEMPT_FETCH_FAILED, ATTEMPT_SOURCE_UNUSABLE, ATTEMPT_UNCLEAR]) {
+      withState([record({ last_attempt_at: "2026-09-24", last_outcome: outcome, last_success: "2026-04-20" })]);
+      assert.equal(lastReadDate(offer), "2026-04-20", `${outcome} after a confirmation dated the read before it`);
+      assert.ok(confirmationDate(offer)! <= lastReadDate(offer), `${outcome}: confirmed on a day we did not read the page`);
+    }
+  });
+
   it("does not fall back when a failed read follows a read that succeeded", () => {
     withState([
       record({ last_attempt_at: "2026-09-10", last_outcome: ATTEMPT_FETCH_FAILED, last_success: "2026-04-12", last_read_at: "2026-09-09" }),
@@ -436,7 +444,7 @@ describe("the catalogue", () => {
     assertSharesPopulation(failed.length, recordsInTheCatalogue(), 0.05, "records whose last attempt failed");
     for (const o of failed) {
       const held = byKey.get(`${o.vendor}|${o.url}`)!;
-      const known = [o.verifiedDate, held.last_read_at ?? ""].sort().pop();
+      const known = [o.verifiedDate, held.last_read_at ?? "", held.last_success ?? ""].sort().pop();
       assert.equal(
         lastReadDate(o),
         known,
