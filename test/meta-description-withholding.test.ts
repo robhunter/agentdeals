@@ -37,6 +37,7 @@ interface Subject {
   termsSuperseded: boolean;
   discontinuedOn: string | null;
   termsWithheld: boolean;
+  withheldBecause: string | null;
 }
 
 const MONTHS = [
@@ -117,6 +118,7 @@ before(async () => {
       termsSuperseded: supersedingChange(primary, vendorChanges) !== null,
       discontinuedOn: discontinuedOnOrBefore(vendorChanges, servedOn),
       termsWithheld: because !== null && withholdsTheTerms(because),
+      withheldBecause: because !== null && withholdsTheTerms(because) ? because.reason : null,
     }];
   });
 
@@ -224,7 +226,8 @@ describe("#1412 the meta description withholds wherever the source check failed"
 
   it("withholds the verification claim on a page whose source check passed over a read we refused", async () => {
     const pages = await everyVendorPage();
-    const population = subjects.filter(s => s.outcome === "ok" && !s.termsSuperseded && s.termsWithheld);
+    const population = subjects.filter(s =>
+      s.outcome === "ok" && !s.termsSuperseded && s.termsWithheld && s.withheldBecause !== "link_unreachable");
     assertPopulationFloor(population.length, 40, "records whose terms are withheld over a source check that passed");
 
     const asserting: string[] = [];
@@ -236,6 +239,23 @@ describe("#1412 the meta description withholds wherever the source check failed"
       asserting.slice(0, 20),
       [],
       `${asserting.length} of ${population.length} meta descriptions state a verification the page withholds`,
+    );
+  });
+
+  it("states no verification date in the meta of a page whose source check passed but whose link did not answer", async () => {
+    const pages = await everyVendorPage();
+    const population = subjects.filter(s =>
+      s.outcome === "ok" && !s.termsSuperseded && s.withheldBecause === "link_unreachable");
+    const dated = new RegExp(`\\b(${CONFIRMED_DATE_LABEL}|${UNCONFIRMED_DATE_LABEL}) [A-Z][a-z]+ \\d{4}\\.`);
+    const stating: string[] = [];
+    for (const subject of population) {
+      const meta = pages.get(subject.slug)!.meta;
+      if (dated.test(meta)) stating.push(`${subject.slug}: ${meta.slice(0, 120)}`);
+    }
+    assert.deepStrictEqual(
+      stating.slice(0, 20),
+      [],
+      `${stating.length} of ${population.length} meta descriptions date a verification over a page that did not answer`,
     );
   });
 
