@@ -564,7 +564,7 @@
     {
       "vendor": "DigitalOcean",
       "category": "Cloud IaaS",
-      "description": "$200 credit for 60 days for new accounts. Basic Droplets from $4/mo (1 vCPU, 512 MB RAM, 10 GB SSD — 20% price cut Jan 2026). Per-second billing (min 60s or $0.01). App Platform: 3 free static sites (1 GiB outbound/mo each). Functions: 25,000 GiB-seconds/mo free. Spaces: 250 GB + 1 TB transfer for $5/mo. Managed databases start at $15/mo (not free). No perpetual free compute tier",
+      "description": "$200 credit for 60 days for new accounts. Basic Droplets from $4/mo (1 vCPU, 512 MB RAM, 10 GB SSD — 20% price cut Jan 2026). Per-second billing (min 60s or $0.01). App Platform: 3 free static sites (1 GiB outbound/mo each). Functions: 90,000 GiB-seconds/mo free. Spaces: 250 GB + 1 TB transfer for $5/mo. Managed databases start at $15/mo (not free). No perpetual free compute tier",
       "tier": "Credits",
       "url": "https://www.digitalocean.com/pricing",
       "tags": [
@@ -742,7 +742,7 @@
     {
       "vendor": "Neon",
       "category": "Databases",
-      "description": "Serverless Postgres with branching — free tier includes 100 CU-hours/month per project, 0.5 GB storage per project, up to 100 projects, 10 branches per project, Neon Auth (60K MAU), auto-scaling up to 2 CU, scale-to-zero",
+      "description": "Serverless Postgres with branching — free tier includes 100 CU-hours/month per project, 0.5 GB storage per project, up to 100 projects, 10 branches per project, Neon Auth (60K MAU), auto-scaling up to 2 CU, scale-to-zero, 5 GB of Object Storage, and Functions (10 active capacity-hours, 400 waiting capacity-hours, 1M invocations)",
       "tier": "Free",
       "url": "https://neon.com/pricing",
       "tags": [
@@ -7422,7 +7422,7 @@
     {
       "vendor": "Brave Search API",
       "category": "Search",
-      "description": "$5 prepaid metered credits ($0.003-$0.005 per query depending on endpoint). Web search, news, videos, images, LLM context endpoints. 50 req/sec rate limit. Attribution required. Credit card required, overages billed with no spending cap. Free tier (2,000 queries/mo) eliminated Feb 2026",
+      "description": "$5 in free credits every month, applied automatically. Search is $5 per 1,000 requests; Answers is $4 per 1,000 requests plus $5 per million tokens. Web search, news, videos, images, LLM context endpoints. 50 queries/sec. Credit card required. The earlier free plan (2,000 queries/mo) ended Feb 2026",
       "tier": "Credit",
       "url": "https://brave.com/search/api/",
       "tags": [
