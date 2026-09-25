@@ -19,7 +19,7 @@ import { RATED_LEVELS, isRated, gradeForStack } from "./stack-grade.js";
 import { provenanceBlock } from "./provenance.js";
 import { recordApiHit, recordSessionConnect, recordSessionDisconnect, recordLandingPageView, getStats, getConnectionStats, loadTelemetry, flushTelemetry, flushPending, FLUSH_INTERVAL_SECONDS, logRequest, getPublicRequestLogResult, getTelemetryHealth, recordPageView, getPageViews, recordReferralListingCall, recordReferralVendorLookup, getReferralMarketplaceStats, getSessionClassification, recordSearchQuery, getSearchAnalytics, getApiHitsByEndpoint, recordTraffic, getTrafficReport, getSignalReport, publicSignalReport, getRollupDaySource, getRollupDatesAvailable, setDurableRollupCoverage, setReservedRouteKeys, reservedRoutePathsInForce, reservedRouteClassesInForce, MAX_CLASS_ROUTE_KEYS_PER_DAY, redisJsonGet, redisJsonMget, redisJsonSet, redisJsonSetWithoutExpiry, useRedis } from "./stats.js";
 import { buildDailyRollup, readRollups, coverageOf, ROLLUP_DATE_PATTERN } from "./analytics-rollup.js";
-import { AGENT_OPENS_WINDOW_DAYS, HOMEPAGE_GUIDE_COUNT, RANKED_TRAFFIC_CLASS, agentOpensByPath, agentOpensWindow, agentRequestAttribution, browseSectionSentence, guideSelectionSentence, guidesGroupedByHeading, opensDecidedPrefix, rankGuidesByAgentOpens, rankableDays } from "./homepage-routing.js";
+import { AGENT_OPENS_WINDOW_DAYS, HOMEPAGE_GUIDE_COUNT, RANKED_TRAFFIC_CLASS, agentOpensByPath, agentOpensWindow, agentRequestAttribution, browseSectionSentence, completeDaysInWindow, guideSelectionSentence, guidesGroupedByHeading, opensDecidedPrefix, rankGuidesByAgentOpens, rankableDays } from "./homepage-routing.js";
 import { configureVendorSeries, recordVendorRequest, flushVendorSeries, readVendorSeries, vendorSeriesGauge, vendorExportAuthorized, isSeriesDate, seriesDateRange, VENDOR_SERIES_PATH, VENDOR_SERIES_RETENTION_DAYS, VENDOR_SERIES_NOTES } from "./vendor-series.js";
 import { openapiSpec } from "./openapi.js";
 import { AGENT_CARD_PATHS, OPENAPI_ALIAS_PATHS, OPENAPI_CANONICAL_PATH, OPENAPI_YAML_PATH, serviceDescription, theDocumentWeAlreadyServe } from "./agent-card.js";
@@ -53405,7 +53405,7 @@ ${stableHtml}
 
 function buildHomepageGuidesSection(): string {
   const population = guidesIndexEntries().map(e => ({ slug: e.slug, title: guideCardTitle(e.title), heading: e.heading }));
-  const held = agentOpensWindow(durableRollups, AGENT_OPENS_WINDOW_DAYS);
+  const held = completeDaysInWindow(durableRollups, AGENT_OPENS_WINDOW_DAYS);
   const ranked = rankableDays(durableRollups, population, AGENT_OPENS_WINDOW_DAYS);
   const rankedWindow = agentOpensWindow(ranked, AGENT_OPENS_WINDOW_DAYS);
   const inPublicationOrder = population.map(g => ({ ...g, agentOpens: 0 }));
@@ -53424,7 +53424,7 @@ function buildHomepageGuidesSection(): string {
     <p>${escHtmlServer(guideSelectionSentence({
       selectedCount: selected.length,
       populationCount: population.length,
-      heldDays: held?.days ?? 0,
+      heldDays: held.length,
       rankedWindow,
       attribution: agentRequestAttribution(ranked),
       opensDecided: decided.length > 0,
