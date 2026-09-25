@@ -83,7 +83,7 @@ const PAGURE = {
   offer: offer({
     vendor: "Pagure.io",
     tier: "Free",
-    url: "https://pagure.io",
+    url: "https://pagure.example",
     description:
       "Pagure.io is a free and open source software code collaboration platform for FOSS-licensed projects, Git-based",
   }),
@@ -98,7 +98,7 @@ const PAGURE = {
     previous_state:
       "Pagure.io is a free and open source software code collaboration platform for FOSS-licensed projects, Git-based",
     current_state: "Pagure.io was sunset in 2026; this is a read-only snapshot.",
-    source_url: "https://pagure.io",
+    source_url: "https://pagure.example",
   }),
 };
 
@@ -106,7 +106,7 @@ const XAI = {
   offer: offer({
     vendor: "xAI",
     tier: "Free Credits",
-    url: "https://docs.x.ai/developers/models",
+    url: "https://docs.xai.example/developers/models",
     description:
       "Sign-up gives $25 in free API credits. Additional $150/month via data sharing program (opt-in, requires $5 minimum spend first).",
   }),
@@ -120,7 +120,7 @@ const XAI = {
     previous_state:
       "Sign-up gives $25 in free API credits. Additional $150/month via data sharing program (opt-in, requires $5 minimum spend first).",
     current_state: "Grok 4.6: Input $2.00 / 1M tokens, Output $6.00 / 1M tokens",
-    source_url: "https://docs.x.ai/developers/models",
+    source_url: "https://docs.xai.example/developers/models",
   }),
 };
 
@@ -128,7 +128,7 @@ const IPAPI = {
   offer: offer({
     vendor: "ipapi",
     tier: "Free",
-    url: "https://ipapi.co/#pricing",
+    url: "https://ipapi.example/#pricing",
     description:
       "IP address geolocation API — free tier: 1,000 IP lookups/day (~30,000/month). Designed for testing & development only.",
   }),
@@ -142,7 +142,7 @@ const IPAPI = {
       "IP address geolocation API — free tier: 1,000 IP lookups/day (~30,000/month). Designed for testing & development only.",
     current_state:
       "The free tier offers up to 1000 lookups/day (approximately 30K/month) for testing and development.",
-    source_url: "https://ipapi.co/#pricing",
+    source_url: "https://ipapi.example/#pricing",
   }),
 };
 
@@ -150,7 +150,7 @@ const BURNERMAIL = {
   offer: offer({
     vendor: "Burnermail",
     tier: "Free",
-    url: "https://burnermail.io/",
+    url: "https://burnermail.example/",
     description: "Free 5 Burner Email Addresses, 1 Mailbox, 7-day Mailbox History",
   }),
   change: change({
@@ -161,7 +161,7 @@ const BURNERMAIL = {
     previous_state: "Free 5 Burner Email Addresses, 1 Mailbox, 7-day Mailbox History",
     current_state:
       "The page encourages users to sign up and use burner addresses, but does not detail any free tier offerings. It states \"Why We're Removing Burner Mail's Free Plan Read more →\".",
-    source_url: "https://burnermail.io/",
+    source_url: "https://burnermail.example/",
   }),
 };
 
@@ -169,7 +169,7 @@ const GITHUB_ACTIONS = {
   offer: offer({
     vendor: "GitHub Actions",
     tier: "Free",
-    url: "https://docs.github.com/en/billing/managing-billing-for-github-actions",
+    url: "https://docs.github.example/en/billing/managing-billing-for-github-actions",
     description:
       "Free CI/CD for public repos (unlimited minutes). Private repos: 2,000 min/mo GitHub-hosted runners, 500 MB artifact storage, 10 GB cache/repo.",
   }),
@@ -182,7 +182,7 @@ const GITHUB_ACTIONS = {
       "Free CI/CD for public repos (unlimited minutes). Private repos: 2,000 min/mo GitHub-hosted runners, 500 MB artifact storage, 10 GB cache/repo.",
     current_state:
       "GitHub Actions usage is free for self-hosted runners and public repositories. For private repositories, each account receives a quota of free minutes, artifact storage, and cache storage.",
-    source_url: "https://docs.github.com/en/billing/managing-billing-for-github-actions",
+    source_url: "https://docs.github.example/en/billing/managing-billing-for-github-actions",
   }),
 };
 
@@ -190,7 +190,7 @@ const POSTMAN = {
   offer: offer({
     vendor: "Postman",
     tier: "Free",
-    url: "https://www.postman.com/pricing/",
+    url: "https://www.postman.example/pricing/",
     description:
       "Free for single user only (since March 2026). Unlimited collections, environments, mock servers, basic monitoring. Team collaboration removed — requires Team plan ($19/user/mo).",
   }),
@@ -203,7 +203,7 @@ const POSTMAN = {
       "Free for single user only (since March 2026). Unlimited collections, environments, mock servers, basic monitoring. Team collaboration removed — requires Team plan ($19/user/mo).",
     current_state:
       "The Free plan costs $0 per month and includes 50 AI credits, an API client, core tools, specs & mock servers, native Git, Collection Runner & Performance Testing runs, manual Flows, and 1,000 API monitoring requests per month.",
-    source_url: "https://www.postman.com/pricing/",
+    source_url: "https://www.postman.example/pricing/",
   }),
 };
 
@@ -211,10 +211,21 @@ const TOMORROW_IO =
   "Tomorrow.io offers a free tier with access to 60+ data layers, 5-Day Forecast, Weather Timelines, Core Weather Data Layers, and 1 automatically monitored Location.";
 
 describe("restating a withheld description from the reading the page already shows", () => {
+  it("keys no fixture to a record the store holds, so a read of a live page cannot change what a fixture proves", () => {
+    const fixtures = [offer(), PAGURE.offer, XAI.offer, IPAPI.offer, BURNERMAIL.offer, GITHUB_ACTIONS.offer, POSTMAN.offer];
+    const store = loadVerificationState();
+    assert.ok(store.size > 0, "the store is empty, so this proves nothing");
+    assert.deepEqual(
+      fixtures.map((f) => `${f.vendor}|${f.url}`).filter((key) => store.has(key)),
+      [],
+      "a fixture shares its vendor and URL with a record the rotation reads, so its ruling moves whenever that record is read again",
+    );
+  });
+
   it("restates terms a record says are gone, where the record grades the edition itself", () => {
     const ruling = ruleOnRestating(PAGURE.offer, PAGURE.change, TODAY);
     assert.equal(ruling?.refusal, null);
-    assert.equal(ruling?.restatement?.source_url, "https://pagure.io");
+    assert.equal(ruling?.restatement?.source_url, PAGURE.change.source_url);
     assert.equal(ruling?.restatement?.reading_date, "2026-09-15");
     assert.equal(ruling?.restatement?.record_date, "2026-09-15");
     assert.equal(ruling?.reading.terms, "Pagure.io was sunset in 2026; this is a read-only snapshot.");
