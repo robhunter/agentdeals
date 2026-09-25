@@ -1,13 +1,15 @@
 export interface VendorKeyedData {
   path: string;
-  arrayKey: string;
+  arrayKeys: readonly string[];
 }
 
 export const VENDOR_KEYED_DATA: readonly VendorKeyedData[] = [
-  { path: "data/index.json", arrayKey: "offers" },
-  { path: "data/deal_changes.json", arrayKey: "changes" },
-  { path: "data/change_refusals.json", arrayKey: "refusals" },
-  { path: "data/verification_state.json", arrayKey: "records" },
+  { path: "data/index.json", arrayKeys: ["offers"] },
+  { path: "data/deal_changes.json", arrayKeys: ["changes"] },
+  { path: "data/change_refusals.json", arrayKeys: ["refusals"] },
+  { path: "data/verification_state.json", arrayKeys: ["records"] },
+  { path: "data/restated_terms.json", arrayKeys: ["restatements"] },
+  { path: "data/change_corroboration.json", arrayKeys: ["held", "resolved"] },
 ];
 
 export const DERIVED_FROM_THE_VENDOR_DATA: readonly string[] = [
@@ -94,6 +96,26 @@ export function withVendorsAsTheyWereBefore(
     for (const was of rows) out.push(was);
   }
   return { ...(after as Record<string, unknown>), [arrayKey]: out };
+}
+
+export function vendorsMovedIn(before: unknown, after: unknown, arrayKeys: readonly string[]): string[] {
+  const moved = new Map<string, string>();
+  for (const arrayKey of arrayKeys) {
+    for (const name of vendorsMoved(before, after, arrayKey)) {
+      if (!moved.has(vendorKey(name))) moved.set(vendorKey(name), name);
+    }
+  }
+  return [...moved.values()].sort((a, b) => a.localeCompare(b));
+}
+
+export function withVendorsAsTheyWereBeforeIn(
+  before: unknown,
+  after: unknown,
+  arrayKeys: readonly string[],
+  held: Iterable<string>,
+): unknown {
+  const vendors = [...held];
+  return arrayKeys.reduce((doc, arrayKey) => withVendorsAsTheyWereBefore(before, doc, arrayKey, vendors), after);
 }
 
 export function failingSection(log: string): string {
