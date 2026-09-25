@@ -198,7 +198,7 @@ describe("on the committed catalogue, every record whose check kept only the nam
     const waiting = offers.filter(
       offer => checkKeptOnlyTheName(offer) && !isQuarantined(verificationState.get(offerKey(offer.vendor, offer.url))),
     );
-    const { picked, retriedFromQuarantine } = pickOldestEntries(offers, LIMIT, RUN, { verificationState });
+    const { picked, retriedFromQuarantine } = pickOldestEntries(offers, LIMIT, new Date(), { verificationState });
     const kept = picked.map((entry: any) => checkKeptOnlyTheName(entry.offer));
     const drawn = kept.filter(Boolean).length;
     assert.strictEqual(drawn, Math.min(waiting.length, LIMIT - retriedFromQuarantine));
