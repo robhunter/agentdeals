@@ -1063,6 +1063,31 @@
       "refused_date": "2026-08-28"
     },
     {
+      "vendor": "CloudAMQP",
+      "change_type": "limits_reduced",
+      "reason": "same_transition_graded_differently",
+      "detail": "same vendor, source_url and previous_state as CloudAMQP|limits_reduced|2026-09-09|https://www.cloudamqp.com/plans.html",
+      "summary": "The Little Lemur tier now has a message quota of 1M messages/month and 10k queued messages, down from 1M messages/month and 100 queues.",
+      "previous_state": "Managed RabbitMQ — 1M messages/month, 20 connections, 100 queues free",
+      "current_state": "Max 100 queues Max 10 000 queued messages Shared RabbitMQ broker 1 M Message quota/month 20 Connection limit FREE",
+      "source_url": "https://www.cloudamqp.com/plans.html",
+      "category": "Messaging",
+      "refused_date": "2026-09-25",
+      "collided_with": "CloudAMQP|limits_reduced|2026-09-09|https://www.cloudamqp.com/plans.html"
+    },
+    {
+      "vendor": "Cloudcraft",
+      "change_type": "new_tier",
+      "reason": "no_price_signal",
+      "detail": "the page read carries no price signal — no amount, named tier or metered rate in 829 characters, so it states no terms to have changed",
+      "summary": "Cloudcraft is now free with any Datadog subscription and includes unlimited users and diagrams.",
+      "previous_state": "AWS/Azure architecture diagramming — Free plan: single user only, manual diagrams limited to a 12x15 component grid, unlimited private diagrams, PNG/PDF/SVG export, private shared links, basic cost calculations. No live-scan/auto-discovery, team management, infinite canvas, version history, API access, or SSO.",
+      "current_state": "Cloudcraft is free in Datadog. Unlimited users · Unlimited diagrams Diagram your entire infrastructure with any Datadog subscription",
+      "source_url": "https://www.cloudcraft.co/pricing",
+      "category": "Diagramming",
+      "refused_date": "2026-09-25"
+    },
+    {
       "vendor": "Cloudcraft",
       "change_type": "free_tier_removed",
       "reason": "no_removal_evidence",
@@ -1246,6 +1271,18 @@
       "refused_date": "2026-09-09"
     },
     {
+      "vendor": "coderabbit.ai",
+      "change_type": "pricing_restructured",
+      "reason": "restates_stored_quantities",
+      "detail": "narrowing claimed, and every quantity the current state names is one the stored description already held at the same value (24 currency/mo, 5 review/hour), and drops 2 the stored description carried",
+      "summary": "The free tier as described is no longer accurate. While a free trial is offered, the unlimited free access to public and private repositories with basic PR summarization and reviews is replaced with a tiered system. The 'Essentials' plan (formerly 'Pro') is now $24/developer/month billed annually, and includes 5 reviews/hour. The 'Team' plan (formerly 'Pro Plus') is $48/developer/month billed annually and includes 10 reviews/hour. A free open-source plan is mentioned, requiring sign up with GitHub or GitLab and installation on a public repository for free reviews.",
+      "previous_state": "AI-powered code review tool for GitHub/GitLab/Bitbucket. Free tier: basic PR summarization and reviews in IDE on unlimited public and private repositories, with a 14-day Pro trial included (no credit card). Paid Pro is $24/user/month billed annually and adds detailed reviews with 5 reviews/hour; Pro Plus adds 10 reviews/hour. Free-for-open-source may still apply but is no longer prominently featured on the pricing page.",
+      "current_state": "Essentials includes AI reviews for pull requests and the CLI, one-click fixes, learnings, coding-agent loops, built-in pre-merge checks, and limited Change Stack access. It costs $24 / developer / month billed annually and includes 5 PR reviews per developer per hour.",
+      "source_url": "https://www.coderabbit.ai/pricing",
+      "category": "Code Quality",
+      "refused_date": "2026-09-25"
+    },
+    {
       "vendor": "Cohere",
       "change_type": "free_tier_removed",
       "reason": "no_removal_evidence",
@@ -1352,6 +1389,18 @@
       "source_url": "https://www.coupler.io/",
       "category": "Notebooks & Data Science",
       "refused_date": "2026-09-12"
+    },
+    {
+      "vendor": "CraftMyPDF",
+      "change_type": "free_tier_removed",
+      "reason": "states_no_terms",
+      "detail": "every clause of the summary states absence rather than a term the page carries, so it reports the reading rather than a change",
+      "summary": "The pricing page does not explicitly mention a free tier with 50 PDFs/images per month and three templates. It highlights features and integrations but does not detail specific limits for a free plan.",
+      "previous_state": "Auto-Generate PDF documents from reusable templates with a drop-and-drop editor and a simple API. The free plan comes with 50 PDFs/images per month and three templates.",
+      "current_state": "The page promotes a demo and pricing options but does not detail a free tier with specific limits. It focuses on features like drag-and-drop editing, API access, and integrations.",
+      "source_url": "https://craftmypdf.com",
+      "category": "Dev Utilities",
+      "refused_date": "2026-09-25"
     },
     {
       "vendor": "CraftMyPDF",
@@ -1708,6 +1757,19 @@
       "refused_date": "2026-09-03"
     },
     {
+      "vendor": "DigitalOcean",
+      "change_type": "restriction",
+      "reason": "same_transition_graded_differently",
+      "detail": "same vendor, source_url and previous_state as DigitalOcean|restriction|2026-08-28|https://www.digitalocean.com/startups",
+      "summary": "The deal now offers credits with a monthly limit of $10,000, and GPU Droplet usage is not covered by the core credits. Additionally, NVIDIA H100 GPUs, Kubernetes Bare Metal GPUs, Dedicated Inference, Serverless Inference, and third-party AI models are excluded from credit usage.",
+      "previous_state": "Hatch startup program — up to $100K compute credits over 12 months. GPU Droplets at $1.90/GPU/hour for 12 months (H100 excluded from credits). 15 months Standard support. Partner perks from Cloudflare, Stripe, Retool, HubSpot. Must have raised $10M or less",
+      "current_state": "DigitalOcean awards startups credits through approved DigitalOcean Startups partners. Participants generally are entitled to a $10,000 monthly limit (and charges apply for any use in a month exceeding this amount). As of May 13, 2026, you may use your credits on any DigitalOcean services, except NVIDIA H100 GPU Droplets, Kubernetes Bare Metal GPUs, Dedicated Inference, Serverless Inference, Third-party AI models hosted outside of DigitalOcean Infrastructure, Paperspace Machines, Cloudways services, or any other charges passed through to third-party providers.",
+      "source_url": "https://www.digitalocean.com/startups",
+      "category": "Startup Perks",
+      "refused_date": "2026-09-25",
+      "collided_with": "DigitalOcean|restriction|2026-08-28|https://www.digitalocean.com/startups"
+    },
+    {
       "vendor": "Directus",
       "change_type": "new_free_tier",
       "reason": "same_transition_graded_differently",
@@ -1953,6 +2015,18 @@
       "refused_date": "2026-09-02"
     },
     {
+      "vendor": "Expo",
+      "change_type": "pricing_restructured",
+      "reason": "confirmed_unchanged",
+      "detail": "The report simply restates information already present in the stored description. The addition of details about other tiers doesn't represent a change to the free tier itself.",
+      "summary": "The Free tier still exists, but build credits are now limited to 15 Android and 15 iOS builds, and CI/CD workflows are limited to 60 minutes. The page also details additional features and pricing for Starter, Production, and Enterprise tiers.",
+      "previous_state": "React Native build and deployment platform — The Free tier is $0/month and includes up to 15 Android and 15 iOS builds with a low-priority queue, 60 min. on CI/CD Workflows, and access to Submit, Update, and Launch.",
+      "current_state": "Includes: 15 Android and 15 iOS builds, Low-priority queue, 60 min. on CI/CD Workflows, Submit to app stores, Send updates to 1K MAUs, Access to Launch, Access to Observe",
+      "source_url": "https://expo.dev/pricing",
+      "category": "Mobile Development",
+      "refused_date": "2026-09-25"
+    },
+    {
       "vendor": "FabForm",
       "change_type": "limits_increased",
       "reason": "unquantified_limit",
@@ -1975,6 +2049,18 @@
       "source_url": "https://feathery.io/pricing",
       "category": "Forms",
       "refused_date": "2026-09-09"
+    },
+    {
+      "vendor": "Feathery",
+      "change_type": "limits_reduced",
+      "reason": "states_no_difference",
+      "detail": "limits_reduced claimed, and every figure the summary carried sat in a clause about our own record rather than about the vendor's terms",
+      "summary": "The free plan now has different limits. The stored information states 500 submissions/mo and 5 live forms, while the current pricing page states 500 submissions/mo and 5 live forms. However, the current page details many more features that are either included or not included in the free tier, such as partial submissions, remember user progress, remove Feathery branding, custom SEO metadata, custom HTML & CSS, custom subdomain, CAPTCHA Verification, A/B Testing & Analytics, Logic & API Connectors, Custom DNS Domain, Role-Based Access Controls, Single Sign-On, Audit Logs, White Label Editor, Workspaces, and Integrations.",
+      "previous_state": "Developer-friendly form builder for signup/login, user onboarding, payment flows, and complex financial applications. Free plan: 500 submissions/mo, 5 active (published) forms, 10 MB file upload limit, standard integrations, forum support. Unlimited fields, pages, conditions, and seats.",
+      "current_state": "The Free plan includes 500 monthly submissions, 5 live forms, and a 10MB file upload limit. It includes standard integrations and forum support. It also includes unlimited fields, pages, conditions, and seats. It does *not* include partial submissions, remember user progress, remove Feathery branding, custom SEO metadata, custom HTML & CSS, custom subdomain, CAPTCHA Verification, A/B Testing & Analytics, Logic & API Connectors, Custom DNS Domain, Role-Based Access Controls, Single Sign-On, Audit Logs, White Label Editor, Workspaces.",
+      "source_url": "https://feathery.io/pricing",
+      "category": "Forms",
+      "refused_date": "2026-09-25"
     },
     {
       "vendor": "FeedBear",
@@ -2358,6 +2444,18 @@
       "refused_date": "2026-09-10"
     },
     {
+      "vendor": "GitBook",
+      "change_type": "limits_reduced",
+      "reason": "measures_no_change",
+      "detail": "limits_reduced claimed, and every quantity the record compares holds the same value once notation and period are normalised — 1 user against 1 user, 10 message/week against 10 message/week",
+      "summary": "AI search, AI writing and editing, and custom domain are no longer included in the Free plan. GitBook Agent has a 10 message limit per week, which is still accurate.",
+      "previous_state": "Documentation platform — Free includes 1 free user. AI search, AI writing and editing, and custom domain are not included. GitBook Agent has a 10 message limit per week.",
+      "current_state": "The Free plan includes 1 free user. AI search, AI writing and editing, and custom domain are not included. GitBook Agent has a 10 message limit per week.",
+      "source_url": "https://www.gitbook.com/pricing",
+      "category": "Documentation",
+      "refused_date": "2026-09-25"
+    },
+    {
       "vendor": "GitDailies",
       "change_type": "limits_reduced",
       "reason": "unquantified_limit",
@@ -2687,6 +2785,19 @@
       "refused_date": "2026-09-19"
     },
     {
+      "vendor": "Harness Feature Flags",
+      "change_type": "pricing_restructured",
+      "reason": "same_transition_graded_differently",
+      "detail": "graded as Harness Feature Flags|pricing_restructured|2026-09-09|https://www.harness.io/pricing, a record we withdrew",
+      "summary": "The free plan now includes Harness Open Source and Litmus Chaos, and community support.",
+      "previous_state": "Feature flags (formerly Split.io) — 2 developers, 25K client MAU, unlimited flags and environments, CI/CD pipelines for rollout",
+      "current_state": "The Free Plan includes Harness Open Source, Litmus Chaos, and Community support.",
+      "source_url": "https://www.harness.io/pricing",
+      "category": "Feature Flags",
+      "refused_date": "2026-09-25",
+      "collided_with": "Harness Feature Flags|pricing_restructured|2026-09-09|https://www.harness.io/pricing"
+    },
+    {
       "vendor": "Hasura Cloud",
       "change_type": "limits_increased",
       "reason": "states_no_difference",
@@ -2968,6 +3079,18 @@
       "refused_date": "2026-09-12"
     },
     {
+      "vendor": "incident.io",
+      "change_type": "limits_increased",
+      "reason": "unquantified_limit",
+      "detail": "limits_increased claimed, but the current state names no quantity for anything the stored state measured (5 user, 1 statu)",
+      "summary": "The Basic plan is still offered as 'Free Forever', but the features and limits have been expanded. The stored information stated 'up to 5 users', but the current page does not mention a user limit. The stored information stated '1 status page', but the current page states 'Unlimited'.",
+      "previous_state": "Incident management platform — free Basic plan: up to 5 users, Slack or Microsoft Teams native incident response, single-team on-call scheduling, 1 status page, essential incident automation",
+      "current_state": "Slack or Microsoft Teams native incident response, Single team on-call, Status page, Essential incident automation",
+      "source_url": "https://incident.io/pricing",
+      "category": "Monitoring",
+      "refused_date": "2026-09-25"
+    },
+    {
       "vendor": "incidenthub.cloud",
       "change_type": "limits_reduced",
       "reason": "measures_no_change",
@@ -3107,24 +3230,24 @@
       "change_type": "limits_reduced",
       "reason": "unquantified_limit",
       "detail": "limits_reduced claimed, but the current state names no quantity for anything the stored state measured (1,000 request)",
-      "summary": "The free plan now provides 1 credit per successful request, and includes core modules (location, country metadata, currency, ASN, and time zone). User Agent is not included in the free plan.",
+      "summary": "The free plan now provides 1 credit per successful request, and access to core modules only (location, country metadata, currency, ASN, and time zone). Advanced modules are only available on the paid plan. User Agent is not available on the free plan, but through a separate API on the Developer plan.",
       "previous_state": "IP Geolocation API - Forever free plan for developers with a 1,000 requests per day limit.",
-      "current_state": "Free Plan: 1 credit per successful request. Core modules: location, country metadata, currency, ASN, and time zone. User Agent is not included.",
+      "current_state": "Free Plan provides 1 credit per successful request and access to core modules: location, country metadata, currency, ASN, and time zone. User Agent is not included.",
       "source_url": "https://ipgeolocation.io/",
       "category": "Dev Utilities",
-      "refused_date": "2026-09-09"
+      "refused_date": "2026-09-25"
     },
     {
       "vendor": "IP2Location.io",
       "change_type": "limits_reduced",
       "reason": "unquantified_limit",
-      "detail": "limits_reduced claimed, but the current state names no quantity for anything the stored state measured (50 credit, 2 location, 500 whoi)",
-      "summary": "The free plan now offers 500 WHOIS queries and 50 hosted domain lookups per month, down from 500 WHOIS and unlimited hosted domain lookups.",
+      "detail": "limits_reduced claimed, but the current state names no quantity for anything the stored state measured (50 credit, 500 whoi)",
+      "summary": "The free plan now offers 500 WHOIS queries and 50 hosted domain lookups per month, down from 500 and 500 respectively.",
       "previous_state": "Freemium, fast, and reliable IP geolocation API. Get data like city, coordinates, ISP, ASN, AS data and more. The free plan includes 50k credits per month. IP2Location.io also offers 500 free WHOIS and hosted domain lookups per month. See domain registration details and find domains hosted on a specific IP. Upgrade to a paid plan for more features.",
       "current_state": "Domain WHOIS API returns comprehensive WHOIS data. Get up to 500 queries free each month. Hosted Domain API retrieves list of domain names by IP address. Get up to 50 queries free each month.",
       "source_url": "https://www.ip2location.io/",
       "category": "Dev Utilities",
-      "refused_date": "2026-09-09"
+      "refused_date": "2026-09-25"
     },
     {
       "vendor": "ipinfo.io",
@@ -3247,6 +3370,19 @@
       "source_url": "https://brex.com/rewards/",
       "category": "Startup Perks",
       "refused_date": "2026-09-15"
+    },
+    {
+      "vendor": "Kong",
+      "change_type": "pricing_restructured",
+      "reason": "same_transition_graded_differently",
+      "detail": "graded as Kong|pricing_restructured|2026-09-09|https://konghq.com/pricing, a record we withdrew",
+      "summary": "Kong now offers a free trial of Kong Konnect with no credit card required, and a 'Plus' tier with limitations on API Gateways and requests.",
+      "previous_state": "Open source API gateway (Apache 2.0). Self-hosted with no request or usage limits. Lacks enterprise features (Manager GUI, advanced analytics)",
+      "current_state": "Kong Konnect offers a free trial for 30 days with no credit card required, including no gateway limits and 1M API requests/month. The 'Plus' tier includes up to 5 Serverless Gateways, 2 Hybrid Gateways, and 2 Dedicated Cloud Gateways, with 10M requests/month.",
+      "source_url": "https://konghq.com/pricing",
+      "category": "API Gateway",
+      "refused_date": "2026-09-25",
+      "collided_with": "Kong|pricing_restructured|2026-09-09|https://konghq.com/pricing"
     },
     {
       "vendor": "Koyeb",
@@ -3691,6 +3827,18 @@
       "refused_date": "2026-09-12"
     },
     {
+      "vendor": "Mapbox",
+      "change_type": "limits_reduced",
+      "reason": "measures_no_change",
+      "detail": "limits_reduced claimed, and every quantity the record compares holds the same value once notation and period are normalised — 100 mau against 100 mau, 1,000 trip against 1,000 trip, 10 then against 10 then",
+      "summary": "The Navigation SDK v3.x free tier now has a limit of 100 MAUs and 1,000 trips, with a cost of $0.30/user and $0.08/trip beyond that. There's also an option for a flat fee per MAU (free up to 10, then contact sales). The pricing for Navigation SDK v2.x is also similar.",
+      "previous_state": "Navigation SDK v3.x offers a free tier up to 100 MAUs and 1,000 trips with a cost of $0.30/user and $0.08/trip beyond that. Another option is a flat fee per MAU (free up to 10, then contact sales). Navigation SDK v2.x also has similar tiered pricing.",
+      "current_state": "Up to 100 MAUs and 1,000 trips are free. Beyond that, it's $0.30/user and $0.08/trip. A flat fee per MAU is available (free up to 10, then contact sales).",
+      "source_url": "https://www.mapbox.com/pricing",
+      "category": "Maps/Geolocation",
+      "refused_date": "2026-09-25"
+    },
+    {
       "vendor": "Market Data API",
       "change_type": "limits_reduced",
       "reason": "confirmed_unchanged",
@@ -3775,6 +3923,19 @@
       "refused_date": "2026-08-28"
     },
     {
+      "vendor": "Mercury",
+      "change_type": "limits_reduced",
+      "reason": "same_transition_graded_differently",
+      "detail": "same vendor, source_url and previous_state as Mercury|limits_reduced|2026-08-28|https://mercury.com/perks",
+      "summary": "The Datadog offer is no longer listed. The AWS credit is now $5k. The Google Cloud credit is no longer listed. QuickBooks Online is now 50% off instead of 30%.",
+      "previous_state": "1 year free Datadog (up to $100K value), $5K AWS credits, up to $200K Google Cloud credits, and 30% off QuickBooks Online for Mercury banking customers",
+      "current_state": "The Startup Bundle includes $5k AWS credits, 50% off QuickBooks Online, and various other perks.",
+      "source_url": "https://mercury.com/perks",
+      "category": "Startup Perks",
+      "refused_date": "2026-09-25",
+      "collided_with": "Mercury|limits_reduced|2026-08-28|https://mercury.com/perks"
+    },
+    {
       "vendor": "Mergify",
       "change_type": "free_tier_removed",
       "reason": "states_no_terms",
@@ -3811,6 +3972,18 @@
       "category": "Startup Perks",
       "refused_date": "2026-09-18",
       "collided_with": "Microsoft for Startups|limits_increased|2026-09-02|https://startups.microsoft.com/en-us/"
+    },
+    {
+      "vendor": "Microsoft Founders Hub",
+      "change_type": "limits_reduced",
+      "reason": "restates_stored_quantities",
+      "detail": "narrowing claimed, and every quantity the current state names is one the stored description already held at the same value (150,000 currency), and drops 5 the stored description carried",
+      "summary": "The page states access to up to $150,000 in credits, but does not mention the $5,000 option. It also does not mention the specific benefits of M365 Business Premium (50 seats), GitHub Enterprise (20 users), Visual Studio Enterprise (5 users), Power Apps (10 users).",
+      "previous_state": "Up to $5,000 Azure credits (basic path, no investor required) or up to $150,000 (investor network path). Includes M365 Business Premium (50 seats), GitHub Enterprise (20 users), Visual Studio Enterprise (5 users), Power Apps (10 users)",
+      "current_state": "Access to up to $150,000 in credits.",
+      "source_url": "https://www.microsoft.com/en-us/startups",
+      "category": "Startup Perks",
+      "refused_date": "2026-09-25"
     },
     {
       "vendor": "Microsoft Teams",
@@ -4473,13 +4646,26 @@
       "vendor": "podio.com",
       "change_type": "limits_reduced",
       "reason": "measures_no_change",
-      "detail": "limits_reduced claimed, and every quantity the record compares holds the same value once notation and period are normalised — 100 item against 100 organization, 100 \"previously\" 100",
-      "summary": "The free plan now has a limit of 100 items per organization, whereas previously it had 100 items *across* the organization. The free plan also no longer includes unlimited workspaces and apps, but rather includes unlimited workspaces and apps in the Plus and Premium plans.",
+      "detail": "limits_reduced claimed, and every quantity the record compares holds the same value once notation and period are normalised — 5 user against 5 user, 100 item against 100 item",
+      "summary": "The free plan now has a limit of 100 items per organization, whereas previously it had no stated item limit. The free plan also no longer includes unlimited items on paid plans.",
       "previous_state": "Work management platform owned by Progress Software — free plan: 5 users, 100 items max across organization, 1,000 API calls daily. Task management, apps, workspaces, basic workflow automations.",
-      "current_state": "The free plan includes unlimited workspaces and apps, but limits the total number of items to 100 per organization.",
+      "current_state": "The free plan includes up to 5 users and a limit of 100 items per organization.",
       "source_url": "https://www.progress.com/podio/pricing",
       "category": "Storage",
-      "refused_date": "2026-09-07"
+      "refused_date": "2026-09-25"
+    },
+    {
+      "vendor": "Polar",
+      "change_type": "pricing_restructured",
+      "reason": "same_transition_graded_differently",
+      "detail": "same vendor, source_url and previous_state as Polar|pricing_restructured|2026-08-28|https://polar.sh/",
+      "summary": "The pricing has been restructured. The original pay-as-you-go tier is no longer available. There is now a 'Starter' plan with 5.00% + 50¢ per transaction, a 'Pro' plan at $20/month with 3.80% + 40¢ per transaction, a 'Growth' plan at $100/month with 3.60% + 35¢ per transaction, and a 'Scale' plan at $400/month with 3.40% + 30¢ per transaction. A 'Startup Program' offers the 'Scale' plan free for 12 months.",
+      "previous_state": "Merchant of record — no monthly fee, 4% + $0.40 per transaction (includes Stripe fees). +1.5% for international cards, +0.5% for subscriptions",
+      "current_state": "Starter: 5.00% + 50¢ per transaction. Pro: $20/month, 3.80% + 40¢ per transaction. Growth: $100/month, 3.60% + 35¢ per transaction. Scale: $400/month, 3.40% + 30¢ per transaction. Startup Program: Scale plan free for 12 months, 3.40% + 30¢ per transaction.",
+      "source_url": "https://polar.sh/",
+      "category": "Payments",
+      "refused_date": "2026-09-25",
+      "collided_with": "Polar|pricing_restructured|2026-08-28|https://polar.sh/"
     },
     {
       "vendor": "Pollinations.AI",
@@ -5083,6 +5269,18 @@
       "refused_date": "2026-09-10"
     },
     {
+      "vendor": "Sendbird",
+      "change_type": "limits_reduced",
+      "reason": "confirmed_unchanged",
+      "detail": "The descriptions are functionally equivalent; 'Developer plan' and 'free trial' appear to be the same offering, and both include the stated features.",
+      "summary": "The Developer tier (1,000 MAU) is still offered as a free trial. The pricing page indicates that the free tier is limited to experimentation and does not include all Pro features. The Pro plan starts at $349/month for 5K MAU.",
+      "previous_state": "Chat SDK — Developer plan: 1,000 MAU, 20 peak concurrent connections, unlimited messages/month, unlimited storage (6-month retention). All Pro features included (typing indicators, read receipts, push notifications)",
+      "current_state": "The free trial includes up to 1,000 MAU and 20 peak concurrent connections, unlimited messages/month, and 6-month message retention. All pro features are available during the free trial.",
+      "source_url": "https://sendbird.com/pricing/chat",
+      "category": "Communication",
+      "refused_date": "2026-09-25"
+    },
+    {
       "vendor": "SendGrid",
       "change_type": "free_tier_removed",
       "reason": "page_does_not_name_vendor",
@@ -5207,6 +5405,19 @@
       "refused_date": "2026-09-16"
     },
     {
+      "vendor": "SimpleLocalize",
+      "change_type": "limits_increased",
+      "reason": "same_transition_graded_differently",
+      "detail": "same vendor, source_url and previous_state as SimpleLocalize|limits_increased|2026-09-09|https://simplelocalize.io/pricing",
+      "summary": "The free Community plan now offers 500 translation keys instead of 250.",
+      "previous_state": "Free Community plan — 250 translation keys, unlimited strings, 10 languages, 10 projects, 1 team member. Discount plans available for educational institutions, indie developers, and open-source projects (contact sales)",
+      "current_state": "The Community plan includes 500 translation keys, unlimited strings, 10 languages, 10 projects, and 1 team member.",
+      "source_url": "https://simplelocalize.io/pricing",
+      "category": "Localization",
+      "refused_date": "2026-09-25",
+      "collided_with": "SimpleLocalize|limits_increased|2026-09-09|https://simplelocalize.io/pricing"
+    },
+    {
       "vendor": "SimplePDF.eu",
       "change_type": "limits_reduced",
       "reason": "same_transition_graded_differently",
@@ -5254,7 +5465,7 @@
       "current_state": "As a Canva Free user, you can create and use up to 2,500 mockups for free. If you exceed this total number of uses, you will need a Canva Pro account to create and use more mockups.",
       "source_url": "https://smartmockups.com/",
       "category": "Design",
-      "refused_date": "2026-09-18"
+      "refused_date": "2026-09-25"
     },
     {
       "vendor": "SmartParse",
@@ -6313,15 +6524,15 @@
     },
     {
       "vendor": "Zapier",
-      "change_type": "limits_reduced",
+      "change_type": "limits_increased",
       "reason": "confirmed_unchanged",
-      "detail": "The current page confirms unlimited Zaps and Forms were *always* included, and 2-step Zaps were the limit. The report simply restates the original terms.",
-      "summary": "The free tier now includes unlimited Zaps and Forms. Limits tasks to 100/month and 2-step Zaps.",
+      "detail": "The current page states unlimited Zaps, Tables, and Forms, and 2-step Zaps, which aligns with the stored description of unlimited Zaps (2-step only) and doesn't change the limits on tables or forms.",
+      "summary": "The free tier now includes unlimited Zaps, Tables, and Forms. Is limited to two-step Zaps. Previously unlimited Zaps but limited to 2-step only, 2,500 table records, and 10 form pages. The free tier now includes unlimited tables and forms, and 2,500 records.",
       "previous_state": "Workflow automation — 100 tasks/month, unlimited Zaps but limited to 2-step only (one trigger + one action), 2,500 table records, 10 form pages",
-      "current_state": "The free tier includes Zap workflows, Tables, and Forms with 100 tasks per month, unlimited Zap workflows, Tables, and Forms, and two-step Zap workflows.",
+      "current_state": "Zaps, Tables, and Forms included (100 tasks per month). Unlimited Zaps, Tables, and Forms. Two-step Zaps.",
       "source_url": "https://zapier.com/pricing",
       "category": "Workflow Automation",
-      "refused_date": "2026-09-09"
+      "refused_date": "2026-09-25"
     },
     {
       "vendor": "Zenable",
@@ -6418,6 +6629,18 @@
       "source_url": "https://zilore.com/en/dns",
       "category": "DNS & Domain Management",
       "refused_date": "2026-09-13"
+    },
+    {
+      "vendor": "Zipcodebase",
+      "change_type": "limits_increased",
+      "reason": "states_no_difference",
+      "detail": "the summary states that the page agrees with what we hold, and names no figure the stored description did not already carry",
+      "summary": "The free plan still exists, but the description is more detailed.",
+      "previous_state": "Free Zip Code API, access to Worldwide Postal Code Data. 5,000 free requests/month.",
+      "current_state": "The Free plan includes 5.000 Searches, 1 Concurrent Requests, 10-mile radius/distance, Private Use, HTTPS Encryption, Self-Service Onboarding, and E-Mail Support.",
+      "source_url": "https://zipcodebase.com",
+      "category": "Dev Utilities",
+      "refused_date": "2026-09-25"
     },
     {
       "vendor": "Zipcodestack",
