@@ -30,6 +30,7 @@ const { supersededTermsNotice, supersedingChange } = await import("../dist/super
 const { changesByVendor } = await import("../dist/superseded-census.js");
 const { loadDealChanges, loadOffers } = await import("../dist/data.js");
 const { loadVerificationState } = await import("../dist/verification-state.js");
+const { OUTCOME_THAT_CONFIRMED } = await import("../dist/read-date.js");
 const { utcDate } = await import("../dist/ranking.js");
 const {
   applyRestatements,
@@ -480,11 +481,11 @@ describe("a restatement is reversible, visible and does not overwrite a hand-wri
   it("keeps our terms where a read since the reading found them still accurate", () => {
     const readingDate = IPAPI.change.date;
     const confirmedSince = [...loadVerificationState().values()]
-      .filter((r) => r.last_success !== null && r.last_success > readingDate)
+      .filter((r) => r.last_outcome === OUTCOME_THAT_CONFIRMED && r.last_success !== null && r.last_success > readingDate)
       .sort((a, b) => a.last_success!.localeCompare(b.last_success!))[0];
     assert.ok(
       confirmedSince,
-      `no record in the store was confirmed after ${readingDate}, so this control proves nothing`,
+      `no record in the store has a latest read that confirmed it after ${readingDate}, so this control proves nothing`,
     );
     const ours = { ...IPAPI.offer, vendor: confirmedSince.vendor, url: confirmedSince.url };
     assert.equal(
