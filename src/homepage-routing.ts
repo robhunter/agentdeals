@@ -51,12 +51,19 @@ export function dayMeasuresPath(day: DailyRollup, path: string): boolean {
   return day.traffic.class_route_truncation?.reserved_paths.includes(path) === true;
 }
 
+export function completeDaysInWindow(
+  rollups: readonly DailyRollup[],
+  days = AGENT_OPENS_WINDOW_DAYS,
+): DailyRollup[] {
+  return mostRecentDays(rollups, days).filter((day) => day.complete === true);
+}
+
 export function rankableDays(
   rollups: readonly DailyRollup[],
   guides: readonly GuideEntry[],
   days = AGENT_OPENS_WINDOW_DAYS,
 ): DailyRollup[] {
-  return mostRecentDays(rollups, days).filter((day) => {
+  return completeDaysInWindow(rollups, days).filter((day) => {
     if (agentOverflowOn(day) === 0) return true;
     const reserved = new Set(day.traffic.class_route_truncation?.reserved_paths ?? []);
     return guides.every((guide) => {
@@ -155,8 +162,12 @@ function sharePhrase(part: number, whole: number): string {
 
 function rankedWindowPhrase(window: AgentOpensWindow): string {
   return window.days === 1
-    ? `on ${window.to}, the one day on which every guide we publish had its own count`
-    : `across the ${window.days} days on which every guide we publish had its own count, ${window.from} to ${window.to}`;
+    ? `on ${window.to}, the one complete day on which every guide we publish had its own count`
+    : `across the ${window.days} complete days on which every guide we publish had its own count, ${window.from} to ${window.to}`;
+}
+
+function completeDaysCount(days: number): string {
+  return days === 1 ? "1 complete day" : `${days} complete days`;
 }
 
 export function guideSelectionSentence(selection: GuideSelection): string {
@@ -166,7 +177,7 @@ export function guideSelectionSentence(selection: GuideSelection): string {
   }
   if (!rankedWindow) {
     return `All ${populationCount} guides we publish, in the order /guides lists them, and not a ranking. `
-      + `We hold ${heldDays} days of traffic and can rank on none of them: on every one, at least one guide's requests could have been folded into a shared bucket, so a zero there would not mean no agent opened it.`;
+      + `We hold ${completeDaysCount(heldDays)} of traffic and can rank on none of them: on every one, at least one guide's requests could have been folded into a shared bucket, so a zero there would not mean no agent opened it.`;
   }
   if (!opensDecided) {
     return `All ${populationCount} guides we publish, in the order /guides lists them, and not a ranking. `

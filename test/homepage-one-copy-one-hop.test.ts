@@ -59,11 +59,11 @@ function statedSelection(section: string): StatedSelection | null {
 
 function statedRankedWindow(section: string): { days: number; from: string; to: string } | null {
   const many = section.match(
-    /across the (\d+) days on which every guide we publish had its own count, (\d{4}-\d{2}-\d{2}) to (\d{4}-\d{2}-\d{2})/,
+    /across the (\d+) complete days on which every guide we publish had its own count, (\d{4}-\d{2}-\d{2}) to (\d{4}-\d{2}-\d{2})/,
   );
   if (many) return { days: Number(many[1]), from: many[2], to: many[3] };
   const one = section.match(
-    /on (\d{4}-\d{2}-\d{2}), the one day on which every guide we publish had its own count/,
+    /on (\d{4}-\d{2}-\d{2}), the one complete day on which every guide we publish had its own count/,
   );
   return one ? { days: 1, from: one[1], to: one[1] } : null;
 }
@@ -237,16 +237,18 @@ describe("the guide list on the home page follows the traffic it says it does", 
     "vercel-vs-netlify": 700,
     "hetzner-pricing-2026": 1,
   };
+  const OPENED_ONLY_ON_A_DAY_STILL_BEING_COUNTED = "gcp-free-tier-2026";
 
   before(async () => {
     tmp = mkdtempSync(path.join(tmpdir(), "homepage-guide-rank-"));
-    const day = (date: string, counts: Record<string, number>) => {
+    const day = (date: string, counts: Record<string, number>, complete = true) => {
       const by_class_route: Record<string, number> = {};
       for (const [slug, n] of Object.entries(counts)) by_class_route[`ai_agent|/${slug}`] = n;
-      writeFileSync(path.join(tmp, `${date}.json`), JSON.stringify({ date, traffic: { by_class_route } }));
+      writeFileSync(path.join(tmp, `${date}.json`), JSON.stringify({ date, complete, traffic: { by_class_route } }));
     };
     day("2026-01-01", { "free-django-stack": 900, "free-go-stack": 800 });
     day("2026-01-02", { "vercel-vs-netlify": 700, "hetzner-pricing-2026": 1 });
+    day("2026-01-03", { [OPENED_ONLY_ON_A_DAY_STILL_BEING_COUNTED]: 5000 }, false);
     server = await startServer({ AGENTDEALS_ROLLUP_DIR: tmp });
     html = await (await fetch(`http://localhost:${server.port}/`)).text();
     const guides = await (await fetch(`http://localhost:${server.port}/guides`)).text();
@@ -290,6 +292,18 @@ describe("the guide list on the home page follows the traffic it says it does", 
     assert.deepStrictEqual([stated.from, stated.to], ["2026-01-01", "2026-01-02"], "the guide section states a window it did not read");
   });
 
+  it("names no guide on the opens of a day the rollup has not marked complete", () => {
+    assert.ok(
+      published.includes(OPENED_ONLY_ON_A_DAY_STILL_BEING_COUNTED),
+      "the guide opened only on the unfinished day is not one /guides publishes, so this proves nothing",
+    );
+    assert.ok(
+      !guidePathsOn(html).includes(`/${OPENED_ONLY_ON_A_DAY_STILL_BEING_COUNTED}`),
+      "the home page ranked a guide on opens from a day that had not finished",
+    );
+    assert.doesNotMatch(sectionOf(html, "answers"), /2026-01-03/, "the window was dated to a day that had not finished");
+  });
+
   it("names no guide the window left on slug order, and stops short of the count it publishes", () => {
     const section = sectionOf(html, "answers");
     const named = guidePathsOn(html);
@@ -311,6 +325,7 @@ describe("the guide list on the home page follows the traffic it says it does", 
       assert.ok(published.length > 0, "the guide population is empty, so this proves nothing");
       writeFileSync(path.join(withOverflow, "2026-01-01.json"), JSON.stringify({
         date: "2026-01-01",
+        complete: true,
         traffic: {
           by_class_route: { "ai_agent|/free-django-stack": 900, "ai_agent|__other_pages__": 100 },
           class_route_truncation: { reserved_paths: published.map((slug) => `/${slug}`) },
@@ -327,6 +342,37 @@ describe("the guide list on the home page follows the traffic it says it does", 
       }
     } finally {
       rmSync(withOverflow, { recursive: true, force: true });
+    }
+  });
+
+  it("counts only complete days as held where it can rank on none, even beside an unfinished day it could have", async () => {
+    const unfinished = mkdtempSync(path.join(tmpdir(), "homepage-guide-unfinished-"));
+    try {
+      assert.ok(published.length > 0, "the guide population is empty, so this proves nothing");
+      writeFileSync(path.join(unfinished, "2026-01-01.json"), JSON.stringify({
+        date: "2026-01-01",
+        complete: true,
+        traffic: { by_class_route: { "ai_agent|/free-django-stack": 900, "ai_agent|__other_pages__": 100 } },
+      }));
+      writeFileSync(path.join(unfinished, "2026-01-02.json"), JSON.stringify({
+        date: "2026-01-02",
+        complete: false,
+        traffic: {
+          by_class_route: { "ai_agent|/free-go-stack": 900, "ai_agent|__other_pages__": 100 },
+          class_route_truncation: { reserved_paths: published.map((slug) => `/${slug}`) },
+        },
+      }));
+      const other = await startServer({ AGENTDEALS_ROLLUP_DIR: unfinished });
+      try {
+        const section = sectionOf(await (await fetch(`http://localhost:${other.port}/`)).text(), "answers");
+        assert.match(section, /We hold 1 complete day of traffic and can rank on none of them/);
+        assert.doesNotMatch(section, /opened most/, "the page ranked on a day that had not finished");
+        assert.doesNotMatch(section, /2026-01-02/, "the page dated its window to a day that had not finished");
+      } finally {
+        other.proc.kill();
+      }
+    } finally {
+      rmSync(unfinished, { recursive: true, force: true });
     }
   });
 });

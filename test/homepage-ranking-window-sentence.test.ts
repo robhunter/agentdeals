@@ -8,6 +8,7 @@ const {
   agentOpensByPath,
   agentOpensWindow,
   agentRequestAttribution,
+  completeDaysInWindow,
   guideSelectionSentence,
   guidesTiedAtCut,
   opensDecidedPrefix,
@@ -29,6 +30,7 @@ function agentKey(path: string): string {
 function dayWith(date: string, byClassRoute: Record<string, number>, reservedPaths: string[] = []) {
   return {
     date,
+    complete: true,
     traffic: {
       by_class_route: byClassRoute,
       class_route_truncation: reservedPaths.length === 0 ? null : { reserved_paths: [...reservedPaths].sort() },
@@ -52,14 +54,14 @@ describe("the home page states the window its guide ranking actually measured (#
   describe("AC-2 the window reads as English at every length it can take", () => {
     it("names the single day rather than counting one of them", () => {
       const sentence = selection({ rankedWindow: { days: 1, from: "2026-09-22", to: "2026-09-22" } });
-      assert.match(sentence, /on 2026-09-22, the one day/);
+      assert.match(sentence, /on 2026-09-22, the one complete day/);
       assert.doesNotMatch(sentence, /1 days/);
       assert.doesNotMatch(sentence, /2026-09-22 to 2026-09-22/);
     });
 
     it("counts the days and names both ends where the window is longer than one", () => {
       const sentence = selection({ rankedWindow: { days: 14, from: "2026-09-08", to: "2026-09-21" } });
-      assert.match(sentence, /across the 14 days .*, 2026-09-08 to 2026-09-21\./);
+      assert.match(sentence, /across the 14 complete days .*, 2026-09-08 to 2026-09-21\./);
     });
 
     it("writes no count as a plural it does not take, at any length the ranking can read", () => {
@@ -218,7 +220,7 @@ describe("the home page states the window its guide ranking actually measured (#
         attribution: agentRequestAttribution(ranked),
         opensDecided: published.length > 0,
       });
-      assert.match(sentence, /The 1 of 97 guides AI agents opened most on 2026-09-22, the one day/);
+      assert.match(sentence, /The 1 of 97 guides AI agents opened most on 2026-09-22, the one complete day/);
       assert.doesNotMatch(sentence, /\b1 guides\b/);
     });
   });
@@ -230,14 +232,14 @@ describe("the home page states the window its guide ranking actually measured (#
         opensDecided: false,
       });
       assert.match(sentence, /All 97 guides we publish, in the order \/guides lists them, and not a ranking\./);
-      assert.match(sentence, /We can rank on 2026-09-22, the one day on which every guide we publish had its own count/);
+      assert.match(sentence, /We can rank on 2026-09-22, the one complete day on which every guide we publish had its own count/);
       assert.match(sentence, /no guide was opened more often than the next one below it/);
       assert.doesNotMatch(sentence, /can rank on none of them/);
     });
 
     it("keeps the unrankable-window sentence for the case it was written for", () => {
       const sentence = selection({ rankedWindow: null, opensDecided: false });
-      assert.match(sentence, /We hold 14 days of traffic and can rank on none of them/);
+      assert.match(sentence, /We hold 14 complete days of traffic and can rank on none of them/);
       assert.doesNotMatch(sentence, /We can rank on/);
     });
 
@@ -257,6 +259,76 @@ describe("the home page states the window its guide ranking actually measured (#
         selection({ heldDays: 0, rankedWindow: null, opensDecided: false }),
         `All ${POPULATION_SIZE} guides we publish, in the order /guides lists them.`,
       );
+    });
+  });
+
+  describe("AC-7 the ranking rests only on days the rollup marks complete", () => {
+    function everyGuideCounted(date: string, opensForFirst = 1) {
+      const counts: Record<string, number> = {};
+      POPULATION.forEach((guide, i) => {
+        counts[agentKey(`/${guide.slug}`)] = i === 0 ? opensForFirst : 1;
+      });
+      return dayWith(date, counts, POPULATION.map((g) => `/${g.slug}`));
+    }
+
+    function partial<T extends object>(day: T): T {
+      return { ...day, complete: false };
+    }
+
+    it("ranks on no day the rollup has not marked complete, however well that day is counted", () => {
+      const counted = everyGuideCounted("2026-09-25");
+      assert.deepEqual(rankableDays([counted], POPULATION, AGENT_OPENS_WINDOW_DAYS), [counted]);
+      assert.deepEqual(rankableDays([partial(counted)], POPULATION, AGENT_OPENS_WINDOW_DAYS), []);
+
+      const noOverflow = dayWith("2026-09-25", { [agentKey(`/${POPULATION[0].slug}`)]: 4 });
+      assert.deepEqual(rankableDays([noOverflow], POPULATION, AGENT_OPENS_WINDOW_DAYS), [noOverflow]);
+      assert.deepEqual(rankableDays([partial(noOverflow)], POPULATION, AGENT_OPENS_WINDOW_DAYS), []);
+    });
+
+    it("reads a rollup that does not say it is complete as not complete", () => {
+      const { complete: _dropped, ...unstated } = everyGuideCounted("2026-09-25");
+      assert.deepEqual(rankableDays([unstated], POPULATION, AGENT_OPENS_WINDOW_DAYS), []);
+    });
+
+    it("dates the window to the last complete day, not to the day still being counted", () => {
+      const days = [
+        everyGuideCounted("2026-09-22"),
+        everyGuideCounted("2026-09-23"),
+        everyGuideCounted("2026-09-24"),
+        partial(everyGuideCounted("2026-09-25")),
+      ];
+      const ranked = rankableDays(days, POPULATION, AGENT_OPENS_WINDOW_DAYS);
+      assert.deepEqual(ranked.map((day: { date: string }) => day.date), ["2026-09-22", "2026-09-23", "2026-09-24"]);
+      assert.deepEqual(agentOpensWindow(ranked, AGENT_OPENS_WINDOW_DAYS), { days: 3, from: "2026-09-22", to: "2026-09-24" });
+    });
+
+    it("lets no open from a day still being counted decide who is on the page", () => {
+      const days = [everyGuideCounted("2026-09-24"), partial(everyGuideCounted("2026-09-25", 500))];
+      const ranked = rankableDays(days, POPULATION, AGENT_OPENS_WINDOW_DAYS);
+      const published = opensDecidedPrefix(
+        rankGuidesByAgentOpens(POPULATION, agentOpensByPath(ranked)),
+        HOMEPAGE_GUIDE_COUNT,
+      );
+      assert.deepEqual(published, [], "a guide was put ahead of the rest on opens from a day that had not finished");
+    });
+
+    it("counts as held only the complete days, so the fallback's claim covers every day it counts", () => {
+      const days = [
+        dayWith("2026-09-24", { [agentKey(OVERFLOW_PAGE_KEY)]: 40 }),
+        partial(everyGuideCounted("2026-09-25")),
+      ];
+      assert.deepEqual(rankableDays(days, POPULATION, AGENT_OPENS_WINDOW_DAYS), []);
+      assert.deepEqual(completeDaysInWindow(days, AGENT_OPENS_WINDOW_DAYS).map((day: { date: string }) => day.date), ["2026-09-24"]);
+      const sentence = selection({ heldDays: completeDaysInWindow(days, AGENT_OPENS_WINDOW_DAYS).length, rankedWindow: null, opensDecided: false });
+      assert.match(sentence, /We hold 1 complete day of traffic and can rank on none of them/);
+      assert.doesNotMatch(sentence, /\b1 complete days\b/);
+    });
+
+    it("says the days it ranked on were complete, at every length the window can take", () => {
+      for (let days = 1; days <= AGENT_OPENS_WINDOW_DAYS; days++) {
+        const sentence = selection({ rankedWindow: { days, from: "2026-09-08", to: "2026-09-21" } });
+        assert.match(sentence, days === 1 ? /the one complete day on which/ : new RegExp(`across the ${days} complete days on which`));
+      }
     });
   });
 });
