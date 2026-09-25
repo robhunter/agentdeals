@@ -6,9 +6,9 @@ import {
   VENDOR_KEYED_DATA,
   holdbackVerdict,
   serializeVendorData,
-  vendorsMoved,
+  vendorsMovedIn,
   vendorsNamedInFailure,
-  withVendorsAsTheyWereBefore,
+  withVendorsAsTheyWereBeforeIn,
 } from "../dist/data-push-holdback.js";
 
 const HELP = `Hold back the vendors a red suite names, so one bad reading costs one vendor rather than the batch.
@@ -84,7 +84,7 @@ for (const entry of VENDOR_KEYED_DATA) {
   const after = inTheWorkingTree(entry.path);
   if (before === null || after === null) continue;
   files.push({ ...entry, before, after });
-  for (const vendor of vendorsMoved(before, after, entry.arrayKey)) {
+  for (const vendor of vendorsMovedIn(before, after, entry.arrayKeys)) {
     moved.set(vendor.toLowerCase(), vendor);
   }
 }
@@ -100,7 +100,7 @@ console.log(verdict.reason);
 if (verdict.decision !== "hold-back") process.exit(1);
 
 for (const file of files) {
-  const reduced = serializeVendorData(withVendorsAsTheyWereBefore(file.before, file.after, file.arrayKey, verdict.vendors));
+  const reduced = serializeVendorData(withVendorsAsTheyWereBeforeIn(file.before, file.after, file.arrayKeys, verdict.vendors));
   if (reduced === readFileSync(file.path, "utf8")) continue;
   writeFileSync(file.path, reduced);
   console.log(`${file.path}: ${verdict.vendors.join(", ")} put back the way ${args.baseline} had them.`);

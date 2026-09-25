@@ -1,6 +1,6 @@
 import { describe, it } from "node:test";
 import assert from "node:assert";
-import { readFileSync } from "node:fs";
+import { readFileSync, readdirSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -13,8 +13,10 @@ import {
   serializeVendorData,
   vendorKey,
   vendorsMoved,
+  vendorsMovedIn,
   vendorsNamedInFailure,
   withVendorsAsTheyWereBefore,
+  withVendorsAsTheyWereBeforeIn,
 } from "../src/data-push-holdback.ts";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -173,25 +175,28 @@ describe("#1337 putting a held vendor back the way main had it", () => {
   });
 
   it("writes the shape the shipped files are written in, so a holdback is not a reformatting", () => {
-    for (const { path, arrayKey } of VENDOR_KEYED_DATA) {
+    for (const { path, arrayKeys } of VENDOR_KEYED_DATA) {
       const shipped = readFileSync(join(REPO, path), "utf8");
       const parsed = JSON.parse(shipped) as Record<string, unknown>;
-      assert.ok(Array.isArray(parsed[arrayKey]), `${path} has no ${arrayKey} array for a vendor's rows to live in`);
+      for (const arrayKey of arrayKeys) {
+        assert.ok(Array.isArray(parsed[arrayKey]), `${path} has no ${arrayKey} array for a vendor's rows to live in`);
+      }
       assert.strictEqual(serializeVendorData(parsed), shipped, `${path} is not written the way a holdback would rewrite it`);
     }
   });
 
   it("holding nobody back rewrites none of the shipped files", () => {
-    for (const { path, arrayKey } of VENDOR_KEYED_DATA) {
+    for (const { path, arrayKeys } of VENDOR_KEYED_DATA) {
       const shipped = readFileSync(join(REPO, path), "utf8");
       const parsed = JSON.parse(shipped);
-      assert.strictEqual(serializeVendorData(withVendorsAsTheyWereBefore(parsed, parsed, arrayKey, [])), shipped, path);
+      assert.strictEqual(serializeVendorData(withVendorsAsTheyWereBeforeIn(parsed, parsed, arrayKeys, [])), shipped, path);
     }
   });
 
   it("every file a vendor's rows live in carries a vendor on every row", () => {
-    for (const { path, arrayKey } of VENDOR_KEYED_DATA) {
-      const rows = JSON.parse(readFileSync(join(REPO, path), "utf8"))[arrayKey] as { vendor?: unknown }[];
+    for (const { path, arrayKeys } of VENDOR_KEYED_DATA) {
+      const parsed = JSON.parse(readFileSync(join(REPO, path), "utf8"));
+      const rows = arrayKeys.flatMap((arrayKey) => parsed[arrayKey] as { vendor?: unknown }[]);
       assert.ok(rows.length > 0, `${path} is empty, so this rule has no subject`);
       const nameless = rows.filter((r) => vendorKey(r.vendor) === "").length;
       assert.strictEqual(nameless, 0, `${path} has ${nameless} row(s) no holdback could attribute to a vendor`);
@@ -202,5 +207,76 @@ describe("#1337 putting a held vendor back the way main had it", () => {
     for (const path of [...VENDOR_KEYED_DATA.map((f) => f.path), ...DERIVED_FROM_THE_VENDOR_DATA]) {
       assert.doesNotThrow(() => readFileSync(join(REPO, path), "utf8"), `${path} is named by the holdback and does not exist`);
     }
+  });
+});
+
+const WORKFLOWS = join(REPO, ".github", "workflows");
+
+function pathsAGatedWorkflowCommits(): string[] {
+  const paths = new Set<string>();
+  for (const file of readdirSync(WORKFLOWS).filter((f) => /\.ya?ml$/.test(f))) {
+    const text = readFileSync(join(WORKFLOWS, file), "utf8");
+    const at = text.indexOf("bash scripts/gate-data-push.sh");
+    if (at === -1) continue;
+    const end = text.indexOf("\n      - ", at);
+    const step = text.slice(at, end === -1 ? undefined : end);
+    for (const match of step.matchAll(/\bdata\/[A-Za-z0-9_.-]+\.json\b/g)) paths.add(match[0]);
+  }
+  return [...paths].sort();
+}
+
+function arraysOfVendorRows(path: string): string[] {
+  const parsed = JSON.parse(readFileSync(join(REPO, path), "utf8")) as Record<string, unknown>;
+  return Object.entries(parsed)
+    .filter(([, value]) => Array.isArray(value) && value.some((r) => typeof (r as { vendor?: unknown })?.vendor === "string"))
+    .map(([key]) => key);
+}
+
+function vendorRowsNoHoldbackRestores(paths: string[], keyed: readonly { path: string; arrayKeys: readonly string[] }[]): string[] {
+  const restored = new Set(keyed.flatMap((f) => f.arrayKeys.map((k) => `${f.path}:${k}`)));
+  return paths.flatMap((path) => arraysOfVendorRows(path).map((k) => `${path}:${k}`)).filter((at) => !restored.has(at));
+}
+
+describe("#1898 a held-back vendor loses every row its run wrote", () => {
+  const before = {
+    held: [row("Held", { first_read_date: "2026-09-21" })],
+    resolved: [row("Kept", { outcome: "corroborated" })],
+  };
+  const after = {
+    held: [],
+    resolved: [row("Kept", { outcome: "corroborated" }), row("Held", { outcome: "baseline_moved" })],
+  };
+
+  it("puts a held vendor back in each array of a file that keeps its rows in two", () => {
+    assert.deepStrictEqual(withVendorsAsTheyWereBeforeIn(before, after, ["held", "resolved"], ["Held"]), before);
+  });
+
+  it("counts a vendor as moved when one of those arrays moved, and names it once", () => {
+    assert.deepStrictEqual(vendorsMovedIn(before, after, ["held", "resolved"]), ["Held"]);
+    const both = { held: [row("Held", { first_read_date: "2026-09-22" })], resolved: [] };
+    assert.deepStrictEqual(vendorsMovedIn(before, both, ["held", "resolved"]), ["Held", "Kept"]);
+  });
+
+  it("takes back the ledger entry a held vendor's restatement wrote", () => {
+    const ledger = { restatements: [row("Buildkite", { restated_on: "2026-09-19" })] };
+    const run = { restatements: [...ledger.restatements, row("Buildkite", { restated_on: "2026-09-20" })] };
+    assert.deepStrictEqual(withVendorsAsTheyWereBeforeIn(ledger, run, ["restatements"], ["Buildkite"]), ledger);
+  });
+
+  it("restores every array of vendor rows in a file a gated workflow commits", () => {
+    const paths = pathsAGatedWorkflowCommits();
+    assert.ok(paths.includes("data/index.json"), paths.join(", "));
+    assert.deepStrictEqual(vendorRowsNoHoldbackRestores(paths, VENDOR_KEYED_DATA), []);
+  });
+
+  it("finds the ledger and the corroboration file missing from a list that leaves them out", () => {
+    const withoutThem = VENDOR_KEYED_DATA.filter(
+      (f) => f.path !== "data/restated_terms.json" && f.path !== "data/change_corroboration.json",
+    );
+    assert.deepStrictEqual(vendorRowsNoHoldbackRestores(pathsAGatedWorkflowCommits(), withoutThem), [
+      "data/change_corroboration.json:held",
+      "data/change_corroboration.json:resolved",
+      "data/restated_terms.json:restatements",
+    ]);
   });
 });
