@@ -8803,7 +8803,7 @@
     {
       "vendor": "AssemblyAI",
       "category": "AI / ML",
-      "description": "Speech-to-text and audio intelligence API — free: $50 in credits (~185 hours pre-recorded transcription). Up to 5 concurrent streams. Core STT and Audio Intelligence models. Pay-as-you-go at $0.15/hr after",
+      "description": "Speech-to-text and audio intelligence API — free tier: up to 185 hours of pre-recorded transcription and up to 333 hours of streaming transcription, no credit card required. Pay as you go after: Universal-2 $0.15/hr, Universal-3.5 Pro $0.21/hr",
       "tier": "Free",
       "url": "https://www.assemblyai.com/pricing",
       "tags": [
@@ -14676,7 +14676,7 @@
     {
       "vendor": "deployhq.com",
       "category": "CI/CD",
-      "description": "Automated deployment platform — free plan: 3 projects with unlimited deployments. Git-based workflow with support for FTP/SFTP/SSH deployment targets",
+      "description": "Automated deployment platform — free plan: 1 project, 3 deployments per day, 5 servers, 1 concurrent deployment, 30 build minutes, 1 user. Unlimited deployments and 3 projects start at $9/mo (Solo). Open-source projects can ask for a free account with unlimited deployments. Git-based workflow with support for FTP/SFTP/SSH deployment targets",
       "tier": "Free",
       "url": "https://www.deployhq.com/",
       "tags": [
@@ -33090,7 +33090,7 @@
     {
       "vendor": "SiliconFlow",
       "category": "AI / ML",
-      "description": "Free inference for open-source models with 100 requests/day limit and $1 free credits. Supports DeepSeek-R1, DeepSeek-V3, QwQ-32B, and other open-source models. China-based provider.",
+      "description": "Pay-per-token inference for open-weight models. siliconflow.cn/pricing lists some models at no charge: Hunyuan-MT-7B, Xing4.0-29B and PaddleOCR-VL-1.5, the BGE embedding and reranker models, Kolors image generation, and several speech recognition models. DeepSeek and most chat models are paid per token. The international site, siliconflow.com, gives $1 in free credits to start. China-based provider.",
       "tier": "Free (Limited)",
       "url": "https://siliconflow.cn/pricing",
       "tags": [
